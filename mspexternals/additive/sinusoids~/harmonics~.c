@@ -47,6 +47,12 @@ University of California, Berkeley.
 	/* TODO: more efficient implementation that locks the phase by using a single phasor */
 	
 	
+/*
+	Left inlet float = ffreq;  list = freq + amp&*
+	Right inlet list is just amplitudes
+
+*/	
+	
 /* Full set of features:
 
 	Just first (or nth or nth through mth) amplitude (without changing # oscillators)
@@ -85,6 +91,9 @@ typedef  struct oscdesc
 typedef struct 
 {
 	t_pxobject b_obj;
+	void *proxy;
+	long which_inlet;
+	
 	oscdesc base[MAXOSCILLATORS];
 	long next_phase_inc;
 	long phase_inc;			/* frequency */
@@ -100,12 +109,20 @@ typedef struct
 } oscbank;
 typedef oscbank t_sinusoids;
 
+static void ResetInterruptStats(t_sinusoids *x);
+static void ReportInterruptStats(t_sinusoids *x);
 t_int *sinusoids2_perform(t_int *w);
+static void clear(t_sinusoids *x);
 static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
 static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv);
 static void sinusoids_clear(t_sinusoids *x);
 static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
 static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
+static void frequency_float(t_sinusoids *x, double ff);
+void harmonics_free(t_sinusoids *x);
+static void SineFunction(int n, float *stab, int stride, float from, float to);
+static void Makeoscsinetable();
+
 
 
 static void ResetInterruptStats(t_sinusoids *x) {
@@ -129,11 +146,12 @@ static t_int *sinusoids2_perform(t_int *w)
 	oscdesc *o = x->base;
 	const char *st = (const char *)Sinetab;
 	float rate ;
-	long pi_fundamental;
+	long pi_fundamental, pi_nextfundamental;
 
 
 	/* Store local copy of F0 outside the loop in case the user changes it in the middle of DSP. */
 	pi_fundamental = x->phase_inc;
+	pi_nextfundamental = x->next_phase_inc;
 
 //	if(op->b_obj.z_disabled)
 //		goto out;
@@ -169,7 +187,7 @@ static t_int *sinusoids2_perform(t_int *w)
 		o->phase_current = pc;
 		++o;
 	}
-	x->phase_inc = x->next_phase_inc;
+	x->phase_inc = x->next_phase_inc;	
 
 out:
 	if(x->cleared)
@@ -178,16 +196,15 @@ out:
 		x->cleared = 0;
 	}
 	
-	++(x->numTimesPerformCalled);
-	if (pi_fundamental != x->phase_inc) {
+/*	++(x->numTimesPerformCalled);
+	if (pi_nextfundamental != x->x->next_phase_inc) {
 		++(x->numTimesParamsChangedDuringPerform);
-	}
+	} */
+	
 	return (w+4);
 }
 
-static void clear(t_sinusoids *x)
-{
-
+static void clear(t_sinusoids *x) {
 	
 	oscdesc *p = x->base;
 	int i;
@@ -226,29 +243,35 @@ static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv
 {
 	int i;
 
+	for (i=0; i< argc; ++i) {
+		if (argv[i].a_type == A_SYM) {
+			error("harmonics~: all input lists must contain only numbers");
+			return;
+		}
+	}	
+
+	if (x->which_inlet == 0) {
+		/* Left inlet: first element of list is freq */
+		frequency_float(x, atom_getfloatarg(0, argc, argv));
+		--argc;
+		++argv;
+	}
 
 	{
 		oscdesc *fp = x->base;
-		int nosc;
+		int i, nosc;
 		nosc = argc;
-		if(nosc>MAXOSCILLATORS)
-			nosc = MAXOSCILLATORS;
-//		
-// mess with ampl
-//for(i=x->nres;i<nres;++i)
-//		{
-//			fp[i].out1 = fp[i].out2 = 0.0f;
-//		}
+		if (nosc>MAXOSCILLATORS) nosc = MAXOSCILLATORS;
+
 		x->nosc = nosc;
-		for(i=0;i<nosc;++i)
-		{
-			float a = 	atom_getfloatarg(i,argc,argv);
+
+		for(i=0;i<nosc;++i)	{
+			float a = atom_getfloatarg(i,argc,argv);
 			fp[i].next_amplitude = a;
-//	post("%d %d %d %f %f %f", i, nosc, fp[i].next_amplitude, f, a);
 		}
-//		post("nosc %d x-nosc %d", nosc, x->nosc);
 	}
-}
+}	
+
 
 static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 {
@@ -280,6 +303,9 @@ static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
      x->cleared = 0;
      clear(x);
 
+
+	x->proxy = proxy_new(x, 1L, &x->which_inlet);
+
     sinusoids_list(x,s,argc,argv);
     frequency_float(x,440.0f);
 //post("%d %f %f %f", x->nosc, x->pk, x->sampleinterval, x->samplerate);
@@ -288,7 +314,12 @@ static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
     return (x);
 }
 
-static void SineFunction(int n, float *stab, int stride, float from, float to);
+
+void harmonics_free(t_sinusoids *x) {
+	freeobject(x->proxy);
+	dsp_free(&(x->b_obj));
+}
+
 static void SineFunction(int n, float *stab, int stride, float from, float to)
 {
 	int j;
@@ -302,7 +333,6 @@ static void SineFunction(int n, float *stab, int stride, float from, float to)
 	}
 }
 
-static void Makeoscsinetable();
 static void Makeoscsinetable()
 {
 		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(float)PI);
@@ -312,7 +342,7 @@ static void Makeoscsinetable()
 
 void main(void)
 {
-	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free, 
+	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)harmonics_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 	post("harmonics~ 1.0 - Adrian Freed");
 	post("Copyright © 1996,1997,1998,1999,2000,01,02,03 Regents of the University of California. All Rights Reserved");
