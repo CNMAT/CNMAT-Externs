@@ -1581,7 +1581,7 @@ void main(fptr *f)
 
 void	*version()
 {
-	post("mlp v2.2 Michael Lee, Matt Wright");
-	post("copyright © 1990-2002 Regents of the University of California. All Rights Reserved.");
+	post("mlp v2.3 Michael Lee, Matt Wright");
+	post("copyright © 1990-2003 Regents of the University of California. All Rights Reserved.");
 }
 	
