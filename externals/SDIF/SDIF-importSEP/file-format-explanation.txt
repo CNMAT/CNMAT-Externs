@@ -1,0 +1,55 @@
+explanation of fixed column ASCII file format used for Solar Energetic Particle 
+(SEP) measurements (provided by Laura Peticolas, project technical contact at SSL):
+----------------------------------------------------------------------------------
+
+
+/*
+On Fri, 27 Feb 2004 16:19:01 -0800
+"Laura Peticolas"  wrote:
+
+> I have placed data from the Helios Mission in
+> ftp://cse.ssl.berkeley.edu/sounds/data/.  These data files are ascii
+> files.  The name of the files represents the type of data (SEP, see next
+> paragraph), the satellite number (there were two satellites), and the
+> Carrington Rotation.  For example sep1_1622 and sep2_1622 are SEP data
+> from the two satellites during the Carrington Rotation 1622.  A
+> Carrington Rotation is a period of 27.3 days, representing one full
+> rotation of the Sun as seen from the Earth. Carrington Rotation numbers
+> are arbitrarily referenced to the time the term came into use, on
+> November 9, 1853. The Helios mission sent two spacecraft out into space
+> to study the Sun and the solar wind from two perspectives at the same
+> time.  You can find out much more about the Helios mission here:
+> http://www.linmpi.mpg.de/english/projekte/helios/
+>  
+>  The Solar Energetic Particle (SEP) data are very high energy protons
+> that are flowing from the sun faster than the average solar wind
+> particles are traveling.  The detector on the Helios satellites measure
+> the proton "Intensity", otherwise known as flux (units = # of
+> protons/(cm2 sr s MeV)).  This intensity is a type of density flux and
+> it is the number of protons that hit the detector per square cm per
+> second per solid angle per energy.    The detectors measure protons over
+> 6 different energy ranges (see above) from 3-56 MeV energies.  The data
+> is given in 30 minute time intervals and the columns are (in this
+> order): 
+>   
+> Column 1:	 verse number; ignore	
+> Columns 2-4: 	 Start time year, day-of-year, time (HHMM)	
+> Columns 5-7: 	 Stop time year, day-of-year, time (HHMM)	
+> Column 8:	 Intensity of 3-6 MeV protons	 
+> Column 9:	 Error for Column 8	
+> Column 10:	 Intensity of 6-11 MeV protons	 
+> Column 11:	 Error for Column 10	
+> Column 12:	 Intensity of 11-21 MeV protons	 
+> Column 13:	 Error for Column 12	
+> Column 14:	 Intensity of 20-30 MeV protons	 
+> Column 15:	 Error for Column 14	
+> Column 16:	 Intensity of 32-45 MeV protons	 
+> Column 17:	 Error for Column 16	
+> Column 18:	 Intensity of 45-56 MeV protons	
+> Column 19:	 Error for Column 18	
+>  
+> There are many problems with the data with -1s and 0s.  It is probably
+> smart to interpolate over these for now.  When we get data from the
+> STEREO mission (launch in 2005), the data will be much more continuous.
+*/
+

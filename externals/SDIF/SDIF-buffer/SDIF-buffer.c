@@ -1,5 +1,5 @@
 /*
-Copyright (c) 1999.  The Regents of the University of California
+Copyright (c) 1999, 2004.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -13,6 +13,7 @@ licensing opportunities.
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
 University of California, Berkeley.  Based on sample code from David Zicarelli.
+Maintenance by Ben "Jacobs".
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
@@ -38,11 +39,14 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
   11/21/02 - 0.6: Has change-frametype message
   12/18.02 - 0.7: Uses Max 4 file opening stuff, works on OSX
   12/26/02 - 0.7.1: Uses locatefile_extended correctly to open regardless of MacOS type
+  04/01/04 - 0.8.0: Refactored some code into sdif-buf.c; added access to SDIFbuf_Buffer (bj)
+  06/22/04 - 0.8.1: Cleanup (bj)
 
 */
 
 
-#define SDIF_BUFFER_VERSION "0.7.1"
+#define SDIF_BUFFER_VERSION "0.8.1"
+#define FINDER_NAME "SDIF-buffer"
 
 /* the required include files */
 
@@ -65,7 +69,7 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 #undef sprintf
 #undef sscanf
 
-#include "SDIF-buffer.h"
+#include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
 
 /* #include <assert.h> */
 
@@ -75,7 +79,7 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 
 /* This struct contains the "private" data for an SDIF-buffer: */
 typedef struct _SDIFbuffer_private {
-	SDIFmem_Frame head, tail;	/* Pointers to ends of doubly-linked list */
+  SDIFbuf_Buffer buf;
 	SDIFBuffer *next;	/* For linked list of all buffers, for name lookup */
 	int debug;			/* 0 or non-zero for debug mode. */
 } SDIFBufferPrivate;
@@ -87,16 +91,6 @@ Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol;
 SDIFBuffer *AllTheBuffers;	/* A linked list of all the buffers */
 
 
-/* Different modes of choosing which stream to read from an SDIF file */
-typedef enum {
-	STREAM_NUMBER,
-	ONLY_STREAM,
-	FIRST_STREAM,
-	ONLY_STREAM_TYPE,
-	FIRST_STREAM_TYPE
-} WhichStreamMode;
-
-
 /* prototypes for my functions */
 void *my_getbytes(int numBytes);
 void my_freebytes(void *bytes, int size);
@@ -105,7 +99,7 @@ void SDIFbuffer_free(SDIFBuffer *x);
 void SDIFbuffer_clear(SDIFBuffer *x);
 void SDIFbuffer_doclear(SDIFBuffer *x);
 static FILE *OpenSDIFFile(char *filename);
-void ReadStream(SDIFBuffer *x, char *filename, WhichStreamMode mode, long arg);
+void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long arg);
 void SDIFbuffer_readstreamnumber(SDIFBuffer *x, Symbol *fileName, long streamID);
 void SDIFbuffer_streamlist(SDIFBuffer *, Symbol *, int argc, Atom *argv);
 void one_streamlist(Symbol *fileName);
@@ -117,14 +111,17 @@ void SDIFbuffer_NAVcrap(SDIFBuffer *x);
 void PrintOneFrame(SDIFmem_Frame f);
 void PrintFrameHeader(SDIF_FrameHeader *fh);
 void PrintMatrixHeader(SDIF_MatrixHeader *mh);
-static SDIFmem_Frame ListSearch(SDIFBuffer *x, sdif_float64 time, long direction);
-static int ListInsert(SDIFmem_Frame f, struct _SDIFbuffer *buf);
+static SDIFFrameLookupFn ListSearch;
+static SDIFFrameInsertFn ListInsert;
+static SDIFFrameDeleteFn ListDelete;  //  NOTE: not implemented (0.8.0)
+static SDIFBufferAccessorFn GetBuffer;
 SDIFBuffer *MySDIFBufferLookupFunction(t_symbol *name);
 void AddNewBuffer(SDIFBuffer *b);
 void DeleteBuffer(SDIFBuffer *goner);
 void PrintAllTheBuffers(void);
 void SDIFbuffer_changeStreamID(SDIFBuffer *x, long newStreamID);
 void SDIFbuffer_changeFrameType(SDIFBuffer *x, t_symbol *newFrameType);
+void SDIFbuffer_timeShift(SDIFBuffer *x);
 void SDIFbuffer_debug(SDIFBuffer *x, long debugMode);
 
 
@@ -147,7 +144,7 @@ void main(fptr *fp) {
 	SDIFresult r;
 	
 	post("SDIF-buffer version " SDIF_BUFFER_VERSION " by Matt Wright and Tim Madden");
-	post("Copyright © 1999,2000,01,02 Regents of the University of California.");
+	post("Copyright © 1999-2004 Regents of the University of California.");
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFbuffer_class, (method)SDIFbuffer_new, (method)SDIFbuffer_free,
@@ -166,21 +163,32 @@ void main(fptr *fp) {
 	addmess((method)SDIFbuffer_writefile, "write", A_SYM, 0);
 	addmess((method)SDIFbuffer_changeStreamID, "change-streamID", A_LONG, 0);
 	addmess((method)SDIFbuffer_changeFrameType, "change-frametype", A_SYM, 0);
+	addmess((method)SDIFbuffer_timeShift, "timeshift", 0);
 	addmess((method)SDIFbuffer_debug, "debug", A_LONG, 0);
 
-
-
-	/* list object in the new object list */
-	finder_addclass("Data","SDIF-buffer");
-	
+  //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
-		ouchstring("Couldn't initialize SDIF library! %s", SDIF_GetErrorString(r));
+		ouchstring("%s: Couldn't initialize SDIF library! %s", 
+		           FINDER_NAME,
+		           SDIF_GetErrorString(r));
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
-		ouchstring("Couldn't initialize SDIF memory utilities! %s", SDIF_GetErrorString(r));
+		ouchstring("%s: Couldn't initialize SDIF memory utilities! %s", 
+		           FINDER_NAME,
+		           SDIF_GetErrorString(r));
 	}
 
+	if (r = SDIFbuf_Init()) {
+		ouchstring("%s: Couldn't initialize SDIF buffer utilities! %s", 
+		           FINDER_NAME,
+		           SDIF_GetErrorString(r));
+		return;
+	}
+
+	/* list object in the new object list */
+	finder_addclass("Data", FINDER_NAME);
+	
 #ifdef NAVIGATION_SERVICES	
 	if (!NavServicesAvailable()) {
 		post("¥ SDIF-buffer: navigation services are not available.");
@@ -219,10 +227,11 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 	x->s_myname = name;
 	x->FrameLookup = ListSearch;
 	x->FrameInsert = ListInsert;
+	x->FrameDelete = ListDelete;    //  NOTE: this has never actually been implemented (0.8.0)
+	x->BufferAccessor = GetBuffer;
 	x->internal = getbytes((short) sizeof(SDIFBufferPrivate));
 	privateStuff = (SDIFBufferPrivate *) x->internal;
-	privateStuff->head = 0;	
-	privateStuff->tail = 0;	
+  privateStuff->buf = SDIFbuf_Create();
 	privateStuff->debug = 0;	
 
 	SDIFbuffer_doclear(x);
@@ -236,41 +245,25 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 	return (x);
 }
 
-static void SDIFbuffer_freeWholeStream(SDIFBuffer *x) {
-	SDIFmem_Frame f, next;
-	SDIFBufferPrivate *privateStuff;
-
-	privateStuff = (SDIFBufferPrivate *) x->internal;	
-	f = privateStuff->head;
-	
-	while (f != NULL) {
-		next = f->next;
-		SDIFmem_FreeFrame(f);
-		f = next;
-	}
-}
-
 void SDIFbuffer_free(SDIFBuffer *x) {
-	
-	
-	SDIFbuffer_freeWholeStream(x);
+	SDIFBufferPrivate *privateStuff;
+  
+	privateStuff = (SDIFBufferPrivate *) x->internal;	
+
+  SDIFbuf_Free(privateStuff->buf);
 	DeleteBuffer(x);
 	
 }
 
 void SDIFbuffer_doclear(SDIFBuffer *x) {
 	SDIFBufferPrivate *privateStuff;
+  
+	privateStuff = (SDIFBufferPrivate *) x->internal;	
 
-	SDIFbuffer_freeWholeStream(x);
+  SDIFbuf_Clear(privateStuff->buf);
+
 	x->fileName = 0;
 	x->streamID = 1;
-	SDIF_Copy4Bytes(x->frameType, "----");
-	x->min_time = 0.0;
-	x->max_time = 0.0;
-
-	privateStuff = (SDIFBufferPrivate *) x->internal;
-	privateStuff->head = 0;	
-	privateStuff->tail = 0;	
 }	
 
 void SDIFbuffer_clear(SDIFBuffer *x) {
@@ -420,21 +413,17 @@ static FILE *OpenSDIFFile(char *filename) {
 
 
 
-
-
-
 void SDIFbuffer_changeStreamID(SDIFBuffer *x, long newStreamID) {
 	SDIFBufferPrivate *privateStuff;
 	SDIFmem_Frame f;
 		
 	privateStuff = (SDIFBufferPrivate *) x->internal;
-	for (f = privateStuff->head; f != 0; f = f->next) {
+	for (f = SDIFbuf_GetFirstFrame(privateStuff->buf); f != 0; f = f->next) {
 		f->header.streamID = newStreamID;	
 	}
 	
 	x->streamID = newStreamID;
 }
-
 
 
 void SDIFbuffer_changeFrameType(SDIFBuffer *x, t_symbol *newFrameType) {
@@ -448,14 +437,17 @@ void SDIFbuffer_changeFrameType(SDIFBuffer *x, t_symbol *newFrameType) {
 	}
 	
 	privateStuff = (SDIFBufferPrivate *) x->internal;
-	for (f = privateStuff->head; f != 0; f = f->next) {
+	for (f = SDIFbuf_GetFirstFrame(privateStuff->buf); f != 0; f = f->next) {
 		SDIF_Copy4Bytes(f->header.frameType, type);	
 	}
-	
-	SDIF_Copy4Bytes(x->frameType, type);	
 }
 
 
+void SDIFbuffer_timeShift(SDIFBuffer *x) {
+	SDIFBufferPrivate *privateStuff = (SDIFBufferPrivate *) x->internal;
+	
+	SDIFbuf_TimeShiftToZero(privateStuff->buf);
+}
 
 
 /* Methods I want:
@@ -473,123 +465,66 @@ void SDIFbuffer_readstreamnumber(SDIFBuffer *x, Symbol *fileNameSymbol, long str
 	
 
 	// post("SDIFbuffer_readstreamnumber: file %s, stream %ld", fileName->s_name, streamID);
-	ReadStream(x, fileNameSymbol->s_name, STREAM_NUMBER, streamID);
+	ReadStream(x, fileNameSymbol->s_name, ESDIF_WHICH_STREAM_NUMBER, streamID);
 
 		
 }
 
 
-void ReadStream(SDIFBuffer *x, char *filename, WhichStreamMode mode, long arg) {	
-	FILE *f;
-	SDIF_FrameHeader fh;
-	SDIFmem_Frame previous, current, first;
-	SDIFBufferPrivate *privateStuff;
-	SDIFresult r;
-	sdif_int32 streamID;
-	
-	
-	privateStuff = (SDIFBufferPrivate *) x->internal;
+void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long arg) {  
+  FILE *f;
+  SDIFmem_Frame first;
+  SDIFBufferPrivate *privateStuff;
+  SDIFresult r;
+  sdif_int32 streamID;
+  
+  privateStuff = (SDIFBufferPrivate *) x->internal;
 
-	if (mode == STREAM_NUMBER) {
-		streamID = arg;
-	} else {
-		post("SDIF-buffer: ReadStream: unrecognized mode %ld", mode);
-		return;
-	}	
-	
-	if (privateStuff->debug) {
-		post(" SDIF-buffer debug: trying to read stream %d from file \"%s\"", streamID, filename);
-	}
+  if (mode == ESDIF_WHICH_STREAM_NUMBER) {
+    streamID = arg;
+  } else {
+    post("SDIF-buffer: ReadStream: unrecognized mode %ld", mode);
+    return;
+  }  
+#ifdef KLUDGE
+  //  SDIFbuf_BeginReadStream() should do this check, and return "bad argument" error
+#endif
+  
+  if (privateStuff->debug) {
+    post(" SDIF-buffer debug: trying to read stream %d from file \"%s\"", streamID, filename);
+  }
 
-			
-	f = OpenSDIFFile(filename);
-	if (f == NULL) {
-		/* OpenSDIFFile already printed an error message */
-		return;
-	} else {
-		/* If there was a stream in this buffer before, flush it. */
-		SDIFbuffer_doclear(x);
-	}
+  //  open requested file
+  //  (handle sordid details of mac file/path spec)
+  f = OpenSDIFFile(filename);
+  if (f == NULL) {
+    //  OpenSDIFFile already printed an error message
+    return;
+  }
+  
+  //  reset buffer state
+  SDIFbuffer_doclear(x);
 
-	if (privateStuff->debug) {
-		post(" SDIF-buffer debug: opened \"%s\" for reading", filename);
-	}
+  if (privateStuff->debug) {
+    post(" SDIF-buffer debug: opened \"%s\" for reading", filename);
+  }
 
+  //  read the requested stream
+  r = SDIFbuf_BeginReadStream(privateStuff->buf, f, mode, arg);
 
-	first = current = previous = (SDIFmem_Frame) NULL;
-	
-	while ((r = SDIF_ReadFrameHeader(&fh, f)) == 0) {
-		if (privateStuff->debug) {
-			post(" SDIF-buffer debug: read frame header: stream %d, time %g, size %d",
-				 fh.streamID, fh.time, fh.size);
-		}
-		if (fh.streamID == streamID) {
-			/* We want this one */
-			r = SDIFmem_ReadFrameContents(&fh, f, &current);
-			if (r) {
-				post("¥ SDIF-buffer: error reading frame from SDIF file %s:", filename);
-				post("  %s", SDIF_GetErrorString(r));
-				SDIF_CloseRead(f);
-				return;
-			}
-			
-			if (privateStuff->debug) {
-				post(" SDIF-buffer debug: read contents of frame", fh.streamID, fh.time);
-			}
-
-			current->prev = previous;
-			current->next = NULL;
-			
-			if (first == NULL) {
-				first = current;
-			} else {
-				previous->next = current;
-			}
-			previous = current;
-		} else {
-			if (r = SDIF_SkipFrame(&fh, f)) {
-				post("¥ SDIF-buffer: error skipping frame in SDIF file %s:", filename);
-				post("  %s", SDIF_GetErrorString(r));
-				SDIF_CloseRead(f);
-				return;
-			}
-			if (privateStuff->debug) {
-				post(" SDIF-buffer debug: skipped contents of frame", fh.streamID, fh.time);
-			}
-			
-		}
-	}
-	
-
-	if (r != ESDIF_END_OF_DATA) {
-		post("¥ SDIF-buffer: error reading SDIF file %s:", filename);
-		post("  %s", SDIF_GetErrorString(r));
-		SDIF_CloseRead(f);
-		return;
-	}
-	
-	if (r = SDIF_CloseRead(f)) {
-		post("¥ SDIF-buffer: error closing SDIF file %s:", filename);
-		post(" %s", SDIF_GetErrorString(r));
-	}
-		
-	if (first == NULL) {
-		post("¥ SDIFbuffer_readstreamnumber: No frames found with StreamID %ld!",
-			 streamID);
-		return;
-	}
-	
-	/* Now update all the buffer's state according to the newly read data */
-	privateStuff->head = first;
-	privateStuff->tail = current;
-	x->fileName = filename;
-	x->streamID = first->header.streamID;
-	SDIF_Copy4Bytes(x->frameType, first->header.frameType);
-	x->min_time = first->header.time;
-	x->max_time = current->header.time;
+  if(!(first = SDIFbuf_GetFirstFrame(privateStuff->buf))) {
+    post("¥ SDIFbuffer_readstreamnumber: No frames found with StreamID %ld!",
+       streamID);
+    return;
+  }
+#ifdef KLUDGE
+  //  should go ahead and update buffer state anyhow, even if no frames in stream
+#endif
+  
+  //  update all the buffer's state according to the newly read data
+  x->fileName = filename;
+  x->streamID = first->header.streamID;
 }
-
-
 
 
 
@@ -731,162 +666,71 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 	}
 }	
 
-static SDIFmem_Frame ListSearch(SDIFBuffer *x, sdif_float64 time, long direction) {
-	/// XXX: This belongs in SDIFmem.c
-	SDIFmem_Frame f;
-	SDIFBufferPrivate *privateStuff;
 
-	// post("* ListSearch(SDIF-buffer %s, time %f, dir %d)", x->s_myname->s_name, (float) time, direction);
-	
-	privateStuff = (SDIFBufferPrivate *) x->internal;	
-	f = privateStuff->head;
-	
-	if (f == 0) return 0;
-	if (time < f->header.time) {
-		/* Requested time is before time of first frame */
-		if (direction > 0) return f;
-		return 0;
-	}
-	
-	// Loop invariant: time >= f->header.time
-	while (f != 0) {
-		if (time == f->header.time) {
-			return f;
-		}
-		if (f->next == 0) {
-			/* Requested time is after time of last frame */
-			if (direction < 0) return f;
-			return 0;
-		}
-			
-		if (time < f->next->header.time) {
-			/* Requested time is between this frame and next frame */
-			if (direction < 0) return f;
-			if (direction > 0) return f->next;
-			return 0;
-		}
-			
-		f = f->next;
-	}
-	
-	/* Should never reach here */
-	return 0;
+//  0.8.0: this replaces ListSearch(), ListInsert(), and ListDelete(), letting the client
+//  object do its own manipulation of SDIF frames, through the API defined in sdif-buf.h
+SDIFbuf_Buffer GetBuffer(struct _SDIFbuffer *x)
+{
+	SDIFBufferPrivate *privateStuff = (SDIFBufferPrivate *) x->internal;
+
+  return privateStuff->buf;
 }
 
-static SDIFmem_Frame OldListSearch(SDIFBuffer *x, sdif_float64 time) {
-	SDIFmem_Frame f;
+
+static SDIFmem_Frame ListSearch(SDIFBuffer *x, sdif_float64 time, long direction) {
+ 	SDIFsearchMode mode;
 	SDIFBufferPrivate *privateStuff;
 
-	privateStuff = (SDIFBufferPrivate *) x->internal;	
-	f = privateStuff->head;
+	privateStuff = (SDIFBufferPrivate *) x->internal;
 	
-	if (f == 0) return 0;
-	if (f->header.time > time) return 0;
-	
-	while (f != 0) {
-		if (f->next == 0 || f->next->header.time > time) {
-			return f;
-		}
-		f = f->next;
-	}
-	
-	/* Should never reach here */
-	return 0;
+	// post("* ListSearch(SDIF-buffer %s, time %f, dir %d)", x->s_myname->s_name, (float) time, direction);
+
+  if(direction < 0)
+    mode = ESDIF_SEARCH_BACKWARDS;
+  else if (direction == 0)
+    mode = ESDIF_SEARCH_EXACT;
+  else
+    mode = ESDIF_SEARCH_FORWARDS;
+  
+  return SDIFbuf_GetFrame(privateStuff->buf, time, mode);
 }
 
 
 static int ListInsert(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
-	sdif_float64 time = newf->header.time;
-	SDIFmem_Frame f;
 	SDIFBufferPrivate *privateStuff;
+	SDIFresult r;
 
 	privateStuff = (SDIFBufferPrivate *) x->internal;	
-	f = privateStuff->head;
+  r = SDIFbuf_InsertFrame(privateStuff->buf, newf, FALSE);
+  
+  return r;
+}
 
-	//post("** ListInsert frame %p into buffer %p", newf, x);
-	
-	if (f == 0) {
-		// This is the only frame;
-		// post("** ListInsert -- the only frame");
-		newf->prev = newf->next = 0;
-		privateStuff->head = privateStuff->tail = newf;
-		x->min_time = x->max_time = newf->header.time;
-		return 0;
-	}
-	
-	if (time < f->header.time) {
-		// This is the new first frame
-		// post("** ListInsert -- the new first frame");
 
-		newf->prev = NULL;
-		newf->next = privateStuff->head;
-		privateStuff->head->prev = newf;
-		privateStuff->head = newf;
-		
-		x->min_time = newf->header.time;
-		return 0;
-	}
-	
-	// Loop invariant: time >= f->header.time
-	while (f != 0) {
-		if (time == f->header.time) {
-			// There's already a frame at this exact time
-			post("¥ SDIF-buffer %s: can't insert a frame at time %f; there's already a frame at that time.",
-				 x->s_myname->s_name, time);
-			return 1;
-		}
-		if (f->next == 0) {
-			// This is the new last frame
-			// post("** ListInsert -- the new last frame");
-			newf->prev = privateStuff->tail;
-			newf->next = NULL;
-			privateStuff->tail->next = newf;
-			privateStuff->tail = newf;
-			x->max_time = newf->header.time;
-			return 0;
-		}
-		
-		if (time < f->next->header.time) {
-			/* The new frame belongs between f and f->next. */
-			SDIFmem_Frame before, after;
-			
-			// post("** ListInsert -- new frame belongs between f and f->next");
-			before = f;
-			after = f->next;
-			
-			newf->prev = before;
-			newf->next = after;
-			before->next = newf;
-			after->prev = newf;
-			return 0;
-		}			
-		f = f->next;
-	}	
-
-	/* Should never reach here */
-	return 10;
+//  this has never actually been implemented (0.8.0)
+static void ListDelete(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
 }
 
 
 void SDIFbuffer_print(SDIFBuffer *x) {
-	SDIFBufferPrivate *privateStuff;
-	SDIFmem_Frame f;
+	SDIFBufferPrivate *privateStuff = (SDIFBufferPrivate *) x->internal;
+	SDIFmem_Frame head, f;
 	int numFrames;
-
-	
-	
+	sdif_float64 tMin, tMax;
+		
 	post("SDIFBuffer %s: file \"%s\"", x->s_myname->s_name, x->fileName);
-	post("   Stream ID %ld, Frame Type %c%c%c%c", x->streamID,
-		x->frameType[0], x->frameType[1], x->frameType[2], x->frameType[3]);
-	post("   Min time %g, Max time %g", x->min_time, x->max_time);
-	
-	privateStuff = (SDIFBufferPrivate *) x->internal;
-	
-	if (privateStuff->head == 0) {
+	if(head = SDIFbuf_GetFirstFrame(privateStuff->buf))
+	{
+  	post("   Stream ID %ld, Frame Type %c%c%c%c", x->streamID,
+  		head->header.frameType[0], head->header.frameType[1], head->header.frameType[2], head->header.frameType[3]);
+  	SDIFbuf_GetMinTime(privateStuff->buf, &tMin);
+  	SDIFbuf_GetMaxTime(privateStuff->buf, &tMax);
+  	post("   Min time %g, Max time %g", tMin, tMax);
+  }
+  else
 		post("   No frames!");
-	}
 	
-	for (f = privateStuff->head, numFrames=0; f != NULL; f = f->next, ++numFrames) {
+	for (f = head, numFrames=0; f != NULL; f = f->next, ++numFrames) {
 		if (numFrames < 10) PrintOneFrame(f);
 	}
 	if (numFrames >= 10) post("  ... and so on, %d frames total.", numFrames);
@@ -1072,14 +916,16 @@ void SDIFbuffer_writefile(SDIFBuffer *x, Symbol *fileName) {
 	SDIFresult r;
 	FILE *fp;
 	SDIFBufferPrivate *privateStuff;
-	SDIFmem_Frame f;
+	SDIFmem_Frame f, head;
 
 	
 
-	post("** SDIFbuffer_writefile (%p, %s)", x, fileName->s_name);
+	// post("** SDIFbuffer_writefile (%p, %s)", x, fileName->s_name);
 
 	privateStuff = (SDIFBufferPrivate *) x->internal;
-	if (privateStuff->head == 0) {
+
+  head = SDIFbuf_GetFirstFrame(privateStuff->buf);  
+	if (head == 0) {
 		post("¥ SDIFbuffer %s is empty; not writing", x->s_myname->s_name);
 		return;
 	}
@@ -1091,7 +937,7 @@ void SDIFbuffer_writefile(SDIFBuffer *x, Symbol *fileName) {
 		return;
 	}
 	
-	for (f = privateStuff->head; f != 0; f = f->next) {
+	for (f = head; f != 0; f = f->next) {
 		r = SDIFmem_WriteFrame(fp, f);
 		if (r) {
 			post("¥ SDIFbuffer: problem writing frame to file %s: %s",

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2000.  The Regents of the University of California
+Copyright (c) 2000-2004.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -12,7 +12,7 @@ Avenue, Suite 510, Berkeley, CA 94720-1620, (510) 643-7201, for commercial
 licensing opportunities.
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley.
+University of California, Berkeley. Maintenance by Ben "Jacobs".
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
@@ -34,11 +34,14 @@ University of California, Berkeley.
  11/15/00 SDIF-listpoke.c -- the SDIF-listpoke object
  A Max SDIF-buffer mutator object
  
- V 0.1 021120 - Added "numcolumns" method
+ V 0.1   021120 - Added "numcolumns" method
+ V 0.1.1 040405 (bj) - updated to use sdif-buf.c
+ V 0.1.2 040622 (bj) - cleanup
   	
  -- */
 
-#define SDIF_LISTPOKE_VERSION "0.0"
+#define SDIF_LISTPOKE_VERSION "0.1.1"
+#define FINDER_NAME "SDIF-listpoke"
 
 #define MAX_NUM_COLUMNS 100
 
@@ -76,6 +79,7 @@ typedef struct _SDIFlistpoke {
 	struct object t_ob;
 	t_symbol *t_bufferSym;
 	SDIFBuffer *t_buffer;
+	SDIFbuf_Buffer t_buf;
  	void *t_out;
  	int t_errorreporting;
  	int t_complainedAboutEmptyBufferAlready;
@@ -98,6 +102,8 @@ void *SDIFlistpoke_class;
 
 /* prototypes for my functions */
 void *SDIFlistpoke_new(Symbol *s, short argc, Atom *argv);
+void *my_getbytes(int numBytes);
+void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFlistpoke *x);
 static void SDIFlistpoke_set(SDIFlistpoke *x, Symbol *bufName);
 static void SDIFlistpoke_errorreporting(SDIFlistpoke *x, long yesno);
@@ -148,8 +154,30 @@ void main() {
 	addmess((method)SDIFlistpoke_newmatrix, "newmatrix", A_GIMME, 0);
 	addmess((method)SDIFlistpoke_matrixtype, "matrixtype", A_DEFSYM, 0);
 
+  //  initialize SDIF libraries
+	if (r = SDIF_Init()) {
+		ouchstring("%s: Couldn't initialize SDIF library! %s", 
+		           FINDER_NAME,
+		           SDIF_GetErrorString(r));
+    return;
+	}
+	
+	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
+		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
+		     FINDER_NAME,
+		     SDIF_GetErrorString(r));
+    return;
+	}
+		
+	if (r = SDIFbuf_Init()) {
+		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
+		     FINDER_NAME,
+		     SDIF_GetErrorString(r));
+		return;
+	}
+
 	/* list object in the new object list */
-	finder_addclass("Data","SDIF-tuples");
+	finder_addclass("Data", FINDER_NAME);
 	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
@@ -193,7 +221,7 @@ void *SDIFlistpoke_new(Symbol *, short argc, Atom *argv) {
 
 static void SDIFlistpoke_version(SDIFlistpoke *x) {
 	post("SDIF-listpoke version " SDIF_LISTPOKE_VERSION " by Matt Wright");
-	post("Copyright © 2000 Regents of the University of California.");
+	post("Copyright © 2000-2004 Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFlistpoke *x) {
@@ -213,8 +241,19 @@ static void LookupMyBuffer(SDIFlistpoke *x) {
 	SDIFBufferLookupFunction f;
 	
 	f = (SDIFBufferLookupFunction) ps_SDIF_buffer_lookup->s_thing;
-	x->t_buffer = (*f)(x->t_bufferSym);
+	if (f == 0) {
+		/* No SDIF buffer has ever been created yet. */
+		x->t_buffer = 0;
+	} else {
+		x->t_buffer = (*f)(x->t_bufferSym);
+	}
 #endif
+
+  //  get access to the SDIFbuf_Buffer instance
+  if (x->t_buffer)
+    x->t_buf = (x->t_buffer->BufferAccessor)(x->t_buffer);
+  else
+    x->t_buf = NULL;
 }
 
 static void SDIFlistpoke_set(SDIFlistpoke *x, Symbol *bufName) {
@@ -353,6 +392,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *, short argc, Atom *a
 	SDIFmem_Frame f;
 	SDIFmem_Matrix m;
 	float *mdata;
+	char myFrameType[4];
 	char myMatrixType[4];
 	SDIFresult r;
 
@@ -382,10 +422,18 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *, short argc, Atom *a
 		post("¥ SDIF-listpoke: no buffer!");
 		return;
 	}
-			
 
+  //  decide the frame type
+  if(f = SDIFbuf_GetFirstFrame(x->t_buf))
+    SDIF_Copy4Bytes(myFrameType, f->header.frameType);
+  else
+    //  we are about to create first frame in the buffer
+    //  (give it the same type as the matrix we are adding)
+    SDIF_Copy4Bytes(myFrameType, x->t_matrixType);
+  
+  //  decide the matrix type
 	if (x->t_mainMatrix) {
-		SDIF_Copy4Bytes(myMatrixType, x->t_buffer->frameType);
+		SDIF_Copy4Bytes(myMatrixType, myFrameType);
 	} else {
 		SDIF_Copy4Bytes(myMatrixType, x->t_matrixType);
 	}
@@ -405,8 +453,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *, short argc, Atom *a
 			return;
 		}
 		
-		
-		SDIF_Copy4Bytes(f->header.frameType, x->t_buffer->frameType);
+		SDIF_Copy4Bytes(f->header.frameType, myFrameType);
 		f->header.time = x->t_time;
 		f->header.streamID = x->t_buffer->streamID;
 		

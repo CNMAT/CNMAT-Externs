@@ -1,0 +1,35 @@
+SDIF-info version 0.0.1 by Matt Wright
+Copyright © 2002 Regents of the University of California.
+SDIF-tuples version 0.5.0 by Matt Wright
+Copyright © 1999-2004 Regents of the University of California.
+SDIF-buffer version 0.8.0 by Matt Wright and Tim Madden
+Copyright © 1999-2004 Regents of the University of California.
+t01: bang
+SDIFBuffer buf2: file "unit_test2.sdif"
+   Stream ID 1, Frame Type HELO
+   Min time 4, Max time 5
+ Frame header: type HELO, size 64, time 4, stream ID 1, 1 matrices
+  Matrix header: type HELO, data type 4, 2 rows, 4 cols
+ Frame header: type HELO, size 64, time 5, stream ID 1, 1 matrices
+  Matrix header: type HELO, data type 4, 2 rows, 4 cols
+t02: bang
+print:  1.000000 2.000000 3.000000 4.000000 5.000000 6.000000 7.000000 8.000000
+t03: bang
+print:  1.000000 2.000000 3.000000 4.000000 5.000000 6.000000 7.000000 8.000000
+t04: bang
+t05: bang
+print:  1.000000 3.000000 5.000000 7.000000
+t06: bang
+print:  1.500000 3.500000 5.500000 7.500000
+t07: bang
+print:  2.000000 4.000000 6.000000 8.000000
+t08: bang
+t09: bang
+print: /name  buf2
+print: /filename  unit_test2.sdif
+print: /streamID  1
+print: /frameType  HELO
+print: /minTime  4.000000
+print: /maxTime  5.000000
+print: /numFrames  2
+t10: bang

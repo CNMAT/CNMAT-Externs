@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2002.  The Regents of the University of California
+Copyright (c) 2002-2004.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -12,7 +12,7 @@ Avenue, Suite 510, Berkeley, CA 94720-1620, (510) 643-7201, for commercial
 licensing opportunities.
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley.
+University of California, Berkeley. Maintenance by Ben "Jacobs".
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
@@ -34,10 +34,14 @@ University of California, Berkeley.
  5/17/2 SDIF-info.c -- the SDIF-info object
  A Max SDIF-buffer selector object
  
- 	
- -- */
+ 04/05/2004 0.0.1 (bj): updated to use sdif-buf.c
+ 06/22/2004 0.0.2 (bj): cleanup
+ 
+*/
 
-#define SDIF_INFO_VERSION "0.0"
+#define SDIF_INFO_VERSION "0.0.1"
+#define FINDER_NAME "SDIF-info"
+
 
 #include <string.h>
 #include <float.h>
@@ -53,7 +57,7 @@ University of California, Berkeley.
 #undef sscanf
 
 #include <stdio.h>
-#include "SDIF-buffer.h"
+#include "SDIF-buffer.h"  //  includes "sdif.h", "sdif-mem.h", "sdif-buf.h"
 #define VERY_SMALL ((sdif_float64) -(DBL_MAX))
 
 /* #include <assert.h> */
@@ -67,11 +71,14 @@ typedef struct _SDIFinfo {
 	struct object t_ob;
 	t_symbol *t_bufferSym;
 	SDIFBuffer *t_buffer;
+	SDIFbuf_Buffer t_buf;
  	void *t_out;
 } SDIFinfo;
 
 /* prototypes for my functions */
 void *SDIFinfo_new(Symbol *s, short argc, Atom *argv);
+void *my_getbytes(int numBytes);
+void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFinfo *x);
 static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName);
 static void SDIFinfo_bang(SDIFinfo *x);
@@ -87,6 +94,8 @@ Symbol *ps_name, *ps_filename, *ps_streamID, *ps_frameType, *ps_minTime, *ps_max
 
 void main(fptr *fp)
 {
+  SDIFresult r;
+  
 	SDIFinfo_version(0);
 	
 	/* tell Max about my class. The cast to short is important for 68K */
@@ -98,6 +107,28 @@ void main(fptr *fp)
 	addmess((method)SDIFinfo_version, "version", 0);
 	addbang((method)SDIFinfo_bang);
 	
+  //  initialize SDIF libraries
+	if (r = SDIF_Init()) {
+		ouchstring("%s: Couldn't initialize SDIF library! %s", 
+		           FINDER_NAME,
+		           SDIF_GetErrorString(r));
+    return;
+	}
+	
+	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
+		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
+		     FINDER_NAME,
+		     SDIF_GetErrorString(r));
+    return;
+	}
+		
+	if (r = SDIFbuf_Init()) {
+		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
+		     FINDER_NAME,
+		     SDIF_GetErrorString(r));
+		return;
+	}
+
 	ps_name = gensym("/name");
 	ps_filename = gensym("/filename");
 	ps_streamID = gensym("/streamID");
@@ -120,6 +151,7 @@ void *SDIFinfo_new(Symbol *, short argc, Atom *argv) {
 	
 	x = newobject(SDIFinfo_class);
 	x->t_buffer = 0;
+	x->t_buf = NULL;
 	x->t_out = listout(x);
 	
 	if (argc >= 1) {
@@ -135,9 +167,20 @@ void *SDIFinfo_new(Symbol *, short argc, Atom *argv) {
 	return (x);
 }
 
+static void *my_getbytes(int numBytes) {
+	if (numBytes > SHRT_MAX) {
+			return 0;
+	}
+	return (void *) getbytes((short) numBytes);
+}
+
+static void my_freebytes(void *bytes, int size) {
+	freebytes(bytes, (short) size);
+}
+
 static void SDIFinfo_version(SDIFinfo *x) {
 	post("SDIF-info version " SDIF_INFO_VERSION " by Matt Wright");
-	post("Copyright © 2002 Regents of the University of California.");
+	post("Copyright © 2002-2004 Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFinfo *x) {
@@ -164,6 +207,12 @@ static void LookupMyBuffer(SDIFinfo *x) {
 		x->t_buffer = (*f)(x->t_bufferSym);
 	}
 #endif
+
+  //  get access to the SDIFbuf_Buffer instance
+  if (x->t_buffer)
+    x->t_buf = (x->t_buffer->BufferAccessor)(x->t_buffer);
+  else
+    x->t_buf = NULL;
 }
 
 static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName) {
@@ -179,6 +228,10 @@ static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName) {
 
 static void SDIFinfo_bang(SDIFinfo *x) {
 	Atom outputArgs[1];	
+	sdif_float64 tMin, tMax;
+	SDIFmem_Frame f;
+	char frameTypeString[5];
+	Symbol *frameTypeSym;
 	
 	if (x->t_bufferSym == 0) {
 		post("¥ SDIF-info: no SDIF buffer name specified");
@@ -213,23 +266,23 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 	outlet_anything(x->t_out, ps_streamID, 1, outputArgs);
 	
 	/* /frameType */
+	if(f = SDIFbuf_GetFirstFrame(x->t_buf))
 	{
-		char frameTypeString[5];
-		Symbol *frameTypeSym;
-		
-		SDIF_Copy4Bytes(frameTypeString, x->t_buffer->frameType);
-		frameTypeString[4] = '\0';
-		frameTypeSym = gensym(frameTypeString);
-		
-		SETSYM(outputArgs, frameTypeSym);
-		outlet_anything(x->t_out, ps_frameType, 1, outputArgs);
-	}
+  	SDIF_Copy4Bytes(frameTypeString, f->header.frameType);
+  	frameTypeString[4] = '\0';
+  	frameTypeSym = gensym(frameTypeString);
+	
+  	SETSYM(outputArgs, frameTypeSym);
+  	outlet_anything(x->t_out, ps_frameType, 1, outputArgs);
+  }
 	
 	/* /minTime and /maxTime */
-	SETFLOAT(outputArgs, x->t_buffer->min_time);
+	SDIFbuf_GetMinTime(x->t_buf, &tMin);
+	SETFLOAT(outputArgs, tMin);
 	outlet_anything(x->t_out, ps_minTime, 1, outputArgs);
 	
-	SETFLOAT(outputArgs, x->t_buffer->max_time);
+	SDIFbuf_GetMaxTime(x->t_buf, &tMax);
+	SETFLOAT(outputArgs, tMax);
 	outlet_anything(x->t_out, ps_maxTime, 1, outputArgs);
 	
 	/* /numFrames */
