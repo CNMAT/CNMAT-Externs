@@ -332,52 +332,70 @@ static FILE *OpenSDIFFile(char *filename) {
 
 	// post("** Got path ID %d,filename %s", pathID, filenamecopy);
 	
+    /* Turning pathID into a FILE * is platform-specific: */
+    
+#ifdef WIN_VERSION
+    {
+		short maxErr;
+		char fullpath[256];
+		char conformed[256];
+		maxErr = path_topathname(pathID, filenamecopy, fullpath);
+		if (maxErr) {
+			error("path_topathname returned error code %d - can't open %s", maxErr, filename);
+			return NULL;
+		}
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
+		if (maxErr) {
+			error("path_nameconform returned error code %d - can't open %s", maxErr, filename);
+			return NULL;
+		}
+		f = fopen(conformed, "rb");
+		if (f == NULL) {
+			error("SDIF-buffer: fopen returned NULL; can't open %s", filename);
+			return NULL;
+		} 
+	}
+#else
+/* Macintosh version */
+
+#define PATH_SPEC_MEANS_FSSPEC
+#ifdef PATH_SPEC_MEANS_FSSPEC
 	result = path_tospec(pathID, filenamecopy, &ps);
-	
 	if (result != 0) {
 		post("¥ SDIF-buffer: couldn't make PATH_SPEC from SDIF file %s (path_tospec returned %ld)",
 			 filenamecopy, result);
 		return NULL;
 	}
 	
-    /* Dealing with the PATH_SPEC is platform-specific: */
-    
-#ifdef WIN_VERSION
-    Write me!    
-#else
-/* Macintosh version */
-
-#define PATH_SPEC_MEANS_FSSPEC
-#ifdef PATH_SPEC_MEANS_FSSPEC
-	// post("FSSpec: vRefNum %ld, parID %ld, name %c", ps.vRefNum, ps.parID, ps.name[0]);
-
 	f = FSp_fopen (&ps, "rb");
 
 	if (f == NULL) {
-		post("¥ SDIF-buffer: FSp_fopen returned NULL!");
-	} else {
-		if (r = SDIF_BeginRead(f)) {
-			int ferrno;
-			post("¥ SDIF-buffer: error reading SDIF file %s:", filename);
-			post("  %s", SDIF_GetErrorString(r));
-			
-			ferrno = ferror(f);
-			post("  ferror() returned %ld:", ferrno);
-			post("      %s", strerror(ferrno));
-			
-			fclose(f);
-			return NULL;
-		}
+		error("SDIF-buffer: FSp_fopen returned NULL; can't open %s", filename);
+		return NULL;
+	} 
+#else 	
+#error What do I do with a PATH_SPEC?	
+#endif /* PATH_SPEC_MEANS_FSSPEC */
+#endif /* WIN_VERSION */
+
+    /* Back to platform-independent code */
+    
+	if (r = SDIF_BeginRead(f)) {
+		int ferrno;
+		error("SDIF-buffer: error reading header of SDIF file %s:", filename);
+		error("  %s", SDIF_GetErrorString(r));
+		
+		ferrno = ferror(f);
+		error("  ferror() returned %ld:", ferrno);
+		error("      %s", strerror(ferrno));
+		
+		fclose(f);
+		return NULL;
 	}
 	
 	return f;
-#else 	
-#error What do I do with a PATH_SPEC?	
-#endif
 }
-#endif /* WIN_VERSION */
 #endif /* ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER */
-
 
 
 
