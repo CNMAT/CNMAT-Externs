@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 1999.  The Regents of the University of California
+Copyright (c) 1999, 2000,01,02,03  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -28,10 +28,13 @@ Wright's pitcher~ external.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+     
+     
+     Original version  7/19/99 
+     
+     Version 0.6 031215 Matt+MZed, compiles for OSX
+     */
 
-*/
-
-/* 7/19/99 */
 
 /* The totalt delay (latency) for this external is (x->minimumPitchSamps + 
   * x->outputDelay) samples. The delay of the (external) pitch detectro should
@@ -40,7 +43,7 @@ Wright's pitcher~ external.
   * compensate.
   */
 
-#define PITCHER_VERSION "0.50"
+#define PITCHER_VERSION "0.6"
 
 /* The number of elements in the circular array. */
 /* The size of this buffer will not affect latency. It should be chosen according
@@ -169,7 +172,7 @@ void main(void) {
 	post("pitcher~ version " PITCHER_VERSION " by Brian K. Vogel");
 	post("Copyright © 1999 Regents of the University of California.  ");
 
-    setup(&pitcher_class, pitcher_new, (method)pitcher_free, (short)sizeof(t_pitcher),
+    setup((t_messlist **)&pitcher_class, (method)pitcher_new, (method)pitcher_free, (short)sizeof(t_pitcher),
           0L, A_GIMME, 0);
     addmess((method)pitcher_dsp, "dsp", A_CANT, 0);
     addmess((method)pitcher_assist,"assist",A_CANT,0);
