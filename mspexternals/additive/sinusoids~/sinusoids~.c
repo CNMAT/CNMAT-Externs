@@ -37,12 +37,16 @@ University of California, Berkeley.
 	©1999 UC Regents, All Rights Reserved. 
 
 	Version 1.7, 030219, bandwidth-enhanced
+	Version 1.7.1, 041228, ability to toggle verbosity
 	
 */
+
+#define SINUSOIDS_VERSION "1.7.1"
 
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
+#include <string.h>  // For strcpy, for assist()
 
 #include "noise-table.h"
 
@@ -89,6 +93,7 @@ typedef struct
 	float *noisep;  // Points into the global noise table
 	
 	int debugPrintsRemaining;
+	Boolean verbose;
 } oscbank;
 typedef oscbank t_sinusoids;
 
@@ -100,6 +105,7 @@ void sinusoids_clear(t_sinusoids *x);
 void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
 void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
 void tellmeeverything(t_sinusoids *x);
+void sinusoids_verbose(t_sinusoids *x, long v);
 
 
 t_int *sinusoids_perform(t_int *w) {
@@ -344,7 +350,9 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 			// fp[i].phase_current = 0;
 			// fp[i].next_noisiness = 0.0f;
 			fp[i].next_amplitude = 0.0f;
-			error("sinusoids~: bad frequency %f for partial %ld (killing partial)", f, i+1);
+			if (x->verbose) {
+				error("sinusoids~: bad frequency %f for partial %ld (killing partial)", f, i+1);
+			}
 		} else {
 			fp[i].next_phase_inc = x->pk*f;	/* frequency	*/
 			fp[i].next_amplitude = a;		/* amplitude	*/
@@ -352,7 +360,9 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 		}
 		
 		if (b < 0.0f || b > 1.0f) {
-			error("sinusoids~: bad noisiness %f for partial %ld (setting to 0)", f, i+1);
+			if (x->verbose) {
+				error("sinusoids~: bad noisiness %f for partial %ld (setting to 0)", f, i+1);
+			}
 			fp[i].next_noisiness = 0.0f;
 		}
 		
@@ -367,9 +377,14 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 //		post("nosc %d x-nosc %d", nosc, x->nosc);
 }
 
-void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
-{
-	assist_string(3214,m,a,1,2,s);
+void sinusoids_assist(t_sinusoids *x, void *box, long msg, long arg, char *dstString) {
+	if (msg == ASSIST_INLET) {
+		strcpy(dstString, "(List) frequency, amplitude, (bandwidth) tuples");
+	} else if (msg = ASSIST_OUTLET) {
+		strcpy(dstString, "(Signal), Oscillator bank output");
+	} else {
+		error("sinusoids_assist: bad msg %ld", msg);
+	}	
 }
 
 void *sinusoids_new(t_symbol *s, short argc, t_atom *argv) {
@@ -387,6 +402,7 @@ void *sinusoids_new(t_symbol *s, short argc, t_atom *argv) {
     x->nosc = x->next_nosc = 0;
 	x->debugPrintsRemaining = 80;
 	x->is_bwe = 0;
+	x->verbose = 0;
 	x->noisep = &(NoiseTable[0]);
 	
 	if (argc > 0 && argv[0].a_type == A_SYM && argv[0].a_w.w_sym == ps_bwe) {
@@ -434,42 +450,23 @@ void main(void)
 {
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-	post("sinusoids~ 1.7 - Adrian Freed");
-	post("Copyright © 1996,97,98,99,2000,01,02,03 Regents of the University of California.");
+	post("sinusoids~ " SINUSOIDS_VERSION " - Adrian Freed");
+	post("Copyright © 1996-99,2000-04 Regents of the University of California.");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
     post("Never expires");
     
     // post("sizeof(NoiseTable) %ld", NTS());
 	Makeoscsinetable();
 
-#ifdef EXPIRE
-#define YEAR 1999
-#define MONTH 1
-#define MONTH1 12
-	post("Expires Dec 1999");
-	{
-		DateTimeRec date;
-		GetTime(&date);
-		if(date.year!=YEAR || date.month <MONTH || date.month >MONTH1)
-		{
-			post("Expired");
-		}
-		else
 
-#else
-{
-#endif
-
-			addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
-
-	}
+	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
 	addmess((method)sinusoids_list, "list", A_GIMME, 0);
 	addmess((method)sinusoids_clear, "clear", 0);
 	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0);
-	dsp_initclass();
-	rescopy('STR#',3214);
-	
+	addmess((method)sinusoids_verbose, "verbose", A_LONG, 0);
+
+	dsp_initclass();	
 	ps_bwe = gensym("bwe");
 }
 
@@ -483,5 +480,14 @@ void tellmeeverything(t_sinusoids *x) {
 			 o->amplitude, o->next_amplitude,
 			 ((float) o->phase_inc) / x->pk, ((float) o->next_phase_inc) / x->pk,
 			 o->noisiness, o->next_noisiness);
+	}
+}
+
+void sinusoids_verbose(t_sinusoids *x, long v) {
+	x->verbose = v;
+	if (x->verbose) {
+		post("sinusoids~: turned verbose mode on");
+	} else {
+		post("sinusoids~: turned verbose mode off");
 	}
 }
