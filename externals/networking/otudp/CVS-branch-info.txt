@@ -1,0 +1,13 @@
+OTUDP has major source code changes between the OS9 and OSX versions.
+
+Therefore there is a separate branch for the OS9 version called "OS9".
+
+The files otudp.c, otudp.r, and otudp.mcp are different between the two versions, 
+and appear in the two branches.
+
+The files otudp.help and otudp.rsrc are the same in both versions and therefore do not
+appear in the OS9 branch.  (Therefore future improvements to these files won't have to be
+reapplied to the branch.)
+
+-Matt 
+1/3/3
