@@ -50,20 +50,6 @@ Maintenance by Ben "Jacobs".
 
 /* the required include files */
 
-#ifdef WIN_VERSION
-#else
-#include <FSp_fopen.h>
-/*
-#if __ide_target("debug-classic") || __ide_target("release-classic")
-// OS9 
-#else
-// OSX 
-#endif
-*/
-#ifdef NAVIGATION_SERVICES	
-#include <Navigation.h>
-#endif
-#endif /* WIN_VERSION */
 
 #include "ext.h"
 #include <limits.h>
@@ -79,6 +65,8 @@ Maintenance by Ben "Jacobs".
 #undef sscanf
 
 #include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
+#include "open-sdif-file.h"
+
 
 /* #include <assert.h> */
 
@@ -286,114 +274,6 @@ void SDIFbuffer_debug(SDIFBuffer *x, long debugMode) {
 	
 	privateStuff->debug = debugMode;	
 }
-
-
-
-
-#ifdef ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER
-/* Life was so simple back in the old days.  
-   To open an SDIF file, we just called into the SDIF library and let it
-   call the stdio open() procedure.  All OpenSDIFFile() does is turn a
-   (user-supplied) filename into a FILE *.  */
-static FILE *OpenSDIFFile(char *filename) {
-	return SDIF_OpenRead(filename);
-}
-#else
-/* Use the Max API's locatefile_extended() to search for the file by name in the
-   Max search path. */
-   
-#define MAX_FILENAME_LEN 256
-#define MAX_FULLPATH_LEN 2000
-
-static FILE *OpenSDIFFile(char *filename) {
-	char filenamecopy[MAX_FILENAME_LEN];
-	char fullpath[MAX_FULLPATH_LEN];
-	short result, pathID;
-	long filetype;
-	PATH_SPEC ps;	
-	OSErr err;
-	FILE *f;
-	SDIFresult r;
-
-	
-	strncpy(filenamecopy, filename, MAX_FILENAME_LEN);
-	
-	result = locatefile_extended(filenamecopy, &pathID, &filetype, 0, 0);
-
-	
-	if (result != 0) {
-		post("¥ SDIF-buffer: couldn't locate alleged SDIF file %s in Max's search path (result %ld)", 
-			 filename, result);
-		return NULL;
-	}
-	
-
-	// post("** Got path ID %d,filename %s", pathID, filenamecopy);
-	
-    /* Turning pathID into a FILE * is platform-specific: */
-    
-#ifdef WIN_VERSION
-    {
-		short maxErr;
-		char fullpath[256];
-		char conformed[256];
-		maxErr = path_topathname(pathID, filenamecopy, fullpath);
-		if (maxErr) {
-			error("path_topathname returned error code %d - can't open %s", maxErr, filename);
-			return NULL;
-		}
-		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
-		if (maxErr) {
-			error("path_nameconform returned error code %d - can't open %s", maxErr, filename);
-			return NULL;
-		}
-		f = fopen(conformed, "rb");
-		if (f == NULL) {
-			error("SDIF-buffer: fopen returned NULL; can't open %s", filename);
-			return NULL;
-		} 
-	}
-#else
-/* Macintosh version */
-
-#define PATH_SPEC_MEANS_FSSPEC
-#ifdef PATH_SPEC_MEANS_FSSPEC
-	result = path_tospec(pathID, filenamecopy, &ps);
-	if (result != 0) {
-		post("¥ SDIF-buffer: couldn't make PATH_SPEC from SDIF file %s (path_tospec returned %ld)",
-			 filenamecopy, result);
-		return NULL;
-	}
-	
-	f = FSp_fopen (&ps, "rb");
-
-	if (f == NULL) {
-		error("SDIF-buffer: FSp_fopen returned NULL; can't open %s", filename);
-		return NULL;
-	} 
-#else 	
-#error What do I do with a PATH_SPEC?	
-#endif /* PATH_SPEC_MEANS_FSSPEC */
-#endif /* WIN_VERSION */
-
-    /* Back to platform-independent code */
-    
-	if (r = SDIF_BeginRead(f)) {
-		int ferrno;
-		error("SDIF-buffer: error reading header of SDIF file %s:", filename);
-		error("  %s", SDIF_GetErrorString(r));
-		
-		ferrno = ferror(f);
-		error("  ferror() returned %ld:", ferrno);
-		error("      %s", strerror(ferrno));
-		
-		fclose(f);
-		return NULL;
-	}
-	
-	return f;
-}
-#endif /* ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER */
 
 
 

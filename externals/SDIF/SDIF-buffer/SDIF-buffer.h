@@ -33,7 +33,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
    Structure definition of an MSP SDIF buffer
  */
 
-
+#include <stdio.h>
 #include "sdif.h"
 #include "sdif-mem.h"
 #include "sdif-buf.h"
