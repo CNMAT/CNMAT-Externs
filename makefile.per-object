@@ -1,0 +1,60 @@
+# This is included in the makefile for every Max external
+
+# Name of the object is the name of this directory
+OBJ := $(shell basename `pwd`)
+
+# Filenames derived from the name of the object
+SOURCE = $(OBJ).c
+HELPFILE = $(OBJ).help
+MAC_BINARY = ../build-mac/$(OBJ)
+MAC_HELPFILE_COPY = ../build-mac/$(OBJ).help 
+MAC_INDIVIDUAL_DOWNLOAD = ../build-mac/$(OBJ)$(VERSION_TAG).sit
+
+# Each VERSION.h file looks like this:  #define VERSION "1.2.3.4"
+# so get a Makefile variable that's just something like "1.2.3.4"
+DOUBLEQUOTED_VERSION := $(word 3,$(shell cat VERSION.h))
+# now a cheesy way to get rid of the double quotes:
+VERSION = $(shell echo $(DOUBLEQUOTED_VERSION))
+
+VERSION_TAG = -$(VERSION)
+
+
+all: mac-individual-download help-diff-warning
+
+clean:
+	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY)
+
+
+mac-binary: $(MAC_BINARY)
+
+# to make the MAC binary, have to open the Codewarrior project:
+$(MAC_BINARY): $(SOURCE)
+	@echo 'Please build the MAC version of' $(OBJ)
+	open $(OBJ).mcp
+
+
+mac-individual-download: $(MAC_INDIVIDUAL_DOWNLOAD)
+
+$(MAC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MAC_BINARY)
+	stuff -n $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_BINARY) $(HELPFILE)
+
+# Put a copy of the help file next to the Mac binary; maybe not necessary
+$(MAC_HELPFILE_COPY): $(OBJ).help
+	cp $(OBJ).help $(MAC_HELPFILE_COPY)
+
+# make sure help patch in correct source directory is the most recent
+# (even though it's the one in ../build-mac that's usually edited.)
+
+help-diff-warning: $(MAC_HELPFILE_COPY)
+	@ cmp -s $(OBJ).help $(MAC_HELPFILE_COPY) || \
+	echo ; echo WARNING\!; echo '$(MAC_HELPFILE_COPY) is different from $(OBJ).help' ; echo
+
+
+
+# Diagnostic stuff for debugging
+
+printenv:
+	printenv
+
+tellversiontag:
+	echo $(VERSION_TAG)
