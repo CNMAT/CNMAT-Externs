@@ -26,7 +26,7 @@ NAME: OpenSoundControl
 DESCRIPTION: Format Max data to OpenSoundControl protocol and vice versa
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
-VERSION: 1.9.1bar
+VERSION: 1.9.1
 STATUS: supported
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
