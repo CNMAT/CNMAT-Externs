@@ -34,6 +34,7 @@ Version 1.6 never expires
 Version 1.7 expires March 1, 2003
 Version 1.8 fixes peqbank_free bug
 Version 1.9 Added "biquads" message; expires 12/1/3
+Version 2.0 Never expires
 
 
 TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
@@ -44,7 +45,7 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 */
 
 
-#define PEQBANK_VERSION "1.9"
+#define PEQBANK_VERSION "2.0"
 
 /* How smooth mode works:
 
@@ -187,7 +188,6 @@ void main(void) {
 			(short)sizeof(t_peqbank), 0L, A_GIMME, 0);
 
 	{
-#define EXPIRE	
 #ifdef EXPIRE
 #define EXPIRATION_STRING "Expires December 1, 2003"
 		DateTimeRec date;
