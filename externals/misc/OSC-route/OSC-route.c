@@ -42,7 +42,7 @@ The OpenSound Control WWW page is
  */
  
 
-#define OSC_ROUTE_VERSION "1.10"
+#include "version.h"
 
 /* Version 1.04: Allows #1 thru #9 as typed-in arguments
    Version 1.05: Allows "list" messages as well as "message" messages.
@@ -51,6 +51,7 @@ The OpenSound Control WWW page is
    Version 1.08: 68K maxL code resource named correctly, so usable in collective
    Version 1.09: Allows special case prefix of /* that matches anything.
    Version 1.10: Assitance now says "for prefix /%s (subaddress + arguments)"
+   Version 1.10.1: New versioning system
 */
 
 
@@ -113,8 +114,8 @@ void main(fptr *f)
 	ps_slash = gensym("slash");
 	ps_emptySymbol = gensym("");
 	
-	post("OSC-route object version " OSC_ROUTE_VERSION " by Matt Wright. ");
-	post("Copyright © 1999,2000,01,02 Regents of the University of California. All Rights Reserved.");
+	post("OSC-route object version " VERSION " by Matt Wright.");
+	post("Copyright © 1999,2000-04 Regents of the University of California. All Rights Reserved.");
 
 }
 
@@ -207,7 +208,7 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 
 
 void OSCroute_version (OSCroute *x) {
-	post("OSC-route Version " OSC_ROUTE_VERSION
+	post("OSC-route Version " VERSION
 		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
 }
 
