@@ -58,12 +58,19 @@ University of California, Berkeley.
 #undef sscanf */
 
 #include <stdio.h>
+#include <limits.h>  // for SHRT_MAX
 #include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
 
 /* #include <assert.h> */
 #define assert(x) if (!(x)) { ouchstring("Assertion failed: %s, file %s, line %i\n", \
 							             #x, __FILE__, __LINE__); } else {}
 
+#ifdef WIN_VERSION
+#include <z_dsp.h>
+extern int isnan(double d) {
+	return IS_NAN_DOUBLE(d);
+}
+#endif
 
 /* My class definiton */
 
@@ -285,12 +292,17 @@ void SDIFranges_GetMaxNumColumns(SDIFranges *x, Symbol *matrixTypeSym) {
     if (resolveBufferAndMatrixType(x, matrixTypeSym, matrixType)) {
 		if (doGetMaxNumColumns(x, matrixType, &answer)) {
 			Atom outputArgs[1];	
-			SETFLOAT(outputArgs, answer);
+			SETLONG(outputArgs, answer);
 			outlet_anything(x->t_out, ps_maxcolumns, 1, outputArgs);
 		}
 	}
 }
 
+#ifdef WIN_VERSION
+// Workaround kludge
+#define getbytes16 getbytes
+#define freebytes16 freebytes
+#endif
 
 void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym) {
     char matrixType[4];
