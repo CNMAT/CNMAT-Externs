@@ -57,6 +57,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 #undef sscanf
 
 #include <stdio.h>
+
 #include "SDIF-buffer.h"  //  includes "sdif.h", "sdif-mem.h", "sdif-buf.h"
 #define VERY_SMALL ((sdif_float64) -(DBL_MAX))
 
@@ -268,21 +269,22 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 	/* /frameType */
 	if(f = SDIFbuf_GetFirstFrame(x->t_buf))
 	{
+	post("Frame %p, type %c%c%c%c", f, f->header.frameType[0], f->header.frameType[1], f->header.frameType[2], f->header.frameType[3]);
   	SDIF_Copy4Bytes(frameTypeString, f->header.frameType);
   	frameTypeString[4] = '\0';
   	frameTypeSym = gensym(frameTypeString);
 	
   	SETSYM(outputArgs, frameTypeSym);
   	outlet_anything(x->t_out, ps_frameType, 1, outputArgs);
-  }
+    }
 	
 	/* /minTime and /maxTime */
 	SDIFbuf_GetMinTime(x->t_buf, &tMin);
-	SETFLOAT(outputArgs, tMin);
+	SETFLOAT(outputArgs, (float) tMin);
 	outlet_anything(x->t_out, ps_minTime, 1, outputArgs);
 	
 	SDIFbuf_GetMaxTime(x->t_buf, &tMax);
-	SETFLOAT(outputArgs, tMax);
+	SETFLOAT(outputArgs, (float) tMax);
 	outlet_anything(x->t_out, ps_maxTime, 1, outputArgs);
 	
 	/* /numFrames */
