@@ -24,6 +24,16 @@
 // OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
 // MODIFICATIONS.
 
+/*
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: matlabcommunicate~
+DESCRIPTION: Bridge between Max/MSP and Matlab using the Matlab Engine
+AUTHORS: Peter Kassakian, Matt Wright
+COPYRIGHT_YEARS: 2005
+VERSION-1.0: Initial hacking by Matt
+VERSION: 1.0
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
 
 #include "ext.h"
 #include "z_dsp.h"
@@ -43,6 +53,7 @@ typedef struct _theobject
   void *x_floatout;
   float x_result;
   Engine *x_engine;
+  char matlabTextOutput[STRING_CAPACITY+1];
   int engineOpen;
   int verbose;
 } t_theobject;
@@ -63,6 +74,10 @@ void theobject_free(t_theobject *x);
 void theobject_closeEngine(t_theobject *x);
 static int MaxListToString(char *s, int capacity, short argc, t_atom *argv);
 void theobject_verbose(t_theobject *x, long yesno);
+void matlabbridge_version (t_theobject *x);
+
+void get_characteristics(const mxArray *array_ptr);
+
 
 void main(void)
 {
@@ -78,9 +93,10 @@ void main(void)
   // addbang((method)theobject_bang);
   addmess((method)theobject_list, "list", A_GIMME, 0);
   addmess((method)theobject_verbose, "verbose", A_LONG, 0);
+  addmess((method)matlabbridge_version, "version", 0);
   
-  
-  post("Matlabcommunicate main()");
+  post("Matlabcommunicate object version " VERSION " by " AUTHORS ".");
+  post("Copyright ¨ " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
   
   ps_ssh = gensym("ssh");
 }
@@ -137,8 +153,7 @@ void theobject_get(t_theobject *x, Symbol *variable) {
 
 
 void theobject_convalot(t_theobject *x, long size) {
-  int i;
-  char s[STRING_CAPACITY], t[STRING_CAPACITY];
+  char s[STRING_CAPACITY];
   mxArray *result;
   double *datptr ;
 
@@ -164,6 +179,7 @@ void theobject_convalot(t_theobject *x, long size) {
 
 void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv) {
   char s[STRING_CAPACITY];
+  mxArray *ans;
   
   if (!x->engineOpen || x->x_engine == NULL) {
 	error("matlabcommunicate: eval: Matlab engine is not open.");
@@ -176,7 +192,20 @@ void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
     if (x->verbose) post("to Matlab: \"%s\"", s);
   }
 
-  engEvalString(x->x_engine, s);  
+  engEvalString(x->x_engine, s);
+  // Skip ">>\n" that Matlab prints to stdout
+  if (x->verbose) post ("|%s|", x->matlabTextOutput+4);
+
+  if (strncmp(x->matlabTextOutput+4, "ans =", 5) == 0) {
+	post("Answer is in ans.");
+  }
+  
+  if ((ans = engGetVariable(x->x_engine,"ans")) == NULL)
+	   error("There is no variable ans.  (?)");
+  else {
+	  post("ans is class %s\t\n", mxGetClassName(ans));
+	  get_characteristics(ans);
+  }
 }
     
 void theobject_list(t_theobject *x, t_symbol *msg, short argc, t_atom *argv) {
@@ -243,7 +272,6 @@ void *theobject_new(Symbol *s, short argc, Atom *argv) {
 		return 0;
 	}
 #if 0
-
 	sprintf(s, "ssh %s \"/bin/csh -c 'setenv DISPLAY %s:0; matlab'\"", 
 			argv[1].a_w.w_sym->s_name, argv[1].a_w.w_sym->s_name);
 #endif  
@@ -261,7 +289,8 @@ void *theobject_new(Symbol *s, short argc, Atom *argv) {
   }
   
   t_theobject *x = (t_theobject *)newobject(theobject_class);
-  x->x_engine = x->engineOpen = 0;
+  x->x_engine = NULL;
+  x->engineOpen = 0;
   
   // dsp_setup((t_pxobject *)x,1);                 // The input signal
   // x->x_obj.z_misc |= Z_NO_INPLACE; 
@@ -280,8 +309,11 @@ void *theobject_new(Symbol *s, short argc, Atom *argv) {
   } else {
 	post("Matlab engine loaded successfully");
 	x->engineOpen = 1;
+
+    x->matlabTextOutput[STRING_CAPACITY] = '\0';
+    engOutputBuffer(x->x_engine, x->matlabTextOutput, STRING_CAPACITY);
   }
-  
+
   x->verbose = 1;
   return (x);
 }
@@ -341,4 +373,65 @@ static int MaxListToString(char *s, int capacity, short argc, t_atom *argv) {
 void theobject_verbose(t_theobject *x, long yesno) {
 	x->verbose = yesno;
 	post("matlabcommunicate: verbose %s", yesno ? "on" : "off");
+}
+
+void matlabbridge_version (t_theobject *x) {
+
+
+
+/* This code for dealing with an mxArray comes from the example provided by
+Matlab in extern/examples/mex/explore.c, adapted for Max. */
+
+/* get_characteristics figures out the size, and category 
+   of the input array_ptr, and then displays all this information. */ 
+void get_characteristics(const mxArray *array_ptr) {
+  const char    *name;
+  const char    *class_name;
+  const int     *dims;
+  char    *shape_string;
+  char    *temp_string;
+  int      c;
+  int      number_of_dimensions; 
+  int      length_of_shape_string;
+
+  int scalar = 0, list = 0;
+  
+  /* Display the mxArray's Dimensions; for example, 5x7x3.  
+     If the mxArray's Dimensions are too long to fit, then just
+     display the number of dimensions; for example, 12-D. */ 
+  number_of_dimensions = mxGetNumberOfDimensions(array_ptr);
+  dims = mxGetDimensions(array_ptr);
+  
+  post("%ld-dimensional array", number_of_dimensions);
+  if (number_of_dimensions > 2) {
+	post("sorry; Max can't handle more than 2 dimensions.");
+	return;
+  } else if (number_of_dimensions == 2) {
+	if (dims[0] == 1 && dims[1] == 1) {
+		post("A \"two dimensional\" 1x1 matrix is really just a scalar");
+		scalar = 1;
+	} else if (dims[0] == 1 || dims[1] == 1) {
+	    post("A \"two dimensional\" %dx%d matrix is really just a list", dims[0], dims[1]);
+		list = 1;
+	} else {
+		post("A %dx%d 2D array would fit in an SDIF matrix.", dims[0], dims[1]);
+		post("Too bad that doesn't work yet.");
+		return;
+	}
+  } else {
+	/* 1D */
+	if (dims[0] == 1) {
+		scalar = 1;
+	} else {
+		list = 1;
+	}
+  }
+
+  if (list) post("can be interpreted as a Max list");
+  if (scalar) post("can be interpreted as a Max scalar");
+  
+  /* Display the mxArray's class (category). */
+  class_name = mxGetClassName(array_ptr);
+  post("Class Name: %s%s\n", class_name,
+	    mxIsSparse(array_ptr) ? " (sparse)" : "");
 }
