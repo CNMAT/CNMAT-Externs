@@ -1,43 +1,93 @@
+# makefile.per-object
 # This is included in the makefile for every Max external
+# Matt Wright, 2005
 
 # Name of the object is the name of this directory
 OBJ := $(shell basename `pwd`)
 
 # Filenames derived from the name of the object
 SOURCE = $(OBJ).c
+REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).help
 MAC_BINARY = ../build-mac/$(OBJ)
 MAC_HELPFILE_COPY = ../build-mac/$(OBJ).help 
 MAC_INDIVIDUAL_DOWNLOAD = ../build-mac/$(OBJ)$(VERSION_TAG).sit
+WEB_INFO = ../build-mac/$(OBJ)-info.txt
+
+# Where files live on our web server
+WEBSERVER_BASE_DIR = /Volumes/webroot$$/Max
+WEBSERVER_DOWNLOAD_DIR = $(WEBSERVER_BASE_DIR)/downloads
+WEBSERVER_INFO_DIR = $(WEBSERVER_BASE_DIR)/object-info
+
+# Making the version number accessible from this Makefile:
 
 # Each version.h file has a line that looks like this:  
 #     #define VERSION "1.2.3.4"
 # so get a Makefile variable that's just something like "1.2.3.4"
-DOUBLEQUOTED_VERSION := $(word 3,$(shell grep VERSION version.h))
+DOUBLEQUOTED_VERSION := $(word 3,$(shell grep '\#define VERSION ' version.h))
 # now a cheesy way to get rid of the double quotes:
 VERSION = $(shell echo $(DOUBLEQUOTED_VERSION))
 VERSION_TAG = _$(VERSION)
 
-all: mac-individual-download help-diff-warning
+# Ditto for status
+DOUBLEQUOTED_STATUS := $(word 3,$(shell grep STATUS version.h))
+STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
 
+
+
+# Top-level build targets
+
+all: mac-individual-download help-diff-warning web-info web-release
+
+.PHONY: clean
 clean:
 	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY)
 
+
+# The version info is now extracted from the .c file by Andy's perl script:
+# because some makefile variables (e.g., VERSION_TAG) come from version.h,
+# start over with a recursive call to $(MAKE)
 version.h: $(SOURCE)
 	perl ../../../commentkeys.pl < $(SOURCE) > $@
+	$(MAKE) $(MAKECMDGOALS)
 
+
+
+.PHONY: web-info
+web-info: $(WEB_INFO)
+
+# Cheesy version of web info is just a properly-named version of version.h
+$(WEB_INFO): version.h
+	cp version.h $(WEB_INFO)
+
+
+
+.PHONY: mac-binary
 mac-binary: $(MAC_BINARY)
 
-# to make the MAC binary, have to open the Codewarrior project:
-$(MAC_BINARY): $(SOURCE) version.h
-	@echo 'Please build the MAC version of' $(OBJ)
-	open $(OBJ).mcp
+# to make the MAC binary, have to open the Codewarrior project.
+# The call to cmp is to force this call to Make to stop, so the 
+# programmer has to say "make" again.
+$(MAC_BINARY): $(SOURCE) $(REZ_FILE) version.h
+	@echo 'Please build the MAC version of' $(OBJ) 
+	open $(OBJ).mcp 
+	@echo 'Ignore the following error message; just run make again after'
+	@echo 'CodeWarrior builds the object.'
+	@cmp -s version.h /dev/null
 
 
+START_OVER_ERROR = $(error Please run make again.)
+.PHONY: start-over
+start-over: ; $(START_OVER_ERROR)
+
+
+.PHONY: mac-individual-download
 mac-individual-download: $(MAC_INDIVIDUAL_DOWNLOAD)
 
 $(MAC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MAC_BINARY)
 	stuff -o -n $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_BINARY) $(HELPFILE)
+
+
 
 # Put a copy of the help file next to the Mac binary; maybe not necessary
 $(MAC_HELPFILE_COPY): $(OBJ).help
@@ -46,9 +96,23 @@ $(MAC_HELPFILE_COPY): $(OBJ).help
 # make sure help patch in correct source directory is the most recent
 # (even though it's the one in ../build-mac that's usually edited.)
 
+.PHONY: help-diff-warning
 help-diff-warning: $(MAC_HELPFILE_COPY)
 	@ cmp -s $(OBJ).help $(MAC_HELPFILE_COPY) || \
 	echo WARNING\! '$(MAC_HELPFILE_COPY) is different from $(OBJ).help'
+
+
+# Actually copying the files to directories where the web server can find them
+
+.PHONY: web-install
+web-install: $(WEBSERVER_BASE_DIR) $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
+	cp $(MAC_INDIVIDUAL_DOWNLOAD) $(WEBSERVER_DOWNLOAD_DIR)
+	cp $(WEB_INFO) $(WEBSERVER_INFO_DIR)
+
+
+$(WEBSERVER_BASE_DIR):
+	@echo Please mount the webroot$$ volume from Bach
+
 
 
 
@@ -60,3 +124,9 @@ printenv:
 
 tellversiontag:
 	echo $(VERSION_TAG)
+
+webtest: $(WEBSERVER_BASE_DIR)
+	open $(WEBSERVER_BASE_DIR)
+
+statustest: version.h
+	echo $(STATUS)
