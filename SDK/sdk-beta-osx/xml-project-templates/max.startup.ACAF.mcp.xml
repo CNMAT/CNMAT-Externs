@@ -763,7 +763,7 @@
                 <SETTING><NAME>MWRez_Language_filtermode</NAME><VALUE>FilterSkip</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_suppresswarnings</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_escapecontrolchars</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE>Types.r</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_filteredtypes</NAME><VALUE>'CODE' 'DATA' 'PICT'</VALUE></SETTING>
             </SETTINGLIST>
             <FILELIST>
@@ -1541,7 +1541,7 @@
                 <SETTING><NAME>MWRez_Language_filtermode</NAME><VALUE>FilterSkip</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_suppresswarnings</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_escapecontrolchars</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE>Types.r</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_filteredtypes</NAME><VALUE>'CODE' 'DATA' 'PICT'</VALUE></SETTING>
             </SETTINGLIST>
             <FILELIST>
@@ -2319,7 +2319,7 @@
                 <SETTING><NAME>MWRez_Language_filtermode</NAME><VALUE>FilterSkip</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_suppresswarnings</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_escapecontrolchars</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE>Types.r</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_filteredtypes</NAME><VALUE>'CODE' 'DATA' 'PICT'</VALUE></SETTING>
             </SETTINGLIST>
             <FILELIST>
@@ -3121,7 +3121,7 @@
                 <SETTING><NAME>MWRez_Language_filtermode</NAME><VALUE>FilterSkip</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_suppresswarnings</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_escapecontrolchars</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWRez_Language_prefixname</NAME><VALUE>Types.r</VALUE></SETTING>
                 <SETTING><NAME>MWRez_Language_filteredtypes</NAME><VALUE>'CODE' 'DATA' 'PICT'</VALUE></SETTING>
             </SETTINGLIST>
             <FILELIST>
