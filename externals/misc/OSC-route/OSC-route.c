@@ -389,8 +389,7 @@ static int MyStrCopy(char *target, const char *source) {
 	*target = 0;
 	return i;
 }
-	
-	
+
 	
 void OSCroute_allmessages(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	int i;
@@ -422,4 +421,28 @@ void OSCroute_allmessages(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	// level of the hierarchy as the *input* to this OSC-route object:
 	SETSYM(a, prefixSymbol);
 	outlet_anything(x->o_otheroutlet, s, 1, a);
+}
+
+
+/* The OSC-Kit calls OSCWarning() to print warning messages (encountered during pattern-matching
+   of malformed OSC address patterns).  Here we define it to use Max's post() */
+
+#include <stdio.h>
+// extern int vsprintf(char *str, const char *format, va_list ap);
+
+void OSCWarning(char *s, ...);
+
+void OSCWarning(char *s, ...) {
+	char warningMessage[1000];
+	int n;
+    va_list ap;
+    
+    sprintf(warningMessage, "OSC-route: Warning: ");
+    n = 20; /* strlen(warningMessage); */
+    
+    va_start(ap, s);
+    vsprintf(warningMessage+n, s, ap);
+    va_end(ap);
+
+	post(warningMessage);
 }
