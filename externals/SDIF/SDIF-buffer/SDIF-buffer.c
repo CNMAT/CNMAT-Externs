@@ -453,10 +453,8 @@ void SDIFbuffer_readstreamnumber(SDIFBuffer *x, Symbol *fileNameSymbol, long str
 		
 }
 
-
 void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long arg) {  
   FILE *f;
-  SDIFmem_Frame first;
   SDIFBufferPrivate *privateStuff;
   SDIFresult r;
   sdif_int32 streamID;
@@ -495,18 +493,21 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
   //  read the requested stream
   r = SDIFbuf_ReadStreamFromOpenFile(privateStuff->buf, f, mode, arg);
 
-  if(!(first = SDIFbuf_GetFirstFrame(privateStuff->buf))) {
-    post("¥ SDIFbuffer_readstreamnumber: No frames found with StreamID %ld!",
+
+  if (r == ESDIF_STREAM_NOT_FOUND) {
+    post("SDIFbuffer_readstreamnumber: Warning: no frames found with StreamID %ld!",
        streamID);
-    return;
+  } else  if (r == ESDIF_SUCCESS) {
+  	// Do nothing
+  } else {
+  	error("SDIF-buffer: Error reading stream %ld from file %s: %s", streamID, filename, 
+  	      SDIF_GetErrorString(r));
   }
-#ifdef KLUDGE
-  //  should go ahead and update buffer state anyhow, even if no frames in stream
-#endif
-  
-  //  update all the buffer's state according to the newly read data
+
+
+  //  update all the buffer's state according to the newly read data (even if no data read)
   x->fileName = filename;
-  x->streamID = first->header.streamID;
+  x->streamID = streamID;
 }
 
 
