@@ -1,0 +1,21 @@
+/* 
+	jit.altivec.h
+
+	Copyright 2001-2002 - Cycling '74
+	Joshua Kit Clayton jkc@cycling74.com
+		
+*/
+
+#ifndef __JIT_ALTIVEC_H__
+#define __JIT_ALTIVEC_H__
+#include <altivec.h>
+
+extern long _jit_altivec;
+
+void jit_altivec_init(void);
+long jit_altivec_capable(void);
+
+#define AltivecGetPrefetchConstant(blockSizeInVectors,blockCount,blockStride) \
+	((blockSizeInVectors << 24) & 0x1F000000) | ((blockCount << 16) && 0x00FF0000) | (blockStride & 0xFFFF)
+
+#endif // __JIT_ALTIVEC_H__
