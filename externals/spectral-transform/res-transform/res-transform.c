@@ -35,6 +35,7 @@ Copyright © 1996,1997,1998,1999 Regents of the University of California.
 Version 1.2 by Matt Wright: compiles with CW 7 and new Max/MSP SDK
 Version 1.3 by Matt Wright has "setoneamplitude", "setonefrequency", "setonerate", and "setone"
 Version 1.4 by Matt Wright allows float midi-pitch
+Version 1.5 debugs setone and adds the -1 index feature, adds numresonances 
 
 
 To-Do:  Generalize into SDIF-transform
@@ -42,7 +43,7 @@ To-Do:  Generalize into SDIF-transform
 	
 */
 
-#define VERSION "1.4"
+#define VERSION "1.5"
 
 /* #include <fp.h>
 #include <fenv.h> */
@@ -147,6 +148,8 @@ static void resondump(fobj *x, struct symbol *s, int argc, Atom *argv);
 static void enddump(fobj *x, struct symbol *s, int argc, struct atom *argv);
 static void version(fobj *x);
 static void tellmeeverything(fobj *x);
+void numresonances(fobj *x);
+
 
 static float miditopitchratio(float f) {
 	return  expf( SEMIFAC*(f - AASMIDINOTE));
@@ -475,19 +478,62 @@ static void setonerate(fobj *x, int i, float newrate) {
 	}
 }
 
+#ifdef MAX_HAS_NO_BUGS
 static void setone(fobj *x, int i, float f, float g, float b) {
-	if (i < 0) {
-		post("¥ res-transform: setone: index must be >= 0");
+	post("*** setone %d %f %f %f", i, f, g, b);
+#else
+static void setone(fobj *x, struct symbol *s, int argc, struct atom *argv) {
+	int i;
+	float f, g, b;
+	
+	if (argc != 4) {
+		error("res-transform: setone needs exactly 4 arguments");
+		return;
+	} 
+	
+	if (argv[0].a_type!= A_LONG) {
+		error("res-transform: index (first arg) to setone must be an integer");
+		return;
+	}
+	
+	if (argv[1].a_type != A_FLOAT || argv[2].a_type != A_FLOAT || argv[3].a_type != A_FLOAT) {
+		error("res-transform: freq, gain, and bw must all be floats");
+		return;
+	}
+	
+	i = argv[0].a_w.w_long;
+	f = argv[1].a_w.w_float;
+	g = argv[2].a_w.w_float;
+	b = argv[3].a_w.w_float;
+#endif		
+		
+	if (i < -1) {
+		post("¥ res-transform: setone: index must be >= 0 (or -1 to add a new resonance)");
 	} else if (i >= x->nreson) {
 		post("¥ res-transform: setone: model has only %ld resonances; can't set number %ld",
 			  x->nreson, i);
 	} else {
+		if (i == -1) {
+			/* Add a new resonance */
+			i = (x->nreson)++;
+		}
+		
 		x->resonances[i].f = f;
 		x->resonances[i].g = g;
 		x->resonances[i].b = b;
 		dumpifnecessary(x);
 	}
 }
+
+void numresonances(fobj *x) {
+	outlet_int(x, x->nreson);
+}
+	
+
+#if 0   /* Make CW happy by balancing curly braces */
+}
+#endif
+
 
 /* ... end of Matt Wright's additions */
 
@@ -535,8 +581,10 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addmess((method)setoneamplitude, "setoneamplitude", A_LONG, A_FLOAT, 0);
 	addmess((method)setonefrequency, "setonefrequency", A_LONG, A_FLOAT, 0);
 	addmess((method)setonerate, "setonerate", A_LONG, A_FLOAT, 0);
-	addmess((method)setone, "setone", A_LONG, A_FLOAT, A_FLOAT, A_FLOAT, 0);
-
+	// addmess((method)setone, "setone", A_LONG, A_FLOAT, A_FLOAT, A_FLOAT, 0);
+	addmess((method)setone, "setone", A_GIMME,0);
+	addmess((method)numresonances, "numresonances", 0);
+	
 	addmess((method)setslope, "spectral-slope", A_DEFFLOAT,0);
 	addmess((method)setcenter, "spectral-corner", A_DEFFLOAT,0);
 
@@ -570,7 +618,7 @@ static void version(fobj *x) {
 static void tellmeeverything(fobj *x) {
 	int i;
 	version(x);
-	post("  Model has %ld resonances, each acually a cluster of size %ld",
+	post("  Model has %ld resonances, each actually a cluster of size %ld",
 		 x->nreson, x->clustersize);
 	post("  I think the base pitch of this model is %f Hz.", x->freqbase);
 	post("  frequency-scale %f frequency-add %f", x->freqscale, x->freqadd);
