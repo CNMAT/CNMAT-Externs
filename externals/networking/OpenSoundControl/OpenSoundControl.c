@@ -1,7 +1,7 @@
 /*
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 1996,97,98,99,2000,01,02,03
+University of California, Berkeley.  Copyright (c) 1996,97,98,99,2000,01,02,03,04,05
 The Regents of the University of California (Regents).  
 
 Permission to use, copy, modify, distribute, and distribute modified versions
@@ -21,8 +21,15 @@ PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
 HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-*/
-  /* 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: OpenSoundControl
+DESCRIPTION: Format Max data to OpenSoundControl protocol and vice versa
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
+VERSION: 1.9.1bar
+STATUS: supported
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
         Author: Matt Wright
                 
         OpenSoundControl max object: formats Max messages into buffers
@@ -38,15 +45,15 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
         Version 1.7 Supports SuperCollider-style type tags
         Version 1.8 has errorreporting mode, compiles under CW7 and Max 4 SDK
         Version 1.9: Cleaned up and fixed copyright for open-sourcing
+        Version 1.9.1: rudimentary blob support
    */
 
-#define OPENSOUNDCONTROL_VERSION "1.9"
-
+#include "version.h"
 #include "ext.h"
 #include "OSC-client.h"
 
 void *OSC_class;
-Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket;
+Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket, *ps_OSCBlob;
 
 typedef struct openSoundControl {
 	struct object O_ob;
@@ -95,8 +102,8 @@ void strcpy(char *s1, char *s2);
 void main (fptr *f) {
 	DateTimeRec date;
 	
-	post("OpenSoundControl object version " OPENSOUNDCONTROL_VERSION " by Matt Wright");
-	post("Copyright © 1996,7,8,9,2000,1,2,3 Regents of the University of California.  ");
+	post("OpenSoundControl object version " VERSION " by Matt Wright");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.  ");
 		
 	setup((t_messlist **)&OSC_class, (method) OSC_new,0L,(short)sizeof(OSC),0L,A_DEFLONG,0);
 
@@ -135,6 +142,7 @@ void main (fptr *f) {
 	ps_gimme = gensym("gimme");
 	ps_OSCTimeTag = gensym("OSCTimeTag");
 	ps_FullPacket = gensym("FullPacket");
+	ps_OSCBlob = gensym("OSCBlob");
 }
 
 #define DEFAULT_BUFFER_SIZE 1024
@@ -189,7 +197,7 @@ void OSC_assist(OSC *x, void *b, long m, long a, char *s) {
 }
 
 void OSC_version (OSC *x) {
-	post("OpenSoundControl Version " OPENSOUNDCONTROL_VERSION
+	post("OpenSoundControl Version " VERSION
 		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
 }
 
@@ -843,6 +851,26 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 	                p = DataAfterAlignedString(p, typeTags+n);
 	            }
 	            break;
+	            
+	            case 'b':
+	            {
+	            	/* put 3 elements in output list: symbol "OSCBlob", int size, ((int) void *data) */
+	            	int size = *((int *) p);
+	            	
+                    if (p+4+size > chars+n) {
+                    	error("OpenSoundControl: blob size %ld too big for packet", size);
+                    	return;
+	            	}
+	            	
+	            	SETSYM(&args[numArgs], ps_OSCBlob);
+	            	SETLONG(&args[numArgs+1], size);
+	            	SETLONG(&args[numArgs+2], ((long) p+4));
+	            	
+	            	numArgs += 2;  /* This OSC argument generated 3 elements of the Max list to be outputted. */
+	            	p += OSC_effectiveBlobLength(size);
+
+	            }
+	            break;
 
 	            case 'T': 
 	            /* "True" value comes out as the int 1 */
@@ -863,7 +891,7 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 	           	break;
 	           	
 	            case 'I': 
-	            /* Empty lists in max?  Ha!  How about the symbol "nil"? */
+	            /* Infinita in Max?  Ha!  How about the symbol "Infinitum"? */
 	            SETSYM(&args[numArgs], gensym("Infinitum"));
 	            /* Don't touch p */
 	           	break;
