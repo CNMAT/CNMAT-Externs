@@ -82,7 +82,7 @@ the flow of control works, so here are some hints:
  */
 
 
-#define OTUDP_VERSION "3.0.1"
+#define OTUDP_VERSION "3.0.1 closedebug"
 #define MAX_PACKET_SIZE 65536   // This is the limit for a UDP packet
 #define DEFAULT_BUFFER_SIZE  1024
 #define DEFAULT_NUM_BUFFERS 20 
@@ -440,11 +440,20 @@ int ParseArgs(short argc, Atom *argv, int *writerp, char **inetHostNamep, InetPo
 	return 1;
 }
 
+#define debug_close_post(x) post(x)
+
 void otudp_free(OTUDP *x) {
+	debug_close_post("* entered otudp_free");
+	
 	freeobject(x->o_clock);
     if (x->o_udp_ep != 0) {
+    	debug_close_post("* about to close Open Transport endpoint...");
 		OTCloseProvider(x->o_udp_ep);
+		debug_close_post("* ... closed Open Transport endpoint");
+	} else {
+		debug_close_post("* This OTUDP object didn't have an Open Transport endpoint");
 	}
+	
 	if (x->allBuffers != 0) {
 		DestroyPackets(x->allBuffers, x->nbufs);
 	}
