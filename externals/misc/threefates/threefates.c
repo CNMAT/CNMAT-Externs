@@ -1,8 +1,39 @@
+/*
+Copyright (c) 2000-2004.  The Regents of the University of California (Regents).
+All Rights Reserved.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for educational, research, and not-for-profit purposes, without
+fee and without a signed licensing agreement, is hereby granted, provided that
+the above copyright notice, this paragraph and the following two paragraphs
+appear in all copies, modifications, and distributions.  Contact The Office of
+Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+
+Written by Tim Madden and Matt Wright, The Center for New Music and Audio Technologies,
+University of California, Berkeley.
+
+     IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+     SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+     ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+     REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+     REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+     FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+     DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+     REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+     ENHANCEMENTS, OR MODIFICATIONS.
+*/
+
+
+
+
 /**************************************************************************************
  * Deal with track birth/death so sinusoids~ works.
  *
  * How it works:
- * 		Take input list of (index,freq,amp) triplets.
+ * 		Take input list of (index,[other parameters]) tuples.
  *
  *		Use "slots" which are position in the list to sinusoids~.
  *
@@ -17,18 +48,20 @@
  *		Free up dead slots (all slots not set to "alive"). these tracks really died.
  *		 		
  *************************************************************************************/
-/*
- * Includes.
- */
- 
+
+
+/* Version 0.2: 041229 MW: Handles arbitrary-length partial parameter lists */
+
+
+#define THREEFATES_VERSION "0.2" 
 
 #include "ext.h"
 
-
-// Define the max number of args.
-#define MAX_OSC 1000
-#define MAX_INARGS (MAX_OSC*3)
-#define MAX_OUTARGS (MAX_OSC*2)
+// Define the max number of oscillators and parameters per oscillator (not including index).
+#define MAX_OSC 200
+#define MAX_PARTIAL_PARAMS 4
+#define MAX_INARGS (MAX_OSC*(MAX_PARTIAL_PARAMS+1))
+#define MAX_OUTARGS (MAX_OSC*MAX_PARTIAL_PARAMS)
 
 
 // We consider each duple sent to sinusoids~ to be a "slot". Each slot
@@ -36,17 +69,18 @@
 // Here is a "slot."
 typedef struct t_slot_
 {
-	// the frequency of sin wave.
-	float freq;
-	// amplitude of sine.
-	float amp;
+	// Parameters other than index: frequency, amplitude, bandwidth, etc.
+	// The second one (i.e., params[1]) must be amplitude
+	float params[MAX_PARTIAL_PARAMS];
+#define AMPLITUDE params[1]
+
 	// Track index of this sine from SDIF data.
 	int index;
 	// A 1 or 0, used for finding track deaths. Set to 1 (assume death) before getting 
 	// all the SDIF freq data. If this index is in the SDIF data, we are alive
 	// so we set to 0. If all SDIF data is processed, and we are still at 1, we died,
 	// so set amp to zero, release this slot.
-	int is_dead;
+	Boolean is_dead;
 } t_slot;
 
 
@@ -54,19 +88,22 @@ typedef struct t_slot_
 typedef struct t_threefates_
 {
 	struct object t_obj;
+	
+	// How many parameters besides index (e.g., amp, freq, bw) does each partial have?
+	int num_partial_parameters;
+	
 	void *t_out;
-	// Output list.	
-	Atom t_list_out[MAX_OUTARGS];
+	Atom output_list[MAX_OUTARGS];
 	int t_outsize;
 
 	// Frame0 num args.
 	int ac0;
-	// Frame 0 Arguments.
+	// Frame 0 Arguments - including partial indices
 	float frame0[MAX_INARGS];
 
 	// Frame 1 num args.
 	int ac1;
-	// Frame 1 Arguments.
+	// Frame 1 Arguments - including partial indices
 	float frame1[MAX_INARGS];
 		
 	// toggle which is present frame (0 or 1). the other is future. 
@@ -89,13 +126,8 @@ void *threefates_class;
  */
 
 // Make new object.
-void *threefates_new(
-	Symbol s, 
-	short ac,
-	Atom *av);
+void *threefates_new(long nPartialParams);
 
-
-// Set up the grid.
 void List(
 	t_threefates *x, 
 	Symbol *mess,
@@ -104,11 +136,7 @@ void List(
 
 void SlotsToOutput(t_threefates *thisobject);
 void RemoveDeadSlots(t_threefates *thisobject);
-void AddToSlotList(
-	t_threefates *thisobject,
-	int index,
-	float freq,
-	float amp);
+void AddToSlotList(t_threefates *thisobject, int index, int nparams, float *params);
 	
 int GetFreeSlot(t_threefates *thisobject);
 
@@ -121,11 +149,7 @@ void SetDeadZero(t_threefates *thisobject);
 void InitializeSlots(t_threefates *thisobject);
 
 
-void BirthSlotList(
-	t_threefates *thisobject,
-	int index,
-	float freq,
-	float amp);
+void BirthSlotList(t_threefates *thisobject, int index, int nparams, float *params);
 
 int InputToFutureFrame(
 	t_threefates *x, 
@@ -179,13 +203,15 @@ void FutureFrameToSlots(t_threefates *x);
 void main(fptr *f)
 {
 	
-	post("Running threefates main");
+	post("threefates " THREEFATES_VERSION " - Tim Madden and Matt Wright");
+	post("Copyright ©2000-04 Regents of the University of California.");
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&threefates_class, (method) threefates_new, 0,
-			(short)sizeof(t_threefates), 0L, 0);
+			(short)sizeof(t_threefates), 0L, A_DEFLONG, 0);
 			
 			
+	post("size %ld", sizeof(t_threefates));
 	addmess((method)List, "list", A_GIMME, 0);
 	
 	ps_list = gensym("list");
@@ -198,19 +224,29 @@ void main(fptr *f)
  *
  *************************************************************************************/
 
-void *threefates_new(
-	Symbol s, 
-	short ac,
-	Atom *av)
-{
+void *threefates_new(long nPartialParams) {
 	int i;
 
 	t_threefates *x;
 	
-	post("Running threefates_new");
-
-	x = (t_threefates*)newobject(threefates_class);
+	post("threefates_new(%ld)", nPartialParams);
 	
+		
+	if (nPartialParams == 0) {
+		/* Default two parameters: freq, amplitude */
+		nPartialParams = 2;
+	}
+	if (nPartialParams < 2 || nPartialParams > MAX_PARTIAL_PARAMS) {
+		error("threefates: bad second argument %ld (partials must have 2 to %ld parameters)",
+			  nPartialParams, MAX_PARTIAL_PARAMS);
+		return 0;
+	}
+
+	// post("bail!"); return 0;
+	
+	x = (t_threefates*)newobject(threefates_class);
+	x->num_partial_parameters = nPartialParams;
+
 	x->t_out = listout(x);
 
 	// Frame0 num args.
@@ -238,6 +274,17 @@ void List(
 	int argc, 
 	Atom *argv)
 {
+
+	if (argc > MAX_INARGS) {
+		error("threefates: input list too big (size %ld) --- dropping", argc);
+		return;
+	}
+	
+	if (argc %  (1+ x->num_partial_parameters) != 0) {
+		error("threefates: input list length not a multiple of %ld - dropping", 1+x->num_partial_parameters);
+		return;
+	}
+
 	// We get FUTURE frame from arguments.
 	if (InputToFutureFrame(x, mess, argc, argv) == 0)
 	{
@@ -253,11 +300,11 @@ void List(
 		// Make output list.
 		SlotsToOutput(x);
 
-		// Set list length. (2 args per slot <amp,freq> pairs).
-		x->t_outsize = 2 * x->max_slot_index;
+		// Set list length
+		x->t_outsize = x->num_partial_parameters * x->max_slot_index;
 		
 		// send to sinusoids~
-		outlet_list(x->t_out, ps_list, x->t_outsize, x->t_list_out);
+		outlet_list(x->t_out, ps_list, x->t_outsize, x->output_list);
 	
 		// Take dead tracks out of the picture.
 		RemoveDeadSlots(x);
@@ -267,7 +314,7 @@ void List(
 	}
 	else
 	{
-		post("¥ Assign-tracks: Need multiple of 3 length input list.");
+		error("threefates: InputToFutureFrame returned a bad value.");
 	}
 }
 
@@ -278,12 +325,12 @@ void List(
 
 void InitializeSlots(t_threefates *thisobject)
 {
-	int i;
+	int i, j;
 	
-	for (i = 0; i < MAX_OSC; i++)
-	{
-		thisobject->t_slotlist[i].freq = 0.0;
-		thisobject->t_slotlist[i].amp = 0.0;
+	for (i = 0; i < MAX_OSC; i++) {
+		for (j=0; j<MAX_PARTIAL_PARAMS; ++j) {
+			thisobject->t_slotlist[i].params[j] = 0.0;
+		}
 		thisobject->t_slotlist[i].index = -1;
 		thisobject->t_slotlist[i].is_dead = 0;		
 	}
@@ -305,7 +352,7 @@ void SetDeadZero(t_threefates *thisobject)
 	
 	for (i = 0; i < thisobject->max_slot_index; i++)
 	{
-		thisobject->t_slotlist[i].amp = 0.0;
+		thisobject->t_slotlist[i].AMPLITUDE = 0.0;
 		thisobject->t_slotlist[i].is_dead = 1;		
 	}
 }
@@ -360,27 +407,23 @@ int GetFreeSlot(t_threefates *thisobject)
  *
  **************************************************************************************/
 
-void AddToSlotList(
-	t_threefates *thisobject,
-	int index,
-	float freq,
-	float amp)
-{
-	int slotindex;
+void AddToSlotList(t_threefates *thisobject, int index, int nparams, float *params) {
+	int slotindex, i;
 	
 	slotindex = IsInSlotList(thisobject, index);
 	
-	if (slotindex  == -1)
-	{
+	if (slotindex  == -1) {
 		slotindex = GetFreeSlot(thisobject);
 	}
 	
-	if (slotindex >= 0)
-	{
-		thisobject->t_slotlist[slotindex].freq = freq;
-		thisobject->t_slotlist[slotindex].amp = amp;
+	if (slotindex >= 0) {
+		for (i = 0; i<nparams; ++i) {
+			thisobject->t_slotlist[slotindex].params[i] = params[i];
+		}
 		thisobject->t_slotlist[slotindex].index = index;
-		thisobject->t_slotlist[slotindex].is_dead = 0;	
+		thisobject->t_slotlist[slotindex].is_dead = 0;
+		
+		//post("** AddToSlotList: index %ld to slotindex %ld, param[0] = %f, param[1] = %f", index, slotindex, params[0], params[1]);
 	}
 	else
 	{
@@ -392,13 +435,8 @@ void AddToSlotList(
  *
  **************************************************************************************/
 
-void BirthSlotList(
-	t_threefates *thisobject,
-	int index,
-	float freq,
-	float amp)
-{
-	int slotindex;
+void BirthSlotList(t_threefates *thisobject, int index, int nparams, float *params){
+	int slotindex, i;
 	
 	slotindex = IsInSlotList(thisobject, index);
 	
@@ -409,8 +447,10 @@ void BirthSlotList(
 	
 		if (slotindex >= 0)
 		{
-			thisobject->t_slotlist[slotindex].freq = freq;
-			thisobject->t_slotlist[slotindex].amp = 0.0;
+			for (i = 0; i<nparams; ++i) {
+				thisobject->t_slotlist[slotindex].params[i] = params[i];
+			}
+			thisobject->t_slotlist[slotindex].AMPLITUDE = 0.0;
 			thisobject->t_slotlist[slotindex].index = index;
 			thisobject->t_slotlist[slotindex].is_dead = 0;	
 		}	
@@ -424,8 +464,10 @@ void BirthSlotList(
 		// Track in list, but dead for 1 frame, and comming to life again. 
 		if (thisobject->t_slotlist[slotindex].is_dead == 1)
 		{
-			thisobject->t_slotlist[slotindex].freq = freq;
-			thisobject->t_slotlist[slotindex].amp = 0.0;
+			for (i = 0; i<nparams; ++i) {
+				thisobject->t_slotlist[slotindex].params[i] = params[i];
+			}
+			thisobject->t_slotlist[slotindex].AMPLITUDE = 0.0;
 			thisobject->t_slotlist[slotindex].index = index;
 			thisobject->t_slotlist[slotindex].is_dead = 0;		
 		}
@@ -439,14 +481,15 @@ void BirthSlotList(
 void RemoveDeadSlots(t_threefates *thisobject)
 {
 
-	int i;
+	int i,j;
 	
 	for (i = 0; i < thisobject->max_slot_index; i++)
 	{
 		if (thisobject->t_slotlist[i].is_dead == 1)
 		{
-			thisobject->t_slotlist[i].freq = 0.0;
-			thisobject->t_slotlist[i].amp = 0.0;
+			for (j=0; j<MAX_PARTIAL_PARAMS; ++j) {
+				thisobject->t_slotlist[i].params[j] = 0.0;
+			}
 			thisobject->t_slotlist[i].index = -1;
 			thisobject->t_slotlist[i].is_dead = 0;
 			
@@ -464,25 +507,17 @@ void RemoveDeadSlots(t_threefates *thisobject)
  *
  **************************************************************************************/
 
-void SlotsToOutput(t_threefates *thisobject)
-{
-	int i;
-	int counter0 = 0;
-	int counter1 = 1;
-	
-	for (i = 0; i < thisobject->max_slot_index; i++)
-	{			
-		thisobject->t_list_out[counter0].a_type = A_FLOAT;
-		thisobject->t_list_out[counter1].a_type = A_FLOAT;
-		
-		thisobject->t_list_out[counter0].a_w.w_float = 
-			thisobject->t_slotlist[i].freq;
-		thisobject->t_list_out[counter1].a_w.w_float = 
-			thisobject->t_slotlist[i].amp;
-			
-		counter0 += 2;
-		counter1 += 2;
-			
+void SlotsToOutput(t_threefates *thisobject) {
+	int i, j, outindex;
+	int nparams = thisobject->num_partial_parameters;
+
+    outindex = 0;
+	for (i = 0; i < thisobject->max_slot_index; i++) {
+	    // Output everything except index
+	    for (j = 0; j<nparams; ++j) {
+			SETFLOAT(thisobject->output_list + outindex, thisobject->t_slotlist[i].params[j]);
+			++outindex;
+		}
 	}
 }
 
@@ -500,31 +535,25 @@ int InputToFutureFrame(
 {
 	int i;
 	float value;	
+
+	SetFutureAC(x, argc);
+
+	// Put args into storage.
+	for (i = 0; i < argc; i++)
+	{	
+		switch (argv[i].a_type)
+		{
+			case A_FLOAT:
+				value = argv[i].a_w.w_float;
+				break;
+			case A_LONG:
+				value = (float)(argv[i].a_w.w_long);
+				break;
+		}
 	
-
-	if ((argc % 3) == 0)
-	{
-
-		SetFutureAC(x, argc);
-
-		// Put args into storage.
-		for (i = 0; i < argc; i++)
-		{	
-			switch (argv[i].a_type)
-			{
-				case A_FLOAT:
-					value = argv[i].a_w.w_float;
-					break;
-				case A_LONG:
-					value = (float)(argv[i].a_w.w_long);
-					break;
-			}
+		SetFutureValue(x, i, value);
+	}
 		
-			SetFutureValue(x, i, value);
-		}// for ...
-	}//if ((argc % 3) == 0)
-	else
-		return -1;
 		
 	return 0;		
 }
@@ -686,76 +715,55 @@ void CopyFutureToPresent(t_threefates *x)
  *
  **************************************************************************************/
 
-void PresentFrameToSlots(t_threefates *x)
-{
-	int counter0, counter1, counter2;
-	int i;
-	int theend;
+void PresentFrameToSlots(t_threefates *x) {
+	int i, j;
 	int index;
-	float freq, amp;
-	
-	// Set counter for output array.
-	counter0 = 0;
-	counter1 = 1;
-	counter2 = 2;
-	
-	// count by threes.
-	theend = GetPresentAC(x) / 3;
+	float params[MAX_PARTIAL_PARAMS];
+	int nparams = x->num_partial_parameters;
+	int npartials = GetPresentAC(x) / (1+nparams);
 			
 	
 	// Put args into storage.
-	for (i = 0; i < theend; i++)
-	{
-	
-		index = (int)(GetPresentValue(x, counter0));
-		freq = GetPresentValue(x, counter1);
-		amp = GetPresentValue(x, counter2);
+	for (i = 0; i < npartials; i++) {
+		// First of each group is index
+		index = (int)(GetPresentValue(x, i*(nparams+1)));
+		
+		// Rest of each group is partial parameters
+		for (j = 0; j < nparams; ++j) {
+	   		params[j] = GetPresentValue(x, i*(nparams+1) + j + 1);
+	   		//post("** PresentFrameToSlots param[%ld] = %f", j, params[j]);
+	   	}
+			
 		
 		// Add to slots. (These tracks are marked as "alive")
-		AddToSlotList(x, index, freq, amp);
-					
-		// increment counter.
-		counter0 += 3;
-		counter1 += 3;
-		counter2 += 3;
-	}// for ...
-	
+		AddToSlotList(x, index, nparams, params);				
+	}
 }
 
 /***************************************************************************************
  *
  **************************************************************************************/
 
-void FutureFrameToSlots(t_threefates *x)
-{
-	int counter0, counter1, counter2;
-	int i;
-	int theend;
+void FutureFrameToSlots(t_threefates *x) {
+	int i,j;
 	int index;
-	float freq, amp;
-	
-	// Set counter for output array.
-	counter0 = 0;
-	counter1 = 1;
-	counter2 = 2;
-	
-	// count by threes.
-	theend = GetFutureAC(x) / 3;
-			
+	float params[MAX_PARTIAL_PARAMS];
+	int nparams = x->num_partial_parameters;
+	int npartials = GetPresentAC(x) / (1+nparams);
+
+				
 	// Put args into storage.
-	for (i = 0; i < theend; i++)
-	{
-		index = (int)(GetFutureValue(x, counter0));
-		freq = GetFutureValue(x, counter1);
-		amp = GetFutureValue(x, counter2);
+	for (i = 0; i < npartials; i++) {
+		// First of each group is index
+		index = (int)(GetFutureValue(x, i*(nparams+1)));
+		
+		// Rest of each group is partial parameters
+		for (j = 0; j < nparams; ++j) {
+	   		params[j] = GetFutureValue(x, i*(nparams+1) + j + 1);
+	   	}
 		
 		// Add to slots. (These tracks are marked as "alive")
-		BirthSlotList(x, index, freq, amp);
-					
-		// increment counter.
-		counter0 += 3;
-		counter1 += 3;
-		counter2 += 3;
-	}// for ...
+		BirthSlotList(x, index, nparams, params);
+	}
 }
 
