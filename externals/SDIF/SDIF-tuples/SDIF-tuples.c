@@ -42,6 +42,7 @@ University of California, Berkeley. Interpolation support by Ben "Jacobs".
  version 0.4b: compiled with CW 7.0
  version 0.5.0: added interpolation support (bj, 2004/04/01)
  version 0.5.1: cleanup (bj, 2004/06/22)
+ version 0.5.2: Made an "interp" message to set interpolation mode like the other parameters (mw, 12/30/04)
  
  Todo:
 	more interpolation features
@@ -50,7 +51,7 @@ University of California, Berkeley. Interpolation support by Ben "Jacobs".
  	
  -- */
 
-#define SDIF_TUPLES_VERSION "0.5.1"
+#define SDIF_TUPLES_VERSION "0.5.2"
 #define FINDER_NAME "SDIF-tuples"
 
 #define MAX_NUM_COLUMNS 100
@@ -153,6 +154,7 @@ static void SDIFtuples_direction(SDIFtuples *x, long d);
 static void SDIFtuples_columns(SDIFtuples *x, Symbol *s, short argc, Atom *argv);
 static void SDIFtuples_matrix(SDIFtuples *x, Symbol *matrixType);
 static void SDIFtuples_max_rows(SDIFtuples *x, long n);
+static void SDIFtuples_interptype(SDIFtuples *x, long interptype);
 static void SDIFtuples_tuples(SDIFtuples *x, Symbol *s, short argc, Atom *argv);
 static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
                                 sdif_float64 time,
@@ -202,7 +204,8 @@ void main(fptr *fp)
 	addmess((method)SDIFtuples_reltime, "reltime", A_FLOAT, 0);
 	addmess((method)SDIFtuples_direction, "direction", A_LONG, 0);
 	addmess((method)SDIFtuples_columns, "columns", A_GIMME, 0);
-	addmess((method)SDIFtuples_max_rows, "max_rows", A_LONG, 0);	
+	addmess((method)SDIFtuples_max_rows, "max_rows", A_LONG, 0);
+	addmess((method)SDIFtuples_interptype, "interp", A_LONG, 0);	
 	addmess((method)SDIFtuples_tuples, "tuples", A_GIMME, 0);
 	addmess((method)SDIFtuples_matrix, "matrix", A_DEFSYM, 0);
 
@@ -420,6 +423,11 @@ static void SDIFtuples_matrix(SDIFtuples *x, Symbol *matrixType) {
 static void SDIFtuples_max_rows(SDIFtuples *x, long n) {
 	x->t_max_rows = n;
 }
+
+static void SDIFtuples_interptype(SDIFtuples *x, long interptype) {
+	x->t_interp = interptype;
+}
+
 
 
 static void SDIFtuples_tuples(SDIFtuples *x, Symbol *dummy, short argc, Atom *argv) {
