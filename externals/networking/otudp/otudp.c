@@ -49,6 +49,7 @@ University of California, Berkeley.
  Fixed bizarre packet-dropping bugs (2.1)
  Changed error reporting to post() instead of ouchstring()  (2.2)
  PPC only, allows "host" and "receiveport" even in overdrive.  No dialog boxes. (2.3)
+ OSX version: InContext, nothing deferred...  (3.0)
  
 
 Now that this thing uses asynchronous mode, it's nearly impossible to tell how
@@ -141,11 +142,7 @@ typedef struct otudp {
 	PacketBuffer freeBuffers;		  /* Pool of available PacketBuffer objects */
 	PacketBufferFIFO pendingBuffers;  /* FIFO of received but unoutputted buffers */
 	PacketBuffer allBuffers;		  /* So we can free them */
-	PacketBufferFIFO outgoingDeferredBuffers;  /* FIFO of buffers we have to wait until Deferred Task time to send */
-	
-	// Deferred task fun
-	long dtCookie;			/* "Cookie" from OT for the deferred task of sending packets not at interrupt level */
-	
+		
 	// Qelem fun (using DNR can't even happen at deferred task time)
 	void *UnbindQelem ;    /* Qelem to change the host not at interrupt or deferred task level */
 	
@@ -156,6 +153,8 @@ typedef struct otudp {
 fptr *FNS;
 void *otudp_class;
 Symbol *ps_read, *ps_write, *ps_PartialPacket, *ps_FullPacket, *ps_nbufs, *ps_bufsize;
+OTClientContextPtr OTContext;
+
 
 
 /* prototypes */
@@ -180,7 +179,6 @@ void otudp_resetdebugstats(OTUDP *x);
 void otudp_toggleErrorReporting(OTUDP *x);
 void otudp_read(OTUDP *x);
 
-pascal void deferred_write_callback (void* arg);
 void try_write(OTUDP *x, long length, void *bytes);
 void do_write(OTUDP *x, long length, void *bytes);
 void otudp_write(OTUDP *x, long size, long bufferPointer);
@@ -244,9 +242,9 @@ void main(fptr *f) {
             return;
     }
 #endif
-    
+        
     // post ("*** before  InitOpenTransport();");
-	err = InitOpenTransport();
+	err = InitOpenTransportInContext(kInitOTForExtensionMask, &OTContext);
 	if (err != kOTNoError) {
 		post("¥ OTUDP: Couldn't InitOpenTransport (err %d).  Perhaps Open Transport is not installed.",
 					err);
@@ -324,7 +322,6 @@ void *otudp_new(Symbol *s, short argc, Atom *argv) {
 	x->o_outlet = outlet_new(x,0L);
 	x->o_clock = clock_new(x, (method) otudp_output);
 	InitPBFIFO(&(x->pendingBuffers));
-	InitPBFIFO(&(x->outgoingDeferredBuffers));
 	
 	x->o_complained_about_old_msgs = 0;
 	
@@ -347,17 +344,14 @@ void *otudp_new(Symbol *s, short argc, Atom *argv) {
 	}
 	
 	x->o_udp_ep = 0; 	// Indicates endpoint hasn't been created yet.
-	err = OTAsyncOpenEndpoint(OTCreateConfiguration(kUDPName), 0, &(x->epinfo), OTUDPNotifier, x);
+	err = OTAsyncOpenEndpointInContext(OTCreateConfiguration(kUDPName), 0, &(x->epinfo), 
+									   NewOTNotifyUPP(OTUDPNotifier), x, OTContext);
 	if (err != noErr) {
 		post("¥ otudp: Error %d from OTAsyncOpenEndpoint. This is bad.", err);
 		return 0;
 	}
 	// This didn't actually make the endpoint; my notifier should get the T_OPENCOMPLETE
 	// event after the endpoint is opened.
-
-
-	/* Create deferred task that will output packets at non-interrupt level */
-	x->dtCookie = OTCreateDeferredTask(deferred_write_callback, x);
 	
 	/* Create a Qelem that will let us change the host at non-interrupt, non-defered-task-time level */
 	x->UnbindQelem = qelem_new(x, (method)unbind_from_qelem);
@@ -454,7 +448,6 @@ void otudp_free(OTUDP *x) {
 		DestroyPackets(x->allBuffers, x->nbufs);
 	}
 	
-	OTDestroyDeferredTask(x->dtCookie);
 	qelem_free(x->UnbindQelem);
 }
 
@@ -493,7 +486,7 @@ static int LookUpInetHost(char *name, InetHost *result) {
 		InetSvcRef tcpipProvider;
 		InetHostInfo hinfo;
 		
-		tcpipProvider = OTOpenInternetServices(kDefaultInternetServicesPath, 0, &err);
+		tcpipProvider = OTOpenInternetServicesInContext(kDefaultInternetServicesPath, 0, &err, OTContext);
 		
 		if (err != noErr) {
 			post("¥ otudp: Error %d from OTOpenInternetServices().", err);
@@ -996,35 +989,6 @@ void otudp_resetdebugstats (OTUDP *x) {
 	numTimesGaveUpForReentrancy = 0;
 }
 
-pascal void deferred_write_callback (void* arg) {
-	OTUDP *x;
-	PacketBuffer pb;
-	short oldLockout;
-	int countdown;
-
-	// post("* Entering deferred_write_callback %p", arg);
-
-	x = (OTUDP *) arg;
-	
-
-	countdown = 100;  // Max # packets that will be sent at once
-	while (countdown-- > 0) {
-		oldLockout = AcquireLock(x);
-		pb = PBFIFODequeue(&(x->outgoingDeferredBuffers));
-		ReleaseLock(x,oldLockout);
-
-		if (pb == 0) break;
-		
-		do_write(x, pb->n, pb->buf);
-		
-		oldLockout = AcquireLock(x);
-		PacketBufferListPush(pb, &(x->freeBuffers));
-		ReleaseLock(x,oldLockout);
-	}
-}	
-
-
-	
 
 void try_write(OTUDP *x, long length, void *bytes) {
 	short oldLockout;
@@ -1038,37 +1002,7 @@ void try_write(OTUDP *x, long length, void *bytes) {
 		return;
 	}
 
-	if (isr()) {
-		// post("*** Max is running at interrupt level");
-		
-		if (length > x->bufsize) {
-			post("¥ OTUDP: packet length %ld is bigger than buffer size %ld; dropping packet.",
-				length, x->bufsize);
-			return;
-		}
-		
-		oldLockout = AcquireLock(x);
-		pb = PacketBufferListPop(&(x->freeBuffers));
-		ReleaseLock(x,oldLockout);
-				
-		if (pb == 0) {
-			post("¥ OTUDP: out of Packet Buffers; had to drop outgoing UDP packet %d %d",
-				 length, (long) bytes);
-			return;
-		}
-		
-		OTMemcpy (pb->buf, bytes, length);
-		pb->n = length;
-	
-		oldLockout = AcquireLock(x);
-		PBFIFOEnqueue(pb, &(x->outgoingDeferredBuffers));
-		ReleaseLock(x,oldLockout);
-				
-		OTScheduleDeferredTask(x->dtCookie);
-	} else {
-		/* Not interrupt level, so we can just call OT directly and save the extra copying */
-		do_write(x, length, bytes);
-	}
+	do_write(x, length, bytes);
 }
 
 
@@ -1215,7 +1149,7 @@ static Boolean BufferSanityCheck(OTUDP *x, int *freep, int *pendingp, int *outgo
 	oldLockout = AcquireLock(x);
 	free = CountPacketList(x->freeBuffers);
 	pending = CountPacketList(x->pendingBuffers.first);
-	outgoing = CountPacketList(x->outgoingDeferredBuffers.first);
+	outgoing = 0;
 	ReleaseLock(x,oldLockout);
 
 	if (freep != 0) *freep = free;
