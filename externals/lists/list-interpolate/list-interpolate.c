@@ -32,7 +32,7 @@ University of California, Berkeley.
    
    Bug fixed to really work with floats, Matt Wright 1/4/01
    Made compilable in CW 8.3,  Matt Wright 12/5/2
-
+ 
 */
 
 #define VERSION "1.5"
@@ -56,7 +56,7 @@ void *iclass;
 typedef	struct	fobj
 {
 	Object			object;		/* An embedded MAX object.					*/
-	void			*dataoutlet;	/* frequency, gain bandwidth tuplets -first outlet		*/
+	void			*dataoutlet;
 	void *bangoutlet;
 	
 	/* Arrays allocated in the new routine */
@@ -280,5 +280,5 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addbang( (method) bangdump  );
 	addfloat( (method) floatdump  );
 	post("list-interpolate " VERSION " - Adrian Freed and Matt Wright");
-	post("Copyright ©1999,2000,2001 Regents of the University of California.");
+	post("Copyright ©1999,2000,2001,02 Regents of the University of California.");
 }
