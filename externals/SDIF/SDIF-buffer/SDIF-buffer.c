@@ -37,12 +37,12 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
   10/08/02 - 0.5: Compiles with CW7
   11/21/02 - 0.6: Has change-frametype message
   12/18.02 - 0.7: Uses Max 4 file opening stuff, works on OSX
-    
+  12/26/02 - 0.7.1: Uses locatefile_extended correctly to open regardless of MacOS type
 
 */
 
 
-#define SDIF_BUFFER_VERSION "0.7"
+#define SDIF_BUFFER_VERSION "0.7.1"
 
 /* the required include files */
 
@@ -310,9 +310,7 @@ static FILE *OpenSDIFFile(char *filename) {
 	char filenamecopy[MAX_FILENAME_LEN];
 	char fullpath[MAX_FULLPATH_LEN];
 	short result, pathID;
-	long filetype, desiredFileType;
-	long everyPossibleSDIFFileType[] = {'DATA', 'SDIF', '????', 'TEXT'};
-	int numPossibleSDIFFileTypes = sizeof(everyPossibleSDIFFileType) / sizeof(long);
+	long filetype;
 	PATH_SPEC ps;	
 	OSErr err;
 	FILE *f;
@@ -321,18 +319,7 @@ static FILE *OpenSDIFFile(char *filename) {
 	
 	strncpy(filenamecopy, filename, MAX_FILENAME_LEN);
 	
-#ifdef LOCATEFILE_WORKS_ON_ANY_TYPE	
-	desiredFileType = 0L;  // Any type is fine
-	
-	result = locatefile_extended(filenamecopy, &pathID, &filetype, &desiredFileType, 1);
-#else
-	result = locatefile_extended(filenamecopy, &pathID, &filetype,
-							     everyPossibleSDIFFileType, numPossibleSDIFFileTypes);
-#endif
-
-	// post("** filename %s, filenamecopy %s", filename, filenamecopy);
-	// post("** pathID %ld", (long) pathID);
-	
+	result = locatefile_extended(filenamecopy, &pathID, &filetype, 0, 0);
 
 	
 	if (result != 0) {

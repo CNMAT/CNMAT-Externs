@@ -4,6 +4,6 @@
           release,               // dev/alpha/beta/release
           0x00,               // Build # (for pre-release)
           0,                  // Region code (US)
-          "0.7 (Classic)",        // Major/minor release as short string
-          "0.7, © 2002 CNMAT (Classic Version)"
+          "0.7.1 (Classic)",        // Major/minor release as short string
+          "0.7.1, © 2002 CNMAT (Classic Version)"
           };
