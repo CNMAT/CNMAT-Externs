@@ -30,8 +30,8 @@ NAME: lbyl ("Look Before You Leap")
 DESCRIPTION: Echo an input stream of numbers to the output, but "don't believe" large jumps in the value unless the output stays at that value for a while.
 AUTHORS: Matt Wright
 VERSION: 0.2
-SPONSOR:
-LICENSE:
+SPONSOR: 
+LICENSE: 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Version history:  	           
