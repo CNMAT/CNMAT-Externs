@@ -25,14 +25,19 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
-  lbyl:  "Look Before You Leap": 
-  			Echo an input stream of numbers to the output, but "don't believe" large
-  	        jumps in the value unless the output stays at that value for a while.
-  	           
-  0.0 Matt Wright 1/3/3
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: lbyl ("Look Before You Leap")
+DESCRIPTION: Echo an input stream of numbers to the output, but "don't believe" large jumps in the value unless the output stays at that value for a while.
+AUTHORS: Matt Wright
+VERSION: 0.2
+SPONSOR:
+LICENSE:
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Version history:  	           
+  0.0 First version  1/3/3
   0.1 Renamed LBYL
   0.2 Added outlets for "non-bogus" and "rejected"
-  
   
   To-Do:  Make despair a return value, decision to repeat last pre-jump value in the float method.
   
