@@ -50,6 +50,7 @@ University of California, Berkeley.
  Changed error reporting to post() instead of ouchstring()  (2.2)
  PPC only, allows "host" and "receiveport" even in overdrive.  No dialog boxes. (2.3)
  OSX version: InContext, nothing deferred...  (3.0)
+ Used error() instead of post() for error messages (3.0.1)
  
 
 Now that this thing uses asynchronous mode, it's nearly impossible to tell how
@@ -81,7 +82,7 @@ the flow of control works, so here are some hints:
  */
 
 
-#define OTUDP_VERSION "2.3"
+#define OTUDP_VERSION "3.0.1"
 #define MAX_PACKET_SIZE 65536   // This is the limit for a UDP packet
 #define DEFAULT_BUFFER_SIZE  1024
 #define DEFAULT_NUM_BUFFERS 20 
@@ -246,7 +247,7 @@ void main(fptr *f) {
     // post ("*** before  InitOpenTransport();");
 	err = InitOpenTransportInContext(kInitOTForExtensionMask, &OTContext);
 	if (err != kOTNoError) {
-		post("¥ OTUDP: Couldn't InitOpenTransport (err %d).  Perhaps Open Transport is not installed.",
+		error("¥ OTUDP: Couldn't InitOpenTransport (err %d).  Perhaps Open Transport is not installed.",
 					err);
 		return;
 	}
@@ -293,14 +294,14 @@ void *otudp_new(Symbol *s, short argc, Atom *argv) {
 
 		
 	if (ParseArgs(argc, argv, &writer, &inetHostName, &port, &receivePort, &nbufs, &bufsize) == 0) {
-		post("¥ OTUDP usage: \"otudp read <port> [bufsize <nbytes>] [nbufs <n>]\" or "
+		error("¥ OTUDP usage: \"otudp read <port> [bufsize <nbytes>] [nbufs <n>]\" or "
 				   "\"otudp write <hostname> <port> [bufsize <nbytes>] [nbufs <n>]\"");
 		return 0;
 	}
 	
 	if (writer) {
 		if (LookUpInetHost(inetHostName, &host) == 0) {
-			post("Couldn't make sense of Internet host \"%s\"", inetHostName);
+			error("otudp: Couldn't make sense of Internet host \"%s\"", inetHostName);
 			return 0;
 		}
 	}
@@ -336,7 +337,7 @@ void *otudp_new(Symbol *s, short argc, Atom *argv) {
 	} else {
 		x->allBuffers = InitPackets(bufsize, nbufs);
 		if (x->allBuffers == 0) {
-			post("¥ OTUDP: Out of memory (Couldn't allocate buffers to store incoming packets)");
+			error("¥ OTUDP: Out of memory (Couldn't allocate buffers to store incoming packets)");
 			return 0;
 		}
 
@@ -347,7 +348,7 @@ void *otudp_new(Symbol *s, short argc, Atom *argv) {
 	err = OTAsyncOpenEndpointInContext(OTCreateConfiguration(kUDPName), 0, &(x->epinfo), 
 									   NewOTNotifyUPP(OTUDPNotifier), x, OTContext);
 	if (err != noErr) {
-		post("¥ otudp: Error %d from OTAsyncOpenEndpoint. This is bad.", err);
+		error("¥ otudp: Error %d from OTAsyncOpenEndpoint. This is bad.", err);
 		return 0;
 	}
 	// This didn't actually make the endpoint; my notifier should get the T_OPENCOMPLETE
@@ -416,7 +417,7 @@ int ParseArgs(short argc, Atom *argv, int *writerp, char **inetHostNamep, InetPo
 		
 		rest = 2;
 	} else {
-		post("¥ OTUDP: first arg must be either \"read\" or \"write\"");
+		error("¥ OTUDP: first arg must be either \"read\" or \"write\"");
 		return 0;
 	}
 	
@@ -462,7 +463,7 @@ void otudp_assist (OTUDP *x, void *box, long msg, long arg, char *dstString) {
 		} else if (msg==ASSIST_OUTLET) {
 			sprintf(dstString, "UDP packets to this sender's return address");
 		} else {
-			post("¥ otudp_assist: unrecognized message %ld", msg);
+			error("¥ otudp_assist: unrecognized message %ld", msg);
 		}
 	} else {
 		if (msg==ASSIST_INLET) {
@@ -470,7 +471,7 @@ void otudp_assist (OTUDP *x, void *box, long msg, long arg, char *dstString) {
 		} else if (msg==ASSIST_OUTLET) {
 			sprintf(dstString, "Incoming UDP packets");
 		} else {
-			post("¥ otudp_assist: unrecognized message %ld", msg);
+			error("¥ otudp_assist: unrecognized message %ld", msg);
 		}
 	}
 }
@@ -489,16 +490,16 @@ static int LookUpInetHost(char *name, InetHost *result) {
 		tcpipProvider = OTOpenInternetServicesInContext(kDefaultInternetServicesPath, 0, &err, OTContext);
 		
 		if (err != noErr) {
-			post("¥ otudp: Error %d from OTOpenInternetServices().", err);
+			error("¥ otudp: Error %d from OTOpenInternetServices().", err);
 			return 0;
 		}
 		
 		err = OTInetStringToAddress(tcpipProvider, name, &hinfo);
 		OTCloseProvider(tcpipProvider);
 		if (err == kOTBadNameErr) {
-			post("¥ otudp: Bad host name \"%s\"; not changing.", name);
+			error("¥ otudp: Bad host name \"%s\"; not changing.", name);
 		} else if (err != noErr) {
-			post("¥ otudp: Error %d from OTInetStringToAddress; not changing host.", err);
+			error("¥ otudp: Error %d from OTInetStringToAddress; not changing host.", err);
 			return 0;
 		}
 		*result = hinfo.addrs[0];
@@ -534,7 +535,7 @@ pascal void OTUDPNotifier(void* vobj, OTEventCode code, OTResult result, void* c
 	
 	if (code == T_OPENCOMPLETE) {
 		if (result != noErr) {
-			post("OTUDPNotifier got a T_OPENCOMPLETE code with error %ld", result);
+			error("OTUDPNotifier got a T_OPENCOMPLETE code with error %ld", result);
 		}
 		
 		// Even if we got an error, we'll bind the endpoint.  
@@ -553,7 +554,7 @@ pascal void OTUDPNotifier(void* vobj, OTEventCode code, OTResult result, void* c
 		} else {
 			// We asked OT for a particular port, but didn't necessarily get it
 			if (x->o_receiveInetPort != x->o_addrWeActuallyGot.fPort) {
-				post("¥ otudp: Tried to bind to port %ld, but got %ld instead!!",
+				error("¥ otudp: Tried to bind to port %ld, but got %ld instead!!",
 						   x->o_receiveInetPort, x->o_addrWeActuallyGot.fPort);
 				x->o_receiveInetPort = x->o_addrWeActuallyGot.fPort;
 			} else {
@@ -580,7 +581,7 @@ pascal void OTUDPNotifier(void* vobj, OTEventCode code, OTResult result, void* c
 		}		
 	} else {
 	 	if (x->o_errorreporting) {
-			post("OTUDP: Unrecognized OTEventCode %ld in event handler.  Oh well.", (long) code);
+			error("OTUDP: Unrecognized OTEventCode %ld in event handler.  Oh well.", (long) code);
 		}
 	}
 
@@ -604,7 +605,7 @@ void BindTheEndpoint(OTUDP *x) {
 		/* Let OTBind pick a return address port number for us */
   	    err = OTBind(x->o_udp_ep, nil, &(x->o_bindAddrWeActuallyGot));
 		if (err != kOTNoError) {
-			post("¥ otudp: Error %d from OTBind.  You may not be able to write.", err);
+			error("¥ otudp: Error %d from OTBind.  You may not be able to write.", err);
 			return;
 		}
 	} else {
@@ -621,7 +622,7 @@ void BindTheEndpoint(OTUDP *x) {
 		err = OTBind(x->o_udp_ep, &bindDesiredAddress, &(x->o_bindAddrWeActuallyGot));
 
 		if (err != kOTNoError) {
-			post("¥ otudp: Error %d from OTBind.  You may not be able to read.", err);
+			error("¥ otudp: Error %d from OTBind.  You may not be able to read.", err);
 			return;
 		}
 		
@@ -631,7 +632,7 @@ void BindTheEndpoint(OTUDP *x) {
 
 void otudp_changeHost(OTUDP *x, Symbol *hostName, long port) {	
 	if (!x->o_writer) {
-		post("¥ OTUDP: You can only change the host on write objects, not readers.");
+		error("¥ OTUDP: You can only change the host on write objects, not readers.");
 		return;
 	}
 	
@@ -669,7 +670,7 @@ void unbind_from_qelem (void* arg) {
 		InetHost host;
 		// post("*** about to call LookUpInetHost");
 		if (LookUpInetHost(x->o_desiredNewHostName, &host) == 0) {
-			post("¥ Can't change Internet host: \"%s\" makes no sense.", x->o_desiredNewHostName);
+			error("¥ Can't change Internet host: \"%s\" makes no sense.", x->o_desiredNewHostName);
 			
 			/* No harm done; just ignore the host change request. */
 			x->o_desiredNewHostName = 0;
@@ -697,15 +698,15 @@ void unbind_from_qelem (void* arg) {
 			// Probably more data has arrived, so we have to read it all out
 			// before this can work.
 			if (tries > 3) {
-				post("¥ OTUDP: kept getting kOTLookErr when trying to unbind; I give up.");
+				error("¥ OTUDP: kept getting kOTLookErr when trying to unbind; I give up.");
 				break;
 			}
-			post("OTUDP: Couldn't unbind because kOTLookErr; reading then trying again.");
+			error("OTUDP: Couldn't unbind because kOTLookErr; reading then trying again.");
 			otudp_read(x);
 			++tries;
 			continue;
 		} else {
-			post("¥ OTUDP: OTUnbind returned %ld; can't change host.", s);
+			error("¥ OTUDP: OTUnbind returned %ld; can't change host.", s);
 		}
 		break;
 	}
@@ -715,7 +716,7 @@ void unbind_from_qelem (void* arg) {
 
 void otudp_changeReceivePort(OTUDP *x, long port) {
 	if (x->o_writer) {
-		post("¥ OTUDP: You can only change the receive port on read objects, not writers.");
+		error("¥ OTUDP: You can only change the receive port on read objects, not writers.");
 		return;
 	}
 
@@ -742,7 +743,7 @@ static short AcquireLock(OTUDP *x) {
 
 	
 	if (x->o_semaphoreTest != 0) {
-		post("¥ otudp_read: semaphoreTest failed!");
+		error("¥ otudp_read: semaphoreTest failed!");
 	}
 	oldLockout = lockout_set(1);
 	OTEnterNotifier(x->o_udp_ep);
@@ -751,7 +752,7 @@ static short AcquireLock(OTUDP *x) {
 	i = 0;
 	while (OTAcquireLock(&(x->o_readlock)) == false) {
 		if ((++i) > TOO_MANY_SPINS) {
-			post("¥ otudp_read: OTAcquireLock keeps failing!");
+			error("¥ otudp_read: OTAcquireLock keeps failing!");
 		}
 	}
 
@@ -761,7 +762,7 @@ static short AcquireLock(OTUDP *x) {
 
 static void ReleaseLock(OTUDP *x, short oldLockout) {
 	if (x->o_semaphoreTest != 1) {
-		post("¥ otudp_read: about to release lock, but semaphoreTest is %ld", x->o_semaphoreTest);
+		error("¥ otudp_read: about to release lock, but semaphoreTest is %ld", x->o_semaphoreTest);
 	}
 	--(x->o_semaphoreTest);
 
@@ -813,7 +814,7 @@ void otudp_read(OTUDP *x) {
 			// drop the packet (gracefully) without Open Transport blowing up.
 			if (x->o_errorreporting) {
 				if (!(x->o_num_dropped_packets)) {
-					post("otudp: Out of packet buffers; have to drop packet(s)");
+					error("otudp: Out of packet buffers; have to drop packet(s)");
 				}
 				++(x->o_num_dropped_packets);
 				x->o_ever_dropped_a_packet = 1;
@@ -839,7 +840,7 @@ void otudp_read(OTUDP *x) {
 			} else if (flags == T_MORE) {
 				// Only the beginning of the (large) UDP packet fit in our buffer
 				if (x->o_errorreporting) {
-					post("OTUDP: packet too big; dropping.");
+					error("OTUDP: packet too big; dropping.");
 				}
 				
 				++numPacketsThisTime;
@@ -849,7 +850,7 @@ void otudp_read(OTUDP *x) {
 				if (myPB) PacketBufferListPush(myPB, &(x->freeBuffers));
 			} else {
 				if (x->o_errorreporting) {
-					post("OTUDP: OTRcvUData returned flags of %ld; dropped packet", (long) flags);
+					error("OTUDP: OTRcvUData returned flags of %ld; dropped packet", (long) flags);
 				}
 				if (myPB) PacketBufferListPush(myPB, &(x->freeBuffers));
 			}
@@ -866,7 +867,7 @@ void otudp_read(OTUDP *x) {
 				--(x->o_num_dropped_packets);
 			}
 		} else {
-			post("OTUDP: OTRcvUData returned error %ld; dropped packet", (long) err);
+			error("OTUDP: OTRcvUData returned error %ld; dropped packet", (long) err);
 			if (myPB) PacketBufferListPush(myPB, &(x->freeBuffers));
 		}
 	}
@@ -935,7 +936,7 @@ void PostUDERR(char *source, EndpointRef ep) {
 #endif
 		
 	err = OTRcvUDErr(ep, &errBlock);
-	post("OTUDP: %s  \"protocol-dependent\" error code %ld", source, errBlock.error);
+	error("OTUDP: %s  \"protocol-dependent\" error code %ld", source, errBlock.error);
 	{
 		char hostNameString[255];
 		OTInetHostToString(addr.fHost, hostNameString);
@@ -952,13 +953,13 @@ void PostUDERR(char *source, EndpointRef ep) {
 		// No further error; don't worry about it
 	} else if (err == kOTLookErr) {
 		OTResult r = OTLook(ep);
-		post("Got kOTLookErr; OTLook returned %d", r);
+		error("Got kOTLookErr; OTLook returned %d", r);
 	} else if (err == kOTFlowErr) {
-		post("Flow control error.");
+		error("Flow control error.");
 	} else if (err == kOTBufferOverflowErr) {
-	    post("Lame Open Transport says it doesn't have enough memory0 to tell me what my problem is.");
+	    error("Open Transport says it doesn't have enough memory to tell me what the error is.");
 	} else {	
-		post("OTRcvUDErr returned %ld", err);
+		error("OTRcvUDErr returned %ld", err);
 	}
 }
 
@@ -998,7 +999,7 @@ void try_write(OTUDP *x, long length, void *bytes) {
 	// post("** try_write(%p, %ld, %p", x, length, bytes);
 	
 	if (length <= 0 || length > MAX_PACKET_SIZE) {
-		post("¥ OTUDP: bad packet length %ld", length);
+		error("¥ OTUDP: bad packet length %ld", length);
 		return;
 	}
 
@@ -1025,24 +1026,24 @@ void do_write(OTUDP *x, long length, void *bytes) {
 	err = OTSndUData(x->o_udp_ep, &udata);
 	
 	if (err == kOTBadSyncErr) {
-		post("¥ OTUDP: failed to send data at interrupt level.  Try turning off overdrive.");
+		error("¥ OTUDP: failed to send data at interrupt level.  Try turning off overdrive.");
 	} else if (err != noErr) {
-		post("¥ OTUDP: OTSndUData returned error code %ld.", err);
+		error("¥ OTUDP: OTSndUData returned error code %ld.", err);
 	}
 }
 
 void otudp_write(OTUDP *x, long size, long bufferPointer) {
 		
 	if (!(x->o_writer)) {
-		post("otudp read objects can't write!  Get a grip!");
+		error("otudp read objects can't write!  Get a grip!");
 		return;
 	}
 	
 	if (!(x->o_ready)) {
 		if (x->o_udp_ep == 0) {
-			post("otudp: Can't send a packet yet; the endpoint hasn't been created yet.");
+			error("otudp: Can't send a packet yet; the endpoint hasn't been created yet.");
 		} else {
-			post("otudp: Can't send a packet yet; the endpoint hasn't been bound yet.");
+			error("otudp: Can't send a packet yet; the endpoint hasn't been bound yet.");
 		}
 		return;
 	}
@@ -1062,15 +1063,15 @@ void otudp_old_write(OTUDP *x, Symbol *s, short argc, Atom *argv) {
 	}
 	
 	if (!(x->o_writer)) {
-		post("otudp read objects can't write!  Get a grip!");
+		error("otudp read objects can't write!  Get a grip!");
 		return;
 	}
 	
 	if (!(x->o_ready)) {
 		if (x->o_udp_ep == 0) {
-			post("otudp: Can't send a packet yet; the endpoint hasn't been created yet.");
+			error("otudp: Can't send a packet yet; the endpoint hasn't been created yet.");
 		} else {
-			post("otudp: Can't send a packet yet; the endpoint hasn't been bound yet.");
+			error("otudp: Can't send a packet yet; the endpoint hasn't been bound yet.");
 		}
 		return;
 	}
@@ -1157,7 +1158,7 @@ static Boolean BufferSanityCheck(OTUDP *x, int *freep, int *pendingp, int *outgo
 	if (outgoingp != 0) *outgoingp = outgoing;
 
 	if (free+pending+outgoing != x->nbufs) {
-		post("¥ BufferSanityCheck failed!  %d free + %d pending + %d outgoing = %d", 
+		error("otudp: BufferSanityCheck failed!  %d free + %d pending + %d outgoing = %d", 
 			free, pending, free+pending+outgoing);
 		return false;
 	} else {
