@@ -42,9 +42,10 @@ Maintenance by Ben "Jacobs".
   04/01/04 - 0.8.0: Refactored some code into sdif-buf.c; added access to SDIFbuf_Buffer (bj)
   06/22/04 - 0.8.1: Cleanup (bj)
   12/24/04 - 0.9: Windows port (mw)
+  12/28/04 - 0.9.1: Fixed bug (in sdif-buf.c) of crashing when reading nonexistant stream number
 */
 
-#define SDIF_BUFFER_VERSION "0.9"
+#define SDIF_BUFFER_VERSION "0.9.1"
 #define FINDER_NAME "SDIF-buffer"
 
 /* the required include files */
