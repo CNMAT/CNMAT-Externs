@@ -21,28 +21,14 @@
  * Includes.
  */
  
-#include <SetUpA4.h>
-#include <A4Stuff.h>
 
-#include <Navigation.h>
-#include <FSp_fopen.h>
 #include "ext.h"
-/* Undo ext.h's macro versions of some of stdio.h: */
-#undef fopen
-#undef fclose
-#undef fprintf
-#undef fscanf
-#undef fseek
-#undef sprintf
-#undef sscanf
-
-#include <stdio.h>
 
 
 // Define the max number of args.
-#define MAX_INARGS 768
-#define MAX_OUTARGS 512
-#define MAX_OSC 256
+#define MAX_OSC 1000
+#define MAX_INARGS (MAX_OSC*3)
+#define MAX_OUTARGS (MAX_OSC*2)
 
 
 // We consider each duple sent to sinusoids~ to be a "slot". Each slot
@@ -65,7 +51,7 @@ typedef struct t_slot_
 
 
 // Structure for this type of object.
-typedef struct t_trackdeath_
+typedef struct t_threefates_
 {
 	struct object t_obj;
 	void *t_out;
@@ -92,18 +78,18 @@ typedef struct t_trackdeath_
 	int num_slots;
 	// Max index in used slot list.
 	int max_slot_index;
-} t_trackdeath;
+} t_threefates;
 
 Symbol *ps_list;
 
-void *trackdeath_class;
+void *threefates_class;
 
 /*
  * Function Prototypes.
  */
 
 // Make new object.
-void *trackdeath_new(
+void *threefates_new(
 	Symbol s, 
 	short ac,
 	Atom *av);
@@ -111,77 +97,77 @@ void *trackdeath_new(
 
 // Set up the grid.
 void List(
-	t_trackdeath *x, 
+	t_threefates *x, 
 	Symbol *mess,
 	int argc, 
 	Atom *argv);
 
-void SlotsToOutput(t_trackdeath *thisobject);
-void RemoveDeadSlots(t_trackdeath *thisobject);
+void SlotsToOutput(t_threefates *thisobject);
+void RemoveDeadSlots(t_threefates *thisobject);
 void AddToSlotList(
-	t_trackdeath *thisobject,
+	t_threefates *thisobject,
 	int index,
 	float freq,
 	float amp);
 	
-int GetFreeSlot(t_trackdeath *thisobject);
+int GetFreeSlot(t_threefates *thisobject);
 
 int IsInSlotList(
-	t_trackdeath *thisobject,
+	t_threefates *thisobject,
 	int index);
 	
-void SetDeadZero(t_trackdeath *thisobject);
+void SetDeadZero(t_threefates *thisobject);
 	
-void InitializeSlots(t_trackdeath *thisobject);
+void InitializeSlots(t_threefates *thisobject);
 
 
 void BirthSlotList(
-	t_trackdeath *thisobject,
+	t_threefates *thisobject,
 	int index,
 	float freq,
 	float amp);
 
 int InputToFutureFrame(
-	t_trackdeath *x, 
+	t_threefates *x, 
 	Symbol *mess,
 	int argc, 
 	Atom *argv);
 	
 void SetFutureValue(
-	t_trackdeath *x,
+	t_threefates *x,
 	int index,
 	float value);
 	
 float GetFutureValue(
-	t_trackdeath *x,
+	t_threefates *x,
 	int index);
 
 void SetFutureAC(
-	t_trackdeath *x,
+	t_threefates *x,
 	int ac);
 
-int GetFutureAC(t_trackdeath *x);
+int GetFutureAC(t_threefates *x);
 
 void SetPresentValue(
-	t_trackdeath *x,
+	t_threefates *x,
 	int index,
 	float value);
 	
 float GetPresentValue(
-	t_trackdeath *x,
+	t_threefates *x,
 	int index);
 
 void SetPresentAC(
-	t_trackdeath *x,
+	t_threefates *x,
 	int ac);
 
-int GetPresentAC(t_trackdeath *x);
+int GetPresentAC(t_threefates *x);
 
-void CopyFutureToPresent(t_trackdeath *x);
+void CopyFutureToPresent(t_threefates *x);
 
-void PresentFrameToSlots(t_trackdeath *x);
+void PresentFrameToSlots(t_threefates *x);
 
-void FutureFrameToSlots(t_trackdeath *x);
+void FutureFrameToSlots(t_threefates *x);
 
 
 
@@ -193,11 +179,11 @@ void FutureFrameToSlots(t_trackdeath *x);
 void main(fptr *f)
 {
 	
-	post("Running track-assigner main");
+	post("Running threefates main");
 	
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup(&trackdeath_class, trackdeath_new, 0,
-			(short)sizeof(t_trackdeath), 0L, 0);
+	setup((t_messlist **)&threefates_class, (method) threefates_new, 0,
+			(short)sizeof(t_threefates), 0L, 0);
 			
 			
 	addmess((method)List, "list", A_GIMME, 0);
@@ -212,19 +198,18 @@ void main(fptr *f)
  *
  *************************************************************************************/
 
-void *trackdeath_new(
+void *threefates_new(
 	Symbol s, 
 	short ac,
 	Atom *av)
 {
 	int i;
 
-	t_trackdeath *x;
+	t_threefates *x;
 	
-	EnterCallback();
-	post("Running track-assigner.new");
+	post("Running threefates_new");
 
-	x = (t_trackdeath*)newobject(trackdeath_class);
+	x = (t_threefates*)newobject(threefates_class);
 	
 	x->t_out = listout(x);
 
@@ -238,9 +223,6 @@ void *trackdeath_new(
 	x->toggle_frame_present = 0;
 	
 	InitializeSlots(x);
-
-	
-	ExitCallback();
 	
 	return(x);
 }
@@ -251,13 +233,11 @@ void *trackdeath_new(
  *************************************************************************************/
 
 void List(
-	t_trackdeath *x, 
+	t_threefates *x, 
 	Symbol *mess,
 	int argc, 
 	Atom *argv)
 {
-	EnterCallback();
-
 	// We get FUTURE frame from arguments.
 	if (InputToFutureFrame(x, mess, argc, argv) == 0)
 	{
@@ -289,8 +269,6 @@ void List(
 	{
 		post("¥ Assign-tracks: Need multiple of 3 length input list.");
 	}
-	 
-	ExitCallback();
 }
 
 
@@ -298,7 +276,7 @@ void List(
  *
  **************************************************************************************/
 
-void InitializeSlots(t_trackdeath *thisobject)
+void InitializeSlots(t_threefates *thisobject)
 {
 	int i;
 	
@@ -321,7 +299,7 @@ void InitializeSlots(t_trackdeath *thisobject)
  *
  **************************************************************************************/
 
-void SetDeadZero(t_trackdeath *thisobject)
+void SetDeadZero(t_threefates *thisobject)
 {
 	int i;
 	
@@ -338,7 +316,7 @@ void SetDeadZero(t_trackdeath *thisobject)
  **************************************************************************************/
 
 int IsInSlotList(
-	t_trackdeath *thisobject,
+	t_threefates *thisobject,
 	int index)
 {
 	int i;
@@ -358,7 +336,7 @@ int IsInSlotList(
  *
  **************************************************************************************/
 
-int GetFreeSlot(t_trackdeath *thisobject)
+int GetFreeSlot(t_threefates *thisobject)
 {
 	int i;
 	
@@ -383,7 +361,7 @@ int GetFreeSlot(t_trackdeath *thisobject)
  **************************************************************************************/
 
 void AddToSlotList(
-	t_trackdeath *thisobject,
+	t_threefates *thisobject,
 	int index,
 	float freq,
 	float amp)
@@ -415,7 +393,7 @@ void AddToSlotList(
  **************************************************************************************/
 
 void BirthSlotList(
-	t_trackdeath *thisobject,
+	t_threefates *thisobject,
 	int index,
 	float freq,
 	float amp)
@@ -458,7 +436,7 @@ void BirthSlotList(
  *
  **************************************************************************************/
 
-void RemoveDeadSlots(t_trackdeath *thisobject)
+void RemoveDeadSlots(t_threefates *thisobject)
 {
 
 	int i;
@@ -486,7 +464,7 @@ void RemoveDeadSlots(t_trackdeath *thisobject)
  *
  **************************************************************************************/
 
-void SlotsToOutput(t_trackdeath *thisobject)
+void SlotsToOutput(t_threefates *thisobject)
 {
 	int i;
 	int counter0 = 0;
@@ -515,7 +493,7 @@ void SlotsToOutput(t_trackdeath *thisobject)
  **************************************************************************************/
 
 int InputToFutureFrame(
-	t_trackdeath *x, 
+	t_threefates *x, 
 	Symbol *mess,
 	int argc, 
 	Atom *argv)
@@ -556,7 +534,7 @@ int InputToFutureFrame(
  **************************************************************************************/
 
 void SetFutureValue(
-	t_trackdeath *x, 
+	t_threefates *x, 
 	int i,
 	float value)
 {
@@ -575,7 +553,7 @@ void SetFutureValue(
  **************************************************************************************/
 
 float GetFutureValue(
-	t_trackdeath *x, 
+	t_threefates *x, 
 	int i)
 {
 	if (x->toggle_frame_present == 0)
@@ -591,7 +569,7 @@ float GetFutureValue(
  **************************************************************************************/
 
 void SetFutureAC(
-	t_trackdeath *x, 
+	t_threefates *x, 
 	int ac)
 {
 	if (x->toggle_frame_present == 0)
@@ -608,7 +586,7 @@ void SetFutureAC(
  *
  **************************************************************************************/
 
-int GetFutureAC(t_trackdeath *x)
+int GetFutureAC(t_threefates *x)
 {
 	if (x->toggle_frame_present == 0)
 	{
@@ -623,7 +601,7 @@ int GetFutureAC(t_trackdeath *x)
  **************************************************************************************/
 
 void SetPresentValue(
-	t_trackdeath *x,
+	t_threefates *x,
 	int i,
 	float value)
 {
@@ -642,7 +620,7 @@ void SetPresentValue(
  **************************************************************************************/
 
 float GetPresentValue(
-	t_trackdeath *x,
+	t_threefates *x,
 	int i)
 {
 	if (x->toggle_frame_present == 1)
@@ -658,7 +636,7 @@ float GetPresentValue(
  **************************************************************************************/
 
 void SetPresentAC(
-	t_trackdeath *x,
+	t_threefates *x,
 	int ac)
 {
 	if (x->toggle_frame_present == 1)
@@ -675,7 +653,7 @@ void SetPresentAC(
  *
  **************************************************************************************/
 
-int GetPresentAC(t_trackdeath *x)
+int GetPresentAC(t_threefates *x)
 {
 	if (x->toggle_frame_present == 1)
 	{
@@ -690,7 +668,7 @@ int GetPresentAC(t_trackdeath *x)
  *
  **************************************************************************************/
 
-void CopyFutureToPresent(t_trackdeath *x)
+void CopyFutureToPresent(t_threefates *x)
 {
 	switch (x->toggle_frame_present)
 	{
@@ -708,7 +686,7 @@ void CopyFutureToPresent(t_trackdeath *x)
  *
  **************************************************************************************/
 
-void PresentFrameToSlots(t_trackdeath *x)
+void PresentFrameToSlots(t_threefates *x)
 {
 	int counter0, counter1, counter2;
 	int i;
@@ -748,7 +726,7 @@ void PresentFrameToSlots(t_trackdeath *x)
  *
  **************************************************************************************/
 
-void FutureFrameToSlots(t_trackdeath *x)
+void FutureFrameToSlots(t_threefates *x)
 {
 	int counter0, counter1, counter2;
 	int i;
