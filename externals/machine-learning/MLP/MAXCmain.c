@@ -4,6 +4,7 @@
 	
 *-------------------------------------------------------------------*/
 
+
 #include "NNInclude.h"
 
 /* ------------------------- nn_auto_learn ------------------------ */
@@ -865,6 +866,7 @@ double		err;
 }
 
 /* ------------------------- nn_create ------------------------- */
+void	*nn_create(long in,long hid,long hid_layers,long out,Symbol *weightFile);
 
 void	*nn_create(long in,long hid,long hid_layers,long out,Symbol *weightFile)
 {
@@ -1106,10 +1108,8 @@ double		inputLayer;
 
 /* ------------------------- nn_momentum --------------------- */
 
-void *nn_momentum(x,mom)
-NeuralNet	*x;
-double		mom;
-{
+void *nn_momentum(NeuralNet	* x, double mom);
+void *nn_momentum(NeuralNet	* x, double mom) {
 	
 	x->nn_net->weightMomentum = mom;
 	
@@ -1117,11 +1117,8 @@ double		mom;
 
 /* ------------------------- nn_mu --------------------- */
 
-void *nn_mu(x,mu)
-NeuralNet	*x;
-double		mu;
-{
-	
+void *nn_mu(NeuralNet *x, double mu);
+void *nn_mu(NeuralNet *x, double mu) {
 	x->nn_net->mu = mu;
 	
 }
@@ -1256,11 +1253,14 @@ void *nn_out_slope_mom(x,momentum)
 	
 }
 
+
+
 /* ------------------------- nn_dqfn ------------------------- */
 
 void	*nn_dqfn(x)
 NeuralNet	*x;
 {
+#ifdef GRAPHICS
 	short		savelock;
 	GrafPort	*oldGrafPort;
 
@@ -1290,7 +1290,7 @@ NeuralNet	*x;
 	post("     nn_dqfn - end");
 #endif
 	lockout_set(savelock);
-	
+#endif	
 }	/* nn_dqfn */
 
 /* ------------------------- nn_qfn ---------------------------- */
@@ -1420,11 +1420,10 @@ void	*nn_status(net)
 void	*nn_update(x)
 NeuralNet	*x;
 {
+#ifdef GRAPHICS
 GrafPort  *	oldGrafPort;
 	int	savelock;
 	
-	
-
 	if (x->nn_debug)
 		post("¥nn_update - start");
 
@@ -1440,7 +1439,7 @@ GrafPort  *	oldGrafPort;
 #endif
 	qelem_set(x->nn_dqelem);
 	
-	
+#endif	
 }	/* nn_update */
 
 /* ------------------------- nn_wsize ------------------------- */
@@ -1448,8 +1447,6 @@ GrafPort  *	oldGrafPort;
 void	*nn_wsize(x)
 NeuralNet	*x;
 {
-GrafPort  *	oldGrafPort;
-
 	
 #ifdef debug
 	post("¥nn_wsize - start");
