@@ -4,6 +4,6 @@
           release,               // dev/alpha/beta/release
           0x00,               // Build # (for pre-release)
           0,                  // Region code (US)
-          "0.1 (Classic or OSX)",        // Major/minor release as short string
-          "0.1, © 2002 CNMAT (Classic/OSX Version)"
+          "0.2 (Classic or OSX)",        // Major/minor release as short string
+          "0.2, © 2002,3 CNMAT (Classic/OSX Version)"
           };

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2002.  The Regents of the University of California (Regents).
+Copyright (c) 2002,3.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -25,16 +25,23 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
-  jump-limit:  Echo an input stream of numbers to the output, but "don't believe" large
-  	           jumps in the value unless the output stays at that value for a while.
+  lbyl:  "Look Before You Leap": 
+  			Echo an input stream of numbers to the output, but "don't believe" large
+  	        jumps in the value unless the output stays at that value for a while.
   	           
-  0.0 Mat Wright 1/3/3
+  0.0 Matt Wright 1/3/3
+  0.1 Renamed LBYL
+  0.2 Added outlets for "non-bogus" and "rejected"
+  
+  
+  To-Do:  Make despair a return value, decision to repeat last pre-jump value in the float method.
+  
   
 */
  
  
 // #define DEBUG	
-#define JUMPLIMIT_VERSION "0.1"
+#define LBYL_VERSION "0.1"
 
  
 #include "ext.h"
@@ -42,61 +49,68 @@ University of California, Berkeley.
 
 #define RINGBUF_SIZE 100
 
-typedef struct JumpLimit
+typedef struct LBYL
 {
 	struct object f_ob;
+	void *nonbogus_outlet;
 	void *outlet;
+	void *reject_outlet;
 	
 	int numSeen;		/* Total #inputs seen */
 
 	float ringbuffer[RINGBUF_SIZE];			/* Previously-seen values */
 	int ringWritePos;				/* Next position that will be written to */
 	
-	float lastBeforeJump;
-
+	float lastBeforeSpuriousJump;
+	int jumped;				/* Have we jumped recently, or do we think we might be in a steady region? */
+	float lastOutput;
 
 	// User parameters
 	float tolerance;	/* If successive values are within this close of each other, it's not a jump */
 	int quota;			/* Number of values that must be seen in new range to believe a jump */
 	
-} JumpLimit;
+} LBYL;
 
 
 void *class;
 
-void *JumpLimit_new(Symbol *s, float tolerance, long quota);
-void JumpLimit_tolerance(JumpLimit *x, float t);
-void JumpLimit_quota(JumpLimit *x, long q);
-void JumpLimit_version(JumpLimit *x);
-void JumpLimit_tellmeeverything(JumpLimit *x);
+void *LBYL_new(Symbol *s, float tolerance, long quota);
+void LBYL_tolerance(LBYL *x, float t);
+void LBYL_quota(LBYL *x, long q);
+void LBYL_version(LBYL *x);
+void LBYL_tellmeeverything(LBYL *x);
 static int Near(float x, float y, float tolerance);
-void JumpLimit_float(JumpLimit *x, float f);
-static float processInput(JumpLimit *x, float f);
-void Reset(JumpLimit *x);
-static void NewInput(JumpLimit *x, float f);
-static int NumRemembered(JumpLimit *x);
-static float PastInput(JumpLimit *x, int ago);
+void LBYL_float(LBYL *x, float f);
+void LBYL_int(LBYL *x, int i);
+static float processInput(LBYL *x, float f, int *rejected, int *despair);
+void Reset(LBYL *x);
+static void NewInput(LBYL *x, float f);
+static int NumRemembered(LBYL *x);
+static float PastInput(LBYL *x, int ago);
 
 
 
 void main(fptr *f) {
-	JumpLimit_version(0);
-	setup((t_messlist **)&class, (method)JumpLimit_new, 0L, (short)sizeof(JumpLimit), 0L, 
+	LBYL_version(0);
+	setup((t_messlist **)&class, (method)LBYL_new, 0L, (short)sizeof(LBYL), 0L, 
 		  A_DEFFLOAT, A_DEFLONG, 0);
-	addfloat((method)JumpLimit_float);
-	addmess((method) JumpLimit_tellmeeverything, "tellmeeverything", 0);
-	addmess((method) JumpLimit_version, "version", 0);
-	addmess((method) JumpLimit_tolerance, "tolerance", A_FLOAT, 0);
-	addmess((method) JumpLimit_quota, "quota", A_LONG, 0);
+	addfloat((method)LBYL_float);
+	addint((method)LBYL_int);
+	addmess((method) LBYL_tellmeeverything, "tellmeeverything", 0);
+	addmess((method) LBYL_version, "version", 0);
+	addmess((method) LBYL_tolerance, "tolerance", A_FLOAT, 0);
+	addmess((method) LBYL_quota, "quota", A_LONG, 0);
 	addmess((method) Reset, "reset", 0);
 }
 
 
-void *JumpLimit_new(Symbol *s, float tolerance, long quota) {
-	JumpLimit *x;
+void *LBYL_new(Symbol *s, float tolerance, long quota) {
+	LBYL *x;
 	
-	x = (JumpLimit *)newobject(class);
+	x = (LBYL *)newobject(class);
+	x->reject_outlet = listout(x);
 	x->outlet = listout(x);
+	x->nonbogus_outlet = listout(x);	
 	
 	if (tolerance == 0.0) {
 		x->tolerance = 5.0f;
@@ -110,46 +124,48 @@ void *JumpLimit_new(Symbol *s, float tolerance, long quota) {
 		x->quota = quota;
 	}
 
-	x->lastBeforeJump = -999.0f;
+	x->lastBeforeSpuriousJump = -999.0f;
+	x->jumped = 1;
 	Reset(x);
 	return (x);
 }
 
-void JumpLimit_tolerance(JumpLimit *x, float t) {
+void LBYL_tolerance(LBYL *x, float t) {
 	if (t < 0.0) {
-		error("jump-limit: tolerance must be nonnegative");
+		error("lbyl: tolerance must be nonnegative");
 	} else {
 		x->tolerance = t;
 	}
 }
 
-void JumpLimit_quota(JumpLimit *x, long q) {
+void LBYL_quota(LBYL *x, long q) {
 	if (q < 1) {
-		error("jump-limit: quota must be positive.");
+		error("lbyl: quota must be positive.");
 	} else if (q > RINGBUF_SIZE) {
-		error("jump-limit: quota %ld can't be larger than internal ring buffer size %ld",
+		error("lbyl: quota %ld can't be larger than internal ring buffer size %ld",
 			  q, RINGBUF_SIZE);
 	} else {
 		x->quota = q;
 	}
 }			  
 
-void JumpLimit_version(JumpLimit *x) {
-	post("jump-limit object version " JUMPLIMIT_VERSION " by Matt Wright 1/3/3");
+void LBYL_version(LBYL *x) {
+	post("lbyl object version " LBYL_VERSION " by Matt Wright 1/3/3");
 	if (x) {
 		/* Not called from main(); */
 		post("  compiled " __TIME__ " " __DATE__);
 	}
 }
 
-void JumpLimit_tellmeeverything(JumpLimit *x) {
+void LBYL_tellmeeverything(LBYL *x) {
 	int numToPrint, i;
 
-	JumpLimit_version(x);
+	LBYL_version(x);
 	post("  Tolerance: %f", x->tolerance);
 	post("  Quota: %ld", x->quota);
 	post("  %ld input values have been seen", x->numSeen);
-	post("  Last non-jump value: %f", x->lastBeforeJump);
+	post("  Last non-jump value: %f", x->lastBeforeSpuriousJump);
+	post("  I believe the input has recently %s", (x->jumped ? "jumped" : "stayed steady"));
 	
 	numToPrint = x->numSeen;
 	if (numToPrint > 10) numToPrint = 10;
@@ -157,6 +173,7 @@ void JumpLimit_tellmeeverything(JumpLimit *x) {
 	for (i = 0; i<numToPrint; ++i) {
 		post("     %f",  PastInput(x, i));
 	}
+	post("  Last output: %f", x->lastOutput);
 }
 
 #define fabs(x) (((x) < 0.0f) ? (-(x)) : (x))
@@ -165,50 +182,109 @@ static int Near(float x, float y, float tolerance) {
 	return (fabs(x-y) <= tolerance);
 }
 
-void JumpLimit_float(JumpLimit *x, float f) {
-	 outlet_float(x->outlet, processInput(x, f));
+void LBYL_float(LBYL *x, float f) {
+	int rejected = 0, despair = 0;
+	float output = processInput(x, f, &rejected, &despair);
+	
+	if (rejected) {
+		 outlet_float(x->reject_outlet, f);
+	}
+	
+	outlet_float(x->outlet, output);
+	x->lastOutput = output;
+	
+	if (!despair) {
+		outlet_float(x->nonbogus_outlet, output);
+	}	
 }
 
 
-static float processInput(JumpLimit *x, float f) {
+void LBYL_int(LBYL *x, int i) {
+	LBYL_float(x, (float) i);
+}
+
+static float processInput(LBYL *x, float f, int *rejected, int *despair) {
+	int i;
 
 	NewInput(x, f);
 
 	if (x->numSeen == 1) {
-		x->lastBeforeJump = f;
+		x->lastBeforeSpuriousJump = f;
+		x->jumped = 0;
 		return f;
 	} else if (x->numSeen < x->quota) {
 		/* We haven't seen enough inputs to establish a believable trend, so pretend that the first 
 		   input was repeated enough to count */
 		
-		if (Near(f, x->lastBeforeJump, x->tolerance)) {
-			return f;
-		} else {
-			return x->lastBeforeJump;
+		for (i = 0; i+1 < x->numSeen; ++i) {
+			if (! Near(PastInput(x, i), PastInput(x, i+1), x->tolerance)) {
+				/* The first sub-quota of inputs haven't been consistent */
+				*rejected = 1;
+				x->jumped = 1;
+				*despair = 1;
+				return x->lastBeforeSpuriousJump; /* Bogus */
+			}
 		}
-	} else if (Near(f, x->lastBeforeJump, x->tolerance)) {
-		/* No jump */
-		x->lastBeforeJump = f;
+		/* First inputs have been consistent, even though quota not yet met. */		
 		return f;
-	} else {
-		int i;
-
-		/* It was a jump.  Have we now seen enough values in the new range to believe the jump? */
-				
+	} else if (x->jumped) {
+		/* Have we now seen enough values in the new range to believe the jump? */
 		for (i = 0; i+1 < x->quota; ++i) {
 			if (! Near(PastInput(x, i), PastInput(x, i+1), x->tolerance)) {
 				/* We failed our quota */
-				return x->lastBeforeJump;
+				*rejected = 1;
+				*despair = 1;
+				return x->lastBeforeSpuriousJump;  /* Bogus */
 			}
 		}
 
 		/* We filled the quota in the new range */
-		
-		x->lastBeforeJump = f;
+
+		x->jumped = 0;
+		*rejected = 0;
+		x->lastBeforeSpuriousJump = f;
 		return f;
+	} else {
+		/* We were in the steady state */
+		
+		if (Near(f, x->lastBeforeSpuriousJump, x->tolerance)) {
+			/* No jump, still in steady state, this input is the new "last good value" */
+			x->lastBeforeSpuriousJump = f;
+			return f;	
+		} else {
+			/* This input was a jump.  Was it spurious?  Let's look at the last quota's worth of inputs
+			   and see if we've made it to the new range. */
+			
+			for (i = 0; i+1 < x->quota; ++i) {
+				if (Near(PastInput(x, i), x->lastBeforeSpuriousJump, x->tolerance)) {
+					/* Saw a good old value recently, so assume this jump is still spurious */
+					*rejected = 1;
+					x->jumped = 0;
+					return x->lastBeforeSpuriousJump;  /* Good */
+				}
+			}
+					
+			/* It's been longer than the quota since we saw a value near x->lastBeforeSpuriousJump,
+			   so maybe we've met the quota in the new range */
+			    
+			for (i = 0; i+1 < x->quota; ++i) {
+				if (! Near(PastInput(x, i), PastInput(x, i+1), x->tolerance)) {
+					/* We failed our quota, so we're just jumping around too much to know what to output. */
+					x->jumped = 1;
+					*rejected = 1;
+					*despair = 1;
+					return x->lastBeforeSpuriousJump;  /* Bogus */
+				}
+			}
+			
+			/* We've met the quota in the new range. */
+			x->jumped = 0;
+			*rejected = 0;
+			return f;
+		}				
 	}	
 	
-	error("jump-limit: should never reach this line");
+	error("lbyl: should never reach this line");
 	return 0;
 }
 
@@ -217,12 +293,12 @@ static float processInput(JumpLimit *x, float f) {
 /*********** Ring buffer *************/
 
 
-void Reset(JumpLimit *x) {
+void Reset(LBYL *x) {
 	x->numSeen = 0;
 	x->ringWritePos = 0;
 }
 
-static void NewInput(JumpLimit *x, float f) {
+static void NewInput(LBYL *x, float f) {
 	x->ringbuffer[x->ringWritePos] = f;
 	
 	++(x->ringWritePos);
@@ -231,17 +307,17 @@ static void NewInput(JumpLimit *x, float f) {
 	++(x->numSeen);
 }
 
-static int NumRemembered(JumpLimit *x) {
+static int NumRemembered(LBYL *x) {
 	if (x->numSeen < RINGBUF_SIZE) return x->numSeen;
 	return RINGBUF_SIZE;
 }
 
-static float PastInput(JumpLimit *x, int ago) {
+static float PastInput(LBYL *x, int ago) {
 	/* ago=0 means the most recent input */
 	int index;
 
 	if (ago >= NumRemembered(x)) {
-		error("jump-limit: logic error: bad arg %ld to PastInput", ago);
+		error("lbyl: logic error: bad arg %ld to PastInput", ago);
 		return -999;
 	}
 	
@@ -250,7 +326,7 @@ static float PastInput(JumpLimit *x, int ago) {
 	if (index < 0) index+= RINGBUF_SIZE;
 	
 	if (index < 0) {
-		error("jump-limit: internal logic error.");
+		error("lbyl: internal logic error.");
 		return -999;
 	}
 	
