@@ -55,7 +55,16 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>  // for SHRT_MAX
+#ifdef WIN_VERSION
+double NAN;
+#include <z_dsp.h>
+extern int isnan(double d) {
+	return IS_NAN_DOUBLE(d);
+}
+#else
 #include <FSp_fopen.h>
+#endif
 
 /* #include <assert.h> */
 #define assert(x) if (!(x)) { ouchstring("Assertion failed: %s, file %s, line %i\n", \
@@ -166,10 +175,17 @@ void main(fptr *fp)
 
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
+
+#ifdef WIN_VERSION
+	{
+		unsigned long nan_bits[2]={0xffffffff, 0x7fffffff};
+		NAN = *(double *)nan_bits;
+	}
+#endif
 }
 
 
-void *SDIFimport_new(Symbol *, short argc, Atom *argv)
+void *SDIFimport_new(Symbol *dummy, short argc, Atom *argv)
 {
 	SDIFImport *x;
 
@@ -340,18 +356,55 @@ void SDIFimport_import(SDIFImport *x, Symbol *fileNameIn)
     goto finish;
   }
   
-  if(0 != path_tospec(fiPath, fni, &fiSpec))
+#ifdef WIN_VERSION
+    {
+		short maxErr;
+		char fullpath[256];
+		char conformed[256];
+		maxErr = path_topathname(fiPath, fni, fullpath);
+		if (maxErr) {
+			error("%s: path_topathname returned error code %d - can't open %s", 
+				  FINDER_NAME, maxErr, fileNameIn->s_name);
+			goto finish;
+		}
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
+		if (maxErr) {
+			error("%s: path_nameconform returned error code %d - can't open %s", 
+				  FINDER_NAME, maxErr, fileNameIn->s_name);
+			goto finish;
+		}
+		fi = fopen(conformed, "rb");
+		if (fi == NULL) {
+			error("%s: fopen returned NULL; can't open %s", FINDER_NAME, fileNameIn->s_name);
+			goto finish;
+		} 
+	}
+#else
+/* Macintosh version */
+
+#define PATH_SPEC_MEANS_FSSPEC
+#ifdef PATH_SPEC_MEANS_FSSPEC
+  if (0 != path_tospec(fiPath, fni, &fiSpec))
   {
-    error("%s: problem opening file \"%s\" for reading", FINDER_NAME, fileNameIn->s_name);
+    error("%s: problem opening file \"%s\" for reading (path_tospec)",
+		  FINDER_NAME, fileNameIn->s_name);
     goto finish;
   }
   
   if(!(fi = FSp_fopen(&fiSpec, "r")))
   {
-    error("%s: problem opening file \"%s\" for reading", FINDER_NAME, fileNameIn->s_name);
+    error("%s: problem opening file \"%s\" for reading (FSp_fopen)", 
+		  FINDER_NAME, fileNameIn->s_name);
     goto finish;
   }
-  
+ 
+#else 	
+#error What do I do with a PATH_SPEC?	
+#endif /* PATH_SPEC_MEANS_FSSPEC */
+#endif /* WIN_VERSION */
+
+
+ 
 	//  loop to read lines / write frames
   for(i = 0; TRUE; ++i)
   {

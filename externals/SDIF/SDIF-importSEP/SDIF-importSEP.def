@@ -1,0 +1,6 @@
+;SDIF-importSEP.def
+
+LIBRARY SDIF-importSEP
+
+EXPORTS
+	main
