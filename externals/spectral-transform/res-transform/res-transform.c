@@ -30,12 +30,16 @@ University of California, Berkeley.
 
 Copyright © 1986,1987 Adrian Freed
 Copyright © 1996,1997,1998,1999 Regents of the University of California.
-	change to accept a giant list of resonances 
+
 
 Version 1.2 by Matt Wright: compiles with CW 7 and new Max/MSP SDK
 Version 1.3 by Matt Wright has "setoneamplitude", "setonefrequency", "setonerate", and "setone"
 Version 1.4 by Matt Wright allows float midi-pitch
 
+
+To-Do:  Generalize into SDIF-transform
+	- Know which columns are freq, amplitude, etc...
+	
 */
 
 #define VERSION "1.4"
