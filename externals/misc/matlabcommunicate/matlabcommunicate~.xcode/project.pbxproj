@@ -266,11 +266,11 @@
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "../c74support/max-includes/ext_carbon_prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/ext_carbon_prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "../c74support/msp-includes ../c74support/max-includes /Applications/Matlab/extern/include";
+				HEADER_SEARCH_PATHS = "../../../c74support/msp-includes ../../../c74support/max-includes /Applications/Matlab/extern/include";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Bundles";
 				LIBRARY_SEARCH_PATHS = /Applications/Matlab/bin/mac;

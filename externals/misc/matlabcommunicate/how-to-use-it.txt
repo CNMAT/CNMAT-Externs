@@ -1,0 +1,27 @@
+
+
+
+
+Go to a bash shell and set the shell variables MATLAB, DVLD_LIBRARY_PATH, and PATH.
+Then start Max from this terminal:
+
+bash
+MATLAB=/Applications/Matlab
+export MATLAB
+DYLD_LIBRARY_PATH=$MATLAB/bin/mac:$MATLAB/sys/os/mac:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH
+PATH=/Applications/Matlab/bin:$PATH
+export PATH
+open /Applications/MaxMSP\ 4.5/MaxMSP\ 4.5
+
+
+
+
+For Remote:
+
+Start the X server on your machine
+xhost +[ip_address_of_matlab_server]
+Make sure your path on the matlab server includes the Matlab directory
+
+Type this in a terminal on my laptop to run Matlab on the G5:
+ssh 128.32.122.217 "/bin/csh -c 'setenv DISPLAY 128.32.122.70:0; matlab'"
