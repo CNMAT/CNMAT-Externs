@@ -239,9 +239,9 @@ void *interleave_new(
 	
 	if (x->num_inputs == 4)
 	{
-		x->t_proxy[3] = proxy_new(x, 3L, &x->t_which_inlet);
-		x->t_proxy[2] = proxy_new(x, 2L, &x->t_which_inlet);
-		x->t_proxy[1] = proxy_new(x, 1L, &x->t_which_inlet);
+		x->t_proxy[2] = proxy_new(x, 3L, &x->t_which_inlet);
+		x->t_proxy[1] = proxy_new(x, 2L, &x->t_which_inlet);
+		x->t_proxy[0] = proxy_new(x, 1L, &x->t_which_inlet);
 	}
 	
 	for (i = 0; i < x->num_inputs; ++i) {
