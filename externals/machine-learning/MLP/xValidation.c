@@ -1,6 +1,9 @@
 #define	SCOPE	extern
 #include "NNInclude.h"
 
+static char *PtoCstr(unsigned char* src);
+
+
 #ifndef MAXObject
 /* ------------------------- nn_error_stats ------------------------ */
 
@@ -41,7 +44,7 @@ int				index;
 }
 #else
 /* ------------------------- nn_error_stats ------------------------ */
-
+   
 void	*nn_error_stats(x,set,index)
 NeuralNetPtr	x;
 patternSetPtr	set;	
@@ -51,16 +54,26 @@ int				index;
 	long	count;
 	char	buf[512];
 	char	fileName[256],prefix[256];
+	short result;
+	FILE_REF fileref;
 
 	strcpy(prefix,set->fileName);
 	PtoCstr((unsigned char*)prefix);
-	sprintf(fileName,
-			(const char *)"\p%s.err",
-			prefix);
-	post("xValidation file %s.err created",prefix);
-	Create((ConstStr255Param)fileName,0,'max2','TEXT');
-	FSOpen((ConstStr255Param)fileName,0,&file);
-		
+	sprintf(fileName, "%s.err", prefix);
+	
+	result = path_createfile(fileName, path_getdefault(), 'TEXT', &fileref);
+
+	if (result) {
+		error("Error %d creating xValidation file %s.err", prefix);
+		return;
+	}
+	
+	post("xValidation file %s.err created" ,prefix);
+
+	/* On July 1, 2003, A max "FILE_REF" is precisely the short that should be passed to 
+	   FSWrite, etc. */
+	file = fileref;
+
 	sprintf(buf,"epochs: %d\r",index);
 	count = strlen(buf);
 	FSWrite(file,&count,buf);
