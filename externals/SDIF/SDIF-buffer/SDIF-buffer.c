@@ -36,15 +36,20 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
   11/21/00 - 0.4.1 default streamID is 1; added change-streamID message
   10/08/02 - 0.5: Compiles with CW7
   11/21/02 - 0.6: Has change-frametype message
+  12/18.02 - 0.7: Uses Max 4 file opening stuff, works on OSX
     
 
 */
 
 
-#define SDIF_BUFFER_VERSION "0.6"
+#define SDIF_BUFFER_VERSION "0.7"
 
 /* the required include files */
+
+#ifdef NAVIGATION_SERVICES	
 #include <Navigation.h>
+#endif
+
 #include <FSp_fopen.h>
 
 #include "ext.h"
@@ -154,7 +159,9 @@ void main(fptr *fp) {
 	addmess((method)SDIFbuffer_framelist, "framelist", A_GIMME, 0);
 	addmess((method)SDIFbuffer_print, "print", 0);
 	addmess((method)SDIFbuffer_clear, "clear", 0);
+#ifdef NAVIGATION_SERVICES	
 	addmess((method)SDIFbuffer_NAVcrap, "NAVcrap", 0);
+#endif	
 	addmess((method)PrintAllTheBuffers, "printall", 0);
 	addmess((method)SDIFbuffer_writefile, "write", A_SYM, 0);
 	addmess((method)SDIFbuffer_changeStreamID, "change-streamID", A_LONG, 0);
@@ -173,7 +180,8 @@ void main(fptr *fp) {
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		ouchstring("Couldn't initialize SDIF memory utilities! %s", SDIF_GetErrorString(r));
 	}
-	
+
+#ifdef NAVIGATION_SERVICES	
 	if (!NavServicesAvailable()) {
 		post("¥ SDIF-buffer: navigation services are not available.");
 		post("Opening a dialog box will probably fail.");
@@ -184,6 +192,7 @@ void main(fptr *fp) {
 			post("Opening a dialog box will probably fail.");
 		}
 	}
+#endif
 	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
@@ -277,10 +286,102 @@ void SDIFbuffer_debug(SDIFBuffer *x, long debugMode) {
 }
 
 
-static FILE *OpenSDIFFile(char *filename) {
-#ifdef ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER
-	return SDIF_OpenRead(filename);
+#if __ide_target("debug-classic") || __ide_target("release-classic")
+/* OS9 */
 #else
+/* OSX */
+#endif
+
+
+
+#define MAX4_FILE_HANDLING
+
+
+#ifdef ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER
+static FILE *OpenSDIFFile(char *filename) {
+	return SDIF_OpenRead(filename);
+}
+#else
+
+#ifdef MAX4_FILE_HANDLING
+#define MAX_FILENAME_LEN 256
+#define MAX_FULLPATH_LEN 2000
+static FILE *OpenSDIFFile(char *filename) {
+	char filenamecopy[MAX_FILENAME_LEN];
+	char fullpath[MAX_FULLPATH_LEN];
+	short result, pathID;
+	long filetype, desiredFileType;
+	long everyPossibleSDIFFileType[] = {'DATA', 'SDIF', '????', 'TEXT'};
+	int numPossibleSDIFFileTypes = sizeof(everyPossibleSDIFFileType) / sizeof(long);
+	PATH_SPEC ps;	
+	OSErr err;
+	FILE *f;
+	SDIFresult r;
+
+	
+	strncpy(filenamecopy, filename, MAX_FILENAME_LEN);
+	
+#ifdef LOCATEFILE_WORKS_ON_ANY_TYPE	
+	desiredFileType = 0L;  // Any type is fine
+	
+	result = locatefile_extended(filenamecopy, &pathID, &filetype, &desiredFileType, 1);
+#else
+	result = locatefile_extended(filenamecopy, &pathID, &filetype,
+							     everyPossibleSDIFFileType, numPossibleSDIFFileTypes);
+#endif
+
+	// post("** filename %s, filenamecopy %s", filename, filenamecopy);
+	// post("** pathID %ld", (long) pathID);
+	
+
+	
+	if (result != 0) {
+		post("¥ SDIF-buffer: couldn't locate alleged SDIF file %s (result %ld)", 
+			 filename, result);
+		return NULL;
+	}
+	
+	
+	
+	result = path_tospec(pathID, filenamecopy, &ps);
+	
+	if (result != 0) {
+		post("¥ SDIF-buffer: couldn't make PATH_SPEC from SDIF file %s (path_tospec returned %ld)",
+			 filenamecopy, result);
+		return NULL;
+	}
+	
+#define PATH_SPEC_MEANS_FSSPEC
+#ifdef PATH_SPEC_MEANS_FSSPEC
+
+	f = FSp_fopen (&ps, "rb");
+	if (f == NULL) {
+		post("¥ SDIF-buffer: FSp_fopen returned NULL!");
+	} else {
+		if (r = SDIF_BeginRead(f)) {
+			int ferrno;
+			post("¥ SDIF-buffer: error reading SDIF file %s:", filename);
+			post("  %s", SDIF_GetErrorString(r));
+			
+			ferrno = ferror(f);
+			post("  ferror() returned %ld:", ferrno);
+			post("      %s", strerror(ferrno));
+			
+			fclose(f);
+			return NULL;
+		}
+	} 
+	return f;
+#else 	
+#error What do I do with a PATH_SPEC?	
+#endif
+}
+
+	
+#else 
+/* The bad old way using FSSpecs... */
+
+static FILE *OpenSDIFFile(char *filename) {
 	SDIFresult r;
 	short vRefNum;
 	FSSpec spec;
@@ -324,8 +425,15 @@ static FILE *OpenSDIFFile(char *filename) {
 		}
 	} 
 	return f;
-#endif
 }
+
+#endif /* MAX4_FILE_HANDLING */
+#endif /* ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER */
+
+
+
+
+
 
 
 void SDIFbuffer_changeStreamID(SDIFBuffer *x, long newStreamID) {
@@ -846,6 +954,7 @@ pascal void worldsLamestEventProc(NavEventCallbackMessage callBackSelector,
 	break;
 	}
 }
+#ifdef NAVIGATION_SERVICES	
 
 void SDIFbuffer_NAVcrap(SDIFBuffer *x) {
 	OSErr err;
@@ -918,9 +1027,10 @@ void SDIFbuffer_NAVcrap(SDIFBuffer *x) {
 		post("* about to dispose reply");
 		NavDisposeReply(&nrr);
 	}
-	
-	
 }
+#endif
+
+
 
 /********************  Buffer lookup ********************/
 
