@@ -1,6 +1,11 @@
 #define	SCOPE	extern
 #include "NNInclude.h"
 
+#include "ext_path.h"  /* for READ_PERM */
+
+
+static char *PtoCstr(unsigned char* src);
+
 #define skip_whitespace(x)\
 {\
 	while (*x == ' ' || *x == '\n' || *x == '\t' || *x == '\r') {\
@@ -30,43 +35,39 @@ void	*nn_doread(NeuralNetPtr x,Symbol *fileName)
 	char	*file_ptr;
 	int		savelock;
 	char	filename[256];
-	short	vol;
-	SFTypeList	typelist;
+	short	path, isTheFileBinary;
+	/* SFTypeList */ long typelist[] = { 'TEXT' };
 	OSType	dstType;
+	short result;
+	FILE_REF fileref;
 
-	strcpy((char*)filename,fileName->s_name);
-	if (fileName==gensym("")||locatefiletype(filename,&vol,0L,0L)){
-#ifdef OPEN_DIALOG_WORKS  // MW couldn't make this compile 021211
-		/* do open dialog if no file given or not found */
-		if (open_dialog(filename,
-		(&vol),
-		(&dstType),
-		typelist,
-		 0))
-#endif
-			goto CloseIt;		/* didn't want to open */
-	}	
-	if (err = FSOpen(CtoPstr(filename),vol,&file))
-		goto CloseIt;
-#ifdef debug
-post("before file_size is: %ld",size);
-#endif
+	strcpy(filename,fileName->s_name);
+	
+	if (fileName==gensym("") || (locatefile(fileName->s_name ,&path, &isTheFileBinary) != 0)) {
+		/* no file given or the given not found, so present a dialog box */
+		
+		if (open_dialog(filename, &path, (long *) &dstType, typelist, 1)) {
+			return;
+		}
+	}
+	
+	result = path_openfile(filename, path, &fileref, READ_PERM);
+	
+	if (result) {
+		error("Error %d opening neural network file %s", filename);
+		return;
+	}
+
+	/* On July 1, 2003, A max "FILE_REF" is precisely the short that should be passed to 
+	   FSWrite, etc. */
+	file = fileref;
+
 	GetEOF(file,&size);
-#ifdef debug
-post("file_size is: %ld",size);
-#endif
 	old_ptr = file_ptr = (char*)getbytes((short)size);
-#ifdef debug
-post("old_ptr: %ld", (long)old_ptr);
-#endif
 	if (!old_ptr) {
 		FSClose(file);
 		goto CloseIt;
 	}
-#ifdef debug
-post("file_size is: %ld",size);
-post("old_ptr: %ld", (long)old_ptr);
-#endif
 	FSRead(file,&size,file_ptr);
 	FSClose(file);
 
@@ -217,20 +218,33 @@ void	*nn_dowrite(NeuralNetPtr x,Symbol *fileName)
 	short	i,file;
 	long	count;
 	char	buf[BUFSIZ];
-	short	vol,binary;
+	short	path,binary;
 	char	filename[256];
+	short result;
+	FILE_REF fileref;
+
 	
-	strcpy(filename,fileName->s_name);
-	if (fileName!=gensym(""))
-		vol = defvolume();
-	else{
-		if (saveas_dialog(filename,&vol,&binary))
-			goto CloseIt;
+	if (fileName->s_name[0] == '\0') {
+		/* User didn't specify a filename, so present a dialog box */
+		if (saveas_dialog(filename, &path, 0L) != 0)
+			return;
+	} else {
+		/* Use user's filename and the default path. */
+		path = path_getdefault();
+		strcpy(filename,fileName->s_name);
 	}
 	
-	Create(CtoPstr(filename),vol,'max2','TEXT');
-	if (err = FSOpen((ConstStr255Param)filename,vol,&file))
-		goto CloseIt;
+	result = path_createfile(filename, path, 'TEXT', &fileref);
+
+	if (result) {
+		error("Error %d creating neural network file %s", filename);
+		return;
+	}
+
+	/* On July 1, 2003, A max "FILE_REF" is precisely the short that should be passed to
+	   FSWrite, etc. */
+	file = fileref;
+
 
 	sprintf(buf,"%d\r",x->nn_net->numIN);
 	count = strlen(buf);
@@ -266,8 +280,7 @@ void	*nn_dowrite(NeuralNetPtr x,Symbol *fileName)
 
 	freebytes(weights,(short)(sizeof(double)*WEIGHTS));
 	FSClose(file);
-	FlushVol(0,vol);
-CloseIt:;
+	// FlushVol(0,vol);  MW removed 030701 while switching to new file I/O routines
 }
 
 void	*nn_free_pattern_memory(x,set)
@@ -313,23 +326,34 @@ void	*nn_doget_pattern(NeuralNetPtr x,patternSetPtr set,Symbol *fileName)
 	char	*file_ptr,*old_ptr;
 	int		savelock,k;
 	char	filename[256];
-	short	vol;
-	SFTypeList	typelist;
+	short	path, result, isTheFileBinary;
+	/* SFTypeList */ long typelist[] = { 'TEXT' };
 	OSType	dstType;
-	
+	FILE_REF fileref;
+
 	savelock = lockout_set(1);
 
 	strcpy(filename,fileName->s_name);
-	if (fileName==gensym("")||locatefiletype(filename,&vol,0L,0L)){
-#ifdef OPEN_DIALOG_WORKS
-		/* do open dialog if no file given or not found */
-		if (open_dialog(filename,&vol,&dstType,typelist,0))
-#endif
-			goto CloseIt;		/* didn't want to open */
+
+	if (fileName==gensym("") || (locatefile(fileName->s_name ,&path, &isTheFileBinary) != 0)) {
+		/* no file given or the given not found, so present a dialog box */
+		
+		if (open_dialog(filename, &path, (long *) &dstType, typelist, 1)) {
+			return;
+		}
 	}
 	
-	if (err = FSOpen(CtoPstr(filename),vol,&file))
-		goto CloseIt;
+	result = path_openfile(filename, path, &fileref, READ_PERM);
+	
+	if (result) {
+		error("Error %d opening pattern file %s", filename);
+		return;
+	}
+
+	/* On July 1, 2003, A max "FILE_REF" is precisely the short that should be passed to 
+	   FSWrite, etc. */
+	file = fileref;
+
 	strcpy(set->fileName,PtoCstr((unsigned char*)filename));
 	GetEOF(file,&size);
 	old_ptr = file_ptr = (char*) getbytes((short)size);
