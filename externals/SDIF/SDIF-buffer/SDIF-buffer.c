@@ -282,16 +282,19 @@ void SDIFbuffer_debug(SDIFBuffer *x, long debugMode) {
 }
 
 
+/*
 #if __ide_target("debug-classic") || __ide_target("release-classic")
-/* OS9 */
+// OS9 
 #else
-/* OSX */
+// OSX 
 #endif
+*/
 
+#ifdef WIN_VERSION
 
-
+#else
 #define MAX4_FILE_HANDLING
-
+#endif
 
 #ifdef ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER
 static FILE *OpenSDIFFile(char *filename) {

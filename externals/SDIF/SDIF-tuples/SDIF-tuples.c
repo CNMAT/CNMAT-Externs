@@ -61,6 +61,7 @@ University of California, Berkeley. Interpolation support by Ben "Jacobs".
 #include <float.h>
 #include <stdlib.h>
 #include <math.h>
+#include <limits.h>
 #include "ext.h"
 
 /* Undo ext.h's macro versions of some of stdio.h: */
@@ -241,7 +242,7 @@ void main(fptr *fp)
 	ps_max_rows = gensym("max_rows");
 }
 
-void *SDIFtuples_new(Symbol *, short argc, Atom *argv) {
+void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
 	SDIFtuples *x;
 	int i;
 	
@@ -371,7 +372,7 @@ static void SDIFtuples_direction(SDIFtuples *x, long d) {
 	x->t_direction = d;
 }
 
-static void SDIFtuples_columns(SDIFtuples *x, Symbol *, short argc, Atom *argv) {
+static void SDIFtuples_columns(SDIFtuples *x, Symbol *dummy, short argc, Atom *argv) {
 	int i;
 
 	/* First make sure all arguments are OK */
@@ -413,7 +414,7 @@ static void SDIFtuples_max_rows(SDIFtuples *x, long n) {
 }
 
 
-static void SDIFtuples_tuples(SDIFtuples *x, Symbol *, short argc, Atom *argv) {
+static void SDIFtuples_tuples(SDIFtuples *x, Symbol *dummy, short argc, Atom *argv) {
 	Boolean concatenate;
 	sdif_float64 time;
 	Boolean reltime;

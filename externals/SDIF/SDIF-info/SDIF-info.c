@@ -45,6 +45,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 
 #include <string.h>
 #include <float.h>
+#include <limits.h>
 #include "ext.h"
 
 /* Undo ext.h's macro versions of some of stdio.h: */
@@ -144,7 +145,7 @@ void main(fptr *fp)
 	finder_addclass("Data","SDIF-info");		
 }
 
-void *SDIFinfo_new(Symbol *, short argc, Atom *argv) {
+void *SDIFinfo_new(Symbol *dummy, short argc, Atom *argv) {
 	SDIFinfo *x;
 	int i;
 	
