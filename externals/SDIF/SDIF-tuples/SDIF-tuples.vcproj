@@ -91,7 +91,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../sysbuild/win_release/externals/"
+			OutputDirectory="../build-win"
 			IntermediateDirectory="../ext_win_release/"
 			ConfigurationType="2"
 			UseOfMFC="0"
