@@ -44,7 +44,6 @@ Maintenance by Ben "Jacobs".
 
 */
 
-
 #define SDIF_BUFFER_VERSION "0.8.1"
 #define FINDER_NAME "SDIF-buffer"
 
@@ -54,9 +53,18 @@ Maintenance by Ben "Jacobs".
 #include <Navigation.h>
 #endif
 
-#ifdef MAC
-mac is great!
+#ifdef WIN_VERSION
+Windows sucks
+#else
 #include <FSp_fopen.h>
+/*
+#if __ide_target("debug-classic") || __ide_target("release-classic")
+// OS9 
+#else
+// OSX 
+#endif
+*/
+
 #endif
 
 #include "ext.h"
@@ -282,29 +290,23 @@ void SDIFbuffer_debug(SDIFBuffer *x, long debugMode) {
 }
 
 
-/*
-#if __ide_target("debug-classic") || __ide_target("release-classic")
-// OS9 
-#else
-// OSX 
-#endif
-*/
 
-#ifdef WIN_VERSION
-
-#else
-#define MAX4_FILE_HANDLING
-#endif
 
 #ifdef ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER
+/* Life was so simple back in the old days.  
+   To open an SDIF file, we just called into the SDIF library and let it
+   call the stdio open() procedure.  All OpenSDIFFile() does is turn a
+   (user-supplied) filename into a FILE *.  */
 static FILE *OpenSDIFFile(char *filename) {
 	return SDIF_OpenRead(filename);
 }
 #else
-
-#ifdef MAX4_FILE_HANDLING
+/* Use the Max API's locatefile_extended() to search for the file by name in the
+   Max search path. */
+   
 #define MAX_FILENAME_LEN 256
 #define MAX_FULLPATH_LEN 2000
+
 static FILE *OpenSDIFFile(char *filename) {
 	char filenamecopy[MAX_FILENAME_LEN];
 	char fullpath[MAX_FULLPATH_LEN];
@@ -322,12 +324,13 @@ static FILE *OpenSDIFFile(char *filename) {
 
 	
 	if (result != 0) {
-		post("¥ SDIF-buffer: couldn't locate alleged SDIF file %s (result %ld)", 
+		post("¥ SDIF-buffer: couldn't locate alleged SDIF file %s in Max's search path (result %ld)", 
 			 filename, result);
 		return NULL;
 	}
 	
-	
+
+	post("** Got path ID %d,filename %s", pathID, filenamecopy);
 	
 	result = path_tospec(pathID, filenamecopy, &ps);
 	
@@ -337,10 +340,22 @@ static FILE *OpenSDIFFile(char *filename) {
 		return NULL;
 	}
 	
+    /* Dealing with the PATH_SPEC is platform-specific: */
+    
+#ifdef WIN_VERSION
+    Write me!    
+#else
+/* Macintosh version */
+
 #define PATH_SPEC_MEANS_FSSPEC
 #ifdef PATH_SPEC_MEANS_FSSPEC
+	post("FSSpec: vRefNum %ld, parID %ld, name %c", ps.vRefNum, ps.parID, ps.
+	name[0]);
 
 	f = FSp_fopen (&ps, "rb");
+
+	post("FILE *:  %p", f);
+
 	if (f == NULL) {
 		post("¥ SDIF-buffer: FSp_fopen returned NULL!");
 	} else {
@@ -356,64 +371,15 @@ static FILE *OpenSDIFFile(char *filename) {
 			fclose(f);
 			return NULL;
 		}
-	} 
+	}
+	
+	post("Got here");  return NULL;
 	return f;
 #else 	
 #error What do I do with a PATH_SPEC?	
 #endif
 }
-
-	
-#else 
-/* The bad old way using FSSpecs... */
-
-static FILE *OpenSDIFFile(char *filename) {
-	SDIFresult r;
-	short vRefNum;
-	FSSpec spec;
-	OSErr err;
-	FILE *f;
-	
-	if (locatefiletype(filename, &vRefNum, 0L, 0L) != 0) {
-		post("¥ SDIF-buffer: couldn't locate alleged SDIF file %s", filename);
-		return NULL;
-	}
-	
-	// Convert to an FSSpec
-	err = FSMakeFSSpec (vRefNum, 0, CtoPstr(filename), &spec);
-	PtoCstr((unsigned char *) filename);
-	if (err != noErr) {
-		if (err == nsvErr) {
-			post("¥ SDIF-buffer: locatefiletype returned a volume ref number that doesn't exist!");
-		} else if (err == bdNamErr) {
-			post("¥ SDIF-buffer: FSMakeFSSpec thought your filename sucked.");
-		} else {
-			post("¥ SDIF-buffer: FSMakeFSSpec returned %d", err);
-		}
-		return NULL;
-	}
-	
-	f = FSp_fopen (&spec, "rb");
-	if (f == NULL) {
-		post("¥ SDIF-buffer: FSp_fopen returned NULL!");
-	} else {
-		if (r = SDIF_BeginRead(f)) {
-			int ferrno;
-			post("¥ SDIF-buffer: error reading SDIF file %s:", filename);
-			post("  %s", SDIF_GetErrorString(r));
-			
-			ferrno = ferror(f);
-			post("  ferror() returned %ld:", ferrno);
-			post("      %s", strerror(ferrno));
-			
-			fclose(f);
-			return NULL;
-		}
-	} 
-	return f;
-}
-
-#endif /* MAX4_FILE_HANDLING */
+#endif /* WIN_VERSION */
 #endif /* ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER */
 
 
@@ -493,7 +459,7 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
     return;
   }  
 #ifdef KLUDGE
-  //  SDIFbuf_BeginReadStream() should do this check, and return "bad argument" error
+  //  SDIFbuf_ReadStreamFromOpenFile() should do this check, and return "bad argument" error
 #endif
   
   if (privateStuff->debug) {
@@ -516,7 +482,7 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
   }
 
   //  read the requested stream
-  r = SDIFbuf_BeginReadStream(privateStuff->buf, f, mode, arg);
+  r = SDIFbuf_ReadStreamFromOpenFile(privateStuff->buf, f, mode, arg);
 
   if(!(first = SDIFbuf_GetFirstFrame(privateStuff->buf))) {
     post("¥ SDIFbuffer_readstreamnumber: No frames found with StreamID %ld!",
