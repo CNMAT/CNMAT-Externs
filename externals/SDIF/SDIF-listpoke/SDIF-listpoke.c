@@ -107,7 +107,7 @@ void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFlistpoke *x);
 static void SDIFlistpoke_set(SDIFlistpoke *x, Symbol *bufName);
 static void SDIFlistpoke_errorreporting(SDIFlistpoke *x, long yesno);
-static void SDIFlistpoke_time(SDIFlistpoke *x, float t);
+static void SDIFlistpoke_time(SDIFlistpoke *x, double t);
 static void SDIFlistpoke_numcolumns(SDIFlistpoke *x, long n);
 static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, Symbol *matrixType);
 static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
@@ -273,7 +273,7 @@ static void SDIFlistpoke_errorreporting(SDIFlistpoke *x, long yesno) {
 }
 
 
-static void SDIFlistpoke_time(SDIFlistpoke *x, float t) {
+static void SDIFlistpoke_time(SDIFlistpoke *x, double t) {
 	x->t_time = (sdif_float64) t;
 }
 

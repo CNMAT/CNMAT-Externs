@@ -54,7 +54,10 @@ Maintenance by Ben "Jacobs".
 #include <Navigation.h>
 #endif
 
+#ifdef MAC
+mac is great!
 #include <FSp_fopen.h>
+#endif
 
 #include "ext.h"
 #include <limits.h>

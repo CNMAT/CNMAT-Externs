@@ -111,7 +111,7 @@ typedef struct _SDIFtuples {
  	/* State for what I'm supposed to output */
  	int t_concatenate;		/* One big list or one list per row? */
  	sdif_float64 t_time;	/* Which frame? */
- 	int t_reltime;			/* if nonzero, t_time is from 0 to 1 and should be scaled by length */
+ 	Boolean t_reltime;			/* if nonzero, t_time is from 0 to 1 and should be scaled by length */
  	int t_direction;		/* Frame in which direction from t_time? */
  	int t_num_columns;		/* How many cols to output?  If 0, all of them */
  	int t_columns[MAX_NUM_COLUMNS];  /* Which ones? (1-based) */
@@ -138,8 +138,8 @@ static void LookupMyBuffer(SDIFtuples *x);
 static void SDIFtuples_set(SDIFtuples *x, Symbol *bufName);
 static void SDIFtuples_errorreporting(SDIFtuples *x, long yesno);
 static void SDIFtuples_concatenate(SDIFtuples *x, long yesno);
-static void SDIFtuples_time(SDIFtuples *x, float t);
-static void SDIFtuples_reltime(SDIFtuples *x, float t);
+static void SDIFtuples_time(SDIFtuples *x, double t);
+static void SDIFtuples_reltime(SDIFtuples *x, double t);
 static void SDIFtuples_direction(SDIFtuples *x, long d);
 static void SDIFtuples_columns(SDIFtuples *x, Symbol *s, short argc, Atom *argv);
 static void SDIFtuples_matrix(SDIFtuples *x, Symbol *matrixType);
@@ -268,9 +268,9 @@ void *SDIFtuples_new(Symbol *, short argc, Atom *argv) {
 	x->t_itValid = FALSE;
 
 	x->t_mainMatrix = TRUE;
-	x->t_concatenate = 1;
+	x->t_concatenate = TRUE;
 	x->t_time = VERY_SMALL;
-	x->t_reltime = 0;
+	x->t_reltime = FALSE;
 	x->t_direction = 1;
 	x->t_interp = INTERP_MODE_NONE;
 	x->t_max_rows = 1000000;
@@ -357,14 +357,14 @@ static void SDIFtuples_concatenate(SDIFtuples *x, long yesno) {
 	x->t_concatenate = yesno;
 }
 
-static void SDIFtuples_time(SDIFtuples *x, float t) {
+static void SDIFtuples_time(SDIFtuples *x, double t) {
 	x->t_time = (sdif_float64) t;
-	x->t_reltime = 0;
+	x->t_reltime = FALSE;
 }
 
-static void SDIFtuples_reltime(SDIFtuples *x, float t) {
+static void SDIFtuples_reltime(SDIFtuples *x, double t) {
 	x->t_time = (sdif_float64) t;
-	x->t_reltime = 1;
+	x->t_reltime = TRUE;
 }
 
 static void SDIFtuples_direction(SDIFtuples *x, long d) {
@@ -414,9 +414,9 @@ static void SDIFtuples_max_rows(SDIFtuples *x, long n) {
 
 
 static void SDIFtuples_tuples(SDIFtuples *x, Symbol *, short argc, Atom *argv) {
-	int concatenate;
+	Boolean concatenate;
 	sdif_float64 time;
-	int reltime;
+	Boolean reltime;
 	int direction;
 	InterpMode interp;
 	int num_columns;
@@ -477,11 +477,11 @@ static void SDIFtuples_tuples(SDIFtuples *x, Symbol *, short argc, Atom *argv) {
 				return;
 			} else if (argv[i+1].a_type == A_FLOAT) {
 				time = (sdif_float64) argv[i+1].a_w.w_float;
-				reltime = 0;
+				reltime = FALSE;
 				++i;
 			} else if (argv[i+1].a_type == A_LONG) {
 				time = (sdif_float64) argv[i+1].a_w.w_long;
-				reltime = 0;
+				reltime = FALSE;
 				++i;
 			} else {
 				post("¥ SDIF-tuples: bad argument after time");
@@ -490,7 +490,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, Symbol *, short argc, Atom *argv) {
 		} else if (argv[i].a_w.w_sym == ps_reltime) {
 			if ((i+1 < argc) && (argv[i+1].a_type == A_FLOAT)) {
 				time = (sdif_float64) argv[i+1].a_w.w_float;
-				reltime = 1;
+				reltime = TRUE;
 				++i;
 			} else {
 				post("¥ SDIF-tuples: bad argument after reltime");
