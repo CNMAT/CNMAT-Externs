@@ -114,7 +114,7 @@ typedef struct _SDIFtuples {
 	SDIFinterp_Interpolator t_it;   //  interpolator matrix
 	Boolean t_itValid;              //  is interpolator matrix still valid?
  	void *t_out;
- 	int t_errorreporting;
+ 	Boolean t_errorreporting;
  	Boolean t_complainedAboutEmptyBufferAlready;
  	
  	/* State for what I'm supposed to output */
@@ -257,7 +257,7 @@ void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
 	// post("SDIFtuples_new: %s, %ld args", s->s_name, (long) argc);
 	
 	x = newobject(SDIFtuples_class);
-	x->t_errorreporting = 0;
+	x->t_errorreporting = FALSE;
 	x->t_complainedAboutEmptyBufferAlready = FALSE;
 	x->t_buffer = 0;
 	x->t_out = listout(x);
@@ -617,20 +617,24 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 	//  what matrixType do we want?
 	if (x->t_mainMatrix) {
 	  SDIFmem_Frame f;
-	  
 		// The "main" matrix is the one whose type is the same as the frame type
-		if(f = SDIFbuf_GetFirstFrame(x->t_buf))
+		f = SDIFbuf_GetFirstFrame(x->t_buf);
+		// post("* main matrix mode - first frame is %p", f);
+		if (f == NULL) {
+			if (x->t_errorreporting) {
+				post("¥ SDIF-tuples: buffer %s is empty!", x->t_bufferSym->s_name);
+			}
+			return NULL;
+		}
   		SDIF_Copy4Bytes(desiredType, f->header.frameType);
-  	else
-  	  //  no frames in buffer, fail
-  	  return NULL;
 	} else {
+		// post("** explicit matrix mode: want %c%c%c%c", x->t_matrixType[0], x->t_matrixType[1], x->t_matrixType[2], x->t_matrixType[3]);
 		SDIF_Copy4Bytes(desiredType, x->t_matrixType);
 	}	
 	
 	// post("* Looking for matrix type %c%c%c%c", desiredType[0], desiredType[1], desiredType[2], desiredType[3]);
 
-  if(mode == INTERP_MODE_NONE)
+  if (mode == INTERP_MODE_NONE)
   {
     //  try to get a matrix without interpolation
     if(!(matrixOut = GetMatrixWithoutInterpolation(x,
