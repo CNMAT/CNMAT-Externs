@@ -330,7 +330,7 @@ static FILE *OpenSDIFFile(char *filename) {
 	}
 	
 
-	post("** Got path ID %d,filename %s", pathID, filenamecopy);
+	// post("** Got path ID %d,filename %s", pathID, filenamecopy);
 	
 	result = path_tospec(pathID, filenamecopy, &ps);
 	
@@ -349,12 +349,9 @@ static FILE *OpenSDIFFile(char *filename) {
 
 #define PATH_SPEC_MEANS_FSSPEC
 #ifdef PATH_SPEC_MEANS_FSSPEC
-	post("FSSpec: vRefNum %ld, parID %ld, name %c", ps.vRefNum, ps.parID, ps.
-	name[0]);
+	// post("FSSpec: vRefNum %ld, parID %ld, name %c", ps.vRefNum, ps.parID, ps.name[0]);
 
 	f = FSp_fopen (&ps, "rb");
-
-	post("FILE *:  %p", f);
 
 	if (f == NULL) {
 		post("¥ SDIF-buffer: FSp_fopen returned NULL!");
@@ -373,7 +370,6 @@ static FILE *OpenSDIFFile(char *filename) {
 		}
 	}
 	
-	post("Got here");  return NULL;
 	return f;
 #else 	
 #error What do I do with a PATH_SPEC?	
