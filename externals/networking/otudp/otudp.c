@@ -51,7 +51,8 @@ University of California, Berkeley.
  PPC only, allows "host" and "receiveport" even in overdrive.  No dialog boxes. (2.3)
  OSX version: InContext, nothing deferred...  (3.0)
  Used error() instead of post() for error messages (3.0.1)
- 
+ Complains less often about semaphoreTest Failed (3.0.1b)
+ Moved the semaphoreTest to the right place 3.0.2
 
 Now that this thing uses asynchronous mode, it's nearly impossible to tell how
 the flow of control works, so here are some hints:
@@ -82,7 +83,7 @@ the flow of control works, so here are some hints:
  */
 
 
-#define OTUDP_VERSION "3.0.1 closedebug"
+#define OTUDP_VERSION "3.0.1b"
 #define MAX_PACKET_SIZE 65536   // This is the limit for a UDP packet
 #define DEFAULT_BUFFER_SIZE  1024
 #define DEFAULT_NUM_BUFFERS 20 
@@ -136,6 +137,7 @@ typedef struct otudp {
 	TEndpointInfo epinfo;
 	OTLock o_readlock;
 	int o_semaphoreTest;		// To see if mutual exclusion on linked lists is working
+	int o_semaphoreTestFailureCount;
 	
 	// Buffer management
 	long nbufs;
@@ -327,7 +329,7 @@ void *otudp_new(Symbol *s, short argc, Atom *argv) {
 	x->o_complained_about_old_msgs = 0;
 	
 	OTClearLock(&(x->o_readlock));
-	x->o_semaphoreTest = 0;
+	x->o_semaphoreTest = x->o_semaphoreTestFailureCount = 0;
 	
 	/* Allocate packet buffers */
 	x->bufsize = bufsize;
@@ -636,6 +638,8 @@ void BindTheEndpoint(OTUDP *x) {
 		}
 		
 	}
+	
+	/* Could output something to let the Max programmer know that we're now re-bound... */
 
 }
 
@@ -751,9 +755,6 @@ static short AcquireLock(OTUDP *x) {
 	short oldLockout;
 
 	
-	if (x->o_semaphoreTest != 0) {
-		error("¥ otudp_read: semaphoreTest failed!");
-	}
 	oldLockout = lockout_set(1);
 	OTEnterNotifier(x->o_udp_ep);
 
@@ -762,6 +763,13 @@ static short AcquireLock(OTUDP *x) {
 	while (OTAcquireLock(&(x->o_readlock)) == false) {
 		if ((++i) > TOO_MANY_SPINS) {
 			error("¥ otudp_read: OTAcquireLock keeps failing!");
+		}
+	}
+
+	if (x->o_semaphoreTest != 0) {
+		++(x->o_semaphoreTestFailureCount);
+		if (x->o_semaphoreTestFailureCount == 1 || (x->o_semaphoreTestFailureCount % 100) == 0) {
+			error("¥ otudp_read: new semaphore test failed (%d times)");
 		}
 	}
 
@@ -1036,6 +1044,9 @@ void do_write(OTUDP *x, long length, void *bytes) {
 	
 	if (err == kOTBadSyncErr) {
 		error("¥ OTUDP: failed to send data at interrupt level.  Try turning off overdrive.");
+	} else if (err == kEHOSTUNREACHErr) {
+		error("OTUDP: Host address is unreachable; couldn't send packet");
+		post("Make sure you're really on a network.");
 	} else if (err != noErr) {
 		error("¥ OTUDP: OTSndUData returned error code %ld.", err);
 	}
