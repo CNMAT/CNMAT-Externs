@@ -1,0 +1,1007 @@
+/*
+ * Copyright (c) 1996, 1997 Regents of the University of California.
+ * All rights reserved.
+ * The name of the
+ * University may not be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+  /* 
+        Author: Matt Wright
+
+		6/11/97 Version uses OpenSoundControl
+                
+        OpenSoundControl max object: formats Max messages into buffers
+         in the "OpenSoundControl" data format.
+         
+        OpenSoundControl documentation at
+        http://www.cnmat.berkeley.edu/OpenSoundControl
+        
+        Version 1.2 was still version 1.1 on 68K; 1.3 is the same for both.
+        Version 1.4 has 3 outlets
+        Version 1.5 uses FullPacket instead of gimme, so no subverting of argc/argv
+        Version 1.6 supports the evil "gimme" for (68K) backwards compatibility
+        Version 1.7 Supports SuperCollider-style type tags
+        Version 1.8 has errorreporting mode, compiles under CW7 and Max 4 SDK
+   */
+
+#define OPENSOUNDCONTROL_VERSION "1.8"
+
+#include "ext.h"
+#include "OpenSoundControl.h"
+
+void *OSC_class;
+Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket;
+
+typedef struct openSoundControl {
+	struct object O_ob;
+	void *O_outlet1;	// stuff for UDP or bang when done parsing a packet
+	void *O_outlet2;	// messages in a packet
+	void *O_outlet3;	// time tag from a packet
+	short	O_debug;
+	short O_resetAllTheWayMode;
+	OSCTimeTag O_timeTagToUse;
+	OSCbuf b;
+	int writeTypeStrings; // nonzero if this object writes messages with type strings
+	int readTypeStrings;  // if zero, never interpret first argument as a type string
+	int errorreporting;	  // Does this object report errors in the Max window?
+} OSC;
+
+
+void *OSC_new(long arg);
+void OSC_assist(OSC *x, void *b, long m, long a, char *s);
+void OSC_version (OSC *x);
+void OSC_debug (OSC *x);
+void OSC_errorreporting(OSC *x, int yesno);
+void OSC_reset (OSC *x);
+void OSC_resetAllTheWayMode (OSC *x);
+void OSC_doReset (OSC *x);
+void OSC_send (OSC *x);
+void OSC_anything (OSC *x, Symbol *s, short argc, Atom *argv);
+void OSC_openBundleCB (OSC *x);
+void OSC_closeBundleCB (OSC *x);
+void OSC_bang (OSC *x);
+void OSC_readtypestrings(OSC *x, int yesno);
+void OSC_writetypestrings(OSC *x, int yesno);
+void OSC_printcontents (OSC *x);
+void OSC_NewTimeTag(OSC *x, long seconds, long fraction);
+void OSC_ParseFullPacket(OSC *x, long size, long bufptr);
+void OSC_ParsePartialPacket(OSC *x, long size, long bufptr);
+void OSC_ParseEvilGimme(OSC *x, Symbol *s, short not_really_argc, Atom *not_really_argv);
+
+void OSC_accumulateMessage(OSC *x, char *messageName, short argc, Atom *argv);
+int OSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argvp);
+void OSC_sendBuffer(OSC *x);
+void OSC_sendData(OSC *x, short size, char *data);
+void OSC_formatData(OSC *x, char *messageName, short argc, Atom *argv);
+void strcpy(char *s1, char *s2);
+
+/* Expiration date */
+#define YEAR 1997
+#define MONTH 4
+#define DAY 1
+#define EXPIRATION_STRING "4/1/1997"
+#define NOTICE "OpenSoundControl object version " OPENSOUNDCONTROL_VERSION " has expired!"
+
+void main (fptr *f) {
+	DateTimeRec date;
+	
+	post("OpenSoundControl object version " OPENSOUNDCONTROL_VERSION " by Matt Wright");
+	post("Copyright © 1996,7,8,9,2000,1,2 Regents of the University of California.  "
+#ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
+		 "Expires " EXPIRATION_STRING
+#endif
+		 );
+		
+	setup((t_messlist **)&OSC_class, (method) OSC_new,0L,(short)sizeof(OSC),0L,A_DEFLONG,0);
+
+#ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
+    /* Make the object time-out: */
+	GetTime(&date);
+	if((date.year > YEAR)  || 
+       (date.year == YEAR && ((date.month > MONTH) ||
+							  (date.month == MONTH && date.day > DAY)))) {
+			ouchstring(NOTICE);
+			return;
+	}
+#endif
+
+#ifdef SANITY_CHECK
+	post("*** sizeof(int4byte) = %ld", (long) sizeof(int4byte));
+	post("*** sizeof(long) = %ld", (long) sizeof(long));
+#endif
+
+	addmess((method)OSC_assist, "assist",	A_CANT,0);
+	addmess((method)OSC_version, "version", 	0);
+	addmess((method)OSC_debug, "debug", 	0);
+	addmess((method)OSC_errorreporting, "errorreporting", 	A_LONG, 0);
+	addmess((method)OSC_reset, "reset", 	0);
+	addmess((method)OSC_resetAllTheWayMode, "resetallthewaymode", 	0);
+
+	addmess((method)OSC_send, "send", 	0);
+
+	addmess((method)OSC_anything, "anything",	A_GIMME,0);
+	addmess((method)OSC_openBundleCB, "openbundle", 	0);
+	addmess((method)OSC_closeBundleCB, "closebundle", 	0);
+	addmess((method)OSC_openBundleCB, "[", 	0);
+	addmess((method)OSC_closeBundleCB, "]", 	0);
+
+	addbang((method)OSC_bang);
+	addmess((method)OSC_printcontents, "printcontents", 0);
+	addmess((method)OSC_NewTimeTag, "OSCTimeTag", A_LONG, A_LONG, 0);
+	addmess((method)OSC_ParseFullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	addmess((method)OSC_ParsePartialPacket, "PartialPacket", A_LONG, A_LONG, 0);
+	addmess((method)OSC_ParseEvilGimme, "gimme", A_GIMME, 0);
+	addmess((method)OSC_readtypestrings, "readtypestrings", A_LONG, 0);
+	addmess((method)OSC_writetypestrings, "writetypestrings", A_LONG, 0);
+	
+
+	finder_addclass("Devices","OpenSoundControl");
+	rescopy('STR#',3009);
+	ps_gimme = gensym("gimme");
+	ps_OSCTimeTag = gensym("OSCTimeTag");
+	ps_FullPacket = gensym("FullPacket");
+}
+
+#define DEFAULT_BUFFER_SIZE 1024
+
+void *OSC_new(long arg) {
+	OSC *x;
+	char *buf;
+	
+	x = (OSC *) newobject(OSC_class);
+
+	/* Create the outlets in right to left order */
+	x->O_outlet3 = outlet_new(x, "OSCTimeTag");
+	x->O_outlet2 = outlet_new(x, 0L);
+	x->O_outlet1 = outlet_new(x, 0L);
+
+	if (arg == 0) {
+		arg = DEFAULT_BUFFER_SIZE;
+	}
+	if (arg < 50) {
+		post("OpenSoundControl: buffer size changed to 50.");
+		arg = 50;
+	}
+	if (arg > 32000) {
+		post("OpenSoundControl: buffer size changed to 32000.");
+		arg = 32000;
+	}
+	buf = getbytes((short) arg);
+	if (buf == 0) {
+		post("OpenSoundControl: couldn't allocate %ld bytes for buffer.", arg);
+		return 0;
+	}
+
+	x->O_debug = false;
+	x->O_resetAllTheWayMode = false;
+	x->O_timeTagToUse = OSCTT_Immediately();
+	x->writeTypeStrings = 1;
+	x->readTypeStrings = 1;
+	
+	OSC_initBuffer(&(x->b), arg, buf);
+#ifdef LAME
+	post("*** Obj %p, buf %p, Buffer %p, size %ld", x, &(x->b), 
+		 (x->b).buffer, (long) OSC_packetSize(&(x->b)));
+#endif
+	
+	OSC_doReset(x);
+	
+	return (x);
+}
+
+void OSC_assist(OSC *x, void *b, long m, long a, char *s) {
+	assist_string(3009,m,a,1,2,s);
+}
+
+void OSC_version (OSC *x) {
+	post("OpenSoundControl Version " OPENSOUNDCONTROL_VERSION
+		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
+#ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
+	post("Expires " EXPIRATION_STRING);
+#endif
+}
+
+void OSC_debug (OSC *x) {
+	x->O_debug = !x->O_debug;
+	
+	if (x->O_debug)
+		post("OpenSoundControl: debug on");
+	else
+		post("OpenSoundControl: debug off");
+}
+
+void OSC_errorreporting(OSC *x, int yesno) {
+	x->errorreporting = yesno;
+	
+	if (yesno) {
+		post("OpenSoundControl: turning on error reporting.");
+	} else {
+		post("OpenSoundControl: turning off eror reporting.  What you don't know can't hurt you.");
+	}
+}
+
+
+void OSC_resetAllTheWayMode (OSC *x) {
+	x->O_resetAllTheWayMode = ! x->O_resetAllTheWayMode;
+	
+	if (x->O_debug)
+		post("OpenSoundControl: resetallthewaymode %s", 
+			 x->O_resetAllTheWayMode ? "on" : "off");
+}
+
+
+void OSC_doReset (OSC *x) {
+	OSC_resetBuffer(&(x->b));
+	if (!x->O_resetAllTheWayMode) {
+		OSC_openBundle(&(x->b), x->O_timeTagToUse);
+	}
+}
+			
+
+void OSC_reset (OSC *x) {
+	if (x->O_debug) {
+		post("OpenSoundControl: resetting buffer to empty state");
+	}
+	OSC_doReset(x);
+}
+
+void OSC_send (OSC *x) {
+	if (x->O_debug) {
+		post("OpenSoundControl: sending buffer (not resetting)");
+	}
+	OSC_sendBuffer(x);
+}
+
+
+void OSC_bang (OSC *x) {
+	if (x->O_debug) {
+		post("OpenSoundControl: BANG! Sending buffer and resetting");
+	}
+	OSC_sendBuffer(x);
+	OSC_doReset(x);
+}
+
+
+void OSC_readtypestrings(OSC *x, int yesno) {
+	x->readTypeStrings = yesno;
+}
+
+
+void OSC_writetypestrings(OSC *x, int yesno) {
+	x->writeTypeStrings = yesno;
+}
+
+
+void OSC_openBundleCB (OSC *x) {
+	if (OSC_openBundle(&(x->b), x->O_timeTagToUse)) {
+		if (x->errorreporting) {
+			post("OpenSoundControl: problem opening bundle:");
+			post("   %s", OSC_errorMessage);
+			post("Throwing away entire buffer.");
+		}
+		OSC_doReset(x);	
+	} else {
+		if (x->O_debug)
+			post("OpenSoundControl: opened bundle.  (Bundle depth now %ld)",
+				 (long) x->b.bundleDepth);
+	}
+}
+
+void OSC_closeBundleCB (OSC *x) {
+	if (OSC_closeBundle(&(x->b))) {
+		if (x->errorreporting) {
+			post("OpenSoundControl: problem closing bundle:");
+			post("   %s", OSC_errorMessage);
+			post("Throwing away entire buffer.");
+		}
+		OSC_doReset(x);	
+	} else {
+		if (x->O_debug)
+			post("OpenSoundControl: closed bundle.  (Bundle depth now %ld)",
+				 (long) x->b.bundleDepth);
+	}
+}
+
+
+void OSC_sendBuffer(OSC *x) {
+	OSCbuf *buf = &(x->b);
+	if (OSC_isBufferEmpty(buf)) {
+		if (x->O_debug) {
+			post("OpenSoundControl: buffer empty, not sending anything");
+		}
+		return;
+	}
+	if (!OSC_isBufferDone(buf)) {
+		// Maybe the problem is unclosed bundles
+		OSC_closeAllBundles(buf);
+		if (!OSC_isBufferDone(buf)) {
+			if (x->errorreporting) {
+				post("OpenSoundControl: buffer not ready to send");
+			}
+			return;
+		}
+	}
+#ifdef LAME
+	post("*** OSC_sendBuffer.  x is %p, buf is %p, size %ld, packet is %p, getPacket returned %p",
+		 x, buf, (long) OSC_packetSize(buf), buf->buffer, OSC_getPacket(buf));
+#endif
+	OSC_sendData(x, (short) OSC_packetSize(buf), OSC_getPacket(buf));
+}
+
+void OSC_sendData(OSC *x, short size, char *data) {
+	Atom arguments[2];
+	
+	if (x->O_debug) {
+		post("OpenSoundControl: Sending buffer (%ld bytes)", (long) size);
+	}
+	
+	SETLONG(&arguments[0], (long) size);
+	SETLONG(&arguments[1], (long) data);
+	outlet_anything(x->O_outlet1, ps_FullPacket, 2, arguments);
+
+#ifdef OLD_EVIL_WAY
+	/* The cast from char *data to (struct atom *) is what made
+	   this object so dangerous. */
+	outlet_anything(x->O_outlet1, ps_gimme, size, (struct atom *)data);
+#endif
+}
+
+#define LONGEST_MESSAGE_NAME 1024
+
+void OSC_anything (OSC *x, Symbol *s, short argc, Atom *argv) {	
+	char mess[LONGEST_MESSAGE_NAME];
+	
+	if (!OSC_stringSubstitution(mess, s->s_name, &argc, &argv)) {
+		if (x->O_debug) {
+			int i;
+			post("OpenSoundControl: Adding message %s with %ld args:", mess, (long) argc);
+			for (i = 0; i < argc; i++) {
+				postatom(argv+i);
+			}
+		}
+
+		OSC_accumulateMessage(x,mess,argc,argv);
+	}
+
+	if (x->O_debug) {
+		post("OpenSoundControl: Now buffer has %ld bytes in it.",
+			 (long) OSC_packetSize(&(x->b)));
+	}
+}
+
+int OSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argvp) {
+	char *in, *p;
+	int i, num;
+	
+	for (in = format, i=0; *in != '\0'; in++) {
+		if (i >= LONGEST_MESSAGE_NAME) {
+			post("OpenSoundControl: message address longer than LONGEST_MESSAGE_NAME (%ld): dropping.",
+				 (long) LONGEST_MESSAGE_NAME);
+			return 1;
+		}
+		if (*in != '%') {
+			target[i++] = *in;
+		} else {
+			switch (in[1]) {
+				case '\0':
+					post("OpenSoundControl: message string ends with a single %%: dropping.");
+					return 1;
+					
+				case '%':
+					target[i++] = '%';
+					in++;
+					break;
+					
+				case 's':
+					if (*argcp == 0) {
+						post("OpenSoundControl: message string with %%s doesn't have enough arguments: dropping.");
+						return 1;
+					}
+					if ((*argvp)->a_type != A_SYM) {
+						post("OpenSoundControl: Dropping message. Argument corresponding to %%s isn't a string:");
+						postatom(*argvp);
+						return 1;
+					}
+					p = (*argvp)->a_w.w_sym->s_name;
+					while (*p != 0) {
+						target[i++] = *p++;
+						if (i >= LONGEST_MESSAGE_NAME) {
+							post("OpenSoundControl: with %%s substitution, message name string too long: dropping.");
+							return 1;
+						}
+					}
+					in++;
+					(*argcp)--;
+					(*argvp)++;
+					break;
+					
+				case 'f':
+					if (*argcp == 0) {
+						post("OpenSoundControl: message string with %%f doesn't have enough arguments: dropping.");
+						return 1;
+					}
+					if ((*argvp)->a_type != A_FLOAT) {
+						post("OpenSoundControl: Dropping message: Argument corresponding to %%f isn't a float:");
+						postatom(*argvp);
+						return 1;
+					}
+					num = sprintf(target+i, "%f", (*argvp)->a_w.w_float);
+					if (num < 0) {
+						post("OpenSoundControl: error formatting float for %%f arg: dropping.");
+						return 1;
+					}
+					i += num;
+					/* If i is too big we'll get an error the next time the loop comes around. */
+
+					in++;
+					(*argcp)--;
+					(*argvp)++;
+					break;
+
+
+				case 'd':
+					if (*argcp == 0) {
+						post("OpenSoundControl: message string with %%d doesn't have enough arguments: dropping.");
+						return 1;
+					}
+					if ((*argvp)->a_type != A_LONG) {
+						post("OpenSoundControl: Dropping message: Argument corresponding to %%d isn't an int:");
+						postatom(*argvp);
+						return 1;
+					}
+					num = sprintf(target+i, "%ld", (*argvp)->a_w.w_long);
+					if (num < 0) {
+						post("OpenSoundControl: error formatting int for %%d arg: dropping.");
+						return 1;
+					}
+					in++;
+					i += num;
+					/* If i is too big we'll get an error the next time the loop comes around. */
+
+					(*argcp)--;
+					(*argvp)++;
+					break;
+
+				case 'c':
+					if (*argcp == 0) {
+						post("OpenSoundControl: message string with %%c doesn't have enough arguments: dropping.");
+						return 1;
+					}
+					if ((*argvp)->a_type != A_LONG) {
+						post("OpenSoundControl: Dropping message.  Argument corresponding to %%c isn't an int:");
+						postatom(*argvp);
+						return 1;
+					}
+					num = sprintf(target+i, "%c", (*argvp)->a_w.w_long);
+					if (num < 0) {
+						post("OpenSoundControl: error formatting char for %%c arg: dropping.");
+						return 1;
+					}
+					in++;
+					i += num;
+					/* If i is too big we'll get an error the next time the loop comes around. */
+
+					(*argcp)--;
+					(*argvp)++;
+					break;
+
+				default:
+					post("OpenSoundControl: don't know what to do with \"%%%c\" in message format string: dropping",
+						 (int) in[1]);
+					return 1;
+			} /* switch */
+		}
+	}
+	target[i] = '\0';
+	return 0;
+}
+
+void OSC_accumulateMessage(OSC *x, char *messageName, short argc, Atom *argv) {
+	/* Translate the message and add it to the internal buffer.  */
+	
+
+	OSC_formatData(x, messageName, argc, argv);
+
+}
+
+#define MAX_ARGS_TO_OSC_MSG 1024
+
+
+void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
+	/* Format the given Max data into buf. */
+	   
+	int i;	
+	OSCbuf *buf = &(x->b);
+	char typeString[MAX_ARGS_TO_OSC_MSG+2]; /* Space for comma and null */
+	
+	if (OSC_writeAddress(buf, messageName)) goto err;
+
+
+	if (x->writeTypeStrings) {
+		/* Write type string */
+		typeString[0] = ',';
+		
+		for (i=0; i < argc; i++) {
+			switch (argv[i].a_type) {
+				case A_LONG:
+					typeString[i+1] = 'i';
+					break;
+					
+				case A_FLOAT:
+					typeString[i+1] = 'f';
+					break;
+					
+				case A_SYM:
+					typeString[i+1] = 's';
+					break;
+					
+				default:
+					error("OpenSoundControl: unrecognized argument type");
+					break;
+			}
+		}
+		typeString[i+1] = '\0';
+		
+		if (OSC_writeStringArg(buf, typeString)) goto err;
+	}
+
+
+
+	for (i=0; i < argc; i++) {
+		switch (argv[i].a_type) {
+			case A_LONG:
+				if (OSC_writeIntArg(buf, argv[i].a_w.w_long)) goto err;
+				break;
+				
+			case A_FLOAT:
+				if (OSC_writeFloatArg(buf, argv[i].a_w.w_float)) goto err;
+				break;
+				
+			case A_SYM:
+			    if (OSC_writeStringArg(buf, argv[i].a_w.w_sym->s_name)) goto err;
+
+				break;
+				
+			default:
+				error("OpenSoundControl: unrecognized argument type");
+				break;
+		}
+	}
+	return;
+
+	err:
+	if (x->errorreporting) {
+		post("OpenSoundControl: problem adding message to buffer:");
+		post("   %s", OSC_errorMessage);
+		post("Throwing away entire buffer.");
+	}
+	OSC_doReset(x);	
+}
+
+void strcpy(char *s1, char *s2) {
+	while (*s1++ = *s2++);
+}
+
+#define PRINTABLE(c) ((char) (c>= 0x20 && c <= 0x7e ? c : 'û'))
+#define isprint(c) ((c) >= 0x20 && (c) <= 0x7e)
+
+void OSC_printcontents (OSC *x) {
+	char *m, buf[100], *p;
+	int n, i;
+	
+	m = (x->b).buffer;
+	n = OSC_packetSize(&(x->b));
+	
+	post("OSC_printcontents: buffer %p, size %ld", m, (long) n);
+
+	if (n % 4 != 0) {
+		post("Hey, the size isn't a multiple of 4!");
+	} else {
+	    for (i = 0; i < n; i += 4) {
+	    	p = buf;
+	    	
+	    	p += sprintf(p, "  %x", m[i]);
+	    	if (isprint(m[i])) {
+	    		p += sprintf(p, "  (%c)", m[i]);
+	    	} else {
+	    		p += sprintf(p, "  ()");
+	    	}
+	    	
+	    	p += sprintf(p, "  %x", m[i+1]);
+	    	if (isprint(m[i+1])) {
+	    		p += sprintf(p, "  (%c)", m[i+1]);
+	    	} else {
+	    		p += sprintf(p, "  ()");
+	    	}
+	    	
+	    	p += sprintf(p, "  %x", m[i+2]);
+	    	if (isprint(m[i+2])) {
+	    		p += sprintf(p, "  (%c)", m[i+2]);
+	    	} else {
+	    		p += sprintf(p, "  ()");
+	    	}
+	    	
+	    	p += sprintf(p, "  %x", m[i+3]);
+	    	if (isprint(m[i+3])) {
+	    		p += sprintf(p, "  (%c)", m[i+3]);
+	    	} else {
+	    		p += sprintf(p, "  ()");
+	    	}
+	    	
+	    	*p = '\0';
+	    	post(buf);	    		 
+	    }
+	}
+}
+	
+	
+
+#ifdef PRECOMPUTE_SIZES
+/* In the old days, we used to have to compute the size of our messages
+   by hand to see if there was room in the buffer. */
+   
+int OSC_messageSize(char *messageName, short argc, Atom *argv) {
+	int result;
+	int i;
+	
+	/* First, we need space for the messageName */
+	result = OSC_effectiveStringLength(messageName);	
+	
+	/* Now account for the arguments */
+	for (i = 0; i < argc; i++) {
+		switch (argv[i].a_type) {
+			case A_LONG:
+				result += sizeof(long);
+				break;
+
+			case A_FLOAT:
+				result += sizeof(float);
+				break;
+			
+			case A_SYM:
+				result += OSC_effectiveStringLength(argv[i].a_w.w_sym->s_name);
+				break;
+			
+			default:
+				error("OpenSoundControl: unrecognized argument type");
+				break;
+		}
+	}
+
+	return result;
+}
+#endif
+
+
+void OSC_NewTimeTag(OSC *x, long seconds, long fraction) {
+	OSCTimeTag tt;
+	tt.seconds = seconds;
+	tt.fraction = fraction;
+	
+	/* Try changing the one that's already there */
+	ChangeOutermostTimestamp(&(x->b), tt);
+	
+	/* And just in case, remember this time stamp for next time too. */
+	x->O_timeTagToUse.seconds = seconds;
+	x->O_timeTagToUse.fraction = fraction;
+}
+
+
+/*******************************************************************
+ Stuff having to do with parsing incoming OSC packets into Max data
+ *******************************************************************/
+
+void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel);
+static void Smessage(OSC *x, char *address, void *v, long n);
+char *DataAfterAlignedString(char *string, char *boundary); 
+Boolean IsNiceString(char *string, char *boundary);
+int strncmp(char *s1, char *s2, int n);
+
+char *htm_error_string;	// Used for error messages
+
+void OSC_ParsePartialPacket(OSC *x, long size, long bufptr) {
+	post("Can't parse partial packet.  Forget it.");
+}
+
+void OSC_ParseFullPacket(OSC *x, long size, long bufptr) {
+	ParseOSCPacket(x, (char *)bufptr, size, true);
+}
+
+void OSC_ParseEvilGimme(OSC *x, Symbol *s, short not_really_argc, Atom *not_really_argv) {
+	// post("Evil gimme: %d bytes, pointer %p", not_really_argc, not_really_argv);
+	ParseOSCPacket(x, (char *) not_really_argv, not_really_argc, true);
+}
+
+void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
+    long size, messageLen, i;
+    char *messageName;
+    char *args;
+
+
+    if ((n%4) != 0) {
+    	if (x->errorreporting) {
+			post("OTUDP: OpenSoundControl packet size (%d) not a multiple of 4 bytes: dropping",
+			 	 n);
+		}
+		return;
+    }
+
+    if ((n >= 8) && (strncmp(buf, "#bundle", 8) == 0)) {
+		/* This is a bundle message. */
+		if (n < 16) {
+			if (x->errorreporting) {
+		   	    post("OTUDP: Bundle message too small (%d bytes) for time tag", n);
+			}
+		    return;
+		}
+
+		if (topLevel) {
+			Atom timeTagLongs[2];
+			SETLONG(&timeTagLongs[0], *((long *)(buf+8)));
+			SETLONG(&timeTagLongs[1], *((long *)(buf+12)));
+			outlet_anything(x->O_outlet3, ps_OSCTimeTag, 2, timeTagLongs);
+		}
+
+		i = 16; /* Skip "#bundle\0" and time tag */
+		while(i<n) {
+	  	  size = *((long *) (buf + i));
+	  	  if ((size % 4) != 0) {
+			if (x->errorreporting) {
+				post("OTUDP: Bad size count %d in bundle (not a multiple of 4)", size);
+			}
+			return;
+	 	   }
+	   	  if ((size + i + 4) > n) {
+			 if (x->errorreporting) {
+			 	post("OTUDP: Bad size count %d in bundle (only %d bytes left in entire bundle)",
+			 	     size, n-i-4);
+			 }
+			 return;	
+	      }
+	    
+	      /* Recursively handle element of bundle */
+	      ParseOSCPacket(x, buf+i+4, size, false);
+	      i += 4 + size;
+	    }
+		if (i != n) {
+	  	  post("OTUDP: This can't happen");
+		}
+    } else {
+		/* This is not a bundle message */
+
+		messageName = buf;
+		args = DataAfterAlignedString(messageName, buf+n);
+		if (args == 0) {
+			if (x->errorreporting) {
+		   		post("OTUDP: Bad message name string: %s\nDropping entire message.\n",
+			     	 htm_error_string);
+			}
+	   	 	return;
+		}
+		
+		messageLen = args-messageName;	    
+		Smessage(x, messageName, (void *)args, n-messageLen);
+    }
+    if (topLevel) {
+		outlet_bang(x->O_outlet1);
+	}
+}
+
+#define SMALLEST_POSITIVE_FLOAT 0.000001f
+#define MAXARGS 500
+
+static void Smessage(OSC *x, char *address, void *v, long n) {
+    int i;
+    float *floats;
+    long *ints;
+    char *chars;
+    char *string, *nextString, *typeTags, *thisType, *p;
+    Symbol *addressSymbol, *argSymbol;
+	Atom args[MAXARGS];
+	int numArgs = 0;
+	Boolean tooManyArgs = false;
+	
+	addressSymbol = gensym(address);
+
+    /* Go through the arguments a word at a time */
+    floats = v;
+    ints = v;
+    chars = v;
+
+
+	if (x->readTypeStrings && chars[0] == ',' && IsNiceString(chars, chars+n)) {
+		/* Interpret the first string argument as a type string */
+				
+		typeTags = chars;
+		p = DataAfterAlignedString(chars, chars+n);
+		
+		
+  		 for (thisType = typeTags+1; *thisType != 0; ++thisType) {
+  		   
+	       switch (*thisType) {
+	            case 'i': case 'r': case 'm': case 'c':
+	            SETLONG(&args[numArgs], *((int *) p));
+	            p += 4;
+	            break;
+
+	            case 'f': 
+	            SETFLOAT(&args[numArgs], *((float *) p));
+	            p += 4;
+	            break;
+	            
+	            case 'h': case 't':
+	            /* 64-bit int: interpret as zero since Max doesn't have long ints */
+	            SETLONG(&args[numArgs], 0);
+	            p += 8;
+	            break;
+
+	            case 'd':
+	            /* 64-bit int: interpret as zero since Max doesn't have long ints */
+	            SETFLOAT(&args[numArgs], 0.0);
+	            p += 8;
+	            break;
+
+	            case 's': case 'S':
+	            if (!IsNiceString(p, typeTags+n)) {
+	            	SETSYM(&args[numArgs], gensym("¥Bogus_String"));
+	            } else {
+	            	SETSYM(&args[numArgs], gensym(p));
+	                p = DataAfterAlignedString(p, typeTags+n);
+	            }
+	            break;
+
+	            case 'T': 
+	            /* SuperCollider "True" value comes out as the int 1 */
+	           	SETLONG(&args[numArgs], 1);
+	           	/* Don't touch p */
+	           	break;
+	           	
+	            case 'F': 
+	            /* SuperCollider "False" value comes out as the int 0 */
+	           	SETLONG(&args[numArgs], 0);
+	           	/* Don't touch p */
+	           	break;
+	           	            
+	            case 'N': 
+	            /* Empty lists in max?  Ha!  How about the symbol "nil"? */
+	            SETSYM(&args[numArgs], gensym("nil"));
+	            /* Don't touch p */
+	           	break;
+	           	
+	            case 'I': 
+	            /* Empty lists in max?  Ha!  How about the symbol "nil"? */
+	            SETSYM(&args[numArgs], gensym("Infinitum"));
+	            /* Don't touch p */
+	           	break;
+
+
+	            default:
+	            if (x->errorreporting) {
+		            post("¥ OpenSoundControl: Unrecognized type tag %c", *thisType);
+		        }
+	            return;
+	        }
+	        ++numArgs;
+	     }
+	} else {
+		/* Use type-guessing heuristics */
+
+	    for (i = 0; i<n/4; ) {
+	    	if (numArgs >= MAXARGS) {
+	    		if (x->errorreporting) {
+	    			post("OTUDP: message has more than %ld arguments; dropping extra ones",
+	    				 (long) MAXARGS);
+	    		}
+	    		break;
+	    	}
+
+			string = &chars[i*4];
+			if  (ints[i] >= -1000 && ints[i] <= 1000000) {
+				SETLONG(&args[numArgs], ints[i]);
+			    i++;
+			} else if (floats[i] >= -1000.f && floats[i] <= 1000000.f &&
+				   (floats[i]<=0.0f || floats[i] >= SMALLEST_POSITIVE_FLOAT)) {
+			    SETFLOAT(&args[numArgs], floats[i]);
+			    i++;
+			} else if (IsNiceString(string, chars+n)) {
+			    nextString = DataAfterAlignedString(string, chars+n);
+			    argSymbol = gensym(string);
+			    SETSYM(&args[numArgs], argSymbol);
+			    i += (nextString-string) / 4;
+			} else {
+				// Assume int if nothing looks good.
+			    SETLONG(&args[numArgs], ints[i]);
+			    i++;
+			}
+			numArgs++;
+	    }
+    }
+	outlet_anything(x->O_outlet2, addressSymbol, numArgs, args);
+}
+
+
+#define STRING_ALIGN_PAD 4
+
+char *DataAfterAlignedString(char *string, char *boundary) 
+{
+    /* The argument is a block of data beginning with a string.  The
+       string has (presumably) been padded with extra null characters
+       so that the overall length is a multiple of STRING_ALIGN_PAD
+       bytes.  Return a pointer to the next byte after the null
+       byte(s).  The boundary argument points to the character after
+       the last valid character in the buffer---if the string hasn't
+       ended by there, something's wrong.
+
+       If the data looks wrong, return 0, and set htm_error_string */
+
+    int i;
+
+    if ((boundary - string) %4 != 0) {
+		ouchstring("OTUDP: Internal error: DataAfterAlignedString: bad boundary\n");
+		return 0;
+    }
+
+    for (i = 0; string[i] != '\0'; i++) {
+		if (string + i >= boundary) {
+		    htm_error_string = "DataAfterAlignedString: Unreasonably long string";
+		    return 0;
+		}
+    }
+
+    /* Now string[i] is the first null character */
+    i++;
+
+    for (; (i % STRING_ALIGN_PAD) != 0; i++) {
+		if (string + i >= boundary) {
+		    htm_error_string = "DataAfterAlignedString: Unreasonably long string";
+		    return 0;
+		}
+		if (string[i] != '\0') {
+		    htm_error_string = "DataAfterAlignedString: Incorrectly padded string.";
+		    return 0;
+		}
+    }
+
+    return string+i;
+}
+
+Boolean IsNiceString(char *string, char *boundary)  {
+    /* Arguments same as DataAfterAlignedString().  Is the given "string"
+       really a string?  I.e., is it a sequence of isprint() characters
+       terminated with 1-4 null characters to align on a 4-byte boundary? */
+
+    int i;
+
+    if ((boundary - string) %4 != 0) {
+		ouchstring("OTUDP: Internal error: IsNiceString: bad boundary\n");
+		return 0;
+    }
+
+    for (i = 0; string[i] != '\0'; i++) {
+		if (!isprint(string[i])) return FALSE;
+		if (string + i >= boundary) return FALSE;
+    }
+
+    /* If we made it this far, it's a null-terminated sequence of printing characters 
+       in the given boundary.  Now we just make sure it's null padded... */
+
+    /* Now string[i] is the first null character */
+    i++;
+    for (; (i % STRING_ALIGN_PAD) != 0; i++) {
+		if (string[i] != '\0') return FALSE;
+    }
+
+    return TRUE;
+}
+
+int strncmp(char *s1, char *s2, int n) {
+	while (n > 0) {
+		if (*s1 != *s2) return *s2 - *s1;
+		if (*s1 == 0) return 0;
+		s1++; s2++; n--;
+	}
+}
