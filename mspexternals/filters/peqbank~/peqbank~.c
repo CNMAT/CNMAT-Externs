@@ -1,5 +1,5 @@
 /*
-Copyright (c) 1999,2000,2001.  The Regents of the University of California (Regents).
+Copyright (c) 1999,2000,01,02.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -33,16 +33,18 @@ Version 1.5 Expires June 2002,
 Version 1.6 never expires
 Version 1.7 expires March 1, 2003
 Version 1.8 fixes peqbank_free bug
+Version 1.9 Added "biquads" message; expires 12/1/3
 
 
-TO-DO:  Add a "biquads" message that takes a list of raw biquad coefficients as
-        5-tuples
+TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
+        
+        Double-precision coefficients, state variables, intra-cascade signal passing
+            (in alternate, slower perform routine)
 
 */
 
 
-#define PEQBANK_VERSION "1.8"
-
+#define PEQBANK_VERSION "1.9"
 
 /* How smooth mode works:
 
@@ -153,11 +155,13 @@ void peqbank_peq(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_fast(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_smooth(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_list(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
+void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_init(t_peqbank *x);
 void peqbank_assist(t_peqbank *x, void *b, long m, long a, char *s);
 void *peqbank_new(t_symbol *s, short argc, t_atom *argv);
 void peqbank_free(t_peqbank *x);
-void peqbank_compute(t_peqbank *x);		
+void peqbank_compute(t_peqbank *x);
+void swap_in_new_coeffs(t_peqbank *x);
 void compute_parameq(t_peqbank *x, int index); 
 void compute_shelf(t_peqbank *x); 
 float pow10(float x);
@@ -185,11 +189,11 @@ void main(void) {
 	{
 #define EXPIRE	
 #ifdef EXPIRE
-#define EXPIRATION_STRING "Expires March 1, 2003"
+#define EXPIRATION_STRING "Expires December 1, 2003"
 		DateTimeRec date;
 		GetTime(&date);
 		post(EXPIRATION_STRING);
-		if(!((date.year==2002) || (date.year==2003 && date.month < 3)))
+		if(!((date.year==2002) || (date.year==2003 && date.month < 12)))
 		{
 			post("Expired");
 		}
@@ -210,6 +214,7 @@ void main(void) {
 	addmess((method)peqbank_assist, "assist", A_CANT, 0);
 	addmess((method)peqbank_version, "version", 0);
 	addmess((method)peqbank_tellmeeverything, "tellmeeverything", 0);
+	addmess((method)peqbank_biquads, "biquads", A_GIMME);
 	
 	dsp_initclass();
 
@@ -621,6 +626,43 @@ void peqbank_list(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	peqbank_compute(x);
 }
 
+#define ASFLOAT(x) (((x).a_type == A_FLOAT) ? ((x).a_w.w_float) : ((float) (x).a_w.w_long))
+
+void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
+	int i;
+	
+	for (i = 0; i < argc; ++i) {
+		if (argv[i].a_type == A_SYM) {
+			error("peqbank~: all arguments to biquads message must be numbers");
+			return;
+		}
+	}
+	
+	if ((argc % 5) != 0) {
+		error("peqbank~: biquads message must have a multiple of 5 arguments");
+		return;
+	}
+	
+	if ((argc / 5) > x->b_max) {
+		error("peqbank~: Too many biquad coefficients (only memory for %d filters)", x->b_max);
+		post("   (ignoring entire biquads list)");
+		return;
+	}
+	
+	
+	for (i = 0; i < argc; ++i) {
+		x->newcoeff[i] = ASFLOAT(argv[i]);
+	}
+
+
+	/* These should happen atomically... */
+	x->b_start = 0;
+	x->b_nbpeq = (argc/5)-1;    /* The first biquad is the "shelf"; the other n-1 are the "peq"s */
+	swap_in_new_coeffs(x);	
+}		
+		
+		
+
 void peqbank_init(t_peqbank *x) {
 
 	int i;
@@ -724,7 +766,6 @@ int already_peqbank_compute = 0;
 #endif
 
 void peqbank_compute(t_peqbank *x) {		
-	float *prevcoeffs, *prevnew, *prevfree;
 	int i;
 	
 #ifdef WORRIED_ABOUT_PEQBANK_REENTRANCY
@@ -740,6 +781,17 @@ void peqbank_compute(t_peqbank *x) {
 	compute_shelf(x);
 	for (i=NBPARAM; i<(x->b_nbpeq+1)*NBPARAM; i+=NBPARAM) compute_parameq(x,i);
 
+	swap_in_new_coeffs(x);
+
+#ifdef WORRIED_ABOUT_PEQBANK_REENTRANCY
+	--already_peqbank_compute;
+#endif
+}
+
+
+void swap_in_new_coeffs(t_peqbank *x) {
+	float *prevcoeffs, *prevnew, *prevfree;
+	int i;
 
 	// To make the new coefficients take effect we swap around the pointers to the
 	// coefficient buffers.  See the large comment at the top of this file.
@@ -793,11 +845,9 @@ void peqbank_compute(t_peqbank *x) {
 	// Output the new coefficients out the outlet
 	for (i=0; i<(x->b_nbpeq+1)*NBPARAM; i++) SETFLOAT(x->myList+i, x->coeff[i]);		
 	outlet_list(x->b_outlet, 0L, (x->b_nbpeq+1)*NBPARAM, x->myList);
-
-#ifdef WORRIED_ABOUT_PEQBANK_REENTRANCY
-	--already_peqbank_compute;
-#endif
 }
+
+
 
 void compute_parameq(t_peqbank *x, int index) {
 	
