@@ -1,31 +1,75 @@
-/* This code is from "Numerical Recipes in C", typed in manually by Richard Dudas on 5/16/99 */
+// cubic spline interpolation
 
-#include "nrutil.h"
-/*
-Given arrays x[1..n] and y[1..n] containing a tabulated function, i.e., y i = f(xi), with
-x1<x2< :::<xN , and given values yp1 and ypn for the rst derivative of the interpolating
-function at points 1 and n, respectively, this routine returns an array y2[1..n] that contains
-the second derivatives of the interpolating function at the tabulated points xi. Ifyp1 and/or
-ypn are equal to 1  10 30 or larger, the routine is signaled to set the corresponding boundary
-condition for a natural spline, with zero second derivative on that boundary.
-*/
+#include "ext.h"
+#include "ext_common.h"
 
-void spline(float x[], float y[], int n, float yp1, float ypn, float y2[])
+#define MAXSIZE 256
+
+typedef struct t_spline
 {
+	Object x_ob;
+	
+	float x_x[MAXSIZE];
+	float x_y[MAXSIZE];
+	float x_y2[MAXSIZE];
+	float x_u[MAXSIZE];
+	int x_xlen;
+	int x_ylen;
+	int x_maxlen;
+	
+	float x_yp1; // first derivative values
+	float x_ypn;
+	
+	float x_val;
+	
+    long  x_inletnum;
+	void *x_proxy;
+	
+	void *x_out;
+	
+} t_spline;
+
+void *spline_class;
+
+void spline_eval(t_spline *obj);
+void spline_float(t_spline *x, double f);
+void spline_list(t_spline *x, Symbol *s, int ac, Atom *av);
+void spline_deriv(t_spline *x, Symbol *s, int ac, Atom *av);
+void *spline_new(long n); 
+void spline_output(t_spline *x);
+
+void main(fptr *f)
+{		
+	setup(&spline_class, spline_new, 0L, (short)sizeof(t_spline), 0L, A_DEFLONG, 0);
+	addfloat((method)spline_float);
+    addmess((method)spline_list, "list", A_GIMME, 0);
+    addmess((method)spline_deriv, "deriv", A_GIMME, 0);
+}
+
+void spline_eval(t_spline *obj)
+{
+	float *x = obj->x_x;
+	float *y = obj->x_y;
+	float *y2 = obj->x_y2;
+	float *u = obj->x_u;
+	int n = obj->x_maxlen;
+	
+	float yp1 = obj->x_yp1; // these should eventually be user-specified
+	float ypn = obj->x_ypn;
+	
 	int i,k;
-	float p,qn,sig,un,*u;
-	u=vector(1,n-1);
+	float p,qn,sig,un;
 
 	if (yp1 > 0.99e30)	// The lower boundary condition is set either to be "natural" 
-		y2[1]=u[1]=0.0;
+		y2[0]=u[0]=0.0;
 	else { 				// or else to have a specified first derivative.
-		y2[1] = -0.5;
-		u[1]=(3.0/(x[2]-x[1]))*((y[2]-y[1])/(x[2]-x[1])-yp1);
+		y2[0] = -0.5;
+		u[0]=(3.0/(x[1]-x[0]))*((y[1]-y[0])/(x[1]-x[0])-yp1);
 	}
 	
 	// This is the decomposition loop of the tridiagonal al gorithm. 
 	// y2 and u are used for tem porary storage of the decomposed factors.
-	for (i=2;i<=n-1;i++) { 
+	for (i=1;i<n-1;i++) { 
 		sig=(x[i]-x[i-1])/(x[i+1]-x[i-1]);
 		p=sig*y2[i-1]+2.0;
 		y2[i]=(sig-1.0)/p;
@@ -37,31 +81,22 @@ void spline(float x[], float y[], int n, float yp1, float ypn, float y2[])
 		qn=un=0.0;
 	else { 				// or else to have a specified first derivative.
 		qn=0.5;
-		un=(3.0/(x[n]-x[n-1]))*(ypn-(y[n]-y[n-1])/(x[n]-x[n-1]));
+		un=(3.0/(x[n-1]-x[n-2]))*(ypn-(y[n-1]-y[n-2])/(x[n-1]-x[n-2]));
 	}
 	
-	y2[n]=(un-qn*u[n-1])/(qn*y2[n-1]+1.0);
-	for (k=n-1;k>=1;k--) // This is the backsubstitution loop of the tridiagonal algorithm. 
+	y2[n-1]=(un-qn*u[n-2])/(qn*y2[n-2]+1.0);
+	for (k=n-2;k>=0;k--) // This is the backsubstitution loop of the tridiagonal algorithm. 
 		y2[k]=y2[k]*y2[k+1]+u[k];
-		
-	free_vector(u,1,n-1);
+
 }
 
-/*
-It is important to understand that the program spline is called only once to
-process an entire tabulated function in arrays xi and yi . Once this has been done,
-values of the interpolated function for any value of x are obtained by calls (as many
-as desired) to a separate routine splint (for Òspline interpolationÓ):
-*/
-
-
-/*Given the arrays xa[1..n] and ya[1..n], which tabulate a function (with the xai's in order),
-and given the array y2a[1..n], which is the output from spline above, and given a value of
-x, this routine returns a cubic-spline interpolated value y. */
-
-void splint(float xa[], float ya[], float y2a[], int n, float x, float *y)
+void spline_float(t_spline *obj, double x)
 {
-	void nrerror(char error_text[]);
+	float *xa = obj->x_x;
+	float *ya = obj->x_y;
+	float *y2a = obj->x_y2;
+	int n = obj->x_maxlen;
+	
 	int klo,khi,k;
 	float h,b,a;
 
@@ -73,13 +108,98 @@ void splint(float xa[], float ya[], float y2a[], int n, float x, float *y)
 	khi=n;
 	while (khi-klo > 1) {
 		k=(khi+klo) >> 1;
-		if (xa[k] > x) khi=k;
+		if (xa[k-1] > x) khi=k;
 		else klo=k;
 	} // klo and khi now bracket the input value of x.
 
+	klo--;
+	khi--;
+	
 	h=xa[khi]-xa[klo];
-	if (h == 0.0) nrerror("Bad xa input to routine splint"); //The xa's must be distinct. 
+	if (h == 0.0) post("Bad xa input to routine splint",0); // The xa's must be distinct. 
+
 	a=(xa[khi]-x)/h;
 	b=(x-xa[klo])/h; //Cubic spline polynomial is now evaluated.
-	*y=a*ya[klo]+b*ya[khi]+((a*a*a-a)*y2a[klo]+(b*b*b-b)*y2a[khi])*(h*h)/6.0;
+	obj->x_val=a*ya[klo]+b*ya[khi]+((a*a*a-a)*y2a[klo]+(b*b*b-b)*y2a[khi])*(h*h)/6.0;
+	
+	outlet_float(obj->x_out, obj->x_val);
+	
 }
+
+void spline_list(t_spline *x, Symbol *s, int ac, Atom *av)
+{
+	int i;
+	if (x->x_inletnum == 0) {
+		for (i=0; i<ac; i++) {
+			if (av[i].a_type == A_FLOAT)
+				x->x_x[i] = av[i].a_w.w_float;
+			else if (av[i].a_type == A_LONG)
+				x->x_x[i] = (float)av[i].a_w.w_long;
+			else
+				x->x_x[i] = 0.0;
+		}
+		x->x_xlen = ac;
+	}
+	else if (x->x_inletnum == 1) {
+		for (i=0; i<ac; i++) {
+			if (av[i].a_type == A_FLOAT)
+				x->x_y[i] = av[i].a_w.w_float;
+			else if (av[i].a_type == A_LONG)
+				x->x_y[i] = (float)av[i].a_w.w_long;
+			else
+				x->x_y[i] = 0.;
+		}
+		x->x_ylen = ac;
+	}
+	x->x_maxlen = MIN(x->x_xlen, x->x_ylen);
+	
+	if(x->x_maxlen) spline_eval(x);
+}
+
+void spline_deriv(t_spline *x, Symbol *s, int ac, Atom *av)
+{
+	if (x->x_inletnum == 0) {
+		if (ac > 1 && av[1].a_type == A_FLOAT)
+			x->x_ypn = av[1].a_w.w_float;
+		else if (ac > 1 &&  av[1].a_type == A_LONG)
+			x->x_ypn = (float)av[1].a_w.w_long;
+		else
+			x->x_ypn = 0.0;
+			
+		if (ac > 0 && av[1].a_type == A_FLOAT)
+			x->x_yp1 = av[1].a_w.w_float;
+		else if (ac > 0 &&  av[1].a_type == A_LONG)
+			x->x_yp1 = (float)av[1].a_w.w_long;
+		else
+			x->x_yp1 = 0.0;
+			
+		if(x->x_maxlen) spline_eval(x);
+	}
+}
+
+
+void *spline_new(long n)
+{
+	int i;
+	t_spline *x;
+
+	x = (t_spline *)newobject(spline_class);
+	
+	x->x_proxy = proxy_new(x, 1L, &x->x_inletnum); // right proxy inlet
+	x->x_out = floatout(x);
+	
+	for(i=0; i<MAXSIZE; i++) {
+		x->x_x[i] = 0.;
+		x->x_y[i] = 0.;
+		x->x_y2[i] = 0.;
+		x->x_u[i] = 0.;
+	}
+	x->x_xlen = x->x_ylen = x->x_maxlen = 0;
+	x->x_yp1 = 0.;
+	x->x_ypn = 0.;
+	
+	return (x);
+}
+
+
+
