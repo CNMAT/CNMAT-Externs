@@ -28,21 +28,18 @@ University of California, Berkeley.
 The OpenSound Control WWW page is 
     http://www.cnmat.berkeley.edu/OpenSoundControl
 
- OSC-route.c
- Max object for OSC-style dispatching
- 
- To-do:
- 
- 	Match a pattern against a pattern?
- 	Declare outlet types / distinguish leaf nodes from other children
- 		OSC-route /amp dB /freq Hz
- 	
- 	More sophisticated (2-pass?) allmessages scheme
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: OSC-route ("OpenSoundControl route")
+DESCRIPTION: Message dispatching through an <A HREF="http://www.cnmat.berkeley.edu/OSC">OpenSoundControl</A> address space.
+AUTHORS: Matt Wright
+VERSION: 1.10.2
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
  
  */
  
 
-#include "version.h"
 
 /* Version 1.04: Allows #1 thru #9 as typed-in arguments
    Version 1.05: Allows "list" messages as well as "message" messages.
@@ -52,10 +49,20 @@ The OpenSound Control WWW page is
    Version 1.09: Allows special case prefix of /* that matches anything.
    Version 1.10: Assitance now says "for prefix /%s (subaddress + arguments)"
    Version 1.10.1: New versioning system
+   Version 1.10.2: Version info in this .c file
+
+ To-do:
+ 
+ 	Match a pattern against a pattern?
+ 	Declare outlet types / distinguish leaf nodes from other children
+ 		OSC-route /amp dB /freq Hz
+ 	
+ 	More sophisticated (2-pass?) allmessages scheme
 */
 
 
 /* the required include files */
+#include "version.h"
 #include "ext.h"
 #include "OSC-pattern-match.h"
 

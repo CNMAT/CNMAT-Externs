@@ -7,5 +7,5 @@
           0x00,               // Build # (for pre-release)
           0,                  // Region code (US)
           VERSION " (Classic or OSX)",        // Major/minor release as short string
-          VERSION ", © 1999,2000-04 CNMAT (Classic/OSX Version)"
+          VERSION ",© " COPYRIGHT_YEARS " CNMAT (Classic/OSX Version)"
           };
