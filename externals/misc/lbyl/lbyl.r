@@ -1,9 +1,11 @@
+#include "version.h"
+
      resource 'vers' (1) {
-          0x00,               // Major release: digit before decimal
-          0x01,               // Minor release: digits after decimal
+          0xff,               // Major release: digit before decimal
+          0xff,               // Minor release: digits after decimal
           release,               // dev/alpha/beta/release
           0x00,               // Build # (for pre-release)
           0,                  // Region code (US)
-          "0.2 (Classic or OSX)",        // Major/minor release as short string
-          "0.2, © 2002,3 CNMAT (Classic/OSX Version)"
+          VERSION " (Classic or OSX)",        // Major/minor release as short string
+          VERSION ",© 2002,3 CNMAT (Classic/OSX Version)"
           };
