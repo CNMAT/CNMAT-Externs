@@ -43,6 +43,7 @@ typedef struct _theobject
   void *x_floatout;
   float x_result;
   Engine *x_engine;
+  int engineOpen;
   int verbose;
 } t_theobject;
 
@@ -59,21 +60,26 @@ void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
 void theobject_clear(t_theobject *x, t_symbol *message, short argc, t_atom *argv);
 void theobject_list(t_theobject *x, t_symbol *msg, short argc, t_atom *argv);
 void theobject_free(t_theobject *x);
+void theobject_closeEngine(t_theobject *x);
 static int MaxListToString(char *s, int capacity, short argc, t_atom *argv);
 void theobject_verbose(t_theobject *x, long yesno);
 
 void main(void)
 {
   setup((t_messlist **)&theobject_class, (method)theobject_new, (method)theobject_free, (short)sizeof(t_theobject), 0L, A_GIMME, 0);
-  dsp_initclass();
-  addmess((method)theobject_dsp, "dsp", A_CANT, 0);
+  // dsp_initclass();
+  // addmess((method)theobject_dsp, "dsp", A_CANT, 0);
   addmess((method)theobject_clear,"clear", A_GIMME, 0);
   addmess((method)theobject_sum,"sum", 0);
+  addmess((method)theobject_closeEngine,"closeEngine", 0);
   addmess((method)theobject_convalot, "convalot", A_LONG, 0);
   addmess((method)theobject_get, "get", A_SYM, 0);
   addmess((method)theobject_eval, "eval", A_GIMME, 0);
   // addbang((method)theobject_bang);
   addmess((method)theobject_list, "list", A_GIMME, 0);
+  addmess((method)theobject_verbose, "verbose", A_LONG, 0);
+  
+  
   post("Matlabcommunicate main()");
   
   ps_ssh = gensym("ssh");
@@ -106,6 +112,11 @@ void theobject_sum(t_theobject *x) {
   mxArray *result;
   double *datptr ;
 
+  if (!x->engineOpen || x->x_engine == NULL) {
+	error("matlabcommunicate: sum: Matlab engine is not open.");
+	return;
+  }
+
   strcpy(s, "y=sum(x);");
 
   if (x->verbose) {
@@ -131,6 +142,11 @@ void theobject_convalot(t_theobject *x, long size) {
   mxArray *result;
   double *datptr ;
 
+  if (!x->engineOpen || x->x_engine == NULL) {
+	error("matlabcommunicate: convalot: Matlab engine is not open.");
+	return;
+  }
+
   sprintf(s, "convout=conv(x,[1:%ld]);", size);
   if (x->verbose) post(s);
   engEvalString(x->x_engine, s);
@@ -149,6 +165,11 @@ void theobject_convalot(t_theobject *x, long size) {
 void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv) {
   char s[STRING_CAPACITY];
   
+  if (!x->engineOpen || x->x_engine == NULL) {
+	error("matlabcommunicate: eval: Matlab engine is not open.");
+	return;
+  }
+  
   if (MaxListToString(s, STRING_CAPACITY, argc, argv) == 0) {
 	error("matlabcommunicate: Couldn't make string to be evaluated.");
   } else {
@@ -161,6 +182,12 @@ void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
 void theobject_list(t_theobject *x, t_symbol *msg, short argc, t_atom *argv) {
   int i;
   char s[STRING_CAPACITY], t[STRING_CAPACITY];
+  
+  
+  if (!x->engineOpen || x->x_engine == NULL) {
+	error("matlabcommunicate: list: Matlab engine is not open.");
+	return;
+  }
  
   for (i=0; i<argc; i++) {
 	    if (argv[i].a_type == A_LONG) {
@@ -234,8 +261,11 @@ void *theobject_new(Symbol *s, short argc, Atom *argv) {
   }
   
   t_theobject *x = (t_theobject *)newobject(theobject_class);
-  dsp_setup((t_pxobject *)x,1);                 // The input signal
-  x->x_obj.z_misc |= Z_NO_INPLACE; 
+  x->x_engine = x->engineOpen = 0;
+  
+  // dsp_setup((t_pxobject *)x,1);                 // The input signal
+  // x->x_obj.z_misc |= Z_NO_INPLACE; 
+  
   x->x_floatout = outlet_new((t_object *)x, 0L);
   outlet_new((t_object *)x, "signal");        // A signal outlet
 
@@ -248,7 +278,8 @@ void *theobject_new(Symbol *s, short argc, Atom *argv) {
   if ((x->x_engine = engOpen(s))==0) {
     post("Couldn't load matlab");
   } else {
-	post("Matlab engine loaded successfully");  
+	post("Matlab engine loaded successfully");
+	x->engineOpen = 1;
   }
   
   x->verbose = 1;
@@ -256,10 +287,21 @@ void *theobject_new(Symbol *s, short argc, Atom *argv) {
 }
 
 void theobject_free(t_theobject *x) {
-  dsp_free(&x->x_obj);
+  // dsp_free(&x->x_obj);
 
+  theobject_closeEngine(x);
+}
+
+
+void theobject_closeEngine(t_theobject *x) {
+  if (!x->engineOpen) {
+	post("Engine already closed; can't close it again.");
+	return;
+  }
+  
   if(engClose(x->x_engine)==0) {
-    post("Matlab engine closed successfully");
+	post("Matlab engine closed successfully");
+	x->engineOpen = 0;
   } else {
 	post("Failed to close Matlab engine.");
   }  
