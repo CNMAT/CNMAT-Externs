@@ -87,6 +87,14 @@ University of California, Berkeley. Interpolation support by Ben "Jacobs".
 
 /* private types */
 
+
+#ifdef WIN_VERSION
+#include <z_dsp.h>
+extern int isnan(double d) {
+	return IS_NAN_DOUBLE(d);
+}
+#endif
+
 typedef enum {
   INTERP_MODE_NONE,
   INTERP_MODE_LINEAR,
