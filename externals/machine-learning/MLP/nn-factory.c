@@ -51,7 +51,9 @@ fType	outFuncts;
 	NeuralNetPtr	x;
 	int				i;
 #ifdef MAXObject
+#ifdef GRAPHICS
 	GrafPort		*oldGrafPort;
+#endif
 #endif	
 #ifdef debug
 	post("¥newNeuralNet - start");
