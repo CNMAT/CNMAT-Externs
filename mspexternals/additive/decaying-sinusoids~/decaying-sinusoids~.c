@@ -286,7 +286,7 @@ void main(void)
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free,
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 	post("decaying-sinusoids~ 1.3Beta- Adrian Freed");
-	post("Copyright © 1996,1997,1998,1999 Regents of the University of California.");
+	post("Copyright © 1996,97,98,99,2000,01,02 Regents of the University of California.");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 
 	post("Never expires");
