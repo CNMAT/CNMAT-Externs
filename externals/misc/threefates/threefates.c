@@ -50,10 +50,12 @@ University of California, Berkeley.
  *************************************************************************************/
 
 
-/* Version 0.2: 041229 MW: Handles arbitrary-length partial parameter lists */
+/* 
+Version 0.2: 041229 MW: Handles arbitrary-length partial parameter lists 
+Version 0.2.1: New version/makefile system
+*/
 
-
-#define THREEFATES_VERSION "0.2" 
+#include "VERSION.h"
 
 #include "ext.h"
 
@@ -206,7 +208,7 @@ void threefates_tellmeeverything(t_threefates *x);
 void main(fptr *f)
 {
 	
-	post("threefates " THREEFATES_VERSION " - Tim Madden and Matt Wright");
+	post("threefates " VERSION " - Tim Madden and Matt Wright");
 	post("Copyright ©2000-04 Regents of the University of California.");
 	
 	/* tell Max about my class. The cast to short is important for 68K */
@@ -800,7 +802,7 @@ void threefates_tellmeeverything(t_threefates *x) {
    int i, j;
    Atom a;
    
-   post("--- threefates " THREEFATES_VERSION " ---");
+   post("--- threefates version " VERSION " ---");
    post(" up to %ld oscillators, %ld params each (so input list length <= %ld, output list length <= %ld)",
         x->max_osc, x->num_partial_parameters, x->max_inargs, x->max_outargs);
    post(" Present frame has %ld values:", GetPresentAC(x));
