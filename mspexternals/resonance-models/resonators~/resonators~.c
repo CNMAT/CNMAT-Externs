@@ -40,9 +40,19 @@ University of California, Berkeley.
 
 /*
  Version 1.6: Compiles under 7/02 Max SDK and CW 7.0 
+ Version 1.7: Doesn't get smooth/unsmooth backwards
 */
 
-#define VERSION	"resonators~ 1.6Beta- Adrian Freed"
+
+/*
+	To-Do
+	Document smooth mode in the help patch
+	Make smooth mode settable by a message.
+	fold all four perform procedures into a single version (with compiled-out conditional)
+	
+*/
+
+#define VERSION	"resonators~ 1.7Beta- Adrian Freed"
 
 
 #include "ext.h"
@@ -171,9 +181,10 @@ out:
 // unsmoothed without input
 t_int *resonators2_perform(t_int *w)
 {
-		t_float *out = (t_float *)(w[2]);
+	t_float *out = (t_float *)(w[2]);
 	t_resonators *op = (t_resonators *)(w[1]);
 	int n = (int)(w[3]);
+	
 	int nfilters = op->nres;
 	  float o0, o1, o2, o3;
 	  float i0,i1,i2,i3,i4,i5;
@@ -399,9 +410,10 @@ out:
 t_int *iresonators2_perform(t_int *w);
 t_int *iresonators2_perform(t_int *w)
 {
-		t_float *out = (t_float *)(w[2]);
+	t_float *out = (t_float *)(w[2]);
 	t_resonators *op = (t_resonators *)(w[1]);
 	int n = (int)(w[3]);
+	
 	float rate = 1.0f/n;
 	int nfilters = op->nres;
 		float yn,yo;
@@ -503,10 +515,9 @@ void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 	}
 	else {
 		if(x->interpolating)
-			dsp_add(resonators2_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
-		else
 			dsp_add(iresonators2_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
-		
+		else
+			dsp_add(resonators2_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
 	}
 }
 
