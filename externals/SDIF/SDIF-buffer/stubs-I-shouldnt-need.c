@@ -10,11 +10,6 @@ void DisposeTextToUnicodeInfo(void) {
 	post("ее DisposeTextToUnicodeInfo was called");
 }
 
-/* void __msl_text2unicode(void);
-void __msl_text2unicode(void) {
-	post("ее __msl_text2unicode was called");
-}
-*/
 
 void ConvertFromTextToUnicode(void);
 void ConvertFromTextToUnicode(void) {
