@@ -9,30 +9,27 @@ HELPFILE = $(OBJ).help
 MAC_BINARY = ../build-mac/$(OBJ)
 MAC_HELPFILE_COPY = ../build-mac/$(OBJ).help 
 MAC_INDIVIDUAL_DOWNLOAD = ../build-mac/$(OBJ)$(VERSION_TAG).sit
-WEB_TABLE_ENTRY = ../../../web-downloads/$(OBJ).html
 
-# Each VERSION.h file looks like this:  #define VERSION "1.2.3.4"
+# Each version.h file has a line that looks like this:  
+#     #define VERSION "1.2.3.4"
 # so get a Makefile variable that's just something like "1.2.3.4"
-DOUBLEQUOTED_VERSION := $(word 3,$(shell cat VERSION.h))
+DOUBLEQUOTED_VERSION := $(word 3,$(shell grep VERSION version.h))
 # now a cheesy way to get rid of the double quotes:
 VERSION = $(shell echo $(DOUBLEQUOTED_VERSION))
 VERSION_TAG = _$(VERSION)
 
-all: mac-individual-download help-diff-warning web-table-entry
+all: mac-individual-download help-diff-warning
 
 clean:
-	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY) $(WEB_TABLE_ENTRY)
+	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY)
 
-
-web-table-entry: $(WEB_TABLE_ENTRY)
-	
-
-
+version.h: $(SOURCE)
+	perl ../../../commentkeys.pl < $(SOURCE) > $@
 
 mac-binary: $(MAC_BINARY)
 
 # to make the MAC binary, have to open the Codewarrior project:
-$(MAC_BINARY): $(SOURCE)
+$(MAC_BINARY): $(SOURCE) version.h
 	@echo 'Please build the MAC version of' $(OBJ)
 	open $(OBJ).mcp
 
