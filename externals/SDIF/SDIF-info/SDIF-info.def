@@ -1,0 +1,6 @@
+;SDIF-info.def
+
+LIBRARY SDIF-info
+
+EXPORTS
+	main
