@@ -192,7 +192,7 @@ void main() {
 	
 }
 
-void *SDIFlistpoke_new(Symbol *, short argc, Atom *argv) {
+void *SDIFlistpoke_new(Symbol *dummy, short argc, Atom *argv) {
 	SDIFlistpoke *x;
 	
 	// post("SDIFlistpoke_new: %s, %ld args", s->s_name, (long) argc);
@@ -387,7 +387,7 @@ static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom 
 }	
 
 
-static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *, short argc, Atom *argv) {
+static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, Atom *argv) {
 	int i;
 	SDIFmem_Frame f;
 	SDIFmem_Matrix m;
