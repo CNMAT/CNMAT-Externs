@@ -44,21 +44,23 @@ University of California, Berkeley.
    before the requested time.)  If direction > 0 it "searches forwards".
    Note that the SDIF_Frame type is actually a doubly linked list node (defined in
    sdif.h), so you can traverse the list of frames in the stream like that if after
-   you call the SDIF Frame Lookup Function once. */
-
+   you call the SDIF Frame Lookup Function once.  
+   Returns 0 if it doesn't find a frame. */
 typedef SDIFmem_Frame (*SDIFFrameLookupFn)(struct _SDIFbuffer *buf, 
 									    sdif_float64 time,
 									    long direction);
 
 /* An "SDIF Frame Insert Function" inserts a new frame into an SDIF-buffer.  It
-   automatically updates the doubly linked list.  */
+   automatically updates the doubly linked list.  
+   Returns 0 for success, nonzero for failure.
+   */
 typedef int (*SDIFFrameInsertFn)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
+
 
 /* An "SDIF Frame Delete Function" deletes the given frame from the given SDIF-buffer,
    automatically updating the linked list connections as well as any internal state,
    and freeing the memory taken by that frame. */
-   
-typedef void (*SDIFFrameDeleteFn)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
+   typedef void (*SDIFFrameDeleteFn)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
 
 typedef struct _SDIFbuffer {
  	t_object s_obj;
