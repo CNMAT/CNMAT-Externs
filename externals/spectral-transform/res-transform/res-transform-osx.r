@@ -5,5 +5,5 @@
           0x00,               // Build # (for pre-release)
           0,                  // Region code (US)
           "1.5 (OSX)",        // Major/minor release as short string
-          "1.5, © 2002,3 CNMAT (OSX Version)"
+          "1.5, © 2002,3,4,5 CNMAT (OSX Version)"
           };
