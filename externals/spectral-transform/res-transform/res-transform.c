@@ -34,10 +34,11 @@ Copyright © 1996,1997,1998,1999 Regents of the University of California.
 
 Version 1.2 by Matt Wright: compiles with CW 7 and new Max/MSP SDK
 Version 1.3 by Matt Wright has "setoneamplitude", "setonefrequency", "setonerate", and "setone"
+Version 1.4 by Matt Wright allows float midi-pitch
 
 */
 
-#define VERSION "1.3"
+#define VERSION "1.4"
 
 /* #include <fp.h>
 #include <fenv.h> */
@@ -116,8 +117,8 @@ typedef	struct	fobj
 
 
 /* prototypes */
-static float miditopitchratio(int n);
-static float modeltune(int n,float p);
+static float miditopitchratio(float f);
+static float modeltune(float f,float p);
 static void faxis(float f[],long n);
 void * fnew(Symbol *s, int argc, Atom *argv);
 static float senv(fobj *x, float f);
@@ -133,7 +134,7 @@ static void *setfreqadd(fobj *it, float f);
 static void *setatten(fobj *it, float f);
 static void *setgain(fobj *it, float f);
 static void *setrmask(fobj *it, float f);
-static void *setmidipitch(fobj *it, int f);
+static void *setmidipitch(fobj *it, float f);
 static void *setbwscale(fobj *it, float f);
 static void	*specenv(fobj *x, struct symbol *s, int argc, Atom *argv);
 static void flist(fobj *x, struct symbol *s, int argc, Atom *argv);
@@ -143,16 +144,17 @@ static void enddump(fobj *x, struct symbol *s, int argc, struct atom *argv);
 static void version(fobj *x);
 static void tellmeeverything(fobj *x);
 
-static float miditopitchratio(int n) {
-	return  expf( SEMIFAC*(n-AASMIDINOTE));
+static float miditopitchratio(float f) {
+	return  expf( SEMIFAC*(f - AASMIDINOTE));
 }
 
-static float modeltune(int n,float p) {
+static float modeltune(float f, float p) {
 	if(p==0.0f)
 		return 1.0f;
 		
-	return miditopitchratio(n)*(A440/p);
+	return miditopitchratio(f)*(A440/p);
 }
+
 static void clearit(fobj *x);
 static void clearit(fobj *x)
 {
@@ -318,9 +320,9 @@ static void *setgain(fobj *it, float f)
 
 
 
-static void *setmidipitch(fobj *it, int n)
+static void *setmidipitch(fobj *it, float f)
 {
-	it->freqscale = modeltune(n,it->freqbase);
+	it->freqscale = modeltune(f,it->freqbase);
 //	post("%d %f %f", n,it->freqbase,it->freqscale);
 		dumpifnecessary(it);
 }
@@ -518,7 +520,7 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addfloat( (method) setfreqbase );
 	addmess((method)clear, "clear", 0);
 	addmess((method)setpitch, "pitch", A_DEFFLOAT,0);
-	addmess((method)setmidipitch, "midi-pitch", A_DEFLONG,0);
+	addmess((method)setmidipitch, "midi-pitch", A_DEFFLOAT,0);
 	addmess((method)setfreqbase, "frequency-base", A_DEFFLOAT,0);
 	addmess((method)setfreqscale, "frequency-scale", A_DEFFLOAT,0);
 	addmess((method)setfreqadd, "frequency-add", A_DEFFLOAT,0);
