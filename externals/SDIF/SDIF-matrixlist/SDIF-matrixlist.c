@@ -37,10 +37,6 @@ University of California, Berkeley.
 
 #define SDIF_MATRIXLIST_VERSION "0.1"
 
-/* the required include files */
-#include <SetUpA4.h>
-#include <A4Stuff.h>
-
 #include "ext.h"
 
 /* Undo ext.h's macro versions of some of stdio.h: */
