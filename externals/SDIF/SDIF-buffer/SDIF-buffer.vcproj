@@ -107,7 +107,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="3"
-				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\All Users\c74support\max-includes&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\All Users\c74support\max-includes&quot;;..\..\..\..\sdif\lib"
 				PreprocessorDefinitions="WIN_VERSION;WIN32;NDEBUG;_WINDOWS;_USRDLL;WIN_EXT_VERSION;"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -183,6 +183,9 @@
 				RelativePath="&quot;C:\Documents and Settings\All Users\c74support\max-includes\common\dllmain_win.c&quot;">
 			</File>
 			<File
+				RelativePath="..\..\..\..\sdif\lib\sdif-buf.c">
+			</File>
+			<File
 				RelativePath=".\SDIF-buffer.c">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -191,6 +194,12 @@
 						AdditionalIncludeDirectories=""
 						CompileAs="0"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\sdif\lib\sdif-mem.c">
+			</File>
+			<File
+				RelativePath="..\..\..\..\sdif\lib\sdif.c">
 			</File>
 		</Filter>
 		<Filter

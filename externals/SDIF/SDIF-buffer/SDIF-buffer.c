@@ -41,20 +41,15 @@ Maintenance by Ben "Jacobs".
   12/26/02 - 0.7.1: Uses locatefile_extended correctly to open regardless of MacOS type
   04/01/04 - 0.8.0: Refactored some code into sdif-buf.c; added access to SDIFbuf_Buffer (bj)
   06/22/04 - 0.8.1: Cleanup (bj)
-
+  12/24/04 - 0.9: Windows port (mw)
 */
 
-#define SDIF_BUFFER_VERSION "0.8.1"
+#define SDIF_BUFFER_VERSION "0.9"
 #define FINDER_NAME "SDIF-buffer"
 
 /* the required include files */
 
-#ifdef NAVIGATION_SERVICES	
-#include <Navigation.h>
-#endif
-
 #ifdef WIN_VERSION
-Windows sucks
 #else
 #include <FSp_fopen.h>
 /*
@@ -64,8 +59,10 @@ Windows sucks
 // OSX 
 #endif
 */
-
+#ifdef NAVIGATION_SERVICES	
+#include <Navigation.h>
 #endif
+#endif /* WIN_VERSION */
 
 #include "ext.h"
 #include <limits.h>
@@ -514,7 +511,7 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
 
 
 
-void SDIFbuffer_streamlist(SDIFBuffer *, Symbol *, int argc, Atom *argv) {	
+void SDIFbuffer_streamlist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *argv) {	
 	int i;
 	
 	
@@ -551,7 +548,7 @@ void one_streamlist(Symbol *fileName) {
 
 
 
-void SDIFbuffer_framelist(SDIFBuffer *, Symbol *, int argc, Atom *argv) {	
+void SDIFbuffer_framelist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *argv) {	
 	int i;
 	
 	
@@ -752,6 +749,9 @@ void PrintMatrixHeader(SDIF_MatrixHeader *mh) {
 
 
 
+
+#ifdef NAVIGATION_SERVICES	
+
 pascal void worldsLamestEventProc(NavEventCallbackMessage callBackSelector,
 						NavCBRecPtr callBackParms,
 						NavCallBackUserData callBackUD);
@@ -771,7 +771,6 @@ pascal void worldsLamestEventProc(NavEventCallbackMessage callBackSelector,
 	break;
 	}
 }
-#ifdef NAVIGATION_SERVICES	
 
 void SDIFbuffer_NAVcrap(SDIFBuffer *x) {
 	OSErr err;
