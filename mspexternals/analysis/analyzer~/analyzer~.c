@@ -4,16 +4,25 @@
 #include <string.h>
 #include <math.h>
 
+/* analyzer~ is by Tristan Jehan, based on Miller Puckette's fiddle~
+
+   version 1.2.1 021004 Matt Wright fixed pitch_getit() bounds error and added debug info
+   version 1.2.2 021016 Matt Wright more debug info: addr of most recent input sig vector and gettime()
+   
+*/
+
+#define VERSION "1.2.2"
+
+
 #define DEBUG
 #ifdef DEBUG
-#define debug post("DEBUG:"); post
+#define debug if (x->x_debug) post
 #else
-#define debug  /* Do nothing */
+#define debug /* Do nothing */
 #endif
 
 
 #define RES_ID	7079
-#define VERSION "1.2"
 #define NUMBAND 25 // at 44100 Hz only
 #define t_floatarg double
 #define DEFAULT_FS 44100
@@ -193,8 +202,11 @@ typedef struct _analyzer {
     void *x_noteout;		// Outlet for cooked pitch
     void *x_peakout;		// Outlet for sinusoidal decomposition
     void *x_pitchout;		// Outlet for raw pitch & amplitude
+		
+	int x_debug;				// Debug mode?
+	t_float *lastInputVector;	// Remembered from last analyzer_perform() for debug into
+	t_int lastInputVectorSize;	// ditto
 	
-	t_int debug;			// Debug mode on/off
 } t_analyzer;
 
 t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_black62, *ps_black70, *ps_black74, *ps_black92, 
@@ -209,6 +221,7 @@ void analyzer_float(t_analyzer *x, double f);
 void analyzer_int(t_analyzer *x, long n);
 void analyzer_assist(t_analyzer *x, void *b, long m, long a, char *s);
 void analyzer_print(t_analyzer *x);
+void analyzer_tellmeeverything(t_analyzer *x);
 void analyzer_amprange(t_analyzer *x, t_floatarg amplo, t_floatarg amphi);
 void analyzer_reattack(t_analyzer *x, t_floatarg attacktime, t_floatarg attackthresh);
 void analyzer_vibrato(t_analyzer *x, t_floatarg vibtime, t_floatarg vibdepth);
@@ -229,6 +242,10 @@ t_float pitch_mtof(t_float f);
 t_float pitch_ftom(t_float f);
 t_int pitch_ilog2(t_int n);
 void pitch_getit(t_analyzer *x); // modified fiddle main function
+void analyzer_debug(t_analyzer *x, long n);
+
+
+
 
 void main(void) {
 
@@ -256,10 +273,13 @@ void main(void) {
 	addmess((method)analyzer_linear, "linear", A_GIMME, 0);
 	addmess((method)analyzer_bright, "bright", A_GIMME, 0);
     addmess((method)analyzer_print, "print", 0);
+    addmess((method)analyzer_tellmeeverything, "tellmeeverything", 0);
     addmess((method)analyzer_amprange, "amp-range", A_FLOAT, A_FLOAT, 0);
     addmess((method)analyzer_reattack, "reattack", A_FLOAT, A_FLOAT, 0);
     addmess((method)analyzer_vibrato, "vibrato", A_FLOAT, A_FLOAT, 0);
    	addmess((method)analyzer_npartial, "npartial", A_FLOAT, 0);
+   	addmess((method)analyzer_debug, "debug", A_LONG, 0);
+	
 
 	addfloat((method)analyzer_float);
 	addint((method)analyzer_int);
@@ -283,6 +303,12 @@ t_int *analyzer_perform(t_int *w) {
     if (x->x_obj.z_disabled)
     	goto skip;
 
+	
+#ifdef DEBUG
+	x->lastInputVector = in;
+	x->lastInputVectorSize = n;
+#endif
+	
 	if (x->x_counter < 1) {
 	
 		// Copy input samples into FFT buffer	
@@ -292,6 +318,8 @@ t_int *analyzer_perform(t_int *w) {
 			index++;
 			cpt--;
 		}
+		
+		debug("perf[%ld]", x->BufWritePos);
 	
 		// When Buffer is full...
 		if (x->BufWritePos >= x->BufSize) {
@@ -316,6 +344,7 @@ t_int *analyzer_perform(t_int *w) {
 
 			// Go for the FFT outside the perform function with a delay of 0 ms!
 			clock_delay(x->x_clock,0);
+			debug("set clock");
 		
 			// Swap buffers
 			x->Buf1 = x->Buf2;
@@ -324,6 +353,12 @@ t_int *analyzer_perform(t_int *w) {
 	} else {
 		x->x_counter--;
 	}
+	
+	
+#ifdef DEBUG
+	/* Count down the debug value each time so we don't flood the Max window with text */
+ 	if (x->x_debug > 0) --(x->x_debug);
+#endif 
 	
 skip:	
 	return (w+4);
@@ -397,6 +432,31 @@ void analyzer_print(t_analyzer *x) {
     } else {
     	post("linear");
     }
+}
+
+#define TELLi(var) post("  " #var ": %ld", x->var);
+#define TELLf(var) post("  " #var ": %f", x->var);
+#define TELLp(var) post("  " #var ": %p", x->var);
+
+
+void analyzer_tellmeeverything(t_analyzer *x) {
+	long time;
+	
+	post("");
+	post("Analyzer~ state:");
+	
+	TELLi(BufSize);
+	TELLi(BufWritePos);
+	TELLp(Buf1);
+	TELLp(Buf2);
+	TELLp(BufFFT);
+	TELLp(lastInputVector);
+	TELLi(lastInputVectorSize);
+	
+	analyzer_print(x);
+	
+	time = gettime();
+	post("gettime(): %ld", time);
 }
 
 void analyzer_amprange(t_analyzer *x, t_floatarg amplo, t_floatarg amphi) {
@@ -882,6 +942,8 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->BufBark[2*NUMBAND-1] = freq;
 	x->BufSizeBark[NUMBAND-1] = sizeband;
 
+	x->x_debug = 0;
+
     return (x);
 }
 
@@ -914,6 +976,9 @@ void analyzer_tick(t_analyzer *x) {
 	double invNumBand = 0.04f;
     t_pitchhist *ph;
 
+
+	debug("Entering analyzer_tick");
+	
 	// Zero padding
 	for (i=x->BufSize; i<x->FFTSize; i++)
 		x->BufFFT[i] = 0.0f;
@@ -1086,6 +1151,8 @@ void analyzer_tick(t_analyzer *x) {
 	if (x->x_output == List) {
  		outlet_list(x->x_outlet, 0L, NUMBAND, x->myList);
  	}
+ 
+ 	debug("leaving analyzer_tick");
  }	
 
 // Convert from MIDI to Hz and Hz to MIDI
@@ -1127,6 +1194,9 @@ void pitch_getit(t_analyzer *x)
     t_int npeaktot = (x->x_npeakout > x->x_npeakanal ? x->x_npeakout : x->x_npeakanal);
     t_pitchhist *phist;
     
+    
+    debug("entering pitch_getit");
+    
     // Circular buffer for History
     oldphase = x->x_histphase;
     newphase = x->x_histphase + 1;
@@ -1155,11 +1225,19 @@ void pitch_getit(t_analyzer *x)
 
 	// search for peaks
 	pk1 = x->x_peaklist;
-		
-    for (i=MINBIN, fp1=spec+2*MINBIN, fp2=powSpec+MINBIN; (i<n-2) && (npeak<npeaktot); i++, fp1+=2, fp2++) {
-    	 
+	
+	// debug("** About to look for peaks.  npeaktot %ld    n %ld    FFTsize  %ld", npeaktot, n, x->FFTSize);
+	
+	
+	/* Matt changed this from (i<n-2) to (i<n-3) */
+    for (i=MINBIN, fp1=spec+2*MINBIN, fp2=powSpec+MINBIN; (i<n-3) && (npeak<npeaktot); i++, fp1+=2, fp2++) {    	 
 		t_float height = fp2[0], h1 = fp2[-1], h2 = fp2[1]; // Bin power and adjacents
 		t_float totalfreq, pfreq, f1, f2, m, var, stdev;
+	
+		 if (fp1+7 >= spec+x->FFTSize) {
+    	 	post("*** fp1 %p, fp1+7 %p, spec %p, spec+FFTsize %p", fp1, fp1+7, spec, spec+x->FFTSize);
+    	 }
+
 	
 		if (height<h1 || height<h2 || h1*coeff<POWERTHRES*total_power || h2*coeff<POWERTHRES*total_power) continue; // Go to next
 
@@ -1482,3 +1560,8 @@ void pitch_getit(t_analyzer *x)
 	return;
 }
 
+
+void analyzer_debug(t_analyzer *x, long n) {
+	post("analyzer~: debug is %ld", n);
+	x->x_debug = n;
+}
