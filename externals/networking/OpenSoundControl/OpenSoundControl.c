@@ -1,18 +1,29 @@
 /*
- * Copyright (c) 1996, 1997 Regents of the University of California.
- * All rights reserved.
- * The name of the
- * University may not be used to endorse or promote products derived
- * from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
- * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- */
 
+Written by Matt Wright, The Center for New Music and Audio Technologies,
+University of California, Berkeley.  Copyright (c) 1996,97,98,99,2000,01,02,03
+The Regents of the University of California (Regents).  
+
+Permission to use, copy, modify, distribute, and distribute modified versions
+of this software and its documentation without fee and without a signed
+licensing agreement, is hereby granted, provided that the above copyright
+notice, this paragraph and the following two paragraphs appear in all copies,
+modifications, and distributions.
+
+IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING
+OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF REGENTS HAS
+BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+*/
   /* 
         Author: Matt Wright
-
-		6/11/97 Version uses OpenSoundControl
                 
         OpenSoundControl max object: formats Max messages into buffers
          in the "OpenSoundControl" data format.
@@ -26,12 +37,13 @@
         Version 1.6 supports the evil "gimme" for (68K) backwards compatibility
         Version 1.7 Supports SuperCollider-style type tags
         Version 1.8 has errorreporting mode, compiles under CW7 and Max 4 SDK
+        Version 1.9: Cleaned up and fixed copyright for open-sourcing
    */
 
-#define OPENSOUNDCONTROL_VERSION "1.8"
+#define OPENSOUNDCONTROL_VERSION "1.9"
 
 #include "ext.h"
-#include "OpenSoundControl.h"
+#include "OSC-client.h"
 
 void *OSC_class;
 Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket;
@@ -79,35 +91,14 @@ void OSC_sendData(OSC *x, short size, char *data);
 void OSC_formatData(OSC *x, char *messageName, short argc, Atom *argv);
 void strcpy(char *s1, char *s2);
 
-/* Expiration date */
-#define YEAR 1997
-#define MONTH 4
-#define DAY 1
-#define EXPIRATION_STRING "4/1/1997"
-#define NOTICE "OpenSoundControl object version " OPENSOUNDCONTROL_VERSION " has expired!"
 
 void main (fptr *f) {
 	DateTimeRec date;
 	
 	post("OpenSoundControl object version " OPENSOUNDCONTROL_VERSION " by Matt Wright");
-	post("Copyright © 1996,7,8,9,2000,1,2 Regents of the University of California.  "
-#ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
-		 "Expires " EXPIRATION_STRING
-#endif
-		 );
+	post("Copyright © 1996,7,8,9,2000,1,2,3 Regents of the University of California.  ");
 		
 	setup((t_messlist **)&OSC_class, (method) OSC_new,0L,(short)sizeof(OSC),0L,A_DEFLONG,0);
-
-#ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
-    /* Make the object time-out: */
-	GetTime(&date);
-	if((date.year > YEAR)  || 
-       (date.year == YEAR && ((date.month > MONTH) ||
-							  (date.month == MONTH && date.day > DAY)))) {
-			ouchstring(NOTICE);
-			return;
-	}
-#endif
 
 #ifdef SANITY_CHECK
 	post("*** sizeof(int4byte) = %ld", (long) sizeof(int4byte));
@@ -200,9 +191,6 @@ void OSC_assist(OSC *x, void *b, long m, long a, char *s) {
 void OSC_version (OSC *x) {
 	post("OpenSoundControl Version " OPENSOUNDCONTROL_VERSION
 		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
-#ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
-	post("Expires " EXPIRATION_STRING);
-#endif
 }
 
 void OSC_debug (OSC *x) {
@@ -835,12 +823,14 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 	            
 	            case 'h': case 't':
 	            /* 64-bit int: interpret as zero since Max doesn't have long ints */
+	            /* Could see if the data fits in a 32-bit int and output it like that if so... */
 	            SETLONG(&args[numArgs], 0);
 	            p += 8;
 	            break;
 
 	            case 'd':
-	            /* 64-bit int: interpret as zero since Max doesn't have long ints */
+	            /* 64-bit float: interpret as zero since Max doesn't have doubles */
+	            /* Could see if the data fits in a 32-bit float and output it like that if so... */
 	            SETFLOAT(&args[numArgs], 0.0);
 	            p += 8;
 	            break;
@@ -855,19 +845,19 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 	            break;
 
 	            case 'T': 
-	            /* SuperCollider "True" value comes out as the int 1 */
+	            /* "True" value comes out as the int 1 */
 	           	SETLONG(&args[numArgs], 1);
 	           	/* Don't touch p */
 	           	break;
 	           	
 	            case 'F': 
-	            /* SuperCollider "False" value comes out as the int 0 */
+	            /* "False" value comes out as the int 0 */
 	           	SETLONG(&args[numArgs], 0);
 	           	/* Don't touch p */
 	           	break;
 	           	            
 	            case 'N': 
-	            /* Empty lists in max?  Ha!  How about the symbol "nil"? */
+	            /* Empty lists in max?  I wish!  How about the symbol "nil"? */
 	            SETSYM(&args[numArgs], gensym("nil"));
 	            /* Don't touch p */
 	           	break;
