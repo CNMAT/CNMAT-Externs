@@ -57,11 +57,8 @@ University of California, Berkeley.
 
 #include "ext.h"
 
-// Define the max number of oscillators and parameters per oscillator (not including index).
-#define MAX_OSC 200
-#define MAX_PARTIAL_PARAMS 4
-#define MAX_INARGS (MAX_OSC*(MAX_PARTIAL_PARAMS+1))
-#define MAX_OUTARGS (MAX_OSC*MAX_PARTIAL_PARAMS)
+// Define the max number of parameters per oscillator (not including index).
+#define MAX_PARTIAL_PARAMS 5
 
 
 // We consider each duple sent to sinusoids~ to be a "slot". Each slot
@@ -89,28 +86,34 @@ typedef struct t_threefates_
 {
 	struct object t_obj;
 	
+	// Maximum number of oscillators (determines memory allocation)
+	int max_osc;
+	
 	// How many parameters besides index (e.g., amp, freq, bw) does each partial have?
 	int num_partial_parameters;
 	
+	// Parameters dervied from those two:
+	int max_inargs, max_outargs;
+	
 	void *t_out;
-	Atom output_list[MAX_OUTARGS];
+	Atom *output_list;
 	int t_outsize;
 
 	// Frame0 num args.
 	int ac0;
 	// Frame 0 Arguments - including partial indices
-	float frame0[MAX_INARGS];
+	float *frame0;
 
 	// Frame 1 num args.
 	int ac1;
 	// Frame 1 Arguments - including partial indices
-	float frame1[MAX_INARGS];
+	float *frame1;
 		
 	// toggle which is present frame (0 or 1). the other is future. 
 	int toggle_frame_present;
 	
 	// List of slots.
-	t_slot t_slotlist[MAX_OSC];
+	t_slot *t_slotlist;
 	// Number of used slots.
 	int num_slots;
 	// Max index in used slot list.
@@ -125,8 +128,8 @@ void *threefates_class;
  * Function Prototypes.
  */
 
-// Make new object.
-void *threefates_new(long nPartialParams);
+void *threefates_new(long maxpartials, long nPartialParams);
+void threefates_free(t_threefates *x);
 
 void List(
 	t_threefates *x, 
@@ -193,7 +196,7 @@ void PresentFrameToSlots(t_threefates *x);
 
 void FutureFrameToSlots(t_threefates *x);
 
-
+void threefates_tellmeeverything(t_threefates *x);
 
 /**************************************************************************************
  *
@@ -207,12 +210,13 @@ void main(fptr *f)
 	post("Copyright ©2000-04 Regents of the University of California.");
 	
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&threefates_class, (method) threefates_new, 0,
-			(short)sizeof(t_threefates), 0L, A_DEFLONG, 0);
+	setup((t_messlist **)&threefates_class, (method) threefates_new, (method) threefates_free,
+			(short)sizeof(t_threefates), 0L, A_DEFLONG, A_DEFLONG, 0);
 			
 			
-	post("size %ld", sizeof(t_threefates));
+	// post("size %ld", sizeof(t_threefates));
 	addmess((method)List, "list", A_GIMME, 0);
+	addmess((method)threefates_tellmeeverything, "tellmeeverything", 0);
 	
 	ps_list = gensym("list");
 
@@ -224,14 +228,19 @@ void main(fptr *f)
  *
  *************************************************************************************/
 
-void *threefates_new(long nPartialParams) {
+void *threefates_new(long maxpartials, long nPartialParams) {
 	int i;
 
 	t_threefates *x;
 	
-	post("threefates_new(%ld)", nPartialParams);
+	// post("threefates_new(%ld, %ld)", maxpartials, nPartialParams);
 	
-		
+	
+	if (maxpartials == 0) {
+		// Default 256 partials for no good reason
+		maxpartials = 256;
+	}
+	
 	if (nPartialParams == 0) {
 		/* Default two parameters: freq, amplitude */
 		nPartialParams = 2;
@@ -241,12 +250,11 @@ void *threefates_new(long nPartialParams) {
 			  nPartialParams, MAX_PARTIAL_PARAMS);
 		return 0;
 	}
-
-	// post("bail!"); return 0;
 	
 	x = (t_threefates*)newobject(threefates_class);
 	x->num_partial_parameters = nPartialParams;
-
+	x->max_osc = maxpartials;
+	
 	x->t_out = listout(x);
 
 	// Frame0 num args.
@@ -258,11 +266,29 @@ void *threefates_new(long nPartialParams) {
 	// toggle which is present frame (0 or 1). the other is future. 
 	x->toggle_frame_present = 0;
 	
+	x->max_inargs =  (x->num_partial_parameters + 1) * x->max_osc;
+	x->max_outargs = x->num_partial_parameters * x->max_osc;
+
+	x->output_list = (Atom *)   getbytes((short) x->max_outargs * sizeof(Atom));
+	x->frame0 =      (float *)  getbytes((short) x->max_inargs * sizeof(float));
+	x->frame1 =      (float *)  getbytes((short) x->max_inargs * sizeof(float));
+	x->t_slotlist =  (t_slot *) getbytes((short) x->max_osc * sizeof(t_slot));
+	
+	
 	InitializeSlots(x);
+	
+	// post("max inargs %ld, max_outargs %ld", x->max_inargs, x->max_outargs);
 	
 	return(x);
 }
 
+void threefates_free(t_threefates *x) {
+	freebytes(x->output_list, (short) x->max_outargs * sizeof(Atom));
+	freebytes(x->frame0,      (short) x->max_inargs * sizeof(float));
+	freebytes(x->frame1,      (short) x->max_inargs * sizeof(float));
+	freebytes(x->t_slotlist,  (short) x->max_osc * sizeof(t_slot));
+}
+	
 
 /**************************************************************************************
  *
@@ -275,7 +301,7 @@ void List(
 	Atom *argv)
 {
 
-	if (argc > MAX_INARGS) {
+	if (argc > x->max_inargs) {
 		error("threefates: input list too big (size %ld) --- dropping", argc);
 		return;
 	}
@@ -323,20 +349,20 @@ void List(
  *
  **************************************************************************************/
 
-void InitializeSlots(t_threefates *thisobject)
+void InitializeSlots(t_threefates *x)
 {
 	int i, j;
 	
-	for (i = 0; i < MAX_OSC; i++) {
+	for (i = 0; i < x->max_osc; i++) {
 		for (j=0; j<MAX_PARTIAL_PARAMS; ++j) {
-			thisobject->t_slotlist[i].params[j] = 0.0;
+			x->t_slotlist[i].params[j] = 0.0;
 		}
-		thisobject->t_slotlist[i].index = -1;
-		thisobject->t_slotlist[i].is_dead = 0;		
+		x->t_slotlist[i].index = -1;
+		x->t_slotlist[i].is_dead = 0;		
 	}
 	
-	thisobject->num_slots = 0;
-	thisobject->max_slot_index = 0;
+	x->num_slots = 0;
+	x->max_slot_index = 0;
 	
 
 }
@@ -383,18 +409,18 @@ int IsInSlotList(
  *
  **************************************************************************************/
 
-int GetFreeSlot(t_threefates *thisobject)
+int GetFreeSlot(t_threefates *x)
 {
 	int i;
 	
-	for (i = 0; i < MAX_OSC; i++)
+	for (i = 0; i < x->max_osc; i++)
 	{
-		if (thisobject->t_slotlist[i].index == -1)
+		if (x->t_slotlist[i].index == -1)
 		{
-			thisobject->num_slots++;
+			x->num_slots++;
 			
-			if (i == thisobject->max_slot_index)
-				thisobject->max_slot_index++;
+			if (i == x->max_slot_index)
+				x->max_slot_index++;
 				
 			return i;
 		}
@@ -439,6 +465,8 @@ void BirthSlotList(t_threefates *thisobject, int index, int nparams, float *para
 	int slotindex, i;
 	
 	slotindex = IsInSlotList(thisobject, index);
+	
+	// post("* BirthSlotList index %ld, param[0] %f, param[1] %f, slot index %ld", index, params[0], params[1], slotindex);
 	
 	if (slotindex  == -1)
 	{
@@ -699,6 +727,7 @@ int GetPresentAC(t_threefates *x)
 
 void CopyFutureToPresent(t_threefates *x)
 {
+	// post("* CopyFutureToPresent");
 	switch (x->toggle_frame_present)
 	{
 		case 0:
@@ -749,7 +778,7 @@ void FutureFrameToSlots(t_threefates *x) {
 	int index;
 	float params[MAX_PARTIAL_PARAMS];
 	int nparams = x->num_partial_parameters;
-	int npartials = GetPresentAC(x) / (1+nparams);
+	int npartials = GetFutureAC(x) / (1+nparams);
 
 				
 	// Put args into storage.
@@ -767,3 +796,35 @@ void FutureFrameToSlots(t_threefates *x) {
 	}
 }
 
+void threefates_tellmeeverything(t_threefates *x) {
+   int i, j;
+   Atom a;
+   
+   post("--- threefates " THREEFATES_VERSION " ---");
+   post(" up to %ld oscillators, %ld params each (so input list length <= %ld, output list length <= %ld)",
+        x->max_osc, x->num_partial_parameters, x->max_inargs, x->max_outargs);
+   post(" Present frame has %ld values:", GetPresentAC(x));
+   for (i = 0; i < GetPresentAC(x); i+= x->num_partial_parameters+1) {
+   	  post("    ");
+   	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
+   	  	SETFLOAT(&a, GetPresentValue(x, i+j));
+   	  	postatom(&a);
+   	  }
+   }
+   post(" Future frame has %ld values:", GetFutureAC(x));
+   for (i = 0; i < GetFutureAC(x); i+= x->num_partial_parameters+1) {
+   	  post("    ");
+   	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
+   	  	SETFLOAT(&a, GetFutureValue(x, i+j));
+   	  	postatom(&a);
+   	  }
+   }
+   post(" Slot list has %ld elements, max index %ld", x->num_slots, x->max_slot_index);
+   for (i = 0; i<x->max_slot_index; i ++) {
+   		post("  index %ld %s ", x->t_slotlist[i].index, x->t_slotlist[i].is_dead ? "DEAD" : "ALIVE");
+   		for (j = 0; j<x->num_partial_parameters; ++j) {
+   			SETFLOAT(&a, x->t_slotlist[i].params[j]);
+   			postatom(&a);
+   	  }
+   }
+}
