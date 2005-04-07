@@ -80,6 +80,7 @@ typedef struct sdif_fileinfo {
 	sdif_float64 	x_endtime[MAX_STREAMS];
 	sdif_int32		x_numframes[MAX_STREAMS];
 	
+	int				print_NVT_matrices;
 	void		*outlet;	// outlet.
 } t_sdif_fileinfo;
 
@@ -91,6 +92,7 @@ void sdif_fileinfo_bang(t_sdif_fileinfo *x);
 void sdif_fileinfo_clear(t_sdif_fileinfo *x);
 
 void sdif_fileinfo_scan(t_sdif_fileinfo *x, Symbol *s);
+int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp);
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name);
 
 void SDIFfileinfo_output(t_sdif_fileinfo *x);
@@ -132,7 +134,8 @@ void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av) {
 	t_sdif_fileinfo *x;
 	x = newobject(sdif_fileinfo_class);	
     x->outlet = outlet_new(x, 0L);
-
+	x->print_NVT_matrices = 1;
+	
 	sdif_fileinfo_clear(x);
 	return (x);
 }
@@ -190,10 +193,11 @@ void sdif_fileinfo_scan(t_sdif_fileinfo *x, Symbol *s)  {
 	SDIFfileinfo_output(x);
 }
 
+
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 	SDIFresult r;
 	SDIF_FrameHeader fh;
-	int result, i, sawStreamAlready;
+	int result, i, sawStreamAlready, needToSkip;
 	char frameTypeBuffer[5];
 
 	x->x_ns = 0;
@@ -201,7 +205,17 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 	while ((r = SDIF_ReadFrameHeader(&fh, f)) == ESDIF_SUCCESS) {
 		/* post("** Read frame header: ID %d, time %g, type %c%c%c%c", fh.streamID, fh.time,
 			 fh.frameType[0], fh.frameType[1], fh.frameType[2], fh.frameType[3]); */
-			 
+		
+		needToSkip = 1;
+		
+		if (x->print_NVT_matrices) {
+			if (SDIF_Char4Eq(fh.frameType, "1NVT")) {
+				needToSkip = 0;  // Will read the matrices in this frame rather than skipping it	
+				if (Read1NVTFrame(x, f, name, &fh) == 0) return;
+			}
+
+		}
+		
 		sawStreamAlready = 0;
 		for (i = 0; i < x->x_ns; ++i) {
 			if (x->x_streamID[i] == fh.streamID) {
@@ -237,10 +251,12 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 		x->x_endtime[i] = fh.time;
 		++(x->x_numframes[i]);
 
-		if (r = SDIF_SkipFrame(&fh, f)) {
-			post(NAME ": error skipping frame in SDIF file %s:", name);
-			post("   %s", SDIF_GetErrorString(r));
-			return;
+		if (needToSkip) {
+			if (r = SDIF_SkipFrame(&fh, f)) {
+				post(NAME ": error skipping frame in SDIF file %s:", name);
+				post("   %s", SDIF_GetErrorString(r));
+				return;
+			}
 		}
 	}
 	
@@ -250,6 +266,47 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 	}
 	
 	return;
+}
+
+
+int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp) {
+	// Just read the frame header, so go through the matrices looking for 1NVTs to print
+
+    SDIFresult r;
+	int i, sz;
+	SDIF_MatrixHeader mh;
+	char *buf;
+	
+	for (i = 0; i < fhp->matrixCount; ++i) {
+        if (r = SDIF_ReadMatrixHeader(&mh, f)) {
+        	error(NAME ": error reading matrix header: %s", SDIF_GetErrorString(r));
+   			return 0;     	
+		}
+		
+		if (SDIF_Char4Eq("1NVT", mh.matrixType) && mh.matrixDataType == SDIF_UTF8) {
+			sz = SDIF_GetMatrixDataSize(&mh);
+			buf = (char *) getbytes(sz);
+			if (buf == 0) {
+				error(NAME ": out of memory; can't read name/value table");
+				return 0;
+			}
+			if (r = SDIF_ReadMatrixData((void *) buf, f, &mh)) {
+			    error(NAME ": error reading 1NVT matrix data: %s", SDIF_GetErrorString(r));
+			    return 0;
+			}
+			post("Name/value table:");
+			post("%s", buf);
+			freebytes(buf, sz);						
+		} else {
+			if (SDIF_Char4Eq("1NVT", mh.matrixType)) {
+				post(NAME ": 1NVT matrix has unexpected matrix data type 0x%x; skipping",  mh.matrixDataType);
+			}				
+			if (r = SDIF_SkipMatrix(&mh, f)) {
+			    error(NAME ": error skipping 1NVT matrix: %s", SDIF_GetErrorString(r));
+			    return 0;
+			 }
+	    }
+	  }
 }
 
 
