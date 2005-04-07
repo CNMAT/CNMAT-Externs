@@ -63,28 +63,27 @@ To-Do:  use opendialog to present a dialog box to the user
 #include "open-sdif-file.h"
 
 
-
+Symbol *ps_file, *ps_stream, *ps_no_file;
 
 #define MAX_STREAMS 100  // Most SDIF streams any file should have
-
-
-#undef CLIP
-#define CLIP(a, b, c) MAX(MIN(a, c), b)
-
 
 typedef struct sdif_fileinfo {
 	struct object t_ob;
 
-	char			*x_filename;
+	Symbol			*x_filenameSymbol;
+	
 	int			    x_ns; // number of streams seen
 	sdif_int32 		x_streamID[MAX_STREAMS];
 	char 			x_frameType[MAX_STREAMS][4];
+	Symbol			*x_frameTypeSymbol[MAX_STREAMS];
     sdif_float64 	x_starttime[MAX_STREAMS];
 	sdif_float64 	x_endtime[MAX_STREAMS];
 	sdif_int32		x_numframes[MAX_STREAMS];
 	
-	void		*x_out0;	// outlet.
+	void		*outlet;	// outlet.
 } t_sdif_fileinfo;
+
+
 
 
 void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av);
@@ -94,6 +93,7 @@ void sdif_fileinfo_clear(t_sdif_fileinfo *x);
 void sdif_fileinfo_scan(t_sdif_fileinfo *x, Symbol *s);
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name);
 
+void SDIFfileinfo_output(t_sdif_fileinfo *x);
 void SDIFfileinfo_version(t_sdif_fileinfo *x);
 
 
@@ -108,6 +108,10 @@ void main(void)
 
 	SDIFfileinfo_version(0);
 
+	if (r = SDIF_Init()) {
+		ouchstring(NAME ": Couldn't initialize SDIF library! %s",
+		           SDIF_GetErrorString(r));
+	}
 
 	setup((t_messlist **)&sdif_fileinfo_class, (method) sdif_fileinfo_new, 0, 
 		  (short)sizeof(t_sdif_fileinfo), 0L, A_GIMME, 0);
@@ -116,16 +120,19 @@ void main(void)
 	addmess((method)SDIFfileinfo_version, "version", 0);
 	addmess((method)sdif_fileinfo_scan, "scan", A_SYM, 0);
 
-	if (r = SDIF_Init()) {
-		ouchstring(NAME ": Couldn't initialize SDIF library! %s",
-		           SDIF_GetErrorString(r));
-	}
+	
+	ps_file = gensym("/file");
+	ps_stream = gensym("/stream");
+	ps_no_file = gensym("<no SDIF file read>");
+
 
 }
 
 void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av) {
 	t_sdif_fileinfo *x;
 	x = newobject(sdif_fileinfo_class);	
+    x->outlet = outlet_new(x, 0L);
+
 	sdif_fileinfo_clear(x);
 	return (x);
 }
@@ -139,14 +146,12 @@ void SDIFfileinfo_version (t_sdif_fileinfo *x) {
 
 
 
-void sdif_fileinfo_bang(t_sdif_fileinfo *x)
-{	
-	
-	post("Bang!");
+void sdif_fileinfo_bang(t_sdif_fileinfo *x) {		
+	SDIFfileinfo_output(x);
 }
 
 void sdif_fileinfo_clear(t_sdif_fileinfo *x) {	
-	x->x_filename = "<no SDIF file read>";
+	x->x_filenameSymbol = ps_no_file;
 	x->x_ns = 0;	
 }
 
@@ -163,28 +168,33 @@ void sdif_fileinfo_clear(t_sdif_fileinfo *x) {
 void sdif_fileinfo_scan(t_sdif_fileinfo *x, Symbol *s)  {	
 	SDIFresult r;
 	FILE *f;
+	char *filename = s->s_name;
+	
 	
 	x->x_ns = 0; // zero streams until a file is read
-	x->x_filename = s->s_name;
+	x->x_filenameSymbol = s;
 		
-	f = OpenSDIFFile(x->x_filename);
+	f = OpenSDIFFile(filename);
 	if (f == NULL) {
-		error(NAME ": Couldn't read SDIF file %s", x->x_filename);
+		error(NAME ": Couldn't read SDIF file %s", filename);
 		return;
 	} 
 		
-	do_scan(x, f, x->x_filename);
+	do_scan(x, f, filename);
 	
 	if ((r = SDIF_CloseRead(f))) {
-		post("SDIF-menu: error closing SDIF file %s:", x->x_filename);
+		post(NAME ": error closing SDIF file %s:", filename);
 		post("%s", SDIF_GetErrorString(r));
 	}
+	
+	SDIFfileinfo_output(x);
 }
 
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 	SDIFresult r;
 	SDIF_FrameHeader fh;
 	int result, i, sawStreamAlready;
+	char frameTypeBuffer[5];
 
 	x->x_ns = 0;
 		
@@ -217,6 +227,9 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 			++(x->x_ns);
 			x->x_streamID[i] = fh.streamID;
 			SDIF_Copy4Bytes(x->x_frameType[i], fh.frameType);
+			SDIF_Copy4Bytes(frameTypeBuffer, fh.frameType);
+			frameTypeBuffer[4] = '\0';
+			x->x_frameTypeSymbol[i] = gensym(frameTypeBuffer);
 			x->x_starttime[i] = fh.time;
 			x->x_numframes[i] = 0;
 		}
@@ -225,29 +238,44 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 		++(x->x_numframes[i]);
 
 		if (r = SDIF_SkipFrame(&fh, f)) {
-			post("SDIF-menu: error skipping frame in SDIF file %s:", name);
+			post(NAME ": error skipping frame in SDIF file %s:", name);
 			post("   %s", SDIF_GetErrorString(r));
-			SDIF_CloseRead(f);
-			goto out;
+			return;
 		}
 	}
 	
 	if (r != ESDIF_END_OF_DATA) {
-		post("SDIF-menu: error reading SDIF file %s:", name);
+		post(NAME ": error reading SDIF file %s:", name);
 		post("%s", SDIF_GetErrorString(r));
-	}
-	
-
-out:
-
-	post("Here's all yer %d streams:", x->x_ns);
-	for (i = 0; i < x->x_ns; ++i) {
-		post("  ID %d, type %c%c%c%c, start %g end %g, %d frames",
-			 x->x_streamID[i], x->x_frameType[i][0], x->x_frameType[i][1],
-			 x->x_frameType[i][2], x->x_frameType[i][3], x->x_starttime[i],
-			 x->x_endtime[i], x->x_numframes[i]);
 	}
 	
 	return;
 }
 
+
+void SDIFfileinfo_output(t_sdif_fileinfo *x) {
+	int i;
+	
+	Atom arguments[5];  // ID, type, start, end, #frames
+	
+
+	// post("File %s has %d streams:", x->x_filenameSymbol->s_name, x->x_ns);
+
+	SETSYM(arguments, x->x_filenameSymbol);
+	SETLONG(arguments+1, x->x_ns);
+	outlet_anything(x->outlet, ps_file, 2, arguments);
+
+	for (i = 0; i < x->x_ns; ++i) {
+		/* post("  ID %d, type %c%c%c%c, start %g end %g, %d frames",
+			 x->x_streamID[i], x->x_frameType[i][0], x->x_frameType[i][1],
+			 x->x_frameType[i][2], x->x_frameType[i][3], x->x_starttime[i],
+			 x->x_endtime[i], x->x_numframes[i]); */
+			 
+		SETLONG(arguments, x->x_streamID[i]);
+		SETSYM(arguments+1, x->x_frameTypeSymbol[i]);
+		SETFLOAT(arguments+2, x->x_starttime[i]);
+		SETFLOAT(arguments+3, x->x_endtime[i]);
+		SETLONG(arguments+4, x->x_numframes[i]);
+		outlet_anything(x->outlet, ps_stream, 5, arguments);
+	}	
+}
