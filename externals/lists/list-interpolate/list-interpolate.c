@@ -1,5 +1,5 @@
 /*
-Copyright (c) 1999.  The Regents of the University of California (Regents).
+Copyright (c) 1999,2000-05.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -24,18 +24,28 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: list-interpolate
+DESCRIPTION: Linearly interpolate two lists element-wise
+AUTHORS: Adrian Freed and Matt Wright
+COPYRIGHT_YEARS: 2000,01,02,03,04,05
+VERSION 1.1: Bug fixed to really work with floats, Matt Wright 1/4/01
+VERSION 1.2: Made compilable in CW 8.3,  Matt Wright 12/5/2
+VERSION 1.6: Merged Windows changes into real version
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 */
 
-/* list-interpolate
-
+/* 
    Adapted from "reson", 1999
+   Compiled for windows 27 April 2004, Michael Zbyszynski
    
-   Bug fixed to really work with floats, Matt Wright 1/4/01
-   Made compilable in CW 8.3,  Matt Wright 12/5/2
- 
 */
 
-#define VERSION "1.5"
+
+#include "version.h"
 
 /* #include <fp.h>
 #include <fenv.h> */
@@ -149,8 +159,8 @@ static void xbangdump(fobj *x)
 	}
 }
 
-static void floatdump(fobj *x, float f);
-static void floatdump(fobj *x, float f)
+static void floatdump(fobj *x, double f);
+static void floatdump(fobj *x, double f)
 {
 		int i;
 		for(i=0;i<x->n;++i)
@@ -187,7 +197,7 @@ static void tellmeeverything(fobj *x) {
 	
 	a.a_type = A_FLOAT;
 		
-	post("list-interpolate version " VERSION " by Adrian Freed and Matt Wright, compiled " __DATE__ " " __TIME__);
+	post("list-interpolate version " VERSION " by " AUTHORS ", compiled " __DATE__ " " __TIME__);
 	post("  list length %ld, list capacity %ld", x->n, x->capacity);
 	post("  %ld steps, current count %ld", x->steps, x->countdown);
 		
@@ -239,10 +249,10 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 		}
 	}
 	
-	x->rate = 		(float *) NewPtr(x->capacity * sizeof(float));
-	x->newinputs = 	(float *) NewPtr(x->capacity * sizeof(float));
-	x->oldinputs = 	(float *) NewPtr(x->capacity * sizeof(float));
-	x->out = 		(Atom *) NewPtr(x->capacity * sizeof(Atom));
+	x->rate = 		(float *) getbytes(x->capacity * sizeof(float));
+	x->newinputs = 	(float *) getbytes(x->capacity * sizeof(float));
+	x->oldinputs = 	(float *) getbytes(x->capacity * sizeof(float));
+	x->out = 		(Atom *) getbytes(x->capacity * sizeof(Atom));
 	
 	if (x->out == 0) {
 		post("¥ list-interpolate: not enough memory for capacity %ld!", x->capacity);
@@ -262,10 +272,10 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 
 void ffree(fobj *x);
 void ffree(fobj *x) {
-	DisposePtr((char *) x->rate);
-	DisposePtr((char *) x->newinputs);
-	DisposePtr((char *) x->oldinputs);
-	DisposePtr((char *) x->out);
+	freebytes((char *) x->rate, sizeof(float));
+	freebytes((char *) x->newinputs, sizeof(float));
+	freebytes((char *) x->oldinputs, sizeof(float));
+	freebytes((char *) x->out, x->capacity * sizeof(Atom));
 }	
 
 void main(fptr *f)		/* called once at launch to define this class */
@@ -279,6 +289,7 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addmess((method)tellmeeverything, "tellmeeverything", 0);
 	addbang( (method) bangdump  );
 	addfloat( (method) floatdump  );
-	post("list-interpolate " VERSION " - Adrian Freed and Matt Wright");
-	post("Copyright ©1999,2000,2001,02 Regents of the University of California.");
+	
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 }
