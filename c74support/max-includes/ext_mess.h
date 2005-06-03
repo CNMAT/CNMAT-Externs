@@ -22,6 +22,7 @@ typedef void *(*voidstarvoid)();
 
 typedef char *ptr,*t_ptr;
 typedef void *vptr,*t_vptr;
+#define T_VPTR_DEFINED
 typedef char **t_handle;
 
 typedef struct symbol
