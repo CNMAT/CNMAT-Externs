@@ -1,5 +1,6 @@
 /*
-Copyright (c) 2001.  The Regents of the University of California (Regents).
+Copyright (c) 2001,2,3,4,5.  
+The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -26,12 +27,20 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
  printit.c
- Really print everything about what comes in the inlet
+ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: printit
+DESCRIPTION: Really print everything about what comes in the inlet
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 2000,01,02,03,04,05
+VERSION 0.1b: Earliest version I could find
+VERSION 0.2: Using new version system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
  */
  
-
-#define PRINTIT_VERSION "0.1b"
+#include "version.h"
+ 
 
 /* the required include files */
 #include "ext.h"
@@ -85,6 +94,8 @@ void main(fptr *f)
 	ps_emptysymbol = gensym("");
 	ps_printit = gensym("printit");
 	
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 }
 
 
@@ -107,8 +118,8 @@ void *printit_new(Symbol *s)
 
 
 void printit_version (printit *x) {
-	post("printit Version " PRINTIT_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
 }
 
 /* I don't know why these aren't defined in some Max #include file. */

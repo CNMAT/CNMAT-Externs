@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2000-2004.  The Regents of the University of California (Regents).
+Copyright (c) 2000-2005.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -24,13 +24,25 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: threefates
+DESCRIPTION: Deal with track birth/death for sinusoids~
+AUTHORS: Tim Madden and Matt Wright
+COPYRIGHT_YEARS: 2000,01,02,03,04,05
+VERSION 0.2: 041229 MW: Handles arbitrary-length partial parameter lists 
+VERSION 0.2.1: New version/makefile system
+VERSION 0.2.2: Proper use of name/value tags
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 */
 
 
 
 
 /**************************************************************************************
- * Deal with track birth/death so sinusoids~ works.
  *
  * How it works:
  * 		Take input list of (index,[other parameters]) tuples.
@@ -50,12 +62,7 @@ University of California, Berkeley.
  *************************************************************************************/
 
 
-/* 
-Version 0.2: 041229 MW: Handles arbitrary-length partial parameter lists 
-Version 0.2.1: New version/makefile system
-*/
-
-#include "VERSION.h"
+#include "version.h"
 
 #include "ext.h"
 
