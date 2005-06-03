@@ -1,0 +1,6 @@
+;res-transform.def
+
+LIBRARY res-transform
+
+EXPORTS
+	main
