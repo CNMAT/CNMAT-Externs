@@ -198,9 +198,11 @@ typedef struct _dspchain
 
 typedef t_int *(*t_perfroutine)(t_int *args);
 
+#ifndef T_VPTR_DEFINED
 #ifndef t_vptr
 typedef void *t_vptr;
 #endif // t_vptr
+#endif // T_VPTR_DEFINED
 
 // useful define
 
