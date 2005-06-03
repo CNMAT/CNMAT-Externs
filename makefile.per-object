@@ -14,17 +14,21 @@ REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).help
 BUILD_DIR = ../build-mac
 MAC_BINARY = $(BUILD_DIR)/$(OBJ)
+MAC_DEBUGGER_SYM = $(BUILD_DIR)/$(OBJ).xSYM
 MAC_HELPFILE_COPY = $(BUILD_DIR)/$(OBJ).help 
 MAC_INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).sit
 MAC_INDIVIDUAL_DOWNLOAD = $(BUILD_DIR)/$(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR)
+# OBJ_INFO is info about the object
+OBJ_INFO_NO_DIR = $(OBJ)-$(PLATFORM)-objinfo.txt
+OBJ_INFO = $(BUILD_DIR)/$(OBJ_INFO_NO_DIR)
+# WEB_INFO is exactly the same, but also with the md5 checksum
 WEB_INFO_NO_DIR = $(OBJ)-$(PLATFORM)-info.txt
 WEB_INFO = $(BUILD_DIR)/$(WEB_INFO_NO_DIR)
 WEB_INCOMING = $(BUILD_DIR)/$(OBJ)-$(PLATFORM).tar.gz
 
 # Where files live on our web server
-WEBSERVER_BASE_DIR = /Volumes/webroot$$/MAX
-WEBSERVER_DOWNLOAD_DIR = $(WEBSERVER_BASE_DIR)/downloads/$(PLATFORM)
-WEBSERVER_INFO_DIR = $(WEBSERVER_BASE_DIR)/object-info
+# WEBSERVER_BASE_DIR = /Volumes/webroot$$/MAX
+WEBSERVER_BASE_DIR = /tmp
 WEBSERVER_INCOMING_DIR = $(WEBSERVER_BASE_DIR)/incoming
 
 # Making the version number accessible from this Makefile:
@@ -45,30 +49,35 @@ STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
 
 # Top-level build targets
 
-all: mac-individual-download help-diff-warning web-info 
+all: mac-binary help-diff-warning
 
 .PHONY: clean
 clean:
-	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY) $(WEB_INFO) version.h
+	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY) 
+	rm -f $(WEB_INFO) $(OBJ_INFO) version.h $(WEB_INCOMING) $(MAC_DEBUGGER_SYM)
 
 
 # The version info is now extracted from the .c file by Andy's perl script:
 # because some makefile variables (e.g., VERSION_TAG) come from version.h,
 # start over with a recursive call to $(MAKE)
-version.h: $(WEB_INFO)
-	perl ../../../info2header.pl < $(WEB_INFO) > $@
+version.h: $(OBJ_INFO)
+	perl ../../../info2header.pl < $(OBJ_INFO) > $@
 	$(MAKE) $(MAKECMDGOALS)
-
 
 
 .PHONY: web-info
 web-info: $(WEB_INFO)
 
-$(WEB_INFO): $(SOURCE)
+$(OBJ_INFO): $(SOURCE)
 	perl ../../../commentkeys.pl < $(SOURCE) > $@
 	echo 'PLATFORM: "$(PLATFORM)"' >> $@
 	echo 'BUILDER: "'`whoami`'"' >> $@
 	echo 'BUILD_DATE: "'`date`'"' >> $@
+	echo 'BUILD_DIR: "'`pwd`'"' >> $@
+
+$(WEB_INFO): $(MAC_INDIVIDUAL_DOWNLOAD) $(OBJ_INFO)
+	cp $(OBJ_INFO) $(WEB_INFO)
+	echo MD5: `md5 $(MAC_INDIVIDUAL_DOWNLOAD)| cut -f 4 -d ' '` >> $(WEB_INFO)
 
 
 .PHONY: mac-binary
@@ -114,17 +123,12 @@ help-diff-warning: $(MAC_HELPFILE_COPY)
 
 # Actually copying the files to directories where the web server can find them
 
-.PHONY: web-release-nonatomic
-web-release-nonatomic: $(WEBSERVER_BASE_DIR) $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
-	cp $(MAC_INDIVIDUAL_DOWNLOAD) $(WEBSERVER_DOWNLOAD_DIR)
-	cp $(WEB_INFO) $(WEBSERVER_INFO_DIR)
-
-
 .PHONY: web-release
-web-release: $(WEBSERVER_BASE_DIR) $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
-	tar cvfz $(WEB_INCOMING) -C $(BUILD_DIR) $(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR) $(WEB_INFO_NO_DIR)
+web-release: $(WEBSERVER_BASE_DIR) $(WEB_INCOMING)
 	cp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
 
+$(WEB_INCOMING): $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
+	tar cvfz $(WEB_INCOMING) -C $(BUILD_DIR) $(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR) $(WEB_INFO_NO_DIR)
 
 $(WEBSERVER_BASE_DIR):
 	@echo Please mount the webroot$$ volume from Bach
