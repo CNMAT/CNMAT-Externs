@@ -5,19 +5,27 @@
 # Name of the object is the name of this directory
 OBJ := $(shell basename `pwd`)
 
+# Need a better way to do this!
+PLATFORM = OSX
+
 # Filenames derived from the name of the object
 SOURCE = $(OBJ).c
 REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).help
-MAC_BINARY = ../build-mac/$(OBJ)
-MAC_HELPFILE_COPY = ../build-mac/$(OBJ).help 
-MAC_INDIVIDUAL_DOWNLOAD = ../build-mac/$(OBJ)$(VERSION_TAG).sit
-WEB_INFO = ../build-mac/$(OBJ)-info.txt
+BUILD_DIR = ../build-mac
+MAC_BINARY = $(BUILD_DIR)/$(OBJ)
+MAC_HELPFILE_COPY = $(BUILD_DIR)/$(OBJ).help 
+MAC_INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).sit
+MAC_INDIVIDUAL_DOWNLOAD = $(BUILD_DIR)/$(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR)
+WEB_INFO_NO_DIR = $(OBJ)-$(PLATFORM)-info.txt
+WEB_INFO = $(BUILD_DIR)/$(WEB_INFO_NO_DIR)
+WEB_INCOMING = $(BUILD_DIR)/$(OBJ)-$(PLATFORM).tar.gz
 
 # Where files live on our web server
-WEBSERVER_BASE_DIR = /Volumes/webroot$$/Max
-WEBSERVER_DOWNLOAD_DIR = $(WEBSERVER_BASE_DIR)/downloads
+WEBSERVER_BASE_DIR = /Volumes/webroot$$/MAX
+WEBSERVER_DOWNLOAD_DIR = $(WEBSERVER_BASE_DIR)/downloads/$(PLATFORM)
 WEBSERVER_INFO_DIR = $(WEBSERVER_BASE_DIR)/object-info
+WEBSERVER_INCOMING_DIR = $(WEBSERVER_BASE_DIR)/incoming
 
 # Making the version number accessible from this Makefile:
 
@@ -37,18 +45,18 @@ STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
 
 # Top-level build targets
 
-all: mac-individual-download help-diff-warning web-info web-release
+all: mac-individual-download help-diff-warning web-info 
 
 .PHONY: clean
 clean:
-	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY)
+	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY) $(WEB_INFO) version.h
 
 
 # The version info is now extracted from the .c file by Andy's perl script:
 # because some makefile variables (e.g., VERSION_TAG) come from version.h,
 # start over with a recursive call to $(MAKE)
-version.h: $(SOURCE)
-	perl ../../../commentkeys.pl < $(SOURCE) > $@
+version.h: $(WEB_INFO)
+	perl ../../../info2header.pl < $(WEB_INFO) > $@
 	$(MAKE) $(MAKECMDGOALS)
 
 
@@ -56,10 +64,11 @@ version.h: $(SOURCE)
 .PHONY: web-info
 web-info: $(WEB_INFO)
 
-# Cheesy version of web info is just a properly-named version of version.h
-$(WEB_INFO): version.h
-	cp version.h $(WEB_INFO)
-
+$(WEB_INFO): $(SOURCE)
+	perl ../../../commentkeys.pl < $(SOURCE) > $@
+	echo 'PLATFORM: "$(PLATFORM)"' >> $@
+	echo 'BUILDER: "'`whoami`'"' >> $@
+	echo 'BUILD_DATE: "'`date`'"' >> $@
 
 
 .PHONY: mac-binary
@@ -93,8 +102,9 @@ $(MAC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MAC_BINARY)
 $(MAC_HELPFILE_COPY): $(OBJ).help
 	cp $(OBJ).help $(MAC_HELPFILE_COPY)
 
+
 # make sure help patch in correct source directory is the most recent
-# (even though it's the one in ../build-mac that's usually edited.)
+# (even though it's the one in $(BUILD_DIR) that's usually edited.)
 
 .PHONY: help-diff-warning
 help-diff-warning: $(MAC_HELPFILE_COPY)
@@ -104,10 +114,16 @@ help-diff-warning: $(MAC_HELPFILE_COPY)
 
 # Actually copying the files to directories where the web server can find them
 
-.PHONY: web-install
-web-install: $(WEBSERVER_BASE_DIR) $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
+.PHONY: web-release-nonatomic
+web-release-nonatomic: $(WEBSERVER_BASE_DIR) $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
 	cp $(MAC_INDIVIDUAL_DOWNLOAD) $(WEBSERVER_DOWNLOAD_DIR)
 	cp $(WEB_INFO) $(WEBSERVER_INFO_DIR)
+
+
+.PHONY: web-release
+web-release: $(WEBSERVER_BASE_DIR) $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
+	tar cvfz $(WEB_INCOMING) -C $(BUILD_DIR) $(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR) $(WEB_INFO_NO_DIR)
+	cp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
 
 
 $(WEBSERVER_BASE_DIR):

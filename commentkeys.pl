@@ -4,20 +4,15 @@
 # by Andy W. Schmeder <andy@a2hd.com> 2005
 #
 # run as "perl commentkeys.pl < test.c > test.info.c" 
-#     or "echo test.c | perl commentkeys.pl > test.info.txt"
+#     or "cat test.c | perl commentkeys.pl > test.info.txt"
 #
-
-my $header_mode = 0;
-if($ARGV[0] eq "-header") {
-    $header_mode = 1;
-}
 
 my @versions = ();
 my $source = '';
 
 while(<STDIN>) {
   $source .= $_
-}
+  }
 
 # natural-order sort with '.' separator and '-' tags
 sub version_sort {
@@ -41,7 +36,7 @@ sub version_sort {
 		return 1;
 	    } elsif($atag && $btag) {
 		return $atag < $btag ? -1 : 1
-	    }
+		}
 	}
 	$i++;
     }
@@ -60,21 +55,12 @@ while($source =~ m~/\*((\n|.)*?)\*/~g) {
 	    if($key =~ /^VERSION(\s|-)*(.*)$/i) {
 		push @versions, $2;
 	    }
-	    if($header_mode) {
-		if(! ($key =~ /^VERSION/i)) {
-		    print qq~#define $key "$value"\n~; 
-		}
-	    } else {
-		print qq~$key: "$value"\n~; 
-	    }
+	    print qq~$key: "$value"\n~; 
 	}
     }
 }
 
 @versions = reverse sort version_sort @versions;
 
-if($header_mode) {
-    print qq~#define VERSION "$versions[0]"\n~;
-} else {
-    print qq~VERSION: "$versions[0]"\n~;
-}
+print qq~VERSION: "$versions[0]"\n~;
+
