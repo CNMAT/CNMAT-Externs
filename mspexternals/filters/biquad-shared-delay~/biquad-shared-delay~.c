@@ -4,11 +4,13 @@
 // it seems slightly more efficient
 // (rounds/truncates differently after the fifth decimal place)
 
+// Windows compile by Michael Zbyszynski 20 April 2004
+
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
 
-#define RES_ID 13251
+//#define RES_ID 13251
 
 void *biquad_class;
 
@@ -56,7 +58,7 @@ void main(void)
 	addint((method)biquad_int);
 	addmess((method)biquad_assist, "assist", A_CANT, 0);
 	dsp_initclass();
-	rescopy('STR#',RES_ID);
+	//rescopy('STR#',RES_ID);
 	// assist isn't defined yet
 }
 
@@ -177,9 +179,9 @@ void biquad_list(t_biquad *x, t_symbol *s, short argc, t_atom *argv)
 }
 
 void biquad_assist(t_biquad *x, void *b, long m, long a, char *s)
-{
+/*{
 	assist_string(RES_ID,m,a,1,7,s);
-}
+}*/
 
 void *biquad_new(t_symbol *s, short argc, t_atom *argv)
 {

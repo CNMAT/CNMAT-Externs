@@ -1,0 +1,6 @@
+;biquad-shared-delay~.def
+
+LIBRARY biquad-shared-delay~
+
+EXPORTS
+	main
