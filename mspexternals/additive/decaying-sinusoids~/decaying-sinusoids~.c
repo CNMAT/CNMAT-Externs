@@ -35,9 +35,17 @@ University of California, Berkeley.
 
 	
 */
+
+
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
+
+#ifdef WIN_VERSION
+#define sinf sin
+#endif
+
+
 #undef PI
 #define PI 3.14159265358979323f
 #define MAXOSCILLATORS 256
@@ -211,7 +219,11 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv)
 
 void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 {
-	assist_string(3215,m,a,1,2,s);
+	if (m == ASSIST_OUTLET)
+		sprintf(s,"(signal) oscillator bank output");
+	else {
+		sprintf(s,"list of float triplets: frequency, gain, decay rate");
+	}
 }
 
 void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
@@ -285,7 +297,7 @@ void main(void)
 {
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free,
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-	post("decaying-sinusoids~ 1.3Beta- Adrian Freed");
+	post("decaying-sinusoids~ 1.3Alpha- Adrian Freed.");
 	post("Copyright © 1996,97,98,99,2000,01,02 Regents of the University of California.");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 
@@ -303,7 +315,6 @@ void main(void)
 	addmess((method)sinusoids_clear, "clear", 0);
 	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
 	dsp_initclass();
-	rescopy('STR#',3215);
 }
 
 
