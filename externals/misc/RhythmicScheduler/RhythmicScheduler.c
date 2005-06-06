@@ -5,10 +5,14 @@
   Version 0.3, 6/3/01: clear message
 */
 
+#include "version.h"
+
 #define RHYTHMICSCHEDULER_VERSION "0.3"
 #define DEFAULT_BUFFER_SIZE 1024
 #define DEFAULT_NUM_EVENTS 128
 #define DEFAULT_MAX_LIST_SIZE 16
+
+
 
 /* the required include files */
 #include "ext.h"
