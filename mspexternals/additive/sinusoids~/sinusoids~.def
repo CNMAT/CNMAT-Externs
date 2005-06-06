@@ -1,0 +1,6 @@
+;sinusoids~.def
+
+LIBRARY sinusoids~
+
+EXPORTS
+	main

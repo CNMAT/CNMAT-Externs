@@ -1,5 +1,5 @@
 /*
-Copyright (c) 1999.  The Regents of the University of California (Regents).
+Copyright (c) 1988-2005.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -24,29 +24,31 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
-*/
 
-
-
-/*
 	sinusoids.c
 	
-	MSP resonator Bank
-	
-	©1988,1989 Adrian Freed
-	©1999 UC Regents, All Rights Reserved. 
 
-	Version 1.7, 030219, bandwidth-enhanced
-	Version 1.7.1, 041228, ability to toggle verbosity
-	
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: sinusoids
+DESCRIPTION: Bank of (optionally bandwidth-enhanced) sinusoidal oscillators
+AUTHORS: Adrian Freed
+COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
+VERSION 1.7: 030219, bandwidth-enhanced
+VERSION 1.7.1: 041228, ability to toggle verbosity	
+VERSION 1.7.2: 050606, merged Michael Zbyszynski's 27 April 2004 Windows changes
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 */
 
-#define SINUSOIDS_VERSION "1.7.1"
-
+#include "version.h"
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
-#include <string.h>  // For strcpy, for assist()
+
+#ifdef WIN_VERSION
+#define sqrtf sqrt
+#define sinf sin
+#endif
 
 #include "noise-table.h"
 
@@ -57,6 +59,8 @@ University of California, Berkeley.
 #define TPOW 14
 #define STABSZ (1l<<TPOW)
 #define LOGBASE2OFTABLEELEMENT 2
+
+//#define NTABSZ 129088
 
 void *sinusoids_class;
 float Sinetab[STABSZ];
@@ -378,14 +382,15 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 }
 
 void sinusoids_assist(t_sinusoids *x, void *box, long msg, long arg, char *dstString) {
-	if (msg == ASSIST_INLET) {
-		strcpy(dstString, "(List) frequency, amplitude, (bandwidth) tuples");
-	} else if (msg = ASSIST_OUTLET) {
-		strcpy(dstString, "(Signal), Oscillator bank output");
-	} else {
-		error("sinusoids_assist: bad msg %ld", msg);
-	}	
+       if (msg == ASSIST_INLET) {
+               sprintf(dstString, "%s", "(List) freq, amp, (bandwidth) tuples");
+       } else if (msg = ASSIST_OUTLET) {
+               sprintf(dstString, "%s", "(Signal) Oscillator bank output");
+       } else {
+               error("sinusoids_assist: bad msg %ld", msg);
+       }       
 }
+
 
 void *sinusoids_new(t_symbol *s, short argc, t_atom *argv) {
     t_sinusoids *x = (t_sinusoids *)newobject(sinusoids_class);
@@ -450,13 +455,14 @@ void main(void)
 {
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-	post("sinusoids~ " SINUSOIDS_VERSION " - Adrian Freed");
-	post("Copyright © 1996-99,2000-04 Regents of the University of California.");
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
     post("Never expires");
     
     // post("sizeof(NoiseTable) %ld", NTS());
 	Makeoscsinetable();
+
 
 
 	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
@@ -465,8 +471,8 @@ void main(void)
 	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0);
 	addmess((method)sinusoids_verbose, "verbose", A_LONG, 0);
-
-	dsp_initclass();	
+	dsp_initclass();
+	
 	ps_bwe = gensym("bwe");
 }
 
@@ -486,8 +492,8 @@ void tellmeeverything(t_sinusoids *x) {
 void sinusoids_verbose(t_sinusoids *x, long v) {
 	x->verbose = v;
 	if (x->verbose) {
-		post("sinusoids~: turned verbose mode on");
+   		post("sinusoids~: turned verbose mode on");
 	} else {
-		post("sinusoids~: turned verbose mode off");
+   		post("sinusoids~: turned verbose mode off");
 	}
 }
