@@ -1,0 +1,6 @@
+;smooth-biquad~.def
+
+LIBRARY smooth-biquad~
+
+EXPORTS
+	main

@@ -26,6 +26,11 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+/*
+Rough windows compile by mzed, 20 April 2004
+Better compile 27 April 2004, mzed
+*/
+
 #include "ext.h"
 #include "z_dsp.h"
 // #include <math.h>
@@ -71,7 +76,7 @@ void main(void)
 {
 	setup((t_messlist **)&biquad_class, (method)biquad_new, (method)dsp_free, 
 		  (short)sizeof(t_biquad), 0L, A_GIMME, 0);
-	post("smooth-biquad~ 1.3Beta- Adrian Freed");
+	post("smooth-biquad~ 1.3Alpha- Adrian Freed");
 	post("Copyright ©1999 Regents of the University of California.");
 	post("Never expires");
 
@@ -83,8 +88,6 @@ void main(void)
 	addint((method)biquad_int);
 	addmess((method)biquad_assist, "assist", A_CANT, 0);
 	dsp_initclass();
-	rescopy('STR#',3251);
-
 }
 
 t_int *biquad_perform(t_int *w)
@@ -267,7 +270,30 @@ void biquad_list(t_biquad *x, t_symbol *s, short argc, t_atom *argv)
 
 void biquad_assist(t_biquad *x, void *b, long m, long a, char *s)
 {
-	assist_string(3251,m,a,1,7,s);
+	if (m == ASSIST_OUTLET)
+		sprintf(s,"(signal)output");
+	else {
+		switch (a) {	
+		case 0:
+			sprintf(s,"(signal) input");
+			break;
+		case 1:
+			sprintf(s,"(signal/float) input gain (FF coeffficient 0");
+			break;
+		case 2:
+			sprintf(s,"(signal/float) FF coeffficient 1");
+			break;
+		case 3:
+			sprintf(s,"(signal/float) FF coeffficient 2");
+			break;
+		case 4:
+			sprintf(s,"(signal/float) FB coeffficient 1");
+			break;
+		case 5:
+			sprintf(s,"(signal/float) FB coeffficient 2");
+			break;
+		}
+	}
 }
 
 void *biquad_new(t_symbol *s, short argc, t_atom *argv)
