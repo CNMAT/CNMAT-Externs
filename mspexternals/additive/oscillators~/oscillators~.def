@@ -1,0 +1,6 @@
+;oscillators~.def
+
+LIBRARY oscillators~
+
+EXPORTS
+	main

@@ -274,7 +274,12 @@ void oscillators_noglissbirthmode(t_sinusoids *x, long i) {
 
 void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 {
-	assist_string(3214,m,a,1,2,s);
+	if (m == ASSIST_OUTLET){
+		sprintf(s,"(signal) oscillator bank output");
+	}
+	else {
+		sprintf(s,"(list)frequency amplitude pairs");	
+	}
 }
 
 void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
@@ -331,6 +336,4 @@ void main(void)
 	dsp_initclass();
 	
 	ps_buffer = gensym("buffer~");
-
-	rescopy('STR#',3214);
 }
