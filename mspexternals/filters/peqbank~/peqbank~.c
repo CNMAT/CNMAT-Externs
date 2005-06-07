@@ -45,7 +45,7 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 */
 
 
-#define PEQBANK_VERSION "2.0"
+#define PEQBANK_VERSION "2.0alpha"
 
 /* How smooth mode works:
 
@@ -87,6 +87,14 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 #include "z_dsp.h"
 #include <Memory.h>
 #include <math.h>
+
+#ifdef WIN_VERSION
+#define sinhf sinh
+#define sqrtf sqrt
+#define tanf tan
+#define expf exp
+#endif
+
 
 #undef PI  /* so we can use the one below instead of the one from math.h */
 #undef TWOPI /* ditto */
@@ -218,7 +226,7 @@ void main(void) {
 	
 	dsp_initclass();
 
-	rescopy('STR#', RES_ID);
+	//rescopy('STR#', RES_ID);
 }
 
 void peqbank_version(t_peqbank *x) {
@@ -668,17 +676,17 @@ void peqbank_init(t_peqbank *x) {
 	int i;
 
 	/* alocate and initialize memory */
-	x->param    = (float*) NewPtr( x->b_max * NBPARAM * sizeof(*x->param) );
-	x->oldparam = (float*) NewPtr( x->b_max * NBPARAM * sizeof(*x->oldparam) );
-	x->coeff    = (float*) NewPtr( x->b_max * NBCOEFF * sizeof(*x->coeff) );
+	x->param    = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->param) );
+	x->oldparam = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->oldparam) );
+	x->coeff    = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->coeff) );
 	x->oldcoeff = x->coeff;
-    x->newcoeff = (float*) NewPtr( x->b_max * NBCOEFF * sizeof(*x->newcoeff) );
-    x->freecoeff = (float*) NewPtr( x->b_max * NBCOEFF * sizeof(*x->freecoeff) );
-    x->b_ym1    = (float*) NewPtr( x->b_max * sizeof(*x->b_ym1) );
-    x->b_ym2    = (float*) NewPtr( x->b_max * sizeof(*x->b_ym2) );     
-    x->b_xm1    = (float*) NewPtr( x->b_max * sizeof(*x->b_xm1) );
-    x->b_xm2    = (float*) NewPtr( x->b_max * sizeof(*x->b_xm2) );     
-    x->myList   = (Atom*)  NewPtr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
+    x->newcoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->newcoeff) );
+    x->freecoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->freecoeff) );
+    x->b_ym1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym1) );
+    x->b_ym2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym2) );     
+    x->b_xm1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm1) );
+    x->b_xm2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm2) );     
+    x->myList   = (Atom*)  sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
 
 
 	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
@@ -705,9 +713,26 @@ void peqbank_init(t_peqbank *x) {
 #endif
 }
 
-void peqbank_assist(t_peqbank *x, void *b, long m, long a, char *s) {
+void peqbank_assist(t_peqbank *x, void *b, long m, long a, char *s) 
+
+/*{
 
 	assist_string(RES_ID, m, a, 1, 2, s);
+}*/
+
+{
+	if (m == ASSIST_INLET)
+		sprintf(s,"(signal)input");
+	else {
+		switch (a) {	
+		case 0:
+			sprintf(s,"(signal) output");
+			break;
+		case 1:
+			sprintf(s,"(list)shelf + parametric EQ biquad coefficients [a0 a1 a2 b1 b2]*");
+			break;
+		}
+	}
 }
 
 void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
@@ -745,19 +770,19 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
 }
 
 void  peqbank_free(t_peqbank *x) {
-	DisposePtr((char *) x->param);
-	DisposePtr((char *) x->oldparam);
+	sysmem_freeptr((char *) x->param);
+	sysmem_freeptr((char *) x->oldparam);
 
-	if (x->coeff != x->oldcoeff) DisposePtr((char *) x->oldcoeff);
-	DisposePtr((char *) x->coeff);
-	DisposePtr((char *) x->newcoeff);
-	if (x->freecoeff) DisposePtr((char *) x->freecoeff);
+	if (x->coeff != x->oldcoeff) sysmem_freeptr((char *) x->oldcoeff);
+	sysmem_freeptr((char *) x->coeff);
+	sysmem_freeptr((char *) x->newcoeff);
+	if (x->freecoeff) sysmem_freeptr((char *) x->freecoeff);
 
-    DisposePtr((char *) x->b_ym1);
-    DisposePtr((char *) x->b_ym2);
-    DisposePtr((char *) x->b_xm1);
-    DisposePtr((char *) x->b_xm2);
-    DisposePtr((char *) x->myList);
+    sysmem_freeptr((char *) x->b_ym1);
+    sysmem_freeptr((char *) x->b_ym2);
+    sysmem_freeptr((char *) x->b_xm1);
+    sysmem_freeptr((char *) x->b_xm2);
+    sysmem_freeptr((char *) x->myList);
 }
 
 #define WORRIED_ABOUT_PEQBANK_REENTRANCY
