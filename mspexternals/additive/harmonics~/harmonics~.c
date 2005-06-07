@@ -64,6 +64,11 @@ University of California, Berkeley.
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
+
+#ifdef WIN_VERSION
+#define sinf sin
+#endif
+
 #undef PI	
 #define PI 3.14159265358979323f
 #define MAXOSCILLATORS 256
@@ -273,9 +278,12 @@ static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv
 }	
 
 
-static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
-{
-	assist_string(3214,m,a,1,2,s);
+static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s) {
+	if (m == ASSIST_OUTLET)
+		sprintf(s,"(signal) oscillator bank output");
+	else {
+		sprintf(s,"(list of float pairs): freq., gain");
+	}
 }
 
 static void frequency_float(t_sinusoids *x, double ff)
@@ -338,7 +346,6 @@ static void Makeoscsinetable()
 		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(float)PI);
 }
 
-#define EXPIRE
 
 void main(void)
 {
@@ -347,30 +354,10 @@ void main(void)
 	post("harmonics~ 1.0 - Adrian Freed");
 	post("Copyright © 1996,1997,1998,1999,2000,01,02,03 Regents of the University of California. All Rights Reserved");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
-#ifndef EXPIRE
-    post("Never expires");
-    
-#endif
+
 	Makeoscsinetable();
 
-#ifdef EXPIRE
-#define YEAR 2004
-	post("Expires 2004");
-	{
-		DateTimeRec date;
-		GetTime(&date);
-		if(date.year>=YEAR)
-		{
-			post("Expired");
-		}
-		else
-
-#else
-{
-#endif
-
-		addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
-	}
+	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
 	addmess((method)sinusoids_list, "list", A_GIMME, 0);		// amplitudes
 	addmess((method)sinusoids_clear, "clear", 0);
 	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
@@ -378,5 +365,4 @@ void main(void)
 	addmess((method)ReportInterruptStats, "report-interrupt-stats", 0);
 
 	dsp_initclass();
-	rescopy('STR#',3214);
 }
