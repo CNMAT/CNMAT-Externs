@@ -16,11 +16,15 @@ my $source = '';
 
 while(<STDIN>) {
   $source .= $_
-}
+  }
 
 while($source =~ m~^([A-Za-z0-9_\.-]*)\s*?:[ ]*([^\n]*)\s*~mg) {
     my ($key, $value) = ($1, $2);
-    print qq~#ifndef $key\n~;
-    print qq~#define $key $value\n~; 
-    print qq~#endif\n~;
+    if($key eq "VERSION" and ($value eq "" or $value eq '""')) {
+        print qq~#error "No VERSION defined!"\n~;
+    } else {
+        print qq~#ifndef $key\n~;
+        print qq~#define $key $value\n~; 
+        print qq~#endif\n~;
+    }
 }
