@@ -83,8 +83,8 @@
 		};
 		08FB77ADFE841716C02AAC07 = {
 			children = (
-				5FEC4D8707D646AA00AB90F0,
-				32BAE0B30371A71500C91783,
+				C99E00E8086A2661001E92CF,
+				C99E00E6086A2658001E92CF,
 			);
 			isa = PBXGroup;
 			name = Source;
@@ -115,24 +115,6 @@
 //192
 //193
 //194
-//320
-//321
-//322
-//323
-//324
-		32BAE0B30371A71500C91783 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = "matlabcommunicate~_Prefix.pch";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-//320
-//321
-//322
-//323
-//324
 //4F0
 //4F1
 //4F2
@@ -195,20 +177,6 @@
 		};
 		5FEC4D7807D6464300AB90F0 = {
 			fileRef = 5FEC4D7607D6464300AB90F0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		5FEC4D8707D646AA00AB90F0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.c;
-			path = "matlabcommunicate~.c";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		5FEC4D8807D646AA00AB90F0 = {
-			fileRef = 5FEC4D8707D646AA00AB90F0;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -295,16 +263,10 @@
 		8D01CCC70486CAD60068D4B7 = {
 			buildActionMask = 2147483647;
 			files = (
-				8D01CCC80486CAD60068D4B7,
+				C99E00E9086A2661001E92CF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8D01CCC80486CAD60068D4B7 = {
-			fileRef = 32BAE0B30371A71500C91783;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		8D01CCC90486CAD60068D4B7 = {
 			buildActionMask = 2147483647;
@@ -323,7 +285,7 @@
 		8D01CCCB0486CAD60068D4B7 = {
 			buildActionMask = 2147483647;
 			files = (
-				5FEC4D8807D646AA00AB90F0,
+				C99E00E7086A2658001E92CF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -368,6 +330,44 @@
 			path = "matlabcommunicate~.mxo";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+//8D0
+//8D1
+//8D2
+//8D3
+//8D4
+//C90
+//C91
+//C92
+//C93
+//C94
+		C99E00E6086A2658001E92CF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			path = matlabcommunicate.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C99E00E7086A2658001E92CF = {
+			fileRef = C99E00E6086A2658001E92CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C99E00E8086A2661001E92CF = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = matlabcommunicate_Prefix.pch;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C99E00E9086A2661001E92CF = {
+			fileRef = C99E00E8086A2661001E92CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 	};
 	rootObject = 089C1669FE841209C02AAC07;
