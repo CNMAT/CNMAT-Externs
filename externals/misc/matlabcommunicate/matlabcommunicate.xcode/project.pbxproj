@@ -28,7 +28,7 @@
 				19C28FB4FE9D528D11CA2CBB,
 			);
 			isa = PBXGroup;
-			name = "matlabcommunicate~";
+			name = matlabcommunicate;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -154,8 +154,8 @@
 //5F3
 //5F4
 		5FEC4D7507D6464300AB90F0 = {
+			explicitFileType = wrapper.framework;
 			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
 			name = MaxAPI.framework;
 			path = /Library/Frameworks/MaxAPI.framework;
 			refType = 0;
@@ -246,7 +246,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-Wl,-flat_namespace -undefined suppress";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "matlabcommunicate~";
+				PRODUCT_NAME = matlabcommunicate;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = mxo;
@@ -254,9 +254,9 @@
 			dependencies = (
 			);
 			isa = PBXNativeTarget;
-			name = "matlabcommunicate~";
+			name = matlabcommunicate;
 			productInstallPath = "$(HOME)/Library/Bundles";
-			productName = "matlabcommunicate~";
+			productName = matlabcommunicate;
 			productReference = 8D01CCD20486CAD60068D4B7;
 			productType = "com.apple.product-type.bundle";
 		};
@@ -327,7 +327,7 @@
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "matlabcommunicate~.mxo";
+			path = matlabcommunicate.mxo;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
