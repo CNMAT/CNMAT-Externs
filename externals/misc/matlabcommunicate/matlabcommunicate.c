@@ -154,9 +154,15 @@ void theobject_sum(t_theobject *x) {
 
 
 void theobject_get(t_theobject *x, Symbol *variable) {
-	if (x->verbose) post("%s = ");
+	mxArray *value;
+	if (x->verbose) post("getting variable %s", variable->s_name);
+	if ((value = engGetVariable(x->x_engine, variable->s_name)) == NULL) {
+		error("Matlab currently has no variable \"%s\".", variable->s_name);
+	} else {
+		shoehorn(x, value);
+		mxDestroyArray(value);
+	}
 }
-
 
 void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv) {
   char s[STRING_CAPACITY];
