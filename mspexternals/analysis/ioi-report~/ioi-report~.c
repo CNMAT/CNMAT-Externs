@@ -23,12 +23,25 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 */
 
-/* 5/28/4 */
 
-#define IOIREPORT_VERSION "0.1"
+/*
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: ioi-report~
+DESCRIPTION: Inter-onset-interval report
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 2004,05
+VERSION 0.1: First version, 5/28/4 
+VERSION 0.2: 050714 added way to set min and max ioi time
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+*/
+
+
 #define RINGBUF_SIZE 2048
 #define MAX_LISTLEN 512
 
+#include "version.h"
 #include "ext.h"
 #include "z_dsp.h"
 
@@ -62,6 +75,7 @@ typedef struct _ioi_report
 
 
 void main(void);
+void ioi_report_version (t_ioi_report *x);
 void ioi_report_assist(t_ioi_report *x, void *b, long m, long a, char *s);
 void *ioi_report_new(Symbol *s, short argc, Atom *argv);
 void ioi_report_free(t_ioi_report *x);
@@ -69,19 +83,35 @@ void ioi_report_reset(t_ioi_report *x);
 void ioi_report_dsp(t_ioi_report *x, t_signal **sp, short *count);
 t_int *ioi_report_perform(t_int *w);
 void *OutputTimes(t_ioi_report *x, int eventTime, int bufPos);
+void ioi_report_min_ioi_time(t_ioi_report *x, long min);
+void ioi_report_max_ioi_time(t_ioi_report *x, long max);
+void ioi_report_max_iois_per_event(t_ioi_report *x, long max);
+
+
 
 
 void main(void) {
-	post("ioi_report~ version " IOIREPORT_VERSION " by Matt Wright");
-	post("Copyright © 2004 Regents of the University of California.  ");
+
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 
     setup((t_messlist **)&ioi_report_class, (method) ioi_report_new, (method)ioi_report_free, 
     	  (short)sizeof(t_ioi_report), 0L, A_GIMME, 0);
     addmess((method)ioi_report_dsp, "dsp", A_CANT, 0);
     addmess((method)ioi_report_dsp, "reset", 0);
+    addmess((method)ioi_report_version, "version", 0);
     addmess((method)ioi_report_assist,"assist",A_CANT,0);
+    addmess((method)ioi_report_min_ioi_time, "min_ioi", A_LONG, 0);
+    addmess((method)ioi_report_max_ioi_time, "max_ioi", A_LONG, 0);
+    addmess((method)ioi_report_max_iois_per_event, "max_per_event", A_LONG, 0);
+
     dsp_initclass();
     rescopy('STR#',3241);
+}
+
+void ioi_report_version (t_ioi_report *x) {
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
 }
 
 
@@ -95,7 +125,7 @@ void ioi_report_assist(t_ioi_report *x, void *box, long msg, long arg, char *dst
 	} else if (msg==ASSIST_OUTLET) {
 		sprintf(dstString, "List of inter-onset-intervals");
 	} else {
-		post("¥ OSCroute_assist: unrecognized message %ld", msg);
+		post("¥ ioi-report: unrecognized message %ld", msg);
 	}
 }
 
@@ -191,6 +221,26 @@ void *OutputTimes(t_ioi_report *x, int eventTime, int bufPos) {
 	
 	outlet_list(x->outlet, 0L, i, x->outputList);
 }
+
+
+void ioi_report_min_ioi_time(t_ioi_report *x, long min) {
+	x->min_ioi_time = min;
+}
+
+void ioi_report_max_ioi_time(t_ioi_report *x, long max) {
+	x->max_ioi_time = max;
+}
+
+
+void ioi_report_max_iois_per_event(t_ioi_report *x, long max) {
+	if (max > MAX_LISTLEN) {
+		error("ioi-report~: max_per_event: You exceeded MAX_LISTLEN of %ld", MAX_LISTLEN);
+	} else {
+		x->max_num_iois = max;
+	}
+}
+
+
 
 
 /*
