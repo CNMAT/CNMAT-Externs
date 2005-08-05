@@ -1,4 +1,4 @@
-// Copyright (c) 2004. The Regents of the
+// Copyright (c) 2004,05. The Regents of the
 // University of California (Regents). All Rights Reserved.
 
 // Permission to use, copy, modify, and distribute this software and its
@@ -10,7 +10,7 @@
 // Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley, CA 94720-1620,
 // (510) 643-7201, for commercial licensing opportunities.
 // Created by Peter Kassakian, Department of Electrical Engineering and 
-// Computer Science, University of California, Berkeley.  
+// Computer Science, and Matt Wright, CNMAT, University of California, Berkeley.  
 
 // IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
@@ -31,6 +31,7 @@ DESCRIPTION: Bridge between Max/MSP and Matlab using the Matlab Engine
 AUTHORS: Peter Kassakian, Matt Wright
 COPYRIGHT_YEARS: 2005
 VERSION 1.0: Initial hacking by Matt
+VERSION 1.1: buffer~ I/O, also fixed bug when evaluating an expression prints nothing
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -38,6 +39,7 @@ VERSION 1.0: Initial hacking by Matt
 #include "ext.h"
 #include "z_dsp.h"
 #include "engine.h"
+#include "buffer.h"
 
 #define MAXORDER 1000
 #define STRING_CAPACITY 1000
@@ -58,7 +60,7 @@ typedef struct _theobject
   int verbose;
 } t_theobject;
 
-Symbol *ps_ssh;
+Symbol *ps_ssh, *ps_buffer;
 
 
 void *theobject_new(Symbol *s, short argc, Atom *argv);
@@ -74,6 +76,14 @@ void theobject_closeEngine(t_theobject *x);
 static int MaxListToString(char *s, int capacity, short argc, t_atom *argv);
 void theobject_verbose(t_theobject *x, long yesno);
 void matlabbridge_version (t_theobject *x);
+static t_buffer *SymbolToBuffer(t_symbol *s);
+void matlabbridge_buffer2matlab(t_theobject *x, Symbol *buffername, Symbol *matlabVariable, Symbol *matlabSR);
+void matlabbridge_bufferchan2matlab(t_theobject *x, Symbol *buffername, int chan, Symbol *matlabVariable, Symbol *matlabSR);
+void matlabbridge_matlab2buffer(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, float SR);
+void matlabbridge_matlab2bufferchan(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, int chan, float SR);
+
+
+int is_exotic_matlab_type(const mxArray *array_ptr);
 
 void shoehorn(t_theobject *x, const mxArray *array_ptr);
 static void analyze_int8(t_theobject *x, const mxArray *array_ptr);
@@ -100,11 +110,17 @@ void main(void)
   addmess((method)theobject_list, "list", A_GIMME, 0);
   addmess((method)theobject_verbose, "verbose", A_LONG, 0);
   addmess((method)matlabbridge_version, "version", 0);
+
+  addmess((method)matlabbridge_buffer2matlab, "buffer2matlab", A_SYM, A_SYM, A_DEFSYM, 0);
+  addmess((method)matlabbridge_bufferchan2matlab, "buffer-channel2matlab", A_SYM, A_LONG, A_SYM, A_DEFSYM, 0);
+  addmess((method)matlabbridge_matlab2buffer, "matlab2buffer", A_SYM, A_SYM, A_DEFFLOAT, 0);
+  addmess((method)matlabbridge_matlab2bufferchan, "matlab2buffer-channel", A_SYM, A_SYM, A_LONG, A_DEFFLOAT, 0);
   
   post(NAME " object version " VERSION " by " AUTHORS ".");
   post("Copyright ¨ " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
   
   ps_ssh = gensym("ssh");
+  ps_buffer = gensym("buffer~");
 }
 
 t_int *theobject_perform(t_int *w)
@@ -179,6 +195,9 @@ void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
     if (x->verbose) post("to Matlab: \"%s\"", s);
   }
 
+  // Clear previous text printed by Matlab
+  x->matlabTextOutput[0]=x->matlabTextOutput[1]=x->matlabTextOutput[2]=x->matlabTextOutput[3]=x->matlabTextOutput[4] = '\0';
+  
   engEvalString(x->x_engine, s);
   // Skip ">>\n" that Matlab prints to stdout
   if (x->verbose) post ("%s", x->matlabTextOutput+4);
@@ -370,9 +389,178 @@ void matlabbridge_version (t_theobject *x) {
 }
 
 
+/* Buffer~ I/O stuff: */
+
+t_buffer *SymbolToBuffer(t_symbol *s) {
+	t_buffer *b;
+	
+	if ((b = (t_buffer *)(s->s_thing)) && ob_sym(b) == ps_buffer) {
+		return b;
+	} else {
+		return 0;
+	}
+}
+
+
+
+
+void do_buffer2matlab(t_theobject *x, Symbol *buffername, Symbol *matlabVariable, Symbol *matlabSRvar, int chan) {
+	mxArray *matlabArray = NULL, *matlabSR = NULL;
+	t_buffer *buf;
+	double *msamps;  // Matlab samples are double
+	double *msrate;
+	int i;
+	
+	if ((buf = SymbolToBuffer(buffername)) == 0) {
+		error("matlabbridge: buffer2matlab: %s is not an MSP buffer.", buffername->s_name);
+		return;
+	}
+	
+	if (chan > buf->b_nchans) {
+		error("matlabbridge: bad channel number %ld (buffer %s has only %ld channels)",
+			  chan, buffername->s_name, buf->b_nchans);
+		return;
+	}
+	
+	matlabArray = mxCreateDoubleMatrix(buf->b_frames, chan == 0 ? buf->b_nchans : 1, mxREAL);
+	if (matlabArray == NULL) {
+		error("matlabbridge: buffer2matlab: couldn't allocate memory for Matlab array");
+		return;
+	}
+	msamps = mxGetPr(matlabArray);
+
+	if (chan == 0) {
+		// Copy all channels.  Luckily the arrays are laid out the same
+		for (i = 0; i < buf->b_size; ++i) {
+			msamps[i] = (double) (buf->b_samples[i]);
+		}
+	} else {
+		// Copy just the given channel
+		int nc = buf->b_nchans;
+		for (i = 0; i < buf->b_frames; ++i) {
+			// chan is 1-origin, so subtract 1
+			msamps[i] = (double) (buf->b_samples[i*nc + (chan-1)]);
+		}
+	}
+		
+	engPutVariable(x->x_engine, matlabVariable->s_name, matlabArray);
+	mxDestroyArray(matlabArray);
+	
+	if (matlabSRvar->s_name[0] != '\0') {
+		matlabSR = mxCreateDoubleMatrix(1, 1, mxREAL);
+		if (matlabArray == NULL) {
+			error("matlabbridge: buffer2matlab: couldn't allocate memory for Matlab sample rate");
+			return;
+		}
+		msrate =mxGetPr(matlabSR);
+		*msrate = (double) buf->b_sr;
+		engPutVariable(x->x_engine, matlabSRvar->s_name, matlabSR);
+		mxDestroyArray(matlabSR);
+	}
+}
+
+void matlabbridge_buffer2matlab(t_theobject *x, Symbol *buffername, Symbol *matlabVariable, Symbol *matlabSRvar) {
+	do_buffer2matlab(x, buffername, matlabVariable, matlabSRvar, 0);
+}
+
+
+void matlabbridge_bufferchan2matlab(t_theobject *x, Symbol *buffername, int chan, Symbol *matlabVariable, Symbol *matlabSRvar) {
+	if (chan < 1) {
+		error("matlabbridge: buffer-channel2matlab: bad channel number %ld", chan);
+		return;
+	}
+	do_buffer2matlab(x, buffername, matlabVariable, matlabSRvar, chan);
+}
+
+
+void matlabbridge_matlab2buffer(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, float SR) {
+	mxArray *matlabArray;
+	t_buffer *buf;
+	int i,j;
+	int      number_of_dimensions; 
+	const int     *dims;
+	long nframes, nchans, buf_nchans;
+	double *msamps;
+	mxClassID  category;
+
+	
+	if ((matlabArray = engGetVariable(x->x_engine,matlabVariable->s_name)) == NULL) {
+		error("matlabbridge: there is no matlab variable %s", matlabVariable->s_name);
+		return;
+	}
+	
+	if ((buf = SymbolToBuffer(buffername)) == 0) {
+		error("matlabbridge: buffer2matlab: %s is not an MSP buffer.", buffername->s_name);
+		return;
+	}
+	
+	// Case analysis for what kind of thing was in the Matlab variable
+	
+	number_of_dimensions = mxGetNumberOfDimensions(matlabArray);
+	dims = mxGetDimensions(matlabArray);
+
+	if (number_of_dimensions > 2) {
+		post("matlabbridge: can't convert %ld-dim Matlab array %s to a buffer",
+			 number_of_dimensions, matlabVariable->s_name);
+		goto done;
+	} 
+
+	if (is_exotic_matlab_type(matlabArray)) {
+		goto done;
+	}
+
+	category = mxGetClassID(matlabArray);
+	if (category != mxDOUBLE_CLASS) {
+		post("Sorry; matlabcommunicate can only read 64-bit doubles from Matlab into a buffer~.");
+		goto done;
+	}
+	
+	nframes = dims[0];
+	if (number_of_dimensions == 1) {
+		nchans = 1;
+	} else {
+		nchans = dims[1];
+	}
+	
+	if (buf->b_frames < nframes) {
+		post("Sorry, buffer~ %s has only %ld frames; need %ld for Matlab array %s",
+			 buffername->s_name, buf->b_frames, nframes, matlabVariable->s_name);
+		goto done;
+	}
+	
+	buf_nchans = buf->b_nchans;
+	if (buf_nchans < nchans) {
+		post("Sorry, buffer~ %s has only %ld channels; need %ld for Matlab array %s",
+			 buffername->s_name, buf->b_nchans, nchans, matlabVariable->s_name);
+		goto done;
+	}
+	
+	post("Matlab %ld/%ld, buffer~ %ld/%ld", nframes, nchans, buf->b_frames, buf_nchans);
+	
+	/* Now we know it's going to fit */
+	msamps = mxGetPr(matlabArray);
+	for (i = 0; i < nframes; ++i) {
+		for (j = 0; j < nchans; ++j) {
+			buf->b_samples[i*buf_nchans + j] = msamps[i*nchans + j];
+		}
+	}
+
+done:
+	mxDestroyArray(matlabArray);
+}
+
+
+void matlabbridge_matlab2bufferchan(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, int chan, float SR) {
+}
+
+
+
+
 
 /* This code for dealing with an mxArray comes from the example provided by
 Matlab in extern/examples/mex/explore.c, adapted for Max. */
+
+
 
 /* shoehorn figures out the size, and category 
    of the input array_ptr, and then displays all this information. */ 
@@ -427,54 +615,65 @@ void shoehorn(t_theobject *x, const mxArray *array_ptr) {
   class_name = mxGetClassName(array_ptr);
   // post("Class Name: %s%s\n", class_name, mxIsSparse(array_ptr) ? " (sparse)" : "");
 
+  if (is_exotic_matlab_type(array_ptr)) {
+	return;
+  }
+
+  category = mxGetClassID(array_ptr);
+  /* A numeric array */
+  switch (category)  {
+	 case mxINT8_CLASS:   analyze_int8(x, array_ptr);   break; 
+	 case mxUINT8_CLASS:  analyze_uint8(x, array_ptr);  break;
+	 case mxINT16_CLASS:  analyze_int16(x, array_ptr);  break;
+	 case mxUINT16_CLASS: analyze_uint16(x, array_ptr); break;
+	 case mxINT32_CLASS:  analyze_int32(x, array_ptr);  break;
+	 case mxUINT32_CLASS: analyze_uint32(x, array_ptr); break;
+	 case mxSINGLE_CLASS: analyze_single(x, array_ptr); break; 
+	 case mxDOUBLE_CLASS: analyze_double(x, array_ptr); break;
+	 default:
+		error("Unrecognized numeric type has fallen through the cracks.");
+		return;
+  }
+}
+
+int is_exotic_matlab_type(const mxArray *array_ptr) {
+  mxClassID  category;
   if (mxIsSparse(array_ptr)) {
 	post("Sorry, can't handle sparse arrays yet.");
-	return;
+	return 1;
   }
   
   if (mxIsComplex(array_ptr)) {
 	post("Sorry, can't handle complex arrays yet.");
-	return;
+	return 1;
   }
 
   category = mxGetClassID(array_ptr);
   switch (category) {
 	  case mxCHAR_CLASS:    {
 		post("sorry; can't handle Matlab strings yet.");
-		return;
+		return 1;
 		// analyze_string(array_ptr);    
 	  } break;
 	  case mxSTRUCT_CLASS:  {
 		post("sorry; can't handle Matlab structures yet.");
-		return;
+		return 1;
 		// analyze_structure(array_ptr);    
 	  } break;
 	  case mxCELL_CLASS:    {
 		post("sorry; can't handle Matlab cell arrays yet.");
-		return;
+		return 1;
 		// analyze_cell(array_ptr);    
 	  } break;
 	  case mxUNKNOWN_CLASS: {
 	    error("Matlab returned something of \"Unknown class\"; don't know what to do.");
-		return;
+		return 1;
 	  } break;
 	  default: {
 		  /* A numeric array */
-		  switch (category)  {
-			 case mxINT8_CLASS:   analyze_int8(x, array_ptr);   break; 
-			 case mxUINT8_CLASS:  analyze_uint8(x, array_ptr);  break;
-			 case mxINT16_CLASS:  analyze_int16(x, array_ptr);  break;
-			 case mxUINT16_CLASS: analyze_uint16(x, array_ptr); break;
-			 case mxINT32_CLASS:  analyze_int32(x, array_ptr);  break;
-			 case mxUINT32_CLASS: analyze_uint32(x, array_ptr); break;
-			 case mxSINGLE_CLASS: analyze_single(x, array_ptr); break; 
-			 case mxDOUBLE_CLASS: analyze_double(x, array_ptr); break;
-			 default:
-				error("Unrecognized numeric type has fallen through the cracks.");
-				return;
-		  }
-	  } break;
-	}
+		  return 0;
+	  }
+  }
 }
 
 
