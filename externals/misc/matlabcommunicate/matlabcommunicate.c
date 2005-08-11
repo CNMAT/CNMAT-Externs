@@ -32,6 +32,7 @@ AUTHORS: Peter Kassakian, Matt Wright
 COPYRIGHT_YEARS: 2005
 VERSION 1.0: Initial hacking by Matt
 VERSION 1.1: buffer~ I/O, also fixed bug when evaluating an expression prints nothing
+VERSION 1.1.1: increased Matlab text output capacity from 1000 to 10000 characters
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -42,6 +43,7 @@ VERSION 1.1: buffer~ I/O, also fixed bug when evaluating an expression prints no
 #include "buffer.h"
 
 #define MAXORDER 1000
+#define MATLAB_TEXT_OUTPUT_CAPACITY 10000
 #define STRING_CAPACITY 1000
 #define BIGGEST_LIST 5000
 #define Z_NO_INPLACE 1
@@ -55,7 +57,7 @@ typedef struct _theobject
   void *x_outlet;
   float x_result;
   Engine *x_engine;
-  char matlabTextOutput[STRING_CAPACITY+1];
+  char matlabTextOutput[MATLAB_TEXT_OUTPUT_CAPACITY+1];
   int engineOpen;
   int verbose;
 } t_theobject;
@@ -318,8 +320,8 @@ void *theobject_new(Symbol *symb, short argc, Atom *argv) {
 	post("Matlab engine loaded successfully");
 	x->engineOpen = 1;
 
-    x->matlabTextOutput[STRING_CAPACITY] = '\0';
-    engOutputBuffer(x->x_engine, x->matlabTextOutput, STRING_CAPACITY);
+    x->matlabTextOutput[MATLAB_TEXT_OUTPUT_CAPACITY] = '\0';
+    engOutputBuffer(x->x_engine, x->matlabTextOutput, MATLAB_TEXT_OUTPUT_CAPACITY);
   }
 
   x->verbose = 1;
