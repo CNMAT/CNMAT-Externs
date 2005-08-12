@@ -12,11 +12,11 @@
  * IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE.
 
+ Modified 8/12/05 by Matt Wright to compile again 
+ 
 */
 
 #include "ext.h"
-#include <SetUpA4.h>
-#include <A4Stuff.h>
 
 struct listAccum *listAccumNew(long);
 void *listAccumFree(struct listAccum *);
@@ -46,12 +46,9 @@ struct listAccum {
 struct listAccum *listAccumNew(long n) {
 	struct listAccum *x;
 	int i;
-
-	EnterCallback();
 	
 	if (n <= 0) {
 		post("listAccum: Argument must be positive.");
-		ExitCallback();
 		return 0;
 	}
 	
@@ -63,15 +60,12 @@ struct listAccum *listAccumNew(long n) {
 	
 	x->debug = false;
 	
-	ExitCallback();
 	return (x);
 }
 
 void *listAccumFree(struct listAccum *x)
 {
-	EnterCallback();
 	freebytes(x->l_atoms,(short)(sizeof(Atom)*x->l_numAtoms));
-	ExitCallback();
 }
 
 /* ------------------------- listAccumBang ------------------------ */
@@ -79,25 +73,18 @@ void *listAccumFree(struct listAccum *x)
 
 void *listAccumBang(struct listAccum *x)
 {
-	int	savelock;
-	
-	EnterCallback();
-	savelock = lockout_set(1);
 	if (x->debug)
 		post("listAccum bang");
 	
 	if (x->l_atomsInBuf)
 		outlet_list(x->l_outlet,0L,(short)x->l_atomsInBuf,x->l_atoms);
 	x->l_atomsInBuf = 0;
-	lockout_set(savelock);
-	ExitCallback();
 }
 
 /* ------------------------- listAccumDebug ------------------------ */
 
 void *listAccumDebug(struct listAccum *x)
 {
-	EnterCallback();
 	x->debug = !x->debug;
 	
 	if (x->debug)
@@ -105,7 +92,6 @@ void *listAccumDebug(struct listAccum *x)
 	else
 		post("listAccum debug off");
 	
-	ExitCallback();
 }
 
 /* ------------------------- listAccumList ------------------------ */
@@ -113,10 +99,6 @@ void *listAccumDebug(struct listAccum *x)
 void	*listAccumList(struct listAccum *x, struct symbol *s, int argc, struct atom *argv)
 {
 	int i;
-	int	savelock;
-	
-	EnterCallback();
-	savelock = lockout_set(1);
 	for (i=0;i<argc;i++) {
 		x->l_atoms[x->l_atomsInBuf] = argv[i];
 		x->l_atomsInBuf++;
@@ -126,17 +108,12 @@ void	*listAccumList(struct listAccum *x, struct symbol *s, int argc, struct atom
 			listAccumBang(x);
 		}
 	}
-	lockout_set(savelock);
-	ExitCallback();
 }
 
 /* -----------------------  listAccum_anything ----------------------- */
 
 void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv) {
-	int savelock, i;
-	
-	EnterCallback();
-	savelock = lockout_set(1);
+	int i;
 
 	/* First, deal with symbol that's the message name */
 		
@@ -162,19 +139,12 @@ void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv)
 		}
 	}
 	
-	lockout_set(savelock);
-	ExitCallback();
 }
 
 
-main(fptr *f) {
-	long oldA4;
-	
-	oldA4 = SetCurrentA4();
-	RememberA4();
-	FNS = f;		
-		
-	setup(&class, listAccumNew,listAccumFree, (short) sizeof(struct listAccum), 0L, A_LONG, 0);
+main(fptr *f) {		
+	setup((t_messlist **)&class, (method) listAccumNew, (method)listAccumFree,
+		  (short) sizeof(struct listAccum), 0L, A_LONG, 0);
 
 	addbang((method)listAccumBang);
 	addmess((method)listAccumDebug, "debug", 0);
@@ -184,6 +154,5 @@ main(fptr *f) {
 	finder_addclass("Data","listAccum");
 	
 	post("listAccum: A max list accumulator.  By Michael Lee and Matt Wright.");
-	post("Copyright © 1996 Regents of the University of California.  All rights reseved.");
-	RestoreA4(oldA4);
+	post("Copyright © 1996-2005 Regents of the University of California.  All rights reseved.");
 }
