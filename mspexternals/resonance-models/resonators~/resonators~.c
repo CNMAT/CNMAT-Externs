@@ -48,15 +48,16 @@ University of California, Berkeley.
  				second outlet for filter state
  				ping completed and tested
  				repaired amplitude interpretation
- 				
- 				THIS CRASHES immediately on being loaded into MAX
- 				
-hopefuly  someone will fix the assistance strings 
-*/
+ */
 
 
 /*
 	To-Do
+		ping should be done the way the float is done where it adds the ping in directly.
+		set the maximum number of resonances dynamically with an integer argument
+		fix the assistance strings 
+		test or failure of resonance allocation
+	
 	Make smooth mode settable by a message.
 	fold all four perform procedures into a single version (with compiled-out conditionals and perhaps the loop unrolling using "duffs device")
 	
@@ -70,7 +71,7 @@ hopefuly  someone will fix the assistance strings
 #include <math.h>
 
 void *resonators_class;
-#define MAXRESONANCES 512
+#define MAXRESONANCES 256
 typedef  struct resdesc
 {
 	float out1, out2;   // state
@@ -91,8 +92,8 @@ typedef struct
 {
 	t_pxobject b_obj;
 	short b_connected;
-	resdesc base[MAXRESONANCES];
-	dresdesc dbase[MAXRESONANCES];
+	resdesc *base;
+	dresdesc *dbase;
 	int nres; 
 	int nmax;	/* maximum number of filters*/
 	int ping; /* index of filter that will be pinged at the next opportunity */
@@ -140,9 +141,9 @@ const 	t_float *in = (t_float *)(w[2]);
 	if(op->b_obj.z_disabled)
 		goto out;
 
-	if(ping>=0 && ping<nfilters &&(op->base[ping].b1 > 0.0f))
+	if(ping>=0 && ping<nfilters )
 	{
-		op->base[ping].out1 += op->pingsize/op->base[ping].b1;
+		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
 
@@ -215,10 +216,10 @@ t_int *resonators2_perform(t_int *w)
 	int ping = op->ping;
 	if(op->b_obj.z_disabled)
 		goto out;
-// ping stuff is undocumented and untested
-	if(ping>=0 && ping<nfilters &&(op->base[ping].b1 > 0.0f))
+
+	if(ping>=0 && ping<nfilters)
 	{
-		op->base[ping].out1 += op->pingsize/op->base[ping].b1;
+		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
 
@@ -288,9 +289,9 @@ t_int *iresonators_perform(t_int *w)
 	if(op->b_obj.z_disabled)
 		goto out;
 
-	if(ping>=0 && ping<nfilters &&(op->base[ping].b1 > 0.0f))
+	if(ping>=0 && ping<nfilters)
 	{
-		op->base[ping].out1 += op->pingsize/op->base[ping].b1;
+		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
 
@@ -389,9 +390,9 @@ t_int *iresonators2_perform(t_int *w)
 	if(op->b_obj.z_disabled)
 		goto out;
 
-	if(ping>=0 && ping<nfilters &&(op->base[ping].b1 > 0.0f))
+	if(ping>=0 && ping<nfilters)
 	{
-		op->base[ping].out1 += op->pingsize/op->base[ping].b1;
+		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
 
@@ -471,9 +472,9 @@ t_int *diresonators_perform(t_int *w)
 	if(op->b_obj.z_disabled || n>4096)
 		goto out;
 
-	if(ping>=0 && ping<nfilters &&(op->dbase[ping].b1 > 0.0f))
+	if(ping>=0 && ping<nfilters)
 	{
-		op->dbase[ping].out1 += op->pingsize/op->dbase[ping].b1;
+		op->dbase[ping].out2 += op->pingsize*op->dbase[ping].a1prime;
 		op->ping = -1;
 	}
 
@@ -579,9 +580,9 @@ t_int *diresonators2_perform(t_int *w)
 	if(op->b_obj.z_disabled||n>4096)
 		goto out;
 
-	if(ping>=0 && ping<nfilters &&(op->base[ping].b1 > 0.0f))
+	if(ping>=0 && ping<nfilters)
 	{
-		op->base[ping].out1 += op->pingsize/op->base[ping].b1;
+		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
 
@@ -707,7 +708,7 @@ void resonators_float(t_resonators *x, double ff)
 	dresdesc *dp = x->dbase;
 		for(i=0;i<x->nres;++i)
 		{
-			dp[i].out1 += dp[i].a1prime*ff;
+			dp[i].out2 += dp[i].a1prime*ff;
 		
 		}
 	}
@@ -717,7 +718,7 @@ void resonators_float(t_resonators *x, double ff)
 		float f = ff;
 		for(i=0;i<x->nres;++i)
 		{
-			fp[i].out1 += fp[i].a1prime*f;
+			fp[i].out2 += fp[i].a1prime*f;
 		
 		}
 	}
@@ -788,6 +789,15 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 	double srbar = x->sampleinterval;
 	resdesc *fp = x->base;
 	dresdesc *dp = x->dbase;
+	
+	if(argc==2)
+	{
+		 x->ping = atom_getintarg(0,argc,argv);
+		if(x->ping>x->nres)
+			x->ping = -1;
+		x->pingsize = atom_getfloatarg(1,argc,argv);
+		return;
+	}
 
 	if (argc%3!=0) {
 		post("multiple of 3 floats required (frequency amplitude decayRate");
@@ -829,17 +839,17 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 			else
 			{
 				double ts;
-				f *= 2.0f*3.14159265358979323f*srbar;
+				f *= 2.0*3.14159265358979323*srbar;
 				ts = g;
 				if(x->badg)
 					ts *= sin(f);
 				tb1[i] = r*cos(f)*2.0;
-				fp[i].a1prime = dp[i].a1prime = ts/tb1[i];   //this is the other norm that establishes the impulse response of the right amplitude (scaled 
-													// so that it can be summed into the state variable outside the perfor routine 
-													// If patents were cheaper..........
-				ta1[i] = ts *  (1.0-r);   //this is one of the relavent L norms
+					ta1[i] = ts *  (1.0-r);   //this is one of the relavent L norms
 				tb2[i] =  -r*r;
-				fp[i].fastr = dp[i].fastr= exp(-rate*100.0*srbar)/r; //to decay fast
+				fp[i].a1prime = dp[i].a1prime = ts/tb2[i];   //this is the other norm that establishes the impulse response of the right amplitude (scaled 
+													// so that it can be summed into the state variable outside the perform routine 
+													// If patents were cheaper..........
+			fp[i].fastr = dp[i].fastr= exp(-rate*100.0*srbar)/r; //to decay fast
 			}
 		}
 	}
@@ -914,10 +924,7 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 			x->samplerate = 44100.0;
 		x->sampleinterval = 1.0/x->samplerate;
 
-    x->nres = MAXRESONANCES;
-    resonators_clear(x); // clears state
-    x->nres = 0;
-    x->badg = false;
+     x->badg = true;
 
     {
     	x->interpolating = false;
@@ -944,7 +951,12 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 	    	}
 	    }
     }
-//    resonators_list(x,s,argc,argv);
+    	x->base = (resdesc *)getbytes(MAXRESONANCES*sizeof(resdesc));
+   	x->dbase = (dresdesc *)getbytes(MAXRESONANCES*sizeof(dresdesc));
+   x->nres = MAXRESONANCES;
+    resonators_clear(x); // clears state
+    x->nres = 0;
+    resonators_list(x,s,argc,argv);
     {
     	resdesc *f = x->base;
     	dresdesc *df = x->dbase;
@@ -1035,9 +1047,9 @@ const	t_float *in = (t_float *)(w[2]);
 	if(op->b_obj.z_disabled)
 		goto out;
 
-	if(ping>=0 && ping<nfilters &&(op->base[ping].b1 > 0.0f))
+	if(ping>=0 && ping<nfilters)
 	{
-		op->base[ping].out1 += op->pingsize/op->base[ping].b1;
+		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
 
