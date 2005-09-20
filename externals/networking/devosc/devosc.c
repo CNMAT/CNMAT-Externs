@@ -29,22 +29,30 @@ COPYRIGHT_YEARS: 2005
 VERSION 0.0: Initial version reads from /dev/random instead, just to learn how to make the right system calls.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-                
-        */
+*/
+
 
 #include "version.h"
 #include "ext.h"
-// #include <sys/types.h>
-//#include <sys/stat.h>
 #include <fcntl.h>
+
+
+// #include <sys/types.h>
+#include <sys/stat.h>
 
 #include <string.h>
 #include <errno.h>
-// #include <FSp_fopen.h>
 
 
 void *devosc_class;
 Symbol *ps_FullPacket, *ps_OSCBlob;
+
+
+#define DEVICE_FILENAME "/dev/osc"
+
+/* This magic number comes from Rimas, of course: */
+#define RIMASBOX_OSC_PACKET_SIZE 188
+
 
 typedef struct devosc_struct {
 	struct object O_ob;
@@ -52,16 +60,22 @@ typedef struct devosc_struct {
 	short	O_debug;
 	int errorreporting;	  // Does this object report errors in the Max window?
 	int fd;
+	char osc_packet[RIMASBOX_OSC_PACKET_SIZE];
+
 } devosc;
 
 
 void *devosc_new(long arg);
+void devosc_open(devosc *x);
+void devosc_close(devosc *x);
 void devosc_free(devosc *x);
 void devosc_assist(devosc *x, void *b, long m, long a, char *s);
 void devosc_version (devosc *x);
 void devosc_debug (devosc *x);
 void devosc_errorreporting(devosc *x, int yesno);
 void devosc_bang (devosc *x);
+void read_rimasbox_packet(devosc *x);
+void read_one_byte(devosc *x);
 
 void devosc_sendData(devosc *x, short size, char *data);
 
@@ -75,6 +89,10 @@ typedef size_t ((*pp_read) (int fd, void *buf, size_t count));  // function defi
 pp_read pointer_to_read; // declare function pointer variable to hold function pointer from bundle
 typedef int ((*pp_close) (int fd));  // function definition typedef
 pp_close pointer_to_close; // declare function pointer variable to hold function pointer from bundle
+typedef int ((*pp_fcntl) (int fd, int cmd, int arg));  // function definition typedef
+pp_fcntl pointer_to_fcntl; // declare function pointer variable to hold function pointer from bundle
+typedef int ((*pp_stat) (const char *path, struct stat *sb));  // function definition typedef
+pp_stat pointer_to_stat; // declare function pointer variable to hold function pointer from bundle
 
 
 
@@ -85,6 +103,8 @@ void main (void) {
 	pointer_to_open = (pp_open)CFBundleGetFunctionPointerForName(bundle, CFSTR("open"));
 	pointer_to_read = (pp_read)CFBundleGetFunctionPointerForName(bundle, CFSTR("read"));
 	pointer_to_close = (pp_close)CFBundleGetFunctionPointerForName(bundle, CFSTR("close"));
+	pointer_to_fcntl = (pp_fcntl)CFBundleGetFunctionPointerForName(bundle, CFSTR("fcntl"));
+	pointer_to_stat = (pp_stat)CFBundleGetFunctionPointerForName(bundle, CFSTR("stat"));
 	
 	post(NAME " object version " VERSION " by " AUTHORS ".");
 	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
@@ -94,6 +114,7 @@ void main (void) {
 
 	addmess((method)devosc_assist, "assist",	A_CANT,0);
 	addmess((method)devosc_version, "version", 	0);
+	addmess((method)devosc_open, "open", 	0);
 
 	addbang((method)devosc_bang);
 	ps_FullPacket = gensym("FullPacket");
@@ -102,34 +123,70 @@ void main (void) {
 	
 void *devosc_new(long arg) {
 	devosc *x;
-	int fd;
-	
-	
-	fd = (*pointer_to_open)("/dev/random", O_RDONLY);
-	if (fd == -1) {
-		char *msg = strerror(errno);
-		error("devosc: Couldn't open() device: %s", msg);
-		return 0;
-	}
 
 	x = (devosc *) newobject(devosc_class);
 
-	x->fd = fd;
+	x->fd = -1;
 	/* Create the outlets in right to left order */
 	x->O_outlet = outlet_new(x, 0L);
 
 	x->O_debug = false;
 
+	devosc_open(x);
+	
 	return (x);
 }
 
 void devosc_free(devosc *x) {
-	int result = (*pointer_to_close)(x->fd);
-	if (result != 0) {
+	devosc_close(x);
+}
+
+
+void devosc_open(devosc *x) {
+	int fd;
+
+	devosc_close(x);
+	
+	fd = (*pointer_to_open)(DEVICE_FILENAME, O_RDONLY);
+	// Should be:	fd = (*pointer_to_open)(DEVICE_FILENAME, O_RDONLY | O_NONBLOCK);
+	if (fd <= -1) {
+		char *msg = strerror(errno);
+		if (errno == 0) {
+			// For some reason errno is zero when the file doesn't exist
+			struct stat sb;
+			if ((*pointer_to_stat)(DEVICE_FILENAME, &sb) == 0) {
+				error("devosc: open() failed with errno==0, but stat() seems happy. ???");
+			} else {
+				char *msg = strerror(errno);
+				error("devosc: open() failed with errno==0, but stat() says \"%s\".", msg);
+			}
+		} else {
+			error("devosc: Couldn't open() device: %s", msg);
+		}
+		return;
+	}
+	x->fd = fd;
+
+#if 0
+	// Make I/O nonblocking the hard way
+	if ((*pointer_to_fcntl)(fd, F_SETFL, O_NONBLOCK) == -1) {
+		char *msg = strerror(errno);
+		error("devosc: Couldn't fcntl() device to set it to nonblocking: %s", msg);
+		return;
+	}
+#endif
+}
+
+void devosc_close(devosc *x) {
+	if (x->fd == -1) return;
+	
+	if ( (*pointer_to_close)(x->fd) != 0) {
 		char *msg = strerror(errno);
 		error("devosc: Couldn't close() device: %s", msg);
 	}
 }
+
+
 void devosc_assist(devosc *x, void *b, long m, long a, char *s) {
 }
 
@@ -157,10 +214,46 @@ void devosc_errorreporting(devosc *x, int yesno) {
 	}
 }
 
-
-
 void devosc_bang (devosc *x) {
+	read_rimasbox_packet(x);
+}
+
+
+void read_rimasbox_packet(devosc *x) {
+	int bytes_read;
+	
+	if (x->fd == -1) {
+		error("Can't read; device not open.");
+		return;
+	}
+
+	bytes_read = (*pointer_to_read)(x->fd, x->osc_packet, RIMASBOX_OSC_PACKET_SIZE);
+	
+	if (bytes_read == RIMASBOX_OSC_PACKET_SIZE) {
+		// success
+		devosc_sendData(x, RIMASBOX_OSC_PACKET_SIZE, x->osc_packet);
+	} else if (bytes_read == 0) {
+		error("devosc: read() saw end-of-file.  OSC never ends!  What's going on?");
+	} else {
+		// An error
+		if (errno == EAGAIN) {
+			// This "error" just means no new data ready, so do nothing.
+		} else {
+			char *msg = strerror(errno);
+			error("devosc: read() failed: %s", msg);
+		}
+	}
+}
+
+
+void read_one_byte(devosc *x) {
 	char buf[1];
+
+	if (x->fd == -1) {
+		error("Can't read; device not open.");
+		return;
+	}
+
 	if ((*pointer_to_read)(x->fd, buf, 1) != 1) {
 		char *msg = strerror(errno);
 		error("devosc: read() didn't return 1: %s", msg);
@@ -168,6 +261,7 @@ void devosc_bang (devosc *x) {
         outlet_int(x->O_outlet, buf[0]);
       }
 }
+
 
 void devosc_sendData(devosc *x, short size, char *data) {
 	Atom arguments[2];
@@ -181,65 +275,3 @@ void devosc_sendData(devosc *x, short size, char *data) {
 	outlet_anything(x->O_outlet, ps_FullPacket, 2, arguments);
 
 }
-
-
-
-
-
-/********************************************************************************/
-
-#ifdef RIDICULOUS
-#define MAX_FILENAME_LEN 256
-#define MAX_FULLPATH_LEN 2000
-
-FILE *ridiculous_fopen(char *filename);
-FILE *ridiculous_fopen(char *filename) {
-	/* This is stupidly copied from open-sdif-file.c; the code should be factored properly. */
-	
-	char filenamecopy[MAX_FILENAME_LEN];
-	char fullpath[MAX_FULLPATH_LEN];
-	short result, pathID;
-	long filetype;
-	PATH_SPEC ps;	
-	OSErr err;
-	FILE *f;
-
-	
-	strncpy(filenamecopy, filename, MAX_FILENAME_LEN);
-	
-	result = locatefile_extended(filenamecopy, &pathID, &filetype, 0, 0);
-
-	
-	if (result != 0) {
-		error("couldn't locate \"%s\" in Max's search path (result %ld)", 
-			 filename, result);
-		return NULL;
-	}
-#ifdef WIN_VERSION
-#error Windows sucks
-#else
-#define PATH_SPEC_MEANS_FSSPEC
-#ifdef PATH_SPEC_MEANS_FSSPEC
-	result = path_tospec(pathID, filenamecopy, &ps);
-	if (result != 0) {
-		error("couldn't make PATH_SPEC from file %s (path_tospec returned %ld)",
-			 filenamecopy, result);
-		return NULL;
-	}
-	
-	f = FSp_fopen (&ps, "rb");
-
-	if (f == NULL) {
-		error("FSp_fopen returned NULL; can't open %s", filename);
-		return NULL;
-	} 
-    return f;
-#else 	
-#error What do I do with a PATH_SPEC?	
-#endif /* PATH_SPEC_MEANS_FSSPEC */
-#endif /* WIN_VERSION */
-	
-}
-
-#endif
-
