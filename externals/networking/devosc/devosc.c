@@ -27,6 +27,7 @@ DESCRIPTION: Read devosc data from /dev/osc and output as a binary "fullpacket" 
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2005
 VERSION 0.0: Initial version reads from /dev/random instead, just to learn how to make the right system calls.
+VERSION 0.1: Seems to work.  Added "open" and "close" messages.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -115,6 +116,7 @@ void main (void) {
 	addmess((method)devosc_assist, "assist",	A_CANT,0);
 	addmess((method)devosc_version, "version", 	0);
 	addmess((method)devosc_open, "open", 	0);
+	addmess((method)devosc_close, "close", 	0);
 
 	addbang((method)devosc_bang);
 	ps_FullPacket = gensym("FullPacket");
@@ -183,6 +185,8 @@ void devosc_close(devosc *x) {
 	if ( (*pointer_to_close)(x->fd) != 0) {
 		char *msg = strerror(errno);
 		error("devosc: Couldn't close() device: %s", msg);
+	} else {
+		x->fd = -1;
 	}
 }
 
