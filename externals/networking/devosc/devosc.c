@@ -27,7 +27,7 @@ DESCRIPTION: Read devosc data from /dev/osc and output as a binary "fullpacket" 
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2005
 VERSION 0.0: Initial version reads from /dev/random instead, just to learn how to make the right system calls.
-VERSION 0.1: Seems to work.  Added "open" and "close" messages.
+VERSION 0.1: Seems to work.  Added "open" and "close" messages, made packet size variable.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -51,8 +51,8 @@ Symbol *ps_FullPacket, *ps_OSCBlob;
 
 #define DEVICE_FILENAME "/dev/osc"
 
-/* This magic number comes from Rimas, of course: */
-#define RIMASBOX_OSC_PACKET_SIZE 188
+#define DEFAULT_RIMASBOX_OSC_PACKET_SIZE 188  /* Size (in bytes) of packet Rimas currently sends. */
+#define MAX_RIMASBOX_OSC_PACKET_SIZE 4096
 
 
 typedef struct devosc_struct {
@@ -61,7 +61,8 @@ typedef struct devosc_struct {
 	short	O_debug;
 	int errorreporting;	  // Does this object report errors in the Max window?
 	int fd;
-	char osc_packet[RIMASBOX_OSC_PACKET_SIZE];
+	int packetsize;
+	char osc_packet[MAX_RIMASBOX_OSC_PACKET_SIZE];
 
 } devosc;
 
@@ -74,6 +75,7 @@ void devosc_assist(devosc *x, void *b, long m, long a, char *s);
 void devosc_version (devosc *x);
 void devosc_debug (devosc *x);
 void devosc_errorreporting(devosc *x, int yesno);
+void devosc_packetsize(devosc *x, long size);
 void devosc_bang (devosc *x);
 void read_rimasbox_packet(devosc *x);
 void read_one_byte(devosc *x);
@@ -117,6 +119,7 @@ void main (void) {
 	addmess((method)devosc_version, "version", 	0);
 	addmess((method)devosc_open, "open", 	0);
 	addmess((method)devosc_close, "close", 	0);
+	addmess((method)devosc_packetsize, "packetsize", 	A_LONG, 0);
 
 	addbang((method)devosc_bang);
 	ps_FullPacket = gensym("FullPacket");
@@ -126,13 +129,22 @@ void main (void) {
 void *devosc_new(long arg) {
 	devosc *x;
 
+	post("arg is %ld", arg);
+	
 	x = (devosc *) newobject(devosc_class);
 
 	x->fd = -1;
+	
 	/* Create the outlets in right to left order */
 	x->O_outlet = outlet_new(x, 0L);
 
 	x->O_debug = false;
+
+	x->packetsize = DEFAULT_RIMASBOX_OSC_PACKET_SIZE;
+	
+	if (arg != 0) {
+		devosc_packetsize(x, arg);
+	}
 
 	devosc_open(x);
 	
@@ -218,9 +230,21 @@ void devosc_errorreporting(devosc *x, int yesno) {
 	}
 }
 
+
+void devosc_packetsize(devosc *x, long size) {
+	if (size <= 0) {
+		error("devosc: unreasonable packet size %ld; not changing", size);
+	} else if (size > MAX_RIMASBOX_OSC_PACKET_SIZE) {
+		error("devosc: requested packet size %ld is bigger than MAX_RIMASBOX_OSC_PACKET_SIZE");
+	} else {
+		x->packetsize = size;
+	}
+}
+
 void devosc_bang (devosc *x) {
 	read_rimasbox_packet(x);
 }
+
 
 
 void read_rimasbox_packet(devosc *x) {
@@ -231,11 +255,11 @@ void read_rimasbox_packet(devosc *x) {
 		return;
 	}
 
-	bytes_read = (*pointer_to_read)(x->fd, x->osc_packet, RIMASBOX_OSC_PACKET_SIZE);
+	bytes_read = (*pointer_to_read)(x->fd, x->osc_packet, x->packetsize);
 	
-	if (bytes_read == RIMASBOX_OSC_PACKET_SIZE) {
+	if (bytes_read == x->packetsize) {
 		// success
-		devosc_sendData(x, RIMASBOX_OSC_PACKET_SIZE, x->osc_packet);
+		devosc_sendData(x, x->packetsize, x->osc_packet);
 	} else if (bytes_read == 0) {
 		error("devosc: read() saw end-of-file.  OSC never ends!  What's going on?");
 	} else {
