@@ -13,6 +13,7 @@ SOURCE = $(OBJ).c
 REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).help
 BUILD_DIR = ../build-mac
+BUILD_DIR_EXISTS = $(BUILD_DIR)/exists
 MAC_BINARY = $(BUILD_DIR)/$(OBJ)
 MAC_DEBUGGER_SYM = $(BUILD_DIR)/$(OBJ).xSYM
 MAC_HELPFILE_COPY = $(BUILD_DIR)/$(OBJ).help 
@@ -49,7 +50,7 @@ STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
 
 # Top-level build targets
 
-all: mac-binary help-diff-warning
+all: help-diff-warning mac-binary
 
 .PHONY: clean
 clean:
@@ -68,12 +69,18 @@ version.h: $(OBJ_INFO)
 .PHONY: web-info
 web-info: $(WEB_INFO)
 
-$(OBJ_INFO): $(SOURCE)
+$(BUILD_DIR_EXISTS):
+	mkdir -p $(BUILD_DIR)
+	touch $(BUILD_DIR_EXISTS)
+
+$(OBJ_INFO): $(SOURCE) $(BUILD_DIR_EXISTS)
 	perl ../../../commentkeys.pl < $(SOURCE) > $@
 	echo 'PLATFORM: "$(PLATFORM)"' >> $@
 	echo 'BUILDER: "'`whoami`'"' >> $@
 	echo 'BUILD_DATE: "'`date`'"' >> $@
 	echo 'BUILD_DIR: "'`pwd`'"' >> $@
+#	echo 'SVN_REVISION: "'`svn info *.c | grep "^Revision: " | awk '{print $$2}'`'"' >> $@
+# SVN_REVISION keyword is now handled by SVN "keywords"
 
 $(WEB_INFO): $(MAC_INDIVIDUAL_DOWNLOAD) $(OBJ_INFO)
 	cp $(OBJ_INFO) $(WEB_INFO)
@@ -86,7 +93,11 @@ mac-binary: $(MAC_BINARY)
 # to make the MAC binary, have to open the Codewarrior project.
 # The call to cmp is to force this call to Make to stop, so the 
 # programmer has to say "make" again.
+# We first rename the MAC binary because CodeWarrior will sometimes "build" a "new"
+# binary (even making the slamming sound) by doing nothing, resulting in the binary
+# file still having an older date than the source file.
 $(MAC_BINARY): $(SOURCE) $(REZ_FILE) version.h
+	@mv -f $(MAC_BINARY) $(MAC_BINARY).backup
 	@echo 'Please build the MAC version of' $(OBJ) 
 	open $(OBJ).mcp 
 	@echo 'Ignore the following error message; just run make again after'
@@ -124,16 +135,26 @@ help-diff-warning: $(MAC_HELPFILE_COPY)
 # Actually copying the files to directories where the web server can find them
 
 .PHONY: web-release
-web-release: $(WEBSERVER_BASE_DIR) $(WEB_INCOMING)
+web-release: $(WEBSERVER_BASE_DIR) $(WEB_INCOMING) code-checked-in
 	cp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
 
-$(WEB_INCOMING): $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO)
+$(WEB_INCOMING): code-checked-in $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO) 
 	tar cvfz $(WEB_INCOMING) -C $(BUILD_DIR) $(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR) $(WEB_INFO_NO_DIR)
 
 $(WEBSERVER_BASE_DIR):
 	@echo Please mount the webroot$$ volume from Bach
 
 
+# Ensuring that the current code has been properly checked into Subversion
+.PHONY: code-checked-in
+code-checked-in:
+	@ !((svn status | grep "^M") && (echo You have modified files that have not been checked back into SVN\!))
+
+# Explanation of above:  Grep returns status 0 if the text was found (i.e., if there are un-checked-in files.
+# So (svn status | grep "^M") && (echo ...)  prints the error only if the text was found.
+# Echo always returns 0, so the return value of the && operator is 0 if an error was printed, 1 otherwise,
+# so I put a logical negation (exclamation point) before the whole thing, so that Make will bomb out
+# if the error is printed.
 
 
 
@@ -150,3 +171,6 @@ webtest: $(WEBSERVER_BASE_DIR)
 
 statustest: version.h
 	echo $(STATUS)
+
+ostest:
+	echo $(OS)
