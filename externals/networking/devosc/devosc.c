@@ -28,6 +28,7 @@ AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2005
 VERSION 0.0: Initial version reads from /dev/random instead, just to learn how to make the right system calls.
 VERSION 0.1: Seems to work.  Added "open" and "close" messages, made packet size variable.
+SVN_REVISION: $LastChangedRevision$
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
