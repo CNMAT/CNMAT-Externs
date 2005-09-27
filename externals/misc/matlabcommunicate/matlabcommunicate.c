@@ -33,6 +33,7 @@ COPYRIGHT_YEARS: 2005
 VERSION 1.0: Initial hacking by Matt
 VERSION 1.1: buffer~ I/O, also fixed bug when evaluating an expression prints nothing
 VERSION 1.1.1: increased Matlab text output capacity from 1000 to 10000 characters
+VERSION 1.1.2: Fixed bug so Matlab disp() works
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -201,8 +202,15 @@ void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
   x->matlabTextOutput[0]=x->matlabTextOutput[1]=x->matlabTextOutput[2]=x->matlabTextOutput[3]=x->matlabTextOutput[4] = '\0';
   
   engEvalString(x->x_engine, s);
-  // Skip ">>\n" that Matlab prints to stdout
-  if (x->verbose) post ("%s", x->matlabTextOutput+4);
+  
+  if (x->verbose) {
+	// Skip ">>\n" that Matlab prints to stdout
+	int i;
+	char *toSkip = ">>\n\n";
+	
+	for (i = 0; toSkip[i] == x->matlabTextOutput[i]; ++i) ;
+	post ("%s", x->matlabTextOutput+i);
+  }
 
   if (strncmp(x->matlabTextOutput+4, "ans =", 5) == 0) {
 	  if ((ans = engGetVariable(x->x_engine,"ans")) == NULL)
