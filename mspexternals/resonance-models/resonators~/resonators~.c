@@ -48,6 +48,12 @@ University of California, Berkeley.
  				second outlet for filter state
  				ping completed and tested
  				repaired amplitude interpretation
+ Version 1.9beta Adds
+ 				added output amplitude vector 
+ Version 1.95beta Adds
+ 				added output amplitude vector  interpolation
+ 				found unfixed bug in double stuff
+ 				
  */
 
 
@@ -57,27 +63,34 @@ University of California, Berkeley.
 		set the maximum number of resonances dynamically with an integer argument
 		fix the assistance strings 
 		test or failure of resonance allocation
+		protect against filter update parallelism bugs
+		partial filter set updates
 	
 	Make smooth mode settable by a message.
 	fold all four perform procedures into a single version (with compiled-out conditionals and perhaps the loop unrolling using "duffs device")
 	
 */
 
-#define VERSION	"resonators~ 1.8beta - Adrian Freed"
+#define VERSION	"resonators~ 1.9beta - Adrian Freed"
 
 
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
+#define xOGAIN
 
 void *resonators_class;
-#define MAXRESONANCES 256
+#define MAXRESONANCES 1024
 typedef  struct resdesc
 {
 	float out1, out2;   // state
 	float a1,a1prime, b1, b2;
 	float o_a1, o_b1, o_b2;
 	float fastr; // a value of r to accelerate decay
+#ifdef OGAIN
+	float og;
+	float o_og;
+#endif
 } resdesc;
 typedef  struct dresdesc
 {
@@ -85,6 +98,10 @@ typedef  struct dresdesc
 	double a1,a1prime, b1, b2;
 	double o_a1, o_b1, o_b2;
 	double fastr; // a value of r to accelerate decay
+#ifdef OGAIN
+	double og;
+	double o_og;
+#endif
 } dresdesc;
 
 /* bank of filters */
@@ -163,15 +180,20 @@ const 	t_float *in = (t_float *)(w[2]);
 	
 			yo = f->b1*yn + f->b2*yo + f->a1*i0;	
 			yn = f->b1*yo + f->b2*yn + f->a1*i1;	
-			o0 += yo;
-			o1 += yn;
+#ifdef OGAIN
+#define GMUL f->og*
+#else
+#define GMUL
+#endif
+			o0 += GMUL yo;
+			o1 += GMUL yn;
 	
 			yo = f->b1*yn + f->b2*yo + f->a1*i2;	
 			yn = f->b1*yo + f->b2*yn + f->a1*i3;	
 			f->out2 = yo;
 			f->out1 = yn;	
-			o2 += yo;
-			o3 += yn;
+			o2 += GMUL  yo;
+			o3 += GMUL yn;
 			++f;
 		}
 		out[0] = o0;
@@ -235,15 +257,15 @@ t_int *resonators2_perform(t_int *w)
 	
 			yo = f->b1*yn + f->b2*yo ;	
 			yn = f->b1*yo + f->b2*yn ;	
-			o0 += yo;
-			o1 += yn;
+			o0 += GMUL yo;
+			o1 += GMUL yn;
 	
 			yo = f->b1*yn + f->b2*yo ;	
 			yn = f->b1*yo + f->b2*yn;	
 			f->out2 = yo;
 			f->out1 = yn;	
-			o2 += yo;
-			o3 += yn;
+			o2 += GMUL yo;
+			o3 += GMUL yn;
 			++f;
 		}
 		out[0] = o0;
@@ -302,44 +324,84 @@ t_int *iresonators_perform(t_int *w)
 		for(i=0;i< nfilters ;++i)
 		{
 			register float b1=f[i].o_b1,b2=f[i].o_b2,a1=f[i].o_a1;
+#ifdef OGAIN	
+			register float			og=f[i].o_og;
+#endif
+
 			float a1inc = (f[i].a1-f[i].o_a1) *  rate;
 			float b1inc = (f[i].b1-f[i].o_b1) *  rate;
 			float b2inc = (f[i].b2-f[i].o_b2) *  rate;
+#ifdef OGAIN
+			float oginc = (f[i].og-f[i].o_og) *  rate;
+#endif
 			yo= f[i].out1;
 			yn =f[i].out2;
 #define UNROLL
 #ifdef UNROLL
+#ifdef OGAIN
+if(f[i].og!=0.0f)
+#endif
 			for(j=0;j<n;j+=4) //unroll 4 times
 			{
 				yn = b1*yo + b2*yn + a1*in[j];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
-
+#ifdef OGAIN
+			
+				 out[j] += og* yn;
+				 og += oginc;
+#else
 				 out[j] += yn;
+#endif
 				yo = b1*yn + b2*yo + a1*in[j+1];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
+
+#ifdef OGAIN
+			
+				 out[j+1] += og* yo;
+				 og += oginc;
+#else
 				 out[j+1] += yo;
-				yn = b1*yo + b2*yn + a1*in[j+2];	
+#endif
+			yn = b1*yo + b2*yn + a1*in[j+2];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
+	#ifdef OGAIN
+			
+				 out[j+2] += og* yn;
+				 og += oginc;
+#else
 				 out[j+2] += yn;
-				yo = b1*yn + b2*yo + a1*in[j+3];	
+#endif
+			yo = b1*yn + b2*yo + a1*in[j+3];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN
+			
+				 out[j+3] += og* yo;
+				 og += oginc;
+#else
 				 out[j+3] += yo;
+#endif
 		
 			}
 #else
-			for(j=0;j<n;++j) //unroll 4 times
+			for(j=0;j<n;++j) 
 			{
 				float x = yo;
 				yo = b1*yo + b2*yn + a1*in[j];	
-				 out[j] += yo;
+#ifdef OGAIN
+			
+				 out[j] += og* yn;
+				 og += oginc;
+#else
+				 out[j] += yn;
+#endif
 				yn = x;
 			a1 += a1inc;
 			b1 += b1inc;
@@ -351,6 +413,11 @@ t_int *iresonators_perform(t_int *w)
 			f[i].o_a1 = f[i].a1;
 			f[i].o_b1 = f[i].b1;
 			f[i].o_b2 = f[i].b2;
+#ifdef OGAIN	
+		f[i].o_og = f[i].og;
+#endif
+
+
 			f[i].out1= yo;
 			f[i].out2 = yn;
 		
@@ -400,11 +467,22 @@ t_int *iresonators2_perform(t_int *w)
 		resdesc *f = op->base;
 		for(j=0;j<n;++j)
 			out[j] = 0.0f;
-		for(i=0;i< nfilters ;++i)
+
+	
+for(i=0;i< nfilters ;++i)
 		{
 			register float b1=f[i].o_b1,b2=f[i].o_b2;
 				float b1inc = (f[i].b1-f[i].o_b1) *  rate;
 			float b2inc = (f[i].b2-f[i].o_b2) *  rate;
+#ifdef OGAIN	
+			register float			og=f[i].o_og;
+			float oginc = (f[i].og-f[i].o_og) *  rate;
+#endif
+
+#ifdef OGAIN
+if(f[i].og==0.0f)
+	continue;
+#endif	
 			yo= f[i].out1;
 			yn =f[i].out2;
 			for(j=0;j<n;j+=4) //unroll 4 times
@@ -413,25 +491,50 @@ t_int *iresonators2_perform(t_int *w)
 			b1 += b1inc;
 			b2 += b2inc;
 
+#ifdef OGAIN
+			
+				 out[j] += og* yn;
+				 og += oginc;
+#else
 				 out[j] += yn;
-				yo = b1*yn + b2*yo ;	
+#endif				yo = b1*yn + b2*yo ;	
 			b1 += b1inc;
 			b2 += b2inc;
-				 out[j+1] += yo;
-				yn = b1*yo + b2*yn;	
+#ifdef OGAIN
+			
+				 out[j+1] += og* yo;
+				 og += oginc;
+#else
+				 out[j+1] += yn;
+#endif				yn = b1*yo + b2*yo;	
 				b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN
+			
+				 out[j+2] += og* yn;
+				 og += oginc;
+#else
 				 out[j+2] += yn;
-				yo = b1*yn + b2*yo ;	
+#endif				yo = b1*yn + b2*yo ;	
 			b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN
+			
+				 out[j+3] += og* yo;
+				 og += oginc;
+#else
 				 out[j+3] += yo;
-		
+#endif		
 			}
 			f[i].o_b1 = f[i].b1;
 			f[i].o_b2 = f[i].b2;
 			f[i].out1= yo;
 			f[i].out2 = yn;
+
+#ifdef OGAIN	
+		f[i].o_og = f[i].og;
+#endif
+
 		
 		}
 	}
@@ -454,7 +557,7 @@ out:
 
 	return (w+4);
 }
-// interpolating (smooth) with input
+// double precision interpolating (smooth) with input
 t_int *diresonators_perform(t_int *w);
 t_int *diresonators_perform(t_int *w)
 {
@@ -482,39 +585,75 @@ t_int *diresonators_perform(t_int *w)
 		dresdesc *f = op->dbase;
 		for(j=0;j<n;++j)
 			out[j] = 0.0;
+
+	
 		for(i=0;i< nfilters ;++i)
 		{
 			register double b1=f[i].o_b1,b2=f[i].o_b2,a1=f[i].o_a1;
 			double a1inc = (f[i].a1-f[i].o_a1) *  rate;
 			double b1inc = (f[i].b1-f[i].o_b1) *  rate;
 			double b2inc = (f[i].b2-f[i].o_b2) *  rate;
+#ifdef OGAIN	
+			register double			og=f[i].o_og;
+
+			double oginc = (f[i].og-f[i].o_og) *  rate;
+#endif		
 			yo= f[i].out1;
 			yn =f[i].out2;
 #define UNROLL
 #ifdef UNROLL
-			for(j=0;j<n;j+=4) //unroll 4 times
+#ifdef OGAIN
+if(f[i].og==0.0)
+	continue;
+	
+#endif			
+	for(j=0;j<n;j+=4) //unroll 4 times
 			{
-				yn = b1*yo + b2*yn + a1*in[j];	
+			yn = b1*yo + b2*yn + a1*in[j];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
 
+#ifdef OGAIN			
+				 out[j] += og* yn;
+				 og += oginc;
+#else
 				 out[j] += yn;
+#endif	
+			yo = b1*yn + b2*yo ;	
 				yo = b1*yn + b2*yo + a1*in[j+1];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
+			
+#ifdef OGAIN
+				 out[j+1] += og* yo;
+				 og += oginc;
+#else
 				 out[j+1] += yo;
+#endif		
+		yo = b1*yn + b2*yo ;	
+
 				yn = b1*yo + b2*yn + a1*in[j+2];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN			
+				 out[j+2] += og* yn;
+				 og += oginc;
+#else
 				 out[j+2] += yn;
+#endif	
 				yo = b1*yn + b2*yo + a1*in[j+3];	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN
+				 out[j+3] += og* yo;
+				 og += oginc;
+#else
 				 out[j+3] += yo;
+#endif		
 		
 			}
 #else
@@ -522,7 +661,12 @@ t_int *diresonators_perform(t_int *w)
 			{
 				float x = yo;
 				yo = b1*yo + b2*yn + a1*in[j];	
+#ifdef OGAIN
+				 out[j] += og* yo;
+				 og += oginc;
+#else
 				 out[j] += yo;
+#endif		
 				yn = x;
 			a1 += a1inc;
 			b1 += b1inc;
@@ -536,7 +680,9 @@ t_int *diresonators_perform(t_int *w)
 			f[i].o_b2 = f[i].b2;
 			f[i].out1= yo;
 			f[i].out2 = yn;
-		
+#ifdef OGAIN	
+		f[i].o_og = f[i].og;
+#endif		
 		}
 	}
 	for(j=0;j<n;++j)
@@ -563,7 +709,7 @@ out:
 	return (w+5);
 }
 
-// smoothed without input
+// double precision smoothed without input
 t_int *diresonators2_perform(t_int *w);
 t_int *diresonators2_perform(t_int *w)
 {
@@ -582,19 +728,31 @@ t_int *diresonators2_perform(t_int *w)
 
 	if(ping>=0 && ping<nfilters)
 	{
-		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
+		op->dbase[ping].out2 += op->pingsize*op->dbase[ping].a1prime;
 		op->ping = -1;
 	}
 
 	{
-		resdesc *f = op->base;
+		dresdesc *f = op->dbase;
 		for(j=0;j<n;++j)
 			out[j] = 0.0f;
-		for(i=0;i< nfilters ;++i)
+
+
+
+	for(i=0;i< nfilters ;++i)
 		{
-			register float b1=f[i].o_b1,b2=f[i].o_b2;
-				float b1inc = (f[i].b1-f[i].o_b1) *  rate;
-			float b2inc = (f[i].b2-f[i].o_b2) *  rate;
+			register double b1=f[i].o_b1,b2=f[i].o_b2;
+				double b1inc = (f[i].b1-f[i].o_b1) *  rate;
+			double b2inc = (f[i].b2-f[i].o_b2) *  rate;
+#ifdef OGAIN	
+			register double			og=f[i].o_og;
+
+			double oginc = (f[i].og-f[i].o_og) *  rate;
+#endif
+#ifdef OGAIN
+if(f[i].og==0.0f)
+	continue;
+#endif	
 			yo= f[i].out1;
 			yn =f[i].out2;
 			for(j=0;j<n;j+=4) //unroll 4 times
@@ -603,30 +761,53 @@ t_int *diresonators2_perform(t_int *w)
 			b1 += b1inc;
 			b2 += b2inc;
 
+#ifdef OGAIN
+				 out[j] += og* yn;
+				 og += oginc;
+#else
 				 out[j] += yn;
+#endif		
 				yo = b1*yn + b2*yo ;	
 			b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN
+				 out[j+1] += og* yo;
+				 og += oginc;
+#else
 				 out[j+1] += yo;
+#endif		
 				yn = b1*yo + b2*yn;	
 				b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN
+				 out[j+2] += og* yn;
+				 og += oginc;
+#else
 				 out[j+2] += yn;
+#endif		
 				yo = b1*yn + b2*yo ;	
 			b1 += b1inc;
 			b2 += b2inc;
+#ifdef OGAIN
+				 out[j+3] += og* yo;
+				 og += oginc;
+#else
 				 out[j+3] += yo;
+#endif		
 		
 			}
 			f[i].o_b1 = f[i].b1;
 			f[i].o_b2 = f[i].b2;
 			f[i].out1= yo;
 			f[i].out2 = yn;
+#ifdef OGAIN	
+		f[i].o_og = f[i].og;
+#endif
 		
 		}
 	}
 	
-		for(j=0;j<n;++j)
+	for(j=0;j<n;++j)
 	{
 		fout[j] = out[j]; // when will max have floating point signals?
 	}
@@ -773,7 +954,25 @@ void resonators_bang(t_resonators *x)
 
 }
 // ignores the inlet, uses order to specify the coefficients
-
+static void outputgain_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv);
+void outputgain_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
+{
+	int i;
+	resdesc *fp = x->base;
+	dresdesc *dp = x->dbase;
+		for(i=0; i<argc; ++i) {
+		if (i >= MAXRESONANCES) {
+			post("¥ resonators~: warning: output gain list has more than %ld resonances; dropping extras",
+				 MAXRESONANCES);
+			break;
+		} else {
+#ifdef OGAIN
+			
+			 dp[i].og =fp[i].og = atom_getfloatarg(i,argc,argv);
+#endif
+	}
+	}
+	}
 void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 {
 	int i;
@@ -868,7 +1067,7 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 	for(i=0;i<x->nres;++i)
 	{
 			fp[i].b1 = dp[i].b1 = tb1[i];
-			fp[i].a1 = fp[i].a1 = ta1[i];
+			fp[i].a1 = dp[i].a1 = ta1[i];
 			fp[i].b2 = dp[i].b2 =  tb2[i];
 	}
 // end of double buffering
@@ -951,8 +1150,13 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 	    	}
 	    }
     }
-    	x->base = (resdesc *)getbytes(MAXRESONANCES*sizeof(resdesc));
-   	x->dbase = (dresdesc *)getbytes(MAXRESONANCES*sizeof(dresdesc));
+    	x->base = (resdesc *) NewPtr(MAXRESONANCES*sizeof(resdesc));
+   	x->dbase = (dresdesc *) NewPtr(MAXRESONANCES*sizeof(dresdesc));
+	    if(x->base==NIL || x->dbase==NIL)
+	    {			post("¥ peqbank~: warning: not enough memory.  Expect to crash soon.");
+	    	return 0;
+	    }
+
    x->nres = MAXRESONANCES;
     resonators_clear(x); // clears state
     x->nres = 0;
@@ -969,6 +1173,10 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 			df[i].o_a1 = df[i].a1;
 			df[i].o_b1 = df[i].b1;
 			df[i].o_b2 = df[i].b2;
+#ifdef OGAIN
+			df[i].o_og = df[i].og = 1;
+			f[i].o_og = f[i].og = 1.0f;
+#endif
 		}
 	}
     	x->ping = -1;
@@ -1001,6 +1209,7 @@ void main(void)
 	
 	addmess((method)resonators_dsp, "dsp", A_CANT, 0);
 	addmess((method)resonators_list, "list", A_GIMME, 0);
+	addmess((method)outputgain_list, "outputgain", A_GIMME, 0);
 	addmess((method)resonators_clear, "clear", 0);
 	addmess((method)resonators_squelch, "squelch", 0);
 	addbang((method)resonators_bang);
