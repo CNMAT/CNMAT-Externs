@@ -27,31 +27,22 @@ University of California, Berkeley.
 */
 
 /*
-	resonators.c
-	
-	MSP resonator Bank
-	
-	©1988,1989,2005 Adrian Freed
-	©1999 UC Regents, All Rights Reserved. 
-
-	
-*/
-
-
-/*
- Version 1.6: Compiles under 7/02 Max SDK and CW 7.0 
- Version 1.7: Doesn't get smooth/unsmooth backwards
-  Version 1.7a: first windows compile
-
- Version 1.8: double precision mode, second outlet for filter state, ping completed and tested, repaired amplitude interpretation
- Version 1.9: added output amplitude vector 
- Version 1.95: added output amplitude vector interpolation, found unfixed bug in double stuff
- Version 1.96: Doesn't crash when making a new object (filterstate array taken out of t_resonators)
- 				
- */
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: resonators~
+DESCRIPTION: MSP resonator Bank
+AUTHORS: Adrian Freed
+COPYRIGHT_YEARS: 1996,1997,1998,1999,2000,2001,2002,2004,2005
+VERSION 1.6: Compiles under 7/02 Max SDK and CW 7.0 
+VERSION 1.7: Doesn't get smooth/unsmooth backwards
+VERSION 1.7a: first windows compile
+VERSION 1.8: double precision mode, second outlet for filter state, ping completed and tested, repaired amplitude interpretation
+VERSION 1.9: added output amplitude vector 
+VERSION 1.95: added output amplitude vector interpolation, found unfixed bug in double stuff
+VERSION 1.96: Doesn't crash when making a new object (filterstate array taken out of t_resonators)
+SVN_REVISION: $LastChangedRevision: 360 $
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
-/*
 	To-Do
 		ping should be done the way the float is done where it adds the ping in directly.
 		set the maximum number of resonances dynamically with an integer argument
@@ -65,8 +56,7 @@ University of California, Berkeley.
 	
 */
 
-#define VERSION	"resonators~ 1.9.6beta - Adrian Freed"
-
+#include "version.h"
 
 #include "ext.h"
 #include "z_dsp.h"
@@ -1196,9 +1186,9 @@ void main(void)
 	setup((t_messlist **)&resonators_class, (method) resonators_new, (method)dsp_free, (short)sizeof(t_resonators),
 		0L, A_GIMME, 0);
 
-    post(VERSION);
-	post("Copyright © 1986,1987 Adrian Freed");
-	post("Copyright © 1996,1997,1998,1999,2000,2001,2002,2004,2005 Regents of the University of California.");
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("Copyright © 1986, 1987 Adrian Freed");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 	post("Maximum number of resonances: %d", MAXRESONANCES);
 	post("Never expires");
 	
@@ -1219,7 +1209,9 @@ void main(void)
 void resonators_tellmeeverything(t_resonators *x) {
 	int i;
 	
-	post(VERSION);
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("Copyright © 1986, 1987 Adrian Freed");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 	post("  Compiled " __DATE__ " " __TIME__);
 /*	if (x->interpolating) {
 		post("  Smooth mode: parameter changes interpolated over time");
