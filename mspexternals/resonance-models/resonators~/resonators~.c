@@ -43,16 +43,10 @@ University of California, Berkeley.
  Version 1.7: Doesn't get smooth/unsmooth backwards
   Version 1.7a: first windows compile
 
- Version 1.8beta: Adds 
- 				double precision mode
- 				second outlet for filter state
- 				ping completed and tested
- 				repaired amplitude interpretation
- Version 1.9beta Adds
- 				added output amplitude vector 
- Version 1.95beta Adds
- 				added output amplitude vector  interpolation
- 				found unfixed bug in double stuff
+ Version 1.8: double precision mode, second outlet for filter state, ping completed and tested, repaired amplitude interpretation
+ Version 1.9: added output amplitude vector 
+ Version 1.95: added output amplitude vector interpolation, found unfixed bug in double stuff
+ Version 1.96: Doesn't crash when making a new object (filterstate array taken out of t_resonators)
  				
  */
 
@@ -71,7 +65,7 @@ University of California, Berkeley.
 	
 */
 
-#define VERSION	"resonators~ 1.9beta - Adrian Freed"
+#define VERSION	"resonators~ 1.9.6beta - Adrian Freed"
 
 
 #include "ext.h"
@@ -125,7 +119,6 @@ typedef struct
 	Boolean badg; // old bad gain compatibility mode
 	Boolean doubling;
 	void *outlet1;
-	t_atom filterstate[MAXRESONANCES*5+1];
 } resbank;
 typedef resbank t_resonators;
 
@@ -938,19 +931,21 @@ void resonators_bang(t_resonators *x);
 void resonators_bang(t_resonators *x)
 {
 	int i;
+	t_atom filterstate[MAXRESONANCES*5+1];
+
 //	output filter state and coefficients to the second outlet
 // should we output the sample rate or normalize the coefficients?
-		SETFLOAT(&x->filterstate[0], x->samplerate);
+		SETFLOAT(&filterstate[0], x->samplerate);
 
 	for(i=0;i<x->nres;++i)
 	{
-		SETFLOAT(&x->filterstate[1+i*5+0], x->doubling?x->dbase[i].out1: x->base[i].out1);
-		SETFLOAT(&x->filterstate[1+i*5+1], x->doubling?x->dbase[i].out2:x->base[i].out2);
-		SETFLOAT(&x->filterstate[1+i*5+2], x->doubling?x->dbase[i].a1:x->base[i].a1);
-		SETFLOAT(&x->filterstate[1+i*5+3], x->doubling?x->dbase[i].b1:x->base[i].b1);
-		SETFLOAT(&x->filterstate[1+i*5+4], x->doubling?x->dbase[i].b2:x->base[i].b2);
+		SETFLOAT(&filterstate[1+i*5+0], x->doubling?x->dbase[i].out1: x->base[i].out1);
+		SETFLOAT(&filterstate[1+i*5+1], x->doubling?x->dbase[i].out2:x->base[i].out2);
+		SETFLOAT(&filterstate[1+i*5+2], x->doubling?x->dbase[i].a1:x->base[i].a1);
+		SETFLOAT(&filterstate[1+i*5+3], x->doubling?x->dbase[i].b1:x->base[i].b1);
+		SETFLOAT(&filterstate[1+i*5+4], x->doubling?x->dbase[i].b2:x->base[i].b2);
 	}
-	   outlet_list(x->outlet1, 0L, 1+i*5, x->filterstate);
+	   outlet_list(x->outlet1, 0L, 1+i*5, filterstate);
 
 }
 // ignores the inlet, uses order to specify the coefficients
