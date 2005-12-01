@@ -97,6 +97,7 @@ mac-binary: $(MAC_BINARY)
 # binary (even making the slamming sound) by doing nothing, resulting in the binary
 # file still having an older date than the source file.
 $(MAC_BINARY): $(SOURCE) $(REZ_FILE) version.h
+	@touch $(MAC_BINARY)  # so there will be something to move
 	@mv -f $(MAC_BINARY) $(MAC_BINARY).backup
 	@echo 'Please build the MAC version of' $(OBJ) 
 	open $(OBJ).mcp 
