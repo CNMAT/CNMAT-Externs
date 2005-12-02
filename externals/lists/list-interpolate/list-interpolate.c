@@ -33,6 +33,7 @@ COPYRIGHT_YEARS: 2000,01,02,03,04,05
 VERSION 1.1: Bug fixed to really work with floats, Matt Wright 1/4/01
 VERSION 1.2: Made compilable in CW 8.3,  Matt Wright 12/5/2
 VERSION 1.6: Merged Windows changes into real version
+VERSION 1.7: Zero Pad mode
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -79,6 +80,7 @@ typedef	struct	fobj
 	int n;
 	int countdown;
 	int steps;
+	Boolean zeroPadMode;
 }fobj;
 
 
@@ -118,18 +120,34 @@ static void storelist(fobj *x, struct symbol *s, int argc, struct atom *argv)
 
 	if(x->n == argc) {
 		x->countdown = x->steps;
-		for(i=0;i<x->n;++i)
-		{
-			x->rate[i] = (x->newinputs[i] - x->oldinputs[i]) ;
-		}
 	} else {
-		/* Wrong sized list from last time, so forget the old values. */
-		x->n = argc;
-		x->countdown = 1;
-		for(i=0;i<x->n;++i) {
-			x->oldinputs[i] = x->newinputs[i];
-			x->rate[i] = 0.0f ;
+		/* Wrong sized list from last time. */
+		if (x->zeroPadMode) {
+			if (x->n > argc) {
+				/* New list has fewer, so just drop end of old list,
+				   i.e., pretend new list is same size as old  */
+				x->n = argc;
+				x->countdown = x->steps;
+			} else {
+				/* New list has more, so zero-pad old list */
+				for (i = x->n; i < argc; ++i) {
+					x->oldinputs[i] = 0.0f;
+				}
+				x->n = argc;
+				x->countdown = x->steps;
+			}
+		} else {
+			/* forget the old values. */
+			x->n = argc;
+			x->countdown = 1;
+			for(i=0;i<x->n;++i) {
+				x->oldinputs[i] = x->newinputs[i];
+			}
 		}
+	}
+	
+	for(i=0;i<x->n;++i)	{
+		x->rate[i] = (x->newinputs[i] - x->oldinputs[i]) ;
 	}
 }
 
@@ -189,6 +207,13 @@ void bangdump(fobj *x)
 	
 }
 
+static void *setzeropad(fobj *it, long l);
+static void *setzeropad(fobj *it, long l)
+{
+	it->zeroPadMode = l;
+}
+
+
 static void tellmeeverything(fobj *x) {
 	int i;
 	Atom a;
@@ -200,6 +225,7 @@ static void tellmeeverything(fobj *x) {
 	post("list-interpolate version " VERSION " by " AUTHORS ", compiled " __DATE__ " " __TIME__);
 	post("  list length %ld, list capacity %ld", x->n, x->capacity);
 	post("  %ld steps, current count %ld", x->steps, x->countdown);
+	post("  %susing zero-pad mode", x->zeroPadMode ? "" : "NOT ");
 		
 	post("  oldinputs:");
 	for (i = 0; i<x->n; ++i) {
@@ -266,6 +292,8 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	
 	x->n = 0;
 	x->countdown = 1;
+	x->zeroPadMode = 0;
+	
 	
 	return  x;
 }
@@ -284,7 +312,9 @@ void main(fptr *f)		/* called once at launch to define this class */
 		
 	setup((t_messlist **) &iclass, (method) fnew, (method) ffree, (int) sizeof(fobj), 0L, A_GIMME, 0 );
 
+
 	addmess((method)setsteps, "steps", A_DEFLONG,0);
+	addmess((method)setzeropad, "zeropad", A_LONG,0);
 	addmess((method)newlist,"list",A_GIMME,0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0);
 	addbang( (method) bangdump  );
