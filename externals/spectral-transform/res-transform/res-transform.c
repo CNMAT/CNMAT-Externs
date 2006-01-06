@@ -38,13 +38,15 @@ Version 1.4 by Matt Wright allows float midi-pitch
 Version 1.5 debugs setone and adds the -1 index feature, adds numresonances 
 Version 1.5alpha for windows compiled by Michael Zbyszynski
 Version 1.6 cleaned up so it works for Mac too by Matt Wright
+Version 1.6.1 Added "more_resonances" method
+Version 1.6.2 Added amprange and freqrange messages
 
 To-Do:  Generalize into SDIF-transform
 	- Know which columns are freq, amplitude, etc...
 	
 */
 
-#define VERSION "1.6"
+#define VERSION "1.6.2"
 
 /* #include <fp.h>
 #include <fenv.h> */
@@ -98,6 +100,8 @@ typedef	struct	fobj
 /* current model 	*/
 	struct			reson { float f,g,b; }	resonances[MAXRESON];	
 	int			nreson; /* number of resonances */
+	int			nreson_output; /* number of resulting resonances after clussters add them and 
+								  frequency-range and gain-range take them away */
 	int			fcount; /* count of incoming parameters stored */
 	
 	// modifiers
@@ -121,6 +125,8 @@ typedef	struct	fobj
 	float bwstretch; /* scale factor */
 	float attenuationspread; /* in dB */
 	
+	// Allowable parameter ranges
+	float minfreq, maxfreq, mingain, maxgain;
 	
 }fobj;
 
@@ -146,8 +152,11 @@ static void *setrmask(fobj *it, float f);
 static void *setmidipitch(fobj *it, double f);
 static void *setbwscale(fobj *it, double f);
 static void	*specenv(fobj *x, struct symbol *s, int argc, Atom *argv);
+static void setfreqrange(fobj *x, double min, double max);
+static void setamprange(fobj *x, double min, double max);
 static void flist(fobj *x, struct symbol *s, int argc, Atom *argv);
 static void fulllist(fobj *x, struct symbol *s, int argc, struct atom *argv);
+void more_resonances(fobj *x, struct symbol *s, int argc, struct atom *argv);
 static void resondump(fobj *x, struct symbol *s, int argc, Atom *argv);
 static void enddump(fobj *x, struct symbol *s, int argc, struct atom *argv);
 static void version(fobj *x);
@@ -188,8 +197,8 @@ static void clearit(fobj *x)
 	x->faround = 0.0f;
 }
 
-static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, Boolean old, Boolean formant);
-static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, Boolean old, Boolean formant)
+static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, Boolean old, Boolean formant, Boolean addmore);
+static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, Boolean old, Boolean formant, Boolean addmore)
 {
 	if (((argc % 3) == 1) && (argv[0].a_type==A_FLOAT) &&(argv[0].a_w.w_float>0.0f) &&
 			(argv[0].a_w.w_float<100000.0f)) {
@@ -201,8 +210,13 @@ static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, B
 		post("reson: fulllist: bad list");
 		return;
 	}
-	x->fcount = 0;
-
+	
+	if (addmore) {
+		x->fcount = x->nreson;
+	} else {
+		x->fcount = 0;
+	}
+	
 	while(argc)
 	{
 			 	if(argv[0].a_type==A_FLOAT && 
@@ -216,7 +230,7 @@ static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, B
 					if(formant) x->resonances[n].g *= x->resonances[n].f / 250.0;
 					++(x->fcount);
 
-//post("%d %d %f",argc, n, x->resonances[n].f);
+// post("%d %d %f",argc, n, x->resonances[n].f);
 
 	 		}
 	 		argv+=3 ; argc -= 3;
@@ -230,11 +244,12 @@ static void computeeverything(fobj *x)
 {
 	float fsc = x->freqscale, bwsc=x->bwscale,
 	 gainscale = x->gainscale,fadd= x->freqadd,srbar;
-	 int i,k;
+	 int i,j,k;
 	int csize = x->clustersize;
 	Boolean squelch = ( x->squelch>=0.0f);
 	 float r;	
 	
+	j = 0; /* Output resonance index */
 	for(i=0;i<x->nreson;++i)
 	{
 		struct reson transformedresonances;
@@ -255,18 +270,23 @@ static void computeeverything(fobj *x)
 			float g = transformedresonances.g * expf(-0.1151292546497f*k*(x->attenuationspread/csize));
 			float b = transformedresonances.b + k*(x->bwspread/csize);
 			
-			x->model[(csize*i+k)*3+0].a_w.w_float = f;
-			x->model[(csize*i+k)*3+1].a_w.w_float = g;
-			x->model[(csize*i+k)*3+2].a_w.w_float = b;
+			if (f >= x->minfreq && f <= x->maxfreq && g >= x->mingain && g <= x->maxgain) {
+				x->model[(j)*3+0].a_w.w_float = f;
+				x->model[(j)*3+1].a_w.w_float = g;
+				x->model[(j)*3+2].a_w.w_float = b;
+				++j;
+			}
 		}
 	}
+	
+	x->nreson_output = j;
 
 }
 
 static void dumpresonances(fobj *x)
 {
 	computeeverything(x);
- 	outlet_list(x->dataoutlet,0L,(short)x->nreson*x->clustersize*3,x->model);
+ 	outlet_list(x->dataoutlet,0L,(short)x->nreson_output*3,x->model);
 }
 void dumpifnecessary(fobj *x);
 void dumpifnecessary(fobj *x)
@@ -398,14 +418,22 @@ static void *setclustersize(fobj *it, int i)
 }
 
 void fulllist(fobj *x, struct symbol *s, int argc, struct atom *argv) {
-	storemodel(x,s,argc,argv,false, false);
+	storemodel(x,s,argc,argv,false, false, false);
 		dumpifnecessary(x);
 
 }
+
+/* Matt Wright, Aug 2005 
+   (Plus I added the extra argument to storemodel().) */
+void more_resonances(fobj *x, struct symbol *s, int argc, struct atom *argv) {
+	storemodel(x,s,argc,argv,false, false, true);
+	dumpifnecessary(x);
+}
+
 void oldfulllist(fobj *x, struct symbol *s, int argc, struct atom *argv);
 void oldfulllist(fobj *x, struct symbol *s, int argc, struct atom *argv)
  {
-	storemodel(x,s,argc,argv, true,false);
+	storemodel(x,s,argc,argv, true,false,false);
 		dumpifnecessary(x);
 
 }
@@ -415,7 +443,7 @@ void formantfulllist(fobj *x, struct symbol *s, int argc, struct atom *argv);
 void formantfulllist(fobj *x, struct symbol *s, int argc, struct atom *argv)
 {
 
-	storemodel(x,s,argc,argv, true,true);
+	storemodel(x,s,argc,argv, true,true,false);
 		dumpifnecessary(x);
 }
 
@@ -535,6 +563,19 @@ void numresonances(fobj *x) {
 #endif
 
 
+static void setfreqrange(fobj *x, double min, double max) {
+	x->minfreq = min;
+	x->maxfreq = max;
+	dumpifnecessary(x);
+}
+
+static void setamprange(fobj *x, double min, double max) {
+	x->mingain = min;
+	x->maxgain = max;
+	dumpifnecessary(x);
+}
+
+
 /* ... end of Matt Wright's additions */
 
 void *myobject_free(fobj *x);
@@ -551,7 +592,12 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->m_proxy = proxy_new(x,1L,&x->m_inletNumber);
 	x->dataoutlet = listout(x);
 	clearit(x);
-	storemodel(x,s,argc, argv, false,false);
+	x->minfreq = 0;
+	x->maxfreq = 9999999;
+	x->mingain = 0;
+	x->maxgain = 9999999;
+	
+	storemodel(x,s,argc, argv, false,false,false);
 	for(i=0;i<MAXRESON;++i)
 	{
 		x->model[i*3+0].a_type = A_FLOAT;
@@ -596,7 +642,12 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addmess((method)setbwstretch, "rate-stretch", A_FLOAT,0);
 	addmess((method)setattenuationspread, "attenuation-spread", A_FLOAT,0);	
 //addmess((method)squelch, "squelch", A_DEFFLOAT,0);
+
+	addmess((method)setfreqrange, "frequency-range", A_FLOAT, A_FLOAT, 0);
+	addmess((method)setamprange, "gain-range", A_FLOAT, A_FLOAT, 0);
+
 	addmess((method)fulllist,"list",A_GIMME,0);
+	addmess((method)more_resonances,"more",A_GIMME,0);
 	addmess((method)oldfulllist,"filter-form",A_GIMME,0);
 	addmess((method)formantfulllist,"formant-form",A_GIMME,0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0);
@@ -633,8 +684,12 @@ static void version(fobj *x) {
 static void tellmeeverything(fobj *x) {
 	int i;
 	version(x);
-	post("  Model has %ld resonances, each actually a cluster of size %ld",
+	post("  Model has %ld resonances, each actually a cluster of size %ld:",
 		 x->nreson, x->clustersize);
+    for (i = 0; i < x->nreson; ++i) {
+    	post("    f %f g %f b %f", x->resonances[i].f, x->resonances[i].g, x->resonances[i].b);
+    }
+		 
 	post("  I think the base pitch of this model is %f Hz.", x->freqbase);
 	post("  frequency-scale %f frequency-add %f", x->freqscale, x->freqadd);
 	post("  gain-scale %f, spectral-slope %f, spectral-corner %f", 
@@ -645,8 +700,11 @@ static void tellmeeverything(fobj *x) {
     	 x->fspread, x->faround, x->fstretch);
     post("    rate-spread %f, rate-stretch %f, attenuation-spread %f",
     	 x->bwspread, x->bwstretch, x->attenuationspread);
+    post("  Will output only partials with %f <= amp <= %f, %f <= freq <= %f",
+    	x->mingain, x->maxgain, x->minfreq, x->maxfreq);
+
     post("  Resulting model (f, g, bw triplets):");
-    for (i = 0; i < x->nreson*x->clustersize; ++i) {
+    for (i = 0; i < x->nreson_output; ++i) {
     	post("    f %f g %f r %f", x->model[3*i].a_w.w_float, 
     		 x->model[3*i + 1].a_w.w_float, x->model[3*i + 2].a_w.w_float);
     }
