@@ -24,29 +24,39 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+     
+     
+     
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: res-transform 
+AUTHORS: Adrian Freed, Matt Wright, and Michael Zbyszynski
+DESCRIPTION: Set of basic transformations for resonance models
+COPYRIGHT_YEARS: 1996,97,98,99,2000,1,2,3,4,5,6
+VERSION 1.2: by Matt Wright: compiles with CW 7 and new Max/MSP SDK
+VERSION 1.3: by Matt Wright has "setoneamplitude", "setonefrequency", "setonerate", and "setone"
+VERSION 1.4: by Matt Wright allows float midi-pitch
+VERSION 1.5: debugs setone and adds the -1 index feature, adds numresonances 
+VERSION 1.5alpha: for windows compiled by Michael Zbyszynski
+VERSION 1.6: cleaned up so it works for Mac too by Matt Wright
+VERSION 1.6.1: Added "more_resonances" method
+VERSION 1.6.2: Added amprange and freqrange messages
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 */
 
 /* reson 
 
 Copyright © 1986,1987 Adrian Freed
-Copyright © 1996,1997,1998,1999 Regents of the University of California.
 
 
-Version 1.2 by Matt Wright: compiles with CW 7 and new Max/MSP SDK
-Version 1.3 by Matt Wright has "setoneamplitude", "setonefrequency", "setonerate", and "setone"
-Version 1.4 by Matt Wright allows float midi-pitch
-Version 1.5 debugs setone and adds the -1 index feature, adds numresonances 
-Version 1.5alpha for windows compiled by Michael Zbyszynski
-Version 1.6 cleaned up so it works for Mac too by Matt Wright
-Version 1.6.1 Added "more_resonances" method
-Version 1.6.2 Added amprange and freqrange messages
 
 To-Do:  Generalize into SDIF-transform
 	- Know which columns are freq, amplitude, etc...
 	
 */
 
-#define VERSION "1.6.2"
+#include "version.h"
 
 /* #include <fp.h>
 #include <fenv.h> */
@@ -566,13 +576,13 @@ void numresonances(fobj *x) {
 static void setfreqrange(fobj *x, double min, double max) {
 	x->minfreq = min;
 	x->maxfreq = max;
-	dumpifnecessary(x);
+	dumpresonances(x);
 }
 
 static void setamprange(fobj *x, double min, double max) {
 	x->mingain = min;
 	x->maxgain = max;
-	dumpifnecessary(x);
+	dumpresonances(x);
 }
 
 
@@ -654,16 +664,15 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addmess((method)version, "version", 0);
 
 	addbang( (method) resondump  );
-	version(0);
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("  Copyright © 1986,1987 Adrian Freed");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 
 }
 
 static void version(fobj *x) {
-	post("res-transform " VERSION " - Adrian Freed");
-	post("  Copyright © 1986,1987 Adrian Freed");
-	post("  Copyright © 1996,1997,1998,1999,2000,2001,2002 Regents of the University of California.");
-	post("  Compiled " __DATE__ " " __TIME__);
-	post("  Never expires.");
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
 }
 
  static void reson_assist(fobj *x, void *b, long m, long a, char *s) 
