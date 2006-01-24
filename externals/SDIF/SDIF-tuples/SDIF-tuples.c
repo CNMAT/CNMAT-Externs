@@ -30,32 +30,31 @@ University of California, Berkeley. Interpolation support by Ben "Jacobs".
 */
 
 /*
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-tuples
+DESCRIPTION: Extract "tuples" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list.
+AUTHORS: Matt Wright and Ben "Jacobs" 
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 0.2: includes reltime
+VERSION 0.3: max_rows, only one complaint if empty
+VERSION 0.3.1: "tuples time" now accepts int or float
+VERSION 0.3.2: Does the right thing if no SDIF buffers exist at all
+VERSION 0.4: uses -(DBL_MAX) instead of -9999999999999.9
+VERSION 0.4b: compiled with CW 7.0
+VERSION 0.5.0: added interpolation support (bj, 2004/04/01)
+VERSION 0.5.1: cleanup (bj, 2004/06/22)
+VERSION 0.5.2: Made an "interp" message to set interpolation mode like the other parameters (mw, 12/30/04)
+VERSION 0.5.3: Made integers work (non-interpolating)
+VERSION 0.6: Uses new version system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
- 3/26/99 SDIF-tuples.c -- the SDIF-tuples object
- A Max SDIF-buffer selector object
- 
- version 0.2: includes reltime
- version 0.3: max_rows, only one complaint if empty
- version 0.3.1: "tuples time" now accepts int or float
- version 0.3.2: Does the right thing if no SDIF buffers exist at all
- version 0.4: uses -(DBL_MAX) instead of -9999999999999.9
- version 0.4b: compiled with CW 7.0
- version 0.5.0: added interpolation support (bj, 2004/04/01)
- version 0.5.1: cleanup (bj, 2004/06/22)
- version 0.5.2: Made an "interp" message to set interpolation mode like the other parameters (mw, 12/30/04)
- version 0.5.3: Made integers work (non-interpolating)
- 
  Todo:
     Don't clone a perfectly good matrix in the non-interpolating case just so you can free it later
- 
-	more interpolation features
-	
-	More logical error reporting in Max window
- 	
- -- */
+    more interpolation features
+    More logical error reporting in Max window
+*/
 
 #include "version.h"
-#define FINDER_NAME "SDIF-tuples"
 
 #define MAX_NUM_COLUMNS 100
 #define BIGGEST_OUTPUT_LIST 3000
@@ -215,34 +214,34 @@ void main(fptr *fp)
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
     return;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
     return;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
 		return;
 	}
 	
 	if (r = SDIFinterp_Init()) {
 		post("¥ %s: Couldn't initialize SDIF interpolation utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
 		return;
 	}
 
 	/* list object in the new object list */
-	finder_addclass("Data", FINDER_NAME);
+	finder_addclass("Data", NAME);
 	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
@@ -316,8 +315,9 @@ static void my_freebytes(void *bytes, int size) {
 }
 
 void SDIFtuples_version(SDIFtuples *x) {
-	post("SDIF-tuples version " VERSION " by Matt Wright");
-	post("Copyright © 1999-2005 Regents of the University of California.");
+    post(NAME " Version " VERSION
+	 ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFtuples *x) {

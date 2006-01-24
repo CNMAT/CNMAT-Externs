@@ -30,18 +30,22 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 */
 
 /*
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-listpoke
+DESCRIPTION: Write data from a Max list into an SDIF-buffer
+AUTHORS: Matt Wright 
+COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
+VERSION 0.1   021120 - Added "numcolumns" method
+VERSION 0.1.1 040405 (bj) - updated to use sdif-buf.c
+VERSION 0.1.2 040622 (bj) - cleanup
+VERSION 0.2: Uses new version info system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
 
- 11/15/00 SDIF-listpoke.c -- the SDIF-listpoke object
- A Max SDIF-buffer mutator object
- 
- V 0.1   021120 - Added "numcolumns" method
- V 0.1.1 040405 (bj) - updated to use sdif-buf.c
- V 0.1.2 040622 (bj) - cleanup
-  	
- -- */
+#include "version.h"
 
-#define SDIF_LISTPOKE_VERSION "0.1.1"
-#define FINDER_NAME "SDIF-listpoke"
+
+
 
 #define MAX_NUM_COLUMNS 100
 
@@ -157,27 +161,27 @@ void main() {
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
     return;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
     return;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
 		return;
 	}
 
 	/* list object in the new object list */
-	finder_addclass("Data", FINDER_NAME);
+	finder_addclass("Data", NAME);
 	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
@@ -220,8 +224,9 @@ void *SDIFlistpoke_new(Symbol *dummy, short argc, Atom *argv) {
 }
 
 static void SDIFlistpoke_version(SDIFlistpoke *x) {
-	post("SDIF-listpoke version " SDIF_LISTPOKE_VERSION " by Matt Wright");
-	post("Copyright © 2000-2004 Regents of the University of California.");
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFlistpoke *x) {

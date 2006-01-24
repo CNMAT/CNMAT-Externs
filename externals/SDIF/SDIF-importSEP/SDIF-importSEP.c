@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2004.  The Regents of the University of California
+Copyright (c) 2004,05,06.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -12,7 +12,7 @@ Avenue, Suite 510, Berkeley, CA 94720-1620, (510) 643-7201, for commercial
 licensing opportunities.
 
 Written by Ben "Jacobs", The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Based on sample code from David Zicarelli.
+University of California, Berkeley.
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
@@ -29,26 +29,19 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 
 */
 
-/* --04/05/2004 SDIF-importSEP.c -- the SDIF-importSEP object -- 
-
-  PURPOSE
-  
-  Read an ascii file containing Helios SEP (Solar Energetic Particle) data,
-  import into an existing SDIF-buffer object.
-
-  VERSION HISTORY
-
-  04/05/2004 - 0.0.1 (bj): basic functionality ("import" method)
-  06/22/2004 - 0.0.2 (bj): cleanup
-  
-  NOTES
-  
+/*
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-importSEP
+DESCRIPTION:   Read an ascii file containing Helios SEP (Solar Energetic Particle) data, import into an existing SDIF-buffer object.
+AUTHORS: Ben "Jacobs"
+COPYRIGHT_YEARS: 2004,05,06
+VERSION 0.0.1: 04/05/2004 -  (bj): basic functionality ("import" method)
+VERSION 0.0.2: 06/22/2004 -  (bj): cleanup
+VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-
-#define FINDER_NAME "SDIF-importSEP"
-#define OBJECT_VERSION "0.0.1"
-
+#include "version.h"
 
 /* the required include files */
 #include "ext.h"
@@ -131,14 +124,18 @@ void SDIFimport_test(SDIFImport *x);
 void *SDIFimport_class;
 static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
 
+void version (SDIFImport *x) {
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
+}
+
 
 void main(fptr *fp) 
 {
 	SDIFresult r;
-	
-	post(FINDER_NAME " version " OBJECT_VERSION " by Ben \"Jacobs\"");
-	post("Copyright © 2004 Regents of the University of California.");
-	
+	version(0);	
+
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFimport_class, (method)SDIFimport_new, (method)SDIFimport_free,
 			(short)sizeof(SDIFImport), 0L, A_GIMME, A_NOTHING);
@@ -151,27 +148,27 @@ void main(fptr *fp)
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
     return;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
     return;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
 		return;
 	}
 	
 	/* list object in the new object list */
-	finder_addclass("Data", FINDER_NAME);
+	finder_addclass("Data", NAME);
 
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
@@ -198,7 +195,7 @@ void *SDIFimport_new(Symbol *dummy, short argc, Atom *argv)
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
 		if (argv[0].a_type != A_SYM) {
-			post("¥ %s: argument must be name of an SDIF-buffer", FINDER_NAME);
+			post("¥ %s: argument must be name of an SDIF-buffer", NAME);
 		} else {
 			// post("* You want SDIF-buffer %s", argv[0].a_w.w_sym->s_name);
 			x->t_bufferSym = argv[0].a_w.w_sym;
@@ -344,7 +341,7 @@ void SDIFimport_import(SDIFImport *x, Symbol *fileNameIn)
   LookupMyBuffer(x);
   if(!(x->t_buf))
   {
-    error("%s: can't find buffer", FINDER_NAME);
+    error("%s: can't find buffer", NAME);
     return;
   }
   
@@ -352,7 +349,7 @@ void SDIFimport_import(SDIFImport *x, Symbol *fileNameIn)
   strncpy(fni, fileNameIn->s_name, sizeof(fni));
   if(0 != locatefile_extended(fni, &fiPath, &fiType, 0L, 0))
   {
-    error("%s: problem opening file \"%s\" for reading", FINDER_NAME, fileNameIn->s_name);
+    error("%s: problem opening file \"%s\" for reading", NAME, fileNameIn->s_name);
     goto finish;
   }
   
@@ -364,18 +361,18 @@ void SDIFimport_import(SDIFImport *x, Symbol *fileNameIn)
 		maxErr = path_topathname(fiPath, fni, fullpath);
 		if (maxErr) {
 			error("%s: path_topathname returned error code %d - can't open %s", 
-				  FINDER_NAME, maxErr, fileNameIn->s_name);
+				  NAME, maxErr, fileNameIn->s_name);
 			goto finish;
 		}
 		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
 		if (maxErr) {
 			error("%s: path_nameconform returned error code %d - can't open %s", 
-				  FINDER_NAME, maxErr, fileNameIn->s_name);
+				  NAME, maxErr, fileNameIn->s_name);
 			goto finish;
 		}
 		fi = fopen(conformed, "rb");
 		if (fi == NULL) {
-			error("%s: fopen returned NULL; can't open %s", FINDER_NAME, fileNameIn->s_name);
+			error("%s: fopen returned NULL; can't open %s", NAME, fileNameIn->s_name);
 			goto finish;
 		} 
 	}
@@ -387,14 +384,14 @@ void SDIFimport_import(SDIFImport *x, Symbol *fileNameIn)
   if (0 != path_tospec(fiPath, fni, &fiSpec))
   {
     error("%s: problem opening file \"%s\" for reading (path_tospec)",
-		  FINDER_NAME, fileNameIn->s_name);
+		  NAME, fileNameIn->s_name);
     goto finish;
   }
   
   if(!(fi = FSp_fopen(&fiSpec, "r")))
   {
     error("%s: problem opening file \"%s\" for reading (FSp_fopen)", 
-		  FINDER_NAME, fileNameIn->s_name);
+		  NAME, fileNameIn->s_name);
     goto finish;
   }
  
@@ -424,14 +421,14 @@ void SDIFimport_import(SDIFImport *x, Symbol *fileNameIn)
     if(-1 == (t = scanLine(line, &row)))
     {
       //  bail if bad input line
-      error("%s: illegal time value on line %d of file \"%s\"", FINDER_NAME, i + 1, fileNameIn->s_name);
+      error("%s: illegal time value on line %d of file \"%s\"", NAME, i + 1, fileNameIn->s_name);
       break;
     }
     
     //  create a new frame
     if(!(f = createFrame(t, &row)))
     {
-      error("%s: out of memory while reading file \"%s\"", FINDER_NAME, fileNameIn->s_name);
+      error("%s: out of memory while reading file \"%s\"", NAME, fileNameIn->s_name);
       break;
     }
     
@@ -439,7 +436,7 @@ void SDIFimport_import(SDIFImport *x, Symbol *fileNameIn)
     r = SDIFbuf_InsertFrame(x->t_buf, f, ESDIF_INSERT_REPLACE);
     if(r != ESDIF_SUCCESS)
     {
-      error("%s: problem adding frame at time %f in file \"%s\"", FINDER_NAME, t, fileNameIn->s_name);
+      error("%s: problem adding frame at time %f in file \"%s\"", NAME, t, fileNameIn->s_name);
       break;
     }
   }
@@ -595,7 +592,7 @@ void SDIFimport_test(SDIFImport *x)
   result = open_dialog(fn, &path, (long *)&type, 0L, 0);
   
   result = path_topathname(path, fn, p);
-  post("%s: open \"%s\"", FINDER_NAME, p);
+  post("%s: open \"%s\"", NAME, p);
 }
 
 

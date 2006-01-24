@@ -32,6 +32,7 @@ Maintenance by Ben "Jacobs".
 
 /* --1/4/99 SDIF-buffer.c -- the SDIF-buffer object -- 
 
+  01/04/99 - Original Version
   10/14/99 - Updated by Matt to use the new SDIF library 
   11/16/00 - Version 0.4 write to SDIF files
   11/21/00 - 0.4.1 default streamID is 1; added change-streamID message
@@ -45,8 +46,19 @@ Maintenance by Ben "Jacobs".
   12/28/04 - 0.9.1: Fixed bug (in sdif-buf.c) of crashing when reading nonexistant stream number
 */
 
+/* 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-buffer
+DESCRIPTION: Store SDIF data in Max's memory and make it accessible to other objects
+AUTHORS: Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 0.9.2: Uses new version info system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
+
+#include "version.h"
+
 #define SDIF_BUFFER_VERSION "0.9.1"
-#define FINDER_NAME "SDIF-buffer"
 
 /* the required include files */
 
@@ -120,7 +132,7 @@ void SDIFbuffer_changeStreamID(SDIFBuffer *x, long newStreamID);
 void SDIFbuffer_changeFrameType(SDIFBuffer *x, t_symbol *newFrameType);
 void SDIFbuffer_timeShift(SDIFBuffer *x);
 void SDIFbuffer_debug(SDIFBuffer *x, long debugMode);
-
+void SDIFbuffer_version (SDIFBuffer *x);
 
 
 void SDIFbuffer_writefile(SDIFBuffer *x, Symbol *fileName);
@@ -137,17 +149,23 @@ void my_freebytes(void *bytes, int size) {
 	freebytes(bytes, (short) size);
 }
 
+void SDIFbuffer_version (SDIFBuffer *x) {
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
+}
+
 void main(fptr *fp) {
 	SDIFresult r;
 	
-	post("SDIF-buffer version " SDIF_BUFFER_VERSION " by Matt Wright and Tim Madden");
-	post("Copyright © 1999-2004 Regents of the University of California.");
+	SDIFbuffer_version(0);
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFbuffer_class, (method)SDIFbuffer_new, (method)SDIFbuffer_free,
 			(short)sizeof(SDIFBuffer), 0L, A_SYM, A_DEFSYM, 0);
 	
 	/* bind my methods to symbols */
+	addmess((method)SDIFbuffer_version, "version", 0);	
 	addmess((method)SDIFbuffer_readstreamnumber, "read-stream-number", A_SYM, A_LONG, 0);
 	addmess((method)SDIFbuffer_streamlist, "streamlist", A_GIMME, 0);
 	addmess((method)SDIFbuffer_framelist, "framelist", A_GIMME, 0);
@@ -166,25 +184,25 @@ void main(fptr *fp) {
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		ouchstring("%s: Couldn't initialize SDIF memory utilities! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
 	}
 
 	if (r = SDIFbuf_Init()) {
 		ouchstring("%s: Couldn't initialize SDIF buffer utilities! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
 		return;
 	}
 
 	/* list object in the new object list */
-	finder_addclass("Data", FINDER_NAME);
+	finder_addclass("Data", NAME);
 	
 #ifdef NAVIGATION_SERVICES	
 	if (!NavServicesAvailable()) {

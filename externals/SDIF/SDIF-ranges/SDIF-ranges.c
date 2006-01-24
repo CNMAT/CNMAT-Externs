@@ -31,18 +31,20 @@ University of California, Berkeley.
 
 /*
 
- 12/23/04 SDIF-ranges.c -- Find ranges of data in an SDIF-buffer
- A Max SDIF-buffer selector object
-
-  Version 0.0.2 050103 mw: Added column-range message, updated to new versioning system
-    	
-    	
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-ranges
+DESCRIPTION: Find ranges of data in an SDIF-buffer
+AUTHORS: Matt Wright 
+COPYRIGHT_YEARS: 2004,05,06
+VERSION 0.0.2: 050103 mw Added column-range message, updated to new versioning system
+VERSION 0.0.3: updated to new new versioning system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+   	
   To-do:  ranges for a given row across all frames
- -- */
+*/
 
-#include "VERSION.h"
-#define FINDER_NAME "SDIF-ranges"
 
+#include "version.h"
 
 
 // #include <string.h>
@@ -127,21 +129,21 @@ void main(fptr *fp)
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
 		return;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
         return;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
 		return;
 	}
@@ -154,7 +156,7 @@ void main(fptr *fp)
 
 
 	/* list object in the new object list */
-	finder_addclass("Data", FINDER_NAME);
+	finder_addclass("Data", NAME);
 	
 }
 
@@ -171,7 +173,7 @@ void *SDIFranges_new(Symbol *dummy, short argc, Atom *argv) {
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
 		if (argv[0].a_type != A_SYM) {
-			error(FINDER_NAME ": argument must be name of an SDIF-buffer");
+			error(NAME ": argument must be name of an SDIF-buffer");
 		} else {
 			// post("* You want SDIF-buffer %s", argv[0].a_w.w_sym->s_name);
 			x->t_bufferSym = argv[0].a_w.w_sym;
@@ -199,8 +201,9 @@ static void my_freebytes(void *bytes, int size) {
 }
 
 void SDIFranges_version(SDIFranges *x) {
-	post(FINDER_NAME " version " VERSION " by Matt Wright");
-	post("Copyright © 2004-5 Regents of the University of California.");
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFranges *x) {
@@ -227,7 +230,7 @@ static void SDIFranges_set(SDIFranges *x, Symbol *bufName) {
 
 	LookupMyBuffer(x);
 	if (x->t_buffer == 0) {
-		post("¥ " FINDER_NAME ": warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
+		post("¥ " NAME ": warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
 	}
 
 }
@@ -251,7 +254,7 @@ static int resolveBufferAndMatrixType(SDIFranges *x, Symbol *matrixTypeSym, char
 	    SDIFmem_Frame f;
 	  
 		if((f = SDIFbuf_GetFirstFrame(x->t_buf)) == NULL) {
-			post(FINDER_NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
+			post(NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
 			return 0;
 		} else {
 	  		SDIF_Copy4Bytes(matrixType, f->header.frameType);
@@ -260,7 +263,7 @@ static int resolveBufferAndMatrixType(SDIFranges *x, Symbol *matrixTypeSym, char
 	 	// Look at user-supplied matrix type
 	    for (i = 1; i < 4; ++i) {
 	   		if (matrixTypeSym->s_name[i] == '\0') {
-	   			error(FINDER_NAME ": error: maxcolumns' matrix type argument \"%s\" is less than 4 characters.",
+	   			error(NAME ": error: maxcolumns' matrix type argument \"%s\" is less than 4 characters.",
 	   				 matrixTypeSym->s_name);
 				return 0;
 			}
@@ -269,7 +272,7 @@ static int resolveBufferAndMatrixType(SDIFranges *x, Symbol *matrixTypeSym, char
 	    SDIF_Copy4Bytes(matrixType, matrixTypeSym->s_name);
 
 		if (matrixTypeSym->s_name[4] != '\0') {
-			post("¥ " FINDER_NAME ": warning: truncating maxcolumns' matrix type argument to \"%c%c%c%c\".",
+			post("¥ " NAME ": warning: truncating maxcolumns' matrix type argument to \"%c%c%c%c\".",
 				 matrixType[0], matrixType[1], matrixType[2], matrixType[3]);
 	    }
 	 }
@@ -281,10 +284,10 @@ static int doGetMaxNumColumns(SDIFranges *x, char *matrixType, sdif_int32 *answe
 	SDIFresult r = SDIFbuf_GetMaxNumColumns(x->t_buf, matrixType, answer);
 	
 	if (r==ESDIF_END_OF_DATA) {
-		post(FINDER_NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
+		post(NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
 		return 0;
 	} else if (r==ESDIF_BAD_MATRIX_DATA_TYPE) {
-		post(FINDER_NAME ":  SDIF-buffer %s has no matrices of type %c%c%c%c",
+		post(NAME ":  SDIF-buffer %s has no matrices of type %c%c%c%c",
 			 x->t_bufferSym->s_name, matrixType[0], matrixType[1], matrixType[2], matrixType[3]);
 	    return 0;
 	}
@@ -323,7 +326,7 @@ void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym) {
 			sdif_float64 *maxes = (sdif_float64 *) getbytes16(numCols * sizeof(sdif_float64));
 			
 			if (maxes == 0) {
-				error(FINDER_NAME ": out of memory");
+				error(NAME ": out of memory");
 				return;
 			}
 			SDIFbuf_GetColumnRanges(x->t_buf, matrixType, numCols, mins, maxes);
@@ -353,7 +356,7 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
 	long column = columnArg -1;  /* Max user numbers columns from 1; internally it's zero-origin. */
     
     if (columnArg <= 0) {
-    	error(FINDER_NAME ": column_range: illegal column number %ld (must be >= 1)", columnArg);
+    	error(NAME ": column_range: illegal column number %ld (must be >= 1)", columnArg);
     	return;
     } 
     
@@ -368,7 +371,7 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
 	 
     // post("* numCols %ld, want column %ld", numCols, column);
 	if (column >= numCols) {
-		error(FINDER_NAME 
+		error(NAME 
 			 ": SDIF-buffer %s has only %ld columns; can't	give column-range of column %ld",
 			 x->t_bufferSym->s_name, numCols, columnArg);
 		return;
@@ -378,7 +381,7 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
 
 		if (r = SDIFbuf_GetColumnRange(x->t_buf, matrixType, column, &min, &max)) {
 			post("¥ %s: Couldn't get column range:  %s", 
-	             FINDER_NAME, SDIF_GetErrorString(r));
+	             NAME, SDIF_GetErrorString(r));
             return;
 		}
 		

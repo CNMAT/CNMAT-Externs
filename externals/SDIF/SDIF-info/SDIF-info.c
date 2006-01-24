@@ -31,17 +31,18 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 
 /*
 
- 5/17/2 SDIF-info.c -- the SDIF-info object
- A Max SDIF-buffer selector object
- 
- 04/05/2004 0.0.1 (bj): updated to use sdif-buf.c
- 06/22/2004 0.0.2 (bj): cleanup
- 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-info
+DESCRIPTION: report overall info about an SDIF-buffer
+AUTHORS: Matt Wright and Ben "Jacobs"
+COPYRIGHT_YEARS: 2002,03,04,05,06
+VERSION 0.0.1: 04/05/2004 -  (bj): updated to use sdif-buf.c
+VERSION 0.0.2: 06/22/2004 -  (bj): cleanup
+VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#define SDIF_INFO_VERSION "0.0.1"
-#define FINDER_NAME "SDIF-info"
-
+#include "version.h"
 
 #include <string.h>
 #include <float.h>
@@ -112,21 +113,21 @@ void main(fptr *fp)
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
-		           FINDER_NAME,
+		           NAME,
 		           SDIF_GetErrorString(r));
     return;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
     return;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
-		     FINDER_NAME,
+		     NAME,
 		     SDIF_GetErrorString(r));
 		return;
 	}
@@ -181,8 +182,9 @@ static void my_freebytes(void *bytes, int size) {
 }
 
 static void SDIFinfo_version(SDIFinfo *x) {
-	post("SDIF-info version " SDIF_INFO_VERSION " by Matt Wright");
-	post("Copyright © 2002-2004 Regents of the University of California.");
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFinfo *x) {

@@ -145,6 +145,7 @@ void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av) {
 void SDIFfileinfo_version (t_sdif_fileinfo *x) {
 	post(NAME " Version " VERSION
 		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 
