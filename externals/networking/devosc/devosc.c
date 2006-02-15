@@ -28,6 +28,7 @@ AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2005
 VERSION 0.0: Initial version reads from /dev/random instead, just to learn how to make the right system calls.
 VERSION 0.1: Seems to work.  Added "open" and "close" messages, made packet size variable.
+VERSION 0.2: Added "errorreporing" message.
 SVN_REVISION: $LastChangedRevision$
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -121,6 +122,7 @@ void main (void) {
 	addmess((method)devosc_open, "open", 	0);
 	addmess((method)devosc_close, "close", 	0);
 	addmess((method)devosc_packetsize, "packetsize", 	A_LONG, 0);
+	addmess((method)devosc_errorreporting, "errorreporting", 	A_LONG, 0);	
 
 	addbang((method)devosc_bang);
 	ps_FullPacket = gensym("FullPacket");
@@ -252,7 +254,7 @@ void read_rimasbox_packet(devosc *x) {
 	int bytes_read;
 	
 	if (x->fd == -1) {
-		error("Can't read; device not open.");
+		if (x->errorreporting) error("Can't read; device not open.");
 		return;
 	}
 
@@ -262,14 +264,15 @@ void read_rimasbox_packet(devosc *x) {
 		// success
 		devosc_sendData(x, x->packetsize, x->osc_packet);
 	} else if (bytes_read == 0) {
-		error("devosc: read() saw end-of-file.  OSC never ends!  What's going on?");
+		if (x->errorreporting) 
+			error("devosc: read() saw end-of-file.  OSC never ends!  What's going on?");
 	} else {
 		// An error
 		if (errno == EAGAIN) {
 			// This "error" just means no new data ready, so do nothing.
 		} else {
 			char *msg = strerror(errno);
-			error("devosc: read() failed: %s", msg);
+			if (x->errorreporting) error("devosc: read() failed: %s", msg);
 		}
 	}
 }
@@ -279,13 +282,13 @@ void read_one_byte(devosc *x) {
 	char buf[1];
 
 	if (x->fd == -1) {
-		error("Can't read; device not open.");
+		if (x->errorreporting) error("Can't read; device not open.");
 		return;
 	}
 
 	if ((*pointer_to_read)(x->fd, buf, 1) != 1) {
 		char *msg = strerror(errno);
-		error("devosc: read() didn't return 1: %s", msg);
+		if (x->errorreporting) error("devosc: read() didn't return 1: %s", msg);
       } else {
         outlet_int(x->O_outlet, buf[0]);
       }
