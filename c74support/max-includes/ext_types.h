@@ -5,7 +5,7 @@
 #ifdef __MOTO__
 #include <Types.h>
 #include <Quickdraw.h>
-#endif __MOTO__
+#endif // __MOTO__  
 #endif // MAC_VERSION
 
 #ifdef WIN_VERSION

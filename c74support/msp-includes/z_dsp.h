@@ -37,7 +37,7 @@ enum {
 #define EXT_SYSOBJ		extern __declspec(dllexport)
 #else
 #define EXT_SYSOBJ		extern __declspec(dllimport)
-#endif WIN_MAL_VERSION
+#endif // WIN_MAL_VERSION
 #endif // WIN_VERSION
 
 EXT_SYSOBJ float **sys_soundout;
@@ -211,10 +211,10 @@ typedef void *t_vptr;
 #endif
 #ifndef TWOPI
 #define TWOPI		6.28318530717958647692
-#endif  TWOPI
+#endif  // TWOPI
 #ifndef PIOVERTWO
 #define PIOVERTWO	1.57079632679489661923
-#endif  PIOVERTWO
+#endif  // PIOVERTWO
 
 // system access prototypes
 
