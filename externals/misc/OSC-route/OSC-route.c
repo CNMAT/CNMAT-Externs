@@ -32,7 +32,7 @@ The OpenSound Control WWW page is
 NAME: OSC-route ("OpenSoundControl route")
 DESCRIPTION: Message dispatching through an <A HREF="http://www.cnmat.berkeley.edu/OSC">OpenSoundControl</A> address space.
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 VERSION 1.04: Allows #1 thru #9 as typed-in arguments
 VERSION 1.05: Allows "list" messages as well as "message" messages.
 VERSION 1.06: Extra outlet, "slash" argument, set method...
@@ -260,7 +260,7 @@ void OSCroute_free(OSCroute *x) {
 
 void OSCroute_version (OSCroute *x) {
 	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);
 }
 
 /* I don't know why these aren't defined in some Max #include file. */
