@@ -152,7 +152,7 @@ void LBYL_quota(LBYL *x, long q) {
 }			  
 
 void LBYL_version(LBYL *x) {
-	post("lbyl object version " VERSION " by Matt Wright 1/3/3.");
+	post(NAME " object version " VERSION " by " AUTHOR );
 	if (x) {
 		/* Not called from main(); */
 		post("  compiled " __TIME__ " " __DATE__);
