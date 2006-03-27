@@ -27,11 +27,13 @@ University of California, Berkeley.
 */
 
 /*
+	©1988,1989,2005,2006 Adrian Freed
+	©1999, 2005 UC Regents, All Rights Reserved. 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: resonators~
 DESCRIPTION: MSP resonator Bank
 AUTHORS: Adrian Freed
-COPYRIGHT_YEARS: 1996,1997,1998,1999,2000,2001,2002,2004,2005
+COPYRIGHT_YEARS: 1996,1997,1998,1999,2000,2001,2002,2004,2005,2006
 VERSION 1.6: Compiles under 7/02 Max SDK and CW 7.0 
 VERSION 1.7: Doesn't get smooth/unsmooth backwards
 VERSION 1.7a: first windows compile
@@ -39,32 +41,41 @@ VERSION 1.8: double precision mode, second outlet for filter state, ping complet
 VERSION 1.9: added output amplitude vector 
 VERSION 1.95: added output amplitude vector interpolation, found unfixed bug in double stuff
 VERSION 1.96: Doesn't crash when making a new object (filterstate array taken out of t_resonators)
+Version 1.99: fixed  double precision version  strange high frequency sound by turning off unrolling (Compiler now seems to do a good enough job on PowerPC anyway, fixed coefficient interpolation bug in case where smoothing is used and resonance models of different sizes are loaded
 SVN_REVISION: $LastChangedRevision: 360 $
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 	To-Do
+	
+		After careful benchmarking on relevant processors/platforms some of the multiplicity of versions can be chucked away
+		perhaps all of them in favor of the double precision version
+		
 		ping should be done the way the float is done where it adds the ping in directly.
 		set the maximum number of resonances dynamically with an integer argument
 		fix the assistance strings 
-		test or failure of resonance allocation
-		protect against filter update parallelism bugs
+		test on failure of resonance allocation
+		protect against filter update parallelism bugs a la peqbank
 		partial filter set updates
 	
 	Make smooth mode settable by a message.
 	fold all four perform procedures into a single version (with compiled-out conditionals and perhaps the loop unrolling using "duffs device")
+			ouch this is hard
 	
 */
 
+
 #include "version.h"
+
 
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
-#define xOGAIN
+#define OGAIN
+#define xUNROLL
 
 void *resonators_class;
-#define MAXRESONANCES 1024
+#define MAXRESONANCES 256
 typedef  struct resdesc
 {
 	float out1, out2;   // state
@@ -106,7 +117,6 @@ typedef struct
 	int underflowcheck;
 #endif
 	Boolean interpolating;
-	Boolean badg; // old bad gain compatibility mode
 	Boolean doubling;
 	void *outlet1;
 } resbank;
@@ -186,7 +196,7 @@ const 	t_float *in = (t_float *)(w[2]);
 		out += 4;
 		in += 4;
 	}
-#define UNDERFLOWCHECK
+
 #ifdef UNDERFLOWCHECK
 #define RESEPS 1.e-20f
 #define MINUSRESEPS -1.e-20f
@@ -319,7 +329,6 @@ t_int *iresonators_perform(t_int *w)
 #endif
 			yo= f[i].out1;
 			yn =f[i].out2;
-#define UNROLL
 #ifdef UNROLL
 #ifdef OGAIN
 if(f[i].og!=0.0f)
@@ -489,7 +498,8 @@ if(f[i].og==0.0f)
 				 og += oginc;
 #else
 				 out[j+1] += yn;
-#endif				yn = b1*yo + b2*yo;	
+#endif
+				yn = b1*yo + b2*yo;	
 				b1 += b1inc;
 			b2 += b2inc;
 #ifdef OGAIN
@@ -498,7 +508,8 @@ if(f[i].og==0.0f)
 				 og += oginc;
 #else
 				 out[j+2] += yn;
-#endif				yo = b1*yn + b2*yo ;	
+#endif			
+			yo = b1*yn + b2*yo ;	
 			b1 += b1inc;
 			b2 += b2inc;
 #ifdef OGAIN
@@ -540,6 +551,8 @@ out:
 
 	return (w+4);
 }
+
+#define MAXMAXVECTOR 4096
 // double precision interpolating (smooth) with input
 t_int *diresonators_perform(t_int *w);
 t_int *diresonators_perform(t_int *w)
@@ -547,15 +560,15 @@ t_int *diresonators_perform(t_int *w)
 	const t_float *in = (t_float *)(w[2]);
 	t_float *fout = (t_float *)(w[3]);
 	t_resonators *op = (t_resonators *)(w[1]);
-	double out[4096];
+	double out[MAXMAXVECTOR];
 	int n = (int)(w[4]);
 	int nfilters = op->nres;
 	register	double yn,yo;
 	int i, j;
 	int ping = op->ping;
-	double rate = 1.0f/n;
+	double rate = 1.0/n;
 	
-	if(op->b_obj.z_disabled || n>4096)
+	if(op->b_obj.z_disabled || n>MAXMAXVECTOR)
 		goto out;
 
 	if(ping>=0 && ping<nfilters)
@@ -572,7 +585,7 @@ t_int *diresonators_perform(t_int *w)
 	
 		for(i=0;i< nfilters ;++i)
 		{
-			register double b1=f[i].o_b1,b2=f[i].o_b2,a1=f[i].o_a1;
+			register double b1=f[i].o_b1, b2=f[i].o_b2, a1=f[i].o_a1;
 			double a1inc = (f[i].a1-f[i].o_a1) *  rate;
 			double b1inc = (f[i].b1-f[i].o_b1) *  rate;
 			double b2inc = (f[i].b2-f[i].o_b2) *  rate;
@@ -583,7 +596,6 @@ t_int *diresonators_perform(t_int *w)
 #endif		
 			yo= f[i].out1;
 			yn =f[i].out2;
-#define UNROLL
 #ifdef UNROLL
 #ifdef OGAIN
 if(f[i].og==0.0)
@@ -642,7 +654,7 @@ if(f[i].og==0.0)
 #else
 			for(j=0;j<n;++j)
 			{
-				float x = yo;
+				double x = yo;
 				yo = b1*yo + b2*yn + a1*in[j];	
 #ifdef OGAIN
 				 out[j] += og* yo;
@@ -670,20 +682,20 @@ if(f[i].og==0.0)
 	}
 	for(j=0;j<n;++j)
 	{
-		fout[j] = out[j]; // when will max have floating point signals?
+		fout[j] = out[j]; // when will max have double signals?
 	}
 
 #ifdef UNDERFLOWCHECK
 		/* underflow check */
 	if(op->nres>0)
 	{
-		resdesc *f;
+		dresdesc *f;
 		(op->underflowcheck)++;
 		op->underflowcheck %= op->nres;
-		f =  &op->base[op->underflowcheck];
+		f =  &op->dbase[op->underflowcheck];
 		if((f->out2<RESEPS) && (f->out2>MINUSRESEPS) && (f->out1<RESEPS) && (f->out1>MINUSRESEPS))
 		{
-			f->out1 = f->out2 = 0.0f;
+			f->out1 = f->out2 = 0.0;
 		}
 	}
 #endif
@@ -699,14 +711,14 @@ t_int *diresonators2_perform(t_int *w)
 	t_float *fout = (t_float *)(w[2]);
 	t_resonators *op = (t_resonators *)(w[1]);
 	int n = (int)(w[3]);
-	double out[4096];
+	double out[MAXMAXVECTOR];
 	
-	double rate = 1.0f/n;
+	double rate = 1.0/n;
 	int nfilters = op->nres;
 		double yn,yo;
 	int i, j;
 	int ping = op->ping;
-	if(op->b_obj.z_disabled||n>4096)
+	if(op->b_obj.z_disabled||n>MAXMAXVECTOR)
 		goto out;
 
 	if(ping>=0 && ping<nfilters)
@@ -733,7 +745,7 @@ t_int *diresonators2_perform(t_int *w)
 			double oginc = (f[i].og-f[i].o_og) *  rate;
 #endif
 #ifdef OGAIN
-if(f[i].og==0.0f)
+if(f[i].og==0.0)
 	continue;
 #endif	
 			yo= f[i].out1;
@@ -799,13 +811,13 @@ if(f[i].og==0.0f)
 	/* underflow check */
 	if(op->nres>0)
 	{
-		resdesc *f;
+		dresdesc *f;
 		(op->underflowcheck)++;
 		op->underflowcheck %= op->nres;
-		f =  &op->base[op->underflowcheck];
+		f =  &op->dbase[op->underflowcheck];
 		if((f->out2<RESEPS) && (f->out2>MINUSRESEPS) && (f->out1<RESEPS) && (f->out1>MINUSRESEPS))
 		{
-			f->out1 = f->out2 = 0.0f;
+			f->out1 = f->out2 = 0.0;
 		}
 	}
 #endif
@@ -864,12 +876,14 @@ void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 	}
 }
 
+// note that this assumes we can never be interrupted by perform routine
+// we need buffering here as we did with the ping functions
 void resonators_float(t_resonators *x, double ff)
 {
 	int i;
 	if(x->doubling)
 	{
-	dresdesc *dp = x->dbase;
+		dresdesc *dp = x->dbase;
 		for(i=0;i<x->nres;++i)
 		{
 			dp[i].out2 += dp[i].a1prime*ff;
@@ -888,7 +902,7 @@ void resonators_float(t_resonators *x, double ff)
 	}
 
 }
-
+// again we shouldn't jam the variables
 void resonators_squelch(t_resonators *x);
 void resonators_squelch(t_resonators *x)
 {
@@ -999,10 +1013,6 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 			double g = 	atom_getfloatarg(i*3+1,argc,argv);
 			double rate = atom_getfloatarg(i*3+2,argc,argv);
 			double r;
-	//	expf(g*0.1151292546497f)
-
-
-
 			r =  exp(-rate*srbar);
 			if((f<=0.0) || (f>=(0.995*x->samplerate*0.5)) || (r<=0.0) || (r>1.0))
 			{
@@ -1013,7 +1023,7 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 				tb2[i] = 0.0;
 	#else
 				fp[i].b1 = fp[i].b1 = 0.0f;
-				dp[i].b1 = dp[i].b1 = 0.0f;
+				dp[i].b1 = dp[i].b1 = 0.0;
 	#endif
 				fp[i].a1prime = 0.0f;
 				fp[i].fastr = 0.0f;
@@ -1025,7 +1035,6 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 				double ts;
 				f *= 2.0*3.14159265358979323*srbar;
 				ts = g;
-				if(x->badg)
 					ts *= sin(f);
 				tb1[i] = r*cos(f)*2.0;
 					ta1[i] = ts *  (1.0-r);   //this is one of the relavent L norms
@@ -1040,21 +1049,32 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 	/* Now we know how many "good" resonances (freq > 0) were in the list */
 	nres = i;
 //This is where we should be double buffering
-	/* If there are now fewer resonances than there were: */ 
-	for(i=x->nres; i<nres; ++i) {
-		fp[i].out1 = fp[i].out2 = 0.0f;
-		dp[i].out1 = dp[i].out2 = 0.0;
-	}
-
-	x->nres = nres;
 
 
-	for(i=0;i<x->nres;++i)
+
+
+	for(i=0;i<nres;++i)
 	{
 			fp[i].b1 = dp[i].b1 = tb1[i];
 			fp[i].a1 = dp[i].a1 = ta1[i];
 			fp[i].b2 = dp[i].b2 =  tb2[i];
+			if(i>=x->nres) 	/* If there are now more resonances than there were: */ 
+
+			{
+				fp[i].o_a1 = fp[i].a1;
+				fp[i].o_b1 = fp[i].b1;
+				fp[i].o_b2 = fp[i].b2;
+				dp[i].o_a1 = dp[i].a1;
+				dp[i].o_b1 = dp[i].b1;
+				dp[i].o_b2 = dp[i].b2;
+#ifdef OGAIN
+				dp[i].o_og = dp[i].og = 1.0;
+				fp[i].o_og = fp[i].og = 1.0f;
+#endif
+			}
 	}
+		x->nres = nres;
+
 // end of double buffering
 //		post("nres %d x->nres %d", nres, x->nres);
 }
@@ -1108,7 +1128,6 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 			x->samplerate = 44100.0;
 		x->sampleinterval = 1.0/x->samplerate;
 
-     x->badg = true;
 
     {
     	x->interpolating = false;
@@ -1128,17 +1147,12 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 	    		x->interpolating = true;
 	    		x->doubling = true;
 	    	}
-		    if(isthesymbol("oops", argv))
-	    	{
-	    		argc--; argv++;
-	    		x->badg = true;
-	    	}
 	    }
     }
+ 	x->dbase = (dresdesc *) NewPtr(MAXRESONANCES*sizeof(dresdesc));
     	x->base = (resdesc *) NewPtr(MAXRESONANCES*sizeof(resdesc));
-   	x->dbase = (dresdesc *) NewPtr(MAXRESONANCES*sizeof(dresdesc));
-	    if(x->base==NIL || x->dbase==NIL)
-	    {			post("¥ peqbank~: warning: not enough memory.  Expect to crash soon.");
+  	    if(x->base==NIL || x->dbase==NIL)
+	    {			post("¥ resonators~: warning: not enough memory.  Expect to crash soon.");
 	    	return 0;
 	    }
 
@@ -1159,7 +1173,7 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 			df[i].o_b1 = df[i].b1;
 			df[i].o_b2 = df[i].b2;
 #ifdef OGAIN
-			df[i].o_og = df[i].og = 1;
+			df[i].o_og = df[i].og = 1.0;
 			f[i].o_og = f[i].og = 1.0f;
 #endif
 		}
@@ -1220,7 +1234,7 @@ void resonators_tellmeeverything(t_resonators *x) {
 	} */
 	post("%s\n%s\n Max resonances: %d, currently computing  %d",
 	x->interpolating?"  Smooth mode: parameter changes interpolated over time":"  Fast mode: no interpolation, more efficient",
-	x->badg?"Old bad gain":"",
+	x->doubling?"  Double precision mode":"",
 	 MAXRESONANCES, x->nres);
 }
 
