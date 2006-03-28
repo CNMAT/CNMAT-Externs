@@ -56,7 +56,7 @@ Future:
 */
 
 #define VERSION "1.72"
-//#include "version.h"
+#include "version.h"
 
 
 #include <math.h>
@@ -923,18 +923,16 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addmess((method)version, "version", 0);
 
 	addbang( (method) resondump  );
-//	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("res-transform");
-	post("Copyright © 2006 UC Regents");
+	post(NAME " object version " VERSION " by " AUTHORS ".");
 	post("  Copyright © 1986,1987 Adrian Freed");
-//	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 
 }
 
 static void version(fobj *x) {
 
-//	post(NAME " Version " VERSION
-//		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
 }
 
  static void reson_assist(fobj *x, void *b, long m, long a, char *s) 
