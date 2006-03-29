@@ -44,6 +44,7 @@ VERSION 1.96: Doesn't crash when making a new object (filterstate array taken ou
 VERSION 1.97: fixed  double precision version  strange high frequency sound by turning off unrolling (Compiler now seems to do a good enough job on PowerPC anyway, fixed coefficient interpolation bug in case where smoothing is used and resonance models of different sizes are loaded
 VERSION 1.98: MW+AF re-fixed coefficient interpolation bug to zero state variables and interpolate a1 aka a0.
 VERSION 1.99: AF: fixed typo in above changed NewPtr to getbytes and increased number of resonances to 512
+VERSION 1.995: AF: changed getbytes back to NewPtr and increased resonances to 1024
 SVN_REVISION: $LastChangedRevision$
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -76,7 +77,7 @@ SVN_REVISION: $LastChangedRevision$
 #define xUNROLL
 
 void *resonators_class;
-#define MAXRESONANCES 512
+#define MAXRESONANCES 1024
 typedef  struct resdesc
 {
 	float out1, out2;   // state
@@ -1155,8 +1156,8 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 	    	}
 	    }
     }
- 	x->dbase = (dresdesc *) getbytes(MAXRESONANCES*sizeof(dresdesc));
-    	x->base = (resdesc *) getbytes(MAXRESONANCES*sizeof(resdesc));
+ 	x->dbase = (dresdesc *) NewPtr(MAXRESONANCES*sizeof(dresdesc));
+    	x->base = (resdesc *) NewPtr(MAXRESONANCES*sizeof(resdesc));
   	    if(x->base==NIL || x->dbase==NIL)
 	    {			post("¥ resonators~: warning: not enough memory.  Expect to crash soon.");
 	    	return 0;
