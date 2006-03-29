@@ -32,6 +32,7 @@ NAME: res-transform
 AUTHORS: Adrian Freed, Matt Wright, and Michael Zbyszynski
 DESCRIPTION: Set of basic transformations for resonance models
 COPYRIGHT_YEARS: 1996,97,98,99,2000,2001,2002,2003,2004,2005,2006
+SVN_REVISION: $LastChangedRevision$
 VERSION 1.2: by Matt Wright: compiles with CW 7 and new Max/MSP SDK
 VERSION 1.3: by Matt Wright has "setoneamplitude", "setonefrequency", "setonerate", and "setone"
 VERSION 1.4: by Matt Wright allows float midi-pitch
