@@ -43,6 +43,7 @@ VERSION 1.6.1: Added "more_resonances" method
 VERSION 1.6.2: Added amprange and freqrange messages
 VERSION 1.7: aliased messages without "-" for compatibility with Javascript, support for sinusoidal models,drop-partials byo from the CAST era , exponential decay maker for percussion effect or clean decay,all calculations in double precision
 VERSION 1.72: AF changes setone to setonesinusoid  and adds setoneresonance, removes numresonances changes matt's amprange and freqrange semantics
+VERSION 1.73: Updated tellmeeverything to disclose info about new features
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Copyright © 1986,1987 Adrian Freed
@@ -974,9 +975,23 @@ static void tellmeeverything(fobj *x) {
     	 
      post("    oddgainscale %lf, evengainscale %lf,oddfrequencyscale %lf evenfrequencyscale %lf",
     	 x->oddgain, x->evengain, x->oddfscale,x->evenfscale);
+     
+     post("    frequencyminimum $lf, frequencymaximum %lf (outside this range gain is set to zero)",
+	  x->fmin, x->fmax);
+     post("    partialminimum $lf, partialmaximum %lf (outside this range gain is set to zero)",
+	  x->partialmin, x->partialmax);
+
+
+     post("    Percussifier: decayrate %lf, skew %lf, frequencypivot %lf, time %lf",
+	  x->k1, x->k2, x->fpivot, x->time);
+
    if(x->sinusoidalmodel)
  	{
- 	    post("  Resulting model (frequency, amplitude duples):");
+ 	    post("  Resulting model (frequency
+
+
+
+, amplitude duples):");
 
  	   for (i = 0; i < x->nreson*x->clustersize; ++i) {
     	post("    f %f g %f", x->model[2*i].a_w.w_float, 
