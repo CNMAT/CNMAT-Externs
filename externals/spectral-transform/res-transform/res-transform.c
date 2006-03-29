@@ -976,9 +976,9 @@ static void tellmeeverything(fobj *x) {
      post("    oddgainscale %lf, evengainscale %lf,oddfrequencyscale %lf evenfrequencyscale %lf",
     	 x->oddgain, x->evengain, x->oddfscale,x->evenfscale);
      
-     post("    frequencyminimum $lf, frequencymaximum %lf (outside this range gain is set to zero)",
+     post("    frequencyminimum %lf, frequencymaximum %lf (outside this range gain is set to zero)",
 	  x->fmin, x->fmax);
-     post("    partialminimum $lf, partialmaximum %lf (outside this range gain is set to zero)",
+     post("    partialminimum %ld, partialmaximum %ld (outside this range gain is set to zero)",
 	  x->partialmin, x->partialmax);
 
 
@@ -987,11 +987,7 @@ static void tellmeeverything(fobj *x) {
 
    if(x->sinusoidalmodel)
  	{
- 	    post("  Resulting model (frequency
-
-
-
-, amplitude duples):");
+ 	    post("  Resulting model (frequency, amplitude duples):");
 
  	   for (i = 0; i < x->nreson*x->clustersize; ++i) {
     	post("    f %f g %f", x->model[2*i].a_w.w_float, 
