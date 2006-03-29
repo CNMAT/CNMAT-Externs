@@ -44,6 +44,7 @@ VERSION 1.6.2: Added amprange and freqrange messages
 VERSION 1.7: aliased messages without "-" for compatibility with Javascript, support for sinusoidal models,drop-partials byo from the CAST era , exponential decay maker for percussion effect or clean decay,all calculations in double precision
 VERSION 1.72: AF changes setone to setonesinusoid  and adds setoneresonance, removes numresonances changes matt's amprange and freqrange semantics
 VERSION 1.73: Updated tellmeeverything to disclose info about new features
+VERSION 1.74: fixed amplitude comparison so that non-zero gains were output, changed to larger model size (1024), added alias for sin-transform, didn't test or even compile anything
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Copyright © 1986,1987 Adrian Freed
@@ -72,7 +73,7 @@ void *resonclass;
 
 
 #define PI (3.14159265358979323)
-#define MAXRESON 256
+#define MAXRESON 1024
 #define NSPECTRALENVELOPE 32
 
 #define A440 440.0
@@ -91,9 +92,11 @@ typedef	struct	fobj
 	void *m_proxy;
 	long m_inletNumber;
 	void			*dataoutlet;	/* frequency, gain bandwidth tuplets -first outlet		*/
-	Atom			model[3*MAXRESON];
+	int maxresonances;
+	Atom 			*model;
+//	Atom			model[3*MAXRESON];
 /* current model 	*/
-	struct			reson { double f,g,b; }	resonances[MAXRESON];	
+	struct			reson { double f,g,b; }	*resonances;	
 	int			nreson; /* number of resonances */
 	int			nreson_output; /* number of resulting resonances after clussters add them and 
 								  frequency-range and gain-range take them away */
@@ -127,7 +130,7 @@ typedef	struct	fobj
 	double fmax; // in Hz
 
 	// Allowable parameter ranges MATT drops partials I set gain to 0 need to resolve this
-	float minfreq, maxfreq, mingain, maxgain;
+	float mingain, maxgain;
 
 
 	
@@ -219,7 +222,7 @@ static void clearit(fobj *x)
 	
 	x->fmin = 0.0;
 	x->fmax = 1000000.0;
-	x->partialmax = MAXRESON;
+	x->partialmax = 1000000;
 	x->partialmin = 0;
 	
 	x->k1 = x->k2 = 0.f;
@@ -295,7 +298,7 @@ else if(!x->sinusoidalmodel && ((argc%3)!=0))
 		{
 				if(argv[0].a_type==A_FLOAT && 
 				 	argv[1].a_type==A_FLOAT && 
-				 	 x->fcount<MAXRESON)
+				 	 x->fcount<x->maxresonances)
 			 	{
 						int n = x->fcount;
 						x->resonances[n].f = argv[0].a_w.w_float;
@@ -352,7 +355,7 @@ static void computeeverything(fobj *x)
 			transformedresonances.g *= exp(x->time*-x->k1*(1.0+ 20.0*x->k2*(transformedresonances.f-x->fpivot)/50000.0));
 		
 		if(i>x->partialmax-1 || i<x->partialmin
-		 ||transformedresonances.g >= x->mingain && transformedresonances.g <= x->maxgain
+		 ||transformedresonances.g < x->mingain && transformedresonances.g > x->maxgain
 			|| transformedresonances.f<x->fmin || transformedresonances.f>x->fmax)
 			transformedresonances.g = 0.0;
 		
@@ -788,8 +791,8 @@ void numresonances(fobj *x) {
 */
 
 static void setfreqrange(fobj *x, double min, double max) {
-	x->minfreq = min;
-	x->maxfreq = max;
+	x->fmin = min;
+	x->fmax = max;
 	dumpresonances(x);
 }
 
@@ -808,6 +811,30 @@ void *myobject_free(fobj *x)
 freeobject(x->m_proxy);
 }
 
+
+long strcmp(const char *s1, const char *s2);
+long strcmp(const char *s1, const char *s2)
+{
+	char c1, c2, dif;
+	
+	for (;;) {
+		if (!(c1 = *s1++))
+			return *s2 ? -1 : 0;
+		if (!(c2 = *s2++))
+			return 1;
+		if (!(dif = (c1 - c2)))
+			continue;
+		if (dif < 0)
+			return -1;
+		else
+			return 1;
+	}
+
+	return 0;
+}
+
+
+
 void * fnew(Symbol *s, int argc, Atom *argv) {
 	fobj *x;
 	int i;
@@ -816,9 +843,19 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->m_proxy = proxy_new(x,1L,&x->m_inletNumber);
 	x->dataoutlet = listout(x);
 	clearit(x);
-
-
-	x->sinusoidalmodel = 0; /* perhaps base this on the Symbol *s */
+	
+	x->maxresonances = MAXRESON; // get this from the command line eventually
+	x->model = (Atom *) getbytes(3 * x->maxresonances * sizeof(Atom));
+	x->resonances = (struct reson *) getbytes(sizeof(struct reson) * x->maxresonances);
+	
+	if(!x->model || ! x->resonances)
+	{
+		Error("cannot allocate space for model");
+		return 0;
+	}
+	x->sinusoidalmodel = (strcmp("sin-transform", s->s_name)==0); 
+	
+	
 
 	x->mingain = 0.0;
 	x->maxgain = 9999999.0;
@@ -826,7 +863,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	storemodel(x,s,argc, argv, false,false,false);
 	computeeverything(x);		// So that tellmeeverything will tell the truth right after the object is instantiated
 
-	for(i=0;i<MAXRESON;++i)
+	for(i=0;i<x->maxresonances;++i)
 	{
 		x->model[i*3+0].a_type = A_FLOAT;
 		x->model[i*3+1].a_type = A_FLOAT;
@@ -838,7 +875,8 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 void main(fptr *f)		/* called once at launch to define this class */
 {
 	FNS = f;		
-		
+	
+	alias("sin-transform");	
 	setup((struct messlist **) &resonclass, (method) fnew, (method) myobject_free, (int) sizeof(fobj), 0L, A_GIMME, 0 );
 
 	addfloat( (method) setfreqbase );
