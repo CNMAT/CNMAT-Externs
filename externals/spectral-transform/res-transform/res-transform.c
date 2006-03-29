@@ -41,8 +41,8 @@ VERSION 1.5alpha: for windows compiled by Michael Zbyszynski
 VERSION 1.6: cleaned up so it works for Mac too by Matt Wright
 VERSION 1.6.1: Added "more_resonances" method
 VERSION 1.6.2: Added amprange and freqrange messages
-VERSION 1.7 aliased messages without "-" for compatibility with Javascript, support for sinusoidal models,drop-partials byo from the CAST era , exponential decay maker for percussion effect or clean decay,all calculations in double precision
-VERSION 1.72 AF changes setone to setonesinusoid  and adds setoneresonance, removes numresonances changes matt's amprange and freqrange semantics
+VERSION 1.7: aliased messages without "-" for compatibility with Javascript, support for sinusoidal models,drop-partials byo from the CAST era , exponential decay maker for percussion effect or clean decay,all calculations in double precision
+VERSION 1.72: AF changes setone to setonesinusoid  and adds setoneresonance, removes numresonances changes matt's amprange and freqrange semantics
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Copyright © 1986,1987 Adrian Freed
@@ -56,7 +56,6 @@ Future:
 	
 */
 
-#define VERSION "1.72"
 #include "version.h"
 
 
