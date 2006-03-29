@@ -43,6 +43,7 @@ VERSION 1.95: added output amplitude vector interpolation, found unfixed bug in 
 VERSION 1.96: Doesn't crash when making a new object (filterstate array taken out of t_resonators)
 VERSION 1.97: fixed  double precision version  strange high frequency sound by turning off unrolling (Compiler now seems to do a good enough job on PowerPC anyway, fixed coefficient interpolation bug in case where smoothing is used and resonance models of different sizes are loaded
 VERSION 1.98: MW+AF re-fixed coefficient interpolation bug to zero state variables and interpolate a1 aka a0.
+VERSION 1.99: AF: fixed typo in above changed NewPtr to getbytes and increased number of resonances to 512
 SVN_REVISION: $LastChangedRevision$
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -52,7 +53,6 @@ SVN_REVISION: $LastChangedRevision$
 		After careful benchmarking on relevant processors/platforms some of the multiplicity of versions can be chucked away
 		perhaps all of them in favor of the double precision version
 		
-		ping should be done the way the float is done where it adds the ping in directly.
 		set the maximum number of resonances dynamically with an integer argument
 		fix the assistance strings 
 		test on failure of resonance allocation
@@ -76,7 +76,7 @@ SVN_REVISION: $LastChangedRevision$
 #define xUNROLL
 
 void *resonators_class;
-#define MAXRESONANCES 256
+#define MAXRESONANCES 512
 typedef  struct resdesc
 {
 	float out1, out2;   // state
@@ -1070,8 +1070,8 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 				dp[i].o_b1 = dp[i].b1;
 				dp[i].o_b2 = dp[i].b2;
 				// Clear out state variables for these totally new resonances
-				f[i].out1 = f[i].out2 = 0.0f;
-				df[i].out1 = df[i].out2 = 0.0f;
+				fp[i].out1 = fp[i].out2 = 0.0f;
+				dp[i].out1 = dp[i].out2 = 0.0f;
 
 #ifdef OGAIN
 				dp[i].o_og = dp[i].og = 1.0;
@@ -1155,8 +1155,8 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 	    	}
 	    }
     }
- 	x->dbase = (dresdesc *) NewPtr(MAXRESONANCES*sizeof(dresdesc));
-    	x->base = (resdesc *) NewPtr(MAXRESONANCES*sizeof(resdesc));
+ 	x->dbase = (dresdesc *) getbytes(MAXRESONANCES*sizeof(dresdesc));
+    	x->base = (resdesc *) getbytes(MAXRESONANCES*sizeof(resdesc));
   	    if(x->base==NIL || x->dbase==NIL)
 	    {			post("¥ resonators~: warning: not enough memory.  Expect to crash soon.");
 	    	return 0;
