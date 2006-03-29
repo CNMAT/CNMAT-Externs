@@ -824,6 +824,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->maxgain = 9999999.0;
 	
 	storemodel(x,s,argc, argv, false,false,false);
+	computeeverything(x);		// So that tellmeeverything will tell the truth right after the object is instantiated
 
 	for(i=0;i<MAXRESON;++i)
 	{
