@@ -45,7 +45,8 @@ VERSION 1.7: aliased messages without "-" for compatibility with Javascript, sup
 VERSION 1.72: AF changes setone to setonesinusoid  and adds setoneresonance, removes numresonances changes matt's amprange and freqrange semantics
 VERSION 1.73: Updated tellmeeverything to disclose info about new features
 VERSION 1.74: fixed amplitude comparison so that non-zero gains were output, changed to larger model size (1024), added alias for sin-transform, didn't test or even compile anything
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+VERSION 1.75: replaced  getbytes by NewPtr and tested
+VERSION 1.76: I can't get the alias feature to work
 
 Copyright © 1986,1987 Adrian Freed
 Copyright © 1996,1997,1998,1999,2005 Regents of the University of California.
@@ -845,15 +846,16 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	clearit(x);
 	
 	x->maxresonances = MAXRESON; // get this from the command line eventually
-	x->model = (Atom *) getbytes(3 * x->maxresonances * sizeof(Atom));
-	x->resonances = (struct reson *) getbytes(sizeof(struct reson) * x->maxresonances);
+	x->model = (Atom *) NewPtr(3 * x->maxresonances * sizeof(Atom));
+	x->resonances = (struct reson *) NewPtr(sizeof(struct reson) * x->maxresonances);
 	
 	if(!x->model || ! x->resonances)
 	{
-		Error("cannot allocate space for model");
+		error("cannot allocate space for model");
 		return 0;
 	}
-	x->sinusoidalmodel = (strcmp("sin-transform", s->s_name)==0); 
+
+	x->sinusoidalmodel = (s==gensym("sin-transform")); 
 	
 	
 
@@ -875,10 +877,11 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 void main(fptr *f)		/* called once at launch to define this class */
 {
 	FNS = f;		
-	
 	alias("sin-transform");	
+	
 	setup((struct messlist **) &resonclass, (method) fnew, (method) myobject_free, (int) sizeof(fobj), 0L, A_GIMME, 0 );
-
+	alias("sin-transform");	
+	
 	addfloat( (method) setfreqbase );
 	addmess((method)clear, "clear", 0);
 	addmess((method)setpitch, "pitch", A_FLOAT,0);
@@ -958,10 +961,11 @@ void main(fptr *f)		/* called once at launch to define this class */
 
 	addmess((method)fulllist,"list",A_GIMME,0);
 	addmess((method)fulllist,"resonance",A_GIMME,0);
+	addmess((method)fulllist,"resonances",A_GIMME,0);
 	addmess((method)more_resonances,"more",A_GIMME,0);
 	addmess((method)oldfulllist,"filter-form",A_GIMME,0);
 	addmess((method)formantfulllist,"formant-form",A_GIMME,0);
-	addmess((method)sinusoidal,"sinusoidal",A_GIMME,0);
+	addmess((method)sinusoidal,"sinusoids",A_GIMME,0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0);
 	addmess((method)version, "version", 0);
 
