@@ -41,8 +41,9 @@ VERSION 1.8: double precision mode, second outlet for filter state, ping complet
 VERSION 1.9: added output amplitude vector 
 VERSION 1.95: added output amplitude vector interpolation, found unfixed bug in double stuff
 VERSION 1.96: Doesn't crash when making a new object (filterstate array taken out of t_resonators)
-Version 1.99: fixed  double precision version  strange high frequency sound by turning off unrolling (Compiler now seems to do a good enough job on PowerPC anyway, fixed coefficient interpolation bug in case where smoothing is used and resonance models of different sizes are loaded
-SVN_REVISION: $LastChangedRevision: 360 $
+VERSION 1.97: fixed  double precision version  strange high frequency sound by turning off unrolling (Compiler now seems to do a good enough job on PowerPC anyway, fixed coefficient interpolation bug in case where smoothing is used and resonance models of different sizes are loaded
+VERSION 1.98: MW+AF re-fixed coefficient interpolation bug to zero state variables and interpolate a1 aka a0.
+SVN_REVISION: $LastChangedRevision$
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -1061,20 +1062,25 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 			if(i>=x->nres) 	/* If there are now more resonances than there were: */ 
 
 			{
-				fp[i].o_a1 = fp[i].a1;
+			    // Set old a1 to zero so that the input to the new resonators will ramp up over the first signal vector.
+				fp[i].o_a1 = 0.0f;
 				fp[i].o_b1 = fp[i].b1;
 				fp[i].o_b2 = fp[i].b2;
-				dp[i].o_a1 = dp[i].a1;
+				dp[i].o_a1 = 0.0;
 				dp[i].o_b1 = dp[i].b1;
 				dp[i].o_b2 = dp[i].b2;
+				// Clear out state variables for these totally new resonances
+				f[i].out1 = f[i].out2 = 0.0f;
+				df[i].out1 = df[i].out2 = 0.0f;
+
 #ifdef OGAIN
 				dp[i].o_og = dp[i].og = 1.0;
 				fp[i].o_og = fp[i].og = 1.0f;
 #endif
 			}
 	}
-		x->nres = nres;
-
+	x->nres = nres;
+	
 // end of double buffering
 //		post("nres %d x->nres %d", nres, x->nres);
 }
