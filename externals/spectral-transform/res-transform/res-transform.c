@@ -342,15 +342,18 @@ static void computeeverything(fobj *x)
 		transformedresonances.f = (x->resonances[i].f*fsc*(odd?x->oddfscale:x->evenfscale)+fadd);
 		transformedresonances.g = x->resonances[i].g*gainscale*(odd?x->oddgain:x->evengain);
 
+
+
 		if(transformedresonances.f>x->center)
 			transformedresonances.g *= exp(0.1151292546497*(x->slope*(x->resonances[i].f-x->center)));
+
+		if(x->time!=0.0)
+			transformedresonances.g *= exp(x->time*-x->k1*(1.0+ 20.0*x->k2*(transformedresonances.f-x->fpivot)/50000.0));
 		
 		if(i>x->partialmax-1 || i<x->partialmin
 		 ||transformedresonances.g >= x->mingain && transformedresonances.g <= x->maxgain
 			|| transformedresonances.f<x->fmin || transformedresonances.f>x->fmax)
 			transformedresonances.g = 0.0;
-		if(x->time!=0.0)
-			transformedresonances.g *= exp(x->time*-x->k1*(1.0+ 20.0*x->k2*(transformedresonances.f-x->fpivot)/50000.0));
 		
 		for(k=0;k<csize;++k)
 		{
