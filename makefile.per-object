@@ -28,9 +28,7 @@ WEB_INFO = $(BUILD_DIR)/$(WEB_INFO_NO_DIR)
 WEB_INCOMING = $(BUILD_DIR)/$(OBJ)-$(PLATFORM).tar.gz
 
 # Where files live on our web server
-# WEBSERVER_BASE_DIR = /Volumes/webroot$$/MAX
-WEBSERVER_BASE_DIR = /tmp
-WEBSERVER_INCOMING_DIR = $(WEBSERVER_BASE_DIR)/incoming
+WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
 
 # Making the version number accessible from this Makefile:
 
@@ -136,15 +134,11 @@ help-diff-warning: $(MAC_HELPFILE_COPY)
 # Actually copying the files to directories where the web server can find them
 
 .PHONY: web-release
-web-release: $(WEBSERVER_BASE_DIR) $(WEB_INCOMING) code-checked-in
-	cp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
+web-release: $(WEB_INCOMING) code-checked-in
+	scp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
 
 $(WEB_INCOMING): code-checked-in $(MAC_INDIVIDUAL_DOWNLOAD) $(WEB_INFO) 
 	tar cvfz $(WEB_INCOMING) -C $(BUILD_DIR) $(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR) $(WEB_INFO_NO_DIR)
-
-$(WEBSERVER_BASE_DIR):
-	@echo Please mount the webroot$$ volume from Bach
-
 
 # Ensuring that the current code has been properly checked into Subversion
 .PHONY: code-checked-in
