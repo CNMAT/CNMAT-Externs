@@ -29,7 +29,8 @@ University of California, Berkeley.
 NAME: lbyl ("Look Before You Leap")
 DESCRIPTION: Echo an input stream of numbers to the output, but "don't believe" large jumps in the value unless the output stays at that value for a while.
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2002,3,4,5
+COPYRIGHT_YEARS: 2002,3,4,5,6
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: First version  1/3/3
 VERSION 0.1: Renamed LBYL
 VERSION 0.2:  Added outlets for "non-bogus" and "rejected"
