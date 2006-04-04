@@ -48,7 +48,7 @@ STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
 
 # Top-level build targets
 
-all: help-diff-warning mac-binary
+all: mac-individual-download help-diff-warning mac-binary
 
 .PHONY: clean
 clean:
