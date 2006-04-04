@@ -47,6 +47,8 @@ VERSION 1.73: Updated tellmeeverything to disclose info about new features
 VERSION 1.74: fixed amplitude comparison so that non-zero gains were output, changed to larger model size (1024), added alias for sin-transform, didn't test or even compile anything
 VERSION 1.75: replaced  getbytes by NewPtr and tested
 VERSION 1.76: I can't get the alias feature to work
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
 Copyright © 1986,1987 Adrian Freed
 Copyright © 1996,1997,1998,1999,2005 Regents of the University of California.
