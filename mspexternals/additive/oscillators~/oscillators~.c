@@ -1,3 +1,4 @@
+clear
 /*
 Copyright (c) 1999.  The Regents of the University of California (Regents).
 All Rights Reserved.
