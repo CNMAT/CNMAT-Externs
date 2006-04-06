@@ -610,7 +610,6 @@ static void Makeoscsinetable()
 		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(float)PI);
 }
 
-#define EXPIRE
 static void first_amplitude(t_sinusoids *x, double ff);
 static void first_amplitude(t_sinusoids *x, double ff)
 {
