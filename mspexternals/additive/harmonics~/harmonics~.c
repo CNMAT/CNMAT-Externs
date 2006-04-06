@@ -24,14 +24,24 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: harmonics~ 
+AUTHORS: Adrian Freed
+DESCRIPTION: MSP harmonic oscillator Bank
+COPYRIGHT_YEARS: 1996,97,98,99,2000,2001,2002,2003,2004,2005,2006
+SVN_REVISION: $LastChangedRevision: 406$
+VERSION 1.1: Adrian Freed - NB: still working on amplutide normalisation of thw wave outputs
+VERSION 1.2: Doesn't expire, uses new versioning system
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 */
 
 
 
 /*
 	harmonics~.c
-	
-	MSP harmonic oscillator Bank
 	
 	©1996,1997,1998,1999,2000,01,02,03 UC Regents, All Rights Reserved. 
 
@@ -60,6 +70,7 @@ University of California, Berkeley.
 	
 		
 */
+#include "version.h"
 
 #include "ext.h"
 #include "z_dsp.h"
@@ -127,6 +138,7 @@ static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
 static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
 static void frequency_float(t_sinusoids *x, double ff);
 void harmonics_free(t_sinusoids *x);
+void version(t_sinusoids *x);
 static void SineFunction(int n, float *stab, int stride, float from, float to);
 static void Makeoscsinetable();
 
@@ -627,12 +639,21 @@ static void noisiness(t_sinusoids *x, double ff)
 		post("noisiness must be between 0.0 and 1.0: %d", f);
 }
 
+static void version(t_sinusoids *x) {
+
+	post(NAME " Version " VERSION
+		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
+}
+
+
 void main(void)
 {
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)harmonics_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-	post("harmonics~ 1.1 - Adrian Freed - NB: still working on amplutide normalisation of thw wave outputs");
-	post("Copyright © 1996,1997,1998,1999,2000,01,02,03,04 Regents of the University of California. All Rights Reserved");
+		  
+	post(NAME " object version " VERSION " by " AUTHORS ".");
+	post("NB: still working on amplutide normalisation of thw wave outputs");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 #ifndef EXPIRE
     post("Never expires");
@@ -662,6 +683,7 @@ void main(void)
 	addmess((method)wave_list, "wave", A_GIMME, 0);		// amplitudes
 	addmess((method)sinusoids_clear, "clear", 0);
 	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
+	addmess((method)version, "version", 0);
 	addfloat((method)frequency_float);							// F0
 	    addmess((method)first_amplitude, 	"first-amplitude", 		A_FLOAT, 0);
 	    addmess((method)noisiness, 	"noisiness", 		A_FLOAT, 0);
