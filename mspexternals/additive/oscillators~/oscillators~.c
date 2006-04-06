@@ -1,4 +1,3 @@
-clear
 /*
 Copyright (c) 1999.  The Regents of the University of California (Regents).
 All Rights Reserved.
@@ -302,7 +301,7 @@ void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 	x->l_buf = 0;
 	
 		if(argc>0 && argv->a_type==A_SYM) {
-		    	x->l_sym = (struct symbol *)argv;
+		    	x->l_sym = argv[0].a_w.w_sym;
 		    	/* Remember the symbol, but don't try to look up the buffer yet,
 		    	   since the buffer~ object in question might not be loaded yet.
 		    	   Instead we'll call oscillators_set() from the dsp() routine. */
