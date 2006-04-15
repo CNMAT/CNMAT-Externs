@@ -44,6 +44,7 @@ VERSION 1.10.1: New versioning system
 VERSION 1.10.2: Version info in this .c file
 VERSION 1.10.3: Just a test of incrementing the version number
 VERSION 1.11: Allows multi-level prefixes (e.g., "/foo/bar")
+VERSION 1.12: Debugged "slash" argument problem introduced in 1.11
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -92,7 +93,7 @@ void *OSCroute_class;
 /* prototypes  */
 
 void OSCroute_free(OSCroute *x);
-int RememberPrefix (OSCroute *x, char *prefixWithLeadingSlash);
+int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash);
 Boolean MyPatternMatch (const char *pattern, const char *test);
 void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv);
 static void OutputOSCArguments(OSCroute *x, int i, short argc, Atom *argv);
@@ -137,7 +138,7 @@ void main(fptr *f) {
 /* instance creation routine */
 
 
-int RememberPrefix (OSCroute *x, char *prefixWithLeadingSlash) {
+int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash) {
 	char *s;
 	
 	if (x->o_num >= MAX_NUM) {
@@ -145,15 +146,14 @@ int RememberPrefix (OSCroute *x, char *prefixWithLeadingSlash) {
 		return 0;
 	}
 
-	x->prefix_sizes[x->o_num] = MyStrLen(prefixWithLeadingSlash);
+	x->prefix_sizes[x->o_num] = MyStrLen(prefixWithoutLeadingSlash);
 	x->o_prefixes[x->o_num] = getbytes(x->prefix_sizes[x->o_num]);
 	if (x->o_prefixes[x->o_num] == 0) {
-		error("Out of memory saving string %s", prefixWithLeadingSlash);
+		error("Out of memory saving string %s", prefixWithoutLeadingSlash);
 		return 0;
 	}
 	
-	// Skip the opening slash
-	MyStrCopy(x->o_prefixes[x->o_num], prefixWithLeadingSlash + 1);
+	MyStrCopy(x->o_prefixes[x->o_num], prefixWithoutLeadingSlash);
 	x->prefix_levels[x->o_num] = 1;
 
 	// Convert all other slashes to nulls so as to
@@ -184,7 +184,7 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 		if (argv[i].a_type == A_SYM) {
 			if (argv[i].a_w.w_sym->s_name[0] == '/') {
 				/* Now that's a nice prefix. */
-				if (RememberPrefix(x, argv[i].a_w.w_sym->s_name) == 0) return 0;
+				if (RememberPrefix(x, argv[i].a_w.w_sym->s_name+1) == 0) return 0;
 			} else if (argv[i].a_w.w_sym->s_name[0] == '#' &&
 					   argv[i].a_w.w_sym->s_name[1] >= '1' &&
 					   argv[i].a_w.w_sym->s_name[1] <= '9') {
@@ -203,7 +203,7 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 				}
 				
 				if (argv[i+1].a_type == A_SYM) {
-					if (RememberPrefix(x, argv[i].a_w.w_sym->s_name) == 0) return 0;
+					if (RememberPrefix(x, argv[i+1].a_w.w_sym->s_name) == 0) return 0;
 				} else if (argv[i+1].a_type == A_LONG) {
 					// Convert to a numeral.  Max ints are -2147483648 to 2147483647
 					char string[12];
