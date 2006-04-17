@@ -562,7 +562,7 @@ static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
 					fp[j].next_amplitude= 0.01f; // gotta scale this right xxx
 				x->nosc=512;
 			}
-if(x->nosc!=512)
+			if(x->nosc!=512)
 			{
 				error("harmonics~: unknown wave shape");
 				return x;
@@ -586,11 +586,12 @@ if(x->nosc!=512)
 			frequency_float(x,440.0f);
 
 		}
-	}
-	else
-	{
-	    sinusoids_list(x,s,argc,argv);
-	    frequency_float(x,440.0f);
+		else
+		{
+			x->which_inlet = 0;
+	  	  sinusoids_list(x,s,argc,argv);
+		}
+	
 	}
 	
 //post("%d %f %f %f", x->nosc, x->pk, x->sampleinterval, x->samplerate);
