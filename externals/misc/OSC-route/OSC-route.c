@@ -45,6 +45,7 @@ VERSION 1.10.2: Version info in this .c file
 VERSION 1.10.3: Just a test of incrementing the version number
 VERSION 1.11: Allows multi-level prefixes (e.g., "/foo/bar")
 VERSION 1.12: Debugged "slash" argument problem introduced in 1.11
+VERSION 1.13: Debugged crash problem introduced in 1.12
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -140,13 +141,13 @@ void main(fptr *f) {
 
 int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash) {
 	char *s;
-	
+		
 	if (x->o_num >= MAX_NUM) {
 		error("OSC-route: too many outlets requested. (max %ld)", MAX_NUM);
 		return 0;
 	}
 
-	x->prefix_sizes[x->o_num] = MyStrLen(prefixWithoutLeadingSlash);
+	x->prefix_sizes[x->o_num] = MyStrLen(prefixWithoutLeadingSlash)+1;
 	x->o_prefixes[x->o_num] = getbytes(x->prefix_sizes[x->o_num]);
 	if (x->o_prefixes[x->o_num] == 0) {
 		error("Out of memory saving string %s", prefixWithoutLeadingSlash);
@@ -184,7 +185,7 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 		if (argv[i].a_type == A_SYM) {
 			if (argv[i].a_w.w_sym->s_name[0] == '/') {
 				/* Now that's a nice prefix. */
-				if (RememberPrefix(x, argv[i].a_w.w_sym->s_name+1) == 0) return 0;
+				if (RememberPrefix(x, (argv[i].a_w.w_sym->s_name)+1) == 0) return 0;
 			} else if (argv[i].a_w.w_sym->s_name[0] == '#' &&
 					   argv[i].a_w.w_sym->s_name[1] >= '1' &&
 					   argv[i].a_w.w_sym->s_name[1] <= '9') {
