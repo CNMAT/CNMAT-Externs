@@ -100,14 +100,15 @@ void oscillators_noglissbirthmode(t_sinusoids *x, long i);
 t_int *sinusoids2_perform(t_int *w)
 {
 	t_sinusoids *op = (t_sinusoids *)(w[1]);
-		t_float *out = (t_float *)(w[2]);
+	t_float *out = (t_float *)(w[2]);
 	int n = (int)(w[3]);
-		int nosc = op->nosc;
-	 int i,j;
-	 oscdesc *o = op->base;
-t_buffer *b = op->l_buf;
-	 const char *st;
-	 float rate ;
+	int nosc = op->nosc;
+	int i,j;
+	oscdesc *o = op->base;
+    t_buffer *b = op->l_buf;
+	const char *st;
+	float rate ;
+	 
 	if(op->b_obj.z_disabled) 
 		goto out;
 	if((b==0) || !b->b_valid || (b->b_frames!=(1l<<16)))
@@ -297,9 +298,7 @@ void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
     clear(x);
     x->l_buf = 0;
 	x->noglissbirthmode = 0;
-	
-	x->l_buf = 0;
-	
+		
 		if(argc>0 && argv->a_type==A_SYM) {
 		    	x->l_sym = argv[0].a_w.w_sym;
 		    	/* Remember the symbol, but don't try to look up the buffer yet,
