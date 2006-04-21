@@ -34,6 +34,7 @@ COPYRIGHT_YEARS: 1996,97,98,99,2000,2001,2002,2003,2004,2005,2006
 SVN_REVISION: $LastChangedRevision: 406$
 VERSION 1.1: Adrian Freed - NB: still working on amplutide normalisation of thw wave outputs
 VERSION 1.2: Doesn't expire, uses new versioning system
+VERSION 1.3: Implements "tellmeeverything"
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -141,6 +142,7 @@ void harmonics_free(t_sinusoids *x);
 void version(t_sinusoids *x);
 static void SineFunction(int n, float *stab, int stride, float from, float to);
 static void Makeoscsinetable();
+void tellmeeverything(t_sinusoids *x);
 
 
 
@@ -646,6 +648,19 @@ static void version(t_sinusoids *x) {
 		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
 }
 
+void tellmeeverything(t_sinusoids *x) {
+	int i;
+	float f0 = x->next_phase_inc / x->pk;
+
+	post(NAME " object with %ld oscillators:", x->nosc);
+	
+	for (i = 0; i < x->nosc; ++i) {
+		oscdesc *o = x->base+i;
+		post("  freq %ld*%f = %f, amp (%.3f -> %.3f), ",
+			 i+1, f0, (i+1)*f0, o->amplitude, o->next_amplitude);
+	}
+}
+
 
 void main(void)
 {
@@ -688,6 +703,7 @@ void main(void)
 	addfloat((method)frequency_float);							// F0
 	    addmess((method)first_amplitude, 	"first-amplitude", 		A_FLOAT, 0);
 	    addmess((method)noisiness, 	"noisiness", 		A_FLOAT, 0);
+   	addmess((method)tellmeeverything, "tellmeeverything", 0);
 
 	dsp_initclass();
 }
