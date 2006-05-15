@@ -49,6 +49,7 @@ VERSION 0.6: Uses new version system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  Todo:
+    Make "matrix" be able to be part of the tuples message or a typed-in argument
     Don't clone a perfectly good matrix in the non-interpolating case just so you can free it later
     more interpolation features
     More logical error reporting in Max window
