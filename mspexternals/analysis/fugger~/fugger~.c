@@ -1,3 +1,7 @@
+/*
+DESCRIPTION: Richard Dudas' "big event-based fft", implemented for a Gibson demo and never used or maintained thereafter.
+*/
+
 //fugger~ object - big event-based fft
 // Fft Used for Gibson Guitar Effect Realisation
 

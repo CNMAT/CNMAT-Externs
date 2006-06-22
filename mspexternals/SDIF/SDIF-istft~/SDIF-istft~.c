@@ -1,6 +1,6 @@
 /* SDIF-istft~  dudas hack
 
-
+DESCRIPTION: Unfinished ancient inverse STFT object by Richard Dudas, reading from SDIF to a signal output.  This sort of became MSP's pfft~ object.
 
 */
 
