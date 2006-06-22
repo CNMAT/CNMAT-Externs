@@ -25,13 +25,18 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
- tpeq-sinelist.c
- based on trk-param-eq.c, Matt Wright, 6/10/96
- 
- tracking parametric EQ from softcast, implemented to work on the Max lists 
-   used as arguments to sinusoids~: alternating freq/amplitude.
- 
- */
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: tpeq-sinelist
+DESCRIPTION: tracking parametric EQ from softcast, implemented to work on the Max lists used as arguments to sinusoids~: alternating freq/amplitude.  This is the basis of the "whistleizer" effect.
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05,06
+VERSION 0.0: Matt's initial version 
+VERSION 0.1: More robust if out of memory in object creation
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+
+ based on trk-param-eq.c (from softcast) Matt Wright, 6/10/96
+
+  */
  
 
 #define TPEQ_SINELIST_VERSION "0.0"
@@ -125,6 +130,12 @@ void *tpeq_sinelist_new(long maxpartials) {
 	/* Output list has 2 Atoms per partials: freq, amp */
 	x->outputlist = (Atom *) getbytes(2 * maxpartials * sizeof(Atom));
 	x->partialFactors = (float *) getbytes(maxpartials * sizeof(float));
+
+	if (x->outputlist == 0 || x->partialFactors == 0) {
+		error("Out of memory");
+		return 0;
+	}
+
 	for (i = 0; i < maxpartials; ++i) {
 		x->outputlist[i].a_type = A_FLOAT;
 		x->partialFactors[i] = 1.0f;
