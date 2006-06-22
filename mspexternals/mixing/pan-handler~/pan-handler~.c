@@ -1,3 +1,7 @@
+/*
+DESCRIPTION: An old matrix mixer (by Ville Pulkki?), superseded by MSP's built-in matrix~ object.
+*/
+
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>

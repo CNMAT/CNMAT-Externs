@@ -1,4 +1,8 @@
 /*
+DESCRIPTION: Dudas' hack MSP port of IRCAM's copyrighted FOF implementation
+*/
+
+/*
  * FOF implementation based on IIR representation
  * by Gerhard Eckel and Francisco Iovino, Feb 1994
  * (c) 1994 IRCAM

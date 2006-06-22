@@ -15,6 +15,9 @@
         6/29/99
         From Max OpenSoundControl object
 
+DESCRIPTION: Receive audio in UDP packets and output it continuously as an MSP signal.
+
+
    */
 
 #define UDP2AUDIO_VERSION "0.0"
