@@ -1,3 +1,7 @@
+/*
+DESCRIPTION: Multiple convolutions with de-synchronised fast real fft
+*/
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "fftnobitrev.h"

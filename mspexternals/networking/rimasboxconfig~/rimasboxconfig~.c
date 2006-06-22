@@ -34,6 +34,8 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 
 	Version 0.0 10/31/01
 
+DESCRIPTION: Now-obsolete object for configuring a rimas box by sending settings encoded as weird signals.  Unnecessary now that the Rimas Box drivers work better.
+
  */
 
 #define RIMASBOXCONFIG_VERSION "0.2"

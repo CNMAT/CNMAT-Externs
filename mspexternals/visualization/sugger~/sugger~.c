@@ -1,6 +1,10 @@
 //sugger~ object - big event-based signal buffer display
 // Signal Used for Gibson Guitar Effect Realisation
 
+/*
+DESCRIPTION: Richard Dudas' "big event-based signal buffer display" implemented for some Gibson demos and not used or maintained since.
+*/
+
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>

@@ -1,3 +1,8 @@
+/*
+DESCRIPTION: Convolution external, probably more efficient than doing it in Max.
+*/
+
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "fftnobitrev.h" // No Bit Reversal !

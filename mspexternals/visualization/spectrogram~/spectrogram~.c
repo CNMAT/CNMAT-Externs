@@ -1,6 +1,11 @@
 // spectrogram user interface object
 // ©1998, 1999 Richard Dudas, CNMAT
 
+/*
+DESCRIPTION: Richard Dudas' final CNMAT version of the spectrogram display that's now part of MSP
+*/
+
+
 /* to do:
 
 make re-sizable (larger offscreen allocated)

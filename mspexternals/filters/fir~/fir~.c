@@ -1,4 +1,7 @@
-// fir~ object - generate an impulse, Oct 98, Danny Chong 
+/*
+DESCRIPTION: finite impulse response (all zeros) filter, implemented in the time domain (i.e., inefficient and minimal latency).  Probably obsoleted by MSP's buffir~ object.
+*/
+
 
 #include "ext.h"
 #include "ext_common.h"

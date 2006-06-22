@@ -24,6 +24,9 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+
+DESCRIPTION: smooth-biquad~ is just like biquad~ except that new coefficient updates are "smoothed": the object linearly interpolates the coefficients from the old value to the new value over one MSP signal processing vector.
+
 */
 
 /*

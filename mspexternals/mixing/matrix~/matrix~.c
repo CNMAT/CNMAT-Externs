@@ -1,5 +1,7 @@
 /* matrix~.c
 
+DESCRIPTION: Ville Pulkki's matrix mixer, superseded by MSP's built-in matrix~ object.
+
 written by Ville Pulkki 1999
 Helsinki University of Technology 
 and 

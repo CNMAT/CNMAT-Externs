@@ -28,6 +28,7 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
+DESCRIPTION: hyperbolic tangent soft-clipping function, now part of standard MSP
 */
 
 /* 11/24/98 -- tanh~ */

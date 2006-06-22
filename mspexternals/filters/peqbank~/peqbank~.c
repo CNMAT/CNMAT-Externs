@@ -26,15 +26,22 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
      
     
-Minor polishing by Matt Wright, 12/10/99 (version, tellmeeverything)
-Major fix of smooth mode disaster, Matt Wright 5/4/2000
-Fixed fast mode, 7/11/2000
-Version 1.5 Expires June 2002, 
-Version 1.6 never expires
-Version 1.7 expires March 1, 2003
-Version 1.8 fixes peqbank_free bug
-Version 1.9 Added "biquads" message; expires 12/1/3
-Version 2.0 Never expires
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: peqbank~
+DESCRIPTION: Bank of parametric EQ with analog-like controls
+AUTHORS: Tristan Jehan, Matt Wright
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 1.0: Tristan's initial version 
+VERSION 1.1: Minor polishing by Matt Wright, 12/10/99 (version, tellmeeverything)
+VERSION 1.2: Major fix of smooth mode disaster, Matt Wright 5/4/2000
+VERSION 1.3: Fixed fast mode, 7/11/2000
+VERSION 1.5 Expires June 2002, 
+VERSION 1.6 never expires
+VERSION 1.7 expires March 1, 2003
+VERSION 1.8 fixes peqbank_free bug
+VERSION 1.9 Added "biquads" message; expires 12/1/3
+VERSION 2.0 Never expires
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
 TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme

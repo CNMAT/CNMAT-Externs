@@ -21,9 +21,15 @@ PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
 HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-*/
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 2threshattack~
+DESCRIPTION: Two-threshold attack detector, aka a Schmitt Trigger (http://en.wikipedia.org/wiki/Schmitt_trigger)
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 2004,05,06
+VERSION 0.1: Matt's initial version (5/31/4)
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
-/* 5/31/4 */
+*/
 
 #define TTA_VERSION "0.1"
 

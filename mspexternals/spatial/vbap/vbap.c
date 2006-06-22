@@ -1,5 +1,7 @@
 /* vbap.c
 
+DESCRIPTION: Ville Pulkki's final CNMAT version of this VBAP-related object, long superceded by the version he's still maintaining.
+
 written by Ville Pulkki 1999
 Helsinki University of Technology 
 and 

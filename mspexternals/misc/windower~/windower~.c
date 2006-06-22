@@ -27,6 +27,12 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+*/
+
+/*
+DESCRIPTION: Output lists of consecutive signal values (as floats) every so many samples.  Sort of like snapshot~, but for an entire (rectangular) window of samples.
+*/
+
 
 */
 
