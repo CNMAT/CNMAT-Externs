@@ -1,3 +1,9 @@
+/*
+MSP Bank of exponentially decaying sinusoids
+
+DESCRIPTION: Fast Fourier Transform object written to use the Motorola FFT library, probably written by Dudas.  Not maintained; you should probably use MSP's built-in fft~ instead.
+*/
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "math.h"

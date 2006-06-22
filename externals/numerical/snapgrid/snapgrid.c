@@ -1,6 +1,40 @@
-/**************************************************************************************
- *
- *************************************************************************************/
+/*
+Copyright (c) 2000,01,02,03,04,05,06.  The Regents of the University of California (Regents).
+All Rights Reserved.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for educational, research, and not-for-profit purposes, without
+fee and without a signed licensing agreement, is hereby granted, provided that
+the above copyright notice, this paragraph and the following two paragraphs
+appear in all copies, modifications, and distributions.  Contact The Office of
+Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+
+Written by Tim Madden, The Center for New Music and
+Audio Technologies, University of California, Berkeley.
+
+     IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+     SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+     ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+     REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+     REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+     FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+     DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+     REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+     ENHANCEMENTS, OR MODIFICATIONS.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: snapgrid
+DESCRIPTION: Snap to Grid is used for adding randomness to a list of numbers, making a preset "grid, " making harmonic series, and creating lydian chromatic scales. Useful for tuning bell sounds to a chord, or randomizing amplitudes.
+AUTHORS: Tim Madden
+COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
+VERSION 0.1: Tim's initial version
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+
+*/
+
 /*
  * Includes.
  */

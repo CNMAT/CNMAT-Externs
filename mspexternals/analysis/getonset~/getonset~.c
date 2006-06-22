@@ -1,3 +1,8 @@
+/*
+DESCRIPTION: Onset detector based on exceeding a threshold change in spectral energy.  Written by Tristan Jehan?
+*/
+
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "fftnobitrev.h"

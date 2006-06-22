@@ -1,6 +1,6 @@
 /*
-Copyright (c) 1999.  The Regents of the University of California (Regents).
-All Rights Reserved.
+Copyright (c) 1999,2000,01,02,03,04,05,06.  The Regents of the
+University of California (Regents).  All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
 documentation for educational, research, and not-for-profit purposes, without
@@ -24,21 +24,20 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
-*/
 
 
-
-/*
-	oscillators.c
-	
-	MSP oscillator Bank
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: oscillators~
+DESCRIPTION: Oscillator bank that can read waveform from a buffer~
+AUTHORS: Adrian Freed
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 1.0: Adrian's initial version 
+VERSION 1.1: (Matt) initializes no-argument buffer null pointer correctly 
+VERSION 1.2: (Matt) noglissbirthmode
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 	
 	©1988,1989 Adrian Freed
 	©1999 UC Regents, All Rights Reserved. 
-
-	Version 1.1: initializes no-argument buffer null pointer correctly 
-	1.2 noglissbirthmode
-	
 */
 
 #include "ext.h"

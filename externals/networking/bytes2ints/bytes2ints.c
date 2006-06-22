@@ -26,8 +26,8 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
  bytes2ints.c
- Convert binary buffers to max lists where each byte of the buffer is a separate Max
-  int.
+
+DESCRIPTION:  Convert binary buffers (e.g., from received UDP packets) to max lists where each byte of the buffer is a separate Max int.
   
  */
  

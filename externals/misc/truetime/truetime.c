@@ -1,3 +1,8 @@
+/*
+DESCRIPTION: Ancient code for getting the system time (superseded by the "date" object).
+*/
+
+
 /* truetime code from Mike Berry via Chris Brown */
  
 

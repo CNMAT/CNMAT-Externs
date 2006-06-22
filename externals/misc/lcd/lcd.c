@@ -18,6 +18,8 @@
 			local 0 			  -- Never draw when being clicked
 	2)  added LineSegment message, with optional color argument.
 	3)  added optional color argument to Paint & Frame Oval and Rect
+
+DESCRIPTION: Obsolete ancient version of the LCD object, long since taken over by Cycling 74.
 	
 */
 

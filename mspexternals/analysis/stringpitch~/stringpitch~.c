@@ -1,3 +1,8 @@
+/* 
+DESCRIPTION: STFT-based onset detector (presumably optimized for guitar) that outputs pitch, energy, and centroid when an onset is found.
+*/
+
+
 #include "ext.h"
 #include "z_dsp.h"
 

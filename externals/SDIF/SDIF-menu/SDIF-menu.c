@@ -28,12 +28,14 @@ Music and Audio Technologies, University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+/* 
+DESCRIPTION: Richard Dudas' obsolete OS9-only PPC-only GUI for SDIF stream selection.  Use sdif-menu2.js instead.
+*/
 
 /* SDIF-menu -  a gui object for SDIF thread selection
 	
 	(c) CNMAT 1999
 	ppc only Dudas hack - gzdip!
-	
 	using some of Matt's SDIF code (modified)
 	Version 0.4 by Matt: solves fopen binary bug, less verbose in Max window
 	Version 0.5 by Matt: Uses %g to print time tags so hugely negative ones don't crash Max

@@ -10,6 +10,8 @@
  */
 
   /* 
+DESCRIPTION: Ancient external for debugging an early version of the Rimas Box.  Outputs the last two bytes of the received packet as a short int.
+
         Author: Matt Wright
         
         6/29/99

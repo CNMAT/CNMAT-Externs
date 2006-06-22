@@ -26,7 +26,9 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
  bytes2text.c
- Convert binary buffers to maxable lists
+
+DESCRIPTION: Interpret a binary buffer (e.g., from a received UDP packet) as an ASCII string, add null termination, and print it in the Max window.
+
   
  */
  

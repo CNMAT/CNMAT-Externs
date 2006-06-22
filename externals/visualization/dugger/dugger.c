@@ -1,3 +1,7 @@
+/*
+DESCRIPTION: Ancient spectral display object by Richard Dudas, superceded by objects now bundled with MSP
+*/
+
 // dugger - a display object for fugger
 // Display Used for Gibson Guitar Effect Realisation
 

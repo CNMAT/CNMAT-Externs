@@ -1,6 +1,6 @@
 /*
-Copyright (c) 1999.  The Regents of the University of California (Regents).
-All Rights Reserved.
+Copyright (c) 1999,2000,01,02,03,04,05,06.  The Regents of the
+University of California (Regents).  All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
 documentation for educational, research, and not-for-profit purposes, without
@@ -24,15 +24,18 @@ University of California, Berkeley.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
-*/
-/*
-	decaying-sinusoids.c
-	
-	MSP Bank of decaying sinusoids
-	
-	©1988,1989 Adrian Freed
-	©1999 UC Regents, All Rights Reserved. 
 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: decaying-sinusoids~
+DESCRIPTION: MSP Bank of exponentially decaying sinusoids
+AUTHORS: Adrian Freed
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 0.0: Adrian's initial version 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+
+       	©1988,1989 Adrian Freed
+	©1999,2000,01,02,03,04,05,06 UC Regents, All Rights Reserved. 
 	
 */
 

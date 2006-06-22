@@ -1,6 +1,10 @@
 // zplane user interface object
 // ©1998 Richard Dudas, CNMAT
 
+/*
+DESCRIPTION: Ancient filter pole/zero display object by Richard Dudas, superceded by objects now bundled with MSP
+*/
+
 #define __EXT_USER	// this is not explained in the writing msp externals doc
 					// necessary if you're making an MSP user interface object
 

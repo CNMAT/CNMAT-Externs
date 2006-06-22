@@ -8,7 +8,11 @@
 
    version 1.2.1 021004 Matt Wright fixed pitch_getit() bounds error and added debug info
    version 1.2.2 021016 Matt Wright more debug info: addr of most recent input sig vector and gettime()
+
+DESCRIPTION: Tristan Jehan's version of fiddle~ that also outputs "perceptual analysis": centroid, noisiness, Bark scale, etc.  This is Tristan's final CNMAT version, long obsolete in comparison to the current version that Tristan still maintains.
    
+
+Outputs Pitch, Loudness, Brightness, Noisiness and Bark scale
 */
 
 #define VERSION "1.2.2"

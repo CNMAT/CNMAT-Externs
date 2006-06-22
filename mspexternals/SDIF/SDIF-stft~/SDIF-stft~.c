@@ -1,6 +1,6 @@
 /* SDIF-stft~ dudas hack
 
-
+DESCRIPTION: Unfinished ancient STFT object by Richard Dudas, reading from signal inputn to SDIF output.  This sort of became MSP's pfft~ object.
 
 -----------------------
 to do:

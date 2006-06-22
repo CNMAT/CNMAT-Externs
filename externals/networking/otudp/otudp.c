@@ -33,26 +33,31 @@ University of California, Berkeley.
 
 
 /*
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: otudp
+DESCRIPTION: Open Transport UDP object (now superseded by udp objects from Cycling 74 that cooperate much better with Max's threading system)
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 1997,98,99,2000,01,02,03,04,05,06
+VERSION 0.0: Initial version
+VERSION 0.1:  Made error reporting slightly more verbose 10/16/97
+VERSION 0.2:  Fixed bugs, made more stable, in 11/97 for The Hub's "Points of Presence"
+VERSION 0.3:  Converted to asynchronous mode, 2/18/99
+VERSION 0.4:  Used OTEnterNotifier() to solve synchronization problems, 3/9/99
+VERSION 0.5: More syncoronization debugging, 4/27/99
+VERSION 0.6:  Allowed changing the host on the fly, 5/18/99
+VERSION 1.7:  Made pendingBuffers a FIFO 10/18/99
+VERSION 1.8: Allowed changing the receive port on the fly
+VERSION 1.9: Allowed #1 through #9 as host and port arguments
+VERSION 2.0: MacOS 9.1 compatibility: Only calls OTSndUData at Deferred Task (not interrupt) time
+VERSION 2.1: Fixed bizarre packet-dropping bugs
+VERSION 2.2: Changed error reporting to post() instead of ouchstring()
+VERSION 2.3: PPC only, allows "host" and "receiveport" even in overdrive.  No dialog boxes.
+VERSION 3.0: OSX version: InContext, nothing deferred...
+VERSION 3.0.1:  Used error() instead of post() for error messages
+VERSION 3.0.1b: Complains less often about semaphoreTest Failed
+VERSION 3.0.2:  Moved the semaphoreTest to the right place
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
- otudp.c: Open Transport UDP object for Max
- by Matt Wright, 2/5/97
- Made error reporting slightly more verbose 10/16/97
- Fixed bugs, made more stable, in 11/97 for The Hub's "Points of Presence"
- Converted to asynchronous mode, 2/18/99
- Used OTEnterNotifier() to solve synchronization problems, 3/9/99
- More syncoronization debugging, 4/27/99
- Allowed changing the host on the fly, 5/18/99
- Made pendingBuffers a FIFO 10/18/99 (version 1.7)
- Allowed changing the receive port on the fly (1.8)
- Allowed #1 through #9 as host and port arguments (1.9)
- MacOS 9.1 compatibility: Only calls OTSndUData at Deferred Task (not interrupt) time (2.0)
- Fixed bizarre packet-dropping bugs (2.1)
- Changed error reporting to post() instead of ouchstring()  (2.2)
- PPC only, allows "host" and "receiveport" even in overdrive.  No dialog boxes. (2.3)
- OSX version: InContext, nothing deferred...  (3.0)
- Used error() instead of post() for error messages (3.0.1)
- Complains less often about semaphoreTest Failed (3.0.1b)
- Moved the semaphoreTest to the right place 3.0.2
 
 Now that this thing uses asynchronous mode, it's nearly impossible to tell how
 the flow of control works, so here are some hints:

@@ -1,3 +1,7 @@
+/*
+DESCRIPTION: Tristan Jehan's object to compute the spectral centroid of a window of a signal.  This is Tristan's final CNMAT version, long obsolete in comparison to the current version that Tristan still maintains.
+*/
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "fft.h"

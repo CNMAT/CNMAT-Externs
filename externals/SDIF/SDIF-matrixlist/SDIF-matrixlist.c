@@ -29,10 +29,21 @@ University of California, Berkeley.
 
 */
 
+
+/* 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-matrixlist
+DESCRIPTION: list all the matrix types found in the given stream
+AUTHORS: Matt Wright 
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 0.1:  First version
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
+
 /*
  SDIF-matrixlist.c -- the SDIF-matrixlist object
  by Matt Wright, 7/8/99 
- A Max SDIF selector object - list all the matrix types found in the given stream
+ A Max SDIF selector object - 
  -- */
 
 #define SDIF_MATRIXLIST_VERSION "0.1"

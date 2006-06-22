@@ -26,12 +26,18 @@ David Zicarelli.
      DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: lcm
+DESCRIPTION: Least common multiple
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
+VERSION 0.1: Matt's initial version, 3/29/98.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+
 */
 
-/* lcm.c
-   Max lcm (least common multiple) object.
-   
-   Version 0.1: 3/29/98 */
    
 #define LCM_VERSION "0.1"   
 #include "ext.h"

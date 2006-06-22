@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 1999, 2000,01,02,03  The Regents of the University of California
+Copyright (c) 1999, 2000,01,02,03,04,05  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -29,14 +29,19 @@ Wright's pitcher~ external.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
      
-     
-     Original version  7/19/99 
-     
-     Version 0.6 031215 Matt+MZed, compiles for OSX
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: pitcher~
+DESCRIPTION: Perform real-time pitch scaling/shifting on a monophonic pitched signal.
+AUTHORS: Brian Vogel
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 0.1: Brian's initial version 7/19/99 
+VERSION 0.6: 031215 Matt+MZed, compiles for OSX
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+
      */
 
 
-/* The totalt delay (latency) for this external is (x->minimumPitchSamps + 
+/* The total delay (latency) for this external is (x->minimumPitchSamps + 
   * x->outputDelay) samples. The delay of the (external) pitch detectro should
   * ideally be x->outputDelay samples. If the pitch detector delay is more than
   * this, a delay line should be added to the audio input of this external to

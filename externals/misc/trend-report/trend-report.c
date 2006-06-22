@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2002.  The Regents of the University of California (Regents).
+Copyright (c) 2002,03,04,05,06.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -25,8 +25,13 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
-  peak-report:  report data about max and min values of a stream of float events
-  
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: trend-report
+DESCRIPTION: Given an input stream of numbers, report statistics on "trends", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the "laughter" detector for Edmund Campion's "ME".
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 2002,03,04,05,06
+VERSION 0.1: Matt's initial version.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 */
  
  

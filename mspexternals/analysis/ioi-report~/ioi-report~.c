@@ -28,7 +28,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: ioi-report~
-DESCRIPTION: Inter-onset-interval report
+DESCRIPTION: Inter-onset-interval report for mostly-zero signals, i.e., a signal domain timer.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2004,05
 VERSION 0.1: First version, 5/28/4 

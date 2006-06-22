@@ -28,11 +28,14 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
-*/
-
-/* 8/15/2 -- mattrms~ 
-
-	Version 0.2: has "continuous" mode
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: mattrms~
+DESCRIPTION: RMS energy analyzer with an idiosyncratic control structure
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 2002,03,04,05,06
+VERSION 0.1: Matt's initial version 
+VERSION 0.2: has "continuous" mode
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
 

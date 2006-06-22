@@ -1,6 +1,6 @@
 /* 
-Copyright (c) 1999.  The Regents of the University of California (Regents).
-All Rights Reserved.
+Copyright (c) 1999,2000,01,02,03,04,05,06.  The Regents of the
+University of California (Regents).  All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
 documentation for educational, research, and not-for-profit purposes, without
@@ -31,10 +31,14 @@ University of California, Berkeley.
 
 /*
 
- ottcp.c: Open Transport TCP object for Max - client (a.k.a. active) side only
- by Matt Wright, 5/19/99  (based on OTUDP object)
- 
- Version 0.0: Still needs substantial debugging.  Use at your own risk.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: ottcp
+DESCRIPTION: Open Transport TCP object for Max - client (a.k.a. active) side only.  Never really tested or debugged.
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 0.0: Matt's initial version 5/19/99  (based on OTUDP object). Still needs substantial debugging.  Use at your own risk.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+
  
  Arguments specify IP address and TCP port of server we want to talk to.
  Our (ephermeral) TCP port number is generated automagically.
