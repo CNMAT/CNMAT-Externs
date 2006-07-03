@@ -74,6 +74,11 @@ public class tempocurver extends MSPPerformer {
 
 	}
  
+
+	public void version() {
+		post("tempocurver version 0.1 - outputs /plan and /starting-ramp messags");
+	}
+
 	public void verbose(int v) {
 		verbose = (v != 0);
 		post("verbosity " + verbose);
@@ -123,6 +128,11 @@ public class tempocurver extends MSPPerformer {
 						( (current_phase+ wait_increment) +
 						  (time_to_get_there - wait) * (current_freq + target_tempo) / 2));
 			}
+
+			outlet(2,"/plan",
+			       new Atom[]{ Atom.newAtom(0.), Atom.newAtom(current_freq),
+					   		   Atom.newAtom(wait), Atom.newAtom(current_freq),
+					  		   Atom.newAtom(time_to_get_there), Atom.newAtom(target_tempo)});
 
 			if (wait < 0.f) {
 				// This should never happen
@@ -231,6 +241,11 @@ public class tempocurver extends MSPPerformer {
 				// This is the signal vector where we start ramping
 				hold_this_sigvec = samps_to_wait;
 				m = 2;
+				outlet(2,"/starting-ramp",
+					   new Atom[]{ Atom.newAtom((tf-f)*sr/(float)samps_to_wait), 
+						       Atom.newAtom(f), 
+						       Atom.newAtom(tf) });
+
 			}
 		} else {
 			// Ramping
@@ -307,6 +322,8 @@ public class tempocurver extends MSPPerformer {
 	}
 
 }
+
+
 
 
 
