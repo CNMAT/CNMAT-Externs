@@ -76,7 +76,7 @@ public class tempocurver extends MSPPerformer {
  
 
 	public void version() {
-		post("tempocurver version 0.1 - outputs /plan and /starting-ramp messags");
+		post("tempocurver version 0.2 - fixed threading problem with samps_to_target varible");
 	}
 
 	public void verbose(int v) {
@@ -151,6 +151,7 @@ public class tempocurver extends MSPPerformer {
 
 
 			synchronized(this) {
+				// post("*** Switching mode to 1");
 				mode = 1; // Now we're waiting to start ramp
 				samps_to_target = (int) (time_to_get_there * sr);
 				samps_to_wait = (int) (wait * sr);
@@ -214,7 +215,7 @@ public class tempocurver extends MSPPerformer {
 		float[] phaseout = outs[0].vec;
 		float[] tempoout = outs[1].vec;
         float p, f, tf, df;
-		int i, m, wait;
+		int i, m, wait, stt, stw;
 		int hold_this_sigvec;	// # samples of this signal vector to keep tempo constant
 		int nsamps = outs[0].n;
 
@@ -223,7 +224,10 @@ public class tempocurver extends MSPPerformer {
             p = current_phase;
 			f = current_freq;
 			tf = target_freq;
+			stt = samps_to_target;
+			stw = samps_to_wait;
 			m = mode;
+			// post("** In perform, m = mode = " + m + " = " + mode);
 			wait = samps_to_wait;
         }
         
@@ -239,10 +243,10 @@ public class tempocurver extends MSPPerformer {
 				// df = 0;
 			} else {
 				// This is the signal vector where we start ramping
-				hold_this_sigvec = samps_to_wait;
+				hold_this_sigvec = stw;
 				m = 2;
 				outlet(2,"/starting-ramp",
-					   new Atom[]{ Atom.newAtom((tf-f)*sr/(float)samps_to_wait), 
+					   new Atom[]{ Atom.newAtom((tf-f)*sr/(float)stw), 
 						       Atom.newAtom(f), 
 						       Atom.newAtom(tf) });
 
@@ -264,9 +268,11 @@ public class tempocurver extends MSPPerformer {
 
 		if (m == 2) {
 			// Ramping;
-			int samps_for_entire_ramp = samps_to_target - samps_to_wait;
+			int samps_for_entire_ramp = stt - stw;
 			df = (tf - f) / ((float) samps_for_entire_ramp);
-			int ramp_this_sigvec = java.lang.Math.min(nsamps, samps_to_target);
+			int ramp_this_sigvec = java.lang.Math.min(nsamps, stt);
+
+			// post("** ramp_this_sigvec " + ramp_this_sigvec);
 
 			for (i = hold_this_sigvec; i < ramp_this_sigvec; ++i) {
 				phaseout[i] = p;
@@ -278,7 +284,8 @@ public class tempocurver extends MSPPerformer {
 				}
 			}
 
-			if (samps_to_target < nsamps) {
+			if (stt < nsamps) {
+				// post("* stt (" + stt +  ") < nsamps (" +nsamps +")");
 				// We finished the ramp this sigvec
 				if (java.lang.Math.abs(f-tf) > 0.0001) {
 					post("Error!!  tried to get to freq " + tf + " but got to " + f + " instead...");
@@ -290,7 +297,7 @@ public class tempocurver extends MSPPerformer {
 					   new Atom[]{ Atom.newAtom(f), 
 								   Atom.newAtom(p) });
 
-				for (i = samps_to_target; i < nsamps; ++i) {
+				for (i = stt; i < nsamps; ++i) {
 					// back to constant-tempo
 					phaseout[i] = p;
 					tempoout[i] = f;
@@ -305,6 +312,8 @@ public class tempocurver extends MSPPerformer {
 			
 		if (i != nsamps) {
 			post("Error!!! Didn't compute the whole signal vector");
+			post("i " + i + ", nsamps " + nsamps + ", mode " + mode + ", m " + m);
+			post("hold_this_sigvec " + hold_this_sigvec);
 		}
 
         synchronized(this) {
@@ -322,6 +331,12 @@ public class tempocurver extends MSPPerformer {
 	}
 
 }
+
+
+
+
+
+
 
 
 
