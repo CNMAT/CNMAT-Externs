@@ -59,7 +59,7 @@ public class tempocurver extends MSPPerformer {
 	{
 		samps_to_target = 0;
         current_phase = 0;
-        current_freq = 2;
+        current_freq = 0;
         interp_mode = 1;
 		mode = 0;
 		verbose = true;
@@ -76,7 +76,7 @@ public class tempocurver extends MSPPerformer {
  
 
 	public void version() {
-		post("tempocurver version 0.2 - fixed threading problem with samps_to_target varible");
+		post("tempocurver version 0.3 - default frequency is zero");
 	}
 
 	public void verbose(int v) {
