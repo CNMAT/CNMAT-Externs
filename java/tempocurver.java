@@ -76,7 +76,7 @@ public class tempocurver extends MSPPerformer {
  
 
 	public void version() {
-		post("tempocurver version 0.3 - default frequency is zero");
+		post("tempocurver version 0.4 - outputs /jumped message");
 	}
 
 	public void verbose(int v) {
@@ -102,7 +102,11 @@ public class tempocurver extends MSPPerformer {
 			synchronized(this) {
 				current_freq = target_tempo;
 				current_phase = target_phase;
+				mode = 0;
 			}
+			outlet(2,"/jumped",
+					   new Atom[]{ Atom.newAtom(target_tempo), 
+								   Atom.newAtom(target_phase)}); 
 		} else {
 			if (target_tempo == current_freq) {
 				outlet(2,"/impossible",
@@ -331,6 +335,7 @@ public class tempocurver extends MSPPerformer {
 	}
 
 }
+
 
 
 
