@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2006.  
+Copyright (c) 2006.
 The Regents of the University of California (Regents).
 All Rights Reserved.
 
@@ -31,52 +31,78 @@ University of California, Berkeley.
 import com.cycling74.max.*;
 import com.cycling74.msp.*;
 
+
 public class tempocurver extends MSPPerformer {
  
-	private int samps_to_target;
-	private int samps_to_wait;
+	private int samps_to_target;	// For all modes, the time to spend 
+	private int samps_to_wait;		// Time to wait before starting a ramp
 	private float target_phase;	// Fractional beat
 	private float target_freq;	// Beats/second
 	private float current_phase;
 	private float current_freq;
-    private int interp_mode;	// 1=linear, 2=quadratic
+    private int interp_mode;	// LINEAR or QUADRATIC (some day)
+	private static final int LINEAR = 1;
+	private static final int QUADRATIC = 2;
 	private float oneoversr;
 	private float sr;
-	private int mode;			// 0 = hold, 1=wait, 2=ramp
+	private int mode;			// HOLD, WAIT, RAMP, or IDLE
 	private boolean verbose;
+	private boolean offline;	// If true, then perform() always returns all zeros
+	private java.util.LinkedList to_do_list;
 
-	private static final String[] INLET_ASSIST = new String[]{
-		"List: target tempo (BPS), target phase (0-1), time to get there"
-	};
-	private static final String[] OUTLET_ASSIST = new String[]{
-		"beat phase (sig)",
-		"tempo (beats/sec) (sig)",
-		"OSC messages"
-	};
-	
+	private class plan_element {
+		int type;		// 0 = hold, 1 = jump, 2 = ramp
+		float dur;		// duration, in seconds
+		float target_p;	// For ramps, the target phase
+		float target_f;	// For ramps, the target frequency
+		public plan_element(int t, float d, float f, float p) {
+			type = t; dur = d; target_f = f; target_p = p; 
+		}
+	};	
+
+	// Enum types for mode variable and plan_element's type variable:
+	private static final int HOLD = 10;
+	private static final int WAIT = 11;
+	private static final int RAMP = 12;
+	private static final int IDLE = 13;
+	private static final int JUMP = 14;
+
+	private String mode_name(int m) {
+		if (m == HOLD) return "HOLD";
+		if (m == WAIT) return "WAIT";
+		if (m == RAMP) return "RAMP";
+		if (m == IDLE) return "IDLE";
+		if (m == JUMP) return "JUMP";
+		return ("mode " + m);
+	}
 
 	public tempocurver()
 	{
 		samps_to_target = 0;
         current_phase = 0;
         current_freq = 0;
-        interp_mode = 1;
-		mode = 0;
+        interp_mode = LINEAR;
+		mode = IDLE;
 		verbose = true;
-
+		sr = 44100;	// Default in case pretend_perform is called before DSP turned on
+		oneoversr = 1/sr;
+		to_do_list = new java.util.LinkedList();
 
 		declareInlets(new int[]{DataTypes.ALL});
 		declareOutlets(new int[]{SIGNAL,SIGNAL,DataTypes.MESSAGE});
 		createInfoOutlet(false);
 		setInletAssist(new String[]{
 			"List: target tempo (BPS), target phase (0-1), time to get there"});
-		setOutletAssist(OUTLET_ASSIST);
-
+		setOutletAssist( new String[]{
+			"beat phase (sig)",
+			"tempo (beats/sec) (sig)",
+			"OSC messages"
+		});
 	}
  
 
 	public void version() {
-		post("tempocurver version 0.4 - outputs /jumped message");
+		post("tempocurver version 2.0 - schedules command sequences into the future");
 	}
 
 	public void verbose(int v) {
@@ -84,100 +110,189 @@ public class tempocurver extends MSPPerformer {
 		post("verbosity " + verbose);
 	}
 
-	public void test_casting() {
-		float f;
-		for (f = -1.f; f <= 2.f; f = f+0.1f) {
-			post("f " + f + " to int " + (int) f  + "\n");
+	public void offline(int v) {
+		offline = (v != 0);
+		post("offline " + verbose);
+	}
+
+
+	// Not inherently thread-safe; relying on caller to call as synchronized
+	private void todo_push(plan_element e) {
+		to_do_list.add(e);
+	}
+
+	// Not inherently thread-safe; relying on caller to call as synchronized
+	private plan_element todo_pop() {
+		if (to_do_list.isEmpty()) {
+			return null;
+		} else {
+			java.lang.Object o = to_do_list.remove(0);
+			plan_element e = (plan_element) o;	
+			return e;
 		}
 	}
+
+	public void clear() {
+		// as in clear the to-do list
+		synchronized(this) {
+			to_do_list.clear();
+		}
+	}
+
+	public void testq() {
+		plan_element e;
+		synchronized(this) {e = todo_pop();}
+		if (e == null) {
+			post("can't remove - to-do list is empty");
+		} else {
+			post("removed " + mode_name(e.type));
+		}
+	}
+
+	public void testq(int i) {
+		synchronized(this) {todo_push(new plan_element(i, 2, 3, 4));}
+		post("added " + i);
+	}
+
+
+	private float fix_phase(float p) {
+		// In case user asks for a phase outside 0-1 range
+		while(p>1.0) {
+			p -= 1.0;
+		}
+
+		while(p < 0.0) {
+			p += 1.0;
+		}
+		return p;
+	}
+
 
 	public void list(float target_tempo, float target_phase, float time_to_get_there) {
 		// post("you asked for " + target_tempo + " " + target_phase + " " + time_to_get_there);
 
-		while(target_phase>1.0) {
-			target_phase -= 1.0;
+		if (time_to_get_there == 0) {
+			jump(target_tempo, target_phase);
+		} else {
+			ramp(target_tempo, target_phase, time_to_get_there);
+		}
+	}
+
+	public void jump(float freq, float phase) {
+		plan_element e = new plan_element(JUMP, 0, freq, fix_phase(phase));
+		synchronized(this) { todo_push(e); }
+	}
+
+	public void ramp(float target_tempo, float target_phase, float time_to_get_there) {
+		if (time_to_get_there == 0.) {
+			jump(target_tempo, target_phase);
+		} else {
+			plan_element e = new plan_element(RAMP, time_to_get_there, target_tempo, fix_phase(target_phase));
+			synchronized(this) { todo_push(e); }
+		}
+	}
+
+	public void hold(float time) {
+		plan_element e = new plan_element(HOLD, time, 0, 0);
+		synchronized(this) { todo_push(e); }
+	}
+
+	private void do_jump(plan_element e) {
+		if (e.type != JUMP) {
+			post("Error!!! called do_jump on a plan_element of type " + e.type);
+			return;
 		}
 
-		if (time_to_get_there == 0) {
-			synchronized(this) {
-				current_freq = target_tempo;
-				current_phase = target_phase;
-				mode = 0;
-			}
-			outlet(2,"/jumped",
-					   new Atom[]{ Atom.newAtom(target_tempo), 
-								   Atom.newAtom(target_phase)}); 
-		} else {
-			if (target_tempo == current_freq) {
-				outlet(2,"/impossible",
-					   new Atom[]{ Atom.newAtom("/same-tempo"), 
-								   Atom.newAtom(target_tempo)}); 
-				return;
-			}
-			float target_fracbeat = target_fracbeat_linear(time_to_get_there, target_tempo, target_phase);
+		synchronized(this) {
+			current_freq = e.target_f;
+			current_phase = e.target_p;
+		}
+		outlet(2,"/jumped",
+				   new Atom[]{ Atom.newAtom(e.target_f), 
+							   Atom.newAtom(e.target_p)});
+	}
 
-			float wait =  how_long_to_wait(target_tempo, time_to_get_there, target_fracbeat);
+	private void plan_ramp(plan_element e) {
+		if (e.type != RAMP) {
+			post("Error!!! called plan_ramp on a plan_element of type " + e.type);
+			return;
+		}
 
-			if (verbose) {
-				post("Target fracbeat is " + target_fracbeat + "\n");
-				post("Wait time is " + wait + " seconds\n");
-				float wait_increment = wait*current_freq;
+		float target_tempo = e.target_f;
+		float target_p = e.target_p;
+		float time_to_get_there = e.dur;
+		float f, p;
 
-				post("So that means " + wait + " seconds at current tempo " + current_freq);
-				post("to increment current phase " +  current_phase + " by " +
-					 wait_increment + " to " + (current_phase+wait*current_freq));
-				post("Then ramp to new tempo " + target_tempo + " over the remaining " + 
-					(time_to_get_there - wait) + " seconds");
-				post("Thereby bringing phase to " +
-						( (current_phase+ wait_increment) +
-						  (time_to_get_there - wait) * (current_freq + target_tempo) / 2));
-			}
+		synchronized(this) {
+			f = current_freq;
+			p = current_phase;
+		}
+		
+		if (target_tempo == f) {
+			outlet(2,"/impossible",
+				   new Atom[]{ Atom.newAtom("/same-tempo"), 
+							   Atom.newAtom(target_tempo)}); 
+			synchronized(this) {mode = IDLE;};
+			return;
+		}
+		float target_fracbeat = target_fracbeat_linear(time_to_get_there, f, p, target_tempo, target_p);
+		float wait =  how_long_to_wait(time_to_get_there, f, p, target_tempo, target_fracbeat);
 
-			outlet(2,"/plan",
-			       new Atom[]{ Atom.newAtom(0.), Atom.newAtom(current_freq),
-					   		   Atom.newAtom(wait), Atom.newAtom(current_freq),
-					  		   Atom.newAtom(time_to_get_there), Atom.newAtom(target_tempo)});
+		if (verbose) {
+			post("Target fracbeat is " + target_fracbeat + "\n");
+			post("Wait time is " + wait + " seconds\n");
+			float wait_increment = wait*current_freq;
 
-			if (wait < 0.f) {
-				// This should never happen
-				outlet(2,"/impossible",
-					   new Atom[]{ Atom.newAtom("/negative-wait-time"), 
-								   Atom.newAtom(wait)}); 
-				return;
-			}
-			if (wait > time_to_get_there) {
-				outlet(2,"/impossible",
-					   new Atom[]{ Atom.newAtom("/need-more-time"), 
-								   Atom.newAtom(wait), 
-								   Atom.newAtom(time_to_get_there) });
-				return;
-			}
+			post("So that means " + wait + " seconds at current tempo " + current_freq);
+			post("to increment current phase " +  current_phase + " by " +
+				 wait_increment + " to " + (current_phase+wait*current_freq));
+			post("Then ramp to new tempo " + target_tempo + " over the remaining " + 
+				(time_to_get_there - wait) + " seconds");
+			post("Thereby bringing phase to " +
+					( (current_phase+ wait_increment) +
+					  (time_to_get_there - wait) * (current_freq + target_tempo) / 2));
+		}
 
+		if (wait < 0.f) {
+			// This should never happen
+			outlet(2,"/impossible",
+				   new Atom[]{ Atom.newAtom("/negative-wait-time"), 
+							   Atom.newAtom(wait)}); 
+			synchronized(this) {mode = IDLE;};
+			return;
+		}
 
-			synchronized(this) {
-				// post("*** Switching mode to 1");
-				mode = 1; // Now we're waiting to start ramp
-				samps_to_target = (int) (time_to_get_there * sr);
-				samps_to_wait = (int) (wait * sr);
-				// For now, just pre-compute the wait time and hope it all works out
-				// Even better would be to re-check everything dynamically...
-				target_phase = -9999; // Not used
-				target_freq = target_tempo;
-			}
+		if (wait > time_to_get_there) {
+			outlet(2,"/impossible",
+				   new Atom[]{ Atom.newAtom("/need-more-time"), 
+							   Atom.newAtom(wait), 
+							   Atom.newAtom(time_to_get_there) });
+			synchronized(this) {mode = IDLE;};
+			return;
+		}
+
+		outlet(2,"/plan",
+			   new Atom[]{ Atom.newAtom(0.), Atom.newAtom(current_freq),
+						   Atom.newAtom(wait), Atom.newAtom(current_freq),
+						   Atom.newAtom(time_to_get_there), Atom.newAtom(target_tempo)});
+
+		synchronized(this) {
+			mode = WAIT; // Now we're waiting to start ramp
+			samps_to_target = (int) (time_to_get_there * sr);
+			// For now, just pre-compute the wait time and hope it all works out
+			// Even better would be to re-check everything dynamically...
+			samps_to_wait = (int) (wait * sr);
+			target_phase = target_p; // Not actually used, but the number's correct
+			target_freq = target_tempo;
 		}
 	}
 
 	// A "fracbeat" is a fractional beat number, a sort of unwrapped phase.
-	private float target_fracbeat_linear(float t, float end_freq, float end_phase) {
-		float phase, freq;
-		synchronized(this) {
-			phase = current_phase;
-			freq = current_freq;
-		}
-
+	private float target_fracbeat_linear(float t, float start_freq, float start_phase, 
+                                         float end_freq, float end_phase) {
 		// Compute the ending fractional beat number based on a steady tempo ramp starting immediately
 		// Trivial in the linear case: average freq times elapsed time
-		float end_phase_starting_now = phase + t * (freq + end_freq) * 0.5f;
+		float end_phase_starting_now = start_phase + t * (start_freq + end_freq) * 0.5f;
 		// Cast to int will round down
 		int int_beats = (int) (end_phase_starting_now - end_phase);
 		float target = int_beats + end_phase;
@@ -192,17 +307,13 @@ public class tempocurver extends MSPPerformer {
 		return target;
 	}
 
-	private float how_long_to_wait(float end_freq, float t, float target_fracbeat) {
-		float phase, freq;
-		synchronized(this) {
-			phase = current_phase;
-			freq = current_freq;
-		}
 
-		float avg_freq = (end_freq+freq)*0.5f;
-	
+	private float how_long_to_wait(float t, float start_freq, float start_phase, 
+	                               float end_freq,  float target_fracbeat) {
 
-		return  (2.f / (end_freq - freq)) * (phase + (avg_freq*t) - target_fracbeat);
+		float avg_freq = (end_freq+start_freq)*0.5f;
+
+		return  (2.f / (end_freq - start_freq)) * (start_phase + (avg_freq*t) - target_fracbeat);
 		// expr (2.0 / ($f1 - $f4)) * ($f5 + (($f1+$f4)*0.5*$f2) - $f3)
 	}
 
@@ -214,53 +325,61 @@ public class tempocurver extends MSPPerformer {
 	    oneoversr = (float) 1.0 / sr;
 	}
 
-	public void perform(MSPSignal[] ins, MSPSignal[] outs) 
-	{
-		float[] phaseout = outs[0].vec;
-		float[] tempoout = outs[1].vec;
-        float p, f, tf, df;
-		int i, m, wait, stt, stw;
-		int hold_this_sigvec;	// # samples of this signal vector to keep tempo constant
-		int nsamps = outs[0].n;
 
+	public void pretend_perform() {
+		// No arguments version means keep going until to-do list is empty
+
+		// So figure out total time of the current to-do list
+		
+		java.util.Iterator iter = to_do_list.iterator();
+		float total_time = 0;
+		
+		while (iter.hasNext()) {
+			java.lang.Object o = iter.next();
+			plan_element e = (plan_element) o;	
+			switch (e.type) {
+				case HOLD: case WAIT: case RAMP: total_time += e.dur; break;
+				case IDLE: case JUMP: /* take zero time */; break;
+				default: post("unrecognized plan_element type: " + mode_name(e.type));
+			}
+		}
+		int nsamps = (int) (total_time * sr);
+		post("Total time: " + total_time + ", nsamps " + nsamps);
+		pretend_perform(nsamps);	
+	}
+
+	public void pretend_perform(int nsamps) {
+		MSPSignal[] ins = new MSPSignal[] {};
+		MSPSignal[] outs = new MSPSignal[] {
+			new MSPSignal(new float[nsamps], (double) sr, (int) nsamps, (short) 0),
+			new MSPSignal(new float[nsamps], (double) sr, (int) nsamps, (short) 0)
+		};
+		do_perform(ins, outs, 0);
+
+		float[] phase = outs[0].vec;
+		for (int i = 1; i<nsamps; ++i) {
+			if (
+	}
+
+
+	public void perform(MSPSignal[] ins, MSPSignal[] outs) {
+		if (offline) {
+			for (int i = 0; i < outs[0].n; ++i) {
+				outs[0].vec[i] = outs[1].vec[i] = 0.0f;
+			}
+		} else {
+			do_perform(ins, outs, 0);
+		}
+	}
+
+	private void do_hold(int from, int to, float[] phaseout, float[] tempoout) {
+		float p, f;
         synchronized(this) {
 			// Grab local copies of our state variables
             p = current_phase;
 			f = current_freq;
-			tf = target_freq;
-			stt = samps_to_target;
-			stw = samps_to_wait;
-			m = mode;
-			// post("** In perform, m = mode = " + m + " = " + mode);
-			wait = samps_to_wait;
-        }
-        
-		if (m==0) {
-			// Holding; keep tempo constant
-			hold_this_sigvec = nsamps;
-			// df = 0;
-		} else if (m == 1) {
-			// waiting...
-			if (wait > nsamps) {
-				// still waiting, so holding for this signal vector
-				hold_this_sigvec = nsamps;
-				// df = 0;
-			} else {
-				// This is the signal vector where we start ramping
-				hold_this_sigvec = stw;
-				m = 2;
-				outlet(2,"/starting-ramp",
-					   new Atom[]{ Atom.newAtom((tf-f)*sr/(float)stw), 
-						       Atom.newAtom(f), 
-						       Atom.newAtom(tf) });
-
-			}
-		} else {
-			// Ramping
-			hold_this_sigvec = 0;
 		}
-
-		for(i = 0; i < hold_this_sigvec; i++) {
+		for (int i = from; i < to; ++i) {
 			// The constant-tempo case
             phaseout[i] = p;
 			tempoout[i] = f;
@@ -269,29 +388,147 @@ public class tempocurver extends MSPPerformer {
 				p -= 1.0;
 			}
 		}
+        synchronized(this) {
+			// Update our state variables with the new values
+            current_phase = p;
+			// current_freq = f;   // freq didn't change; this is the hold case!
+		}
+	}
 
-		if (m == 2) {
-			// Ramping;
-			int samps_for_entire_ramp = stt - stw;
-			df = (tf - f) / ((float) samps_for_entire_ramp);
-			int ramp_this_sigvec = java.lang.Math.min(nsamps, stt);
+	private void do_ramp(int from, int to, float[] phaseout, float[] tempoout) {
+		float p, f, df;
+        synchronized(this) {
+			// Grab local copies of our state variables and simple derived values
+            p = current_phase;
+			f = current_freq;
+			int samps_for_entire_ramp =  samps_to_target - samps_to_wait;
+			df = (target_freq - f) / ((float) samps_for_entire_ramp);		
+		}
 
-			// post("** ramp_this_sigvec " + ramp_this_sigvec);
+		// Ramping;
 
-			for (i = hold_this_sigvec; i < ramp_this_sigvec; ++i) {
-				phaseout[i] = p;
-				tempoout[i] = f;
-   	        	p = p + f*oneoversr;
-				f = f + df;
-				while (p > 1.0) {
-					p -= 1.0;
-				}
+		for (int i = from; i < to; ++i) {
+			phaseout[i] = p;
+			tempoout[i] = f;
+			p = p + f*oneoversr;
+			f = f + df;
+			while (p > 1.0) {
+				p -= 1.0;
 			}
+		}
+        synchronized(this) {
+			// Update our state variables with the new values
+            current_phase = p;
+			current_freq = f;
+		}
+	}
 
-			if (stt < nsamps) {
-				// post("* stt (" + stt +  ") < nsamps (" +nsamps +")");
-				// We finished the ramp this sigvec
-				if (java.lang.Math.abs(f-tf) > 0.0001) {
+	public void do_perform(MSPSignal[] ins, MSPSignal[] outs, int i) {
+		/* This procedure is recursive, to handle the cases where we finish a
+		   segment and switch to a new mode (possibly more than once) during
+		   the current signal vector.  The object's "mode", "stt" and "stw" variables
+		   are always assumed to be and kept accurate. */
+		   
+		float[] phaseout = outs[0].vec;
+		float[] tempoout = outs[1].vec;
+        float p, f, tf;
+		int m, stt, stw;
+		int nsamps = outs[0].n;
+
+		// base case / sanity check
+		if (i >= nsamps) return;
+
+        synchronized(this) {
+			m = mode;
+			// post("** In perform, m = mode = " + m + " = " + mode);
+        }        
+		
+		if (m == IDLE) {
+			// We were idle (or we just finished a segment); 
+			// is there now something else to do?
+			plan_element e;
+			synchronized(this) {e = todo_pop();}
+			if (e == null) {
+				// Nope, still idle
+				do_hold(i, nsamps, phaseout, tempoout);
+			} else {
+				if (verbose) post("switching to mode " + mode_name(e.type));
+ 
+				if (e.type == HOLD) {
+					synchronized(this) {
+						mode = HOLD;
+						samps_to_target = (int) (e.dur * sr);
+					}
+				} else if (e.type == JUMP) {
+					// Set state variables and output
+					do_jump(e);
+					// Carry on; leave mode as IDLE so next recursion will start next segment
+				} else if (e.type == RAMP) {
+					plan_ramp(e);
+					do_perform(ins, outs, i);
+				} else {
+					post("error: scheduled segment has unknown mode " + e.type);
+					// leave mode as IDLE
+				}
+				
+				// Now that we updated mode and associated state variables, recurse
+				do_perform(ins, outs, i);
+
+			}
+		} else if (m == HOLD) {
+			synchronized(this) {stt = samps_to_target;}
+
+			if (i+stt > nsamps) {
+				// Hold for entire signal vector
+				do_hold(i, nsamps, phaseout, tempoout);
+				synchronized(this) { samps_to_target -= (nsamps - i); };
+			} else {
+				// Finish HOLD segment
+				do_hold(i, i+stt, phaseout, tempoout);
+				outlet(2,"/finished-hold");
+				synchronized(this) { mode = IDLE; };  // so recursive call will pop next segment
+				do_perform(ins, outs, i+stt);
+			}
+		} else if (m == WAIT) {
+			synchronized(this) {stw = samps_to_wait;}
+
+			if (i+stw > nsamps) {
+				// wait for entire signal vector
+				do_hold(i, nsamps, phaseout, tempoout);
+				synchronized(this) { samps_to_wait -= (nsamps - i); };
+			} else {
+				// This is the signal vector where we start ramping
+				do_hold(i, i+stw, phaseout, tempoout);
+
+				synchronized(this) { 
+					f = current_freq;
+					tf = target_freq;
+				};
+
+				outlet(2,"/starting-ramp",
+					   new Atom[]{ Atom.newAtom((tf-f)*sr/(float)stw), 
+						       Atom.newAtom(f), 
+						       Atom.newAtom(tf) });
+				synchronized(this) { mode = RAMP; };
+				do_perform(ins, outs, i+stw);
+			}
+		} else if (m == RAMP) {
+			synchronized(this) {stt = samps_to_target;}
+			
+			if (i+stt > nsamps) {
+				// ramp for entire signal vector
+				do_ramp(i, nsamps, phaseout, tempoout);
+				synchronized(this) { samps_to_target -= (nsamps - i); };
+			} else {
+				// Ramp finishes this signal vector
+				do_ramp(i, i+stt, phaseout, tempoout);
+				
+				synchronized(this) { 
+					f = current_freq;
+					p = current_phase;
+					tf = target_freq;
+				};
+				if (java.lang.Math.abs(f-tf) > 0.005) {
 					post("Error!!  tried to get to freq " + tf + " but got to " + f + " instead...");
 				}
 
@@ -300,20 +537,15 @@ public class tempocurver extends MSPPerformer {
 				outlet(2,"/made-it",
 					   new Atom[]{ Atom.newAtom(f), 
 								   Atom.newAtom(p) });
-
-				for (i = stt; i < nsamps; ++i) {
-					// back to constant-tempo
-					phaseout[i] = p;
-					tempoout[i] = f;
-           			p = p + f*oneoversr;
-					while (p > 1.0) {
-						p -= 1.0;
-					}
-				}
-				m = 0;	// Now we're holding at a steady tempo until further notice
+				synchronized(this) { mode = IDLE; };  // so recursive call will pop next segment
+				do_perform(ins, outs, i+stt);
 			}
+		} else {
+			post("error: current mode is unknown: " + m);
 		}
 			
+			
+		/* All this should be gone...	
 		if (i != nsamps) {
 			post("Error!!! Didn't compute the whole signal vector");
 			post("i " + i + ", nsamps " + nsamps + ", mode " + mode + ", m " + m);
@@ -322,8 +554,6 @@ public class tempocurver extends MSPPerformer {
 
         synchronized(this) {
 			// Update our state variables with the new values
-            current_phase = p;
-			current_freq = f;
 			if (m == 1) {
 				samps_to_wait -= nsamps;
 			} else {
@@ -332,24 +562,10 @@ public class tempocurver extends MSPPerformer {
 			mode = m;
 			samps_to_target -= nsamps;
         }
-	}
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
+        */
+	} // do_perform()
+} // class tempocurver
 
 
 
