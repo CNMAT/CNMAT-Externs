@@ -33,12 +33,16 @@ import com.cycling74.msp.*;
 
 
 public class tempocurver extends MSPPerformer {
+	public void version() {
+		post("tempocurver version 2.1 - added hold_beats message");
+	}
  
 	private int samps_to_target;	// For all modes, the time to spend 
-	private int samps_to_wait;		// Time to wait before starting a ramp
+	private int samps_to_wait;      // Time to wait before starting a ramp
+    //        private float ramp_dur;         // Duration of the ramp (seconds)
 	private float target_phase;	// Fractional beat
 	private float target_freq;	// Beats/second
-	private float current_phase;
+	private double current_phase;
 	private float current_freq;
     private int interp_mode;	// LINEAR or QUADRATIC (some day)
 	private static final int LINEAR = 1;
@@ -62,6 +66,7 @@ public class tempocurver extends MSPPerformer {
 
 	// Enum types for mode variable and plan_element's type variable:
 	private static final int HOLD = 10;
+	private static final int HOLDBEATS = 15;	
 	private static final int WAIT = 11;
 	private static final int RAMP = 12;
 	private static final int IDLE = 13;
@@ -69,6 +74,7 @@ public class tempocurver extends MSPPerformer {
 
 	private String mode_name(int m) {
 		if (m == HOLD) return "HOLD";
+		if (m == HOLDBEATS) return "HOLDBEATS";
 		if (m == WAIT) return "WAIT";
 		if (m == RAMP) return "RAMP";
 		if (m == IDLE) return "IDLE";
@@ -98,12 +104,10 @@ public class tempocurver extends MSPPerformer {
 			"tempo (beats/sec) (sig)",
 			"OSC messages"
 		});
+		version();
 	}
  
 
-	public void version() {
-		post("tempocurver version 2.0 - schedules command sequences into the future");
-	}
 
 	public void verbose(int v) {
 		verbose = (v != 0);
@@ -197,6 +201,11 @@ public class tempocurver extends MSPPerformer {
 		synchronized(this) { todo_push(e); }
 	}
 
+	public void hold_beats(float numbeats) {
+		plan_element e = new plan_element(HOLDBEATS, numbeats, 0, 0);
+		synchronized(this) { todo_push(e); }
+	}
+
 	private void do_jump(plan_element e) {
 		if (e.type != JUMP) {
 			post("Error!!! called do_jump on a plan_element of type " + e.type);
@@ -221,7 +230,8 @@ public class tempocurver extends MSPPerformer {
 		float target_tempo = e.target_f;
 		float target_p = e.target_p;
 		float time_to_get_there = e.dur;
-		float f, p;
+		float f;
+		double p;
 
 		synchronized(this) {
 			f = current_freq;
@@ -235,8 +245,9 @@ public class tempocurver extends MSPPerformer {
 			synchronized(this) {mode = IDLE;};
 			return;
 		}
-		float target_fracbeat = target_fracbeat_linear(time_to_get_there, f, p, target_tempo, target_p);
+		double target_fracbeat = target_fracbeat_linear(time_to_get_there, f, p, target_tempo, target_p);
 		float wait =  how_long_to_wait(time_to_get_there, f, p, target_tempo, target_fracbeat);
+
 
 		if (verbose) {
 			post("Target fracbeat is " + target_fracbeat + "\n");
@@ -282,20 +293,21 @@ public class tempocurver extends MSPPerformer {
 			// For now, just pre-compute the wait time and hope it all works out
 			// Even better would be to re-check everything dynamically...
 			samps_to_wait = (int) (wait * sr);
+			//			ramp_dur = (time_to_get_there - wait);
 			target_phase = target_p; // Not actually used, but the number's correct
 			target_freq = target_tempo;
 		}
 	}
 
 	// A "fracbeat" is a fractional beat number, a sort of unwrapped phase.
-	private float target_fracbeat_linear(float t, float start_freq, float start_phase, 
-                                         float end_freq, float end_phase) {
+	private double target_fracbeat_linear(float t, float start_freq, double start_phase, 
+                                         float end_freq, double end_phase) {
 		// Compute the ending fractional beat number based on a steady tempo ramp starting immediately
 		// Trivial in the linear case: average freq times elapsed time
-		float end_phase_starting_now = start_phase + t * (start_freq + end_freq) * 0.5f;
+		double end_phase_starting_now = start_phase + t * (start_freq + end_freq) * 0.5f;
 		// Cast to int will round down
 		int int_beats = (int) (end_phase_starting_now - end_phase);
-		float target = int_beats + end_phase;
+		double target = int_beats + end_phase;
 		if (end_freq>current_freq) {
 			// Tempo is increasing, so can end at lower phase by waiting to accelerate
 			// So we were right to round down; do nothing
@@ -308,13 +320,14 @@ public class tempocurver extends MSPPerformer {
 	}
 
 
-	private float how_long_to_wait(float t, float start_freq, float start_phase, 
-	                               float end_freq,  float target_fracbeat) {
+	private float how_long_to_wait(float t, float start_freq, double start_phase, 
+	                               float end_freq,  double target_fracbeat) {
 
 		float avg_freq = (end_freq+start_freq)*0.5f;
-
-		return  (2.f / (end_freq - start_freq)) * (start_phase + (avg_freq*t) - target_fracbeat);
+		double answer =  (2.f / (end_freq - start_freq)) * (start_phase + (avg_freq*t) - target_fracbeat);
 		// expr (2.0 / ($f1 - $f4)) * ($f5 + (($f1+$f4)*0.5*$f2) - $f3)
+
+		return (float) answer;
 	}
 
 
@@ -333,19 +346,30 @@ public class tempocurver extends MSPPerformer {
 		
 		java.util.Iterator iter = to_do_list.iterator();
 		float total_time = 0;
-		
+		float current_freq = 0;		
+
 		while (iter.hasNext()) {
 			java.lang.Object o = iter.next();
 			plan_element e = (plan_element) o;	
 			switch (e.type) {
-				case HOLD: case WAIT: case RAMP: total_time += e.dur; break;
-				case IDLE: case JUMP: /* take zero time */; break;
+				case HOLDBEATS:
+					total_time += e.dur / current_freq;
+					break;
+				case RAMP: 
+					current_freq = e.target_f;
+					// no break!
+				case HOLD: case WAIT: total_time += e.dur; break;
+				case JUMP: 
+					/* take zero time */; 
+					current_freq = e.target_f;
+					break;
+				case IDLE: /* take zero time */; break;
 				default: post("unrecognized plan_element type: " + mode_name(e.type));
 			}
 		}
 		int nsamps = (int) (total_time * sr);
 		post("Total time: " + total_time + ", nsamps " + nsamps);
-		pretend_perform(nsamps);	
+		pretend_perform(nsamps+1);	
 	}
 
 	public void pretend_perform(int nsamps) {
@@ -358,7 +382,10 @@ public class tempocurver extends MSPPerformer {
 
 		float[] phase = outs[0].vec;
 		for (int i = 1; i<nsamps; ++i) {
-			if (
+		    if (phase[i] < phase[i-1]) {
+			post("beat at time " + i*oneoversr + "(phase " + phase[i-1] + ", " + phase[i]);
+		    }
+		}
 	}
 
 
@@ -373,18 +400,19 @@ public class tempocurver extends MSPPerformer {
 	}
 
 	private void do_hold(int from, int to, float[] phaseout, float[] tempoout) {
-		float p, f;
+		float f;
+		double p;
         synchronized(this) {
 			// Grab local copies of our state variables
-            p = current_phase;
+            p = (float) current_phase;
 			f = current_freq;
 		}
 		for (int i = from; i < to; ++i) {
 			// The constant-tempo case
-            phaseout[i] = p;
+            phaseout[i] = (float) p;
 			tempoout[i] = f;
             p = p + f*oneoversr;
-			while (p > 1.0) {
+			while (p >= 1.0) {
 				p -= 1.0;
 			}
 		}
@@ -396,19 +424,23 @@ public class tempocurver extends MSPPerformer {
 	}
 
 	private void do_ramp(int from, int to, float[] phaseout, float[] tempoout) {
-		float p, f, df;
+		float f, df;
+		double p;
         synchronized(this) {
 			// Grab local copies of our state variables and simple derived values
             p = current_phase;
 			f = current_freq;
-			int samps_for_entire_ramp =  samps_to_target - samps_to_wait;
-			df = (target_freq - f) / ((float) samps_for_entire_ramp);		
+			// This should only be called if we're actually in the ramping mode
+			// The amount to change the frequency on each sample (in the linear case)
+			// is simply the remaining frequency difference divided by the remaining
+			// number of samples, minus one because the freq only changes between  samples...?
+			df = (target_freq - f) / (samps_to_target-1);
 		}
 
 		// Ramping;
 
 		for (int i = from; i < to; ++i) {
-			phaseout[i] = p;
+			phaseout[i] = (float) p;
 			tempoout[i] = f;
 			p = p + f*oneoversr;
 			f = f + df;
@@ -431,7 +463,8 @@ public class tempocurver extends MSPPerformer {
 		   
 		float[] phaseout = outs[0].vec;
 		float[] tempoout = outs[1].vec;
-        float p, f, tf;
+        float f, tf;
+		double p;
 		int m, stt, stw;
 		int nsamps = outs[0].n;
 
@@ -459,13 +492,18 @@ public class tempocurver extends MSPPerformer {
 						mode = HOLD;
 						samps_to_target = (int) (e.dur * sr);
 					}
+				} else if (e.type == HOLDBEATS) {
+					post("gonna hold for " + e.dur + " beats at tempo " + current_freq);
+					synchronized(this) {
+						mode = HOLD;
+						samps_to_target = (int)  ((e.dur / current_freq) * sr);
+					}
 				} else if (e.type == JUMP) {
 					// Set state variables and output
 					do_jump(e);
 					// Carry on; leave mode as IDLE so next recursion will start next segment
 				} else if (e.type == RAMP) {
 					plan_ramp(e);
-					do_perform(ins, outs, i);
 				} else {
 					post("error: scheduled segment has unknown mode " + e.type);
 					// leave mode as IDLE
@@ -537,7 +575,9 @@ public class tempocurver extends MSPPerformer {
 				outlet(2,"/made-it",
 					   new Atom[]{ Atom.newAtom(f), 
 								   Atom.newAtom(p) });
-				synchronized(this) { mode = IDLE; };  // so recursive call will pop next segment
+				synchronized(this) { 
+				    mode = IDLE; // so recursive call will pop next segment
+				};  
 				do_perform(ins, outs, i+stt);
 			}
 		} else {
@@ -566,6 +606,21 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
