@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.1 - added hold_beats message");
+		post("tempocurver version 2.2 -fixed ramping bug and pretend_perform outputs times");
 	}
  
 	private int samps_to_target;	// For all modes, the time to spend 
@@ -136,10 +136,19 @@ public class tempocurver extends MSPPerformer {
 		}
 	}
 
+	public void reset() {
+		clear();
+		synchronized(this) {
+			current_freq = 0.f;
+			current_phase = 0.;
+		}
+	}
+
 	public void clear() {
 		// as in clear the to-do list
 		synchronized(this) {
 			to_do_list.clear();
+			mode = IDLE;
 		}
 	}
 
@@ -289,7 +298,7 @@ public class tempocurver extends MSPPerformer {
 
 		synchronized(this) {
 			mode = WAIT; // Now we're waiting to start ramp
-			samps_to_target = (int) (time_to_get_there * sr);
+			samps_to_target = (int) ((time_to_get_there-wait) * sr);
 			// For now, just pre-compute the wait time and hope it all works out
 			// Even better would be to re-check everything dynamically...
 			samps_to_wait = (int) (wait * sr);
@@ -369,7 +378,7 @@ public class tempocurver extends MSPPerformer {
 		}
 		int nsamps = (int) (total_time * sr);
 		post("Total time: " + total_time + ", nsamps " + nsamps);
-		pretend_perform(nsamps+1);	
+		pretend_perform(nsamps+1);	// add one so we get to the final beat
 	}
 
 	public void pretend_perform(int nsamps) {
@@ -381,9 +390,14 @@ public class tempocurver extends MSPPerformer {
 		do_perform(ins, outs, 0);
 
 		float[] phase = outs[0].vec;
+		int beatnum = 0;
 		for (int i = 1; i<nsamps; ++i) {
 		    if (phase[i] < phase[i-1]) {
-			post("beat at time " + i*oneoversr + "(phase " + phase[i-1] + ", " + phase[i]);
+				outlet(2,"/future-beat",
+					   new Atom[]{ Atom.newAtom(beatnum),
+						       Atom.newAtom(i*oneoversr)});
+			    beatnum++;
+			post("beat at time " +i*oneoversr + "(phase " + phase[i-1] + ", " + phase[i]);
 		    }
 		}
 	}
@@ -606,6 +620,10 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
 
 
 
