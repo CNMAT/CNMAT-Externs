@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.2 -fixed ramping bug and pretend_perform outputs times");
+		post("tempocurver version 2.3 - bug fixes, outputs /future-beat/done");
 	}
  
 	private int samps_to_target;	// For all modes, the time to spend 
@@ -116,7 +116,7 @@ public class tempocurver extends MSPPerformer {
 
 	public void offline(int v) {
 		offline = (v != 0);
-		post("offline " + verbose);
+		post("offline " + offline);
 	}
 
 
@@ -391,15 +391,27 @@ public class tempocurver extends MSPPerformer {
 
 		float[] phase = outs[0].vec;
 		int beatnum = 0;
+		
+		if (nsamps >= 2 && phase[0] == 0.0f && phase[1] > 0.0f) {
+			// Special case for first beat
+			outlet(2,"/future-beat",
+					   new Atom[]{ Atom.newAtom(beatnum),
+						       Atom.newAtom(0.0f)});
+			beatnum++;
+		}						       
 		for (int i = 1; i<nsamps; ++i) {
 		    if (phase[i] < phase[i-1]) {
 				outlet(2,"/future-beat",
 					   new Atom[]{ Atom.newAtom(beatnum),
 						       Atom.newAtom(i*oneoversr)});
 			    beatnum++;
-			post("beat at time " +i*oneoversr + "(phase " + phase[i-1] + ", " + phase[i]);
+			    if (verbose) {
+				    post("beat at time " +i*oneoversr + "(phase " + phase[i-1] + ", " + phase[i]);
+		    	}
 		    }
 		}
+	    outlet(2,"/future-beat/done");
+		
 	}
 
 
@@ -620,6 +632,9 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
 
 
 
