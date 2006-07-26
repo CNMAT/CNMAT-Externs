@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.6 - bug fixes");
+		post("tempocurver version 2.6 - bug fixes and 64-bit calculations so phase comes out right");
 	}
  
 	private double current_phase;
@@ -277,6 +277,7 @@ public class tempocurver extends MSPPerformer {
 		float target_tempo = e.target_f;
 		float target_p = e.target_p;
 		float time_to_get_there = e.dur;
+		float f_float;
 		double f;
 		double p;
 
@@ -284,8 +285,10 @@ public class tempocurver extends MSPPerformer {
 			f = current_freq;
 			p = current_phase;
 		}
+
+		f_float = (float) f;
 		
-		if (target_tempo == f) {
+		if (target_tempo == f_float) {
 			outlet(2,"/impossible",
 				   new Atom[]{ Atom.newAtom("/same-tempo"), 
 							   Atom.newAtom(target_tempo)}); 
@@ -306,9 +309,9 @@ public class tempocurver extends MSPPerformer {
 				 wait_increment + " to " + (current_phase+wait*current_freq));
 			post("Then ramp to new tempo " + target_tempo + " over the remaining " + 
 				(time_to_get_there - wait) + " seconds");
-			post("At a slope of " +
+			post("at a slope of " +
 				 (target_tempo-current_freq) / (time_to_get_there - wait));
-			post("Thereby bringing phase to " +
+			post("thereby bringing phase to " +
 					( (current_phase+ wait_increment) +
 					  (time_to_get_there - wait) * (current_freq + target_tempo) / 2));
 		}
@@ -668,26 +671,32 @@ public class tempocurver extends MSPPerformer {
 					tf = target_freq;
 					tp = target_phase;
 				};
-				if (java.lang.Math.abs(f-tf) > 0.005) {
+				if (java.lang.Math.abs(f-tf) > 0.0005) {
 					post("Error!!  tried to get to freq " + tf + " but got to " + f + " instead...");
 				}
-				// Cheat: jump to exact frequency as if everything went correctly
-				f = tf;
 
 				double phase_error = java.lang.Math.abs(p-tp);
 
 				// wrap
 				if (phase_error > 0.9) phase_error = java.lang.Math.abs(phase_error-1);
 
-				if (phase_error > 0.005) {
+				if (phase_error > 0.0005) {
 					post("Error!!  tried to get to phase " + tp + " but got to " + p + " instead...");
 				}
+
+
 
 				outlet(2,"/made-it",
 					   new Atom[]{ Atom.newAtom(f), 
 								   Atom.newAtom(p) });
 				synchronized(this) { 
 				    mode = IDLE; // so recursive call will pop next segment
+
+					// Now that we got close or printed an error otherwise, we cheat:
+					// jump to exact frequency and phase as if everything went correctly
+					/* current_freq = tf;
+					current_phase = tp; */
+
 				};  
 				do_perform(ins, outs, i+stt);
 			}
@@ -717,6 +726,10 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
 
 
 
