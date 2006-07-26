@@ -34,16 +34,19 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.3 - bug fixes, outputs /future-beat/done");
+		post("tempocurver version 2.6 - bug fixes");
 	}
  
-	private int samps_to_target;	// For all modes, the time to spend 
-	private int samps_to_wait;      // Time to wait before starting a ramp
-    //        private float ramp_dur;         // Duration of the ramp (seconds)
+	private double current_phase;
+	private double current_freq;
 	private float target_phase;	// Fractional beat
 	private float target_freq;	// Beats/second
-	private double current_phase;
-	private float current_freq;
+ 
+	private int samps_to_target;	// For all modes, the time to spend on the current segment
+	private int samps_to_wait;      // Time to wait before starting a ramp
+	private double freq_slope_per_sample;	// For linear ramps, the slope (beats/sec/sec)
+
+    //        private float ramp_dur;         // Duration of the ramp (seconds)
     private int interp_mode;	// LINEAR or QUADRATIC (some day)
 	private static final int LINEAR = 1;
 	private static final int QUADRATIC = 2;
@@ -82,6 +85,9 @@ public class tempocurver extends MSPPerformer {
 		return ("mode " + m);
 	}
 
+
+
+
 	public tempocurver()
 	{
 		samps_to_target = 0;
@@ -106,7 +112,21 @@ public class tempocurver extends MSPPerformer {
 		});
 		version();
 	}
+
+	// Synchronization mechanism to protect against DSP happening 
+	// when only some of the tempocurver objects have received their commands
+	private static int num_to_start_together = 0;
+	private static int num_ready_to_start = 0;
+	private boolean i_am_ready_to_start = false;
  
+	public void start_together(int n) {
+	    num_to_start_together = n;
+		if (verbose) {
+			post("No tempocurver will begin its plan unless at least " +
+				n + " tempocurver objects have a plan.");
+		}
+	}
+
 
 
 	public void verbose(int v) {
@@ -122,6 +142,13 @@ public class tempocurver extends MSPPerformer {
 
 	// Not inherently thread-safe; relying on caller to call as synchronized
 	private void todo_push(plan_element e) {
+		if (to_do_list.isEmpty() && i_am_ready_to_start == false) {
+			synchronized(tempocurver.class) {
+				num_ready_to_start++;
+				i_am_ready_to_start = true;
+			}
+		}
+
 		to_do_list.add(e);
 	}
 
@@ -142,6 +169,7 @@ public class tempocurver extends MSPPerformer {
 			current_freq = 0.f;
 			current_phase = 0.;
 		}
+		if (verbose) post("reset");
 	}
 
 	public void clear() {
@@ -150,6 +178,16 @@ public class tempocurver extends MSPPerformer {
 			to_do_list.clear();
 			mode = IDLE;
 		}
+
+		if (i_am_ready_to_start) {
+			synchronized(tempocurver.class) {
+				// No longer ready to start
+				num_ready_to_start--;
+				i_am_ready_to_start = false;
+			}
+		}
+		if (verbose) post("cleared");
+
 	}
 
 	public void testq() {
@@ -239,7 +277,7 @@ public class tempocurver extends MSPPerformer {
 		float target_tempo = e.target_f;
 		float target_p = e.target_p;
 		float time_to_get_there = e.dur;
-		float f;
+		double f;
 		double p;
 
 		synchronized(this) {
@@ -261,13 +299,15 @@ public class tempocurver extends MSPPerformer {
 		if (verbose) {
 			post("Target fracbeat is " + target_fracbeat + "\n");
 			post("Wait time is " + wait + " seconds\n");
-			float wait_increment = wait*current_freq;
+			double wait_increment = wait*current_freq;
 
 			post("So that means " + wait + " seconds at current tempo " + current_freq);
 			post("to increment current phase " +  current_phase + " by " +
 				 wait_increment + " to " + (current_phase+wait*current_freq));
 			post("Then ramp to new tempo " + target_tempo + " over the remaining " + 
 				(time_to_get_there - wait) + " seconds");
+			post("At a slope of " +
+				 (target_tempo-current_freq) / (time_to_get_there - wait));
 			post("Thereby bringing phase to " +
 					( (current_phase+ wait_increment) +
 					  (time_to_get_there - wait) * (current_freq + target_tempo) / 2));
@@ -282,7 +322,7 @@ public class tempocurver extends MSPPerformer {
 			return;
 		}
 
-		if (wait > time_to_get_there) {
+		if (wait >= time_to_get_there) {
 			outlet(2,"/impossible",
 				   new Atom[]{ Atom.newAtom("/need-more-time"), 
 							   Atom.newAtom(wait), 
@@ -303,14 +343,15 @@ public class tempocurver extends MSPPerformer {
 			// Even better would be to re-check everything dynamically...
 			samps_to_wait = (int) (wait * sr);
 			//			ramp_dur = (time_to_get_there - wait);
-			target_phase = target_p; // Not actually used, but the number's correct
+			target_phase = target_p; // Used only to see if we made it correctly @ end
 			target_freq = target_tempo;
+			freq_slope_per_sample = (target_freq - current_freq) / samps_to_target; 
 		}
 	}
 
 	// A "fracbeat" is a fractional beat number, a sort of unwrapped phase.
-	private double target_fracbeat_linear(float t, float start_freq, double start_phase, 
-                                         float end_freq, double end_phase) {
+	private double target_fracbeat_linear(float t, double start_freq, double start_phase, 
+                                         double end_freq, double end_phase) {
 		// Compute the ending fractional beat number based on a steady tempo ramp starting immediately
 		// Trivial in the linear case: average freq times elapsed time
 		double end_phase_starting_now = start_phase + t * (start_freq + end_freq) * 0.5f;
@@ -329,10 +370,10 @@ public class tempocurver extends MSPPerformer {
 	}
 
 
-	private float how_long_to_wait(float t, float start_freq, double start_phase, 
-	                               float end_freq,  double target_fracbeat) {
+	private float how_long_to_wait(float t, double start_freq, double start_phase, 
+	                               double end_freq,  double target_fracbeat) {
 
-		float avg_freq = (end_freq+start_freq)*0.5f;
+		double avg_freq = (end_freq+start_freq)*0.5f;
 		double answer =  (2.f / (end_freq - start_freq)) * (start_phase + (avg_freq*t) - target_fracbeat);
 		// expr (2.0 / ($f1 - $f4)) * ($f5 + (($f1+$f4)*0.5*$f2) - $f3)
 
@@ -426,7 +467,7 @@ public class tempocurver extends MSPPerformer {
 	}
 
 	private void do_hold(int from, int to, float[] phaseout, float[] tempoout) {
-		float f;
+		double f;
 		double p;
         synchronized(this) {
 			// Grab local copies of our state variables
@@ -436,7 +477,7 @@ public class tempocurver extends MSPPerformer {
 		for (int i = from; i < to; ++i) {
 			// The constant-tempo case
             phaseout[i] = (float) p;
-			tempoout[i] = f;
+			tempoout[i] = (float) f;
             p = p + f*oneoversr;
 			while (p >= 1.0) {
 				p -= 1.0;
@@ -450,24 +491,43 @@ public class tempocurver extends MSPPerformer {
 	}
 
 	private void do_ramp(int from, int to, float[] phaseout, float[] tempoout) {
-		float f, df;
+		double f, df;
 		double p;
+		int m;
+
         synchronized(this) {
 			// Grab local copies of our state variables and simple derived values
             p = current_phase;
 			f = current_freq;
-			// This should only be called if we're actually in the ramping mode
+			m = mode;
+
+
+			/* Bad old way recomputing the slope each signal vector:
+
 			// The amount to change the frequency on each sample (in the linear case)
 			// is simply the remaining frequency difference divided by the remaining
-			// number of samples, minus one because the freq only changes between  samples...?
-			df = (target_freq - f) / (samps_to_target-1);
+			// number of samples
+			// ??? should it be minus one because the freq only changes between  samples...?
+			df = (target_freq - f) / (samps_to_target-2);
+			*/
+
+			df = freq_slope_per_sample;
 		}
+
+		if (m != RAMP) {
+			post("error: do_ramp was called not in RAMP mode!");
+			do_hold(from, to, phaseout, tempoout);
+			return;
+		}			
+
+
+		// post("*** df = " + df + " so slope is " + df * sr);
 
 		// Ramping;
 
 		for (int i = from; i < to; ++i) {
 			phaseout[i] = (float) p;
-			tempoout[i] = f;
+			tempoout[i] = (float) f;
 			p = p + f*oneoversr;
 			f = f + df;
 			while (p > 1.0) {
@@ -489,8 +549,8 @@ public class tempocurver extends MSPPerformer {
 		   
 		float[] phaseout = outs[0].vec;
 		float[] tempoout = outs[1].vec;
-        float f, tf;
-		double p;
+        double f, tf;
+		double p, tp;
 		int m, stt, stw;
 		int nsamps = outs[0].n;
 
@@ -505,38 +565,52 @@ public class tempocurver extends MSPPerformer {
 		if (m == IDLE) {
 			// We were idle (or we just finished a segment); 
 			// is there now something else to do?
-			plan_element e;
-			synchronized(this) {e = todo_pop();}
-			if (e == null) {
-				// Nope, still idle
+			
+			// First check if we're waiting for a number of instances to start together
+			if (!to_do_list.isEmpty() && (num_to_start_together > num_ready_to_start)) {
+				if (verbose) {
+					post("Not starting; only " + num_ready_to_start + 
+						 " instances are ready and you want " + num_to_start_together);
+				}
 				do_hold(i, nsamps, phaseout, tempoout);
 			} else {
-				if (verbose) post("switching to mode " + mode_name(e.type));
- 
-				if (e.type == HOLD) {
-					synchronized(this) {
-						mode = HOLD;
-						samps_to_target = (int) (e.dur * sr);
-					}
-				} else if (e.type == HOLDBEATS) {
-					post("gonna hold for " + e.dur + " beats at tempo " + current_freq);
-					synchronized(this) {
-						mode = HOLD;
-						samps_to_target = (int)  ((e.dur / current_freq) * sr);
-					}
-				} else if (e.type == JUMP) {
-					// Set state variables and output
-					do_jump(e);
-					// Carry on; leave mode as IDLE so next recursion will start next segment
-				} else if (e.type == RAMP) {
-					plan_ramp(e);
+				// Pop the next item from the to-do list
+				plan_element e;
+				synchronized(this) {e = todo_pop();}
+				if (e == null) {
+					// Nope, still idle
+					do_hold(i, nsamps, phaseout, tempoout);
 				} else {
-					post("error: scheduled segment has unknown mode " + e.type);
-					// leave mode as IDLE
+					if (verbose) post("switching to mode " + mode_name(e.type));
+	 
+					if (e.type == HOLD) {
+					    outlet(2,"/holding",
+	 						   new Atom[]{ Atom.newAtom(current_freq),
+						                   Atom.newAtom(e.dur)});
+						synchronized(this) {
+							mode = HOLD;
+							samps_to_target = (int) (e.dur * sr);
+						}
+					} else if (e.type == HOLDBEATS) {
+						post("gonna hold for " + e.dur + " beats at tempo " + current_freq);
+						synchronized(this) {
+							mode = HOLD;
+							samps_to_target = (int)  ((e.dur / current_freq) * sr);
+						}
+					} else if (e.type == JUMP) {
+						// Set state variables and output
+						do_jump(e);
+						// Carry on; leave mode as IDLE so next recursion will start next segment
+					} else if (e.type == RAMP) {
+						plan_ramp(e);
+					} else {
+						post("error: scheduled segment has unknown mode " + e.type);
+						// leave mode as IDLE
+					}
+					
+					// Now that we updated mode and associated state variables, recurse
+					do_perform(ins, outs, i);
 				}
-				
-				// Now that we updated mode and associated state variables, recurse
-				do_perform(ins, outs, i);
 
 			}
 		} else if (m == HOLD) {
@@ -567,10 +641,11 @@ public class tempocurver extends MSPPerformer {
 				synchronized(this) { 
 					f = current_freq;
 					tf = target_freq;
+					stt = samps_to_target;
 				};
 
 				outlet(2,"/starting-ramp",
-					   new Atom[]{ Atom.newAtom((tf-f)*sr/(float)stw), 
+					   new Atom[]{ Atom.newAtom((tf-f)/ (((float)stt) * oneoversr)), 
 						       Atom.newAtom(f), 
 						       Atom.newAtom(tf) });
 				synchronized(this) { mode = RAMP; };
@@ -591,12 +666,22 @@ public class tempocurver extends MSPPerformer {
 					f = current_freq;
 					p = current_phase;
 					tf = target_freq;
+					tp = target_phase;
 				};
 				if (java.lang.Math.abs(f-tf) > 0.005) {
 					post("Error!!  tried to get to freq " + tf + " but got to " + f + " instead...");
 				}
-
+				// Cheat: jump to exact frequency as if everything went correctly
 				f = tf;
+
+				double phase_error = java.lang.Math.abs(p-tp);
+
+				// wrap
+				if (phase_error > 0.9) phase_error = java.lang.Math.abs(phase_error-1);
+
+				if (phase_error > 0.005) {
+					post("Error!!  tried to get to phase " + tp + " but got to " + p + " instead...");
+				}
 
 				outlet(2,"/made-it",
 					   new Atom[]{ Atom.newAtom(f), 
@@ -632,6 +717,19 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
