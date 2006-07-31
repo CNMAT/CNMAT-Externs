@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.6 - bug fixes and 64-bit calculations so phase comes out right");
+		post("tempocurver version 2.7 - optional cheat mode");
 	}
  
 	private double current_phase;
@@ -55,6 +55,9 @@ public class tempocurver extends MSPPerformer {
 	private int mode;			// HOLD, WAIT, RAMP, or IDLE
 	private boolean verbose;
 	private boolean offline;	// If true, then perform() always returns all zeros
+	private boolean cheat;		// Jump to exact tempo+phase after a ramp?
+
+
 	private java.util.LinkedList to_do_list;
 
 	private class plan_element {
@@ -96,6 +99,7 @@ public class tempocurver extends MSPPerformer {
         interp_mode = LINEAR;
 		mode = IDLE;
 		verbose = true;
+		cheat = false;
 		sr = 44100;	// Default in case pretend_perform is called before DSP turned on
 		oneoversr = 1/sr;
 		to_do_list = new java.util.LinkedList();
@@ -139,6 +143,10 @@ public class tempocurver extends MSPPerformer {
 		post("offline " + offline);
 	}
 
+	public void cheat(int c) {
+		cheat = (c != 0);
+		post("cheat " + cheat);
+	}
 
 	// Not inherently thread-safe; relying on caller to call as synchronized
 	private void todo_push(plan_element e) {
@@ -692,11 +700,12 @@ public class tempocurver extends MSPPerformer {
 				synchronized(this) { 
 				    mode = IDLE; // so recursive call will pop next segment
 
-					// Now that we got close or printed an error otherwise, we cheat:
-					// jump to exact frequency and phase as if everything went correctly
-					/* current_freq = tf;
-					current_phase = tp; */
-
+					if (cheat) {
+						// Now that we got close or printed an error otherwise, we cheat:
+						// jump to exact frequency and phase as if everything went correctly
+						current_freq = tf;
+						current_phase = tp;
+					}
 				};  
 				do_perform(ins, outs, i+stt);
 			}
@@ -726,6 +735,8 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
 
 
 
