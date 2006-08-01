@@ -75,7 +75,7 @@ public class tc_editor extends MaxObject
 					post("Ack!  Too many arguments to JUMP!");
 				}
 			} else {
-				post("Ack! Unrecognized tempocurver command: " + args[0].getString());
+				// post("Ack! Unrecognized tempocurver command: " + args[0].getString());
 			}
 		}
 	}
@@ -267,24 +267,34 @@ public class tc_editor extends MaxObject
 		// Get the one column we care about
 		java.util.ArrayList col = (java.util.ArrayList) contents.get(selected_col);
 
-		post("Inserting:  size (r=" + nrows + ", c=" + ncols + ")");
+		// post("Inserting:  size (r=" + nrows + ", c=" + ncols + ")");
+
+
 
 		// Move everything below the selected cell down by one (to the next higher row)
 		for (int i = selected_row+1; i < nrows; ++i) {
-			// We need the user's arbitrary stored command, plus the new row and column to store it in
-			// It's fun to concatenate arrays in Java!
-		    post("* gonna get row " + (i-1));
-			Atom[] command =  ((cell) col.get(i-1)).command;
-			Atom[] toOutput = new Atom[2+command.length];
-			for (int j = 0; j < command.length; ++j) {
-				toOutput[j+2] = command[j];
-			}
+			cell c = (cell) col.get(i-1);
 
-			toOutput[0] = Atom.newAtom(selected_col);
-			toOutput[1] = Atom.newAtom(i);
-			
-			post("Gonna output " + Atom.toDebugString(toOutput));
-			outlet(0, "set", toOutput);
+			if (c==null) {
+				// Clear the ith row of this column
+				outlet(0, "clear", new Atom[] { Atom.newAtom(selected_col),
+									            Atom.newAtom(selected_row) });
+			} else {
+				// We need the user's arbitrary stored command,
+				//  plus the new row and column to store it in
+				// It's fun to concatenate arrays in Java!
+		   		// post("* gonna get row " + (i-1));
+				Atom[] command =  c.command;
+				Atom[] toOutput = new Atom[2+command.length];
+				toOutput[0] = Atom.newAtom(selected_col);
+				toOutput[1] = Atom.newAtom(i);
+				for (int j = 0; j < command.length; ++j) {
+					toOutput[j+2] = command[j];
+				}
+
+				// post("Gonna output " + Atom.toDebugString(toOutput));
+				outlet(0, "set", toOutput);
+			}
 		}
 
 		// And now we can put the new value ("hold 0.") in the selected cell
@@ -320,7 +330,7 @@ public class tc_editor extends MaxObject
 		}
 	}
 
-	public void sync(String shouldBeSelect, int r, int c) {
+	public void sync(String shouldBeSelect, int c, int r) {
 		if (shouldBeSelect.equals("select")) {
 			selected_row = r;
 			selected_col = c;
@@ -348,6 +358,10 @@ public class tc_editor extends MaxObject
 	}
     
 }
+
+
+
+
 
 
 
