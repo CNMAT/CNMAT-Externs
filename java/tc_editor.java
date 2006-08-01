@@ -14,6 +14,11 @@ public class tc_editor extends MaxObject
 	private java.util.ArrayList contents;
 	private int nrows;
 	private int ncols;
+	private int new_nrows;
+	private int new_ncols;
+	private int selected_row = 0;
+	private int selected_col = 0;
+
 
 	private static final int IGNORE = 0;
 	private static final int CHECK_SIZE = 1;
@@ -41,22 +46,22 @@ public class tc_editor extends MaxObject
 					if (args[2].isString()) {
 						post("Ack! Raw list's third element must be a number");
 					} else {
-						duration = args[2].getFloat();
+						duration = args[2].toFloat();
 					}
 				} else {
 					post("Ack!  Too many elements in list");
 				}
-			} else if (args[0].getString.equalsIgnoreCase("jump")) {
+			} else if (args[0].getString().equalsIgnoreCase("jump")) {
 				duration = 0;
-			} else if (args[0].getString.equalsIgnoreCase("hold")) {
+			} else if (args[0].getString().equalsIgnoreCase("hold")) {
 				if (args.length == 1) {
 					post("Ack! Need an argument to HOLD");
 				} else if (args[1].isString()) {
 					post("Ack! Argument to HOLD must be a number");
 				} else {
-					duration = args[1].getFloat();
+					duration = args[1].toFloat();
 				}
-			} else if (args[0].getString.equalsIgnoreCase("ramp")) {
+			} else if (args[0].getString().equalsIgnoreCase("ramp")) {
 				if (args.length < 4) {
 					// Implied jump
 					duration = 0;
@@ -64,7 +69,7 @@ public class tc_editor extends MaxObject
 					if (args[3].isString()) {
 						post("Ack! JUMP's third argument must be a number");
 					} else {
-						duration = args[3].getFloat();
+						duration = args[3].toFloat();
 					}
 				} else {
 					post("Ack!  Too many arguments to JUMP!");
@@ -80,7 +85,7 @@ public class tc_editor extends MaxObject
 	{
 		declareInlets(new int[]{DataTypes.ALL, DataTypes.ALL});
 		declareOutlets(new int[]{DataTypes.ALL});
-		createInfoInlet(false);
+		createInfoOutlet(false);
 
 		setInletAssist(INLET_ASSIST);
 		setOutletAssist(OUTLET_ASSIST);
@@ -152,7 +157,7 @@ public class tc_editor extends MaxObject
 
 		Object o = null;
 		if  (data.length > 0) {
-			o =  new cell(data)
+			o =  new cell(data);
 		}
 
 	    ((java.util.ArrayList) contents.get(col)).set(row, o);
@@ -165,18 +170,39 @@ public class tc_editor extends MaxObject
 		post("bung!");
 	}
 
-	public void dumpout(int col, int row, Atom[] data) {
+	public void dumpout(Atom[] args) {
+		// post("dumpout called with " + Atom.toDebugString(args));
+
+		if (args.length < 3) {
+			post("Ack: too few arguments to dumpout");
+			return;
+		}
+
+		if (!args[0].isInt() || !args[1].isInt()) {
+			post("Ack: first two args to dumpout must be ints");
+			return;
+		}
+
+		int col = args[0].getInt();
+		int row = args[1].getInt();
+
+		Atom[] data = Atom.removeFirst(args,2);
+
+
+		// post("dumpout " + col + "," + row);
+
 		switch (dump_mode) {
 			case IGNORE: // do nothing
 				break;
 			case CHECK_SIZE:
-				/* Check nrows first, cause it's more efficient to call add_rows() before
-				   add_cols() than the reverse. */
-				if (row > nrows) {
-					add_rows(row);
+				// post("Checking size");
+				if (row >= new_nrows) {
+					// post("more rows");
+				    new_nrows = row+1;
 				}
-				if (col > ncols) {
-					add_cols(col);
+				if (col >= new_ncols) {
+					// post("more columns");
+					new_ncols = col+1;
 				}
 				break;
 			case GOBBLE:
@@ -192,26 +218,84 @@ public class tc_editor extends MaxObject
 
 	public void take_dump() {
 		clear_contents();
+		// post("Before:  size (r=" + nrows + ", c=" + ncols + ")");
 
-	
-	
+		dump_mode = CHECK_SIZE;
+		new_nrows = 0;
+		new_ncols = 0;
+		outlet(0, "dump");
+		// Now dumpout() will be called many times
+
+		// post("After dump, new_nrows=" + new_nrows +", new_ncols=" + new_ncols);
+
+		/* Check nrows first, cause it's more efficient to call add_rows() before
+		   add_cols() than the reverse. */
+		if (new_nrows > nrows) {
+			add_rows(new_nrows);
+		}
+		if (new_ncols > ncols) {
+			add_cols(new_ncols);
+		}
+
+		// post("After:  size (r=" + nrows + ", c=" + ncols + ")");
+
+
+		dump_mode = GOBBLE;
+		outlet(0, "dump");
+		// Now dumpout() will be called many times
 	}	
 
+/*
 	public void insert() {
+		// First refresh our knowledge of the contents of the cellblock with a refreshing dump
 		take_dump();
+
+		if (selected_col < 0 || selected_col >= ncols) {
+			post("Ack!  selected column " + selected_col + " is illegal!");
+			return;
+		}
+
+		// Get the one column we care about
+		java.util.ArrayList col = (java.util.ArrayList) contents.get(selected_col);
+
+		// Move everything below the selected cell down by one (to the next higher row)
+		for (int i = selected_row+1; i < nrows; ++i) {
+			
+			set, selected_col, i, 
+
+
 	}
+*/
 		
 
+/*
+	public void sync(Atom[] args) {
+		if (args.length == 0) {
+			post("didn't expect empty sync message");
+		} else {
+			if (args[0].isString()) {
+				post("Don't know how to sync that " + args[0].getString());
+			} else {
+				post("Didn't expect sync message with numeric first argument");
+			}
+		}
+	}
+*/
 
-	public void sync() {
-		post("Don't know how to sync that");
+
+	public void sync(String shouldBeClick, int a, int b, int c, int d) {
+		if (shouldBeClick.equals("click")) {
+			// Do nothing
+		} else {
+			post("Didn't expect sync " + shouldBeClick);
+		}
 	}
 
 	public void sync(String shouldBeSelect, int r, int c) {
 		if (shouldBeSelect.equals("select")) {
-			post("Sync r " + r + ", c " + c);
-		} else if (shouldBeSelect.equals("click")) {
-			// Do nothing
+			selected_row = r;
+			selected_col = c;
+			post("you selected r " + r + ", c " + c);
 		} else {
 			post("Didn't expect sync " + shouldBeSelect);
 		}
@@ -226,11 +310,30 @@ public class tc_editor extends MaxObject
 	}
     
     
-	public void list(Atom[] list)
-	{
+	public void list(Atom[] list) {
+
+		// jit.cellblock apparently gets to output a list whose first element is "dumpout".  Grr.
+		if (list.length > 0 && list[0].isString() && list[0].getString().equals("dumpout")) {
+			dumpout(Atom.removeFirst(list,1));
+		}
 	}
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
