@@ -25,6 +25,8 @@ public class tc_editor extends MaxObject
 	private static final int GOBBLE = 2;
 	private int dump_mode;		// How to handle incoming dumped data
 
+	java.util.TreeSet all_start_times;
+
 	private class cell {
 		Atom[] command;		// Max data in the cell
 		float duration;		// Time taken by command
@@ -95,48 +97,50 @@ public class tc_editor extends MaxObject
 		ncols = 5;
 
 		make_contents();
-		java.lang.Object o = ((java.util.ArrayList) contents.get(2)).get(2);
-		post("Default array content: " + o);
+		
+		/*		java.lang.Object o = ((java.util.ArrayList) contents.get(2)).get(2);
+				post("Default array content: " + o); */
 
+		all_start_times = new java.util.TreeSet();	
 	}
     
 	private void make_contents() {
 		// Make an ArrayList of ArrayLists to mirror what's in the jit.cellblock
 		// Put a "null" in each element.
 		contents = new java.util.ArrayList(ncols);
-		for (int i = 0; i < ncols; ++i) {
-			contents.add(make_column());
-		}
-	}
+		 for (int i = 0; i < ncols; ++i) {
+			 contents.add(make_column());
+		 }
+	 }
 
-	private java.util.ArrayList make_column() {
-		java.util.ArrayList col = new java.util.ArrayList(nrows);
-		for (int j = 0; j < nrows; ++j) {
-			col.add(null);
-		}	
-		return col;
-	}	
+	 private java.util.ArrayList make_column() {
+		 java.util.ArrayList col = new java.util.ArrayList(nrows);
+		 for (int j = 0; j < nrows; ++j) {
+			 col.add(null);
+		 }	
+		 return col;
+	 }	
 
-	private void add_cols(int larger_ncols) {
-		contents.ensureCapacity(larger_ncols);
-		for (int i = ncols; i < larger_ncols; ++i) {
-			contents.add(make_column());
-		}
-		ncols = larger_ncols;
-	}
+	 private void add_cols(int larger_ncols) {
+		 contents.ensureCapacity(larger_ncols);
+		 for (int i = ncols; i < larger_ncols; ++i) {
+			 contents.add(make_column());
+		 }
+		 ncols = larger_ncols;
+	 }
 
-	private void add_rows(int larger_nrows) {
-		for (int i = 0; i<ncols; ++i) {
-			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
-			col.ensureCapacity(larger_nrows);
-			for (int j = nrows; j < larger_nrows; ++j) {
-				col.add(null);
-			}
-		}
-		nrows = larger_nrows;
-	}
+	 private void add_rows(int larger_nrows) {
+		 for (int i = 0; i<ncols; ++i) {
+			 java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+			 col.ensureCapacity(larger_nrows);
+			 for (int j = nrows; j < larger_nrows; ++j) {
+				 col.add(null);
+			 }
+		 }
+		 nrows = larger_nrows;
+	 }
 
-	public void clear_contents() {
+	 public void clear_contents() {
 		for (int i = 0; i < ncols; ++i) {
 			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
 			for (int j = 0; j < nrows; ++j) {
@@ -150,7 +154,8 @@ public class tc_editor extends MaxObject
 			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
 			for (int j = 0; j < nrows; ++j) {
 				cell c =  (cell) col.get(j);
-				post("[" + i + "," + j + "] " + Atom.toDebugString(c.command));
+				post("[" + i + "," + j + " @ " + c.start_time +"] " +
+					 Atom.toDebugString(c.command));
 			}	
 		}
 	}
@@ -256,7 +261,7 @@ public class tc_editor extends MaxObject
 	}	
 
 	public void insert() {
-		// First refresh our knowledge of the contents of the cellblock with a refreshing dump
+		// First refresh our knowledge of the contents of the cellblock
 		take_dump();
 
 		if (selected_col < 0 || selected_col >= ncols) {
@@ -280,20 +285,7 @@ public class tc_editor extends MaxObject
 				outlet(0, "clear", new Atom[] { Atom.newAtom(selected_col),
 									            Atom.newAtom(selected_row) });
 			} else {
-				// We need the user's arbitrary stored command,
-				//  plus the new row and column to store it in
-				// It's fun to concatenate arrays in Java!
-		   		// post("* gonna get row " + (i-1));
-				Atom[] command =  c.command;
-				Atom[] toOutput = new Atom[2+command.length];
-				toOutput[0] = Atom.newAtom(selected_col);
-				toOutput[1] = Atom.newAtom(i);
-				for (int j = 0; j < command.length; ++j) {
-					toOutput[j+2] = command[j];
-				}
-
-				// post("Gonna output " + Atom.toDebugString(toOutput));
-				outlet(0, "set", toOutput);
+				outlet_set_cell(selected_col, i, c);
 			}
 		}
 
@@ -302,10 +294,25 @@ public class tc_editor extends MaxObject
 									  Atom.newAtom(selected_row),
 									  Atom.newAtom("hold"),
 									  Atom.newAtom(0.)} );
-
-
 	}
 		
+	private void outlet_set_cell(int col, int row, cell c) {
+		// Construct the Atom[] array to set a cell to an (arbitrary-sized) value
+		// We need the user's arbitrary stored command,
+		//  plus the new row and column to store it in
+		// It's fun to concatenate arrays in Java!
+
+		Atom[] command =  c.command;
+		Atom[] toOutput = new Atom[2+command.length];
+		toOutput[0] = Atom.newAtom(col);
+		toOutput[1] = Atom.newAtom(row);
+		for (int j = 0; j < command.length; ++j) {
+			toOutput[j+2] = command[j];
+		}
+		// post("Gonna output " + Atom.toDebugString(toOutput));
+		outlet(0, "set", toOutput);
+	}
+
 
 /*
 	public void sync(Atom[] args) {
@@ -356,35 +363,100 @@ public class tc_editor extends MaxObject
 			dumpout(Atom.removeFirst(list,1));
 		}
 	}
-    
+
+
+	public void order() {
+		// First refresh our knowledge of the contents of the cellblock
+		take_dump();
+
+		// Find the start time of each command
+		calculate_start_times();
+
+		// Get rid of all the stored "null" values 
+		// All the vertical spacing is going to be recomputed in this method anyway. 
+		for (int i = 0; i<ncols; ++i) {
+			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+			while (col.remove(null)) {
+				// keep going until it returns false
+			}
+		}
+
+		// Now clear the entire cellblock
+		outlet(0, "clear", new Atom[] { Atom.newAtom("all")});
+
+		/* Here's the tricky part.  We iterate through the sorted set of times,
+		   keeping track of our current index in each of the columns. */
+		int indices = new int[ncols];
+		java.util.Arrays.fill(indices, 0);
+		
+		Iterator iter = all_start_times.iterator();
+		int outputRow = 0;
+
+		while (iter.hasNext()) {
+			float thisTime = iter.next();
+
+			// Since "jump" commands (and unrecognized commands) take zero time,
+			// there may need to be multiple output rows with the same time.
+			boolean more_this_time = true;
+			while (more_this_time) {
+				// Put the absolute time in the leftmost column
+				outlet(0, "set", new Atom[] { Atom.newAtom(0),
+											  Atom.newAtom(outputRow),
+											  Atom.newAtom(thisTime) });
+
+				// So far we haven't seen any columns with more entries for this time.
+				more_this_time = false;  
+
+				for (int i = 1; i<ncols; ++i) { // col 0 is for the times this method write
+					java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+
+					if (indices[i] < col.size()) {
+						cell c =  (cell) col.get(indices[i]);
+						float next_time_in_column = c.start_time;
+						if (next_time_in_column < thisTime) {
+							post("Internal error!  next_time_in_column < thisTime");
+							return;
+						} else if (next_time_in_column == thisTime) {
+							// This command belongs in the current row, since it has the right time
+							outlet_set_cell(i, outputRow, c);
+							(indices[i])++;
+
+							// Is the next command in this column at the same start time?
+							if (indices[i] < col.size() &&
+								((cell) col.get(indices[i])).start_time == thisTime) {
+								more_this_time = true;
+							}
+						} else {
+							// This column should just have a blank in this row, so do nothing
+						}
+					}
+				}
+
+				outputRow++;
+			}
+		}
+	}
+
+    public void calculate_start_times() {
+
+		all_start_times.clear();
+
+		for (int i = 0; i<ncols; ++i) {
+			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+			float t = 0.0;
+			for (int j = 0; j < nrows; ++j) {
+				cell c =  (cell) col.get(j);
+				if (c != null) {
+					c.start_time = t;
+					all_start_times.add(t);
+					t += c.duration;
+				}
+			}
+			// xxx t is now the time that the last command ends...
+		}
+	}
+				
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
