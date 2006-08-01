@@ -145,6 +145,16 @@ public class tc_editor extends MaxObject
 		}
 	}
 
+	public void print_contents() {
+		for (int i = 0; i < ncols; ++i) {
+			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+			for (int j = 0; j < nrows; ++j) {
+				cell c =  (cell) col.get(j);
+				post("[" + i + "," + j + "] " + Atom.toDebugString(c.command));
+			}	
+		}
+	}
+
 	private void store(int col, int row, Atom[] data) {
 		if (row>nrows) {
 			post("Ack!  Trying to store row " + row + " but data only has " + nrows);
@@ -245,7 +255,6 @@ public class tc_editor extends MaxObject
 		// Now dumpout() will be called many times
 	}	
 
-/*
 	public void insert() {
 		// First refresh our knowledge of the contents of the cellblock with a refreshing dump
 		take_dump();
@@ -258,14 +267,34 @@ public class tc_editor extends MaxObject
 		// Get the one column we care about
 		java.util.ArrayList col = (java.util.ArrayList) contents.get(selected_col);
 
+		post("Inserting:  size (r=" + nrows + ", c=" + ncols + ")");
+
 		// Move everything below the selected cell down by one (to the next higher row)
 		for (int i = selected_row+1; i < nrows; ++i) {
+			// We need the user's arbitrary stored command, plus the new row and column to store it in
+			// It's fun to concatenate arrays in Java!
+		    post("* gonna get row " + (i-1));
+			Atom[] command =  ((cell) col.get(i-1)).command;
+			Atom[] toOutput = new Atom[2+command.length];
+			for (int j = 0; j < command.length; ++j) {
+				toOutput[j+2] = command[j];
+			}
+
+			toOutput[0] = Atom.newAtom(selected_col);
+			toOutput[1] = Atom.newAtom(i);
 			
-			set, selected_col, i, 
+			post("Gonna output " + Atom.toDebugString(toOutput));
+			outlet(0, "set", toOutput);
+		}
+
+		// And now we can put the new value ("hold 0.") in the selected cell
+		outlet(0, "set", new Atom[] { Atom.newAtom(selected_col),
+									  Atom.newAtom(selected_row),
+									  Atom.newAtom("hold"),
+									  Atom.newAtom(0.)} );
 
 
 	}
-*/
 		
 
 /*
@@ -319,6 +348,11 @@ public class tc_editor extends MaxObject
 	}
     
 }
+
+
+
+
+
 
 
 
