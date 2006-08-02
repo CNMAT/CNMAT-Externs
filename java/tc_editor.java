@@ -2,6 +2,9 @@ import com.cycling74.max.*;
 
 public class tc_editor extends MaxObject
 {
+	public void version() {
+		post("tc_editor version 0.03 - first working version?");
+	}
 
 	private static final String[] INLET_ASSIST = new String[]{
 		"from jit.cellblock first outlet",
@@ -101,7 +104,8 @@ public class tc_editor extends MaxObject
 		/*		java.lang.Object o = ((java.util.ArrayList) contents.get(2)).get(2);
 				post("Default array content: " + o); */
 
-		all_start_times = new java.util.TreeSet();	
+		all_start_times = new java.util.TreeSet();
+		version();	
 	}
     
 	private void make_contents() {
@@ -113,6 +117,13 @@ public class tc_editor extends MaxObject
 		 }
 	 }
 
+	private void resize_contents() {
+		if (contents.size() < ncols) {
+			add_cols(ncols);
+		}
+		add_rows(nrows);
+	}
+
 	 private java.util.ArrayList make_column() {
 		 java.util.ArrayList col = new java.util.ArrayList(nrows);
 		 for (int j = 0; j < nrows; ++j) {
@@ -123,7 +134,7 @@ public class tc_editor extends MaxObject
 
 	 private void add_cols(int larger_ncols) {
 		 contents.ensureCapacity(larger_ncols);
-		 for (int i = ncols; i < larger_ncols; ++i) {
+		 for (int i = contents.size(); i < larger_ncols; ++i) {
 			 contents.add(make_column());
 		 }
 		 ncols = larger_ncols;
@@ -133,7 +144,7 @@ public class tc_editor extends MaxObject
 		 for (int i = 0; i<ncols; ++i) {
 			 java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
 			 col.ensureCapacity(larger_nrows);
-			 for (int j = nrows; j < larger_nrows; ++j) {
+			 for (int j = col.size(); j < larger_nrows; ++j) {
 				 col.add(null);
 			 }
 		 }
@@ -150,12 +161,13 @@ public class tc_editor extends MaxObject
 	}
 
 	public void print_contents() {
+		post("Printing contents: " + ncols + " columns, " + nrows + "rows.");
 		for (int i = 0; i < ncols; ++i) {
 			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
 			for (int j = 0; j < nrows; ++j) {
 				cell c =  (cell) col.get(j);
-				post("[" + i + "," + j + " @ " + c.start_time +"] " +
-					 Atom.toDebugString(c.command));
+				post("[" + i + "," + j + "] " +
+					 ((c==null) ? "[null]" : Atom.toDebugString(c.command)));
 			}	
 		}
 	}
@@ -341,7 +353,7 @@ public class tc_editor extends MaxObject
 		if (shouldBeSelect.equals("select")) {
 			selected_row = r;
 			selected_col = c;
-			post("you selected r " + r + ", c " + c);
+			// post("you selected r " + r + ", c " + c);
 		} else {
 			post("Didn't expect sync " + shouldBeSelect);
 		}
@@ -386,14 +398,14 @@ public class tc_editor extends MaxObject
 
 		/* Here's the tricky part.  We iterate through the sorted set of times,
 		   keeping track of our current index in each of the columns. */
-		int indices = new int[ncols];
+		int indices[] = new int[ncols];
 		java.util.Arrays.fill(indices, 0);
 		
-		Iterator iter = all_start_times.iterator();
+		java.util.Iterator iter = all_start_times.iterator();
 		int outputRow = 0;
 
 		while (iter.hasNext()) {
-			float thisTime = iter.next();
+			float thisTime = ((java.lang.Float) iter.next()).floatValue();
 
 			// Since "jump" commands (and unrecognized commands) take zero time,
 			// there may need to be multiple output rows with the same time.
@@ -435,6 +447,9 @@ public class tc_editor extends MaxObject
 				outputRow++;
 			}
 		}
+
+		// Now that we're done, restore the size of contents
+		resize_contents();
 	}
 
     public void calculate_start_times() {
@@ -443,12 +458,12 @@ public class tc_editor extends MaxObject
 
 		for (int i = 0; i<ncols; ++i) {
 			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
-			float t = 0.0;
+			float t = 0.0f;
 			for (int j = 0; j < nrows; ++j) {
 				cell c =  (cell) col.get(j);
 				if (c != null) {
 					c.start_time = t;
-					all_start_times.add(t);
+					all_start_times.add(new java.lang.Float(t));
 					t += c.duration;
 				}
 			}
@@ -457,6 +472,14 @@ public class tc_editor extends MaxObject
 	}
 				
 }
+
+
+
+
+
+
+
+
 
 
 
