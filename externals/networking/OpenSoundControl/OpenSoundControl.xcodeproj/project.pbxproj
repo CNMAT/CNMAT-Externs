@@ -7,18 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		BE7400560A81354E002BA208 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE7400550A81354E002BA208 /* MaxAPI.framework */; };
-		BE7A7D470A3F90B400ECC77A /* OSC-route.c in Sources */ = {isa = PBXBuildFile; fileRef = BE7A7D460A3F90B400ECC77A /* OSC-route.c */; };
-		BED0FC590A81371B0067D548 /* OSC-pattern-match.c in Sources */ = {isa = PBXBuildFile; fileRef = BED0FC580A81371B0067D548 /* OSC-pattern-match.c */; };
+		BE66544F0A813985005ED759 /* OSC-client.c in Sources */ = {isa = PBXBuildFile; fileRef = BE66544E0A813985005ED759 /* OSC-client.c */; };
+		BE6654510A81398C005ED759 /* OSC-timetag.c in Sources */ = {isa = PBXBuildFile; fileRef = BE6654500A81398C005ED759 /* OSC-timetag.c */; };
+		BEEC23300A3F859F00C8A6FF /* OpenSoundControl.c in Sources */ = {isa = PBXBuildFile; fileRef = BEEC232F0A3F859F00C8A6FF /* OpenSoundControl.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		8D01CCD20486CAD60068D4B7 /* OSC-route.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OSC-route.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE7400550A81354E002BA208 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		BE7A7D460A3F90B400ECC77A /* OSC-route.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "OSC-route.c"; sourceTree = "<group>"; };
-		BED0FC580A81371B0067D548 /* OSC-pattern-match.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "OSC-pattern-match.c"; path = "../../../../OSC/OSC-Kit/OSC-pattern-match.c"; sourceTree = SOURCE_ROOT; };
+		0F5B62020919440900A62EB9 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
+		BE4DBB840A34259100AA925C /* OpenSoundControl.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenSoundControl.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE66544E0A813985005ED759 /* OSC-client.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "OSC-client.c"; path = "../../../../OSC/libOSC/OSC-client.c"; sourceTree = SOURCE_ROOT; };
+		BE6654500A81398C005ED759 /* OSC-timetag.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "OSC-timetag.c"; path = "../../../../OSC/libOSC/OSC-timetag.c"; sourceTree = SOURCE_ROOT; };
+		BEEC232F0A3F859F00C8A6FF /* OpenSoundControl.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = OpenSoundControl.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,7 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				BE7400560A81354E002BA208 /* MaxAPI.framework in Frameworks */,
+				0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,7 +50,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BE7400550A81354E002BA208 /* MaxAPI.framework */,
+				0F5B62020919440900A62EB9 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -64,8 +66,9 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				BE7A7D460A3F90B400ECC77A /* OSC-route.c */,
-				BED0FC580A81371B0067D548 /* OSC-pattern-match.c */,
+				BEEC232F0A3F859F00C8A6FF /* OpenSoundControl.c */,
+				BE66544E0A813985005ED759 /* OSC-client.c */,
+				BE6654500A81398C005ED759 /* OSC-timetag.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -73,7 +76,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D01CCD20486CAD60068D4B7 /* OSC-route.mxo */,
+				BE4DBB840A34259100AA925C /* OpenSoundControl.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,9 +94,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* OSC-route */ = {
+		8D01CCC60486CAD60068D4B7 /* OpenSoundControl */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "OSC-route" */;
+			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "OpenSoundControl" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -105,10 +108,10 @@
 			);
 			dependencies = (
 			);
-			name = "OSC-route";
+			name = OpenSoundControl;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 8D01CCD20486CAD60068D4B7 /* OSC-route.mxo */;
+			productReference = BE4DBB840A34259100AA925C /* OpenSoundControl.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -116,12 +119,12 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "OSC-route" */;
+			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "OpenSoundControl" */;
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* OSC-route */,
+				8D01CCC60486CAD60068D4B7 /* OpenSoundControl */,
 			);
 		};
 /* End PBXProject section */
@@ -151,8 +154,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE7A7D470A3F90B400ECC77A /* OSC-route.c in Sources */,
-				BED0FC590A81371B0067D548 /* OSC-pattern-match.c in Sources */,
+				BEEC23300A3F859F00C8A6FF /* OpenSoundControl.c in Sources */,
+				BE66544F0A813985005ED759 /* OSC-client.c in Sources */,
+				BE6654510A81398C005ED759 /* OSC-timetag.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,11 +170,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -190,10 +190,10 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "OSC-route";
+				PRODUCT_NAME = OpenSoundControl;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
-				USER_HEADER_SEARCH_PATHS = "../../../../OSC/OSC-Kit";
+				USER_HEADER_SEARCH_PATHS = "../../../../OSC/OSC-Kit ../../../../OSC/libOSC";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -214,11 +214,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -235,10 +231,10 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "OSC-route";
+				PRODUCT_NAME = OpenSoundControl;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
-				USER_HEADER_SEARCH_PATHS = "../../../../OSC/OSC-Kit";
+				USER_HEADER_SEARCH_PATHS = "../../../../OSC/OSC-Kit ../../../../OSC/libOSC";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -254,11 +250,7 @@
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -274,9 +266,9 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "OSC-route";
+				PRODUCT_NAME = OpenSoundControl;
 				SECTORDER_FLAGS = "";
-				USER_HEADER_SEARCH_PATHS = "../../../../OSC/OSC-Kit";
+				USER_HEADER_SEARCH_PATHS = "../../../../OSC/OSC-Kit ../../../../OSC/libOSC";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -307,7 +299,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "OSC-route" */ = {
+		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "OpenSoundControl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670B096B494E00E9E0B4 /* Development */,
@@ -317,7 +309,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "OSC-route" */ = {
+		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "OpenSoundControl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670F096B494E00E9E0B4 /* Development */,
