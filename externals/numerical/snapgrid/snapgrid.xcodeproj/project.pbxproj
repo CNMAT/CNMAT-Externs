@@ -8,15 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		BE1CC30C0A81338D0050AA91 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */; };
-		BE212E540A756D4000A875F5 /* threefates.c in Sources */ = {isa = PBXBuildFile; fileRef = BE212E530A756D4000A875F5 /* threefates.c */; };
+		BE9E8EED0A7569000018141F /* snapgrid.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9E8EEC0A7569000018141F /* snapgrid.c */; };
+		BE9E8EF80A7569190018141F /* gridlock.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9E8EF70A7569190018141F /* gridlock.c */; };
+		BEB87AA30A81333500C31058 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEB87AA20A81333500C31058 /* MaxAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		8D01CCD20486CAD60068D4B7 /* threefates.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = threefates.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		BE212E530A756D4000A875F5 /* threefates.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = threefates.c; sourceTree = "<group>"; };
+		8D01CCD20486CAD60068D4B7 /* snapgrid.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = snapgrid.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE9E8EEC0A7569000018141F /* snapgrid.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = snapgrid.c; sourceTree = "<group>"; };
+		BE9E8EF70A7569190018141F /* gridlock.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = gridlock.c; sourceTree = "<group>"; };
+		BEB87AA20A81333500C31058 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,7 +27,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				BE1CC30C0A81338D0050AA91 /* MaxAPI.framework in Frameworks */,
+				BEB87AA30A81333500C31058 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,7 +48,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */,
+				BEB87AA20A81333500C31058 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -62,7 +64,8 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				BE212E530A756D4000A875F5 /* threefates.c */,
+				BE9E8EEC0A7569000018141F /* snapgrid.c */,
+				BE9E8EF70A7569190018141F /* gridlock.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -70,7 +73,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D01CCD20486CAD60068D4B7 /* threefates.mxo */,
+				8D01CCD20486CAD60068D4B7 /* snapgrid.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,9 +91,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* threefates */ = {
+		8D01CCC60486CAD60068D4B7 /* snapgrid */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "threefates" */;
+			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "snapgrid" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -102,10 +105,10 @@
 			);
 			dependencies = (
 			);
-			name = threefates;
+			name = snapgrid;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 8D01CCD20486CAD60068D4B7 /* threefates.mxo */;
+			productReference = 8D01CCD20486CAD60068D4B7 /* snapgrid.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -113,12 +116,12 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "threefates" */;
+			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "snapgrid" */;
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* threefates */,
+				8D01CCC60486CAD60068D4B7 /* snapgrid */,
 			);
 		};
 /* End PBXProject section */
@@ -148,7 +151,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE212E540A756D4000A875F5 /* threefates.c in Sources */,
+				BE9E8EED0A7569000018141F /* snapgrid.c in Sources */,
+				BE9E8EF80A7569190018141F /* gridlock.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,7 +190,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = threefates;
+				PRODUCT_NAME = snapgrid;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -230,7 +234,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = threefates;
+				PRODUCT_NAME = snapgrid;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -268,7 +272,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = threefates;
+				PRODUCT_NAME = snapgrid;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -300,7 +304,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "threefates" */ = {
+		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "snapgrid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670B096B494E00E9E0B4 /* Development */,
@@ -310,7 +314,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "threefates" */ = {
+		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "snapgrid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670F096B494E00E9E0B4 /* Development */,
