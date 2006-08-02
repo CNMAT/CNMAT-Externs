@@ -814,7 +814,7 @@ void *myobject_free(fobj *x)
 freeobject(x->m_proxy);
 }
 
-
+/*
 long strcmp(const char *s1, const char *s2);
 long strcmp(const char *s1, const char *s2)
 {
@@ -835,7 +835,7 @@ long strcmp(const char *s1, const char *s2)
 
 	return 0;
 }
-
+*/
 
 
 void * fnew(Symbol *s, int argc, Atom *argv) {
