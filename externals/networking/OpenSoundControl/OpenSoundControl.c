@@ -26,7 +26,7 @@ NAME: OpenSoundControl
 DESCRIPTION: Format Max data to OpenSoundControl protocol and vice versa
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
-VERSION: 1.9.1
+VERSION 1.9.1: I like cheese
 STATUS: supported
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -96,8 +96,9 @@ int OSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argv
 void OSC_sendBuffer(OSC *x);
 void OSC_sendData(OSC *x, short size, char *data);
 void OSC_formatData(OSC *x, char *messageName, short argc, Atom *argv);
+#ifdef DONT_HAVE_STRING_LIBRARY
 void strcpy(char *s1, char *s2);
-
+#endif
 
 void main (fptr *f) {
 	DateTimeRec date;
@@ -146,6 +147,10 @@ void main (fptr *f) {
 }
 
 #define DEFAULT_BUFFER_SIZE 1024
+
+#ifdef __MWERKS__
+#define DONT_HAVE_STRING_LIBRARY
+#endif
 
 void *OSC_new(long arg) {
 	OSC *x;
@@ -578,9 +583,11 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
 	OSC_doReset(x);	
 }
 
+#ifdef DONT_HAVE_STRING_LIBRARY
 void strcpy(char *s1, char *s2) {
 	while (*s1++ = *s2++);
 }
+#endif
 
 #define PRINTABLE(c) ((char) (c>= 0x20 && c <= 0x7e ? c : 'û'))
 #define isprint(c) ((c) >= 0x20 && (c) <= 0x7e)
@@ -695,7 +702,9 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel);
 static void Smessage(OSC *x, char *address, void *v, long n);
 char *DataAfterAlignedString(char *string, char *boundary); 
 Boolean IsNiceString(char *string, char *boundary);
+#ifdef DONT_HAVE_STRING_LIBRARY
 int strncmp(char *s1, char *s2, int n);
+#endif
 
 char *htm_error_string;	// Used for error messages
 
@@ -1016,6 +1025,7 @@ Boolean IsNiceString(char *string, char *boundary)  {
     return TRUE;
 }
 
+#ifdef DONT_HAVE_STRING_LIBRARY
 int strncmp(char *s1, char *s2, int n) {
 	while (n > 0) {
 		if (*s1 != *s2) return *s2 - *s1;
@@ -1023,3 +1033,4 @@ int strncmp(char *s1, char *s2, int n) {
 		s1++; s2++; n--;
 	}
 }
+#endif
