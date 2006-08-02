@@ -145,8 +145,8 @@ static void *SDIFtuples_class;
 /* prototypes for my functions */
 void *SDIFtuples_new(Symbol *s, short argc, Atom *argv);
 void SDIFtuples_free(SDIFtuples *x);
-void *my_getbytes(int numBytes);
-void my_freebytes(void *bytes, int size);
+static void *my_getbytes(int numBytes);
+static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFtuples *x);
 static void SDIFtuples_set(SDIFtuples *x, Symbol *bufName);
 static void SDIFtuples_errorreporting(SDIFtuples *x, long yesno);
