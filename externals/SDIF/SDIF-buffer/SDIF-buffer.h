@@ -38,6 +38,45 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 #include "sdif-mem.h"
 #include "sdif-buf.h"
 
+typedef struct _SDIFbuffer {
+ 	t_object s_obj;
+ 	t_symbol *s_myname;
+ 	void *internal;			/* Users of SDIF-buffers don't get to use this */
+
+ 	// was: SDIFFrameLookupFn *FrameLookup;
+	SDIFmem_Frame (*FrameLookup)(struct _SDIFbuffer * buf, 
+									    sdif_float64 time,
+									    long direction);
+
+ 	// was: SDIFFrameInsertFn *FrameInsert;
+	int (*FrameInsert)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
+
+ 	// was: SDIFFrameDeleteFn *FrameDelete;  //  NOTE: not implemented (0.8.0)
+
+	void (*FrameDelete)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
+
+ 	
+ 	// Info about the stream as a whole
+ 	char *fileName;
+ 	sdif_int32   streamID;
+
+	//  direct access to buffer data though API defined in sdif-buf.h
+ 	// was: SDIFBufferAccessorFn *BufferAccessor;
+	SDIFbuf_Buffer (*BufferAccessor)(struct _SDIFbuffer * buf);
+
+  //  only add new stuff at bottom, so we don't have to recompile existing client objects
+} SDIFBuffer;
+
+
+
+/* The "SDIF buffer lookup function" turns a max symbol into a pointer to an 
+   SDIFBuffer.  A pointer to this function will be in the s_thing field of the
+   symbol "##SDIF-buffer-lookup". */
+   
+typedef SDIFBuffer *(*SDIFBufferLookupFunction)(t_symbol *name);
+
+
+
 /* An "SDIF Frame Lookup Function" looks for a frame at or near a given time.
    If there is a frame at the exact requested time, then of course that frame
    is returned.  If direction < 0, it "searches backwards", returning
@@ -47,7 +86,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
    sdif.h), so you can traverse the list of frames in the stream like that if after
    you call the SDIF Frame Lookup Function once.  
    Returns 0 if it doesn't find a frame. */
-typedef SDIFmem_Frame (SDIFFrameLookupFn)(struct _SDIFbuffer *buf, 
+typedef SDIFmem_Frame (SDIFFrameLookupFn)(struct _SDIFbuffer * buf, 
 									    sdif_float64 time,
 									    long direction);
 
@@ -55,14 +94,14 @@ typedef SDIFmem_Frame (SDIFFrameLookupFn)(struct _SDIFbuffer *buf,
    automatically updates the doubly linked list.  
    Returns 0 for success, nonzero for failure.
    */
-typedef int (SDIFFrameInsertFn)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
+typedef int (SDIFFrameInsertFn)(SDIFmem_Frame f, struct _SDIFbuffer * buf);
 
 
 /* An "SDIF Frame Delete Function" deletes the given frame from the given SDIF-buffer,
    automatically updating the linked list connections as well as any internal state,
    and freeing the memory taken by that frame. 
    NOTE: this function has never actually been implemented (0.8.0) */
-typedef void (SDIFFrameDeleteFn)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
+typedef void (SDIFFrameDeleteFn)(SDIFmem_Frame f, struct _SDIFbuffer * buf);
 
 /* An "SDIF Buffer Accessor Function" returns the SDIFbuf_Buffer instance which
    contains the SDIF data for a given max object instance. This provides the
@@ -70,30 +109,9 @@ typedef void (SDIFFrameDeleteFn)(SDIFmem_Frame f, struct _SDIFbuffer *buf);
    essentially replacing SDIFFrameLookupFn, SDIFFrameInsertFn, SDIFFrameDeleteFn.
    Returns 0 only if the SDIFbuf_Buffer wasn't successfully initialized during
    the max new object constructor (unlikely). */
-typedef SDIFbuf_Buffer (SDIFBufferAccessorFn)(struct _SDIFbuffer *buf);
+typedef SDIFbuf_Buffer (SDIFBufferAccessorFn)(struct _SDIFbuffer * buf);
 
 
-typedef struct _SDIFbuffer {
- 	t_object s_obj;
- 	t_symbol *s_myname;
- 	void *internal;			/* Users of SDIF-buffers don't get to use this */
- 	SDIFFrameLookupFn *FrameLookup;
- 	SDIFFrameInsertFn *FrameInsert;
- 	SDIFFrameDeleteFn *FrameDelete;  //  NOTE: not implemented (0.8.0)
- 	
- 	// Info about the stream as a whole
- 	char *fileName;
- 	sdif_int32   streamID;
-
-  //  direct access to buffer data though API defined in sdif-buf.h
- 	SDIFBufferAccessorFn *BufferAccessor;
-
-  //  only add new stuff at bottom, so we don't have to recompile existing client objects
-} SDIFBuffer;
 
 
-/* The "SDIF buffer lookup function" turns a max symbol into a pointer to an 
-   SDIFBuffer.  A pointer to this function will be in the s_thing field of the
-   symbol "##SDIF-buffer-lookup". */
-   
-typedef SDIFBuffer *(*SDIFBufferLookupFunction)(t_symbol *name);
+

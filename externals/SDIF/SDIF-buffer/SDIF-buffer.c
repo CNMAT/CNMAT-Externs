@@ -76,7 +76,7 @@ VERSION 0.9.2: Uses new version info system
 #undef sprintf
 #undef sscanf
 
-#include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
+#include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h`
 #include "open-sdif-file.h"
 
 
@@ -107,7 +107,7 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename);
 void SDIFbuffer_free(SDIFBuffer *x);
 void SDIFbuffer_clear(SDIFBuffer *x);
 void SDIFbuffer_doclear(SDIFBuffer *x);
-static FILE *OpenSDIFFile(char *filename);
+FILE *OpenSDIFFile(char *filename);
 void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long arg);
 void SDIFbuffer_readstreamnumber(SDIFBuffer *x, Symbol *fileName, long streamID);
 void SDIFbuffer_streamlist(SDIFBuffer *, Symbol *, int argc, Atom *argv);
@@ -591,7 +591,7 @@ static int ListInsert(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
 
 
 //  this has never actually been implemented (0.8.0)
-static void ListDelete(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
+static ListDelete(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
 }
 
 
