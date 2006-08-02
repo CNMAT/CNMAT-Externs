@@ -61,8 +61,6 @@ VERSION 1.0: Tim's original version
 
 #include "ext.h"
 
-#include "gridlock.h"
-
 // Define the max number of args.
 #define MAX_INARGS 256
 #define MAX_OUTARGS 1024
@@ -197,7 +195,7 @@ void interleave_version (t_Interleave *x);
 void main(void)
 {
 	
-	post("Running snapgrid main");
+
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&interleave_class, (method)interleave_new, (method) interleave_free,
