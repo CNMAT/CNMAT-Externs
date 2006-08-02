@@ -130,7 +130,7 @@ typedef oscbank t_sinusoids;
 
 static void ResetInterruptStats(t_sinusoids *x);
 static void ReportInterruptStats(t_sinusoids *x);
-t_int *sinusoids2_perform(t_int *w);
+static t_int *sinusoids2_perform(t_int *w);
 static void clear(t_sinusoids *x);
 static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
 static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv);
@@ -139,7 +139,7 @@ static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
 static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
 static void frequency_float(t_sinusoids *x, double ff);
 void harmonics_free(t_sinusoids *x);
-void version(t_sinusoids *x);
+static void version(t_sinusoids *x);
 static void SineFunction(int n, float *stab, int stride, float from, float to);
 static void Makeoscsinetable();
 void tellmeeverything(t_sinusoids *x);
@@ -329,6 +329,7 @@ static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
 {
 	dsp_add(sinusoids2_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 }
+/*
 long strcmp(const char *s1, const char *s2);
 long strcmp(const char *s1, const char *s2)
 {
@@ -349,7 +350,7 @@ long strcmp(const char *s1, const char *s2)
 
 	return 0;
 }
-
+*/
 Boolean isthesymbol(char *name, t_atom *t);
 Boolean isthesymbol(char *name, t_atom *t)
 {
