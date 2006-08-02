@@ -3,7 +3,7 @@ import com.cycling74.max.*;
 public class tc_editor extends MaxObject
 {
 	public void version() {
-		post("tc_editor version 0.03 - first working version?");
+		post("tc_editor version 0.07 -  auto-order");
 	}
 
 	private static final String[] INLET_ASSIST = new String[]{
@@ -21,7 +21,8 @@ public class tc_editor extends MaxObject
 	private int new_ncols;
 	private int selected_row = 0;
 	private int selected_col = 0;
-
+	private boolean auto_order = true;
+	private boolean verbose = false;
 
 	private static final int IGNORE = 0;
 	private static final int CHECK_SIZE = 1;
@@ -191,6 +192,17 @@ public class tc_editor extends MaxObject
 	}
 
 
+	public void verbose(int v) {
+		verbose = (v != 0);
+		post("verbose mode " + verbose);
+	}
+
+
+	public void autoorder(int a) {
+		auto_order = (a != 0);
+		post("automatic reordering mode " + auto_order);
+	}
+
 
 	public void bang()
 	{
@@ -358,6 +370,10 @@ public class tc_editor extends MaxObject
 			post("Didn't expect sync " + shouldBeSelect);
 		}
 	}
+
+	public void refresh_selection() {
+		outlet(0, "select", new Atom[] {Atom.newAtom(selected_col), Atom.newAtom(selected_row)});
+	}
     
 	public void inlet(int i)
 	{
@@ -373,6 +389,15 @@ public class tc_editor extends MaxObject
 		// jit.cellblock apparently gets to output a list whose first element is "dumpout".  Grr.
 		if (list.length > 0 && list[0].isString() && list[0].getString().equals("dumpout")) {
 			dumpout(Atom.removeFirst(list,1));
+		} else {
+			if (auto_order) {
+				// Look for messages that say a cell has a new value
+				// They look like [int] [int] [something else]
+				if (list.length >= 3 &&  list[0].isInt() && list[1].isInt()) {
+					if (verbose) post("about to auto_order...");
+					order();
+				}
+			}
 		}
 	}
 
@@ -383,6 +408,17 @@ public class tc_editor extends MaxObject
 
 		// Find the start time of each command
 		calculate_start_times();
+
+		if (verbose) {
+			post("All the start times: ");
+			java.util.Iterator iter = all_start_times.iterator();
+			while (iter.hasNext()) {
+				float thisTime = ((java.lang.Float) iter.next()).floatValue();
+				post("   " + thisTime);
+			}
+		}
+
+
 
 		// Get rid of all the stored "null" values 
 		// All the vertical spacing is going to be recomputed in this method anyway. 
@@ -450,6 +486,11 @@ public class tc_editor extends MaxObject
 
 		// Now that we're done, restore the size of contents
 		resize_contents();
+
+		// This shouldn't be necessary, but it might help with the textedit box to display
+		// the selected cell after doing a reorder.  Of course it should really be the same
+		// *content* that used to be selected, not just the same row and column.
+		// refresh_selection();  gives stack overflow
 	}
 
     public void calculate_start_times() {
@@ -472,6 +513,17 @@ public class tc_editor extends MaxObject
 	}
 				
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
