@@ -1,0 +1,6 @@
+;maximum.def
+
+LIBRARY maximum
+
+EXPORTS
+	main
