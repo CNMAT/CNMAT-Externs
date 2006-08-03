@@ -1,24 +1,55 @@
 # makefile.per-object
 # This is included in the makefile for every Max external
-# Matt Wright, 2005
+# Matt Wright, 2005-2006
+
+# default platform is "UNKNOWN"
+PLATFORM = UNKNOWN
+
+# Now figure out the platform based on what the build target is
+cfm: PLATFORM := OSX-CFM
+cfm-release: PLATFORM := OSX-CFM
+macho: PLATFORM = OSX-MachO
+macho-release: PLATFORM = OSX-MachO
+cfm: PLATFORM := OSX-CFM
+cfm-release: PLATFORM := OSX-CFM
+win: PLATFORM = WIN
+win-release: PLATFORM = WIN
+
 
 # Name of the object is the name of this directory
 OBJ := $(shell basename `pwd`)
-
-# Need a better way to do this!
-PLATFORM = OSX
 
 # Filenames derived from the name of the object
 SOURCE = $(OBJ).c
 REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).help
-BUILD_DIR = ../build-mac
-BUILD_DIR_EXISTS = $(BUILD_DIR)/exists
-MAC_BINARY = $(BUILD_DIR)/$(OBJ)
+MAC_BINARY = $(if $(findstring OSX-CFM,$(PLATFORM)), \
+   $(BUILD_DIR)/$(OBJ), $(BUILD_DIR)/$(OBJ).mxo)
 MAC_DEBUGGER_SYM = $(BUILD_DIR)/$(OBJ).xSYM
 MAC_HELPFILE_COPY = $(BUILD_DIR)/$(OBJ).help 
 MAC_INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).sit
 MAC_INDIVIDUAL_DOWNLOAD = $(BUILD_DIR)/$(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR)
+
+CODEWARRIOR_BUILD_DIR = ../build-mac
+XCODE_BUILD_DIR = build/Deployment
+DEFAULT_BUILD_DIR = /tmp
+
+# Variables derived from the platform
+ifeq ($(PLATFORM), OSX-CFM)
+  BUILD_DIR = $(CODEWARRIOR_BUILD_DIR)
+else 
+ifeq ($(PLATFORM), OSX-MachO)
+  BUILD_DIR = $(XCODE_BUILD_DIR)
+else 
+ifeq ($(PLATFORM), UNKNOWN)
+  BUILD_DIR = $(DEFAULT_BUILD_DIR)
+else
+  BUILD_DIR = $(error Unrecognized platform "$(PLATFORM)")
+endif
+endif
+endif
+
+BUILD_DIR_EXISTS = $(BUILD_DIR)/exists
 # OBJ_INFO is info about the object
 OBJ_INFO_NO_DIR = $(OBJ)-$(PLATFORM)-objinfo.txt
 OBJ_INFO = $(BUILD_DIR)/$(OBJ_INFO_NO_DIR)
@@ -30,8 +61,9 @@ WEB_INCOMING = $(BUILD_DIR)/$(OBJ)-$(PLATFORM).tar.gz
 # Where files live on our web server
 WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
 
-# Making the version number accessible from this Makefile:
 
+# Making the version number accessible from this Makefile:
+#
 # Each version.h file has a line that looks like this:  
 #     #define VERSION "1.2.3.4"
 # so get a Makefile variable that's just something like "1.2.3.4"
@@ -48,12 +80,20 @@ STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
 
 # Top-level build targets
 
+
+test: 
+	echo platform $(PLATFORM)
+#	echo binary $(MAC_BINARY)
+#	echo build $(BUILD_DIR)
+
+
 all: mac-individual-download help-diff-warning mac-binary
 
 .PHONY: clean
 clean:
 	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY) 
 	rm -f $(WEB_INFO) $(OBJ_INFO) version.h $(WEB_INCOMING) $(MAC_DEBUGGER_SYM)
+	rm -f *~
 
 
 # The version info is now extracted from the .c file by Andy's perl script:
