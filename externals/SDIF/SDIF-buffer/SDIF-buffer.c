@@ -53,6 +53,7 @@ DESCRIPTION: Store SDIF data in Max's memory and make it accessible to other obj
 AUTHORS: Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 VERSION 0.9.2: Uses new version info system
+VERSION 0.9.2a: UB compile
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -81,10 +82,11 @@ VERSION 0.9.2: Uses new version info system
 
 
 /* #include <assert.h> */
+/* assert is now provided by ext.h
 
 #define assert(x) if (!(x)) { ouchstring("Assertion failed: %s, file %s, line %i\n", \
 							             #x, __FILE__, __LINE__); } else {}
-
+*/
 
 /* This struct contains the "private" data for an SDIF-buffer: */
 typedef struct _SDIFbuffer_private {
@@ -153,6 +155,8 @@ void SDIFbuffer_version (SDIFBuffer *x) {
 	post(NAME " Version " VERSION
 		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
     post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
+	
+	post("UB foo");
 }
 
 void main(fptr *fp) {
@@ -591,7 +595,7 @@ static int ListInsert(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
 
 
 //  this has never actually been implemented (0.8.0)
-static ListDelete(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
+static void ListDelete(SDIFmem_Frame newf, struct _SDIFbuffer *x) {
 }
 
 
