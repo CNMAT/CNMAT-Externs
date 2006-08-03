@@ -1,17 +1,47 @@
+/*
+Copyright (c) 2006.
+The Regents of the University of California (Regents).
+All Rights Reserved.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for educational, research, and not-for-profit purposes, without
+fee and without a signed licensing agreement, is hereby granted, provided that
+the above copyright notice, this paragraph and the following two paragraphs
+appear in all copies, modifications, and distributions.  Contact The Office of
+Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+
+Written by Matt Wright, The Center for New Music and Audio Technologies,
+University of California, Berkeley.
+
+     IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+     SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+     ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+     REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+     REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+     FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+     DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+     REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+     ENHANCEMENTS, OR MODIFICATIONS.
+
+*/
+
 import com.cycling74.max.*;
 
 public class tc_editor extends MaxObject
 {
 	public void version() {
-		post("tc_editor version 0.07 -  auto-order");
+		post("tc_editor version 0.1  - accepts input");
 	}
 
 	private static final String[] INLET_ASSIST = new String[]{
-		"from jit.cellblock first outlet",
-		"from jit.cellblock third outlet"
+		"from jit.cellblock first and third outlets"
 	};
 	private static final String[] OUTLET_ASSIST = new String[]{
-		"to jit.cellblock inlet"
+		"to jit.cellblock inlet",
+		"OSC Messages"
 	};
 
 	private java.util.ArrayList contents;
@@ -21,20 +51,50 @@ public class tc_editor extends MaxObject
 	private int new_ncols;
 	private int selected_row = 0;
 	private int selected_col = 0;
+
+	private boolean last_command_was_input = false;
+	private int last_import_col;
+	private int last_import_row;
+
+
+
+	// user-settable modes
 	private boolean auto_order = true;
 	private boolean verbose = false;
 
-	private static final int IGNORE = 0;
-	private static final int CHECK_SIZE = 1;
-	private static final int GOBBLE = 2;
+
 	private int dump_mode;		// How to handle incoming dumped data
+		private static final int IGNORE = 0;
+		private static final int CHECK_SIZE = 1;
+		private static final int GOBBLE = 2;
+
+
+
 
 	java.util.TreeSet all_start_times;
+	
+	public tc_editor(Atom[] args)
+	{
+		declareInlets(new int[]{DataTypes.ALL});
+		declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});
+		createInfoOutlet(false);
 
+		setInletAssist(INLET_ASSIST);
+		setOutletAssist(OUTLET_ASSIST);
+
+		dump_mode = IGNORE;
+		nrows = 10;
+		ncols = 5;
+
+		make_contents();
+		all_start_times = new java.util.TreeSet();
+		version();	
+	}
+    
 	private class cell {
-		Atom[] command;		// Max data in the cell
-		float duration;		// Time taken by command
-		float start_time;	// In the context of this column, the time this command will start
+		public Atom[] command;		// Max data in the cell
+		public float duration;		// Time taken by command
+		public float start_time;	// In the context of this column, the time this command will start
 		public cell (Atom[] args) {
 			command = args;
 			
@@ -85,30 +145,7 @@ public class tc_editor extends MaxObject
 			}
 		}
 	}
-	
 
-	public tc_editor(Atom[] args)
-	{
-		declareInlets(new int[]{DataTypes.ALL, DataTypes.ALL});
-		declareOutlets(new int[]{DataTypes.ALL});
-		createInfoOutlet(false);
-
-		setInletAssist(INLET_ASSIST);
-		setOutletAssist(OUTLET_ASSIST);
-
-		dump_mode = IGNORE;
-		nrows = 10;
-		ncols = 5;
-
-		make_contents();
-		
-		/*		java.lang.Object o = ((java.util.ArrayList) contents.get(2)).get(2);
-				post("Default array content: " + o); */
-
-		all_start_times = new java.util.TreeSet();
-		version();	
-	}
-    
 	private void make_contents() {
 		// Make an ArrayList of ArrayLists to mirror what's in the jit.cellblock
 		// Put a "null" in each element.
@@ -154,14 +191,22 @@ public class tc_editor extends MaxObject
 
 	 public void clear_contents() {
 		for (int i = 0; i < ncols; ++i) {
-			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
-			for (int j = 0; j < nrows; ++j) {
+			clear_column(i);	
+		}
+	}
+
+
+	private void clear_column(int i) {
+		java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+		if (col != null) {
+			for (int j = 0; j < col.size(); ++j) {
 				col.set(j,null);
-			}	
+			}
 		}
 	}
 
 	public void print_contents() {
+		last_command_was_input = false;
 		post("Printing contents: " + ncols + " columns, " + nrows + "rows.");
 		for (int i = 0; i < ncols; ++i) {
 			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
@@ -172,6 +217,23 @@ public class tc_editor extends MaxObject
 			}	
 		}
 	}
+
+	public int highest_row_in_use() {
+		int answer = -1;
+		for (int i = 1; i<ncols; ++i) {
+			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+			for (int j = answer+1; j < col.size(); ++j) {
+				cell c =  (cell) col.get(j);
+				if (c != null) {
+					if (j > answer) answer = j;
+				}
+			}
+		}
+
+		if (verbose) post("Highest row in use is " + answer);
+		return answer;
+	}
+
 
 	private void store(int col, int row, Atom[] data) {
 		if (row>nrows) {
@@ -193,12 +255,14 @@ public class tc_editor extends MaxObject
 
 
 	public void verbose(int v) {
+		last_command_was_input = false;
 		verbose = (v != 0);
 		post("verbose mode " + verbose);
 	}
 
 
 	public void autoorder(int a) {
+		last_command_was_input = false;
 		auto_order = (a != 0);
 		post("automatic reordering mode " + auto_order);
 	}
@@ -206,6 +270,7 @@ public class tc_editor extends MaxObject
 
 	public void bang()
 	{
+		last_command_was_input = false;
 		post("bung!");
 	}
 
@@ -285,6 +350,8 @@ public class tc_editor extends MaxObject
 	}	
 
 	public void insert() {
+		last_command_was_input = false;
+
 		// First refresh our knowledge of the contents of the cellblock
 		take_dump();
 
@@ -306,8 +373,7 @@ public class tc_editor extends MaxObject
 
 			if (c==null) {
 				// Clear the ith row of this column
-				outlet(0, "clear", new Atom[] { Atom.newAtom(selected_col),
-									            Atom.newAtom(selected_row) });
+				outlet_clear_cell(selected_col, selected_row);
 			} else {
 				outlet_set_cell(selected_col, i, c);
 			}
@@ -318,8 +384,16 @@ public class tc_editor extends MaxObject
 									  Atom.newAtom(selected_row),
 									  Atom.newAtom("hold"),
 									  Atom.newAtom(0.)} );
+
+		// This may have changed the order
+		if (auto_order) order();
 	}
-		
+	
+	private void outlet_clear_cell(int col, int row) {
+		outlet(0, "clear", new Atom[] { Atom.newAtom(col),
+							            Atom.newAtom(row) });
+	}
+
 	private void outlet_set_cell(int col, int row, cell c) {
 		// Construct the Atom[] array to set a cell to an (arbitrary-sized) value
 		// We need the user's arbitrary stored command,
@@ -335,6 +409,27 @@ public class tc_editor extends MaxObject
 		}
 		// post("Gonna output " + Atom.toDebugString(toOutput));
 		outlet(0, "set", toOutput);
+	}
+
+	private void refresh_cellblock() {
+		if (verbose) post("Writing everythign into the jit.cellblock");
+
+		dump_mode = IGNORE;
+		
+		outlet(0, "rows", new Atom[] { Atom.newAtom(highest_row_in_use()+1) });
+
+
+		for (int i = 1; i<ncols; ++i) { // col 0 is for the times this method write
+			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
+			for (int j=0; j<col.size(); ++j) {
+				cell c =  (cell) col.get(j);
+				if (c==null) {
+					outlet_clear_cell(i, j);
+				} else {
+					outlet_set_cell(i, j, c);
+				}
+			}
+		}
 	}
 
 
@@ -354,6 +449,8 @@ public class tc_editor extends MaxObject
 
 
 	public void sync(String shouldBeClick, int a, int b, int c, int d) {
+		last_command_was_input = false;
+
 		if (shouldBeClick.equals("click")) {
 			// Do nothing
 		} else {
@@ -362,6 +459,7 @@ public class tc_editor extends MaxObject
 	}
 
 	public void sync(String shouldBeSelect, int c, int r) {
+		last_command_was_input = false;
 		if (shouldBeSelect.equals("select")) {
 			selected_row = r;
 			selected_col = c;
@@ -372,6 +470,7 @@ public class tc_editor extends MaxObject
 	}
 
 	public void refresh_selection() {
+		last_command_was_input = false;
 		outlet(0, "select", new Atom[] {Atom.newAtom(selected_col), Atom.newAtom(selected_row)});
 	}
     
@@ -385,7 +484,6 @@ public class tc_editor extends MaxObject
     
     
 	public void list(Atom[] list) {
-
 		// jit.cellblock apparently gets to output a list whose first element is "dumpout".  Grr.
 		if (list.length > 0 && list[0].isString() && list[0].getString().equals("dumpout")) {
 			dumpout(Atom.removeFirst(list,1));
@@ -394,6 +492,7 @@ public class tc_editor extends MaxObject
 				// Look for messages that say a cell has a new value
 				// They look like [int] [int] [something else]
 				if (list.length >= 3 &&  list[0].isInt() && list[1].isInt()) {
+				    last_command_was_input = false;
 					if (verbose) post("about to auto_order...");
 					order();
 				}
@@ -417,8 +516,6 @@ public class tc_editor extends MaxObject
 				post("   " + thisTime);
 			}
 		}
-
-
 
 		// Get rid of all the stored "null" values 
 		// All the vertical spacing is going to be recomputed in this method anyway. 
@@ -481,6 +578,7 @@ public class tc_editor extends MaxObject
 				}
 
 				outputRow++;
+				outlet(0, "rows", new Atom[] { Atom.newAtom(outputRow+1) });
 			}
 		}
 
@@ -494,10 +592,9 @@ public class tc_editor extends MaxObject
 	}
 
     public void calculate_start_times() {
-
 		all_start_times.clear();
 
-		for (int i = 0; i<ncols; ++i) {
+		for (int i = 1; i<ncols; ++i) {
 			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
 			float t = 0.0f;
 			for (int j = 0; j < nrows; ++j) {
@@ -511,26 +608,119 @@ public class tc_editor extends MaxObject
 			// xxx t is now the time that the last command ends...
 		}
 	}
+
+	public void outputall() {
+		last_command_was_input = false;
+
+		take_dump();
+		for (int i = 1; i<ncols; ++i) {
+			output(i);
+		}
+	}
+
+	public void output(int column) {
+		last_command_was_input = false;
+
+		take_dump();
+		do_output(column);
+	}
+
+	private void do_output(int column) {
+		if (column < 0 || column >= ncols) {
+			post("Can't output column " + column + "; they go from 0 to " + (ncols-1));
+			return;
+		}
+
+		java.util.ArrayList col = (java.util.ArrayList) contents.get(column);
+		if (col == null) {
+			post("Error: column " + column + " is null!");
+			return;
+		}
+	
+		// clear the message box
+		outlet(1, ("/"+column+"/msg"), new Atom[] {Atom.newAtom("set")});
+
+		// output all commands in this column to the message box and the tempocurver object
+		// row 0 is reserved for title (voice name or whatever)
+
+		for (int i = 1; i < col.size(); ++i) {
+			cell c =  (cell) col.get(i);
+			if (c != null) {
 				
+				outlet(1, ("/"+column+"/tc"), c.command);
+
+				Atom[] toOutput = new Atom[c.command.length + 1];
+				toOutput[0] = Atom.newAtom("append");
+				for (int j=0; j<c.command.length; ++j) {
+					toOutput[j+1] = c.command[j];
+				}
+
+				outlet(1, ("/"+column+"/msg"), toOutput);
+				outlet(1, ("/"+column+"/msg"), new Atom[]{Atom.newAtom("append"),
+													  Atom.newAtom(",") });
+			}
+		}
+	}
+
+	
+
+	public void input(Atom [] column_plus_command) {
+		if (column_plus_command.length < 2) {
+			post("input: needs column number followed by a command to add to the column");
+			return;
+		}
+
+		if (!column_plus_command[0].isInt()) {
+			post("input: column number must be an integer (you gave " + 
+				 Atom.toDebugString(column_plus_command) + ")");
+			return;
+		}
+
+		int column = column_plus_command[0].getInt();
+		Atom [] command = Atom.removeFirst(column_plus_command);
+
+
+		if (verbose) {
+			post("import " + column + 
+				  (last_command_was_input ? " another" : " first"));
+		}
+
+		if (column < 1 || column >= contents.size()) {
+			post("Can't import to column " + column + "; they go from 1 to " + (ncols-1));
+			return;
+		}
+
+		java.util.ArrayList col = (java.util.ArrayList) contents.get(column);
+		if (col == null) {
+			post("Internal error!  Column " + column + " is null!");
+			return;
+		}
+
+		if (verbose) {
+		    post("Last inputted column was " + last_import_col + " now inputting " + column);
+		}
+
+		if (column != last_import_col) {
+			last_command_was_input = false;				
+			last_import_col = column;
+		}
+
+		if (!last_command_was_input) {
+			clear_column(column);
+			last_import_row = 0;
+		}
+		last_command_was_input = true;
+
+
+		last_import_row++;
+		
+		col.set(last_import_row, new cell(command));
+
+		refresh_cellblock();
+		if (auto_order) order();
+		
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
