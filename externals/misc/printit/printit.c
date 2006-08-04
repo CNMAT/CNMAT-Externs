@@ -62,7 +62,7 @@ void *printit_class;
 /* prototypes  */
 
 void printit_bang(printit *x);
-void printit_float(printit *x, float f);
+void printit_float(printit *x, double d);
 void printit_int(printit *x, long n);
 void printit_list(printit *x, Symbol *s, short argc, Atom *argv);
 void printit_anything(printit *x, Symbol *s, short argc, Atom *argv);
@@ -142,9 +142,10 @@ void printit_bang(printit *x)
 	post("%s: received a bang.", x->my_name->s_name);
 }
 
-void printit_float(printit *x, float f)
+void printit_float(printit *x, double d)
 {
-	post("%s: received a float: %f", x->my_name->s_name, f);
+	float f = (float) d;
+	post("%s: received a float: %f (which was passed on the stack as a double: %d)", x->my_name->s_name, f, d);
 }
 
 void printit_int(printit *x, long n)

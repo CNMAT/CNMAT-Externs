@@ -83,7 +83,7 @@ void LBYL_quota(LBYL *x, long q);
 void LBYL_version(LBYL *x);
 void LBYL_tellmeeverything(LBYL *x);
 static int Near(float x, float y, float tolerance);
-void LBYL_float(LBYL *x, float f);
+void LBYL_float(LBYL *x, double d);
 void LBYL_int(LBYL *x, int i);
 static float processInput(LBYL *x, float f, int *rejected, int *despair);
 void Reset(LBYL *x);
@@ -185,7 +185,8 @@ static int Near(float x, float y, float tolerance) {
 	return (fabs(x-y) <= tolerance);
 }
 
-void LBYL_float(LBYL *x, float f) {
+void LBYL_float(LBYL *x, double d) {
+	float f = (float) d;
 	int rejected = 0, despair = 0;
 	float output = processInput(x, f, &rejected, &despair);
 	
