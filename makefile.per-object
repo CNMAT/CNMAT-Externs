@@ -2,8 +2,6 @@
 # This is included in the makefile for every Max external
 # Matt Wright, 2005-2006
 
-$(info entering makefile)
-
 # default platform is "UNKNOWN"
 PLATFORM = UNKNOWN
 
@@ -37,21 +35,18 @@ MAC_INDIVIDUAL_DOWNLOAD = $(BUILD_DIR)/$(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR)
 CODEWARRIOR_BUILD_DIR = ../build-mac
 XCODE_BUILD_DIR = build/Deployment
 DEFAULT_BUILD_DIR = /tmp
+ALL_BUILD_DIRS = $(CODEWARRIOR_BUILD_DIR) $(XCODE_BUILD_DIR) $(DEFAULT_BUILD_DIR)
+
 
 # Variables derived from the platform
-ifeq ($(PLATFORM), OSX-CFM)
-  BUILD_DIR = $(CODEWARRIOR_BUILD_DIR)
-else 
-ifeq ($(PLATFORM), OSX-MachO)
-  BUILD_DIR = $(XCODE_BUILD_DIR)
-else 
-ifeq ($(PLATFORM), UNKNOWN)
-  BUILD_DIR = $(DEFAULT_BUILD_DIR)
-else
-  BUILD_DIR = $(error Unrecognized platform "$(PLATFORM)")
-endif
-endif
-endif
+
+# The use of the inline $(if ...) construction is so the conditional will be evaluated later,
+# when we try to use the value of BUILD_DIR somewhere, at which point the PLATFORM will hopefully
+# be defined...
+BUILD_DIR = $(if $(findstring OSX-CFM,$(PLATFORM)), $(CODEWARRIOR_BUILD_DIR), \
+                 $(if $(findstring OSX-MachO,$(PLATFORM)), $(XCODE_BUILD_DIR), \
+                      $(if $(findstring UNKNOWN,$(PLATFORM)), $(DEFAULT_BUILD_DIR), \
+                           $(error Unrecognized platform "$(PLATFORM)") )))
 
 BUILD_DIR_EXISTS = $(BUILD_DIR)/exists
 # OBJ_INFO is info about the object, not platform-specific
@@ -65,6 +60,7 @@ WEB_INCOMING = $(BUILD_DIR)/$(OBJ)-$(PLATFORM).tar.gz
 
 # Where files live on our web server
 WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
+# WEBSERVER_INCOMING_DIR = /tmp/incoming
 
 
 # Making the version number accessible from this Makefile:
@@ -112,13 +108,13 @@ $(OBJ_INFO): $(SOURCE) $(BUILD_DIR_EXISTS)
 	perl ../../../commentkeys.pl < $(SOURCE) > $@
 
 $(WEB_INFO): $(MAC_INDIVIDUAL_DOWNLOAD) $(OBJ_INFO)
-	cp $(OBJ_INFO) $(WEB_INFO)
-	echo MD5: `md5 $(MAC_INDIVIDUAL_DOWNLOAD)| cut -f 4 -d ' '` >> $@
-	echo 'PLATFORM: "$(PLATFORM)"' >> $@
-	echo 'BUILDER: "'`whoami`'"' >> $@
-	echo 'BUILD_DATE: "'`date`'"' >> $@
-	echo 'BUILD_DIR: "'`pwd`'"' >> $@
-#	echo 'SVN_REVISION: "'`svn info *.c | grep "^Revision: " | awk '{print $$2}'`'"' >> $@
+	cp $(OBJ_INFO) $(WEB_INFO) 
+	echo MD5: `md5 $(MAC_INDIVIDUAL_DOWNLOAD)| cut -f 4 -d ' '` >> $(WEB_INFO)
+	echo 'PLATFORM: "$(PLATFORM)"' >> $(WEB_INFO)
+	echo 'BUILDER: "'`whoami`'"' >> $(WEB_INFO)
+	echo 'BUILD_DATE: "'`date`'"' >> $(WEB_INFO)
+	echo 'BUILD_DIR: "'`pwd`'"' >> $(WEB_INFO)
+#	echo 'SVN_REVISION: "'`svn info *.c | grep "^Revision: " | awk '{print $$2}'`'"' >> $(WEB_INFO)
 # SVN_REVISION keyword is now handled by SVN "keywords"
 
 
@@ -154,6 +150,7 @@ $(CFM_BINARY): $(SOURCE) $(REZ_FILE) version.h
 mac-individual-download: $(MAC_INDIVIDUAL_DOWNLOAD)
 
 $(MAC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MAC_BINARY) help-diff-warning
+	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
 	stuff -o -n $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_BINARY) $(HELPFILE)
 
 
@@ -170,6 +167,14 @@ $(MAC_HELPFILE_COPY): $(OBJ).help
 help-diff-warning: $(MAC_HELPFILE_COPY)
 	@ cmp -s $(OBJ).help $(MAC_HELPFILE_COPY) || \
 	echo WARNING\! '$(MAC_HELPFILE_COPY) is different from $(OBJ).help'
+
+
+# The different "[platform]-release" targets set the platform above, so now they all mean
+# the same thing:
+cfm-release: web-release
+macho-release: web-release
+cfm-release: web-release
+win-release: web-release
 
 
 # Actually copying the files to directories where the web server can find them
@@ -197,9 +202,12 @@ code-checked-in:
 clean:
 	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY)  
 	rm -f $(WEB_INFO) $(OBJ_INFO) version.h $(WEB_INCOMING) $(MAC_DEBUGGER_SYM) 
-	rm -rf $(MAC_BINARY) 
+	rm -rf $(MAC_BINARY) $(CFM_BINARY) $(MACHO_BINARY)
+	# clean all the possible build directories depending on the platform... 
+	rm -rf $(foreach dir, $(ALL_BUILD_DIRS), \
+                 $(dir)/$(OBJ).help $(dir)/$(MAC_INDIVIDUAL_DOWNLOAD_NO_DIR) $(dir)/$(WEB_INFO_NO_DIR))
 	rm -f *~ 
-	echo Should clean all the possible build directories depending on the platform... 
+
 
 
 # Diagnostic stuff for debugging
