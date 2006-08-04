@@ -145,7 +145,7 @@ void printit_bang(printit *x)
 void printit_float(printit *x, double d)
 {
 	float f = (float) d;
-	post("%s: received a float: %f (which was passed on the stack as a double: %d)", x->my_name->s_name, f, d);
+	post("%s: received a float: %f (which was passed on the stack as a double: %f)", x->my_name->s_name, f, d);
 }
 
 void printit_int(printit *x, long n)
