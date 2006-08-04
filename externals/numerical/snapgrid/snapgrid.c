@@ -31,6 +31,7 @@ DESCRIPTION: Snap to Grid is used for adding randomness to a list of numbers, ma
 AUTHORS: Tim Madden
 COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
 VERSION 0.1: Tim's initial version
+VERSION 0.2: MachO compile, added version message
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
@@ -44,6 +45,7 @@ VERSION 0.1: Tim's initial version
 #include "ext.h"
 
 #include "gridlock.h"
+#include "version.h"
 
 // Define the max number of args.
 #define MAX_ARGS 2048
@@ -120,6 +122,9 @@ void OutputLydianChScale(
 	int argc, 
 	Atom *argv);	
 
+void version(t_TJMSnapGrid *x);
+
+
 /**************************************************************************************
  *
  *************************************************************************************/
@@ -147,10 +152,12 @@ void main(fptr *f)
 	addmess((method)OutputJerkedFreq, "jitter", A_GIMME, 0);
 	addmess((method)OutputHarmGrid, "harmgrid", A_GIMME, 0);
 	addmess((method)OutputLydianChScale, "lydian", A_GIMME, 0);
+
+	addmess((method) version, "version", 0);
+
 	
 	ps_list = gensym("list");
-
-
+	version(0);
 }
 
 
@@ -397,3 +404,12 @@ void Grid2Atom(Grid* grid, Atom *list)
 	}
 
 }
+
+void version(t_TJMSnapGrid *x) {
+    post(NAME " object version " VERSION " by " AUTHORS );
+    if (x) {
+      /* Not called from main(); */
+      post("  compiled " __TIME__ " " __DATE__);
+    }
+}
+
