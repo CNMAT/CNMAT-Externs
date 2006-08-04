@@ -2,18 +2,20 @@
 # This is included in the makefile for every Max external
 # Matt Wright, 2005-2006
 
+$(info entering makefile)
+
 # default platform is "UNKNOWN"
 PLATFORM = UNKNOWN
 
 # Now figure out the platform based on what the build target is
-cfm: PLATFORM := OSX-CFM
-cfm-release: PLATFORM := OSX-CFM
-macho: PLATFORM = OSX-MachO
-macho-release: PLATFORM = OSX-MachO
-cfm: PLATFORM := OSX-CFM
-cfm-release: PLATFORM := OSX-CFM
-win: PLATFORM = WIN
-win-release: PLATFORM = WIN
+cfm: export PLATFORM = OSX-CFM
+cfm-release: export PLATFORM = OSX-CFM
+macho: export PLATFORM = OSX-MachO
+macho-release: export PLATFORM = OSX-MachO
+cfm: export PLATFORM = OSX-CFM
+cfm-release: export PLATFORM = OSX-CFM
+win: export PLATFORM = WIN
+win-release: export PLATFORM = WIN
 
 
 # Name of the object is the name of this directory
@@ -23,8 +25,10 @@ OBJ := $(shell basename `pwd`)
 SOURCE = $(OBJ).c
 REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).help
-MAC_BINARY = $(if $(findstring OSX-CFM,$(PLATFORM)), \
-   $(BUILD_DIR)/$(OBJ), $(BUILD_DIR)/$(OBJ).mxo)
+CFM_BINARY = $(CODEWARRIOR_BUILD_DIR)/$(OBJ)
+MACHO_BINARY = $(XCODE_BUILD_DIR)/$(OBJ).mxo
+MAC_BINARY = $(if $(findstring OSX-CFM,$(PLATFORM)), $(CFM_BINARY), $(MACHO_BINARY))
+
 MAC_DEBUGGER_SYM = $(BUILD_DIR)/$(OBJ).xSYM
 MAC_HELPFILE_COPY = $(BUILD_DIR)/$(OBJ).help 
 MAC_INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).sit
@@ -50,10 +54,11 @@ endif
 endif
 
 BUILD_DIR_EXISTS = $(BUILD_DIR)/exists
-# OBJ_INFO is info about the object
-OBJ_INFO_NO_DIR = $(OBJ)-$(PLATFORM)-objinfo.txt
-OBJ_INFO = $(BUILD_DIR)/$(OBJ_INFO_NO_DIR)
-# WEB_INFO is exactly the same, but also with the md5 checksum
+# OBJ_INFO is info about the object, not platform-specific
+OBJ_INFO_NO_DIR = $(OBJ)-objinfo.txt
+# No longer put in BUILD_DIR:  OBJ_INFO = $(BUILD_DIR)/$(OBJ_INFO_NO_DIR)
+OBJ_INFO = $(OBJ_INFO_NO_DIR)
+# WEB_INFO is exactly the same, but also with the md5 checksum and build info
 WEB_INFO_NO_DIR = $(OBJ)-$(PLATFORM)-info.txt
 WEB_INFO = $(BUILD_DIR)/$(WEB_INFO_NO_DIR)
 WEB_INCOMING = $(BUILD_DIR)/$(OBJ)-$(PLATFORM).tar.gz
@@ -67,41 +72,33 @@ WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
 # Each version.h file has a line that looks like this:  
 #     #define VERSION "1.2.3.4"
 # so get a Makefile variable that's just something like "1.2.3.4"
-DOUBLEQUOTED_VERSION := $(word 3,$(shell grep '\#define VERSION ' version.h))
+DOUBLEQUOTED_VERSION := $(word 3,$(shell grep -s '\#define VERSION ' version.h))
 # now a cheesy way to get rid of the double quotes:
 VERSION = $(shell echo $(DOUBLEQUOTED_VERSION))
 VERSION_TAG = _$(VERSION)
 
 # Ditto for status
-DOUBLEQUOTED_STATUS := $(word 3,$(shell grep STATUS version.h))
+DOUBLEQUOTED_STATUS := $(word 3,$(shell grep -s STATUS version.h))
 STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
 
 
 
 # Top-level build targets
 
+default: macho
 
-test: 
-	echo platform $(PLATFORM)
-#	echo binary $(MAC_BINARY)
-#	echo build $(BUILD_DIR)
+macho: $(MACHO_BINARY) $(MAC_INDIVIDUAL_DOWNLOAD) 
 
+xcode:
+	open ./$(OBJ).xcodeproj
 
-all: mac-individual-download help-diff-warning mac-binary
-
-.PHONY: clean
-clean:
-	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY) $(MAC_BINARY) 
-	rm -f $(WEB_INFO) $(OBJ_INFO) version.h $(WEB_INCOMING) $(MAC_DEBUGGER_SYM)
-	rm -f *~
-
-
-# The version info is now extracted from the .c file by Andy's perl script:
-# because some makefile variables (e.g., VERSION_TAG) come from version.h,
+# The version info is extracted from the .c file by Andy's perl script.
+# Because some makefile variables (e.g., VERSION_TAG) come from version.h,
 # start over with a recursive call to $(MAKE)
 version.h: $(OBJ_INFO)
 	perl ../../../info2header.pl < $(OBJ_INFO) > $@
 	$(MAKE) $(MAKECMDGOALS)
+
 
 
 .PHONY: web-info
@@ -113,6 +110,10 @@ $(BUILD_DIR_EXISTS):
 
 $(OBJ_INFO): $(SOURCE) $(BUILD_DIR_EXISTS)
 	perl ../../../commentkeys.pl < $(SOURCE) > $@
+
+$(WEB_INFO): $(MAC_INDIVIDUAL_DOWNLOAD) $(OBJ_INFO)
+	cp $(OBJ_INFO) $(WEB_INFO)
+	echo MD5: `md5 $(MAC_INDIVIDUAL_DOWNLOAD)| cut -f 4 -d ' '` >> $@
 	echo 'PLATFORM: "$(PLATFORM)"' >> $@
 	echo 'BUILDER: "'`whoami`'"' >> $@
 	echo 'BUILD_DATE: "'`date`'"' >> $@
@@ -120,21 +121,21 @@ $(OBJ_INFO): $(SOURCE) $(BUILD_DIR_EXISTS)
 #	echo 'SVN_REVISION: "'`svn info *.c | grep "^Revision: " | awk '{print $$2}'`'"' >> $@
 # SVN_REVISION keyword is now handled by SVN "keywords"
 
-$(WEB_INFO): $(MAC_INDIVIDUAL_DOWNLOAD) $(OBJ_INFO)
-	cp $(OBJ_INFO) $(WEB_INFO)
-	echo MD5: `md5 $(MAC_INDIVIDUAL_DOWNLOAD)| cut -f 4 -d ' '` >> $(WEB_INFO)
 
 
 .PHONY: mac-binary
 mac-binary: $(MAC_BINARY)
 
-# to make the MAC binary, have to open the Codewarrior project.
+$(MACHO_BINARY): $(SOURCE) version.h
+	xcodebuild -configuration Deployment
+
+# to make the CFM binary, have to open the Codewarrior project.
 # The call to cmp is to force this call to Make to stop, so the 
 # programmer has to say "make" again.
 # We first rename the MAC binary because CodeWarrior will sometimes "build" a "new"
 # binary (even making the slamming sound) by doing nothing, resulting in the binary
 # file still having an older date than the source file.
-$(MAC_BINARY): $(SOURCE) $(REZ_FILE) version.h
+$(CFM_BINARY): $(SOURCE) $(REZ_FILE) version.h
 	@touch $(MAC_BINARY)  # so there will be something to move
 	@mv -f $(MAC_BINARY) $(MAC_BINARY).backup
 	@echo 'Please build the MAC version of' $(OBJ) 
@@ -144,15 +145,15 @@ $(MAC_BINARY): $(SOURCE) $(REZ_FILE) version.h
 	@cmp -s version.h /dev/null
 
 
-START_OVER_ERROR = $(error Please run make again.)
-.PHONY: start-over
-start-over: ; $(START_OVER_ERROR)
+#START_OVER_ERROR = $(error Please run make again.)
+#.PHONY: start-over
+#start-over: ; $(START_OVER_ERROR)
 
 
 .PHONY: mac-individual-download
 mac-individual-download: $(MAC_INDIVIDUAL_DOWNLOAD)
 
-$(MAC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MAC_BINARY)
+$(MAC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MAC_BINARY) help-diff-warning
 	stuff -o -n $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_BINARY) $(HELPFILE)
 
 
@@ -192,6 +193,14 @@ code-checked-in:
 # if the error is printed.
 
 
+.PHONY: clean
+clean:
+	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(MAC_HELPFILE_COPY)  
+	rm -f $(WEB_INFO) $(OBJ_INFO) version.h $(WEB_INCOMING) $(MAC_DEBUGGER_SYM) 
+	rm -rf $(MAC_BINARY) 
+	rm -f *~ 
+	echo Should clean all the possible build directories depending on the platform... 
+
 
 # Diagnostic stuff for debugging
 
@@ -209,3 +218,9 @@ statustest: version.h
 
 ostest:
 	echo $(OS)
+
+
+test: 
+	echo platform $(PLATFORM)
+	echo binary $(MAC_BINARY)
+	echo build $(BUILD_DIR)
