@@ -45,26 +45,35 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 #undef sprintf
 #undef sscanf
 
+#define TEST_PLATFORM
+#ifdef TEST_PLATFORM
+#ifdef __MWERKS__
+#warning "__MWERKS__"
+#endif
+#ifdef __POWERPC__
+#warning "__POWERPC__"
+#endif
+#ifdef __APPLE__
+#warning "__APPLE__"
+#endif
+#ifdef __MACH__
+#warning "__MACH__"
+#endif
+#ifdef WIN_VERSION
+#warning "WIN_VERSION"
+#endif
+#endif // TEST_PLATFORM
+
  
 #include <stdio.h>
 #include <string.h>
 
 #include "sdif.h"
 #include "open-sdif-file.h"
- 
-#define WIN_VERSION
-#ifdef WIN_VERSION
-#else
-#include <FSp_fopen.h>
-/*
-#if __ide_target("debug-classic") || __ide_target("release-classic")
-// OS9 
-#else
-// OSX 
-#endif
-*/
-#endif /* WIN_VERSION */
 
+#ifdef __MWERKS__
+#include <FSp_fopen.h>
+#endif
 
 
 #ifdef ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER
@@ -84,11 +93,9 @@ static FILE *OpenSDIFFile(char *filename) {
 
 FILE *OpenSDIFFile(char *filename) {
 	char filenamecopy[MAX_FILENAME_LEN];
-	char fullpath[MAX_FULLPATH_LEN];
 	short result, pathID;
 	long filetype;
 	PATH_SPEC ps;	
-	OSErr err;
 	FILE *f;
 	SDIFresult r;
 
@@ -112,14 +119,14 @@ FILE *OpenSDIFFile(char *filename) {
 #ifdef WIN_VERSION
     {
 		short maxErr;
-		char fullpath[256];
-		char conformed[256];
+		char fullpath[MAX_FULLPATH_LEN];
+		char conformed[MAX_FULLPATH_LEN];
 		maxErr = path_topathname(pathID, filenamecopy, fullpath);
 		if (maxErr) {
 			error("path_topathname returned error code %d - can't open %s", maxErr, filename);
 			return NULL;
 		}
-		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_SLASH, PATH_TYPE_BOOT);
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
 		if (maxErr) {
 			error("path_nameconform returned error code %d - can't open %s", maxErr, filename);
 			return NULL;
@@ -141,14 +148,58 @@ FILE *OpenSDIFFile(char *filename) {
 			 filenamecopy, result);
 		return NULL;
 	}
-	
-	f = FSp_fopen (&ps, "rb");
 
-	if (f == NULL) {
-		error("SDIF-buffer: FSp_fopen returned NULL; can't open %s", filename);
-		return NULL;
-	} 
-#else 	
+	/* Now what to do with the FSSpec? */
+#ifdef __MWERKS__
+    f = FSp_fopen (&ps, "rb");
+#else
+	// No FSp_fopen(), so use the more roundabout route in Carbon that David Zicarelli suggested
+	
+    {
+	   OSErr errorCode;
+	   OSStatus fileManagerResultCode;
+	   UInt8 path_unsigned[MAX_FULLPATH_LEN];
+	   char path[MAX_FULLPATH_LEN];
+	   FSRef myFSRef;
+	   int i;
+
+	   errorCode =  FSpMakeFSRef (&ps, &myFSRef);
+	   if (errorCode) {
+	     error("SDIF-buffer: FSpMakeFSRef returned %d; can't open %s", errorCode, filename);
+	     return NULL;
+	   }
+
+	   fileManagerResultCode =  FSRefMakePath (&myFSRef, path_unsigned, MAX_FULLPATH_LEN);
+	   if (fileManagerResultCode) {
+	     error("SDIF-buffer: FSRefMakePath returned %d; can't open %s", fileManagerResultCode, filename);
+	     return NULL;
+	   }
+
+#ifdef NEED_SIGNED_PATH
+	   for (i=0; i<MAX_FULLPATH_LEN; ++i) {
+	   	   if (path_unsigned[i] >= 128) {
+	   	   	    error("Path returned by FSRefMakePath contains illegal character %d (%c); can't open.",
+	   	   	    	  path_unsigned[i], path_unsigned[i]);
+	   	   	    return NULL;
+	   	   }
+	   	   path[i] = (char) path_unsigned[i];
+	   	   if (path[i] == '\0') break;
+	   }
+	   
+	   post("path: %s", path);
+
+	   f = fopen(path, "rb");
+#else	   		
+	   f = fopen(path_unsigned, "rb");
+#endif // NEED_SIGNED_PATH
+	   if (f == NULL) {
+	     error("SDIF-buffer: fopen() returned NULL; can't open %s", filename);
+	     return NULL;
+	   } 
+    }
+#endif __MWERKS__
+
+#else // PATH_SPEC_MEANS_FSSPEC
 #error What do I do with a PATH_SPEC?	
 #endif /* PATH_SPEC_MEANS_FSSPEC */
 #endif /* WIN_VERSION */
