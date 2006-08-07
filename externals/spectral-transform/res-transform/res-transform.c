@@ -814,30 +814,6 @@ void *myobject_free(fobj *x)
 freeobject(x->m_proxy);
 }
 
-/*
-long strcmp(const char *s1, const char *s2);
-long strcmp(const char *s1, const char *s2)
-{
-	char c1, c2, dif;
-	
-	for (;;) {
-		if (!(c1 = *s1++))
-			return *s2 ? -1 : 0;
-		if (!(c2 = *s2++))
-			return 1;
-		if (!(dif = (c1 - c2)))
-			continue;
-		if (dif < 0)
-			return -1;
-		else
-			return 1;
-	}
-
-	return 0;
-}
-*/
-
-
 void * fnew(Symbol *s, int argc, Atom *argv) {
 	fobj *x;
 	int i;
