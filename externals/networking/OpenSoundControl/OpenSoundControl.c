@@ -23,29 +23,21 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: OpenSoundControl
-DESCRIPTION: Format Max data to OpenSoundControl protocol and vice versa
+DESCRIPTION: Format Max data to <A href="http://www.cnmat.berkeley.edu/OpenSoundControl">OpenSoundControl</a> protocol and vice versa
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
-VERSION 1.9.1: I like cheese
+VERSION 1.2: was still version 1.1 on 68K; 1.3 is the same for both.
+VERSION 1.4: has 3 outlets
+VERSION 1.5: uses FullPacket instead of gimme, so no subverting of argc/argv
+VERSION 1.6: supports the evil "gimme" for (68K) backwards compatibility
+VERSION 1.7: Supports SuperCollider-style type tags
+VERSION 1.8: has errorreporting mode, compiles under CW7 and Max 4 SDK
+VERSION 1.9:: Cleaned up and fixed copyright for open-sourcing
+VERSION 1.9.1: rudimentary blob support
+VERSION 1.9.2: Builds CFM and MachO from the same code
 STATUS: supported
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-        Author: Matt Wright
-                
-        OpenSoundControl max object: formats Max messages into buffers
-         in the "OpenSoundControl" data format.
-         
-        OpenSoundControl documentation at
-        http://www.cnmat.berkeley.edu/OpenSoundControl
         
-        Version 1.2 was still version 1.1 on 68K; 1.3 is the same for both.
-        Version 1.4 has 3 outlets
-        Version 1.5 uses FullPacket instead of gimme, so no subverting of argc/argv
-        Version 1.6 supports the evil "gimme" for (68K) backwards compatibility
-        Version 1.7 Supports SuperCollider-style type tags
-        Version 1.8 has errorreporting mode, compiles under CW7 and Max 4 SDK
-        Version 1.9: Cleaned up and fixed copyright for open-sourcing
-        Version 1.9.1: rudimentary blob support
    */
 
 #include "version.h"
@@ -96,13 +88,16 @@ int OSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argv
 void OSC_sendBuffer(OSC *x);
 void OSC_sendData(OSC *x, short size, char *data);
 void OSC_formatData(OSC *x, char *messageName, short argc, Atom *argv);
+
+#ifdef __MWERKS__
+#define DONT_HAVE_STRING_LIBRARY
+#endif
+
 #ifdef DONT_HAVE_STRING_LIBRARY
 void strcpy(char *s1, char *s2);
 #endif
 
-void main (fptr *f) {
-	DateTimeRec date;
-	
+void main (fptr *f) {	
 	post("OpenSoundControl object version " VERSION " by Matt Wright");
 	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.  ");
 		
@@ -148,9 +143,6 @@ void main (fptr *f) {
 
 #define DEFAULT_BUFFER_SIZE 1024
 
-#ifdef __MWERKS__
-#define DONT_HAVE_STRING_LIBRARY
-#endif
 
 void *OSC_new(long arg) {
 	OSC *x;
