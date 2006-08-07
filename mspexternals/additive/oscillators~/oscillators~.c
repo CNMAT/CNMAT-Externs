@@ -40,6 +40,8 @@ VERSION 1.2: (Matt) noglissbirthmode
 	©1999 UC Regents, All Rights Reserved. 
 */
 
+#include "version.h"
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "buffer.h"
@@ -85,20 +87,20 @@ typedef struct
 	int noglissbirthmode;
 	
 } oscbank;
-typedef oscbank t_sinusoids;
+typedef oscbank t_oscillators;
 
 t_int *sinusoids2_perform(t_int *w);
-void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
- void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv);
- void sinusoids_clear(t_sinusoids *x);
- void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
+void sinusoids_dsp(t_oscillators *x, t_signal **sp, short *connect);
+ void sinusoids_list(t_oscillators *x, t_symbol *s, short argc, t_atom *argv);
+ void sinusoids_clear(t_oscillators *x);
+ void sinusoids_assist(t_oscillators *x, void *b, long m, long a, char *s);
  void *oscillators_new(t_symbol *s, short argc, t_atom *argv);
-void oscillators_noglissbirthmode(t_sinusoids *x, long i);
-
+void oscillators_noglissbirthmode(t_oscillators *x, long i);
+void version(t_oscillators *x);
 
 t_int *sinusoids2_perform(t_int *w)
 {
-	t_sinusoids *op = (t_sinusoids *)(w[1]);
+	t_oscillators *op = (t_oscillators *)(w[1]);
 	t_float *out = (t_float *)(w[2]);
 	int n = (int)(w[3]);
 	int nosc = op->nosc;
@@ -157,7 +159,7 @@ out:
 	return (w+4);
 }
 
-static void clear(t_sinusoids *x)
+static void clear(t_oscillators *x)
 {
 	oscdesc *p = x->base;
 	int i;
@@ -173,7 +175,7 @@ static void clear(t_sinusoids *x)
 //		p->next_phaseadd = 0;
 	}
 }
-void sinusoids_clear(t_sinusoids *x)
+void sinusoids_clear(t_oscillators *x)
 {
 	oscdesc *p = x->base;
 	int i;
@@ -184,8 +186,8 @@ void sinusoids_clear(t_sinusoids *x)
 	x->cleared = TRUE;
 }
 
-void oscillators_set(t_sinusoids *x, t_symbol *s);
-void oscillators_set(t_sinusoids *x, t_symbol *s)
+void oscillators_set(t_oscillators *x, t_symbol *s);
+void oscillators_set(t_oscillators *x, t_symbol *s)
 {
 	t_buffer *b;
 	
@@ -202,7 +204,7 @@ void oscillators_set(t_sinusoids *x, t_symbol *s)
 		x->l_buf = 0;
 	}
 }
-void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
+void sinusoids_dsp(t_oscillators *x, t_signal **sp, short *connect)
 {
 	int i;
 
@@ -213,7 +215,7 @@ void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
 	dsp_add(sinusoids2_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
 }
 
-void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv)
+void sinusoids_list(t_oscillators *x, t_symbol *s, short argc, t_atom *argv)
 {
 	int i;
 	if(argc%2!=0)
@@ -267,12 +269,12 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv)
 	}
 }
 
-void oscillators_noglissbirthmode(t_sinusoids *x, long i) {
+void oscillators_noglissbirthmode(t_oscillators *x, long i) {
 	x->noglissbirthmode = i;
 }
 
 
-void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
+void sinusoids_assist(t_oscillators *x, void *b, long m, long a, char *s)
 {
 	if (m == ASSIST_OUTLET){
 		sprintf(s,"(signal) oscillator bank output");
@@ -284,7 +286,7 @@ void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 
 void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 {
-    t_sinusoids *x = (t_sinusoids *)newobject(sinusoids_class);
+    t_oscillators *x = (t_oscillators *)newobject(sinusoids_class);
     dsp_setup((t_pxobject *)x,0);
     outlet_new((t_object *)x, "signal");
 	x->samplerate =  sys_getsr();
@@ -317,7 +319,7 @@ void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 
 void main(void)
 {
-	setup((struct messlist **)&sinusoids_class,(method)oscillators_new, (method)dsp_free, (short)sizeof(t_sinusoids),
+	setup((struct messlist **)&sinusoids_class,(method)oscillators_new, (method)dsp_free, (short)sizeof(t_oscillators),
 		0L, A_GIMME, 0);
 	post("oscillators~ 1.3 - Adrian Freed and Matt Wright");
 	post("Copyright © 1996,1997,1998,1999,2000,2001,02,03,04 Regents of the University of California.");
@@ -331,7 +333,17 @@ void main(void)
 	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
 	addmess((method)oscillators_set, "set", A_SYM, 0);
 	addmess((method)oscillators_noglissbirthmode, "noglissbirthmode", A_LONG, 0);
+	addmess((method)version, "version", 0);
 	dsp_initclass();
 	
 	ps_buffer = gensym("buffer~");
+	version(0);
+}
+
+void version(t_oscillators *x) {
+  post(NAME " object version " VERSION " by " AUTHORS );
+  if (x) {
+    /* Not called from main(); */
+    post("  compiled " __TIME__ " " __DATE__);
+  }
 }
