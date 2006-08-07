@@ -330,7 +330,9 @@ static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
 	dsp_add(sinusoids2_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 }
 
-//#define DONT_HAVE_STRING_LIBRARY
+#ifdef __MWERKS__
+#define DONT_HAVE_STRING_LIBRARY
+#endif
 
 #ifdef DONT_HAVE_STRING_LIBRARY
 long strcmp (const char *s1, const char *s2);
