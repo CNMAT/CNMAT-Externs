@@ -54,8 +54,8 @@ void *tta_new(double low, double high);
 void tta_dsp(t_tta *x, t_signal **sp, short *count);
 t_int *tta_perform(t_int *w);
 
-void tta_set_low(t_tta *x, float low);
-void tta_set_high(t_tta *x, float high);
+void tta_set_low(t_tta *x, double low);
+void tta_set_high(t_tta *x, double high);
 void tta_tellmeeverything(t_tta *x);
 
 void main(void) {
@@ -148,12 +148,12 @@ t_int *tta_perform(t_int *w) {
     return (w+6);
 }
 
-void tta_set_low(t_tta *x, float l) {
-	x->low = l;
+void tta_set_low(t_tta *x, double l) {
+	x->low = (float) l;
 }
 
-void tta_set_high(t_tta *x, float h) {
-	x->high = h;
+void tta_set_high(t_tta *x, double h) {
+	x->high = (float) h;
 }
 
 

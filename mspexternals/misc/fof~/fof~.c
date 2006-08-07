@@ -1,5 +1,6 @@
 /*
 DESCRIPTION: Dudas' hack MSP port of IRCAM's copyrighted FOF implementation
+MW made floating point args be declared as double.
 */
 
 /*
@@ -44,11 +45,11 @@ typedef struct _sigfofs {
 } t_sigfofs;*/
 
 static void fof_error(void);
-void sigfofs_start(t_sigfofs *x, float p);
-void sigfofs_phase(t_sigfofs *x, t_sample v);
+void sigfofs_start(t_sigfofs *x, double p);
+void sigfofs_phase(t_sigfofs *x, double v);
 void sigfofs_bang(t_sigfofs *x);
 void sigfofs_maxfofs(t_sigfofs *x, long v);
-void sigfofs_f0_phase(t_sigfofs *x, t_sample v);
+void sigfofs_f0_phase(t_sigfofs *x, double v);
 
 void sigfofs_float(t_sigfofs *x, t_sample v);
 void sigfofs_int(t_sigfofs *x, long v);
@@ -59,7 +60,7 @@ void sigfofs_amp(t_sigfofs *x, t_sample v);
 void sigfofs_tex(t_sigfofs *x, t_sample v);
 void sigfofs_debatt(t_sigfofs *x, t_sample v);
 void sigfofs_atten(t_sigfofs *x, t_sample v);
-void sigfofs_phase(t_sigfofs *x, t_sample v);
+void sigfofs_phase(t_sigfofs *x, double v);
 
 
 void sigfofs_input(t_int *w, long m);
@@ -109,8 +110,9 @@ static void fof_error(void)
 }
 
 //sigfofs_start triggers a fof at p seconds after next block begin
-void sigfofs_start(t_sigfofs *x, float p)
+void sigfofs_start(t_sigfofs *x, double d)
 {
+    float p = (float) d;
     long offset;
     t_fof_real delta;
     
@@ -122,8 +124,9 @@ void sigfofs_start(t_sigfofs *x, float p)
     fof_trigger(x->ctlp, offset, delta);
 }
 
-void sigfofs_phase(t_sigfofs *x, t_sample v)
+void sigfofs_phase(t_sigfofs *x, double d)
 {
+  v = (t_sample) d;
     v = v - (int)v;
     if (v < 0)
         v += 1;
@@ -151,8 +154,9 @@ void sigfofs_maxfofs(t_sigfofs *x, long v)
 }
 
 //sigfofs_f0_phase sets the initial phase of the fof (0 <= v < 1)
-void sigfofs_f0_phase(t_sigfofs *x, t_sample v)
+void sigfofs_f0_phase(t_sigfofs *x, double d)
 {
+  t_sample v = (t_sample) d;
     if (v < 0)
         v = -v;
     x->ctlp->f0_phase = x->ctlp->params.sr - v;

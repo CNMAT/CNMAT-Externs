@@ -95,7 +95,7 @@ void *z_divcount_new(long n);
 void z_divcount_free(t_z_divcount *x);
 void z_divcount_bang(t_z_divcount *x);
 void z_divcount_int(t_z_divcount *x, long n);
-void z_divcount_dis(t_z_divcount *x, t_sample n);
+void z_divcount_dis(t_z_divcount *x, double n);
 void z_divcount_start(t_z_divcount *x);
 void z_divcount_stop(t_z_divcount *x);
 void z_divcount_info(t_z_divcount *x);
@@ -285,9 +285,9 @@ void z_divcount_stop(t_z_divcount *x){
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //	z_divcount_dis																			  //
 ////////////////////////////////////////////////////////////////////////////////////////////////
-void z_divcount_dis(t_z_divcount *x, t_sample n){
+void z_divcount_dis(t_z_divcount *x, double n){
 	if(x->inlet_number)	error("divcount~: message should be sent to leftmost inlet.");
-	else				x->dis_out = n;
+	else				x->dis_out = (t_sample) n;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
