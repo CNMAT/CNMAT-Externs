@@ -28,32 +28,26 @@ Maintenance by Ben "Jacobs".
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
-*/
-
-/* --1/4/99 SDIF-buffer.c -- the SDIF-buffer object -- 
-
-  01/04/99 - Original Version
-  10/14/99 - Updated by Matt to use the new SDIF library 
-  11/16/00 - Version 0.4 write to SDIF files
-  11/21/00 - 0.4.1 default streamID is 1; added change-streamID message
-  10/08/02 - 0.5: Compiles with CW7
-  11/21/02 - 0.6: Has change-frametype message
-  12/18.02 - 0.7: Uses Max 4 file opening stuff, works on OSX
-  12/26/02 - 0.7.1: Uses locatefile_extended correctly to open regardless of MacOS type
-  04/01/04 - 0.8.0: Refactored some code into sdif-buf.c; added access to SDIFbuf_Buffer (bj)
-  06/22/04 - 0.8.1: Cleanup (bj)
-  12/24/04 - 0.9: Windows port (mw)
-  12/28/04 - 0.9.1: Fixed bug (in sdif-buf.c) of crashing when reading nonexistant stream number
-*/
-
-/* 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: SDIF-buffer
 DESCRIPTION: Store SDIF data in Max's memory and make it accessible to other objects
 AUTHORS: Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+VERSION 0.1: (01/04/99) Original Version
+VERSION 0.2: (10/14/99) Updated by Matt to use the new SDIF library 
+VERSION 0.4: (11/16/00) write to SDIF files
+VERSION 0.4.1: (11/21/00) default streamID is 1; added change-streamID message
+VERSION 0.5: (10/08/02) Compiles with CW7
+VERSION 0.6: (11/21/02) Has change-frametype message
+VERSION 0.7: (12/18/02) Uses Max 4 file opening stuff, works on OSX
+VERSION 0.7.1: (12/26/02) Uses locatefile_extended correctly to open regardless of MacOS type
+VERSION 0.8.0: (04/01/04) Refactored some code into sdif-buf.c; added access to SDIFbuf_Buffer (bj)
+VERSION 0.8.1: (06/22/04) Cleanup (bj)
+VERSION 0.9: (12/24/04) Windows port (mw)
+VERSION 0.9.1: (12/28/04) Fixed bug (in sdif-buf.c) of crashing when reading nonexistant stream number
 VERSION 0.9.2: Uses new version info system
 VERSION 0.9.2a: UB compile
+VERSION 0.9.3: Proper cross-platform method for opening an SDIF file in Max's search path
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -155,8 +149,6 @@ void SDIFbuffer_version (SDIFBuffer *x) {
 	post(NAME " Version " VERSION
 		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
     post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
-	
-	post("UB foo");
 }
 
 void main(fptr *fp) {
