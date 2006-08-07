@@ -1094,10 +1094,12 @@ void resonators_assist(t_resonators *x, void *b, long m, long a, char *s)
              sprintf(s,"(Signal) Filter bank input and control messages");
       }
 }
-/*
 
-I commented this whole thing out to get resonators~ to compile with Xcode.  A bad idea?  -mzed
+#ifdef __MWERKS__
+#define DONT_HAVE_STRING_LIBRARY
+#endif
 
+#ifdef DONT_HAVE_STRING_LIBRARY
 long strcmp(const char *s1, const char *s2);
 long strcmp(const char *s1, const char *s2)
 {
@@ -1118,7 +1120,8 @@ long strcmp(const char *s1, const char *s2)
 
 	return 0;
 }
-*/
+#endif
+
 Boolean isthesymbol(char *name, t_atom *t);
 Boolean isthesymbol(char *name, t_atom *t)
 {
