@@ -214,7 +214,9 @@ int FreeAllGrains(t_amaranth *x) {
 	return result;
 }
 
+
  // void amaranth_grain(t_amaranth *x, float location, float dur, float trans, Symbol *bufName) {
+// That probably would have worked if I had made them doubles instead of floats...
  
 void amaranth_grain(t_amaranth *x, Symbol *s, short argc, Atom *argv) {
 	int g, samplesNeeded;

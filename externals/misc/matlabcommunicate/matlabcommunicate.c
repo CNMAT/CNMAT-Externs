@@ -82,8 +82,8 @@ void matlabbridge_version (t_theobject *x);
 static t_buffer *SymbolToBuffer(t_symbol *s);
 void matlabbridge_buffer2matlab(t_theobject *x, Symbol *buffername, Symbol *matlabVariable, Symbol *matlabSR);
 void matlabbridge_bufferchan2matlab(t_theobject *x, Symbol *buffername, int chan, Symbol *matlabVariable, Symbol *matlabSR);
-void matlabbridge_matlab2buffer(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, float SR);
-void matlabbridge_matlab2bufferchan(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, int chan, float SR);
+void matlabbridge_matlab2buffer(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, double SR);
+void matlabbridge_matlab2bufferchan(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, int chan, double SR);
 
 
 int is_exotic_matlab_type(const mxArray *array_ptr);
@@ -483,7 +483,7 @@ void matlabbridge_bufferchan2matlab(t_theobject *x, Symbol *buffername, int chan
 }
 
 
-void matlabbridge_matlab2buffer(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, float SR) {
+void matlabbridge_matlab2buffer(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, double SR) {
 	mxArray *matlabArray;
 	t_buffer *buf;
 	int i,j;
@@ -503,6 +503,8 @@ void matlabbridge_matlab2buffer(t_theobject *x, Symbol *matlabVariable, Symbol *
 		error("matlabbridge: buffer2matlab: %s is not an MSP buffer.", buffername->s_name);
 		return;
 	}
+
+	post("Warning: matlabbridge_matlab2buffer: ignoring sample rate you may have specified.");
 	
 	// Case analysis for what kind of thing was in the Matlab variable
 	
@@ -561,6 +563,7 @@ done:
 
 
 void matlabbridge_matlab2bufferchan(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, int chan, float SR) {
+  post("matlabcommunicate: matlab2bufferchan not implemented.");
 }
 
 

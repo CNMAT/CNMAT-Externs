@@ -53,8 +53,8 @@ void *stpd_new(double taua, double taur);
 void stpd_dsp(t_stpd *x, t_signal **sp, short *count);
 t_int *stpd_perform(t_int *w);
 
-void stpd_set_taua(t_stpd *x, float taua);
-void stpd_set_taur(t_stpd *x, float taur);
+void stpd_set_taua(t_stpd *x, double taua);
+void stpd_set_taur(t_stpd *x, double taur);
 void stpd_tellmeeverything(t_stpd *x);
 
 void main(void) {
@@ -134,14 +134,16 @@ t_int *stpd_perform(t_int *w) {
     return (w+5);
 }
 
-void stpd_set_taua(t_stpd *x, float taua) {
-	x->oneover_taua = 1.0f / taua;
-	// post("1/taua %f", x->oneover_taua);
+void stpd_set_taua(t_stpd *x, double taua_d) {
+  float taua = (float) tauad;
+  x->oneover_taua = 1.0f / taua;
+  // post("1/taua %f", x->oneover_taua);
 }
 
-void stpd_set_taur(t_stpd *x, float taur) {
-	x->oneover_taur = 1.0f / taur;
-	// post("1/taur %f", x->oneover_taur);
+void stpd_set_taur(t_stpd *x, double taur_d) {
+  float taur = (float) taur_d;
+  x->oneover_taur = 1.0f / taur;
+  // post("1/taur %f", x->oneover_taur);
 	
 }
 

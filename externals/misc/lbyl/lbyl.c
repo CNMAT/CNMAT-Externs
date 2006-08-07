@@ -78,7 +78,7 @@ typedef struct LBYL
 void *class;
 
 void *LBYL_new(Symbol *s, float tolerance, long quota);
-void LBYL_tolerance(LBYL *x, float t);
+void LBYL_tolerance(LBYL *x, double t);
 void LBYL_quota(LBYL *x, long q);
 void LBYL_version(LBYL *x);
 void LBYL_tellmeeverything(LBYL *x);
@@ -133,11 +133,11 @@ void *LBYL_new(Symbol *s, float tolerance, long quota) {
 	return (x);
 }
 
-void LBYL_tolerance(LBYL *x, float t) {
+void LBYL_tolerance(LBYL *x, double t) {
 	if (t < 0.0) {
 		error("lbyl: tolerance must be nonnegative");
 	} else {
-		x->tolerance = t;
+		x->tolerance = (float) t;
 	}
 }
 
