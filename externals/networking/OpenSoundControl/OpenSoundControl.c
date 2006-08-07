@@ -26,7 +26,7 @@ NAME: OpenSoundControl
 DESCRIPTION: Format Max data to <A href="http://www.cnmat.berkeley.edu/OpenSoundControl">OpenSoundControl</a> protocol and vice versa
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
-SVN_REVISION: $LastChangedRevision: 999 $
+SVN_REVISION: $LastChangedRevision$
 VERSION 1.2: was still version 1.1 on 68K; 1.3 is the same for both.
 VERSION 1.4: has 3 outlets
 VERSION 1.5: uses FullPacket instead of gimme, so no subverting of argc/argv
