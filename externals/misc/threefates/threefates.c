@@ -35,6 +35,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 0.2: 041229 MW: Handles arbitrary-length partial parameter lists 
 VERSION 0.2.1: New version/makefile system
 VERSION 0.2.2: Proper use of name/value tags
+VERSION 0.2.3: Compiles for CFM and MachO
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
