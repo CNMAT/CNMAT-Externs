@@ -27,6 +27,7 @@ University of California, Berkeley.
 
  bytes2ints.c
 
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION:  Convert binary buffers (e.g., from received UDP packets) to max lists where each byte of the buffer is a separate Max int.
   
  */

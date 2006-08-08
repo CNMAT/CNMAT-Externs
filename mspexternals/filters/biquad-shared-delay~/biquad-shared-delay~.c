@@ -1,4 +1,5 @@
 /* 
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: this is the "new" biquad test version using shared delays ym1, ym2. still mathematically equivalent to direct form.  it seems slightly more efficient (rounds/truncates differently after the fifth decimal place)
 */
 

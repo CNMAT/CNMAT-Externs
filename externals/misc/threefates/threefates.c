@@ -31,6 +31,7 @@ NAME: threefates
 DESCRIPTION: Deal with track birth/death for sinusoids~
 AUTHORS: Tim Madden and Matt Wright
 COPYRIGHT_YEARS: 2000,01,02,03,04,05
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.2: 041229 MW: Handles arbitrary-length partial parameter lists 
 VERSION 0.2.1: New version/makefile system
 VERSION 0.2.2: Proper use of name/value tags

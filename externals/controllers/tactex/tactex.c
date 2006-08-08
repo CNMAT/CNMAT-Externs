@@ -7,6 +7,7 @@
     Amar Chaudhary provided the kmeans code for centroid tracking
 	as of version 0.2, the centroid tracking has been removed and put in another dedicated object
 
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Richard Dudas' obsolete object to read data from a Tactex MTC, superceded by an object written by the Tactex folks.
 */
 

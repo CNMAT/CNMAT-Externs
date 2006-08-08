@@ -36,6 +36,7 @@ NAME: SDIF-ranges
 DESCRIPTION: Find ranges of data in an SDIF-buffer
 AUTHORS: Matt Wright 
 COPYRIGHT_YEARS: 2004,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0.2: 050103 mw Added column-range message, updated to new versioning system
 VERSION 0.0.3: updated to new new versioning system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

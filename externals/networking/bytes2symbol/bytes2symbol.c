@@ -1,5 +1,6 @@
 /* dereffer MAX object
 
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION:  Convert binary buffers (e.g., from received UDP packets) which are presumed to consist only of single null-terminated ASCII strings to Max symbols.
 
    Brian Whitman, WPI 4/22/99

@@ -35,6 +35,7 @@ NAME: SDIF-tuples
 DESCRIPTION: Extract "tuples" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list.
 AUTHORS: Matt Wright and Ben "Jacobs" 
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.2: includes reltime
 VERSION 0.3: max_rows, only one complaint if empty
 VERSION 0.3.1: "tuples time" now accepts int or float

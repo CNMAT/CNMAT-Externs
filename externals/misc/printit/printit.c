@@ -33,6 +33,7 @@ NAME: printit
 DESCRIPTION: Really print everything about what comes in the inlet
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2000,01,02,03,04,05
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.1b: Earliest version I could find
 VERSION 0.2: Using new version system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

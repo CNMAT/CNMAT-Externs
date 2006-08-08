@@ -1,4 +1,5 @@
 /*
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Ancient code for getting the system time (superseded by the "date" object).
 */
 

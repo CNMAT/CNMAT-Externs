@@ -35,6 +35,7 @@ NAME: SDIF-importSEP
 DESCRIPTION:   Read an ascii file containing Helios SEP (Solar Energetic Particle) data, import into an existing SDIF-buffer object.
 AUTHORS: Ben "Jacobs"
 COPYRIGHT_YEARS: 2004,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0.1: 04/05/2004 -  (bj): basic functionality ("import" method)
 VERSION 0.0.2: 06/22/2004 -  (bj): cleanup
 VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system

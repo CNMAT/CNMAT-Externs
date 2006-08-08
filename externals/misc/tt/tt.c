@@ -31,6 +31,7 @@ NAME: tt
 DESCRIPTION: type-sane trigger: How Matt believes Max's "trigger" object ought to work.  Has an "a"nything argument which outputs whatever type was received.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Matt's initial version.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
   

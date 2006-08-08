@@ -31,6 +31,7 @@ NAME: list-accum
 DESCRIPTION: "Accumulate" a list by adding elements gradually.  Much like "zl group" except it can output arbitrary-length lists.
 AUTHORS: Michael Lee and Matt Wright
 COPYRIGHT_YEARS: 1996,98,98,992000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Mike Lee's original version
 VERSION 0.2: Modified to work w/ PPC Max on 9/25/96 by Matt Wright.  Also made it accept "symbol" lists, not just lists of numbers.
 VERSION 0.3: Modified 8/12/05 by Matt Wright to compile again 

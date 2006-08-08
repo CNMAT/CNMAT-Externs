@@ -19,6 +19,7 @@
 	2)  added LineSegment message, with optional color argument.
 	3)  added optional color argument to Paint & Frame Oval and Rect
 
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Obsolete ancient version of the LCD object, long since taken over by Cycling 74.
 	
 */

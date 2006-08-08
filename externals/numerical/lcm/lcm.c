@@ -33,6 +33,7 @@ NAME: lcm
 DESCRIPTION: Least common multiple
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version, 3/29/98.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 

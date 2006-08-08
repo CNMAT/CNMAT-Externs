@@ -26,7 +26,9 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
  SNNS-wrapper.c
- Turn an SNNS-generated network-forward-pass C file into a Max object.
+
+DESCRIPTION: Turn an SNNS-generated network-forward-pass C file into a Max object.
+SVN_REVISION: $LastChangedRevision$
  
  To change the SNNS file, do this:
  	1) Add the new .c file to the project

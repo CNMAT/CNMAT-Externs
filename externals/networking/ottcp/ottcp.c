@@ -36,6 +36,7 @@ NAME: ottcp
 DESCRIPTION: Open Transport TCP object for Max - client (a.k.a. active) side only.  Never really tested or debugged.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Matt's initial version 5/19/99  (based on OTUDP object). Still needs substantial debugging.  Use at your own risk.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 

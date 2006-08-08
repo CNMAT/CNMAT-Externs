@@ -31,6 +31,7 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 
 /*
 DESCRIPTION: Output lists of consecutive signal values (as floats) every so many samples.  Sort of like snapshot~, but for an entire (rectangular) window of samples.
+SVN_REVISION: $LastChangedRevision$
 */
 
 

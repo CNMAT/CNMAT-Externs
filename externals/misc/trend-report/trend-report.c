@@ -30,6 +30,7 @@ NAME: trend-report
 DESCRIPTION: Given an input stream of numbers, report statistics on "trends", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the "laughter" detector for Edmund Campion's "ME".
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2002,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 */

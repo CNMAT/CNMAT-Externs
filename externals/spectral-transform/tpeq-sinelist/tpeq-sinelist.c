@@ -30,6 +30,7 @@ NAME: tpeq-sinelist
 DESCRIPTION: tracking parametric EQ from softcast, implemented to work on the Max lists used as arguments to sinusoids~: alternating freq/amplitude.  This is the basis of the "whistleizer" effect.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Matt's initial version 
 VERSION 0.1: More robust if out of memory in object creation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  

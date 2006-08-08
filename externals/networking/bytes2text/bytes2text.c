@@ -27,6 +27,7 @@ University of California, Berkeley.
 
  bytes2text.c
 
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Interpret a binary buffer (e.g., from a received UDP packet) as an ASCII string, add null termination, and print it in the Max window.
 
   

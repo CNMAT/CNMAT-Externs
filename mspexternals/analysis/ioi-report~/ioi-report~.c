@@ -31,6 +31,7 @@ NAME: ioi-report~
 DESCRIPTION: Inter-onset-interval report for mostly-zero signals, i.e., a signal domain timer.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2004,05
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: First version, 5/28/4 
 VERSION 0.2: 050714 added way to set min and max ioi time
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

@@ -26,7 +26,7 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
 DESCRIPTION: smooth-biquad~ is just like biquad~ except that new coefficient updates are "smoothed": the object linearly interpolates the coefficients from the old value to the new value over one MSP signal processing vector.
-
+SVN_REVISION: $LastChangedRevision$
 */
 
 /*

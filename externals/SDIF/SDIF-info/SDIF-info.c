@@ -36,6 +36,7 @@ NAME: SDIF-info
 DESCRIPTION: report overall info about an SDIF-buffer
 AUTHORS: Matt Wright and Ben "Jacobs"
 COPYRIGHT_YEARS: 2002,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0.1: 04/05/2004 -  (bj): updated to use sdif-buf.c
 VERSION 0.0.2: 06/22/2004 -  (bj): cleanup
 VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system

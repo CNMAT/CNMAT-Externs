@@ -32,6 +32,7 @@ NAME: RhythmicScheduler
 DESCRIPTION: Keep track of events to be scheduled some number of "tatums" (arbitrary units of time) in the future, and output the appropriate events when time advances.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's original version
 VERSION 0.3: Has "clear" message
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

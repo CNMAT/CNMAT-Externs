@@ -38,6 +38,7 @@ NAME: otudp
 DESCRIPTION: Open Transport UDP object (now superseded by udp objects from Cycling 74 that cooperate much better with Max's threading system)
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1997,98,99,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Initial version
 VERSION 0.1:  Made error reporting slightly more verbose 10/16/97
 VERSION 0.2:  Fixed bugs, made more stable, in 11/97 for The Hub's "Points of Presence"

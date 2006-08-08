@@ -30,6 +30,7 @@ NAME: list-interpolate
 DESCRIPTION: Linearly interpolate two lists element-wise
 AUTHORS: Adrian Freed and Matt Wright
 COPYRIGHT_YEARS: 2000,01,02,03,04,05
+SVN_REVISION: $LastChangedRevision$
 VERSION 1.1: Bug fixed to really work with floats, Matt Wright 1/4/01
 VERSION 1.2: Made compilable in CW 8.3,  Matt Wright 12/5/2
 VERSION 1.6: Merged Windows changes into real version

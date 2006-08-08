@@ -1,4 +1,5 @@
 /*
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Convolution external, probably more efficient than doing it in Max.
 */
 

@@ -33,6 +33,7 @@ NAME: OSC-route ("OpenSoundControl route")
 DESCRIPTION: Message dispatching through an <A HREF="http://www.cnmat.berkeley.edu/OSC">OpenSoundControl</A> address space.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 1.04: Allows #1 thru #9 as typed-in arguments
 VERSION 1.05: Allows "list" messages as well as "message" messages.
 VERSION 1.06: Extra outlet, "slash" argument, set method...
