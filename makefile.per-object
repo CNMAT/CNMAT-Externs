@@ -67,16 +67,14 @@ REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).help
 CFM_BINARY = $(CODEWARRIOR_BUILD_DIR)/$(OBJ)
 MACHO_BINARY = $(XCODE_BUILD_DIR)/$(OBJ).mxo
-MAC_BINARY = $(if $(findstring OSX-CFM,$(PLATFORM)), $(CFM_BINARY), $(MACHO_BINARY))
+# MAC_BINARY = $(if $(findstring OSX-CFM,$(PLATFORM)), $(CFM_BINARY), $(MACHO_BINARY))
 
 
 CODEWARRIOR_DEBUGGER_SYM = $(CODEWARRIOR_BUILD_DIR)/$(OBJ).xSYM
-
 CODEWARRIOR_HELPFILE_COPY = $(CODEWARRIOR_BUILD_DIR)/$(OBJ).help 
 XCODE_HELPFILE_COPY = $(XCODE_BUILD_DIR)/$(OBJ).help 
 WINDOWS_HELPFILE_COPY = $(WINDOWS_BUILD_DIR)/$(OBJ).help 
 
-	
 CODEWARRIOR_BUILD_DIR = ../build-mac
 XCODE_BUILD_DIR = build/Deployment
 WINDOWS_BUILD_DIR = avoid windows at all costs
@@ -159,12 +157,12 @@ version.h: $(OBJ_INFO)
 
 # Make sure the build directory is really there
 $(CODEWARRIOR_BUILD_DIR_EXISTS):
-	mkdir -p $(CODEWARRIOR_BUILD_DIR)
-	touch $(CODEWARRIOR_BUILD_DIR_EXISTS)
+	mkdir -p "$(CODEWARRIOR_BUILD_DIR)"
+	touch "$(CODEWARRIOR_BUILD_DIR_EXISTS)"
 
 $(XCODE_BUILD_DIR_EXISTS):
-	mkdir -p $(XCODE_BUILD_DIR)
-	touch $(XCODE_BUILD_DIR_EXISTS)
+	mkdir -p "$(XCODE_BUILD_DIR)"
+	touch "$(XCODE_BUILD_DIR_EXISTS)"
 
 
 $(OBJ_INFO): $(SOURCE)
@@ -192,8 +190,8 @@ $(CFM_WEB_INFO): $(CFM_INDIVIDUAL_DOWNLOAD) $(OBJ_INFO)
 $(MACHO_WEB_INFO): $(MACHO_INDIVIDUAL_DOWNLOAD) $(OBJ_INFO)
 	$(make-web-info)
 
-.PHONY: mac-binary
-mac-binary: $(MAC_BINARY)
+# .PHONY: mac-binary
+# mac-binary: $(MAC_BINARY)
 
 $(MACHO_BINARY): $(SOURCE) version.h $(XCODE_HELPFILE_COPY)
 	xcodebuild -configuration Deployment
@@ -305,7 +303,7 @@ clean:
 	rm -f $(MAC_INDIVIDUAL_DOWNLOAD) $(HELPFILE_COPY)  
 	rm -f $(OBJ_INFO) version.h $(WEB_INCOMING) $(CODEWARRIOR_DEBUGGER_SYM) 
 	rm -f $(CFM_WEB_INFO) $(MACHO_WEB_INFO)
-	rm -rf $(MAC_BINARY) $(CFM_BINARY) $(MACHO_BINARY)
+	rm -rf $(CFM_BINARY) $(MACHO_BINARY)
 	rm -rf $(foreach dir, $(ALL_BUILD_DIRS), \
                  $(dir)/$(OBJ).help \
 		 $(dir)/$(INDIVIDUAL_DOWNLOAD_NO_DIR))
@@ -332,8 +330,8 @@ ostest:
 
 
 test: 
-	echo CURDIR $(CURDIR)
 	echo OBJ $(OBJ)
-	echo platform $(PLATFORM)
-	echo binary $(MAC_BINARY)
+	echo PLATFORM $(PLATFORM)
+	echo CURDIR $(CURDIR)
+	echo OBJ_INFO  $(OBJ_INFO)
 	echo build $(BUILD_DIR)
