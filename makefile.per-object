@@ -58,8 +58,8 @@ export BUILD_DIR
 # Name of the object is the name of this directory
 # Could do this with $(notdir$(CURDIR)) ???
 
-OBJ := $(shell basename `pwd`)
-
+# OBJ := $(shell basename `pwd`)
+OBJ = $(notdir $(CURDIR))
 
 # Filenames derived from the name of the object
 SOURCE = $(OBJ).c
@@ -332,6 +332,8 @@ ostest:
 
 
 test: 
+	echo CURDIR $(CURDIR)
+	echo OBJ $(OBJ)
 	echo platform $(PLATFORM)
 	echo binary $(MAC_BINARY)
 	echo build $(BUILD_DIR)
