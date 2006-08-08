@@ -81,13 +81,13 @@ typedef struct _SDIFinfo {
 
 /* prototypes for my functions */
 void *SDIFinfo_new(Symbol *s, short argc, Atom *argv);
-void *my_getbytes(int numBytes);
-void my_freebytes(void *bytes, int size);
+static void *my_getbytes(int numBytes);
+static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFinfo *x);
 static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName);
 static void SDIFinfo_bang(SDIFinfo *x);
 
-void SDIFinfo_version(SDIFinfo *x);
+static void SDIFinfo_version(SDIFinfo *x);
 
 
 /* global that holds the class definition */
