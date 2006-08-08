@@ -56,10 +56,15 @@ export BUILD_DIR
 
 
 # Name of the object is the name of this directory
-# Could do this with $(notdir$(CURDIR)) ???
-
-# OBJ := $(shell basename `pwd`)
-OBJ = $(notdir $(CURDIR))
+# Old way (cygwin "basename" doesn't seem to work) OBJ := $(shell basename `pwd`)
+# Nothing in CNMAT's repository should have any whitespace in file or directory
+# names, so we'll just blithely use $(lastword ...) to remove everything before
+# the final space in the current directory before we pass it to $(notdir ...).
+# Otherwise $(notdir ...) will think that each space-delimited segment of the
+# current directory is a separate input, and return an answer with spaces,
+# which will blow up the rest of the Makefile.
+# in case the full path to the working directory has white space.
+OBJ = $(notdir $(lastword $(strip $(CURDIR))))
 
 # Filenames derived from the name of the object
 SOURCE = $(OBJ).c
@@ -330,8 +335,8 @@ ostest:
 
 
 test: 
+	echo CURDIR $(CURDIR)
 	echo OBJ $(OBJ)
 	echo PLATFORM $(PLATFORM)
-	echo CURDIR $(CURDIR)
 	echo OBJ_INFO  $(OBJ_INFO)
 	echo build $(BUILD_DIR)
