@@ -107,8 +107,6 @@ void *SDIFlistpoke_class;
 
 /* prototypes for my functions */
 void *SDIFlistpoke_new(Symbol *s, short argc, Atom *argv);
-void *my_getbytes(int numBytes);
-void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFlistpoke *x);
 static void SDIFlistpoke_set(SDIFlistpoke *x, Symbol *bufName);
 static void SDIFlistpoke_errorreporting(SDIFlistpoke *x, long yesno);
@@ -117,18 +115,18 @@ static void SDIFlistpoke_numcolumns(SDIFlistpoke *x, long n);
 static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, Symbol *matrixType);
 static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
 static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
-void SDIFlistpoke_version(SDIFlistpoke *x);
-void *my_getbytes(int numBytes);
-void my_freebytes(void *bytes, int size);
+static void SDIFlistpoke_version(SDIFlistpoke *x);
+static void *my_getbytes(int numBytes);
+static void my_freebytes(void *bytes, int size);
 
 
 
 
-void *my_getbytes(int numBytes) {
+static void *my_getbytes(int numBytes) {
 	return (void *) getbytes((short) numBytes);
 }
 
-void my_freebytes(void *bytes, int size) {
+static void my_freebytes(void *bytes, int size) {
 	freebytes(bytes, (short) size);
 }
 
