@@ -105,8 +105,8 @@ OBJ_INFO_NO_DIR = $(OBJ)-objinfo.txt
 # No longer put in BUILD_DIR:  OBJ_INFO = $(BUILD_DIR)/$(OBJ_INFO_NO_DIR)
 OBJ_INFO = $(OBJ_INFO_NO_DIR)
 # WEB_INFO is exactly the same, but also with the md5 checksum and build info
-CFM_WEB_INFO_NO_DIR = $(OBJ)-CFM-info.txt
-MACHO_WEB_INFO_NO_DIR = $(OBJ)-MACHO-info.txt
+CFM_WEB_INFO_NO_DIR = $(OBJ)-OSX-CFM-info.txt
+MACHO_WEB_INFO_NO_DIR = $(OBJ)-OSX-MachO-info.txt
 #WEB_INFO = $(BUILD_DIR)/$(WEB_INFO_NO_DIR)
 CFM_WEB_INFO = $(CODEWARRIOR_BUILD_DIR)/$(CFM_WEB_INFO_NO_DIR)
 MACHO_WEB_INFO = $(XCODE_BUILD_DIR)/$(MACHO_WEB_INFO_NO_DIR)
@@ -114,8 +114,8 @@ MACHO_WEB_INFO = $(XCODE_BUILD_DIR)/$(MACHO_WEB_INFO_NO_DIR)
 #old attempt to be general:
 #WEB_INCOMING = $(BUILD_DIR)/$(OBJ)-$(PLATFORM).tar.gz
 #export WEB_INCOMING
-CFM_WEB_INCOMING = $(CODEWARRIOR_BUILD_DIR)/$(OBJ)-CFM.tar.gz
-MACHO_WEB_INCOMING = $(XCODE_BUILD_DIR)/$(OBJ)-MachO.tar.gz
+CFM_WEB_INCOMING = $(CODEWARRIOR_BUILD_DIR)/$(OBJ)-OSX-CFM.tar.gz
+MACHO_WEB_INCOMING = $(XCODE_BUILD_DIR)/$(OBJ)-OSX-MachO.tar.gz
 
 
 # Where files live on our web server
@@ -290,9 +290,6 @@ macho-release: $(MACHO_WEB_INCOMING)
 win-release: 
 	echo Windows release not yet implemented
 
-
-CFM_WEB_INCOMING = $(CODEWARRIOR_BUILD_DIR)/$(OBJ)-CFM.tar.gz
-MACHO_WEB_INCOMING = $(XCODE_BUILD_DIR)/$(OBJ)-MachO.tar.gz
 
 $(CFM_WEB_INCOMING): code-checked-in $(CFM_INDIVIDUAL_DOWNLOAD) $(CFM_WEB_INFO) 
 	tar cvfz $@ -C $(CODEWARRIOR_BUILD_DIR) $(INDIVIDUAL_DOWNLOAD_NO_DIR) $(CFM_WEB_INFO_NO_DIR)
