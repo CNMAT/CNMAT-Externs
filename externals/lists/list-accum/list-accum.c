@@ -34,16 +34,20 @@ COPYRIGHT_YEARS: 1996,98,98,992000,01,02,03,04,05,06
 VERSION 0.1: Mike Lee's original version
 VERSION 0.2: Modified to work w/ PPC Max on 9/25/96 by Matt Wright.  Also made it accept "symbol" lists, not just lists of numbers.
 VERSION 0.3: Modified 8/12/05 by Matt Wright to compile again 
+VERSION 0.4: Accepts single floats or integers
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#include "version.h"
 #include "ext.h"
 
 struct listAccum *listAccumNew(long);
-void *listAccumFree(struct listAccum *);
-void *listAccumBang(struct listAccum *);
-void *listAccumDebug(struct listAccum *);
-void *listAccumList(struct listAccum *, struct symbol *, int, struct atom *);
+void listAccumFree(struct listAccum *);
+void listAccumBang(struct listAccum *);
+void listAccumDebug(struct listAccum *);
+void listAccumList(struct listAccum *, struct symbol *, int, struct atom *);
+void listAccumInt(struct listAccum *, int i);
+void listAccumFloat(struct listAccum *, double d);
 void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv);
 
 
@@ -66,7 +70,6 @@ struct listAccum {
 
 struct listAccum *listAccumNew(long n) {
 	struct listAccum *x;
-	int i;
 	
 	if (n <= 0) {
 		post("listAccum: Argument must be positive.");
@@ -84,7 +87,7 @@ struct listAccum *listAccumNew(long n) {
 	return (x);
 }
 
-void *listAccumFree(struct listAccum *x)
+void listAccumFree(struct listAccum *x)
 {
 	freebytes(x->l_atoms,(short)(sizeof(Atom)*x->l_numAtoms));
 }
@@ -92,7 +95,7 @@ void *listAccumFree(struct listAccum *x)
 /* ------------------------- listAccumBang ------------------------ */
 
 
-void *listAccumBang(struct listAccum *x)
+void listAccumBang(struct listAccum *x)
 {
 	if (x->debug)
 		post("listAccum bang");
@@ -104,7 +107,7 @@ void *listAccumBang(struct listAccum *x)
 
 /* ------------------------- listAccumDebug ------------------------ */
 
-void *listAccumDebug(struct listAccum *x)
+void listAccumDebug(struct listAccum *x)
 {
 	x->debug = !x->debug;
 	
@@ -117,7 +120,7 @@ void *listAccumDebug(struct listAccum *x)
 
 /* ------------------------- listAccumList ------------------------ */
 
-void	*listAccumList(struct listAccum *x, struct symbol *s, int argc, struct atom *argv)
+void	listAccumList(struct listAccum *x, struct symbol *s, int argc, struct atom *argv)
 {
 	int i;
 	for (i=0;i<argc;i++) {
@@ -130,6 +133,26 @@ void	*listAccumList(struct listAccum *x, struct symbol *s, int argc, struct atom
 		}
 	}
 }
+
+
+void listAccumInt(struct listAccum *x, int i) {
+  SETLONG(&(x->l_atoms[x->l_atomsInBuf]), i);
+  x->l_atomsInBuf++;
+  if (x->debug) post("listAccum: added int %ld, that makes %ld atoms so far", i, x->l_atomsInBuf);
+  if (x->l_atomsInBuf>=x->l_numAtoms) listAccumBang(x);
+}
+
+void listAccumFloat(struct listAccum *x, double d) {
+  float f = (float) d;
+  SETFLOAT(&(x->l_atoms[x->l_atomsInBuf]), f);
+  x->l_atomsInBuf++;
+  if (x->debug) post("listAccum: added float %, that makes %ld atoms so far", f, x->l_atomsInBuf);
+  if (x->l_atomsInBuf>=x->l_numAtoms) listAccumBang(x);
+}
+
+ 
+
+void listAccumFloat(struct listAccum *, double d);
 
 /* -----------------------  listAccum_anything ----------------------- */
 
@@ -163,11 +186,13 @@ void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv)
 }
 
 
-main(fptr *f) {		
+void main(fptr *f) {		
 	setup((t_messlist **)&class, (method) listAccumNew, (method)listAccumFree,
 		  (short) sizeof(struct listAccum), 0L, A_LONG, 0);
 
 	addbang((method)listAccumBang);
+	addint((method)listAccumInt);
+	addfloat((method)listAccumFloat);
 	addmess((method)listAccumDebug, "debug", 0);
 	addmess((method)listAccumList, "list",A_GIMME, 0);
  	addmess((method)listAccum_anything,	"anything",	A_GIMME, 0);
