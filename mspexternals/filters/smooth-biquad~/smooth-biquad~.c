@@ -25,14 +25,20 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: smooth-biquad~
 DESCRIPTION: smooth-biquad~ is just like biquad~ except that new coefficient updates are "smoothed": the object linearly interpolates the coefficients from the old value to the new value over one MSP signal processing vector.
+AUTHORS: Tristan Jehan, Matt Wright
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
+VERSION 1.3alpha: Adrian's initial version
+VERSION 1.4: Rough windows compile by mzed, 20 April 2004
+VERSION 1.4.1: Better compile 27 April 2004, mzed
+VERSION 1.4: CFM/MachO compile, proper version info.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-/*
-Rough windows compile by mzed, 20 April 2004
-Better compile 27 April 2004, mzed
-*/
+#include "version.h"
 
 #include "ext.h"
 #include "z_dsp.h"
@@ -74,6 +80,7 @@ void biquad_list(t_biquad *x, t_symbol *s, short argc, t_atom *argv);
 void biquad_clear(t_biquad *x);
 void biquad_assist(t_biquad *x, void *b, long m, long a, char *s);
 void *biquad_new(t_symbol *s, short argc, t_atom *argv);
+void version(t_biquad *x);
 
 void main(void)
 {
@@ -90,7 +97,9 @@ void main(void)
 	addfloat((method)biquad_float);
 	addint((method)biquad_int);
 	addmess((method)biquad_assist, "assist", A_CANT, 0);
+	addmess((method)version, "version", 0);
 	dsp_initclass();
+	version(0);
 }
 
 t_int *biquad_perform(t_int *w)
@@ -315,3 +324,10 @@ void *biquad_new(t_symbol *s, short argc, t_atom *argv)
     return (x);
 }
 
+void version(t_biquad *x) {
+	post(NAME " object version " VERSION " by " AUTHORS );
+	if (x) {
+		/* Not called from main(); */
+		post("  compiled " __TIME__ " " __DATE__);
+	}
+}
