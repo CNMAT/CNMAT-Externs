@@ -1,4 +1,5 @@
 /*
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Onset detector based on exceeding a threshold change in spectral energy.  Written by Tristan Jehan?
 */
 

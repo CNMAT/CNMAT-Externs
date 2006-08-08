@@ -26,6 +26,7 @@ NAME: stpd~
 DESCRIPTION: A short-term peak detector (aka leaky peak detector, envelope follower), useful, e.g., as part of a compressor/limiter.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2004,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.11: Matt's initial version 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 

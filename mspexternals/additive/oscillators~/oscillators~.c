@@ -31,6 +31,7 @@ NAME: oscillators~
 DESCRIPTION: Oscillator bank that can read waveform from a buffer~
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 1.0: Adrian's initial version 
 VERSION 1.1: (Matt) initializes no-argument buffer null pointer correctly 
 VERSION 1.2: (Matt) noglissbirthmode

@@ -15,6 +15,7 @@
         6/29/99
         From Max OpenSoundControl object
 
+SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Receive audio in UDP packets and output it continuously as an MSP signal.
 
 
