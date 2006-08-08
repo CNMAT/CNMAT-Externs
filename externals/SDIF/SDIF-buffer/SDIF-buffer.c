@@ -33,6 +33,7 @@ NAME: SDIF-buffer
 DESCRIPTION: Store SDIF data in Max's memory and make it accessible to other objects
 AUTHORS: Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: (01/04/99) Original Version
 VERSION 0.2: (10/14/99) Updated by Matt to use the new SDIF library 
 VERSION 0.4: (11/16/00) write to SDIF files
