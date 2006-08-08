@@ -39,6 +39,7 @@ COPYRIGHT_YEARS: 2004,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0.2: 050103 mw Added column-range message, updated to new versioning system
 VERSION 0.0.3: updated to new new versioning system
+VERSION 0.1: Compiles for CFM and MachO
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    	
   To-do:  ranges for a given row across all frames
@@ -97,8 +98,8 @@ static Symbol *ps_SDIF_buffer_lookup, *ps_column_mins, *ps_column_maxes, *ps_max
 /* prototypes for my functions */
 void *SDIFranges_new(Symbol *s, short argc, Atom *argv);
 void SDIFranges_free(SDIFranges *x);
-void *my_getbytes(int numBytes);
-void my_freebytes(void *bytes, int size);
+static void *my_getbytes(int numBytes);
+static void my_freebytes(void *bytes, int size);
 void SDIFranges_version(SDIFranges *x);
 static void LookupMyBuffer(SDIFranges *x);
 static void SDIFranges_set(SDIFranges *x, Symbol *bufName);
