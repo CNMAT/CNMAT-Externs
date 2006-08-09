@@ -33,7 +33,7 @@ University of California, Berkeley.
 /* 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: SDIF-matrixlist
-DESCRIPTION: list all the matrix types found in the given stream
+DESCRIPTION: list all the matrix types found in the given stream.  This never worked; use the "framelist" message to SDIF-buffer.
 AUTHORS: Matt Wright 
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
@@ -47,7 +47,7 @@ VERSION 0.1:  First version
  A Max SDIF selector object - 
  -- */
 
-#define SDIF_MATRIXLIST_VERSION "0.1"
+#include "version.h"
 
 #include "ext.h"
 
@@ -102,8 +102,8 @@ void main(fptr *fp)
 	// this is not necessary (but harmless) on PowerPC
 	FNS = fp;	
 	
-	post("SDIF-matrixlist version " SDIF_TUPLES_VERSION " by Matt Wright");
-	post("Copyright © 1999 Regents of the University of California.");
+	post("SDIF-matrixlist version " VERSION " by Matt Wright");
+	post("Copyright © 1999,2000-06 Regents of the University of California.");
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup(&SDIFmatrixlist_class, SDIFmatrixlist_new, 0,
@@ -185,7 +185,7 @@ void SDIFmatrixlist_listmatrices(SDIFmatrixlist *x) {
 	
 void SDIFmatrixlist_printmatrices(SDIFmatrixlist *x) {
 	char types[MOST_MATRIX_TYPES][4];
-	int i;
+	int i, num;
 	
 	EnterCallback();
 	num = FindAllMatrixTypes(x, types);
