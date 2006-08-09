@@ -1,0 +1,31 @@
+#! /bin/tcsh
+set pushdsilent = 1
+
+foreach category ( externals/*/ mspexternals/*/ )
+    echo
+    echo '--- ' $category
+    pushd $category
+    ls * > &  /dev/null
+    if ($status) then
+	echo No projects in this category
+    else
+        foreach proj ( * )
+    	if (-d $proj) then
+    	    pushd $proj
+    	    set here = `pwd`;
+    	    set externalname = `basename $here`;
+	    if (-e $externalname.c) then
+		grep -qs DESCRIPTION $externalname.c
+		if (!($status)) then
+		    echo -n $externalname ": "
+		    grep '^DESCRIPTION' $externalname.c | awk -F DESCRIPTION: '{print $2}'
+		else
+		    echo XXXX $externalname has no DESCRIPTION
+		endif
+    	    endif
+    	    popd
+    	endif
+        end
+    endif
+    popd
+end
