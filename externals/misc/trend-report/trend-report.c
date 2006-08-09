@@ -29,7 +29,7 @@ University of California, Berkeley.
 NAME: trend-report
 DESCRIPTION: Given an input stream of numbers, report statistics on "trends", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the "laughter" detector for Edmund Campion's "ME".
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2002,03,04,05,06
+COPYRIGHT_YEARS: 2002-06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
@@ -37,10 +37,9 @@ VERSION 0.1: Matt's initial version.
  
  
 // #define DEBUG	
-#define TRENDREPORT_VERSION "0.1"
-
  
 #include "ext.h"
+#include "version.h"
 
 typedef struct TrendReport
 {
@@ -75,12 +74,10 @@ void OutputTrend(TrendReport *x);
 
 
 void main(fptr *f) {
-	long oldA4;
-
-	post("trend-report object version " TRENDREPORT_VERSION " by Matt Wright 9/5/02");
-
 	setup((t_messlist **)&class, (method)TrendReport_new, 0L, (short)sizeof(TrendReport), 0L, A_DEFFLOAT, 0);
 	addfloat((method)TrendReport_float);
+	addmess((method)version, "version", 0);
+	version(0);
 }
 
 void Reset(TrendReport *x) {
