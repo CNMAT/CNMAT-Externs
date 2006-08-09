@@ -43,7 +43,7 @@ VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
 
 #include <string.h>
 #include <float.h>
@@ -60,6 +60,8 @@ VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system
 #undef sscanf
 
 #include <stdio.h>
+
+#include "version.c"
 
 #include "SDIF-buffer.h"  //  includes "sdif.h", "sdif-mem.h", "sdif-buf.h"
 #define VERY_SMALL ((sdif_float64) -(DBL_MAX))
@@ -87,9 +89,6 @@ static void LookupMyBuffer(SDIFinfo *x);
 static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName);
 static void SDIFinfo_bang(SDIFinfo *x);
 
-static void SDIFinfo_version(SDIFinfo *x);
-
-
 /* global that holds the class definition */
 void *SDIFinfo_class;
 
@@ -100,15 +99,15 @@ void main(fptr *fp)
 {
   SDIFresult r;
   
-	SDIFinfo_version(0);
+	version(0);
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFinfo_class, (method) SDIFinfo_new, 0,
 			(short)sizeof(SDIFinfo), 0L, A_GIMME, 0);
 	
 	/* bind my methods to symbols */
+	addmess((method)version, "version", 0);
 	addmess((method)SDIFinfo_set, "set", A_SYM, 0);	
-	addmess((method)SDIFinfo_version, "version", 0);
 	addbang((method)SDIFinfo_bang);
 	
   //  initialize SDIF libraries
@@ -180,12 +179,6 @@ static void *my_getbytes(int numBytes) {
 
 static void my_freebytes(void *bytes, int size) {
 	freebytes(bytes, (short) size);
-}
-
-static void SDIFinfo_version(SDIFinfo *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFinfo *x) {

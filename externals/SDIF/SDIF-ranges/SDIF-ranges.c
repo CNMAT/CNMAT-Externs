@@ -45,9 +45,7 @@ VERSION 0.1: Compiles for CFM and MachO
   To-do:  ranges for a given row across all frames
 */
 
-
-#include "version.h"
-
+#include "./version.h" // Make sure not to get ../SDIF-buffer/version.h
 
 // #include <string.h>
 // #include <float.h>
@@ -64,6 +62,8 @@ VERSION 0.1: Compiles for CFM and MachO
 #undef fseek
 #undef sprintf
 #undef sscanf */
+
+#include "version.c"
 
 #include <stdio.h>
 #include <limits.h>  // for SHRT_MAX
@@ -100,7 +100,6 @@ void *SDIFranges_new(Symbol *s, short argc, Atom *argv);
 void SDIFranges_free(SDIFranges *x);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
-void SDIFranges_version(SDIFranges *x);
 static void LookupMyBuffer(SDIFranges *x);
 static void SDIFranges_set(SDIFranges *x, Symbol *bufName);
 void SDIFranges_GetMaxNumColumns(SDIFranges *x, Symbol *matrixTypeSym);
@@ -113,15 +112,15 @@ void main(fptr *fp)
 {
   SDIFresult r;
   
-	SDIFranges_version(0);
-	
+	version(0);
+		
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFranges_class, (method)SDIFranges_new, (method)SDIFranges_free,
 			(short)sizeof(SDIFranges), 0L, A_GIMME, 0);
 	
 	/* bind my methods to symbols */
+    addmess((method)version, "version", 0);
 	addmess((method)SDIFranges_set, "set", A_SYM, 0);	
-	addmess((method)SDIFranges_version, "version", 0);
 	addmess((method)SDIFranges_GetMaxNumColumns, "max-columns", A_DEFSYM, 0);
 	addmess((method)SDIFranges_GetColumnRanges, "column-ranges", A_DEFSYM, 0);
 	addmess((method)SDIFranges_GetColumnRange, "column-range", A_LONG, A_DEFSYM, 0);
@@ -200,12 +199,6 @@ static void *my_getbytes(int numBytes) {
 
 static void my_freebytes(void *bytes, int size) {
 	freebytes(bytes, (short) size);
-}
-
-void SDIFranges_version(SDIFranges *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFranges *x) {

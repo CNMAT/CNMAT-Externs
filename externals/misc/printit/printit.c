@@ -32,7 +32,7 @@ University of California, Berkeley.
 NAME: printit
 DESCRIPTION: Really print everything about what comes in the inlet
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2000,01,02,03,04,05
+COPYRIGHT_YEARS: 2000-06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1b: Earliest version I could find
 VERSION 0.2: Using new version system
@@ -40,11 +40,11 @@ VERSION 0.2: Using new version system
   
  */
  
-#include "version.h"
  
 
-/* the required include files */
+#include "version.h"
 #include "ext.h"
+#include "version.c"
 
 /* structure definition of your object */
 
@@ -68,7 +68,6 @@ void printit_int(printit *x, long n);
 void printit_list(printit *x, Symbol *s, short argc, Atom *argv);
 void printit_anything(printit *x, Symbol *s, short argc, Atom *argv);
 void *printit_new(Symbol *s);
-void printit_version (printit *x);
 void printit_assist (printit *x, void *box, long msg, long arg, char *dstString);
 
 Symbol *ps_emptysymbol;
@@ -78,6 +77,7 @@ Symbol *ps_printit;
 
 void main(fptr *f)
 {
+  version(0);
 	/* tell Max about your class. The cast to short is important for 68K */
 	setup((t_messlist **)&printit_class, (method) printit_new, 0L, (short)sizeof(printit), 
 		  0L, A_DEFSYM, 0);
@@ -90,13 +90,10 @@ void main(fptr *f)
 	addmess((method)printit_list, "list", A_GIMME, 0);	
 	addmess((method)printit_anything, "anything", A_GIMME, 0);
 	addmess((method)printit_assist, "assist", A_CANT, 0);
-	addmess((method)printit_version, "version", 0);
+	addmess((method)version, "version", 0);
 
 	ps_emptysymbol = gensym("");
 	ps_printit = gensym("printit");
-	
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 }
 
 
@@ -118,10 +115,6 @@ void *printit_new(Symbol *s)
 }
 
 
-void printit_version (printit *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-}
 
 /* I don't know why these aren't defined in some Max #include file. */
 #define ASSIST_INLET 1

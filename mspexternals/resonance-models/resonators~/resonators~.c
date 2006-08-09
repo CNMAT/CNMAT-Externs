@@ -33,7 +33,7 @@ University of California, Berkeley.
 NAME: resonators~
 DESCRIPTION: MSP resonator Bank
 AUTHORS: Adrian Freed
-COPYRIGHT_YEARS: 1996,1997,1998,1999,2000,2001,2002,2004,2005,2006
+COPYRIGHT_YEARS: 1996-2006
 VERSION 1.6: Compiles under 7/02 Max SDK and CW 7.0 
 VERSION 1.7: Doesn't get smooth/unsmooth backwards
 VERSION 1.7a: first windows compile
@@ -67,10 +67,11 @@ SVN_REVISION: $LastChangedRevision$
 */
 
 
-#include "version.h"
 
 
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 #include "z_dsp.h"
 #include <math.h>
 #define OGAIN
@@ -1213,12 +1214,12 @@ void main(void)
 	setup((t_messlist **)&resonators_class, (method) resonators_new, (method)dsp_free, (short)sizeof(t_resonators),
 		0L, A_GIMME, 0);
 
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("Copyright © 1986, 1987 Adrian Freed");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	version(0);
+	post("Portions copyright (c) 1986, 1987 Adrian Freed");
 	post("Maximum number of resonances: %d", MAXRESONANCES);
 	post("Never expires");
 	
+	addmess((method)version, "version", 0);
 	addmess((method)resonators_dsp, "dsp", A_CANT, 0);
 	addmess((method)resonators_list, "list", A_GIMME, 0);
 	addmess((method)outputgain_list, "outputgain", A_GIMME, 0);
@@ -1236,15 +1237,16 @@ void main(void)
 void resonators_tellmeeverything(t_resonators *x) {
 	int i;
 	
-	post(NAME " object version " VERSION " by " AUTHORS ".");
+	version(x);
 	post("Copyright © 1986, 1987 Adrian Freed");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
-	post("  Compiled " __DATE__ " " __TIME__);
-/*	if (x->interpolating) {
+
+
+	if (x->interpolating) {
 		post("  Smooth mode: parameter changes interpolated over time");
 	} else {
 		post("  Fast mode: no interpolation, more efficient");
-	} */
+	}
+
 	post("%s\n%s\n Max resonances: %d, currently computing  %d",
 	x->interpolating?"  Smooth mode: parameter changes interpolated over time":"  Fast mode: no interpolation, more efficient",
 	x->doubling?"  Double precision mode":"",

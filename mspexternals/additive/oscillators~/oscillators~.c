@@ -41,9 +41,10 @@ VERSION 1.2: (Matt) noglissbirthmode
 	©1999 UC Regents, All Rights Reserved. 
 */
 
-#include "version.h"
 
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 #include "z_dsp.h"
 #include "buffer.h"
 t_symbol *ps_buffer;
@@ -97,7 +98,6 @@ void sinusoids_dsp(t_oscillators *x, t_signal **sp, short *connect);
  void sinusoids_assist(t_oscillators *x, void *b, long m, long a, char *s);
  void *oscillators_new(t_symbol *s, short argc, t_atom *argv);
 void oscillators_noglissbirthmode(t_oscillators *x, long i);
-void version(t_oscillators *x);
 
 t_int *sinusoids2_perform(t_int *w)
 {
@@ -339,12 +339,4 @@ void main(void)
 	
 	ps_buffer = gensym("buffer~");
 	version(0);
-}
-
-void version(t_oscillators *x) {
-  post(NAME " object version " VERSION " by " AUTHORS );
-  if (x) {
-    /* Not called from main(); */
-    post("  compiled " __TIME__ " " __DATE__);
-  }
 }

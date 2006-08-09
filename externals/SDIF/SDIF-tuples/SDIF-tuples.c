@@ -56,7 +56,7 @@ VERSION 0.6: Uses new version system
     More logical error reporting in Max window
 */
 
-#include "version.h"
+#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
 
 #define MAX_NUM_COLUMNS 100
 #define BIGGEST_OUTPUT_LIST 3000
@@ -77,6 +77,8 @@ VERSION 0.6: Uses new version system
 #undef fseek
 #undef sprintf
 #undef sscanf
+
+#include "version.c"
 
 #include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
 #include "sdif-util.h"
@@ -182,7 +184,6 @@ static void SetupInterpolator(SDIFtuples *x,
                               int num_dstColumns,
                               InterpMode mode);
 void SDIFtuples_print(SDIFtuples *x);
-void SDIFtuples_version(SDIFtuples *x);
 void PrintOneFrame(SDIFmem_Frame f);
 void PrintFrameHeader(SDIF_FrameHeader *fh);
 void PrintMatrixHeader(SDIF_MatrixHeader *mh);
@@ -192,16 +193,16 @@ void main(fptr *fp)
 {
   SDIFresult r;
   
-	SDIFtuples_version(0);
+	version(0);
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFtuples_class, (method)SDIFtuples_new, (method)SDIFtuples_free,
 			(short)sizeof(SDIFtuples), 0L, A_GIMME, 0);
 	
 	/* bind my methods to symbols */
+	addmess((method)version, "version", 0);
 	addmess((method)SDIFtuples_set, "set", A_SYM, 0);	
 	addmess((method)SDIFtuples_errorreporting, "errorreporting", A_LONG, 0);
-	addmess((method)SDIFtuples_version, "version", 0);
 	addmess((method)SDIFtuples_print, "print", 0);
 	addmess((method)SDIFtuples_concatenate, "concatenate", A_LONG, 0);
 	addmess((method)SDIFtuples_time, "time", A_FLOAT, 0);
@@ -314,12 +315,6 @@ static void *my_getbytes(int numBytes) {
 
 static void my_freebytes(void *bytes, int size) {
 	freebytes(bytes, (short) size);
-}
-
-void SDIFtuples_version(SDIFtuples *x) {
-    post(NAME " Version " VERSION
-	 ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFtuples *x) {

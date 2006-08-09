@@ -47,7 +47,7 @@ VERSION 0.1:  First version
  A Max SDIF selector object - 
  -- */
 
-#include "version.h"
+#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
 
 #include "ext.h"
 
@@ -59,6 +59,8 @@ VERSION 0.1:  First version
 #undef fseek
 #undef sprintf
 #undef sscanf
+
+#include "version.c"
 
 #include "SDIF-buffer.h"
 

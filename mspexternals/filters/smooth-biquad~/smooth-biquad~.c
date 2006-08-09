@@ -38,11 +38,13 @@ VERSION 1.4: CFM/MachO compile, proper version info.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
 
 #include "ext.h"
 #include "z_dsp.h"
 // #include <math.h>
+
+#include "version.h"
+#include "version.c"
 
 void *biquad_class;
 
@@ -80,7 +82,6 @@ void biquad_list(t_biquad *x, t_symbol *s, short argc, t_atom *argv);
 void biquad_clear(t_biquad *x);
 void biquad_assist(t_biquad *x, void *b, long m, long a, char *s);
 void *biquad_new(t_symbol *s, short argc, t_atom *argv);
-void version(t_biquad *x);
 
 void main(void)
 {
@@ -324,10 +325,3 @@ void *biquad_new(t_symbol *s, short argc, t_atom *argv)
     return (x);
 }
 
-void version(t_biquad *x) {
-	post(NAME " object version " VERSION " by " AUTHORS );
-	if (x) {
-		/* Not called from main(); */
-		post("  compiled " __TIME__ " " __DATE__);
-	}
-}

@@ -27,14 +27,14 @@ University of California, Berkeley.
 
  bytes2text.c
 
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 1999-2006
 SVN_REVISION: $LastChangedRevision$
 DESCRIPTION: Interpret a binary buffer (e.g., from a received UDP packet) as an ASCII string, add null termination, and print it in the Max window.
-
+VERSION 0.0: initial version
   
  */
  
-
-#define BYTES2TEXT_VERSION "0.0"
 
 /* the required include files */
 #include "ext.h"
@@ -58,7 +58,6 @@ void *bytes2text_class;
 /* prototypes  */
 
 void *bytes2text_new(Symbol *s, short argc, Atom *argv);
-void bytes2text_version (bytes2text *x);
 void bytes2text_assist (bytes2text *x, void *box, long msg, long arg, char *dstString);
 void bytes2text_convert(bytes2text *x, long nbytes, long pointerAsLong);
 void do_convert(bytes2text *x, long nbytes, char *buf);
@@ -75,20 +74,19 @@ void main(fptr *f)
 	// this is not necessary (but harmless) on PowerPC
 	FNS = f;	
 	
+	version(0);
+
 	/* tell Max about your class. The cast to short is important for 68K */
 	setup(&bytes2text_class, bytes2text_new, 0L, (short)sizeof(bytes2text), 0L, A_GIMME, 0);
 
 	/* bind your methods to symbols */
+	addmess((method)version, "version", 0);
 	addmess((method)bytes2text_assist, "assist", A_CANT, 0);
-	addmess((method)bytes2text_version, "version", 0);
 	
 	addmess((method)bytes2text_convert, "FullPacket", A_LONG, A_LONG, 0);
 	addmess((method)bytes2text_convert, "OTTCP_delim", A_LONG, A_LONG, 0);
 	addmess((method)bytes2text_convert, "OTTCP_nbytes", A_LONG, A_LONG, 0);
 		
-	post("bytes2text object version " BYTES2TEXT_VERSION " by Matt Wright. ");
-	post("Copyright © 1999 Regents of the University of California. All Rights Reserved.");
-
 	// restore old value of A4 (68K only)
 	RestoreA4(oldA4);
 }
@@ -111,12 +109,6 @@ void *bytes2text_new(Symbol *s, short argc, Atom *argv)
 }
 
 
-void bytes2text_version(bytes2text *x) {
-	EnterCallback();
-	post("bytes2text Version " BYTES2TEXT_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
-	ExitCallback();
-}
 
 void bytes2text_assist (bytes2text *x, void *box, long msg, long arg, char *dstString) {
 	EnterCallback();

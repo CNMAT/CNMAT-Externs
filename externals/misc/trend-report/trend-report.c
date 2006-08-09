@@ -40,6 +40,7 @@ VERSION 0.1: Matt's initial version.
  
 #include "ext.h"
 #include "version.h"
+#include "version.c"
 
 typedef struct TrendReport
 {
@@ -74,10 +75,10 @@ void OutputTrend(TrendReport *x);
 
 
 void main(fptr *f) {
+	version(0);
 	setup((t_messlist **)&class, (method)TrendReport_new, 0L, (short)sizeof(TrendReport), 0L, A_DEFFLOAT, 0);
 	addfloat((method)TrendReport_float);
 	addmess((method)version, "version", 0);
-	version(0);
 }
 
 void Reset(TrendReport *x) {

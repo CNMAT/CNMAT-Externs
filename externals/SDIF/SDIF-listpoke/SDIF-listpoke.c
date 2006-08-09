@@ -43,7 +43,7 @@ VERSION 0.2: Uses new version info system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
 
 
 
@@ -65,6 +65,8 @@ VERSION 0.2: Uses new version info system
 #undef fseek
 #undef sprintf
 #undef sscanf
+
+#include "version.c"
 
 #include <stdio.h>
 #include "SDIF-buffer.h"
@@ -115,7 +117,6 @@ static void SDIFlistpoke_numcolumns(SDIFlistpoke *x, long n);
 static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, Symbol *matrixType);
 static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
 static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
-static void SDIFlistpoke_version(SDIFlistpoke *x);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 
@@ -135,7 +136,7 @@ void main() {
 	SDIFresult r;
 	
 	
-	SDIFlistpoke_version(0);
+	version(0);
 	
 	r = SDIFmem_Init(my_getbytes, my_freebytes);
 	
@@ -147,9 +148,9 @@ void main() {
 			(short)sizeof(SDIFlistpoke), 0L, A_GIMME, 0);
 	
 	/* bind my methods to symbols */
+        addmess((method)version, "version", 0);
 	addmess((method)SDIFlistpoke_set, "set", A_SYM, 0);	
 	addmess((method)SDIFlistpoke_errorreporting, "errorreporting", A_LONG, 0);
-	addmess((method)SDIFlistpoke_version, "version", 0);
 	addmess((method)SDIFlistpoke_time, "time", A_FLOAT, 0);
 	addmess((method)SDIFlistpoke_numcolumns, "numcolumns", A_LONG, 0);
 	addmess((method)SDIFlistpoke_listpoke, "listpoke", A_GIMME, 0);
@@ -220,12 +221,6 @@ void *SDIFlistpoke_new(Symbol *dummy, short argc, Atom *argv) {
     x->t_num_columns = 1;
     
 	return (x);
-}
-
-static void SDIFlistpoke_version(SDIFlistpoke *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 static void LookupMyBuffer(SDIFlistpoke *x) {

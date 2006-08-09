@@ -40,16 +40,6 @@ VERSION 1.3: Implements "tellmeeverything"
 */
 
 
-
-/*
-	harmonics~.c
-	
-	©1996,1997,1998,1999,2000,01,02,03 UC Regents, All Rights Reserved. 
-
-	
-*/
-
-
 	/* harmonic oscillator bank */
 	/* sums a bunch of sinusoidal oscillators which are frequency locked to integer harmonics: great for glottal simulations, periodic pulse trains, etc */
 	/* a list of floats sets the amplitudes (and the length of the list sets the number harmonic partials) */
@@ -71,9 +61,11 @@ VERSION 1.3: Implements "tellmeeverything"
 	
 		
 */
-#include "version.h"
 
+#include "version.h"
 #include "ext.h"
+#include "version.c"
+
 #include "z_dsp.h"
 #include <math.h>
 
@@ -139,7 +131,6 @@ static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
 static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
 static void frequency_float(t_sinusoids *x, double ff);
 void harmonics_free(t_sinusoids *x);
-static void version(t_sinusoids *x);
 static void SineFunction(int n, float *stab, int stride, float from, float to);
 static void Makeoscsinetable();
 void tellmeeverything(t_sinusoids *x);
@@ -649,12 +640,6 @@ static void noisiness(t_sinusoids *x, double ff)
 		post("noisiness must be between 0.0 and 1.0: %d", f);
 }
 
-static void version(t_sinusoids *x) {
-
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-}
-
 void tellmeeverything(t_sinusoids *x) {
 	int i;
 	float f0 = x->next_phase_inc / x->pk;
@@ -674,9 +659,8 @@ void main(void)
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)harmonics_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 		  
-	post(NAME " object version " VERSION " by " AUTHORS ".");
+	version(0);
 	post("NB: still working on amplutide normalisation of thw wave outputs");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 #ifndef EXPIRE
     post("Never expires");

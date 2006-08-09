@@ -43,6 +43,7 @@ STATUS: supported
 
 #include "version.h"
 #include "ext.h"
+#include "version.c"
 #include "OSC-client.h"
 
 void *OSC_class;
@@ -65,7 +66,6 @@ typedef struct openSoundControl {
 
 void *OSC_new(long arg);
 void OSC_assist(OSC *x, void *b, long m, long a, char *s);
-void OSC_version (OSC *x);
 void OSC_debug (OSC *x);
 void OSC_errorreporting(OSC *x, int yesno);
 void OSC_reset (OSC *x);
@@ -99,8 +99,7 @@ void strcpy(char *s1, char *s2);
 #endif
 
 void main (fptr *f) {	
-	post("OpenSoundControl object version " VERSION " by Matt Wright");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.  ");
+        version(0);
 		
 	setup((t_messlist **)&OSC_class, (method) OSC_new,0L,(short)sizeof(OSC),0L,A_DEFLONG,0);
 
@@ -110,7 +109,7 @@ void main (fptr *f) {
 #endif
 
 	addmess((method)OSC_assist, "assist",	A_CANT,0);
-	addmess((method)OSC_version, "version", 	0);
+	addmess((method)version, "version", 	0);
 	addmess((method)OSC_debug, "debug", 	0);
 	addmess((method)OSC_errorreporting, "errorreporting", 	A_LONG, 0);
 	addmess((method)OSC_reset, "reset", 	0);
@@ -192,11 +191,6 @@ void *OSC_new(long arg) {
 
 void OSC_assist(OSC *x, void *b, long m, long a, char *s) {
 	assist_string(3009,m,a,1,2,s);
-}
-
-void OSC_version (OSC *x) {
-	post("OpenSoundControl Version " VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
 }
 
 void OSC_debug (OSC *x) {

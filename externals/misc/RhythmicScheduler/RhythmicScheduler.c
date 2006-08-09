@@ -39,9 +39,7 @@ VERSION 0.3: Has "clear" message
 */
 
 
-#include "version.h"
 
-#define RHYTHMICSCHEDULER_VERSION "0.3"
 #define DEFAULT_BUFFER_SIZE 1024
 #define DEFAULT_NUM_EVENTS 128
 #define DEFAULT_MAX_LIST_SIZE 16
@@ -49,7 +47,9 @@ VERSION 0.3: Has "clear" message
 
 
 /* the required include files */
+#include "version.h"
 #include "ext.h"
+#include "version.c"
 #include <SetUpA4.h>
 #include <A4Stuff.h>
 
@@ -92,7 +92,6 @@ void *RhythmicScheduler_class;
 void *RhythmicScheduler_new(long bufSize, long numEvents, long maxListSize);
 void RhythmicScheduler_free(RhythmicScheduler *x);
 void RhythmicScheduler_toggleVerbosity(RhythmicScheduler *x);
-void RhythmicScheduler_version(RhythmicScheduler *x);
 void RhythmicScheduler_setRefTatum(RhythmicScheduler *x, long referenceTatum);
 void RhythmicScheduler_setCurrentTatum(RhythmicScheduler *x, long newCurrentTatum);
 
@@ -113,11 +112,13 @@ void main(fptr *f) {
 	RememberA4();
 	
 	FNS = f;	
-	
+
+	version(0);
+
 	setup(&RhythmicScheduler_class, RhythmicScheduler_new, (method) RhythmicScheduler_free, 
 		  (short)sizeof(RhythmicScheduler), 0L, A_DEFLONG, A_DEFLONG, A_DEFLONG, 0);
 
-	addmess((method)RhythmicScheduler_version, "version", 	0);
+        addmess((method)version, "version", 0);
 	addmess((method)RhythmicScheduler_toggleVerbosity, "verbose", 	0);
 	addmess((method)RhythmicScheduler_setRefTatum, "reference_tatum", A_LONG, 0);
 	addmess((method)RhythmicScheduler_setCurrentTatum, "current_tatum", A_LONG, 0);
@@ -229,13 +230,6 @@ void RhythmicScheduler_toggleVerbosity(RhythmicScheduler *x) {
 	else
 		post("RhythmicScheduler: verbose off");
 	
-	ExitCallback();
-}
-
-void RhythmicScheduler_version(RhythmicScheduler *x) {
-	EnterCallback();
-	post("RhythmicScheduler Version " RHYTHMICSCHEDULER_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
 	ExitCallback();
 }
 

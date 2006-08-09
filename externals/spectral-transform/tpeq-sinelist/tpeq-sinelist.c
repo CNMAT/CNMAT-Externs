@@ -40,13 +40,13 @@ VERSION 0.1: More robust if out of memory in object creation
   */
  
 
-#define TPEQ_SINELIST_VERSION "0.0"
 #define RESOURCE_ID_WITH_ASSIST_STRINGS   12346
 
 /* the required include files */
 #include "ext.h"
-#include <SetUpA4.h>
-#include <A4Stuff.h>
+#include "version.h"
+#include "version.c"
+
 #include <math.h>
 
 #define NUM_KNOTS 10	/* Max # knots for a voice */
@@ -83,7 +83,6 @@ void *tpeq_sinelist_class;
 
 void *tpeq_sinelist_new(long maxpartials);
 void tpeq_sinelist_free(tpeq_sinelist *x);
-void tpeq_sinelist_version (tpeq_sinelist *x);
 void tpeq_sinelist_tellmeeverything (tpeq_sinelist *x);
 void tpeq_sinelist_assist (tpeq_sinelist *x, void *box, long msg, long arg, char *dstString);
 void tpeq_sinelist_points(tpeq_sinelist *x, Symbol *s, short argc, Atom *argv);
@@ -97,20 +96,19 @@ void RecomputeFunction(tpeq_sinelist *x, int numPartials);
 
 /* initialization routine */
 void main(fptr *f) {
+  version(0);
 	/* tell Max about your class. The cast to short is important for 68K */
 	setup(&tpeq_sinelist_class, tpeq_sinelist_new, (method) tpeq_sinelist_free, 
 		  (short)sizeof(tpeq_sinelist), 0L, A_DEFLONG, 0);
 	/* bind your methods to symbols */
 	addmess((method)tpeq_sinelist_assist, "assist", A_CANT, 0);
-	addmess((method)tpeq_sinelist_version, "version", 0);
+	addmess((method)version, "version", 0);
 	addmess((method)tpeq_sinelist_tellmeeverything, "tellmeeverything", 0);
 	addmess((method)tpeq_sinelist_list, "list", A_GIMME, 0);
 	addmess((method)tpeq_sinelist_points, "tpe_points", A_GIMME, 0);
 	
 	rescopy('STR#', RESOURCE_ID_WITH_ASSIST_STRINGS);
 	
-	post("tpeq_sinelist object version " TPEQ_SINELIST_VERSION " by Matt Wright. ");
-	post("Copyright © 1999 Regents of the University of California. All Rights Reserved.");
 }
 
 
@@ -151,14 +149,10 @@ void tpeq_sinelist_free(tpeq_sinelist *x) {
 	freebytes(x->partialFactors, x->maxpartials * sizeof(*(x->partialFactors)));
 }
 
-void tpeq_sinelist_version (tpeq_sinelist *x) {
-	post("tpeq_sinelist Version " TPEQ_SINELIST_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
-}
 
 void tpeq_sinelist_tellmeeverything (tpeq_sinelist *x) {
     int i;
-	tpeq_sinelist_version(x);
+	version(x);
 	
 	post("  x %p, x->outputlist %p, x->partialFactors %p", x, x->outputlist, x->partialFactors);
 	post("  %d maxpartials, %d max points", x->maxpartials, NUM_KNOTS);

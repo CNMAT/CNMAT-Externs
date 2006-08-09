@@ -47,6 +47,7 @@ VERSION 0.2: MachO compile, added version message
 
 #include "gridlock.h"
 #include "version.h"
+#include "version.c"
 
 // Define the max number of args.
 #define MAX_ARGS 2048
@@ -122,8 +123,6 @@ void OutputLydianChScale(
 	Symbol *mess,
 	int argc, 
 	Atom *argv);	
-
-void version(t_TJMSnapGrid *x);
 
 
 /**************************************************************************************
@@ -405,12 +404,3 @@ void Grid2Atom(Grid* grid, Atom *list)
 	}
 
 }
-
-void version(t_TJMSnapGrid *x) {
-    post(NAME " object version " VERSION " by " AUTHORS );
-    if (x) {
-      /* Not called from main(); */
-      post("  compiled " __TIME__ " " __DATE__);
-    }
-}
-

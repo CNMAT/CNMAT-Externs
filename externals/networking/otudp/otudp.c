@@ -89,13 +89,14 @@ the flow of control works, so here are some hints:
  */
 
 
-#define OTUDP_VERSION "3.0.1b"
 #define MAX_PACKET_SIZE 65536   // This is the limit for a UDP packet
 #define DEFAULT_BUFFER_SIZE  1024
 #define DEFAULT_NUM_BUFFERS 20 
 
 
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 
 /* We need to access the field "error" in the Open Transport TUDErr structure,
    so we have to undo the Max function table macro for error() */
@@ -182,7 +183,6 @@ static Boolean BufferSanityCheck(OTUDP *x, int *freep, int *pendingp, int *outgo
 static int CountPacketList(PacketBuffer l);
 
 void otudp_assist (OTUDP *x, void *box, long msg, long arg, char *dstString);
-void otudp_version(OTUDP *x);
 void otudp_debugstats(OTUDP *x);
 void otudp_resetdebugstats(OTUDP *x);
 void otudp_toggleErrorReporting(OTUDP *x);
@@ -201,7 +201,7 @@ void otudp_changeReceivePort(OTUDP *x, long port);
 #define MONTH 8
 #define MONTH1 -1
 #define DAY 1
-#define EXPIRATION_NOTICE "otudp object version " OTUDP_VERSION " has expired!"
+#define EXPIRATION_NOTICE "otudp object version " VERSION " has expired!"
 
 
 
@@ -236,11 +236,11 @@ void main(fptr *f) {
 
 	setup((t_messlist **)&otudp_class, (method)otudp_new, (method) otudp_free, (short)sizeof(OTUDP), 0L, A_GIMME, 0);
 	
-	post("otudp object version " OTUDP_VERSION " by Matt Wright. ");
+	version(0);
 #ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
 	post("Expires %d/%d/%d", MONTH, DAY, YEAR);
 #endif
-	post("Copyright © 1997,98,99,2000,2001 Regents of the University of California. All Rights Reserved.");
+
 
 #ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
 	GetTime(&date);
@@ -262,7 +262,7 @@ void main(fptr *f) {
 	
 	/* bind methods */
 	addmess((method) otudp_write, "FullPacket", A_LONG, A_LONG, 0);
-	addmess((method) otudp_version, "version", 0);
+	addmess((method) version, "version", 0);
 	addmess((method) otudp_toggleErrorReporting, "errorreporting", 0);
 	addmess((method) otudp_tellmeeverything, "tellmeeverything", 0);
 	addmess((method) otudp_old_write, "write", A_GIMME, 0);
@@ -988,11 +988,6 @@ void PostUDERR(char *source, EndpointRef ep) {
 
 /* My methods */
 
-void otudp_version (OTUDP *x) {
-	post("OTUDP (Open Transport UDP) Version " OTUDP_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
-}
-
 void otudp_toggleErrorReporting(OTUDP *x) {
 	if (x->o_errorreporting) {
 		post("OTUDP: Turning off error reporting.  What you don't know can't hurt you.");
@@ -1111,7 +1106,7 @@ void otudp_tellmeeverything(OTUDP *x) {
 	int free, pending, outgoing;
 	
 	post("otudp_tellmeeverything: You asked for it");
-	otudp_version(x);
+	version(x);
 	
 	post("  Thanks: James McCartney, Adrian Freed, David Zicarelli, Chris Brown, Keith McMillen, etc.");
 	

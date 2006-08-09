@@ -32,7 +32,7 @@ University of California, Berkeley.
 /*
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: ottcp
+NAME: OTTCP (Open Transport TCP)
 DESCRIPTION: Open Transport TCP object for Max - client (a.k.a. active) side only.  Never really tested or debugged.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
@@ -82,7 +82,6 @@ On disconnect, reset all buffers
  */
 
 #define DEBUG
-#define OTTCP_VERSION "0.0"
 #define DEFAULT_BUFFER_SIZE  1024
 #define MAX_TO_READ_LOOKING_FOR_DELIMITER 128
 
@@ -195,7 +194,6 @@ void ottcp_write(OTTCP *x, long size, long bufferPointer);
 void do_write(OTTCP *x, long length, void *bytes);
 void AddToWriteBuffer(OTTCP *x, long length, char *bytes);
 void ottcp_assist (OTTCP *x, void *box, long msg, long arg, char *dstString);
-void ottcp_version(OTTCP *x);
 void ottcp_ErrorReporting(OTTCP *x, long yesno);
 void ottcp_tellmeeverything(OTTCP *x);
 long strlen (const char *s);
@@ -205,7 +203,7 @@ long strlen (const char *s);
 #define MONTH 8
 #define MONTH1 -1
 #define DAY 1
-#define EXPIRATION_NOTICE "ottcp object version " OTTCP_VERSION " has expired!"
+#define EXPIRATION_NOTICE "ottcp object version " VERSION " has expired!"
 
 /* initialization routine */
 
@@ -249,11 +247,10 @@ void main(fptr *f) {
 
 	setup(&ottcp_class, ottcp_new, (method) ottcp_free, (short)sizeof(OTTCP), 0L, A_GIMME, 0);
 	
-	post("ottcp object version " OTTCP_VERSION " by Matt Wright. ");
+	version(0);
 #ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
 	post("Expires %d/%d/%d", MONTH, DAY, YEAR);
 #endif
-	post("Copyright © 1999 Regents of the University of California. All Rights Reserved.");
 
 #ifdef DAVID_LIKES_EXPIRING_MAX_OBJECTS
 	GetTime(&date);
@@ -280,7 +277,7 @@ void main(fptr *f) {
 	addmess((method) ottcp_read_until_delimiter_symbol, "delim", A_SYM, 0);
 	addmess((method) ottcp_read_until_delimiter_bytes, "delim-bytes", A_GIMME, 0);
 	addmess((method) ottcp_write, "write", A_LONG, A_LONG, 0);
-	addmess((method) ottcp_version, "version", 0);
+	addmess((method) version, "version", 0);
 	addmess((method) ottcp_ErrorReporting, "errorreporting", 0);
 	addmess((method) ottcp_tellmeeverything, "tellmeeverything", 0);
 	addmess((method) ottcp_assist, "assist", A_CANT, 0);
@@ -1392,12 +1389,6 @@ void ottcp_assist (OTTCP *x, void *box, long msg, long arg, char *dstString) {
 	ExitCallback();
 }
 
-void ottcp_version (OTTCP *x) {
-	EnterCallback();
-	post("OTTCP (Open Transport TCP) Version " OTTCP_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
-	ExitCallback();
-}
 
 void ottcp_ErrorReporting(OTTCP *x, long yesno) {
 	EnterCallback();
@@ -1417,7 +1408,7 @@ void ottcp_tellmeeverything(OTTCP *x) {
 
 	EnterCallback();
 	post("ottcp_tellmeeverything: You asked for it");
-	ottcp_version(x);
+	version(x);
 	
 	post("  This object error does %sreport errors", x->o_errorreporting ? "" : "not ");
 	post("  state: %s", StateName(x->o_state));

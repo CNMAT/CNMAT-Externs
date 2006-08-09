@@ -49,17 +49,18 @@ VERSION 0.9.1: (12/28/04) Fixed bug (in sdif-buf.c) of crashing when reading non
 VERSION 0.9.2: Uses new version info system
 VERSION 0.9.2a: UB compile
 VERSION 0.9.3: Proper cross-platform method for opening an SDIF file in Max's search path
+VERSION 0.9.3v: Change in implementation of version method
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
 #include "version.h"
 
-#define SDIF_BUFFER_VERSION "0.9.1"
-
 /* the required include files */
 
 
 #include "ext.h"
+#include "version.c"
+
 #include <limits.h>
 #include <string.h>
 
@@ -146,23 +147,18 @@ void my_freebytes(void *bytes, int size) {
 	freebytes(bytes, (short) size);
 }
 
-void SDIFbuffer_version (SDIFBuffer *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
-}
 
 void main(fptr *fp) {
 	SDIFresult r;
 	
-	SDIFbuffer_version(0);
-	
+	version(0);
+		
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFbuffer_class, (method)SDIFbuffer_new, (method)SDIFbuffer_free,
 			(short)sizeof(SDIFBuffer), 0L, A_SYM, A_DEFSYM, 0);
 	
 	/* bind my methods to symbols */
-	addmess((method)SDIFbuffer_version, "version", 0);	
+	addmess((method)version, "version", 0);	
 	addmess((method)SDIFbuffer_readstreamnumber, "read-stream-number", A_SYM, A_LONG, 0);
 	addmess((method)SDIFbuffer_streamlist, "streamlist", A_GIMME, 0);
 	addmess((method)SDIFbuffer_framelist, "framelist", A_GIMME, 0);
@@ -222,6 +218,7 @@ void main(fptr *fp) {
 		post("¥ SDIF-buffer: warning: SDIF-buffer-lookup s_thing not zero.");
 	}
 	ps_SDIF_buffer_lookup->s_thing = (void *) MySDIFBufferLookupFunction;
+
 }
 
 void *SDIFbuffer_new(Symbol *name, Symbol *filename) {

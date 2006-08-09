@@ -48,16 +48,9 @@ VERSION 1.7: Zero Pad mode
 
 
 #include "version.h"
-
-/* #include <fp.h>
-#include <fenv.h> */
-/* #include <math.h> */
 #include "ext.h"
+#include "version.c"
 
-/*
-#include "typedefs.h"
-#include "common.h"
-*/
 
 
 fptr *FNS;

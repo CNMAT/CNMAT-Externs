@@ -29,11 +29,11 @@ University of California, Berkeley.
 
 SVN_REVISION: $LastChangedRevision$
 DESCRIPTION:  Convert binary buffers (e.g., from received UDP packets) to max lists where each byte of the buffer is a separate Max int.
+VERSION 0.0: original version
   
  */
  
 
-#define BYTES2INTS_VERSION "0.0"
 #define DEFAULT_MAX_LIST_LENGTH 256
 
 
@@ -62,7 +62,6 @@ void *bytes2ints_class;
 
 void *bytes2ints_new(long listlen);
 void bytes2ints_free(bytes2ints *x);
-void bytes2ints_version (bytes2ints *x);
 void bytes2ints_assist (bytes2ints *x, void *box, long msg, long arg, char *dstString);
 void bytes2ints_convert(bytes2ints *x, long nbytes, long pointerAsLong);
 void do_convert(bytes2ints *x, long nbytes, char *buf);
@@ -79,20 +78,20 @@ void main(fptr *f)
 	// this is not necessary (but harmless) on PowerPC
 	FNS = f;	
 	
+	version(0);
+
 	/* tell Max about your class. The cast to short is important for 68K */
 	setup(&bytes2ints_class, bytes2ints_new, (method) bytes2ints_free, 
 		  (short)sizeof(bytes2ints), 0L, A_DEFLONG, 0);
 
 	/* bind your methods to symbols */
 	addmess((method)bytes2ints_assist, "assist", A_CANT, 0);
-	addmess((method)bytes2ints_version, "version", 0);
+	addmess((method)version, "version", 0);
 	
 	addmess((method)bytes2ints_convert, "FullPacket", A_LONG, A_LONG, 0);
 	addmess((method)bytes2ints_convert, "OTTCP_delim", A_LONG, A_LONG, 0);
 	addmess((method)bytes2ints_convert, "OTTCP_nbytes", A_LONG, A_LONG, 0);
 		
-	post("bytes2ints object version " BYTES2INTS_VERSION " by Matt Wright. ");
-	post("Copyright © 2000 Regents of the University of California. All Rights Reserved.");
 
 	// restore old value of A4 (68K only)
 	RestoreA4(oldA4);
@@ -127,12 +126,6 @@ void bytes2ints_free(bytes2ints *x) {
 	freebytes(x->b_list, (short) (x->b_listlen * sizeof(Atom)));
 }
 
-void bytes2ints_version(bytes2ints *x) {
-	EnterCallback();
-	post("bytes2ints Version " BYTES2INTS_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
-	ExitCallback();
-}
 
 void bytes2ints_assist (bytes2ints *x, void *box, long msg, long arg, char *dstString) {
 	EnterCallback();

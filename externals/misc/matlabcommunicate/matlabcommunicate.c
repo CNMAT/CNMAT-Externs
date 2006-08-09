@@ -40,6 +40,7 @@ VERSION 1.1.2: Fixed bug so Matlab disp() works
 
 #include "version.h"
 #include "ext.h"
+#include "version.c"
 #include "z_dsp.h"
 #include "engine.h"
 #include "buffer.h"
@@ -79,7 +80,6 @@ void theobject_free(t_theobject *x);
 void theobject_closeEngine(t_theobject *x);
 static int MaxListToString(char *s, int capacity, short argc, t_atom *argv);
 void theobject_verbose(t_theobject *x, long yesno);
-void matlabbridge_version (t_theobject *x);
 static t_buffer *SymbolToBuffer(t_symbol *s);
 void matlabbridge_buffer2matlab(t_theobject *x, Symbol *buffername, Symbol *matlabVariable, Symbol *matlabSR);
 void matlabbridge_bufferchan2matlab(t_theobject *x, Symbol *buffername, int chan, Symbol *matlabVariable, Symbol *matlabSR);
@@ -102,6 +102,7 @@ static void analyze_double(t_theobject *x, const mxArray *array_ptr);
 
 void main(void)
 {
+  version(0);
   setup((t_messlist **)&theobject_class, (method)theobject_new, (method)theobject_free, (short)sizeof(t_theobject), 0L, A_GIMME, 0);
   // dsp_initclass();
   // addmess((method)theobject_dsp, "dsp", A_CANT, 0);
@@ -113,15 +114,12 @@ void main(void)
   // addbang((method)theobject_bang);
   addmess((method)theobject_list, "list", A_GIMME, 0);
   addmess((method)theobject_verbose, "verbose", A_LONG, 0);
-  addmess((method)matlabbridge_version, "version", 0);
+  addmess((method)version, "version", 0);
 
   addmess((method)matlabbridge_buffer2matlab, "buffer2matlab", A_SYM, A_SYM, A_DEFSYM, 0);
   addmess((method)matlabbridge_bufferchan2matlab, "buffer-channel2matlab", A_SYM, A_LONG, A_SYM, A_DEFSYM, 0);
   addmess((method)matlabbridge_matlab2buffer, "matlab2buffer", A_SYM, A_SYM, A_DEFFLOAT, 0);
   addmess((method)matlabbridge_matlab2bufferchan, "matlab2buffer-channel", A_SYM, A_SYM, A_LONG, A_DEFFLOAT, 0);
-  
-  post(NAME " object version " VERSION " by " AUTHORS ".");
-  post("Copyright ¨ " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
   
   ps_ssh = gensym("ssh");
   ps_buffer = gensym("buffer~");
@@ -392,11 +390,6 @@ static int MaxListToString(char *s, int capacity, short argc, t_atom *argv) {
 void theobject_verbose(t_theobject *x, long yesno) {
 	x->verbose = yesno;
 	post("matlabcommunicate: verbose %s", yesno ? "on" : "off");
-}
-
-void matlabbridge_version (t_theobject *x) {
-  post(NAME " version " VERSION ", by " AUTHORS ". ");
-  post("Compiled " __TIME__ " " __DATE__);
 }
 
 

@@ -29,7 +29,7 @@ David Zicarelli.
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: lcm
+NAME: lcm (least common multiple)
 DESCRIPTION: Least common multiple
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
@@ -40,10 +40,9 @@ VERSION 0.1: Matt's initial version, 3/29/98.
 */
 
    
-#define LCM_VERSION "0.1"   
 #include "ext.h"
-#include <SetUpA4.h>
-#include <A4Stuff.h>
+#include "version.h"
+#include "version.c"
 
 #define MAXSIZE 32
 
@@ -70,8 +69,7 @@ void lcm_in6(LCM *x, long n);
 void lcm_in7(LCM *x, long n);
 void lcm_in8(LCM *x, long n);
 void lcm_in9(LCM *x, long n);
-void lcm_spew(LCM *x);
-void lcm_version(LCM *x);
+void lcm_tellmeeverything(LCM *x);
 
 void lcm_list(LCM *x, Symbol *s, short ac, Atom *av);
 void *lcm_new(Symbol *s, short ac, Atom *av);
@@ -83,8 +81,6 @@ void lcm_findLCM(LCM *x);
 void main(fptr *f)
 {
 	
-	EnterCodeResource();
-	PrepareCallback();
 	FNS = f;	
 		
 	setup(&class, lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
@@ -101,109 +97,74 @@ void main(fptr *f)
 	addinx((method)lcm_in9,9);
 	addmess((method)lcm_list,"list",A_GIMME,0);
 	
-	addmess((method)lcm_spew,"spew",0);
-	addmess((method)lcm_version,"version",0);
+	addmess((method)lcm_tellmeeverything,"tellmeeverything",0);
+	addmess((method)version,"version",0);
 
 	finder_addclass("Arith/Logic/Bitwise","lcm");
 	
-	post("lcm object version " LCM_VERSION " by Matt Wright. ");
-	post("Copyright © 1998 Regents of the University of California. All Rights Reserved.");
-	
-	ExitCodeResource();
+	version(0);
 }
 
 void lcm_bang(LCM *x) {	
-	EnterCallback();
 	lcm_findLCM(x);
 	outlet_int(x->l_out,x->l_theLCM);
-	ExitCallback();
 }
 
 void lcm_int(LCM *x, long n)
 {
-	EnterCallback();
 	x->l_args[0] = n;
 	lcm_bang(x);
-	ExitCallback();
 }
 
 void lcm_in1(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[1] = n;
-	ExitCallback();
 }
 
 void lcm_in2(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[2] = n;
-	ExitCallback();
 }
 
 void lcm_in3(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[3] = n;
-	ExitCallback();
 }
 
 void lcm_in4(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[4] = n;
-	ExitCallback();
 }
 
 void lcm_in5(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[5] = n;
-	ExitCallback();
 }
 
 void lcm_in6(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[6] = n;
-	ExitCallback();
 }
 
 void lcm_in7(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[7] = n;
-	ExitCallback();
 }
 
 void lcm_in8(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[8] = n;
-	ExitCallback();
 }
 
 void lcm_in9(LCM *x, long n) {
-	EnterCallback();
 	x->l_args[9] = n;
-	ExitCallback();
 }
 
-void lcm_spew(LCM *x) {
+void lcm_tellmeeverything(LCM *x) {
 	int i;
-	EnterCallback();
 	post("LCM object has %ld numbers:", x->l_count);
 	for (i = 0; i < x->l_count; ++i) {
 		post("  %ld", x->l_args[i]);
 	}
 	post("LCM of those numbers is %ld", x->l_theLCM);
-	ExitCallback();
 }
 
-
-void lcm_version (LCM *x) {
-	EnterCallback();
-	post("lcm (least common multiple) Version " LCM_VERSION
-		  ", by Matt Wright. Compiled " __TIME__ " " __DATE__);	
-	ExitCallback();
-}
 
 void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 {
 	register short i;
-	EnterCallback();
 	if (ac > 10)
 		ac = 10;
 	for (i=0; i < ac; i++,av++) {
@@ -219,7 +180,6 @@ void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 	x->l_count = ac;
 
 	lcm_bang(x);
-	ExitCallback();
 }
 
 
@@ -227,7 +187,6 @@ void *lcm_new(Symbol *s, short ac, Atom *av)
 {
 	LCM *x;
 	
-	EnterCallback();
 	x = (LCM *)newobject(class);
 	
 	x->l_args[0] = 1;
@@ -255,7 +214,6 @@ void *lcm_new(Symbol *s, short ac, Atom *av)
 	}
 	
 	x->l_out = intout(x);
-	ExitCallback();
 	return (x);
 }
 

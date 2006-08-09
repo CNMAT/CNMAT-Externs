@@ -46,7 +46,7 @@ To-Do:  use opendialog to present a dialog box to the user
 */
 
 
-#include "version.h"
+#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
 
 #include "ext.h"
 /* Undo ext.h's macro versions of some of stdio.h: */
@@ -57,6 +57,8 @@ To-Do:  use opendialog to present a dialog box to the user
 #undef fseek
 #undef sprintf
 #undef sscanf
+
+#include "version.c"
 
 #include <stdio.h>
 #include <string.h>
@@ -97,7 +99,6 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name);
 
 void SDIFfileinfo_output(t_sdif_fileinfo *x);
-void SDIFfileinfo_version(t_sdif_fileinfo *x);
 
 
 void *sdif_fileinfo_class;
@@ -109,7 +110,7 @@ void main(void)
 {	
 	SDIFresult r;
 
-	SDIFfileinfo_version(0);
+	version(0);
 
 	if (r = SDIF_Init()) {
 		ouchstring(NAME ": Couldn't initialize SDIF library! %s",
@@ -120,7 +121,7 @@ void main(void)
 		  (short)sizeof(t_sdif_fileinfo), 0L, A_GIMME, 0);
 	addbang((method)sdif_fileinfo_bang);
 	addmess((method)sdif_fileinfo_clear, "clear", 0);
-	addmess((method)SDIFfileinfo_version, "version", 0);
+	addmess((method)version, "version", 0);
 	addmess((method)sdif_fileinfo_scan, "scan", A_SYM, 0);
 
 	
@@ -139,14 +140,6 @@ void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av) {
 	
 	sdif_fileinfo_clear(x);
 	return (x);
-}
-
-
-
-void SDIFfileinfo_version (t_sdif_fileinfo *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
 }
 
 

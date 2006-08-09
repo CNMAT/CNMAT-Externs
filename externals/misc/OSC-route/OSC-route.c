@@ -66,6 +66,8 @@ VERSION 1.13: Debugged crash problem introduced in 1.12
 /* the required include files */
 #include "version.h"
 #include "ext.h"
+#include "version.c"
+
 #include "OSC-pattern-match.h"
 
 /* structure definition of your object */

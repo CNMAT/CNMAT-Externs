@@ -42,10 +42,11 @@ VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
 
 /* the required include files */
 #include "ext.h"
+#include "version.c"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -125,13 +126,6 @@ void SDIFimport_test(SDIFImport *x);
 void *SDIFimport_class;
 static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
 
-void version (SDIFImport *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-    post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California.");
-}
-
-
 void main(fptr *fp) 
 {
 	SDIFresult r;
@@ -142,6 +136,7 @@ void main(fptr *fp)
 			(short)sizeof(SDIFImport), 0L, A_GIMME, A_NOTHING);
 	
 	/* bind my methods to symbols */
+        addmess((method)version, "version", 0);
 	addmess((method)SDIFimport_import, "import", A_SYM, A_NOTHING);
 	addmess((method)SDIFimport_debug, "debug", A_LONG, A_NOTHING);
 	addmess((method)SDIFimport_test, "test", A_NOTHING);

@@ -65,8 +65,8 @@ VERSION 0.2.3: Compiles for CFM and MachO
 
 
 #include "version.h"
-
 #include "ext.h"
+#include "version.c"
 
 // Define the max number of parameters per oscillator (not including index).
 #define MAX_PARTIAL_PARAMS 5
@@ -217,15 +217,14 @@ void threefates_tellmeeverything(t_threefates *x);
 void main(fptr *f)
 {
 	
-	post("threefates " VERSION " - Tim Madden and Matt Wright");
-	post("Copyright ©2000-04 Regents of the University of California.");
-	
+	version(0);	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&threefates_class, (method) threefates_new, (method) threefates_free,
 			(short)sizeof(t_threefates), 0L, A_DEFLONG, A_DEFLONG, 0);
 			
 			
 	// post("size %ld", sizeof(t_threefates));
+	addmess((method)version, "version", 0);
 	addmess((method)List, "list", A_GIMME, 0);
 	addmess((method)threefates_tellmeeverything, "tellmeeverything", 0);
 	
@@ -811,7 +810,8 @@ void threefates_tellmeeverything(t_threefates *x) {
    int i, j;
    Atom a;
    
-   post("--- threefates version " VERSION " ---");
+   version(x);
+
    post(" up to %ld oscillators, %ld params each (so input list length <= %ld, output list length <= %ld)",
         x->max_osc, x->num_partial_parameters, x->max_inargs, x->max_outargs);
    post(" Present frame has %ld values:", GetPresentAC(x));

@@ -41,6 +41,7 @@ VERSION 0.4: Accepts single floats or integers
 
 #include "version.h"
 #include "ext.h"
+#include "version.c"
 
 struct listAccum *listAccumNew(long);
 void listAccumFree(struct listAccum *);
@@ -200,6 +201,5 @@ void main(fptr *f) {
 
 	finder_addclass("Data","listAccum");
 	
-	post("listAccum: A max list accumulator.  By Michael Lee and Matt Wright.");
-	post("Copyright © 1996-2005 Regents of the University of California.  All rights reseved.");
+	version(0);
 }

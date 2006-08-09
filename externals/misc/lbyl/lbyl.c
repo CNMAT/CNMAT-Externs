@@ -46,8 +46,8 @@ Version history:
  
 // #define DEBUG	
 #include "version.h"
- 
 #include "ext.h"
+#include "version.c"
 
 
 #define RINGBUF_SIZE 100
@@ -80,7 +80,6 @@ void *class;
 void *LBYL_new(Symbol *s, float tolerance, long quota);
 void LBYL_tolerance(LBYL *x, double t);
 void LBYL_quota(LBYL *x, long q);
-void LBYL_version(LBYL *x);
 void LBYL_tellmeeverything(LBYL *x);
 static int Near(float x, float y, float tolerance);
 void LBYL_float(LBYL *x, double d);
@@ -94,13 +93,13 @@ static float PastInput(LBYL *x, int ago);
 
 
 void main(fptr *f) {
-	LBYL_version(0);
+	version(0);
 	setup((t_messlist **)&class, (method)LBYL_new, 0L, (short)sizeof(LBYL), 0L, 
 		  A_DEFFLOAT, A_DEFLONG, 0);
-	addfloat((method)LBYL_float);
-	addint((method)LBYL_int);
+        addmess((method) version, "version", 0);
+	addfloat((method) LBYL_float);
+	addint((method) LBYL_int);
 	addmess((method) LBYL_tellmeeverything, "tellmeeverything", 0);
-	addmess((method) LBYL_version, "version", 0);
 	addmess((method) LBYL_tolerance, "tolerance", A_FLOAT, 0);
 	addmess((method) LBYL_quota, "quota", A_LONG, 0);
 	addmess((method) Reset, "reset", 0);
@@ -152,18 +151,10 @@ void LBYL_quota(LBYL *x, long q) {
 	}
 }			  
 
-void LBYL_version(LBYL *x) {
-	post(NAME " object version " VERSION " by " AUTHORS );
-	if (x) {
-		/* Not called from main(); */
-		post("  compiled " __TIME__ " " __DATE__);
-	}
-}
-
 void LBYL_tellmeeverything(LBYL *x) {
 	int numToPrint, i;
 
-	LBYL_version(x);
+	version(x);
 	post("  Tolerance: %f", x->tolerance);
 	post("  Quota: %ld", x->quota);
 	post("  %ld input values have been seen", x->numSeen);

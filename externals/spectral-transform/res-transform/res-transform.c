@@ -31,7 +31,7 @@ University of California, Berkeley.
 NAME: res-transform 
 AUTHORS: Adrian Freed, Matt Wright, and Michael Zbyszynski
 DESCRIPTION: Set of basic transformations for resonance models
-COPYRIGHT_YEARS: 1996,97,98,99,2000,2001,2002,2003,2004,2005,2006
+COPYRIGHT_YEARS: 1996-2006
 SVN_REVISION: $LastChangedRevision: 406$
 VERSION 1.2: by Matt Wright: compiles with CW 7 and new Max/MSP SDK
 VERSION 1.3: by Matt Wright has "setoneamplitude", "setonefrequency", "setonerate", and "setone"
@@ -61,11 +61,12 @@ Future:
 	
 */
 
-#include "version.h"
 
 
 #include <math.h>
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 
 
 
@@ -186,7 +187,6 @@ static void fulllist(fobj *x, struct symbol *s, int argc, struct atom *argv);
 void more_resonances(fobj *x, struct symbol *s, int argc, struct atom *argv);
 static void resondump(fobj *x, struct symbol *s, int argc, Atom *argv);
 static void enddump(fobj *x, struct symbol *s, int argc, struct atom *argv);
-static void version(fobj *x);
 static void tellmeeverything(fobj *x);
 void numresonances(fobj *x);
 
@@ -948,19 +948,11 @@ void main(fptr *f)		/* called once at launch to define this class */
 	addmess((method)version, "version", 0);
 
 	addbang( (method) resondump  );
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("  Copyright © 1986,1987 Adrian Freed");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
-
+	version(0);
+	post("  Portions copyright (c) 1986,1987 Adrian Freed");
 }
 
-static void version(fobj *x) {
-
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
-}
-
- static void reson_assist(fobj *x, void *b, long m, long a, char *s) 
+static void reson_assist(fobj *x, void *b, long m, long a, char *s) 
 {
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"(list)to resonators~");

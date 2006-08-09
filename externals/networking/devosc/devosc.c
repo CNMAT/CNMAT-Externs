@@ -37,6 +37,8 @@ SVN_REVISION: $LastChangedRevision$
 
 #include "version.h"
 #include "ext.h"
+#include "version.c"
+
 #include <fcntl.h>
 
 
@@ -74,7 +76,6 @@ void devosc_open(devosc *x);
 void devosc_close(devosc *x);
 void devosc_free(devosc *x);
 void devosc_assist(devosc *x, void *b, long m, long a, char *s);
-void devosc_version (devosc *x);
 void devosc_debug (devosc *x);
 void devosc_errorreporting(devosc *x, int yesno);
 void devosc_packetsize(devosc *x, long size);
@@ -111,14 +112,12 @@ void main (void) {
 	pointer_to_fcntl = (pp_fcntl)CFBundleGetFunctionPointerForName(bundle, CFSTR("fcntl"));
 	pointer_to_stat = (pp_stat)CFBundleGetFunctionPointerForName(bundle, CFSTR("stat"));
 	
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
-		
+	version(0);
 	setup((t_messlist **)&devosc_class, (method) devosc_new, (method) devosc_free,
 		  (short)sizeof(devosc),0L,A_DEFLONG,0);
 
 	addmess((method)devosc_assist, "assist",	A_CANT,0);
-	addmess((method)devosc_version, "version", 	0);
+	addmess((method)version, "version", 	0);
 	addmess((method)devosc_open, "open", 	0);
 	addmess((method)devosc_close, "close", 	0);
 	addmess((method)devosc_packetsize, "packetsize", 	A_LONG, 0);
@@ -207,11 +206,6 @@ void devosc_close(devosc *x) {
 
 
 void devosc_assist(devosc *x, void *b, long m, long a, char *s) {
-}
-
-void devosc_version (devosc *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
 }
 
 void devosc_debug (devosc *x) {
