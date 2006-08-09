@@ -23,7 +23,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories="&quot;..\..\c74support\max-includes&quot;"
+				AdditionalIncludeDirectories="&quot;..\..\..\c74support\max-includes&quot;"
 				PreprocessorDefinitions="WIN_VERSION;WIN32;_DEBUG;_WINDOWS;_USRDLL;WIN_EXT_VERSION;"
 				MinimalRebuild="TRUE"
 				ExceptionHandling="FALSE"
@@ -46,7 +46,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies=".\..\..\c74support\max-includes\MaxAPI.lib"
+				AdditionalDependencies=".\..\..\..\c74support\max-includes\MaxAPI.lib"
 				OutputFile=".\..\..\sysbuild\win_debug\externals\list-interpolate.mxe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -125,7 +125,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies=".\..\..\c74support\max-includes\MaxAPI.lib"
+				AdditionalDependencies=".\..\..\..\c74support\max-includes\MaxAPI.lib"
 				OutputFile=".\..\..\sysbuild\win_release\externals\list-interpolate.mxe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -177,7 +177,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\..\c74support\max-includes\common\dllmain_win.c">
+				RelativePath="..\..\..\c74support\max-includes\common\dllmain_win.c">
 			</File>
 			<File
 				RelativePath=".\list-interpolate.c">
