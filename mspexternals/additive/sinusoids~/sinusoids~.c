@@ -42,8 +42,9 @@ VERSION 1.7.3: Changed name (in version system) to have the tilde.
 
 */
 
-#include "version.h"
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 #include "z_dsp.h"
 #include <math.h>
 
@@ -457,8 +458,8 @@ void main(void)
 {
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+
+	version(0);
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
     post("Never expires");
     
@@ -467,6 +468,7 @@ void main(void)
 
 
 
+	addmess((method)version, "version", 0);
 	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
 	addmess((method)sinusoids_list, "list", A_GIMME, 0);
 	addmess((method)sinusoids_clear, "clear", 0);

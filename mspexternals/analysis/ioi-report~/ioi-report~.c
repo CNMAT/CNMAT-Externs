@@ -42,8 +42,9 @@ VERSION 0.2: 050714 added way to set min and max ioi time
 #define RINGBUF_SIZE 2048
 #define MAX_LISTLEN 512
 
-#include "version.h"
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 #include "z_dsp.h"
 
 void *ioi_report_class;
@@ -76,7 +77,6 @@ typedef struct _ioi_report
 
 
 void main(void);
-void ioi_report_version (t_ioi_report *x);
 void ioi_report_assist(t_ioi_report *x, void *b, long m, long a, char *s);
 void *ioi_report_new(Symbol *s, short argc, Atom *argv);
 void ioi_report_free(t_ioi_report *x);
@@ -93,14 +93,14 @@ void ioi_report_max_iois_per_event(t_ioi_report *x, long max);
 
 void main(void) {
 
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+  
+	version(0);
 
     setup((t_messlist **)&ioi_report_class, (method) ioi_report_new, (method)ioi_report_free, 
     	  (short)sizeof(t_ioi_report), 0L, A_GIMME, 0);
     addmess((method)ioi_report_dsp, "dsp", A_CANT, 0);
     addmess((method)ioi_report_dsp, "reset", 0);
-    addmess((method)ioi_report_version, "version", 0);
+    addmess((method)version, "version", 0);
     addmess((method)ioi_report_assist,"assist",A_CANT,0);
     addmess((method)ioi_report_min_ioi_time, "min_ioi", A_LONG, 0);
     addmess((method)ioi_report_max_ioi_time, "max_ioi", A_LONG, 0);
@@ -108,11 +108,6 @@ void main(void) {
 
     dsp_initclass();
     rescopy('STR#',3241);
-}
-
-void ioi_report_version (t_ioi_report *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);	
 }
 
 

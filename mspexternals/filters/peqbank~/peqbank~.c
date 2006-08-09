@@ -53,7 +53,6 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 */
 
 
-#define PEQBANK_VERSION "2.0alpha"
 
 /* How smooth mode works:
 
@@ -92,6 +91,8 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 
 
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 #include "z_dsp.h"
 #include <Memory.h>
 #include <math.h>
@@ -183,16 +184,13 @@ void compute_parameq(t_peqbank *x, int index);
 void compute_shelf(t_peqbank *x); 
 float pow10(float x);
 float pow2(float x);
-void peqbank_version(t_peqbank *x);
 void peqbank_tellmeeverything(t_peqbank *x);
 
 int test_normal_state(t_peqbank *x);
 int test_newcoeffs_state(t_peqbank *x);
 
 void main(void) {
-
-	post("peqbank version " PEQBANK_VERSION " by Tristan Jehan");
-	post("Copyright © 1999,2000,01,02 Regents of the University of California.");
+        version(0);
 
 	ps_maxelem = gensym("maxelem");
 	ps_shelf   = gensym("shelf");
@@ -228,7 +226,7 @@ void main(void) {
 	addmess((method)peqbank_smooth, "smooth", A_GIMME, 0);
 	addmess((method)peqbank_clear, "clear", 0);
 	addmess((method)peqbank_assist, "assist", A_CANT, 0);
-	addmess((method)peqbank_version, "version", 0);
+	addmess((method)version, "version", 0);
 	addmess((method)peqbank_tellmeeverything, "tellmeeverything", 0);
 	addmess((method)peqbank_biquads, "biquads", A_GIMME);
 	
@@ -237,18 +235,10 @@ void main(void) {
 	//rescopy('STR#', RES_ID);
 }
 
-void peqbank_version(t_peqbank *x) {
-	post("peqbank~ Version " PEQBANK_VERSION
-		  ", by Tristan Jehan. Compiled " __TIME__ " " __DATE__);
-#ifdef EXPIRE
-	post(EXPIRATION_STRING);
-#endif
-}
-
 void peqbank_tellmeeverything(t_peqbank *x) {
 	int i;
 	
-	peqbank_version(x);
+	version(x);
 
     if (x->b_version == SMOOTH) {
     	post("  Smooth mode: coefficients linearly interpolated over one MSP vector");
