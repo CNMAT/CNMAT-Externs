@@ -167,6 +167,7 @@ win: $(WIN_BINARY) $(WIN_INDIVIDUAL_DOWNLOAD)
 # start over with a recursive call to $(MAKE)
 version.h: $(OBJ_INFO)
 	perl ../../../info2header.pl < $(OBJ_INFO) > $@
+	cat ../../../utility-library/version/version.c >> $@
 	$(MAKE) $(MAKECMDGOALS)
 
 # Make sure the build directory is really there
