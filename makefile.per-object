@@ -230,7 +230,7 @@ $(CFM_BINARY): $(SOURCE) $(REZ_FILE) version.h $(CODEWARRIOR_BUILD_DIR_EXISTS)
 	@cmp -s version.h /dev/null
 
 $(WIN_BINARY): $(SOURCE) version.h $(VCC_HELPFILE_COPY) 
-#  echo "Start VCC!!"
+	echo "Start VCC!!"
 
 
 #START_OVER_ERROR = $(error Please run make again.)
