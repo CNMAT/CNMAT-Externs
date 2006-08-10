@@ -165,10 +165,13 @@ win: $(WIN_BINARY) $(WIN_INDIVIDUAL_DOWNLOAD)
 # The version info is extracted from the .c file by Andy's perl script.
 # Because some makefile variables (e.g., VERSION_TAG) come from version.h,
 # start over with a recursive call to $(MAKE)
-version.h: $(OBJ_INFO)
+version.h: $(OBJ_INFO) version.c
 	perl ../../../info2header.pl < $(OBJ_INFO) > $@
-	cat ../../../utility-library/version/version.c >> $@
 	$(MAKE) $(MAKECMDGOALS)
+
+ORIGINAL_VERSION_C = ../../../utility-library/version/version.c
+version.c: $(ORIGINAL_VERSION_C)
+	cp $< $@
 
 # Make sure the build directory is really there
 $(CODEWARRIOR_BUILD_DIR_EXISTS):
@@ -220,7 +223,7 @@ $(MACHO_BINARY): $(SOURCE) version.h $(XCODE_HELPFILE_COPY)
 # We first rename the MAC binary because CodeWarrior will sometimes "build" a "new"
 # binary (even making the slamming sound) by doing nothing, resulting in the binary
 # file still having an older date than the source file.
-$(CFM_BINARY): $(SOURCE) $(REZ_FILE) version.h $(CODEWARRIOR_BUILD_DIR_EXISTS)
+$(CFM_BINARY): $(SOURCE) $(REZ_FILE) version.h $(CODEWARRIOR_BUILD_DIR_EXISTS) $(CODEWARRIOR_HELPFILE_COPY)
 	@echo getting ready to make $(CFM_BINARY)
 	@touch $(CFM_BINARY)  # so there will be something to move
 	@mv -f $(CFM_BINARY) $(CFM_BINARY).backup
