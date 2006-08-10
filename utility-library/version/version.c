@@ -4,9 +4,15 @@ on which external it is, so we factored it out.
 
 We could have changed all the projects to include
 ../../../utility-library/version/version.c in their list of source files,
-but instead Matt hacked the Makefile to insert this file at the end of
-the version.h file that's made automatically.  So we're being naughty by
-defining a C procedure in a .h file. */
+but instead Matt hacked the Makefile to copy this file to each object's
+local directory as part of the build process, and we added
+
+     #include "version.c"
+
+to each object's .c file, *after* the #include "ext.h", because we
+need the definition of post().
+
+So we're being naughty by including a .c file. */
 
 void version(void *x);
 
