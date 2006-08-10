@@ -33,7 +33,7 @@ import com.cycling74.max.*;
 public class tc_editor extends MaxObject
 {
 	public void version() {
-		post("tc_editor version 0.1  - accepts input");
+		post("tc_editor version 0.11  - fixes row 0 bug");
 	}
 
 	private static final String[] INLET_ASSIST = new String[]{
@@ -61,6 +61,7 @@ public class tc_editor extends MaxObject
 	// user-settable modes
 	private boolean auto_order = true;
 	private boolean verbose = false;
+	private int first_data_row = 1;
 
 
 	private int dump_mode;		// How to handle incoming dumped data
@@ -189,17 +190,21 @@ public class tc_editor extends MaxObject
 		 nrows = larger_nrows;
 	 }
 
-	 public void clear_contents() {
+	 private void clear_contents() {
 		for (int i = 0; i < ncols; ++i) {
-			clear_column(i);	
+			clear_column(i, 0);	
 		}
 	}
 
+	public void clearall() {
+		clear_contents();
+		outlet(0, "clear", new Atom[] { Atom.newAtom("all")});
+	}
 
-	private void clear_column(int i) {
+	private void clear_column(int i, int rowsToKeep) {
 		java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
 		if (col != null) {
-			for (int j = 0; j < col.size(); ++j) {
+			for (int j = rowsToKeep; j < col.size(); ++j) {
 				col.set(j,null);
 			}
 		}
@@ -220,6 +225,7 @@ public class tc_editor extends MaxObject
 
 	public int highest_row_in_use() {
 		int answer = -1;
+		// Skip column 0, since it's just times that this object writes
 		for (int i = 1; i<ncols; ++i) {
 			java.util.ArrayList col = (java.util.ArrayList) contents.get(i);
 			for (int j = answer+1; j < col.size(); ++j) {
@@ -236,6 +242,11 @@ public class tc_editor extends MaxObject
 
 
 	private void store(int col, int row, Atom[] data) {
+		if (col < 0 || row < 0) {
+			post("Ack! column number ("+col+") and row number ("+row+") must be nonnegative!");
+			return;
+		}
+
 		if (row>nrows) {
 			post("Ack!  Trying to store row " + row + " but data only has " + nrows);
 			return;
@@ -267,6 +278,15 @@ public class tc_editor extends MaxObject
 		post("automatic reordering mode " + auto_order);
 	}
 
+	public void labelrow(int l) {
+		last_command_was_input = false;
+		if (l == 0) {
+			first_data_row = 0;
+		} else {
+			first_data_row = 1;
+		}
+		post("labelrow " + first_data_row);
+	}
 
 	public void bang()
 	{
@@ -643,7 +663,7 @@ public class tc_editor extends MaxObject
 		// output all commands in this column to the message box and the tempocurver object
 		// row 0 is reserved for title (voice name or whatever)
 
-		for (int i = 1; i < col.size(); ++i) {
+		for (int i = first_data_row; i < col.size(); ++i) {
 			cell c =  (cell) col.get(i);
 			if (c != null) {
 				
@@ -706,14 +726,16 @@ public class tc_editor extends MaxObject
 		}
 
 		if (!last_command_was_input) {
-			clear_column(column);
-			last_import_row = 0;
+			clear_column(column, first_data_row);
+			last_import_row =  first_data_row - 1;
+			// post("** reset last_import_row  to " + last_import_row );
 		}
 		last_command_was_input = true;
 
 
 		last_import_row++;
 		
+		// post("** Gonna write command to row " + last_import_row );
 		col.set(last_import_row, new cell(command));
 
 		refresh_cellblock();
@@ -721,6 +743,10 @@ public class tc_editor extends MaxObject
 		
 	}
 }
+
+
+
+
 
 
 
