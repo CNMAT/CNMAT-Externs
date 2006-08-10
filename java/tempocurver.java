@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.7 - optional cheat mode");
+		post("tempocurver version 2.8 - nowait_phase methods");
 	}
  
 	private double current_phase;
@@ -171,13 +171,17 @@ public class tempocurver extends MSPPerformer {
 		}
 	}
 
-	public void reset() {
+	public void reset(double freq, double phase) {
 		clear();
 		synchronized(this) {
-			current_freq = 0.f;
-			current_phase = 0.;
+			current_freq = freq;
+			current_phase = phase;
 		}
-		if (verbose) post("reset");
+		if (verbose) post("reset to freq " + freq + ", phase " + phase);
+ 	}
+
+	public void reset() {
+		reset(0.,0.);
 	}
 
 	public void clear() {
@@ -342,6 +346,7 @@ public class tempocurver extends MSPPerformer {
 			return;
 		}
 
+		/// xxx make it output just the wait time, separate from the plan message
 		outlet(2,"/plan",
 			   new Atom[]{ Atom.newAtom(0.), Atom.newAtom(current_freq),
 						   Atom.newAtom(wait), Atom.newAtom(current_freq),
@@ -363,9 +368,8 @@ public class tempocurver extends MSPPerformer {
 	// A "fracbeat" is a fractional beat number, a sort of unwrapped phase.
 	private double target_fracbeat_linear(float t, double start_freq, double start_phase, 
                                          double end_freq, double end_phase) {
-		// Compute the ending fractional beat number based on a steady tempo ramp starting immediately
-		// Trivial in the linear case: average freq times elapsed time
-		double end_phase_starting_now = start_phase + t * (start_freq + end_freq) * 0.5f;
+
+		double end_phase_starting_now = end_phase_of_linear_ramp(start_phase, t, start_freq, end_freq);
 		// Cast to int will round down
 		int int_beats = (int) (end_phase_starting_now - end_phase);
 		double target = int_beats + end_phase;
@@ -378,6 +382,36 @@ public class tempocurver extends MSPPerformer {
 			target += 1.f;
 		}
 		return target;
+	}
+
+	private double end_phase_of_linear_ramp(double start_phase, float t, double start_freq, double end_freq) {
+		// Compute the ending fractional beat number based on a steady tempo ramp starting immediately
+		// Trivial in the linear case: average freq times elapsed time	
+		return  start_phase + (start_freq + end_freq) * (t * 0.5f);
+	}
+
+	public void nowait_phase(double start_freq, double start_phase, float t, double end_freq) {
+		float end_phase = (float) end_phase_of_linear_ramp(start_phase, t, start_freq, end_freq);
+
+		outlet(2,"/nowait_phase",
+				   new Atom[]{ Atom.newAtom(start_freq),
+							   Atom.newAtom(start_phase),
+							   Atom.newAtom(t),
+							   Atom.newAtom(end_freq),
+							   Atom.newAtom(end_phase) });
+	}
+
+	public void nowait_phase(float t, double end_freq) {
+		// If only 2 arguments, it means to start from current phase and frequency
+		double start_freq, start_phase;
+
+
+		synchronized(this) {
+			start_phase = current_phase;
+			start_freq = current_freq;
+		}
+
+		nowait_phase(start_freq, start_phase, t, end_freq);
 	}
 
 
@@ -654,11 +688,15 @@ public class tempocurver extends MSPPerformer {
 					tf = target_freq;
 					stt = samps_to_target;
 				};
+				
+				float duration_of_ramp = ((float)stt) * oneoversr;
 
 				outlet(2,"/starting-ramp",
-					   new Atom[]{ Atom.newAtom((tf-f)/ (((float)stt) * oneoversr)), 
+					   new Atom[]{ Atom.newAtom((tf-f)/ duration_of_ramp), 
 						       Atom.newAtom(f), 
 						       Atom.newAtom(tf) });
+
+				// xxx make it also output the duration of the ramp
 				synchronized(this) { mode = RAMP; };
 				do_perform(ins, outs, i+stw);
 			}
@@ -735,6 +773,8 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
 
 
 
