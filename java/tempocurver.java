@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.8 - nowait_phase methods");
+		post("tempocurver version 2.9 - predict_wait methods");
 	}
  
 	private double current_phase;
@@ -425,6 +425,28 @@ public class tempocurver extends MSPPerformer {
 		return (float) answer;
 	}
 
+	public void predict_wait(double start_freq, double start_phase, 
+							 float t, double end_freq, double end_phase) {
+
+
+		post("predict_wait( " + start_freq + ", " + start_phase + ", " + t + ", " + end_freq + ", " + end_phase + ")");
+
+		double end_fracbeat = target_fracbeat_linear(t, start_freq, start_phase, end_freq, end_phase);
+
+		post("  end_fracbeat " + end_fracbeat);
+
+		float wait = how_long_to_wait(t,  start_freq, start_phase, end_freq, end_fracbeat);
+
+		post("  wait " + wait);
+
+		outlet(2,"/predict_wait",
+				   new Atom[]{ Atom.newAtom(start_freq),
+							   Atom.newAtom(start_phase),
+							   Atom.newAtom(t),
+							   Atom.newAtom(end_freq),
+							   Atom.newAtom(end_fracbeat),
+							   Atom.newAtom(wait) });
+	}
 
 
 	public void dspsetup(MSPSignal[] ins, MSPSignal[] outs)
@@ -773,6 +795,8 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
 
 
 
