@@ -1,7 +1,7 @@
 /*
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2004, The Regents of 
+University of California, Berkeley.  Copyright (c) 2004-06, The Regents of 
 the University of California (Regents).  
 
 Permission to use, copy, modify, distribute, and distribute modified versions
@@ -25,17 +25,22 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 NAME: 2threshattack~
 DESCRIPTION: Two-threshold attack detector, aka a Schmitt Trigger (http://en.wikipedia.org/wiki/Schmitt_trigger)
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2004,05,06
+COPYRIGHT_YEARS: 2004-06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version (5/31/4)
+VERSION 0.2: UB recompile 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
 
-#define TTA_VERSION "0.1"
 
 #include "ext.h"
+#include "version.h"
+#include "version.c"
+
 #include "z_dsp.h"
+
+
 
 void *tta_class;
 
@@ -60,11 +65,10 @@ void tta_set_high(t_tta *x, double high);
 void tta_tellmeeverything(t_tta *x);
 
 void main(void) {
-	post("tta~ version " TTA_VERSION " by Matt Wright");
-	post("Copyright © 2004 Regents of the University of California.");
-
+    version(0);
     setup((t_messlist **)&tta_class, (method)tta_new, (method)dsp_free,
           (short)sizeof(t_tta), 0L, A_DEFFLOAT, A_DEFFLOAT, 0);
+    addmess((method)version, "version", 0);
     addmess((method)tta_dsp, "dsp", A_CANT, 0);
     addmess((method)tta_set_low, "low", A_FLOAT, 0);
     addmess((method)tta_set_high, "high", A_FLOAT, 0);
@@ -83,7 +87,7 @@ void *tta_new(double l, double h) {
     x->event_outlet = listout (x);	
 	outlet_new((t_object *)x,"signal");
 	
-	// post("Args: taua %f, taur %f", taua, taur);
+	// post("Args: low %f, high %f", l, h);
 	
 	if (l == 0.0) {
 		l = 0.25;
