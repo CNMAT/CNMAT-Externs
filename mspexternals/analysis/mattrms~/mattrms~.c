@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2002.  The Regents of the University of California
+Copyright (c) 2002-06.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -41,9 +41,11 @@ VERSION 0.2: has "continuous" mode
 */
 
 
-#define MATTRMS_VERSION "0.2"
 
 #include "ext.h"
+#include "version.h"
+#include "version.c"
+
 #include "z_dsp.h"
 #include <math.h>
 
@@ -75,13 +77,13 @@ t_int *mattrms_perform(t_int *w);
 
 
 void main(void) {
-	post("mattrms~ version " MATTRMS_VERSION " by Matt Wright");
-	post("Copyright © 2002 Regents of the University of California.  ");
+	version(0);
 	post("  output format:  sum-of-squares num-counted mean-of-squares sqrt-of-mean-of-squares");
 	
     setup((t_messlist **)&mattrms_class, (method)mattrms_new, (method)dsp_free, (short)sizeof(t_mattrms),
           0L, 0);
     addint((method)mattrms_int);
+    addmess((method)version, "version", 0);
     addmess((method)mattrms_dsp, "dsp", A_CANT, 0);
     addmess((method)mattrms_continuous, "continuous", A_LONG, 0);
     dsp_initclass();
@@ -156,12 +158,11 @@ void mattrms_dsp(t_mattrms *x, t_signal **sp, short *count) {
 int bogus = 0;
 
 t_int *mattrms_perform(t_int *w) {
-	t_float val;
     t_mattrms *x = (t_mattrms *)(w[1]);  // object
     t_float *in = (t_float *)(w[2]); // input
     int size = w[3]; // vector size
     
-	int g, i, j;
+	int i;
 	
 	for (i = 0; i < size; ++i) {
 		x->sumsquared += (in[i] * in[i]);
