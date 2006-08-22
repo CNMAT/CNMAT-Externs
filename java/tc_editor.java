@@ -28,12 +28,19 @@ University of California, Berkeley.
 
 */
 
+/* To-do
+
+There seems to be a bug: when "labelrow" is 1, and you write new commands into the cellblock,
+they go into row 0 instead of row 1.
+
+*/
+
 import com.cycling74.max.*;
 
 public class tc_editor extends MaxObject
 {
 	public void version() {
-		post("tc_editor version 0.11  - fixes row 0 bug");
+		post("tc_editor version 0.13  - fixed bug where inputting more stuff would cause error");
 	}
 
 	private static final String[] INLET_ASSIST = new String[]{
@@ -61,7 +68,7 @@ public class tc_editor extends MaxObject
 	// user-settable modes
 	private boolean auto_order = true;
 	private boolean verbose = false;
-	private int first_data_row = 1;
+	private int first_data_row = 0;
 
 
 	private int dump_mode;		// How to handle incoming dumped data
@@ -197,6 +204,7 @@ public class tc_editor extends MaxObject
 	}
 
 	public void clearall() {
+		last_command_was_input = false;
 		clear_contents();
 		outlet(0, "clear", new Atom[] { Atom.newAtom("all")});
 	}
@@ -555,7 +563,10 @@ public class tc_editor extends MaxObject
 		java.util.Arrays.fill(indices, 0);
 		
 		java.util.Iterator iter = all_start_times.iterator();
-		int outputRow = 0;
+        // Start outputting into the first data row (in case there's a label row)
+		int outputRow = first_data_row;
+		// No, output the labels into row 0
+		outputRow = 0;
 
 		while (iter.hasNext()) {
 			float thisTime = ((java.lang.Float) iter.next()).floatValue();
@@ -736,22 +747,14 @@ public class tc_editor extends MaxObject
 		last_import_row++;
 		
 		// post("** Gonna write command to row " + last_import_row );
-		col.set(last_import_row, new cell(command));
+		// col.ensureCapacity(last_import_row+1);
+		col.add(last_import_row, new cell(command));
 
 		refresh_cellblock();
 		if (auto_order) order();
 		
 	}
 }
-
-
-
-
-
-
-
-
-
 
 
 
