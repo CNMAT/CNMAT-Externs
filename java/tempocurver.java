@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 2.9 - predict_wait methods");
+		post("tempocurver version 3.0c - 'jumping' signal outlet");
 	}
  
 	private double current_phase;
@@ -56,7 +56,7 @@ public class tempocurver extends MSPPerformer {
 	private boolean verbose;
 	private boolean offline;	// If true, then perform() always returns all zeros
 	private boolean cheat;		// Jump to exact tempo+phase after a ramp?
-
+	private boolean just_reset;
 
 	private java.util.LinkedList to_do_list;
 
@@ -100,18 +100,20 @@ public class tempocurver extends MSPPerformer {
 		mode = IDLE;
 		verbose = true;
 		cheat = false;
+		just_reset = false;
 		sr = 44100;	// Default in case pretend_perform is called before DSP turned on
 		oneoversr = 1/sr;
 		to_do_list = new java.util.LinkedList();
 
 		declareInlets(new int[]{DataTypes.ALL});
-		declareOutlets(new int[]{SIGNAL,SIGNAL,DataTypes.MESSAGE});
+		declareOutlets(new int[]{SIGNAL,SIGNAL,SIGNAL,DataTypes.MESSAGE});
 		createInfoOutlet(false);
 		setInletAssist(new String[]{
 			"List: target tempo (BPS), target phase (0-1), time to get there"});
 		setOutletAssist( new String[]{
 			"beat phase (sig)",
 			"tempo (beats/sec) (sig)",
+			"jumping (0=no, 1=yes) (sig)",
 			"OSC messages"
 		});
 		version();
@@ -176,6 +178,7 @@ public class tempocurver extends MSPPerformer {
 		synchronized(this) {
 			current_freq = freq;
 			current_phase = phase;
+			just_reset = true;
 		}
 		if (verbose) post("reset to freq " + freq + ", phase " + phase);
  	}
@@ -526,9 +529,20 @@ public class tempocurver extends MSPPerformer {
 	public void perform(MSPSignal[] ins, MSPSignal[] outs) {
 		if (offline) {
 			for (int i = 0; i < outs[0].n; ++i) {
-				outs[0].vec[i] = outs[1].vec[i] = 0.0f;
+				outs[0].vec[i] = outs[1].vec[i] = outs[2].vec[i] = 0.0f;
 			}
 		} else {
+			// Default is not to be jumping
+			for (int i = 0; i < outs[0].n; ++i) {
+				outs[2].vec[i] = 0.0f;
+			}
+			// Unless we just reset
+			synchronized(this) {
+				if (just_reset) {
+					outs[2].vec[0] = 1.0f;
+					just_reset = false;
+				}
+			}
 			do_perform(ins, outs, 0);
 		}
 	}
@@ -667,6 +681,8 @@ public class tempocurver extends MSPPerformer {
 					} else if (e.type == JUMP) {
 						// Set state variables and output
 						do_jump(e);
+						// Indicate in the "jumped" signal outlet that a jump happened
+						outs[2].vec[i] = 1.0f;
 						// Carry on; leave mode as IDLE so next recursion will start next segment
 					} else if (e.type == RAMP) {
 						plan_ramp(e);
@@ -795,6 +811,13 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
+
+
+
 
 
 
