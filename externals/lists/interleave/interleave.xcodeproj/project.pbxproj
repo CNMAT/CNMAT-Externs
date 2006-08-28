@@ -8,15 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		BE07396D0A75631C004E491A /* interleave.c in Sources */ = {isa = PBXBuildFile; fileRef = BE07396C0A75631C004E491A /* interleave.c */; };
-		BEFA62500A8160ED007B4E66 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFA624F0A8160ED007B4E66 /* MaxAPI.framework */; };
+		BEFA61D70A815FC8007B4E66 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFA61D60A815FC8007B4E66 /* MaxAPI.framework */; };
+		C9D9317B0A8D371000293691 /* interleave.c in Sources */ = {isa = PBXBuildFile; fileRef = C9D9317A0A8D371000293691 /* interleave.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		8D01CCD20486CAD60068D4B7 /* interleave.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = interleave.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE07396C0A75631C004E491A /* interleave.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = interleave.c; sourceTree = "<group>"; };
-		BEFA624F0A8160ED007B4E66 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		BEFA61D60A815FC8007B4E66 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		C9D9317A0A8D371000293691 /* interleave.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = interleave.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,7 +25,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				BEFA62500A8160ED007B4E66 /* MaxAPI.framework in Frameworks */,
+				BEFA61D70A815FC8007B4E66 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,7 +46,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BEFA624F0A8160ED007B4E66 /* MaxAPI.framework */,
+				BEFA61D60A815FC8007B4E66 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -62,7 +62,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				BE07396C0A75631C004E491A /* interleave.c */,
+				C9D9317A0A8D371000293691 /* interleave.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -148,7 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE07396D0A75631C004E491A /* interleave.c in Sources */,
+				C9D9317B0A8D371000293691 /* interleave.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,7 +162,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK";
+				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -205,7 +205,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK";
+				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -240,7 +240,7 @@
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK";
+				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

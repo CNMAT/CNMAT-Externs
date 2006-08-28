@@ -33,6 +33,7 @@ AUTHORS: Tim Madden
 COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.0: Tim's original version
+VERSION 1.1: UB recompile
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -58,9 +59,10 @@ VERSION 1.0: Tim's original version
  * Includes.
  */
  
-#define INTERLEAVE_VERSION "1.0"
-
 #include "ext.h"
+#include "version.h"
+#include "version.c"
+
 
 // Define the max number of args.
 #define MAX_INARGS 256
@@ -186,7 +188,6 @@ void List(
 	int argc, 
 	Atom *argv);
 	
-void interleave_version (t_Interleave *x);
 
 /**************************************************************************************
  * Set up object.
@@ -210,11 +211,11 @@ void main(void)
 	addmess((method)List3, "list3", A_GIMME, 0);
 	addmess((method)List4, "list4", A_GIMME, 0);
 	addmess((method)Output, "output", A_GIMME, 0);
-	addmess((method)interleave_version, "version", 0);
+	addmess((method)version, "version", 0);
 
 	ps_list = gensym("list");
 
-
+	version(0);
 }
 
 
@@ -629,10 +630,3 @@ void List4guts(
 	
 	x->sublist_sizes[3] = argc;
 }
-
-
-void interleave_version (t_Interleave *x) {
-	post("interleave Version " INTERLEAVE_VERSION
-		  ", by Tim Madden. Compiled " __TIME__ " " __DATE__);	
-}
-
