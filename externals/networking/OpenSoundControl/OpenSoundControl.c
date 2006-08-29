@@ -38,6 +38,7 @@ VERSION 1.8: has errorreporting mode, compiles under CW7 and Max 4 SDK
 VERSION 1.9:: Cleaned up and fixed copyright for open-sourcing
 VERSION 1.9.1: rudimentary blob support
 VERSION 1.9.2: Builds CFM and MachO from the same code
+VERSION 1.9.3: Same as 1.9.2
 STATUS: supported
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         
