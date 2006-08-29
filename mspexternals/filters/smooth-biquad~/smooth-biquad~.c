@@ -27,7 +27,7 @@ University of California, Berkeley.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: smooth-biquad~
-DESCRIPTION: smooth-biquad~ is just like biquad~ except that new coefficient updates are "smoothed": the object linearly interpolates the coefficients from the old value to the new value over one MSP signal processing vector.
+DESCRIPTION: smooth-biquad~ is just like biquad~ except that new coefficient updates are "smoothed" to avoid clicks and other undesirable artifacts: the object linearly interpolates the coefficients from the old value to the new value over one MSP signal processing vector.
 AUTHORS: Tristan Jehan, Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
