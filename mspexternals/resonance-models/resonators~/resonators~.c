@@ -31,9 +31,10 @@ University of California, Berkeley.
 	©1999, 2005 UC Regents, All Rights Reserved. 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: resonators~
-DESCRIPTION: MSP resonator Bank
+DESCRIPTION: Parallel bank of resonant filters
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1996-2006
+PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
 VERSION 1.6: Compiles under 7/02 Max SDK and CW 7.0 
 VERSION 1.7: Doesn't get smooth/unsmooth backwards
 VERSION 1.7a: first windows compile
