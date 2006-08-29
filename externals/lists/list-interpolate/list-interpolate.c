@@ -27,7 +27,8 @@ University of California, Berkeley.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: list-interpolate
-DESCRIPTION: Linearly interpolate two lists element-wise
+DESCRIPTION: Linearly interpolate two lists of numbers element-wise
+PUBLICATION: http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
 AUTHORS: Adrian Freed and Matt Wright
 COPYRIGHT_YEARS: 2000,01,02,03,04,05
 SVN_REVISION: $LastChangedRevision$
