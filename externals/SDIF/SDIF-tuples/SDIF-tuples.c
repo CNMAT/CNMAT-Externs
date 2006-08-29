@@ -34,6 +34,7 @@ University of California, Berkeley. Interpolation support by Ben "Jacobs".
 NAME: SDIF-tuples
 DESCRIPTION: Extract "tuples" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list.
 AUTHORS: Matt Wright and Ben "Jacobs" 
+PUBLICATION: http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.2: includes reltime
