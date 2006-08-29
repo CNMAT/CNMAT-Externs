@@ -28,7 +28,7 @@ University of California, Berkeley.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: decaying-sinusoids~
-DESCRIPTION: MSP Bank of exponentially decaying sinusoids
+DESCRIPTION: Additive synthesis of a bank of exponentially decaying sinusoids
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
