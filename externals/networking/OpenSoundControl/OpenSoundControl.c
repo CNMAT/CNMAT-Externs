@@ -26,8 +26,9 @@ NAME: OpenSoundControl
 DESCRIPTION: Format Max data to <A href="http://www.cnmat.berkeley.edu/OpenSoundControl">OpenSoundControl</a> protocol and vice versa
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
-PUBLICATION: http://www.cnmat.berkeley.edu/ICMC97/papers-html/OpenSoundControl.html
-PUBLICATION: http://www.cnmat.berkeley.edu/Research/NIME2003/NIME03_Wright.pdf
+PUBLICATION: ICMC 97 paper | http://www.cnmat.berkeley.edu/ICMC97/papers-html/OpenSoundControl.html
+PUBLICATION: NIME 03 paper | http://www.cnmat.berkeley.edu/Research/NIME2003/NIME03_Wright.pdf
+PUBLICATION: Community web portal | http://www.opensoundcontrol.org
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.2: was still version 1.1 on 68K; 1.3 is the same for both.
 VERSION 1.4: has 3 outlets
