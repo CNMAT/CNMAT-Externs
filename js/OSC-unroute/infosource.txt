@@ -1,7 +1,7 @@
 /*
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: OSC-unroute
-DESCRIPTION: Opposite of OSC-route: prepends bits of OSC addresses to existing OSC messages
+DESCRIPTION: Opposite of OSC-route: prepends bits of OSC addresses to existing OSC messages (javascript)
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision$
