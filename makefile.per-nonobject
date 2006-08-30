@@ -1,0 +1,179 @@
+# makefile.per-nonobject
+# This is included in the makefile for everything we release that's Max-related but not an external
+# Matt Wright, 2006
+
+PLATFORM = ANY
+
+# Name of the object is the name of this directory
+# Old way (cygwin "basename" doesn't seem to work) NAME := $(shell basename `pwd`)
+# Nothing in CNMAT's repository should have any whitespace in file or directory
+# names, so we'll just blithely use $(lastword ...) to remove everything before
+# the final space in the current directory before we pass it to $(notdir ...).
+# Otherwise $(notdir ...) will think that each space-delimited segment of the
+# current directory is a separate input, and return an answer with spaces,
+# which will blow up the rest of the Makefile.
+# in case the full path to the working directory has white space.
+NAME = $(notdir $(lastword $(strip $(CURDIR))))
+
+# Making the version number accessible from this Makefile:
+#
+# Each version.h file has a line that looks like this:  
+#     #define VERSION "1.2.3.4"
+# so get a Makefile variable that's just something like "1.2.3.4"
+DOUBLEQUOTED_VERSION := $(word 3,$(shell grep -s '\#define VERSION ' version.h))
+# now a cheesy way to get rid of the double quotes:
+VERSION := $(shell echo $(DOUBLEQUOTED_VERSION))
+VERSION_TAG := _$(VERSION)
+
+# Ditto for status
+DOUBLEQUOTED_STATUS := $(word 3,$(shell grep -s STATUS version.h))
+STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
+
+
+# INFO_FILE is info about this thing, in the name/value table format
+# If this is a Javascript or Java object, the name/value table should be in the source code
+# Otherwise it's in $(DEFAULT_INFO_FILE)
+DEFAULT_INFO_FILE := infosource.txt
+POSSIBLE_JS_SOURCE_FILE := $(NAME).js
+POSSIBLE_JAVA_SOURCE_FILE := $(NAME).java
+JS_SOURCE_FILE := $(shell ls $(POSSIBLE_JS_SOURCE_FILE) 2>/dev/null)
+JAVA_SOURCE_FILE := $(shell ls $(POSSIBLE_JAVA_SOURCE_FILE) 2>/dev/null)
+INFO_FILE = $(if $(JAVA_SOURCE_FILE), $(JAVA_SOURCE_FILE), \
+		 $(if $(JS_SOURCE_FILE), $(JS_SOURCE_FILE), $(DEFAULT_INFO_FILE)))
+
+
+# INFO_FILE2 is the output of Andy's perl script on INFO_FILE
+INFO_FILE2 = $(NAME)-info.txt
+
+# WEB_INFO is the same as INFO_FILE2 plus some extra info (like BUILD_DIR, BUILD_DATE...)
+# added by this Makefile
+WEB_INFO = $(NAME)-ANY-info.txt
+
+# What the user will download
+# DOWNLOAD_ARCHIVE = $(NAME).tar.gz
+DOWNLOAD_ARCHIVE = $(NAME)$(VERSION_TAG).zip
+
+# What will be copied into the "incoming" directory to make the downloads page see this release
+WEB_INCOMING = $(NAME)-ANY.tar.gz
+
+# Tar can't take a list of files to exclude on the command line, so we have to write them into this file
+EXCLUDE_FILES_FILE = files-to-exclude.txt
+
+# files not to put in the archives we show the user (and to remove with "make clean")
+GENERATED_FILES = version.h $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE)
+EXCLUDE_FILES = infosource.txt Makefile makefile $(GENERATED_FILES) *~ *.zip
+
+# Where files live on our web server
+WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
+# WEBSERVER_INCOMING_DIR = /tmp/incoming
+
+
+
+# Top-level build targets
+
+.PHONY: default
+default: download-archive
+
+.PHONY: download-archive
+download-archive: $(DOWNLOAD_ARCHIVE)
+
+$(EXCLUDE_FILES_FILE):
+	echo $(EXCLUDE_FILES) | tr "[:space:]" "\n" > $@
+
+# The version info is extracted from the .c file by Andy's perl script.
+# Because some makefile variables (e.g., VERSION_TAG) come from version.h,
+# start over with a recursive call to $(MAKE), but then bomb out of the outer
+# invocation of Make (which presumably has the wrong VERSION_TAG, etc., and
+# will therefore be doing bad things).
+version.h: $(INFO_FILE2) 
+	perl ../../info2header.pl < $< > $@ 
+	$(MAKE) $(MAKECMDGOALS) 
+	@echo -n 'Ignore the following error message: '
+	@cmp -s version.h /dev/null
+
+$(INFO_FILE2): $(INFO_FILE)
+	perl ../../commentkeys.pl < $< > $@
+
+# for now assume we'll never publish non-objects from a Windows box.  
+# Otherwise this will break:
+MD5 = $(if $(findstring WIN, $(PLATFORM)), md5sum, md5 -q)
+
+# a "canned command sequence" because it's the same for all platforms:
+# Note the use of "$<" in the MD5 computation; this means that the per-platform individual download
+# must be the first prerequisite for any XXX_WEB_INFO rule.
+define make-web-info
+	cp $(INFO_FILE2) $@ 
+	echo MD5: `$(MD5) $< | awk '{print $$1}'` >> $@
+	echo 'PLATFORM: "$(PLATFORM)"' >> $@
+	echo 'BUILDER: "'`whoami`'"' >> $@
+	echo 'BUILD_DATE: "'`date`'"' >> $@
+	echo 'BUILD_DIR: "'`pwd`'"' >> $@
+endef
+
+$(WEB_INFO): $(DOWNLOAD_ARCHIVE) $(INFO_FILE2)
+	$(make-web-info)
+
+
+$(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *))) $(EXCLUDE_FILES_FILE) version.h
+	echo $*
+#	tar --unlink -czf $(DOWNLOAD_ARCHIVE) * --exclude-from $(EXCLUDE_FILES_FILE)
+	rm -f $(DOWNLOAD_ARCHIVE)
+	zip $(DOWNLOAD_ARCHIVE) * -x $(EXCLUDE_FILES)
+
+# For any release, make sure the code is checked in before allowing the release
+release: code-checked-in
+
+# Ensuring that the current code has been properly checked into Subversion
+.PHONY: code-checked-in
+code-checked-in:
+	@ !((svn status | grep "^M") && \
+	(echo You have modified files that have not been checked back into SVN\!))
+
+# Explanation of above:  Grep returns status 0 if the text was found (i.e., if there are un-checked-in files.
+# So (svn status | grep "^M") && (echo ...)  prints the error only if the text was found.
+# Echo always returns 0, so the return value of the && operator is 0 if an error was printed, 1 otherwise,
+# so I put a logical negation (exclamation point) before the whole thing, so that Make will bomb out
+# if the error is printed.
+
+
+# Actually copying the files to directories where the web server can find them
+
+
+release: $(WEB_INCOMING)
+	scp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
+
+
+.PHONY: web-incoming
+web-incoming: $(WEB_INCOMING)
+
+$(WEB_INCOMING): code-checked-in $(DOWNLOAD_ARCHIVE) $(WEB_INFO) 
+	tar cvfz $@ $(DOWNLOAD_ARCHIVE) $(WEB_INFO) 
+
+
+.PHONY: clean
+clean:
+	rm -f $(GENERATED_FILES) *~ *.zip
+
+
+# Diagnostic stuff for debugging
+
+printenv:
+	printenv
+
+tellversiontag:
+	echo $(VERSION_TAG)
+
+test: 
+	echo CURDIR $(CURDIR)
+	echo NAME $(NAME)
+	echo PLATFORM $(PLATFORM)
+	echo INFO_FILE2  $(INFO_FILE2)
+	echo build $(BUILD_DIR)
+
+test-info-file:
+	echo DEFAULT_INFO_FILE $(DEFAULT_INFO_FILE)
+	echo POSSIBLE_JS_SOURCE_FILE $(POSSIBLE_JS_SOURCE_FILE)
+	echo JS_SOURCE_FILE $(JS_SOURCE_FILE)
+	echo POSSIBLE_JAVA_SOURCE_FILE $(POSSIBLE_JAVA_SOURCE_FILE)
+	echo JAVA_SOURCE_FILE $(JAVA_SOURCE_FILE)
+	echo INFO_FILE $(INFO_FILE)
