@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 3.0c - 'jumping' signal outlet");
+		post("tempocurver version 3.1c - pretend_perform works again with new 3rd signal outlet");
 	}
  
 	private double current_phase;
@@ -47,7 +47,7 @@ public class tempocurver extends MSPPerformer {
 	private double freq_slope_per_sample;	// For linear ramps, the slope (beats/sec/sec)
 
     //        private float ramp_dur;         // Duration of the ramp (seconds)
-    private int interp_mode;	// LINEAR or QUADRATIC (some day)
+        private int interp_mode;	// LINEAR or QUADRATIC (some day)
 	private static final int LINEAR = 1;
 	private static final int QUADRATIC = 2;
 	private float oneoversr;
@@ -88,8 +88,8 @@ public class tempocurver extends MSPPerformer {
 		return ("mode " + m);
 	}
 
-
-
+    private int perform_i;    // Used in do_perform and outletOSC
+	private boolean pretending = false; // True when we're doing a "pretend_perform"
 
 	public tempocurver()
 	{
@@ -278,7 +278,7 @@ public class tempocurver extends MSPPerformer {
 			current_freq = e.target_f;
 			current_phase = e.target_p;
 		}
-		outlet(2,"/jumped",
+		outletOSC("/jumped",
 				   new Atom[]{ Atom.newAtom(e.target_f), 
 							   Atom.newAtom(e.target_p)});
 	}
@@ -304,7 +304,7 @@ public class tempocurver extends MSPPerformer {
 		f_float = (float) f;
 		
 		if (target_tempo == f_float) {
-			outlet(2,"/impossible",
+			outletOSC("/impossible",
 				   new Atom[]{ Atom.newAtom("/same-tempo"), 
 							   Atom.newAtom(target_tempo)}); 
 			synchronized(this) {mode = IDLE;};
@@ -333,7 +333,7 @@ public class tempocurver extends MSPPerformer {
 
 		if (wait < 0.f) {
 			// This should never happen
-			outlet(2,"/impossible",
+			outletOSC("/impossible",
 				   new Atom[]{ Atom.newAtom("/negative-wait-time"), 
 							   Atom.newAtom(wait)}); 
 			synchronized(this) {mode = IDLE;};
@@ -341,7 +341,7 @@ public class tempocurver extends MSPPerformer {
 		}
 
 		if (wait >= time_to_get_there) {
-			outlet(2,"/impossible",
+			outletOSC("/impossible",
 				   new Atom[]{ Atom.newAtom("/need-more-time"), 
 							   Atom.newAtom(wait), 
 							   Atom.newAtom(time_to_get_there) });
@@ -350,7 +350,7 @@ public class tempocurver extends MSPPerformer {
 		}
 
 		/// xxx make it output just the wait time, separate from the plan message
-		outlet(2,"/plan",
+		outletOSC("/plan",
 			   new Atom[]{ Atom.newAtom(0.), Atom.newAtom(current_freq),
 						   Atom.newAtom(wait), Atom.newAtom(current_freq),
 						   Atom.newAtom(time_to_get_there), Atom.newAtom(target_tempo)});
@@ -396,7 +396,7 @@ public class tempocurver extends MSPPerformer {
 	public void nowait_phase(double start_freq, double start_phase, float t, double end_freq) {
 		float end_phase = (float) end_phase_of_linear_ramp(start_phase, t, start_freq, end_freq);
 
-		outlet(2,"/nowait_phase",
+		outletOSC("/nowait_phase",
 				   new Atom[]{ Atom.newAtom(start_freq),
 							   Atom.newAtom(start_phase),
 							   Atom.newAtom(t),
@@ -442,7 +442,7 @@ public class tempocurver extends MSPPerformer {
 
 		post("  wait " + wait);
 
-		outlet(2,"/predict_wait",
+		outletOSC("/predict_wait",
 				   new Atom[]{ Atom.newAtom(start_freq),
 							   Atom.newAtom(start_phase),
 							   Atom.newAtom(t),
@@ -459,7 +459,19 @@ public class tempocurver extends MSPPerformer {
 	}
 
 
-	public void pretend_perform() {
+    private void outletOSC(java.lang.String message) {
+		if (pretending) post("perform_i " + perform_i);
+		outlet(2, message);
+    }
+
+    private void outletOSC(java.lang.String message, Atom[] args) {
+		if (pretending)	post("perform_i " + perform_i);
+		outlet(2, message, args);
+    }
+
+
+
+    public void pretend_perform() {
 		// No arguments version means keep going until to-do list is empty
 
 		// So figure out total time of the current to-do list
@@ -496,23 +508,26 @@ public class tempocurver extends MSPPerformer {
 		MSPSignal[] ins = new MSPSignal[] {};
 		MSPSignal[] outs = new MSPSignal[] {
 			new MSPSignal(new float[nsamps], (double) sr, (int) nsamps, (short) 0),
+			new MSPSignal(new float[nsamps], (double) sr, (int) nsamps, (short) 0),
 			new MSPSignal(new float[nsamps], (double) sr, (int) nsamps, (short) 0)
 		};
+		pretending=true;
 		do_perform(ins, outs, 0);
+		pretending=false;
 
 		float[] phase = outs[0].vec;
 		int beatnum = 0;
 		
 		if (nsamps >= 2 && phase[0] == 0.0f && phase[1] > 0.0f) {
 			// Special case for first beat
-			outlet(2,"/future-beat",
+			outletOSC("/future-beat",
 					   new Atom[]{ Atom.newAtom(beatnum),
 						       Atom.newAtom(0.0f)});
 			beatnum++;
 		}						       
 		for (int i = 1; i<nsamps; ++i) {
 		    if (phase[i] < phase[i-1]) {
-				outlet(2,"/future-beat",
+				outletOSC("/future-beat",
 					   new Atom[]{ Atom.newAtom(beatnum),
 						       Atom.newAtom(i*oneoversr)});
 			    beatnum++;
@@ -521,7 +536,7 @@ public class tempocurver extends MSPPerformer {
 		    	}
 		    }
 		}
-	    outlet(2,"/future-beat/done");
+	    outletOSC("/future-beat/done");
 		
 	}
 
@@ -550,6 +565,7 @@ public class tempocurver extends MSPPerformer {
 	private void do_hold(int from, int to, float[] phaseout, float[] tempoout) {
 		double f;
 		double p;
+
         synchronized(this) {
 			// Grab local copies of our state variables
             p = (float) current_phase;
@@ -569,6 +585,7 @@ public class tempocurver extends MSPPerformer {
             current_phase = p;
 			// current_freq = f;   // freq didn't change; this is the hold case!
 		}
+		perform_i = to;    // Now the current index for perform is the end of the hold we just did.
 	}
 
 	private void do_ramp(int from, int to, float[] phaseout, float[] tempoout) {
@@ -620,13 +637,18 @@ public class tempocurver extends MSPPerformer {
             current_phase = p;
 			current_freq = f;
 		}
+		perform_i = to;    // Now the current index for perform is the end of the ramp we just did.
 	}
 
 	public void do_perform(MSPSignal[] ins, MSPSignal[] outs, int i) {
 		/* This procedure is recursive, to handle the cases where we finish a
 		   segment and switch to a new mode (possibly more than once) during
 		   the current signal vector.  The object's "mode", "stt" and "stw" variables
-		   are always assumed to be and kept accurate. */
+		   are always assumed to be and kept accurate. 
+
+		   The "perform_i" variable is a global class variable, so that when we're
+		   doing pretend_perform and we output an OSC message, the OSCoutlet method
+		   knows the "current time" of the OSC message.  */
 		   
 		float[] phaseout = outs[0].vec;
 		float[] tempoout = outs[1].vec;
@@ -637,6 +659,9 @@ public class tempocurver extends MSPPerformer {
 
 		// base case / sanity check
 		if (i >= nsamps) return;
+
+		perform_i = i;
+
 
         synchronized(this) {
 			m = mode;
@@ -665,7 +690,7 @@ public class tempocurver extends MSPPerformer {
 					if (verbose) post("switching to mode " + mode_name(e.type));
 	 
 					if (e.type == HOLD) {
-					    outlet(2,"/holding",
+					    outletOSC("/holding",
 	 						   new Atom[]{ Atom.newAtom(current_freq),
 						                   Atom.newAtom(e.dur)});
 						synchronized(this) {
@@ -706,7 +731,7 @@ public class tempocurver extends MSPPerformer {
 			} else {
 				// Finish HOLD segment
 				do_hold(i, i+stt, phaseout, tempoout);
-				outlet(2,"/finished-hold");
+				outletOSC("/finished-hold");
 				synchronized(this) { mode = IDLE; };  // so recursive call will pop next segment
 				do_perform(ins, outs, i+stt);
 			}
@@ -729,7 +754,7 @@ public class tempocurver extends MSPPerformer {
 				
 				float duration_of_ramp = ((float)stt) * oneoversr;
 
-				outlet(2,"/starting-ramp",
+				outletOSC("/starting-ramp",
 					   new Atom[]{ Atom.newAtom((tf-f)/ duration_of_ramp), 
 						       Atom.newAtom(f), 
 						       Atom.newAtom(tf) });
@@ -770,7 +795,7 @@ public class tempocurver extends MSPPerformer {
 
 
 
-				outlet(2,"/made-it",
+				outletOSC("/made-it",
 					   new Atom[]{ Atom.newAtom(f), 
 								   Atom.newAtom(p) });
 				synchronized(this) { 
@@ -811,6 +836,10 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
 
 
 
