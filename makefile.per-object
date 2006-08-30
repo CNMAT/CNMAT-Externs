@@ -93,10 +93,12 @@ CODEWARRIOR_BUILD_DIR_EXISTS = $(CODEWARRIOR_BUILD_DIR)/exists
 XCODE_BUILD_DIR_EXISTS = $(XCODE_BUILD_DIR)/exists
 
 
-INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).sit
-CFM_INDIVIDUAL_DOWNLOAD = $(CODEWARRIOR_BUILD_DIR)/$(INDIVIDUAL_DOWNLOAD_NO_DIR)
-MACHO_INDIVIDUAL_DOWNLOAD = $(XCODE_BUILD_DIR)/$(INDIVIDUAL_DOWNLOAD_NO_DIR)
-WIN_INDIVIDUAL_DOWNLOAD = $(VCC_BUILD_DIR)/$(OBJ)$(VERSION_TAG).zip
+CFM_INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).sit
+MACHO_INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).tar.gz
+WIN_INDIVIDUAL_DOWNLOAD_NO_DIR = $(OBJ)$(VERSION_TAG).zip
+CFM_INDIVIDUAL_DOWNLOAD = $(CODEWARRIOR_BUILD_DIR)/$(CFM_INDIVIDUAL_DOWNLOAD_NO_DIR)
+MACHO_INDIVIDUAL_DOWNLOAD = $(XCODE_BUILD_DIR)/$(MACHO_INDIVIDUAL_DOWNLOAD_NO_DIR)
+WIN_INDIVIDUAL_DOWNLOAD = $(VCC_BUILD_DIR)/$(WIN_INDIVIDUAL_DOWNLOAD_NO_DIR)
 
 #MAC_INDIVIDUAL_DOWNLOAD = $(if $(findstring OSX-CFM,$(PLATFORM)), $(CFM_INDIVIDUAL_DOWNLOAD),\
 #                 $(if $(findstring OSX-MachO,$(PLATFORM)), $(MACHO_INDIVIDUAL_DOWNLOAD), \
@@ -164,10 +166,15 @@ win: $(WIN_BINARY) $(WIN_INDIVIDUAL_DOWNLOAD)
 
 # The version info is extracted from the .c file by Andy's perl script.
 # Because some makefile variables (e.g., VERSION_TAG) come from version.h,
-# start over with a recursive call to $(MAKE)
+# start over with a recursive call to $(MAKE), but then bomb out of the outer
+# invocation of Make (which presumably has the wrong VERSION_TAG, etc., and
+# will therefore be doing bad things).
 version.h: $(OBJ_INFO) version.c
 	perl ../../../info2header.pl < $(OBJ_INFO) > $@
 	$(MAKE) $(MAKECMDGOALS)
+	@echo -n 'Ignore the following error message: '
+	@cmp -s version.h /dev/null
+
 
 ORIGINAL_VERSION_C = ../../../utility-library/version/version.c
 version.c: $(ORIGINAL_VERSION_C)
@@ -252,10 +259,13 @@ $(WIN_BINARY): $(SOURCE) version.h $(VCC_HELPFILE_COPY)
 $(CFM_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(CFM_BINARY) cfm-help-diff-warning
 	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION) version_tag $(VERSION_TAG)
 	stuff -o -n $(CFM_INDIVIDUAL_DOWNLOAD) $(CFM_BINARY) $(HELPFILE)
+#	tar --unlink -czf $(CFM_INDIVIDUAL_DOWNLOAD) $(HELPFILE) -C $(CODEWARRIOR_BUILD_DIR) $(OBJ)
+
 
 $(MACHO_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MACHO_BINARY) macho-help-diff-warning
 	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
-	stuff -o -n $(MACHO_INDIVIDUAL_DOWNLOAD) $(MACHO_BINARY) $(HELPFILE)
+#	stuff -o -n $(MACHO_INDIVIDUAL_DOWNLOAD) $(MACHO_BINARY) $(HELPFILE)
+	tar --unlink -czf $(MACHO_INDIVIDUAL_DOWNLOAD) $(HELPFILE) -C $(XCODE_BUILD_DIR) $(OBJ).mxo
 
 $(WIN_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(WIN_BINARY) win-help-diff-warning
 	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
@@ -321,13 +331,13 @@ win-release: $(WIN_WEB_INCOMING)
 
 
 $(CFM_WEB_INCOMING): code-checked-in $(CFM_INDIVIDUAL_DOWNLOAD) $(CFM_WEB_INFO) 
-	tar cvfz $@ -C $(CODEWARRIOR_BUILD_DIR) $(INDIVIDUAL_DOWNLOAD_NO_DIR) $(CFM_WEB_INFO_NO_DIR)
+	tar cvfz $@ -C $(CODEWARRIOR_BUILD_DIR) $(CFM_INDIVIDUAL_DOWNLOAD_NO_DIR) $(CFM_WEB_INFO_NO_DIR)
 
 $(MACHO_WEB_INCOMING): code-checked-in $(MACHO_INDIVIDUAL_DOWNLOAD) $(MACHO_WEB_INFO) 
-	tar cvfz $@ -C $(XCODE_BUILD_DIR) $(INDIVIDUAL_DOWNLOAD_NO_DIR) $(MACHO_WEB_INFO_NO_DIR)
+	tar cvfz $@ -C $(XCODE_BUILD_DIR) $(MACHO_INDIVIDUAL_DOWNLOAD_NO_DIR) $(MACHO_WEB_INFO_NO_DIR)
 
 $(WIN_WEB_INCOMING): code-checked-in $(WIN_INDIVIDUAL_DOWNLOAD) $(WIN_WEB_INFO) 
-	tar cvfz $@ -C $(VCC_BUILD_DIR) $(OBJ)$(VERSION_TAG).zip $(WIN_WEB_INFO_NO_DIR)
+	tar cvfz $@ -C $(VCC_BUILD_DIR) $(WIN_INDIVIDUAL_DOWNLOAD_NO_DIR) $(WIN_WEB_INFO_NO_DIR)
 
 
 
@@ -340,9 +350,10 @@ clean:
 	rm -rf $(CFM_BINARY) $(MACHO_BINARY)
 	rm -rf $(foreach dir, $(ALL_BUILD_DIRS), \
                  $(dir)/$(OBJ).help \
-		 $(dir)/$(INDIVIDUAL_DOWNLOAD_NO_DIR))
+		 $(dir)/$(WIN_INDIVIDUAL_DOWNLOAD_NO_DIR) \
+		 $(dir)/$(CFM_INDIVIDUAL_DOWNLOAD_NO_DIR) \
+		 $(dir)/$(MACHO_INDIVIDUAL_DOWNLOAD_NO_DIR) )
 	rm -f *~ 
-
 
 
 # Diagnostic stuff for debugging
