@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 3.1c - pretend_perform works again with new 3rd signal outlet");
+		post("tempocurver version 3.2 - OSC messages output during pretend_perform say when in the future they'll happen");
 	}
  
 	private double current_phase;
@@ -458,15 +458,34 @@ public class tempocurver extends MSPPerformer {
 	    oneoversr = (float) 1.0 / sr;
 	}
 
+	public Atom[] prependTwoAtoms(Atom a, Atom b, Atom[] cddr) {
+        Atom[] toOutput = new Atom[2+cddr.length];
+        toOutput[0] = a;
+        toOutput[1] = b;
+        for (int j = 0; j < cddr.length; ++j) {
+            toOutput[j+2] = cddr[j];
+        }
+  		return toOutput;
+	}
 
     private void outletOSC(java.lang.String message) {
-		if (pretending) post("perform_i " + perform_i);
-		outlet(2, message);
+		if (pretending) {
+			outlet(2, "/future", new Atom[]{Atom.newAtom(perform_i * oneoversr),
+										    Atom.newAtom(message) });
+		} else { 
+			outlet(2, message);
+		}
     }
 
     private void outletOSC(java.lang.String message, Atom[] args) {
-		if (pretending)	post("perform_i " + perform_i);
-		outlet(2, message, args);
+		if (pretending) {
+			outlet(2, "/future",
+				prependTwoAtoms(Atom.newAtom(perform_i * oneoversr),
+								Atom.newAtom(message),
+								args ));
+		} else { 
+			outlet(2, message, args);
+		}
     }
 
 
@@ -836,6 +855,10 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
 
 
 
