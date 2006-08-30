@@ -78,7 +78,7 @@ default: download-archive
 download-archive: $(DOWNLOAD_ARCHIVE)
 
 $(EXCLUDE_FILES_FILE):
-	echo $(EXCLUDE_FILES) | tr "[:space:]" "\n" > $@
+	@ echo $(EXCLUDE_FILES) | tr "[:space:]" "\n" > $@
 
 # The version info is extracted from the .c file by Andy's perl script.
 # Because some makefile variables (e.g., VERSION_TAG) come from version.h,
@@ -115,7 +115,6 @@ $(WEB_INFO): $(DOWNLOAD_ARCHIVE) $(INFO_FILE2)
 
 
 $(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *))) $(EXCLUDE_FILES_FILE) version.h
-	echo $*
 #	tar --unlink -czf $(DOWNLOAD_ARCHIVE) * --exclude-from $(EXCLUDE_FILES_FILE)
 	rm -f $(DOWNLOAD_ARCHIVE)
 	zip $(DOWNLOAD_ARCHIVE) * -x $(EXCLUDE_FILES)
