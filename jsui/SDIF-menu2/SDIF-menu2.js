@@ -34,6 +34,15 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: SDIF-menu2
+DESCRIPTION: Attractive tabular display of information from SDIF-fileinfo about the streams in an SDIF file.  (jsui)
+AUTHORS: Michael Zbyszynski
+COPYRIGHT_YEARS: 2005-6
+SVN_REVISION: $LastChangedRevision: 618 $
+VERSION 0.5: This one can draw a little nicer.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 */
 
 outlets = 2;
