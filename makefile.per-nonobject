@@ -68,6 +68,12 @@ WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
 # WEBSERVER_INCOMING_DIR = /tmp/incoming
 
 
+# Perl scripts might live two or three directories up the repository
+# source tree from whatever's being released
+PERL_SCRIPT_DIR = ../..
+ifndef ($(wildcard $(PERL_SCRIPT_DIR)/*.pl))
+PERL_SCRIPT_DIR = ../../..
+endif
 
 # Top-level build targets
 
@@ -86,13 +92,13 @@ $(EXCLUDE_FILES_FILE):
 # invocation of Make (which presumably has the wrong VERSION_TAG, etc., and
 # will therefore be doing bad things).
 version.h: $(INFO_FILE2) 
-	perl ../../info2header.pl < $< > $@ 
+	perl $(PERL_SCRIPT_DIR)/info2header.pl < $< > $@ 
 	$(MAKE) $(MAKECMDGOALS) 
 	@echo -n 'Ignore the following error message: '
 	@cmp -s version.h /dev/null
 
 $(INFO_FILE2): $(INFO_FILE)
-	perl ../../commentkeys.pl < $< > $@
+	perl $(PERL_SCRIPT_DIR)/commentkeys.pl < $< > $@
 
 # for now assume we'll never publish non-objects from a Windows box.  
 # Otherwise this will break:
@@ -117,7 +123,7 @@ $(WEB_INFO): $(DOWNLOAD_ARCHIVE) $(INFO_FILE2)
 $(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *))) $(EXCLUDE_FILES_FILE) version.h
 #	tar --unlink -czf $(DOWNLOAD_ARCHIVE) * --exclude-from $(EXCLUDE_FILES_FILE)
 	rm -f $(DOWNLOAD_ARCHIVE)
-	zip $(DOWNLOAD_ARCHIVE) * -x $(EXCLUDE_FILES)
+	zip -r $(DOWNLOAD_ARCHIVE) * -x $(EXCLUDE_FILES)
 
 # For any release, make sure the code is checked in before allowing the release
 release: code-checked-in
