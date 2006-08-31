@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 3.2 - OSC messages output during pretend_perform say when in the future they'll happen");
+		post("tempocurver version 3.3 - future-beat tells you tempo at time of downbeat");
 	}
  
 	private double current_phase;
@@ -535,20 +535,23 @@ public class tempocurver extends MSPPerformer {
 		pretending=false;
 
 		float[] phase = outs[0].vec;
+		float[] tempo = outs[1].vec;
 		int beatnum = 0;
 		
 		if (nsamps >= 2 && phase[0] == 0.0f && phase[1] > 0.0f) {
 			// Special case for first beat
 			outletOSC("/future-beat",
 					   new Atom[]{ Atom.newAtom(beatnum),
-						       Atom.newAtom(0.0f)});
+						       Atom.newAtom(0.0f),
+							   Atom.newAtom(tempo[0]) });
 			beatnum++;
 		}						       
 		for (int i = 1; i<nsamps; ++i) {
 		    if (phase[i] < phase[i-1]) {
 				outletOSC("/future-beat",
 					   new Atom[]{ Atom.newAtom(beatnum),
-						       Atom.newAtom(i*oneoversr)});
+						       Atom.newAtom(i*oneoversr),
+							   Atom.newAtom(tempo[i]) });
 			    beatnum++;
 			    if (verbose) {
 				    post("beat at time " +i*oneoversr + "(phase " + phase[i-1] + ", " + phase[i]);
@@ -855,6 +858,8 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
 
 
 
