@@ -34,6 +34,7 @@ COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Tim's original version
 VERSION 1.0: 2/20/02 Matt Wright changed to right-to-left output order
+VERSION 1.1: Matt changed to use global version() procedure and compile on Windows/GCC
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -62,9 +63,10 @@ VERSION 1.0: 2/20/02 Matt Wright changed to right-to-left output order
  * Includes.
  */
 
-#define DEINTERLEAVE_VERSION "1.0"
 
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 
 // Define the max size of an output list
 #define MAX_OUTARGS 1000
@@ -120,8 +122,6 @@ void Bang(t_deinterleave *x);
 // Output our data.	
 void Output(t_deinterleave *x);
 
-void deinterleave_version (t_deinterleave *x);
-
 /**************************************************************************************
  * Main, or most central, encompassing, and critical routine.
  *************************************************************************************/
@@ -136,12 +136,11 @@ void main(void) {
 			
 	addmess((method)List, "list", A_GIMME, 0);
 	addbang((method)Bang);
-	addmess((method)deinterleave_version, "version", 0);
+	addmess((method)version, "version", 0);
 
 	ps_list = gensym("list");
 	
-	post("deinterleave version " DEINTERLEAVE_VERSION " by Tim Madden. ");
-	post("Copyright © 2000,01,02 Regents of the University of California. All Rights Reserved.");	
+	version();
 }
 
 
@@ -309,9 +308,3 @@ void Output(t_deinterleave *x)
 
 	}	
 } 
-
-
-void deinterleave_version (t_deinterleave *x) {
-	post("deinterleave Version " DEINTERLEAVE_VERSION
-		  ", by Tim Madden. Compiled " __TIME__ " " __DATE__);	
-}
