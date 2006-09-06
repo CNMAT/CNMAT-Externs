@@ -140,7 +140,7 @@ void main(void) {
 
 	ps_list = gensym("list");
 	
-	version();
+	version(0);
 }
 
 
