@@ -1,6 +1,5 @@
 CC := gcc
-# CFLAGS := -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION
-CFLAGS := -DWIN_VERSION -DWIN_EXT_VERSION
+CFLAGS := -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION
 MAX_INCLUDES = ../../../c74support-w32/max-includes
 INCLUDES = $(MAX_INCLUDES)
 LDFLAGS = -shared -mno-cygwin 
