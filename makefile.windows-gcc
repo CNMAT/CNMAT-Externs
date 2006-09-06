@@ -1,15 +1,16 @@
 CC := gcc
 CFLAGS := -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION
 MAX_INCLUDES = ../../../c74support-w32/max-includes
-INCLUDES = $(MAX_INCLUDES)
+MSP_INCLUDES = ../../../c74support-w32/msp-includes
+INCLUDES = -I$(MAX_INCLUDES) -I$(MSP_INCLUDES)
 LDFLAGS = -shared -mno-cygwin 
 
 $(GCC_BUILD_DIR)/%.o: %.c
-	$(CC) -c $(CFLAGS) -I$(INCLUDES) $< -o $@
+	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 
 $(GCC_BUILD_DIR)/$(OBJ).mxe: $(GCC_BUILD_DIR)/$(OBJ).o $(OBJ).def
-	$(CC) $(LDFLAGS) -o $@ $^ -L$(MAX_INCLUDES) -lMaxAPI
+	$(CC) $(LDFLAGS) -o $@ $^ -L$(MAX_INCLUDES) -L$(MSP_INCLUDES) -lMaxAPI
 
 # All of the example .def files in the Windows SDK look like this:
 # ;coll.def
