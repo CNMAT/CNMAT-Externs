@@ -38,7 +38,7 @@ DESCRIPTION: Resonance and sinusoidal Model Display and Editing (jsui)
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1985-2006
 SVN_REVISION: $LastChangedRevision: 622 $
-VERSION 1.2: First released version
+VERSION 1.2: Initial beta release - don't rely on the features as the design may change
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -61,6 +61,7 @@ var theyareresonances=true;
 var undostack = new Array();
 var adf = new Global("adf"); // to hang the clipboard off
 post("Resonance Editor 1.2 \n Adrian Freed\n 2006 Adrian Freed, UC Regents. All Rights Reserved\n");
+post("beta version - don't rely on the features as the design may change\n");
 
 if (undefined == adf.resonanceeditor)
 {
