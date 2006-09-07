@@ -71,9 +71,10 @@ WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
 # Perl scripts might live two or three directories up the repository
 # source tree from whatever's being released
 PERL_SCRIPT_DIR = ../..
-ifeq ($(strip($(wildcard $(PERL_SCRIPT_DIR)/*.pl))),)
+ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
 PERL_SCRIPT_DIR = ../../..
 endif
+# $(warning Perl Scripts are in $(PERL_SCRIPT_DIR))
 
 # Top-level build targets
 
