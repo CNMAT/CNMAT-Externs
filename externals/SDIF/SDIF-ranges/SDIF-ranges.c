@@ -74,10 +74,12 @@ VERSION 0.1: Compiles for CFM and MachO
 							             #x, __FILE__, __LINE__); } else {}
 
 #ifdef WIN_VERSION
+#ifdef STUCK_WITH_MICROSOFT_COMPILER
 #include <z_dsp.h>
 extern int isnan(double d) {
 	return IS_NAN_DOUBLE(d);
 }
+#endif
 #endif
 
 /* My class definiton */
