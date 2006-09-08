@@ -138,7 +138,7 @@ void main (fptr *f) {
 	
 
 	finder_addclass("Devices","OpenSoundControl");
-	rescopy('STR#',3009);
+	//	rescopy('STR#',3009);
 	ps_gimme = gensym("gimme");
 	ps_OSCTimeTag = gensym("OSCTimeTag");
 	ps_FullPacket = gensym("FullPacket");
@@ -194,7 +194,7 @@ void *OSC_new(long arg) {
 }
 
 void OSC_assist(OSC *x, void *b, long m, long a, char *s) {
-	assist_string(3009,m,a,1,2,s);
+  //	assist_string(3009,m,a,1,2,s);
 }
 
 void OSC_debug (OSC *x) {
