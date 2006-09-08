@@ -19,9 +19,15 @@ $(GCC_BUILD_DIR)/$(OBJ).mxe: $(GCC_BUILD_DIR)/$(OBJ).o $(OBJ).def
 #
 # EXPORTS
 #        main
+# But if the object's name begins with a numeral (e.g., 2d.wave~ or 2threshattack~)
+# then we're supposed to comment out the LIBRARY line.
+# Grep returns status 0 if the text was found, i.e., if the object's name starts with a numeral.
+# So I use sh's "if" to decide whether to write the ";" character.
+# 
 $(OBJ).def:
 	echo \;$(OBJ).def > $@
 	echo >> $@
+	if (echo $(OBJ) | grep --quiet '^[0-9]') ; then echo -n ';' >> $@; fi
 	echo LIBRARY $(OBJ) >> $@
 	echo >> $@
 	echo EXPORTS >> $@
