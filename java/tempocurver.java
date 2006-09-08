@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 3.3 - future-beat tells you tempo at time of downbeat");
+		post("tempocurver version 3.4 - pretend_perform requires phase < 0.01 to claim a downbeat");
 	}
  
 	private double current_phase;
@@ -525,6 +525,11 @@ public class tempocurver extends MSPPerformer {
 
 	public void pretend_perform(int nsamps) {
 		MSPSignal[] ins = new MSPSignal[] {};
+		int nbytes = nsamps * 3 * 4;
+		post("About to allocate " + nbytes + " bytes for pretend_perform.");
+		/// Could catch java.lang.OutOfMemoryError and tell user
+		// to find max.java.config.txt and change
+		// max.jvm.option -Xmx256m to some higher number
 		MSPSignal[] outs = new MSPSignal[] {
 			new MSPSignal(new float[nsamps], (double) sr, (int) nsamps, (short) 0),
 			new MSPSignal(new float[nsamps], (double) sr, (int) nsamps, (short) 0),
@@ -545,9 +550,9 @@ public class tempocurver extends MSPPerformer {
 						       Atom.newAtom(0.0f),
 							   Atom.newAtom(tempo[0]) });
 			beatnum++;
-		}						       
+		}
 		for (int i = 1; i<nsamps; ++i) {
-		    if (phase[i] < phase[i-1]) {
+		    if ((phase[i] < phase[i-1]) && phase[i] < 0.01) {
 				outletOSC("/future-beat",
 					   new Atom[]{ Atom.newAtom(beatnum),
 						       Atom.newAtom(i*oneoversr),
@@ -858,6 +863,8 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
 
 
 
