@@ -251,6 +251,9 @@ $(WIN_VCC_BINARY): $(SOURCE) version.h $(VCC_HELPFILE_COPY)
 $(WIN_BINARY): $(SOURCE) version.h $(GCC_HELPFILE_COPY) 
 	$(MAKE) -f ../../../makefile.windows-gcc $@
 
+$(OBJ.def): 
+	$(MAKE) -f ../../../makefile.windows-gcc $@
+
 
 #START_OVER_ERROR = $(error Please run make again.)
 #.PHONY: start-over
