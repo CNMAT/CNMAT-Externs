@@ -51,17 +51,18 @@ VERSION 0.6: Uses new version system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  Todo:
-    Make "matrix" be able to be part of the tuples message or a typed-in argument
+    Make "matrix" able to be part of the tuples message or a typed-in argument
     Don't clone a perfectly good matrix in the non-interpolating case just so you can free it later
     more interpolation features
     More logical error reporting in Max window
 */
 
-#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
+
+// make sure not to get ../SDIF-buffer/version.h
+#include "./version.h" 
 
 #define MAX_NUM_COLUMNS 100
 #define BIGGEST_OUTPUT_LIST 3000
-
 
 #include <string.h>
 #include <float.h>
@@ -79,6 +80,7 @@ VERSION 0.6: Uses new version system
 #undef sprintf
 #undef sscanf
 
+
 #include "version.c"
 
 #include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
@@ -88,19 +90,26 @@ VERSION 0.6: Uses new version system
 
 #define VERY_SMALL ((sdif_float64) -(DBL_MAX))
 
+
 /* #include <assert.h> */
 
+/*
 #define assert(x) if (!(x)) { ouchstring("Assertion failed: %s, file %s, line %i\n", \
 							             #x, __FILE__, __LINE__); } else {}
 
+*/
+
 /* private types */
 
+int zzz7;
 
 #ifdef WIN_VERSION
+#ifdef STUCK_WITH_MICROSOFT_COMPILER
 #include <z_dsp.h>
 extern int isnan(double d) {
 	return IS_NAN_DOUBLE(d);
 }
+#endif
 #endif
 
 typedef enum {
