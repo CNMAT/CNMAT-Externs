@@ -34,7 +34,7 @@ import com.cycling74.msp.*;
 
 public class tempocurver extends MSPPerformer {
 	public void version() {
-		post("tempocurver version 3.4 - pretend_perform requires phase < 0.01 to claim a downbeat");
+		post("tempocurver version 3.5 - pretend_perform outputs /future_subdiv");
 	}
  
 	private double current_phase;
@@ -90,6 +90,8 @@ public class tempocurver extends MSPPerformer {
 
     private int perform_i;    // Used in do_perform and outletOSC
 	private boolean pretending = false; // True when we're doing a "pretend_perform"
+	private int pretend_subdivisions = 8; // # of subdivisions per beat for pretend_perform
+	private float oneover_pretend_subdivisions = 0.125f; // reciprocal of above
 
 	public tempocurver()
 	{
@@ -488,7 +490,15 @@ public class tempocurver extends MSPPerformer {
 		}
     }
 
+	public void future_subdivisions(int n) {
+		if (n < 0) n=0;
+		pretend_subdivisions = n;
+		oneover_pretend_subdivisions = 1.0f/((float) n);
 
+		if (verbose) {
+			post("pretend_perform will output " + n + " /future_subdiv messages per beat.");
+		}
+	}
 
     public void pretend_perform() {
 		// No arguments version means keep going until to-do list is empty
@@ -541,16 +551,30 @@ public class tempocurver extends MSPPerformer {
 
 		float[] phase = outs[0].vec;
 		float[] tempo = outs[1].vec;
+		float[] jumped = outs[2].vec;
 		int beatnum = 0;
 		
-		if (nsamps >= 2 && phase[0] == 0.0f && phase[1] > 0.0f) {
-			// Special case for first beat
-			outletOSC("/future-beat",
-					   new Atom[]{ Atom.newAtom(beatnum),
-						       Atom.newAtom(0.0f),
-							   Atom.newAtom(tempo[0]) });
-			beatnum++;
+		if (nsamps >= 2) {
+			// Special cases for first beat and first subdivision
+			if (phase[0] == 0.0f && phase[1] > 0.0f) {
+				outletOSC("/future-beat",
+						  new Atom[]{ Atom.newAtom(beatnum),
+									  Atom.newAtom(0.0f),
+									  Atom.newAtom(tempo[0]) });
+				beatnum++;
+			}
+			for (int s = 0; s < pretend_subdivisions; ++s) {
+				float subdiv_phase = s * oneover_pretend_subdivisions;
+				if (phase[0] == subdiv_phase && phase[1] > subdiv_phase) {
+					outletOSC("/future_subdiv", 
+							  new Atom[] {Atom.newAtom(beatnum-1),
+										  Atom.newAtom(s),
+										  Atom.newAtom(0.f),
+										  Atom.newAtom(tempo[0]) });
+				}
+			}
 		}
+
 		for (int i = 1; i<nsamps; ++i) {
 		    if ((phase[i] < phase[i-1]) && phase[i] < 0.01) {
 				outletOSC("/future-beat",
@@ -559,13 +583,47 @@ public class tempocurver extends MSPPerformer {
 							   Atom.newAtom(tempo[i]) });
 			    beatnum++;
 			    if (verbose) {
-				    post("beat at time " +i*oneoversr + "(phase " + phase[i-1] + ", " + phase[i]);
+				    post("beat at time " +i*oneoversr + " (phase " + phase[i-1] + ", " + phase[i] +")");
 		    	}
+
+				// Every beat is also subdivision 0
+				outletOSC("/future_subdiv",
+						  new Atom[] {Atom.newAtom(beatnum-1),
+									  Atom.newAtom(0),
+									  Atom.newAtom(i*oneoversr),
+									  Atom.newAtom(tempo[i]) });
 		    }
+
+			if (jumped[i] > 0.) {
+				for (int s = 1; s < pretend_subdivisions; ++s) {
+					float subdiv_phase = s * oneover_pretend_subdivisions;
+					if (phase[i] == subdiv_phase) {
+						// Jumped to this subdivision
+						outletOSC("/future_subdiv",
+								  new Atom[] {Atom.newAtom(beatnum-1),
+											  Atom.newAtom(s),
+											  Atom.newAtom(i*oneoversr),
+											  Atom.newAtom(tempo[i]) });
+					}
+				}
+			} else {
+				// Not a jump; did we cross a subdivision phase?
+				for (int s = 1; s < pretend_subdivisions; ++s) {
+					float subdiv_phase = s * oneover_pretend_subdivisions;
+                    if (phase[i] >= subdiv_phase && phase[i-1] < subdiv_phase) {
+                        outletOSC("/future_subdiv",
+                                  new Atom[] {Atom.newAtom(beatnum-1),
+                                              Atom.newAtom(s),
+                                              Atom.newAtom(i*oneoversr),
+                                              Atom.newAtom(tempo[i]) });
+					}
+				}
+			}
 		}
 	    outletOSC("/future-beat/done");
 		
 	}
+
 
 
 	public void perform(MSPSignal[] ins, MSPSignal[] outs) {
@@ -863,6 +921,11 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
+
 
 
 
