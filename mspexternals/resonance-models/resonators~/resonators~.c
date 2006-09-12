@@ -35,6 +35,7 @@ DESCRIPTION: Parallel bank of resonant filters
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1996-2006
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
+SVN_REVISION: $LastChangedRevision$
 VERSION 1.6: Compiles under 7/02 Max SDK and CW 7.0 
 VERSION 1.7: Doesn't get smooth/unsmooth backwards
 VERSION 1.7a: first windows compile
@@ -46,7 +47,7 @@ VERSION 1.97: fixed  double precision version  strange high frequency sound by t
 VERSION 1.98: MW+AF re-fixed coefficient interpolation bug to zero state variables and interpolate a1 aka a0.
 VERSION 1.99: AF: fixed typo in above changed NewPtr to getbytes and increased number of resonances to 512
 VERSION 1.995: AF: changed getbytes back to NewPtr and increased resonances to 1024
-SVN_REVISION: $LastChangedRevision$
+VERSION 1.996: (MW) Changed NewPtr to sysmem_newptr(), added free() to plug memory leak
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -136,7 +137,7 @@ void resonators_clear(t_resonators *x);
 void resonators_assist(t_resonators *x, void *b, long m, long a, char *s);
 void *resonators_new(t_symbol *s, short argc, t_atom *argv);
 void resonators_tellmeeverything(t_resonators *x);
-
+void resonators_free(t_resonators *x);
 
 // unsmoothed with input
 t_int *resonators_perform(t_int *w)
@@ -146,8 +147,8 @@ const 	t_float *in = (t_float *)(w[2]);
 	t_resonators *op = (t_resonators *)(w[1]);
 	int n = (int)(w[4]);
 	int nfilters = op->nres;
-	  float o0, o1, o2, o3;
-	  float i0,i1,i2,i3,i4,i5;
+	float o0, o1, o2, o3;
+	float i0,i1,i2,i3,i4,i5;
 		float yn,yo;
 	int i, j;
 	int ping = op->ping;
@@ -1164,9 +1165,9 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 	    	}
 	    }
     }
- 	x->dbase = (dresdesc *) NewPtr(MAXRESONANCES*sizeof(dresdesc));
-    	x->base = (resdesc *) NewPtr(MAXRESONANCES*sizeof(resdesc));
-  	    if(x->base==NIL || x->dbase==NIL)
+ 	x->dbase = (dresdesc *) sysmem_newptr(MAXRESONANCES*sizeof(dresdesc));
+    	x->base = (resdesc *) sysmem_newptr(MAXRESONANCES*sizeof(resdesc));
+  	    if(x->base==0 || x->dbase==0)
 	    {			post("¥ resonators~: warning: not enough memory.  Expect to crash soon.");
 	    	return 0;
 	    }
@@ -1209,11 +1210,18 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
     return (x);
 }
 
+void resonators_free(t_resonators *x) {
+  sysmem_freeptr(x->base);
+  sysmem_freeptr(x->dbase);
+  dsp_free(&(x->b_obj));
+}
 
-void main(void)
-{
-	setup((t_messlist **)&resonators_class, (method) resonators_new, (method)dsp_free, (short)sizeof(t_resonators),
-		0L, A_GIMME, 0);
+
+
+void main(void) {
+	setup((t_messlist **)&resonators_class, (method) resonators_new, 
+		  (method) resonators_free, (short)sizeof(t_resonators),
+		  0L, A_GIMME, 0);
 
 	version(0);
 	post("Portions copyright (c) 1986, 1987 Adrian Freed");
