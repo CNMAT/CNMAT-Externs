@@ -40,7 +40,7 @@ VERSION 1.9:: Cleaned up and fixed copyright for open-sourcing
 VERSION 1.9.1: rudimentary blob support
 VERSION 1.9.2: Builds CFM and MachO from the same code
 VERSION 1.9.3: Same as 1.9.2
-STATUS: supported
+VERSION 1.9.4: Fixed severe type tag bug and built for Windows
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         
    */
@@ -537,7 +537,7 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
 			}
 		}
 		typeString[i+1] = '\0';
-		
+
 		if (OSC_writeStringArg(buf, typeString)) goto err;
 	}
 
