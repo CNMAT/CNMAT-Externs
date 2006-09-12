@@ -47,6 +47,7 @@ VERSION 1.73: Updated tellmeeverything to disclose info about new features
 VERSION 1.74: fixed amplitude comparison so that non-zero gains were output, changed to larger model size (1024), added alias for sin-transform, didn't test or even compile anything
 VERSION 1.75: replaced  getbytes by NewPtr and tested
 VERSION 1.76: I can't get the alias feature to work
+VERSION 1.77: (MW) replaced NewPtr() with sysmem_newptr() so it will compile on Windows too.  Plugged memory leak.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -811,7 +812,9 @@ static void setamprange(fobj *x, double min, double max) {
 void *myobject_free(fobj *x);
 void *myobject_free(fobj *x)
 {
-freeobject(x->m_proxy);
+  sysmem_freeptr(x->model);
+  sysmem_freeptr(x->resonances);
+  freeobject(x->m_proxy);
 }
 
 void * fnew(Symbol *s, int argc, Atom *argv) {
@@ -824,8 +827,8 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	clearit(x);
 	
 	x->maxresonances = MAXRESON; // get this from the command line eventually
-	x->model = (Atom *) NewPtr(3 * x->maxresonances * sizeof(Atom));
-	x->resonances = (struct reson *) NewPtr(sizeof(struct reson) * x->maxresonances);
+	x->model = (Atom *) sysmem_newptr(3 * x->maxresonances * sizeof(Atom));
+	x->resonances = (struct reson *) sysmem_newptr(sizeof(struct reson) * x->maxresonances);
 	
 	if(!x->model || ! x->resonances)
 	{
