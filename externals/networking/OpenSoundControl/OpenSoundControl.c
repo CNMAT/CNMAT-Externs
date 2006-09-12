@@ -737,8 +737,8 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 
 		if (topLevel) {
 			Atom timeTagLongs[2];
-			SETLONG(&timeTagLongs[0], *((long *)(buf+8)));
-			SETLONG(&timeTagLongs[1], *((long *)(buf+12)));
+			SETLONG(&timeTagLongs[0], ntohl(*((long *)(buf+8))));
+			SETLONG(&timeTagLongs[1], ntohl(*((long *)(buf+12))));
 			outlet_anything(x->O_outlet3, ps_OSCTimeTag, 2, timeTagLongs);
 		}
 
