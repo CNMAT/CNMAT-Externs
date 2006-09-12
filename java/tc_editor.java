@@ -30,6 +30,8 @@ University of California, Berkeley.
 
 /* To-do
 
+Support "hold_beats" command.
+
 There seems to be a bug: when "labelrow" is 1, and you write new commands into the cellblock,
 they go into row 0 instead of row 1.
 
