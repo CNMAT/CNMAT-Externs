@@ -40,7 +40,7 @@ VERSION 1.9:: Cleaned up and fixed copyright for open-sourcing
 VERSION 1.9.1: rudimentary blob support
 VERSION 1.9.2: Builds CFM and MachO from the same code
 VERSION 1.9.3: Same as 1.9.2
-VERSION 1.9.4: Fixed severe type tag bug and built for Windows
+VERSION 1.9.4: Fixed severe type tag bug and severe byte-order bug (for receiving) and built for Windows
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         
    */
@@ -744,7 +744,7 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 
 		i = 16; /* Skip "#bundle\0" and time tag */
 		while(i<n) {
-	  	  size = *((long *) (buf + i));
+	  	  size = ntohl(*((long *) (buf + i)));
 	  	  if ((size % 4) != 0) {
 			if (x->errorreporting) {
 				post("OTUDP: Bad size count %d in bundle (not a multiple of 4)", size);
@@ -820,12 +820,12 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
   		   
 	       switch (*thisType) {
 	            case 'i': case 'r': case 'm': case 'c':
-	            SETLONG(&args[numArgs], *((int *) p));
+	            SETLONG(&args[numArgs], ntohl(*((int *) p)));
 	            p += 4;
 	            break;
 
 	            case 'f': 
-	            SETFLOAT(&args[numArgs], *((float *) p));
+	            SETFLOAT(&args[numArgs], ntohl(*((float *) p)));
 	            p += 4;
 	            break;
 	            
@@ -919,11 +919,11 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 
 			string = &chars[i*4];
 			if  (ints[i] >= -1000 && ints[i] <= 1000000) {
-				SETLONG(&args[numArgs], ints[i]);
+				SETLONG(&args[numArgs], ntohl(ints[i]));
 			    i++;
 			} else if (floats[i] >= -1000.f && floats[i] <= 1000000.f &&
 				   (floats[i]<=0.0f || floats[i] >= SMALLEST_POSITIVE_FLOAT)) {
-			    SETFLOAT(&args[numArgs], floats[i]);
+			    SETFLOAT(&args[numArgs], ntohl(floats[i]));
 			    i++;
 			} else if (IsNiceString(string, chars+n)) {
 			    nextString = DataAfterAlignedString(string, chars+n);
@@ -932,7 +932,7 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 			    i += (nextString-string) / 4;
 			} else {
 				// Assume int if nothing looks good.
-			    SETLONG(&args[numArgs], ints[i]);
+			    SETLONG(&args[numArgs], ntohl(ints[i]));
 			    i++;
 			}
 			numArgs++;
