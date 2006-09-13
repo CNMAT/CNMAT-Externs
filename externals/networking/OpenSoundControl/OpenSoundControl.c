@@ -825,7 +825,10 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 	            break;
 
 	            case 'f': 
-	            SETFLOAT(&args[numArgs], ntohl(*((float *) p)));
+		      { // Pretend the 32 bits are an int so I can call ntohl()
+			long bytesAsInt = ntohl(*((int *) p));
+			SETFLOAT(&args[numArgs], *((float *) (& bytesAsInt)));
+		      }
 	            p += 4;
 	            break;
 	            
@@ -923,7 +926,9 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 			    i++;
 			} else if (floats[i] >= -1000.f && floats[i] <= 1000000.f &&
 				   (floats[i]<=0.0f || floats[i] >= SMALLEST_POSITIVE_FLOAT)) {
-			    SETFLOAT(&args[numArgs], ntohl(floats[i]));
+			  // Pretend the 32 bits are an int so I can call ntohl()
+			  long bytesAsInt = ntohl(ints[i]);
+			  SETFLOAT(&args[numArgs], *((float *) (&bytesAsInt)));
 			    i++;
 			} else if (IsNiceString(string, chars+n)) {
 			    nextString = DataAfterAlignedString(string, chars+n);
