@@ -48,6 +48,7 @@ VERSION 1.98: MW+AF re-fixed coefficient interpolation bug to zero state variabl
 VERSION 1.99: AF: fixed typo in above changed NewPtr to getbytes and increased number of resonances to 512
 VERSION 1.995: AF: changed getbytes back to NewPtr and increased resonances to 1024
 VERSION 1.996: (MW) Changed NewPtr to sysmem_newptr(), added free() to plug memory leak
+VERSION 1.997: (MW) Changed free() routine to call dsp_free() *before* freeing memory. 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -1211,12 +1212,10 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 }
 
 void resonators_free(t_resonators *x) {
+  dsp_free(&(x->b_obj));
   sysmem_freeptr(x->base);
   sysmem_freeptr(x->dbase);
-  dsp_free(&(x->b_obj));
 }
-
-
 
 void main(void) {
 	setup((t_messlist **)&resonators_class, (method) resonators_new, 
