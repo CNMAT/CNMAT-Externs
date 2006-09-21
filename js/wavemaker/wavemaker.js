@@ -24,7 +24,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: wavemaker
-DESCRIPTION: intended for constructing wavetables for oscillators~
+DESCRIPTION: Additive synthesis of one cycle of a harmonic waveform with specified amplitudes and phases.  (Intended for constructing wavetables in buffer~ objects to use with oscillators~)
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 2005-6
 SVN_REVISION: $LastChangedRevision: 618 $
