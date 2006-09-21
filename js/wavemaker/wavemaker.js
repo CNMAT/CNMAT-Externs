@@ -1,6 +1,40 @@
-// Adrian Freed 2005,2006
-// Copyright UC Regents. All Rights Reserved.
-// Wavemaker (intended for constructing wavetables for oscillators~)
+/*
+Wavemaker (intended for constructing wavetables for oscillators~)
+
+Written by Adrian Freed, The Center for New Music and Audio Technologies,
+University of California, Berkeley.  Copyright (c) 2005-6, The Regents of 
+the University of California (Regents).  
+
+Permission to use, copy, modify, distribute, and distribute modified versions
+of this software and its documentation without fee and without a signed
+licensing agreement, is hereby granted, provided that the above copyright
+notice, this paragraph and the following two paragraphs appear in all copies,
+modifications, and distributions.
+
+IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING
+OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF REGENTS HAS
+BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: wavemaker
+DESCRIPTION: intended for constructing wavetables for oscillators~
+AUTHORS: Adrian Freed
+COPYRIGHT_YEARS: 2005-6
+SVN_REVISION: $LastChangedRevision: 618 $
+VERSION 1.0: First release
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+*/
+
+
+
 
 inlets=2;
 outlets=2;
@@ -8,18 +42,23 @@ var phases = new Array();
 var amplitudes = new Array();
 const defblen = 64*1024;
 var blen = defblen;
-if (jsarguments.length>1)
-{
+if (jsarguments.length>1) {
 	blen = jsarguments[1];
 	if(blen<0 || blen >10000000)
 		blen = defblen;
-	// copy amplitude phase duples
-	for(var j=0;j<(jsarguments.length-1)/2;j+=2)
-	{
-		amplitudes[j/2] = jsarguments[j+2];
-		phases[j/2] = jsarguments[j+3];
+
+	if (jsarguments.length > 2) {
+		// copy amplitude phase duples
+		for(var j=0;j<(jsarguments.length-1)/2;j+=2)
+		{
+			amplitudes[j/2] = jsarguments[j+2];
+			phases[j/2] = jsarguments[j+3];
+		}
 	}
 }
+
+post("wavemaker: ready to synthesize a buffer of length ", blen, "\n");
+
 var rphases =0;
 
 var out = new Array(blen);
@@ -40,8 +79,15 @@ function randomphases()
 {
 	rphases=1;
 }
+
 function bang()
 {
+	// post("Amp.l = ", amplitudes.length);
+	// post("Phases.l = ", phases.length);
+	if (amplitudes.length == 0) {
+		post("wavemaker: No amplitudes have been specified!  Doing nothing.\n");
+		return;
+	}
 		var max = 0;
 		var min = 0;
 		var rms = 0;
@@ -54,7 +100,7 @@ function bang()
 			{
 
 				phases[j] = Math.random()*2*3.14159265358979323;
-post(phases[j],"\n");
+				// post("Random phase ", j, ": ", phases[j],"\n");
 			}
 		}
 		for(var i=0;i<blen;++i)
@@ -62,17 +108,25 @@ post(phases[j],"\n");
 			v = 0;
 			for(var j=0;j<amplitudes.length;++j)
 				v += amplitudes[j]*Math.sin((j+1)*i*2*3.14159265358979323/blen+phases[j]);
+
 //post(v,"\n");
 			if(v>max)
 				max = v;
 			if(v<min)
 				min=v;
 			out[i] = v;
+
 			rms += v*v;
 		}
 	if(-min>max)
 			max = -min;
-	post("RMS: ",Math.sqrt(rms/blen)/max,"\n");
+	
+	// post("sum of squares: ", rms, "\n");
+	// post("mean of squares: ", rms/blen, "\n");
+	realrms = Math.sqrt(rms/blen);
+	post("RMS: ", realrms, "\n");
+	post("Peak: ", max, "\n");
+	post("RMS to peak ratio: ",realrms/max,"\n");
 		if(max>0)
 		for(var i=0;i<blen;++i)
 		{
