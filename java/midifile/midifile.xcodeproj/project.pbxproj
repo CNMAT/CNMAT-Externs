@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		12D1A5880A76D3E300F570A8 /* max.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 12D1A5870A76D3E300F570A8 /* max.jar */; };
 		12D1A5A30A76D66000F570A8 /* midifile.java in Sources */ = {isa = PBXBuildFile; fileRef = 12D1A5A20A76D66000F570A8 /* midifile.java */; };
+		12F261400ACE056C0020E71B /* max.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F2613F0ACE056B0020E71B /* max.jar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		12D1A5870A76D3E300F570A8 /* max.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = max.jar; path = "/Applications/Audio/MaxMSP 4.6/Cycling '74/java/lib/max.jar"; sourceTree = "<absolute>"; };
 		12D1A5A20A76D66000F570A8 /* midifile.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = midifile.java; sourceTree = "<group>"; };
+		12F2613F0ACE056B0020E71B /* max.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = max.jar; path = "/Applications/Audio/MaxMSP 4.6/Cycling '74/java/lib/max.jar"; sourceTree = "<absolute>"; };
 		6A9ED92C02B0286D0CC91562 /* midifile */ = {isa = PBXFileReference; explicitFileType = folder; includeInIndex = 0; path = midifile; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -22,7 +22,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				12D1A5880A76D3E300F570A8 /* max.jar in Frameworks */,
+				12F261400ACE056C0020E71B /* max.jar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,7 +32,7 @@
 		00E6828FFEC88D1A11DB9C8B = {
 			isa = PBXGroup;
 			children = (
-				12D1A5870A76D3E300F570A8 /* max.jar */,
+				12F2613F0ACE056B0020E71B /* max.jar */,
 				12D1A5A20A76D66000F570A8 /* midifile.java */,
 				0120612AFEC8923411DB9C8B /* Products */,
 			);
@@ -75,14 +75,14 @@
 /* Begin PBXShellScriptBuildPhase section */
 		0F8E05D30A13D88900568E53 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "/bin/cp $PROJECT_DIR/$PRODUCT_NAME.java $PROJECT_DIR/../classes/$PRODUCT_NAME";
 		};
@@ -146,7 +146,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				INSTALL_PATH = "/Users/johnmac/MaxMSP-devel/JAVA/classes";
 				JAVA_ARCHIVE_CLASSES = NO;
 				JAVA_ARCHIVE_COMPRESSION = NO;
 				JAVA_ARCHIVE_TYPE = JAR;
