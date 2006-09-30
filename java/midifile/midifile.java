@@ -173,6 +173,7 @@ public class midifile extends MaxObject
 	public void read(){
 		String filepath;
 		filepath = MaxSystem.openDialog();
+		if(filepath == null) return;
 		
 		read(filepath);
 	}
@@ -367,6 +368,7 @@ public class midifile extends MaxObject
 	public void write(){
 		String filepath;
 		filepath = MaxSystem.saveAsDialog(new String("Screw you."), new String(""));
+		if(filepath == null) return;
 		
 		write(filepath);
 	}
