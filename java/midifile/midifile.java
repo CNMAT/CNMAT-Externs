@@ -41,7 +41,6 @@ COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 622 $
 VERSION 2.1: Added play, play_from, and read messages and implemented open and save dialogs.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 */
 
 import com.cycling74.max.*;
