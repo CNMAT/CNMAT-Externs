@@ -75,16 +75,16 @@
 /* Begin PBXShellScriptBuildPhase section */
 		0F8E05D30A13D88900568E53 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "/bin/cp $PROJECT_DIR/$PRODUCT_NAME.java $PROJECT_DIR/../classes/$PRODUCT_NAME";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "";
+			shellScript = "";
 		};
 /* End PBXShellScriptBuildPhase section */
 
