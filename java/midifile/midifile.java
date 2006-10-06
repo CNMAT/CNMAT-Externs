@@ -35,11 +35,11 @@ University of California, Berkeley.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: midifile
-DESCRIPTION: reads / writes / plays type 0 and 1 midi files
+DESCRIPTION: Reads / writes / plays type 0 and 1 midi files.  Java object.
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 622 $
-VERSION 2.1: Added play, play_from, and read messages and implemented open and save dialogs.
+VERSION 2.1.1: Added play, play_from, and read messages and implemented open and save dialogs.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
