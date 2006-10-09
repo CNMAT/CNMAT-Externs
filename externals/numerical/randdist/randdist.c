@@ -33,6 +33,7 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.1: Changed the way the random seed it made
+VERSION 1.2: Universal binary
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
