@@ -156,7 +156,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if ! [ ../../../../lib/gsl/lib/libgsl.a ]\n\tthen\n\t\tcd ../../../../lib/gsl\n\t\t./configure\n\t\tmake\n\t\tmv .libs lib\nfi";
+			shellScript = "if ! [ ../../../../lib/gsl/lib/libgsl.a ]\n\tthen\n\t\tcd ../../../../lib/gsl\n\t\tmkdir arch_ppc\n\t\tmkdir arch_i386\n\t\tcp configure arch_ppc\n\t\tcp configure arch_i386\n\t\tcd arch_ppc\n\t\t./configure --build=powerpc-apple --host=powerpc-apple CC=`ls /usr/bin | grep powerpc-apple-darwin8-gcc`\n\t\tmake\n\t\tcd arch_i386\n\t\t./configure --build=i386-apple --host=i386-apple CC=`ls /usr/bin | grep i686-apple-darwin8-gcc`\n\t\tmake\n\t\tcd ..\n\t\tmkdir lib\n\t\tcp arch_ppc/.libs/libgsl.a lib/libgsl_ppc.a\n\t\tcp arch_i386/.libs/libgsl.a lib/libgsl_i386.a\n\t\tcd lib\n\t\tlipo -create libgsl_ppc.a libgsl_i386.a -output libgsl.a\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -222,7 +222,10 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
+				ARCHS = (
+					i386,
+					PPC,
+				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
