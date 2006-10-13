@@ -35,6 +35,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Tim's original version
 VERSION 1.0: 2/20/02 Matt Wright changed to right-to-left output order
 VERSION 1.1: Matt changed to use global version() procedure and compile on Windows/GCC
+VERSION 1.2incomplete: beginning of rewrite to have any number of outputs and to work with "message plus argument" lists; not completed, since Javascript can now do the job.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -69,23 +70,17 @@ VERSION 1.1: Matt changed to use global version() procedure and compile on Windo
 #include "version.c"
 
 // Define the max size of an output list
-#define MAX_OUTARGS 1000
-
+#define DEFAULT_MAX_OUTARGS 1000
+#define MAX_OUTLETS 32
 
 // Structure for this type of object.
 typedef struct t_deinterleave
 {
 	struct object t_obj;
 	// Outputs
-	void *t_out0;	
-	void *t_out1;	
-	void *t_out2;	
-	void *t_out3;
+	void *t_out[MAX_OUTLETS];	
 	// data to output.	
-	Atom t_list_out0[MAX_OUTARGS];
-	Atom t_list_out1[MAX_OUTARGS];
-	Atom t_list_out2[MAX_OUTARGS];
-	Atom t_list_out3[MAX_OUTARGS];
+	Atom *t_list_out[MAX_OUTLETS];
 	// Length of each output list.
 	short t_outsize;
 	// Number of outputs.
@@ -130,7 +125,7 @@ void Output(t_deinterleave *x);
 void main(void) {
 
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&deinterleave_class, (method)deinterleave_new, 0,
+	setup((t_messlist **)&deinterleave_class, (method)deinterleave_new, (method)deinterleave_free,
 			(short)sizeof(t_deinterleave), 0L, A_GIMME, 0);
 			
 			
@@ -180,36 +175,20 @@ void *deinterleave_new(
 		x->num_outputs = ac;
 	}
 	
-	// allow 2 to 4 outputs.
-	if (x->num_outputs > 4)
-		x->num_outputs = 4;
-		
+	// Allow 2 to MAX_OUTLETS outputs.
+	if (x->num_outputs > MAX_OUTLETS) {
+		post("deinterleave: can't have more than %ld outlets (compile-time constant MAX_OUTLETS)", MAX_OUTLETS);
+		x->num_outputs = MAX_OUTLETS;
+	}
+			
 	if (x->num_outputs < 2)
 		x->num_outputs = 2;
 		
-	
-	// Make outputs.
-	if (x->num_outputs == 2)
-	{
-		x->t_out1 = listout(x);
-		x->t_out0 = listout(x);
+	// Make outputs (in right to left order) and allocate space to hold output lists
+		for (i = x->num_outputs-1; i >= 0; --i) {
+		x->t_out[i] = listout(x);
+		x->t_list_out[i] = (Atom *) getbytes(DEFAULT_MAX_OUTARGS * sizeof(Atom));
 	}
-	
-	if (x->num_outputs == 3)
-	{
-		x->t_out2 = listout(x);
-		x->t_out1 = listout(x);
-		x->t_out0 = listout(x);
-	}
-	
-	if (x->num_outputs == 4)
-	{
-		x->t_out3 = listout(x);
-		x->t_out2 = listout(x);
-		x->t_out1 = listout(x);
-		x->t_out0 = listout(x);
-	}
-	
 		
 	// Set output size 0	
 	x->t_outsize = 0;
@@ -218,6 +197,12 @@ void *deinterleave_new(
 
 }
 
+void deinterleave_free(t_deinterleave *x) {
+	int i;
+	for (i = 0; i<x->num_outputs; ++i) {
+		freebytes(x->t_list_out[i], DEFAULT_MAX_OUTARGS * sizeof(Atom));
+	}
+}
 
 
 /**************************************************************************************
