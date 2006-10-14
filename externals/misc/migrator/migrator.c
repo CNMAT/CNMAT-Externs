@@ -40,17 +40,8 @@ VERSION 1.0: Universal Binary
 #include "ext.h"
 #include "version.c"
 #include "math.h"
-//#include <gsl/gsl_rng.h>
-//#include <gsl/gsl_randist.h>
-
-#define IA 16807
-#define IM 2147483647
-#define IQ 127773
-#define IR 2836
-#define NTAB 32
-#define EPS (1.2E-07)
-#define MAX(a,b) (a>b)?a:b
-#define MIN(a,b) (a<b)?a:b
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
 
 typedef struct _mig
 {
@@ -72,10 +63,10 @@ typedef struct _mig
 	void *m_forcefeed_clock2;
 	double m_tinterval;
 	float m_oscamp;
-	//gsl_rng *m_rng;
+	gsl_rng *m_rng;
 	double m_var;
 	long m_on;
-	long m_idum[1];
+	//long m_idum[1];
 	//long m_manCounter;
 	long m_fade;
 	int m_waitingToChangeNumOsc[2];
@@ -107,8 +98,8 @@ void forcefeed(t_mig *x);
 void forcefeed_out(t_mig *x);
 void forcefeed_change(t_mig *x);
 void forcefeed_in(t_mig *x);
-float ran1(long *idum);
-float gasdev(long *idum);
+//float ran1(long *idum);
+//float gasdev(long *idum);
 void mig_auto(t_mig *x, long a);
 void mig_fade(t_mig *x, long n);
 void mig_tinterval(t_mig *x, long n);
@@ -363,12 +354,12 @@ void *mig_new(double var, long nOsc, double oscamp)
 	x->m_fade = 1;
 	x->m_on = 0;
 	
-	//gsl_rng_env_setup();
-	//x->m_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_default);
+	gsl_rng_env_setup();
+	x->m_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_default);
 	
-	//gsl_rng_set(x->m_rng, systime_ms());
+	gsl_rng_set(x->m_rng, rand());
 	
-	x->m_idum[0] = rand() * -1;
+	//x->m_idum[0] = rand() * -1;
 	   	
 	return(x);
 }
@@ -383,7 +374,7 @@ void mig_free(t_mig *x)
 	free(x->m_pmf);
 	freeobject((t_object *)x->m_clock1);
 	freeobject((t_object *)x->m_clock2);
-	//gsl_rng_free(x->m_rng);
+	gsl_rng_free(x->m_rng);
 }
 
 //--------------------------------------------------------------------------
@@ -411,8 +402,8 @@ int randPMF(t_mig *x)
 
 	lastIndex = (x->m_arrayInLength / 2) - 1;
 	//u = random() / (pow(2, 31) - 1);
-	//u = gsl_rng_uniform(x->m_rng);
-	u = ran1(x->m_idum);
+	u = gsl_rng_uniform(x->m_rng);
+	//u = ran1(x->m_idum);
 	i = 0;
 	sum = ((float *)(x->m_pmf))[0];
 	while((i < lastIndex) && (u > sum)){
@@ -455,8 +446,8 @@ void mig_probDecay(t_mig *x)
 
 float gaussBlur(t_mig *x, float m)
 {
-	return m * (pow(pow(2., 1./12.), gasdev(x->m_idum) * x->m_var));
-	//return m * (pow(pow(2., 1./12.), gsl_ran_gaussian(x->m_rng, x->m_var)));
+	//return m * (pow(pow(2., 1./12.), gasdev(x->m_idum) * x->m_var));
+	return m * (pow(pow(2., 1./12.), gsl_ran_gaussian(x->m_rng, x->m_var)));
 }
 
 void forcefeed(t_mig *x)
@@ -497,6 +488,7 @@ void forcefeed_in(t_mig *x)
 	outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
 }
 
+/*
 float ran1(long *idum) 
 {
 	int j; 
@@ -548,7 +540,7 @@ float gasdev(long *idum)
 		return gset; //and return it. 
 	} 
 } 
-
+*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // OPTIONS
@@ -642,7 +634,6 @@ void mig_tinterval(t_mig *x, long n){
 
 void tellmeeverything(t_mig *x)
 {
-	post("Migrator version %s", MIG_VERSION);
 	post("Migrator is %s", (x->m_on) ? "ON" : "OFF");
 	post("Number of oscillators: %ld", x->m_nOsc);
 	post("Number of elements in timbre: %d", x->m_arrayInLength);
