@@ -92,6 +92,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "migrator" */;
 			buildPhases = (
+				12A673B10AE0D6BF0084F1D2 /* ShellScript */,
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
 				8D01CCCB0486CAD60068D4B7 /* Sources */,
@@ -142,6 +143,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXRezBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		12A673B10AE0D6BF0084F1D2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Building a Universal Binary version of the GNU Scientific Library...\"\nif ! [ -e ../../../../lib/gsl/lib/libgsl.a ] ;then\n\tcd ../../../../lib/gsl\n\tmake distclean\n\tif [ -e arch_ppc ] ;then\n\t\trm -r arch_ppc/*\n\telse\n\t\tmkdir arch_ppc\n\tfi\n\tif [ -e arch_i386 ] ;then\n\t\trm -r arch_i386/*\n\telse\n\t\tmkdir arch_i386\n\tfi\t\n\t\t\n\tcp configure arch_ppc\n\tcp configure arch_i386\n\t\t\n\tcd arch_ppc\n\techo \"Making the PPC build...\"\n\t./configure --build=powerpc-apple CFLAGS=\"$CFLAGS -arch ppc\"\n\tmake\n\n\tcd ../arch_i386\n\techo \"Making the i386 build...\"\n\t./configure --build=i386-apple CFLAGS=\"$CFLAGS -arch i386\"\n\tmake\n\n\tcd ..\n\tif [ -e lib ] ;then\n\t\trm -r lib/*\n\telse\n\t\tmkdir lib\n\tfi\n\tcp arch_ppc/.libs/libgsl.a lib/libgsl_ppc.a\n\tcp arch_i386/.libs/libgsl.a lib/libgsl_i386.a\n\tcd lib\n\techo \"Making the universal binary...\"\n\tlipo -create libgsl_ppc.a libgsl_i386.a -output libgsl.a\n\tranlib libgsl.a\n\t\t\n\tcd ..\n\tif [ -e include ] ;then\n\t\trm -r include/*\n\telse\n\t\tmkdir include\n\tfi\n\tmkdir include/gsl\n\tcp -r arch_i386/gsl/*.h include/gsl/\n\n\techo \"Cleaning up...\"\n\trm -r arch_*\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D01CCCB0486CAD60068D4B7 /* Sources */ = {
