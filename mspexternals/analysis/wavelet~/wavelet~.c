@@ -1,6 +1,5 @@
 #include "ext.h"
 #include "z_dsp.h"
-#include "buffer.h"
 #include "math.h"
 #include <gsl/gsl_wavelet.h>
 
