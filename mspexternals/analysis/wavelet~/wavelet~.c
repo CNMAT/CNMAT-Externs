@@ -1,4 +1,44 @@
+/*
+Copyright (c) 2006.  The Regents of the University of California (Regents).
+All Rights Reserved.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for educational, research, and not-for-profit purposes, without
+fee and without a signed licensing agreement, is hereby granted, provided that
+the above copyright notice, this paragraph and the following two paragraphs
+appear in all copies, modifications, and distributions.  Contact The Office of
+Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+
+Written by John MacCallum, The Center for New Music and Audio Technologies,
+University of California, Berkeley.
+
+     IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+     SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+     ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+     REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+     REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+     FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+     DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+     REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+     ENHANCEMENTS, OR MODIFICATIONS.
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: wavelet~
+DESCRIPTION: Discrete Wavelet Transform (DWT)
+AUTHORS: John MacCallum
+COPYRIGHT_YEARS: 2006
+SVN_REVISION: $LastChangedRevision: 587 $
+VERSION 1.1: Universal Binary
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
+
+#include "version.h"
 #include "ext.h"
+#include "version.c"
 #include "z_dsp.h"
 #include "math.h"
 #include <gsl/gsl_wavelet.h>
@@ -35,6 +75,9 @@ int main(void)
 {
 	setup((t_messlist **)&wlet_class, (method)wlet_new, (method)wlet_free, (short)sizeof(t_wlet), 0L, A_SYM, A_DEFSYM, A_DEFLONG, A_DEFLONG, A_DEFLONG, 0); 
 	
+	version(0);
+
+	addmess((method) version, "version", 0);
 	addmess((method)wlet_dsp, "dsp", A_CANT, 0);
 	addmess((method)wlet_anything, "anything", A_GIMME, 0);
 	addint((method)wlet_int);
@@ -162,9 +205,7 @@ void *wlet_new(t_symbol *dir, t_symbol *wlet, long k, long n)//, long stride)
 	x->w_workspace = gsl_wavelet_workspace_alloc(x->w_waveletLength);
 	
 	wlet_setupWavelet(x, (!strcmp(wlet->s_name, " ")) ? wlet : gensym("daubechies"), k);
-	
-	post("wavelet version 0.1b - John MacCallum\nwavelet: %s\nk: %d\nlength: %ld", gsl_wavelet_name(x->w_wavelet), 4, x->w_waveletLength);
-	
+		
 	return(x);
 }
 
