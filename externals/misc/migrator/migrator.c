@@ -111,6 +111,9 @@ int main(void)
 {
 	setup((t_messlist **)&mig_class, (method)mig_new, (method)mig_free, (short)sizeof(t_mig), 0L, A_DEFFLOAT, A_DEFLONG, A_DEFFLOAT, 0); 
 	
+	version(0);
+
+	addmess((method) version, "version", 0);
 	addbang((method)mig_bang);
 	addint((method)mig_int);
 	addmess((method)mig_anything, "anything", A_GIMME, 0);
@@ -325,9 +328,6 @@ void *mig_new(double var, long nOsc, double oscamp)
 	//	x->m_nOsc = (long)nOsc;
 	//else
 		x->m_nOsc = 200;
-	post("var: %f", var);
-	post("nOsc: %ld", nOsc);
-	post("oscamp: %f", oscamp);
 	
 	x->m_arrayOut = (t_atom *)calloc((int)x->m_nOsc * 2, sizeof(t_atom));
 	x->m_arrayIn = (t_atom *)calloc(10, sizeof(t_atom));
