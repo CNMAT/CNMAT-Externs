@@ -63,7 +63,7 @@ typedef struct _mig
 	void *m_forcefeed_clock1;
 	void *m_forcefeed_clock2;
 	double m_tinterval;
-	float m_oscamp;
+	double m_oscamp;
 	gsl_rng *m_rng;
 	double m_var;
 	long m_on;
@@ -103,8 +103,8 @@ void forcefeed_in(t_mig *x);
 //float gasdev(long *idum);
 void mig_auto(t_mig *x, long a);
 void mig_fade(t_mig *x, long n);
-void mig_tinterval(t_mig *x, long n);
-void mig_oscamp(t_mig *x, long n);
+void mig_tinterval(t_mig *x, double n);
+void mig_oscamp(t_mig *x, double a);
 void tellmeeverything(t_mig *x);
 
 //--------------------------------------------------------------------------
@@ -125,8 +125,8 @@ int main(void)
 	addmess((method)mig_var, "var", A_FLOAT, 0);
 	addmess((method)mig_assist, "assist", A_CANT, 0);
 	addmess((method)mig_fade, "fade", A_LONG, 0);
-	addmess((method)mig_tinterval, "time_interval", A_LONG, 0);
-	addmess((method)mig_oscamp, "oscamp", A_LONG, 0);
+	addmess((method)mig_tinterval, "time_interval", A_FLOAT, 0);
+	addmess((method)mig_oscamp, "oscamp", A_FLOAT, 0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0L, 0);
 		
 	return 0;
@@ -631,12 +631,12 @@ void mig_fade(t_mig *x, long n)
 	x->m_fade = n;
 }
 
-void mig_tinterval(t_mig *x, long n){
+void mig_tinterval(t_mig *x, double n){
 	x->m_tinterval = n;
 }
 
-void mig_oscamp(t_mig *x, long n){
-	x->m_oscamp = n;
+void mig_oscamp(t_mig *x, double a){
+	x->m_oscamp = a;
 }
 
 void tellmeeverything(t_mig *x)
@@ -644,10 +644,10 @@ void tellmeeverything(t_mig *x)
 	version(0);
 	post("Migrator is %s", (x->m_on) ? "ON" : "OFF");
 	post("Number of oscillators: %ld", x->m_nOsc);
-	post("Oscillator amplitude: %ld", x->m_oscamp);
-	post("Time interval: %ld", x->m_tinterval);
+	post("Oscillator amplitude: %f", x->m_oscamp);
+	post("Time interval: %f", x->m_tinterval);
 	post("Fade: %ld", x->m_fade);
-	post("Variance (Gaussian blur): %ld", x->m_var);
+	post("Variance (Gaussian blur): %f", x->m_var);
 	if(x->m_theyAreResonances) post("Migrator thinks your data is in frequency / amplitude / decayrate triples");
 	post("Number of elements in timbre: %d", x->m_arrayInLength);
 	post("First 10 elements from timbre:");
