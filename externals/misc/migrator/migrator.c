@@ -32,6 +32,7 @@ DESCRIPTION: Spectral harmony a la David Wessel
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 587 $
+VERSION 1.0.1: Added mig_oscamp and a better tellmeeverything function
 VERSION 1.0: Universal Binary
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
@@ -103,6 +104,7 @@ void forcefeed_in(t_mig *x);
 void mig_auto(t_mig *x, long a);
 void mig_fade(t_mig *x, long n);
 void mig_tinterval(t_mig *x, long n);
+void mig_oscamp(t_mig *x, long n);
 void tellmeeverything(t_mig *x);
 
 //--------------------------------------------------------------------------
@@ -124,6 +126,7 @@ int main(void)
 	addmess((method)mig_assist, "assist", A_CANT, 0);
 	addmess((method)mig_fade, "fade", A_LONG, 0);
 	addmess((method)mig_tinterval, "time_interval", A_LONG, 0);
+	addmess((method)mig_oscamp, "oscamp", A_LONG, 0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0L, 0);
 		
 	return 0;
@@ -632,10 +635,20 @@ void mig_tinterval(t_mig *x, long n){
 	x->m_tinterval = n;
 }
 
+void mig_oscamp(t_mig *x, long n){
+	x->m_oscamp = n;
+}
+
 void tellmeeverything(t_mig *x)
 {
+	version(0);
 	post("Migrator is %s", (x->m_on) ? "ON" : "OFF");
 	post("Number of oscillators: %ld", x->m_nOsc);
+	post("Oscillator amplitude: %ld", x->m_oscamp);
+	post("Time interval: %ld", x->m_tinterval);
+	post("Fade: %ld", x->m_fade);
+	post("Variance (Gaussian blur): %ld", x->m_var);
+	if(x->m_theyAreResonances) post("Migrator thinks your data is in frequency / amplitude / decayrate triples");
 	post("Number of elements in timbre: %d", x->m_arrayInLength);
 	post("First 10 elements from timbre:");
 	int i;
