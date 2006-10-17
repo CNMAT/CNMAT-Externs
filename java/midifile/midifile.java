@@ -41,6 +41,7 @@ COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 622 $
 VERSION 2.1.1: Added play, play_from, and read messages and implemented open and save dialogs.
 VERSION 2.1.2: Fixed a bug where an error would be reported if play was called and there was no data in one of the tracks.
+VERSION 2.1.3: Gratitous increment of the version number.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -55,7 +56,7 @@ import javax.sound.midi.*;
 public class midifile extends MaxObject
 {	
 	public void version(){
-		post("midifile Version 2.1.2, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
+		post("midifile Version 2.1.3, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
 	}
 	
 	private int numVoices;
