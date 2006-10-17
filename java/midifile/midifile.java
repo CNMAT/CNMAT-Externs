@@ -40,6 +40,7 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 622 $
 VERSION 2.1.1: Added play, play_from, and read messages and implemented open and save dialogs.
+VERSION 2.1.2: Fixed a bug where an error would be reported if play was called and there was no data in one of the tracks.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -54,7 +55,7 @@ import javax.sound.midi.*;
 public class midifile extends MaxObject
 {	
 	public void version(){
-		post("midifile 2.1 -- John MacCallum.  Added play and read messages.");
+		post("midifile Version 2.1.2, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
 	}
 	
 	private int numVoices;
@@ -394,8 +395,10 @@ public class midifile extends MaxObject
 		for(i = 0; i < events.size(); i++)
 			clocks.add(i, new MaxClock(new Callback(this, "play_callback", i)));
 		
-		for(i = 0; i < events.size(); i++)
-			((MaxClock)clocks.get(i)).delay(0);
+		for(i = 0; i < events.size(); i++){
+			if(((ArrayList)events.get(i)).size() != 0)
+				((MaxClock)clocks.get(i)).delay(0);
+		}
 		
 		//post("number of events: " + ((ArrayList)events.get(0)).size());
 		
