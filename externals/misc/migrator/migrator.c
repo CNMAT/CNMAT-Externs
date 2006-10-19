@@ -330,7 +330,6 @@ void *mig_new(double var, long nOsc, double oscamp)
 		x->m_nOsc = (long)nOsc;
 	else
 		x->m_nOsc = 200;
-	post("Number of oscillators: %ld", x->m_nOsc);
 	
 	x->m_arrayOut = (t_atom *)calloc((int)x->m_nOsc * 2, sizeof(t_atom));
 	x->m_arrayIn = (t_atom *)calloc(10, sizeof(t_atom));
