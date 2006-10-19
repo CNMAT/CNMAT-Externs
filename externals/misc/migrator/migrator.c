@@ -6,9 +6,7 @@ Permission to use, copy, modify, and distribute this software and its
 documentation for educational, research, and not-for-profit purposes, without
 fee and without a signed licensing agreement, is hereby granted, provided that
 the above copyright notice, this paragraph and the following two paragraphs
-appear in all copies, modifications, and distributions.  Contact The Office of
-Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
-CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+appear in all copies, modifications, and distributions.  
 
 Written by John MacCallum, The Center for New Music and Audio Technologies,
 University of California, Berkeley.
@@ -34,6 +32,7 @@ COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: Universal Binary
 VERSION 1.0.1: Added mig_oscamp and a better tellmeeverything function
+VERSION 1.0.2: The number of oscillators specified as an argument is now recognized.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -327,10 +326,11 @@ void *mig_new(double var, long nOsc, double oscamp)
 	x->m_waitingToChangeNumOsc[1] = 0;
 	//x->m_manCounter = 0;
 	
-	//if(nOsc)
-	//	x->m_nOsc = (long)nOsc;
-	//else
+	if(nOsc)
+		x->m_nOsc = (long)nOsc;
+	else
 		x->m_nOsc = 200;
+	post("Number of oscillators: %ld", x->m_nOsc);
 	
 	x->m_arrayOut = (t_atom *)calloc((int)x->m_nOsc * 2, sizeof(t_atom));
 	x->m_arrayIn = (t_atom *)calloc(10, sizeof(t_atom));
