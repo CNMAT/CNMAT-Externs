@@ -265,22 +265,22 @@ $(OBJ).def:
 
 $(CFM_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(CFM_BINARY) cfm-help-diff-warning
 	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION) version_tag $(VERSION_TAG)
-	stuff -o -n $@ $(CFM_BINARY) $(HELPFILE)
+	stuff -o -n $@ $(MORE_RELEASE_FILES) $(CFM_BINARY) $(HELPFILE)
 #	tar --unlink -czf $@ $(HELPFILE) -C $(CODEWARRIOR_BUILD_DIR) $(OBJ)
 
 
 $(MACHO_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MACHO_BINARY) macho-help-diff-warning
 	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
 #	stuff -o -n $@ $(MACHO_BINARY) $(HELPFILE)
-	tar --unlink -czf $@ $(HELPFILE) -C $(XCODE_BUILD_DIR) $(OBJ).mxo
+	tar --unlink -czf $@ $(MORE_RELEASE_FILES) $(HELPFILE) -C $(XCODE_BUILD_DIR) $(OBJ).mxo
 
 $(WIN_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(WIN_BINARY) win-help-diff-warning
 	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
-	zip -j $@ $(WIN_BINARY) $(HELPFILE)
+	zip -j $@ $(MORE_RELEASE_FILES) $(WIN_BINARY) $(HELPFILE)
 
 $(WIN_VCC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(WIN_VCC_BINARY) win-vcc-help-diff-warning
 	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
-	zip -j $@ $(WIN_VCC_BINARY) $(HELPFILE)
+	zip -j $@ $(MORE_RELEASE_FILES) $(WIN_VCC_BINARY) $(HELPFILE)
 
 
 # Put a copy of the help file next to the built binary for ease of testing
