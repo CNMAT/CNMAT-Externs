@@ -28,6 +28,7 @@ COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.1: Universal Binary
 VERSION 1.1.1: GPL compatible license
+VERSION 1.1.2: Added tellmeeverything function
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -50,6 +51,7 @@ typedef struct _wlet
 	gsl_wavelet_direction w_direction;
 	int w_waveletLength;
 	size_t w_stride;
+	size_t w_k;
 } t_wlet;
 
 void *wlet_class;
@@ -62,6 +64,7 @@ t_int *wlet_perform(t_int *w);
 void wlet_setupWavelet(t_wlet *x, t_symbol *msg, size_t k);
 void wlet_dsp(t_wlet *x, t_signal **sp, short *count);
 void wlet_free(t_wlet *x);
+void wlet_tellmeeverything(t_wlet *x);
 
 
 //--------------------------------------------------------------------------
@@ -77,6 +80,7 @@ int main(void)
 	addmess((method)wlet_anything, "anything", A_GIMME, 0);
 	addint((method)wlet_int);
 	addmess((method)wlet_assist, "assist", A_CANT, 0);
+	addmess((method)wlet_tellmeeverything, "tellmeeverything", 0);
 	
 	dsp_initclass();
 	
@@ -199,7 +203,10 @@ void *wlet_new(t_symbol *dir, t_symbol *wlet, long k, long n)//, long stride)
 	//x->w_wavelet = gsl_wavelet_alloc(gsl_wavelet_daubechies, (k) ? k : 4);
 	x->w_workspace = gsl_wavelet_workspace_alloc(x->w_waveletLength);
 	
-	wlet_setupWavelet(x, (!strcmp(wlet->s_name, " ")) ? wlet : gensym("daubechies"), k);
+	if(k)
+		x->w_k = (size_t)k;
+	else x->w_k = 4;
+	wlet_setupWavelet(x, (!strcmp(wlet->s_name, " ")) ? wlet : gensym("daubechies"), x->w_k);
 		
 	return(x);
 }
@@ -215,6 +222,7 @@ void wlet_free(t_wlet *x)
 void wlet_setupWavelet(t_wlet *x, t_symbol *msg, size_t k)
 {
 	gsl_wavelet *oldWlet = x->w_wavelet;
+	x->w_k = k;
 	
 	if(!strcmp(msg->s_name, "daubechies")){
 		if(k = -1)
@@ -305,4 +313,12 @@ t_int *wlet_perform(t_int *w)
 	}
 			
 	return (w + 5);
+}
+
+void wlet_tellmeeverything(t_wlet *x){
+	version(0);
+	post("Direction: %s", x->w_direction == forward ? "forward" : "backward");
+	post("Wavelet type: %s", gsl_wavelet_name(x->w_wavelet));
+	post("k = %ld", (long)x->w_k);
+	post("Size: %d", x->w_waveletLength);
 }
