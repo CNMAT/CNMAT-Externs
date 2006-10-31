@@ -33,6 +33,7 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: First version
+VERSION 1.1: Added choice of diffent formulas for calculating the cbw
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -41,7 +42,8 @@ VERSION 1.0: First version
 #include "version.c"
 #include "math.h"
 
-#define R_MAX_LEN 8192
+#define CBW_PARNCUTT 1
+#define CBW_MOORE_GLASBERG 2
 
 typedef struct _mig
 {
@@ -50,6 +52,7 @@ typedef struct _mig
 	void *r_out1;
 	float *r_buffer;
 	long r_bufferLen;
+	long r_cbwType;
 } t_rho;
 
 void *rho_class;
@@ -57,9 +60,11 @@ void *rho_class;
 void rho_anything(t_rho *x, t_symbol *msg, short argc, t_atom *argv);
 void rho_list(t_rho *x, t_symbol *msg, short argc, t_atom *argv);
 void rho_process(t_rho *x);
+void rho_set_cbw_type(t_rho *x, long t);
+float rho_cbw(t_rho *x, float f);
 void rho_bang(t_rho *x);
 void rho_assist(t_rho *x, void *b, long m, long a, char *s);
-void *rho_new(double var, long nOsc, double oscamp);
+void *rho_new(long cbwType);
 void rho_free(t_rho *x);
 void rho_tellmeeverything(t_rho *x);
 
@@ -67,7 +72,7 @@ void rho_tellmeeverything(t_rho *x);
 
 int main(void)
 {
-	setup((t_messlist **)&rho_class, (method)rho_new, (method)rho_free, (short)sizeof(t_rho), 0L, 0); 
+	setup((t_messlist **)&rho_class, (method)rho_new, (method)rho_free, (short)sizeof(t_rho), 0L, A_DEFLONG, 0); 
 	
 	version(0);
 
@@ -76,12 +81,13 @@ int main(void)
 	addmess((method)rho_anything, "anything", A_GIMME, 0);
 	addmess((method)rho_list, "list", A_GIMME, 0);
 	addmess((method)rho_assist, "assist", A_CANT, 0);
+	addmess((method)rho_set_cbw_type, "set-cbw-type", A_LONG, 0);
 	addmess((method)rho_tellmeeverything, "tellmeeverything", 0L, 0);
 	
 	return 0;
 }
 
-void *rho_new(double var, long nOsc, double oscamp)
+void *rho_new(long cbwType)
 {
 	t_rho *x;
 
@@ -91,7 +97,10 @@ void *rho_new(double var, long nOsc, double oscamp)
 	
 	x->r_buffer = NULL;
 	x->r_bufferLen = 0;
-	   	
+	
+	x->r_cbwType = CBW_PARNCUTT;
+	if(cbwType) rho_set_cbw_type(x, cbwType);
+	
 	return(x);
 }
 
@@ -135,7 +144,7 @@ void rho_process(t_rho *x){
 					//post("%.10f %.10f %.10f %.10f", f1, a1, f2, a2);
 					
 					meanFreq = (f1 + f2) / 2;
-					cbw = 1.72 * powf(meanFreq, 0.65);
+					cbw = rho_cbw(x, meanFreq);
 					cbInterval = (fabsf(f2 - f1)) / cbw;
 					ratio = cbInterval / cbInterval0;
 					//post( "%f, %f, %f\n", ( e * ratio ), exp ( -1 * ratio ), ratio );
@@ -143,7 +152,6 @@ void rho_process(t_rho *x){
 					//printf ( "%f\n", standardCurve );
 					numerator += a1 * a2 * standardCurve;
 					//printf ( "%f, %f, %f\n", gAmpData[i][j], gAmpData[k][l], numerator );
-					
 				}
 			}
 			denominator += a1 * a1;	
@@ -156,6 +164,31 @@ void rho_process(t_rho *x){
 	outlet_float(x->r_out1, roughness);
 	//post("roughness: %f", roughness);
 	
+}
+
+void rho_set_cbw_type(t_rho *x, long t){
+	x->r_cbwType = t;
+	switch(t){
+		case CBW_PARNCUTT:
+			post("Using Parncutt's critical bandwidth formula:");
+			post("cbw = 1.72 * powf(f, 0.65)");
+			return;
+		case CBW_MOORE_GLASBERG:
+			post("Using Moore and Glasberg's critical bandwidth formula:");
+			post("cbw = (0.108 * f) + 24.7");
+			return;
+	}
+	error("%ld isn't a valid choice for the critical bandwidth formula.  See the help file for more info.", t);
+}
+
+float rho_cbw(t_rho *x, float f){
+	switch(x->r_cbwType){
+		case CBW_PARNCUTT:
+			return 1.72 * powf(f, 0.65);
+		case CBW_MOORE_GLASBERG:
+			return (0.108 * f) + 24.7;
+	}
+	return (0.108 * f) + 24.7;
 }
 
 void rho_bang(t_rho *x)
@@ -180,6 +213,6 @@ void rho_free(t_rho *x)
 	free(x->r_buffer);
 }
 
-void rho_tellmeeverything(t_rho *x)
-{
+void rho_tellmeeverything(t_rho *x){
+
 }
