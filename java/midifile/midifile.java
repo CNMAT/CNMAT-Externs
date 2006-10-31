@@ -41,7 +41,8 @@ COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 622 $
 VERSION 2.1.1: Added play, play_from, and read messages and implemented open and save dialogs.
 VERSION 2.1.2: Fixed a bug where an error would be reported if play was called and there was no data in one of the tracks.
-VERSION 2.1.3: Gratitous increment of the version number.
+VERSION 2.1.3: Gratuitous increment of the version number.
+VERSION 2.1.4: Play now outputs the channel number if there is one.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -56,7 +57,7 @@ import javax.sound.midi.*;
 public class midifile extends MaxObject
 {	
 	public void version(){
-		post("midifile Version 2.1.3, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
+		post("midifile Version 2.1.4, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
 	}
 	
 	private int numVoices;
@@ -447,7 +448,9 @@ public class midifile extends MaxObject
 		mf_MidiEvent thisME = ((mf_MidiEvent)((ArrayList)playList.get(v)).get(0));
 		
 		((ArrayList)playList.get(v)).remove(0);
-		outlet(0, new Atom[]{Atom.newAtom("/track" + v), Atom.newAtom(thisME.getnote()), Atom.newAtom(thisME.getvel()), (thisME.getdur() > 0) ? Atom.newAtom(thisME.getdur()) : Atom.newAtom("")});
+		outlet(0, new Atom[]{Atom.newAtom("/track" + v), Atom.newAtom(thisME.getnote()), 
+			Atom.newAtom(thisME.getvel()), (thisME.getdur() > 0) ? Atom.newAtom(thisME.getdur()) : Atom.newAtom(""),
+			(thisME.getchan() > 0) ? Atom.newAtom(thisME.getchan()) : Atom.newAtom("")});
 		
 		if(((ArrayList)playList.get(v)).size() == 0){
 			cl.unset();
