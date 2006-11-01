@@ -32,6 +32,7 @@ AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2002-06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version.
+VERSION 0.2: Fixed float input problem and allowed int inputs
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 */
  
@@ -65,7 +66,8 @@ typedef struct TrendReport
 
 void *class;
 
-void TrendReport_float(TrendReport *x, float f);
+void TrendReport_int(TrendReport *x, int i);
+void TrendReport_float(TrendReport *x, double f);
 void *TrendReport_new(Symbol *s, float arg);
 
 void Reset(TrendReport *x);
@@ -78,6 +80,7 @@ void main(fptr *f) {
 	version(0);
 	setup((t_messlist **)&class, (method)TrendReport_new, 0L, (short)sizeof(TrendReport), 0L, A_DEFFLOAT, 0);
 	addfloat((method)TrendReport_float);
+	addint((method)TrendReport_int);
 	addmess((method)version, "version", 0);
 }
 
@@ -123,7 +126,13 @@ void OutputTrend(TrendReport *x) {
 }
 
 
-void TrendReport_float(TrendReport *x, float f) {
+void TrendReport_int(TrendReport *x, int i) {
+  TrendReport_float(x, (double) i);
+}
+
+
+void TrendReport_float(TrendReport *x, double d) {
+  float f = (float) d;
 	if (x->numSeen == 0) {
 		x->initialValue = x->prevprev = x->prev = f;
 		x->direction = 0;
