@@ -42,7 +42,7 @@ VERSION 1.1: Added choice of diffent formulas for calculating the cbw
 #include "version.c"
 #include "math.h"
 
-#define CBW_PARNCUTT 1
+#define CBW_HUTCHINSON_KNOPOFF 1
 #define CBW_MOORE_GLASBERG 2
 
 typedef struct _mig
@@ -98,9 +98,9 @@ void *rho_new(long cbwType)
 	x->r_buffer = NULL;
 	x->r_bufferLen = 0;
 	
-	x->r_cbwType = CBW_PARNCUTT;
+	x->r_cbwType = CBW_HUTCHINSON_KNOPOFF;
 	if(cbwType) rho_set_cbw_type(x, cbwType);
-	
+		
 	return(x);
 }
 
@@ -169,7 +169,7 @@ void rho_process(t_rho *x){
 void rho_set_cbw_type(t_rho *x, long t){
 	x->r_cbwType = t;
 	switch(t){
-		case CBW_PARNCUTT:
+		case CBW_HUTCHINSON_KNOPOFF:
 			post("Using Parncutt's critical bandwidth formula:");
 			post("cbw = 1.72 * powf(f, 0.65)");
 			return;
@@ -183,7 +183,7 @@ void rho_set_cbw_type(t_rho *x, long t){
 
 float rho_cbw(t_rho *x, float f){
 	switch(x->r_cbwType){
-		case CBW_PARNCUTT:
+		case CBW_HUTCHINSON_KNOPOFF:
 			return 1.72 * powf(f, 0.65);
 		case CBW_MOORE_GLASBERG:
 			return (0.108 * f) + 24.7;
