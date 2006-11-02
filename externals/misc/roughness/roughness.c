@@ -170,7 +170,7 @@ void rho_set_cbw_type(t_rho *x, long t){
 	x->r_cbwType = t;
 	switch(t){
 		case CBW_HUTCHINSON_KNOPOFF:
-			post("Using Parncutt's critical bandwidth formula:");
+			post("Using Hutchinson and Knopoff's critical bandwidth formula:");
 			post("cbw = 1.72 * powf(f, 0.65)");
 			return;
 		case CBW_MOORE_GLASBERG:
