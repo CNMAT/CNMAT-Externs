@@ -36,6 +36,7 @@ VERSION 0.2: 041229 MW: Handles arbitrary-length partial parameter lists
 VERSION 0.2.1: New version/makefile system
 VERSION 0.2.2: Proper use of name/value tags
 VERSION 0.2.3: Compiles for CFM and MachO
+VERSION 0.2.4: Changed GetBytes to sysmem_newptr so max # partials can increase.  Also made running out of memory an error instead of a crash.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -279,10 +280,15 @@ void *threefates_new(long maxpartials, long nPartialParams) {
 	x->max_inargs =  (x->num_partial_parameters + 1) * x->max_osc;
 	x->max_outargs = x->num_partial_parameters * x->max_osc;
 
-	x->output_list = (Atom *)   getbytes((short) x->max_outargs * sizeof(Atom));
-	x->frame0 =      (float *)  getbytes((short) x->max_inargs * sizeof(float));
-	x->frame1 =      (float *)  getbytes((short) x->max_inargs * sizeof(float));
-	x->t_slotlist =  (t_slot *) getbytes((short) x->max_osc * sizeof(t_slot));
+	x->output_list = (Atom *)   sysmem_newptr(x->max_outargs * sizeof(Atom));
+	x->frame0 =      (float *)  sysmem_newptr(x->max_inargs * sizeof(float));
+	x->frame1 =      (float *)  sysmem_newptr(x->max_inargs * sizeof(float));
+	x->t_slotlist =  (t_slot *) sysmem_newptr(x->max_osc * sizeof(t_slot));
+
+	if (x->output_list == 0 || x->frame0 == 0 || x->frame1 == 0 || x->t_slotlist == 0) {
+	  error(NAME ": out of memory.");
+	  return 0;
+	}
 	
 	
 	InitializeSlots(x);
@@ -293,10 +299,17 @@ void *threefates_new(long maxpartials, long nPartialParams) {
 }
 
 void threefates_free(t_threefates *x) {
-	freebytes(x->output_list, (short) x->max_outargs * sizeof(Atom));
+  	sysmem_freeptr(x->output_list);
+	sysmem_freeptr(x->frame0);
+	sysmem_freeptr(x->frame1);
+	sysmem_freeptr(x->t_slotlist);
+
+#ifdef GETBYTES_GIVES_ENOUGH_MEMORY
+  	freebytes(x->output_list, (short) x->max_outargs * sizeof(Atom));
 	freebytes(x->frame0,      (short) x->max_inargs * sizeof(float));
 	freebytes(x->frame1,      (short) x->max_inargs * sizeof(float));
 	freebytes(x->t_slotlist,  (short) x->max_osc * sizeof(t_slot));
+#endif
 }
 	
 
