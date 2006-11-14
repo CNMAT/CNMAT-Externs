@@ -37,6 +37,7 @@ VERSION 0.2.1: New version/makefile system
 VERSION 0.2.2: Proper use of name/value tags
 VERSION 0.2.3: Compiles for CFM and MachO
 VERSION 0.2.4: Changed GetBytes to sysmem_newptr so max # partials can increase.  Also made running out of memory an error instead of a crash.
+VERSION 0.2.5: Improved error message when dropping partials.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -325,7 +326,8 @@ void List(
 {
 
 	if (argc > x->max_inargs) {
-		error("threefates: input list too big (size %ld) --- dropping", argc);
+	  error("threefates: %ld-element input list too big, so I'm dropping it as if you'd never sent it.", argc);
+	  error("   Maximum input list size is %ld = %ld partials * (1 index + %ld parameters per partial)", x->max_inargs, x->max_osc, x->num_partial_parameters);
 		return;
 	}
 	
