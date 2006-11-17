@@ -41,6 +41,7 @@ VERSION 1.9.1: rudimentary blob support
 VERSION 1.9.2: Builds CFM and MachO from the same code
 VERSION 1.9.3: Same as 1.9.2
 VERSION 1.9.4: Fixed severe type tag bug and severe byte-order bug (for receiving) and built for Windows
+VERSION 1.9.5: Rebuilt for CFM (had to change where it got ntohl()).
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         
    */
@@ -96,6 +97,10 @@ void OSC_formatData(OSC *x, char *messageName, short argc, Atom *argv);
 
 #ifdef __MWERKS__
 #define DONT_HAVE_STRING_LIBRARY
+/* KLUDGE!!! 
+If we're on metrowerks we must be compiling for PPC which is big-endian, so since I don't know
+where to link in the real ntohl() I'll define this evil macro: */
+#define ntohl(x) (x)
 #endif
 
 #ifdef DONT_HAVE_STRING_LIBRARY
