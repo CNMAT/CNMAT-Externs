@@ -1,22 +1,28 @@
+/*	analyzer~ object by Tristan Jehan
+	Copyright (c) 2001 Masachussetts Institute of Technology.
+	All rights reserved.
+
+	pitch tracker based on Miller Puckette's fiddle~
+	Copyright (c) 1997-1999 University of California San Diego.
+	All rights reserved.
+	
+	version 1.2.1 Matt Wright fixed pitch_getit() bounds error and added debug info
+	version 1.2.2 Matt Wright more debug info: addr of most recent input sig vector and gettime()
+	version 1.3 implements an altivec-optimized FFT and adds more windows
+*/
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "fft.h"
 #include <string.h>
 #include <math.h>
+#include <Accelerate/Accelerate.h> // to get veclib
 
-/* analyzer~ is by Tristan Jehan, based on Miller Puckette's fiddle~
 
-   version 1.2.1 021004 Matt Wright fixed pitch_getit() bounds error and added debug info
-   version 1.2.2 021016 Matt Wright more debug info: addr of most recent input sig vector and gettime()
-
-DESCRIPTION: Tristan Jehan's version of fiddle~ that also outputs "perceptual analysis": centroid, noisiness, Bark scale, etc.  This is Tristan's final CNMAT version, long obsolete in comparison to the current version that Tristan still maintains.
-   
-
-Outputs Pitch, Loudness, Brightness, Noisiness and Bark scale
-*/
-
-#define VERSION "1.2.2"
-
+// Add altivec function prototypes
+#ifdef __ALTIVEC__
+#include "vDSP.h"
+#endif
 
 #define DEBUG
 #ifdef DEBUG
@@ -25,14 +31,14 @@ Outputs Pitch, Loudness, Brightness, Noisiness and Bark scale
 #define debug /* Do nothing */
 #endif
 
-
+#define VERSION "1.3"
 #define RES_ID	7079
-#define NUMBAND 25 // at 44100 Hz only
+#define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
 #define DEFAULT_FS 44100
 #define DB_REF 96
 #define SFM_MAX 60
-#define TWOPI 6.28318530717952646f
+//#define TWOPI 6.28318530717952646f
 #define FOURPI 12.56637061435917292f
 #define THREEPI 9.424777960769379f
 #define DEFBUFSIZE 1024		// Default signal buffer size
@@ -71,10 +77,10 @@ Outputs Pitch, Loudness, Brightness, Noisiness and Bark scale
 
 #define HANNING_W(i,ac) ((1.0f - cos((i * TWOPI) / (ac - 1.0f))) * 0.5f)
 #define HAMMING_W(i,ac) (0.54f - 0.46f * cos((TWOPI * i) / (ac - 1.0f)))
-#define BLACK62_W(i,ac) (0.44859f - 0.49364f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.05677f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))))
-#define BLACK70_W(i,ac) (0.42323f - 0.49755f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.07922f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))))
-#define BLACK74_W(i,ac) (0.402217f - 0.49703f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.09892f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))) - 0.00188 * cos(THREEPI * ((i - 1.0f)/(ac - 1.0f))))
-#define BLACK92_W(i,ac) (0.35875f - 0.48829f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.14128f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))) - 0.01168 * cos(THREEPI * ((i - 1.0f)/(ac - 1.0f))))
+#define BLACKMAN62_W(i,ac) (0.44859f - 0.49364f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.05677f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))))
+#define BLACKMAN70_W(i,ac) (0.42323f - 0.49755f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.07922f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))))
+#define BLACKMAN74_W(i,ac) (0.402217f - 0.49703f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.09892f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))) - 0.00188 * cos(THREEPI * ((i - 1.0f)/(ac - 1.0f))))
+#define BLACKMAN92_W(i,ac) (0.35875f - 0.48829f * cos(TWOPI * ((i - 1.0f)/(ac - 1.0f))) + 0.14128f * cos(FOURPI * ((i - 1.0f)/(ac - 1.0f))) - 0.01168 * cos(THREEPI * ((i - 1.0f)/(ac - 1.0f))))
 
 #define MINF(A,B) ((A < B) ? A : B)
 #define ftom pitch_ftom
@@ -98,11 +104,11 @@ static t_int pitch_intpartialonset[] = {
 
 void *analyzer_class;
 
-enum {Recta = 0, Hann, Hamm, Black62, Black70, Black74, Black92};
+enum {Recta=0, Hann, Hamm, Blackman62, Blackman70, Blackman74, Blackman92};
 enum {Log=0, Linear};
 enum {List=0, noList};
 
-#define DEFWIN	Black70		// Default window
+#define DEFWIN	Blackman70		// Default window
 
 // Some structures from Fiddle~
 typedef struct peakout {    // a peak for output
@@ -150,6 +156,7 @@ typedef struct _analyzer {
 	t_int x_scale;			// Type of output scale (log=0, linear=1)	
 	t_int x_output;			// Type of output
 	t_int x_bright;			// Type of brightness
+	t_int x_loud;			// Type of loudness
 	t_float x_loudness;		// Current loudness
 	t_float x_brightness;	// Current brightness
 	t_float x_noisiness;	// Current noisiness
@@ -190,6 +197,7 @@ typedef struct _analyzer {
 
     t_int BufSize;			// FFT buffer size
 	t_int FFTSize;			// Size of FFT
+	UInt32 x_FFTSizeOver2;	// Size of FFT/2 (UInt32 in G4 FFT)
     t_int BufWritePos;		// Where to write in buffer
 
     t_float *BufBark;		// Bark buffer
@@ -210,16 +218,26 @@ typedef struct _analyzer {
 	int x_debug;				// Debug mode?
 	t_float *lastInputVector;	// Remembered from last analyzer_perform() for debug into
 	t_int lastInputVectorSize;	// ditto
+
+#ifdef __ALTIVEC__ // Additional stuff for managing the G4-optimized FFT by Apple
+#pragma altivec_model on
+	t_float x_scaleFactor;
+	UInt32 x_log2n;
+    COMPLEX_SPLIT x_A;
+	FFTSetup x_setup;
+#pragma altivec_model off
+#endif
 	
 } t_analyzer;
 
-t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_black62, *ps_black70, *ps_black74, *ps_black92, 
+t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_blackman62, *ps_blackman70, *ps_blackman74, *ps_blackman92, 
 		 *ps_list, *ps_nolist;
 
 t_int *analyzer_perform(t_int *w);
 void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect);
 void analyzer_log(t_analyzer *x);
 void analyzer_linear(t_analyzer *x);
+void analyzer_loud(t_analyzer *x, t_symbol *s, short argc, t_atom *argv);
 void analyzer_bright(t_analyzer *x, t_symbol *s, short argc, t_atom *argv);
 void analyzer_float(t_analyzer *x, double f);
 void analyzer_int(t_analyzer *x, long n);
@@ -245,16 +263,19 @@ void analyzer_tick(t_analyzer *x);
 t_float pitch_mtof(t_float f);
 t_float pitch_ftom(t_float f);
 t_int pitch_ilog2(t_int n);
-void pitch_getit(t_analyzer *x); // modified fiddle main function
+void pitch_getit(t_analyzer *x); // modified fiddle pitch tracker function
 void analyzer_debug(t_analyzer *x, long n);
 
+#ifdef __ALTIVEC__
+void analyzer_tick_G4(t_analyzer *x);
+long log2max(long n);
+#endif
 
 
-
-void main(void) {
+int main(void) {
 
     post("Analyzer~ object version " VERSION " by Tristan Jehan");
-    post("copyright © 2001 Massachussets Institute of Technology");
+    post("copyright © 2001 Massachusetts Institute of Technology");
     post("Pitch tracker based on Miller Puckette's fiddle~");
     post("copyright © 1997-1999 Music Department UCSD");
     post(" ");
@@ -262,19 +283,20 @@ void main(void) {
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
 	ps_hamming = gensym("hamming");
-	ps_black62 = gensym("black62");
-	ps_black70 = gensym("black70");
-	ps_black74 = gensym("black74");
-	ps_black92 = gensym("black92");
+	ps_blackman62 = gensym("blackman62");
+	ps_blackman70 = gensym("blackman70");
+	ps_blackman74 = gensym("blackman74");
+	ps_blackman92 = gensym("blackman92");
 	ps_list = gensym("list");
 	ps_nolist = gensym("nolist");
 
-	setup( (Messlist **)&analyzer_class, (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
+	setup((Messlist **)&analyzer_class, (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
 		
 	addmess((method)analyzer_dsp, "dsp", A_CANT, 0);
 	addmess((method)analyzer_assist, "assist", A_CANT, 0);
 	addmess((method)analyzer_log, "log", A_GIMME, 0);
 	addmess((method)analyzer_linear, "linear", A_GIMME, 0);
+	addmess((method)analyzer_loud, "loud", A_GIMME, 0);
 	addmess((method)analyzer_bright, "bright", A_GIMME, 0);
     addmess((method)analyzer_print, "print", 0);
     addmess((method)analyzer_tellmeeverything, "tellmeeverything", 0);
@@ -284,12 +306,12 @@ void main(void) {
    	addmess((method)analyzer_npartial, "npartial", A_FLOAT, 0);
    	addmess((method)analyzer_debug, "debug", A_LONG, 0);
 	
-
 	addfloat((method)analyzer_float);
 	addint((method)analyzer_int);
 	dsp_initclass();
 
 	rescopy('STR#', RES_ID);
+	return 0;
 }
 
 t_int *analyzer_perform(t_int *w) {
@@ -402,6 +424,22 @@ void analyzer_bright(t_analyzer *x, t_symbol *s, short argc, t_atom *argv) {
 	}
 }
 
+void analyzer_loud(t_analyzer *x, t_symbol *s, short argc, t_atom *argv) {
+	if (argv[0].a_type == A_LONG) {
+		if (argv[0].a_w.w_long == 0) {
+			x->x_loud = 0;
+		} else {
+			x->x_loud = 1;
+		}
+	} else if (argv[0].a_type == A_FLOAT) {
+		if (argv[0].a_w.w_float == 0.0f) {
+			x->x_loud = 0;
+		} else {
+			x->x_loud = 1;
+		}
+	}
+}
+
 void analyzer_float(t_analyzer *x, double f) {
 
 	int n = (t_int)(f * x->x_Fs/1000.0f); 
@@ -430,6 +468,7 @@ void analyzer_print(t_analyzer *x) {
     post("reattack %d %.2f",  x->x_attacktime, x->x_attackthresh);
     post("vibrato %d %.2f",  x->x_vibtime, x->x_vibdepth);
     post("npartial %.2f",  x->x_npartial);
+    post("loud %d",  x->x_loud);
     post("bright %d",  x->x_bright);
     if (x->x_scale == Log) {
     	post("log");
@@ -441,7 +480,6 @@ void analyzer_print(t_analyzer *x) {
 #define TELLi(var) post("  " #var ": %ld", x->var);
 #define TELLf(var) post("  " #var ": %f", x->var);
 #define TELLp(var) post("  " #var ": %p", x->var);
-
 
 void analyzer_tellmeeverything(t_analyzer *x) {
 	long time;
@@ -538,14 +576,14 @@ void readx_window(t_analyzer *x, t_atom *argv) {
 		x->x_window = Hann;
 	} else if (argv[3].a_w.w_sym == ps_hamming) {
 		x->x_window = Hamm;
-	} else if (argv[3].a_w.w_sym == ps_black62) {
-		x->x_window = Black62;
-	} else if (argv[3].a_w.w_sym == ps_black70) {
-		x->x_window = Black70;
-	} else if (argv[3].a_w.w_sym == ps_black74) {
-		x->x_window = Black74;
-	} else if (argv[3].a_w.w_sym == ps_black92) {
-		x->x_window = Black92;
+	} else if (argv[3].a_w.w_sym == ps_blackman62) {
+		x->x_window = Blackman62;
+	} else if (argv[3].a_w.w_sym == ps_blackman70) {
+		x->x_window = Blackman70;
+	} else if (argv[3].a_w.w_sym == ps_blackman74) {
+		x->x_window = Blackman74;
+	} else if (argv[3].a_w.w_sym == ps_blackman92) {
+		x->x_window = Blackman92;
 	} else {
 		x->x_window = DEFWIN;
 	}
@@ -570,7 +608,7 @@ void readx_npitch(t_analyzer *x, t_atom *argv) {
 	} else if ((argv[5].a_type == A_FLOAT) && (argv[5].a_w.w_float >= 0) && (argv[5].a_w.w_float <= MAXNPITCH)) {
 		x->x_npitch = (t_int)(argv[5].a_w.w_float);
 	} else {
-		post("Pitch~: '# of pitches' argument may be out of range... Choosing default...");
+		post("Analyzer~: '# of pitches' argument may be out of range... Choosing default...");
 		x->x_npitch = DEFNPITCH;
 	}
 }
@@ -582,7 +620,7 @@ void readx_npeakanal(t_analyzer *x, t_atom *argv) {
 	} else if ((argv[6].a_type == A_FLOAT) && (argv[6].a_w.w_float >= 0) && (argv[6].a_w.w_float <= MAXNPEAK)) {
 		x->x_npeakanal = (t_int)(argv[6].a_w.w_float);
 	} else {
-		post("Pitch~: '# of peaks to find' argument may be out of range... Choosing default...");
+		post("Analyzer~: '# of peaks to find' argument may be out of range... Choosing default...");
 		x->x_npeakanal = DEFNPEAKANAL;
 	}
 }
@@ -594,7 +632,7 @@ void readx_npeakout(t_analyzer *x, t_atom *argv) {
 	} else if ((argv[7].a_type == A_FLOAT) && (argv[7].a_w.w_float >= 0) && (argv[7].a_w.w_float <= MAXNPEAK)) {
 		x->x_npeakout = (t_int)(argv[7].a_w.w_float);
 	} else {
-		post("Pitch~: '# of peaks to output' argument may be out of range... Choosing default...");
+		post("Analyzer~: '# of peaks to output' argument may be out of range... Choosing default...");
 		x->x_npeakout = DEFNPEAKOUT;
 	}
 }
@@ -613,10 +651,10 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	double freq = 0.0f, oldfreq = 0.0f;
     t_analyzer *x = (t_analyzer *)newobject(analyzer_class);
     dsp_setup((t_pxobject *)x,1); // one inlet	
-	x->x_clock = clock_new(x,(method)analyzer_tick);
 	x->x_Fs = sys_getsr();
 	x->BufWritePos = 0;
 	x->x_scale = Log;
+	x->x_loud = 0;
 	x->x_bright = 0;
 	x->x_loudness = 0.0f;
 	x->x_brightness = 0.0f;
@@ -636,7 +674,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     x->x_vibdepth = DEFVIBDEPTH;
     x->x_npartial = DEFNPARTIAL;
     x->x_attackvalue = 0;
-		
+
 	// More initializations from Fiddle~
     for (i=0; i<MAXNPITCH; i++) {
 		x->x_hist[i].h_pitch = x->x_hist[i].h_noted = 0.0f;
@@ -792,19 +830,19 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 			strcpy(x->x_winName,"hamming");
 			break;		
 		case 3:
-			strcpy(x->x_winName,"black62");
+			strcpy(x->x_winName,"blackman62");
 			break;		
 		case 4:
-			strcpy(x->x_winName,"black70");
+			strcpy(x->x_winName,"blackman70");
 			break;		
 		case 5:
-			strcpy(x->x_winName,"black74");
+			strcpy(x->x_winName,"blackman74");
 			break;		
 		case 6:
-			strcpy(x->x_winName,"black92");
+			strcpy(x->x_winName,"blackman92");
 			break;		
 		default:
-			strcpy(x->x_winName,"black62");
+			strcpy(x->x_winName,"blackman62");
 	}
 	
 	if (x->BufSize < vs) { 
@@ -842,6 +880,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 		x->x_overlap = 0; 
 
 	x->x_hop = x->BufSize - x->x_overlap;
+	x->x_FFTSizeOver2 = x->FFTSize/2;		
 
 	post("--- Analyzer~ ---");	
 	post("	Buffer size = %d",x->BufSize);
@@ -852,7 +891,31 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	post("	Number of pitches = %d",x->x_npitch);
 	post("	Number of peaks to search = %d",x->x_npeakanal);
 	post("	Number of peaks to output = %d",x->x_npeakout);
-	post("  ");
+
+	// Here comes the choice for altivec optimization or not...
+	if (sys_optimize()) { // note that we DON'T divide the vector size by four here
+
+#ifdef __ALTIVEC__ // More code and a new ptr so that x->BufFFT is vector aligned.
+#pragma altivec_model on 
+		x->x_clock = clock_new(x,(method)analyzer_tick_G4); // Call altivec-optimized tick function
+		post("	Using G4-optimized FFT");	
+		// Allocate some memory for the altivec FFT
+		x->x_A.realp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
+		x->x_A.imagp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
+		x->x_log2n = log2max(x->FFTSize);
+      	x->x_setup = create_fftsetup (x->x_log2n, 0);
+    	x->x_scaleFactor = (t_float)1.0/(2.0*x->FFTSize);
+#pragma altivec_model off
+#else
+		error("  No G4 optimization available");
+#endif
+
+	} else { // Normal tick function
+		x->x_clock = clock_new(x,(method)analyzer_tick);
+		x->memFFT = (t_float*) NewPtr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
+	}
+	post("");
+
 
 	// Allocate memory
 	x->Buf1 = (t_int*) NewPtr(x->BufSize * sizeof(t_float)); // Careful these are pointers to integers but the content is floats
@@ -860,13 +923,12 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->BufFFT = (t_float*) NewPtr(x->FFTSize * sizeof(t_float));
 	x->BufPower = (t_float*) NewPtr((x->FFTSize/2) * sizeof(t_float));
 	x->WindFFT = (t_float*) NewPtr(x->BufSize * sizeof(t_float));
-	x->memFFT = (t_float*) NewPtr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for fft twiddle
 	x->peakBuf = (t_peakout*) NewPtr(x->x_npeakout * sizeof(t_peakout)); // from Fiddle~
 	x->histBuf = (t_float*) NewPtr((x->FFTSize + BINGUARD) * sizeof(t_float)); // for Fiddle~
 
 	if (x->x_Fs != DEFAULT_FS) {
 		error("Analyzer~: WARNING !!! Object set for 44.1 KHz only");
-		return;
+		return 0;
 	} else {
 		x->BufBark = (t_float*) NewPtr(2*NUMBAND * sizeof(t_float));
 		x->BufSizeBark = (t_int*) NewPtr(NUMBAND * sizeof(t_int));
@@ -901,17 +963,17 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 			case Hamm:	for (i=0; i<x->BufSize; ++i)
 							x->WindFFT[i] = HAMMING_W(i,x->BufSize);
 						break;
-			case Black62: for (i=0; i<x->BufSize; ++i)
-							x->WindFFT[i] = BLACK62_W(i,x->BufSize);
+			case Blackman62: for (i=0; i<x->BufSize; ++i)
+							x->WindFFT[i] = BLACKMAN62_W(i,x->BufSize);
 						break;
-			case Black70: for (i=0; i<x->BufSize; ++i)
-							x->WindFFT[i] = BLACK70_W(i,x->BufSize);
+			case Blackman70: for (i=0; i<x->BufSize; ++i)
+							x->WindFFT[i] = BLACKMAN70_W(i,x->BufSize);
 						break;
-			case Black74: for (i=0; i<x->BufSize; ++i)
-							x->WindFFT[i] = BLACK74_W(i,x->BufSize);
+			case Blackman74: for (i=0; i<x->BufSize; ++i)
+							x->WindFFT[i] = BLACKMAN74_W(i,x->BufSize);
 						break;
-			case Black92: for (i=0; i<x->BufSize; ++i)
-							x->WindFFT[i] = BLACK92_W(i,x->BufSize);
+			case Blackman92: for (i=0; i<x->BufSize; ++i)
+							x->WindFFT[i] = BLACKMAN92_W(i,x->BufSize);
 						break;
 		}
 	} else {
@@ -952,12 +1014,21 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 }
 
 void  analyzer_free(t_analyzer *x) {
+#ifdef __ALTIVEC__
+#pragma altivec_model on
+	if (x->x_A.realp) t_freebytes(x->x_A.realp, x->x_FFTSizeOver2);
+	if (x->x_A.imagp) t_freebytes(x->x_A.imagp, x->x_FFTSizeOver2);
+	if (x->x_setup) destroy_fftsetup(x->x_setup);
+#pragma altivec_model off
+#else
+	if (x->memFFT != NULL) DisposePtr((char *) x->memFFT);
+#endif		
+
 	if (x->Buf1 != NULL) DisposePtr((char *) x->Buf1);
 	if (x->Buf2 != NULL) DisposePtr((char *) x->Buf2);
 	if (x->BufFFT != NULL) DisposePtr((char *) x->BufFFT);
 	if (x->BufPower != NULL) DisposePtr((char *) x->BufPower);
 	if (x->WindFFT != NULL) DisposePtr((char *) x->WindFFT);
-	if (x->memFFT != NULL) DisposePtr((char *) x->memFFT);
 	if (x->peakBuf != NULL) DisposePtr((char *) x->peakBuf);
 	if (x->histBuf != NULL) DisposePtr((char *) x->histBuf);
 	if (x->x_clock != NULL) freeobject((t_object *)x->x_clock);
@@ -973,13 +1044,11 @@ void analyzer_tick(t_analyzer *x) {
 
 	t_int i, index=0, cpt;
 	t_float bark = 0.0f, loud = 0.0f, bright = 0.0f, sumSpectrum = 0.0f, SFM = 0.0f;
-	t_int halfFFTSize = x->FFTSize/2;
-	t_float FsOverFFTSize = x->x_Fs/x->FFTSize;
-	t_float FsOverBarkSize = x->x_Fs/(2.0f*NUMBAND);
+	t_float FsOverFFTSize = x->x_Fs/x->FFTSize; // Keep it here since x_Fs may change
+	t_float FsOverBarkSize = x->x_Fs/(2.0f*NUMBAND); // Fix that problem in a next version
 	double prod = 1.0f, sum = 0.0f;
 	double invNumBand = 0.04f;
     t_pitchhist *ph;
-
 
 	debug("Entering analyzer_tick");
 	
@@ -1001,22 +1070,7 @@ void analyzer_tick(t_analyzer *x) {
 	
 	// Go into fiddle~ code
 	pitch_getit(x);
-
-	// loudness
-	for (i=1; i<halfFFTSize; i++) {
-		loud += x->BufPower[i];
-	}
-	
-	x->x_loudness = loud / (halfFFTSize-1);
-	
-	if (x->x_scale == Log) {
-		if (x->x_loudness > 0) {
-			x->x_loudness = 10*log10(x->x_loudness/DB_REF);
-		} else {
-			x->x_loudness = -DB_REF;
-		}
-	}
-				
+					
 	// Output Band energy (find brightness #1)
 	for (i=0; i<NUMBAND; i++) {
 		cpt = x->BufSizeBark[i];
@@ -1038,6 +1092,11 @@ void analyzer_tick(t_analyzer *x) {
 			sumSpectrum += bark;
 		}
 		
+		// Special Loudness case
+		if (x->x_loud != 0) {
+			loud += bark;
+		}
+		
 		// output
 		if (x->x_output == noList) {
 			if (x->x_scale) {
@@ -1053,7 +1112,25 @@ void analyzer_tick(t_analyzer *x) {
  			}
  		}
  	}
- 	 		
+
+	// loudness
+	if (x->x_loud == 0) {
+		for (i=1; i<x->x_FFTSizeOver2; i++) {
+			loud += x->BufPower[i];
+		}
+		x->x_loudness = loud / (x->x_FFTSizeOver2-1);
+	} else {
+		x->x_loudness = loud / NUMBAND;
+	}
+	
+	if (x->x_scale == Log) {
+		if (x->x_loudness > 0) {
+			x->x_loudness = 10*log10(x->x_loudness/DB_REF);
+		} else {
+			x->x_loudness = -DB_REF;
+		}
+	}
+	 		 		
  	// for Noisiness
  	prod = pow(prod,invNumBand);
  	sum  = invNumBand * sum;
@@ -1077,11 +1154,11 @@ void analyzer_tick(t_analyzer *x) {
 	if (x->x_bright == 0) {
 	
 		// Absolute
-		for (i=1; i<halfFFTSize; i++) 
+		for (i=1; i<x->x_FFTSizeOver2; i++) 
 			x->BufPower[i] = sqrtf(x->BufPower[i]);
 
 		// Brightness
-		for (i=1; i<halfFFTSize; i++) {
+		for (i=1; i<x->x_FFTSizeOver2; i++) {
 			bright += (i * x->BufPower[i]);
 			sumSpectrum += x->BufPower[i];
 		}
@@ -1096,14 +1173,14 @@ void analyzer_tick(t_analyzer *x) {
  	// Output Loudness/Brightness/Noisiness
 	outlet_float(x->x_outloud, x->x_loudness);
     outlet_float(x->x_outbright, x->x_brightness);
-    outlet_float(x->x_outnois, x->x_noisiness);
+    outlet_float(x->x_outnois, (1.0 - x->x_noisiness));
 
 	// Output pitch results
     if (x->x_npeakout) { // Output peaks
     	t_peakout *po;
     	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
 			t_atom at[3];
-	    	SETINT(at, i+1);
+	    	SETLONG(at, i+1);
 	    	SETFLOAT(at+1, po->po_freq);
 	    	SETFLOAT(at+2, po->po_amp);
 	    	outlet_list(x->x_peakout, 0, 3, at);
@@ -1114,7 +1191,7 @@ void analyzer_tick(t_analyzer *x) {
     if (x->x_npitch > 1) {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[3];
-			SETINT(at, i+1);
+			SETLONG(at, i+1);
 			SETFLOAT(at+1, ph->h_pitches[x->x_histphase]);
 			SETFLOAT(at+2, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 3, at);
@@ -1133,7 +1210,7 @@ void analyzer_tick(t_analyzer *x) {
 	    for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
  			if (ph->h_pitch) {
 				t_atom at[3];
-				SETINT(at, i+1);
+				SETLONG(at, i+1);
 				SETFLOAT(at+1, ph->h_pitch);
 				SETFLOAT(at+2, mtof(ph->h_pitch));
 				outlet_list(x->x_noteout, 0, 3, at);
@@ -1158,6 +1235,218 @@ void analyzer_tick(t_analyzer *x) {
  
  	debug("leaving analyzer_tick");
  }	
+
+#ifdef __ALTIVEC__
+void analyzer_tick_G4(t_analyzer *x) {
+
+	t_int i, index=0, cpt;
+	t_float bark = 0.0f, loud = 0.0f, bright = 0.0f, sumSpectrum = 0.0f, SFM = 0.0f;
+	t_float FsOverFFTSize = x->x_Fs/x->FFTSize; // Keep it here since x_Fs may change
+	t_float FsOverBarkSize = x->x_Fs/(2.0f*NUMBAND); // Fix that problem in a next version
+	double prod = 1.0f, sum = 0.0f;
+	double invNumBand = 0.04f;
+    t_pitchhist *ph;
+
+	debug("Entering analyzer_tick_G4");
+	
+	// Zero padding
+	for (i=x->BufSize; i<x->FFTSize; i++)
+		x->BufFFT[i] = 0.0f;
+
+	// Window the samples
+	if (x->x_window != Recta)
+		for (i=0; i<x->BufSize; ++i)
+			x->BufFFT[i] *= x->WindFFT[i];
+			
+    // Look at the real signal as an interleaved complex vector by casting it.
+    // Then call the transformation function ctoz to get a split complex vector,
+    // which for a real signal, divides into an even-odd configuration.
+    ctoz ((COMPLEX *) x->BufFFT, 2, &x->x_A, 1, x->x_FFTSizeOver2);
+      
+    // Carry out a Forward FFT transform
+    fft_zrip(x->x_setup, &x->x_A, 1, x->x_log2n, FFT_FORWARD);
+
+	// Fast rescaling required
+//    vsmul( x->x_A.realp, 1, &x->x_scaleFactor, x->x_A.realp, 1, x->x_FFTSizeOver2);
+//    vsmul( x->x_A.imagp, 1, &x->x_scaleFactor, x->x_A.imagp, 1, x->x_FFTSizeOver2);
+
+    // The output signal is now in a split real form.  Use the function
+    // ztoc to get a split real vector.
+    ztoc ( &x->x_A, 1, (COMPLEX *) x->BufFFT, 2, x->x_FFTSizeOver2);
+		
+	// Squared Absolute
+	for (i=0; i<x->FFTSize; i+=2) 
+		x->BufPower[i/2] = (x->BufFFT[i] * x->BufFFT[i]) + (x->BufFFT[i+1] * x->BufFFT[i+1]);
+	
+	// Go into fiddle~ code
+	pitch_getit(x);
+					
+	// Output Band energy (find brightness #1)
+	for (i=0; i<NUMBAND; i++) {
+		cpt = x->BufSizeBark[i];
+		bark = 0.0f;
+		while (cpt > 0) {
+			bark += x->BufPower[index];
+			cpt--;
+			index++;
+		}
+		bark = bark/x->BufSizeBark[i];
+		
+		// for Noisiness
+		sum += bark;
+		prod *= bark;
+
+		// Special Brightness case
+		if (x->x_bright != 0) {
+			bright += ((i+0.5) * bark); // center around half the bandwidth of the band
+			sumSpectrum += bark;
+		}
+		
+		// Special Loudness case
+		if (x->x_loud != 0) {
+			loud += bark;
+		}
+		
+		// output
+		if (x->x_output == noList) {
+			if (x->x_scale) {
+				outlet_float(x->x_out[NUMBAND-1-i], bark);
+			} else {
+				outlet_float(x->x_out[NUMBAND-1-i], 10*log10(bark/DB_REF));
+ 			}
+ 		} else {
+			if (x->x_scale) {
+				SETFLOAT(x->myList+i, bark);
+			} else {
+				SETFLOAT(x->myList+i, 10*log10(bark/DB_REF));
+ 			}
+ 		}
+ 	}
+
+	// loudness
+	if (x->x_loud == 0) {
+		for (i=1; i<x->x_FFTSizeOver2; i++) {
+			loud += x->BufPower[i];
+		}
+		x->x_loudness = loud / (x->x_FFTSizeOver2-1);
+	} else {
+		x->x_loudness = loud / NUMBAND;
+	}
+	
+	if (x->x_scale == Log) {
+		if (x->x_loudness > 0) {
+			x->x_loudness = 10*log10(x->x_loudness/DB_REF);
+		} else {
+			x->x_loudness = -DB_REF;
+		}
+	}
+	 		 		
+ 	// for Noisiness
+ 	prod = pow(prod,invNumBand);
+ 	sum  = invNumBand * sum;
+	if (sum!=0) {
+	 	SFM = prod/sum;
+	} else {
+		SFM = 0.;
+	}
+	
+	// Spectral Flatness Measure (SFM)
+ 	if (SFM > 0) {
+		SFM = 10*log10(prod/sum);
+	} else {
+		SFM = 0.0f;
+	}
+	
+	// Tonality factor or Peakiness
+	x->x_noisiness = MINF((SFM/-SFM_MAX),1); // minimum
+
+	// for Brightness
+	if (x->x_bright == 0) {
+	
+		// Absolute
+		for (i=1; i<x->x_FFTSizeOver2; i++) 
+			x->BufPower[i] = sqrtf(x->BufPower[i]);
+
+		// Brightness
+		for (i=1; i<x->x_FFTSizeOver2; i++) {
+			bright += (i * x->BufPower[i]);
+			sumSpectrum += x->BufPower[i];
+		}
+	
+		if (sumSpectrum <= 0.0f) x->x_brightness = 0.0f;
+		else x->x_brightness = (bright * FsOverFFTSize) / sumSpectrum;
+	} else {
+		if (sumSpectrum <= 0.0f) x->x_brightness = 0.0f;
+		else x->x_brightness = (bright * FsOverBarkSize) / sumSpectrum;
+	}		
+
+ 	// Output Loudness/Brightness/Noisiness
+	outlet_float(x->x_outloud, x->x_loudness);
+    outlet_float(x->x_outbright, x->x_brightness);
+    outlet_float(x->x_outnois, (1.0 - x->x_noisiness));
+
+	// Output pitch results
+    if (x->x_npeakout) { // Output peaks
+    	t_peakout *po;
+    	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
+			t_atom at[3];
+	    	SETLONG(at, i+1);
+	    	SETFLOAT(at+1, po->po_freq);
+	    	SETFLOAT(at+2, po->po_amp);
+	    	outlet_list(x->x_peakout, 0, 3, at);
+		}
+    }
+      
+    // Output fundamental frequencies + amplitudes
+    if (x->x_npitch > 1) {
+		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
+			t_atom at[3];
+			SETLONG(at, i+1);
+			SETFLOAT(at+1, ph->h_pitches[x->x_histphase]);
+			SETFLOAT(at+2, ph->h_amps[x->x_histphase]);
+			outlet_list(x->x_pitchout, 0, 3, at);
+   		}
+   	} else {
+		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
+			t_atom at[2];
+			SETFLOAT(at, ph->h_pitches[x->x_histphase]);
+			SETFLOAT(at+1, ph->h_amps[x->x_histphase]);
+			outlet_list(x->x_pitchout, 0, 2, at);
+   		}
+	}   	
+       
+    // Output cooked MIDI/Frequency pitch
+    if (x->x_npitch > 1) {
+	    for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
+ 			if (ph->h_pitch) {
+				t_atom at[3];
+				SETLONG(at, i+1);
+				SETFLOAT(at+1, ph->h_pitch);
+				SETFLOAT(at+2, mtof(ph->h_pitch));
+				outlet_list(x->x_noteout, 0, 3, at);
+			}
+	} else {
+		ph = x->x_hist;
+ 		if (ph->h_pitch) {
+			t_atom at[2];
+			SETFLOAT(at, ph->h_pitch);
+			SETFLOAT(at+1, mtof(ph->h_pitch));
+			outlet_list(x->x_noteout, 0, 2, at);
+		}
+	}
+			
+    // Output attack bang 
+    if (x->x_attackvalue) outlet_bang(x->x_attackout);
+
+ 	// Only for lists
+	if (x->x_output == List) {
+ 		outlet_list(x->x_outlet, 0L, NUMBAND, x->myList);
+ 	}
+ 
+ 	debug("leaving analyzer_tick_G4");
+ }	
+#endif // __ALTIVEC__
+
 
 // Convert from MIDI to Hz and Hz to MIDI
 t_float pitch_mtof(t_float f) {
@@ -1197,8 +1486,7 @@ void pitch_getit(t_analyzer *x)
     t_float *histogram = x->histBuf + BINGUARD;
     t_int npeaktot = (x->x_npeakout > x->x_npeakanal ? x->x_npeakout : x->x_npeakanal);
     t_pitchhist *phist;
-    
-    
+       
     debug("entering pitch_getit");
     
     // Circular buffer for History
@@ -1230,18 +1518,17 @@ void pitch_getit(t_analyzer *x)
 	// search for peaks
 	pk1 = x->x_peaklist;
 	
-	// debug("** About to look for peaks.  npeaktot %ld    n %ld    FFTsize  %ld", npeaktot, n, x->FFTSize);
-	
-	
-	/* Matt changed this from (i<n-2) to (i<n-3) */
+	debug("*** About to look for peaks.  npeaktot %ld    n %ld    FFTsize  %ld", npeaktot, n, x->FFTSize);
+		
+	// Matt changed this from (i<n-2) to (i<n-3) */
     for (i=MINBIN, fp1=spec+2*MINBIN, fp2=powSpec+MINBIN; (i<n-3) && (npeak<npeaktot); i++, fp1+=2, fp2++) {    	 
 		t_float height = fp2[0], h1 = fp2[-1], h2 = fp2[1]; // Bin power and adjacents
 		t_float totalfreq, pfreq, f1, f2, m, var, stdev;
 	
-		 if (fp1+7 >= spec+x->FFTSize) {
-    	 	post("*** fp1 %p, fp1+7 %p, spec %p, spec+FFTsize %p", fp1, fp1+7, spec, spec+x->FFTSize);
-    	 }
-
+		// Get worried if you see this
+		if (fp1+7 >= spec+x->FFTSize) {
+    		post("*** fp1 %p, fp1+7 %p, spec %p, spec+FFTsize %p", fp1, fp1+7, spec, spec+x->FFTSize);
+    	}
 	
 		if (height<h1 || height<h2 || h1*coeff<POWERTHRES*total_power || h2*coeff<POWERTHRES*total_power) continue; // Go to next
 
@@ -1261,7 +1548,7 @@ void pitch_getit(t_analyzer *x)
 
 		totalfreq = i + m;
 		
-		// BAD HACK TO BE CHANGE IN NEXT VERSION !!!!
+		// BAD HACK TO BE CHANGED IN NEXT VERSION !!!!
 		if (coeff > 1) {
 			switch ((t_int)coeff) {
 				case 2:
@@ -1564,8 +1851,22 @@ void pitch_getit(t_analyzer *x)
 	return;
 }
 
-
+// Function added by Matt
 void analyzer_debug(t_analyzer *x, long n) {
-	post("analyzer~: debug is %ld", n);
+	post("Analyzer~: debug is %ld", n);
 	x->x_debug = n;
 }
+
+// Computes the ceiling of log2(n) 
+// i.e. log2max(7) = 3, log2max(8) = 3, log2max(9) = 4
+long log2max(long n) {
+	
+	long power = 1;
+	long k = 1;
+	
+	if (n==1) return 0;
+	while ((k <<= 1) < n) power++;
+	
+	return power;
+}
+
