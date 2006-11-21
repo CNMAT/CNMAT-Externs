@@ -42,6 +42,7 @@ VERSION 1.9.2: Builds CFM and MachO from the same code
 VERSION 1.9.3: Same as 1.9.2
 VERSION 1.9.4: Fixed severe type tag bug and severe byte-order bug (for receiving) and built for Windows
 VERSION 1.9.5: Rebuilt for CFM (had to change where it got ntohl()).
+VERSION 1.9.6: Implements assistance strings again.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         
    */
@@ -198,8 +199,26 @@ void *OSC_new(long arg) {
 	return (x);
 }
 
-void OSC_assist(OSC *x, void *b, long m, long a, char *s) {
-  //	assist_string(3009,m,a,1,2,s);
+void OSC_assist(OSC *x, void *b, long m, long a, char *dst) {
+	if (m == ASSIST_INLET) {
+		if (a == 0) {
+			strcpy(dst, "Max msgs; OSC packets");
+		} else {
+			error("OSC_assist: unrecognized inlet number %ld", a);
+		}
+	} else if (m == ASSIST_OUTLET) {
+		if (a == 0) {
+			strcpy(dst, "OSC packets; bang after msgs in OSC packet");
+		} else if (a == 1) {
+			strcpy(dst, "OSC msgs decoded from OSC packet");
+		} else if (a == 2) {
+			strcpy(dst, "Time tag (list of two ints) from OSC packet");
+		} else {
+			error("OSC_assist: unrecognized outlet number %ld", a);
+		}
+	} else {
+		error("Unexpected msg %ld in OSC_assist", m);
+	}
 }
 
 void OSC_debug (OSC *x) {
