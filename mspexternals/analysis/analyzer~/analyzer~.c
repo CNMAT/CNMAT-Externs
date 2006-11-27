@@ -9,6 +9,7 @@
 	version 1.2.1 Matt Wright fixed pitch_getit() bounds error and added debug info
 	version 1.2.2 Matt Wright more debug info: addr of most recent input sig vector and gettime()
 	version 1.3 implements an altivec-optimized FFT and adds more windows
+	version 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
 */
 
 #include "ext.h"
@@ -31,7 +32,7 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.3"
+#define VERSION "1.3.1"
 #define RES_ID	7079
 #define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
@@ -314,6 +315,8 @@ int main(void) {
 	return 0;
 }
 
+
+
 t_int *analyzer_perform(t_int *w) {
 
 	t_float *in = (t_float *)(w[1]);
@@ -459,9 +462,49 @@ void analyzer_int(t_analyzer *x, long n) {
 	x->x_overlap = x->BufSize - x->x_hop;	
 }
 
+//Assist strings
+
+void analyzer_assist(t_analyzer *x, void *b, long m, long a, char *s) 
+{
+       if (m == ASSIST_INLET) {
+               sprintf(s, "(signal) input, (float/int) hop size");
+			   }
+       else {
+		switch (a) {	
+		case 0:
+			sprintf(s,"(list) cooked MIDI pitch, pitch (Hz)");
+			break;
+		case 1:
+			sprintf(s,"(float) loudness");
+			break;
+		case 2:
+			sprintf(s,"(float) brightness");
+			break;
+		case 3:
+			sprintf(s,"(float) noisiness");
+			break;
+		case 4:
+			sprintf(s,"(list) bark");
+			break;
+		case 5:
+			sprintf(s,"(bang) attack");
+			break;
+		case 6:
+			sprintf(s,"(list) polyphonic pitches (freq, amp)");
+			break;
+		case 7:
+			sprintf(s,"(list) sinusoidal components (freq, amp)");
+			break;
+		}
+	}
+}
+
+/*
 void analyzer_assist(t_analyzer *x, void *b, long m, long a, char *s) {
 	assist_string(RES_ID,m,a,1,2,s);
 }
+*/
+
 
 void analyzer_print(t_analyzer *x) {
     post("amp-range %.2f %.2f",  x->x_amplo, x->x_amphi);
@@ -1014,6 +1057,9 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 }
 
 void  analyzer_free(t_analyzer *x) {
+
+dsp_free((t_pxobject *)x);
+
 #ifdef __ALTIVEC__
 #pragma altivec_model on
 	if (x->x_A.realp) t_freebytes(x->x_A.realp, x->x_FFTSizeOver2);
@@ -1036,8 +1082,6 @@ void  analyzer_free(t_analyzer *x) {
 	if (x->BufSizeBark != NULL) DisposePtr((char *) x->BufSizeBark);
 	if (x->x_out != NULL) DisposePtr((char *) x->x_out);
 	if (x->myList != NULL) DisposePtr((char *) x->myList);
-
-	dsp_free((t_pxobject *)x);
 }
 
 void analyzer_tick(t_analyzer *x) {
