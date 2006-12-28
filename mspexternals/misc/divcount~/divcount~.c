@@ -111,7 +111,8 @@ char *strcpy(char *s1, const char *s2);
 //	main																					  //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 void main(void){
-	setup(&z_divcount_class, z_divcount_new, (method)z_divcount_free, (short)sizeof(t_z_divcount), 0L, A_DEFLONG, 0);
+	setup((t_messlist **)&z_divcount_class, (method)z_divcount_new, (method)z_divcount_free, 
+		  (short)sizeof(t_z_divcount), 0L, A_DEFLONG, 0);
 	
 	addmess((method)z_divcount_dsp, "dsp", A_CANT, 0);
 	addmess((method)z_divcount_assist,"assist",A_CANT,0);
