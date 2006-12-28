@@ -29,6 +29,7 @@ AUTHORS: Takahiko Suzuki
 COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 000308: Takahiko's final version.
+VERSION 309: Built for UB by Matt Wright
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
@@ -132,9 +133,7 @@ void main(void){
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //	z_divcount_new																			  //
 ////////////////////////////////////////////////////////////////////////////////////////////////
-void *z_divcount_new(long n){
-	long	i;
-	
+void *z_divcount_new(long n){	
 	t_z_divcount *x = (t_z_divcount *)newobject(z_divcount_class); 
 	
 	if(n<2){
@@ -157,7 +156,7 @@ void *z_divcount_new(long n){
 	x->ch = (channel*)getbytes(sizeof(channel) * n);
 	if(!(x->ch)){
 		error("divcount~: ouch!! memory allocation failed!!");
-		return;
+		return 0;
 	}
 	
 	while(n--){
