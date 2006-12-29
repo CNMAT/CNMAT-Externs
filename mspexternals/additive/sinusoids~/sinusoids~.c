@@ -38,6 +38,7 @@ VERSION 1.7: 030219, bandwidth-enhanced
 VERSION 1.7.1: 041228, ability to toggle verbosity	
 VERSION 1.7.2: 050606, merged Michael Zbyszynski's 27 April 2004 Windows changes
 VERSION 1.7.3: Changed name (in version system) to have the tilde.
+VERSION 1.7.4: Updated help file
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
