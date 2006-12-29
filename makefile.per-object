@@ -335,6 +335,12 @@ code-checked-in:
 
 # Actually copying the files to directories where the web server can find them
 
+release:
+	@echo You must specify which platform you want to release, e.g.,
+	@echo     make macho-release
+	@echo     make cfm-release
+	@echo     make win-release
+	
 
 cfm-release: $(CFM_WEB_INCOMING)
 	scp $< $(WEBSERVER_INCOMING_DIR)
