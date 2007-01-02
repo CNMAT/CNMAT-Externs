@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2001.  The Regents of the University of California
+Copyright (c) 2001-07.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -32,19 +32,20 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 NAME: amaranth~ 
 DESCRIPTION: Idiosyncratic granular synthesis external
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2001,02,03,04,05,06
+COPYRIGHT_YEARS: 2001,02,03,04,05,06,07
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Initial version. (10/18/01)
-VERSION 0.1: (020606) multichannel buffers OK, Clears all grains when DSP turn 
+VERSION 0.1: (020606) multichannel buffers OK, Clears all grains when DSP turn
+VERSION 0.1.1: Recompiled for UB, uses proper version system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
 */
 
 
-#define AMARANTH_VERSION "0.1"
-
+#include "version.h"
 #include "ext.h"
+#include "version.c"
 #include "z_dsp.h"
 #include <math.h>
 #include "buffer.h"
@@ -113,9 +114,8 @@ void tellmeeverything(t_amaranth *x);
 
 
 void main(void) {
-	post("amaranth~ version " AMARANTH_VERSION " by Matt Wright");
-	post("Copyright © 2001 Regents of the University of California.  ");
-
+	version(0);
+	
 	fillHanningWindowTable();
 	FillInterpTable();
 	ps_buffer = gensym("buffer~");
@@ -125,6 +125,7 @@ void main(void) {
 //    addmess((method)amaranth_grain, "grain", A_FLOAT, A_FLOAT, A_FLOAT, A_SYM, 0);
     addmess((method)amaranth_grain, "grain", A_GIMME, 0);
     addmess((method)amaranth_dsp, "dsp", A_CANT, 0);
+	addmess((method)version, "version", 0);
     addmess((method)tellmeeverything, "tellmeeverything", 0);
     dsp_initclass();
 }
