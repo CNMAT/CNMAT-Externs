@@ -36,6 +36,7 @@ VERSION 0.1: Mike Lee's original version
 VERSION 0.2: Modified to work w/ PPC Max on 9/25/96 by Matt Wright.  Also made it accept "symbol" lists, not just lists of numbers.
 VERSION 0.3: Modified 8/12/05 by Matt Wright to compile again 
 VERSION 0.4: Accepts single floats or integers
+VERSION 0.5: Uses sysmem_newptr instead of getbytes(); works with more than 4096
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -81,7 +82,7 @@ struct listAccum *listAccumNew(long n) {
 	x = (struct listAccum *)newobject(class);
 	x->l_outlet = outlet_new(x,0L);
 	x->l_numAtoms = n;
-	x->l_atoms	= (Atom *) getbytes((short)(sizeof(Atom)*x->l_numAtoms));
+	x->l_atoms	= (Atom *) sysmem_newptr((long)(sizeof(Atom)*x->l_numAtoms));
 	x->l_atomsInBuf = 0;
 	
 	x->debug = false;
@@ -91,7 +92,8 @@ struct listAccum *listAccumNew(long n) {
 
 void listAccumFree(struct listAccum *x)
 {
-	freebytes(x->l_atoms,(short)(sizeof(Atom)*x->l_numAtoms));
+  //freebytes(x->l_atoms,(short)(sizeof(Atom)*x->l_numAtoms));
+  sysmem_freeptr(x->l_atoms);
 }
 
 /* ------------------------- listAccumBang ------------------------ */
