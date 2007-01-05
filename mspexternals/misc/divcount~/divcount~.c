@@ -30,6 +30,7 @@ COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 000308: Takahiko's final version.
 VERSION 309: Built for UB by Matt Wright
+VERSION 309.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */

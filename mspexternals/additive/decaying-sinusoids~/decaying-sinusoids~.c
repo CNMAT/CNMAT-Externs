@@ -33,6 +33,7 @@ AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Adrian's initial version 
+VERSION 0.0.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
        	©1988,1989 Adrian Freed

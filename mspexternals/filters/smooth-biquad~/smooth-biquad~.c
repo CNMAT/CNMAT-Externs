@@ -34,7 +34,8 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 1.3alpha: Adrian's initial version
 VERSION 1.4: Rough windows compile by mzed, 20 April 2004
 VERSION 1.4.1: Better compile 27 April 2004, mzed
-VERSION 1.4: CFM/MachO compile, proper version info.
+VERSION 1.5: CFM/MachO compile, proper version info.
+VERSION 1.5.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

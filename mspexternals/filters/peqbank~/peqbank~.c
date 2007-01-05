@@ -43,6 +43,7 @@ VERSION 1.7 expires March 1, 2003
 VERSION 1.8 fixes peqbank_free bug
 VERSION 1.9 Added "biquads" message; expires 12/1/3
 VERSION 2.0 Never expires
+VERSION 2.0.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 

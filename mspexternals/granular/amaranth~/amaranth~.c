@@ -38,6 +38,7 @@ VERSION 0.0: Initial version. (10/18/01)
 VERSION 0.1: (020606) multichannel buffers OK, Clears all grains when DSP turn
 VERSION 0.1.1: Recompiled for UB, uses proper version system
 VERSION 0.1.2: Help patch no longer requires sound files
+VERSION 0.1.3: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 

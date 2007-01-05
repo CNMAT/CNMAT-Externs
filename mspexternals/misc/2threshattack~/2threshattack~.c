@@ -29,6 +29,7 @@ COPYRIGHT_YEARS: 2004-06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version (5/31/4)
 VERSION 0.2: UB recompile 
+VERSION 0.2.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */

@@ -49,6 +49,7 @@ VERSION 1.99: AF: fixed typo in above changed NewPtr to getbytes and increased n
 VERSION 1.995: AF: changed getbytes back to NewPtr and increased resonances to 1024
 VERSION 1.996: (MW) Changed NewPtr to sysmem_newptr(), added free() to plug memory leak
 VERSION 1.997: (MW) Changed free() routine to call dsp_free() *before* freeing memory. 
+VERSION 1.997.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
