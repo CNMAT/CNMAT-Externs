@@ -1,7 +1,7 @@
 /*
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2004, The Regents of 
+University of California, Berkeley.  Copyright (c) 2004-7, The Regents of 
 the University of California (Regents).  
 
 Permission to use, copy, modify, distribute, and distribute modified versions
@@ -25,17 +25,21 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 NAME: stpd~
 DESCRIPTION: A short-term peak detector (aka leaky peak detector, envelope follower), useful, e.g., as part of a compressor/limiter.
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2004,05,06
+COPYRIGHT_YEARS: 2004,5,6,7
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.11: Matt's initial version 
+VERSION 0.2: UB compile, uses version system
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
 
-#define STPD_VERSION "0.11"
+
 
 #include "ext.h"
 #include "z_dsp.h"
+
+#include "version.h"
+#include "version.c"
 
 void *stpd_class;
 
@@ -59,8 +63,7 @@ void stpd_set_taur(t_stpd *x, double taur);
 void stpd_tellmeeverything(t_stpd *x);
 
 void main(void) {
-	post("stpd~ version " STPD_VERSION " by Matt Wright");
-	post("Copyright © 2004 Regents of the University of California.");
+    version(0);
 
     setup((t_messlist **)&stpd_class, (method)stpd_new, (method)dsp_free,
           (short)sizeof(t_stpd), 0L, A_DEFFLOAT, A_DEFFLOAT, 0);
@@ -68,6 +71,7 @@ void main(void) {
     addmess((method)stpd_set_taua, "taua", A_FLOAT, 0);
     addmess((method)stpd_set_taur, "taur", A_FLOAT, 0);
     addmess((method)stpd_tellmeeverything, "tellmeeverything", 0);
+    addmess((method)version, "version", 0);
     
     dsp_initclass();
 }
@@ -136,7 +140,7 @@ t_int *stpd_perform(t_int *w) {
 }
 
 void stpd_set_taua(t_stpd *x, double taua_d) {
-  float taua = (float) tauad;
+  float taua = (float) taua_d;
   x->oneover_taua = 1.0f / taua;
   // post("1/taua %f", x->oneover_taua);
 }
