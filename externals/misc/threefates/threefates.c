@@ -37,7 +37,7 @@ VERSION 0.2.1: New version/makefile system
 VERSION 0.2.2: Proper use of name/value tags
 VERSION 0.2.3: Compiles for CFM and MachO
 VERSION 0.2.4: Changed GetBytes to sysmem_newptr so max # partials can increase.  Also made running out of memory an error instead of a crash.
-VERSION 0.2.5: Improved error message when dropping partials.
+VERSION 0.2.5: Improved error message when dropping input lists.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
