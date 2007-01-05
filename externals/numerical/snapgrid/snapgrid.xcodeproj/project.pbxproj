@@ -8,14 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		BE1A74810AFBCE7F000A1FAD /* rössler.c in Sources */ = {isa = PBXBuildFile; fileRef = BE1A74800AFBCE7F000A1FAD /* rössler.c */; };
+		BE9E8EED0A7569000018141F /* snapgrid.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9E8EEC0A7569000018141F /* snapgrid.c */; };
+		BE9E8EF80A7569190018141F /* gridlock.c in Sources */ = {isa = PBXBuildFile; fileRef = BE9E8EF70A7569190018141F /* gridlock.c */; };
 		BEB87AA30A81333500C31058 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEB87AA20A81333500C31058 /* MaxAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		8D01CCD20486CAD60068D4B7 /* rössler.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rössler.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE1A74800AFBCE7F000A1FAD /* rössler.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "rössler.c"; sourceTree = "<group>"; };
+		8D01CCD20486CAD60068D4B7 /* snapgrid.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = snapgrid.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE9E8EEC0A7569000018141F /* snapgrid.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = snapgrid.c; sourceTree = "<group>"; };
+		BE9E8EF70A7569190018141F /* gridlock.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = gridlock.c; sourceTree = "<group>"; };
 		BEB87AA20A81333500C31058 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -62,7 +64,8 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				BE1A74800AFBCE7F000A1FAD /* rössler.c */,
+				BE9E8EEC0A7569000018141F /* snapgrid.c */,
+				BE9E8EF70A7569190018141F /* gridlock.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -70,7 +73,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D01CCD20486CAD60068D4B7 /* rössler.mxo */,
+				8D01CCD20486CAD60068D4B7 /* snapgrid.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,9 +91,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* rössler */ = {
+		8D01CCC60486CAD60068D4B7 /* snapgrid */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "rössler" */;
+			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "snapgrid" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -102,10 +105,10 @@
 			);
 			dependencies = (
 			);
-			name = "rössler";
+			name = snapgrid;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 8D01CCD20486CAD60068D4B7 /* rössler.mxo */;
+			productReference = 8D01CCD20486CAD60068D4B7 /* snapgrid.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -118,7 +121,7 @@
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* rössler */,
+				8D01CCC60486CAD60068D4B7 /* snapgrid */,
 			);
 		};
 /* End PBXProject section */
@@ -148,7 +151,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE1A74810AFBCE7F000A1FAD /* rössler.c in Sources */,
+				BE9E8EED0A7569000018141F /* snapgrid.c in Sources */,
+				BE9E8EF80A7569190018141F /* gridlock.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +191,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "rössler";
+				PRODUCT_NAME = snapgrid;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -232,7 +236,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "rössler";
+				PRODUCT_NAME = snapgrid;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -271,7 +275,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "rössler";
+				PRODUCT_NAME = snapgrid;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -303,7 +307,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "rössler" */ = {
+		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "snapgrid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670B096B494E00E9E0B4 /* Development */,
