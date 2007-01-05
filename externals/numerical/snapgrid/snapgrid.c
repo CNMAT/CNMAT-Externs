@@ -33,6 +33,7 @@ COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Tim's initial version
 VERSION 0.2: MachO compile, added version message
+VERSION 0.3: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */

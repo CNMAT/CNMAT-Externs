@@ -37,6 +37,7 @@ VERSION 0.2: Modified to work w/ PPC Max on 9/25/96 by Matt Wright.  Also made i
 VERSION 0.3: Modified 8/12/05 by Matt Wright to compile again 
 VERSION 0.4: Accepts single floats or integers
 VERSION 0.5: Uses sysmem_newptr instead of getbytes(); works with more than 4096
+VERSION 0.5.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

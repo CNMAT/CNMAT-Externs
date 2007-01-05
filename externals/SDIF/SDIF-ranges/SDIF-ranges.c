@@ -40,6 +40,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 0.0.2: 050103 mw Added column-range message, updated to new versioning system
 VERSION 0.0.3: updated to new new versioning system
 VERSION 0.1: Compiles for CFM and MachO
+VERSION 0.1.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    	
   To-do:  ranges for a given row across all frames

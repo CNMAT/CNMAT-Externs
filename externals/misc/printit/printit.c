@@ -36,6 +36,7 @@ COPYRIGHT_YEARS: 2000-06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1b: Earliest version I could find
 VERSION 0.2: Using new version system
+VERSION 0.2.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
  */

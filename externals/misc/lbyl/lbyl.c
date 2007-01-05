@@ -34,6 +34,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: First version  1/3/3
 VERSION 0.1: Renamed LBYL
 VERSION 0.2:  Added outlets for "non-bogus" and "rejected"
+VERSION 0.2.1:  Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Version history:  	           

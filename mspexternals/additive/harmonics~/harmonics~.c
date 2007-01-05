@@ -35,6 +35,7 @@ SVN_REVISION: $LastChangedRevision: 406$
 VERSION 1.1: Adrian Freed - NB: still working on amplutide normalisation of thw wave outputs
 VERSION 1.2: Doesn't expire, uses new versioning system
 VERSION 1.3: Implements "tellmeeverything"
+VERSION 1.3.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */

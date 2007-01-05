@@ -36,6 +36,7 @@ VERSION 1.1: Bug fixed to really work with floats, Matt Wright 1/4/01
 VERSION 1.2: Made compilable in CW 8.3,  Matt Wright 12/5/2
 VERSION 1.6: Merged Windows changes into real version
 VERSION 1.7: Zero Pad mode
+VERSION 1.8: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 

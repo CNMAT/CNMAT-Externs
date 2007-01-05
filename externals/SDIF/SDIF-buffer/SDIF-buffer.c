@@ -51,6 +51,7 @@ VERSION 0.9.2: Uses new version info system
 VERSION 0.9.2a: UB compile
 VERSION 0.9.3: Proper cross-platform method for opening an SDIF file in Max's search path
 VERSION 0.9.3v: Change in implementation of version method
+VERSION 0.9.4: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

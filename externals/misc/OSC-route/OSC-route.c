@@ -47,6 +47,7 @@ VERSION 1.10.3: Just a test of incrementing the version number
 VERSION 1.11: Allows multi-level prefixes (e.g., "/foo/bar")
 VERSION 1.12: Debugged "slash" argument problem introduced in 1.11
 VERSION 1.13: Debugged crash problem introduced in 1.12
+VERSION 1.13.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */

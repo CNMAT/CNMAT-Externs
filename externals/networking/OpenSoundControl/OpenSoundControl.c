@@ -43,6 +43,7 @@ VERSION 1.9.3: Same as 1.9.2
 VERSION 1.9.4: Fixed severe type tag bug and severe byte-order bug (for receiving) and built for Windows
 VERSION 1.9.5: Rebuilt for CFM (had to change where it got ntohl()).
 VERSION 1.9.6: Implements assistance strings again.
+VERSION 1.9.7: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         
    */

@@ -34,6 +34,7 @@ COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.0: Tim's original version
 VERSION 1.1: UB recompile
+VERSION 1.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

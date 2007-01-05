@@ -41,6 +41,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 0.0.1: 04/05/2004 -  (bj): updated to use sdif-buf.c
 VERSION 0.0.2: 06/22/2004 -  (bj): cleanup
 VERSION 0.0.3: 1/24/6 (mw):  Uses new version info system
+VERSION 0.0.4: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

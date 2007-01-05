@@ -40,6 +40,7 @@ VERSION 0.1   021120 - Added "numcolumns" method
 VERSION 0.1.1 040405 (bj) - updated to use sdif-buf.c
 VERSION 0.1.2 040622 (bj) - cleanup
 VERSION 0.2: Uses new version info system
+VERSION 0.2.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

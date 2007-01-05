@@ -38,6 +38,7 @@ AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1:  First version
+VERSION 0.1.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

@@ -35,6 +35,7 @@ VERSION 1.0: Initial hacking by Matt
 VERSION 1.1: buffer~ I/O, also fixed bug when evaluating an expression prints nothing
 VERSION 1.1.1: increased Matlab text output capacity from 1000 to 10000 characters
 VERSION 1.1.2: Fixed bug so Matlab disp() works
+VERSION 1.1.3: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

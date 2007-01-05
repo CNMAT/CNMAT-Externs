@@ -26,10 +26,11 @@ NAME: devosc
 DESCRIPTION: Read devosc data from /dev/osc and output as a binary "fullpacket" message
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2005
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Initial version reads from /dev/random instead, just to learn how to make the right system calls.
 VERSION 0.1: Seems to work.  Added "open" and "close" messages, made packet size variable.
 VERSION 0.2: Added "errorreporing" message.
-SVN_REVISION: $LastChangedRevision$
+VERSION 0.2.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */

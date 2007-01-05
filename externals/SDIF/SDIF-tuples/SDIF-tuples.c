@@ -48,6 +48,7 @@ VERSION 0.5.1: cleanup (bj, 2004/06/22)
 VERSION 0.5.2: Made an "interp" message to set interpolation mode like the other parameters (mw, 12/30/04)
 VERSION 0.5.3: Made integers work (non-interpolating)
 VERSION 0.6: Uses new version system
+VERSION 0.6.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  Todo:

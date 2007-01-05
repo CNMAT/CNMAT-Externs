@@ -36,6 +36,7 @@ COPYRIGHT_YEARS: 2002,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version 
 VERSION 0.2: has "continuous" mode
+VERSION 0.2.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */

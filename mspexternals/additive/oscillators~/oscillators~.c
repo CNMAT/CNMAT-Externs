@@ -35,6 +35,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 1.0: Adrian's initial version 
 VERSION 1.1: (Matt) initializes no-argument buffer null pointer correctly 
 VERSION 1.2: (Matt) noglissbirthmode
+VERSION 1.2.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 	
 	©1988,1989 Adrian Freed

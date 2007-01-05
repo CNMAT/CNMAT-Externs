@@ -48,6 +48,7 @@ VERSION 1.74: fixed amplitude comparison so that non-zero gains were output, cha
 VERSION 1.75: replaced  getbytes by NewPtr and tested
 VERSION 1.76: I can't get the alias feature to work
 VERSION 1.77: (MW) replaced NewPtr() with sysmem_newptr() so it will compile on Windows too.  Plugged memory leak.
+VERSION 1.78: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
