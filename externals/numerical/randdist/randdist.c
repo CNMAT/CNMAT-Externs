@@ -123,9 +123,9 @@ int main(void)
 {
 	setup((t_messlist **)&rdist_class, (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, 0); 
 	
-	version(0);
+	//version(0);
 
-	addmess((method) version, "version", 0);
+	//addmess((method) version, "version", 0);
 	addbang((method)rdist_bang);
 	addint((method)rdist_int);
 	addmess((method)rdist_list, "list", A_GIMME, 0);
@@ -139,6 +139,7 @@ int main(void)
 
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 {
+	int i = 0;
 	if(strcmp(msg->s_name, "seed") && strcmp(msg->s_name, "dump")){
 		
 		if(argc > R_MAX_N_VARS){
@@ -146,7 +147,6 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 			return;
 		}
 		
-		int i = 0;
 		for(i = 0; i < argc; i++){
 			switch(argv[i].a_type){
 				case A_LONG:
@@ -298,12 +298,14 @@ void rdist_int(t_rdist *x, long n)
 
 void rdist_dump(t_rdist *x, long n)
 {
+	int i = 0;
+	t_atom *out;
 	if(n < 1){
 		error("randdist: dump argument must be greater than 1.");
 		return;
 	}
-	int i = 0;
-	t_atom *out = (t_atom *)calloc(n, sizeof(t_atom));
+	
+	out = (t_atom *)calloc(n, sizeof(t_atom));
 	for(i = 0; i < n; i++){
 		out[i] = x->r_buffers[x->r_whichBuffer][x->r_bufferPos];
 		rdist_incBufPos(x);
@@ -316,7 +318,10 @@ void rdist_fillBuffers(t_rdist *x, int n)
 {
 	int i, j, k = 0;
 	t_atom tmp;
-	
+	double result[2];
+	double *diricResult;
+	unsigned int *multiResult;
+
 	switch(x->r_dist){
 		case -1:
 			break;
@@ -348,7 +353,6 @@ void rdist_fillBuffers(t_rdist *x, int n)
 				return;
 			}
 			
-			double result[2];
 			for(i = 0; i < R_BUFFER_SIZE / 2; i++){
 				gsl_ran_bivariate_gaussian(x->r_rng, x->r_vars[0], x->r_vars[1], x->r_vars[2], &result[0], &result[1]);
 				SETFLOAT(x->r_buffers[n] + (i * 2), result[0]);
@@ -512,7 +516,7 @@ void rdist_fillBuffers(t_rdist *x, int n)
 		case R_DIRICHLET:
 			
 			k = (int)x->r_vars[0];
-			double *diricResult = (double *)calloc(k, sizeof(double));
+			diricResult = (double *)calloc(k, sizeof(double));
 			
 			for(i = 0; i < (int)(floor(R_BUFFER_SIZE / k)); i++){
 				rdist_dirichlet(x, diricResult);
@@ -550,7 +554,7 @@ void rdist_fillBuffers(t_rdist *x, int n)
 		case R_MULTINOMIAL:
 			
 			k = (int)x->r_vars[0];
-			unsigned int *multiResult = (unsigned int *)calloc(k, sizeof(unsigned int));
+			multiResult = (unsigned int *)calloc(k, sizeof(unsigned int));
 			
 			for(i = 0; i < (int)(floor(R_BUFFER_SIZE / k)); i++){
 				rdist_multinomial(x, multiResult);
@@ -673,6 +677,7 @@ static int makeseed(void)
 
 void *rdist_new()
 {
+	int i = 0;
 	t_rdist *x;
 
 	x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
@@ -695,7 +700,6 @@ void *rdist_new()
 	x->r_buffers[0] = (t_atom *)calloc(R_BUFFER_SIZE, sizeof(t_atom));
 	x->r_buffers[1] = (t_atom *)calloc(R_BUFFER_SIZE, sizeof(t_atom));
 	
-	int i = 0;
 	for(i = 0; i < R_BUFFER_SIZE; i++){
 		SETFLOAT(x->r_buffers[0] + i, 0.0);
 		SETFLOAT(x->r_buffers[1] + i, 0.0);
@@ -716,10 +720,14 @@ void rdist_free(t_rdist *x)
 
 void rdist_dirichlet(t_rdist *x, double *out)
 {
-	size_t k = (size_t)x->r_vars[0];
-	double alpha[k];
+	size_t k;
+	double *alpha;
 	int i;
-	for(i = 0; i < k; i++){
+
+	k = (size_t)x->r_vars[0];
+	alpha = (double *)calloc(k, sizeof(double));
+
+	for(i = 0; i < (int)k; i++){
 		alpha[i] = x->r_vars[i + 1];
 		out[i] = x->r_vars[i + 1 + k];
 	}
@@ -731,7 +739,7 @@ void rdist_multinomial(t_rdist *x, unsigned int *out)
 {
 	size_t k = (size_t)x->r_vars[0];
 	unsigned int N = (unsigned int)x->r_vars[1];
-	double p[k];
+	double *p = (double *)calloc(k, sizeof(double));
 	int i;
 	for(i = 0; i < k; i++){
 		p[i] = x->r_vars[i + 2];
