@@ -41,12 +41,11 @@ VERSION 0.1.1 040405 (bj) - updated to use sdif-buf.c
 VERSION 0.1.2 040622 (bj) - cleanup
 VERSION 0.2: Uses new version info system
 VERSION 0.2.1: Force Package Info Generation
+VERSION 0.3: Added "tellmeeverything"; wrote a real help patch
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
 #include "./version.h" // make sure not to get ../SDIF-buffer/version.h
-
-
 
 
 #define MAX_NUM_COLUMNS 100
@@ -88,7 +87,7 @@ typedef struct _SDIFlistpoke {
 	t_symbol *t_bufferSym;
 	SDIFBuffer *t_buffer;
 	SDIFbuf_Buffer t_buf;
- 	void *t_out;
+ 	// void *t_out;
  	int t_errorreporting;
  	int t_complainedAboutEmptyBufferAlready;
  	
@@ -99,6 +98,7 @@ typedef struct _SDIFlistpoke {
  	char t_matrixType[4];	/* Otherwise, type of matrix to write to */
  	sdif_int32 t_streamID;	/* Which streamID? (For when an SDIF-buffer has multiple streams) */
 } SDIFlistpoke;
+
 
 
 Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
@@ -120,6 +120,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *s, short argc, Atom *
 static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
+static void SDIFlistpoke_tellmeeverything(SDIFlistpoke *x);
 
 
 
@@ -158,6 +159,7 @@ void main() {
 	addmess((method)SDIFlistpoke_listpoke, "list", A_GIMME, 0);
 	addmess((method)SDIFlistpoke_newmatrix, "newmatrix", A_GIMME, 0);
 	addmess((method)SDIFlistpoke_matrixtype, "matrixtype", A_DEFSYM, 0);
+	addmess((method)SDIFlistpoke_tellmeeverything, "tellmeeverything", 0);
 
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
@@ -205,7 +207,7 @@ void *SDIFlistpoke_new(Symbol *dummy, short argc, Atom *argv) {
 	x = newobject(SDIFlistpoke_class);
 	x->t_errorreporting = 0;
 	x->t_buffer = 0;
-	x->t_out = bangout(x);
+	// x->t_out = bangout(x);
 	
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
@@ -530,3 +532,25 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 	// post("** about to SDIFmem_RepairFrameHeader");
 	SDIFmem_RepairFrameHeader(f);	
 }
+
+static void SDIFlistpoke_tellmeeverything(SDIFlistpoke *x) {
+    post("SDIF-listpoke object state");
+    if (x->t_buffer == 0) {
+        post("  not set to a buffer");
+    } else {
+        post("  set to buffer %s", x->t_buffer->s_myname->s_name);
+    }
+    
+    post("  prepared to write to time %f", x->t_time);
+
+    if (x->t_mainMatrix) {
+        post("  prepared to write into the main matrix of the frame");
+        post("  (i.e., the matrix whose type is the same as the frame type.)");
+    } else {
+        post("  prepared to write into matrix type %c%c%c%c", 
+            x->t_matrixType[0], x->t_matrixType[1], x->t_matrixType[2], x->t_matrixType[3]);
+    }
+    
+    post("  prepared to write a %ld column matrix", x->t_num_columns);
+}
+
