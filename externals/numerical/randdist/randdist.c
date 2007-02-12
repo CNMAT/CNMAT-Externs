@@ -123,9 +123,9 @@ int main(void)
 {
 	setup((t_messlist **)&rdist_class, (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, 0); 
 	
-	//version(0);
+	version(0);
 
-	//addmess((method) version, "version", 0);
+	addmess((method) version, "version", 0);
 	addbang((method)rdist_bang);
 	addint((method)rdist_int);
 	addmess((method)rdist_list, "list", A_GIMME, 0);
