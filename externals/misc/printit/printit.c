@@ -37,6 +37,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 0.1b: Earliest version I could find
 VERSION 0.2: Using new version system
 VERSION 0.2.1: Force Package Info Generation
+VERSION 0.3: Added support for many more a_type possibilities found in ext_mess.h
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
  */
@@ -148,39 +149,55 @@ void printit_int(printit *x, long n)
 	post("%s: received an int: %ld", x->my_name->s_name, n);
 }
 
+static void print_args(short argc, Atom *argv) {
+  int i;
+
+  for (i = 0; i < argc; ++i) {
+    if (argv[i].a_type == A_SYM) {
+      post(" SYMBOL \"%s\" (%p, s_thing %p)",
+	   argv[i].a_w.w_sym->s_name, argv[i].a_w.w_sym, argv[i].a_w.w_sym->s_thing);
+    } else if (argv[i].a_type == A_LONG) {
+      post(" LONG   %ld", argv[i].a_w.w_long);
+    } else if (argv[i].a_type == A_FLOAT) {
+      post(" FLOAT  %f", argv[i].a_w.w_float);
+    } else if (argv[i].a_type == A_SEMI) {
+      post(" A_SEMI (semicolon: \";\") - its own special undocumented Max data type");
+    } else if (argv[i].a_type == A_COMMA) {
+      post(" A_COMMA (comma: \",\") - its own special undocumented Max data type");
+    } else if (argv[i].a_type == A_DOLLAR) {
+      post(" A_DOLLAR (dollar sign: \"$\") - its own special undocumented Max data type");
+    } else if (argv[i].a_type == A_NOTHING) {
+      post(" A_NOTHING (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_OBJ) {
+      post(" A_OBJ (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_DEFLONG) {
+      post(" A_DEFLONG (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_DEFFLOAT) {
+      post(" A_DEFFLOAT (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_DEFSYM) {
+      post(" A_DEFSYM (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_GIMME) {
+      post(" A_GIMME (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_CANT) {
+      post(" A_CANT (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_DOLLSYM) {
+      post(" A_DOLLSYM (whatever that means---let Matt Wright know if you find out!)");
+    } else if (argv[i].a_type == A_GIMMEBACK) {
+      post(" A_GIMMEBACK (whatever that means---let Matt Wright know if you find out!)");
+    } else {
+      post(" ¥ unrecognized argument type %d!", argv[i].a_type);
+    }
+  }
+}
+
 void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
-	int i;
-	
 	post("%s: received MESSAGE \"%s\" (%p, s_thing %p) with %d argument(s):", 
 	     x->my_name->s_name, s->s_name, s, s->s_thing, argc);
-	for (i = 0; i < argc; ++i) {
-		if (argv[i].a_type == A_SYM) {
-			post(" SYMBOL \"%s\" (%p, s_thing %p)",
-			     argv[i].a_w.w_sym->s_name, argv[i].a_w.w_sym, argv[i].a_w.w_sym->s_thing);
-		} else if (argv[i].a_type == A_LONG) {
-			post(" LONG   %ld", argv[i].a_w.w_long);
-		} else if (argv[i].a_type == A_FLOAT) {
-			post(" FLOAT  %f", argv[i].a_w.w_float);
-		} else {
-			post(" ¥ unrecognized argument type!");
-		}
-	}
+
+	print_args(argc, argv);
 }
 
 void printit_list(printit *x, Symbol *s, short argc, Atom *argv) {
-	int i;
-	
 	post("%s: received LIST with %d argument(s):", x->my_name->s_name, argc);
-	for (i = 0; i < argc; ++i) {
-		if (argv[i].a_type == A_SYM) {
-			post(" SYMBOL \"%s\" (%p, s_thing %p)",
-			     argv[i].a_w.w_sym->s_name, argv[i].a_w.w_sym, argv[i].a_w.w_sym->s_thing);
-		} else if (argv[i].a_type == A_LONG) {
-			post(" LONG   %ld", argv[i].a_w.w_long);
-		} else if (argv[i].a_type == A_FLOAT) {
-			post(" FLOAT  %f", argv[i].a_w.w_float);
-		} else {
-			post(" ¥ unrecognized argument type!");
-		}
-	}
+	print_args(argc, argv);
 }
