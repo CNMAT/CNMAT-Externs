@@ -30,7 +30,7 @@ COPYRIGHT_YEARS: 2005-7
 SVN_REVISION: $LastChangedRevision: 864 $
 VERSION 1.0: First release
 VERSION 1.1: Updates to Peak and RMS output, assist strings
-VERSION 1.1.1: line breaks
+VERSION 1.1.1: line breaks.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
