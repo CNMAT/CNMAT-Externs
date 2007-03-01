@@ -121,19 +121,29 @@ $(WEB_INFO): $(DOWNLOAD_ARCHIVE) $(INFO_FILE2)
 	$(make-web-info)
 
 
-$(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *))) $(EXCLUDE_FILES_FILE) version.h
+$(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *))) $(EXCLUDE_FILES_FILE) version.h no-cr-characters
 #	tar --unlink -czf $(DOWNLOAD_ARCHIVE) * --exclude-from $(EXCLUDE_FILES_FILE)
 	rm -f $(DOWNLOAD_ARCHIVE)
 	zip -r $(DOWNLOAD_ARCHIVE) * -x $(EXCLUDE_FILES)
 
 # For any release, make sure the code is checked in before allowing the release
-release: code-checked-in
+release: code-checked-in no-cr-characters
 
 # Ensuring that the current code has been properly checked into Subversion
 .PHONY: code-checked-in
 code-checked-in:
 	@ !((svn status | grep "^M") && \
 	(echo You have modified files that have not been checked back into SVN\!))
+
+
+# Ensuring that any text files in this directory don't have evil CR line
+# terminators (e.g., that Max's built-in javascript text editor might have
+# added):
+.PHONY: no-cr-characters
+no-cr-characters:
+	@ !((file * | grep -v macyucky |  grep "with CR line terminators") && \
+	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
+
 
 # Explanation of above:  Grep returns status 0 if the text was found (i.e., if there are un-checked-in files.
 # So (svn status | grep "^M") && (echo ...)  prints the error only if the text was found.
