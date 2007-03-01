@@ -27,9 +27,10 @@ NAME: wavemaker
 DESCRIPTION: Additive synthesis of one cycle of a harmonic waveform with specified amplitudes and phases.  (Intended for constructing wavetables in buffer~ objects to use with oscillators~)
 AUTHORS: Adrian Freed, Michael Zbyszynski
 COPYRIGHT_YEARS: 2005-7
-SVN_REVISION: $LastChangedRevision: 856 $
+SVN_REVISION: $LastChangedRevision: 864 $
 VERSION 1.0: First release
 VERSION 1.1: Updates to Peak and RMS output, assist strings
+VERSION 1.1.1: line breaks
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
