@@ -45,8 +45,13 @@ VERSION 1.9.5: Rebuilt for CFM (had to change where it got ntohl()).
 VERSION 1.9.6: Implements assistance strings again.
 VERSION 1.9.7: Force Package Info Generation
 VERSION 1.9.8: Fixed byte-order bug with time tags
+VERSION 1.9.9: Another attempt to fix time tag byte-order bug
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        
+     
+		
+	Note: all conversions to network byte order for outgoing packets happen in OSC-client.c,
+	whereas conversions to host byte order for incoming packes happen in this file.
+	
    */
 
 #include "version.h"
@@ -64,7 +69,7 @@ typedef struct openSoundControl {
 	void *O_outlet3;	// time tag from a packet
 	short	O_debug;
 	short O_resetAllTheWayMode;
-	OSCTimeTag O_timeTagToUse;  // Stored in network byte order
+	OSCTimeTag O_timeTagToUse;  // Stored in host byte order
 	OSCbuf b;
 	int writeTypeStrings; // nonzero if this object writes messages with type strings
 	int readTypeStrings;  // if zero, never interpret first argument as a type string
@@ -188,7 +193,7 @@ void *OSC_new(long arg) {
 	x->O_resetAllTheWayMode = false;
 	x->O_timeTagToUse = OSCTT_Immediately();
 	// Kludge to patch around lack of endianness-awareness in OSC-timetag.c:
-	OSC_NewTimeTag(x, 0, 1);
+	// OSC_NewTimeTag(x, 0, 1);
 	x->writeTypeStrings = 1;
 	x->readTypeStrings = 1;
 	
@@ -701,15 +706,15 @@ int OSC_messageSize(char *messageName, short argc, Atom *argv) {
 
 void OSC_NewTimeTag(OSC *x, long seconds, long fraction) {
 	OSCTimeTag tt;
-	tt.seconds = htonl(seconds);
-	tt.fraction = htonl(fraction);
+	tt.seconds = seconds;
+	tt.fraction = fraction;
 	
 	/* Try changing the one that's already there */
 	ChangeOutermostTimestamp(&(x->b), tt);
 	
 	/* Remember this time stamp for next time too. */
-	x->O_timeTagToUse.seconds = htonl(seconds);
-	x->O_timeTagToUse.fraction = htonl(fraction);
+	x->O_timeTagToUse.seconds = seconds;
+	x->O_timeTagToUse.fraction = fraction;
 }
 
 
