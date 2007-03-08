@@ -17,7 +17,7 @@
 #define DEF_MAX 127
 
 #define COPYRIGHT "copyright © 2003 Massachusetts Institute of Technology"
-#define VERSION "1.0"
+#define VERSION "1.01 "
 
 /* structure definition of the object */
 typedef struct map
@@ -70,7 +70,7 @@ void mapper_param_out1(Mapper *s, Symbol *sym, short argc, Atom *argv);
 void mapper_param_out2(Mapper *s, Symbol *sym, short argc, Atom *argv);
 void mapper_param_clip(Mapper *s, Symbol *sym, short argc, Atom *argv);
 void mapper_mapcoeff(Mapper *s, Symbol *sym, short argc, Atom *argv);
-void mapper_float(Mapper *s, float f);
+void mapper_float(Mapper *s, double f);
 void mapper_int(Mapper *s, long l);
 void mapper_all(Mapper *s, Symbol *sym, short argc, Atom *argv);
 void mapper_reset(Mapper *s, Symbol *sym);
@@ -757,7 +757,7 @@ void mapper_mapcoeff(Mapper *s, Symbol *sym, short argc, Atom *argv)
     
 }
 
-void mapper_float(Mapper *s, float f)
+void mapper_float(Mapper *s, double f)
 {
 	short i;
 	i = s->s_inletnumber;
@@ -839,8 +839,8 @@ void mapper_print(Mapper *s)
 	post("");
 
 }
-
-void main(fptr *f)
+int main(void)
+//void main(fptr *f)
 {
 	post("Mapper object version " VERSION " by Tristan Jehan");
 	post(COPYRIGHT);
@@ -877,4 +877,5 @@ void main(fptr *f)
 
 	/* list object in the new object list */
 //	finder_addclass("Analysis","mapper");
+return 0;
 }

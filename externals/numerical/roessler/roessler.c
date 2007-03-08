@@ -31,7 +31,7 @@ void *rossler_new(t_symbol *s, short argc, t_atom *argv);
 
 /* initialization routine */
 
-void main(void)
+int main(void)
 {
 	/* define class. */
 	setup((t_messlist **)&rossler_class, (method)rossler_new, (method)0L, (short)sizeof(t_rossler), 0L, A_GIMME,0);
@@ -47,6 +47,8 @@ void main(void)
 	
 	/* list object in the new object list */
 	finder_addclass("Data","rossler");
+	
+	return 0;
 }
 //--------------------------------------------------------------------------
 

@@ -8,15 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		BE0EFAC10B97B39900AFF326 /* roessler.c in Sources */ = {isa = PBXBuildFile; fileRef = BE0EFAC00B97B39900AFF326 /* roessler.c */; };
-		BEB87AA30A81333500C31058 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEB87AA20A81333500C31058 /* MaxAPI.framework */; };
+		BE4177B30B9CAD5200D58739 /* mapper.c in Sources */ = {isa = PBXBuildFile; fileRef = BE4177B20B9CAD5200D58739 /* mapper.c */; };
+		BEFA61D70A815FC8007B4E66 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFA61D60A815FC8007B4E66 /* MaxAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		8D01CCD20486CAD60068D4B7 /* rössler.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rössler.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE0EFAC00B97B39900AFF326 /* roessler.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = roessler.c; sourceTree = "<group>"; };
-		BEB87AA20A81333500C31058 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		8D01CCD20486CAD60068D4B7 /* mapper.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = mapper.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE4177B20B9CAD5200D58739 /* mapper.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = mapper.c; sourceTree = "<group>"; };
+		BEFA61D60A815FC8007B4E66 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,7 +25,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				BEB87AA30A81333500C31058 /* MaxAPI.framework in Frameworks */,
+				BEFA61D70A815FC8007B4E66 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,7 +46,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BEB87AA20A81333500C31058 /* MaxAPI.framework */,
+				BEFA61D60A815FC8007B4E66 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -62,7 +62,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				BE0EFAC00B97B39900AFF326 /* roessler.c */,
+				BE4177B20B9CAD5200D58739 /* mapper.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -70,7 +70,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D01CCD20486CAD60068D4B7 /* rössler.mxo */,
+				8D01CCD20486CAD60068D4B7 /* mapper.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,9 +88,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* rössler */ = {
+		8D01CCC60486CAD60068D4B7 /* mapper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "rössler" */;
+			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "mapper" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -102,10 +102,10 @@
 			);
 			dependencies = (
 			);
-			name = "rössler";
+			name = mapper;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 8D01CCD20486CAD60068D4B7 /* rössler.mxo */;
+			productReference = 8D01CCD20486CAD60068D4B7 /* mapper.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -113,12 +113,12 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "roessler" */;
+			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "mapper" */;
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* rössler */,
+				8D01CCC60486CAD60068D4B7 /* mapper */,
 			);
 		};
 /* End PBXProject section */
@@ -148,7 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE0EFAC10B97B39900AFF326 /* roessler.c in Sources */,
+				BE4177B30B9CAD5200D58739 /* mapper.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,11 +162,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -187,7 +183,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "rössler";
+				PRODUCT_NAME = mapper;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -210,11 +206,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -232,7 +224,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "rössler";
+				PRODUCT_NAME = mapper;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -250,11 +242,7 @@
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -271,7 +259,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "rössler";
+				PRODUCT_NAME = mapper;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -303,7 +291,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "rössler" */ = {
+		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "mapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670B096B494E00E9E0B4 /* Development */,
@@ -313,7 +301,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "roessler" */ = {
+		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "mapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670F096B494E00E9E0B4 /* Development */,
