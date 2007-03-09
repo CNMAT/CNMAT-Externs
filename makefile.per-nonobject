@@ -134,6 +134,11 @@ release: code-checked-in no-cr-characters
 code-checked-in:
 	@ !((svn status | grep "^M") && \
 	(echo You have modified files that have not been checked back into SVN\!))
+# Explanation of above:  Grep returns status 0 if the text was found (i.e., if there are un-checked-in files.
+# So (svn status | grep "^M") && (echo ...)  prints the error only if the text was found.
+# Echo always returns 0, so the return value of the && operator is 0 if an error was printed, 1 otherwise,
+# so I put a logical negation (exclamation point) before the whole thing, so that Make will bomb out
+# if the error is printed.
 
 
 # Ensuring that any text files in this directory don't have evil CR line
@@ -143,14 +148,6 @@ code-checked-in:
 no-cr-characters:
 	@ !((file * | grep -v macyucky |  grep "with CR line terminators") && \
 	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
-
-
-# Explanation of above:  Grep returns status 0 if the text was found (i.e., if there are un-checked-in files.
-# So (svn status | grep "^M") && (echo ...)  prints the error only if the text was found.
-# Echo always returns 0, so the return value of the && operator is 0 if an error was printed, 1 otherwise,
-# so I put a logical negation (exclamation point) before the whole thing, so that Make will bomb out
-# if the error is printed.
-
 
 # Actually copying the files to directories where the web server can find them
 
