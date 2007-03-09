@@ -122,6 +122,10 @@ public class running_average extends MaxObject
 	}
 	
 	public void length(int l){
+		if(l < 1){
+			error("running-average: Length must be greater than 0.");
+			return;
+		}
 		clear();
 		avg_length = l;
 	}
