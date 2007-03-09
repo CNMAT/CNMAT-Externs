@@ -321,7 +321,7 @@ cfm-release macho-release win-release win-vcc-release: code-checked-in
 
 # Ensuring that the current code has been properly checked into Subversion
 .PHONY: code-checked-in
-code-checked-in:
+code-checked-in: no-cr-characters
 	@ !((svn status | grep "^M") && \
 	(echo You have modified files that have not been checked back into SVN\!))
 # Explanation of above: Grep returns status 0 if the text was found
@@ -331,6 +331,16 @@ code-checked-in:
 # the && operator is 0 if an error was printed, 1 otherwise, so I put a
 # logical negation (exclamation point) before the whole thing, so that
 # Make will bomb out if the error is printed.
+
+
+# Ensuring that any text files in this directory don't have evil CR line
+# terminators (e.g., that Max's built-in javascript text editor might have
+# added):
+.PHONY: no-cr-characters
+no-cr-characters:
+	@ !((file * | grep -v macyucky |  grep "with CR line terminators") && \
+	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
+
 
 
 # Actually copying the files to directories where the web server can find them
