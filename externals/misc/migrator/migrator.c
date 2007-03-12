@@ -30,6 +30,7 @@ VERSION 1.0: Universal Binary
 VERSION 1.0.1: Added mig_oscamp and a better tellmeeverything function
 VERSION 1.0.2: The number of oscillators specified as an argument is now recognized.
 VERSION 1.0.3: GPL compatible license
+VERSION 1.0.4: Added three different output modes (concatenate, f/a pairs, only updated).
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -69,12 +70,14 @@ typedef struct _mig
 	int m_waitingToChangeNumOsc[2];
 	int m_theyAreResonances;
 	float m_decayTime;
+	int m_outputType;
 } t_mig;
 
 void *mig_class;
 
 void mig_anything(t_mig *x, t_symbol *msg, short argc, t_atom *argv);
 void mig_list(t_mig *x, t_symbol *msg, short argc, t_atom *argv);
+void mig_resonances(t_mig *x, t_symbol *msg, short argc, t_atom *argv);
 void mig_nOsc(t_mig *x, long n);
 void mig_nOsc_smooth(t_mig *x, long n);
 void mig_var(t_mig *x, double var);
@@ -82,6 +85,7 @@ void mig_bang(t_mig *x);
 void mig_fadeOut(t_mig *x);
 void mig_changeFreq(t_mig *x);
 void mig_fadeIn(t_mig *x);
+void mig_outputList(t_mig *x, short length, t_atom *array);
 void mig_int(t_mig *x, long n);
 void mig_assist(t_mig *x, void *b, long m, long a, char *s);
 void *mig_new(double var, long nOsc, double oscamp);
@@ -101,6 +105,7 @@ void mig_auto(t_mig *x, long a);
 void mig_fade(t_mig *x, long n);
 void mig_tinterval(t_mig *x, double n);
 void mig_oscamp(t_mig *x, double a);
+void mig_outputType(t_mig *x, long t);
 void tellmeeverything(t_mig *x);
 
 //--------------------------------------------------------------------------
@@ -116,6 +121,7 @@ int main(void)
 	addint((method)mig_int);
 	addmess((method)mig_anything, "anything", A_GIMME, 0);
 	addmess((method)mig_list, "list", A_GIMME, 0);
+	addmess((method)mig_resonances, "resonances", A_GIMME, 0);
 	addmess((method)mig_nOsc, "nOsc", A_LONG, 0);
 	addmess((method)mig_nOsc_smooth, "nOsc_smooth", A_LONG, 0);
 	addmess((method)mig_var, "var", A_FLOAT, 0);
@@ -123,6 +129,7 @@ int main(void)
 	addmess((method)mig_fade, "fade", A_LONG, 0);
 	addmess((method)mig_tinterval, "time_interval", A_FLOAT, 0);
 	addmess((method)mig_oscamp, "oscamp", A_FLOAT, 0);
+	addmess((method)mig_outputType, "output", A_LONG, 0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0L, 0);
 		
 	return 0;
@@ -152,6 +159,7 @@ void mig_list(t_mig *x, t_symbol *msg, short argc, t_atom *argv)
 		return;
 	}*/
 	
+	/*
 	x->m_theyAreResonances = 1;
 	// heuristic to figure out whether the list is f/g pairs or f/g/r triples
 	// Taken from Adrian Freed's res-display.js
@@ -171,28 +179,31 @@ void mig_list(t_mig *x, t_symbol *msg, short argc, t_atom *argv)
 		}
 		else x->m_theyAreResonances = 0;
 	}
-	
+	*/
+	x->m_theyAreResonances = 0;
+	x->m_arrayIn = (t_atom *)realloc(x->m_arrayIn, argc * sizeof(t_atom));
+	memcpy(x->m_arrayIn, argv, argc * sizeof(t_atom));
+	x->m_arrayInLength = argc;
+	makePMF(x);
+
+}
+
+void mig_resonances(t_mig *x, t_symbol *msg, short argc, t_atom *argv){
+	//post("%d resonances", argc / 3);
 	int i;
-	if(x->m_theyAreResonances){
-		post("%d resonances", argc / 3);
-		x->m_decayTime = 0.;
-		x->m_arrayIn = (t_atom *)realloc(x->m_arrayIn, ((argc / 3) * 2) * sizeof(t_atom));
-		x->m_decayRates = (float *)realloc(x->m_decayRates, (argc / 3) * sizeof(float));
-		for(i = 0; i < argc / 3; i++){
-			x->m_arrayIn[(i * 2)] = argv[(i * 3)];
-			x->m_arrayIn[(i * 2) + 1] = argv[(i * 3) + 1];
-			x->m_decayRates[i] = argv[(i * 3) + 3].a_w.w_float;
-			x->m_arrayInLength = (argc / 3) * 2;
-			makePMF(x);
-			x->m_arrayOut[(i * 2)].a_w.w_float = x->m_arrayIn[randPMF(x) * 2].a_w.w_float;
-			x->m_arrayOut[(i * 2) + 1].a_w.w_float = x->m_oscamp;
-			//SETFLOAT(x->m_arrayOut + ((i * 2) + 1), x->m_oscamp);
-		}
-	}else{
-		x->m_arrayIn = (t_atom *)realloc(x->m_arrayIn, argc * sizeof(t_atom));
-		memcpy(x->m_arrayIn, argv, argc * sizeof(t_atom));
-		x->m_arrayInLength = argc;
+	x->m_theyAreResonances = 1;
+	x->m_decayTime = 0.;
+	x->m_arrayIn = (t_atom *)realloc(x->m_arrayIn, ((argc / 3) * 2) * sizeof(t_atom));
+	x->m_decayRates = (float *)realloc(x->m_decayRates, (argc / 3) * sizeof(float));
+	for(i = 0; i < argc / 3; i++){
+		x->m_arrayIn[(i * 2)] = argv[(i * 3)];
+		x->m_arrayIn[(i * 2) + 1] = argv[(i * 3) + 1];
+		x->m_decayRates[i] = argv[(i * 3) + 3].a_w.w_float;
+		x->m_arrayInLength = (argc / 3) * 2;
 		makePMF(x);
+		x->m_arrayOut[(i * 2)].a_w.w_float = x->m_arrayIn[randPMF(x) * 2].a_w.w_float;
+		x->m_arrayOut[(i * 2) + 1].a_w.w_float = x->m_oscamp;
+		//SETFLOAT(x->m_arrayOut + ((i * 2) + 1), x->m_oscamp);
 	}
 }
 
@@ -213,7 +224,8 @@ void mig_fadeOut(t_mig *x)
 		x->m_arrayOut[(((x->m_counter + i) % x->m_nOsc) * 2) + 1].a_w.w_float = x->m_oscamp * i / x->m_fade;
 	}
 	
-	outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
+	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
+	mig_outputList(x, (short)x->m_nOsc * 2, x->m_arrayOut);
 	
 	if(x->m_on)
 		clock_fdelay(x->m_clock1, x->m_tinterval);
@@ -229,7 +241,8 @@ void mig_changeFreq(t_mig *x)
 	else
 		x->m_arrayOut[(x->m_counter * 2)].a_w.w_float = gaussBlur(x, freq);
 	
-	outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
+	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
+	mig_outputList(x, (short)x->m_nOsc * 2, x->m_arrayOut);
 
 	if(x->m_on)
 		clock_fdelay(x->m_clock2, x->m_tinterval);
@@ -247,7 +260,8 @@ void mig_fadeIn(t_mig *x)
 			x->m_arrayOut[(n * 2) + 1].a_w.w_float = x->m_oscamp * (i + 1) / x->m_fade;
 		}
 	}	
-	outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
+	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
+	mig_outputList(x, (short)x->m_nOsc * 2, x->m_arrayOut);
 	outlet_int(x->m_out2, x->m_counter);
 		
 	counter(x);
@@ -259,12 +273,35 @@ void mig_fadeIn(t_mig *x)
 	if(x->m_on) mig_fadeOut(x);
 }
 
+void mig_outputList(t_mig *x, short length, t_atom *array){
+	int i;
+	t_atom tmp[2];
+	switch(x->m_outputType){
+		case 0:
+			outlet_list(x->m_out1, 0, length, array);
+			break;
+		case 1:
+			for(i = 0; i < length / 2; i++){
+				tmp[0] = array[i * 2];
+				tmp[1] = array[(i * 2) + 1];
+				outlet_list(x->m_out1, 0, 2, tmp);
+			}
+			break;
+		case 2:
+			tmp[0] = array[x->m_counter * 2];
+			tmp[1] = array[(x->m_counter * 2) + 1];
+			outlet_list(x->m_out1, 0, 2, tmp);
+			break;
+	}
+}
+
 //--------------------------------------------------------------------------
 
 void mig_int(t_mig *x, long n)
 {
+	int i = 0;
+	t_atom ar[2];
 	if(!x->m_arrayIn) return;
-	
 	x->m_on = n;
 	
 	if(n){
@@ -272,8 +309,6 @@ void mig_int(t_mig *x, long n)
 		return;
 	}
 	
-	int i = 0;
-	t_atom ar[2];
 	SETFLOAT(ar, 0.0);
 	SETFLOAT(ar + 1, 0.0);
 	
@@ -311,6 +346,7 @@ void mig_assist(t_mig *x, void *b, long m, long a, char *s)
 void *mig_new(double var, long nOsc, double oscamp)
 {
 	t_mig *x;
+	int i = 0;
 
 	x = (t_mig *)newobject(mig_class); // create a new instance of this object
 	
@@ -333,7 +369,6 @@ void *mig_new(double var, long nOsc, double oscamp)
 	x->m_decayRates = (float *)calloc(10, sizeof(float));
 	x->m_pmf = (float *)calloc(10, sizeof(float));
 
-	int i = 0;
 	for(i = 0; i < (int)x->m_nOsc * 2; i++){
 		SETFLOAT(x->m_arrayOut + i, 0.0);
 	}
@@ -352,6 +387,7 @@ void *mig_new(double var, long nOsc, double oscamp)
 	x->m_var = var;
 	x->m_fade = 1;
 	x->m_on = 0;
+	x->m_outputType = 0;
 	
 	gsl_rng_env_setup();
 	x->m_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_default);
@@ -414,6 +450,8 @@ int randPMF(t_mig *x)
 
 long counter(t_mig *x)
 {	
+	int oldcounter;
+
 	if(x->m_waitingToChangeNumOsc[0]){
 		if(x->m_counter == x->m_nOsc - 1){
 			x->m_nOsc = x->m_waitingToChangeNumOsc[1];
@@ -421,7 +459,7 @@ long counter(t_mig *x)
 			x->m_waitingToChangeNumOsc[0] = 0;
 		}
 	}
-	int oldcounter = x->m_counter;
+	oldcounter = x->m_counter;
 	x->m_counter = (x->m_counter + 1) % x->m_nOsc;	
 	
 	if(oldcounter > x->m_counter)
@@ -546,6 +584,8 @@ float gasdev(long *idum)
 
 void mig_nOsc(t_mig *x, long n)
 {
+	int i;
+	int oldNumOsc;
 	if(n < 1){
 		error("migrator: the number of oscillators must be greater than 0");
 		return;
@@ -556,8 +596,7 @@ void mig_nOsc(t_mig *x, long n)
 		x->m_fade = (long)floor((double)n / 2);
 	}
 	
-	int oldNumOsc = x->m_nOsc;
-	int i;
+	oldNumOsc = x->m_nOsc;
 	
 	if(n < (int)x->m_nOsc)
 		x->m_counter = 0.;
@@ -574,6 +613,8 @@ void mig_nOsc(t_mig *x, long n)
 
 void mig_nOsc_smooth(t_mig *x, long n)
 {
+	int i;
+	int oldNumOsc;
 	if(n < 1){
 		error("migrator: the number of oscillators must be greater than 0");
 		return;
@@ -592,8 +633,7 @@ void mig_nOsc_smooth(t_mig *x, long n)
 		return;
 	}
 	
-	int i;
-	int oldNumOsc = x->m_nOsc;
+	oldNumOsc = x->m_nOsc;
 	if(oldNumOsc < n){
 		x->m_counter = oldNumOsc;
 		x->m_nOsc = n;
@@ -635,8 +675,17 @@ void mig_oscamp(t_mig *x, double a){
 	x->m_oscamp = a;
 }
 
+void mig_outputType(t_mig *x, long t){
+	if(t < 0 || t > 2){
+		error("migrator: 0 = concatenate the output (default), 1 = output each f / a pair separately, 2 = output only the updated partial\n");
+		return;
+	}
+	x->m_outputType = (int)t;
+}
+
 void tellmeeverything(t_mig *x)
 {
+	int i;
 	version(0);
 	post("Migrator is %s", (x->m_on) ? "ON" : "OFF");
 	post("Number of oscillators: %ld", x->m_nOsc);
@@ -647,7 +696,7 @@ void tellmeeverything(t_mig *x)
 	if(x->m_theyAreResonances) post("Migrator thinks your data is in frequency / amplitude / decayrate triples");
 	post("Number of elements in timbre: %d", x->m_arrayInLength);
 	post("First 10 elements from timbre:");
-	int i;
+	
 	for(i = 0; i < 10; i++){
 		if(x->m_theyAreResonances)
 			post("%f %f %f", x->m_arrayIn[i * 3].a_w.w_float, x->m_arrayIn[(i * 3) + 1].a_w.w_float, x->m_arrayIn[(i * 3) + 2].a_w.w_float);
