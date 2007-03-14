@@ -59,6 +59,11 @@ VERSION 1.9.9: Another attempt to fix time tag byte-order bug
 #include "version.c"
 #include "OSC-client.h"
 
+#ifdef WIN_VERSION
+// To get ntohl() on Windows
+#include <asm/byteorder.h>
+#endif
+
 void *OSC_class;
 Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket, *ps_OSCBlob;
 
