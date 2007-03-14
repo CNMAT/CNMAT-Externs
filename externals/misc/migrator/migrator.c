@@ -31,6 +31,7 @@ VERSION 1.0.1: Added mig_oscamp and a better tellmeeverything function
 VERSION 1.0.2: The number of oscillators specified as an argument is now recognized.
 VERSION 1.0.3: GPL compatible license
 VERSION 1.0.4: Added three different output modes (concatenate, f/a pairs, only updated).
+VERSION 1.0.5: Got rid of the third output mode and added an outlet that outputs only the changed frequency for each update.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -48,6 +49,7 @@ typedef struct _mig
 	void *m_out1;
 	void *m_out2;
 	void *m_out3;
+	void *m_out4;
 	t_atom *m_arrayIn;
 	float *m_decayRates;
 	short m_arrayInLength;
@@ -242,6 +244,7 @@ void mig_changeFreq(t_mig *x)
 		x->m_arrayOut[(x->m_counter * 2)].a_w.w_float = gaussBlur(x, freq);
 	
 	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
+	outlet_float(x->m_out2, freq);
 	mig_outputList(x, (short)x->m_nOsc * 2, x->m_arrayOut);
 
 	if(x->m_on)
@@ -262,7 +265,7 @@ void mig_fadeIn(t_mig *x)
 	}	
 	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
 	mig_outputList(x, (short)x->m_nOsc * 2, x->m_arrayOut);
-	outlet_int(x->m_out2, x->m_counter);
+	outlet_int(x->m_out3, x->m_counter);
 		
 	counter(x);
 	if(x->m_theyAreResonances){
@@ -287,11 +290,13 @@ void mig_outputList(t_mig *x, short length, t_atom *array){
 				outlet_list(x->m_out1, 0, 2, tmp);
 			}
 			break;
+		/*
 		case 2:
 			tmp[0] = array[x->m_counter * 2];
 			tmp[1] = array[(x->m_counter * 2) + 1];
 			outlet_list(x->m_out1, 0, 2, tmp);
 			break;
+		*/
 	}
 }
 
@@ -350,8 +355,9 @@ void *mig_new(double var, long nOsc, double oscamp)
 
 	x = (t_mig *)newobject(mig_class); // create a new instance of this object
 	
-	x->m_out3 = bangout(x);
-	x->m_out2 = intout(x);
+	x->m_out4 = bangout(x);
+	x->m_out3 = intout(x);
+	x->m_out2 = floatout(x);
 	x->m_out1 = listout(x);	
 	
 	x->m_counter = 0;
@@ -362,7 +368,7 @@ void *mig_new(double var, long nOsc, double oscamp)
 	if(nOsc)
 		x->m_nOsc = (long)nOsc;
 	else
-		x->m_nOsc = 200;
+		x->m_nOsc = 100;
 	
 	x->m_arrayOut = (t_atom *)calloc((int)x->m_nOsc * 2, sizeof(t_atom));
 	x->m_arrayIn = (t_atom *)calloc(10, sizeof(t_atom));
@@ -463,7 +469,7 @@ long counter(t_mig *x)
 	x->m_counter = (x->m_counter + 1) % x->m_nOsc;	
 	
 	if(oldcounter > x->m_counter)
-		outlet_bang(x->m_out3);
+		outlet_bang(x->m_out4);
 	
 	//if(x->m_counter == 0) mig_probDecay(x);
 	
@@ -591,6 +597,11 @@ void mig_nOsc(t_mig *x, long n)
 		return;
 	}
 	
+	if(n > 128){
+		error("migrator: Max objects can only output lists of less than 256 elements.  Setting the number of oscillators to 128.");
+		n = 128;
+	}
+	
 	if(x->m_fade >= n){
 		error("migrator: fade must be less than nOsc.  Setting fade to %f", floor((double)n / 2));
 		x->m_fade = (long)floor((double)n / 2);
@@ -676,8 +687,9 @@ void mig_oscamp(t_mig *x, double a){
 }
 
 void mig_outputType(t_mig *x, long t){
-	if(t < 0 || t > 2){
-		error("migrator: 0 = concatenate the output (default), 1 = output each f / a pair separately, 2 = output only the updated partial\n");
+	if(t < 0 || t > 1){
+		//error("migrator: 0 = concatenate the output (default), 1 = output each f / a pair separately, 2 = output only the updated partial\n");
+		error("migrator: 0 = concatenate the output (default), 1 = output each f / a pair separately\n");
 		return;
 	}
 	x->m_outputType = (int)t;
