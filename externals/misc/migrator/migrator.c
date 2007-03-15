@@ -32,6 +32,7 @@ VERSION 1.0.2: The number of oscillators specified as an argument is now recogni
 VERSION 1.0.3: GPL compatible license
 VERSION 1.0.4: Added three different output modes (concatenate, f/a pairs, only updated).
 VERSION 1.0.5: Got rid of the third output mode and added an outlet that outputs only the changed frequency for each update.
+VERSION 1.0.6: Unlimited list length.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -596,12 +597,7 @@ void mig_nOsc(t_mig *x, long n)
 		error("migrator: the number of oscillators must be greater than 0");
 		return;
 	}
-	
-	if(n > 128){
-		error("migrator: Max objects can only output lists of less than 256 elements.  Setting the number of oscillators to 128.");
-		n = 128;
-	}
-	
+		
 	if(x->m_fade >= n){
 		error("migrator: fade must be less than nOsc.  Setting fade to %f", floor((double)n / 2));
 		x->m_fade = (long)floor((double)n / 2);
