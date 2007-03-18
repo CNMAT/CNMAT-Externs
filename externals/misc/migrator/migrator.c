@@ -24,7 +24,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 NAME: migrator
 DESCRIPTION: Spectral harmony a la David Wessel
 AUTHORS: John MacCallum
-COPYRIGHT_YEARS: 2006
+COPYRIGHT_YEARS: 2006-07
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: Universal Binary
 VERSION 1.0.1: Added mig_oscamp and a better tellmeeverything function
@@ -33,6 +33,7 @@ VERSION 1.0.3: GPL compatible license
 VERSION 1.0.4: Added three different output modes (concatenate, f/a pairs, only updated).
 VERSION 1.0.5: Got rid of the third output mode and added an outlet that outputs only the changed frequency for each update.
 VERSION 1.0.6: Unlimited list length.
+VERSION 1.0.7: Now likes lists of ints too!
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -185,7 +186,17 @@ void mig_list(t_mig *x, t_symbol *msg, short argc, t_atom *argv)
 	*/
 	x->m_theyAreResonances = 0;
 	x->m_arrayIn = (t_atom *)realloc(x->m_arrayIn, argc * sizeof(t_atom));
-	memcpy(x->m_arrayIn, argv, argc * sizeof(t_atom));
+	
+	// Yes, memcpy would be better, but this is so we don't have to do 
+	// typechecking throughout the rest of the program.
+	int i;
+	for(i = 0; i < argc; i++){
+		if(argv[i].a_type == A_FLOAT)
+			x->m_arrayIn[i] = argv[i];
+		else
+			SETFLOAT(x->m_arrayIn + i, (float)(argv[i].a_w.w_long));
+	}
+	//memcpy(x->m_arrayIn, argv, argc * sizeof(t_atom));
 	x->m_arrayInLength = argc;
 	makePMF(x);
 
