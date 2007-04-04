@@ -1,5 +1,5 @@
 /*
-Copyright (c) 1999,2000,01,02.  The Regents of the University of California (Regents).
+Copyright (c) 1999,2000-07.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -30,7 +30,7 @@ University of California, Berkeley.
 NAME: peqbank~
 DESCRIPTION: Bank of biquad filters in series with analog-like control parameters based on shelving or parametric EQ (or low-level control in the biquad coefficient domain)
 AUTHORS: Tristan Jehan, Matt Wright
-COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07
 SVN_REVISION: $LastChangedRevision$
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
 VERSION 1.0: Tristan's initial version 
@@ -44,6 +44,7 @@ VERSION 1.8 fixes peqbank_free bug
 VERSION 1.9 Added "biquads" message; expires 12/1/3
 VERSION 2.0 Never expires
 VERSION 2.0.1: Force Package Info Generation
+VERSION 2.1: Fixed bug of overwriting input signal vector with the filtered output
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
@@ -323,12 +324,16 @@ t_int *peqbank_perform(t_int *w) {
 		float a0inc, a1inc, a2inc, b1inc, b2inc;
 		float y0, y1;
 		
-		float *tmpparam;	// So we can swap old and new
-		float *tmpcoeff;
 
 #ifdef DEBUG		
 		if (!test_newcoeffs_state(x)) post("peqbank_perform: mycoeff!=x->oldcoeff");
 #endif
+
+
+		// First copy input vector to output vector (below we'll filter the output in-place
+		if (out != in) {
+			for (i=0; i<n; ++i) out[i] = in[i];
+		}
 
 		/* Cascade of Biquads */
 		for (j=x->b_start; j<(x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
@@ -354,16 +359,16 @@ t_int *peqbank_perform(t_int *w) {
 			
 			for (i=0; i<n; i+=4) {
 
-				in[i  ] = y0 = (a0 * (i0 = in[i  ])) + (a1 * i3) + (a2 * i2) - (b1 * y1) - (b2 * y0);
+				out[i  ] = y0 = (a0 * (i0 = out[i  ])) + (a1 * i3) + (a2 * i2) - (b1 * y1) - (b2 * y0);
 				a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
 		
-				in[i+1] = y1 = (a0 * (i1 = in[i+1])) + (a1 * i0) + (a2 * i3) - (b1 * y0) - (b2 * y1);
+				out[i+1] = y1 = (a0 * (i1 = out[i+1])) + (a1 * i0) + (a2 * i3) - (b1 * y0) - (b2 * y1);
 				a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
 
-				in[i+2] = y0 = (a0 * (i2 = in[i+2])) + (a1 * i1) + (a2 * i0) - (b1 * y1) - (b2 * y0);
+				out[i+2] = y0 = (a0 * (i2 = out[i+2])) + (a1 * i1) + (a2 * i0) - (b1 * y1) - (b2 * y0);
 				a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
 
-				in[i+3] = y1 = (a0 * (i3 = in[i+3])) + (a1 * i2) + (a2 * i1) - (b1 * y0) - (b2 * y1);
+				out[i+3] = y1 = (a0 * (i3 = out[i+3])) + (a1 * i2) + (a2 * i1) - (b1 * y0) - (b2 * y1);
 				a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
 		
 			} // Interpolation loop						
@@ -376,7 +381,6 @@ t_int *peqbank_perform(t_int *w) {
 			
 		} // cascade loop
 			
-		for (i=0; i<n; ++i) out[i] = in[i];
 		
 		
 		// Now that we've made it to the end of the signal vector, the "old" coefficients are
@@ -428,6 +432,11 @@ t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 	int i, j, k=0;
 	float a0, a1, a2, b1, b2;
 	float xn, yn, xm2, xm1, ym2, ym1; 
+	
+	// First copy input vector to output vector (below we'll filter the output in-place
+	if (out != in) {
+		for (i=0; i<n; ++i) out[i] = in[i];
+	}
 
 	/* Cascade of Biquads */
 	for (j=x->b_start; j<(x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
@@ -444,8 +453,8 @@ t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 		b2 = mycoeff[j+4];
 				
 		for (i=0; i<n; i++) {
-			xn = in[i];
-		    in[i] = yn = (a0 * xn) + (a1 * xm1) + (a2 * xm2) - (b1 * ym1) - (b2 * ym2);
+			xn = out[i];
+		    out[i] = yn = (a0 * xn) + (a1 * xm1) + (a2 * xm2) - (b1 * ym1) - (b2 * ym2);
 
 			xm2 = xm1;
 			xm1 = xn;
@@ -460,9 +469,7 @@ t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 		k ++;
 		
 	} // cascade loop
-		
-	for (i=0; i<n; ++i) out[i] = in[i];
-	
+
 	return (w+5);
 }
 
@@ -519,9 +526,6 @@ int maxelem(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest) {
 }
 
 int shelf(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest) {
-		
-	float Fl, Fh;
-	
 	if ((rest+4 < argc) && (argv[rest  ].a_type == A_FLOAT) && (argv[rest+1].a_type == A_FLOAT) 
 						&& (argv[rest+2].a_type == A_FLOAT) && (argv[rest+3].a_type == A_FLOAT)
 						&& (argv[rest+4].a_type == A_FLOAT)) {
@@ -609,7 +613,7 @@ void peqbank_smooth(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 
 void peqbank_list(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 
-	int i, rest=0;
+	int rest=0;
 
 	x->b_Fs = sys_getsr();
 	x->b_nbpeq = 0;
