@@ -146,7 +146,7 @@ code-checked-in:
 # added):
 .PHONY: no-cr-characters
 no-cr-characters:
-	@ !((file * | grep -v macyucky |  grep "with CR line terminators") && \
+	@ !((file * | grep -v macyucky | grep -v "\.pat" | grep -v "\.mxt" |  grep "with CR line terminators") && \
 	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
 
 # Actually copying the files to directories where the web server can find them
