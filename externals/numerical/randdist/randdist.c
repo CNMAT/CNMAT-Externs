@@ -1,6 +1,6 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2006, The Regents of
+University of California, Berkeley.  Copyright (c) 2006-07, The Regents of
 the University of California (Regents). 
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
@@ -24,11 +24,12 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 NAME: randdist
 DESCRIPTION: Random number generator with over 30 statistical distributions.
 AUTHORS: John MacCallum
-COPYRIGHT_YEARS: 2006
+COPYRIGHT_YEARS: 2006-07
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.1: Changed the way the random seed it made
 VERSION 1.2: Universal binary
 VERSION 1.2.1: Changed the license to be GPL compatible
+VERSION 1.3: The object now takes arguments to specify the distribution
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -107,7 +108,7 @@ void rdist_fillBuffers(t_rdist *x, int n);
 void rdist_incBufPos(t_rdist *x);
 void rdist_assist(t_rdist *x, void *b, long m, long a, char *s);
 static int makeseed(void);
-void *rdist_new();
+void *rdist_new(t_symbol *msg, short argc, t_atom *argv);
 void rdist_free(t_rdist *x);
 
 void rdist_dirichlet(t_rdist *x, double *out);
@@ -121,7 +122,7 @@ int rdist_randPMF(t_rdist *x);
 
 int main(void)
 {
-	setup((t_messlist **)&rdist_class, (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, 0); 
+	setup((t_messlist **)&rdist_class, (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, A_GIMME, 0); 
 	
 	version(0);
 
@@ -675,7 +676,7 @@ static int makeseed(void)
     return (random_nextseed & 0x7fffffff);
 }
 
-void *rdist_new()
+void *rdist_new(t_symbol *msg, short argc, t_atom *argv)
 {
 	int i = 0;
 	t_rdist *x;
@@ -707,6 +708,13 @@ void *rdist_new()
 	
 	x->r_whichBuffer = 0;
 	x->r_bufferPos = 0;
+	
+	if(argc){
+		t_symbol *m = argv[0].a_w.w_sym;
+		for(i = 0; i < argc - 1; i++)
+			argv[i] = argv[i + 1];
+		rdist_anything(x, m, argc - 1, argv);
+	}
 	   	
 	return(x);
 }
