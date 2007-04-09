@@ -70,7 +70,7 @@ export OBJ = $(notdir $(lastword $(strip $(CURDIR))))
 # Filenames derived from the name of the object
 SOURCE = $(OBJ).c
 REZ_FILE = $(OBJ).r
-HELPFILE = $(OBJ).help
+HELPFILE = $(OBJ).help.pat
 CFM_BINARY = $(CODEWARRIOR_BUILD_DIR)/$(OBJ)
 MACHO_BINARY = $(XCODE_BUILD_DIR)/$(OBJ).mxo
 # MAC_BINARY = $(if $(findstring OSX-CFM,$(PLATFORM)), $(CFM_BINARY), $(MACHO_BINARY))
@@ -79,10 +79,10 @@ WIN_BINARY = $(GCC_BUILD_DIR)/$(OBJ).mxe
 
 
 CODEWARRIOR_DEBUGGER_SYM = $(CODEWARRIOR_BUILD_DIR)/$(OBJ).xSYM
-CODEWARRIOR_HELPFILE_COPY = $(CODEWARRIOR_BUILD_DIR)/$(OBJ).help 
-XCODE_HELPFILE_COPY = $(XCODE_BUILD_DIR)/$(OBJ).help 
-VCC_HELPFILE_COPY = $(VCC_BUILD_DIR)/$(OBJ).help 
-GCC_HELPFILE_COPY = $(GCC_BUILD_DIR)/$(OBJ).help 
+CODEWARRIOR_HELPFILE_COPY = $(CODEWARRIOR_BUILD_DIR)/$(HELPFILE)
+XCODE_HELPFILE_COPY = $(XCODE_BUILD_DIR)/$(HELPFILE)
+VCC_HELPFILE_COPY = $(VCC_BUILD_DIR)/$(HELPFILE)
+GCC_HELPFILE_COPY = $(GCC_BUILD_DIR)/$(HELPFILE)
 
 CODEWARRIOR_BUILD_DIR = ../build-mac
 XCODE_BUILD_DIR = build/Deployment
@@ -288,8 +288,8 @@ $(CODEWARRIOR_HELPFILE_COPY): $(CODEWARRIOR_BUILD_DIR_EXISTS)
 $(XCODE_HELPFILE_COPY): $(XCODE_BUILD_DIR_EXISTS)
 $(GCC_HELPFILE_COPY): $(GCC_BUILD_DIR_EXISTS)
 
-$(CODEWARRIOR_HELPFILE_COPY) $(XCODE_HELPFILE_COPY) $(VCC_HELPFILE_COPY) $(GCC_HELPFILE_COPY): $(OBJ).help
-	cp $(OBJ).help $@
+$(CODEWARRIOR_HELPFILE_COPY) $(XCODE_HELPFILE_COPY) $(VCC_HELPFILE_COPY) $(GCC_HELPFILE_COPY): $(HELPFILE)
+	cp $(HELPFILE) $@
 
 
 # make sure help patch in correct source directory is the most recent
@@ -338,7 +338,7 @@ code-checked-in: no-cr-characters
 # added):
 .PHONY: no-cr-characters
 no-cr-characters:
-	@ !((file * | grep -v macyucky |  grep "with CR line terminators") && \
+	@ !((file * | grep -v "macyucky\|\.pat\|\.mxt" | grep "with CR line terminators") && \
 	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
 
 
@@ -386,7 +386,7 @@ clean:
 	rm -f $(CFM_WEB_INFO) $(MACHO_WEB_INFO)
 	rm -rf $(CFM_BINARY) $(MACHO_BINARY)
 	rm -rf $(foreach dir, $(ALL_BUILD_DIRS), \
-                 $(dir)/$(OBJ).help \
+                 $(dir)/$(HELPFILE) \
 		 $(dir)/$(WIN_INDIVIDUAL_DOWNLOAD_NO_DIR) \
 		 $(dir)/$(CFM_INDIVIDUAL_DOWNLOAD_NO_DIR) \
 		 $(dir)/$(MACHO_INDIVIDUAL_DOWNLOAD_NO_DIR) )
