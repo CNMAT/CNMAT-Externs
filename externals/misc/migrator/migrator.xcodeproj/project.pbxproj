@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		1229BFAB0A5B5FBA00CFEE8F /* migrator.c in Sources */ = {isa = PBXBuildFile; fileRef = 1229BFAA0A5B5FBA00CFEE8F /* migrator.c */; };
+		1263484C0BB5D05C00D8240F /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 126348470BB5D05C00D8240F /* sdif-mem.c */; };
+		1263484D0BB5D05C00D8240F /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 126348480BB5D05C00D8240F /* sdif.c */; };
+		1263484E0BB5D05C00D8240F /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 126348490BB5D05C00D8240F /* sdif-buf.c */; };
+		1263484F0BB5D05C00D8240F /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 1263484A0BB5D05C00D8240F /* sdif-util.c */; };
+		126348500BB5D05C00D8240F /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 1263484B0BB5D05C00D8240F /* open-sdif-file.c */; };
 		12A6735B0AE0A9E80084F1D2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A6735A0AE0A9E80084F1D2 /* MaxAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
@@ -15,6 +20,11 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		1229BFAA0A5B5FBA00CFEE8F /* migrator.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = migrator.c; sourceTree = "<group>"; };
+		126348470BB5D05C00D8240F /* sdif-mem.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "sdif-mem.c"; path = "../../../../sdif/lib/sdif-mem.c"; sourceTree = SOURCE_ROOT; };
+		126348480BB5D05C00D8240F /* sdif.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = sdif.c; path = ../../../../sdif/lib/sdif.c; sourceTree = SOURCE_ROOT; };
+		126348490BB5D05C00D8240F /* sdif-buf.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "sdif-buf.c"; path = "../../../../sdif/lib/sdif-buf.c"; sourceTree = SOURCE_ROOT; };
+		1263484A0BB5D05C00D8240F /* sdif-util.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "sdif-util.c"; path = "../../../../sdif/lib/sdif-util.c"; sourceTree = SOURCE_ROOT; };
+		1263484B0BB5D05C00D8240F /* open-sdif-file.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "open-sdif-file.c"; path = "../../../utility-library/search-path/open-sdif-file.c"; sourceTree = SOURCE_ROOT; };
 		12A6735A0AE0A9E80084F1D2 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* migrator.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = migrator.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -63,6 +73,11 @@
 			isa = PBXGroup;
 			children = (
 				1229BFAA0A5B5FBA00CFEE8F /* migrator.c */,
+				126348470BB5D05C00D8240F /* sdif-mem.c */,
+				126348480BB5D05C00D8240F /* sdif.c */,
+				126348490BB5D05C00D8240F /* sdif-buf.c */,
+				1263484A0BB5D05C00D8240F /* sdif-util.c */,
+				1263484B0BB5D05C00D8240F /* open-sdif-file.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -166,6 +181,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1229BFAB0A5B5FBA00CFEE8F /* migrator.c in Sources */,
+				1263484C0BB5D05C00D8240F /* sdif-mem.c in Sources */,
+				1263484D0BB5D05C00D8240F /* sdif.c in Sources */,
+				1263484E0BB5D05C00D8240F /* sdif-buf.c in Sources */,
+				1263484F0BB5D05C00D8240F /* sdif-util.c in Sources */,
+				126348500BB5D05C00D8240F /* open-sdif-file.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +275,7 @@
 				PRODUCT_NAME = migrator;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
+				USER_HEADER_SEARCH_PATHS = "../../../utility-library/search-path ../../../../sdif/lib ../../SDIF/SDIF-buffer";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
