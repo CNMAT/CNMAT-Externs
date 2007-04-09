@@ -338,7 +338,7 @@ code-checked-in: no-cr-characters
 # added):
 .PHONY: no-cr-characters
 no-cr-characters:
-	@ !((file * | grep -v "macyucky\|\.pat\|\.mxt" | grep "with CR line terminators") && \
+	@ !((file * | grep -v macyucky | grep -v "\.pat" | grep -v "\.mxt" |  grep "with CR line terminators") && \
 	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
 
 
