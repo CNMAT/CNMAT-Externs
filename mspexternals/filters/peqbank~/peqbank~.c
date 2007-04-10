@@ -45,7 +45,7 @@ VERSION 1.9 Added "biquads" message; expires 12/1/3
 VERSION 2.0 Never expires
 VERSION 2.0.1: Force Package Info Generation
 VERSION 2.1: Fixed bug of overwriting input signal vector with the filtered output
-VERSION 2.2: Added "bank" message as a synonym for "list".
+VERSION 2.2: Added "bank" message as a synonym for "list", dsp_free fixed -mz
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
@@ -778,6 +778,9 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
 }
 
 void  peqbank_free(t_peqbank *x) {
+	
+	dsp_free(&(x->b_obj));
+	
 	sysmem_freeptr((char *) x->param);
 	sysmem_freeptr((char *) x->oldparam);
 
