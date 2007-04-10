@@ -45,6 +45,7 @@ VERSION 1.9 Added "biquads" message; expires 12/1/3
 VERSION 2.0 Never expires
 VERSION 2.0.1: Force Package Info Generation
 VERSION 2.1: Fixed bug of overwriting input signal vector with the filtered output
+VERSION 2.2: Added "bank" message as a synonym for "list".
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
@@ -192,7 +193,7 @@ void peqbank_tellmeeverything(t_peqbank *x);
 int test_normal_state(t_peqbank *x);
 int test_newcoeffs_state(t_peqbank *x);
 
-void main(void) {
+int main(void) {
         version(0);
 
 	ps_maxelem = gensym("maxelem");
@@ -222,6 +223,7 @@ void main(void) {
 	}
 	addmess((method)peqbank_reset, "reset", A_GIMME, 0);
 	addmess((method)peqbank_list, "list", A_GIMME, 0);
+	addmess((method)peqbank_list, "bank", A_GIMME, 0); //This is a better name than "list," because it isn't a reservered word in Max. -mz
 	addmess((method)peqbank_maxelem, "maxelem", A_GIMME, 0);
 	addmess((method)peqbank_shelf, "shelf", A_GIMME, 0);
 	addmess((method)peqbank_peq, "peq", A_GIMME, 0);
@@ -234,6 +236,8 @@ void main(void) {
 	addmess((method)peqbank_biquads, "biquads", A_GIMME);
 	
 	dsp_initclass();
+	
+	return 0;
 
 	//rescopy('STR#', RES_ID);
 }
