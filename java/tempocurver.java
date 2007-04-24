@@ -275,14 +275,15 @@ public class tempocurver extends MSPPerformer {
 			post("Error!!! called do_jump on a plan_element of type " + e.type);
 			return;
 		}
+		
+		outletOSC("/jumped",
+				   new Atom[]{ Atom.newAtom(e.target_f), 
+							    Atom.newAtom(e.target_p)});
 
 		synchronized(this) {
 			current_freq = e.target_f;
 			current_phase = e.target_p;
 		}
-		outletOSC("/jumped",
-				   new Atom[]{ Atom.newAtom(e.target_f), 
-							   Atom.newAtom(e.target_p)});
 	}
 
 	private void plan_ramp(plan_element e) {
@@ -553,6 +554,7 @@ public class tempocurver extends MSPPerformer {
 		float[] tempo = outs[1].vec;
 		float[] jumped = outs[2].vec;
 		int beatnum = 0;
+		int subdivnum = 0;
 		
 		if (nsamps >= 2) {
 			// Special cases for first beat and first subdivision
@@ -562,15 +564,17 @@ public class tempocurver extends MSPPerformer {
 									  Atom.newAtom(0.0f),
 									  Atom.newAtom(tempo[0]) });
 				beatnum++;
+				subdivnum = 0;
 			}
 			for (int s = 0; s < pretend_subdivisions; ++s) {
 				float subdiv_phase = s * oneover_pretend_subdivisions;
 				if (phase[0] == subdiv_phase && phase[1] > subdiv_phase) {
 					outletOSC("/future_subdiv", 
 							  new Atom[] {Atom.newAtom(beatnum-1),
-										  Atom.newAtom(s),
+										  Atom.newAtom(subdivnum),
 										  Atom.newAtom(0.f),
 										  Atom.newAtom(tempo[0]) });
+					subdivnum++;
 				}
 			}
 		}
@@ -587,11 +591,13 @@ public class tempocurver extends MSPPerformer {
 		    	}
 
 				// Every beat is also subdivision 0
+				subdivnum = 0;
 				outletOSC("/future_subdiv",
 						  new Atom[] {Atom.newAtom(beatnum-1),
-									  Atom.newAtom(0),
+									  Atom.newAtom(subdivnum),
 									  Atom.newAtom(i*oneoversr),
 									  Atom.newAtom(tempo[i]) });
+				subdivnum++;
 		    }
 
 			if (jumped[i] > 0.) {
@@ -601,9 +607,10 @@ public class tempocurver extends MSPPerformer {
 						// Jumped to this subdivision
 						outletOSC("/future_subdiv",
 								  new Atom[] {Atom.newAtom(beatnum-1),
-											  Atom.newAtom(s),
+											  Atom.newAtom(subdivnum),
 											  Atom.newAtom(i*oneoversr),
 											  Atom.newAtom(tempo[i]) });
+						subdivnum++;
 					}
 				}
 			} else {
@@ -613,9 +620,10 @@ public class tempocurver extends MSPPerformer {
                     if (phase[i] >= subdiv_phase && phase[i-1] < subdiv_phase) {
                         outletOSC("/future_subdiv",
                                   new Atom[] {Atom.newAtom(beatnum-1),
-                                              Atom.newAtom(s),
+                                              Atom.newAtom(subdivnum),
                                               Atom.newAtom(i*oneoversr),
                                               Atom.newAtom(tempo[i]) });
+						subdivnum++;
 					}
 				}
 			}
@@ -628,7 +636,7 @@ public class tempocurver extends MSPPerformer {
 
 	public void perform(MSPSignal[] ins, MSPSignal[] outs) {
 		if (offline) {
-			for (int i = 0; i < outs[0].n; ++i) {
+			for (int i = 0; i < outs[0].n; ++i) { 
 				outs[0].vec[i] = outs[1].vec[i] = outs[2].vec[i] = 0.0f;
 			}
 		} else {
@@ -921,6 +929,10 @@ public class tempocurver extends MSPPerformer {
         */
 	} // do_perform()
 } // class tempocurver
+
+
+
+
 
 
 
