@@ -48,6 +48,7 @@ VERSION 1.11: Allows multi-level prefixes (e.g., "/foo/bar")
 VERSION 1.12: Debugged "slash" argument problem introduced in 1.11
 VERSION 1.13: Debugged crash problem introduced in 1.12
 VERSION 1.13.1: Force Package Info Generation
+VERSION 1.14: Improved error checking for bad input lists
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -319,11 +320,22 @@ void OSCroute_list(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	if (argc > 0 && argv[0].a_type == A_SYM) {
 		/* Ignore the fact that this is a "list" */
 		OSCroute_doanything(x, argv[0].a_w.w_sym, argc-1, argv+1);
+	} else if (argc == 0) {
+	  post("¥ OSC-route: can't handle empty list; it has no OSC address.");
 	} else {
-		post("¥ OSC-route: invalid list beginning with a number");
+	  if (argv[0].a_type == A_LONG) {
+	    post("¥ OSC-route: integer %d is not an OSC-address",
+		 argv[0].a_w.w_long);
+	  } else if (argv[0].a_type == A_FLOAT) {
+	    post("¥ OSC-route: float %f is not an OSC-address",
+		 argv[0].a_w.w_float);
+	  } else {
+	    post("¥ OSC-route: invalid list starting with atom of unrecognized type... ???");
+	  }
+
+	  // Could print the rest of the arguments here...
 	}
-}
-	
+}	
 	
 void OSCroute_anything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	OSCroute_doanything(x, s, argc, argv);
