@@ -35,6 +35,7 @@ VERSION 1.0.5: Got rid of the third output mode and added an outlet that outputs
 VERSION 1.0.6: Unlimited list length.
 VERSION 1.0.7: Now likes lists of ints too!
 VERSION 1.1: Reads the contents of SDIF-buffers.
+VERSION 1.1.1: Fixed helpfile
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
