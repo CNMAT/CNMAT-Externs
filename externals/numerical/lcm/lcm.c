@@ -1,5 +1,6 @@
 /*
-Copyright (c) 1998.  The Regents of the University of California (Regents).
+Copyright (c) 1998,99,2000,01,02,03,04,05,06,07
+The Regents of the University of California (Regents).
 All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -11,9 +12,7 @@ Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
 CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Based on Max object template from
-David Zicarelli.
-
+University of California, Berkeley.
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
@@ -32,9 +31,10 @@ David Zicarelli.
 NAME: lcm (least common multiple)
 DESCRIPTION: Least common multiple
 AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
+COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06,07
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version, 3/29/98.
+VERSION 0.2: First release; fixed bug with typed-in arguments
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
@@ -80,10 +80,10 @@ void lcm_findLCM(LCM *x);
 
 void main(fptr *f)
 {
-	
+	version(0);
 	FNS = f;	
 		
-	setup(&class, lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
+	setup((t_messlist **)&class, (method)lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
 	addbang((method)lcm_bang);
 	addint((method)lcm_int);
 	addinx((method)lcm_in1,1);
@@ -158,6 +158,7 @@ void lcm_tellmeeverything(LCM *x) {
 	for (i = 0; i < x->l_count; ++i) {
 		post("  %ld", x->l_args[i]);
 	}
+	lcm_findLCM(x);
 	post("LCM of those numbers is %ld", x->l_theLCM);
 }
 
@@ -165,15 +166,18 @@ void lcm_tellmeeverything(LCM *x) {
 void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 {
 	register short i;
-	if (ac > 10)
+	if (ac > 10) {
 		ac = 10;
-	for (i=0; i < ac; i++,av++) {
-		if (av[1].a_type!=A_LONG) {
+		post("lcm: warning: truncating list to 10 elements.");
+	}
+	
+	for (i=0; i < ac; i++) {
+		if (av[i].a_type!=A_LONG) {
 			post("lcm: list must contain nothing but ints.");
 			return;
 		}
 	}
-	for (i=0; i < ac; i++,av++) {
+	for (i=0; i < ac; i++) {
 		x->l_args[i] = av[i].a_w.w_long;
 	}
 	
@@ -186,7 +190,6 @@ void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 void *lcm_new(Symbol *s, short ac, Atom *av)
 {
 	LCM *x;
-	
 	x = (LCM *)newobject(class);
 	
 	x->l_args[0] = 1;
@@ -200,7 +203,7 @@ void *lcm_new(Symbol *s, short ac, Atom *av)
 		return 0;
 	} else {
 		int i;
-		for (i = ac; i >= 0; --i) {
+		for (i = ac-1; i >= 0; --i) {
 			if (av->a_type != A_LONG) {
 				ouchstring("Arguments to lcm must be ints");
 				return 0;
@@ -208,9 +211,9 @@ void *lcm_new(Symbol *s, short ac, Atom *av)
 			if (i > 0) {
 				intin(x, i);
 			}
-			x->l_args[i+1] = av[i].a_w.w_long;
+			x->l_args[i] = av[i].a_w.w_long;
 		}
-		x->l_count = ac + 1;
+		x->l_count = ac;
 	}
 	
 	x->l_out = intout(x);
@@ -235,7 +238,7 @@ void lcm_findLCM(LCM *x) {
 	long result, i;
 	
 	result = x->l_args[0];
-	for (i = 0; i < x->l_count; ++i) {
+	for (i = 1; i < x->l_count; ++i) {
 		result = lcm(result, x->l_args[i]);
 	}
 	
