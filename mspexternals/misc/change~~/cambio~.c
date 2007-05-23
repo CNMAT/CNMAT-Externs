@@ -29,12 +29,13 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
      ENHANCEMENTS, OR MODIFICATIONS.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: change~~
-DESCRIPTION: Signal to event domain version of change
+NAME: cambio~
+DESCRIPTION: Signal to event domain version of change: Output a float whenever the input signal's value changes.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2007
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version 
+VERSION 0.2: Renamed to "cambio~"
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
@@ -48,10 +49,10 @@ VERSION 0.1: Matt's initial version
 #include "z_dsp.h"
 #include <math.h>
 
-void *change_class;
+void *cambio_class;
 
 
-typedef struct _change
+typedef struct _cambio
 {
 	/* Max stuff */
     t_pxobject x_obj;	//  header
@@ -59,35 +60,35 @@ typedef struct _change
     void *outlet;
 	float prev;
 	float speedlimit;
-} t_change;
+} t_cambio;
 
 
 
 void main(void);
-void *change_new(void);
-static void Output(t_change *x);
-void change_int(t_change *x, int i);
-void change_continuous(t_change *x, long yesno);
-void change_free(t_change *x);
-void change_dsp(t_change *x, t_signal **sp, short *count);
-t_int *change_perform(t_int *w);
+void *cambio_new(void);
+static void Output(t_cambio *x);
+void cambio_int(t_cambio *x, int i);
+void cambio_continuous(t_cambio *x, long yesno);
+void cambio_free(t_cambio *x);
+void cambio_dsp(t_cambio *x, t_signal **sp, short *count);
+t_int *cambio_perform(t_int *w);
 
 
 void main(void) {
 	version(0);	
-    setup((t_messlist **)&change_class, (method)change_new, (method)dsp_free, (short)sizeof(t_change),
+    setup((t_messlist **)&cambio_class, (method)cambio_new, (method)dsp_free, (short)sizeof(t_cambio),
           0L, 0);
-//    addint((method)change_int);
+//    addint((method)cambio_int);
     addmess((method)version, "version", 0);
-    addmess((method)change_dsp, "dsp", A_CANT, 0);
-//    addmess((method)change_continuous, "continuous", A_LONG, 0);
+    addmess((method)cambio_dsp, "dsp", A_CANT, 0);
+//    addmess((method)cambio_continuous, "continuous", A_LONG, 0);
     dsp_initclass();
 }
 
-void *change_new(void) {
-	t_change *x;
+void *cambio_new(void) {
+	t_cambio *x;
 
-	x = (t_change *)newobject(change_class);
+	x = (t_cambio *)newobject(cambio_class);
 	
 	if (x==0) return 0;
 
@@ -99,18 +100,18 @@ void *change_new(void) {
 }
 	
 
-void change_int(t_change *x, int i) {
+void cambio_int(t_cambio *x, int i) {
 }
 
 
-void change_dsp(t_change *x, t_signal **sp, short *count) {
-	dsp_add(change_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);  // in, size
+void cambio_dsp(t_cambio *x, t_signal **sp, short *count) {
+	dsp_add(cambio_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);  // in, size
 }
 
 int bogus = 0;
 
-t_int *change_perform(t_int *w) {
-    t_change *x = (t_change *)(w[1]);  // object
+t_int *cambio_perform(t_int *w) {
+    t_cambio *x = (t_cambio *)(w[1]);  // object
     t_float *in = (t_float *)(w[2]); // input
     int size = w[3]; // vector size
 	int events_this_vector = 0;

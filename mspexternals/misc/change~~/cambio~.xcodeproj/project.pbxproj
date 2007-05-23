@@ -10,15 +10,15 @@
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		BEED70E40A8153B600523D1A /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEED70E20A8153B600523D1A /* MaxAPI.framework */; };
 		BEED70E50A8153B600523D1A /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEED70E30A8153B600523D1A /* MaxAudioAPI.framework */; };
-		C93E2F580BE2701E00642F09 /* change~~.c in Sources */ = {isa = PBXBuildFile; fileRef = C93E2F570BE2701E00642F09 /* change~~.c */; };
+		C90B89200C04D1590061F7A4 /* cambio~.c in Sources */ = {isa = PBXBuildFile; fileRef = C90B891F0C04D1590061F7A4 /* cambio~.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		BEED70E20A8153B600523D1A /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		BEED70E30A8153B600523D1A /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/UB-SDK/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
-		C93E2F570BE2701E00642F09 /* change~~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "change~~.c"; sourceTree = "<group>"; };
-		C93E2F590BE2704100642F09 /* change~~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "change~~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C90B891F0C04D1590061F7A4 /* cambio~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "cambio~.c"; sourceTree = "<group>"; };
+		C93E2F590BE2704100642F09 /* cambio~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cambio~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +66,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				C93E2F570BE2701E00642F09 /* change~~.c */,
+				C90B891F0C04D1590061F7A4 /* cambio~.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -74,7 +74,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C93E2F590BE2704100642F09 /* change~~.mxo */,
+				C93E2F590BE2704100642F09 /* cambio~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -92,9 +92,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* change~~ */ = {
+		8D01CCC60486CAD60068D4B7 /* cambio~ */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "change~~" */;
+			buildConfigurationList = 0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "cambio~" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -106,10 +106,10 @@
 			);
 			dependencies = (
 			);
-			name = "change~~";
+			name = "cambio~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = C93E2F590BE2704100642F09 /* change~~.mxo */;
+			productReference = C93E2F590BE2704100642F09 /* cambio~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -117,12 +117,12 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "change~~" */;
+			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "cambio~" */;
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
 			projectDirPath = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* change~~ */,
+				8D01CCC60486CAD60068D4B7 /* cambio~ */,
 			);
 		};
 /* End PBXProject section */
@@ -152,7 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C93E2F580BE2701E00642F09 /* change~~.c in Sources */,
+				C90B89200C04D1590061F7A4 /* cambio~.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,7 +194,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "change~~";
+				PRODUCT_NAME = "cambio~";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -242,7 +242,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "change~~";
+				PRODUCT_NAME = "cambio~";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -284,7 +284,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "change~~";
+				PRODUCT_NAME = "cambio~";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -319,7 +319,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "change~~" */ = {
+		0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "cambio~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FFBC541097463A900D78707 /* Development */,
@@ -329,7 +329,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		0FFBC544097463A900D78707 /* Build configuration list for PBXProject "change~~" */ = {
+		0FFBC544097463A900D78707 /* Build configuration list for PBXProject "cambio~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FFBC545097463A900D78707 /* Development */,
