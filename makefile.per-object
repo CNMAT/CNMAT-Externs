@@ -391,6 +391,8 @@ clean:
 		 $(dir)/$(CFM_INDIVIDUAL_DOWNLOAD_NO_DIR) \
 		 $(dir)/$(MACHO_INDIVIDUAL_DOWNLOAD_NO_DIR) )
 	rm -f *~ 
+	rm -rf $(OBJ)\ Data
+	rm -rf build
 
 
 # Diagnostic stuff for debugging
