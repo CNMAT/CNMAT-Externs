@@ -46,6 +46,7 @@ VERSION 2.0 Never expires
 VERSION 2.0.1: Force Package Info Generation
 VERSION 2.1: Fixed bug of overwriting input signal vector with the filtered output
 VERSION 2.2: Added "bank" message as a synonym for "list", dsp_free fixed -mz
+VERSION 2.3: Tried to make peqbank_compute() be reentrant.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
@@ -157,6 +158,9 @@ typedef struct _peqbank {
 	
 	Atom *myList;		// Copy of coefficients as Atoms
 	void *b_outlet;		// List of biquad coefficients
+	
+	int already_peqbank_compute;		// Flag for whether we're currently computing new coefficients
+	int need_to_recompute;		// Flag for whether we need to recompute new coefficients
 
 } t_peqbank;
 
@@ -391,9 +395,8 @@ t_int *peqbank_perform(t_int *w) {
 		// the ones we just used.  The previous "old" coeffients, which we've now finished
 		// interpolating away from, are not needed any more.
 		
-		
 		if (x->freecoeff != 0) {
-			post("¥ peqbank~ disaster!  freecoeff should be zero now!");
+			post("¥ peqbank~ disaster (smooth)!  freecoeff should be zero now!");
 		}
 		
 #ifdef DEBUG	
@@ -417,7 +420,7 @@ t_int *peqbank_perform_fast(t_int *w) {
 	
 	if (x->coeff != x->oldcoeff) {
 		if (x->freecoeff != 0) {
-			post("¥ peqbank~ disaster!  freecoeff should be zero now!");
+			post("¥ peqbank~ disaster (fast)!  freecoeff should be zero now!");
 		}
 		x->freecoeff = x->oldcoeff;
 		x->oldcoeff = x->coeff;		
@@ -764,6 +767,9 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
 				}
 			}	
 		 }
+		
+	x->already_peqbank_compute = 0;
+	x->need_to_recompute = 0;
 	peqbank_init(x);
 		
     dsp_setup((t_pxobject *)x, 1);			// number of inlets
@@ -797,30 +803,37 @@ void  peqbank_free(t_peqbank *x) {
 }
 
 #define WORRIED_ABOUT_PEQBANK_REENTRANCY
-#ifdef WORRIED_ABOUT_PEQBANK_REENTRANCY
-int already_peqbank_compute = 0;
-#endif
 
 void peqbank_compute(t_peqbank *x) {		
 	int i;
 	
 #ifdef WORRIED_ABOUT_PEQBANK_REENTRANCY
-	if (already_peqbank_compute) {
-		post("¥ Congratulations; you have discovered a bug in peqbank~!");
-		post("¥ Please email matt@cnmat.berkeley.edu and tell him that");
-		post("¥ peqbank_compute must be reentrant.  Sorry about the click.");
+	if (x->already_peqbank_compute) {
+	  x->need_to_recompute = 1;
+	  post("Still computing filter design from the previous message; ignoring new message.");
+	  return;
 	}
-	++already_peqbank_compute;
+	/* If we get interrupted right here then we're screwed. */
+	x->already_peqbank_compute = 1;
 #endif
 
+ startover:
 	// Do the actual computation of coefficients, into x->newcoeff
 	compute_shelf(x);
 	for (i=NBPARAM; i<(x->b_nbpeq+1)*NBPARAM; i+=NBPARAM) compute_parameq(x,i);
 
+	if (x->need_to_recompute) {
+	  // This procedure was called while the previous invocation
+	  // was still running, so the coefficients we just computed
+	  // are junk.
+	  x->need_to_recompute = 0;
+	  goto startover;
+	}
+
 	swap_in_new_coeffs(x);
 
 #ifdef WORRIED_ABOUT_PEQBANK_REENTRANCY
-	--already_peqbank_compute;
+	x->already_peqbank_compute = 0;
 #endif
 }
 
