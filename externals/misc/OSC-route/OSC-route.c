@@ -49,6 +49,7 @@ VERSION 1.12: Debugged "slash" argument problem introduced in 1.11
 VERSION 1.13: Debugged crash problem introduced in 1.12
 VERSION 1.13.1: Force Package Info Generation
 VERSION 1.14: Improved error checking for bad input lists
+VERSION 1.15: Fixed symbol corruption memory management bug related to "set" message.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -99,7 +100,8 @@ void *OSCroute_class;
 /* prototypes  */
 
 void OSCroute_free(OSCroute *x);
-int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash);
+int RememberNextPrefix (OSCroute *x, char *prefixWithoutLeadingSlash);
+int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num);
 Boolean MyPatternMatch (const char *pattern, const char *test);
 void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv);
 static void OutputOSCArguments(OSCroute *x, int i, short argc, Atom *argv);
@@ -143,35 +145,53 @@ void main(fptr *f) {
 
 /* instance creation routine */
 
-
-int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash) {
-	char *s;
-		
+int RememberNextPrefix(OSCroute *x, char *prefixWithoutLeadingSlash) {
 	if (x->o_num >= MAX_NUM) {
 		error("OSC-route: too many outlets requested. (max %ld)", MAX_NUM);
 		return 0;
 	}
 
-	x->prefix_sizes[x->o_num] = MyStrLen(prefixWithoutLeadingSlash)+1;
-	x->o_prefixes[x->o_num] = getbytes(x->prefix_sizes[x->o_num]);
-	if (x->o_prefixes[x->o_num] == 0) {
+	if (!RememberPrefix(x, prefixWithoutLeadingSlash, x->o_num)) return 0;
+
+	++(x->o_num);
+	return 1;
+}
+
+
+int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num) {
+	char *s;
+
+
+	if (num < 0) {
+	  error("OSC-route: what's with the negative outlet number %ld?", num);
+	  return 0;
+	}
+
+	if (num >= MAX_NUM) {
+		error("OSC-route: can't have %ld outlets (max %ld)", num, MAX_NUM);
+		return 0;
+	}
+		
+
+	x->prefix_sizes[num] = MyStrLen(prefixWithoutLeadingSlash)+1;
+	x->o_prefixes[num] = getbytes(x->prefix_sizes[num]);
+	if (x->o_prefixes[num] == 0) {
 		error("Out of memory saving string %s", prefixWithoutLeadingSlash);
 		return 0;
 	}
 	
-	MyStrCopy(x->o_prefixes[x->o_num], prefixWithoutLeadingSlash);
-	x->prefix_levels[x->o_num] = 1;
+	MyStrCopy(x->o_prefixes[num], prefixWithoutLeadingSlash);
+	x->prefix_levels[num] = 1;
 
 	// Convert all other slashes to nulls so as to
 	// store each "part" (between slashes) as consecutive strings.
-	for (s = x->o_prefixes[x->o_num]; *s != '\0'; ++s) {
+	for (s = x->o_prefixes[num]; *s != '\0'; ++s) {
 		if (*s == '/') {
 			*s = '\0';
-			++(x->prefix_levels[x->o_num]);
+			++(x->prefix_levels[num]);
 		}
 	}
 				
-	++(x->o_num);
 	return 1;
 }
 
@@ -190,7 +210,7 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 		if (argv[i].a_type == A_SYM) {
 			if (argv[i].a_w.w_sym->s_name[0] == '/') {
 				/* Now that's a nice prefix. */
-				if (RememberPrefix(x, (argv[i].a_w.w_sym->s_name)+1) == 0) return 0;
+				if (RememberNextPrefix(x, (argv[i].a_w.w_sym->s_name)+1) == 0) return 0;
 			} else if (argv[i].a_w.w_sym->s_name[0] == '#' &&
 					   argv[i].a_w.w_sym->s_name[1] >= '1' &&
 					   argv[i].a_w.w_sym->s_name[1] <= '9') {
@@ -209,12 +229,12 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 				}
 				
 				if (argv[i+1].a_type == A_SYM) {
-					if (RememberPrefix(x, argv[i+1].a_w.w_sym->s_name) == 0) return 0;
+					if (RememberNextPrefix(x, argv[i+1].a_w.w_sym->s_name) == 0) return 0;
 				} else if (argv[i+1].a_type == A_LONG) {
 					// Convert to a numeral.  Max ints are -2147483648 to 2147483647
 					char string[12];
 					sprintf(string, "%d", argv[i+1].a_w.w_long);
-					if (RememberPrefix(x, string) == 0) return 0;
+					if (RememberNextPrefix(x, string) == 0) return 0;
 				} else {
 					post("¥ OSC-route: unrecognized argument type after \"slash\".");
 					return 0;
@@ -298,21 +318,28 @@ void OSCroute_assist (OSCroute *x, void *box, long msg, long arg, char *dstStrin
 
 
 void OSCroute_set(OSCroute *x, long outlet, Symbol *s) {	
-	// outlet argument is 1-based.
+  int i;
+  // outlet argument is 1-based.
 	
-	if (outlet <=0 || outlet > x->o_num) {
-		post("¥ OSC-route: argument to set must be from one to the number of outlets.");
-		goto bag;
-	}
+  if (outlet <=0 || outlet > x->o_num) {
+    post("¥ OSC-route: argument to set must be from one to the number of outlets.");
+    return;
+  }
 	
-	if (s->s_name[0] == '/') {
-		x->o_prefixes[outlet-1] = s->s_name + 1;
-	} else {
-		x->o_prefixes[outlet-1] = s->s_name;
-	}	
-		
-bag:
-	1+1;
+  i = outlet-1;
+
+  // First free the memory of the old string
+  if (x->prefix_sizes[i] != 0) {
+    freebytes(x->o_prefixes[i], x->prefix_sizes[i]);
+  }
+
+  // Store the new string
+
+  if (s->s_name[0] == '/') {
+    RememberPrefix(x, s->s_name + 1, i);
+  } else {
+    RememberPrefix(x, s->s_name, i);
+  }
 }
 
 
