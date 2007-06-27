@@ -50,6 +50,7 @@ VERSION 1.13: Debugged crash problem introduced in 1.12
 VERSION 1.13.1: Force Package Info Generation
 VERSION 1.14: Improved error checking for bad input lists
 VERSION 1.15: Fixed symbol corruption memory management bug related to "set" message.
+VERSION 1.16: Fixed possible bug when freeing the object
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -78,13 +79,14 @@ VERSION 1.15: Fixed symbol corruption memory management bug related to "set" mes
 
 typedef struct OSCroute
 {
-	Object o_ob;				// required header
-	int o_num;					// Number of address prefixes we store
-	int o_complainmode;			// Do we print a message if no match?
-	char *o_prefixes[MAX_NUM];	// Prefixes this object matches, with multiple levels as successive 
-								// null-terminated strings
-	int prefix_levels[MAX_NUM]; // Number of levels (i.e., of strings) for each prefix
-	int prefix_sizes[MAX_NUM];	// # bytes in each o_prefixes[i], for freebytes
+	Object o_ob;		        // required header
+	int o_num;		        // Number of address prefixes we store
+	int o_complainmode;             // Do we print a message if no match?
+        char *o_prefixes[MAX_NUM];      // Prefixes this object matches, with multiple levels as successive 
+                                        // null-terminated strings
+	int prefix_levels[MAX_NUM];     // Number of levels (i.e., of successive null-terminated strings)
+                                        // for each prefix
+	int o_prefix_sizes[MAX_NUM];	// # bytes in each o_prefixes[i], for freebytes
 	void *o_outlets[MAX_NUM];
 	void *o_otheroutlet;		// "none of the above" outlet
 } OSCroute;
@@ -173,10 +175,11 @@ int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num) {
 	}
 		
 
-	x->prefix_sizes[num] = MyStrLen(prefixWithoutLeadingSlash)+1;
-	x->o_prefixes[num] = getbytes(x->prefix_sizes[num]);
+	x->o_prefix_sizes[num] = MyStrLen(prefixWithoutLeadingSlash)+1;
+	x->o_prefixes[num] = getbytes(x->o_prefix_sizes[num]);
 	if (x->o_prefixes[num] == 0) {
-		error("Out of memory saving string %s", prefixWithoutLeadingSlash);
+		error("Out of memory saving string /%s", prefixWithoutLeadingSlash);
+		x->o_prefix_sizes[num] = 0;
 		return 0;
 	}
 	
@@ -218,6 +221,8 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 				   a subpatch with arguments.  We have to make an outlet for this
 				   argument. */
 				 x->o_prefixes[x->o_num] = "dummy";
+				 // Since "dummy" is a string literal, we shouldn't freebytes() it!
+				 x->o_prefix_sizes[x->o_num] = 0;  
 				 ++(x->o_num);
 			} else if (argv[i].a_w.w_sym == ps_complain) {
 				x->o_complainmode = 1;
@@ -278,10 +283,12 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 
 
 void OSCroute_free(OSCroute *x) {
-	int i;
-	for (i = 0; i<x->o_num; ++i) {
-		freebytes(x->o_prefixes[i], x->prefix_sizes[i]);
-	}
+  int i;
+  for (i = 0; i<x->o_num; ++i) {
+    if (x->o_prefix_sizes[i] > 0) {
+      freebytes(x->o_prefixes[i], x->o_prefix_sizes[i]);
+    }
+  }
 }
 
 void OSCroute_version (OSCroute *x) {
@@ -329,17 +336,12 @@ void OSCroute_set(OSCroute *x, long outlet, Symbol *s) {
   i = outlet-1;
 
   // First free the memory of the old string
-  if (x->prefix_sizes[i] != 0) {
-    freebytes(x->o_prefixes[i], x->prefix_sizes[i]);
+  if (x->o_prefix_sizes[i] != 0) {
+    freebytes(x->o_prefixes[i], x->o_prefix_sizes[i]);
   }
 
   // Store the new string
-
-  if (s->s_name[0] == '/') {
-    RememberPrefix(x, s->s_name + 1, i);
-  } else {
-    RememberPrefix(x, s->s_name, i);
-  }
+  RememberPrefix(x, s->s_name + ((s->s_name[0] == '/') ? 1 : 0), i);
 }
 
 
@@ -410,7 +412,7 @@ void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	}
 	
 	if (numPatternParts == MAX_PREFIX_LEVELS) {
-		error("OSC-route: exceeded MAX_PREFIX_LEVELS");
+		error("OSC-route: exceeded MAX_PREFIX_LEVELS (%ld)", MAX_PREFIX_LEVELS);
 		return;
 	}
 	
@@ -423,7 +425,7 @@ void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	
 	/* Go through all our prefixes looking for matches */
 	matchedAnything = 0;
-	
+
 	for (i = 0; i < x->o_num; ++i) {
 		str = x->o_prefixes[i];
 		for (j = 0; j < x->prefix_levels[i] && j < numPatternParts; ++j) {
@@ -557,6 +559,7 @@ void OSCroute_allmessages(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	++endOfPrefix;
 
 	for (i = 0; i < x->o_num; ++i) {
+	  // XXX bug: we need to convert '\0' back to '/' in x->o_prefixes[i]!!!
 		post("OSC:  %s/%s", prefixSymbol->s_name, x->o_prefixes[i]);
 		MyStrCopy(endOfPrefix, x->o_prefixes[i]);
 		SETSYM(a, gensym(prefixBuf));
