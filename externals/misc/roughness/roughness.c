@@ -476,6 +476,7 @@ void rho_free(t_rho *x)
 }
 
 void rho_tellmeeverything(t_rho *x){
+	version(0);
 	switch(x->r_cbwType){
 		case CBW_HUTCHINSON_KNOPOFF:
 			post("Using Hutchinson and Knopoff's critical bandwidth formula:");
