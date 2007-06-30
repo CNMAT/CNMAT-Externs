@@ -1,0 +1,13 @@
+infosource.txt
+Makefile
+makefile
+.svn/*
+*/.svn
+version.h
+net_download-info.txt
+net_download-ANY-info.txt
+net_download_1.0.zip
+net_download-ANY.tar.gz
+files-to-exclude.txt
+*~
+*.zip
