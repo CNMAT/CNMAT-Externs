@@ -22,19 +22,78 @@ public class net_download extends MaxObject
 		version();
 	}	
 	
-	public void bang(){
-	}
-    
-	public void inlet(int i){
-	}
-    
-	public void inlet(float f){
-	}
-    
-	public void list(Atom[] args){
-	}
+	//List q = Collections.synchronizedList(new LinkedList());
+	LinkedList q = new LinkedList();
+	boolean running = false;
+	int numActiveConnections = 0;
+	int maxNumConnections = 10;
 	
 	public void get_html(Atom[] args){
+		post("¥ get_html " + args[0].toString());
+		ArrayList ar = new ArrayList();
+		ar.add(new Integer(1));
+		ar.add(args);
+		synchronized(this.q){
+			q.add(ar);
+		}
+		if(!running) dolist();
+	}
+	
+	public void get_image(Atom[] args){
+		post("¥ get_image " + args[0].toString());
+		ArrayList ar = new ArrayList();
+		ar.add(new Integer(2));
+		ar.add(args);
+		synchronized(this.q){
+			q.add(ar);
+		}
+		if(!running) dolist();
+	}
+	
+	public void get_file(Atom[] args){
+		post("¥ get_file " + args[0].toString());
+		ArrayList ar = new ArrayList();
+		ar.add(new Integer(3));
+		ar.add(args);
+		synchronized(this.q){
+			q.add(ar);
+		}
+		if(!running) dolist();
+	}
+	
+	public void bang(){
+		dolist();
+	}
+	
+	private void dolist(){
+		if(q.size() == 0){
+			running = false;
+			return;
+		}
+	
+		running = true;
+		Atom[] at;
+		ArrayList ar;
+		Integer i;
+		synchronized(this.q){
+			ar = (ArrayList)(q.poll());
+			i = (Integer)ar.get(0);
+			at = (Atom[])ar.get(1);
+		}
+		switch(i){
+			case 1:
+				doget_html(at);
+				break;
+			case 2:
+				doget_image(at);
+				break;
+			case 3:
+				doget_file(at);
+				break;
+		}
+	}
+	
+	private void doget_html(Atom[] args){
 		String url;
 		String tmp;
 		ArrayList tags = new ArrayList();
@@ -55,14 +114,15 @@ public class net_download extends MaxObject
 		for(int i = ++counter; i < args.length; i++){
 			attributes.add(args[i].getString());
 		}
-		get_html(url, tags, attributes);
+		doget_html(url, tags, attributes);
 	}
 	
-	public void get_html(final String url, final ArrayList tags, final ArrayList attributes){
+	private void doget_html(final String url, final ArrayList tags, final ArrayList attributes){
 		Thread t = new Thread() 
 			{
 			public void run()
 				{
+				++numActiveConnections;
 				Reader reader;
 				URLConnection conn;
 				try{
@@ -108,16 +168,19 @@ public class net_download extends MaxObject
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				--numActiveConnections;
+				dolist();
 			}
 		};
 		t.start();
 	}
 	
-	public void get_image(final Atom[] args){	
+	private void doget_image(final Atom[] args){	
 		Thread t = new Thread() 
 			{
 			public void run()
 				{
+					++numActiveConnections;
 					String imageURL = args[0].toString();
 					String outputPath = null;
 					JitterMatrix jitmat;
@@ -132,31 +195,39 @@ public class net_download extends MaxObject
 						image = ImageIO.read(url);
 						jitmat = new JitterMatrix(image);
 					}catch (IOException e) {
-						post("¥ error: net_download: couldn't find an image at " + imageURL);
+						get_image(args); // if we can't connect, add this url back on to the list
+						post("¥ error: net_download: couldn't download " + imageURL);
 						e.printStackTrace();
 						return;
 					}
 					outlet(0,"image",new Atom[]{Atom.newAtom("jit_matrix"),Atom.newAtom(jitmat.getName())});
-					if(outputPath != null){
-						File f = new File(outputPath);
+					
+					//if(outputPath != null){
+						String tmp = url.toString();
+						String[] tmpar = tmp.split("/");
+						File f = new File("/Users/johnmac/Workspace/STEREO/testfiles/test/" + tmpar[tmpar.length - 1]);
 						try{
 							ImageIO.write(image, "jpg", f);
-							outlet(0, "image_filename", outputPath);
+							outlet(0, new Atom[]{Atom.newAtom("image_filepath"), Atom.newAtom("/Users/johnmac/Workspace/STEREO/testfiles/test/" + tmpar[tmpar.length - 1])});
+							outlet(0, new Atom[]{Atom.newAtom("image_filename"), Atom.newAtom(tmpar[tmpar.length - 1])});
 						} catch(Exception e){
 							e.printStackTrace();
 						}
-					}
+					//}
+					--numActiveConnections;
+					dolist();
 				}
 			};
 		t.start();
-		
 	}
 	
-	public void get_file(final String url){
+	private void doget_file(final Atom[] args){
+		final String url = args[0].toString();
 		Thread t = new Thread() 
 		{
 		public void run()
 			{
+			++numActiveConnections;
 			BufferedInputStream iostream = null;
 			URLConnection conn;
 			ArrayList<Byte> buffer = new ArrayList();
@@ -205,6 +276,8 @@ public class net_download extends MaxObject
 			catch(Exception e){e.printStackTrace();}
 			outlet(0, new Atom[]{Atom.newAtom("filepath"), Atom.newAtom(fp.getAbsolutePath())});
 			post("finished downloading\n\t" + url);
+			--numActiveConnections;
+			dolist();
 			}
 		};
 		t.start();
