@@ -1,5 +1,5 @@
 /*
-Copyright (c) 1999, 2004.  The Regents of the University of California
+Copyright (c) 1999, 2000-07.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -35,7 +35,7 @@ NAME: SDIF-tuples
 DESCRIPTION: Extract "tuples" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list.
 AUTHORS: Matt Wright and Ben "Jacobs" 
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
-COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.2: includes reltime
 VERSION 0.3: max_rows, only one complaint if empty
@@ -49,6 +49,7 @@ VERSION 0.5.2: Made an "interp" message to set interpolation mode like the other
 VERSION 0.5.3: Made integers work (non-interpolating)
 VERSION 0.6: Uses new version system
 VERSION 0.6.1: Force Package Info Generation
+VERSION 1.0: Controllable by a virtual time signal input. tellmeeverything. Better help patch.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  Todo:
@@ -91,6 +92,7 @@ VERSION 0.6.1: Force Package Info Generation
 
 #define VERY_SMALL ((sdif_float64) -(DBL_MAX))
 
+#include <z_dsp.h>
 
 /* #include <assert.h> */
 
@@ -125,7 +127,7 @@ typedef enum {
 /* My class definiton */
 
 typedef struct _SDIFtuples {
-	struct object t_ob;
+	t_pxobject t_ob;
 	t_symbol *t_bufferSym;
 	SDIFBuffer *t_buffer;
 	SDIFbuf_Buffer t_buf;           //  provides API to manipulate buffer contents
@@ -134,6 +136,12 @@ typedef struct _SDIFtuples {
  	void *t_out;
  	Boolean t_errorreporting;
  	Boolean t_complainedAboutEmptyBufferAlready;
+
+  /* State for signal control */
+  float t_output_interval;
+  int t_output_interval_samps;
+  int t_samps_until_output;
+  float t_sr;
  	
  	/* State for what I'm supposed to output */
  	int t_concatenate;		/* One big list or one list per row? */
@@ -159,6 +167,9 @@ static void *SDIFtuples_class;
 /* prototypes for my functions */
 void *SDIFtuples_new(Symbol *s, short argc, Atom *argv);
 void SDIFtuples_free(SDIFtuples *x);
+void SDIFtuples_outputinterval(SDIFtuples *x, Symbol *dummy, short argc, t_atom *argv);
+void SDIFtuples_dsp(SDIFtuples *x, t_signal **sp, short *count);
+t_int *SDIFbuffer_perform(t_int *w);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFtuples *x);
@@ -195,16 +206,16 @@ static void SetupInterpolator(SDIFtuples *x,
                               int num_dstColumns,
                               InterpMode mode);
 void SDIFtuples_print(SDIFtuples *x);
+void SDIFtuples_tellmeeverything(SDIFtuples *x);
 void PrintOneFrame(SDIFmem_Frame f);
 void PrintFrameHeader(SDIF_FrameHeader *fh);
 void PrintMatrixHeader(SDIF_MatrixHeader *mh);
 
 
-void main(fptr *fp)
-{
+int main(int dummy, char **dummy2) {
   SDIFresult r;
   
-	version(0);
+  version(0);
 	
 	/* tell Max about my class. The cast to short is important for 68K */
 	setup((t_messlist **)&SDIFtuples_class, (method)SDIFtuples_new, (method)SDIFtuples_free,
@@ -212,9 +223,12 @@ void main(fptr *fp)
 	
 	/* bind my methods to symbols */
 	addmess((method)version, "version", 0);
+	addmess((method)SDIFtuples_dsp, "dsp", A_CANT, 0);
+	addmess((method)SDIFtuples_outputinterval, "outputinterval", A_GIMME, 0);
 	addmess((method)SDIFtuples_set, "set", A_SYM, 0);	
 	addmess((method)SDIFtuples_errorreporting, "errorreporting", A_LONG, 0);
 	addmess((method)SDIFtuples_print, "print", 0);
+	addmess((method)SDIFtuples_tellmeeverything, "tellmeeverything", 0);
 	addmess((method)SDIFtuples_concatenate, "concatenate", A_LONG, 0);
 	addmess((method)SDIFtuples_time, "time", A_FLOAT, 0);
 	addmess((method)SDIFtuples_reltime, "reltime", A_FLOAT, 0);
@@ -230,28 +244,28 @@ void main(fptr *fp)
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
-    return;
+		return 0;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-    return;
+		return 0;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 	
 	if (r = SDIFinterp_Init()) {
 		post("¥ %s: Couldn't initialize SDIF interpolation utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 
 	/* list object in the new object list */
@@ -267,6 +281,9 @@ void main(fptr *fp)
 	ps_columns = gensym("columns");
 	ps_interp = gensym("interp");
 	ps_max_rows = gensym("max_rows");
+	
+    dsp_initclass();
+    return 1;
 }
 
 void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
@@ -276,6 +293,8 @@ void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
 	// post("SDIFtuples_new: %s, %ld args", s->s_name, (long) argc);
 	
 	x = newobject(SDIFtuples_class);
+	dsp_setup((t_pxobject *)x,1); // One signal input
+	
 	x->t_errorreporting = FALSE;
 	x->t_complainedAboutEmptyBufferAlready = FALSE;
 	x->t_buffer = 0;
@@ -308,6 +327,8 @@ void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
 		x->t_columns[i] = i;
 	}
 
+	x->t_output_interval = 10.0f; // Default 10ms
+
 	return (x);
 }
 
@@ -315,6 +336,7 @@ void SDIFtuples_free(SDIFtuples *x)
 {
   if(x->t_it)
     SDIFinterp_Free(x->t_it);
+  dsp_free(&(x->t_ob));
 }
 
 static void *my_getbytes(int numBytes) {
@@ -371,6 +393,7 @@ static void SDIFtuples_set(SDIFtuples *x, Symbol *bufName) {
 	x->t_complainedAboutEmptyBufferAlready = FALSE;
 
 }
+
 
 static void SDIFtuples_errorreporting(SDIFtuples *x, long yesno) {
 	x->t_errorreporting = yesno;
@@ -462,7 +485,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, Symbol *dummy, short argc, Atom *ar
 	Atom outputArgs[BIGGEST_OUTPUT_LIST];
 	short numArgs;
 	SDIFmem_Matrix m;
-	char desiredType[4];
+	//	char desiredType[4];  XXX need to parse "matrix" arguments to tuples too!
 	
 	
 	/* First, store my remembered parameters locally */
@@ -636,7 +659,7 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 {
   SDIFmem_Matrix matrixOut;
   char desiredType[4];
-  int i, j;
+  int j;
 
 	LookupMyBuffer(x);
 	
@@ -659,7 +682,8 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 		}
   		SDIF_Copy4Bytes(desiredType, f->header.frameType);
 	} else {
-		// post("** explicit matrix mode: want %c%c%c%c", x->t_matrixType[0], x->t_matrixType[1], x->t_matrixType[2], x->t_matrixType[3]);
+	  //post("** explicit matrix mode: want %c%c%c%c",
+	  //     x->t_matrixType[0], x->t_matrixType[1], x->t_matrixType[2], x->t_matrixType[3]);
 		SDIF_Copy4Bytes(desiredType, x->t_matrixType);
 	}	
 	
@@ -779,7 +803,6 @@ static SDIFmem_Matrix GetMatrixWithInterpolation(SDIFtuples *x,
                                                  int num_columns,
                                                  InterpMode mode)
 {
-  SDIFresult r;
   SDIFmem_Frame f;
   SDIFmem_Matrix m, matrixOut;
   sdif_float64 t1;
@@ -887,6 +910,114 @@ static void SetupInterpolator(SDIFtuples *x,
   //  set this flag if we want to avoid creating a new interpolator on every matrix request:
   //  t_itValid = TRUE;
 }
+
+/* Signal-rate control ********************/
+
+void SDIFtuples_outputinterval(SDIFtuples *x, Symbol *dummy, short argc, t_atom *argv) {
+  if (argc != 1) {
+    error("SDIF-tuples: outputinterval should have exactly one argument (you passed %ld)",
+	  argc);
+  } else if (argv[0].a_type == A_LONG) {
+    x->t_output_interval = (float) argv[0].a_w.w_long;
+  } else if (argv[0].a_type == A_FLOAT) {
+    x->t_output_interval = argv[0].a_w.w_float;    
+  } else {
+    error("SDIF-tuples: outputinterval's argument must be a number.");
+  }
+
+  x->t_samps_until_output = x->t_output_interval_samps = 
+    (int) (x->t_sr * x->t_output_interval * 0.001f);
+}
+
+void SDIFtuples_dsp(SDIFtuples *x, t_signal **sp, short *count) {
+  x->t_sr = sp[0]->s_sr;
+  x->t_samps_until_output = x->t_output_interval_samps = 
+    (int) (x->t_sr * x->t_output_interval * 0.001f);
+
+  if (count[0]) {
+    // Signal inlet is connected
+    dsp_add(SDIFbuffer_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+  } else {
+    // Don't add anything
+  }
+}
+
+t_int *SDIFbuffer_perform(t_int *w) {
+  SDIFtuples *x = (SDIFtuples *)(w[1]);  // object
+  int size = w[2]; // vector size
+  t_float *vtime_in = (t_float *)(w[3]);
+
+  if (x->t_samps_until_output >= size) {
+    x->t_samps_until_output -= size;
+  } else {
+    x->t_time = (sdif_float64) vtime_in[x->t_samps_until_output];
+    SDIFtuples_tuples(x, 0, 0, 0);
+    x->t_samps_until_output = x->t_output_interval_samps;
+  }
+
+  return w+4;
+}
+
+
+void SDIFtuples_tellmeeverything(SDIFtuples *x) {
+  int i;
+
+  post("SDIF-tuples object:");
+  post(" buffer %s", x->t_bufferSym->s_name);
+  post(" this object %s errors", x->t_errorreporting ? "reports" : "does not report");
+  post(" input signal (if any) is sampled every %f ms (%ld samples)",
+       x->t_output_interval, x->t_output_interval_samps);
+  post("Current output settings:");
+
+  if (x->t_mainMatrix) {
+    post(" output the \"main\" matrix (i.e., the one whose type is the same as the frame type)");
+  } else {
+    post(" output the %c%c%c%c matrix",
+	 x->t_matrixType[0], x->t_matrixType[1], x->t_matrixType[2], x->t_matrixType[3]);
+  }
+  
+  post(" output no more than %ld rows", x->t_max_rows);
+
+  post(" output %ld columns:", x->t_num_columns);
+  for (i=0; i<x->t_num_columns; ++i) {
+    post("   %ld", x->t_columns[i]);
+  }
+
+  if (x->t_concatenate) {
+    post(" concatenate 1: combine all rows into a single output list");
+  } else {
+    post(" concatenate 0: Output each row as a separate output list");
+  }
+			 
+  post(" %s time: %f", x->t_reltime ? "Relative" : "Absolute",
+       (float) x->t_time);
+
+  switch (x->t_interp) {
+  case INTERP_MODE_NONE: 
+    post(" No time axis interpolation. So you'll get one of the frames from the SDIF file:");
+    if (x->t_direction < 0) {
+      post("  direction -1: search backwards from requested time");
+    } else if (x->t_direction == 0) {
+      post("  direction 0: Output nothing unless the SDIF file has a frame exactly at the requested time");
+    } else {
+      post("  direction 1: search forwards from requested time");
+    }
+    break;
+  case INTERP_MODE_LINEAR: 
+    post(" Linear interpolation along the time axis.");
+    break;
+  case INTERP_MODE_LAGRANGE2:
+    post(" Lagrange interpolation (degree 2)");
+    break;
+  case INTERP_MODE_LAGRANGE3:
+    post(" Lagrange interpolation (degree 3)");
+    break;
+  default:
+    post(" Unrecognized interpolation mode!  (This is a bug.)");
+    break;
+  }
+}
+
 
 
 /* Printing stuff ***************************/

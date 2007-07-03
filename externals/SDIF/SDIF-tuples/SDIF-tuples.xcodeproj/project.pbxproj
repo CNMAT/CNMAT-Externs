@@ -17,6 +17,7 @@
 		BEB6A6230A816599004BB7B5 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB6A6220A816599004BB7B5 /* sdif-buf.c */; };
 		BEB6A6250A8165A7004BB7B5 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB6A6240A8165A7004BB7B5 /* sdif-util.c */; };
 		BEB6A6270A8165C7004BB7B5 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = BEB6A6260A8165C7004BB7B5 /* open-sdif-file.c */; };
+		C9CD646B0C39A82D005355BD /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CD646A0C39A82D005355BD /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		BEB6A6220A816599004BB7B5 /* sdif-buf.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "sdif-buf.c"; path = "../../../../sdif/lib/sdif-buf.c"; sourceTree = SOURCE_ROOT; };
 		BEB6A6240A8165A7004BB7B5 /* sdif-util.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "sdif-util.c"; path = "../../../../sdif/lib/sdif-util.c"; sourceTree = SOURCE_ROOT; };
 		BEB6A6260A8165C7004BB7B5 /* open-sdif-file.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "open-sdif-file.c"; path = "../../../utility-library/search-path/open-sdif-file.c"; sourceTree = SOURCE_ROOT; };
+		C9CD646A0C39A82D005355BD /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/UB-SDK/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +42,7 @@
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
 				BEB6A5D30A81630B004BB7B5 /* MaxAPI.framework in Frameworks */,
+				C9CD646B0C39A82D005355BD /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +63,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				C9CD646A0C39A82D005355BD /* MaxAudioAPI.framework */,
 				BEB6A5D20A81630B004BB7B5 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
@@ -190,7 +194,11 @@
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK";
+				FRAMEWORK_SEARCH_PATHS = (
+					"../../../SDK/UB-SDK",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -202,7 +210,10 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = (
+					"../../../c74support/max-includes",
+					"../../../c74support/msp-includes",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -235,7 +246,11 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK";
+				FRAMEWORK_SEARCH_PATHS = (
+					"../../../SDK/UB-SDK",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -245,7 +260,10 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = (
+					"../../../c74support/max-includes",
+					"../../../c74support/msp-includes",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -272,7 +290,11 @@
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK";
+				FRAMEWORK_SEARCH_PATHS = (
+					"../../../SDK/UB-SDK",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
