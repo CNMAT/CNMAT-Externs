@@ -58,8 +58,6 @@ typedef struct _timemachine
 {
   /* Max stuff */
   t_pxobject x_obj;	//  header
-  void *t_proxy[1];
-  long t_inletNumber;
 
   float T;              // 1/fs
 
@@ -341,7 +339,7 @@ void timemachine_dsp(t_timemachine *x, t_signal **sp, short *count) {
   if (count[1]) {
     // A signal is connected to the position control
     post("* You're controlling position with a signal (rate signal will be ignored)");
-	// So no need to pass the rate signal input; it has no effect.
+    // So no need to pass the rate signal input; it has no effect.
     dsp_add(timemachine_perform_signal_position_control, 4, x, sp[0]->s_n, 
 	    sp[1]->s_vec, sp[2]->s_vec);
   } else if (count[0]) {
@@ -438,19 +436,24 @@ t_int *timemachine_perform_no_signals_in(t_int *w) {
     t_timemachine *x = (t_timemachine *)(w[1]);  // object
     int size = w[2]; // vector size
     t_float *output = (t_float *)(w[3]);
-    double min = x->t_min;
-    double max = x->t_max;
-    double T = x->T;
-    double t = x->t;
-    double rate = x->t_rate;
     double timeToTarget = x->timeToTarget;
     Boolean gotATarget = x->gotATarget;
     Boolean gottaMotor = x->gottaMotor;
-
     int i;
 
-
-	
+    if (gotATarget) {
+      // Will we reach the target on this signal vector?
+      if (timeToTarget > T*size) {
+	// No.
+	do_perform_constant_rate(x, output, size);
+      } else {
+	do_perform_finish_target(x, output, size);
+      }
+    } else {
+      // No target at all, so just mosey along
+      do_perform_constant_rate(x, output, size);
+    }
+    
     for (i = 0; i < size; ++i) {
       t += T * rate;
       t = CLIP_BETWEEN(t, min, max);
@@ -489,3 +492,64 @@ t_int *timemachine_perform_no_signals_in(t_int *w) {
 
     return (w+4);
 }
+
+void do_perform_constant_rate(t_timemachine *x, t_float *output, int size) {
+  double min = x->t_min;
+  double max = x->t_max;
+  double T = x->T;
+  double t = x->t;
+  double rate = x->t_rate;
+  
+  int i;
+  for (i = 0; i < size; ++i) {
+    t += T * rate;
+    t = CLIP_BETWEEN(t, min, max);
+    output[i] = t;    
+  }
+
+  x->t = t;
+
+  if (x->gotATarget) {
+    // Check the constraints once per signal vector.
+    CheckConstraints(x);
+  }
+}
+
+void do_perform_finish_target(t_timemachine *x, t_float *output, int size) {
+  double min = x->t_min;
+  double max = x->t_max;
+  double T = x->T;
+  double t = x->t;
+  double rate = x->t_rate;
+  
+  int i;
+  int samps_to_target = x->timeToTarget / T;
+
+  if (samps_to_target > size) {
+    error("do_perform_finish_target samps_to_target (%ld) > size (%ld)",
+	  samps_to_target, size);
+    do_perform_constant_rate(x, output, size);
+  } else {
+    do_perform_constant_rate(x, output, samps_to_target);
+    /* We made it to the target */    
+#ifdef DEBUG
+    post("Made the target!  timeToTarget %f, current time %f, rate %f\n",
+	 x->timeToTarget, x->t, x->t_rate);
+#endif
+    gotATarget = x->gotATarget = FALSE;
+    gottaMotor = x->gottaMotor = FALSE;
+    /* Reset rate to last value set by user */
+    rate = x->t_rate = x->lastUserSetRate;
+    
+    for (i = samps_to_target; i < size; ++i) {
+    t += T * rate;
+    t = CLIP_BETWEEN(t, min, max);
+
+
+
+    output[i] = t;    
+  }
+
+  x->t = t;
+}
+
