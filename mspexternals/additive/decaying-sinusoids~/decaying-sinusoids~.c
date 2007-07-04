@@ -29,11 +29,13 @@ University of California, Berkeley.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: decaying-sinusoids~
 DESCRIPTION: Additive synthesis of a bank of exponentially decaying sinusoids
-AUTHORS: Adrian Freed
-COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+AUTHORS: Adrian Freed and Matt Wright
+COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05,06
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Adrian's initial version 
 VERSION 0.0.1: Force Package Info Generation
+VERSION 0.1: min_vtime and max_vtime affect goto.  Also "clear" now doesn't clear the model.
+VERSION 0.2: signal inlet for virtual time.  Also version message.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
        	©1988,1989 Adrian Freed
@@ -45,6 +47,9 @@ VERSION 0.0.1: Force Package Info Generation
 #include "ext.h"
 #include "z_dsp.h"
 #include <math.h>
+
+#include "version.h"
+#include "version.c"
 
 #ifdef WIN_VERSION
 #define sinf sin
@@ -93,11 +98,26 @@ typedef struct
 typedef oscbank t_sinusoids;
 
 t_int *sinusoids2_perform(t_int *w);
+t_int *decayingsinusoids_perform_time_input_signal(t_int *w);
 void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
  void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv);
  void sinusoids_clear(t_sinusoids *x);
  void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
  void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
+
+void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *count)
+{
+
+	if (count[0]) {
+		// Signal inlet is connected; that's virtual time
+		dsp_add(decayingsinusoids_perform_time_input_signal, 
+				4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	} else {
+		// Old perform method, with only message control of time
+		dsp_add(sinusoids2_perform, 3, x, sp[0]->s_vec,  sp[0]->s_n);
+	}
+}
+
 
 t_int *sinusoids2_perform(t_int *w)
 {
@@ -149,10 +169,61 @@ out:	return (w+4);
 }
 
 
-void sinusoids_clear(t_sinusoids *x)
-{
-	oscdesc *p = x->base;
+t_int *decayingsinusoids_perform_time_input_signal(t_int *w) {
+	t_sinusoids *op = (t_sinusoids *)(w[1]);
+	t_float *time = (t_float *)(w[2]);
+	t_float *out = (t_float *)(w[3]);
+	int n = (int)(w[4]);
+	int nosc = op->nosc;
+	 int i,j;
+	 oscdesc *o = op->base;
+	 const char *st = (const char *)Sinetab;
+	 float rate ;
+//	if(op->b_obj.z_disabled)
+//		goto out;
+	
+	rate = 1.0f/n;
+	for(j=0;j<n;++j)
+		out[j] = 0.0f;
+
+
+	for(i=0;i<nosc;++i)
+	{
+		// register float a = op->pulse*exp(-o->rate*op->t)*o->gain;
+		// register float ascale = exp(-o->rate*op->sampleinterval*op->rate);
+		register long pi = o->phase_inc;
+		register ulong pc = o->phase_current;
+//		register float astep = (nexta - o->amplitude)*rate;
+		register float t, a;
+
+//		if(op->t<1.0)
+//			post("%d", o->phase_current);
+		for(j=0;j<n;++j)
+		{
+			// Super-inefficient version calls exp in the inner loop!
+			a = op->pulse *exp(-o->rate*time[j])*o->gain;
+			out[j] +=  a  * 
+		*((float *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+					& ((STABSZ-1)*sizeof(*Sinetab)))));
+			pc +=  pi;
+//			a *=ascale;
+
+		}
+		o->phase_current = pc;
+		++o;
+	}
+	op->t += op->rate*n*op->sampleinterval;
+	if(op->t<op->backstop)
+		op->t = op->backstop;
+	if(op->t>op->stop)
+		op->t = op->stop;
+out:	return (w+5);
+}
+
+
+void sinusoids_clearmodel(t_sinusoids *x) {
 	int i;
+	oscdesc *p = x->base;
 	for(i=0;i<MAXOSCILLATORS;++i, p++)
 	{
 	
@@ -164,18 +235,16 @@ void sinusoids_clear(t_sinusoids *x)
 //		p->phaseadd = 0;
 //		p->next_phaseadd = 0;
 	}
+}  
+
+
+void sinusoids_clear(t_sinusoids *x)
+{
 	x->rate = 1.0;
 	x->pulse = 1.0;
 	x->t = 1e30;
 	x->backstop = 0.0;
 	x->stop = 1e30;
-}
-
-void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
-{
-	int i;
-
-	dsp_add(sinusoids2_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
 }
 
 void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv)
@@ -234,7 +303,7 @@ void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_sinusoids *x = (t_sinusoids *)newobject(sinusoids_class);
-    dsp_setup((t_pxobject *)x,0);
+    dsp_setup((t_pxobject *)x,1);   // One signal inlet, for virtual time
     outlet_new((t_object *)x, "signal");
 	x->samplerate =  sys_getsr();
 	if(x->samplerate<=0.0f)
@@ -242,6 +311,7 @@ void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
 	x->sampleinterval = 1.0f/x->samplerate;
 	x->pk = (STABSZ*x->sampleinterval)*(1l<<(32-TPOW)) ;
      x->nosc = 0;
+     sinusoids_clearmodel(x);
      sinusoids_clear(x);
 
     sinusoids_list(x,s,argc,argv);
@@ -277,8 +347,14 @@ void sinusoids_rate(t_sinusoids *x, double f)
 void sinusoids_goto(t_sinusoids *x, double f);
 void sinusoids_goto(t_sinusoids *x, double f)
 {
-	x->t = f;
+  if (f < x->backstop) {
+    f = x->backstop;
+  } else if (f > x->stop) {
+    f = x->stop;
+  }
+  x->t = f;
 }
+
 void sinusoids_float(t_sinusoids *x, double f);
 void sinusoids_float(t_sinusoids *x, double f)
 {
@@ -302,14 +378,13 @@ void main(void)
 {
 	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free,
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-	post("decaying-sinusoids~ 1.3Alpha- Adrian Freed.");
-	post("Copyright © 1996,97,98,99,2000,01,02 Regents of the University of California.");
+	version(0);
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
-
 	post("Never expires");
 
 
 	Makeoscsinetable();
+	addmess((method)version, "version", 0);
 	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
 	addfloat((method)sinusoids_float);
 	addmess((method)sinusoids_goto, "goto", A_FLOAT, 0);
@@ -319,6 +394,7 @@ void main(void)
 	addmess((method)sinusoids_list, "list", A_GIMME, 0);
 	addmess((method)sinusoids_clear, "clear", 0);
 	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
+	
 	dsp_initclass();
 }
 
