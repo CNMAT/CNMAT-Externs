@@ -114,7 +114,7 @@ void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *count)
 				4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 	} else {
 		// Old perform method, with only message control of time
-		dsp_add(sinusoids2_perform, 3, x, sp[0]->s_vec,  sp[0]->s_n);
+		dsp_add(sinusoids2_perform, 3, x, sp[1]->s_vec,  sp[1]->s_n);
 	}
 }
 
