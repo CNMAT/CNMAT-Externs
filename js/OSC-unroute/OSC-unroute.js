@@ -31,6 +31,7 @@ COPYRIGHT_YEARS: 2006
 SVN_REVISION: $LastChangedRevision: 618 $
 VERSION 0.1: First release
 VERSION 0.1.1: Moved name/value block from infosource.txt to js source file
+VERSION 0.2: Added "correct"/"cheap" modes; made "correct" the default.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -41,14 +42,32 @@ const MAXINOUT = 64;
 var NbInlets = Math.min(jsarguments.length-1,MAXINOUT);
 inlets = NbInlets;
 outlets = 1;
+cheap_mode = 0;
 
 for ( i=0 ; i < NbInlets ; i++) {
 	setinletassist(i,jsarguments[i+1]);  
 }
 setoutletassist(0, "OSC messages");
 
+function cheap() {
+	cheap_mode = 1;
+	post("Cheap mode: like prepend; no symbol concatenation\n");
+}
+
+function correct() {
+	cheap_mode = 0;
+	post("Correct mode: output new OSC address as a single symbol.\n");
+}
+
 function anything()  {
-	var a = arrayfromargs(messagename,arguments);
-	a.unshift(jsarguments[inlet+1]);  // Add one new element to front
-	outlet(0, a);
+	if (cheap_mode) {
+		// Like prepend
+		var a = arrayfromargs(messagename,arguments);
+		a.unshift(jsarguments[inlet+1]);  // Add one new element to front
+		outlet(0, a);
+	} else {
+		// String concatenation (and a new gensym)
+		var a = arrayfromargs(jsarguments[inlet+1] + messagename,arguments);
+		outlet(0, a);
+	}	
 }
