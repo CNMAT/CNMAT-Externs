@@ -32,6 +32,7 @@ SVN_REVISION: $LastChangedRevision: 618 $
 VERSION 0.1: First release
 VERSION 0.1.1: Moved name/value block from infosource.txt to js source file
 VERSION 0.2: Added "correct"/"cheap" modes; made "correct" the default.
+VERSION 0.3: "correct" mode checks whether input already begins with an OSC address.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -60,7 +61,15 @@ function correct() {
 }
 
 function anything()  {
-	if (cheap_mode) {
+	var do_prepend = 1;
+	// Usually we prepend
+	
+	if (!cheap_mode && messagename[0] == '/') {
+		// Input already began with an OSC address, so concatenate
+		do_prepend = 0;
+	}
+
+	if (do_prepend) {
 		// Like prepend
 		var a = arrayfromargs(messagename,arguments);
 		a.unshift(jsarguments[inlet+1]);  // Add one new element to front
@@ -69,5 +78,5 @@ function anything()  {
 		// String concatenation (and a new gensym)
 		var a = arrayfromargs(jsarguments[inlet+1] + messagename,arguments);
 		outlet(0, a);
-	}	
+	}		
 }
