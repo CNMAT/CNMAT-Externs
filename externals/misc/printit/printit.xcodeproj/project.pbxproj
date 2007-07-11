@@ -10,6 +10,7 @@
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		BE1CC30C0A81338D0050AA91 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */; };
 		BE38AF460A82931800D010C6 /* printit.c in Sources */ = {isa = PBXBuildFile; fileRef = BE38AF450A82931800D010C6 /* printit.c */; };
+		C9E431DD0C45941D009A30D2 /* myPrintOSCpacket.c in Sources */ = {isa = PBXBuildFile; fileRef = C9E431DC0C45941D009A30D2 /* myPrintOSCpacket.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +18,7 @@
 		8D01CCD20486CAD60068D4B7 /* printit.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = printit.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		BE38AF450A82931800D010C6 /* printit.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = printit.c; sourceTree = "<group>"; };
+		C9E431DC0C45941D009A30D2 /* myPrintOSCpacket.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = myPrintOSCpacket.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				BE38AF450A82931800D010C6 /* printit.c */,
+				C9E431DC0C45941D009A30D2 /* myPrintOSCpacket.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE38AF460A82931800D010C6 /* printit.c in Sources */,
+				C9E431DD0C45941D009A30D2 /* myPrintOSCpacket.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

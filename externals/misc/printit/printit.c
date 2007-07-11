@@ -38,6 +38,7 @@ VERSION 0.1b: Earliest version I could find
 VERSION 0.2: Using new version system
 VERSION 0.2.1: Force Package Info Generation
 VERSION 0.3: Added support for many more a_type possibilities found in ext_mess.h
+VERSION 0.4: Added support for binary OSC packets sent as "FullPacket" messages (i.e., from the OpenSoundControl object)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
  */
@@ -47,6 +48,7 @@ VERSION 0.3: Added support for many more a_type possibilities found in ext_mess.
 #include "version.h"
 #include "ext.h"
 #include "version.c"
+#include "../../../../OSC/dumpOSC/printOSCpacket.h"
 
 /* structure definition of your object */
 
@@ -74,6 +76,8 @@ void printit_assist (printit *x, void *box, long msg, long arg, char *dstString)
 
 Symbol *ps_emptysymbol;
 Symbol *ps_printit;
+Symbol *ps_FullPacket;
+
 
 /* initialization routine */
 
@@ -96,6 +100,7 @@ void main(fptr *f)
 
 	ps_emptysymbol = gensym("");
 	ps_printit = gensym("printit");
+	ps_FullPacket = gensym("FullPacket");
 }
 
 
@@ -131,7 +136,6 @@ void printit_assist (printit *x, void *box, long msg, long arg, char *dstString)
 		post("¥ printit_assist: unrecognized message %ld", msg);
 	}
 }
-
 
 void printit_bang(printit *x)
 {
@@ -195,6 +199,11 @@ void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
 	     x->my_name->s_name, s->s_name, s, s->s_thing, argc);
 
 	print_args(argc, argv);
+	
+	if (s == ps_FullPacket && argc == 2 && argv[0].a_type == A_LONG && argv[1].a_type == A_LONG) {
+		post("It looks like an OSC packet:");
+		PrintOSCPacket((char *) argv[1].a_w.w_long, argv[0].a_w.w_long);
+	}
 }
 
 void printit_list(printit *x, Symbol *s, short argc, Atom *argv) {
