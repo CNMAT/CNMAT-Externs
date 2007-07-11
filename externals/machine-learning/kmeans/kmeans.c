@@ -20,7 +20,7 @@ maybe make taxpoint struct = (x, y) and centroid struct = taxpoint + amp + age. 
 #include <math.h>
 #include <stdlib.h> // for rand() function
 
-#define VERSION "kmenas v0.1 dudas mess + chauhary hack"
+#define VERSION "kmenas v0.2 dudas mess + chauhary hack"
 
 #define RES_ID 16656	// for assistance
 #define MAXTAXELS 256 	// maximum 256 taxels right now
@@ -37,6 +37,7 @@ typedef struct _taxpoint {
 	float y;
 	float weight;
 	int age;
+	int k;
 } Taxpoint;
 
 typedef struct _kmeans
@@ -57,8 +58,9 @@ typedef struct _kmeans
 	Taxpoint x_centroids[MAXCENTROIDS]; 
 	//float x_amplitudes[MAXCENTROIDS];
 	//int x_age[MAXCENTROIDS];
+	//int x_k[MAXCENTROIDS];
 	
-	Atom x_clist[MAXCENTROIDS*4]; // output atom for taxel array (x, y, amplitude, age)
+	Atom x_clist[MAXCENTROIDS*5]; // output atom for taxel array (x, y, amplitude, age, k)
 	
 	void *x_outlet0; // tracked centroids
 	void *x_outlet1; // ncentroids found
@@ -121,14 +123,15 @@ void kmeans_outputcentroids(t_kmeans *x)
 {
 	int i;
 	for (i=0; i<x->x_xused; i++) {
-		SETFLOAT(&x->x_clist[i*4], x->x_centroids[i].x);
-		SETFLOAT(&x->x_clist[i*4+1], x->x_centroids[i].y);
-		SETFLOAT(&x->x_clist[i*4+2], x->x_centroids[i].weight);
-		SETLONG(&x->x_clist[i*4+3], x->x_centroids[i].age);
+		SETFLOAT(&x->x_clist[i*5], x->x_centroids[i].x);
+		SETFLOAT(&x->x_clist[i*5+1], x->x_centroids[i].y);
+		SETFLOAT(&x->x_clist[i*5+2], x->x_centroids[i].weight);
+		SETLONG(&x->x_clist[i*5+3], x->x_centroids[i].age);
+		SETLONG(&x->x_clist[i*5+4], x->x_centroids[i].k);
 		//post("%f %f %f" %d, x->x_centroids[i].x, x->x_centroids[i].y, x->x_centroids[i].weight, x->x_centroids[i].age);
 	}
 	outlet_int(x->x_outlet1, (long)x->x_xused);
-	outlet_list(x->x_outlet0, 0L, x->x_xused*4, x->x_clist);
+	outlet_list(x->x_outlet0, 0L, x->x_xused*5, x->x_clist);
 }
 
 void kmeans_ncentroids(t_kmeans *x, long n)
@@ -214,6 +217,7 @@ void *kmeans_new(Symbol *s, int ac, Atom *av)
 		x->x_centroids[i].x = rand() % x->x_ncols;
 		x->x_centroids[i].y = rand() % x->x_nrows;
 		x->x_centroids[i].age = 0;
+		x->x_centroids[i].k = -1;
 	}
 	
 	return(x);
@@ -349,6 +353,7 @@ void kmeans_run(t_kmeans *x, Taxpoint *coords, int coordssize, int n, int hack)
 				x->x_centroids[i].y = rand() % maxy;
 				x->x_centroids[i].weight = 0.0f;
 				x->x_centroids[i].age = 0;
+				x->x_centroids[i].k = i;
 				++xused;
 	  
 			}
@@ -363,6 +368,7 @@ void kmeans_run(t_kmeans *x, Taxpoint *coords, int coordssize, int n, int hack)
 			old_centroids[i].y = x->x_centroids[i].y;
 			old_centroids[i].weight = x->x_centroids[i].weight;
 			old_centroids[i].age = x->x_centroids[i].age;
+			old_centroids[i].k = x->x_centroids[i].k;
 		}
       
 		for (i = 0; i < coordssize; ++i) {
@@ -421,8 +427,12 @@ void kmeans_run(t_kmeans *x, Taxpoint *coords, int coordssize, int n, int hack)
 			if (x->x_centroids[i].weight > 0.0f) {
 				x->x_centroids[i].x = X / x->x_centroids[i].weight;
 				x->x_centroids[i].y = Y / x->x_centroids[i].weight;
-				//amplitudes[i] /= float(bins[i].size());
-				if ((x->x_centroids[i].x != old_centroids[i].x) && (x->x_centroids[i].y != old_centroids[i].y)) {
+				
+				// scale the weight to 0-256 (divide by ntaxels)
+				x->x_centroids[i].weight /= (float)binssize[i]; 
+				
+				if ((x->x_centroids[i].x != old_centroids[i].x) && 
+					(x->x_centroids[i].y != old_centroids[i].y)) {
 					go_again = true;
 				}
 			} else {
@@ -439,6 +449,7 @@ void kmeans_run(t_kmeans *x, Taxpoint *coords, int coordssize, int n, int hack)
 			++xused;
 			++x->x_centroids[i].age;
 		}
+		x->x_centroids[i].k = i;
 	}
 	while (xused > n) {
 		float minamp = 10000000.0;
