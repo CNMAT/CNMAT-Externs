@@ -173,7 +173,9 @@ int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num) {
 		error("OSC-route: can't have %ld outlets (max %ld)", num, MAX_NUM);
 		return 0;
 	}
-		
+
+	// XXX Here we should acquire a lock so that nobody will attempt to access
+	// this prefix for pattern-matching!
 
 	x->o_prefix_sizes[num] = MyStrLen(prefixWithoutLeadingSlash)+1;
 	x->o_prefixes[num] = getbytes(x->o_prefix_sizes[num]);
@@ -326,6 +328,7 @@ void OSCroute_assist (OSCroute *x, void *box, long msg, long arg, char *dstStrin
 
 void OSCroute_set(OSCroute *x, long outlet, Symbol *s) {	
   int i;
+
   // outlet argument is 1-based.
 	
   if (outlet <=0 || outlet > x->o_num) {
@@ -334,6 +337,11 @@ void OSCroute_set(OSCroute *x, long outlet, Symbol *s) {
   }
 	
   i = outlet-1;
+
+  // Here we should acquire a lock.
+  // We might be in the middle of pattern matching against the old
+  // string, or be interrupted with new input before this procedure
+  // finishes...
 
   // First free the memory of the old string
   if (x->o_prefix_sizes[i] != 0) {
