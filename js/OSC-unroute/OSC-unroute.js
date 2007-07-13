@@ -48,7 +48,7 @@ cheap_mode = 0;
 for ( i=0 ; i < NbInlets ; i++) {
 	setinletassist(i,jsarguments[i+1]);  
 }
-setoutletassist(0, "OSC messages");
+setoutletassist(0, "OSC Max messages");
 
 function cheap() {
 	cheap_mode = 1;
