@@ -39,6 +39,7 @@ VERSION 0.2: Using new version system
 VERSION 0.2.1: Force Package Info Generation
 VERSION 0.3: Added support for many more a_type possibilities found in ext_mess.h
 VERSION 0.4: Added support for binary OSC packets sent as "FullPacket" messages (i.e., from the OpenSoundControl object)
+VERSION 0.4.1: Added min and max OSC Packet sizes as a heuristic protection against crashing from non-OSC input.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
  */
@@ -56,6 +57,7 @@ typedef struct printit
 {
 	Object o_ob;				// required header
 	Symbol *my_name;
+  int min_OSCPacket_size, max_OSCPacket_size;
 } printit;
 
 /* global necessary for 68K function macros to work */
@@ -117,6 +119,12 @@ void *printit_new(Symbol *s)
 	} else {
 		x->my_name = s;
 	}
+
+	// A bundle containing a single message with a very short
+	// address and a single argument is 32 bytes:
+	x->min_OSCPacket_size = 32;
+
+	x->max_OSCPacket_size = 2048;
 
 	return (x);
 }
@@ -201,8 +209,18 @@ void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
 	print_args(argc, argv);
 	
 	if (s == ps_FullPacket && argc == 2 && argv[0].a_type == A_LONG && argv[1].a_type == A_LONG) {
-		post("It looks like an OSC packet:");
-		PrintOSCPacket((char *) argv[1].a_w.w_long, argv[0].a_w.w_long);
+	  int size = argv[0].a_w.w_long;
+	  char *bufptr = (char *) argv[1].a_w.w_long;
+	  post("It looks like an OSC packet");
+	  if (size < x->min_OSCPacket_size) {
+	    post("but the size is only %ld bytes, so I won't try to print it.",
+		 size);
+	  } else if (size > x->max_OSCPacket_size) {
+	    post("but the size (%ld) looks too big, so I won't try to print it",
+		 size);
+	  } else {
+		PrintOSCPacket(bufptr, size);
+	  }
 	}
 }
 
