@@ -3,7 +3,7 @@ CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION
 MAX_INCLUDES = ../../../c74support-w32/max-includes
 MSP_INCLUDES = ../../../c74support-w32/msp-includes
 INCLUDES = -I$(MAX_INCLUDES) -I$(MSP_INCLUDES)
-LDFLAGS = -shared -mno-cygwin 
+LDFLAGS += -shared -mno-cygwin 
 
 #
 # The specific Makefile for this directory might have defined MORE_SOURCE
@@ -24,6 +24,7 @@ $(GCC_BUILD_DIR)/%.o: %.c
 
 
 $(GCC_BUILD_DIR)/$(OBJ).mxe: $(GCC_BUILD_DIR)/$(OBJ).o $(MORE_OBJECTS) $(OBJ).def
+	echo ldflags $(LDFLAGS)
 	$(CC) $(LDFLAGS) -o $@ $^ -L$(MAX_INCLUDES) -L$(MSP_INCLUDES) -lMaxAPI -lMaxAudio
 
 # All of the example .def files in the Windows SDK look like this:
