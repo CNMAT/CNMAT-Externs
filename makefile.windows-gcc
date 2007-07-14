@@ -25,7 +25,7 @@ $(GCC_BUILD_DIR)/%.o: %.c
 
 $(GCC_BUILD_DIR)/$(OBJ).mxe: $(GCC_BUILD_DIR)/$(OBJ).o $(MORE_OBJECTS) $(OBJ).def
 	echo ldflags $(LDFLAGS)
-	$(CC) $(LDFLAGS) -o $@ $^ -L$(MAX_INCLUDES) -L$(MSP_INCLUDES) -lMaxAPI -lMaxAudio
+	$(CC) -o $@ $^ -L$(MAX_INCLUDES) -L$(MSP_INCLUDES) -lMaxAPI -lMaxAudio $(LDFLAGS)
 
 # All of the example .def files in the Windows SDK look like this:
 # ;coll.def
