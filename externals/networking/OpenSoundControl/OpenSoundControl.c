@@ -61,7 +61,9 @@ VERSION 1.9.9: Another attempt to fix time tag byte-order bug
 
 #ifdef WIN_VERSION
 // To get ntohl() on Windows
-#include <asm/byteorder.h>
+// #include <asm/byteorder.h>
+// #include </usr/include/asm/byteorder.h>
+#include </usr/include/w32api/winsock2.h>
 #endif
 
 void *OSC_class;
