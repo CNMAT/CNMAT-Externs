@@ -1,5 +1,6 @@
 /* Smoother Object: Independent multitrack 1st order low-pass filter and median filter */
 /* Written by Alejandro R. Sedeno and Tristan Jehan at the MIT Media Laboratory */
+/* Macho port by Michael Zbyszynski */
 
 #include "ext.h"
 
@@ -13,7 +14,7 @@
 #define DEF_COEFF 1.0	// Default Low Pass Filter coefficient
 
 #define COPYRIGHT "copyright © 2001 Massachusetts Institute of Technology"
-#define VERSION "1.2"
+#define VERSION "1.3"
 
 /* structure definition of the object */
 typedef struct medfilt
@@ -69,7 +70,7 @@ Smoother *smoother_new(Symbol *s, short argc, Atom *argv);
 void smoother_free(Smoother *s);
 void smoother_mfsize(Smoother *s, Symbol *sym, short argc, Atom *argv);
 void smoother_lpfcoeff(Smoother *s, Symbol *sym, short argc, Atom *argv);
-void smoother_float(Smoother *s, float f);
+void smoother_float(Smoother *s, double f);
 void smoother_int(Smoother *s, long l);
 void smoother_all(Smoother *s, Symbol *sym, short argc, Atom *argv);
 void smoother_clear(Smoother *s, Symbol *sym);
@@ -228,7 +229,7 @@ Smoother *smoother_new(Symbol *sym, short argc, Atom *argv)
 	long chcnt = DEF_CHANS;
 	long mfsize = 1;
 	float lpfcoeff = 1;
-	short i, n;
+	short i;
 
 	s = newobject(smoother_class);
 	
@@ -597,7 +598,7 @@ void smoother_lpfcoeff(Smoother *s, Symbol *sym, short argc, Atom *argv)
     
 }
 
-void smoother_float(Smoother *s, float f)
+void smoother_float(Smoother *s, double f)
 {
 	short i;
 	i = s->s_inletnumber;
@@ -702,7 +703,8 @@ void smoother_print(Smoother *s)
 
 }
 
-void main(fptr *f)
+int main(void)
+//void main(fptr *f)
 {
 	post("Smoother object version " VERSION " by Tristan Jehan and Alejandro R. Sedeno");
 	post(COPYRIGHT);
@@ -732,4 +734,5 @@ void main(fptr *f)
 
 	/* list object in the new object list */
 //	finder_addclass("Analysis","smoother");
+return 0;
 }
