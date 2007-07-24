@@ -260,7 +260,12 @@ public class midifile extends MaxObject
 				message = event.getMessage();
 				// 128-143 = chan 1-16 note on.
 				// 144-159 = chan 1-16 note off.
-				if(message.getStatus() <= 159 && message.getStatus() >= 128){
+				// 255 = meta event
+				if(message.getStatus() == 255){ // meta-event
+					MetaMessage metamessage = ((MetaMessage)event.getMessage());
+					handleMetaMessage(metamessage);
+					
+				} else if(message.getStatus() <= 159 && message.getStatus() >= 128){
 					byte[] midibytes = message.getMessage();
 					
 					time = (long)((event.getTick() * tickLength) * 1000);
@@ -278,6 +283,46 @@ public class midifile extends MaxObject
 		
 		//post(mf.getByteLength() + " " + mf.getDivisionType() + " " + mf.getMicrosecondLength() + " " + mf. getResolution() + " " + mf.getType());
 		//post("size: " + tracks[0].size());
+	}
+	
+	private void handleMetaMessage(MetaMessage m){
+		//http://www.sonicspot.com/guide/midifiles.html
+		int type = m.getType();
+		byte[] data = m.getData();
+		switch (type) {
+			case 47: // end of track
+				
+				break;
+			case 81: // set tempo
+				// returns the tempo in microseconds per minute.
+				float ms_per_min = 60000000.f;
+				int val = 0;
+				
+				// convert byte array to an int
+				for (int k = data.length - 1, j = 0; k >= 0; k--, j++)
+					val += (data[k] & 0xff) << (8 * j);
+				post("ms_per_min = " + ms_per_min + " " + val + " " + (ms_per_min / val));
+				
+				break;
+			case 84: // SMPTE offset
+				// hour, minute, sec, frame, subframe
+				post("smpte = " + data[0] + " " + data[1] + " "  + data[2] + " "  + data[3] + " "  + data[4]);
+				break;
+			case 88: // time sig
+				// returns an array of 4 bytes corresponding to:
+				//	numerator
+				//	denominator (this is actually the power to which 2 must be raised->midi blows
+				//	metro = specifies how often the metronome should click in terms of the number of clock signals per click, 
+				//		which come at a rate of 24 per quarter-note.
+				//	number of 32nds per quarter
+				post("time sig = " + data[0] + " " + Math.pow(2, data[1]) + " " + data[2] + " " + data[3]);
+				break;
+			case 89: // key sig
+				// the first byte is the key sig from -7 to 7 (<0 flats, >0 sharps)
+				// second byte is 0 = major, 1 = minor
+				post("key sig = " + data[0] + " " + data[1]);
+				break;
+		}
 	}
 	
 	public void write_separate_files(){
