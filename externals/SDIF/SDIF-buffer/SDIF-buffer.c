@@ -52,6 +52,7 @@ VERSION 0.9.2a: UB compile
 VERSION 0.9.3: Proper cross-platform method for opening an SDIF file in Max's search path
 VERSION 0.9.3v: Change in implementation of version method
 VERSION 0.9.4: Force Package Info Generation
+VERSION 1.0: Includes workaround for illegal SDIF files with -1 for the frame size
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -388,17 +389,18 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
   //  read the requested stream
   r = SDIFbuf_ReadStreamFromOpenFile(privateStuff->buf, f, mode, arg);
 
-
   if (r == ESDIF_STREAM_NOT_FOUND) {
     post("SDIFbuffer_readstreamnumber: Warning: no frames found with StreamID %ld!",
        streamID);
-  } else  if (r == ESDIF_SUCCESS) {
+  } else if (r == ESDIF_SUCCESS) {
   	// Do nothing
+  } else if (r == ESDIF_MINUSONE_FRAMESIZE_WORKAROUND) {
+    post("Warning: file %s has frames with -1 as the frame size.", filename);
+    post("  This is illegal but I read stream %ld anyway.", streamID);
   } else {
   	error("SDIF-buffer: Error reading stream %ld from file %s: %s", streamID, filename, 
   	      SDIF_GetErrorString(r));
   }
-
 
   //  update all the buffer's state according to the newly read data (even if no data read)
   x->fileName = filename;
