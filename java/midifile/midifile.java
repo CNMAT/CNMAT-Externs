@@ -1,9 +1,9 @@
 /*
 
 midifile
-by John MacCallum, 2006
+by John MacCallum, 2006-07
 
-Copyright (c) 2006.  The Regents of the University of California
+Copyright (c) 2006-07.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -37,12 +37,13 @@ University of California, Berkeley.
 NAME: midifile
 DESCRIPTION: Reads / writes / plays type 0 and 1 midi files.  Java object.
 AUTHORS: John MacCallum
-COPYRIGHT_YEARS: 2006
+COPYRIGHT_YEARS: 2006-07
 SVN_REVISION: $LastChangedRevision: 622 $
 VERSION 2.1.1: Added play, play_from, and read messages and implemented open and save dialogs.
 VERSION 2.1.2: Fixed a bug where an error would be reported if play was called and there was no data in one of the tracks.
 VERSION 2.1.3: Gratuitous increment of the version number.
 VERSION 2.1.4: Play now outputs the channel number if there is one.
+VERSION 2.2: Now handles meta messages
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -78,19 +79,36 @@ public class midifile extends MaxObject
 		private float dur;
 		private int vel;
 		private int chan;
+		private boolean ismeta = false;
+		private byte[] meta_data;
+		private int metatype;
 		
+		public mf_MidiEvent(){};
 		public mf_MidiEvent(float t, int p, float d, int v, int c){
 			time = t; note = p; dur = d; vel = v; chan = c;
 		}
-		public float gettime() { return time; }
-		public int getnote() { return note; }
-		public float getdur() { return dur; }
-		public int getvel() { return vel; }
-		public int getchan() { return chan; }
+		
+		private float gettime() { return time; }
+		private int getnote() { return note; }
+		private float getdur() { return dur; }
+		private int getvel() { return vel; }
+		private int getchan() { return chan; }
+		
+		private void settime(float x) { time = x; }
+		private void setnote(int x) { note = x; }
+		private void setdur(float x) { dur = x; }
+		private void setvel(int x) { vel = x; }
+		private void setchan(int x) { chan = x; }
+		
+		private void set_ismeta(boolean b) { ismeta = b; }
+		private boolean ismeta() { return ismeta; }
+		private void set_meta_data(byte[] b) { meta_data = b; }
+		private byte[] get_meta_data() { return meta_data; }
+		private void set_metatype(int t) { metatype = t; }
+		private int get_metatype() { return metatype; }
 	}
 
-	public midifile(Atom[] args)
-	{
+	public midifile(Atom[] args) {
 		numVoices = 1;
 		midifile_type = 0;
 		
@@ -261,10 +279,22 @@ public class midifile extends MaxObject
 				// 128-143 = chan 1-16 note on.
 				// 144-159 = chan 1-16 note off.
 				// 255 = meta event
+				//post("j = " + j + " status = " + message.getStatus());
 				if(message.getStatus() == 255){ // meta-event
 					MetaMessage metamessage = ((MetaMessage)event.getMessage());
-					handleMetaMessage(metamessage);
 					
+					time = (long)((event.getTick() * tickLength) * 1000);
+					byte[] data = metamessage.getData();
+					mf_MidiEvent me = new mf_MidiEvent();
+					me.set_ismeta(true);
+					me.set_metatype(metamessage.getType());
+					me.set_meta_data(data);
+					me.settime(time);
+					((ArrayList)events.get(i)).add(me);
+					
+				} else if(message.getStatus() <= 207 && message.getStatus() >= 192){
+					// program change--this doesn't seem too useful
+				
 				} else if(message.getStatus() <= 159 && message.getStatus() >= 128){
 					byte[] midibytes = message.getMessage();
 					
@@ -285,10 +315,11 @@ public class midifile extends MaxObject
 		//post("size: " + tracks[0].size());
 	}
 	
-	private void handleMetaMessage(MetaMessage m){
+	private Atom[] getOSCforMeta(byte[] data, int type, float time, int track){
 		//http://www.sonicspot.com/guide/midifiles.html
-		int type = m.getType();
-		byte[] data = m.getData();
+		
+		Atom[] a = null;
+		
 		switch (type) {
 			case 47: // end of track
 				
@@ -301,12 +332,14 @@ public class midifile extends MaxObject
 				// convert byte array to an int
 				for (int k = data.length - 1, j = 0; k >= 0; k--, j++)
 					val += (data[k] & 0xff) << (8 * j);
-				post("ms_per_min = " + ms_per_min + " " + val + " " + (ms_per_min / val));
+				a = new Atom[]{Atom.newAtom("/track/" + track + "/tempo"), Atom.newAtom(time), Atom.newAtom(ms_per_min / val)};
+				//post("ms_per_min = " + ms_per_min + " " + val + " " + (ms_per_min / val));
 				
 				break;
 			case 84: // SMPTE offset
 				// hour, minute, sec, frame, subframe
-				post("smpte = " + data[0] + " " + data[1] + " "  + data[2] + " "  + data[3] + " "  + data[4]);
+				//post("smpte = " + data[0] + " " + data[1] + " "  + data[2] + " "  + data[3] + " "  + data[4]);
+				a = new Atom[]{Atom.newAtom("/track/" + track + "/SMPTE_offset"), Atom.newAtom(time), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
 				break;
 			case 88: // time sig
 				// returns an array of 4 bytes corresponding to:
@@ -315,14 +348,18 @@ public class midifile extends MaxObject
 				//	metro = specifies how often the metronome should click in terms of the number of clock signals per click, 
 				//		which come at a rate of 24 per quarter-note.
 				//	number of 32nds per quarter
-				post("time sig = " + data[0] + " " + Math.pow(2, data[1]) + " " + data[2] + " " + data[3]);
+				//post("time sig = " + data[0] + " " + Math.pow(2, data[1]) + " " + data[2] + " " + data[3]);
+				a = new Atom[]{Atom.newAtom("/track/" + track + "/time_sig"), Atom.newAtom(time), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), 
+					Atom.newAtom(data[2]), Atom.newAtom(data[3])};
 				break;
 			case 89: // key sig
 				// the first byte is the key sig from -7 to 7 (<0 flats, >0 sharps)
 				// second byte is 0 = major, 1 = minor
-				post("key sig = " + data[0] + " " + data[1]);
+				//post("key sig = " + data[0] + " " + data[1]);
+				a = new Atom[]{Atom.newAtom("/track/" + track + "/key_sig"), Atom.newAtom(time), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
 				break;
 		}
+		return a;
 	}
 	
 	public void write_separate_files(){
@@ -493,13 +530,17 @@ public class midifile extends MaxObject
 		mf_MidiEvent thisME = ((mf_MidiEvent)((ArrayList)playList.get(v)).get(0));
 		
 		((ArrayList)playList.get(v)).remove(0);
-		outlet(0, new Atom[]{Atom.newAtom("/track" + v), Atom.newAtom(thisME.getnote()), 
-			Atom.newAtom(thisME.getvel()), (thisME.getdur() > 0) ? Atom.newAtom(thisME.getdur()) : Atom.newAtom(""),
-			(thisME.getchan() > 0) ? Atom.newAtom(thisME.getchan()) : Atom.newAtom("")});
+		if(thisME.ismeta()){
+			outlet(0, getOSCforMeta(thisME.get_meta_data(), thisME.get_metatype(), thisME.gettime(), v));
+		} else {
+			outlet(0, new Atom[]{Atom.newAtom("/track/" + v + "/note"), Atom.newAtom(thisME.getnote()), 
+				Atom.newAtom(thisME.getvel()), (thisME.getdur() > 0) ? Atom.newAtom(thisME.getdur()) : Atom.newAtom(""),
+				(thisME.getchan() > 0) ? Atom.newAtom(thisME.getchan()) : Atom.newAtom("")});
+		}
 		
 		if(((ArrayList)playList.get(v)).size() == 0){
 			cl.unset();
-			outlet(0, new Atom[]{Atom.newAtom("/track" + v), Atom.newAtom("bang")});
+			outlet(0, new Atom[]{Atom.newAtom("/track/" + v + "/*"), Atom.newAtom("bang")});
 		}
 		else cl.delay(((mf_MidiEvent)((ArrayList)playList.get(v)).get(0)).gettime() - thisME.gettime());
 		//cl.delay(thisME.getdur());
@@ -535,7 +576,7 @@ public class midifile extends MaxObject
 			
 		for(i = 0; i < events.size(); i++){
 			for(j = 0; j < 128; j++)
-				outlet(0, new Atom[]{Atom.newAtom("/track" + i), Atom.newAtom(j), Atom.newAtom(0)});
+				outlet(0, new Atom[]{Atom.newAtom("/track/" + i + "/note"), Atom.newAtom(j), Atom.newAtom(0)});
 		}
 		
 		clocks.clear();
@@ -645,13 +686,18 @@ public class midifile extends MaxObject
 				me = (mf_MidiEvent)((ArrayList)events.get(i)).get(j);
 			
 				float time = me.gettime();
-				int note = me.getnote();
-				float dur = me.getdur();
-				int vel = me.getvel();
-				int chan = me.getchan();
-				
-				outlet(1, new Atom[]{Atom.newAtom("/track" + i), Atom.newAtom(time), Atom.newAtom(note), Atom.newAtom(dur), 
-						Atom.newAtom(vel), Atom.newAtom(chan)});
+				if(me.ismeta()){
+					Atom[] a = getOSCforMeta(me.get_meta_data(), me.get_metatype(), time, i);
+					outlet(1, a);
+				} else {
+					int note = me.getnote();
+					float dur = me.getdur();
+					int vel = me.getvel();
+					int chan = me.getchan();
+					
+					outlet(1, new Atom[]{Atom.newAtom("/track/" + i + "/note"), Atom.newAtom(time), Atom.newAtom(note), Atom.newAtom(dur), 
+							Atom.newAtom(vel), Atom.newAtom(chan)});
+				}
 			}
 		}
 		
