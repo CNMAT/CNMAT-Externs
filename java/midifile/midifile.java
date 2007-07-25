@@ -58,7 +58,7 @@ import javax.sound.midi.*;
 public class midifile extends MaxObject
 {	
 	public void version(){
-		post("midifile Version 2.1.4, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
+		post("midifile Version 2.2, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
 	}
 	
 	private int numVoices;
@@ -376,7 +376,7 @@ public class midifile extends MaxObject
 		}
 		
 		int i, j;
-		for(i = 0; i < numVoices; i++){
+		for(i = 0; i < events.size(); i++){
 			if(!((ArrayList)events.get(i)).isEmpty()){
 				String filepath = path + "track" + i + ".mid";
 				
@@ -421,7 +421,7 @@ public class midifile extends MaxObject
 		Track tracks[] = new Track[numVoices];
 		
 		// Only create tracks for voices that actually contain data.
-		for(i = 0; i < numVoices; i++){
+		for(i = 0; i < events.size(); i++){
 			if(!((ArrayList)events.get(i)).isEmpty()){
 				tracks[i] = sequence.createTrack();
 				++numVoicesRecorded;
@@ -650,7 +650,7 @@ public class midifile extends MaxObject
 	public void clear(){
 		int i;
 
-		for(i = 0; i < numVoices; i++){
+		for(i = 0; i < events.size(); i++){
 			((ArrayList)events.get(i)).clear();
 		}
 
@@ -681,7 +681,7 @@ public class midifile extends MaxObject
 		int i, j;
 		mf_MidiEvent me;
 		
-		for(i = 0; i < numVoices; i++){
+		for(i = 0; i < events.size(); i++){
 			for(j = 0; j < ((ArrayList)events.get(i)).size(); j++){
 				me = (mf_MidiEvent)((ArrayList)events.get(i)).get(j);
 			
