@@ -30,6 +30,8 @@ VERSION 1.1: Changed the way the random seed it made
 VERSION 1.2: Universal binary
 VERSION 1.2.1: Changed the license to be GPL compatible
 VERSION 1.3: The object now takes arguments to specify the distribution
+VERSION 1.3.1: Use of the buffering system is now optional and off by default
+VERSION 1.3.2: Fixed a bug that would cause a crash if randdist was instantiated with a number instead of a symbol as its first arg.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -81,6 +83,7 @@ VERSION 1.3: The object now takes arguments to specify the distribution
 #define R_MAX_N_VARS 66
 #define R_BUFFER_SIZE 1024
 
+
 typedef struct _rdist
 {
 	t_object r_ob;
@@ -95,6 +98,7 @@ typedef struct _rdist
 	t_atom **r_buffers;
 	int r_bufferPos;
 	int r_whichBuffer;
+	int r_useBuffer;
 } t_rdist;
 
 void *rdist_class;
@@ -104,7 +108,8 @@ void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 void rdist_bang(t_rdist *x);
 void rdist_int(t_rdist *x, long n);
 void rdist_dump(t_rdist *x, long n);
-void rdist_fillBuffers(t_rdist *x, int n);
+void rdist_fillBuffers(t_rdist *x, int n, t_atom *buffer);
+void rdist_useBuffer(t_rdist *x, long b);
 void rdist_incBufPos(t_rdist *x);
 void rdist_assist(t_rdist *x, void *b, long m, long a, char *s);
 static int makeseed(void);
@@ -132,6 +137,7 @@ int main(void)
 	addmess((method)rdist_list, "list", A_GIMME, 0);
 	addmess((method)rdist_anything, "anything", A_GIMME, 0);
 	addmess((method)rdist_assist, "assist", A_CANT, 0);
+	addmess((method)rdist_useBuffer, "useBuffer", A_DEFLONG, 0);
 	
 	return 0;
 }
@@ -237,14 +243,16 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 			x->r_dist = R_LOGARITHMIC;
 		}
 	}
-	rdist_fillBuffers(x, abs(x->r_whichBuffer - 1));
-	x->r_whichBuffer = abs(x->r_whichBuffer - 1);
-	x->r_bufferPos = 0;
-	rdist_fillBuffers(x, abs(x->r_whichBuffer - 1));
+	
+	if(x->r_useBuffer){
+		rdist_fillBuffers(x, R_BUFFER_SIZE, x->r_buffers[abs(x->r_whichBuffer - 1)]);
+		x->r_whichBuffer = abs(x->r_whichBuffer - 1);
+		x->r_bufferPos = 0;
+		rdist_fillBuffers(x, R_BUFFER_SIZE, x->r_buffers[abs(x->r_whichBuffer - 1)]);
+	}
 }
 
-void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
-{
+void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	x->r_dist = R_USER_DEFINED;
 	x->r_pmfLength = argc / 2;
 		
@@ -252,12 +260,13 @@ void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 	memcpy(x->r_arIn, argv, argc * sizeof(t_atom));
 	rdist_makePMF(x);
 	
-	rdist_fillBuffers(x, 0);
-	rdist_fillBuffers(x, 1);
+	if(x->r_useBuffer){
+		rdist_fillBuffers(x, R_BUFFER_SIZE, x->r_buffers[0]);
+		rdist_fillBuffers(x, R_BUFFER_SIZE, x->r_buffers[1]);
+	}
 }
 
-void rdist_bang(t_rdist *x)
-{
+void rdist_bang(t_rdist *x){
 	t_atom *out;
 	int numOut = 1;
 	int i;
@@ -277,10 +286,13 @@ void rdist_bang(t_rdist *x)
 	}
 	
 	out = (t_atom *)calloc(numOut, sizeof(t_atom));
-	for(i = 0; i < numOut; i++){
-		out[i] = x->r_buffers[x->r_whichBuffer][x->r_bufferPos];
-		rdist_incBufPos(x);
-	}
+	
+	if(x->r_useBuffer){
+		for(i = 0; i < numOut; i++){
+			out[i] = x->r_buffers[x->r_whichBuffer][x->r_bufferPos];
+			rdist_incBufPos(x);
+		}
+	} else rdist_fillBuffers(x, 1, out);
 	
 	if(numOut > 1) msg = gensym("list");
 	else if(out[0].a_type == A_LONG) msg = gensym("int");
@@ -292,13 +304,11 @@ void rdist_bang(t_rdist *x)
 	free(out);
 }
 
-void rdist_int(t_rdist *x, long n)
-{
+void rdist_int(t_rdist *x, long n){
 	
 }
 
-void rdist_dump(t_rdist *x, long n)
-{
+void rdist_dump(t_rdist *x, long n){
 	int i = 0;
 	t_atom *out;
 	if(n < 1){
@@ -315,8 +325,7 @@ void rdist_dump(t_rdist *x, long n)
 	free(out);
 }
 
-void rdist_fillBuffers(t_rdist *x, int n)
-{
+void rdist_fillBuffers(t_rdist *x, int n, t_atom *buffer){
 	int i, j, k = 0;
 	t_atom tmp;
 	double result[2];
@@ -332,8 +341,8 @@ void rdist_fillBuffers(t_rdist *x, int n)
 				error("randdist: standard deviation (sigma) must be positive.");
 				return;
 			}			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_gaussian(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_gaussian(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_GAUSSIAN_TAIL:
@@ -343,8 +352,8 @@ void rdist_fillBuffers(t_rdist *x, int n)
 				return;
 			}
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_gaussian_tail(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_gaussian_tail(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_BIVARIATE_GAUSSIAN:
@@ -354,58 +363,58 @@ void rdist_fillBuffers(t_rdist *x, int n)
 				return;
 			}
 			
-			for(i = 0; i < R_BUFFER_SIZE / 2; i++){
+			for(i = 0; i < n / 2; i++){
 				gsl_ran_bivariate_gaussian(x->r_rng, x->r_vars[0], x->r_vars[1], x->r_vars[2], &result[0], &result[1]);
-				SETFLOAT(x->r_buffers[n] + (i * 2), result[0]);
-				SETFLOAT(x->r_buffers[n] + ((i * 2) + 1), result[1]);
+				SETFLOAT(buffer + (i * 2), result[0]);
+				SETFLOAT(buffer + ((i * 2) + 1), result[1]);
 			}
 			break;
 		case R_EXPONENTIAL:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_exponential(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_exponential(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_LAPLACE:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_laplace(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_laplace(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_EXPPOW:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_exppow(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_exppow(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_CAUCHY:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_cauchy(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_cauchy(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_RAYLEIGH:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_rayleigh(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_rayleigh(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_RAYLEIGH_TAIL:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_rayleigh_tail(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_rayleigh_tail(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_LANDAU:
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_landau(x->r_rng));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_landau(x->r_rng));
 			}
 			break;
 		case R_LEVY:
@@ -415,8 +424,8 @@ void rdist_fillBuffers(t_rdist *x, int n)
 				return;
 			}
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_levy(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_levy(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_LEVY_SKEW:
@@ -426,92 +435,92 @@ void rdist_fillBuffers(t_rdist *x, int n)
 				return;
 			}
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_levy_skew(x->r_rng, x->r_vars[0], x->r_vars[1], x->r_vars[2]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_levy_skew(x->r_rng, x->r_vars[0], x->r_vars[1], x->r_vars[2]));
 			}
 			break;
 		case R_GAMMA:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_gamma(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_gamma(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_UNIFORM:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_flat(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_flat(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_LOGNORMAL:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_lognormal(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_lognormal(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_CHISQ:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_chisq(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_chisq(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_F:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_fdist(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_fdist(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_T:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_tdist(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_tdist(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_BETA:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_beta(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_beta(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_LOGISTIC:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_logistic(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_logistic(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_PARETO:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_pareto(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_pareto(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_WEIBULL:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_weibull(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_weibull(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_GUMBEL1:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_gumbel1(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_gumbel1(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_GUMBEL2:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETFLOAT(x->r_buffers[n] + i, gsl_ran_gumbel2(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETFLOAT(buffer + i, gsl_ran_gumbel2(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_DIRICHLET:
@@ -519,14 +528,14 @@ void rdist_fillBuffers(t_rdist *x, int n)
 			k = (int)x->r_vars[0];
 			diricResult = (double *)calloc(k, sizeof(double));
 			
-			for(i = 0; i < (int)(floor(R_BUFFER_SIZE / k)); i++){
+			for(i = 0; i < (int)(floor(n / k)); i++){
 				rdist_dirichlet(x, diricResult);
 				for(j = 0; j < k; j++){
-					SETFLOAT(x->r_buffers[n] + ((i * (int)k) + j), diricResult[j]);
+					SETFLOAT(buffer + ((i * (int)k) + j), diricResult[j]);
 				}
 			}
-			for(i = R_BUFFER_SIZE - ((R_BUFFER_SIZE / k) - floor(R_BUFFER_SIZE / k)); i < R_BUFFER_SIZE; i++)
-				SETFLOAT(x->r_buffers[n] + i, 0.0);
+			for(i = n - ((n / k) - floor(n / k)); i < n; i++)
+				SETFLOAT(buffer + i, 0.0);
 			
 			free(diricResult);
 			
@@ -534,22 +543,22 @@ void rdist_fillBuffers(t_rdist *x, int n)
 		case R_POISSON:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_poisson(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_poisson(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_BERNOULLI:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_bernoulli(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_bernoulli(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_BINOMIAL:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_binomial(x->r_rng, x->r_vars[0], (int)(x->r_vars[1])));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_binomial(x->r_rng, x->r_vars[0], (int)(x->r_vars[1])));
 			}
 			break;
 		case R_MULTINOMIAL:
@@ -557,14 +566,14 @@ void rdist_fillBuffers(t_rdist *x, int n)
 			k = (int)x->r_vars[0];
 			multiResult = (unsigned int *)calloc(k, sizeof(unsigned int));
 			
-			for(i = 0; i < (int)(floor(R_BUFFER_SIZE / k)); i++){
+			for(i = 0; i < (int)(floor(n / k)); i++){
 				rdist_multinomial(x, multiResult);
 				for(j = 0; j < k; j++){
-					SETFLOAT(x->r_buffers[n] + ((i * (int)k) + j), multiResult[j]);
+					SETFLOAT(buffer + ((i * (int)k) + j), multiResult[j]);
 				}
 			}
-			for(i = R_BUFFER_SIZE - ((R_BUFFER_SIZE / k) - floor(R_BUFFER_SIZE / k)); i < R_BUFFER_SIZE; i++)
-				SETFLOAT(x->r_buffers[n] + i, 0.0);
+			for(i = n - ((n / k) - floor(n / k)); i < n; i++)
+				SETFLOAT(buffer + i, 0.0);
 			
 			free(multiResult);
 			
@@ -572,22 +581,22 @@ void rdist_fillBuffers(t_rdist *x, int n)
 		case R_NEGATIVE_BINOMIAL:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_negative_binomial(x->r_rng, x->r_vars[0], x->r_vars[1]));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_negative_binomial(x->r_rng, x->r_vars[0], x->r_vars[1]));
 			}
 			break;
 		case R_PASCAL:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_pascal(x->r_rng, x->r_vars[0], (int)(x->r_vars[1])));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_pascal(x->r_rng, x->r_vars[0], (int)(x->r_vars[1])));
 			}
 			break;
 		case R_GEOMETRIC:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_geometric(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_geometric(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_HYPERGEOMETRIC:
@@ -597,26 +606,26 @@ void rdist_fillBuffers(t_rdist *x, int n)
 				return;
 			}
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_hypergeometric(x->r_rng, (int)(x->r_vars[0]), (int)(x->r_vars[1]), (int)(x->r_vars[2])));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_hypergeometric(x->r_rng, (int)(x->r_vars[0]), (int)(x->r_vars[1]), (int)(x->r_vars[2])));
 			}
 			break;
 		case R_LOGARITHMIC:
 			
 			
-			for(i = 0; i < R_BUFFER_SIZE; i++){
-				SETLONG(x->r_buffers[n] + i, gsl_ran_logarithmic(x->r_rng, x->r_vars[0]));
+			for(i = 0; i < n; i++){
+				SETLONG(buffer + i, gsl_ran_logarithmic(x->r_rng, x->r_vars[0]));
 			}
 			break;
 		case R_USER_DEFINED:
-			for(i = 0; i < R_BUFFER_SIZE; i++){
+			for(i = 0; i < n; i++){
 				tmp = x->r_arIn[rdist_randPMF(x) * 2];
 				switch(tmp.a_type){
 					case A_LONG:
-						SETLONG(x->r_buffers[n] + i, tmp.a_w.w_long);
+						SETLONG(buffer + i, tmp.a_w.w_long);
 						break;
 					case A_FLOAT:
-						SETFLOAT(x->r_buffers[n] + i, tmp.a_w.w_float);
+						SETFLOAT(buffer + i, tmp.a_w.w_float);
 						break;
 				}
 			}
@@ -639,6 +648,14 @@ void rdist_assist(t_rdist *x, void *b, long m, long a, char *s)
 	}
 }
 
+void rdist_useBuffer(t_rdist *x, long b){
+	x->r_useBuffer = b;
+	if(b){
+		rdist_fillBuffers(x, R_BUFFER_SIZE, x->r_buffers[0]);
+		rdist_fillBuffers(x, R_BUFFER_SIZE, x->r_buffers[1]);
+	}
+}
+
 void rdist_incBufPos(t_rdist *x)
 {
 	int stride = 1;
@@ -657,7 +674,7 @@ void rdist_incBufPos(t_rdist *x)
 	
 		x->r_whichBuffer = abs(x->r_whichBuffer - 1);
 		x->r_bufferPos = 0;
-		rdist_fillBuffers(x, abs(x->r_whichBuffer - 1));
+		rdist_fillBuffers(x, R_BUFFER_SIZE, x->r_buffers[abs(x->r_whichBuffer - 1)]);
 		
 		return;
 	}
@@ -708,12 +725,15 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv)
 	
 	x->r_whichBuffer = 0;
 	x->r_bufferPos = 0;
+	x->r_useBuffer = 0;
 	
 	if(argc){
-		t_symbol *m = argv[0].a_w.w_sym;
-		for(i = 0; i < argc - 1; i++)
-			argv[i] = argv[i + 1];
-		rdist_anything(x, m, argc - 1, argv);
+		if(argv[0].a_type == A_SYM){
+			t_symbol *m = argv[0].a_w.w_sym;
+			for(i = 0; i < argc - 1; i++)
+				argv[i] = argv[i + 1];
+			rdist_anything(x, m, argc - 1, argv);
+		}
 	}
 	   	
 	return(x);
