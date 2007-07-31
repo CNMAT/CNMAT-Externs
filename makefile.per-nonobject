@@ -61,7 +61,7 @@ EXCLUDE_FILES_FILE = files-to-exclude.txt
 
 # files not to put in the archives we show the user (and to remove with "make clean")
 GENERATED_FILES = version.h $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE)
-EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store
+EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store $(MORE_EXCLUDE_FILES)
 
 # Where files live on our web server
 WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
