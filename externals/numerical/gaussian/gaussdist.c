@@ -6,11 +6,11 @@
 #include <stdlib.h>
 
 // CONSTANTS
-#define VERSION "1.0"
+#define VERSION "1.1" // Version 1.1 = UB port by Michael Zbyszynski
 #define SQRT2PI 2.506628274794649f
 #define DEFMEAN 0	// Default mean
 #define DEFVAR 1	// Default variance
-#define RES_ID 7033
+//#define RES_ID 7033
 
 // Main structure
 typedef struct _gaussdist
@@ -31,14 +31,14 @@ void gaussdist_assist(t_gaussdist *x, void *b, long m, long a, char *s);
 void gaussdist_free(t_gaussdist *x);
 void gaussdist_bang(t_gaussdist *x);
 void gaussdist_int(t_gaussdist *x, long n);
-void gaussdist_float(t_gaussdist *x, float f);
+void gaussdist_float(t_gaussdist *x, double f);
 void gaussdist_int_1(t_gaussdist *x, long n);
-void gaussdist_float_1(t_gaussdist *x, float f);
+void gaussdist_float_1(t_gaussdist *x, double f);
 void readx_mean(t_gaussdist *x, t_atom *argv);
 void readx_var(t_gaussdist *x, t_atom *argv);
 
 // Main function
-void main(void) 
+int main(void) 
 {
 	post("gaussdist object version " VERSION " by Tristan Jehan");
     post("copyright © 2001 Massachusetts Institute of Technology");
@@ -57,38 +57,41 @@ void main(void)
 	addint((method)gaussdist_int);
 	addftx((method)gaussdist_float_1,1);
 	addinx((method)gaussdist_int_1,1);
-	addmess((method)gaussdist_assist,"assist",A_CANT,0);
+	// addmess((method)gaussdist_assist,"assist",A_CANT,0);
 
 	/* list object in the new object list */
 	finder_addclass("Statistics", "gaussdist");
-
-	rescopy('STR#', RES_ID);
+	
+	return (0);
+	//rescopy('STR#', RES_ID);
 }
 
-void gaussdist_assist(t_gaussdist *x, void *b, long m, long a, char *s) 
+/*
+ void gaussdist_assist(t_gaussdist *x, void *b, long m, long a, char *s) 
 {
 	assist_string(RES_ID,m,a,1,3,s);
 }
+*/
 
 void gaussdist_int(t_gaussdist *x, long n)
 {
-	gaussdist_float(x, (float)n);
+	gaussdist_float(x, (double)n);
 }
 
-void gaussdist_float(t_gaussdist *x, float f)
+void gaussdist_float(t_gaussdist *x, double f)
 {
-	x->x_mean = f;
+	x->x_mean = (float)f;
 }
 
 void gaussdist_int_1(t_gaussdist *x, long n)
 {
-	gaussdist_float_1(x, (float)n);
+	gaussdist_float_1(x, (double)n);
 }
 
-void gaussdist_float_1(t_gaussdist *x, float f)
+void gaussdist_float_1(t_gaussdist *x, double f)
 {
 	if (f >= 0) {
-		x->x_var = f;
+		x->x_var = (float)f;
 	} else {
 		x->x_var = 0.;
 	}		
@@ -155,10 +158,17 @@ void gaussdist_free(t_gaussdist *x)
 void gaussdist_bang(t_gaussdist *x)
 {
 	float gauss, S = 2, U1,U2,V1,V2;
+	post ("babyeater");
 	
+	U1 = (float)rand()/32678.0;
+	U2 = (float)rand()/32678.0;
+	post ("%f %f", U1, U2);
+	
+	/*
 	while (S > 1) {
 		U1 = (float)rand()/32678.0;
 		U2 = (float)rand()/32678.0;
+		post ("%f %f", U1, U2);
 		V1 = 2 * U1 - 1.0;
 		V2 = 2 * U2 - 1.0;
 		S = V1 * V1 + V2 * V2;
@@ -167,4 +177,5 @@ void gaussdist_bang(t_gaussdist *x)
 	gauss = gauss * sqrtf(x->x_var) + x->x_mean;
 	
 	outlet_float(x->x_out, gauss);
+	 */
 }
