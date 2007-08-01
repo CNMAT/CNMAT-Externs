@@ -32,6 +32,7 @@ VERSION 1.2.1: Changed the license to be GPL compatible
 VERSION 1.3: The object now takes arguments to specify the distribution
 VERSION 1.3.1: Use of the buffering system is now optional and off by default
 VERSION 1.3.2: Fixed a bug that would cause a crash if randdist was instantiated with a number instead of a symbol as its first arg.
+VERSION 1.3.3: Added Gaussdist faker to helpfile, bump version to re-release. -mzed
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
