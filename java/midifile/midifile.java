@@ -45,7 +45,7 @@ VERSION 2.1.3: Gratuitous increment of the version number.
 VERSION 2.1.4: Play now outputs the channel number if there is one.
 VERSION 2.2: Now handles meta messages
 VERSION 2.2.1: Fixed a bug that caused all tracks of a multi-track file to start together even if one of them had a delay at the beg.
-VERSION: 2.2.2: Understands text meta events
+VERSION 2.2.2: Understands text meta events
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
