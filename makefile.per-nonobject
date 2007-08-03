@@ -1,6 +1,7 @@
 # makefile.per-nonobject
-# This is included in the makefile for everything we release that's Max-related but not an external
-# Matt Wright, 2006
+# This is included in the makefile for everything we release that's
+# Max-related but not a C external.  (Use this for Java externals.)
+# Matt Wright, 2006,2007
 
 PLATFORM = ANY
 
@@ -60,8 +61,8 @@ WEB_INCOMING = $(NAME)-ANY.tar.gz
 EXCLUDE_FILES_FILE = files-to-exclude.txt
 
 # files not to put in the archives we show the user (and to remove with "make clean")
-GENERATED_FILES = version.h $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE)
-EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store $(MORE_EXCLUDE_FILES)
+GENERATED_FILES = version.h *.class $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE)
+EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store *.xcodeproj/*.mode1 *.xcodeproj/*.pbxuser $(MORE_EXCLUDE_FILES) 
 
 # Where files live on our web server
 WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
@@ -129,10 +130,17 @@ $(WEB_INFO): $(DOWNLOAD_ARCHIVE) $(INFO_FILE2)
 $(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *))) $(EXCLUDE_FILES_FILE) version.h no-cr-characters
 #	tar --unlink -czf $(DOWNLOAD_ARCHIVE) * --exclude-from $(EXCLUDE_FILES_FILE)
 	rm -f $(DOWNLOAD_ARCHIVE)
-	zip -r $(DOWNLOAD_ARCHIVE) * $(MORE_RELEASE_FILES) -x $(EXCLUDE_FILES)
+	zip -r $(DOWNLOAD_ARCHIVE) *   $(MORE_RELEASE_FILES) -x $(EXCLUDE_FILES)
 
 # For any release, make sure the code is checked in before allowing the release
 release: code-checked-in no-cr-characters
+
+
+javaclasses: $(JAVA_SOURCE_FILE)
+	javac -classpath ../lib/max.jar $(MORE_JAVAC_OPTIONS) $(JAVA_SOURCE_FILE)
+
+
+	
 
 # Ensuring that the current code has been properly checked into Subversion
 .PHONY: code-checked-in
