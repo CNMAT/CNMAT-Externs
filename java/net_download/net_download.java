@@ -16,17 +16,34 @@ public class net_download extends MaxObject
 	public void version(){
 		post("net_download Version 1.0, by John MacCallum.\nCopyright (c) 2007 Regents of the University of California.  All rights reserved.");
 	}
+			
+	//List q = Collections.synchronizedList(new LinkedList());
+	LinkedList q = new LinkedList();
+	int numActiveConnections = 0;
+	int maxNumConnections = 10;
+	MaxClock c;
+	String tmpdir = null;
 
 	public net_download(Atom[] args){
 		declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});	
+		c = new MaxClock(new Callback(this, "dolist")); 
+		c.delay(100);
+		
+		// this block of code is to make sure that the tmp file we use is not an alias.
+		// on mac os x System.getProperty("java.io.tmpdir") returns /tmp which is an
+		// alias that points to /private/tmp
+		File f = null;
+		try{f = File.createTempFile("tmp","");}
+		catch(Exception e){}
+		try{tmpdir = f.getCanonicalPath();}
+		catch(Exception e){
+			error("net_download: couldn't get the default system tmp path");
+		}
+		tmpdir = tmpdir.substring(0, tmpdir.lastIndexOf(System.getProperty("file.separator")));	
+		post("tmpdir: " + tmpdir);
+		
 		version();
 	}	
-	
-	//List q = Collections.synchronizedList(new LinkedList());
-	LinkedList q = new LinkedList();
-	boolean running = false;
-	int numActiveConnections = 0;
-	int maxNumConnections = 10;
 	
 	public void get_html(Atom[] args){
 		post("¥ get_html " + args[0].toString());
@@ -36,7 +53,6 @@ public class net_download extends MaxObject
 		synchronized(this.q){
 			q.add(ar);
 		}
-		if(!running) dolist();
 	}
 	
 	public void get_image(Atom[] args){
@@ -47,7 +63,6 @@ public class net_download extends MaxObject
 		synchronized(this.q){
 			q.add(ar);
 		}
-		if(!running) dolist();
 	}
 	
 	public void get_file(Atom[] args){
@@ -58,7 +73,6 @@ public class net_download extends MaxObject
 		synchronized(this.q){
 			q.add(ar);
 		}
-		if(!running) dolist();
 	}
 	
 	public void bang(){
@@ -66,12 +80,18 @@ public class net_download extends MaxObject
 	}
 	
 	private void dolist(){
-		if(q.size() == 0){
-			running = false;
+		//post("numActiveConnections: " + numActiveConnections);
+		//post("q.size = " + q.size());
+		
+		outlet(1, new Atom[]{Atom.newAtom("/numActiveConnections"), Atom.newAtom(numActiveConnections)});
+		outlet(1, new Atom[]{Atom.newAtom("/remainingFiles"), Atom.newAtom(q.size())});
+		if(q.size() == 0 && numActiveConnections == 0)
+			outlet(1, "/done");
+		if(q.size() == 0 || numActiveConnections >= maxNumConnections) {
+			c.delay(100);
 			return;
 		}
 	
-		running = true;
 		Atom[] at;
 		ArrayList ar;
 		Integer i;
@@ -91,6 +111,7 @@ public class net_download extends MaxObject
 				doget_file(at);
 				break;
 		}
+		c.delay(100);
 	}
 	
 	private void doget_html(Atom[] args){
@@ -102,7 +123,18 @@ public class net_download extends MaxObject
 		
 		url = args[0].getString();
 		
-		if(args.length == 1) return;
+		if(args.length == 1){
+			HTML.Tag[] t = HTML.getAllTags();
+			for(int i = 0; i < t.length; i++){
+				tags.add(t[i].toString());
+			}
+		}
+		if(args.length == 2){
+			HTML.Attribute[] t = HTML.getAllAttributeKeys();
+			for(int i = 0; i < t.length; i++){
+				attributes.add(t[i].toString());
+			}
+		}
 		
 		if(args[1].getString().compareTo("tags") == 1) return;
 		
@@ -131,6 +163,8 @@ public class net_download extends MaxObject
 				   
 					reader = new InputStreamReader(conn.getInputStream());
 				} catch (Exception e){
+					--numActiveConnections;
+					outletBang(1);
 					e.printStackTrace();
 					return;
 				}
@@ -156,9 +190,19 @@ public class net_download extends MaxObject
 							if (s != null) {				
 								for(int j = 0; j < attributes.size(); j++){
 									String link = s.getAttribute(HTML.getAttributeKey((String)attributes.get(j))).toString();
-									outlet(1, url);
-									outlet(0, new Atom[]{Atom.newAtom((String)tags.get(i)), Atom.newAtom((String)attributes.get(j)), 
-										Atom.newAtom(link.toString())});
+									//outlet(1, url);
+									if(((String)attributes.get(j)).compareTo("href") == 0){
+										if(link.contains("http://")){
+											outlet(0, new Atom[]{Atom.newAtom((String)tags.get(i)), Atom.newAtom((String)attributes.get(j)), 
+												Atom.newAtom(link.toString())});
+										} else {
+											outlet(0, new Atom[]{Atom.newAtom((String)tags.get(i)), Atom.newAtom((String)attributes.get(j)), 
+												Atom.newAtom(url), Atom.newAtom(link.toString())});
+										}
+									} else {
+										outlet(0, new Atom[]{Atom.newAtom((String)tags.get(i)), Atom.newAtom((String)attributes.get(j)), 
+												Atom.newAtom(link.toString())});
+									}
 								}
 							}
 						}				
@@ -169,13 +213,13 @@ public class net_download extends MaxObject
 					e.printStackTrace();
 				}
 				--numActiveConnections;
-				dolist();
+				//dolist();
 			}
 		};
 		t.start();
 	}
 	
-	private void doget_image(final Atom[] args){	
+	private void doget_image(final Atom[] args){
 		Thread t = new Thread() 
 			{
 			public void run()
@@ -197,6 +241,8 @@ public class net_download extends MaxObject
 					}catch (IOException e) {
 						get_image(args); // if we can't connect, add this url back on to the list
 						post("¥ error: net_download: couldn't download " + imageURL);
+						--numActiveConnections;
+						outletBang(1);
 						e.printStackTrace();
 						return;
 					}
@@ -205,17 +251,25 @@ public class net_download extends MaxObject
 					//if(outputPath != null){
 						String tmp = url.toString();
 						String[] tmpar = tmp.split("/");
-						File f = new File("/Users/johnmac/Workspace/STEREO/testfiles/test/" + tmpar[tmpar.length - 1]);
+						File fp;
 						try{
-							ImageIO.write(image, "jpg", f);
-							outlet(0, new Atom[]{Atom.newAtom("image_filepath"), Atom.newAtom("/Users/johnmac/Workspace/STEREO/testfiles/test/" + tmpar[tmpar.length - 1])});
-							outlet(0, new Atom[]{Atom.newAtom("image_filename"), Atom.newAtom(tmpar[tmpar.length - 1])});
+							fp = new File(tmpdir + File.separator + tmpar[tmpar.length - 1]);//File.createTempFile(imageURL.substring(imageURL.lastIndexOf("/") + 1), "");
+						} catch(Exception e){
+							error("net_download: couldn't create output file for " + imageURL);
+							e.printStackTrace();
+							return;
+						}
+						try{
+							ImageIO.write(image, "jpg", fp);
+							outlet(0, new Atom[]{Atom.newAtom("image_filepath"), Atom.newAtom(tmpdir), 
+								Atom.newAtom(tmpar[tmpar.length - 1])});
 						} catch(Exception e){
 							e.printStackTrace();
 						}
 					//}
+					outletBang(1);
 					--numActiveConnections;
-					dolist();
+					//dolist();
 				}
 			};
 		t.start();
@@ -276,8 +330,9 @@ public class net_download extends MaxObject
 			catch(Exception e){e.printStackTrace();}
 			outlet(0, new Atom[]{Atom.newAtom("filepath"), Atom.newAtom(fp.getAbsolutePath())});
 			post("finished downloading\n\t" + url);
+			outletBang(1);
 			--numActiveConnections;
-			dolist();
+			//dolist();
 			}
 		};
 		t.start();
@@ -287,6 +342,7 @@ public class net_download extends MaxObject
 	}
 		
 	public void notifyDeleted() {
+		c.release();
 	}
 	
 }
