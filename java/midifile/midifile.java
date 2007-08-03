@@ -44,6 +44,8 @@ VERSION 2.1.2: Fixed a bug where an error would be reported if play was called a
 VERSION 2.1.3: Gratuitous increment of the version number.
 VERSION 2.1.4: Play now outputs the channel number if there is one.
 VERSION 2.2: Now handles meta messages
+VERSION 2.2.1: Fixed a bug that caused all tracks of a multi-track file to start together even if one of them had a delay at the beg.
+VERSION: 2.2.2: Understands text meta events
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -58,7 +60,7 @@ import javax.sound.midi.*;
 public class midifile extends MaxObject
 {	
 	public void version(){
-		post("midifile Version 2.2, by John MacCallum.\nCopyright (c) 2006 Regents of the University of California.  All rights reserved.");
+		post("midifile Version 2.2.1, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
 	}
 	
 	private int numVoices;
@@ -143,7 +145,7 @@ public class midifile extends MaxObject
 		// There's a short delay the first time a mf_MidiEvent gets instantiated, 
 		// so do it here once at initialization.
 		mf_MidiEvent me = new mf_MidiEvent(0, 0, 0, 0, 0);
-
+		
 		version();
 
 	}	
@@ -188,6 +190,85 @@ public class midifile extends MaxObject
 			post("event number " + ((ArrayList)events.get(inlet)).size() + " : " + me.gettime() + " " + 
 				 me.getnote() + " " + me.getdur() + " " + me.getvel() + " " + me.getchan());
 		}
+	}
+	
+	public void setTempo(Atom[] a){
+		if(!record) return;
+		if(a.length < 2){
+			error("midifile: setTempo requires two arguments: the time at which the tempo change occurs (in miliseconds) and the tempo (in BPM)");
+			return;
+		}
+		float ms_per_min = 60000000.f;
+		mf_MidiEvent me = new mf_MidiEvent();
+		me.settime(a[0].toFloat());
+		me.set_ismeta(true);
+		me.set_metatype(81);
+		
+		byte[] data = new byte[3];
+		for (int i = 0; i < 3; i++) {
+            int offset = (data.length - 1 - i) * 8;
+            data[i] = (byte) (((int)(ms_per_min / a[1].toInt()) >>> offset) & 0xFF);
+		}
+		me.set_meta_data(data);
+		((ArrayList)events.get(getInlet())).add(me);
+	}
+	
+	public void setTimeSig(Atom[] a){
+		if(!record) return;
+		if(a.length < 3){
+			error("midifile: setTimeSig requires three arguments: the time at which the tempo change occurs (in miliseconds), and the numerator and denominator");
+			return;
+		}
+		mf_MidiEvent me = new mf_MidiEvent();
+		me.settime(a[0].toFloat());
+		me.set_ismeta(true);
+		me.set_metatype(88);
+		
+		byte[] data = new byte[4];
+		data[0] = a[1].toByte();
+		data[1] = (byte)Math.sqrt(a[2].toFloat());
+		data[2] = a.length > 3 ? a[3].toByte() : 24;
+		data[3] = a.length > 4 ? a[4].toByte() : 8;
+		
+		me.set_meta_data(data);
+		((ArrayList)events.get(getInlet())).add(me);
+	}
+	
+	public void setKeySig(Atom[] a){
+		if(!record) return;
+		if(a.length < 3){
+			error("midifile: setKeySig requires three arguments: the time at which the key sig change occurs (in miliseconds), the number of flats or sharps, and a 0 or 1 for major / minor");
+			return;
+		}
+		mf_MidiEvent me = new mf_MidiEvent();
+		me.settime(a[0].toFloat());
+		me.set_ismeta(true);
+		me.set_metatype(89);
+		
+		byte[] data = new byte[2];
+		data[0] = a[1].toByte();
+		data[1] = a[1].toByte();
+		
+		me.set_meta_data(data);
+		((ArrayList)events.get(getInlet())).add(me);
+	}
+	
+	public void setText(Atom[] a){
+		if(!record) return;
+		String text = a[1].toString();
+		mf_MidiEvent me = new mf_MidiEvent();
+		me.settime(a[0].toFloat());
+		me.set_ismeta(true);
+		me.set_metatype(1);
+		
+		byte[] data;
+		try{data = text.getBytes("US-ASCII");}
+		catch(Exception e){
+			error("midifile: couldn't encode text: " + text);
+			return;
+		}
+		me.set_meta_data(data);
+		((ArrayList)events.get(getInlet())).add(me);
 	}
 	
 	public void read(){
@@ -308,6 +389,9 @@ public class midifile extends MaxObject
 					((ArrayList)events.get(i)).add(new mf_MidiEvent((float)time, (int)note, 0, (int)vel, (int)chan));
 					if(verbose) post("track: " + i + " event: " + j + " time: " + time + " note: " + (int)note + " vel: " + (int)vel + " chan " + (int)chan);
 				}
+				else {
+					//post("found an event with status " + message.getStatus());
+				}
 			}
 		}
 		
@@ -321,6 +405,12 @@ public class midifile extends MaxObject
 		Atom[] a = null;
 		
 		switch (type) {
+			case 3:
+				/*
+				String st = new String(data);
+				post("META EVENT " + st);
+				*/
+				break;
 			case 47: // end of track
 				
 				break;
@@ -358,6 +448,8 @@ public class midifile extends MaxObject
 				//post("key sig = " + data[0] + " " + data[1]);
 				a = new Atom[]{Atom.newAtom("/track/" + track + "/key_sig"), Atom.newAtom(time), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
 				break;
+			default:
+				post("meta event " + type);
 		}
 		return a;
 	}
@@ -481,7 +573,7 @@ public class midifile extends MaxObject
 		
 		for(i = 0; i < events.size(); i++){
 			if(((ArrayList)events.get(i)).size() != 0)
-				((MaxClock)clocks.get(i)).delay(0);
+				((MaxClock)clocks.get(i)).delay(((mf_MidiEvent)((ArrayList)(playList.get(i))).get(0)).gettime());
 		}
 		
 		//post("number of events: " + ((ArrayList)events.get(0)).size());
@@ -592,6 +684,17 @@ public class midifile extends MaxObject
 	}
 	
 	private static void addEventToTrack(mf_MidiEvent me, Track track){
+		if(me.ismeta()){	
+			MetaMessage mm = new MetaMessage();
+			try{mm.setMessage(me.get_metatype(), me.get_meta_data(), (me.get_meta_data()).length);}
+			catch(InvalidMidiDataException e){
+				e.printStackTrace();
+				return;
+			}
+			track.add(new MidiEvent(mm, Math.round(me.gettime())));
+			return;
+		}
+		
 		int note, time, dur, vel, chan;
 				
 		time = java.lang.Math.round(me.gettime());
