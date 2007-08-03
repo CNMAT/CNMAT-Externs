@@ -39,7 +39,7 @@ DESCRIPTION: Computes a running average of it's input.  Java object.
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006-7
 SVN_REVISION: $LastChangedRevision: 622 $
-VERSION 1.0: First versiion
+VERSION 1.0: First version
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -97,8 +97,13 @@ public class running_average extends MaxObject
 		addNewValue(f);
 	}
     
-	public void list(float[] l){
-		
+	public void list(Atom[] args){
+		Atom a;
+		int i;
+		for(i = 0; i < args.length; i++){
+			a = args[i];
+			addNewValue(a.toFloat());
+		}
 	}
 	
 	public void addNewValue(float f){
