@@ -12,18 +12,6 @@
 		12F3807E0AD4B449000C8C3E /* max.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F3807D0AD4B449000C8C3E /* max.jar */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		12F076B70C272BBA00623A2A /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /Users/johnmac/MaxMSP46/classes/plot_2d;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		120A9D0B0C270C6100E38DD0 /* jitter.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = jitter.jar; path = "/Applications/MaxMSP 4.6/Cycling '74/java/lib/jitter.jar"; sourceTree = "<absolute>"; };
 		128BFEFA0C2AEA7600A1D430 /* net_download.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = net_download.java; sourceTree = "<group>"; };
@@ -124,7 +112,6 @@
 				130F8B93001BDF0A11CA292A /* JavaArchive */,
 				130F8B94001BDF0A11CA292A /* Frameworks */,
 				0F8E05D30A13D88900568E53 /* ShellScript */,
-				12F076B70C272BBA00623A2A /* CopyFiles */,
 			);
 			dependencies = (
 			);
@@ -163,6 +150,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				INSTALL_PATH = /Users/johnmac/MaxMSP46/classes;
 				JAVA_ARCHIVE_CLASSES = NO;
 				JAVA_ARCHIVE_COMPRESSION = NO;
 				JAVA_ARCHIVE_TYPE = JAR;
