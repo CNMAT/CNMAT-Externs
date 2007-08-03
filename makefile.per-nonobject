@@ -61,8 +61,9 @@ WEB_INCOMING = $(NAME)-ANY.tar.gz
 EXCLUDE_FILES_FILE = files-to-exclude.txt
 
 # files not to put in the archives we show the user (and to remove with "make clean")
-GENERATED_FILES = version.h *.class $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE)
-EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store *.xcodeproj/*.mode1 *.xcodeproj/*.pbxuser $(MORE_EXCLUDE_FILES) 
+GENERATED_INCIDENTAL_FILES = version.h $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE) build/ build/* build/*/ build/*/* build/*/*/*
+GENERATED_FILES = $(GENERATED_INCIDENTAL_FILES) *.class
+EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_INCIDENTAL_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store *.xcodeproj/*.mode1 *.xcodeproj/*.pbxuser $(MORE_EXCLUDE_FILES) 
 
 # Where files live on our web server
 WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
