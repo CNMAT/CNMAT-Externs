@@ -170,7 +170,7 @@ $(WEB_INCOMING): code-checked-in $(DOWNLOAD_ARCHIVE) $(WEB_INFO)
 
 .PHONY: clean
 clean:
-	rm -f $(GENERATED_FILES) *~ *.zip *.macyucky
+	rm -rf $(GENERATED_FILES) *~ *.zip *.macyucky
 
 
 # Diagnostic stuff for debugging
