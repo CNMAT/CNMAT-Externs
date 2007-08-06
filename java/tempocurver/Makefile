@@ -1,1 +1,1 @@
-include ../../makefile.per-nonobject 
+include ../../makefile.per-javaobject 

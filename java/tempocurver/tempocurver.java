@@ -26,6 +26,17 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: tempocurver
+DESCRIPTION: Generate tempo signals with control of rate (tempo) and phase 
+AUTHORS: Matt Wright
+COPYRIGHT_YEARS: 2006,7
+SVN_REVISION: $LastChangedRevision: 1191 $
+VERSION 3.5: pretend_perform outputs /future_subdiv
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
 */
 
 import com.cycling74.max.*;
