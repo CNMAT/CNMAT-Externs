@@ -130,8 +130,9 @@ release: code-checked-in no-cr-characters javaclasses
 javaclasses: $(SOURCE)
 	javac -classpath ../lib/max.jar $(MORE_JAVAC_OPTIONS) $(SOURCE)
 
+xcode:
+	open ./$(NAME).xcodeproj
 
-	
 
 # Ensuring that the current code has been properly checked into Subversion
 .PHONY: code-checked-in
