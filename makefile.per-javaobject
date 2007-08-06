@@ -1,0 +1,196 @@
+# makefile.per-javaobject
+# This is included in the makefile for every CNMAT Java external.
+# It handles compilation of Java .class files and the release process.
+# Matt Wright, 2007
+
+PLATFORM = ANY
+
+# Name of the object is the name of this directory
+# Old way (cygwin "basename" doesn't seem to work) NAME := $(shell basename `pwd`)
+# Nothing in CNMAT's repository should have any whitespace in file or directory
+# names, so we'll just blithely use $(lastword ...) to remove everything before
+# the final space in the current directory before we pass it to $(notdir ...).
+# Otherwise $(notdir ...) will think that each space-delimited segment of the
+# current directory is a separate input, and return an answer with spaces,
+# which will blow up the rest of the Makefile.
+# in case the full path to the working directory has white space.
+NAME = $(notdir $(lastword $(strip $(CURDIR))))
+
+# Filenames derived from the name of the object
+SOURCE = $(NAME).java
+HELPFILE = $(NAME).help.pat
+
+
+# Making the version number accessible from this Makefile:
+#
+# Each version.h file has a line that looks like this:  
+#     #define VERSION "1.2.3.4"
+# so get a Makefile variable that's just something like "1.2.3.4"
+DOUBLEQUOTED_VERSION := $(word 3,$(shell grep -s '\#define VERSION ' version.h))
+# now a cheesy way to get rid of the double quotes:
+VERSION := $(shell echo $(DOUBLEQUOTED_VERSION))
+VERSION_TAG := _$(VERSION)
+
+# Ditto for status
+DOUBLEQUOTED_STATUS := $(word 3,$(shell grep -s STATUS version.h))
+STATUS = $(shell echo $(DOUBLEQUOTED_STATUS))
+
+
+# INFO_FILE2 is the output of Andy's perl script that parses version info
+INFO_FILE2 = $(NAME)-info.txt
+
+# WEB_INFO is the same as INFO_FILE2 plus some extra info (like BUILD_DIR, BUILD_DATE...)
+# added by this Makefile
+WEB_INFO = $(NAME)-ANY-info.txt
+
+# What the user will download
+DOWNLOAD_ARCHIVE = $(NAME)$(VERSION_TAG).zip
+
+# What will be copied into the "incoming" directory to make the downloads page see this release
+WEB_INCOMING = $(NAME)-ANY.tar.gz
+
+
+# files not to put in the archives we show the user (and to remove with "make clean")
+GENERATED_INCIDENTAL_FILES = version.h $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING)  build/ build/* build/*/ build/*/* build/*/*/*
+GENERATED_FILES = $(GENERATED_INCIDENTAL_FILES) *.class
+EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_INCIDENTAL_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store *.xcodeproj/*.mode1 *.xcodeproj/*.pbxuser build build/ build/* build/*/ build/*/* build/*/*/ build/*/*/* build/*/*/*/ build/*/*/*/* $(MORE_EXCLUDE_FILES) 
+
+# Where files live on our web server
+WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
+# WEBSERVER_INCOMING_DIR = /tmp/incoming
+
+
+# Perl scripts might live 2-4 directories up the repository
+# source tree from whatever's being released
+PERL_SCRIPT_DIR = ../..
+ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
+PERL_SCRIPT_DIR = ../../..
+endif
+ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
+PERL_SCRIPT_DIR = ../../../..
+endif
+# $(warning Perl Scripts are in $(PERL_SCRIPT_DIR))
+
+
+# Top-level build targets
+
+.PHONY: default
+default: download-archive
+
+.PHONY: download-archive
+download-archive: $(DOWNLOAD_ARCHIVE)
+
+
+# The version info is extracted from the .c file by Andy's perl script.
+# Because some makefile variables (e.g., VERSION_TAG) come from version.h,
+# start over with a recursive call to $(MAKE), but then bomb out of the outer
+# invocation of Make (which presumably has the wrong VERSION_TAG, etc., and
+# will therefore be doing bad things).
+version.h: $(INFO_FILE2) 
+	perl $(PERL_SCRIPT_DIR)/info2header.pl < $< > $@ 
+	$(MAKE) $(MAKECMDGOALS) 
+	@echo -n 'Ignore the following error message: '
+	@cmp -s version.h /dev/null
+
+$(INFO_FILE2): $(SOURCE)
+	perl $(PERL_SCRIPT_DIR)/commentkeys.pl < $< > $@
+
+# for now assume we'll never publish non-objects from a Windows box.  
+# Otherwise this will break:
+MD5 = $(if $(findstring WIN, $(PLATFORM)), md5sum, md5 -q)
+
+# a "canned command sequence" because it's the same for all platforms:
+# Note the use of "$<" in the MD5 computation; this means that the per-platform individual download
+# must be the first prerequisite for any XXX_WEB_INFO rule.
+define make-web-info
+	cp $(INFO_FILE2) $@ 
+	echo MD5: `$(MD5) $< | awk '{print $$1}'` >> $@
+	echo 'PLATFORM: "$(PLATFORM)"' >> $@
+	echo 'BUILDER: "'`whoami`'"' >> $@
+	echo 'BUILD_DATE: "'`date`'"' >> $@
+	echo 'BUILD_DIR: "'`pwd`'"' >> $@
+endef
+
+$(WEB_INFO): $(DOWNLOAD_ARCHIVE) $(INFO_FILE2)
+	$(make-web-info)
+
+
+$(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *)))  version.h no-cr-characters javaclasses
+	rm -f $(DOWNLOAD_ARCHIVE)
+	zip -r $(DOWNLOAD_ARCHIVE) *.class $(HELPFILE) $(MORE_RELEASE_FILES) -x $(EXCLUDE_FILES)
+
+# For any release, make sure the code is checked in before allowing the release
+release: code-checked-in no-cr-characters javaclasses
+
+
+# Java stuff:
+# Tested only on OSX so far...
+
+
+javaclasses: $(SOURCE)
+	javac -classpath ../lib/max.jar $(MORE_JAVAC_OPTIONS) $(SOURCE)
+
+
+	
+
+# Ensuring that the current code has been properly checked into Subversion
+.PHONY: code-checked-in
+code-checked-in:
+	@ !((svn status | grep "^M") && \
+	(echo You have modified files that have not been checked back into SVN\!))
+# Explanation of above:  Grep returns status 0 if the text was found (i.e., if there are un-checked-in files.
+# So (svn status | grep "^M") && (echo ...)  prints the error only if the text was found.
+# Echo always returns 0, so the return value of the && operator is 0 if an error was printed, 1 otherwise,
+# so I put a logical negation (exclamation point) before the whole thing, so that Make will bomb out
+# if the error is printed.
+
+
+# Ensuring that any text files in this directory don't have evil CR line
+# terminators (e.g., that Max's built-in javascript text editor might have
+# added):
+.PHONY: no-cr-characters
+no-cr-characters:
+	@ !((file * | grep -v macyucky | grep -v "\.pat" | grep -v "\.mxt" |  grep "with CR line terminators") && \
+	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
+
+# Actually copying the files to directories where the web server can find them
+
+
+release: $(WEB_INCOMING)
+	scp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
+
+
+.PHONY: web-incoming
+web-incoming: $(WEB_INCOMING)
+
+$(WEB_INCOMING): code-checked-in $(DOWNLOAD_ARCHIVE) $(WEB_INFO) 
+	tar cvfz $@ $(DOWNLOAD_ARCHIVE) $(WEB_INFO) 
+
+
+.PHONY: clean
+clean:
+	rm -f $(GENERATED_FILES) *~ *.zip *.macyucky
+
+
+# Diagnostic stuff for debugging
+
+printenv:
+	printenv
+
+tellversiontag:
+	echo $(VERSION_TAG)
+
+test: 
+	echo CURDIR $(CURDIR)
+	echo NAME $(NAME)
+	echo PLATFORM $(PLATFORM)
+	echo INFO_FILE2  $(INFO_FILE2)
+	echo build $(BUILD_DIR)
+
+test-info-file:
+	echo DEFAULT_INFO_FILE $(DEFAULT_INFO_FILE)
+	echo POSSIBLE_JS_SOURCE_FILE $(POSSIBLE_JS_SOURCE_FILE)
+	echo JS_SOURCE_FILE $(JS_SOURCE_FILE)
+	echo POSSIBLE_JAVA_SOURCE_FILE $(POSSIBLE_JAVA_SOURCE_FILE)
+	echo JAVA_SOURCE_FILE $(JAVA_SOURCE_FILE)
+	echo INFO_FILE $(INFO_FILE)
