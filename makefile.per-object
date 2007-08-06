@@ -264,22 +264,22 @@ $(OBJ).def:
 #mac-individual-download: $(MAC_INDIVIDUAL_DOWNLOAD)
 
 $(CFM_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(CFM_BINARY) cfm-help-diff-warning
-	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION) version_tag $(VERSION_TAG)
+	@echo Building CFM download of version $(VERSION) for platform $(PLATFORM) in build-dir $(BUILD_DIR) 
 	stuff -o -n $@ $(MORE_RELEASE_FILES) $(CFM_BINARY) $(HELPFILE)
 #	tar --unlink -czf $@ $(HELPFILE) -C $(CODEWARRIOR_BUILD_DIR) $(OBJ)
 
 
 $(MACHO_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MACHO_BINARY) macho-help-diff-warning
-	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
+	@echo Building MachO download of version $(VERSION) for platform $(PLATFORM) in build-dir $(BUILD_DIR) 
 #	stuff -o -n $@ $(MACHO_BINARY) $(HELPFILE)
 	tar --unlink -czf $@ $(MORE_RELEASE_FILES) $(HELPFILE) -C $(XCODE_BUILD_DIR) $(OBJ).mxo
 
 $(WIN_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(WIN_BINARY) win-help-diff-warning
-	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
+	@echo Building Windoze download of version $(VERSION) for platform $(PLATFORM) in build-dir $(BUILD_DIR)
 	zip -j $@ $(MORE_RELEASE_FILES) $(WIN_BINARY) $(HELPFILE)
 
 $(WIN_VCC_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(WIN_VCC_BINARY) win-vcc-help-diff-warning
-	echo platform $(PLATFORM) build-dir $(BUILD_DIR) version $(VERSION)
+	@echo Building Windoze (VCC) download of version $(VERSION) for platform $(PLATFORM) in build-dir $(BUILD_DIR)
 	zip -j $@ $(MORE_RELEASE_FILES) $(WIN_VCC_BINARY) $(HELPFILE)
 
 
