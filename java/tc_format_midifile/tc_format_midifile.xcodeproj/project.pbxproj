@@ -1,0 +1,208 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		124042510BD4618900E7C64E /* tc_format_midifile.java in Sources */ = {isa = PBXBuildFile; fileRef = 124042500BD4618900E7C64E /* tc_format_midifile.java */; };
+		12F3807E0AD4B449000C8C3E /* max.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F3807D0AD4B449000C8C3E /* max.jar */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		124042500BD4618900E7C64E /* tc_format_midifile.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = tc_format_midifile.java; sourceTree = "<group>"; };
+		12F3807D0AD4B449000C8C3E /* max.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = max.jar; path = ../lib/max.jar; sourceTree = SOURCE_ROOT; };
+		6A9ED92C02B0286D0CC91562 /* tc_format_midifile */ = {isa = PBXFileReference; explicitFileType = folder; includeInIndex = 0; path = tc_format_midifile; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		130F8B94001BDF0A11CA292A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12F3807E0AD4B449000C8C3E /* max.jar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00E6828FFEC88D1A11DB9C8B = {
+			isa = PBXGroup;
+			children = (
+				124042500BD4618900E7C64E /* tc_format_midifile.java */,
+				12F3807D0AD4B449000C8C3E /* max.jar */,
+				0120612AFEC8923411DB9C8B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0120612AFEC8923411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6A9ED92C02B0286D0CC91562 /* tc_format_midifile */,
+			);
+			name = Products;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXJavaArchiveBuildPhase section */
+		130F8B93001BDF0A11CA292A /* JavaArchive */ = {
+			isa = PBXJavaArchiveBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXJavaArchiveBuildPhase section */
+
+/* Begin PBXProject section */
+		00E6828EFEC88D1A11DB9C8B /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "tc_format-midifile" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 00E6828FFEC88D1A11DB9C8B;
+			productRefGroup = 0120612AFEC8923411DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				130F8B90001BDF0A11CA292A /* tc_format_midifile */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0F8E05D30A13D88900568E53 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/bash;
+			shellScript = "cp ./Build/UninstalledProducts/tc_format_midifile/* .";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		130F8B91001BDF0A11CA292A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				124042510BD4618900E7C64E /* tc_format_midifile.java in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXToolTarget section */
+		130F8B90001BDF0A11CA292A /* tc_format_midifile */ = {
+			isa = PBXToolTarget;
+			buildConfigurationList = 0AE31F6508BBAC2E002AF232 /* Build configuration list for PBXToolTarget "tc_format_midifile" */;
+			buildPhases = (
+				130F8B91001BDF0A11CA292A /* Sources */,
+				130F8B93001BDF0A11CA292A /* JavaArchive */,
+				130F8B94001BDF0A11CA292A /* Frameworks */,
+				0F8E05D30A13D88900568E53 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = tc_format_midifile;
+			productInstallPath = /usr/local/bin;
+			productName = testmxj;
+			productReference = 6A9ED92C02B0286D0CC91562 /* tc_format_midifile */;
+		};
+/* End PBXToolTarget section */
+
+/* Begin XCBuildConfiguration section */
+		0AE31F6608BBAC2E002AF232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				JAVA_ARCHIVE_CLASSES = NO;
+				JAVA_ARCHIVE_COMPRESSION = NO;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_DEPRECATED_WARNINGS = YES;
+				JAVA_MANIFEST_FILE = Manifest;
+				JAVA_SOURCE_SUBDIR = .;
+				PRODUCT_NAME = testmxj;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		0AE31F6708BBAC2E002AF232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				JAVA_ARCHIVE_CLASSES = NO;
+				JAVA_ARCHIVE_COMPRESSION = NO;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_SOURCE_VERSION = 1.5;
+				JAVA_COMPILER_TARGET_VM_VERSION = 1.5;
+				JAVA_SOURCE_SUBDIR = .;
+				OPTIMIZATION_CFLAGS = "-O0";
+				PRODUCT_NAME = tc_format_midifile;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		0AE31F6A08BBAC2E002AF232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DSTROOT = /;
+				INSTALL_PATH = "/Users/johnmac/MaxMSP-devel/JAVA/classes";
+			};
+			name = Debug;
+		};
+		0AE31F6B08BBAC2E002AF232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEPLOYMENT_LOCATION = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DSTROOT = /;
+				INSTALL_PATH = "/Users/johnmac/MaxMSP-devel/JAVA/classes";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0AE31F6508BBAC2E002AF232 /* Build configuration list for PBXToolTarget "tc_format_midifile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AE31F6608BBAC2E002AF232 /* Debug */,
+				0AE31F6708BBAC2E002AF232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "tc_format-midifile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AE31F6A08BBAC2E002AF232 /* Debug */,
+				0AE31F6B08BBAC2E002AF232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 00E6828EFEC88D1A11DB9C8B /* Project object */;
+}
