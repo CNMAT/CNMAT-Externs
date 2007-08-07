@@ -61,7 +61,7 @@ WEB_INCOMING = $(NAME)-ANY.tar.gz
 EXCLUDE_FILES_FILE = files-to-exclude.txt
 
 # files not to put in the archives we show the user (and to remove with "make clean")
-GENERATED_INCIDENTAL_FILES = version.h $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE) build/ build/* build/*/ build/*/* build/*/*/*
+GENERATED_INCIDENTAL_FILES = version.h $(INFO_FILE2) $(WEB_INFO) $(DOWNLOAD_ARCHIVE) $(WEB_INCOMING) $(EXCLUDE_FILES_FILE) dependencies build/ build/* build/*/ build/*/* build/*/*/*
 GENERATED_FILES = $(GENERATED_INCIDENTAL_FILES) *.class
 EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_INCIDENTAL_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store *.xcodeproj/*.mode1 *.xcodeproj/*.pbxuser $(MORE_EXCLUDE_FILES) 
 
@@ -131,7 +131,17 @@ $(WEB_INFO): $(DOWNLOAD_ARCHIVE) $(INFO_FILE2)
 $(DOWNLOAD_ARCHIVE): $(filter-out $(WEB_INCOMING), $(filter-out $(DOWNLOAD_ARCHIVE), $(wildcard *))) $(EXCLUDE_FILES_FILE) version.h no-cr-characters
 #	tar --unlink -czf $(DOWNLOAD_ARCHIVE) * --exclude-from $(EXCLUDE_FILES_FILE)
 	rm -f $(DOWNLOAD_ARCHIVE)
-	zip -r $(DOWNLOAD_ARCHIVE) *   $(MORE_RELEASE_FILES) -x $(EXCLUDE_FILES)
+ifeq ($(strip $(MORE_RELEASE_FILES)),)
+	# No additional release files, so forget it
+else
+	mkdir dependencies
+	cp $(MORE_RELEASE_FILES) dependencies
+endif
+	zip -r $(DOWNLOAD_ARCHIVE) * -x $(EXCLUDE_FILES)
+ifeq ($(strip $(MORE_RELEASE_FILES)),)
+else
+	rm -rf dependencies
+endif
 
 # For any release, make sure the code is checked in before allowing the release
 release: code-checked-in no-cr-characters
@@ -179,7 +189,7 @@ $(WEB_INCOMING): code-checked-in $(DOWNLOAD_ARCHIVE) $(WEB_INFO)
 
 .PHONY: clean
 clean:
-	rm -f $(GENERATED_FILES) *~ *.zip *.macyucky
+	rm -rf $(GENERATED_FILES) *~ *.zip *.macyucky
 
 
 # Diagnostic stuff for debugging
