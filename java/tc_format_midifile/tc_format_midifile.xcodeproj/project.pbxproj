@@ -61,7 +61,7 @@
 /* Begin PBXProject section */
 		00E6828EFEC88D1A11DB9C8B /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "tc_format-midifile" */;
+			buildConfigurationList = 0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "tc_format_midifile" */;
 			hasScannedForEncodings = 1;
 			mainGroup = 00E6828FFEC88D1A11DB9C8B;
 			productRefGroup = 0120612AFEC8923411DB9C8B /* Products */;
@@ -193,7 +193,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "tc_format-midifile" */ = {
+		0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "tc_format_midifile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0AE31F6A08BBAC2E002AF232 /* Debug */,
