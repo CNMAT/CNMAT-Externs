@@ -88,9 +88,6 @@ public class tc_format_midifile extends MaxObject {
 	private static final String MUSIC_XML_VERSION = "1.1";	
 
 	private int numBars = 0;
-	
-	private int posInBar = 0; // the position in the bar in subdivisions
-	private int offsetInBeat = 0; // this is to keep track of where any syncopation
 
 	public void version(){
 		post("tc_format_midifile Version 0.0, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
@@ -288,74 +285,121 @@ public class tc_format_midifile extends MaxObject {
 			return;
 		}
 		
-		NodeList parts = musicxmlscore.getElementsByTagName("part");
-		Element part_element = (Element)parts.item(0);
-		NodeList bars = (NodeList)part_element.getElementsByTagName("measure");
-		Element bar_element = (Element)bars.item(0);
-		Element duration_element = musicxmlscore.createElement("duration");
-		Element type_element = musicxmlscore.createElement("type");
-		Element note_element;
-		
-		// hard-coded for now.  this should be open to the user.
-		Element pitch_element = musicxmlscore.createElement("pitch");
-		Element step_element = musicxmlscore.createElement("step");
-		Element octave_element = musicxmlscore.createElement("octave");
-		step_element.appendChild(musicxmlscore.createTextNode("B"));
-		octave_element.appendChild(musicxmlscore.createTextNode("4"));
-		pitch_element.appendChild(step_element);
-		pitch_element.appendChild(octave_element);
-		
-		int dur_subdivs;
-
+		int offsetInBeat = 0;
+		int offsetInBar = 0;
+		String[] duration_string;
+		int durationInSubdivs;
+	
 		tcfm_event thisBeat;
 		HashMap theseSubdivs;
 		int startTime, duration;
 		int prevTime = 0;
 		int prevDur = 0;
 		
+		NodeList parts = musicxmlscore.getElementsByTagName("part");
+		Element part_element = (Element)parts.item(0);
+		NodeList bars = (NodeList)part_element.getElementsByTagName("measure");
+		Element bar_element = (Element)bars.item(0);
+		
 		for(int i = 0; i < beatArray.size() - 1; i++){
 			//thisBeat = (tcfm_event)beatArray.get(i);
 			theseSubdivs = (HashMap)subdivArray.get(i);
-			dur_subdivs = theseSubdivs.size();
-			
+			durationInSubdivs = theseSubdivs.size();
+						
 			/////////////////////////
 			// for musicXML output
 			/////////////////////////
-			post("dur_subdivs = " + dur_subdivs + " offsetInBeat = " + offsetInBeat + " posInBar = " + posInBar + " numBars = " + numBars);
-			if(dur_subdivs > numSubdivs - offsetInBeat){
-				note_element = musicxmlscore.createElement("note");
-				note_element.appendChild(pitch_element);
-				note_element.appendChild(musicxmlscore.createElement("duration"));
-				duration_element.appendChild(musicxmlscore.createTextNode("" + (numSubdivs - offsetInBeat)));
-				note_element.appendChild(musicxmlscore.createElement("type"));
-				duration_element.appendChild(musicxmlscore.createTextNode(getNoteType(numSubdivs - offsetInBeat)));
-				dur_subdivs -= (numSubdivs - offsetInBeat);
-				offsetInBeat = (offsetInBeat + (numSubdivs - offsetInBeat)) % numSubdivs;
-				posInBar += (numSubdivs - offsetInBeat);
-				if(posInBar >= 4 * numSubdivs){
-					addBarToMusicXMLScore();
-					bars = (NodeList)part_element.getElementsByTagName("measure");
-					bar_element = (Element)bars.item(numBars);
-				}
-				post("dur_subdivs = " + dur_subdivs + " offsetInBeat = " + offsetInBeat + " posInBar = " + posInBar + " numBars = " + numBars);
-			}
-			while(dur_subdivs > numSubdivs){
-				note_element = musicxmlscore.createElement("note");
-				note_element.appendChild(musicxmlscore.createElement("rest"));
-				note_element.appendChild(musicxmlscore.createElement("duration"));
-				duration_element.appendChild(musicxmlscore.createTextNode("" + (numSubdivs - offsetInBeat)));
-				dur_subdivs -= (numSubdivs - offsetInBeat);
-				offsetInBeat = (offsetInBeat + (numSubdivs - offsetInBeat)) % numSubdivs;
-				posInBar += (numSubdivs - offsetInBeat);
-				if(posInBar >= 4 * numSubdivs){
-					addBarToMusicXMLScore();
-					bars = (NodeList)part_element.getElementsByTagName("measure");
-					bar_element = (Element)bars.item(numBars);
-				}
-				post("dur_subdivs = " + dur_subdivs + " offsetInBeat = " + offsetInBeat + " posInBar = " + posInBar + " numBars = " + numBars);
-			}
-			post("dur_subdivs = " + dur_subdivs + " offsetInBeat = " + offsetInBeat + " posInBar = " + posInBar + " numBars = " + numBars);
+			duration_string = getDuration(1);
+			Element note_element = musicxmlscore.createElement("note");
+			Element duration_element = musicxmlscore.createElement("duration");
+			Element type_element = musicxmlscore.createElement("type");
+			Element pitch_element = getPitch(71);
+			duration_element.appendChild(musicxmlscore.createTextNode("" + 1));
+			type_element.appendChild(musicxmlscore.createTextNode(duration_string[0]));
+			note_element.appendChild(pitch_element);
+			note_element.appendChild(duration_element);
+			note_element.appendChild(type_element);
 			
+			bar_element.appendChild(note_element);
+			
+			--durationInSubdivs;
+			offsetInBeat = ++offsetInBeat % numSubdivs;
+			if(offsetInBeat == 0){ 
+				offsetInBar = ++offsetInBar % 4;
+				if(offsetInBar == 0){
+					addBarToMusicXMLScore();
+					bars = (NodeList)part_element.getElementsByTagName("measure");
+					bar_element = (Element)bars.item(0);					
+				}
+			}
+			
+			int restDur = 2;
+						
+			while(durationInSubdivs > 0){
+				if((offsetInBeat & 1) == 1) restDur = 1;
+				else restDur = 2;
+				duration_string = getDuration(restDur);
+				Element rest_note_element = musicxmlscore.createElement("note");
+				Element rest_duration_element = musicxmlscore.createElement("duration");
+				Element rest_type_element = musicxmlscore.createElement("type");
+				
+				rest_duration_element.appendChild(musicxmlscore.createTextNode("" + restDur));
+				rest_type_element.appendChild(musicxmlscore.createTextNode(duration_string[0]));
+			        rest_note_element.appendChild(rest_duration_element);
+				rest_note_element.appendChild(rest_type_element);
+			
+				bar_element.appendChild(rest_note_element);
+			
+				--durationInSubdivs;
+				offsetInBeat = ++offsetInBeat % numSubdivs;
+				if(offsetInBeat == 0){ 
+					offsetInBar = ++offsetInBar % 4;
+					if(offsetInBar == 0){
+						addBarToMusicXMLScore();
+						bars = (NodeList)part_element.getElementsByTagName("measure");
+						bar_element = (Element)bars.item(0);					
+					}
+				}
+			}
+			writeFile("/Users/johnmac/Development/cnmat/trunk/max/java/tc_format_midifile/shithole.xml");			
+			/*
+			post("1. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
+			if(currentBeat == 0 && i > 0){
+				addBarToMusicXMLScore();
+				bars = (NodeList)part_element.getElementsByTagName("measure");
+				bar_element = (Element)bars.item(numBars - 1);
+			}
+			subdivsLeftInBeat = numSubdivs - beatOffset;
+			if(durationInSubdivs >= (subdivsLeftInBeat)){
+				addNoteToMusicXMLBar(bar_element, 71, subdivsLeftInBeat);
+				durationInSubdivs -= subdivsLeftInBeat;
+				beatOffset = 0;
+				currentBeat = ++currentBeat % 4;
+				post("2. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
+			} else {
+				addNoteToMusicXMLBar(bar_element, 71, durationInSubdivs);
+				beatOffset = (beatOffset + durationInSubdivs) % numSubdivs;
+				durationInSubdivs = 0;
+				post("3. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
+			}
+			
+			while(durationInSubdivs > 0){
+				subdivsLeftInBeat = numSubdivs - beatOffset;
+				if(durationInSubdivs >= (subdivsLeftInBeat)){
+					addRestToMusicXMLBar(bar_element, subdivsLeftInBeat);
+					durationInSubdivs -= subdivsLeftInBeat;
+					beatOffset = 0;
+					currentBeat = ++currentBeat % 4;
+					post("4. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
+				} else {
+					addRestToMusicXMLBar(bar_element, durationInSubdivs);
+					beatOffset = (beatOffset + durationInSubdivs) % numSubdivs;
+					durationInSubdivs = 0;
+					post("5. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
+				}
+			}
+			writeFile("/Users/johnmac/Development/cnmat/trunk/max/java/tc_format_midifile/shithole.xml");
+			*/
 			/////////////////////////
 			// for midi output
 			/////////////////////////
@@ -592,9 +636,6 @@ public class tc_format_midifile extends MaxObject {
 
 	private void setupFirstBarAttributes(){
 		NodeList parts = musicxmlscore.getElementsByTagName("part");
-		Element part;
-		NodeList bars;
-		Element firstBar;
 		
 		Element attributes = musicxmlscore.createElement("attributes");
 		
@@ -630,38 +671,159 @@ public class tc_format_midifile extends MaxObject {
 		clef.appendChild(line_element);
 		attributes.appendChild(clef);
 		
-		
-		for(int i = 0; i < parts.getLength(); i++){
-			part = (Element)parts.item(i);
+		++numBars;
+		//for(int i = 0; i < parts.getLength(); i++){
+			Element part = (Element)parts.item(0);
 			//bars = part.getElementsByTagName("measure");
 			//firstBar = (Element)bars.item(0);
-			firstBar = musicxmlscore.createElement("measure");
-			firstBar.setAttribute("number", "" + (++numBars));
+			Element firstBar = musicxmlscore.createElement("measure");
+			firstBar.setAttribute("number", "" + (numBars));
 			firstBar.appendChild(attributes);
 			part.appendChild(firstBar);
-		}
+		//}
+		writeFile("/Users/johnmac/Development/cnmat/trunk/max/java/tc_format_midifile/fuckface.xml");
 	}
 
    	private void addBarToMusicXMLScore(){
 	    NodeList parts = musicxmlscore.getElementsByTagName("part");
 	    Element part;
 	    Element bar;
+		++numBars;
 		for(int i = 0; i < parts.getLength(); i++){
 			part = (Element)parts.item(i);
 			//bars = part.getElementsByTagName("measure");
 			//bar = (Element)bars.item(0);
 			bar = musicxmlscore.createElement("measure");
-			bar.setAttribute("number", "" + (++numBars));
+			bar.setAttribute("number", "" + (numBars));
 			part.appendChild(bar);
 		}
 	}
 	
+	/*	
+	private void addNoteToMusicXMLBar(Element bar, float m, int dur){
+		addNoteToMusicXMLBar(bar, m, dur, false);
+	}
+	
+	private void addRestToMusicXMLBar(Element bar, int dur){
+		addNoteToMusicXMLBar(bar, 0, dur, true);
+	}
+	
+	private void addNoteToMusicXMLBar(Element bar, float m, int dur, boolean isrest){
+		Element note = musicxmlscore.createElement("note");
+		
+		if(isrest == false){
+			Element pitch = musicxmlscore.createElement("pitch");
+			Element step = musicxmlscore.createElement("step");
+			Element accidental = musicxmlscore.createElement("alter");
+			Element octave = musicxmlscore.createElement("octave");
+			
+			float midiPitch = m;
+			float acc = 0;
+			float[] accidentals = new float[]{0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 1.f, 0.f};
+			String[] pitches = new String[]{"C", "C", "D", "D", "E", "F", "F", "G", "G", "A", "A", "B"};
+
+			float decimal = midiPitch - (float)(Math.floor(midiPitch));
+			if(decimal < .25){
+					midiPitch = (float)Math.floor(midiPitch);
+			} else if(decimal < .75 && decimal >= .25){
+					midiPitch = (float)Math.floor(midiPitch) + .5f;
+					acc = 0.5f;
+			} else{
+					midiPitch = (float)Math.floor(midiPitch) + 1;
+					acc = -0.5f;
+			}
+
+			octave.appendChild(musicxmlscore.createTextNode("" + (int)(((float)Math.floor(midiPitch) / 12.f) - 1.f)));
+
+			while(midiPitch > 11) midiPitch -= 12;
+
+			step.appendChild(musicxmlscore.createTextNode(pitches[(int)midiPitch]));
+			accidental.appendChild(musicxmlscore.createTextNode("" + (acc + accidentals[(int)midiPitch])));
+
+
+			pitch.appendChild(step);
+			if((acc + accidentals[(int)midiPitch]) != 0) pitch.appendChild(accidental);
+			pitch.appendChild(octave);
+			note.appendChild(pitch);
+		} else {
+			note.appendChild(musicxmlscore.createElement("rest"));
+		}
+		
+		Element duration = musicxmlscore.createElement("duration");
+		duration.appendChild(musicxmlscore.createTextNode("" + dur));
+		note.appendChild(duration);
+		
+		bar.appendChild(note);
+	}
+	
 	private String getNoteType(int dur){
+		// return an array of elements for the calling method to append to the note
+		// this will work because we aren't doing anything longer than a quarter note
+		
+		// addNoteToMusicXMLBar is the method that would call this one and it is 
+		// responsible for creating the note and appending it to the bar.  so, we
+		// can let it create two notes for the case of 5 32nd notes.
 		switch(dur){
+			case 1:
+				return "32nd";
+			case 2: 
+				return "16th";
 		}
 		return null;
 	}
+	*/
+
+	private String[] getDuration(int dur){
+		float dec = ((float)dur) / ((float)numSubdivs);
+		if(dec == .125) return new String[]{"32nd"};
+		else if(dec == 0.25) return new String[]{"16th"};
+		else if(dec == .375) return new String[]{"16th", "32nd"};
+		else if(dec == .5) return new String[]{"eighth"};
+		else if(dec == .625) return new String[]{"eighth", "32nd"};
+		else if(dec == .75) return new String[]{"eighth", "16th"};
+		else if(dec == .875) return new String[]{"eighth", "16th", "32nd"};
+		else if(dec == 1.0) return new String[]{"quarter"};
+		else return null;
+	}
 	
+	private Element getPitch(float m){
+		Element note = musicxmlscore.createElement("note");
+		Element pitch = musicxmlscore.createElement("pitch");
+		Element step = musicxmlscore.createElement("step");
+		Element accidental = musicxmlscore.createElement("alter");
+		Element octave = musicxmlscore.createElement("octave");
+			
+		float midiPitch = m;
+		float acc = 0;
+		float[] accidentals = new float[]{0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 1.f, 0.f};
+		String[] pitches = new String[]{"C", "C", "D", "D", "E", "F", "F", "G", "G", "A", "A", "B"};
+
+		float decimal = midiPitch - (float)(Math.floor(midiPitch));
+		if(decimal < .25){
+			midiPitch = (float)Math.floor(midiPitch);
+		} else if(decimal < .75 && decimal >= .25){
+			midiPitch = (float)Math.floor(midiPitch) + .5f;
+			acc = 0.5f;
+		} else{
+			midiPitch = (float)Math.floor(midiPitch) + 1;
+			acc = -0.5f;
+		}
+
+		octave.appendChild(musicxmlscore.createTextNode("" + (int)(((float)Math.floor(midiPitch) / 12.f) - 1.f)));
+
+		while(midiPitch > 11) midiPitch -= 12;
+
+		step.appendChild(musicxmlscore.createTextNode(pitches[(int)midiPitch]));
+		accidental.appendChild(musicxmlscore.createTextNode("" + (acc + accidentals[(int)midiPitch])));
+
+
+		pitch.appendChild(step);
+		if((acc + accidentals[(int)midiPitch]) != 0) pitch.appendChild(accidental);
+		pitch.appendChild(octave);
+		note.appendChild(pitch);
+		return note;
+	}
+
 	private void writeFile(String path){
 		try{
 			OutputFormat format = new OutputFormat(musicxmlscore);
