@@ -111,7 +111,7 @@ void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 void rdist_bang(t_rdist *x);
 void rdist_int(t_rdist *x, long n);
 void rdist_float(t_rdist *x, double n);
-void rdist_dump(t_rdist *x, long n);
+void rdist_distlist(t_rdist *x, long n);
 void rdist_fillBuffers(t_rdist *x, int n, t_atom *buffer);
 void rdist_useBuffer(t_rdist *x, long b);
 void rdist_incBufPos(t_rdist *x);
@@ -155,7 +155,7 @@ int main(void)
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	int i = 0;
-	if(strcmp(msg->s_name, "seed") && strcmp(msg->s_name, "dump")){
+	if(strcmp(msg->s_name, "seed") && strcmp(msg->s_name, "distlist")){
 		
 		if(argc > R_MAX_N_VARS){
 			error("randdist: whoa dude, too many variables.");
@@ -181,8 +181,8 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 	if(msg){
 		if(!strcmp(msg->s_name, "seed")){
 			gsl_rng_set(x->r_rng, argv[0].a_w.w_long);
-		}else if(!strcmp(msg->s_name, "dump")){
-			rdist_dump(x, argv[0].a_w.w_long);
+		}else if(!strcmp(msg->s_name, "distlist")){
+			rdist_distlist(x, argv[0].a_w.w_long);
 		}else if(!strcmp(msg->s_name, "gaussian")){
 			x->r_dist = R_GAUSSIAN;
 		}else if(!strcmp(msg->s_name, "gaussian_tail")){
@@ -331,11 +331,11 @@ void rdist_bang(t_rdist *x){
 	free(out);
 }
 
-void rdist_dump(t_rdist *x, long n){
+void rdist_distlist(t_rdist *x, long n){
 	int i = 0;
 	t_atom *out;
 	if(n < 1){
-		error("randdist: dump argument must be greater than 1.");
+		error("randdist: distlist argument must be greater than 1.");
 		return;
 	}
 	
