@@ -100,14 +100,17 @@ typedef struct _rdist
 	int r_bufferPos;
 	int r_whichBuffer;
 	int r_useBuffer;
+	int r_numVars;
 } t_rdist;
 
 void *rdist_class;
 
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
+void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 void rdist_bang(t_rdist *x);
 void rdist_int(t_rdist *x, long n);
+void rdist_float(t_rdist *x, double n);
 void rdist_dump(t_rdist *x, long n);
 void rdist_fillBuffers(t_rdist *x, int n, t_atom *buffer);
 void rdist_useBuffer(t_rdist *x, long b);
@@ -123,7 +126,8 @@ void rdist_multinomial(t_rdist *x, unsigned int *out);
 void rdist_makePMF(t_rdist *x);
 int rdist_randPMF(t_rdist *x);
 
-
+char *rdist_getDistString(int d);
+void rdist_tellmeeverything(t_rdist *x);
 //--------------------------------------------------------------------------
 
 int main(void)
@@ -135,10 +139,13 @@ int main(void)
 	addmess((method) version, "version", 0);
 	addbang((method)rdist_bang);
 	addint((method)rdist_int);
+	addfloat((method)rdist_float);
 	addmess((method)rdist_list, "list", A_GIMME, 0);
+	addmess((method)rdist_nonparametric, "nonparametric", A_GIMME, 0);
 	addmess((method)rdist_anything, "anything", A_GIMME, 0);
 	addmess((method)rdist_assist, "assist", A_CANT, 0);
 	addmess((method)rdist_useBuffer, "useBuffer", A_DEFLONG, 0);
+	addmess((method)rdist_tellmeeverything, "tellmeeverything", 0);
 	
 	return 0;
 }
@@ -167,6 +174,8 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 		}
 		for(i = argc; i < R_MAX_N_VARS; i++)
 			x->r_vars[i] = 1.0;
+
+		x->r_numVars = argc;
 	}
 	
 	if(msg){
@@ -254,6 +263,23 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv)
 }
 
 void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
+	rdist_anything(x, gensym(rdist_getDistString(x->r_dist)), argc, argv);
+	
+}
+
+void rdist_int(t_rdist *x, long n){	
+	t_atom *argv;
+	SETFLOAT(argv, (double)n);
+	rdist_anything(x, gensym(rdist_getDistString(x->r_dist)), 1, argv);
+}
+
+void rdist_float(t_rdist *x, double n){
+	t_atom *argv;
+	SETFLOAT(argv, n);
+	rdist_anything(x, gensym(rdist_getDistString(x->r_dist)), 1, argv);
+}
+
+void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	x->r_dist = R_USER_DEFINED;
 	x->r_pmfLength = argc / 2;
 		
@@ -303,10 +329,6 @@ void rdist_bang(t_rdist *x){
 	
 	outlet_anything(x->r_out0, msg, numOut, out);
 	free(out);
-}
-
-void rdist_int(t_rdist *x, long n){
-	
 }
 
 void rdist_dump(t_rdist *x, long n){
@@ -703,8 +725,8 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv)
 	
 	x->r_out0 = outlet_new(x, 0);
 	
-	x->r_dist = -1;
-		
+	x->r_numVars = 0;
+	
 	gsl_rng_env_setup();
 	x->r_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_default);
 	
@@ -735,8 +757,14 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv)
 				argv[i] = argv[i + 1];
 			rdist_anything(x, m, argc - 1, argv);
 		}
+	} else {
+		t_atom *ar = (t_atom *)calloc(2, sizeof(t_atom));
+		SETFLOAT(ar, 0.);
+		SETFLOAT(ar + 1, 1.);
+		rdist_anything(x, gensym("uniform"), 2, ar);
+		free(ar);
 	}
-	   	
+	
 	return(x);
 }
 
@@ -815,4 +843,88 @@ int rdist_randPMF(t_rdist *x)
 		sum += ((float *)(x->r_pmf))[i];
 	}
 	return i;
+}
+
+void rdist_tellmeeverything(t_rdist *x){
+	post("DISTRIBUTION:");
+	post("	%s", rdist_getDistString(x->r_dist));
+	post("PARAMETERS:");
+	int i;
+	for(i = 0; i < x->r_numVars; i++)
+		post("	%f", x->r_vars[i]);
+}
+
+char *rdist_getDistString(int d){
+	switch(d){
+		case R_GAUSSIAN:
+			return "gaussian";
+		case R_GAUSSIAN_TAIL :
+			return "gaussian_tail";
+		case R_BIVARIATE_GAUSSIAN :
+			return "bivariate_gaussian";
+		case R_EXPONENTIAL :
+			return "exponential";
+		case R_LAPLACE :
+			return "laplace";
+		case R_EXPPOW :
+			return "exppow";
+		case R_CAUCHY :
+			return "cauchy";
+		case R_RAYLEIGH :
+			return "rayleigh";
+		case R_RAYLEIGH_TAIL :
+			return "rayleigh_tail";
+		case R_LANDAU :
+			return "landau";
+		case R_LEVY :
+			return "levy";
+		case R_LEVY_SKEW :
+			return "levy_skew";
+		case R_GAMMA :
+			return "gamma";
+		case R_UNIFORM :
+			return "uniform";
+		case R_LOGNORMAL :
+			return "lognormal";
+		case R_CHISQ :
+			return "chisq";
+		case R_F :
+			return "f";
+		case R_T :
+			return "t";
+		case R_BETA :
+			return "beta";
+		case R_LOGISTIC :
+			return "logistic";
+		case R_PARETO :
+			return "pareto";
+		case R_WEIBULL :
+			return "weibull";
+		case R_GUMBEL1 :
+			return "gumbel1";
+		case R_GUMBEL2 :
+			return "gumbel2";
+		case R_DIRICHLET :
+			return "dirichlet";
+		case R_POISSON :
+			return "poisson";
+		case R_BERNOULLI :
+			return "bernoulli";
+		case R_BINOMIAL :
+			return "binomial";
+		case R_MULTINOMIAL:
+			return "multinomial";
+		case R_NEGATIVE_BINOMIAL :
+			return "negative_binomial";
+		case R_PASCAL :
+			return "pascal";
+		case R_GEOMETRIC :
+			return "geometric";
+		case R_HYPERGEOMETRIC :
+			return "hypergeometric";
+		case R_LOGARITHMIC :
+			return "logarithmic";
+		case R_USER_DEFINED :
+			return "nonparametric";
+	}
 }
