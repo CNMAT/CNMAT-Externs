@@ -37,6 +37,7 @@ SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version 
 VERSION 0.2: has "continuous" mode
 VERSION 0.2.1: Force Package Info Generation
+VERSION 0.3: Two outlets and assistance strings
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
@@ -58,7 +59,8 @@ typedef struct _mattrms
 	/* Max stuff */
     t_pxobject x_obj;	//  header
     
-    void *outlet;
+    void *leftoutlet;
+    void *rightoutlet;
     double sumsquared;	// Accumulate sum of squares of samples so far
     long samplesCounted; // How many samples have been counted so far?
     long sampleGoal;     // How many samples are we trying to count?
@@ -69,6 +71,7 @@ typedef struct _mattrms
 
 void main(void);
 void *mattrms_new(void);
+void mattrms_assist (t_mattrms *x, void *b, long msg, long arg, char *dst);
 static void Output(t_mattrms *x);
 void mattrms_int(t_mattrms *x, int i);
 void mattrms_continuous(t_mattrms *x, long yesno);
@@ -85,6 +88,7 @@ void main(void) {
           0L, 0);
     addint((method)mattrms_int);
     addmess((method)version, "version", 0);
+    addmess ((method)mattrms_assist, "assist", A_CANT, 0);
     addmess((method)mattrms_dsp, "dsp", A_CANT, 0);
     addmess((method)mattrms_continuous, "continuous", A_LONG, 0);
     dsp_initclass();
@@ -103,21 +107,51 @@ void *mattrms_new(void) {
 	x->continuous = 1;
 	
   	dsp_setup((t_pxobject *)x,1);  
-    x->outlet = listout(x);
+
+    x->rightoutlet = listout(x);
+    x->leftoutlet = floatout(x);
     return x;   
 }
 
+void mattrms_assist (t_mattrms *x, void *b, long msg, long arg, char *dst) {
+  if (msg==ASSIST_INLET) { 
+    switch (arg) { 
+    case 0: 
+      strcpy(dst,"Signal to analyze");
+      break; 
+    default:
+      strcpy(dst,"Unknown inlet");
+      break; 
+    }
+  } else if (msg==ASSIST_OUTLET) { 
+    switch (arg) { 
+    case 0: 
+      strcpy(dst,"RMS");
+      break; 
+    case 1:
+      strcpy(dst,"[sumofsquares, n, meansquare]");
+      break; 
+    default:
+      strcpy(dst,"Unknown inlet");
+      break; 
+    }
+ } 
+} 
+ 
+
 void mattrms_continuous(t_mattrms *x, long yesno) {
 	x->continuous = yesno;
+	/*
 	if (x->continuous) {
-		post("mattrms~: continuous mode (keep outputting every n samples)");
+	  /post("mattrms~: continuous mode (keep outputting every n samples)");
 	} else {
-		post("mattrms~: one-shot mode (output only once per received int)");
+	  post("mattrms~: one-shot mode (output only once per received int)");
 	}
+	*/
 }
 
 static void Output(t_mattrms *x) {
-	Atom outputList[4];
+	Atom outputList[3];
 	double meanSquare, rootMeanSquare;
 	
 	
@@ -127,9 +161,9 @@ static void Output(t_mattrms *x) {
 	SETFLOAT(outputList+0, ((float) x->sumsquared));
 	SETLONG(outputList+1, x->samplesCounted);
 	SETFLOAT(outputList+2, ((float) meanSquare));
-	SETFLOAT(outputList+3, ((float) rootMeanSquare));
 	
-	outlet_list(x->outlet, 0L, 4, outputList);
+	outlet_list(x->rightoutlet, 0L, 3, outputList);
+	outlet_float(x->leftoutlet, (float) rootMeanSquare);
 	
 	x->sumsquared = 0.0;
 	x->samplesCounted = 0;
