@@ -1,5 +1,5 @@
 /*
-Copyright (c) 1999,2000,01,02,03,04,05,06.  The Regents of the
+Copyright (c) 1999,2000,01,02,03,04,05,06,07.  The Regents of the
 University of California (Regents).  All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -30,12 +30,13 @@ University of California, Berkeley.
 NAME: oscillators~
 DESCRIPTION: Oscillator bank that can read waveform from a buffer~
 AUTHORS: Adrian Freed
-COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.0: Adrian's initial version 
 VERSION 1.1: (Matt) initializes no-argument buffer null pointer correctly 
 VERSION 1.2: (Matt) noglissbirthmode
 VERSION 1.2.1: Force Package Info Generation
+VERSION 1.4: Removed spurious printing of incorrect version information
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 	
 	©1988,1989 Adrian Freed
@@ -321,14 +322,12 @@ void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 
 void main(void)
 {
-	setup((struct messlist **)&sinusoids_class,(method)oscillators_new, (method)dsp_free, (short)sizeof(t_oscillators),
-		0L, A_GIMME, 0);
-	post("oscillators~ 1.3 - Adrian Freed and Matt Wright");
-	post("Copyright © 1996,1997,1998,1999,2000,2001,02,03,04 Regents of the University of California.");
+	setup((struct messlist **)&sinusoids_class,(method)oscillators_new, 
+	      (method)dsp_free, (short)sizeof(t_oscillators),
+	      0L, A_GIMME, 0);
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
-    post("Never expires.");
+	post("Never expires.");
     
-
 	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
 	addmess((method)sinusoids_list, "list", A_GIMME, 0);
 	addmess((method)sinusoids_clear, "clear", 0);
