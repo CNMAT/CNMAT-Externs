@@ -1,0 +1,454 @@
+(*
+This script displays a summery of the Tablet Driver
+settings. It does a get on almost every AppleScript
+property that the Tablet Driver provides.
+*)
+
+(*
+IMPORTANT NOTES:
+Mac Classic users: You will need to change every occurance of
+tell application "TabletDriver" to tell application "Tablet Driver".
+Notice the space between Tablet and Driver.
+
+MacOS X users: To script the Tablet Driver you must be running
+MacOS X 10.2 or higher.
+
+ALL: To script the tablet driver you must be using Tablet Driver
+version 4.7.5-1 or higher.
+
+Proper full form to set the button function of a transducer is:
+	set button function of button [W] of transducer [X] of customized application [Y] of tablet [Z] to [function]
+If you do not specify tablet or a cusomized application, the first of each will be used.
+*)
+
+on run
+	tell application "TabletDriver"
+		
+		-- Get Driver Version
+		set DrvVer to version of tablet driver 0 as string
+		set MSG to "Wacom Driver Version: " & DrvVer & return
+		
+		-- Get the Number of tablets.
+		set TbltCnt to count of every tablet
+		set MSG to MSG & "Number of Tablets: " & (TbltCnt as string) & return
+		
+		-- Display info to user
+		tell me to display dialog MSG buttons {"Cancel", "Ok", "Show Tablets"} default button 3
+		
+		if button returned of the result is "Show Tablets" then
+			-- Loop though each tablet and display info about it.
+			repeat with thisTablet from 1 to TbltCnt
+				tell me to displayTabletInfo(thisTablet)
+			end repeat
+		end if
+		
+	end tell
+	
+	-- That was probably a lot of dialogs, so let user know we are finished
+	display dialog "All Done"
+end run
+
+on displayTabletInfo(tabletNumber)
+	-- This routine will display the settings for a tablet
+	
+	tell application "TabletDriver"
+		set MSG to ""
+		
+		try
+			-- Tablet Name
+			set TabletName to name of tablet tabletNumber
+			set MSG to MSG & TabletName & return
+		end try
+		
+		try
+			-- X dimension
+			set XDIM to X dimension of tablet tabletNumber
+			set MSG to MSG & "    X Dimension: " & (XDIM as string) & return
+		on error
+			set MSG to MSG & "    X Dimension: Unknown" & return
+		end try
+		
+		try
+			-- Y dimension
+			set YDIM to Y dimension of tablet tabletNumber
+			set MSG to MSG & "    Y Dimension: " & (YDIM as string) & return
+		on error
+			set MSG to MSG & "    Y Dimension: Unknown" & return
+		end try
+		
+		try
+			-- tablet Resolution
+			set RES to resolution of tablet tabletNumber
+			set MSG to MSG & "    Resolution: " & (RES as string) & return
+		on error
+			set MSG to MSG & "    Resolution: Unknown" & return
+		end try
+		
+		try
+			-- Tablet Rectangle
+			-- Note that rectangle of talbet return a long rect
+			-- So I convert the long rect to a list to get to its components
+			set SZ to rectangle of tablet tabletNumber as list
+			set MSG to MSG & "    Size: " & return
+			set MSG to MSG & "       Top=" & (item 1 of SZ as string) & return
+			set MSG to MSG & "        Left=" & (item 2 of SZ as string) & return
+			set MSG to MSG & "        Bottom=" & (item 3 of SZ as string) & return
+			set MSG to MSG & "        Right=" & (item 4 of SZ as string) & return
+		on error
+			set MSG to MSG & "    Size: Unknown" & return
+		end try
+		
+		try
+			-- Tablet Orientation
+			set ORIENT to orientation of tablet tabletNumber
+			set MSG to MSG & "    Orientation: " & (ORIENT as string) & return
+		on error
+			set MSG to MSG & "    Orientation: Unknown" & return
+		end try
+		
+		try
+			-- Number of tilt levels
+			set TILT to tilt levels of tablet tabletNumber
+			set MSG to MSG & "    Tilt Levels: " & (TILT as string) & return
+		on error
+			set MSG to MSG & "    Tilt Levels: Unknown" & return
+		end try
+		
+		-- Get the number of customized applications for this tablet.
+		set AppsCnt to count every custom application of tablet tabletNumber
+		set MSG to MSG & "    Custom Applications: " & (AppsCnt as string) & return
+		
+		tell me to display dialog MSG buttons {"Cancel", "Ok", "Show Custom Apps"} default button 3
+		
+		if button returned of the result is "Show Custom Apps" then
+			-- Loop through each customized application for this tablet and
+			-- display it's settings.
+			repeat with thisApp from 1 to AppsCnt
+				tell me to displayCustomAppInfo(thisApp, tabletNumber)
+			end repeat
+		end if
+		
+	end tell
+end displayTabletInfo
+
+on displayCustomAppInfo(appNumber, tabletNumber)
+	tell application "TabletDriver"
+		set MSG to ""
+		
+		try
+			-- Customized Application's Name
+			set AppName to name of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & AppName & return
+		end try
+		
+		try
+			-- Creator Code of the Customized Application
+			-- Note that this returns an integer, not a 4 char string
+			set AppCodeNum to creator code of custom application appNumber of tablet tabletNumber
+			tell me to set AppCodeString to convertTo4CharCode(AppCodeNum)
+			set MSG to MSG & "App Code: " & AppCodeString & return
+		end try
+		
+		-- Get the number of menu items in the tablet menu strip
+		-- note, not all tablets have menu strips
+		
+		-- Get the number of transducers for this customized application
+		set TransCnt to count every transducer of custom application appNumber of tablet tabletNumber
+		set MSG to MSG & "    Transducers: " & (TransCnt as string) & return
+		
+		-- Display info to user
+		tell me to display dialog MSG buttons {"Cancel", "Transducers"} default button 2
+		
+		
+		-- Loop through each transducer and display it's settings
+		repeat with thistransducer from 1 to TransCnt
+			tell me to displayTransducerInfo(thistransducer, appNumber, tabletNumber)
+		end repeat
+	end tell
+end displayCustomAppInfo
+
+on displayTransducerInfo(transducerNumber, appNumber, tabletNumber)
+	-- This routine will display the settings for a Transdcer
+	
+	tell application "TabletDriver"
+		-- Get the name of the transducer
+		set TRANSNAME to name of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+		
+		-- You can name a transducer whatever you like, so by default they have no name. The Wacom Control
+		-- Panel provides a default name if the user does not name them, so provide a default name for
+		-- unnamed transducers here.
+		if TRANSNAME = "" then
+			set TRANSNAME to "Transducer " & (transducerNumber as string)
+		end if
+		set MSG to TRANSNAME & return
+		
+		try
+			-- Get the type of transducer. This is an integer number.
+			set TRANSTYPE to type of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Type: " & (TRANSTYPE as string) & return
+		end try
+		
+		try
+			-- Get the serial numver of this transducer
+			set SN to Serial number of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Serial Number: " & (SN as string) & return
+		end try
+		
+		try
+			-- Get the unique id of this transdcer.
+			-- Currently this returns a long point
+			set UID to (unique id of transducer transducerNumber of custom application appNumber of tablet tabletNumber)
+			
+			-- Apple Script does not coerce long points into a list.
+			-- Thus the following try block will fail. However, we can get the hex data out of the error msg.
+			-- A bit sneaky, but it puts the long point in a form that we can display.
+			try
+				set UIDString to UID as string
+			on error e
+				set UIDString to text 22 thru -17 of e
+			end try
+			set MSG to MSG & "Unique ID: " & (UIDString as string) & return
+		end try
+		
+		try
+			-- Get Double Click Assist info. Note that double click assist time is in milliseconds (1000 ms = 1 sec)
+			set DBLCLKASSIT to double click assist of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Double Click Assist On: " & (DBLCLKASSIT as string)
+			set DBLCLKDST to assist distance of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "  Distance: " & (DBLCLKDST as string)
+			set DBLCLKTIME to assist time of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & " Time: " & (DBLCLKTIME as string) & return
+		end try
+		
+		try
+			-- Get Tilt Sensitivity. Not all transducers support tilt. The following get will fail if the transducer
+			-- does not support tilt. But that is what try blocks are for.
+			set TILTSENS to tilt sensitivity of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Tilt Sensitivity: " & (TILTSENS as string) & return
+		end try
+		
+		try
+			-- Determine if the transducer is in Pen Mode (Absolute) or Mouse Mode (Relative)
+			set POSMODE to positioning mode of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Positioning Mode: " & (POSMODE as string) & return
+		end try
+		
+		-- Get the number of buttos for this transducer
+		set BtnCnt to count of every button of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+		set MSG to MSG & "Buttons: " & BtnCnt
+		
+		tell me to display dialog MSG buttons {"Cancel", "Ok", "Show Buttons"} default button 3
+		
+		if button returned of the result is "Show Buttons" then
+			tell me to displayAllButtonInfo(transducerNumber, appNumber, tabletNumber)
+		end if
+	end tell
+end displayTransducerInfo
+
+on displayAllButtonInfo(transducerNumber, appNumber, tabletNumber)
+	-- This routine displays the settings of each button on a transducer
+	
+	tell application "TabletDriver"
+		set MSG to ""
+		
+		-- get the number of buttons for this transducer
+		set BtnCnt to count of every button of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+		
+		repeat with ButtonNumber from 1 to BtnCnt
+			try
+				-- Get the name of the button
+				set BTNNAME to name of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+				if BTNNAME = "" then
+					set BTNNAME to "Button " & (ButtonNumber as string)
+				end if
+				
+				-- Get the button function
+				set BTNFUNC to button function of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+				try
+					--Depending on the function of the button, get more information
+					if BTNFUNC is equal to play keystroke then
+						try
+							-- There is a bug in the 4.7.5-6 (4.7.5-5 classic) driver where trying to get/set button keystroke will fail
+							-- That's why there is an extra try block here. This bug will be fixed in a future version
+							-- of the driver
+							set ExtraText to button keystroke of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+						on error
+							set ExtraText to "Unknown"
+						end try
+					else if BTNFUNC is equal to run application then
+						set ExtraText to runnable of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					else if BTNFUNC is equal to press modifiers then
+						set mods to button modifiers of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+						-- Botton modifiers are concated togethor to create one integer.
+						-- The following decodes that integer into text.
+						set ExtraText to ""
+						if mods is greater than or equal to 32 then
+							set ExtraText to "Click " & ExtraText
+							set mods to mods - 32
+						end if
+						
+						if mods is greater than or equal to 16 then
+							set ExtraText to "Command " & ExtraText
+							set mods to mods - 16
+						end if
+						
+						if mods is greater than or equal to 8 then
+							set ExtraText to "Option " & ExtraText
+							set mods to mods - 8
+						end if
+						
+						if mods is greater than or equal to 4 then
+							set ExtraText to "Shift " & ExtraText
+							set mods to mods - 4
+						end if
+						
+						if mods is greater than or equal to 2 then
+							set ExtraText to "Control " & ExtraText
+							set mods to mods - 2
+						end if
+						set ExtraText to "[ " & ExtraText & "]"
+					else
+						set ExtraText to ""
+					end if
+				on error
+					set ExtraText to ""
+				end try
+				
+				set MSG to MSG & "   " & BTNNAME & " Func: "
+				set MSG to MSG & (BTNFUNC as string)
+				if length of ExtraText is not equal to 0 then
+					set MSG to MSG & space & ExtraText
+				end if
+				
+				-- Not every button supports pressure, but lets ask each button any way.
+				-- If a button does not have pressure, then the script will fail. But that
+				-- is what try blocks are for!
+				try
+					set PRESSSENS to pressure sensitivity of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					set MSG to MSG & " [" & (PRESSSENS as string)
+					
+					set PRESSCLICK to click pressure of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					set MSG to MSG & ", " & PRESSCLICK
+					
+					try
+						-- There is a bug in the 4.7.5-6 (4.7.5-5 classic) driver dictionary where trying to get/set max pressure will fail
+						-- That's why there is an extra try block here. This bug will be fixed in a future version of the driver
+						-- max pressure should be «class Frng» but is not. Once this is fixed, the «class Frng» in the line
+						-- below will autoatically be changed to max pressure when the script is compiled. 
+						set MAXPRESS to max pressure of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+						set MSG to MSG & ", " & MAXPRESS
+					end try
+					
+					set FORCEMIN to force min of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					set MSG to MSG & ", " & FORCEMIN
+					
+					set FORCEMAX to force max of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					set MSG to MSG & ", " & FORCEMAX
+					
+					set PRESSLVLS to pressure levels of button ButtonNumber of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					set MSG to MSG & ", " & PRESSLVLS
+					
+					set MSG to MSG & "]"
+				end try
+				
+				set MSG to MSG & return
+			end try
+		end repeat
+		
+		-- 4D Mouse Roller
+		-- Not every tranducer has a 4D Mouse Roller. In fact only 4D Mice do. But we will ask anywy.
+		-- If a transducer does not have a 4D Mouse Roller and you ask for roller property of that
+		-- transducer, an error will occur. So unless you are positive that the transducer you are
+		-- accessing here is a 4D mouse, be sure you use a try block.
+		try
+			try
+				-- There is a bug in the 4.7.5-6 (4.7.5-5 classic) driver where getting the roller function may fail
+				-- That's why there is an extra try block here. This bug will be fixed in a future version
+				-- of the driver
+				set ROLLFUNC to roller function of roller 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+				set MSG to MSG & "Roller Func: " & (ROLLFUNC as string) & return
+				
+				
+				if ROLLFUNC is equal to key scroll then
+					set UPKEY to roller up keystroke of roller 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					set MSG to MSG & "Up Keystroke: " & UPKEY & return
+					set DOWNKEY to roller down keystroke of roller 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+					set MSG to MSG & "Down Keystroke: " & DOWNKEY & return
+				end if
+			end try
+			
+			set ROLLSENS to roller sensitivity of roller 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Roller Sensitivity: " & (ROLLSENS as string) & return
+			
+			set ROLLREVDIR to should reverse direction of roller 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Roller Should Reverse Direction: " & (ROLLREVDIR as string) & return
+			
+		end try
+		
+		-- 2D / Graphire Mouse Wheel
+		-- Not every tranducer has a 4D Mouse Roller. In fact only 2D and Graphire Mice do. But we will ask anywy.
+		-- If a transducer does not have a 4D Mouse Roller and you ask for roller property of that
+		-- transducer, an error will occur. So unless you are positive that the transducer you are
+		-- accessing here is a 2D or Graphire mouse, be sure you use a try block.
+		try
+			set WHEELFUNC to wheel function of wheel 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Wheel Func: " & (WHEELFUNC as string) & return
+			
+			if WHEELFUNC is equal to line scroll then
+				set LINESPER to lines per notch of wheel 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+				set MSG to MSG & "Lines to scroll per notch: " & (LINESPER as string) & return
+			else if WHEELFUNC is equal to key scroll then
+				set UPKEY to roller up keystroke of wheel 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+				set MSG to MSG & "Up Keystroke: " & UPKEY & return
+				set DOWNKEY to roller down keystroke of wheel 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+				set MSG to MSG & "Down Keystroke: " & DOWNKEY & return
+			end if
+			
+			set WHEELREVDIR to should reverse direction of wheel 1 of transducer transducerNumber of custom application appNumber of tablet tabletNumber
+			set MSG to MSG & "Wheel Should Reverse Direction: " & (WHEELREVDIR as string) & return
+		end try
+		
+		tell me to display dialog MSG
+		
+	end tell
+end displayAllButtonInfo
+
+on convertTo4CharCode(theInteger)
+	-- this subroutine converts an integer into a 4 char code string
+	
+	if theInteger is equal to 0 then
+		set FourCharCode to "????"
+	else
+		try
+			set Remainder to (theInteger mod 256)
+			set FourCharCode to ASCII character Remainder
+			set theInteger to theInteger div 256
+		on error
+			set FourCharCode to "?"
+		end try
+		
+		try
+			set Remainder to theInteger mod 256
+			set FourCharCode to (ASCII character Remainder) & FourCharCode
+			set theInteger to theInteger div 256
+		on error
+			set FourCharCode to "?" & FourCharCode
+		end try
+		
+		try
+			set Remainder to theInteger mod 256
+			set FourCharCode to (ASCII character Remainder) & FourCharCode
+			set theInteger to theInteger div 256
+		on error
+			set FourCharCode to "?" & FourCharCode
+		end try
+		
+		try
+			set Remainder to theInteger
+			set FourCharCode to (ASCII character Remainder) & FourCharCode
+		on error
+			set FourCharCode to "?" & FourCharCode
+		end try
+	end if
+	return FourCharCode
+end convertTo4CharCode
