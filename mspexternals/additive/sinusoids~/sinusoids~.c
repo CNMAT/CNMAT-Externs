@@ -40,6 +40,7 @@ VERSION 1.7.2: 050606, merged Michael Zbyszynski's 27 April 2004 Windows changes
 VERSION 1.7.3: Changed name (in version system) to have the tilde.
 VERSION 1.7.4: Updated help file
 VERSION 1.7.5: Force Package Info Generation
+VERSION 1.7.6: Changed max sinusoids to 1024 -mzed
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -59,7 +60,7 @@ VERSION 1.7.5: Force Package Info Generation
 
 #undef PI	
 #define PI 3.14159265358979323f
-#define MAXOSCILLATORS 256
+#define MAXOSCILLATORS 1024
 
 #define TPOW 14
 #define STABSZ (1l<<TPOW)
