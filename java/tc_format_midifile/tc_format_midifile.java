@@ -70,12 +70,17 @@ public class tc_format_midifile extends MaxObject {
 	private static final int MARKER_EVENT = 3;
 
 	private TreeMap beatArray = new TreeMap();
-	private HashMap subdivArray = new HashMap();
-	private HashMap markerArray = new HashMap();
+	private TreeMap subdivArray = new TreeMap();
+	private ArrayList markerArray = new ArrayList();
 		
 	private TreeSet beatStartTimes = new TreeSet();
-	private TreeSet subdivTimes_in = new TreeSet();
+	private TreeSet<Float> subdivTimes_in = new TreeSet<Float>();
 	private TreeSet subdivTimes_out = new TreeSet();
+
+	private int[][] beatPositions;
+	private int[][][] subdivPositions;
+	private int[][] markerPositions;
+	private HashMap markerStrings = new HashMap();
 	
 	private int subdivsToOutput[];
 	
@@ -88,6 +93,12 @@ public class tc_format_midifile extends MaxObject {
 	private static final String MUSIC_XML_VERSION = "1.1";	
 
 	private int numBars = 0;
+
+	private int numStaves = 2;
+
+	private int beatStaff = 0;
+	private int markerStaff = 1;
+	private int[] subdivStaves = null;
 
 	public void version(){
 		post("tc_format_midifile Version 0.0, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
@@ -107,18 +118,20 @@ public class tc_format_midifile extends MaxObject {
 			for(int i = 0; i < args.length - 1; i++)
 				subdivsToOutput[i] = args[i + 1].toInt();
 		}
-	
-		markerArray.put("jumped", new HashMap());
-		markerArray.put("made-it", new HashMap());
-		markerArray.put("plan", new HashMap());
-		markerArray.put("starting-ramp", new HashMap());
-		markerArray.put("holding", new HashMap());
-		markerArray.put("finished-hold", new HashMap());
 
-	   	tcfm_event ev = new tcfm_event();
+		numStaves = subdivsToOutput.length + 2; // subdivisions separate staves for beats and markers.
+		subdivStaves = new int[subdivsToOutput.length];
+		for(int i = 0; i < subdivsToOutput.length; i++)
+			subdivStaves[i] = i + 2;
+
+		// there is a delay when these classes get instantiated for the first time.
+		tcfm_beatEvent b = new tcfm_beatEvent();
+		tcfm_subdivEvent s = new tcfm_subdivEvent();
+		tcfm_markerEvent m = new tcfm_markerEvent();
 		version();
 	}	
-	
+
+	/*
 	class tcfm_event{
 		private int eventType;
 		private int beatIndex;
@@ -131,11 +144,13 @@ public class tc_format_midifile extends MaxObject {
 		private int markerType;
 		private HashMap plan;
 		private int rampDirection;
+		private String OSCString;
+		private float duration;
 
-		/*public tcfm_event(int et, int bi, int si, float st, float ct){
-			eventType = et; beatIndex = bi; subdivIndex = si;
-			startTime = st; currentTempo = ct;
-		}*/
+		//public tcfm_event(int et, int bi, int si, float st, float ct){
+			//eventType = et; beatIndex = bi; subdivIndex = si;
+			//startTime = st; currentTempo = ct;
+		//}
 		public void setEventType(int et){eventType = et;}
 		public void setBeatIndex(int bi){beatIndex = bi;}
 		public void setSubdivIndex(int si){subdivIndex = si;}
@@ -145,6 +160,8 @@ public class tc_format_midifile extends MaxObject {
 		public void setCurrentPhase(float cp){currentPhase = cp;}
 		public void setTargetPhase(float tp){targetPhase = tp;}
 		public void setRampDirection(int rd){rampDirection = rd;}
+		public void setOSCString(String s){OSCString = s;}
+		public void setDuration(float d){duration = d;}
 
 		public void setPlan(Atom ar[]){
 			plan = new HashMap();
@@ -170,8 +187,10 @@ public class tc_format_midifile extends MaxObject {
 		public int getRampDirection(){return rampDirection;}
 
 		public HashMap getPlan(){return plan;}
-
+		public String getOSCString(){return OSCString;}
+		public float getDuration(){return duration;}
 	}
+	*/
 
 	public void beat(Atom[] args){
 		if(args[0].isString()){
@@ -180,26 +199,16 @@ public class tc_format_midifile extends MaxObject {
 		}
 		int index = args[0].toInt();
 		
-		tcfm_event ev = new tcfm_event();
-		ev.setEventType(BEAT_EVENT);
-		ev.setBeatIndex(index);
-		ev.setStartTime(args[1].toFloat());
-		ev.setCurrentTempo(args[2].toFloat());
+		tcfm_beatEvent ev = new tcfm_beatEvent(index, args[1].toFloat(), args[2].toFloat());
 		beatArray.put(index, ev);
 	}
 	
 	public void subdiv(Atom[] args){
 		int index_b = args[0].toInt();
 		int index_s = args[1].toInt();
-		
-		tcfm_event ev = new tcfm_event();
-		ev.setEventType(SUBDIV_EVENT);
-		ev.setBeatIndex(index_b);
-		ev.setSubdivIndex(index_s);
-		ev.setStartTime(args[2].toFloat());
-		subdivTimes_in.add(args[2].toFloat());
-		ev.setCurrentTempo(args[3].toFloat());
-		
+		tcfm_subdivEvent ev = new tcfm_subdivEvent(index_b, index_s, args[2].toFloat(), args[3].toFloat());
+		int rampDirection;
+
 		if(index_b == 0 && index_s == 0) ev.setRampDirection(0);
 		else{
 			if(args[3].toFloat() > lastTempo)
@@ -217,334 +226,239 @@ public class tc_format_midifile extends MaxObject {
 		
 		hm.put(index_s, ev);
 		subdivArray.put(index_b, hm);
+
+		subdivTimes_in.add(args[2].toFloat());
 	}
 
 	public void marker(Atom[] args){
-		tcfm_event ev = new tcfm_event();
-		ev.setEventType(MARKER_EVENT);
-		ev.setStartTime(args[0].getFloat());
-		String marker_type = args[1].getString();
-		HashMap hm;
-			
-		if(marker_type.compareTo("/plan") == 0){
-			Atom ar[] = new Atom[args.length - 2];
-			for(int i = 0; i < args.length - 2; i++)
-				ar[i] = args[i + 2];
-				
-			ev.setPlan(ar);
-			hm = (HashMap)(markerArray.get("plan"));
-			hm.put(ev.getStartTime(), ev);
-		} 
-		else if(marker_type.compareTo("/starting-ramp") == 0){
-			ev.setCurrentTempo(args[3].toFloat());
-			ev.setTargetTempo(args[4].toFloat());
-			if(args[3].toFloat() < args[4].toFloat()) ev.setRampDirection(1);
-			else if(args[3].toFloat() > args[4].toFloat()) ev.setRampDirection(-1);
-			else ev.setRampDirection(0); // this shouldn't happen
-			
-			hm = (HashMap)(markerArray.get("starting-ramp"));
-			hm.put(ev.getStartTime(), ev);
-		} 
-		else if(marker_type.compareTo("/jumped") == 0){
-			ev.setCurrentTempo(args[2].toFloat());
-			ev.setCurrentPhase(args[3].toFloat());
-			hm = (HashMap)(markerArray.get("jumped"));
-			hm.put(ev.getStartTime(), ev);
-		} 
-		else if(marker_type.compareTo("/made-it") == 0){
-			ev.setCurrentTempo(args[2].toFloat());
-			hm = (HashMap)(markerArray.get("made-it"));
-			hm.put(ev.getStartTime(), ev);
-		} 
-		else if(marker_type.compareTo("/holding") == 0){
-			ev.setCurrentTempo(args[2].toFloat());
-			ev.setRampDirection(0);
-			hm = (HashMap)(markerArray.get("holding"));
-			hm.put(ev.getStartTime(), ev);
-		} 
-		else if(marker_type.compareTo("/finished-hold") == 0){
-			hm = (HashMap)(markerArray.get("finished-hold"));
-			hm.put(ev.getStartTime(), ev);
-		}
+		tcfm_markerEvent ev = new tcfm_markerEvent(args);
+		markerArray.add(ev);
+
 	}
 	
 	public void bang(){
-		initDocument();
-		setupPartList();
-		setupParts();
-		setupFirstBarAttributes();
-		dumpBeats();
-		dumpSubdivs();
-		dumpMarkers();
-		makeTimeMap();
-	}
-	
-	public void dumpBeats(){
 		if(beatArray.size() < 1){
 			error("tc_format_midifile: Beat array is empty!");
 			return;
 		}
-		
-		int offsetInBeat = 0;
-		int offsetInBar = 0;
-		String[] duration_string;
-		int durationInSubdivs;
+
+		initDocument();
+		setupPartList();
+		setupParts();
+		makeBars();
+		setupFirstBarAttributes();
+		fillPositionArrays();
+	      	makeBeats();
+		makeSubdivs();
+		makeMarkers();
+	}
 	
-		tcfm_event thisBeat;
-		HashMap theseSubdivs;
-		int startTime, duration;
-		int prevTime = 0;
-		int prevDur = 0;
-		
-		NodeList parts = musicxmlscore.getElementsByTagName("part");
-		Element part_element = (Element)parts.item(0);
-		NodeList bars = (NodeList)part_element.getElementsByTagName("measure");
-		Element bar_element = (Element)bars.item(0);
-		
-		for(int i = 0; i < beatArray.size() - 1; i++){
-			//thisBeat = (tcfm_event)beatArray.get(i);
-			theseSubdivs = (HashMap)subdivArray.get(i);
-			durationInSubdivs = theseSubdivs.size();
-						
-			/////////////////////////
-			// for musicXML output
-			/////////////////////////
-			duration_string = getDuration(1);
-			Element note_element = musicxmlscore.createElement("note");
-			Element duration_element = musicxmlscore.createElement("duration");
-			Element type_element = musicxmlscore.createElement("type");
-			Element pitch_element = getPitch(71);
-			duration_element.appendChild(musicxmlscore.createTextNode("" + 1));
-			type_element.appendChild(musicxmlscore.createTextNode(duration_string[0]));
-			note_element.appendChild(pitch_element);
-			note_element.appendChild(duration_element);
-			note_element.appendChild(type_element);
-			
-			bar_element.appendChild(note_element);
-			
-			--durationInSubdivs;
-			offsetInBeat = ++offsetInBeat % numSubdivs;
-			if(offsetInBeat == 0){ 
-				offsetInBar = ++offsetInBar % 4;
-				if(offsetInBar == 0){
-					addBarToMusicXMLScore();
-					bars = (NodeList)part_element.getElementsByTagName("measure");
-					bar_element = (Element)bars.item(0);					
-				}
-			}
-			
-			int restDur = 2;
-						
-			while(durationInSubdivs > 0){
-				if((offsetInBeat & 1) == 1) restDur = 1;
-				else restDur = 2;
-				duration_string = getDuration(restDur);
-				Element rest_note_element = musicxmlscore.createElement("note");
-				Element rest_duration_element = musicxmlscore.createElement("duration");
-				Element rest_type_element = musicxmlscore.createElement("type");
-				
-				rest_duration_element.appendChild(musicxmlscore.createTextNode("" + restDur));
-				rest_type_element.appendChild(musicxmlscore.createTextNode(duration_string[0]));
-			        rest_note_element.appendChild(rest_duration_element);
-				rest_note_element.appendChild(rest_type_element);
-			
-				bar_element.appendChild(rest_note_element);
-			
-				--durationInSubdivs;
-				offsetInBeat = ++offsetInBeat % numSubdivs;
-				if(offsetInBeat == 0){ 
-					offsetInBar = ++offsetInBar % 4;
-					if(offsetInBar == 0){
-						addBarToMusicXMLScore();
-						bars = (NodeList)part_element.getElementsByTagName("measure");
-						bar_element = (Element)bars.item(0);					
-					}
-				}
-			}
-			writeFile("/Users/johnmac/Development/cnmat/trunk/max/java/tc_format_midifile/shithole.xml");			
-			/*
-			post("1. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
-			if(currentBeat == 0 && i > 0){
-				addBarToMusicXMLScore();
-				bars = (NodeList)part_element.getElementsByTagName("measure");
-				bar_element = (Element)bars.item(numBars - 1);
-			}
-			subdivsLeftInBeat = numSubdivs - beatOffset;
-			if(durationInSubdivs >= (subdivsLeftInBeat)){
-				addNoteToMusicXMLBar(bar_element, 71, subdivsLeftInBeat);
-				durationInSubdivs -= subdivsLeftInBeat;
-				beatOffset = 0;
-				currentBeat = ++currentBeat % 4;
-				post("2. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
-			} else {
-				addNoteToMusicXMLBar(bar_element, 71, durationInSubdivs);
-				beatOffset = (beatOffset + durationInSubdivs) % numSubdivs;
-				durationInSubdivs = 0;
-				post("3. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
-			}
-			
-			while(durationInSubdivs > 0){
-				subdivsLeftInBeat = numSubdivs - beatOffset;
-				if(durationInSubdivs >= (subdivsLeftInBeat)){
-					addRestToMusicXMLBar(bar_element, subdivsLeftInBeat);
-					durationInSubdivs -= subdivsLeftInBeat;
-					beatOffset = 0;
-					currentBeat = ++currentBeat % 4;
-					post("4. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
-				} else {
-					addRestToMusicXMLBar(bar_element, durationInSubdivs);
-					beatOffset = (beatOffset + durationInSubdivs) % numSubdivs;
-					durationInSubdivs = 0;
-					post("5. beatOffset = " + beatOffset + " durationInSubdivs = " + durationInSubdivs);
-				}
-			}
-			writeFile("/Users/johnmac/Development/cnmat/trunk/max/java/tc_format_midifile/shithole.xml");
-			*/
-			/////////////////////////
-			// for midi output
-			/////////////////////////
-		    		
-			startTime = prevTime + prevDur;
-			duration = (int)(theseSubdivs.size() * (1000.f / numSubdivs));
-			
-			outlet(0, new Atom[]{
-							Atom.newAtom("/beat"),
-							Atom.newAtom(startTime), 
-							Atom.newAtom(71),
-							Atom.newAtom(duration)});
-			beatStartTimes.add(startTime);
-			prevTime = startTime;
-			prevDur = duration;
+	public void makeBeats(){
+        	Iterator subdiv_keys = (subdivArray.keySet()).iterator();
+		int currentBar = 0;
+		int posInBar = 0;
+
+		while(subdiv_keys.hasNext()){
+			int key = ((Integer)subdiv_keys.next()).intValue();
+			int len = ((HashMap)subdivArray.get(key)).size();
+
+			if(key >= 0) beatPositions[currentBar][posInBar] = 1;
+			if(posInBar + len >= numSubdivs * 4) ++currentBar;
+			posInBar = (posInBar + len) % (numSubdivs * 4);
+		}
+		cleanupArray(beatPositions);
+		makeMusicXMLScore(beatPositions, beatStaff);
+		for(int i = 0; i < numBars; i++){
+			Float[] times = subdivTimes_in.toArray(new Float[0]);
+			insertStringBeforeNote(formatTimeString(times[((numSubdivs * 4) * i)]), beatStaff, i, 0);
 		}
 	}
 	
-	public void dumpSubdivs(){
-		int n;
-		int startTime = 0;
-		int duration = 0;
-		int thisStartTime;
-		Iterator startTimes = beatStartTimes.iterator();
-		int i = 0;
-		int theSubdiv, mod, pitch;
-		HashMap thisSubdivArray;
-		tcfm_event ev;
-		while(startTimes.hasNext()){
-			thisSubdivArray = (HashMap)(subdivArray.get(i));
-			n = thisSubdivArray.size();
-			startTime = (Integer)(startTimes.next());
-			//duration = (int)(1000.f / numSubdivs);
-			for(int j = 0; j < n; j++){
-				ev = (tcfm_event)thisSubdivArray.get(j);
-				if(ev.getRampDirection() < 0) pitch = 64;
-				else if(ev.getRampDirection() > 0) pitch = 77;
-				else pitch = 71;
-				for(int k = 0; k < subdivsToOutput.length; k++){
-					theSubdiv = subdivsToOutput[k];
-					mod = numSubdivs / theSubdiv;
-					if(j % mod == 0){
-						thisStartTime = startTime + (int)((1000.f / theSubdiv) * (j / mod));
-						duration = (int)(1000.f / theSubdiv);
-						outlet(0, new Atom[]{
-									Atom.newAtom("/subdiv/" + theSubdiv),
-									Atom.newAtom(thisStartTime), 
-									Atom.newAtom(pitch),
-									Atom.newAtom(duration)});
-						
-						if(theSubdiv == numSubdivs)
-							subdivTimes_out.add(thisStartTime);
-					}
+	public void makeSubdivs(){
+		Iterator key = subdivArray.keySet().iterator();
+		int currentBar = 0;
+		int posInBar = 0;
+		int beat = 0;
+		while(key.hasNext()){
+			int len = ((HashMap)subdivArray.get(key.next())).size();
+			for(int subdiv = 0; subdiv < len; subdiv++){
+				for(int i = 0; i < subdivsToOutput.length; i++){
+					if(subdiv % (numSubdivs / subdivsToOutput[i]) == 0) 
+						subdivPositions[i][currentBar][posInBar] = 1;
 				}
+				if(posInBar + 1 >= numSubdivs * 4) ++currentBar;
+				posInBar = (posInBar + 1) % (numSubdivs * 4);
 			}
-			i++;
+			++beat;
+		}
+		for(int i = 0; i < subdivPositions.length; i++){
+			cleanupArray(subdivPositions[i]);
+			makeMusicXMLScore(subdivPositions[i], subdivStaves[i]);
 		}
 	}
 	
-	public void dumpMarkers(){
-		Set markerType = (Set)markerArray.keySet();
-		Iterator markerType_it = markerType.iterator();
-		String markerType_string;
-		HashMap markers;
-		Set markerTimes;
-		Iterator markerTimes_it;
-		tcfm_event ev;
-		float time;
+	public void makeMarkers(){
+		tcfm_markerEvent ev;
 		int beatPos, subdivPos;
-		while(markerType_it.hasNext()){
-			markerType_string = (String)markerType_it.next();
-			markers = (HashMap)markerArray.get(markerType_string);
-			markerTimes = (Set)markers.keySet();
-			markerTimes_it = markerTimes.iterator();
-			while(markerTimes_it.hasNext()){
-				ev = (tcfm_event)(markers.get((Float)(markerTimes_it.next())));
-				time = (float)ev.getStartTime();
-				subdivPos = 1 + ((SortedSet)subdivTimes_in.headSet(time)).size();
-				post("type = " + markerType_string + " time = " + time + " subdivPos = " + subdivPos);
-			}
+
+		for(int i = 0; i < markerArray.size(); i++){
+			ev = (tcfm_markerEvent)markerArray.get(i);
+			float time = (float)ev.getStartTime();
+			subdivPos = ((SortedSet)subdivTimes_in.headSet(time)).size();
+			post("time = " + time + " subdivPos = " + subdivPos);
+			int beatIndex = ((int)Math.floor(subdivPos / (numSubdivs * 4)));
+			int subdivIndex = (subdivPos % (numSubdivs * 4));
+			markerPositions[beatIndex][subdivIndex] = 1;
+			post("adding marker to position: " + beatIndex + " " + subdivIndex);
+			String thisMarkerString = ev.getOSCString();
+			if(thisMarkerString != null){
+				if(markerStrings.containsKey(subdivPos)){
+					markerStrings.put(subdivPos, (String)markerStrings.get(subdivPos) + "\n" + thisMarkerString);
+				} else
+					markerStrings.put(subdivPos, thisMarkerString);
+			}			
 		}
-		//SortedSet subdivTimes_in.headSet(
-	}
-	
-	public void makeTimeMap(){
-		Set keys = (Set)beatArray.keySet();
-		Iterator it = keys.iterator();
-		Iterator it2 = beatStartTimes.iterator();
-		int i = 0;
-		Float time;
-		Integer scoretime;
-		tcfm_event ev;
-		while(it.hasNext() && it2.hasNext()){
-			ev = (tcfm_event)beatArray.get(it.next());
-			time = ev.getStartTime();
-			scoretime = (Integer)it2.next();
-			if(i % 4 == 0){
-				outlet(0, new Atom[]{Atom.newAtom("/timemap"), Atom.newAtom("setText"), Atom.newAtom(scoretime), Atom.newAtom(time)});
-			}
-			++i;
+
+		makeMusicXMLScore(markerPositions, markerStaff);
+		Iterator keys = markerStrings.keySet().iterator();
+		while(keys.hasNext()){
+			subdivPos = (Integer)keys.next();
+			int bar = (int)Math.floor(subdivPos / (numSubdivs * 4));
+			int subdiv = subdivPos % (numSubdivs * 4);
+			insertStringBeforeNote((String)markerStrings.get(subdivPos), markerStaff, bar, subdiv);
 		}
 	}
 
-    private void makeMusicXMLScore(){
-    	
-    }
-	
+	public void cleanupArray(int[][] ar){
+		int counter = 0;
+		for(int i = 0; i < ar.length; i++){
+			for(int j = (numSubdivs * 4) - 1; j >= 0; j--){
+				if(j % (numSubdivs / 2) == (numSubdivs / 2) - 1) counter = 0;
+				if(ar[i][j] < 0) ++counter;
+				else counter = 0;
+				
+				if(counter > 0 && (j & 1) == 0){
+					ar[i][j] = -1 * counter;
+					for(int k = 0; k < counter - 1; k++){
+						ar[i][j + k + 1] = 0;
+					}
+				}
+			}
+		}
+	}
+
+	private void insertStringBeforeNote(String s, int p, int bar, int subdiv){
+		NodeList parts = musicxmlscore.getElementsByTagName("part");
+		Element part = (Element)(parts.item(p));
+		NodeList bars = part.getElementsByTagName("measure");
+		Element bar_element = (Element)bars.item(bar);
+		NodeList notes = bar_element.getElementsByTagName("note");
+		Node note_element = (Node)notes.item(subdiv);
+		Element direction = musicxmlscore.createElement("direction");
+		direction.setAttribute("placement", "above");
+		Element direction_type = musicxmlscore.createElement("direction-type");
+		Element words = musicxmlscore.createElement("words");
+		words.appendChild(musicxmlscore.createTextNode(s));
+		direction_type.appendChild(words);
+		direction.appendChild(direction_type);
+		bar_element.insertBefore((Node)direction, note_element);
+	}
+
+	private void makeMusicXMLScore(int[][] ar, int p){
+		NodeList parts = musicxmlscore.getElementsByTagName("part");
+		Element part = (Element)(parts.item(p));
+		NodeList bars = part.getElementsByTagName("measure");
+		for(int i = 0; i < ar.length; i++){
+			Element bar = ((Element)bars.item(i));
+			Element prevNote = null;
+			/*
+			int[] start = new int[]{-1, -1, -1, -1};
+			int[] end = new int[]{-1, -1, -1, -1};
+			int beat = -1;
+			for(int j = 0; j < 4; j++){
+				for(int k = 0; k < numSubdivs; k++){
+					if(ar[i][(j * numSubdivs) + k] > 0 && start[j] < 0) start[j] = (j * numSubdivs) + k;
+					if(ar[i][(j * numSubdivs) + k] != 0) end[j] = (j * numSubdivs) + k;
+				}
+			}
+			*/
+			//post("******************************");
+			//for(int j = 0; j < 4; j++) post(i + " start[" + j + "] = " + start[j] + " end[" + j + "] = " + end[j]);
+			//post("******************************");
+
+			for(int j = 0; j < ar[i].length; j++){
+				//if(j % numSubdivs == 0) ++beat;
+				if(ar[i][j] != 0){
+					Element note = musicxmlscore.createElement("note");
+					if(ar[i][j] < 0){
+						note.appendChild(musicxmlscore.createElement("rest"));
+					} else if(ar[i][j] > 0){
+						note.appendChild(getPitch(71));
+					}
+					Element dur = musicxmlscore.createElement("duration");
+					dur.appendChild(musicxmlscore.createTextNode("" + Math.abs(ar[i][j])));
+					Element type = musicxmlscore.createElement("type");
+					type.appendChild(musicxmlscore.createTextNode("" + getDuration(Math.abs(ar[i][j]))[0]));
+					note.appendChild(dur);
+					note.appendChild(type);
+					/*
+					Element beam = musicxmlscore.createElement("beam");
+					beam.setAttribute("number", "" + 1);
+
+					if(start[beat] == j)
+						beam.appendChild(musicxmlscore.createTextNode("start"));
+					else if(end[beat] == j)
+						beam.appendChild(musicxmlscore.createTextNode("end"));
+					else 
+						beam.appendChild(musicxmlscore.createTextNode("continue"));
+					note.appendChild(beam);
+					*/
+					bar.appendChild(note);
+				}
+			}
+		}
+	}
+
+	private void outputDataForMidifile(){
+
+	}
+
 	public void clear(){
 		beatArray.clear();
 		subdivArray.clear();
+		markerArray.clear();
 		beatStartTimes.clear();
-		
-		Set keys = (Set)markerArray.keySet();
-		Iterator it = keys.iterator();
-		while(it.hasNext())
-			((HashMap)(markerArray.get((String)(it.next())))).clear();
+
 	}
 	
 	// Printing 
 	public void print_beat_array(){
 		int i;
-		tcfm_event ev;
+		tcfm_beatEvent ev;
 		post("size: " + beatArray.size() + "\n");
 		for(i = 0; i < beatArray.size(); i++){
-			ev = (tcfm_event)beatArray.get(i);
+			ev = (tcfm_beatEvent)beatArray.get(i);
 			post(" Beat Index: " + ev.getBeatIndex() + " Start Time: " + ev.getStartTime() + " Current Tempo: " + ev.getCurrentTempo());
 		}
 	}
 
 	public void print_subdiv_array(){
-		tcfm_event ev;
+		tcfm_subdivEvent ev;
 		HashMap hm;
 		post("size: " + subdivArray.size() + "\n");
 		for(int i = 0; i < subdivArray.size(); i++){
 			hm = (HashMap)subdivArray.get(i);
 			for(int j = 0; j < hm.size(); j++){
-				ev = (tcfm_event)hm.get(j);
+				ev = (tcfm_subdivEvent)hm.get(j);
 				post("Beat Index: " + ev.getBeatIndex() + " Subdiv Index: " + " " + ev.getSubdivIndex() + " Start Time: " + ev.getStartTime()
-					+ " Current Tempo: " + ev.getCurrentTempo());
+				     + " Current Tempo: " + ev.getCurrentTempo());
 			}
 		}
 	}
-	
+
+	/*	
 	public void print_marker_array(){
-		tcfm_event ev;
+		tcfm_markerEvent ev;
 				
 		Set markerKeys = (Set)(markerArray.keySet());
 		Iterator markerKeys_it = markerKeys.iterator();
@@ -557,21 +471,23 @@ public class tc_format_midifile extends MaxObject {
 			markerValues = (Collection)(((HashMap)(markerArray.get(key))).values());
 			markerValues_it = markerValues.iterator();
 			while(markerValues_it.hasNext()){
-				ev = (tcfm_event)markerValues_it.next();
+				ev = (tcfm_markerEvent)markerValues_it.next();
 				if(key.compareTo("plan") == 0){
 					post(key + " Current Tempo: " + (ev.getPlan()).get("currentTempo") + " Wait Time: " + (ev.getPlan()).get("waitTime") + 
-							" Plan Time: " + (ev.getPlan()).get("planTime") + " Target Tempo: " + (ev.getPlan()).get("targetTempo"));
+					     " Plan Time: " + (ev.getPlan()).get("planTime") + " Target Tempo: " + (ev.getPlan()).get("targetTempo"));
 				} else
 					post(key + " Time: " + ev.getStartTime() + (ev.getCurrentTempo() == 0 ? "" : " Current tempo: " + ev.getCurrentTempo()));
 			}
 		}
 	}
+	*/
 
 	private void initDocument() {
 		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		
 		String f = MaxSystem.locateFile("partwise.xsd");
+
 		try{
 			Source schemaFile = new StreamSource(new File(f));
 			Schema schema = factory.newSchema(schemaFile);
@@ -580,9 +496,9 @@ public class tc_format_midifile extends MaxObject {
 		} catch(SAXException e){
 			error("musicxml: error reading DTD file(s)\n" + e);
 			post("Parsing XML failed due to a:\n" + e.getClass().getName()
-				+ "\n in Line number:" + ((SAXParseException) e).getLineNumber()
-				+ "\n Coloumn Number:" + ((SAXParseException) e).getColumnNumber()
-				+ "\n Xml schema file is:" + ((SAXParseException) e).getSystemId() + "\nSTACKTRACE: ");
+			     + "\n in Line number:" + ((SAXParseException) e).getLineNumber()
+			     + "\n Coloumn Number:" + ((SAXParseException) e).getColumnNumber()
+			     + "\n Xml schema file is:" + ((SAXParseException) e).getSystemId() + "\nSTACKTRACE: ");
 			e.printStackTrace();
 			return;
 		}
@@ -610,7 +526,8 @@ public class tc_format_midifile extends MaxObject {
 		Element part_id_element;
 		Element part_name_element;
 		Text part_name;
-		for(int i = 0; i < subdivsToOutput.length; i++){
+		// create parts for all of the subdivsToOutput plus the main line.
+		for(int i = 0; i < numStaves; i++){
 			part_id_element = musicxmlscore.createElement("score-part");
 			part_id_element.setAttribute("id", "P" + i);
 			
@@ -627,7 +544,7 @@ public class tc_format_midifile extends MaxObject {
 	private void setupParts(){
 		Element rootElement = musicxmlscore.getDocumentElement();
 		Element part;
-		for(int i = 0; i < subdivsToOutput.length; i++){
+		for(int i = 0; i < numStaves; i++){
 			part = musicxmlscore.createElement("part");
 			part.setAttribute("id", "P" + i);
 			rootElement.appendChild(part);
@@ -636,7 +553,6 @@ public class tc_format_midifile extends MaxObject {
 
 	private void setupFirstBarAttributes(){
 		NodeList parts = musicxmlscore.getElementsByTagName("part");
-		
 		Element attributes = musicxmlscore.createElement("attributes");
 		
 		// divisions
@@ -671,107 +587,66 @@ public class tc_format_midifile extends MaxObject {
 		clef.appendChild(line_element);
 		attributes.appendChild(clef);
 		
-		++numBars;
-		//for(int i = 0; i < parts.getLength(); i++){
-			Element part = (Element)parts.item(0);
-			//bars = part.getElementsByTagName("measure");
-			//firstBar = (Element)bars.item(0);
-			Element firstBar = musicxmlscore.createElement("measure");
-			firstBar.setAttribute("number", "" + (numBars));
-			firstBar.appendChild(attributes);
-			part.appendChild(firstBar);
-		//}
-		writeFile("/Users/johnmac/Development/cnmat/trunk/max/java/tc_format_midifile/fuckface.xml");
+		for(int i = 0; i < parts.getLength(); i++){
+			Element part = (Element)parts.item(i);
+			NodeList bars = part.getElementsByTagName("measure");
+			Node firstBar = (Node)bars.item(0);
+			//firstBar.insertBefore(attributes.cloneNode(true), firstBar.getFirstChild());
+			firstBar.appendChild(attributes.cloneNode(true));
+		}
+	}
+
+	private void makeBars(){
+		int totalNumSubdivs = 0;
+		Iterator keys = ((Set)subdivArray.keySet()).iterator();
+		while(keys.hasNext()){
+			totalNumSubdivs += ((HashMap)subdivArray.get(keys.next())).size();
+		}
+		int totalNumBars = (int)Math.ceil((double)totalNumSubdivs / ((double)numSubdivs * 4.));
+
+		for(int i = 0; i < totalNumBars; i++){
+			++numBars;
+			addBarToMusicXMLScore();
+		}
+	}
+
+	private void fillPositionArrays(){
+		beatPositions = new int[numBars][4 * numSubdivs];
+		subdivPositions = new int[numStaves - 2][numBars][4 * numSubdivs];
+		markerPositions = new int[numBars][4 * numSubdivs];
+		for(int i = 0; i < numBars; i++){
+			for(int j = 0; j < 4 * numSubdivs; j++){
+				beatPositions[i][j] = -1;
+			}
+		}
+
+		for(int i = 0; i < numBars; i++){
+			for(int j = 0; j < 4 * numSubdivs; j++){
+				markerPositions[i][j] = -1;
+			}
+		}
+
+		for(int k = 0; k < numStaves - 2; k++){
+			for(int i = 0; i < numBars; i++){
+				for(int j = 0; j < 4 * numSubdivs; j++){
+					subdivPositions[k][i][j] = -1;
+				}
+			}
+		}
 	}
 
    	private void addBarToMusicXMLScore(){
-	    NodeList parts = musicxmlscore.getElementsByTagName("part");
-	    Element part;
-	    Element bar;
-		++numBars;
+	    	NodeList parts = musicxmlscore.getElementsByTagName("part");
+	    	Element part;
+	    	Element bar;
+
 		for(int i = 0; i < parts.getLength(); i++){
 			part = (Element)parts.item(i);
-			//bars = part.getElementsByTagName("measure");
-			//bar = (Element)bars.item(0);
 			bar = musicxmlscore.createElement("measure");
-			bar.setAttribute("number", "" + (numBars));
+			bar.setAttribute("number", "" + numBars);
 			part.appendChild(bar);
 		}
 	}
-	
-	/*	
-	private void addNoteToMusicXMLBar(Element bar, float m, int dur){
-		addNoteToMusicXMLBar(bar, m, dur, false);
-	}
-	
-	private void addRestToMusicXMLBar(Element bar, int dur){
-		addNoteToMusicXMLBar(bar, 0, dur, true);
-	}
-	
-	private void addNoteToMusicXMLBar(Element bar, float m, int dur, boolean isrest){
-		Element note = musicxmlscore.createElement("note");
-		
-		if(isrest == false){
-			Element pitch = musicxmlscore.createElement("pitch");
-			Element step = musicxmlscore.createElement("step");
-			Element accidental = musicxmlscore.createElement("alter");
-			Element octave = musicxmlscore.createElement("octave");
-			
-			float midiPitch = m;
-			float acc = 0;
-			float[] accidentals = new float[]{0.f, 1.f, 0.f, 1.f, 0.f, 0.f, 1.f, 0.f, 1.f, 0.f, 1.f, 0.f};
-			String[] pitches = new String[]{"C", "C", "D", "D", "E", "F", "F", "G", "G", "A", "A", "B"};
-
-			float decimal = midiPitch - (float)(Math.floor(midiPitch));
-			if(decimal < .25){
-					midiPitch = (float)Math.floor(midiPitch);
-			} else if(decimal < .75 && decimal >= .25){
-					midiPitch = (float)Math.floor(midiPitch) + .5f;
-					acc = 0.5f;
-			} else{
-					midiPitch = (float)Math.floor(midiPitch) + 1;
-					acc = -0.5f;
-			}
-
-			octave.appendChild(musicxmlscore.createTextNode("" + (int)(((float)Math.floor(midiPitch) / 12.f) - 1.f)));
-
-			while(midiPitch > 11) midiPitch -= 12;
-
-			step.appendChild(musicxmlscore.createTextNode(pitches[(int)midiPitch]));
-			accidental.appendChild(musicxmlscore.createTextNode("" + (acc + accidentals[(int)midiPitch])));
-
-
-			pitch.appendChild(step);
-			if((acc + accidentals[(int)midiPitch]) != 0) pitch.appendChild(accidental);
-			pitch.appendChild(octave);
-			note.appendChild(pitch);
-		} else {
-			note.appendChild(musicxmlscore.createElement("rest"));
-		}
-		
-		Element duration = musicxmlscore.createElement("duration");
-		duration.appendChild(musicxmlscore.createTextNode("" + dur));
-		note.appendChild(duration);
-		
-		bar.appendChild(note);
-	}
-	
-	private String getNoteType(int dur){
-		// return an array of elements for the calling method to append to the note
-		// this will work because we aren't doing anything longer than a quarter note
-		
-		// addNoteToMusicXMLBar is the method that would call this one and it is 
-		// responsible for creating the note and appending it to the bar.  so, we
-		// can let it create two notes for the case of 5 32nd notes.
-		switch(dur){
-			case 1:
-				return "32nd";
-			case 2: 
-				return "16th";
-		}
-		return null;
-	}
-	*/
 
 	private String[] getDuration(int dur){
 		float dec = ((float)dur) / ((float)numSubdivs);
@@ -787,7 +662,7 @@ public class tc_format_midifile extends MaxObject {
 	}
 	
 	private Element getPitch(float m){
-		Element note = musicxmlscore.createElement("note");
+		//Element note = musicxmlscore.createElement("note");
 		Element pitch = musicxmlscore.createElement("pitch");
 		Element step = musicxmlscore.createElement("step");
 		Element accidental = musicxmlscore.createElement("alter");
@@ -820,11 +695,17 @@ public class tc_format_midifile extends MaxObject {
 		pitch.appendChild(step);
 		if((acc + accidentals[(int)midiPitch]) != 0) pitch.appendChild(accidental);
 		pitch.appendChild(octave);
-		note.appendChild(pitch);
-		return note;
+		//note.appendChild(pitch);
+		return pitch;
 	}
 
-	private void writeFile(String path){
+	private String formatTimeString(float t){
+		int minute = (int)Math.floor(t / 60);
+		float second = t - (minute * 60);
+		return minute + "\' " + second + "\"";
+	}
+
+	public void writeFile(String path){
 		try{
 			OutputFormat format = new OutputFormat(musicxmlscore);
 			format.setIndenting(true);
@@ -850,5 +731,121 @@ public class tc_format_midifile extends MaxObject {
 			error("musicxml: error writing file.");
 			ie.printStackTrace();
 		}
+	}
+
+	public void dumpToMidifile(){
+
+	}
+
+	class tcfm_beatEvent{
+		public int beatIndex;
+		public float startTime;
+		public float currentTempo;
+		public float pitch = 71;
+		public int rampDirection;
+
+		public tcfm_beatEvent(int b, float s, float t){
+			beatIndex = b;
+			startTime = s;
+			currentTempo = t;
+		}
+		public tcfm_beatEvent(int b, float s, float t, float p){
+			beatIndex = b;
+			startTime = s;
+			currentTempo = t;
+			pitch = p;
+		}
+		public tcfm_beatEvent(){}
+
+		public float getBeatIndex(){ return beatIndex;}
+		public float getStartTime(){ return startTime;}
+		public float getCurrentTempo(){ return currentTempo;}
+		public float getPitch(){ return pitch; }
+
+		public void setPitch(float p){
+			pitch = p;
+		}
+
+		public float getRampDirection(){return rampDirection;}
+		public void setRampDirection(int d){rampDirection = d;}
+	}
+
+	class tcfm_subdivEvent extends tcfm_beatEvent{
+		private int subdivIndex;
+		public tcfm_subdivEvent(int b, int si, float s, float t){
+			super(b, s, t);
+			subdivIndex = si;
+		}
+		public tcfm_subdivEvent(int b, int si, float s, float t, float p){
+			super(b, s, t, p);
+			subdivIndex = si;
+		}
+		public tcfm_subdivEvent(){}
+
+		public int getSubdivIndex(){return subdivIndex;}
+		public void setSubdivIndex(int si){subdivIndex = si;}
+	}
+
+	class tcfm_markerEvent{
+		private float startTime;
+		private float currentTempo;
+		private float targetTempo;
+		private float currentPhase;
+		private float targetPhase;
+		private float duration;
+		private float waitTime;
+		private int rampDirection;
+		private String markerString;
+		private String OSCString = "";
+
+		public tcfm_markerEvent(Atom[] args){
+			startTime = args[0].toFloat();
+			markerString = args[1].toString();
+
+			if(markerString.compareTo("/plan") == 0){
+				currentTempo = args[2].toFloat();
+				waitTime = args[3].toFloat();
+				duration = args[5].toFloat();
+				targetTempo = args[6].toFloat();
+				rampDirection = calcRampDirection(currentTempo, targetTempo);
+			} else if(markerString.compareTo("/starting-ramp") == 0){
+				currentTempo = args[3].toFloat();
+				targetTempo = args[4].toFloat();
+				rampDirection = calcRampDirection(currentTempo, targetTempo);
+			} else if(markerString.compareTo("/jumped") == 0){
+				currentTempo = args[2].toFloat();
+				currentPhase = args[3].toFloat();
+			} else if(markerString.compareTo("/made-it") == 0){
+				currentTempo = args[2].toFloat();
+			} else if(markerString.compareTo("/holding") == 0){
+				currentTempo = args[2].toFloat();
+				rampDirection = 0;
+				duration = args[3].toFloat();
+			} else if(markerString.compareTo("/finished-hold") == 0){
+
+			}
+
+			for(int i = 0; i < args.length; i++)
+				OSCString = OSCString.concat(args[i].toString() + " ");
+		}
+
+		public tcfm_markerEvent(){};
+
+		private int calcRampDirection(float ct, float tt){
+			if(ct < tt) return 1;
+			else if(ct > tt) return -1;
+			else return 0;
+		}
+		public float getStartTime(){return startTime;}
+		public float getCurrentTempo(){return currentTempo;}
+		public float getTargetTempo(){return targetTempo;}
+		public float getCurrentPhase(){return currentPhase;}
+		public float getTargetPhase(){return targetPhase;}
+		public float getDuration(){return duration;}
+		public float getWaitTime(){return waitTime;}
+		public int getRampDirection(){return rampDirection;}
+		public String getMarkerString(){return markerString;}
+		public String getOSCString(){return OSCString;}
+
 	}
 }
