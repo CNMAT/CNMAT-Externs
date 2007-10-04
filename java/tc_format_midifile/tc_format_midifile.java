@@ -241,7 +241,6 @@ public class tc_format_midifile extends MaxObject {
 			error("tc_format_midifile: Beat array is empty!");
 			return;
 		}
-
 		initDocument();
 		setupPartList();
 		setupParts();
@@ -305,11 +304,9 @@ public class tc_format_midifile extends MaxObject {
 			ev = (tcfm_markerEvent)markerArray.get(i);
 			float time = (float)ev.getStartTime();
 			subdivPos = ((SortedSet)subdivTimes_in.headSet(time)).size();
-			post("time = " + time + " subdivPos = " + subdivPos);
 			int beatIndex = ((int)Math.floor(subdivPos / (numSubdivs * 4)));
 			int subdivIndex = (subdivPos % (numSubdivs * 4));
 			markerPositions[beatIndex][subdivIndex] = 1;
-			post("adding marker to position: " + beatIndex + " " + subdivIndex);
 			String thisMarkerString = ev.getOSCString();
 			if(thisMarkerString != null){
 				if(markerStrings.containsKey(subdivPos)){
@@ -371,23 +368,8 @@ public class tc_format_midifile extends MaxObject {
 		for(int i = 0; i < ar.length; i++){
 			Element bar = ((Element)bars.item(i));
 			Element prevNote = null;
-			/*
-			int[] start = new int[]{-1, -1, -1, -1};
-			int[] end = new int[]{-1, -1, -1, -1};
-			int beat = -1;
-			for(int j = 0; j < 4; j++){
-				for(int k = 0; k < numSubdivs; k++){
-					if(ar[i][(j * numSubdivs) + k] > 0 && start[j] < 0) start[j] = (j * numSubdivs) + k;
-					if(ar[i][(j * numSubdivs) + k] != 0) end[j] = (j * numSubdivs) + k;
-				}
-			}
-			*/
-			//post("******************************");
-			//for(int j = 0; j < 4; j++) post(i + " start[" + j + "] = " + start[j] + " end[" + j + "] = " + end[j]);
-			//post("******************************");
 
 			for(int j = 0; j < ar[i].length; j++){
-				//if(j % numSubdivs == 0) ++beat;
 				if(ar[i][j] != 0){
 					Element note = musicxmlscore.createElement("note");
 					if(ar[i][j] < 0){
@@ -419,16 +401,20 @@ public class tc_format_midifile extends MaxObject {
 		}
 	}
 
-	private void outputDataForMidifile(){
-
-	}
-
 	public void clear(){
+		musicxmlscore = null;
 		beatArray.clear();
 		subdivArray.clear();
 		markerArray.clear();
 		beatStartTimes.clear();
-
+		subdivTimes_in.clear();
+		subdivTimes_out.clear();
+		beatPositions = null;
+		subdivPositions = null;
+		markerPositions = null;
+		markerStrings.clear();
+		lastTempo = 0;
+		numBars = 0;
 	}
 	
 	// Printing 
@@ -734,7 +720,29 @@ public class tc_format_midifile extends MaxObject {
 	}
 
 	public void dumpToMidifile(){
-
+		Iterator it = (beatArray.keySet()).iterator();
+		while(it.hasNext()){
+			tcfm_beatEvent e = (tcfm_beatEvent)(beatArray.get(it.next()));
+			outlet(0, new Atom[]{Atom.newAtom("/beat"), Atom.newAtom(e.getStartTime() * 1000.f), Atom.newAtom(e.getPitch())});
+		}
+		it = (subdivArray.keySet()).iterator();
+		while(it.hasNext()){
+			HashMap h = (HashMap)subdivArray.get(it.next());
+			Iterator subdiv_it = (h.keySet()).iterator();
+			while(subdiv_it.hasNext()){
+				Integer subdivIndex = (Integer)subdiv_it.next();
+				tcfm_subdivEvent e = (tcfm_subdivEvent)h.get(subdivIndex);
+				for(int i = 0; i < subdivsToOutput.length; i++){
+					if(subdivIndex % subdivsToOutput[i] == 0)
+						outlet(0, new Atom[]{Atom.newAtom("/subdiv/" + subdivsToOutput[i]), Atom.newAtom(e.getStartTime() * 1000.f), Atom.newAtom(e.getPitch())});
+				}
+			}
+		}
+		for(int i = 0; i < markerArray.size(); i++){
+			tcfm_markerEvent e = (tcfm_markerEvent)markerArray.get(i);
+			outlet(0, new Atom[]{Atom.newAtom("/marker"), Atom.newAtom("setText"), Atom.newAtom(e.getStartTime() * 1000.f), Atom.newAtom(e.getOSCString())});
+			outlet(0, new Atom[]{Atom.newAtom("/marker"), Atom.newAtom(e.getStartTime() * 1000.f), Atom.newAtom(71)});
+		}
 	}
 
 	class tcfm_beatEvent{
