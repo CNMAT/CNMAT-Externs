@@ -171,9 +171,16 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		String st = new String();
 		for(int i = 0; i < args.length - 1; i++)
 			st = st.concat(args[i + 1].toString() + " ");
-		byte[] data = st.getBytes();
 
-		addMetaEvent(0, data, timeStamp);
+		byte[] data;
+		try{data = st.getBytes("US-ASCII");}
+		catch(Exception e){
+			e.printStackTrace();
+			error("midifile: couldn't encode text.");
+			return;
+		}
+
+		addMetaEvent(1, data, timeStamp);
 	}
 
 	public void addMetaEvent(Atom[] args){
@@ -196,8 +203,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		try{m.setMessage(type, data, length);}
 		catch(InvalidMidiDataException e){e.printStackTrace();}
 		MidiEvent ev = new MidiEvent(m, tick);
-
-		post("" + tracks[0].add(ev));
+		tracks[0].add(ev);
 	}
 
 	public void read(){
@@ -561,6 +567,12 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void setDefaultChannel(int i){def_channel = i;}
 	public void setDefaultVelocity(int i){def_velocity = i;}
 	public void verbose(boolean b){verbose = b;}
+
+	public void notifyDeleted(){
+		sequencer.stop();
+		sequencer.close();
+		transmitter.close();
+	}
 
 	////////////////////////////////////////////////////////////
 	// the methods below implement javax.sound.midi.Receiver
