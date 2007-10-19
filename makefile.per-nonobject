@@ -15,6 +15,7 @@ PLATFORM = ANY
 # which will blow up the rest of the Makefile.
 # in case the full path to the working directory has white space.
 NAME = $(notdir $(lastword $(strip $(CURDIR))))
+NAME = $(notdir $(strip $(CURDIR)))
 
 # Making the version number accessible from this Makefile:
 #
@@ -70,7 +71,7 @@ WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
 # WEBSERVER_INCOMING_DIR = /tmp/incoming
 
 
-# Perl scripts might live 2-4 directories up the repository
+# Perl scripts might live 2-7 directories up the repository
 # source tree from whatever's being released
 PERL_SCRIPT_DIR = ../..
 ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
@@ -78,6 +79,15 @@ PERL_SCRIPT_DIR = ../../..
 endif
 ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
 PERL_SCRIPT_DIR = ../../../..
+endif
+ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
+PERL_SCRIPT_DIR = ../../../../..
+endif
+ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
+PERL_SCRIPT_DIR = ../../../../../..
+endif
+ifeq ($(wildcard $(PERL_SCRIPT_DIR)/*.pl),)
+PERL_SCRIPT_DIR = ../../../../../../..
 endif
 
 
@@ -202,6 +212,9 @@ tellversiontag:
 
 test: 
 	echo CURDIR $(CURDIR)
+	echo strip $(strip $(CURDIR))
+	echo lastword $(lastword $(strip $(CURDIR)))
+	echo notdir  $(notdir $(lastword $(strip $(CURDIR))))
 	echo NAME $(NAME)
 	echo PLATFORM $(PLATFORM)
 	echo INFO_FILE2  $(INFO_FILE2)
