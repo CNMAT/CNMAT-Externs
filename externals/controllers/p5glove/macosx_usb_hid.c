@@ -292,6 +292,6 @@ int ReadUSBHID( USBHIDHandle usbHidHandle, void *data, int count )
     UInt32 readSize = count;
     
     (*intf)->ReadPipe(intf, 1,  data, &readSize ); // 1 should be inPipeRef
-    
+	//(*intf)->ReadPipeTO(intf, 1,  data, &readSize, 10000, 10000 ); // this should work    
     return readSize;
 }
