@@ -53,6 +53,7 @@ VERSION 0.9.3: Proper cross-platform method for opening an SDIF file in Max's se
 VERSION 0.9.3v: Change in implementation of version method
 VERSION 0.9.4: Force Package Info Generation
 VERSION 1.0: Includes workaround for illegal SDIF files with -1 for the frame size
+VERSION 1.0.1: New outlet bangs when file is read
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -90,8 +91,9 @@ VERSION 1.0: Includes workaround for illegal SDIF files with -1 for the frame si
 /* This struct contains the "private" data for an SDIF-buffer: */
 typedef struct _SDIFbuffer_private {
   SDIFbuf_Buffer buf;
-	SDIFBuffer *next;	/* For linked list of all buffers, for name lookup */
-	int debug;			/* 0 or non-zero for debug mode. */
+  SDIFBuffer *next;	/* For linked list of all buffers, for name lookup */
+  int debug;			/* 0 or non-zero for debug mode. */
+  void *t_out;
 } SDIFBufferPrivate;
 
 
@@ -243,8 +245,9 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 	x->BufferAccessor = GetBuffer;
 	x->internal = getbytes((short) sizeof(SDIFBufferPrivate));
 	privateStuff = (SDIFBufferPrivate *) x->internal;
-  privateStuff->buf = SDIFbuf_Create();
+	privateStuff->buf = SDIFbuf_Create();
 	privateStuff->debug = 0;	
+	privateStuff->t_out = bangout(x);
 
 	SDIFbuffer_doclear(x);
 	AddNewBuffer(x);
@@ -405,6 +408,12 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
   //  update all the buffer's state according to the newly read data (even if no data read)
   x->fileName = filename;
   x->streamID = streamID;
+
+  // Output a bang after reading
+  {
+    SDIFBufferPrivate *p = x->internal;
+    outlet_bang(p->t_out);
+  }
 }
 
 
