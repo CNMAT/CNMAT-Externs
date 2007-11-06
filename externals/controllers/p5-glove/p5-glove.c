@@ -27,6 +27,7 @@ int visibleLEDs[8];
 typedef struct p5_glove
 {
 	t_object l_ob;
+	void *p_out3;
 	void *p_out2;
 	void *p_out1;		
 	void *p_out0;
@@ -79,83 +80,72 @@ void p5_glove_bang(t_p5_glove *x)
 	{
 		//  Sample the glove
 		
-			int err;
-			
-			err=p5glove_sample(theGlove, -1);
-			if (err < 0 && errno == EAGAIN)
+		int err;
+		err=p5glove_sample(theGlove, -1);
+		if (err < 0 && errno == EAGAIN)
+			return;
+		if (err < 0) 
+		{
+			post("Glove Failure");
 				return;
-			if (err < 0) {
-				post("Glove Failure");
-				return;
-			}
+		}
 			
-			
-			
-			//p5glove_process_sample(theGlove, &theData);
+		//p5glove_process_sample(theGlove, &theData);
 	
-			// Output buttons
-		
+		// Output buttons
 		uint32_t buttons;
 		p5glove_get_buttons(theGlove,&buttons);
+	
+		t_atom Buttonlist[3]; 
+		int theButtons[3];
+		theButtons[0] = (buttons & P5GLOVE_BUTTON_A);
+		theButtons[1] = (buttons & P5GLOVE_BUTTON_B);
+		theButtons[2] = (buttons & P5GLOVE_BUTTON_C);
+		for (i=0; i < 3; i++) 
+		{ 
+			SETLONG(Buttonlist+i,theButtons[i]); 
+		} 
+		outlet_list(x->p_out1,0L,3,&Buttonlist);
+			
+		// Output fingers
+		double clench;
+		t_atom Fingerlist[5];
+		for (i=0; i < 5; i++)
+		{
+			p5glove_get_finger(theGlove,i,&clench);
+			SETFLOAT(Fingerlist+i,clench);
+		}
+		outlet_list(x->p_out0,0L,5,&Fingerlist);
+						
+		// Output X Y Z
+		double pos[3];
+		p5glove_get_position(theGlove, pos);
+		t_atom posList[3];
+		for (i=0; i < 3; i++)
+		{
+			SETFLOAT(posList+i,pos[i]);
+		}
+		outlet_list(x->p_out2,0L,3,&posList);
 		
-	
-			t_atom Buttonlist[3]; 
-			int theButtons[3];
-			theButtons[0] = (buttons & P5GLOVE_BUTTON_A);
-			theButtons[1] = (buttons & P5GLOVE_BUTTON_B);
-			theButtons[2] = (buttons & P5GLOVE_BUTTON_C);
-			for (i=0; i < 3; i++) 
-			{ 
-				SETLONG(Buttonlist+i,theButtons[i]); 
-			} 
-			outlet_list(x->p_out1,0L,3,&Buttonlist);
-			/*
-			// Output fingers
-	
-			t_atom Fingerlist[5];
-			for (i=0; i < 5; i++)
-			{
-				SETLONG(Fingerlist+i,theData.finger[i]);
-			}
-			outlet_list(x->p_out0,0L,5,&Fingerlist);
-							
-			// Establish which LEDs are visible
-			for(i=0;i<8;i++)
-			{
-				if(theData.ir[i].visible)
-				{
-					visibleLEDs[visibleCount] = i;
-					visibleCount++;
-					gloveX += theData.ir[i].x;
-					gloveY += theData.ir[i].y;
-					gloveZ += theData.ir[i].z;
-				}
-			}
-	
-			// Simple Averaging of visible leds gives a centroid of sorts
-				
-			if(visibleCount>0)
-			{
-				// If there are visisble LEDs,  average LEDS 
-				gloveX = gloveX/visibleCount;
-				gloveY = gloveY/visibleCount;
-				gloveZ = gloveZ/visibleCount;
+		//Output axis andangle
+		double axis[3],angle;
+		p5glove_get_rotation(theGlove, &angle, axis);
+		t_atom tiltList[4];
+		for (i=0; i < 3; i++)
+		{
+			SETFLOAT(tiltList+i, axis[i]);
+		}
+		i = 3;
+		SETFLOAT(tiltList+i, angle);
+		outlet_list(x->p_out3,0L,4,&tiltList);
 		
-				// Output X Y Z
-				t_atom posList[3];
-				int glovePos[3];
-				glovePos[0] = gloveX;
-				glovePos[1] = gloveY;
-				glovePos[2] = gloveZ;
-				for (i=0; i < 3; i++)
-				{
-					SETLONG(posList+i,glovePos[i]);
-				}
-				outlet_list(x->p_out2,0L,3,&posList);
-			}	
-		*/
+		
+	}	
+	else 
+	{
+		post("No glove, no love. :-(");
 	}
-	else {post("No glove, no love. :-(");}
+	
 }			
 		
 
@@ -207,7 +197,8 @@ void *p5_glove_new(t_symbol *s, short argc, t_atom *argv)
 		post("Glove Connect Failed");
 	}
 	
-	x->p_out2 = listout(x); // create outlets
+	x->p_out3 = listout(x); // create outlets
+	x->p_out2 = listout(x);
 	x->p_out1 = listout(x);
 	x->p_out0 = listout(x);
 
