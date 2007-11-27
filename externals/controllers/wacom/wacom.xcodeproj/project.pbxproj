@@ -7,30 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
 		3FAD30B00A5988100038C954 /* TabletAEDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 3FAD30A80A5988100038C954 /* TabletAEDictionary.h */; };
 		3FAD30B10A5988100038C954 /* TAEHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 3FAD30A90A5988100038C954 /* TAEHelpers.c */; };
 		3FAD30B20A5988100038C954 /* TAEHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3FAD30AA0A5988100038C954 /* TAEHelpers.h */; };
 		3FAD30B30A5988100038C954 /* wacom.c in Sources */ = {isa = PBXBuildFile; fileRef = 3FAD30AB0A5988100038C954 /* wacom.c */; };
 		3FAD30B40A5988100038C954 /* Wacom.h in Headers */ = {isa = PBXBuildFile; fileRef = 3FAD30AC0A5988100038C954 /* Wacom.h */; };
-		3FAD30B50A5988100038C954 /* wacom.rsrc in Rez */ = {isa = PBXBuildFile; fileRef = 3FAD30AD0A5988100038C954 /* wacom.rsrc */; };
 		3FAD30B60A5988100038C954 /* WacomHelperFuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = 3FAD30AE0A5988100038C954 /* WacomHelperFuncs.c */; };
 		3FAD30B70A5988100038C954 /* WacomHelperFuncs.h in Headers */ = {isa = PBXBuildFile; fileRef = 3FAD30AF0A5988100038C954 /* WacomHelperFuncs.h */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
+		C91FEA7C0CFCB8C60092E254 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91FEA7B0CFCB8C60092E254 /* MaxAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		0F5B62020919440900A62EB9 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
 		3FAD30A80A5988100038C954 /* TabletAEDictionary.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TabletAEDictionary.h; sourceTree = "<group>"; };
 		3FAD30A90A5988100038C954 /* TAEHelpers.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = TAEHelpers.c; sourceTree = "<group>"; };
 		3FAD30AA0A5988100038C954 /* TAEHelpers.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TAEHelpers.h; sourceTree = "<group>"; };
 		3FAD30AB0A5988100038C954 /* wacom.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = wacom.c; sourceTree = "<group>"; wrapsLines = 0; };
 		3FAD30AC0A5988100038C954 /* Wacom.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wacom.h; sourceTree = "<group>"; };
-		3FAD30AD0A5988100038C954 /* wacom.rsrc */ = {isa = PBXFileReference; lastKnownFileType = archive.rsrc; path = wacom.rsrc; sourceTree = "<group>"; };
 		3FAD30AE0A5988100038C954 /* WacomHelperFuncs.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = WacomHelperFuncs.c; sourceTree = "<group>"; };
 		3FAD30AF0A5988100038C954 /* WacomHelperFuncs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = WacomHelperFuncs.h; sourceTree = "<group>"; };
 		8D01CCD20486CAD60068D4B7 /* wacom.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = wacom.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		C91FEA7B0CFCB8C60092E254 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +37,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */,
+				C91FEA7C0CFCB8C60092E254 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +58,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				0F5B62020919440900A62EB9 /* MaxAPI.framework */,
+				C91FEA7B0CFCB8C60092E254 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -69,7 +67,6 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3FAD30AD0A5988100038C954 /* wacom.rsrc */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -163,7 +160,6 @@
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3FAD30B50A5988100038C954 /* wacom.rsrc in Rez */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,19 +186,23 @@
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -234,17 +234,21 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -270,16 +274,20 @@
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
