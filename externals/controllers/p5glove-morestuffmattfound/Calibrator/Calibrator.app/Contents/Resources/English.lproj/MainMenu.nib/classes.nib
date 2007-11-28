@@ -1,0 +1,37 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                CloseGlove = id; 
+                OpenGlove = id; 
+                StartCalib = id; 
+                StopCalib = id; 
+                updateGLOVE = id; 
+            }; 
+            CLASS = MyWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                button1 = id; 
+                button2 = id; 
+                button3 = id; 
+                finger1 = id; 
+                finger2 = id; 
+                finger3 = id; 
+                finger4 = id; 
+                finger5 = id; 
+                x = id; 
+                y = id; 
+                z = id; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {calibrate = id; }; 
+            CLASS = NSWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSResponder; 
+        }
+    ); 
+    IBVersion = 1; 
+}
