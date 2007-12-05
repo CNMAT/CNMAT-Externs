@@ -15,6 +15,23 @@
 		BEED70E50A8153B600523D1A /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEED70E30A8153B600523D1A /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildStyle section */
+		3AD891A80C74A66900CA7CC2 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		3AD891A90C74A66900CA7CC2 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		8D01CCD20486CAD60068D4B7 /* sinusoids~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "sinusoids~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +142,12 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "sinusoids~" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				3AD891A80C74A66900CA7CC2 /* Development */,
+				3AD891A90C74A66900CA7CC2 /* Deployment */,
+			);
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
 			projectDirPath = "";
