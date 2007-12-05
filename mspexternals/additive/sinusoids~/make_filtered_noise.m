@@ -1,6 +1,6 @@
 % matlab script to build the noise table
 
-n = 96000;
+n = 129088;
 gaussnoise = randn(1,n);
 fs = 44100;
 fc = 500;
@@ -13,8 +13,8 @@ hold on
 plot(db(abs(fft(goodnoise))), 'g')
 
 
-diary most_of_noisetable.c
+fid = fopen('most_of_noisetable.c', 'wt');
 for i=1:length(goodnoise)
-  disp([num2str(goodnoise(i)) 'f, '])
+  fprintf(fid, [num2str(goodnoise(i)) 'f, \n']);
 end
-diary off
+fclose(fid)

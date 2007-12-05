@@ -41,6 +41,7 @@ VERSION 1.7.3: Changed name (in version system) to have the tilde.
 VERSION 1.7.4: Updated help file
 VERSION 1.7.5: Force Package Info Generation
 VERSION 1.7.6: Changed max sinusoids to 1024 -mzed
+VERSION 1.8: Debugged bandwidth enhancement to make it more narrowband
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
