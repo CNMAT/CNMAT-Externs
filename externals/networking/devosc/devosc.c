@@ -31,6 +31,7 @@ VERSION 0.0: Initial version reads from /dev/random instead, just to learn how t
 VERSION 0.1: Seems to work.  Added "open" and "close" messages, made packet size variable.
 VERSION 0.2: Added "errorreporing" message.
 VERSION 0.2.1: Force Package Info Generation
+VERSION 0.3: MachO-only version, no CFBundleGetFunctionPointerForName
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -49,6 +50,7 @@ VERSION 0.2.1: Force Package Info Generation
 #include <string.h>
 #include <errno.h>
 
+#include <unistd.h> // for close(), etc.
 
 void *devosc_class;
 Symbol *ps_FullPacket, *ps_OSCBlob;
@@ -88,31 +90,11 @@ void devosc_sendData(devosc *x, short size, char *data);
 
 
 
-// This is from David Z:
-// example which gets a pointer to the Mach-O function "open" from the Carbon framework.
-typedef int ((*pp_open) (const char *pathname, int flags));  // function definition typedef
-pp_open pointer_to_open; // declare function pointer variable to hold function pointer from bundle
-typedef size_t ((*pp_read) (int fd, void *buf, size_t count));  // function definition typedef
-pp_read pointer_to_read; // declare function pointer variable to hold function pointer from bundle
-typedef int ((*pp_close) (int fd));  // function definition typedef
-pp_close pointer_to_close; // declare function pointer variable to hold function pointer from bundle
-typedef int ((*pp_fcntl) (int fd, int cmd, int arg));  // function definition typedef
-pp_fcntl pointer_to_fcntl; // declare function pointer variable to hold function pointer from bundle
-typedef int ((*pp_stat) (const char *path, struct stat *sb));  // function definition typedef
-pp_stat pointer_to_stat; // declare function pointer variable to hold function pointer from bundle
 
 
 
 
 void main (void) {
-	// Also from David Z.:
-	CFBundleRef bundle	= CFBundleGetBundleWithIdentifier(CFSTR("com.apple.Carbon")); // open bundle
-	pointer_to_open = (pp_open)CFBundleGetFunctionPointerForName(bundle, CFSTR("open"));
-	pointer_to_read = (pp_read)CFBundleGetFunctionPointerForName(bundle, CFSTR("read"));
-	pointer_to_close = (pp_close)CFBundleGetFunctionPointerForName(bundle, CFSTR("close"));
-	pointer_to_fcntl = (pp_fcntl)CFBundleGetFunctionPointerForName(bundle, CFSTR("fcntl"));
-	pointer_to_stat = (pp_stat)CFBundleGetFunctionPointerForName(bundle, CFSTR("stat"));
-	
 	version(0);
 	setup((t_messlist **)&devosc_class, (method) devosc_new, (method) devosc_free,
 		  (short)sizeof(devosc),0L,A_DEFLONG,0);
@@ -164,21 +146,21 @@ void devosc_open(devosc *x) {
 
 	devosc_close(x);
 	
-	fd = (*pointer_to_open)(DEVICE_FILENAME, O_RDONLY);
-	// Should be:	fd = (*pointer_to_open)(DEVICE_FILENAME, O_RDONLY | O_NONBLOCK);
+	fd = open(DEVICE_FILENAME, O_RDONLY);
+	// Should be:	fd = open(DEVICE_FILENAME, O_RDONLY | O_NONBLOCK);
 	if (fd <= -1) {
 		char *msg = strerror(errno);
 		if (errno == 0) {
 			// For some reason errno is zero when the file doesn't exist
 			struct stat sb;
-			if ((*pointer_to_stat)(DEVICE_FILENAME, &sb) == 0) {
+			if (stat(DEVICE_FILENAME, &sb) == 0) {
 				error("devosc: open() failed with errno==0, but stat() seems happy. ???");
 			} else {
 				char *msg = strerror(errno);
 				error("devosc: open() failed with errno==0, but stat() says \"%s\".", msg);
 			}
 		} else {
-			error("devosc: Couldn't open() device: %s", msg);
+			error("devosc: Couldn't open() device %s: %s", DEVICE_FILENAME, msg);
 		}
 		return;
 	}
@@ -186,7 +168,7 @@ void devosc_open(devosc *x) {
 
 #if 0
 	// Make I/O nonblocking the hard way
-	if ((*pointer_to_fcntl)(fd, F_SETFL, O_NONBLOCK) == -1) {
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
 		char *msg = strerror(errno);
 		error("devosc: Couldn't fcntl() device to set it to nonblocking: %s", msg);
 		return;
@@ -197,7 +179,7 @@ void devosc_open(devosc *x) {
 void devosc_close(devosc *x) {
 	if (x->fd == -1) return;
 	
-	if ( (*pointer_to_close)(x->fd) != 0) {
+	if ( close(x->fd) != 0) {
 		char *msg = strerror(errno);
 		error("devosc: Couldn't close() device: %s", msg);
 	} else {
@@ -253,7 +235,7 @@ void read_rimasbox_packet(devosc *x) {
 		return;
 	}
 
-	bytes_read = (*pointer_to_read)(x->fd, x->osc_packet, x->packetsize);
+	bytes_read = read(x->fd, x->osc_packet, x->packetsize);
 	
 	if (bytes_read == x->packetsize) {
 		// success
@@ -281,7 +263,7 @@ void read_one_byte(devosc *x) {
 		return;
 	}
 
-	if ((*pointer_to_read)(x->fd, buf, 1) != 1) {
+	if (read(x->fd, buf, 1) != 1) {
 		char *msg = strerror(errno);
 		if (x->errorreporting) error("devosc: read() didn't return 1: %s", msg);
       } else {
