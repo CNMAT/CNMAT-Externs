@@ -68,8 +68,10 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	private	Transmitter transmitter = null;
 	private	File fp = null;
 
+	private Track[] tracks = null;
+
 	private	int originalNumTracks = 1;
-	private	int numTracks = 1;
+	private	int numTracks = 2;
 
 	private int def_duration = 250;
 	private int def_channel = 0;
@@ -80,13 +82,15 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	private static final int BANG_OUTLET = 2;
 	private static final int INFO_OUTLET = 3;
 
+	private boolean ignoreTempoChanges = false;
+
 	private boolean verbose = false;
 
 	private int[][] recordState = null;
 
 	public midifile(Atom[] args){
                 if(args.length > 0)
-                        numTracks = originalNumTracks = args[0].getInt();
+                        numTracks = originalNumTracks = args[0].getInt() + 1;
 
 		if(args.length > 1) def_duration = args[1].toInt();
 		if(args.length > 2) def_velocity = args[2].toInt();
@@ -94,11 +98,11 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 		recordState = new int[numTracks][16];
 
-                int inlets[] = new int[numTracks];
-                String INLET_ASSIST[] = new String [numTracks];
-                for(int i = 0; i < numTracks; i++){
+                int inlets[] = new int[numTracks - 1];
+                String INLET_ASSIST[] = new String [numTracks - 1];
+                for(int i = 0; i < numTracks - 1; i++){
                         inlets[i] = DataTypes.ALL;
-                        INLET_ASSIST[i] = "Track " + i + " midi input";
+                        INLET_ASSIST[i] = "Track " + (i + 1) + " midi input";
                 }
 
                 declareInlets(inlets);
@@ -113,13 +117,18 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		version();
 	}
 
+	public void ignoreTempoChanges(int i){
+		if(i == 0) ignoreTempoChanges = false;
+		else ignoreTempoChanges = true;
+	}
+
 	public void list(Atom[] args){
 		if(sequencer.isRunning()){
 			error("midifile: can't add notes to sequence while it is being played");
 			return;
 		}
 
-		addEventToTrack(args, getInlet());
+		addEventToTrack(args, getInlet() + 1);
 	}
 
 	public void addEventToTrack(Atom[] args){
@@ -134,6 +143,38 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		addEventToTrack(a, args[0].toInt());
 	}
 
+	public void test(){
+		post("" + sequence.getResolution());
+		sequencer.setMicrosecondPosition(10000000);
+		post("ms = " + sequencer.getMicrosecondPosition() + " tick = " + sequencer.getTickPosition());
+		post("" + (sequencer.getTickPosition() / sequence.getResolution()));
+		post("********************");
+	}
+
+	public void test2(){
+		long prev = 0;
+		long cur = 0;
+		long l = sequence.getTickLength();
+		long ll = 0;
+		while(ll < l){
+			sequencer.setTickPosition(ll);
+			cur = sequencer.getMicrosecondPosition();
+			post("" + cur + " " + (cur - prev) + " tempo = " + sequencer.getTempoInBPM());
+			prev = cur;
+			ll += 1000;
+		}
+		post("********************");
+	}
+
+	public void test3(){
+		long time = System.currentTimeMillis();
+		for(int i = 0; i < 50000; i++){
+			sequencer.setTickPosition((long)(Math.random() * 1000000));
+			post("" + sequencer.getMicrosecondPosition());
+		}
+		post("done in " + (System.currentTimeMillis() - time) + " ms");
+	}
+
 	public void addEventToTrack(Atom[] args, int t){
 		int note = args.length > 1 ? args[1].toInt() : 60;
 		int velocity = args.length > 2 ? args[2].toInt() : def_velocity;
@@ -143,15 +184,22 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 		long note_on_time = args[0].toLong() * 1000;
 		long note_off_time = note_on_time + (duration * 1000);
-		sequencer.setMicrosecondPosition(note_on_time);
-		long note_on_tick = sequencer.getTickPosition();
-		sequencer.setMicrosecondPosition(note_off_time);
-		long note_off_tick = sequencer.getTickPosition();
+		long note_on_tick, note_off_tick;
+
+		if(ignoreTempoChanges){
+			note_on_tick = (long)((args[0].toDouble() / 500.) * ((double)sequence.getResolution()));
+			note_off_tick = (long)((note_on_tick + (((double)duration / 500.) * ((double)sequence.getResolution()))));
+		} else {
+			sequencer.setMicrosecondPosition(note_on_time);
+			note_on_tick = sequencer.getTickPosition();
+			sequencer.setMicrosecondPosition(note_off_time);
+			note_off_tick = sequencer.getTickPosition();
+		}
 
 		MidiEvent ev = createNoteEvent(command, channel, note, velocity, note_on_tick);
 		MidiEvent ev_off = createNoteEvent(ShortMessage.NOTE_OFF, channel, note, 0, note_off_tick);
 
-		Track[] tracks = sequence.getTracks();
+		//Track[] tracks = sequence.getTracks();
 		tracks[t].add(ev);
 		tracks[t].add(ev_off);
 	}
@@ -197,7 +245,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		long tick;
 		sequencer.setMicrosecondPosition(timeStamp * 1000);
 		tick = sequencer.getTickPosition();
-		Track[] tracks = sequence.getTracks();
+		//Track[] tracks = sequence.getTracks();
 
 		MetaMessage m = new MetaMessage();
 		try{m.setMessage(type, data, length);}
@@ -214,7 +262,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	}
 	
 	public void read(String path){
-		Track[] tracks = null;
+		//Track[] tracks = null;
+		tracks = null;
 		try{
 			fp = new File(path);
 			sequence = MidiSystem.getSequence(fp);
@@ -240,10 +289,10 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		filepath = MaxSystem.saveAsDialog(new String(""), new String(""));
 		if(filepath == null) return;
 		
-		writeFile(filepath);
+		write(filepath);
 	}
 	
-	private int writeFile(String filepath){
+	public void write(String filepath){
 		File outputFile = new File(filepath);
 		try{
 			MidiSystem.write(sequence, numTracks > 1 ? 1 : 0, outputFile);
@@ -251,9 +300,9 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			//e.printStackTrace();
 			//System.exit(1);
 			error("midifile: couldn't create file at " + filepath);
-			return 1;
+			return;
 		}
-		return 0;
+		post("midifile: successfully wrote file " + filepath);
 	}
 
 	public void play(){
@@ -263,7 +312,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 	public void play(float startPos){
 		if(sequence == null) return;
-		sequencer.setMicrosecondPosition(Math.round(startPos * 1000));
+		sequencer.setMicrosecondPosition(Math.round(startPos * 1000.f));
 		sequencer.start();
 	}
 
@@ -320,7 +369,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void dump(){
 		stop();
 
-		Track[] tracks = sequence.getTracks();
+		//Track[] tracks = sequence.getTracks();
 
 		if(tracks == null || tracks.length == 0) return;
 		openSequencer();
@@ -469,6 +518,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 		openSequencer();
 		sequencer.setTempoInBPM(120.f);
+
+		tracks = sequence.getTracks();
 	}
 
 	public void postSequenceInfo(){
@@ -479,7 +530,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	}
 
 	public void tellmeeverything(){
-		Track[] tracks = sequence.getTracks();
+		//Track[] tracks = sequence.getTracks();
 
 		post("**************************************************");
 
@@ -509,7 +560,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		}else outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/filepath"), Atom.newAtom("")});
 		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/duration"), Atom.newAtom(sequencer.getMicrosecondLength() / 1000.f)});
 
-		Track[] tracks = sequence.getTracks();
+		//Track[] tracks = sequence.getTracks();
 		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/numTracks"), Atom.newAtom(tracks.length)});
 
 		long loopStart, loopEnd, loopCount;
