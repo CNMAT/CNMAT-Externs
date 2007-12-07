@@ -33,6 +33,7 @@ NAME: mattrms~
 DESCRIPTION: RMS energy analyzer with an idiosyncratic control structure
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2002,03,04,05,06
+DRUPAL_NODE: /patch/4062
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version 
 VERSION 0.2: has "continuous" mode

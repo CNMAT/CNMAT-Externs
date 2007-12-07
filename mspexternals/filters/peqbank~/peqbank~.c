@@ -31,6 +31,7 @@ NAME: peqbank~
 DESCRIPTION: Bank of biquad filters in series with analog-like control parameters based on shelving or parametric EQ (or low-level control in the biquad coefficient domain)
 AUTHORS: Tristan Jehan, Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07
+DRUPAL_NODE: /patch/4026
 SVN_REVISION: $LastChangedRevision$
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
 VERSION 1.0: Tristan's initial version 

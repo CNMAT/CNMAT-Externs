@@ -33,6 +33,7 @@ NAME: cambio~
 DESCRIPTION: Signal to event domain version of change: Output a float whenever the input signal's value changes.
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2007
+DRUPAL_NODE: /patch/4073
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version 
 VERSION 0.2: Renamed to "cambio~"
