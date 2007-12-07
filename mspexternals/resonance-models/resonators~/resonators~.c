@@ -35,6 +35,7 @@ DESCRIPTION: Parallel bank of resonant filters
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1996-2006
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
+DRUPAL_NODE: /patch/4019
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.6: Compiles under 7/02 Max SDK and CW 7.0 
 VERSION 1.7: Doesn't get smooth/unsmooth backwards

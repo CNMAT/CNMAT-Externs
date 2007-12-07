@@ -31,6 +31,7 @@ NAME: decaying-sinusoids~
 DESCRIPTION: Additive synthesis of a bank of exponentially decaying sinusoids
 AUTHORS: Adrian Freed and Matt Wright
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05,06
+DRUPAL_NODE: /patch/4072
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Adrian's initial version 
 VERSION 0.0.1: Force Package Info Generation

@@ -31,6 +31,7 @@ NAME: deinterleave
 DESCRIPTION: Divide a large input list into multiple output lists by de-interleaving.  E.g., for 2 outputs, it will put odd-numbered elements out the left list and even-numbered elements out the right list.
 AUTHORS: Tim Madden and Matt Wright
 COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
+DRUPAL_NODE: /patch/4071
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Tim's original version
 VERSION 1.0: 2/20/02 Matt Wright changed to right-to-left output order

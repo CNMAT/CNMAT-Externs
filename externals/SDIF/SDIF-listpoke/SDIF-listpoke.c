@@ -35,6 +35,7 @@ NAME: SDIF-listpoke
 DESCRIPTION: Write data from a Max list into an SDIF-buffer
 AUTHORS: Matt Wright 
 COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
+DRUPAL_NODE: /patch/4013
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1   021120 - Added "numcolumns" method
 VERSION 0.1.1 040405 (bj) - updated to use sdif-buf.c

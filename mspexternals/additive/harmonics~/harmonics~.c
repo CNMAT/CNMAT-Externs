@@ -31,6 +31,7 @@ NAME: harmonics~
 AUTHORS: Adrian Freed
 DESCRIPTION: MSP harmonic oscillator Bank
 COPYRIGHT_YEARS: 1996,97,98,99,2000,2001,2002,2003,2004,2005,2006
+DRUPAL_NODE: /patch/4069
 SVN_REVISION: $LastChangedRevision: 406$
 VERSION 1.1: Adrian Freed - NB: still working on amplutide normalisation of thw wave outputs
 VERSION 1.2: Doesn't expire, uses new versioning system

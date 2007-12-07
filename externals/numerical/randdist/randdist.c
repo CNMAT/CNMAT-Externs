@@ -25,6 +25,7 @@ NAME: randdist
 DESCRIPTION: Random number generator with over 30 statistical distributions.
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006-07
+DRUPAL_NODE: /patch/4023
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.1: Changed the way the random seed it made
 VERSION 1.2: Universal binary

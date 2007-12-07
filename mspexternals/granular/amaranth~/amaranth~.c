@@ -33,6 +33,7 @@ NAME: amaranth~
 DESCRIPTION: Idiosyncratic granular synthesis external
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2001,02,03,04,05,06,07
+DRUPAL_NODE: /patch/4074
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: Initial version. (10/18/01)
 VERSION 0.1: (020606) multichannel buffers OK, Clears all grains when DSP turn

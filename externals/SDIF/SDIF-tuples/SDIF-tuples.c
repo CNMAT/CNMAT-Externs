@@ -36,6 +36,7 @@ DESCRIPTION: Extract "tuples" of data (a list of values for each column) from an
 AUTHORS: Matt Wright and Ben "Jacobs" 
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07
+DRUPAL_NODE: /patch/4010
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.2: includes reltime
 VERSION 0.3: max_rows, only one complaint if empty

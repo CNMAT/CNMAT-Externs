@@ -37,6 +37,7 @@ DESCRIPTION: report overall info about an SDIF-buffer
 AUTHORS: Matt Wright and Ben "Jacobs"
 COPYRIGHT_YEARS: 2002,03,04,05,06
 PUBLICATION: ICMC 99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
+DRUPAL_NODE: /patch/4014
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0.1: 04/05/2004 -  (bj): updated to use sdif-buf.c
 VERSION 0.0.2: 06/22/2004 -  (bj): cleanup

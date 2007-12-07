@@ -31,6 +31,7 @@ NAME: roughness
 DESCRIPTION: Roughness estimate based on Richard Parncutt's algorithm.
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006
+DRUPAL_NODE: /patch/4018
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: First version
 VERSION 1.1: Added choice of diffent formulas for calculating the cbw

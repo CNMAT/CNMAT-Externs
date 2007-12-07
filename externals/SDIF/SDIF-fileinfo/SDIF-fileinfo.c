@@ -32,6 +32,7 @@ NAME: SDIF-fileinfo
 DESCRIPTION: Read info about SDIF streams from an SDIF file
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2005
+DRUPAL_NODE: /patch/4015
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: first version 050405, derived from SDIF-menu
 VERSION 0.1: Force Package Info Generation

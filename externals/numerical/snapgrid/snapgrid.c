@@ -30,6 +30,7 @@ NAME: snapgrid
 DESCRIPTION: Snap to Grid is used for adding randomness to a list of numbers, making a preset "grid, " making harmonic series, and creating lydian chromatic scales. Useful for tuning bell sounds to a chord, or randomizing amplitudes.
 AUTHORS: Tim Madden
 COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06
+DRUPAL_NODE: /patch/4006
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Tim's initial version
 VERSION 0.2: MachO compile, added version message

@@ -25,6 +25,7 @@ NAME: wavelet~
 DESCRIPTION: Discrete Wavelet Transform (DWT)
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006
+DRUPAL_NODE: /patch/4003
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.1: Universal Binary
 VERSION 1.1.1: GPL compatible license

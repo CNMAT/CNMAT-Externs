@@ -29,6 +29,7 @@ COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
 PUBLICATION: ICMC 97 paper | http://www.cnmat.berkeley.edu/ICMC97/papers-html/OpenSoundControl.html
 PUBLICATION: NIME 03 paper | http://www.cnmat.berkeley.edu/Research/NIME2003/NIME03_Wright.pdf
 PUBLICATION: Community web portal | http://www.opensoundcontrol.org
+DRUPAL_NODE: /patch/4059
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.2: was still version 1.1 on 68K; 1.3 is the same for both.
 VERSION 1.4: has 3 outlets

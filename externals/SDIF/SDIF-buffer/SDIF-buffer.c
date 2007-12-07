@@ -34,6 +34,7 @@ DESCRIPTION: Store SDIF data in Max's memory and make it accessible to other obj
 AUTHORS: Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
+DRUPAL_NODE: /patch/4016
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: (01/04/99) Original Version
 VERSION 0.2: (10/14/99) Updated by Matt to use the new SDIF library 

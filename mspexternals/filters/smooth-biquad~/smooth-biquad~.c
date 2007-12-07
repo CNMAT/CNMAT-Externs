@@ -30,6 +30,7 @@ NAME: smooth-biquad~
 DESCRIPTION: smooth-biquad~ is just like biquad~ except that new coefficient updates are "smoothed" to avoid clicks and other undesirable artifacts: the object linearly interpolates the coefficients from the old value to the new value over one MSP signal processing vector.
 AUTHORS: Tristan Jehan, Matt Wright
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+DRUPAL_NODE: /patch/4007
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.3alpha: Adrian's initial version
 VERSION 1.4: Rough windows compile by mzed, 20 April 2004

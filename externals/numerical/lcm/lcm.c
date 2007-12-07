@@ -32,6 +32,7 @@ NAME: lcm (least common multiple)
 DESCRIPTION: Least common multiple
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 1998,99,2000,01,02,03,04,05,06,07
+DRUPAL_NODE: /patch/4066
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version, 3/29/98.
 VERSION 0.2: First release; fixed bug with typed-in arguments

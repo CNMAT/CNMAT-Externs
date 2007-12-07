@@ -27,6 +27,7 @@ NAME: divcount~
 DESCRIPTION: "Divided count~," outputting the continuously-increasing signal out each active outlet in turn.  Used for "sequential looping".
 AUTHORS: Takahiko Suzuki
 COPYRIGHT_YEARS: 2000,01,02,03,04,05,06
+DRUPAL_NODE: /patch/4070
 SVN_REVISION: $LastChangedRevision$
 VERSION 000308: Takahiko's final version.
 VERSION 309: Built for UB by Matt Wright

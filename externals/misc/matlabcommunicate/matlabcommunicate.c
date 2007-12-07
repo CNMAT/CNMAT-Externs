@@ -30,6 +30,7 @@ NAME: matlabcommunicate
 DESCRIPTION: Bridge between Max/MSP and Matlab using the Matlab Engine
 AUTHORS: Peter Kassakian, Matt Wright
 COPYRIGHT_YEARS: 2005
+DRUPAL_NODE: /patch/4063
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.0: Initial hacking by Matt
 VERSION 1.1: buffer~ I/O, also fixed bug when evaluating an expression prints nothing

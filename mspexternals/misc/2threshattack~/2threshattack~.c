@@ -26,6 +26,7 @@ NAME: 2threshattack~
 DESCRIPTION: Two-threshold attack detector, aka a Schmitt Trigger (http://en.wikipedia.org/wiki/Schmitt_trigger)
 AUTHORS: Matt Wright
 COPYRIGHT_YEARS: 2004-06
+DRUPAL_NODE: /patch/4075
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.1: Matt's initial version (5/31/4)
 VERSION 0.2: UB recompile 

@@ -33,6 +33,7 @@ NAME: sinusoids~
 DESCRIPTION: Additive synthesis with a bank of (optionally bandwidth-enhanced) sinusoidal oscillators
 AUTHORS: Adrian Freed
 COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
+DRUPAL_NODE: /patch/4008
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.7: 030219, bandwidth-enhanced
 VERSION 1.7.1: 041228, ability to toggle verbosity	

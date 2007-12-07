@@ -25,6 +25,7 @@ NAME: migrator
 DESCRIPTION: Spectral harmony a la David Wessel
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2006-07
+DRUPAL_NODE: /patch/4060
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: Universal Binary
 VERSION 1.0.1: Added mig_oscamp and a better tellmeeverything function
