@@ -27,13 +27,13 @@ University of California, Berkeley.
 */
 
 /*
-	©1988,1989,2005,2006 Adrian Freed
+	©1988,1989,2005,2006,2007 Adrian Freed
 	©1999, 2005 UC Regents, All Rights Reserved. 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: resonators~
 DESCRIPTION: Parallel bank of resonant filters
 AUTHORS: Adrian Freed
-COPYRIGHT_YEARS: 1996-2006
+COPYRIGHT_YEARS: 1996-2007
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
 DRUPAL_NODE: /patch/4019
 SVN_REVISION: $LastChangedRevision$
@@ -52,6 +52,7 @@ VERSION 1.996: (MW) Changed NewPtr to sysmem_newptr(), added free() to plug memo
 VERSION 1.997: (MW) Changed free() routine to call dsp_free() *before* freeing memory. 
 VERSION 1.997.1: Force Package Info Generation
 VERSION 1.998: Improved help file
+VERSION 1.999: Fixed sample-rate acquisition to happen on every list that is sent not just at instantiation time.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -993,10 +994,15 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 	double tb2[MAXRESONANCES];
 #endif
 	int nres;
-	double srbar = x->sampleinterval;
+	double srbar;
 	resdesc *fp = x->base;
 	dresdesc *dp = x->dbase;
 	
+			x->samplerate =  sys_getsr();
+		if(x->samplerate<=0.0)
+			x->samplerate = 44100.0;
+		srbar = x->sampleinterval = 1.0/x->samplerate;
+
 	if(argc==2)
 	{
 		 x->ping = atom_getintarg(0,argc,argv);

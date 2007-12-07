@@ -14,6 +14,23 @@
 		BE7490180A81577500F4ABF4 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE7490160A81577500F4ABF4 /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildStyle section */
+		3AE302840D077DC70050C619 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		3AE302850D077DC70050C619 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		8D01CCD20486CAD60068D4B7 /* harmonics~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "harmonics~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +138,12 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "harmonics~" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				3AE302840D077DC70050C619 /* Development */,
+				3AE302850D077DC70050C619 /* Deployment */,
+			);
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
 			projectDirPath = "";
