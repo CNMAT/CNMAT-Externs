@@ -10,6 +10,7 @@
 	version 1.2.2 Matt Wright more debug info: addr of most recent input sig vector and gettime()
 	version 1.3 implements an altivec-optimized FFT and adds more windows
 	version 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
+	version 1.4 Sample rate agnostic - mzed
 */
 
 #include "ext.h"
@@ -32,7 +33,7 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.3.1"
+#define VERSION "1.4"
 #define RES_ID	7079
 #define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
@@ -275,8 +276,8 @@ long log2max(long n);
 
 int main(void) {
 
-    post("Analyzer~ object version " VERSION " by Tristan Jehan");
-    post("copyright © 2001 Massachusetts Institute of Technology");
+    post("Analyzer~ object version " VERSION " by Tristan Jehan, Matt Wright, and Michael Zbyszynski");
+    post("copyright © 2001 Massachusetts Institute of Technology, 2007 UC Regents");
     post("Pitch tracker based on Miller Puckette's fiddle~");
     post("copyright © 1997-1999 Music Department UCSD");
     post(" ");
@@ -395,6 +396,7 @@ skip:
 
 void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect) {
 	int vs = sys_getblksize();
+	x->x_Fs = sp[0]->s_sr; // store sampling rate
 
 	// Initializing the delay counter
 	x->x_counter = x->x_delay;
@@ -969,13 +971,18 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->peakBuf = (t_peakout*) NewPtr(x->x_npeakout * sizeof(t_peakout)); // from Fiddle~
 	x->histBuf = (t_float*) NewPtr((x->FFTSize + BINGUARD) * sizeof(t_float)); // for Fiddle~
 
-	if (x->x_Fs != DEFAULT_FS) {
+	/*
+	 if (x->x_Fs != DEFAULT_FS) {
 		error("Analyzer~: WARNING !!! Object set for 44.1 KHz only");
 		return 0;
 	} else {
 		x->BufBark = (t_float*) NewPtr(2*NUMBAND * sizeof(t_float));
 		x->BufSizeBark = (t_int*) NewPtr(NUMBAND * sizeof(t_int));
 	}
+	*/
+	
+	x->BufBark = (t_float*) NewPtr(2*NUMBAND * sizeof(t_float));
+	x->BufSizeBark = (t_int*) NewPtr(NUMBAND * sizeof(t_int));
 
 	// Create the Bark outlet(s)
 	if (x->x_output == noList) {
