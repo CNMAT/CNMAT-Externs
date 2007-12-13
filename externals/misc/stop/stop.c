@@ -27,6 +27,7 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2007
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: First version
+VERSION 1.01: Fixed a bug that would cause it to crash when it encounters any object with no inlets.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -108,9 +109,11 @@ short lookForDelays(t_patcher *p, void *x){
 	b = boxes;
 	int i;
 	for(b = boxes; b; b = b->b_next){
-		for(i = 0; i < xx->s_numArgs; i++){
-			if(strcmp(ob_name(b->b_firstin), xx->s_args[i].a_w.w_sym->s_name) == 0){
-				stopDelay(b->b_firstin);
+		if(b->b_firstin != NULL){
+			for(i = 0; i < xx->s_numArgs; i++){
+				if(strcmp(ob_name(b->b_firstin), xx->s_args[i].a_w.w_sym->s_name) == 0){
+					stopDelay(b->b_firstin);
+				}
 			}
 		}
 	}
