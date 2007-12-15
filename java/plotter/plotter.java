@@ -1,3 +1,4 @@
+
 import com.cycling74.max.*;
 import com.cycling74.jitter.*;
 
@@ -16,6 +17,7 @@ public class plotter extends MaxObject implements JitterNotifiable
 	JitterObject r;
 	JitterMatrix jm = null;
 	JitterMatrix gl_jm = null;
+	JitterMatrix empty_jm = new JitterMatrix();
 	JitterObject handle;
 	//Map datamap = Collections.synchronizedMap(new HashMap());
 	List xdata = Collections.synchronizedList(new ArrayList());
@@ -54,6 +56,9 @@ public class plotter extends MaxObject implements JitterNotifiable
 	float[] selectionBox_screen = new float[]{-1, -1, -1, -1}; // x, y, w, h (xy = lower left corner)
 	
 	int mouseDown = 0;
+
+	boolean prune = false;
+	boolean dataHasBeenPruned = false;
 	
 	public plotter(Atom[] args){
 		declareInlets(new int[]{DataTypes.ALL, DataTypes.ALL, DataTypes.ALL});	
@@ -99,7 +104,7 @@ public class plotter extends MaxObject implements JitterNotifiable
 		colors.add(new float[]{1.f, 0.f, 1.f});
 		colors.add(new float[]{0.f, 1.f, 1.f});
 		colors.add(new float[]{1.f, 1.f, 1.f});
-		
+
 		version();
 	}	
 	
@@ -116,9 +121,11 @@ public class plotter extends MaxObject implements JitterNotifiable
 			
 			if(gl_jm != null)
 				outlet(0, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(gl_jm.getName())});
+			else outlet(0, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(empty_jm.getName())});
 		} else {
 			if(jm != null)
 				outlet(0, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
+			else outlet(0, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(empty_jm.getName())});
 		}
 	}
 	
@@ -137,6 +144,8 @@ public class plotter extends MaxObject implements JitterNotifiable
 		float[] x, y, z;
 		boolean plotz = false;
 		int[] order;
+
+		if(prune && !dataHasBeenPruned) pruneData();
 		
 		if(shouldMakeDisplayBuffer) makeDisplayBuffer();
 		clear_context();
@@ -149,13 +158,20 @@ public class plotter extends MaxObject implements JitterNotifiable
 		synchronized(this.ydataBuffer){
 		synchronized(this.zdataBuffer){
 			if(verifyData() > 0) return;
-						
+
 			order = new int[xdataBuffer.size()];
-			for(int i = 0; i < xdataBuffer.size(); i++){
-				if(i < activePlot) order[i + 1] = i;
-				else if(i > activePlot) order[i] = i;
+		       	if(activePlot >= 0){
+				for(int i = 0; i < xdataBuffer.size(); i++){
+					if(i < activePlot) order[i + 1] = i;
+					else if(i > activePlot) order[i] = i;
+				}
+				order[0] = activePlot;
+			} else {
+				for(int i = 0; i < xdataBuffer.size(); i++){
+					order[i] = i;
+				}
 			}
-			order[0] = activePlot;
+
 						
 			for(int i = 0; i < xdataBuffer.size(); i++){
 				x = (float[])xdataBuffer.get(order[i]);
@@ -171,11 +187,13 @@ public class plotter extends MaxObject implements JitterNotifiable
 				for(int c = 0; c < tmp.length; c++)
 					thisColor[c] = tmp[c];
 				
-				if(order[i] != activePlot){
+				if(order[i] == activePlot || activePlot < 0){
+					sk.call("gldisable", "line_stipple");
+				} else {
 					sk.call("gllinestipple", new Atom[]{Atom.newAtom(1), Atom.newAtom(0xAAAA)});
 					sk.call("glenable", "line_stipple");
 					for(int c = 0; c < thisColor.length; c++) thisColor[c] *= 0.5;
-				} else sk.call("gldisable", "line_stipple");
+				}
 				
 				sk.call("glcolor", new Atom[]{Atom.newAtom(thisColor[0]), Atom.newAtom(thisColor[1]), Atom.newAtom(thisColor[2])});
 				
@@ -205,6 +223,9 @@ public class plotter extends MaxObject implements JitterNotifiable
 		int xlength;
 		int[] color;
 		float[] x, y, z;
+
+		if(prune && !dataHasBeenPruned) pruneData();			
+
 		synchronized(this.xdata){
 		synchronized(this.ydata){
 		synchronized(this.zdata){
@@ -212,7 +233,7 @@ public class plotter extends MaxObject implements JitterNotifiable
 				post("error " + verifyData());
 				return;
 			}
-			
+
 			xlength = ((float[])xdata.get(0)).length;
 			x = ((float[])xdata.get(0)); // we only allow one x array
 			y = ((float[])ydata.get(0)); // and one y array
@@ -229,6 +250,65 @@ public class plotter extends MaxObject implements JitterNotifiable
 		}}}
 		shouldProcess = false;
 	}
+
+	private void pruneData(){
+		List data;
+		double thismax = 0;
+		double thismin = 0;
+		double mean = 0;
+		double var = 0;
+		double std = 0;
+		float counter = 0;
+		synchronized(this.ydata){
+		synchronized(this.zdata){
+			if(zdata.size() == ydata.size())
+				data = zdata;
+			else data = ydata;
+			for(int i = 0; i < data.size(); i++){
+				float[] thisar = ((float[])data.get(i));
+				if(i == 0) thismax = thismin = thisar[0];
+				for(int j = 0; j < thisar.length; j++){
+					mean += thisar[j];
+					if(thisar[j] > thismax) thismax = thisar[j];
+					if(thisar[j] < thismin) thismin = thisar[j];
+					++counter;
+				}
+			}
+			mean = ((mean - thismin) - thismax) / (counter - 2);
+			for(int i = 0; i < data.size(); i++){
+				float[] thisar = ((float[])data.get(i));
+				for(int j = 0; j < thisar.length; j++){
+					if(thisar[j] != thismax && thisar[j] != thismin){
+						var += Math.pow(thisar[j] - mean, 2);
+					}
+				}
+			}
+			var = var / (counter - 2);
+			std = Math.sqrt(var);
+			for(int i = 0; i < data.size(); i++){
+				float[] thisar = ((float[])data.get(i));
+				for(int j = 0; j < thisar.length; j++){
+					if(Math.abs(thisar[j] - mean) > std){
+						//post("" + (thisar[j] - mean));
+						if(thisar[j] < mean) thisar[j] = (float)(mean - std);
+						else thisar[j] = (float)(mean + std);
+					}
+				}
+				data.remove(i);
+				data.add(i, thisar);
+			}
+			if(zdata.size() == ydata.size()){
+				zdata = data;
+				max[2] = (float)(mean + std);
+				min[2] = (float)(mean - std);
+			}else{ 
+				ydata = data;
+				max[1] = (float)(mean + std);
+				min[1] = (float)(mean - std);
+			}
+		}}
+		dataHasBeenPruned = true;
+	}
 	
 	private int verifyData(){
 		if(xdata.size() == 0 || ydata.size() == 0) return 1;
@@ -243,7 +323,7 @@ public class plotter extends MaxObject implements JitterNotifiable
 		} else {
 			//post("zdata.size() = " + zdata.size() + " ((float[])xdata.get(0)).length = " + ((float[])xdata.get(0)).length);
 			if(zdata.size() == 0) return 5;
-			if(zdata.size() != ((float[])xdata.get(0)).length) return 6;
+			//if(zdata.size() != ((float[])xdata.get(0)).length) return 6;
 		}
 		return 0;
 	}
@@ -272,6 +352,7 @@ public class plotter extends MaxObject implements JitterNotifiable
 		synchronized(this.xdataBuffer){
 		synchronized(this.ydataBuffer){
 		synchronized(this.zdataBuffer){
+			if(verifyData() > 0) return;
 			xdataBuffer.clear();
 			ydataBuffer.clear();
 			zdataBuffer.clear();
@@ -371,40 +452,43 @@ public class plotter extends MaxObject implements JitterNotifiable
 		max[inlet] = thisMax;
 		min[inlet] = thisMin;
 		
-		if(xdata.size() == ydata.size()){
-			shouldProcess = true;
-			shouldMakeDisplayBuffer = true;
-		}
+		shouldProcess = true;
+		shouldMakeDisplayBuffer = true;
+		dataHasBeenPruned = false;
 	}
 		
 	private void drawCrosshairs(){
 		if(!shouldDrawCrosshairs) return;
 		float aspect = (float)dim[0] / (float)dim[1];
-		float x = ((float[])xdataBuffer.get(activePlot))[currentXPos];
-		float y = ((float[])ydataBuffer.get(activePlot))[currentXPos];
-		float z;
-		boolean usedefz = true;
-		if(zdataBuffer.size() > 0 && !sonogramStyle) usedefz = false;
-		if(!usedefz) z = ((float[])zdataBuffer.get(activePlot))[currentXPos];
-		else z = defaultZ;
+		int n = activePlot >= 0 ? 1 : xdataBuffer.size();
+		for(int i = 0; i < n; i++){
+			int p = activePlot >= 0 ? activePlot : i;
+			float x = ((float[])xdataBuffer.get(p))[currentXPos];
+			float y = ((float[])ydataBuffer.get(p))[currentXPos];
+			float z;
+			boolean usedefz = true;
+			if(zdataBuffer.size() > 0 && !sonogramStyle) usedefz = false;
+			if(!usedefz) z = ((float[])zdataBuffer.get(activePlot))[currentXPos];
+			else z = defaultZ;
 			
 		
-		float x_world = scale(x, min_disp, max_disp, -aspect, aspect);
-		float y_world = scale(y, miny_disp, maxy_disp, -1, 1);
-		float z_world = z;
-		if(!usedefz) z_world = scale(z, min[2], max[2], -1, 1);
+			float x_world = scale(x, min_disp, max_disp, -aspect, aspect);
+			float y_world = scale(y, miny_disp, maxy_disp, -1, 1);
+			float z_world = z;
+			if(!usedefz) z_world = scale(z, min[2], max[2], -1, 1);
 		
 		
-		sk.call("glcolor", new Atom[]{Atom.newAtom(1.f), Atom.newAtom(1.f), Atom.newAtom(1.f)});
-		sk.call("moveto", new Atom[]{Atom.newAtom(x_world), Atom.newAtom(y_world), Atom.newAtom(z_world)});
-		sk.call("lineto", new Atom[]{Atom.newAtom(x_world), Atom.newAtom(-1.f), Atom.newAtom(z_world)});
-		sk.call("moveto", new Atom[]{Atom.newAtom(-aspect), Atom.newAtom(y_world), Atom.newAtom(z_world)});
-		sk.call("lineto", new Atom[]{Atom.newAtom(x_world), Atom.newAtom(y_world), Atom.newAtom(z_world)});
+			sk.call("glcolor", new Atom[]{Atom.newAtom(1.f), Atom.newAtom(1.f), Atom.newAtom(1.f)});
+			sk.call("moveto", new Atom[]{Atom.newAtom(x_world), Atom.newAtom(y_world), Atom.newAtom(z_world)});
+			sk.call("lineto", new Atom[]{Atom.newAtom(x_world), Atom.newAtom(-1.f), Atom.newAtom(z_world)});
+			sk.call("moveto", new Atom[]{Atom.newAtom(-aspect), Atom.newAtom(y_world), Atom.newAtom(z_world)});
+			sk.call("lineto", new Atom[]{Atom.newAtom(x_world), Atom.newAtom(y_world), Atom.newAtom(z_world)});
 		
-		if(!usedefz)
-			outlet(2, new Atom[]{Atom.newAtom("/coordinates"), Atom.newAtom(Math.round(x)), Atom.newAtom(y), Atom.newAtom(z)});
-		else
-			outlet(2, new Atom[]{Atom.newAtom("/coordinates"), Atom.newAtom(Math.round(x)), Atom.newAtom(y)});
+			if(!usedefz)
+				outlet(2, new Atom[]{Atom.newAtom("/coordinates"), Atom.newAtom(Math.round(x)), Atom.newAtom(y), Atom.newAtom(z)});
+			else
+				outlet(2, new Atom[]{Atom.newAtom("/coordinates"), Atom.newAtom(Math.round(x)), Atom.newAtom(y)});
+		}
 	}
 	
 	private void drawGrid(){
@@ -566,7 +650,7 @@ public class plotter extends MaxObject implements JitterNotifiable
 	
 	public void movecrosshair(int x){
 		if(xdata.size() == 0) return;
-		//if(x <= ((float[])xdataBuffer.get(activePlot)).length - 1 && x >= 0) currentXPos = x;
+		if(x <= ((float[])xdataBuffer.get(activePlot)).length - 1 && x >= 0) currentXPos = x;
 		shouldProcess = true;
 	}
 	
@@ -690,4 +774,27 @@ public class plotter extends MaxObject implements JitterNotifiable
 		shouldMakeDisplayBuffer = true;
 		shouldProcess = true;
 	}
+
+	public void pruneData(int i){
+		if(i == 0) prune = false;
+		else{
+			prune = true;
+			shouldProcess = true;
+		}
+	}
+	
+	public void tellmeeverything(){
+		post("xdata length = " + xdata.size());
+		post("ydata length = " + ydata.size());
+		post("zdata length = " + zdata.size());
+		for(int i = 0; i < xdata.size(); i++){
+			for(int j = 0; j < ((float[])xdata.get(i)).length; j++)
+				post("x[" + i + "][" + j + "] = " + ((float[])xdata.get(i))[j]);
+			for(int j = 0; j < ((float[])ydata.get(i)).length; j++)
+				post("y[" + i + "][" + j + "] = " + ((float[])ydata.get(i))[j]);
+			for(int j = 0; j < ((float[])zdata.get(i)).length; j++)
+				post("z[" + i + "][" + j + "] = " + ((float[])zdata.get(i))[j]);
+		}		
+	}
 }
+
