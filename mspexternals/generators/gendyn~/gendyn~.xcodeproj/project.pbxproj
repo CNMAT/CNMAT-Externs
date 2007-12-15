@@ -250,19 +250,15 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"../../../c74support/max-includes",
-					"../../../c74support/msp-includes",
-					../../../../lib/gsl/include,
-				);
+				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = ../../../../lib/gsl/lib;
+				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
-				PRELINK_LIBS = ../../../../lib/gsl/lib/libgsl.a;
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "gendyn~";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
