@@ -20,9 +20,10 @@ public class net_download extends MaxObject
 	//List q = Collections.synchronizedList(new LinkedList());
 	LinkedList q = new LinkedList();
 	int numActiveConnections = 0;
-	int maxNumConnections = 10;
+	int maxNumConnections = 1;
 	MaxClock c;
-	String tmpdir = null;
+	String downloadDir = null;
+	boolean announcedDone = false;
 
 	public net_download(Atom[] args){
 		declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});	
@@ -30,49 +31,56 @@ public class net_download extends MaxObject
 		c.delay(100);
 		
 		// this block of code is to make sure that the tmp file we use is not an alias.
-		// on mac os x System.getProperty("java.io.tmpdir") returns /tmp which is an
+		// on mac os x System.getProperty("java.io.downloadDir") returns /tmp which is an
 		// alias that points to /private/tmp
 		File f = null;
 		try{f = File.createTempFile("tmp","");}
 		catch(Exception e){}
-		try{tmpdir = f.getCanonicalPath();}
+		try{downloadDir = f.getCanonicalPath();}
 		catch(Exception e){
 			error("net_download: couldn't get the default system tmp path");
 		}
-		tmpdir = tmpdir.substring(0, tmpdir.lastIndexOf(System.getProperty("file.separator")));	
-		post("tmpdir: " + tmpdir);
+		downloadDir = downloadDir.substring(0, downloadDir.lastIndexOf(System.getProperty("file.separator")));	
+		//post("downloadDir: " + downloadDir);
 		
+		if(args.length > 0){
+			if(args[0].isInt()) setMaxNumConnections(args[0].toInt());
+		}		
+	
 		version();
 	}	
 	
 	public void get_html(Atom[] args){
-		post("¥ get_html " + args[0].toString());
+		//post("¥ get_html " + args[0].toString());
 		ArrayList ar = new ArrayList();
 		ar.add(new Integer(1));
 		ar.add(args);
 		synchronized(this.q){
 			q.add(ar);
 		}
+		announcedDone = false;
 	}
 	
 	public void get_image(Atom[] args){
-		post("¥ get_image " + args[0].toString());
+		//post("¥ get_image " + args[0].toString());
 		ArrayList ar = new ArrayList();
 		ar.add(new Integer(2));
 		ar.add(args);
 		synchronized(this.q){
 			q.add(ar);
 		}
+		announcedDone = false;
 	}
 	
 	public void get_file(Atom[] args){
-		post("¥ get_file " + args[0].toString());
+		//post("¥ get_file " + args[0].toString());
 		ArrayList ar = new ArrayList();
 		ar.add(new Integer(3));
 		ar.add(args);
 		synchronized(this.q){
 			q.add(ar);
 		}
+		announcedDone = false;
 	}
 	
 	public void bang(){
@@ -82,11 +90,16 @@ public class net_download extends MaxObject
 	private void dolist(){
 		//post("numActiveConnections: " + numActiveConnections);
 		//post("q.size = " + q.size());
-		
+
 		outlet(1, new Atom[]{Atom.newAtom("/numActiveConnections"), Atom.newAtom(numActiveConnections)});
 		outlet(1, new Atom[]{Atom.newAtom("/remainingFiles"), Atom.newAtom(q.size())});
-		if(q.size() == 0 && numActiveConnections == 0)
-			outlet(1, "/done");
+
+		if(q.size() == 0 && numActiveConnections == 0){
+			if(!announcedDone){
+				outlet(1, "/done");
+				announcedDone = true;
+			}
+		}
 		if(q.size() == 0 || numActiveConnections >= maxNumConnections) {
 			c.delay(100);
 			return;
@@ -240,33 +253,35 @@ public class net_download extends MaxObject
 						jitmat = new JitterMatrix(image);
 					}catch (IOException e) {
 						get_image(args); // if we can't connect, add this url back on to the list
-						post("¥ error: net_download: couldn't download " + imageURL);
+						error("net_download: couldn't download " + imageURL);
 						--numActiveConnections;
 						outletBang(1);
 						e.printStackTrace();
 						return;
 					}
 					outlet(0,"image",new Atom[]{Atom.newAtom("jit_matrix"),Atom.newAtom(jitmat.getName())});
-					
-					//if(outputPath != null){
-						String tmp = url.toString();
-						String[] tmpar = tmp.split("/");
-						File fp;
-						try{
-							fp = new File(tmpdir + File.separator + tmpar[tmpar.length - 1]);//File.createTempFile(imageURL.substring(imageURL.lastIndexOf("/") + 1), "");
-						} catch(Exception e){
-							error("net_download: couldn't create output file for " + imageURL);
-							e.printStackTrace();
-							return;
-						}
-						try{
-							ImageIO.write(image, "jpg", fp);
-							outlet(0, new Atom[]{Atom.newAtom("image_filepath"), Atom.newAtom(tmpdir), 
-								Atom.newAtom(tmpar[tmpar.length - 1])});
-						} catch(Exception e){
-							e.printStackTrace();
-						}
-					//}
+
+					//////////////////////////////
+					// finished outputting jittermatrix, now store file in tmp directory and output path
+					//////////////////////////////
+					String tmp = url.toString();
+					String[] tmpar = tmp.split("/");
+					File fp;
+					try{
+						fp = new File(downloadDir + File.separator + tmpar[tmpar.length - 1]);//File.createTempFile(imageURL.substring(imageURL.lastIndexOf("/") + 1), "");
+					} catch(Exception e){
+						error("net_download: couldn't create output file for " + imageURL);
+						e.printStackTrace();
+						return;
+					}
+					try{
+						ImageIO.write(image, "jpg", fp);
+						outlet(0, new Atom[]{Atom.newAtom("image_filepath"), Atom.newAtom(downloadDir), 
+								     Atom.newAtom(tmpar[tmpar.length - 1])});
+					} catch(Exception e){
+						e.printStackTrace();
+					}
+
 					outletBang(1);
 					--numActiveConnections;
 					//dolist();
@@ -277,64 +292,67 @@ public class net_download extends MaxObject
 	
 	private void doget_file(final Atom[] args){
 		final String url = args[0].toString();
-		Thread t = new Thread() 
-		{
-		public void run()
-			{
-			++numActiveConnections;
-			BufferedInputStream iostream = null;
-			URLConnection conn;
-			ArrayList<Byte> buffer = new ArrayList();
-			int b = 0;
-			//File out = new File("/Users/johnmac/porkbutt.cdf");
-			File fp = null;
-			FileOutputStream iostreamout = null;
-			int offset = 0;
-			try{
-				fp = File.createTempFile(url.substring(url.lastIndexOf("/") + 1), "");
-				iostreamout = new FileOutputStream(fp);
-			} catch(Exception e){
-				e.printStackTrace();
-			}
+		Thread t = new Thread(){
+				public void run(){
+					++numActiveConnections;
+					BufferedInputStream iostream = null;
+					URLConnection conn;
+					ArrayList<Byte> buffer = new ArrayList();
+					int b = 0;
+					int offset = 0;
+					//File out = new File("/Users/johnmac/porkbutt.cdf");
 			
-			try{
-				conn = new URL(url).openConnection();
-				conn.addRequestProperty("User-Agent", "Mozilla/4.76"); 
-				iostream = new BufferedInputStream(conn.getInputStream());
-			}catch(Exception e){e.printStackTrace();}
+					File fp = null;
+					FileOutputStream iostreamout = null;
 			
-			try{b = iostream.read();}
-			catch(Exception e){e.printStackTrace();}
-			int counter = 0;
-			while(b >= 0){
-				try{
-					buffer.add(new Byte((byte)b));
-					b = iostream.read();
-					++offset;
-				} catch (Exception e){
-					e.printStackTrace();
-					return;
+					try{
+						//fp = File.createTempFile(url.substring(url.lastIndexOf("/") + 1), "");
+						fp = new File(downloadDir + File.separator + url.substring(url.lastIndexOf("/") + 1));
+						iostreamout = new FileOutputStream(fp);
+					} catch(Exception e){
+						e.printStackTrace();
+					}
+			
+					try{
+						conn = new URL(url).openConnection();
+						conn.addRequestProperty("User-Agent", "Mozilla/4.76"); 
+						iostream = new BufferedInputStream(conn.getInputStream());
+					}catch(Exception e){e.printStackTrace();}
+			
+					try{b = iostream.read();}
+					catch(Exception e){e.printStackTrace();}
+					int counter = 0;
+					while(b >= 0){
+						try{
+							buffer.add(new Byte((byte)b));
+							b = iostream.read();
+							++offset;
+						} catch (Exception e){
+							e.printStackTrace();
+							return;
+						}
+					}
+			
+					byte[] buffer_byte = new byte[buffer.size()];
+					for(int i = 0; i < buffer.size(); i++)
+						buffer_byte[i] = ((Byte)buffer.get(i)).byteValue();
+					try{
+						iostreamout.write(buffer_byte);
+					} catch (Exception e){
+						e.printStackTrace();
+						return;
+					}
+					try{iostreamout.close();}
+					catch(Exception e){e.printStackTrace();}
+					String[] tmp = url.split("/");
+					//outlet(0, new Atom[]{Atom.newAtom("filepath"), Atom.newAtom(fp.getAbsolutePath()), Atom.newAtom(tmp[tmp.length - 1])});
+					outlet(0, new Atom[]{Atom.newAtom("filepath"), Atom.newAtom(downloadDir), Atom.newAtom(tmp[tmp.length - 1])});
+					post("finished downloading\n\t" + url);
+					outletBang(1);
+					--numActiveConnections;
+					//dolist();
 				}
-			}
-			
-			byte[] buffer_byte = new byte[buffer.size()];
-			for(int i = 0; i < buffer.size(); i++)
-				buffer_byte[i] = ((Byte)buffer.get(i)).byteValue();
-			try{
-				iostreamout.write(buffer_byte);
-			} catch (Exception e){
-				e.printStackTrace();
-				return;
-			}
-			try{iostreamout.close();}
-			catch(Exception e){e.printStackTrace();}
-			outlet(0, new Atom[]{Atom.newAtom("filepath"), Atom.newAtom(fp.getAbsolutePath())});
-			post("finished downloading\n\t" + url);
-			outletBang(1);
-			--numActiveConnections;
-			//dolist();
-			}
-		};
+			};
 		t.start();
 	}
 		
@@ -343,6 +361,32 @@ public class net_download extends MaxObject
 		
 	public void notifyDeleted() {
 		c.release();
+		Thread[] ar = new Thread[Thread.activeCount()];
+		Thread.enumerate(ar);
+		for(int i = 0; i < ar.length; i++){
+			post(ar[i].getName());
+			/*
+			try{
+				ar[i].interrupt();
+			}catch(Exception e){e.printStackTrace();}
+			*/
+		}
 	}
-	
+
+	public void setMaxNumConnections(int i){
+		if(i > 0) maxNumConnections = i;
+	}	
+
+	public void setDownloadDir(String s){
+		File fp = new File(s);
+                if(!fp.exists()){
+                        error("net_download: " + s + " doesn't exist.  Create it and try again.");
+                        return;
+                }
+                if(fp.isFile()){
+                        error("net_download: " + s + " is a file.  Please enter the path of a directory.");
+                        return;
+                }
+        }
+
 }

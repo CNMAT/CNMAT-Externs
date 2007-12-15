@@ -109,6 +109,10 @@ public class tc_format_midifile extends MaxObject {
 	}
 
 	public tc_format_midifile(Atom[] args){
+		String f = MaxSystem.locateFile("partwise.xsd");
+		if(f == null){
+			bail("tc_format_midifile: can't find musicxml schema partwise.xsd.  bailing out.");
+		}
 	
 		if(args.length == 0){
 			numSubdivs = 8;
@@ -1007,7 +1011,7 @@ public class tc_format_midifile extends MaxObject {
 			ie.printStackTrace();
 			return;
 		}
-		post("tc_format_midifile: wrote file " + path + " successfully.");
+		post("tc_format_midifile: successfully wrote file " + path);
 	}
 	/*
 	public void loadEditedScore(String path){
@@ -1081,6 +1085,7 @@ public class tc_format_midifile extends MaxObject {
 	public void dumpMainSubdivsToMidifile(){
 		long time = System.currentTimeMillis();
 		Iterator<Integer> bars = (subdivArray.keySet()).iterator();
+		int sd = 0;
 		while(bars.hasNext()){
 			Integer barNum = bars.next();
 			TreeMap<Integer, TreeMap> bar = subdivArray.get(barNum);
@@ -1089,12 +1094,18 @@ public class tc_format_midifile extends MaxObject {
 				Integer beatNum = beats.next();
 				TreeMap<Integer, tcfm_subdivEvent> beat = bar.get(beatNum);
 				Iterator<Integer> subdivs = beat.keySet().iterator();
+				int pos = 0;
 				while(subdivs.hasNext()){
 					Integer subdiv = subdivs.next();
-					tcfm_subdivEvent e = (beat.get(subdiv));
-					if(!(e == null))
-						outlet(mainSubdivStaff, new Atom[]{Atom.newAtom(e.getStartTime() * 1000.f), Atom.newAtom(e.getPitch())});
-
+					tcfm_subdivEvent ev = (beat.get(subdiv));
+					//if(!(e == null))
+					//outlet(mainSubdivStaff, new Atom[]{Atom.newAtom(e.getStartTime() * 1000.f), Atom.newAtom(e.getPitch())});
+					if(ev != null){
+						if(ev.getSubdivIndex() == 0) sd = getSubdivsForTempo(ev.getCurrentTempo());
+						int index = ev.getSubdivIndex();
+						if(index % (numSubdivs / sd) == 0)
+							outlet(mainSubdivStaff, new Atom[]{Atom.newAtom(ev.getStartTime() * 1000.f), Atom.newAtom(ev.getPitch())});
+					}
 				}
 			}
 		}
