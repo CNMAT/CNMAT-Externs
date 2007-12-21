@@ -37,6 +37,7 @@ VERSION 1.0.6: Unlimited list length.
 VERSION 1.0.7: Now likes lists of ints too!
 VERSION 1.1: Reads the contents of SDIF-buffers.
 VERSION 1.1.1: Fixed helpfile
+VERSION 1.1.2: Now uses SETFLOAT to set the contents of atoms.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -266,7 +267,7 @@ void *mig_new(double var, long nOsc, double oscamp)
 	for(i = 0; i < (int)x->m_nOsc * 2; i++){
 		SETFLOAT(x->m_arrayOut + i, 0.0);
 	}
-	
+
 	x->m_clock1 = clock_new(x, (method)mig_changeFreq);
 	x->m_clock2 = clock_new(x, (method)mig_fadeIn);
 	x->m_forcefeed_clock1 = clock_new(x, (method)forcefeed_change);
@@ -422,9 +423,8 @@ void mig_resmod(t_mig *x, t_symbol *msg, short argc, t_atom *argv){
 		x->m_decayRates[i] = argv[(i * 3) + 3].a_w.w_float;
 		x->m_arrayInLength = (argc / 3) * 2;
 		makePMF(x);
-		x->m_arrayOut[(i * 2)].a_w.w_float = x->m_arrayIn[randPMF(x) * 2].a_w.w_float;
-		x->m_arrayOut[(i * 2) + 1].a_w.w_float = x->m_oscamp;
-		//SETFLOAT(x->m_arrayOut + ((i * 2) + 1), x->m_oscamp);
+		x->m_arrayOut[i * 2] = x->m_arrayIn[randPMF(x) * 2];
+		SETFLOAT(x->m_arrayOut + ((i * 2) + 1), x->m_oscamp);
 	}
 }
 
@@ -442,7 +442,7 @@ void mig_fadeOut(t_mig *x)
 {
 	int i;
 	for(i = 0; i < x->m_fade; i++){
-		x->m_arrayOut[(((x->m_counter + i) % x->m_nOsc) * 2) + 1].a_w.w_float = x->m_oscamp * i / x->m_fade;
+		SETFLOAT(x->m_arrayOut + ((((x->m_counter + i) % x->m_nOsc) * 2) + 1), x->m_oscamp * i / x->m_fade);
 	}
 	
 	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
@@ -452,15 +452,14 @@ void mig_fadeOut(t_mig *x)
 		clock_fdelay(x->m_clock1, x->m_tinterval);
 }
 
-void mig_changeFreq(t_mig *x)
-{	
+void mig_changeFreq(t_mig *x){	
 	int r = randPMF(x);
 	float freq = x->m_arrayIn[(r * 2)].a_w.w_float;
 	
 	if(x->m_waitingToChangeNumOsc[0])
-		x->m_arrayOut[(x->m_counter * 2)].a_w.w_float = 0.;
+		SETFLOAT(x->m_arrayOut + (x->m_counter * 2), 0.);
 	else
-		x->m_arrayOut[(x->m_counter * 2)].a_w.w_float = gaussBlur(x, freq, r);
+		SETFLOAT(x->m_arrayOut + (x->m_counter * 2), gaussBlur(x, freq, r));
 	
 	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
 	outlet_float(x->m_out2, freq);
@@ -470,16 +469,15 @@ void mig_changeFreq(t_mig *x)
 		clock_fdelay(x->m_clock2, x->m_tinterval);
 }
 
-void mig_fadeIn(t_mig *x)
-{
+void mig_fadeIn(t_mig *x){
 	int i, n;
 	
 	if(x->m_waitingToChangeNumOsc[0])
-		x->m_arrayOut[(x->m_counter * 2) + 1].a_w.w_float = 0.;
+		SETFLOAT(x->m_arrayOut + ((x->m_counter * 2) + 1), 0.);
 	else{
 		for(i = 0; i < x->m_fade; i++){
 			n = ((x->m_counter - i) < 0) ? x->m_nOsc + (x->m_counter - i) : (x->m_counter - i);
-			x->m_arrayOut[(n * 2) + 1].a_w.w_float = x->m_oscamp * (i + 1) / x->m_fade;
+			SETFLOAT(x->m_arrayOut + ((n * 2) + 1), x->m_oscamp * (i + 1) / x->m_fade);
 		}
 	}	
 	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
@@ -539,7 +537,7 @@ void mig_int(t_mig *x, long n)
 	clock_unset(x->m_clock1);
 	clock_unset(x->m_clock2);
 	for(i = 0; i < (int)x->m_nOsc * 2; i++){
-		x->m_arrayOut[i].a_w.w_float = 0.0;
+		SETFLOAT(x->m_arrayOut + i, 0.0);
 	}
 	outlet_list(x->m_out1, 0, 2, ar);
 }
@@ -604,7 +602,7 @@ void mig_probDecay(t_mig *x){
 	int i;
 	
 	for(i = 0; i < x->m_arrayInLength / 2; i++){
-		x->m_arrayIn[(i * 2) + 1].a_w.w_float = x->m_arrayIn[(i * 2) + 1].a_w.w_float * expf(-1. * x->m_decayRates[i] * x->m_decayTime);
+		SETFLOAT(x->m_arrayIn + ((i * 2) + 1), x->m_arrayIn[(i * 2) + 1].a_w.w_float * expf(-1. * x->m_decayRates[i] * x->m_decayTime));
 	}
 	makePMF(x);
 	x->m_decayTime = x->m_decayTime + .00000005;
@@ -635,8 +633,7 @@ void forcefeed(t_mig *x){
 void forcefeed_out(t_mig *x){
 	int i;
 	for(i = 0; i < (int)x->m_nOsc; i++){
-		//x->m_arrayOut[(i * 2)].a_w.w_float = 0.0;
-		x->m_arrayOut[(i * 2) + 1].a_w.w_float = 0.0;
+		SETFLOAT(x->m_arrayOut + ((i * 2) + 1), 0.0);
 	}
 	
 	outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
@@ -646,7 +643,7 @@ void forcefeed_out(t_mig *x){
 void forcefeed_change(t_mig *x){
 	int i;
 	for(i = 0; i < (int)x->m_nOsc; i++){
-		x->m_arrayOut[(i * 2)].a_w.w_float = x->m_arrayIn[randPMF(x) * 2].a_w.w_float;
+		SETFLOAT(x->m_arrayOut + (i * 2), x->m_arrayIn[randPMF(x) * 2].a_w.w_float);
 	}
 	
 	outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
@@ -657,7 +654,7 @@ void forcefeed_in(t_mig *x)
 {
 	int i;
 	for(i = 0; i < (int)x->m_nOsc; i++){
-		x->m_arrayOut[(i * 2) + 1].a_w.w_float = x->m_oscamp;
+		SETFLOAT(x->m_arrayOut + ((i * 2) + 1), x->m_oscamp);
 	}
 	
 	outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
@@ -743,8 +740,8 @@ void mig_nOsc(t_mig *x, long n)
 	
 	if(x->m_nOsc > oldNumOsc){
 		for(i = oldNumOsc; i < x->m_nOsc; i++){
-			x->m_arrayOut[(i * 2)].a_w.w_float = x->m_arrayIn[randPMF(x) * 2].a_w.w_float;
-			x->m_arrayOut[(i * 2) + 1].a_w.w_float = x->m_oscamp;
+			SETFLOAT(x->m_arrayOut + (i * 2), x->m_arrayIn[randPMF(x) * 2].a_w.w_float);
+			SETFLOAT(x->m_arrayOut + ((i * 2) + 1), x->m_oscamp);
 		}
 	}
 }
@@ -777,7 +774,7 @@ void mig_nOsc_smooth(t_mig *x, long n)
 		x->m_nOsc = n;
 		x->m_arrayOut = realloc(x->m_arrayOut, (2 * n) * sizeof(t_atom));
 		for(i = oldNumOsc * 2; i < x->m_nOsc * 2; i++){
-			x->m_arrayOut[i].a_w.w_float = 0.;
+			SETFLOAT(x->m_arrayOut + i, 0.0);
 		}
 	}
 }
