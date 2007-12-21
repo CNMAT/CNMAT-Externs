@@ -44,7 +44,7 @@ typedef struct mapper
 	float s_output2;				// default output2 for reset
 	float s_coeff;					// default coefficient for reset
 	long clipmode;
-	long listmode;		
+	long listmode;
 } Mapper;
 
 /* globalthat holds the class definition */
@@ -59,6 +59,7 @@ void map_setOutput1(Map *f, float val);
 void map_setOutput2(Map *f, float val);
 void map_setClip(Map *f, int val);
 void map_init(Mapper *s, Map *f);
+
 
 // Mapper Prototypes
 Mapper *mapper_new(Symbol *s, short argc, Atom *argv);
@@ -77,6 +78,7 @@ void mapper_reset(Mapper *s, Symbol *sym);
 void mapper_resetAll(Mapper *s, Symbol *sym);
 void read_sym(Mapper *s, Atom *argv, int i);
 void mapper_print(Mapper *s);
+
 
 float map_process(Map *f, float data)
 {
@@ -477,26 +479,7 @@ Mapper *mapper_new(Symbol *sym, short argc, Atom *argv)
 		map_init(s, &s->s_map[i]);
 	}
 
-/* For debugging */	
-	post("--- Mapper ---");	
-	post("	input 1  = %.2f", inputmin);
-	post("	input 2  = %.2f", inputmax);
-	post("	output 1 = %.2f", mapmin);
-	post("	output 2 = %.2f", mapmax);
-	post("	exponential coefficient = %.2f", mapcoeff);
-	post("	number of channels = %d", chcnt);
-	if (s->listmode) {
-		post("	list mode = list");
-	} else {
-		post("	list mode = nolist");
-	}	
-	if (s->clipmode) {
-		post("	clip mode = clip");
-	} else {
-		post("	clip mode = noclip");
-	}	
-	post("");
-	
+		
 	return s;
 
 }
@@ -514,6 +497,7 @@ void mapper_free(Mapper *s)
 	}
 }
 
+							  
 void mapper_param_in1(Mapper *s, Symbol *sym, short argc, Atom *argv)
 {
 	short i;
@@ -874,6 +858,7 @@ int main(void)
 	addmess((method)mapper_mapcoeff, "coeffall", A_GIMME, 0);
 	addmess((method)mapper_print, "print", 0);
 	addmess((method)mapper_all, "list", A_GIMME, 0);
+
 
 	/* list object in the new object list */
 //	finder_addclass("Analysis","mapper");
