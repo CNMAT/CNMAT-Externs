@@ -47,6 +47,7 @@ VERSION 2.2: Now handles meta messages
 VERSION 2.2.1: Fixed a bug that caused all tracks of a multi-track file to start together even if one of them had a delay at the beg.
 VERSION 2.2.2: Understands text meta events
 VERSION 3.0: Totally redesigned to make much better use of javax.sound.midi
+VERSION 3.0.1: Sets all note off velocities to 0 by default
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -79,10 +80,11 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 	private static final int MAIN_OUTLET = 0;
 	private static final int DUMP_OUTLET = 1;
-	private static final int BANG_OUTLET = 2;
-	private static final int INFO_OUTLET = 3;
+	private static final int BANG_OUTLET = 3;
+	private static final int INFO_OUTLET = 2;
 
 	private boolean ignoreTempoChanges = false;
+	private boolean ignoreNoteOffVelocity = true;
 
 	private boolean verbose = false;
 
@@ -141,38 +143,6 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		for(int i = 0; i < a.length; i++)
 			a[i] = args[i + 1];
 		addEventToTrack(a, args[0].toInt());
-	}
-
-	public void test(){
-		post("" + sequence.getResolution());
-		sequencer.setMicrosecondPosition(10000000);
-		post("ms = " + sequencer.getMicrosecondPosition() + " tick = " + sequencer.getTickPosition());
-		post("" + (sequencer.getTickPosition() / sequence.getResolution()));
-		post("********************");
-	}
-
-	public void test2(){
-		long prev = 0;
-		long cur = 0;
-		long l = sequence.getTickLength();
-		long ll = 0;
-		while(ll < l){
-			sequencer.setTickPosition(ll);
-			cur = sequencer.getMicrosecondPosition();
-			post("" + cur + " " + (cur - prev) + " tempo = " + sequencer.getTempoInBPM());
-			prev = cur;
-			ll += 1000;
-		}
-		post("********************");
-	}
-
-	public void test3(){
-		long time = System.currentTimeMillis();
-		for(int i = 0; i < 50000; i++){
-			sequencer.setTickPosition((long)(Math.random() * 1000000));
-			post("" + sequencer.getMicrosecondPosition());
-		}
-		post("done in " + (System.currentTimeMillis() - time) + " ms");
 	}
 
 	public void addEventToTrack(Atom[] args, int t){
@@ -382,6 +352,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 				sequencer.setTickPosition(ev.getTick());
 				time = ((float)sequencer.getMicrosecondPosition()) / 1000.f;
 
+				if(verbose) post("status = " + m.getStatus());
 				if(m.getStatus() == 255)
 					oscmessage = formatMetaMessage((MetaMessage)m, time);
 				else oscmessage = formatMidiMessage(m, time);
@@ -397,11 +368,12 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		byte[] message = m.getMessage();
 
 		if(status >= 128 && status <= 159){
-			// 128-143 = note on, channels 1-16.
-			// 144-159 = note off, channels 1-16.
+			// 128-143 = note off, channels 1-16.
+			// 144-159 = note on, channels 1-16.
 			int note, velocity, channel;
 			note = (int)(message[1] & 0xFF);
 			velocity = (int)(message[2] & 0xFF);
+			if(status <= 143 && ignoreNoteOffVelocity) velocity = 0;
 			channel = status <= 143 ? status - 128 : status - 144;
 
 			if(timeStamp == -1)
@@ -446,6 +418,10 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			case 84: // SMPTE offset
 				// hour, minute, sec, frame, subframe
 
+				post("********************");
+				post("timeStamp = " + timeStamp);
+				for(int i = 0; i < data.length; i++)
+					post(i + " " + data[i]);
 				if(timeStamp == -1)
 					return new Atom[]{Atom.newAtom("SMPTE_offset"), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
 				else
@@ -618,6 +594,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void setDefaultChannel(int i){def_channel = i;}
 	public void setDefaultVelocity(int i){def_velocity = i;}
 	public void verbose(boolean b){verbose = b;}
+
+	public void ignoreNoteOffVelocity(int i){ignoreNoteOffVelocity = i == 0 ? false : true;}
 
 	public void notifyDeleted(){
 		sequencer.stop();
