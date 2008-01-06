@@ -35,6 +35,7 @@ enum _distributions{
 	R_GAUSSIAN_TAIL,
 	R_BIVARIATE_GAUSSIAN,
 	R_EXPONENTIAL,
+	R_ERLANG,
 	R_LAPLACE,
 	R_EXPPOW,
 	R_CAUCHY,
@@ -75,6 +76,7 @@ typedef struct _rdist{
         t_pxobject r_ob;
         long r_in_0;
         void *r_out0;
+	void *r_out1;
         gsl_rng *r_rng;
         t_atom *r_vars;
         int r_dist;
@@ -119,6 +121,7 @@ void rdist_gaussian(void *xx);
 void rdist_gaussian_tail(void *xx);
 void rdist_bivariate_gaussian(void *xx);
 void rdist_exponential(void *xx);
+void rdist_erlang(void *xx);
 void rdist_laplace(void *xx);
 void rdist_exppow(void *xx);
 void rdist_cauchy(void *xx);

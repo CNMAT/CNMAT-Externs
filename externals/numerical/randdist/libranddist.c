@@ -44,7 +44,6 @@ void rdist_init(t_rdist *x, short argc, t_atom *argv){
 	gsl_rng_set(x->r_rng, makeseed());
 
 	x->r_whichBuffer = 0;
-	x->r_bufferPos = 0;
 
 	x->r_vars = (t_atom *)calloc(R_MAX_N_VARS, sizeof(t_atom));
 	x->r_data = (float *)calloc(x->r_stride, sizeof(float));
@@ -97,6 +96,9 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 		}else if(!strcmp(msg->s_name, "exponential")){
 			x->r_dist = R_EXPONENTIAL;
 			x->r_function = rdist_exponential;
+		}else if(!strcmp(msg->s_name, "erlang")){
+			x->r_dist = R_ERLANG;
+			x->r_function = rdist_erlang;
 		}else if(!strcmp(msg->s_name, "laplace")){
 			x->r_dist = R_LAPLACE;
 			x->r_function = rdist_laplace;
@@ -265,7 +267,6 @@ void rdist_incBufPos(t_rdist *x){
 //void rdist_fillBuffers(t_rdist *x, int n, float *buffer){
 void *rdist_fillBuffers(void *args){
 	t_rdist *x = (t_rdist *)args;
-	//post("entering thread %d", x->r_bufferSize);
 
 	/************************************************
 	//need to make local copies of all vars
@@ -355,6 +356,8 @@ char *rdist_getDistString(int d){
 			return "bivariate_gaussian";
 		case R_EXPONENTIAL :
 			return "exponential";
+		case R_ERLANG :
+			return "erlang";
 		case R_LAPLACE :
 			return "laplace";
 		case R_EXPPOW :
@@ -450,6 +453,13 @@ void rdist_exponential(void *xx){
 	t_rdist *x = (t_rdist *)xx;
 	const double mu = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
 	x->r_data[0] = (float)gsl_ran_exponential(x->r_rng, mu);
+}
+
+void rdist_erlang(void *xx){
+	t_rdist *x = (t_rdist *)xx;
+	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+	const double n = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+	x->r_data[0] = (float)gsl_ran_erlang(x->r_rng, a, n);
 }
 
 void rdist_laplace(void *xx){
