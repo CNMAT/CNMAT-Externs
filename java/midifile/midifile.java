@@ -48,6 +48,7 @@ VERSION 2.2.1: Fixed a bug that caused all tracks of a multi-track file to start
 VERSION 2.2.2: Understands text meta events
 VERSION 3.0: Totally redesigned to make much better use of javax.sound.midi
 VERSION 3.0.1: Sets all note off velocities to 0 by default
+VERSION 3.0.2: Now outputs /text message for meta events like markers
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -61,7 +62,7 @@ import javax.sound.midi.*;
 
 public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void version(){
-		post("midifile Version 3.0, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
+		post("midifile Version 3.0.1, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
 	}
 
 	private	Sequence sequence = null;
@@ -390,14 +391,16 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		byte[] data = m.getData();
 
 		//http://www.sonicspot.com/guide/midifiles.html
+		post("type = " + type);
 		switch (type) {
 			case 0:
 				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+			case 1:
+				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
 			case 3:
-				/*
 				String st = new String(data);
 				post("META EVENT " + st);
-				*/
+
 				break;
 			case 47: // end of track
 				outlet(BANG_OUTLET, "bang");
