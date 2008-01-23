@@ -7,7 +7,7 @@ bash
 # Note this kludge to get /Applications/MATLAB701, /Applications/MATLAB704, etc:
 MATLAB=`echo /Applications/MATLAB*`
 export MATLAB
-DYLD_LIBRARY_PATH=$MATLAB/bin/mac:$MATLAB/sys/os/mac:$DYLD_LIBRARY_PATH
+DYLD_LIBRARY_PATH=$MATLAB/bin/maci:$MATLAB/sys/os/maci:$DYLD_LIBRARY_PATH
 export DYLD_LIBRARY_PATH
 PATH=$MATLAB/bin:$PATH
 export PATH
