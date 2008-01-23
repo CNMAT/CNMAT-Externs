@@ -558,7 +558,7 @@ done:
 }
 
 
-void matlabbridge_matlab2bufferchan(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, int chan, float SR) {
+void matlabbridge_matlab2bufferchan(t_theobject *x, Symbol *matlabVariable, Symbol *buffername, int chan, double SR) {
   post("matlabcommunicate: matlab2bufferchan not implemented.");
 }
 
