@@ -37,6 +37,8 @@ VERSION 1.1: buffer~ I/O, also fixed bug when evaluating an expression prints no
 VERSION 1.1.1: increased Matlab text output capacity from 1000 to 10000 characters
 VERSION 1.1.2: Fixed bug so Matlab disp() works
 VERSION 1.1.3: Force Package Info Generation
+VERSION 2.0: Builds again (only for MacIntel), sending a list of numbers now goes in binary, not ASCII
+VERSION 2.0.01: Now checks return value from any calls to Matlab engine. 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -47,7 +49,6 @@ VERSION 1.1.3: Force Package Info Generation
 #include "engine.h"
 #include "buffer.h"
 
-#define MAXORDER 1000
 #define MATLAB_TEXT_OUTPUT_CAPACITY 10000
 #define STRING_CAPACITY 1000
 #define BIGGEST_LIST 5000
@@ -58,7 +59,6 @@ void *theobject_class;
 typedef struct _theobject
 {
   t_pxobject x_obj;
-  float x_array[MAXORDER];  // This shouldn't be here.
   void *x_outlet;
   float x_result;
   Engine *x_engine;
@@ -76,7 +76,6 @@ void theobject_dsp(t_theobject *x, t_signal **sp, short *count);
 void theobject_sum(t_theobject *x);
 void theobject_get(t_theobject *x, Symbol *variable);
 void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv);
-void theobject_clear(t_theobject *x, t_symbol *message, short argc, t_atom *argv);
 void theobject_list(t_theobject *x, t_symbol *msg, short argc, t_atom *argv);
 void theobject_free(t_theobject *x);
 void theobject_closeEngine(t_theobject *x);
@@ -108,7 +107,6 @@ void main(void)
   setup((t_messlist **)&theobject_class, (method)theobject_new, (method)theobject_free, (short)sizeof(t_theobject), 0L, A_GIMME, 0);
   // dsp_initclass();
   // addmess((method)theobject_dsp, "dsp", A_CANT, 0);
-  addmess((method)theobject_clear,"clear", A_GIMME, 0);
   addmess((method)theobject_sum,"sum", 0);
   addmess((method)theobject_closeEngine,"closeEngine", 0);
   addmess((method)theobject_get, "get", A_SYM, 0);
@@ -187,6 +185,7 @@ void theobject_get(t_theobject *x, Symbol *variable) {
 void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv) {
   char s[STRING_CAPACITY];
   mxArray *ans;
+  int result;
   
   if (!x->engineOpen || x->x_engine == NULL) {
 	error("matlabcommunicate: eval: Matlab engine is not open.");
@@ -202,7 +201,10 @@ void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
   // Clear previous text printed by Matlab
   x->matlabTextOutput[0]=x->matlabTextOutput[1]=x->matlabTextOutput[2]=x->matlabTextOutput[3]=x->matlabTextOutput[4] = '\0';
   
-  engEvalString(x->x_engine, s);
+  result = engEvalString(x->x_engine, s);
+  if (result) {
+	post("matlabcommunicate: engEvalString returned %ld.", result);
+  }
   
   if (x->verbose) {
 	// Skip ">>\n" that Matlab prints to stdout
@@ -223,51 +225,65 @@ void theobject_eval(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
 	  }
   }
 }
-    
+
 void theobject_list(t_theobject *x, t_symbol *msg, short argc, t_atom *argv) {
   int i;
   char s[STRING_CAPACITY], t[STRING_CAPACITY];
-  
+  double *array;
+  mxArray *T = NULL;
   
   if (!x->engineOpen || x->x_engine == NULL) {
 	error("matlabcommunicate: list: Matlab engine is not open.");
 	return;
   }
+  
  
+  T = mxCreateDoubleMatrix(1, argc, mxREAL);
+  if (T==0) {
+	error("Couldn't send list to Matlab; mxCreateDoubleMatrix() returned 0.");
+	return;
+  }
+	
+  array = (void *)mxGetPr(T);
+  if (array ==0) {
+	post("matlabcommunicate: mxGetPr returned zero!");
+	return;
+  }
+  
+  
   for (i=0; i<argc; i++) {
 	    if (argv[i].a_type == A_LONG) {
-			x->x_array[i] = (float) argv[i].a_w.w_long;
+			array[i] = (double) argv[i].a_w.w_long;
 		} else if (argv[i].a_type == A_FLOAT) {
-			x->x_array[i] = argv[i].a_w.w_float;
+			array[i] = (double) argv[i].a_w.w_float;
 		} else {
-			post("¥ matlabcommunicate: ignoring nonnumeric list element.");
-			x->x_array[i] = 0.0f;
+			post("¥ matlabcommunicate: treating nonnumeric list element as zero.");
+			array[i] = 0.0f;
 		}
   }
  
+  if (engPutVariable(x->x_engine, "x", T) != 0) {
+	post("matlabcommunicate: failed to write %ld-element list to variable 'x'.", argc);
+  }
+  if (x->verbose) post("Wrote %ld-element list to variable 'x'.", argc);
+
+
+ #define DOIT_WITH_STRINGS 0
+ #if DOIT_WITH_STRINGS
   s[0] = '\0';
   strcpy(s,"x = [");
   for (i=0; i<argc-1; i++){
-    sprintf(t, "%f, ", x->x_array[i]);
+    sprintf(t, "%f, ", array[i]);
     strcat(s, t);
   }
-  sprintf(t, "%f", x->x_array[argc-1]);
+  sprintf(t, "%f", array[argc-1]);
   strcat(s, t);
   strcpy(t, "];");
   strcat(s, t);
   engEvalString(x->x_engine, s);
   if (x->verbose) post(s);
+  #endif
 }
-
-void theobject_clear(t_theobject *x, t_symbol *message, short argc, t_atom *argv)
-{
-  int i;
-  for (i=0; i<MAXORDER; i++){
-    x->x_array[i] = 0;
-  } 
-}
-
-
 
 
 #if 0
@@ -306,9 +322,6 @@ void *theobject_new(Symbol *symb, short argc, Atom *argv) {
   // outlet_new((t_object *)x, "signal");        // A signal outlet
 
   x->x_result = 0;
-  for (i=0; i<MAXORDER; i++){
-    x->x_array[i] = 0;
-  }
   
   
   if (MaxListToString(s, STRING_CAPACITY, argc, argv) == 0) {
