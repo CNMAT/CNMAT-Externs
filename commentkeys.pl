@@ -16,6 +16,10 @@ while(<STDIN>) {
 
 # natural-order sort with '.' separator and '-' tags
 sub version_sort {
+    # workaround for 0.01, 0.02 case etc which is otherwise indistinguishable from 0.1, 0.2
+    $a =~ s/\.0(\d)/\.0\.$1/;
+    $b =~ s/\.0(\d)/\.0\.$1/;
+
     my @av = split /\./, $a;
     my @bv = split /\./, $b;
 
