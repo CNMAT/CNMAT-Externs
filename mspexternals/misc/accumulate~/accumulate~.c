@@ -1,7 +1,7 @@
 /*
 
 Written by Andy Schmeder, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2007, The Regents of 
+University of California, Berkeley.  Copyright (c) 2008, The Regents of 
 the University of California (Regents).  
 
 Permission to use, copy, modify, distribute, and distribute modified versions
@@ -23,10 +23,10 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: accumulate~
-DESCRIPTION: Signal integrator like +=~ with signal control for reset
+DESCRIPTION: Signal integrator like +=~ with signal control for reset, leakiness and overflow
 AUTHORS: Andy Schmeder
 COPYRIGHT_YEARS: 2007
-SVN_REVISION: $LastChangedRevision: 550 $
+SVN_REVISION: $LastChangedRevision$
 VERSION 0.2: New argument syntax
 VERSION 0.1: First version
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
@@ -50,7 +50,6 @@ typedef struct _t_acc
     float initialValue;
     float maxValue;
     long maxMode;
-    long accumMode;
     float leakP;
 } t_acc;
 

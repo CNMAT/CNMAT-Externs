@@ -50,12 +50,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 225320494;
-			PBXWorkspaceStateSaveDate = 225320494;
+			PBXPerProjectTemplateStateSaveDate = 225321384;
+			PBXWorkspaceStateSaveDate = 225321384;
 		};
 		perUserProjectItems = {
-			A1AA317F0D6E1F3800E97FAF /* PBXTextBookmark */ = A1AA317F0D6E1F3800E97FAF /* PBXTextBookmark */;
-			A1AA31840D6E208F00E97FAF /* PBXTextBookmark */ = A1AA31840D6E208F00E97FAF /* PBXTextBookmark */;
+			A1AA317F0D6E1F3800E97FAF = A1AA317F0D6E1F3800E97FAF /* PBXTextBookmark */;
+			A1AA31840D6E208F00E97FAF = A1AA31840D6E208F00E97FAF /* PBXTextBookmark */;
 		};
 		sourceControlManager = A192DF140CADB6B4005335F7 /* Source Control */;
 		userBuildSettings = {
@@ -87,7 +87,7 @@
 		fRef = C92502B70A8BAAD300F04C3F /* accumulate~.c */;
 		name = "accumulate~.c: 231";
 		rLen = 0;
-		rLoc = 7204;
+		rLoc = 7184;
 		rType = 0;
 		vrLen = 1301;
 		vrLoc = 6097;
