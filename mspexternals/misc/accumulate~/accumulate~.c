@@ -206,6 +206,8 @@ void *acc_new(t_symbol *s, short argc, t_atom *argv) {
         
     }
     
+    x->current = x->start;
+    
     return x;
 }
 
