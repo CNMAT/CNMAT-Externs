@@ -100,7 +100,7 @@ void *acc_new(t_symbol *s, short argc, t_atom *argv) {
 
             if(argv[i].a_type == A_SYM) {
                 
-                if(strcmp(argv[i].a_w.w_sym->s_name, "@start")) {
+                if(strcmp(argv[i].a_w.w_sym->s_name, "@start") == 0) {
                     if(i + 1 < argc) {
                         i++;
                         
@@ -118,7 +118,7 @@ void *acc_new(t_symbol *s, short argc, t_atom *argv) {
                     }
                 }
                 
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@max")) {
+                else if(strcmp(argv[i].a_w.w_sym->s_name, "@max") == 0) {
                     if(i + 1 < argc) {
                         i++;
                         
@@ -136,7 +136,7 @@ void *acc_new(t_symbol *s, short argc, t_atom *argv) {
                     }
                 }
 
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@min")) {
+                else if(strcmp(argv[i].a_w.w_sym->s_name, "@min") == 0) {
                     if(i + 1 < argc) {
                         i++;
                         
@@ -154,7 +154,7 @@ void *acc_new(t_symbol *s, short argc, t_atom *argv) {
                     }
                 }
                 
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@scale")) {
+                else if(strcmp(argv[i].a_w.w_sym->s_name, "@scale") == 0) {
                     if(i + 1 < argc) {
                         i++;
                         
@@ -172,7 +172,7 @@ void *acc_new(t_symbol *s, short argc, t_atom *argv) {
                     }
                 }
                 
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@mode")) {
+                else if(strcmp(argv[i].a_w.w_sym->s_name, "@mode") == 0) {
                     if(i + 1 < argc) {
                         i++;
 
