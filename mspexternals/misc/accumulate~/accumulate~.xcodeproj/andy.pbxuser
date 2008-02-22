@@ -11,7 +11,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					571,
+					441,
 					20,
 					48,
 					43,
@@ -53,10 +53,6 @@
 			PBXPerProjectTemplateStateSaveDate = 225321384;
 			PBXWorkspaceStateSaveDate = 225321384;
 		};
-		perUserProjectItems = {
-			A1AA317F0D6E1F3800E97FAF = A1AA317F0D6E1F3800E97FAF /* PBXTextBookmark */;
-			A1AA31840D6E208F00E97FAF = A1AA31840D6E208F00E97FAF /* PBXTextBookmark */;
-		};
 		sourceControlManager = A192DF140CADB6B4005335F7 /* Source Control */;
 		userBuildSettings = {
 		};
@@ -82,32 +78,12 @@
 		objects = (
 		);
 	};
-	A1AA317F0D6E1F3800E97FAF /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = C92502B70A8BAAD300F04C3F /* accumulate~.c */;
-		name = "accumulate~.c: 231";
-		rLen = 0;
-		rLoc = 7184;
-		rType = 0;
-		vrLen = 1301;
-		vrLoc = 6097;
-	};
-	A1AA31840D6E208F00E97FAF /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = C92502B70A8BAAD300F04C3F /* accumulate~.c */;
-		name = "accumulate~.c: 36";
-		rLen = 0;
-		rLoc = 1502;
-		rType = 0;
-		vrLen = 1810;
-		vrLoc = 0;
-	};
 	C92502B70A8BAAD300F04C3F /* accumulate~.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1007, 3458}}";
-			sepNavSelRange = "{1502, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {1007, 4508}}";
+			sepNavSelRange = "{805, 0}";
 			sepNavVisRect = "{{0, 0}, {1007, 745}}";
-			sepNavWindowFrame = "{{609, 127}, {1046, 874}}";
+			sepNavWindowFrame = "{{497, 66}, {1046, 874}}";
 		};
 	};
 }
