@@ -67,7 +67,7 @@ GENERATED_FILES = $(GENERATED_INCIDENTAL_FILES) *.class
 EXCLUDE_FILES = infosource.txt Makefile makefile */Makefile */makefile */infosource.txt $(GENERATED_INCIDENTAL_FILES) *~ *.zip *.svn* *macyucky .DS_Store */.DS_Store */*/.DS_Store */*/*/.DS_Store */*/*/*/.DS_Store */*/*/*/*/.DS_Store *.xcodeproj/*.mode1 *.xcodeproj/*.pbxuser $(MORE_EXCLUDE_FILES) 
 
 # Where files live on our web server
-WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
+WEBSERVER_INCOMING_DIR = /Volumes/maxdl/incoming
 # WEBSERVER_INCOMING_DIR = /tmp/incoming
 
 
@@ -187,8 +187,11 @@ no-cr-characters:
 
 
 release: $(WEB_INCOMING)
-	scp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
-
+	mkdir /Volumes/maxdl
+	mount_webdav https://cnmat.berkeley.edu/dav/www/maxdl
+	cp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
+	umount /Volumes/maxdl
+	rmdir /Volumes/maxdl
 
 .PHONY: web-incoming
 web-incoming: $(WEB_INCOMING)
