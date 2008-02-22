@@ -278,10 +278,10 @@ t_int *acc_perform(t_int *w) {
             
             // wrap top and bottom boundary
             if(x->current > x->max) {
-                x->current = x->min;
+                x->current = x->min + fmodf(x->current, (x->max - x->min));
             }
             else if(x->current < x->min) {
-                x->current = x->max;
+                x->current = x->max - fmodf(x->min - x->current, (x->max - x->min));
             }
             
             *out++ = x->current;
