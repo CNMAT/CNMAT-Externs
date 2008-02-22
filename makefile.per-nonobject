@@ -188,7 +188,7 @@ no-cr-characters:
 
 release: $(WEB_INCOMING)
 	mkdir /Volumes/maxdl
-	mount_webdav https://cnmat.berkeley.edu/dav/www/maxdl
+	mount_webdav https://cnmat.berkeley.edu/dav/www/maxdl /Volumes/maxdl
 	cp $(WEB_INCOMING) $(WEBSERVER_INCOMING_DIR)
 	umount /Volumes/maxdl
 	rmdir /Volumes/maxdl
