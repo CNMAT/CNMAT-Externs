@@ -128,7 +128,7 @@ WIN_WEB_INCOMING = $(GCC_BUILD_DIR)/$(OBJ)-WIN.tar.gz
 
 
 # Where files live on our web server
-WEBSERVER_INCOMING_DIR = cnmat.berkeley.edu:/Users/andy/MAX-incoming
+WEBSERVER_INCOMING_DIR = /Volumes/maxdl/incoming
 # WEBSERVER_INCOMING_DIR = /tmp/incoming
 
 
@@ -353,17 +353,24 @@ release:
 	
 
 cfm-release: $(CFM_WEB_INCOMING)
-	scp $< $(WEBSERVER_INCOMING_DIR)
+	mkdir /Volumes/maxdl
+	mount_webdav https://cnmat.berkeley.edu/dav/www/maxdl /Volumes/maxdl
+	cp $< $(WEBSERVER_INCOMING_DIR)
+	umount /Volumes/maxdl
+	rmdir /Volumes/maxdl
 
 macho-release: $(MACHO_WEB_INCOMING)
-	scp $< $(WEBSERVER_INCOMING_DIR)
+	mkdir /Volumes/maxdl
+	mount_webdav https://cnmat.berkeley.edu/dav/www/maxdl /Volumes/maxdl
+	cp $< $(WEBSERVER_INCOMING_DIR)
+	umount /Volumes/maxdl
+	rmdir /Volumes/maxdl
 
 win-release: $(WIN_WEB_INCOMING) 
-	scp $< $(WEBSERVER_INCOMING_DIR)
+	echo "Automatic release not supported for windows"
 
 win-vcc-release: $(WIN_VCC_WEB_INCOMING) 
-	scp $< $(WEBSERVER_INCOMING_DIR)
-
+	echo "Automatic release not supported for windows"
 
 $(CFM_WEB_INCOMING): code-checked-in $(CFM_INDIVIDUAL_DOWNLOAD) $(CFM_WEB_INFO) 
 	tar cvfz $@ -C $(CODEWARRIOR_BUILD_DIR) $(CFM_INDIVIDUAL_DOWNLOAD_NO_DIR) $(CFM_WEB_INFO_NO_DIR)
