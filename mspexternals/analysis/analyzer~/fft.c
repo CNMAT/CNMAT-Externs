@@ -20,7 +20,7 @@
 #include "fft.h"
 
 #define INLINEBITREV // Use bitrev512
-#define STORED // Use maketwiddle
+//#define STORED // Use maketwiddle
 // #define TFAST // Used in realfft
 // #define GOOD 
 
