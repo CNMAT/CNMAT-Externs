@@ -2,6 +2,8 @@
 	pitch tracker based on Miller Puckette's fiddle~
 	version 1.3 implements an altivec-optimized FFT and adds more windows
 	version 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
+	version 1.3.2 Fixed fft routine. - mzed
+ 
 */
 
 #include "ext.h"
@@ -22,7 +24,7 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.3.1"
+#define VERSION "1.3.2"
 #define RES_ID	7083
 #define t_floatarg double
 
