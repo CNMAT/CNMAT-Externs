@@ -43,9 +43,9 @@
  COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
  DRUPAL_NODE: /patch/xxxx
  SVN_REVISION: $LastChangedRevision: 1916 $
- version: 1.3 implements an altivec-optimized FFT and adds more windows
- version: 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
- version: 1.3.2 Fixed fft routine. - mzed
+ version 1.3: implements an altivec-optimized FFT and adds more windows
+ version 1.3.1: Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
+ version 1.3.2: Fixed fft routine. - mzed
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
