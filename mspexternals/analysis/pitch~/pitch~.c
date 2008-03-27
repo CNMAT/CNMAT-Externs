@@ -1,10 +1,55 @@
-/*	pitch~ object is by Tristan Jehan
-	pitch tracker based on Miller Puckette's fiddle~
-	version 1.3 implements an altivec-optimized FFT and adds more windows
-	version 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
-	version 1.3.2 Fixed fft routine. - mzed
+/*
+ analyzer~ object by Tristan Jehan
+ Copyright (c) 2001 Masachussetts Institute of Technology.
+ All rights reserved.
  
-*/
+ pitch tracker based on Miller Puckette's fiddle~
+ Copyright (c) 1997-1999 University of California San Diego.
+ All rights reserved.
+ 
+ Copyright (c) 2008.  The Regents of the University of California (Regents).
+ All Rights Reserved.
+ 
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for educational, research, and not-for-profit purposes, without
+ fee and without a signed licensing agreement, is hereby granted, provided that
+ the above copyright notice, this paragraph and the following two paragraphs
+ appear in all copies, modifications, and distributions.  Contact The Office of
+ Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+ CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+ 
+ Written by Adrian Freed and Michael Zbyszynski, The Center for New Music and Audio Technologies,
+ University of California, Berkeley.
+ 
+ IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+ SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+ ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+ REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+ DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+ REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+ ENHANCEMENTS, OR MODIFICATIONS.
+ 
+ pitch.c
+ 
+ 
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ NAME: analyzer~
+ DESCRIPTION: FFT-Based Perceptual Analysis
+ AUTHORS: Tristan Jehan, Adrian Freed, and Michael Zbyszynski
+ COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
+ DRUPAL_NODE: /patch/xxxx
+ SVN_REVISION: $LastChangedRevision: 1916 $
+ version: 1.3 implements an altivec-optimized FFT and adds more windows
+ version: 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
+ version: 1.3.2 Fixed fft routine. - mzed
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+ */
+
 
 #include "ext.h"
 #include "z_dsp.h"
@@ -233,8 +278,9 @@ long log2max(long n);
 
 void main(void) {
 
-    post("Pitch~ object version " VERSION " by Tristan Jehan");
+    post("Pitch~ object version " VERSION " by Tristan Jehan and Michael Zbyszynski");
     post("copyright © 2001 Massachussets Institute of Technology");
+	post("copyright © 2007-8 UC Regents");
     post("Based on Miller Puckette's fiddle~");
     post("copyright © 1997-1999 Music Department UCSD");
     post(" ");
