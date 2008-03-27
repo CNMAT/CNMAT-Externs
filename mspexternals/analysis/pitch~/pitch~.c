@@ -37,8 +37,8 @@
  
  
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
- NAME: analyzer~
- DESCRIPTION: FFT-Based Perceptual Analysis
+ NAME: pitch~
+ DESCRIPTION: Pitch tracker (based on fiddle~ from Miller Puckette)
  AUTHORS: Tristan Jehan, Adrian Freed, and Michael Zbyszynski
  COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
  DRUPAL_NODE: /patch/xxxx
