@@ -43,12 +43,12 @@
  COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
  DRUPAL_NODE: /patch/xxxx
  SVN_REVISION: $LastChangedRevision$
- version 1.2.1 Matt Wright fixed pitch_getit() bounds error and added debug info
- version 1.2.2 Matt Wright more debug info: addr of most recent input sig vector and gettime()
- version 1.3 implements an altivec-optimized FFT and adds more windows
- version 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
- version 1.4 Sample rate agnostic - mzed
- version 1.4.1 fixed twiddle bug in fft code - mzed
+ version 1.2.1: Matt Wright fixed pitch_getit() bounds error and added debug info
+ version 1.2.2: Matt Wright more debug info: addr of most recent input sig vector and gettime()
+ version 1.3: implements an altivec-optimized FFT and adds more windows
+ version 1.3.1: Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
+ version 1.4: Sample rate agnostic - mzed
+ version 1.4.1: fixed twiddle bug in fft code - mzed
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
@@ -316,8 +316,8 @@ long log2max(long n);
 
 int main(void) {
 
-    post("Analyzer~ object version " VERSION " by Tristan Jehan, Matt Wright, and Michael Zbyszynski");
-    post("copyright © 2001 Massachusetts Institute of Technology, 2007 UC Regents");
+    post("Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
+    post("copyright © 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
     post("Pitch tracker based on Miller Puckette's fiddle~");
     post("copyright © 1997-1999 Music Department UCSD");
     post(" ");
