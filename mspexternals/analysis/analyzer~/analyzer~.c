@@ -11,6 +11,7 @@
 	version 1.3 implements an altivec-optimized FFT and adds more windows
 	version 1.3.1 Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
 	version 1.4 Sample rate agnostic - mzed
+	version 1.4.1 fixed twiddle bug in fft code - mzed
 */
 
 #include "ext.h"
