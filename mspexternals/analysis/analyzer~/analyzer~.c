@@ -73,7 +73,7 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.4"
+#define VERSION "1.4.1"
 #define RES_ID	7079
 #define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
