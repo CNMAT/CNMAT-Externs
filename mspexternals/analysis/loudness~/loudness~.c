@@ -1,3 +1,57 @@
+/*
+ loudness~ object by Tristan Jehan
+ Copyright (c) 2001 Masachussetts Institute of Technology.
+ All rights reserved.
+ 
+ pitch tracker based on Miller Puckette's fiddle~
+ Copyright (c) 1997-1999 University of California San Diego.
+ All rights reserved.
+ 
+ Copyright (c) 2008.  The Regents of the University of California (Regents).
+ All Rights Reserved.
+ 
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for educational, research, and not-for-profit purposes, without
+ fee and without a signed licensing agreement, is hereby granted, provided that
+ the above copyright notice, this paragraph and the following two paragraphs
+ appear in all copies, modifications, and distributions.  Contact The Office of
+ Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+ CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+ 
+ Written by Adrian Freed, Matt Wright,  and Michael Zbyszynski, The Center for New Music and Audio Technologies,
+ University of California, Berkeley.
+ 
+ IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+ SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+ ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+ REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+ DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+ REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+ ENHANCEMENTS, OR MODIFICATIONS.
+ 
+ loudness.c
+ 
+ 
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ NAME: loudness~
+ DESCRIPTION: Spectral or Time-domain Energy
+ AUTHORS: Tristan Jehan, Adrian Freed, and Michael Zbyszynski
+ COPYRIGHT_YEARS: 1988,89,90-99,2000-8
+ DRUPAL_NODE: /patch/xxxx
+ SVN_REVISION: $LastChangedRevision: 1916 $
+ version 1.3.1: Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
+ version 1.3.2: fixed twiddle bug in fft code - mzed
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+ */
+
+
+
+
 #include "ext.h"
 #include "z_dsp.h"
 #include "fftnobitrev.h"
@@ -11,7 +65,7 @@
 #endif
 
 #define RES_ID	7078
-#define VERSION "1.3.1"
+#define VERSION "1.3.2"
 
 //#define TWOPI 6.28318530717952646f
 #define THREEPI 9.424777960769379f
@@ -102,8 +156,8 @@ void main(void) {
 
     post("Loudness~ object version " VERSION " by Tristan Jehan (Media Laboratory)");
     post("copyright © 2001 Massachusetts Institute of Technology");
-    post("");
-
+	post("copyright © 2008 UC Regents:");
+	post(" ");
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
 	ps_hamming = gensym("hamming");
