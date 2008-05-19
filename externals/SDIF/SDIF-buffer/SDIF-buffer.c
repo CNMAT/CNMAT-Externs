@@ -55,6 +55,7 @@ VERSION 0.9.3v: Change in implementation of version method
 VERSION 0.9.4: Force Package Info Generation
 VERSION 1.0: Includes workaround for illegal SDIF files with -1 for the frame size
 VERSION 1.0.1: New outlet bangs when file is read
+VERSION 1.1: For Max 5
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 

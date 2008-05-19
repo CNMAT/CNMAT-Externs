@@ -31,7 +31,8 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 
 /* open-sdif-file.c : open an SDIF file in Max's search path
    This code was split from SDIF-buffer.c on 050405 by Matt Wright
-   
+   On 080519 Matt changed this to work with Max 5, removing lots of stuff having to do with Metrowerks, FSSPEC, etc.
+
  */
  
  
@@ -49,6 +50,7 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 #ifdef TEST_PLATFORM
 #ifdef __MWERKS__
 #warning "__MWERKS__"
+#error "Metrowerks no longer supported (try revision 1772 or before)"
 #endif
 #ifdef __POWERPC__
 #warning "__POWERPC__"
@@ -71,9 +73,6 @@ University of California, Berkeley.  Based on sample code from David Zicarelli.
 #include "sdif.h"
 #include "open-sdif-file.h"
 
-#ifdef __MWERKS__
-#include <FSp_fopen.h>
-#endif
 
 
 #ifdef ALWAYS_WANT_TO_LOOK_IN_MAX_FOLDER
@@ -114,10 +113,10 @@ FILE *OpenSDIFFile(char *filename) {
 
 	// post("** Got path ID %d,filename %s", pathID, filenamecopy);
 	
-    /* Turning pathID into a FILE * is platform-specific: */
+	/* Turn pathID into a FILE *... */
     
-#ifdef WIN_VERSION
-    {
+
+	{
 		short maxErr;
 		char fullpath[MAX_FULLPATH_LEN];
 		char conformed[MAX_FULLPATH_LEN];
@@ -126,7 +125,25 @@ FILE *OpenSDIFFile(char *filename) {
 			error("path_topathname returned error code %d - can't open %s", maxErr, filename);
 			return NULL;
 		}
+#ifdef DEBUG_PATH_NAMECONFORM
 		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
+		post("NATIVE/ABSOLUTE: %s", conformed);
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_SLASH, PATH_TYPE_ABSOLUTE);
+		post("SLASH/ABSOLUTE: %s", conformed);
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_SLASH, PATH_TYPE_IGNORE);
+		post("SLASH/IGNORE: %s", conformed);
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_SLASH, PATH_TYPE_RELATIVE);
+		post("SLASH/RELATIVE: %s", conformed);
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_SLASH, PATH_TYPE_BOOT);
+		post("SLASH/BOOT: %s", conformed);
+#endif
+
+#ifdef WIN_VERSION
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
+#else
+		maxErr = path_nameconform(fullpath, conformed, PATH_STYLE_SLASH, PATH_TYPE_BOOT);
+#endif
+
 		if (maxErr) {
 			error("path_nameconform returned error code %d - can't open %s", maxErr, filename);
 			return NULL;
@@ -137,74 +154,6 @@ FILE *OpenSDIFFile(char *filename) {
 			return NULL;
 		} 
 	}
-#else
-/* Macintosh version */
-
-#define PATH_SPEC_MEANS_FSSPEC
-#ifdef PATH_SPEC_MEANS_FSSPEC
-	result = path_tospec(pathID, filenamecopy, &ps);
-	if (result != 0) {
-		post("¥ SDIF-buffer: couldn't make PATH_SPEC from SDIF file %s (path_tospec returned %ld)",
-			 filenamecopy, result);
-		return NULL;
-	}
-
-	/* Now what to do with the FSSpec? */
-#ifdef __MWERKS__
-    f = FSp_fopen (&ps, "rb");
-#else
-	// No FSp_fopen(), so use the more roundabout route in Carbon that David Zicarelli suggested
-	
-    {
-	   OSErr errorCode;
-	   OSStatus fileManagerResultCode;
-	   UInt8 path_unsigned[MAX_FULLPATH_LEN];
-	   char path[MAX_FULLPATH_LEN];
-	   FSRef myFSRef;
-	   int i;
-
-	   errorCode =  FSpMakeFSRef (&ps, &myFSRef);
-	   if (errorCode) {
-	     error("SDIF-buffer: FSpMakeFSRef returned %d; can't open %s", errorCode, filename);
-	     return NULL;
-	   }
-
-	   fileManagerResultCode =  FSRefMakePath (&myFSRef, path_unsigned, MAX_FULLPATH_LEN);
-	   if (fileManagerResultCode) {
-	     error("SDIF-buffer: FSRefMakePath returned %d; can't open %s", fileManagerResultCode, filename);
-	     return NULL;
-	   }
-
-#ifdef NEED_SIGNED_PATH
-	   for (i=0; i<MAX_FULLPATH_LEN; ++i) {
-	   	   if (path_unsigned[i] >= 128) {
-	   	   	    error("Path returned by FSRefMakePath contains illegal character %d (%c); can't open.",
-	   	   	    	  path_unsigned[i], path_unsigned[i]);
-	   	   	    return NULL;
-	   	   }
-	   	   path[i] = (char) path_unsigned[i];
-	   	   if (path[i] == '\0') break;
-	   }
-	   
-	   post("path: %s", path);
-
-	   f = fopen(path, "rb");
-#else	   		
-	   f = fopen(path_unsigned, "rb");
-#endif // NEED_SIGNED_PATH
-	   if (f == NULL) {
-	     error("SDIF-buffer: fopen() returned NULL; can't open %s", filename);
-	     return NULL;
-	   } 
-    }
-#endif __MWERKS__
-
-#else // PATH_SPEC_MEANS_FSSPEC
-#error What do I do with a PATH_SPEC?	
-#endif /* PATH_SPEC_MEANS_FSSPEC */
-#endif /* WIN_VERSION */
-
-    /* Back to platform-independent code */
     
 	if (r = SDIF_BeginRead(f)) {
 		int ferrno;
