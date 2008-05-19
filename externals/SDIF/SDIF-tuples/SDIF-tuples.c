@@ -51,6 +51,7 @@ VERSION 0.5.3: Made integers work (non-interpolating)
 VERSION 0.6: Uses new version system
 VERSION 0.6.1: Force Package Info Generation
 VERSION 1.0: Controllable by a virtual time signal input. tellmeeverything. Better help patch.
+VERSION 1.1: Works for Max 5.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  Todo:
