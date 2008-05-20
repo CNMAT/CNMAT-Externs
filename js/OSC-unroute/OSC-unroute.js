@@ -33,7 +33,7 @@ VERSION 0.1: First release
 VERSION 0.1.1: Moved name/value block from infosource.txt to js source file
 VERSION 0.2: Added "correct"/"cheap" modes; made "correct" the default.
 VERSION 0.3: "correct" mode checks whether input already begins with an OSC address.
-VERSION 0.3: Added a set message
+VERSION 0.4: Added a set message
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
