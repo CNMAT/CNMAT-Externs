@@ -26,13 +26,14 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: OSC-unroute
 DESCRIPTION: Opposite of OSC-route: prepends bits of OSC addresses to existing OSC messages (javascript)
-AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2006
-SVN_REVISION: $LastChangedRevision: 618 $
+AUTHORS: Matt Wright and Michael Zbyszynski
+COPYRIGHT_YEARS: 2006-8
+SVN_REVISION: $LastChangedRevision: 1973 $
 VERSION 0.1: First release
 VERSION 0.1.1: Moved name/value block from infosource.txt to js source file
 VERSION 0.2: Added "correct"/"cheap" modes; made "correct" the default.
 VERSION 0.3: "correct" mode checks whether input already begins with an OSC address.
+VERSION 0.3: Added a set message
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -48,7 +49,7 @@ cheap_mode = 0;
 for ( i=0 ; i < NbInlets ; i++) {
 	setinletassist(i,jsarguments[i+1]);  
 }
-setoutletassist(0, "OSC Max messages");
+setoutletassist(0, "OSC messages");
 
 function cheap() {
 	cheap_mode = 1;
@@ -79,4 +80,11 @@ function anything()  {
 		var a = arrayfromargs(jsarguments[inlet+1] + messagename,arguments);
 		outlet(0, a);
 	}		
+}
+
+function set(argNum, newarg) {
+    jsarguments[argNum] = newarg;
+    for ( i=0 ; i < NbInlets ; i++) {
+        setinletassist(i,jsarguments[i+1]);  
+    }
 }
