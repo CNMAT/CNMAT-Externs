@@ -47,6 +47,7 @@ VERSION 1.9.6: Implements assistance strings again.
 VERSION 1.9.7: Force Package Info Generation
 VERSION 1.9.8: Fixed byte-order bug with time tags
 VERSION 1.9.9: Another attempt to fix time tag byte-order bug
+VERSION 1.9.10: Handle time tags in arguments (andy@cnmat)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
      
 		
@@ -548,6 +549,7 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
 	/* Format the given Max data into buf. */
 	   
 	int i;	
+  int j;
 	OSCbuf *buf = &(x->b);
 	char typeString[MAX_ARGS_TO_OSC_MSG+2]; /* Space for comma and null */
 	
@@ -557,32 +559,40 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
 	if (x->writeTypeStrings) {
 		/* Write type string */
 		typeString[0] = ',';
-		
+
+		j = 0;
 		for (i=0; i < argc; i++) {
+      
 			switch (argv[i].a_type) {
 				case A_LONG:
-					typeString[i+1] = 'i';
+					typeString[j+1] = 'i';
 					break;
 					
 				case A_FLOAT:
-					typeString[i+1] = 'f';
+					typeString[j+1] = 'f';
 					break;
 					
 				case A_SYM:
-					typeString[i+1] = 's';
+          // might be an OSCTimeTag + two longs, or just an ordinary string...
+          if(strcmp(argv[i].a_w.w_sym->s_name, "OSCTimeTag") == 0 && i+1 < argc && argv[i+1].a_type == A_LONG && i+2 < argc && argv[i+2].a_type == A_LONG) {
+              typeString[j+1] = 't';
+              i++; i++; // skip the next two args...
+          } else {
+  					typeString[j+1] = 's';
+          }
 					break;
 					
 				default:
 					error("OpenSoundControl: unrecognized argument type");
 					break;
 			}
+      
+      j++;
 		}
-		typeString[i+1] = '\0';
+		typeString[j+1] = '\0';
 
 		if (OSC_writeStringArg(buf, typeString)) goto err;
 	}
-
-
 
 	for (i=0; i < argc; i++) {
 		switch (argv[i].a_type) {
@@ -595,7 +605,12 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
 				break;
 				
 			case A_SYM:
-			    if (OSC_writeStringArg(buf, argv[i].a_w.w_sym->s_name)) goto err;
+        if(strcmp(argv[i].a_w.w_sym->s_name, "OSCTimeTag") == 0 && i+1 < argc && argv[i+1].a_type == A_LONG && i+2 < argc && argv[i+2].a_type == A_LONG) {
+          if (OSC_writeTimeTagArg(buf, argv[i+1].a_w.w_long, argv[i+2].a_w.w_long)) goto err;
+          i++; i++;
+        } else {
+   	      if (OSC_writeStringArg(buf, argv[i].a_w.w_sym->s_name)) goto err;
+        }
 
 				break;
 				
@@ -872,8 +887,20 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 		      }
 	            p += 4;
 	            break;
-	            
-	            case 'h': case 't':
+
+              case 't':
+              /* handle typetags in args as they are in bundles */
+              /* Could see if the data fits in a 32-bit int and output it like that if so... */
+              SETSYM(&args[numArgs], ps_OSCTimeTag);
+              numArgs++;
+              SETLONG(&args[numArgs], ntohl(*((int *) p)));
+              numArgs++;
+              p += 4;
+              SETLONG(&args[numArgs], ntohl(*((int *) p)));
+              p += 4;
+              break;
+             
+	            case 'h': 
 	            /* 64-bit int: interpret as zero since Max doesn't have long ints */
 	            /* Could see if the data fits in a 32-bit int and output it like that if so... */
 	            SETLONG(&args[numArgs], 0);
