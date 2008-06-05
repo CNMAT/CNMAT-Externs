@@ -153,11 +153,15 @@ public class plotter extends MaxObject implements JitterNotifiable
 		drawCrosshairs();
 			
 		float zz;
-		
+		int error = 0;
 		synchronized(this.xdataBuffer){
 		synchronized(this.ydataBuffer){
 		synchronized(this.zdataBuffer){
-			if(verifyData() > 0) return;
+
+			if(error = verifyData() > 0){
+				post("there was an error" + error);
+				return;
+			}
 
 			order = new int[xdataBuffer.size()];
 		       	if(activePlot >= 0){
