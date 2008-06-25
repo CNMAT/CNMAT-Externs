@@ -51,8 +51,6 @@ VERSION 1.1.2: Now uses SETFLOAT to set the contents of atoms.
 	#include <gsl/gsl_rng.h>
 	#include <gsl/gsl_randist.h>
 #endif
-#include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
-#include "sdif-util.h"
 
 #ifndef USE_GSL
 	// for ran1 from Numerical Rec. in C
@@ -69,6 +67,11 @@ VERSION 1.1.2: Now uses SETFLOAT to set the contents of atoms.
 	#define MIN(a,b) (a<b)?a:b 
 #endif
 
+#ifdef MIG_ENABLE_SDIF
+
+#include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
+#include "sdif-util.h"
+
 typedef struct _partialInfo{
 	float min;
 	float max;
@@ -77,6 +80,8 @@ typedef struct _partialInfo{
 	float var;
 	int count;
 } partialInfo;
+
+#endif // MIG_ENABLE_SDIF
 
 typedef struct _mig
 {
@@ -112,6 +117,7 @@ typedef struct _mig
 	int m_theyAreResonances;
 	float m_decayTime;
 	int m_outputType;
+#ifdef MIG_ENABLE_SDIF
 	partialInfo *m_SDIFbufferStats_freq;
 	partialInfo *m_SDIFbufferStats_amp;
 	t_symbol *m_bufferSym;
@@ -121,6 +127,7 @@ typedef struct _mig
 	int m_maxNumRows;
 	int *m_SDIFindexes;
 	int m_autostdev;
+#endif
 } t_mig;
 
 void *mig_class;
@@ -163,6 +170,7 @@ void mig_oscamp(t_mig *x, double a);
 void mig_outputType(t_mig *x, long t);
 void tellmeeverything(t_mig *x);
 
+#ifdef MIG_ENABLE_SDIF
 static void LookupMyBuffer(t_mig *x);
 static void mig_setSDIFbuffer(t_mig *x, Symbol *bufName);
 static void *my_getbytes(int numBytes);
@@ -176,6 +184,8 @@ void mig_SDIFtime(t_mig *x, double t);
 void mig_autostdev(t_mig *x, int i);
 
 static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
+
+#endif
 
 //--------------------------------------------------------------------------
 
@@ -201,10 +211,11 @@ int main(void)
 	addmess((method)mig_oscamp, "oscamp", A_FLOAT, 0);
 	addmess((method)mig_outputType, "output", A_LONG, 0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0L, 0);
+#ifdef MIG_ENABLE_SDIF
 	addmess((method)mig_setSDIFbuffer, "set", A_SYM, 0);
 	addmess((method)mig_SDIFtime, "SDIFtime", A_FLOAT, 0);
 	addmess((method)mig_autostdev, "autostdev", A_LONG, 0);
-	
+
 	SDIFresult r;
 	
 	if (r = SDIF_Init()) {
@@ -233,7 +244,7 @@ int main(void)
 	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
-		
+#endif		
 	return 0;
 }
 
@@ -297,7 +308,8 @@ void *mig_new(double var, long nOsc, double oscamp)
 		post("gasdev: %f", gasdev(x->m_idum));
 	}
 	*/
-	
+
+#ifdef MIG_ENABLE_SDIF	
 	x->m_complainedAboutEmptyBufferAlready = FALSE;
 	x->m_SDIFbuffer = 0;
 	x->m_buf = NULL;
@@ -305,7 +317,8 @@ void *mig_new(double var, long nOsc, double oscamp)
 	x->m_SDIFbufferStats_amp = (partialInfo *)calloc(1, sizeof(partialInfo));
 	x->m_SDIFindexes = (int *)calloc(1, sizeof(int));
 	x->m_autostdev = 0;
-	
+#endif
+
 	return(x);
 }
 
@@ -458,8 +471,11 @@ void mig_changeFreq(t_mig *x){
 	
 	if(x->m_waitingToChangeNumOsc[0])
 		SETFLOAT(x->m_arrayOut + (x->m_counter * 2), 0.);
-	else
-		SETFLOAT(x->m_arrayOut + (x->m_counter * 2), gaussBlur(x, freq, r));
+	else{
+		if(x->m_stdev)
+			SETFLOAT(x->m_arrayOut + (x->m_counter * 2), gaussBlur(x, freq, r));
+		else SETFLOAT(x->m_arrayOut + (x->m_counter * 2), freq);
+	}
 	
 	//outlet_list(x->m_out1, 0, (short)x->m_nOsc * 2, x->m_arrayOut);
 	outlet_float(x->m_out2, freq);
@@ -612,14 +628,18 @@ float gaussBlur(t_mig *x, float m, int r){
 	float returnval;
 	
 #ifdef USE_GSL
+#ifdef MIG_ENABLE_SDIF
 	if(x->m_autostdev)
 		returnval = m + (float)gsl_ran_gaussian(x->m_rng, x->m_SDIFbufferStats_freq[x->m_SDIFindexes[r]].stdev);
 	else
+#endif // MIG_ENABLE_SDIF
 		returnval = m * (pow(pow(2., 1./12.), gsl_ran_gaussian(x->m_rng, x->m_stdev)));
 #else
+#ifdef MIG_ENABLE_SDIF
 	if(x->m_autostdev)
 		returnval = m + x->m_SDIFbufferStats_freq[x->m_SDIFindexes[r]].stdev * gasdev(x->m_idum);
 	else
+#endif // MIG_ENABLE_SDIF
 		returnval = m * (pow(pow(2., 1./12.), x->m_stdev * gasdev(x->m_idum)));
 #endif
 		
@@ -838,14 +858,17 @@ void tellmeeverything(t_mig *x)
 	post("Time interval: %f", x->m_tinterval);
 	post("Fade: %ld", x->m_fade);
 	post("Standard deviation (Gaussian blur): %f", x->m_stdev);
+#ifdef MIG_ENABLE_SDIF
 	if(x->m_SDIFbuffer)
 		post("Migrator is linked to an SDIF-buffer called %s", x->m_bufferSym->s_name);
+#endif
 #ifdef USE_GSL
 	post("Migrator is using the GSL to generate random numbers");
 #endif
 		
 }
 
+#ifdef MIG_ENABLE_SDIF
 ////////////////////////////////////////////////////
 // SDIF stuff
 // the functions for linking to and reading from an SDIF-buffer were taken from SDIF-tuples
@@ -888,7 +911,7 @@ static void mig_setSDIFbuffer(t_mig *x, Symbol *bufName) {
 
 	LookupMyBuffer(x);
 	if (x->m_SDIFbuffer == 0) {
-		post("¥ SDIF-tuples: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
+		error("migrator: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
 	}
 	x->m_complainedAboutEmptyBufferAlready = FALSE;
 	
@@ -939,7 +962,7 @@ void mig_analyzeBuffer(t_mig *x){
 	char matrixType[4];
 
 	if(!(f = SDIFbuf_GetFirstFrame(x->m_buf))){
-		error("Migrator: the buffer %s seems to be empty", x->m_bufferSym);
+		error("migrator: the buffer %s seems to be empty", x->m_bufferSym);
 		return;
 	}
 	SDIF_Copy4Bytes(matrixType, f->header.frameType);
@@ -1075,3 +1098,5 @@ void mig_autostdev(t_mig *x, int i){
 	}
 	x->m_autostdev = i;
 }
+
+#endif // MIG_ENABLE_SDIF
