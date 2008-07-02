@@ -31,8 +31,8 @@ The OpenSound Control WWW page is
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: OSC-route ("OpenSoundControl route")
 DESCRIPTION: Message dispatching through an <A HREF="http://www.cnmat.berkeley.edu/OSC">OpenSoundControl</A> address space.
-AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
+AUTHORS: Matt Wright, Michael Zbyszynski
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07,08
 DRUPAL_NODE: /patch/4029
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.04: Allows #1 thru #9 as typed-in arguments
@@ -52,6 +52,7 @@ VERSION 1.13.1: Force Package Info Generation
 VERSION 1.14: Improved error checking for bad input lists
 VERSION 1.15: Fixed symbol corruption memory management bug related to "set" message.
 VERSION 1.16: Fixed possible bug when freeing the object
+VERSION 1.17: Changed outlet declaration to accomodate Jitter
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -274,10 +275,10 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 	
 	/* Have to create the outlets in reverse order */
 	
-	x->o_otheroutlet = listout(x);
+	x->o_otheroutlet = outlet_new(x, 0);
 	
 	for (i = x->o_num-1; i >= 0; --i) {
-		x->o_outlets[i] = listout(x);
+		x->o_outlets[i] = outlet_new(x, 0);
 	}
 		
 	return (x);
