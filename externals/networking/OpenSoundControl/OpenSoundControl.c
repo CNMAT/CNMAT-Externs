@@ -42,14 +42,14 @@ VERSION 1.9.1: rudimentary blob support
 VERSION 1.9.2: Builds CFM and MachO from the same code
 VERSION 1.9.3: Same as 1.9.2
 VERSION 1.9.4: Fixed severe type tag bug and severe byte-order bug (for receiving) and built for Windows
-VERSION 1.9.5: Rebuilt for CFM (had to change where it got ntohl()).
-VERSION 1.9.6: Implements assistance strings again.
+VERSION 1.9.5: Rebuilt for CFM (had to change where it got ntohl())
+VERSION 1.9.6: Implements assistance strings again
 VERSION 1.9.7: Force Package Info Generation
 VERSION 1.9.8: Fixed byte-order bug with time tags
 VERSION 1.9.9: Another attempt to fix time tag byte-order bug
 VERSION 1.9.10: Handle time tags in arguments (andy@cnmat)
+VERSION 1.9.11: Implement proper blob support (andy@cnmat)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-     
 		
 	Note: all conversions to network byte order for outgoing packets happen in OSC-client.c,
 	whereas conversions to host byte order for incoming packes happen in this file.
@@ -550,6 +550,9 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
 	   
 	int i;	
   int j;
+  int k;
+  int size;
+  
 	OSCbuf *buf = &(x->b);
 	char typeString[MAX_ARGS_TO_OSC_MSG+2]; /* Space for comma and null */
 	
@@ -577,6 +580,10 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
           if(strcmp(argv[i].a_w.w_sym->s_name, "OSCTimeTag") == 0 && i+1 < argc && argv[i+1].a_type == A_LONG && i+2 < argc && argv[i+2].a_type == A_LONG) {
               typeString[j+1] = 't';
               i++; i++; // skip the next two args...
+          } else if(strcmp(argv[i].a_w.w_sym->s_name, "OSCBlob") == 0 && i+1 < argc && argv[i+1].a_type == A_LONG) {
+              typeString[j+1] = 'b';
+              i++; // skip past OSCBlob
+              i += argv[i].a_w.w_long; // skip by size
           } else {
   					typeString[j+1] = 's';
           }
@@ -608,6 +615,19 @@ void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
         if(strcmp(argv[i].a_w.w_sym->s_name, "OSCTimeTag") == 0 && i+1 < argc && argv[i+1].a_type == A_LONG && i+2 < argc && argv[i+2].a_type == A_LONG) {
           if (OSC_writeTimeTagArg(buf, argv[i+1].a_w.w_long, argv[i+2].a_w.w_long)) goto err;
           i++; i++;
+        } else if(strcmp(argv[i].a_w.w_sym->s_name, "OSCBlob") == 0 && i+1 < argc && argv[i+1].a_type == A_LONG && i + argv[i+1].a_w.w_long < argc) {
+          size = argv[i+1].a_w.w_long;
+          if (OSC_writeIntArg(buf, argv[i+1].a_w.w_long)) goto err;
+          i += 2;
+          for(k = 0; k < size; k++) {
+            buf->bufptr[k] = (unsigned char)(argv[i+k].a_w.w_long);
+          }
+          i += k - 1;
+          while(k % 4 != 0) {
+            buf->bufptr[k] = 0;
+            k++;
+          }
+          buf->bufptr += k;
         } else {
    	      if (OSC_writeStringArg(buf, argv[i].a_w.w_sym->s_name)) goto err;
         }
@@ -844,10 +864,10 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 }
 
 #define SMALLEST_POSITIVE_FLOAT 0.000001f
-#define MAXARGS 500
+#define MAXARGS 5000
 
 static void Smessage(OSC *x, char *address, void *v, long n) {
-    int i;
+    int i, j, k;
     float *floats;
     long *ints;
     char *chars;
@@ -925,19 +945,27 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 	            
 	            case 'b':
 	            {
-	            	/* put 3 elements in output list: symbol "OSCBlob", int size, ((int) void *data) */
-	            	int size = *((int *) p);
-	            	
-                    if (p+4+size > chars+n) {
+                // output symbol OSCBlob, int size, int data0 ... int dataN
+	            	int size = ntohl(*((int *) p));
+                
+                if (p+4+size > chars+n) {
                     	error("OpenSoundControl: blob size %ld too big for packet", size);
                     	return;
 	            	}
-	            	
-	            	SETSYM(&args[numArgs], ps_OSCBlob);
-	            	SETLONG(&args[numArgs+1], size);
-	            	SETLONG(&args[numArgs+2], ((long) p+4));
-	            	
-	            	numArgs += 2;  /* This OSC argument generated 3 elements of the Max list to be outputted. */
+	            	SETSYM(&args[numArgs], ps_OSCBlob); numArgs++;
+                
+                if(numArgs + 1 + size > MAXARGS) {
+                  post("OpenSoundControl: blob size too big for encoding");
+                  return;
+                }
+	            	SETLONG(&args[numArgs], size); numArgs++;
+
+                for(j = 0; j < size; j++) {
+                  SETLONG(&args[numArgs], ((long) (*(p + 4 + j)))); numArgs++;
+                }
+                
+                numArgs--; // increments again at end of loop
+                
 	            	p += OSC_effectiveBlobLength(size);
 
 	            }
