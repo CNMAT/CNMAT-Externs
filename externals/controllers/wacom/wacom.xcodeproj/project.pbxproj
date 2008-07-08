@@ -140,6 +140,7 @@
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* wacom */,
 			);

@@ -1,3 +1,50 @@
+/*
+ Copyright (c) 1999, 2000, 01, 08.  The Regents of the University of California (Regents).
+ All Rights Reserved.
+ 
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for educational, research, and not-for-profit purposes, without
+ fee and without a signed licensing agreement, is hereby granted, provided that
+ the above copyright notice, this paragraph and the following two paragraphs
+ appear in all copies, modifications, and distributions.  Contact The Office of
+ Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+ CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+ 
+ Written by Richard Dudas and Jean-Michel Coutier.
+ 
+ IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+ SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+ ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+ REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+ DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+ REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+ ENHANCEMENTS, OR MODIFICATIONS.
+ 
+ 
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ NAME: wacom
+ DESCRIPTION: Report the location, pressure and other parameters of transducers on a Wacomª Graphics Tablet. You can use several tablets and several tools with different wacom objects.
+ AUTHORS: Jean-Michel Courutier, Richard Dudas, and Michael Zbyszynski
+ COPYRIGHT_YEARS: 1996, 1999, 2001,02,03,04,05,06,08
+ DRUPAL_NODE: /patch/666
+ SVN_REVISION: $LastChangedRevision: 1634 $
+ VERSION 1.0: based on simple example in wacom SDK; created for Atau Tanaka at Bionic Media in Paris -Rd
+ VERSION 2.0: major update finally includes internal clock, wacom tablet driver access instead of adb, different outlets than previous version = no retro-compatibility  -Rd
+ VERSION 3.0b1: Ported to OS X -JMC
+ VERSION 3.0b2: bug finder->max->finder, output only if the data changes, pressure -> 0 if tool far from tablet, prox record integrated in polling
+ VERSION 3.0b3: bug pressure -> 0 if tool far from tablet
+ VERSION 3.0b4: wacom mouse: output the mouse coordinates
+ VERSION 3.1b1: better performance, 3 handlersw by object, movecurs tablet specific
+ VERSION 3.1b3: bug when no dirvers; bug with prox info in poll bang mode
+ VERSION 3.1b5: universal binaries; new message xyrange for position : raw, 0-1, 0-1 proportional
+ VERSION 4.0: First CNMAT release, assist strings, bug thinking new driver is old -mz
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ */
+
 /* 
 Wacom Tablet Max Object 2003, Jean-Michel Couturier  
 	
@@ -44,7 +91,7 @@ History:
 #include "TAEHelpers.h"
 #include "ext_strings.h"
 
-#define VERSION "wacom object v3.1§5 for os X"
+#define VERSION "wacom object v4.0 for os X"
 #define RES_ID 23000
 #define PI 3.1415
 #define kIntuos2TabletID 0x0c
@@ -670,11 +717,51 @@ TabletProximityRec res;
 //	Assist
 //------------------------------------------------
 
-void wacom_assist(t_wacom *x, void *b, long m, long a, char *s)
+/* old style
+ void wacom_assist(t_wacom *x, void *b, long m, long a, char *s)
 {
 	assist_string(RES_ID,m,a,1,2,s);
 }
-
+*/
+void wacom_assist(t_wacom *x, void *b, long m, long a, char *s) 
+{
+	if (m == ASSIST_INLET)
+		sprintf(s,"messages to wacom object");
+	else {
+		switch(a) {	
+			case 0:
+				sprintf(s,"(list) x, y position");
+				break;
+			case 1:
+				sprintf(s,"(int) pressure");
+				break;
+			case 2:
+				sprintf(s,"(list) x, y tilt");
+				break;
+			case 3:
+				sprintf(s,"(int) button flags");
+				break;
+			case 4:
+				sprintf(s,"(int) rotation");
+				break;
+			case 5:
+				sprintf(s,"(int) z axis");
+				break;
+			case 6:
+				sprintf(s,"(int) tangental pressure");
+				break;
+			case 7:
+				sprintf(s,"(int) device ID");
+				break;
+			case 8:
+				sprintf(s,"(list) tablet proximity record");
+				break;
+			case 9:
+				sprintf(s,"(list) menu");
+				break;
+		}
+	}
+}
 //------------------------------------------------
 //	Free
 //------------------------------------------------
@@ -1434,13 +1521,9 @@ void CheckDriver(t_wacom *x)
 	if(err == noErr)
 	{
 		// Post the version number 
-//		post("Wacom driver V.%d.%d.%d",
-//			 theVerData.majorRev,
-//			 (theVerData.minorAndBugRev/10),
-//			 theVerData.minorAndBugRev-(((int)(theVerData.minorAndBugRev/10)) * 10));
-		gTabletDriver475OrHigher = FALSE;		
-		if ( ( theVerData.majorRev > 4 ) ||
-		 ((theVerData.majorRev >= 4) && (theVerData.minorAndBugRev >= 75)) )
+//		post("Wacom driver V.%d.%d.%d", theVerData.majorRev, (theVerData.minorAndBugRev/10), theVerData.minorAndBugRev-(((int)(theVerData.minorAndBugRev/10)) * 10));
+		gTabletDriver475OrHigher = TRUE;		
+/*		if ( ( theVerData.majorRev > 4 ) || ((theVerData.majorRev >= 4) && (theVerData.minorAndBugRev >= 75)) )
 		{
 			// Set a global flag so that we know we can use 4.7.5 features.
 			gTabletDriver475OrHigher = TRUE;
@@ -1448,7 +1531,8 @@ void CheckDriver(t_wacom *x)
 		else
 		{
 		post("Wacom driver: too old version");			
-		}
+		} 
+ */
 	}
 	else
 	{
@@ -1457,6 +1541,7 @@ void CheckDriver(t_wacom *x)
 		gTabletDriver475OrHigher = FALSE;
 		post("No Wacom driver detected");
 	}
+ 
 	
 	theTabletDriverObject.objectType = cWTDTablet;
 	err = CountTabletObjects(&theTabletDriverObject, &numTablets);
