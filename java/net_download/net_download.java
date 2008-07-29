@@ -1,392 +1,278 @@
-// Thanks to Ali Momeni for some of this code.
-
 import com.cycling74.max.*;
-import com.cycling74.jitter.*;
 
 import java.io.*;
 import java.util.*;
 import java.net.*;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 public class net_download extends MaxObject
 {	
 	public void version(){
-		post("net_download Version 1.0, by John MacCallum.\nCopyright (c) 2007 Regents of the University of California.  All rights reserved.");
+		if(!alreadydidcopyright){
+			post("net_download Version 1.1, by John MacCallum.\nCopyright (c) 2007-08 Regents of the University of California.  All rights reserved.");
+			alreadydidcopyright = true;
+		}
 	}
-			
-	//List q = Collections.synchronizedList(new LinkedList());
-	LinkedList q = new LinkedList();
-	int numActiveConnections = 0;
-	int maxNumConnections = 1;
-	MaxClock c;
-	String downloadDir = null;
-	boolean announcedDone = false;
+	private static boolean alreadydidcopyright = false;		
+	private boolean verbose = false;
+	private String downloadDir = null;
+	private boolean percent = false;
+	private int sleepinterval = 60000;
+	private boolean willDelete = false;
+	private Socket socket = null;
+	private URL url = null;
+
+	public class nd_Header{
+		LinkedHashMap<String, String> hm = new LinkedHashMap<String, String>(20);
+		public nd_Header(String h){
+			parseHeader(h);
+		}
+
+		private void parseHeader(String h){
+			String[] responses = h.split("\n");
+			hm.put("response-code", responses[0]);
+			for(int i = 1; i < responses.length - 2; i++){
+				String[] subs = responses[i].split(":");
+				hm.put(subs[0], subs[1].trim());
+			}
+		}
+
+		public String get(String k){
+			return hm.get(k);
+		}
+
+		public Set keySet(){
+			return hm.keySet();
+		}
+	}
+
+	public class nd_Client extends Thread{
+		OutputStream os = null;
+		PrintWriter pw = null;
+		BufferedReader br = null;
+		URL url = null;
+		int amountDownloaded = 0;
+		int sleepInterval = 60000;
+		boolean verbose = false;
+
+		public nd_Client(Socket sock, URL u, boolean verb){
+			this(sock, u);
+			verbose = verb;
+		}
+
+		public nd_Client(Socket sock, URL u, int si, boolean verb){
+			this(sock, u, si);
+			verbose = verbose;
+		}
+
+		public nd_Client(Socket sock, URL u, int si){
+			this(sock, u);
+			sleepInterval = si;
+		}
+
+		public nd_Client(Socket sock, URL u){
+			try{os = sock.getOutputStream();}
+			catch(IOException e){
+				e.printStackTrace();
+				return;
+			}
+			try{pw = new PrintWriter(sock.getOutputStream(), true);} // last param is autoflush
+			catch(IOException e){
+				e.printStackTrace();
+				return;
+			}
+			try{br = new BufferedReader(new InputStreamReader(sock.getInputStream()));}
+			catch(IOException e){
+				e.printStackTrace();
+				return;
+			}
+			try{br.mark(1000000);}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+			url = u;
+			start();
+		}
+
+		public void run(){
+			String h = requestHeader(url.getFile());
+			nd_Header header = new nd_Header(h);
+			if(verbose) printHeader(header);
+			Integer length = new Integer(header.get("Content-Length"));
+			byte[] buffer = null;
+			if(length > amountDownloaded){
+				buffer = requestContent(url.getFile(), amountDownloaded, length);
+			}
+			if(buffer == null){
+				error("net_download: null buffer");
+				return;
+			}
+
+			FileOutputStream fos;
+			try{
+				File fp = new File("/Users/johnmac/shithole.cdf", true); // append = true
+				fos = new FileOutputStream(fp);
+			}catch(Exception e){
+				e.printStackTrace();
+				return;
+			}
+			try{fos.write(buffer);}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+
+		private byte[] requestContent(String file, int start, int end){
+			ByteBuffer buffer = ByteBuffer.allocate(end - start);
+			if(verbose){
+				post("getting file " + file + " from host " + url.getHost());
+				post("GET " + file + " HTTP/1.1");
+				post("Host: localhost:8080");
+				post("Connection: Close");
+			}
+			pw.println("GET " + file + " HTTP/1.1");
+			pw.println("Host: localhost:8080");
+			pw.println("Connection: Close");
+			pw.println();
+
+			boolean loop = true;
+			int counter = 0;
+
+			while(loop){
+				try{
+					if(br.ready()){
+						int i = 0;
+
+						// skip over header
+						while(i != -1){
+							i = br.read();
+							if((char)i == '\n') ++counter;
+							else if((char)i == '\r') ++counter;
+							else counter = 0;
+							if(counter == 4) break;
+						}
+						post("skipped over header successfully");
+						while(i != -1){
+							i = br.read();
+							buffer.put((byte)i);
+						}
+						loop = false;
+					}
+				}catch(Exception e){
+					error("net_download: an exception was thrown while trying to get header from " + file);
+					e.printStackTrace();
+					return null;
+				}
+				try{Thread.currentThread().sleep(50);}
+				catch(Exception e){
+					e.printStackTrace();
+					return null;
+				}
+			}
+			return buffer.array();
+		}
+
+		private String requestHeader(String file){
+			if(verbose){
+				post("getting file " + file + " from host " + url.getHost());
+				post("HEAD " + file + " HTTP/1.1");
+				post("Host: localhost:8080");
+				post("Connection: Close");
+			}
+			pw.println("HEAD " + file + " HTTP/1.1");
+			pw.println("Host: localhost:8080");
+			pw.println("Connection: Close");
+			pw.println();
+
+			boolean loop = true;
+			StringBuffer sb = new StringBuffer(8096);
+			while(loop){
+				try{
+					if(br.ready()){
+						int i = 0;
+						while(i != -1){
+							i = br.read();
+							sb.append((char)i);
+						}
+						loop = false;
+					}
+				}catch(Exception e){
+					error("net_download: an exception was thrown while trying to get header from " + file);
+					e.printStackTrace();
+					return null;
+				}
+				try{Thread.currentThread().sleep(50);}
+				catch(Exception e){
+					e.printStackTrace();
+					return null;
+				}
+			}
+			try{br.reset();}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+			return sb.toString();
+		}
+
+		private void printHeader(nd_Header h){
+			Iterator<String> it = h.keySet().iterator();
+			while(it.hasNext()){
+				String k = it.next();
+				post(k + ": " + h.get(k));
+			}
+		}
+	}
+
+	public void download(String u){
+		try{url = new URL(u);}
+		catch(Exception e){
+			error("net_download: " + u + " is a malformed url");
+			return;
+		}
+       	}
 
 	public net_download(Atom[] args){
 		declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});	
-		c = new MaxClock(new Callback(this, "dolist")); 
-		c.delay(100);
-		
-		// this block of code is to make sure that the tmp file we use is not an alias.
-		// on mac os x System.getProperty("java.io.downloadDir") returns /tmp which is an
-		// alias that points to /private/tmp
-		File f = null;
-		try{f = File.createTempFile("tmp","");}
-		catch(Exception e){}
-		try{downloadDir = f.getCanonicalPath();}
-		catch(Exception e){
-			error("net_download: couldn't get the default system tmp path");
-		}
-		downloadDir = downloadDir.substring(0, downloadDir.lastIndexOf(System.getProperty("file.separator")));	
-		//post("downloadDir: " + downloadDir);
-		
-		if(args.length > 0){
-			if(args[0].isInt()) setMaxNumConnections(args[0].toInt());
-		}		
-	
+		createInfoOutlet(false);
+		declareAttribute("percent");
+		declareAttribute("verbose");
+		declareAttribute("sleepinterval");
+		downloadDir = System.getProperty("java.io.tmpdir");
+
 		version();
 	}	
-	
-	public void get_html(Atom[] args){
-		//post("¥ get_html " + args[0].toString());
-		ArrayList ar = new ArrayList();
-		ar.add(new Integer(1));
-		ar.add(args);
-		synchronized(this.q){
-			q.add(ar);
-		}
-		announcedDone = false;
-	}
-	
-	public void get_image(Atom[] args){
-		//post("¥ get_image " + args[0].toString());
-		ArrayList ar = new ArrayList();
-		ar.add(new Integer(2));
-		ar.add(args);
-		synchronized(this.q){
-			q.add(ar);
-		}
-		announcedDone = false;
-	}
-	
-	public void get_file(Atom[] args){
-		//post("¥ get_file " + args[0].toString());
-		ArrayList ar = new ArrayList();
-		ar.add(new Integer(3));
-		ar.add(args);
-		synchronized(this.q){
-			q.add(ar);
-		}
-		announcedDone = false;
-	}
-	
+
 	public void bang(){
-		dolist();
-	}
-	
-	private void dolist(){
-		//post("numActiveConnections: " + numActiveConnections);
-		//post("q.size = " + q.size());
 
-		outlet(1, new Atom[]{Atom.newAtom("/numActiveConnections"), Atom.newAtom(numActiveConnections)});
-		outlet(1, new Atom[]{Atom.newAtom("/remainingFiles"), Atom.newAtom(q.size())});
+		download("http://stereo-ssc.nascom.nasa.gov/data/beacon/ahead/impact/2008/07/STA_LB_IMPACT_20080728_V02.cdf");
 
-		if(q.size() == 0 && numActiveConnections == 0){
-			if(!announcedDone){
-				outlet(1, "/done");
-				announcedDone = true;
-			}
-		}
-		if(q.size() == 0 || numActiveConnections >= maxNumConnections) {
-			c.delay(100);
+		try{socket = new Socket(url.getHost(), 80);}
+		catch(Exception e){
+			error("net_download: couldn't find host " + url.getHost());
 			return;
 		}
-	
-		Atom[] at;
-		ArrayList ar;
-		Integer i;
-		synchronized(this.q){
-			ar = (ArrayList)(q.poll());
-			i = (Integer)ar.get(0);
-			at = (Atom[])ar.get(1);
-		}
-		switch(i){
-			case 1:
-				doget_html(at);
-				break;
-			case 2:
-				doget_image(at);
-				break;
-			case 3:
-				doget_file(at);
-				break;
-		}
-		c.delay(100);
-	}
-	
-	private void doget_html(Atom[] args){
-		String url;
-		String tmp;
-		ArrayList tags = new ArrayList();
-		ArrayList attributes = new ArrayList();
-		int counter = 2;
-		
-		url = args[0].getString();
-		
-		if(args.length == 1){
-			HTML.Tag[] t = HTML.getAllTags();
-			for(int i = 0; i < t.length; i++){
-				tags.add(t[i].toString());
-			}
-		}
-		if(args.length == 2){
-			HTML.Attribute[] t = HTML.getAllAttributeKeys();
-			for(int i = 0; i < t.length; i++){
-				attributes.add(t[i].toString());
-			}
-		}
-		
-		if(args[1].getString().compareTo("tags") == 1) return;
-		
-		tmp = args[2].getString();
-		while(tmp.compareTo("attributes") != 0){
-			tags.add(tmp);
-			tmp = args[++counter].getString();
-		}
-		for(int i = ++counter; i < args.length; i++){
-			attributes.add(args[i].getString());
-		}
-		doget_html(url, tags, attributes);
-	}
-	
-	private void doget_html(final String url, final ArrayList tags, final ArrayList attributes){
-		Thread t = new Thread() 
-			{
-			public void run()
-				{
-				++numActiveConnections;
-				Reader reader;
-				URLConnection conn;
-				try{
-					conn = new URL(url).openConnection();
-					conn.addRequestProperty("User-Agent", "Mozilla/4.76"); 
-				   
-					reader = new InputStreamReader(conn.getInputStream());
-				} catch (Exception e){
-					--numActiveConnections;
-					outletBang(1);
-					e.printStackTrace();
-					return;
-				}
-				
-				EditorKit kit = new HTMLEditorKit();
-				Document doc = kit.createDefaultDocument();
 
-				// post("searching..."+str);
-				// The Document class does not yet handle charset's properly.
-				doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
-				try {
-					// Parse the HTML.
-					kit.read(reader, doc, 0);
-
-					// Iterate through the elements of the HTML document.
-					ElementIterator it = new ElementIterator(doc);
-					javax.swing.text.Element elem;
-					
-					while ((elem = it.next()) != null) {
-						for(int i = 0; i < tags.size(); i++){
-							SimpleAttributeSet s = (SimpleAttributeSet)elem.getAttributes().getAttribute(HTML.getTag((String)tags.get(i)));
-								
-							if (s != null) {				
-								for(int j = 0; j < attributes.size(); j++){
-									String link = s.getAttribute(HTML.getAttributeKey((String)attributes.get(j))).toString();
-									//outlet(1, url);
-									if(((String)attributes.get(j)).compareTo("href") == 0){
-										if(link.contains("http://")){
-											outlet(0, new Atom[]{Atom.newAtom((String)tags.get(i)), Atom.newAtom((String)attributes.get(j)), 
-												Atom.newAtom(link.toString())});
-										} else {
-											outlet(0, new Atom[]{Atom.newAtom((String)tags.get(i)), Atom.newAtom((String)attributes.get(j)), 
-												Atom.newAtom(url), Atom.newAtom(link.toString())});
-										}
-									} else {
-										outlet(0, new Atom[]{Atom.newAtom((String)tags.get(i)), Atom.newAtom((String)attributes.get(j)), 
-												Atom.newAtom(link.toString())});
-									}
-								}
-							}
-						}				
-					}
-				outletBang(1);
-				
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				--numActiveConnections;
-				//dolist();
-			}
-		};
-		t.start();
-	}
-	
-	private void doget_image(final Atom[] args){
-		Thread t = new Thread() 
-			{
-			public void run()
-				{
-					++numActiveConnections;
-					String imageURL = args[0].toString();
-					String outputPath = null;
-					JitterMatrix jitmat;
-					URL url;
-					
-					if(args.length > 1)
-						outputPath = args[1].toString();
-						
-					BufferedImage image = null;
-					try{ 
-						url = new URL(imageURL);
-						image = ImageIO.read(url);
-						jitmat = new JitterMatrix(image);
-					}catch (IOException e) {
-						get_image(args); // if we can't connect, add this url back on to the list
-						error("net_download: couldn't download " + imageURL);
-						--numActiveConnections;
-						outletBang(1);
-						e.printStackTrace();
-						return;
-					}
-					outlet(0,"image",new Atom[]{Atom.newAtom("jit_matrix"),Atom.newAtom(jitmat.getName())});
-
-					//////////////////////////////
-					// finished outputting jittermatrix, now store file in tmp directory and output path
-					//////////////////////////////
-					String tmp = url.toString();
-					String[] tmpar = tmp.split("/");
-					File fp;
-					try{
-						fp = new File(downloadDir + File.separator + tmpar[tmpar.length - 1]);//File.createTempFile(imageURL.substring(imageURL.lastIndexOf("/") + 1), "");
-					} catch(Exception e){
-						error("net_download: couldn't create output file for " + imageURL);
-						e.printStackTrace();
-						return;
-					}
-					try{
-						ImageIO.write(image, "jpg", fp);
-						outlet(0, new Atom[]{Atom.newAtom("image_filepath"), Atom.newAtom(downloadDir), 
-								     Atom.newAtom(tmpar[tmpar.length - 1])});
-					} catch(Exception e){
-						e.printStackTrace();
-					}
-
-					outletBang(1);
-					--numActiveConnections;
-					//dolist();
-				}
-			};
-		t.start();
-	}
-	
-	private void doget_file(final Atom[] args){
-		final String url = args[0].toString();
-		Thread t = new Thread(){
-				public void run(){
-					++numActiveConnections;
-					BufferedInputStream iostream = null;
-					URLConnection conn;
-					ArrayList<Byte> buffer = new ArrayList();
-					int b = 0;
-					int offset = 0;
-					//File out = new File("/Users/johnmac/porkbutt.cdf");
-			
-					File fp = null;
-					FileOutputStream iostreamout = null;
-			
-					try{
-						//fp = File.createTempFile(url.substring(url.lastIndexOf("/") + 1), "");
-						fp = new File(downloadDir + File.separator + url.substring(url.lastIndexOf("/") + 1));
-						iostreamout = new FileOutputStream(fp);
-					} catch(Exception e){
-						e.printStackTrace();
-					}
-			
-					try{
-						conn = new URL(url).openConnection();
-						conn.addRequestProperty("User-Agent", "Mozilla/4.76"); 
-						iostream = new BufferedInputStream(conn.getInputStream());
-					}catch(Exception e){e.printStackTrace();}
-			
-					try{b = iostream.read();}
-					catch(Exception e){e.printStackTrace();}
-					int counter = 0;
-					while(b >= 0){
-						try{
-							buffer.add(new Byte((byte)b));
-							b = iostream.read();
-							++offset;
-						} catch (Exception e){
-							e.printStackTrace();
-							return;
-						}
-					}
-			
-					byte[] buffer_byte = new byte[buffer.size()];
-					for(int i = 0; i < buffer.size(); i++)
-						buffer_byte[i] = ((Byte)buffer.get(i)).byteValue();
-					try{
-						iostreamout.write(buffer_byte);
-					} catch (Exception e){
-						e.printStackTrace();
-						return;
-					}
-					try{iostreamout.close();}
-					catch(Exception e){e.printStackTrace();}
-					String[] tmp = url.split("/");
-					//outlet(0, new Atom[]{Atom.newAtom("filepath"), Atom.newAtom(fp.getAbsolutePath()), Atom.newAtom(tmp[tmp.length - 1])});
-					outlet(0, new Atom[]{Atom.newAtom("filepath"), Atom.newAtom(downloadDir), Atom.newAtom(tmp[tmp.length - 1])});
-					post("finished downloading\n\t" + url);
-					outletBang(1);
-					--numActiveConnections;
-					//dolist();
-				}
-			};
-		t.start();
-	}
-		
-	public void clear(){
-	}
-		
-	public void notifyDeleted() {
-		c.release();
-		Thread[] ar = new Thread[Thread.activeCount()];
-		Thread.enumerate(ar);
-		for(int i = 0; i < ar.length; i++){
-			post(ar[i].getName());
-			/*
-			try{
-				ar[i].interrupt();
-			}catch(Exception e){e.printStackTrace();}
-			*/
-		}
+		nd_Client client = new nd_Client(socket, url, true);
 	}
 
-	public void setMaxNumConnections(int i){
-		if(i > 0) maxNumConnections = i;
-	}	
+	public void notifyDeleted(){
+		willDelete = true;
+	}
 
 	public void setDownloadDir(String s){
-		File fp = new File(s);
-                if(!fp.exists()){
-                        error("net_download: " + s + " doesn't exist.  Create it and try again.");
-                        return;
-                }
-                if(fp.isFile()){
-                        error("net_download: " + s + " is a file.  Please enter the path of a directory.");
-                        return;
-                }
+
         }
 
+	public void percent(boolean b){
+		percent = b;
+	}
+
+	public void verbose(boolean b){
+		verbose = b;
+	}
+
+	public void sleepinterval(int i){
+		sleepinterval = i;
+	}
 }
