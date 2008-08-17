@@ -49,6 +49,7 @@
  version 1.3.1: Port to Universal Binary, assist strings, changed free() routine to call dsp_free() *before* freeing memory. - mzed
  version 1.4: Sample rate agnostic - mzed
  version 1.4.1: fixed twiddle bug in fft code - mzed
+ version 1.4.2: rewrote the error messages to be more informative - JM
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
@@ -441,7 +442,7 @@ void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect) {
 	// Initializing the delay counter
 	x->x_counter = x->x_delay;
 
-	if (vs > x->BufSize) post("Analyzer~: You need to use a smaller signal vector size...");
+	if(vs > x->BufSize) error("Analyzer~: Vector size (%d) must not be bigger than buffer size (%d)\n", vs, x->BufSize);
 	else if (connect[0]) dsp_add(analyzer_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
 }
 
@@ -496,7 +497,7 @@ void analyzer_int(t_analyzer *x, long n) {
 
 	x->x_hop = n; 
 	if (x->x_hop < vs) {
-		post("Analyzer~: You can't overlap so much...");
+		error("Analyzer~: hop size (%d) is less than ths signal vector size (%d)\n", x->x_hop, vs);
 		x->x_hop = vs;
 	} else if (x->x_hop > x->BufSize) {
 		x->x_hop = x->BufSize;
@@ -675,49 +676,57 @@ void readx_window(t_analyzer *x, t_atom *argv) {
 }
 
 void readx_delay(t_analyzer *x, t_atom *argv) {
-    
-	if ((argv[4].a_type == A_LONG) && (argv[4].a_w.w_long >= 0) && (argv[4].a_w.w_long < MAXDELAY)) {
-		x->x_delay = argv[4].a_w.w_long;
-	} else if ((argv[4].a_type == A_FLOAT) && (argv[4].a_w.w_float >= 0) && (argv[4].a_w.w_float < MAXDELAY)) {
-		x->x_delay = (t_int)(argv[4].a_w.w_float);
-	} else {
-		post("Analyzer~: 'delay' argument may be out of range... Choosing default...");
+	int val = 0;
+	int argnum = 4;
+	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
+	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
+	else error("Analyzer~: 'delay' argument must be either an int or a float (which will be truncated to an int).\n");
+
+	if(val >= 0 && val < MAXDELAY) x->x_delay = val;
+	else{
+		error("Analyzer~: 'delay' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXDELAY, DEFDELAY);
 		x->x_delay = DEFDELAY;
 	}
 }
 
 void readx_npitch(t_analyzer *x, t_atom *argv) {
-    
-	if ((argv[5].a_type == A_LONG) && (argv[5].a_w.w_long >= 0) && (argv[5].a_w.w_long <= MAXNPITCH)) {
-		x->x_npitch = argv[5].a_w.w_long;
-	} else if ((argv[5].a_type == A_FLOAT) && (argv[5].a_w.w_float >= 0) && (argv[5].a_w.w_float <= MAXNPITCH)) {
-		x->x_npitch = (t_int)(argv[5].a_w.w_float);
-	} else {
-		post("Analyzer~: '# of pitches' argument may be out of range... Choosing default...");
+	int val = 0;
+	int argnum = 5;
+	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
+	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
+	else error("Analyzer~: '# of pitches' argument must be either an int or a float (which will be truncated to an int).\n");
+
+	if(val >= 0 && val < MAXNPITCH) x->x_npitch = val;
+	else{
+		error("Analyzer~: '# of pitches' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPITCH, DEFNPITCH);
 		x->x_npitch = DEFNPITCH;
 	}
 }
 
 void readx_npeakanal(t_analyzer *x, t_atom *argv) {
-    
-	if ((argv[6].a_type == A_LONG) && (argv[6].a_w.w_long >= 0) && (argv[6].a_w.w_long <= MAXNPEAK)) {
-		x->x_npeakanal = argv[6].a_w.w_long;
-	} else if ((argv[6].a_type == A_FLOAT) && (argv[6].a_w.w_float >= 0) && (argv[6].a_w.w_float <= MAXNPEAK)) {
-		x->x_npeakanal = (t_int)(argv[6].a_w.w_float);
-	} else {
-		post("Analyzer~: '# of peaks to find' argument may be out of range... Choosing default...");
+	int val = 0;
+	int argnum = 6;
+	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
+	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
+	else error("Analyzer~: '# of peaks to find' argument must be either an int or a float (which will be truncated to an int).\n");
+
+	if(val >= 0 && val < MAXNPEAK) x->x_npeakanal = val;
+	else{
+		error("Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKANAL);
 		x->x_npeakanal = DEFNPEAKANAL;
 	}
 }
 
 void readx_npeakout(t_analyzer *x, t_atom *argv) {
-    
-	if ((argv[7].a_type == A_LONG) && (argv[7].a_w.w_long >= 0) && (argv[7].a_w.w_long <= MAXNPEAK)) {
-		x->x_npeakout = argv[7].a_w.w_long;
-	} else if ((argv[7].a_type == A_FLOAT) && (argv[7].a_w.w_float >= 0) && (argv[7].a_w.w_float <= MAXNPEAK)) {
-		x->x_npeakout = (t_int)(argv[7].a_w.w_float);
-	} else {
-		post("Analyzer~: '# of peaks to output' argument may be out of range... Choosing default...");
+	int val = 0;
+	int argnum = 7;
+	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
+	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
+	else error("Analyzer~: '# of peaks to output' argument must be either an int or a float (which will be truncated to an int).\n");
+
+	if(val >= 0 && val < MAXNPEAK) x->x_npeakout = val;
+	else{
+		error("Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKOUT);
 		x->x_npeakout = DEFNPEAKOUT;
 	}
 }
@@ -888,7 +897,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	}		
 
 	if (x->x_npeakout > x->x_npeakanal) {
-		post("Analyzer~: You can't output more peaks than you pick...");
+		error("Analyzer~: '# of peaks to output' (%d) must not be larger than '# of peaks to analyze' (%d).  Setting the former to the latter.\n", x->x_npeakout, x->x_npeakanal);
 		x->x_npeakout = x->x_npeakanal;
 	}
 	
@@ -931,15 +940,15 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	}
 	
 	if (x->BufSize < vs) { 
-		post("Analyzer~: Buffer size is smaller than the vector size, %d",vs);
+		error("Analyzer~: Buffer size (%d) is smaller than the vector size, %d.  Setting buffer size to the signal vector size.\n", x->BufSize, vs);
 		x->BufSize = vs;
 	} else if (x->BufSize > 65536) {
-		post("Analyzer~: Maximum FFT size is 65536 samples");
+		error("Analyzer~: Maximum FFT size is 65536 samples. Setting buffer size to 65536.\n");
 		x->BufSize = 65536;
 	}
 	
 	if (x->FFTSize < x->BufSize) {
-		post("Analyzer~: FFT size is at least the buffer size, %d",x->BufSize);
+		error("Analyzer~: FFT size (%d) must be less than the buffer size, %d. Setting FFT size to buffer size.\n", x->FFTSize, x->BufSize);
 		x->FFTSize = x->BufSize;
 	}
 
@@ -953,13 +962,14 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	else if ((x->FFTSize > 16384) && (x->FFTSize < 32768)) x->FFTSize = 32768;
 	else if ((x->FFTSize > 32768) && (x->FFTSize < 65536)) x->FFTSize = 65536;
 	else if (x->FFTSize > 65536) {
-		post("Analyzer~: Maximum FFT size is 65536 samples");
+		error("Analyzer~: Maximum FFT size is 65536 samples.  Setting FFT size to 65536.\n");
 		x->FFTSize = 65536;
 	}
 	
 	// Overlap case
-	if (x->x_overlap > x->BufSize-vs) {
-		post("Analyzer~: You can't overlap so much...");
+	if (x->x_overlap > x->BufSize - vs) {
+		//post("Analyzer~: You can't overlap so much...");
+		error("Analyzer~: overlap (%d) must be smaller than the buffer size minus signal vector size (%d). Setting overlap to buffersize - sigvs.\n", x->x_overlap, x->BufSize - vs);
 		x->x_overlap = x->BufSize-vs;
 	} else if (x->x_overlap < 1)
 		x->x_overlap = 0; 
