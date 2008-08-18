@@ -50,11 +50,13 @@
  version 1.4: Sample rate agnostic - mzed
  version 1.4.1: fixed twiddle bug in fft code - mzed
  version 1.4.2: rewrote the error messages to be more informative - JM
+ version 1.4.3: the hop size is now calculated when the dsp chain is compiled - JM
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
-
 #include "ext.h"
+#include "version.h"
+#include "version.c"
 #include "z_dsp.h"
 #include "fft.h"
 #include <string.h>
@@ -74,7 +76,7 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.4.1"
+#define VERSION "1.4.3"
 #define RES_ID	7079
 #define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
@@ -318,9 +320,9 @@ long log2max(long n);
 int main(void) {
 
     post("Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
-    post("copyright © 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
+    post("copyright (c) 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
     post("Pitch tracker based on Miller Puckette's fiddle~");
-    post("copyright © 1997-1999 Music Department UCSD");
+    post("copyright (c) 1997-1999 Music Department UCSD");
     post(" ");
 
 	ps_rectangular = gensym("rectangular");
@@ -442,8 +444,25 @@ void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect) {
 	// Initializing the delay counter
 	x->x_counter = x->x_delay;
 
-	if(vs > x->BufSize) error("Analyzer~: Vector size (%d) must not be bigger than buffer size (%d)\n", vs, x->BufSize);
-	else if (connect[0]) dsp_add(analyzer_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+	//if(vs > x->BufSize) error("Analyzer~: Vector size (%d) must not be bigger than buffer size (%d)\n", vs, x->BufSize);
+	// Overlap case
+	if (x->x_overlap > x->BufSize - vs) {
+		error("Analyzer~: overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
+		error("***Analyzer~ will be left out of the dsp chain!\n");
+		return;
+	} else if (x->x_overlap < 1)
+		x->x_overlap = 0; 
+
+	if(vs > x->BufSize){
+		error("Analyzer~: sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
+		error("***Analyzer~ will be left out of the dsp chain!\n");
+		return;
+	}
+
+	x->x_hop = x->BufSize - x->x_overlap;
+	x->x_FFTSizeOver2 = x->FFTSize/2;		
+
+	if (connect[0]) dsp_add(analyzer_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
 }
 
 void analyzer_log(t_analyzer *x) {
@@ -966,16 +985,18 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 		x->FFTSize = 65536;
 	}
 	
+	/*
 	// Overlap case
 	if (x->x_overlap > x->BufSize - vs) {
 		//post("Analyzer~: You can't overlap so much...");
-		error("Analyzer~: overlap (%d) must be smaller than the buffer size minus signal vector size (%d). Setting overlap to buffersize - sigvs.\n", x->x_overlap, x->BufSize - vs);
+		error("Analyzer~: overlap (%d) must be smaller than the buffer size (%d) minus signal vector size (%d). Setting overlap to buffersize - sigvs.\n", x->x_overlap, x->BufSize, vs);
 		x->x_overlap = x->BufSize-vs;
 	} else if (x->x_overlap < 1)
 		x->x_overlap = 0; 
 
 	x->x_hop = x->BufSize - x->x_overlap;
 	x->x_FFTSizeOver2 = x->FFTSize/2;		
+	*/
 
 	post("--- Analyzer~ ---");	
 	post("	Buffer size = %d",x->BufSize);
