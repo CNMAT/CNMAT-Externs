@@ -701,29 +701,28 @@ void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
             sec =      ntohl(*((unsigned long *)(data+8)));
             frac_sec = ntohl(*((unsigned long *)(data+12)));
             
-        }
-        
-        if(i == 0) {
-            if(sec == 0 && frac_sec == 1) {
+	    if(i == 0) {
+	      if(sec == 0 && frac_sec == 1) {
                 x->a.type = TIME_IMMEDIATE;
-            } else {
+	      } else {
                 x->a.type = TIME_STAMP;
                 x->a.sec = sec;
                 x->a.frac_sec = frac_sec;
                 OSCTimeTag_run(x);
-            }
-        }
-        else if(i == 1) {
-            if(sec == 0 && frac_sec == 1) {
+	      }
+	    }
+	    else if(i == 1) {
+	      if(sec == 0 && frac_sec == 1) {
                 x->b.type = TIME_IMMEDIATE;
-            } else {
+	      } else {
                 x->b.type = TIME_STAMP;
                 x->b.sec = sec;
                 x->b.frac_sec = frac_sec;
-            }
-        }
+	      }
+	    }
+	}
     }
-
+    
 }
     
 
@@ -736,27 +735,29 @@ void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
     i = proxy_getinlet(x);
 
     if(argc == 2 && argv[0].a_type == A_LONG && argv[1].a_type == A_LONG) {
+      
         sec = (unsigned long)argv[0].a_w.w_long;
         frac_sec = (unsigned long)argv[1].a_w.w_long;
     
         if(i == 0) {
+	  x->a.sec = sec;
+	  x->a.frac_sec = frac_sec;
             if(sec == 0 && frac_sec == 1) {
                 x->a.type = TIME_IMMEDIATE;
             } else {
                 x->a.type = TIME_STAMP;
-                x->a.sec = sec;
-                x->a.frac_sec = frac_sec;
-                OSCTimeTag_run(x);
             }
+	    OSCTimeTag_run(x);
         }
         else if(i == 1) {
+	  x->b.sec = sec;
+	  x->b.frac_sec = frac_sec;
             if(sec == 0 && frac_sec == 1) {
                 x->b.type = TIME_IMMEDIATE;
             } else {
                 x->b.type = TIME_STAMP;
-                x->b.sec = sec;
-                x->b.frac_sec = frac_sec;
             }
+	    // passive inlet
         }
     } else {
         post("OSC-timetag: got invalid OSCTimeTag");
