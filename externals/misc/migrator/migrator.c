@@ -38,10 +38,12 @@ VERSION 1.0.7: Now likes lists of ints too!
 VERSION 1.1: Reads the contents of SDIF-buffers.
 VERSION 1.1.1: Fixed helpfile
 VERSION 1.1.2: Now uses SETFLOAT to set the contents of atoms.
+VERSION 1.1.3: SDIF support fixed.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
 //#define USE_GSL 1
+#define MIG_ENABLE_SDIF 1
 
 #include "version.h"
 #include "ext.h"
