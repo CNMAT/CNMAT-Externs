@@ -138,11 +138,8 @@ void heap_delete(binary_heap *a, int i) {
  * heap. Adapted from Introduction to Algorithms (Cormen, Leiserson,
  * Rivest 1990) page 151 Exercise 7.5-4 */
 
+/*
 void heap_increase_key(binary_heap *a,int i,priority p) {
-
-  /* return with an error if the input is invalid, ie trying to
-   * increase elements that are outside of the heap bounds, 1 to
-   * heap_size */
 
   if (i > a->heap_size || i < 1) {
     sprintf(messages,"heap_increase_key(): %d, no such element.",i);
@@ -150,11 +147,10 @@ void heap_increase_key(binary_heap *a,int i,priority p) {
     return;
   }
 
-  /* change and propagate */
-
   a->elements[i].p = p;
   heapify(a,i);
 }
+*/
 
 /* function to initalize a given binary heap */
 
