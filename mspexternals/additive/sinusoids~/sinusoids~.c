@@ -32,7 +32,7 @@ University of California, Berkeley.
 NAME: sinusoids~
 DESCRIPTION: Additive synthesis with a bank of (optionally bandwidth-enhanced) sinusoidal oscillators
 AUTHORS: Adrian Freed
-COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
+COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05,06,07,08
 DRUPAL_NODE: /patch/4008
 SVN_REVISION: $LastChangedRevision$
 VERSION 1.7: 030219, bandwidth-enhanced
@@ -43,13 +43,17 @@ VERSION 1.7.4: Updated help file
 VERSION 1.7.5: Force Package Info Generation
 VERSION 1.7.6: Changed max sinusoids to 1024 -mzed
 VERSION 1.8: Debugged bandwidth enhancement to make it more narrowband
+VERSION 1.9: Changed click problem on Intel by removing small random numbers from table, tweaked compiler options for performance, removed NTABSZ
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
 
 #include "ext.h"
+
 #include "version.h"
 #include "version.c"
+
 #include "z_dsp.h"
 #include <math.h>
 
@@ -68,7 +72,6 @@ VERSION 1.8: Debugged bandwidth enhancement to make it more narrowband
 #define STABSZ (1l<<TPOW)
 #define LOGBASE2OFTABLEELEMENT 2
 
-//#define NTABSZ 129088
 
 void *sinusoids_class;
 float Sinetab[STABSZ];
@@ -194,8 +197,8 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 		
 		
 		// Make sure we're not going to run out of noise:
-		if ((local_noisep + n) >= &(NoiseTable[NTABSZ])) {
-			local_noisep = &(NoiseTable[0]);
+		while ((local_noisep + n) >= (NoiseTable+NTS())) {
+			local_noisep = &NoiseTable[0] ;
 			// Could start at a random location within the noise table...
 		}
 
@@ -206,11 +209,11 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 		
 		carrier_amp = sqrtf(1.0f - o->noisiness) * o->amplitude ;
 		carrier_amp_final = sqrtf(1.0f - o->next_noisiness) * o->next_amplitude;
-		carrier_amp_inc = (carrier_amp_final - carrier_amp) / n;
+		carrier_amp_inc = (carrier_amp_final - carrier_amp)*rate;
 		
 		mod_amp =       sqrtf(2.0f * o->noisiness) * o->amplitude ;
 		mod_amp_final = sqrtf(2.0f * o->next_noisiness) * o->next_amplitude ;
-		mod_amp_inc = (mod_amp_final - mod_amp) / n;
+		mod_amp_inc = (mod_amp_final - mod_amp) *rate;
 		
 		// post("carrier %f to %f, mod %f to %f", carrier_amp, carrier_amp_final, mod_amp, mod_amp_final);
 		
@@ -247,7 +250,7 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 	op->noisep = local_noisep;
 	op->nosc = op->next_nosc;
 
-out:	
+	
 	return (w+4);
 }
 
@@ -283,15 +286,12 @@ void sinusoids_clear(t_sinusoids *x)
 
 void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
 {
-	int i;
 	
-	
-	if (sp[0]->s_n > NTABSZ) {
+	if (sp[0]->s_n > NTS()) {
 		error("sinusoids~: %ld-size Noise table is too small for sigvs %ld",
-			   NTABSZ, sp[0]->s_n);
+			   NTS(), sp[0]->s_n);
 		return;
 	}
-	
 	if (x->is_bwe) {
 		dsp_add(sinusoids_bwe_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
 	} else {
@@ -456,7 +456,6 @@ void Makeoscsinetable()
 		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(float)PI);
 }
 
-int NTS(void);
 
 
 void main(void)
@@ -465,12 +464,11 @@ void main(void)
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 
 	version(0);
-	post("Maximum Oscillators: %d", MAXOSCILLATORS);
+ 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
     post("Never expires");
     
-    // post("sizeof(NoiseTable) %ld", NTS());
+//     post("sizeof(NoiseTable) %ld", NTS());
 	Makeoscsinetable();
-
 
 
 	addmess((method)version, "version", 0);
