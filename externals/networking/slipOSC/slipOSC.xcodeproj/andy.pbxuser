@@ -11,7 +11,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					333,
+					628,
 					20,
 					48,
 					43,
@@ -30,6 +30,10 @@
 			};
 			PBXPerProjectTemplateStateSaveDate = 236299252;
 			PBXWorkspaceStateSaveDate = 236299252;
+		};
+		perUserProjectItems = {
+			A1D92B8B0E15A3F90066BCB5 /* PBXBookmark */ = A1D92B8B0E15A3F90066BCB5 /* PBXBookmark */;
+			A1D92B940E15C31D0066BCB5 /* PBXTextBookmark */ = A1D92B940E15C31D0066BCB5 /* PBXTextBookmark */;
 		};
 		sourceControlManager = A152FCFB0D4937A30097EC5A /* Source Control */;
 		userBuildSettings = {
@@ -50,11 +54,25 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
+	A1D92B8B0E15A3F90066BCB5 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = BEEC232F0A3F859F00C8A6FF /* slipOSC.c */;
+	};
+	A1D92B940E15C31D0066BCB5 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = BEEC232F0A3F859F00C8A6FF /* slipOSC.c */;
+		name = "slipOSC.c: 39";
+		rLen = 0;
+		rLoc = 1663;
+		rType = 0;
+		vrLen = 1989;
+		vrLoc = 0;
+	};
 	BEEC232F0A3F859F00C8A6FF /* slipOSC.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1077, 8540}}";
-			sepNavSelRange = "{4685, 0}";
-			sepNavVisRange = "{4020, 941}";
+			sepNavIntBoundsRect = "{{0, 0}, {1077, 8764}}";
+			sepNavSelRange = "{1663, 0}";
+			sepNavVisRange = "{0, 1989}";
 			sepNavWindowFrame = "{{15, 4}, {1136, 874}}";
 		};
 	};
