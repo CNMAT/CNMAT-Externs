@@ -125,7 +125,6 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "sinusoids~" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
 			projectDirPath = "";
@@ -171,6 +170,10 @@
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
@@ -180,13 +183,18 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				GCC_AUTO_VECTORIZATION = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_STRICT_ALIASING = YES;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -220,8 +228,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					ppc,
 					i386,
+					ppc,
 				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
@@ -231,11 +239,16 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_STRICT_ALIASING = YES;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -267,6 +280,10 @@
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -274,10 +291,15 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_STRICT_ALIASING = YES;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -307,6 +329,10 @@
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Development;
@@ -314,6 +340,10 @@
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Deployment;
@@ -321,6 +351,10 @@
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Default;
