@@ -166,12 +166,11 @@ void slipencodeFullPacket(sOSC *x, long size, unsigned char *source) {
   
 }
   
-void slipdecode(sOSC *x, unsigned char c)
+int slipdecode(sOSC *x, unsigned char c)
 {
 
   int t;
 
-  critical_enter(x->lock);
   
   switch(x->istate)
     {
@@ -209,7 +208,7 @@ void slipdecode(sOSC *x, unsigned char c)
 	      
 	      if((t % 4) == 0) { 
 		sOSC_sendData(x, t, x->slipibuf);
-		return;
+		return 0;
 	      } // else bad packet not a multiple four length...
 
 	    }
@@ -265,14 +264,18 @@ void slipdecode(sOSC *x, unsigned char c)
       
     }
 
-  critical_exit(x->lock);
+return 1;
+ 
 
 }
 
 void slipbyte(sOSC *x, long n)
 {
   if((x->m_inletNumber==1) && n<256)
-    slipdecode(x, n);
+{
+	  critical_enter(x->lock);
+	if(slipdecode(x, n))
+		critical_exit(x->lock);
 }
 
 void sliplist(sOSC *x, struct symbol *s, int argc, struct atom *argv)
@@ -286,12 +289,18 @@ void sliplist(sOSC *x, struct symbol *s, int argc, struct atom *argv)
       return;
     }
   }
-  
+	  critical_enter(x->lock);
+ 
   for(i=0;i<argc;++i) {
     int  e = argv[i].a_w.w_long;	
     if(e<256)
-      slipdecode(x,e);
+      if(!slipdecode(x,e))
+	  {
+	  	  critical_enter(x->lock);
+	  }
   }
+  critical_exit(x->lock);
+ 
 }
 
 void *myobject_free(sOSC *x);
