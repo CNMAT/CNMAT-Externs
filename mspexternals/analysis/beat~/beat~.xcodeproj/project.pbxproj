@@ -10,9 +10,9 @@
 		0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
 		0FF3254009473DCC00B01934 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
+		BE82966D0E6DE08B007147F3 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = BE82966C0E6DE08B007147F3 /* fft.c */; };
 		BE8516220A7199FC00BAD975 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE8516210A7199FC00BAD975 /* Accelerate.framework */; };
 		BE91A7CA0B74028500DF0806 /* beat~.c in Sources */ = {isa = PBXBuildFile; fileRef = BE91A7C90B74028500DF0806 /* beat~.c */; };
-		BEAEE5130A71950900A55B9D /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = BEAEE5120A71950900A55B9D /* fft.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,9 +20,9 @@
 		0F5B62020919440900A62EB9 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
 		0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = /Library/Frameworks/MaxAudioAPI.framework; sourceTree = "<absolute>"; };
 		8D01CCD20486CAD60068D4B7 /* beat~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "beat~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE82966C0E6DE08B007147F3 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fft.c; path = "../Jehan-lib/fft.c"; sourceTree = SOURCE_ROOT; };
 		BE8516210A7199FC00BAD975 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		BE91A7C90B74028500DF0806 /* beat~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "beat~.c"; sourceTree = "<group>"; };
-		BEAEE5120A71950900A55B9D /* fft.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +44,7 @@
 			isa = PBXGroup;
 			children = (
 				BE91A7C90B74028500DF0806 /* beat~.c */,
-				BEAEE5120A71950900A55B9D /* fft.c */,
+				BE82966C0E6DE08B007147F3 /* fft.c */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -125,9 +125,11 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "beat~" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* beat~ */,
 			);
@@ -159,8 +161,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEAEE5130A71950900A55B9D /* fft.c in Sources */,
 				BE91A7CA0B74028500DF0806 /* beat~.c in Sources */,
+				BE82966D0E6DE08B007147F3 /* fft.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
