@@ -1,3 +1,35 @@
+/*
+Written by John MacCallum, The Center for New Music and Audio Technologies,
+University of California, Berkeley.  Copyright (c) 2006-07, The Regents of
+the University of California (Regents). 
+Permission to use, copy, modify, distribute, and distribute modified versions
+of this software and its documentation without fee and without a signed
+licensing agreement, is hereby granted, provided that the above copyright
+notice, this paragraph and the following two paragraphs appear in all copies,
+modifications, and distributions.
+
+IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING
+OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF REGENTS HAS
+BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: cdf
+DESCRIPTION: Reads and writes Common Data Format (CDF) files (nssdc.gsfc.nasa.gov/cdf/)
+AUTHORS: John MacCallum
+COPYRIGHT_YEARS: 2007
+SVN_REVISION: $LastChangedRevision: 587 $
+VERSION 1.0: First version
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
+
 #include "version.h"
 #include "ext.h"
 #include "version.c"
@@ -29,6 +61,7 @@ typedef struct _cdf
 	char c_varAttrName[CDF_ATTR_NAME_LEN256];
 	t_epochNode *c_epochListHead;
 	t_epochNode *c_epochListTail;
+	//char *c_timeVarName;
 } t_cdf;
 
 void *cdf_class;
@@ -46,7 +79,7 @@ CDFstatus cdf_printGlobalInfo(t_cdf *x);
 CDFstatus cdf_outputzVarNames(t_cdf *x);
 void cdf_getzVarData(t_cdf *x, t_symbol *msg, short argc, t_atom *argv);
 void cdf_getzVarInfo(t_cdf *x, t_symbol *var);
-int cdf_getEpochs(t_cdf *x);
+void cdf_getEpochs(t_cdf *x, t_symbol *msg);
 long cdf_getRecForEpoch(t_cdf *x, double epoch);
 void cdf_searchEpochsFromHead(t_cdf *x, double epoch, t_epochNode **epochNode);
 void cdf_searchEpochsFromTail(t_cdf *x, double epoch, t_epochNode **epochNode);
@@ -59,7 +92,7 @@ void StatusHandler (CDFstatus status);
 
 int main(void)
 {
-	setup((t_messlist **)&cdf_class, (method)cdf_new, (method)cdf_free, (short)sizeof(t_cdf), 0L, 0); 
+	setup((t_messlist **)&cdf_class, (method)cdf_new, (method)cdf_free, (short)sizeof(t_cdf), 0L, A_DEFSYM, 0); 
 	
 	version(0);
 
@@ -71,13 +104,17 @@ int main(void)
 	addmess((method)cdf_anything, "anything", A_GIMME, 0);
 	addmess((method)cdf_assist, "assist", A_CANT, 0);
 	addmess((method)cdf_read, "read", A_SYM, 0);
-	addmess((method)cdf_getzVarData, "getzVarData", A_GIMME, 0);
+	addmess((method)cdf_printGlobalInfo, "printGlobalInfo", 0);
+	//addmess((method)cdf_getzVarData, "getzVarData", A_GIMME, 0);
 	addmess((method)cdf_getzVarInfo, "getzVarInfo", A_DEFSYM, 0);
+	addmess((method)cdf_getEpochs, "getEpochs", A_DEFSYM, 0);
 	
 	return 0;
 }
 
 void cdf_anything(t_cdf *x, t_symbol *msg, short argc, t_atom *argv){
+	//post("%s", msg->s_name);
+	cdf_getzVarData(x, msg, argc, argv);
 }
 
 void cdf_bang(t_cdf *x){
@@ -126,7 +163,7 @@ void *cdf_new(){
 	post ("CDF library copyright:%s\n", copyright);
 	
 	x->c_maxzRec = 0;
-		   	
+				   	
 	return(x);
 }
 
@@ -178,17 +215,21 @@ void cdf_read(t_cdf *x, t_symbol *fn){
 
 	status = CDFopenCDF (filename, &x->c_id);
 	if (status != CDF_OK) StatusHandler (status);
-	
-	post ("CDF file name: %s", filename);
+
+
 	status = cdf_printGlobalInfo(x);
 	if(status != CDF_OK) StatusHandler(status);
-	
+
 	status = cdf_outputzVarNames(x);
 	if(status != CDF_OK)StatusHandler(status);
 	
-	cdf_getEpochs(x);
+	//cdf_getEpochs(x);
 }
 
+//////////////////////////////////////////////////
+// PROBLEM: we obtain x->c_maxsRec (which is very important) in cdf_printGlobalInfo().
+// This should be done in a different place and global info shouldn't be printed by default.
+//////////////////////////////////////////////////
 CDFstatus cdf_printGlobalInfo(t_cdf *x){
 	CDFstatus status;    // CDF completion status. 
 	
@@ -296,13 +337,18 @@ CDFstatus cdf_outputzVarNames(t_cdf *x){
 }
 
 void cdf_getzVarData(t_cdf *x, t_symbol *msg, short argc, t_atom *argv){
-	if(argc < 3){
-		error("cdf: getzVarData takes 3 or more arguments (see help file).");
+	if(!x->c_id){
+		error("cdf: you must open a cdf file first!");
 		return;
 	}
-	int i, j;
 	CDFstatus status;
+	status = CDFconfirmzVarExistence(x->c_id, msg->s_name);
+	if(status != CDF_OK){
+		StatusHandler(status);
+		return;
+	}
 	
+	int i, j;
 	char varName[CDF_VAR_NAME_LEN256+1];
 	long  numElems, dataType, numDims, recVary, dimSizes[CDF_MAX_DIMS], dimVarys[2];
 	t_atom *outArray;
@@ -310,46 +356,50 @@ void cdf_getzVarData(t_cdf *x, t_symbol *msg, short argc, t_atom *argv){
 	long record_start = 0L;
 	long record_end = 0L;
 	long record = 0L;
-	if(argv[1].a_type != A_SYM){
-		error("cdf: the second argument to getzVarData should be a string (see help file).");
-		return;
-	}
-	if(!strcmp(argv[1].a_w.w_sym->s_name, "record")){
-		record_start = argv[2].a_w.w_long;
-		if(argc > 3) record_end = argv[3].a_w.w_long;
-		else record_end = record_start;
-	}
-	else if(!strcmp(argv[1].a_w.w_sym->s_name, "epoch")){
-		// this should be test for reasonableness
-		record_start = cdf_getRecForEpoch(x, computeEPOCH(argv[2].a_w.w_long,
+	
+	switch(argc){
+		case 0:
+			record_start = 0;
+			record_end = x->c_maxzRec;
+			post("record_start = %d, record_end = %d", record_start, record_end);
+			break;
+		case 1:
+			record_start = record_end = argv[0].a_w.w_long;
+			break;
+		case 2:
+			record_start = argv[0].a_w.w_long;
+			record_end = argv[1].a_w.w_long;
+			break;
+		case 7:
+			record_start = record_end = cdf_getRecForEpoch(x, computeEPOCH(argv[0].a_w.w_long,
+														argv[1].a_w.w_long,
+														argv[2].a_w.w_long,
 														argv[3].a_w.w_long,
 														argv[4].a_w.w_long,
 														argv[5].a_w.w_long,
-														argv[6].a_w.w_long,
-														argv[7].a_w.w_long,
-														argv[8].a_w.w_long));
-		if(argc > 9){
-			record_end = cdf_getRecForEpoch(x, computeEPOCH(argv[9].a_w.w_long,
+														argv[6].a_w.w_long));
+			break;
+		case 14:
+			record_start = cdf_getRecForEpoch(x, computeEPOCH(argv[0].a_w.w_long,
+														argv[1].a_w.w_long,
+														argv[2].a_w.w_long,
+														argv[3].a_w.w_long,
+														argv[4].a_w.w_long,
+														argv[5].a_w.w_long,
+														argv[6].a_w.w_long));
+			record_end = cdf_getRecForEpoch(x, computeEPOCH(argv[7].a_w.w_long,
+														argv[8].a_w.w_long,
+														argv[9].a_w.w_long,
 														argv[10].a_w.w_long,
 														argv[11].a_w.w_long,
 														argv[12].a_w.w_long,
-														argv[13].a_w.w_long,
-														argv[14].a_w.w_long,
-														argv[15].a_w.w_long));
-		}
-		else record_end = record_start;
-	}
-	else if(!strcmp(argv[1].a_w.w_sym->s_name, "epochstring")){
-		// this string should be tested for valid format
-		record_start = cdf_getRecForEpoch(x, parseEPOCH(argv[2].a_w.w_sym->s_name));
-		if(argc > 3)
-			record_end = cdf_getRecForEpoch(x, parseEPOCH(argv[3].a_w.w_sym->s_name));
-		else record_end = record_start;
+														argv[13].a_w.w_long));
+			break;
 	}
 	
 	// we could use CDFhyperGetzVarData, but i'm too lazy to rewrite all this, so for now it goes in a big-ass for loop.
 	for(record = record_start; record <= record_end; record++){
-		status = CDFinquirezVar (x->c_id, CDFgetVarNum(x->c_id, argv[0].a_w.w_sym->s_name), varName, &dataType,
+		status = CDFinquirezVar (x->c_id, CDFgetVarNum(x->c_id, msg->s_name), varName, &dataType,
 							 &numElems, &numDims, &dimSizes, &recVary, dimVarys);
 		if (status != CDF_OK) StatusHandler (status);
 		
@@ -359,17 +409,21 @@ void cdf_getzVarData(t_cdf *x, t_symbol *msg, short argc, t_atom *argv){
 				if(dataType == CDF_REAL4 || dataType == CDF_FLOAT){
 					float data;
 					status = CDFgetzVarRecordData (x->c_id, CDFgetVarNum(x->c_id, varName), record, &data);
-					if (status != CDF_OK) StatusHandler (status);
-					SETSYM(outArray, gensym(varName));
-					SETFLOAT(outArray + 1, data);
-					outlet_list(x->c_out0, 0L, 2, outArray);
+					if(status != VIRTUAL_RECORD_DATA){
+						if (status != CDF_OK) StatusHandler (status);
+						SETSYM(outArray, gensym(varName));
+						SETFLOAT(outArray + 1, data);
+						outlet_list(x->c_out0, 0L, 2, outArray);
+					}
 				} else {
 					double data;
 					status = CDFgetzVarRecordData (x->c_id, CDFgetVarNum(x->c_id, varName), record, &data);
-					if (status != CDF_OK) StatusHandler (status);
-					SETSYM(outArray, gensym(varName));
-					SETFLOAT(outArray + 1, (float)data);
-					outlet_list(x->c_out0, 0L, 2, outArray);
+					if(status != VIRTUAL_RECORD_DATA){
+						if (status != CDF_OK) StatusHandler (status);
+						SETSYM(outArray, gensym(varName));
+						SETFLOAT(outArray + 1, (float)data);
+						outlet_list(x->c_out0, 0L, 2, outArray);
+					}
 				}
 				free(outArray);
 			} else {
@@ -390,13 +444,16 @@ void cdf_getzVarData(t_cdf *x, t_symbol *msg, short argc, t_atom *argv){
 					status = CDFgetzVarRecordData (x->c_id, CDFgetVarNum(x->c_id, varName), record, data);
 				}
 				
-				if (status != CDF_OK) StatusHandler (status);
+				if(status != VIRTUAL_RECORD_DATA){ // it would be great if someone would clean this status handling bull-shizzle up
+					if (status != CDF_OK) StatusHandler (status);
+					
+					SETSYM(outArray, gensym(varName));
+					for(j = 0; j < totalNumData; j++)
+						SETFLOAT(outArray + j + 1, *((float *)data + j));
+					
+					outlet_list(x->c_out0, 0L, (short)totalNumData + 1, outArray);
+				}
 				
-				SETSYM(outArray, gensym(varName));
-				for(j = 0; j < totalNumData; j++)
-					SETFLOAT(outArray + j + 1, *((float *)data + j));
-				
-				outlet_list(x->c_out0, 0L, (short)totalNumData + 1, outArray);
 				free(data);
 				free(outArray);
 			}
@@ -452,7 +509,7 @@ void cdf_getzVarData(t_cdf *x, t_symbol *msg, short argc, t_atom *argv){
 	outlet_bang(x->c_bangout);
 }
 
-int cdf_getEpochs(t_cdf *x){
+void cdf_getEpochs(t_cdf *x, t_symbol *msg){
 	
 	char varName[CDF_VAR_NAME_LEN256+1];
 	
@@ -465,7 +522,7 @@ int cdf_getEpochs(t_cdf *x){
 	
 	long  numRecs;
 	
-	varNum  =  CDFgetVarNum  (id,  "Epoch"); 
+	varNum  =  CDFgetVarNum  (id,  msg->s_name); 
 	if (varNum  <  CDF_OK)  StatusHandler  (varNum); 
 		
 	status = CDFgetzVarNumRecsWritten (id, varNum, &numRecs);
@@ -558,21 +615,9 @@ void cdf_getzVarInfo(t_cdf *x, t_symbol *var){
 											   &numElements);
 				if (status != CDF_OK) StatusHandler(status);
 				
-				if(datatype == CDF_REAL4 || datatype == CDF_FLOAT){
-					entry = (float *)calloc(numElements, sizeof(float));
-					t_atom ar_out[numElements + 2];
-					SETSYM(ar_out, gensym("/varinfo"));
-					SETSYM(ar_out + 1, gensym(strcat(attrName, ":")));
-					
-					status = CDFgetAttrzEntry (x->c_id, i, varNum, entry);
-					if (status != CDF_OK) StatusHandler(status);
-					
-					for(j = 0; j < numElements; j++)
-						SETFLOAT(ar_out + (j + 2), *((float *)entry + j));
-					
-					outlet_anything(x->c_OSCout, gensym("list"), numElements + 2, ar_out);
-					
-				} else if(datatype == CDF_CHAR){
+				
+				// we need to handle epochs and unsigned ints.
+				if(datatype == CDF_CHAR){
 					entry = (char *)calloc(numElements + 1, sizeof(char));
 					t_atom ar_out[3];
 					SETSYM(ar_out, gensym("/varinfo"));
@@ -587,8 +632,36 @@ void cdf_getzVarInfo(t_cdf *x, t_symbol *var){
 				} else if(datatype == CDF_EPOCH){
 					
 				} else {
-					error("cdf: no routine to handle data of type %d.  Contact johnmac@berkeley.edu.", datatype);
-				}
+					
+					if(datatype == CDF_DOUBLE || CDF_REAL8)
+							entry = (double *)calloc(numElements, CDF_DOUBLE);
+					else if(datatype == CDF_FLOAT || CDF_REAL4)
+							entry = (float *)calloc(numElements, CDF_FLOAT);
+					else if(datatype == CDF_INT1 || CDF_BYTE)
+							entry = (char *)calloc(numElements, CDF_INT1);
+					else if(datatype == CDF_INT2)
+							entry = (short *)calloc(numElements, CDF_INT2);
+					else if(datatype == CDF_INT4)
+							entry = (long *)calloc(numElements, CDF_INT4);
+										
+					t_atom ar_out[numElements + 2];
+					SETSYM(ar_out, gensym("/varinfo"));
+					SETSYM(ar_out + 1, gensym(strcat(attrName, ":")));
+					
+					status = CDFgetAttrzEntry (x->c_id, i, varNum, entry);
+					if (status != CDF_OK) StatusHandler(status);
+					
+					if(datatype == CDF_DOUBLE || CDF_REAL8 || CDF_FLOAT || CDF_REAL4){
+						for(j = 0; j < numElements; j++)
+							SETFLOAT(ar_out + (j + 2), *((float *)entry + j));
+					} else if(datatype == CDF_INT1 || CDF_INT2 || CDF_INT4 || CDF_BYTE){
+						for(j = 0; j < numElements; j++)
+							SETLONG(ar_out + (j + 2), *((long *)entry + j));
+					}
+						
+					outlet_anything(x->c_OSCout, gensym("list"), numElements + 2, ar_out);
+					
+				} 
 			}
 		}
 	}
