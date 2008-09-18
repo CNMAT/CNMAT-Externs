@@ -49,6 +49,7 @@ VERSION 2.2.2: Understands text meta events
 VERSION 3.0: Totally redesigned to make much better use of javax.sound.midi
 VERSION 3.0.1: Sets all note off velocities to 0 by default
 VERSION 3.0.2: Now outputs /text message for meta events like markers
+VERSION 3.0.3: Read message now locates file in max's searchpath
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -62,7 +63,7 @@ import javax.sound.midi.*;
 
 public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void version(){
-		post("midifile Version 3.0.1, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
+		post("midifile Version 3.0.3, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
 	}
 
 	private	Sequence sequence = null;
@@ -203,6 +204,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	}
 
 	public void addMetaEvent(Atom[] args){
+		// type, timestamp, data
 		byte[] data = new byte[args.length - 2];
 		int timeStamp = args[1].toInt();
 		for(int i = 0; i < data.length; i++){
@@ -229,10 +231,16 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		String filepath;
 		filepath = MaxSystem.openDialog();
 		if(filepath == null) return;
-		read(filepath);
+		do_read(filepath);
 	}
 	
 	public void read(String path){
+		String filepath = MaxSystem.locateFile(path);
+		if(filepath != null) do_read(filepath);
+		else error("midifile: couldn't locate " + filepath);
+	}
+
+	private void do_read(String path){
 		//Track[] tracks = null;
 		tracks = null;
 		try{
