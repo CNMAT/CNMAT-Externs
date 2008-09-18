@@ -9,9 +9,8 @@ public class STEREO_display extends MaxObject{
 	JitterMatrix xdata, zdata;
 	int width = 256;
 	int mode = 0; // 0 = 3d sonogram-style, 1 = 2d cartesian plot.
-	String buffer = "";
-	int bufferSize = -1;
 	double[] dateRange = null;
+	int bufferSize;
 	double fillVal = 0.0;
 
 	public STEREO_display(){
@@ -21,10 +20,9 @@ public class STEREO_display extends MaxObject{
 	private void init(){
 		declareInlets(new int[]{DataTypes.ALL, DataTypes.ALL});
 		createInfoOutlet(false);
-                declareOutlets(new int[]{DataTypes.ALL});
+                declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL});
 		declareAttribute("mode");
 		declareAttribute("width");
-		declareAttribute("buffer");
 		declareAttribute("bufferSize");
 		declareAttribute("fillVal");
 	}
@@ -34,6 +32,7 @@ public class STEREO_display extends MaxObject{
 		switch(ilet){
 		case 0:
 			xdata = new JitterMatrix(s);
+			bang();
 			break;
 		case 1:
 			zdata = new JitterMatrix(s);
@@ -42,44 +41,37 @@ public class STEREO_display extends MaxObject{
 	}
 
 	public void bang(){
-		switch(mode){
-		case 0:
-			String dt = zdata.getType();
-			JitterMatrix jm = new JitterMatrix(1, dt, width, zdata.getDim()[1]);
-			double[] ar = processData_1(width);
-			jm.copyArrayToMatrix(ar);
-			outlet(0, "jit_matrix", jm.getName());
-			if(buffer.compareTo("") == 0 || bufferSize < 1) break;
-			fillBuffer();
-			break;
-		case 1:
-			processData_2();
-			if(buffer.compareTo("") == 0 || bufferSize < 1) break;
-			fillBuffer();
-			break;
-		}
+		Thread t = new Thread(){
+				public void run(){
+					switch(mode){
+					case 0:
+						String dt = zdata.getType();
+						JitterMatrix jm = new JitterMatrix(1, dt, width, zdata.getDim()[1]);
+						double[] ar = processData_1(width);
+						jm.copyArrayToMatrix(ar);
+						outlet(0, "jit_matrix", jm.getName());
+						//if(buffer.compareTo("") == 0 || bufferSize < 1) break;
+						fillBuffer();
+						break;
+					case 1:
+						processData_2();
+						//if(buffer.compareTo("") == 0 || bufferSize < 1) break;
+						fillBuffer();
+						break;
+					}
+				}
+			};
+		t.start();
 	}
 
 	private void fillBuffer(){
-		//java.io.File f = new java.io.File("/Users/johnmac/Workspace/STEREO/STEREO_max_new/" + buffer + ".txt");
-		//java.io.FileOutputStream fos = null;
-		//try{fos = new java.io.FileOutputStream(f);}
-		//catch(Exception e){e.printStackTrace();}
 		double[] ar = processData_1(bufferSize);
-		MSPBuffer.setFrames(buffer, zdata.getDim()[1], bufferSize);
-		float[] fill = new float[bufferSize];
-		Arrays.fill(fill, (float)fillVal);
-		MSPBuffer.poke(buffer, fill);
 		for(int j = 0; j < zdata.getDim()[1]; j++){
 			for(int i = 0; i < bufferSize; i++){
-				MSPBuffer.poke(buffer, j + 1, i, (float)ar[i + (j * bufferSize)]);
-				//String s = (j + 1) + " " + i + " " + ((float)ar[i + (j * bufferSize)]) + "\n";
-				//try{fos.write(s.getBytes());}
-				//catch(Exception e){e.printStackTrace();}
+				//MSPBuffer.poke(buffer, j + 1, i, (float)ar[i + (j * bufferSize)]);
+				outlet(1, new Atom[]{Atom.newAtom(i), Atom.newAtom((float)ar[i + (j * bufferSize)]), Atom.newAtom(j + 1)});
 			}
 		}
-		//try{fos.close();}
-		//catch(Exception e){e.printStackTrace();}
 	}
 
 	private double[] processData_1(int w){
@@ -141,6 +133,12 @@ public class STEREO_display extends MaxObject{
 			xmin = dateRange[0];
 			xmax = dateRange[1];
 		}
+		/*
+		  double realxmin = xdataArray[0];
+		  double realxmax = xdataArray[xdataArray.length - 1];
+		  post("xmin = " + Epoch.encode(xmin) + " xmax = " + Epoch.encode(xmax));
+		  post("realxmin = " + Epoch.encode(realxmin) + " realxmax = " + Epoch.encode(realxmax));
+		*/
 
 		xdiff = xmax - xmin;
 		xstep = ((double)w- 1.0) / xdiff;
@@ -149,11 +147,46 @@ public class STEREO_display extends MaxObject{
 		for(int i = 0; i < zdim[0]; i++){
 			double currentX = xdataArray[i];
 			out[i] = (int)Math.round((currentX - xmin) * xstep);
-			//post(buffer + " currentX = " + currentX + " out[" + i + "] = " + out[i]);
+			//post("currentX = " + currentX + " out[" + i + "] = " + out[i]);
 		}
 		return out;
 	}
+	/*
+	private double[] makeXArray(int w){
+		// xdata is assumed to be sorted from low to high.
+		double[] xdataArray = new double[xdata.getDim()[0]];
+		for(int i = 0; i < xdata.getDim()[0]; i++){
+			int[] e = xdata.getcellInt(new int[]{i, 0});
+			try{xdataArray[i] = Epoch.compute(e[0], e[1], e[2], e[3], e[4], e[5], e[6]);}
+			catch(Exception ex){
+				error("plot_3d: exception thrown while trying to compute epochs");
+				ex.printStackTrace();
+				return null;
+			}
+		}
+		double xmin, xmax, xdiff, xstep;
+		int[] zdim = zdata.getDim();
 
+		if(dateRange == null){
+			xmin = xdataArray[0];
+			xmax = xdataArray[xdataArray.length - 1];
+		}else{
+			xmin = dateRange[0];
+			xmax = dateRange[1];
+		}
+
+		xdiff = xmax - xmin;
+		xstep = ((double)w- 1.0) / xdiff;
+
+		double[] out = new double[xdataArray.length];
+		for(int i = 0; i < zdim[0]; i++){
+			double currentX = xdataArray[i];
+			out[i] = (int)Math.round((currentX - xmin) * xstep);
+			//post("currentX = " + currentX + " out[" + i + "] = " + out[i]);
+		}
+		return out;
+	}
+	*/
 	public void dateRange(long[] r){
 		if(dateRange == null) dateRange = new double[2];
 		try{dateRange[0] = Epoch.compute(r[0], r[1], r[2], r[3], r[4], r[5], r[6]);}
@@ -183,7 +216,7 @@ public class STEREO_display extends MaxObject{
 	public void tellmeeverything(){
 		post("width = " + width);
 		post("mode = " + mode);
-		post("buffer = " + buffer);
+		//post("buffer = " + buffer);
 		post("bufferSize = " + bufferSize);
 	}
 }

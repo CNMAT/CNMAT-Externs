@@ -1,4 +1,5 @@
 import com.cycling74.max.*;
+import com.cycling74.jitter.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -9,12 +10,16 @@ import gsfc.nssdc.cdf.util.*;
 public class cdf extends MaxObject implements CDFConstants{
 	CDF cdf = null;
 	int OUT_BANG = 1;
-	int OUT_OSC = 2;
-	int OUT_EPOCH = 3;
+	int OUT_INFO = 2;
+	public static boolean didcopyright = false;
 	
 	public cdf(){
+		if(!didcopyright){
+			post("CDF: version 1.0 by John MacCallum, Copyright (c) 2008 Regents of the University of California. All rights reserved.");
+			didcopyright = true;
+		}
 		createInfoOutlet(false);
-		declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL, DataTypes.ALL, DataTypes.ALL});
+		declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL, DataTypes.ALL});
 	}
 
 	public void read(){
@@ -24,7 +29,26 @@ public class cdf extends MaxObject implements CDFConstants{
 		read(filepath);
 	}
 
-	public void read(String filepath){
+	public void read(String fn){
+		//String filepath = MaxSystem.locateFile(fn);
+		java.net.URI uri = null;
+		try{
+			uri = new java.net.URI(fn);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return;
+		}
+		String filepath = "";
+		if(!uri.isAbsolute()){
+			//filepath = MaxSystem.getDefaultPath() + fn;
+			filepath = MaxSystem.locateFile(fn);
+		}
+		else{
+			filepath = fn;
+		}
+		post("filepath = " + filepath);
+
 		if(cdf != null)
 			try{cdf.close();}
 			catch(Exception e){
@@ -59,41 +83,47 @@ public class cdf extends MaxObject implements CDFConstants{
 
 	public void getVarNames(){
 		Vector<Variable> v = cdf.getVariables();
-		outlet(OUT_OSC, new Atom[]{Atom.newAtom("/varname"), Atom.newAtom("clear")});
+		outlet(OUT_INFO, new Atom[]{Atom.newAtom("/varname"), Atom.newAtom("clear")});
 		for(int i = 0; i < v.size(); i++){
-			outlet(OUT_OSC, new Atom[]{Atom.newAtom("/varname"), Atom.newAtom(v.elementAt(i).getName())});
+			outlet(OUT_INFO, new Atom[]{Atom.newAtom("/varname"), Atom.newAtom(v.elementAt(i).getName())});
 		}
-		outlet(OUT_OSC, new Atom[]{Atom.newAtom("/varname"), Atom.newAtom("done")});
+		outlet(OUT_INFO, new Atom[]{Atom.newAtom("/varname"), Atom.newAtom("done")});
 	}
 
-	public void getAllRecordsForVarName(String[] vars){
-		for(int i = 0; i < vars.length; i++){
-			if(do_getAllRecordsForVarName(vars[i])){
-				error("cdf: there was an error getting data for " + vars[i]);
-				return;
-			}
-		}
-		outlet(OUT_BANG, "bang");
+	public void getAllRecordsForVarName(final String[] vars){
+		Thread t = new Thread(){
+				public void run(){
+					for(int i = 0; i < vars.length; i++){
+						Variable v = getVariable(vars[i]);
+						if(do_getRecordsForVarName(v, vars[i], 0, getNumRecords(v) - 1)){
+							error("cdf: there was an error getting data for " + vars[i]);
+							return;
+						}
+					}
+					//outlet(OUT_BANG, "bang");
+				}
+			};
+		t.start();
 	}
 
 	public void getAllRecordsForVarName(String var){
-		if(do_getAllRecordsForVarName(var)){
+		Variable v = getVariable(var);
+		if(do_getRecordsForVarName(v, var, 0, getNumRecords(v) - 1)){
 			error("cdf: there was an error getting data for " + var);
-		}else outlet(OUT_BANG, "bang");
+		}//else outlet(OUT_BANG, "bang");
 	}
 
-	private boolean do_getAllRecordsForVarName(String var){
-		long varID = cdf.getVariableID(var);
-		if(varID < 0){
-			error("cdf: variable " + var + " doesn't exist.\n");
-			return true;
-		}
-		//post("" + varID);
-		Variable v = null;
+	public void getRecordsForVarName_from(String var, long start){
+		Variable v = getVariable(var);
+		if(do_getRecordsForVarName(v, var, start, getNumRecords(v) - 1)){
+			error("cdf: there was an error getting data for " + var);
+		}//else outlet(OUT_BANG, "bang");
+	}
+
+	private boolean do_getRecordsForVarName(Variable v, String var, long start, long end){
 		long n = 0L;
 		CDFData d = null;
 		try{
-			v = cdf.getVariable(var);
 			n = v.getNumWrittenRecords();
 			d = v.getRecordsObject(0L, n);
 		}
@@ -102,6 +132,8 @@ public class cdf extends MaxObject implements CDFConstants{
 			e.printStackTrace();
 			return true;
 		}
+
+		outlet(OUT_INFO, new Atom[]{Atom.newAtom("/num-records/" + var), Atom.newAtom(n)});
 
 		// the cdf constants are long, not int, so use this crappy if statement 
 		// rather than cast the constants to int to use switch.
@@ -119,101 +151,84 @@ public class cdf extends MaxObject implements CDFConstants{
 			if(d.getDimCounts()[0] > 0)
 				outputData(var, (float[][])d.getData());
 			else outputData(var, (float[])d.getData());
-
 		} else if(v.getDataType() == CDF_EPOCH){
 			outputEpochData(var, (double[])d.getData());
-
 		} else {
 			error("cdf: data is type " + v.getDataType());
 		}
-
 		return false;
 	}
 
-	private void outputMinMax(String var, Atom min, Atom max){
-		outlet(OUT_OSC, new Atom[]{Atom.newAtom("/" + var + "/min"), min});
-	        outlet(OUT_OSC, new Atom[]{Atom.newAtom("/" + var + "/max"), max});
-	}
-
 	private void outputData(String var, long[] data){
-		long min = data[0], max = data[0];
+		JitterMatrix jm = new JitterMatrix(1, "long", data.length, 1);
 		for(int i = 0; i < data.length; i++){
-			if(data[i] < min) min = data[i];
-			if(data[i] > max) max = data[i];
-			outlet(0, new Atom[]{Atom.newAtom(var), Atom.newAtom(data[i])});
+			jm.setcell(new int[]{i, 0}, 0, data[i]);
 		}
-		outputMinMax(var, Atom.newAtom(min), Atom.newAtom(max));
+		outlet(0, var, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
 	}
 
 	private void outputData(String var, long[][] data){
-		long min = data[0][0], max = data[0][0];
+		//we assume that this 2d data will always have a number of dimensions consistent with the first array.
+		//this is safe for the SSL project for which this object was written, but perhaps not for other uses.
+		JitterMatrix jm = new JitterMatrix(1, "long", data.length, data[0].length);
 		for(int i = 0; i < data.length; i++){
 			for(int j = 0; j < data[i].length; j++){
-				if(data[i][j] < min) min = data[i][j];
-				if(data[i][j] > max) max = data[i][j];
+				jm.setcell(new int[]{i, j}, 0, data[i][j]);
 			}
-			outlet(0, Atom.newAtom(var, Atom.newAtom(data[i])));
 		}
-		outputMinMax(var, Atom.newAtom(min), Atom.newAtom(max));
+		outlet(0, var, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
 	}
 
 	private void outputData(String var, double[] data){
-		double min = data[0], max = data[0];
+		JitterMatrix jm = new JitterMatrix(1, "float64", data.length, 1);
 		for(int i = 0; i < data.length; i++){
-			if(data[i] < min) min = data[i];
-			if(data[i] > max) max = data[i];
-			outlet(0, new Atom[]{Atom.newAtom(var), Atom.newAtom(data[i])});
+			jm.setcell(new int[]{i, 0}, 0, data[i]);
 		}
-		outputMinMax(var, Atom.newAtom(min), Atom.newAtom(max));
+		outlet(0, var, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
 	}
 
 	private void outputData(String var, double[][] data){
-		double min = data[0][0], max = data[0][0];
+		JitterMatrix jm = new JitterMatrix(1, "float64", data.length, data[0].length);
 		for(int i = 0; i < data.length; i++){
 			for(int j = 0; j < data[i].length; j++){
-				if(data[i][j] < min) min = data[i][j];
-				if(data[i][j] > max) max = data[i][j];
+				jm.setcell(new int[]{i, j}, 0, data[i][j]);
 			}
-			outlet(0, Atom.newAtom(var, Atom.newAtom(data[i])));
 		}
-		outputMinMax(var, Atom.newAtom(min), Atom.newAtom(max));
+		outlet(0, var, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
 	}
 
 	private void outputData(String var, float[] data){
-		float min = data[0], max = data[0];
+		JitterMatrix jm = new JitterMatrix(1, "float32", data.length, 1);
 		for(int i = 0; i < data.length; i++){
-			if(data[i] < min) min = data[i];
-			if(data[i] > max) max = data[i];
-			outlet(0, new Atom[]{Atom.newAtom(var), Atom.newAtom(data[i])});
+			jm.setcell(new int[]{i, 0}, 0, data[i]);
 		}
-		outputMinMax(var, Atom.newAtom(min), Atom.newAtom(max));
+		outlet(0, var, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
 	}
 
 	private void outputData(String var, float[][] data){
-		float min = data[0][0], max = data[0][0];
+		JitterMatrix jm = new JitterMatrix(1, "float32", data.length, data[0].length);
 		for(int i = 0; i < data.length; i++){
 			for(int j = 0; j < data[i].length; j++){
-				if(data[i][j] < min) min = data[i][j];
-				if(data[i][j] > max) max = data[i][j];
+				jm.setcell(new int[]{i, j}, 0, data[i][j]);
 			}
-			outlet(0, Atom.newAtom(var, Atom.newAtom(data[i])));
 		}
-		outputMinMax(var, Atom.newAtom(min), Atom.newAtom(max));
+		outlet(0, var, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
 	}
 
 	private void outputEpochData(String var, double[] data){
-		double min = data[0], max = data[0];
+		JitterMatrix jm = new JitterMatrix(7, "long", data.length, 1);
 		for(int i = 0; i < data.length; i++){
-			if(data[i] < min) min = data[i];
-			if(data[i] > max) max = data[i];
-			outlet(0, Atom.newAtom(var, Atom.newAtom(Epoch.breakdown(data[i]))));
+			double d = data[i];
+			long[] e = Epoch.breakdown(d);
+			int[] ee = new int[]{(int)e[0], (int)e[1], (int)e[2], (int)e[3], (int)e[4], (int)e[5], (int)e[6]};
+			jm.setcell(new int[]{i, 0}, ee);
+			//post(i + " " + ee[0] + " " + ee[1] + " " + ee[2] + " " + ee[3] + " " + ee[4] + " " + ee[5] + " " + ee[6]);
 		}
-		outlet(OUT_OSC, Atom.newAtom("/" + var + "/min", Atom.newAtom(Epoch.breakdown(min))));
-		outlet(OUT_OSC, Atom.newAtom("/" + var + "/max", Atom.newAtom(Epoch.breakdown(max))));
+		outlet(0, var, new Atom[]{Atom.newAtom("jit_matrix"), Atom.newAtom(jm.getName())});
 	}
 
 	public void epoch2string(double e){
-		outlet(OUT_EPOCH, Epoch.encode(e));
+		outlet(OUT_INFO, "/epoch", Epoch.encode(e));
 	}
 
 	public void epoch2string(long[] e){
@@ -222,7 +237,7 @@ public class cdf extends MaxObject implements CDFConstants{
 			return;
 		}
 		try{
-			outlet(OUT_EPOCH, Epoch.encode(Epoch.compute(e[0], e[1], e[2], e[3], e[4], e[5], e[6])));
+			outlet(OUT_INFO, "/epoch", Epoch.encode(Epoch.compute(e[0], e[1], e[2], e[3], e[4], e[5], e[6])));
 		} catch(Exception ee){
 			error("cdf: couldn't convert epoch to string.");
 			ee.printStackTrace();
@@ -231,10 +246,38 @@ public class cdf extends MaxObject implements CDFConstants{
 
 	public void string2epoch(String e){
 		try{
-			outlet(OUT_EPOCH, Epoch.breakdown(Epoch.parse(e)));
+			outlet(OUT_INFO, "/epoch", Epoch.breakdown(Epoch.parse(e)));
 		} catch(Exception ee){
 			error("cdf: couldn't convert epoch to string.");
 			ee.printStackTrace();
 		}
+	}
+
+
+	public Variable getVariable(String var){
+		long varID = cdf.getVariableID(var);
+		if(varID < 0){
+			error("cdf: variable " + var + " doesn't exist.\n");
+			return null;
+		}
+		//post("" + varID);
+		Variable v = null;
+		try{v = cdf.getVariable(var);}
+		catch(Exception e){
+			error("cdf: error getting data for " + var);
+			e.printStackTrace();
+			return null;
+		}
+		return v;
+	}
+
+	private long getNumRecords(Variable v){
+		long n = 0L;
+		try{n = v.getNumWrittenRecords();}
+		catch(Exception e){
+			e.printStackTrace();
+			return -1;
+		}
+		return n;
 	}
 }
