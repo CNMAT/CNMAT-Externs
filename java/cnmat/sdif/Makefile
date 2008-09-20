@@ -18,10 +18,10 @@ SDIF_buffer_native.h: SDIF_buffer.class
 	cd $(TOP_LEVEL) && javah -jni -o cnmat/sdif/native/SDIF_buffer_native.h cnmat.sdif.SDIF_buffer
 
 jnilib: libSDIF_buffer_native.o
-	cd native && gcc -dynamiclib -F../../../../SDK/UB-SDK -filelist SDIF_Buffer_native.LinkFileList -framework MaxAPI -o libSDIF_buffer_native.dylib libSDIF_buffer_native.o
+	cd native && gcc -dynamiclib -F../../../../SDK/UB-SDK -L../../../../utility-library/CNMAT_MMJ/lib -filelist SDIF_Buffer_native.LinkFileList -framework MaxAPI -lCNMAT_MMJ -o libSDIF_buffer_native.dylib libSDIF_buffer_native.o
 
 libSDIF_buffer_native.o: macho-prefix.h.gch SDIF_buffer_native.h
-	cd native && gcc -F/System/Library/Frameworks/Carbon.framework -F../../../../SDK/UB-SDK -I../../../../utility-library/search-path -I/System/Library/Frameworks/JavaVM.framework/Headers -I../../../../c74support/max-includes -I../../../../../sdif/lib -I../../../../externals/SDIF/SDIF-buffer -include macho-prefix.h -o libSDIF_buffer_native.o -c SDIF_buffer_native.c
+	cd native && gcc -F/System/Library/Frameworks/Carbon.framework -F../../../../SDK/UB-SDK -I../../../../utility-library/search-path -I/System/Library/Frameworks/JavaVM.framework/Headers -I../../../../c74support/max-includes -I../../../../../sdif/lib -I../../../../externals/SDIF/SDIF-buffer -I../../../../utility-library/CNMAT_MMJ/include -include macho-prefix.h -o libSDIF_buffer_native.o -c SDIF_buffer_native.c
 
 macho-prefix.h.gch:
 	cd native && /Developer/usr/bin/gcc-4.0 -x c-header -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4 -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F../../../../SDK/UB-SDK -I../../../../../sdif/lib -I../../../../utility-library/search-path -I../../../../c74support/max-includes  -c ../../../../c74support/max-includes/macho-prefix.h -o macho-prefix.h.gch

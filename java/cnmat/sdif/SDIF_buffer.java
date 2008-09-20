@@ -10,17 +10,17 @@ public class SDIF_buffer extends MaxObject{
 		java.util.Properties p = System.getProperties();
 		String dylibPath = null;
 		//if(p.getProperty("os.name").compareTo("Mac OS X") == 0)
-			dylibPath = MaxSystem.locateFile("libSDIFJava_test.dylib");
+			dylibPath = MaxSystem.locateFile("libSDIF_buffer_native.dylib");
 			//else dylibPath = MaxSystem.locateFile("libjavaobject.1.0.dll");
 		try{System.load(dylibPath);}
 		catch(Exception e){
-			error("SDIFJava_test: couldn't load libSDIFJava_test--make sure it's in your searchpath.");
+			error("mxj SDIF_buffer: couldn't load libSDIF_buffer_native.dylib--make sure it's in your searchpath.");
 			return;
 		}
 
 		int r = n_init();
 		if(r == 0){
-			error("SDIFJava_test: there was a problem initializing the native library");
+			error("mxj SDIF_buffer: there was a problem initializing the native library");
 			return;
 		}
 	}
