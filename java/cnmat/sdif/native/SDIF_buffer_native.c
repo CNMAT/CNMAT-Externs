@@ -1,25 +1,17 @@
 #include "ext.h"
 #include "SDIF_buffer_native.h"
-//#include "sdif.h"
-#include "SDIF-buffer.h"
-#include "sdif-util.h"
+#include "CNMAT_MMJ_SDIF.h"
 
-static Symbol *ps_SDIF_buffer_lookup;
-static SDIFmem_Matrix GetMatrixWithoutInterpolation(SDIFBuffer *buffer,
-                                                    const char *desiredType,
-                                                    sdif_float64 time,
-                                                    int direction,
-						    Symbol *bufferSym);
-static void *my_getbytes(int numBytes);
-static void my_freebytes(void *bytes, int size);
 int SDIFJava_test_init();
+void error_report(SDIFresult r, const char *st);
 
-JNIEXPORT jint JNICALL Java_SDIFJava_1test_n_1init(JNIEnv *env, jobject obj){
+JNIEXPORT jint JNICALL Java_cnmat_sdif_SDIF_1buffer_n_1init(JNIEnv *env, jobject obj){
 	return SDIFJava_test_init();
 }
 
-JNIEXPORT jobject JNICALL Java_SDIFJava_1test_n_1getMatrixHeader(JNIEnv *env, jobject obj, jstring s){
+JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIF_1buffer_n_1getMatrixHeader(JNIEnv *env, jobject obj, jstring s){
 	char *s_char = (*env)->GetStringUTFChars(env, s, NULL);
+	/*
 	SDIFBufferLookupFunction f;
 	SDIFBuffer *buffer;
 	Symbol *buffer_sym = gensym(s_char);
@@ -48,6 +40,20 @@ JNIEXPORT jobject JNICALL Java_SDIFJava_1test_n_1getMatrixHeader(JNIEnv *env, jo
 	}
 
 	SDIFmem_Matrix m =  GetMatrixWithoutInterpolation(buffer, "1TRC", 1.0, 1, buffer_sym);
+	*/
+
+	CNMAT_MMJ_SDIF_buffer b;
+	b.t_bufferSym = gensym(s_char);
+	LookupMyBuffer(&b);
+
+        if (b.t_buffer == 0) {
+                error("¥ SDIF-tuples: no buffer!");
+                return;
+	}
+
+	SDIFmem_Matrix m;
+	if(!(m = GetMatrix(&b, "1TRC", 1.0, 1)))
+                return;
 	post("matrixDataType = %d, rows = %d, cols = %d\n", m->header.matrixDataType, m->header.rowCount, m->header.columnCount);
 	jclass c = (*env)->FindClass(env, "cnmat/sdif/MatrixHeader");
 	post("class = %p", c);
@@ -74,114 +80,12 @@ JNIEXPORT jobject JNICALL Java_SDIFJava_1test_n_1getMatrixHeader(JNIEnv *env, jo
 	//return NULL;
 }
 
-static SDIFmem_Matrix GetMatrixWithoutInterpolation(SDIFBuffer *buffer,
-                                                    const char *desiredType,
-                                                    sdif_float64 time,
-                                                    int direction,
-						    Symbol *bufferSym)
-{
-	SDIFmem_Frame f;
-	SDIFmem_Matrix m, matrixOut;
-	SDIFresult r;
-
-	// could pass to function: buffer
-        //  get the frame
-        if(!(f = (*(buffer->FrameLookup))(buffer, time, direction))) {
-		/*
-                if ((*(buffer->FrameLookup))(buffer, (sdif_float64) VERY_SMALL, 1) == 0) {
-                        if (!x->t_complainedAboutEmptyBufferAlready) {
-                                post("¥ SDIF-tuples: SDIF-buffer %s is empty", x->t_bufferSym->s_name);
-                                x->t_complainedAboutEmptyBufferAlready = TRUE;
-                        }
-                } else {
-                        if (x->t_errorreporting) {
-                                post("¥ SDIF-tuples: SDIF-buffer %s has no frame at time %f",
-				     x->t_bufferSym->s_name, (float) time);
-                        }
-                }
-		*/
-		post("error using FrameLookup");
-                return NULL;
-        }
-
-        //  find the matrix
-        for (m = f->matrices; m!= 0; m = m->next) {
-                if (SDIF_Char4Eq(m->header.matrixType, desiredType)) {
-                        break;
-                }
-        }
-
-        //  couldn't find the matrix
-        if (m == 0) {
-                post("¥ SDIF-tuples: no matrix of type %c%c%c%c in frame at time %f of SDIF-buffer %s",
-		     desiredType[0], desiredType[1], desiredType[2], desiredType[3],
-		     (float) f->header.time, bufferSym->s_name);
-                return NULL;
-        }
-
-	//  we don't support matrix data types other than float and int32
-	if (((m->header.matrixDataType >> 8) != SDIF_FLOAT) && (m->header.matrixDataType != SDIF_INT32))  {
-                post("¥ SDIF-tuples: Unsupported matrix data type (0x%x) in %c%c%c%c matrix ",
-		     m->header.matrixDataType,
-		     desiredType[0], desiredType[1], desiredType[2], desiredType[3]);
-                post("  in frame at time %f of SDIF-buffer %s (currently only float and int32 are supported)",
-		     (float) f->header.time, bufferSym->s_name);
-                return NULL;
-        }
-
-        //post("*** Cloning matrix at time %f, type 0x%x", time, m->header.matrixDataType);
-
-        //  copy result to output matrix
-	r = SDIFutil_CloneMatrix(m, &matrixOut);
-
-        if (r == ESDIF_OUT_OF_MEMORY) {
-                error("¥ SDIF-tuples: out of memory to clone matrix");
-		return NULL;
-        } else if (r!=ESDIF_SUCCESS) {
-                error("¥ SDIF-tuples: couldn't clone matrix: %s", SDIF_GetErrorString(r));
-                return NULL;
-        }
-
-	//  return result                                                                                                                      
-	//  NOTE: caller is responsible for calling SDIFmem_FreeMatrix()                                                                       
-	return matrixOut;
-}
-
-static void *my_getbytes(int numBytes) {
-        if (numBytes > SHRT_MAX) {
-		return 0;
-        }
-        return (void *) getbytes((short) numBytes);
-}
-
-static void my_freebytes(void *bytes, int size) {
-        freebytes(bytes, (short) size);
-}
-
 int SDIFJava_test_init(){
-	SDIFresult r;
-	char *NAME = "SDIFJava_test";
-	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
-	if (r = SDIF_Init()) {
-                ouchstring("%s: Couldn't initialize SDIF library! %s",
-                           NAME,
-                           SDIF_GetErrorString(r));
-                return 0;
-        }
-
-        if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
-                post("¥ %s: Couldn't initialize SDIF memory utilities! %s",
-                     NAME,
-                     SDIF_GetErrorString(r));
-                return 0;
-        }
-
-        if (r = SDIFbuf_Init()) {
-                post("¥ %s: Couldn't initialize SDIF buffer utilities! %s",
-                     NAME,
-                     SDIF_GetErrorString(r));
-                return 0;
-        }
-	post("SDIFJava_test: initialized sucessfully");
+	CNMAT_MMJ_SDIF_init(error_report);
 	return 1;
+}
+
+void error_report(SDIFresult r, const char *st){
+	if(r) error("SDIF native lib: %s: %s", st, SDIF_GetErrorString(r));
+	else error("SDIF native lib: %s", st);
 }

@@ -61,10 +61,10 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "mxj SDIFJava_test",
+					"text" : "mxj cnmat.sdif.SDIF_buffer",
 					"outlettype" : [ "", "" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 34.0, 88.0, 111.0, 20.0 ],
+					"patching_rect" : [ 34.0, 88.0, 155.0, 20.0 ],
 					"id" : "obj-1",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
