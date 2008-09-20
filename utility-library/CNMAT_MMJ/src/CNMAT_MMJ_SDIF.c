@@ -1,6 +1,9 @@
 #include "CNMAT_MMJ_SDIF.h"
 
+static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
 static Boolean verbose = FALSE;
+static void *my_getbytes(int numBytes);
+static void my_freebytes(void *bytes, int size);
 
 SDIFresult CNMAT_MMJ_SDIF_init(void (*ecallback)(SDIFresult r, const char *errorString)){
 	error_callback = ecallback;
@@ -29,14 +32,6 @@ SDIFresult CNMAT_MMJ_SDIF_init(void (*ecallback)(SDIFresult r, const char *error
 
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
-	ps_emptysymbol  = gensym("");
-	ps_concatenate = gensym("concatenate");
-	ps_time = gensym("time");
-	ps_reltime = gensym("reltime");
-	ps_direction = gensym("direction");
-	ps_columns = gensym("columns");
-	ps_interp = gensym("interp");
-	ps_max_rows = gensym("max_rows");
 
 	return ESDIF_SUCCESS;
 }
