@@ -1,6 +1,6 @@
 package cnmat.sdif;
 
-public abstract class Header{
+public abstract class SDIFHeader{
 	public void sdifTypeCheck(char[] t) throws SDIFBadTypeException{
 		if(t.length != 5) // should be 4, but the jstring we're passing from the native library is likely null-terminated.)
 			throw new SDIFBadTypeException("FrameHeader: Bad SDIF type.  Type " + t + " " + (new String(t)) + " has " + t.length + " characters and is not a valid 4-char code");

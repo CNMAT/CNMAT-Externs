@@ -3,7 +3,7 @@ package cnmat.sdif;
 /**
  * Global Header for an SDIF file.
  */
-public class GlobalHeader extends Header{
+public class SDIFGlobalHeader extends SDIFHeader{
 	/** SDIF global identifier.  This should always be 'S', 'D', 'I', 'F' */
 	private char[] SDIF = new char[4];
 	/** The size of the header frame not including SDIF and size */
@@ -14,7 +14,7 @@ public class GlobalHeader extends Header{
 	private int SDIFStandardTypesVersion;
 
 	/** Default constructor */
-	public GlobalHeader(){}
+	public SDIFGlobalHeader(){}
 
 	/** Constructor
 	    @param sdifc SDIF identifier.  Should always be 'S', 'D', 'I', 'F'
@@ -22,7 +22,7 @@ public class GlobalHeader extends Header{
 	    @param v Version of the SDIF library used
 	    @param sstv Version of the SDIF spec
 	*/
-	public GlobalHeader(char[] sdifc, int s, int v, int sstv){
+	public SDIFGlobalHeader(char[] sdifc, int s, int v, int sstv){
 		super();
 		SDIF = sdifc;
 		size = s;
@@ -36,7 +36,7 @@ public class GlobalHeader extends Header{
 	    @param v Version of the SDIF library used
 	    @param sstv Version of the SDIF spec
 	*/
-	public GlobalHeader(String sdifc, int s, int v, int sstv){
+	public SDIFGlobalHeader(String sdifc, int s, int v, int sstv){
 		this(sdifc.toCharArray(), s, v, sstv);
 	}
 
