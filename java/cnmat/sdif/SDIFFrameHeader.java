@@ -3,7 +3,7 @@ package cnmat.sdif;
 
 See <a href="http://sdif.sourceforge.net/standard/types-main.html">http://sdif.sourceforge.net/standard/types-main.html</a> for a list and explanation of the standard SDIF types.
  */
-public class FrameHeader extends Header{
+public class SDIFFrameHeader extends SDIFHeader{
 	private char[] frameType = new char[4];
 	private int size;
 	private float time;
@@ -11,7 +11,7 @@ public class FrameHeader extends Header{
 	private int matrixCount;
 
 	/** Default constructor */
-	public FrameHeader(){}
+	public SDIFFrameHeader(){}
 	
 	/** Constructor
 	    @param ft Frame type.  See <a href="http://sdif.sourceforge.net/standard/types-main.html">http://sdif.sourceforge.net/standard/types-main.html</a> for a list of standard frame types and their descriptions.
@@ -20,7 +20,7 @@ public class FrameHeader extends Header{
 	    @param sid Stream ID.
 	    @param mc The number of Matrices contained in the frame.
 	*/
-	public FrameHeader(char[] ft, int s, float t, int sid, int mc) throws SDIFBadTypeException{
+	public SDIFFrameHeader(char[] ft, int s, float t, int sid, int mc) throws SDIFBadTypeException{
 		super();
 		sdifTypeCheck(ft);
 		frameType = ft;
@@ -37,7 +37,7 @@ public class FrameHeader extends Header{
 	    @param sid Stream ID.
 	    @param mc The number of Matrices contained in the frame.
 	*/
-	public FrameHeader(String ft, int s, float t, int sid, int mc) throws SDIFBadTypeException{
+	public SDIFFrameHeader(String ft, int s, float t, int sid, int mc) throws SDIFBadTypeException{
 		this(ft.toCharArray(), s, t, sid, mc);
 	}
 

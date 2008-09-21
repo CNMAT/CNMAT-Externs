@@ -1,14 +1,14 @@
 package cnmat.sdif;
 
 /** Matrix header.  Provides basic information about an SDIF matrix. */
-public class MatrixHeader extends Header{
+public class SDIFMatrixHeader extends SDIFHeader{
 	private char[] matrixType = new char[4];
 	private int matrixDataType;
 	private int rowCount;
 	private int columnCount;
 
 	/** Default constructor */
-	public MatrixHeader(){}
+	public SDIFMatrixHeader(){}
 
 	/** Constructor
 	    @param t 4 char type (e.g. 1TRC, 1RES, etc.)
@@ -16,7 +16,7 @@ public class MatrixHeader extends Header{
 	    @param r Row count.
 	    @param c Column count.
 	*/
-	public MatrixHeader(String t, int dt, int r, int c) throws SDIFBadTypeException{
+	public SDIFMatrixHeader(String t, int dt, int r, int c) throws SDIFBadTypeException{
 		this(t.toCharArray(), dt, r, c);
 	}
 
@@ -26,7 +26,7 @@ public class MatrixHeader extends Header{
 	    @param r Row count.
 	    @param c Column count.
 	*/
-	public MatrixHeader(char[] t, int dt, int r, int c) throws SDIFBadTypeException{
+	public SDIFMatrixHeader(char[] t, int dt, int r, int c) throws SDIFBadTypeException{
 		super();
 		sdifTypeCheck(t);
 		matrixType = t;

@@ -1,6 +1,6 @@
 package cnmat.sdif;
 
-public class SDIFDataTypes{
+public class SDIFTypes{
 	public int SDIF_FLOAT32 = 0x0004;
 	public int SDIF_FLOAT64 = 0x0008;
 	public int SDIF_INT16 = 0x0102;
@@ -11,5 +11,5 @@ public class SDIFDataTypes{
 	public int SDIF_BYTE = 0x0401;
     	public int SDIF_NO_TYPE = -1;
 
-	private SDIFDataTypes(){}
+	private SDIFTypes(){}
 }
