@@ -19,6 +19,7 @@
  AUTHORS: Franz Zotter, Andy Schmeder
  COPYRIGHT_YEARS: 2006-2008
  VERSION 0.1: Ported to MaxMSP
+ VERSION 0.2: Improve help patch
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
