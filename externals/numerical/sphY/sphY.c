@@ -15,7 +15,7 @@
  
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  NAME: sphY
- DESCRIPTION: Evaluates the real-valued spherical harmonics up to order N at a point (phi,theta)
+ DESCRIPTION: Evaluates the real-valued spherical harmonics up to order N at a point (theta, phi)
  AUTHORS: Franz Zotter, Andy Schmeder
  COPYRIGHT_YEARS: 2006-2008
  VERSION 0.1: Ported to MaxMSP
