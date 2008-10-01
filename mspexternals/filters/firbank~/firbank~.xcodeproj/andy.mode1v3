@@ -202,46 +202,6 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
-				<string>A1745D210E7EF0A4004CB423</string>
-				<key>PBXProjectModuleLabel</key>
-				<string>firbank~.c</string>
-				<key>PBXSplitModuleInNavigatorKey</key>
-				<dict>
-					<key>Split0</key>
-					<dict>
-						<key>PBXProjectModuleGUID</key>
-						<string>A1745D220E7EF0A4004CB423</string>
-						<key>PBXProjectModuleLabel</key>
-						<string>firbank~.c</string>
-						<key>_historyCapacity</key>
-						<integer>0</integer>
-						<key>bookmark</key>
-						<string>A19E779C0E8888DE00300374</string>
-						<key>history</key>
-						<array>
-							<string>A1745F050E886C6D004CB423</string>
-						</array>
-					</dict>
-					<key>SplitCount</key>
-					<string>1</string>
-				</dict>
-				<key>StatusBarVisibility</key>
-				<true/>
-			</dict>
-			<key>Geometry</key>
-			<dict>
-				<key>Frame</key>
-				<string>{{0, 20}, {1238, 833}}</string>
-				<key>PBXModuleWindowStatusBarHidden2</key>
-				<false/>
-				<key>RubberWindowFrame</key>
-				<string>177 4 1238 874 0 0 1440 878 </string>
-			</dict>
-		</dict>
-		<dict>
-			<key>Content</key>
-			<dict>
-				<key>PBXProjectModuleGUID</key>
 				<string>A19E77960E88867E00300374</string>
 				<key>PBXProjectModuleLabel</key>
 				<string>z_dsp.h</string>
@@ -256,7 +216,7 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>A19E779D0E8888DE00300374</string>
+						<string>A19E77A00E888EE800300374</string>
 						<key>history</key>
 						<array>
 							<string>A19E77980E88867E00300374</string>
@@ -276,6 +236,46 @@
 				<false/>
 				<key>RubberWindowFrame</key>
 				<string>15 4 1238 874 0 0 1440 878 </string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>A1745D210E7EF0A4004CB423</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>firbank~.c</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>A1745D220E7EF0A4004CB423</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>firbank~.c</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>A19E77A20E888EE800300374</string>
+						<key>history</key>
+						<array>
+							<string>A1745F050E886C6D004CB423</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {1238, 833}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>177 4 1238 874 0 0 1440 878 </string>
 			</dict>
 		</dict>
 	</array>
@@ -600,9 +600,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A19E77960E88867E00300374</string>
 		<string>/Users/andy/Projects/cnmat/cnmat/trunk/max/mspexternals/filters/firbank~/firbank~.xcodeproj</string>
 		<string>A1745D210E7EF0A4004CB423</string>
+		<string>A19E77960E88867E00300374</string>
 	</array>
 	<key>WindowString</key>
 	<string>380 114 896 636 0 0 1440 878 </string>
