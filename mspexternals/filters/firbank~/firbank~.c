@@ -29,6 +29,7 @@
  COPYRIGHT_YEARS: 2008
  VERSION 0.1: Initial release
  VERSION 0.2: Fixed operation with multiple inputs
+ VERSION 0.3: Fix sensitivity to buffer initialization
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
@@ -53,7 +54,7 @@ void *firbank_class;
 typedef struct _fir {
     
     // buffer
-    t_buffer* buffer;
+    t_symbol* buffer;
     
     // buffer offset
     int offset;
@@ -104,7 +105,7 @@ typedef struct _firbank {
     float** output;
 
     float* input_copy;
-
+    
     /*
     // autosplit mode on/off
     int autosplit;
@@ -189,7 +190,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
 
     // scope vars
     t_firbank *x;	
-    t_buffer* default_buffer;
+    t_symbol* default_buffer;
     int default_filters;
     int default_iomap;
     int default_channel_1;
@@ -282,7 +283,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
             else if(strcmp(argv[i].a_w.w_sym->s_name, "@buffer") == 0) {
                 i++;
                 if(i < argc && argv[i].a_type == A_SYM) {
-                    default_buffer = _sym_to_buffer(argv[i].a_w.w_sym);
+                    default_buffer = argv[i].a_w.w_sym; // _sym_to_buffer(argv[i].a_w.w_sym);
                     //x->autosplit = 0;
                 } else {
                     post("firbank~: expected symbol for @buffer");
@@ -535,6 +536,8 @@ t_int* firbank_perform(t_int *w) {
     int i, p, s, k;
     float c, d;
 	t_firbank *x;
+    
+    t_buffer* b;
 
     wp = (t_int**)w;
     
@@ -583,17 +586,19 @@ t_int* firbank_perform(t_int *w) {
                     // find the corresponding filter index
                     k = x->filter_states[p].k;
                     
+                    b = _sym_to_buffer(x->filters[k].buffer);
+                    
                     // verify that its buffer valid and meets the channel and length requirements...
-                    if((x->filters[k].buffer->b_valid) && 
-                       (x->filters[k].channel_1 >= 0 && x->filters[k].channel_1 < x->filters[k].buffer->b_nchans) && 
-                       ((x->filters[k].channel_2 >= 0 && x->filters[k].channel_2 < x->filters[k].buffer->b_nchans) || (x->filters[k].channel_2 < 0)) &&
-                       (x->filters[k].offset + x->framesize < x->filters[k].buffer->b_frames)) {
+                    if(b && (b->b_valid) && 
+                       (x->filters[k].channel_1 >= 0 && x->filters[k].channel_1 < b->b_nchans) && 
+                       ((x->filters[k].channel_2 >= 0 && x->filters[k].channel_2 < b->b_nchans) || (x->filters[k].channel_2 < 0)) &&
+                       (x->filters[k].offset + x->framesize < b->b_frames)) {
 
                         // real convolution only (magnitude) 
                         if(x->filters[k].channel_2 < 0) {
                             
                             for(s = 0; s < x->framesize / 2 + 1; s++) { // note symmetry; second half of filter is ignored
-                                c = x->filters[k].buffer->b_samples[(x->filters[k].offset + s) * x->filters[k].buffer->b_nchans + x->filters[k].channel_1];
+                                c = b->b_samples[(x->filters[k].offset + s) * b->b_nchans + x->filters[k].channel_1];
                                 
                                 // (a + b I) * c = ac + bc I
                                 x->x_inverse_c[s][0] = x->x_forward_c[s][0] * c; // ac
@@ -606,8 +611,8 @@ t_int* firbank_perform(t_int *w) {
                         else {
                             
                             for(s = 0; s < (x->framesize / 2 + 1); s++) { // note symmetry
-                                c = x->filters[k].buffer->b_samples[(x->filters[k].offset + s) * x->filters[k].buffer->b_nchans + x->filters[k].channel_1];
-                                d = x->filters[k].buffer->b_samples[(x->filters[k].offset + s) * x->filters[k].buffer->b_nchans + x->filters[k].channel_2];
+                                c = b->b_samples[(x->filters[k].offset + s) * b->b_nchans + x->filters[k].channel_1];
+                                d = b->b_samples[(x->filters[k].offset + s) * b->b_nchans + x->filters[k].channel_2];
                                 
                                 // (a + b I) * (c + d I) = (ac - bd) + (ad + bc) I
                                 x->x_inverse_c[s][0] = x->x_forward_c[s][0] * c - x->x_forward_c[s][1] * d;  // ac - bd
