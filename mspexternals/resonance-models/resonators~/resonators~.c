@@ -122,7 +122,7 @@ typedef struct
 	float pingsize; /* size of pulse */
 	double samplerate;
 	double sampleinterval;
-#define  UNDERFLOWCHECK
+//#define  UNDERFLOWCHECK
 #ifdef UNDERFLOWCHECK
 	int underflowcheck;
 #endif
@@ -170,7 +170,7 @@ const 	t_float *in = (t_float *)(w[2]);
 	for(j=0;j<n;j+=4)
 	{
 		resdesc *f = op->base;
-		i0 = in[0];
+		i0 = in[0]+ 1e-15;
 		i1 = in[1];
 		i2 = in[2];
 		i3 = in[3];
@@ -208,8 +208,8 @@ const 	t_float *in = (t_float *)(w[2]);
 	}
 
 #ifdef UNDERFLOWCHECK
-#define RESEPS 1.e-20f
-#define MINUSRESEPS -1.e-20f
+#define RESEPS 1.e-10f
+#define MINUSRESEPS -1.e-10f
 	/* underflow check */
 	if(op->nres>0)
 	{
@@ -614,7 +614,7 @@ if(f[i].og==0.0)
 #endif			
 	for(j=0;j<n;j+=4) //unroll 4 times
 			{
-			yn = b1*yo + b2*yn + a1*in[j];	
+			yn = b1*yo + b2*yn + a1*in[j] + 1e-15;	
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
