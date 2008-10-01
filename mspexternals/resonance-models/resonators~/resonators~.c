@@ -53,6 +53,7 @@ VERSION 1.997: (MW) Changed free() routine to call dsp_free() *before* freeing m
 VERSION 1.997.1: Force Package Info Generation
 VERSION 1.998: Improved help file
 VERSION 1.999: Fixed sample-rate acquisition to happen on every list that is sent not just at instantiation time.
+VERSION 1.9991: Fixed de-normalization problem.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
