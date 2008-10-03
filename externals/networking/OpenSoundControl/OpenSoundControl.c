@@ -48,7 +48,8 @@ VERSION 1.9.7: Force Package Info Generation
 VERSION 1.9.8: Fixed byte-order bug with time tags
 VERSION 1.9.9: Another attempt to fix time tag byte-order bug
 VERSION 1.9.10: Handle time tags in arguments (andy@cnmat)
-VERSION 1.9.11: Implement proper blob support (andy@cnmat)
+VERSION 1.9.11: Implement usable blob support (andy@cnmat)
+VERSION 1.9.12: Fix crash for zero, negative and excessive packet lengths (andy@cnmat)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		
 	Note: all conversions to network byte order for outgoing packets happen in OSC-client.c,
@@ -801,7 +802,15 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 		}
 		return;
     }
+    
+    if(n < 0 || n == 0) {
+        post("OTUDP: OpenSoundControl bad n (%d)", n);
+    }
 
+    if(n > x->b.size) {
+        post("OTUDP: OpenSoundControl n (%d) exceeds buffer size (%d)", n, x->b.size);
+    }
+             
     if ((n >= 8) && (strncmp(buf, "#bundle", 8) == 0)) {
 		/* This is a bundle message. */
 		if (n < 16) {
@@ -819,7 +828,7 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 		}
 
 		i = 16; /* Skip "#bundle\0" and time tag */
-		while(i<n) {
+		while((i+sizeof(long)) < n) { // next operation will take four bytes -aws
 	  	  size = ntohl(*((long *) (buf + i)));
 	  	  if ((size % 4) != 0) {
 			if (x->errorreporting) {
@@ -1063,6 +1072,12 @@ char *DataAfterAlignedString(char *string, char *boundary)
 		ouchstring("OTUDP: Internal error: DataAfterAlignedString: bad boundary\n");
 		return 0;
     }
+    
+    // note the above test doesn't catch this possibility and the next test dereferences string[0] resulting in possible crash -aws
+    if ((boundary - string) == 0) { 
+		ouchstring("OTUDP: Internal error: DataAfterAlignedString: no data\n");
+		return 0;
+    }
 
     for (i = 0; string[i] != '\0'; i++) {
 		if (string + i >= boundary) {
@@ -1095,8 +1110,13 @@ Boolean IsNiceString(char *string, char *boundary)  {
 
     int i;
 
-    if ((boundary - string) %4 != 0) {
+    if ((boundary - string) % 4 != 0) {
 		ouchstring("OTUDP: Internal error: IsNiceString: bad boundary\n");
+		return 0;
+    }
+    
+    if ((boundary - string) == 0) { 
+		ouchstring("OTUDP: Internal error: DataAfterAlignedString: no data\n");
 		return 0;
     }
 
