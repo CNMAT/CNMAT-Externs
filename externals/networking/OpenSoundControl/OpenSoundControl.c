@@ -50,6 +50,7 @@ VERSION 1.9.9: Another attempt to fix time tag byte-order bug
 VERSION 1.9.10: Handle time tags in arguments (andy@cnmat)
 VERSION 1.9.11: Implement usable blob support (andy@cnmat)
 VERSION 1.9.12: Fix crash for zero, negative and excessive packet lengths (andy@cnmat)
+VERSION 1.9.13: Remove legacy ouchstring and broken htm_error_string (andy@cnmat)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		
 	Note: all conversions to network byte order for outgoing packets happen in OSC-client.c,
@@ -774,8 +775,6 @@ Boolean IsNiceString(char *string, char *boundary);
 int strncmp(char *s1, char *s2, int n);
 #endif
 
-char *htm_error_string;	// Used for error messages
-
 void OSC_ParsePartialPacket(OSC *x, long size, long bufptr) {
 	post("Can't parse partial packet.  Forget it.");
 }
@@ -795,20 +794,26 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
     char *args;
 
 
-    if ((n%4) != 0) {
+    if ((n % 4) != 0) {
     	if (x->errorreporting) {
-			post("OTUDP: OpenSoundControl packet size (%d) not a multiple of 4 bytes: dropping",
-			 	 n);
+			post("OTUDP: OpenSoundControl packet size (%d) not a multiple of 4 bytes: dropping", n);
 		}
 		return;
     }
     
     if(n < 0 || n == 0) {
         post("OTUDP: OpenSoundControl bad n (%d)", n);
+        return;
     }
 
     if(n > x->b.size) {
         post("OTUDP: OpenSoundControl n (%d) exceeds buffer size (%d)", n, x->b.size);
+        return;
+    }
+    
+    if(buf == NULL) {
+        post("OTUDP: OpenSoundControl got null buffer");
+        return;
     }
              
     if ((n >= 8) && (strncmp(buf, "#bundle", 8) == 0)) {
@@ -858,8 +863,7 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 		args = DataAfterAlignedString(messageName, buf+n);
 		if (args == 0) {
 			if (x->errorreporting) {
-		   		post("OTUDP: Bad message name string: %s\nDropping entire message.\n",
-			     	 htm_error_string);
+		   		post("OTUDP: Bad message name string");
 			}
 	   	 	return;
 		}
@@ -1067,21 +1071,21 @@ char *DataAfterAlignedString(char *string, char *boundary)
        If the data looks wrong, return 0, and set htm_error_string */
 
     int i;
-
+    
     if ((boundary - string) %4 != 0) {
-		ouchstring("OTUDP: Internal error: DataAfterAlignedString: bad boundary\n");
+		post("OTUDP: Internal error: DataAfterAlignedString: bad boundary\n");
 		return 0;
     }
     
     // note the above test doesn't catch this possibility and the next test dereferences string[0] resulting in possible crash -aws
     if ((boundary - string) == 0) { 
-		ouchstring("OTUDP: Internal error: DataAfterAlignedString: no data\n");
+		post("OTUDP: Internal error: DataAfterAlignedString: no data\n");
 		return 0;
     }
 
     for (i = 0; string[i] != '\0'; i++) {
 		if (string + i >= boundary) {
-		    htm_error_string = "DataAfterAlignedString: Unreasonably long string";
+		    post("DataAfterAlignedString: Unreasonably long string");
 		    return 0;
 		}
     }
@@ -1091,11 +1095,11 @@ char *DataAfterAlignedString(char *string, char *boundary)
 
     for (; (i % STRING_ALIGN_PAD) != 0; i++) {
 		if (string + i >= boundary) {
-		    htm_error_string = "DataAfterAlignedString: Unreasonably long string";
+		    post("DataAfterAlignedString: Unreasonably long string");
 		    return 0;
 		}
 		if (string[i] != '\0') {
-		    htm_error_string = "DataAfterAlignedString: Incorrectly padded string.";
+		    post("DataAfterAlignedString: Incorrectly padded string.");
 		    return 0;
 		}
     }
@@ -1111,12 +1115,12 @@ Boolean IsNiceString(char *string, char *boundary)  {
     int i;
 
     if ((boundary - string) % 4 != 0) {
-		ouchstring("OTUDP: Internal error: IsNiceString: bad boundary\n");
+		post("OTUDP: Internal error: IsNiceString: bad boundary\n");
 		return 0;
     }
     
     if ((boundary - string) == 0) { 
-		ouchstring("OTUDP: Internal error: DataAfterAlignedString: no data\n");
+		post("OTUDP: Internal error: DataAfterAlignedString: no data\n");
 		return 0;
     }
 
