@@ -24,7 +24,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: OpenSoundControl
 DESCRIPTION: Format Max data to <A href="http://www.cnmat.berkeley.edu/OpenSoundControl">OpenSoundControl</a> protocol and vice versa
-AUTHORS: Matt Wright
+AUTHORS: Matt Wright, Andy Schmeder
 COPYRIGHT_YEARS: 1996,97,98,99,2000,01,02,03,04,05
 PUBLICATION: ICMC 97 paper | http://www.cnmat.berkeley.edu/ICMC97/papers-html/OpenSoundControl.html
 PUBLICATION: NIME 03 paper | http://www.cnmat.berkeley.edu/Research/NIME2003/NIME03_Wright.pdf
@@ -48,9 +48,10 @@ VERSION 1.9.7: Force Package Info Generation
 VERSION 1.9.8: Fixed byte-order bug with time tags
 VERSION 1.9.9: Another attempt to fix time tag byte-order bug
 VERSION 1.9.10: Handle time tags in arguments (andy@cnmat)
-VERSION 1.9.11: Implement usable blob support (andy@cnmat)
-VERSION 1.9.12: Fix crash for zero, negative and excessive packet lengths (andy@cnmat)
-VERSION 1.9.13: Remove legacy ouchstring and broken htm_error_string (andy@cnmat)
+VERSION 1.9.11: Implement usable blob support
+VERSION 1.9.12: Fix crash for zero, negative and excessive packet lengths
+VERSION 1.9.13: Remove legacy ouchstring and broken htm_error_string
+VERSION 1.9.14: Fix more bad packet crashes, always do toplevel bang even on bad packet
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		
 	Note: all conversions to network byte order for outgoing packets happen in OSC-client.c,
@@ -798,22 +799,22 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
     	if (x->errorreporting) {
 			post("OTUDP: OpenSoundControl packet size (%d) not a multiple of 4 bytes: dropping", n);
 		}
-		return;
+        goto ParseOSCPacket_Error;
     }
     
     if(n < 0 || n == 0) {
         post("OTUDP: OpenSoundControl bad n (%d)", n);
-        return;
+        goto ParseOSCPacket_Error;
     }
 
     if(n > x->b.size) {
         post("OTUDP: OpenSoundControl n (%d) exceeds buffer size (%d)", n, x->b.size);
-        return;
+        goto ParseOSCPacket_Error;
     }
     
     if(buf == NULL) {
         post("OTUDP: OpenSoundControl got null buffer");
-        return;
+        goto ParseOSCPacket_Error;
     }
              
     if ((n >= 8) && (strncmp(buf, "#bundle", 8) == 0)) {
@@ -822,7 +823,7 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 			if (x->errorreporting) {
 		   	    post("OTUDP: Bundle message too small (%d bytes) for time tag", n);
 			}
-		    return;
+            goto ParseOSCPacket_Error;
 		}
 
 		if (topLevel) {
@@ -839,14 +840,14 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 			if (x->errorreporting) {
 				post("OTUDP: Bad size count %d in bundle (not a multiple of 4)", size);
 			}
-			return;
-	 	   }
+            goto ParseOSCPacket_Error;
+ 	      }
 	   	  if ((size + i + 4) > n) {
 			 if (x->errorreporting) {
 			 	post("OTUDP: Bad size count %d in bundle (only %d bytes left in entire bundle)",
 			 	     size, n-i-4);
 			 }
-			 return;	
+             goto ParseOSCPacket_Error;
 	      }
 	    
 	      /* Recursively handle element of bundle */
@@ -854,7 +855,8 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 	      i += 4 + size;
 	    }
 		if (i != n) {
-	  	  post("OTUDP: This can't happen");
+	  	    post("OTUDP: Failed to process entire packet (%d of %d)", i, n);
+            goto ParseOSCPacket_Error;
 		}
     } else {
 		/* This is not a bundle message */
@@ -865,12 +867,15 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 			if (x->errorreporting) {
 		   		post("OTUDP: Bad message name string");
 			}
-	   	 	return;
+            goto ParseOSCPacket_Error;
 		}
 		
 		messageLen = args-messageName;	    
 		Smessage(x, messageName, (void *)args, n-messageLen);
     }
+    
+ParseOSCPacket_Error:
+    
     if (topLevel) {
 		outlet_bang(x->O_outlet1);
 	}
