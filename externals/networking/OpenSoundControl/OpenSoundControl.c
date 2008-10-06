@@ -52,6 +52,7 @@ VERSION 1.9.11: Implement usable blob support
 VERSION 1.9.12: Fix crash for zero, negative and excessive packet lengths
 VERSION 1.9.13: Remove legacy ouchstring and broken htm_error_string
 VERSION 1.9.14: Fix more bad packet crashes, always do toplevel bang even on bad packet
+VERSION 1.9.15: Handle bad packets correctly when nested in bundles
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		
 	Note: all conversions to network byte order for outgoing packets happen in OSC-client.c,
@@ -768,7 +769,7 @@ void OSC_NewTimeTag(OSC *x, long seconds, long fraction) {
  Stuff having to do with parsing incoming OSC packets into Max data
  *******************************************************************/
 
-void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel);
+int ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel);
 static void Smessage(OSC *x, char *address, void *v, long n);
 char *DataAfterAlignedString(char *string, char *boundary); 
 Boolean IsNiceString(char *string, char *boundary);
@@ -789,11 +790,11 @@ void OSC_ParseEvilGimme(OSC *x, Symbol *s, short not_really_argc, Atom *not_real
 	ParseOSCPacket(x, (char *) not_really_argv, not_really_argc, true);
 }
 
-void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
+int ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
     long size, messageLen, i;
     char *messageName;
     char *args;
-
+    int t;
 
     if ((n % 4) != 0) {
     	if (x->errorreporting) {
@@ -851,7 +852,11 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 	      }
 	    
 	      /* Recursively handle element of bundle */
-	      ParseOSCPacket(x, buf+i+4, size, false);
+	      t = ParseOSCPacket(x, buf+i+4, size, false);
+          if(t != 0) {
+              post("OTUDP: Error in encapsulated message; bailing out on bundle");
+              goto ParseOSCPacket_Error;
+          }
 	      i += 4 + size;
 	    }
 		if (i != n) {
@@ -874,11 +879,19 @@ void ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 		Smessage(x, messageName, (void *)args, n-messageLen);
     }
     
+    if (topLevel) {
+		outlet_bang(x->O_outlet1);
+	}
+    
+    return 0;
+
 ParseOSCPacket_Error:
     
     if (topLevel) {
 		outlet_bang(x->O_outlet1);
 	}
+    return 1;
+    
 }
 
 #define SMALLEST_POSITIVE_FLOAT 0.000001f
