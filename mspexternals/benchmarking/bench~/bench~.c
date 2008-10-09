@@ -130,7 +130,7 @@ void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 		if(argc == 3) x->t_id = argv[2].a_w.w_long;
 				      //post("%s", x->t_id->s_name);
 	}
-	x->t_ob.z_misc |= Z_NO_INPLACE;	
+	//x->t_ob.z_misc |= Z_NO_INPLACE;	
 
 	return x;
 }
