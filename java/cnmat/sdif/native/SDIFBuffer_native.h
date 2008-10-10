@@ -9,11 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     cnmat_sdif_SDIFBuffer
+ * Method:    n_getMatrix
+ * Signature: (Ljava/lang/String;[CDI)Lcnmat/sdif/SDIFMatrix;
+ */
+JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIFBuffer_n_1getMatrix
+  (JNIEnv *, jclass, jstring, jcharArray, jdouble, jint);
+
+/*
+ * Class:     cnmat_sdif_SDIFBuffer
  * Method:    n_getMatrixHeader
  * Signature: (Ljava/lang/String;)Lcnmat/sdif/SDIFMatrixHeader;
  */
 JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIFBuffer_n_1getMatrixHeader
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     cnmat_sdif_SDIFBuffer
@@ -21,7 +29,7 @@ JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIFBuffer_n_1getMatrixHeader
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_cnmat_sdif_SDIFBuffer_n_1init
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }
