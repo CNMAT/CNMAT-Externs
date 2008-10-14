@@ -445,7 +445,7 @@ static void SDIFtuples_interptype(SDIFtuples *x, long interptype) {
 	x->t_interp = interptype;
 }
 
-
+/*
 static void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row) {
 	if (m->header.matrixDataType == SDIF_INT32) {
 		SETLONG(a, SDIFutil_GetMatrixCell_int32(m, column, row));
@@ -453,7 +453,7 @@ static void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif
 		SETFLOAT(a, SDIFutil_GetMatrixCell(m, column, row));
 	}
 }
-
+*/
 
 static void SDIFtuples_tuples(SDIFtuples *x, Symbol *dummy, short argc, Atom *argv) {
 	Boolean concatenate;
