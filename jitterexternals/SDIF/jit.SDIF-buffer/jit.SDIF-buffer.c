@@ -72,29 +72,12 @@ t_jit_err jit_SDIF_buffer_matrix_calc(t_jit_SDIF_buffer *x, void *inputs, void *
 
 	if (x&&out_matrix) {
 		out_savelock = (long) jit_object_method(out_matrix,_jit_sym_lock,1);
-		
-		jit_object_method(out_matrix,_jit_sym_getinfo,&out_minfo);
-		
-		jit_object_method(out_matrix,_jit_sym_getdata,&out_bp);
-		
-		if (!out_bp) { err=JIT_ERR_INVALID_OUTPUT; goto out;}
-		
-		//get dimensions/planecount
-		dimcount   = out_minfo.dimcount;
-		planecount = out_minfo.planecount;			
-		
-		for (i=0;i<dimcount;i++) {
-			dim[i] = out_minfo.dim[i];
-		}
-				
-		//jit_SDIF_buffer_getvecdata(x,&vecdata);
-		//jit_parallel_ndim_simplecalc1((method)jit_SDIF_buffer_calculate_ndim,
-		//&vecdata, dimcount, dim, planecount, &out_minfo, out_bp,
-		//0 /* flags1 */);
+		jit_object_method(out_matrix,_jit_sym_getinfo,&out_minfo);		
 
-		//post("rowCount = %d, colCount = %d", m->header.rowCount, m->header.columnCount);
-		//post("type = %x", m->header.matrixDataType);
-		out_minfo.size = m->header.rowCount * m->header.columnCount * ((m->header.matrixDataType & 0xF) * 8);
+		/**************************************************
+		// get the info struct and fill it up the way we want
+		**************************************************/
+		out_minfo.size = m->header.rowCount * m->header.columnCount * (m->header.matrixDataType & 0xF);
 		switch(m->header.matrixDataType){
 		case SDIF_FLOAT64:
 			out_minfo.type = _jit_sym_float64;
@@ -104,13 +87,52 @@ t_jit_err jit_SDIF_buffer_matrix_calc(t_jit_SDIF_buffer *x, void *inputs, void *
 			break;
 		}
 
+		out_minfo.dimcount = 2;
 		out_minfo.dim[0] = m->header.columnCount;
 		out_minfo.dim[1] = m->header.rowCount;
-		//out_minfo.dimstride[0] = sizeof(double);
+		out_minfo.dimstride[0] = (m->header.matrixDataType & 0xF);
+		out_minfo.dimstride[1] = out_minfo.dim[0] * out_minfo.dimstride[0];
 		out_minfo.planecount = 1;
-		out_bp = m->data;
+
+		/**************************************************
+		// Set the info struct and then get it again so we have the dimstrides as they 
+		// may have changed to be 16-byte aligned.
+		**************************************************/
 		jit_object_method(out_matrix, gensym("setinfo"), &out_minfo);
+		jit_object_method(out_matrix, gensym("getinfo"), &out_minfo);
+
+		/**************************************************
+		// now get the data array which should be the correct size.
+		**************************************************/
+		jit_object_method(out_matrix,_jit_sym_getdata,&out_bp);
+		if (!out_bp) { err=JIT_ERR_INVALID_OUTPUT; goto out;}
+		char *sdifData = (char *)(m->data);
+		int colWidth = m->header.matrixDataType & 0xF;
+		int i = 0;
+		while(i < out_minfo.size){
+			memcpy(out_bp + i, sdifData, m->header.columnCount * colWidth);
+			//out_bp += out_minfo.dimstride[1];
+			sdifData += (colWidth * m->header.columnCount);
+			i += out_minfo.dimstride[1];
+		}
+
 		jit_object_method(out_matrix, gensym("data"), out_bp);
+		
+		//get dimensions/planecount
+		//dimcount   = out_minfo.dimcount;
+		//planecount = out_minfo.planecount;			
+		
+		//for (i=0;i<dimcount;i++) {
+		//dim[i] = out_minfo.dim[i];
+		//}
+				
+		//jit_SDIF_buffer_getvecdata(x,&vecdata);
+		//jit_parallel_ndim_simplecalc1((method)jit_SDIF_buffer_calculate_ndim,
+		//&vecdata, dimcount, dim, planecount, &out_minfo, out_bp,
+		//0 /* flags1 */);
+
+		//post("rowCount = %d, colCount = %d", m->header.rowCount, m->header.columnCount);
+		//post("type = %x", m->header.matrixDataType);
 
 	} else {
 		return JIT_ERR_INVALID_PTR;
