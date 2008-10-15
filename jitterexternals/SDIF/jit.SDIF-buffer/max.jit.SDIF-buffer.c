@@ -87,7 +87,6 @@ void max_jit_SDIF_buffer_outputmatrix(t_max_jit_SDIF_buffer *x){
 			{
 				jit_error_code(x,err); 
 			} else {
-				post("outputting matrix");
 				max_jit_mop_outputmatrix(x);
 			}
 		}
@@ -141,9 +140,10 @@ void max_jit_SDIF_buffer_float(t_max_jit_SDIF_buffer *x, double f){
 
 	SDIFmem_Matrix m;
 	CNMAT_MMJ_SDIF_getMainMatrixType(&(x->t_b), x->t_matrixType);
-	post("FRAME TYPE: %s", x->t_matrixType);
-	post("time = %f", f);
-	if(!(m = GetMatrix(&(x->t_b), "1TRC", f, 1))){
+	//post("FRAME TYPE: %s", x->t_matrixType);
+	//post("time = %f", f);
+	//if(!(m = GetMatrix(&(x->t_b), "1TRC", f, 1))){
+	if(!(m = GetMatrix(&(x->t_b), x->t_matrixType, f, 1))){
 		error("jit.SDIF-buffer: error!!");
 		return;
 	}
