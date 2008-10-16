@@ -46,13 +46,10 @@ VERSION 1.0: First version
 #define BENCH_MODE_RAND 2
 #define BENCH_MODE_THRU 3
 
-#define Z_NO_INPLACE 1
-
 typedef struct _bench{
-	t_pxobject t_ob;
+       	t_pxobject t_ob;
 	int t_objmode;
 	int t_mode; 
-	int t_id;
 } t_bench;
 
 void *bench_class;
@@ -127,8 +124,6 @@ void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 			error("bench~: unrecognized argument %s", argv[0].a_w.w_sym->s_name);
 			return NULL;
 		}
-		if(argc == 3) x->t_id = argv[2].a_w.w_long;
-				      //post("%s", x->t_id->s_name);
 	}
 	//x->t_ob.z_misc |= Z_NO_INPLACE;	
 
@@ -168,8 +163,6 @@ t_int *bench_perform_in_connected(t_int *w){
 	t_float *in = (t_float *)w[2];
 	t_float *out1 = (t_float *)w[3];
 	t_float *out2 = (t_float *)w[4];
-	//post("%d %p %p %p", x->t_id, in, out1, out2);
-	//post("*****");
 	int n = (int)w[5];
 	ticks t = getticks();
 	unsigned long l1, l2;
@@ -179,13 +172,6 @@ t_int *bench_perform_in_connected(t_int *w){
 	out2[0] = *((float *)(&l1));
 	out2[1] = *((float *)(&l2));
 
-	//post("in %d: t1 = %llu %llX, out2[0] = %X %llX, out2[1] = %X %llX", x->t_id, (unsigned long long)t, (unsigned long long)t, out2[0], l1, out2[1], l2);
-	//post("in %d: %p %p", x->t_id, out2, out2 + 1);
-	//unsigned long long l;
-	//l = l1;
-	//l = l << 32;
-	//l = l | l2;
-	//post("%llX %llX %d", t, l, t == l);
 	memcpy(out1, in, sizeof(float) * n);
 
 	return (w + 6);
@@ -196,25 +182,18 @@ t_int *bench_perform_out(t_int *w){
 	t_float *in1 = (t_float *)w[2];
 	t_float *in2 = (t_float *)w[3];
 	t_float *out = (t_float *)w[4];
-	//post("out %d %p %p %p", x->t_id, in1, in2, out);
-	//post("*****");
+
 	int n = (int)w[5];
 	int i;
 
 	ticks t2 = getticks();
-	unsigned long long l;
-	l = *((unsigned long *)(in2));
-	l = l << 32;
-	l = l | *((unsigned long *)(in2 + 1));
+	unsigned long long t1;
+	t1 = *((unsigned long *)(in2));
+	t1 = t1 << 32;
+	t1 = t1 | *((unsigned long *)(in2 + 1));
 
-	double diff = elapsed(t2, (ticks)l);
+	double diff = elapsed(t2, (ticks)t1);
 
-	/*
-	post("out %d: t1 = %llu, t2 = %llu, in2[0] = %X %llX, in2[1] = %X %llX", x->t_id, l, (unsigned long long)t2, in2[0], l1, in2[1], l2);
-	post("out %d: %p %p", x->t_id, in2, in2 + 1);
-	post("%f", diff);
-	post("*****");
-	*/
 	for(i = 0; i < n; i++)
 		out[i] = (float)diff;
 
