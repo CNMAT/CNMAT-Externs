@@ -274,6 +274,7 @@ void slipbyte(sOSC *x, long n)
   if((x->m_inletNumber==1) && n<256)
 {
 	  critical_enter(x->lock);
+}
 	if(slipdecode(x, n))
 		critical_exit(x->lock);
 }
