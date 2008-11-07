@@ -174,21 +174,21 @@ win-vcc: $(WIN_VCC_BINARY) $(WIN_VCC_INDIVIDUAL_DOWNLOAD)
 # will therefore be doing bad things).
 version.h: $(OBJ_INFO) version.c
 	#perl ../../../info2header.pl < $(OBJ_INFO) > $@
-	perl $(TOPDIR)/info2header.pl < $(OBJ_INFO) > $@
+	perl $(CNMAT_MAX_DIR)/info2header.pl < $(OBJ_INFO) > $@
 	$(MAKE) $(MAKECMDGOALS)
 	@echo -n 'Ignore the following error message: '
 	@cmp -s version.h /dev/null
 
 
 #ORIGINAL_VERSION_C = ../../../utility-library/version/version.c
-ORIGINAL_VERSION_C = $(TOPDIR)/utility-library/version/version.c
+ORIGINAL_VERSION_C = $(CNMAT_MAX_DIR)/utility-library/version/version.c
 version.c: $(ORIGINAL_VERSION_C)
 	cp $< $@
 
 
 $(OBJ_INFO): $(SOURCE)
 	#perl ../../../commentkeys.pl < $(SOURCE) > $@
-	perl $(TOPDIR)/commentkeys.pl < $(SOURCE) > $@
+	perl $(CNMAT_MAX_DIR)/commentkeys.pl < $(SOURCE) > $@
 
 MD5 = $(if $(findstring WIN, $(PLATFORM)), md5sum, md5 -q)
 
@@ -258,11 +258,11 @@ $(WIN_VCC_BINARY): $(SOURCE) version.h $(VCC_HELPFILE_COPY)
 
 $(WIN_BINARY): $(SOURCE) version.h $(GCC_HELPFILE_COPY) 
 	#$(MAKE) -f ../../../makefile.windows-gcc $@
-	$(MAKE) -f $(TOPDIR)/makefile.windows-gcc $@
+	$(MAKE) -f $(CNMAT_MAX_DIR)/makefile.windows-gcc $@
 
 $(OBJ).def: 
 	#$(MAKE) -f ../../../makefile.windows-gcc $@
-	$(MAKE) -f $(TOPDIR)makefile.windows-gcc $@
+	$(MAKE) -f $(CNMAT_MAX_DIR)makefile.windows-gcc $@
 
 
 #START_OVER_ERROR = $(error Please run make again.)
