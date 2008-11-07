@@ -903,7 +903,7 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
     float *floats;
     long *ints;
     char *chars;
-    char *string, *nextString, *typeTags, *thisType, 
+    char *string, *nextString, *typeTags, *thisType;
     unsigned char *p;
     Symbol *addressSymbol, *argSymbol;
 	Atom args[MAXARGS];
