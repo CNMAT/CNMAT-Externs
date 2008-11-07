@@ -53,6 +53,7 @@ VERSION 1.9.12: Fix crash for zero, negative and excessive packet lengths
 VERSION 1.9.13: Remove legacy ouchstring and broken htm_error_string
 VERSION 1.9.14: Fix more bad packet crashes, always do toplevel bang even on bad packet
 VERSION 1.9.15: Handle bad packets correctly when nested in bundles
+VERSION 1.9.16: Use unsigned bytes in blobs
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		
 	Note: all conversions to network byte order for outgoing packets happen in OSC-client.c,
@@ -902,7 +903,8 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
     float *floats;
     long *ints;
     char *chars;
-    char *string, *nextString, *typeTags, *thisType, *p;
+    char *string, *nextString, *typeTags, *thisType, 
+    unsigned char *p;
     Symbol *addressSymbol, *argSymbol;
 	Atom args[MAXARGS];
 	int numArgs = 0;
