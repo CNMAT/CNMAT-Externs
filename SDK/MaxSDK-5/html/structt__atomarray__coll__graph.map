@@ -1,0 +1,3 @@
+<area shape="rect" href="$structt__object.html" title="The structure for the head of any object which wants to have inlets or outlets, or..." alt="" coords="5,96,75,123">
+<area shape="rect" href="$structt__atom.html" title="An atom is a typed datum." alt="" coords="99,96,163,123">
+<area shape="rect" href="$unionword.html" title="Union for packing any of the datum defined in e_max_atomtypes." alt="" coords="104,6,157,32">
