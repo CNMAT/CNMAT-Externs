@@ -156,6 +156,7 @@ void p5glove_connect(t_p5glove *x)
 	else
 	{
 		post("Glove Connect Failed");
+		post(strerror(errno));
 	}
 }
 

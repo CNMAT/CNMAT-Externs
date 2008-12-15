@@ -7,28 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		BE51B4490CD161A300EBD035 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE51B4480CD161A300EBD035 /* IOKit.framework */; };
-		BE51B4AD0CD1623900EBD035 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE51B4AC0CD1623900EBD035 /* CoreFoundation.framework */; };
-		BE950BA50CD11D9E00079534 /* p5glove.c in Sources */ = {isa = PBXBuildFile; fileRef = BE950BA40CD11D9E00079534 /* p5glove.c */; };
-		BE950BCA0CD1234E00079534 /* p5glover.c in Sources */ = {isa = PBXBuildFile; fileRef = BE950BC90CD1234E00079534 /* p5glover.c */; };
-		BE950C1A0CD1270E00079534 /* p5glover.h in Headers */ = {isa = PBXBuildFile; fileRef = BE950C190CD1270E00079534 /* p5glover.h */; };
-		BE950C1D0CD1271500079534 /* macosx_usb_hid.c in Sources */ = {isa = PBXBuildFile; fileRef = BE950C1B0CD1271500079534 /* macosx_usb_hid.c */; };
-		BE950C1E0CD1271500079534 /* macosx_usb_hid.h in Headers */ = {isa = PBXBuildFile; fileRef = BE950C1C0CD1271500079534 /* macosx_usb_hid.h */; };
-		BEB87AA30A81333500C31058 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEB87AA20A81333500C31058 /* MaxAPI.framework */; };
+		4123BC940B2D8FEB00E6834C /* wiiremote.c in Sources */ = {isa = PBXBuildFile; fileRef = 4123BC930B2D8FEB00E6834C /* wiiremote.c */; };
+		4123BC960B2D8FF500E6834C /* wiiremote.h in Headers */ = {isa = PBXBuildFile; fileRef = 4123BC950B2D8FF500E6834C /* wiiremote.h */; };
+		4198157A0B28442C0053E59F /* aka.wiiremote.c in Sources */ = {isa = PBXBuildFile; fileRef = 419815790B28442C0053E59F /* aka.wiiremote.c */; };
+		705DF09F0EF0738A004A08CC /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 705DF09E0EF0738A004A08CC /* MaxAPI.framework */; };
+		709C3DD80EF071ED00F718A8 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70945B1C0EF06DD600BF848D /* Carbon.framework */; };
+		709C3DD90EF071F600F718A8 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70945B210EF06DE600BF848D /* IOBluetooth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		8D01CCD20486CAD60068D4B7 /* p5glove.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = p5glove.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE51B4480CD161A300EBD035 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
-		BE51B4AC0CD1623900EBD035 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
-		BE950BA40CD11D9E00079534 /* p5glove.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = p5glove.c; sourceTree = "<group>"; };
-		BE950BC90CD1234E00079534 /* p5glover.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = p5glover.c; sourceTree = "<group>"; };
-		BE950C190CD1270E00079534 /* p5glover.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = p5glover.h; sourceTree = "<group>"; };
-		BE950C1B0CD1271500079534 /* macosx_usb_hid.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = macosx_usb_hid.c; sourceTree = "<group>"; };
-		BE950C1C0CD1271500079534 /* macosx_usb_hid.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = macosx_usb_hid.h; sourceTree = "<group>"; };
-		BEB87AA20A81333500C31058 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		185646990EE71C51002ABE5C /* disis.aka.wiiremote.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = disis.aka.wiiremote.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		4123BC930B2D8FEB00E6834C /* wiiremote.c */ = {isa = PBXFileReference; fileEncoding = 0; lastKnownFileType = sourcecode.c.c; path = wiiremote.c; sourceTree = "<group>"; };
+		4123BC950B2D8FF500E6834C /* wiiremote.h */ = {isa = PBXFileReference; fileEncoding = 0; lastKnownFileType = sourcecode.c.h; path = wiiremote.h; sourceTree = "<group>"; };
+		419815790B28442C0053E59F /* aka.wiiremote.c */ = {isa = PBXFileReference; fileEncoding = 0; indentWidth = 4; lastKnownFileType = sourcecode.c.c; path = aka.wiiremote.c; sourceTree = "<group>"; tabWidth = 4; };
+		705DF09E0EF0738A004A08CC /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "/Applications/MaxSDK-5.0.6/c74support/max-includes/MaxAPI.framework"; sourceTree = "<absolute>"; };
+		70945B1C0EF06DD600BF848D /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		70945B210EF06DE600BF848D /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,10 +30,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				BEB87AA30A81333500C31058 /* MaxAPI.framework in Frameworks */,
-				BE51B4490CD161A300EBD035 /* IOKit.framework in Frameworks */,
-				BE51B4AD0CD1623900EBD035 /* CoreFoundation.framework in Frameworks */,
+				709C3DD80EF071ED00F718A8 /* Carbon.framework in Frameworks */,
+				709C3DD90EF071F600F718A8 /* IOBluetooth.framework in Frameworks */,
+				705DF09F0EF0738A004A08CC /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +46,9 @@
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
+				70945B1C0EF06DD600BF848D /* Carbon.framework */,
+				70945B210EF06DE600BF848D /* IOBluetooth.framework */,
+				705DF09E0EF0738A004A08CC /* MaxAPI.framework */,
 			);
 			name = maximum;
 			sourceTree = "<group>";
@@ -60,10 +56,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BE51B4AC0CD1623900EBD035 /* CoreFoundation.framework */,
-				BE51B4480CD161A300EBD035 /* IOKit.framework */,
-				BEB87AA20A81333500C31058 /* MaxAPI.framework */,
-				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -78,11 +70,9 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				BE950BA40CD11D9E00079534 /* p5glove.c */,
-				BE950BC90CD1234E00079534 /* p5glover.c */,
-				BE950C190CD1270E00079534 /* p5glover.h */,
-				BE950C1B0CD1271500079534 /* macosx_usb_hid.c */,
-				BE950C1C0CD1271500079534 /* macosx_usb_hid.h */,
+				419815790B28442C0053E59F /* aka.wiiremote.c */,
+				4123BC930B2D8FEB00E6834C /* wiiremote.c */,
+				4123BC950B2D8FF500E6834C /* wiiremote.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -90,7 +80,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D01CCD20486CAD60068D4B7 /* p5glove.mxo */,
+				185646990EE71C51002ABE5C /* disis.aka.wiiremote.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,17 +92,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE950C1A0CD1270E00079534 /* p5glover.h in Headers */,
-				BE950C1E0CD1271500079534 /* macosx_usb_hid.h in Headers */,
+				4123BC960B2D8FF500E6834C /* wiiremote.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* p5glove */ = {
+		8D01CCC60486CAD60068D4B7 /* disis.aka.wiiremote */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "p5glove" */;
+			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "disis.aka.wiiremote" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -124,10 +113,10 @@
 			);
 			dependencies = (
 			);
-			name = p5glove;
+			name = disis.aka.wiiremote;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 8D01CCD20486CAD60068D4B7 /* p5glove.mxo */;
+			productReference = 185646990EE71C51002ABE5C /* disis.aka.wiiremote.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -135,14 +124,14 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "p5glove" */;
+			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "disis.aka.wiiremote" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* p5glove */,
+				8D01CCC60486CAD60068D4B7 /* disis.aka.wiiremote */,
 			);
 		};
 /* End PBXProject section */
@@ -172,9 +161,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE950BA50CD11D9E00079534 /* p5glove.c in Sources */,
-				BE950BCA0CD1234E00079534 /* p5glover.c in Sources */,
-				BE950C1D0CD1271500079534 /* macosx_usb_hid.c in Sources */,
+				4198157A0B28442C0053E59F /* aka.wiiremote.c in Sources */,
+				4123BC940B2D8FEB00E6834C /* wiiremote.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,43 +172,40 @@
 		0FF6670B096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_APPS_DIR)/MaxSDK-5.0.6/c74support/max-includes\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "/Applications/MaxSDK-5.0.6/c74support/max-includes/macho-prefix.pch";
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = "/Applications/MaxSDK-5.0.6/c74support/max-includes";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
+				INSTALL_PATH = "/Applications/Max5/Cycling '74/max-externals";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = p5glove;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				PRODUCT_NAME = disis.aka.wiiremote;
+				SDKROOT = "";
 				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
+				WARNING_CFLAGS = "";
 				WRAPPER_EXTENSION = mxo;
 				ZERO_LINK = YES;
 			};
@@ -229,10 +214,8 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -240,17 +223,17 @@
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_APPS_DIR)/MaxSDK-5.0.6/c74support/max-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../c74support/max-includes/macho-prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = "../../c74support/max-includes";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -258,7 +241,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = p5glove;
+				PRODUCT_NAME = disis.aka.wiiremote;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -274,22 +257,24 @@
 		0FF6670D096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_APPS_DIR)/MaxSDK-5.0.6/c74support/max-includes\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../c74support/max-includes/macho-prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = "../../c74support/max-includes";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -297,7 +282,8 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = p5glove;
+				PRODUCT_NAME = disis.aka.wiiremote;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -311,25 +297,46 @@
 		0FF6670F096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				CURRENT_PROJECT_VERSION = 1.0;
+				HEADER_SEARCH_PATHS = /System/Library/Frameworks;
+				LD_MAP_FILE_PATH = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
+				LIBRARY_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Development;
 		};
 		0FF66710096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				CURRENT_PROJECT_VERSION = 1.0;
+				HEADER_SEARCH_PATHS = /System/Library/Frameworks;
+				LD_MAP_FILE_PATH = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
+				LIBRARY_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Deployment;
 		};
 		0FF66711096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				CURRENT_PROJECT_VERSION = 1.0;
+				HEADER_SEARCH_PATHS = /System/Library/Frameworks;
+				LD_MAP_FILE_PATH = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
+				LIBRARY_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Default;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "p5glove" */ = {
+		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "disis.aka.wiiremote" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670B096B494E00E9E0B4 /* Development */,
@@ -339,7 +346,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "p5glove" */ = {
+		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "disis.aka.wiiremote" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670F096B494E00E9E0B4 /* Development */,
