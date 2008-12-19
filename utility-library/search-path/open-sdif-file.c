@@ -94,7 +94,7 @@ FILE *OpenSDIFFile(char *filename) {
 	char filenamecopy[MAX_FILENAME_LEN];
 	short result, pathID;
 	long filetype;
-	PATH_SPEC ps;	
+	//PATH_SPEC ps;	
 	FILE *f;
 	SDIFresult r;
 
