@@ -1,12 +1,12 @@
 #include "CNMAT_MMJ_common.h"
 
 static char *CNMAT_resultStrings[] = {
-	"Operation was successful"
+	"Operation was SUCCESSful"
 };
 
 CNMAT_result CNMAT_MMJ_common_init(t_class *c){
 	class_addmethod(c, (method)CNMAT_OSC_packet, "FullPacket", A_LONG, A_LONG, 0);
-	return CNMAT_success;
+	return CNMAT_SUCCESS;
 }
 
 void CNMAT_OSC_packet(t_class *x, long size, long address){
