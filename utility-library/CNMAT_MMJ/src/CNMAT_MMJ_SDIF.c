@@ -207,7 +207,7 @@ SDIFmem_Matrix GetMatrix(CNMAT_MMJ_SDIF_buffer *b,
 			break;
 		}
 	}
-	
+
 	//  couldn't find the matrix
 	if (m == 0) {
 		char buf[256];
@@ -238,8 +238,8 @@ SDIFmem_Matrix GetMatrix(CNMAT_MMJ_SDIF_buffer *b,
 		*/
 		return NULL;
 	}
-	
-	// post("*** Cloning matrix at time %f, type 0x%x", time, m->header.matrixDataType);
+
+	//post("*** Cloning matrix at time %f, type 0x%x", time, m->header.matrixDataType);
 	  
 	//  copy result to output matrix
 	r = SDIFutil_CloneMatrix(m, &matrixOut);
@@ -251,9 +251,10 @@ SDIFmem_Matrix GetMatrix(CNMAT_MMJ_SDIF_buffer *b,
 		error_callback(r, "couldn't clone matrix");
 		return NULL;
   	}
-  	
+
 	//  return result
 	//  NOTE: caller is responsible for calling SDIFmem_FreeMatrix()
+
 	return matrixOut;
 }
 
@@ -404,6 +405,23 @@ void SetupInterpolator(SDIFinterp_Interpolator *it,
 	//  t_itValid = TRUE;
 }
 
+void CNMAT_MMJ_SDIF_getMainMatrixType(CNMAT_MMJ_SDIF_buffer *b, char *mt){
+	//char matrixType[4];
+	LookupMyBuffer(b);
+	SDIFmem_Frame fr;
+	fr = SDIFbuf_GetFirstFrame(b->t_buf);
+	if (fr == NULL) {
+		if (verbose) {
+			char buf[100];
+			sprintf(buf, "buffer %s is empty!", b->t_bufferSym->s_name);
+			error_callback(ESDIF_OTHER, buf);
+		}
+		return;
+	}
+	SDIF_Copy4Bytes(mt, fr->header.frameType);
+	//return matrixType;
+}
+
 void PrintOneFrame(SDIFmem_Frame f) {
 	SDIFmem_Matrix m;
 	if (f == 0) {
@@ -428,6 +446,14 @@ void PrintMatrixHeader(SDIF_MatrixHeader *mh) {
 	post("  Matrix header: type %c%c%c%c, data type 0x%x, %ld rows, %ld cols",
 	     mh->matrixType[0], mh->matrixType[1], mh->matrixType[2], mh->matrixType[3],
 	     mh->matrixDataType, mh->rowCount, mh->columnCount);
+}
+
+void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row){
+        if (m->header.matrixDataType == SDIF_INT32) {
+                SETLONG(a, SDIFutil_GetMatrixCell_int32(m, column, row));
+        } else {
+                SETFLOAT(a, SDIFutil_GetMatrixCell(m, column, row));
+        }
 }
 
 void verbose_error_reporting(Boolean b){verbose = b;}
