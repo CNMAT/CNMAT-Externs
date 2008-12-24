@@ -1,4 +1,4 @@
-Installation instructions:
+INSTALLATION INSTRUCTIONS:
 
 To build the library, you will need a copy of cmake (www.cmake.org).  Once you have installed cmake, you can make the Makefiles with
 
@@ -15,6 +15,9 @@ Then build the project using
 make
 sudo make install
 
+
+OUT OF SOURCE BUILDS:
+
 Out of source builds can be made by creating a build directory and starting the cmake process from there.  For example
 
 mkdir build
@@ -22,6 +25,16 @@ cd build
 cmake ..
 make
 make install
+
+
+XCODE:
+
+To have cmake generate an xcode project, use the following command
+
+cmake -G Xcode .
+
+
+DOCUMENTATION:
 
 To build the documentation, you will need a copy of doxygen (www.doxygen.org).  Then the documentation can be built by typing
 

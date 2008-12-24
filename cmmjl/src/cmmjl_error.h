@@ -1,7 +1,8 @@
 /** @file cmmjl_error.h
 	Error handling macros, functions, and codes.
 	@authors John MacCallum and Andy Schmeder, The Center for New Music and Audio Technologies, University of California, Berkeley.
-
+*/
+/*
 Copyright (c) 2008.  The Regents of the University of California (Regents).
 All Rights Reserved.
 
@@ -12,6 +13,9 @@ the above copyright notice, this paragraph and the following two paragraphs
 appear in all copies, modifications, and distributions.  Contact The Office of
 Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
 CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+
+Written by John MacCallum and Andy Schmeder, The Center for New Music and 
+Audio Technologies, University of California, Berkeley.
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
@@ -33,42 +37,52 @@ CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
 #include "ext.h"
 
 #ifndef PINFO
+/** Print info--functions like post, but prepends the object name to the string.
+	@param	str	printf-style format string
+	@param 	...	arguments to be substituted into the string.
+*/
 #define PINFO(str, args...) post(NAME ": " str, ##args)
 #endif
 
 #ifndef PERROR
+/** Print an error string with the filename and line number where the error occured.  Has the same signature as post() or printf().
+	@param	str	printf-style format string
+	@param  ...	arguments to be substituted into the string.
+*/
 #define PERROR(str, args...) error(NAME ": ERROR at %s:%d: " str, __FILE__, __LINE__, ##args)
 #endif
 
 #ifdef DEBUG
 #ifndef PDEBUG
+/** Print debugging info--functions like post, but prepends the object name to the string.
+	@param	str	printf-style format string
+	@param 	...	arguments to be substituted into the string.
+*/
 #define PDEBUG(str, args...) post(NAME ": " str, ##args)
 #endif
 #else
 #ifndef PDEBUG
+/** Debugging is disabled--this does nothing. */
 #define PDEBUG(str, args...)
 #endif
 #endif
 
-#ifndef CMMJL_PINFO
-#define CMMJL_PINFO(str, args...) post("cmmjl: " str, ##args)
-#endif
-
-#ifndef CMMJL_PERROR
-#define CMMJL_PERROR(str, args...) error("cmmjl: ERROR at %s:%d: " str, __FILE__, __LINE__, ##args)
-#endif
-
 #ifdef CMMJL_DEBUG
 #ifndef CMMJL_PDEBUG
+/** Print debugging info.  Exactly like PDEBUG, but for internal use in debugging the library.
+	@param	str	printf-style format string
+	@param 	...	arguments to be substituted into the string.
+*/
 #define CMMJL_PDEBUG(str, args...) post("cmmjl: " str, ##args)
 #endif
 #else
 #ifndef CMMJL_PDEBUG
+/** Debugging is disabled--this does nothing. */
 #define CMMJL_PDEBUG(str, args...)
 #endif
 #endif
 
-enum{
+typedef enum _cmmjl_error{
 	CMMJL_SUCCESS = 0,
 	CMMJL_END,
 
@@ -86,9 +100,9 @@ enum{
 
 	CMMJL_SDIF_SUCCESS = 0x10000,
 	CMMJL_SDIF_END
-};
+} t_cmmjl_error;
 
-typedef int t_cmmjl_error;
+//typedef int t_cmmjl_error;
 
 char *cmmjl_error_getString(t_cmmjl_error e);
 
