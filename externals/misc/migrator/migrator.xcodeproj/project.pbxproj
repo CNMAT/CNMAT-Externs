@@ -213,7 +213,6 @@
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -255,10 +254,16 @@
 				HEADER_SEARCH_PATHS = (
 					"../../../c74support/max-includes",
 					../../../../lib/gsl/include,
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../utility-library/CNMAT_MMJ/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = ../../externals;
-				LIBRARY_SEARCH_PATHS = ../../../../lib/gsl/lib;
+				LIBRARY_SEARCH_PATHS = (
+					../../../../lib/gsl/lib,
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../utility-library/CNMAT_MMJ/lib\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";

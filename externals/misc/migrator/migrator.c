@@ -47,7 +47,11 @@ VERSION 1.1.3: SDIF support fixed.
 
 #include "version.h"
 #include "ext.h"
+#include "ext_obex.h"
+#include "commonsyms.h"
 #include "version.c"
+#include "CNMAT_MMJ_common.h"
+
 #include "math.h"
 #ifdef USE_GSL
 	#include <gsl/gsl_rng.h>
@@ -88,6 +92,7 @@ typedef struct _partialInfo{
 typedef struct _mig
 {
 	t_object m_ob;
+	void *obex;
 	long m_in0;
 	void *m_out1;
 	void *m_out2;
@@ -134,7 +139,7 @@ typedef struct _mig
 
 void *mig_class;
 
-void *mig_new(double var, long nOsc, double oscamp);
+void *mig_new(t_symbol *sym, short argc, t_atom *argv);
 void mig_free(t_mig *x);
 void mig_assist(t_mig *x, void *b, long m, long a, char *s);
 
@@ -193,10 +198,31 @@ static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
 
 int main(void)
 {
-	setup((t_messlist **)&mig_class, (method)mig_new, (method)mig_free, (short)sizeof(t_mig), 0L, A_DEFFLOAT, A_DEFLONG, A_DEFFLOAT, 0); 
-	
-	version(0);
+	//setup((t_messlist **)&mig_class, (method)mig_new, (method)mig_free, (short)sizeof(t_mig), 0L, A_DEFFLOAT, A_DEFLONG, A_DEFFLOAT, 0); 
+	t_class *c = class_new("migrator", (method)mig_new, (method)mig_free, sizeof(t_mig), (method)0L, A_GIMME, 0); 
+	class_obexoffset_set(c, calcoffset(t_mig, obex)); 
+	common_symbols_init();
 
+	class_addmethod(c, (method)version, "version", 0);
+	class_addmethod(c, (method)mig_bang, "bang", 0);
+	class_addmethod(c, (method)mig_int, "int", 0);
+	class_addmethod(c, (method)mig_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)mig_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)mig_resmod, "resmod", A_GIMME, 0);
+	class_addmethod(c, (method)mig_nOsc, "nOsc", A_LONG, 0);
+	class_addmethod(c, (method)mig_nOsc_smooth, "nOsc_smooth", A_LONG, 0);
+	class_addmethod(c, (method)mig_stdev, "stdev", A_FLOAT, 0);
+	class_addmethod(c, (method)mig_var, "var", A_FLOAT, 0);
+	class_addmethod(c, (method)mig_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)mig_fade, "fade", A_LONG, 0);
+	class_addmethod(c, (method)mig_tinterval, "time_interval", A_FLOAT, 0);
+	class_addmethod(c, (method)mig_oscamp, "oscamp", A_FLOAT, 0);
+	class_addmethod(c, (method)mig_outputType, "output", A_LONG, 0);
+	class_addmethod(c, (method)tellmeeverything, "tellmeeverything", 0L, 0);
+
+	CNMAT_MMJ_common_init(c);
+
+	/*
 	addmess((method) version, "version", 0);
 	addbang((method)mig_bang);
 	addint((method)mig_int);
@@ -213,11 +239,16 @@ int main(void)
 	addmess((method)mig_oscamp, "oscamp", A_FLOAT, 0);
 	addmess((method)mig_outputType, "output", A_LONG, 0);
 	addmess((method)tellmeeverything, "tellmeeverything", 0L, 0);
+	*/
 #ifdef MIG_ENABLE_SDIF
+	class_addmethod(c, (method)mig_setSDIFbuffer, "set", A_SYM, 0);
+	class_addmethod(c, (method)mig_SDIFtime, "SDIFtime", A_FLOAT, 0);
+	class_addmethod(c, (method)mig_autostdev, "autostdev", A_LONG, 0);
+	/*
 	addmess((method)mig_setSDIFbuffer, "set", A_SYM, 0);
 	addmess((method)mig_SDIFtime, "SDIFtime", A_FLOAT, 0);
 	addmess((method)mig_autostdev, "autostdev", A_LONG, 0);
-
+	*/
 	SDIFresult r;
 	
 	if (r = SDIF_Init()) {
@@ -246,16 +277,20 @@ int main(void)
 	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
-#endif		
+#endif	
+	class_register(CLASS_BOX, c);
+	mig_class = c;
+	version(0);
+
 	return 0;
 }
 
-void *mig_new(double var, long nOsc, double oscamp)
-{
+void *mig_new(t_symbol *sym, short argc, t_atom *argv){//(double var, long nOsc, double oscamp)
 	t_mig *x;
 	int i = 0;
 
-	x = (t_mig *)newobject(mig_class); // create a new instance of this object
+	//x = (t_mig *)newobject(mig_class); // create a new instance of this object
+	x = (t_mig *)object_alloc(mig_class);
 	
 	x->m_out4 = bangout(x);
 	x->m_out3 = intout(x);
@@ -266,11 +301,23 @@ void *mig_new(double var, long nOsc, double oscamp)
 	x->m_waitingToChangeNumOsc[0] = 0;
 	x->m_waitingToChangeNumOsc[1] = 0;
 	//x->m_manCounter = 0;
-	
-	if(nOsc)
-		x->m_nOsc = (long)nOsc;
-	else
-		x->m_nOsc = 100;
+
+	x->m_stdev = 0.0;
+	x->m_nOsc = 100;
+	x->m_oscamp = 0.03;
+
+	if(argc > 0){
+		if(argv[0].a_type == A_FLOAT) x->m_stdev = argv[0].a_w.w_float;
+		else x->m_stdev = (float)(argv[0].a_w.w_long);
+	}
+	if(argc > 1){
+		if(argv[1].a_type == A_FLOAT) x->m_nOsc = (int)(argv[1].a_w.w_float);
+		else x->m_nOsc = argv[1].a_w.w_long;
+	}
+	if(argc > 2){
+		if(argv[2].a_type == A_FLOAT) x->m_oscamp = argv[2].a_w.w_float;
+		else x->m_oscamp = (float)(argv[2].a_w.w_long);
+	}
 	
 	x->m_arrayOut = (t_atom *)calloc((int)x->m_nOsc * 2, sizeof(t_atom));
 	x->m_arrayIn = (t_atom *)calloc(10, sizeof(t_atom));
@@ -286,13 +333,7 @@ void *mig_new(double var, long nOsc, double oscamp)
 	x->m_forcefeed_clock1 = clock_new(x, (method)forcefeed_change);
 	x->m_forcefeed_clock2 = clock_new(x, (method)forcefeed_in);
 	x->m_tinterval = 25.0; //ms
-	
-	if(oscamp) 
-		x->m_oscamp = oscamp;
-	else 
-		x->m_oscamp = 0.03;
-	
-	x->m_stdev = var;
+
 	x->m_fade = 1;
 	x->m_on = 0;
 	x->m_outputType = 0;

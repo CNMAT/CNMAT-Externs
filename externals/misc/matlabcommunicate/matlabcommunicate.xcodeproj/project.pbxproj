@@ -7,21 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		122C47EF0ED57662003F92D4 /* libeng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 122C47EE0ED57662003F92D4 /* libeng.dylib */; };
+		122C47F10ED57682003F92D4 /* libmx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 122C47F00ED57682003F92D4 /* libmx.dylib */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		BE7400560A81354E002BA208 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE7400550A81354E002BA208 /* MaxAPI.framework */; };
 		C9D7E7500D47FA8600BC56BA /* matlabcommunicate.c in Sources */ = {isa = PBXBuildFile; fileRef = C9D7E74F0D47FA8600BC56BA /* matlabcommunicate.c */; };
-		C9D7E83C0D47FCC400BC56BA /* libeng.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D7E83B0D47FCC400BC56BA /* libeng.dylib */; };
-		C9D7E83E0D47FCD600BC56BA /* libmx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D7E83D0D47FCD600BC56BA /* libmx.dylib */; };
 		C9D7E8570D47FE2900BC56BA /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D7E8560D47FE2900BC56BA /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		122C47EE0ED57662003F92D4 /* libeng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libeng.dylib; path = /Applications/MATLAB_R2008a/bin/maci/libeng.dylib; sourceTree = "<absolute>"; };
+		122C47F00ED57682003F92D4 /* libmx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmx.dylib; path = /Applications/MATLAB_R2008a/bin/maci/libmx.dylib; sourceTree = "<absolute>"; };
 		BE7400550A81354E002BA208 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		C9D7E74F0D47FA8600BC56BA /* matlabcommunicate.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = matlabcommunicate.c; sourceTree = "<group>"; };
 		C9D7E7510D47FA9E00BC56BA /* matlabcommunicate.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = matlabcommunicate.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		C9D7E83B0D47FCC400BC56BA /* libeng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libeng.dylib; path = /Applications/MATLAB_R2007b/bin/maci/libeng.dylib; sourceTree = "<absolute>"; };
-		C9D7E83D0D47FCD600BC56BA /* libmx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmx.dylib; path = /Applications/MATLAB_R2007b/bin/maci/libmx.dylib; sourceTree = "<absolute>"; };
 		C9D7E8560D47FE2900BC56BA /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/UB-SDK/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -32,9 +32,9 @@
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
 				BE7400560A81354E002BA208 /* MaxAPI.framework in Frameworks */,
-				C9D7E83C0D47FCC400BC56BA /* libeng.dylib in Frameworks */,
-				C9D7E83E0D47FCD600BC56BA /* libmx.dylib in Frameworks */,
 				C9D7E8570D47FE2900BC56BA /* MaxAudioAPI.framework in Frameworks */,
+				122C47EF0ED57662003F92D4 /* libeng.dylib in Frameworks */,
+				122C47F10ED57682003F92D4 /* libmx.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,8 +55,8 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				C9D7E83B0D47FCC400BC56BA /* libeng.dylib */,
-				C9D7E83D0D47FCD600BC56BA /* libmx.dylib */,
+				122C47EE0ED57662003F92D4 /* libeng.dylib */,
+				122C47F00ED57682003F92D4 /* libmx.dylib */,
 				C9D7E8560D47FE2900BC56BA /* MaxAudioAPI.framework */,
 				BE7400550A81354E002BA208 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
@@ -126,9 +126,11 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "matlabcommunicate" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* matlabcommunicate */,
 			);
@@ -202,10 +204,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_APPS_DIR)/MATLAB_R2007b/bin/maci\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_APPS_DIR)/MATLAB_R2008a/bin/maci\"";
 				LIBRARY_STYLE = Bundle;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -226,20 +229,15 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(NATIVE_ARCH)";
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -248,23 +246,24 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
+					/Applications/MATLAB_R2008a/extern/include,
 					"../../../c74support/max-includes",
 					"../../../c74support/msp-includes",
-					/Applications/MATLAB_R2007b/extern/include,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					/Applications/MATLAB_R2008a/bin/maci,
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_APPS_DIR)/MATLAB_R2007b/bin/maci\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
+				PRELINK_LIBS = /Applications/MATLAB_R2008a/bin/maci/libmx.dylib;
 				PRODUCT_NAME = matlabcommunicate;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
@@ -309,8 +308,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_APPS_DIR)/MATLAB_R2007b/bin/maci\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_APPS_DIR)/MATLAB_R2008a/bin/maci\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";

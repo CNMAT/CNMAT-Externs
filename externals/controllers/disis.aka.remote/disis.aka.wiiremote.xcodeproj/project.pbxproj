@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12239B420EF729EB00D1586A /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12239B410EF729EB00D1586A /* MaxAPI.framework */; };
 		4123BC940B2D8FEB00E6834C /* wiiremote.c in Sources */ = {isa = PBXBuildFile; fileRef = 4123BC930B2D8FEB00E6834C /* wiiremote.c */; };
 		4123BC960B2D8FF500E6834C /* wiiremote.h in Headers */ = {isa = PBXBuildFile; fileRef = 4123BC950B2D8FF500E6834C /* wiiremote.h */; };
 		4198157A0B28442C0053E59F /* aka.wiiremote.c in Sources */ = {isa = PBXBuildFile; fileRef = 419815790B28442C0053E59F /* aka.wiiremote.c */; };
-		705DF09F0EF0738A004A08CC /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 705DF09E0EF0738A004A08CC /* MaxAPI.framework */; };
 		709C3DD80EF071ED00F718A8 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70945B1C0EF06DD600BF848D /* Carbon.framework */; };
 		709C3DD90EF071F600F718A8 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70945B210EF06DE600BF848D /* IOBluetooth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		12239B410EF729EB00D1586A /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		185646990EE71C51002ABE5C /* disis.aka.wiiremote.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = disis.aka.wiiremote.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		4123BC930B2D8FEB00E6834C /* wiiremote.c */ = {isa = PBXFileReference; fileEncoding = 0; lastKnownFileType = sourcecode.c.c; path = wiiremote.c; sourceTree = "<group>"; };
 		4123BC950B2D8FF500E6834C /* wiiremote.h */ = {isa = PBXFileReference; fileEncoding = 0; lastKnownFileType = sourcecode.c.h; path = wiiremote.h; sourceTree = "<group>"; };
 		419815790B28442C0053E59F /* aka.wiiremote.c */ = {isa = PBXFileReference; fileEncoding = 0; indentWidth = 4; lastKnownFileType = sourcecode.c.c; path = aka.wiiremote.c; sourceTree = "<group>"; tabWidth = 4; };
-		705DF09E0EF0738A004A08CC /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "/Applications/MaxSDK-5.0.6/c74support/max-includes/MaxAPI.framework"; sourceTree = "<absolute>"; };
 		70945B1C0EF06DD600BF848D /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		70945B210EF06DE600BF848D /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -32,7 +32,7 @@
 			files = (
 				709C3DD80EF071ED00F718A8 /* Carbon.framework in Frameworks */,
 				709C3DD90EF071F600F718A8 /* IOBluetooth.framework in Frameworks */,
-				705DF09F0EF0738A004A08CC /* MaxAPI.framework in Frameworks */,
+				12239B420EF729EB00D1586A /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,7 +48,7 @@
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 				70945B1C0EF06DD600BF848D /* Carbon.framework */,
 				70945B210EF06DE600BF848D /* IOBluetooth.framework */,
-				705DF09E0EF0738A004A08CC /* MaxAPI.framework */,
+				12239B410EF729EB00D1586A /* MaxAPI.framework */,
 			);
 			name = maximum;
 			sourceTree = "<group>";
@@ -180,8 +180,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_APPS_DIR)/MaxSDK-5.0.6/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -220,20 +224,21 @@
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_APPS_DIR)/MaxSDK-5.0.6/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "../../c74support/max-includes";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -242,7 +247,7 @@
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = disis.aka.wiiremote;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -264,8 +269,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_APPS_DIR)/MaxSDK-5.0.6/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

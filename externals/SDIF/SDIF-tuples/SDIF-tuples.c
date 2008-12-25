@@ -191,8 +191,8 @@ int main(int dummy, char **dummy2) {
 	c = class_new("SDIF-tuples", (method)SDIFtuples_new, (method)SDIFtuples_free, sizeof(SDIFtuples),
 			       (method)0L, A_GIMME, 0);
 
-	class_obexoffset_set(c, calcoffset(SDIFtuples, obex));
 	common_symbols_init();
+	class_obexoffset_set(c, calcoffset(SDIFtuples, obex));
 	
 	/* bind my methods to symbols */
 	class_addmethod(c, (method)version, "version", 0);
@@ -219,8 +219,9 @@ int main(int dummy, char **dummy2) {
 	class_addmethod(c, (method)object_obex_dumpout, "dumpout", A_CANT, 0); 
 	class_addmethod(c, (method)object_obex_quickref, "quickref", A_CANT, 0); 
 
-	attr = attr_offset_new("buffer_name", _sym_symbol, attrflags, (method)0L, (method)0L, calcoffset(SDIFtuples, t_b.t_bufferSym));
-	class_addattr(c, attr);
+	//attr = attr_offset_new("buffer_name", _sym_symbol, attrflags, (method)0L, (method)0L, calcoffset(SDIFtuples, t_b.t_bufferSym));
+	//class_addattr(c, attr);
+	CLASS_ATTR_SYM(c, "buffer_name", 0, SDIFtuples, t_b.t_bufferSym);
 	attr = attr_offset_new("reltime", _sym_long, attrflags, (method)0L, (method)0L, calcoffset(SDIFtuples, t_reltime));
 	class_addattr(c, attr);
 	attr = attr_offset_array_new("matrix", 
@@ -424,8 +425,8 @@ static void SDIFtuples_matrix(SDIFtuples *x, Symbol *matrixType) {
 		}
 		*/
   		//SDIF_Copy4Bytes(x->t_matrixType, fr->header.frameType);
-		char *mt = CNMAT_MMJ_SDIF_getMainMatrixType(&(x->t_b));
-  		SDIF_Copy4Bytes(x->t_matrixType, mt);
+		CNMAT_MMJ_SDIF_getMainMatrixType(&(x->t_b), x->t_matrixType);
+  		//SDIF_Copy4Bytes(x->t_matrixType, mt);
 	} else {		
 		//Here's where I could implement user matrix names that aren't just the 4 bytes. 
 		x->t_mainMatrix = FALSE;
