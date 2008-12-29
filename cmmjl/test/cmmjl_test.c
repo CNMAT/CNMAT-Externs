@@ -1,4 +1,8 @@
+//#define DEBUG
+
+#include "version.h"
 #include "ext.h"
+#include "version.c"
 #include "cmmjl/cmmjl.h"
 #include "cmmjl/cmmjl_commonsymbols.h"
 #include "cmmjl/cmmjl_error.h"
@@ -19,7 +23,7 @@ void test_fullpacket_callback(void *x, t_symbol *sym, int argc, t_atom *argv);
 int main(int argc, char **argv){
 	setup((t_messlist **)&test_class, (method)test_new, (method)test_free, (short)sizeof(t_test), 0L, 0);
 	addmess((method)test_fullpacket, "FullPacket", A_LONG, A_LONG, 0);
-
+	
 	return 0;
 }
 
@@ -37,6 +41,7 @@ void test_free(t_test *x){
 }
 
 void test_fullpacket(t_test *x, long len, long ptr){
+	PDEBUG("len = %d, ptr = %d", len, ptr);
 	t_cmmjl_error e = cmmjl_osc_parseFullPacket(x, (char *)ptr, len, true, test_fullpacket_callback);
 }
 
