@@ -26,6 +26,7 @@ Audio Technologies, University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+#include "cmmjl.h"
 #include "cmmjl_osc.h"
 #include "cmmjl_commonsymbols.h"
 #include "cmmjl_error.h"
@@ -46,13 +47,15 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 	int t;
 
 	if ((n % 4) != 0) {
-		//post("OTUDP: OpenSoundControl packet size (%d) not a multiple of 4 bytes: dropping", n);
-		return CMMJL_OSC_PACKET_NOT_MULTIPLE_OF_4BYTES;
+		CMMJL_ERROR(CMMJL_OSC_ENO4BYTE, 
+			"packet size (%d) is not a multiple of 4 bytes: dropping", n);
+		return CMMJL_OSC_ENO4BYTE;
 	}
     
-	if(n < 0 || n == 0) {
-		//post("OTUDP: OpenSoundControl bad n (%d)", n);
-		return CMMJL_OSC_BAD_PACKET_SIZE;
+	if(n <= 0) {
+		CMMJL_ERROR(CMMJL_OSC_EUNDRFLW,
+			    "bad OSC packet length: %d", n);
+		return CMMJL_OSC_EUNDRFLW;
 	}
 
 	/* your object is passing n in, so it should check this before the function is called.
@@ -63,22 +66,22 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 	*/
     
 	if(buf == NULL) {
-		//post("OTUDP: OpenSoundControl got null buffer");
-		return CMMJL_OSC_NULL_BUFFER;
+		CMMJL_ERROR(CMMJL_ENULLPTR, "OSC packet pointer is NULL");
+		return CMMJL_ENULLPTR;
 	}
              
 	if ((n >= 8) && (strncmp(buf, "#bundle", 8) == 0)) {
 		/* This is a bundle message. */
 		if (n < 16) {
-			//post("OTUDP: Bundle message too small (%d bytes) for time tag", n);
-			return CMMJL_OSC_NO_TIME_TAG;
+			CMMJL_ERROR(CMMJL_OSC_EBADBNDL, 
+				    "bundle is too small (%d bytes) for time tag", n);
+			return CMMJL_OSC_EBADBNDL;
 		}
 
 		if (topLevel) {
 			Atom timeTagLongs[2];
 			SETLONG(&timeTagLongs[0], ntohl(*((long *)(buf+8))));
 			SETLONG(&timeTagLongs[1], ntohl(*((long *)(buf+12))));
-			//outlet_anything(x->O_outlet3, ps_OSCTimeTag, 2, timeTagLongs);
 			cbk(x, _OSCTimeTag, 2, timeTagLongs);
 		}
 
@@ -86,34 +89,38 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 		while((i+sizeof(long)) < n) { // next operation will take four bytes -aws
 			size = ntohl(*((long *) (buf + i)));
 			if ((size % 4) != 0) {
-				//post("OTUDP: Bad size count %d in bundle (not a multiple of 4)", size);
-				return CMMJL_OSC_BAD_SIZE_COUNT_IN_BUNDLE;
+				CMMJL_ERROR(CMMJL_OSC_EBNDLNO4, 
+					    "bundle size (%d) is not a multiple of 4", size);
+				return CMMJL_OSC_EBNDLNO4;
 			}
 			if ((size + i + 4) > n) {
-				//post("OTUDP: Bad size count %d in bundle (only %d bytes left in entire bundle)", size, n-i-4);
-				return CMMJL_OSC_BAD_SIZE_COUNT_IN_BUNDLE;
+				CMMJL_ERROR(CMMJL_OSC_EBADBNDL, 
+					    "bad OSC bundle size %d, only %d bytes left in entire bundle", 
+					    size, n - i - 4);
+				return CMMJL_OSC_EBADBNDL;
 			}
 	    
 			/* Recursively handle element of bundle */
 			t = cmmjl_osc_parseFullPacket(x, buf+i+4, size, false, cbk);
 			if(t != 0) {
-				//post("OTUDP: Error in encapsulated message; bailing out on bundle");
-				return CMMJL_OSC_ERROR_IN_ENCAPSULATED_MESSAGE;
+				CMMJL_ERROR(CMMJL_FAILURE, 
+					    "recursive processing of OSC packet failed.  Bailing out.");
+				return CMMJL_FAILURE;
 			}
 			i += 4 + size;
 		}
 		if (i != n) {
-			//post("OTUDP: Failed to process entire packet (%d of %d)", i, n);
-			return CMMJL_OSC_FAILED_TO_PROCESS_ENTIRE_PACKET;
+			CMMJL_ERROR(CMMJL_FAILURE, 
+				    "failed to process entire packet (%d of %d bytes)", i, n);
+			return CMMJL_FAILURE;
 		}
 	} else {
 		/* This is not a bundle message */
-
 		messageName = buf;
 		args = cmmjl_osc_dataAfterAlignedString(messageName, buf+n);
 		if (args == 0) {
-		   	//post("OTUDP: Bad message name string");
-			return CMMJL_OSC_BAD_MESSAGE_NAME_STRING;
+			CMMJL_ERROR(CMMJL_OSC_EBADMSG, "bad message name string");
+			return CMMJL_OSC_EBADMSG;
 		}
 		
 		messageLen = args-messageName;	    
@@ -124,7 +131,7 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 		//outlet_bang(x->O_outlet1);
 	}
     
-	return CMMJL_OSC_SUCCESS;
+	return CMMJL_SUCCESS;
 	/*
  ParseOSCPacket_Error:
     
@@ -137,19 +144,18 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 }
 
 t_cmmjl_error cmmjl_osc_formatMessage(void *x, 
-					     char *address, 
-					     void *v, 
-					     long n, 
-					     void (*cbk)(void *x, 
-							 t_symbol *msg, 
-							 int argc, 
-							 t_atom *argv)) {
+				      char *address, 
+				      void *v, 
+				      long n, 
+				      void (*cbk)(void *x, t_symbol *msg, int argc, t_atom *argv))
+{
     int i, j, k;
     float *floats;
     long *ints;
     char *chars;
     char *string, *nextString, *typeTags, *thisType;
-    unsigned char *p;
+    //unsigned char *p;
+    char *p;
     Symbol *addressSymbol, *argSymbol;
 
     // get rid of me and just use the length passed to the function

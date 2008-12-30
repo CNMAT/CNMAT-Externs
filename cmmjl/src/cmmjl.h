@@ -39,6 +39,11 @@ Audio Technologies, University of California, Berkeley.
 /** Initializes the library.  This must be called before the library is used.  Currently, it initializes the symbol table.
 	@returns	An error code or 0 on success.
  */
-t_cmmjl_error cmmjl_init(void);
+
+#ifndef NAME
+#define NAME "cmmjl"
+#endif
+
+t_cmmjl_error *cmmjl_init(void);
 
 #endif

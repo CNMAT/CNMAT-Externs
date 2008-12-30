@@ -34,7 +34,7 @@ print(FOUT "#include \"ext.h\"\n\n");
 
 print(FOUT "typedef struct _cmmjl_common_symols_table{\n");
 foreach(<FIN>) {
-    if($_ =~ /^\s\"(.*)\",?$/){
+    if($_ =~ /^\s*\"(.*)\",?$/){
 	push(@symbols, $1);
 	print(FOUT "\tt_symbol *s_$1;\n");
     }

@@ -35,6 +35,22 @@ Audio Technologies, University of California, Berkeley.
 #define __CMMJL_ERROR_H__
 
 #include "ext.h"
+#include <libgen.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+#ifndef __CMMJL_ERRNO_H__
+#include "cmmjl_errno.h"
+#endif
+
+#ifndef FILE
+#define FILE basename(__FILE__)
+#endif
+
+#ifndef CMMJL_ERROR
+#define CMMJL_ERROR(code, reason_fmt, args...) \
+	cmmjl_error(NAME, FILE, __FUNCTION__, __LINE__, code, reason_fmt, ##args) 
+#endif
 
 #ifndef PINFO
 /** Print info--functions like post, but prepends the object name to the string.
@@ -49,7 +65,7 @@ Audio Technologies, University of California, Berkeley.
 	@param	str	printf-style format string
 	@param  ...	arguments to be substituted into the string.
 */
-#define PERROR(str, args...) error(NAME ": ERROR at %s:%d: " str, __FILE__, __LINE__, ##args)
+#define PERROR(str, args...) error(NAME ": ERROR at %s:%d: " str, FILE, __LINE__, ##args)
 #endif
 
 #ifdef DEBUG
@@ -82,28 +98,26 @@ Audio Technologies, University of California, Berkeley.
 #endif
 #endif
 
-typedef enum _cmmjl_error{
-	CMMJL_SUCCESS = 0,
-	CMMJL_END,
+void (*cmmjl_error_callback)(const char *objname, 
+			     const char *filename, 
+			     const char *function, 
+			     int line, 
+			     int code, 
+			     char *st);
+void cmmjl_default_error_handler(const char *objname, 
+				 const char *filename, 
+				 const char *function, 
+				 int line, 
+				 int code, 
+				 char *st);
+void cmmjl_error(const char *objname, 
+		 const char *filename, 
+		 const char *function, 
+		 int line, 
+		 int code, 
+		 const char *st,
+		 ...);
 
-	CMMJL_OSC_SUCCESS = 0x100,
-	CMMJL_OSC_PACKET_NOT_MULTIPLE_OF_4BYTES = 0x101,
-	CMMJL_OSC_BAD_PACKET_SIZE = 0x102,
-	CMMJL_OSC_BAD_BUFFER_SIZE = 0x103,
-	CMMJL_OSC_NULL_BUFFER = 0x104,
-	CMMJL_OSC_NO_TIME_TAG = 0x105,
-	CMMJL_OSC_BAD_SIZE_COUNT_IN_BUNDLE = 0x106,
-	CMMJL_OSC_ERROR_IN_ENCAPSULATED_MESSAGE = 0x107,
-	CMMJL_OSC_FAILED_TO_PROCESS_ENTIRE_PACKET = 0x108,
-	CMMJL_OSC_BAD_MESSAGE_NAME_STRING = 0x109,
-	CMMJL_OSC_END,
-
-	CMMJL_SDIF_SUCCESS = 0x10000,
-	CMMJL_SDIF_END
-} t_cmmjl_error;
-
-//typedef int t_cmmjl_error;
-
-char *cmmjl_error_getString(t_cmmjl_error e);
+const char *cmmjl_strerror(const int cmmjl_errno); /* defined in cmmjl_strerror.c */
 
 #endif
