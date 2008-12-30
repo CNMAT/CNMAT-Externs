@@ -26,29 +26,39 @@ Audio Technologies, University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
  */
 
+#include "cmmjl_errno.h"
 #include "cmmjl_error.h"
 
-static char *cmmjl_error_strings[] = {
-	// Library error strings
-	"Operation was successful",
-	"Illegal error code",
-	// OSC error strings
-	"Operation was successful",
-	"OSC packet size is not a multiple of 4 bytes",
-	"Bad OSC Packet size",
-	"Requested buffer position exceeds buffer size",
-	"Buffer pointer is NULL",
-	"Bundle message is too small for a time tag",
-	"Bad size count in bundle",
-	"Error in encapsulated message.  Recursive call to cnmat_osc_parseFullPacket() returned an error",
-	"Failed to process the entire OSC packet",
-	"Bad message name string",
-	"Illegal error code",
-	// SDIF error strings
-	"Operation was successful",
-	"Illegal error code"
-};
+void cmmjl_default_error_handler(const char *objname, 
+				 const char *filename, 
+				 const char *function, 
+				 int line, 
+				 int code, 
+				 char *st)
+{
+	error("%s: %s: %s: %d: %s (%d)", objname, filename, function, line, st, code);
+}
 
-char *cmmjl_error_getString(t_cmmjl_error e){
-	return cmmjl_error_strings[e];
+void cmmjl_no_error_handler(const char *objname,
+			    const char *filename,
+			    const char *function,
+			    int line,
+			    int code,
+			    char *str)
+{}
+
+void cmmjl_error(const char *objname, 
+		 const char *filename, 
+		 const char *function, 
+		 int line, 
+		 int code, 
+		 const char *st,
+		 ...)
+{
+	va_list ap;
+	va_start(ap, st);
+	char buf[256];
+	vsprintf(buf, st, ap);
+	va_end(ap);
+	cmmjl_error_callback(objname, filename, function, line, code, buf);
 }

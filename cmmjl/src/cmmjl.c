@@ -26,12 +26,14 @@ Audio Technologies, University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+#include "cmmjl_errno.h"
 #include "cmmjl_error.h"
 #include "cmmjl_commonsymbols.h"
 #include "cmmjl.h"
 
-t_cmmjl_error cmmjl_init(void){
+t_cmmjl_error *cmmjl_init(void){
 	cmmjl_common_symbols_init();
-	return CMMJL_SUCCESS;
+	cmmjl_error_callback = cmmjl_default_error_handler;
+	return NULL;
 }
 
