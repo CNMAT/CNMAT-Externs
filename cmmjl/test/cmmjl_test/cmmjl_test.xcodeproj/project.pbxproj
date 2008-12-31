@@ -8,17 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		12C23BA80F002EE80097EEB6 /* cmmjl_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 12C23BA70F002EE80097EEB6 /* cmmjl_test.c */; };
-		12C23BAA0F002EF40097EEB6 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C23BA90F002EF40097EEB6 /* MaxAPI.framework */; };
-		12C23BAC0F002EFD0097EEB6 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 12C23BAB0F002EFD0097EEB6 /* commonsyms.c */; };
+		12C8CCB50F09709B003BFA43 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C8CCB40F09709B003BFA43 /* MaxAPI.framework */; };
+		12C8CCF40F0970A9003BFA43 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 12C8CCF30F0970A9003BFA43 /* commonsyms.c */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		1257EEB60AE6A0C1007E4472 /* migrator.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = migrator.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		1257EEB60AE6A0C1007E4472 /* cmmjl_test.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cmmjl_test.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		12C23BA70F002EE80097EEB6 /* cmmjl_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmmjl_test.c; sourceTree = "<group>"; };
-		12C23BA90F002EF40097EEB6 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		12C23BAB0F002EFD0097EEB6 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
+		12C8CCB40F09709B003BFA43 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		12C8CCF30F0970A9003BFA43 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,7 +27,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				12C23BAA0F002EF40097EEB6 /* MaxAPI.framework in Frameworks */,
+				12C8CCB50F09709B003BFA43 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,7 +48,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				12C23BA90F002EF40097EEB6 /* MaxAPI.framework */,
+				12C8CCB40F09709B003BFA43 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -64,8 +64,8 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				12C8CCF30F0970A9003BFA43 /* commonsyms.c */,
 				12C23BA70F002EE80097EEB6 /* cmmjl_test.c */,
-				12C23BAB0F002EFD0097EEB6 /* commonsyms.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -73,7 +73,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1257EEB60AE6A0C1007E4472 /* migrator.mxo */,
+				1257EEB60AE6A0C1007E4472 /* cmmjl_test.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,7 +108,7 @@
 			name = cmmjl_test;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 1257EEB60AE6A0C1007E4472 /* migrator.mxo */;
+			productReference = 1257EEB60AE6A0C1007E4472 /* cmmjl_test.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -154,7 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				12C23BA80F002EE80097EEB6 /* cmmjl_test.c in Sources */,
-				12C23BAC0F002EFD0097EEB6 /* commonsyms.c in Sources */,
+				12C8CCF40F0970A9003BFA43 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,8 +172,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -221,13 +223,13 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -237,8 +239,8 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../include\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = ../../externals;
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../lib\"";
@@ -246,7 +248,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/../../lib/libcmmjl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../../../lib/libcmmjl.a\"";
 				PRODUCT_NAME = cmmjl_test;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SECTORDER_FLAGS = "";
@@ -270,8 +272,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
