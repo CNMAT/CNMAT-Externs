@@ -1,19 +1,15 @@
+/** 	@file cmmjl_sdif.h
+	Definitions of functions that can be used to access the contents of an SDIF-buffer object in Max/MSP.
+	@defgroup SDIF SDIF
+ @{
+ */
+
 #include "ext.h"
 #include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
 #include "sdif-util.h"
 #include "sdif-interp.h"
 #include "sdif-interp-implem.h"
 
-/** @file cmmjl_sdif.h
-	Definitions of functions that can be used to access the contents of an SDIF-buffer object in Max/MSP.
- */
-
-
-#ifdef DBL_MIN
-#define VERY_SMALL DBL_MIN
-#else 
-#define VERY_SMALL ((sdif_float64) - (DBL_MAX))
-#endif
 
 /** Struct containing all of the necessary data structures needed to access and manipulate the contents of an SDIF-buffer in Max/MSP. */
 typedef struct _cmmjl_sdif_buffer{
@@ -115,3 +111,5 @@ void PrintMatrixHeader(SDIF_MatrixHeader *mh);
 void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row);
 
 void verbose_error_reporting(Boolean b);
+
+/*@}*/

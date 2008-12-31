@@ -32,8 +32,9 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl_error.h"
 #include "OSC-client.h"
 
-#define CMMJL_OSC_STRING_ALIGN_PAD 4
-#define SMALLEST_POSITIVE_FLOAT 0.0000001
+void cmmjl_osc_fullPacket(void *x, long n, long ptr){
+	cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, cmmjl_post_gimme);
+}
 
 t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, 
 			      char *buf, 
@@ -309,7 +310,7 @@ t_cmmjl_error cmmjl_osc_formatMessage(void *x,
 				SETLONG(&args[numArgs], ntohl(ints[i]));
 			    i++;
 			} else if (floats[i] >= -1000.f && floats[i] <= 1000000.f &&
-				   (floats[i]<=0.0f || floats[i] >= SMALLEST_POSITIVE_FLOAT)) {
+				   (floats[i]<=0.0f || floats[i] >= __FLT_MIN__)) {
 			  // Pretend the 32 bits are an int so I can call ntohl()
 			  long bytesAsInt = ntohl(ints[i]);
 			  SETFLOAT(&args[numArgs], *((float *) (&bytesAsInt)));
@@ -411,4 +412,8 @@ Boolean cmmjl_osc_isNiceString(char *string, char *boundary)  {
     }
 
     return TRUE;
+}
+
+bool cmmjl_osc_isFinalPathSegment(char *path){
+	return !strcmp(dirname(path), "/");
 }

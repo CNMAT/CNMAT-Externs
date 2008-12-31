@@ -1,5 +1,5 @@
 /** @file cmmjl.h
-	Basic common functions and initialization.
+	Basic common functions, defines, and initialization.
 	@author John MacCallum
 */
 /*
@@ -36,14 +36,39 @@ Audio Technologies, University of California, Berkeley.
 #ifndef __CMMJL_H__
 #define __CMMJL_H__
 
-/** Initializes the library.  This must be called before the library is used.  Currently, it initializes the symbol table.
-	@returns	An error code or 0 on success.
- */
+#ifndef __FLT_MIN__
+#define __FLT_MIN__ 1.17549435e-38F
+#endif
+
+#ifndef __FLT_MAX__
+#define __FLT_MAX__ 3.40282347e+38F
+#endif
+
+#ifndef __DBL_MIN__
+#define __DBL_MIN__ 2.2250738585072014e-308
+#endif
+
+#ifndef __DBL_MAX__
+#define __DBL_MAX__ 1.7976931348623157e+308
+#endif
 
 #ifndef NAME
 #define NAME "cmmjl"
 #endif
 
+/** 	Initializes the library.  This must be called before the library is used.  
+
+	@returns	An error code or 0 on success.
+ */
 t_cmmjl_error *cmmjl_init(void);
+
+/**	Posts the arguments of an A_GIMME message
+
+	@param	x	The object.  This function posts the pointer address.
+	@param 	msg	The message.
+	@param 	argc	The number of arguments.
+	@param	argv	The arguments.
+*/
+void cmmjl_post_gimme(void *x, t_symbol *msg, int argc, t_atom *argv);
 
 #endif

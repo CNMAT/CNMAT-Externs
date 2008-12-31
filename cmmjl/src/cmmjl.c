@@ -37,3 +37,27 @@ t_cmmjl_error *cmmjl_init(void){
 	return NULL;
 }
 
+void cmmjl_post_gimme(void *x, t_symbol *msg, int argc, t_atom *argv){
+	int i;
+	t_atom a;
+	PINFO("x = %p", x);
+	PINFO("msg = %s", msg->s_name);
+	PINFO("argc = %d", argc);
+	PINFO("argv:");
+	for(i = 0; i < argc; i++){
+		a = argv[i];
+		switch(a.a_type){
+		case A_FLOAT:
+			PINFO("A_FLOAT: %f", a.a_w.w_float);
+			break;
+		case A_LONG:
+			PINFO("A_LONG: %d", a.a_w.w_long);
+			break;
+		case A_SYM:
+			PINFO("A_SYM: %s", a.a_w.w_sym->s_name);
+			break;
+		default:
+			CMMJL_ERROR(CMMJL_EBADTYPE, "Unknown type: %d", a.a_type);
+		}
+	}
+}
