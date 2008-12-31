@@ -180,7 +180,7 @@ SDIFmem_Matrix GetMatrix(cmmjl_sdif_buffer *b,
   
 	//  get the frame
 	if(!(f = (*(b->t_buffer->FrameLookup))(b->t_buffer, time, direction))) {
-		if ((*(b->t_buffer->FrameLookup))(b->t_buffer, (sdif_float64) VERY_SMALL, 1) == 0) {
+		if ((*(b->t_buffer->FrameLookup))(b->t_buffer, (sdif_float64) __DBL_MIN__, 1) == 0) {
 			//if (!x->t_complainedAboutEmptyBufferAlready) {
 			char buf[256];
 			sprintf(buf, "SDIF-buffer %s is empty", b->t_bufferSym->s_name);

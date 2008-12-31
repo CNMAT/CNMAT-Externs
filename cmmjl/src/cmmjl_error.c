@@ -29,14 +29,40 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl_errno.h"
 #include "cmmjl_error.h"
 
+void (*cmmjl_error_callback)(const char *objname, 
+				    const char *filename, 
+				    const char *function, 
+				    int line, 
+				    int code, 
+				    char *st);
+
+void cmmjl_error(const char *objname, 
+		 const char *filename, 
+		 const char *function, 
+		 int line, 
+		 int code, 
+		 const char *reason_fmt,
+		 ...)
+{
+	if(!cmmjl_error_callback){
+		return;
+	}
+	va_list ap;
+	va_start(ap, reason_fmt);
+	char buf[256];
+	vsprintf(buf, reason_fmt, ap);
+	va_end(ap);
+	cmmjl_error_callback(objname, filename, function, line, code, buf);
+}
+
 void cmmjl_default_error_handler(const char *objname, 
 				 const char *filename, 
 				 const char *function, 
 				 int line, 
 				 int code, 
-				 char *st)
+				 char *reason)
 {
-	error("%s: %s: %s: %d: %s (%d)", objname, filename, function, line, st, code);
+	error("%s: %s: %s: %d: %s (%d)", objname, filename, function, line, reason, code);
 }
 
 void cmmjl_no_error_handler(const char *objname,
@@ -44,21 +70,23 @@ void cmmjl_no_error_handler(const char *objname,
 			    const char *function,
 			    int line,
 			    int code,
-			    char *str)
+			    char *reason)
 {}
 
-void cmmjl_error(const char *objname, 
-		 const char *filename, 
-		 const char *function, 
-		 int line, 
-		 int code, 
-		 const char *st,
-		 ...)
+void cmmjl_set_error_handler(void (*cbk)(const char *objname,
+					    const char *filename,
+					    const char *function,
+					    int line,
+					    int code,
+					    char *reason))
 {
-	va_list ap;
-	va_start(ap, st);
-	char buf[256];
-	vsprintf(buf, st, ap);
-	va_end(ap);
-	cmmjl_error_callback(objname, filename, function, line, code, buf);
+	cmmjl_error_callback = cbk;
+}
+
+void cmmjl_set_default_error_handler(void){
+	cmmjl_error_callback = cmmjl_default_error_handler;
+}
+
+void cmmjl_set_no_error_handler(void){
+	cmmjl_error_callback = cmmjl_no_error_handler;
 }

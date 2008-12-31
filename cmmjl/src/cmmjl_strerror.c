@@ -1,13 +1,15 @@
 #include "cmmjl_error.h"
 
-const char *cmmjl_strerror(const int cmmjl_errno){
-	switch(cmmjl_errno){
+const char *cmmjl_strerror(const t_cmmjl_error errno){
+	switch(errno){
 	case CMMJL_SUCCESS:
 		return "success";
 	case CMMJL_FAILURE:
 		return "failure";
 	case CMMJL_ENULLPTR:
 		return "NULL pointer";
+	case CMMJL_EBADTYPE:
+		return "unknown data type";
 	case CMMJL_OSC_ENO4BYTE:
 		return "OSC packet is not a multiple of 4 bytes long";
 	case CMMJL_OSC_EUNDRFLW:
