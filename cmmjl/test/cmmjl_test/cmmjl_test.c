@@ -43,10 +43,16 @@ int main(int argc, char **argv){
 	/* Initialize error reporter, symbol table, etc. */
 	cmmjl_init();
 	/* Accept the FullPacket message and set the callback */
-	CMMJL_ACCEPT_FULLPACKET(c, test_fullpacket);
-	
+	//CMMJL_ACCEPT_FULLPACKET(c, test_fullpacket);
+
+	/* Or pass NULL in as the callback to use the default which will attempt to 
+	 send the OSC message received to this object as a message (function call). 
+	 */
+	CMMJL_ACCEPT_FULLPACKET(c, NULL);
 	int bloo = 21;
 
+	post("%llx", CMMJL_EMASK_OSC_ALL);
+	post("%llx", CMMJL_EMASK_ALL);
 	/* report an error like this */
 	CMMJL_ERROR(19, "some foo screwed up here making bar = %d", bloo);
 

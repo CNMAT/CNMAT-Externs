@@ -1,7 +1,7 @@
-/** @file cmmjl_error.h
+/** 	@file cmmjl_error.h
 	Error handling macros and functions.
 	@authors John MacCallum and Andy Schmeder, The Center for New Music and Audio Technologies, University of California, Berkeley.
-	\defgroup Error Error reporting
+	@addtogroup	Error
 @{
 */
 /*
@@ -38,17 +38,32 @@ Audio Technologies, University of California, Berkeley.
 
 #include "ext.h"
 #include <libgen.h>
-#include <stdarg.h>
-#include <stdio.h>
-
-#ifndef __CMMJL_ERRNO_H__
 #include "cmmjl_errno.h"
-#endif
+
+/** @name Error masks */
+/*@{ */
+#define	CMMJL_EMASK_GEN 0xFull /**< General errors */
+#define	CMMJL_EMASK_GEN_V 0xF0ull /**< Verbose general errors */
+#define	CMMJL_EMASK_GEN_ALL CMMJL_EMASK_GEN | CMMJL_EMASK_GEN_V /**< All general errors */
+#define	CMMJL_EMASK_OSC 0xF00ull /**< OSC errors */
+#define	CMMJL_EMASK_OSC_V 0xF000ull /**< Verbose OSC errors */
+#define	CMMJL_EMASK_OSC_ALL CMMJL_EMASK_OSC | CMMJL_EMASK_OSC_V /**< All OSC errors */
+#define	CMMJL_EMASK_SDIF 0xF0000ull /**< SDIF errors */
+#define	CMMJL_EMASK_SDIF_V 0xF00000ull /**< Verbose SDIF errors */
+#define	CMMJL_EMASK_SDIF_ALL CMMJL_EMASK_SDIF | CMMJL_EMASK_SDIF_V /**< All SDIF errors */
+#define CMMJL_EMASK_OBJ 0xF00000000000000ull /**< User-defined object errors */
+#define CMMJL_EMASK_OBJ_V 0xF000000000000000ull /**< Verbose user-defined object errors */
+#define CMMJL_EMASK_OBJ_ALL CMMJL_EMASK_OBJ | CMMJL_EMASK_OBJ_V /**< All user-defined obj errors*/
+#define CMMJL_EMASK_ALL_REG = 0x0F0F0F0F0F0F0F0F
+#define CMMJL_EMASK_ALL_V = ~CMMJL_EMASK_ALL_REG
+#define	CMMJL_EMASK_ALL ~0ull /**< All errors */
+/*@} end error masks*/
 
 #ifndef FILE
 #define FILE basename(__FILE__)
 #endif
-
+/** 	@name Error reporting macros */
+/*@{*/
 #ifndef CMMJL_ERROR
 /** 	This macro simply calls the cmmjl_error function with the 
 	name, file, function, and line of the error so you only need to 
@@ -119,6 +134,7 @@ Audio Technologies, University of California, Berkeley.
 #define CMMJL_PDEBUG(str, args...)
 #endif
 #endif
+/*@} end error reporting macros */
 
 /** 	Error reporting callback.  This can be set to point to 
   	cmmjl_default_error_handler or cmmjl_no_error_handler, using
@@ -235,4 +251,4 @@ const char *cmmjl_strerror(const t_cmmjl_error errno); /* defined in cmmjl_strer
 
 #endif
 
-/*@}*/
+/*@} end error */

@@ -36,19 +36,22 @@ Audio Technologies, University of California, Berkeley.
 #ifndef __CMMJL_ERRNO_H__
 #define __CMMJL_ERRNO_H__
 
-/** Error codes used by the cmmjl */
-typedef enum _cmmjl_error{
-	CMMJL_SUCCESS = 0, /**< success */
-	CMMJL_FAILURE, /**< failure */
-	CMMJL_ENULLPTR, /**< null pointer */
-	CMMJL_EBADTYPE, /**< unknown data type */
-	CMMJL_OSC_ENO4BYTE = 0x100, /**< OSC packet is not a multiple of 4 bytes long */
-	CMMJL_OSC_EUNDRFLW, /**< OSC packet is too small */
-	CMMJL_OSC_EOVRFLW, /**< OSC packet is too big */
-	CMMJL_OSC_EBNDLNO4, /**< OSC bundle size is not a multiple of 4 bytes long */
-	CMMJL_OSC_EBADBNDL, /**< OSC bad bundle size */
-	CMMJL_OSC_EBADMSG /**< OSC bad message name */
-} t_cmmjl_error;
+/** Error codes are 64-bit unsigned ints */
+typedef unsigned long long t_cmmjl_error;
+
+/** @name Error codes */
+/*@{*/
+#define	CMMJL_SUCCESS 0ull /**< success */
+#define	CMMJL_FAILURE 1ull /**< failure */
+#define	CMMJL_ENULLPTR 2ull /**< null pointer */
+#define	CMMJL_EBADTYPE 3ull /**< unknown data type */
+#define	CMMJL_OSC_ENO4BYTE 0x100ull /**< OSC packet is not a multiple of 4 bytes long */
+#define	CMMJL_OSC_EUNDRFLW 0x200ull/**< OSC packet is too small */
+#define	CMMJL_OSC_EOVRFLW 0x300ull /**< OSC packet is too big */
+#define	CMMJL_OSC_EBNDLNO4 0x400ull /**< OSC bundle size is not a multiple of 4 bytes long */
+#define	CMMJL_OSC_EBADBNDL 0x500ull /**< OSC bad bundle size */
+#define	CMMJL_OSC_EBADMSG 0x600ull /**< OSC bad message name */
+/*@}*/
 
 #endif
 

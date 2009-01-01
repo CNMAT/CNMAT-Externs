@@ -1,0 +1,30 @@
+/**	@file	cmmjl_tut_errorCodes.txt
+	@page	error_codes	Error Codes
+
+Error codes used by the cmmjl are 64-bit unsigned integers and t_cmmjl_error is simply a typedef for unsigned long long.  The error codes act as a bitfield that can be used to filter out errors of different types if desired.  The bitfield is organized with the first 4 bits of each byte representing normal errors and the higher 4 bits representing verbose errors.  
+
+@verbatim
+0x		0-F		0-F
+		Verbose		Normal
+@endverbatim
+
+Each byte then corresponds to an error from a different module of the library.
+
+@verbatim
+0x		0-F 0-F		0-F 0-F		0-F 0-F		0-F 0-F		0-F 0-F		0-F 0-F		0-F 0-F		0-F 0-F
+		Object errors	Undefined	Undefined	Undefined	Undefined	SDIF errors	OSC errors	General lib errors
+@endverbatim
+
+Error masks are defined in cmmjl_error.h and can be used to filter error messages.  For example, if you wanted to write all OSC errors to a log, you might do this (see Receiving Errors):
+
+@code
+void myobj_error(const char *objname, const char *filename, const char *function, int line, int code, char *reason){
+	unsigned long long mask = CMMJL_EMASK_OSC_ALL;
+	FILE *fp;
+	fp = fopen("foo.log", "w+");
+	if(code & mask){
+		fprintf(fp, "%s:%s:%s:%d: %s (%d)\n", objname, filename, function, line, reason, code);
+	}
+}
+@endcode
+*/

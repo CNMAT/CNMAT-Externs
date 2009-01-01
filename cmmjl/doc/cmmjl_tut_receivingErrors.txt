@@ -1,0 +1,29 @@
+/**	@file	cmmjl_tut_receivingErrors.txt
+	@page	Receiving_errors Receiving Errors
+
+The default behavior is for the cmmjl to post internal errors and debugging information to the Max window.  You can choose to receive this info as a call to a function in your object with this signature:
+
+@code
+void myobj_error(const char *objname, const char *filename, const char *function, int line, int code, char *reason_fmt);
+@endcode
+
+by calling 
+
+@code
+cmmjl_set_error_handler(myobj_error);
+@endcode
+
+This can be useful for "turning off" certain error messages or logging others to a file.
+
+To turn error reporting off completely, call 
+
+@code
+cmmjl_set_no_error_handler();
+@endcode
+
+and to restore the default behavior, call
+
+@code
+cmmjl_set_default_error_handler();
+@endcode
+*/

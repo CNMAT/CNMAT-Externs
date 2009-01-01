@@ -31,9 +31,22 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl_commonsymbols.h"
 #include "cmmjl_error.h"
 #include "OSC-client.h"
+#include <libgen.h>
 
 void cmmjl_osc_fullPacket(void *x, long n, long ptr){
-	cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, cmmjl_post_gimme);
+	cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, cmmjl_osc_sendMsg);
+}
+
+void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv){
+	if(msg == _OSCTimeTag){
+		return;
+	}
+	t_symbol *m = gensym(basename(msg->s_name));
+	method func = zgetfn((t_object *)x, m);
+	void *r;
+	if(func){
+		r = typedmess(x, m, argc, argv);
+	}
 }
 
 t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, 
