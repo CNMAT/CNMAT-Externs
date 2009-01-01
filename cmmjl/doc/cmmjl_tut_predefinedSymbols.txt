@@ -1,0 +1,8 @@
+/** 	@file	cmmjl_tut_predefinedSymbols.txt
+	@page	predefined_symbols Predefined Symbols
+
+A number of t_symbol's are predefined in cmmjl_commonsymbols.[ch].  The file cmmjl_commonsymbols.h is generated at compile-time by a cmmjl_commonsymbols.pl and should not be modified.  To add a new symbol to the list, add it to the struct in cmmjl_commonsymbols.c and the perl script will do the rest when you recompile the library.
+
+To use the symbols in your code, use the #define'd symbols in cmmjl_commonsymbols.h which have the same form as those in the struct in the cmmjl_commonsymbols.c with an underscore prepended.  For example, "OSCTimeTag" becomes _OSCTimeTag.
+
+*/

@@ -28,6 +28,8 @@ Audio Technologies, University of California, Berkeley.
 
 #include "cmmjl_errno.h"
 #include "cmmjl_error.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 void (*cmmjl_error_callback)(const char *objname, 
 				    const char *filename, 

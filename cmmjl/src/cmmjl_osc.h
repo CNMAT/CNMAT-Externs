@@ -1,5 +1,5 @@
 /** 	@file cmmjl_osc.h Utilites for handling OpenSoundControl data in Max. 
-	@defgroup OSC OpenSoundControl
+	@addtogroup 	OSC 
 @{
 */
 
@@ -20,8 +20,20 @@ This is defined in the OSC spec and should never change */
 	@param	fn	The function that will be called when the FullPacket message
 			is received, or NULL to use the default cmmjl_osc_fullpacket().
 */
-#define CMMJL_ACCEPT_FULLPACKET(ob, fn) class_addmethod(ob, (method)(fn ? fn : cmmjl_osc_fullPacket), \
-							"FullPacket", A_LONG, A_LONG, 0);
+#define CMMJL_ACCEPT_FULLPACKET(ob, fn)					\
+	class_addmethod(ob, ((method)fn == (method)0 ? (method)cmmjl_osc_fullPacket : (method)fn), \
+			"FullPacket", A_LONG, A_LONG, 0);
+
+/**	This function strips an OSC message of everything but the last segment
+	(if necessary) and sends it to an object.
+
+	@param 	x	The receiving object.
+	@param	msg	The OSC message.
+	@param	argc	The number of arguments.
+	@param  argv	The arguments.
+*/
+void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv);
+
 /**	Handle a FullPacket message.  This is the default function set if 
 	CMMJL_ACCEPT_FULLPACKET() is called with NULL for the function arg.
 	This function simply parses the packet and posts the contents to 

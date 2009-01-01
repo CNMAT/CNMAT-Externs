@@ -1,0 +1,46 @@
+/**	@file	cmmjl_tut_parseFullPacket.txt
+	@page	Parse_Full_Packet How to parse an OSC packet.
+
+To parse an OSC packet, you have two options.  You can either have the messages contained in the packet passed out of an outlet that you supply, or you can define a callback that will be called for each message contained in the packet.  The cmmjl_osc_parseFullPacket() function has the following signature:
+
+@code
+t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, char *buf, long n, bool topLevel, void(*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc))
+@endcode
+
+where x can be anything that you want to pass to the callback as the first argument.  So, in the case where you pass outlet_anything() as the callback, x should be the outlet you want the messages sent out.
+
+@code
+typedef struct _myobj{
+	t_object ob;
+	void *out;
+} t_myobj;
+
+...
+
+void myobj_fullpacket(t_myobj *x, long n, long, ptr){
+	cmmjl_osc_parseFullPacket(x->out, (char *)ptr, n, true, outlet_anything);
+}
+@endcode
+
+To use a function that you define as the callback, make sure it has the same signature as outlet_anything, and then pass it to cmmjl_osc_parseFullPacket() as the last argument.
+
+@code
+typedef struct _myobj{
+	t_object ob;
+	void *out;
+} t_myobj;
+
+...
+
+void myobj_oscCallback(void *x, t_symbol *msg, long argc, t_atom *argv){
+	// do something with the messages here
+}
+
+void myobj_fullpacket(t_myobj *x, long n, long, ptr){
+	cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, myobj_oscCallback);
+}
+@endcode
+
+Notice that in the above example, the first argument to cmmjl_osc_parseFullPacket is a pointer to your object rather than to an outlet.
+
+*/

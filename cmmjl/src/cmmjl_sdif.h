@@ -1,6 +1,6 @@
 /** 	@file cmmjl_sdif.h
 	Definitions of functions that can be used to access the contents of an SDIF-buffer object in Max/MSP.
-	@defgroup SDIF SDIF
+	@addtogroup 	SDIF 
  @{
  */
 

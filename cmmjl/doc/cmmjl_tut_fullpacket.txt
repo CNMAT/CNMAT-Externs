@@ -1,0 +1,40 @@
+/**
+@file
+@page	tut_fullpacket	How to add support for the "FullPacket" message to your object.
+
+The following describes how to add OSC support to your object such that when a full packet is received, a message corresponding to the last segment of the OSC message.
+
+You will need to include cmmjl_osc.h along with cmmjl.h:
+@code
+#include "cmmjl.h"
+#include "cmmjl_osc.h"
+@endcode
+
+In the main() routine, after calling cmmjl_init(), call the macro CMMJL_ACCEPT_FULLPACKET().
+@code
+int main(void){
+	t_class *c;
+	...
+	cmmjl_init();
+	CMMJL_ACCEPT_FULLPACKET(c, NULL);
+	...
+}
+@endcode
+
+The first argument should be a pointer to your class and the second argument should be NULL to use the default callback, cmmjl_osc_fullpacket().  When a "FullPacket" message is received, cmmjl_osc_fullpacket() strips off all but the last segment of the OSC message and then attempts to send that message along with the parameters of the OSC message to your object (see cmmjl_osc_sendMsg()).
+
+Example:
+If the OSC packet contains /foo/bar 34 12.3, a message called "bar" will be sent to your object with the arguments 34 and 12.3, if your object accepts a message called "bar."
+
+If you want to define some other behavior when the "FullPacket" message is received, you can define a function with the signature
+
+@code
+void fullpacket(void *, long, long)
+@endcode
+
+and pass that to CMMJL_ACCEPT_FULLPACKET() as the second argument:
+
+@code
+CMMJL_ACCEPT_FULLPACKET(c, fullpacket);
+@endcode
+*/
