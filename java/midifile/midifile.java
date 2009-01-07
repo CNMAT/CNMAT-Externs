@@ -50,6 +50,7 @@ VERSION 3.0: Totally redesigned to make much better use of javax.sound.midi
 VERSION 3.0.1: Sets all note off velocities to 0 by default
 VERSION 3.0.2: Now outputs /text message for meta events like markers
 VERSION 3.0.3: Read message now locates file in max's searchpath
+VERSION 3.0.4: Better handling of meta-events
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -405,11 +406,18 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
 			case 1:
 				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+			case 2:
+				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
 			case 3:
-				String st = new String(data);
-				post("META EVENT " + st);
-
-				break;
+				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+			case 4:
+				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+			case 5:
+				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+			case 6:
+				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+			case 7:
+				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
 			case 47: // end of track
 				outlet(BANG_OUTLET, "bang");
 				break;
