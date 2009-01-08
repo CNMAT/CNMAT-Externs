@@ -29,6 +29,7 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl_commonsymbols.h"
 
 t_cmmjl_common_symbols_table *_cmmjl_common_symbols;
+int _cmmjl_common_syms_initialized;
 
 static char *cmmjl_common_strings[] = {
 	"OSCTimeTag",
@@ -37,6 +38,9 @@ static char *cmmjl_common_strings[] = {
 };
 
 void cmmjl_common_symbols_init(void){
+	if(_cmmjl_common_syms_initialized){
+		return;
+	}
 	_cmmjl_common_symbols = (t_cmmjl_common_symbols_table *)malloc(sizeof(t_cmmjl_common_symbols_table));
 	if(_cmmjl_common_symbols == NULL){
 		error("out of memory");
@@ -48,5 +52,5 @@ void cmmjl_common_symbols_init(void){
 	for(i = 0; i < n; i++){
 		syms[i] = gensym(cmmjl_common_strings[i]);
 	}
-
+	_cmmjl_common_syms_initialized = 1;
 }

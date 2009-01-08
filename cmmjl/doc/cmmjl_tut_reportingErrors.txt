@@ -3,7 +3,11 @@
 
 cmmjl provides a number of macros for posting information to the Max window.  The simplest are PINFO() and PERROR() which can be used just like post() or error().  In addition to printing whatever formatted arguments you provide, the name of your object.  PERROR() will also prepend the file, function name, and line number where the error occured.
 
-PDEBUG() can be used just like PINFO(), but is only included in your code if you #define DEBUG, otherwise it will do nothing.  
+PDEBUG() can be used just like PINFO(), but is only included in your code if you \#define DEBUG, otherwise it will do nothing.  
 
-You can also call the macro CMMJL_ERROR() to report the error using the same callback that the cmmjl library uses to report internal errors.  The signature has an additional argument before the formatting string and optional arguments which specifies the error code (see @ref error_codes).
+You can also call the macro CMMJL_ERROR() to report the error using the same callback that the cmmjl library uses to report internal errors.  
+
+@code
+CMMJL_ERROR(myobj, CMMJL_FAILURE, "the reason for the error was %d", foo);
+@endcode
 */

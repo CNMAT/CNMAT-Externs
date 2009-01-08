@@ -24,10 +24,10 @@
 #     REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 #     ENHANCEMENTS, OR MODIFICATIONS.
 
-SET(cmmjl_PATH_TO_LIBOSC ../../../OSC/libOSC)
 SET(cmmjl_PATH_TO_SDIFLIB ../../../sdif/lib)
 SET(cmmjl_PATH_TO_MAXSDK ../../SDK/MaxSDK-5)
 SET(cmmjl_PATH_TO_SDIF-BUFFER ../../externals/SDIF/SDIF-buffer)
+SET(cmmjl_PATH_TO_LIBOSC ../../../OSC/libOSC)
 
 SET(cmmjl_SOURCES 
 	cmmjl.c 
@@ -35,8 +35,9 @@ SET(cmmjl_SOURCES
 	cmmjl_osc.c 
 	cmmjl_error.c 
 	cmmjl_strerror.c
-	cmmjl_commonsymbols.c 
-	${cmmjl_PATH_TO_LIBOSC}/OSC-client.c 
+	cmmjl_commonsymbols.c
+	cmmjl_profile.c
+	${cmmjl_PATH_TO_LIBOSC}/OSC-client.c
 	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.c)
 
 SET(cmmjl_HEADERS 
@@ -47,17 +48,22 @@ SET(cmmjl_HEADERS
 	cmmjl_errno.h
 	cmmjl_commonsymbols.h 
 	cmmjl_types.h
-	${cmmjl_PATH_TO_LIBOSC}/OSC-client.h 
+	cmmjl_profile.h
+	${cmmjl_PATH_TO_LIBOSC}/OSC-client.h
 	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.h)
 
 SET(cmmjl_EXTRA_FILES ${PROJECT_SOURCE_DIR}/README.txt ${PROJECT_SOURCE_DIR}/COPYRIGHT.txt)
 
-
 INCLUDE_DIRECTORIES(. 
 	${cmmjl_PATH_TO_MAXSDK}/c74support/max-includes 
-	${cmmjl_PATH_TO_LIBOSC}
+	../../include
 	${cmmjl_PATH_TO_SDIF-BUFFER}
 	${cmmjl_PATH_TO_SDIFLIB})
+
+LINK_DIRECTORIES(../../lib)
+#SET(OSC_LIBRARY OSC)
+
+#SET(EXTRA_LIBS ${EXTRA_LIBS} OSC)
 
 IF(APPLE)
 	SET(CMAKE_FRAMEWORK_PATH ${cmmjl_PATH_TO_MAXSDK}/c74support/max-includes)
@@ -68,7 +74,7 @@ IF(APPLE)
 	MARK_AS_ADVANCED (CARBON_LIBRARY)
 	MARK_AS_ADVANCED (QUICKTIME_LIBRARY)
 	MARK_AS_ADVANCED (MAX_LIBRARY)
-	SET(EXTRA_LIBS ${CARBON_LIBRARY} ${QUICKTIME_LIBRARY} ${MAX_LIBRARY})
+	SET(EXTRA_LIBS ${EXTRA_LIBS} ${CARBON_LIBRARY} ${QUICKTIME_LIBRARY} ${MAX_LIBRARY})
 ENDIF(APPLE)
 
 ADD_CUSTOM_COMMAND(OUTPUT cmmjl_commonsymbols.h

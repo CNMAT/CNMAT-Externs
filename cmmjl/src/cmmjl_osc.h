@@ -2,8 +2,37 @@
 	@addtogroup 	OSC 
 @{
 */
+/*
+Copyright (c) 2008.  The Regents of the University of California (Regents).
+All Rights Reserved.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for educational, research, and not-for-profit purposes, without
+fee and without a signed licensing agreement, is hereby granted, provided that
+the above copyright notice, this paragraph and the following two paragraphs
+appear in all copies, modifications, and distributions.  Contact The Office of
+Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
+CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
+
+Written by John MacCallum and Andy Schmeder, The Center for New Music and 
+Audio Technologies, University of California, Berkeley.
+
+     IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+     SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+     ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+     REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+     REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+     FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+     DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS".
+     REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+     ENHANCEMENTS, OR MODIFICATIONS.
+
+*/
 
 #include "cmmjl_error.h"
+#include "OSC-client.h"
 #include "ext.h"
 
 #ifndef __CMMJL_OSC_H__
@@ -14,18 +43,19 @@ This is defined in the OSC spec and should never change */
 #define CMMJL_OSC_STRING_ALIGN_PAD 4 
 
 /** 	Adds support for the FullPacket OSC message to your object.  If fn is NULL,
-	the default function will be used.
+	the default function cmmjl_osc_fullPacket() will be used with 
+	cmmjl_osc_sendMsg() as the callback.
 
 	@param 	ob	A pointer to your object.
 	@param	fn	The function that will be called when the FullPacket message
-			is received, or NULL to use the default cmmjl_osc_fullpacket().
+			is received, or NULL to use the default cmmjl_osc_fullPacket().
 */
 #define CMMJL_ACCEPT_FULLPACKET(ob, fn)					\
 	class_addmethod(ob, ((method)fn == (method)0 ? (method)cmmjl_osc_fullPacket : (method)fn), \
 			"FullPacket", A_LONG, A_LONG, 0);
 
 /**	This function strips an OSC message of everything but the last segment
-	(if necessary) and sends it to an object.
+	(if necessary) and attempts to send it to the object pointed to by x.
 
 	@param 	x	The receiving object.
 	@param	msg	The OSC message.
@@ -36,8 +66,8 @@ void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv);
 
 /**	Handle a FullPacket message.  This is the default function set if 
 	CMMJL_ACCEPT_FULLPACKET() is called with NULL for the function arg.
-	This function simply parses the packet and posts the contents to 
-	the Max window.
+	This function parses the packet and calls cmmjl_osc_sendMsg for
+	each OSC message found
 
 	@param	x	The object.
 	@param	n	The length of the packet in bytes.
@@ -48,19 +78,15 @@ void cmmjl_osc_fullPacket(void *x, long n, long ptr);
 /** 	Parse an OSC packet.  This function recursively parses the 
 	packet which can be a bundle or even a nested bundle.  
 	For each message (and the timetag), cbk is called.  
-	outlet_anything() (max-includes) can be passed to the 
-	function as the callback in order to have the messages and 
-	timetag output through an outlet, or a user-defined callback 
-	can be used for further processing.
 
-	@param 	x		Anything.  This will be passed as the first 
-				argument to the callback.  If outlet_anything() 
-				is used, x should be a pointer to an outlet, 
-				otherwise it can be an object struct, or NULL.
+	@param 	x		A pointer to your object.  This will be passed
+				to the callback as the first argument.
 	@param	buf		Pointer to the OSC data to be parsed.
 	@param	n		Length in bytes of the OSC data.
 	@param	topLevel	Set this to "true" or 1 when calling the function.
-	@param 	cbk		The callback to be used to return OSC messages.
+	@param 	cbk		The callback to be used to return OSC messages.  
+				If cbk is NULL, the messages will be printed to 
+				the Max window.
 
 	@returns		Any error code or 0 on success.
 */ 
@@ -68,7 +94,7 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 					char *buf, 
 					long n, 
 					bool topLevel,
-					void(*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc));
+					void (*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc));
 
 /** 	Format an OSC message as a Max message.  This function is 
 	called by cmmjl_osc_parseFullPacket().
@@ -98,9 +124,12 @@ t_cmmjl_error cmmjl_osc_formatMessage(void *x,
 				character after the last valid character 
 				in the buffer.  If the string hasn't ended 
 				by there, the function calls cmmjl_error() and returns 0.
+	@param	result		The address of a pointer which will point to the first byte
+				after the end of the null padding
+
 	@returns		A pointer to the next byte after the null byte(s) or zero on failure.
 */
-char *cmmjl_osc_dataAfterAlignedString(char *string, char *boundary);
+t_cmmjl_error cmmjl_osc_dataAfterAlignedString(char *string, char *boundary, char **result);
 
 /** 	Checks to see if the string is really a null terminated, 
 	4-byte aligned isprint()able string.
@@ -111,15 +140,15 @@ char *cmmjl_osc_dataAfterAlignedString(char *string, char *boundary);
 				If the string hasn't ended by there, the function 
 				calls cmmjl_error() and returns 0.
 
-	@returns		true or false (1 or 0).
+	@returns		An error code if the string looks bad, or CMMJL_SUCCESS.
 */
-Boolean cmmjl_osc_isNiceString(char *string, char *boundary);
+t_cmmjl_error cmmjl_osc_isNiceString(char *string, char *boundary);
 
 /** 	Tests if the string is the final segment of an OSC path.  "/foo" will return true
 	while "/foo/bar" will return false.
 
 	@param	path	The path to test.
-	@returns 	True or false
+	@returns 	CMMJL_SUCCESS on success, or an error code
 */
 bool cmmjl_osc_isFinalPathSegment(char *path);
 #endif

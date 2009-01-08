@@ -2,7 +2,7 @@
 @file
 @page	tut_fullpacket	How to add support for the "FullPacket" message to your object.
 
-The following describes how to add OSC support to your object such that when a full packet is received, a message corresponding to the last segment of the OSC message.
+You can add support for the ``FullPacket'' message to your object fairly easily by calling CMMJL_ACCEPT_FULLPACKET() in your main routine.  When an OSC packet is received, by default, the last segment of each OSC address will be passed to your object as a message (see below).
 
 You will need to include cmmjl_osc.h along with cmmjl.h:
 @code
@@ -15,7 +15,6 @@ In the main() routine, after calling cmmjl_init(), call the macro CMMJL_ACCEPT_F
 int main(void){
 	t_class *c;
 	...
-	cmmjl_init();
 	CMMJL_ACCEPT_FULLPACKET(c, NULL);
 	...
 }
