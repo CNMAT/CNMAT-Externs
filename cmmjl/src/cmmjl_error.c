@@ -26,69 +26,108 @@ Audio Technologies, University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
  */
 
+#include "ext.h"
+#include "ext_obex.h"
+#include "ext_hashtab.h"
+#include "cmmjl.h"
 #include "cmmjl_errno.h"
 #include "cmmjl_error.h"
 #include <stdarg.h>
 #include <stdio.h>
 
-void (*cmmjl_error_callback)(const char *objname, 
-				    const char *filename, 
-				    const char *function, 
-				    int line, 
-				    int code, 
-				    char *st);
+extern t_hashtab *_cmmjl_obj_tab;
 
-void cmmjl_error(const char *objname, 
+void cmmjl_error(void *x,
+		 const char *objname, 
 		 const char *filename, 
 		 const char *function, 
 		 int line, 
-		 int code, 
+		 t_cmmjl_error code, 
 		 const char *reason_fmt,
 		 ...)
 {
-	if(!cmmjl_error_callback){
+	if(!_cmmjl_obj_tab){
 		return;
 	}
+	t_object *val;
+	hashtab_lookup(_cmmjl_obj_tab, x, &val);
 	va_list ap;
 	va_start(ap, reason_fmt);
 	char buf[256];
 	vsprintf(buf, reason_fmt, ap);
 	va_end(ap);
-	cmmjl_error_callback(objname, filename, function, line, code, buf);
+	((t_cmmjl_obj *)val)->error(objname, filename, function, line, code, buf);
 }
 
 void cmmjl_default_error_handler(const char *objname, 
 				 const char *filename, 
 				 const char *function, 
 				 int line, 
-				 int code, 
+				 t_cmmjl_error code, 
 				 char *reason)
 {
-	error("%s: %s: %s: %d: %s (%d)", objname, filename, function, line, reason, code);
+	if(code & CMMJL_EMASK_ALL_REG){
+		error("%s: %s: %s: %d: %s (%llx)", objname, filename, function, line, reason, code);
+	}
+}
+
+void cmmjl_verbose_error_handler(const char *objname, 
+				 const char *filename, 
+				 const char *function, 
+				 int line, 
+				 t_cmmjl_error code, 
+				 char *reason)
+{
+	error("%s: %s: %s: %d: %s (%llx)", objname, filename, function, line, reason, code);
 }
 
 void cmmjl_no_error_handler(const char *objname,
 			    const char *filename,
 			    const char *function,
 			    int line,
-			    int code,
+			    t_cmmjl_error code,
 			    char *reason)
 {}
 
-void cmmjl_set_error_handler(void (*cbk)(const char *objname,
-					    const char *filename,
-					    const char *function,
-					    int line,
-					    int code,
-					    char *reason))
+void *cmmjl_get_error_handler(void *x){
+	if(!_cmmjl_obj_tab){
+		return NULL;
+	}
+	t_object *o;
+	t_max_err err;
+	if(err = hashtab_lookup(_cmmjl_obj_tab, x, &o)){
+		return NULL;
+	}
+	return ((t_cmmjl_obj *)o)->error;
+}
+
+t_cmmjl_error cmmjl_set_error_handler(void *x,
+				      void (*cbk)(const char *objname,
+						  const char *filename,
+						  const char *function,
+						  int line,
+						  t_cmmjl_error code,
+						  char *reason))
 {
-	cmmjl_error_callback = cbk;
+	if(!_cmmjl_obj_tab){
+		return CMMJL_ENOOBJ;
+	}
+	t_object *o;
+	t_max_err err;
+	if(err = hashtab_lookup(_cmmjl_obj_tab, x, &o)){
+		return CMMJL_ENOOBJ;
+	}
+	((t_cmmjl_obj *)o)->error = cbk;
 }
 
-void cmmjl_set_default_error_handler(void){
-	cmmjl_error_callback = cmmjl_default_error_handler;
+t_cmmjl_error cmmjl_set_default_error_handler(void *x){
+	cmmjl_set_error_handler(x, cmmjl_default_error_handler);
 }
 
-void cmmjl_set_no_error_handler(void){
-	cmmjl_error_callback = cmmjl_no_error_handler;
+t_cmmjl_error cmmjl_set_verbose_error_handler(void *x){
+	cmmjl_set_error_handler(x, cmmjl_verbose_error_handler);
+}
+
+t_cmmjl_error cmmjl_set_no_error_handler(void *x){
+	cmmjl_set_error_handler(x, cmmjl_no_error_handler);
 }

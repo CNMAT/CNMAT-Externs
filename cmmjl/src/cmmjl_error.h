@@ -54,14 +54,17 @@ Audio Technologies, University of California, Berkeley.
 #define CMMJL_EMASK_OBJ 0xF00000000000000ull /**< User-defined object errors */
 #define CMMJL_EMASK_OBJ_V 0xF000000000000000ull /**< Verbose user-defined object errors */
 #define CMMJL_EMASK_OBJ_ALL CMMJL_EMASK_OBJ | CMMJL_EMASK_OBJ_V /**< All user-defined obj errors*/
-#define CMMJL_EMASK_ALL_REG = 0x0F0F0F0F0F0F0F0F
-#define CMMJL_EMASK_ALL_V = ~CMMJL_EMASK_ALL_REG
+#define CMMJL_EMASK_ALL_REG 0x0F0F0F0F0F0F0F0Full /**< All regular (non-verbose) errors */
+#define CMMJL_EMASK_ALL_V ~CMMJL_EMASK_ALL_REG /**< All verbose (non-regular) errors */
 #define	CMMJL_EMASK_ALL ~0ull /**< All errors */
 /*@} end error masks*/
 
+/** @cond */
 #ifndef FILE
 #define FILE basename(__FILE__)
 #endif
+/** @endcond */
+
 /** 	@name Error reporting macros */
 /*@{*/
 #ifndef CMMJL_ERROR
@@ -70,6 +73,7 @@ Audio Technologies, University of California, Berkeley.
 	specify the error code, the reason as a printf-style format string,
 	and any additional arguments to be formatted.
 
+	@param	x		The object
 	@param 	code		The error code (see t_cmmjl_error)
 	@param 	reason_fmt 	A string describing the error encountered. 
 				This can be a printf-style format string.
@@ -78,8 +82,8 @@ Audio Technologies, University of California, Berkeley.
 	@see	t_cmmjl_error
 	@see	cmmjl_errno.h
 */
-#define CMMJL_ERROR(code, reason_fmt, args...) \
-	cmmjl_error(NAME, FILE, __FUNCTION__, __LINE__, code, reason_fmt, ##args) 
+#define CMMJL_ERROR(x, code, reason_fmt, args...)			\
+	cmmjl_error(x, NAME, FILE, __FUNCTION__, __LINE__, code, reason_fmt, ##args) 
 #endif
 
 #ifndef PINFO
@@ -136,23 +140,12 @@ Audio Technologies, University of California, Berkeley.
 #endif
 /*@} end error reporting macros */
 
-/** 	Error reporting callback.  This can be set to point to 
-  	cmmjl_default_error_handler or cmmjl_no_error_handler, using
-	cmmjl_set_default_error_handler() and cmmjl_set_no_error_handler()
-	respectively, or it can be set to a user-defined callback
-	with cmmjl_set_error_handler.
-*/
-extern void (*cmmjl_error_callback)(const char *objname, 
-				    const char *filename, 
-				    const char *function, 
-				    int line, 
-				    int code, 
-				    char *reason_fmt);
 
 /**	The error function that should be called to report an error.  
 	This function calls vsprintf() to format any optional arguments
 	and then calls cmmjl_error_callback.
 	
+	@param	x		A pointer to your object.
 	@param	objname		The name of the object.
 	@param	filename	The name of the file in which the error occured.
 	@param 	function	The name of the function in which the error occured.
@@ -165,15 +158,17 @@ extern void (*cmmjl_error_callback)(const char *objname,
 	@see	t_cmmjl_error
 	@see	cmmjl_errno.h
 */
-void cmmjl_error(const char *objname, 
+void cmmjl_error(void *x,
+		 const char *objname, 
 		 const char *filename, 
 		 const char *function, 
 		 int line, 
-		 int code, 
+		 t_cmmjl_error code, 
 		 const char *reason_fmt,
 		 ...);
 
-/**	The default error handler.  This calls error() (defined in ext.h) to 
+/**	The default error handler; only prints non-verbose errors
+	to the Max window.  This calls error() (defined in ext.h) to 
 	post an error in the following format: 
 	objname:filename:function:line: reason (code)
 
@@ -191,7 +186,29 @@ void cmmjl_default_error_handler(const char *objname,
 				 const char *filename, 
 				 const char *function, 
 				 int line, 
-				 int code, 
+				 t_cmmjl_error code, 
+				 char *reason);
+
+/**	Error handler which prints all (verbose and non-verbose)
+	errors to the Max window.  This calls error() (defined in ext.h) to 
+	post an error in the following format: 
+	objname:filename:function:line: reason (code)
+
+	@param	objname		The name of the object.
+	@param	filename	The name of the file in which the error occured.
+	@param 	function	The name of the function in which the error occured.
+	@param  line		The line number where the error occured.
+	@param	code		The error code.
+	@param	reason		A printf-style format string describing the error.
+
+	@see	t_cmmjl_error
+	@see	cmmjl_errno.h
+ */
+void cmmjl_verbose_error_handler(const char *objname, 
+				 const char *filename, 
+				 const char *function, 
+				 int line, 
+				 t_cmmjl_error code, 
 				 char *reason);
 
 /**	A dummy function which does nothing.  cmmjl_error_callback points to this
@@ -211,43 +228,81 @@ void cmmjl_no_error_handler(const char *objname,
 			    const char *filename, 
 			    const char *function, 
 			    int line, 
-			    int code, 
+			    t_cmmjl_error code, 
 			    char *reason);
+
+/**	This function will point eptr to your object's current error handler.
+
+	@param	x	A pointer to your object.
+
+	@returns	A pointer to your object's error handler function
+*/
+void *cmmjl_get_error_handler(void *x);
 
 /** 	This function can be used to set cmmjl_error_callback to a user-defined
 	callback.
 
+	@param  x	A pointer to your object.
 	@param	cbk	The callback.
+
+	@returns	An error if the internal data storage object
+			where the error callback is stored could not
+			be found.
 
 	@see	cmmjl_error_callback
 */
-void cmmjl_set_error_handler(void (*cbk)(const char *objname,
-					 const char *filename,
-					 const char *function,
-					 int line,
-					 int code,
-					 char *reason));
+t_cmmjl_error cmmjl_set_error_handler(void *x,
+				      void (*cbk)(const char *objname,
+						  const char *filename,
+						  const char *function,
+						  int line,
+						  t_cmmjl_error code,
+						  char *reason));
 
 /**	This function sets cmmjl_error_callback to point to cmmjl_default_error_handler()
 
+	@param 	x	A pointer to your object.
+
+	@returns	An error if the internal data storage object
+			where the error callback is stored could not
+			be found.	
+
 	@see cmmjl_default_error_handler()
- */
-void cmmjl_set_default_error_handler(void);
+*/
+t_cmmjl_error cmmjl_set_default_error_handler(void *x);
+
+/**	This function sets cmmjl_error_callback to point to cmmjl_verbose_error_handler()
+
+	@param 	x	A pointer to your object.
+
+	@returns	An error if the internal data storage object
+			where the error callback is stored could not
+			be found.	
+
+	@see cmmjl_verbose_error_handler()
+*/
+t_cmmjl_error cmmjl_set_verbose_error_handler(void *x);
 
 /**	This function turns error reporting off by setting cmmjl_error_callback to 
 	a function which does nothing.
 
+	@param	x	A pointer to your object.
+
+	@returns	An error if the internal data storage object
+			where the error callback is stored could not
+			be found.
+
 	@see	cmmjl_error_callback
 */
-void cmmjl_set_no_error_handler(void);
+t_cmmjl_error cmmjl_set_no_error_handler(void *x);
 
 /**	Get the string description associated with the error code.
 	
-	@param	errno	The error code.
+	@param	err	The error code.
 
 	@returns	The string associated with the error code.
- */
-const char *cmmjl_strerror(const t_cmmjl_error errno); /* defined in cmmjl_strerror.c */
+*/
+const char *cmmjl_strerror(unsigned long long err); /* defined in cmmjl_strerror.c */
 
 #endif
 

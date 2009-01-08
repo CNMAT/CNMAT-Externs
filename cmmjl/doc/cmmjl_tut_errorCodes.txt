@@ -23,7 +23,7 @@ void myobj_error(const char *objname, const char *filename, const char *function
 	FILE *fp;
 	fp = fopen("foo.log", "w+");
 	if(code & mask){
-		fprintf(fp, "%s:%s:%s:%d: %s (%d)\n", objname, filename, function, line, reason, code);
+		fprintf(fp, "%s:%s:%s:%d: %s (%llx)\n", objname, filename, function, line, reason, code);
 	}
 }
 @endcode

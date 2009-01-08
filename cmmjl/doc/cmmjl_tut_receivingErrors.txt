@@ -4,7 +4,7 @@
 The default behavior is for the cmmjl to post internal errors and debugging information to the Max window.  You can choose to receive this info as a call to a function in your object with this signature:
 
 @code
-void myobj_error(const char *objname, const char *filename, const char *function, int line, int code, char *reason_fmt);
+void myobj_error(void *x, const char *objname, const char *filename, const char *function, int line, int code, char *reason_fmt);
 @endcode
 
 by calling 
@@ -25,5 +25,11 @@ and to restore the default behavior, call
 
 @code
 cmmjl_set_default_error_handler();
+@endcode
+
+By default, only non-verbose errors are printed.  To turn verbose error reporting on, call
+
+@code
+cmmjl_set_verbose_error_handler();
 @endcode
 */
