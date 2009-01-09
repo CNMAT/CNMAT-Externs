@@ -17,6 +17,8 @@
 #include "version.c"
 #include "cmmjl/cmmjl.h" /* Include this for basic functionality */
 #include "cmmjl/cmmjl_osc.h" /* OSC support */
+#include "cmmjl/cmmjl_osc_pattern.h"
+#include "regex.h"
 
 typedef struct _test{
 	t_object t_ob;
@@ -69,16 +71,23 @@ void *test_new(){
 	cmmjl_init(x, CMMJL_CREATE_INFO_OUTLET);
 	
 	int bloo = 21;
-	
-	post("%llx", CMMJL_EMASK_OSC_ALL);
-	post("%llx", CMMJL_EMASK_ALL);
-	/* report an error like this */
+       	/* report an error like this */
 	CMMJL_ERROR(x, 19, "some foo screwed up here making bar = %d", bloo);
-	
-	post("typtag: %s", cmmjl_strerror(CMMJL_OSC_ETYPTAG));
 
-	post("%p", x);
-
+	regex_t r;
+	int e;
+	char ebuf[256];
+	char *st = "/app*e/pi?/{1,3,5}/foo";
+	if(e = cmmjl_osc2regex(st, strlen(st), &r)){
+		regerror(e, &r, ebuf, 256);
+		error("%d: %s", e, ebuf);
+		return x;
+	}
+	char *st2 = "/appqcue/pie/3/foo";
+	if(e = regexec(&r, st2, 0, NULL, 0)){
+		regerror(e, &r, ebuf, 256);
+		post("no match!  returned %d: %s", e, ebuf);
+	}
 	return x;
 }
 

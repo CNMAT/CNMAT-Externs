@@ -16,8 +16,9 @@
 #endif
 
 #ifndef CMMJL_ENTER
-#define CMMJL_ENTER(x) if(cmmjl_entrance_count_inc(x, __FUNCTION__) > 1){	\
-		error("entrance count for %s: %s() = %d", NAME, __FUNCTION__); \
+#define CMMJL_ENTER(x) if(cmmjl_entrance_count_inc(x, __FUNCTION__) > 1){ \
+		error("entrance count for %s: %s() = %d",		\
+		      NAME, __FUNCTION__, cmmjl_entrance_count_get(x, __FUNCTION__)); \
 	}
 #endif
 #ifndef CMMJL_EXIT
@@ -40,5 +41,6 @@
 
 int cmmjl_entrance_count_inc(void *x, const char *func);
 int cmmjl_entrance_count_dec(void *x, const char *func);
+int cmmjl_entrance_count_get(void *x, const char *func);
 
 #endif // __CMMJL_PROFILE_H__

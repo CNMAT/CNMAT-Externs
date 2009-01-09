@@ -31,6 +31,8 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl.h"
 #include "cmmjl_commonsymbols.h"
 
+static void cmmjl_reformat_obj_name(char *name);
+
 t_hashtab *_cmmjl_obj_tab;
 
 /** 	@cond
@@ -66,7 +68,35 @@ t_cmmjl_error cmmjl_init(void *x, bool shouldCreateInfoOutlet){
 	}
 	hashtab_store(_cmmjl_obj_tab, x, (t_object *)o);
 
+	// Give the obj a name
+	// The name we give it is the name of the object and Max will kindly 
+	// add a bracketed number after the name if there is a conflict, so 
+	// we let it do that and then reformat the name as an OSC-style string
+	// if necessary.
+	/*
+	t_box *b;
+	object_obex_lookup(x, gensym("#B"), (t_object **)&b);
+	t_symbol *name = object_attr_getsym(b, _varname);
+	char *b1, *b2;
+	int l;
+	if(!strcmp(name->s_name, "")){
+		object_attr_setsym(b, _varname, gensym(NAME));
+	}
+	name = object_attr_getsym(b, _varname);
+	l = strlen(name->s_name);
+	char name_char[l];
+	memcpy(name_char, name->s_name, l);
+	if(b1 = strchr(name_char, '[')){
+		cmmjl_reformat_obj_name(name_char);
+		object_attr_setsym(b, _varname, gensym(name_char));
+	}
+	*/
+
 	return CMMJL_SUCCESS;
+}
+
+static void cmmjl_reformat_obj_name(char *name){
+
 }
 
 t_cmmjl_error cmmjl_init_obj(void *x, t_cmmjl_obj *o, bool shouldCreateInfoOutlet){
