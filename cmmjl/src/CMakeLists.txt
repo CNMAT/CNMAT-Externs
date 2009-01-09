@@ -33,6 +33,7 @@ SET(cmmjl_SOURCES
 	cmmjl.c 
 	cmmjl_sdif.c 
 	cmmjl_osc.c 
+	cmmjl_osc_pattern.c
 	cmmjl_error.c 
 	cmmjl_strerror.c
 	cmmjl_commonsymbols.c
@@ -44,6 +45,7 @@ SET(cmmjl_HEADERS
 	cmmjl.h 
 	cmmjl_sdif.h 
 	cmmjl_osc.h 
+	cmmjl_osc_pattern.h
 	cmmjl_error.h 
 	cmmjl_errno.h
 	cmmjl_commonsymbols.h 

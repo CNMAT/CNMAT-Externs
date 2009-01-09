@@ -18,6 +18,38 @@
 		"metadata" : [  ],
 		"boxes" : [ 			{
 				"box" : 				{
+					"maxclass" : "newobj",
+					"varname" : "shithole[2]",
+					"text" : "cmmjl_test",
+					"patching_rect" : [ 375.0, 404.0, 68.0, 20.0 ],
+					"fontname" : "Arial",
+					"outlettype" : [ "", "" ],
+					"fontsize" : 12.0,
+					"id" : "obj-11",
+					"numinlets" : 1,
+					"presentation_rect" : [ 375.0, 404.0, 0.0, 0.0 ],
+					"numoutlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "newobj",
+					"varname" : "shithole[1]",
+					"text" : "cmmjl_test",
+					"patching_rect" : [ 117.0, 334.0, 68.0, 20.0 ],
+					"fontname" : "Arial",
+					"outlettype" : [ "", "" ],
+					"fontsize" : 12.0,
+					"id" : "obj-8",
+					"numinlets" : 1,
+					"presentation_rect" : [ 117.0, 334.0, 0.0, 0.0 ],
+					"numoutlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"maxclass" : "message",
 					"text" : "error",
 					"patching_rect" : [ 328.0, 212.0, 36.0, 18.0 ],
@@ -61,6 +93,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
+					"varname" : "foo",
 					"text" : "cmmjl_test",
 					"patching_rect" : [ 357.0, 266.0, 68.0, 20.0 ],
 					"fontname" : "Arial",
@@ -130,6 +163,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
+					"varname" : "shithole",
 					"text" : "cmmjl_test",
 					"patching_rect" : [ 205.0, 266.0, 68.0, 20.0 ],
 					"fontname" : "Arial",
