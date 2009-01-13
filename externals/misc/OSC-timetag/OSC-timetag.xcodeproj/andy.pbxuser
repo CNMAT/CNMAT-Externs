@@ -4,6 +4,9 @@
 		activeArchitecture = i386;
 		activeBuildConfigurationName = Deployment;
 		activeTarget = 8D01CCC60486CAD60068D4B7 /* OSC-timetag */;
+		addToTargets = (
+			8D01CCC60486CAD60068D4B7 /* OSC-timetag */,
+		);
 		codeSenseManager = A1E0159A0D57D4AC0072EB73 /* Code sense */;
 		perUserDictionary = {
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
@@ -66,8 +69,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 241132287;
-			PBXWorkspaceStateSaveDate = 241132287;
+			PBXPerProjectTemplateStateSaveDate = 241390682;
+			PBXWorkspaceStateSaveDate = 241390682;
 		};
 		sourceControlManager = A1E015990D57D4AC0072EB73 /* Source Control */;
 		userBuildSettings = {

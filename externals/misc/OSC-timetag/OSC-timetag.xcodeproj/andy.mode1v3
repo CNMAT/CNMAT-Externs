@@ -268,6 +268,7 @@
 							<array>
 								<string>089C166AFE841209C02AAC07</string>
 								<string>08FB77ADFE841716C02AAC07</string>
+								<string>089C167CFE841241C02AAC07</string>
 								<string>089C1671FE841209C02AAC07</string>
 								<string>19C28FB4FE9D528D11CA2CBB</string>
 								<string>1C37FBAC04509CD000000102</string>
@@ -301,7 +302,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>417 94 980 784 0 0 1440 878 </string>
+						<string>298 94 980 784 0 0 1440 878 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -338,7 +339,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {772, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>417 94 980 784 0 0 1440 878 </string>
+								<string>298 94 980 784 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -358,7 +359,7 @@
 								<key>Frame</key>
 								<string>{{0, 5}, {772, 738}}</string>
 								<key>RubberWindowFrame</key>
-								<string>417 94 980 784 0 0 1440 878 </string>
+								<string>298 94 980 784 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -382,9 +383,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A12A25BB0E61A35A004D98BA</string>
+				<string>A10259980E63F18B006740A2</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>A12A25BC0E61A35A004D98BA</string>
+				<string>A10259990E63F18B006740A2</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -515,9 +516,11 @@
 	<key>WindowJustification</key>
 	<integer>5</integer>
 	<key>WindowOrderList</key>
-	<array/>
+	<array>
+		<string>/Users/andy/Projects/cnmat/cnmat/trunk/max/externals/misc/OSC-timetag/OSC-timetag.xcodeproj</string>
+	</array>
 	<key>WindowString</key>
-	<string>417 94 980 784 0 0 1440 878 </string>
+	<string>298 94 980 784 0 0 1440 878 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

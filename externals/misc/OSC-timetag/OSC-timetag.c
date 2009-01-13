@@ -1,3 +1,4 @@
+
 /*
  
 Copyright (c) 2008
@@ -36,24 +37,16 @@ AUTHORS: Andy Schmeder
 COPYRIGHT_YEARS: 2008
 SVN_REVISION: $LastChangedRevision: 1634 $
 VERSION 0.1: First public release
+VERSION 0.2: Added support for in-place operations on FullPackets
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
 
-// need math.h
-#include <math.h>
-
-// need strcmp
-#include <string.h>
-
-// need a source of time
-#include "timeval.h"
-
-// need ntohl
-#include <arpa/inet.h>
-
 // max object header
 #include "ext.h"
+
+// need a source of time
+#include "OSC-timetag-ops.h"
 
 // version info
 #include "version.h"
@@ -72,19 +65,7 @@ VERSION 0.1: First public release
 #define TO_I 3 
 #define TO_S 4
 #define TO_A 5
-
-#define TIME_NULL       0 
-#define TIME_NOW        1
-#define TIME_IMMEDIATE  2
-#define TIME_STAMP      3
-
-struct ntptime 
-{
-  unsigned long int sec;
-  unsigned long int frac_sec;
-  int sign;
-  int type;
-};
+#define TO_P 6
 
 /* structure definition of your object */
 typedef struct _OSCTimeTag
@@ -109,6 +90,7 @@ typedef struct _OSCTimeTag
 /* global that holds the class definition */
 void *OSCTimeTag_class;
 
+Symbol *ps_FullPacket;
 Symbol *ps_OSCTimeTag;
 Symbol *ps_iso8601;
 Symbol *ps_tai;
@@ -119,7 +101,7 @@ void OSCTimeTag_free(OSCTimeTag *x);
 void OSCTimeTag_assist (OSCTimeTag *x, void *box, long msg, long arg, char *dstString);
 
 // op callback
-void OSCTimeTag_run(OSCTimeTag *x);
+struct ntptime OSCTimeTag_run(OSCTimeTag *x);
 
 // methods
 void OSCTimeTag_now(OSCTimeTag *x);
@@ -129,23 +111,7 @@ void OSCTimeTag_immediate(OSCTimeTag *x);
 void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
 void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
 void OSCTimeTag_iso8601(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
-void OSCTimeTag_tai(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
-
-// conversions 
-void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n);
-void OSCTimeTag_ntp_to_iso8601(struct ntptime* n, char* s);
-
-void OSCTimeTag_float_to_ntp(double d, struct ntptime* n);
-double OSCTimeTag_ntp_to_float(struct ntptime* n);
-
-void OSCTimeTag_ut_to_ntp(long int ut, struct ntptime* n);
-long int OSCTimeTag_ntp_to_ut(struct ntptime* n);
-
-// operations
-void OSCTimeTag_add(struct ntptime* a, struct ntptime* b, struct ntptime* r);
-
-// generation
-void OSCTimeTag_now_to_ntp(struct ntptime* n);
+//void OSCTimeTag_tai(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
 
 // setup
 void main(fptr *f)
@@ -183,6 +149,7 @@ void main(fptr *f)
   // tooltip helper
   addmess((method)OSCTimeTag_assist, "assist", A_CANT, 0);
     
+  ps_FullPacket = gensym("FullPacket");
   ps_OSCTimeTag = gensym("OSCTimeTag");
   ps_iso8601 = gensym("iso8601");
   ps_tai = gensym("tai");
@@ -276,6 +243,10 @@ void *OSCTimeTag_new(Symbol* s, short argc, Atom *argv)
 	      x->to = TO_S;
 	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "iso8601") == 0) {
 	      x->to = TO_S;
+	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "FullPacket") == 0) {
+	      x->to = TO_P;
+	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "#bundle") == 0) {
+	      x->to = TO_P;
 	    } else {
 	      post("OSC-timetag got unknown value for @to: %s", argv[i].a_w.w_sym->s_name);
 	    }
@@ -308,6 +279,9 @@ void *OSCTimeTag_new(Symbol* s, short argc, Atom *argv)
     break;
   case TO_S:
     x->out_p[0] = outlet_new(x, "iso8601");
+    break;
+  case TO_P:
+    x->out_p[0] = outlet_new(x, "FullPacket");
     break;
   }
     
@@ -364,6 +338,9 @@ void OSCTimeTag_assist (OSCTimeTag *x, void *box, long msg, long arg, char *dstS
       case TO_S:
 	sprintf(dstString, "time in iso8601 string");
 	break;
+      case TO_P:
+	sprintf(dstString, "transformed pacet as FullPacket");
+	break;
       }
     }
   } else {
@@ -372,7 +349,7 @@ void OSCTimeTag_assist (OSCTimeTag *x, void *box, long msg, long arg, char *dstS
 }
 
 // this is where the op executes
-void OSCTimeTag_run(OSCTimeTag *x)
+struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 {
     
   struct ntptime r; // answer
@@ -606,6 +583,8 @@ void OSCTimeTag_run(OSCTimeTag *x)
     }
     break;
   }
+
+  return r;
     
 }
 
@@ -682,47 +661,65 @@ void OSCTimeTag_float(OSCTimeTag *x, double d)
 }
 
 void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
-    
-    long i;
-    unsigned long sec;
-    unsigned long frac_sec;
-    unsigned long length;
-    char* data;
+  
+  long i;
+  unsigned long sec;
+  unsigned long frac_sec;
+  unsigned long length;
 
-    sec = 0;
-    frac_sec = 0;
+  struct ntptime r;
+  
+  char* data;
+
+  sec = 0;
+  frac_sec = 0;
+  
+  i = proxy_getinlet(x);
+  if(argc == 2 && argv[0].a_type == A_LONG && argv[0].a_w.w_long >= 16 && argv[1].a_type == A_LONG && argv[1].a_w.w_long != 0) {
     
-    i = proxy_getinlet(x);
-    if(argc == 2 && argv[0].a_type == A_LONG && argv[0].a_w.w_long >= 16 && argv[1].a_type == A_LONG && argv[1].a_w.w_long != 0) {
-        
-        data = (char*)argv[1].a_w.w_long;
-        if(strcmp(data, "#bundle") == 0) {
-            
-            sec =      ntohl(*((unsigned long *)(data+8)));
-            frac_sec = ntohl(*((unsigned long *)(data+12)));
-            
-	    if(i == 0) {
-	      if(sec == 0 && frac_sec == 1) {
-                x->a.type = TIME_IMMEDIATE;
-	      } else {
-                x->a.type = TIME_STAMP;
-                x->a.sec = sec;
-                x->a.frac_sec = frac_sec;
-                OSCTimeTag_run(x);
-	      }
-	    }
-	    else if(i == 1) {
-	      if(sec == 0 && frac_sec == 1) {
-                x->b.type = TIME_IMMEDIATE;
-	      } else {
-                x->b.type = TIME_STAMP;
-                x->b.sec = sec;
-                x->b.frac_sec = frac_sec;
-	      }
-	    }
+    data = (char*)argv[1].a_w.w_long;
+    if(strcmp(data, "#bundle") == 0) {
+      
+      sec =      ntohl(*((unsigned long *)(data+8)));
+      frac_sec = ntohl(*((unsigned long *)(data+12)));
+      
+      if(i == 0) {
+	if(sec == 0 && frac_sec == 1) {
+	  if(x->op == OP_TAG) {
+	    x->a.type = TIME_NOW;
+	  } else {
+	    x->a.type = TIME_IMMEDIATE;
+	  }
+	} else {
+	  x->a.type = TIME_STAMP;
+	  x->a.sec = sec;
+	  x->a.frac_sec = frac_sec;
 	}
+	
+	r = OSCTimeTag_run(x);
+	
+	if(x->to == TO_P) {
+	  // write result into packet...
+	  (*((unsigned long *)(data+8))) = htonl(r.sec);
+	  (*((unsigned long *)(data+12))) = htonl(r.frac_sec);
+	  
+	  // output transformed FullPacket
+	  outlet_anything(x->out_p[0], ps_FullPacket, 2, argv);
+	}
+
+      }
+      else if(i == 1) {
+	if(sec == 0 && frac_sec == 1) {
+	  x->b.type = TIME_IMMEDIATE;
+	} else {
+	  x->b.type = TIME_STAMP;
+	  x->b.sec = sec;
+	  x->b.frac_sec = frac_sec;
+	}
+      }
     }
-    
+  }
+  
 }
     
 
@@ -784,169 +781,5 @@ void OSCTimeTag_iso8601(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
                                     
     }
     
-}
-
-// add or subtract
-
-void OSCTimeTag_add(struct ntptime* a, struct ntptime* b, struct ntptime* r) {
-  
-  if((a->sign == 1 && b->sign == 1) || (a->sign == -1 && b->sign == -1)) {
-    
-    r->sec = a->sec + b->sec;
-    r->frac_sec = a->frac_sec + b->frac_sec;
-    
-    if(r->frac_sec < a->frac_sec) { // rollover occurred
-      r->sec += 1;
-    }
-    
-    r->sign = a->sign;
-    
-  } else if((a->sign == 1 && b->sign == -1)) {
-    
-    if(a->sec > b->sec || (a->sec == b->sec && a->frac_sec >= b->frac_sec)) {
-      
-      r->sec = a->sec - b->sec;
-      r->sign = 1;
-      
-      if(a->frac_sec >= b->frac_sec) {
-	r->frac_sec = a->frac_sec - b->frac_sec;
-      } else {
-	if(r->sec == 0) {
-	  r->frac_sec = b->frac_sec - a->frac_sec;
-	  r->sign = -1;
-	} else {
-	  r->sec--;
-	  r->frac_sec = a->frac_sec - b->frac_sec;
-	}
-      }
-      
-      
-    } else {
-      
-      r->sec = b->sec - a->sec;
-      
-      if(a->frac_sec >= b->frac_sec) {
-	r->frac_sec = a->frac_sec - b->frac_sec;
-      } else {
-	r->frac_sec = b->frac_sec - a->frac_sec;
-      }
-      
-      r->sign = -1;
-      
-    }
-    
-  } else { // a.sign == -1 and b.sign == 1...
-    OSCTimeTag_add(b, a, r);
-  }
-  
-  r->type = TIME_STAMP;
-  
-}
-
-// conversion functions
-
-void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n) {
-  
-    struct tm t;
-    float sec;
-    char s1[20];
-    
-    // read out the fractions part
-    sscanf(s, "%*d-%*d-%*dT%*d:%*d:%fZ", &sec);
-    
-    // null-terminate the string
-    strncat(s1, s, 19);
-
-    // parse the time
-    strptime(s1, "%Y-%m-%dT%H:%M:%S", &t);
-    
-    OSCTimeTag_ut_to_ntp(timegm(&t), n);
-    n->frac_sec = (unsigned long int)(fmod(sec, 1.0) * 4294967295.0);
-    
-}
-
-void OSCTimeTag_ntp_to_iso8601(struct ntptime* n, char* s) {
-  
-    time_t i;
-    struct tm* t;
-    char s1[24];
-    char s2[10];
-    double d;
-    
-    i = (time_t)OSCTimeTag_ntp_to_ut(n);
-    d = OSCTimeTag_ntp_to_float(n);
-    t = gmtime(&i);
-    
-    strftime(s1, 24, "%Y-%m-%dT%H:%M:%S", t);
-    sprintf(s2, "%05fZ", fmod(d, 1.0));
-    sprintf(s, "%s.%s", s1, s2+2);
-}
-
-void OSCTimeTag_float_to_ntp(double d, struct ntptime* n) {
-
-    double sec;
-    double frac_sec;
-
-    if(d > 0) {
-      n->sign = 1;
-    } else {
-      d *= -1;
-      n->sign = -1;
-    }
-    
-    frac_sec = fmod(d, 1.0);
-    sec = d - frac_sec;
-    
-    n->sec = (unsigned long int)(sec);
-    n->frac_sec= (unsigned long int)(frac_sec * 4294967295.0);
-    n->type = TIME_STAMP;
-}
-
-double OSCTimeTag_ntp_to_float(struct ntptime* n) {
-  if(n->sign == 1) {
-    return ((double)(n->sec)) + ((double)((unsigned long int)(n->frac_sec))) / 4294967295.0;
-  } else {
-    return -1. * (((double)(n->sec)) + (((double)((unsigned long int)(n->frac_sec))) / 4294967295.0));
-  }
-}
-
-void OSCTimeTag_ut_to_ntp(long int ut, struct ntptime* n) {
-
-    struct timeval tv;
-    struct timezone tz;
-    
-    gettimeofday(&tv, &tz); // this is just to get the timezone...
-    
-    n->sec = (unsigned long)2208988800L + 
-            (unsigned long)ut - 
-            (unsigned long)(60 * tz.tz_minuteswest) +
-            (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
-
-    n->frac_sec = 0;
-}
-
-long int OSCTimeTag_ntp_to_ut(struct ntptime* n) {
-
-    struct timeval tv;
-    struct timezone tz;
-    
-    gettimeofday(&tv, &tz); // this is just to get the timezone...
-    
-    return n->sec - (unsigned long)2208988800 + (unsigned long)(60 * tz.tz_minuteswest) - (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
-}
-
-void OSCTimeTag_now_to_ntp(struct ntptime* n) {
-
-    struct timeval tv;
-    struct timezone tz;
-
-    gettimeofday(&tv, &tz);
-    
-    n->sec = (unsigned long)2208988800 + 
-        (unsigned long) tv.tv_sec - 
-        (unsigned long)(60 * tz.tz_minuteswest) +
-        (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
-    
-    n->frac_sec = (unsigned long)(tv.tv_usec * 4295); // 2^32-1 / 1.0e6
 }
 
