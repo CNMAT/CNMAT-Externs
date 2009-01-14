@@ -18,10 +18,10 @@ typedef struct _cmmjl_common_symols_table{
 	t_symbol *s_OSCBlob;
 } t_cmmjl_common_symbols_table;
 
-#define _varname (_cmmjl_common_symbols->s_varname)
-#define _OSCTimeTag (_cmmjl_common_symbols->s_OSCTimeTag)
-#define _FullPacket (_cmmjl_common_symbols->s_FullPacket)
-#define _OSCBlob (_cmmjl_common_symbols->s_OSCBlob)
+#define ps_varname (_cmmjl_common_symbols->s_varname)
+#define ps_OSCTimeTag (_cmmjl_common_symbols->s_OSCTimeTag)
+#define ps_FullPacket (_cmmjl_common_symbols->s_FullPacket)
+#define ps_OSCBlob (_cmmjl_common_symbols->s_OSCBlob)
 
 /** The common symbols structure.  This shouldn't be accessed directly, but rather by using the symbols defined above. */
 extern t_cmmjl_common_symbols_table *_cmmjl_common_symbols;

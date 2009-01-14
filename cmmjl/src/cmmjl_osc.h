@@ -31,12 +31,12 @@ Audio Technologies, University of California, Berkeley.
 
 */
 
+#ifndef __CMMJL_OSC_H__
+#define __CMMJL_OSC_H__
+
 #include "cmmjl_error.h"
 #include "OSC-client.h"
 #include "ext.h"
-
-#ifndef __CMMJL_OSC_H__
-#define __CMMJL_OSC_H__
 
 /** The alignment padding for a string in an OSC packet.  
 This is defined in the OSC spec and should never change */
@@ -46,13 +46,53 @@ This is defined in the OSC spec and should never change */
 	the default function cmmjl_osc_fullPacket() will be used with 
 	cmmjl_osc_sendMsg() as the callback.
 
-	@param 	ob	A pointer to your object.
-	@param	fn	The function that will be called when the FullPacket message
-			is received, or NULL to use the default cmmjl_osc_fullPacket().
+	@param 	c		A pointer to your object's class allocated with class_new().
+	@param	structname	Your class's type.
 */
-#define CMMJL_ACCEPT_FULLPACKET(ob, fn)					\
-	class_addmethod(ob, ((method)fn == (method)0 ? (method)cmmjl_osc_fullPacket : (method)fn), \
-			"FullPacket", A_LONG, A_LONG, 0);
+#define CMMJL_ACCEPT_FULLPACKET(c, structname)				\
+	do{							\
+		class_addmethod(c, (method)cmmjl_osc_fullPacket, "FullPacket", A_LONG, A_LONG, 0); \
+		class_addattr(c,attr_offset_new("OSC-address",USESYM(symbol),0L,(method)0L,(method)0L,0L)); \
+		CLASS_ATTR_ACCESSORS(c, "OSC-address", cmmjl_osc_address_get, cmmjl_osc_address_set); \
+		CLASS_ATTR_SAVE(c, "OSC-address", 0L); \
+	}while(0)
+
+/**	Initialize the OSC part of the lib.  This should be done in the object's
+	new instance routine.
+
+	@param	x	A pointer to your newly allocated object.
+	@returns	An error code if one was encountered, or CMMJL_SUCCESS.
+*/
+t_cmmjl_error cmmjl_osc_init(void *x);
+
+/**	Get the OSC address of this object
+	@param	x	A pointer to the object.
+	@param	attr	The attribute object.
+	@param	argc	Arg count.
+	@param	argv	The argument vector.
+
+	@returns	An error code if one is encountered.
+*/
+t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **argv);
+
+/**	Set the OSC address of this object
+	@param	x	A pointer to the object.
+	@param	attr	The attribute object.
+	@param	argc	Arg count.
+	@param	argv	The argument vector.
+
+	@returns	An error code if one is encountered.
+*/
+t_max_err cmmjl_osc_address_set(void *x, t_object *attr, long argc, t_atom *argv);
+
+/**	Convenience function for getting the OSC address of an object.  Simply
+	calls cmmjl_osc_address_get() and returns the result after unpacking 
+	the t_atom.
+
+	@param	x	The object
+	@returns	The OSC address.
+*/
+char *cmmjl_osc_getAddress(void *x);
 
 /**	This function strips an OSC message of everything but the last segment
 	(if necessary) and attempts to send it to the object pointed to by x.

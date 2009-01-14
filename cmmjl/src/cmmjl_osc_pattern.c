@@ -1,8 +1,10 @@
+#include "cmmjl.h"
 #include "cmmjl_osc_pattern.h"
 #include <string.h>
 
-int cmmjl_osc2regex(char *osc_string, int len, regex_t *re){
+int cmmjl_osc2regex(char *osc_string, regex_t *re){
 	int i;
+	int len = strlen(osc_string);
 
 	// this should be long enough, but we'll keep track and allocate more if necessary
 	char write_buf[len * 2]; 
@@ -63,4 +65,27 @@ int cmmjl_osc2regex(char *osc_string, int len, regex_t *re){
 		return e;
 	}
 	return 0;
+}
+
+int cmmjl_osc_match(void *x, char *st1, char *st2){
+	regex_t re;
+	int e;
+	char ebuf[256];
+	if(e = cmmjl_osc2regex(st1, &re)){
+		regerror(e, &re, ebuf, 256);
+		CMMJL_ERROR(x, CMMJL_OSC_EMATCH, "%s:\n\t%s", 
+			    cmmjl_strerror(CMMJL_OSC_EMATCH), ebuf);
+		return e;
+	}
+	if(e = cmmjl_osc_match_re(&re, st2)){
+		regerror(e, &re, ebuf, 256);
+		CMMJL_ERROR(x, CMMJL_OSC_EMATCH, "%s:\n\t%s", 
+			    cmmjl_strerror(CMMJL_OSC_EMATCH), ebuf);
+		return e;
+	}
+	return e;
+}
+
+int cmmjl_osc_match_re(regex_t *re, char *st){
+	return regexec(re, st, 0, NULL, 0);
 }

@@ -16,6 +16,8 @@ const char *cmmjl_strerror(unsigned long long err){
 		return "couldn't find internal t_cmmjl_obj";
 	case CMMJL_ENOFUNC:
 		return "no such function";
+	case CMMJL_ENOMEM:
+		return "out of memory";
 	case CMMJL_OSC_ENO4BYTE:
 		return "OSC packet is not a multiple of 4 bytes long";
 	case CMMJL_OSC_EUNDRFLW:
@@ -36,5 +38,7 @@ const char *cmmjl_strerror(unsigned long long err){
 		return "bad string alignment in OSC packet";
 	case CMMJL_OSC_ELIB:
 		return "the OSC lib encountered an error while processing a packet";
+	case CMMJL_OSC_EMATCH:
+		return "the OSC lib encountered an error while attempting a match";
 	}
 }

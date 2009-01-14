@@ -14,6 +14,8 @@
 #include "version.h"
 #include "ext.h"
 #include "ext_obex.h"
+#include "ext_obex_util.h"
+#include "jpatcher_api.h"
 #include "version.c"
 #include "cmmjl/cmmjl.h" /* Include this for basic functionality */
 #include "cmmjl/cmmjl_osc.h" /* OSC support */
@@ -21,7 +23,7 @@
 #include "regex.h"
 
 typedef struct _test{
-	t_object t_ob;
+	t_object ob;
 	void *outlet;
 } t_test;
 
@@ -55,7 +57,7 @@ int main(int argc, char **argv){
 	/* Or pass NULL in as the callback to use the default which will attempt to 
 	 send the OSC message received to this object as a message (function call). 
 	 */
-	CMMJL_ACCEPT_FULLPACKET(c, test_fullpacket);
+	CMMJL_ACCEPT_FULLPACKET(c, t_test);
 
 	class_register(CLASS_BOX, c);
 	test_class = c;
@@ -68,26 +70,40 @@ void *test_new(){
 	x->outlet = outlet_new(x, 0);
 	
 	/* Initialize error reporter, symbol table, etc. */
-	cmmjl_init(x, CMMJL_CREATE_INFO_OUTLET);
+	cmmjl_init(x, NAME, CMMJL_CREATE_INFO_OUTLET);
 	
 	int bloo = 21;
        	/* report an error like this */
 	CMMJL_ERROR(x, 19, "some foo screwed up here making bar = %d", bloo);
 
-	regex_t r;
-	int e;
-	char ebuf[256];
-	char *st = "/app*e/pi?/{1,3,5}/foo";
-	if(e = cmmjl_osc2regex(st, strlen(st), &r)){
-		regerror(e, &r, ebuf, 256);
-		error("%d: %s", e, ebuf);
-		return x;
-	}
+	char *st1 = "/app*e/pi?/{1,3,5}/foo";
 	char *st2 = "/appqcue/pie/3/foo";
-	if(e = regexec(&r, st2, 0, NULL, 0)){
-		regerror(e, &r, ebuf, 256);
-		post("no match!  returned %d: %s", e, ebuf);
+	if(cmmjl_osc_match(x, st1, st2)){
+		error("No match!!");
 	}
+
+	t_object *patcher;
+	t_box *box;
+	object_obex_lookup(x, gensym("#P"), (t_object **)&patcher);
+	if(!patcher){
+		post("%s is apparently not in a patcher...", cmmjl_osc_getAddress(x));
+	}
+	t_symbol *pname = jpatcher_get_name(patcher);
+	if(!strcmp(pname->s_name, "")){
+		post("name is empty");
+		object_obex_lookup(x, gensym("#B"), (t_object **)&box);
+		post("box is called %s", jbox_get_maxclass(box)->s_name);
+		patcher = jbox_get_patcher(box);
+		post("patcher is called %s", jpatcher_get_name(patcher)->s_name);
+	}
+	post("%s", jpatcher_get_name(patcher)->s_name);
+	while(patcher){
+		patcher = jpatcher_get_parentpatcher(patcher);
+		if(patcher){
+			post("%s", jpatcher_get_name(patcher)->s_name);
+		}
+	}
+
 	return x;
 }
 

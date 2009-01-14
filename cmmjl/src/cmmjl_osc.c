@@ -32,12 +32,57 @@
 #include "cmmjl_error.h"
 #include <libgen.h>
 
+t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **argv){
+	if(!_cmmjl_obj_tab){
+		return;
+	}
+	t_object *ob;
+	t_max_err e;
+	if(e = hashtab_lookup(_cmmjl_obj_tab, x, &ob)){
+		return;
+	}
+
+	if(!(*argc) || !(*argv)){
+		*argc = 1;
+		*argv = (t_atom *)calloc(*argc, sizeof(t_atom));
+		if(!argv){
+			*argc = 0;
+			PERROR("%s", cmmjl_strerror(CMMJL_ENOMEM));
+			return MAX_ERR_OUT_OF_MEM;
+		}
+	}
+
+	atom_setsym(*argv, ((t_cmmjl_obj *)ob)->osc_address);
+	return MAX_ERR_NONE;
+}
+
+t_max_err cmmjl_osc_address_set(void *x, t_object *attr, long argc, t_atom *argv){
+	if(!_cmmjl_obj_tab){
+		return;
+	}
+	t_object *ob;
+	hashtab_lookup(_cmmjl_obj_tab, x, &ob);
+	if(argc && argv){
+		((t_cmmjl_obj *)ob)->osc_address = atom_getsym(argv);
+	}else{
+		((t_cmmjl_obj *)ob)->osc_address = gensym("");
+	}
+	return MAX_ERR_NONE;
+}
+
+char *cmmjl_osc_getAddress(void *x){
+	long ac;
+	t_atom *av;
+	cmmjl_osc_address_get(x, NULL, &ac, &av);
+	return av->a_w.w_sym->s_name;
+}
+
 void cmmjl_osc_fullPacket(void *x, long n, long ptr){
 	cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, cmmjl_osc_sendMsg);
 }
 
 void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv){
-	if(msg == _OSCTimeTag){
+	if(msg == ps_OSCTimeTag){
 		return;
 	}
 	t_symbol *m = gensym(basename(msg->s_name));
@@ -101,7 +146,7 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 			Atom timeTagLongs[2];
 			SETLONG(&timeTagLongs[0], ntohl(*((long *)(buf+8))));
 			SETLONG(&timeTagLongs[1], ntohl(*((long *)(buf+12))));
-			cbk(x, _OSCTimeTag, 2, timeTagLongs);
+			cbk(x, ps_OSCTimeTag, 2, timeTagLongs);
 		}
 
 		i = 16; /* Skip "#bundle\0" and time tag */
@@ -226,7 +271,7 @@ t_cmmjl_error cmmjl_osc_formatMessage(void *x,
 			case 't':
 				/* handle typetags in args as they are in bundles */
 				/* Could see if the data fits in a 32-bit int and output it like that if so... */
-				SETSYM(&args[numArgs], _OSCTimeTag);
+				SETSYM(&args[numArgs], ps_OSCTimeTag);
 				numArgs++;
 				SETLONG(&args[numArgs], ntohl(*((int *) p)));
 				numArgs++;
@@ -272,7 +317,7 @@ t_cmmjl_error cmmjl_osc_formatMessage(void *x,
 							    size);
 						return CMMJL_OSC_EOVRFLW;
 					}
-					SETSYM(&args[numArgs], _OSCBlob); numArgs++;
+					SETSYM(&args[numArgs], ps_OSCBlob); numArgs++;
                 
 					if(numArgs + 1 + size > MAXARGS) {
 						CMMJL_ERROR(x, CMMJL_OSC_EOVRFLW, 
