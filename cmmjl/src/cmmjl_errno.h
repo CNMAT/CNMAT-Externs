@@ -41,13 +41,19 @@ typedef unsigned long long t_cmmjl_error;
 
 /** @name Error codes */
 /*@{*/
+/* general errors */
 #define	CMMJL_SUCCESS 0ull /**< success */
 #define	CMMJL_FAILURE 1ull /**< failure */
 #define	CMMJL_ENULLPTR 2ull /**< null pointer */
 #define	CMMJL_EBADTYPE 3ull /**< unknown data type */
 #define CMMJL_ENODATA 4ull /**< no data */
 #define CMMJL_ENOOBJ 5ull /**< couldn't find internal t_cmmjl_obj */
-#define CMMJL_ENOFUNC 10ull /**< no such function (verbose) */
+#define CMMJL_ENOMEM 6ull /** < out of memory */
+
+/* verbose general errors */
+#define CMMJL_ENOFUNC 10ull /**< no such function */
+
+/* OSC errors */
 #define	CMMJL_OSC_ENO4BYTE 0x100ull /**< OSC packet is not a multiple of 4 bytes long */
 #define	CMMJL_OSC_EUNDRFLW 0x200ull/**< data in OSC packet is too small */
 #define	CMMJL_OSC_EOVRFLW 0x300ull /**< data in OSC packet is too big */
@@ -58,6 +64,9 @@ typedef unsigned long long t_cmmjl_error;
 #define CMMJL_OSC_EARGS 0x800ull /**< too many arguments in OSC message */
 #define CMMJL_OSC_EBADALIGN 0x900ull /**< bad string alignment in OSC packet */
 #define CMMJL_OSC_ELIB 0xA00ull /**< the OSC lib encountered an error while processing a packet */
+
+/* verbose OSC errors */
+#define CMMJL_OSC_EMATCH 0x1000ull /**< A problem was encountered will attempting a match */
 /*@}*/
 
 #endif

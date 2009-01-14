@@ -33,6 +33,7 @@ Audio Technologies, University of California, Berkeley.
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_hashtab.h"
+#include "ext_linklist.h"
 #include "cmmjl_error.h"
 #include "cmmjl_errno.h"
 #include "cmmjl_commonsymbols.h"
@@ -79,6 +80,7 @@ Audio Technologies, University of California, Berkeley.
 #endif
 
 extern t_hashtab *_cmmjl_obj_tab;
+extern t_hashtab *_cmmjl_instance_count;
 
 #ifndef CMMJL_CLASS_ADDMETHOD
 /**	This macro can be used to add a message to your object and
@@ -115,18 +117,21 @@ typedef struct _cmmjl_obj{
 		      char *reason_fmt); /**< The object's error handler */
 	void *info_outlet; /**< A pointer to the object's info_outlet */
 	t_hashtab *entrance_count_tab; /**< Hashtab to keep track of entrance counts in functions */
+	t_symbol *osc_address; /**< the object's varname (scripting name) as an OSC address. */
+	t_linklist *osc_address_methods; /**< a list of all the OSC messages this obj understands*/
 } t_cmmjl_obj;
 
 /** 	Initializes the library.  This must be called before the library is used.  
 
 	@param	x			A pointer to your object.
+	@param  name			The name of your object.
 	@param	shouldCreateInfoOutlet	Pass CMMJL_CREATE_INFO_OUTLET or true to 
 					create an info outlet, and CMMJL_DONT_CREATE_INFO_OUTLET
 					or false to suppress the creation.
 
 	@returns			An error code or 0 on success.
  */
-t_cmmjl_error cmmjl_init(void *x, bool shouldCreateInfoOutlet);
+t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet);
 
 /**	Returns a pointer to the info outlet.
 

@@ -43,7 +43,7 @@ foreach(<FIN>) {
 print(FOUT "} t_cmmjl_common_symbols_table;\n\n");
 
 foreach(@symbols){
-    print(FOUT "#define _$_ (_cmmjl_common_symbols->s_$_)\n");
+    print(FOUT "#define ps_$_ (_cmmjl_common_symbols->s_$_)\n");
 }
 
 print(FOUT "\n");
