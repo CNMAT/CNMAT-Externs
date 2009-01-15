@@ -32,7 +32,7 @@ t_cmmjl_common_symbols_table *_cmmjl_common_symbols;
 int _cmmjl_common_syms_initialized;
 
 static char *cmmjl_common_strings[] = {
-	"varname",
+	"OSCaddress",
 	"OSCTimeTag",
 	"FullPacket",
 	"OSCBlob"

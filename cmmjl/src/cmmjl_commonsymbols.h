@@ -12,13 +12,13 @@
 #include "ext.h"
 
 typedef struct _cmmjl_common_symols_table{
-	t_symbol *s_varname;
+	t_symbol *s_OSCaddress;
 	t_symbol *s_OSCTimeTag;
 	t_symbol *s_FullPacket;
 	t_symbol *s_OSCBlob;
 } t_cmmjl_common_symbols_table;
 
-#define ps_varname (_cmmjl_common_symbols->s_varname)
+#define ps_OSCaddress (_cmmjl_common_symbols->s_OSCaddress)
 #define ps_OSCTimeTag (_cmmjl_common_symbols->s_OSCTimeTag)
 #define ps_FullPacket (_cmmjl_common_symbols->s_FullPacket)
 #define ps_OSCBlob (_cmmjl_common_symbols->s_OSCBlob)

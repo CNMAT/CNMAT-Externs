@@ -26,33 +26,7 @@ Audio Technologies, University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-#include "cmmjl_errno.h"
-#include "cmmjl_error.h"
 #include "cmmjl.h"
-#include "cmmjl_commonsymbols.h"
-
-static void cmmjl_reformat_obj_name(char *name);
-
-t_hashtab *_cmmjl_obj_tab;
-t_hashtab *_cmmjl_instance_count;
-
-/** 	@cond
-	Initializes an object used by the library to store things like the error
-	handler, the info outlet, etc.
-
-	@param	x		The object
-	@param 	o		The t_cmmjl_obj object
-	@param	name		The name of the object
-	@param 	instance	The instance number
-
-	@returns	An error or CMMJL_SUCCESS
-*/
-t_cmmjl_error cmmjl_init_obj(void *x, 
-			     t_cmmjl_obj *o, 
-			     bool shouldCreateInfoOutlet, 
-			     const char *name,
-			     long instance);
-/* 	@endcond */
 
 t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet){
 	t_cmmjl_error err;
@@ -83,75 +57,13 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet)
 	// Create a data structure to hold our internal data and add its 
 	// address to our hash table
 	t_cmmjl_obj *o = (t_cmmjl_obj *)malloc(sizeof(t_cmmjl_obj));
-	if(err = cmmjl_init_obj(x, o, shouldCreateInfoOutlet, name, c)){
+	if(err = cmmjl_obj_init(x, o, shouldCreateInfoOutlet, name, c)){
 		error("cmmjl: couldn't allocate object (%d)", err);
 		return err;
 	}
 	hashtab_store(_cmmjl_obj_tab, x, (t_object *)o);
 
 	return CMMJL_SUCCESS;
-}
-
-t_cmmjl_error cmmjl_init_obj(void *x, 
-			     t_cmmjl_obj *o, 
-			     bool shouldCreateInfoOutlet, 
-			     const char *name,
-			     long instance)
-{
-	o->error = cmmjl_default_error_handler;
-	if(shouldCreateInfoOutlet){
-		o->info_outlet = outlet_new(x, (char *)name);
-	}else{
-		o->info_outlet = (char *)name;
-	}
-	o->entrance_count_tab = (t_hashtab *)hashtab_new(0);
-
-	// We'll just blindly set this in the default manner since 
-	// if the name has been saved with the patcher, Max will 
-	// override this name
-	char ad[256];
-	char ad2[256];
-	sprintf(ad, "/%s/%d", name, instance);
-	o->osc_address = gensym(ad);
-
-	o->osc_address_methods = (t_linklist *)linklist_new();
-	// make sure the items will never be freed
-	linklist_flags(o->osc_address_methods, OBJ_FLAG_DATA);
-	int i = 0;
-	// we're relying on the object being the first element of the struct
-	while(((t_object *)x)->o_messlist[i].m_sym){
-		if(((t_object *)x)->o_messlist[i].m_sym->s_name[0] == '/'){
-			sprintf(ad2, "%s%s", ad, ((t_object *)x)->o_messlist[i].m_sym->s_name);
-			linklist_append(o->osc_address_methods, ad2);
-		}
-		i++;
-	}
-
-	return CMMJL_SUCCESS;
-}
-
-void *cmmjl_info_outlet_get(void *x){
-	if(!_cmmjl_obj_tab){
-		return NULL;
-	}
-	t_object *o;
-	t_max_err err;
-	if(err = hashtab_lookup(_cmmjl_obj_tab, x, &o)){
-		return NULL;
-	}
-	return ((t_cmmjl_obj *)o)->info_outlet;
-}
-
-void cmmjl_info_outlet_set(void *x, void *outlet){
-	if(!_cmmjl_obj_tab){
-		return;
-	}
-	t_object *o;
-	t_max_err err;
-	if(err = hashtab_lookup(_cmmjl_obj_tab, x, &o)){
-		return;
-	}
-	((t_cmmjl_obj *)o)->info_outlet = outlet;
 }
 
 void cmmjl_post_gimme(void *x, t_symbol *msg, int argc, t_atom *argv){

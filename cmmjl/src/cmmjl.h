@@ -30,10 +30,7 @@ Audio Technologies, University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
  */
 
-#include "ext.h"
-#include "ext_obex.h"
-#include "ext_hashtab.h"
-#include "ext_linklist.h"
+#include "cmmjl_obj.h"
 #include "cmmjl_error.h"
 #include "cmmjl_errno.h"
 #include "cmmjl_commonsymbols.h"
@@ -69,57 +66,6 @@ Audio Technologies, University of California, Berkeley.
 #endif
 /** @endcond */
 
-#ifndef CMMJL_CREATE_INFO_OUTLET
-/** 	Pass this to cmmjl_init to create a default info outlet */
-#define CMMJL_CREATE_INFO_OUTLET true
-#endif
-
-#ifndef CMMJL_DONT_CREATE_INFO_OUTLET
-/** 	Pass this to cmmjl_init to suppress creation of an info outlet */
-#define CMMJL_DONT_CREATE_INFO_OUTLET false
-#endif
-
-extern t_hashtab *_cmmjl_obj_tab;
-extern t_hashtab *_cmmjl_instance_count;
-
-#ifndef CMMJL_CLASS_ADDMETHOD
-/**	This macro can be used to add a message to your object and
-	at the same time add an alias which has the same name with
-	a slash prepended to it for use with OSC-style messages.
-	For example, if you want your object to respond to a message
-	"foo", it will also respond to "/foo".  This macro has exactly
-	the same signature as class_addmethod() found in the Max SDK
-	and can be used in place of it.
-
-	@param	c	Your object's class--this should be instantiated
-			by calling class_new().
-	@param	func	The function that will be called in response to
-			the message.
-	@param  msg	The message name.
-	@param	args	The function signature.
-*/
-#define CMMJL_CLASS_ADDMETHOD(c, func, msg, args...)	\
-	do{					\
-	char buf[64];				\
-	sprintf(buf, "/%s", msg);		\
-	class_addmethod(c, func, msg, ##args);	\
-	class_addmethod(c, func, buf, ##args); \
-	} while(0)
-#endif
-
-/** 	Internal object used to store any data that will be used by the lib. */
-typedef struct _cmmjl_obj{
-	void (*error)(const char *objname, 
-		      const char *file, 
-		      const char *func, 
-		      int line, 
-		      t_cmmjl_error code, 
-		      char *reason_fmt); /**< The object's error handler */
-	void *info_outlet; /**< A pointer to the object's info_outlet */
-	t_hashtab *entrance_count_tab; /**< Hashtab to keep track of entrance counts in functions */
-	t_symbol *osc_address; /**< the object's varname (scripting name) as an OSC address. */
-	t_linklist *osc_address_methods; /**< a list of all the OSC messages this obj understands*/
-} t_cmmjl_obj;
 
 /** 	Initializes the library.  This must be called before the library is used.  
 
@@ -132,21 +78,6 @@ typedef struct _cmmjl_obj{
 	@returns			An error code or 0 on success.
  */
 t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet);
-
-/**	Returns a pointer to the info outlet.
-
-	@param 	x	Your object.
-
-	@returns	A pointer to the info outlet.
-*/
-void *cmmjl_info_outlet_get(void *x);
-
-/**	Set the info outlet.
-
-	@param	x	Your object.
-	@param	outlet	A pointer to the outlet.
-*/
-void cmmjl_info_outlet_set(void *x, void *outlet);
 
 /**	Posts the arguments of an A_GIMME message
 
