@@ -33,15 +33,6 @@
 #include <libgen.h>
 
 t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **argv){
-	if(!_cmmjl_obj_tab){
-		return;
-	}
-	t_object *ob;
-	t_max_err e;
-	if(e = hashtab_lookup(_cmmjl_obj_tab, x, &ob)){
-		return;
-	}
-
 	if(!(*argc) || !(*argv)){
 		*argc = 1;
 		*argv = (t_atom *)calloc(*argc, sizeof(t_atom));
@@ -51,30 +42,75 @@ t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **ar
 			return MAX_ERR_OUT_OF_MEM;
 		}
 	}
-
-	atom_setsym(*argv, ((t_cmmjl_obj *)ob)->osc_address);
+	t_symbol *sym = cmmjl_osc_getAddress(x);
+	if(!sym){
+		return MAX_ERR_GENERIC;
+	}
+	atom_setsym(*argv, sym);
 	return MAX_ERR_NONE;
 }
 
 t_max_err cmmjl_osc_address_set(void *x, t_object *attr, long argc, t_atom *argv){
+	if(argc && argv){
+		cmmjl_osc_setAddress(x, atom_getsym(argv));
+	}else{
+		cmmjl_osc_setAddress(x, gensym(""));
+	}
+	cmmjl_osc_saveAddressWithPatcher(x, true);
+	return MAX_ERR_NONE;
+}
+
+t_symbol *cmmjl_osc_getAddress(void *x){
+	if(!_cmmjl_obj_tab){
+		return NULL;
+	}
+	t_object *ob;
+	t_max_err e;
+	if(e = hashtab_lookup(_cmmjl_obj_tab, x, &ob)){
+		return NULL;
+	}
+	return ((t_cmmjl_obj *)ob)->osc_address;
+}
+
+void cmmjl_osc_setAddress(void *x, t_symbol *address){
 	if(!_cmmjl_obj_tab){
 		return;
 	}
 	t_object *ob;
 	hashtab_lookup(_cmmjl_obj_tab, x, &ob);
-	if(argc && argv){
-		((t_cmmjl_obj *)ob)->osc_address = atom_getsym(argv);
-	}else{
-		((t_cmmjl_obj *)ob)->osc_address = gensym("");
-	}
-	return MAX_ERR_NONE;
+	((t_cmmjl_obj *)ob)->osc_address = address;
 }
 
-char *cmmjl_osc_getAddress(void *x){
+void cmmjl_osc_setDefaultAddress(void *x){
+	char buf1[256];
+	char buf2[256];
+	long instance = cmmjl_obj_getInstance(x);
+	// do patcher hierarchy here
+	cmmjl_osc_makeDefaultAddress(x, instance, buf1);
+	cmmjl_osc_setAddress(x, gensym(buf1));
+	cmmjl_osc_saveAddressWithPatcher(x, false);
+}
+
+void cmmjl_osc_makeDefaultAddress(void *x, long instance, char *buf){
+	t_symbol *name = object_classname(x);
+	sprintf(buf, "/%s/%d", name->s_name, instance);
+}
+
+void cmmjl_osc_saveAddressWithPatcher(void *x, bool b){
 	long ac;
-	t_atom *av;
-	cmmjl_osc_address_get(x, NULL, &ac, &av);
-	return av->a_w.w_sym->s_name;
+	t_atom a, *aa;
+	t_patcher *p;
+	object_attr_attr_getvalueof(x, ps_OSCaddress, gensym("save"), &ac, &aa);
+	if(aa->a_type == A_LONG){
+		if(aa->a_w.w_long != (long)b){
+			atom_setlong(&a, b ? 1 : 0);
+			object_attr_attr_setvalueof(x, ps_OSCaddress, gensym("save"), 1, &a);
+			object_obex_lookup(x, gensym("#P"), (t_object **)&p);
+			if(p){
+				jpatcher_set_dirty(p, true);
+			}
+		}
+	}
 }
 
 void cmmjl_osc_fullPacket(void *x, long n, long ptr){

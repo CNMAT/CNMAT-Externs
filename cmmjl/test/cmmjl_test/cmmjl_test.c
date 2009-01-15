@@ -82,28 +82,46 @@ void *test_new(){
 		error("No match!!");
 	}
 
-	t_object *patcher;
+	/*
+	t_patcher *patcher, *ppatcher;
 	t_box *box;
 	object_obex_lookup(x, gensym("#P"), (t_object **)&patcher);
-	if(!patcher){
-		post("%s is apparently not in a patcher...", cmmjl_osc_getAddress(x));
-	}
-	t_symbol *pname = jpatcher_get_name(patcher);
-	if(!strcmp(pname->s_name, "")){
-		post("name is empty");
-		object_obex_lookup(x, gensym("#B"), (t_object **)&box);
-		post("box is called %s", jbox_get_maxclass(box)->s_name);
-		patcher = jbox_get_patcher(box);
-		post("patcher is called %s", jpatcher_get_name(patcher)->s_name);
-	}
-	post("%s", jpatcher_get_name(patcher)->s_name);
+	post("patcher address: %p", patcher);
+	post("patcher name: %s", jpatcher_get_name(patcher)->s_name);
+	post("patcher title: %s", jpatcher_get_title(patcher)->s_name);
+	box = jpatcher_get_box(patcher);
+	post("box = %p", box);
+	ppatcher = jpatcher_get_parentpatcher(patcher);
+	post("parent address: %p", ppatcher);
+	*/
+
+	/*
+	t_object *parent, *patcher;
+        t_symbol *name;
+
+        object_obex_lookup(x, gensym("#P"), &patcher);
+        parent = patcher;
+        do {
+		parent = jpatcher_get_parentpatcher(parent);
+		if (parent) {
+			name = object_attr_getsym(parent, gensym("name"));
+			if (name)
+				post("%s",name->s_name);
+		}
+        } while (parent != NULL);
+	*/
+
+	/*
+	object_obex_lookup(x, gensym("#B"), (t_object **)&box);
+	post("box is called %s", jbox_get_maxclass(box)->s_name);
+	post("id = %d", jbox_get_id(box)->s_name);
 	while(patcher){
 		patcher = jpatcher_get_parentpatcher(patcher);
 		if(patcher){
-			post("%s", jpatcher_get_name(patcher)->s_name);
+			post("patcher: %s", jpatcher_get_name(patcher)->s_name);
 		}
 	}
-
+	*/
 	return x;
 }
 

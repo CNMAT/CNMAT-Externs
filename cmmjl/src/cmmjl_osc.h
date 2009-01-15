@@ -52,9 +52,9 @@ This is defined in the OSC spec and should never change */
 #define CMMJL_ACCEPT_FULLPACKET(c, structname)				\
 	do{							\
 		class_addmethod(c, (method)cmmjl_osc_fullPacket, "FullPacket", A_LONG, A_LONG, 0); \
-		class_addattr(c,attr_offset_new("OSC-address",USESYM(symbol),0L,(method)0L,(method)0L,0L)); \
-		CLASS_ATTR_ACCESSORS(c, "OSC-address", cmmjl_osc_address_get, cmmjl_osc_address_set); \
-		CLASS_ATTR_SAVE(c, "OSC-address", 0L); \
+		class_addattr(c,attr_offset_new("OSCaddress",USESYM(symbol),0L,(method)0L,(method)0L,0L)); \
+		CLASS_ATTR_ACCESSORS(c, "OSCaddress", cmmjl_osc_address_get, cmmjl_osc_address_set); \
+		class_addmethod(c, (method)cmmjl_osc_setDefaultAddress, "reset_OSCaddress", 0); \
 	}while(0)
 
 /**	Initialize the OSC part of the lib.  This should be done in the object's
@@ -65,34 +65,67 @@ This is defined in the OSC spec and should never change */
 */
 t_cmmjl_error cmmjl_osc_init(void *x);
 
-/**	Get the OSC address of this object
+/**	Get the OSC address of this object.  This should only be called by the max system
+	when the attribute is querried.  Use cmmjl_osc_getAddress() instead.
 	@param	x	A pointer to the object.
 	@param	attr	The attribute object.
 	@param	argc	Arg count.
 	@param	argv	The argument vector.
 
 	@returns	An error code if one is encountered.
+	@see		cmmjl_osc_getAddress()
 */
 t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **argv);
 
-/**	Set the OSC address of this object
+/**	Set the OSC address of this object.  This should only be called by the max system
+	when the attribute is set.  Use cmmjl_osc_setAddress() instead.
 	@param	x	A pointer to the object.
 	@param	attr	The attribute object.
 	@param	argc	Arg count.
 	@param	argv	The argument vector.
 
 	@returns	An error code if one is encountered.
+	@see		cmmjl_osc_setAddress()
 */
 t_max_err cmmjl_osc_address_set(void *x, t_object *attr, long argc, t_atom *argv);
 
-/**	Convenience function for getting the OSC address of an object.  Simply
-	calls cmmjl_osc_address_get() and returns the result after unpacking 
-	the t_atom.
+/*	Get the OSC address associated with an object.
 
 	@param	x	The object
 	@returns	The OSC address.
 */
-char *cmmjl_osc_getAddress(void *x);
+t_symbol *cmmjl_osc_getAddress(void *x);
+
+/**	Set the OSC address associated with an object.
+
+	@param	x	The object
+	@param address	The address to set.
+*/
+void cmmjl_osc_setAddress(void *x, t_symbol *address);
+
+/**	Create and set a default OSC address which will be in the form
+	/patcher/hierarchy/objectname/instancenumber
+
+	@param	x	The object
+*/
+void cmmjl_osc_setDefaultAddress(void *x);
+
+/**	Create a default OSC address in the form
+	/patcher/hierarchy/objectname/instancenumber
+
+	@param 	x		The object
+	@param	instance	The instance number
+	@param	buf		A buffer to hold the address.
+	@see 	cmmjl_osc_setAddress 
+*/
+void cmmjl_osc_makeDefaultAddress(void *x, long instance, char *buf);
+
+/**	Calls obj_attr_attr_setvalueof() to notify Max that he should save 
+	the value of this attribute with the patcher.
+	@param	x 	The object.
+	@param	b	true/false
+*/
+void cmmjl_osc_saveAddressWithPatcher(void *x, bool b);
 
 /**	This function strips an OSC message of everything but the last segment
 	(if necessary) and attempts to send it to the object pointed to by x.

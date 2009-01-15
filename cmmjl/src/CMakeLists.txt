@@ -38,6 +38,7 @@ SET(cmmjl_SOURCES
 	cmmjl_strerror.c
 	cmmjl_commonsymbols.c
 	cmmjl_profile.c
+	cmmjl_obj.c
 	${cmmjl_PATH_TO_LIBOSC}/OSC-client.c
 	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.c)
 
@@ -51,6 +52,7 @@ SET(cmmjl_HEADERS
 	cmmjl_commonsymbols.h 
 	cmmjl_types.h
 	cmmjl_profile.h
+	cmmjl_obj.h
 	${cmmjl_PATH_TO_LIBOSC}/OSC-client.h
 	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.h)
 
