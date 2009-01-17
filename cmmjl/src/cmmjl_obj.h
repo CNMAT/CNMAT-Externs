@@ -34,21 +34,14 @@ Audio Technologies, University of California, Berkeley.
 #ifndef __CMMJL_OBJ_H__
 #define __CMMJL_OBJ_H__
 
-#include "cmmjl_error.h"
+#include "cmmjl_error.h" // need t_cmmjl_error
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_hashtab.h"
 #include "ext_linklist.h"
 
-#ifndef CMMJL_CREATE_INFO_OUTLET
-/** 	Pass this to cmmjl_init to create a default info outlet */
-#define CMMJL_CREATE_INFO_OUTLET true
-#endif
-
-#ifndef CMMJL_DONT_CREATE_INFO_OUTLET
-/** 	Pass this to cmmjl_init to suppress creation of an info outlet */
-#define CMMJL_DONT_CREATE_INFO_OUTLET false
-#endif
+#define CMMJL_CREATE_INFO_OUTLET 0x1
+#define CMMJL_OSC_SCHEDULER_ON 0x2
 
 extern t_hashtab *_cmmjl_obj_tab;
 extern t_hashtab *_cmmjl_instance_count;
@@ -86,11 +79,18 @@ typedef struct _cmmjl_obj{
 		      int line, 
 		      t_cmmjl_error code, 
 		      char *reason_fmt); /**< The object's error handler */
-	void *info_outlet; /**< A pointer to the object's info_outlet */
-	t_hashtab *entrance_count_tab; /**< Hashtab to keep track of entrance counts in functions */
+	/** The object's FullPacket handler */
+	t_cmmjl_error (*osc_parser)(void*,long,long,void(*)(void*,t_symbol*,int,t_atom*));
+	/** The callback used when parsing a FullPacket */
+	void (*osc_parser_cb)(void *x, t_symbol *sym, int argc, t_atom *argv); 
 	t_symbol *osc_address; /**< the object's varname (scripting name) as an OSC address. */
 	t_linklist *osc_address_methods; /**< a list of all the OSC messages this obj understands*/
+	/** A structure containing all the data necessary to use the OSC scheduling system. */
+	void *osc_scheduler;
+	int osc_should_schedule; /**< set this to non-zero to schedule a packet using its timestamp */
 	long instance; /**< a unique number identifying which instance this obj is */
+	void *info_outlet; /**< A pointer to the object's info_outlet */
+	t_hashtab *entrance_count_tab; /**< Hashtab to keep track of entrance counts in functions*/
 } t_cmmjl_obj;
 
 t_hashtab *_cmmjl_obj_tab;
@@ -108,6 +108,7 @@ t_cmmjl_obj *cmmjl_obj_get(void *x);
 
 	@param	x		The object
 	@param 	o		The t_cmmjl_obj object
+	@param 	flags		A bitfield of flags.
 	@param	name		The name of the object
 	@param 	instance	The instance number
 
@@ -115,11 +116,23 @@ t_cmmjl_obj *cmmjl_obj_get(void *x);
 */
 t_cmmjl_error cmmjl_obj_init(void *x, 
 			     t_cmmjl_obj *o, 
-			     bool shouldCreateInfoOutlet, 
+			     unsigned long flags,
 			     const char *name,
 			     long instance);
 /* 	@endcond */
 
+/**	@cond
+	We need some things to be initialized after all objects have been 
+	instantiated, so cmmjl_obj_init() schedules this to be called after a 
+	short delay.
+	
+	@param	x	The object
+	@param	sym	A message
+	@param	argc	Arg count
+	@param	argv	Arguments
+*/
+void cmmjl_obj_init_del(void *x, t_symbol *sym, short argc, t_atom *argv);
+/*	@endcond */
 
 /**	Returns a pointer to the info outlet.
 	@param 	x	Your object.
@@ -130,13 +143,61 @@ void *cmmjl_obj_info_outlet_get(void *x);
 /**	Set the info outlet.
 	@param	x	Your object.
 	@param	outlet	A pointer to the outlet.
+	@returns	An error or CMMJL_SUCCESS
 */
-void cmmjl_obj_info_outlet_set(void *x, void *outlet);
+t_cmmjl_error cmmjl_obj_info_outlet_set(void *x, void *outlet);
+
+/**	Get a pointer to the function to call when a FullPacket message is received.
+	@param	x	Your object
+	@returns	A pointer to the function.
+*/
+void *cmmjl_obj_osc_parser_get(void *x);
+
+/**	Set the function that will be called when a FullPacket message is received.
+	@param	x	Your object
+	@param	cb	A pointer to the function that you want called
+	@returns	An error or CMMJL_SUCCESS
+	@see		cmmjl_osc_parseFullPacket()
+*/
+t_cmmjl_error cmmjl_obj_osc_parser_set(void *x, 
+				       t_cmmjl_error(*cb)(void*,long,long,
+							  void(*)(void*,t_symbol*,int,t_atom*)));
+
+/**	Get a pointer to the function that will handle the data as it is decoded 
+	from an OSC packet.
+	@param	x	Your object
+	@returns	A pointer to the function.
+*/
+void *cmmjl_obj_osc_parser_cb_get(void *x);
+
+/**	Set the function that will be called to handle the data as it is decoded 
+	from an OSC packet.
+	@param	x	Your object
+	@param	cb	A pointer to the function.
+	@returns	An error os CMMJL_SUCCESS
+*/
+t_cmmjl_error cmmjl_obj_osc_parser_cb_set(void *x, void (*cb)(void*,t_symbol*,int,t_atom*));
+
 
 /**	Get the instance number of your object.  
 	@param	x	Your object
 	@returns	The instance number or -1 if there was an error.
 */
-long cmmjl_obj_getInstance(void *x);
+long cmmjl_obj_instance_get(void *x);
+
+/**	Get a pointer to the linked list contaning the OSC addresses this obj responds to
+	@param	x	Your object.
+	@returns	A pointer to the linked list.
+*/
+t_linklist *cmmjl_obj_osc_address_methods_get(void *x);
+
+/**	Add an address to the linked list of OSC addresses this object responds to
+	@param	x	Your object.
+	@param	address	The OSC address to add
+	@returns	An error if one was encountered, or CMMJL_SUCCESS
+	@note	No sanity checks are performed on the address to make sure it's a 
+		valid OSC-style address.
+*/
+t_cmmjl_error cmmjl_obj_osc_address_methods_add(void *x, char *address);
 
 #endif // __CMMJL_OBJ_H__

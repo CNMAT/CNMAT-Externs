@@ -27,6 +27,7 @@ Audio Technologies, University of California, Berkeley.
 */
 
 #include "cmmjl.h"
+#include "cmmjl_osc.h"
 #include "cmmjl_obj.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -36,12 +37,13 @@ Audio Technologies, University of California, Berkeley.
 
 t_cmmjl_error cmmjl_obj_init(void *x, 
 			     t_cmmjl_obj *o, 
-			     bool shouldCreateInfoOutlet, 
+			     unsigned long flags,
 			     const char *name,
 			     long instance)
 {
+	//t_atom a;
 	o->error = cmmjl_default_error_handler;
-	if(shouldCreateInfoOutlet){
+	if(flags & CMMJL_CREATE_INFO_OUTLET){
 		o->info_outlet = outlet_new(x, (char *)name);
 	}else{
 		o->info_outlet = (char *)name;
@@ -50,32 +52,69 @@ t_cmmjl_error cmmjl_obj_init(void *x,
 
 	o->instance = instance;
 
+	o->osc_address = NULL;
+	o->osc_address_methods = NULL;
+	o->osc_parser = NULL;
+	o->osc_parser_cb = NULL;
+
 	if(object_attr_get(x, ps_OSCaddress)){
-		// We'll just blindly set this in the default manner since 
-		// if the name has been saved with the patcher, Max will 
-		// override this name
-		char buf1[256];
-		char buf2[256];
-		cmmjl_osc_makeDefaultAddress(x, instance, buf1);
-		o->osc_address = gensym(buf1);
-		//cmmjl_osc_setDefaultAddress(x);
+		o->osc_parser = cmmjl_osc_parseFullPacket;
+		o->osc_parser_cb = cmmjl_osc_sendMsg;
+		o->osc_should_schedule = flags & CMMJL_OSC_SCHEDULER_ON;
 
 		OBJ_ATTR_SAVE(x, "OSCaddress", 0L);
 
-		o->osc_address_methods = (t_linklist *)linklist_new();
-		// make sure the items will never be freed
-		linklist_flags(o->osc_address_methods, OBJ_FLAG_DATA);
-		int i = 0;
-		// we're relying on the object being the first element of the struct
-		while(((t_object *)x)->o_messlist[i].m_sym){
-			if(((t_object *)x)->o_messlist[i].m_sym->s_name[0] == '/'){
-				sprintf(buf2, "%s%s", buf1, ((t_object *)x)->o_messlist[i].m_sym->s_name);
-				linklist_append(o->osc_address_methods, buf2);
-			}
-			i++;
-		}
+		cmmjl_osc_schedule_init(x, o);
+
+		//atom_setlong(&a, 0);
+		//object_attr_attr_setvalueof(x, ps_OSCaddress, gensym("save"), 1, &a);
+
+		// Now schedule the rest of the initialization for 50ms from now since
+		// we need to be sure that all objs have been instantiated before we 
+		// start making our OSC address.
+		schedule_defer(x, (method)cmmjl_obj_init_del, 50, NULL, 0, NULL);
 	}
 	return CMMJL_SUCCESS;
+}
+
+void cmmjl_obj_init_del(void *x, t_symbol *sym, short argc, t_atom *argv){
+	//post("cmmjl_obj_init_del");
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(o->osc_address){
+		//post("address = %s", o->osc_address);
+		// We already have an address presumably set by Max due to it 
+		// being saved with the patcher.
+		return;
+	}
+	char buf[256];
+	cmmjl_osc_makeDefaultAddress(x, cmmjl_obj_instance_get(x), buf);
+	//post("buf = %s", buf);
+	o->osc_address = gensym(buf);
+
+	// cmmjl_osc_saveAddressWithPatcher() would do this, but it will set the patcher's 
+	// "dirty" bit which we don't want at this point.
+	t_atom a;
+	atom_setlong(&a, 0);
+	object_attr_attr_setvalueof(x, ps_OSCaddress, gensym("save"), 1, &a);
+	//cmmjl_osc_saveAddressWithPatcher(x, false);
+
+	o->osc_address_methods = (t_linklist *)linklist_new();
+	// make sure the items will never be freed
+	linklist_flags(o->osc_address_methods, OBJ_FLAG_DATA);
+	int i = 0;
+	char *buf_ptr;
+	// we're relying on the object being the first element of the struct
+	while(((t_object *)x)->o_messlist[i].m_sym){
+		if(((t_object *)x)->o_messlist[i].m_sym->s_name[0] == '/'){
+			sprintf(buf, "%s%s", o->osc_address->s_name, ((t_object *)x)->o_messlist[i].m_sym->s_name);
+			buf_ptr = (char *)calloc(sizeof(char), strlen(buf) + 1);
+			strcpy(buf_ptr, buf);
+			post("putting %s in linked list", buf);
+			linklist_append(o->osc_address_methods, buf_ptr);
+			post("%p", buf_ptr);
+		}
+		i++;
+	}
 }
 
 t_cmmjl_obj *cmmjl_obj_get(void *x){
@@ -102,22 +141,76 @@ void *cmmjl_obj_info_outlet_get(void *x){
 	return ((t_cmmjl_obj *)o)->info_outlet;
 }
 
-void cmmjl_obj_info_outlet_set(void *x, void *outlet){
+t_cmmjl_error cmmjl_obj_info_outlet_set(void *x, void *outlet){
 	if(!_cmmjl_obj_tab){
-		return;
+		return CMMJL_ENOOBJ;
 	}
 	t_object *o;
 	t_max_err err;
 	if(err = hashtab_lookup(_cmmjl_obj_tab, x, &o)){
-		return;
+		return CMMJL_FAILURE;
 	}
 	((t_cmmjl_obj *)o)->info_outlet = outlet;
+	return CMMJL_SUCCESS;
 }
 
-long cmmjl_obj_getInstance(void *x){
+long cmmjl_obj_instance_get(void *x){
 	t_cmmjl_obj *o = cmmjl_obj_get(x);
 	if(!o){
 		return -1;
 	}
 	return o->instance;
+}
+
+void *cmmjl_obj_osc_parser_get(void *x){
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(!o){
+		return NULL;
+	}
+	return o->osc_parser;
+}
+
+t_cmmjl_error cmmjl_obj_osc_parser_set(void *x, 
+				       t_cmmjl_error(*cb)(void*,long,long,
+							  void(*)(void*,t_symbol*,int,t_atom*)))
+{
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(!o){
+		return CMMJL_ENOOBJ;
+	}
+	o->osc_parser = cb;
+	return CMMJL_SUCCESS;
+}
+
+void *cmmjl_obj_osc_parser_cb_get(void *x){
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(!o){
+		return NULL;
+	}
+	return o->osc_parser_cb;
+}
+
+t_cmmjl_error cmmjl_obj_osc_parser_cb_set(void *x, void (*cb)(void*,t_symbol*,int,t_atom*)){
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(!o){
+		return CMMJL_ENOOBJ;
+	}
+	o->osc_parser_cb = cb;
+	return CMMJL_SUCCESS;
+}
+
+t_linklist *cmmjl_obj_osc_address_methods_get(void *x){
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(!o){
+		return NULL;
+	}
+	return o->osc_address_methods;
+}
+
+t_cmmjl_error cmmjl_obj_osc_address_methods_add(void *x, char *address){
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(!o){
+		return CMMJL_ENOOBJ;
+	}
+	linklist_append(o->osc_address_methods, gensym(address));
 }

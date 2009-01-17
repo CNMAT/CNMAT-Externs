@@ -31,6 +31,7 @@
 #include "cmmjl_commonsymbols.h"
 #include "cmmjl_error.h"
 #include <libgen.h>
+#include "jpatcher_api.h"
 
 t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **argv){
 	if(!(*argc) || !(*argv)){
@@ -82,18 +83,75 @@ void cmmjl_osc_setAddress(void *x, t_symbol *address){
 }
 
 void cmmjl_osc_setDefaultAddress(void *x){
-	char buf1[256];
-	char buf2[256];
-	long instance = cmmjl_obj_getInstance(x);
-	// do patcher hierarchy here
-	cmmjl_osc_makeDefaultAddress(x, instance, buf1);
-	cmmjl_osc_setAddress(x, gensym(buf1));
+	char buf[256];
+	long instance = cmmjl_obj_instance_get(x);
+	cmmjl_osc_makeDefaultAddress(x, instance, buf);
+	cmmjl_osc_setAddress(x, gensym(buf));
 	cmmjl_osc_saveAddressWithPatcher(x, false);
 }
 
 void cmmjl_osc_makeDefaultAddress(void *x, long instance, char *buf){
-	t_symbol *name = object_classname(x);
-	sprintf(buf, "/%s/%d", name->s_name, instance);
+	char buf2[256], tmp[64];
+	t_patcher *p, *pp;
+	t_box *b;
+	t_symbol *name;
+	char *ptr;
+	int index;
+	object_obex_lookup(x, gensym("#P"), (t_object **)&p);
+	if(!p){
+		return;
+	}
+	name = jpatcher_get_name(p);
+	if(name){
+		if(strcmp(name->s_name, "")){
+			// if this is a filename, get rid of the extension
+			if(ptr = strrchr(name->s_name, '.')){
+				memset(tmp, '\0', 64);
+				index = name->s_name - ptr;
+				if(index < 0) index = -index;
+				post("index = %d", index);
+				memcpy(tmp, name->s_name, index);
+				sprintf(buf2, "/%s", tmp);
+			}else{
+				sprintf(buf2, "/%s", name->s_name);
+			}
+			post("name = %s", name->s_name);
+		}
+	}else{
+		// maybe we didn't wait long enough...
+	}
+	b = jpatcher_get_box(p);
+	if(b){
+		post("box %p", b);
+		while(p){
+			pp = jpatcher_get_parentpatcher(p);
+			if(pp){
+				name = jpatcher_get_name(pp);
+				if(name){
+					if(strcmp(name->s_name, "")){
+						if(ptr = strrchr(name->s_name, '.')){
+							memset(tmp, '\0', 64);
+							index = name->s_name - ptr;
+							if(index < 0) index = -index;
+							post("index = %d", index);
+							memcpy(tmp, name->s_name, index);
+							sprintf(buf, "/%s%s", tmp, buf2);
+						}else{
+							sprintf(buf, "/%s%s", name->s_name, buf2);
+						}
+						post("name = %s", name->s_name);
+						post("%s", buf);
+					}
+				}
+			}
+			p = pp;
+			strcpy(buf2, buf);
+		}
+	}
+
+	name = object_classname(x);
+	sprintf(buf, "%s/%s/%d", buf2, name->s_name, instance);
+
 }
 
 void cmmjl_osc_saveAddressWithPatcher(void *x, bool b){
@@ -114,28 +172,75 @@ void cmmjl_osc_saveAddressWithPatcher(void *x, bool b){
 }
 
 void cmmjl_osc_fullPacket(void *x, long n, long ptr){
-	cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, cmmjl_osc_sendMsg);
+	//cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, cmmjl_osc_sendMsg);
+	t_cmmjl_error (*parser)(void *, long, long, void (*)(void *, t_symbol *, int, t_atom *));
+	t_cmmjl_error e;
+	if(cmmjl_osc_should_schedule(x)){
+		cmmjl_osc_schedule(x, n, ptr);
+	}else{
+		parser = cmmjl_obj_osc_parser_get(x);
+		if(e = (*parser)(x, n, ptr, cmmjl_obj_osc_parser_cb_get(x))){
+			// cmmjl_osc_parseFullPacket posts its own errors so just return
+			return;
+		}
+	}
 }
 
 void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv){
+	t_linklist *ll = cmmjl_obj_osc_address_methods_get(x);
+	t_symbol *m = gensym(basename(msg->s_name));
+	char *osc_address;
+	int i;
+	method func;
+	void *r;
+
 	if(msg == ps_OSCTimeTag){
 		return;
 	}
-	t_symbol *m = gensym(basename(msg->s_name));
-	method func = zgetfn((t_object *)x, m);
-	void *r;
-	if(func){
-		r = typedmess(x, m, argc, argv);
+	if(!ll){
 		return;
+	}
+	osc_address = linklist_getindex(ll, 0);
+	for(i = 0; i < linklist_getsize(ll); i++){
+		post("%s (%p)", osc_address, osc_address);
+		if(!osc_address){
+			post("no OSC address--breaking");
+			break;
+		}
+		post("matching %s against %s", msg->s_name, osc_address);
+		if(!cmmjl_osc_match(x, msg->s_name, osc_address)){
+			post("%s matches %s", osc_address, msg->s_name);
+			func = zgetfn((t_object *)x, m);
+			if(func){
+				post("function %s exists", m->s_name);
+				r = typedmess(x, m, argc, argv);
+				//return;
+			}
+		}else{
+			post("%s does not match %s", osc_address, msg->s_name);
+		}
+		linklist_next(ll, osc_address, (void **)&osc_address);
 	}
 	CMMJL_ERROR(x, CMMJL_ENOFUNC, "couldn't send message %s to object", m->s_name);
 }
 
 t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, 
-					char *buf, 
 					long n, 
-					bool topLevel,
-					void (*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc))
+					long ptr, 
+					void (*cbk)(void*, t_symbol*, int, t_atom*))
+{
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	if(!x){
+		return CMMJL_ENOOBJ;
+	}
+	cmmjl_osc_parse(x, n, (char *)ptr, true, o->osc_parser_cb);
+}
+
+t_cmmjl_error cmmjl_osc_parse(void *x, 
+			      long n, 
+			      char *buf,
+			      bool topLevel,
+			      void (*cbk)(void *x, t_symbol *sym, int argc, t_atom *argv))
 {
 	long size, messageLen, i;
 	char *messageName;
@@ -201,7 +306,7 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 			}
 	    
 			/* Recursively handle element of bundle */
-			t = cmmjl_osc_parseFullPacket(x, buf+i+4, size, false, cbk);
+			t = cmmjl_osc_parse(x, size, buf+i+4, false, cbk);
 			if(t != 0) {
 				CMMJL_ERROR(x, CMMJL_FAILURE, 
 					    "recursive processing of OSC packet failed.  Bailing out.");

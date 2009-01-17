@@ -28,17 +28,21 @@ SET(cmmjl_PATH_TO_SDIFLIB ../../../sdif/lib)
 SET(cmmjl_PATH_TO_MAXSDK ../../SDK/MaxSDK-5)
 SET(cmmjl_PATH_TO_SDIF-BUFFER ../../externals/SDIF/SDIF-buffer)
 SET(cmmjl_PATH_TO_LIBOSC ../../../OSC/libOSC)
+SET(cmmjl_PATH_TO_THIRDPARTY thirdparty)
 
 SET(cmmjl_SOURCES 
 	cmmjl.c 
 	cmmjl_sdif.c 
 	cmmjl_osc.c 
 	cmmjl_osc_pattern.c
+	cmmjl_osc_schedule.c
+	cmmjl_osc_timetag.c
 	cmmjl_error.c 
 	cmmjl_strerror.c
 	cmmjl_commonsymbols.c
 	cmmjl_profile.c
 	cmmjl_obj.c
+	${cmmjl_PATH_TO_THIRDPARTY}/pqops.c
 	${cmmjl_PATH_TO_LIBOSC}/OSC-client.c
 	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.c)
 
@@ -47,12 +51,15 @@ SET(cmmjl_HEADERS
 	cmmjl_sdif.h 
 	cmmjl_osc.h 
 	cmmjl_osc_pattern.h
+	cmmjl_osc_schedule.h
+	cmmjl_osc_timetag.h
 	cmmjl_error.h 
 	cmmjl_errno.h
 	cmmjl_commonsymbols.h 
 	cmmjl_types.h
 	cmmjl_profile.h
 	cmmjl_obj.h
+	${cmmjl_PATH_TO_THIRDPARTY}/pqops.h
 	${cmmjl_PATH_TO_LIBOSC}/OSC-client.h
 	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.h)
 
@@ -62,7 +69,8 @@ INCLUDE_DIRECTORIES(.
 	${cmmjl_PATH_TO_MAXSDK}/c74support/max-includes 
 	../../include
 	${cmmjl_PATH_TO_SDIF-BUFFER}
-	${cmmjl_PATH_TO_SDIFLIB})
+	${cmmjl_PATH_TO_SDIFLIB}
+	${cmmjl_PATH_TO_THIRDPARTY})
 
 LINK_DIRECTORIES(../../lib)
 #SET(OSC_LIBRARY OSC)

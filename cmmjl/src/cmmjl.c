@@ -28,7 +28,9 @@ Audio Technologies, University of California, Berkeley.
 
 #include "cmmjl.h"
 
-t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet){
+#define CMMJL_DEFAULT_HASHTAB_SIZE 1021 // prime
+
+t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags){
 	t_cmmjl_error err;
 
 	// initialize symbol table. This function checks to see if it's 
@@ -37,7 +39,7 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet)
 
 	// Create a new hashtable if we haven't done that yet.
 	if(!_cmmjl_obj_tab){
-		_cmmjl_obj_tab = (t_hashtab *)hashtab_new(0);
+		_cmmjl_obj_tab = (t_hashtab *)hashtab_new(CMMJL_DEFAULT_HASHTAB_SIZE);
 	}
 
 	// Create a hashtab to keep track of instance counts for all the objects.
@@ -45,7 +47,7 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet)
 	// which use the OSC part of this lib.
 	t_symbol *s_name = gensym((char *)name);
 	if(!_cmmjl_instance_count){
-		_cmmjl_instance_count = (t_hashtab *)hashtab_new(0);
+		_cmmjl_instance_count = (t_hashtab *)hashtab_new(CMMJL_DEFAULT_HASHTAB_SIZE);
 	}
 	t_object *count;
 	long c;
@@ -57,13 +59,17 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet)
 	// Create a data structure to hold our internal data and add its 
 	// address to our hash table
 	t_cmmjl_obj *o = (t_cmmjl_obj *)malloc(sizeof(t_cmmjl_obj));
-	if(err = cmmjl_obj_init(x, o, shouldCreateInfoOutlet, name, c)){
+	if(err = cmmjl_obj_init(x, o, flags, name, c)){
 		error("cmmjl: couldn't allocate object (%d)", err);
 		return err;
 	}
 	hashtab_store(_cmmjl_obj_tab, x, (t_object *)o);
 
 	return CMMJL_SUCCESS;
+}
+
+void cmmjl_free(void *x){
+	//free some stuff here...
 }
 
 void cmmjl_post_gimme(void *x, t_symbol *msg, int argc, t_atom *argv){

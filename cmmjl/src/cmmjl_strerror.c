@@ -40,5 +40,9 @@ const char *cmmjl_strerror(unsigned long long err){
 		return "the OSC lib encountered an error while processing a packet";
 	case CMMJL_OSC_EMATCH:
 		return "the OSC lib encountered an error while attempting a match";
+	case CMMJL_OSC_ELATE:
+		return "OSC packet arrived too late for scheduling";
+	case CMMJL_OSC_EMAXDEL:
+		return "OSC packet was scheduled too far into the future";
 	}
 }

@@ -1,4 +1,5 @@
 /** 	@file cmmjl_osc.h Utilites for handling OpenSoundControl data in Max. 
+	@authors John MacCallum, Matt Wright, Andy Schmeder
 	@addtogroup 	OSC 
 @{
 */
@@ -14,7 +15,7 @@ appear in all copies, modifications, and distributions.  Contact The Office of
 Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley,
 CA 94720-1620, (510) 643-7201, for commercial licensing opportunities.
 
-Written by John MacCallum and Andy Schmeder, The Center for New Music and 
+Written by John MacCallum, Matt Wright and Andy Schmeder, The Center for New Music and 
 Audio Technologies, University of California, Berkeley.
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
@@ -34,6 +35,9 @@ Audio Technologies, University of California, Berkeley.
 #ifndef __CMMJL_OSC_H__
 #define __CMMJL_OSC_H__
 
+#include "cmmjl_osc_pattern.h"
+#include "cmmjl_osc_timetag.h"
+#include "cmmjl_osc_schedule.h"
 #include "cmmjl_error.h"
 #include "OSC-client.h"
 #include "ext.h"
@@ -148,14 +152,25 @@ void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv);
  */
 void cmmjl_osc_fullPacket(void *x, long n, long ptr);
 
+/**	Call the OSC FullPacket parser
+	@param	x	The object.
+	@param	n	The length of the packet in bytes.
+	@param	cbk	The callback that will be used when messages get parsed
+	@param	ptr	The address of the packet.
+*/
+t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, 
+					long n, 
+					long ptr, 
+					void (*cbk)(void*, t_symbol*, int, t_atom*));
+
 /** 	Parse an OSC packet.  This function recursively parses the 
 	packet which can be a bundle or even a nested bundle.  
 	For each message (and the timetag), cbk is called.  
 
 	@param 	x		A pointer to your object.  This will be passed
 				to the callback as the first argument.
-	@param	buf		Pointer to the OSC data to be parsed.
 	@param	n		Length in bytes of the OSC data.
+	@param	buf		Pointer to the OSC data to be parsed.
 	@param	topLevel	Set this to "true" or 1 when calling the function.
 	@param 	cbk		The callback to be used to return OSC messages.  
 				If cbk is NULL, the messages will be printed to 
@@ -163,11 +178,11 @@ void cmmjl_osc_fullPacket(void *x, long n, long ptr);
 
 	@returns		Any error code or 0 on success.
 */ 
-t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, 
-					char *buf, 
-					long n, 
-					bool topLevel,
-					void (*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc));
+t_cmmjl_error cmmjl_osc_parse(void *x, 
+			      long n, 
+			      char *buf,
+			      bool topLevel,
+			      void (*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc));
 
 /** 	Format an OSC message as a Max message.  This function is 
 	called by cmmjl_osc_parseFullPacket().

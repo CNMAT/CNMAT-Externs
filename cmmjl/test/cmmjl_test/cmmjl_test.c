@@ -20,6 +20,8 @@
 #include "cmmjl/cmmjl.h" /* Include this for basic functionality */
 #include "cmmjl/cmmjl_osc.h" /* OSC support */
 #include "cmmjl/cmmjl_osc_pattern.h"
+#include "cmmjl/cmmjl_osc_timetag.h"
+#include "cmmjl/cmmjl_osc_schedule.h"
 #include "regex.h"
 
 typedef struct _test{
@@ -36,6 +38,7 @@ void test_assist(t_test *x, void *b, long m, long a, char *s);
 void test_seterrorcb(t_test *x);
 void test_error(t_test *x);
 void test_errorcb(const char *obj, const char *file, const char *func, int line, t_cmmjl_error code, char *reason);
+void test_verbose(t_test *x, long b);
 
 /* This will be called in response to the FullPacket message */
 void test_fullpacket(t_test *x, long len, long ptr);
@@ -50,6 +53,7 @@ int main(int argc, char **argv){
 	CMMJL_CLASS_ADDMETHOD(c, (method)test_bar, "bar", A_LONG, 0);
 	CMMJL_CLASS_ADDMETHOD(c, (method)test_seterrorcb, "seterrorcb", 0);
 	CMMJL_CLASS_ADDMETHOD(c, (method)test_error, "error", 0);
+	CMMJL_CLASS_ADDMETHOD(c, (method)test_verbose, "verbose", A_LONG, 0);
 	
 	/* Accept the FullPacket message and set the callback */
 	//CMMJL_ACCEPT_FULLPACKET(c, test_fullpacket);
@@ -70,7 +74,7 @@ void *test_new(){
 	x->outlet = outlet_new(x, 0);
 	
 	/* Initialize error reporter, symbol table, etc. */
-	cmmjl_init(x, NAME, CMMJL_CREATE_INFO_OUTLET);
+	cmmjl_init(x, NAME, CMMJL_CREATE_INFO_OUTLET | CMMJL_OSC_SCHEDULER_ON);
 	
 	int bloo = 21;
        	/* report an error like this */
@@ -144,6 +148,14 @@ void test_seterrorcb(t_test *x){
 	cmmjl_set_error_handler(x, test_errorcb);
 }
 
+void test_verbose(t_test *x, long b){
+	if(b == 0){
+		cmmjl_set_default_error_handler(x);
+	}else{
+		cmmjl_set_verbose_error_handler(x);
+	}
+}
+
 void test_fullpacket(t_test *x, long len, long ptr){
 	CMMJL_ENTER(x);
 	CMMJL_TIMER();
@@ -152,7 +164,7 @@ void test_fullpacket(t_test *x, long len, long ptr){
 	PDEBUG("len = %d, ptr = %d", len, ptr);
 	/* When we get a pointer to a packet, call this function with the callback that
 	   will handle the messages as they are parsed out of the packet. */
-	t_cmmjl_error e = cmmjl_osc_parseFullPacket(x, (char *)ptr, len, true, test_fullpacket_callback);
+	t_cmmjl_error e = cmmjl_osc_parseFullPacket(x, len, ptr, test_fullpacket_callback);
 	CMMJL_TIMER_END();
 	CMMJL_EXIT(x);
 }

@@ -67,6 +67,8 @@ typedef unsigned long long t_cmmjl_error;
 
 /* verbose OSC errors */
 #define CMMJL_OSC_EMATCH 0x1000ull /**< A problem was encountered will attempting a match */
+#define CMMJL_OSC_ELATE 0x2000ull /**< OSC packet arrived too late for scheduling */
+#define CMMJL_OSC_EMAXDEL 0x3000ull /**< OSC packet was scheduled too far into the future */
 /*@}*/
 
 #endif

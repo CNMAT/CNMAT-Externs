@@ -69,15 +69,14 @@ Audio Technologies, University of California, Berkeley.
 
 /** 	Initializes the library.  This must be called before the library is used.  
 
-	@param	x			A pointer to your object.
-	@param  name			The name of your object.
-	@param	shouldCreateInfoOutlet	Pass CMMJL_CREATE_INFO_OUTLET or true to 
-					create an info outlet, and CMMJL_DONT_CREATE_INFO_OUTLET
-					or false to suppress the creation.
+	@param	x	A pointer to your object.
+	@param  name	The name of your object.
+	@param	flags	A bitfield of flags.  See cmmjl_obj.h
 
-	@returns			An error code or 0 on success.
+	@returns	An error code or 0 on success.
+	@see cmmjl_obj.h
  */
-t_cmmjl_error cmmjl_init(void *x, const char *name, bool shouldCreateInfoOutlet);
+t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags);
 
 /**	Posts the arguments of an A_GIMME message
 

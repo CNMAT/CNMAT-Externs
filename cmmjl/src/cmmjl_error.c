@@ -67,7 +67,7 @@ void cmmjl_default_error_handler(const char *objname,
 				 char *reason)
 {
 	if(code & CMMJL_EMASK_ALL_REG){
-		error("%s: %s: %s: %d: %s (%llx)", objname, filename, function, line, reason, code);
+		error("%s: %s: %s: %d: %s (0x%llx)", objname, filename, function, line, reason, code);
 	}
 }
 
@@ -78,7 +78,7 @@ void cmmjl_verbose_error_handler(const char *objname,
 				 t_cmmjl_error code, 
 				 char *reason)
 {
-	error("%s: %s: %s: %d: %s (%llx)", objname, filename, function, line, reason, code);
+	error("%s: %s: %s: %d: %s (0x%llx)", objname, filename, function, line, reason, code);
 }
 
 void cmmjl_no_error_handler(const char *objname,
