@@ -189,7 +189,7 @@ void heap_finalize(binary_heap *a) { FREE(a->elements); }
 int compare_priority(node i, node j) {
   
   int c;
-  c = OSCTimeTag_cmp(&(i.timestamp), &(j.timestamp)); 
+  c = cmmjl_osc_timetag_cmp(&(i.timestamp), &(j.timestamp)); 
   
   if(c == -1) { // priority sorts opposite of timestamp...
     return 1;

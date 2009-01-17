@@ -4,6 +4,9 @@
  * Revision: $Id: pqops.h 434 2005-06-16 23:24:22Z ranga $
  */
 
+#ifndef __PQOPS_H__
+#define __PQOPS_H__
+
 /* define some constants,  */
 
 #define MSGSIZE 128       /* max size of a debug message */
@@ -35,7 +38,7 @@ typedef unsigned long long int priority;
 
 /* create a global node tmp, for swaping purposes */
 
-#include "../OSC-timetag/OSC-timetag-ops.h"
+#include "cmmjl_osc_timetag.h"
 
 typedef struct _node
 {
@@ -81,3 +84,5 @@ extern int         node_find(binary_heap a,unsigned int id);
 
 extern int         compare_priority(node i, node j);
 extern void        print_error(char *msg);
+
+#endif
