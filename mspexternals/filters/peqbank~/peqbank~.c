@@ -48,6 +48,7 @@ VERSION 2.0.1: Force Package Info Generation
 VERSION 2.1: Fixed bug of overwriting input signal vector with the filtered output
 VERSION 2.2: Added "bank" message as a synonym for "list", dsp_free fixed -mz
 VERSION 2.3: Tried to make peqbank_compute() be reentrant.
+VERSION 2.3.1 Fixed crash caused by maxelem() and peqbank_reset() calling peqbank_free() --JM
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
@@ -508,9 +509,21 @@ void peqbank_reset(t_peqbank *x) {
 	x->b_nbpeq = 0;
 	x->b_start = NBCOEFF;
 	x->b_max = MAXELEM;
-	
-	peqbank_free(x);
-	peqbank_init(x);
+
+	memset(x->param, 0, x->b_max * NBPARAM * sizeof(float));
+	memset(x->oldparam, 0, x->b_max * NBPARAM * sizeof(float));
+	memset(x->coeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	memset(x->coeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	memset(x->newcoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	memset(x->freecoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	memset(x->b_ym1, 0, x->b_max * sizeof(float));
+	memset(x->b_ym2, 0, x->b_max * sizeof(float));
+	memset(x->b_xm1, 0, x->b_max * sizeof(float));
+	memset(x->b_xm2, 0, x->b_max * sizeof(float));
+	memset(x->myList, 0, x->b_max * NBCOEFF * sizeof(float));
+
+	//peqbank_free(x);
+	//peqbank_init(x);
 	peqbank_compute(x);	
 }
 
@@ -527,8 +540,9 @@ int maxelem(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest) {
 		rest ++;
 	}
 	
-	peqbank_free(x);
-	peqbank_init(x);
+	//peqbank_free(x);
+	//peqbank_init(x);
+	peqbank_reset(x);
 		
 	return(rest);		
 }
