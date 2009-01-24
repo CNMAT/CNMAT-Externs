@@ -187,6 +187,8 @@ void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_init(t_peqbank *x);
 void peqbank_assist(t_peqbank *x, void *b, long m, long a, char *s);
 void *peqbank_new(t_symbol *s, short argc, t_atom *argv);
+void peqbank_allocmem(t_peqbank *x);
+void peqbank_freemem(t_peqbank *x);
 void peqbank_free(t_peqbank *x);
 void peqbank_compute(t_peqbank *x);
 void swap_in_new_coeffs(t_peqbank *x);
@@ -505,25 +507,51 @@ void peqbank_dsp(t_peqbank *x, t_signal **sp, short *connect) {
 }
 
 void peqbank_reset(t_peqbank *x) {
-
 	x->b_nbpeq = 0;
 	x->b_start = NBCOEFF;
+	long oldmax = x->b_max;
 	x->b_max = MAXELEM;
-
-	memset(x->param, 0, x->b_max * NBPARAM * sizeof(float));
-	memset(x->oldparam, 0, x->b_max * NBPARAM * sizeof(float));
-	memset(x->coeff, 0, x->b_max * NBCOEFF * sizeof(float));
-	memset(x->coeff, 0, x->b_max * NBCOEFF * sizeof(float));
-	memset(x->newcoeff, 0, x->b_max * NBCOEFF * sizeof(float));
-	memset(x->freecoeff, 0, x->b_max * NBCOEFF * sizeof(float));
-	memset(x->b_ym1, 0, x->b_max * sizeof(float));
-	memset(x->b_ym2, 0, x->b_max * sizeof(float));
-	memset(x->b_xm1, 0, x->b_max * sizeof(float));
-	memset(x->b_xm2, 0, x->b_max * sizeof(float));
-	memset(x->myList, 0, x->b_max * NBCOEFF * sizeof(float));
+	if(oldmax != x->b_max){
+		peqbank_freemem(x);
+		peqbank_allocmem(x);
+	}
+	
+	if(x->param){
+		memset(x->param, 0, x->b_max * NBPARAM * sizeof(float));
+	}
+	if(x->oldparam){
+		memset(x->oldparam, 0, x->b_max * NBPARAM * sizeof(float));
+	}
+	if(x->coeff){
+		memset(x->coeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	}
+	if(x->oldcoeff){
+		memset(x->oldcoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	}
+	if(x->newcoeff){
+		memset(x->newcoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	}
+	if(x->freecoeff){
+		memset(x->freecoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+	}
+	if(x->b_ym1){
+		memset(x->b_ym1, 0, x->b_max * sizeof(float));
+	}
+	if(x->b_ym2){
+		memset(x->b_ym2, 0, x->b_max * sizeof(float));
+	}
+	if(x->b_xm1){
+		memset(x->b_xm1, 0, x->b_max * sizeof(float));
+	}
+	if(x->b_xm2){
+		memset(x->b_xm2, 0, x->b_max * sizeof(float));
+	}
+	if(x->myList){
+		memset(x->myList, 0, x->b_max * NBCOEFF * sizeof(t_atom));
+	}
 
 	//peqbank_free(x);
-	//peqbank_init(x);
+        peqbank_init(x);
 	peqbank_compute(x);	
 }
 
@@ -540,9 +568,10 @@ int maxelem(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest) {
 		rest ++;
 	}
 	
-	//peqbank_free(x);
-	//peqbank_init(x);
-	peqbank_reset(x);
+	peqbank_freemem(x);
+	peqbank_allocmem(x);
+	peqbank_init(x);
+	//peqbank_reset(x);
 		
 	return(rest);		
 }
@@ -698,28 +727,9 @@ void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 		
 
 void peqbank_init(t_peqbank *x) {
+	// memory allocation has been moved to peqbank_allocmem() --JM
 
 	int i;
-
-	/* alocate and initialize memory */
-	x->param    = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->param) );
-	x->oldparam = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->oldparam) );
-	x->coeff    = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->coeff) );
-	x->oldcoeff = x->coeff;
-    x->newcoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->newcoeff) );
-    x->freecoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->freecoeff) );
-    x->b_ym1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym1) );
-    x->b_ym2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym2) );     
-    x->b_xm1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm1) );
-    x->b_xm2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm2) );     
-    x->myList   = (Atom*)  sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
-
-
-	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
-	    x->freecoeff == NIL || x->b_ym1 == NIL || x->b_ym2 == NIL || x->b_xm1 == NIL || 
-	    x->b_xm2 == NIL || x->myList == NIL) {
-		post("¥ peqbank~: warning: not enough memory.  Expect to crash soon.");
-	}
 
 	for (i=0; i<x->b_max * NBPARAM; ++i) {
 		x->param[i]    = 0.0f;
@@ -785,6 +795,7 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
 		
 	x->already_peqbank_compute = 0;
 	x->need_to_recompute = 0;
+	peqbank_allocmem(x);
 	peqbank_init(x);
 		
     dsp_setup((t_pxobject *)x, 1);			// number of inlets
@@ -798,10 +809,30 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
     return (x);
 }
 
-void  peqbank_free(t_peqbank *x) {
-	
-	dsp_free(&(x->b_obj));
-	
+void peqbank_allocmem(t_peqbank *x){
+	/* alocate and initialize memory */
+	x->param    = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->param) );
+	x->oldparam = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->oldparam) );
+	x->coeff    = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->coeff) );
+	x->oldcoeff = x->coeff;
+	x->newcoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->newcoeff) );
+	x->freecoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->freecoeff) );
+	x->b_ym1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym1) );
+	x->b_ym2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym2) );     
+	x->b_xm1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm1) );
+	x->b_xm2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm2) );     
+	x->myList   = (Atom*)  sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
+
+
+	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
+	    x->freecoeff == NIL || x->b_ym1 == NIL || x->b_ym2 == NIL || x->b_xm1 == NIL || 
+	    x->b_xm2 == NIL || x->myList == NIL) {
+		post("¥ peqbank~: warning: not enough memory.  Expect to crash soon.");
+	}
+
+}
+
+void peqbank_freemem(t_peqbank *x){
 	sysmem_freeptr((char *) x->param);
 	sysmem_freeptr((char *) x->oldparam);
 
@@ -810,11 +841,16 @@ void  peqbank_free(t_peqbank *x) {
 	sysmem_freeptr((char *) x->newcoeff);
 	if (x->freecoeff) sysmem_freeptr((char *) x->freecoeff);
 
-    sysmem_freeptr((char *) x->b_ym1);
-    sysmem_freeptr((char *) x->b_ym2);
-    sysmem_freeptr((char *) x->b_xm1);
-    sysmem_freeptr((char *) x->b_xm2);
-    sysmem_freeptr((char *) x->myList);
+	sysmem_freeptr((char *) x->b_ym1);
+	sysmem_freeptr((char *) x->b_ym2);
+	sysmem_freeptr((char *) x->b_xm1);
+	sysmem_freeptr((char *) x->b_xm2);
+	sysmem_freeptr((char *) x->myList);
+}
+
+void  peqbank_free(t_peqbank *x) {
+	dsp_free(&(x->b_obj));
+	peqbank_freemem(x);
 }
 
 #define WORRIED_ABOUT_PEQBANK_REENTRANCY
