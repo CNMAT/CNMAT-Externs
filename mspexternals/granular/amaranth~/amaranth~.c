@@ -385,6 +385,15 @@ t_int *amaranth_perform(t_int *w) {
 				} else {
 					howMany = x->grains[g].samplesToGo;
 				}
+                
+                /*
+                 What happens here:
+                 
+                 When the grain is played back at a speed other than 1.0, the playback pointer falls on points "in between" two samples.
+                 The number of positions in between that are allowed is quantized to INTERPOLATION_TABLE_SIZE.
+                 
+                 interpTable contains precomputed weights for combining the left and right samples at each quantized position.
+                 */
 				
 				for (j = 0; j < howMany; ++j) {
 					index = x->grains[g].bufIndex / INTERPOLATION_TABLE_SIZE;
@@ -395,7 +404,7 @@ t_int *amaranth_perform(t_int *w) {
 					out[j] += interpolatedSample * hanningWindowTable[x->grains[g].windowPos>>8];
 					
 					x->grains[g].bufIndex += x->grains[g].bufStep;
-					x->grains[g].bufIndex = (x->grains[g].bufIndex % (x->grains[g].buffer->b_frames * INTERPOLATION_TABLE_SIZE));
+					x->grains[g].bufIndex = (x->grains[g].bufIndex % (x->grains[g].buffer->b_frames * INTERPOLATION_TABLE_SIZE)); // allow to wrap around
 					x->grains[g].windowPos += x->grains[g].windowStep;
 				}
 
