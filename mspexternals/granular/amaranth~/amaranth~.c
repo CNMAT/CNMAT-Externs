@@ -296,7 +296,7 @@ void amaranth_grain(t_amaranth *x, Symbol *s, short argc, Atom *argv) {
 	x->grains[g].location = ((int) location * x->grains[g].buffer->b_sr * 0.001);
 	x->grains[g].bufIndex = x->grains[g].location << 8;
 	
-	x->grains[g].bufStep = (int) (256.0f * trans);
+	x->grains[g].bufStep = (int) (INTERPOLATION_TABLE_SIZE * trans);
 	
 	x->grains[g].duration = x->grains[g].samplesToGo = dur * sys_getsr() * 0.001;
 	x->grains[g].transpose = trans;
@@ -305,15 +305,20 @@ void amaranth_grain(t_amaranth *x, Symbol *s, short argc, Atom *argv) {
 	
 	samplesNeeded = x->grains[g].location + x->grains[g].duration / trans;
 	
-	if (samplesNeeded > x->grains[g].buffer->b_frames) {
+    if(samplesNeeded <= 1) {
+        FreeGrain(x, g);
+        return;
+    }
+    
+	//if (samplesNeeded > x->grains[g].buffer->b_frames) {
 		/* Buffer is too small; drop this grain */
 		/* xxx make this complaint only happen once...*/
 		/* post("¥ amaranth~: %ld-sample buffer %s is too small for loc %f, duration %f, trans %f",
 			 x->grains[g].buffer->b_frames, bufName->s_name, x->grains[g].location, 
 			 x->grains[g].duration, trans); */
-		FreeGrain(x, g);
-		return;
-	}
+	//	FreeGrain(x, g);
+	//	return;
+	//}
 
 	
 	/* post("*** grain %ld, loc %ld, dur %ld, trans %f, buf %s", g, x->grains[g].location, x->grains[g].duration,
@@ -381,9 +386,8 @@ t_int *amaranth_perform(t_int *w) {
 					howMany = x->grains[g].samplesToGo;
 				}
 				
-				
 				for (j = 0; j < howMany; ++j) {
-					index = x->grains[g].bufIndex >> 8;
+					index = x->grains[g].bufIndex >> 8; // same as division by 256
 					interpIndex = x->grains[g].bufIndex & 0xff;
 					interpolatedSample = samples[index*nchans] * interpTable[interpIndex].left +
 										 samples[(index+1)*nchans] * interpTable[interpIndex].right;
@@ -391,6 +395,7 @@ t_int *amaranth_perform(t_int *w) {
 					out[j] += interpolatedSample * hanningWindowTable[x->grains[g].windowPos>>8];
 					
 					x->grains[g].bufIndex += x->grains[g].bufStep;
+					x->grains[g].bufIndex = (x->grains[g].bufIndex % (x->grains[g].buffer->b_frames * INTERPOLATION_TABLE_SIZE));
 					x->grains[g].windowPos += x->grains[g].windowStep;
 				}
 
