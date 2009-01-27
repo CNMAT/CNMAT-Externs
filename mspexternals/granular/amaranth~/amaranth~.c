@@ -387,7 +387,7 @@ t_int *amaranth_perform(t_int *w) {
 				}
 				
 				for (j = 0; j < howMany; ++j) {
-					index = x->grains[g].bufIndex >> 8; // same as division by 256
+					index = x->grains[g].bufIndex / INTERPOLATION_TABLE_SIZE;
 					interpIndex = x->grains[g].bufIndex & 0xff;
 					interpolatedSample = samples[index*nchans] * interpTable[interpIndex].left +
 										 samples[(index+1)*nchans] * interpTable[interpIndex].right;
