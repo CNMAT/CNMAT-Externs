@@ -86,6 +86,7 @@ typedef struct _amaranth
     int numGrains;
     Grainstate *grains;
     int firstFree;		// Head of "free list" of grains
+	int numUsedGrains;
 } t_amaranth;    
 
 t_symbol *ps_buffer;
@@ -109,6 +110,7 @@ void amaranth_free(t_amaranth *x);
 int AllocGrain(t_amaranth *x);
 void FreeGrain(t_amaranth *x, int which);
 int FreeAllGrains(t_amaranth *x);
+void amaranth_ngrains(t_amaranth *x);
 void amaranth_dsp(t_amaranth *x, t_signal **sp, short *count);
 t_int *amaranth_perform(t_int *w);
 void amaranth_grain(t_amaranth *x, Symbol *s, short argc, Atom *argv);
@@ -166,6 +168,8 @@ void *amaranth_new(int maxNumGrains) {
   	dsp_setup((t_pxobject *)x,0);  // no signal inlets
     x->outlet = outlet_new((t_object *)x, 0L);
 	outlet_new((t_object *)x, "signal");
+
+	x->numUsedGrains = 0;
     return x;
     
 }
@@ -195,6 +199,8 @@ int AllocGrain(t_amaranth *x) {
 	if (result == -1) return -1;
 	x->grains[result].busy = 1;
 	x->firstFree = x->grains[result].nextFree;
+	x->numUsedGrains += 1;
+	amaranth_ngrains(x);
 	return result;
 #endif
 }
@@ -204,6 +210,8 @@ void FreeGrain(t_amaranth *x, int which) {
 
 	x->grains[which].nextFree = x->firstFree;
 	x->firstFree = which;
+	x->numUsedGrains -= 1;
+	amaranth_ngrains(x);
 }
 
 int FreeAllGrains(t_amaranth *x) {
@@ -216,9 +224,16 @@ int FreeAllGrains(t_amaranth *x) {
 			++result;
 		}
 	}
+	x->numUsedGrains = 0;
+	amaranth_ngrains(x);
 	return result;
 }
 
+void amaranth_ngrains(t_amaranth *x){
+	t_atom a;
+	SETLONG(&a, x->numUsedGrains);
+	outlet_anything(x->outlet, gensym("ngrains"), 1, &a);
+}
 
  // void amaranth_grain(t_amaranth *x, float location, float dur, float trans, Symbol *bufName) {
 // That probably would have worked if I had made them doubles instead of floats...
