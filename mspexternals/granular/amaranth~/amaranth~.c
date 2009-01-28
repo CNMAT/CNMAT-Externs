@@ -239,6 +239,9 @@ void amaranth_ngrains(t_amaranth *x){
 // That probably would have worked if I had made them doubles instead of floats...
  
 void amaranth_grain(t_amaranth *x, Symbol *s, short argc, Atom *argv) {
+	if(sys_getdspstate == 0){
+		return;
+	}
 	int g, samplesNeeded;
 	float location,  dur,  trans;
 	Symbol *bufName;
