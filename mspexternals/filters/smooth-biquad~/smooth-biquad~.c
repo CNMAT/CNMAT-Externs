@@ -48,6 +48,9 @@ VERSION 1.5.1: Force Package Info Generation
 #include "version.h"
 #include "version.c"
 
+#include <fenv.h>
+#pragma STDC FENV_ACCESS ON
+
 void *biquad_class;
 
 enum {
@@ -123,6 +126,14 @@ t_int *biquad_perform(t_int *w)
 	  float o0, o1, o2, o3;
 	  float i0,i1;
 	
+#ifdef WINDOWS
+	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON)
+#else
+	fenv_t oldEnv;
+	//Read the old environment and set the new environment using default flags and denormals off
+	fegetenv( &oldEnv );
+	fesetenv( FE_DFL_DISABLE_SSE_DENORMS_ENV );
+#endif	
 	for(i=0;i<n;i+=4)
 	{
 		out[i] = y0 = (a0 * (i0 = in[i])) + (a1 * i3) + (a2 * i2) - (b1 * y1) - (b2 * y0);
@@ -150,6 +161,13 @@ t_int *biquad_perform(t_int *w)
 		b1 += b1inc;
 		b2 += b2inc;
 	}
+
+#ifdef WINDOWS
+	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_OFF)
+#else
+	fesetenv( &oldEnv );
+#endif
+	
 	x->b_ym1 = y1;
 	x->b_ym2 = y0;
 	x->b_xm1 = i3;
@@ -190,7 +208,16 @@ t_int *biquad2_perform(t_int *w)
 	a1inc = (x->a1-x->b_a1) *  rate;
 	b1inc = (x->b1-x->b_b1) *  rate;
 	b2inc = ( x->b2-x->b_b2) *  rate;
-
+	
+#ifdef WINDOWS
+	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON)
+#else
+	fenv_t oldEnv;
+	//Read the old environment and set the new environment using default flags and denormals off
+	fegetenv( &oldEnv );
+	fesetenv( FE_DFL_DISABLE_SSE_DENORMS_ENV );
+#endif
+	
 	for(i=0;i<n;++i)
 	{
 		xn = in[i];
@@ -205,6 +232,13 @@ t_int *biquad2_perform(t_int *w)
 		b1 += b1inc;
 		b2 += b2inc;
 	}
+
+#ifdef WINDOWS
+	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_OFF)
+#else
+	fesetenv( &oldEnv );
+#endif
+	
 	x->b_ym1 = ym1;
 	x->b_ym2 = ym2;
 	x->b_xm1 = xm1;
