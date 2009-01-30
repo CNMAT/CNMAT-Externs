@@ -37,6 +37,7 @@ VERSION 1.4: Rough windows compile by mzed, 20 April 2004
 VERSION 1.4.1: Better compile 27 April 2004, mzed
 VERSION 1.5: CFM/MachO compile, proper version info.
 VERSION 1.5.1: Force Package Info Generation
+VERSION 1.5.2: Denormals squashed
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -48,6 +49,7 @@ VERSION 1.5.1: Force Package Info Generation
 #include "version.h"
 #include "version.c"
 
+#define SQUASH_DENORMALS
 #include <fenv.h>
 #pragma STDC FENV_ACCESS ON
 
@@ -125,7 +127,9 @@ t_int *biquad_perform(t_int *w)
 	float b2inc = (x->b2-x->b_b2) *  rate;
 	  float o0, o1, o2, o3;
 	  float i0,i1;
-	
+
+
+#ifdef SQUASH_DENORMALS
 #ifdef WINDOWS
 	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON)
 #else
@@ -133,7 +137,8 @@ t_int *biquad_perform(t_int *w)
 	//Read the old environment and set the new environment using default flags and denormals off
 	fegetenv( &oldEnv );
 	fesetenv( FE_DFL_DISABLE_SSE_DENORMS_ENV );
-#endif	
+#endif
+#endif
 	for(i=0;i<n;i+=4)
 	{
 		out[i] = y0 = (a0 * (i0 = in[i])) + (a1 * i3) + (a2 * i2) - (b1 * y1) - (b2 * y0);
@@ -162,10 +167,12 @@ t_int *biquad_perform(t_int *w)
 		b2 += b2inc;
 	}
 
+#ifdef SQUASH_DENORMALS
 #ifdef WINDOWS
 	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_OFF)
 #else
 	fesetenv( &oldEnv );
+#endif
 #endif
 	
 	x->b_ym1 = y1;
@@ -208,7 +215,8 @@ t_int *biquad2_perform(t_int *w)
 	a1inc = (x->a1-x->b_a1) *  rate;
 	b1inc = (x->b1-x->b_b1) *  rate;
 	b2inc = ( x->b2-x->b_b2) *  rate;
-	
+
+#ifdef SQUASH_DENORMALS	
 #ifdef WINDOWS
 	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON)
 #else
@@ -216,6 +224,7 @@ t_int *biquad2_perform(t_int *w)
 	//Read the old environment and set the new environment using default flags and denormals off
 	fegetenv( &oldEnv );
 	fesetenv( FE_DFL_DISABLE_SSE_DENORMS_ENV );
+#endif
 #endif
 	
 	for(i=0;i<n;++i)
@@ -233,10 +242,12 @@ t_int *biquad2_perform(t_int *w)
 		b2 += b2inc;
 	}
 
+#ifdef SQUASH_DENORMALS
 #ifdef WINDOWS
 	_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_OFF)
 #else
 	fesetenv( &oldEnv );
+#endif
 #endif
 	
 	x->b_ym1 = ym1;
