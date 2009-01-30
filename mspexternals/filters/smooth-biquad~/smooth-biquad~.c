@@ -50,8 +50,12 @@ VERSION 1.5.2: Denormals squashed
 #include "version.c"
 
 #define SQUASH_DENORMALS
+#ifdef WINDOWS
+#include <xmmintrin.h>
+#else
 #include <fenv.h>
 #pragma STDC FENV_ACCESS ON
+#endif
 
 void *biquad_class;
 
