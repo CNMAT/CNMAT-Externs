@@ -27,6 +27,7 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2007
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: First version
+VERSION 1.0.1: Fixed a memory bug
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -35,6 +36,8 @@ VERSION 1.0: First version
 #include "version.c"
 #include "z_dsp.h"
 #include "math.h"
+
+#define VSHT_MAX_VSIZE 4096
 
 typedef struct _vsht
 {
@@ -105,15 +108,16 @@ void *vsht_new(long t){
 	x->v_running = 0;
 	x->v_interval = 0;
 
-	x->v_vectorSize = sys_getblksize();
-	x->v_currentVector = (t_atom *)calloc(x->v_vectorSize, sizeof(t_atom));
+	x->v_currentVector = (t_atom *)calloc(VSHT_MAX_VSIZE, sizeof(t_atom));
 
 	if(t > 0){
 		x->v_interval = t;
 		x->v_running = 1;
 		clock_delay(x->v_clock, x->v_interval);
 	}
-		
+
+	float foo[t * sizeof(float)];
+	post("%d", sizeof(foo));
 	return(x);
 }
 
@@ -161,10 +165,7 @@ t_int *vsht_perform(t_int *w
 	int n = (int)w[3];
 	int i = 0;
 
-	if(x->v_vectorSize != n){
-		x->v_currentVector = (t_atom *)realloc(x->v_currentVector, n * sizeof(t_atom));
-		x->v_vectorSize = n;
-	}
+	x->v_vectorSize = n;
 
 	for(i = 0; i < n; i++){
 		SETFLOAT(x->v_currentVector + i, in[i]);
