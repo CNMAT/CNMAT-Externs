@@ -116,8 +116,6 @@ void *vsht_new(long t){
 		clock_delay(x->v_clock, x->v_interval);
 	}
 
-	float foo[t * sizeof(float)];
-	post("%d", sizeof(foo));
 	return(x);
 }
 
@@ -159,7 +157,7 @@ void vsht_dsp(t_vsht *x, t_signal **sp, short *count){
 	dsp_add(vsht_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 }
 
-t_int *vsht_perform(t_int *w
+t_int *vsht_perform(t_int *w){
 	t_vsht *x = (t_vsht *)w[1];
 	t_float *in = (t_float *)w[2];
 	int n = (int)w[3];
