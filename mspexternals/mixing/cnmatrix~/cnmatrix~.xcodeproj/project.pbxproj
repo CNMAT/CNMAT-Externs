@@ -9,17 +9,17 @@
 /* Begin PBXBuildFile section */
 		1207C7520F449FF800A99B0A /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1207C7510F449FF800A99B0A /* JitterAPI.framework */; };
 		1207C7860F44BCF300A99B0A /* cnmatrix~.c in Sources */ = {isa = PBXBuildFile; fileRef = 1207C7850F44BCF300A99B0A /* cnmatrix~.c */; };
+		1207C8CA0F46606F00A99B0A /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1207C8C90F46606F00A99B0A /* MaxAPI.framework */; };
+		1207C9090F46607700A99B0A /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1207C9080F46607700A99B0A /* MaxAudioAPI.framework */; };
 		129BE9680D044469004F0F92 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 129BE9670D044469004F0F92 /* Info.plist */; };
-		BEED70E40A8153B600523D1A /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEED70E20A8153B600523D1A /* MaxAPI.framework */; };
-		BEED70E50A8153B600523D1A /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEED70E30A8153B600523D1A /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1207C7510F449FF800A99B0A /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/jit-includes/JitterAPI.framework"; sourceTree = SOURCE_ROOT; };
 		1207C7850F44BCF300A99B0A /* cnmatrix~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cnmatrix~.c"; sourceTree = "<group>"; };
+		1207C8C90F46606F00A99B0A /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		1207C9080F46607700A99B0A /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		129BE9670D044469004F0F92 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BEED70E20A8153B600523D1A /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		BEED70E30A8153B600523D1A /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/UB-SDK/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		C93E2F590BE2704100642F09 /* cnmatrix~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cnmatrix~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -28,9 +28,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEED70E40A8153B600523D1A /* MaxAPI.framework in Frameworks */,
-				BEED70E50A8153B600523D1A /* MaxAudioAPI.framework in Frameworks */,
 				1207C7520F449FF800A99B0A /* JitterAPI.framework in Frameworks */,
+				1207C8CA0F46606F00A99B0A /* MaxAPI.framework in Frameworks */,
+				1207C9090F46607700A99B0A /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,8 +51,8 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BEED70E20A8153B600523D1A /* MaxAPI.framework */,
-				BEED70E30A8153B600523D1A /* MaxAudioAPI.framework */,
+				1207C9080F46607700A99B0A /* MaxAudioAPI.framework */,
+				1207C8C90F46606F00A99B0A /* MaxAPI.framework */,
 				1207C7510F449FF800A99B0A /* JitterAPI.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -176,9 +176,13 @@
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/jit-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/msp-includes\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -225,12 +229,15 @@
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/jit-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/jit-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/msp-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -241,11 +248,14 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../../../c74support/max-includes",
-					"../../../c74support/msp-includes",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/jit-includes\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/jit-includes\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/msp-includes\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -275,9 +285,13 @@
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/jit-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/msp-includes\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
