@@ -51,10 +51,9 @@ void rdist_distlist(t_rdist *x, long n);
 void rdist_useBuffer(t_rdist *x, long b);
 void rdist_assist(t_rdist *x, void *b, long m, long a, char *s);
 void *rdist_new(t_symbol *msg, short argc, t_atom *argv);
-void rdist_free(t_rdist *x);
+//void rdist_free(t_rdist *x);
 
-int main(void)
-{
+int main(void){
 	setup((t_messlist **)&rdist_class, (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, A_GIMME, 0); 
 	
 	rdist_main();
@@ -72,23 +71,20 @@ int main(void)
 //--------------------------------------------------------------------------
 
 void rdist_bang(t_rdist *x){
-	float *out;
-	t_atom *out_atom;
+	float out[x->r_stride];
+	t_atom out_atom[x->r_stride];
 	int i;
 	t_symbol *msg;
 
-	out = (float *)calloc(x->r_stride, sizeof(float));
-	out_atom = (t_atom *)calloc(x->r_stride, sizeof(t_atom));
-	
 	if(x->r_useBuffer){
 		for(i = 0; i < x->r_stride; i++){
-			SETFLOAT(out_atom + i, x->r_buffers[x->r_whichBuffer][x->r_bufferPos]);
+			SETFLOAT(&(out_atom[i]), x->r_buffers[x->r_whichBuffer][x->r_bufferPos]);
 			rdist_incBufPos(x, 1);
 		}
 	} else {
 		(*x->r_function)((void *)x, out, x->r_stride);
 		for(i = 0; i < x->r_stride; i++)
-			SETFLOAT(out_atom + i, out[i]);
+			SETFLOAT(&(out_atom[i]), out[i]);
 	}
 
 	msg = (x->r_stride > 1) ? gensym("list") : gensym("float");
@@ -96,26 +92,21 @@ void rdist_bang(t_rdist *x){
 	//post("buffer: %d, pos: %d, val: %f", x->r_whichBuffer, x->r_bufferPos, out[0].a_w.w_float);
 	
 	outlet_anything(x->r_out0, msg, x->r_stride, out_atom);
-	free(out);
-	free(out_atom);
 }
 
 void rdist_distlist(t_rdist *x, long n){
 	int i, j;
-	float *out;
-	t_atom *out_atom;
+	float out[n * x->r_stride];
+	t_atom out_atom[n * x->r_stride];
 	if(n < 1){
-		error("randdist: distlist argument must be greater than 1.");
+		error("randdist: distlist argument must be >= 1.");
 		return;
 	}
-
-	out = (float *)calloc(n * x->r_stride, sizeof(float));
-	out_atom = (t_atom *)calloc(n * x->r_stride, sizeof(t_atom));
 	
 	if(x->r_useBuffer){
 		for(i = 0; i < n; i++){
 			for(j = 0; j < x->r_stride; j++){
-				SETFLOAT(out_atom + ((i * x->r_stride) + j), x->r_buffers[x->r_whichBuffer][x->r_bufferPos]);
+				SETFLOAT(&(out_atom[((i * x->r_stride) + j)]), x->r_buffers[x->r_whichBuffer][x->r_bufferPos]);
 				rdist_incBufPos(x, 1);
 			}
 		}
@@ -123,18 +114,16 @@ void rdist_distlist(t_rdist *x, long n){
 		for(i = 0; i < n; i++){
 			(*x->r_function)((void *)x, out, x->r_stride * n);
 			for(j = 0; j < x->r_stride; j++)
-				SETFLOAT(out_atom + ((i * x->r_stride) + j), out[j]);
+				SETFLOAT(&(out_atom[((i * x->r_stride) + j)]), out[j]);
 		}
 	}
 	
 	outlet_anything(x->r_out0, gensym("list"), n * x->r_stride, out_atom);
-	free(out);
-	free(out_atom);
 }
 
 
 void rdist_assist(t_rdist *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
+	if (m == ASSIST_INLET)
 		sprintf(s,"Probability distribution and arguments");
 	else {
 		switch (a) {	
@@ -168,18 +157,18 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 	x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
 	
 	x->r_out0 = outlet_new(x, 0);
-	
+
+	x->r_useBuffer = 0;
 	x->r_bufferSize = R_BUFFER_SIZE;
+
+	/*	
 	x->r_buffers = (float **)calloc(2, sizeof(float *));
 	x->r_buffers[0] = (float *)calloc(x->r_bufferSize, sizeof(float));
 	x->r_buffers[1] = (float *)calloc(x->r_bufferSize, sizeof(float));
-
-	x->r_useBuffer = 0;
-
+	*/
 	rdist_init(x, argc, argv);
 	return(x);
 }
 
-void rdist_free(t_rdist *x){
-	//gsl_rng_free(x->r_rng);
-}
+//void rdist_free(t_rdist *x){
+//}

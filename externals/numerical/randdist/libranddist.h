@@ -75,7 +75,6 @@ enum _distributions{
 
 typedef struct _rdist{
         t_pxobject r_ob;
-        long r_in_0;
         void *r_out0;
 	void *r_out1;
         gsl_rng *r_rng;
@@ -117,6 +116,7 @@ void rdist_makePMF(t_rdist *x);
 int rdist_randPMF(t_rdist *x);
 char *rdist_getDistString(int d);
 void rdist_tellmeeverything(t_rdist *x);
+void rdist_free(t_rdist *x);
 
 extern void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 

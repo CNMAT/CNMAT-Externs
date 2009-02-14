@@ -80,6 +80,27 @@ void rdist_init(t_rdist *x, short argc, t_atom *argv){
 	}
 }
 
+void rdist_free(t_rdist *x){
+	if(x->r_rng){
+		gsl_rng_free(x->r_rng);
+	}
+	if(x->r_vars){
+		free(x->r_vars);
+	}
+	if(x->r_arIn){
+		free(x->r_arIn);
+	}
+	if(x->r_pmf){
+		free(x->r_pmf);
+	}
+	if(x->r_buffers){
+		if(x->r_buffers + 1){
+			free(x->r_buffers + 1);
+		}
+		free(x->r_buffers);
+	}
+}
+
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	if(argc > R_MAX_N_VARS){
 		error("randdist: too many variables");
@@ -258,7 +279,7 @@ void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 
 void rdist_incBufPos(t_rdist *x, int i){
 	if(x->r_bufferPos + i >= x->r_bufferSize){
-		x->r_bufferIsEmpty[x->r_whichBuffer];
+		x->r_bufferIsEmpty[x->r_whichBuffer] = 1;
 		x->r_whichBuffer = abs(x->r_whichBuffer - 1);
 		x->r_bufferPos = 0;
 		pthread_cond_signal(&x->r_cv);
@@ -300,7 +321,7 @@ void *rdist_fillBuffers(void *args){
 */
 void *rdist_fillBuffers(void *args){
 	t_rdist *x = (t_rdist *)args;
-	int whichBuffer;
+	int whichBuffer = x->r_whichBuffer;
 	int stride;
 	int bufferSize;
 	float *buf;
