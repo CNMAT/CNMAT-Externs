@@ -156,31 +156,46 @@ t_int *matrix_perform_smooth(t_int *w) {
 	float *inptr, *outptr;
 	float *lasty = x->lasty;
 	float tmp;
-	/*
+
 	for(i = 0; i < numOutlets; i++){
 		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
-	*/
-	/*
+
 	for(j = 0; j < numOutlets * numInlets; j++){
 		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
 		inptr = (float *)(w[(j % numInlets) + 3]);
 		coeff = *coeffptr++;
-		for(k = 0; k < n; k++){
+		for(k = 0; k < n; k+=4){
 			tmp = (*lasty + ((coeff - *lasty) / x->slide));
 			*outptr++ += tmp * *inptr++;
-			*lasty = tmp;
+			*outptr++ += tmp * *inptr++;
+			*outptr++ += tmp * *inptr++;
+			*outptr++ += tmp * *inptr++;
+			if(fabsf(coeff - *lasty) < 10e-18){
+				*lasty = coeff;
+			}else{
+				*lasty = tmp;
+			}
 		}
 		lasty++;
 	}
-	*/
 
+	/*
+	post("***************");
+	for(i = 0; i < numInlets + numOutlets; i++){
+		post("%d %p", i, w[i + 3]);
+	}
+	*/
+	/*
 	inptr = (float *)(w[3]);
 	for(j = 0; j < numOutlets; j++){
 		outptr = (float *)(w[numInlets + j + 3]);
 		coeff = *coeffptr++;
-		for(k = 0; k < n; k++){
-			tmp = (*lasty + ((coeff - *lasty) / x->slide));
+		for(k = 0; k < n; k+=4){
+			tmp = (*lasty + ((coeff - *lasty) / (x->slide / 4)));
+			*outptr++ = tmp * *inptr++;
+			*outptr++ = tmp * *inptr++;
+			*outptr++ = tmp * *inptr++;
 			*outptr++ = tmp * *inptr++;
 			if(fabsf(coeff - *lasty) < 10e-18){
 				*lasty = coeff;
@@ -192,13 +207,16 @@ t_int *matrix_perform_smooth(t_int *w) {
 	}
 
 	for(i = 1; i < numInlets; i++){
+		inptr = (float *)(w[i + 3]);
 		for(j = 0; j < numOutlets; j++){
 			outptr = (float *)(w[numInlets + j + 3]);
-			inptr = (float *)(w[i + 3]);
 			coeff = *coeffptr++;
-			for(k = 0; k < n; k++){
-				tmp = (*lasty + ((coeff - *lasty) / x->slide));
-				*outptr++ += tmp * *inptr++;
+			for(k = 0; k < n; k+=4){
+				tmp = (*lasty + ((coeff - *lasty) / (x->slide / 4)));
+				*outptr++ += tmp * inptr[i];
+				*outptr++ += tmp * inptr[i];
+				*outptr++ += tmp * inptr[i];
+				*outptr++ += tmp * inptr[i];
 				if(fabsf(coeff - *lasty) < 10e-18){
 					*lasty = coeff;
 				}else{
@@ -208,7 +226,7 @@ t_int *matrix_perform_smooth(t_int *w) {
 			lasty++;
 		}
 	}
-
+	*/
 	return w + numInlets + numOutlets + 3;
 }
 
@@ -384,7 +402,7 @@ void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
 }
 
 void matrix_setgains(t_matrix *x, long in, long out, float gain){
-	//post("%d", (in * x->numOutlets) + out);
+	//post("%d %d %d %f", in, out, (in * x->numOutlets) + out, gain);
 	x->coeffLists[(in * x->numOutlets) + out] = gain;
 }
 
