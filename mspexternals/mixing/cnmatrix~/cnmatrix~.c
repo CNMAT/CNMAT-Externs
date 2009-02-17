@@ -160,7 +160,19 @@ t_int *matrix_perform_smooth(t_int *w) {
 	for(i = 0; i < numOutlets; i++){
 		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
+	for(j = 0; j < numOutlets * numInlets; j++){
+		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
+		inptr = (float *)(w[(j % numInlets) + 3]);
+		coeff = *coeffptr++;
+		for(k = 0; k < n; k++){
+			tmp = (*lasty + ((coeff - *lasty) / x->slide));
+			*outptr++ += tmp * *inptr++;
+			*lasty = tmp;
+		}
+		lasty++;
+	}
 
+	/*
 	for(i = 0; i < numInlets; i++){
 		for(j = 0; j < numOutlets; j++){
 			outptr = (float *)(w[numInlets + j + 3]);
@@ -175,6 +187,7 @@ t_int *matrix_perform_smooth(t_int *w) {
 			lasty++;
 		}
 	}
+	*/
 	return w + numInlets + numOutlets + 3;
 }
 
@@ -394,7 +407,7 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
 }
 
 void  matrix_free(t_matrix *x) {
-	dsp_free((t_pxobject *)x);
+	dsp_free(&(x->m_obj));
 	if (x->Inlets){
 		free(x->Inlets);
 	}
