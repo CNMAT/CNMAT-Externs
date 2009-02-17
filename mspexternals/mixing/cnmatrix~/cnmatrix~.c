@@ -27,6 +27,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
    COPYRIGHT_YEARS: 2009, 1999
    SVN_REVISION: $LastChangedRevision: 587 $
    VERSION 1.0: First version with jitter matrix support and log xfade
+   VERSION 1.0.1: Improvements in efficiency and denormal handling
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
