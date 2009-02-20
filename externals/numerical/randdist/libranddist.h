@@ -21,138 +21,58 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
 #include "ext.h"
-#include "z_dsp.h"
-
-#include "math.h"
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
-#include "pthread.h"
-#include "sched.h"
-#include "unistd.h"
 
 // Distributions
-enum _distributions{
-	R_GAUSSIAN,
-	R_GAUSSIAN_TAIL,
-	R_BIVARIATE_GAUSSIAN,
-	R_EXPONENTIAL,
-	R_ERLANG,
-	R_LAPLACE,
-	R_EXPPOW,
-	R_CAUCHY,
-	R_RAYLEIGH,
-	R_RAYLEIGH_TAIL,
-	R_LANDAU,
-	R_LEVY,
-	R_LEVY_SKEW,
-	R_GAMMA,
-	R_UNIFORM,
-	R_LOGNORMAL,
-	R_CHISQ,
-	R_F,
-	R_T,
-	R_BETA,
-	R_LOGISTIC,
-	R_PARETO,
-	R_WEIBULL,
-	R_GUMBEL1,
-	R_GUMBEL2,
-	R_DIRICHLET,
-	R_POISSON,
-	R_BERNOULLI,
-	R_BINOMIAL,
-	R_MULTINOMIAL,
-	R_NEGATIVE_BINOMIAL,
-	R_PASCAL,
-	R_GEOMETRIC,
-	R_HYPERGEOMETRIC,
-	R_LOGARITHMIC,
-	R_USER_DEFINED
-};
+t_symbol *ps_gaussian, *ps_gaussian_tail, *ps_bivariate_gaussian, *ps_exponential, *ps_erlang, *ps_laplace, *ps_exppow, *ps_cauchy, *ps_rayleigh, *ps_rayleigh_tail, *ps_landau, *ps_levy, *ps_levy_skew, *ps_gamma, *ps_uniform, *ps_lognormal, *ps_chisq, *ps_f, *ps_t, *ps_beta, *ps_logistic, *ps_pareto, *ps_weibull, *ps_gumbel1, *ps_gumbel2, *ps_dirichlet, *ps_poisson, *ps_bernoulli, *ps_binomial, *ps_multinomial, *ps_negative_binomial, *ps_pascal, *ps_geometric, *ps_hypergeometric, *ps_logarithmic, *ps_nonparametric;
 
 #define R_MAX_N_VARS 66
 #define R_BUFFER_SIZE 16384
 
-typedef struct _rdist{
-        t_pxobject r_ob;
-        void *r_out0;
-	void *r_out1;
-        gsl_rng *r_rng;
-        t_atom *r_vars;
-        int r_dist;
-        t_atom *r_arIn;
-        float *r_pmf;
-        short r_pmfLength;
-        float **r_buffers;
-	int r_bufferSize;
-        int r_bufferPos;
-        int r_whichBuffer;
-        int r_useBuffer;
-        int r_numVars;
-	int r_stride;
-	int r_threadShouldWait;
-	int r_threadShouldExit;
-	int r_bufferIsEmpty[2];
-	pthread_t r_thread;
-	pthread_mutex_t r_mx;
-	pthread_cond_t r_cv;
-	void (*r_function)(void *xx, float *buffer, int size);
-	float r_defVal; // is object is connected, this is the value that will be output if not a random dev.
-	int r_sampleAndHold; // if object is connected.
-} t_rdist;
+void librdist_init(void);
+int librdist_makeseed(void);
+void *librdist_get_function(t_symbol *dist);
 
-void rdist_main(void);
-void rdist_init(t_rdist *x, short argc, t_atom *argv);
-void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
-void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
-void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
-void rdist_int(t_rdist *x, long n);
-void rdist_float(t_rdist *x, double n);
-void rdist_incBufPos(t_rdist *x, int i);
-void *rdist_fillBuffers(void *args);
-void rdist_seed(t_rdist *x, long s);
-int makeseed(void);
-void rdist_makePMF(t_rdist *x);
-int rdist_randPMF(t_rdist *x);
-char *rdist_getDistString(int d);
-void rdist_tellmeeverything(t_rdist *x);
-void rdist_free(t_rdist *x);
+long librdist_getnargs(t_symbol *dist);
+float librdist_atom_getfloat(t_atom *a);
+long librdist_atom_getlong(t_atom *a);
 
-extern void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
+void librdist_seed(gsl_rng *rng, long s);
 
-void rdist_gaussian(void *xx, float *buffer, int size);
-void rdist_gaussian_tail(void *xx, float *buffer, int size);
-void rdist_bivariate_gaussian(void *xx, float *buffer, int size);
-void rdist_exponential(void *xx, float *buffer, int size);
-void rdist_erlang(void *xx, float *buffer, int size);
-void rdist_laplace(void *xx, float *buffer, int size);
-void rdist_exppow(void *xx, float *buffer, int size);
-void rdist_cauchy(void *xx, float *buffer, int size);
-void rdist_rayleigh(void *xx, float *buffer, int size);
-void rdist_rayleigh_tail(void *xx, float *buffer, int size);
-void rdist_landau(void *xx, float *buffer, int size);
-void rdist_levy(void *xx, float *buffer, int size);
-void rdist_levy_skew(void *xx, float *buffer, int size);
-void rdist_gamma(void *xx, float *buffer, int size);
-void rdist_uniform(void *xx, float *buffer, int size);
-void rdist_lognormal(void *xx, float *buffer, int size);
-void rdist_chisq(void *xx, float *buffer, int size);
-void rdist_fdist(void *xx, float *buffer, int size);
-void rdist_tdist(void *xx, float *buffer, int size);
-void rdist_beta(void *xx, float *buffer, int size);
-void rdist_logistic(void *xx, float *buffer, int size);
-void rdist_pareto(void *xx, float *buffer, int size);
-void rdist_weibull(void *xx, float *buffer, int size);
-void rdist_gumbel1(void *xx, float *buffer, int size);
-void rdist_gumbel2(void *xx, float *buffer, int size);
-void rdist_dirichlet(void *xx, float *buffer, int size);
-void rdist_poisson(void *xx, float *buffer, int size);
-void rdist_bernoulli(void *xx, float *buffer, int size);
-void rdist_binomial(void *xx, float *buffer, int size);
-void rdist_multinomial(void *xx, float *buffer, int size);
-void rdist_negative_binomial(void *xx, float *buffer, int size);
-void rdist_pascal(void *xx, float *buffer, int size);
-void rdist_geometric(void *xx, float *buffer, int size);
-void rdist_hypergeometric(void *xx, float *buffer, int size);
-void rdist_logarithmic(void *xx, float *buffer, int size);
-void rdist_user_defined(void *xx, float *buffer, int size);
+void librdist_gaussian(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_gaussian_tail(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_bivariate_gaussian(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_exponential(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_erlang(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_laplace(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_exppow(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_cauchy(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_rayleigh(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_rayleigh_tail(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_landau(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_levy(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_levy_skew(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_gamma(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_uniform(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_lognormal(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_chisq(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_t(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_f(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_beta(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_logistic(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_pareto(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_weibull(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_gumbel1(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_gumbel2(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_dirichlet(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_poisson(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_bernoulli(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_binomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_multinomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_negative_binomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_pascal(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_geometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_logarithmic(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_nonparametric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);

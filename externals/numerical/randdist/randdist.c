@@ -36,89 +36,209 @@ VERSION 1.3.2: Fixed a bug that would cause a crash if randdist was instantiated
 VERSION 1.3.3: Added Gaussdist faker to helpfile, bump version to re-release. -mzed
 VERSION 1.4: Default state, changed dump to distlist, user-defined pmfs are now done with the nonparametric message, bugfixes.
 VERSION 2.0: Rewritten with common code between randdist and randdist~ put in libranddist.h/c
+version 2.1: Re-re-factored.  Nonparametric now uses gsl_ran_discrete().
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#include "ext.h"
 #include "libranddist.h"
 #include "version.h"
 #include "version.c"
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+
+#define RDIST_DEFAULT_BUF_SIZE 1024
+
+typedef struct _rdist{
+        t_object r_ob;
+        void *r_out0;
+	void *r_out1;
+        gsl_rng *r_rng; // random number generator
+	gsl_ran_discrete_t *r_g; // lookup table for nonparametric pdf sampling
+        t_atom r_vars[R_MAX_N_VARS];
+        t_symbol *r_dist;
+        t_atom *r_arIn;
+        float *r_pmf;
+        short r_pmfLength;
+        int r_numVars;
+	int r_stride;
+	void (*r_function)(gsl_rng*, int, void*, int, float*);
+	t_atom *r_output_buffer;
+} t_rdist;
 
 void *rdist_class;
 
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 void rdist_bang(t_rdist *x);
 void rdist_distlist(t_rdist *x, long n);
-void rdist_useBuffer(t_rdist *x, long b);
 void rdist_assist(t_rdist *x, void *b, long m, long a, char *s);
 void *rdist_new(t_symbol *msg, short argc, t_atom *argv);
-//void rdist_free(t_rdist *x);
+void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
+void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
+void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
+void rdist_int(t_rdist *x, long n);
+void rdist_float(t_rdist *x, double n);
+void rdist_seed(t_rdist *x, long s);
+void rdist_free(t_rdist *x);
+void rdist_tellmeeverything(t_rdist *x);
+void rdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno);
 
 int main(void){
 	setup((t_messlist **)&rdist_class, (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, A_GIMME, 0); 
 	
-	rdist_main();
 	addmess((method)version, "version", 0);
 	addmess((method)rdist_assist, "assist", A_CANT, 0);
 	addbang((method)rdist_bang);
-	addmess((method)rdist_useBuffer, "useBuffer", A_DEFLONG, 0);
 	addmess((method)rdist_distlist, "distlist", A_DEFLONG, 0);
+        addint((method)rdist_int);
+        addfloat((method)rdist_float);
+        addmess((method)rdist_list, "list", A_GIMME, 0);
+	addmess((method)rdist_anything, "anything", A_GIMME, 0);
+        addmess((method)rdist_nonparametric, "nonparametric", A_GIMME, 0);
+        addmess((method)rdist_seed, "seed", A_LONG, 0);
+        addmess((method)rdist_tellmeeverything, "tellmeeverything", 0);
 
 	version(0);
 
 	return 0;
 }
 
-//--------------------------------------------------------------------------
+void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
+	t_rdist *x;
+
+	x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
+	
+	x->r_out0 = outlet_new(x, 0);
+
+	int i;
+	x->r_numVars = 0;
+	
+	gsl_rng_env_setup();
+	x->r_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_waterman14);
+	
+	// makeseed() is from the PD code in x_misc.c
+	gsl_rng_set(x->r_rng, makeseed());
+
+	gsl_set_error_handler(rdist_errorHandler);  
+
+	x->r_output_buffer = (t_atom *)malloc(RDIST_DEFAULT_BUF_SIZE * sizeof(t_atom));
+	librdist_init();
+
+	if(argc){
+		if(argv[0].a_type == A_SYM){
+			rdist_anything(x, argv[0].a_w.w_sym, argc - 1, argv + 1);
+		}
+	} else {
+		t_atom *ar = (t_atom *)calloc(2, sizeof(t_atom));
+		SETFLOAT(ar, 0.);
+		SETFLOAT(ar + 1, 1.);
+		rdist_anything(x, gensym("uniform"), 2, ar);
+		free(ar);
+	}
+
+	return(x);
+}
 
 void rdist_bang(t_rdist *x){
-	float out[x->r_stride];
-	t_atom out_atom[x->r_stride];
+	int stride = x->r_stride;
+	float out[stride];
 	int i;
 	t_symbol *msg;
 
-	if(x->r_useBuffer){
-		for(i = 0; i < x->r_stride; i++){
-			SETFLOAT(&(out_atom[i]), x->r_buffers[x->r_whichBuffer][x->r_bufferPos]);
-			rdist_incBufPos(x, 1);
-		}
-	} else {
-		(*x->r_function)((void *)x, out, x->r_stride);
-		for(i = 0; i < x->r_stride; i++)
-			SETFLOAT(&(out_atom[i]), out[i]);
-	}
-
-	msg = (x->r_stride > 1) ? gensym("list") : gensym("float");
+	msg = (stride > 1) ? gensym("list") : gensym("float");
 
 	//post("buffer: %d, pos: %d, val: %f", x->r_whichBuffer, x->r_bufferPos, out[0].a_w.w_float);
-	
-	outlet_anything(x->r_out0, msg, x->r_stride, out_atom);
+	if(x->r_dist == ps_nonparametric){
+		x->r_function(x->r_rng, 0, x->r_g, stride, out);
+	}else{
+		x->r_function(x->r_rng, x->r_numVars, x->r_vars, stride, out);
+	}
+	for(i = 0; i < stride; i++){
+		SETFLOAT(x->r_output_buffer + i, out[i]);
+	}	
+	outlet_anything(x->r_out0, msg, stride, x->r_output_buffer);
+}
+
+void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
+	if(argc > R_MAX_N_VARS){
+		error("randdist: too many variables");
+		return;
+	}
+
+	// need to check that this is a valid dist.
+	x->r_dist = msg;
+	int i;
+	for(i = 0; i < argc; i++){
+		x->r_vars[i] = argv[i];
+	}
+	x->r_numVars = (int)argc;	
+
+	if(x->r_dist == ps_bivariate_gaussian){
+		x->r_stride = 2;
+	}else if(x->r_dist == ps_dirichlet || x->r_dist == ps_multinomial){
+		x->r_stride = x->r_numVars;
+	}else{
+		x->r_stride = 1;
+	}
+
+	x->r_function = librdist_get_function(x->r_dist);
+}
+
+void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
+	double f[argc];
+	int i;
+	x->r_dist = msg;
+	for(i = 0; i < argc; i++){
+		f[i] = librdist_atom_getfloat(argv + i);
+		post("%d, %f", i, f[i]);
+	}
+	if(x->r_g){
+		gsl_ran_discrete_free(x->r_g);
+	}
+	x->r_g = gsl_ran_discrete_preproc(argc, f);
+	x->r_function = librdist_nonparametric;
+}
+
+void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
+	rdist_anything(x, x->r_dist, argc, argv);
+}
+
+void rdist_int(t_rdist *x, long n){	
+	t_atom argv[1];
+	SETFLOAT(argv, (double)n);
+	rdist_anything(x, x->r_dist, 1, argv);
+}
+
+void rdist_float(t_rdist *x, double n){
+	t_atom argv[1];
+	SETFLOAT(argv, n);
+	rdist_anything(x, x->r_dist, 1, argv);
 }
 
 void rdist_distlist(t_rdist *x, long n){
 	int i, j;
-	float out[n * x->r_stride];
-	t_atom out_atom[n * x->r_stride];
+	int stride = x->r_stride;
+	float out[n * stride];
+	if(stride * n > RDIST_DEFAULT_BUF_SIZE){
+		error("randdist: output list is too long (%d > %d)", 
+		      n * stride, 
+		      RDIST_DEFAULT_BUF_SIZE);
+		return;
+	}
+
 	if(n < 1){
 		error("randdist: distlist argument must be >= 1.");
 		return;
 	}
-	
-	if(x->r_useBuffer){
-		for(i = 0; i < n; i++){
-			for(j = 0; j < x->r_stride; j++){
-				SETFLOAT(&(out_atom[((i * x->r_stride) + j)]), x->r_buffers[x->r_whichBuffer][x->r_bufferPos]);
-				rdist_incBufPos(x, 1);
-			}
-		}
-	}else {
-		for(i = 0; i < n; i++){
-			(*x->r_function)((void *)x, out, x->r_stride * n);
-			for(j = 0; j < x->r_stride; j++)
-				SETFLOAT(&(out_atom[((i * x->r_stride) + j)]), out[j]);
+
+	for(i = 0; i < n; i++){
+		x->r_function(x->r_rng, x->r_numVars, x->r_vars, stride, out);
+		for(j = 0; j < stride; j++){
+			SETFLOAT(x->r_output_buffer + ((i * stride) + j), out[j]);
 		}
 	}
 	
-	outlet_anything(x->r_out0, gensym("list"), n * x->r_stride, out_atom);
+	outlet_anything(x->r_out0, gensym("list"), n * stride, x->r_output_buffer);
 }
 
 
@@ -134,41 +254,13 @@ void rdist_assist(t_rdist *x, void *b, long m, long a, char *s){
 	}
 }
 
-void rdist_useBuffer(t_rdist *x, long b){
-	x->r_useBuffer = b;
+void rdist_tellmeeverything(t_rdist *x){
 
-	if(b){
-		if(x->r_buffers == NULL){
-			x->r_buffers = (float **)calloc(2, sizeof(float *));
-			x->r_buffers[0] = (float *)calloc(R_BUFFER_SIZE, sizeof(float));
-			x->r_buffers[1] = (float *)calloc(R_BUFFER_SIZE, sizeof(float));
-		}
-
-		rdist_fillBuffers((void *)x);
-		x->r_bufferPos = 0;
-		x->r_whichBuffer = abs(x->r_whichBuffer - 1);
-		rdist_fillBuffers((void *)x);
-	}
 }
 
-void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
-	t_rdist *x;
-
-	x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
-	
-	x->r_out0 = outlet_new(x, 0);
-
-	x->r_useBuffer = 0;
-	x->r_bufferSize = R_BUFFER_SIZE;
-
-	/*	
-	x->r_buffers = (float **)calloc(2, sizeof(float *));
-	x->r_buffers[0] = (float *)calloc(x->r_bufferSize, sizeof(float));
-	x->r_buffers[1] = (float *)calloc(x->r_bufferSize, sizeof(float));
-	*/
-	rdist_init(x, argc, argv);
-	return(x);
+void rdist_free(t_rdist *x){
 }
 
-//void rdist_free(t_rdist *x){
-//}
+void rdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
+	error("interpol: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+}

@@ -23,84 +23,123 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 #include "libranddist.h"
 
-void rdist_main(void){
-        addint((method)rdist_int);
-        addfloat((method)rdist_float);
-        addmess((method)rdist_list, "list", A_GIMME, 0);
-	addmess((method)rdist_anything, "anything", A_GIMME, 0);
-        addmess((method)rdist_nonparametric, "nonparametric", A_GIMME, 0);
-        addmess((method)rdist_seed, "seed", A_LONG, 0);
-        addmess((method)rdist_tellmeeverything, "tellmeeverything", 0);
+void librdist_init(void){
+	ps_gaussian = gensym("gaussian");
+	ps_gaussian_tail = gensym("gaussian_tail");
+	ps_bivariate_gaussian = gensym("bivariate_gaussian");
+	ps_exponential = gensym("exponential");
+	ps_erlang = gensym("erlang");
+	ps_laplace = gensym("laplace");
+	ps_exppow = gensym("exppow");
+	ps_cauchy = gensym("cauchy");
+	ps_rayleigh = gensym("rayleigh");
+	ps_rayleigh_tail = gensym("rayleigh_tail");
+	ps_landau = gensym("landau");
+	ps_levy = gensym("levy");
+	ps_levy_skew = gensym("levy_skew");
+	ps_gamma = gensym("gamma");
+	ps_uniform = gensym("uniform");
+	ps_lognormal = gensym("lognormal");
+	ps_chisq = gensym("chisq");
+	ps_f = gensym("f");
+	ps_t = gensym("t");
+	ps_beta = gensym("beta");
+	ps_logistic = gensym("logistic");
+	ps_pareto = gensym("pareto");
+	ps_weibull = gensym("weibull");
+	ps_gumbel1 = gensym("gumbel1");
+	ps_gumbel2 = gensym("gumbel2");
+	ps_dirichlet = gensym("dirichlet");
+	ps_poisson = gensym("poisson");
+	ps_bernoulli = gensym("bernoulli");
+	ps_binomial = gensym("binomial");
+	ps_multinomial = gensym("multinomial");
+	ps_negative_binomial = gensym("negative_binomial");
+	ps_pascal = gensym("pascal");
+	ps_geometric = gensym("geometric");
+	ps_hypergeometric = gensym("hypergeometric");
+	ps_logarithmic = gensym("logarithmic");
+	ps_nonparametric = gensym("nonparametric");
 }
 
-void rdist_init(t_rdist *x, short argc, t_atom *argv){
-	int i;
-	x->r_numVars = 0;
-	
-	gsl_rng_env_setup();
-	x->r_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_waterman14);
-	
-	// makeseed() is from the PD code in x_misc.c
-	gsl_rng_set(x->r_rng, makeseed());
-
-	x->r_whichBuffer = 0;
-
-	x->r_vars = (t_atom *)calloc(R_MAX_N_VARS, sizeof(t_atom));
-	x->r_threadShouldExit = 0;
-	x->r_threadShouldWait = 1;
-	x->r_bufferIsEmpty[0] = x->r_bufferIsEmpty[1] = 0;
-
-	pthread_mutex_init(&x->r_mx, NULL);
-	pthread_cond_init(&x->r_cv, NULL);
-	if(x->r_useBuffer){
-		pthread_attr_t a;
-		pthread_attr_init(&a);
-		struct sched_param p;
-		pthread_attr_getschedparam(&a, &p);
-		p.sched_priority = sched_get_priority_min(SCHED_OTHER);
-		pthread_attr_setschedparam(&a, &p);
-
-		pthread_create(&x->r_thread, &a, rdist_fillBuffers, (void *)x);
-		pthread_detach(x->r_thread);
-	}
-
-	if(argc){
-		if(argv[0].a_type == A_SYM){
-			t_symbol *m = argv[0].a_w.w_sym;
-			for(i = 0; i < argc - 1; i++)
-				argv[i] = argv[i + 1];
-			rdist_anything(x, m, argc - 1, argv);
-		}
-	} else {
-		t_atom *ar = (t_atom *)calloc(2, sizeof(t_atom));
-		SETFLOAT(ar, 0.);
-		SETFLOAT(ar + 1, 1.);
-		rdist_anything(x, gensym("uniform"), 2, ar);
-		free(ar);
+void *librdist_get_function(t_symbol *dist){
+	if(dist == ps_gaussian){
+		return librdist_gaussian;
+	}else if(dist == ps_gaussian_tail){
+		return librdist_gaussian_tail;
+	}else if(dist == ps_bivariate_gaussian){
+		return librdist_bivariate_gaussian;
+	}else if(dist == ps_exponential){
+		return librdist_exponential;
+	}else if(dist == ps_erlang){
+		return librdist_erlang;
+	}else if(dist == ps_laplace){
+		return librdist_laplace;
+	}else if(dist == ps_exppow){
+		return librdist_exppow;
+	}else if(dist == ps_cauchy){
+		return librdist_cauchy;
+	}else if(dist == ps_rayleigh){
+		return librdist_rayleigh;
+	}else if(dist == ps_rayleigh_tail){
+		return librdist_rayleigh_tail;
+	}else if(dist == ps_landau){
+		return librdist_landau;
+	}else if(dist == ps_levy){
+		return librdist_levy;
+	}else if(dist == ps_levy_skew){
+		return librdist_levy_skew;
+	}else if(dist == ps_gamma){
+		return librdist_gamma;
+	}else if(dist == ps_uniform){
+		return librdist_uniform;
+	}else if(dist == ps_lognormal){
+		return librdist_lognormal;
+	}else if(dist == ps_chisq){
+		return librdist_chisq;
+	}else if(dist == ps_f){
+		return librdist_f;
+	}else if(dist == ps_t){
+		return librdist_t;
+	}else if(dist == ps_beta){
+		return librdist_beta;
+	}else if(dist == ps_logistic){
+		return librdist_logistic;
+	}else if(dist == ps_pareto){
+		return librdist_pareto;
+	}else if(dist == ps_weibull){
+		return librdist_weibull;
+	}else if(dist == ps_gumbel1){
+		return librdist_gumbel1;
+	}else if(dist == ps_gumbel2){
+		return librdist_gumbel2;
+	}else if(dist == ps_dirichlet){
+		return librdist_dirichlet;
+	}else if(dist == ps_poisson){
+		return librdist_poisson;
+	}else if(dist == ps_bernoulli){
+		return librdist_bernoulli;
+	}else if(dist == ps_binomial){
+		return librdist_binomial;
+	}else if(dist == ps_multinomial){
+		return librdist_multinomial;
+	}else if(dist == ps_negative_binomial){
+		return librdist_negative_binomial;
+	}else if(dist == ps_pascal){
+		return librdist_pascal;
+	}else if(dist == ps_geometric){
+		return librdist_geometric;
+	}else if(dist == ps_hypergeometric){
+		return librdist_hypergeometric;
+	}else if(dist == ps_logarithmic){
+		return librdist_logarithmic;
+	}else if(dist == ps_nonparametric){
+		return librdist_nonparametric;
+	}else{
+		return NULL;
 	}
 }
-
-void rdist_free(t_rdist *x){
-	if(x->r_rng){
-		gsl_rng_free(x->r_rng);
-	}
-	if(x->r_vars){
-		free(x->r_vars);
-	}
-	if(x->r_arIn){
-		free(x->r_arIn);
-	}
-	if(x->r_pmf){
-		free(x->r_pmf);
-	}
-	if(x->r_buffers){
-		if(x->r_buffers + 1){
-			free(x->r_buffers + 1);
-		}
-		free(x->r_buffers);
-	}
-}
-
+/*
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	if(argc > R_MAX_N_VARS){
 		error("randdist: too many variables");
@@ -237,25 +276,10 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 		pthread_cond_signal(&x->r_cv);
         }
 }
+*/
 
-void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
-	rdist_anything(x, gensym(rdist_getDistString(x->r_dist)), argc, argv);
-	
-}
-
-void rdist_int(t_rdist *x, long n){	
-	t_atom argv[1];
-	SETFLOAT(argv, (double)n);
-	rdist_anything(x, gensym(rdist_getDistString(x->r_dist)), 1, argv);
-}
-
-void rdist_float(t_rdist *x, double n){
-	t_atom argv[1];
-	SETFLOAT(argv, n);
-	rdist_anything(x, gensym(rdist_getDistString(x->r_dist)), 1, argv);
-}
-
-void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
+//void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
+	/*
 	x->r_dist = R_USER_DEFINED;
 	x->r_pmfLength = argc / 2;
 		
@@ -263,7 +287,7 @@ void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	memcpy(x->r_arIn, argv, argc * sizeof(t_atom));
 	rdist_makePMF(x);
 	x->r_function = (*rdist_user_defined);
-
+	*/
 	//error("randdist: fillbuffer block is commented out!");
 	/*
 	x->r_threadShouldWait = 1;
@@ -275,8 +299,8 @@ void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 		rdist_fillBuffers((void *)x);
 	}
 	*/
-}
-
+//}
+/*
 void rdist_incBufPos(t_rdist *x, int i){
 	if(x->r_bufferPos + i >= x->r_bufferSize){
 		x->r_bufferIsEmpty[x->r_whichBuffer] = 1;
@@ -293,7 +317,7 @@ void rdist_incBufPos(t_rdist *x, int i){
 	x->r_bufferPos = (x->r_bufferPos + i) % x->r_bufferSize;
 	//x->r_bufferPos++;
 }
-
+*/
 /*
 //void rdist_fillBuffers(t_rdist *x, int n, float *buffer){
 void *rdist_fillBuffers(void *args){
@@ -319,6 +343,7 @@ void *rdist_fillBuffers(void *args){
 	return NULL;
 }
 */
+/*
 void *rdist_fillBuffers(void *args){
 	t_rdist *x = (t_rdist *)args;
 	int whichBuffer = x->r_whichBuffer;
@@ -344,23 +369,36 @@ void *rdist_fillBuffers(void *args){
 	}
 	pthread_exit(NULL);
 }
-
-void rdist_seed(t_rdist *x, long s){
-	gsl_rng_set(x->r_rng, s);
+*/
+void rdist_seed(gsl_rng *rng, long s){
+	gsl_rng_set(rng, s);
 }
 
-// from PD x_misc.c
-// JM made the last 9-digit number a random number.
 int makeseed(void){
+	/* from PD x_misc.c
 	int r = rand();
-    static unsigned int random_nextseed = 1489853723;
-    random_nextseed = random_nextseed * 435898247 + r;//938284287;
-    return (random_nextseed & 0x7fffffff);
+    	static unsigned int random_nextseed = 1489853723;
+    	random_nextseed = random_nextseed * 435898247 + 938284287;
+    	return (random_nextseed & 0x7fffffff);
+	*/
+
+	unsigned int r;
+	FILE *f;
+
+#ifdef Windows
+#else
+	f = fopen("/dev/random", "r");
+#endif
+	fread(&r, sizeof(r), 1, f);
+	fclose(f);
+
+	//post("%u\n", randval);
+	return r;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // User defined PMF
-
+/*
 void rdist_makePMF(t_rdist *x){
 	int i = 0;
 	float sum = 0;
@@ -393,422 +431,474 @@ int rdist_randPMF(t_rdist *x){
 	}
 	return i;
 }
-
-void rdist_tellmeeverything(t_rdist *x){
-	post("DISTRIBUTION:");
-	post("	%s", rdist_getDistString(x->r_dist));
-	post("PARAMETERS:");
-	int i;
-	for(i = 0; i < x->r_numVars; i++)
-		post("	%f", x->r_vars[i].a_type == A_LONG ? (float)x->r_vars[i].a_w.w_long : x->r_vars[i].a_w.w_float);
-}
-
-char *rdist_getDistString(int d){
-	switch(d){
-		case R_GAUSSIAN:
-			return "gaussian";
-		case R_GAUSSIAN_TAIL :
-			return "gaussian_tail";
-		case R_BIVARIATE_GAUSSIAN :
-			return "bivariate_gaussian";
-		case R_EXPONENTIAL :
-			return "exponential";
-		case R_ERLANG :
-			return "erlang";
-		case R_LAPLACE :
-			return "laplace";
-		case R_EXPPOW :
-			return "exppow";
-		case R_CAUCHY :
-			return "cauchy";
-		case R_RAYLEIGH :
-			return "rayleigh";
-		case R_RAYLEIGH_TAIL :
-			return "rayleigh_tail";
-		case R_LANDAU :
-			return "landau";
-		case R_LEVY :
-			return "levy";
-		case R_LEVY_SKEW :
-			return "levy_skew";
-		case R_GAMMA :
-			return "gamma";
-		case R_UNIFORM :
-			return "uniform";
-		case R_LOGNORMAL :
-			return "lognormal";
-		case R_CHISQ :
-			return "chisq";
-		case R_F :
-			return "f";
-		case R_T :
-			return "t";
-		case R_BETA :
-			return "beta";
-		case R_LOGISTIC :
-			return "logistic";
-		case R_PARETO :
-			return "pareto";
-		case R_WEIBULL :
-			return "weibull";
-		case R_GUMBEL1 :
-			return "gumbel1";
-		case R_GUMBEL2 :
-			return "gumbel2";
-		case R_DIRICHLET :
-			return "dirichlet";
-		case R_POISSON :
-			return "poisson";
-		case R_BERNOULLI :
-			return "bernoulli";
-		case R_BINOMIAL :
-			return "binomial";
-		case R_MULTINOMIAL:
-			return "multinomial";
-		case R_NEGATIVE_BINOMIAL :
-			return "negative_binomial";
-		case R_PASCAL :
-			return "pascal";
-		case R_GEOMETRIC :
-			return "geometric";
-		case R_HYPERGEOMETRIC :
-			return "hypergeometric";
-		case R_LOGARITHMIC :
-			return "logarithmic";
-		case R_USER_DEFINED :
-			return "nonparametric";
+*/
+long librdist_getnargs(t_symbol *dist){
+	if(dist == ps_landau){
+		return 0;
+	}else if(dist == ps_gaussian || dist == ps_exponential || dist == ps_laplace || dist == ps_cauchy || dist == ps_rayleigh || dist == ps_chisq || dist == ps_t || dist == ps_logistic || dist == ps_poisson || dist == ps_bernoulli || dist == ps_geometric || dist == ps_logarithmic){
+		return 1;
+	}else if(dist == ps_gaussian_tail || dist == ps_erlang || dist == ps_exppow || dist == ps_rayleigh_tail || dist == ps_levy || dist == ps_gamma || dist == ps_uniform || dist == ps_lognormal || dist == ps_f || dist == ps_beta || dist == ps_pareto || dist == ps_weibull || dist == ps_gumbel1 || dist == ps_gumbel2 || dist == ps_binomial || dist == ps_negative_binomial || dist == ps_pascal){
+		return 2;
+	}else if(dist == ps_bivariate_gaussian || dist == ps_levy_skew || dist == ps_hypergeometric){
+		return 3;
+	}else{
+		return -1;
 	}
-
-	return NULL;
 }
 
-void rdist_gaussian(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double sigma = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+float librdist_atom_getfloat(t_atom *a){
+	if(a->a_type == A_FLOAT){
+		return a->a_w.w_float;
+	}else if(a->a_type == A_LONG){
+		return (float)(a->a_w.w_long);
+	}else{
+		return 0;
+	}
+}
+
+long librdist_atom_getlong(t_atom *a){
+	if(a->a_type == A_LONG){
+		return a->a_w.w_long;
+	}else if(a->a_type == A_FLOAT){
+		return (float)(a->a_w.w_float);
+	}else{
+		return 0;
+	}
+}
+
+void librdist_gaussian(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_gaussian)){
+		return;
+	}
+	const double sigma = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-		buffer[i] = (float)gsl_ran_gaussian_ratio_method(x->r_rng, sigma);
+	for(i = 0; i < bufc; i++)
+		buf[i] = (float)gsl_ran_gaussian_ratio_method(rng, sigma);
 }
 
-void rdist_gaussian_tail(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double sigma = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_gaussian_tail(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_gaussian_tail)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double sigma = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-		buffer[i] = (float)gsl_ran_gaussian_tail(x->r_rng, a, sigma);
+	for(i = 0; i < bufc; i++)
+		buf[i] = (float)gsl_ran_gaussian_tail(rng, a, sigma);
 }
 
-void rdist_bivariate_gaussian(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double sigma_x = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double sigma_y = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
-	const double rho = x->r_vars[2].a_type == A_LONG ? (double)x->r_vars[2].a_w.w_long : x->r_vars[2].a_w.w_float;
+void librdist_bivariate_gaussian(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_bivariate_gaussian)){
+		return;
+	}
+	const double sigma_x = librdist_atom_getfloat(av);
+	const double sigma_y = librdist_atom_getfloat(av + 1);
+	const double rho = librdist_atom_getfloat(av + 2);
 	double _x, _y;
-	gsl_ran_bivariate_gaussian(x->r_rng, sigma_x, sigma_y, rho, &_x, &_y);
+	gsl_ran_bivariate_gaussian(rng, sigma_x, sigma_y, rho, &_x, &_y);
 	int i;
-	for(i = 0; i < size / 2; i += 2){
-		buffer[i] = _x;
-		buffer[i + 1] = _y;
+	for(i = 0; i < bufc / 2; i += 2){
+		buf[i] = _x;
+		buf[i + 1] = _y;
 	}
 }
 
-void rdist_exponential(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double mu = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_exponential(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_exponential)){
+		return;
+	}
+	const double mu = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-		buffer[i] = (float)gsl_ran_exponential(x->r_rng, mu);
+	for(i = 0; i < bufc; i++)
+		buf[i] = (float)gsl_ran_exponential(rng, mu);
 }
 
-void rdist_erlang(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double n = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_erlang(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_erlang)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double n = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	     	buffer[i] = (float)gsl_ran_erlang(x->r_rng, a, n);
+	for(i = 0; i < bufc; i++)
+	     	buf[i] = (float)gsl_ran_erlang(rng, a, n);
 }
 
-void rdist_laplace(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_laplace(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_laplace)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-		buffer[i] = (float)gsl_ran_laplace(x->r_rng, a);
+	for(i = 0; i < bufc; i++)
+		buf[i] = (float)gsl_ran_laplace(rng, a);
 }
 
-void rdist_exppow(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_exppow(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_exppow)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_exppow(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_exppow(rng, a, b);
 }
 
-void rdist_cauchy(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_cauchy(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_cauchy)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_cauchy(x->r_rng, a);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_cauchy(rng, a);
 }
 
-void rdist_rayleigh(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double sigma = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_rayleigh(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_rayleigh)){
+		return;
+	}
+	const double sigma = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_rayleigh(x->r_rng, sigma);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_rayleigh(rng, sigma);
 }
 
-void rdist_rayleigh_tail(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double sigma = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_rayleigh_tail(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_rayleigh_tail)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double sigma = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_rayleigh_tail(x->r_rng, a, sigma);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_rayleigh_tail(rng, a, sigma);
 }
 
-void rdist_landau(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
+void librdist_landau(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_landau)){
+		return;
+	}
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_landau(x->r_rng);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_landau(rng);
 }
 
-void rdist_levy(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double c = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double alpha = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_levy(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_levy)){
+		return;
+	}
+	const double c = librdist_atom_getfloat(av);
+	const double alpha = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_levy(x->r_rng, c, alpha);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_levy(rng, c, alpha);
 }
 
-void rdist_levy_skew(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double c = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double alpha = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
-	const double beta = x->r_vars[2].a_type == A_LONG ? (double)x->r_vars[2].a_w.w_long : x->r_vars[2].a_w.w_float;
+void librdist_levy_skew(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_levy_skew)){
+		return;
+	}
+	const double c = librdist_atom_getfloat(av);
+	const double alpha = librdist_atom_getfloat(av + 1);
+	const double beta = librdist_atom_getfloat(av + 2);
 	int i;
-	for(i = 0; i < size; i++)
-		buffer[i] = (float)gsl_ran_levy_skew(x->r_rng, c, alpha, beta);
+	for(i = 0; i < bufc; i++)
+		buf[i] = (float)gsl_ran_levy_skew(rng, c, alpha, beta);
 }
 
-void rdist_gamma(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_gamma(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_gamma)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_gamma(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_gamma(rng, a, b);
 }
 
-void rdist_uniform(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_uniform(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_uniform)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_flat(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_flat(rng, a, b);
 }
 
-void rdist_lognormal(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double zeta = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double sigma = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_lognormal(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_lognormal)){
+		return;
+	}
+	const double zeta = librdist_atom_getfloat(av);
+	const double sigma = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_lognormal(x->r_rng, zeta, sigma);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_lognormal(rng, zeta, sigma);
 }
 
-void rdist_chisq(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double nu = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_chisq(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_chisq)){
+		return;
+	}
+	const double nu = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_chisq(x->r_rng, nu);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_chisq(rng, nu);
 }
 
-void rdist_fdist(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double nu1 = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double nu2 = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_f(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_f)){
+		return;
+	}
+	const double nu1 = librdist_atom_getfloat(av);
+	const double nu2 = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_fdist(x->r_rng, nu1, nu2);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_fdist(rng, nu1, nu2);
 }
 
-void rdist_tdist(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double nu = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_t(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_t)){
+		return;
+	}
+	const double nu = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_tdist(x->r_rng, nu);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_tdist(rng, nu);
 }
 
-void rdist_beta(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_beta(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_beta)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_beta(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_beta(rng, a, b);
 }
 
-void rdist_logistic(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_logistic(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_logistic)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_logistic(x->r_rng, a);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_logistic(rng, a);
 }
 
-void rdist_pareto(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_pareto(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_pareto)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_pareto(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_pareto(rng, a, b);
 }
 
-void rdist_weibull(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_weibull(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_weibull)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_weibull(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_weibull(rng, a, b);
 }
 
-void rdist_gumbel1(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_gumbel1(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_gumbel1)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_gumbel1(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_gumbel1(rng, a, b);
 }
 
-void rdist_gumbel2(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double a = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double b = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_gumbel2(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_gumbel2)){
+		return;
+	}
+	const double a = librdist_atom_getfloat(av);
+	const double b = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_gumbel2(x->r_rng, a, b);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_gumbel2(rng, a, b);
 }
 
-void rdist_dirichlet(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
+void librdist_dirichlet(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+/*
+	if(argc != librdist_getnargs(ps_dirichlet)){
+		return;
+	}
 	int i, j;
-	size_t k = x->r_numVars;
+	bufc_t k = x->r_numVars;
 	double alpha[x->r_numVars];
 	double theta[x->r_numVars];
 	for(i = 0; i < k; i++)
 		alpha[i] = x->r_vars[i].a_type == A_LONG ? (double)x->r_vars[i].a_w.w_long : x->r_vars[i].a_w.w_float;
 
-	for(j = 0; j < floor(size / k); j++){
-		gsl_ran_dirichlet(x->r_rng, k, alpha, theta);
+	for(j = 0; j < floor(bufc / k); j++){
+		gsl_ran_dirichlet(rng, k, alpha, theta);
 		for(i = 0; i < k; i++)
-			buffer[i] = theta[i];
+			buf[i] = theta[i];
 	}
+*/
 }
 
-void rdist_poisson(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double mu = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_poisson(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_poisson)){
+		return;
+	}
+	const double mu = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_poisson(x->r_rng, mu);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_poisson(rng, mu);
 }
 
-void rdist_bernoulli(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double p = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_bernoulli(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_bernoulli)){
+		return;
+	}
+	const double p = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_bernoulli(x->r_rng, p);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_bernoulli(rng, p);
 }
 
-void rdist_binomial(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double p = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const unsigned int n = x->r_vars[1].a_type == A_LONG ? (unsigned int)x->r_vars[1].a_w.w_long : (unsigned int)x->r_vars[1].a_w.w_float;
+void librdist_binomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_binomial)){
+		return;
+	}
+	const double p = librdist_atom_getfloat(av);
+	const unsigned int n = (unsigned int)librdist_atom_getlong(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_binomial(x->r_rng, p, n);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_binomial(rng, p, n);
 }
 
-void rdist_multinomial(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
+void librdist_multinomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+/*
+	if(argc != librdist_getnargs(ps_multinomial)){
+		return;
+	}
 	int i, j;
-	size_t K = x->r_numVars - 1;
+	bufc_t K = x->r_numVars - 1;
 	unsigned int N = x->r_vars[0].a_type == A_LONG ? (unsigned int)x->r_vars[0].a_w.w_long : (unsigned int)x->r_vars[0].a_w.w_float;
 	double p[K];
 	unsigned int n[K];
 	for(i = 0; i < K; i++)
 		p[i] = x->r_vars[i + 1].a_type == A_LONG ? (unsigned int)x->r_vars[i + 1].a_w.w_long : (unsigned int)x->r_vars[i + 1].a_w.w_float;
 
-	for(j = 0; j < floor(size / K); j++){
-		gsl_ran_multinomial(x->r_rng, K, N, p, n);
+	for(j = 0; j < floor(bufc / K); j++){
+		gsl_ran_multinomial(rng, K, N, p, n);
 		for(i = 0; i < K; i++)
-			buffer[i] = (float)n[i];
+			buf[i] = (float)n[i];
 	}
+*/
 }
 
-void rdist_negative_binomial(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double p = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const double n = x->r_vars[1].a_type == A_LONG ? (double)x->r_vars[1].a_w.w_long : x->r_vars[1].a_w.w_float;
+void librdist_negative_binomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_negative_binomial)){
+		return;
+	}
+	const double p = librdist_atom_getfloat(av);
+	const double n = librdist_atom_getfloat(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_negative_binomial(x->r_rng, p, n);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_negative_binomial(rng, p, n);
 }
 
-void rdist_pascal(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double p = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
-	const unsigned int n = x->r_vars[1].a_type == A_LONG ? (unsigned int)x->r_vars[1].a_w.w_long : (unsigned int)x->r_vars[1].a_w.w_float;
+void librdist_pascal(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_pascal)){
+		return;
+	}
+	const double p = librdist_atom_getfloat(av);
+	const unsigned int n = (unsigned int)librdist_atom_getlong(av + 1);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_pascal(x->r_rng, p, n);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_pascal(rng, p, n);
 }
 
-void rdist_geometric(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double p = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_geometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_geometric)){
+		return;
+	}
+	const double p = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_geometric(x->r_rng, p);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_geometric(rng, p);
 }
 
-void rdist_hypergeometric(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const unsigned int n1 = x->r_vars[0].a_type == A_LONG ? (unsigned int)x->r_vars[0].a_w.w_long : (unsigned int)x->r_vars[0].a_w.w_float;
-	const unsigned int n2 = x->r_vars[1].a_type == A_LONG ? (unsigned int)x->r_vars[1].a_w.w_long : (unsigned int)x->r_vars[1].a_w.w_float;
-	const unsigned int t = x->r_vars[2].a_type == A_LONG ? (unsigned int)x->r_vars[2].a_w.w_long : (unsigned int)x->r_vars[2].a_w.w_float;
+void librdist_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_hypergeometric)){
+		return;
+	}
+	const unsigned int n1 = (unsigned int)librdist_atom_getlong(av);
+	const unsigned int n2 = (unsigned int)librdist_atom_getlong(av + 1);
+	const unsigned int t = (unsigned int)librdist_atom_getlong(av + 2);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_hypergeometric(x->r_rng, n1, n2, t);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_hypergeometric(rng, n1, n2, t);
 }
 
-void rdist_logarithmic(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	const double p = x->r_vars[0].a_type == A_LONG ? (double)x->r_vars[0].a_w.w_long : x->r_vars[0].a_w.w_float;
+void librdist_logarithmic(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	if(argc != librdist_getnargs(ps_logarithmic)){
+		return;
+	}
+	const double p = librdist_atom_getfloat(av);
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = (float)gsl_ran_logarithmic(x->r_rng, p);
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = (float)gsl_ran_logarithmic(rng, p);
 }
 
-void rdist_user_defined(void *xx, float *buffer, int size){
-	t_rdist *x = (t_rdist *)xx;
-	t_atom tmp = x->r_arIn[rdist_randPMF(x) * 2];
+void librdist_nonparametric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	gsl_ran_discrete_t *g = (gsl_ran_discrete_t *)argv;
 	int i;
-	for(i = 0; i < size; i++)
-	       	buffer[i] = tmp.a_type == A_LONG ? (float)tmp.a_w.w_long : tmp.a_w.w_float;
+	for(i = 0; i < bufc; i++)
+	       	buf[i] = gsl_ran_discrete(rng, g);
 }
