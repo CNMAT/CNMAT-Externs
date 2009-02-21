@@ -1,6 +1,6 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2006-07, The Regents of
+University of California, Berkeley.  Copyright (c) 2006-09, The Regents of
 the University of California (Regents). 
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
@@ -24,7 +24,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 NAME: randdist
 DESCRIPTION: Random number generator with over 30 statistical distributions.
 AUTHORS: John MacCallum
-COPYRIGHT_YEARS: 2006-07
+COPYRIGHT_YEARS: 2006-09
 DRUPAL_NODE: /patch/4023
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.1: Changed the way the random seed it made
@@ -58,7 +58,6 @@ typedef struct _rdist{
         t_atom r_vars[R_MAX_N_VARS];
         t_symbol *r_dist;
         t_atom *r_arIn;
-        float *r_pmf;
         short r_pmfLength;
         int r_numVars;
 	int r_stride;
@@ -105,38 +104,47 @@ int main(void){
 
 void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 	t_rdist *x;
+	int i;
+	t_atom ar[2];
 
 	x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
 	
 	x->r_out0 = outlet_new(x, 0);
 
-	int i;
 	x->r_numVars = 0;
-	
+
+	// set up the random number generator	
 	gsl_rng_env_setup();
+
+	// waterman14 was the fastest according to my tests
 	x->r_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_waterman14);
 	
-	// makeseed() is from the PD code in x_misc.c
+	// seed it by reading from /dev/random on mac os x and 
+	// something similar on windows
 	gsl_rng_set(x->r_rng, makeseed());
 
+	// this is really fucking important.  if there's an error and the gsl's 
+	// default handler gets called, it aborts the program!
 	gsl_set_error_handler(rdist_errorHandler);  
 
+	// setup a workspace
 	x->r_output_buffer = (t_atom *)malloc(RDIST_DEFAULT_BUF_SIZE * sizeof(t_atom));
+
+	// init the lib.  just gensyms all the distribution names
 	librdist_init();
 
+	// handle the args.  this should be done with attributes.
 	if(argc){
 		if(argv[0].a_type == A_SYM){
 			rdist_anything(x, argv[0].a_w.w_sym, argc - 1, argv + 1);
 		}
 	} else {
-		t_atom *ar = (t_atom *)calloc(2, sizeof(t_atom));
-		SETFLOAT(ar, 0.);
-		SETFLOAT(ar + 1, 1.);
+		SETFLOAT(&(ar[0]), 0.);
+		SETFLOAT(&(ar[1]), 1.);
 		rdist_anything(x, gensym("uniform"), 2, ar);
-		free(ar);
 	}
 
-	return(x);
+	return x;
 }
 
 void rdist_bang(t_rdist *x){
@@ -175,8 +183,10 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 
 	if(x->r_dist == ps_bivariate_gaussian){
 		x->r_stride = 2;
-	}else if(x->r_dist == ps_dirichlet || x->r_dist == ps_multinomial){
+	}else if(x->r_dist == ps_dirichlet){
 		x->r_stride = x->r_numVars;
+	}else if(x->r_dist == ps_multinomial){
+		x->r_stride = x->r_numVars - 1;
 	}else{
 		x->r_stride = 1;
 	}
@@ -190,7 +200,7 @@ void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	x->r_dist = msg;
 	for(i = 0; i < argc; i++){
 		f[i] = librdist_atom_getfloat(argv + i);
-		post("%d, %f", i, f[i]);
+		//post("%d, %f", i, f[i]);
 	}
 	if(x->r_g){
 		gsl_ran_discrete_free(x->r_g);
@@ -255,12 +265,30 @@ void rdist_assist(t_rdist *x, void *b, long m, long a, char *s){
 }
 
 void rdist_tellmeeverything(t_rdist *x){
-
+	int i;
+	float vars[x->r_numVars];
+	post("Distribution: %s", x->r_dist->s_name);
+	post("Args:");
+	for(i = 0; i < x->r_numVars; i++){
+		post("\t%f", x->r_vars[i]);
+	}
 }
 
 void rdist_free(t_rdist *x){
+	if(x->r_rng){
+		gsl_rng_free(x->r_rng);
+	}
+	if(x->r_g){
+		gsl_ran_discrete_free(x->r_g);
+	}
+	if(x->r_arIn){
+		free(x->r_arIn);
+	}
+	if(x->r_output_buffer){
+		free(x->r_output_buffer);
+	}
 }
 
 void rdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
-	error("interpol: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+	error("randdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
 }

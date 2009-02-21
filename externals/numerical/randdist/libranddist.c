@@ -763,23 +763,19 @@ void librdist_gumbel2(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
 }
 
 void librdist_dirichlet(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
-/*
-	if(argc != librdist_getnargs(ps_dirichlet)){
-		return;
-	}
+	t_atom *av = (t_atom *)argv;
 	int i, j;
-	bufc_t k = x->r_numVars;
-	double alpha[x->r_numVars];
-	double theta[x->r_numVars];
-	for(i = 0; i < k; i++)
-		alpha[i] = x->r_vars[i].a_type == A_LONG ? (double)x->r_vars[i].a_w.w_long : x->r_vars[i].a_w.w_float;
-
+	size_t k = argc;
+	double alpha[argc];
+	double theta[argc];
+	for(i = 0; i < k; i++){
+		alpha[i] = librdist_atom_getfloat(av + i);
+	}
 	for(j = 0; j < floor(bufc / k); j++){
 		gsl_ran_dirichlet(rng, k, alpha, theta);
 		for(i = 0; i < k; i++)
 			buf[i] = theta[i];
 	}
-*/
 }
 
 void librdist_poisson(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
@@ -817,24 +813,21 @@ void librdist_binomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf)
 }
 
 void librdist_multinomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
-/*
-	if(argc != librdist_getnargs(ps_multinomial)){
-		return;
-	}
+	t_atom *av = (t_atom *)argv;
 	int i, j;
-	bufc_t K = x->r_numVars - 1;
-	unsigned int N = x->r_vars[0].a_type == A_LONG ? (unsigned int)x->r_vars[0].a_w.w_long : (unsigned int)x->r_vars[0].a_w.w_float;
+	size_t K = argc - 1;
+	unsigned int N = librdist_atom_getlong(av);
 	double p[K];
 	unsigned int n[K];
-	for(i = 0; i < K; i++)
-		p[i] = x->r_vars[i + 1].a_type == A_LONG ? (unsigned int)x->r_vars[i + 1].a_w.w_long : (unsigned int)x->r_vars[i + 1].a_w.w_float;
+	for(i = 0; i < K; i++){
+		p[i] = (unsigned int)librdist_atom_getlong(av + i + 1);
+	}
 
 	for(j = 0; j < floor(bufc / K); j++){
 		gsl_ran_multinomial(rng, K, N, p, n);
 		for(i = 0; i < K; i++)
 			buf[i] = (float)n[i];
 	}
-*/
 }
 
 void librdist_negative_binomial(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
