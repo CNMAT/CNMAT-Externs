@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		121373BE0F2A92A900C9CE80 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 121373BD0F2A92A900C9CE80 /* MaxAPI.framework */; };
 		121374030F2A9ACB00C9CE80 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 121374020F2A9ACB00C9CE80 /* commonsyms.c */; };
+		121374050F2E105100C9CE80 /* sin_tab.c in Sources */ = {isa = PBXBuildFile; fileRef = 121374040F2E105100C9CE80 /* sin_tab.c */; };
 		1229BFAB0A5B5FBA00CFEE8F /* migrator.c in Sources */ = {isa = PBXBuildFile; fileRef = 1229BFAA0A5B5FBA00CFEE8F /* migrator.c */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
@@ -17,6 +18,7 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		121373BD0F2A92A900C9CE80 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		121374020F2A9ACB00C9CE80 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
+		121374040F2E105100C9CE80 /* sin_tab.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sin_tab.c; sourceTree = "<group>"; };
 		1229BFAA0A5B5FBA00CFEE8F /* migrator.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = migrator.c; sourceTree = "<group>"; };
 		8D01CCD20486CAD60068D4B7 /* migrator.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = migrator.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -66,6 +68,7 @@
 			children = (
 				1229BFAA0A5B5FBA00CFEE8F /* migrator.c */,
 				121374020F2A9ACB00C9CE80 /* commonsyms.c */,
+				121374040F2E105100C9CE80 /* sin_tab.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -155,6 +158,7 @@
 			files = (
 				1229BFAB0A5B5FBA00CFEE8F /* migrator.c in Sources */,
 				121374030F2A9ACB00C9CE80 /* commonsyms.c in Sources */,
+				121374050F2E105100C9CE80 /* sin_tab.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,7 +236,12 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = ../../externals;
 				LIBRARY_SEARCH_PATHS = "";

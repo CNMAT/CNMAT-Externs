@@ -50,9 +50,24 @@ VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily remove
 #include "commonsyms.h"
 #include "version.c"
 #include "math.h"
+#include "sin_tab.h"
+
+#ifdef DEBUG
+#define PDEBUG(s,args...) post(s, ##args)
+#else
+#define PDEBUG(s,args...)
+#endif
 
 #define MIG_MAX_NUM_OSC 2048
 #define MIG_MAX_INPUT 2048
+#define MIG_STATE_FADE_OUT 0
+#define MIG_STATE_CHANGE_FREQ 1
+#define MIG_STATE_FADE_IN 2
+
+enum _algo{
+	MIG_ALGO_PMF,
+	MIG_ALGO_MCMC
+};
 
 // for ran1 from Numerical Rec. in C
 #define IA 16807
@@ -67,22 +82,33 @@ VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily remove
 #define MAX(a,b) (a>b)?a:b
 #define MIN(a,b) (a<b)?a:b 
 
+static t_symbol *ps_pmf, *ps_mcmc;
+
 typedef struct _mig{
 	t_object ob;
 	void *out1;
 	void *out2;
 	void *out3;
 	void *out4;
-	t_atom *arrayIn;
-	long arrayInLength;
-	long nOsc;
-	float *pmf;
-	t_atom *arrayOut;
-	long counter;
-	void *clock1;
-	void *clock2;
-	void *forcefeed_clock1;
-	void *forcefeed_clock2;
+	long nOsc; // number of oscillators = half the length of the output array
+	// unless we change the number of oscillator immediately, we don't want to do this
+	// until we have finished the update cycle.  So, store the value here and change when
+	// we wrap around to the first oscillator.
+	long nOsc_new; 
+	long arrayInLength; // length of the array that we received
+	t_atom *arrayIn; // the input array
+	t_atom *arrayOut; // the output array
+	float *pmf; // the PMF computed from the input array
+	float *amp_scale; // this will be filled with values to multiply the amplitude by.
+	float *amp_mask; // used to 
+	long counter; // the current element of the list that's being updated
+	void *clock; // takes care of all the timing
+	// we don't want this to be changed in the middle of an update cycle,
+	// so the value of numOscToUpdate gets moved into actualNumOscToUpdate only
+	// at the beginning of a cycle.
+	long numOscToUpdate;
+	long actualNumOscToUpdate;
+	long state;
 	float tinterval;
 	float oscamp;
 	long idum; // for ran1
@@ -91,6 +117,7 @@ typedef struct _mig{
 	long fade;
 	long waitingToChangeNumOsc[2];
 	long outputType;
+	long algo;
 } t_mig;
 
 void *mig_class;
@@ -105,10 +132,12 @@ void mig_nOsc_smooth(t_mig *x, long n);
 t_max_err mig_var_get(t_mig *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err mig_var_set(t_mig *x, t_object *attr, long argc, t_atom *argv);
 void mig_bang(t_mig *x);
+void mig_clock_cb(t_mig *x);
 void mig_fadeOut(t_mig *x);
 void mig_changeFreq(t_mig *x);
 void mig_fadeIn(t_mig *x);
 void mig_outputList(t_mig *x, short length, t_atom *array);
+void mig_calc_amp_scale(t_mig *x);
 void mig_int(t_mig *x, long n);
 t_max_err mig_fade(t_mig *x, t_object *attr, long argc, t_atom *argv);
 
@@ -125,9 +154,14 @@ float mig_gasdev(long *idum);
 void mig_auto(t_mig *x, long a);
 void mig_tellmeeverything(t_mig *x);
 
+void mig_algo(t_mig *x, t_symbol *a);
+
 int main(void){
 	t_class *c = class_new("migrator", (method)mig_new, (method)mig_free, sizeof(t_mig), (method)0L, A_GIMME, 0); 
 	//common_symbols_init();
+
+	ps_pmf = gensym("pmf");
+	ps_mcmc = gensym("mcmc");
 
 	t_object *attr;
 	class_addmethod(c, (method)version, "version", 0);
@@ -170,11 +204,11 @@ void *mig_new(t_symbol *sym, long argc, t_atom *argv){
 	int i = 0;
 
 	if(x = (t_mig *)object_alloc(mig_class)){
-		post("%p", x);
-
 		x->arrayIn = (t_atom *)calloc(MIG_MAX_INPUT, sizeof(t_atom));
 		x->arrayOut = (t_atom *)calloc(MIG_MAX_NUM_OSC, sizeof(t_atom));
 		x->pmf = (float *)calloc(MIG_MAX_INPUT, sizeof(t_atom));
+		x->amp_scale = (float *)calloc(MIG_MAX_NUM_OSC, sizeof(float));
+		x->amp_mask = (float *)calloc(MIG_MAX_NUM_OSC, sizeof(float));
 
 		x->out4 = bangout(x);
 		x->out3 = intout(x);
@@ -204,40 +238,47 @@ void *mig_new(t_symbol *sym, long argc, t_atom *argv){
 		}
 		*/
 
+		x->algo = MIG_ALGO_PMF;
+
 		for(i = 0; i < MIG_MAX_NUM_OSC; i++){
 			SETFLOAT(&(x->arrayOut[i]), 0.0);
 		}
 
-		x->clock1 = clock_new(x, (method)mig_changeFreq);
-		x->clock2 = clock_new(x, (method)mig_fadeIn);
-		x->forcefeed_clock1 = clock_new(x, (method)mig_forcefeed_change);
-		x->forcefeed_clock2 = clock_new(x, (method)mig_forcefeed_in);
+		x->clock = clock_new((t_object *)x, (method)mig_clock_cb);
+
 		x->tinterval = 25.0; //ms
 
 		x->fade = 1;
 		x->on = 0;
 		x->outputType = 0;
+		x->numOscToUpdate = 1;
 
 		x->idum = rand() * -1;
 
 		attr_args_process(x, argc, argv);
+
+		for(i = 0; i < x->nOsc; i++){
+			x->amp_mask[i] = 1.f;
+		}
+		for(i = x->nOsc; i < MIG_MAX_NUM_OSC; i++){
+			x->amp_mask[i] = 0.f;
+		}
+		mig_calc_amp_scale(x);
 	}
 	return x;
 }
 
 void mig_free(t_mig *x){
-	clock_unset(x->clock1);
-	clock_unset(x->clock2);
 	free(x->arrayIn);
 	free(x->pmf);
 	free(x->arrayOut);
-       	freeobject((t_object *)x->clock1);
-	freeobject((t_object *)x->clock2);
+	clock_unset(x->clock);
+	clock_free(x->clock);
 }
 
 
 void mig_assist(t_mig *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
+	if (m == ASSIST_INLET)
 		sprintf(s,"(List) %ld frequency amplitude pairs", x->nOsc);
 	else {
 		switch (a) {	
@@ -283,52 +324,102 @@ void mig_list(t_mig *x, t_symbol *msg, long argc, t_atom *argv){
 }
 
 void mig_bang(t_mig *x){
-	if(x->on) return;
-		
-	mig_fadeOut(x);
-	clock_fdelay(x->clock1, x->tinterval);
-	clock_fdelay(x->clock2, x->tinterval * 2.);
+	error("migrator: bang does nothing right now");
+}
+
+void mig_clock_cb(t_mig *x){
+	int n;
+	if(x->algo == MIG_ALGO_MCMC){
+
+	}
+
+	switch(x->state){
+	case MIG_STATE_FADE_OUT:
+		x->nOsc = x->nOsc_new;
+		if(x->numOscToUpdate < 0){
+			PDEBUG("forcefeed");
+			n = x->actualNumOscToUpdate;
+			x->actualNumOscToUpdate = x->nOsc;
+			x->numOscToUpdate = n;
+			PDEBUG("actual = %d, num = %d", x->actualNumOscToUpdate, x->numOscToUpdate);
+		}else{
+			PDEBUG("regular");
+			x->actualNumOscToUpdate = x->numOscToUpdate;
+			PDEBUG("actual = %d, num = %d", x->actualNumOscToUpdate, x->numOscToUpdate);
+		}
+		mig_fadeOut(x);
+		break;
+	case MIG_STATE_CHANGE_FREQ:
+		mig_changeFreq(x);
+		break;
+	case MIG_STATE_FADE_IN:
+		mig_fadeIn(x);
+		mig_counter(x);
+		break;
+	}
+	mig_outputList(x, (short)x->nOsc * 2, x->arrayOut);
+	x->state = (x->state + 1) % 3;
+	if(x->on){
+		clock_fdelay(x->clock, x->tinterval);
+	}
 }
 
 void mig_fadeOut(t_mig *x){
 	int i;
+	int n = x->actualNumOscToUpdate;
+	int osc;
+	PDEBUG("actualNumOscToUpdate = %d", n);
+	/*
 	for(i = 0; i < x->fade; i++){
 		SETFLOAT(&(x->arrayOut[((((x->counter + i) % x->nOsc) * 2) + 1)]), x->oscamp * i / x->fade);
 	}
-	
-	//outlet_list(x->out1, 0, (short)x->nOsc * 2, x->arrayOut);
-	mig_outputList(x, (short)x->nOsc * 2, x->arrayOut);
-	
-	if(x->on){
-		clock_fdelay(x->clock1, x->tinterval);
+	*/
+	PDEBUG("fade out");
+	for(i = 0; i < n; i++){
+		osc = ((x->counter + i) % x->nOsc);
+		SETFLOAT(&(x->arrayOut[(osc * 2) + 1]), 0.);
+		PDEBUG("zeroing %d", ((osc * 2) + 1));
 	}
+	for(i = 0; i < x->fade; i++){
+		osc = (((x->counter + n) + i) % x->nOsc);
+		if((atom_getfloat(&(x->arrayOut[(osc * 2) + 1])) > 0.f) && 
+		   (atom_getfloat(&(x->arrayOut[(osc * 2)])) != 0.f)){
+			SETFLOAT(&(x->arrayOut[(osc * 2) + 1]), (x->amp_scale[i] * x->oscamp));
+			PDEBUG("fading %d", osc);
+		}
+	}	
 }
 
 void mig_changeFreq(t_mig *x){	
 	int r = mig_randPMF(x);
 	float freq = x->arrayIn[(r * 2)].a_w.w_float;
-	
-	if(x->waitingToChangeNumOsc[0]){
+	int n = x->actualNumOscToUpdate;	
+	int i;
+	int osc;
+	PDEBUG("change freq");
+	if(x->counter > x->nOsc){
+		// we're reducing the number of oscillators, so set this freq to 0.
+		PDEBUG("%d > %d so setting freq to 0", x->counter, x->nOsc);
 		SETFLOAT(&(x->arrayOut[(x->counter * 2)]), 0.);
 	}else{
-		if(x->stdev){
-			SETFLOAT(&(x->arrayOut[(x->counter * 2)]), mig_gaussBlur(x, freq, r));
-		}else{
-			SETFLOAT(&(x->arrayOut[(x->counter * 2)]), freq);
+		for(i = 0; i < n; i++){
+			osc = ((x->counter + i) % x->nOsc);
+			if(x->stdev){
+				SETFLOAT(&(x->arrayOut[(osc * 2)]), mig_gaussBlur(x, freq, r));
+			}else{
+				SETFLOAT(&(x->arrayOut[(osc * 2)]), freq);
+			}
+			PDEBUG("changing %d", osc * 2);
 		}
 	}
-	
-	//outlet_list(x->out1, 0, (short)x->nOsc * 2, x->arrayOut);
 	outlet_float(x->out2, freq);
-	mig_outputList(x, (short)x->nOsc * 2, x->arrayOut);
-
-	if(x->on){
-		clock_fdelay(x->clock2, x->tinterval);
-	}
 }
 
 void mig_fadeIn(t_mig *x){
-	int i, n;
+	int n = x->actualNumOscToUpdate;
+	int osc;
+	int i;
+	/*
 	if(x->waitingToChangeNumOsc[0]){
 		SETFLOAT(&(x->arrayOut[((x->counter * 2) + 1)]), 0.);
 	}else{
@@ -336,15 +427,20 @@ void mig_fadeIn(t_mig *x){
 			n = ((x->counter - i) < 0) ? x->nOsc + (x->counter - i) : (x->counter - i);
 			SETFLOAT(&(x->arrayOut[((n * 2) + 1)]), x->oscamp * (i + 1) / x->fade);
 		}
-	}	
-	//outlet_list(x->out1, 0, (short)x->nOsc * 2, x->arrayOut);
-	mig_outputList(x, (short)x->nOsc * 2, x->arrayOut);
-	outlet_int(x->out3, x->counter);
-		
-	mig_counter(x);
-	if(x->on){
-		mig_fadeOut(x);
 	}
+	*/
+	//n = sin_tab_len();
+	PDEBUG("fade in");
+	PDEBUG("fade = %d, n = %d", x->fade, n);
+	for(i = 0; i < x->fade + (n - 1); i++){
+		osc = (x->counter + x->actualNumOscToUpdate) - i;
+		osc = (osc + x->nOsc) % x->nOsc;
+		if(atom_getfloat(&(x->arrayOut[osc * 2])) != 0){
+			SETFLOAT(&(x->arrayOut[(osc * 2) + 1]), x->oscamp * (i + 1) / x->fade);
+			PDEBUG("fading in %d", (osc * 2) + 1);
+		}
+	}
+	outlet_int(x->out3, x->counter);
 }
 
 void mig_outputList(t_mig *x, short length, t_atom *array){
@@ -364,20 +460,41 @@ void mig_outputList(t_mig *x, short length, t_atom *array){
 	}
 }
 
+void mig_calc_amp_scale(t_mig *x){
+	float fade = x->fade;
+	//float freq = 1.f / 40.f;
+	long n_osc = x->nOsc;
+	long n = sin_tab_len();
+	long stride = (long)floor((n / 2) / fade);
+	int i;
+	for(i = 0; i < fade; i++){
+		//x->amp_scale[i] = sinf(2.f * M_PI * freq * i);
+		//post("%d %f", i, sin_tab[i * stride]);
+		x->amp_scale[i] = sin_tab[i * stride];
+	}
+	for(i = 0; i > -fade; i--){
+		//post("%d %f", (x->nOsc - 1) + i, sin_tab[n + (i * stride)]);
+		x->amp_scale[(n_osc - 1) + i] = sin_tab[n + (i * stride)];
+	}
+	for(i = fade; i < x->nOsc - fade; i++){
+		x->amp_scale[i] = 1.;
+		//post("%d", i);
+	}
+}
+
 void mig_int(t_mig *x, long n){
 	int i = 0;
 	t_atom ar[2];
 	x->on = n;	
 	if(n){
-		mig_fadeOut(x);
+		clock_fdelay(x->clock, x->tinterval);
 		return;
 	}
 	
 	SETFLOAT(&(ar[0]), 0.0);
 	SETFLOAT(&(ar[1]), 0.0);
 	
-	clock_unset(x->clock1);
-	clock_unset(x->clock2);
+	clock_unset(x->clock);
 	for(i = 0; i < (int)x->nOsc * 2; i++){
 		SETFLOAT(&(x->arrayOut[i]), 0.0);
 	}
@@ -436,37 +553,7 @@ float mig_gaussBlur(t_mig *x, float m, int r){
 
 void mig_forcefeed(t_mig *x, t_symbol *sym, long argc, t_atom *argv){
 	mig_list(x, sym, argc, argv);
-	mig_forcefeed_out(x);	
-}
-
-void mig_forcefeed_out(t_mig *x){
-	int i;
-	for(i = 0; i < (int)x->nOsc; i++){
-		SETFLOAT(&(x->arrayOut[((i * 2) + 1)]), 0.0);
-	}
-	
-	outlet_list(x->out1, 0, (short)x->nOsc * 2, x->arrayOut);
-	clock_fdelay(x->forcefeed_clock1, x->tinterval * 2);
-}
-
-void mig_forcefeed_change(t_mig *x){
-	int i;
-	for(i = 0; i < (int)x->nOsc; i++){
-		x->arrayOut[i * 2] = x->arrayIn[mig_randPMF(x) * 2];
-		//SETFLOAT(&(x->arrayOut[(i * 2)]), x->arrayIn[mig_randPMF(x) * 2].a_w.w_float);
-	}
-	
-	outlet_list(x->out1, 0, (short)x->nOsc * 2, x->arrayOut);
-	clock_fdelay(x->forcefeed_clock2, x->tinterval * 2);
-}
-
-void mig_forcefeed_in(t_mig *x){
-	int i;
-	for(i = 0; i < (int)x->nOsc; i++){
-		SETFLOAT(&(x->arrayOut[((i * 2) + 1)]), x->oscamp);
-	}
-	
-	outlet_list(x->out1, 0, (short)x->nOsc * 2, x->arrayOut);
+	x->numOscToUpdate = -1;
 }
 
 //////////////////////////////////////////////////
@@ -525,6 +612,39 @@ float mig_gasdev(long *idum){
 // OPTIONS
 
 t_max_err mig_nOsc(t_mig *x, t_object *attr, long argc, t_atom *argv){
+	int i;
+	long n;
+	if(argc < 1){
+		return MAX_ERR_GENERIC;
+	}
+
+	n = atom_getlong(argv);
+
+	if(n > MIG_MAX_NUM_OSC){
+		error("migrator: the maximum number of oscillators is %d", MIG_MAX_NUM_OSC);
+		return MAX_ERR_GENERIC;
+	}
+	if(n < 1){
+		error("migrator: the number of oscillators must be greater than 0");
+		return MAX_ERR_GENERIC;
+	}
+      	if(x->fade >= n){
+		error("migrator: fade must be less than nOsc.  Setting fade to %f", 
+		      floorf((float)n / 2));
+		x->fade = (long)floorf((float)n / 2);
+		//return MAX_ERR_GENERIC;
+	}
+	x->nOsc_new = n;	
+	for(i = 0; i < n; i++){
+		x->amp_mask[i] = 1.f;
+	}
+	for(i = n; i < MIG_MAX_NUM_OSC; i++){
+		x->amp_mask[i] = 0.f;
+	}
+	return 0;
+}
+/*
+t_max_err mig_nOsc(t_mig *x, t_object *attr, long argc, t_atom *argv){
 	if(argc < 1){
 		return MAX_ERR_GENERIC;
 	}
@@ -562,6 +682,7 @@ t_max_err mig_nOsc(t_mig *x, t_object *attr, long argc, t_atom *argv){
 	}
 	return MAX_ERR_GENERIC;
 }
+*/
 
 void mig_nOsc_smooth(t_mig *x, long n){
 	int i;
@@ -634,4 +755,17 @@ void mig_tellmeeverything(t_mig *x){
 	post("Time interval: %f", x->tinterval);
 	post("Fade: %d", x->fade);
 	post("Standard deviation (Gaussian blur): %f", x->stdev);
+}
+
+void mig_algo(t_mig *x, t_symbol *a){
+	if(a = ps_pmf){
+		x->algo = MIG_ALGO_PMF;
+	}else if(a = ps_mcmc){
+		x->algo = MIG_ALGO_MCMC;
+	}else{
+		error("migrator: unknown algorithm %s", a->s_name);
+		error("\t\tValid options are \"pmf\" and \"mcmc\".  See helpfile for details.");
+	}
+
+
 }
