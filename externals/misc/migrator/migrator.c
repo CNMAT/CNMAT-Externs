@@ -50,7 +50,7 @@ VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily remove
 #include "commonsyms.h"
 #include "version.c"
 #include "math.h"
-#include "sin_tab.h"
+//#include "sin_tab.h"
 
 #ifdef DEBUG
 #define PDEBUG(s,args...) post(s, ##args)
@@ -461,6 +461,7 @@ void mig_outputList(t_mig *x, short length, t_atom *array){
 }
 
 void mig_calc_amp_scale(t_mig *x){
+	/*
 	float fade = x->fade;
 	//float freq = 1.f / 40.f;
 	long n_osc = x->nOsc;
@@ -480,6 +481,7 @@ void mig_calc_amp_scale(t_mig *x){
 		x->amp_scale[i] = 1.;
 		//post("%d", i);
 	}
+	*/
 }
 
 void mig_int(t_mig *x, long n){
