@@ -223,21 +223,6 @@ void *mig_new(t_symbol *sym, long argc, t_atom *argv){
 		x->nOsc = 100;
 		x->oscamp = 0.03f;
 
-		/*
-		if(argc > 0){
-			if(argv[0].a_type == A_FLOAT) x->stdev = argv[0].a_w.w_float;
-			else x->stdev = (float)(argv[0].a_w.w_long);
-		}
-		if(argc > 1){
-			if(argv[1].a_type == A_FLOAT) x->nOsc = (int)(argv[1].a_w.w_float);
-			else x->nOsc = argv[1].a_w.w_long;
-		}
-		if(argc > 2){
-			if(argv[2].a_type == A_FLOAT) x->oscamp = argv[2].a_w.w_float;
-			else x->oscamp = (float)(argv[2].a_w.w_long);
-		}
-		*/
-
 		x->algo = MIG_ALGO_PMF;
 
 		for(i = 0; i < MIG_MAX_NUM_OSC; i++){
@@ -369,11 +354,12 @@ void mig_fadeOut(t_mig *x){
 	int n = x->actualNumOscToUpdate;
 	int osc;
 	PDEBUG("actualNumOscToUpdate = %d", n);
-	/*
+
 	for(i = 0; i < x->fade; i++){
 		SETFLOAT(&(x->arrayOut[((((x->counter + i) % x->nOsc) * 2) + 1)]), x->oscamp * i / x->fade);
 	}
-	*/
+
+	/*
 	PDEBUG("fade out");
 	for(i = 0; i < n; i++){
 		osc = ((x->counter + i) % x->nOsc);
@@ -388,6 +374,7 @@ void mig_fadeOut(t_mig *x){
 			PDEBUG("fading %d", osc);
 		}
 	}	
+	*/
 }
 
 void mig_changeFreq(t_mig *x){	
@@ -419,8 +406,9 @@ void mig_fadeIn(t_mig *x){
 	int n = x->actualNumOscToUpdate;
 	int osc;
 	int i;
-	/*
-	if(x->waitingToChangeNumOsc[0]){
+
+	//if(x->waitingToChangeNumOsc[0]){
+	if(x->counter > x->nOsc){
 		SETFLOAT(&(x->arrayOut[((x->counter * 2) + 1)]), 0.);
 	}else{
 		for(i = 0; i < x->fade; i++){
@@ -428,8 +416,9 @@ void mig_fadeIn(t_mig *x){
 			SETFLOAT(&(x->arrayOut[((n * 2) + 1)]), x->oscamp * (i + 1) / x->fade);
 		}
 	}
-	*/
+
 	//n = sin_tab_len();
+	/*
 	PDEBUG("fade in");
 	PDEBUG("fade = %d, n = %d", x->fade, n);
 	for(i = 0; i < x->fade + (n - 1); i++){
@@ -440,6 +429,7 @@ void mig_fadeIn(t_mig *x){
 			PDEBUG("fading in %d", (osc * 2) + 1);
 		}
 	}
+	*/
 	outlet_int(x->out3, x->counter);
 }
 
