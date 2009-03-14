@@ -39,30 +39,35 @@ VERSION 0.0: First try
 #include "version.c"
 #include <math.h>
 
+#define SDIFED_BUF_SIZE 2048
+
+#ifndef VPOST()
+#define VPOST(vv, str, args...) (((vv) > 0) ? post("%s:%d: " str, NAME, __LINE__, ##args) : 0)
+#endif
+
 typedef struct _sel{
 	double click, drag;
 } t_sel;
 
 typedef struct _sdifed{
 	t_jbox box;
-	void *listout;
+	void *out_data, *out_info;
 	t_cmmjl_sdif_buffer sdif_buf;
+	char matrix_type[4];
 	t_jrgba bgcolor;
 	t_jrgba selcolor;
 	t_jrgba linecolor;
 	t_jrgb datacolor;
 	t_jrgb hilite;
-
-	float freqmin, freqmax;
-	float timemin, timemax;
+	double single_frame_width;
+	double freqmin_disp, freqmax_disp;
+	double freqmin_sdif, freqmax_sdif;
+	double timemin_disp, timemax_disp;
+	double timemin_sdif, timemax_sdif;
 	float contrast;
-	//int vertline1, vertline2, horizline1, horizline2;
-	// selections along the x and y axes
 	t_sel sel_x, sel_y;
-	// bitfield:
-	// 	first byte = modifiers
-	//	second byte = which lines to draw (vertline{1,2}, horizline{1,2})
-	unsigned long long state; 
+	t_atom *buf;
+	int v; // verbose
 } t_sdifed;
 
 void *sdifed_class;
@@ -73,10 +78,13 @@ void sdifed_set(t_sdifed *x, t_symbol *bufname);
 void sdifed_paint(t_sdifed *x, t_object *patcherview);
 void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect);
 void sdifed_draw_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect);
+void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect);
+void sdifed_draw_single_frame(t_sdifed *x, t_jgraphics *g, t_rect *rect);
 void sdifed_assist(t_sdifed *x, void *b, long m, long a, char *s);
 void sdifed_free(t_sdifed *x);
 void sdifed_error(SDIFresult r, const char *st);
 t_max_err sdifed_notify(t_sdifed *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+void sdifed_output_current_frame(t_sdifed *x);
 void sdifed_mousedown(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers);
 void sdifed_mousedrag(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers);
 void sdifed_mouseup(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers);
@@ -84,7 +92,11 @@ double sdifed_get_sel_min(t_sel *s);
 double sdifed_get_sel_max(t_sel *s);
 void sdifed_get_intersection(t_sel *sel_x, t_sel *sel_y, t_rect *r);
 void sdifed_post_sel(t_sel *sel_x, t_sel *sel_y);
-double sdifed_scale(float f, float min_in, float max_in, float min_out, float max_out);
+void sdifed_output_sel(t_sdifed *x);
+double sdifed_scale(double f, double min_in, double max_in, double min_out, double max_out);
+void sdifed_zoom_in(t_sdifed *x);
+void sdifed_zoom_out(t_sdifed *x);
+void sdifed_zero_sel(t_sel *sel);
 
 int main(void){
 	t_class *c = class_new("SDIF-editor", (method)sdifed_new, (method)sdifed_free, sizeof(t_sdifed), 0L, A_GIMME, 0);
@@ -100,12 +112,15 @@ int main(void){
 	class_addmethod(c, (method)sdifed_mousedown, "mousedown", A_CANT, 0);
 	class_addmethod(c, (method)sdifed_mousedrag, "mousedrag", A_CANT, 0);
 	class_addmethod(c, (method)sdifed_mouseup, "mouseup", A_CANT, 0);
+	class_addmethod(c, (method)sdifed_zoom_in, "zoom_in", 0);
+	class_addmethod(c, (method)sdifed_zoom_out, "zoom_out", 0);
 
-	CLASS_ATTR_FLOAT(c, "freqmin", 0, t_sdifed, freqmin);
-	CLASS_ATTR_FLOAT(c, "freqmax", 0, t_sdifed, freqmax);
-	CLASS_ATTR_FLOAT(c, "timemin", 0, t_sdifed, timemin);
-	CLASS_ATTR_FLOAT(c, "timemax", 0, t_sdifed, timemax);
+	CLASS_ATTR_DOUBLE(c, "freqmin", 0, t_sdifed, freqmin_disp);
+	CLASS_ATTR_DOUBLE(c, "freqmax", 0, t_sdifed, freqmax_disp);
+	CLASS_ATTR_DOUBLE(c, "timemin", 0, t_sdifed, timemin_disp);
+	CLASS_ATTR_DOUBLE(c, "timemax", 0, t_sdifed, timemax_disp);
 	CLASS_ATTR_FLOAT(c, "contrast", 0, t_sdifed, contrast);
+	CLASS_ATTR_DOUBLE(c, "single_frame_width", 0, t_sdifed, single_frame_width);
 
 	CLASS_STICKY_ATTR(c, "category", 0, "Color");
 
@@ -151,8 +166,6 @@ void *sdifed_new(t_symbol *s, long argc, t_atom *argv){
 
 	x = (t_sdifed *)object_alloc(sdifed_class);
 
-	x->listout = listout(x);
-
 	// box setup
 	if(!(d = object_dictionaryarg(argc, argv))){
 		return NULL;
@@ -177,19 +190,28 @@ void *sdifed_new(t_symbol *s, long argc, t_atom *argv){
 	jbox_new((t_jbox *)x, boxflags, argc, argv);
 	x->box.b_firstin = (void *)x;
 
+	x->out_info = listout((t_object *)x);
+	x->out_data = listout((t_object *)x);
+
+
 	// uncomment if we add attributes
 	attr_dictionary_process(x, d);
 
 	jbox_ready((t_jbox *)x);
 
 	// variables
-	x->freqmin = 0;
-	x->freqmax = 22050;
-	x->timemin = -1;
-	x->timemax = -1;
+	x->freqmin_disp = 0;
+	x->freqmax_disp = 22050;
+	x->freqmin_sdif = 0;
+	x->freqmax_sdif = 22050;
+	x->timemin_disp = 0;
+	x->timemax_disp = 1;
 	x->contrast = 1.;
 	x->sel_x.click = x->sel_x.drag = -1;
 	x->sel_y.click = x->sel_y.drag = -1;
+	x->single_frame_width = 100;
+	x->buf = (t_atom *)malloc(SDIFED_BUF_SIZE * sizeof(t_atom));
+	x->v = 1;
 
 	// SDIF setup
 	cmmjl_sdif_init(sdifed_error);
@@ -198,12 +220,65 @@ void *sdifed_new(t_symbol *s, long argc, t_atom *argv){
 }
 
 void sdifed_set(t_sdifed *x, t_symbol *bufname){
+	SDIFmem_Matrix m;
+	SDIFmem_Frame f;
+	float *data;
+	double time;
+	int r, c;
+
 	x->sdif_buf.t_bufferSym = bufname;
 	LookupMyBuffer(&(x->sdif_buf));
 	if(x->sdif_buf.t_buffer == 0){
 		error("SDIF-editor: there is no SDIF-buffer called %s", x->sdif_buf.t_bufferSym->s_name);
 		return;
 	}
+
+	// get the max and min times in the SDIF file
+	SDIFbuf_GetMinTime(x->sdif_buf.t_buf, &(x->timemin_sdif));
+	SDIFbuf_GetMaxTime(x->sdif_buf.t_buf, &(x->timemax_sdif));
+	VPOST(x->v, "min time = %f\nmax time = %f", x->timemin_sdif, x->timemax_sdif);
+	x->timemin_disp = x->timemin_sdif;
+	x->timemax_disp = x->timemax_sdif;
+
+	// figure out what the main matrix type is
+	cmmjl_sdif_getMainMatrixType(&(x->sdif_buf), x->matrix_type);
+	VPOST(x->v, "matrix type = %c%c%c%c", 
+	      x->matrix_type[0], 
+	      x->matrix_type[1], 
+	      x->matrix_type[2], 
+	      x->matrix_type[3]);
+
+	// get the first frame
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, x->timemin_disp, 1);
+
+	// go through each frame and make sure the data is reasonable and that
+	// our buffer (x->buf) is big enough to handle it.
+	while(f){
+		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
+			error("SDIF-editor: error!!");
+			return;
+		}
+
+		if(m->header.matrixDataType == SDIF_FLOAT64){
+			error("SDIF-editor: SDIF matrix contains doubles!!  I wasn't expecting that...");
+			return;
+		}
+
+		time = f->header.time;
+		r = m->header.rowCount;
+		c = m->header.columnCount;
+		data = (float *)(m->data);
+		if(r * c + 1 > SDIFED_BUF_SIZE){
+			x->buf = (t_atom *)realloc(x->buf, (r * c + 1) * sizeof(t_atom));
+			if(x->buf == NULL){
+				error("SDIF-editor: out of memory!");
+				return;
+			}
+		}
+		// could look at the data here if we want
+		f = f->next;
+	}
+
 	jbox_redraw(&(x->box));
 }
 
@@ -224,8 +299,10 @@ void sdifed_paint(t_sdifed *x, t_object *patcherview){
 	jgraphics_set_line_width(g, 1);
 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
 
+	sdifed_draw_track_lines(x, g, &rect);
 	sdifed_draw_sdif(x, g, &rect);
 	sdifed_draw_lines(x, g, &rect);
+	sdifed_draw_single_frame(x, g, &rect);
 
 	jgraphics_stroke(g);
 
@@ -245,15 +322,14 @@ void sdifed_paint(t_sdifed *x, t_object *patcherview){
 }
 
 void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
-	char matrixType[4];
 	SDIFmem_Matrix m;
 	SDIFmem_Frame f;
 	float *data;
 	int i, r, c;
-	double freqmin = x->freqmin;
-	double freqmax = x->freqmax;
-	double timemin = x->timemin;
-	double timemax = x->timemax;
+	double freqmin_disp = x->freqmin_disp;
+	double freqmax_disp = x->freqmax_disp;
+	double timemin_disp = x->timemin_disp;
+	double timemax_disp = x->timemax_disp;
 	double contrast = x->contrast;
 	double freq, amp, time;
 	int index;
@@ -266,11 +342,11 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		return;
 	}
 
-	if(timemin == -1){
-		SDIFbuf_GetMinTime(x->sdif_buf.t_buf, &timemin);
+	if(timemin_disp == -1){
+		timemin_disp = x->timemin_sdif;
 	}
-	if(timemax == -1){
-		SDIFbuf_GetMaxTime(x->sdif_buf.t_buf, &timemax);
+	if(timemax_disp == -1){
+		timemax_disp = x->timemax_sdif;
 	}
 
 	freqtohilite_min = freqtohilite_max = timetohilite_min = timetohilite_max = -1;
@@ -280,22 +356,20 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		// and decrease towards the bottom.
 		freqtohilite_min = sel_y.click > sel_y.drag ? sel_y.click : sel_y.drag;
 		freqtohilite_max = sel_y.click < sel_y.drag ? sel_y.click : sel_y.drag;
-		freqtohilite_min = fabsf((freqtohilite_min / rect->height) - 1) * (x->freqmax - x->freqmin) + x->freqmin;
-		freqtohilite_max = fabsf((freqtohilite_max / rect->height) - 1) * (x->freqmax - x->freqmin) + x->freqmin;
+		freqtohilite_min = fabsf((freqtohilite_min / rect->height) - 1) * (x->freqmax_disp - x->freqmin_disp) + x->freqmin_disp;
+		freqtohilite_max = fabsf((freqtohilite_max / rect->height) - 1) * (x->freqmax_disp - x->freqmin_disp) + x->freqmin_disp;
 		//post("%f %f", freqtohilite_min, freqtohilite_max);
 	}
 
 	if(sel_x.click >= 0 && sel_x.drag >= 0){
 		timetohilite_min = sel_x.click < sel_x.drag ? sel_x.click : sel_x.drag;
 		timetohilite_max = sel_x.click > sel_x.drag ? sel_x.click : sel_x.drag;
-		timetohilite_min = (timetohilite_min / rect->width) * (timemax - timemin) + timemin;
-		timetohilite_max = (timetohilite_max / rect->width) * (timemax - timemin) + timemin;
+		timetohilite_min = (timetohilite_min / rect->width) * (timemax_disp - timemin_disp) + timemin_disp;
+		timetohilite_max = (timetohilite_max / rect->width) * (timemax_disp - timemin_disp) + timemin_disp;
 		//post("timetohilite_min = %f timetohilite_max = %f", timetohilite_min, timetohilite_max);
 	}
 
-	cmmjl_sdif_getMainMatrixType(&(x->sdif_buf), matrixType);
-
-	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, timemin, 1);
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, timemin_disp, 1);
 
 	t_jrgba datacolor;
 	datacolor.red = x->datacolor.red;
@@ -312,7 +386,7 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 	jgraphics_set_line_width(g, 1.);
 
 	while(f){
-		if(!(m = GetMatrix(&(x->sdif_buf), matrixType, f->header.time, 1))){
+		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
 			error("SDIF-editor: error!!");
 			return;
 		}
@@ -326,13 +400,13 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		r = m->header.rowCount;
 		c = m->header.columnCount;
 		data = (float *)(m->data);
-		if(time <= timemax && time >= timemin){
+		if(time <= timemax_disp && time >= timemin_disp){
 			for(i = 0; i < r; i++){
 				index = (int)(data[(i * c)]);
 				freq = data[(i * c) + 1];
 				amp = data[(i * c) + 2];
 
-				if(freq <= freqmax && freq >= freqmin){
+				if(freq <= freqmax_disp && freq >= freqmin_disp){
 					if((freq <= freqtohilite_max && freq >= freqtohilite_min) || 
 					   (time <= timetohilite_max && time >= timetohilite_min)){
 						jgraphics_set_source_jrgba(g, &hilite);
@@ -340,9 +414,9 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 						datacolor.alpha = amp * contrast;
 						jgraphics_set_source_jrgba(g, &datacolor);
 					}
-					freq = (freq - freqmin) / (freqmax - freqmin);
-					jgraphics_rectangle(g, rect->width * ((time - timemin) / (timemax - timemin)), roundf(fabsf(freq - 1) * rect->height), 1, 1);
-					jgraphics_stroke(g);
+					freq = (freq - freqmin_disp) / (freqmax_disp - freqmin_disp);
+					jgraphics_rectangle(g, rect->width * ((time - timemin_disp) / (timemax_disp - timemin_disp)), roundf(fabsf(freq - 1) * rect->height), 2, 2);
+					jgraphics_fill(g);
 				}
 			}
 		}
@@ -386,6 +460,187 @@ void sdifed_draw_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 	}
 }
 
+void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
+	SDIFmem_Matrix m;
+	SDIFmem_Frame f;
+	float *data;
+	int r, c, i, j;
+	int index;
+	float freq, amp;
+	double time, prev_time;
+	float prev_freq[SDIFED_BUF_SIZE];
+	int prev_ind[SDIFED_BUF_SIZE];
+	int num_prev_indices;
+	double timemin_disp, timemax_disp;
+	t_jrgba datacolor;
+	datacolor.red = x->datacolor.red;
+	datacolor.green = x->datacolor.green;
+	datacolor.blue = x->datacolor.blue;
+	datacolor.alpha = 1.;
+
+	jgraphics_set_line_width(g, .2);
+	jgraphics_set_source_jrgba(g, &datacolor);
+
+	if(!(x->sdif_buf.t_buf)){
+		return;
+	}
+
+	timemin_disp = x->timemin_disp;
+	timemax_disp = x->timemax_disp;
+	if(timemin_disp == -1){
+		timemin_disp = x->timemin_sdif;
+	}
+	if(timemax_disp == -1){
+		timemax_disp = x->timemax_sdif;
+	}
+
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, x->timemin_sdif, 1);
+
+	if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
+		error("SDIF-editor: error!!");
+		return;
+	}
+
+	if(m->header.matrixDataType == SDIF_FLOAT64){
+		error("SDIF-editor: SDIF matrix contains doubles!!  I wasn't expecting that...");
+		return;
+	}
+
+	r = m->header.rowCount;
+	c = m->header.columnCount;
+	data = (float *)(m->data);
+	prev_time = f->header.time;
+	prev_time = sdifed_scale(prev_time, x->timemin_disp, x->timemax_disp, 0, rect->width);
+
+	num_prev_indices = 0;
+	for(i = 0; i < r; i++){
+		index = data[i * c];
+		freq = data[(i * c) + 1];
+		freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0);
+		prev_freq[num_prev_indices] = freq;
+		prev_ind[num_prev_indices] = index;
+		num_prev_indices++;
+	}
+
+	while(f){
+		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
+			error("SDIF-editor: error!!");
+			return;
+		}
+
+		if(m->header.matrixDataType == SDIF_FLOAT64){
+			error("SDIF-editor: SDIF matrix contains doubles!!  I wasn't expecting that...");
+			return;
+		}
+
+		r = m->header.rowCount;
+		c = m->header.columnCount;
+		data = (float *)(m->data);
+		time = f->header.time;
+		//post("**********	TIME = %f", time);
+		time = sdifed_scale(time, x->timemin_disp, x->timemax_disp, 0, rect->width);
+
+		for(i = 0; i < r; i++){
+	       		index = data[i * c];
+			freq = data[(i * c) + 1];
+			freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0);
+			amp = data[(i * c) + 2];
+			for(j = 0; j < num_prev_indices; j++){
+				if(prev_ind[j] == index){
+					//post("prev index = %d, index = %d, prev freq = %f, freq = %f", prev_ind[j], index, prev_freq[j], freq);
+					datacolor.alpha = amp * x->contrast;
+					jgraphics_set_source_jrgba(g, &datacolor);     
+					jgraphics_move_to(g, prev_time, prev_freq[j]);
+					jgraphics_line_to(g, time, freq);
+					jgraphics_stroke(g);
+				}
+			}
+		}
+		prev_time = time;
+		num_prev_indices = 0;
+		for(i = 0; i < r; i++){
+			index = data[i * c];
+			freq = data[(i * c) + 1];
+			freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0);
+			prev_freq[num_prev_indices] = freq;
+			prev_ind[num_prev_indices] = index;
+			num_prev_indices++;
+		}
+		f = f->next;
+	}
+}
+
+void sdifed_draw_single_frame(t_sdifed *x, t_jgraphics *g, t_rect *rect){
+	/*
+	double xx = x->sel_x.drag;
+	double timemin, timemax;
+	double time;
+	char matrixType[4];
+	SDIFmem_Matrix m;
+	SDIFmem_Frame f;
+	float *data;
+	int r, c, i;
+	int index;
+	float freq, amp;
+
+	timemin = x->timemin_disp;
+	timemax = x->timemax_disp;
+	if(timemin == -1){
+		timemin = x->timemin_sdif;
+	}
+	if(timemax == -1){
+		timemax = x->timemax_sdif;
+	}
+
+	time = sdifed_scale(xx, 0., rect->width, timemin, timemax);
+
+	if(!(x->sdif_buf.t_buf)){
+		return;
+	}
+	cmmjl_sdif_getMainMatrixType(&(x->sdif_buf), matrixType);
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, time, 1);
+
+	if(!(m = GetMatrix(&(x->sdif_buf), matrixType, f->header.time, 1))){
+		error("SDIF-editor: error!!");
+		return;
+	}
+
+	if(m->header.matrixDataType == SDIF_FLOAT64){
+		error("SDIF-editor: SDIF matrix contains doubles!!  I wasn't expecting that...");
+		return;
+	}
+
+	r = m->header.rowCount;
+	c = m->header.columnCount;
+	data = (float *)(m->data);
+
+	t_jrgba color;
+	color.red = color.green = 0;
+	color.blue = 1.;
+	color.alpha = .6;
+	jgraphics_set_line_width(g, 1.);
+	jgraphics_set_source_jrgba(g, &color);
+
+	//post("**************************************************");
+	//post("freqmin_disp = %f, freqmax_disp = %f", x->freqmin_disp, x->freqmax_disp);
+	post("sfw: %f", x->single_frame_width);
+	for(i = 0; i < r; i++){
+		index = (int)(data[(i * c)]);
+		freq = data[(i * c) + 1];
+		//post("freq = %f", freq);
+		freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0.);
+		//post("freq adj = %f", freq);
+		amp = data[(i * c) + 2];
+		//post("amp = %f", amp);
+		amp = amp * x->single_frame_width;
+		//post("amp adj = %f", amp);
+		jgraphics_move_to(g, xx, freq);
+		jgraphics_line_to(g, xx + amp, freq);
+		jgraphics_stroke(g);
+	}
+	*/
+}
+
 void sdifed_assist(t_sdifed *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET){
 	}else{
@@ -409,11 +664,67 @@ t_max_err sdifed_notify(t_sdifed *x, t_symbol *s, t_symbol *msg, void *sender, v
 	//t_symbol *attrname;
 	if (msg == gensym("attr_modified")){
 		//attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
-		x->sel_x.click = x->sel_x.drag = x->sel_y.click = x->sel_y.drag = -1;
+		//x->sel_x.click = x->sel_x.drag = x->sel_y.click = x->sel_y.drag = -1;
 		jbox_redraw(&(x->box));
 
         }
         return 0;
+}
+
+void sdifed_output_current_frame(t_sdifed *x){
+	double xx = x->sel_x.drag;
+	if(xx == -1){
+		xx = x->sel_x.click;
+	}
+	double timemin, timemax;
+	double time;
+	SDIFmem_Matrix m;
+	SDIFmem_Frame f;
+	float *data;
+	int r, c, i;
+	int n;
+	t_atom *buf = x->buf;
+	t_rect rect;
+
+	jbox_get_patching_rect(&(x->box.b_ob), &rect);
+
+	timemin = x->timemin_disp;
+	timemax = x->timemax_disp;
+	if(timemin == -1){
+		timemin = x->timemin_sdif;
+	}
+	if(timemax == -1){
+		timemax = x->timemax_sdif;
+	}
+
+	time = sdifed_scale(xx, 0., rect.width, timemin, timemax);
+
+	if(!(x->sdif_buf.t_buf)){
+		return;
+	}
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, time, 1);
+
+	if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
+		error("SDIF-editor: error!!");
+		return;
+	}
+
+	if(m->header.matrixDataType == SDIF_FLOAT64){
+		error("SDIF-editor: SDIF matrix contains doubles!!  I wasn't expecting that...");
+		return;
+	}
+
+	r = m->header.rowCount;
+	c = m->header.columnCount;
+	n = r * c + 1;
+
+	data = (float *)(m->data);
+
+	atom_setfloat(buf++, time);
+	for(i = 0; i < r * c; i++){
+		atom_setfloat(buf++, *((float *)(data++)));
+	}
+	outlet_list(x->out_data, NULL, n, x->buf);
 }
 
 void sdifed_output_matrix_for_time(t_sdifed *x, double time){
@@ -429,7 +740,6 @@ void sdifed_mousedown(t_sdifed *x, t_object *patcherview, t_pt pt, long modifier
 	//post("0x%X", modifiers);
 	switch(modifiers){
 	case 0x10:
-		post("0");
 		// no modifiers.  
 		x->sel_x.click = pt.x;
 		x->sel_x.drag = -1;
@@ -437,7 +747,6 @@ void sdifed_mousedown(t_sdifed *x, t_object *patcherview, t_pt pt, long modifier
 		x->sel_y.drag = -1;
 		break;
 	case 0x12:
-		post("shift");
 		// shift.  
 		x->sel_x.click = -1;
 		x->sel_x.drag = -1;
@@ -452,7 +761,9 @@ void sdifed_mousedown(t_sdifed *x, t_object *patcherview, t_pt pt, long modifier
 		break;
 	}
 	jbox_redraw(&(x->box));
-	sdifed_post_sel(&(x->sel_x), &(x->sel_y));
+	//sdifed_post_sel(&(x->sel_x), &(x->sel_y));
+	sdifed_output_sel(x);
+	sdifed_output_current_frame(x);
 }
 
 void sdifed_mousedrag(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -472,6 +783,8 @@ void sdifed_mousedrag(t_sdifed *x, t_object *patcherview, t_pt pt, long modifier
 	}
 
 	jbox_redraw(&(x->box));
+	sdifed_output_sel(x);
+	sdifed_output_current_frame(x);
 }
 
 void sdifed_mouseup(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -509,8 +822,115 @@ void sdifed_post_sel(t_sel *sel_x, t_sel *sel_y){
 	post("%f %f %f %f", sel_x->click, sel_x->drag, sel_y->click, sel_y->drag);
 }
 
-double sdifed_scale(float f, float min_in, float max_in, float min_out, float max_out){
-	float m = (max_out - min_out) / (max_in - min_in);
-	float b = (min_out - (m * min_in));
+void sdifed_output_sel(t_sdifed *x){
+	t_rect r;
+	t_atom out[4];
+	double xmin, xmax, ymin, ymax;
+	double timemin_disp, timemax_disp;
+
+	xmin = sdifed_get_sel_min(&(x->sel_x));
+	xmax = sdifed_get_sel_max(&(x->sel_x));
+
+	// these are swapped intentionally since the top of the view is 0.
+	ymin = sdifed_get_sel_max(&(x->sel_y));
+	ymax = sdifed_get_sel_min(&(x->sel_y));
+
+	jbox_get_patching_rect(&(x->box.b_ob), &r);
+
+	if(xmin == -1){
+		xmin = 0.;
+	}
+	if(xmax == -1){
+		xmax = r.width;
+	}
+	if(ymin == -1){
+		ymin = r.height;
+	}
+	if(ymax == -1){
+		ymax = 0.;
+	}
+
+	timemin_disp = x->timemin_disp;
+	timemax_disp = x->timemax_disp;
+	if(timemin_disp == -1){
+		timemin_disp = x->timemin_sdif;
+	}
+	if(timemax_disp == -1){
+		timemax_disp = x->timemax_sdif;
+	}
+
+	atom_setfloat(&(out[0]), sdifed_scale(xmin, 0., r.width, timemin_disp, timemax_disp));
+	atom_setfloat(&(out[1]), sdifed_scale(xmax, 0., r.width, timemin_disp, timemax_disp));
+	atom_setfloat(&(out[2]), sdifed_scale(ymin, r.height, 0., x->freqmin_disp, x->freqmax_disp));
+	atom_setfloat(&(out[3]), sdifed_scale(ymax, r.height, 0., x->freqmin_disp, x->freqmax_disp));
+	outlet_list(x->out_info, NULL, 4, out);
+}
+
+double sdifed_scale(double f, double min_in, double max_in, double min_out, double max_out){
+	double m = (max_out - min_out) / (max_in - min_in);
+	double b = (min_out - (m * min_in));
 	return m * f + b;
+}
+
+void sdifed_zoom_in(t_sdifed *x){
+	t_rect r;
+	double xmin, xmax, ymin, ymax;
+
+	xmin = sdifed_get_sel_min(&(x->sel_x));
+	xmax = sdifed_get_sel_max(&(x->sel_x));
+
+	// these are swapped intentionally since the top of the view is 0.
+	ymin = sdifed_get_sel_max(&(x->sel_y));
+	ymax = sdifed_get_sel_min(&(x->sel_y));
+
+	jbox_get_patching_rect(&(x->box.b_ob), &r);
+	/*
+	if(xmin == -1){
+		xmin = 0.;
+	}
+	if(xmax == -1){
+		xmax = r.width;
+	}
+	if(ymin == -1){
+		ymin = r.height;
+	}
+	if(ymax == -1){
+		ymax = 0.;
+	}
+	*/
+	if(xmin >= 0){
+		x->timemin_disp = sdifed_scale(xmin, 0, r.width, x->timemin_disp, x->timemax_disp);
+	}
+	if(xmax >= 0){
+		x->timemax_disp = sdifed_scale(xmax, 0, r.width, x->timemin_disp, x->timemax_disp);
+	}
+	if(ymin >= 0){
+		x->freqmin_disp = sdifed_scale(ymin, r.height, 0, x->freqmin_disp, x->freqmax_disp);
+	}
+	if(ymax >= 0){
+		x->freqmax_disp = sdifed_scale(ymax, r.height, 0, x->freqmin_disp, x->freqmax_disp);
+	}
+
+	//post("%f %f %f %f", x->timemin_disp, x->timemax_disp, x->freqmin_disp, x->freqmax_disp);
+	sdifed_zero_sel(&(x->sel_x));
+	sdifed_zero_sel(&(x->sel_y));
+
+	jbox_redraw(&(x->box));
+}
+
+void sdifed_zoom_out(t_sdifed *x){
+	x->freqmin_disp = x->freqmin_sdif;
+	x->freqmax_disp = x->freqmax_sdif;
+	x->timemin_disp = x->timemin_sdif;
+	x->timemax_disp = x->timemax_sdif;
+
+	sdifed_zero_sel(&(x->sel_x));
+	sdifed_zero_sel(&(x->sel_y));
+
+	jbox_redraw(&(x->box));
+}
+
+void sdifed_zero_sel(t_sel *sel){
+	sel->click = -1;
+	sel->drag = -1;
 }
