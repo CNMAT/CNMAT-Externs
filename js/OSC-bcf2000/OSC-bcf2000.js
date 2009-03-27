@@ -3,7 +3,7 @@
 OSC-bcf2000.js by John MacCallum
 
 Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2006, The Regents of 
+University of California, Berkeley.  Copyright (c) 2006-9, The Regents of 
 the University of California (Regents).  
 
 Permission to use, copy, modify, distribute, and distribute modified versions
@@ -32,6 +32,7 @@ SVN_REVISION: $LastChangedRevision: 618 $
 VERSION 0.1: First release
 VERSION 0.1.2: Gratuitously incremented the version number
 VERSION 0.1.3: Fixed line-break problem
+VERSION 1.0: OSC name space sucks less
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -42,23 +43,46 @@ outlets = 1;
 var debug = 0;
 if(jsarguments.length < 2) mode = 0;
 else mode = jsarguments[1];
+var shitmode = 0;
 
-function list(a)
-{
+var legacyNameArray = Array("rot1", "rot2", "rot3", "rot4", "rbut1", "rbut2", "rbut3", "rbut4", "but1", "but2", "fad", "glo" );
+var nameArray = Array("/rotary_encoder/1/", "/rotary_encoder/2/", "/rotary_encoder/3/", "/rotary_encoder/4/", "/push_encoder/1/", 
+		  "/push_encoder/2/", "/push_encoder/3/", "/push_encoder/4/", "/button/1/", "/button/2/", "/fader/", "/global/");
+
+function list(a){
 	var a = arrayfromargs(messagename, arguments);
 	
 	osc_tag(a);
 }
 
-function anything(a)
-{
+function anything(a){
 	var a = arrayfromargs(messagename, arguments);
-
 	var oscTags = a[0].split("/");
 	var value = a[1];
+	var channel;
+	var midiNumber;
 
-	var channel = oscTags.length == 3 ? oscTags[1].charAt(oscTags[1].length - 1) * 1 : -1;
-	var midiNumber = getMIDInumber(oscTags[oscTags.length - 1]);
+	if(shitmode){
+		channel = oscTags.length == 3 ? oscTags[1].charAt(oscTags[1].length - 1) * 1 : -1;
+		midiNumber = getMIDInumber(oscTags[oscTags.length - 1]);
+	}else{
+		//channel = oscTags.length == 5 ? oscTags[3]: -1;
+		channel = -1;
+		if(oscTags[1].match("ch")){
+			channel = oscTags[2];
+		}
+		var tmp = "";
+		var st;
+		if(channel >= 0){
+			st = 3;
+		}else{
+			st = 1;
+		}
+		for(var i = st; i < oscTags.length; i++){
+			tmp = tmp + "/" + oscTags[i];
+		}
+		midiNumber = getMIDInumber(tmp);
+	}
 	
 	if (channel >= 0)
 		outlet(0, value, midiNumber, channel);
@@ -66,8 +90,7 @@ function anything(a)
 		outlet(0, value, midiNumber, 1);
 }
 
-function osc_tag(a)
-{
+function osc_tag(a){
 	//post(getOSCtag(a[1]), "\n");
 	//var mode;
 	//if (!jsarguments[1])
@@ -82,7 +105,11 @@ function osc_tag(a)
 			OSCarray = Array(getOSCtag(a[1]), a[0]);
 			break;
 		case 1:
-			OSCarray = Array("/ch" + a[2] + getOSCtag(a[1]), a[0]);
+			if(shitmode){
+				OSCarray = Array("/ch" + a[2] + getOSCtag(a[1]), a[0]);
+			}else{
+				OSCarray = Array("/ch/" + a[2] + getOSCtag(a[1]), a[0]);
+			}
 			break;
 	}
 	if (debug)
@@ -91,24 +118,32 @@ function osc_tag(a)
 	outlet(0, OSCarray);
 }
 
-function getOSCtag(v)
-{
-	var nameArray = Array("rot1", "rot2", "rot3", "rot4", "rbut1", "rbut2", "rbut3", "rbut4", "but1", "but2", "fad", "glo" );
-	var name = nameArray[Math.floor((v - 1) / 8)];
-	var element = v - (8 * Math.floor((v - 1) / 8));
-	return ("/" + name + element);
+function getOSCtag(v){
+	var name;
+	var element;
+	if(shitmode){
+		name = "/" + legacyNameArray[Math.floor((v - 1) / 8)];
+	}else{
+		name = nameArray[Math.floor((v - 1) / 8)];
+	}
+	element = v - (8 * Math.floor((v - 1) / 8));
+	return (name + element);
 }
 
-function getMIDInumber(n)
-{
-	var nameArray = Array("rot1", "rot2", "rot3", "rot4", "rbut1", "rbut2", "rbut3", "rbut4", "but1", "but2", "fad", "glo" );
+function getMIDInumber(n){
+	var na;
+	if(shitmode){
+		na = legacyNameArray;
+	}else{
+		na = nameArray;
+	}
 
 	var controller = n.substring(0, n.length - 1);
 	var number = n.charAt(n.length - 1);
 	var controllerNumber = 0;
 
-	for ( i = 0; i < nameArray.length; i++ ) {
-		if (controller == nameArray[i]) {
+	for ( i = 0; i < na.length; i++ ) {
+		if (controller == na[i]) {
 			controllerNumber = i;
 			break;
 		}
@@ -117,12 +152,14 @@ function getMIDInumber(n)
 	return controllerNumber * 8 + (number * 1);
 }
 
-function debug(b)
-{
+function debug(b){
 	debug = b;
 }
 
-function dispch(b)
-{
+function dispch(b){
 	mode = b;
+}
+
+function legacy(v){
+	shitmode = v;
 }
