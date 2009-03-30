@@ -21,8 +21,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: hashtab
-DESCRIPTION: A hashtable for Max
+NAME: template
+DESCRIPTION: A template for Max objects
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2009
 SVN_REVISION: $LastChangedRevision: 587 $
@@ -30,68 +30,63 @@ VERSION 0.0: First try
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-/* Description of the object:
+#include "ext.h"
+#include "ext_obex.h"
+#include "ext_obex_util.h"
 
- */
-
-#include "ext.h"		// must be included with all Max objects
-#include "ext_obex.h"		// attribute support and useful object extensions such as atom_getfloat() 
-#include "ext_obex_util.h"	// macros that make attributes easier to deal with
-
-
-typedef struct _htab{
+typedef struct _temp{
 	t_object ob;
 	void *outlet;
-} t_htab;
+} t_temp;
 
-static t_class *htab_class;
+static t_class *temp_class;
 
-void htab_bang(t_htab *x);
-void htab_int(t_htab *x, long n);
-void htab_float(t_htab *x, double xx);
-void htab_list(t_htab *x, t_symbol *msg, short argc, t_atom *argv);
-void htab_anything(t_htab *x, t_symbol *msg, short argc, t_atom *argv);
-void htab_free(t_htab *x);
-void htab_assist(t_htab *x, void *b, long m, long a, char *s);
-void htab_inletinfo(t_htab *x, void *b, long index, char *t);
-void *htab_new(void);
+void temp_bang(t_temp *x);
+void temp_int(t_temp *x, long n);
+void temp_float(t_temp *x, double xx);
+void temp_list(t_temp *x, t_symbol *msg, short argc, t_atom *argv);
+void temp_anything(t_temp *x, t_symbol *msg, short argc, t_atom *argv);
+void temp_free(t_temp *x);
+void temp_assist(t_temp *x, void *b, long m, long a, char *s);
+void temp_inletinfo(t_temp *x, void *b, long index, char *t);
+void *temp_new(void);
 
-void htab_bang(t_htab *x){
-
-}
-
-void htab_int(t_htab *x, long n){
+void temp_bang(t_temp *x){
 
 }
 
-void htab_float(t_htab *x, double f){
+void temp_int(t_temp *x, long n){
 
 }
 
-void htab_list(t_htab *x, t_symbol *msg, short argc, t_atom *argv){
+void temp_float(t_temp *x, double f){
 
 }
 
-void htab_anything(t_htab *x, t_symbol *msg, short argc, t_atom *argv){
+void temp_list(t_temp *x, t_symbol *msg, short argc, t_atom *argv){
 
 }
 
-void htab_free(t_htab *x){
+void temp_anything(t_temp *x, t_symbol *msg, short argc, t_atom *argv){
+
 }
 
-void htab_assist(t_htab *x, void *b, long io, long index, char *s){
+void temp_free(t_temp *x){
+}
+
+void temp_assist(t_temp *x, void *b, long io, long index, char *s){
 	switch(io){
 	case 1:
 		switch(index){
 		case 0:
-			sprintf(s, "Store or recall data");
+			sprintf(s, "");
 			break;
 		}
 		break;
 	case 2:
 		switch(index){
 		case 0:
-			sprintf(s, "Data that has been recalled");
+			sprintf(s, "");
 			break;
 		}
 		break;
@@ -103,10 +98,10 @@ void htab_assist(t_htab *x, void *b, long io, long index, char *s){
 Object and instance creation functions.
  **************************************************/
 
-void *htab_new(){
-	t_htab *x;
+void *temp_new(void){
+	t_temp *x;
 
-	if(x = (t_htab *)object_alloc(htab_class)){
+	if(x = (t_temp *)object_alloc(temp_class)){
 		x->outlet = outlet_new(x, NULL);
 		return x;
 	}
@@ -114,18 +109,18 @@ void *htab_new(){
 }
 
 int main(void){
-	t_class *c = class_new("hashtab", (method)htab_new, (method)htab_free, sizeof(t_htab), 0L, A_DEFLONG, 0);
+	t_class *c = class_new("template", (method)temp_new, (method)temp_free, sizeof(t_temp), 0L, 0);
 
-	class_addmethod(c, (method)htab_bang, "bang", 0);
-	class_addmethod(c, (method)htab_int, "int", A_LONG, 0);
-	class_addmethod(c, (method)htab_float, "float", A_FLOAT, 0);
-	class_addmethod(c, (method)htab_list, "list", A_GIMME, 0);
-	class_addmethod(c, (method)htab_anything, "anything", A_GIMME, 0);
-	class_addmethod(c, (method)htab_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)htab_stdinletinfo, "inletinfo", A_CANT, 0);
+	class_addmethod(c, (method)temp_bang, "bang", 0);
+	class_addmethod(c, (method)temp_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)temp_float, "float", A_FLOAT, 0);
+	class_addmethod(c, (method)temp_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)temp_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)temp_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)temp_stdinletinfo, "inletinfo", A_CANT, 0);
 
 	class_register(CLASS_BOX, c);
-	htab_class = c;
+	temp_class = c;
 
 	common_symbols_init();
 
