@@ -34,14 +34,17 @@ VERSION 0.0: First try
 
  */
 
-#include "ext.h"		// must be included with all Max objects
-#include "ext_obex.h"		// attribute support and useful object extensions such as atom_getfloat() 
-#include "ext_obex_util.h"	// macros that make attributes easier to deal with
+#include "ext.h"
+#include "ext_obex.h"
+#include "ext_obex_util.h"
+#include "ext_hashtab.h" 	// Hashtable header
 
 
 typedef struct _htab{
 	t_object ob;
 	void *outlet;
+	t_symbol *name;  // The name of our hashtable
+	t_hashtab *hashtab; // A pointer to our object's hashtable
 } t_htab;
 
 static t_class *htab_class;
@@ -54,7 +57,7 @@ void htab_anything(t_htab *x, t_symbol *msg, short argc, t_atom *argv);
 void htab_free(t_htab *x);
 void htab_assist(t_htab *x, void *b, long m, long a, char *s);
 void htab_inletinfo(t_htab *x, void *b, long index, char *t);
-void *htab_new(void);
+void *htab_new(t_symbol *name, long size);
 
 void htab_bang(t_htab *x){
 
@@ -73,7 +76,11 @@ void htab_list(t_htab *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void htab_anything(t_htab *x, t_symbol *msg, short argc, t_atom *argv){
-
+	if(argc == 0){
+		// get the data associated with the message
+		
+	}else{
+	}
 }
 
 void htab_free(t_htab *x){
@@ -103,18 +110,29 @@ void htab_assist(t_htab *x, void *b, long io, long index, char *s){
 Object and instance creation functions.
  **************************************************/
 
-void *htab_new(){
+void *htab_new(t_symbol *name, long size){
 	t_htab *x;
 
 	if(x = (t_htab *)object_alloc(htab_class)){
+		t_hashtab *ht;
 		x->outlet = outlet_new(x, NULL);
+		if(name){
+			x->name = name;
+		}else{
+			name = gensym("");
+		}
+		if(ht = (t_hashtab *)(name->s_thing)){
+			x->hashtab = ht;
+		}else{
+			x->hashtab = (t_hashtab *)hashtab_new(size);
+		}
 		return x;
 	}
 	return NULL;
 }
 
 int main(void){
-	t_class *c = class_new("hashtab", (method)htab_new, (method)htab_free, sizeof(t_htab), 0L, A_DEFLONG, 0);
+	t_class *c = class_new("hashtab", (method)htab_new, (method)htab_free, sizeof(t_htab), 0L, A_DEFSYM, A_DEFLONG, 0);
 
 	class_addmethod(c, (method)htab_bang, "bang", 0);
 	class_addmethod(c, (method)htab_int, "int", A_LONG, 0);
@@ -122,7 +140,7 @@ int main(void){
 	class_addmethod(c, (method)htab_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)htab_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)htab_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)htab_stdinletinfo, "inletinfo", A_CANT, 0);
+	class_addmethod(c, (method)stdinletinfo, "inletinfo", A_CANT, 0);
 
 	class_register(CLASS_BOX, c);
 	htab_class = c;
