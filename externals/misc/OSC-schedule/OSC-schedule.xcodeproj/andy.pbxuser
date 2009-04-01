@@ -1,7 +1,6 @@
 // !$*UTF8*$!
 {
 	089C1669FE841209C02AAC07 /* Project object */ = {
-		activeArchitecture = i386;
 		activeBuildConfigurationName = Deployment;
 		activeTarget = 8D01CCC60486CAD60068D4B7 /* OSC-schedule */;
 		addToTargets = (
@@ -93,8 +92,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 241457504;
-			PBXWorkspaceStateSaveDate = 241457504;
+			PBXPerProjectTemplateStateSaveDate = 260305212;
+			PBXWorkspaceStateSaveDate = 260305212;
 		};
 		sourceControlManager = A1E015990D57D4AC0072EB73 /* Source Control */;
 		userBuildSettings = {
