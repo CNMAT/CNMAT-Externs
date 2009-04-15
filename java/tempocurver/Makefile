@@ -1,3 +1,3 @@
 include ../../makefile.per-javaobject 
-more_release_files += tc_subdivider.maxpat
-more_release_files += tc_subdivider.maxhelp
+MORE_RELEASE_FILES += tc_subdivider.maxpat
+MORE_RELEASE_FILES += tc_subdivider.maxhelp
