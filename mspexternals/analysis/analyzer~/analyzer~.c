@@ -62,7 +62,7 @@
 #include <string.h>
 #include <math.h>
 
-#ifndef Windows
+#ifndef WINDOWS
 #include <Accelerate/Accelerate.h> // to get veclib
 #endif
 
