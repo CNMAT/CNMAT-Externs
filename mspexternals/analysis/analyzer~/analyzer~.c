@@ -61,7 +61,10 @@
 #include "fft.h"
 #include <string.h>
 #include <math.h>
+
+#ifndef Windows
 #include <Accelerate/Accelerate.h> // to get veclib
+#endif
 
 
 // Add altivec function prototypes
