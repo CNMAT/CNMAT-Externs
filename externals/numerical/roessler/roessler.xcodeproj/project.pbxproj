@@ -14,7 +14,7 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		8D01CCD20486CAD60068D4B7 /* rössler.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rössler.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D01CCD20486CAD60068D4B7 /* roessler.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = roessler.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE0EFAC00B97B39900AFF326 /* roessler.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = roessler.c; sourceTree = "<group>"; };
 		BEB87AA20A81333500C31058 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -70,7 +70,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D01CCD20486CAD60068D4B7 /* rössler.mxo */,
+				8D01CCD20486CAD60068D4B7 /* roessler.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,9 +88,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* rössler */ = {
+		8D01CCC60486CAD60068D4B7 /* roessler */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "rössler" */;
+			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "roessler" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -102,10 +102,10 @@
 			);
 			dependencies = (
 			);
-			name = "rössler";
+			name = roessler;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 8D01CCD20486CAD60068D4B7 /* rössler.mxo */;
+			productReference = 8D01CCD20486CAD60068D4B7 /* roessler.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -114,11 +114,13 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "roessler" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* rössler */,
+				8D01CCC60486CAD60068D4B7 /* roessler */,
 			);
 		};
 /* End PBXProject section */
@@ -232,7 +234,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "rössler";
+				PRODUCT_NAME = roessler;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -303,7 +305,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "rössler" */ = {
+		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "roessler" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FF6670B096B494E00E9E0B4 /* Development */,
