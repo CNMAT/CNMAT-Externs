@@ -10,6 +10,8 @@
 		125244690F7C0FB300AFDB8A /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 125244680F7C0FB300AFDB8A /* MaxAPI.framework */; };
 		125244D60F7C5A0E00AFDB8A /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 125244D50F7C5A0E00AFDB8A /* commonsyms.c */; };
 		125246C70F8AB86100AFDB8A /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = 125246C60F8AB86100AFDB8A /* array.c */; };
+		125246E50F8C0B1300AFDB8A /* libarray.c in Sources */ = {isa = PBXBuildFile; fileRef = 125246E40F8C0B1300AFDB8A /* libarray.c */; };
+		125246E70F8C0B1900AFDB8A /* libarray.h in Headers */ = {isa = PBXBuildFile; fileRef = 125246E60F8C0B1900AFDB8A /* libarray.h */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
@@ -19,6 +21,8 @@
 		125244680F7C0FB300AFDB8A /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		125244D50F7C5A0E00AFDB8A /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		125246C60F8AB86100AFDB8A /* array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = array.c; sourceTree = "<group>"; };
+		125246E40F8C0B1300AFDB8A /* libarray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = libarray.c; path = ../libarray.c; sourceTree = SOURCE_ROOT; };
+		125246E60F8C0B1900AFDB8A /* libarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = libarray.h; path = ../libarray.h; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* array.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = array.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -67,6 +71,8 @@
 			isa = PBXGroup;
 			children = (
 				125246C60F8AB86100AFDB8A /* array.c */,
+				125246E40F8C0B1300AFDB8A /* libarray.c */,
+				125246E60F8C0B1900AFDB8A /* libarray.h */,
 				125244D50F7C5A0E00AFDB8A /* commonsyms.c */,
 			);
 			name = Source;
@@ -87,6 +93,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				125246E70F8C0B1900AFDB8A /* libarray.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +164,7 @@
 			files = (
 				125244D60F7C5A0E00AFDB8A /* commonsyms.c in Sources */,
 				125246C70F8AB86100AFDB8A /* array.c in Sources */,
+				125246E50F8C0B1300AFDB8A /* libarray.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
