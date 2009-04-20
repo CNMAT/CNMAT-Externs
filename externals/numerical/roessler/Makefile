@@ -1,2 +1,2 @@
-MORE_RELEASE_FILES += bessel.c bessel-readme.txt
+MORE_RELEASE_FILES = roessler.c 
 include ../../../makefile.per-object
