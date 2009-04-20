@@ -107,7 +107,7 @@ void temp_anything(t_temp *x, t_symbol *msg, short argc, t_atom *argv){
 
 void temp_free(t_temp *x){
 	// dsp_free() should be first.
-	dsp_free();
+	dsp_free((t_pxobject *)x);
 }
 
 void temp_assist(t_temp *x, void *b, long io, long index, char *s){
@@ -159,7 +159,7 @@ int main(void){
 	class_addmethod(c, (method)temp_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)temp_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)temp_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)temp_stdinletinfo, "inletinfo", A_CANT, 0);
+	class_addmethod(c, (method)stdinletinfo, "inletinfo", A_CANT, 0);
 
 	class_register(CLASS_BOX, c);
 	temp_class = c;
