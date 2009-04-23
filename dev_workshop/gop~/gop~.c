@@ -42,6 +42,7 @@ todo:
 --read from buffer
 --different (non-random) grain start times from source material
 --resize buffer (restart dsp)
+--do everything in floating point (get rid of ints)
  */
 
 #include "ext.h"
