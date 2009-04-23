@@ -79,6 +79,7 @@ static t_class *gop_class;
 
 void gop_dsp(t_gop *x, t_signal **sp, short *count);
 t_int *gop_perform(t_int *w);
+t_int *gop_perform_connected(t_int *w);
 float gop_triangle_window(float window_length, float pos);
 void gop_bang(t_gop *x);
 void gop_make_new_grain(t_gop *x);
@@ -96,7 +97,17 @@ int gop_ms2samp(float ms, float sr);
 void *gop_new(void);
 
 void gop_dsp(t_gop *x, t_signal **sp, short *count){
-	dsp_add(gop_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+	if(count[1]){
+		dsp_add(gop_perform_connected, 
+			5, 
+			x, 
+			sp[0]->s_vec, 
+			sp[1]->s_vec, 
+			sp[2]->s_vec, 
+			sp[0]->s_n);
+	}else{
+		dsp_add(gop_perform, 4, x, sp[0]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+	}
 }
 
 t_int *gop_perform(t_int *w){
@@ -140,6 +151,55 @@ t_int *gop_perform(t_int *w){
 	}
 
 	return w + 5;
+
+}
+
+t_int *gop_perform_connected(t_int *w){
+	t_float *in1, *in2, *out;
+	int n, i, j, grain_num;
+
+	t_gop *x = (t_gop *)w[1];
+	in1 = (t_float *)w[2];
+	in2 = (t_float *)w[3];
+	out = (t_float *)w[4];
+	n = (int)w[5];
+
+	for(i = 0; i < n; i++){
+		// add the current input vector to our buffer.
+		x->buffer[x->buffer_pos] = in1[i];
+		x->buffer_pos = (x->buffer_pos + 1) % x->buffer_length;
+		// zero the output vector as we go
+		out[i] = 0.;
+		// iterate through the active grains
+
+		if(in2[i] > 0){
+			post("got one %d", i);
+			gop_make_new_grain(x);
+		}
+		for(grain_num = 0; grain_num < GOP_MAX_GRAINS; grain_num++){
+			if(x->active_grains[grain_num] == 1){
+				t_grain *g = &(x->grains[grain_num]);
+				/*
+				if(i == 0){
+					post("%f %f %f, %f", gop_triangle_window((float)(g->grain_length_samp),fabsf((float)(g->buffer_pos_samp - g->buffer_start_samp))) * x->buffer[g->buffer_pos_samp], 
+					     (float)(g->grain_length_samp), 
+					     (float)(g->buffer_pos_samp - g->buffer_start_samp), 
+					     x->buffer[g->buffer_pos_samp]);
+				}
+				*/
+				out[i] += gop_triangle_window((float)(g->grain_length_samp), (int)(g->grain_pos)) * x->buffer[g->buffer_pos_samp];
+				if(g->buffer_pos_samp == g->buffer_end_samp){
+					x->active_grains[grain_num] = 0;
+				}else{
+					g->buffer_pos_samp++;
+					g->buffer_pos_samp %= x->buffer_length;
+					g->grain_pos++;
+				}
+			}
+		}
+	}
+
+	return w + 6;
 
 }
 
@@ -268,7 +328,8 @@ void *gop_new(void){
 	t_gop *x;
 
 	if(x = (t_gop *)object_alloc(gop_class)){
-		dsp_setup((t_pxobject *)x, 1);
+		dsp_setup((t_pxobject *)x, 2);
+		x->ob.z_misc = Z_NO_INPLACE;
 		x->outlet = outlet_new(x, "signal");
 
 		x->buffer = (float *)calloc(GOP_BUFFER_LENGTH, sizeof(float));
