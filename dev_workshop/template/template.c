@@ -117,7 +117,7 @@ int main(void){
 	class_addmethod(c, (method)temp_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)temp_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)temp_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)temp_stdinletinfo, "inletinfo", A_CANT, 0);
+	class_addmethod(c, (method)stdinletinfo, "inletinfo", A_CANT, 0);
 
 	class_register(CLASS_BOX, c);
 	temp_class = c;
