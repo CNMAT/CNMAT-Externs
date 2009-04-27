@@ -1,0 +1,53 @@
+CC := gcc
+CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION
+#MAX_INCLUDES = ../../../c74support-w32/max-includes
+#MSP_INCLUDES = ../../../c74support-w32/msp-includes
+MAX_INCLUDES = ../../../SDK/MaxSDK-5/c74support/max-includes
+MSP_INCLUDES = ../../../SDK/MaxSDK-5/c74support/msp-includes
+INCLUDES = -I$(MAX_INCLUDES) -I$(MSP_INCLUDES)
+LDFLAGS += -shared -mno-cygwin 
+
+#
+# The specific Makefile for this directory might have defined MORE_SOURCE
+ifdef MORE_SOURCE
+$(warning MORE_SOURCE is $(MORE_SOURCE))
+endif
+#
+# Each item of MORE_SOURCE will result in a .o file in the build dir
+MORE_OBJECTS = $(patsubst %.c,$(GCC_BUILD_DIR)/%.o,$(notdir $(MORE_SOURCE)))
+# Each directory of MORE_SOURCE should be in the makefile's VPATH
+VPATH = $(sort $(dir $(MORE_SOURCE)))
+# Each directory mentioned in MORE_SOURCE might have include files too
+CFLAGS += $(addprefix -I,$(VPATH))
+
+
+$(GCC_BUILD_DIR)/%.o: %.c
+	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
+
+
+$(GCC_BUILD_DIR)/$(OBJ).mxe: $(GCC_BUILD_DIR)/$(OBJ).o $(MORE_OBJECTS) $(OBJ).def
+	echo ldflags $(LDFLAGS)
+	$(CC) -o $@ $^ -L$(MAX_INCLUDES) -L$(MSP_INCLUDES) -lMaxAPI -lMaxAudio $(LDFLAGS)
+
+# All of the example .def files in the Windows SDK look like this:
+# ;coll.def
+#
+# LIBRARY coll
+#
+# EXPORTS
+#        main
+# But if the object's name begins with a numeral (e.g., 2d.wave~ or 2threshattack~)
+# then we're supposed to comment out the LIBRARY line.
+# Grep returns status 0 if the text was found, i.e., if the object's name starts with a numeral.
+# So I use sh's "if" to decide whether to write the ";" character.
+# 
+$(OBJ).def:
+	echo \;$(OBJ).def > $@
+	@echo >> $@
+	@if (echo $(OBJ) | grep --quiet '^[0-9]') ; then echo -n ';' >> $@; fi
+	@echo LIBRARY $(OBJ) >> $@
+	@echo >> $@
+	@echo EXPORTS >> $@
+	@echo \	main >> $@
+
+
