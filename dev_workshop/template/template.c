@@ -52,7 +52,7 @@ void temp_inletinfo(t_temp *x, void *b, long index, char *t);
 void *temp_new(void);
 
 void temp_bang(t_temp *x){
-
+	post("Hello World!");
 }
 
 void temp_int(t_temp *x, long n){
