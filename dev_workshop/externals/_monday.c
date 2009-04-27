@@ -208,6 +208,9 @@ int main(void){
 
 	class_register(CLASS_BOX, c);
 	ppn_class = c;
+	
+	// Initialize a symbol table--this allows us to use predefined symbols like _sym_bang above
+	common_symbols_init();
 
 	return 0;
 }
