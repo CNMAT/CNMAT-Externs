@@ -1,0 +1,214 @@
+# makefile.per-object
+# This is included in the makefile for every Max external
+# Matt Wright, 2005-2006
+
+# default platform is "UNKNOWN"
+PLATFORM = UNKNOWN
+
+ifeq ($(strip $(CNMAT_MAX_DIR)),)
+CNMAT_MAX_DIR = ../../../
+endif
+
+ifeq ($(strip $(CNMAT_MAX_INSTALL_DIR)),)
+CNMAT_MAX_INSTALL_DIR = ../../../build
+endif
+	
+# Now figure out the platform based on what the build target is
+# Note that these definitions of PLATFORM will be valid only within
+# those particular build targets and their prerequisites!!!
+
+.PHONY: macho win win-vcc
+macho: export PLATFORM := OSX-MachO
+win: export PLATFORM := WIN
+win-vcc: export PLATFORM := WIN
+
+
+# The use of the inline $(if ...) construction is so the conditional will be evaluated later,
+# when we try to use the value of BUILD_DIR somewhere, at which point the PLATFORM will 
+# hopefully be defined...
+BUILD_DIR = $(if $(findstring OSX-CFM,$(PLATFORM)), \
+	         $(CODEWARRIOR_BUILD_DIR), \
+                 $(if $(findstring OSX-MachO,$(PLATFORM)), \
+	              $(XCODE_BUILD_DIR), \
+                      $(if $(findstring UNKNOWN,$(PLATFORM)), \
+			   $(DEFAULT_BUILD_DIR), \
+			                    $(if $(findstring WIN,$(PLATFORM)), \
+			                 $(VCC_BUILD_DIR), \
+                           $(error Unrecognized platform "$(PLATFORM)") ))))
+export BUILD_DIR
+
+
+# Make all recursive calls to make know the platform and all variables
+# derived fro the platform:
+
+.EXPORT_ALL_VARIABLES: 
+
+
+# Name of the object is the name of this directory.
+# Nothing in CNMAT's repository should have any whitespace in file or
+# directory names, so we'll just blithely use $(lastword ...) to
+# remove everything before the final space in the current directory
+# before we pass it to $(notdir ...).  Otherwise $(notdir ...) will
+# think that each space-delimited segment of the current directory is
+# a separate input, and return an answer with spaces, which will blow
+# up the rest of the Makefile.  in case the full path to the working
+# directory has white space.
+export OBJ = $(notdir $(lastword $(strip $(CURDIR))))
+
+# Filenames derived from the name of the object
+SOURCE = $(OBJ).c
+HELPFILE = $(OBJ).maxhelp
+MACHO_BINARY = $(XCODE_BUILD_DIR)/$(OBJ).mxo
+WIN_VCC_BINARY = $(VCC_BUILD_DIR)/$(OBJ).mxe
+WIN_BINARY = $(GCC_BUILD_DIR)/$(OBJ).mxe
+
+
+XCODE_HELPFILE_COPY = $(XCODE_BUILD_DIR)/$(OBJ).help.pat
+VCC_HELPFILE_COPY = $(VCC_BUILD_DIR)/$(OBJ).help.pat
+GCC_HELPFILE_COPY = $(GCC_BUILD_DIR)/$(OBJ).help.pat
+
+XCODE_BUILD_DIR = build/Deployment
+VCC_BUILD_DIR = ../../sysbuild/win_release/externals
+GCC_BUILD_DIR = build-gcc
+DEFAULT_BUILD_DIR = /tmp
+ALL_BUILD_DIRS = $(XCODE_BUILD_DIR) $(DEFAULT_BUILD_DIR) $(VCC_BUILD_DIR) $(GCC_BUILD_DIR)
+
+XCODE_BUILD_DIR_EXISTS = $(XCODE_BUILD_DIR)/exists
+GCC_BUILD_DIR_EXISTS = $(GCC_BUILD_DIR)/exists
+
+CNMAT_MAX_INSTALL_DIR_EXISTS = $(CNMAT_MAX_INSTALL_DIR)/exists
+
+# Top-level build targets
+
+default: macho
+
+macho: $(MACHO_BINARY) $(MACHO_INDIVIDUAL_DOWNLOAD) 
+
+xcode:
+	open ./$(OBJ).xcodeproj
+	
+win: $(WIN_BINARY) $(WIN_INDIVIDUAL_DOWNLOAD)
+
+win-vcc: $(WIN_VCC_BINARY) $(WIN_VCC_INDIVIDUAL_DOWNLOAD)
+
+
+# Make sure the build directory is really there
+
+$(XCODE_BUILD_DIR_EXISTS):
+	mkdir -p "$(XCODE_BUILD_DIR)"
+	touch "$(XCODE_BUILD_DIR_EXISTS)"
+
+$(GCC_BUILD_DIR_EXISTS):
+	mkdir -p "$(GCC_BUILD_DIR)"
+	touch "$(GCC_BUILD_DIR_EXISTS)"
+
+
+
+$(MACHO_BINARY): $(SOURCE) $(XCODE_HELPFILE_COPY)
+	xcodebuild -configuration Deployment
+
+
+$(WIN_VCC_BINARY): $(SOURCE) $(VCC_HELPFILE_COPY) 
+	echo "Start VCC!!"
+
+$(WIN_BINARY): $(SOURCE) $(GCC_HELPFILE_COPY) 
+	#$(MAKE) -f ../../../makefile.windows-gcc $@
+	$(MAKE) -f $(CNMAT_MAX_DIR)/makefile.windows-gcc $@
+
+$(OBJ).def: 
+	#$(MAKE) -f ../../../makefile.windows-gcc $@
+	$(MAKE) -f $(CNMAT_MAX_DIR)makefile.windows-gcc $@
+
+
+#START_OVER_ERROR = $(error Please run make again.)
+#.PHONY: start-over
+#start-over: ; $(START_OVER_ERROR)
+
+
+#.PHONY: mac-individual-download
+#mac-individual-download: $(MAC_INDIVIDUAL_DOWNLOAD)
+
+
+# Put a copy of the help file next to the built binary for ease of testing
+$(XCODE_HELPFILE_COPY): $(XCODE_BUILD_DIR_EXISTS)
+$(GCC_HELPFILE_COPY): $(GCC_BUILD_DIR_EXISTS)
+
+$(CODEWARRIOR_HELPFILE_COPY) $(XCODE_HELPFILE_COPY) $(VCC_HELPFILE_COPY) $(GCC_HELPFILE_COPY): $(HELPFILE)
+	cp $(HELPFILE) $@
+
+
+# make sure help patch in correct source directory is the most recent
+# (even though it's the one in $(BUILD_DIR) that's usually edited.)
+
+define do-help-diff
+	@ cmp -s $(HELPFILE) $< || \
+	echo WARNING\! '$< is different from $(HELPFILE)'
+endef
+
+.PHONY: macho-help-diff-warning
+
+macho-help-diff-warning: $(XCODE_HELPFILE_COPY)
+	$(do-help-diff)
+
+win-help-diff-warning: $(GCC_HELPFILE_COPY)
+	$(do-help-diff)
+
+win-vcc-help-diff-warning: $(VCC_HELPFILE_COPY)
+	$(do-help-diff)
+
+
+
+# Ensuring that any text files in this directory don't have evil CR line
+# terminators (e.g., that Max's built-in javascript text editor might have
+# added):
+.PHONY: no-cr-characters
+no-cr-characters:
+	@ !((file * | grep -v macyucky | grep -v "\.pat" | grep -v "\.mxt" |  grep "with CR line terminators") && \
+	(echo You have files with yucky line break character.  Please fix with demac, BBedit, etc.  ))
+
+
+
+.PHONY: clean
+# Note that this cleans all the possible build directories for all platforms... 
+clean:
+	rm -rf $(MACHO_BINARY)
+	rm -rf $(foreach dir, $(ALL_BUILD_DIRS), \
+                 $(dir)/$(HELPFILE) )
+	rm -f *~ 
+	rm -rf $(OBJ)\ Data
+	rm -rf build
+
+
+# Diagnostic stuff for debugging
+
+printenv:
+	printenv
+
+tellversiontag:
+	echo $(VERSION_TAG)
+
+webtest: $(WEBSERVER_BASE_DIR)
+	open $(WEBSERVER_BASE_DIR)
+
+statustest: version.h
+	echo $(STATUS)
+
+ostest:
+	echo $(OS)
+
+
+test: 
+	echo CURDIR $(CURDIR)
+	echo OBJ $(OBJ)
+	echo PLATFORM $(PLATFORM)
+	echo OBJ_INFO  $(OBJ_INFO)
+	echo build $(BUILD_DIR)
+
+install: $(CNMAT_MAX_INSTALL_DIR_EXISTS)
+	rm -rf $(CNMAT_MAX_INSTALL_DIR)/$(OBJ).mxo
+	cp -r $(MACHO_BINARY) $(CNMAT_MAX_INSTALL_DIR)/
+	cp $(HELPFILE) $(CNMAT_MAX_INSTALL_DIR)/
+	
+$(CNMAT_MAX_INSTALL_DIR_EXISTS):
+	mkdir -p "$(CNMAT_MAX_INSTALL_DIR)"
+	touch "$(CNMAT_MAX_INSTALL_DIR_EXISTS)"
