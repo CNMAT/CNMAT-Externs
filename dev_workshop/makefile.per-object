@@ -6,11 +6,11 @@
 PLATFORM = UNKNOWN
 
 ifeq ($(strip $(CNMAT_MAX_DIR)),)
-CNMAT_MAX_DIR = ../../../
+CNMAT_MAX_DIR = ../../
 endif
 
 ifeq ($(strip $(CNMAT_MAX_INSTALL_DIR)),)
-CNMAT_MAX_INSTALL_DIR = ../../../build
+CNMAT_MAX_INSTALL_DIR = ../../build
 endif
 	
 # Now figure out the platform based on what the build target is
