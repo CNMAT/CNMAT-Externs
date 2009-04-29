@@ -202,14 +202,6 @@ t_int *gop_perform_connected(t_int *w){
 		for(grain_num = 0; grain_num < GOP_MAX_GRAINS; grain_num++){
 			if(x->active_grains[grain_num] == 1){
 				t_grain *g = &(x->grains[grain_num]);
-				/*
-				if(i == 0){
-					post("%f %f %f, %f", gop_triangle_window((float)(g->grain_length_samp),fabsf((float)(g->buffer_pos_samp - g->buffer_start_samp))) * x->buffer[g->buffer_pos_samp], 
-					     (float)(g->grain_length_samp), 
-					     (float)(g->buffer_pos_samp - g->buffer_start_samp), 
-					     x->buffer[g->buffer_pos_samp]);
-				}
-				*/
 				((t_float *)w[5 + g->channel])[i] += gop_triangle_window((float)(g->grain_length_samp), (int)(g->grain_pos)) * x->buffer[g->buffer_pos_samp];
 				if(g->buffer_pos_samp == g->buffer_end_samp){
 					x->active_grains[grain_num] = 0;
@@ -262,7 +254,6 @@ void gop_make_new_grain(t_gop *x){
 	// important to init the grain before announcing that it is ready
 	gop_initgrain(x, &(x->grains[i]));
 	x->active_grains[i] = 1;
-	//post("grain = %d", i);
 }
 
 void gop_initgrain(t_gop *x, t_grain *grain){
@@ -270,11 +261,8 @@ void gop_initgrain(t_gop *x, t_grain *grain){
 	grain->grain_pos = 0;
 	grain->channel = gop_get_channel(x);
 	grain->buffer_start_samp = (int)gop_rand(0, x->buffer_length - sys_getblksize());
-	//post("%d", grain->buffer_start_samp);
 	grain->buffer_start_samp += x->buffer_pos + sys_getblksize();
-	//post("%d", grain->buffer_start_samp);
 	grain->buffer_start_samp %= x->buffer_length;
-	//post("%d", grain->buffer_start_samp);
 	grain->buffer_pos_samp = grain->buffer_start_samp;
 	grain->buffer_end_samp = (grain->buffer_start_samp + grain->grain_length_samp) % x->buffer_length;
 	/*
@@ -369,8 +357,6 @@ void *gop_new(t_symbol *sym, short argc, t_atom *argv){
 	if(x = (t_gop *)object_alloc(gop_class)){
 		dsp_setup((t_pxobject *)x, 2);
 		x->ob.z_misc = Z_NO_INPLACE;
-		//x->outlet = outlet_new(x, "signal");
-
 
 		x->buffer_length = GOP_BUFFER_LENGTH;
 		x->buffer_pos = 0;
@@ -386,7 +372,7 @@ void *gop_new(t_symbol *sym, short argc, t_atom *argv){
 			outlet_new(x, "signal");
 		}
 		// 2 inlets, num_channels, our object, and the vector size
-		x->w = malloc((2 + x->num_channels + 2) * sizeof(t_int*));
+		x->w = (t_int **)malloc((2 + x->num_channels + 2) * sizeof(t_int*));
 
 		return x;
 	}
