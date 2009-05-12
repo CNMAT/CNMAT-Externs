@@ -32,7 +32,6 @@ Audio Technologies, University of California, Berkeley.
 
 #include "cmmjl_obj.h"
 #include "cmmjl_error.h"
-#include "cmmjl_errno.h"
 #include "cmmjl_commonsymbols.h"
 #include "cmmjl_types.h"
 #include "cmmjl_profile.h"
@@ -77,6 +76,12 @@ Audio Technologies, University of California, Berkeley.
 	@see cmmjl_obj.h
  */
 t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags);
+
+/**	Free the resources used by an object
+
+	@param	x	The object
+*/
+void cmmjl_free(void *x);
 
 /**	Posts the arguments of an A_GIMME message
 

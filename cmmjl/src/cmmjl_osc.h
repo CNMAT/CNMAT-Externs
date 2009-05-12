@@ -38,8 +38,6 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl_osc_pattern.h"
 #include "cmmjl_osc_timetag.h"
 #include "cmmjl_osc_schedule.h"
-#include "cmmjl_error.h"
-#include "OSC-client.h"
 #include "ext.h"
 
 /** The alignment padding for a string in an OSC packet.  
@@ -93,7 +91,7 @@ t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **ar
 */
 t_max_err cmmjl_osc_address_set(void *x, t_object *attr, long argc, t_atom *argv);
 
-/*	Get the OSC address associated with an object.
+/**	Get the OSC address associated with an object.
 
 	@param	x	The object
 	@returns	The OSC address.
@@ -149,6 +147,7 @@ void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv);
 	@param	x	The object.
 	@param	n	The length of the packet in bytes.
 	@param	ptr	The address of the packet.
+	@callgraph
  */
 void cmmjl_osc_fullPacket(void *x, long n, long ptr);
 
@@ -239,6 +238,15 @@ t_cmmjl_error cmmjl_osc_isNiceString(char *string, char *boundary);
 	@returns 	CMMJL_SUCCESS on success, or an error code
 */
 bool cmmjl_osc_isFinalPathSegment(char *path);
+
+/**	Returns the number of bytes needed to hold a blob:  The length of the 4-byte
+	size count, plus the number of bytes in the blob, plus 0-3 null bytes needed
+	for the 4-byte alignment.
+
+	@param 	blobDataSize	The length of the blob data
+	@returns		The number of bytes needed to hold the blob data.
+*/
+int cmmjl_osc_effectiveBlobLength(int blobDataSize);
 #endif
 
 /*@}*/

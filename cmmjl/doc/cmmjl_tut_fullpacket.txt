@@ -2,38 +2,209 @@
 @file
 @page	tut_fullpacket	How to add support for the "FullPacket" message to your object.
 
-You can add support for the ``FullPacket'' message to your object fairly easily by calling CMMJL_ACCEPT_FULLPACKET() in your main routine.  When an OSC packet is received, by default, the last segment of each OSC address will be passed to your object as a message (see below).
+There are a number of ways to add support for OSC FullPacket messages to your object.  
 
-You will need to include cmmjl_osc.h along with cmmjl.h:
+@section	OSC_addresses OSC addresses as messages to your object
+
+Using this method, incoming OSC packets/bundles will be parsed and the address contained in the packet will be tested against the OSCaddress of your object.  If there is a match, the last segment of the OSC address will be sent, along with any arguments, to your object.  
+
+You'll need the following includes:
+
 @code
-#include "cmmjl.h"
-#include "cmmjl_osc.h"
+#include "cmmjl/cmmjl.h"
+#include "cmmjl/cmmjl_osc.h"
 @endcode
 
-In the main() routine, after calling cmmjl_init(), call the macro CMMJL_ACCEPT_FULLPACKET().
+In your main() routine, use the CMMJL_CLASS_ADDMETHOD() macro to declare a message and to register that message as one that can be called from an OSC packet.  After your methods have been declared, call CMMJL_ACCEPT_FULLPACKET() with your class as the first argument, and your object's struct as the second.
+
 @code
-int main(void){
+#include "cmmjl/cmmjl.h" /* Include this for basic functionality */
+#include "cmmjl/cmmjl_osc.h" /* OSC support */
+
+typedef struct _test{
+	t_object ob;
+	void *outlet;
+} t_test;
+
+void *test_class;
+
+void *test_new(t_symbol *sym, long argc, t_atom *argv);
+void test_free(t_test *x);
+void test_assist(t_test *x, void *b, long m, long a, char *s);
+void test_foo(t_test *x, long l);
+
+int main(int argc, char **argv){
 	t_class *c;
-	...
-	CMMJL_ACCEPT_FULLPACKET(c, NULL);
-	...
+	c = class_new("cmmjl_test", (method)test_new, (method)test_free, (long)sizeof(t_test), 0L, A_GIMME, 0);
+	class_addmethod(c, (method)test_assist, "assist", A_CANT, 0);
+	CMMJL_CLASS_ADDMETHOD(c, (method)test_foo, "foo", A_LONG, 0);
+	
+	CMMJL_ACCEPT_FULLPACKET(c, t_test);
+
+	class_register(CLASS_BOX, c);
+	test_class = c;
+
+	return 0;
 }
 @endcode
 
-The first argument should be a pointer to your class and the second argument should be NULL to use the default callback, cmmjl_osc_fullpacket().  When a "FullPacket" message is received, cmmjl_osc_fullpacket() strips off all but the last segment of the OSC message and then attempts to send that message along with the parameters of the OSC message to your object (see cmmjl_osc_sendMsg()).
-
-Example:
-If the OSC packet contains /foo/bar 34 12.3, a message called "bar" will be sent to your object with the arguments 34 and 12.3, if your object accepts a message called "bar."
-
-If you want to define some other behavior when the "FullPacket" message is received, you can define a function with the signature
+Then, in your object's new() routine, call cmmjl_init()
 
 @code
-void fullpacket(void *, long, long)
+cmmjl_init(x, NAME, CMMJL_CREATE_INFO_OUTLET);
 @endcode
 
-and pass that to CMMJL_ACCEPT_FULLPACKET() as the second argument:
+That's it!
+
+@section	OSC_scheduler	Scheduling OSC packets using their timetsamps
+
+If you call cmmjl_init() with an additional flag, OSC packets will be scheduled for execution using their timestamps.
 
 @code
-CMMJL_ACCEPT_FULLPACKET(c, fullpacket);
+cmmjl_init(x, NAME, CMMJL_CREATE_INFO_OUTLET | CMMJL_OSC_SCHEDULER_ON);
 @endcode
+
+By default, an OSC packet that missed it's deadline will produce a verbose error message that will not be seen unless verbose error reporting is turned on by calling cmmjl_set_verbose_error_handler().  The cmmjl does not process the packets further once it has been determined that the deadline was missed unless you call cmmjl_init with the additional flag CMMJL_OSC_TREAT_LATE_PACKETS_AS_ONTIME.
+
+By default, the scheduler calls cmmjl_osc_parseFullPacket() which calls cmmjl_osc_sendMsg to attempt to send a message contained in the OSC packet to your object.  The next section explains how to change the way in which the incoming OSC packet is processed.
+
+@section 	OSC_intercept	Intercepting an OSC packet at various stages of processing
+
+Although the default way in which an OSC packet is handled by the cmmjl is useful in most situations, there may be times when you want to use certain parts of the process and not others.  There are three callbacks that are used by the library, all of which can be set to your own functions.  The first callback is the one that the scheduler uses to send the OSC data.  In a typical situation, that will be set to cmmjl_osc_parseFullPacket(), but if you want to do something with the raw packet after it has been scheduled, call cmmjl_osc_set_sched_cb() (see below for an example).  You can also set the parser, and the callback that the parser uses by calling cmmjl_obj_osc_parser_set(), and cmmjl_obj_osc_parser_cb_set().
+
+As an example, let's look at how the OpenSoundControl object could be implemented using this library.  The problem is that the object needs to receive the messages as they are parsed out of the packet, but we don't want them to be sent to the object as function calls--we want the objec to receive them in an A_GIMME function and then output them into max as messages.
+
+In the main routine, we would do this:
+
+@code
+// Pointer to your class
+t_class *OSC_class;
+...
+
+// Your object
+typedef struct openSoundControl{
+	...
+	void *out1;
+	...
+}OSC;
+
+// Method declarations
+void *OSC_new(long arg);
+void OSC_parse_cb(OSC *x, t_symbol *sym, long argc, t_atom *argv);
+
+// Class setup.  Call CMMJL_ACCEPT_FULLPACKET() here.
+int main(){
+	t_class *c = class_new(...);
+	...
+	CMMJL_ACCEPT_FULLPACKET(c, OSC);
+	...
+}
+
+// Instance setup--call cmmjl_init() with no flags (scheduler will be off).
+// We can use the default parser, cmmjl_osc_parseFullPacket() which will
+// be called when a "FullPacket" message is received, but we'll set the callback
+// that it uses to a function in our object
+void *OSC_new(long arg){
+	OSC *x = (OSC *)object_alloc(OSC_class);
+	...
+	cmmjl_init(x, NAME, 0L);
+	cmmjl_obj_osc_parser_cb_set(x, OSC_parse_cb);
+}
+
+// Here's where we'll receive our messages as they are parsed unpacked from the 
+// OSC packet.  We just output them into Max.
+void OSC_parse_cb(OSC *x, t_symbol *sym, long argc, t_atom *argv){
+	outlet_anything(x->out1, sym, argc, argv);
+}
+@endcode
+
+Next, we'll look at how OSC-schedule might be implemented using the lib.  This is a little trickier since OSC-schedule takes incoming OSC packets and schedules them for output, but it sends them out a different outlet depending on whether they arrived on time, were late, or were scheduled for later execution.  For this, we need to turn the scheduler off and receive the packets before anything else happens.  Then we'll check the timestamp to see if the packet is on time, late, or early.  If it's early, we'll schedule it and then get it back via the callback that we set for the scheduler.  If the backet it late or on time, we'll simply send the data out the appropriate outlet.
+
+@code
+
+#include "cmmjl/cmmjl.h"
+#include "cmmjl/cmmjl_osc.h"
+
+typedef struct _OSCSchedule{
+	...
+	// declare our outlets
+	void *out_ontime;
+	void *out_late;
+	void *out_scheduled;
+	...
+}OSCSchedule;
+
+// our class
+void *OSCSchedule_class;
+
+// method declarations
+void *OSCSchedule_new(t_symbol *sym, long argc, t_atom *argv);
+void OSCSchedule_FullPacket(OSCSchedule *x, long n, long ptr);
+void OSCSchedule_scheduler_cb(OSCSchedule *x, long n, long ptr);
+
+int main(void){
+	// Instantiate our class
+	t_class *c = class_new(...);
+	...
+	// Call this to set up the object to take the FullPacket message
+	CMMJL_ACCEPT_FULLPACKET(c, t_test);
+	...
+}
+
+void *OSCSchedule_new(t_symbol *sym, long argc, t_atom *argv){
+	OSCSchedule *x;
+	if(x = (OSCSchedule *)object_alloc(OSCSchedule_class)){
+		// get pointers to our outlets
+		x->out_ontime = outlet_new(x, "FullPacket");
+		x->out_late = outlet_new(x, "FullPacket");
+		x->out_scheduled = outlet_new(x, "FullPacket");
+		
+		// initialize the lib with no flags
+		cmmjl_init(x, NAME, 0L);
+
+		// set the callback for the parser
+		cmmjl_obj_osc_parser_set(x, OSCSchedule_FullPacket);
+		
+		// set the callback for the scheduler
+		cmmjl_obj_osc_scheduler_cb_set(x, OSCSchedule_scheduler_cb);
+	}
+	return x;
+}
+
+
+// This is where we'll receive the unadulterated raw packet
+void OSCSchedule_FullPacket(OSCSchedule *x, long n, long ptr){
+	t_cmmjl_error e;
+	ntptime timetag;
+	t_atom argv[2];
+	atom_setlong(&argv[0], n);
+	atom_setlong(&argv[1], ptr);
+
+	// get the timetag
+	cmmjl_osc_timetag_get(n, ptr, &timetag);
+
+	// check to see what the status is
+	switch(cmmjl_osc_schedule_isontime(x, timetag)){
+	case CMMJL_OSC_SCHEDULE_ONTIME:
+		outlet_anything(x->out_ontime, ps_FullPacket, 2, argv);
+		return;
+	case CMMJL_OSC_SCHEDULE_LATE:
+		outlet_anything(x->out_late, ps_FullPacket, 2, argv);
+		return;
+	case CMMJL_OSC_SCHEDULE_EARLY:
+		cmmjl_osc_schedule(x, n, ptr);
+	}
+}
+
+// Here's where we'll receive the scheduled packet
+void OSCSchedule_scheduler_cb(OSCSchedule *x, long n, long ptr){
+	t_atom argv[2];
+	atom_setlong(&argv[0], n);
+	atom_setlong(&argv[1], ptr);
+	outlet_anything(x->out_scheduled, ps_FullPacket, 2, argv);
+}
+
+
+@endcode
+
 */

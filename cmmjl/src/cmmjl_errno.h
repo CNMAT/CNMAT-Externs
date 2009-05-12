@@ -48,7 +48,7 @@ typedef unsigned long long t_cmmjl_error;
 #define	CMMJL_EBADTYPE 3ull /**< unknown data type */
 #define CMMJL_ENODATA 4ull /**< no data */
 #define CMMJL_ENOOBJ 5ull /**< couldn't find internal t_cmmjl_obj */
-#define CMMJL_ENOMEM 6ull /** < out of memory */
+#define CMMJL_ENOMEM 6ull /**< out of memory */
 
 /* verbose general errors */
 #define CMMJL_ENOFUNC 10ull /**< no such function */

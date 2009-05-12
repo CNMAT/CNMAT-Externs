@@ -32,12 +32,13 @@
 #include "cmmjl.h"
 #include "timeval.h"
 
-t_cmmjl_error cmmjl_osc_schedule_init(void *x, t_cmmjl_obj *o){
+t_cmmjl_error cmmjl_osc_schedule_init(void *x, t_cmmjl_obj *o, unsigned int flags){
 	t_cmmjl_osc_scheduler *osc = (t_cmmjl_osc_scheduler *)malloc(sizeof(t_cmmjl_osc_scheduler));
 	osc->packets_max = CMMJL_OSC_SCHEDULE_DEFAULT_QUEUE_SIZE;
 	osc->packet_size = CMMJL_OSC_SCHEDULE_DEFAULT_PACKET_SIZE;
 	cmmjl_osc_timetag_float_to_ntp(0.003, &(osc->precision));
 	cmmjl_osc_timetag_float_to_ntp(1000.0, &(osc->max_delay));
+	osc->late_packets_ok = flags & CMMJL_OSC_TREAT_LATE_PACKETS_AS_ONTIME;
 	osc->id = 0;
 	osc->clock = clock_new(x, (method)cmmjl_osc_schedule_tick);
 	critical_new(&(osc->lock));
@@ -60,8 +61,8 @@ t_cmmjl_error cmmjl_osc_schedule_init(void *x, t_cmmjl_obj *o){
 }
 
 t_cmmjl_error cmmjl_osc_schedule(void *x, long length, long ptr){
-	struct ntptime now;
-	struct ntptime nowp1;
+	ntptime now;
+	ntptime nowp1;
 	char *data;
 	int i;
 	node n;
@@ -98,6 +99,7 @@ t_cmmjl_error cmmjl_osc_schedule(void *x, long length, long ptr){
 		return CMMJL_OSC_EBADBNDL;
         }
 
+	/*
         n.timestamp.sec = ntohl(*((unsigned long *)(data + 8)));
         n.timestamp.frac_sec = ntohl(*((unsigned long *)(data + 12)));
         n.timestamp.sign = 1;
@@ -109,6 +111,14 @@ t_cmmjl_error cmmjl_osc_schedule(void *x, long length, long ptr){
 	}else{
 		n.timestamp.type = TIME_STAMP;
 	}
+	*/
+	cmmjl_osc_timetag_get(length, ptr, &(n.timestamp));
+
+	// timetag == immediate, so don't schedule--just call the parser.
+	if(n.timestamp.sec == 0 && n.timestamp.frac_sec == 1){
+		o->osc_parser(x, length, ptr, o->osc_parser_cb);
+		return;
+	}
 
 	// now
 	cmmjl_osc_timetag_now_to_ntp(&now);
@@ -116,6 +126,7 @@ t_cmmjl_error cmmjl_osc_schedule(void *x, long length, long ptr){
 	// now plus scheduler precision interval -> nowp1
 	cmmjl_osc_timetag_add(&now, &(osc->precision), &nowp1);
 
+	/*
 	switch(cmmjl_osc_timetag_cmp(&nowp1, &(n.timestamp))){
 	case 0: // on time
 		o->osc_parser(x, length, ptr, o->osc_parser_cb);
@@ -127,6 +138,24 @@ t_cmmjl_error cmmjl_osc_schedule(void *x, long length, long ptr){
 			o->osc_parser(x, length, ptr, o->osc_parser_cb);
 			return CMMJL_SUCCESS;
 		case 1: // deadline missed
+			if(osc->late_packets_ok){
+				o->osc_parser(x, length, ptr, o->osc_parser_cb);
+				return;
+			}
+			CMMJL_ERROR(x, CMMJL_OSC_ELATE, cmmjl_strerror(CMMJL_OSC_ELATE));
+			return CMMJL_OSC_ELATE;
+		}
+	}
+	*/
+	switch(cmmjl_osc_schedule_isontime(x, n.timestamp)){
+	case CMMJL_OSC_SCHEDULE_ONTIME:
+		o->osc_parser(x, length, ptr, o->osc_parser_cb);
+		return CMMJL_SUCCESS;
+	case CMMJL_OSC_SCHEDULE_LATE:
+		if(osc->late_packets_ok){
+			o->osc_parser(x, length, ptr, o->osc_parser_cb);
+			return CMMJL_OSC_ELATE;
+		}else{
 			CMMJL_ERROR(x, CMMJL_OSC_ELATE, cmmjl_strerror(CMMJL_OSC_ELATE));
 			return CMMJL_OSC_ELATE;
 		}
@@ -182,8 +211,8 @@ t_cmmjl_error cmmjl_osc_schedule(void *x, long length, long ptr){
 }
 
 void cmmjl_osc_schedule_tick(void *x){
-	struct ntptime now;
-	struct ntptime nowp1;
+	ntptime now;
+	ntptime nowp1;
 	double dt;
 	node n;
 	node_ptr p_n;
@@ -263,4 +292,40 @@ void cmmjl_osc_should_schedule_set(void *x, bool b){
 		return;
 	}
 	o->osc_should_schedule = b;
+}
+
+void cmmjl_osc_schedule_free(t_cmmjl_osc_scheduler *o){
+	free(o->buf);
+	clock_unset(o->clock);
+	object_free(o->clock);
+	free(o->packets_free);
+}
+
+long cmmjl_osc_schedule_isontime(void *x, ntptime timestamp){
+	ntptime precision = cmmjl_osc_schedule_precision_get(x);
+	ntptime now;
+	ntptime nowp1;
+	cmmjl_osc_timetag_now_to_ntp(&now);
+	cmmjl_osc_timetag_add(&now, &(precision), &nowp1);
+	switch(cmmjl_osc_timetag_cmp(&nowp1, &(timestamp))){
+	case 0: // on time
+		return CMMJL_OSC_SCHEDULE_ONTIME;
+	case 1: // late or on time
+		switch(cmmjl_osc_timetag_cmp(&now, &(timestamp))){
+		case -1:
+			return CMMJL_OSC_SCHEDULE_ONTIME;
+		case 0:
+			return CMMJL_OSC_SCHEDULE_ONTIME;
+		case 1:
+			return CMMJL_OSC_SCHEDULE_LATE;
+		}
+	case -1:
+		return CMMJL_OSC_SCHEDULE_EARLY;
+	}
+}
+
+ntptime cmmjl_osc_schedule_precision_get(void *x){
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	t_cmmjl_osc_scheduler *osc = o->osc_scheduler;
+	return osc->precision;
 }

@@ -32,6 +32,7 @@ Audio Technologies, University of California, Berkeley.
 
 t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags){
 	t_cmmjl_error err;
+	int i;
 
 	// initialize symbol table. This function checks to see if it's 
 	// already been done and does nothing if so.
@@ -40,6 +41,7 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags){
 	// Create a new hashtable if we haven't done that yet.
 	if(!_cmmjl_obj_tab){
 		_cmmjl_obj_tab = (t_hashtab *)hashtab_new(CMMJL_DEFAULT_HASHTAB_SIZE);
+		hashtab_flags(_cmmjl_instance_count, OBJ_FLAG_MEMORY);
 	}
 
 	// Create a hashtab to keep track of instance counts for all the objects.
@@ -48,18 +50,25 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags){
 	t_symbol *s_name = gensym((char *)name);
 	if(!_cmmjl_instance_count){
 		_cmmjl_instance_count = (t_hashtab *)hashtab_new(CMMJL_DEFAULT_HASHTAB_SIZE);
+		hashtab_flags(_cmmjl_instance_count, OBJ_FLAG_MEMORY);
 	}
-	t_object *count;
-	long c;
-	hashtab_lookup(_cmmjl_instance_count, s_name, &count);
-	c = (long)count;
-	c += 1;
-	hashtab_store_safe(_cmmjl_instance_count, s_name, (t_object *)c);
+	//t_object *count;
+	//long c;
+	long *c;
+	hashtab_lookup(_cmmjl_instance_count, s_name, (t_object **)&c);
+	if(!c){
+		c = (long *)calloc(1024, sizeof(long));
+		hashtab_store_safe(_cmmjl_instance_count, s_name, (t_object *)c);
+	}
+	while(c[i] == 1){
+		i++;
+	}
+	c[i] = 1;
 
 	// Create a data structure to hold our internal data and add its 
 	// address to our hash table
 	t_cmmjl_obj *o = (t_cmmjl_obj *)malloc(sizeof(t_cmmjl_obj));
-	if(err = cmmjl_obj_init(x, o, flags, name, c)){
+	if(err = cmmjl_obj_init(x, o, flags, name, i)){
 		error("cmmjl: couldn't allocate object (%d)", err);
 		return err;
 	}
@@ -69,7 +78,30 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags){
 }
 
 void cmmjl_free(void *x){
-	//free some stuff here...
+	// An instance has been deleted, so we need to go through and free all 
+	// of the data we allocated for it.
+
+	t_cmmjl_obj *o = cmmjl_obj_get(x);
+	int i;
+	if(o->osc_address_methods){
+		linklist_clear(o->osc_address_methods);
+		free(o->osc_address_methods);
+	}
+	cmmjl_obj_instance_mark_free(x, o->instance);
+	if(o->osc_scheduler){
+		cmmjl_osc_schedule_free(o->osc_scheduler);
+		free(o->osc_scheduler);
+	}
+	if(o->entrance_count_tab){
+		hashtab_clear(o->entrance_count_tab);
+		free(o->entrance_count_tab);
+	}
+	hashtab_delete(_cmmjl_obj_tab, x);
+	if(hashtab_getsize(_cmmjl_obj_tab) == 0){
+		free(_cmmjl_obj_tab);
+		hashtab_clear(_cmmjl_instance_count);
+		free(_cmmjl_instance_count);
+	}
 }
 
 void cmmjl_post_gimme(void *x, t_symbol *msg, int argc, t_atom *argv){

@@ -27,7 +27,7 @@
 SET(cmmjl_PATH_TO_SDIFLIB ../../../sdif/lib)
 SET(cmmjl_PATH_TO_MAXSDK ../../SDK/MaxSDK-5)
 SET(cmmjl_PATH_TO_SDIF-BUFFER ../../externals/SDIF/SDIF-buffer)
-SET(cmmjl_PATH_TO_LIBOSC ../../../OSC/libOSC)
+#SET(cmmjl_PATH_TO_LIBOSC ../../../OSC/libOSC)
 SET(cmmjl_PATH_TO_THIRDPARTY thirdparty)
 
 SET(cmmjl_SOURCES 
@@ -42,9 +42,10 @@ SET(cmmjl_SOURCES
 	cmmjl_commonsymbols.c
 	cmmjl_profile.c
 	cmmjl_obj.c
-	${cmmjl_PATH_TO_THIRDPARTY}/pqops.c
-	${cmmjl_PATH_TO_LIBOSC}/OSC-client.c
-	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.c)
+	cmmjl_interp.c
+	${cmmjl_PATH_TO_THIRDPARTY}/pqops.c)
+	#${cmmjl_PATH_TO_LIBOSC}/OSC-client.c
+	#${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.c)
 
 SET(cmmjl_HEADERS 
 	cmmjl.h 
@@ -59,9 +60,10 @@ SET(cmmjl_HEADERS
 	cmmjl_types.h
 	cmmjl_profile.h
 	cmmjl_obj.h
-	${cmmjl_PATH_TO_THIRDPARTY}/pqops.h
-	${cmmjl_PATH_TO_LIBOSC}/OSC-client.h
-	${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.h)
+	cmmjl_interp.h
+	${cmmjl_PATH_TO_THIRDPARTY}/pqops.h)
+	#${cmmjl_PATH_TO_LIBOSC}/OSC-client.h
+	#${cmmjl_PATH_TO_LIBOSC}/OSC-timetag.h)
 
 SET(cmmjl_EXTRA_FILES ${PROJECT_SOURCE_DIR}/README.txt ${PROJECT_SOURCE_DIR}/COPYRIGHT.txt)
 

@@ -19,9 +19,9 @@
 #include "version.c"
 #include "cmmjl/cmmjl.h" /* Include this for basic functionality */
 #include "cmmjl/cmmjl_osc.h" /* OSC support */
-#include "cmmjl/cmmjl_osc_pattern.h"
-#include "cmmjl/cmmjl_osc_timetag.h"
-#include "cmmjl/cmmjl_osc_schedule.h"
+//#include "cmmjl/cmmjl_osc_pattern.h"
+//#include "cmmjl/cmmjl_osc_timetag.h"
+//#include "cmmjl/cmmjl_osc_schedule.h"
 #include "regex.h"
 
 typedef struct _test{
@@ -31,7 +31,7 @@ typedef struct _test{
 
 void *test_class;
 
-void *test_new();
+void *test_new(t_symbol *sym, long argc, t_atom *argv);
 void test_free(t_test *x);
 void test_assist(t_test *x, void *b, long m, long a, char *s);
 
@@ -48,7 +48,7 @@ void test_bar(t_test *x, long l);
 
 int main(int argc, char **argv){
 	t_class *c;
-	c = class_new("cmmjl_test", (method)test_new, (method)test_free, (long)sizeof(t_test), 0L, 0);
+	c = class_new("cmmjl_test", (method)test_new, (method)test_free, (long)sizeof(t_test), 0L, A_GIMME, 0);
 	class_addmethod(c, (method)test_assist, "assist", A_CANT, 0);
 	CMMJL_CLASS_ADDMETHOD(c, (method)test_bar, "bar", A_LONG, 0);
 	CMMJL_CLASS_ADDMETHOD(c, (method)test_seterrorcb, "seterrorcb", 0);
@@ -69,67 +69,33 @@ int main(int argc, char **argv){
 	return 0;
 }
 
-void *test_new(){
-	t_test *x = (t_test *)object_alloc(test_class);
-	x->outlet = outlet_new(x, 0);
+void *test_new(t_symbol *sym, long argc, t_atom *argv){
+	t_test *x;
+	if(x = (t_test *)object_alloc(test_class)){
+		x->outlet = outlet_new(x, 0);
 	
-	/* Initialize error reporter, symbol table, etc. */
-	cmmjl_init(x, NAME, CMMJL_CREATE_INFO_OUTLET | CMMJL_OSC_SCHEDULER_ON);
+		/* Initialize error reporter, symbol table, etc. */
+		cmmjl_init(x, NAME, CMMJL_CREATE_INFO_OUTLET | CMMJL_OSC_SCHEDULER_ON);
+
+		// process attribute arguments.  This should be done __AFTER__ cmmjl_init()!
+		attr_args_process(x, argc, argv);
 	
-	int bloo = 21;
-       	/* report an error like this */
-	CMMJL_ERROR(x, 19, "some foo screwed up here making bar = %d", bloo);
+		int bloo = 21;
+		/* report an error like this */
+		CMMJL_ERROR(x, 19, "some foo screwed up here making bar = %d", bloo);
 
-	char *st1 = "/app*e/pi?/{1,3,5}/foo";
-	char *st2 = "/appqcue/pie/3/foo";
-	if(cmmjl_osc_match(x, st1, st2)){
-		error("No match!!");
-	}
-
-	/*
-	t_patcher *patcher, *ppatcher;
-	t_box *box;
-	object_obex_lookup(x, gensym("#P"), (t_object **)&patcher);
-	post("patcher address: %p", patcher);
-	post("patcher name: %s", jpatcher_get_name(patcher)->s_name);
-	post("patcher title: %s", jpatcher_get_title(patcher)->s_name);
-	box = jpatcher_get_box(patcher);
-	post("box = %p", box);
-	ppatcher = jpatcher_get_parentpatcher(patcher);
-	post("parent address: %p", ppatcher);
-	*/
-
-	/*
-	t_object *parent, *patcher;
-        t_symbol *name;
-
-        object_obex_lookup(x, gensym("#P"), &patcher);
-        parent = patcher;
-        do {
-		parent = jpatcher_get_parentpatcher(parent);
-		if (parent) {
-			name = object_attr_getsym(parent, gensym("name"));
-			if (name)
-				post("%s",name->s_name);
+		char *st1 = "/app*e/pi?/{1,3,5}/foo";
+		char *st2 = "/appqcue/pie/3/foo";
+		if(cmmjl_osc_match(x, st1, st2)){
+			error("No match!!");
 		}
-        } while (parent != NULL);
-	*/
 
-	/*
-	object_obex_lookup(x, gensym("#B"), (t_object **)&box);
-	post("box is called %s", jbox_get_maxclass(box)->s_name);
-	post("id = %d", jbox_get_id(box)->s_name);
-	while(patcher){
-		patcher = jpatcher_get_parentpatcher(patcher);
-		if(patcher){
-			post("patcher: %s", jpatcher_get_name(patcher)->s_name);
-		}
 	}
-	*/
 	return x;
 }
 
 void test_free(t_test *x){
+	cmmjl_free(x);
 }
 
 void test_assist(t_test *x, void *b, long m, long a, char *s){

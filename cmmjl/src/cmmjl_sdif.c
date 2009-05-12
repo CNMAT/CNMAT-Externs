@@ -40,14 +40,14 @@ static void *my_getbytes(int numBytes) {
 	if (numBytes > SHRT_MAX) {
 		return 0;
 	}
-	return (void *) getbytes((short) numBytes);
+	return (void *) sysmem_newptr((short) numBytes);
 }
 
 static void my_freebytes(void *bytes, int size) {
-	freebytes(bytes, (short) size);
+	sysmem_freeptr(bytes);
 }
 
-void LookupMyBuffer(cmmjl_sdif_buffer *b){
+void LookupMyBuffer(t_cmmjl_sdif_buffer *b){
 #ifdef THE_S_THING_KLUDGE
 	void *thing;
 	
@@ -162,7 +162,7 @@ static SDIFmem_Matrix GetMatrix(CNMAT_MMJ_SDIF_buffer *b,
 }
 */
 
-SDIFmem_Matrix GetMatrix(cmmjl_sdif_buffer *b,
+SDIFmem_Matrix GetMatrix(t_cmmjl_sdif_buffer *b,
 				const char *desiredType,
 				sdif_float64 time,
 				int direction)
@@ -259,7 +259,7 @@ SDIFmem_Matrix GetMatrix(cmmjl_sdif_buffer *b,
 }
 
 
-SDIFmem_Matrix GetMatrixWithInterpolation(cmmjl_sdif_buffer *b,
+SDIFmem_Matrix GetMatrixWithInterpolation(t_cmmjl_sdif_buffer *b,
                                                  const char *desiredType,
                                                  sdif_float64 time,
                                                  int *columns,
@@ -405,7 +405,7 @@ void SetupInterpolator(SDIFinterp_Interpolator *it,
 	//  t_itValid = TRUE;
 }
 
-void cmmjl_sdif_getMainMatrixType(cmmjl_sdif_buffer *b, char *mt){
+void cmmjl_sdif_getMainMatrixType(t_cmmjl_sdif_buffer *b, char *mt){
 	//char matrixType[4];
 	LookupMyBuffer(b);
 	SDIFmem_Frame fr;
