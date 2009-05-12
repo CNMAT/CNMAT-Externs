@@ -106,7 +106,7 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name);
 
 void SDIFfileinfo_output(t_sdif_fileinfo *x);
-void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf);
+void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf, SDIF_FrameHeader *fhp);
 
 
 void *sdif_fileinfo_class;
@@ -269,6 +269,8 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 		post(NAME ": error reading SDIF file %s:", name);
 		post("%s", SDIF_GetErrorString(r));
 	}
+
+	outlet_bang(x->outlet2);
 	
 	return;
 }
@@ -301,7 +303,7 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 			}
 			//post("Name/value table:");
 			//post("%s", buf);
-			SDIFfileinfo_output1NVT(x, buf);
+			SDIFfileinfo_output1NVT(x, buf, fhp);
 			freebytes(buf, sz);						
 		} else {
 			if (SDIF_Char4Eq("1NVT", mh.matrixType)) {
@@ -343,10 +345,13 @@ void SDIFfileinfo_output(t_sdif_fileinfo *x) {
 	}	
 }
 
-void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf){
+void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf, SDIF_FrameHeader *fhp){
 	char key[256], val[256];
 	char *ptr = buf;
 	int i = 0;
+	char msg_char[16];
+	sprintf(msg_char, "/1NVT/%d", fhp->streamID);
+	t_symbol *msg = gensym(msg_char);
 	while(*ptr != 0x0){
 		i = 0;
 		while(*ptr != 0x09 && *ptr != 0x0){
@@ -360,15 +365,18 @@ void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf){
 			ptr++;
 		}
 		val[i++] = 0x0;
+		//post("%s %s", key, val);
 		if(i > 1){
 			t_atom out[2];
 			SETSYM(&(out[0]), gensym(key));
 			SETSYM(&(out[1]), gensym(val));
-			outlet_anything(x->outlet2, ps_1NVT, 2, out);
+			outlet_anything(x->outlet2, msg, 2, out);
 		}else{
+			/*
 			t_atom out;
 			SETSYM(&out, gensym("bang"));
-			outlet_anything(x->outlet2, ps_1NVT, 1, &out);
+			outlet_anything(x->outlet2, msg, 1, &out);
+			*/
 		}
 	}
 }
