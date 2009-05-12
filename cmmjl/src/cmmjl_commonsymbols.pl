@@ -32,19 +32,23 @@ print(FOUT "#define __CMMJL_COMMONSYMBOLS_H__\n\n");
 
 print(FOUT "#include \"ext.h\"\n\n");
 
+print(FOUT "/** A predefined symbol table */\n");
 print(FOUT "typedef struct _cmmjl_common_symols_table{\n");
+print(FOUT "/** \@cond */\n");
 foreach(<FIN>) {
     if($_ =~ /^\s*\"(.*)\",?$/){
 	push(@symbols, $1);
 	print(FOUT "\tt_symbol *s_$1;\n");
     }
 }
-
+print(FOUT "/** \@endcond */\n");
 print(FOUT "} t_cmmjl_common_symbols_table;\n\n");
 
+print(FOUT "/** \@cond */\n");
 foreach(@symbols){
     print(FOUT "#define ps_$_ (_cmmjl_common_symbols->s_$_)\n");
 }
+print(FOUT "/** \@endcond */\n");
 
 print(FOUT "\n");
 

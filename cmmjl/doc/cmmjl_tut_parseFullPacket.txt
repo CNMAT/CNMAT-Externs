@@ -1,13 +1,13 @@
 /**	@file	cmmjl_tut_parseFullPacket.txt
 	@page	Parse_Full_Packet How to parse an OSC packet.
 
-To parse an OSC packet, define a callback function with the ``A_GIMME'' signature and call cmmjl_osc_parseFullPacket() with that function as the last argument.  The signature of cmmjl_osc_parseFullPacket has the following signature:
+To parse an OSC packet, define a callback function with the ``A_GIMME'' signature and call cmmjl_osc_parseFullPacket() with that function as the last argument.  cmmjl_osc_parseFullPacket() has the following signature:
 
 @code
-t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, char *buf, long n, bool topLevel, void(*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc))
+t_cmmjl_error cmmjl_osc_parseFullPacket(void *x, long n, long ptr, void(*cbk)(void *x, t_symbol *sym, int argv, t_atom *argc))
 @endcode
 
-where x is a pointer to your object, buf is a pointer to the OSC packet, n is the length in bytes, and topLevel should be set to true.
+where x is a pointer to your object, n is the length in bytes, ptr is a pointer to the OSC data, and cbk is the callback to be used as the messages are extracted from the packet.
 
 @code
 

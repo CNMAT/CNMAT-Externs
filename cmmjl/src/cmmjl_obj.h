@@ -40,10 +40,18 @@ Audio Technologies, University of California, Berkeley.
 #include "ext_hashtab.h"
 #include "ext_linklist.h"
 
-#define CMMJL_CREATE_INFO_OUTLET 0x1
-#define CMMJL_OSC_SCHEDULER_ON 0x2
+/** 	Flags used during the class setup. */
+enum cmmjl_flags{
+	CMMJL_CREATE_INFO_OUTLET = 0x1, /**< Create an info outlet */
+	CMMJL_OSC_SCHEDULER_ON = 0x2, /**< Schedule OSC packets for execution according to the time tag*/
+	/** pretend that OSC packets that arrived after their timestamp were actually on time.*/
+	CMMJL_OSC_TREAT_LATE_PACKETS_AS_ONTIME = 0x4
+};
 
+/**	Hashtable used to store instance-specific data. */
 extern t_hashtab *_cmmjl_obj_tab;
+
+/** 	Hashtable used to store instance counts to generate unique ids for object instances. */
 extern t_hashtab *_cmmjl_instance_count;
 
 #ifndef CMMJL_CLASS_ADDMETHOD
@@ -83,7 +91,7 @@ typedef struct _cmmjl_obj{
 	t_cmmjl_error (*osc_parser)(void*,long,long,void(*)(void*,t_symbol*,int,t_atom*));
 	/** The callback used when parsing a FullPacket */
 	void (*osc_parser_cb)(void *x, t_symbol *sym, int argc, t_atom *argv); 
-	t_symbol *osc_address; /**< the object's varname (scripting name) as an OSC address. */
+	t_symbol *osc_address; /**< the object's OSC address. */
 	t_linklist *osc_address_methods; /**< a list of all the OSC messages this obj understands*/
 	/** A structure containing all the data necessary to use the OSC scheduling system. */
 	void *osc_scheduler;
@@ -199,5 +207,27 @@ t_linklist *cmmjl_obj_osc_address_methods_get(void *x);
 		valid OSC-style address.
 */
 t_cmmjl_error cmmjl_obj_osc_address_methods_add(void *x, char *address);
+
+/** 	Mark an instance slot as taken
+	
+	@param	x		Your object
+	@param	instance	The instance number (the slot to mark)
+*/
+void cmmjl_obj_instance_mark_used(void *x, long instance);
+
+/** 	Mark an instance slot as free
+	
+	@param	x		Your object
+	@param	instance	The instance number (the slot to mark)
+*/
+void cmmjl_obj_instance_mark_free(void *x, long instance);
+
+/** 	Mark an instance slot with a value
+	
+	@param	x		Your object
+	@param	instance	The instance number (the slot to mark)
+	@param	val		The value to put in the slot (0 or 1)
+*/
+void cmmjl_obj_instance_mark_val(void *x, long instance, long val);
 
 #endif // __CMMJL_OBJ_H__

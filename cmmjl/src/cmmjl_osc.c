@@ -109,20 +109,17 @@ void cmmjl_osc_makeDefaultAddress(void *x, long instance, char *buf){
 				memset(tmp, '\0', 64);
 				index = name->s_name - ptr;
 				if(index < 0) index = -index;
-				post("index = %d", index);
 				memcpy(tmp, name->s_name, index);
 				sprintf(buf2, "/%s", tmp);
 			}else{
 				sprintf(buf2, "/%s", name->s_name);
 			}
-			post("name = %s", name->s_name);
 		}
 	}else{
 		// maybe we didn't wait long enough...
 	}
 	b = jpatcher_get_box(p);
 	if(b){
-		post("box %p", b);
 		while(p){
 			pp = jpatcher_get_parentpatcher(p);
 			if(pp){
@@ -133,14 +130,11 @@ void cmmjl_osc_makeDefaultAddress(void *x, long instance, char *buf){
 							memset(tmp, '\0', 64);
 							index = name->s_name - ptr;
 							if(index < 0) index = -index;
-							post("index = %d", index);
 							memcpy(tmp, name->s_name, index);
 							sprintf(buf, "/%s%s", tmp, buf2);
 						}else{
 							sprintf(buf, "/%s%s", name->s_name, buf2);
 						}
-						post("name = %s", name->s_name);
-						post("%s", buf);
 					}
 				}
 			}
@@ -202,22 +196,17 @@ void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv){
 	}
 	osc_address = linklist_getindex(ll, 0);
 	for(i = 0; i < linklist_getsize(ll); i++){
-		post("%s (%p)", osc_address, osc_address);
 		if(!osc_address){
 			post("no OSC address--breaking");
 			break;
 		}
-		post("matching %s against %s", msg->s_name, osc_address);
 		if(!cmmjl_osc_match(x, msg->s_name, osc_address)){
-			post("%s matches %s", osc_address, msg->s_name);
 			func = zgetfn((t_object *)x, m);
 			if(func){
-				post("function %s exists", m->s_name);
 				r = typedmess(x, m, argc, argv);
 				//return;
 			}
 		}else{
-			post("%s does not match %s", osc_address, msg->s_name);
 		}
 		linklist_next(ll, osc_address, (void **)&osc_address);
 	}
@@ -473,7 +462,7 @@ t_cmmjl_error cmmjl_osc_formatMessage(void *x,
                 
 					numArgs--; // increments again at end of loop
                 
-					p += OSC_effectiveBlobLength(size);
+					p += cmmjl_osc_effectiveBlobLength(size);
 
 				}
 				break;
@@ -633,3 +622,13 @@ t_cmmjl_error cmmjl_osc_isNiceString(char *string, char *boundary)  {
 bool cmmjl_osc_isFinalPathSegment(char *path){
 	return !strcmp(dirname(path), "/");
 }
+
+int cmmjl_osc_effectiveBlobLength(int blobDataSize){
+	int len = 4 + blobDataSize;  /* int32 size count. */
+	/* Round up len to next multiple of STRING_ALIGN_PAD to account for alignment padding */
+	if ((len % CMMJL_OSC_STRING_ALIGN_PAD) != 0) {
+		len += CMMJL_OSC_STRING_ALIGN_PAD - (len % CMMJL_OSC_STRING_ALIGN_PAD);
+	}
+	return len;
+}
+

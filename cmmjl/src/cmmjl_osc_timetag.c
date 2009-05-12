@@ -19,7 +19,7 @@
 
 // add or subtract
 
-void cmmjl_osc_timetag_add(struct ntptime* a, struct ntptime* b, struct ntptime* r) {
+void cmmjl_osc_timetag_add(ntptime* a, ntptime* b, ntptime* r) {
   
   if((a->sign == 1 && b->sign == 1) || (a->sign == -1 && b->sign == -1)) {
     
@@ -74,7 +74,7 @@ void cmmjl_osc_timetag_add(struct ntptime* a, struct ntptime* b, struct ntptime*
   
 }
 
-int cmmjl_osc_timetag_cmp(struct ntptime* a, struct ntptime* b) {
+int cmmjl_osc_timetag_cmp(ntptime* a, ntptime* b) {
   
   if(a->sec < b->sec || (a->sec == b->sec && a->frac_sec < b->frac_sec)) {
     return -1;
@@ -90,7 +90,7 @@ int cmmjl_osc_timetag_cmp(struct ntptime* a, struct ntptime* b) {
 
 // conversion functions
 
-void cmmjl_osc_timetag_iso8601_to_ntp(char* s, struct ntptime* n) {
+void cmmjl_osc_timetag_iso8601_to_ntp(char* s, ntptime* n) {
   
     struct tm t;
     float sec;
@@ -111,7 +111,7 @@ void cmmjl_osc_timetag_iso8601_to_ntp(char* s, struct ntptime* n) {
     n->sign = 1;
 }
 
-void cmmjl_osc_timetag_ntp_to_iso8601(struct ntptime* n, char* s) {
+void cmmjl_osc_timetag_ntp_to_iso8601(ntptime* n, char* s) {
   
     time_t i;
     struct tm* t;
@@ -128,7 +128,7 @@ void cmmjl_osc_timetag_ntp_to_iso8601(struct ntptime* n, char* s) {
     sprintf(s, "%s.%s", s1, s2+2);
 }
 
-void cmmjl_osc_timetag_float_to_ntp(double d, struct ntptime* n) {
+void cmmjl_osc_timetag_float_to_ntp(double d, ntptime* n) {
 
     double sec;
     double frac_sec;
@@ -148,7 +148,7 @@ void cmmjl_osc_timetag_float_to_ntp(double d, struct ntptime* n) {
     n->type = TIME_STAMP;
 }
 
-double cmmjl_osc_timetag_ntp_to_float(struct ntptime* n) {
+double cmmjl_osc_timetag_ntp_to_float(ntptime* n) {
   if(n->sign == 1) {
     return ((double)(n->sec)) + ((double)((unsigned long int)(n->frac_sec))) / 4294967295.0;
   } else {
@@ -156,7 +156,7 @@ double cmmjl_osc_timetag_ntp_to_float(struct ntptime* n) {
   }
 }
 
-void cmmjl_osc_timetag_ut_to_ntp(long int ut, struct ntptime* n) {
+void cmmjl_osc_timetag_ut_to_ntp(long int ut, ntptime* n) {
 
     struct timeval tv;
     struct timezone tz;
@@ -171,7 +171,7 @@ void cmmjl_osc_timetag_ut_to_ntp(long int ut, struct ntptime* n) {
     n->frac_sec = 0;
 }
 
-long int cmmjl_osc_timetag_ntp_to_ut(struct ntptime* n) {
+long int cmmjl_osc_timetag_ntp_to_ut(ntptime* n) {
 
     struct timeval tv;
     struct timezone tz;
@@ -181,7 +181,7 @@ long int cmmjl_osc_timetag_ntp_to_ut(struct ntptime* n) {
     return n->sec - (unsigned long)2208988800UL + (unsigned long)(60 * tz.tz_minuteswest) - (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
 }
 
-void cmmjl_osc_timetag_now_to_ntp(struct ntptime* n) {
+void cmmjl_osc_timetag_now_to_ntp(ntptime* n) {
 
     struct timeval tv;
     struct timezone tz;
@@ -198,3 +198,19 @@ void cmmjl_osc_timetag_now_to_ntp(struct ntptime* n) {
     n->sign = 1;
 }
 
+t_cmmjl_error cmmjl_osc_timetag_get(long n, long ptr, ntptime *r){
+	if(strcmp((char *)ptr, "#bundle") != 0) {
+		r = NULL;
+		return CMMJL_OSC_EBADBNDL;
+        }
+	char *data = (char *)ptr;
+	if(n < 16){
+		r = NULL;
+		return CMMJL_OSC_EBADBNDL;
+	}
+	r->sec = ntohl(*((unsigned long *)(data + 8)));
+	r->frac_sec = ntohl(*((unsigned long *)(data + 12)));
+	r->sign = 1;
+	r->type = TIME_STAMP;
+	return CMMJL_SUCCESS;
+}

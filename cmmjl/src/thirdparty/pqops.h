@@ -45,7 +45,7 @@ typedef struct _node
   int sentinel;
   unsigned int id;
   unsigned int length;
-  struct ntptime timestamp;
+  ntptime timestamp;
 } node;
 
 node tmp;

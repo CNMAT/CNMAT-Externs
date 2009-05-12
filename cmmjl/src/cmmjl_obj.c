@@ -64,7 +64,7 @@ t_cmmjl_error cmmjl_obj_init(void *x,
 
 		OBJ_ATTR_SAVE(x, "OSCaddress", 0L);
 
-		cmmjl_osc_schedule_init(x, o);
+		cmmjl_osc_schedule_init(x, o, flags);
 
 		//atom_setlong(&a, 0);
 		//object_attr_attr_setvalueof(x, ps_OSCaddress, gensym("save"), 1, &a);
@@ -99,8 +99,7 @@ void cmmjl_obj_init_del(void *x, t_symbol *sym, short argc, t_atom *argv){
 	//cmmjl_osc_saveAddressWithPatcher(x, false);
 
 	o->osc_address_methods = (t_linklist *)linklist_new();
-	// make sure the items will never be freed
-	linklist_flags(o->osc_address_methods, OBJ_FLAG_DATA);
+	linklist_flags(o->osc_address_methods, OBJ_FLAG_MEMORY);
 	int i = 0;
 	char *buf_ptr;
 	// we're relying on the object being the first element of the struct
@@ -109,9 +108,7 @@ void cmmjl_obj_init_del(void *x, t_symbol *sym, short argc, t_atom *argv){
 			sprintf(buf, "%s%s", o->osc_address->s_name, ((t_object *)x)->o_messlist[i].m_sym->s_name);
 			buf_ptr = (char *)calloc(sizeof(char), strlen(buf) + 1);
 			strcpy(buf_ptr, buf);
-			post("putting %s in linked list", buf);
 			linklist_append(o->osc_address_methods, buf_ptr);
-			post("%p", buf_ptr);
 		}
 		i++;
 	}
@@ -160,6 +157,21 @@ long cmmjl_obj_instance_get(void *x){
 		return -1;
 	}
 	return o->instance;
+}
+
+void cmmjl_obj_instance_mark_used(void *x, long instance){
+	cmmjl_obj_instance_mark_val(x, instance, 1);
+}
+
+void cmmjl_obj_instance_mark_free(void *x, long instance){
+	cmmjl_obj_instance_mark_val(x, instance, 0);
+}
+
+void cmmjl_obj_instance_mark_val(void *x, long instance, long val){
+	t_symbol *name = object_classname(x);
+	long *c;
+	hashtab_lookup(_cmmjl_instance_count, name, (t_object **)&c);
+	c[instance] = val;
 }
 
 void *cmmjl_obj_osc_parser_get(void *x){

@@ -16,7 +16,7 @@ typedef struct _cmmjl_sdif_buffer{
 	t_symbol *t_bufferSym;	/**< Buffer name */
 	SDIFBuffer *t_buffer;	/**< Instance of the SDIF-buffer */
 	SDIFbuf_Buffer t_buf;	/**< Provides API to manipulate buffer contents */
-}cmmjl_sdif_buffer;
+}t_cmmjl_sdif_buffer;
 
 /** Interpolation modes used when requesting a matrix with interpolation. */
 typedef enum {
@@ -45,7 +45,7 @@ SDIFresult cmmjl_sdif_init(void (*ecallback)(SDIFresult r, const char *errorStri
 Associates b->t_buffer with the name in b->t_bufferSym.
 	@param b Struct containing a reference to an SDIF-buffer and the desired buffer's name.
 */
-void LookupMyBuffer(cmmjl_sdif_buffer *b);
+void LookupMyBuffer(t_cmmjl_sdif_buffer *b);
 
 /**
 Get a matrix of a given type from the frame closest to the requested time.
@@ -55,7 +55,7 @@ Get a matrix of a given type from the frame closest to the requested time.
 	@param direction Search from the front (1) or the end (-1).
 	@returns An SDIF matrix.
 */
-SDIFmem_Matrix GetMatrix(cmmjl_sdif_buffer *b,
+SDIFmem_Matrix GetMatrix(t_cmmjl_sdif_buffer *b,
 				const char *desiredType,
 				sdif_float64 time,
 				int direction);
@@ -72,7 +72,7 @@ Perform interpolation on the matrix before it is returned.
 	@param itValid Set this to FALSE to forse a new interpolation matrix to be created.
 	@returns An SDIF matrix on which interpolation has been performed.
 */
-SDIFmem_Matrix GetMatrixWithInterpolation(cmmjl_sdif_buffer *b,
+SDIFmem_Matrix GetMatrixWithInterpolation(t_cmmjl_sdif_buffer *b,
                                                  const char *desiredType,
                                                  sdif_float64 time,
                                                  int *columns,
@@ -99,10 +99,10 @@ void SetupInterpolator(SDIFinterp_Interpolator *it,
 
 /**
 Get the type of the 'main' matrix.  The 'main' matrix is the matrix whose type is the same as that of the first frame.
-	@param b Buffer structure (see #cmmjl_sdif_buffer).
+	@param b Buffer structure (see #t_cmmjl_sdif_buffer).
 	@param mt Variable where the matrix type will be stored.
 */
-void cmmjl_sdif_getMainMatrixType(cmmjl_sdif_buffer *b, char *mt);
+void cmmjl_sdif_getMainMatrixType(t_cmmjl_sdif_buffer *b, char *mt);
 
 void PrintOneFrame(SDIFmem_Frame f);
 void PrintFrameHeader(SDIF_FrameHeader *fh);
