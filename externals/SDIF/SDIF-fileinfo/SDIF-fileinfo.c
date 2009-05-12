@@ -53,6 +53,7 @@ To-Do:  use opendialog to present a dialog box to the user
 
 #include "ext.h"
 /* Undo ext.h's macro versions of some of stdio.h: */
+	/*
 #undef fopen
 #undef fclose
 #undef fprintf
@@ -60,6 +61,7 @@ To-Do:  use opendialog to present a dialog box to the user
 #undef fseek
 #undef sprintf
 #undef sscanf
+	*/
 
 #include "version.c"
 
@@ -69,7 +71,7 @@ To-Do:  use opendialog to present a dialog box to the user
 #include "open-sdif-file.h"
 
 
-Symbol *ps_file, *ps_stream, *ps_no_file;
+Symbol *ps_file, *ps_stream, *ps_no_file, *ps_1NVT;
 
 #define MAX_STREAMS 100  // Most SDIF streams any file should have
 
@@ -88,6 +90,7 @@ typedef struct sdif_fileinfo {
 	
 	int				print_NVT_matrices;
 	void		*outlet;	// outlet.
+	void *outlet2;
 } t_sdif_fileinfo;
 
 
@@ -102,6 +105,7 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name);
 
 void SDIFfileinfo_output(t_sdif_fileinfo *x);
+void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf);
 
 
 void *sdif_fileinfo_class;
@@ -131,6 +135,7 @@ void main(void)
 	ps_file = gensym("/file");
 	ps_stream = gensym("/stream");
 	ps_no_file = gensym("<no SDIF file read>");
+	ps_1NVT = gensym("/1NVT");
 
 
 }
@@ -138,6 +143,7 @@ void main(void)
 void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av) {
 	t_sdif_fileinfo *x;
 	x = newobject(sdif_fileinfo_class);	
+    x->outlet2 = outlet_new(x, 0L);
     x->outlet = outlet_new(x, 0L);
 	x->print_NVT_matrices = 1;
 	
@@ -292,8 +298,9 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 			    error(NAME ": error reading 1NVT matrix data: %s", SDIF_GetErrorString(r));
 			    return 0;
 			}
-			post("Name/value table:");
-			post("%s", buf);
+			//post("Name/value table:");
+			//post("%s", buf);
+			SDIFfileinfo_output1NVT(x, buf);
 			freebytes(buf, sz);						
 		} else {
 			if (SDIF_Char4Eq("1NVT", mh.matrixType)) {
@@ -333,4 +340,34 @@ void SDIFfileinfo_output(t_sdif_fileinfo *x) {
 		SETLONG(arguments+4, x->x_numframes[i]);
 		outlet_anything(x->outlet, ps_stream, 5, arguments);
 	}	
+}
+
+void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf){
+	char key[256], val[256];
+	char *ptr = buf;
+	int i = 0;
+	while(*ptr != 0x0){
+		i = 0;
+		while(*ptr != 0x09 && *ptr != 0x0){
+			key[i++] = *ptr;
+			ptr++;
+		}
+		key[i++] = 0x0;
+		i = 0;
+		while(*ptr != 0x0A && *ptr != 0x0){
+			val[i++] = *ptr;
+			ptr++;
+		}
+		val[i++] = 0x0;
+		if(i > 1){
+			t_atom out[2];
+			SETSYM(&(out[0]), gensym(key));
+			SETSYM(&(out[1]), gensym(val));
+			outlet_anything(x->outlet2, ps_1NVT, 2, out);
+		}else{
+			t_atom out;
+			SETSYM(&out, gensym("bang"));
+			outlet_anything(x->outlet2, ps_1NVT, 1, &out);
+		}
+	}
 }
