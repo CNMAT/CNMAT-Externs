@@ -20,6 +20,18 @@ public class cdf extends MaxObject implements CDFConstants{
 		}
 		createInfoOutlet(false);
 		declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL, DataTypes.ALL});
+		/*
+		String[] st = MaxSystem.getSearchPath();
+		for(int i = 0; i < st.length; i++){
+			post(st[i] + "\n");
+		}
+		post("**************************************************");
+		post("default path: " + MaxSystem.getDefaultPath());
+		post("lib = " + MaxSystem.locateFile("libcdfNativeLibrary.jnilib"));
+		String libpath = MaxSystem.locateFile("libcdfNativeLibrary.jnilib");
+		System.load(libpath);
+		post(System.getProperty("java.library.path") + "\n");
+		*/
 	}
 
 	public void read(){
