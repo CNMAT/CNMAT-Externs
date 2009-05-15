@@ -1,9 +1,9 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ -1530.0, 116.0, 1441.0, 977.0 ],
+		"rect" : [ 377.0, 44.0, 1124.0, 740.0 ],
 		"bglocked" : 0,
-		"defrect" : [ -1530.0, 116.0, 1441.0, 977.0 ],
+		"defrect" : [ 377.0, 44.0, 1124.0, 740.0 ],
 		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -47,7 +47,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "textedit",
-					"text" : "5",
+					"text" : "0",
 					"id" : "obj-14",
 					"outlettype" : [ "", "int", "", "" ],
 					"fontname" : "Arial",

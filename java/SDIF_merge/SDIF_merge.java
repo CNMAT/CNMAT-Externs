@@ -7,10 +7,14 @@ import java.io.InputStream;
 import java.util.regex.*;
 
 public class SDIF_merge extends MaxObject{
-	LinkedHashMap<String, ArrayList<SDIF_stream>> tab = new LinkedHashMap<String, ArrayList<SDIF_stream>>();
-	ArrayList<String> rows = new ArrayList<String>();
+	ArrayList<String> filenames = new ArrayList<String>();
+	ArrayList<Integer> streamIDs = new ArrayList<Integer>();
+	ArrayList<String> frameTypes = new ArrayList<String>();
+	ArrayList<Float> startTimes = new ArrayList<Float>();
+	LinkedHashMap<String, String> files = new LinkedHashMap<String, String>();
 	Cell selection = new Cell();
 	String outputFile;
+
 
 	public class Cell{
 		public int row, column;
@@ -26,36 +30,13 @@ public class SDIF_merge extends MaxObject{
 		public void set(int c, int r){
 			row = r;
 			column = c;
+			val = null;
 		}
-	}
-
-	public class SDIF_stream{
-		private int streamID;
-		private String frameType;
-		private float startTime;
-		public SDIF_stream(String streamList){
-			Pattern pattern = Pattern.compile("\\s<stream id=\"(-?\\d+)\"/>\\s+frame type ([0-9A-Z]{4}), starts at time (.*)$");
-			Matcher matcher = pattern.matcher(streamList);
-			if(!matcher.find()){
-				error("SDIF_merge: " + streamList + " does not appear to be a valid stream list");
-			}
-
-			streamID = Integer.parseInt(matcher.group(1));
-			frameType = matcher.group(2);
-			startTime = Float.parseFloat(matcher.group(3));
-			/*
-			post("count = " + matcher.groupCount());
-			for(int i = 1; i <= matcher.groupCount(); i++){
-				post("i = " + i + " " + matcher.group(i));
-			}
-			*/
+		public void set(int c, int r, Atom v){
+			row = r;
+			column = c;
+			val = v;
 		}
-		public int getStreamID(){return streamID;}
-		public void setStreamID(int sid){streamID = sid;}
-		public String getFrameType(){return frameType;}
-		public void setFrameType(String ft){frameType = ft;}
-		public float getStartTime(){return startTime;}
-		public void setStartTime(float st){startTime = st;}
 	}
 
 	public SDIF_merge(){
@@ -71,21 +52,41 @@ public class SDIF_merge extends MaxObject{
 			error("SDIF_merge: Couldn't locate " + filename + ". Make sure it's in your searchpath.");
 			return;
 		}
-		//list.put(absFilename, 0);
+		files.put(absFilename, "");
+		scanFiles();
+	}
+
+	private void scanFiles(){
 		String[] command = new String[2];
 		command[0] = "/usr/local/bin/streamlist";
-		command[1] = absFilename;
-		String[] ret = launchProc(command);
-		ArrayList<SDIF_stream> streams = new ArrayList<SDIF_stream>();
-		for(String st : ret){
-			//post(st);
-			if(!st.startsWith("List of streams")){
-				SDIF_stream stream = new SDIF_stream(st);
-				streams.add(stream);
+		filenames.clear();
+		streamIDs.clear();
+		frameTypes.clear();
+		startTimes.clear();
+		for(String key : files.keySet()){
+			command[1] = key;
+			String[] ret = launchProc(command);
+			for(String st : ret){
+				if(!st.startsWith("List of streams")){
+					addInfoToArrays(key, st);
+					//post(key + " " + st);
+				}
 			}
 		}
-		tab.put(absFilename, streams);
 		outputInfo();
+	}
+
+	private void addInfoToArrays(String filename, String streamList){
+		Pattern pattern = Pattern.compile("\\s<stream id=\"(-?\\d+)\"/>\\s+frame type ([0-9A-Z]{4}), starts at time (.*)$");
+		Matcher matcher = pattern.matcher(streamList);
+		if(!matcher.find()){
+			error("SDIF_merge: " + streamList + " does not appear to be a valid stream list");
+		}
+
+		filenames.add(filename);
+		streamIDs.add(new Integer(matcher.group(1)));
+		frameTypes.add(matcher.group(2));
+		startTimes.add(new Float(matcher.group(3)));
 	}
 
 	public void outputFile(String filename){
@@ -97,13 +98,13 @@ public class SDIF_merge extends MaxObject{
 			error("SDIF_merge: you must specify an output file by calling outputFile");
 			return;
 		}
-		if(tab.size() < 2){
+		if(files.size() < 2){
 			error("SDIF_merge: you must specify more than one file to merge");
 	        }
-		String[] command = new String[tab.size() + 2];
+		String[] command = new String[files.size() + 2];
 		command[0] = "/usr/local/bin/merge-sdif";
 		int i = 1;
-		for(String key : tab.keySet()){
+		for(String key : files.keySet()){
 			command[i] = key;
 			i++;
 		}
@@ -113,6 +114,16 @@ public class SDIF_merge extends MaxObject{
 		for(String st : ret){
 			post(st);
 		}
+	}
+
+	private String[] changeStreamID(String filename, Integer from, Integer to){
+		String[] command = new String[4];
+		command[0] = "/usr/local/bin/change-streamID";
+		command[1] = filename;
+		command[2] = from.toString();
+		command[3] = to.toString();
+		post(command[0] + " " + command[1] + " " + command[2] + " " + command[3]);
+		return launchProc(command);
 	}
 
 	private String[] launchProc(String[] command){
@@ -170,27 +181,20 @@ public class SDIF_merge extends MaxObject{
 		int row, col;
 		row = 0;
 		sendClear();
-		rows.clear();
-		for(String filename : tab.keySet()){
-			ArrayList<SDIF_stream> streams = tab.get(filename);
-			for(SDIF_stream s : streams){
-				rows.add(filename);
-				outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(0), Atom.newAtom(row), Atom.newAtom(filename)});
-				outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(1), Atom.newAtom(row), Atom.newAtom(s.getStreamID())});
-				outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(2), Atom.newAtom(row), Atom.newAtom(s.getFrameType())});
-				outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(3), Atom.newAtom(row), Atom.newAtom(s.getStartTime())});
-				row++;
-			}
-			/*
-			post(s.getStreamID() + "");
-			post(s.getFrameType() + "");
-			post(s.getStartTime() + "");
-			*/
+		for(int r = 0; r < filenames.size(); r++){
+			outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(0), Atom.newAtom(r), Atom.newAtom(filenames.get(r))});
+			outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(1), Atom.newAtom(r), Atom.newAtom(streamIDs.get(r))});
+			outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(2), Atom.newAtom(r), Atom.newAtom(frameTypes.get(r))});
+			outlet(0, new Atom[]{Atom.newAtom("set"), Atom.newAtom(3), Atom.newAtom(r), Atom.newAtom(startTimes.get(r))});
 		}
 	}
 
 	public void clear(){
-		tab.clear();
+		filenames.clear();
+		streamIDs.clear();
+		frameTypes.clear();
+		startTimes.clear();
+		files.clear();
 		outputFile = null;
 		sendClear();
 	}
@@ -200,37 +204,34 @@ public class SDIF_merge extends MaxObject{
 	}
 
 	public void sync(Atom[] args){
+		if(args[1].toInt() > 1){
+			return;
+		}
 		int col = args[1].toInt();
 		int row = args[2].toInt();
-		selection.set(col, row);
-		String filename = rows.get(row);
+		Atom val = null;
+		ArrayList l = getArrayListForCol(col);
 		switch(col){
 		case 0:
-			selection.val = Atom.newAtom(filename);
+			val = Atom.newAtom((String)l.get(row));
 			break;
 		case 1:
+			val = Atom.newAtom((Integer)l.get(row));
 			break;
 		}
+		selection.set(col, row, val);
 	}
 
 	public void set(Atom[] args){
-		boolean diff = false;
-		for(int i = 0; i < args.length; i++){
-			if(!args[i].equals(selection.val[i])){
-				diff = true;
-				break;
-			}
-		}
-		post("in set");
-		if(diff){
-			post("different");
+		if(!selection.val.equals(args[0])){
 			switch(selection.column){
 			case 0:
 				// rename file
+				post("rename " + selection.val.toString() + " to " + args[0].toString());
 				break;
 			case 1:
 				// change stream id
-				post("gonna change stream ID from " + Atom.toOneString(selection.val) + " to " + Atom.toOneString(args));
+				changeStreamID(filenames.get(selection.row), selection.val.toInt(), args[0].toInt());
 				break;
 			case 2:
 				// throw error
@@ -239,6 +240,8 @@ public class SDIF_merge extends MaxObject{
 				// throw error
 				break;
 			}
+			selection.val = args[0];
+			scanFiles();
 		}
 	}
 
@@ -256,6 +259,21 @@ public class SDIF_merge extends MaxObject{
 		case 3:
 
 			break;
+		}
+	}
+
+	private ArrayList getArrayListForCol(int col){
+		switch(col){
+		case 0:
+			return filenames;
+		case 1:
+			return streamIDs;
+		case 2:
+			return frameTypes;
+		case 3:
+			return startTimes;
+		default:
+			return null;
 		}
 	}
 }
