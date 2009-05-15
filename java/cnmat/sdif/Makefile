@@ -1,11 +1,11 @@
 TOP_LEVEL = ../../
 
-all: java jnilib jar doc
+all: java jnilib jar
 
 java: 
 	cd $(TOP_LEVEL) && javac cnmat/sdif/SDIFTypes.java
 	cd $(TOP_LEVEL) && javac cnmat/sdif/SDIFBadTypeException.java
-	cd $(TOP_LEVEL) && javac cnmat/sdif/SDIFHeader.java
+	cd $(TOP_LEVEL) && javac -cp .:lib/max.jar cnmat/sdif/SDIFHeader.java
 	cd $(TOP_LEVEL) && javac cnmat/sdif/SDIFGlobalHeader.java
 	cd $(TOP_LEVEL) && javac cnmat/sdif/SDIFFrameHeader.java
 	cd $(TOP_LEVEL) && javac cnmat/sdif/SDIFMatrixHeader.java
@@ -28,7 +28,7 @@ jnilib: libSDIFBuffer_native.o
 	cd native && gcc -dynamiclib -F../../../../SDK/UB-SDK -L../../../../utility-library/CNMAT_MMJ/lib -filelist SDIFBuffer_native.LinkFileList -framework MaxAPI -lCNMAT_MMJ -o libSDIFBuffer_native.dylib libSDIFBuffer_native.o
 
 libSDIFBuffer_native.o: macho-prefix.h.gch SDIFBuffer_native.h
-	cd native && gcc -F/System/Library/Frameworks/Carbon.framework -F../../../../SDK/UB-SDK -I../../../../utility-library/search-path -I/System/Library/Frameworks/JavaVM.framework/Headers -I../../../../c74support/max-includes -I../../../../../sdif/lib -I../../../../externals/SDIF/SDIF-buffer -I../../../../utility-library/CNMAT_MMJ/include -include macho-prefix.h -o libSDIFBuffer_native.o -c SDIFBuffer_native.c
+	cd native && gcc -Wall -F/System/Library/Frameworks/Carbon.framework -F../../../../SDK/UB-SDK -I../../../../utility-library/search-path -I/System/Library/Frameworks/JavaVM.framework/Headers -I../../../../c74support/max-includes -I../../../../../sdif/lib -I../../../../externals/SDIF/SDIF-buffer -I../../../../utility-library/CNMAT_MMJ/include -include macho-prefix.h -o libSDIFBuffer_native.o -c SDIFBuffer_native.c
 
 macho-prefix.h.gch:
 	cd native && /Developer/usr/bin/gcc-4.0 -x c-header -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4 -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F../../../../SDK/UB-SDK -I../../../../../sdif/lib -I../../../../utility-library/search-path -I../../../../c74support/max-includes  -c ../../../../c74support/max-includes/macho-prefix.h -o macho-prefix.h.gch

@@ -1,31 +1,28 @@
 package cnmat.sdif;
+import com.cycling74.max.MaxSystem;
 
 public class SDIFBuffer{
-	private native SDIFMatrixHeader n_getMatrixHeader(String name);
-	private native int n_init();
+	private static native SDIFMatrix n_getMatrix(String name, char[] type, double time, int direction);
+	private static native SDIFMatrixHeader n_getMatrixHeader(String name);
+	private static native int n_init();
 
-	public SDIFBuffer(){
-		// load native lib
-		java.util.Properties p = System.getProperties();
-		String dylibPath = null;
-		//if(p.getProperty("os.name").compareTo("Mac OS X") == 0)
-		//dylibPath = MaxSystem.locateFile("libSDIF_buffer_native.dylib");
-			//else dylibPath = MaxSystem.locateFile("libjavaobject.1.0.dll");
-		try{System.load(dylibPath);}
-		catch(Exception e){
-			//error("mxj SDIF_buffer: couldn't load libSDIF_buffer_native.dylib--make sure it's in your searchpath.");
-			return;
-		}
+	public SDIFBuffer(){}
 
+	public static void init(){
+		String dylib = MaxSystem.locateFile("libSDIFBuffer_native.dylib");
+		System.load(dylib);
 		int r = n_init();
-		if(r == 0){
-			//error("mxj SDIF_buffer: there was a problem initializing the native library");
-			return;
-		}
+                if(r == 0){
+                        System.out.println("cnmat.sdif.SDIF: couldn't load native library");
+                        return;
+                }
 	}
 
-	public void getMatrixHeader(String name){
-		SDIFMatrixHeader mh = (SDIFMatrixHeader)n_getMatrixHeader(name);
-		//post(mh.toString());
+	public static SDIFMatrix getMatrix(String name, char[] type, double time, int direction){
+		return n_getMatrix(name, type, time, direction);
+	}
+
+	public static SDIFMatrixHeader getMatrixHeader(String name){
+		return n_getMatrixHeader(name);
 	}
 }

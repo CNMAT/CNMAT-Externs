@@ -2,18 +2,26 @@
 #include "SDIFBuffer_native.h"
 #include "CNMAT_MMJ_SDIF.h"
 
-int SDIFJava_test_init();
 void error_report(SDIFresult r, const char *st);
+jclass sdif_matrix_header_class;
+jclass sdif_matrix_class;
+jmethodID sdif_matrix_header_ctor;
+jmethodID sdif_matrix_ctor;
 
 JNIEXPORT jint JNICALL Java_cnmat_sdif_SDIFBuffer_n_1init(JNIEnv *env, jobject obj){
-	return SDIFJava_test_init();
+	sdif_matrix_class = (*env)->FindClass(env, "cnmat/sdif/SDIFMatrix");
+	sdif_matrix_header_class = (*env)->FindClass(env, "cnmat/sdif/SDIFMatrixHeader");
+	sdif_matrix_header_ctor = (*env)->GetMethodID(env, sdif_matrix_header_class, "<init>", "([CIII)V");
+	sdif_matrix_ctor = (*env)->GetMethodID(env, sdif_matrix_class, "<init>", "(Lcnmat/sdif/SDIFMatrixHeader;)V");
+	CNMAT_MMJ_SDIF_init(error_report);
+	return 1;
 }
 
 JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIFBuffer_n_1getMatrix
   (JNIEnv *env, jobject obj, jstring bufferName, jcharArray type, jdouble time, jint direction){
-	post("hi from the native lib");
 	char *bufferName_char = (*env)->GetStringUTFChars(env, bufferName, NULL);
 	jchar *type_char = (*env)->GetCharArrayElements(env, type, 0);
+	int col, row, counter;
 
 	CNMAT_MMJ_SDIF_buffer b;
 	b.t_bufferSym = gensym(bufferName_char);
@@ -21,90 +29,80 @@ JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIFBuffer_n_1getMatrix
 
         if (b.t_buffer == 0) {
                 error(": no buffer!");
-                return;
+                return NULL;
 	}
 
 	SDIFmem_Matrix m;
 	if(!(m = GetMatrix(&b, "1TRC", 1.0, 1)))
-                return;
+                return NULL;
 
-	jclass matrixHeader_class = (*env)->FindClass(env, "cnmat/sdif/SDIFMatrixHeader");
-	jmethodID cid = (*env)->GetMethodID(env, matrixHeader_class, "<init>", "(Ljava/lang/String;III)V");
-	jstring tmpString = (*env)->NewStringUTF(env, m->header.matrixType);
-	jobject matrixHeader_obj = (*env)->NewObject(env, matrixHeader_class, cid, tmpString, m->header.matrixDataType, m->header.rowCount, m->header.columnCount);
+	jstring matrixType_jstring = (*env)->NewStringUTF(env, m->header.matrixType);
+	jobject matrix_header_obj = (*env)->NewObject(env, 
+						     sdif_matrix_header_class, 
+						     sdif_matrix_header_ctor, 
+						     matrixType_jstring, 
+						     m->header.matrixDataType, 
+						     m->header.rowCount, 
+						     m->header.columnCount);
 
-	jclass sdif_matrix_class = (*env)->FindClass(env, "cnmat/sdif/SDIFMatrix");
-	jobject sdif_matrix_obj = NULL;
+	jobject sdif_matrix_obj = (*env)->NewObject(env, 
+						    sdif_matrix_obj, 
+						    sdif_matrix_ctor, 
+						    matrix_header_obj);
+
+	jmethodID setData;
 	if(m->header.matrixDataType == SDIF_INT32){
-		int counter = 0;
-		int d[m->header.rowCount * m->header.columnCount];
-		int c, r;
-		for(r = 0; r < m->header.rowCount; r++){
-			for(c = 0; c < m->header.columnCount; c++){
-				d[counter++] = SDIFutil_GetMatrixCell_int32(m, c, r);
-			}
-		}
-		cid = (*env)->GetMethodID(env, sdif_matrix_class, "<init>", "(Lcnmat/sdif/SDIFMatrixHeader;[I)V");
-		sdif_matrix_obj = (*env)->NewObject(env, sdif_matrix_obj, cid, matrixHeader_obj, d);
+		setData = (*env)->GetMethodID(env, sdif_matrix_class, "setData", "([I)V");
+		(*env)->CallVoidMethod(env, obj, setData, (int *)m->data);
+	}else if(m->header.matrixDataType == SDIF_FLOAT32){
+		setData = (*env)->GetMethodID(env, sdif_matrix_class, "setData", "([F)V");
+		(*env)->CallVoidMethod(env, obj, setData, (float *)m->data);
 	}else{
-		int counter = 0;
-		float d[m->header.rowCount * m->header.columnCount];
-		int c, r;
-		for(r = 0; r < m->header.rowCount; r++){
-			for(c = 0; c < m->header.columnCount; c++){
-				d[counter++] = SDIFutil_GetMatrixCell(m, c, r);
-			}
-		}
-		cid = (*env)->GetMethodID(env, sdif_matrix_class, "<init>", "(Lcnmat/sdif/SDIFMatrixHeader;[F)V");
-		sdif_matrix_obj = (*env)->NewObject(env, sdif_matrix_obj, cid, matrixHeader_obj, d);
+		//post error
 	}
+
+	//cid = (*env)->GetMethodID(env, sdif_matrix_class, "<init>", "(Lcnmat/sdif/SDIFMatrixHeader;[I)V");
+	//sdif_matrix_obj = (*env)->NewObject(env, sdif_matrix_obj, cid, matrixHeader_obj, d);
+
+
 	return sdif_matrix_obj;
 }
 
-JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIFBuffer_n_1getMatrixHeader(JNIEnv *env, jobject obj, jstring s){
-	SDIFJava_test_init();
+JNIEXPORT jobject JNICALL Java_cnmat_sdif_SDIFBuffer_n_1getMatrixHeader(JNIEnv *env, 
+									jobject obj, 
+									jstring s)
+{
 	char *s_char = (*env)->GetStringUTFChars(env, s, NULL);
 
 	CNMAT_MMJ_SDIF_buffer b;
-	post("b = %p\n", b.t_buffer);
 	b.t_bufferSym = gensym(s_char);
 	LookupMyBuffer(&b);
 
         if (b.t_buffer == 0) {
-                error(": no buffer!");
-                return;
+                error_report(0, "no buffer!");
+                return NULL;
 	}
 
-	post("b = %p\n", b.t_buffer);
 	SDIFmem_Matrix m;
-
-	GetMatrix(&b, "1TRC", 1.0, 1);
-	/*
-	if(!(m = GetMatrix(&b, "1TRC", 1.0, 1)))
+	char dt[4] = {'1', 'T', 'R', 'C'};
+	if(!(m = GetMatrix(&b, dt, 1.0, 1))){
                 return NULL;
-	*/
-
+	}
+	post("made it here");
 	return;
-	post("matrixDataType = %d, rows = %d, cols = %d\n", m->header.matrixDataType, m->header.rowCount, m->header.columnCount);
-	jclass c = (*env)->FindClass(env, "cnmat/sdif/MatrixHeader");
-	post("class = %p", c);
-	jmethodID cid = (*env)->GetMethodID(env, c, "<init>", "(Ljava/lang/String;III)V");
-	post("cid = %p", cid);
-	post("%s", m->header.matrixType);
-	jstring tmpString = (*env)->NewStringUTF(env, m->header.matrixType);
-	jobject o = (*env)->NewObject(env, c, cid, tmpString, m->header.matrixDataType, m->header.rowCount, m->header.columnCount);
-	post("o = %p", o);
 
+	jstring matrixType_jstring = (*env)->NewStringUTF(env, m->header.matrixType);
+	jobject o = (*env)->NewObject(env, 
+				      sdif_matrix_header_class, 
+				      sdif_matrix_header_ctor, 
+				      matrixType_jstring, 
+				      m->header.matrixDataType, 
+				      m->header.rowCount, 
+				      m->header.columnCount);
 	return o;
 }
 
-int SDIFJava_test_init(){
-	CNMAT_MMJ_SDIF_init(error_report);
-	post("INIT WAS SUCCESSFUL");
-	return 1;
-}
-
 void error_report(SDIFresult r, const char *st){
-	if(r) error("SDIF native lib: %s: %s", st, SDIF_GetErrorString(r));
-	else error("SDIF native lib: %s", st);
+	if(r) error("SDIF_native_lib: %s: %s", st, SDIF_GetErrorString(r));
+	else error("SDIF_native_lib: %s", st);
 }
