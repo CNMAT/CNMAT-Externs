@@ -1,0 +1,6 @@
+;udpsend.def
+
+LIBRARY	udpsend.mxe
+
+EXPORTS
+		main

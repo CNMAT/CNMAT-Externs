@@ -1,0 +1,6 @@
+;udpreceive.def
+
+LIBRARY	udpreceive.mxe
+
+EXPORTS
+		main

@@ -1,0 +1,6 @@
+;net.send.udp.def
+
+LIBRARY	net.send.udp.mxe
+
+EXPORTS
+		main

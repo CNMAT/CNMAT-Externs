@@ -1,0 +1,6 @@
+;net.recv.udp.def
+
+LIBRARY	net.recv.udp.mxe
+
+EXPORTS
+		main
