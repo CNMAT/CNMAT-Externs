@@ -18,6 +18,22 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "comment",
+					"text" : "select a cell in the first column to rename a file, and in the second column to change the stream number.  The 3rd and 4th columns can't be edited.",
+					"linecount" : 2,
+					"id" : "obj-23",
+					"fontname" : "Arial",
+					"patching_rect" : [ 150.0, 30.0, 404.0, 34.0 ],
+					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"fontsize" : 12.0,
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"presentation_rect" : [ 466.0, 58.0, 0.0, 0.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "comment",
 					"text" : "drag a file or a folder of sdif files here to load them",
 					"id" : "obj-8",
 					"fontname" : "Arial",

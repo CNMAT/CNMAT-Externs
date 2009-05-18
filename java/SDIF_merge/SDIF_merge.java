@@ -389,9 +389,11 @@ public class SDIF_merge extends MaxObject{
 				break;
 			case 2:
 				// throw error
+				error("SDIF_merge: you can't edit the frame type");
 				break;
 			case 3:
 				// throw error
+				error("SDIF_merge: you can't edit the start time");
 				break;
 			}
 			selection.val = args[0];
