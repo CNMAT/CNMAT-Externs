@@ -93,6 +93,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 	private int[][] recordState = null;
 
+	private MaxClock syncClock = null;
+
 	public midifile(Atom[] args){
                 if(args.length > 0)
                         numTracks = originalNumTracks = args[0].getInt() + 1;
@@ -102,6 +104,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		if(args.length > 3) def_channel = args[3].toInt();
 
 		recordState = new int[numTracks][16];
+
+		syncClock = new MaxClock(this, "sync");
 
                 int inlets[] = new int[numTracks - 1];
                 String INLET_ASSIST[] = new String [numTracks - 1];
@@ -120,6 +124,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		initSequence();
 
 		version();
+
 	}
 
 	public void ignoreTempoChanges(int i){
@@ -287,13 +292,15 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 	public void play(){
 		if(sequence == null) return;
-		sequencer.start();
+		//sequencer.start();
+		play(0);
 	}
 
 	public void play(float startPos){
 		if(sequence == null) return;
 		sequencer.setMicrosecondPosition(Math.round(startPos * 1000.f));
 		sequencer.start();
+		syncClock.delay(1);
 	}
 
 	public void stop(){
@@ -620,6 +627,21 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		sequencer.stop();
 		sequencer.close();
 		transmitter.close();
+		syncClock.release();
+	}
+
+	private void sync(){
+		if(!sequencer.isRunning()){
+			return;
+		}
+		long len = sequencer.getMicrosecondLength();
+		long pos = sequencer.getMicrosecondPosition();
+		double s = (double)pos / (double)len;
+		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/sync"), Atom.newAtom(s)});
+		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/time"), Atom.newAtom(pos / 1000.)});
+		if(sequencer.isRunning()){
+			syncClock.delay(1);
+		}
 	}
 
 	////////////////////////////////////////////////////////////
