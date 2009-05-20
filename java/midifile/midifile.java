@@ -51,6 +51,7 @@ VERSION 3.0.1: Sets all note off velocities to 0 by default
 VERSION 3.0.2: Now outputs /text message for meta events like markers
 VERSION 3.0.3: Read message now locates file in max's searchpath
 VERSION 3.0.4: Better handling of meta-events
+VERSION 3.1: Sync outlet
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
