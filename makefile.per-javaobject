@@ -5,6 +5,11 @@
 
 PLATFORM = ANY
 
+ifeq ($(strip $(CNMAT_MAX_INSTALL_DIR)),)
+CNMAT_MAX_INSTALL_DIR = ../../../build
+endif
+CNMAT_MAX_INSTALL_DIR_EXISTS = $(CNMAT_MAX_INSTALL_DIR)/exists
+
 # Name of the object is the name of this directory
 # Old way (cygwin "basename" doesn't seem to work) NAME := $(shell basename `pwd`)
 # Nothing in CNMAT's repository should have any whitespace in file or directory
@@ -18,7 +23,7 @@ NAME = $(notdir $(lastword $(strip $(CURDIR))))
 
 # Filenames derived from the name of the object
 SOURCE = $(NAME).java
-HELPFILE = $(NAME).help.pat
+HELPFILE = $(NAME).maxhelp
 
 
 # Making the version number accessible from this Makefile:
@@ -198,3 +203,12 @@ test-info-file:
 	echo POSSIBLE_JAVA_SOURCE_FILE $(POSSIBLE_JAVA_SOURCE_FILE)
 	echo JAVA_SOURCE_FILE $(JAVA_SOURCE_FILE)
 	echo INFO_FILE $(INFO_FILE)
+
+install: $(CNMAT_MAX_INSTALL_DIR_EXISTS)
+	#rm -rf $(CNMAT_MAX_INSTALL_DIR)/*.class
+	cp -R *.class $(CNMAT_MAX_INSTALL_DIR)/
+	cp $(HELPFILE) $(CNMAT_MAX_INSTALL_DIR)/
+	
+$(CNMAT_MAX_INSTALL_DIR_EXISTS):
+	mkdir -p "$(CNMAT_MAX_INSTALL_DIR)"
+	touch "$(CNMAT_MAX_INSTALL_DIR_EXISTS)"
