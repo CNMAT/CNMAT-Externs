@@ -2,6 +2,7 @@ import com.cycling74.max.*;
 import com.cycling74.jitter.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class bpf extends MaxObject{
 	private String drawto = null;
@@ -50,6 +51,50 @@ public class bpf extends MaxObject{
 		drawto = drawto;
 	}
 
+	public void inlet(float f){
+		if(f < 0){
+			f = 0.f;
+		}else if(f > 1){
+			f = 1.f;
+		}
+		// Get the size of the window we're drawing to.  Seems like there must be a better way of doing this...
+		Atom[] size = sk.call("screentoworld", new Atom[]{Atom.newAtom(0), Atom.newAtom(0)});
+		size = sk.call("worldtoscreen", new Atom[]{Atom.newAtom(size[0].toFloat() * -1.), Atom.newAtom(size[1].toFloat() * -1.)});
+		//post("size = " + size[0].toInt() + " " + size[1].toInt());
+		float xs = f * size[0].toFloat();
+		Atom[] tmp = sk.call("screentoworld", new Atom[]{Atom.newAtom(xs)});
+		float xw = tmp[0].toFloat();
+		//post(xs + "");
+		float ys, yw, y, ys1, ys2;
+		int i = 0;
+		for(LinkedList<Point3D> ll : functions){
+			if(xw < ll.getFirst().x || xw > ll.getLast().x){
+				outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(0.0f)});
+			}else if(xw == ll.getFirst().x){
+				Atom[] screen = sk.call("worldtoscreen", Atom.newAtom(ll.getFirst().getCoords()));
+				outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(Math.abs(size[1].toFloat() - screen[1].toFloat()) / size[1].toFloat())});
+			}else{
+				ListIterator<Point3D> it = ll.listIterator();
+				Point3D prev = it.next();
+				Point3D current;
+				while(it.hasNext()){
+					current = it.next();
+					if(xw >= prev.x && xw <= current.x){
+						Atom[] prev_screen = sk.call("worldtoscreen", Atom.newAtom(prev.getCoords()));
+						Atom[] current_screen = sk.call("worldtoscreen", Atom.newAtom(current.getCoords()));
+						float m = ((prev_screen[1].toFloat() - current_screen[1].toFloat()) / 
+							   (prev_screen[0].toFloat() - current_screen[0].toFloat()));
+						float b = prev_screen[1].toFloat() - (m * prev_screen[0].toFloat());
+						ys = (m * xs) + b;
+						outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(Math.abs(size[1].toFloat() - ys) / size[1].toFloat())});
+					}
+					prev = current;
+				}
+			}
+			i++;
+		}
+	}
+
 	public void addFunction(){
 		functions.add(new LinkedList<Point3D>());
 		currentFunction = functions.size() - 1;
@@ -73,6 +118,7 @@ public class bpf extends MaxObject{
 			return;
 		}
 		currentFunction = f;
+		drawFunctions();
 	}
 
 	private int insert(int x, int y){
@@ -223,6 +269,10 @@ public class bpf extends MaxObject{
 			ll.clear();
 		}
 		drawFunctions();
+	}
+
+	public void dump(){
+		error("dump is not implemented yet");
 	}
 
 }
