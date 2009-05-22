@@ -3,6 +3,10 @@ import com.cycling74.jitter.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 public class bpf extends MaxObject{
 	private String drawto = null;
@@ -51,28 +55,39 @@ public class bpf extends MaxObject{
 		drawto = drawto;
 	}
 
+	public void list(Atom[] args){
+		double[] size = getScreenSize();
+		switch(args.length){
+		case 2:
+			insert((int)(args[0].toDouble() * size[0]), (int)(Math.abs(size[1] - (args[1].toDouble() * size[1]))), currentFunction);
+			break;
+		case 3:
+			insert((int)(args[1].toDouble() * size[0]), (int)(Math.abs(size[1] - (args[2].toDouble() * size[1]))), args[0].toInt());
+			break;
+		}
+		drawFunctions();
+	}
+
 	public void inlet(float f){
 		if(f < 0){
 			f = 0.f;
 		}else if(f > 1){
 			f = 1.f;
 		}
-		// Get the size of the window we're drawing to.  Seems like there must be a better way of doing this...
-		Atom[] size = sk.call("screentoworld", new Atom[]{Atom.newAtom(0), Atom.newAtom(0)});
-		size = sk.call("worldtoscreen", new Atom[]{Atom.newAtom(size[0].toFloat() * -1.), Atom.newAtom(size[1].toFloat() * -1.)});
-		//post("size = " + size[0].toInt() + " " + size[1].toInt());
-		float xs = f * size[0].toFloat();
+		double[] size = getScreenSize();
+
+		double xs = f * size[0];
 		Atom[] tmp = sk.call("screentoworld", new Atom[]{Atom.newAtom(xs)});
-		float xw = tmp[0].toFloat();
+		double xw = tmp[0].toDouble();
 		//post(xs + "");
-		float ys, yw, y, ys1, ys2;
+		double ys, yw, y, ys1, ys2;
 		int i = 0;
 		for(LinkedList<Point3D> ll : functions){
 			if(xw < ll.getFirst().x || xw > ll.getLast().x){
 				outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(0.0f)});
 			}else if(xw == ll.getFirst().x){
 				Atom[] screen = sk.call("worldtoscreen", Atom.newAtom(ll.getFirst().getCoords()));
-				outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(Math.abs(size[1].toFloat() - screen[1].toFloat()) / size[1].toFloat())});
+				outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(Math.abs(size[1] - screen[1].toDouble()) / size[1])});
 			}else{
 				ListIterator<Point3D> it = ll.listIterator();
 				Point3D prev = it.next();
@@ -82,17 +97,27 @@ public class bpf extends MaxObject{
 					if(xw >= prev.x && xw <= current.x){
 						Atom[] prev_screen = sk.call("worldtoscreen", Atom.newAtom(prev.getCoords()));
 						Atom[] current_screen = sk.call("worldtoscreen", Atom.newAtom(current.getCoords()));
-						float m = ((prev_screen[1].toFloat() - current_screen[1].toFloat()) / 
-							   (prev_screen[0].toFloat() - current_screen[0].toFloat()));
-						float b = prev_screen[1].toFloat() - (m * prev_screen[0].toFloat());
+						double m = ((prev_screen[1].toDouble() - current_screen[1].toDouble()) / 
+							   (prev_screen[0].toDouble() - current_screen[0].toDouble()));
+						double b = prev_screen[1].toDouble() - (m * prev_screen[0].toDouble());
 						ys = (m * xs) + b;
-						outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(Math.abs(size[1].toFloat() - ys) / size[1].toFloat())});
+						outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(f), Atom.newAtom(Math.abs(size[1] - ys) / size[1])});
 					}
 					prev = current;
 				}
 			}
 			i++;
 		}
+	}
+
+	private double[] getScreenSize(){
+		// Get the size of the window we're drawing to.  Seems like there must be a better way of doing this...
+		Atom[] size = sk.call("screentoworld", new Atom[]{Atom.newAtom(0), Atom.newAtom(0)});
+		size = sk.call("worldtoscreen", new Atom[]{Atom.newAtom(size[0].toFloat() * -1.), Atom.newAtom(size[1].toFloat() * -1.)});
+		double[] out = new double[2];
+		out[0] = size[0].toDouble();
+		out[1] = size[1].toDouble();
+		return out;
 	}
 
 	public void addFunction(){
@@ -121,15 +146,21 @@ public class bpf extends MaxObject{
 		drawFunctions();
 	}
 
-	private int insert(int x, int y){
+	private int insert(int x, int y, int cf){
 		double min = 10000000000.;
 		int mini = -1;
 		Atom[] world_atom = sk.call("screentoworld", new Atom[]{Atom.newAtom(x), Atom.newAtom(y)});
 		double[] world = new double[]{world_atom[0].toDouble(), world_atom[1].toDouble(), world_atom[2].toDouble()};
 		int i = 0;
 
-		post("inserting point at " + x + " " + y);
-		LinkedList<Point3D> function = functions.get(currentFunction);
+		if(cf > functions.size() - 1){
+			for(i = functions.size() - 1; i < cf; i++){
+				functions.add(new LinkedList<Point3D>());
+			}
+		}
+
+		//post("inserting point at " + x + " " + y);
+		LinkedList<Point3D> function = functions.get(cf);
 		if(function.size() == 0){
 			function.add(new Point3D(world));
 			return 0;
@@ -145,7 +176,7 @@ public class bpf extends MaxObject{
 				return 0;
 			}
 		}
-		for(Point3D p : functions.get(currentFunction).toArray(new Point3D[0])){
+		for(Point3D p : functions.get(cf).toArray(new Point3D[0])){
 			if(Math.abs((p.x - world[0])) < min){
 				min = Math.abs(p.x - world[0]);
 				mini = i;
@@ -153,14 +184,14 @@ public class bpf extends MaxObject{
 			i++;
 		}
 
-		Point3D p = functions.get(currentFunction).get(mini);
+		Point3D p = functions.get(cf).get(mini);
 		if(p.x < world[0]){		
 			//post("inserting " + world[0] + " into slot " + mini + 1);
-			functions.get(currentFunction).add(mini + 1, new Point3D(world));
+			functions.get(cf).add(mini + 1, new Point3D(world));
 			return mini + 1;
 		}else{
 			//post("inserting " + world[0] + " into slot " + mini);
-			functions.get(currentFunction).add(mini, new Point3D(world));
+			functions.get(cf).add(mini, new Point3D(world));
 			return mini;
 		}
 	}
@@ -210,7 +241,7 @@ public class bpf extends MaxObject{
 		if(selected != -1){
 			remove(selected);
 		}
-		selected = insert(args[0].toInt(), args[1].toInt());
+		selected = insert(args[0].toInt(), args[1].toInt(), currentFunction);
 		if(args[2].toInt() == 0){
 			selected = -1;
 		}
@@ -272,7 +303,82 @@ public class bpf extends MaxObject{
 	}
 
 	public void dump(){
-		error("dump is not implemented yet");
+		int i = 0;
+		double[] size = getScreenSize();
+		for(LinkedList<Point3D> ll : functions){
+			for(Point3D p : ll.toArray(new Point3D[0])){
+				Atom[] screen = sk.call("worldtoscreen", Atom.newAtom(p.getCoords()));
+				outlet(0, new Atom[]{Atom.newAtom(i), Atom.newAtom(screen[0].toDouble() / size[0]), Atom.newAtom(Math.abs(size[1] - screen[1].toDouble()) / size[1])});
+			}
+			i++;
+		}
+	}
+
+	public void write(){
+		String filename = MaxSystem.saveAsDialog("", "");
+		if(filename != null){
+			write(filename);
+		}
+	}
+
+	public void write(String filename){
+		File fp = new File(filename);
+		FileWriter fw;
+		try{fw = new FileWriter(fp);}
+		catch(Exception e){
+			e.printStackTrace();
+			return;
+		}
+		String out;
+		int i = 0;
+		double[] size = getScreenSize();
+		for(LinkedList<Point3D> ll : functions){
+			for(Point3D p : ll.toArray(new Point3D[0])){
+				Atom[] screen = sk.call("worldtoscreen", Atom.newAtom(p.getCoords()));
+				out = Atom.newAtom(i) + " " + Atom.newAtom(screen[0].toDouble() / size[0]) + " " + Atom.newAtom(Math.abs(size[1] - screen[1].toDouble()) / size[1]) + "\n";
+				try{fw.write(out);}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			i++;
+		}
+		try{fw.close();}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void read(){
+		String filename = MaxSystem.openDialog("");
+		if(filename != null){
+			read(filename);
+		}
+	}
+
+	public void read(String filename){
+		File fp = new File(filename);
+		BufferedReader br;
+		try{
+			br = new BufferedReader(new FileReader(fp));
+			String s = br.readLine();
+			while(s != null){
+				String[] parsed = s.split(" ");
+				Atom[] l = new Atom[parsed.length];
+				int i = 0;
+				for(String ss : parsed){
+					l[i] = Atom.newAtom(new Double(ss));
+					i++;
+				}
+				list(l);
+				s = br.readLine();
+
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return;
+		}
+
 	}
 
 }
