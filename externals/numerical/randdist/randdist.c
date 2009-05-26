@@ -36,7 +36,7 @@ VERSION 1.3.2: Fixed a bug that would cause a crash if randdist was instantiated
 VERSION 1.3.3: Added Gaussdist faker to helpfile, bump version to re-release. -mzed
 VERSION 1.4: Default state, changed dump to distlist, user-defined pmfs are now done with the nonparametric message, bugfixes.
 VERSION 2.0: Rewritten with common code between randdist and randdist~ put in libranddist.h/c
-version 2.1: Re-re-factored.  Nonparametric now uses gsl_ran_discrete().
+VERSION 2.1: Re-re-factored.  Nonparametric now uses gsl_ran_discrete().
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -153,7 +153,7 @@ void rdist_bang(t_rdist *x){
 	int i;
 	t_symbol *msg;
 
-	msg = (stride > 1) ? gensym("list") : gensym("float");
+	//msg = (stride > 1) ? gensym("list") : gensym("float");
 
 	//post("buffer: %d, pos: %d, val: %f", x->r_whichBuffer, x->r_bufferPos, out[0].a_w.w_float);
 	if(x->r_dist == ps_nonparametric){
@@ -161,10 +161,16 @@ void rdist_bang(t_rdist *x){
 	}else{
 		x->r_function(x->r_rng, x->r_numVars, x->r_vars, stride, out);
 	}
-	for(i = 0; i < stride; i++){
-		SETFLOAT(x->r_output_buffer + i, out[i]);
-	}	
-	outlet_anything(x->r_out0, msg, stride, x->r_output_buffer);
+
+	if(stride > 1){
+		for(i = 0; i < stride; i++){
+			SETFLOAT(x->r_output_buffer + i, out[i]);
+		}	
+		outlet_list(x->r_out0, NULL, stride, x->r_output_buffer);
+	}else{
+		outlet_float(x->r_out0, out[0]);
+	}
+	//outlet_anything(x->r_out0, msg, stride, x->r_output_buffer);
 }
 
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
