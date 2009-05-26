@@ -39,6 +39,7 @@ float librdist_atom_getfloat(t_atom *a);
 long librdist_atom_getlong(t_atom *a);
 
 void librdist_seed(gsl_rng *rng, long s);
+int makeseed(void);
 
 void librdist_gaussian(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
 void librdist_gaussian_tail(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
