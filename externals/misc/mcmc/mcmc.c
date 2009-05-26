@@ -383,21 +383,10 @@ void mcmc_getNewFreq(t_mcmc *x, double currentFreq, double currentProb, double *
 		norm = mcmc_norm(x->centroid, x->freq_min, x->freq_max);
 		min = currentFreq - (norm * (currentFreq * x->proposal_density_width));
 		max = currentFreq + ((1 - norm) * (currentFreq * x->proposal_density_width));
-		post("currentFreq = %f, norm = %f, min = %f, max = %f, freq_min = %f, freq_max = %f, cent = %f", currentFreq, norm, min, max, x->freq_min, x->freq_max, x->centroid);
-		post("pdw = %f", x->proposal_density_width);
+		PDEBUG("currentFreq = %f, norm = %f, min = %f, max = %f, freq_min = %f, freq_max = %f, cent = %f", currentFreq, norm, min, max, x->freq_min, x->freq_max, x->centroid);
+		PDEBUG("pdw = %f", x->proposal_density_width);
 		proposal_x = (r * (max - min)) + min;
-		post("proposal = %f", proposal_x);
-		//r = mcmc_gaussdist(x, x->pro_stdev);
-		/*
-		min = currentFreq * pow(pow(2., 1. / 12.), -x->minstep);
-		max = currentFreq * pow(pow(2., 1. / 12.), x->maxstep);
-		ml = (currentFreq - min) / (max - min);
-		beta = (((1 - ml) / ml) * x->a) - ((1 - (x->a * ml)) / ml);
-		r = gsl_ran_beta(x->rng, x->a, beta);
-		PDEBUG("min = %f, max = %f, ml = %f, beta = %f, r = %f %f", min, max, ml, beta, r, (r * (max - min)) + min);
-		//proposal_x = currentFreq * (pow(pow(2., 1./12.), (r * (max - min)) + min));
-		proposal_x = (r * (max - min)) + min;
-		*/
+		PDEBUG("proposal = %f", proposal_x);
 		++i;
 	}
 	// if we couldn't find a new freq for some reason (stdev is too small, for instance)
@@ -436,24 +425,7 @@ void mcmc_getNewFreq(t_mcmc *x, double currentFreq, double currentProb, double *
 	PDEBUG("q01 = %f, q10 = %f, %f, %f %f", q01, q10, q01 / q10, (proposal_y / currentProb), ratio);
 
 	PDEBUG("r = %f, pro_x = %f, pro_y = %f, current_y = %f, ratio = %f", r, proposal_x, proposal_y, currentProb, ratio);
-	/*
-	q01 = ((currentFreq - min) / (max - min)) - ((proposal_x - min) / (max - min));
-	PDEBUG("q01 raw = %f", q01);
-	if(q01 < 0){
-		q01 += 1;
-	}
-	q01 = gsl_ran_beta_pdf(q01, x->a, beta);
-	q10 = ((proposal_x - min) / (max - min)) - ((currentFreq - min) / (max - min));
-	PDEBUG("q10 raw = %f", q10);
-	if(q10 < 0){
-		q10 += 1;
-	}
-	q10 = gsl_ran_beta_pdf(q10, x->a, beta);
-	ratio = (proposal_y / currentProb) * (q01 / q10);
-	PDEBUG("q01 = %f, q10 = %f, %f, %f %f", q01, q10, q01 / q10, (proposal_y / currentProb), ratio);
 
-	PDEBUG("r = %f, pro_x = %f, pro_y = %f, current_y = %f, ratio = %f", r, proposal_x, proposal_y, currentProb, ratio);
-	*/
 	if(ratio >= 1){
 		*newFreq = proposal_x;
 		*newProb = proposal_y;
@@ -473,7 +445,6 @@ void mcmc_getNewFreq(t_mcmc *x, double currentFreq, double currentProb, double *
 			return;
 		}
 	}
-	//if(x->arrayIn[2 * 
 }
 
 void mcmc_clock_cb(t_mcmc *x, t_symbol *msg, long argc, t_atom *argv){
