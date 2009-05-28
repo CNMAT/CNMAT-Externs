@@ -120,7 +120,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		createInfoOutlet(false);
 
                 setInletAssist(INLET_ASSIST);
-                setOutletAssist(new String[]{"Playback", "Dump", "Bang when done playing or dumping", "Information about the midifile"});
+                setOutletAssist(new String[]{"Playback", "Dump", "Information about the midifile", "Bang when done playing or dumping"});
 
 		initSequence();
 
