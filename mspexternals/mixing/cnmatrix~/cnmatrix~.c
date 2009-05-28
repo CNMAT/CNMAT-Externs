@@ -39,6 +39,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <math.h>
 #include "jit.common.h"
 
+#define FRAME   2
 #define FAST	1
 #define SMOOTH  0
 
@@ -55,15 +56,18 @@ typedef struct _matrix {
 	t_float *coeffLists;   //  panning factors		
 	float *lasty;
 	float slide;
+    int mode;
 } t_matrix;
 
-t_symbol *ps_fast, *ps_smooth;
+t_symbol *ps_fast, *ps_smooth, *ps_frame;
 
 t_int *matrix_perform_fast(t_int *w);
 t_int *matrix_perform_smooth(t_int *w);
+t_int *matrix_perform_frame(t_int *w);
 void matrix_dsp(t_matrix *x, t_signal **sp, short *connect);
 void matrix_fast(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
 void matrix_smooth(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
+void matrix_frame(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
 void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv);
 float mygetfloat(t_atom *a);
 float mygetlong(t_atom *a);
@@ -78,12 +82,14 @@ void main(void) {
 	
 	ps_fast    = gensym("fast");
 	ps_smooth  = gensym("smooth");
+	ps_frame  = gensym("frame");
 
 	setup( &matrix_class, matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
 		
 	addmess((method)matrix_dsp, "dsp", A_CANT, 0);
 	addmess((method)matrix_fast, "fast", A_GIMME, 0);
 	addmess((method)matrix_smooth, "smooth", A_GIMME, 0);
+	addmess((method)matrix_frame, "frame", A_GIMME, 0);
 	addmess((method)matrix_list, "list", A_GIMME, 0);
 	addmess((method)jit_matrix, "jit_matrix", A_GIMME, 0);
 	addmess((method)matrix_slide, "slide", A_FLOAT, 0);
@@ -157,11 +163,11 @@ t_int *matrix_perform_smooth(t_int *w) {
 	float *inptr, *outptr;
 	float *lasty = x->lasty;
 	float tmp;
-
+    
 	for(i = 0; i < numOutlets; i++){
 		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
-
+    
 	for(j = 0; j < numOutlets * numInlets; j++){
 		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
 		inptr = (float *)(w[(j % numInlets) + 3]);
@@ -180,54 +186,97 @@ t_int *matrix_perform_smooth(t_int *w) {
 		}
 		lasty++;
 	}
+    
+	/*
+     post("***************");
+     for(i = 0; i < numInlets + numOutlets; i++){
+     post("%d %p", i, w[i + 3]);
+     }
+     */
+	/*
+     inptr = (float *)(w[3]);
+     for(j = 0; j < numOutlets; j++){
+     outptr = (float *)(w[numInlets + j + 3]);
+     coeff = *coeffptr++;
+     for(k = 0; k < n; k+=4){
+     tmp = (*lasty + ((coeff - *lasty) / (x->slide / 4)));
+     *outptr++ = tmp * *inptr++;
+     *outptr++ = tmp * *inptr++;
+     *outptr++ = tmp * *inptr++;
+     *outptr++ = tmp * *inptr++;
+     if(fabsf(coeff - *lasty) < 10e-18){
+     *lasty = coeff;
+     }else{
+     *lasty = tmp;
+     }
+     }
+     lasty++;
+     }
+     
+     for(i = 1; i < numInlets; i++){
+     inptr = (float *)(w[i + 3]);
+     for(j = 0; j < numOutlets; j++){
+     outptr = (float *)(w[numInlets + j + 3]);
+     coeff = *coeffptr++;
+     for(k = 0; k < n; k+=4){
+     tmp = (*lasty + ((coeff - *lasty) / (x->slide / 4)));
+     *outptr++ += tmp * inptr[i];
+     *outptr++ += tmp * inptr[i];
+     *outptr++ += tmp * inptr[i];
+     *outptr++ += tmp * inptr[i];
+     if(fabsf(coeff - *lasty) < 10e-18){
+     *lasty = coeff;
+     }else{
+     *lasty = tmp;
+     }
+     }
+     lasty++;
+     }
+     }
+     */
+	return w + numInlets + numOutlets + 3;
+}
 
-	/*
-	post("***************");
-	for(i = 0; i < numInlets + numOutlets; i++){
-		post("%d %p", i, w[i + 3]);
+// this mode does linear interpolation over one signal frame
+t_int *matrix_perform_frame(t_int *w) {
+	int i, j, k;
+	t_matrix *x = (t_matrix *)w[1];
+	int n = (int)w[2];
+	float *in, *out;
+	t_int numInlets = x->numInlets;
+	t_int numOutlets = x->numOutlets;
+	float coeff;
+    float coeffstep;
+	float *coeffptr = x->coeffLists;
+	float *inptr, *outptr;
+	float *lasty = x->lasty;
+	float tmp;
+    
+    
+	for(i = 0; i < numOutlets; i++){
+		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
-	*/
-	/*
-	inptr = (float *)(w[3]);
-	for(j = 0; j < numOutlets; j++){
-		outptr = (float *)(w[numInlets + j + 3]);
+    
+    //x->coeffLists[(in * x->numOutlets) + out] = gain;
+    
+	for(j = 0; j < numOutlets * numInlets; j++){
+		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
+		inptr = (float *)(w[(j % numInlets) + 3]);
 		coeff = *coeffptr++;
-		for(k = 0; k < n; k+=4){
-			tmp = (*lasty + ((coeff - *lasty) / (x->slide / 4)));
-			*outptr++ = tmp * *inptr++;
-			*outptr++ = tmp * *inptr++;
-			*outptr++ = tmp * *inptr++;
-			*outptr++ = tmp * *inptr++;
-			if(fabsf(coeff - *lasty) < 10e-18){
-				*lasty = coeff;
-			}else{
-				*lasty = tmp;
-			}
-		}
+        coeffstep = (coeff - *lasty) / n;
+        if(coeffstep != 0.) {
+            for(k = 1; k <= n; k += 1) {
+                *outptr++ += (*lasty + k * coeffstep) * *inptr++;
+            }
+        } else {
+            for(k = 1; k <= n; k += 1) {
+                *outptr++ += coeff * *inptr++;
+            }
+        }
+        *lasty = coeff;
 		lasty++;
 	}
 
-	for(i = 1; i < numInlets; i++){
-		inptr = (float *)(w[i + 3]);
-		for(j = 0; j < numOutlets; j++){
-			outptr = (float *)(w[numInlets + j + 3]);
-			coeff = *coeffptr++;
-			for(k = 0; k < n; k+=4){
-				tmp = (*lasty + ((coeff - *lasty) / (x->slide / 4)));
-				*outptr++ += tmp * inptr[i];
-				*outptr++ += tmp * inptr[i];
-				*outptr++ += tmp * inptr[i];
-				*outptr++ += tmp * inptr[i];
-				if(fabsf(coeff - *lasty) < 10e-18){
-					*lasty = coeff;
-				}else{
-					*lasty = tmp;
-				}
-			}
-			lasty++;
-		}
-	}
-	*/
 	return w + numInlets + numOutlets + 3;
 }
 
@@ -244,9 +293,13 @@ void matrix_dsp(t_matrix *x, t_signal **sp, short *connect) {
 			
 	num += 2; // x and n
 
-	if (x->version == FAST) 
+	if (x->version == FAST) {
 		dsp_addv(matrix_perform_fast, num, (void **)w);
-	else dsp_addv(matrix_perform_smooth, num, (void **)w);
+    } else if (x->version == SMOOTH) {
+        dsp_addv(matrix_perform_smooth, num, (void **)w);
+    } else if (x->version == FRAME) {
+        dsp_addv(matrix_perform_frame, num, (void **)w);
+    }
 }
 
 void matrix_fast(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
@@ -255,6 +308,10 @@ void matrix_fast(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
 
 void matrix_smooth(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
 	x->version = SMOOTH;
+}
+
+void matrix_frame(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
+	x->version = FRAME;
 }
 
 void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
@@ -425,10 +482,14 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
 	else x->numOutlets = 2; // Just a default value
 		
 	// Look at 3rd argument
-	if (argv[2].a_w.w_sym == ps_fast)
+	if (argv[2].a_w.w_sym == ps_fast) {
 		x->version = FAST;
-	else x->version = SMOOTH; // smooth is default
-
+    } else if(argv[2].a_w.w_sym == ps_frame) {
+        x->version = FRAME;
+    } else {
+        x->version = SMOOTH; // smooth is default
+    }
+    
 	x->Inlets = t_getbytes(x->numInlets * sizeof(t_float*));
 	x->Outlets = t_getbytes(x->numOutlets * sizeof(t_float*));
 	x->w = t_getbytes((x->numInlets + x->numOutlets + 2) * sizeof(t_int*));
@@ -447,7 +508,9 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
 }
 
 void  matrix_free(t_matrix *x) {
-	dsp_free(&(x->m_obj));
+
+    dsp_free((t_pxobject *)x);
+    
 	if (x->Inlets){
 		free(x->Inlets);
 	}
@@ -459,7 +522,12 @@ void  matrix_free(t_matrix *x) {
 	}
 	if(x->coeffLists){
 		free(x->coeffLists);
-	}	dsp_free((t_pxobject *)x);
+	}
+    
+    if(x->lasty) {
+        free(x->lasty);
+    }
+	
 }
 
 void matrix_slide(t_matrix *x, double slide){
