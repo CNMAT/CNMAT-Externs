@@ -49,7 +49,7 @@ VERSION 0.1: First version
 void *acc_class;
 
 #ifndef MAXFLOAT
-#defne MAXFLOAT ((float)3.40282346638528860e+38)
+#define MAXFLOAT ((float)3.40282346638528860e+38)
 #endif
 
 typedef struct _t_acc
