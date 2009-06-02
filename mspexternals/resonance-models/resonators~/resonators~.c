@@ -86,6 +86,8 @@ VERSION 1.9992: Fixed de-normalization problem using SSE
 #define OGAIN
 #define xUNROLL
 
+#define SQUASH_DENORMALS
+
 void *resonators_class;
 #define MAXRESONANCES 1024
 typedef  struct resdesc
@@ -169,10 +171,12 @@ const 	t_float *in = (t_float *)(w[2]);
 		op->ping = -1;
 	}
 
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
 		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
 		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 #endif
 	for(j=0;j<n;j+=4)
 	{
@@ -213,8 +217,10 @@ const 	t_float *in = (t_float *)(w[2]);
 		out += 4;
 		in += 4;
 	}
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 	_mm_setcsr(oldMXCSR); 
+#endif
 #endif
 
 #ifdef UNDERFLOWCHECK
@@ -257,10 +263,12 @@ t_int *resonators2_perform(t_int *w)
 		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
 		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
 		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 #endif
 	for(j=0;j<n;j+=4)
 	{
@@ -291,8 +299,10 @@ t_int *resonators2_perform(t_int *w)
 		out[3] = o3;
 		out += 4;
 	}
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 	_mm_setcsr(oldMXCSR); 
+#endif
 #endif
 #ifdef UNDERFLOWCHECK
 	/* underflow check */
@@ -338,10 +348,12 @@ t_int *iresonators_perform(t_int *w)
 	}
 
 	{
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
 		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
 		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 #endif
 		resdesc *f = op->base;
 		for(j=0;j<n;++j)
@@ -447,8 +459,10 @@ if(f[i].og!=0.0f)
 			f[i].out2 = yn;
 		
 		}
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		_mm_setcsr(oldMXCSR); 
+#endif
 #endif
 	}
 #ifdef UNDERFLOWCHECK
@@ -492,10 +506,12 @@ t_int *iresonators2_perform(t_int *w)
 	}
 
 	{
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
 		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
 		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 #endif
 		resdesc *f = op->base;
 		for(j=0;j<n;++j)
@@ -572,8 +588,10 @@ if(f[i].og==0.0f)
 
 		
 		}
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
  _mm_setcsr(oldMXCSR); 
+#endif
 #endif
 	}
 #ifdef UNDERFLOWCHECK	
@@ -623,10 +641,12 @@ t_int *diresonators_perform(t_int *w)
 
 	{
 
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
 		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
 		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 #endif
 		dresdesc *f = op->dbase;
 		for(j=0;j<n;++j)
@@ -729,8 +749,10 @@ if(f[i].og==0.0)
 		f[i].o_og = f[i].og;
 #endif		
 		}
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		_mm_setcsr(oldMXCSR); 
+#endif
 #endif
 	}
 	for(j=0;j<n;++j)
@@ -781,10 +803,12 @@ t_int *diresonators2_perform(t_int *w)
 	}
 
 	{
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
 		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
 		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 #endif
 		dresdesc *f = op->dbase;
 		for(j=0;j<n;++j)
@@ -857,8 +881,10 @@ if(f[i].og==0.0)
 #endif
 		
 		}
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )	
 	_mm_setcsr(oldMXCSR); 
+#endif
 #endif
 	}
 	
