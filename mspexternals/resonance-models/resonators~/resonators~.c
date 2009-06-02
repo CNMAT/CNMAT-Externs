@@ -54,6 +54,7 @@ VERSION 1.997.1: Force Package Info Generation
 VERSION 1.998: Improved help file
 VERSION 1.999: Fixed sample-rate acquisition to happen on every list that is sent not just at instantiation time.
 VERSION 1.9991: Fixed de-normalization problem.
+VERSION 1.9992: Fixed de-normalization problem using SSE
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -168,6 +169,11 @@ const 	t_float *in = (t_float *)(w[2]);
 		op->ping = -1;
 	}
 
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 	for(j=0;j<n;j+=4)
 	{
 		resdesc *f = op->base;
@@ -207,6 +213,9 @@ const 	t_float *in = (t_float *)(w[2]);
 		out += 4;
 		in += 4;
 	}
+#if defined( __i386__ ) || defined( __x86_64__ )	
+	_mm_setcsr(oldMXCSR); 
+#endif
 
 #ifdef UNDERFLOWCHECK
 #define RESEPS 1.e-10f
@@ -248,7 +257,11 @@ t_int *resonators2_perform(t_int *w)
 		op->base[ping].out2 += op->pingsize*op->base[ping].a1prime;
 		op->ping = -1;
 	}
-
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 	for(j=0;j<n;j+=4)
 	{
 		resdesc *f = op->base;
@@ -278,6 +291,9 @@ t_int *resonators2_perform(t_int *w)
 		out[3] = o3;
 		out += 4;
 	}
+#if defined( __i386__ ) || defined( __x86_64__ )	
+	_mm_setcsr(oldMXCSR); 
+#endif
 #ifdef UNDERFLOWCHECK
 	/* underflow check */
 	if(op->nres>0)
@@ -322,9 +338,15 @@ t_int *iresonators_perform(t_int *w)
 	}
 
 	{
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 		resdesc *f = op->base;
 		for(j=0;j<n;++j)
 			out[j] = 0.0f;
+
 		for(i=0;i< nfilters ;++i)
 		{
 			register float b1=f[i].o_b1,b2=f[i].o_b2,a1=f[i].o_a1;
@@ -425,6 +447,9 @@ if(f[i].og!=0.0f)
 			f[i].out2 = yn;
 		
 		}
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		_mm_setcsr(oldMXCSR); 
+#endif
 	}
 #ifdef UNDERFLOWCHECK
 		/* underflow check */
@@ -467,6 +492,11 @@ t_int *iresonators2_perform(t_int *w)
 	}
 
 	{
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 		resdesc *f = op->base;
 		for(j=0;j<n;++j)
 			out[j] = 0.0f;
@@ -542,6 +572,9 @@ if(f[i].og==0.0f)
 
 		
 		}
+#if defined( __i386__ ) || defined( __x86_64__ )	
+ _mm_setcsr(oldMXCSR); 
+#endif
 	}
 #ifdef UNDERFLOWCHECK	
 	/* underflow check */
@@ -589,6 +622,12 @@ t_int *diresonators_perform(t_int *w)
 	}
 
 	{
+
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 		dresdesc *f = op->dbase;
 		for(j=0;j<n;++j)
 			out[j] = 0.0;
@@ -690,6 +729,9 @@ if(f[i].og==0.0)
 		f[i].o_og = f[i].og;
 #endif		
 		}
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		_mm_setcsr(oldMXCSR); 
+#endif
 	}
 	for(j=0;j<n;++j)
 	{
@@ -739,10 +781,14 @@ t_int *diresonators2_perform(t_int *w)
 	}
 
 	{
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR 
+#endif
 		dresdesc *f = op->dbase;
 		for(j=0;j<n;++j)
 			out[j] = 0.0f;
-
 
 
 	for(i=0;i< nfilters ;++i)
@@ -811,6 +857,9 @@ if(f[i].og==0.0)
 #endif
 		
 		}
+#if defined( __i386__ ) || defined( __x86_64__ )	
+	_mm_setcsr(oldMXCSR); 
+#endif
 	}
 	
 	for(j=0;j<n;++j)
@@ -834,7 +883,6 @@ if(f[i].og==0.0)
 #endif
 
 out:
-
 	return (w+4);
 }
 // this is done every time the filter is restarted, in case you blow it up
