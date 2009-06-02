@@ -23,11 +23,13 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
    NAME: cnmatrix~
    DESCRIPTION: similar to matrix~, but takes jitter matricies
-   AUTHORS: John MacCallum, Ville Pulkki
+   AUTHORS: John MacCallum, Andy Schmeder, Ville Pulkki
    COPYRIGHT_YEARS: 2009, 1999
    SVN_REVISION: $LastChangedRevision: 587 $
    VERSION 1.0: First version with jitter matrix support and log xfade
    VERSION 1.0.1: Improvements in efficiency and denormal handling
+   VERSION 1.0.2: Added frame-based linear interpolation mode
+   VERSION 1.0.3: Fixed bug causing incorrect output with large matrix size
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -112,42 +114,29 @@ t_int *matrix_perform_fast(t_int *wAsT_int) {
 	t_float *inptr;
 	t_int numInlets = x->numInlets;
 	t_int numOutlets = x->numOutlets;
-	t_float *coeffptr;
+	t_float *coeffptr = x->coeffLists;
 	t_float coeff; 
 	
-	// Inlets and Outlets
-	for (k=0; k<numInlets; k++)
-		in[k] = (t_float *)(w[k+3]);
-
-	for (k=0; k<numOutlets; k++)
-		out[k] = (t_float *)(w[numInlets+k+3]);	
+	for(i = 0; i < numOutlets; i++){
+		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
+	}
 	
-	
-	// first channel panning
-	coeffptr=x->coeffLists;
-	j=0;
-	for (k=0; k<numOutlets; k++){
-		outptr= out[k];
+	for(j = 0; j < (numOutlets * numInlets); j++) {
+		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
+		inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
+		
 		coeff = *coeffptr++;
-		inptr = in[j];
-		if(coeff != 0.0)
-			for (i=0; i<n; ++i)
-				*outptr++ = *inptr++ * coeff; 
-		else
-			for (i=0; i<n; ++i)
-				*outptr++ = 0.0; 
-	}		
-	// other channels panning
-	for(j=1;j<numInlets; j++){
-		for (k=0; k<numOutlets; k++){
-			outptr= out[k];
-			coeff = *coeffptr++;
-			inptr = in[j];
-			if(coeff != 0.0)
-				for (i=0; i<n; ++i)
-					*outptr++ += *inptr++ * coeff; 
-		}	
-	}		
+		
+		for(k = 0; k < n; k += 4) {
+			
+			*outptr++ += coeff * *inptr++;
+			*outptr++ += coeff * *inptr++;
+			*outptr++ += coeff * *inptr++;
+			*outptr++ += coeff * *inptr++;
+			
+		}
+	}
+	
 	return (wAsT_int+numInlets+numOutlets+3);
 }
 
@@ -167,25 +156,31 @@ t_int *matrix_perform_smooth(t_int *w) {
 	for(i = 0; i < numOutlets; i++){
 		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
-    
-	for(j = 0; j < numOutlets * numInlets; j++){
+
+	for(j = 0; j < (numOutlets * numInlets); j++) {
 		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
-		inptr = (float *)(w[(j % numInlets) + 3]);
+		inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
+		
 		coeff = *coeffptr++;
-		for(k = 0; k < n; k+=4){
+
+		for(k = 0; k < n; k += 4) {
+			
 			tmp = (*lasty + ((coeff - *lasty) / x->slide));
+			
 			*outptr++ += tmp * *inptr++;
 			*outptr++ += tmp * *inptr++;
 			*outptr++ += tmp * *inptr++;
 			*outptr++ += tmp * *inptr++;
+			
 			if(fabsf(coeff - *lasty) < 10e-18){
 				*lasty = coeff;
-			}else{
+			} else{
 				*lasty = tmp;
 			}
+			
 		}
 		lasty++;
-	}
+	}		
     
 	/*
      post("***************");
@@ -261,7 +256,7 @@ t_int *matrix_perform_frame(t_int *w) {
     
 	for(j = 0; j < numOutlets * numInlets; j++){
 		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
-		inptr = (float *)(w[(j % numInlets) + 3]);
+		inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
 		coeff = *coeffptr++;
         coeffstep = (coeff - *lasty) / n;
         if(coeffstep != 0.) {
@@ -353,6 +348,9 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 			n = dim[0];
 			rowstride = in_minfo.dimstride[1];
 			colstride = in_minfo.dimstride[0];
+			
+			//post("n = %d, rowstride = %d, colstride = %d", n, rowstride, colstride);
+			
 			if (in_minfo.type==_jit_sym_char) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
@@ -378,6 +376,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
 						jit_atom_setfloat(&(a_coord[i]), *((float *)ip));
+						//post("j = %d, i = %d, f = %f", j, i, *((float *)ip));
 						matrix_setgains(x, j, i, *((float *)ip));
 						ip += rowstride;
 					}
