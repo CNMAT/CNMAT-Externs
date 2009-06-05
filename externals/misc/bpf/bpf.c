@@ -30,6 +30,11 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
+/*
+todo:
+extend to 0 and 1 function
+ */
+
 #include "version.h" 
 #include "ext.h" 
 #include "ext_obex.h" 
@@ -86,8 +91,17 @@ void bpf_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
 t_point *bpf_insertPoint(t_bpf *x, t_pt screen_coords, int functionNum);
 void bpf_removePoint(t_bpf *x, t_point *point, int functionNum);
 void bpf_clear(t_bpf *x);
+//void bpf_read(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
+//void bpf_doread(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
+//void bpf_write(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
+//void bpf_dowrite(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 int main(void); 
 void *bpf_new(t_symbol *s, long argc, t_atom *argv); 
+
+
+void myobject_write(t_bpf *x, t_symbol *s);
+void myobject_dowrite(t_bpf *x, t_symbol *s);
+void myobject_writefile(t_bpf *x, char *filename, short path);
 
 void bpf_paint(t_bpf *x, t_object *patcherview){ 
  	t_rect rect; 
@@ -165,7 +179,7 @@ void bpf_editSel(t_bpf *x, double xx, double yy){
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.b_ob), &r);
 	bpf_getScreenCoords(r, norm_coords, &screen_coords);
-	post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
+	//post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
 	bpf_removePoint(x, x->selected, x->currentFunction);
 	x->selected = bpf_insertPoint(x, screen_coords, x->currentFunction);
 	jbox_redraw(&(x->box));
@@ -521,14 +535,142 @@ void bpf_free(t_bpf *x){
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
+		t_point *next = p->next;
 		while(p){
 			if(p){
 				free(p);
 			}
-			p = p->next;
+			p = next;
+			next = next->next;
 		}
 	}
 } 
+
+/*
+void bpf_read(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
+	defer(x, (method)bpf_doread, msg, argc, argv);
+}
+
+void bpf_doread(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
+	char name[512];
+	short volptr;
+	long typeptr;
+	if(argc){
+		sprintf(name, "%s", (atom_getsym(argv))->s_name);
+		if(locatefile_extended(name, &volptr, &typeptr, NULL, 0)){
+			error("bpf: couldn't find %s", name);
+			return;
+		}
+	}else{
+		if(open_dialog(name, &volptr, &typeptr, NULL, 0)){
+			return;
+		}
+	}
+	//post("filename = %s, %d", name, volptr);
+	
+	// read the file
+	{
+		t_filehandle fh;
+		char **texthandle;
+
+		if (path_opensysfile(name, volptr, &fh, READ_PERM)) {
+			object_error((t_object *)x, "error opening %s", name);
+			return;
+		}
+		// allocate some empty memory to receive text
+		texthandle = sysmem_newhandle(0);
+		sysfile_readtextfile(fh, texthandle, 0, 0);
+		//post("the file has %ld characters", sysmem_handlesize(texthandle));
+		int i;
+		char *ls = *texthandle, *le;
+		int newline = 1;
+		char buf[256];
+		t_atom argv[3], *ap;
+		long filesize = sysmem_handlesize(texthandle);
+		for(i = 0; i < filesize + 1; i++){
+			if(newline){
+				ls = &((*texthandle)[i]);
+			}
+			if((*texthandle)[i] == '\n' || i == filesize){
+				le = &((*texthandle)[i]);
+				if(le - ls > 0){
+					memcpy(buf, ls, le - ls);
+					buf[(le - ls)] = '\0';
+					char *tok = strtok(buf, " ");
+					double f = 0;
+					ap = &(argv[0]);
+					if(tok){
+						f = atof(tok);
+						atom_setfloat(ap++, f);
+					}
+					while((tok = strtok(NULL, " "))){
+						if(tok){
+							f = atof(tok);
+							atom_setfloat(ap++, f);
+						}
+					}
+					bpf_list(x, NULL, (ap - &(argv[0])), argv);
+				}
+				newline = 1;
+			}else{
+				newline = 0;
+			}
+		}
+		sysfile_close(fh);
+		sysmem_freehandle(texthandle);
+	}
+	x->selected = NULL;
+}
+
+void bpf_write(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
+	defer(x, (method)bpf_dowrite, msg, argc, argv);
+}
+
+void bpf_dowrite(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
+	char name[512];
+	short path;
+	long type;
+	long filetype = 'TEXT';
+	if(argc){
+		sprintf(name, "%s", (atom_getsym(argv))->s_name);
+		path = path_getdefault();
+	}else{
+		if(saveasdialog_extended(name, &path, &type, &filetype, 1)){
+			return;
+		}
+	}
+
+	// write the file
+	{
+		//char buf[512];
+		char *buf = "this sux\n";
+		long err;
+		t_filehandle fh;
+		err = path_createsysfile(name, path, 'TEXT', &fh);
+		if(err){
+			return;
+		}
+		int i;
+		t_pt norm_coords;
+		t_point *p;
+		t_rect r;
+		jbox_get_patching_rect(&(x->box.b_ob), &r);
+		for(i = 0; i < x->numFunctions; i++){
+			p = x->functions[i];
+			while(p){
+				bpf_getNormCoords(r, p->screen_coords, &norm_coords);
+				sprintf(buf, "%d %f %f\n", i, norm_coords.x, norm_coords.y);
+				err = sysfile_writetextfile(fh, (t_handle)(&buf), TEXT_LB_NATIVE);
+				if(err){
+					error("bpf: error writing file");
+				}
+				p = p->next;
+			}
+		}
+		sysfile_close(fh);
+	}
+}
+*/
 
 int main(void){ 
  	t_class *c = class_new("bpf", (method)bpf_new, (method)bpf_free, sizeof(t_bpf), 0L, A_GIMME, 0); 
@@ -550,6 +692,9 @@ int main(void){
 	class_addmethod(c, (method)bpf_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_clear, "clear", 0);
 	class_addmethod(c, (method)bpf_dump, "dump", 0);
+	//class_addmethod(c, (method)bpf_read, "read", A_GIMME, 0);
+	//class_addmethod(c, (method)bpf_write, "write", A_GIMME, 0);
+	//class_addmethod(c, (method)myobject_write, "test", A_DEFSYM, 0);
 
  	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
 
@@ -633,4 +778,3 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
  	} 
  	return NULL; 
 } 
-
