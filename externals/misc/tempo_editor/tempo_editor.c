@@ -46,6 +46,7 @@ extend to 0 and 1 function
 #include "version.c" 
 
 #define MAX_NUM_FUNCTIONS 256 
+#define POINT_WIDTH 14
 
 typedef struct _point{ 
  	t_pt screen_coords; 
@@ -93,7 +94,7 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan);
 void te_computePhaseError(t_plan *plan);
 double te_computeTempo(double t, t_plan *p);
 double te_computePhase(double t, t_plan *p);
-void te_editSel(t_te *x, double xx, double yy);
+void te_editSel(t_te *x, double xx, double yy, double zz);
 void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_float(t_te *x, double f);
 void te_find_btn(t_point *function, double x, t_point **left, t_point **right);
@@ -150,57 +151,10 @@ void te_paint(t_te *x, t_object *patcherview){
  	jgraphics_rectangle(g, 0., 0., rect.width, rect.height); 
  	jgraphics_fill(g); 
 
-	// draw points and lines between them
- 	{ 
-		critical_enter(x->lock);
-		int i;
-		for(i = 0; i < x->numFunctions; i++){
-			t_point *p = x->functions[i];
-			if(p){
-				jgraphics_move_to(g, p->screen_coords.x, p->screen_coords.y);
-				if(p == x->selected){
-					jgraphics_set_source_jrgba(g, &(x->selectionColor));
-				}else{
-					if(i == x->currentFunction){
-						jgraphics_set_source_jrgba(g, &(x->pointColor));
-					}else{
-						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
-					}
-				}
-				jgraphics_ellipse(g, p->screen_coords.x - 3., p->screen_coords.y - 3., 6., 6.);
-				jgraphics_fill(g);
-				p = p->next;
-			}
-			while(p){
-				//post("drawing point %f %f", p->screen_coords.x, p->screen_coords.y);
-				t_pt norm_coords;
-				if(p == x->selected){
-					jgraphics_set_source_jrgba(g, &(x->selectionColor));
-				}else{
-					if(i == x->currentFunction){
-						jgraphics_set_source_jrgba(g, &(x->pointColor));
-					}else{
-						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
-					}
-				}
-				jgraphics_ellipse(g, p->screen_coords.x - 3., p->screen_coords.y - 3., 6., 6.);
-				jgraphics_fill(g);
-				if(i == x->currentFunction){
-					jgraphics_set_source_jrgba(g, &(x->lineColor));
-				}else{
-					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
-				}
-				jgraphics_move_to(g, p->prev->screen_coords.x, p->prev->screen_coords.y);
-				jgraphics_line_to(g, p->screen_coords.x, p->screen_coords.y);
-				jgraphics_stroke(g);
-				p = p->next;
-			}
-		}
-		critical_exit(x->lock);
- 	} 
+	critical_enter(x->lock);
 
+	// draw the beat lines
 	{
-		critical_enter(x->lock);
 		jgraphics_set_source_jrgba(g, &(x->lineColor));
 		int i;
 		double prev_t = te_scale(0, 0, rect.width, x->time_min, x->time_max);
@@ -223,8 +177,90 @@ void te_paint(t_te *x, t_object *patcherview){
 			prev_t = t;
 			prev_phase = p;
 		}
-		critical_exit(x->lock);
 	}
+
+	// draw lines
+ 	{ 
+		int i;
+		jgraphics_set_source_jrgba(g, &(x->lineColor));
+		jgraphics_set_line_width(g, 1); 
+		for(i = 0; i < x->numFunctions; i++){
+			t_point *p = x->functions[i];
+			if(p){
+				jgraphics_move_to(g, p->screen_coords.x, p->screen_coords.y);
+				p = p->next;
+			}
+			while(p){
+				t_pt norm_coords;
+				jgraphics_move_to(g, p->prev->screen_coords.x, p->prev->screen_coords.y);
+				jgraphics_line_to(g, p->screen_coords.x, p->screen_coords.y);
+				jgraphics_stroke(g);
+				p = p->next;
+			}
+		}
+ 	} 
+
+	// draw points 
+ 	{ 
+		int i;
+		double ps = POINT_WIDTH; // point size
+		double ps2 = ps / 2.; // point size divided by 2
+ 		jgraphics_set_line_width(g, 0.25); 
+		for(i = 0; i < x->numFunctions; i++){
+			t_point *p = x->functions[i];
+			double xx, yy;
+			if(p){
+				if(p == x->selected){
+					jgraphics_set_source_jrgba(g, &(x->selectionColor));
+				}else{
+					if(i == x->currentFunction){
+						jgraphics_set_source_jrgba(g, &(x->pointColor));
+					}else{
+						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
+					}
+				}
+				jgraphics_ellipse(g, p->screen_coords.x - ps2, p->screen_coords.y - ps2, ps, ps);
+				jgraphics_fill(g);
+
+				jgraphics_set_source_jrgba(g, &(x->bgcolor));
+				jgraphics_move_to(g, p->screen_coords.x, p->screen_coords.y);
+
+				xx = ps2 * sin(2 * M_PI * p->phase);
+				yy = ps2 * cos(2 * M_PI * p->phase);
+				jgraphics_line_to(g, p->screen_coords.x + xx, p->screen_coords.y - yy);
+				jgraphics_stroke(g);
+
+				p = p->next;
+			}
+			while(p){
+				t_pt norm_coords;
+
+				if(p == x->selected){
+					jgraphics_set_source_jrgba(g, &(x->selectionColor));
+				}else{
+					if(i == x->currentFunction){
+						jgraphics_set_source_jrgba(g, &(x->pointColor));
+					}else{
+						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
+					}
+				}
+				jgraphics_ellipse(g, p->screen_coords.x - ps2, p->screen_coords.y - ps2, ps, ps);
+				jgraphics_fill(g);
+
+ 				jgraphics_set_line_width(g, 1); 
+				jgraphics_set_source_jrgba(g, &(x->bgcolor));
+				jgraphics_move_to(g, p->screen_coords.x, p->screen_coords.y);
+
+				xx = ps2 * sin(2 * M_PI * p->phase);
+				yy = ps2 * cos(2 * M_PI * p->phase);
+				jgraphics_line_to(g, p->screen_coords.x + xx, p->screen_coords.y - yy);
+				jgraphics_stroke(g);
+
+				p = p->next;
+			}
+		}
+ 	} 
+	critical_exit(x->lock);
 } 
 
 t_int *te_perform(t_int *w){
@@ -247,7 +283,7 @@ t_int *te_perform(t_int *w){
 	for(i = 0; i < n; i++){
 		if(te_isPlanValid(x, in[i], plan) == 0){
 			te_makePlan(x, in[i], x->currentFunction, plan);
-			if(0){//in[i] != 10.0){
+			/*
 				post("time = %f", in[i]);
 				post("plan: %f %f %f %f %f %f", plan->startTime, plan->startFreq, plan->startPhase, plan->endTime, plan->endFreq, plan->endPhase);
 				post("phase_error = %f, m = %f, b = %f", plan->phaseError, plan->m, plan->b);
@@ -257,7 +293,7 @@ t_int *te_perform(t_int *w){
 					post("**********************%f", out_phase[i - 1]);
 					outputphase = 1;
 				}
-			}
+			*/
 		}
 
 		if(0){
@@ -332,7 +368,7 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 	}
 
 	while(p && next){
-		if(f_sc >= p->screen_coords.x && f_sc <= next->screen_coords.x){
+		if(f_sc >= p->screen_coords.x && f_sc < next->screen_coords.x){
 			plan->startTime = te_scale(p->screen_coords.x, 0., r.width, x->time_min, x->time_max);
 			plan->endTime = te_scale(next->screen_coords.x, 0., r.width, x->time_min, x->time_max);
 			plan->startFreq = te_scale(p->screen_coords.y, r.height, 0., x->freq_min, x->freq_max);
@@ -403,7 +439,7 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan){
 				//post("there is no p->next but %f == %f", etsc, x->time_max);
 				return 1;
 			}else{
-				//post("this plan is fucked");
+				//post("man, this plan is fucked");
 				return 0;
 			}
 		}else{
@@ -423,7 +459,7 @@ void te_computePhaseError(t_plan *plan){
 	//post("%f %f", m * plan->startTime + b, m * plan->endTime + b);
 	//post("b = %f", b);
 	//post("this should be 0. -> %f", ((plan->startTime * ((2. * b) + (m * plan->startTime))) / 2.));
-	plan->phaseError_start = ((plan->startTime * ((2. * b) + (m * plan->startTime))) / 2.);
+	plan->phaseError_start = ((plan->startTime * ((2. * b) + (m * plan->startTime))) / 2.) - plan->startPhase;
 	plan->phaseError = ((plan->endTime * ((2. * b) + (m * plan->endTime))) / 2.) - plan->phaseError_start;
 	//post("%f", plan->phaseError);
 	plan->phaseError = plan->phaseError - ((int)(plan->phaseError));
@@ -450,34 +486,40 @@ double te_computePhase(double t, t_plan *p){
 	return (((t * ((2. * p->b) + (p->m * t))) / 2.) - p->phaseError_start) + error;
 }
 
-void te_editSel(t_te *x, double xx, double yy){
-	t_pt screen_coords, norm_coords = {xx, yy};
+void te_editSel(t_te *x, double xx, double yy, double zz){
+	t_pt screen_coords;
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
-	te_getScreenCoords(r, norm_coords, &screen_coords);
+	//te_getScreenCoords(r, norm_coords, &screen_coords);
+	screen_coords.x = te_scale(xx, x->time_min, x->time_max, 0, r.width);
+	screen_coords.y = te_scale(yy, x->freq_min, x->freq_max, r.height, 0);
 	//post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
 	te_removePoint(x, x->selected, x->currentFunction);
 	x->selected = te_insertPoint(x, screen_coords, x->currentFunction);
+	x->selected->phase = zz;
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 	t_atom *a = argv;
 	int functionNum = x->currentFunction;
-	if(argc == 3){
+	if(argc == 4){
 		functionNum = atom_getlong(a++);
 		if(functionNum > x->numFunctions - 1){
 			x->numFunctions = functionNum + 1;
 		}
 	}
-	t_pt screen_coords, norm_coords;
+	t_pt screen_coords;
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
-	norm_coords.x = atom_getfloat(a++);
-	norm_coords.y = atom_getfloat(a++);
-	te_getScreenCoords(r, norm_coords, &screen_coords);
+	//norm_coords.x = atom_getfloat(a++);
+	//norm_coords.y = atom_getfloat(a++);
+	//te_getScreenCoords(r, norm_coords, &screen_coords);
+	screen_coords.x = te_scale(atom_getfloat(a++), x->time_min, x->time_max, 0, r.width);
+	screen_coords.y = te_scale(atom_getfloat(a++), x->freq_min, x->freq_max, r.height, 0);
 	//post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
 	x->selected = te_insertPoint(x, screen_coords, functionNum);
+	x->selected->phase = atom_getfloat(a);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -540,7 +582,7 @@ t_point *te_select(t_te *x, t_pt p){
 	t_point *ptr = x->functions[x->currentFunction];
 	double xdif, ydif;
 	while(ptr){
-		if((xdif = abs(p.x - ptr->screen_coords.x)) < 3 && (ydif = abs(p.y - ptr->screen_coords.y)) < 3){
+		if((xdif = abs(p.x - ptr->screen_coords.x)) < POINT_WIDTH / 2. && (ydif = abs(p.y - ptr->screen_coords.y)) < POINT_WIDTH / 2.){
 			if(xdif + ydif < min){
 				min = xdif + ydif;
 				min_ptr = ptr;
@@ -883,7 +925,7 @@ int main(void){
  	class_addmethod(c, (method)te_mouseup, "mouseup", A_CANT, 0); 
  	class_addmethod(c, (method)te_addFunction, "addFunction", 0); 
  	class_addmethod(c, (method)te_setFunction, "setFunction", A_LONG, 0); 
-	class_addmethod(c, (method)te_editSel, "editSelection", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)te_editSel, "editSelection", A_FLOAT, A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)te_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)te_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)te_clear, "clear", 0);
