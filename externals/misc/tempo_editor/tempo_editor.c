@@ -31,9 +31,9 @@
 */
 
 /*
-todo:
-extend to 0 and 1 function
- */
+  todo:
+  extend to 0 and 1 function
+*/
 
 #include "version.h" 
 #include "ext.h" 
@@ -69,6 +69,8 @@ typedef struct _plan{
 typedef struct _te{ 
  	t_pxjbox box; 
  	void *out_info;
+	void *proxy;
+	long in;
 	t_critical lock;
  	t_point **functions; 
 	t_point *selected;
@@ -78,6 +80,7 @@ typedef struct _te{
 	int dirty; // set this to non-zero to indicate that a point has been added
 	double time_min, time_max;
 	double freq_min, freq_max;
+	int mode;
  	t_jrgba bgcolor; 
 	t_jrgba pointColor;
 	t_jrgba lineColor;
@@ -87,11 +90,13 @@ typedef struct _te{
 
 void *te_class; 
 
+t_symbol *ps_cellblock;
+
 void te_paint(t_te *x, t_object *patcherview); 
 t_int *te_perform(t_int *w);
 void te_makePlan(t_te *x, float f, int function, t_plan *plan);
 int te_isPlanValid(t_te *x, double time, t_plan *plan);
-void te_computePhaseError(t_plan *plan);
+void te_computePhaseError(t_te *x, t_plan *plan);
 double te_computeTempo(double t, t_plan *p);
 double te_computePhase(double t, t_plan *p);
 void te_editSel(t_te *x, double xx, double yy, double zz);
@@ -114,6 +119,8 @@ void te_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords);
 void te_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
 t_point *te_insertPoint(t_te *x, t_pt screen_coords, int functionNum);
 void te_removePoint(t_te *x, t_point *point, int functionNum);
+void te_dump(t_te *x);
+void te_dumpCellblock(t_te *x);
 void te_time_min(t_te *x, double f);
 void te_time_max(t_te *x, double f);
 void te_time_minmax(t_te *x, double min, double max);
@@ -153,6 +160,10 @@ void te_paint(t_te *x, t_object *patcherview){
 
 	critical_enter(x->lock);
 
+	if(x->functions[0] == NULL){
+		post("nothing to draw");
+		goto out;
+	}
 	// draw the beat lines
 	{
 		jgraphics_set_source_jrgba(g, &(x->lineColor));
@@ -161,11 +172,17 @@ void te_paint(t_te *x, t_object *patcherview){
 		t_plan plan;
 		te_makePlan(x, prev_t, x->currentFunction, &plan);
 		double prev_phase = te_computePhase(prev_t, &plan);
-		for(i = 1; i < rect.width * 100; i++){
-			double idx = i / 100.;
+		for(i = 1; i < rect.width * 1; i++){
+			double idx = i / 1.;
 			double t = te_scale(idx, 0, rect.width, x->time_min, x->time_max);
-			te_makePlan(x, t, x->currentFunction, &plan);
+			if(!te_isPlanValid(x, t, &plan)){
+				//post("making plan for time %f", t);
+				te_makePlan(x, t, x->currentFunction, &plan);
+			}
 			double p = te_computePhase(t, &plan);
+			//if(p < prev_phase){
+			//post("went negative at time %f", t);
+			//}
 			//post("%d %f %f %f %f", idx, prev_t, prev_phase, t, p);
 			if((p - ((int)p)) < (prev_phase - ((int)prev_phase))){
 				jgraphics_move_to(g, idx, rect.height);
@@ -205,7 +222,7 @@ void te_paint(t_te *x, t_object *patcherview){
 		int i;
 		double ps = POINT_WIDTH; // point size
 		double ps2 = ps / 2.; // point size divided by 2
- 		jgraphics_set_line_width(g, 0.25); 
+ 		//jgraphics_set_line_width(g, 0.25); 
 		for(i = 0; i < x->numFunctions; i++){
 			t_point *p = x->functions[i];
 			double xx, yy;
@@ -247,7 +264,7 @@ void te_paint(t_te *x, t_object *patcherview){
 				jgraphics_ellipse(g, p->screen_coords.x - ps2, p->screen_coords.y - ps2, ps, ps);
 				jgraphics_fill(g);
 
- 				jgraphics_set_line_width(g, 1); 
+ 				//jgraphics_set_line_width(g, 1); 
 				jgraphics_set_source_jrgba(g, &(x->bgcolor));
 				jgraphics_move_to(g, p->screen_coords.x, p->screen_coords.y);
 
@@ -260,6 +277,7 @@ void te_paint(t_te *x, t_object *patcherview){
 			}
 		}
  	} 
+ out:
 	critical_exit(x->lock);
 } 
 
@@ -284,15 +302,15 @@ t_int *te_perform(t_int *w){
 		if(te_isPlanValid(x, in[i], plan) == 0){
 			te_makePlan(x, in[i], x->currentFunction, plan);
 			/*
-				post("time = %f", in[i]);
-				post("plan: %f %f %f %f %f %f", plan->startTime, plan->startFreq, plan->startPhase, plan->endTime, plan->endFreq, plan->endPhase);
-				post("phase_error = %f, m = %f, b = %f", plan->phaseError, plan->m, plan->b);
-				post("seglen = %f", plan->segmentDuration_sec);
-				post("i = %d", i);
-				if(i != 0){
-					post("**********************%f", out_phase[i - 1]);
-					outputphase = 1;
-				}
+			  post("time = %f", in[i]);
+			  post("plan: %f %f %f %f %f %f", plan->startTime, plan->startFreq, plan->startPhase, plan->endTime, plan->endFreq, plan->endPhase);
+			  post("phase_error = %f, m = %f, b = %f", plan->phaseError, plan->m, plan->b);
+			  post("seglen = %f", plan->segmentDuration_sec);
+			  post("i = %d", i);
+			  if(i != 0){
+			  post("**********************%f", out_phase[i - 1]);
+			  outputphase = 1;
+			  }
 			*/
 		}
 
@@ -318,10 +336,10 @@ t_int *te_perform(t_int *w){
 			out_phase[i] = out_phase[i] + plan->phaseError;
 		}
 		/*
-		if(seg != oldseg){
-			post("segment %d", seg);
-			oldseg = seg;
-		}
+		  if(seg != oldseg){
+		  post("segment %d", seg);
+		  oldseg = seg;
+		  }
 		*/
 		out_phase_wrapped[i] = out_phase[i] - ((int)(out_phase[i]));
 		out_bps[i] = m * in[i] + b;
@@ -362,7 +380,7 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		// we don't want to introduce any phase error here that would cause the 
 		// algorithm to try to compensate for it.
 		plan->endPhase = 0.; 
-		te_computePhaseError(plan);
+		te_computePhaseError(x, plan);
 		plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
 		return;
 	}
@@ -375,18 +393,18 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 			plan->endFreq = te_scale(next->screen_coords.y, r.height, 0., x->freq_min, x->freq_max);
 			plan->startPhase = p->phase;
 			plan->endPhase = next->phase;
-			te_computePhaseError(plan);
+			te_computePhaseError(x, plan);
 			plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
 			/*
-			post("startTime = %f", plan->startTime);
-			post("endTime = %f", plan->endTime);
-			post("startFreq = %f", plan->startFreq);
-			post("endFreq = %f", plan->endFreq);
-			post("startPhase = %f", plan->startPhase);
-			post("endPhase = %f", plan->endPhase);
+			  post("startTime = %f", plan->startTime);
+			  post("endTime = %f", plan->endTime);
+			  post("startFreq = %f", plan->startFreq);
+			  post("endFreq = %f", plan->endFreq);
+			  post("startPhase = %f", plan->startPhase);
+			  post("endPhase = %f", plan->endPhase);
 
-			post("phaseError = %f, %f", plan->phaseError, plan->phaseError_start);
-			post("segdur = %f", plan->segmentDuration_sec);
+			  post("phaseError = %f, %f", plan->phaseError, plan->phaseError_start);
+			  post("segdur = %f", plan->segmentDuration_sec);
 			*/
 			return;
 		}
@@ -404,7 +422,7 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		// we don't want to introduce any phase error here that would cause the 
 		// algorithm to try to compensate for it.  this will effectively be a jump to phase and freq 0.
 		plan->endPhase = 0.; 
-		te_computePhaseError(plan);
+		te_computePhaseError(x, plan);
 		plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
 		return;
 
@@ -424,19 +442,22 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan){
 	stsc = te_scale(plan->startTime, x->time_min, x->time_max, 0, r.width);
 	etsc = te_scale(plan->endTime, x->time_min, x->time_max, 0, r.width);
 	t_point *p = x->functions[x->currentFunction];
+	if(p->screen_coords.x - etsc < .001 && plan->startTime == 0.){
+		return 1;
+	}
 	while(p){
-		if(abs(p->screen_coords.x - stsc) < .001){
+		if(fabs(p->screen_coords.x - stsc) < .001){
 			//post("%f == %f", p->screen_coords.x, stsc);
 			if(p->next){
-				if(abs(p->next->screen_coords.x - etsc) < .001){
+				if(fabs(p->next->screen_coords.x - etsc) < .001){
 					//post("there is p->next and %f == %f", p->next->screen_coords.x, etsc);
 					return 1;
 				}else{
 					//post("there is p->next but %f != %f", p->next->screen_coords.x, etsc);
 					return 0;
 				}
-			}else if(etsc == x->time_max){
-				//post("there is no p->next but %f == %f", etsc, x->time_max);
+			}else if(fabs(etsc - r.width) < 0.001){
+				//post("there is no p->next but %f == %f", etsc, r.width)
 				return 1;
 			}else{
 				//post("man, this plan is fucked");
@@ -450,23 +471,58 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan){
 	return 0;
 }
 
-void te_computePhaseError(t_plan *plan){
+void te_computePhaseError(t_te *x, t_plan *plan){
 	double m = (plan->endFreq - plan->startFreq) / (plan->endTime - plan->startTime);
 	double b = plan->startFreq - (m * plan->startTime);
-	//post("*****");
 	plan->m = m;
 	plan->b = b;
-	//post("%f %f", m * plan->startTime + b, m * plan->endTime + b);
-	//post("b = %f", b);
-	//post("this should be 0. -> %f", ((plan->startTime * ((2. * b) + (m * plan->startTime))) / 2.));
+
+	// this is the offset that we need to subtract in order to get this part of the plan to start at 0.
 	plan->phaseError_start = ((plan->startTime * ((2. * b) + (m * plan->startTime))) / 2.) - plan->startPhase;
+
+	// evaluate the integral at the endpoint and translate by the offset computed above.
 	plan->phaseError = ((plan->endTime * ((2. * b) + (m * plan->endTime))) / 2.) - plan->phaseError_start;
-	//post("%f", plan->phaseError);
+
+	// wrap to [0,1]
 	plan->phaseError = plan->phaseError - ((int)(plan->phaseError));
-	//post("%f", plan->phaseError);
+
+	// compute the actual error
 	plan->phaseError = plan->endPhase - plan->phaseError;
-	//post("%f", plan->phaseError);
-	//post("*****");
+
+	// add 1 to the phase if necessary
+	if(x->mode < 0){
+	}else if(x->mode > 0){
+		plan->phaseError += 1.;
+	}else{
+		if(fabs(plan->phaseError) > 0.5){
+			if(plan->phaseError < 0.){
+				plan->phaseError += 1.;
+			}else{
+				plan->phaseError -= 1.;
+			}
+		}
+	}
+
+	double i;
+	double st, et, inc;
+	st = plan->startTime + plan->segmentDuration_sec;
+	et = (plan->startTime + (2. * plan->segmentDuration_sec));
+	inc = (et - st) / 10.;
+	//post("%f %f %f", st, et, inc);
+	double prev_phase = te_computePhase(st, plan);
+	double prev_time = st;
+	for(i = st + inc; i < et; i+= inc){
+		double ph = te_computePhase(i, plan);
+		//post("%f %f %f %f %f", i, ph, prev_time, prev_phase, ((ph - prev_phase) / (i - prev_time)));
+		if(((ph - prev_phase) / (i - prev_time)) < 0){
+			//post("***");
+			plan->phaseError += 1;
+			return;
+		}
+		prev_phase = ph;
+		prev_time = i;
+	}
+
 }
 
 double te_computeTempo(double t, t_plan *p){
@@ -498,29 +554,95 @@ void te_editSel(t_te *x, double xx, double yy, double zz){
 	x->selected = te_insertPoint(x, screen_coords, x->currentFunction);
 	x->selected->phase = zz;
 	jbox_redraw((t_jbox *)x);
+	te_dumpCellblock(x);
 }
 
 void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 	t_atom *a = argv;
 	int functionNum = x->currentFunction;
-	if(argc == 4){
-		functionNum = atom_getlong(a++);
-		if(functionNum > x->numFunctions - 1){
-			x->numFunctions = functionNum + 1;
-		}
-	}
 	t_pt screen_coords;
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
-	//norm_coords.x = atom_getfloat(a++);
-	//norm_coords.y = atom_getfloat(a++);
-	//te_getScreenCoords(r, norm_coords, &screen_coords);
-	screen_coords.x = te_scale(atom_getfloat(a++), x->time_min, x->time_max, 0, r.width);
-	screen_coords.y = te_scale(atom_getfloat(a++), x->freq_min, x->freq_max, r.height, 0);
-	//post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
-	x->selected = te_insertPoint(x, screen_coords, functionNum);
-	x->selected->phase = atom_getfloat(a);
+
+	switch(proxy_getinlet((t_object *)x)){
+	case 0:
+		if(argc == 4){
+			functionNum = atom_getlong(a++);
+			if(functionNum > x->numFunctions - 1){
+				x->numFunctions = functionNum + 1;
+			}
+		}
+
+		//norm_coords.x = atom_getfloat(a++);
+		//norm_coords.y = atom_getfloat(a++);
+		//te_getScreenCoords(r, norm_coords, &screen_coords);
+		screen_coords.x = te_scale(atom_getfloat(a++), x->time_min, x->time_max, 0, r.width);
+		screen_coords.y = te_scale(atom_getfloat(a++), x->freq_min, x->freq_max, r.height, 0);
+		//post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
+		x->selected = te_insertPoint(x, screen_coords, functionNum);
+		x->selected->phase = atom_getfloat(a);
+		break;
+	case 1:
+		{
+			if(argc == 2){
+				return;
+			}
+			t_point *p = x->functions[x->currentFunction];
+			int i;
+			int row = atom_getlong(&(argv[1]));
+			int col = atom_getlong(&(argv[0]));
+			double val = atom_getfloat(&(argv[2]));
+			for(i = 0; p; i++){
+				if(i == row){
+					break;
+				}
+				p = p->next;
+			}
+			if(p){
+				x->selected = p;
+				switch(col){
+				case 0:
+					// time
+					p->screen_coords.x = te_scale(val, x->time_min, x->time_max, 0, r.width);
+					break;
+				case 1:
+					// freq
+					p->screen_coords.y = te_scale(val, x->freq_min, x->freq_max, r.height, 0);
+					break;
+				case 2:
+					// phase
+					p->phase = val;
+					break;
+				}
+				if(col == 0){
+					double ph = p->phase;
+					t_pt sc = p->screen_coords;
+					te_removePoint(x, p, x->currentFunction);
+					x->selected = te_insertPoint(x, sc, x->currentFunction);
+					x->selected->phase = ph;
+				}
+			}else{
+				t_pt sc = {0., r.height};
+				double ph = 0.;
+				switch(col){
+				case 0:
+					sc.x = te_scale(val, x->time_min, x->time_max, 0, r.width);
+					break;
+				case 1:
+					sc.y = te_scale(val, x->freq_min, x->freq_max, r.height, 0);
+					break;
+				case 2:
+					ph = val;
+					break;
+				}
+				x->selected = te_insertPoint(x, sc, x->currentFunction);
+				x->selected->phase = ph;
+			}
+		}
+		break;
+	}
 	jbox_redraw((t_jbox *)x);
+	te_dumpCellblock(x);
 }
 
 void te_float(t_te *x, double f){
@@ -545,7 +667,7 @@ void te_float(t_te *x, double f){
 			double m = (right->screen_coords.y - left->screen_coords.y) / (right->screen_coords.x - left->screen_coords.x);
 			double b = left->screen_coords.y - (m * left->screen_coords.x);
 			double y = (m * screenx) + b;
-			atom_setfloat(&(out[2]), abs(y - r.height) / r.height);
+			atom_setfloat(&(out[2]), fabs(y - r.height) / r.height);
 			//outlet_list(x->out_main, NULL, 3, out);
 		}
 	}
@@ -582,7 +704,7 @@ t_point *te_select(t_te *x, t_pt p){
 	t_point *ptr = x->functions[x->currentFunction];
 	double xdif, ydif;
 	while(ptr){
-		if((xdif = abs(p.x - ptr->screen_coords.x)) < POINT_WIDTH / 2. && (ydif = abs(p.y - ptr->screen_coords.y)) < POINT_WIDTH / 2.){
+		if((xdif = fabs(p.x - ptr->screen_coords.x)) < POINT_WIDTH / 2. && (ydif = fabs(p.y - ptr->screen_coords.y)) < POINT_WIDTH / 2.){
 			if(xdif + ydif < min){
 				min = xdif + ydif;
 				min_ptr = ptr;
@@ -636,6 +758,7 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	}
 	te_outputSelection(x);
 	jbox_redraw((t_jbox *)x);
+	te_dumpCellblock(x);
 }
 
 void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -654,8 +777,12 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 
 	switch(modifiers){
 	case 0x10:
-		te_removePoint(x, x->selected, x->currentFunction);
-		x->selected = te_insertPoint(x, pt, x->currentFunction);
+		{
+			double ph = x->selected->phase;
+			te_removePoint(x, x->selected, x->currentFunction);
+			x->selected = te_insertPoint(x, pt, x->currentFunction);
+			x->selected->phase = ph;
+		}
 		break;
 	case 0x12:
 		break;
@@ -664,6 +791,7 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	}
 	te_outputSelection(x);
 	jbox_redraw((t_jbox *)x);
+	te_dumpCellblock(x);
 }
 
 void te_mouseup(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -721,12 +849,12 @@ double te_scale(double f, double min_in, double max_in, double min_out, double m
 
 void te_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords){
 	norm_coords->x = screen_coords.x / r.width;
-	norm_coords->y = abs(r.height - screen_coords.y) / r.height;
+	norm_coords->y = fabs(r.height - screen_coords.y) / r.height;
 }
 
 void te_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords){
 	screen_coords->x = norm_coords.x * r.width;
-	screen_coords->y = abs((norm_coords.y * r.height) - r.height);
+	screen_coords->y = fabs((norm_coords.y * r.height) - r.height);
 }
 
 t_point *te_insertPoint(t_te *x, t_pt screen_coords, int functionNum){
@@ -820,45 +948,160 @@ void te_dump(t_te *x){
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
-		atom_setlong(&(out[0]), i);
+		//atom_setlong(&(out[0]), i);
 		while(p){
-			te_getNormCoords(r, p->screen_coords, &norm_coords);
-			atom_setfloat(&(out[1]), norm_coords.x);
-			atom_setfloat(&(out[2]), norm_coords.y);
-			//outlet_list(x->out_dump, NULL, 3, out);
+			//te_getNormCoords(r, p->screen_coords, &norm_coords);
+			atom_setfloat(&(out[0]), te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max));
+			atom_setfloat(&(out[1]), te_scale(p->screen_coords.y, r.height, 0, x->freq_min, x->freq_max));
+			atom_setfloat(&(out[2]), p->phase);
+			outlet_anything(x->out_info, _sym_dump, 3, out);
 			p = p->next;
 		}
 	}
+	atom_setsym(&(out[0]), _sym_done);
+	outlet_anything(x->out_info, _sym_dump, 1, out);
 	//outlet_bang(x->out_bang);
 }
 
+void te_dumpCellblock(t_te *x){
+	int i = 0;
+	t_point *p = x->functions[x->currentFunction];
+	t_rect r;
+	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	t_atom out[4];
+	atom_setsym(&(out[0]), _sym_clear);
+	atom_setsym(&(out[1]), gensym("all"));
+	outlet_anything(x->out_info, ps_cellblock, 2, out);
+	atom_setsym(&(out[0]), _sym_set);
+	while(p){
+		/*
+		if(x->selected == p){
+			atom_setsym(&(out[0]), _sym_select);
+			atom_setlong(&(out[1]), 0);
+			atom_setlong(&(out[2]), i);
+			outlet_anything(x->out_info, ps_cellblock, 3, out);
+			atom_setsym(&(out[0]), _sym_set);
+		}
+		*/
+		atom_setlong(&(out[2]), i);
+		atom_setlong(&(out[1]), 0);
+		atom_setfloat(&(out[3]), te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max));
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		atom_setlong(&(out[1]), 1);
+		atom_setfloat(&(out[3]), te_scale(p->screen_coords.y, r.height, 0, x->freq_min, x->freq_max));
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		atom_setlong(&(out[1]), 2);
+		atom_setfloat(&(out[3]), p->phase);
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		p = p->next;
+		i++;
+	}
+}
+
 void te_time_min(t_te *x, double f){
+	int i;
+	t_point *p;
+	t_rect r;
+	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	for(i = 0; i < x->numFunctions; i++){
+		p = x->functions[i];
+		while(p){
+			p->screen_coords.x = te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max);
+			p->screen_coords.x = te_scale(p->screen_coords.x, f, x->time_max, 0, r.width);
+			p = p->next;
+		}
+	}
 	x->time_min = f;
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_time_max(t_te *x, double f){
+	int i;
+	t_point *p;
+	t_rect r;
+	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	for(i = 0; i < x->numFunctions; i++){
+		p = x->functions[i];
+		while(p){
+			p->screen_coords.x = te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max);
+			p->screen_coords.x = te_scale(p->screen_coords.x, x->time_min, f, 0, r.width);
+			p = p->next;
+		}
+	}
 	x->time_max = f;
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_time_minmax(t_te *x, double min, double max){
+	int i;
+	t_point *p;
+	t_rect r;
+	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	for(i = 0; i < x->numFunctions; i++){
+		p = x->functions[i];
+		while(p){
+			p->screen_coords.x = te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max);
+			p->screen_coords.x = te_scale(p->screen_coords.x, min, max, 0, r.width);
+			p = p->next;
+		}
+	}
 	x->time_min = min;
 	x->time_max = max;
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_freq_min(t_te *x, double f){
+	int i;
+	t_point *p;
+	t_rect r;
+	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	for(i = 0; i < x->numFunctions; i++){
+		p = x->functions[i];
+		while(p){
+			p->screen_coords.y = te_scale(p->screen_coords.y, r.height, 0, x->freq_min, x->freq_max);
+			p->screen_coords.y = te_scale(p->screen_coords.y, f, x->freq_max, r.height, 0);
+			p = p->next;
+		}
+	}
 	x->freq_min = f;
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_freq_max(t_te *x, double f){
+	int i;
+	t_point *p;
+	t_rect r;
+	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	for(i = 0; i < x->numFunctions; i++){
+		p = x->functions[i];
+		while(p){
+			p->screen_coords.y = te_scale(p->screen_coords.y, r.height, 0, x->freq_min, x->freq_max);
+			p->screen_coords.y = te_scale(p->screen_coords.y, x->freq_min, f, r.height, 0);
+			p = p->next;
+		}
+	}
+
 	x->freq_max = f;
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_freq_minmax(t_te *x, double min, double max){
+	int i;
+	t_point *p;
+	t_rect r;
+	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	for(i = 0; i < x->numFunctions; i++){
+		p = x->functions[i];
+		while(p){
+			p->screen_coords.y = te_scale(p->screen_coords.y, r.height, 0, x->freq_min, x->freq_max);
+			p->screen_coords.y = te_scale(p->screen_coords.y, min, max, r.height, 0);
+			p = p->next;
+		}
+	}
+
 	x->freq_min = min;
 	x->freq_max = max;
 	jbox_redraw((t_jbox *)x);
@@ -889,6 +1132,8 @@ void te_assist(t_te *x, void *b, long m, long a, char *s){
 void te_free(t_te *x){ 
 	dsp_freejbox((t_pxjbox *)x);
 	jbox_free((t_jbox *)x);
+
+	object_free(x->proxy);
 
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
@@ -941,6 +1186,8 @@ int main(void){
 	//class_addmethod(c, (method)te_write, "write", A_GIMME, 0);
 	//class_addmethod(c, (method)myobject_write, "test", A_DEFSYM, 0);
 
+	CLASS_ATTR_LONG(c, "mode", 0, t_te, mode);
+
  	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
 
  	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_te, bgcolor); 
@@ -971,6 +1218,7 @@ int main(void){
  	te_class = c; 
 
 	common_symbols_init();
+	ps_cellblock = gensym("cellblock");
 
  	version(0); 
 	
@@ -1010,6 +1258,8 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 
 		dsp_setupjbox((t_pxjbox *)x, 1);
 
+		x->proxy = proxy_new((t_object *)x, 1, &(x->in));
+
 		x->out_info = outlet_new((t_object *)x, NULL);
  		outlet_new((t_object *)x, "signal"); 
  		outlet_new((t_object *)x, "signal"); 
@@ -1019,6 +1269,7 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		x->time_max = 10.;
 		x->freq_min = 0.;
 		x->freq_max = 10.;
+		x->mode = 0;
 
  		x->functions = (t_point **)calloc(MAX_NUM_FUNCTIONS, sizeof(t_point *));
  		x->numFunctions = 1; 
