@@ -335,41 +335,32 @@ t_int *te_perform(t_int *w){
 		t_symbol *name1, *name2, *name3;
 		if(name1 = te_mangleName(x->name, 1, j)){
 			name1->s_thing = (t_object *)(x->ptrs[j * 3]);
-			//post("name1 = %s, %p", name1->s_name, x->ptrs[j * 3]);
 		}
 		if(name2 = te_mangleName(x->name, 2, j)){
 			name2->s_thing = (t_object *)(x->ptrs[(j * 3) + 1]);
-			//post("name2 = %s, %p", name2->s_name, x->ptrs[j * 3 + 1]);
 		}
 		if(name3 = te_mangleName(x->name, 3, j)){
 			name3->s_thing = (t_object *)(x->ptrs[(j * 3) + 2]);
-			//post("name3 = %s, %p", name3->s_name, x->ptrs[j * 3 + 2]);
 		}
 
-		for(i = 0; i < n; i++){
-			if(te_isPlanValid(x, in[i], plan, j) == 0){
-				te_makePlan(x, in[i], j, plan);
-			}
-			m = plan->m;
-			b = plan->b;
+		if(x->functions[j] == NULL){
+			memset(x->ptrs[(j * 3)], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 3) + 1], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 3) + 2], 0, n * sizeof(t_float));
+		}else{
 
-			//out_phase[i] = ((in[i] * ((2. * b) + (m * in[i]))) / 2.) - plan->phaseError_start;
-			/*
-			x->ptrs[(j * 3) + 1][i] = ((in[i] * ((2. * b) + (m * in[i]))) / 2.) - plan->phaseError_start;
-			if(in[i] < plan->startTime + plan->segmentDuration_sec){
-			}else if(in[i] < plan->startTime + (2. * plan->segmentDuration_sec)){
-				//out_phase[i] = out_phase[i] + ((plan->phaseError / (plan->segmentDuration_sec * sr)) * ((in[i] - (plan->startTime + plan->segmentDuration_sec)) * sr));
-				x->ptrs[(j * 3) + 1][i] = x->ptrs[(j * 3) + 1][i] + ((plan->phaseError / (plan->segmentDuration_sec * sr)) * ((in[i] - (plan->startTime + plan->segmentDuration_sec)) * sr));
-			}else{
-				//out_phase[i] = out_phase[i] + plan->phaseError;
-				x->ptrs[(j * 3) + 1][i] = x->ptrs[(j * 3) + 1][i] + plan->phaseError;
+			te_makePlan(x, in[0], j, plan);
+			for(i = 0; i < n; i++){
+				if(te_isPlanValid(x, in[i], plan, j) == 0){
+					te_makePlan(x, in[i], j, plan);
+				}
+				m = plan->m;
+				b = plan->b;
+
+				x->ptrs[(j * 3) + 1][i] = te_computePhase(in[i], plan);
+				x->ptrs[(j * 3)][i] = x->ptrs[j * 3 + 1][i] - ((int)(x->ptrs[j * 3 + 1][i]));
+				x->ptrs[(j * 3) + 2][i] = m * in[i] + b;
 			}
-			*/
-			x->ptrs[(j * 3) + 1][i] = te_computePhase(in[i], plan);
-			//out_phase_wrapped[i] = out_phase[i] - ((int)(out_phase[i]));
-			x->ptrs[(j * 3)][i] = x->ptrs[j * 3 + 1][i] - ((int)(x->ptrs[j * 3 + 1][i]));
-			//out_bps[i] = m * in[i] + b;
-			x->ptrs[(j * 3) + 2][i] = m * in[i] + b;
 		}
 	}
 	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 3], n * sizeof(t_float));
