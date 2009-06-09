@@ -108,6 +108,7 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan, int function);
 void te_computePhaseError(t_te *x, t_plan *plan);
 double te_computeTempo(double t, t_plan *p);
 double te_computePhase(double t, t_plan *p);
+double te_computeCorrectedPhase(double t, t_plan *p);
 void te_editSel(t_te *x, double xx, double yy, double zz);
 void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_float(t_te *x, double f);
@@ -185,21 +186,54 @@ void te_paint(t_te *x, t_object *patcherview){
 				jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 			}
 			te_makePlan(x, prev_t, j, &plan);
+			double prev_correctedPhase = te_computeCorrectedPhase(prev_t, &plan);
 			double prev_phase = te_computePhase(prev_t, &plan);
 			for(i = 1; i < rect.width * 1; i++){
 				double idx = i / 1.;
 				double t = te_scale(idx, 0, rect.width, x->time_min, x->time_max);
+				double p;
 				if(!te_isPlanValid(x, t, &plan, j)){
 					te_makePlan(x, t, j, &plan);
 				}
-				double p = te_computePhase(t, &plan);
-				if((p - ((int)p)) < (prev_phase - ((int)prev_phase))){
+
+				if(x->show_correction){//&& t >= plan.startTime + plan.segmentDuration_sec){
+					if(j == x->currentFunction){
+						jgraphics_set_source_jrgba(g, &(x->lineColor));
+					}else{
+						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
+					}
+					p = te_computePhase(t, &plan);
+					if((p - ((int)p)) < (prev_phase - ((int)prev_phase))){
+						jgraphics_move_to(g, idx, rect.height);
+						jgraphics_line_to(g, idx, te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
+						jgraphics_stroke(g);
+					}
+					prev_phase = p;
+				}
+
+				if(x->show_correction){
+					if(j == x->currentFunction){
+						jgraphics_set_source_jrgba(g, &(x->correctionColor));
+					}else{
+						jgraphics_set_source_jrgba(g, &(x->bgCorrectionColor));
+					}
+				}else{
+					if(j == x->currentFunction){
+						jgraphics_set_source_jrgba(g, &(x->lineColor));
+					}else{
+						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
+					}
+				}
+
+				p = te_computeCorrectedPhase(t, &plan);
+				if((p - ((int)p)) < (prev_correctedPhase - ((int)prev_correctedPhase))){
 					jgraphics_move_to(g, idx, rect.height);
 					jgraphics_line_to(g, idx, te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
 					jgraphics_stroke(g);
 				}
+
 				prev_t = t;
-				prev_phase = p;
+				prev_correctedPhase = p;
 			}
 		}
 	}
@@ -233,18 +267,18 @@ void te_paint(t_te *x, t_object *patcherview){
 					t_plan plan;
 					te_makePlan(x, te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
 					double t = plan.startTime + plan.segmentDuration_sec;
-					double phase1 = te_computePhase(t, &plan);
-					double phase2 = te_computePhase(t + (1./44100.), &plan);
+					double phase1 = te_computeCorrectedPhase(t, &plan);
+					double phase2 = te_computeCorrectedPhase(t + (1./44100.), &plan);
 					double freq = (phase2 - phase1) * 44100.;
 					jgraphics_move_to(g, te_scale(t, x->time_min, x->time_max, 0, rect.width), te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.));
-					post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
-					post("plan: starttime = %f, endtime = %f", plan.startTime, plan.endTime);
+					//post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
+					//post("plan: starttime = %f, endtime = %f", plan.startTime, plan.endTime);
 					t = plan.startTime + (2. * plan.segmentDuration_sec);
-					phase1 = te_computePhase(t - (1. / 44100.), &plan);
-					phase2 = te_computePhase(t, &plan);
+					phase1 = te_computeCorrectedPhase(t - (1. / 44100.), &plan);
+					phase2 = te_computeCorrectedPhase(t, &plan);
 					freq = (phase2 - phase1) * 44100.;
-					post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
-					post("******************************");
+					//post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
+					//post("******************************");
 					jgraphics_line_to(g, te_scale(t, x->time_min, x->time_max, 0, rect.width), te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.));
 					jgraphics_stroke(g);
 				}
@@ -357,7 +391,7 @@ t_int *te_perform(t_int *w){
 				m = plan->m;
 				b = plan->b;
 
-				x->ptrs[(j * 3) + 1][i] = te_computePhase(in[i], plan);
+				x->ptrs[(j * 3) + 1][i] = te_computeCorrectedPhase(in[i], plan);
 				x->ptrs[(j * 3)][i] = x->ptrs[j * 3 + 1][i] - ((int)(x->ptrs[j * 3 + 1][i]));
 				x->ptrs[(j * 3) + 2][i] = m * in[i] + b;
 			}
@@ -526,16 +560,17 @@ void te_computePhaseError(t_te *x, t_plan *plan){
 		}
 	}
 
+	// check to see if the phase accumulation function ever has a negative derivitave and add 1 to the phase error if so
 	double i;
 	double st, et, inc;
 	st = plan->startTime + plan->segmentDuration_sec;
 	et = (plan->startTime + (2. * plan->segmentDuration_sec));
 	inc = (et - st) / 10.;
 	//post("%f %f %f", st, et, inc);
-	double prev_phase = te_computePhase(st, plan);
+	double prev_phase = te_computeCorrectedPhase(st, plan);
 	double prev_time = st;
 	for(i = st + inc; i < et; i+= inc){
-		double ph = te_computePhase(i, plan);
+		double ph = te_computeCorrectedPhase(i, plan);
 		//post("%f %f %f %f %f", i, ph, prev_time, prev_phase, ((ph - prev_phase) / (i - prev_time)));
 		if(((ph - prev_phase) / (i - prev_time)) < 0){
 			//post("***");
@@ -553,6 +588,17 @@ double te_computeTempo(double t, t_plan *p){
 }
 
 double te_computePhase(double t, t_plan *p){
+	switch(p->state){
+	case BEFORE_FIRST_POINT:
+		return 0.999;
+	case AFTER_LAST_POINT:
+		return 0.;
+	default:
+		return (((t * ((2. * p->b) + (p->m * t))) / 2.) - p->phaseError_start);
+	}
+}
+
+double te_computeCorrectedPhase(double t, t_plan *p){
 	switch(p->state){
 	case BEFORE_FIRST_POINT:
 		return 0.999;
@@ -1011,13 +1057,13 @@ void te_dumpCellblock(t_te *x){
 	atom_setsym(&(out[0]), _sym_set);
 	while(p){
 		/*
-		if(x->selected == p){
-			atom_setsym(&(out[0]), _sym_select);
-			atom_setlong(&(out[1]), 0);
-			atom_setlong(&(out[2]), i);
-			outlet_anything(x->out_info, ps_cellblock, 3, out);
-			atom_setsym(&(out[0]), _sym_set);
-		}
+		  if(x->selected == p){
+		  atom_setsym(&(out[0]), _sym_select);
+		  atom_setlong(&(out[1]), 0);
+		  atom_setlong(&(out[2]), i);
+		  outlet_anything(x->out_info, ps_cellblock, 3, out);
+		  atom_setsym(&(out[0]), _sym_set);
+		  }
 		*/
 		atom_setlong(&(out[2]), i);
 		atom_setlong(&(out[1]), 0);
@@ -1247,7 +1293,7 @@ int main(void){
 	CLASS_ATTR_SAVE(c, "mode", 0);
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
-	CLASS_ATTR_SYM(c, "show_correction", 0, t_te, show_correction);
+	CLASS_ATTR_LONG(c, "show_correction", 0, t_te, show_correction);
 	CLASS_ATTR_SAVE(c, "show_correction", 0);
 
  	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
