@@ -92,6 +92,7 @@ typedef struct _te{
 	t_jrgba lineColor;
 	t_jrgba bgFuncColor;
 	t_jrgba selectionColor;
+	t_jrgba correctionColor, bgCorrectionColor;
 	t_symbol *name;
 	t_float **ptrs;
 } t_te; 
@@ -183,28 +184,19 @@ void te_paint(t_te *x, t_object *patcherview){
 			}else{
 				jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 			}
-			//te_makePlan(x, prev_t, x->currentFunction, &plan);
 			te_makePlan(x, prev_t, j, &plan);
 			double prev_phase = te_computePhase(prev_t, &plan);
 			for(i = 1; i < rect.width * 1; i++){
 				double idx = i / 1.;
 				double t = te_scale(idx, 0, rect.width, x->time_min, x->time_max);
 				if(!te_isPlanValid(x, t, &plan, j)){
-					//post("making plan for time %f", t);
-					//te_makePlan(x, t, x->currentFunction, &plan);
 					te_makePlan(x, t, j, &plan);
 				}
 				double p = te_computePhase(t, &plan);
-				//if(p < prev_phase){
-				//post("went negative at time %f", t);
-				//}
-				//post("%d %f %f %f %f", idx, prev_t, prev_phase, t, p);
 				if((p - ((int)p)) < (prev_phase - ((int)prev_phase))){
 					jgraphics_move_to(g, idx, rect.height);
 					jgraphics_line_to(g, idx, te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
 					jgraphics_stroke(g);
-					//post("moveto %f %f", (float)i, rect.height);
-					//post("lineto %f %f", (float)i, te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
 				}
 				prev_t = t;
 				prev_phase = p;
@@ -232,19 +224,27 @@ void te_paint(t_te *x, t_object *patcherview){
 				jgraphics_stroke(g);
 
 				if(x->show_correction){
-					jgraphics_set_source_jrgba(g, &(x->selectionColor));
+					if(i == x->currentFunction){
+						jgraphics_set_source_jrgba(g, &(x->correctionColor));
+					}else{
+						jgraphics_set_source_jrgba(g, &(x->bgCorrectionColor));
+					}
 					jgraphics_set_line_width(g, 1); 
 					t_plan plan;
-					te_makePlan(x, plan.startTime, i, &plan);
+					te_makePlan(x, te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
 					double t = plan.startTime + plan.segmentDuration_sec;
 					double phase1 = te_computePhase(t, &plan);
 					double phase2 = te_computePhase(t + (1./44100.), &plan);
 					double freq = (phase2 - phase1) * 44100.;
 					jgraphics_move_to(g, te_scale(t, x->time_min, x->time_max, 0, rect.width), te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.));
+					post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
+					post("plan: starttime = %f, endtime = %f", plan.startTime, plan.endTime);
 					t = plan.startTime + (2. * plan.segmentDuration_sec);
 					phase1 = te_computePhase(t - (1. / 44100.), &plan);
 					phase2 = te_computePhase(t, &plan);
 					freq = (phase2 - phase1) * 44100.;
+					post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
+					post("******************************");
 					jgraphics_line_to(g, te_scale(t, x->time_min, x->time_max, 0, rect.width), te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.));
 					jgraphics_stroke(g);
 				}
@@ -866,6 +866,10 @@ void te_setFunction(t_te *x, long f){
 			x->numFunctions++;
 		}
 	}
+	if(f < 0){
+		error("te: function must be a positive number");
+		return;
+	}
 	critical_enter(x->lock);
 	x->currentFunction = f;
 	x->selected = NULL;
@@ -1267,6 +1271,14 @@ int main(void){
  	CLASS_ATTR_RGBA(c, "selectionColor", 0, t_te, selectionColor); 
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "selectionColor", 0, "1. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "selectionColor", 0, "rgba", "Selection Color"); 
+
+ 	CLASS_ATTR_RGBA(c, "correctionColor", 0, t_te, correctionColor); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "correctionColor", 0, "1. 0. 0. 1."); 
+ 	CLASS_ATTR_STYLE_LABEL(c, "correctionColor", 0, "rgba", "Correction Color"); 
+
+ 	CLASS_ATTR_RGBA(c, "bgCorrectionColor", 0, t_te, bgCorrectionColor); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgCorrectionColor", 0, "0. 0. 0. 0.5"); 
+ 	CLASS_ATTR_STYLE_LABEL(c, "bgCorrectionColor", 0, "rgba", "Background Correction Color"); 
 
  	CLASS_STICKY_ATTR_CLEAR(c, "category"); 
 
