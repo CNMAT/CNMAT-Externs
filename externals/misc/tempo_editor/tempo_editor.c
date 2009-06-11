@@ -32,8 +32,12 @@
 
 /*
   todo:
-figure out a way to get the first beat.
-make sure jumps in phase and freq are really handled properly
+
+each point should have an arrival and departure phase and frequency.  this is how we'll handle jumps
+
+implement beta distribution for distributing the error.  a and b should be dynamically setable 
+and the starting and ending points of the error accumulation should be adjustable with no limits
+other than the starting and ending points of the plan.
 */
 
 #include "version.h" 
@@ -130,6 +134,7 @@ void te_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
 t_point *te_insertPoint(t_te *x, t_pt screen_coords, int functionNum);
 void te_removePoint(t_te *x, t_point *point, int functionNum);
 void te_dump(t_te *x);
+void te_dumpBeats(t_te *x);
 void te_dumpCellblock(t_te *x);
 void te_time_min(t_te *x, double f);
 void te_time_max(t_te *x, double f);
@@ -137,7 +142,11 @@ void te_time_minmax(t_te *x, double min, double max);
 void te_freq_min(t_te *x, double f);
 void te_freq_max(t_te *x, double f);
 void te_freq_minmax(t_te *x, double min, double max);
+void te_postPlan(t_plan *plan);
 void te_clear(t_te *x);
+void te_clearFunction(t_te *x, int f);
+void te_clearCurrent(t_te *x);
+void te_doClearFunction(t_te *x, int f);
 //void te_read(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 //void te_doread(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 //void te_write(t_te *x, t_symbol *msg, short argc, t_atom *argv);
@@ -174,7 +183,7 @@ void te_paint(t_te *x, t_object *patcherview){
 	// draw the beat lines
 	{
 		int i, j;
-		double prev_t = te_scale(0, 0, rect.width, x->time_min, x->time_max);
+		double prev_t = te_scale(-1, 0, rect.width, x->time_min, x->time_max);
 		t_plan plan;
 		for(j = 0; j < x->numFunctions; j++){
 			if(x->functions[j] == NULL){
@@ -185,6 +194,7 @@ void te_paint(t_te *x, t_object *patcherview){
 			}else{
 				jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 			}
+			//post("1. makePlan, %f", prev_t);
 			te_makePlan(x, prev_t, j, &plan);
 			double prev_correctedPhase = te_computeCorrectedPhase(prev_t, &plan);
 			double prev_phase = te_computePhase(prev_t, &plan);
@@ -193,6 +203,7 @@ void te_paint(t_te *x, t_object *patcherview){
 				double t = te_scale(idx, 0, rect.width, x->time_min, x->time_max);
 				double p;
 				if(!te_isPlanValid(x, t, &plan, j)){
+					//post("2. makePlan, %f", prev_t);
 					te_makePlan(x, t, j, &plan);
 				}
 
@@ -265,6 +276,7 @@ void te_paint(t_te *x, t_object *patcherview){
 					}
 					jgraphics_set_line_width(g, 1); 
 					t_plan plan;
+					//post("3. makePlan, %f", te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
 					te_makePlan(x, te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
 					double t = plan.startTime + plan.segmentDuration_sec;
 					double phase1 = te_computeCorrectedPhase(t, &plan);
@@ -347,6 +359,23 @@ void te_paint(t_te *x, t_object *patcherview){
 			}
 		}
  	} 
+
+	// draw the function number in the top left corner
+	{
+ 		jgraphics_set_line_width(g, 0.5); 
+		jgraphics_set_source_jrgba(g, &(x->lineColor));
+		char buf[32];
+		double w, h;
+		sprintf(buf, "%d/%d", x->currentFunction + 1, x->numFunctions);
+		jgraphics_set_font_size(g, 10);
+		jgraphics_text_measure(g, buf, &w, &h);
+		//post("%f %f", w, h);
+		jgraphics_rectangle(g, 0, 0, w + 4, h + 2);
+		jgraphics_stroke(g);
+		jgraphics_move_to(g, 2, h - 2);
+		jgraphics_show_text(g, buf);
+		//jgraphics_stroke(g);
+	}
  out:
 	critical_exit(x->lock);
 } 
@@ -364,7 +393,6 @@ t_int *te_perform(t_int *w){
 
 	//post("x = %p, %d, plan = %p, %p %p %p %p", x, n, plan, in, out_phase_wrapped, out_phase, out_bps);
 
-	double m, b;
 	for(j = 0; j < x->numFunctions; j++){
 		t_symbol *name1, *name2, *name3;
 		if(name1 = te_mangleName(x->name, 1, j)){
@@ -388,12 +416,11 @@ t_int *te_perform(t_int *w){
 				if(te_isPlanValid(x, in[i], plan, j) == 0){
 					te_makePlan(x, in[i], j, plan);
 				}
-				m = plan->m;
-				b = plan->b;
 
 				x->ptrs[(j * 3) + 1][i] = te_computeCorrectedPhase(in[i], plan);
 				x->ptrs[(j * 3)][i] = x->ptrs[j * 3 + 1][i] - ((int)(x->ptrs[j * 3 + 1][i]));
-				x->ptrs[(j * 3) + 2][i] = m * in[i] + b;
+				//x->ptrs[(j * 3) + 2][i] = m * in[i] + b;
+				x->ptrs[(j * 3) + 2][i] = te_computeTempo(in[i], plan);
 			}
 		}
 	}
@@ -434,6 +461,7 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		plan->endPhase = 0.; 
 		te_computePhaseError(x, plan);
 		plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
+		//te_postPlan(plan);
 		return;
 	}
 
@@ -448,17 +476,8 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 			plan->endPhase = next->phase;
 			te_computePhaseError(x, plan);
 			plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
-			/*
-			  post("startTime = %f", plan->startTime);
-			  post("endTime = %f", plan->endTime);
-			  post("startFreq = %f", plan->startFreq);
-			  post("endFreq = %f", plan->endFreq);
-			  post("startPhase = %f", plan->startPhase);
-			  post("endPhase = %f", plan->endPhase);
 
-			  post("phaseError = %f, %f", plan->phaseError, plan->phaseError_start);
-			  post("segdur = %f", plan->segmentDuration_sec);
-			*/
+			//te_postPlan(plan);
 			return;
 		}
 		p = next;
@@ -478,6 +497,7 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		plan->endPhase = 0.; 
 		te_computePhaseError(x, plan);
 		plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
+		//te_postPlan(plan);
 		return;
 
 	}
@@ -920,6 +940,7 @@ void te_setFunction(t_te *x, long f){
 	x->currentFunction = f;
 	x->selected = NULL;
 	critical_exit(x->lock);
+	te_dumpCellblock(x);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -1030,7 +1051,7 @@ void te_dump(t_te *x){
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
-		//atom_setlong(&(out[0]), i);
+		atom_setlong(&(out[0]), i);
 		while(p){
 			//te_getNormCoords(r, p->screen_coords, &norm_coords);
 			atom_setfloat(&(out[0]), te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max));
@@ -1043,6 +1064,41 @@ void te_dump(t_te *x){
 	atom_setsym(&(out[0]), _sym_done);
 	outlet_anything(x->out_info, _sym_dump, 1, out);
 	//outlet_bang(x->out_bang);
+}
+
+void te_dumpBeats(t_te *x){
+	int function;
+	double t;
+	t_atom out[4];
+	critical_enter(x->lock);
+	for(function = 0; function < x->numFunctions; function++){
+		if(x->functions[function] == NULL){
+			continue;
+		}
+		t_plan plan;
+		te_makePlan(x, x->time_min, function, &plan);
+		double prev_phase = .9999;
+		double p, wp;
+		for(t = x->time_min; t <= x->time_max; t += (1. / 500.)){
+			if(!te_isPlanValid(x, t, &plan, function)){
+				te_makePlan(x, t, function, &plan);
+			}
+			p = te_computeCorrectedPhase(t, &plan);
+			wp = p - ((int)p);
+
+			if(wp < prev_phase){
+				atom_setlong(&(out[0]), function);
+				atom_setfloat(&(out[1]), t);
+				atom_setfloat(&(out[2]), te_computeTempo(t, &plan));
+				atom_setfloat(&(out[3]), wp);
+				critical_exit(x->lock);
+				outlet_list(x->out_info, NULL, 4, out);
+				critical_enter(x->lock);
+			}
+			prev_phase = wp;
+		}
+	}
+	critical_exit(x->lock);
 }
 
 void te_dumpCellblock(t_te *x){
@@ -1189,16 +1245,50 @@ void te_freq_minmax(t_te *x, double min, double max){
 	jbox_redraw((t_jbox *)x);
 }
 
+void te_postPlan(t_plan *plan){
+	post("start time = %f, end time = %f", plan->startTime, plan->endTime);
+	post("start tempo = %f, end tempo = %f", plan->startFreq, plan->endFreq);
+	post("start phase = %f, end phase = %f", plan->startPhase, plan->endPhase);
+	post("phase error = %f %f", plan->phaseError, plan->phaseError_start);
+	post("segment duration = %f seconds", plan->segmentDuration_sec);
+	post("m = %f, b = %f", plan->m, plan->b);
+	post("state = %d", plan->state);
+}
+
 void te_clear(t_te *x){
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
-		t_point *p = x->functions[i];
-		if(p){
-			free(p);
-		}
-		x->functions[i] = NULL;
+		te_doClearFunction(x, i);
 	}
+	te_dumpCellblock(x);
 	jbox_redraw((t_jbox *)x);
+}
+
+void te_clearFunction(t_te *x, int f){
+	te_doClearFunction(x, f);
+	te_dumpCellblock(x);
+	jbox_redraw((t_jbox *)x);
+}
+
+void te_clearCurrent(t_te *x){
+	te_doClearFunction(x, x->currentFunction);
+	te_dumpCellblock(x);
+	jbox_redraw((t_jbox *)x);
+}
+
+void te_doClearFunction(t_te *x, int f){
+	critical_enter(x->lock);
+	t_point *p = x->functions[x->currentFunction];
+	t_point *next = p->next;
+	while(p){
+		if(p){
+			next = p->next;
+			free(p);
+			p = next;
+		}
+	}
+	x->functions[f] = NULL;
+	critical_exit(x->lock);
 }
 
 void te_assist(t_te *x, void *b, long m, long a, char *s){ 
@@ -1277,6 +1367,8 @@ int main(void){
 	class_addmethod(c, (method)te_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)te_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)te_clear, "clear", 0);
+	class_addmethod(c, (method)te_clearCurrent, "clear_current", 0);
+	class_addmethod(c, (method)te_clearFunction, "clear_function", A_LONG, 0);
 	class_addmethod(c, (method)te_dump, "dump", 0);
 	class_addmethod(c, (method)te_time_min, "time_min", A_FLOAT, 0);
 	class_addmethod(c, (method)te_time_max, "time_max", A_FLOAT, 0);
@@ -1284,6 +1376,7 @@ int main(void){
 	class_addmethod(c, (method)te_freq_min, "freq_min", A_FLOAT, 0);
 	class_addmethod(c, (method)te_freq_max, "freq_max", A_FLOAT, 0);
 	class_addmethod(c, (method)te_freq_minmax, "freq_minmax", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)te_dumpBeats, "dump_beats", 0);
 
 	//class_addmethod(c, (method)te_read, "read", A_GIMME, 0);
 	//class_addmethod(c, (method)te_write, "write", A_GIMME, 0);
