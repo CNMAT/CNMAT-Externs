@@ -49,9 +49,11 @@ other than the starting and ending points of the plan.
 #include "jgraphics.h" 
 #include "z_dsp.h"
 #include "version.c" 
+#include "gsl/gsl_sf.h"
 
 #define MAX_NUM_FUNCTIONS 32
 #define POINT_WIDTH 14
+#define CONTROL_POINT_WIDTH 10
 
 #define BEFORE_FIRST_POINT 1
 #define AFTER_LAST_POINT 2
@@ -61,6 +63,7 @@ typedef struct _point{
 	double phase;
 	//t_pt aux_points[2];
 	double aux_points[2];
+	double a, b; // shape parameters for the beta distribution
 	int whichPoint;  // 0=this point, >0=aux_points
  	struct _point *next; 
  	struct _point *prev; 
@@ -75,6 +78,8 @@ typedef struct _plan{
 	//double segmentDuration_sec;
 	double correctionStart, correctionEnd;
 	double m, b;
+	double alpha, beta;  // shape parameters for the beta distribution.  
+	//unfortunately, they need to be here as well as with the point above
  	struct _plan *next; 
  	struct _plan *prev; 
 } t_plan; 
@@ -114,6 +119,9 @@ t_int *te_perform(t_int *w);
 void te_makePlan(t_te *x, float f, int function, t_plan *plan);
 int te_isPlanValid(t_te *x, double time, t_plan *plan, int function);
 void te_computePhaseError(t_te *x, t_plan *plan);
+double te_betaPDF(double a, double b, double x);
+double te_betaCDF(double a, double b, double x);
+double te_computeCorrectedTempo(double t, t_plan *p);
 double te_computeTempo(double t, t_plan *p);
 double te_computePhase(double t, t_plan *p);
 double te_computeCorrectedPhase(double t, t_plan *p);
@@ -274,45 +282,44 @@ void te_paint(t_te *x, t_object *patcherview){
 				jgraphics_line_to(g, p->screen_coords.x, p->screen_coords.y);
 				jgraphics_stroke(g);
 
-				if(x->show_correction){
-					if(i == x->currentFunction){
-						jgraphics_set_source_jrgba(g, &(x->correctionColor));
-					}else{
-						jgraphics_set_source_jrgba(g, &(x->bgCorrectionColor));
-					}
-					jgraphics_set_line_width(g, 1); 
-					t_plan plan;
-					te_makePlan(x, te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
-					double t = plan.correctionStart;
-					//double t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
-					double t_sc = p->prev->aux_points[0];
-					double phase1 = te_computeCorrectedPhase(t + (1./44100.), &plan);
-					double phase2 = te_computeCorrectedPhase(t + (2./44100.), &plan);
-					double freq = (phase2 - phase1) * 44100.;
-					double freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
+				/*
+				  if(x->show_correction){
+				  if(i == x->currentFunction){
+				  jgraphics_set_source_jrgba(g, &(x->correctionColor));
+				  }else{
+				  jgraphics_set_source_jrgba(g, &(x->bgCorrectionColor));
+				  }
+				  jgraphics_set_line_width(g, 1); 
+				  t_plan plan;
+				  te_makePlan(x, te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
+				  double t = plan.correctionStart;
+				  //double t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
+				  double t_sc = p->prev->aux_points[0];
+				  double phase1 = te_computeCorrectedPhase(t + (1./44100.), &plan);
+				  double phase2 = te_computeCorrectedPhase(t + (2./44100.), &plan);
+				  double freq = (phase2 - phase1) * 44100.;
+				  double freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
 
-					post("%f %f %f %f, %f %f", t, freq, t_sc, freq_sc, phase1, phase2);
-					jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
-					jgraphics_stroke(g);
+				  jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
+				  jgraphics_stroke(g);
 
-					jgraphics_move_to(g, t_sc, freq_sc);
+				  jgraphics_move_to(g, t_sc, freq_sc);
 
-					t = plan.correctionEnd;
-					t_sc = p->prev->aux_points[1];
-					//t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
-					phase1 = te_computeCorrectedPhase(t - (2. / 44100.), &plan);
-					phase2 = te_computeCorrectedPhase(t - (1. / 44100.), &plan);
-					freq = (phase2 - phase1) * 44100.;
-					freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
+				  t = plan.correctionEnd;
+				  t_sc = p->prev->aux_points[1];
+				  //t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
+				  phase1 = te_computeCorrectedPhase(t - (2. / 44100.), &plan);
+				  phase2 = te_computeCorrectedPhase(t - (1. / 44100.), &plan);
+				  freq = (phase2 - phase1) * 44100.;
+				  freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
 
-					post("%f %f %f %f, %f %f", t, freq, t_sc, freq_sc, phase1, phase2);
-					post("***********************************");
-					jgraphics_line_to(g, t_sc, freq_sc);
-					jgraphics_stroke(g);
+				  jgraphics_line_to(g, t_sc, freq_sc);
+				  jgraphics_stroke(g);
 
-					jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
-					jgraphics_stroke(g);
-				}
+				  jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
+				  jgraphics_stroke(g);
+				  }
+				*/
 				p = p->next;
 			}
 		}
@@ -353,6 +360,41 @@ void te_paint(t_te *x, t_object *patcherview){
 			}
 		}
  	} 
+
+	// draw the tempo correction line and control points
+	{
+		jgraphics_set_source_jrgba(g, &(x->correctionColor));
+		int i;
+		for(i = 0; i < x->numFunctions; i++){
+			t_point *p = x->functions[i];
+			while(p){
+				if(!(p->next)){
+					break;
+				}
+				double correctionStart, correctionStart_sc, correctionEnd, correctionEnd_sc;
+				int j;
+				t_plan plan;
+				correctionStart_sc = p->aux_points[0];
+				correctionEnd_sc = p->aux_points[1];
+				//post("%f %f", correctionStart_sc, correctionEnd_sc);
+				te_makePlan(x, te_scale(p->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
+				double freq = te_computeTempo(plan.correctionStart, &plan);
+				double freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
+				jgraphics_ellipse(g, correctionStart_sc - CONTROL_POINT_WIDTH / 2, freq_sc - CONTROL_POINT_WIDTH / 2, CONTROL_POINT_WIDTH, CONTROL_POINT_WIDTH);
+				jgraphics_move_to(g, correctionStart_sc, freq_sc);
+				for(j = correctionStart_sc; j < correctionEnd_sc; j++){
+					freq = te_computeCorrectedTempo(te_scale(j, 0, rect.width, x->time_min, x->time_max), &plan);
+					freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
+					jgraphics_line_to(g, j, freq_sc);
+					jgraphics_move_to(g, j, freq_sc);
+					//jgraphics_stroke(g);
+				}
+				jgraphics_ellipse(g, j - CONTROL_POINT_WIDTH / 2, freq_sc - CONTROL_POINT_WIDTH / 2, CONTROL_POINT_WIDTH, CONTROL_POINT_WIDTH);
+				jgraphics_stroke(g);
+				p = p->next;
+			}
+		}
+	}
 
 	// draw the function number in the top left corner
 	{
@@ -441,6 +483,9 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		return;
 	}
 
+
+	plan->alpha = p->a;
+	plan->beta = p->b;
 	// we are somewhere between the minimum time (probably 0) and the first
 	// point.  so we'll make a plan with a freq of 0.
 	if(f_sc < p->screen_coords.x){
@@ -605,6 +650,18 @@ void te_computePhaseError(t_te *x, t_plan *plan){
 
 }
 
+double te_betaPDF(double a, double b, double x){
+	return ((pow(x, a - 1) * (pow(1 - x, b - 1))) / gsl_sf_beta(a, b));
+}
+
+double te_betaCDF(double a, double b, double x){
+	return gsl_sf_beta_inc(a, b, x);
+}
+
+double te_computeCorrectedTempo(double t, t_plan *p){
+	return (te_computeCorrectedPhase(t, p) - te_computeCorrectedPhase(t - (1. / 44100.), p)) * 44100.;
+}
+
 double te_computeTempo(double t, t_plan *p){
 	return t * p->m + p->b;
 }
@@ -632,8 +689,11 @@ double te_computeCorrectedPhase(double t, t_plan *p){
 			double sr = 44100.;
 			if(t >= p->startTime && t < p->correctionStart){
 			}else if(t >= p->correctionStart && t < p->correctionEnd){
-				double segdur = p->correctionEnd - p->correctionStart;
-				error = ((p->phaseError / (segdur * sr)) * ((t - (p->startTime + segdur)) * sr));
+				//double segdur = p->correctionEnd - p->correctionStart;
+				//error = ((p->phaseError / (segdur * sr)) * ((t - (p->startTime + segdur)) * sr));
+				double norm_t = (t - p->correctionStart) / (p->correctionEnd - p->correctionStart);
+				error = p->phaseError * (te_betaCDF(p->alpha, p->beta, norm_t));
+				//post("%f %f %f %f", norm_t, p->phaseError, te_betaCDF(p->alpha, p->beta, norm_t), error);
 			}else if(t >= p->correctionEnd && t <= p->endTime){
 				error = p->phaseError;
 			}
@@ -717,14 +777,22 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 				}
 				if(col == 0){
 					double ph = p->phase;
+					double a, b;
+					a = p->a;
+					b = p->b;
 					t_pt sc = p->screen_coords;
 					te_removePoint(x, p, x->currentFunction);
 					x->selected = te_insertPoint(x, sc, x->currentFunction);
 					x->selected->phase = ph;
+					x->selected->a = a;
+					x->selected->b = b;
 				}
 			}else{
 				t_pt sc = {0., r.height};
 				double ph = 0.;
+				double a, b;
+				a = p->a;
+				b = p->b;
 				switch(col){
 				case 0:
 					sc.x = te_scale(val, x->time_min, x->time_max, 0, r.width);
@@ -738,6 +806,8 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 				}
 				x->selected = te_insertPoint(x, sc, x->currentFunction);
 				x->selected->phase = ph;
+				x->selected->a = a;
+				x->selected->b = b;
 			}
 		}
 		break;
@@ -822,8 +892,10 @@ t_point *te_select(t_te *x, t_pt p){
 t_point *te_selectControlPoint(t_te *x, t_pt p){
 	t_point *ptr = x->functions[x->currentFunction];
 	while(ptr){
-		if(p.x >= ptr->screen_coords.x){
-			break;
+		if(ptr->next){
+			if(p.x >= ptr->screen_coords.x && p.x < ptr->next->screen_coords.x){
+				break;
+			}
 		}
 		ptr = ptr->next;
 	}
@@ -831,10 +903,10 @@ t_point *te_selectControlPoint(t_te *x, t_pt p){
 	if(ptr){
 		post("click happened at %f and the point to the left is at %f", p.x, ptr->screen_coords.x);
 		post("%f %f %f", p.x, ptr->aux_points[0], ptr->aux_points[1]);
-		if(fabs(p.x - ptr->aux_points[0]) <= 6){
+		if(fabs(p.x - ptr->aux_points[0]) <= CONTROL_POINT_WIDTH){
 			ptr->whichPoint = 1;
 			return ptr;
-		}else if(fabs(p.x - ptr->aux_points[1]) <= 6){
+		}else if(fabs(p.x - ptr->aux_points[1]) <= CONTROL_POINT_WIDTH){
 			ptr->whichPoint = 2;
 			return ptr;
 		}
@@ -873,6 +945,8 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 			break;
 		}else{
 			x->selected = te_insertPoint(x, pt, x->currentFunction);
+			x->selected->phase = 0.;
+			x->selected->a = x->selected->b = 2.;
 			x->selected->whichPoint = 0;
 			te_defaultControlPoints(x->selected);
 			//post("%f %f", x->selected->aux_points[0], x->selected->aux_points[1]);
@@ -916,11 +990,16 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 				x->selected->aux_points[x->selected->whichPoint - 1] = pt.x;
 			}else{
 				double ph = x->selected->phase;
+				double a, b;
+				a = x->selected->a;
+				b = x->selected->b;
 				te_removePoint(x, x->selected, x->currentFunction);
 				x->selected = te_insertPoint(x, pt, x->currentFunction);
 				te_defaultControlPoints(x->selected);
 				te_defaultControlPoints(x->selected->prev);
 				x->selected->phase = ph;
+				x->selected->a = a;
+				x->selected->b = b;
 			}
 		}
 		break;
