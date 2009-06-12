@@ -59,6 +59,9 @@ other than the starting and ending points of the plan.
 typedef struct _point{ 
  	t_pt screen_coords; 
 	double phase;
+	//t_pt aux_points[2];
+	double aux_points[2];
+	int whichPoint;  // 0=this point, >0=aux_points
  	struct _point *next; 
  	struct _point *prev; 
 } t_point; 
@@ -69,7 +72,8 @@ typedef struct _plan{
 	double startFreq, endFreq;
 	double startPhase, endPhase;
 	double phaseError, phaseError_start;
-	double segmentDuration_sec;
+	//double segmentDuration_sec;
+	double correctionStart, correctionEnd;
 	double m, b;
  	struct _plan *next; 
  	struct _plan *prev; 
@@ -121,6 +125,7 @@ t_point *te_select(t_te *x, t_pt p);
 void te_draw_bounds(t_te *x, t_jgraphics *g, t_rect *rect); 
 void te_assist(t_te *x, void *b, long m, long a, char *s); 
 void te_free(t_te *x); 
+t_point *te_selectControlPoint(t_te *x, t_pt p);
 t_max_err te_notify(t_te *x, t_symbol *s, t_symbol *msg, void *sender, void *data); 
 void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
 void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
@@ -133,6 +138,7 @@ void te_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords);
 void te_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
 t_point *te_insertPoint(t_te *x, t_pt screen_coords, int functionNum);
 void te_removePoint(t_te *x, t_point *point, int functionNum);
+void te_defaultControlPoints(t_point *p);
 void te_dump(t_te *x);
 void te_dumpBeats(t_te *x);
 void te_dumpCellblock(t_te *x);
@@ -276,22 +282,35 @@ void te_paint(t_te *x, t_object *patcherview){
 					}
 					jgraphics_set_line_width(g, 1); 
 					t_plan plan;
-					//post("3. makePlan, %f", te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
 					te_makePlan(x, te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
-					double t = plan.startTime + plan.segmentDuration_sec;
-					double phase1 = te_computeCorrectedPhase(t, &plan);
-					double phase2 = te_computeCorrectedPhase(t + (1./44100.), &plan);
+					double t = plan.correctionStart;
+					//double t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
+					double t_sc = p->prev->aux_points[0];
+					double phase1 = te_computeCorrectedPhase(t + (1./44100.), &plan);
+					double phase2 = te_computeCorrectedPhase(t + (2./44100.), &plan);
 					double freq = (phase2 - phase1) * 44100.;
-					jgraphics_move_to(g, te_scale(t, x->time_min, x->time_max, 0, rect.width), te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.));
-					//post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
-					//post("plan: starttime = %f, endtime = %f", plan.startTime, plan.endTime);
-					t = plan.startTime + (2. * plan.segmentDuration_sec);
-					phase1 = te_computeCorrectedPhase(t - (1. / 44100.), &plan);
-					phase2 = te_computeCorrectedPhase(t, &plan);
+					double freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
+
+					post("%f %f %f %f, %f %f", t, freq, t_sc, freq_sc, phase1, phase2);
+					jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
+					jgraphics_stroke(g);
+
+					jgraphics_move_to(g, t_sc, freq_sc);
+
+					t = plan.correctionEnd;
+					t_sc = p->prev->aux_points[1];
+					//t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
+					phase1 = te_computeCorrectedPhase(t - (2. / 44100.), &plan);
+					phase2 = te_computeCorrectedPhase(t - (1. / 44100.), &plan);
 					freq = (phase2 - phase1) * 44100.;
-					//post("%f %f %f %f %f", t, phase1, phase2, freq, p->prev->screen_coords.x);
-					//post("******************************");
-					jgraphics_line_to(g, te_scale(t, x->time_min, x->time_max, 0, rect.width), te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.));
+					freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
+
+					post("%f %f %f %f, %f %f", t, freq, t_sc, freq_sc, phase1, phase2);
+					post("***********************************");
+					jgraphics_line_to(g, t_sc, freq_sc);
+					jgraphics_stroke(g);
+
+					jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
 					jgraphics_stroke(g);
 				}
 				p = p->next;
@@ -308,32 +327,7 @@ void te_paint(t_te *x, t_object *patcherview){
 		for(i = 0; i < x->numFunctions; i++){
 			t_point *p = x->functions[i];
 			double xx, yy;
-			if(p){
-				if(p == x->selected){
-					jgraphics_set_source_jrgba(g, &(x->selectionColor));
-				}else{
-					if(i == x->currentFunction){
-						jgraphics_set_source_jrgba(g, &(x->pointColor));
-					}else{
-						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
-					}
-				}
-				jgraphics_ellipse(g, p->screen_coords.x - ps2, p->screen_coords.y - ps2, ps, ps);
-				jgraphics_fill(g);
-
-				jgraphics_set_source_jrgba(g, &(x->bgcolor));
-				jgraphics_move_to(g, p->screen_coords.x, p->screen_coords.y);
-
-				xx = ps2 * sin(2 * M_PI * p->phase);
-				yy = ps2 * cos(2 * M_PI * p->phase);
-				jgraphics_line_to(g, p->screen_coords.x + xx, p->screen_coords.y - yy);
-				jgraphics_stroke(g);
-
-				p = p->next;
-			}
 			while(p){
-				t_pt norm_coords;
-
 				if(p == x->selected){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}else{
@@ -460,7 +454,10 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		// algorithm to try to compensate for it.
 		plan->endPhase = 0.; 
 		te_computePhaseError(x, plan);
-		plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
+		//plan->correctionStart = plan->startTime + ((plan->endTime - plan->startTime) / 3.);
+		//plan->correctionEnd = plan->correctionStart + ((plan->endTime - plan->startTime) / 3.);
+		plan->correctionStart = te_scale(p->aux_points[0], 0, r.width, x->time_min, x->time_max);
+		plan->correctionEnd = te_scale(p->aux_points[1], 0, r.width, x->time_min, x->time_max);
 		//te_postPlan(plan);
 		return;
 	}
@@ -475,8 +472,10 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 			plan->startPhase = p->phase;
 			plan->endPhase = next->phase;
 			te_computePhaseError(x, plan);
-			plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
-
+			//plan->correctionStart = plan->startTime + ((plan->endTime - plan->startTime) / 3.);
+			//plan->correctionEnd = plan->correctionStart + ((plan->endTime - plan->startTime) / 3.);
+			plan->correctionStart = te_scale(p->aux_points[0], 0, r.width, x->time_min, x->time_max);
+			plan->correctionEnd = te_scale(p->aux_points[1], 0, r.width, x->time_min, x->time_max);
 			//te_postPlan(plan);
 			return;
 		}
@@ -496,7 +495,10 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		// algorithm to try to compensate for it.  this will effectively be a jump to phase and freq 0.
 		plan->endPhase = 0.; 
 		te_computePhaseError(x, plan);
-		plan->segmentDuration_sec = (plan->endTime - plan->startTime) / 3.;
+		//plan->correctionStart = plan->startTime + ((plan->endTime - plan->startTime) / 3.);
+		//plan->correctionEnd = plan->correctionStart + ((plan->endTime - plan->startTime) / 3.);
+		plan->correctionStart = te_scale(p->aux_points[0], 0, r.width, x->time_min, x->time_max);
+		plan->correctionEnd = te_scale(p->aux_points[1], 0, r.width, x->time_min, x->time_max);
 		//te_postPlan(plan);
 		return;
 
@@ -583,8 +585,8 @@ void te_computePhaseError(t_te *x, t_plan *plan){
 	// check to see if the phase accumulation function ever has a negative derivitave and add 1 to the phase error if so
 	double i;
 	double st, et, inc;
-	st = plan->startTime + plan->segmentDuration_sec;
-	et = (plan->startTime + (2. * plan->segmentDuration_sec));
+	st = plan->correctionStart;
+	et = plan->correctionEnd;
 	inc = (et - st) / 10.;
 	//post("%f %f %f", st, et, inc);
 	double prev_phase = te_computeCorrectedPhase(st, plan);
@@ -628,10 +630,11 @@ double te_computeCorrectedPhase(double t, t_plan *p){
 		{
 			double error = 0;
 			double sr = 44100.;
-			if(t >= p->startTime && t < p->startTime + p->segmentDuration_sec){
-			}else if(t >= p->startTime + p->segmentDuration_sec && t < p->startTime + (2. * p->segmentDuration_sec)){
-				error = ((p->phaseError / (p->segmentDuration_sec * sr)) * ((t - (p->startTime + p->segmentDuration_sec)) * sr));
-			}else if(t >= p->startTime + (2. * p->segmentDuration_sec) && t <= p->startTime + (3. * p->segmentDuration_sec)){
+			if(t >= p->startTime && t < p->correctionStart){
+			}else if(t >= p->correctionStart && t < p->correctionEnd){
+				double segdur = p->correctionEnd - p->correctionStart;
+				error = ((p->phaseError / (segdur * sr)) * ((t - (p->startTime + segdur)) * sr));
+			}else if(t >= p->correctionEnd && t <= p->endTime){
 				error = p->phaseError;
 			}
 
@@ -810,7 +813,33 @@ t_point *te_select(t_te *x, t_pt p){
 		}
 		ptr = ptr->next;
 	}
+	if(min_ptr){
+		min_ptr->whichPoint = 0;
+	}
 	return min_ptr;
+}
+
+t_point *te_selectControlPoint(t_te *x, t_pt p){
+	t_point *ptr = x->functions[x->currentFunction];
+	while(ptr){
+		if(p.x >= ptr->screen_coords.x){
+			break;
+		}
+		ptr = ptr->next;
+	}
+
+	if(ptr){
+		post("click happened at %f and the point to the left is at %f", p.x, ptr->screen_coords.x);
+		post("%f %f %f", p.x, ptr->aux_points[0], ptr->aux_points[1]);
+		if(fabs(p.x - ptr->aux_points[0]) <= 6){
+			ptr->whichPoint = 1;
+			return ptr;
+		}else if(fabs(p.x - ptr->aux_points[1]) <= 6){
+			ptr->whichPoint = 2;
+			return ptr;
+		}
+	}
+	return NULL;
 }
 
 t_max_err te_notify(t_te *x, t_symbol *s, t_symbol *msg, void *sender, void *data){ 
@@ -840,8 +869,13 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 		//post("inserting %f %f", pt.x, pt.y);
 		if(x->selected = te_select(x, pt)){
 			break;
+		}else if(x->selected = te_selectControlPoint(x, pt)){
+			break;
 		}else{
 			x->selected = te_insertPoint(x, pt, x->currentFunction);
+			x->selected->whichPoint = 0;
+			te_defaultControlPoints(x->selected);
+			//post("%f %f", x->selected->aux_points[0], x->selected->aux_points[1]);
 		}
 		break;
 	case 0x12:
@@ -876,10 +910,18 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	switch(modifiers){
 	case 0x10:
 		{
-			double ph = x->selected->phase;
-			te_removePoint(x, x->selected, x->currentFunction);
-			x->selected = te_insertPoint(x, pt, x->currentFunction);
-			x->selected->phase = ph;
+			if(x->selected->whichPoint){
+				post("%f %f", x->selected->aux_points[0], x->selected->aux_points[1]);
+				post("whichPoint = %d", x->selected->whichPoint);
+				x->selected->aux_points[x->selected->whichPoint - 1] = pt.x;
+			}else{
+				double ph = x->selected->phase;
+				te_removePoint(x, x->selected, x->currentFunction);
+				x->selected = te_insertPoint(x, pt, x->currentFunction);
+				te_defaultControlPoints(x->selected);
+				te_defaultControlPoints(x->selected->prev);
+				x->selected->phase = ph;
+			}
 		}
 		break;
 	case 0x12:
@@ -975,6 +1017,9 @@ t_point *te_insertPoint(t_te *x, t_pt screen_coords, int functionNum){
 		p->next = (*function);
 		(*function)->prev = p;
 		x->functions[functionNum] = p;
+		double temp = ((p->next->screen_coords.x - p->screen_coords.x) / 3);
+		p->aux_points[0] = p->screen_coords.x + temp;
+		p->aux_points[1] = p->screen_coords.x + (temp * 2);
 	}else{
 		int i = 1;
 		t_point *current, *next;
@@ -982,6 +1027,12 @@ t_point *te_insertPoint(t_te *x, t_pt screen_coords, int functionNum){
 		next = current->next;
 		while(next){
 			if(p->screen_coords.x >= current->screen_coords.x && p->screen_coords.x <= next->screen_coords.x){
+				double aux_points[2] = {current->aux_points[0], current->aux_points[1]};
+				current->aux_points[0] = te_scale(aux_points[0], current->screen_coords.x, next->screen_coords.x, current->screen_coords.x, p->screen_coords.x);
+				current->aux_points[1] = te_scale(aux_points[1], current->screen_coords.x, next->screen_coords.x, current->screen_coords.x, p->screen_coords.x);
+				p->aux_points[0] = te_scale(aux_points[0], current->screen_coords.x, next->screen_coords.x, p->screen_coords.x, next->screen_coords.x);
+				p->aux_points[1] = te_scale(aux_points[1], current->screen_coords.x, next->screen_coords.x, p->screen_coords.x, next->screen_coords.x);
+
 				current->next = p;
 				next->prev = p;
 				p->next = next;
@@ -995,6 +1046,10 @@ t_point *te_insertPoint(t_te *x, t_pt screen_coords, int functionNum){
 		p->prev = current;
 		p->next = NULL;
 		current->next = p;
+		double temp = ((p->screen_coords.x - p->prev->screen_coords.x) / 3);
+		p->prev->aux_points[0] = p->prev->screen_coords.x + temp;
+		p->prev->aux_points[1] = p->prev->screen_coords.x + (temp * 2);
+
 	}
  out:
 	//post("inserted point %p %f %f", p, screen_coords.x, screen_coords.y);
@@ -1014,18 +1069,24 @@ void te_removePoint(t_te *x, t_point *point, int functionNum){
 	while(p){
 		if(p == point){
 			if(p->prev){
+				p->prev->next = p->next;
+				/*
 				if(p->next){
 					p->prev->next = p->next;
 				}else{
 					p->prev->next = NULL;
 				}
+				*/
 			}
 			if(p->next){
+				p->next->prev = p->prev;
+				/*
 				if(p->prev){
 					p->next->prev = p->prev;
 				}else{
 					p->next->prev = NULL;
 				}
+				*/
 			}
 			if(i == 0){
 				x->functions[functionNum] = p->next;
@@ -1041,6 +1102,20 @@ void te_removePoint(t_te *x, t_point *point, int functionNum){
 	}
  out:
 	critical_exit(x->lock);
+}
+
+void te_defaultControlPoints(t_point *p){
+	if(!p){
+		return;
+	}
+	if(p->next){
+		double temp = (p->next->screen_coords.x - p->screen_coords.x) / 3.;
+		p->aux_points[0] = p->screen_coords.x + temp;
+		p->aux_points[1] = p->screen_coords.x + (temp * 2);
+	}else{
+		p->aux_points[0] = 0.;
+		p->aux_points[1] = 0.;
+	}
 }
 
 void te_dump(t_te *x){
@@ -1250,7 +1325,8 @@ void te_postPlan(t_plan *plan){
 	post("start tempo = %f, end tempo = %f", plan->startFreq, plan->endFreq);
 	post("start phase = %f, end phase = %f", plan->startPhase, plan->endPhase);
 	post("phase error = %f %f", plan->phaseError, plan->phaseError_start);
-	post("segment duration = %f seconds", plan->segmentDuration_sec);
+	//post("segment duration = %f seconds", plan->segmentDuration_sec);
+	post("correction starts at %f and ends at %f (%f)", plan->correctionStart, plan->correctionEnd, (plan->correctionEnd - plan->correctionStart));
 	post("m = %f, b = %f", plan->m, plan->b);
 	post("state = %d", plan->state);
 }
