@@ -44,9 +44,9 @@ VERSION 1.3.1: Force Package Info Generation
 
 	/* harmonic oscillator bank */
 	/* sums a bunch of sinusoidal oscillators which are frequency locked to integer harmonics: great for glottal simulations, periodic pulse trains, etc */
-	/* a list of floats sets the amplitudes (and the length of the list sets the number harmonic partials) */
+	/* a list of floats sets the amplitudes (and the length of the list sets the numberof  harmonic partials) */
 	/* a single float sets the frequency of the first partial */
-	/* TODO: method to set the first harmonic amplitude, and a method to set the amplitude roll off in db/Octave */
+	/* TODO:  a method to set the amplitude roll off in db/Octave */
 	/* TODO: more efficient implementation that locks the phase by using a single phasor */
 	
 	
@@ -662,7 +662,7 @@ void main(void)
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 		  
 	version(0);
-	post("NB: still working on amplutide normalisation of thw wave outputs");
+	post("NB: still working on amplutide normalisation of the wave outputs");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 #ifndef EXPIRE
     post("Never expires");
