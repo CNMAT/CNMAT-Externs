@@ -50,6 +50,7 @@ other than the starting and ending points of the plan.
 #include "z_dsp.h"
 #include "version.c" 
 #include "gsl/gsl_sf.h"
+#include "gsl/gsl_errno.h"
 
 #define MAX_NUM_FUNCTIONS 32
 #define POINT_WIDTH 14
@@ -63,7 +64,9 @@ typedef struct _point{
 	double phase;
 	//t_pt aux_points[2];
 	double aux_points[2];
-	double a, b; // shape parameters for the beta distribution
+	// shape parameters for the beta distribution
+	double alpha, beta;
+	double error_alpha, error_beta;
 	int whichPoint;  // 0=this point, >0=aux_points
  	struct _point *next; 
  	struct _point *prev; 
@@ -75,10 +78,10 @@ typedef struct _plan{
 	double startFreq, endFreq;
 	double startPhase, endPhase;
 	double phaseError, phaseError_start;
-	//double segmentDuration_sec;
 	double correctionStart, correctionEnd;
-	double m, b;
-	double alpha, beta;  // shape parameters for the beta distribution.  
+	//double m, b;
+	double alpha, beta;
+	double error_alpha, error_beta;  // shape parameters for the beta distribution.  
 	//unfortunately, they need to be here as well as with the point above
  	struct _plan *next; 
  	struct _plan *prev; 
@@ -119,8 +122,10 @@ t_int *te_perform(t_int *w);
 void te_makePlan(t_te *x, float f, int function, t_plan *plan);
 int te_isPlanValid(t_te *x, double time, t_plan *plan, int function);
 void te_computePhaseError(t_te *x, t_plan *plan);
-double te_betaPDF(double a, double b, double x);
-double te_betaCDF(double a, double b, double x);
+double te_betaPDF(double z, double a, double b);
+double te_betaCDF(double z, double a, double b);
+double te_betaCDFInt(double z, double a, double b);
+double te_scaledBetaCDFInt(double z, double a, double b, double scale, double offset);
 double te_computeCorrectedTempo(double t, t_plan *p);
 double te_computeTempo(double t, t_plan *p);
 double te_computePhase(double t, t_plan *p);
@@ -141,6 +146,7 @@ void te_mouseup(t_te *x, t_object *patcherview, t_pt pt, long modifiers);
 void te_outputSelection(t_te *x);
 void te_addFunction(t_te *x); 
 void te_setFunction(t_te *x, long f); 
+double te_clip(double f, double min, double max);
 double te_scale(double f, double min_in, double max_in, double min_out, double max_out);
 void te_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords); 
 void te_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
@@ -167,6 +173,7 @@ void te_doClearFunction(t_te *x, int f);
 //void te_dowrite(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_dsp(t_te *x, t_signal **sp, short *count);
 t_symbol *te_mangleName(t_symbol *name, int i, int fnum);
+void te_errorHandler(const char * reason, const char * file, int line, int gsl_errno);
 int main(void); 
 void *te_new(t_symbol *s, long argc, t_atom *argv); 
 
@@ -263,12 +270,56 @@ void te_paint(t_te *x, t_object *patcherview){
 		}
 	}
 
+	// draw the tempo correction line and control points
+	{
+		jgraphics_set_source_jrgba(g, &(x->lineColor));
+		int i;
+		for(i = 0; i < x->numFunctions; i++){
+			t_point *p = x->functions[i];
+			while(p){
+				if(!(p->next)){
+					break;
+				}
+				int j;
+				t_plan plan;
+				te_makePlan(x, te_scale(p->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
+				double freq = te_computeTempo(plan.startTime, &plan);
+				double freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
+				jgraphics_move_to(g, p->screen_coords.x, freq_sc);
+				double endTime_sc = te_scale(plan.endTime, x->time_min, x->time_max, 0., rect.width);
+				for(j = p->screen_coords.x; j < endTime_sc; j++){
+					freq = te_computeTempo(te_scale(j, 0, rect.width, x->time_min, x->time_max), &plan);
+					freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
+					jgraphics_line_to(g, j, freq_sc);
+					jgraphics_move_to(g, j, freq_sc);
+					//jgraphics_stroke(g);
+				}
+				jgraphics_stroke(g);
+				p = p->next;
+			}
+		}
+	}
+
+	/*
 	// draw lines
  	{ 
 		int i;
 		//jgraphics_set_source_jrgba(g, &(x->lineColor));
 		//jgraphics_set_line_width(g, 1); 
+		double t = te_scale(t, 0, rect.width, x->time_min, x->time_max);
+		t_plan plan;
+		te_makePlan(x, x->time_min, 0, &plan);
+		double tempo = te_computeTempo(t, &p);
 		for(i = 0; i < x->numFunctions; i++){
+			for(j = 0; j < rect.width; j++){
+				t = te_scale(t, 0, rect.width, x->time_min, x->time_max);
+				if(!te_isPlanValid(x, t, &plan, i)){
+					te_makePlan(x, t, i, &plan);
+				}
+				tempo = te_computeTempo(t, &p);
+
+			}
+
 			t_point *p = x->functions[i];
 			if(p){
 				jgraphics_move_to(g, p->screen_coords.x, p->screen_coords.y);
@@ -277,53 +328,16 @@ void te_paint(t_te *x, t_object *patcherview){
 			while(p){
 				jgraphics_set_source_jrgba(g, &(x->lineColor));
 				jgraphics_set_line_width(g, 1); 
-				t_pt norm_coords;
 				jgraphics_move_to(g, p->prev->screen_coords.x, p->prev->screen_coords.y);
 				jgraphics_line_to(g, p->screen_coords.x, p->screen_coords.y);
 				jgraphics_stroke(g);
 
-				/*
-				  if(x->show_correction){
-				  if(i == x->currentFunction){
-				  jgraphics_set_source_jrgba(g, &(x->correctionColor));
-				  }else{
-				  jgraphics_set_source_jrgba(g, &(x->bgCorrectionColor));
-				  }
-				  jgraphics_set_line_width(g, 1); 
-				  t_plan plan;
-				  te_makePlan(x, te_scale(p->prev->screen_coords.x + 1, 0, rect.width, x->time_min, x->time_max), i, &plan);
-				  double t = plan.correctionStart;
-				  //double t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
-				  double t_sc = p->prev->aux_points[0];
-				  double phase1 = te_computeCorrectedPhase(t + (1./44100.), &plan);
-				  double phase2 = te_computeCorrectedPhase(t + (2./44100.), &plan);
-				  double freq = (phase2 - phase1) * 44100.;
-				  double freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
-
-				  jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
-				  jgraphics_stroke(g);
-
-				  jgraphics_move_to(g, t_sc, freq_sc);
-
-				  t = plan.correctionEnd;
-				  t_sc = p->prev->aux_points[1];
-				  //t_sc = te_scale(t, x->time_min, x->time_max, 0, rect.width);
-				  phase1 = te_computeCorrectedPhase(t - (2. / 44100.), &plan);
-				  phase2 = te_computeCorrectedPhase(t - (1. / 44100.), &plan);
-				  freq = (phase2 - phase1) * 44100.;
-				  freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0.);
-
-				  jgraphics_line_to(g, t_sc, freq_sc);
-				  jgraphics_stroke(g);
-
-				  jgraphics_ellipse(g, t_sc - 2, freq_sc - 2, 4, 4);
-				  jgraphics_stroke(g);
-				  }
-				*/
 				p = p->next;
 			}
+
 		}
  	} 
+	*/
 
 	// draw points 
  	{ 
@@ -371,7 +385,7 @@ void te_paint(t_te *x, t_object *patcherview){
 				if(!(p->next)){
 					break;
 				}
-				double correctionStart, correctionStart_sc, correctionEnd, correctionEnd_sc;
+				double correctionStart_sc, correctionEnd_sc;
 				int j;
 				t_plan plan;
 				correctionStart_sc = p->aux_points[0];
@@ -412,14 +426,12 @@ void te_paint(t_te *x, t_object *patcherview){
 		jgraphics_show_text(g, buf);
 		//jgraphics_stroke(g);
 	}
- out:
 	critical_exit(x->lock);
 } 
 
 t_int *te_perform(t_int *w){
 	t_te *x = (t_te *)w[1];
 	int n = (int)w[2];
-	float sr = 44100.;
 	t_float *in = (t_float *)w[3];
 	t_float *out_phase_wrapped = (t_float *)w[4];
 	t_float *out_phase = (t_float *)w[5];
@@ -484,8 +496,11 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 	}
 
 
-	plan->alpha = p->a;
-	plan->beta = p->b;
+	plan->alpha = p->alpha;
+	plan->beta = p->beta;
+	plan->error_alpha = p->error_alpha;
+	plan->error_beta = p->error_beta;
+
 	// we are somewhere between the minimum time (probably 0) and the first
 	// point.  so we'll make a plan with a freq of 0.
 	if(f_sc < p->screen_coords.x){
@@ -596,6 +611,19 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan, int function){
 }
 
 void te_computePhaseError(t_te *x, t_plan *plan){
+	double endingPhase = te_scaledBetaCDFInt(1., plan->alpha, plan->beta, plan->endFreq - plan->startFreq, plan->startFreq);
+	endingPhase *= (plan->endTime - plan->startTime);
+	double endingPhase_wrapped = (endingPhase - ((int)endingPhase));
+        double phaseError = plan->endPhase - endingPhase_wrapped;
+	if(fabs(phaseError) > 0.5){
+		//phaseError = 1. - phaseError;
+	}
+	//post("phase error = %f", phaseError);
+	plan->phaseError = phaseError;
+}
+
+/*
+void te_computePhaseError(t_te *x, t_plan *plan){
 	double m = (plan->endFreq - plan->startFreq) / (plan->endTime - plan->startTime);
 	double b = plan->startFreq - (m * plan->startTime);
 	plan->m = m;
@@ -607,7 +635,7 @@ void te_computePhaseError(t_te *x, t_plan *plan){
 	// evaluate the integral at the endpoint and translate by the offset computed above.
 	plan->phaseError = ((plan->endTime * ((2. * b) + (m * plan->endTime))) / 2.) - plan->phaseError_start;
 
-	// wrap to [0,1]
+	// wrap to [0,1)
 	plan->phaseError = plan->phaseError - ((int)(plan->phaseError));
 
 	// compute the actual error
@@ -649,13 +677,30 @@ void te_computePhaseError(t_te *x, t_plan *plan){
 	}
 
 }
+*/
 
-double te_betaPDF(double a, double b, double x){
-	return ((pow(x, a - 1) * (pow(1 - x, b - 1))) / gsl_sf_beta(a, b));
+double te_betaPDF(double z, double a, double b){
+	//post("te_betaPDF: z = %f", z);
+	return ((pow(z, a - 1) * (pow(1 - z, b - 1))) / gsl_sf_beta(a, b));
 }
 
-double te_betaCDF(double a, double b, double x){
-	return gsl_sf_beta_inc(a, b, x);
+double te_betaCDF(double z, double a, double b){
+	//post("te_betaCDF: z = %f", z);
+	z = te_clip(z, 0., 1.);
+	return gsl_sf_beta_inc(a, b, z);
+}
+
+double te_betaCDFInt(double z, double a, double b){
+	post("te_betaCDFInt: z = %f", z);
+	z = te_clip(z, 0., 1.);
+	return (z * (gsl_sf_beta_inc(a, b, z) * gsl_sf_beta(a, b)) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b))) / gsl_sf_beta(a, b);
+}
+
+double te_scaledBetaCDFInt(double z, double a, double b, double scale, double offset){
+	//post("te_scaledBetaCDFInt: z = %f", z);
+	//post("%f %f %f %f %f", z, a, b, scale, offset);
+	z = te_clip(z, 0., 1.);
+	return (offset * z + (scale * z * ((gsl_sf_beta_inc(a, b, z) * gsl_sf_beta(a, b)) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b)) / z)) / gsl_sf_beta(a, b));
 }
 
 double te_computeCorrectedTempo(double t, t_plan *p){
@@ -663,7 +708,11 @@ double te_computeCorrectedTempo(double t, t_plan *p){
 }
 
 double te_computeTempo(double t, t_plan *p){
-	return t * p->m + p->b;
+	double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
+	norm_t = te_clip(norm_t, 0., 1.);
+	//post("te_computeTempo: norm_t = %f", norm_t);
+	return gsl_sf_beta_inc(p->alpha, p->beta, norm_t) * (p->endFreq - p->startFreq) + p->startFreq;
+	//return t * p->m + p->b;
 }
 
 double te_computePhase(double t, t_plan *p){
@@ -673,8 +722,14 @@ double te_computePhase(double t, t_plan *p){
 	case AFTER_LAST_POINT:
 		return 0.;
 	default:
-		return (((t * ((2. * p->b) + (p->m * t))) / 2.) - p->phaseError_start);
+		break;
+		//return (((t * ((2. * p->b) + (p->m * t))) / 2.) - p->phaseError_start);
 	}
+
+	double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
+	norm_t = te_clip(norm_t, 0., 1.);
+	//post("te_computePhase: norm_t = %f", norm_t);
+	return te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - p->startFreq, p->startFreq) * (p->endTime - p->startTime);
 }
 
 double te_computeCorrectedPhase(double t, t_plan *p){
@@ -691,14 +746,21 @@ double te_computeCorrectedPhase(double t, t_plan *p){
 			}else if(t >= p->correctionStart && t < p->correctionEnd){
 				//double segdur = p->correctionEnd - p->correctionStart;
 				//error = ((p->phaseError / (segdur * sr)) * ((t - (p->startTime + segdur)) * sr));
-				double norm_t = (t - p->correctionStart) / (p->correctionEnd - p->correctionStart);
-				error = p->phaseError * (te_betaCDF(p->alpha, p->beta, norm_t));
-				//post("%f %f %f %f", norm_t, p->phaseError, te_betaCDF(p->alpha, p->beta, norm_t), error);
+				//double norm_t = (t - p->correctionStart) / (p->correctionEnd - p->correctionStart);
+				double norm_t = te_scale(t, p->correctionStart, p->correctionEnd, 0., 1.);
+				norm_t = te_clip(norm_t, 0., 1.);
+				error = p->phaseError * (te_betaCDF(norm_t, p->error_alpha, p->error_beta));
+				//post("te_correctedPhase: norm_t %f, error %f", norm_t, error);
+				//post("%f %f %f %f", norm_t, p->phaseError, te_betaCDF(p->error_alpha, p->error_beta, norm_t), error);
 			}else if(t >= p->correctionEnd && t <= p->endTime){
 				error = p->phaseError;
 			}
 
-			return (((t * ((2. * p->b) + (p->m * t))) / 2.) - p->phaseError_start) + error;
+			double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
+			norm_t = te_clip(norm_t, 0., 1.);
+			//post("te_correctedPhase: norm_t = %f", norm_t);
+			return (te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - p->startFreq, p->startFreq) * (p->endTime - p->startTime)) + error;
+			//return (((t * ((2. * p->b) + (p->m * t))) / 2.) - p->phaseError_start) + error;
 		}
 	}
 }
@@ -774,25 +836,47 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 					// phase
 					p->phase = val;
 					break;
+				case 3:
+					// alpha
+					p->alpha = val;
+					break;
+				case 4:
+					// beta
+					p->beta = val;
+					break;
+				case 5:
+					// error_alpha
+					p->error_alpha = val;
+					break;
+				case 6:
+					// error_beta
+					p->error_beta = val;
+					break;
 				}
 				if(col == 0){
 					double ph = p->phase;
-					double a, b;
-					a = p->a;
-					b = p->b;
+					double a, b, ae, be;
+					a = p->alpha;
+					b = p->beta;
+					ae = p->error_alpha;
+					be = p->error_beta;
 					t_pt sc = p->screen_coords;
 					te_removePoint(x, p, x->currentFunction);
 					x->selected = te_insertPoint(x, sc, x->currentFunction);
 					x->selected->phase = ph;
-					x->selected->a = a;
-					x->selected->b = b;
+					x->selected->alpha = a;
+					x->selected->beta = b;
+					x->selected->error_alpha = ae;
+					x->selected->error_beta = be;
 				}
 			}else{
 				t_pt sc = {0., r.height};
 				double ph = 0.;
-				double a, b;
-				a = p->a;
-				b = p->b;
+				double a, b, ae, be;
+				a = p->alpha;
+				b = p->beta;
+				ae = p->error_alpha;
+				be = p->error_beta;
 				switch(col){
 				case 0:
 					sc.x = te_scale(val, x->time_min, x->time_max, 0, r.width);
@@ -806,8 +890,10 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 				}
 				x->selected = te_insertPoint(x, sc, x->currentFunction);
 				x->selected->phase = ph;
-				x->selected->a = a;
-				x->selected->b = b;
+				x->selected->alpha = a;
+				x->selected->beta = b;
+				x->selected->error_alpha = ae;
+				x->selected->error_beta = be;
 			}
 		}
 		break;
@@ -901,8 +987,8 @@ t_point *te_selectControlPoint(t_te *x, t_pt p){
 	}
 
 	if(ptr){
-		post("click happened at %f and the point to the left is at %f", p.x, ptr->screen_coords.x);
-		post("%f %f %f", p.x, ptr->aux_points[0], ptr->aux_points[1]);
+		//post("click happened at %f and the point to the left is at %f", p.x, ptr->screen_coords.x);
+		//post("%f %f %f", p.x, ptr->aux_points[0], ptr->aux_points[1]);
 		if(fabs(p.x - ptr->aux_points[0]) <= CONTROL_POINT_WIDTH){
 			ptr->whichPoint = 1;
 			return ptr;
@@ -946,7 +1032,8 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 		}else{
 			x->selected = te_insertPoint(x, pt, x->currentFunction);
 			x->selected->phase = 0.;
-			x->selected->a = x->selected->b = 2.;
+			x->selected->alpha = x->selected->beta = 2.;
+			x->selected->error_alpha = x->selected->error_beta = 2.;
 			x->selected->whichPoint = 0;
 			te_defaultControlPoints(x->selected);
 			//post("%f %f", x->selected->aux_points[0], x->selected->aux_points[1]);
@@ -985,21 +1072,23 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x10:
 		{
 			if(x->selected->whichPoint){
-				post("%f %f", x->selected->aux_points[0], x->selected->aux_points[1]);
-				post("whichPoint = %d", x->selected->whichPoint);
 				x->selected->aux_points[x->selected->whichPoint - 1] = pt.x;
 			}else{
 				double ph = x->selected->phase;
-				double a, b;
-				a = x->selected->a;
-				b = x->selected->b;
+				double a, b, ae, be;
+				a = x->selected->alpha;
+				b = x->selected->beta;
+				ae = x->selected->error_alpha;
+				be = x->selected->error_beta;
 				te_removePoint(x, x->selected, x->currentFunction);
 				x->selected = te_insertPoint(x, pt, x->currentFunction);
 				te_defaultControlPoints(x->selected);
 				te_defaultControlPoints(x->selected->prev);
 				x->selected->phase = ph;
-				x->selected->a = a;
-				x->selected->b = b;
+				x->selected->alpha = a;
+				x->selected->beta = b;
+				x->selected->error_alpha = ae;
+				x->selected->error_beta = be;
 			}
 		}
 		break;
@@ -1063,6 +1152,16 @@ void te_setFunction(t_te *x, long f){
 	critical_exit(x->lock);
 	te_dumpCellblock(x);
 	jbox_redraw((t_jbox *)x);
+}
+
+double te_clip(double f, double min, double max){
+	double ff = f;
+	if(ff < min){
+		ff = min;
+	}else if(ff > max){
+		ff = max;
+	}
+	return ff;
 }
 
 double te_scale(double f, double min_in, double max_in, double min_out, double max_out){
@@ -1275,17 +1374,41 @@ void te_dumpCellblock(t_te *x){
 		  atom_setsym(&(out[0]), _sym_set);
 		  }
 		*/
+
+		// time
 		atom_setlong(&(out[2]), i);
 		atom_setlong(&(out[1]), 0);
 		atom_setfloat(&(out[3]), te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max));
 		outlet_anything(x->out_info, ps_cellblock, 4, out);
 
+		// freq
 		atom_setlong(&(out[1]), 1);
 		atom_setfloat(&(out[3]), te_scale(p->screen_coords.y, r.height, 0, x->freq_min, x->freq_max));
 		outlet_anything(x->out_info, ps_cellblock, 4, out);
 
+		// phase
 		atom_setlong(&(out[1]), 2);
 		atom_setfloat(&(out[3]), p->phase);
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		// alpha
+		atom_setlong(&(out[1]), 3);
+		atom_setfloat(&(out[3]), p->alpha);
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		// beta
+		atom_setlong(&(out[1]), 4);
+		atom_setfloat(&(out[3]), p->beta);
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		// error_alpha
+		atom_setlong(&(out[1]), 5);
+		atom_setfloat(&(out[3]), p->error_alpha);
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		// error_beta
+		atom_setlong(&(out[1]), 6);
+		atom_setfloat(&(out[3]), p->error_beta);
 		outlet_anything(x->out_info, ps_cellblock, 4, out);
 
 		p = p->next;
@@ -1406,7 +1529,7 @@ void te_postPlan(t_plan *plan){
 	post("phase error = %f %f", plan->phaseError, plan->phaseError_start);
 	//post("segment duration = %f seconds", plan->segmentDuration_sec);
 	post("correction starts at %f and ends at %f (%f)", plan->correctionStart, plan->correctionEnd, (plan->correctionEnd - plan->correctionStart));
-	post("m = %f, b = %f", plan->m, plan->b);
+	//post("m = %f, b = %f", plan->m, plan->b);
 	post("state = %d", plan->state);
 }
 
@@ -1499,6 +1622,10 @@ void te_dsp(t_te *x, t_signal **sp, short *count){
 	if(count[0]){
 		dsp_add(te_perform, 6, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
 	}
+}
+
+void te_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
+	error("tempo editor: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
 }
 
 int main(void){ 
@@ -1645,6 +1772,10 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		for(i = 0; i < MAX_NUM_FUNCTIONS * 3; i++){
 			x->ptrs[i] = (t_float *)malloc(2048 * sizeof(t_float));
 		}
+
+		// this is really fucking important.  if there's an error and the gsl's 
+		// default handler gets called, it aborts the program!
+		gsl_set_error_handler(te_errorHandler);  
 
 		x->name = NULL;
 
