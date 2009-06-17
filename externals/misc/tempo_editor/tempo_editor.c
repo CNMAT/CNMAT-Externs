@@ -539,10 +539,10 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		plan->endTime = te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max);
 		plan->startFreq = 0.;
 		plan->endFreq = 0.;
-		plan->startPhase = 0.;
+		plan->startPhase = p->a_phase;
 		// we don't want to introduce any phase error here that would cause the 
 		// algorithm to try to compensate for it.
-		plan->endPhase = 0.; 
+		plan->endPhase = p->a_phase; 
 		te_computePhaseError(x, plan);
 		//plan->correctionStart = plan->startTime + ((plan->endTime - plan->startTime) / 3.);
 		//plan->correctionEnd = plan->correctionStart + ((plan->endTime - plan->startTime) / 3.);
@@ -650,6 +650,7 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan, int function){
 
 void te_computePhaseError(t_te *x, t_plan *plan){
 	double endingPhase = te_scaledBetaCDFInt(1., plan->alpha, plan->beta, plan->endFreq - plan->startFreq, plan->startFreq);
+	endingPhase += plan->startPhase;
 	endingPhase *= (plan->endTime - plan->startTime);
 	double endingPhase_wrapped = (endingPhase - ((int)endingPhase));
         double phaseError = plan->endPhase - endingPhase_wrapped;
@@ -767,13 +768,17 @@ double te_computePhase(double t, t_plan *p){
 	double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
 	norm_t = te_clip(norm_t, 0., 1.);
 	//post("te_computePhase: norm_t = %f", norm_t);
-	return te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - p->startFreq, p->startFreq) * (p->endTime - p->startTime);
+	return te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - p->startFreq, p->startFreq) * (p->endTime - p->startTime) + p->startPhase;
 }
 
 double te_computeCorrectedPhase(double t, t_plan *p){
 	switch(p->state){
 	case BEFORE_FIRST_POINT:
-		return 0.999;
+		if(p->endPhase == 0.){
+			return 0.999;
+		}else{
+			return p->endPhase;
+		}
 	case AFTER_LAST_POINT:
 		return 0.;
 	default:
@@ -797,7 +802,7 @@ double te_computeCorrectedPhase(double t, t_plan *p){
 			double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
 			norm_t = te_clip(norm_t, 0., 1.);
 			//post("te_correctedPhase: norm_t = %f", norm_t);
-			return (te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - p->startFreq, p->startFreq) * (p->endTime - p->startTime)) + error;
+			return ((p->startPhase + te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - p->startFreq, p->startFreq)) * (p->endTime - p->startTime)) + error;
 			//return (((t * ((2. * p->b) + (p->m * t))) / 2.) - p->phaseError_start) + error;
 		}
 	}
