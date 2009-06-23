@@ -130,7 +130,7 @@ typedef struct _te{
 
 void *te_class; 
 
-t_symbol *ps_cellblock, *ps_pointNum, *ps_time, *ps_dFreq, *ps_aFreq, *ps_dPhase, *ps_aPhase, *ps_alpha, *ps_beta, *ps_errorAlpha, *ps_errorBeta;
+t_symbol *ps_cellblock, *ps_pointNum, *ps_time, *ps_dFreq, *ps_aFreq, *ps_dPhase, *ps_aPhase, *ps_alpha, *ps_beta, *ps_errorAlpha, *ps_errorBeta, *ps_error;
 
 void te_paint(t_te *x, t_object *patcherview); 
 t_int *te_perform(t_int *w);
@@ -237,7 +237,6 @@ void te_paint(t_te *x, t_object *patcherview){
 				double t = te_scale(idx, 0, rect.width, x->time_min, x->time_max);
 				double p;
 				if(!te_isPlanValid(x, t, &plan, j)){
-					//post("2. makePlan, %f", prev_t);
 					te_makePlan(x, t, j, &plan);
 				}
 
@@ -261,12 +260,12 @@ void te_paint(t_te *x, t_object *patcherview){
 
 				p = te_computeCorrectedPhase(t, &plan);
 				if(p - floor(p) < prev_correctedPhase - floor(prev_correctedPhase)){
-					jgraphics_move_to(g, idx, rect.height);
-					if(x->show_tempo_correction){
+									jgraphics_move_to(g, idx, rect.height);
+									//if(x->show_tempo_correction){
 						jgraphics_line_to(g, idx, te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
-					}else{
-						jgraphics_line_to(g, idx, te_scale(te_computeCorrectedTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
-					}
+						//}else{
+						//jgraphics_line_to(g, idx, te_scale(te_computeCorrectedTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
+						//}
 					jgraphics_stroke(g);
 				}
 
@@ -296,11 +295,11 @@ void te_paint(t_te *x, t_object *patcherview){
 				for(j = p->screen_coords.x; j < endTime_sc; j++){
 
 					// if we will show the correction, we should draw the uncorrected line here
-					if(x->show_tempo_correction){
+					//if(x->show_tempo_correction){
 						freq = te_computeTempo(te_scale(j, 0, rect.width, x->time_min, x->time_max), &plan);
-					}else{
-						freq = te_computeCorrectedTempo(te_scale(j, 0, rect.width, x->time_min, x->time_max), &plan);
-					}
+						//}else{
+						//freq = te_computeCorrectedTempo(te_scale(j, 0, rect.width, x->time_min, x->time_max), &plan);
+						//}
 					freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
 					jgraphics_line_to(g, j, freq_sc);
 					jgraphics_stroke(g);
@@ -591,11 +590,10 @@ t_int *te_perform(t_int *w){
 	t_float *out_bps = (t_float *)w[6];
 	int i, j;
 	t_plan *plan = &(x->plan);
-
+	t_symbol *name1, *name2, *name3;
 	//post("x = %p, %d, plan = %p, %p %p %p %p", x, n, plan, in, out_phase_wrapped, out_phase, out_bps);
 
 	for(j = 0; j < x->numFunctions; j++){
-		t_symbol *name1, *name2, *name3;
 		if(name1 = te_mangleName(x->name, 1, j)){
 			name1->s_thing = (t_object *)(x->ptrs[j * 3]);
 		}
@@ -619,7 +617,7 @@ t_int *te_perform(t_int *w){
 				}
 
 				x->ptrs[(j * 3) + 1][i] = te_computeCorrectedPhase(in[i], plan);
-				x->ptrs[(j * 3)][i] = x->ptrs[j * 3 + 1][i] - floor((x->ptrs[j * 3 + 1][i]));
+				x->ptrs[(j * 3)][i] = x->ptrs[(j * 3) + 1][i] - floor((x->ptrs[(j * 3) + 1][i]));
 				//x->ptrs[(j * 3) + 2][i] = m * in[i] + b;
 				//x->ptrs[(j * 3) + 2][i] = 0.; //te_computeTempo(in[i], plan);
 				x->ptrs[(j * 3) + 2][i] = (x->ptrs[(j * 3) + 1][i] - x->last_y[j]) * 44100.;
@@ -630,6 +628,18 @@ t_int *te_perform(t_int *w){
 	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 3], n * sizeof(t_float));
 	memcpy(out_phase, x->ptrs[x->currentFunction * 3 + 1], n * sizeof(t_float));
 	memcpy(out_bps, x->ptrs[x->currentFunction * 3 + 2], n * sizeof(t_float));
+
+	for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
+		if(name1 = te_mangleName(x->name, 1, j)){
+			name1->s_thing = NULL;
+		}
+		if(name2 = te_mangleName(x->name, 2, j)){
+			name2->s_thing = NULL;
+		}
+		if(name3 = te_mangleName(x->name, 3, j)){
+			name3->s_thing = NULL;
+		}
+	}
 
 	return w + 7;
 }
@@ -778,6 +788,11 @@ void te_computePhaseError(t_te *x, t_plan *plan){
 	double endingPhase_wrapped = (endingPhase - floor(endingPhase));
         double phaseError = plan->endPhase - endingPhase_wrapped;
 	if(fabs(phaseError) > 0.5){
+		if(phaseError < 0){
+			phaseError += 1;
+		}else{
+			phaseError -= 1;
+		}
 		//phaseError = 1. - phaseError;
 	}
 	//post("phase error = %f", phaseError);
@@ -1620,6 +1635,7 @@ void te_dumpCellblock(t_te *x){
 	t_point *p = x->functions[x->currentFunction];
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	t_plan plan;
 	t_atom out[4];
 	atom_setsym(&(out[0]), _sym_clear);
 	atom_setsym(&(out[1]), gensym("all"));
@@ -1670,14 +1686,19 @@ void te_dumpCellblock(t_te *x){
 	atom_setsym(&(out[3]), ps_errorBeta);
 	outlet_anything(x->out_info, ps_cellblock, 4, out);
 
+	atom_setlong(&(out[1]), c++);
+	atom_setsym(&(out[3]), ps_error);
+	outlet_anything(x->out_info, ps_cellblock, 4, out);
+
 	int i = 1; // first row is the header
 	while(p){
+		te_makePlan(x, te_scale(p->screen_coords.x, 0, r.width, x->time_min, x->time_max), x->currentFunction, &plan);
 		c = 0;
 		atom_setlong(&(out[2]), i);
 
 		// point number
 		atom_setlong(&(out[1]), c++);
-		atom_setfloat(&(out[3]), i);
+		atom_setlong(&(out[3]), i);
 		outlet_anything(x->out_info, ps_cellblock, 4, out);
 
 		// time
@@ -1723,6 +1744,11 @@ void te_dumpCellblock(t_te *x){
 		// error_beta
 		atom_setlong(&(out[1]), c++);
 		atom_setfloat(&(out[3]), p->error_beta);
+		outlet_anything(x->out_info, ps_cellblock, 4, out);
+
+		// error
+		atom_setlong(&(out[1]), c++);
+		atom_setfloat(&(out[3]), plan.phaseError);
 		outlet_anything(x->out_info, ps_cellblock, 4, out);
 
 		p = p->next;
@@ -2054,6 +2080,7 @@ int main(void){
 	ps_beta = gensym("Beta");
 	ps_errorAlpha = gensym("E Alpha");
 	ps_errorBeta = gensym("E Beta");
+	ps_error = gensym("Error");
 
  	version(0); 
 	
