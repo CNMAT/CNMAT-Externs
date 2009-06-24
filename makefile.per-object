@@ -76,7 +76,10 @@ export BUILD_DIR
 export OBJ = $(notdir $(lastword $(strip $(CURDIR))))
 
 # Filenames derived from the name of the object
-SOURCE = $(OBJ).c
+#SOURCE = $(OBJ).c
+POSSIBLE_SOURCE_FILES = $(OBJ).c $(OBJ).cpp $(OBJ).cc
+SOURCE = $(filter $(wildcard $(OBJ).*), $(POSSIBLE_SOURCE_FILES))
+
 REZ_FILE = $(OBJ).r
 HELPFILE = $(OBJ).maxhelp
 CFM_BINARY = $(CODEWARRIOR_BUILD_DIR)/$(OBJ)
