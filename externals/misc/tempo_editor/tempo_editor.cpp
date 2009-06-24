@@ -873,7 +873,13 @@ double te_betaCDF(double z, double a, double b){
 	//post("te_betaCDF: z = %f", z);
 	z = te_clip(z, 0., 1.);
 	//return gsl_sf_beta_inc(a, b, z);
-	return boost::math::ibeta(a, b, z);
+	double r;
+	if(a == 1 && b == 1){
+		r = z;
+	}else{
+		r = boost::math::ibeta(a, b, z);
+	}
+	return r;
 }
 
 double te_betaCDFInt(double z, double a, double b){
@@ -881,7 +887,13 @@ double te_betaCDFInt(double z, double a, double b){
 	z = te_clip(z, 0., 1.);
 	//double beta_ab = gsl_sf_beta(a, b);
 	//return (z * (gsl_sf_beta_inc(a, b, z) * beta_ab) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b))) / beta_ab;
-	return (z * (boost::math::beta(a, b, z) - boost::math::beta(a + 1, b, z))) / boost::math::beta(a, b);
+	double r;
+	if(a == 1 && b == 1){
+		r = (z * z) / 2;
+	}else{
+		r = (z * (boost::math::beta(a, b, z) - boost::math::beta(a + 1, b, z))) / boost::math::beta(a, b);
+	}
+	return r;
 }
 
 double te_scaledBetaCDFInt(double z, double a, double b, double scale, double offset){
@@ -890,7 +902,14 @@ double te_scaledBetaCDFInt(double z, double a, double b, double scale, double of
 	z = te_clip(z, 0., 1.);
 	//double beta_ab = gsl_sf_beta(a, b);
 	//return (offset * z + (scale * z * ((gsl_sf_beta_inc(a, b, z) * beta_ab) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b)) / z)) / beta_ab);
-	return (offset * z + (scale * z * (boost::math::beta(a, b, z) - (boost::math::beta(a + 1, b, z)) / z)) / boost::math::beta(a, b));
+
+	double r;
+	if(a == 1 && b == 1){
+		r = offset * z + ((scale * (z * z)) / 2.);
+	}else{
+		r = (offset * z + (scale * z * (boost::math::beta(a, b, z) - (boost::math::beta(a + 1, b, z)) / z)) / boost::math::beta(a, b));
+	}
+	return r;
 }
 
 double te_computeCorrectedTempo(double t, t_plan *p){
