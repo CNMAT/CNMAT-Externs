@@ -54,8 +54,8 @@ there is a drawing bug with the beat at the arrival frequency point when it is d
 #include "jgraphics.h" 
 #include "z_dsp.h"
 #include "version.c" 
-#include "gsl/gsl_sf.h"
-#include "gsl/gsl_errno.h"
+//#include "gsl/gsl_sf.h"
+//#include "gsl/gsl_errno.h"
 #undef msg
 #include "boost/math/special_functions/gamma.hpp"
 #include <boost/math/special_functions/beta.hpp>
@@ -197,7 +197,6 @@ void te_doClearFunction(t_te *x, int f);
 //void te_dowrite(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_dsp(t_te *x, t_signal **sp, short *count);
 t_symbol *te_mangleName(t_symbol *name, int i, int fnum);
-void te_errorHandler(const char * reason, const char * file, int line, int gsl_errno);
 int main(void); 
 void *te_new(t_symbol *s, long argc, t_atom *argv); 
 
@@ -870,12 +869,19 @@ double te_betaPDF(double z, double a, double b){
 }
 
 double te_betaCDF(double z, double a, double b){
-	//post("te_betaCDF: z = %f", z);
 	z = te_clip(z, 0., 1.);
 	//return gsl_sf_beta_inc(a, b, z);
 	double r;
-	if(a == 1 && b == 1){
+	if(a == 1. && b == 1.){
 		r = z;
+	}else if(a == 1.){
+		r = 1. - (1. * pow((1. - z), b));
+	}else if(b == 1.){
+		if(a == 2){
+			r = z * z;
+		}else{
+			r = pow(z, a);
+		}
 	}else{
 		r = boost::math::ibeta(a, b, z);
 	}
@@ -883,13 +889,20 @@ double te_betaCDF(double z, double a, double b){
 }
 
 double te_betaCDFInt(double z, double a, double b){
-	post("te_betaCDFInt: z = %f", z);
 	z = te_clip(z, 0., 1.);
 	//double beta_ab = gsl_sf_beta(a, b);
 	//return (z * (gsl_sf_beta_inc(a, b, z) * beta_ab) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b))) / beta_ab;
 	double r;
 	if(a == 1 && b == 1){
 		r = (z * z) / 2;
+	}else if(a == 1){
+		r = (1 /(1. + b)) * pow(1. - z, b + 1) + z;
+	}else if(b == 1.){
+		if(a == 2){
+			r = (z * z * z) / 3;
+		}else{
+			r = pow(z, b + 1) / (b + 1);
+		}
 	}else{
 		r = (z * (boost::math::beta(a, b, z) - boost::math::beta(a + 1, b, z))) / boost::math::beta(a, b);
 	}
@@ -906,6 +919,12 @@ double te_scaledBetaCDFInt(double z, double a, double b, double scale, double of
 	double r;
 	if(a == 1 && b == 1){
 		r = offset * z + ((scale * (z * z)) / 2.);
+	}else if(a == 1.){
+		// not sure why this doesn't work...
+		//r = (1 / (b + 1)) * scale * pow(1. - 1. * z, (b + 1)) + offset * z + scale * (-1. + 1. * z);
+		r = (offset * z + (scale * z * (boost::math::beta(a, b, z) - (boost::math::beta(a + 1, b, z)) / z)) / boost::math::beta(a, b));
+	}else if(b == 1.){
+		r = offset * z + ((scale * pow(z, a + 1)) / (a + 1));
 	}else{
 		r = (offset * z + (scale * z * (boost::math::beta(a, b, z) - (boost::math::beta(a + 1, b, z)) / z)) / boost::math::beta(a, b));
 	}
@@ -2008,10 +2027,6 @@ void te_dsp(t_te *x, t_signal **sp, short *count){
 	}
 }
 
-void te_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
-
-}
-
 int main(void){ 
  	t_class *c = class_new("tempo_editor", (method)te_new, (method)te_free, sizeof(t_te), 0L, A_GIMME, 0); 
 	class_dspinitjbox(c);
@@ -2178,10 +2193,6 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		for(i = 0; i < MAX_NUM_FUNCTIONS * 3; i++){
 			x->ptrs[i] = (t_float *)malloc(2048 * sizeof(t_float));
 		}
-
-		// this is really fucking important.  if there's an error and the gsl's 
-		// default handler gets called, it aborts the program!
-		gsl_set_error_handler(te_errorHandler);  
 
 		x->name = NULL;
 
