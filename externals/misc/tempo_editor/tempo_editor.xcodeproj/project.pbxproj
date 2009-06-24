@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1230F9600FE2BD7E00265259 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1230F95F0FE2BD7E00265259 /* libgsl.a */; };
-		1280FB3E0FD7390B00696DEB /* tempo_editor.c in Sources */ = {isa = PBXBuildFile; fileRef = 1280FB3D0FD7390B00696DEB /* tempo_editor.c */; };
+		1280FB3E0FD7390B00696DEB /* tempo_editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1280FB3D0FD7390B00696DEB /* tempo_editor.cpp */; };
 		1298AD1C0FC91630001BACCC /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1298AD1B0FC91630001BACCC /* MaxAPI.framework */; };
 		12FACB220FD83D4B00C745EF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12FACB210FD83D4B00C745EF /* MaxAudioAPI.framework */; };
 		12FACB2D0FD8565800C745EF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 12FACB2C0FD8565800C745EF /* commonsyms.c */; };
@@ -19,7 +19,7 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		1230F95F0FE2BD7E00265259 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../../../../lib/gsl/lib/libgsl.a; sourceTree = SOURCE_ROOT; };
 		1257EEB60AE6A0C1007E4472 /* tempo_editor.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tempo_editor.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		1280FB3D0FD7390B00696DEB /* tempo_editor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tempo_editor.c; sourceTree = "<group>"; };
+		1280FB3D0FD7390B00696DEB /* tempo_editor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tempo_editor.cpp; sourceTree = "<group>"; };
 		1298AD1B0FC91630001BACCC /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		12FACB210FD83D4B00C745EF /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		12FACB2C0FD8565800C745EF /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
@@ -73,7 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				12FACB2C0FD8565800C745EF /* commonsyms.c */,
-				1280FB3D0FD7390B00696DEB /* tempo_editor.c */,
+				1280FB3D0FD7390B00696DEB /* tempo_editor.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -161,7 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1280FB3E0FD7390B00696DEB /* tempo_editor.c in Sources */,
+				1280FB3E0FD7390B00696DEB /* tempo_editor.cpp in Sources */,
 				12FACB2D0FD8565800C745EF /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -243,6 +243,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "/Users/johnmac/Development/cnmat/trunk/max/SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -254,10 +255,12 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/msp-includes\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../../lib/gsl/include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../../../../../Downloads/boost_1_39_0\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = ../../externals;
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../lib/gsl/lib\"";

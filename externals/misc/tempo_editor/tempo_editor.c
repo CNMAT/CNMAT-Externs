@@ -56,8 +56,15 @@ there is a drawing bug with the beat at the arrival frequency point when it is d
 #include "version.c" 
 #include "gsl/gsl_sf.h"
 #include "gsl/gsl_errno.h"
+#undef msg
+#include "boost/math/special_functions/gamma.hpp"
+#include <boost/math/special_functions/beta.hpp>
+#include <boost/math/tools/stats.hpp>
+//#include <boost/math/tools/test.hpp>
+#include <boost/math/constants/constants.hpp>
+//#include <boost/type_traits/is_floating_point.hpp>
 
-#define MAX_NUM_FUNCTIONS 32
+#define MAX_NUM_FUNCTIONS 8
 #define POINT_WIDTH 14
 #define CONTROL_POINT_WIDTH 10
 
@@ -128,7 +135,7 @@ typedef struct _te{
 	t_pt last_mouse;
 } t_te; 
 
-void *te_class; 
+t_class *te_class; 
 
 t_symbol *ps_cellblock, *ps_pointNum, *ps_time, *ps_dFreq, *ps_aFreq, *ps_dPhase, *ps_aPhase, *ps_alpha, *ps_beta, *ps_errorAlpha, *ps_errorBeta, *ps_error;
 
@@ -858,26 +865,32 @@ void te_computePhaseError(t_te *x, t_plan *plan){
 
 double te_betaPDF(double z, double a, double b){
 	//post("te_betaPDF: z = %f", z);
-	return ((pow(z, a - 1) * (pow(1 - z, b - 1))) / gsl_sf_beta(a, b));
+	//return ((pow(z, a - 1) * (pow(1 - z, b - 1))) / gsl_sf_beta(a, b));
+	return ((pow(z, a - 1) * (pow(1 - z, b - 1))) / boost::math::beta(a, b));
 }
 
 double te_betaCDF(double z, double a, double b){
 	//post("te_betaCDF: z = %f", z);
 	z = te_clip(z, 0., 1.);
-	return gsl_sf_beta_inc(a, b, z);
+	//return gsl_sf_beta_inc(a, b, z);
+	return boost::math::ibeta(a, b, z);
 }
 
 double te_betaCDFInt(double z, double a, double b){
 	post("te_betaCDFInt: z = %f", z);
 	z = te_clip(z, 0., 1.);
-	return (z * (gsl_sf_beta_inc(a, b, z) * gsl_sf_beta(a, b)) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b))) / gsl_sf_beta(a, b);
+	//double beta_ab = gsl_sf_beta(a, b);
+	//return (z * (gsl_sf_beta_inc(a, b, z) * beta_ab) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b))) / beta_ab;
+	return (z * (boost::math::beta(a, b, z) - boost::math::beta(a + 1, b, z))) / boost::math::beta(a, b);
 }
 
 double te_scaledBetaCDFInt(double z, double a, double b, double scale, double offset){
 	//post("te_scaledBetaCDFInt: z = %f", z);
 	//post("%f %f %f %f %f", z, a, b, scale, offset);
 	z = te_clip(z, 0., 1.);
-	return (offset * z + (scale * z * ((gsl_sf_beta_inc(a, b, z) * gsl_sf_beta(a, b)) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b)) / z)) / gsl_sf_beta(a, b));
+	//double beta_ab = gsl_sf_beta(a, b);
+	//return (offset * z + (scale * z * ((gsl_sf_beta_inc(a, b, z) * beta_ab) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b)) / z)) / beta_ab);
+	return (offset * z + (scale * z * (boost::math::beta(a, b, z) - (boost::math::beta(a + 1, b, z)) / z)) / boost::math::beta(a, b));
 }
 
 double te_computeCorrectedTempo(double t, t_plan *p){
@@ -886,13 +899,15 @@ double te_computeCorrectedTempo(double t, t_plan *p){
 	}else{
 		return te_computeTempo(t, p);
 	}
+	return 0.;
 }
 
 double te_computeTempo(double t, t_plan *p){
 	double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
 	norm_t = te_clip(norm_t, 0., 1.);
 	//post("te_computeTempo: norm_t = %f", norm_t);
-	return gsl_sf_beta_inc(p->alpha, p->beta, norm_t) * (p->endFreq - p->startFreq) + p->startFreq;
+	//return gsl_sf_beta_inc(p->alpha, p->beta, norm_t) * (p->endFreq - p->startFreq) + p->startFreq;
+	return boost::math::ibeta(p->alpha, p->beta, norm_t) * (p->endFreq - p->startFreq) + p->startFreq;
 	//return t * p->m + p->b;
 }
 
@@ -2116,7 +2131,7 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
  	if(x = (t_te *)object_alloc(te_class)){ 
 
  		jbox_new((t_jbox *)x, boxflags, argc, argv); 
- 		x->box.z_box.b_firstin = (void *)x; 
+ 		x->box.z_box.b_firstin = (t_object *)x; 
 
 		dsp_setupjbox((t_pxjbox *)x, 1);
 
