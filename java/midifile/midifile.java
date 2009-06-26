@@ -52,6 +52,7 @@ VERSION 3.0.2: Now outputs /text message for meta events like markers
 VERSION 3.0.3: Read message now locates file in max's searchpath
 VERSION 3.0.4: Better handling of meta-events
 VERSION 3.1: Sync outlet
+VERSION 3.2: Records
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -89,12 +90,15 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 	private boolean ignoreTempoChanges = false;
 	private boolean ignoreNoteOffVelocity = true;
+	private boolean outputStatus = false;
 
 	private boolean verbose = false;
 
 	private int[][] recordState = null;
 
 	private MaxClock syncClock = null;
+
+	private long recordStartTime = 0;
 
 	public midifile(Atom[] args){
                 if(args.length > 0)
@@ -119,6 +123,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
                 declareOutlets(new int[]{DataTypes.ALL, DataTypes.ALL, DataTypes.MESSAGE, DataTypes.ALL});
 		createInfoOutlet(false);
 
+		declareAttribute("outputStatus");
+
                 setInletAssist(INLET_ASSIST);
                 setOutletAssist(new String[]{"Playback", "Dump", "Information about the midifile", "Bang when done playing or dumping"});
 
@@ -136,6 +142,20 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void list(Atom[] args){
 		if(sequencer.isRunning()){
 			error("midifile: can't add notes to sequence while it is being played");
+			return;
+		}
+
+		if(sequencer.isRecording()){
+			try{
+			Receiver r = sequencer.getReceiver();
+			ShortMessage m = new ShortMessage();
+			m.setMessage(args[0].toInt(), args[1].toInt(), args[2].toInt());
+			r.send(m, Math.round((System.nanoTime() - recordStartTime) / 1000.));
+			post("" + sequencer.getTickPosition() + " " + sequencer.getMicrosecondLength());
+			}catch(Exception e){
+				e.printStackTrace();
+				return;
+			}
 			return;
 		}
 
@@ -315,7 +335,6 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		sequencer.stop();
 	}
 
-	/*
 	public void recordEnable(){
 		Track[] tracks = sequence.getTracks();
 		for(int i = 0; i < numTracks; i++){
@@ -352,7 +371,15 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		}
 		
 	}
-	*/
+
+	public void record(int b){
+		if(b == 0){
+			sequencer.stopRecording();
+		}else{
+			sequencer.startRecording();
+			recordStartTime = System.nanoTime();
+		}
+	}
 
 	public void dump(){
 		stop();
@@ -394,10 +421,19 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			if(status <= 143 && ignoreNoteOffVelocity) velocity = 0;
 			channel = status <= 143 ? status - 128 : status - 144;
 
-			if(timeStamp == -1)
-				return new Atom[]{Atom.newAtom("note"), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
-			else
-				return new Atom[]{Atom.newAtom("note"), Atom.newAtom(timeStamp), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+			if(timeStamp == -1){
+				if(outputStatus){
+					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(status), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+				}else{
+					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+				}
+			}else{
+				if(outputStatus){
+					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(status), Atom.newAtom(timeStamp), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+				}else{
+					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(timeStamp), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+				}
+			}
 		}
 
 		return null;
@@ -408,7 +444,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		byte[] data = m.getData();
 
 		//http://www.sonicspot.com/guide/midifiles.html
-		post("type = " + type);
+		//post("type = " + type);
 		switch (type) {
 			case 0:
 				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
