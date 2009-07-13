@@ -41,6 +41,11 @@ VERSION 0.0: First try
 
 #define SDIFED_BUF_SIZE 2048
 
+#define SDIFED_LAYER_BACKGROUND 0
+#define SDIFED_LAYER_SDIF 1
+#define SDIFED_LAYER_SEL_LINES 2
+#define SDIFED_LAYER_SEL 3
+
 #ifndef VPOST()
 #define VPOST(vv, str, args...) (((vv) > 0) ? post("%s:%d: " str, NAME, __LINE__, ##args) : 0)
 #endif
@@ -49,11 +54,23 @@ typedef struct _sel{
 	double click, drag;
 } t_sel;
 
+typedef struct _trackstats{
+	float amp_min;
+	float amp_max;
+	float freq_min;
+	float freq_max;
+} t_trackstats;
+
 typedef struct _sdifed{
 	t_jbox box;
 	void *out_data, *out_info;
 	t_cmmjl_sdif_buffer sdif_buf;
 	char matrix_type[4];
+	// if the matrix is 1TRC or something else that has track numbers
+	// we can store the max number here.
+	int numTracks; 
+	double delta_avg;
+	int framecount;
 	t_jrgba bgcolor;
 	t_jrgba selcolor;
 	t_jrgba linecolor;
@@ -68,6 +85,10 @@ typedef struct _sdifed{
 	t_sel sel_x, sel_y;
 	t_atom *buf;
 	int v; // verbose
+	unsigned long long state;
+	t_trackstats *trackstats;
+	// these should be marked non-zero to indicate that a layer should be redrawn
+	int layerstate[4]; 
 } t_sdifed;
 
 void *sdifed_class;
@@ -80,6 +101,7 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect);
 void sdifed_draw_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect);
 void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect);
 void sdifed_draw_single_frame(t_sdifed *x, t_jgraphics *g, t_rect *rect);
+void sdifed_draw_bounds(t_sdifed *x, t_jgraphics *g, t_rect *rect);
 void sdifed_assist(t_sdifed *x, void *b, long m, long a, char *s);
 void sdifed_free(t_sdifed *x);
 void sdifed_error(SDIFresult r, const char *st);
@@ -97,12 +119,15 @@ double sdifed_scale(double f, double min_in, double max_in, double min_out, doub
 void sdifed_zoom_in(t_sdifed *x);
 void sdifed_zoom_out(t_sdifed *x);
 void sdifed_zero_sel(t_sel *sel);
+void sdifed_output_bounds(t_sdifed *x);
+
+t_symbol *ps_sdifLayer;
 
 int main(void){
 	t_class *c = class_new("SDIF-editor", (method)sdifed_new, (method)sdifed_free, sizeof(t_sdifed), 0L, A_GIMME, 0);
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
-	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR);
+	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR);
 
 	class_addmethod(c, (method)sdifed_paint, "paint", A_CANT, 0);
 	class_addmethod(c, (method)version, "version", 0);
@@ -121,6 +146,7 @@ int main(void){
 	CLASS_ATTR_DOUBLE(c, "timemax", 0, t_sdifed, timemax_disp);
 	CLASS_ATTR_FLOAT(c, "contrast", 0, t_sdifed, contrast);
 	CLASS_ATTR_DOUBLE(c, "single_frame_width", 0, t_sdifed, single_frame_width);
+	CLASS_ATTR_LONG(c, "verbose", 0, t_sdifed, v);
 
 	CLASS_STICKY_ATTR(c, "category", 0, "Color");
 
@@ -153,6 +179,8 @@ int main(void){
 
 	class_register(CLASS_BOX, c);
 	sdifed_class = c;
+
+	ps_sdifLayer = gensym("sdifLayer");
 
 	version(0);
 	
@@ -190,7 +218,7 @@ void *sdifed_new(t_symbol *s, long argc, t_atom *argv){
 	jbox_new((t_jbox *)x, boxflags, argc, argv);
 	x->box.b_firstin = (void *)x;
 
-	x->out_info = listout((t_object *)x);
+	x->out_info = outlet_new((t_object *)x, NULL);
 	x->out_data = listout((t_object *)x);
 
 
@@ -206,13 +234,18 @@ void *sdifed_new(t_symbol *s, long argc, t_atom *argv){
 	x->freqmax_sdif = 22050;
 	x->timemin_disp = 0;
 	x->timemax_disp = 1;
-	x->contrast = 1.;
+	x->contrast = 10.;
 	x->sel_x.click = x->sel_x.drag = -1;
 	x->sel_y.click = x->sel_y.drag = -1;
 	x->single_frame_width = 100;
 	x->buf = (t_atom *)malloc(SDIFED_BUF_SIZE * sizeof(t_atom));
 	x->v = 1;
-
+	/*
+	x->sel[SDIFED_LAYER_BACKGROUND] = 1;
+	x->sel[SDIFED_LAYER_SDIF] = 1;
+	x->sel[SDIFED_LAYER_SEL_LINES] = 1;
+	x->sel[SDIFED_LAYER_SEL] = 1;
+	*/
 	// SDIF setup
 	cmmjl_sdif_init(sdifed_error);
 
@@ -224,7 +257,7 @@ void sdifed_set(t_sdifed *x, t_symbol *bufname){
 	SDIFmem_Frame f;
 	float *data;
 	double time;
-	int r, c;
+	int i, r, c, framecount, numTracks;
 
 	x->sdif_buf.t_bufferSym = bufname;
 	LookupMyBuffer(&(x->sdif_buf));
@@ -238,10 +271,25 @@ void sdifed_set(t_sdifed *x, t_symbol *bufname){
 	SDIFbuf_GetMaxTime(x->sdif_buf.t_buf, &(x->timemax_sdif));
 	VPOST(x->v, "min time = %f\nmax time = %f", x->timemin_sdif, x->timemax_sdif);
 	x->timemin_disp = x->timemin_sdif;
-	x->timemax_disp = x->timemax_sdif;
+	//x->timemax_disp = x->timemax_sdif;
+
+	if(x->timemax_sdif > 10.){
+		x->timemax_disp = 10.;
+	}else{
+		x->timemax_disp = x->timemax_sdif;
+	}
+
 
 	// figure out what the main matrix type is
 	cmmjl_sdif_getMainMatrixType(&(x->sdif_buf), x->matrix_type);
+	if(strncmp(x->matrix_type, "1TRC", 4)){
+		error("SDIF-editor: matrix type %c%c%c%c is not supported at this time (sorry)", 
+		      x->matrix_type[0],
+		      x->matrix_type[1],
+		      x->matrix_type[2],
+		      x->matrix_type[3]);
+		return;
+	}
 	VPOST(x->v, "matrix type = %c%c%c%c", 
 	      x->matrix_type[0], 
 	      x->matrix_type[1], 
@@ -249,10 +297,51 @@ void sdifed_set(t_sdifed *x, t_symbol *bufname){
 	      x->matrix_type[3]);
 
 	// get the first frame
-	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, x->timemin_disp, 1);
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, x->timemin_disp, ESDIF_SEARCH_FORWARDS);
+
+	if(!strncmp(x->matrix_type, "1TRC", 4)){
+		x->numTracks = 0;
+	}
+
+	double prevdelta = 0;
+	double delta_avg = 0;
+	framecount = 0;
+	time = 0;
+
+	// compute the average time between frames
+	while(f){
+		delta_avg += f->header.time - time;
+		time = f->header.time;
+
+		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
+			error("SDIF-editor: error!!");
+			return;
+		}
+
+		if(m->header.matrixDataType == SDIF_FLOAT64){
+			error("SDIF-editor: SDIF matrix contains doubles!!  I wasn't expecting that...");
+			return;
+		}
+
+		time = f->header.time;
+		r = m->header.rowCount;
+		c = m->header.columnCount;
+		data = (float *)(m->data);
+
+		f = f->next;
+		framecount++;
+	}
+
+	x->delta_avg = delta_avg / ((double)framecount);
+	x->framecount = framecount;
+
+	VPOST(x->v, "framecount = %d, numTracks = %d", x->framecount, x->numTracks);
+	//post("nFrames = %f", (x->timemax_sdif - x->timemin_sdif) / (delta_avg / (double)i));
+
 
 	// go through each frame and make sure the data is reasonable and that
 	// our buffer (x->buf) is big enough to handle it.
+	/*
 	while(f){
 		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
 			error("SDIF-editor: error!!");
@@ -268,6 +357,7 @@ void sdifed_set(t_sdifed *x, t_symbol *bufname){
 		r = m->header.rowCount;
 		c = m->header.columnCount;
 		data = (float *)(m->data);
+
 		if(r * c + 1 > SDIFED_BUF_SIZE){
 			x->buf = (t_atom *)realloc(x->buf, (r * c + 1) * sizeof(t_atom));
 			if(x->buf == NULL){
@@ -275,9 +365,19 @@ void sdifed_set(t_sdifed *x, t_symbol *bufname){
 				return;
 			}
 		}
-		// could look at the data here if we want
+
+		if(!strncmp(x->matrix_type, "1TRC", 4)){
+			for(i = 0; i < r; i++){
+				if(data[(r * i)] > x->numTracks){
+					x->numTracks = (int)(data[(r * i)]);
+				}
+			}
+		}
+
+		//post("time = %f", f->header.time);
 		f = f->next;
 	}
+	*/
 
 	jbox_redraw(&(x->box));
 }
@@ -298,27 +398,28 @@ void sdifed_paint(t_sdifed *x, t_object *patcherview){
 	jgraphics_set_source_jrgba(g, &c);
 	jgraphics_set_line_width(g, 1);
 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
+	jgraphics_stroke(g);
+
+	jgraphics_set_source_jrgba(g, &(x->bgcolor));
+	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
+	jgraphics_fill(g);
 
 	sdifed_draw_track_lines(x, g, &rect);
-	sdifed_draw_sdif(x, g, &rect);
-	sdifed_draw_lines(x, g, &rect);
-	sdifed_draw_single_frame(x, g, &rect);
-
-	jgraphics_stroke(g);
-
-	// make a rectangle
 	/*
-	t_jrgba hilite;
-	hilite.red = 1.;
-	hilite.green = 0.;
-	hilite.blue = 0.;
-	hilite.alpha = 1.;
-	jgraphics_set_source_jrgba(g, &hilite);
-	jgraphics_set_line_width(g, 1.);
-	jgraphics_ellipse(g, 50, 50, 2, 2);
-	jgraphics_fill(g);
-	jgraphics_stroke(g);
+	if(x->layerstate[SDIFED_LAYER_SDIF]){
+		jbox_invalidate_layer((t_object *)x, patcherview, ps_sdifLayer);
+		x->layerstate[SDIFED_LAYER_SDIF] = 0;
+	}
+	g = jbox_start_layer((t_object *)x, patcherview, ps_sdifLayer, 0, 0);
 	*/
+	sdifed_draw_sdif(x, g, &rect);
+	//jbox_end_layer((t_object *)x, patcherview, ps_sdifLayer);
+
+	sdifed_draw_lines(x, g, &rect);
+	//sdifed_draw_single_frame(x, g, &rect);
+	sdifed_output_bounds(x);
+	//sdifed_draw_bounds(x, g, &rect);
+
 }
 
 void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
@@ -333,6 +434,7 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 	double contrast = x->contrast;
 	double freq, amp, time;
 	int index;
+	int numFramesToSkip;
 	double freqtohilite_min, freqtohilite_max, timetohilite_min, timetohilite_max;
 	t_sel sel_x, sel_y;
 	sel_x = x->sel_x;
@@ -369,7 +471,7 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		//post("timetohilite_min = %f timetohilite_max = %f", timetohilite_min, timetohilite_max);
 	}
 
-	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, timemin_disp, 1);
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, timemin_disp, ESDIF_SEARCH_FORWARDS);
 
 	t_jrgba datacolor;
 	datacolor.red = x->datacolor.red;
@@ -385,7 +487,9 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 
 	jgraphics_set_line_width(g, 1.);
 
-	while(f){
+	numFramesToSkip = (int)floor(((x->timemax_disp - x->timemin_disp) / x->delta_avg) / rect->width);
+
+	while(f && (f->header.time <= x->timemax_disp)){
 		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
 			error("SDIF-editor: error!!");
 			return;
@@ -407,9 +511,22 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 				amp = data[(i * c) + 2];
 
 				if(freq <= freqmax_disp && freq >= freqmin_disp){
-					if((freq <= freqtohilite_max && freq >= freqtohilite_min) || 
-					   (time <= timetohilite_max && time >= timetohilite_min)){
-						jgraphics_set_source_jrgba(g, &hilite);
+					if(x->state == 0x10 || x->state == 0x12){
+						if((freq <= freqtohilite_max && freq >= freqtohilite_min) || 
+						   (time <= timetohilite_max && time >= timetohilite_min)){
+							jgraphics_set_source_jrgba(g, &hilite);
+						}else{
+							datacolor.alpha = amp * contrast;
+							jgraphics_set_source_jrgba(g, &datacolor);
+						}
+					}else if(x->state == 0x13){
+						if((freq <= freqtohilite_max && freq >= freqtohilite_min) && 
+						   (time <= timetohilite_max && time >= timetohilite_min)){
+							jgraphics_set_source_jrgba(g, &hilite);
+						}else{
+							datacolor.alpha = amp * contrast;
+							jgraphics_set_source_jrgba(g, &datacolor);
+						}
 					}else{
 						datacolor.alpha = amp * contrast;
 						jgraphics_set_source_jrgba(g, &datacolor);
@@ -420,7 +537,12 @@ void sdifed_draw_sdif(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 				}
 			}
 		}
-		f = f->next;
+		for(i = 0; i < numFramesToSkip + 1; i++){
+			f = f->next;
+			if(!f){
+				break;
+			}
+		}
 	}
 }
 
@@ -460,9 +582,11 @@ void sdifed_draw_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 	}
 }
 
+// if we can assume that a track number will only be used once in the course
+// of a file, this function can be greatly simplified.
 void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 	SDIFmem_Matrix m;
-	SDIFmem_Frame f;
+	SDIFmem_Frame f, ff;
 	float *data;
 	int r, c, i, j;
 	int index;
@@ -473,6 +597,14 @@ void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 	int num_prev_indices;
 	double timemin_disp, timemax_disp;
 	t_jrgba datacolor;
+	double numFramesToSkip = ((x->timemax_disp - x->timemin_disp) / x->delta_avg) / rect->width;
+	//post("%f %f %f %f %f", numFramesToSkip, x->timemax_disp, x->timemin_disp, x->delta_avg, rect->width);
+	if(numFramesToSkip > .25){
+		post("numFramesToSkip = %f, __NOT__ drawing lines");
+		return;
+	}
+	post("numFramesToSkip = %f, drawing lines");
+
 	datacolor.red = x->datacolor.red;
 	datacolor.green = x->datacolor.green;
 	datacolor.blue = x->datacolor.blue;
@@ -494,7 +626,40 @@ void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		timemax_disp = x->timemax_sdif;
 	}
 
-	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, x->timemin_sdif, 1);
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, x->timemin_sdif, ESDIF_SEARCH_FORWARDS);
+	ff = f;
+
+	int counter;
+	// check to see how many frequency components we're supposed to display.
+	// if it's ever more than the number of pixels we have, bail out.
+	// this needs to be smarter--it could be that it's fine for the most part
+	// but bad in only one small region.  we should try to deal with this properly
+	/*
+	while(ff && ff->header.time < x->timemin_disp){
+		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
+			error("SDIF-editor: error!!");
+			return;
+		}
+
+		if(m->header.matrixDataType == SDIF_FLOAT64){
+			error("SDIF-editor: SDIF matrix contains doubles!!  I wasn't expecting that...");
+			return;
+		}
+		r = m->header.rowCount;
+		c = m->header.columnCount;
+		data = (float *)(m->data);
+		counter = 0;
+		for(i = 0; i < r; i++){
+			freq = data[(i * c) + 1];
+			if(freq >= x->freqmin_disp && freq <= x->freqmax_disp){
+				if(++counter > rect->height){
+					return;
+				}
+			}
+		}
+		ff = ff->next;
+	}
+	*/
 
 	if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
 		error("SDIF-editor: error!!");
@@ -522,7 +687,7 @@ void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		num_prev_indices++;
 	}
 
-	while(f){
+	while(f && f->header.time <= x->timemax_disp){
 		if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
 			error("SDIF-editor: error!!");
 			return;
@@ -543,16 +708,18 @@ void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		for(i = 0; i < r; i++){
 	       		index = data[i * c];
 			freq = data[(i * c) + 1];
-			freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0);
-			amp = data[(i * c) + 2];
-			for(j = 0; j < num_prev_indices; j++){
-				if(prev_ind[j] == index){
-					//post("prev index = %d, index = %d, prev freq = %f, freq = %f", prev_ind[j], index, prev_freq[j], freq);
-					datacolor.alpha = amp * x->contrast;
-					jgraphics_set_source_jrgba(g, &datacolor);     
-					jgraphics_move_to(g, prev_time, prev_freq[j]);
-					jgraphics_line_to(g, time, freq);
-					jgraphics_stroke(g);
+			if(freq >= x->freqmin_disp && freq <= x->freqmax_disp){
+				freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0);
+				amp = data[(i * c) + 2];
+				for(j = 0; j < num_prev_indices; j++){
+					if(prev_ind[j] == index){
+						//post("prev index = %d, index = %d, prev freq = %f, freq = %f", prev_ind[j], index, prev_freq[j], freq);
+						datacolor.alpha = amp * x->contrast;
+						jgraphics_set_source_jrgba(g, &datacolor);     
+						jgraphics_move_to(g, prev_time, prev_freq[j]);
+						jgraphics_line_to(g, time, freq);
+						jgraphics_stroke(g);
+					}
 				}
 			}
 		}
@@ -561,12 +728,19 @@ void sdifed_draw_track_lines(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 		for(i = 0; i < r; i++){
 			index = data[i * c];
 			freq = data[(i * c) + 1];
-			freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0);
-			prev_freq[num_prev_indices] = freq;
-			prev_ind[num_prev_indices] = index;
-			num_prev_indices++;
+			if(freq >= x->freqmin_disp && freq <= x->freqmax_disp){
+				freq = sdifed_scale(freq, x->freqmin_disp, x->freqmax_disp, rect->height, 0);
+				prev_freq[num_prev_indices] = freq;
+				prev_ind[num_prev_indices] = index;
+				num_prev_indices++;
+			}
 		}
-		f = f->next;
+		for(i = 0; i < (int)floor(numFramesToSkip) + 1; i++){
+			f = f->next;
+			if(!f){
+				break;
+			}
+		}
 	}
 }
 
@@ -641,6 +815,40 @@ void sdifed_draw_single_frame(t_sdifed *x, t_jgraphics *g, t_rect *rect){
 	*/
 }
 
+void sdifed_draw_bounds(t_sdifed *x, t_jgraphics *g, t_rect *rect){
+	t_jrgba textcolor;
+	t_jfont *jf;
+	t_jtextlayout *jtl;
+	char text[16];
+	
+	// draw counter
+	jf = jfont_create(jbox_get_fontname((t_object *)x)->s_name, jbox_get_font_slant((t_object *)x), jbox_get_font_weight((t_object *)x), jbox_get_fontsize((t_object *)x));
+	jtl = jtextlayout_create();
+	textcolor.red = textcolor.green = textcolor.blue = 0;
+	textcolor.alpha = 1;
+	jtextlayout_settextcolor(jtl, &textcolor); 
+
+	sprintf(text, "%.01f", x->freqmax_disp);	
+	jtextlayout_set(jtl, text, jf, 0, 0, rect->width - 10, rect->height- 10, JGRAPHICS_TEXT_JUSTIFICATION_LEFT, JGRAPHICS_TEXTLAYOUT_NOWRAP);
+	jtextlayout_draw(jtl, g);
+
+	sprintf(text, "%.01f", x->freqmin_disp);
+	jtextlayout_set(jtl, text, jf, 0, rect->height - 10, rect->width - 10, rect->height- 10, JGRAPHICS_TEXT_JUSTIFICATION_LEFT, JGRAPHICS_TEXTLAYOUT_NOWRAP);
+	jtextlayout_draw(jtl, g);
+
+	/*
+	sprintf(text, "%.02f", x->timemin_disp);	
+	jtextlayout_set(jtl, text, jf, 0, 0, rect->width - 10, rect->height- 10, JGRAPHICS_TEXT_JUSTIFICATION_LEFT, JGRAPHICS_TEXTLAYOUT_NOWRAP);
+	jtextlayout_draw(jtl, g);
+
+	sprintf(text, "%.02f", x->freqmin_disp);	
+	jtextlayout_set(jtl, text, jf, 0, 0, rect->width - 10, rect->height- 10, JGRAPHICS_TEXT_JUSTIFICATION_LEFT, JGRAPHICS_TEXTLAYOUT_NOWRAP);
+	jtextlayout_draw(jtl, g);
+	*/
+	jtextlayout_destroy(jtl);
+	jfont_destroy(jf);
+}
+
 void sdifed_assist(t_sdifed *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET){
 	}else{
@@ -702,7 +910,7 @@ void sdifed_output_current_frame(t_sdifed *x){
 	if(!(x->sdif_buf.t_buf)){
 		return;
 	}
-	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, time, 1);
+	f = SDIFbuf_GetFrame(x->sdif_buf.t_buf, time, ESDIF_SEARCH_FORWARDS);
 
 	if(!(m = GetMatrix(&(x->sdif_buf), x->matrix_type, f->header.time, 1))){
 		error("SDIF-editor: error!!");
@@ -737,6 +945,7 @@ void sdifed_output_matrix_for_time(t_sdifed *x, double time){
 // 0x94 = control
 // 0x18 = option
 void sdifed_mousedown(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers){
+	x->state = (unsigned long long)modifiers;
 	//post("0x%X", modifiers);
 	switch(modifiers){
 	case 0x10:
@@ -763,10 +972,23 @@ void sdifed_mousedown(t_sdifed *x, t_object *patcherview, t_pt pt, long modifier
 	jbox_redraw(&(x->box));
 	//sdifed_post_sel(&(x->sel_x), &(x->sel_y));
 	sdifed_output_sel(x);
-	sdifed_output_current_frame(x);
+	//sdifed_output_current_frame(x);
 }
 
 void sdifed_mousedrag(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers){
+	t_rect r;
+	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+	if(pt.x < 0){
+		pt.x = 0;
+	}else if(pt.x > r.width){
+		pt.x = r.width;
+	}
+	if(pt.y < 0){
+		pt.y = 0;
+	}else if(pt.y > r.height){
+		pt.y = r.height;
+	}
+	x->state = (unsigned long long)modifiers;
 	switch(modifiers){
 	case 0x10:
 		x->sel_x.drag = pt.x;
@@ -784,7 +1006,7 @@ void sdifed_mousedrag(t_sdifed *x, t_object *patcherview, t_pt pt, long modifier
 
 	jbox_redraw(&(x->box));
 	sdifed_output_sel(x);
-	sdifed_output_current_frame(x);
+	//sdifed_output_current_frame(x);
 }
 
 void sdifed_mouseup(t_sdifed *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -863,7 +1085,8 @@ void sdifed_output_sel(t_sdifed *x){
 	atom_setfloat(&(out[1]), sdifed_scale(xmax, 0., r.width, timemin_disp, timemax_disp));
 	atom_setfloat(&(out[2]), sdifed_scale(ymin, r.height, 0., x->freqmin_disp, x->freqmax_disp));
 	atom_setfloat(&(out[3]), sdifed_scale(ymax, r.height, 0., x->freqmin_disp, x->freqmax_disp));
-	outlet_list(x->out_info, NULL, 4, out);
+
+	outlet_anything(x->out_info, gensym("selection"), 4, out);
 }
 
 double sdifed_scale(double f, double min_in, double max_in, double min_out, double max_out){
@@ -884,34 +1107,33 @@ void sdifed_zoom_in(t_sdifed *x){
 	ymax = sdifed_get_sel_min(&(x->sel_y));
 
 	jbox_get_patching_rect(&(x->box.b_ob), &r);
-	/*
-	if(xmin == -1){
-		xmin = 0.;
-	}
-	if(xmax == -1){
-		xmax = r.width;
-	}
-	if(ymin == -1){
-		ymin = r.height;
-	}
-	if(ymax == -1){
-		ymax = 0.;
-	}
-	*/
+
 	if(xmin >= 0){
-		x->timemin_disp = sdifed_scale(xmin, 0, r.width, x->timemin_disp, x->timemax_disp);
+		xmin = sdifed_scale(xmin, 0., r.width, x->timemin_disp, x->timemax_disp);
+	}else{
+		xmin = x->timemin_disp;
 	}
 	if(xmax >= 0){
-		x->timemax_disp = sdifed_scale(xmax, 0, r.width, x->timemin_disp, x->timemax_disp);
+		xmax = sdifed_scale(xmax, 0., r.width, x->timemin_disp, x->timemax_disp);
+	}else{
+		xmax = x->timemax_disp;
 	}
 	if(ymin >= 0){
-		x->freqmin_disp = sdifed_scale(ymin, r.height, 0, x->freqmin_disp, x->freqmax_disp);
+		ymin = sdifed_scale(ymin, r.height, 0., x->freqmin_disp, x->freqmax_disp);
+	}else{
+		ymin = x->freqmin_disp;
 	}
 	if(ymax >= 0){
-		x->freqmax_disp = sdifed_scale(ymax, r.height, 0, x->freqmin_disp, x->freqmax_disp);
+		ymax = sdifed_scale(ymax, r.height, 0., x->freqmin_disp, x->freqmax_disp);
+	}else{
+		ymax = x->freqmax_disp;
 	}
 
-	//post("%f %f %f %f", x->timemin_disp, x->timemax_disp, x->freqmin_disp, x->freqmax_disp);
+	x->timemin_disp = xmin;
+	x->timemax_disp = xmax;
+	x->freqmin_disp = ymin;
+	x->freqmax_disp = ymax;
+
 	sdifed_zero_sel(&(x->sel_x));
 	sdifed_zero_sel(&(x->sel_y));
 
@@ -934,3 +1156,20 @@ void sdifed_zero_sel(t_sel *sel){
 	sel->click = -1;
 	sel->drag = -1;
 }
+
+void sdifed_output_bounds(t_sdifed *x){
+	t_atom a[2];
+	atom_setfloat(a, (float)(x->timemin_disp));
+	atom_setfloat(a + 1, (float)(x->timemax_disp));
+	outlet_anything(x->out_info, gensym("domain"), 2, a);
+
+	atom_setfloat(a, (float)(x->freqmax_disp));
+	atom_setfloat(a + 1, (float)(x->freqmin_disp));
+	outlet_anything(x->out_info, gensym("range"), 2, a);
+
+	//post("bounds: %f %f %f %f", x->timemin_disp, x->timemax_disp, x->freqmin_disp, x->freqmax_disp);
+}
+
+void sdifed_output_selection(t_sdifed *x){
+}
+

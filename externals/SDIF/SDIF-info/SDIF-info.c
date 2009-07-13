@@ -91,6 +91,7 @@ static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFinfo *x);
 static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName);
 static void SDIFinfo_bang(SDIFinfo *x);
+void SDIFinfo_tellmeeverything(SDIFinfo *x);
 
 /* global that holds the class definition */
 void *SDIFinfo_class;
@@ -112,6 +113,7 @@ void main(fptr *fp)
 	addmess((method)version, "version", 0);
 	addmess((method)SDIFinfo_set, "set", A_SYM, 0);	
 	addbang((method)SDIFinfo_bang);
+	addmess((method)SDIFinfo_tellmeeverything, "tellmeeverything", 0);
 	
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
@@ -158,7 +160,7 @@ void *SDIFinfo_new(Symbol *dummy, short argc, Atom *argv) {
 	x = newobject(SDIFinfo_class);
 	x->t_buffer = 0;
 	x->t_buf = NULL;
-	x->t_out = listout(x);
+	x->t_out = outlet_new(x, NULL);
 	
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
@@ -269,7 +271,7 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 	/* /frameType */
 	if(f = SDIFbuf_GetFirstFrame(x->t_buf))
 	{
-	post("Frame %p, type %c%c%c%c", f, f->header.frameType[0], f->header.frameType[1], f->header.frameType[2], f->header.frameType[3]);
+		//post("Frame %p, type %c%c%c%c", f, f->header.frameType[0], f->header.frameType[1], f->header.frameType[2], f->header.frameType[3]);
   	SDIF_Copy4Bytes(frameTypeString, f->header.frameType);
   	frameTypeString[4] = '\0';
   	frameTypeSym = gensym(frameTypeString);
@@ -302,4 +304,9 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 		SETLONG(outputArgs, numFrames);
 		outlet_anything(x->t_out, ps_numFrames, 1, outputArgs);
 	}
+}
+
+void SDIFinfo_tellmeeverything(SDIFinfo *x){
+	version(0);
+	post("buffer name: %s", x->t_bufferSym->s_name);
 }

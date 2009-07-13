@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1222175D0FB8E80A000049EC /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1222175C0FB8E80A000049EC /* MaxAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		BE4B868B0A815B3200883E5D /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE4B868A0A815B3200883E5D /* MaxAPI.framework */; };
 		BE4B86FF0A815CC300883E5D /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = BE4B86FE0A815CC300883E5D /* sdif.c */; };
 		C9B8D6FC0A891789005682F0 /* SDIF-info.c in Sources */ = {isa = PBXBuildFile; fileRef = C9B8D6FB0A891789005682F0 /* SDIF-info.c */; };
 		C9B8D7170A89191B005682F0 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = C9B8D7150A89191B005682F0 /* sdif-mem.c */; };
@@ -17,8 +17,8 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		1222175C0FB8E80A000049EC /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* SDIF-info.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SDIF-info.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE4B868A0A815B3200883E5D /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		BE4B86FE0A815CC300883E5D /* sdif.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = sdif.c; path = ../../../../sdif/lib/sdif.c; sourceTree = SOURCE_ROOT; };
 		C9B8D6FB0A891789005682F0 /* SDIF-info.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "SDIF-info.c"; sourceTree = "<group>"; };
 		C9B8D7150A89191B005682F0 /* sdif-mem.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = "sdif-mem.c"; path = "../../../../sdif/lib/sdif-mem.c"; sourceTree = SOURCE_ROOT; };
@@ -31,7 +31,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				BE4B868B0A815B3200883E5D /* MaxAPI.framework in Frameworks */,
+				1222175D0FB8E80A000049EC /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,7 +52,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BE4B868A0A815B3200883E5D /* MaxAPI.framework */,
+				1222175C0FB8E80A000049EC /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -123,9 +123,11 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "SDIF-info" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* SDIF-info */,
 			);
@@ -174,7 +176,11 @@
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
+				FRAMEWORK_SEARCH_PATHS = (
+					"../../../SDK/UB-SDK/",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -191,7 +197,6 @@
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
-				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -219,7 +224,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -256,7 +261,11 @@
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "../../../SDK/UB-SDK/";
+				FRAMEWORK_SEARCH_PATHS = (
+					"../../../SDK/UB-SDK/",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

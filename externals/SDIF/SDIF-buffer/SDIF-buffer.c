@@ -1276,3 +1276,6 @@ void SDIFbuffer_realtimeHeader(
 }
 #endif
 
+void SDIFbuffer_fixStreamNumbers(SDIFBuffer *x){
+
+}
