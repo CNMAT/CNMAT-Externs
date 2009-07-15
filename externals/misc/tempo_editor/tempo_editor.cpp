@@ -152,7 +152,7 @@ t_class *te_class;
 
 t_symbol *ps_cellblock, *ps_pointNum, *ps_time, *ps_dFreq, *ps_aFreq, *ps_dPhase, *ps_aPhase, *ps_alpha, *ps_beta, *ps_errorAlpha, *ps_errorBeta, *ps_error;
 
-t_symbol *l_xgrid, *l_ygrid, *l_xycoords, *l_legend, *l_xaxis, *l_yaxis, *l_lockbox, *l_playhead;
+t_symbol *l_background, *l_xgrid, *l_ygrid, *l_xycoords, *l_legend, *l_xaxis, *l_yaxis, *l_lockbox, *l_playhead;
 t_symbol *l_function_layers[MAX_NUM_FUNCTIONS];
 
 void te_paint(t_te *x, t_object *patcherview); 
@@ -213,12 +213,13 @@ void te_clear(t_te *x);
 void te_clearFunction(t_te *x, int f);
 void te_clearCurrent(t_te *x);
 void te_doClearFunction(t_te *x, int f);
+void te_invalidateAllFunctions(t_te *x);
+void te_invalidateAll(t_te *x);
 //void te_read(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 //void te_doread(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 //void te_write(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 //void te_dowrite(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_dsp(t_te *x, t_signal **sp, short *count);
-void te_unlock(t_te *x, t_symbol *sym, short argc, t_atom *argv);
 void te_postplan(t_plan *p);
 t_symbol *te_mangleName(t_symbol *name, int i, int fnum);
 int main(void); 
@@ -238,15 +239,24 @@ void te_paint(t_te *x, t_object *patcherview){
  	// get our box's rectangle 
  	jbox_get_rect_for_view((t_object *)x, patcherview, &rect); 
 
- 	// draw the outline of the box 
- 	jgraphics_set_source_jrgba(g, &c); 
- 	jgraphics_set_line_width(g, 1); 
- 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height); 
- 	jgraphics_stroke(g); 
+	// draw background
+	{
+		t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_background, rect.width, rect.height);
+		if(gg){
 
- 	jgraphics_set_source_jrgba(g, &(x->bgcolor)); 
- 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height); 
- 	jgraphics_fill(g); 
+			// draw the outline of the box 
+			jgraphics_set_source_jrgba(gg, &c); 
+			jgraphics_set_line_width(gg, 1); 
+			jgraphics_rectangle(gg, 0., 0., rect.width, rect.height); 
+			jgraphics_stroke(gg); 
+
+			jgraphics_set_source_jrgba(gg, &(x->bgcolor)); 
+			jgraphics_rectangle(gg, 0., 0., rect.width, rect.height); 
+			jgraphics_fill(gg); 
+		}
+		jbox_end_layer((t_object *)x, patcherview, l_background);
+		jbox_paint_layer((t_object *)x, patcherview, l_background, 0, 0);
+	}
 
 	critical_enter(x->lock);
 
@@ -254,9 +264,8 @@ void te_paint(t_te *x, t_object *patcherview){
 	for(function = 0; function < x->numFunctions; function++){
 		t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_function_layers[function], rect.width, rect.height);
 		if(gg){
-			post("function %d", function);
 			// draw the beat lines
-			if(x->show_beats && ((x->time_max - x->time_min) * 4) <= rect.width){
+			if(x->show_beats){
 				int i;
 				double prev_t = te_scale(-1, 0, rect.width, x->time_min, x->time_max);
 				t_plan plan;
@@ -466,15 +475,18 @@ void te_paint(t_te *x, t_object *patcherview){
 			}
 		}
 		jbox_end_layer((t_object *)x, patcherview, l_function_layers[function]);
+	}
+
+	for(function = 0; function < x->numFunctions; function++){
 		jbox_paint_layer((t_object *)x, patcherview, l_function_layers[function], 0, 0);
 	}
 
 	// draw the x grid
 	{
 		if(x->show_major_x_grid && x->major_grid_width_sec > 0.){
-			t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_xgrid, rect.width, 10);
+			t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_xgrid, rect.width, rect.height);
 			if(gg){
-				post("xgrid");
+				//post("xgrid");
 				double xx = x->time_min;// + x->major_grid_width_sec;
 				double x_sc;
 				double minor_grid_width_sec = x->major_grid_width_sec / x->num_minor_x_grid_divisions;
@@ -485,8 +497,8 @@ void te_paint(t_te *x, t_object *patcherview){
 					jgraphics_set_source_jrgba(gg, &(x->major_grid_line_color)); 
 					jgraphics_set_line_width(gg, x->major_grid_line_width);
 					jgraphics_move_to(gg, x_sc, 0);
-					//jgraphics_line_to(gg, x_sc, rect.height);
-					jgraphics_line_to(gg, x_sc, 10);
+					jgraphics_line_to(gg, x_sc, rect.height);
+					//jgraphics_line_to(gg, x_sc, 10);
 					jgraphics_stroke(gg);
 					if(x->show_minor_x_grid){
 						jgraphics_set_source_jrgba(gg, &(x->minor_grid_line_color)); 
@@ -495,23 +507,23 @@ void te_paint(t_te *x, t_object *patcherview){
 						int i;
 						for(i = 0; i < x->num_minor_x_grid_divisions; i++){
 							jgraphics_move_to(gg, x_sc + i * minor_grid_width_sc, 0); 
-							//jgraphics_line_to(gg, x_sc + i * minor_grid_width_sc, rect.height); 
-							jgraphics_line_to(gg, x_sc + i * minor_grid_width_sc, 10); 
+							jgraphics_line_to(gg, x_sc + i * minor_grid_width_sc, rect.height); 
+							//jgraphics_line_to(gg, x_sc + i * minor_grid_width_sc, 10); 
 							jgraphics_stroke(gg);
 						}
 					}
 					xx = xx + x->major_grid_width_sec;
 				}
-				jbox_end_layer((t_object *)x, patcherview, l_xgrid);
-				jbox_paint_layer((t_object *)x, patcherview, l_xgrid, 0, 0);
 			}
+			jbox_end_layer((t_object *)x, patcherview, l_xgrid);
+			jbox_paint_layer((t_object *)x, patcherview, l_xgrid, 0, 0);
 		}
 	}
 
 	// draw the y grid
 	{
 		if(x->show_major_y_grid && x->major_grid_height_bps > 0.){
-			t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_ygrid, 10, rect.height);
+			t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_ygrid, rect.width, rect.height);
 			if(gg){
 				post("ygrid");
 				double yy = x->freq_min;
@@ -524,8 +536,8 @@ void te_paint(t_te *x, t_object *patcherview){
 					jgraphics_set_source_jrgba(gg, &(x->major_grid_line_color)); 
 					jgraphics_set_line_width(gg, x->major_grid_line_width);
 					jgraphics_move_to(gg, 0., y_sc);
-					//jgraphics_line_to(gg, rect.width, y_sc);
-					jgraphics_line_to(gg, 10, y_sc);
+					jgraphics_line_to(gg, rect.width, y_sc);
+					//jgraphics_line_to(gg, 10, y_sc);
 					//post("major %f", y_sc);
 					jgraphics_stroke(gg);
 					if(x->show_minor_y_grid){
@@ -536,8 +548,8 @@ void te_paint(t_te *x, t_object *patcherview){
 						for(i = 0; i < x->num_minor_y_grid_divisions; i++){
 							//post("minor %f", y_sc - i * minor_grid_height_sc);
 							jgraphics_move_to(gg, 0, y_sc - i * minor_grid_height_sc);
-							//jgraphics_line_to(gg, rect.width, y_sc - i * minor_grid_height_sc);
-							jgraphics_line_to(gg, 10, y_sc - i * minor_grid_height_sc);
+							jgraphics_line_to(gg, rect.width, y_sc - i * minor_grid_height_sc);
+							//jgraphics_line_to(gg, 10, y_sc - i * minor_grid_height_sc);
 							jgraphics_stroke(gg);
 						}
 					}
@@ -553,14 +565,13 @@ void te_paint(t_te *x, t_object *patcherview){
 	{
 		char buf[32];
 		double w, h;
-		t_jrgba white = {1., 1., 1., 1.};
 		sprintf(buf, "%f sec, %f bps", te_scale(x->mousemove.x, 0, rect.width, x->time_min, x->time_max), te_scale(x->mousemove.y, rect.height, 0, x->freq_min, x->freq_max));
 		jgraphics_set_font_size(g, 10);
 		jgraphics_text_measure(g, buf, &w, &h);
 		t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_xycoords, w, h);
 		if(gg){
-			post("xycoords");
-			jgraphics_set_source_jrgba(gg, &white);
+			//post("xycoords");
+			jgraphics_set_source_jrgba(gg, &(x->bgcolor));
 			//jgraphics_rectangle(gg, rect.width - w - 4, 10, w, h);
 			jgraphics_rectangle(gg, 0, 0, w, h);
 			jgraphics_fill(gg);
@@ -578,10 +589,10 @@ void te_paint(t_te *x, t_object *patcherview){
 	{
 		t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_legend, 50, (x->numFunctions - 1) * 10 + 20);
 		if(gg){
-			post("legend");
+			//post("legend");
 			int i;
-			t_jrgba c = {1., 1., 1., 1.};
-			jgraphics_set_source_jrgba(gg, &c);
+			t_jrgba c;
+			jgraphics_set_source_jrgba(gg, &(x->bgcolor));
 			//jgraphics_rectangle(gg, rect.width - 50, 20, 50, (x->numFunctions - 1) * 10 + 20);
 			jgraphics_rectangle(gg, 0, 0, 50, (x->numFunctions - 1) * 10 + 20);
 			jgraphics_fill(gg);
@@ -617,15 +628,15 @@ void te_paint(t_te *x, t_object *patcherview){
 		if(x->show_y_axis){
 			t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_yaxis, 30, rect.height);
 			if(gg){
-				post("yaxis");
+				//post("yaxis");
 
 				jgraphics_set_line_width(gg, 0.5); 
 				char buf1[32], buf2[32], buf3[32];
 				double w1, w2, w3, h1, h2, h3;
 				double maxw;
-				sprintf(buf1, "%.1f", x->freq_max);
-				sprintf(buf2, "%.1f", x->freq_max - x->freq_min);
-				sprintf(buf3, "%.1f", x->freq_min);
+				sprintf(buf1, "%.1f", (x->freq_min + (((x->freq_max - x->freq_min) / 4) * 3)));
+				sprintf(buf2, "%.1f", x->freq_min + ((x->freq_max - x->freq_min) / 2));
+				sprintf(buf3, "%.1f", x->freq_min + ((x->freq_max - x->freq_min) / 4));
 				jgraphics_set_font_size(gg, 10);
 				jgraphics_text_measure(gg, buf1, &w1, &h1);
 				jgraphics_text_measure(gg, buf2, &w2, &h2);
@@ -640,95 +651,85 @@ void te_paint(t_te *x, t_object *patcherview){
 				}
 
 				double p1, p2, p3;
-				p1 = rect.height / 8;
+				p1 = rect.height / 4;
 				p2 = rect.height / 2;
-				p3 = (rect.height / 8) * 7;
+				p3 = (rect.height / 4) * 3;
 
 				jgraphics_set_source_jrgba(gg, &(x->lineColor));
-				jgraphics_move_to(gg, 2, p1 + (h1 / 2));
+				jgraphics_move_to(gg, 10, p1 + (h1 / 4));
 				jgraphics_show_text(gg, buf1);
 
-				jgraphics_move_to(gg, 2, p2 + (h2 / 2));
+				jgraphics_move_to(gg, 10, p2 + (h2 / 4));
 				jgraphics_show_text(gg, buf2);
 
-				jgraphics_move_to(gg, 2, (p3 + (h3 / 2)));
+				jgraphics_move_to(gg, 10, (p3 + (h3 / 4)));
 				jgraphics_show_text(gg, buf3);
 
-				jgraphics_move_to(gg, 8, p1 + h1);
-				jgraphics_line_to(gg, 4, p1 + h1 + 4);
-				jgraphics_line_to(gg, 12, p1 + h1 + 4);
-				jgraphics_close_path(gg);
-				jgraphics_fill(gg);
+				jgraphics_move_to(gg, 0, p1);
+				jgraphics_line_to(gg, 5, p1);
+				jgraphics_move_to(gg, 0, p2);
+				jgraphics_line_to(gg, 5, p2);
+				jgraphics_move_to(gg, 0, p3);
+				jgraphics_line_to(gg, 5, p3);
 
-				jgraphics_move_to(gg, 8, p1 + h1);
-				jgraphics_line_to(gg, 8, p2 - h2);
 				jgraphics_stroke(gg);
 
-				jgraphics_move_to(gg, 8, p2 + h2);
-				jgraphics_line_to(gg, 8, p3 - h3);
-				jgraphics_stroke(gg);
-
-				jgraphics_move_to(gg, 8, p3 - h3);
-				jgraphics_line_to(gg, 4, p3 - h3 - 4);
-				jgraphics_line_to(gg, 12, p3 - h3 - 4);
-				jgraphics_close_path(gg);
-				jgraphics_fill(gg);
 
 				/*
-				jgraphics_set_line_width(gg, 0.5); 
-				char buf1[32], buf2[32], buf3[32];
-				double w1, w2, w3, h1, h2, h3;
-				double maxw;
-				sprintf(buf1, "%.1f", x->freq_max);
-				sprintf(buf2, "%.1f", x->freq_max - x->freq_min);
-				sprintf(buf3, "%.1f", x->freq_min);
-				jgraphics_set_font_size(gg, 10);
-				jgraphics_text_measure(gg, buf1, &w1, &h1);
-				jgraphics_text_measure(gg, buf2, &w2, &h2);
-				jgraphics_text_measure(gg, buf3, &w3, &h3);
-				if(w1 >= w2){
-					maxw = w1;
-				}else{
-					maxw = w2;
-				}
-				if(w3 > maxw){
-					maxw = w3;
-				}
+				  jgraphics_set_line_width(gg, 0.5); 
+				  char buf1[32], buf2[32], buf3[32];
+				  double w1, w2, w3, h1, h2, h3;
+				  double maxw;
+				  sprintf(buf1, "%.1f", x->freq_max);
+				  sprintf(buf2, "%.1f", x->freq_max - x->freq_min);
+				  sprintf(buf3, "%.1f", x->freq_min);
+				  jgraphics_set_font_size(gg, 10);
+				  jgraphics_text_measure(gg, buf1, &w1, &h1);
+				  jgraphics_text_measure(gg, buf2, &w2, &h2);
+				  jgraphics_text_measure(gg, buf3, &w3, &h3);
+				  if(w1 >= w2){
+				  maxw = w1;
+				  }else{
+				  maxw = w2;
+				  }
+				  if(w3 > maxw){
+				  maxw = w3;
+				  }
 
-				double p1, p2, p3;
-				p1 = rect.height / 8;
-				p2 = rect.height / 2;
-				p3 = (rect.height / 8) * 7;
+				  double p1, p2, p3;
+				  p1 = rect.height / 8;
+				  p2 = rect.height / 2;
+				  p3 = (rect.height / 8) * 7;
 
-				jgraphics_set_source_jrgba(gg, &(x->lineColor));
-				jgraphics_move_to(gg, 2, p1 + (h1 / 2));
-				jgraphics_show_text(gg, buf1);
+				  jgraphics_set_source_jrgba(gg, &(x->lineColor));
+				  jgraphics_move_to(gg, 2, p1 + (h1 / 2));
+				  jgraphics_show_text(gg, buf1);
 
-				jgraphics_move_to(gg, 2, p2 + (h2 / 2));
-				jgraphics_show_text(gg, buf2);
+				  jgraphics_move_to(gg, 2, p2 + (h2 / 2));
+				  jgraphics_show_text(gg, buf2);
 
-				jgraphics_move_to(gg, 2, (p3 + (h3 / 2)));
-				jgraphics_show_text(gg, buf3);
+				  jgraphics_move_to(gg, 2, (p3 + (h3 / 2)));
+				  jgraphics_show_text(gg, buf3);
 
-				jgraphics_move_to(gg, 8, p1 + h1);
-				jgraphics_line_to(gg, 4, p1 + h1 + 4);
-				jgraphics_line_to(gg, 12, p1 + h1 + 4);
-				jgraphics_close_path(gg);
-				jgraphics_fill(gg);
+				  jgraphics_move_to(gg, 8, p1 + h1);
+				  jgraphics_line_to(gg, 4, p1 + h1 + 4);
+				  jgraphics_line_to(gg, 12, p1 + h1 + 4);
+				  jgraphics_close_path(gg);
+				  jgraphics_fill(gg);
 
-				jgraphics_move_to(gg, 8, p1 + h1);
-				jgraphics_line_to(gg, 8, p2 - h2);
-				jgraphics_stroke(gg);
+				  jgraphics_move_to(gg, 8, p1 + h1);
+				  jgraphics_line_to(gg, 8, p2 - h2);
+				  jgraphics_stroke(gg);
 
-				jgraphics_move_to(gg, 8, p2 + h2);
-				jgraphics_line_to(gg, 8, p3 - h3);
-				jgraphics_stroke(gg);
+				  jgraphics_move_to(gg, 8, p2 + h2);
+				  jgraphics_line_to(gg, 8, p3 - h3);
+				  jgraphics_stroke(gg);
 
-				jgraphics_move_to(gg, 8, p3 - h3);
-				jgraphics_line_to(gg, 4, p3 - h3 - 4);
-				jgraphics_line_to(gg, 12, p3 - h3 - 4);
-				jgraphics_close_path(gg);
-				jgraphics_fill(gg);
+				  jgraphics_move_to(gg, 8, p3 - h3);
+				  jgraphics_line_to(gg, 4, p3 - h3 - 4);
+				  jgraphics_line_to(gg, 12, p3 - h3 - 4);
+				  jgraphics_close_path(gg);
+				  jgraphics_fill(gg);
 				*/
 			}
 			jbox_end_layer((t_object *)x, patcherview, l_yaxis);
@@ -741,55 +742,44 @@ void te_paint(t_te *x, t_object *patcherview){
 		if(x->show_x_axis){
 			t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_xaxis, rect.width, 20);
 			if(gg){
-				post("xaxis");
+				//post("xaxis");
 				jgraphics_set_line_width(gg, 0.5); 
 				char buf1[32], buf2[32], buf3[32];
 				double w1, w2, w3, h1, h2, h3;
-				sprintf(buf1, "%.1f", x->time_min);
-				sprintf(buf2, "%.1f", x->time_max - x->time_min);
-				sprintf(buf3, "%.1f", x->time_max);
+				sprintf(buf1, "%.1f", x->time_min + ((x->time_max - x->time_min) / 4));
+				sprintf(buf2, "%.1f", x->time_min + ((x->time_max - x->time_min) / 2));
+				sprintf(buf3, "%.1f", x->time_min + (((x->time_max - x->time_min) / 4) * 3));
 				jgraphics_set_font_size(gg, 10);
 				jgraphics_text_measure(gg, buf1, &w1, &h1);
 				jgraphics_text_measure(gg, buf2, &w2, &h2);
 				jgraphics_text_measure(gg, buf3, &w3, &h3);
 
 				double p1, p2, p3;
-				p1 = rect.width / 8;
+				p1 = rect.width / 4;
 				p2 = rect.width / 2;
-				p3 = (rect.width / 8) * 7;
+				p3 = (rect.width / 4) * 3;
 
 				jgraphics_set_source_jrgba(gg, &(x->lineColor));
-				jgraphics_move_to(gg, p1, 4);
+				jgraphics_move_to(gg, p1 - (w1 / 2), h1 + 5);
 				jgraphics_show_text(gg, buf1);
 
-				jgraphics_move_to(gg, p2 - (w2 / 2), 4);
+				jgraphics_move_to(gg, p2 - (w2 / 2), h2 + 5);
 				jgraphics_show_text(gg, buf2);
 
-				jgraphics_move_to(gg, p3 - w3, 4);
+				jgraphics_move_to(gg, p3 - (w3 / 2), h3 + 5);
 				jgraphics_show_text(gg, buf3);
 
-				jgraphics_move_to(gg, p1 + w1 + 4, 8);
-				jgraphics_line_to(gg, p1 + w1 + 8, 4);
-				jgraphics_line_to(gg, p1 + w1 + 8, 12);
-				jgraphics_close_path(gg);
-				jgraphics_fill(gg);
+				jgraphics_move_to(gg, p1, 0);
+				jgraphics_line_to(gg, p1, 5);
+				jgraphics_move_to(gg, p2, 0);
+				jgraphics_line_to(gg, p2, 5);
+				jgraphics_move_to(gg, p3, 0);
+				jgraphics_line_to(gg, p3, 5);
 
-				jgraphics_move_to(gg, p1 + w1 + 4, 8);
-				jgraphics_line_to(gg, p2 - w2, 8);
 				jgraphics_stroke(gg);
-
-				jgraphics_move_to(gg, p2 + w2, 8);
-				jgraphics_line_to(gg, p3 - w3 - 4, 8);
-				jgraphics_stroke(gg);
-
-				jgraphics_move_to(gg, p3 - w3 - 4, 8);
-				jgraphics_line_to(gg, p3 - w3 - 8, 4);
-				jgraphics_line_to(gg, p3 - w3 - 8, 12);
-				jgraphics_close_path(gg);
-				jgraphics_fill(gg);
 			}
 			jbox_end_layer((t_object *)x, patcherview, l_xaxis);
-			jbox_paint_layer((t_object *)x, patcherview, l_xaxis, 0, rect.height - 20);
+			jbox_paint_layer((t_object *)x, patcherview, l_xaxis, 0, 0);
 		}
 	}
 
@@ -797,7 +787,7 @@ void te_paint(t_te *x, t_object *patcherview){
 	{
 		t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_lockbox, 10, 10);
 		if(gg){
-			post("lockbox");
+			//post("lockbox");
 			jgraphics_set_source_jrgba(gg, &(x->lineColor)); 
 			jgraphics_set_line_width(gg, 0.5);
 			if(x->locked){
@@ -822,7 +812,7 @@ void te_paint(t_te *x, t_object *patcherview){
 		float xx = te_scale(x->last_x, x->time_min, x->time_max, 0, rect.width);
 		t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_playhead, 1, rect.height);
 		if(gg){
-			post("playhead");
+			//post("playhead");
 			if(x->last_x >= x->time_min && x->last_x <= x->time_max){
 				jgraphics_set_source_jrgba(gg, &(x->lineColor));
 				jgraphics_move_to(gg, 0, 0);
@@ -834,7 +824,7 @@ void te_paint(t_te *x, t_object *patcherview){
 		jbox_paint_layer((t_object *)x, patcherview, l_playhead, xx, 0);
 	}
 
-	out:
+ out:
 	critical_exit(x->lock);
 }
 
@@ -884,28 +874,28 @@ t_int *te_perform(t_int *w){
 				}
 
 				/*
-				if(i == 0){
-					t1 = getticks();
-				}
+				  if(i == 0){
+				  t1 = getticks();
+				  }
 				*/
 				x->ptrs[(j * 3) + 1][i] = te_computeCorrectedPhase(in[i], plan);
 				x->ptrs[(j * 3) + 1][i + 1] = x->ptrs[(j * 3) + 1][i];
 				x->ptrs[(j * 3) + 1][i + 2] = x->ptrs[(j * 3) + 1][i];
 				x->ptrs[(j * 3) + 1][i + 3] = x->ptrs[(j * 3) + 1][i];
 				/*
-				x->ptrs[(j * 3) + 1][i + 1] = te_computeCorrectedPhase(in[i + 1], plan);
-				x->ptrs[(j * 3) + 1][i + 2] = te_computeCorrectedPhase(in[i + 2], plan);
-				x->ptrs[(j * 3) + 1][i + 3] = te_computeCorrectedPhase(in[i + 3], plan);
-				x->ptrs[(j * 3) + 1][i + 4] = te_computeCorrectedPhase(in[i + 4], plan);
-				x->ptrs[(j * 3) + 1][i + 5] = te_computeCorrectedPhase(in[i + 5], plan);
-				x->ptrs[(j * 3) + 1][i + 6] = te_computeCorrectedPhase(in[i + 6], plan);
-				x->ptrs[(j * 3) + 1][i + 7] = te_computeCorrectedPhase(in[i + 7], plan);
+				  x->ptrs[(j * 3) + 1][i + 1] = te_computeCorrectedPhase(in[i + 1], plan);
+				  x->ptrs[(j * 3) + 1][i + 2] = te_computeCorrectedPhase(in[i + 2], plan);
+				  x->ptrs[(j * 3) + 1][i + 3] = te_computeCorrectedPhase(in[i + 3], plan);
+				  x->ptrs[(j * 3) + 1][i + 4] = te_computeCorrectedPhase(in[i + 4], plan);
+				  x->ptrs[(j * 3) + 1][i + 5] = te_computeCorrectedPhase(in[i + 5], plan);
+				  x->ptrs[(j * 3) + 1][i + 6] = te_computeCorrectedPhase(in[i + 6], plan);
+				  x->ptrs[(j * 3) + 1][i + 7] = te_computeCorrectedPhase(in[i + 7], plan);
 				*/
 				/*
-				if(i == 0){
-					t2 = getticks();
-					post("%f", elapsed(t2, t1));
-				}
+				  if(i == 0){
+				  t2 = getticks();
+				  post("%f", elapsed(t2, t1));
+				  }
 				*/
 				x->ptrs[(j * 3)][i] = x->ptrs[(j * 3) + 1][i] - floor((x->ptrs[(j * 3) + 1][i]));
 				x->ptrs[(j * 3) + 2][i] = (x->ptrs[(j * 3) + 1][i] - x->last_y[j]) * 44100.;
@@ -924,33 +914,33 @@ t_int *te_perform(t_int *w){
 				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 3];
 
 				/*
-				x->ptrs[(j * 3)][i + 1] = x->ptrs[(j * 3) + 1][i + 1] - floor((x->ptrs[(j * 3) + 1][i + 1]));
-				x->ptrs[(j * 3) + 2][i + 1] = (x->ptrs[(j * 3) + 1][i + 1] - x->last_y[j]) * 44100.;
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 1];
+				  x->ptrs[(j * 3)][i + 1] = x->ptrs[(j * 3) + 1][i + 1] - floor((x->ptrs[(j * 3) + 1][i + 1]));
+				  x->ptrs[(j * 3) + 2][i + 1] = (x->ptrs[(j * 3) + 1][i + 1] - x->last_y[j]) * 44100.;
+				  x->last_y[j] = x->ptrs[(j * 3) + 1][i + 1];
 
-				x->ptrs[(j * 3)][i + 2] = x->ptrs[(j * 3) + 1][i + 2] - floor((x->ptrs[(j * 3) + 1][i + 2]));
-				x->ptrs[(j * 3) + 2][i + 2] = (x->ptrs[(j * 3) + 1][i + 2] - x->last_y[j]) * 44100.;
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 2];
+				  x->ptrs[(j * 3)][i + 2] = x->ptrs[(j * 3) + 1][i + 2] - floor((x->ptrs[(j * 3) + 1][i + 2]));
+				  x->ptrs[(j * 3) + 2][i + 2] = (x->ptrs[(j * 3) + 1][i + 2] - x->last_y[j]) * 44100.;
+				  x->last_y[j] = x->ptrs[(j * 3) + 1][i + 2];
 
-				x->ptrs[(j * 3)][i + 3] = x->ptrs[(j * 3) + 1][i + 3] - floor((x->ptrs[(j * 3) + 1][i + 3]));
-				x->ptrs[(j * 3) + 2][i + 3] = (x->ptrs[(j * 3) + 1][i + 3] - x->last_y[j]) * 44100.;
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 3];
+				  x->ptrs[(j * 3)][i + 3] = x->ptrs[(j * 3) + 1][i + 3] - floor((x->ptrs[(j * 3) + 1][i + 3]));
+				  x->ptrs[(j * 3) + 2][i + 3] = (x->ptrs[(j * 3) + 1][i + 3] - x->last_y[j]) * 44100.;
+				  x->last_y[j] = x->ptrs[(j * 3) + 1][i + 3];
 
-				x->ptrs[(j * 3)][i + 4] = x->ptrs[(j * 3) + 1][i + 4] - floor((x->ptrs[(j * 3) + 1][i + 4]));
-				x->ptrs[(j * 3) + 2][i + 4] = (x->ptrs[(j * 3) + 1][i + 4] - x->last_y[j]) * 44100.;
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 4];
+				  x->ptrs[(j * 3)][i + 4] = x->ptrs[(j * 3) + 1][i + 4] - floor((x->ptrs[(j * 3) + 1][i + 4]));
+				  x->ptrs[(j * 3) + 2][i + 4] = (x->ptrs[(j * 3) + 1][i + 4] - x->last_y[j]) * 44100.;
+				  x->last_y[j] = x->ptrs[(j * 3) + 1][i + 4];
 
-				x->ptrs[(j * 3)][i + 5] = x->ptrs[(j * 3) + 1][i + 5] - floor((x->ptrs[(j * 3) + 1][i + 5]));
-				x->ptrs[(j * 3) + 2][i + 5] = (x->ptrs[(j * 3) + 1][i + 5] - x->last_y[j]) * 44100.;
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 5];
+				  x->ptrs[(j * 3)][i + 5] = x->ptrs[(j * 3) + 1][i + 5] - floor((x->ptrs[(j * 3) + 1][i + 5]));
+				  x->ptrs[(j * 3) + 2][i + 5] = (x->ptrs[(j * 3) + 1][i + 5] - x->last_y[j]) * 44100.;
+				  x->last_y[j] = x->ptrs[(j * 3) + 1][i + 5];
 
-				x->ptrs[(j * 3)][i + 6] = x->ptrs[(j * 3) + 1][i + 6] - floor((x->ptrs[(j * 3) + 1][i + 6]));
-				x->ptrs[(j * 3) + 2][i + 6] = (x->ptrs[(j * 3) + 1][i + 6] - x->last_y[j]) * 44100.;
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 6];
+				  x->ptrs[(j * 3)][i + 6] = x->ptrs[(j * 3) + 1][i + 6] - floor((x->ptrs[(j * 3) + 1][i + 6]));
+				  x->ptrs[(j * 3) + 2][i + 6] = (x->ptrs[(j * 3) + 1][i + 6] - x->last_y[j]) * 44100.;
+				  x->last_y[j] = x->ptrs[(j * 3) + 1][i + 6];
 
-				x->ptrs[(j * 3)][i + 7] = x->ptrs[(j * 3) + 1][i + 7] - floor((x->ptrs[(j * 3) + 1][i + 7]));
-				x->ptrs[(j * 3) + 2][i + 7] = (x->ptrs[(j * 3) + 1][i + 7] - x->last_y[j]) * 44100.;
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i + 7];
+				  x->ptrs[(j * 3)][i + 7] = x->ptrs[(j * 3) + 1][i + 7] - floor((x->ptrs[(j * 3) + 1][i + 7]));
+				  x->ptrs[(j * 3) + 2][i + 7] = (x->ptrs[(j * 3) + 1][i + 7] - x->last_y[j]) * 44100.;
+				  x->last_y[j] = x->ptrs[(j * 3) + 1][i + 7];
 				*/
 			}
 		}
@@ -1354,7 +1344,7 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
 
 	switch(proxy_getinlet((t_object *)x)){
-	case 0:
+	case 0: // add points
 		screen_coords.x = te_scale(atom_getfloat(argv + 1), x->time_min, x->time_max, 0, r.width);
 		screen_coords.y = te_scale(atom_getfloat(argv + 2), x->freq_min, x->freq_max, r.height, 0);
 		if(atom_getlong(argv) >= x->numFunctions){
@@ -1372,7 +1362,7 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		x->selected->aux_points[0] = x->error_offset;
 		x->selected->aux_points[1] = x->error_span + x->error_offset;
 		break;
-	case 1:
+	case 1: // cellblock
 		{
 			if(argc == 2){
 				return;
@@ -1485,7 +1475,7 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		}
 		break;
 	}
-	jbox_invalidate_layer((t_object *)x, x->pv, NULL);
+	te_invalidateAllFunctions(x);
 	jbox_redraw((t_jbox *)x);
 	te_dumpCellblock(x);
 }
@@ -1662,7 +1652,7 @@ t_max_err te_notify(t_te *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
  	if (msg == gensym("attr_modified")){ 
  		//attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
  		//x->sel_x.click = x->sel_x.drag = x->sel_y.click = x->sel_y.drag = -1; 
-		jbox_invalidate_layer((t_object *)x, x->pv, NULL);
+		te_invalidateAll(x);
  		jbox_redraw((t_jbox *)x); 
 	} 
 	return 0; 
@@ -1869,7 +1859,8 @@ void te_addFunction(t_te *x){
 	x->numFunctions++;
 	critical_exit(x->lock);
 	te_setFunction(x, x->numFunctions - 1);
-	jbox_invalidate_layer((t_object *)x, x->pv, NULL);
+	te_invalidateAllFunctions(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_legend);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -1892,7 +1883,8 @@ void te_setFunction(t_te *x, long f){
 	x->selected = NULL;
 	critical_exit(x->lock);
 	te_dumpCellblock(x);
-	jbox_invalidate_layer((t_object *)x, x->pv, NULL);
+	te_invalidateAllFunctions(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_legend);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2208,7 +2200,7 @@ void te_time_min(t_te *x, double f){
 		}
 	}
 	x->time_min = f;
-	jbox_invalidate_layer((t_object *)x, x->pv, NULL);
+	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2226,7 +2218,7 @@ void te_time_max(t_te *x, double f){
 		}
 	}
 	x->time_max = f;
-	jbox_invalidate_layer((t_object *)x, x->pv, NULL);
+	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2251,7 +2243,7 @@ void te_time_minmax(t_te *x, double min, double max){
 	}
 	x->time_min = mmin;
 	x->time_max = mmax;
-	jbox_invalidate_layer((t_object *)x, x->pv, NULL);
+	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2269,6 +2261,7 @@ void te_freq_min(t_te *x, double f){
 		}
 	}
 	x->freq_min = f;
+	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2287,6 +2280,7 @@ void te_freq_max(t_te *x, double f){
 	}
 
 	x->freq_max = f;
+	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2308,6 +2302,7 @@ void te_freq_minmax(t_te *x, double min, double max){
 
 	x->freq_min = min;
 	x->freq_max = max;
+	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2330,18 +2325,21 @@ void te_clear(t_te *x){
 	x->currentFunction = 0;
 	x->numFunctions = 1;
 	te_dumpCellblock(x);
+	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_clearFunction(t_te *x, int f){
 	te_doClearFunction(x, f);
 	te_dumpCellblock(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[f]);
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_clearCurrent(t_te *x){
 	te_doClearFunction(x, x->currentFunction);
 	te_dumpCellblock(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[x->currentFunction]);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2373,6 +2371,7 @@ void te_hideFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		return;
 	}
 	x->hideFunctions[function] = b;
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[function]);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2404,6 +2403,7 @@ void te_addToFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		p = p->next;
 	}
 	te_dumpCellblock(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[func]);
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -2429,6 +2429,26 @@ void te_makeColorForInt(int i, t_jrgb *c){
 		c->green = (j & 2) >> 1;
 		c->blue = (j & 4) >> 2;
 	}
+}
+
+void te_invalidateAllFunctions(t_te *x){
+	int i;
+	for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
+		jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[i]);
+	}
+}
+
+void te_invalidateAll(t_te *x){
+	te_invalidateAllFunctions(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_background);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_xgrid);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_ygrid);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_xycoords);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_legend);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_xaxis);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_yaxis);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_lockbox);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_playhead);
 }
 
 void te_assist(t_te *x, void *b, long m, long a, char *s){ 
@@ -2500,20 +2520,6 @@ t_symbol *te_mangleName(t_symbol *name, int i, int fnum){
 void te_dsp(t_te *x, t_signal **sp, short *count){
 	if(count[0]){
 		dsp_add(te_perform, 6, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
-	}
-	if(x->locked == 0){
-		x->locked = 1;
-		schedule(x, (method)te_unlock, 500, NULL, 0, NULL);
-		jbox_redraw((t_jbox *)x);
-	}
-}
-
-void te_unlock(t_te *x, t_symbol *sym, short argc, t_atom *argv){
-	if(sys_getdspstate()){
-		schedule(x, (method)te_unlock, 500, NULL, 0, NULL);
-	}else{
-		x->locked = 0;
-		jbox_redraw((t_jbox *)x);
 	}
 }
 
@@ -2668,6 +2674,7 @@ int main(void){
 	ps_errorBeta = gensym("E Beta");
 	ps_error = gensym("Error");
 
+	l_background = gensym("l_background");
 	l_xgrid = gensym("l_xgrid");
 	l_ygrid = gensym("l_ygrid");
 	l_xycoords = gensym("l_xycoords");
