@@ -74,18 +74,19 @@ void oop_avg(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
 void oop_absdiff(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
 void oop_fold(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
 void oop_wrap(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-/*
 void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
 void oop_minusFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
 void oop_modFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-*/
 
 void oop_scale(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
 void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
+void oop_map(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
+
+
 double oop_do_clip(double f, double min, double max);
 double oop_do_scale(double f, double min_in, double max_in, double min_out, double max_out);
 
-t_symbol *ps_pass, *ps_plus, *ps_minus, *ps_times, *ps_div, *ps_mod, *ps_min, *ps_max, *ps_abs, *ps_avg, *ps_absdiff, *ps_fold, *ps_wrap, /**ps_divFlip, *ps_minusFlipp, *ps_modFlip, */*ps_scale, *ps_clip;
+t_symbol *ps_pass, *ps_plus, *ps_minus, *ps_times, *ps_div, *ps_mod, *ps_min, *ps_max, *ps_abs, *ps_avg, *ps_absdiff, *ps_fold, *ps_wrap, *ps_divFlip, *ps_minusFlipp, *ps_modFlip, *ps_scale, *ps_clip, *ps_map;
 
 void oop_fullPacket(t_oop *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
@@ -153,18 +154,18 @@ t_oop_f oop_getFunction(t_symbol *op){
 		return oop_fold;
 	}else if(op == ps_wrap){
 		return oop_wrap;
-		/*
 	}else if(op == ps_divFlip){
 		return oop_divFlip;
 	}else if(op == ps_minusFlipp){
 		return oop_minusFlip;
 	}else if(op == ps_modFlip){
 		return oop_modFlip;
-		*/
 	}else if(op == ps_scale){
 		return oop_scale;
 	}else if(op == ps_clip){
 		return oop_clip;
+	}else if(op == ps_map){
+		return oop_map;
 	}else{
 		return NULL;
 	}
@@ -273,13 +274,12 @@ int main(void){
 	ps_absdiff = gensym("absdiff");
 	ps_fold = gensym("fold");
 	ps_wrap = gensym("wrap");
-	/*
 	ps_divFlip = gensym("!/");
 	ps_minusFlipp = gensym("!-");
 	ps_modFlip = gensym("!%");
-	*/
 	ps_scale = gensym("scale");
 	ps_clip = gensym("clip");
+	ps_map = gensym("map");
 
 	return 0;
 }
@@ -577,11 +577,88 @@ void oop_fold(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 void oop_wrap(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 
 }
-/*
-void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){}
-void oop_minusFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){}
-void oop_modFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){}
-*/
+
+void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+	int i;
+	char *args = msg->argv;
+	float arg = atom_getfloat(argv);
+	for(i = 0; i < msg->argc; i++){
+		switch(*(msg->typetags + 1)){
+		case 'i':
+			{
+				int ii = ntohl(*((int *)args));
+				ii = arg / ii;
+				*((int *)args) = htonl(ii);
+				args += 4;
+			}
+			break;
+		case 'f':
+			{
+				int ii = ntohl(*((int *)args));
+				float f = *(((float *)(&ii)));
+				f = arg / f;
+				*((int *)args) = htonl(*(((int *)(&f))));
+				args += 4;
+			}
+			break;
+		}
+	}
+}
+
+void oop_minusFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+	int i;
+	char *args = msg->argv;
+	float arg = atom_getfloat(argv);
+	for(i = 0; i < msg->argc; i++){
+		switch(*(msg->typetags + 1)){
+		case 'i':
+			{
+				int ii = ntohl(*((int *)args));
+				ii = arg - ii;
+				*((int *)args) = htonl(ii);
+				args += 4;
+			}
+			break;
+		case 'f':
+			{
+				int ii = ntohl(*((int *)args));
+				float f = *(((float *)(&ii)));
+				f = arg - f;
+				*((int *)args) = htonl(*(((int *)(&f))));
+				args += 4;
+			}
+			break;
+		}
+	}
+}
+
+void oop_modFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+	int i;
+	char *args = msg->argv;
+	long arg = atom_getlong(argv);
+	for(i = 0; i < msg->argc; i++){
+		switch(*(msg->typetags + 1)){
+		case 'i':
+			{
+				int ii = ntohl(*((int *)args));
+				ii = arg % ii;
+				*((int *)args) = htonl(ii);
+				args += 4;
+			}
+			break;
+		case 'f':
+			{
+				int ii = ntohl(*((int *)args));
+				float f = *(((float *)(&ii)));
+				ii = (int)f;
+				ii = arg % ii;
+				*((int *)args) = htonl(ii);
+				args += 4;
+			}
+			break;
+		}
+	}
+}
 
 void oop_scale(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	if(argc != 4){
@@ -650,6 +727,11 @@ void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 			break;
 		}
 	}
+}
+
+void oop_map(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+	oop_scale(msg, argc, argv);
+	oop_clip(msg, 2, argv);
 }
 
 double oop_do_clip(double f, double min, double max){
