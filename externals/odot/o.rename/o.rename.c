@@ -53,6 +53,13 @@ void *orename_class;
 
 void orename_fullPacket(t_orename *x, long len, long ptr);
 void orename_cbk(t_cmmjl_osc_message msg, void *v);
+/*
+int orename_rename(char *buffer, 
+		    int bufferLen, 
+		    int bufferPos, 
+		    t_cmmjl_osc_message *msg, 
+		    char *newAddress);
+*/
 void orename_anything(t_orename *x, t_symbol *msg, short argc, t_atom *argv);
 void orename_free(t_orename *x);
 void orename_assist(t_orename *x, void *b, long m, long a, char *s);
@@ -101,16 +108,7 @@ void orename_cbk(t_cmmjl_osc_message msg, void *v){
 	}
 	for(i = 0; i < x->numAddresses; i++){
 		if((ret = cmmjl_osc_match(x, msg.address, x->addresses_in[i]->s_name)) != 0){
-			int len = strlen(x->addresses_out[i]->s_name);
-			len++;
-			len += 4 - (len % 4);
-			*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size + (len - (msg.typetags - msg.address)));
-			x->bufferPos += 4;
-			memcpy(x->buffer + x->bufferPos, x->addresses_out[i]->s_name, strlen(x->addresses_out[i]->s_name));
-			x->bufferPos += len;
-			len = msg.size - (msg.typetags - msg.address);
-			memcpy(x->buffer + x->bufferPos, msg.typetags, len);
-			x->bufferPos += len;
+			x->bufferPos += cmmjl_osc_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, x->addresses_out[i]->s_name);
 			didmatch++;
 		}
 	}
@@ -121,6 +119,27 @@ void orename_cbk(t_cmmjl_osc_message msg, void *v){
 		x->bufferPos += msg.size;
 	}
 }
+
+/*
+int orename_rename(char *buffer, 
+		    int bufferLen, 
+		    int bufferPos, 
+		    t_cmmjl_osc_message *msg, 
+		    char *newAddress){
+	int start = bufferPos;
+	int len = strlen(newAddress);
+	len++;
+	len += 4 - (len % 4);
+	*((long *)(buffer + bufferPos)) = htonl(msg->size + (len - (msg->typetags - msg->address)));
+	bufferPos += 4;
+	memcpy(buffer + bufferPos, newAddress, strlen(newAddress));
+	bufferPos += len;
+	len = msg->size - (msg->typetags - msg->address);
+	memcpy(buffer + bufferPos, msg->typetags, len);
+	bufferPos += len;
+	return bufferPos - start;
+}
+*/
 
 void orename_anything(t_orename *x, t_symbol *msg, short argc, t_atom *argv){
 }
