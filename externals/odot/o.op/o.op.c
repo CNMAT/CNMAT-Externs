@@ -45,9 +45,12 @@ typedef struct _oop{
 	void *outlet;
 	int numPatterns;
 	t_symbol **patterns;
+	t_symbol **outputAddresses;
 	t_symbol **operations;
 	t_oop_f *functions;
 	t_atom **arguments;
+	char *buffer;
+	int bufferPos, bufferLen;
 	int *numArgs;
 } t_oop;
 
@@ -94,6 +97,12 @@ void oop_fullPacket(t_oop *x, long len, long ptr){
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 
+	char buffer[len * 2];
+	memset(buffer, '\0', len * 2);
+	x->buffer = buffer;
+	x->bufferPos = 0;
+	x->bufferLen = len * 2;
+
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
 		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
@@ -105,11 +114,21 @@ void oop_fullPacket(t_oop *x, long len, long ptr){
 	// flatten any nested bundles
 	nn = cmmjl_osc_flatten(nn, cpy, cpy);
 
+	memcpy(buffer, cpy, 16);
+	x->bufferPos = 16;
+
 	cmmjl_osc_extract_messages(nn, cpy, true, oop_cbk, (void *)x);
 
+	/*
+	int i;
+	for(i = 0; i < x->bufferPos; i++){
+		post("%d %x %c", i, x->buffer[i], x->buffer[i]);
+	}
+	*/
+
 	t_atom out[2];
-	atom_setlong(&(out[0]), len);
-	atom_setlong(&(out[1]), (long)cpy);
+	atom_setlong(&(out[0]), x->bufferPos);
+	atom_setlong(&(out[1]), (long)buffer);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
@@ -117,14 +136,39 @@ void oop_cbk(t_cmmjl_osc_message msg, void *v){
 	t_oop *x = (t_oop *)v;
 	int i;
 	int ret;
+	int didmatch = 0;
+
+	if(x->bufferPos + msg.size > x->bufferLen){
+		realloc(x->buffer, x->bufferLen * 2);
+	}
+
 	for(i = 0; i < x->numPatterns; i++){
 		if((ret = cmmjl_osc_match(x, msg.address, x->patterns[i]->s_name)) == -1){
 			if(x->functions[i]){
-				post("numArgs = %d", x->numArgs[i]);
+				//post("numArgs = %d", x->numArgs[i]);
 				x->functions[i](&msg, x->numArgs[i], x->arguments[i]);
 			}
+
+			if(x->outputAddresses[i]){
+				//post("%d %s %s", i, x->outputAddresses[i]->s_name, msg.address);
+				x->bufferPos += cmmjl_osc_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, x->outputAddresses[i]->s_name);
+			}else{
+				*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size);
+				x->bufferPos += 4;
+				memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
+				x->bufferPos += msg.size;
+			}
+			didmatch++;
+
 		}
 	}
+	if(didmatch == 0){
+		*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size);
+		x->bufferPos += 4;
+		memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
+		x->bufferPos += msg.size;
+	}
+
 }
 
 t_oop_f oop_getFunction(t_symbol *op){
@@ -214,14 +258,30 @@ void *oop_new(t_symbol *msg, short argc, t_atom *argv){
 		x->outlet = outlet_new(x, "FullPacket");
 		int i = 0, j = 0;
 		x->numPatterns = 0;
+		// This part is so kludgy it even has a variable called kludge...
+		int kludge = 0;
 		for(i = 0; i < argc; i++){
 			char *c = atom_getsym(argv + i)->s_name;
 			if(c[0] == '/' && strlen(c) > 1){
-				x->numPatterns++;
+				if(!kludge){
+					x->numPatterns++;
+					kludge++;
+				}else{
+					kludge = 0;
+				}
+			}else{
+				kludge = 0;
+			}
+		}
+		if(argv[argc - 1].a_type == A_SYM){
+			t_symbol *sym = atom_getsym(argv + (argc - 1));
+			if(sym->s_name[0] == '/' && strlen(sym->s_name) > 1){
+				x->numPatterns--;
 			}
 		}
 		x->patterns = (t_symbol **)malloc(x->numPatterns * sizeof(t_symbol *));
 		x->operations = (t_symbol **)malloc(x->numPatterns * sizeof(t_symbol *));
+		x->outputAddresses = (t_symbol **)malloc(x->numPatterns * sizeof(t_symbol *));
 		x->functions = (t_oop_f *)malloc(x->numPatterns * sizeof(t_oop_f));
 		x->arguments = (t_atom **)malloc(x->numPatterns * sizeof(t_atom *));
 		x->numArgs = (int *)malloc(x->numPatterns * sizeof(int ));
@@ -238,11 +298,38 @@ void *oop_new(t_symbol *msg, short argc, t_atom *argv){
 					break;
 				}
 				x->arguments[j][k] = *(argv + i++);
-				postatom(&(x->arguments[j][k]));
+				//postatom(&(x->arguments[j][k]));
 				k++;
 			}
+			// <nasty>
+			if(argv[i].a_type == A_SYM && i < argc - 1){
+				if(argv[i + 1].a_type == A_SYM){
+					t_symbol *s1, *s2;
+					s1 = atom_getsym(argv + i);
+					s2 = atom_getsym(argv + i + 1);
+					if(s1->s_name[0] == '/' && s2->s_name[0] == '/' && strlen(s1->s_name) > 1 && strlen(s2->s_name) > 1){
+						x->outputAddresses[j] = s1;
+						i++;
+					}else{
+						x->outputAddresses[j] = NULL;
+					}
+				}else{
+					x->outputAddresses[j] = NULL;
+				}
+			}else{
+				if(i == argc - 1 && argv[i].a_type == A_SYM){
+					if(argv[i].a_w.w_sym->s_name[0] == '/'){
+						x->outputAddresses[j] = atom_getsym(argv + i++);
+					}
+				}else{
+					x->outputAddresses[j] = NULL;
+				}
+			}
+
+			// <\nasty>
 			x->numArgs[j] = k;
 			j++;
+
 		}
 	}
 		   	
