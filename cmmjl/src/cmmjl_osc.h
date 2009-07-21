@@ -40,6 +40,29 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl_osc_schedule.h"
 #include "ext.h"
 
+typedef char t_cmmjl_osc_type;
+
+union _cmmjl_osc_word{
+	int w_int;
+	float w_float;
+	char *w_string;
+	char *w_blob;
+	long long w_timetag;
+};
+
+typedef struct _cmmjl_osc_atom{
+	union _cmmjl_osc_word a_w;
+	t_cmmjl_osc_type a_type;
+} t_cmmjl_osc_atom;
+
+typedef struct _cmmjl_osc_message{
+	char *address;
+	t_cmmjl_osc_type *typetags;
+	int argc;
+	char *argv;
+	int size;
+} t_cmmjl_osc_message;
+
 /** The alignment padding for a string in an OSC packet.  
 This is defined in the OSC spec and should never change */
 #define CMMJL_OSC_STRING_ALIGN_PAD 4 
@@ -139,6 +162,46 @@ void cmmjl_osc_saveAddressWithPatcher(void *x, bool b);
 */
 void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv);
 
+int cmmjl_osc_init_bundle(int len, char *ptr, char *timetag);
+int cmmjl_osc_make_bundle(int numAddresses,
+			  t_symbol **addresses, 
+			  int *numArgs,
+			  char **typetags, 
+			  t_atom **args, 
+			  int *len, 
+			  char *buffer);
+int cmmjl_osc_check_pos_and_resize(char *buf, int len, char *pos);
+int cmmjl_osc_add_to_bundle(int len, char *ptr, t_cmmjl_osc_message *msg);
+int cmmjl_osc_make_message(char *address, int argc, t_cmmjl_osc_atom *argv, int len, char *ptr, t_cmmjl_osc_message *msg);
+int cmmjl_osc_rename(char *buffer, 
+		    int bufferLen, 
+		    int bufferPos, 
+		    t_cmmjl_osc_message *msg, 
+		     char *newAddress);
+void cmmjl_osc_args2atoms(char *typetags, char *argv, t_atom *atoms);
+
+/** 	Wrap a naked message in a bundle with an ``immediate'' timetag
+
+	@param  n	The length of the message in bytes
+	@param 	ptr	A pointer to the message
+	@param 	out	A pointer where the new bundle will be put.  
+			If NULL, memory will be allocated.
+
+	@returns	The length of the new bundle or -1 if the ptr arg was already a bundle
+*/
+long cmmjl_osc_bundle_naked_message(long n, char *ptr, char *out);
+
+/**	Flatten a (possibly) nested bundle.
+
+	@param	n	The length of the message in bytes
+	@param	ptr 	A pointer to the message
+	@param 	out	A pointer to where the new bundle will be put.
+			If NULL, memory will be allocated.
+
+	@returns	The length of the new bundle or -1 if the ptr arg was already a bundle
+ */
+long cmmjl_osc_flatten(long n, char *ptr, char *out);
+
 /**	Handle a FullPacket message.  This is the default function set if 
 	CMMJL_ACCEPT_FULLPACKET() is called with NULL for the function arg.
 	This function parses the packet and calls cmmjl_osc_sendMsg for
@@ -161,6 +224,12 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 					long n, 
 					long ptr, 
 					void (*cbk)(void*, t_symbol*, int, t_atom*));
+
+t_cmmjl_error cmmjl_osc_extract_messages(long n, 
+					 char *buf,
+					 bool topLevel,
+					 void (*cbk)(t_cmmjl_osc_message msg, void *v), 
+					 void *v);
 
 /** 	Parse an OSC packet.  This function recursively parses the 
 	packet which can be a bundle or even a nested bundle.  

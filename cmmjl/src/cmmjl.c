@@ -38,6 +38,7 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags){
 	// already been done and does nothing if so.
 	cmmjl_common_symbols_init();
 
+	/*
 	// Create a new hashtable if we haven't done that yet.
 	if(!_cmmjl_obj_tab){
 		_cmmjl_obj_tab = (t_hashtab *)hashtab_new(CMMJL_DEFAULT_HASHTAB_SIZE);
@@ -73,7 +74,7 @@ t_cmmjl_error cmmjl_init(void *x, const char *name, unsigned long flags){
 		return err;
 	}
 	hashtab_store(_cmmjl_obj_tab, x, (t_object *)o);
-
+	*/
 	return CMMJL_SUCCESS;
 }
 

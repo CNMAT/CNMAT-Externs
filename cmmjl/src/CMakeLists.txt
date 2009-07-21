@@ -34,6 +34,7 @@ SET(cmmjl_SOURCES
 	cmmjl.c 
 	cmmjl_sdif.c 
 	cmmjl_osc.c 
+	cmmjl_osc_obj.c 
 	cmmjl_osc_pattern.c
 	cmmjl_osc_schedule.c
 	cmmjl_osc_timetag.c
@@ -51,6 +52,7 @@ SET(cmmjl_HEADERS
 	cmmjl.h 
 	cmmjl_sdif.h 
 	cmmjl_osc.h 
+	cmmjl_osc_obj.h
 	cmmjl_osc_pattern.h
 	cmmjl_osc_schedule.h
 	cmmjl_osc_timetag.h

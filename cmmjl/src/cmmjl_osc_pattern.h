@@ -60,9 +60,11 @@ int cmmjl_osc2regex(char *osc_string, regex_t *re);
 			converted into a regex by calling cmmjl_osc2regex().
 	@param	st2	The OSC address to try to match.
 
-	@returns	0 if st2 matches the pattern in st1, or an error code (see regex.h)
+	@returns	The number of characters that matched
 */
-int cmmjl_osc_match(void *x, char *st1, char *st2);
+int cmmjl_osc_match(void *x, 
+		    char *st1, 
+		    char *st2);
 
 /**	Tests st against the regular expression re.
 	
