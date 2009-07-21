@@ -21,7 +21,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: o.route
+NAME: o.pack
 DESCRIPTION: Pack up an OSC packet
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2009
@@ -56,6 +56,7 @@ typedef struct _opack{
 void *opack_class;
 
 void opack_outputBundle(t_opack *x);
+int opack_checkPosAndResize(char *buf, int len, char *pos);
 void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv);
 void opack_int(t_opack *x, long l);
 void opack_float(t_opack *x, double f);
@@ -66,49 +67,32 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 void opack_outputBundle(t_opack *x){
 	char buffer[x->bufsize];
 	memset(buffer, '\0', x->bufsize);
-	int bufpos = cmmjl_osc_init_bundle(x->bufsize, buffer, NULL);
-	int i, j;
-	char *ptr = &(buffer[bufpos]);
-	for(i = 0; i < x->numAddresses; i++){
-		//post("%s", x->addresses[i]->s_name);
-		char *sizeptr = ptr;
-		ptr += 4; // skip over size
-		int len = strlen(x->addresses[i]->s_name);
-		memcpy(ptr, x->addresses[i]->s_name, len);
-		ptr += len;
-		ptr += 4 - (len % 4);
-		*ptr = ',';
-		char *tt = ++ptr;
-		ptr += x->numArgs[i];
-		ptr += 4 - ((x->numArgs[i] + 1) % 4);
-		for(j = 0; j < x->numArgs[i]; j++){
-			*tt = x->typetags[i][j];
-			switch(*tt){
-			case 'i':
-				*((long *)ptr) = htonl(atom_getlong(x->args[i] + j));
-				ptr += 4;
-				break;
-			case 'f':
-				{
-					float f = atom_getfloat(x->args[i] + j);
-					*((long *)ptr) = htonl(*((long *)(&f)));
-					ptr += 4;
-				}
-				break;
-			}
-			tt++;
-			//postatom(x->args[i] + j);
-		}
-		*((long *)sizeptr) = htonl(ptr - sizeptr - 4);
+	cmmjl_osc_init_bundle(x->bufsize, buffer, NULL);
+	int len = cmmjl_osc_make_bundle(x->numAddresses, 
+					x->addresses, 
+					x->numArgs, 
+					x->typetags, 
+					x->args, 
+					&(x->bufsize), 
+					buffer);
+	/*
+	int i;
+	for(i = 0; i < len; i++){
+		post("%d %c 0x%x", i, buffer[i], buffer[i]);
 	}
+	*/
 	t_atom out[2];
-	atom_setlong(&(out[0]), ptr - &(buffer[0]));
+	atom_setlong(&(out[0]), len);
 	atom_setlong(&(out[1]), (long)buffer);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
 void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 	int inlet = proxy_getinlet((t_object *)x);
+	int shouldOutput = (inlet == 0);
+#ifdef PAK
+	shouldOutput = 1;
+#endif
 	int address = 0;
 	int i = 0;
 	for(i = i; i < x->numAddresses; i++){
@@ -121,6 +105,20 @@ void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 	int argNum = inlet - address;
 	address = i;
 
+	if(msg){
+		t_atom a;
+		atom_setsym(&a, msg);
+		x->args[address][argNum] = a;
+		if(++argNum >= x->numArgs[address]){
+			address++;
+		}
+		if(address >= x->numAddresses){
+			if(shouldOutput){
+				opack_outputBundle(x);
+				return;
+			}
+		}
+	}
 	for(i = 0; i < argc; i++){
 		x->args[address][argNum] = argv[i];
 		if(++argNum >= x->numArgs[address]){
@@ -130,7 +128,7 @@ void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 			break;
 		}
 	}
-	if(inlet == 0){
+	if(shouldOutput){
 		opack_outputBundle(x);
 	}
 }
@@ -234,29 +232,29 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 						{
 							int len;
 							t_symbol *s = atom_getsym(&a);
-							if((len = strlen(atom_getsym(&a)->s_name)) == 1 && ){
+							if((len = strlen(atom_getsym(&a)->s_name)) == 1){
 								switch(s->s_name[0]){
 								case 'i':
 									atom_setlong(&a, 0);
-									x->typetags[i][j] = 'i';
+									x->typetags[j][k] = 'i';
 									x->args[j][k] = a;
 									x->bufsize += 4;
 									break;
 								case 'f':
 									atom_setfloat(&a, 0.);
-									x->typetags[i][j] = 'f';
+									x->typetags[j][k] = 'f';
 									x->args[j][k] = a;
 									x->bufsize += 4;
 									break;
 								case 's':
-									x->typetags[i][j] = 's';
+									x->typetags[j][k] = 's';
 									x->args[j][k] = a;
 									x->bufsize += 32;
 									break;
 								case 'b':
 									break;
 								default:
-									x->typetags[i][j] = 's';
+									x->typetags[j][k] = 's';
 									x->args[j][k] = a;
 									x->bufsize += 32;
 									break;
@@ -281,7 +279,6 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 
 		x->proxy = malloc(numInlets * sizeof(void *));
 		for(i = 0; i < numInlets; i++){
-			post("%d", numInlets - i);
 			x->proxy[i] = proxy_new((t_object *)x, numInlets - i, &(x->inlet));
 		}
 		x->outlet = outlet_new(x, "FullPacket");
@@ -291,7 +288,13 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
-	t_class *c = class_new("o.pack", (method)opack_new, (method)opack_free, sizeof(t_opack), 0L, A_GIMME, 0);
+	char *name;
+#ifdef PAK
+	name = "o.pak";
+#else
+	name = "o.pack";
+#endif
+	t_class *c = class_new(name, (method)opack_new, (method)opack_free, sizeof(t_opack), 0L, A_GIMME, 0);
     
 	//class_addmethod(c, (method)opack_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)opack_assist, "assist", A_CANT, 0);

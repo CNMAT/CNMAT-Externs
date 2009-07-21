@@ -1,5 +1,5 @@
 #ifndef NAME
-#define NAME "o.route"
+#define NAME "o.pack"
 #endif
 #ifndef DESCRIPTION
 #define DESCRIPTION "Pack up an OSC packet"

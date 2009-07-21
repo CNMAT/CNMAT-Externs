@@ -18,6 +18,21 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "message",
+					"text" : "foo",
+					"id" : "obj-8",
+					"fontsize" : 12.0,
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"presentation_rect" : [ 444.0, 161.0, 0.0, 0.0 ],
+					"outlettype" : [ "" ],
+					"fontname" : "Arial",
+					"patching_rect" : [ 440.0, 160.0, 32.5, 18.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
 					"text" : "4 3 5",
 					"id" : "obj-9",
 					"fontsize" : 12.0,
@@ -111,19 +126,28 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.pack /foo 0. 0 /bar 0 0",
+					"text" : "o.pack /foo 0. 0 /bar 0 s",
 					"id" : "obj-1",
 					"fontsize" : 12.0,
 					"numinlets" : 4,
 					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 270.0, 180.0, 137.0, 20.0 ]
+					"patching_rect" : [ 270.0, 180.0, 136.0, 20.0 ]
 				}
 
 			}
  ],
 		"lines" : [ 			{
+				"patchline" : 				{
+					"source" : [ "obj-8", 0 ],
+					"destination" : [ "obj-1", 3 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
 				"patchline" : 				{
 					"source" : [ "obj-9", 0 ],
 					"destination" : [ "obj-1", 0 ],
