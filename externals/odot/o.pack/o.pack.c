@@ -100,10 +100,6 @@ void opack_outputBundle(t_opack *x){
 			//postatom(x->args[i] + j);
 		}
 		*((long *)sizeptr) = htonl(ptr - sizeptr - 4);
-		post("%d %d", ptr - sizeptr, ptr - sizeptr - 4);
-	}
-	for(i = 0; i < x->bufsize; i++){
-		post("%d %c 0x%x", i, buffer[i], buffer[i]);
 	}
 	t_atom out[2];
 	atom_setlong(&(out[0]), ptr - &(buffer[0]));
@@ -127,7 +123,6 @@ void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 
 	for(i = 0; i < argc; i++){
 		x->args[address][argNum] = argv[i];
-		//post("I would put this at address %d, slot %d", address, argNum);
 		if(++argNum >= x->numArgs[address]){
 			address++;
 		}
@@ -236,9 +231,42 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 						x->bufsize += 4;
 						break;
 					case A_SYM:
-						x->typetags[j][k] = atom_getsym(&a)->s_name[0];
-						x->args[j][k] = a;
-						x->bufsize += 32; // reasonable guess...
+						{
+							int len;
+							t_symbol *s = atom_getsym(&a);
+							if((len = strlen(atom_getsym(&a)->s_name)) == 1 && ){
+								switch(s->s_name[0]){
+								case 'i':
+									atom_setlong(&a, 0);
+									x->typetags[i][j] = 'i';
+									x->args[j][k] = a;
+									x->bufsize += 4;
+									break;
+								case 'f':
+									atom_setfloat(&a, 0.);
+									x->typetags[i][j] = 'f';
+									x->args[j][k] = a;
+									x->bufsize += 4;
+									break;
+								case 's':
+									x->typetags[i][j] = 's';
+									x->args[j][k] = a;
+									x->bufsize += 32;
+									break;
+								case 'b':
+									break;
+								default:
+									x->typetags[i][j] = 's';
+									x->args[j][k] = a;
+									x->bufsize += 32;
+									break;
+								}
+							}else{
+								x->typetags[j][k] = 's';
+								x->args[j][k] = a;
+								x->bufsize += 32;
+							}
+					        }
 						break;
 					}
 					k++;
