@@ -38,25 +38,118 @@ VERSION 0.0: First try
 #include "cmmjl/cmmjl.h"
 #include "cmmjl/cmmjl_osc.h"
 
+#define MAX_ARGS 64
+
 typedef struct _opack{
 	t_object ob;
 	void *outlet;
 	t_symbol **addresses;
 	char **typetags;
+	t_atom **args;
+	int *numArgs;
 	int numAddresses;
 	long inlet;
-	void *proxy;
+	void **proxy;
+	int bufsize;
 } t_opack;
 
 void *opack_class;
 
+void opack_outputBundle(t_opack *x);
 void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv);
+void opack_int(t_opack *x, long l);
+void opack_float(t_opack *x, double f);
 void opack_free(t_opack *x);
 void opack_assist(t_opack *x, void *b, long m, long a, char *s);
 void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 
-void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
+void opack_outputBundle(t_opack *x){
+	char buffer[x->bufsize];
+	memset(buffer, '\0', x->bufsize);
+	int bufpos = cmmjl_osc_init_bundle(x->bufsize, buffer, NULL);
+	int i, j;
+	char *ptr = &(buffer[bufpos]);
+	for(i = 0; i < x->numAddresses; i++){
+		//post("%s", x->addresses[i]->s_name);
+		char *sizeptr = ptr;
+		ptr += 4; // skip over size
+		int len = strlen(x->addresses[i]->s_name);
+		memcpy(ptr, x->addresses[i]->s_name, len);
+		ptr += len;
+		ptr += 4 - (len % 4);
+		*ptr = ',';
+		char *tt = ++ptr;
+		ptr += x->numArgs[i];
+		ptr += 4 - ((x->numArgs[i] + 1) % 4);
+		for(j = 0; j < x->numArgs[i]; j++){
+			*tt = x->typetags[i][j];
+			switch(*tt){
+			case 'i':
+				*((long *)ptr) = htonl(atom_getlong(x->args[i] + j));
+				ptr += 4;
+				break;
+			case 'f':
+				{
+					float f = atom_getfloat(x->args[i] + j);
+					*((long *)ptr) = htonl(*((long *)(&f)));
+					ptr += 4;
+				}
+				break;
+			}
+			tt++;
+			//postatom(x->args[i] + j);
+		}
+		*((long *)sizeptr) = htonl(ptr - sizeptr - 4);
+		post("%d %d", ptr - sizeptr, ptr - sizeptr - 4);
+	}
+	for(i = 0; i < x->bufsize; i++){
+		post("%d %c 0x%x", i, buffer[i], buffer[i]);
+	}
+	t_atom out[2];
+	atom_setlong(&(out[0]), ptr - &(buffer[0]));
+	atom_setlong(&(out[1]), (long)buffer);
+	outlet_anything(x->outlet, ps_FullPacket, 2, out);
+}
 
+void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
+	int inlet = proxy_getinlet((t_object *)x);
+	int address = 0;
+	int i = 0;
+	for(i = i; i < x->numAddresses; i++){
+		if(inlet >= address && inlet < (address + x->numArgs[i])){
+			break;
+		}else{
+			address += x->numArgs[i];
+		}
+	}
+	int argNum = inlet - address;
+	address = i;
+
+	for(i = 0; i < argc; i++){
+		x->args[address][argNum] = argv[i];
+		//post("I would put this at address %d, slot %d", address, argNum);
+		if(++argNum >= x->numArgs[address]){
+			address++;
+		}
+		if(address >= x->numAddresses){
+			break;
+		}
+	}
+	if(inlet == 0){
+		opack_outputBundle(x);
+	}
+}
+
+void opack_int(t_opack *x, long l){
+	t_atom a;
+	atom_setlong(&a, l);
+	opack_anything(x, NULL, 1, &a);
+}
+
+void opack_float(t_opack *x, double f){
+	t_atom a;
+	atom_setfloat(&a, f);
+	opack_anything(x, NULL, 1, &a);
 }
 
 void opack_assist(t_opack *x, void *b, long m, long a, char *s){
@@ -81,34 +174,87 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 	t_opack *x;
 	if(x = (t_opack *)object_alloc(opack_class)){
 		cmmjl_init(x, NAME, 0);
+
 		int i;
-		int type[argc];
-		x->numAddresses = 0;
+		int isaddress[argc];
+		x->bufsize = 16;
+		memset(isaddress, '\0', argc * sizeof(int));
 		for(i = 0; i < argc; i++){
-			if(atom_getsym(argv + i)->s_name[0] == '/'){
-				type[i] = 1;
-				++(x->numAddresses);
-			}else{
-				type[i] = 0;
+			if(argv[i].a_type == A_SYM){
+				if(atom_getsym(argv + i)->s_name[0] == '/'){
+					++(x->numAddresses);
+					isaddress[i] = 1;
+				}
 			}
 		}
 		x->addresses = (t_symbol **)malloc(x->numAddresses * sizeof(t_symbol *));
 		x->typetags = (char **)calloc(x->numAddresses, sizeof(char *));
-		int j = 0;
+		x->args = (t_atom **)malloc(x->numAddresses * sizeof(t_atom *));
+		x->numArgs = (int *)calloc(x->numAddresses, sizeof(int));
+		int j = -1;
 		for(i = 0; i < argc; i++){
-			if(type[i]){
-				x->addresses[j] = atom_getsym(argv + i);
-				post("address %s", x->addresses[j]->s_name);
+			if(isaddress[i]){
 				j++;
+				x->addresses[j] = atom_getsym(argv + i);
+				int len = strlen(x->addresses[j]->s_name);
+				len++;
+				len += (4 - (len % 4));
+				x->bufsize += 4; // size
+				x->bufsize += len;
+
 			}else{
-				t_symbol *tt = atom_getsym(argv + i);
-				x->typetags[j] = malloc(strlen(tt->s_name));
-				strcpy(x->typetags[j], tt->s_name);
-				post("typetags %s", x->typetags[j]);
+				x->numArgs[j]++;
 			}
 		}
-		for(i = 0; i < x->numAddresses - 1; i++){
-			x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
+
+		for(i = 0; i < x->numAddresses; i++){
+			x->typetags[i] = calloc(x->numArgs[i], sizeof(char));
+			x->args[i] = (t_atom *)calloc(x->numArgs[i], sizeof(t_atom));
+			x->bufsize += 4 - ((x->numArgs[i] + 2) % 4);
+		}
+
+		j = -1;
+		int numInlets = 0;
+		i = 0;
+		while(i < argc){
+			if(isaddress[i]){
+				j++;
+				i++;
+			}else{
+				int k = 0;
+				while(!(isaddress[i])){
+					t_atom a = argv[i];
+					switch(a.a_type){
+					case A_LONG:
+						x->typetags[j][k] = 'i';
+						x->args[j][k] = a;
+						x->bufsize += 4;
+						break;
+					case A_FLOAT:
+						x->typetags[j][k] = 'f';
+						x->args[j][k] = a;
+						x->bufsize += 4;
+						break;
+					case A_SYM:
+						x->typetags[j][k] = atom_getsym(&a)->s_name[0];
+						x->args[j][k] = a;
+						x->bufsize += 32; // reasonable guess...
+						break;
+					}
+					k++;
+					i++;
+					if(i >= argc){
+						break;
+					}
+					numInlets++;
+				}
+			}
+		}
+
+		x->proxy = malloc(numInlets * sizeof(void *));
+		for(i = 0; i < numInlets; i++){
+			post("%d", numInlets - i);
+			x->proxy[i] = proxy_new((t_object *)x, numInlets - i, &(x->inlet));
 		}
 		x->outlet = outlet_new(x, "FullPacket");
 	}
@@ -121,6 +267,9 @@ int main(void){
     
 	//class_addmethod(c, (method)opack_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)opack_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)opack_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)opack_float, "float", A_FLOAT, 0);
+	class_addmethod(c, (method)opack_int, "int", A_LONG, 0);
     
 	class_register(CLASS_BOX, c);
 	opack_class = c;
