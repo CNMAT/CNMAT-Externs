@@ -165,6 +165,194 @@ void cmmjl_osc_saveAddressWithPatcher(void *x, bool b){
 	}
 }
 
+int cmmjl_osc_init_bundle(int len, char *ptr, char *timetag){
+	if(len < 16){
+		return 0;
+	}
+	ptr[0] = '#';
+	ptr[1] = 'b';
+	ptr[2] = 'u';
+	ptr[3] = 'n';
+	ptr[4] = 'd';
+	ptr[5] = 'l';
+	ptr[6] = 'e';
+	ptr[7] = '\0';
+	if(timetag == NULL){
+		*((long long *)(ptr + 8)) = 0x0000000000000001;
+	}else{
+		memcpy(ptr + 8, timetag, 8);
+	}
+	return 16;
+}
+
+int cmmjl_osc_make_bundle(int numAddresses,
+			  t_symbol **addresses, 
+			  int *numArgs,
+			  char **typetags, 
+			  t_atom **args, 
+			  int *len, 
+			  char *buffer)
+{
+	if(strncmp(buffer, "#bundle", 8)){
+		cmmjl_osc_init_bundle(*len, buffer, NULL);
+	}
+	int i, j;
+	char *ptr = &(buffer[16]);
+	for(i = 0; i < numAddresses; i++){
+		char *sizeptr = ptr;
+		ptr += 4; // skip over size
+		*len = cmmjl_osc_check_pos_and_resize(buffer, *len, ptr);
+		int addlen = strlen(addresses[i]->s_name);
+		memcpy(ptr, addresses[i]->s_name, addlen);
+		ptr += addlen;
+		ptr += 4 - (addlen % 4);
+		*len = cmmjl_osc_check_pos_and_resize(buffer, *len, ptr);
+		*ptr = ',';
+		char *tt = ++ptr;
+		ptr += numArgs[i];
+		ptr += 4 - ((numArgs[i] + 1) % 4);
+		*len = cmmjl_osc_check_pos_and_resize(buffer, *len, ptr);
+		for(j = 0; j < numArgs[i]; j++){
+			*tt = typetags[i][j];
+			switch(*tt){
+			case 'i':
+				*((long *)ptr) = htonl(atom_getlong(args[i] + j));
+				ptr += 4;
+				break;
+			case 'f':
+				{
+					float f = atom_getfloat(args[i] + j);
+					*((long *)ptr) = htonl(*((long *)(&f)));
+					ptr += 4;
+				}
+				break;
+			case 's':
+				{
+					t_symbol *s = atom_getsym(args[i] + j);
+					int slen = strlen(s->s_name);
+					memcpy(ptr, s->s_name, slen);
+					ptr += slen;
+					ptr += 4 - (slen % 4);
+				}
+				break;
+			}
+			tt++;
+			*len = cmmjl_osc_check_pos_and_resize(buffer, *len, ptr);
+		}
+		*((long *)sizeptr) = htonl(ptr - sizeptr - 4);
+	}
+	return ptr - buffer;
+}
+
+int cmmjl_osc_check_pos_and_resize(char *buf, int len, char *pos){
+	if(pos - buf >= len){
+		realloc(buf, len * 2);
+		post("o.pack: realloc took place");
+		return len * 2;
+	}
+	return len;
+}
+
+int cmmjl_osc_add_to_bundle(int len, char *ptr, t_cmmjl_osc_message *msg){
+
+	return 0;
+}
+
+int cmmjl_osc_rename(char *buffer, 
+		    int bufferLen, 
+		    int bufferPos, 
+		    t_cmmjl_osc_message *msg, 
+		    char *newAddress){
+	int start = bufferPos;
+	int len = strlen(newAddress);
+	//len++;
+	len += 4 - (len % 4);
+	*((long *)(buffer + bufferPos)) = htonl(msg->size + (len - (msg->typetags - msg->address)));
+	bufferPos += 4;
+	memcpy(buffer + bufferPos, newAddress, strlen(newAddress));
+	bufferPos += len;
+	len = msg->size - (msg->typetags - msg->address);
+	memcpy(buffer + bufferPos, msg->typetags, len);
+	bufferPos += len;
+	return bufferPos - start;
+}
+
+void cmmjl_osc_args2atoms(char *typetags, char *argv, t_atom *atoms){
+	char *tt = typetags;
+	char *av = argv;
+	t_atom *a = atoms;
+	if(*tt == ','){
+		tt++;
+	}
+	while(*tt != '\0'){
+		switch(*tt){
+		case 'i':
+			atom_setlong(a, htonl(*((long *)av)));
+			av += 4;
+			break;
+		case 'f':
+			{
+				long l = *((long *)av);
+				l = htonl(l);
+				atom_setfloat(a, *((float *)(&l)));
+				av += 4;
+			}
+			break;
+		case 's':
+			atom_setsym(a, gensym(av));
+			int len = strlen(av);
+			len += 4 - (len % 4);
+			av += len;
+			break;
+		}
+		tt++;
+		a++;
+	}
+}
+
+long cmmjl_osc_bundle_naked_message(long n, char *ptr, char *out){
+	if(!strncmp(ptr, "#bundle\0", 8)){
+		return -1;
+	}
+	if(!out){
+		out = malloc(n + 20);
+	}
+	out[0] = '#';
+	out[1] = 'b';
+	out[2] = 'u';
+	out[3] = 'n';
+	out[4] = 'd';
+	out[5] = 'l';
+	out[6] = 'e';
+	out[7] = '\0';
+	*((long long *)(out + 8)) = 0x00001000;
+	*((long *)(out + 16)) = htonl(n);
+	memcpy(out + 20, ptr, n);
+	return n + 20;
+}
+
+long cmmjl_osc_flatten(long n, char *ptr, char *out){
+	if(strncmp(ptr, "#bundle\0", 8)){
+		return -1;
+	}
+	if(!out){
+		out = malloc(n);
+	}
+	int i = 0, j = 0;
+	memcpy(out, ptr, 16);
+	i = j = 16;
+	while(i < n){
+		if(!strncmp(ptr + i, "#bundle\0", 8)){
+			i += 16; // skip over #bundle\0, timetag, and size
+			j -= 4;
+		}else{
+			*(out + (j++)) = *(ptr + i++);
+		}
+	}
+	memset(out + j, '\0', n - j);
+	return j;
+}
+
 void cmmjl_osc_fullPacket(void *x, long n, long ptr){
 	//cmmjl_osc_parseFullPacket(x, (char *)ptr, n, true, cmmjl_osc_sendMsg);
 	t_cmmjl_error (*parser)(void *, long, long, void (*)(void *, t_symbol *, int, t_atom *));
@@ -223,6 +411,127 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 		return CMMJL_ENOOBJ;
 	}
 	cmmjl_osc_parse(x, n, (char *)ptr, true, o->osc_parser_cb);
+}
+
+
+t_cmmjl_error cmmjl_osc_extract_messages(long n, 
+					 char *buf,
+					 bool topLevel,
+					 void (*cbk)(t_cmmjl_osc_message msg, void *v), 
+					 void *v)
+{
+	long size, messageLen, i;
+	char *messageName;
+	char *args;
+	int t;
+	t_cmmjl_error err;
+	if(!cbk){
+		return;
+	}
+
+	if ((n % 4) != 0) {
+		//CMMJL_ERROR(x, CMMJL_OSC_ENO4BYTE, 
+		//"packet size (%d) is not a multiple of 4 bytes: dropping", n);
+		return CMMJL_OSC_ENO4BYTE;
+	}
+    
+	if(n <= 0) {
+		//CMMJL_ERROR(x, CMMJL_OSC_EUNDRFLW,
+		//"bad OSC packet length: %d", n);
+		return CMMJL_OSC_EUNDRFLW;
+	}
+
+	if(buf == NULL) {
+		//CMMJL_ERROR(x, CMMJL_ENULLPTR, "OSC packet pointer is NULL");
+		return CMMJL_ENULLPTR;
+	}
+             
+	if ((n >= 8) && (strncmp(buf, "#bundle", 8) == 0)) {
+		/* This is a bundle message. */
+		if (n < 16) {
+			//CMMJL_ERROR(x, CMMJL_OSC_EBADBNDL, 
+			//"bundle is too small (%d bytes) for time tag", n);
+			return CMMJL_OSC_EBADBNDL;
+		}
+
+		if (topLevel) {
+			/*
+			Atom timeTagLongs[2];
+			SETLONG(&timeTagLongs[0], ntohl(*((long *)(buf+8))));
+			SETLONG(&timeTagLongs[1], ntohl(*((long *)(buf+12))));
+			cbk(x, ps_OSCTimeTag, 2, timeTagLongs);
+			*/
+		}
+
+		i = 16; /* Skip "#bundle\0" and time tag */
+		while((i+sizeof(long)) < n) { // next operation will take four bytes -aws
+			size = ntohl(*((long *) (buf + i)));
+			if ((size % 4) != 0) {
+				//CMMJL_ERROR(x, CMMJL_OSC_EBNDLNO4, 
+				//"bundle size (%d) is not a multiple of 4", size);
+				return CMMJL_OSC_EBNDLNO4;
+			}
+			if ((size + i + 4) > n) {
+				//CMMJL_ERROR(x, CMMJL_OSC_EBADBNDL, 
+				//"bad OSC bundle size %d, only %d bytes left in entire bundle", 
+				//size, n - i - 4);
+				return CMMJL_OSC_EBADBNDL;
+			}
+	    
+			/* Recursively handle element of bundle */
+			t = cmmjl_osc_extract_messages(size, buf+i+4, false, cbk, v);
+			if(t != 0) {
+				//CMMJL_ERROR(x, CMMJL_FAILURE, 
+				//"recursive processing of OSC packet failed.  Bailing out.");
+				return CMMJL_FAILURE;
+			}
+			i += 4 + size;
+		}
+		if (i != n) {
+			//CMMJL_ERROR(x, CMMJL_FAILURE, 
+			//"failed to process entire packet (%d of %d bytes)", i, n);
+			return CMMJL_FAILURE;
+		}
+	} else {
+		/* This is not a bundle message */
+		//messageName = buf;
+		t_cmmjl_osc_message msg;
+		msg.size = n;
+		msg.address = buf;
+		if(err = cmmjl_osc_dataAfterAlignedString(buf, buf+n, &args)){
+			//CMMJL_ERROR(x, err, cmmjl_strerror(err));
+			return err;
+		}
+		//messageLen = args-messageName;	    
+		msg.typetags = args;
+
+		if(err = cmmjl_osc_dataAfterAlignedString(msg.typetags, buf+n, &args)){
+			//CMMJL_ERROR(x, err, cmmjl_strerror(err));
+			return err;
+		}
+		msg.argv = args;
+		args--;
+		while(*args == '\0'){
+			args--;
+		}
+		msg.argc = args - msg.typetags;
+		cbk(msg, v);
+	}
+    
+	if (topLevel) {
+		//outlet_bang(x->O_outlet1);
+	}
+    
+	return CMMJL_SUCCESS;
+	/*
+	  ParseOSCPacket_Error:
+    
+	  if (topLevel) {
+	  //outlet_bang(x->O_outlet1);
+	  }
+	  return 1;
+
+	*/
 }
 
 t_cmmjl_error cmmjl_osc_parse(void *x, 
@@ -357,7 +666,6 @@ t_cmmjl_error cmmjl_osc_formatMessage(void *x,
 		return CMMJL_FAILURE;
 	}
 
-	// get rid of me and just use the length passed to the function
 #define MAXARGS 5000
 
 	Atom args[MAXARGS];
