@@ -32,7 +32,7 @@ SET(cmmjl_PATH_TO_THIRDPARTY thirdparty)
 
 SET(cmmjl_SOURCES 
 	cmmjl.c 
-	cmmjl_sdif.c 
+	#cmmjl_sdif.c 
 	cmmjl_osc.c 
 	cmmjl_osc_obj.c 
 	cmmjl_osc_pattern.c
@@ -50,7 +50,7 @@ SET(cmmjl_SOURCES
 
 SET(cmmjl_HEADERS 
 	cmmjl.h 
-	cmmjl_sdif.h 
+	#cmmjl_sdif.h 
 	cmmjl_osc.h 
 	cmmjl_osc_obj.h
 	cmmjl_osc_pattern.h
