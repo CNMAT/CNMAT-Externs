@@ -74,7 +74,8 @@ INCLUDE_DIRECTORIES(.
 	../../include
 	${cmmjl_PATH_TO_SDIF-BUFFER}
 	${cmmjl_PATH_TO_SDIFLIB}
-	${cmmjl_PATH_TO_THIRDPARTY})
+	${cmmjl_PATH_TO_THIRDPARTY}
+	/usr/include)
 
 LINK_DIRECTORIES(../../lib)
 #SET(OSC_LIBRARY OSC)
@@ -98,7 +99,6 @@ IF(WIN32)
 	SET(CMAKE_C_FLAGS -mno-cygwin)
 	ADD_DEFINITIONS(-DWIN_VERSION -DWIN_EXT_VERSION)
 	SET(CMAKE_LDFLAGS -shared -mno-cygwin)
-	INCLUDE_DIRECTORIES( /usr/include )
 ENDIF(WIN32)
 
 ADD_CUSTOM_COMMAND(OUTPUT cmmjl_commonsymbols.h
