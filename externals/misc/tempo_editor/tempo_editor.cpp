@@ -1540,7 +1540,7 @@ void te_reorderPoint(t_point *p){
 			//post("first, before %p %p %p", p, p->prev, p->next);
 			te_swapPoints(p->prev, p);
 			//post("first, after %p %p %p", p, p->prev, p->next);
-			break;
+			//break;
 		}else{
 			break;
 		}
@@ -1551,7 +1551,7 @@ void te_reorderPoint(t_point *p){
 			//post("second, before %p %p %p", p, p->prev, p->next);
 			te_swapPoints(p, p->next);
 			//post("second, after %p %p %p", p, p->prev, p->next);
-			break;
+			//break;
 		}else{
 			break;
 		}
