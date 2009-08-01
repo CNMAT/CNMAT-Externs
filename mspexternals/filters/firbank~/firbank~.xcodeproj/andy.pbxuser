@@ -111,10 +111,8 @@
 			PBXWorkspaceStateSaveDate = 244517652;
 		};
 		perUserProjectItems = {
-			A1745F050E886C6D004CB423 = A1745F050E886C6D004CB423 /* PBXTextBookmark */;
-			A19E77980E88867E00300374 = A19E77980E88867E00300374 /* PBXTextBookmark */;
-			A19E77A00E888EE800300374 = A19E77A00E888EE800300374 /* PBXTextBookmark */;
-			A19E77A20E888EE800300374 = A19E77A20E888EE800300374 /* PBXTextBookmark */;
+			A19E77A20E888EE800300374 /* PBXTextBookmark */ = A19E77A20E888EE800300374 /* PBXTextBookmark */;
+			A1BDB6D30E9317B9007A9148 /* PBXTextBookmark */ = A1BDB6D30E9317B9007A9148 /* PBXTextBookmark */;
 		};
 		sourceControlManager = A1745D150E7C3F09004CB423 /* Source Control */;
 		userBuildSettings = {
@@ -136,57 +134,10 @@
 	};
 	A1745D180E7C3F7B004CB423 /* firbank~.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1179, 10128}}";
-			sepNavSelRange = "{10828, 4}";
-			sepNavVisRange = "{9937, 2113}";
-			sepNavWindowFrame = "{{177, 4}, {1238, 874}}";
-		};
-	};
-	A1745F050E886C6D004CB423 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A1745D180E7C3F7B004CB423 /* firbank~.c */;
-		name = "firbank~.c: 563";
-		rLen = 0;
-		rLoc = 15794;
-		rType = 0;
-		vrLen = 2080;
-		vrLoc = 14678;
-	};
-	A19E77980E88867E00300374 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A19E77990E88867E00300374 /* z_dsp.h */;
-		rLen = 0;
-		rLoc = 2147483647;
-		rType = 0;
-	};
-	A19E77990E88867E00300374 /* z_dsp.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = z_dsp.h;
-		path = "/Users/andy/Projects/cnmat/cnmat/trunk/max/c74support/msp-includes/z_dsp.h";
-		sourceTree = "<absolute>";
-	};
-	A19E77A00E888EE800300374 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A19E77A10E888EE800300374 /* z_dsp.h */;
-		name = "z_dsp.h: 24";
-		rLen = 0;
-		rLoc = 487;
-		rType = 0;
-		vrLen = 1221;
-		vrLoc = 7727;
-	};
-	A19E77A10E888EE800300374 /* z_dsp.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = z_dsp.h;
-		path = "/Users/andy/Projects/cnmat/cnmat/trunk/max/c74support/msp-includes/z_dsp.h";
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1179, 5536}}";
-			sepNavSelRange = "{487, 0}";
-			sepNavVisRange = "{7689, 1259}";
-			sepNavWindowFrame = "{{15, 4}, {1238, 874}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1179, 10672}}";
+			sepNavSelRange = "{1610, 0}";
+			sepNavVisRange = "{1276, 899}";
+			sepNavWindowFrame = "{{89, 4}, {1238, 874}}";
 		};
 	};
 	A19E77A20E888EE800300374 /* PBXTextBookmark */ = {
@@ -194,9 +145,19 @@
 		fRef = A1745D180E7C3F7B004CB423 /* firbank~.c */;
 		name = "firbank~.c: 401";
 		rLen = 4;
-		rLoc = 10828;
+		rLoc = 10909;
 		rType = 0;
 		vrLen = 2113;
 		vrLoc = 9937;
+	};
+	A1BDB6D30E9317B9007A9148 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A1745D180E7C3F7B004CB423 /* firbank~.c */;
+		name = "firbank~.c: 32";
+		rLen = 0;
+		rLoc = 1610;
+		rType = 0;
+		vrLen = 899;
+		vrLoc = 1276;
 	};
 }
