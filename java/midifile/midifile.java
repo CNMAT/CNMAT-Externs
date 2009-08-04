@@ -1,9 +1,9 @@
 /*
 
 midifile
-by John MacCallum, 2006-07
+by John MacCallum, 2006-09
 
-Copyright (c) 2006-07.  The Regents of the University of California
+Copyright (c) 2006-09.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -37,7 +37,7 @@ University of California, Berkeley.
 NAME: midifile
 DESCRIPTION: Reads / writes / plays type 0 and 1 midi files.  Java object.
 AUTHORS: John MacCallum
-COPYRIGHT_YEARS: 2006-07
+COPYRIGHT_YEARS: 2006-09
 SVN_REVISION: $LastChangedRevision: 622 $
 VERSION 2.1.1: Added play, play_from, and read messages and implemented open and save dialogs.
 VERSION 2.1.2: Fixed a bug where an error would be reported if play was called and there was no data in one of the tracks.
@@ -54,6 +54,7 @@ VERSION 3.0.4: Better handling of meta-events
 VERSION 3.1: Sync outlet
 VERSION 3.2: Records
 VERSION 3.2.1: added setTempo(), setTimeSig() and setKeySig()
+VERSION 3.2.2: minor bug fixes and a new help file
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
