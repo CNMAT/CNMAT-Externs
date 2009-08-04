@@ -53,6 +53,7 @@ VERSION 3.0.3: Read message now locates file in max's searchpath
 VERSION 3.0.4: Better handling of meta-events
 VERSION 3.1: Sync outlet
 VERSION 3.2: Records
+VERSION 3.2.1: added setTempo(), setTimeSig() and setKeySig()
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -228,6 +229,62 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		}
 
 		addMetaEvent(1, data, timeStamp);
+	}
+
+	public void setTempo(Atom[] args){
+		if(args.length < 2){
+			error("midifile: you must supply 2 arguments: timestamp, tempo");
+			return;
+		}
+		int timeStamp = args[0].toInt();
+		int bpm = args[1].toInt();
+		int mpqn = (60000000 / bpm);
+		byte[] data = new byte[3];
+		data[2] = (byte)(mpqn & 0xFF);
+		data[1] = (byte)((mpqn & 0xFF00) >> 8);
+		data[0] = (byte)((mpqn & 0xFF0000) >> 16);
+		//post(String.format("%x %x %x %x", mpqn, data[0], data[1], data[2]));
+
+		addMetaEvent(81, data, timeStamp);
+	}
+
+	public void setTimeSig(Atom[] args){
+		if(args.length < 3){
+			error("midifile: you must supply at least 3 arguments: timestamp, numerator, denominator");
+			return;
+		}
+		int timeStamp = args[0].toInt();
+		int num = args[1].toInt();
+		int den = args[2].toInt();
+		int ugh = (int)(Math.log(den) / Math.log(2));
+		int mp = 24;
+		if(args.length > 3){
+			mp = args[3].toInt();
+		}
+		int n32 = 8;
+		if(args.length > 4){
+			n32 = args[4].toInt();
+		}
+		byte[] data = new byte[4];
+		data[0] = (byte)num;
+		data[1] = (byte)ugh;
+		data[2] = (byte)mp;
+		data[3] = (byte)n32;
+		addMetaEvent(88, data, timeStamp);
+	}
+
+	public void setKeySig(Atom[] args){
+		if(args.length < 3){
+			error("midifile: you must supply 3 arguments: timestamp, key (-7 - 7), scale (0 = major, 1 = minor)");
+			return;
+		}
+		int timeStamp = args[0].toInt();
+		int key = args[1].toInt();
+		int scale = args[2].toInt();
+		byte[] data = new byte[2];
+		data[0] = (byte)key;
+		data[1] = (byte)scale;
+		addMetaEvent(89, data, timeStamp);
 	}
 
 	public void addMetaEvent(Atom[] args){

@@ -62,10 +62,12 @@
 		00E6828EFEC88D1A11DB9C8B /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 0AE31F6908BBAC2E002AF232 /* Build configuration list for PBXProject "midifile" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 00E6828FFEC88D1A11DB9C8B;
 			productRefGroup = 0120612AFEC8923411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				130F8B90001BDF0A11CA292A /* midifile */,
 			);
