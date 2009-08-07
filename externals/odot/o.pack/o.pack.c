@@ -141,7 +141,7 @@ void opack_int(t_opack *x, long l){
 
 void opack_float(t_opack *x, double f){
 	t_atom a;
-	atom_setfloat(&a, f);
+	atom_setfloat(&a, (float)f);
 	opack_anything(x, NULL, 1, &a);
 }
 
@@ -301,6 +301,7 @@ int main(void){
 	class_addmethod(c, (method)opack_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)opack_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)opack_int, "int", A_LONG, 0);
+
     
 	class_register(CLASS_BOX, c);
 	opack_class = c;

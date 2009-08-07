@@ -93,6 +93,9 @@ t_symbol *ps_pass, *ps_plus, *ps_minus, *ps_times, *ps_div, *ps_mod, *ps_min, *p
 
 void oop_fullPacket(t_oop *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
+	if(strncmp((char *)ptr, "#bundle", 8)){
+		post("bundle");
+	}
 	char cpy[len];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
@@ -143,7 +146,8 @@ void oop_cbk(t_cmmjl_osc_message msg, void *v){
 	}
 
 	for(i = 0; i < x->numPatterns; i++){
-		if((ret = cmmjl_osc_match(x, msg.address, x->patterns[i]->s_name)) == -1){
+		if((ret = cmmjl_osc_match(x, msg.address, x->patterns[i]->s_name)) == -1){// || !strcmp(msg.address, x->patterns[i]->s_name)){
+			post("%d %s matched %s", ret, msg.address, x->patterns[i]->s_name);
 			if(x->functions[i]){
 				//post("numArgs = %d", x->numArgs[i]);
 				x->functions[i](&msg, x->numArgs[i], x->arguments[i]);
@@ -160,6 +164,8 @@ void oop_cbk(t_cmmjl_osc_message msg, void *v){
 			}
 			didmatch++;
 
+		}else{
+			//post("%s did not match %s", msg.address, x->patterns[i]->s_name);
 		}
 	}
 	if(didmatch == 0){
@@ -754,32 +760,59 @@ void oop_scale(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	double minmax[4];
+	int type = argv[0].a_type;
 	minmax[0] = atom_getfloat(argv);
 	minmax[1] = atom_getfloat(argv + 1);
 	minmax[2] = atom_getfloat(argv + 2);
 	minmax[3] = atom_getfloat(argv + 3);
 
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		int ii = ntohl(*((int *)(args)));
+		float ff;
+		switch(*(msg->typetags + i + 1)){
 		case 'i':
+			ff = (float)ii;
+			break; 
+		case 'f':
+			ff = *((float *)(&ii));
+			break;
+		}
+		ff = oop_do_scale((double)ff, minmax[0], minmax[1], minmax[2], minmax[3]);
+		ii = *((long *)(&ff));
+		*((int *)args) = htonl(ii);
+		if(argv[2].a_type == A_FLOAT || argv[3].a_type == A_FLOAT){
+			*(msg->typetags + i + 1) = 'f';
+		}else{
+			*(msg->typetags + i + 1) = 'i';
+		}
+		args += 4;
+	}
+	/*
+	for(i = 0; i < msg->argc; i++){
+		//switch(*(msg->typetags + 1)){
+		switch(type){
+		case A_LONG:
 			{
 				int ii = ntohl(*((int *)args));
 				ii = (int)oop_do_scale((double)ii, minmax[0], minmax[1], minmax[2], minmax[3]);
 				*((int *)args) = htonl(ii);
 				args += 4;
+				*(msg->typetags + i + 1) = 'i';
 			}
 			break;
-		case 'f':
+		case A_FLOAT:
 			{
 				int ii = ntohl(*((int *)args));
 				float f = *(((float *)(&ii)));
 				f = oop_do_scale(f, minmax[0], minmax[1], minmax[2], minmax[3]);
 				*((int *)args) = htonl(*(((int *)(&f))));
 				args += 4;
+				*(msg->typetags + i + 1) = 'f';
 			}
 			break;
 		}
 	}
+	*/
 }
 
 void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){

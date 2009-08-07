@@ -65,15 +65,27 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	char cpy[len];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
+	//int k;
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
+		/*
+		post("making bundle from naked message");
+		for(k = 0; k < nn; k++){
+			post("bundled: %d %c 0x%x", k, cpy[k], cpy[k]);
+		}
+		*/
 		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
+	/*
+	for(k = 0; k < nn; k++){
+		post("bundled: %d %c 0x%x", k, cpy[k], cpy[k]);
+	}
+	*/
 	// flatten any nested bundles
 	nn = cmmjl_osc_flatten(nn, cpy, cpy);
 
@@ -104,15 +116,26 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 		for(i = 0; i < x->numMatched; i++){
 			//atom_setsym(&(out_atoms[0]), gensym(x->matched[i].address));
 			if(x->matched_outlets[i] == j){
+				t_atom out_atoms[x->matched[i].argc];
+				cmmjl_osc_args2atoms(x->matched[i].typetags, x->matched[i].argv, out_atoms);
+
 				t_symbol *sym = _sym_list;
 				if(x->numCharsMatched[i] > 0){
 					sym = gensym(x->matched[i].address + x->numCharsMatched[i]);
+					outlet_anything(x->outlets[x->matched_outlets[i]], sym, x->matched[i].argc, out_atoms);
 				}else{
-					//sym = gensym(x->matched[i].address);
+					if(x->matched[i].argc > 1){
+						outlet_anything(x->outlets[x->matched_outlets[i]], sym, x->matched[i].argc, out_atoms);
+					}else{
+						outlet_atoms(x->outlets[x->matched_outlets[i]], x->matched[i].argc, out_atoms);
+					}
 				}
-				t_atom out_atoms[x->matched[i].argc];
-				cmmjl_osc_args2atoms(x->matched[i].typetags, x->matched[i].argv, out_atoms);
-				outlet_anything(x->outlets[x->matched_outlets[i]], sym, x->matched[i].argc, out_atoms);
+
+				if(x->matched[i].argc > 1){
+
+				}else{
+
+				}
 			}
 		}
 	}
@@ -124,7 +147,7 @@ void oroute_foo(t_cmmjl_osc_message msg, void *v){
 	int ret;
 	int didmatch = 0;
 	for(i = 0; i < x->numArgs; i++){
-		if((ret = cmmjl_osc_match(x, msg.address, x->args[i]->s_name)) != 0){
+		if((ret = cmmjl_osc_match(x, msg.address, x->args[i]->s_name)) != 0 || !strcmp(msg.address, x->args[i]->s_name)){
 			x->matched_outlets[x->numMatched] = i;	
 			x->numCharsMatched[x->numMatched] = ret;
 			x->matched[x->numMatched++] = msg;
