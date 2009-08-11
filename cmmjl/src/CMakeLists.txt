@@ -29,11 +29,13 @@ SET(cmmjl_PATH_TO_MAXSDK ../../SDK/MaxSDK-5)
 SET(cmmjl_PATH_TO_SDIF-BUFFER ../../externals/SDIF/SDIF-buffer)
 #SET(cmmjl_PATH_TO_LIBOSC ../../../OSC/libOSC)
 SET(cmmjl_PATH_TO_THIRDPARTY thirdparty)
+SET(cmmjl_PATH_TO_BOOST_REGEX ../../lib/boost/libs/regex/build/gcc)
+SET(cmmjl_PATH_TO_BOOST ../../../lib/boost)
 
 SET(cmmjl_SOURCES 
 	cmmjl.c 
 	#cmmjl_sdif.c 
-	cmmjl_osc.c 
+	cmmjl_osc.c
 	cmmjl_osc_obj.c 
 	cmmjl_osc_pattern.c
 	cmmjl_osc_schedule.c
@@ -75,14 +77,15 @@ INCLUDE_DIRECTORIES(.
 	${cmmjl_PATH_TO_SDIF-BUFFER}
 	${cmmjl_PATH_TO_SDIFLIB}
 	${cmmjl_PATH_TO_THIRDPARTY}
-	/usr/include)
+	${cmmjl_PATH_TO_BOOST})
 
-LINK_DIRECTORIES(../../lib)
+LINK_DIRECTORIES(../../lib ${cmmjl_PATH_TO_BOOST_REGEX})
 #SET(OSC_LIBRARY OSC)
 
 #SET(EXTRA_LIBS ${EXTRA_LIBS} OSC)
+#SET(EXTRA_LIBS ${EXTRA_LIBS} ${cmmjl_PATH_TO_BOOST_REGEX}/libboost_regex-gcc-1_38.a)
 
-FIND_LIBRARY(MAX_LIBRARY MaxAPI)
+#FIND_LIBRARY(MAX_LIBRARY MaxAPI)
 
 IF(APPLE)
 	SET(CMAKE_FRAMEWORK_PATH ${cmmjl_PATH_TO_MAXSDK}/c74support/max-includes)
@@ -91,12 +94,12 @@ IF(APPLE)
 	FIND_LIBRARY(QUICKTIME_LIBRARY QuickTime )
 	MARK_AS_ADVANCED (CARBON_LIBRARY)
 	MARK_AS_ADVANCED (QUICKTIME_LIBRARY)
-	MARK_AS_ADVANCED (MAX_LIBRARY)
+	#MARK_AS_ADVANCED (MAX_LIBRARY)
 	SET(EXTRA_LIBS ${EXTRA_LIBS} ${CARBON_LIBRARY} ${QUICKTIME_LIBRARY} ${MAX_LIBRARY})
 ENDIF(APPLE)
 
 IF(WIN32)
-	#SET(CMAKE_C_FLAGS -mno-cygwin)
+	SET(CMAKE_C_FLAGS -mno-cygwin)
 	ADD_DEFINITIONS(-DWIN_VERSION -DWIN_EXT_VERSION)
 	SET(CMAKE_LDFLAGS -shared -mno-cygwin)
 ENDIF(WIN32)

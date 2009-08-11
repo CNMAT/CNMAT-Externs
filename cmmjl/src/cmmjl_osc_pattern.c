@@ -108,8 +108,11 @@ int cmmjl_osc_match(void *x,
 			//return e;
 			return 0;
 		}
+		post("cmmjl_osc_pattern.c: trying to match %s to %s", buf1, buf2);
+		post("buf1 is %d chars long and buf2 is %d chars long", strlen(buf1), strlen(buf2));
 		if(e = cmmjl_osc_match_re(&re, buf2)){
 			regerror(e, &re, ebuf, 256);
+			post("%s, %d", ebuf, e);
 			CMMJL_ERROR(x, CMMJL_OSC_EMATCH, "%s:\n\t%s", 
 				    cmmjl_strerror(CMMJL_OSC_EMATCH), ebuf);
 			//return e;

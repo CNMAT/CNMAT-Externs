@@ -32,6 +32,8 @@
 #include "cmmjl_error.h"
 #include <libgen.h>
 #include "jpatcher_api.h"
+//#include <iostream>
+//#include <boost/regex.hpp>
 
 t_max_err cmmjl_osc_address_get(void *x, t_object *attr, long *argc, t_atom **argv){
 	if(!(*argc) || !(*argv)){
@@ -254,8 +256,9 @@ int cmmjl_osc_check_pos_and_resize(char *buf, int len, char *pos){
 }
 
 int cmmjl_osc_add_to_bundle(int len, char *ptr, t_cmmjl_osc_message *msg){
-
-	return 0;
+	*((long *)ptr) = htonl(msg->size);
+	memcpy(ptr + 4, msg->address, msg->size);
+	return msg->size + 4; // the contents + 4 bytes for the size
 }
 
 int cmmjl_osc_rename(char *buffer, 
@@ -265,16 +268,22 @@ int cmmjl_osc_rename(char *buffer,
 		    char *newAddress){
 	int start = bufferPos;
 	int len = strlen(newAddress);
+	int bp = bufferPos;
+	post("bufferPos = %d", bp);
 	//len++;
 	len += 4 - (len % 4);
-	*((long *)(buffer + bufferPos)) = htonl(msg->size + (len - (msg->typetags - msg->address)));
-	bufferPos += 4;
-	memcpy(buffer + bufferPos, newAddress, strlen(newAddress));
-	bufferPos += len;
+	*((long *)(buffer + bp)) = htonl(msg->size + (len - (msg->typetags - msg->address)));
+	bp += 4;
+	post("bufferPos = %d", bp);
+	memcpy(buffer + bp, newAddress, strlen(newAddress));
+	bp += len;
+	post("bufferPos = %d", bp);
 	len = msg->size - (msg->typetags - msg->address);
-	memcpy(buffer + bufferPos, msg->typetags, len);
-	bufferPos += len;
-	return bufferPos - start;
+	memcpy(buffer + bp, msg->typetags, len);
+	bp += len;
+	post("bufferPos = %d", bp);
+	post("done copying %d bytes", bp - start);
+	return bp - start;
 }
 
 void cmmjl_osc_args2atoms(char *typetags, char *argv, t_atom *atoms){
@@ -317,17 +326,19 @@ long cmmjl_osc_bundle_naked_message(long n, char *ptr, char *out){
 	if(!out){
 		out = malloc(n + 20);
 	}
-	out[0] = '#';
-	out[1] = 'b';
-	out[2] = 'u';
-	out[3] = 'n';
-	out[4] = 'd';
-	out[5] = 'l';
-	out[6] = 'e';
-	out[7] = '\0';
-	*((long long *)(out + 8)) = 0x00001000;
-	*((long *)(out + 16)) = htonl(n);
-	memcpy(out + 20, ptr, n);
+	char buf[n + 20];
+	buf[0] = '#';
+	buf[1] = 'b';
+	buf[2] = 'u';
+	buf[3] = 'n';
+	buf[4] = 'd';
+	buf[5] = 'l';
+	buf[6] = 'e';
+	buf[7] = '\0';
+	*((long long *)(buf + 8)) = 0x000000001;
+	*((long *)(buf + 16)) = htonl(n);
+	memcpy(buf + 20, ptr, n);
+	memcpy(out, buf, n + 20);
 	return n + 20;
 }
 
