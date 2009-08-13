@@ -91,13 +91,13 @@ void orename_fullPacket(t_orename *x, long len, long ptr){
 
 	// extract the messages from the bundle
 	cmmjl_osc_extract_messages(nn, cpy, true, orename_cbk, (void *)x);
-
+	/*
 	int i; 
 	post("x->bufferPos = %d", x->bufferPos);
 	for(i = 0; i < x->bufferPos; i++){
 		post("%d %x %c", i, x->buffer[i], x->buffer[i]);
 	}
-
+	*/
 	t_atom out[2];
 	atom_setlong(&(out[0]), x->bufferPos);
 	atom_setlong(&(out[1]), (long)buffer);
@@ -113,13 +113,13 @@ void orename_cbk(t_cmmjl_osc_message msg, void *v){
 		realloc(x->buffer, x->bufferLen * 2);
 	}
 	for(i = 0; i < x->numAddresses; i++){
-		post("testing %s against %s", msg.address, x->addresses_in[i]->s_name);
+		//post("testing %s against %s", msg.address, x->addresses_in[i]->s_name);
 		if((ret = cmmjl_osc_match(x, msg.address, x->addresses_in[i]->s_name)) == -1){
-			post("matchd %d characters", ret);
+			//post("matchd %d characters", ret);
 			x->bufferPos += cmmjl_osc_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, x->addresses_out[i]->s_name);
 			didmatch++;
 		}
-		post("ret = %d", ret);
+		//post("ret = %d", ret);
 	}
 	if(didmatch == 0){
 		*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size);

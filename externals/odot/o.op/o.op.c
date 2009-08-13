@@ -147,7 +147,7 @@ void oop_cbk(t_cmmjl_osc_message msg, void *v){
 
 	for(i = 0; i < x->numPatterns; i++){
 		if((ret = cmmjl_osc_match(x, msg.address, x->patterns[i]->s_name)) == -1){// || !strcmp(msg.address, x->patterns[i]->s_name)){
-			post("%d %s matched %s", ret, msg.address, x->patterns[i]->s_name);
+			//post("%d %s matched %s", ret, msg.address, x->patterns[i]->s_name);
 			if(x->functions[i]){
 				//post("numArgs = %d", x->numArgs[i]);
 				x->functions[i](&msg, x->numArgs[i], x->arguments[i]);
