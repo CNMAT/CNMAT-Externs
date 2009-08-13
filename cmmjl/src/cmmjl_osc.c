@@ -269,20 +269,14 @@ int cmmjl_osc_rename(char *buffer,
 	int start = bufferPos;
 	int len = strlen(newAddress);
 	int bp = bufferPos;
-	post("bufferPos = %d", bp);
-	//len++;
 	len += 4 - (len % 4);
 	*((long *)(buffer + bp)) = htonl(msg->size + (len - (msg->typetags - msg->address)));
 	bp += 4;
-	post("bufferPos = %d", bp);
 	memcpy(buffer + bp, newAddress, strlen(newAddress));
 	bp += len;
-	post("bufferPos = %d", bp);
 	len = msg->size - (msg->typetags - msg->address);
 	memcpy(buffer + bp, msg->typetags, len);
 	bp += len;
-	post("bufferPos = %d", bp);
-	post("done copying %d bytes", bp - start);
 	return bp - start;
 }
 
