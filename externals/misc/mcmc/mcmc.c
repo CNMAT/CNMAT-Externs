@@ -42,7 +42,7 @@ VERSION 0.0: First try
 //#include <gsl/gsl_errno.h>
 //#include <gsl/gsl_spline.h>
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define PDEBUG(s,args...) post(s, ##args)
 #else
@@ -68,7 +68,7 @@ typedef struct _mcmc{
 	void *info_out;
 	long nOsc; // number of oscillators = half the length of the output array
 	long nOsc_new;
-	long arrayInLength; // length of the array that we received
+	long numPartials; // length of the array that we received
 	double *freq_in, *amp_in;
 	double *cdf;
 	t_atom *arrayOut; // the output array
@@ -76,6 +76,8 @@ typedef struct _mcmc{
 	double freq_min, freq_max;
 	double centroid;
 	double newFreq;
+	double avg_amp;
+	double stdev_amp;
 	long counter; // the current element of the list that's being updated
 	// we don't want this to be changed in the middle of an update cycle,
 	// so the value of numOscToUpdate gets moved into actualNumOscToUpdate only
@@ -99,6 +101,10 @@ typedef struct _mcmc{
 	long haveGoodAcceptanceData;
 	double interp_alpha;
 	double w0;
+	long sample_mode;
+	double temp;
+	FILE *fp;
+	long log;
 } t_mcmc;
 
 void *mcmc_class;
@@ -114,18 +120,22 @@ t_max_err mcmc_var_set(t_mcmc *x, t_object *attr, long argc, t_atom *argv);
 void mcmc_makeCDF(long ac, double *av, double *cdf);
 void mcmc_bang(t_mcmc *x);
 long mcmc_randomFromCDF(double r, double *cdf, long len);
+int mcmc_isFreqValid(t_mcmc *x, double freq);
+int mcmc_findNearestInputFreq(t_mcmc *x, double freq);
 void mcmc_getNewFreq(t_mcmc *x, double currentFreq, double currentProb, double *newFreq, double *newProb);
 void mcmc_clock_cb(t_mcmc *x, t_symbol *msg, long argc, t_atom *argv);
 void mcmc_fadeOut(t_mcmc *x);
 void mcmc_changeFreq(t_mcmc *x);
 void mcmc_fadeIn(t_mcmc *x);
 void mcmc_outputList(t_mcmc *x, short length, t_atom *array);
+double mcmc_quantizeFreq(double freq, int arrayLen, double *freq_array);
 void mcmc_int(t_mcmc *x, long n);
 double mcmc_interp(double *x_vec, double *y_vec, double x, long len, double minx, double maxx, double alpha, double w0);
 
 double mcmc_accepted(t_mcmc *x);
 double mcmc_rejected(t_mcmc *x);
 double mcmc_calc_acceptance_rate(t_mcmc *x, long l);
+double mcmc_getAcceptanceRate(t_mcmc *x);
 
 //void mcmc_makePMF(t_mcmc *x);
 long mcmc_counter(t_mcmc *x);
@@ -133,11 +143,15 @@ double mcmc_gaussBlur(t_mcmc *x, double m, int r);
 double mcmc_gaussdist(t_mcmc *x, double sigma);
 int makeseed(void);
 void mcmc_betafit(t_mcmc *x, double *freq, double *amp, long len, double *alpha, double *beta);
+double mcmc_scale(double f, double min_in, double max_in, double min_out, double max_out);
 double mcmc_norm(double x, double min, double max);
 
 void mcmc_tellmeeverything(t_mcmc *x);
 
 void mcmc_errorHandler(const char * reason, const char * file, int line, int gsl_errno);
+
+void mcmc_interp_test(t_mcmc *x, double f);
+void mcmc_log(t_mcmc *x, long l);
 
 t_symbol *ps_acceptance_rate, *ps_centroid, *ps_variance, *ps_cdf;
 
@@ -151,6 +165,9 @@ int main(void){
 	class_addmethod(c, (method)mcmc_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)mcmc_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)mcmc_tellmeeverything, "tellmeeverything", 0L, 0);
+
+	class_addmethod(c, (method)mcmc_interp_test, "interp", A_FLOAT, 0);
+	class_addmethod(c, (method)mcmc_log, "log", A_LONG, 0);
 
 	CLASS_ATTR_LONG(c, "nOsc", 0, t_mcmc, nOsc);
 	attr = (t_object *)class_attr_get(c, gensym("nOsc"));
@@ -170,6 +187,10 @@ int main(void){
 
 	// better name?
 	CLASS_ATTR_DOUBLE(c, "proposal_density_width", 0, t_mcmc, proposal_density_width);
+
+	CLASS_ATTR_LONG(c, "sample_mode", 0, t_mcmc, sample_mode);
+
+	CLASS_ATTR_DOUBLE(c, "temperature", 0, t_mcmc, temp);
 
 
 	class_register(CLASS_BOX, c);
@@ -195,7 +216,7 @@ void *mcmc_new(t_symbol *sym, long argc, t_atom *argv){
 		}
 
 		x->info_out = outlet_new(x, NULL);
-		x->out2 = floatout(x);
+		x->out2 = listout(x);
 		x->out1 = listout(x);	
 
 		x->newFreq = 0.;
@@ -225,16 +246,19 @@ void *mcmc_new(t_symbol *sym, long argc, t_atom *argv){
 			x->acceptanceRateBuf[i] = 0;
 		}
 
-		x->proposal_density_width = 0.75;
+		x->proposal_density_width = 1.;
 		x->beta_alpha = x->beta_beta = 0.;
 
 		x->interp_alpha = 1.;
 		x->w0 = 0.00001;
+		x->temp = 0.;
 
 		ps_acceptance_rate = gensym("acceptance_rate");
 		ps_centroid = gensym("centroid");
 		ps_variance = gensym("variance");
 		ps_cdf = gensym("cdf");
+		x->log = 0;
+		//if(x->log) x->fp = fopen("/Users/johnmac/mcmc.txt", "w");
 
 		attr_args_process(x, argc, argv);
 	}
@@ -248,6 +272,7 @@ void mcmc_free(t_mcmc *x){
 	//free(x->pmf);
 	free(x->arrayOut);
 	//free(x->currentProb);
+	if(x->log) fclose(x->fp);
 }
 
 
@@ -283,29 +308,40 @@ void mcmc_list(t_mcmc *x, t_symbol *msg, long argc, t_atom *argv){
 	//memcpy(x->arrayIn, argv, argc * sizeof(t_atom));
 	int i;
 	t_atom *ptr = argv;
+	if(x->log) fprintf(x->fp, "LIST ++++++++++++++++++++\n");
+	x->avg_amp = 0.;
 	for(i = 0; i < argc / 2; i++){
 		// convert to power spectrum?
 		x->freq_in[i] = atom_getfloat(ptr++);
 		//x->amp_in[i] = pow(atom_getfloat(ptr++), 2.);
 		x->amp_in[i] = atom_getfloat(ptr++);
+		x->avg_amp += x->amp_in[i];
+		if(x->log) fprintf(x->fp, "%f %f\n", x->freq_in[i], x->amp_in[i]);
 	}
+	x->avg_amp /= (argc / 2.);
+	for(i = 0; i < argc / 2; i++){
+		x->stdev_amp += pow(x->amp_in[i] - x->avg_amp, 2.);
+	}
+	//post("avg_amp = %f, stdev_amp = %f", x->avg_amp, x->stdev_amp);
+	x->stdev_amp /= (argc / 2.);
 	for(i = argc / 2; i < MCMC_MAX_ARRAY_LEN; i++){
 		x->freq_in[i] = 0.;
 		x->amp_in[i] = 0.;
 	}
 
-	x->arrayInLength = argc / 2;
+	x->numPartials = argc / 2;
 
 	x->freq_min = x->freq_in[0];
-	x->freq_max = x->freq_in[x->arrayInLength - 1];
+	x->freq_max = x->freq_in[x->numPartials - 1];
 
-	error("min = %f, max = %f", x->freq_min, x->freq_max);
+	//post("min = %f, max = %f", x->freq_min, x->freq_max);
 
 	// consider sorting the input here?
 
-	mcmc_betafit(x, x->freq_in, x->amp_in, x->arrayInLength, &(x->beta_alpha), &(x->beta_beta));
+	mcmc_betafit(x, x->freq_in, x->amp_in, x->numPartials, &(x->beta_alpha), &(x->beta_beta));
+	//post("shape parameters: a = %f, b = %f", x->beta_alpha, x->beta_beta);
 
-	mcmc_makeCDF(x->arrayInLength, x->amp_in, x->cdf);
+	mcmc_makeCDF(x->numPartials, x->amp_in, x->cdf);
 }
 
 void mcmc_makeCDF(long ac, double *av, double *cdf){
@@ -337,6 +373,52 @@ long mcmc_randomFromCDF(double r, double *cdf, long len){
 	return -1;
 }
 
+long mcmc_samplePartialCDF(t_mcmc *x, double freq){
+	int nearestPartial = mcmc_findNearestInputFreq(x, freq);
+	double nearestFreq = x->freq_in[nearestPartial];
+	//post("freq = %f, nearestFreq = %f, nearestPartial = %d", freq, nearestFreq, nearestPartial);
+	double min = x->freq_min, max = x->freq_max;
+	int mini = 0, maxi = x->numPartials;
+	double min_ex = 0, max_ex = 1;
+	if(nearestFreq < freq){
+		maxi = nearestPartial;
+		max = nearestFreq;
+	}else if(nearestFreq > freq){
+		min_ex = -1;
+		max_ex = 0;
+		mini = nearestPartial;
+		min = nearestFreq;
+	}else{
+		return nearestPartial;
+	}
+
+	double r = gsl_rng_uniform(x->rng);
+	r = mcmc_scale(r, 0., 1., mcmc_norm(min, x->freq_min, x->freq_max), mcmc_norm(max, x->freq_min, x->freq_max));
+	int i;
+	double cdf[maxi - mini];
+	double sum = 0;
+	//post("freq = %f", freq);
+	//post("mini = %d, maxi = %d, min = %f, max = %f", mini, maxi, min, max);
+	cdf[0] = 0;
+	for(i = 1; i < (maxi - mini); i++){
+		//post("%d scale = %f", i, fabs(mcmc_scale(x->freq_in[i + mini], min, max, min_ex, max_ex)));
+		cdf[i] = (sum += x->amp_in[i + mini] * pow(fabs(mcmc_scale(x->freq_in[i + mini], min, max, min_ex, max_ex)), 1.5));
+		//post("cdf[%d] = %f", i, cdf[i]);
+	}
+	for(i = 0; i < (maxi - mini); i++){
+		cdf[i] /= sum;
+		//post("cdf[%d] = %f", i, cdf[i]);
+	}
+	for(i = 0; i < (maxi - mini); i++){
+		//post("r = %f, cdf[%d] = %f", r, i, cdf[i]);
+		if(r <= cdf[i]){
+			//post("choosing %d %f", i + mini, x->freq_in[i + mini]);
+			return i + mini;
+		}
+	}
+	return 0;
+}
+
 double mcmc_accepted(t_mcmc *x){
 	return mcmc_calc_acceptance_rate(x, 1);
 }
@@ -346,12 +428,21 @@ double mcmc_rejected(t_mcmc *x){
 }
 
 double mcmc_calc_acceptance_rate(t_mcmc *x, long l){
+	x->acceptanceRateSum -= x->acceptanceRateBuf[x->acceptanceRateBufPos % MCMC_ACCEPTANCE_RATE_BUF_LEN];
+	x->acceptanceRateBuf[x->acceptanceRateBufPos % MCMC_ACCEPTANCE_RATE_BUF_LEN] = l;
+	x->acceptanceRateSum += l;
+	x->acceptanceRateBufPos++;
+	t_atom a;
+	SETFLOAT(&a, x->acceptanceRateSum / MCMC_ACCEPTANCE_RATE_BUF_LEN);
+	outlet_anything(x->info_out, ps_acceptance_rate, 1, &a);
+	return x->acceptanceRateSum / MCMC_ACCEPTANCE_RATE_BUF_LEN;
+	/*
 	long prevIndex = x->acceptanceRateBufPos == 0 ? MCMC_ACCEPTANCE_RATE_BUF_LEN - 1 : x->acceptanceRateBufPos - 1;
 	t_atom a;
 	x->acceptanceRateBufPos = (x->acceptanceRateBufPos + 1) % MCMC_ACCEPTANCE_RATE_BUF_LEN;
-	if(x->acceptanceRateBufPos == 0){
+	//if(x->acceptanceRateBufPos == 0){
 		x->haveGoodAcceptanceData = 1;
-	}
+		//}
 	if(x->haveGoodAcceptanceData){
 		x->acceptanceRateSum = (x->acceptanceRateSum - x->acceptanceRateBuf[prevIndex]) + l;
 	}else{
@@ -361,6 +452,48 @@ double mcmc_calc_acceptance_rate(t_mcmc *x, long l){
 	SETFLOAT(&a, x->acceptanceRateSum / MCMC_ACCEPTANCE_RATE_BUF_LEN);
 	outlet_anything(x->info_out, ps_acceptance_rate, 1, &a);
 	return x->acceptanceRateSum / MCMC_ACCEPTANCE_RATE_BUF_LEN;
+	*/
+}
+
+double mcmc_getAcceptanceRate(t_mcmc *x){
+	if(x->acceptanceRateBufPos < MCMC_ACCEPTANCE_RATE_BUF_LEN){
+		return x->acceptanceRateSum / (x->acceptanceRateBufPos + 1);
+	}else{
+		return x->acceptanceRateSum / MCMC_ACCEPTANCE_RATE_BUF_LEN;
+	}
+}
+
+int mcmc_isFreqValid(t_mcmc *x, double freq){
+	int nearestFreqIndex = mcmc_findNearestInputFreq(x, freq);
+	double nearestFreq = x->freq_in[nearestFreqIndex];
+	double nearestAmp = x->amp_in[nearestFreqIndex];
+	double cutoff = nearestAmp * .707;
+	double amp = mcmc_interp(x->freq_in, 
+				 x->amp_in, 
+				 freq, 
+				 x->numPartials, 
+				 x->freq_min * MST < 0. ? 0. : x->freq_min * MST, 
+				 x->freq_max * PST > 22050. ? 22020. : x->freq_max * PST, 
+				 x->interp_alpha, 
+				 x->w0);
+	if(amp > cutoff){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+int mcmc_findNearestInputFreq(t_mcmc *x, double freq){
+	int i;
+	int mini = 0;
+	double min = DBL_MAX;
+	for(i = 0; i < x->numPartials; i++){
+		if(abs(x->freq_in[i] - freq) < min){
+			min = abs(x->freq_in[i] - freq);
+			mini = i;
+		}
+	}
+	return mini;
 }
 
 void mcmc_getNewFreq(t_mcmc *x, double currentFreq, double currentProb, double *newFreq, double *newProb){
@@ -369,39 +502,54 @@ void mcmc_getNewFreq(t_mcmc *x, double currentFreq, double currentProb, double *
 	int i = 0;
 	double q01, q10;
 
+	/*
 	if(currentFreq == 0.f){
-		lr = mcmc_randomFromCDF(gsl_rng_uniform(x->rng), x->cdf, x->arrayInLength);
+		lr = mcmc_randomFromCDF(gsl_rng_uniform(x->rng), x->cdf, x->numPartials);
 		*newFreq = x->freq_in[lr];
 		*newProb = x->amp_in[lr];
 		return;
 	}
-
+	*/
+	if(x->log) fprintf(x->fp, "******************************\n");
+	if(x->log) fprintf(x->fp, "CURRENT FREQ = %f, CURRENT PROB = %f\n\n", currentFreq, currentProb);
 	//r = mcmc_gaussdist(x, x->pro_stdev);
+	double pdw = x->proposal_density_width * (1. - mcmc_getAcceptanceRate(x));
+	int maxTries = 256;
 	proposal_x = -1;
-	while((proposal_x < x->freq_min || proposal_x > x->freq_max) && i < 50){
+	int good = 0;
+	norm = mcmc_norm(x->centroid, x->freq_min, x->freq_max);
+	min = currentFreq - (norm * (currentFreq * pdw));
+	max = currentFreq + ((1 - norm) * (currentFreq * pdw));
+	while(i < maxTries && !good){
 		r = gsl_ran_beta(x->rng, x->beta_alpha, x->beta_beta);
-		norm = mcmc_norm(x->centroid, x->freq_min, x->freq_max);
-		min = currentFreq - (norm * (currentFreq * x->proposal_density_width));
-		max = currentFreq + ((1 - norm) * (currentFreq * x->proposal_density_width));
 		PDEBUG("currentFreq = %f, norm = %f, min = %f, max = %f, freq_min = %f, freq_max = %f, cent = %f", currentFreq, norm, min, max, x->freq_min, x->freq_max, x->centroid);
 		PDEBUG("pdw = %f", x->proposal_density_width);
 		proposal_x = (r * (max - min)) + min;
+		good = mcmc_isFreqValid(x, proposal_x);
 		PDEBUG("proposal = %f", proposal_x);
 		++i;
 	}
+	if(x->log) fprintf(x->fp, "r = %f, norm = %f, min = %f, max = %f\n", r, norm, min, max);
+	if(x->log) fprintf(x->fp, "proposal_x = %f %s\n", proposal_x, mcmc_isFreqValid(x, proposal_x) ? "valid" : "not valid");
 	// if we couldn't find a new freq for some reason (stdev is too small, for instance)
 	// just choose one from the cdf and bail out.
-	if(i == 100){
-		lr = mcmc_randomFromCDF(gsl_rng_uniform(x->rng), x->cdf, x->arrayInLength);
+	if(!good){
+		//error("couldn't get a valid freq between %f and %f!", min, max);
+		PDEBUG("sampling from CDF");
+		//lr = mcmc_randomFromCDF(gsl_rng_uniform(x->rng), x->cdf, x->numPartials);
+		lr = mcmc_samplePartialCDF(x, currentFreq);
 		*newFreq = x->freq_in[lr];
 		*newProb = x->amp_in[lr];
 		outlet_anything(x->info_out, ps_cdf, 0, NULL);
+		mcmc_rejected(x);
 		return;
 	}
+
+	// we should have an option to select from the actual spectrum rather than interpolating
 	proposal_y = mcmc_interp(x->freq_in, 
 				 x->amp_in, 
 				 proposal_x, 
-				 x->arrayInLength, 
+				 x->numPartials, 
 				 x->freq_min * MST < 0. ? 0. : x->freq_min * MST, 
 				 x->freq_max * PST > 22050. ? 22020. : x->freq_max * PST, 
 				 x->interp_alpha, 
@@ -413,36 +561,65 @@ void mcmc_getNewFreq(t_mcmc *x, double currentFreq, double currentProb, double *
 
 	// the proposal density centered around the proposed frequency and evaluated at the
 	// current frequency.
-	min = proposal_x - (norm * (proposal_x * x->proposal_density_width));
-	max = proposal_x + ((1 - norm) * (proposal_x * x->proposal_density_width));
+	//post("acceptanceRateSum = %f, %d, %f %f, pdw = %f", x->acceptanceRateSum, MCMC_ACCEPTANCE_RATE_BUF_LEN, mcmc_getAcceptanceRate(x), mcmc_getAcceptanceRate(x) * x->proposal_density_width, pdw);
+	if(x->log) fprintf(x->fp, "pdw = %f\n", pdw);
+	min = proposal_x - (norm * (proposal_x * pdw));
+	max = proposal_x + ((1 - norm) * (proposal_x * pdw));
 	double currentFreq_scaled = mcmc_norm(currentFreq, min, max);
+	if(x->log) fprintf(x->fp, "norm = %f, min = %f, max = %f, currentFreq_scaled = %f\n", norm, min, max, currentFreq_scaled);
 	if(currentFreq_scaled > 0 && currentFreq_scaled < 1){
 		q01 = gsl_ran_beta_pdf(currentFreq_scaled, x->beta_alpha, x->beta_beta);
 	}else{
 		q01 = 0;
 	}
-	ratio = (proposal_y / currentProb) * (q01 / q10);
+	if(x->log) fprintf(x->fp, "stdev = %f, proposal is %f stdevs away, and current is %f\n", x->stdev_amp, x->stdev_amp / proposal_y, x->stdev_amp / currentProb);
+	ratio = ((proposal_y / currentProb) * (q01 / q10)) * (1. / pow(1. + (x->stdev_amp / proposal_y), 2.));
 	PDEBUG("q01 = %f, q10 = %f, %f, %f %f", q01, q10, q01 / q10, (proposal_y / currentProb), ratio);
 
-	PDEBUG("r = %f, pro_x = %f, pro_y = %f, current_y = %f, ratio = %f", r, proposal_x, proposal_y, currentProb, ratio);
+	PDEBUG("r = %f, pro_x = %f, pro_y = %f, current_y = %f, ratio = %f * %f = %f", r, proposal_x, proposal_y, currentProb, ((proposal_y / currentProb) * (q01 / q10)), (1. / (x->stdev_amp / proposal_y)), ratio);
+	if(x->log) fprintf(x->fp, "currentFreq = %f, currentProb = %f\n", currentFreq, currentProb);
+	if(x->log) fprintf(x->fp, "q01 = %f, q10 = %f\n", q01, q10);
+	if(x->log) fprintf(x->fp, "r = %f, cf_s = %f\n", r, currentFreq_scaled);
+	if(x->log) fprintf(x->fp, "proposal_y = %f, currentProb = %f\n", proposal_y, currentProb);
+if(x->log) fprintf(x->fp, "ratio = %f * %f = %f\n", ((proposal_y / currentProb) * (q01 / q10)), (1. / pow(1. + (x->stdev_amp / proposal_y), 2.)), ratio);
+
 
 	if(ratio >= 1){
+		if(x->log) fprintf(x->fp, "ACCEPTED %f as the new frequency\n", proposal_x);
 		*newFreq = proposal_x;
 		*newProb = proposal_y;
-		return;
+		//return;
 	}else{
+		if(x->log) fprintf(x->fp, "REJECTED %f as the new frequency\n", proposal_x);
 		r = gsl_rng_uniform(x->rng);
+		if(x->log) fprintf(x->fp, "new random num: %f\n", r);
 		PDEBUG("ratio was less than 1, so here's a new random num: %f", r);
 		if(r < ratio){
+			if(x->log) fprintf(x->fp, "%f is less than %f so we will accept %f as the new frequency\n", r, ratio, proposal_x);
 			PDEBUG("r (%f) < ratio (%f)", r, ratio);
 			*newFreq = proposal_x;
 			*newProb = proposal_y;
-			return;
+			//return;
 		}else{
+			if(x->log) fprintf(x->fp, "%f is greater than %f so we will reject %f again\n", r, ratio, proposal_x);
 			PDEBUG("r (%f) !< ratio (%f)", r, ratio);
 			*newFreq = currentFreq;
 			*newProb = currentProb;
-			return;
+			//return;
+		}
+	}
+	if(*newFreq == currentFreq){
+		mcmc_rejected(x);
+	}else{
+		mcmc_accepted(x);
+	}
+	if(x->log){
+		if(*newFreq != currentFreq){
+			if(mcmc_isFreqValid(x, *newFreq)){
+				fprintf(x->fp, "%f is VALID\n", *newFreq);
+			}else{
+				fprintf(x->fp, "%f is NOT VALID\n", *newFreq);
+			}
 		}
 	}
 }
@@ -458,55 +635,62 @@ void mcmc_clock_cb(t_mcmc *x, t_symbol *msg, long argc, t_atom *argv){
 	case MCMC_STATE_FADE_OUT:
 		x->nOsc = x->nOsc_new;
 		currentFreq = atom_getfloat(&(x->arrayOut[x->counter * 2]));
+		if(currentFreq == 0.f){
+			currentFreq = gsl_rng_uniform(x->rng);
+			currentFreq = (currentFreq * (x->freq_max - x->freq_min)) + x->freq_min;
+		}
 		currentProb = mcmc_interp(x->freq_in, 
 					  x->amp_in, 
 					  currentFreq, 
-					  x->arrayInLength / 2, 
+					  //x->numPartials / 2, 
+					  x->numPartials,
 				 	  x->freq_min * MST < 0. ? 0. : x->freq_min * MST, 
 					  x->freq_max * PST > 22050. ? 22020. : x->freq_max * PST, 
 					  x->interp_alpha, 
 					  x->w0);
+		if(x->log) fprintf(x->fp, "******************************\n");
+		if(x->log) fprintf(x->fp, "%d\n", 0);
 		mcmc_getNewFreq(x, currentFreq, currentProb, &newFreq, &newProb);
-		PDEBUG("%d %f %f", x->counter, currentFreq, newFreq, newProb);
+		PDEBUG("%d %f %f %f", x->counter, currentFreq, newFreq, newProb);
 		SETLONG(&a, x->counter);
 
 		i = 0;
-		while(newFreq == currentFreq && i < 100){
-			mcmc_rejected(x);
+		int n = 50;
+		while(newFreq == currentFreq && i < n){
+			if(x->log) fprintf(x->fp, "******************************\n");
+			if(x->log) fprintf(x->fp, "%d\n", i + 1);
+			PDEBUG("%d", i);
+			//mcmc_rejected(x);
 			mcmc_getNewFreq(x, currentFreq, currentProb, &newFreq, &newProb);
 			i++;
 		}
-		if(i < 100){
-			mcmc_accepted(x);
-			x->newFreq = newFreq;
+		if(i < (n - 1)){
+			//mcmc_accepted(x);
+			if(x->sample_mode != 0){
+				double qf = mcmc_quantizeFreq(newFreq, x->numPartials, x->freq_in);
+				x->newFreq = qf;
+				PDEBUG("quantizing %f -> %f", newFreq, qf);
+			}else{
+				x->newFreq = newFreq;
+			}
 			mcmc_fadeOut(x);
 			x->state = MCMC_STATE_CHANGE_FREQ;
+			t_atom kludge[3];
+			atom_setlong(kludge, x->counter);
+			atom_setfloat(kludge + 1, currentFreq);
+			atom_setfloat(kludge + 2, newFreq);
+			outlet_list(x->out2, NULL, 3, kludge);
+			//post("%f -> %f", currentFreq, newFreq);
+
 		}else{
-			error("couldn't change freq!");
+			//error("couldn't change freq!");
+			//mcmc_rejected(x);
 			mcmc_counter(x);
 			if(x->on){
 				schedule_fdelay(x, (method)mcmc_clock_cb, x->tinterval, NULL, 0, NULL);
 			}
 			return;
 		}
-		/*
-		if(newFreq >= currentFreq * MST_D10 && newFreq <= currentFreq * PST_D10){
-			outlet_anything(x->info_out, gensym("skipping"), 1, &a);
-			mcmc_rejected(x);
-			mcmc_counter(x);
-			if(x->on){
-				schedule_fdelay(x, (method)mcmc_clock_cb, x->tinterval, NULL, 0, NULL);
-			}
-			return;
-			// do nothing
-		}else{
-			outlet_anything(x->info_out, gensym("changing"), 1, &a);
-			mcmc_accepted(x);
-			x->newFreq = newFreq;
-			mcmc_fadeOut(x);
-			x->state = MCMC_STATE_CHANGE_FREQ;
-		}
-		*/
 		PDEBUG("**************************************************");
 		PDEBUG("counter = %d", x->counter);
 		break;
@@ -558,6 +742,19 @@ void mcmc_outputList(t_mcmc *x, short length, t_atom *array){
 		break;
 	}
 	*/
+}
+
+double mcmc_quantizeFreq(double freq, int arrayLen, double *freq_array){
+	int i;
+	double min = DBL_MAX;
+	int mini;
+	for(i = 0; i < arrayLen; i++){
+		if(fabs(freq - freq_array[i]) < min){
+			min = fabs(freq - freq_array[i]);
+			mini = i;
+		}
+	}
+	return freq_array[mini];
 }
 
 void mcmc_int(t_mcmc *x, long n){
@@ -646,6 +843,12 @@ void mcmc_betafit(t_mcmc *x, double *freq, double *amp, long len, double *alpha,
 	*alpha = (mean * *alpha) + 2;
 }
 
+double mcmc_scale(double f, double min_in, double max_in, double min_out, double max_out){
+	float m = (max_out - min_out) / (max_in - min_in);
+	float b = (min_out - (m * min_in));
+	return m * f + b;
+}
+
 double mcmc_norm(double x, double min, double max){
 	return (x - min) / (max - min);
 }
@@ -687,72 +890,6 @@ double mcmc_interp(double *x_vec, double *y_vec, double x, long len, double minx
 	}
 	return num / den;
 }
-
-/*
-double mcmc_interp(double *x_vec, double *y_vec, double x, long len, double minx, double maxx, double alpha, double w0){
-	int i;
-	double numer = 0.;
-	double denom = 0.;
-	double d;
-	//post("x = %f, mind = %f, maxd = %f", x, mind, maxd);
-	double boundary_weight = (len * (exp(w0) - 1));
-
-	d = pow(abs(x - minx), alpha);
-	//post("d = %f", d);
-	if(d < 0.0001){
-		return 0.;
-	}
-	denom += boundary_weight / d;
-	for(i = 0; i < len; i++){
-		d = pow(abs(x - x_vec[i]), alpha);
-		//post("d = %f", d);
-		if(d < 0.0001){
-			return y_vec[i];
-		}else{
-			numer += y_vec[i] / d;
-			denom += 1. / d;
-		}
-	}
-	d = pow(abs(x - maxx), alpha);
-	//post("d = %f", d);
-	//post("**************************************************");
-	if(d < 0.0001){
-		return 0.;
-	}
-	denom += boundary_weight / d;
-	return numer / denom;
-}
-*/
-
-/*
-double mcmc_interp(double *x_vec, double *y_vec, double x, long len, double minx, double maxx, double alpha){
-	int i;
-	double numer = 0.;
-	double denom = 0.;
-	double d;
-
-	d = pow(abs(x - minx), alpha);
-	// numer += 0. / d;
-	denom += 1 / d;
-
-	for(i = 0; i < len; i++){
-		if(x >= x_vec[i] * pow(pow(2. / 12.), -.1) && 
-		   x <= x_vec[i] * pow(pow(2. / 12.), .1)){
-			return y_vec[i];
-		}
-		d = pow(abs(x - x_vec[i]), alpha);
-		numer += (len * y_vec[i]) / d;
-		denom += len / d;
-	}
-
-	d = pow(abs(x - maxx), alpha);
-	// numer += 0. / d;
-	denom += 1 / d;
-
-	return numer / denom;
-
-}
-*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // OPTIONS
@@ -801,8 +938,36 @@ void mcmc_tellmeeverything(t_mcmc *x){
 	post("Oscillator amplitude: %f", x->oscamp);
 	post("Time interval: %f", x->tinterval);
 	post("Standard deviation (Gaussian blur): %f", x->stdev);
+	post("w0: %.20f", x->w0);
+	post("interp_alpha: %.20f", x->interp_alpha);
 }
 
 void mcmc_errorHandler (const char * reason, const char * file, int line, int gsl_errno){
 	error("mcmc: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+}
+
+void mcmc_interp_test(t_mcmc *x, double f){
+	float y = mcmc_interp(x->freq_in, 
+				  x->amp_in, 
+				  f, 
+				  //x->numPartials / 2, 
+				  x->numPartials,
+				  x->freq_min * MST < 0. ? 0. : x->freq_min * MST, 
+				  x->freq_max * PST > 22050. ? 22020. : x->freq_max * PST, 
+				  x->interp_alpha, 
+				  x->w0);
+
+	t_atom a;
+	atom_setfloat(&a, y);
+	outlet_anything(x->info_out, gensym("interp"), 1, &a);
+	post("%.30f", y);
+}
+
+void mcmc_log(t_mcmc *x, long l){
+	if(l){
+		x->fp = fopen("/Users/johnmac/mcmc.txt", "w");
+	}else{
+		fclose(x->fp);
+	}
+	x->log = l;
 }
