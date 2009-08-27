@@ -1,7 +1,6 @@
 // !$*UTF8*$!
 {
 	089C1669FE841209C02AAC07 /* Project object */ = {
-		activeArchitecture = i386;
 		activeBuildConfigurationName = Deployment;
 		activeTarget = 8D01CCC60486CAD60068D4B7 /* accumulate~ */;
 		codeSenseManager = A192DF150CADB6B4005335F7 /* Code sense */;
@@ -50,8 +49,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 239046570;
-			PBXWorkspaceStateSaveDate = 239046570;
+			PBXPerProjectTemplateStateSaveDate = 270719988;
+			PBXWorkspaceStateSaveDate = 270719988;
 		};
 		sourceControlManager = A192DF140CADB6B4005335F7 /* Source Control */;
 		userBuildSettings = {
@@ -74,10 +73,11 @@
 	};
 	C92502B70A8BAAD300F04C3F /* accumulate~.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1007, 4508}}";
-			sepNavSelRange = "{805, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {987, 5616}}";
+			sepNavSelRange = "{7428, 0}";
+			sepNavVisRange = "{9115, 1328}";
 			sepNavVisRect = "{{0, 0}, {1007, 745}}";
-			sepNavWindowFrame = "{{497, 66}, {1046, 874}}";
+			sepNavWindowFrame = "{{92, 0}, {1046, 874}}";
 		};
 	};
 }
