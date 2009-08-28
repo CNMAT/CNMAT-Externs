@@ -29,8 +29,8 @@ University of California, Berkeley.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: peqbank~
 DESCRIPTION: Bank of biquad filters in series with analog-like control parameters based on shelving or parametric EQ (or low-level control in the biquad coefficient domain)
-AUTHORS: Tristan Jehan, Matt Wright
-COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07
+AUTHORS: Tristan Jehan, Matt Wright, Andy Schmeder
+COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07,09
 DRUPAL_NODE: /patch/4026
 SVN_REVISION: $LastChangedRevision$
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/MSP-filters/filticmc.html
@@ -49,6 +49,7 @@ VERSION 2.1: Fixed bug of overwriting input signal vector with the filtered outp
 VERSION 2.2: Added "bank" message as a synonym for "list", dsp_free fixed -mz
 VERSION 2.3: Tried to make peqbank_compute() be reentrant.
 VERSION 2.3.1 Fixed crash caused by maxelem() and peqbank_reset() calling peqbank_free() --JM
+VERSION 2.4: Support for multiple channels, vector optimization, built with Intel CC
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
@@ -148,15 +149,20 @@ typedef struct _peqbank {
 #endif	
 	float b_Fs;			// Sample rate
 
+    int b_channels;     // Number of channels to process in parallel
 	int b_max;			// Number max of peq filters (used to allocate memory)
 	int b_nbpeq;		// Current number of peq filters
 	int b_start;		// 0=shelf, 5=no shelf
 	int b_version;		// SMOOTH (0) or FAST (1) 
 
-	float *b_ym1;		// Ptr on y minus 1 per biquad
-	float *b_ym2;		// Ptr on y minus 2 per biquad
-	float *b_xm1;		// Ptr on x minus 1 per biquad
-	float *b_xm2;		// Pyr on x minus 2 per biquad
+	float *b_ym1;		// Ptr on y minus 1 per biquad, per channel
+	float *b_ym2;		// Ptr on y minus 2 per biquad, per channel
+	float *b_xm1;		// Ptr on x minus 1 per biquad, per channel
+	float *b_xm2;		// Pyr on x minus 2 per biquad, per channel
+    
+    t_float** s_vec_in;    // input vectors in multi-channel mode
+    t_float** s_vec_out;   // output vectors
+    int s_n;
 	
 	Atom *myList;		// Copy of coefficients as Atoms
 	void *b_outlet;		// List of biquad coefficients
@@ -166,11 +172,14 @@ typedef struct _peqbank {
 
 } t_peqbank;
 
-t_symbol *ps_maxelem, *ps_shelf, *ps_peq, *ps_fast, *ps_smooth;
+t_symbol *ps_maxelem, *ps_shelf, *ps_peq, *ps_fast, *ps_smooth, *ps_channels;
 
-t_int *peqbank_perform(t_int *w);
+t_int *peqbank_perform_smooth(t_int *w);
 t_int *peqbank_perform_fast(t_int *w);
+t_int *peqbank_perform_smooth_multi(t_int *w);
+t_int *peqbank_perform_fast_multi(t_int *w);
 t_int *do_peqbank_perform_fast(t_int *w, float *mycoeffs);
+void do_peqbank_perform_fast_multi(t_peqbank *w, float *mycoeffs);
 void peqbank_clear(t_peqbank *x);
 void peqbank_dsp(t_peqbank *x, t_signal **sp, short *connect);
 void peqbank_reset(t_peqbank *x);
@@ -209,6 +218,7 @@ int main(void) {
 	ps_peq     = gensym("peq");
 	ps_fast    = gensym("fast");
 	ps_smooth  = gensym("smooth");
+    ps_channels = gensym("channels");
 	
 	setup( (t_messlist **)&peqbank_class, (method)peqbank_new, (method)peqbank_free,
 			(short)sizeof(t_peqbank), 0L, A_GIMME, 0);
@@ -263,6 +273,8 @@ void peqbank_tellmeeverything(t_peqbank *x) {
     	post("  ERROR: object is in neither FAST mode nor SMOOTH mode!");
     }
     
+    post("  Channels: %d", x->b_channels);
+    
     post("  coeff = %p, oldcoeff = %p, newcoeff = %p, freecoeff = %p",
     	x->coeff, x->oldcoeff, x->newcoeff, x->freecoeff);
     
@@ -294,11 +306,20 @@ void peqbank_tellmeeverything(t_peqbank *x) {
 
 int posted = 0;
 
-t_int *peqbank_perform(t_int *w) {
+t_int *peqbank_perform_smooth_multi(t_int *w) {
+
+   
+    // smooth multi channel isn't supported yet, just use fast so at least it doesn't break... -aws
+    return peqbank_perform_fast_multi(w);
+    
+}
+    
+t_int *peqbank_perform_smooth(t_int *w) {
+    
 	t_float *in  = (t_float *)(w[1]);
 	t_float *out = (t_float *)(w[2]);
 	t_peqbank *x = (t_peqbank *)(w[3]);
-	int n        = (int)(w[4]);	
+	int n        = (int)(w[4]);
 	float *mycoeff;
 	
 	// In overdrive, it's possible that this perform routine could be interrupted (e.g., 
@@ -419,7 +440,6 @@ t_int *peqbank_perform_fast(t_int *w) {
 
 	result = do_peqbank_perform_fast(w, x->coeff);
 	
-	
 	/* We still have to shuffle the coeff pointers around. */
 	
 	if (x->coeff != x->oldcoeff) {
@@ -484,11 +504,92 @@ t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 	return (w+5);
 }
 
+t_int *peqbank_perform_fast_multi(t_int *w) {
+
+	t_peqbank *x = (t_peqbank *)(w[1]);
+    
+	do_peqbank_perform_fast_multi(x, x->coeff);
+	
+	/* We still have to shuffle the coeff pointers around. */
+	
+	if (x->coeff != x->oldcoeff) {
+		if (x->freecoeff != 0) {
+			post("¥ peqbank~ disaster (fast)!  freecoeff should be zero now!");
+		}
+		x->freecoeff = x->oldcoeff;
+		x->oldcoeff = x->coeff;		
+	}
+	
+	return w + 2;	
+}
+
+void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
+
+	int n = x->s_n;
+    
+	int i, j, k=0, c;
+	float a0, a1, a2, b1, b2;
+    
+	float xn[x->b_channels], yn[x->b_channels], xm2[x->b_channels], xm1[x->b_channels], ym2[x->b_channels], ym1[x->b_channels]; 
+
+	// First copy input vector to output vector, we'll filter the output in-place
+    for (c = 0; c < x->b_channels; c++) {
+        if(x->s_vec_out[c] != x->s_vec_in[c]) {
+            for (i=0; i<n; i++) {
+                x->s_vec_out[c][i] = x->s_vec_in[c][i];
+            }
+        }
+    }
+    
+	/* Cascade of Biquads */
+	for (j=x->b_start; j < (x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
+
+		for(c = 0; c < x->b_channels; c++) {
+            xm2[c] = x->b_xm2[k*x->b_channels + c]; 
+            xm1[c] = x->b_xm1[k*x->b_channels + c];
+            ym2[c] = x->b_ym2[k*x->b_channels + c]; 
+            ym1[c] = x->b_ym1[k*x->b_channels + c];	
+		}
+        
+		a0 = mycoeff[j  ];
+		a1 = mycoeff[j+1];
+		a2 = mycoeff[j+2];
+		b1 = mycoeff[j+3];	
+		b2 = mycoeff[j+4];
+        
+#pragma ivdep
+		for (i=0; i < n; i++) {
+#pragma ivdep
+            for(c = 0; c < x->b_channels; c++) {
+
+                xn[c] = x->s_vec_out[c][i];
+                x->s_vec_out[c][i] = yn[c] = (a0 * xn[c]) + (a1 * xm1[c]) + (a2 * xm2[c]) - (b1 * ym1[c]) - (b2 * ym2[c]);
+                
+                xm2[c] = xm1[c];
+                xm1[c] = xn[c];
+                ym2[c] = ym1[c];
+                ym1[c] = yn[c];
+            }
+		}
+		
+		for(c = 0; c < x->b_channels; c++) {
+            x->b_xm2[k*x->b_channels + c] = xm2[c];
+            x->b_xm1[k*x->b_channels + c] = xm1[c];
+            x->b_ym2[k*x->b_channels + c] = ym2[c];
+            x->b_ym1[k*x->b_channels + c] = ym1[c];		
+        }
+        
+		k ++;
+		
+	} // cascade loop
+}
+
+
 void peqbank_clear(t_peqbank *x) {
 
 	int i;
 	
-	for(i=0; i<x->b_max; ++i) {
+	for(i=0; i < (x->b_max * x->b_channels); ++i) {
 		x->b_ym1[i] = 0.0f;
 		x->b_ym2[i] = 0.0f;
 		x->b_xm1[i] = 0.0f;
@@ -498,12 +599,32 @@ void peqbank_clear(t_peqbank *x) {
 
 void peqbank_dsp(t_peqbank *x, t_signal **sp, short *connect) {
 
-	x->b_Fs = sys_getsr();
+    int i;
+    
+	x->b_Fs = sp[0]->s_sr;
+    
 	peqbank_clear(x);
 
-	if (x->b_version == FAST) 
-	   dsp_add(peqbank_perform_fast, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
-	else dsp_add(peqbank_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+    if(x->b_channels == 1) {
+        if (x->b_version == FAST) {
+            dsp_add(peqbank_perform_fast, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+        } else {
+            dsp_add(peqbank_perform_smooth, 4, sp[0]->s_vec, sp[1]->s_vec, x, sp[0]->s_n);
+        }
+    } else {
+        for(i = 0; i < x->b_channels; i++) {
+            x->s_vec_in[i] = sp[i]->s_vec;
+            x->s_vec_out[i] = sp[i + x->b_channels]->s_vec;
+        }
+        x->s_n = sp[0]->s_n;
+        if (x->b_version == FAST) {
+            dsp_add(peqbank_perform_fast_multi, 1, x);
+        } else {
+            dsp_add(peqbank_perform_smooth_multi, 1, x);
+        }
+        
+    }
+        
 }
 
 void peqbank_reset(t_peqbank *x) {
@@ -535,23 +656,23 @@ void peqbank_reset(t_peqbank *x) {
 		memset(x->freecoeff, 0, x->b_max * NBCOEFF * sizeof(float));
 	}
 	if(x->b_ym1){
-		memset(x->b_ym1, 0, x->b_max * sizeof(float));
+		memset(x->b_ym1, 0, x->b_max * x->b_channels * sizeof(float));
 	}
 	if(x->b_ym2){
-		memset(x->b_ym2, 0, x->b_max * sizeof(float));
+		memset(x->b_ym2, 0, x->b_max * x->b_channels * sizeof(float));
 	}
 	if(x->b_xm1){
-		memset(x->b_xm1, 0, x->b_max * sizeof(float));
+		memset(x->b_xm1, 0, x->b_max * x->b_channels * sizeof(float));
 	}
 	if(x->b_xm2){
-		memset(x->b_xm2, 0, x->b_max * sizeof(float));
+		memset(x->b_xm2, 0, x->b_max * x->b_channels * sizeof(float));
 	}
 	if(x->myList){
 		memset(x->myList, 0, x->b_max * NBCOEFF * sizeof(t_atom));
 	}
 
 	//peqbank_free(x);
-        peqbank_init(x);
+    peqbank_init(x);
 	peqbank_compute(x);	
 }
 
@@ -676,7 +797,7 @@ void peqbank_list(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 		if (argv[rest].a_w.w_sym == ps_maxelem) {
 			if (argv[rest+1].a_w.w_long != x->b_max) 
 				rest = maxelem(x, s, argc, argv, rest+1);
-			else rest += 2;		
+			else rest += 2;
 		}									
 		if (argv[rest].a_w.w_sym == ps_shelf) rest = shelf(x, s, argc, argv, rest+1);
 		if (argv[rest].a_w.w_sym == ps_peq) rest = peq(x, s, argc, argv, rest+1);
@@ -684,7 +805,13 @@ void peqbank_list(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 			peqbank_fast(x, s, argc, argv); 
 			rest ++;
 		}
-		if (argv[rest].a_w.w_sym == ps_smooth) rest ++;
+		if (argv[rest].a_w.w_sym == ps_smooth) {
+            peqbank_smooth(x, s, argc, argv);
+            rest ++;
+        }
+		if (argv[rest].a_w.w_sym == ps_channels) {
+            rest += 2;
+        }
 	}	
 	peqbank_compute(x);
 }
@@ -737,7 +864,7 @@ void peqbank_init(t_peqbank *x) {
 		x->coeff[i]    = 0.0f;
 	}
 	
-	for (i=0; i<x->b_max; ++i) {
+	for (i=0; i < (x->b_max * x->b_channels); ++i) {
 		x->b_ym1[i] = 0.0f;
 		x->b_ym2[i] = 0.0f;
 		x->b_xm1[i] = 0.0f;
@@ -760,14 +887,11 @@ void peqbank_assist(t_peqbank *x, void *b, long m, long a, char *s)
 	if (m == ASSIST_INLET)
 		sprintf(s,"(signal)input");
 	else {
-		switch (a) {	
-		case 0:
-			sprintf(s,"(signal) output");
-			break;
-		case 1:
+        if(a == x->b_channels) {
 			sprintf(s,"(list)shelf + parametric EQ biquad coefficients [a0 a1 a2 b1 b2]*");
-			break;
-		}
+        } else {
+			sprintf(s,"(signal) output");
+        }
 	}
 }
 
@@ -777,31 +901,46 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
 	 	
 	t_peqbank *x = (t_peqbank *)newobject(peqbank_class);	
 	x->b_max = MAXELEM;
-
+    x->b_channels = 1;
+    
 	/* get the maximum of filters */
 	if (argv[0].a_type == A_LONG) x->b_max = argv[0].a_w.w_long;
 	else for (i=0; i<argc; ++i) {	
-			if (argv[rest].a_w.w_sym == ps_maxelem) {
-				rest ++;
-				if ((rest < argc) && (argv[rest].a_type == A_LONG)) { 
-					x->b_max = argv[rest].a_w.w_long;
-					if (x->b_max < 2) {
-						x->b_max = 2;
-					}
-					break;
-				}
-			}	
-		 }
-		
+        if (argv[rest].a_w.w_sym == ps_maxelem) {
+            rest ++;
+            if ((rest < argc) && (argv[rest].a_type == A_LONG)) { 
+                x->b_max = argv[rest].a_w.w_long;
+                if (x->b_max < 2) {
+                    x->b_max = 2;
+                }
+                break;
+            }
+        }	
+        if (argv[rest].a_w.w_sym == ps_channels) {
+            rest ++;
+            if ((rest < argc) && (argv[rest].a_type == A_LONG)) { 
+                x->b_channels = argv[rest].a_w.w_long;
+                if (x->b_channels < 1) {
+                    x->b_channels = 1;
+                }
+                break;
+            }
+        }	
+    }
+
 	x->already_peqbank_compute = 0;
 	x->need_to_recompute = 0;
 	peqbank_allocmem(x);
 	peqbank_init(x);
 		
-    dsp_setup((t_pxobject *)x, 1);			// number of inlets
+    dsp_setup((t_pxobject *)x, x->b_channels);			// number of inlets
+    if(x->b_channels > 1) {  // inplace processing is broken for multichannel, msp inverts the order of the output channel buffers (as of 08/28/2009) -aws
+        x->b_obj.z_misc = Z_NO_INPLACE;
+    }
     x->b_outlet = listout((t_object *)x);	// Create an outlet
-	outlet_new((t_object *)x, "signal");	// type of outlet: "signal"
-	x->b_Fs = sys_getsr();
+    for(i = 0; i < x->b_channels; i++) {
+        outlet_new((t_object *)x, "signal");	// type of outlet: "signal"
+    }
 	x->b_version = SMOOTH;
 	peqbank_clear(x);
     peqbank_list(x, s, argc, argv);
@@ -817,12 +956,13 @@ void peqbank_allocmem(t_peqbank *x){
 	x->oldcoeff = x->coeff;
 	x->newcoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->newcoeff) );
 	x->freecoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->freecoeff) );
-	x->b_ym1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym1) );
-	x->b_ym2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_ym2) );     
-	x->b_xm1    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm1) );
-	x->b_xm2    = (float*) sysmem_newptr( x->b_max * sizeof(*x->b_xm2) );     
+	x->b_ym1    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_ym1) );
+	x->b_ym2    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_ym2) );     
+	x->b_xm1    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_xm1) );
+	x->b_xm2    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_xm2) );     
+    x->s_vec_in = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
+    x->s_vec_out = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
 	x->myList   = (Atom*)  sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
-
 
 	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
 	    x->freecoeff == NIL || x->b_ym1 == NIL || x->b_ym2 == NIL || x->b_xm1 == NIL || 
@@ -845,6 +985,8 @@ void peqbank_freemem(t_peqbank *x){
 	sysmem_freeptr((char *) x->b_ym2);
 	sysmem_freeptr((char *) x->b_xm1);
 	sysmem_freeptr((char *) x->b_xm2);
+    sysmem_freeptr((char *) x->s_vec_in);
+    sysmem_freeptr((char *) x->s_vec_out);
 	sysmem_freeptr((char *) x->myList);
 }
 
