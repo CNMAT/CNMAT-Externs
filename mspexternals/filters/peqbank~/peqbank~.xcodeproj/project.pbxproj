@@ -13,6 +13,17 @@
 		BEED70E50A8153B600523D1A /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEED70E30A8153B600523D1A /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		A163848E1048A2B30008DE94 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.intel.compilers.icc.11_1_0;
+			fileType = sourcecode.c;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		8D01CCD20486CAD60068D4B7 /* peqbank~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "peqbank~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +114,7 @@
 				8D01CCCF0486CAD60068D4B7 /* Rez */,
 			);
 			buildRules = (
+				A163848E1048A2B30008DE94 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -188,6 +200,9 @@
 					"../../../c74support/max-includes",
 					"../../../c74support/msp-includes",
 				);
+				ICC_DEBUG = NO;
+				ICC_DIAG_VEC_REPORT = vec2;
+				ICC_OPTLEVEL = speed;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -236,6 +251,9 @@
 					"../../../c74support/max-includes",
 					"../../../c74support/msp-includes",
 				);
+				ICC_DIAG_VEC_REPORT = vec2;
+				ICC_FP_DENORMAL_TO_ZERO = YES;
+				ICC_MKL = nonthreaded;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
@@ -244,7 +262,7 @@
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = "peqbank~";
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
