@@ -104,6 +104,7 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 #include "z_dsp.h"
 #include <Memory.h>
 #include <math.h>
+#include <stdio.h>
 
 #ifdef WIN_VERSION
 #define sinhf sinh
@@ -557,14 +558,25 @@ void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
 		b1 = mycoeff[j+3];	
 		b2 = mycoeff[j+4];
         
-#pragma ivdep
 		for (i=0; i < n; i++) {
+
 #pragma ivdep
             for(c = 0; c < x->b_channels; c++) {
-
                 xn[c] = x->s_vec_out[c][i];
-                x->s_vec_out[c][i] = yn[c] = (a0 * xn[c]) + (a1 * xm1[c]) + (a2 * xm2[c]) - (b1 * ym1[c]) - (b2 * ym2[c]);
-                
+			}
+			
+#pragma ivdep
+			for(c = 0; c < x->b_channels; c++) {
+                yn[c] = (a0 * xn[c]) + (a1 * xm1[c]) + (a2 * xm2[c]) - (b1 * ym1[c]) - (b2 * ym2[c]);
+			}
+			
+#pragma ivdep
+			for(c = 0; c < x->b_channels; c++) {
+				x->s_vec_out[c][i] = yn[c];
+			}
+			
+#pragma ivdep
+			for(c = 0; c < x->b_channels; c++) {
                 xm2[c] = xm1[c];
                 xm1[c] = xn[c];
                 ym2[c] = ym1[c];
@@ -1186,7 +1198,7 @@ float pow2(float x) {
 }
 
 
-#define YUCKKYIF(test) if (test) {post("ее normal:  " #test); ok = 0;}
+#define YUCKKYIF(test) if (test) {post(" normal:  " #test); ok = 0;}
 int test_normal_state(t_peqbank *x) {
 	int ok = 1;
 	YUCKKYIF (x->coeff == 0)
