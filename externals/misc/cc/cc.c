@@ -35,18 +35,43 @@ VERSION 0.0: First try
 #include "ext_obex_util.h"
 #include "ext_critical.h"
 #include "ext_hashtab.h"
+
+#ifdef CC_MSP
+#include "z_dsp.h"
+#endif
+
 #include <dlfcn.h>
 
-#define BUFSIZE 4096
+#define BUFSIZE 65536
 #define OBJSIZE 65536
+
+#ifdef CC_MSP
+#define CFLAGS "-Wall -O3 -isysroot /Developer/SDKs/MacOSX10.5.sdk -I%s/c74support/max-includes -I%s/c74support/msp-includes -include %s/c74support/max-includes/macho-prefix.pch -F%s/c74support/max-includes -F%s/c74support/msp-includes -mmacosx-version-min=10.5 -fPIC"
+
+#define LDFLAGS "-isysroot /Developer/SDKs/MacOSX10.5.sdk -F%s/c74support/max-includes -F%s/c74support/msp-includes -lmx -framework Carbon -framework MaxAPI -framework MaxAudioAPI"
+
+#else
 #define CFLAGS "-Wall -O3 -isysroot /Developer/SDKs/MacOSX10.5.sdk -I%s/c74support/max-includes -include %s/c74support/max-includes/macho-prefix.pch -F%s/c74support/max-includes -mmacosx-version-min=10.5 -fPIC"
 
 #define LDFLAGS "-isysroot /Developer/SDKs/MacOSX10.5.sdk -F%s/c74support/max-includes -lmx -framework Carbon -framework MaxAPI"
+#endif
 
 typedef int (*ccmethod)(t_object *, char *, int, int, t_atom *, int, void **);
 
+#ifdef CC_MSP
+typedef t_int *(*ccperform_method)(t_object *, char *, long, t_float **, long, t_float **, long, long);
+#endif
+
 typedef struct _cc{
+#ifdef CC_MSP
+	t_pxobject ob;
+	t_float **svin, **svout;
+	long nsiginlets, nsigoutlets;
+	ccperform_method user_perform;
+	long blksize, sr;
+#else
 	t_object ob;
+#endif
 	void **outlets;
 	long ninlets, noutlets;
 	long inlet;
@@ -69,7 +94,6 @@ typedef struct _cc{
 	t_symbol *user_ldflags;
 	char *user_obj;
 	int verbose;
-	long ret;
 	int cfile_is_tmp;
 } t_cc;
 
@@ -77,34 +101,39 @@ static t_class *cc_class;
 
 void cc_compile(t_cc *x);
 void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
+void cc_load(t_cc *x);
+void cc_doload(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
+void cc_compile_and_load(t_cc *x);
 void cc_bang(t_cc *x);
 void cc_read_symbols(t_cc *x);
 void cc_edclose(t_cc *x, char **text, long size);
 long cc_edsave(t_cc *x, char **text, long size);
 void cc_okclose(t_cc *x, char *prompt, short *result);
 void cc_dblclick(t_cc *x);
-/*
-void cc_read(t_cc *x, t_symbol *s, short argc, t_atom *argv);
-void cc_doread(t_cc *x, t_symbol *s, short argc, t_atom *argv);
-void cc_save(t_cc *x, t_symbol *s, short argc, t_atom *argv);
-void cc_saveas(t_cc *x, t_symbol *s, short argc, t_atom *argv);
-void cc_dosave(t_cc *x, t_symbol *s, short argc, t_atom *argv);
-*/
 void cc_make_file_paths(t_cc *x);
 void cc_free(t_cc *x);
 void cc_assist(t_cc *x, void *b, long m, long a, char *s);
 void cc_post_log(t_cc *x, void (*p)(char *, ...));
 void cc_write_template(t_cc *x, FILE *fp);
+#ifdef CC_MSP
+void cc_dsp(t_cc *x, t_signal **sp, short *count);
+t_int *cc_perform(t_int *w);
+#endif
 void *cc_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err cc_notify(t_cc *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 t_max_err cc_cfile_set(t_cc *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cc_cfile_get(t_cc *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err cc_build_path_set(t_cc *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cc_build_path_get(t_cc *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err cc_maxsdk_set(t_cc *x, t_object *attr, long argc, t_atom *argv);
+t_max_err cc_maxsdk_get(t_cc *x, t_object *attr, long *argc, t_atom **argv);
 
 t_symbol *ps_cc_instance_count;
 
 void cc_compile(t_cc *x){
+#ifdef CC_MSP
+	canvas_stop_dsp();
+#endif
 	defer_low(x, (method)cc_docompile, NULL, 0, NULL);
 }
 
@@ -112,28 +141,24 @@ void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 	if(x->handle){
 		dlclose(x->handle);
 	}
-	FILE *fp = fopen(x->cfile_fullpath, "w");
-	fprintf(fp, "%s", x->code_buf);
-	fclose(fp);
-
-	/*
-	long err;
-	t_filehandle fh;
-	err = path_createsysfile(x->cfile, x->cfile_path, 'TEXT', &fh);
-	if(err){
-		error("cc: problem creating file");
+	FILE *fp = fopen(x->cfile_fullpath, "r");
+	if(fp){
+		x->code_len = fread(x->code_buf, sizeof(char), x->code_buf_len, fp);
+		fclose(fp);
+	}else{
+		fclose(fp);
 		return;
 	}
-	post("codebuf = %s", x->code_buf);
-	err = sysfile_writetextfile(fh, &(x->code_buf), TEXT_LB_NATIVE);
-	sysfile_close(fh);
-	*/
 
 	int ret;
-	char compbuf[1024];
-	char flags[1024];
+	char compbuf[2048];
+	char flags[2048];
 	sprintf(flags, "%s %s", x->def_cflags, x->user_cflags->s_name);
-	sprintf(compbuf, "gcc %s -o %s -c %s > %s 2>&1", flags, x->ofile_fullpath, x->cfile_fullpath, x->logfile_fullpath);
+	sprintf(compbuf, "echo \"gcc %s -o %s -c %s\n\" > %s 2>&1", flags, x->ofile_fullpath, x->cfile_fullpath, x->logfile_fullpath);
+	system(compbuf);
+
+	sprintf(compbuf, "gcc %s -o %s -c %s >> %s 2>&1", flags, x->ofile_fullpath, x->cfile_fullpath, x->logfile_fullpath);
+
 	if(x->verbose){
 		post("%s", compbuf);
 	}
@@ -144,7 +169,11 @@ void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 
 	sprintf(flags, "%s %s", x->def_ldflags, x->user_ldflags->s_name);
+	sprintf(compbuf, "echo \"\ngcc %s -o %s -dynamiclib %s\n\" >> %s 2>&1", flags, x->dfile_fullpath, x->ofile_fullpath, x->logfile_fullpath);
+	system(compbuf);
+
 	sprintf(compbuf, "gcc %s -o %s -dynamiclib %s >> %s 2>&1", flags, x->dfile_fullpath, x->ofile_fullpath, x->logfile_fullpath);
+
 	if(x->verbose){
 		post("%s", compbuf);
 	}
@@ -160,6 +189,16 @@ void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 	system(compbuf);
 
+}
+
+void cc_load(t_cc *x){
+#ifdef CC_MSP
+	canvas_stop_dsp();
+#endif
+	defer_low(x, (method)cc_doload, NULL, 0, NULL);
+}
+
+void cc_doload(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 	x->handle = dlopen(x->dfile_fullpath, RTLD_NOW);
 	if(!x->handle){
 		error("cc: %s", dlerror());
@@ -168,15 +207,16 @@ void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 
 	cc_read_symbols(x);
 
-	/*
-	x->f = dlsym(x->handle, "f");
-	if((err = dlerror()) != NULL){
-		error("o.tt_callback: %s", err);
-		return;
+	void (*f)(t_object *, char *);
+	hashtab_lookup(x->ht, gensym("my_new"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj);
 	}
+}
 
-	post("f(%f, %f) = %f\n", 3., 4., x->f(3., 4.));
-	*/
+void cc_compile_and_load(t_cc *x){
+	cc_compile(x);
+	cc_load(x);
 }
 
 void cc_bang(t_cc *x){
@@ -192,38 +232,6 @@ void cc_anything(t_cc *x, t_symbol *msg, int argc, t_atom *argv){
 	}
 	int inlet = proxy_getinlet((t_object *)x);
 	((ccmethod)(f))((t_object *)x, x->user_obj, inlet, argc, argv, x->noutlets, x->outlets);
-	/*
-	t_atombuf *ab[x->noutlets];
-	int i;
-	for(i = 0; i < x->noutlets; i++){
-		ab[i] = NULL;
-	}
-	if(!(((ccmethod)(f))(x->user_obj, inlet, argc, argv, ab))){
-		for(i = x->noutlets - 1; i >= 0; i--){
-			if(ab[i]){
-				if(ab[i]->a_argc == 1){
-					switch(ab[i]->a_argv->a_type){
-					case A_FLOAT:
-						outlet_float(x->outlets[i], atom_getfloat(ab[i]->a_argv));
-						break;
-					case A_LONG:
-						outlet_int(x->outlets[i], atom_getlong(ab[i]->a_argv));
-						break;
-					case A_SYM:
-						outlet_anything(x->outlets[i], atom_getsym(ab[i]->a_argv), 0, NULL);
-						break;
-					}
-				}else{
-					if(ab[i]->a_argv->a_type == A_SYM){
-						outlet_anything(x->outlets[i], atom_getsym(ab[i]->a_argv), ab[i]->a_argc - 1, ab[i]->a_argv + 1);
-					}else{
-						outlet_list(x->outlets[i], NULL, ab[i]->a_argc, ab[i]->a_argv);
-					}
-				}
-			}
-		}
-	}
-	*/
 }
 
 void cc_read_symbols(t_cc *x){
@@ -238,7 +246,7 @@ void cc_read_symbols(t_cc *x){
 		if((err = dlerror()) == NULL){
 			x->function_names[i] = gensym(buf + 1); // skip over the leading underscore
 			hashtab_store(x->ht, x->function_names[i], (t_object *)f);
-			post("function %d = %s", i, buf + 1);
+			post("%s", buf + 1);
 		}
 	}
 	fclose(fp);
@@ -266,23 +274,7 @@ void cc_edclose(t_cc *x, char **text, long size){
 }
 
 long cc_edsave(t_cc *x, char **text, long size){
-	post("edsave %s", *text);
-	if(x->ed){
-		t_class *c = class_findbyname(CLASS_NOBOX, gensym("jed"));
-		post("messcount = %d", c->c_messcount);
-		int i;
-		for(i = 0; i < c->c_messcount; i++){
-			if(c->c_messlist[i].m_sym){
-				post("%s", c->c_messlist[i].m_sym->s_name);
-			}
-		}
-	}
-	/*
-	FILE *fp = fopen(x->cfile_fullpath, "w");
-	fwrite(x->code_buf, sizeof(char), x->code_len, fp);
-	fclose(fp);
-	*/
-	return 1;
+	return 0;
 }
 
 void cc_okclose(t_cc *x, char *prompt, short *result){
@@ -302,7 +294,10 @@ void cc_dblclick(t_cc *x){
 		x->code_len = fread(x->code_buf, sizeof(char), x->code_buf_len, fp);
 	}else if(x->cfile_is_tmp){
 		fclose(fp);
-		fp = fopen(x->cfile_fullpath, "w");
+		if(!(fp = fopen(x->cfile_fullpath, "w"))){
+			error("cc: couldn't open %s", x->cfile_fullpath);
+			return;
+		}
 		cc_write_template(x, fp);
 		fclose(fp);
 		fp = fopen(x->cfile_fullpath, "r");
@@ -325,114 +320,6 @@ void cc_dblclick(t_cc *x){
 
 	object_attr_setchar(x->ed, gensym("visible"), 1);
 }
-
-/**************************************************
- * File IO stuff from chuck~
- **************************************************/
-/*
-void cc_read(t_cc *x, t_symbol *s, short argc, t_atom *argv){
-	defer_low(x, (method)cc_doread, s, argc, argv);
-}
-
-void cc_doread(t_cc *x, t_symbol *s, short argc, t_atom *argv){
-	char filename[256];
-	short err;
-	long type = 'TEXT'; 
-	long size;
-	short volptr;
-	long outtype;
-	t_filehandle fh;
-	t_handle script_handle;
-	
-	if(argc == 0){
-		if(open_dialog(filename, &volptr, &outtype, 0L, 0)){ // allow all types of files
-			return; //user cancelled
-		}
-	}else{
-		if(locatefile_extended(filename, &volptr, &outtype, &type, 1)){
-			error("cc~: error opening file: can't find file"); 
-			return; //not found
-		}
-	}
-	
-	//we should have a valid filename at this point
-	err = path_opensysfile(filename, volptr, &fh, READ_PERM);  
-	if(err){       
-		fh = 0;      
-		error("error %d opening file", err); 
-		return;
-	}
-	
-	strcpy(x->cfile, filename);
-	x->cfile_path = volptr;
-	cc_make_file_paths(x);
-	
-	sysfile_geteof(fh, &size);
-
-	if(!(script_handle = sysmem_newhandle(size + 1))){
-		error("cc: couldn't get a filehandle");
-	}
-
-	sysfile_readtextfile(fh, script_handle, size, TEXT_LB_NATIVE);
-	strcpy(x->code_buf, *script_handle);
-
-	x->code_buf[size] = '\0'; // the max5 text editor apparently needs this
-	// BGG for some reason mach-o doesn't like this one... the memory hit should be small
-//	sysmem_freehandle(script_handle);
-	sysfile_close(fh);
-
-	return;	
-}
-*/
-
-
-void cc_save(t_cc *x, t_symbol *s, short argc, t_atom *argv){	
-	//defer(x, (method)cc_dosave, s, argc, argv);
-	post("save!!");
-}
-
-void cc_saveas(t_cc *x, t_symbol *s, short argc, t_atom *argv){
-	//defer(x, (method)cc_dosave, s, argc, argv);
-	post("saveas!!");
-}
-/*
-void cc_dosave(t_cc *x, t_symbol *s, short argc, t_atom *argv){
-	char filename[256];
-	t_handle script_handle;
-	short err;
-	long type_chosen, thistype = 'TEXT';
-	t_filehandle fh;
-	
-	if(argc == 0) {
-		if(saveasdialog_extended(x->cfile, &(x->cfile_path), &type_chosen, &thistype, 1)){
-			return; //user cancelled
-		}
-	}
-	
-	err = path_createsysfile(x->cfile, x->cfile_path, thistype, &fh);  
-	if (err) {       
-		error("cc: error %d creating file", err); 
-		return;
-	}
-	
-	script_handle = sysmem_newhandle(0);
-	sysmem_ptrandhand(x->code_buf, script_handle, x->code_len); 
-
-	err = sysfile_writetextfile(fh, script_handle, TEXT_LB_UNIX); 
-	if (err) {       
-		error("cc: error %d writing file", err); 
-		return;
-	}
-
-	// BGG for some reason mach-o doesn't like this one... the memory hit should be small
-//	sysmem_freehandle(script_handle);
-	sysfile_seteof(fh, x->code_len); 
-	sysfile_close(fh);
-
-	return;	
-
-}
-*/
 
 void cc_make_file_paths(t_cc *x){
 	char path[512], *p;
@@ -458,9 +345,25 @@ void cc_make_file_paths(t_cc *x){
 }
 
 void cc_free(t_cc *x){
-	if(x->cfile_is_tmp){
+#ifdef CC_MSP
+	dsp_free((t_pxobject *)x);
+	free(x->svin);
+	free(x->svout);
+#endif
+	void (*f)(t_object *, char *);
+	hashtab_lookup(x->ht, gensym("my_free"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj);
+	}
+
+	if(x->cfile_is_tmp != 0){
 		// save prompt here would be nice...
-		remove(x->cfile_fullpath);
+		//remove(x->cfile_fullpath);
+		char buf[128];
+		char file[128];
+		strncpy(file, x->cfile_fullpath, strlen(x->cfile_fullpath) - 1);
+		sprintf(buf, "rm -f %s*", file);
+		system(buf);
 	}
 	free(x->code_buf);
 	free(x->cfile);
@@ -517,7 +420,21 @@ void cc_write_template(t_cc *x, FILE *fp){
 	}
 	fprintf(fp, "#include \"ext.h\"\n");
 	fprintf(fp, "#include \"ext_obex.h\"\n");
-	fprintf(fp, "#include \"ext_obex_util.h\"\n");
+	fprintf(fp, "#include \"ext_obex_util.h\"\n\n");
+
+#ifdef CC_MSP
+	fprintf(fp, "#include \"z_dsp.h\"\n\n");
+
+	fprintf(fp, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr);\n\n");
+
+	fprintf(fp, "long my_dsp(t_object *o, char *x, short *count){\n");
+	fprintf(fp, "\treturn (long)my_perform;\n");
+	fprintf(fp, "}\n\n");
+
+	fprintf(fp, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr){\n");
+	fprintf(fp, "\n");
+	fprintf(fp, "}\n\n");
+#endif
 
 	fprintf(fp, "int foo(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
 	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
@@ -525,15 +442,47 @@ void cc_write_template(t_cc *x, FILE *fp){
 
 	fprintf(fp, "\n\n");
 
-	fprintf(fp, "void free(t_object *o, char *x){\n");
+	fprintf(fp, "void my_free(t_object *o, char *x){\n");
 	fprintf(fp, "\t// free any instance data here\n");
-	fprintf(fp, "}\n");
+	fprintf(fp, "}\n\n");
 
-	fprintf(fp, "void new(t_object *o, char *x){\n");
+	fprintf(fp, "void my_new(t_object *o, char *x){\n");
 	fprintf(fp, "\t// allocate and initialize any instance data/variables here\n");
 	fprintf(fp, "\t// this function will be called each time you compile\n");
 	fprintf(fp, "}\n");
 }
+
+#ifdef CC_MSP
+void cc_dsp(t_cc *x, t_signal **sp, short *count){
+	long (*dsp)(t_object *, char *, short *);
+	hashtab_lookup(x->ht, gensym("my_dsp"), (t_object **)&dsp);
+	if(dsp){
+		x->user_perform = (ccperform_method)dsp((t_object *)x, x->user_obj, count);
+	}
+
+	x->blksize = sp[0]->s_n;
+	x->sr = sp[0]->s_sr;
+	int i;
+	for(i = 0; i < x->nsiginlets; i++){
+		x->svin[i] = sp[i]->s_vec;
+	}
+	for(i = 0; i < x->nsigoutlets; i++){
+		x->svout[i] = sp[i + x->nsiginlets]->s_vec;
+	}
+	dsp_add(cc_perform, 1, x);
+}
+
+t_int *cc_perform(t_int *w){
+	t_cc *x = (t_cc *)w[1];
+	if(!(x->user_perform)){
+		return w + 2;
+	}
+
+	x->user_perform((t_object *)x, x->user_obj, x->nsiginlets, x->svin, x->nsigoutlets, x->svout, x->blksize, x->sr);
+
+	return w + 2;
+}
+#endif
 
 void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 	t_cc *x;
@@ -541,6 +490,8 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 	if(x = (t_cc *)object_alloc(cc_class)){
 		x->ht = (t_hashtab *)hashtab_new(0);
 		hashtab_flags(x->ht, OBJ_FLAG_DATA);
+
+		x->cfile_is_tmp = 1;
 
 		x->ed = NULL;
 		x->code_buf_len = BUFSIZE;
@@ -569,12 +520,19 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		path_frompathname(tmp, &tmpdir, fn);
 		x->cfile_path = x->build_path = tmpdir;
 
+#ifdef CC_MSP
+		sprintf(x->cfile, "cc~_%ld.c", (long)ps_cc_instance_count->s_thing);
+		sprintf(x->ofile, "cc~_%ld.o", (long)ps_cc_instance_count->s_thing);
+		sprintf(x->dfile, "cc~_%ld.dylib", (long)ps_cc_instance_count->s_thing);
+		sprintf(x->stfile, "cc~_%ld.st", (long)ps_cc_instance_count->s_thing);
+		sprintf(x->logfile, "cc~_%ld.log", (long)ps_cc_instance_count->s_thing);
+#else
 		sprintf(x->cfile, "cc_%ld.c", (long)ps_cc_instance_count->s_thing);
 		sprintf(x->ofile, "cc_%ld.o", (long)ps_cc_instance_count->s_thing);
 		sprintf(x->dfile, "cc_%ld.dylib", (long)ps_cc_instance_count->s_thing);
 		sprintf(x->stfile, "cc_%ld.st", (long)ps_cc_instance_count->s_thing);
 		sprintf(x->logfile, "cc_%ld.log", (long)ps_cc_instance_count->s_thing);
-
+#endif
 		sprintf(x->cfile_fullpath, "%s/%s", tmp, x->cfile);
 		sprintf(x->ofile_fullpath, "%s/%s", tmp, x->ofile);
 		sprintf(x->dfile_fullpath, "%s/%s", tmp, x->dfile);
@@ -583,30 +541,45 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 
 		x->function_names = (t_symbol **)calloc(128, sizeof(t_symbol *));
 
+		x->ninlets = 1;
+		x->noutlets = 1;
+
 		x->path_to_maxsdk = gensym("");
+		x->def_cflags = (char *)calloc(2048, sizeof(char));
+		x->def_ldflags = (char *)calloc(2048, sizeof(char));
+		attr_args_process(x, argc, argv);
+
+		char *sdk = x->path_to_maxsdk->s_name;
+
+#ifdef CC_MSP
+		sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk, sdk, sdk);
+		sprintf(x->def_ldflags, LDFLAGS, sdk, sdk);
+#else
+		sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk);
+		sprintf(x->def_ldflags, LDFLAGS, sdk);
+#endif
+
 		x->user_cflags = gensym("");
 		x->user_ldflags = gensym("");
 
-		x->ninlets = 1;
-		x->noutlets = 1;
-		attr_args_process(x, argc, argv);
-
-		x->proxies = (void **)calloc(x->ninlets - 1, sizeof(void *));
 		int i;
+#ifdef CC_MSP
+		dsp_setup((t_pxobject *)x, x->nsiginlets);
+		for(i = 0; i < x->nsigoutlets; i++){
+			outlet_new((t_object *)x, "signal");
+		}
+		x->svin = (t_float **)calloc(x->nsiginlets, sizeof(t_float *));
+		x->svout = (t_float **)calloc(x->nsigoutlets, sizeof(t_float *));
+#endif
+		x->proxies = (void **)calloc(x->ninlets - 1, sizeof(void *));
 		for(i = 0; i < x->ninlets - 1; i++){
 			x->proxies[0] = proxy_new((t_object *)x, x->ninlets - (i + 1), &(x->inlet));
 		}
+
 		x->outlets = (void **)calloc(x->noutlets, sizeof(void *));
 		for(i = x->noutlets - 1; i >= 0; i--){
 			x->outlets[i] = outlet_new((t_object *)x, NULL);
 		}
-
-		char *sdk = x->path_to_maxsdk->s_name;
-
-		x->def_cflags = (char *)calloc(512, sizeof(char));
-		sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk);
-		x->def_ldflags = (char *)calloc(512, sizeof(char));
-		sprintf(x->def_ldflags, LDFLAGS, sdk);
 
 		x->user_obj = (char *)calloc(OBJSIZE, sizeof(char));
 		long ic = (long)(ps_cc_instance_count->s_thing);
@@ -614,7 +587,7 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		ps_cc_instance_count->s_thing = (void *)ic;
 		x->handle = NULL;
 
-		x->cfile_is_tmp = 1;
+		object_attach_byptr_register(x, x, CLASS_BOX);
 
 		return x;
 	}
@@ -622,7 +595,13 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
+#ifdef CC_MSP
+	t_class *c = class_new("cc~", (method)cc_new, (method)cc_free, sizeof(t_cc), 0L, A_GIMME, 0);
+	class_dspinit(c);
+	class_addmethod(c, (method)cc_dsp, "dsp", A_CANT, 0);
+#else
 	t_class *c = class_new("cc", (method)cc_new, (method)cc_free, sizeof(t_cc), 0L, A_GIMME, 0);
+#endif
 
 	class_addmethod(c, (method)cc_bang, "bang", 0);
 	class_addmethod(c, (method)cc_anything, "anything", A_GIMME, 0);
@@ -635,11 +614,12 @@ int main(void){
 	class_addmethod(c, (method)cc_dblclick, "dblclick", A_CANT, 0);
 	class_addmethod(c, (method)cc_okclose, "okclose", A_CANT, 0);  
 	class_addmethod(c, (method)cc_compile, "compile", 0);
-	//class_addmethod(c, (method)cc_read, "read", A_GIMME, 0);
-	class_addmethod(c, (method)cc_save, "save", A_GIMME, 0);
-	class_addmethod(c, (method)cc_saveas, "saveas", A_GIMME, 0);
+	class_addmethod(c, (method)cc_load, "load", 0);
+	class_addmethod(c, (method)cc_compile_and_load, "compile_and_load", 0);
 
 	CLASS_ATTR_SYM(c, "maxsdk", 0, t_cc, path_to_maxsdk);
+	CLASS_ATTR_ACCESSORS(c, "maxsdk", cc_maxsdk_get, cc_maxsdk_set);
+
 	CLASS_ATTR_LONG(c, "outlets", 0, t_cc, noutlets);
 	CLASS_ATTR_LONG(c, "inlets", 0, t_cc, ninlets);
 	CLASS_ATTR_LONG(c, "verbose", 0, t_cc, verbose);
@@ -650,7 +630,11 @@ int main(void){
 	CLASS_ATTR_CHAR(c, "build_path", 0, t_cc, build_path);
 	CLASS_ATTR_ACCESSORS(c, "build_path", cc_build_path_get, cc_build_path_set);
 
-	CLASS_ATTR_LONG(c, "ret", 0, t_cc, ret);
+#ifdef CC_MSP
+	CLASS_ATTR_LONG(c, "sigoutlets", 0, t_cc, nsigoutlets);
+	CLASS_ATTR_LONG(c, "siginlets", 0, t_cc, nsiginlets);
+#endif
+
 	class_register(CLASS_BOX, c);
 	cc_class = c;
 
@@ -669,8 +653,14 @@ t_max_err cc_notify(t_cc *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
 		attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
 		if(attrname == gensym("maxsdk")){
 			char *sdk = x->path_to_maxsdk->s_name;
+			post("notify!");
+#ifdef CC_MSP
+			sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk, sdk, sdk);
+			sprintf(x->def_ldflags, LDFLAGS, sdk, sdk);
+#else
 			sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk);
 			sprintf(x->def_ldflags, LDFLAGS, sdk);
+#endif
 		}
         }
         return 0;
@@ -680,9 +670,26 @@ t_max_err cc_cfile_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	if(argc == 0){
 		return 1;
 	}
+
 	char *fullpath = atom_getsym(argv)->s_name;
+	if(fullpath[0] != '/'){
+		short vol, bin;
+		if(locatefile(fullpath, &vol, &bin)){
+			error("cc: couldn't find file %s", fullpath);
+			return 1;
+		}
+		char buf[512], *ptr;
+		path_topotentialname(vol, fullpath, buf, 0);
+		ptr = buf;
+		while(*ptr++ != ':'){}
+		strcpy(x->cfile_fullpath, ptr);
+
+	}else{
+		strcpy(x->cfile_fullpath, fullpath);
+	}
 	int len = strlen(fullpath);
-	path_frompathname(fullpath, &(x->cfile_path), x->cfile);
+	path_frompathname(x->cfile_fullpath, &(x->cfile_path), x->cfile);
+
 	cc_make_file_paths(x);
 
 	FILE *fp = fopen(fullpath, "r");
@@ -723,6 +730,7 @@ t_max_err cc_build_path_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	int len = strlen(fullpath);
 	char buf[512];
 	path_frompathname(fullpath, &(x->build_path), buf);
+	post("fullpath = %d, %s", strlen(buf), buf);
 	sprintf(buf, "mkdir -p %s", fullpath);
 	system(buf);
 
@@ -731,7 +739,7 @@ t_max_err cc_build_path_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	sprintf(x->stfile_fullpath, "%s/%s", fullpath, x->stfile);
 	sprintf(x->logfile_fullpath, "%s/%s", fullpath, x->logfile);
 
-	//cc_make_file_paths(x);
+	cc_make_file_paths(x);
 
 	return 0;
 }
@@ -741,7 +749,37 @@ t_max_err cc_build_path_get(t_cc *x, t_object *attr, long *argc, t_atom **argv){
  
         atom_alloc(argc, argv, &alloc);     // allocate return atom
  
-        atom_setsym(*argv, gensym(x->cfile_fullpath));
+	char buf[512];
+
+	path_topotentialname(x->build_path, "", buf, 0);
+
+        atom_setsym(*argv, gensym(buf));
+
+        return 0;
+}
+
+t_max_err cc_maxsdk_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
+	if(argc == 0){
+		return 1;
+	}
+	x->path_to_maxsdk = atom_getsym(argv);
+	char *sdk = x->path_to_maxsdk->s_name;
+#ifdef CC_MSP
+	sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk, sdk, sdk);
+	sprintf(x->def_ldflags, LDFLAGS, sdk, sdk);
+#else
+	sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk);
+	sprintf(x->def_ldflags, LDFLAGS, sdk);
+#endif
+	return 0;
+}
+
+t_max_err cc_maxsdk_get(t_cc *x, t_object *attr, long *argc, t_atom **argv){
+	char alloc;
+ 
+        atom_alloc(argc, argv, &alloc);     // allocate return atom
+ 
+        atom_setsym(*argv, x->path_to_maxsdk);
 
         return 0;
 }
