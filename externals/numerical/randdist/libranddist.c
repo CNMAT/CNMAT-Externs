@@ -892,6 +892,7 @@ void librdist_logarithmic(gsl_rng *rng, int argc, void *argv, int bufc, float *b
 void librdist_nonparametric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
 	gsl_ran_discrete_t *g = (gsl_ran_discrete_t *)argv;
 	int i;
-	for(i = 0; i < bufc; i++)
-	       	buf[i] = gsl_ran_discrete(rng, g);
+	for(i = 0; i < bufc; i++){
+	       	buf[i] = (float)gsl_ran_discrete(rng, g);
+	}
 }

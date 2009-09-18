@@ -17,5 +17,5 @@
 #define SVN_REVISION "$LastChangedRevision: 587 $"
 #endif
 #ifndef VERSION
-#define VERSION "2.1"
+#define VERSION "2.1.1"
 #endif

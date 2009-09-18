@@ -37,10 +37,13 @@ VERSION 1.3.3: Added Gaussdist faker to helpfile, bump version to re-release. -m
 VERSION 1.4: Default state, changed dump to distlist, user-defined pmfs are now done with the nonparametric message, bugfixes.
 VERSION 2.0: Rewritten with common code between randdist and randdist~ put in libranddist.h/c
 VERSION 2.1: Re-re-factored.  Nonparametric now uses gsl_ran_discrete().
+VERSION 2.1.1: Fixed a bug that occurred when distlist was used with nonparametric
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
 #include "ext.h"
+#include "ext_obex.h"
+#include "ext_obex_util.h"
 #include "libranddist.h"
 #include "version.h"
 #include "version.c"
@@ -182,8 +185,16 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	// need to check that this is a valid dist.
 	x->r_dist = msg;
 	int i;
+	double sum = 0;
+	if(x->r_dist == gensym("multinomial")){
+		for(i = 0; i < argc; i++){
+			sum += atom_getfloat(argv + i);
+		}
+	}else{
+		sum = 1.;
+	}
 	for(i = 0; i < argc; i++){
-		x->r_vars[i] = argv[i];
+		atom_setfloat(x->r_vars + i, atom_getfloat(argv + i) / sum);
 	}
 	x->r_numVars = (int)argc;	
 
@@ -248,7 +259,11 @@ void rdist_distlist(t_rdist *x, long n){
 	}
 
 	for(i = 0; i < n; i++){
-		x->r_function(x->r_rng, x->r_numVars, x->r_vars, stride, out);
+		if(x->r_dist == gensym("nonparametric")){
+			x->r_function(x->r_rng, x->r_numVars, x->r_g, stride, out);
+		}else{
+			x->r_function(x->r_rng, x->r_numVars, x->r_vars, stride, out);
+		}
 		for(j = 0; j < stride; j++){
 			SETFLOAT(x->r_output_buffer + ((i * stride) + j), out[j]);
 		}
