@@ -40,6 +40,7 @@ VERSION 0.0: First try
 #include "z_dsp.h"
 #endif
 
+#include <libgen.h>
 #include <dlfcn.h>
 
 #define BUFSIZE 65536
@@ -57,6 +58,10 @@ VERSION 0.0: First try
 #endif
 
 typedef int (*ccmethod)(t_object *, char *, int, int, t_atom *, int, void **);
+typedef int (*ccmethod_anything)(t_object *, char *, int, t_symbol *, int, t_atom *, int, void **);
+typedef int (*ccmethod_float)(t_object *, char *, int, double, int, void **);
+typedef int (*ccmethod_int)(t_object *, char *, int, long, int, void **);
+typedef int (*ccmethod_bang)(t_object *, char *, int, int, void **);
 
 #ifdef CC_MSP
 typedef t_int *(*ccperform_method)(t_object *, char *, long, t_float **, long, t_float **, long, long);
@@ -80,9 +85,10 @@ typedef struct _cc{
 	char *code_buf;
 	int code_buf_len;
 	int code_len;
-	char *cfile, *ofile, *dfile, *stfile, *logfile;
-	char *cfile_fullpath, *ofile_fullpath, *dfile_fullpath, *stfile_fullpath, *logfile_fullpath;
-	short cfile_path, build_path;
+	char *basename;
+	char *cfile_fullpath, *ofile_fullpath, *dfile_fullpath, *logfile_fullpath;
+	char *cfile_path, *build_path;
+        short cfile_path_id, build_path_id;
 	void *handle;
 	t_hashtab *ht;
 	t_symbol **function_names;
@@ -94,23 +100,31 @@ typedef struct _cc{
 	t_symbol *user_ldflags;
 	char *user_obj;
 	int verbose;
-	int cfile_is_tmp;
+	int cfile_is_tmp, build_path_is_tmp;
+	int ok_to_compile; // we can't use critical_enter() because the function contained in a lib may call an outlet (or something worse...).
+	int compiling;
 } t_cc;
 
 static t_class *cc_class;
 
 void cc_compile(t_cc *x);
-void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
-void cc_load(t_cc *x);
-void cc_doload(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
-void cc_compile_and_load(t_cc *x);
+//void cc_docompile_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
+void cc_docompile_and_load_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
+int cc_docompile(t_cc *x);
+void cc_load(t_cc *x, t_symbol *msg);
+void cc_doload_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
+int cc_doload(t_cc *x, t_symbol *lib);
 void cc_bang(t_cc *x);
-void cc_read_symbols(t_cc *x);
+void cc_float(t_cc *x, double d);
+void cc_int(t_cc *x, long l);
+void cc_list(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
+//void cc_read_symbols(t_cc *x);
 void cc_edclose(t_cc *x, char **text, long size);
 long cc_edsave(t_cc *x, char **text, long size);
 void cc_okclose(t_cc *x, char *prompt, short *result);
 void cc_dblclick(t_cc *x);
 void cc_make_file_paths(t_cc *x);
+int cc_make_build_dir(t_cc *x, char *path);
 void cc_free(t_cc *x);
 void cc_assist(t_cc *x, void *b, long m, long a, char *s);
 void cc_post_log(t_cc *x, void (*p)(char *, ...));
@@ -121,12 +135,15 @@ t_int *cc_perform(t_int *w);
 #endif
 void *cc_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err cc_notify(t_cc *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+void cc_get_basename(char *fp, char *basename);
 t_max_err cc_cfile_set(t_cc *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cc_cfile_get(t_cc *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err cc_build_path_set(t_cc *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cc_build_path_get(t_cc *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err cc_maxsdk_set(t_cc *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cc_maxsdk_get(t_cc *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err cc_load_get(t_cc *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err cc_load_set(t_cc *x, t_object *attr, long argc, t_atom *argv);
 
 t_symbol *ps_cc_instance_count;
 
@@ -134,10 +151,30 @@ void cc_compile(t_cc *x){
 #ifdef CC_MSP
 	canvas_stop_dsp();
 #endif
-	defer_low(x, (method)cc_docompile, NULL, 0, NULL);
+	defer(x, (method)cc_docompile_and_load_lowpriority, NULL, 0, NULL);
 }
 
-void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
+/*
+void cc_docompile_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
+	cc_docompile(x);
+}
+*/
+
+void cc_docompile_and_load_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
+	if(cc_docompile(x)){
+		return;
+	}
+	cc_doload(x, msg);
+}
+
+int cc_docompile(t_cc *x){
+	while(!(x->ok_to_compile)){}
+	x->compiling = 1;
+	int ret = cc_make_build_dir(x, x->build_path);
+	if(ret){
+		goto out;
+	}
+
 	if(x->handle){
 		dlclose(x->handle);
 	}
@@ -147,10 +184,10 @@ void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 		fclose(fp);
 	}else{
 		fclose(fp);
-		return;
+		ret = 1;
+		goto out;
 	}
 
-	int ret;
 	char compbuf[2048];
 	char flags[2048];
 	sprintf(flags, "%s %s", x->def_cflags, x->user_cflags->s_name);
@@ -165,7 +202,8 @@ void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 	if(ret = system(compbuf)){
 		error("cc: error compiling file:");
 		cc_post_log(x, error);
-		return;
+		ret = 1;
+		goto out;
 	}
 
 	sprintf(flags, "%s %s", x->def_ldflags, x->user_ldflags->s_name);
@@ -180,69 +218,90 @@ void cc_docompile(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 	if(ret = system(compbuf)){
 		error("cc: error linking file:");
 		cc_post_log(x, error);
-		return;
+		ret = 1;
+		goto out;
 	}
 
-	sprintf(compbuf, "nm %s | awk '$2 ~ /T/ {print $3}' > %s", x->ofile_fullpath, x->stfile_fullpath);
-	if(x->verbose){
-		post("%s", compbuf);
-	}
 	system(compbuf);
 
+ out:
+	x->compiling = 0;
+	return ret;
 }
 
-void cc_load(t_cc *x){
+void cc_load(t_cc *x, t_symbol *msg){
 #ifdef CC_MSP
 	canvas_stop_dsp();
 #endif
-	defer_low(x, (method)cc_doload, NULL, 0, NULL);
+	defer(x, (method)cc_doload_lowpriority, msg, 0, NULL);
 }
 
-void cc_doload(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
-	x->handle = dlopen(x->dfile_fullpath, RTLD_NOW);
+void cc_doload_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
+	cc_doload(x, msg);
+}
+
+int cc_doload(t_cc *x, t_symbol *lib){
+	while(!(x->ok_to_compile)){}
+	x->compiling = 1;
+	int ret = 0;
+
+	t_symbol *dfile_sym = lib;
+	if(!dfile_sym){
+		dfile_sym = gensym(x->dfile_fullpath);
+	}
+	char dfile[MAX_PATH_CHARS];
+	strcpy(dfile, dfile_sym->s_name);
+	//char *ptr = dfile->s_name;
+	//if(*ptr != '/'){
+	short outvol;
+	long outtype;
+	if(locatefile_extended(dfile, &outvol, &outtype, NULL, 0)){
+		error("cc: couldn't locate %s", dfile);
+		ret = 1;
+		goto out;
+	}else{
+		char buf[MAX_PATH_CHARS];
+		path_topathname(outvol, dfile, buf);
+		char *ptr = buf;
+		while(*ptr++ != ':'){}
+		dfile_sym = gensym(ptr);
+		strcpy(dfile, dfile_sym->s_name);
+	}
+
+	x->handle = dlopen(dfile, RTLD_NOW);
 	if(!x->handle){
 		error("cc: %s", dlerror());
-		return;
+		ret = 1;
+		goto out;
 	}
 
-	cc_read_symbols(x);
-
-	void (*f)(t_object *, char *);
-	hashtab_lookup(x->ht, gensym("my_new"), (t_object **)&f);
-	if(f){
-		f((t_object *)x, x->user_obj);
-	}
-}
-
-void cc_compile_and_load(t_cc *x){
-	cc_compile(x);
-	cc_load(x);
-}
-
-void cc_bang(t_cc *x){
-
-}
-
-void cc_anything(t_cc *x, t_symbol *msg, int argc, t_atom *argv){
-	long f = 0;
-	hashtab_lookup(x->ht, msg, (t_object **)(&f));
-	if(!f){
-		error("cc: couldn't look up function %s", msg->s_name);
-		return;
-	}
-	int inlet = proxy_getinlet((t_object *)x);
-	((ccmethod)(f))((t_object *)x, x->user_obj, inlet, argc, argv, x->noutlets, x->outlets);
-}
-
-void cc_read_symbols(t_cc *x){
+	// read the symbols from the dylib
 	hashtab_clear(x->ht);
 	char *err;
-	FILE *fp = fopen(x->stfile_fullpath, "r");
+	char st[MAX_PATH_CHARS];
+	sprintf(st, "%s/.%s", x->build_path, x->basename);
+
+	char compbuf[1024];
+	sprintf(compbuf, "nm %s | awk '$2 ~ /T/ {print $3}' > %s", dfile, st);
+	if(system(compbuf)){
+		error("cc: couldn't parse symbol table");
+		ret = 1;
+		goto out;
+	}
+
+	FILE *fp = fopen(st, "r");
+	if(!fp){
+		error("cc: couldn't read symbol table");
+		ret = 1;
+		goto out;
+	}
+
 	char buf[LINE_MAX];
 	int i = 0;
 	while(fgets(buf, LINE_MAX, fp)){
 		buf[strlen(buf) - 1] = '\0'; // get rid of the newline char
-		ccmethod f = (ccmethod)dlsym(x->handle, buf + 1);
+		//ccmethod f = (ccmethod)dlsym(x->handle, buf + 1);
+		long f = (long)dlsym(x->handle, buf + 1);
 		if((err = dlerror()) == NULL){
 			x->function_names[i] = gensym(buf + 1); // skip over the leading underscore
 			hashtab_store(x->ht, x->function_names[i], (t_object *)f);
@@ -250,11 +309,100 @@ void cc_read_symbols(t_cc *x){
 		}
 	}
 	fclose(fp);
+	remove(st);
+
+	void (*f)(t_object *, char *);
+	hashtab_lookup(x->ht, gensym("my_new"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj);
+	}
+ out:
+	x->compiling = 0;
+	return ret;
 }
 
-/****************************************************
- * editor stuff taken from chuck~
- ***************************************************/
+void cc_bang(t_cc *x){
+	while(x->compiling){};
+	x->ok_to_compile = 0;
+	long f = 0;
+	hashtab_lookup(x->ht, gensym("my_bang"), (t_object **)(&f));
+	if(!f){
+		error("cc: doesn't respond to message bang");
+		goto out;
+	}
+	int inlet = proxy_getinlet((t_object *)x);
+	((ccmethod_bang)(f))((t_object *)x, x->user_obj, inlet, x->noutlets, x->outlets);
+ out:
+	x->ok_to_compile = 1;
+}
+
+void cc_float(t_cc *x, double d){
+	while(x->compiling){};
+	x->ok_to_compile = 0;
+	long f = 0;
+	hashtab_lookup(x->ht, gensym("my_float"), (t_object **)(&f));
+	if(!f){
+		error("cc: doesn't respond to message float");
+		goto out;
+	}
+	int inlet = proxy_getinlet((t_object *)x);
+	((ccmethod_float)(f))((t_object *)x, x->user_obj, inlet, d, x->noutlets, x->outlets);
+ out:
+	x->ok_to_compile = 1;
+}
+
+void cc_int(t_cc *x, long l){
+	while(x->compiling){};
+	x->ok_to_compile = 0;
+	long f = 0;
+	hashtab_lookup(x->ht, gensym("my_int"), (t_object **)(&f));
+	if(!f){
+		error("cc: doesn't respond to message int");
+		goto out;
+	}
+	int inlet = proxy_getinlet((t_object *)x);
+	((ccmethod_int)(f))((t_object *)x, x->user_obj, inlet, l, x->noutlets, x->outlets);
+ out:
+	x->ok_to_compile = 1;
+}
+
+void cc_list(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
+	while(x->compiling){};
+	x->ok_to_compile = 0;
+	long f = 0;
+	hashtab_lookup(x->ht, gensym("my_list"), (t_object **)(&f));
+	if(!f){
+		error("cc: doesn't respond to message list");
+		goto out;
+	}
+	int inlet = proxy_getinlet((t_object *)x);
+	((ccmethod)(f))((t_object *)x, x->user_obj, inlet, argc, argv, x->noutlets, x->outlets);
+ out:
+	x->ok_to_compile = 1;
+}
+
+void cc_anything(t_cc *x, t_symbol *msg, int argc, t_atom *argv){
+	while(x->compiling){};
+	x->ok_to_compile = 0;
+	long f = 0;
+	int inlet = proxy_getinlet((t_object *)x);
+
+	hashtab_lookup(x->ht, msg, (t_object **)(&f));
+	if(f){
+		((ccmethod)(f))((t_object *)x, x->user_obj, inlet, argc, argv, x->noutlets, x->outlets);
+		goto out;
+	}
+
+	hashtab_lookup(x->ht, gensym("my_anything"), (t_object **)(&f));
+	if(f){
+		((ccmethod_anything)(f))((t_object *)x, x->user_obj, inlet, msg, argc, argv, x->noutlets, x->outlets);
+		goto out;
+	}
+	error("cc: doesn't respond to the message %s", msg->s_name);
+ out:
+	x->ok_to_compile = 1;
+}
+
 void cc_edclose(t_cc *x, char **text, long size){
 	if(size + 1 > x->code_buf_len){
 		char *tmp = (char *)realloc(x->code_buf, (size * 2) * sizeof(char));
@@ -292,7 +440,8 @@ void cc_dblclick(t_cc *x){
 	FILE *fp = fopen(x->cfile_fullpath, "r");
 	if(fp){
 		x->code_len = fread(x->code_buf, sizeof(char), x->code_buf_len, fp);
-	}else if(x->cfile_is_tmp){
+	}else{
+		//}else if(x->cfile_is_tmp){
 		fclose(fp);
 		if(!(fp = fopen(x->cfile_fullpath, "w"))){
 			error("cc: couldn't open %s", x->cfile_fullpath);
@@ -308,12 +457,18 @@ void cc_dblclick(t_cc *x){
 		object_method(x->ed, gensym("settext"), x->code_buf, gensym("utf-8"));
 	}else{
 		x->ed = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), (t_object *)x, 0);
+		short path;
+		char filename[MAX_FILENAME_CHARS];
+		if(path_frompathname(x->cfile_fullpath, &path, filename)){
+			error("cc: couldn't find %s", x->cfile_fullpath);
+			return;
+		}
 		if(x->cfile_is_tmp){
-			object_method(x->ed, gensym("filename"), x->cfile, x->cfile_path);
-			object_attr_setsym(x->ed, gensym("title"), gensym("editor"));
+			object_method(x->ed, gensym("filename"), filename, path);
+			//object_attr_setsym(x->ed, gensym("title"), gensym("editor"));
 		}else{
-			object_method(x->ed, gensym("filename"), x->cfile, x->cfile_path);
-			object_attr_setsym(x->ed, gensym("title"), gensym(x->cfile_fullpath));
+			object_method(x->ed, gensym("filename"), filename, path);
+			//object_attr_setsym(x->ed, gensym("title"), gensym(x->cfile_fullpath));
 		}
 		object_method(x->ed, gensym("settext"), x->code_buf, gensym("utf-8"));
 	}
@@ -322,26 +477,29 @@ void cc_dblclick(t_cc *x){
 }
 
 void cc_make_file_paths(t_cc *x){
-	char path[512], *p;
-	int path_len;
+}
 
-	path_topathname(x->cfile_path, x->cfile, path);
-	p = path;
-	path_len = strlen(path);
-	while(*(p++) != ':' && (p - path) < path_len){}
-	strcpy(x->cfile_fullpath, p);
+int cc_make_build_dir(t_cc *x, char *path){
+	char buf[MAX_PATH_CHARS];
+	sprintf(buf, "mkdir -p %s/", path);
+	if(system(buf)){
+		error("cc: couldn't create directory %s", buf);
+		return 1;
+	}
 
-	//sprintf(x->cfile_fullpath, "%s/%s", p, x->cfile);
+	sprintf(buf, "%s/exists", path);
+	FILE *fp = fopen(buf, "w");
+	if(!fp){
+		// directory doesn't exist, or we can't write to it
+		error("cc: can't write to directory %s", path);
+		fclose(fp);
+		return 1;
+	}
 
-	path_topathname(x->build_path, NULL, path);
-	p = path;
-	path_len = strlen(path);
-	while(*(p++) != ':' && (p - path) < path_len){}
+	fclose(fp);
+	remove(buf);
 
-	sprintf(x->ofile_fullpath, "%s/%s", p, x->ofile);
-	sprintf(x->dfile_fullpath, "%s/%s", p, x->dfile);
-	sprintf(x->stfile_fullpath, "%s/%s", p, x->stfile);
-	sprintf(x->logfile_fullpath, "%s/%s", p, x->logfile);
+	return 0;
 }
 
 void cc_free(t_cc *x){
@@ -356,21 +514,19 @@ void cc_free(t_cc *x){
 		f((t_object *)x, x->user_obj);
 	}
 
-	if(x->cfile_is_tmp != 0){
-		// save prompt here would be nice...
-		//remove(x->cfile_fullpath);
-		char buf[128];
-		char file[128];
-		strncpy(file, x->cfile_fullpath, strlen(x->cfile_fullpath) - 1);
-		sprintf(buf, "rm -f %s*", file);
+	if(x->cfile_is_tmp){
+		char buf[MAX_PATH_CHARS + 20];
+		sprintf(buf, "rm -f %s", x->cfile_fullpath);
 		system(buf);
 	}
+
+	if(x->build_path_is_tmp){
+		char buf[MAX_PATH_CHARS + 20];
+		sprintf(buf, "rm -f %s/%s.{o,dylib,st,log}", x->build_path, x->basename);
+		system(buf);
+	}
+
 	free(x->code_buf);
-	free(x->cfile);
-	free(x->ofile);
-	free(x->dfile);
-	free(x->stfile);
-	free(x->logfile);
 	free(x->function_names);
 	if(x->handle){
 		dlclose(x->handle);
@@ -440,7 +596,37 @@ void cc_write_template(t_cc *x, FILE *fp){
 	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
 	fprintf(fp, "}\n");
 
-	fprintf(fp, "\n\n");
+	fprintf(fp, "\n");
+
+	fprintf(fp, "int my_bang(t_object *o, char *x, int inlet, int numoutlets, void **outlets){\n");
+	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
+	fprintf(fp, "}\n");
+
+	fprintf(fp, "\n");
+
+	fprintf(fp, "int my_int(t_object *o, char *x, int inlet, long l, int numoutlets, void **outlets){\n");
+	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
+	fprintf(fp, "}\n");
+
+	fprintf(fp, "\n");
+
+	fprintf(fp, "int my_float(t_object *o, char *x, int inlet, double f, int numoutlets, void **outlets){\n");
+	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
+	fprintf(fp, "}\n");
+
+	fprintf(fp, "\n");
+
+	fprintf(fp, "int my_list(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
+	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
+	fprintf(fp, "}\n");
+
+	fprintf(fp, "\n");
+
+	fprintf(fp, "int my_anything(t_object *o, char *x, int inlet, t_symbol *msg, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
+	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
+	fprintf(fp, "}\n");
+
+	fprintf(fp, "\n");
 
 	fprintf(fp, "void my_free(t_object *o, char *x){\n");
 	fprintf(fp, "\t// free any instance data here\n");
@@ -491,62 +677,70 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		x->ht = (t_hashtab *)hashtab_new(0);
 		hashtab_flags(x->ht, OBJ_FLAG_DATA);
 
+		x->ok_to_compile = 1;
+		x->compiling = 0;
+
 		x->cfile_is_tmp = 1;
+		x->build_path_is_tmp = 1;
 
 		x->ed = NULL;
 		x->code_buf_len = BUFSIZE;
 		x->code_buf = (char *)calloc(BUFSIZE, sizeof(char));
-		int len = 512;
 
-		x->cfile = (char *)calloc(len, sizeof(char));
-		x->ofile = (char *)calloc(len, sizeof(char));
-		x->dfile = (char *)calloc(len, sizeof(char));
-		x->stfile = (char *)calloc(len, sizeof(char));
-		x->logfile = (char *)calloc(len, sizeof(char));
+		x->cfile_path = (char *)calloc(MAX_FILENAME_CHARS, sizeof(char));
+		x->build_path = (char *)calloc(MAX_FILENAME_CHARS, sizeof(char));
+		x->basename = (char *)calloc(MAX_FILENAME_CHARS, sizeof(char));
 
-		x->cfile_fullpath = (char *)calloc(len, sizeof(char));
-		x->ofile_fullpath = (char *)calloc(len, sizeof(char));
-		x->dfile_fullpath = (char *)calloc(len, sizeof(char));
-		x->stfile_fullpath = (char *)calloc(len, sizeof(char));
-		x->logfile_fullpath = (char *)calloc(len, sizeof(char));
+		x->cfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
+		x->ofile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
+		x->dfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
+		//x->stfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
+		x->logfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
+
+		x->path_to_maxsdk = gensym("");
 
 		x->verbose = 0;
+
+		long ic = (long)(ps_cc_instance_count->s_thing);
+		ic += 1;
+		ps_cc_instance_count->s_thing = (void *)ic;
+
+#ifdef CC_MSP
+		sprintf(x->basename, "cc~_%ld", (long)ps_cc_instance_count->s_thing);
+#else
+		sprintf(x->basename, "cc_%ld", (long)ps_cc_instance_count->s_thing);
+#endif
 
 		// private?!?
 		//short tmpdir = path_tempfolder();
 		short tmpdir;
-		char *tmp = "/private/var/tmp";
+		sprintf(x->build_path, "/private/var/tmp");
 		char fn[512];
-		path_frompathname(tmp, &tmpdir, fn);
-		x->cfile_path = x->build_path = tmpdir;
+		path_frompathname(x->build_path, &tmpdir, fn);
+		x->cfile_path_id = x->build_path_id = tmpdir;
 
-#ifdef CC_MSP
-		sprintf(x->cfile, "cc~_%ld.c", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->ofile, "cc~_%ld.o", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->dfile, "cc~_%ld.dylib", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->stfile, "cc~_%ld.st", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->logfile, "cc~_%ld.log", (long)ps_cc_instance_count->s_thing);
-#else
-		sprintf(x->cfile, "cc_%ld.c", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->ofile, "cc_%ld.o", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->dfile, "cc_%ld.dylib", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->stfile, "cc_%ld.st", (long)ps_cc_instance_count->s_thing);
-		sprintf(x->logfile, "cc_%ld.log", (long)ps_cc_instance_count->s_thing);
-#endif
-		sprintf(x->cfile_fullpath, "%s/%s", tmp, x->cfile);
-		sprintf(x->ofile_fullpath, "%s/%s", tmp, x->ofile);
-		sprintf(x->dfile_fullpath, "%s/%s", tmp, x->dfile);
-		sprintf(x->stfile_fullpath, "%s/%s", tmp, x->stfile);
-		sprintf(x->logfile_fullpath, "%s/%s", tmp, x->logfile);
+		sprintf(x->cfile_fullpath, "%s/%s.c", x->build_path, x->basename);
+		sprintf(x->ofile_fullpath, "%s/%s.o", x->build_path, x->basename);
+		sprintf(x->dfile_fullpath, "%s/%s.dylib", x->build_path, x->basename);
+		//sprintf(x->stfile_fullpath, "%s/%s.st", x->build_path, x->basename);
+		sprintf(x->logfile_fullpath, "%s/%s.log", x->build_path, x->basename);
+
+		FILE *fp = fopen(x->cfile_fullpath, "w");
+		if(fp){
+			cc_write_template(x, fp);
+			fclose(fp);
+		}else{
+			error("cc: couldn't write to tmp dir");
+		}
+
 
 		x->function_names = (t_symbol **)calloc(128, sizeof(t_symbol *));
 
 		x->ninlets = 1;
 		x->noutlets = 1;
 
-		x->path_to_maxsdk = gensym("");
-		x->def_cflags = (char *)calloc(2048, sizeof(char));
-		x->def_ldflags = (char *)calloc(2048, sizeof(char));
+		x->def_cflags = (char *)calloc(4096, sizeof(char));
+		x->def_ldflags = (char *)calloc(4096, sizeof(char));
 		attr_args_process(x, argc, argv);
 
 		char *sdk = x->path_to_maxsdk->s_name;
@@ -582,9 +776,6 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		}
 
 		x->user_obj = (char *)calloc(OBJSIZE, sizeof(char));
-		long ic = (long)(ps_cc_instance_count->s_thing);
-		ic += 1;
-		ps_cc_instance_count->s_thing = (void *)ic;
 		x->handle = NULL;
 
 		object_attach_byptr_register(x, x, CLASS_BOX);
@@ -604,9 +795,12 @@ int main(void){
 #endif
 
 	class_addmethod(c, (method)cc_bang, "bang", 0);
+	class_addmethod(c, (method)cc_float, "float", A_FLOAT, 0);
+	class_addmethod(c, (method)cc_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)cc_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)cc_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)cc_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)cc_notify, "notify", A_CANT, 0);
+	//class_addmethod(c, (method)cc_notify, "notify", A_CANT, 0);
 
 	//for the text editor and code
 	class_addmethod(c, (method)cc_edclose, "edclose", A_CANT, 0); 
@@ -614,8 +808,6 @@ int main(void){
 	class_addmethod(c, (method)cc_dblclick, "dblclick", A_CANT, 0);
 	class_addmethod(c, (method)cc_okclose, "okclose", A_CANT, 0);  
 	class_addmethod(c, (method)cc_compile, "compile", 0);
-	class_addmethod(c, (method)cc_load, "load", 0);
-	class_addmethod(c, (method)cc_compile_and_load, "compile_and_load", 0);
 
 	CLASS_ATTR_SYM(c, "maxsdk", 0, t_cc, path_to_maxsdk);
 	CLASS_ATTR_ACCESSORS(c, "maxsdk", cc_maxsdk_get, cc_maxsdk_set);
@@ -624,11 +816,14 @@ int main(void){
 	CLASS_ATTR_LONG(c, "inlets", 0, t_cc, ninlets);
 	CLASS_ATTR_LONG(c, "verbose", 0, t_cc, verbose);
 
-	CLASS_ATTR_CHAR(c, "cfile", 0, t_cc, cfile);
+	CLASS_ATTR_CHAR(c, "cfile", 0, t_cc, cfile_fullpath);
 	CLASS_ATTR_ACCESSORS(c, "cfile", cc_cfile_get, cc_cfile_set);
 
 	CLASS_ATTR_CHAR(c, "build_path", 0, t_cc, build_path);
 	CLASS_ATTR_ACCESSORS(c, "build_path", cc_build_path_get, cc_build_path_set);
+
+	CLASS_ATTR_CHAR(c, "load", 0, t_cc, dfile_fullpath);
+	CLASS_ATTR_ACCESSORS(c, "load", cc_load_get, cc_load_set);
 
 #ifdef CC_MSP
 	CLASS_ATTR_LONG(c, "sigoutlets", 0, t_cc, nsigoutlets);
@@ -646,66 +841,68 @@ int main(void){
 	return 0;
 }
 
-t_max_err cc_notify(t_cc *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
-	t_symbol *attrname;
-
-        if (msg == gensym("attr_modified")){
-		attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
-		if(attrname == gensym("maxsdk")){
-			char *sdk = x->path_to_maxsdk->s_name;
-			post("notify!");
-#ifdef CC_MSP
-			sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk, sdk, sdk);
-			sprintf(x->def_ldflags, LDFLAGS, sdk, sdk);
-#else
-			sprintf(x->def_cflags, CFLAGS, sdk, sdk, sdk);
-			sprintf(x->def_ldflags, LDFLAGS, sdk);
-#endif
-		}
-        }
-        return 0;
+void cc_get_basename(char *fp, char *bn){
+	int len = strlen(fp);
+	char buf[len];
+	strcpy(buf, fp);
+	char *filename = basename(fp);
+	char *ptr = filename + strlen(filename);
+	while(*ptr != '.'){
+		ptr--;
+	}
+	strncpy(bn, filename, ptr - filename);
+	bn[ptr - filename] = '\0';
 }
 
 t_max_err cc_cfile_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	if(argc == 0){
 		return 1;
 	}
+	char old_file[MAX_PATH_CHARS];
+	strcpy(old_file, x->cfile_fullpath);
 
-	char *fullpath = atom_getsym(argv)->s_name;
-	if(fullpath[0] != '/'){
-		short vol, bin;
-		if(locatefile(fullpath, &vol, &bin)){
-			error("cc: couldn't find file %s", fullpath);
-			return 1;
+	char *f = atom_getsym(argv)->s_name;
+
+	FILE *fp;
+	if(*f == '/'){
+		// full path.  read it if it exists, otherwise write a template
+		strcpy(x->cfile_fullpath, f);
+		if(fp = fopen(f, "r")){
+			x->code_len = fread(x->code_buf, sizeof(char), BUFSIZE, fp);
+		}else{
+			fclose(fp);
+			if(fp = fopen(f, "w")){
+				cc_write_template(x, fp);
+				fclose(fp);
+			}
 		}
-		char buf[512], *ptr;
-		path_topotentialname(vol, fullpath, buf, 0);
-		ptr = buf;
-		while(*ptr++ != ':'){}
-		strcpy(x->cfile_fullpath, ptr);
-
 	}else{
-		strcpy(x->cfile_fullpath, fullpath);
+		// not a full path.  try to find it in the search path and bail if not found
+		short outvol;//, binflag;
+		long outtype;
+		//if(locatefile(f, &outvol, &binflag)){
+		if(locatefile_extended(f, &outvol, &outtype, NULL, 0)){
+			error("cc: couldn't locate %s", f);
+			return 1;
+		}else{
+			char buf[MAX_PATH_CHARS];
+			char *ptr = buf;
+			path_topathname(outvol, f, buf);
+			while(*ptr++ != ':'){}
+			strcpy(x->cfile_fullpath, ptr);
+		}
 	}
-	int len = strlen(fullpath);
-	path_frompathname(x->cfile_fullpath, &(x->cfile_path), x->cfile);
 
-	cc_make_file_paths(x);
+	cc_get_basename(f, x->basename);
+	sprintf(x->ofile_fullpath, "%s/%s.o", x->build_path, x->basename);
+	sprintf(x->dfile_fullpath, "%s/%s.dylib", x->build_path, x->basename);
+	sprintf(x->logfile_fullpath, "%s/%s.log", x->build_path, x->basename);
 
-	FILE *fp = fopen(fullpath, "r");
-	if(fp){
-		x->code_len = fread(x->code_buf, sizeof(char), x->code_buf_len, fp);
+	if(x->cfile_is_tmp){
+		char buf[MAX_PATH_CHARS + 20];
+		sprintf(buf, "rm -f %s", old_file);
+		system(buf);
 	}
-	fclose(fp);
-
-	len = strlen(x->cfile);
-	char buf[len - 1];
-	memset(buf, '\0', len - 1);
-	strncpy(buf, x->cfile, len - 2);
-	sprintf(x->ofile, "%s.o", buf);
-	sprintf(x->dfile, "%s.dylib", buf);
-	sprintf(x->stfile, "%s.st", buf);
-	sprintf(x->logfile, "%s.log", buf);
 
 	x->cfile_is_tmp = 0;
 
@@ -716,45 +913,56 @@ t_max_err cc_cfile_get(t_cc *x, t_object *attr, long *argc, t_atom **argv){
 	char alloc;
  
         atom_alloc(argc, argv, &alloc);     // allocate return atom
- 
-        atom_setsym(*argv, gensym(x->cfile_fullpath));
+	atom_setsym(*argv, gensym(x->cfile_fullpath));
 
         return 0;
 }
 
 t_max_err cc_build_path_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
+	while(x->compiling){}
+	x->ok_to_compile = 0;
+	int ret = 0;
 	if(argc == 0){
-		return 1;
+		ret = 1;
+		goto out;
 	}
-	char *fullpath = atom_getsym(argv)->s_name;
-	int len = strlen(fullpath);
-	char buf[512];
-	path_frompathname(fullpath, &(x->build_path), buf);
-	post("fullpath = %d, %s", strlen(buf), buf);
-	sprintf(buf, "mkdir -p %s", fullpath);
-	system(buf);
 
-	sprintf(x->ofile_fullpath, "%s/%s", fullpath, x->ofile);
-	sprintf(x->dfile_fullpath, "%s/%s", fullpath, x->dfile);
-	sprintf(x->stfile_fullpath, "%s/%s", fullpath, x->stfile);
-	sprintf(x->logfile_fullpath, "%s/%s", fullpath, x->logfile);
+	char old_path[MAX_PATH_CHARS];
+	int old_path_len = strlen(x->ofile_fullpath) - 1;
+	strncpy(old_path, x->ofile_fullpath, strlen(x->ofile_fullpath) - 1);
+	old_path[old_path_len] = '\0';
 
-	cc_make_file_paths(x);
+	char *path = atom_getsym(argv)->s_name;
 
-	return 0;
+	if(cc_make_build_dir(x, path)){
+		ret = 1;
+		goto out;
+	}
+
+	strcpy(x->build_path, path);
+
+	sprintf(x->ofile_fullpath, "%s/%s.o", path, x->basename);
+	sprintf(x->dfile_fullpath, "%s/%s.dylib", path, x->basename);
+	//sprintf(x->stfile_fullpath, "%s/%s.st", path, x->basename);
+	sprintf(x->logfile_fullpath, "%s/%s.log", path, x->basename);
+
+	if(x->build_path_is_tmp){
+		char buf[MAX_PATH_CHARS + 20];
+		sprintf(buf, "rm -f %s{o,dylib,st,log}", old_path);
+		system(buf);
+	}
+
+	x->build_path_is_tmp = 0;
+
+ out:
+	x->ok_to_compile = 1;
+	return ret;
 }
 
 t_max_err cc_build_path_get(t_cc *x, t_object *attr, long *argc, t_atom **argv){
-	char alloc;
- 
-        atom_alloc(argc, argv, &alloc);     // allocate return atom
- 
-	char buf[512];
-
-	path_topotentialname(x->build_path, "", buf, 0);
-
-        atom_setsym(*argv, gensym(buf));
-
+	char alloc; 
+        atom_alloc(argc, argv, &alloc);
+	atom_setsym(*argv, gensym(x->build_path));
         return 0;
 }
 
@@ -776,10 +984,33 @@ t_max_err cc_maxsdk_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 
 t_max_err cc_maxsdk_get(t_cc *x, t_object *attr, long *argc, t_atom **argv){
 	char alloc;
- 
-        atom_alloc(argc, argv, &alloc);     // allocate return atom
- 
+        atom_alloc(argc, argv, &alloc);
         atom_setsym(*argv, x->path_to_maxsdk);
+        return 0;
+}
 
+t_max_err cc_load_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
+	if(argc == 0){
+		return 1;
+	}
+	t_symbol *dfile_sym = atom_getsym(argv);
+	char *dfile = dfile_sym->s_name;
+	char buf[MAX_FILENAME_CHARS];
+	cc_get_basename(dfile, buf);
+	char *ptr = buf + strlen(buf);
+	*ptr++ = '.';
+	*ptr++ = 'c';
+	*ptr = '\0';
+	t_atom a;
+	atom_setsym(&a, gensym(buf));
+	cc_cfile_set(x, NULL, 1, &a);
+	cc_load(x, dfile_sym);
+	return 0;
+}
+
+t_max_err cc_load_get(t_cc *x, t_object *attr, long *argc, t_atom **argv){
+	char alloc;
+        atom_alloc(argc, argv, &alloc);
+        atom_setsym(*argv, gensym(x->dfile_fullpath));
         return 0;
 }

@@ -1,9 +1,9 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ 233.0, 44.0, 1024.0, 629.0 ],
+		"rect" : [ 301.0, 44.0, 1024.0, 629.0 ],
 		"bglocked" : 0,
-		"defrect" : [ 233.0, 44.0, 1024.0, 629.0 ],
+		"defrect" : [ 301.0, 44.0, 1024.0, 629.0 ],
 		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -20,14 +20,216 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "message",
-					"text" : "build_path /Users/johnmac/foo/",
+					"text" : "load bar.dylib",
 					"fontsize" : 12.0,
 					"numoutlets" : 1,
-					"presentation_rect" : [ 163.0, 54.0, 0.0, 0.0 ],
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 164.0, 56.0, 176.0, 18.0 ],
+					"presentation_rect" : [ 349.0, 232.0, 0.0, 0.0 ],
+					"id" : "obj-22",
+					"fontname" : "Arial",
+					"patching_rect" : [ 348.0, 232.0, 82.0, 18.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "newobj",
+					"text" : "cc @inlets 2 @outlets 2 @load /Users/johnmac/Development/cnmat/trunk/max/externals/misc/cc/foo_build/bar.dylib",
+					"linecount" : 2,
+					"fontsize" : 12.0,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"id" : "obj-21",
+					"fontname" : "Arial",
+					"patching_rect" : [ 60.0, 268.0, 456.0, 34.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
+					"text" : "load foo.dylib",
+					"fontsize" : 12.0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"id" : "obj-20",
+					"fontname" : "Arial",
+					"patching_rect" : [ 420.0, 88.0, 81.0, 18.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "number",
+					"fontsize" : 12.0,
+					"numoutlets" : 2,
+					"outlettype" : [ "int", "bang" ],
+					"id" : "obj-19",
+					"fontname" : "Arial",
+					"patching_rect" : [ 384.0, 116.0, 50.0, 20.0 ],
+					"numinlets" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "flonum",
+					"fontsize" : 12.0,
+					"numoutlets" : 2,
+					"outlettype" : [ "float", "bang" ],
+					"id" : "obj-18",
+					"fontname" : "Arial",
+					"patching_rect" : [ 492.0, 144.0, 50.0, 20.0 ],
+					"numinlets" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "newobj",
+					"text" : "printit",
+					"fontsize" : 12.0,
+					"numoutlets" : 0,
+					"id" : "obj-17",
+					"fontname" : "Arial",
+					"patching_rect" : [ 44.0, 228.0, 40.0, 20.0 ],
+					"numinlets" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
+					"text" : "mult $1",
+					"fontsize" : 12.0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"id" : "obj-15",
+					"fontname" : "Arial",
+					"patching_rect" : [ 332.0, 140.0, 50.0, 18.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "flonum",
+					"fontsize" : 12.0,
+					"numoutlets" : 2,
+					"outlettype" : [ "float", "bang" ],
+					"id" : "obj-13",
+					"fontname" : "Arial",
+					"patching_rect" : [ 332.0, 116.0, 50.0, 20.0 ],
+					"numinlets" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
+					"text" : "1 2 3",
+					"fontsize" : 12.0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"id" : "obj-11",
+					"fontname" : "Arial",
+					"patching_rect" : [ 156.0, 12.0, 37.0, 18.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "button",
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"id" : "obj-16",
+					"patching_rect" : [ 120.0, 16.0, 20.0, 20.0 ],
+					"numinlets" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "number",
+					"fontsize" : 12.0,
+					"numoutlets" : 2,
+					"outlettype" : [ "int", "bang" ],
+					"id" : "obj-14",
+					"fontname" : "Arial",
+					"patching_rect" : [ 68.0, 16.0, 50.0, 20.0 ],
+					"numinlets" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "flonum",
+					"fontsize" : 12.0,
+					"numoutlets" : 2,
+					"outlettype" : [ "float", "bang" ],
+					"id" : "obj-12",
+					"fontname" : "Arial",
+					"patching_rect" : [ 16.0, 16.0, 50.0, 20.0 ],
+					"numinlets" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
+					"text" : "build_path /Users/johnmac/Development/cnmat/trunk/max/externals/misc/cc/foo_build",
+					"fontsize" : 12.0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"id" : "obj-10",
+					"fontname" : "Arial",
+					"patching_rect" : [ 316.0, 60.0, 466.0, 18.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
+					"text" : "cfile bar.c",
+					"fontsize" : 12.0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"id" : "obj-9",
+					"fontname" : "Arial",
+					"patching_rect" : [ 228.0, 60.0, 62.0, 18.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
+					"text" : "cfile foo.c",
+					"fontsize" : 12.0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"id" : "obj-4",
+					"fontname" : "Arial",
+					"patching_rect" : [ 164.0, 60.0, 61.0, 18.0 ],
+					"numinlets" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"maxclass" : "message",
+					"text" : "cfile /Users/johnmac/Development/cnmat/trunk/max/externals/misc/cc/foo.c",
+					"fontsize" : 12.0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
 					"id" : "obj-2",
 					"fontname" : "Arial",
+					"patching_rect" : [ 164.0, 36.0, 409.0, 18.0 ],
 					"numinlets" : 2
 				}
 
@@ -39,10 +241,10 @@
 					"linecount" : 8,
 					"fontsize" : 12.0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 16.0, 308.0, 510.0, 117.0 ],
 					"id" : "obj-8",
 					"fontname" : "Arial",
 					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"patching_rect" : [ 16.0, 484.0, 510.0, 117.0 ],
 					"numinlets" : 1
 				}
 
@@ -54,10 +256,10 @@
 					"linecount" : 3,
 					"fontsize" : 12.0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 16.0, 252.0, 510.0, 48.0 ],
 					"id" : "obj-7",
 					"fontname" : "Arial",
 					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"patching_rect" : [ 16.0, 428.0, 510.0, 48.0 ],
 					"numinlets" : 1
 				}
 
@@ -69,10 +271,10 @@
 					"linecount" : 4,
 					"fontsize" : 12.0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 16.0, 180.0, 570.0, 62.0 ],
 					"id" : "obj-6",
 					"fontname" : "Arial",
 					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"patching_rect" : [ 16.0, 356.0, 570.0, 62.0 ],
 					"numinlets" : 1
 				}
 
@@ -84,10 +286,10 @@
 					"linecount" : 9,
 					"fontsize" : 12.0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 600.0, 24.0, 402.0, 131.0 ],
 					"id" : "obj-5",
 					"fontname" : "Arial",
 					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"patching_rect" : [ 592.0, 216.0, 402.0, 131.0 ],
 					"numinlets" : 1
 				}
 
@@ -95,13 +297,13 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "message",
-					"text" : "compile_and_load",
+					"text" : "compile",
 					"fontsize" : 12.0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 44.0, 56.0, 108.0, 18.0 ],
 					"id" : "obj-3",
 					"fontname" : "Arial",
+					"patching_rect" : [ 44.0, 56.0, 52.0, 18.0 ],
 					"numinlets" : 2
 				}
 
@@ -109,19 +311,119 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "cc @inlets 2 @outlets 2 @maxsdk /Users/johnmac/Development/cnmat/trunk/max/SDK/MaxSDK-5",
+					"text" : "cc @inlets 2 @outlets 2 @cfile foo.c @build_path /Users/johnmac/Development/cnmat/trunk/max/externals/misc/cc/foo_build @maxsdk /Users/johnmac/Development/cnmat/trunk/max/SDK/MaxSDK-5",
+					"linecount" : 3,
 					"fontsize" : 12.0,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 44.0, 100.0, 536.0, 20.0 ],
 					"id" : "obj-1",
 					"fontname" : "Arial",
+					"patching_rect" : [ 44.0, 172.0, 468.0, 48.0 ],
 					"numinlets" : 2
 				}
 
 			}
  ],
 		"lines" : [ 			{
+				"patchline" : 				{
+					"source" : [ "obj-22", 0 ],
+					"destination" : [ "obj-21", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-19", 0 ],
+					"destination" : [ "obj-15", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-13", 0 ],
+					"destination" : [ "obj-15", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-18", 0 ],
+					"destination" : [ "obj-1", 1 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-1", 0 ],
+					"destination" : [ "obj-17", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-15", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-11", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-12", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-14", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-16", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-9", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
 				"patchline" : 				{
 					"source" : [ "obj-2", 0 ],
 					"destination" : [ "obj-1", 0 ],
@@ -133,6 +435,33 @@
 , 			{
 				"patchline" : 				{
 					"source" : [ "obj-3", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-4", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-10", 0 ],
+					"destination" : [ "obj-1", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-20", 0 ],
 					"destination" : [ "obj-1", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
