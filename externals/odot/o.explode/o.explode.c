@@ -41,8 +41,10 @@ VERSION 0.0: First try
 
 typedef struct _oex{
 	t_object ob;
-	void *outlets;
-
+	void *outlet;
+	t_symbol *address;
+	t_symbol **ex_addresses;
+	int num_ex_addresses;
 	char *buffer;
 	int bufferLen;
 	int bufferPos;
@@ -59,10 +61,12 @@ void *oex_new(t_symbol *msg, short argc, t_atom *argv);
 
 void oex_fullPacket(t_oex *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
+	int i;
 	char cpy[len];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
-	char buffer[len * 2];
+	char buffer[len * 8];
+	memset(buffer, '\0', len * 8);
 	x->buffer = buffer;
 	x->bufferLen = len * 2;
 	x->bufferPos = 0;
@@ -78,7 +82,21 @@ void oex_fullPacket(t_oex *x, long len, long ptr){
 	// flatten any nested bundles
 	nn = cmmjl_osc_flatten(nn, cpy, cpy);
 
+	x->bufferPos = 0;
+	//x->bufferPos += cmmjl_osc_init_bundle(len * 2, buffer, NULL);
+	memcpy(buffer, cpy, 16); // #bundle and timestamp
+	x->bufferPos += 16;
 	cmmjl_osc_extract_messages(nn, cpy, true, oex_cbk, (void *)x);
+	/*
+	for(i = 0; i < x->bufferPos; i++){
+		post("%d 0x%x %c", i, buffer[i], buffer[i]);
+	}
+	*/
+
+	t_atom out[2];
+	atom_setlong(out, x->bufferPos);
+	atom_setlong(out + 1, (long)buffer);
+	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 
 }
 
@@ -86,13 +104,83 @@ void oex_cbk(t_cmmjl_osc_message msg, void *v){
 	t_oex *x = (t_oex *)v;
 	int i;
 	int ret;
-	for(i = 0; i < x->numArgs; i++){
-		if((ret = cmmjl_osc_match(x, msg.address, x->args[i]->s_name)) != 0 || !strcmp(msg.address, x->args[i]->s_name)){
-			x->matched_outlets[x->numMatched] = i;	
-			x->numCharsMatched[x->numMatched] = ret;
-			x->matched[x->numMatched++] = msg;
+	if((ret = cmmjl_osc_match(x, msg.address, x->address->s_name)) == -1){
+		int n = x->num_ex_addresses;
+		if(n != msg.argc){
+			if(n < msg.argc){
+				n--;
+			}else{
+				n = msg.argc;
+			}
 		}
+		char *argptr = msg.argv;
+		char *tt = msg.typetags + 1;
+		char *sizeptr;
+		int s;
+		for(i = 0; i < n; i++){
+			sizeptr = x->buffer + x->bufferPos;
+			x->bufferPos += 4;
+			s = strlen(x->ex_addresses[i]->s_name);
+
+			memcpy(x->buffer + x->bufferPos, x->ex_addresses[i]->s_name, s);
+			x->bufferPos += s + 1;
+			while(x->bufferPos % 4 != 0){
+				x->bufferPos++;
+			}
+			x->buffer[x->bufferPos++] = ',';
+			x->buffer[x->bufferPos++] = *tt;
+			x->bufferPos += 2;
+			s = 4;
+			if(*tt != 'f' && *tt != 'i'){
+				s = strlen(argptr);
+			}
+			memcpy(x->buffer + x->bufferPos, argptr, s);
+			argptr += s;
+			x->bufferPos += s;
+			tt++;
+			*((long *)sizeptr) = htonl((x->buffer + x->bufferPos) - (sizeptr + 4));
+		}
+		if(x->num_ex_addresses < msg.argc){
+			sizeptr = (x->buffer + x->bufferPos);
+			x->bufferPos += 4;
+			strcpy(x->buffer + x->bufferPos, x->ex_addresses[x->num_ex_addresses - 1]->s_name);
+			x->bufferPos += strlen(x->buffer + x->bufferPos);
+			x->bufferPos++;
+			while(x->bufferPos % 4){
+				x->bufferPos++;
+			}
+			x->buffer[x->bufferPos++] = ',';
+			strcpy(x->buffer + x->bufferPos, tt);
+			x->bufferPos += strlen(x->buffer + x->bufferPos);
+			x->bufferPos++;
+			while(x->bufferPos % 4){
+				x->bufferPos++;
+			}
+			s = (msg.address + msg.size) - argptr;
+			memcpy(x->buffer + x->bufferPos, argptr, s);
+			x->bufferPos += s;
+			*((long *)sizeptr) = htonl((x->buffer + x->bufferPos) - (sizeptr + 4));
+		}else if(x->num_ex_addresses > msg.argc){
+			for(i = msg.argc; i < x->num_ex_addresses; i++){
+				sizeptr = (x->buffer + x->bufferPos);
+				x->bufferPos += 4;
+				strcpy(x->buffer + x->bufferPos, x->ex_addresses[i]->s_name);
+				x->bufferPos += strlen(x->buffer + x->bufferPos);
+				x->bufferPos++;
+				while(x->bufferPos % 4){
+					x->bufferPos++;
+				}
+				x->buffer[x->bufferPos++] = ',';
+				x->buffer[x->bufferPos++] = 'i';
+				x->bufferPos += 6;
+				*((long *)sizeptr) = htonl((x->buffer + x->bufferPos) - (sizeptr + 4));
+			}
+		}
+	}else{
+		memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
+		x->bufferPos += msg.size;
 	}
+
 }
 
 void oex_anything(t_oex *x, t_symbol *msg, short argc, t_atom *argv){
@@ -111,8 +199,8 @@ void oex_assist(t_oex *x, void *b, long m, long a, char *s){
 }
 
 void oex_free(t_oex *x){
-	if(x->args){
-		free(x->args);
+	if(x->ex_addresses){
+		free(x->ex_addresses);
 	}
 }
 
@@ -121,9 +209,12 @@ void *oex_new(t_symbol *msg, short argc, t_atom *argv){
 	int i;
 	if(x = (t_oex *)object_alloc(oex_class)){
 		cmmjl_init(x, NAME, 0);
-		x->outlet = outlet_new(x->outlet, NULL);
-		for(i = 0; i < argc; i++){
-
+		x->outlet = outlet_new(x, NULL);
+		x->address = atom_getsym(argv);
+		x->ex_addresses = (t_symbol **)malloc((argc - 1) * sizeof(t_symbol *));
+		x->num_ex_addresses = argc - 1;
+		for(i = 1; i < argc; i++){
+			x->ex_addresses[i - 1] = atom_getsym(argv + i);
 		}
 	}
 		   	

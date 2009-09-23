@@ -95,7 +95,7 @@ void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 #endif
 	int address = 0;
 	int i = 0;
-	for(i = i; i < x->numAddresses; i++){
+	for(i = 0; i < x->numAddresses; i++){
 		if(inlet >= address && inlet < (address + x->numArgs[i])){
 			break;
 		}else{
@@ -166,6 +166,15 @@ void opack_free(t_opack *x){
 void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 	t_opack *x;
 	if(x = (t_opack *)object_alloc(opack_class)){
+		if(argc == 0){
+			object_error((t_object *)x, "you must supply at least 1 argument");
+			return NULL;
+		}
+
+		if(atom_getsym(argv)->s_name[0] != '/'){
+			object_error((t_object *)x, "the first argument must be an OSC string that begins with a slash (/)");
+			return NULL;
+		}
 		cmmjl_init(x, NAME, 0);
 
 		int i;
@@ -201,7 +210,11 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 		}
 
 		for(i = 0; i < x->numAddresses; i++){
+			if(x->numArgs[i] == 0){
+				x->numArgs[i] = 1;
+			}
 			x->typetags[i] = calloc(x->numArgs[i], sizeof(char));
+			memset(x->typetags[i], 'f', x->numArgs[i]);
 			x->args[i] = (t_atom *)calloc(x->numArgs[i], sizeof(t_atom));
 			x->bufsize += 4 - ((x->numArgs[i] + 2) % 4);
 		}

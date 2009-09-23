@@ -378,6 +378,7 @@ int main(void){
 }
 
 void oop_pass(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+	// no bugs with this one!
 }
 
 void oop_plus(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
@@ -385,7 +386,7 @@ void oop_plus(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -412,7 +413,7 @@ void oop_minus(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -439,7 +440,7 @@ void oop_times(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -466,7 +467,7 @@ void oop_div(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -493,7 +494,7 @@ void oop_mod(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	long arg = atom_getlong(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -506,9 +507,9 @@ void oop_mod(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 			{
 				int ii = ntohl(*((int *)args));
 				float f = *(((float *)(&ii)));
-				ii = (int)f;
-				ii %= arg;
-				*((int *)args) = htonl(ii);
+				//ii = (int)f;
+				f = fmodf(f, (float)arg);
+				*((int *)args) = htonl(*((long *)(&f)));
 				args += 4;
 			}
 			break;
@@ -582,11 +583,12 @@ void oop_abs(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
-				ii = abs(ii);
+				const int mask = ii >> sizeof(int) * CHAR_BIT - 1;
+				ii = (ii + mask) ^ mask;
 				*((int *)args) = htonl(ii);
 				args += 4;
 			}
@@ -595,7 +597,7 @@ void oop_abs(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 			{
 				int ii = ntohl(*((int *)args));
 				float f = *(((float *)(&ii)));
-				f = fabs(f);
+				f = fabsf(f);
 				*((int *)args) = htonl(*(((int *)(&f))));
 				args += 4;
 			}
@@ -641,11 +643,11 @@ void oop_absdiff(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
-				ii = abs(ii - arg);
+				ii = fabsf((float)(ii - arg));
 				*((int *)args) = htonl(ii);
 				args += 4;
 			}
@@ -654,7 +656,7 @@ void oop_absdiff(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 			{
 				int ii = ntohl(*((int *)args));
 				float f = *(((float *)(&ii)));
-				f = fabs(f - arg);
+				f = fabsf(f - arg);
 				*((int *)args) = htonl(*(((int *)(&f))));
 				args += 4;
 			}
@@ -664,11 +666,11 @@ void oop_absdiff(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 }
 
 void oop_fold(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
-
+	error("o.op: fold doesn't work at the moment");
 }
 
 void oop_wrap(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
-
+	error("o.op: wrap doesn't work at the moment");
 }
 
 void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
@@ -676,7 +678,7 @@ void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -703,7 +705,7 @@ void oop_minusFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -730,7 +732,7 @@ void oop_modFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	char *args = msg->argv;
 	long arg = atom_getlong(argv);
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -778,11 +780,14 @@ void oop_scale(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 			break;
 		}
 		ff = oop_do_scale((double)ff, minmax[0], minmax[1], minmax[2], minmax[3]);
-		ii = *((long *)(&ff));
-		*((int *)args) = htonl(ii);
+
 		if(argv[2].a_type == A_FLOAT || argv[3].a_type == A_FLOAT){
+			ii = *((long *)(&ff));
+			*((int *)args) = htonl(ii);
 			*(msg->typetags + i + 1) = 'f';
 		}else{
+			ii = (long)ff;
+			*((int *)args) = htonl(ii);
 			*(msg->typetags + i + 1) = 'i';
 		}
 		args += 4;
@@ -827,7 +832,7 @@ void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	minmax[1] = atom_getfloat(argv + 1);
 
 	for(i = 0; i < msg->argc; i++){
-		switch(*(msg->typetags + 1)){
+		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
 				int ii = ntohl(*((int *)args));
@@ -851,7 +856,7 @@ void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 
 void oop_map(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	oop_scale(msg, argc, argv);
-	oop_clip(msg, 2, argv);
+	oop_clip(msg, 2, argv + 2);
 }
 
 double oop_do_clip(double f, double min, double max){
