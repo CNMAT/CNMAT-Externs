@@ -233,15 +233,18 @@ void *oinsert_new(t_symbol *msg, short argc, t_atom *argv){
 		x->address = (char *)calloc(256, sizeof(char));
 		x->address_out = (char *)calloc(256, sizeof(char));
 		x->argc = 0;
+
+		// how many substitutions will be made
 		for(i = 0; i < address_len; i++){
 			if(addressptr[i] == '$'){
 				x->argc++;
 			}
 		}
+
+		// make an inlet for each substitution
 		x->proxy = (void **)malloc(x->argc * sizeof(void *));
 		for(i = 0; i < x->argc; i++){
 			x->proxy[i] = proxy_new((t_object *)x, x->argc - i, &(x->inlet));
-			post("%d", x->argc - i);
 		}
 		x->argv = (t_atom *)malloc(x->argc * sizeof(t_atom));
 		x->offsets = (int *)malloc(x->argc * sizeof(int));
