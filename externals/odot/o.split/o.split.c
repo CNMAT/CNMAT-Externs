@@ -38,25 +38,25 @@ VERSION 0.0: First try
 #include "cmmjl/cmmjl.h"
 #include "cmmjl/cmmjl_osc.h"
 
-typedef struct _range{
-	float min;
-	float max;
-} t_range;
-
 typedef struct _osplit{
 	t_object ob;
 	void **outlets;
 	char **buffers;
 	int *buffer_len;
 	int *buffer_pos;
-	int numranges;
-	t_range *ranges;
+	double min, max;
+	int (*left_test)(double, double);
+	int (*right_test)(double, double);
 } t_osplit;
 
 void *osplit_class;
 
 void osplit_fullPacket(t_osplit *x, long len, long ptr);
 void osplit_cbk(t_cmmjl_osc_message msg, void *v);
+int osplit_gt(double f1, double f2);
+int osplit_gte(double f1, double f2);
+int osplit_lt(double f1, double f2);
+int osplit_lte(double f1, double f2);
 void osplit_anything(t_osplit *x, t_symbol *msg, short argc, t_atom *argv);
 void osplit_free(t_osplit *x);
 void osplit_assist(t_osplit *x, void *b, long m, long a, char *s);
@@ -130,7 +130,7 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 					float val = (float)l;
 					post("%s long val = %f", msg.address, val);
 					if(val >= x->ranges[r].min && val <= x->ranges[r].max){
-						post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
+						//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
 						rangematches[r]++;
 						//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
 					}
@@ -141,9 +141,9 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 				{
 					long l = ntohl(*((long *)(msg.argv + argpos)));
 					float val = *((float *)(&l));
-					post("%s float val = %f", msg.address, val);
+					//post("%s float val = %f", msg.address, val);
 					if(val >= x->ranges[r].min && val <= x->ranges[r].max){
-						post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
+						//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
 						rangematches[r]++;
 						//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
 					}
@@ -162,7 +162,7 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 	}
 
 	for(r = 0; r < x->numranges; r++){
-		post("%d %d", rangematches[r], msg.argc);
+		//post("%d %d", rangematches[r], msg.argc);
 		if(rangematches[r] == msg.argc){
 			didmatch++;
 			x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
@@ -172,6 +172,22 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 	if(didmatch == 0){
 		x->buffer_pos[x->numranges] += cmmjl_osc_add_to_bundle(x->buffer_len[x->numranges], x->buffers[x->numranges] + x->buffer_pos[x->numranges], &msg);
 	}
+}
+
+int osplit_gt(double f1, double f2){
+	return f1 > f2;
+}
+
+int osplit_gte(double f1, double f2){
+	return f1 >= f2;
+}
+
+int osplit_lt(double f1, double f2){
+	return f1 < f2;
+}
+
+int osplit_lte(double f1, double f2){
+	return f1 <= f2;
 }
 
 void osplit_anything(t_osplit *x, t_symbol *msg, short argc, t_atom *argv){
