@@ -55,7 +55,7 @@ void *oapply_class;
 void oapply_fullPacket(t_oapply *x, long len, long ptr);
 void oapply_cbk(t_cmmjl_osc_message msg, void *v);
 void oapply_int(t_oapply *x, long l);
-void doapply_int(t_oapply *x, long l);
+void oapply_float(t_oapply *x, double f);
 void oapply_anything(t_oapply *x, t_symbol *msg, short argc, t_atom *argv);
 void oapply_list(t_oapply *x, t_symbol *msg, short argc, t_atom *argv);
 void oapply_free(t_oapply *x);
@@ -93,10 +93,12 @@ void oapply_fullPacket(t_oapply *x, long len, long ptr){
 	atom_setlong(out, x->buffer_pos);
 	atom_setlong(out + 1, (long)x->buffer);
 	outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
+	/*
 	int i;
 	for(i = 0; i < x->buffer_pos; i++){
 		post("%d %c 0x%x", i, x->buffer[i], x->buffer[i]);
 	}
+	*/
 }
 
 void oapply_cbk(t_cmmjl_osc_message msg, void *v){
@@ -111,28 +113,22 @@ void oapply_int(t_oapply *x, long l){
 	if(proxy_getinlet((t_object *)x) == 0){
 		return;
 	}
-	doapply_int(x, l);
+	t_atom a;
+	atom_setlong(&a, l);
+	oapply_list(x, NULL, 1, &a);
+}
+
+void oapply_float(t_oapply *x, double f){
+	if(proxy_getinlet((t_object *)x) == 0){
+		return;
+	}
+	t_atom a;
+	atom_setfloat(&a, f);
+	oapply_list(x, NULL, 1, &a);
 }
 
 void doapply_int(t_oapply *x, long l){
-	/*
-	if(x->split_bundle){
-		if(l == 0){
-			x->failure++;
-			memcpy(x->buffers[1] + x->buffer_pos[1], x->msg.address - 4, x->msg.size + 4);
-			x->buffer_pos[1] += (x->msg.size + 4);
-		}else{
-			memcpy(x->buffers[0] + x->buffer_pos[0], x->msg.address - 4, x->msg.size + 4);
-			x->buffer_pos[0] += (x->msg.size + 4);
-		}
-	}else{
-		memcpy(x->buffers[0] + x->buffer_pos[0], x->msg.address - 4, x->msg.size + 4);
-		x->buffer_pos[0] += (x->msg.size + 4);
-		if(l == 0){
-			x->failure++;
-		}
-	}
-	*/
+
 }
 
 void oapply_anything(t_oapply *x, t_symbol *msg, short argc, t_atom *argv){
@@ -253,6 +249,7 @@ int main(void){
 	//class_addmethod(c, (method)oapply_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oapply_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oapply_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)oapply_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)oapply_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oapply_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)oapply_notify, "notify", A_CANT, 0);

@@ -389,6 +389,9 @@ void omessage_make_and_output_bundle(t_omessage *x){
 	int i;
 	x->buffer_pos = 0;
 	x->buffer_pos += cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
+	ntptime now;
+	cmmjl_osc_timetag_now_to_ntp(&now);
+	cmmjl_osc_timetag_set(x->buffer_len, (long)x->buffer, &now);
 	x->buffer_pos += cmmjl_osc_make_bundle_from_atoms(x->num_atoms, x->atoms, &(x->buffer_len), x->buffer + x->buffer_pos);
 	//for(i = 0; i < x->buffer_pos; i++){
 	//post("%d %c 0x%x", i, x->buffer[i], x->buffer[i]);

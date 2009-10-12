@@ -1,9 +1,9 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ 264.0, 44.0, 1017.0, 645.0 ],
+		"rect" : [ 302.0, 44.0, 1017.0, 645.0 ],
 		"bglocked" : 0,
-		"defrect" : [ 264.0, 44.0, 1017.0, 645.0 ],
+		"defrect" : [ 302.0, 44.0, 1017.0, 645.0 ],
 		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -15,16 +15,18 @@
 		"toolbarvisible" : 1,
 		"boxanimatetime" : 200,
 		"imprint" : 0,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "newobj",
 					"text" : "print",
 					"id" : "obj-6",
-					"numinlets" : 1,
-					"fontsize" : 12.0,
-					"numoutlets" : 0,
 					"fontname" : "Arial",
-					"patching_rect" : [ 300.0, 210.0, 34.0, 20.0 ]
+					"fontsize" : 12.0,
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 140.0, 150.0, 34.0, 20.0 ]
 				}
 
 			}
@@ -33,26 +35,26 @@
 					"maxclass" : "newobj",
 					"text" : "OpenSoundControl",
 					"id" : "obj-5",
-					"numinlets" : 1,
-					"fontsize" : 12.0,
-					"numoutlets" : 3,
-					"outlettype" : [ "", "", "OSCTimeTag" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 250.0, 180.0, 113.0, 20.0 ]
+					"outlettype" : [ "", "", "OSCTimeTag" ],
+					"fontsize" : 12.0,
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"patching_rect" : [ 90.0, 120.0, 113.0, 20.0 ]
 				}
 
 			}
 , 			{
 				"box" : 				{
 					"maxclass" : "message",
-					"text" : "/foo 34, /bar 54.8, bang",
+					"text" : "/foo 34, /bloo 54.8, bang",
 					"id" : "obj-4",
-					"numinlets" : 2,
-					"fontsize" : 12.0,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 250.0, 90.0, 135.0, 18.0 ]
+					"outlettype" : [ "" ],
+					"fontsize" : 12.0,
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"patching_rect" : [ 90.0, 30.0, 140.0, 18.0 ]
 				}
 
 			}
@@ -61,26 +63,26 @@
 					"maxclass" : "newobj",
 					"text" : "OpenSoundControl",
 					"id" : "obj-2",
-					"numinlets" : 1,
-					"fontsize" : 12.0,
-					"numoutlets" : 3,
-					"outlettype" : [ "", "", "OSCTimeTag" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 250.0, 120.0, 113.0, 20.0 ]
+					"outlettype" : [ "", "", "OSCTimeTag" ],
+					"fontsize" : 12.0,
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"patching_rect" : [ 90.0, 60.0, 113.0, 20.0 ]
 				}
 
 			}
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.prepend /foo /poopchute",
+					"text" : "o.prepend /foo /bar",
 					"id" : "obj-1",
-					"numinlets" : 1,
-					"fontsize" : 12.0,
-					"numoutlets" : 1,
-					"outlettype" : [ "FullPacket" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 250.0, 150.0, 151.0, 20.0 ]
+					"outlettype" : [ "FullPacket" ],
+					"fontsize" : 12.0,
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"patching_rect" : [ 90.0, 90.0, 112.0, 20.0 ]
 				}
 
 			}
@@ -105,8 +107,8 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-5", 1 ],
-					"destination" : [ "obj-6", 0 ],
+					"source" : [ "obj-4", 0 ],
+					"destination" : [ "obj-2", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
@@ -114,8 +116,8 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-4", 0 ],
-					"destination" : [ "obj-2", 0 ],
+					"source" : [ "obj-5", 1 ],
+					"destination" : [ "obj-6", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
