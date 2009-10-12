@@ -53,6 +53,7 @@ void *oppnd_class;
 
 void oppnd_fullPacket(t_oppnd *x, long len, long ptr);
 void oppnd_cbk(t_cmmjl_osc_message msg, void *v);
+void oppnd_set(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv);
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv);
 void oppnd_free(t_oppnd *x);
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s);
@@ -126,6 +127,30 @@ void oppnd_cbk(t_cmmjl_osc_message msg, void *v){
 	}
 }
 
+void oppnd_set(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv){
+	if(argc > 0){
+		switch((*argv).a_type){
+		case A_FLOAT:
+			{
+				char buf[256];
+				sprintf(buf, "%f", (*argv).a_w.w_float);
+				x->sym_to_prepend = gensym(buf);
+			}
+			break;
+		case A_LONG:
+			{
+				char buf[256];
+				sprintf(buf, "%ld", (*argv).a_w.w_long);
+				x->sym_to_prepend = gensym(buf);
+			}
+			break;
+		case A_SYM:
+			x->sym_to_prepend = (*argv).a_w.w_sym;
+			break;
+		}
+	}
+}
+
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
 
 }
@@ -146,12 +171,6 @@ void oppnd_free(t_oppnd *x){
 }
 
 void *oppnd_new(t_symbol *msg, short argc, t_atom *argv){
-	/*
-	  if(argc % 2 != 0){
-	  error("o.rename: multiple of 2 arguments required");
-	  return NULL;
-	  }
-	*/
 	t_oppnd *x;
 	if(x = (t_oppnd *)object_alloc(oppnd_class)){
 		cmmjl_init(x, NAME, 0);
@@ -176,6 +195,8 @@ int main(void){
 	class_addmethod(c, (method)oppnd_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oppnd_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oppnd_assist, "assist", A_CANT, 0);
+
+	class_addmethod(c, (method)oppnd_set, "set", A_GIMME, 0);
     
 	class_register(CLASS_BOX, c);
 	oppnd_class = c;

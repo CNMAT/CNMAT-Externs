@@ -39,26 +39,40 @@ VERSION 0.0: First try
 #include "cmmjl/cmmjl_osc.h"
 //#include "cmmjl/cmmjl_osc_obj.h"
 
-typedef struct _oroute{
+#ifndef ODOT_BUFFER_LEN
+#define ODOT_BUFFER_LEN 4096
+#endif
+
+typedef struct _oinsert{
 	t_object ob;
 	void *outlet;
-	char *address;
-	char *address_out;
-	void **proxy;
+	void **proxies;
 	long inlet;
+	/*
+	int num_parts;
+	char **address_parts;
+	int *address_part_lens;
+	int *operations;
+	int *substitutions;
+	int *backrefs;
+	*/
 	char *buffer;
-	int bufferPos;
-	int bufferLen;
-	t_atom *argv;
+	int buffer_pos;
+	int buffer_len;
+	char **argv;
 	int argc;
-	int *offsets;
+	int *insertions;
+	char **containers;
+	int *container_lens;
+	int num_containers;
 } t_oinsert;
 
 void *oinsert_class;
 
 void oinsert_fullPacket(t_oinsert *x, long len, long ptr);
 void oinsert_cbk(t_cmmjl_osc_message msg, void *v);
-void oinsert_do_insert(t_oinsert *x);
+//void oinsert_do_insert(t_oinsert *x);
+void oinsert_atom_tostring(t_atom *a, char *st);
 void oinsert_anything(t_oinsert *x, t_symbol *msg, short argc, t_atom *argv);
 void oinsert_float(t_oinsert *x, double f);
 void oinsert_long(t_oinsert *x, long l);
@@ -69,11 +83,19 @@ void *oinsert_new(t_symbol *msg, short argc, t_atom *argv);
 void oinsert_fullPacket(t_oinsert *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
 	char cpy[len];
-	char buffer[len * 2];
-	memset(buffer, '\0', len * 2);
-	x->buffer = buffer;
-	x->bufferLen = len * 2;
 	memcpy(cpy, (char *)ptr, len);
+	if(x->buffer_len < len){
+		char *tmp = (char *)realloc(x->buffer, len * 2);
+		if(tmp){
+			x->buffer = tmp;
+			x->buffer_len = len * 2;
+		}else{
+			object_error((t_object *)x, "ran out of memory trying to allocate %d bytes!", len * 2);
+			return;
+		}
+		object_warn((t_object *)x, "buffer reallocation took place to accomidate an OSC packet of %d bytes.  Specify the buffer size with the @buffer_len attribute to prevent this from happening.", len);
+	}
+	memset(x->buffer, '\0', x->buffer_len);
 	long nn = len;
 
 	// if the OSC packet contains a single message, turn it into a bundle
@@ -87,20 +109,21 @@ void oinsert_fullPacket(t_oinsert *x, long len, long ptr){
 	// flatten any nested bundles
 	nn = cmmjl_osc_flatten(nn, cpy, cpy);
 
-	memcpy(buffer, cpy, 16);
-	x->bufferPos = 16;
+	memcpy(x->buffer, cpy, 16);
+	x->buffer_pos = 16;
 
 	// extract the messages from the bundle
 	cmmjl_osc_extract_messages(nn, cpy, true, oinsert_cbk, (void *)x);
-	/*
-	int i; 
-	post("x->bufferPos = %d", x->bufferPos);
-	for(i = 0; i < x->bufferPos; i++){
-		post("%d %x %c", i, x->buffer[i], x->buffer[i]);
+
+	char buffer[x->buffer_pos];
+	memcpy(buffer, x->buffer, x->buffer_pos * sizeof(char));
+
+	int i;
+	for(i = 0; i < x->buffer_pos; i++){
+		post("%c (%x)", buffer[i], buffer[i]);
 	}
-	*/
 	t_atom out[2];
-	atom_setlong(&(out[0]), x->bufferPos);
+	atom_setlong(&(out[0]), x->buffer_pos);
 	atom_setlong(&(out[1]), (long)buffer);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
@@ -110,8 +133,119 @@ void oinsert_cbk(t_cmmjl_osc_message msg, void *v){
 	int i;
 	int ret;
 	int didmatch = 0;
-	if(x->bufferPos + msg.size > x->bufferLen){
-		realloc(x->buffer, x->bufferLen * 2);
+	if(x->buffer_pos + msg.size > x->buffer_len){
+		char *tmp = (char *)realloc(x->buffer, x->buffer_len * 2);
+		if(tmp){
+			x->buffer = tmp;
+			x->buffer_len = x->buffer_len * 2;
+		}else{
+			object_error((t_object *)x, "ran out of memory trying to allocate %d bytes!", x->buffer_len * 2);
+			return;
+		}
+		object_warn((t_object *)x, "buffer reallocation took place.  Specify the buffer size with the @buffer_len attribute to prevent this from happening.", x->buffer_len);
+	}
+	char buf[1024];
+	memset(buf, '\0', 1024);
+	char *bufptr = buf;
+	int container = 0, input_container = 0;
+	int address_len = strlen(msg.address);
+	int num_input_containers = cmmjl_osc_get_tree_length(address_len, msg.address);
+	char *input_containers[num_input_containers];
+	int container_lens[num_input_containers];
+	cmmjl_osc_address_to_array(address_len, msg.address, input_containers, container_lens);
+
+	char buf1[256], buf2[256];
+	post("num containers: %d", x->num_containers);
+	for(i = 0; i < x->num_containers; i++){
+		post("i = %d", i);
+		if(x->insertions[i] < 0){
+			memcpy(buf1, x->containers[i] - 1, x->container_lens[i] + 1);
+			buf1[x->container_lens[i] + 1] = '\0';
+			memcpy(buf2, input_containers[input_container] - 1, container_lens[input_container] + 1);
+			buf2[container_lens[input_container] + 1] = '\0';
+			if((*(input_containers[input_container]) == '*' && *(x->containers[i]) == '*') || (ret = cmmjl_osc_match(x, buf1, buf2)) == -1){
+				*bufptr++ = '/';
+				memcpy(bufptr, input_containers[input_container], container_lens[input_container]);
+				bufptr += container_lens[input_container];
+			}else{
+				memcpy(x->buffer + x->buffer_pos, msg.address, msg.size);
+				x->buffer_pos += msg.size;
+				post("returning");
+				return;
+			}
+			input_container++;
+		}else{
+			post("copying %d, %d, %s", i, x->insertions[i], x->argv[x->insertions[i]]);
+			*bufptr++ = '/';
+			int len = strlen(x->argv[x->insertions[i]]);
+			memcpy(bufptr, x->argv[x->insertions[i]], len);
+			bufptr += len;
+		}
+	}
+	bufptr++;
+	while((bufptr - buf) % 4){
+		bufptr++;
+	}
+	int buflen = bufptr - buf;
+	int datalen = (msg.size - (msg.typetags - msg.address));
+	*(long *)(x->buffer + x->buffer_pos) = htonl(buflen + datalen);
+	x->buffer_pos += 4;
+	memcpy(x->buffer + x->buffer_pos, buf, bufptr - buf);
+	x->buffer_pos += bufptr - buf;
+	memcpy(x->buffer + x->buffer_pos, msg.typetags, datalen);
+	x->buffer_pos += datalen;
+
+	//post("buf = %s", buf);
+	/*
+	t_oinsert *x = (t_oinsert *)v;
+	int i;
+	int ret;
+	int didmatch = 0;
+	if(x->buffer_pos + msg.size > x->buffer_len){
+		realloc(x->buffer, x->buffer_len * 2);
+	}
+	char buf[1024];
+	memset(buf, '\0', 1024);
+	char *ptr = buf;
+	char *msgptr = msg.address;
+	int msglen = strlen(msg.address);
+	for(i = 0; i < x->num_parts; i++){
+		switch(x->operations[i]){
+		case OINSERT_MATCH:
+			post("%d MATCH", i);
+			msgptr++; // slash
+			*ptr++ = '/';
+			while(*msgptr != '/' && ((msgptr - msg.address) < msglen)){
+				*ptr++ = *msgptr++;
+			}
+			break;
+		case OINSERT_INSERT:
+			post("%d INSERT", i);
+			*ptr++ = '/';
+			post("%d", x->substitutions[i]);
+			//post("would strcpy %s", x->argv[x->substitutions[i]]);
+			strcpy(ptr, x->argv[x->substitutions[i]]);
+			ptr += strlen(x->argv[x->substitutions[i]]);
+			break;
+		case OINSERT_BACKREF:
+			post("%d BACKREF", i);
+			msgptr++; // slash
+			*ptr++ = '/';
+			while(*msgptr != '/' && ((msgptr - msg.address) < msglen)){
+				*ptr++ = *msgptr++;
+			}
+			break;
+		}
+	}
+	post("buf = %s", buf);
+	*/
+	/*
+	t_oinsert *x = (t_oinsert *)v;
+	int i;
+	int ret;
+	int didmatch = 0;
+	if(x->buffer_pos + msg.size > x->buffer_len){
+		realloc(x->buffer, x->buffer_len * 2);
 	}
 	int len = strlen(x->address);
 	char buf[len];
@@ -121,15 +255,17 @@ void oinsert_cbk(t_cmmjl_osc_message msg, void *v){
 	}
 
 	if((ret = cmmjl_osc_match(x, msg.address, buf)) == -1){
-		x->bufferPos += cmmjl_osc_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, x->address_out);
+		x->buffer_pos += cmmjl_osc_rename(x->buffer, x->buffer_len, x->buffer_pos, &msg, x->address_out);
 	}else{
-		*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size);
-		x->bufferPos += 4;
-		memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
-		x->bufferPos += msg.size;
+		*((long *)(x->buffer + x->buffer_pos)) = htonl(msg.size);
+		x->buffer_pos += 4;
+		memcpy(x->buffer + x->buffer_pos, msg.address, msg.size);
+		x->buffer_pos += msg.size;
 	}
+	*/
 }
 
+/*
 void oinsert_do_insert(t_oinsert *x){
 	char buf[256];
 	memset(buf, '\0', 256);
@@ -167,30 +303,43 @@ void oinsert_do_insert(t_oinsert *x){
 	}
 	strcpy(x->address_out, buf);
 }
+*/
+
+void oinsert_atom_tostring(t_atom *a, char *st){
+	switch(a->a_type){
+	case A_LONG:
+		sprintf(st, "%ld", a->a_w.w_long);
+		break;
+	case A_FLOAT:
+		sprintf(st, "%f", a->a_w.w_float);
+		break;
+	case A_SYM:
+		//post("sym: %s", a->a_w.w_sym->s_name);
+		strcpy(st, a->a_w.w_sym->s_name);
+		break;
+	}
+}
 
 void oinsert_anything(t_oinsert *x, t_symbol *msg, short argc, t_atom *argv){
 	int inlet = proxy_getinlet((t_object *)x);
 	inlet--;
 	if(msg){
-		atom_setsym(x->argv + inlet, msg);
+		strcpy(x->argv[inlet], msg->s_name);
 	}else if(argv){
-		x->argv[inlet] = *argv;
+		oinsert_atom_tostring(argv, x->argv[inlet]);
 	}
-	oinsert_do_insert(x);
 }
 
 void oinsert_float(t_oinsert *x, double f){
 	int inlet = proxy_getinlet((t_object *)x);
 	inlet--;
-	atom_setfloat(x->argv + inlet, f);
-	oinsert_do_insert(x);
+	sprintf(x->argv[inlet], "%f", f);
 }
 
 void oinsert_int(t_oinsert *x, long l){
 	int inlet = proxy_getinlet((t_object *)x);
 	inlet--;
-	atom_setlong(x->argv + inlet, l);
-	oinsert_do_insert(x);
+	sprintf(x->argv[inlet], "%ld", l);
 }
 
 void oinsert_assist(t_oinsert *x, void *b, long m, long a, char *s){
@@ -208,6 +357,7 @@ void oinsert_assist(t_oinsert *x, void *b, long m, long a, char *s){
 void oinsert_free(t_oinsert *x){
 
 }
+
 
 void *oinsert_new(t_symbol *msg, short argc, t_atom *argv){
 	if(!argc){
@@ -227,68 +377,125 @@ void *oinsert_new(t_symbol *msg, short argc, t_atom *argv){
 	int i;
 	if(x = (t_oinsert *)object_alloc(oinsert_class)){
 		cmmjl_init(x, NAME, 0);
+		x->buffer_len = ODOT_BUFFER_LEN;
+		x->buffer_pos = 0;
 		x->outlet = outlet_new(x, "FullPacket");
-		char *addressptr = address->s_name;
-		int address_len = strlen(addressptr);
-		x->address = (char *)calloc(256, sizeof(char));
-		x->address_out = (char *)calloc(256, sizeof(char));
-		x->argc = 0;
-
-		// how many substitutions will be made
-		for(i = 0; i < address_len; i++){
-			if(addressptr[i] == '$'){
-				x->argc++;
-			}
+		int i;
+		x->proxies = (void **)calloc(argc - 1, sizeof(void *));
+		x->argv = (char **)calloc(argc - 1, sizeof(char *));
+		for(i = 0; i < argc - 1; i++){
+			x->proxies[i] = proxy_new((t_object *)x, argc - i, &(x->inlet));
+			x->argv[i] = (char *)calloc(256, sizeof(char));
+			oinsert_atom_tostring(argv + i + 1, x->argv[i]);
 		}
-
-		// make an inlet for each substitution
-		x->proxy = (void **)malloc(x->argc * sizeof(void *));
-		for(i = 0; i < x->argc; i++){
-			x->proxy[i] = proxy_new((t_object *)x, x->argc - i, &(x->inlet));
-		}
-		x->argv = (t_atom *)malloc(x->argc * sizeof(t_atom));
-		x->offsets = (int *)malloc(x->argc * sizeof(int));
-		char buf[address_len];
-		char *bufptr = buf;
-		char a[16];
-		for(i = 0; i < address_len; i++){
-			if(addressptr[i] == '$'){
-				int j = 0;
-				int offset = bufptr - buf;
-				i++;
-				while(addressptr[i] != '/' && i < address_len){
-					a[j++] = addressptr[i++];
-				}
-				a[j] = '\0';
-				int varNum = atoi(a) - 1;
-				if(varNum >= x->argc){
-					error("o.insert: error parsing arguments");
-					free(x->proxy);
-					free(x->offsets);
-					return NULL;
-				}
-				x->offsets[varNum] = offset;
+		int len = strlen(address->s_name);
+		x->num_containers = cmmjl_osc_get_tree_length(len, address->s_name);
+		x->containers = (char **)calloc(x->num_containers, sizeof(char *));
+		x->container_lens = (int *)malloc(x->num_containers * sizeof(int));
+		cmmjl_osc_address_to_array(len, address->s_name, x->containers, x->container_lens);
+		x->insertions = (int *)malloc(x->num_containers * sizeof(int)); // we'll need at least this many
+		for(i = 0; i < x->num_containers; i++){
+			if(*(x->containers[i]) == '$'){
+				char var[x->container_lens[i]];
+				memcpy(var, x->containers[i] + 1, x->container_lens[i] - 1);
+				var[x->container_lens[i] - 1] = '\0';
+				x->insertions[i] = atoi(var) - 1;
 			}else{
-				*bufptr++ = addressptr[i];
-				*bufptr = '\0';
+				x->insertions[i] = -1;
 			}
 		}
 
-		for(i = 1; i < argc; i++){
-			x->argv[i - 1] = argv[i];
-		}
-		for(i = argc - 1; i < x->argc; i++){
-			t_atom arg;
-			atom_setsym(&arg, gensym(""));
-			x->argv[i] = arg;
-		}
-		strcpy(x->address, buf);
-		oinsert_do_insert(x);
-		post("%s => %s", x->address, x->address_out);
+		attr_args_process(x, argc, argv);
+		x->buffer = (char *)calloc(x->buffer_len, sizeof(char));
+		return x;
 	}
 		   	
-	return(x);
+	return NULL;
 }
+
+/*
+void *oinsert_new(t_symbol *msg, short argc, t_atom *argv){
+	if(!argc){
+		error("o.insert: you must specify an address pattern");
+		return NULL;
+	}
+	t_symbol *address = atom_getsym(argv);
+	if(!address){
+		error("o.insert: you must specify an address pattern");
+		return NULL;
+	}
+	if(address->s_name[0] != '/'){
+		error("o.insert: %s is not a valid OSC address");
+		return NULL;
+	}
+	t_oinsert *x;
+	int i;
+	if(x = (t_oinsert *)object_alloc(oinsert_class)){
+		cmmjl_init(x, NAME, 0);
+		x->outlet = outlet_new(x, "FullPacket");
+		int i;
+		x->proxies = (void **)calloc(argc - 1, sizeof(void *));
+		for(i = 0; i < argc - 1; i++){
+			x->proxies[i] = proxy_new((t_object *)x, argc - i, &(x->inlet));
+		}
+		int len = strlen(address->s_name);
+		x->num_parts = cmmjl_osc_get_tree_length(len, address->s_name);
+		x->address_parts = (char **)calloc(x->num_parts, sizeof(char *));
+		x->address_part_lens = (int *)calloc(x->num_parts, sizeof(int));
+		x->operations = (int *)calloc(x->num_parts, sizeof(int));
+		x->substitutions = (int *)calloc(x->num_parts, sizeof(int));
+		x->backrefs = (int *)calloc(argc - 1, sizeof(int));
+		cmmjl_osc_address_to_array(len, address->s_name, x->address_parts, x->address_part_lens);
+
+		for(i = 1; i < argc; i++){
+			x->backrefs[i - 1] = -1;
+			if(argv[i].a_type == A_SYM){
+				t_symbol *s = argv[i].a_w.w_sym;
+				char *schar = s->s_name;
+				int slen = strlen(schar);
+				if(slen > 1){
+
+					if(*schar == '(' && schar[1] == '$'){
+						char atoibuf[slen - 2];
+						memcpy(atoibuf, schar + 2, slen - 3);
+						atoibuf[slen - 3] = '\0';
+						x->backrefs[i - 1] = atoi(atoibuf) - 1;
+						post("backref: %d %d", i - 1, x->backrefs[i - 1]);
+					}
+				}
+			}
+		}
+
+		for(i = 0; i < x->num_parts; i++){
+			if(*(x->address_parts[i]) == '$'){
+				char atoibuf[x->address_part_lens[i]];
+				memcpy(atoibuf, x->address_parts[i] + 1, x->address_part_lens[i] - 1);
+				int sub = atoi(atoibuf) - 1;
+				x->substitutions[i] = sub;
+				int j;
+				x->operations[i] = OINSERT_INSERT;
+				for(j = 0; j < argc - 1; j++){
+					post("%d, %d %d", i, sub, x->backrefs[j]);
+					if(sub == x->backrefs[j]){
+						x->operations[i] = OINSERT_BACKREF;
+					}
+				}
+			}else{
+				x->operations[i] = OINSERT_MATCH;
+			}
+		}
+
+		x->argv = (char **)calloc(argc - 1, sizeof(char *));
+		for(i = 0; i < argc - 1; i++){
+			x->argv[i] = (char *)calloc(128, sizeof(char));
+			oinsert_atom_tostring(argv + i + 1, x->argv[i]);
+		}
+		return x;
+	}
+		   	
+	return NULL;
+}
+*/
 
 int main(void){
 	t_class *c = class_new("o.insert", (method)oinsert_new, (method)oinsert_free, sizeof(t_oinsert), 0L, A_GIMME, 0);
@@ -299,6 +506,8 @@ int main(void){
 	class_addmethod(c, (method)oinsert_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oinsert_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)oinsert_int, "int", A_LONG, 0);
+
+	CLASS_ATTR_LONG(c, "buffer_len", 0, t_oinsert, buffer_len);
     
 	class_register(CLASS_BOX, c);
 	oinsert_class = c;

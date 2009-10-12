@@ -47,6 +47,7 @@ typedef struct _osplit{
 	double min, max;
 	int (*left_test)(double, double);
 	int (*right_test)(double, double);
+	int test_all_args;
 } t_osplit;
 
 void *osplit_class;
@@ -117,47 +118,49 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 	int i, r;
 	int ret;
 	int didmatch = 0;
-	int rangematches[x->numranges];
-	memset(rangematches, '\0', x->numranges * sizeof(int));
+	int argpos = 0;
+	int num_args_to_test = 1;
+	if(x->test_all_args){
+		num_args_to_test = msg.argc;
+	}
+	t_cmmjl_osc_atom atoms[msg.argc];
+	cmmjl_osc_get_data(&msg, atoms);
+	for(i = 0; i < num_args_to_test; i++){
 
-	for(r = 0; r < x->numranges; r++){
-		int argpos = 0;
-		for(i = 0; i < msg.argc; i++){
-			switch(msg.typetags[i + 1]){
-			case 'i':
-				{
-					long l = ntohl(*((long *)(msg.argv + argpos)));
-					float val = (float)l;
-					post("%s long val = %f", msg.address, val);
-					if(val >= x->ranges[r].min && val <= x->ranges[r].max){
-						//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
-						rangematches[r]++;
-						//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
-					}
-					argpos += 4;
+		switch(msg.typetags[i + 1]){
+		case 'i':
+			{
+				long l = ntohl(*((long *)(msg.argv + argpos)));
+				float val = (float)l;
+				post("%s long val = %f", msg.address, val);
+				if(val >= x->ranges[r].min && val <= x->ranges[r].max){
+					//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
+					rangematches[r]++;
+					//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
 				}
-				break;
-			case 'f':
-				{
-					long l = ntohl(*((long *)(msg.argv + argpos)));
-					float val = *((float *)(&l));
-					//post("%s float val = %f", msg.address, val);
-					if(val >= x->ranges[r].min && val <= x->ranges[r].max){
-						//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
-						rangematches[r]++;
-						//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
-					}
-					argpos += 4;
-				}
-				break;
-			default:
-				{
-					int len = strlen(msg.argv + argpos) + 1;
-					while(len % 4){len++;}
-					argpos += len;
-				}
-				break;
+				argpos += 4;
 			}
+			break;
+		case 'f':
+			{
+				long l = ntohl(*((long *)(msg.argv + argpos)));
+				float val = *((float *)(&l));
+				//post("%s float val = %f", msg.address, val);
+				if(val >= x->ranges[r].min && val <= x->ranges[r].max){
+					//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
+					rangematches[r]++;
+					//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
+				}
+				argpos += 4;
+			}
+			break;
+		default:
+			{
+				int len = strlen(msg.argv + argpos) + 1;
+				while(len % 4){len++;}
+				argpos += len;
+			}
+			break;
 		}
 	}
 
@@ -234,7 +237,8 @@ void *osplit_new(t_symbol *msg, short argc, t_atom *argv){
 			// skip buffers since they will be allocated on the stack
 			x->ranges[i] = (t_range){atom_getfloat(argv + (i * 2)), atom_getfloat(argv + ((i * 2) + 1))};
 		}
-			x->outlets[0] = outlet_new(x, "FullPacket");
+	        x->outlets[0] = outlet_new(x, "FullPacket");
+		attr_args_process(x, argc, argv);
 	}
 		   	
 	return x;
@@ -246,6 +250,8 @@ int main(void){
 	class_addmethod(c, (method)osplit_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)osplit_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)osplit_assist, "assist", A_CANT, 0);
+
+	CLASS_ATTR_LONG(c, "test_all_args", 0, t_osplit, test_all_args);
     
 	class_register(CLASS_BOX, c);
 	osplit_class = c;

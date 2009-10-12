@@ -21,8 +21,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: o.merge
-DESCRIPTION: Merge 2 or more OSC bundles together
+NAME: o.union
+DESCRIPTION: Create a bundle with all of the elements contained in 2 or more bundles
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2009
 SVN_REVISION: $LastChangedRevision: 587 $
@@ -35,10 +35,11 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
+#include "ext_hashtab.h"
 #include "cmmjl/cmmjl.h"
 #include "cmmjl/cmmjl_osc.h"
 
-typedef struct _omerge{
+typedef struct _ounion{
 	t_object ob;
 	void *outlet;
 	void **proxies;
@@ -47,28 +48,29 @@ typedef struct _omerge{
 	char **buffers;
 	int *buffer_pos;
 	int buffer_len;
-} t_omerge;
+	t_hashtab *hashtab;
+} t_ounion;
 
-void *omerge_class;
+void *ounion_class;
 
-void omerge_fullPacket(t_omerge *x, long len, long ptr);
-void omerge_cbk(t_cmmjl_osc_message msg, void *v);
-void omerge_anything(t_omerge *x, t_symbol *msg, short argc, t_atom *argv);
-void omerge_free(t_omerge *x);
-void omerge_assist(t_omerge *x, void *b, long m, long a, char *s);
-void omerge_clear(t_omerge *x);
-void *omerge_new(t_symbol *msg, short argc, t_atom *argv);
+void ounion_fullPacket(t_ounion *x, long len, long p);
+void ounion_cbk(t_cmmjl_osc_message msg, void *v);
+void ounion_anything(t_ounion *x, t_symbol *msg, short argc, t_atom *argv);
+void ounion_free(t_ounion *x);
+void ounion_assist(t_ounion *x, void *b, long m, long a, char *s);
+void ounion_clear(t_ounion *x);
+void *ounion_new(t_symbol *msg, short argc, t_atom *argv);
 
-void omerge_fullPacket(t_omerge *x, long len, long ptr){
+void ounion_fullPacket(t_ounion *x, long len, long p){
 	int inlet = proxy_getinlet((t_object *)x);
 	if(len > x->buffer_len){
 		error("o.merge: len is greater than the maximum buffer size of %d bytes", x->buffer_len);
 		return;
 	}
 
-	memcpy(x->buffers[inlet], (char *)ptr, len);
+	memcpy(x->buffers[inlet], (char *)p, len);
 	x->buffer_pos[inlet] = len;
-	if(strncmp((char *)ptr, "#bundle\0", 8)){
+	if(strncmp((char *)p, "#bundle\0", 8)){
 		x->buffer_pos[inlet] = cmmjl_osc_bundle_naked_message(len, x->buffers[inlet], x->buffers[inlet]);
 		if(x->buffer_pos[inlet] < 0){
 			error("problem bundling naked message");
@@ -85,17 +87,31 @@ void omerge_fullPacket(t_omerge *x, long len, long ptr){
 	}
 
 	char buf[x->num_inlets * x->buffer_len];
-	int bufpos = 0;
-	if(x->buffer_pos[0] > 0){
-		memcpy(buf, x->buffers[0], x->buffer_pos[0]);
-		bufpos += x->buffer_pos[0];
-	}
+	memcpy(buf, (char *)p, 16);
+	int bufpos = 16;
 	int i;
-	for(i = 1; i < x->num_inlets; i++){
-		if(x->buffer_pos[i] > 0){
-			memcpy(buf + bufpos, x->buffers[i] + 16, x->buffer_pos[i] - 16);
-			bufpos += x->buffer_pos[i] - 16;
+	hashtab_clear(x->hashtab);
+	for(i = x->num_inlets - 1; i >= 0; i--){
+		if(x->buffer_pos[i] == 0){
+			continue;
 		}
+		char *ptr = x->buffers[i];
+		ptr += 16;
+		while((ptr - x->buffers[i]) <  x->buffer_pos[i]){
+			int size = ntohl(*((long *)ptr));
+			hashtab_store(x->hashtab, gensym(ptr + 4), (t_object *)ptr);
+			ptr += (size + 4);
+		}
+	}
+	long kc;
+	t_symbol **k;
+	hashtab_getkeys(x->hashtab, &kc, &k);
+	for(i = 0; i < kc; i++){
+		char *ptr;
+		hashtab_lookup(x->hashtab, k[i], (t_object **)(&ptr));
+		int size = ntohl(*((long *)ptr)) + 4;
+		memcpy(buf + bufpos, ptr, size);
+		bufpos += size;
 	}
 	t_atom out[2];
 	atom_setlong(&(out[0]), bufpos);
@@ -103,10 +119,10 @@ void omerge_fullPacket(t_omerge *x, long len, long ptr){
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
-void omerge_anything(t_omerge *x, t_symbol *msg, short argc, t_atom *argv){
+void ounion_anything(t_ounion *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
-void omerge_assist(t_omerge *x, void *b, long m, long a, char *s){
+void ounion_assist(t_ounion *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"Probability distribution and arguments");
 	else {
@@ -118,7 +134,7 @@ void omerge_assist(t_omerge *x, void *b, long m, long a, char *s){
 	}
 }
 
-void omerge_clear(t_omerge *x){
+void ounion_clear(t_ounion *x){
 	int inlet = proxy_getinlet((t_object *)x);
 	if(inlet == 0){
 		int i;
@@ -132,13 +148,25 @@ void omerge_clear(t_omerge *x){
 	}
 }
 
-void omerge_free(t_omerge *x){
+void ounion_free(t_ounion *x){
+	int i;
+	for(i = 0; i < x->num_inlets - 1; i++){
+		object_free(x->proxies[i]);
+	}
+	for(i = 0; i < x->num_inlets; i++){
+		if(x->buffers[i]){
+			free(x->buffers[i]);
+		}
+	}
+	free(x->buffers);
+	free(x->buffer_pos);
+	object_free(x->hashtab);
 }
 
-void *omerge_new(t_symbol *msg, short argc, t_atom *argv){
-	t_omerge *x;
+void *ounion_new(t_symbol *msg, short argc, t_atom *argv){
+	t_ounion *x;
 	int i;
-	if(x = (t_omerge *)object_alloc(omerge_class)){
+	if(x = (t_ounion *)object_alloc(ounion_class)){
 		cmmjl_init(x, NAME, 0);
 		x->outlet = outlet_new(x, "FullPacket");
 		x->num_inlets = 2;
@@ -159,24 +187,26 @@ void *omerge_new(t_symbol *msg, short argc, t_atom *argv){
 		for(i = 0; i < x->num_inlets; i++){
 			x->buffers[i] = (char *)calloc(x->buffer_len, sizeof(char));
 		}
+		x->hashtab = hashtab_new(1021); // prime number--we don't want a rehash...
+		hashtab_flags(x->hashtab, OBJ_FLAG_DATA);
 	}
 		   	
 	return(x);
 }
 
 int main(void){
-	t_class *c = class_new("o.merge", (method)omerge_new, (method)omerge_free, sizeof(t_omerge), 0L, A_GIMME, 0);
+	t_class *c = class_new("o.union", (method)ounion_new, (method)ounion_free, sizeof(t_ounion), 0L, A_GIMME, 0);
     
-	class_addmethod(c, (method)omerge_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
-	//class_addmethod(c, (method)omerge_notify, "notify", A_CANT, 0);
-	class_addmethod(c, (method)omerge_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)omerge_clear, "clear", 0);
+	class_addmethod(c, (method)ounion_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	//class_addmethod(c, (method)ounion_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)ounion_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)ounion_clear, "clear", 0);
     
-	CLASS_ATTR_LONG(c, "num_inlets", 0, t_omerge, num_inlets);
-	CLASS_ATTR_LONG(c, "buffer_len", 0, t_omerge, buffer_len);
+	CLASS_ATTR_LONG(c, "num_inlets", 0, t_ounion, num_inlets);
+	CLASS_ATTR_LONG(c, "buffer_len", 0, t_ounion, buffer_len);
 
 	class_register(CLASS_BOX, c);
-	omerge_class = c;
+	ounion_class = c;
 
 	common_symbols_init();
 	return 0;

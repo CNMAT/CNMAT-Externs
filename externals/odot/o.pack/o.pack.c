@@ -145,6 +145,10 @@ void opack_float(t_opack *x, double f){
 	opack_anything(x, NULL, 1, &a);
 }
 
+void opack_bang(t_opack *x){
+	opack_anything(x, NULL, 0, NULL);
+}
+
 void opack_assist(t_opack *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"Probability distribution and arguments");
@@ -264,7 +268,8 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 									x->args[j][k] = a;
 									x->bufsize += 32;
 									break;
-								case 'b':
+								case 'I':
+									x->typetags[j][k] = 'I';
 									break;
 								default:
 									x->typetags[j][k] = 's';
@@ -314,6 +319,7 @@ int main(void){
 	class_addmethod(c, (method)opack_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)opack_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)opack_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)opack_bang, "bang", 0);
 
     
 	class_register(CLASS_BOX, c);

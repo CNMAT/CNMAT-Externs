@@ -121,7 +121,8 @@ void oroute_doFullPacket(t_oroute *x, long len, long ptr, int shouldOutputBundle
 			//atom_setsym(&(out_atoms[0]), gensym(x->matched[i].address));
 			if(x->matched_outlets[i] == j){
 				t_atom out_atoms[x->matched[i].argc];
-				cmmjl_osc_args2atoms(x->matched[i].typetags, x->matched[i].argv, out_atoms);
+				//cmmjl_osc_args2atoms(x->matched[i].typetags, x->matched[i].argv, out_atoms);
+				cmmjl_osc_get_data_atoms(x->matched + i, out_atoms);
 
 				t_symbol *sym = _sym_list;
 				if(x->numCharsMatched[i] > 0){
@@ -166,7 +167,14 @@ void oroute_foo(t_cmmjl_osc_message msg, void *v){
 	int ret;
 	int didmatch = 0;
 	for(i = 0; i < x->numArgs; i++){
-		if((ret = cmmjl_osc_match(x, msg.address, x->args[i]->s_name)) != 0 || !strcmp(msg.address, x->args[i]->s_name)){
+		char *arg = x->args[i]->s_name;
+		int l1 = strlen(msg.address);
+		int l2 = strlen(arg);
+		ret = cmmjl_osc_match(x, msg.address, arg);
+		if(ret != 0){
+			if(((ret < l1 && ret < l2) || (ret == l1 && ret < l2)) && ret != -1){
+				continue;
+			}
 			x->matched_outlets[x->numMatched] = i;	
 			x->numCharsMatched[x->numMatched] = ret;
 			x->matched[x->numMatched++] = msg;
