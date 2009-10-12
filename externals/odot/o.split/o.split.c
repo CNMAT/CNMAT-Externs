@@ -121,7 +121,7 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 			matched++;
 		}
 	}
-	if(!matched){
+	if(!matched && x->num_addresses > 0){
 		return;
 	}
 	t_cmmjl_osc_atom a[msg.argc];
@@ -141,18 +141,22 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 }
 
 int osplit_gt(double f1, double f2){
+	post("%f > %f = %d", f1, f2, f1 > f2);
 	return f1 > f2;
 }
 
 int osplit_gte(double f1, double f2){
+	post("%f >= %f = %d", f1, f2, f1 >= f2);
 	return f1 >= f2;
 }
 
 int osplit_lt(double f1, double f2){
+	post("%f < %f = %d", f1, f2, f1 < f2);
 	return f1 < f2;
 }
 
 int osplit_lte(double f1, double f2){
+	post("%f <= %f = %d", f1, f2, f1 <= f2);
 	return f1 <= f2;
 }
 
