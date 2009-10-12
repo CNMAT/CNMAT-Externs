@@ -40,14 +40,19 @@ VERSION 0.0: First try
 
 typedef struct _osplit{
 	t_object ob;
-	void **outlets;
-	char **buffers;
-	int *buffer_len;
-	int *buffer_pos;
+	void *outlets[2];
+	void *proxies[3];
+	long inlet;
+	char *buffer;
+	int buffer_len;
+	int buffer_pos;
 	double min, max;
 	int (*left_test)(double, double);
 	int (*right_test)(double, double);
+	int failure;
 	int test_all_args;
+	char **addresses;
+	int num_addresses;
 } t_osplit;
 
 void *osplit_class;
@@ -59,42 +64,41 @@ int osplit_gte(double f1, double f2);
 int osplit_lt(double f1, double f2);
 int osplit_lte(double f1, double f2);
 void osplit_anything(t_osplit *x, t_symbol *msg, short argc, t_atom *argv);
+void osplit_int(t_osplit *x, long l);
+void osplit_float(t_osplit *x, double f);
 void osplit_free(t_osplit *x);
 void osplit_assist(t_osplit *x, void *b, long m, long a, char *s);
 void *osplit_new(t_symbol *msg, short argc, t_atom *argv);
 
 void osplit_fullPacket(t_osplit *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
-	char cpy[len];
-	memcpy(cpy, (char *)ptr, len);
-	char buffers[x->numranges + 1][len * 2];
-	int i;
-	for(i = 0; i < x->numranges + 1; i++){
-		memset(buffers[i], '\0', len * 2);
-		x->buffers[i] = buffers[i];
-		x->buffer_len[i] = len * 2;
-		x->buffer_pos[i] = 0;
-	}
+	memcpy(x->buffer, (char *)ptr, len);
+	x->buffer_pos = len;
+	x->failure = 0;
 
 	int nn = len;
 	// if the OSC packet contains a single message, turn it into a bundle
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
+	if(strncmp(x->buffer, "#bundle\0", 8)){
+		nn = cmmjl_osc_bundle_naked_message(len, x->buffer, x->buffer);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, cpy, cpy);
-
-	for(i = 0; i < x->numranges + 1; i++){
-		memcpy(buffers[i], cpy, 16);
-		x->buffer_pos[i] = 16;
-	}
+	nn = cmmjl_osc_flatten(nn, x->buffer, x->buffer);
 
 	// extract the messages from the bundle
-	cmmjl_osc_extract_messages(nn, cpy, true, osplit_cbk, (void *)x);
+	cmmjl_osc_extract_messages(nn, x->buffer, true, osplit_cbk, (void *)x);
+
+	t_atom out[2];
+	atom_setlong(out, x->buffer_pos);
+	atom_setlong(out + 1, (long)x->buffer);
+	if(x->failure){
+		outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
+	}else{
+		outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
+	}
 
 	/*
 	int i; 
@@ -104,76 +108,35 @@ void osplit_fullPacket(t_osplit *x, long len, long ptr){
 	}
 	*/
 
-	for(i = x->numranges; i >= 0; i--){
-		t_atom out[2];
-		atom_setlong(&(out[0]), x->buffer_pos[i]);
-		atom_setlong(&(out[1]), (long)buffers[i]);
-		outlet_anything(x->outlets[i], ps_FullPacket, 2, out);
-	}
-
 }
 
 void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 	t_osplit *x = (t_osplit *)v;
-	int i, r;
-	int ret;
-	int didmatch = 0;
-	int argpos = 0;
-	int num_args_to_test = 1;
+	int i;
+	int matched = 0;
+	for(i = 0; i < x->num_addresses; i++){
+		int ret = cmmjl_osc_match(x, msg.address, x->addresses[i]);
+		post("%s %s %d", msg.address, x->addresses[i], ret);
+		if(ret == -1){
+			matched++;
+		}
+	}
+	if(!matched){
+		return;
+	}
+	t_cmmjl_osc_atom a[msg.argc];
+	cmmjl_osc_get_data(&msg, a);
+	int n = 1;
 	if(x->test_all_args){
-		num_args_to_test = msg.argc;
+		n = msg.argc;
 	}
-	t_cmmjl_osc_atom atoms[msg.argc];
-	cmmjl_osc_get_data(&msg, atoms);
-	for(i = 0; i < num_args_to_test; i++){
-
-		switch(msg.typetags[i + 1]){
-		case 'i':
-			{
-				long l = ntohl(*((long *)(msg.argv + argpos)));
-				float val = (float)l;
-				post("%s long val = %f", msg.address, val);
-				if(val >= x->ranges[r].min && val <= x->ranges[r].max){
-					//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
-					rangematches[r]++;
-					//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
-				}
-				argpos += 4;
-			}
-			break;
-		case 'f':
-			{
-				long l = ntohl(*((long *)(msg.argv + argpos)));
-				float val = *((float *)(&l));
-				//post("%s float val = %f", msg.address, val);
-				if(val >= x->ranges[r].min && val <= x->ranges[r].max){
-					//post("%s: %f <= %f <= %f", msg.address, x->ranges[r].min, val, x->ranges[r].max);
-					rangematches[r]++;
-					//x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
-				}
-				argpos += 4;
-			}
-			break;
-		default:
-			{
-				int len = strlen(msg.argv + argpos) + 1;
-				while(len % 4){len++;}
-				argpos += len;
-			}
-			break;
+	for(i = 0; i < n; i++){
+		if(!(x->left_test(cmmjl_osc_atom_getdouble(a + i), x->min))){
+			x->failure++;
 		}
-	}
-
-	for(r = 0; r < x->numranges; r++){
-		//post("%d %d", rangematches[r], msg.argc);
-		if(rangematches[r] == msg.argc){
-			didmatch++;
-			x->buffer_pos[r] += cmmjl_osc_add_to_bundle(x->buffer_len[r], x->buffers[r] + x->buffer_pos[r], &msg);
+		if(!(x->right_test(cmmjl_osc_atom_getdouble(a + i), x->max))){
+			x->failure++;
 		}
-	}
-
-	if(didmatch == 0){
-		x->buffer_pos[x->numranges] += cmmjl_osc_add_to_bundle(x->buffer_len[x->numranges], x->buffers[x->numranges] + x->buffer_pos[x->numranges], &msg);
 	}
 }
 
@@ -194,6 +157,44 @@ int osplit_lte(double f1, double f2){
 }
 
 void osplit_anything(t_osplit *x, t_symbol *msg, short argc, t_atom *argv){
+	long inlet = proxy_getinlet((t_object *)x);
+	if(msg){
+		if(inlet == 1){
+			if(*(msg->s_name) == '('){
+				x->left_test = osplit_gt;
+			}else if(*(msg->s_name) == '['){
+				x->left_test = osplit_gte;
+			}
+		}else if(inlet == 2){
+			if(*(msg->s_name) == ')'){
+				x->right_test = osplit_lt;
+			}else if(*(msg->s_name) == ']'){
+				x->right_test = osplit_lte;
+			}
+		}
+	}
+}
+
+void osplit_int(t_osplit *x, long l){
+	switch(proxy_getinlet((t_object *)x)){
+	case 1:
+		x->min = (double)l;
+		break;
+	case 2:
+		x->max = (double)l;
+		break;
+	}
+}
+
+void osplit_float(t_osplit *x, double f){
+	switch(proxy_getinlet((t_object *)x)){
+	case 1:
+		x->min = f;
+		break;
+	case 2:
+		x->max = f;
+		break;
+	}
 }
 
 void osplit_assist(t_osplit *x, void *b, long m, long a, char *s){
@@ -213,31 +214,108 @@ void osplit_free(t_osplit *x){
 }
 
 void *osplit_new(t_symbol *msg, short argc, t_atom *argv){
-	if(argc % 2 != 0){
-		error("o.rename: multiple of 2 arguments required");
-		return NULL;
-	}
 	t_osplit *x;
 	int i;
 	if(x = (t_osplit *)object_alloc(osplit_class)){
 		cmmjl_init(x, NAME, 0);
-		if(argc % 2){
-			error("o.split: multiple of 2 arguments required.");
-			return NULL;
-		}
-		x->numranges = argc / 2;
-		x->outlets = (void **)calloc(x->numranges + 1, sizeof(void *));
-		x->buffers = (char **)calloc(x->numranges + 1, sizeof(char *));
-		x->buffer_len = (int *)calloc(x->numranges + 1, sizeof(int *));
-		x->buffer_pos = (int *)calloc(x->numranges + 1, sizeof(int *));
-		x->ranges = (t_range *)calloc(x->numranges, sizeof(int *));
 
-		for(i = 0; i < x->numranges; i++){
-			x->outlets[x->numranges - i] = outlet_new(x, "FullPacket");
-			// skip buffers since they will be allocated on the stack
-			x->ranges[i] = (t_range){atom_getfloat(argv + (i * 2)), atom_getfloat(argv + ((i * 2) + 1))};
-		}
+	        x->outlets[1] = outlet_new(x, "FullPacket");
 	        x->outlets[0] = outlet_new(x, "FullPacket");
+		x->proxies[1] = proxy_new((t_object *)x, 2, &(x->inlet));
+		x->proxies[0] = proxy_new((t_object *)x, 1, &(x->inlet));
+
+		x->buffer = (char *)calloc(4096, sizeof(char));
+		x->buffer_len = 4096;
+		x->buffer_pos = 0;
+
+		x->num_addresses = 0;
+		x->addresses = (char **)calloc(argc, sizeof(char *));
+		for(i = 0; i < argc; i++){
+			x->addresses[i] = (char *)calloc(128, sizeof(char *));
+		}
+
+		int argoffset = 0;
+		while(atom_gettype(argv + x->num_addresses) == A_SYM){
+			t_symbol *s = atom_getsym(argv + x->num_addresses);
+			if(*(s->s_name) == '/'){
+				strcpy(x->addresses[x->num_addresses], s->s_name);
+				x->num_addresses++;
+			}else{
+				break;
+			}
+		}
+		post("%d addresses", x->num_addresses);
+		for(i = 0; i < x->num_addresses; i++){
+			post("%d: %s", i, x->addresses[i]);
+		}
+
+		x->failure = 0;
+
+		x->min = 0.;
+		x->max = 1.;
+		x->left_test = osplit_gte;
+		x->right_test = osplit_lte;
+
+		switch(argc - x->num_addresses){
+		case 0:
+			break;
+		case 1:
+			if(atom_gettype(argv) == A_SYM){
+				error("o.split: error parsing arguments");
+				return NULL;
+			}
+			x->max = atom_getfloat(argv + x->num_addresses);
+			break;
+		case 2:
+			if(atom_gettype(argv + x->num_addresses) == A_SYM || atom_gettype(argv + x->num_addresses + 1) == A_SYM){
+				error("o.split: error parsing arguments");
+				return NULL;
+			}
+			x->min = atom_getfloat(argv + x->num_addresses);
+			x->max = atom_getfloat(argv + x->num_addresses + 1);
+			break;
+		case 3:
+			error("o.split: error parsing arguments");
+			return NULL;
+			break;
+		case 4:
+			if(atom_gettype(argv + x->num_addresses) != A_SYM || atom_gettype(argv + x->num_addresses + 1) == A_SYM || atom_gettype(argv + x->num_addresses + 2) == A_SYM || atom_gettype(argv + x->num_addresses + 3) != A_SYM){
+				error("o.split: error parsing arguments");
+				return NULL;
+			}
+			{
+				// arg 1
+				t_symbol *sym = atom_getsym(argv + x->num_addresses);
+				if(*(sym->s_name) == '('){
+					x->left_test = osplit_gt;
+				}else if(*(sym->s_name) == '['){
+					x->left_test = osplit_gte;
+				}else{
+					error("o.split: unrecognized 1st argument: %s", sym->s_name);
+					return NULL;
+				}
+
+				// arg 4
+				sym = atom_getsym(argv + x->num_addresses + 3);
+				if(*(sym->s_name) == ')'){
+					x->right_test = osplit_lt;
+				}else if(*(sym->s_name) == ']'){
+					x->right_test = osplit_lte;
+				}else{
+					error("o.split: unrecognized 4th argument: %s", sym->s_name);
+					return NULL;
+				}
+
+				// arg 2
+				x->min = atom_getfloat(argv + x->num_addresses + 1);
+				// arg 3
+				x->max = atom_getfloat(argv + x->num_addresses + 2);
+			}
+			break;
+		default:
+
+			break;
+		}
 		attr_args_process(x, argc, argv);
 	}
 		   	
@@ -250,6 +328,9 @@ int main(void){
 	class_addmethod(c, (method)osplit_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)osplit_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)osplit_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)osplit_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)osplit_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)osplit_float, "float", A_FLOAT, 0);
 
 	CLASS_ATTR_LONG(c, "test_all_args", 0, t_osplit, test_all_args);
     
