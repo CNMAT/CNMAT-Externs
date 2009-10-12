@@ -382,27 +382,35 @@ void *oinsert_new(t_symbol *msg, short argc, t_atom *argv){
 		x->outlet = outlet_new(x, "FullPacket");
 		int i;
 		x->proxies = (void **)calloc(argc - 1, sizeof(void *));
-		x->argv = (char **)calloc(argc - 1, sizeof(char *));
-		for(i = 0; i < argc - 1; i++){
-			x->proxies[i] = proxy_new((t_object *)x, argc - i, &(x->inlet));
-			x->argv[i] = (char *)calloc(256, sizeof(char));
-			oinsert_atom_tostring(argv + i + 1, x->argv[i]);
-		}
+
 		int len = strlen(address->s_name);
 		x->num_containers = cmmjl_osc_get_tree_length(len, address->s_name);
 		x->containers = (char **)calloc(x->num_containers, sizeof(char *));
 		x->container_lens = (int *)malloc(x->num_containers * sizeof(int));
 		cmmjl_osc_address_to_array(len, address->s_name, x->containers, x->container_lens);
 		x->insertions = (int *)malloc(x->num_containers * sizeof(int)); // we'll need at least this many
+		int num_insertions = 0;
 		for(i = 0; i < x->num_containers; i++){
 			if(*(x->containers[i]) == '$'){
 				char var[x->container_lens[i]];
 				memcpy(var, x->containers[i] + 1, x->container_lens[i] - 1);
 				var[x->container_lens[i] - 1] = '\0';
 				x->insertions[i] = atoi(var) - 1;
+				num_insertions++;
 			}else{
 				x->insertions[i] = -1;
 			}
+		}
+
+		x->argv = (char **)calloc(num_insertions, sizeof(char *));
+		for(i = 0; i < num_insertions; i++){
+			x->argv[i] = (char *)calloc(256, sizeof(char));
+			if((i + 1) < argc){
+				oinsert_atom_tostring(argv + i + 1, x->argv[i]);
+			}else{
+				memset(x->argv[i], '\0', 256);
+			}
+			x->proxies[i] = proxy_new((t_object *)x, argc - i, &(x->inlet));
 		}
 
 		attr_args_process(x, argc, argv);
