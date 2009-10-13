@@ -85,13 +85,16 @@ History:
 #include <assert.h> 
 #include "ext.h"
 #include "ext_common.h"
+#include "ext_obex.h"
+#include "ext_obex_util.h"
+
 
 #include "Wacom.h"
 #include "WacomHelperFuncs.h"
 #include "TAEHelpers.h"
 #include "ext_strings.h"
 
-#define VERSION "wacom object v4.0 for os X"
+#define VERSION "wacom object v4.1§ for os X"
 #define RES_ID 23000
 #define PI 3.1415
 #define kIntuos2TabletID 0x0c
@@ -217,7 +220,7 @@ pascal OSStatus HandleTabletProximity(EventHandlerCallRef inCallRef, EventRef in
 void CheckDriver(t_wacom *x);
 Atom UpdateSpecificPointerType(UInt16 vendorPointerType, UInt16 tabletType);
 
-void main(void)
+int main(void)
 {
 	setup((t_messlist **)&wacom_class, (method)wacom_new, (method)wacom_free, (short)sizeof(t_wacom),  0L, A_GIMME, 0);
 	addbang((method)wacom_bang);
@@ -241,8 +244,9 @@ void main(void)
 //	post(" Copyright (c) 1999.  The Regents of the University of California (Regents).",0);
 //    post(" All Rights Reserved.",0);
 
-
+	return 0;
 }
+
 
 void wacom_bang(t_wacom *x) // output wacom data when bang
 {
@@ -298,7 +302,7 @@ void wacom_getinfo(t_wacom *x)
 	if (x->w_systemTabletID <= 0)
 		for(i=0;i<x->w_nbTablets;i++) {
 
-			post("Tablet %i name: %s",i+1,x->w_tablet[i].t_name.a_w.w_sym->s_name);
+			object_post((t_object*)x,"Tablet %i name: %s",i+1,x->w_tablet[i].t_name.a_w.w_sym->s_name);
 			post("X dimension: %i",x->w_tablet[i].t_XDimension);
 			post("Y dimension: %i",x->w_tablet[i].t_YDimension);
 			post("Resolution: %i",x->w_tablet[i].t_resolution);
