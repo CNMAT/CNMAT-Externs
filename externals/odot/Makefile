@@ -1,5 +1,5 @@
 OBJDIR = $(CURDIR)/build
-OBJECTS = o.compliment o.delay o.explode o.insert o.intersection o.list-accum o.apply o.merge o.message o.op o.pack o.packet o.pak o.prepend o.rename o.route o.split o.test o.timetag o.union
+OBJECTS = o.compliment o.delay o.explode o.filter o.insert o.intersection o.list-accum o.apply o.merge o.message o.op o.pack o.packet o.pak o.prepend o.rename o.route o.split o.test o.timetag o.union
 ODOT_BUFFER_LEN = 4096
 
 all: $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxo) $(OBJDIR)/patches
