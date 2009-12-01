@@ -53,6 +53,7 @@ VERSION 1.14: Improved error checking for bad input lists
 VERSION 1.15: Fixed symbol corruption memory management bug related to "set" message.
 VERSION 1.16: Fixed possible bug when freeing the object
 VERSION 1.17: Changed outlet declaration to accomodate Jitter
+VERSION 1.17.1: Increased the size of the substrings
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -394,7 +395,7 @@ Boolean MyPatternMatch (const char *pattern, const char *test) {
 
 
 #define MAX_PREFIX_LEVELS 20  // e.g., "/a/b/c/d/e/f/ ... /t"
-#define MAX_PREFIX_PART_LENGTH 50
+#define MAX_PREFIX_PART_LENGTH 100
 void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	char *pattern, *nextSlash, *str;
 	int i,j,k;
