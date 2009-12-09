@@ -7,14 +7,26 @@ Helsinki University of Technology
 and 
 Unversity of California at Berkeley
 
-See copyright in file with name COPYRIGHT  */
+See copyright in file with name COPYRIGHT  
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: cnmatrix~
+DESCRIPTION: just like matrix~, but takes jitter matricies
+AUTHORS: Ville Pulkki, John MacCallum
+COPYRIGHT_YEARS: 1999, 2009
+SVN_REVISION: $LastChangedRevision$
+VERSION 1.0: Original code with the jitter matrix addition
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
 
 
+#include "version.h"
 #include "ext.h"
+#include "version.c"
 #include "z_dsp.h"
 #include <math.h>
+#include "jit.common.h"
 
-#define RES_ID	7050
 #define FAST	1
 #define SMOOTH  0
 #define DEF_UPD_INTERVAL 6400
@@ -44,6 +56,7 @@ void matrix_dsp(t_matrix *x, t_signal **sp, short *connect);
 void matrix_fast(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
 void matrix_smooth(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
 void matrix_list(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
+void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv);
 void *matrix_new(t_symbol *s, short argc, t_atom *argv);
 void matrix_free(t_matrix *x);
 
@@ -58,9 +71,10 @@ void main(void) {
 	addmess((method)matrix_fast, "fast", A_GIMME, 0);
 	addmess((method)matrix_smooth, "smooth", A_GIMME, 0);
 	addmess((method)matrix_list, "list", A_GIMME, 0);
+	addmess((method)jit_matrix, "jit_matrix", A_GIMME, 0);
 	dsp_initclass();
 
-	rescopy('STR#', RES_ID);
+	version(0);
 }
 
 t_int *matrix_perform_fast(t_int *wAsT_int) {
@@ -224,11 +238,121 @@ void matrix_smooth(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
 		else if (argv[0].a_type == A_FLOAT) x->numInlets = (int)argv[0].a_w.w_float;
 }
 
-void matrix_list(t_matrix *x, t_symbol *s, short argc, t_atom *argv) 
-{
+void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
+	void *matrix;
+	long err,dimcount,dim[JIT_MATRIX_MAX_DIMCOUNT];
+	long i, j, n;
+	long rowstride, colstride;
+	long in_savelock;
+	t_jit_matrix_info in_minfo;
+	char *in_bp;
+	char *ip;
+	t_atom a_coord[1024];
+	t_float *coeffptr,*oldcoeffptr;
+
+	if(x->version == FAST){
+		coeffptr= x->coeffLists + x->m_obj.z_in*x->numOutlets;
+		oldcoeffptr= x->oldcoeffLists + x->m_obj.z_in*x->numOutlets;
+		for(i=0;i<x->numOutlets;i++){
+			*oldcoeffptr++ = *coeffptr++;
+		}
+	}
+
+	coeffptr = x->coeffLists;
+	
+	if (argc&&argv) {
+		//find matrix
+		matrix = jit_object_findregistered(jit_atom_getsym(argv));
+		if (matrix && jit_object_method(matrix, _jit_sym_class_jit_matrix)) {
+			//calculate
+			in_savelock = (long) jit_object_method(matrix, _jit_sym_lock, 1);
+			jit_object_method(matrix, _jit_sym_getinfo, &in_minfo);
+			jit_object_method(matrix, _jit_sym_getdata, &in_bp);
+			
+			if (!in_bp) { 
+				jit_error_sym(x, _jit_sym_err_calculate);
+				jit_object_method(matrix, _jit_sym_lock, in_savelock);
+				return;
+			}
+			
+			//get dimensions/planecount 
+			dimcount = in_minfo.dimcount;
+			for (i=0;i<dimcount;i++) {
+				dim[i] = in_minfo.dim[i];
+			}		
+			
+			//calculate
+			n = dim[0];
+			rowstride = in_minfo.dimstride[1];
+			colstride = in_minfo.dimstride[0];
+			if (in_minfo.type==_jit_sym_char) {
+				for (j=0;j<dim[1];j++) {
+					ip = in_bp + j * in_minfo.dimstride[0];	
+					jit_atom_setlong(&(a_coord[0]),j);	
+					for (i=0;i<dim[0];i++){
+						jit_atom_setlong(&(a_coord[1]),i);
+						jit_atom_setlong(&(a_coord[2+i]), *((uchar *)ip));
+
+						post("%d %d %d", i, j, *((uchar *)ip));
+						ip += rowstride;
+					}
+					matrix_list(x, NULL, dim[i], a_coord);
+				}
+			} else if (in_minfo.type==_jit_sym_long) {
+				for (j=0;j<dim[0];j++) {
+					ip = in_bp + j * in_minfo.dimstride[0];	
+					jit_atom_setlong(&(a_coord[0]),j);	
+					for (i=0;i<dim[1];i++){
+						jit_atom_setlong(&(a_coord[1]),i);
+						jit_atom_setlong(&(a_coord[2+i]), *((long *)ip));
+						post("%d %d %d", i, j, *((long *)ip));
+						matrix_list(x, NULL, 3, a_coord);
+						ip += rowstride;
+					}
+					matrix_list(x, NULL, dim[i], a_coord);
+				}
+			} else if (in_minfo.type==_jit_sym_float32) {
+				for (j=0;j<dim[0];j++) {
+					ip = in_bp + j * in_minfo.dimstride[0];	
+					//jit_atom_setlong(&(a_coord[0]),j);	
+					for (i=0;i<dim[1];i++){
+						//jit_atom_setlong(&(a_coord[1]),i);
+						jit_atom_setfloat(&(a_coord[i]), *((float *)ip));
+						post("i = %d, j = %d, %f", i, j, *((float *)ip));
+						ip += rowstride;
+					}
+					x->m_obj.z_in = j;
+					matrix_list(x, NULL, dim[1], a_coord);
+				}
+			} else if (in_minfo.type==_jit_sym_float64) {
+				for (j=0;j<dim[0];j++) {
+					ip = in_bp + j * in_minfo.dimstride[0];	
+					jit_atom_setlong(&(a_coord[0]),j);	
+					for (i=0;i<dim[1];i++){
+						jit_atom_setlong(&(a_coord[1]),i);
+						jit_atom_setfloat(&(a_coord[2+i]), *((double *)ip));
+						post("%d %d %f", i, j, *((double *)ip));
+						matrix_list(x, NULL, 3, a_coord);
+						ip += rowstride;
+					}
+					matrix_list(x, NULL, dim[i], a_coord);
+				}
+			}
+			jit_object_method(matrix,_jit_sym_lock,in_savelock);
+		} else {
+
+		}
+	}
+}
+
+void matrix_list(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
 	int i;
 	t_float *coeffptr,*oldcoeffptr;
-	
+
+	for(i = 0; i < argc; i++){
+		post("%d %f", i, argv[i].a_w.w_float);
+	}
+
 	if(argc != x->numOutlets){
 		post("matrix~: Wrong number of panning coefficients! Should be %d.",x->numOutlets);
 	} else {
