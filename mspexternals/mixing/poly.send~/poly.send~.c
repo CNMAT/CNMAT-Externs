@@ -92,7 +92,7 @@ t_int *psend_perform(t_int *w){
 				}
 			}
 		}
-		x->should_memset_name = 0;
+		x->should_memset_name->s_thing = (void *)0;
 	}
 	t_float *ptr = (t_float *)(x->mangled_name->s_thing);
 	for(i = 0; i < x->blksize; i++){
