@@ -94,9 +94,9 @@ void pbus_mangle(t_pbus *x){
 	for(i = 0; i < x->num_channels; i++){
 		sprintf(buf, "%s_%d", x->name->s_name, i + 1);
 		x->mangled_names[i] = gensym(buf);
-		sprintf(buf, "%s_memset", x->name->s_name);
-		x->should_memset_name = gensym(buf);
 	}
+	sprintf(buf, "%s_memset", x->name->s_name);
+	x->should_memset_name = gensym(buf);
 }
 
 void pbus_free(t_pbus *x){
