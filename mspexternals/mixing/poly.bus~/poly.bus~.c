@@ -34,13 +34,12 @@ VERSION 0.0: First try
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "ext_hashtab.h"
 #include "z_dsp.h"
 #include "version.c"
 
 typedef struct _pbus{
 	t_pxobject ob;
-	t_symbol *name, **mangled_names, *should_memset_name;
+	t_symbol *name, **mangled_names;
 	long num_channels;
 	t_float **sv;
 	long blksize;
@@ -57,13 +56,18 @@ void pbus_assist(t_pbus *x, void *b, long m, long a, char *s);
 void *pbus_new(t_symbol *sym, int argc, t_atom *argv);
 
 void pbus_dsp(t_pbus *x, t_signal **sp, short *count){
-	t_hashtab *ht = (t_hashtab *)(x->name->s_thing);
 	int i;
 	for(i = 0; i < x->num_channels; i++){
 		x->sv[i] = sp[i + 1]->s_vec;
-		memset(x->mangled_names[i]->s_thing, '\0', sizeof(t_float) * x->blksize);
-		x->mangled_names[i]->s_thing = (void *)(x->sv[i]);
-		hashtab_store(ht, x->mangled_names[i], (t_object *)(x->sv[i]));
+		if(x->blksize != sp[0]->s_n){
+			void *ptr = realloc(x->mangled_names[i]->s_thing, sp[0]->s_n * sizeof(t_float));
+			if(ptr){
+				x->mangled_names[i]->s_thing = ptr;
+			}else{
+				object_error((t_object *)x, "out of memory!");
+			}
+		}
+		memset(x->mangled_names[i]->s_thing, '\0', sizeof(t_float) * sp[0]->s_n);
 	}
 	x->blksize = sp[0]->s_n;
 	x->samplerate = sp[0]->s_sr;
@@ -76,12 +80,9 @@ t_int *pbus_perform(t_int *w){
 	for(i = 0; i < x->num_channels; i++){
 		if(x->mangled_names[i]->s_thing){
 			memcpy(x->sv[i], x->mangled_names[i]->s_thing, sizeof(t_float) * x->blksize);
-		}else{
-			memset(x->sv[i], '\0', sizeof(t_float) * x->blksize);
 		}
-
+		memset(x->mangled_names[i]->s_thing, '\0', sizeof(t_float) * x->blksize);
 	}
-	x->should_memset_name->s_thing = (void *)1;
 	return w + 2;
 }
 
@@ -95,8 +96,6 @@ void pbus_mangle(t_pbus *x){
 		sprintf(buf, "%s_%d", x->name->s_name, i + 1);
 		x->mangled_names[i] = gensym(buf);
 	}
-	sprintf(buf, "%s_memset", x->name->s_name);
-	x->should_memset_name = gensym(buf);
 }
 
 void pbus_free(t_pbus *x){
@@ -141,14 +140,12 @@ void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 		x->mangled_names = (t_symbol **)calloc(x->num_channels, sizeof(t_symbol *));
 		x->sv = (t_float **)calloc(x->num_channels, sizeof(t_float *));
 		int i;
+		pbus_mangle(x);
 		for(i = 0; i < x->num_channels; i++){
 			outlet_new(x, "signal");
 		}
-		pbus_mangle(x);
+		x->blksize = 0;
 
-		t_hashtab *ht = hashtab_new(0);
-		hashtab_flags(ht, OBJ_FLAG_DATA);
-		x->name->s_thing = (void *)ht;
 		return x;
 	}
 	return NULL;
