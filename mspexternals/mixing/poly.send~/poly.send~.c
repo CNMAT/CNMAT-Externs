@@ -34,13 +34,12 @@ VERSION 0.0: First try
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "ext_hashtab.h"
 #include "z_dsp.h"
 #include "version.c"
 
 typedef struct _psend{
 	t_pxobject ob;
-	t_symbol *name, *mangled_name, *should_memset_name;
+	t_symbol *name, *mangled_name;
 	long channel;
 	t_float *sv;
 	long blksize;
@@ -73,27 +72,6 @@ t_int *psend_perform(t_int *w){
 		return w + 2;
 	}
 	int i;
-	if(x->should_memset_name){
-		if(x->should_memset_name->s_thing){
-			t_hashtab *ht = (t_hashtab *)(x->name->s_thing);
-			if(ht){
-				t_symbol **keys = NULL;
-				long num_keys;
-				hashtab_getkeys(ht, &num_keys, &keys);
-				char *ptr;
-				for(i = 0; i < num_keys; i++){
-					ptr = (char *)(keys[i]->s_thing);
-					if(ptr){
-						memset(ptr, '\0', sizeof(t_float) * x->blksize);
-					}
-				}
-				if(keys){
-					sysmem_freeptr(keys);
-				}
-			}
-		}
-		x->should_memset_name->s_thing = (void *)0;
-	}
 	t_float *ptr = (t_float *)(x->mangled_name->s_thing);
 	for(i = 0; i < x->blksize; i++){
 		ptr[i] += x->sv[i];
@@ -106,8 +84,6 @@ void psend_mangle(t_psend *x){
 		char buf[256];
 		sprintf(buf, "%s_%ld", x->name->s_name, x->channel);
 		x->mangled_name = gensym(buf);
-		sprintf(buf, "%s_memset", x->name->s_name);
-		x->should_memset_name = gensym(buf);
 	}
 }
 
