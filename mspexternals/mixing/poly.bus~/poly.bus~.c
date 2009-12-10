@@ -27,6 +27,8 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2009
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 0.0: First try
+VERSION 0.0.1: New help file
+VERSION 0.1: Fixed a memory leak and made it so that you can safely have 2 of them running at once
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -44,6 +46,7 @@ typedef struct _pbus{
 	t_float **sv;
 	long blksize;
 	long samplerate;
+	long my_id;
 } t_pbus;
 
 static t_class *pbus_class;
@@ -60,6 +63,12 @@ void pbus_dsp(t_pbus *x, t_signal **sp, short *count){
 	for(i = 0; i < x->num_channels; i++){
 		x->sv[i] = sp[i + 1]->s_vec;
 		if(x->blksize != sp[0]->s_n){
+			// block size has changed
+			// if there are multiple instances of this object, this will happen more than once, but
+			// it's cool because (from the gcc manual):
+			// If the new size you specify is the same as the old size, realloc is guaranteed to change
+			// nothing and return the same address that you gave.
+
 			void *ptr = realloc(x->mangled_names[i]->s_thing, sp[0]->s_n * sizeof(t_float));
 			if(ptr){
 				x->mangled_names[i]->s_thing = ptr;
@@ -70,6 +79,9 @@ void pbus_dsp(t_pbus *x, t_signal **sp, short *count){
 		memset(x->mangled_names[i]->s_thing, '\0', sizeof(t_float) * sp[0]->s_n);
 	}
 	x->blksize = sp[0]->s_n;
+	long id = (long)(x->name->s_thing);
+	x->my_id = ++id;
+	x->name->s_thing = (void *)id;
 	x->samplerate = sp[0]->s_sr;
 	dsp_add(pbus_perform, 1, x);
 }
@@ -81,7 +93,9 @@ t_int *pbus_perform(t_int *w){
 		if(x->mangled_names[i]->s_thing){
 			memcpy(x->sv[i], x->mangled_names[i]->s_thing, sizeof(t_float) * x->blksize);
 		}
-		memset(x->mangled_names[i]->s_thing, '\0', sizeof(t_float) * x->blksize);
+		if(x->my_id == (long)(x->name->s_thing)){
+			memset(x->mangled_names[i]->s_thing, '\0', sizeof(t_float) * x->blksize);
+		}
 	}
 	return w + 2;
 }
@@ -100,6 +114,15 @@ void pbus_mangle(t_pbus *x){
 
 void pbus_free(t_pbus *x){
 	dsp_free((t_pxobject *)x);
+	int i;
+	x->name->s_thing = x->name->s_thing - 1;
+	if(x->name->s_thing == 0){
+		for(i = 0; i < x->num_channels; i++){
+			if(x->mangled_names[i]->s_thing){
+				free(x->mangled_names[i]->s_thing);
+			}
+		}
+	}
 }
 
 void pbus_assist(t_pbus *x, void *b, long io, long index, char *s){
@@ -132,6 +155,7 @@ void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 		dsp_setup((t_pxobject *)x, 1);
         	x->ob.z_misc = Z_NO_INPLACE;
 		x->name = atom_getsym(argv);
+		x->name->s_thing = x->name->s_thing + 1;
 		x->num_channels = atom_getlong(argv + 1);
 		if(x->num_channels <= 0){
 			error("poly.bus~: number of channels must be >0");
@@ -145,6 +169,7 @@ void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 			outlet_new(x, "signal");
 		}
 		x->blksize = 0;
+		x->my_id = 0;
 
 		return x;
 	}
