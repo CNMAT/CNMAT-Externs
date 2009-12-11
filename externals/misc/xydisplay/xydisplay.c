@@ -109,6 +109,7 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 	{
 		jgraphics_set_line_width(g, 1);
 		t_point *p = x->points;
+		critical_enter(x->lock);
 		while(p){
 			if(p == x->selected){
 				jgraphics_set_source_jrgba(g, &(x->selectedcolor));
@@ -134,10 +135,12 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 
 			p = p->next;
 		}
+		critical_exit(x->lock);
 	}
 }
 
 void xydisplay_bang(t_xydisplay *x){
+	xydisplay_outputPoints(x);
 }
 
 void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
@@ -148,24 +151,16 @@ void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 	x->npoints = argc / 2;
-	t_point *p = x->points;
-	t_point *plast = x->points;
-	if(!p){
-		p = (t_point *)sysmem_newptr(sizeof(t_point));
-		p->next = NULL;
-		p->prev = NULL;
-		x->points = p;
-		plast = x->points;
-	}
+
 	int i;
-	x->monotonic_point_counter = 0; //not really monotonic i guess...
+
+	critical_enter(x->lock);
 	for(i = 0; i < argc / 2; i++){
-		if(!p){
-			p = (t_point *)sysmem_newptr(sizeof(t_point));
-			p->next = NULL;
-			plast->next = p;
-			p->prev = plast;
-		}
+		t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
+		p->next = x->points;
+		x->points = p;
+		p->prev = NULL;
+
 		p->x = atom_getfloat(argv + (i * 2));
 		p->x = xydisplay_scale(p->x, x->xmin, x->xmax, 0, r.width);
 		p->y = atom_getfloat(argv + ((i * 2) + 1));
@@ -174,10 +169,8 @@ void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
 		sprintf(buf, "%ld", x->monotonic_point_counter++);
 		p->label = gensym(buf);
 		p->color = x->labelcolor;
-
-		plast = p;
-		p = p->next;
 	}
+	critical_exit(x->lock);
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
 }
@@ -202,6 +195,7 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		{
 			x->selected = xydisplay_selectPoint(x, pt);
 			if(!(x->selected) && !(x->locked)){
+				critical_enter(x->lock);
 				t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
 				p->x = pt.x;
 				p->y = pt.y;
@@ -217,6 +211,7 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 				sprintf(buf, "%ld", x->monotonic_point_counter++);
 				p->label = gensym(buf);
 				p->color = x->labelcolor;
+				critical_exit(x->lock);
 			}
 		}
 		break;
@@ -226,7 +221,9 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 			t_point *p;
 			if(p = xydisplay_selectPoint(x, pt)){
 				xydisplay_removePoint(x, p);
+				critical_enter(x->lock);
 				x->selected = NULL;
+				critical_exit(x->lock);
 			}
 		}
 		break;
@@ -246,8 +243,10 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 	switch(modifiers){
 	case 0x10:
 		if(x->selected){
+			critical_enter(x->lock);
 			x->selected->x = pt.x;
 			x->selected->y = pt.y;
+			critical_exit(x->lock);
 		}
 		break;
 	case 0x12:
@@ -262,18 +261,22 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 }
 
 t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt){
+	critical_enter(x->lock);
 	t_point *p = x->points;
 	while(p){
 		if(pt.x >= (p->x - x->pointdiameter) && pt.x <= (p->x + x->pointdiameter) &&
 		   pt.y >= (p->y - x->pointdiameter) && pt.y <= (p->y + x->pointdiameter)){
-			return p;
+			goto out;
 		}
 		p = p->next;
 	}
-	return NULL;
+ out:
+	critical_exit(x->lock);
+	return p;
 }
 
 void xydisplay_removePoint(t_xydisplay *x, t_point *p){
+	critical_enter(x->lock);
 	if(p->prev){
 		p->prev->next = p->next;
 	}else{
@@ -284,6 +287,7 @@ void xydisplay_removePoint(t_xydisplay *x, t_point *p){
 	}
 	sysmem_freeptr((void *)p);
 	x->npoints--;
+	critical_exit(x->lock);
 }
 
 void xydisplay_outputPoints(t_xydisplay *x){
@@ -291,8 +295,10 @@ void xydisplay_outputPoints(t_xydisplay *x){
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 	if(x->selected){
 		t_atom out[2];
+		critical_enter(x->lock);
 		atom_setfloat(out, xydisplay_scale(x->selected->x, 0, r.width, x->xmin, x->xmax));
 		atom_setfloat(out + 1, xydisplay_scale(x->selected->y, r.height, 0, x->ymin, x->ymax));
+		critical_exit(x->lock);
 		outlet_list(x->selectedOutlet, NULL, 2, out);
 	}
 	t_point *p = x->points;
@@ -302,25 +308,40 @@ void xydisplay_outputPoints(t_xydisplay *x){
 			long outlen = x->npoints * 2;
 			t_atom out[outlen];
 			t_atom *outptr = out;
-
+			critical_enter(x->lock);
 			while(p){
 				atom_setfloat(outptr++, xydisplay_scale(p->x, 0, r.width, x->xmin, x->xmax));
 				atom_setfloat(outptr++, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
 				p = p->next;
 			}
+			critical_exit(x->lock);
 			outlet_list(x->listOutlet, NULL, outlen, out);
 		}
 		break;
 	case OUTPUT_LIST:
 		{
-			t_atom out[2];
-
-			outlet_anything(x->listOutlet, gensym("clear"), 0, NULL);
+			// we could go through and call the outlet for each point, but we would have to exit the critical
+			// section and then re-enter at the beginning of the while loop.  since the outlet function can 
+			// take a long time to return, we should make a copy of everything quickly and safely, and then 
+			// output our copy.
+			int npoints = x->npoints;
+			t_atom out[3 * npoints];
+			t_atom *ptr = out;
+			critical_enter(x->lock);
 			while(p){
-				atom_setfloat(out, xydisplay_scale(p->x, 0, r.width, x->xmin, x->xmax));
-				atom_setfloat(out + 1, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
-				outlet_anything(x->listOutlet, p->label, 2, out);
+				atom_setsym(ptr++, p->label);
+				atom_setfloat(ptr++, xydisplay_scale(p->x, 0, r.width, x->xmin, x->xmax));
+				atom_setfloat(ptr++, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
 				p = p->next;
+			}
+			critical_exit(x->lock);
+			int i;
+			outlet_anything(x->listOutlet, gensym("clear"), 0, NULL);
+			ptr = out;
+			for(i = 0; i < npoints; i++){
+				t_symbol *sym = atom_getsym(ptr++);
+				outlet_anything(x->listOutlet, sym, 2, ptr);
+				ptr += 2;
 			}
 		}
 		break;
@@ -328,6 +349,7 @@ void xydisplay_outputPoints(t_xydisplay *x){
 }
 
 void xydisplay_clear(t_xydisplay *x){
+	critical_enter(x->lock);
 	t_point *p = x->points;
 	t_point *next;
 	while(p){
@@ -338,11 +360,14 @@ void xydisplay_clear(t_xydisplay *x){
 	}
 	x->points = NULL;
 	x->selected = NULL;
+	x->monotonic_point_counter = 0; // not really monotonic i guess...
+	critical_exit(x->lock);
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
 }
 
 void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
+	critical_enter(x->lock);
 	if(argc == 1){
 		if(x->selected){
 			x->selected->label = atom_getsym(argv);
@@ -358,11 +383,19 @@ void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
 			p = p->next;
 		}
 	}
+	critical_exit(x->lock);
 	jbox_redraw(&(x->ob));
 }
 
 void xydisplay_free(t_xydisplay *x){
 	jbox_free(&(x->ob));
+	t_point *p = x->points;
+	t_point *next = NULL;
+	while(p){
+		next = p->next;
+		sysmem_freeptr(p);
+		p = next;
+	}
 	xydisplay_clear(x);
 	critical_free(x->lock);
 }
@@ -372,14 +405,17 @@ void xydisplay_assist(t_xydisplay *x, void *b, long io, long index, char *s){
 	case 1:
 		switch(index){
 		case 0:
-			sprintf(s, "");
+			sprintf(s, "Point coordinates (list)");
 			break;
 		}
 		break;
 	case 2:
 		switch(index){
 		case 0:
-			sprintf(s, "");
+			sprintf(s, "All point coordinates (list)");
+			break;
+		case 1:
+			sprintf(s, "Selected point coordinates (list)");
 			break;
 		}
 		break;
@@ -407,12 +443,13 @@ t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av){
 	//post("getvalueof");
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	int npoints = x->npoints;
 	if(*ac && *av){
 	}else{
-		*ac = x->npoints * 2;
+		*ac = npoints * 2;
 		*av = (t_atom *)sysmem_newptr(*ac * sizeof(t_atom));
-		//*av = (t_atom *)getbytes(*ac * sizeof(t_atom));
 	}
+	critical_enter(x->lock);
 	t_point *p = x->points;
 	t_atom *outptr = *av;
 	while(p){
@@ -420,6 +457,7 @@ t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av){
 		atom_setfloat(outptr++, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
 		p = p->next;
 	}
+	critical_exit(x->lock);
 
 	return MAX_ERR_NONE;
 }
