@@ -29,6 +29,7 @@
   VERSION 0.0: First try
   VERSION 0.1: Added labels, and the ability to lock the display so that no new points can be added
   VERSION 0.11: added critical sections and fixed a memory leak
+  VERSION 0.2: points are now output in the order in which they were entered
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -308,11 +309,12 @@ void xydisplay_outputPoints(t_xydisplay *x){
 		{
 			long outlen = x->npoints * 2;
 			t_atom out[outlen];
-			t_atom *outptr = out;
+			t_atom *outptr = out + outlen - 1;
 			critical_enter(x->lock);
+			// since the points are pushed onto the front of the linked list, we should work backwards
 			while(p){
-				atom_setfloat(outptr++, xydisplay_scale(p->x, 0, r.width, x->xmin, x->xmax));
-				atom_setfloat(outptr++, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
+				atom_setfloat(outptr--, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
+				atom_setfloat(outptr--, xydisplay_scale(p->x, 0, r.width, x->xmin, x->xmax));
 				p = p->next;
 			}
 			critical_exit(x->lock);
@@ -327,12 +329,12 @@ void xydisplay_outputPoints(t_xydisplay *x){
 			// output our copy.
 			int npoints = x->npoints;
 			t_atom out[3 * npoints];
-			t_atom *ptr = out;
+			t_atom *ptr = out + (3 * npoints) - 1;
 			critical_enter(x->lock);
 			while(p){
-				atom_setsym(ptr++, p->label);
-				atom_setfloat(ptr++, xydisplay_scale(p->x, 0, r.width, x->xmin, x->xmax));
-				atom_setfloat(ptr++, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
+				atom_setfloat(ptr--, xydisplay_scale(p->y, r.height, 0, x->ymin, x->ymax));
+				atom_setfloat(ptr--, xydisplay_scale(p->x, 0, r.width, x->xmin, x->xmax));
+				atom_setsym(ptr--, p->label);
 				p = p->next;
 			}
 			critical_exit(x->lock);
@@ -440,6 +442,7 @@ double xydisplay_clip(double f, double min, double max){
 	return ff;
 }
 
+// for pattr
 t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av){
 	//post("getvalueof");
 	t_rect r;
