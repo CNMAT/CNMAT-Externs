@@ -27,7 +27,8 @@
   COPYRIGHT_YEARS: 2009
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
-VERSION 0.1: Added labels, and the ability to lock the display so that no new points can be added
+  VERSION 0.1: Added labels, and the ability to lock the display so that no new points can be added
+  VERSION 0.11: added critical sections and fixed a memory leak
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
