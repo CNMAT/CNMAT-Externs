@@ -28,7 +28,7 @@
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
   VERSION 0.1: Added labels, and the ability to lock the display so that no new points can be added
-  VERSION 0.11: added critical sections and fixed a memory leak
+  VERSION 0.1.1: added critical sections and fixed a memory leak
   VERSION 0.2: points are now output in the order in which they were entered
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
