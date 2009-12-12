@@ -30,6 +30,7 @@
   VERSION 0.1: Added labels, and the ability to lock the display so that no new points can be added
   VERSION 0.1.1: added critical sections and fixed a memory leak
   VERSION 0.2: points are now output in the order in which they were entered
+  VERSION 0.3: Added a middle outlet to output the distances from the current point to all others
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -56,7 +57,7 @@ typedef struct _point{
 
 typedef struct _xydisplay{
 	t_jbox ob;
-	void *selectedOutlet, *listOutlet;
+	void *selectedOutlet, *listOutlet, *distanceOutlet;
 	t_critical lock;
 	t_jrgba bgcolor, pointcolor, bordercolor, selectedcolor, labelcolor;
 	float pointdiameter;
@@ -81,6 +82,7 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt);
 void xydisplay_removePoint(t_xydisplay *x, t_point *p);
 void xydisplay_outputPoints(t_xydisplay *x);
+void xydisplay_outputDistance(t_xydisplay *x);
 void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv);
 void xydisplay_clear(t_xydisplay *x);
 void xydisplay_free(t_xydisplay *x);
@@ -143,6 +145,7 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 
 void xydisplay_bang(t_xydisplay *x){
 	xydisplay_outputPoints(x);
+	xydisplay_outputDistance(x);
 }
 
 void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
@@ -236,6 +239,7 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
 	xydisplay_outputPoints(x);
+	xydisplay_outputDistance(x);
 }
 
 void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -260,6 +264,7 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
 	xydisplay_outputPoints(x);
+	xydisplay_outputDistance(x);
 }
 
 t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt){
@@ -349,6 +354,29 @@ void xydisplay_outputPoints(t_xydisplay *x){
 		}
 		break;
 	}
+}
+
+void xydisplay_outputDistance(t_xydisplay *x){
+	if(!x->selected){
+		return;
+	}
+	critical_enter(x->lock);
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	int npoints = x->npoints;
+	t_atom out[npoints * 2];
+	t_atom *ptr = out + (npoints * 2) - 1;
+	t_point *p = x->points;
+	double selx = xydisplay_scale(x->selected->x, 0, r.width, 0., 1.);
+	double sely = xydisplay_scale(x->selected->y, r.height, 0, 0., 1.);
+
+	while(p){
+		atom_setfloat(ptr--, sqrt(pow(selx - xydisplay_scale(p->x, 0., r.width, 0., 1.), 2.) + pow(sely - xydisplay_scale(p->y, r.height, 0., 0., 1.), 2.)));
+		atom_setsym(ptr--, p->label);
+		p = p->next;
+	}
+	critical_exit(x->lock);
+	outlet_list(x->distanceOutlet, NULL, npoints * 2, out);
 }
 
 void xydisplay_clear(t_xydisplay *x){
@@ -507,6 +535,7 @@ void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv){
  		x->ob.b_firstin = (void *)x; 
 
 		x->selectedOutlet = outlet_new(x, NULL);
+		x->distanceOutlet = outlet_new(x, NULL);
 		x->listOutlet = outlet_new(x, NULL);
 		x->npoints = 0;
 		x->points = NULL;
