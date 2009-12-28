@@ -1,4 +1,3 @@
-
 // need sprintf, sscanf
 #include <stdio.h>
 
@@ -86,6 +85,18 @@ int cmmjl_osc_timetag_cmp(ntptime* a, ntptime* b) {
   
   return 0;
   
+}
+
+int cmmjl_osc_timetag_is_immediate(char *buf){
+	int offset = 0;
+	if(!(strcmp(buf, "#bundle"))){
+		offset = 8;
+	}
+	if(*(unsigned long long *)(buf + offset) == 0x100000000000000LL){
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 // conversion functions
@@ -212,5 +223,20 @@ t_cmmjl_error cmmjl_osc_timetag_get(long n, long ptr, ntptime *r){
 	r->frac_sec = ntohl(*((unsigned long *)(data + 12)));
 	r->sign = 1;
 	r->type = TIME_STAMP;
+	return CMMJL_SUCCESS;
+}
+
+t_cmmjl_error cmmjl_osc_timetag_set(long n, long ptr, ntptime *r){
+	if(strcmp((char *)ptr, "#bundle") != 0) {
+		r = NULL;
+		return CMMJL_OSC_EBADBNDL;
+        }
+	char *data = (char *)ptr;
+	if(n < 16){
+		r = NULL;
+		return CMMJL_OSC_EBADBNDL;
+	}
+	*(unsigned long *)(data + 8) = htonl(r->sec);
+	*(unsigned long *)(data + 12) = htonl(r->frac_sec);
 	return CMMJL_SUCCESS;
 }

@@ -28,7 +28,7 @@ Audio Technologies, University of California, Berkeley.
 
 #include "cmmjl_interp.h"
 
-double mcmc_interp_simple(double *x_vec, 
+double cmmjl_interp_simple(double *x_vec, 
 			  double *y_vec, 
 			  double x, 
 			  long len, 
@@ -42,10 +42,10 @@ double mcmc_interp_simple(double *x_vec,
 	for(i = 0; i < len; i++){
 		avec[i] = alpha;
 	}
-	mcmc_interp_avec(x_vec, y_vec, x, len, minx, maxx, avec, w0);
+	return cmmjl_interp_simple_avec(x_vec, y_vec, x, len, minx, maxx, avec, w0);
 }
 
-double mcmc_interp_avec_simple(double *x_vec, 
+double cmmjl_interp_simple_avec(double *x_vec, 
 			       double *y_vec, 
 			       double x, 
 			       long len, 

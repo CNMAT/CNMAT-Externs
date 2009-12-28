@@ -138,10 +138,6 @@ void cmmjl_osc_filter(t_cmmjl_osc_packet *p1, t_cmmjl_osc_packet *p2){
 
 }
 
-void cmmjl_osc_flatten(t_cmmjl_osc_packet *p1, t_cmmjl_osc_packet *p2){
-
-}
-
 void cmmjl_osc_remove_bundle_element(t_cmmjl_osc_bundle *b, t_cmmjl_osc_obj *obj_to_remove){
 	t_cmmjl_osc_obj *obj = b;
 	t_cmmjl_osc_obj *element;

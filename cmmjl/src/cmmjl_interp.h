@@ -78,7 +78,7 @@ Audio Technologies, University of California, Berkeley.
 			will tend towards when it is between peaks.  The function is
 			 bounded on both sides at xmin and xmax.
 */
-double mcmc_interp_simple(double *x_vec, 
+double cmmjl_interp_simple(double *x_vec, 
 			  double *y_vec, 
 			  double x, 
 			  long len, 
@@ -112,7 +112,7 @@ double mcmc_interp_simple(double *x_vec,
 	@see		http://arXiv:astro-ph/0208533
 	@see		mcmc_interp() for an explanation of the function
 */
-double mcmc_interp_simple_avec(double *x_vec, 
+double cmmjl_interp_simple_avec(double *x_vec, 
 			       double *y_vec, 
 			       double x, 
 			       long len, 

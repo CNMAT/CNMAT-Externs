@@ -21,6 +21,9 @@ int cmmjl_osc2regex(char *osc_string, regex_t *re){
 	int read_pos = 0;
 	int write_pos = 0;
 
+	write_buf[0] = '^';
+	write_pos++;
+
 	//////////////////////////////////////////////////
 	// replace:
 	//	'?' => [^/]
@@ -72,6 +75,7 @@ int cmmjl_osc2regex(char *osc_string, regex_t *re){
 		}
 	}
 	write_buf[write_pos++] = '$';
+
 	write_buf[write_pos++] = '\0';
 	//post("cmmjl_osc2regex: %s => %s", read_buf, write_buf);
 	int e;
@@ -115,8 +119,15 @@ int cmmjl_osc_match(void *x,
 		}
 		buf2[ptr2_r - ptr2_l] = '\0';
 
+		if(!strcmp(buf1, buf2)){
+			ptr1_l = ++ptr1_r;
+			ptr2_l = ++ptr2_r;
+			continue;
+		}
+
 		char *regex = buf1, *st = buf2;
 		if(cmmjl_osc_hasPattern(strlen(buf2), buf2)){
+			//post("buf2 has pattern");
 			if(cmmjl_osc_hasPattern(strlen(buf1), buf1)){
 				error("you can't match a pattern (%s) against another pattern (%s) (yet).", buf1, buf2);
 				return 0;

@@ -63,6 +63,8 @@ long int cmmjl_osc_timetag_ntp_to_ut(ntptime* n);
 void cmmjl_osc_timetag_add(ntptime* a, ntptime* b, ntptime* r);
 int cmmjl_osc_timetag_cmp(ntptime* a, ntptime* b);
 
+int cmmjl_osc_timetag_is_immediate(char *buf);
+
 // generation
 void cmmjl_osc_timetag_now_to_ntp(ntptime* n);
 
@@ -76,6 +78,7 @@ void cmmjl_osc_timetag_now_to_ntp(ntptime* n);
 	@retval 	#CMMJL_OSC_EBADBNDL
 */
 t_cmmjl_error cmmjl_osc_timetag_get(long n, long ptr, ntptime *r);
+t_cmmjl_error cmmjl_osc_timetag_set(long n, long ptr, ntptime *r);
 
 #endif
 
