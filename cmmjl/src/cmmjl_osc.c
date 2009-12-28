@@ -145,8 +145,6 @@ void cmmjl_osc_makeDefaultAddress(void *x, long instance, char *buf){
 		}
 	}
 
-	name = object_classname(x);
-	sprintf(buf, "%s/%s/%d", buf2, name->s_name, instance);
 
 }
 
@@ -180,11 +178,147 @@ int cmmjl_osc_init_bundle(int len, char *ptr, char *timetag){
 	ptr[6] = 'e';
 	ptr[7] = '\0';
 	if(timetag == NULL){
-		*((long long *)(ptr + 8)) = 0x0000000000000001;
+		*((long long *)(ptr + 8)) = 0x100000000000000LL;
 	}else{
 		memcpy(ptr + 8, timetag, 8);
 	}
 	return 16;
+}
+
+int cmmjl_osc_get_msg_length(char *address, char *tt, int argc, char *argv){
+	int addressLen = strlen(address);
+	addressLen++;
+	while(addressLen % 4){
+		addressLen++;
+	}
+	int ttLen = strlen(tt);
+	ttLen++;
+	while(ttLen % 4){
+		ttLen++;
+	}
+	int argLen = 0;
+	int i;
+	for(i = 0; i < argc; i++){
+		if(tt[i + 1] == 'f' || tt[i + 1] == 'i'){
+			argLen += 4;
+		}else{
+			int n = strlen(argv + argLen);
+			argLen += n + 1;
+			while(argLen % 4){
+				argLen++;
+			}
+		}
+	}
+	return addressLen + ttLen + argLen;
+}
+
+int cmmjl_osc_get_msg_length_max(t_symbol *msg, short argc, t_atom *argv){
+	int addressLen = strlen(msg->s_name);
+	addressLen++;
+	while(addressLen % 4){
+		addressLen++;
+	}
+	int ttLen = argc + 2;
+	while(ttLen % 4){
+		ttLen++;
+	}
+	int argLen = 0;
+	int i;
+	for(i = 0; i < argc; i++){
+		if(argv[i].a_type == A_FLOAT || argv[i].a_type == A_LONG){
+			argLen += 4;
+		}else{
+			argLen += strlen(atom_getsym(argv + i)->s_name);
+			argLen++;
+			while(argLen % 4){
+				argLen++;
+			}
+		}
+	}
+	return addressLen + ttLen + argLen;
+}
+
+int cmmjl_osc_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buffer){
+	int i;
+	if(atom_gettype(argv) != A_SYM){
+		return 0;
+	}
+	if(*(atom_getsym(argv)->s_name) != '/'){
+		return 0;
+	}
+	int numargs = 0;
+	char typetags[argc];
+	char argbuf[*len];
+	char *bufptr = buffer, *argbufptr = argbuf;
+	char *sizeptr = buffer;
+	bufptr += 4; // skip over the size
+        for(i = 0; i < argc; i++){
+		int type;
+		if((type = atom_gettype(argv + i)) == A_SYM){
+			t_symbol *sym = atom_getsym(argv + i);
+			if(*(sym->s_name) == '/'){
+				// OSC address
+				if(numargs){
+					*bufptr++ = ',';
+					memcpy(bufptr, typetags, numargs);
+					bufptr += numargs;
+					*bufptr++ = '\0';
+					while((bufptr - buffer) % 4){
+						*bufptr++ = '\0';
+					}
+					memcpy(bufptr, argbuf, argbufptr - argbuf);
+					bufptr += (argbufptr - argbuf);
+					*((long *)sizeptr) = htonl((bufptr - sizeptr) - 4);
+					sizeptr = bufptr;
+					bufptr += 4;
+				}
+				memset(argbuf, '\0', *len);
+				memset(typetags, '\0', argc);
+				argbufptr = argbuf;
+
+				numargs = 0;
+				strcpy(bufptr, sym->s_name);
+				bufptr += strlen(sym->s_name) + 1;
+				while((bufptr - buffer) % 4){
+					*bufptr++ = '\0';
+				}
+			}else{
+				typetags[numargs] = 's';
+				strcpy(argbufptr, sym->s_name);
+				argbufptr += strlen(sym->s_name) + 1;
+				while((argbufptr - buffer) % 4){
+					argbufptr++;
+				}
+				numargs++;
+			}
+		}else{
+			switch(type){
+			case A_FLOAT:
+				*((long *)argbufptr) = htonl(*((long *)&(argv[i].a_w.w_float)));
+				typetags[numargs] = 'f';
+				break;
+			case A_LONG:
+				*((long *)argbufptr) = htonl(argv[i].a_w.w_long);
+				typetags[numargs] = 'i';
+				break;
+			}
+			numargs++;
+			argbufptr += 4;
+		}
+        }
+	if(numargs){
+		*bufptr++ = ',';
+		memcpy(bufptr, typetags, numargs);
+		bufptr += numargs;
+		*bufptr++ = '\0';
+		while((bufptr - buffer) % 4){
+			*bufptr++ = '\0';
+		}
+		memcpy(bufptr, argbuf, argbufptr - argbuf);
+		bufptr += (argbufptr - argbuf);
+		*((long *)sizeptr) = htonl((bufptr - sizeptr) - 4);
+	}
+	return bufptr - buffer;
 }
 
 int cmmjl_osc_make_bundle(int numAddresses,
@@ -237,6 +371,8 @@ int cmmjl_osc_make_bundle(int numAddresses,
 					ptr += 4 - (slen % 4);
 				}
 				break;
+			case 'I':
+				break;
 			}
 			tt++;
 			*len = cmmjl_osc_check_pos_and_resize(buffer, *len, ptr);
@@ -249,7 +385,6 @@ int cmmjl_osc_make_bundle(int numAddresses,
 int cmmjl_osc_check_pos_and_resize(char *buf, int len, char *pos){
 	if(pos - buf >= len){
 		realloc(buf, len * 2);
-		post("o.pack: realloc took place");
 		return len * 2;
 	}
 	return len;
@@ -278,39 +413,6 @@ int cmmjl_osc_rename(char *buffer,
 	memcpy(buffer + bp, msg->typetags, len);
 	bp += len;
 	return bp - start;
-}
-
-void cmmjl_osc_args2atoms(char *typetags, char *argv, t_atom *atoms){
-	char *tt = typetags;
-	char *av = argv;
-	t_atom *a = atoms;
-	if(*tt == ','){
-		tt++;
-	}
-	while(*tt != '\0'){
-		switch(*tt){
-		case 'i':
-			atom_setlong(a, htonl(*((long *)av)));
-			av += 4;
-			break;
-		case 'f':
-			{
-				long l = *((long *)av);
-				l = htonl(l);
-				atom_setfloat(a, *((float *)(&l)));
-				av += 4;
-			}
-			break;
-		case 's':
-			atom_setsym(a, gensym(av));
-			int len = strlen(av);
-			len += 4 - (len % 4);
-			av += len;
-			break;
-		}
-		tt++;
-		a++;
-	}
 }
 
 long cmmjl_osc_bundle_naked_message(long n, char *ptr, char *out){
@@ -356,6 +458,60 @@ long cmmjl_osc_flatten(long n, char *ptr, char *out){
 	}
 	memset(out + j, '\0', n - j);
 	return j;
+}
+
+int cmmjl_osc_copy_max_messages(t_symbol *msg, short argc, t_atom *argv, int len, char *buf){
+	int pos = 0;
+	int n = strlen(msg->s_name);
+	int i;
+	memcpy(buf + pos, msg->s_name, n);
+	pos += n + 1;
+	while(pos % 4){
+		pos++;
+	}
+	n = argc;
+	buf[pos++] = ',';
+	for(i = 0; i < argc; i++){
+		switch(argv[i].a_type){
+		case A_FLOAT:
+			buf[pos++] = 'f';
+			break;
+		case A_LONG:
+			buf[pos++] = 'i';
+			break;
+		case A_SYM:
+			buf[pos++] = 's';
+			break;
+		}
+	}
+	pos++;
+	while(pos % 4){
+		pos++;
+	}
+	for(i = 0; i < argc; i++){
+		switch(argv[i].a_type){
+		case A_FLOAT:
+			{
+				float f = atom_getfloat(argv + i);
+				*((long *)(buf + pos)) = htonl(*(long *)(&f));
+				pos += 4;
+			}
+			break;
+		case A_LONG:
+			*((long *)(buf + pos)) = htonl(atom_getlong(argv + i));
+			pos += 4;
+			break;
+		case A_SYM:
+			n = strlen(atom_getsym(argv + i)->s_name);
+			memcpy(buf + pos, atom_getsym(argv + i)->s_name, n);
+			pos += n + 1;
+			while(pos % 4){
+				pos++;
+			}
+			break;
+		}
+	}
+	return pos;
 }
 
 void cmmjl_osc_fullPacket(void *x, long n, long ptr){
@@ -416,6 +572,7 @@ t_cmmjl_error cmmjl_osc_parseFullPacket(void *x,
 		return CMMJL_ENOOBJ;
 	}
 	cmmjl_osc_parse(x, n, (char *)ptr, true, o->osc_parser_cb);
+	return CMMJL_SUCCESS;
 }
 
 
@@ -431,7 +588,7 @@ t_cmmjl_error cmmjl_osc_extract_messages(long n,
 	int t;
 	t_cmmjl_error err;
 	if(!cbk){
-		return;
+		return 0;
 	}
 
 	if ((n % 4) != 0) {
@@ -850,6 +1007,7 @@ t_cmmjl_error cmmjl_osc_formatMessage(void *x,
 		}
 	}
 	cbk(x, addressSymbol, numArgs, args);
+	return CMMJL_SUCCESS;
 }
 
 t_cmmjl_error cmmjl_osc_dataAfterAlignedString(char *string, char *boundary, char **result){
@@ -945,3 +1103,625 @@ int cmmjl_osc_effectiveBlobLength(int blobDataSize){
 	return len;
 }
 
+int cmmjl_osc_get_tree_length(int len, char *msg){
+	int i;
+	int count = 0;
+	for(i = 0; i < len; i++){
+		if(msg[i] == '/'){
+			count++;
+		}
+	}
+	if(msg[len - 1] == '/'){
+		count--;
+	}
+	return count;
+}
+
+void cmmjl_osc_address_to_array(int len, char *msg, char **ar, int *lengths){
+	int i;
+	int count = 0;
+	int plen = 0;
+	for(i = 0; i < len - 1; i++){
+		if(msg[i] == '/'){
+			if(i > 0){
+				lengths[count - 1] = plen - 1;
+				plen = 0;
+			}
+			ar[count++] = msg + i + 1;
+		}
+		plen++;
+	}
+	lengths[count - 1] = plen;
+}
+
+void cmmjl_osc_atom2maxatom(t_cmmjl_osc_atom *a, t_atom *ma){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		atom_setlong(ma, (long)(a->a_w.w_char));
+		break;
+	case CMMJL_UCHAR:
+		atom_setlong(ma, (long)(a->a_w.w_uchar));
+		break;
+	case CMMJL_SHORT:
+		atom_setlong(ma, (long)(a->a_w.w_short));
+		break;
+	case CMMJL_USHORT:
+		atom_setlong(ma, (long)(a->a_w.w_ushort));
+		break;
+	case CMMJL_LONG:
+		atom_setlong(ma, (long)(a->a_w.w_long));
+		break;
+	case CMMJL_ULONG:
+		atom_setlong(ma, (long)(a->a_w.w_ulong));
+		break;
+	case CMMJL_LLONG:
+		atom_setlong(ma, (long)(a->a_w.w_llong));
+		break;
+	case CMMJL_ULLONG:
+		atom_setlong(ma, (long)(a->a_w.w_ullong));
+		break;
+	case CMMJL_FLOAT:
+		atom_setfloat(ma, (float)(a->a_w.w_float));
+		break;
+	case CMMJL_DOUBLE:
+		atom_setfloat(ma, (float)(a->a_w.w_double));
+		break;
+	case CMMJL_LDOUBLE:
+		atom_setfloat(ma, (float)(a->a_w.w_ldouble));
+		break;
+	case CMMJL_PTR:
+		switch(a->osc_typetag){
+		case 'b':
+			atom_setlong(ma, (long)(a->a_w.w_ptr));
+			break;
+		case 's':
+			atom_setsym(ma, gensym(a->a_w.w_ptr));
+			break;
+		}
+		break;	
+	case CMMJL_TIMETAG:
+		// maybe a string here?
+		//atom_setlong(ma, (long)(a->a_w.w_char));
+		break;
+	}
+}
+
+void cmmjl_osc_get_data_atoms(t_cmmjl_osc_message *msg, t_atom *atoms){
+	t_cmmjl_osc_atom oa[msg->argc];
+	cmmjl_osc_get_data(msg, oa);
+	int i;
+	for(i = 0; i < msg->argc; i++){
+		cmmjl_osc_atom2maxatom(oa + i, atoms + i);
+	}
+}
+
+void cmmjl_osc_get_data(t_cmmjl_osc_message *msg, t_cmmjl_osc_atom *a){
+	int i;
+	char *tt = msg->typetags + 1;
+	int argoffset = 0;
+	for(i = 0; i < msg->argc; i++){
+		switch(*tt++){
+		case 'i':
+			argoffset += cmmjl_osc_atom_setlong(a + i, msg->argv + argoffset);
+			cmmjl_osc_atom_settypetag(a + i, 'i');
+			break;
+		case 'f':
+			argoffset += cmmjl_osc_atom_setfloat(a + i, msg->argv + argoffset);
+			cmmjl_osc_atom_settypetag(a + i, 'f');
+			break;
+		case 's':
+			argoffset += cmmjl_osc_atom_setptr(a + i, msg->argv + argoffset);
+			cmmjl_osc_atom_settypetag(a + i, 's');
+			break;
+		case 'b':
+			argoffset += cmmjl_osc_atom_setptr(a + i, msg->argv + argoffset + 4); // blob has a 4 byte length at the beg.
+			argoffset += 4; // length
+			cmmjl_osc_atom_settypetag(a + i, 'b');
+			break;
+		case 'T':
+			{
+				char c = 1;
+				cmmjl_osc_atom_setchar(a + i, &c);
+				cmmjl_osc_atom_settypetag(a + i, 'T');
+			}
+			break;
+		case 'F':
+			{
+				char c = 0;
+				cmmjl_osc_atom_setchar(a + i, &c);
+				cmmjl_osc_atom_settypetag(a + i, 'F');
+			}
+			break;
+		case 'N':
+
+			break;
+		case 'I':
+
+			break;
+		case 't':
+
+			break;
+
+		}
+	}
+}
+
+int cmmjl_osc_atom_setchar(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_char = *ptr;
+	a->a_type = CMMJL_CHAR;
+	a->nbytes = sizeof(char);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+char cmmjl_osc_atom_getchar(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (char)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (char)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (char)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (char)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (char)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (char)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (char)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (char)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (char)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (char)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (char)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+int cmmjl_osc_atom_setuchar(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_uchar = *((unsigned char *)ptr);
+	a->a_type = CMMJL_UCHAR;
+	a->nbytes = sizeof(unsigned char);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+unsigned char cmmjl_osc_atom_getuchar(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (unsigned char)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (unsigned char)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (unsigned char)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (unsigned char)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (unsigned char)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (unsigned char)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (unsigned char)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (unsigned char)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (unsigned char)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (unsigned char)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (unsigned char)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+int cmmjl_osc_atom_setshort(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_short = ntohs(*((short *)ptr));
+	a->a_type = CMMJL_SHORT;
+	a->nbytes = sizeof(short);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+short cmmjl_osc_atom_getshort(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (short)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (short)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (short)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (short)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (short)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (short)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (short)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (short)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (short)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (short)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (short)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+
+int cmmjl_osc_atom_setushort(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_ushort = ntohs(*((unsigned short *)ptr));
+	a->a_type = CMMJL_USHORT;
+	a->nbytes = sizeof(unsigned short);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+unsigned short cmmjl_osc_atom_getushort(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (unsigned short)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (unsigned short)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (unsigned short)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (unsigned short)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (unsigned short)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (unsigned short)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (unsigned short)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (unsigned short)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (unsigned short)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (unsigned short)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (unsigned short)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+int cmmjl_osc_atom_setlong(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_long = ntohl(*((long *)ptr));
+	a->a_type = CMMJL_LONG;
+	a->nbytes = sizeof(long);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+long cmmjl_osc_atom_getlong(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (long)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (long)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (long)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (long)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (long)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (long)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (long)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (long)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (long)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (long)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (long)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+int cmmjl_osc_atom_setulong(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_ulong = ntohl(*((unsigned long *)ptr));
+	a->a_type = CMMJL_ULONG;
+	a->nbytes = sizeof(unsigned long);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+unsigned long cmmjl_osc_atom_getulong(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (unsigned long)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (unsigned long)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (unsigned long)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (unsigned long)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (unsigned long)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (unsigned long)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (unsigned long)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (unsigned long)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (unsigned long)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (unsigned long)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (unsigned long)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+
+int cmmjl_osc_atom_setllong(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_llong = ntohll(*((long long *)ptr));
+	a->a_type = CMMJL_LLONG;
+	a->nbytes = sizeof(long long);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+long long cmmjl_osc_atom_getllong(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (long long)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (long long)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (long long)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (long long)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (long long)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (long long)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (long long)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (long long)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (long long)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (long long)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (long long)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+
+int cmmjl_osc_atom_setullong(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_ullong = ntohll(*((unsigned long long *)ptr));
+	a->a_type = CMMJL_ULLONG;
+	a->nbytes = sizeof(unsigned long long);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+unsigned long long cmmjl_osc_atom_getullong(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (unsigned long long)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (unsigned long long)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (unsigned long long)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (unsigned long long)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (unsigned long long)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (unsigned long long)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (unsigned long long)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (unsigned long long)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (unsigned long long)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (unsigned long long)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (unsigned long long)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+
+int cmmjl_osc_atom_setfloat(t_cmmjl_osc_atom *a, char *ptr){
+	long l = htonl(*((long *)ptr));
+	a->a_w.w_float = *((float *)&l);
+	a->a_type = CMMJL_FLOAT;
+	a->nbytes = sizeof(float);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+float cmmjl_osc_atom_getfloat(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (float)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (float)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (float)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (float)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (float)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (float)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (float)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (float)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (float)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (float)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (float)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+int cmmjl_osc_atom_setdouble(t_cmmjl_osc_atom *a, char *ptr){
+	long long l = htonll(*((long *)ptr));
+	a->a_w.w_double = *((double *)&l);
+	a->a_type = CMMJL_DOUBLE;
+	a->nbytes = sizeof(double);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+double cmmjl_osc_atom_getdouble(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (double)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (double)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (double)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (double)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (double)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (double)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (double)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (double)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (double)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (double)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (double)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+int cmmjl_osc_atom_setldouble(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_ldouble = *((long double *)ptr);
+	a->a_type = CMMJL_LDOUBLE;
+	a->nbytes = sizeof(long double);
+	a->npaddingbytes = 0;
+	return a->nbytes;
+}
+
+long double cmmjl_osc_atom_getldouble(t_cmmjl_osc_atom *a){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return (long double)(a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return (long double)(a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return (long double)(a->a_w.w_short);
+	case CMMJL_USHORT:
+		return (long double)(a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return (long double)(a->a_w.w_long);
+	case CMMJL_ULONG:
+		return (long double)(a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return (long double)(a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return (long double)(a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return (long double)(a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return (long double)(a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return (long double)(a->a_w.w_ldouble);
+	default:
+		return 0;
+	}
+}
+
+int cmmjl_osc_atom_setptr(t_cmmjl_osc_atom *a, char *ptr){
+	a->a_w.w_ptr = ptr;
+	a->a_type = CMMJL_PTR;
+	a->nbytes = 0;
+	a->npaddingbytes = 0;
+	int i = 0;
+	while(*(ptr + i) != '\0'){
+		//post("%d %c 0x%x", i, ptr[i], ptr[i]);
+		i++;
+		a->nbytes++;
+	}
+	i++;
+	a->npaddingbytes++;
+	while(i % 4){
+		//post("%d %c 0x%x", i, ptr[i], ptr[i]);
+		i++;
+		a->npaddingbytes++;
+	}
+	//post("%d bytes", a->nbytes + a->npaddingbytes);
+	return a->nbytes + a->npaddingbytes;
+}
+
+char *cmmjl_osc_atom_getptr(t_cmmjl_osc_atom *a){
+	return a->a_w.w_ptr;;
+}
+
+void cmmjl_osc_atom_settypetag(t_cmmjl_osc_atom *a, char tt){
+	a->osc_typetag = tt;
+}
+
+char cmmjl_osc_atom_gettypetag(t_cmmjl_osc_atom *a){
+	return a->osc_typetag;
+}
+
+int cmmjl_osc_atom_tostring(t_cmmjl_osc_atom *a, char *buf){
+	switch(a->a_type){
+	case CMMJL_CHAR:
+		return sprintf(buf, "%c", a->a_w.w_char);
+	case CMMJL_UCHAR:
+		return sprintf(buf, "%c", a->a_w.w_uchar);
+	case CMMJL_SHORT:
+		return sprintf(buf, "%hd", a->a_w.w_short);
+	case CMMJL_USHORT:
+		return sprintf(buf, "%hud", a->a_w.w_ushort);
+	case CMMJL_LONG:
+		return sprintf(buf, "%ld", a->a_w.w_long);
+	case CMMJL_ULONG:
+		return sprintf(buf, "%lud", a->a_w.w_ulong);
+	case CMMJL_LLONG:
+		return sprintf(buf, "%lld", a->a_w.w_llong);
+	case CMMJL_ULLONG:
+		return sprintf(buf, "%llud", a->a_w.w_ullong);
+	case CMMJL_FLOAT:
+		return sprintf(buf, "%f", a->a_w.w_float);
+	case CMMJL_DOUBLE:
+		return sprintf(buf, "%f", a->a_w.w_double);
+	case CMMJL_LDOUBLE:
+		return sprintf(buf, "%Lf", a->a_w.w_ldouble);
+	case CMMJL_PTR:
+		return sprintf(buf, "%p", a->a_w.w_ptr);
+	case CMMJL_TIMETAG:
+		// should format in some human readable form
+		return 0;
+	}
+	return 0;
+}

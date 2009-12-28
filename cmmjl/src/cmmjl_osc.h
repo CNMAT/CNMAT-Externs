@@ -40,24 +40,53 @@ Audio Technologies, University of California, Berkeley.
 #include "cmmjl_osc_schedule.h"
 #include "ext.h"
 
-typedef char t_cmmjl_osc_type;
+#define CMMJL_GEN_INT 0x100
+#define CMMJL_GEN_FLOAT 0x200
+#define CMMJL_GEN_OTHER 0x300
+
+typedef enum _cmmjl_osc_type{
+	CMMJL_CHAR = 0x100,
+	CMMJL_UCHAR,
+	CMMJL_SHORT,
+	CMMJL_USHORT,
+	CMMJL_LONG,
+	CMMJL_ULONG,
+	CMMJL_LLONG,
+	CMMJL_ULLONG,
+	CMMJL_FLOAT = 0x200,
+	CMMJL_DOUBLE,
+	CMMJL_LDOUBLE,
+	CMMJL_PTR = 0x300,
+	CMMJL_TIMETAG
+} t_cmmjl_osc_type;
 
 union _cmmjl_osc_word{
-	int w_int;
+	char w_char;
+	unsigned char w_uchar;
+	short w_short;
+	unsigned short w_ushort;
+	long w_long;
+	unsigned long w_ulong;
+	long long w_llong;
+	unsigned long long w_ullong;
 	float w_float;
-	char *w_string;
-	char *w_blob;
-	long long w_timetag;
+	double w_double;
+	long double w_ldouble;
+	char *w_ptr;
+	unsigned long long w_timetag;
 };
 
 typedef struct _cmmjl_osc_atom{
 	union _cmmjl_osc_word a_w;
 	t_cmmjl_osc_type a_type;
+	int nbytes;
+	int npaddingbytes;
+	char osc_typetag;
 } t_cmmjl_osc_atom;
 
 typedef struct _cmmjl_osc_message{
 	char *address;
-	t_cmmjl_osc_type *typetags;
+	char *typetags;
 	int argc;
 	char *argv;
 	int size;
@@ -163,6 +192,9 @@ void cmmjl_osc_saveAddressWithPatcher(void *x, bool b);
 void cmmjl_osc_sendMsg(void *x, t_symbol *msg, int argc, t_atom *argv);
 
 int cmmjl_osc_init_bundle(int len, char *ptr, char *timetag);
+int cmmjl_osc_get_msg_length(char *address, char *tt, int argc, char *argv);
+int cmmjl_osc_get_msg_length_max(t_symbol *msg, short argc, t_atom *argv);
+int cmmjl_osc_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buffer);
 int cmmjl_osc_make_bundle(int numAddresses,
 			  t_symbol **addresses, 
 			  int *numArgs,
@@ -178,7 +210,6 @@ int cmmjl_osc_rename(char *buffer,
 		    int bufferPos, 
 		    t_cmmjl_osc_message *msg, 
 		     char *newAddress);
-void cmmjl_osc_args2atoms(char *typetags, char *argv, t_atom *atoms);
 
 /** 	Wrap a naked message in a bundle with an ``immediate'' timetag
 
@@ -212,6 +243,8 @@ long cmmjl_osc_flatten(long n, char *ptr, char *out);
 	@param	ptr	The address of the packet.
 	@callgraph
  */
+
+int cmmjl_osc_copy_max_messages(t_symbol *msg, short argc, t_atom *argv, int len, char *buf);
 void cmmjl_osc_fullPacket(void *x, long n, long ptr);
 
 /**	Call the OSC FullPacket parser
@@ -316,6 +349,41 @@ bool cmmjl_osc_isFinalPathSegment(char *path);
 	@returns		The number of bytes needed to hold the blob data.
 */
 int cmmjl_osc_effectiveBlobLength(int blobDataSize);
+
+int cmmjl_osc_get_tree_length(int len, char *msg);
+void cmmjl_osc_address_to_array(int len, char *msg, char **ar, int *lengths);
+
+void cmmjl_osc_atom2maxatom(t_cmmjl_osc_atom *a, t_atom *ma);
+void cmmjl_osc_get_data_atoms(t_cmmjl_osc_message *msg, t_atom *atoms);
+void cmmjl_osc_get_data(t_cmmjl_osc_message *msg, t_cmmjl_osc_atom *a);
+
+int cmmjl_osc_atom_setchar(t_cmmjl_osc_atom *a, char *ptr);
+char cmmjl_osc_atom_getchar(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setuchar(t_cmmjl_osc_atom *a, char *ptr);
+unsigned char cmmjl_osc_atom_getuchar(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setshort(t_cmmjl_osc_atom *a, char *ptr);
+short cmmjl_osc_atom_getshort(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setushort(t_cmmjl_osc_atom *a, char *ptr);
+unsigned short cmmjl_osc_atom_getushort(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setlong(t_cmmjl_osc_atom *a, char *ptr);
+long cmmjl_osc_atom_getlong(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setulong(t_cmmjl_osc_atom *a, char *ptr);
+unsigned long cmmjl_osc_atom_getulong(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setllong(t_cmmjl_osc_atom *a, char *ptr);
+long long cmmjl_osc_atom_getllong(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setullong(t_cmmjl_osc_atom *a, char *ptr);
+unsigned long long cmmjl_osc_atom_getullong(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setfloat(t_cmmjl_osc_atom *a, char *ptr);
+float cmmjl_osc_atom_getfloat(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setdouble(t_cmmjl_osc_atom *a, char *ptr);
+double cmmjl_osc_atom_getdouble(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setldouble(t_cmmjl_osc_atom *a, char *ptr);
+long double cmmjl_osc_atom_getldouble(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_setptr(t_cmmjl_osc_atom *a, char *ptr);
+char *cmmjl_osc_atom_getptr(t_cmmjl_osc_atom *a);
+void cmmjl_osc_atom_settypetag(t_cmmjl_osc_atom *a, char tt);
+char cmmjl_osc_atom_gettypetag(t_cmmjl_osc_atom *a);
+int cmmjl_osc_atom_tostring(t_cmmjl_osc_atom *a, char *buf);
 #endif
 
 /*@}*/

@@ -36,7 +36,8 @@ Audio Technologies, University of California, Berkeley.
 #ifndef __CMMJL_OSC_PATTERN_H__
 #define __CMMJL_OSC_PATTERN_H__
 
-#include "regex.h"
+//#include "regex.h"
+#include <pcreposix.h>
 
 /**	Convert an OSC address to a regular expression.  This is done by 
 	converting the following OSC expressions to their regex counterparts:\n\n
