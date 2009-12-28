@@ -1,5 +1,5 @@
 #include "cmmjl.h"
-#include "cmmjl_osc_pattern.h"
+#include "cmmjl_osc_pattern_re.h"
 #include <string.h>
 
 int cmmjl_osc_hasPattern(int len, char *st);
