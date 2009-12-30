@@ -28,6 +28,7 @@
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
   VERSION 0.0.1: Added version info
+  VERSION 0.1: Better help file and prevents a and b from being <= 0
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
