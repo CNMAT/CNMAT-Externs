@@ -70,6 +70,7 @@ void bdist_assist(t_bdist *x, void *b, long m, long a, char *s);
 double bdist_scale(double f, double min_in, double max_in, double min_out, double max_out);
 double bdist_clip(double f, double min, double max);
 void *bdist_new(t_symbol *msg, int argc, t_atom *argv);
+void bdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno);
 
 double bdist_beta(double x, double a, double b){
 	return gsl_sf_beta_inc(a, b, bdist_clip(x, 0., 1.));
@@ -128,10 +129,10 @@ void bdist_float(t_bdist *x, double f){
 		outlet_float(x->outlet, bdist_scale(bdist_beta(x->x, x->a, x->b), 0., 1., x->ymin, x->ymax));
 		break;
 	case 1:
-		x->a = bdist_clip(f, DBL_MIN, DBL_MAX);
+		x->a = bdist_clip(f, FLT_MIN, FLT_MAX);
 		break;
 	case 2:
-		x->b = bdist_clip(f, DBL_MIN, DBL_MAX);
+		x->b = bdist_clip(f, FLT_MIN, FLT_MAX);
 		break;
 	}
 	jbox_redraw(&(x->ob));
@@ -225,6 +226,10 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 		x->proxies[1] = proxy_new((t_object *)x, 2, &(x->inlet));
 		x->proxies[0] = proxy_new((t_object *)x, 1, &(x->inlet));
 
+		// this is really fucking important.  if there's an error and the gsl's 
+		// default handler gets called, it aborts the program!
+		gsl_set_error_handler(bdist_errorHandler);  
+
 		critical_new(&(x->lock));
         
 		attr_dictionary_process(x, d); 
@@ -266,8 +271,10 @@ int main(void){
 
 	CLASS_ATTR_DOUBLE(c, "a", 0, t_bdist, a);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "a", 0, "1.0");
+	CLASS_ATTR_FILTER_CLIP(c, "a", FLT_MIN, FLT_MAX);
 	CLASS_ATTR_DOUBLE(c, "b", 0, t_bdist, b);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "b", 0, "1.0");
+	CLASS_ATTR_FILTER_CLIP(c, "b", FLT_MIN, FLT_MAX);
 
 	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_bdist, xmin);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "xmin", 0, "0.0");
@@ -290,3 +297,6 @@ int main(void){
 	return 0;
 }
 
+void bdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
+	error("bdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+}
