@@ -10,10 +10,10 @@ int mult(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets
     t_myobj *xx = (t_myobj *)x;
     switch(argv[0].a_type){
         case A_FLOAT:
-            outlet_float(outlets[0], xx->arg * atom_getfloat(argv));
+            outlet_float(outlets[0], xx->arg / atom_getfloat(argv));
             break;
         case A_LONG:
-            outlet_int(outlets[0], xx->arg * atom_getlong(argv));
+            outlet_int(outlets[0], xx->arg / atom_getlong(argv));
             break;
     }
     return 0; // non-zero indicates an error

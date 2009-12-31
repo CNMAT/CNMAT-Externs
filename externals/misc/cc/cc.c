@@ -100,9 +100,10 @@ typedef struct _cc{
 	t_symbol *user_ldflags;
 	char *user_obj;
 	int verbose;
-	int cfile_is_tmp, build_path_is_tmp;
+	int build_path_is_tmp;
 	int ok_to_compile; // we can't use critical_enter() because the function contained in a lib may call an outlet (or something worse...).
 	int compiling;
+	int have_valid_filename;
 } t_cc;
 
 static t_class *cc_class;
@@ -123,12 +124,13 @@ void cc_edclose(t_cc *x, char **text, long size);
 long cc_edsave(t_cc *x, char **text, long size);
 void cc_okclose(t_cc *x, char *prompt, short *result);
 void cc_dblclick(t_cc *x);
+
 void cc_make_file_paths(t_cc *x);
 int cc_make_build_dir(t_cc *x, char *path);
 void cc_free(t_cc *x);
 void cc_assist(t_cc *x, void *b, long m, long a, char *s);
 void cc_post_log(t_cc *x, void (*p)(char *, ...));
-void cc_write_template(t_cc *x, FILE *fp);
+int cc_write_template(t_cc *x, char *buf);
 #ifdef CC_MSP
 void cc_dsp(t_cc *x, t_signal **sp, short *count);
 t_int *cc_perform(t_int *w);
@@ -154,12 +156,6 @@ void cc_compile(t_cc *x){
 	defer(x, (method)cc_docompile_and_load_lowpriority, NULL, 0, NULL);
 }
 
-/*
-void cc_docompile_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
-	cc_docompile(x);
-}
-*/
-
 void cc_docompile_and_load_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 	if(cc_docompile(x)){
 		return;
@@ -172,6 +168,7 @@ int cc_docompile(t_cc *x){
 	x->compiling = 1;
 	int ret = cc_make_build_dir(x, x->build_path);
 	if(ret){
+		object_error((t_object *)x, "failed to make build directory at %s", x->build_path);
 		goto out;
 	}
 
@@ -185,6 +182,11 @@ int cc_docompile(t_cc *x){
 	}else{
 		fclose(fp);
 		ret = 1;
+		if(x->have_valid_filename == 0){
+			object_error((t_object *)x, "you must specify a c file to compile");
+		}else{
+			object_error((t_object *)x, "couldn't open %s", x->cfile_fullpath);
+		}
 		goto out;
 	}
 
@@ -404,6 +406,28 @@ void cc_anything(t_cc *x, t_symbol *msg, int argc, t_atom *argv){
 }
 
 void cc_edclose(t_cc *x, char **text, long size){
+	t_symbol *path = object_attr_getsym(x->ed, gensym("filepath"));
+	x->ed = NULL;
+	if(path){
+		if(path == gensym("")){
+			return;
+		}
+		char *ptr = path->s_name;
+		while(*ptr != ':'){
+			ptr++;
+		}
+		ptr++;
+		strcpy(x->cfile_fullpath, ptr);
+		//post("%s cfile: %s", __PRETTY_FUNCTION__, x->cfile_fullpath);
+		x->have_valid_filename = 1;
+		cc_get_basename(x->cfile_fullpath, x->basename);
+		sprintf(x->ofile_fullpath, "%s/%s.o", x->build_path, x->basename);
+		sprintf(x->dfile_fullpath, "%s/%s.dylib", x->build_path, x->basename);
+		sprintf(x->logfile_fullpath, "%s/%s.log", x->build_path, x->basename);
+	}
+}
+
+long cc_edsave(t_cc *x, char **text, long size){
 	if(size + 1 > x->code_buf_len){
 		char *tmp = (char *)realloc(x->code_buf, (size * 2) * sizeof(char));
 		if(tmp){
@@ -411,64 +435,71 @@ void cc_edclose(t_cc *x, char **text, long size){
 			x->code_buf_len = size * 2;
 		}else{
 			error("cc: out of memory!");
-			return;
+			return 0;
 		}
 	}
 	strncpy(x->code_buf, *text, size);
 	x->code_buf[size] = '\0';
 	x->code_len = size + 1;
 
-	x->ed = NULL;
-}
-
-long cc_edsave(t_cc *x, char **text, long size){
 	return 0;
 }
 
-void cc_okclose(t_cc *x, char *prompt, short *result){
-	if(x->cfile_is_tmp){
-		sprintf(prompt, "Save changes before closing?");
-		*result = 1;
-	}else{
-		*result = 0;
-	}
+void cc_okclose(t_cc *x, char *s, short *result){
+	/*
+	  t_symbol *name = object_attr_getsym(x->ed, gensym("title"));
+	  t_symbol *path = object_attr_getsym(x->ed, gensym("filepath"));
+	  t_object *wind = object_attr_getobj(x->ed, gensym("wind"));
+	  post("%s: name = %s, path = %s", __PRETTY_FUNCTION__, name->s_name, path->s_name);
+	*/
+
 	return;
+
+	/*
+	  sprintf(s,"Store changes to \"%s\" before closing?", name->s_name);
+
+	  switch (wind_advise(wind,s)) {
+	  case aaYes:
+	  //x->c_saveme = 1;
+	  *result = 3;	// no dialog, don't clear dirty bit 
+	  break;
+	  case aaNo:
+	  //x->c_saveme = 0;
+	  *result = 3;	
+	  break;
+	  case aaCancel:
+	  *result = 4;
+	  break;
+	  }
+	  return;
+	*/
 }
 
 void cc_dblclick(t_cc *x){
 	// this should be done only if the file was actually modified--otherwise, just use the buffer
+
+	//post("%s ofile: %s", __PRETTY_FUNCTION__, x->ofile_fullpath);
 	FILE *fp = fopen(x->cfile_fullpath, "r");
 	if(fp){
 		x->code_len = fread(x->code_buf, sizeof(char), x->code_buf_len, fp);
 	}else{
-		//}else if(x->cfile_is_tmp){
-		fclose(fp);
-		if(!(fp = fopen(x->cfile_fullpath, "w"))){
-			error("cc: couldn't open %s", x->cfile_fullpath);
-			return;
-		}
-		cc_write_template(x, fp);
-		fclose(fp);
-		fp = fopen(x->cfile_fullpath, "r");
-		x->code_len = fread(x->code_buf, sizeof(char), x->code_buf_len, fp);
+		x->code_len = cc_write_template(x, x->code_buf);
 	}
 	fclose(fp);
 	if(x->ed){
 		object_method(x->ed, gensym("settext"), x->code_buf, gensym("utf-8"));
 	}else{
 		x->ed = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), (t_object *)x, 0);
-		short path;
-		char filename[MAX_FILENAME_CHARS];
-		if(path_frompathname(x->cfile_fullpath, &path, filename)){
-			error("cc: couldn't find %s", x->cfile_fullpath);
-			return;
-		}
-		if(x->cfile_is_tmp){
+		if(x->have_valid_filename){
+			short path;
+			char filename[MAX_FILENAME_CHARS];
+			if(path_frompathname(x->cfile_fullpath, &path, filename)){
+				error("cc: couldn't find %s", x->cfile_fullpath);
+				return;
+			}
 			object_method(x->ed, gensym("filename"), filename, path);
-			//object_attr_setsym(x->ed, gensym("title"), gensym("editor"));
 		}else{
-			object_method(x->ed, gensym("filename"), filename, path);
-			//object_attr_setsym(x->ed, gensym("title"), gensym(x->cfile_fullpath));
+			object_attr_setsym(x->ed, gensym("title"), gensym("Untitled"));
 		}
 		object_method(x->ed, gensym("settext"), x->code_buf, gensym("utf-8"));
 	}
@@ -514,12 +545,6 @@ void cc_free(t_cc *x){
 		f((t_object *)x, x->user_obj);
 	}
 
-	if(x->cfile_is_tmp){
-		char buf[MAX_PATH_CHARS + 20];
-		sprintf(buf, "rm -f %s", x->cfile_fullpath);
-		system(buf);
-	}
-
 	if(x->build_path_is_tmp){
 		char buf[MAX_PATH_CHARS + 20];
 		sprintf(buf, "rm -f %s/%s.{o,dylib,st,log}", x->build_path, x->basename);
@@ -543,21 +568,11 @@ void cc_free(t_cc *x){
 }
 
 void cc_assist(t_cc *x, void *b, long io, long index, char *s){
-	switch(io){
-	case 1:
-		switch(index){
-		case 0:
-			sprintf(s, "");
-			break;
-		}
-		break;
-	case 2:
-		switch(index){
-		case 0:
-			sprintf(s, "");
-			break;
-		}
-		break;
+	void (*f)(long, long, char*);
+	hashtab_lookup(x->ht, gensym("my_assist"), (t_object **)&f);
+	if(f){
+		//f((t_object *)x, x->user_obj);
+		f(io, index, s);
 	}
 }
 
@@ -570,72 +585,85 @@ void cc_post_log(t_cc *x, void (*p)(char *, ...)){
 	fclose(fp);
 }
 
-void cc_write_template(t_cc *x, FILE *fp){
-	if(!fp){
-		return;
+int cc_write_template(t_cc *x, char *buf){
+	if(!buf){
+		return 0;
 	}
-	fprintf(fp, "#include \"ext.h\"\n");
-	fprintf(fp, "#include \"ext_obex.h\"\n");
-	fprintf(fp, "#include \"ext_obex_util.h\"\n\n");
+	int len = 0;
+	len += sprintf(buf + len, "#include \"ext.h\"\n");
+	len += sprintf(buf + len, "#include \"ext_obex.h\"\n");
+	len += sprintf(buf + len, "#include \"ext_obex_util.h\"\n\n");
 
 #ifdef CC_MSP
-	fprintf(fp, "#include \"z_dsp.h\"\n\n");
+	len += sprintf(buf + len, "#include \"z_dsp.h\"\n\n");
 
-	fprintf(fp, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr);\n\n");
+	len += sprintf(buf + len, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr);\n\n");
 
-	fprintf(fp, "long my_dsp(t_object *o, char *x, short *count){\n");
-	fprintf(fp, "\treturn (long)my_perform;\n");
-	fprintf(fp, "}\n\n");
+	len += sprintf(buf + len, "long my_dsp(t_object *o, char *x, short *count){\n");
+	len += sprintf(buf + len, "\treturn (long)my_perform;\n");
+	len += sprintf(buf + len, "}\n\n");
 
-	fprintf(fp, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr){\n");
-	fprintf(fp, "\n");
-	fprintf(fp, "}\n\n");
+	len += sprintf(buf + len, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr){\n");
+	len += sprintf(buf + len, "\n");
+	len += sprintf(buf + len, "}\n\n");
 #endif
 
-	fprintf(fp, "int foo(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
-	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
-	fprintf(fp, "}\n");
+	len += sprintf(buf + len, "int foo(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
+	len += sprintf(buf + len, "\n\treturn 0; // non-zero indicates an error\n");
+	len += sprintf(buf + len, "}\n");
 
-	fprintf(fp, "\n");
+	len += sprintf(buf + len, "\n");
 
-	fprintf(fp, "int my_bang(t_object *o, char *x, int inlet, int numoutlets, void **outlets){\n");
-	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
-	fprintf(fp, "}\n");
+	len += sprintf(buf + len, "int my_bang(t_object *o, char *x, int inlet, int numoutlets, void **outlets){\n");
+	len += sprintf(buf + len, "\n\treturn 0; // non-zero indicates an error\n");
+	len += sprintf(buf + len, "}\n");
 
-	fprintf(fp, "\n");
+	len += sprintf(buf + len, "\n");
 
-	fprintf(fp, "int my_int(t_object *o, char *x, int inlet, long l, int numoutlets, void **outlets){\n");
-	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
-	fprintf(fp, "}\n");
+	len += sprintf(buf + len, "int my_int(t_object *o, char *x, int inlet, long l, int numoutlets, void **outlets){\n");
+	len += sprintf(buf + len, "\n\treturn 0; // non-zero indicates an error\n");
+	len += sprintf(buf + len, "}\n");
 
-	fprintf(fp, "\n");
+	len += sprintf(buf + len, "\n");
 
-	fprintf(fp, "int my_float(t_object *o, char *x, int inlet, double f, int numoutlets, void **outlets){\n");
-	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
-	fprintf(fp, "}\n");
+	len += sprintf(buf + len, "int my_float(t_object *o, char *x, int inlet, double f, int numoutlets, void **outlets){\n");
+	len += sprintf(buf + len, "\n\treturn 0; // non-zero indicates an error\n");
+	len += sprintf(buf + len, "}\n");
 
-	fprintf(fp, "\n");
+	len += sprintf(buf + len, "\n");
 
-	fprintf(fp, "int my_list(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
-	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
-	fprintf(fp, "}\n");
+	len += sprintf(buf + len, "int my_list(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
+	len += sprintf(buf + len, "\n\treturn 0; // non-zero indicates an error\n");
+	len += sprintf(buf + len, "}\n");
 
-	fprintf(fp, "\n");
+	len += sprintf(buf + len, "\n");
 
-	fprintf(fp, "int my_anything(t_object *o, char *x, int inlet, t_symbol *msg, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
-	fprintf(fp, "\n\treturn 0; // non-zero indicates an error\n");
-	fprintf(fp, "}\n");
+	len += sprintf(buf + len, "int my_anything(t_object *o, char *x, int inlet, t_symbol *msg, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
+	len += sprintf(buf + len, "\n\treturn 0; // non-zero indicates an error\n");
+	len += sprintf(buf + len, "}\n");
 
-	fprintf(fp, "\n");
+	len += sprintf(buf + len, "\n");
 
-	fprintf(fp, "void my_free(t_object *o, char *x){\n");
-	fprintf(fp, "\t// free any instance data here\n");
-	fprintf(fp, "}\n\n");
+	len += sprintf(buf + len, "void my_free(t_object *o, char *x){\n");
+	len += sprintf(buf + len, "\t// free any instance data here\n");
+	len += sprintf(buf + len, "}\n\n");
 
-	fprintf(fp, "void my_new(t_object *o, char *x){\n");
-	fprintf(fp, "\t// allocate and initialize any instance data/variables here\n");
-	fprintf(fp, "\t// this function will be called each time you compile\n");
-	fprintf(fp, "}\n");
+	len += sprintf(buf + len, "void my_new(t_object *o, char *x){\n");
+	len += sprintf(buf + len, "\t// allocate and initialize any instance data/variables here\n");
+	len += sprintf(buf + len, "\t// this function will be called each time you compile\n");
+	len += sprintf(buf + len, "}\n");
+
+	len += sprintf(buf + len, "void my_assist(long io, long index, char *s){\n");
+	len += sprintf(buf + len, "\tswitch(io){\n");
+	len += sprintf(buf + len, "\t\tcase 1: // inlet\n");
+	len += sprintf(buf + len, "\t\t\tswitch(index){\n\t\t\t}\n");
+	len += sprintf(buf + len, "\t\t\tbreak;\n");
+	len += sprintf(buf + len, "\t\tcase 2: // outlet\n");
+	len += sprintf(buf + len, "\t\t\tswitch(index){\n\t\t\t}\n");
+	len += sprintf(buf + len, "\t\t\tbreak;\n");
+	len += sprintf(buf + len, "\t}\n}\n");
+
+	return len;
 }
 
 #ifdef CC_MSP
@@ -679,8 +707,8 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 
 		x->ok_to_compile = 1;
 		x->compiling = 0;
+		x->have_valid_filename = 0;
 
-		x->cfile_is_tmp = 1;
 		x->build_path_is_tmp = 1;
 
 		x->ed = NULL;
@@ -694,7 +722,6 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		x->cfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
 		x->ofile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
 		x->dfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
-		//x->stfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
 		x->logfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
 
 		x->path_to_maxsdk = gensym("");
@@ -711,28 +738,18 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		sprintf(x->basename, "cc_%ld", (long)ps_cc_instance_count->s_thing);
 #endif
 
-		// private?!?
-		//short tmpdir = path_tempfolder();
 		short tmpdir;
 		sprintf(x->build_path, "/private/var/tmp");
 		char fn[512];
 		path_frompathname(x->build_path, &tmpdir, fn);
-		x->cfile_path_id = x->build_path_id = tmpdir;
+		x->build_path_id = tmpdir;
 
-		sprintf(x->cfile_fullpath, "%s/%s.c", x->build_path, x->basename);
+		//sprintf(x->cfile_fullpath, "%s/%s.c", x->build_path, x->basename);
 		sprintf(x->ofile_fullpath, "%s/%s.o", x->build_path, x->basename);
 		sprintf(x->dfile_fullpath, "%s/%s.dylib", x->build_path, x->basename);
-		//sprintf(x->stfile_fullpath, "%s/%s.st", x->build_path, x->basename);
 		sprintf(x->logfile_fullpath, "%s/%s.log", x->build_path, x->basename);
 
-		FILE *fp = fopen(x->cfile_fullpath, "w");
-		if(fp){
-			cc_write_template(x, fp);
-			fclose(fp);
-		}else{
-			error("cc: couldn't write to tmp dir");
-		}
-
+		x->code_len = cc_write_template(x, x->code_buf);
 
 		x->function_names = (t_symbol **)calloc(128, sizeof(t_symbol *));
 
@@ -870,9 +887,9 @@ t_max_err cc_cfile_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 		if(fp = fopen(f, "r")){
 			x->code_len = fread(x->code_buf, sizeof(char), BUFSIZE, fp);
 		}else{
-			fclose(fp);
 			if(fp = fopen(f, "w")){
-				cc_write_template(x, fp);
+				x->code_len = cc_write_template(x, x->code_buf);
+				fwrite(x->code_buf, x->code_len, sizeof(char), fp);
 				fclose(fp);
 			}
 		}
@@ -898,13 +915,7 @@ t_max_err cc_cfile_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	sprintf(x->dfile_fullpath, "%s/%s.dylib", x->build_path, x->basename);
 	sprintf(x->logfile_fullpath, "%s/%s.log", x->build_path, x->basename);
 
-	if(x->cfile_is_tmp){
-		char buf[MAX_PATH_CHARS + 20];
-		sprintf(buf, "rm -f %s", old_file);
-		system(buf);
-	}
-
-	x->cfile_is_tmp = 0;
+	x->have_valid_filename = 1;
 
 	return 0;
 }
@@ -1003,7 +1014,8 @@ t_max_err cc_load_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	*ptr = '\0';
 	t_atom a;
 	atom_setsym(&a, gensym(buf));
-	cc_cfile_set(x, NULL, 1, &a);
+	//post("calling cc_cfile_set: %s", buf);
+	//cc_cfile_set(x, NULL, 1, &a);
 	cc_load(x, dfile_sym);
 	return 0;
 }
