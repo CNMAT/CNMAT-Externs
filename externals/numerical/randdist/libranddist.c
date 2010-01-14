@@ -820,7 +820,7 @@ void librdist_multinomial(gsl_rng *rng, int argc, void *argv, int bufc, float *b
 	double p[K];
 	unsigned int n[K];
 	for(i = 0; i < K; i++){
-		p[i] = (unsigned int)librdist_atom_getlong(av + i + 1);
+		p[i] = atom_getfloat(av + i + 1);
 	}
 
 	for(j = 0; j < floor(bufc / K); j++){

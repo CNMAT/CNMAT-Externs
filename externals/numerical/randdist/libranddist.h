@@ -21,6 +21,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
 #include "ext.h"
+#include "ext_obex.h"
+#include "ext_obex_util.h"
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 

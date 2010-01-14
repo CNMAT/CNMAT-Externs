@@ -232,7 +232,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.pch";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;

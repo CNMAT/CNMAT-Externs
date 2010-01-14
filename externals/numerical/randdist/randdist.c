@@ -38,6 +38,7 @@ VERSION 1.4: Default state, changed dump to distlist, user-defined pmfs are now 
 VERSION 2.0: Rewritten with common code between randdist and randdist~ put in libranddist.h/c
 VERSION 2.1: Re-re-factored.  Nonparametric now uses gsl_ran_discrete().
 VERSION 2.1.1: Fixed a bug that occurred when distlist was used with nonparametric
+VERSION 2.1.2: Fixed a bug with the multinomial distribution
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -188,7 +189,7 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	double sum = 0;
 	if(x->r_dist == gensym("multinomial")){
 		for(i = 0; i < argc; i++){
-			sum += atom_getfloat(argv + i);
+			sum += atom_getfloat(argv + i + 1);
 		}
 	}else{
 		sum = 1.;
