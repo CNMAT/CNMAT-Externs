@@ -31,6 +31,7 @@
   VERSION 0.1.1: added critical sections and fixed a memory leak
   VERSION 0.2: points are now output in the order in which they were entered
   VERSION 0.3: Added a middle outlet to output the distances from the current point to all others
+  VERSION 0.4: New algorithm, ability to reshape it by dragging concentric circles
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -47,10 +48,30 @@
 #define OUTPUT_CONCATENATE 0
 #define OUTPUT_LIST 1
 
+#define XY_INNER 1
+#define XY_OUTER 2
+
+/*
+typedef struct _m22{
+	double a, b, c, d;
+} t_m22;
+
+typedef struct _basis{
+	t_m22 cov_mat;
+	t_m22 icov_mat;
+	double det;
+	double mscale, gscale;
+} t_basis;
+*/
+
 typedef struct _point{
 	double x, y;
 	t_symbol *label;
 	t_jrgba color;
+	long double exponent;
+	long double weight;
+	double inner_radius, outer_radius;
+	int dragging;
 	struct _point *next;
 	struct _point *prev;
 } t_point;
@@ -69,6 +90,9 @@ typedef struct _xydisplay{
 	long monotonic_point_counter;
 	long outputmode;
 	long locked;
+	long rbf;
+	long mouse_state;
+	float line_width;
 } t_xydisplay;
 
 static t_class *xydisplay_class;
@@ -77,8 +101,15 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview);
 void xydisplay_bang(t_xydisplay *x);
 void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv);
 void xydisplay_anything(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv);
+//void xydisplay_initCovarianceMatrix(t_basis *cm, t_m22 m, double scale);
 void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
 void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
+void xydisplay_mouseup(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
+t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt);
+long double xydisplay_computeWeightFromDistances(double d1, double d2);
+long double xydisplay_computeExponentFromDistances(double d1, double d2);
+void xydisplay_exponent(t_xydisplay *x, double f);
+void xydisplay_weight(t_xydisplay *x, double f);
 t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt);
 void xydisplay_removePoint(t_xydisplay *x, t_point *p);
 void xydisplay_outputPoints(t_xydisplay *x);
@@ -87,6 +118,7 @@ void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv);
 void xydisplay_clear(t_xydisplay *x);
 void xydisplay_free(t_xydisplay *x);
 void xydisplay_assist(t_xydisplay *x, void *b, long m, long a, char *s);
+//double xydisplay_gaussian(t_xydisplay *x, t_point *p, double xx, double yy);
 double xydisplay_scale(double f, double min_in, double max_in, double min_out, double max_out);
 double xydisplay_clip(double f, double min, double max);
 t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av);
@@ -96,43 +128,126 @@ void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv);
 
 void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 	t_rect rect;
-    
-	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);
-	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
-        
-	jgraphics_set_source_jrgba(g, &(x->bordercolor));
-	jgraphics_set_line_width(g, 1);
-	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
-	jgraphics_stroke(g);
-    
-	jgraphics_set_source_jrgba(g, &(x->bgcolor));
-	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
-	jgraphics_fill(g);
 
+	t_jgraphics *g_onscreen = (t_jgraphics *)patcherview_get_jgraphics(patcherview);    
+	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
+
+	t_jsurface *s = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, rect.width, rect.height);
+	t_jgraphics *g = jgraphics_create(s);
+
+	jgraphics_set_source_jrgba(g_onscreen, &(x->bordercolor));
+	jgraphics_set_line_width(g_onscreen, 1);
+	jgraphics_rectangle(g_onscreen, 0., 0., rect.width, rect.height);
+	jgraphics_stroke(g_onscreen);
+    
+	jgraphics_set_source_jrgba(g_onscreen, &(x->bgcolor));
+	jgraphics_rectangle(g_onscreen, 0., 0., rect.width, rect.height);
+	jgraphics_fill(g_onscreen);
+
+	t_rect srect = rect;
+	t_rect drect = rect;
+	srect.x = srect.y = drect.x = drect.y = 0.;
+	if(1){
+		srect.width = srect.height = 128.;
+	}else{
+	}
+
+
+	{
+		int i, j;
+		int w = srect.width;
+		int h = srect.height;
+		double sum;
+		for(i = 0; i < w; i++){
+			for(j = 0; j < h; j++){
+				t_point *p = x->points;
+				sum = 0;
+				t_jrgba color = {0., 0., 0., 1.};
+				double weight;
+				double ii = xydisplay_scale(i, 0, srect.width, 0, drect.width);
+				double jj = xydisplay_scale(j, 0, srect.width, 0, drect.width);
+				while(p){
+					if(ii == p->x && jj == p->y){
+						//weight = 1.;
+						color = p->color;
+						sum = 1;
+						break;
+					}else{
+						weight = powl(1. / sqrtl(pow(ii - p->x, 2.) + powl(jj - p->y, 2.)), p->exponent) * p->weight;
+						if(isinf(weight)){
+							color = p->color;
+							sum = 1.;
+							break;
+						}
+					}
+					color.red += weight * p->color.red;
+					color.green += weight * p->color.green;
+					color.blue += weight * p->color.blue;
+					sum += weight;
+					p = p->next;
+				}
+				color.red /= sum;
+				color.green /= sum;
+				color.blue /= sum;
+				jgraphics_image_surface_set_pixel(s, i, j, color);
+				/*
+				jgraphics_set_source_jrgba(g, &color);
+				jgraphics_rectangle(g, i, j, 1, 1);
+				jgraphics_fill(g);
+				*/
+			}
+		}
+	}
+
+	jgraphics_destroy(g);
+	jgraphics_image_surface_draw(g_onscreen, s, srect, drect);
+
+	g = g_onscreen;
 	// draw points
 	{
 		jgraphics_set_line_width(g, 1);
 		t_point *p = x->points;
 		critical_enter(x->lock);
+		t_jrgba white = {1., 1., 1., 1.};
+		t_jrgba gray = {.5, .5, .5, 1.};
+		t_jrgba black = {0., 0., 0., 1.};
 		while(p){
 			if(p == x->selected){
-				jgraphics_set_source_jrgba(g, &(x->selectedcolor));
+				jgraphics_set_source_jrgba(g, &(white));
 			}else{
-				jgraphics_set_source_jrgba(g, &(x->pointcolor));
+				jgraphics_set_source_jrgba(g, &(gray));
 			}
 			// small center circle
-			jgraphics_ellipse(g, p->x - (x->pointdiameter / 2), p->y - (x->pointdiameter / 2), x->pointdiameter, x->pointdiameter);
+			//jgraphics_ellipse(g, p->x - (x->pointdiameter / 2), p->y - (x->pointdiameter / 2), x->pointdiameter, x->pointdiameter);
+			/*
 			if(x->draw_circle){
 				jgraphics_ellipse(g, p->x - .5, p->y - .5, 1, 1);
 			}
+			*/
+
+			double inner_p = .4, outer_p = 1.25;
+			t_jrgba inner_color = (t_jrgba){pow(p->color.red, inner_p), pow(p->color.green, inner_p), pow(p->color.blue, inner_p), 0.6};
+			t_jrgba outer_color = (t_jrgba){pow(p->color.red, outer_p), pow(p->color.green, outer_p), pow(p->color.blue, outer_p), 0.6};
+
+
+			jgraphics_set_dash(g, NULL, 0, 0);
+			jgraphics_set_line_width(g, 2.);
+			jgraphics_set_source_jrgba(g, &inner_color);
+			jgraphics_ellipse(g, p->x - p->inner_radius, p->y - p->inner_radius, p->inner_radius * 2, p->inner_radius * 2);
+			jgraphics_stroke(g);
+
+			jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
+			jgraphics_set_line_width(g, 1.);
+			jgraphics_set_source_jrgba(g, &inner_color);
+			jgraphics_ellipse(g, p->x - p->outer_radius, p->y - p->outer_radius, p->outer_radius * 2, p->outer_radius * 2);
 			jgraphics_stroke(g);
 
 			if(x->draw_label && p->label){
-				jgraphics_set_source_jrgba(g, &(p->color));
+				jgraphics_set_source_jrgba(g, &(white));
 				jgraphics_set_font_size(g, 10);
 				double w, h;
 				jgraphics_text_measure(g, p->label->s_name, &w, &h);
-				jgraphics_move_to(g, p->x - (w / 2.), p->y - (h / 2.));
+				jgraphics_move_to(g, p->x - (w / 2.), p->y + (w / 2.));
 				jgraphics_show_text(g, p->label->s_name);
 			}
 			jgraphics_stroke(g);
@@ -141,6 +256,129 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 		}
 		critical_exit(x->lock);
 	}
+
+	{
+
+
+		/*
+		double sums[w * h];
+		double weights[w * h * x->npoints];
+		double *wp = weights;
+		memset(sums, 0, (w * h) * sizeof(double));
+		memset(weights, 0, (w * h * x->npoints) * sizeof(double));
+		for(i = 0; i < w; i++){
+			for(j = 0; j < h; j++){
+				t_point *p = x->points;
+				while(p){
+					if(i == p->x && j == p->y){
+						*wp = 1.;
+					}else{
+						*wp = pow(1. / sqrt(pow(i - p->x, 2.) + pow(j - p->y, 2.)), p->exponent);
+					}
+					//printf("%ld: %d %d %f %f %f %f %f %f %f\n", wp, i, j, p->x, p->y, pow(i - p->x, 2.), pow(j - p->y, 2.), sqrt(pow(i - p->x, 2.) + pow(j - p->y, 2.)), 1. / sqrt(pow(i - p->x, 2.) + pow(j - p->y, 2.)), pow(1. / sqrt(pow(i - p->x, 2.) + pow(j - p->y, 2.)), p->exponent));
+					sums[i * h + j] += *wp;
+					wp++;
+					p = p->next;
+				}
+				if(sums[i * h + j]){
+					sums[i * h + j] = .95 / sums[i * h + j];
+				}else{
+					sums[i * h + j] = 1.;
+				}
+			}
+		}
+
+		wp = weights;
+		for(i = 0; i < w; i++){
+			for(j = 0; j < h; j++){
+				t_jrgba color = {1., 1., 1., 1.};
+				t_point *p = x->points;
+				while(p){
+					color.red += (p->color.red * *wp);
+					color.green += (p->color.green * *wp);
+					color.blue += (p->color.blue * *wp);
+					wp++;
+					p = p->next;
+					//color.alpha += *wp++;
+				}
+				color.red /= sums[i * h + j];
+				color.green /= sums[i * h + j];
+				color.blue /= sums[i * h + j];
+				color.alpha /= sums[i * h + j];
+				//printf("%ld: %d %d, alpha = %f\n", i * h + (j * x->npoints) + k, i, j, color.alpha);
+				jgraphics_set_source_jrgba(g, &color);
+				jgraphics_rectangle(g, i, j, 1, 1);
+				jgraphics_fill(g);
+			}
+		}
+		*/
+	}
+
+	/*
+	{
+		int i, j;
+		critical_enter(x->lock);
+		int m = 20;
+		int n = 20;
+		double gms[m * (n + 1)];
+		double sgms[m * (n + 1)];
+		double aspect = (rect.width / rect.height);
+		double dx = 2.0 * aspect / (m - 1);
+		double dy = 2.0 / (n - 1);
+		double xx, yy;
+		//for(i = 0; i < rect.width; i++){
+		//for(j = 0; j < rect.height; j++){
+		for(i = 0, xx = -aspect; i < m; i++, xx += dx){
+			for(j = 0, yy = -1; j < n + 1; j++, yy += dy){
+				double sum = 0;
+				t_point *p = x->points;
+				//double xx = xydisplay_scale(i, 0, rect.width, -1., 1.);
+				//double yy = xydisplay_scale(j, rect.height, 0, -1., 1.);
+				while(p){
+					double g = xydisplay_gaussian(x, p, xx, yy);
+					sum += g;
+					p = p->next;
+				}
+				if(sum == 0.){
+					sgms[i * n + j] = 1.;
+				}else{
+					sgms[i * n + j] = 0.95 / sum;
+				}
+			}
+		}
+		t_point *p = x->points;
+		while(p){
+			double red = p->color.red;
+			double green = p->color.green;
+			double blue = p->color.blue;
+			//for(i = 0; i < rect.width; i++){
+			//for(j = 0; j < rect.height; j++){
+			for(i = 0, xx = -aspect; i < m; i++, xx += dx){
+				for(j = 0, yy = -1; j < n + 1; j++, yy += dy){
+					//double xx = xydisplay_scale(i, 0, rect.width, -1., 1.);
+					//double yy = xydisplay_scale(j, rect.height, 0, -1., 1.);
+					double gauss = xydisplay_gaussian(x, p, xx, yy);
+					gms[i * n + j] = gauss * 0.75;
+				}
+			}
+			//for(i = 0; i < rect.width; i++){
+			//for(j = 0; j < rect.height; j++){
+			for(i = 0, xx = -aspect; i < m; i++, xx += dx){
+				//yy = -1. + dy;
+				for(j = 0, yy = 1.; j < n; j++, yy -= dy){
+					t_jrgba color = (t_jrgba){red, green, blue, gms[i * n + j] * sgms[i * n + j]};
+					jgraphics_set_source_jrgba(g, &color);
+					jgraphics_rectangle(g, xydisplay_scale(xx, -1., 1., 0., rect.width), xydisplay_scale(yy, 1., -1., 0., rect.height), xydisplay_scale(dx, 0., aspect * 2., 0., rect.width), xydisplay_scale(dy, 0., 2., 0., rect.height));
+					post("alpha = %f, %f %f %d %d, %f %f, %f %f", gms[i * n + j] * sgms[i * n + j], xydisplay_scale(xx, -aspect, aspect, 0., rect.width), xydisplay_scale(yy, 1., -1., 0., rect.height), m, n, dx, dy, xydisplay_scale(dx, 0., aspect * 2, 0., rect.width), (aspect * (m - 1)) / 2.);
+					jgraphics_fill(g);
+				}
+
+			}
+			p = p->next;
+		}
+		critical_exit(x->lock);
+	}
+	*/
 }
 
 void xydisplay_bang(t_xydisplay *x){
@@ -184,6 +422,22 @@ void xydisplay_anything(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv)
 
 }
 
+/*
+void xydisplay_initCovarianceMatrix(t_basis *cm, t_m22 m, double scale){
+	cm->det = m.a * m.d - m.b * m.c;
+	if(cm->det != 0.0){
+		cm->cov_mat = m;
+		double one_over_det = 1. / cm->det;
+		cm->icov_mat.a = one_over_det * m.d;
+		cm->icov_mat.b = one_over_det * -m.b;
+		cm->icov_mat.c = one_over_det * -m.c;
+		cm->icov_mat.d = one_over_det * m.a;
+		cm->mscale = scale;
+		cm->gscale = scale / (2.0 * M_PI * sqrt(cm->det));
+	}
+}
+*/
+
 // 0x10 = no modifiers 
 // 0x11 = command 
 // 0x12 = shift 
@@ -200,23 +454,7 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		{
 			x->selected = xydisplay_selectPoint(x, pt);
 			if(!(x->selected) && !(x->locked)){
-				critical_enter(x->lock);
-				t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
-				p->x = pt.x;
-				p->y = pt.y;
-				p->next = x->points;
-				p->prev = NULL;
-				if(x->points){
-					x->points->prev = p;
-				}
-				x->points = p;
-				x->selected = p;
-				x->npoints++;
-				char buf[16];
-				sprintf(buf, "%ld", x->monotonic_point_counter++);
-				p->label = gensym(buf);
-				p->color = x->labelcolor;
-				critical_exit(x->lock);
+				x->selected = xydisplay_insertPoint(x, pt);
 			}
 		}
 		break;
@@ -233,6 +471,27 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		}
 		break;
 	case 0x13:
+		{
+			t_point *p = x->points;
+			int i = 0;
+			while(p){
+				post("inner: %f %f %f", pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.), pow(p->inner_radius, 2.), fabs(pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.) - pow(p->inner_radius, 2.)));
+				post("outer: %f %f %f", pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.), pow(p->outer_radius, 2.), fabs(pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.) - pow(p->outer_radius, 2.)));
+				i++;
+				if(fabs(sqrt(pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.)) - p->inner_radius) <= 5){
+					p->dragging = XY_INNER;
+					break;
+				}else if(fabs(sqrt(pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.)) - p->outer_radius) <= 5.){
+					p->dragging = XY_OUTER;
+					break;
+				}else{
+					p->dragging = 0;
+				}
+
+
+				p = p->next;
+			}
+		}
 		break;
 	}
 
@@ -252,12 +511,30 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 			critical_enter(x->lock);
 			x->selected->x = pt.x;
 			x->selected->y = pt.y;
+			x->mouse_state = 1;
 			critical_exit(x->lock);
 		}
 		break;
 	case 0x12:
 		break;
 	case 0x13:
+		{
+			t_point *p = x->points;
+			while(p){
+				if(p->dragging == XY_INNER){
+					p->inner_radius = sqrt(pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.));
+					p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+					p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+					break;
+				}else if(p->dragging == XY_OUTER){
+					p->outer_radius = sqrt(pow(pt.x - p->x, 2.) + pow(pt.y - p->y, 2.));
+					p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+					p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+					break;
+				}
+				p = p->next;
+			}
+		}
 		break;
 	}
 
@@ -265,6 +542,92 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 	jbox_redraw(&(x->ob));
 	xydisplay_outputPoints(x);
 	xydisplay_outputDistance(x);
+}
+
+void xydisplay_mouseup(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
+	if(x->mouse_state){
+		x->mouse_state = 0;
+		jbox_redraw(&(x->ob));
+	}
+}
+
+t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt){
+	critical_enter(x->lock);
+	t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
+	p->x = pt.x;
+	p->y = pt.y;
+	p->next = x->points;
+	p->prev = NULL;
+	if(x->points){
+		x->points->prev = p;
+	}
+	x->points = p;
+	x->npoints++;
+	char buf[16];
+	sprintf(buf, "%ld", x->monotonic_point_counter++);
+	p->label = gensym(buf);
+	p->color = (t_jrgba){(double)rand() / RAND_MAX, (double)rand() / RAND_MAX, (double)rand() / RAND_MAX, 1.};
+	//xydisplay_initCovarianceMatrix(&(p->cov_mat), (t_m22){.125, 0., 0., .125}, .125);
+	//p->exponent = 2.;
+	//p->weight = 1.;
+	p->inner_radius = 10.;
+	p->outer_radius = 100.;
+	p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+	p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+	critical_exit(x->lock);
+	return p;
+}
+
+#define THRESH .9
+long double xydisplay_computeWeightFromDistances(double d1, double d2){
+	double dd1 = d1;
+	double dd2 = d2;
+	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
+		post("%s: a", __PRETTY_FUNCTION__);
+		dd1 = THRESH * dd2;
+	}else if((dd1 / dd2) >= 1 && (dd1 / dd2) <= (1. / THRESH)){
+		post("%s: b", __PRETTY_FUNCTION__);
+		dd1 = dd2 / THRESH;
+	}
+
+	long double w = expl(-((log(2.) + log(5.)) * (log(dd1) + log(dd2))) / (log(dd1) - log(dd2)));
+	post("w = %f", (double)w);
+	return w;
+}
+
+long double xydisplay_computeExponentFromDistances(double d1, double d2){
+	double dd1 = d1;
+	double dd2 = d2;
+	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
+		dd1 = THRESH * dd2;
+	}else if((dd1 / dd2) >= 1 && (dd1 / dd2) <= (1. / THRESH)){
+		dd1 = dd2 / THRESH;
+	}
+
+	long double d = (2 * (log(2.) + log(5.))) / (-log(dd1) + log(dd2));
+	post("p = %f", (double)d);
+	return d;
+}
+
+void xydisplay_exponent(t_xydisplay *x, double f){
+	t_point *p = x->points;
+	while(p){
+		p->exponent = f;
+		p = p->next;
+	}
+	/*
+	if(x->selected){
+		x->selected->exponent = f;
+	}
+	*/
+	jbox_redraw(&(x->ob));
+}
+
+void xydisplay_weight(t_xydisplay *x, double f){
+	if(x->selected){
+		x->selected->weight = f;
+	}
+	jbox_redraw(&(x->ob));
 }
 
 t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt){
@@ -453,6 +816,19 @@ void xydisplay_assist(t_xydisplay *x, void *b, long io, long index, char *s){
 	}
 }
 
+/*
+double xydisplay_gaussian(t_xydisplay *x, t_point *p, double xx, double yy){
+	t_basis cm = p->cov_mat;
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	xx -= xydisplay_scale(p->x, 0., r.width, -1., 1.);
+	yy -= xydisplay_scale(p->y, 0., r.height, -1., 1.);
+	double g = cm.gscale * exp(-0.5 * (xx * (cm.icov_mat.a * xx + cm.icov_mat.c * yy) + yy * (cm.icov_mat.b * xx + cm.icov_mat.d * yy)));
+	//post("cm.gscale = %f x = %f y = %f g = %f\n", cm.gscale, xx, yy, g);
+	return g;
+}
+*/
+
 double xydisplay_scale(double f, double min_in, double max_in, double min_out, double max_out){
 	float m = (max_out - min_out) / (max_in - min_in);
 	float b = (min_out - (m * min_in));
@@ -540,6 +916,7 @@ void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv){
 		x->npoints = 0;
 		x->points = NULL;
 		x->monotonic_point_counter = 0;
+		x->mouse_state = 0;
 
 		critical_new(&(x->lock));
         
@@ -567,13 +944,16 @@ int main(void){
 	class_addmethod(c, (method)xydisplay_setvalueof, "setvalueof", A_CANT, 0);
 	class_addmethod(c, (method)xydisplay_mousedown, "mousedown", A_CANT, 0);
 	class_addmethod(c, (method)xydisplay_mousedrag, "mousedrag", A_CANT, 0);
+	class_addmethod(c, (method)xydisplay_mouseup, "mouseup", A_CANT, 0);
 	class_addmethod(c, (method)xydisplay_clear, "clear", 0);
 	class_addmethod(c, (method)xydisplay_rename, "rename", A_GIMME, 0);
+	class_addmethod(c, (method)xydisplay_exponent, "exponent", A_FLOAT, 0);
+	class_addmethod(c, (method)xydisplay_weight, "weight", A_FLOAT, 0);
     
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
     
  	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_xydisplay, bgcolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, "1. 1. 1. 1."); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "bgcolor", 0, "rgba", "Background Color"); 
 
  	CLASS_ATTR_RGBA(c, "pointcolor", 0, t_xydisplay, pointcolor); 
@@ -617,8 +997,13 @@ int main(void){
 
 	CLASS_ATTR_LONG(c, "locked", 0, t_xydisplay, locked);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "locked", 0, "0");
-    
-    
+
+	CLASS_ATTR_LONG(c, "rbf", 0, t_xydisplay, rbf);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "rbf", 0, 0);
+
+	CLASS_ATTR_DOUBLE(c, "line_width", 0, t_xydisplay, line_width);
+    	CLASS_ATTR_DEFAULTNAME_SAVE(c, "line_width", 0, "1.0");
+
 	class_register(CLASS_BOX, c);
 	xydisplay_class = c;
 
