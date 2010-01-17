@@ -57,12 +57,14 @@ typedef struct _rd{
 	void *outlet;
 	t_critical lock;
 	t_jrgba bgcolor, datacolor, selectioncolor, bordercolor;
-	double xmin, xmax, ymin, ymax;
+	double freqmin, freqmax, ampmin, ampmax;
+	double ampmin_log, ampmax_log;
 	double *buffer;
 	long n, buffer_size;
 	int sinusoids;
 	long mode;
 	t_range selection;
+	long log;
 } t_rd;
 
 static t_class *rd_class;
@@ -106,8 +108,8 @@ void rd_paint(t_rd *x, t_object *patcherview){
 			t_sin *s = (t_sin *)(x->buffer);
 			for(i = 0; i < x->n; i++){
 				double xx, yy;
-				xx = rd_scale(s[i].f, x->xmin, x->xmax, 0, rect.width);
-				yy = rd_scale(s[i].a, x->ymin, x->ymax, rect.height, 0);
+				xx = rd_scale(s[i].f, x->freqmin, x->freqmax, 0, rect.width);
+				yy = rd_scale(s[i].a, x->ampmin, x->ampmax, rect.height, 0);
 
 				jgraphics_move_to(g, xx, yy);
 				jgraphics_line_to(g, xx, rect.height);
@@ -137,8 +139,13 @@ void rd_paint(t_rd *x, t_object *patcherview){
 			t_res *r = (t_res *)(x->buffer);
 			for(i = 0; i < x->n; i++){
 				double xx, yy1, yy2;
-				xx = rd_scale(r[i].f, x->xmin, x->xmax, 0, rect.width);
-				yy1 = rd_scale((100+20.0*log(r[i].a))/100./log(10), -1., 1., rect.height, 0.);
+				xx = rd_scale(r[i].f, x->freqmin, x->freqmax, 0, rect.width);
+				if(x->log){
+					//yy1 = rd_scale((100+20.0*log(r[i].a))/100./log(10), -1., 1., rect.height, 0.);
+					yy1 = rd_scale((20.0*log(r[i].a))/log(10), x->ampmin_log, x->ampmax_log, rect.height, 0.);
+				}else{
+					yy1 = rd_scale(r[i].a, x->ampmin, x->ampmax, rect.height, 0);
+				}
 				yy2 = (rect.height - yy1) * (.4 / sqrt(r[i].d)) + yy1;
 
 				jgraphics_move_to(g, xx, yy1);
@@ -152,15 +159,15 @@ void rd_paint(t_rd *x, t_object *patcherview){
 	{
 		jgraphics_set_source_jrgba(g, &(x->selectioncolor));
 		if(x->mode){
-			jgraphics_move_to(g, 0, x->selection.min);
-			jgraphics_line_to(g, rect.width, x->selection.min);
-			jgraphics_move_to(g, 0, x->selection.max);
-			jgraphics_line_to(g, rect.width, x->selection.max);
+			jgraphics_move_to(g, 0, rd_scale(x->selection.min, x->freqmin, x->freqmax, rect.height, 0));
+			jgraphics_line_to(g, rect.width, rd_scale(x->selection.min, x->freqmin, x->freqmax, rect.height, 0));
+			jgraphics_move_to(g, 0, rd_scale(x->selection.max, x->freqmin, x->freqmax, rect.height, 0));
+			jgraphics_line_to(g, rect.width, rd_scale(x->selection.max, x->freqmin, x->freqmax, rect.height, 0));
 		}else{
-			jgraphics_move_to(g, x->selection.min, 0);
-			jgraphics_line_to(g, x->selection.min, rect.height);
-			jgraphics_move_to(g, x->selection.max, 0);
-			jgraphics_line_to(g, x->selection.max, rect.height);
+			jgraphics_move_to(g, rd_scale(x->selection.min, x->freqmin, x->freqmax, 0, rect.width), 0);
+			jgraphics_line_to(g, rd_scale(x->selection.min, x->freqmin, x->freqmax, 0, rect.width), rect.height);
+			jgraphics_move_to(g, rd_scale(x->selection.max, x->freqmin, x->freqmax, 0, rect.width), 0);
+			jgraphics_line_to(g, rd_scale(x->selection.max, x->freqmin, x->freqmax, 0, rect.width), rect.height);
 		}
 		jgraphics_stroke(g);
 	}
@@ -228,24 +235,29 @@ double rd_scale(double f, double min_in, double max_in, double min_out, double m
 }
 
 void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
+	t_rect rect;
+    	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
+
 	double f;
 	if(x->mode){
-		f = pt.y;
+		f = rd_scale(pt.y, rect.height, 0, x->freqmin, x->freqmax);
 	}else{
-		f = pt.x;
+		f = rd_scale(pt.x, 0, rect.width, x->freqmin, x->freqmax);
 	}
-
 	x->selection.min = x->selection.max = f;
 
 	jbox_redraw(&(x->ob));
 }
 
 void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
+	t_rect rect;
+    	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
+
 	double f;
 	if(x->mode){
-		f = pt.y;
+		f = rd_scale(pt.y, rect.height, 0, x->freqmin, x->freqmax);
 	}else{
-		f = pt.x;
+		f = rd_scale(pt.x, 0, rect.width, x->freqmin, x->freqmax);
 	}
 
 	if(f > x->selection.min){
@@ -267,13 +279,7 @@ void rd_output_sel(t_rd *x){
 	if(x->sinusoids){
 		t_sin *s = (t_sin *)x->buffer;
 		for(i = 0; i < x->n; i++){
-			double xx;
-			if(x->mode){
-				xx = rd_scale(s[i].f, 0., 22050., rect.height, 0);
-			}else{
- 				xx = rd_scale(s[i].f, 0., 22050., 0., rect.width);
-			}
-			if(xx >= x->selection.min && xx <= x->selection.max){
+			if(s[i].f >= x->selection.min && s[i].f <= x->selection.max){
 				atom_setfloat(buf + selpos++, s[i].f);
 				atom_setfloat(buf + selpos++, s[i].a);
 			}else{
@@ -284,13 +290,7 @@ void rd_output_sel(t_rd *x){
 	}else{
 		t_res *r = (t_res *)x->buffer;
 		for(i = 0; i < x->n; i++){
-			double xx;
-			if(x->mode){
-				xx = rd_scale(r[i].f, 0., 22050., rect.height, 0);
-			}else{
- 				xx = rd_scale(r[i].f, 0., 22050., 0., rect.width);
-			}
-			if(xx >= x->selection.min && xx <= x->selection.max){
+			if(r[i].f >= x->selection.min && r[i].f <= x->selection.max){
 				atom_setfloat(buf + selpos++, r[i].f);
 				atom_setfloat(buf + selpos++, r[i].a);
 				atom_setfloat(buf + selpos++, r[i].d);
@@ -422,20 +422,28 @@ int main(void){
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bordercolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "bordercolor", 0, "rgba", "Border Color"); 
     
+	CLASS_STICKY_ATTR_CLEAR(c, "category");
 
-	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_rd, xmin);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "xmin", 0, "0.0");
-	CLASS_ATTR_DOUBLE(c, "xmax", 0, t_rd, xmax);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "xmax", 0, "22050.");
+	CLASS_ATTR_DOUBLE(c, "freqmin", 0, t_rd, freqmin);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "freqmin", 0, "0.0");
+	CLASS_ATTR_DOUBLE(c, "freqmax", 0, t_rd, freqmax);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "freqmax", 0, "22050.");
 
-	CLASS_ATTR_DOUBLE(c, "ymin", 0, t_rd, ymin);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ymin", 0, "0.0");
-	CLASS_ATTR_DOUBLE(c, "ymax", 0, t_rd, ymax);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ymax", 0, "1.0");
+	CLASS_ATTR_DOUBLE(c, "ampmin", 0, t_rd, ampmin);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ampmin", 0, "0.0");
+	CLASS_ATTR_DOUBLE(c, "ampmax", 0, t_rd, ampmax);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ampmax", 0, "1.0");
+
+	CLASS_ATTR_DOUBLE(c, "ampmin_log", 0, t_rd, ampmin_log);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ampmin_log", 0, "-100.");
+	CLASS_ATTR_DOUBLE(c, "ampmax_log", 0, t_rd, ampmax_log);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ampmax_log", 0, "0.0");
 
 	CLASS_ATTR_LONG(c, "mode", 0, t_rd, mode);
 	CLASS_ATTR_PAINT(c, "mode", 0);
     
+	CLASS_ATTR_LONG(c, "log", 0, t_rd, log);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "log", 0, "1");
     
 	class_register(CLASS_BOX, c);
 	rd_class = c;
@@ -454,6 +462,7 @@ t_max_err rd_notify(t_rd *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
         if (msg == gensym("attr_modified")){
                 attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
 		if(attrname == gensym("mode")){
+			/*
 			if(x->mode){
 				x->selection.min = rect.height - ((x->selection.min / rect.width) * rect.height);
 				x->selection.max = rect.height - ((x->selection.max / rect.width) * rect.height);
@@ -461,6 +470,7 @@ t_max_err rd_notify(t_rd *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
 				x->selection.min = (1. - (x->selection.min / rect.height)) * rect.width;
 				x->selection.max = (1. - (x->selection.max / rect.height)) * rect.width;
 			}
+			*/
 		}
 	}
 	jbox_redraw(&(x->ob));
