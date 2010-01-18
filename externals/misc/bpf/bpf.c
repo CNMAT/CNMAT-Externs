@@ -28,6 +28,7 @@
   SVN_REVISION: $LastChangedRevision: 587 $ 
   VERSION 0.0: First try 
   VERSION 0.1: bug fixes, scaling, function names, dotted background functions, dump out now includes index number for coll, displays point coordinates in the upper right corner
+  VERSION 0.1.1: added functionNames message
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -38,7 +39,7 @@ functions array needs to be a linked hashtab to properly support the function at
 carefully review use of locks
 display mouse coords in upper left even when not dragging a point
 needs to take signals
-
+shift-drag while dragging a point should snap it to the y-value of the point with the closest y-value
  */
 
 #include "version.h" 
@@ -101,6 +102,7 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers);
 void bpf_mouseup(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers); 
 void bpf_outputSelection(t_bpf *x);
 void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
+void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
 void bpf_setFunction(t_bpf *x, long f); 
 void bpf_setFunctionName(t_bpf *x, t_symbol *name);
 void bpf_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords); 
@@ -255,7 +257,7 @@ void bpf_float(t_bpf *x, double ff){
 	jbox_get_patching_rect(&(x->box.b_ob), &r);
 	double screenx = f * r.width;
 	t_atom out[3]; // function number, x, y
-	atom_setfloat(&(out[1]), f);
+	atom_setfloat(&(out[1]), ff);
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
@@ -270,7 +272,7 @@ void bpf_float(t_bpf *x, double ff){
 			double m = (right->screen_coords.y - left->screen_coords.y) / (right->screen_coords.x - left->screen_coords.x);
 			double b = left->screen_coords.y - (m * left->screen_coords.x);
 			double y = (m * screenx) + b;
-			atom_setfloat(&(out[2]), abs(y - r.height) / r.height);
+			atom_setfloat(&(out[2]), (abs(y - r.height) / r.height) * (x->ymax - x->ymin) + x->ymin);
 			outlet_list(x->out_main, NULL, 3, out);
 		}
 	}
@@ -412,7 +414,7 @@ void bpf_outputSelection(t_bpf *x){
 void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	critical_enter(x->lock);
 	if(x->numFunctions + 1 > MAX_NUM_FUNCTIONS){
-		error("bpf: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
+		object_error((t_object *)x, "bpf: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
 		return;
 	}
 	x->numFunctions++;
@@ -431,6 +433,22 @@ void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 			break;
 		}
 	}
+	jbox_redraw(&(x->box));
+}
+
+void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
+	if(argc > MAX_NUM_FUNCTIONS){
+		object_error((t_object *)x, "bpf: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
+		return;
+	}
+	critical_enter(x->lock);
+	int i;
+	for(i = 0; i < argc; i++){
+		strncpy(x->funcattr[i]->name, atom_getsym(argv + i)->s_name, 64);
+	}
+	x->numFunctions = argc;
+	x->currentFunction = 0;
+	critical_exit(x->lock);
 	jbox_redraw(&(x->box));
 }
 
@@ -755,6 +773,7 @@ int main(void){
  	class_addmethod(c, (method)bpf_mousedrag, "mousedrag", A_CANT, 0); 
  	class_addmethod(c, (method)bpf_mouseup, "mouseup", A_CANT, 0); 
  	class_addmethod(c, (method)bpf_addFunction, "addFunction", A_GIMME, 0); 
+ 	class_addmethod(c, (method)bpf_functionList, "functionList", A_GIMME, 0); 
  	class_addmethod(c, (method)bpf_setFunction, "setFunction", A_LONG, 0); 
 	class_addmethod(c, (method)bpf_editSel, "editSelection", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_list, "list", A_GIMME, 0);
