@@ -27,9 +27,9 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <gsl/gsl_randist.h>
 
 // Distributions
-t_symbol *ps_gaussian, *ps_gaussian_tail, *ps_bivariate_gaussian, *ps_exponential, *ps_erlang, *ps_laplace, *ps_exppow, *ps_cauchy, *ps_rayleigh, *ps_rayleigh_tail, *ps_landau, *ps_levy, *ps_levy_skew, *ps_gamma, *ps_uniform, *ps_lognormal, *ps_chisq, *ps_f, *ps_t, *ps_beta, *ps_logistic, *ps_pareto, *ps_weibull, *ps_gumbel1, *ps_gumbel2, *ps_dirichlet, *ps_poisson, *ps_bernoulli, *ps_binomial, *ps_multinomial, *ps_negative_binomial, *ps_pascal, *ps_geometric, *ps_hypergeometric, *ps_logarithmic, *ps_nonparametric;
+t_symbol *ps_gaussian, *ps_gaussian_tail, *ps_bivariate_gaussian, *ps_exponential, *ps_erlang, *ps_laplace, *ps_exppow, *ps_cauchy, *ps_rayleigh, *ps_rayleigh_tail, *ps_landau, *ps_levy, *ps_levy_skew, *ps_gamma, *ps_uniform, *ps_lognormal, *ps_chisq, *ps_f, *ps_t, *ps_beta, *ps_logistic, *ps_pareto, *ps_weibull, *ps_gumbel1, *ps_gumbel2, *ps_dirichlet, *ps_poisson, *ps_bernoulli, *ps_binomial, *ps_multinomial, *ps_negative_binomial, *ps_pascal, *ps_geometric, *ps_hypergeometric, *ps_multivariate_hypergeometric, *ps_logarithmic, *ps_nonparametric;
 
-#define R_MAX_N_VARS 66
+#define R_MAX_N_VARS 256
 #define R_BUFFER_SIZE 16384
 
 void librdist_init(void);
@@ -77,5 +77,6 @@ void librdist_negative_binomial(gsl_rng *rng, int argc, void *argv, int bufc, fl
 void librdist_pascal(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
 void librdist_geometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
 void librdist_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
+void librdist_multivariate_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
 void librdist_logarithmic(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
 void librdist_nonparametric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);

@@ -203,7 +203,7 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 		x->r_stride = 2;
 	}else if(x->r_dist == ps_dirichlet){
 		x->r_stride = x->r_numVars;
-	}else if(x->r_dist == ps_multinomial){
+	}else if(x->r_dist == ps_multinomial || x->r_dist == ps_multivariate_hypergeometric){
 		x->r_stride = x->r_numVars - 1;
 	}else{
 		x->r_stride = 1;

@@ -58,6 +58,7 @@ void librdist_init(void){
 	ps_pascal = gensym("pascal");
 	ps_geometric = gensym("geometric");
 	ps_hypergeometric = gensym("hypergeometric");
+	ps_multivariate_hypergeometric = gensym("multivariate_hypergeometric");
 	ps_logarithmic = gensym("logarithmic");
 	ps_nonparametric = gensym("nonparametric");
 }
@@ -131,6 +132,8 @@ void *librdist_get_function(t_symbol *dist){
 		return librdist_geometric;
 	}else if(dist == ps_hypergeometric){
 		return librdist_hypergeometric;
+	}else if(dist == ps_multivariate_hypergeometric){
+		return librdist_multivariate_hypergeometric;
 	}else if(dist == ps_logarithmic){
 		return librdist_logarithmic;
 	}else if(dist == ps_nonparametric){
@@ -773,8 +776,10 @@ void librdist_dirichlet(gsl_rng *rng, int argc, void *argv, int bufc, float *buf
 	}
 	for(j = 0; j < floor(bufc / k); j++){
 		gsl_ran_dirichlet(rng, k, alpha, theta);
-		for(i = 0; i < k; i++)
+		for(i = 0; i < k; i++){
 			buf[i] = theta[i];
+			//post("%.20f", buf[i]);
+		}
 	}
 }
 
@@ -876,6 +881,51 @@ void librdist_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float
 	int i;
 	for(i = 0; i < bufc; i++)
 	       	buf[i] = (float)gsl_ran_hypergeometric(rng, n1, n2, t);
+}
+
+void librdist_multivariate_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
+	t_atom *av = (t_atom *)argv;
+	unsigned long t = atom_getlong(av + (argc - 1));
+	unsigned long balls[argc - 1];
+	unsigned long cumsum[argc - 1];
+	unsigned long s[argc - 1];
+	memset(s, 0, sizeof(long) * (argc - 1));
+	unsigned int n = 0;
+	double b;
+
+	int i, j, k;
+	for(i = 0; i < argc - 1; i++){
+		balls[i] = atom_getlong(av + i);
+		n += balls[i];
+		cumsum[i] = n;
+	}
+	b = n;
+
+	if(t > n){
+		t = n;
+	}
+
+	for(i = 0; i < t; i++){
+		//double u = ((double)rand() / RAND_MAX);
+		double u = gsl_rng_uniform(rng);
+		//post("%f", u);
+		u *= b;
+		for(j = 0; j < argc - 1; j++){
+			if(u < cumsum[j]){
+				balls[j]--;
+				s[j]++;
+				for(k = j; k < argc - 1; k++){
+					cumsum[k]--;
+				}
+				break;
+			}
+		}
+		b--;
+	}
+	for(i = 0; i < argc - 1; i++){
+		//post("%f", (float)s[i]);
+		buf[i] = (float)s[i];
+	}
 }
 
 void librdist_logarithmic(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
