@@ -39,6 +39,7 @@ VERSION 2.0: Rewritten with common code between randdist and randdist~ put in li
 VERSION 2.1: Re-re-factored.  Nonparametric now uses gsl_ran_discrete().
 VERSION 2.1.1: Fixed a bug that occurred when distlist was used with nonparametric
 VERSION 2.1.2: Fixed a bug with the multinomial distribution
+VERSION 2.1.3: Added multivariate hypergeometric distribution
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
