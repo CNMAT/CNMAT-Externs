@@ -35,6 +35,7 @@
   VERSION 0.5: Points are now stored in a linked hashtable so that we can operate on them by name
   VERSION 0.6: Lots of bugfixes and UI features:  dump, add_point, etc.
   VERSION 0.6.1: Now rescales properly and fixes a problem where a black line would appear at the bottom of the window when resizing
+  VERSION 0.7: Reworked the mouse interaction to be closer to Ali's js version and more sane than prev versions of this obj
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -55,15 +56,26 @@
 #define XY_INNER 1
 #define XY_OUTER 2
 
+/*
+#define MOUSEUP 0x10
+#define MOUSEDOWN 0x20
+*/
+
+#define INSIDE_INNER_CIRCLE 0x1
+#define ON_INNER_CIRCLE 0x2
+//#define INSIDE_OUTER_CIRCLE 0x4
+#define ON_OUTER_CIRCLE 0x4
+
 typedef struct _point{
 	//double x, y;
 	t_pt pt;
 	t_symbol *label;
+	long index;
 	t_jrgba color;
 	long double exponent;
 	long double weight;
 	double inner_radius, outer_radius;
-	int dragging;
+	unsigned long mousestate;
 	struct _point *next;
 	struct _point *prev;
 } t_point;
@@ -194,8 +206,9 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 		t_point *p = x->points;
 		critical_enter(x->lock);
 		t_jrgba white = {1., 1., 1., 1.};
-		t_jrgba gray = {.5, .5, .5, 1.};
+		t_jrgba gray = {.75, .75, .75, 1.};
 		t_jrgba black = {0., 0., 0., 1.};
+		int i = 0;
 		while(p){
 			if(p == x->selected){
 				jgraphics_set_source_jrgba(g, &(white));
@@ -203,28 +216,57 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 				jgraphics_set_source_jrgba(g, &(gray));
 			}
 			double inner_p = .4, outer_p = 1.25;
-			t_jrgba inner_color = (t_jrgba){pow(p->color.red, inner_p), pow(p->color.green, inner_p), pow(p->color.blue, inner_p), 0.6};
-			t_jrgba outer_color = (t_jrgba){pow(p->color.red, outer_p), pow(p->color.green, outer_p), pow(p->color.blue, outer_p), 0.6};
+			//t_jrgba inner_color = (t_jrgba){pow(p->color.red, inner_p), pow(p->color.green, inner_p), pow(p->color.blue, inner_p), 0.6};
+			//t_jrgba outer_color = (t_jrgba){pow(p->color.red, outer_p), pow(p->color.green, outer_p), pow(p->color.blue, outer_p), 0.6};
 
+			t_jrgba color;
 			t_pt pt = p->pt;
 			pt.x *= rect.width;
 			pt.y *= rect.height;
-			if(x->draw_circles == gensym("always") || (x->draw_circles == gensym("edit") && (x->modifiers & 0x2))){
+			{
+				if(p == x->selected){
+					if((p->mousestate == INSIDE_INNER_CIRCLE) || (p->mousestate == ON_INNER_CIRCLE)){
+						color = white;
+					}else{
+						color = gray;
+					}
+				}else{
+					color = gray;
+				}
 				jgraphics_set_dash(g, NULL, 0, 0);
 				jgraphics_set_line_width(g, 2.);
-				jgraphics_set_source_jrgba(g, &inner_color);
+				jgraphics_set_source_jrgba(g, &color);
 				jgraphics_ellipse(g, pt.x - p->inner_radius, pt.y - p->inner_radius, p->inner_radius * 2, p->inner_radius * 2);
 				jgraphics_stroke(g);
 
+				if(p == x->selected){
+					//post("%s is selected, comparing 0x%x to 0x%x and 0x%x", p->label->s_name, p->mousestate, (MOUSEUP | INSIDE_INNER_CIRCLE), (MOUSEUP | ON_OUTER_CIRCLE));
+					if((p->mousestate == INSIDE_INNER_CIRCLE) || (p->mousestate == ON_OUTER_CIRCLE)){
+						color = white;
+					}else{
+						color = gray;
+					}
+				}else{
+					color = gray;
+				}
 				jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 				jgraphics_set_line_width(g, 1.);
-				jgraphics_set_source_jrgba(g, &inner_color);
+				jgraphics_set_source_jrgba(g, &color);
 				jgraphics_ellipse(g, pt.x - p->outer_radius, pt.y - p->outer_radius, p->outer_radius * 2, p->outer_radius * 2);
 				jgraphics_stroke(g);
 			}
 
-			if(x->draw_labels == gensym("always") || (x->draw_labels == gensym("edit") && (x->modifiers & 0x2))){
-				jgraphics_set_source_jrgba(g, &(white));
+			{
+				if(p == x->selected){
+					if(p->mousestate & 0xful){
+						color = white;
+					}else{
+						color = gray;
+					}
+				}else{
+					color = gray;
+				}
+				jgraphics_set_source_jrgba(g, &(color));
 				jgraphics_set_font_size(g, 10);
 				double w, h;
 				jgraphics_text_measure(g, p->label->s_name, &w, &h);
@@ -380,16 +422,132 @@ void xydisplay_move(t_xydisplay *x, double xx, double yy){
 // 0x94 = control 
 // 0x18 = option 
 
-/*
+#define CIRCLE_HIT 3 // num pixels on either side of a circle that will register a hit
+
 void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
+ 	//t_rect r; 
+	//jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+	x->modifiers = modifiers;
+ 	//post("0x%X", modifiers); 
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
-	post("0x%x", modifiers);
+
+	t_atom pos[2];
+	atom_setfloat(pos, xydisplay_scale(pt.x, 0, r.width, x->xmin, x->xmax));
+	atom_setfloat(pos + 1, xydisplay_scale(pt.y, r.height, 0, x->ymin, x->ymax));
+	outlet_list(x->mouseposOutlet, NULL, 2, pos);
+
+	//x->selected = NULL;
+	switch(modifiers){
+	case 0x10:
+		{
+			double weights[x->npoints];
+			xydisplay_computeWeights(pt, r, x->points, x->npoints, weights);
+			t_atom out[2];
+			int i = 0;
+			t_point *p = x->points;
+			while(p){
+				atom_setsym(out, p->label);
+				atom_setfloat(out + 1, weights[i]);
+				outlet_list(x->listOutlet, NULL, 2, out);
+				i++;
+				p = p->next;
+			}
+			outlet_bang(x->listOutlet);
+			x->xhairs = pt;
+		}
+		break;
+	case 0x12:
+		{
+			//x->selected = xydisplay_selectPoint(x, pt);
+		}
+		break;
+	case (0x12 | 0x11):
+		// command-shift -> delete a point 
+		{
+			t_point *p;
+			if(p = xydisplay_selectPoint(x, pt)){
+				xydisplay_removePoint(x, p);
+				critical_enter(x->lock);
+				x->selected = NULL;
+				critical_exit(x->lock);
+			}
+		}
+		break;
+	case 0x1a:
+		// option-shift
+		x->selected = xydisplay_insertPoint(x, pt, NULL);
+		break;
+	}
+
+ out:
+	object_notify(x, _sym_modified, NULL);
+	jbox_redraw(&(x->ob));
+	//xydisplay_outputPoints(x);
+	xydisplay_outputDistance(x);
 }
 
 void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+
+	switch(modifiers){
+	case 0x10:
+		{
+			double weights[x->npoints];
+			xydisplay_computeWeights(pt, r, x->points, x->npoints, weights);
+			t_atom out[2];
+			int i = 0;
+			t_point *p = x->points;
+			while(p){
+				atom_setsym(out, p->label);
+				atom_setfloat(out + 1, weights[i]);
+				outlet_list(x->listOutlet, NULL, 2, out);
+				i++;
+				p = p->next;
+			}
+			outlet_bang(x->listOutlet);
+			x->xhairs = pt;
+		}
+		break;
+	case 0x12:
+		post("selected = %p", x->selected);
+		if(x->selected){
+			post("mousestate: 0x%x", x->selected->mousestate);
+			switch(x->selected->mousestate){
+			case INSIDE_INNER_CIRCLE:
+				post("inside");
+				x->selected->pt = (t_pt){pt.x / r.width, pt.y / r.height};
+				break;
+			case ON_INNER_CIRCLE:
+				post("on inner");
+				{
+					t_point *p = x->selected;
+					t_pt sc = p->pt;
+					sc.x *= r.width;
+					sc.y *= r.height;
+					p->inner_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
+					p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+					p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+				}
+				break;
+			case ON_OUTER_CIRCLE:
+				post("on outer");
+				{
+					t_point *p = x->selected;
+					t_pt sc = p->pt;
+					sc.x *= r.width;
+					sc.y *= r.height;
+					p->outer_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
+					p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+					p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+				}
+				break;
+			}
+		}
+		break;
+	}
+	jbox_redraw(&(x->ob));
 }
 
 void xydisplay_mouseup(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -400,15 +558,67 @@ void xydisplay_mouseup(t_xydisplay *x, t_object *patcherview, t_pt pt, long modi
 void xydisplay_mouseleave(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+	x->selected = NULL;
+	jbox_redraw(&(x->ob));
 }
 
 void xydisplay_mousemove(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+
+	switch(modifiers){
+	case 0x2:
+		{
+		// shift
+			t_point *p = x->points;
+			int i = 0;
+			while(p){
+				t_pt sc = p->pt;
+				sc.x *= r.width;
+				sc.y *= r.height;
+				i++;
+				double pos = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
+				p->mousestate = 0;
+				if(fabs(pos - p->inner_radius) <= CIRCLE_HIT){
+					p->mousestate |= ON_INNER_CIRCLE;
+					if(x->selected){
+						if(fabs(pos - p->inner_radius) < fabs(pos - x->selected->inner_radius)){
+							x->selected = p;
+						}
+					}else{
+						x->selected = p;
+					}
+				}else if(fabs(pos - p->outer_radius) <= CIRCLE_HIT){
+					p->mousestate |= ON_OUTER_CIRCLE;
+					if(x->selected){
+						if(fabs(pos - p->outer_radius) < fabs(pos - x->selected->outer_radius)){
+							x->selected = p;
+						}
+					}else{
+						x->selected = p;
+					}
+				}else if(p->inner_radius - pos >= 0){
+					p->mousestate |= INSIDE_INNER_CIRCLE;
+					if(x->selected){
+						if((p->inner_radius - pos) < (x->selected->inner_radius - pos)){
+							x->selected = p;
+						}
+					}else{
+						x->selected = p;
+					}
+				}else if(p == x->selected){
+					x->selected = NULL;
+				}
+
+				p = p->next;
+			}
+		}
+		break;
+	}
+	jbox_redraw(&(x->ob));
 }
 
-*/
-
+/*
 void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){ 
 	x->modifiers = modifiers;
  	//post("0x%X", modifiers); 
@@ -579,7 +789,7 @@ void xydisplay_mousemove(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		jbox_redraw(&(x->ob));
 	}
 }
-
+*/
 t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt, t_symbol *label){
 	critical_enter(x->lock);
 	t_hashtab *ht = x->ht;
