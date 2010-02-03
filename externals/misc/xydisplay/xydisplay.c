@@ -36,6 +36,7 @@
   VERSION 0.6: Lots of bugfixes and UI features:  dump, add_point, etc.
   VERSION 0.6.1: Now rescales properly and fixes a problem where a black line would appear at the bottom of the window when resizing
   VERSION 0.7: Reworked the mouse interaction to be closer to Ali's js version and more sane than prev versions of this obj
+  VERSION 0.71: added add_point message and implemented a more sane scheme for choosing colors when none are supplied by the user
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -49,6 +50,10 @@
 #include "ext_critical.h"
 #include "version.c"
 #include "math.h"
+#ifdef WINDOWS
+#else
+#include <mach/mach_time.h>
+#endif
 
 #define OUTPUT_CONCATENATE 0
 #define OUTPUT_LIST 1
@@ -72,8 +77,8 @@ typedef struct _point{
 	t_symbol *label;
 	long index;
 	t_jrgba color;
-	long double exponent;
-	long double weight;
+	double exponent;
+	double weight;
 	double inner_radius, outer_radius;
 	unsigned long mousestate;
 	struct _point *next;
@@ -101,6 +106,8 @@ typedef struct _xydisplay{
 	t_pt xhairs;
 } t_xydisplay;
 
+static t_symbol *xydisplay_ps_coords, *xydisplay_ps_name, *xydisplay_ps_index, *xydisplay_ps_rgb, *xydisplay_ps_hsv, *xydisplay_ps_weight, *xydisplay_ps_exponent, *xydisplay_ps_inner_radius, *xydisplay_ps_outer_radius;
+
 static t_class *xydisplay_class;
 
 void xydisplay_paint(t_xydisplay *x, t_object *patcherview);
@@ -114,14 +121,18 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 void xydisplay_mouseup(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
 void xydisplay_mousemove(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
 void xydisplay_mouseleave(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
-t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt, t_symbol *label);
-long double xydisplay_computeWeightFromDistances(double d1, double d2);
-long double xydisplay_computeExponentFromDistances(double d1, double d2);
+void xydisplay_addPoint(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv);
+int xydisplay_parseAddPointArgs(t_point *p, int argc, t_atom *argv);
+t_point *xydisplay_addPointToList(t_xydisplay *x, t_point point);
+t_point *xydisplay_newPoint(void);
+void xydisplay_initPoint(t_xydisplay *x, t_point *p);
+//t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt, t_symbol *label);
+double xydisplay_computeWeightFromDistances(double d1, double d2);
+double xydisplay_computeExponentFromDistances(double d1, double d2);
 void xydisplay_exponent(t_xydisplay *x, double f);
 void xydisplay_weight(t_xydisplay *x, double f);
 t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt);
 void xydisplay_removePoint(t_xydisplay *x, t_point *p);
-void xydisplay_addPoint(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv);
 void xydisplay_outputPoints(t_xydisplay *x);
 void xydisplay_outputDistance(t_xydisplay *x);
 void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv);
@@ -133,7 +144,10 @@ double xydisplay_scale(double f, double min_in, double max_in, double min_out, d
 double xydisplay_clip(double f, double min, double max);
 t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av);
 t_max_err xydisplay_setvalueof(t_xydisplay *x, long ac, t_atom *av);
+void RGBtoHSV( double r, double g, double b, double *h, double *s, double *v );
+void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v );
 void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv);
+void xydisplay_postPoint(t_point *p);
 
 
 void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
@@ -269,9 +283,11 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 				jgraphics_set_source_jrgba(g, &(color));
 				jgraphics_set_font_size(g, 10);
 				double w, h;
-				jgraphics_text_measure(g, p->label->s_name, &w, &h);
-				jgraphics_move_to(g, pt.x - (w / 2.), pt.y + (h / 2.));
-				jgraphics_show_text(g, p->label->s_name);
+				char buf[64];
+				sprintf(buf, "%ld: %s", p->index, p->label->s_name);
+				jgraphics_text_measure(g, buf, &w, &h);
+				jgraphics_move_to(g, pt.x - (w / 2.), pt.y + (h / 2.) - 1);
+				jgraphics_show_text(g, buf);
 			}
 			jgraphics_stroke(g);
 
@@ -299,6 +315,7 @@ void xydisplay_bang(t_xydisplay *x){
 }
 
 void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
+	/*
 	if(argc != 2 && argc != 3){
 		object_error((t_object *)x, "list must be a either 2 or 3 elements long");
 		return;
@@ -349,6 +366,7 @@ void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
 	critical_exit(x->lock);
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
+	*/
 }
 
 void xydisplay_anything(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
@@ -374,8 +392,8 @@ void xydisplay_computeWeights(t_pt coords, t_rect r, t_point *points, int nweigh
 			weights[i] = 1.;
 			return;
 		}else{
-			double d = sqrtl(pow(coords.x - pt.x, 2.) + powl(coords.y - pt.y, 2.));
-			weights[i] = powl(1. / d, p->exponent) * p->weight;
+			double d = sqrt(pow(coords.x - pt.x, 2.) + pow(coords.y - pt.y, 2.));
+			weights[i] = pow(1. / d, p->exponent) * p->weight;
 			if(isinf(weights[i])){
 				memset(weights, 0, nweights * sizeof(double));
 				weights[i] = 1.;
@@ -401,17 +419,18 @@ void xydisplay_move(t_xydisplay *x, double xx, double yy){
 	double xx_screen = xydisplay_scale(xx, x->xmin, x->xmax, 0, r.width);
 	double yy_screen = xydisplay_scale(yy, x->ymin, x->ymax, r.height, 0);
 	xydisplay_computeWeights((t_pt){xx_screen,yy_screen}, r, x->points, x->npoints, weights);
-	t_atom out[2];
+	t_atom out[3];
 	int i = 0;
 	t_point *p = x->points;
 	while(p){
-		atom_setsym(out, p->label);
-		atom_setfloat(out + 1, weights[i]);
-		outlet_list(x->listOutlet, NULL, 2, out);
+		atom_setlong(out, p->index);
+		atom_setsym(out + 1, p->label);
+		atom_setfloat(out + 2, weights[i]);
+		outlet_list(x->listOutlet, NULL, 3, out);
 		i++;
 		p = p->next;
 	}
-	outlet_bang(x->listOutlet);
+	outlet_anything(x->listOutlet, gensym("done"), 0, NULL);
 	x->xhairs = (t_pt){xx_screen,yy_screen};
 	jbox_redraw(&(x->ob));
 }
@@ -443,17 +462,18 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		{
 			double weights[x->npoints];
 			xydisplay_computeWeights(pt, r, x->points, x->npoints, weights);
-			t_atom out[2];
+			t_atom out[3];
 			int i = 0;
 			t_point *p = x->points;
 			while(p){
-				atom_setsym(out, p->label);
-				atom_setfloat(out + 1, weights[i]);
-				outlet_list(x->listOutlet, NULL, 2, out);
+				atom_setlong(out, p->index);
+				atom_setsym(out + 1, p->label);
+				atom_setfloat(out + 2, weights[i]);
+				outlet_list(x->listOutlet, NULL, 3, out);
 				i++;
 				p = p->next;
 			}
-			outlet_bang(x->listOutlet);
+			outlet_anything(x->listOutlet, gensym("done"), 0, NULL);
 			x->xhairs = pt;
 		}
 		break;
@@ -476,7 +496,13 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		break;
 	case 0x1a:
 		// option-shift
-		x->selected = xydisplay_insertPoint(x, pt, NULL);
+		{
+			t_atom a[3];
+			atom_setsym(a, xydisplay_ps_coords);
+			atom_setfloat(a + 1, pt.x / r.width);
+			atom_setfloat(a + 2, pt.y / r.height);
+			xydisplay_addPoint(x, NULL, 3, a);
+		}
 		break;
 	}
 
@@ -496,17 +522,18 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		{
 			double weights[x->npoints];
 			xydisplay_computeWeights(pt, r, x->points, x->npoints, weights);
-			t_atom out[2];
+			t_atom out[3];
 			int i = 0;
 			t_point *p = x->points;
 			while(p){
-				atom_setsym(out, p->label);
-				atom_setfloat(out + 1, weights[i]);
-				outlet_list(x->listOutlet, NULL, 2, out);
+				atom_setlong(out, p->index);
+				atom_setsym(out + 1, p->label);
+				atom_setfloat(out + 2, weights[i]);
+				outlet_list(x->listOutlet, NULL, 3, out);
 				i++;
 				p = p->next;
 			}
-			outlet_bang(x->listOutlet);
+			outlet_anything(x->listOutlet, gensym("done"), 0, NULL);
 			x->xhairs = pt;
 		}
 		break;
@@ -790,6 +817,215 @@ void xydisplay_mousemove(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 	}
 }
 */
+
+// this is called in response to the "add_point" message from Max
+void xydisplay_addPoint(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
+	t_point p;
+	xydisplay_initPoint(x, &p);
+	int ret = xydisplay_parseAddPointArgs(&p, argc, argv);
+	x->selected = xydisplay_addPointToList(x, p);
+	xydisplay_postPoint(x->selected);
+	jbox_redraw(&(x->ob));
+}
+
+int xydisplay_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
+	if(argc == 0){
+		return 0;
+	}
+	t_symbol *s;
+	t_atom *ptr = argv;
+	if(atom_gettype(ptr) != A_SYM){
+		error("xydisplay: error parsing arguments to add_point.  expected a symbol and found something else.");
+		return 1;
+	}
+	s = atom_getsym(ptr++);
+	if(s == xydisplay_ps_coords){
+		if(argc - (ptr - argv) < 2){
+			goto bail;
+		}
+		p->pt = (t_pt){atom_getfloat(ptr++), atom_getfloat(ptr++)};
+	}else if(s == xydisplay_ps_name){
+		if(argc - (ptr - argv) < 1){
+			goto bail;
+		}
+		p->label = atom_getsym(ptr++);
+	}else if(s == xydisplay_ps_index){
+		if(argc - (ptr - argv) < 1){
+			goto bail;
+		}
+		p->index = atom_getlong(ptr++);
+	}else if(s == xydisplay_ps_rgb){
+		if(argc - (ptr - argv) == 0){
+			goto bail;
+		}
+		if(atom_gettype(ptr) == A_FLOAT){
+			// this is probably a set of floats
+			if(argc - (ptr - argv) < 3){
+				goto bail;
+			}
+			p->color = (t_jrgba){atom_getfloat(ptr++), atom_getfloat(ptr++), atom_getfloat(ptr++), 1.};
+		}else if(atom_gettype(ptr) == A_SYM){
+			t_symbol *hex = atom_getsym(ptr++);
+			if(*(hex->s_name) == '0' && (*(hex->s_name + 1) == 'x' || *(hex->s_name + 1) == 'X')){
+				// hex
+				long h = strtol(hex->s_name, NULL, 0);
+				p->color.red = (double)((h & 0xff0000) / 0xff);
+				p->color.green = (double)((h & 0xff00) / 0xff);
+				p->color.blue = (double)((h & 0xff) / 0xff);
+			}else{
+				error("xydisplay: unrecognized argument for key rgb");
+				return 1;
+			}
+		}
+	}else if(s == xydisplay_ps_hsv){
+		if(argc - (ptr - argv) == 0){
+			goto bail;
+		}
+		if(atom_gettype(ptr) == A_FLOAT){
+			// this is probably a set of floats
+			if(argc - (ptr - argv) < 3){
+				goto bail;
+			}
+			p->color = (t_jrgba){atom_getfloat(ptr++), atom_getfloat(ptr++), atom_getfloat(ptr++), 1.};
+		}else if(atom_gettype(ptr) == A_SYM){
+			t_symbol *hex = atom_getsym(ptr++);
+			if(*(hex->s_name) == '0' && (*(hex->s_name + 1) == 'x' || *(hex->s_name + 1) == 'X')){
+				// hex
+				long h = strtol(hex->s_name, NULL, 0);
+				p->color.red = (double)((h & 0xff0000) / 0xff);
+				p->color.green = (double)((h & 0xff00) / 0xff);
+				p->color.blue = (double)((h & 0xff) / 0xff);
+			}else{
+				error("xydisplay: unrecognized argument for key rgb");
+				return 1;
+			}
+		}
+	}else if(s == xydisplay_ps_weight){
+		if(argc - (ptr - argv) < 1){
+			goto bail;
+		}
+		p->weight = atom_getfloat(ptr++);
+	}else if(s == xydisplay_ps_exponent){
+		if(argc - (ptr - argv) < 1){
+			goto bail;
+		}
+		p->exponent = atom_getfloat(ptr++);
+	}else if(s == xydisplay_ps_inner_radius){
+		if(argc - (ptr - argv) < 1){
+			goto bail;
+		}
+		p->inner_radius = atom_getfloat(ptr++);
+	}else if(s == xydisplay_ps_outer_radius){
+		if(argc - (ptr - argv) < 1){
+			goto bail;
+		}
+		p->outer_radius = atom_getfloat(ptr++);
+	}else{
+		error("xydisplay: unrecognized key %s", s->s_name);
+	}
+	return xydisplay_parseAddPointArgs(p, argc - (ptr - argv), ptr);
+
+ bail:
+	error("xydisplay: not enough arguments for key %s", s->s_name);
+	return 1;
+}
+
+t_point *xydisplay_addPointToList(t_xydisplay *x, t_point point){
+	critical_enter(x->lock);
+	t_hashtab *ht = x->ht;
+	t_point *p = NULL;
+	if(point.label){
+		hashtab_lookup(ht, point.label, (t_object **)&p);
+		if(p){
+			p->pt = point.pt;
+			//p->label = point.label;
+			//p->index = point.index;
+			p->color = point.color;
+			p->exponent = point.exponent;
+			p->weight = point.weight;
+			p->inner_radius = point.inner_radius;
+			p->outer_radius = point.outer_radius;
+			p->mousestate = 0;
+			return p;
+		}
+	}
+	if(!p){
+		p = xydisplay_newPoint();
+	}
+	if(!p){
+		return NULL;
+	}
+	memcpy(p, &point, sizeof(t_point));
+
+	p->next = x->points;
+	p->prev = NULL;
+	if(x->points){
+		x->points->prev = p;
+	}
+	x->points = p;
+	x->npoints++;
+
+	if(!(p->label)){
+		char buf[32];
+		sprintf(buf, "preset %ld", p->index);
+		p->label = gensym(buf);
+	}
+	hashtab_store(ht, p->label, (t_object *)p);
+
+	critical_exit(x->lock);
+	return p;
+}
+
+t_point *xydisplay_newPoint(void){
+	t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
+	if(p){
+		return p;
+	}else{
+		error("xydisplay: out of memory!  failed to allocate a new point");
+		return NULL;
+	}
+}
+
+void xydisplay_initPoint(t_xydisplay *x, t_point *p){
+	p->pt = (t_pt){(double)rand() / RAND_MAX, (double)rand() / RAND_MAX};
+	p->index = x->monotonic_point_counter++;
+	char buf[32];
+	sprintf(buf, "preset %ld", p->index);
+	p->label = gensym(buf);
+	//p->color = (t_jrgba){(double)rand() / RAND_MAX, 0.75, 0.75};
+	double r = (double)rand() / RAND_MAX;
+	//HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), r * 360., 0.75, 0.75);
+	HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), (x->monotonic_point_counter * 20) % 360, 0.75, 0.75);
+	post("%f, (%f %f %f)", r, p->color.red, p->color.green, p->color.blue);
+	p->inner_radius = 50.;
+	p->outer_radius = 100.;
+	p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+	p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+	p->mousestate = 0;
+}
+
+/*
+void xydisplay_addPoint(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
+	if(argc != 11){
+		object_error((t_object *)x, "bad number of arguments--should be 11");
+		return;
+	}
+	t_symbol *label = atom_getsym(argv);
+	t_pt pt = {atom_getfloat(argv + 1), atom_getfloat(argv + 2)};
+	x->selected = xydisplay_insertPoint(x, pt, label);
+	x->selected->color = (t_jrgba){
+		atom_getfloat(argv + 3),
+		atom_getfloat(argv + 4),
+		atom_getfloat(argv + 5),
+		atom_getfloat(argv + 6)
+	};
+	x->selected->exponent = atom_getfloat(argv + 7);
+	x->selected->weight = atom_getfloat(argv + 8);
+	x->selected->inner_radius = atom_getfloat(argv + 9);
+	x->selected->outer_radius = atom_getfloat(argv + 10);
+	jbox_redraw(&(x->ob));
+}
+
 t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt, t_symbol *label){
 	critical_enter(x->lock);
 	t_hashtab *ht = x->ht;
@@ -824,18 +1060,16 @@ t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt, t_symbol *label){
 
 	hashtab_store(ht, p->label, (t_object *)p);
 
-	/*
-	p->x = pt.x;
-	p->y = pt.y;
-	*/
+
 	p->pt.x = pt.x / r.width;
 	p->pt.y = pt.y / r.height;
 	critical_exit(x->lock);
 	return p;
 }
+*/
 
 #define THRESH .9
-long double xydisplay_computeWeightFromDistances(double d1, double d2){
+double xydisplay_computeWeightFromDistances(double d1, double d2){
 	double dd1 = d1;
 	double dd2 = d2;
 	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
@@ -844,11 +1078,11 @@ long double xydisplay_computeWeightFromDistances(double d1, double d2){
 		dd1 = dd2 / THRESH;
 	}
 
-	long double w = expl(-((log(2.) + log(5.)) * (log(dd1) + log(dd2))) / (log(dd1) - log(dd2)));
+	double w = exp(-((log(2.) + log(5.)) * (log(dd1) + log(dd2))) / (log(dd1) - log(dd2)));
 	return w;
 }
 
-long double xydisplay_computeExponentFromDistances(double d1, double d2){
+double xydisplay_computeExponentFromDistances(double d1, double d2){
 	double dd1 = d1;
 	double dd2 = d2;
 	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
@@ -857,7 +1091,7 @@ long double xydisplay_computeExponentFromDistances(double d1, double d2){
 		dd1 = dd2 / THRESH;
 	}
 
-	long double d = (2 * (log(2.) + log(5.))) / (-log(dd1) + log(dd2));
+	double d = (2 * (log(2.) + log(5.))) / (-log(dd1) + log(dd2));
 	return d;
 }
 
@@ -871,8 +1105,10 @@ void xydisplay_exponent(t_xydisplay *x, double f){
 }
 
 void xydisplay_weight(t_xydisplay *x, double f){
-	if(x->selected){
-		x->selected->weight = f;
+	t_point *p = x->points;
+	while(p){
+		p->weight = f;
+		p = p->next;
 	}
 	jbox_redraw(&(x->ob));
 }
@@ -895,27 +1131,6 @@ t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt){
  out:
 	critical_exit(x->lock);
 	return p;
-}
-
-void xydisplay_addPoint(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
-	if(argc != 11){
-		object_error((t_object *)x, "bad number of arguments--should be 11");
-		return;
-	}
-	t_symbol *label = atom_getsym(argv);
-	t_pt pt = {atom_getfloat(argv + 1), atom_getfloat(argv + 2)};
-	x->selected = xydisplay_insertPoint(x, pt, label);
-	x->selected->color = (t_jrgba){
-		atom_getfloat(argv + 3),
-		atom_getfloat(argv + 4),
-		atom_getfloat(argv + 5),
-		atom_getfloat(argv + 6)
-	};
-	x->selected->exponent = atom_getfloat(argv + 7);
-	x->selected->weight = atom_getfloat(argv + 8);
-	x->selected->inner_radius = atom_getfloat(argv + 9);
-	x->selected->outer_radius = atom_getfloat(argv + 10);
-	jbox_redraw(&(x->ob));
 }
 
 void xydisplay_removePoint(t_xydisplay *x, t_point *p){
@@ -1028,13 +1243,12 @@ void xydisplay_dump(t_xydisplay *x){
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 	t_point *p = x->points;
-	int counter = 0;
 	while(p){
 		t_pt sc = p->pt;
 		sc.x *= r.width;
 		sc.y *= r.height;
 		t_atom a[12], *ptr = a;
-		atom_setlong(ptr++, counter++);
+		atom_setlong(ptr++, p->index);
 		atom_setsym(ptr++, p->label);
 		atom_setfloat(ptr++, p->pt.x * r.width);
 		atom_setfloat(ptr++, p->pt.y * r.height);
@@ -1050,6 +1264,7 @@ void xydisplay_dump(t_xydisplay *x){
 		outlet_list(x->dumpOutlet, NULL, 12, a);
 		p = p->next;
 	}
+	outlet_anything(x->dumpOutlet, gensym("done"), 0, NULL);
 }
 
 void xydisplay_clear(t_xydisplay *x){
@@ -1194,6 +1409,90 @@ t_max_err xydisplay_setvalueof(t_xydisplay *x, long ac, t_atom *av){
 	return MAX_ERR_NONE;
 }
 
+#define MIN3(x,y,z)  ((y) <= (z) ? \
+		      ((x) <= (y) ? (x) : (y)) \
+		      : \
+		      ((x) <= (z) ? (x) : (z)))
+
+#define MAX3(x,y,z)  ((y) >= (z) ? \
+		      ((x) >= (y) ? (x) : (y)) \
+		      : \
+		      ((x) >= (z) ? (x) : (z)))
+
+// http://www.cs.rit.edu/~ncs/color/t_convert.html
+void RGBtoHSV( double r, double g, double b, double *h, double *s, double *v ){ 
+	double min, max, delta;
+	min = MIN3( r, g, b );
+	max = MAX3( r, g, b );
+	*v = max;				// v
+	delta = max - min;
+	if( max != 0 )
+		*s = delta / max;		// s
+	else {
+		// r = g = b = 0		// s = 0, v is undefined
+		*s = 0;
+		*h = -1;
+		return;
+	}
+	if( r == max )
+		*h = ( g - b ) / delta;		// between yellow & magenta
+	else if( g == max )
+		*h = 2 + ( b - r ) / delta;	// between cyan & yellow
+	else
+		*h = 4 + ( r - g ) / delta;	// between magenta & cyan
+	*h *= 60;				// degrees
+	if( *h < 0 )
+		*h += 360;
+}
+void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v )
+{
+	int i;
+	double f, p, q, t;
+	if( s == 0 ) {
+		// achromatic (grey)
+		*r = *g = *b = v;
+		return;
+	}
+	h /= 60;			// sector 0 to 5
+	i = floor( h );
+	f = h - i;			// factorial part of h
+	p = v * ( 1 - s );
+	q = v * ( 1 - s * f );
+	t = v * ( 1 - s * ( 1 - f ) );
+	switch( i ) {
+	case 0:
+		*r = v;
+		*g = t;
+		*b = p;
+		break;
+	case 1:
+		*r = q;
+		*g = v;
+		*b = p;
+		break;
+	case 2:
+		*r = p;
+		*g = v;
+		*b = t;
+		break;
+	case 3:
+		*r = p;
+		*g = q;
+		*b = v;
+		break;
+	case 4:
+		*r = t;
+		*g = p;
+		*b = v;
+		break;
+	default:		// case 5:
+		*r = v;
+		*g = p;
+		*b = q;
+		break;
+	}
+}
+
 /**************************************************
 Object and instance creation functions.
 **************************************************/
@@ -1244,7 +1543,7 @@ void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv){
 		hashtab_flags(x->ht, OBJ_FLAG_DATA);
 
 		critical_new(&(x->lock));
-        
+
 		attr_dictionary_process(x, d); 
  		jbox_ready((t_jbox *)x); 
         
@@ -1340,9 +1639,43 @@ int main(void){
 	class_register(CLASS_BOX, c);
 	xydisplay_class = c;
 
+	xydisplay_ps_coords = gensym("coords");
+	xydisplay_ps_name = gensym("name");
+	xydisplay_ps_index = gensym("index");
+	xydisplay_ps_rgb = gensym("rgb");
+	xydisplay_ps_hsv = gensym("hsv");
+	xydisplay_ps_weight = gensym("weight");
+	xydisplay_ps_exponent = gensym("exponent");
+	xydisplay_ps_inner_radius = gensym("inner_radius");
+	xydisplay_ps_outer_radius = gensym("outer_radius");
+
 	common_symbols_init();
+
+#ifdef WINDOWS
+#else
+	srand(mach_absolute_time());
+#endif
 
 	version(0);
 
 	return 0;
+}
+
+void xydisplay_postPoint(t_point *p){
+	if(!p){
+		post("p == NULL!!");
+		return;
+	}
+	post("point %p:", p);
+	post("coords: %f %f", p->pt.x, p->pt.y);
+	if(p->label){
+		post("label: %s", p->label->s_name);
+	}else{
+		post("no label");
+	}
+	post("index: %d", p->index);
+	post("color: %f %f %f", p->color.red, p->color.blue, p->color.green);
+	post("exponent: %f, weight: %f", p->exponent, p->weight);
+	post("inner radius: %f, outer radius: %f", p->inner_radius, p->outer_radius);
+	post("mousestate: 0x%X", p->mousestate);
 }
