@@ -41,6 +41,7 @@
   VERSION 0.7.3: uses layers to redraw the background only when needed
   VERSION 0.7.4: mouse stuff works for real this time
   VERSION 0.7.5: preset parameters can be adjusted by name
+  VERSION 0.7.6: dump now outputs key value pairs
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -1005,23 +1006,26 @@ void rbfi_dump(t_rbfi *x){
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 	t_point *p = x->points;
-	int counter = 0;
+	//int counter = 0;
 	while(p){
-		t_pt sc = p->pt;
-		sc.x *= r.width;
-		sc.y *= r.height;
 		t_atom a[12], *ptr = a;
-		atom_setlong(ptr++, counter++);
+		//atom_setlong(ptr++, counter++);
+		//atom_setsym(ptr++, rbfi_ps_name);
 		atom_setsym(ptr++, p->label);
-		atom_setfloat(ptr++, p->pt.x * r.width);
-		atom_setfloat(ptr++, p->pt.y * r.height);
+
+		atom_setsym(ptr++, rbfi_ps_coords);
+		atom_setfloat(ptr++, p->pt.x);
+		atom_setfloat(ptr++, p->pt.y);
+
+		atom_setsym(ptr++, rbfi_ps_rgb);
 		atom_setfloat(ptr++, p->color.red);
 		atom_setfloat(ptr++, p->color.green);
 		atom_setfloat(ptr++, p->color.blue);
-		atom_setfloat(ptr++, p->color.alpha);
-		atom_setfloat(ptr++, p->exponent);
-		atom_setfloat(ptr++, p->weight);
+
+		atom_setsym(ptr++, rbfi_ps_inner_radius);
 		atom_setfloat(ptr++, p->inner_radius);
+
+		atom_setsym(ptr++, rbfi_ps_outer_radius);
 		atom_setfloat(ptr++, p->outer_radius);
 
 		outlet_list(x->dumpOutlet, NULL, 12, a);
