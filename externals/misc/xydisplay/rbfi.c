@@ -42,6 +42,7 @@
   VERSION 0.7.4: mouse stuff works for real this time
   VERSION 0.7.5: preset parameters can be adjusted by name
   VERSION 0.7.6: dump now outputs key value pairs
+  VERSION 0.7.7: circle radii are now specified in [0-1]
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -110,6 +111,7 @@ typedef struct _rbfi{
 	float line_width;
 	long modifiers;
 	t_pt xhairs;
+	long mouse_active_beyond_rect;
 } t_rbfi;
 
 static t_symbol *rbfi_ps_coords, *rbfi_ps_name, *rbfi_ps_rgb, *rbfi_ps_hsv, /**rbfi_ps_weight, *rbfi_ps_exponent, */*rbfi_ps_inner_radius, *rbfi_ps_outer_radius, *rbfi_ps_locked;
@@ -136,6 +138,8 @@ void rbfi_initPoint(t_rbfi *x, t_point *p);
 //t_point *rbfi_insertPoint(t_rbfi *x, t_pt pt, t_symbol *label);
 double rbfi_computeWeightFromDistances(double d1, double d2);
 double rbfi_computeExponentFromDistances(double d1, double d2);
+void rbfi_inner_radius(t_rbfi *x, double f);
+void rbfi_outer_radius(t_rbfi *x, double f);
 void rbfi_exponent(t_rbfi *x, double f);
 void rbfi_weight(t_rbfi *x, double f);
 t_point *rbfi_selectPoint(t_rbfi *x, t_pt pt);
@@ -257,7 +261,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					jgraphics_set_dash(g, NULL, 0, 0);
 					jgraphics_set_line_width(g, 2.);
 					jgraphics_set_source_jrgba(g, &color);
-					jgraphics_ellipse(g, pt.x - p->inner_radius, pt.y - p->inner_radius, p->inner_radius * 2, p->inner_radius * 2);
+					jgraphics_ellipse(g, pt.x - p->inner_radius * rect.width, pt.y - p->inner_radius * rect.width, p->inner_radius * rect.width * 2, p->inner_radius * rect.width * 2);
 					jgraphics_stroke(g);
 				}else if(x->modifiers & 0x2){
 					if(p == x->selected){
@@ -273,7 +277,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					jgraphics_set_dash(g, NULL, 0, 0);
 					jgraphics_set_line_width(g, 2.);
 					jgraphics_set_source_jrgba(g, &color);
-					jgraphics_ellipse(g, pt.x - p->inner_radius, pt.y - p->inner_radius, p->inner_radius * 2, p->inner_radius * 2);
+					jgraphics_ellipse(g, pt.x - p->inner_radius * rect.width, pt.y - p->inner_radius * rect.width, p->inner_radius * rect.width * 2, p->inner_radius * rect.width * 2);
 					jgraphics_stroke(g);
 				}
 
@@ -282,7 +286,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 					jgraphics_set_line_width(g, 1.);
 					jgraphics_set_source_jrgba(g, &color);
-					jgraphics_ellipse(g, pt.x - p->outer_radius, pt.y - p->outer_radius, p->outer_radius * 2, p->outer_radius * 2);
+					jgraphics_ellipse(g, pt.x - p->outer_radius * rect.width, pt.y - p->outer_radius * rect.width, p->outer_radius * rect.width * 2, p->outer_radius * rect.width * 2);
 					jgraphics_stroke(g);
 				}else if(x->modifiers & 0x2){
 					if(p == x->selected){
@@ -298,7 +302,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 					jgraphics_set_line_width(g, 1.);
 					jgraphics_set_source_jrgba(g, &color);
-					jgraphics_ellipse(g, pt.x - p->outer_radius, pt.y - p->outer_radius, p->outer_radius * 2, p->outer_radius * 2);
+					jgraphics_ellipse(g, pt.x - p->outer_radius * rect.width, pt.y - p->outer_radius * rect.width, p->outer_radius * rect.width * 2, p->outer_radius * rect.width * 2);
 					jgraphics_stroke(g);
 				}
 			}
@@ -372,7 +376,12 @@ void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 		atom_setsym(a + 1, name);
 		memcpy(a + 2, argv, argc * sizeof(t_atom));
 		rbfi_addPoint(x, msg, argc + 2, a);
-	}
+	}		
+
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+       	p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+	p->exponent = rbfi_computeExponentFromDistances(p->inner_radius  * r.width, p->outer_radius * r.width);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
@@ -516,6 +525,12 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	switch(modifiers){
 	case 0x10:
 		{
+			if(!(x->mouse_active_beyond_rect)){
+				pt = (t_pt){
+					rbfi_clip(pt.x, 0, r.width),
+					rbfi_clip(pt.y, 0, r.height)
+				};
+			}
 			double weights[x->npoints];
 			rbfi_computeWeights(pt, r, x->points, x->npoints, weights);
 			t_atom out[2];
@@ -548,9 +563,9 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 					t_pt sc = p->pt;
 					sc.x *= r.width;
 					sc.y *= r.height;
-					p->inner_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
-					p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
-					p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+					p->inner_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.)) / r.width;
+					p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+					p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 				}
 				break;
 			case ON_OUTER_CIRCLE:
@@ -559,9 +574,9 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 					t_pt sc = p->pt;
 					sc.x *= r.width;
 					sc.y *= r.height;
-					p->outer_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
-					p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
-					p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+					p->outer_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.)) / r.width;
+					p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+					p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 				}
 				break;
 			}
@@ -607,28 +622,28 @@ void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				i++;
 				double pos = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
 				p->mousestate = 0;
-				if(fabs(pos - p->inner_radius) <= CIRCLE_HIT){
+				if(fabs(pos - p->inner_radius * r.width) <= CIRCLE_HIT){
 					p->mousestate |= ON_INNER_CIRCLE;
 					if(x->selected){
-						if(fabs(pos - p->inner_radius) < fabs(pos - x->selected->inner_radius)){
+						if(fabs(pos - p->inner_radius * r.width) < fabs(pos - x->selected->inner_radius * r.width)){
 							x->selected = p;
 						}
 					}else{
 						x->selected = p;
 					}
-				}else if(fabs(pos - p->outer_radius) <= CIRCLE_HIT){
+				}else if(fabs(pos - p->outer_radius * r.width) <= CIRCLE_HIT){
 					p->mousestate |= ON_OUTER_CIRCLE;
 					if(x->selected){
-						if(fabs(pos - p->outer_radius) < fabs(pos - x->selected->outer_radius)){
+						if(fabs(pos - p->outer_radius * r.width) < fabs(pos - x->selected->outer_radius * r.width)){
 							x->selected = p;
 						}
 					}else{
 						x->selected = p;
 					}
-				}else if(p->inner_radius - pos >= 0){
+				}else if(p->inner_radius * r.width - pos >= 0){
 					p->mousestate |= INSIDE_INNER_CIRCLE;
 					if(x->selected){
-						if((p->inner_radius - pos) < (x->selected->inner_radius - pos)){
+						if((p->inner_radius * r.width - pos) < (x->selected->inner_radius * r.width - pos)){
 							x->selected = p;
 						}
 					}else{
@@ -651,6 +666,11 @@ void rbfi_addPoint(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv){
 	t_point p;
 	rbfi_initPoint(x, &p);
 	int ret = rbfi_parseAddPointArgs(&p, argc, argv);
+
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	p.weight = rbfi_computeWeightFromDistances(p.inner_radius * r.width, p.outer_radius * r.width);
+	p.exponent = rbfi_computeExponentFromDistances(p.inner_radius  * r.width, p.outer_radius * r.width);
 	x->selected = rbfi_addPointToList(x, p);
 	//rbfi_postPoint(x->selected);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
@@ -741,15 +761,11 @@ int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 			goto bail;
 		}
 		p->inner_radius = atom_getfloat(ptr++);
-		p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
-		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
 	}else if(s == rbfi_ps_outer_radius){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
 		}
 		p->outer_radius = atom_getfloat(ptr++);
-		p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
-		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
 	}else if(s == rbfi_ps_locked){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
@@ -815,18 +831,20 @@ t_point *rbfi_newPoint(void){
 }
 
 void rbfi_initPoint(t_rbfi *x, t_point *p){
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 	p->pt = (t_pt){(double)rand() / RAND_MAX, (double)rand() / RAND_MAX};
 	char buf[32];
 	sprintf(buf, "preset %ld", x->monotonic_point_counter++);
 	p->label = gensym(buf);
 	//p->color = (t_jrgba){(double)rand() / RAND_MAX, 0.75, 0.75};
-	double r = (double)rand() / RAND_MAX;
-	//HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), r * 360., 0.75, 0.75);
+	//double rr = (double)rand() / RAND_MAX;
+	//HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), rr * 360., 0.75, 0.75);
 	HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), (x->monotonic_point_counter * 20) % 360, 0.75, 0.75);
-	p->inner_radius = 50.;
-	p->outer_radius = 100.;
-	p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
-	p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+	p->inner_radius = .05;
+	p->outer_radius = .2;
+	p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+	p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 	p->mousestate = 0;
 	p->locked = 0;
 }
@@ -856,6 +874,35 @@ double rbfi_computeExponentFromDistances(double d1, double d2){
 
 	double d = (2 * (log(2.) + log(5.))) / (-log(dd1) + log(dd2));
 	return d;
+}
+
+void rbfi_inner_radius(t_rbfi *x, double f){
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	t_point *p = x->points;
+	while(p){
+		p->inner_radius = f;
+		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+		p = p->next;
+	}
+	jbox_invalidate_layer((t_object *)x, NULL, l_color);
+	jbox_redraw(&(x->ob));
+}
+
+void rbfi_outer_radius(t_rbfi *x, double f){
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	t_point *p = x->points;
+	while(p){
+		p->outer_radius = f;
+		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+		p = p->next;
+	}
+
+	jbox_invalidate_layer((t_object *)x, NULL, l_color);
+	jbox_redraw(&(x->ob));
 }
 
 void rbfi_exponent(t_rbfi *x, double f){
@@ -1282,8 +1329,8 @@ void *rbfi_new(t_symbol *msg, int argc, t_atom *argv){
 		| JBOX_DRAWINLAST
 		//| JBOX_TRANSPARENT  
 		//      | JBOX_NOGROW
-		//| JBOX_GROWY
-		| JBOX_GROWBOTH
+		| JBOX_GROWY
+		//| JBOX_GROWBOTH
 		//      | JBOX_HILITE
 		| JBOX_BACKGROUND
 		| JBOX_DRAWBACKGROUND
@@ -1342,8 +1389,8 @@ int main(void){
 	class_addmethod(c, (method)rbfi_mouseleave, "mouseleave", A_CANT, 0);
 	class_addmethod(c, (method)rbfi_clear, "clear", 0);
 	class_addmethod(c, (method)rbfi_rename, "rename", A_GIMME, 0);
-	class_addmethod(c, (method)rbfi_exponent, "exponent", A_FLOAT, 0);
-	class_addmethod(c, (method)rbfi_weight, "weight", A_FLOAT, 0);
+	class_addmethod(c, (method)rbfi_inner_radius, "inner_radius", A_FLOAT, 0);
+	class_addmethod(c, (method)rbfi_outer_radius, "outer_radius", A_FLOAT, 0);
 	class_addmethod(c, (method)rbfi_move, "move", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)rbfi_dump, "dump", 0);
 	class_addmethod(c, (method)rbfi_addPoint, "add_point", A_GIMME, 0);
@@ -1395,6 +1442,9 @@ int main(void){
 	CLASS_ATTR_LONG(c, "always_draw_labels", 0, t_rbfi, always_draw_labels);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "always_draw_labels", 0, "0");
 
+	CLASS_ATTR_LONG(c, "mouse_active_beyond_rect", 0, t_rbfi, mouse_active_beyond_rect);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "mouse_active_beyond_rect", 0, "1");
+
 	/*
 	CLASS_ATTR_SYM(c, "draw_circles", 0, t_rbfi, draw_circles);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "draw_circles", 0, "edit");
@@ -1410,6 +1460,8 @@ int main(void){
 
 	CLASS_ATTR_DOUBLE(c, "line_width", 0, t_rbfi, line_width);
     	CLASS_ATTR_DEFAULTNAME_SAVE(c, "line_width", 0, "1.0");
+
+	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 200. 200."); 
 
 	class_register(CLASS_BOX, c);
 	rbfi_class = c;
