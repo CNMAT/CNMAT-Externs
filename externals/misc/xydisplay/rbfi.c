@@ -21,7 +21,7 @@
 
 
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  NAME: xydisplay
+  NAME: rbfi
   DESCRIPTION: A 2-D graphical display/editor like pictctrl but supporting multiple points.
   AUTHORS: John MacCallum
   COPYRIGHT_YEARS: 2009
@@ -89,7 +89,7 @@ typedef struct _point{
 	struct _point *prev;
 } t_point;
 
-typedef struct _xydisplay{
+typedef struct _rbfi{
 	t_jbox ob;
 	void *selectedOutlet, *listOutlet, *distanceOutlet, *mouseposOutlet, *dumpOutlet;
 	t_critical lock;
@@ -109,54 +109,54 @@ typedef struct _xydisplay{
 	float line_width;
 	long modifiers;
 	t_pt xhairs;
-} t_xydisplay;
+} t_rbfi;
 
-static t_symbol *xydisplay_ps_coords, *xydisplay_ps_name, *xydisplay_ps_rgb, *xydisplay_ps_hsv, *xydisplay_ps_weight, *xydisplay_ps_exponent, *xydisplay_ps_inner_radius, *xydisplay_ps_outer_radius, *xydisplay_ps_locked;
+static t_symbol *rbfi_ps_coords, *rbfi_ps_name, *rbfi_ps_rgb, *rbfi_ps_hsv, /**rbfi_ps_weight, *rbfi_ps_exponent, */*rbfi_ps_inner_radius, *rbfi_ps_outer_radius, *rbfi_ps_locked;
 
 static t_symbol *l_color, *l_points, *l_xhairs;
-static t_class *xydisplay_class;
+static t_class *rbfi_class;
 
-void xydisplay_paint(t_xydisplay *x, t_object *patcherview);
-void xydisplay_bang(t_xydisplay *x);
-void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv);
-void xydisplay_anything(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv);
-void xydisplay_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
-void xydisplay_move(t_xydisplay *x, double xx, double yy);
-void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
-void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
-void xydisplay_mouseup(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
-void xydisplay_mousemove(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
-void xydisplay_mouseleave(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers);
-void xydisplay_addPoint(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv);
-int xydisplay_parseAddPointArgs(t_point *p, int argc, t_atom *argv);
-t_point *xydisplay_addPointToList(t_xydisplay *x, t_point point);
-t_point *xydisplay_newPoint(void);
-void xydisplay_initPoint(t_xydisplay *x, t_point *p);
-//t_point *xydisplay_insertPoint(t_xydisplay *x, t_pt pt, t_symbol *label);
-double xydisplay_computeWeightFromDistances(double d1, double d2);
-double xydisplay_computeExponentFromDistances(double d1, double d2);
-void xydisplay_exponent(t_xydisplay *x, double f);
-void xydisplay_weight(t_xydisplay *x, double f);
-t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt);
-void xydisplay_removePoint(t_xydisplay *x, t_point *p);
-void xydisplay_outputPoints(t_xydisplay *x);
-void xydisplay_outputDistance(t_xydisplay *x);
-void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv);
-void xydisplay_dump(t_xydisplay *x);
-void xydisplay_clear(t_xydisplay *x);
-void xydisplay_free(t_xydisplay *x);
-void xydisplay_assist(t_xydisplay *x, void *b, long m, long a, char *s);
-double xydisplay_scale(double f, double min_in, double max_in, double min_out, double max_out);
-double xydisplay_clip(double f, double min, double max);
-t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av);
-t_max_err xydisplay_setvalueof(t_xydisplay *x, long ac, t_atom *av);
+void rbfi_paint(t_rbfi *x, t_object *patcherview);
+void rbfi_bang(t_rbfi *x);
+void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
+void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
+void rbfi_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
+void rbfi_move(t_rbfi *x, double xx, double yy);
+void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
+void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
+void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
+void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
+void rbfi_mouseleave(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
+void rbfi_addPoint(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv);
+int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv);
+t_point *rbfi_addPointToList(t_rbfi *x, t_point point);
+t_point *rbfi_newPoint(void);
+void rbfi_initPoint(t_rbfi *x, t_point *p);
+//t_point *rbfi_insertPoint(t_rbfi *x, t_pt pt, t_symbol *label);
+double rbfi_computeWeightFromDistances(double d1, double d2);
+double rbfi_computeExponentFromDistances(double d1, double d2);
+void rbfi_exponent(t_rbfi *x, double f);
+void rbfi_weight(t_rbfi *x, double f);
+t_point *rbfi_selectPoint(t_rbfi *x, t_pt pt);
+void rbfi_removePoint(t_rbfi *x, t_point *p);
+void rbfi_outputPoints(t_rbfi *x);
+void rbfi_outputDistance(t_rbfi *x);
+void rbfi_rename(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv);
+void rbfi_dump(t_rbfi *x);
+void rbfi_clear(t_rbfi *x);
+void rbfi_free(t_rbfi *x);
+void rbfi_assist(t_rbfi *x, void *b, long m, long a, char *s);
+double rbfi_scale(double f, double min_in, double max_in, double min_out, double max_out);
+double rbfi_clip(double f, double min, double max);
+t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av);
+t_max_err rbfi_setvalueof(t_rbfi *x, long ac, t_atom *av);
 void RGBtoHSV( double r, double g, double b, double *h, double *s, double *v );
 void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v );
-void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv);
-void xydisplay_postPoint(t_point *p);
+void *rbfi_new(t_symbol *msg, int argc, t_atom *argv);
+void rbfi_postPoint(t_point *p);
 
 
-void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
+void rbfi_paint(t_rbfi *x, t_object *patcherview){
 	t_rect rect;
 
 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);    
@@ -198,9 +198,9 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 						t_point *p = x->points;
 						sum = 0;
 						t_jrgba color = {0., 0., 0., 1.};
-						double ii = xydisplay_scale(i, 0, srect.width, 0, drect.width);
-						double jj = xydisplay_scale(j, 0, srect.width, 0, drect.width);
-						xydisplay_computeWeights((t_pt){ii, jj}, rect, x->points, x->npoints, weights);
+						double ii = rbfi_scale(i, 0, srect.width, 0, drect.width);
+						double jj = rbfi_scale(j, 0, srect.width, 0, drect.width);
+						rbfi_computeWeights((t_pt){ii, jj}, rect, x->points, x->npoints, weights);
 						k = 0;
 						while(p){
 							color.red += weights[k] * p->color.red;
@@ -350,32 +350,33 @@ void xydisplay_paint(t_xydisplay *x, t_object *patcherview){
 	}
 }
 
-void xydisplay_bang(t_xydisplay *x){
-	xydisplay_outputPoints(x);
-	xydisplay_outputDistance(x);
+void rbfi_bang(t_rbfi *x){
+	rbfi_outputPoints(x);
+	rbfi_outputDistance(x);
 }
 
-void xydisplay_list(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
+void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 
 }
 
-void xydisplay_anything(t_xydisplay *x, t_symbol *msg, short argc, t_atom *argv){
+void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 	t_symbol *name = msg;
 	t_point *p = NULL;
 	hashtab_lookup(x->ht, name, (t_object **)&p);
 	if(p){
-		xydisplay_parseAddPointArgs(p, argc, argv);
+		rbfi_parseAddPointArgs(p, argc, argv);
 	}else{
 		t_atom a[argc + 2];
 		atom_setsym(a, gensym("name"));
 		atom_setsym(a + 1, name);
 		memcpy(a + 2, argv, argc * sizeof(t_atom));
-		xydisplay_addPoint(x, msg, argc + 2, a);
+		rbfi_addPoint(x, msg, argc + 2, a);
 	}
+	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
 
-void xydisplay_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights){
+void rbfi_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights){
 	t_point *p = points;
 	int i = 0;
 	double sum = 0;
@@ -406,15 +407,15 @@ void xydisplay_computeWeights(t_pt coords, t_rect r, t_point *points, int nweigh
 	}
 }
 
-void xydisplay_move(t_xydisplay *x, double xx, double yy){
+void rbfi_move(t_rbfi *x, double xx, double yy){
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 
 	double weights[x->npoints];
 
-	double xx_screen = xydisplay_scale(xx, x->xmin, x->xmax, 0, r.width);
-	double yy_screen = xydisplay_scale(yy, x->ymin, x->ymax, r.height, 0);
-	xydisplay_computeWeights((t_pt){xx_screen,yy_screen}, r, x->points, x->npoints, weights);
+	double xx_screen = rbfi_scale(xx, x->xmin, x->xmax, 0, r.width);
+	double yy_screen = rbfi_scale(yy, x->ymin, x->ymax, r.height, 0);
+	rbfi_computeWeights((t_pt){xx_screen,yy_screen}, r, x->points, x->npoints, weights);
 	t_atom out[2];
 	int i = 0;
 	t_point *p = x->points;
@@ -438,22 +439,21 @@ void xydisplay_move(t_xydisplay *x, double xx, double yy){
 
 #define CIRCLE_HIT 3 // num pixels on either side of a circle that will register a hit
 
-void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
-	post("modifiers = 0x%X", modifiers);
+void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->modifiers = modifiers;
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 
 	t_atom pos[2];
-	atom_setfloat(pos, xydisplay_scale(pt.x, 0, r.width, x->xmin, x->xmax));
-	atom_setfloat(pos + 1, xydisplay_scale(pt.y, r.height, 0, x->ymin, x->ymax));
+	atom_setfloat(pos, rbfi_scale(pt.x, 0, r.width, x->xmin, x->xmax));
+	atom_setfloat(pos + 1, rbfi_scale(pt.y, r.height, 0, x->ymin, x->ymax));
 	outlet_list(x->mouseposOutlet, NULL, 2, pos);
 
 	switch(modifiers){
 	case 0x10:
 		{
 			double weights[x->npoints];
-			xydisplay_computeWeights(pt, r, x->points, x->npoints, weights);
+			rbfi_computeWeights(pt, r, x->points, x->npoints, weights);
 			t_atom out[2];
 			int i = 0;
 			t_point *p = x->points;
@@ -470,16 +470,16 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		break;
 	case 0x12:
 		{
-			//x->selected = xydisplay_selectPoint(x, pt);
+			//x->selected = rbfi_selectPoint(x, pt);
 		}
 		break;
 	case (0x12 | 0x11):
 		// command-shift -> delete a point 
 		{
 			t_point *p;
-			if(p = xydisplay_selectPoint(x, pt)){
+			if(p = rbfi_selectPoint(x, pt)){
 				if(!(p->locked)){
-					xydisplay_removePoint(x, p);
+					rbfi_removePoint(x, p);
 					critical_enter(x->lock);
 					x->selected = NULL;
 					critical_exit(x->lock);
@@ -492,10 +492,10 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 		// option-shift -> make a new point
 		{
 			t_atom a[3];
-			atom_setsym(a, xydisplay_ps_coords);
+			atom_setsym(a, rbfi_ps_coords);
 			atom_setfloat(a + 1, pt.x / r.width);
 			atom_setfloat(a + 2, pt.y / r.height);
-			xydisplay_addPoint(x, NULL, 3, a);
+			rbfi_addPoint(x, NULL, 3, a);
 			jbox_invalidate_layer((t_object *)x, NULL, l_color);
 		}
 		break;
@@ -504,11 +504,11 @@ void xydisplay_mousedown(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
  out:
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
-	//xydisplay_outputPoints(x);
-	xydisplay_outputDistance(x);
+	//rbfi_outputPoints(x);
+	rbfi_outputDistance(x);
 }
 
-void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
+void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 
@@ -516,7 +516,7 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 	case 0x10:
 		{
 			double weights[x->npoints];
-			xydisplay_computeWeights(pt, r, x->points, x->npoints, weights);
+			rbfi_computeWeights(pt, r, x->points, x->npoints, weights);
 			t_atom out[2];
 			int i = 0;
 			t_point *p = x->points;
@@ -548,8 +548,8 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 					sc.x *= r.width;
 					sc.y *= r.height;
 					p->inner_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
-					p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
-					p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+					p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+					p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
 				}
 				break;
 			case ON_OUTER_CIRCLE:
@@ -559,8 +559,8 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 					sc.x *= r.width;
 					sc.y *= r.height;
 					p->outer_radius = sqrt(pow(pt.x - sc.x, 2.) + pow(pt.y - sc.y, 2.));
-					p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
-					p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+					p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+					p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
 				}
 				break;
 			}
@@ -571,12 +571,12 @@ void xydisplay_mousedrag(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 	jbox_redraw(&(x->ob));
 }
 
-void xydisplay_mouseup(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
+void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 }
 
-void xydisplay_mouseleave(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
+void rbfi_mouseleave(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->modifiers = 0;
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
@@ -584,7 +584,7 @@ void xydisplay_mouseleave(t_xydisplay *x, t_object *patcherview, t_pt pt, long m
 	jbox_redraw(&(x->ob));
 }
 
-void xydisplay_mousemove(t_xydisplay *x, t_object *patcherview, t_pt pt, long modifiers){
+void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->modifiers = modifiers;
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
@@ -646,38 +646,38 @@ void xydisplay_mousemove(t_xydisplay *x, t_object *patcherview, t_pt pt, long mo
 }
 
 // this is called in response to the "add_point" message from Max
-void xydisplay_addPoint(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
+void rbfi_addPoint(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv){
 	t_point p;
-	xydisplay_initPoint(x, &p);
-	int ret = xydisplay_parseAddPointArgs(&p, argc, argv);
-	x->selected = xydisplay_addPointToList(x, p);
-	xydisplay_postPoint(x->selected);
+	rbfi_initPoint(x, &p);
+	int ret = rbfi_parseAddPointArgs(&p, argc, argv);
+	x->selected = rbfi_addPointToList(x, p);
+	//rbfi_postPoint(x->selected);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
 
-int xydisplay_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
+int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 	if(argc == 0){
 		return 0;
 	}
 	t_symbol *s;
 	t_atom *ptr = argv;
 	if(atom_gettype(ptr) != A_SYM){
-		error("xydisplay: error parsing arguments to add_point.  expected a symbol and found something else.");
+		error("rbfi: error parsing arguments to add_point.  expected a symbol and found something else.");
 		return 1;
 	}
 	s = atom_getsym(ptr++);
-	if(s == xydisplay_ps_coords){
+	if(s == rbfi_ps_coords){
 		if(argc - (ptr - argv) < 2){
 			goto bail;
 		}
 		p->pt = (t_pt){atom_getfloat(ptr++), atom_getfloat(ptr++)};
-	}else if(s == xydisplay_ps_name){
+	}else if(s == rbfi_ps_name){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
 		}
 		p->label = atom_getsym(ptr++);
-	}else if(s == xydisplay_ps_rgb){
+	}else if(s == rbfi_ps_rgb){
 		if(argc - (ptr - argv) == 0){
 			goto bail;
 		}
@@ -696,11 +696,11 @@ int xydisplay_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 				p->color.green = (double)((h & 0xff00) / 0xff);
 				p->color.blue = (double)((h & 0xff) / 0xff);
 			}else{
-				error("xydisplay: unrecognized argument for key rgb");
+				error("rbfi: unrecognized argument for key rgb");
 				return 1;
 			}
 		}
-	}else if(s == xydisplay_ps_hsv){
+	}else if(s == rbfi_ps_hsv){
 		if(argc - (ptr - argv) == 0){
 			goto bail;
 		}
@@ -719,46 +719,52 @@ int xydisplay_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 				p->color.green = (double)((h & 0xff00) / 0xff);
 				p->color.blue = (double)((h & 0xff) / 0xff);
 			}else{
-				error("xydisplay: unrecognized argument for key rgb");
+				error("rbfi: unrecognized argument for key rgb");
 				return 1;
 			}
 		}
-	}else if(s == xydisplay_ps_weight){
+		/*
+	}else if(s == rbfi_ps_weight){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
 		}
 		p->weight = atom_getfloat(ptr++);
-	}else if(s == xydisplay_ps_exponent){
+	}else if(s == rbfi_ps_exponent){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
 		}
 		p->exponent = atom_getfloat(ptr++);
-	}else if(s == xydisplay_ps_inner_radius){
+		*/
+	}else if(s == rbfi_ps_inner_radius){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
 		}
 		p->inner_radius = atom_getfloat(ptr++);
-	}else if(s == xydisplay_ps_outer_radius){
+		p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+	}else if(s == rbfi_ps_outer_radius){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
 		}
 		p->outer_radius = atom_getfloat(ptr++);
-	}else if(s == xydisplay_ps_locked){
+		p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+	}else if(s == rbfi_ps_locked){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
 		}
 		p->locked = atom_getlong(ptr++);
 	}else{
-		error("xydisplay: unrecognized key %s", s->s_name);
+		error("rbfi: unrecognized key %s", s->s_name);
 	}
-	return xydisplay_parseAddPointArgs(p, argc - (ptr - argv), ptr);
+	return rbfi_parseAddPointArgs(p, argc - (ptr - argv), ptr);
 
  bail:
-	error("xydisplay: not enough arguments for key %s", s->s_name);
+	error("rbfi: not enough arguments for key %s", s->s_name);
 	return 1;
 }
 
-t_point *xydisplay_addPointToList(t_xydisplay *x, t_point point){
+t_point *rbfi_addPointToList(t_rbfi *x, t_point point){
 	critical_enter(x->lock);
 	t_hashtab *ht = x->ht;
 	t_point *p = NULL;
@@ -776,7 +782,7 @@ t_point *xydisplay_addPointToList(t_xydisplay *x, t_point point){
 		}
 	}
 	if(!p){
-		p = xydisplay_newPoint();
+		p = rbfi_newPoint();
 	}
 	if(!p){
 		return NULL;
@@ -797,17 +803,17 @@ t_point *xydisplay_addPointToList(t_xydisplay *x, t_point point){
 	return p;
 }
 
-t_point *xydisplay_newPoint(void){
+t_point *rbfi_newPoint(void){
 	t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
 	if(p){
 		return p;
 	}else{
-		error("xydisplay: out of memory!  failed to allocate a new point");
+		error("rbfi: out of memory!  failed to allocate a new point");
 		return NULL;
 	}
 }
 
-void xydisplay_initPoint(t_xydisplay *x, t_point *p){
+void rbfi_initPoint(t_rbfi *x, t_point *p){
 	p->pt = (t_pt){(double)rand() / RAND_MAX, (double)rand() / RAND_MAX};
 	char buf[32];
 	sprintf(buf, "preset %ld", x->monotonic_point_counter++);
@@ -818,14 +824,14 @@ void xydisplay_initPoint(t_xydisplay *x, t_point *p){
 	HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), (x->monotonic_point_counter * 20) % 360, 0.75, 0.75);
 	p->inner_radius = 50.;
 	p->outer_radius = 100.;
-	p->exponent = xydisplay_computeExponentFromDistances(p->inner_radius, p->outer_radius);
-	p->weight = xydisplay_computeWeightFromDistances(p->inner_radius, p->outer_radius);
+	p->exponent = rbfi_computeExponentFromDistances(p->inner_radius, p->outer_radius);
+	p->weight = rbfi_computeWeightFromDistances(p->inner_radius, p->outer_radius);
 	p->mousestate = 0;
 	p->locked = 0;
 }
 
 #define THRESH .9
-double xydisplay_computeWeightFromDistances(double d1, double d2){
+double rbfi_computeWeightFromDistances(double d1, double d2){
 	double dd1 = d1;
 	double dd2 = d2;
 	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
@@ -838,7 +844,7 @@ double xydisplay_computeWeightFromDistances(double d1, double d2){
 	return w;
 }
 
-double xydisplay_computeExponentFromDistances(double d1, double d2){
+double rbfi_computeExponentFromDistances(double d1, double d2){
 	double dd1 = d1;
 	double dd2 = d2;
 	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
@@ -851,7 +857,7 @@ double xydisplay_computeExponentFromDistances(double d1, double d2){
 	return d;
 }
 
-void xydisplay_exponent(t_xydisplay *x, double f){
+void rbfi_exponent(t_rbfi *x, double f){
 	t_point *p = x->points;
 	while(p){
 		p->exponent = f;
@@ -860,7 +866,7 @@ void xydisplay_exponent(t_xydisplay *x, double f){
 	jbox_redraw(&(x->ob));
 }
 
-void xydisplay_weight(t_xydisplay *x, double f){
+void rbfi_weight(t_rbfi *x, double f){
 	t_point *p = x->points;
 	while(p){
 		p->weight = f;
@@ -869,7 +875,7 @@ void xydisplay_weight(t_xydisplay *x, double f){
 	jbox_redraw(&(x->ob));
 }
 
-t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt){
+t_point *rbfi_selectPoint(t_rbfi *x, t_pt pt){
 	critical_enter(x->lock);
 	t_point *p = x->points;
 	t_rect r;
@@ -889,7 +895,7 @@ t_point *xydisplay_selectPoint(t_xydisplay *x, t_pt pt){
 	return p;
 }
 
-void xydisplay_removePoint(t_xydisplay *x, t_point *p){
+void rbfi_removePoint(t_rbfi *x, t_point *p){
 	critical_enter(x->lock);
 	if(p->prev){
 		p->prev->next = p->next;
@@ -904,14 +910,14 @@ void xydisplay_removePoint(t_xydisplay *x, t_point *p){
 	critical_exit(x->lock);
 }
 
-void xydisplay_outputPoints(t_xydisplay *x){
+void rbfi_outputPoints(t_rbfi *x){
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 	if(x->selected){
 		t_atom out[2];
 		critical_enter(x->lock);
-		atom_setfloat(out, xydisplay_scale(x->selected->pt.x, 0, 1., x->xmin, x->xmax));
-		atom_setfloat(out + 1, xydisplay_scale(x->selected->pt.y, 1., 0, x->ymin, x->ymax));
+		atom_setfloat(out, rbfi_scale(x->selected->pt.x, 0, 1., x->xmin, x->xmax));
+		atom_setfloat(out + 1, rbfi_scale(x->selected->pt.y, 1., 0, x->ymin, x->ymax));
 		critical_exit(x->lock);
 		outlet_list(x->selectedOutlet, NULL, 2, out);
 	}
@@ -928,8 +934,8 @@ void xydisplay_outputPoints(t_xydisplay *x){
 				t_pt sc = p->pt;
 				sc.x *= r.width;
 				sc.y *= r.height;
-				atom_setfloat(outptr--, xydisplay_scale(sc.y, r.height, 0, x->ymin, x->ymax));
-				atom_setfloat(outptr--, xydisplay_scale(sc.x, 0, r.width, x->xmin, x->xmax));
+				atom_setfloat(outptr--, rbfi_scale(sc.y, r.height, 0, x->ymin, x->ymax));
+				atom_setfloat(outptr--, rbfi_scale(sc.x, 0, r.width, x->xmin, x->xmax));
 				p = p->next;
 			}
 			critical_exit(x->lock);
@@ -950,8 +956,8 @@ void xydisplay_outputPoints(t_xydisplay *x){
 				t_pt sc = p->pt;
 				sc.x *= r.width;
 				sc.y *= r.height;
-				atom_setfloat(ptr--, xydisplay_scale(sc.y, r.height, 0, x->ymin, x->ymax));
-				atom_setfloat(ptr--, xydisplay_scale(sc.x, 0, r.width, x->xmin, x->xmax));
+				atom_setfloat(ptr--, rbfi_scale(sc.y, r.height, 0, x->ymin, x->ymax));
+				atom_setfloat(ptr--, rbfi_scale(sc.x, 0, r.width, x->xmin, x->xmax));
 				atom_setsym(ptr--, p->label);
 				p = p->next;
 			}
@@ -969,7 +975,7 @@ void xydisplay_outputPoints(t_xydisplay *x){
 	}
 }
 
-void xydisplay_outputDistance(t_xydisplay *x){
+void rbfi_outputDistance(t_rbfi *x){
 	if(!x->selected){
 		return;
 	}
@@ -980,14 +986,14 @@ void xydisplay_outputDistance(t_xydisplay *x){
 	t_atom out[npoints * 2];
 	t_atom *ptr = out + (npoints * 2) - 1;
 	t_point *p = x->points;
-	double selx = xydisplay_scale(x->selected->pt.x, 0, 1., 0., 1.);
-	double sely = xydisplay_scale(x->selected->pt.y, 1., 0, 0., 1.);
+	double selx = rbfi_scale(x->selected->pt.x, 0, 1., 0., 1.);
+	double sely = rbfi_scale(x->selected->pt.y, 1., 0, 0., 1.);
 
 	while(p){
 		t_pt sc = p->pt;
 		sc.x *= r.width;
 		sc.y *= r.height;
-		atom_setfloat(ptr--, sqrt(pow(selx - xydisplay_scale(sc.x, 0., r.width, 0., 1.), 2.) + pow(sely - xydisplay_scale(sc.y, r.height, 0., 0., 1.), 2.)));
+		atom_setfloat(ptr--, sqrt(pow(selx - rbfi_scale(sc.x, 0., r.width, 0., 1.), 2.) + pow(sely - rbfi_scale(sc.y, r.height, 0., 0., 1.), 2.)));
 		atom_setsym(ptr--, p->label);
 		p = p->next;
 	}
@@ -995,7 +1001,7 @@ void xydisplay_outputDistance(t_xydisplay *x){
 	outlet_list(x->distanceOutlet, NULL, npoints * 2, out);
 }
 
-void xydisplay_dump(t_xydisplay *x){
+void rbfi_dump(t_rbfi *x){
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 	t_point *p = x->points;
@@ -1024,7 +1030,7 @@ void xydisplay_dump(t_xydisplay *x){
 	outlet_anything(x->dumpOutlet, gensym("done"), 0, NULL);
 }
 
-void xydisplay_clear(t_xydisplay *x){
+void rbfi_clear(t_rbfi *x){
 	critical_enter(x->lock);
 	t_point *p = x->points;
 	t_point *next;
@@ -1044,7 +1050,7 @@ void xydisplay_clear(t_xydisplay *x){
 	jbox_redraw(&(x->ob));
 }
 
-void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
+void rbfi_rename(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv){
 	critical_enter(x->lock);
 	if(argc == 1){
 		if(x->selected){
@@ -1083,7 +1089,7 @@ void xydisplay_rename(t_xydisplay *x, t_symbol *msg, int argc, t_atom *argv){
 	jbox_redraw(&(x->ob));
 }
 
-void xydisplay_free(t_xydisplay *x){
+void rbfi_free(t_rbfi *x){
 	jbox_free(&(x->ob));
 	t_point *p = x->points;
 	t_point *next = NULL;
@@ -1092,11 +1098,11 @@ void xydisplay_free(t_xydisplay *x){
 		sysmem_freeptr(p);
 		p = next;
 	}
-	xydisplay_clear(x);
+	rbfi_clear(x);
 	critical_free(x->lock);
 }
 
-void xydisplay_assist(t_xydisplay *x, void *b, long io, long index, char *s){
+void rbfi_assist(t_rbfi *x, void *b, long io, long index, char *s){
 	switch(io){
 	case 1:
 		switch(index){
@@ -1118,13 +1124,13 @@ void xydisplay_assist(t_xydisplay *x, void *b, long io, long index, char *s){
 	}
 }
 
-double xydisplay_scale(double f, double min_in, double max_in, double min_out, double max_out){
+double rbfi_scale(double f, double min_in, double max_in, double min_out, double max_out){
 	float m = (max_out - min_out) / (max_in - min_in);
 	float b = (min_out - (m * min_in));
 	return m * f + b;
 }
 
-double xydisplay_clip(double f, double min, double max){
+double rbfi_clip(double f, double min, double max){
 	double ff = f;
 	if(ff < min){
 		ff = min;
@@ -1136,7 +1142,7 @@ double xydisplay_clip(double f, double min, double max){
 }
 
 // for pattr
-t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av){
+t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av){
 	//post("getvalueof");
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
@@ -1153,8 +1159,8 @@ t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av){
 		t_pt sc = p->pt;
 		sc.x *= r.width;
 		sc.y *= r.height;
-		atom_setfloat(outptr++, xydisplay_scale(sc.x, 0, r.width, x->xmin, x->xmax));
-		atom_setfloat(outptr++, xydisplay_scale(sc.y, r.height, 0, x->ymin, x->ymax));
+		atom_setfloat(outptr++, rbfi_scale(sc.x, 0, r.width, x->xmin, x->xmax));
+		atom_setfloat(outptr++, rbfi_scale(sc.y, r.height, 0, x->ymin, x->ymax));
 		p = p->next;
 	}
 	critical_exit(x->lock);
@@ -1162,8 +1168,8 @@ t_max_err xydisplay_getvalueof(t_xydisplay *x, long *ac, t_atom **av){
 	return MAX_ERR_NONE;
 }
 
-t_max_err xydisplay_setvalueof(t_xydisplay *x, long ac, t_atom *av){
-	xydisplay_list(x, NULL, ac, av);
+t_max_err rbfi_setvalueof(t_rbfi *x, long ac, t_atom *av){
+	rbfi_list(x, NULL, ac, av);
 	return MAX_ERR_NONE;
 }
 
@@ -1255,8 +1261,8 @@ void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v )
 Object and instance creation functions.
 **************************************************/
 
-void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv){
-	t_xydisplay *x;
+void *rbfi_new(t_symbol *msg, int argc, t_atom *argv){
+	t_rbfi *x;
     
  	t_dictionary *d = NULL; 
  	long boxflags; 
@@ -1282,7 +1288,7 @@ void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv){
 		//      | JBOX_TEXTFIELD
 		;
 
-	if(x = (t_xydisplay *)object_alloc(xydisplay_class)){
+	if(x = (t_rbfi *)object_alloc(rbfi_class)){
 		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->ob.b_firstin = (void *)x; 
 
@@ -1311,108 +1317,110 @@ void *xydisplay_new(t_symbol *msg, int argc, t_atom *argv){
 }
 
 int main(void){
-	t_class *c = class_new("xydisplay", (method)xydisplay_new, (method)xydisplay_free, sizeof(t_xydisplay), 0L, A_GIMME, 0);
+	t_class *c = class_new("rbfi", (method)rbfi_new, (method)rbfi_free, sizeof(t_rbfi), 0L, A_GIMME, 0);
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
  	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
     
-	class_addmethod(c, (method)xydisplay_paint, "paint", A_CANT, 0); 
-	class_addmethod(c, (method)xydisplay_bang, "bang", 0);
-	//class_addmethod(c, (method)xydisplay_int, "int", A_LONG, 0);
-	//class_addmethod(c, (method)xydisplay_float, "float", A_FLOAT, 0);
-	class_addmethod(c, (method)xydisplay_anything, "anything", A_GIMME, 0);
-	class_addmethod(c, (method)xydisplay_list, "list", A_GIMME, 0);
-	class_addmethod(c, (method)xydisplay_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_getvalueof, "getvalueof", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_setvalueof, "setvalueof", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_mousedown, "mousedown", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_mousedrag, "mousedrag", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_mouseup, "mouseup", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_mousemove, "mousemove", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_mouseleave, "mouseleave", A_CANT, 0);
-	class_addmethod(c, (method)xydisplay_clear, "clear", 0);
-	class_addmethod(c, (method)xydisplay_rename, "rename", A_GIMME, 0);
-	class_addmethod(c, (method)xydisplay_exponent, "exponent", A_FLOAT, 0);
-	class_addmethod(c, (method)xydisplay_weight, "weight", A_FLOAT, 0);
-	class_addmethod(c, (method)xydisplay_move, "move", A_FLOAT, A_FLOAT, 0);
-	class_addmethod(c, (method)xydisplay_dump, "dump", 0);
-	class_addmethod(c, (method)xydisplay_addPoint, "add_point", A_GIMME, 0);
+	class_addmethod(c, (method)rbfi_paint, "paint", A_CANT, 0); 
+	class_addmethod(c, (method)rbfi_bang, "bang", 0);
+	//class_addmethod(c, (method)rbfi_int, "int", A_LONG, 0);
+	//class_addmethod(c, (method)rbfi_float, "float", A_FLOAT, 0);
+	class_addmethod(c, (method)rbfi_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)rbfi_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)rbfi_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_getvalueof, "getvalueof", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_setvalueof, "setvalueof", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_mousedown, "mousedown", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_mousedrag, "mousedrag", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_mouseup, "mouseup", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_mousemove, "mousemove", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_mouseleave, "mouseleave", A_CANT, 0);
+	class_addmethod(c, (method)rbfi_clear, "clear", 0);
+	class_addmethod(c, (method)rbfi_rename, "rename", A_GIMME, 0);
+	class_addmethod(c, (method)rbfi_exponent, "exponent", A_FLOAT, 0);
+	class_addmethod(c, (method)rbfi_weight, "weight", A_FLOAT, 0);
+	class_addmethod(c, (method)rbfi_move, "move", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)rbfi_dump, "dump", 0);
+	class_addmethod(c, (method)rbfi_addPoint, "add_point", A_GIMME, 0);
 
     
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
     
- 	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_xydisplay, bgcolor); 
+ 	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_rbfi, bgcolor); 
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "bgcolor", 0, "rgba", "Background Color"); 
 
- 	CLASS_ATTR_RGBA(c, "pointcolor", 0, t_xydisplay, pointcolor); 
+ 	CLASS_ATTR_RGBA(c, "pointcolor", 0, t_rbfi, pointcolor); 
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "pointcolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "pointcolor", 0, "rgba", "Point Color"); 
 
- 	CLASS_ATTR_RGBA(c, "bordercolor", 0, t_xydisplay, bordercolor); 
+ 	CLASS_ATTR_RGBA(c, "bordercolor", 0, t_rbfi, bordercolor); 
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bordercolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "bordercolor", 0, "rgba", "Border Color"); 
 
- 	CLASS_ATTR_RGBA(c, "selectedcolor", 0, t_xydisplay, selectedcolor); 
+ 	CLASS_ATTR_RGBA(c, "selectedcolor", 0, t_rbfi, selectedcolor); 
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "selectedcolor", 0, "1. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "selectedcolor", 0, "rgba", "Selected Color"); 
 
- 	CLASS_ATTR_RGBA(c, "labelcolor", 0, t_xydisplay, labelcolor); 
+ 	CLASS_ATTR_RGBA(c, "labelcolor", 0, t_rbfi, labelcolor); 
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "labelcolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "labelcolor", 0, "rgba", "Label Color"); 
 
- 	CLASS_ATTR_RGBA(c, "xhaircolor", 0, t_xydisplay, xhaircolor); 
+ 	CLASS_ATTR_RGBA(c, "xhaircolor", 0, t_rbfi, xhaircolor); 
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xhaircolor", 0, "1. 1. 1. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "xhaircolor", 0, "rgba", "Crosshair Color"); 
     
 	CLASS_STICKY_ATTR_CLEAR(c, "category"); 
 
-	CLASS_ATTR_FLOAT(c, "pointdiameter", 0, t_xydisplay, pointdiameter);
+	CLASS_ATTR_FLOAT(c, "pointdiameter", 0, t_rbfi, pointdiameter);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "pointdiameter", 0, "10.0");
 
-	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_xydisplay, xmin);
+	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_rbfi, xmin);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "xmin", 0, "0.0");
-	CLASS_ATTR_DOUBLE(c, "xmax", 0, t_xydisplay, xmax);
+	CLASS_ATTR_DOUBLE(c, "xmax", 0, t_rbfi, xmax);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "xmax", 0, "1.0");
 
-	CLASS_ATTR_DOUBLE(c, "ymin", 0, t_xydisplay, ymin);
+	CLASS_ATTR_DOUBLE(c, "ymin", 0, t_rbfi, ymin);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ymin", 0, "0.0");
-	CLASS_ATTR_DOUBLE(c, "ymax", 0, t_xydisplay, ymax);
+	CLASS_ATTR_DOUBLE(c, "ymax", 0, t_rbfi, ymax);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ymax", 0, "1.0");
 
-	CLASS_ATTR_LONG(c, "always_draw_circles", 0, t_xydisplay, always_draw_circles);
+	CLASS_ATTR_LONG(c, "always_draw_circles", 0, t_rbfi, always_draw_circles);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "always_draw_circles", 0, "0");
-	CLASS_ATTR_LONG(c, "always_draw_labels", 0, t_xydisplay, always_draw_labels);
+	CLASS_ATTR_LONG(c, "always_draw_labels", 0, t_rbfi, always_draw_labels);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "always_draw_labels", 0, "0");
 
 	/*
-	CLASS_ATTR_SYM(c, "draw_circles", 0, t_xydisplay, draw_circles);
+	CLASS_ATTR_SYM(c, "draw_circles", 0, t_rbfi, draw_circles);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "draw_circles", 0, "edit");
-	CLASS_ATTR_SYM(c, "draw_labels", 0, t_xydisplay, draw_labels);
+	CLASS_ATTR_SYM(c, "draw_labels", 0, t_rbfi, draw_labels);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "draw_labels", 0, "edit");
 	*/
 
-	CLASS_ATTR_LONG(c, "outputmode", 0, t_xydisplay, outputmode);
+	CLASS_ATTR_LONG(c, "outputmode", 0, t_rbfi, outputmode);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "outputmode", 0, "0");
 
-	CLASS_ATTR_LONG(c, "rbf", 0, t_xydisplay, rbf);
+	CLASS_ATTR_LONG(c, "rbf", 0, t_rbfi, rbf);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "rbf", 0, 0);
 
-	CLASS_ATTR_DOUBLE(c, "line_width", 0, t_xydisplay, line_width);
+	CLASS_ATTR_DOUBLE(c, "line_width", 0, t_rbfi, line_width);
     	CLASS_ATTR_DEFAULTNAME_SAVE(c, "line_width", 0, "1.0");
 
 	class_register(CLASS_BOX, c);
-	xydisplay_class = c;
+	rbfi_class = c;
 
-	xydisplay_ps_coords = gensym("coords");
-	xydisplay_ps_name = gensym("name");
-	xydisplay_ps_rgb = gensym("rgb");
-	xydisplay_ps_hsv = gensym("hsv");
-	xydisplay_ps_weight = gensym("weight");
-	xydisplay_ps_exponent = gensym("exponent");
-	xydisplay_ps_inner_radius = gensym("inner_radius");
-	xydisplay_ps_outer_radius = gensym("outer_radius");
-	xydisplay_ps_locked = gensym("locked");
+	rbfi_ps_coords = gensym("coords");
+	rbfi_ps_name = gensym("name");
+	rbfi_ps_rgb = gensym("rgb");
+	rbfi_ps_hsv = gensym("hsv");
+	/*
+	rbfi_ps_weight = gensym("weight");
+	rbfi_ps_exponent = gensym("exponent");
+	*/
+	rbfi_ps_inner_radius = gensym("inner_radius");
+	rbfi_ps_outer_radius = gensym("outer_radius");
+	rbfi_ps_locked = gensym("locked");
 
 	l_color = gensym("l_color");
 	l_points = gensym("l_points");
@@ -1430,7 +1438,7 @@ int main(void){
 	return 0;
 }
 
-void xydisplay_postPoint(t_point *p){
+void rbfi_postPoint(t_point *p){
 	if(!p){
 		post("p == NULL!!");
 		return;
