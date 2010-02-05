@@ -57,7 +57,7 @@ there is a drawing bug with the beat at the arrival frequency point when it is d
 //#include "gsl/gsl_sf.h"
 //#include "gsl/gsl_errno.h"
 #undef msg
-#include "boost/math/special_functions/gamma.hpp"
+#include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/special_functions/beta.hpp>
 #include <boost/math/tools/stats.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -146,6 +146,7 @@ typedef struct _te{
 	int locked;
 	t_jsurface *surface;
 	t_object *pv;
+	int draw_mouse, draw_voice_legend;
 } t_te; 
 
 t_class *te_class; 
@@ -561,8 +562,9 @@ void te_paint(t_te *x, t_object *patcherview){
 		}
 	}
 
+#define XY_COORDS_Y_OFFSET 25
 	// draw the x,y coords of the mouse
-	{
+	if(x->draw_mouse){
 		char buf[32];
 		double w, h;
 		sprintf(buf, "%f sec, %f bps", te_scale(x->mousemove.x, 0, rect.width, x->time_min, x->time_max), te_scale(x->mousemove.y, rect.height, 0, x->freq_min, x->freq_max));
@@ -582,11 +584,11 @@ void te_paint(t_te *x, t_object *patcherview){
 			jgraphics_show_text(gg, buf);
 		}
 		jbox_end_layer((t_object *)x, patcherview, l_xycoords);
-		jbox_paint_layer((t_object *)x, patcherview, l_xycoords, rect.width - w - 4, 10);
+		jbox_paint_layer((t_object *)x, patcherview, l_xycoords, rect.width - w - 4, XY_COORDS_Y_OFFSET);
 	}
 
 	// draw legend
-	{
+	if(x->draw_voice_legend){
 		t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_legend, 50, (x->numFunctions - 1) * 10 + 20);
 		if(gg){
 			//post("legend");
@@ -620,7 +622,7 @@ void te_paint(t_te *x, t_object *patcherview){
 			}
 		}
 		jbox_end_layer((t_object *)x, patcherview, l_legend);
-		jbox_paint_layer((t_object *)x, patcherview, l_legend, rect.width - 50, 20);
+		jbox_paint_layer((t_object *)x, patcherview, l_legend, rect.width - 50, XY_COORDS_Y_OFFSET + 10);
 	}
 
 	// draw the y axis
@@ -2595,6 +2597,11 @@ int main(void){
 	CLASS_ATTR_DEFAULT_SAVE(c, "show_beats", 0, "1");
 	CLASS_ATTR_LONG(c, "show_beats", 0, t_te, show_beats);
 	CLASS_ATTR_DEFAULT_SAVE(c, "show_beats", 0, "1");
+
+	CLASS_ATTR_LONG(c, "draw_mouse", 0, t_te, draw_mouse);
+	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "draw_mouse", 0, "1");
+	CLASS_ATTR_LONG(c, "draw_voice_legend", 0, t_te, draw_voice_legend);
+	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "draw_voice_legend", 0, "1");
 
 	CLASS_ATTR_FLOAT(c, "major_grid_width_sec", 0, t_te, major_grid_width_sec);
 	CLASS_ATTR_DEFAULT_SAVE(c, "major_grid_width_sec", 0, "1.");

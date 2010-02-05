@@ -28,6 +28,8 @@ SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 0.0: First try
 VERSION 1.0: First stable version.
 VERSION 1.1: Added code for cc_jbox
+VERSION 1.2: Added code for cc_jbox~
+VERSION 1.2.1: Fixed a bug in cc_cfile_sec() that would cause a crash when called with an empty string
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -38,16 +40,28 @@ VERSION 1.1: Added code for cc_jbox
 #include "ext_critical.h"
 #include "ext_hashtab.h"
 
-#if defined(CC_MSP)
-#include "z_dsp.h"
-#undef NAME
-#define NAME "cc~"
-#elif defined(CC_JBOX)
+#undef __ALTIVEC__ // not sure why i have to do this...
+
+#ifdef CC_JBOX
 #include "jpatcher_api.h"
 #include "jgraphics.h"
-#undef NAME
-#define NAME "cc_jbox"
 #endif
+
+#ifdef CC_MSP
+#include "z_dsp.h"
+#endif
+
+#undef NAME
+#if defined(CC_MSP) && defined(CC_JBOX)
+#define NAME "cc_jbox~"
+#elif defined(CC_MSP)
+#define NAME "cc~"
+#elif defined(CC_JBOX)
+#define NAME "cc_jbox"
+#else
+#define NAME "cc"
+#endif
+
 
 #include "version.h"
 #include "version.c"
@@ -75,24 +89,33 @@ typedef int (*ccmethod_float)(t_object *, char *, int, double, int, void **);
 typedef int (*ccmethod_int)(t_object *, char *, int, long, int, void **);
 typedef int (*ccmethod_bang)(t_object *, char *, int, int, void **);
 
-#if defined(CC_MSP)
+#ifdef CC_MSP
 typedef t_int *(*ccperform_method)(t_object *, char *, long, t_float **, long, t_float **, long, long);
-#elif defined(CC_JBOX)
+#endif
+#ifdef CC_JBOX
 typedef void (*ccpaint_method)(t_object *ob, char *user_ob, t_object *patcherview, int numoutlets, void **outlets);
+typedef void (*ccmouse_method)(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, long noutlets, void **outlets);
 #endif
 
 typedef struct _cc{
-#if defined(CC_MSP)
+#if defined(CC_MSP) && defined(CC_JBOX)
+	t_pxjbox ob;
+#elif defined(CC_MSP)
 	t_pxobject ob;
+#elif defined(CC_JBOX)
+	t_jbox ob;
+#else
+	t_object ob;
+#endif
+
+#ifdef CC_MSP
 	t_float **svin, **svout;
 	long nsiginlets, nsigoutlets;
 	ccperform_method user_perform;
 	long blksize, sr;
-#elif defined(CC_JBOX)
-	t_jbox ob;
+#endif
+#ifdef CC_JBOX
 	ccpaint_method user_paint;
-#else
-	t_object ob;
 #endif
 	void **outlets;
 	long ninlets, noutlets;
@@ -140,9 +163,11 @@ void cc_list(t_cc *x, t_symbol *msg, short argc, t_atom *argv);
 void cc_edclose(t_cc *x, char **text, long size);
 long cc_edsave(t_cc *x, char **text, long size);
 void cc_okclose(t_cc *x, char *prompt, short *result);
+
 #if !defined(CC_JBOX)
 void cc_dblclick(t_cc *x);
 #endif
+
 void cc_open_editor(t_cc *x);
 
 void cc_make_file_paths(t_cc *x);
@@ -151,13 +176,22 @@ void cc_free(t_cc *x);
 void cc_assist(t_cc *x, void *b, long m, long a, char *s);
 void cc_post_log(t_cc *x, void (*p)(char *, ...));
 int cc_write_template(t_cc *x, char *buf);
-#if defined(CC_MSP)
+
+#ifdef CC_MSP
 void cc_dsp(t_cc *x, t_signal **sp, short *count);
 t_int *cc_perform(t_int *w);
-#elif defined(CC_JBOX)
-void cc_paint(t_cc *x, t_object *patcherview);
-// mouse methods go here
 #endif
+#ifdef CC_JBOX
+void cc_paint(t_cc *x, t_object *patcherview);
+void cc_mousedown(t_cc *x, t_object *patcherview, t_pt pt, long modifiers);
+void cc_mousedrag(t_cc *x, t_object *patcherview, t_pt pt, long modifiers);
+void cc_mouseup(t_cc *x, t_object *patcherview, t_pt pt, long modifiers);
+void cc_mouseenter(t_cc *x, t_object *patcherview, t_pt pt, long modifiers);
+void cc_mouseleave(t_cc *x, t_object *patcherview, t_pt pt, long modifiers);
+void cc_mousemove(t_cc *x, t_object *patcherview, t_pt pt, long modifiers);
+void cc_mousewheel(t_cc *x, t_object *patcherview, t_pt pt, long modifiers);
+#endif
+
 void *cc_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err cc_notify(t_cc *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 void cc_get_basename(char *fp, char *basename);
@@ -266,14 +300,19 @@ void cc_doload_lowpriority(t_cc *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 int cc_doload(t_cc *x, t_symbol *lib){
-	while(!(x->ok_to_compile)){}
+	while(x->ok_to_compile == 0){}
 	x->compiling = 1;
 	int ret = 0;
 
 	t_symbol *dfile_sym = lib;
 	if(!dfile_sym){
-		dfile_sym = gensym(x->dfile_fullpath);
+		if(x->dfile_fullpath){
+			dfile_sym = gensym(x->dfile_fullpath);
+		}else{
+			goto out;
+		}
 	}
+
 	char dfile[MAX_PATH_CHARS];
 	strcpy(dfile, dfile_sym->s_name);
 	//char *ptr = dfile->s_name;
@@ -572,7 +611,12 @@ int cc_make_build_dir(t_cc *x, char *path){
 }
 
 void cc_free(t_cc *x){
-#if defined(CC_MSP)
+#if defined(CC_MSP) && defined(CC_JBOX)
+	dsp_freejbox((t_pxjbox *)x);
+	jbox_free((t_jbox *)x);
+	free(x->svin);
+	free(x->svout);
+#elif defined(CC_MSP)
 	dsp_free((t_pxobject *)x);
 	free(x->svin);
 	free(x->svout);
@@ -585,11 +629,13 @@ void cc_free(t_cc *x){
 		f((t_object *)x, x->user_obj);
 	}
 
+	/*
 	if(x->build_path_is_tmp){
 		char buf[MAX_PATH_CHARS + 20];
 		sprintf(buf, "rm -f %s/%s.{o,dylib,st,log}", x->build_path, x->basename);
 		system(buf);
 	}
+	*/
 
 	free(x->code_buf);
 	free(x->function_names);
@@ -634,7 +680,13 @@ int cc_write_template(t_cc *x, char *buf){
 	len += sprintf(buf + len, "#include \"ext_obex.h\"\n");
 	len += sprintf(buf + len, "#include \"ext_obex_util.h\"\n\n");
 
-#if defined(CC_MSP)
+#ifdef CC_JBOX
+
+	len += sprintf(buf + len, "#include \"jpatcher_api.h\"\n");
+	len += sprintf(buf + len, "#include \"jgraphics.h\"\n\n");
+#endif
+
+#ifdef CC_MSP
 	len += sprintf(buf + len, "#include \"z_dsp.h\"\n\n");
 
 	len += sprintf(buf + len, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr);\n\n");
@@ -646,14 +698,18 @@ int cc_write_template(t_cc *x, char *buf){
 	len += sprintf(buf + len, "void my_perform(t_object *o, char *x, long nin, t_float **in, long nout, t_float **out, long blksize, long sr){\n");
 	len += sprintf(buf + len, "\n");
 	len += sprintf(buf + len, "}\n\n");
-
-#elif defined(CC_JBOX)
-
-	len += sprintf(buf + len, "#include \"jpatcher_api.h\"\n");
-	len += sprintf(buf + len, "#include \"jgraphics.h\"\n\n");
-
+#endif
+#ifdef CC_JBOX
 	len += sprintf(buf + len, "void my_paint(t_object *ob, char *user_ob, t_object *patcherview, int numoutlets, void **outlets){\n");
-	 len += sprintf(buf + len, "}\n");
+	len += sprintf(buf + len, "}\n\n");
+
+	len += sprintf(buf + len, "void my_mousedown(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, int numoutlets, void **outlets){\n\n}\n\n");
+	len += sprintf(buf + len, "void my_mousedrag(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, int numoutlets, void **outlets){\n\n}\n\n");
+	len += sprintf(buf + len, "void my_mouseup(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, int numoutlets, void **outlets){\n\n}\n\n");
+	len += sprintf(buf + len, "void my_mouseenter(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, int numoutlets, void **outlets){\n\n}\n\n");
+	len += sprintf(buf + len, "void my_mouseleave(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, int numoutlets, void **outlets){\n\n}\n\n");
+	len += sprintf(buf + len, "void my_mousemove(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, int numoutlets, void **outlets){\n\n}\n\n");
+	len += sprintf(buf + len, "void my_mousewheel(t_object *ob, char *user_ob, t_object *patcherview, t_pt pt, long modifiers, int numoutlets, void **outlets){\n\n}\n\n");
 #endif
 
 	len += sprintf(buf + len, "int foo(t_object *o, char *x, int inlet, int argc, t_atom *argv, int numoutlets, void **outlets){\n");
@@ -744,11 +800,68 @@ t_int *cc_perform(t_int *w){
 
 	return w + 2;
 }
+#endif
 
-#elif defined(CC_JBOX)
+#if defined(CC_JBOX)
 void cc_paint(t_cc *x, t_object *patcherview){
 	if(x->user_paint){
 		x->user_paint((t_object *)x, x->user_obj, patcherview, x->noutlets, x->outlets);
+	}
+}
+
+void cc_mousedown(t_cc *x, t_object *patcherview, t_pt pt, long modifiers){
+	ccmouse_method f;
+	hashtab_lookup(x->ht, gensym("my_mousedown"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj, patcherview, pt, modifiers, x->noutlets, x->outlets);
+	}
+}
+
+void cc_mouseup(t_cc *x, t_object *patcherview, t_pt pt, long modifiers){
+	ccmouse_method f;
+	hashtab_lookup(x->ht, gensym("my_mouseup"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj, patcherview, pt, modifiers, x->noutlets, x->outlets);
+	}
+}
+
+void cc_mousedrag(t_cc *x, t_object *patcherview, t_pt pt, long modifiers){
+	ccmouse_method f;
+	hashtab_lookup(x->ht, gensym("my_mousedrag"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj, patcherview, pt, modifiers, x->noutlets, x->outlets);
+	}
+}
+
+void cc_mouseenter(t_cc *x, t_object *patcherview, t_pt pt, long modifiers){
+	ccmouse_method f;
+	hashtab_lookup(x->ht, gensym("my_mouseenter"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj, patcherview, pt, modifiers, x->noutlets, x->outlets);
+	}
+}
+
+void cc_mouseleave(t_cc *x, t_object *patcherview, t_pt pt, long modifiers){
+	ccmouse_method f;
+	hashtab_lookup(x->ht, gensym("my_mouseleave"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj, patcherview, pt, modifiers, x->noutlets, x->outlets);
+	}
+}
+
+void cc_mousemove(t_cc *x, t_object *patcherview, t_pt pt, long modifiers){
+	ccmouse_method f;
+	hashtab_lookup(x->ht, gensym("my_mousemove"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj, patcherview, pt, modifiers, x->noutlets, x->outlets);
+	}
+}
+
+void cc_mousewheel(t_cc *x, t_object *patcherview, t_pt pt, long modifiers){
+	ccmouse_method f;
+	hashtab_lookup(x->ht, gensym("my_mousemove"), (t_object **)&f);
+	if(f){
+		f((t_object *)x, x->user_obj, patcherview, pt, modifiers, x->noutlets, x->outlets);
 	}
 }
 #endif
@@ -781,7 +894,11 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 			//      | JBOX_TEXTFIELD
 			;
 		jbox_new((t_jbox *)x, boxflags, argc, argv); 
+#if defined(CC_MSP)
+		x->ob.z_box.b_firstin = (void *)x;
+#else
  		x->ob.b_firstin = (void *)x; 
+#endif
 #endif
 		x->ht = (t_hashtab *)hashtab_new(0);
 		hashtab_flags(x->ht, OBJ_FLAG_DATA);
@@ -806,6 +923,7 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		x->logfile_fullpath = (char *)calloc(MAX_PATH_CHARS, sizeof(char));
 
 		x->path_to_maxsdk = gensym("");
+		x->user_obj = (char *)calloc(OBJSIZE, sizeof(char));
 
 		x->verbose = 0;
 
@@ -813,7 +931,9 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		ic += 1;
 		ps_cc_instance_count->s_thing = (void *)ic;
 
-#if defined(CC_MSP)
+#if defined(CC_MSP) && defined(CC_JBOX)
+		sprintf(x->basename, "cc_jbox~_%ld", (long)ps_cc_instance_count->s_thing);
+#elif defined(CC_MSP)
 		sprintf(x->basename, "cc~_%ld", (long)ps_cc_instance_count->s_thing);
 #elif defined(CC_JBOX)
 		sprintf(x->basename, "cc_jbox_%ld", (long)ps_cc_instance_count->s_thing);
@@ -841,11 +961,6 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 
 		x->def_cflags = (char *)calloc(4096, sizeof(char));
 		x->def_ldflags = (char *)calloc(4096, sizeof(char));
-#if !defined(CC_JBOX)
-		attr_args_process(x, argc, argv);
-#else
-		attr_dictionary_process(x, d);
-#endif
 
 		char *sdk = x->path_to_maxsdk->s_name;
 
@@ -860,9 +975,23 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		x->user_cflags = gensym("");
 		x->user_ldflags = gensym("");
 
+#ifdef CC_JBOX
+		x->user_paint = NULL;
+#endif
+
+#if !defined(CC_JBOX)
+		attr_args_process(x, argc, argv);
+#else
+		attr_dictionary_process(x, d);
+#endif
+
 		int i;
 #if defined(CC_MSP)
+#if defined(CC_JBOX)
+		dsp_setupjbox((t_pxjbox *)x, x->nsiginlets);
+#else
 		dsp_setup((t_pxobject *)x, x->nsiginlets);
+#endif
 		for(i = 0; i < x->nsigoutlets; i++){
 			outlet_new((t_object *)x, "signal");
 		}
@@ -870,43 +999,56 @@ void *cc_new(t_symbol *msg, short argc, t_atom *argv){
 		x->svout = (t_float **)calloc(x->nsigoutlets, sizeof(t_float *));
 #endif
 		x->proxies = (void **)calloc(x->ninlets - 1, sizeof(void *));
-		post("%d inlets, %d outlets", x->ninlets, x->noutlets);
 		for(i = 0; i < x->ninlets - 1; i++){
 			x->proxies[0] = proxy_new((t_object *)x, x->ninlets - (i + 1), &(x->inlet));
 		}
-
+#if !defined(CC_MSP)
 		x->outlets = (void **)calloc(x->noutlets, sizeof(void *));
 		for(i = x->noutlets - 1; i >= 0; i--){
 			x->outlets[i] = outlet_new((t_object *)x, NULL);
 		}
+#endif
 
-		x->user_obj = (char *)calloc(OBJSIZE, sizeof(char));
 		x->handle = NULL;
 
 		object_attach_byptr_register(x, x, CLASS_BOX);
 
-#if defined(CC_JBOX)
-		x->user_paint = NULL;
+#ifdef CC_JBOX
 		jbox_ready((t_jbox *)x);
 #endif
-
 		return x;
 	}
 	return NULL;
 }
 
 int main(void){
-#if defined(CC_MSP)
+#if defined(CC_MSP) && defined(CC_JBOX)
+	t_class *c = class_new("cc_jbox~", (method)cc_new, (method)cc_free, sizeof(t_cc), 0L, A_GIMME, 0);
+	class_dspinitjbox(c);
+#elif defined(CC_MSP)
 	t_class *c = class_new("cc~", (method)cc_new, (method)cc_free, sizeof(t_cc), 0L, A_GIMME, 0);
 	class_dspinit(c);
-	class_addmethod(c, (method)cc_dsp, "dsp", A_CANT, 0);
 #elif defined(CC_JBOX)
 	t_class *c = class_new("cc_jbox", (method)cc_new, (method)cc_free, sizeof(t_cc), 0L, A_GIMME, 0);
-	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
- 	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
-	class_addmethod(c, (method)cc_paint, "paint", A_CANT, 0);
+
 #else
 	t_class *c = class_new("cc", (method)cc_new, (method)cc_free, sizeof(t_cc), 0L, A_GIMME, 0);
+#endif
+
+#if defined(CC_JBOX)
+	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
+ 	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR);
+	class_addmethod(c, (method)cc_paint, "paint", A_CANT, 0);
+	class_addmethod(c, (method)cc_mousedown, "mousedown", A_CANT, 0);
+	class_addmethod(c, (method)cc_mousedrag, "mousedrag", A_CANT, 0);
+	class_addmethod(c, (method)cc_mouseup, "mouseup", A_CANT, 0);
+	class_addmethod(c, (method)cc_mouseenter, "mouseenter", A_CANT, 0);
+	class_addmethod(c, (method)cc_mouseleave, "mouseleave", A_CANT, 0);
+	class_addmethod(c, (method)cc_mousemove, "mousemove", A_CANT, 0);
+	class_addmethod(c, (method)cc_mousewheel, "mousewheel", A_CANT, 0);
+#endif
+#if defined(CC_MSP)
+	class_addmethod(c, (method)cc_dsp, "dsp", A_CANT, 0);
 #endif
 
 	class_addmethod(c, (method)cc_bang, "bang", 0);
@@ -951,8 +1093,11 @@ int main(void){
 
 #if defined(CC_MSP)
 	CLASS_ATTR_LONG(c, "sigoutlets", 0, t_cc, nsigoutlets);
+	CLASS_ATTR_SAVE(c, "sigoutlets", 0);
 	CLASS_ATTR_LONG(c, "siginlets", 0, t_cc, nsiginlets);
-#else
+	CLASS_ATTR_SAVE(c, "siginlets", 0);
+#endif
+#if defined(CC_JBOX)
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 300. 100.");
 #endif
 
@@ -983,12 +1128,15 @@ void cc_get_basename(char *fp, char *bn){
 
 t_max_err cc_cfile_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	if(argc == 0){
+		// should put up an open file editor window here
 		return 1;
 	}
-	char old_file[MAX_PATH_CHARS];
-	strcpy(old_file, x->cfile_fullpath);
 
-	char *f = atom_getsym(argv)->s_name;
+	t_symbol *arg = atom_getsym(argv);
+	if(arg == gensym("")){
+		return 0;
+	}
+	char *f = arg->s_name;
 
 	FILE *fp;
 	if(*f == '/'){
@@ -1067,12 +1215,13 @@ t_max_err cc_build_path_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	//sprintf(x->stfile_fullpath, "%s/%s.st", path, x->basename);
 	sprintf(x->logfile_fullpath, "%s/%s.log", path, x->basename);
 
+	/*
 	if(x->build_path_is_tmp){
 		char buf[MAX_PATH_CHARS + 20];
 		sprintf(buf, "rm -f %s{o,dylib,st,log}", old_path);
 		system(buf);
 	}
-
+	*/
 	x->build_path_is_tmp = 0;
 
  out:
@@ -1118,12 +1267,14 @@ t_max_err cc_load_set(t_cc *x, t_object *attr, long argc, t_atom *argv){
 	char *dfile = dfile_sym->s_name;
 	char buf[MAX_FILENAME_CHARS];
 	cc_get_basename(dfile, buf);
+	/*
 	char *ptr = buf + strlen(buf);
 	*ptr++ = '.';
 	*ptr++ = 'c';
 	*ptr = '\0';
 	t_atom a;
 	atom_setsym(&a, gensym(buf));
+	*/
 	//post("calling cc_cfile_set: %s", buf);
 	//cc_cfile_set(x, NULL, 1, &a);
 	cc_load(x, dfile_sym);

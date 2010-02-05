@@ -270,6 +270,34 @@ void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
 	rd_output_sel(x);
 }
 
+void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
+	if(x->sinusoids){
+		return;
+	}
+	t_rect rect;
+        jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
+	int i;
+	t_atom buf[x->buffer_size];
+	int selpos = 0, nselpos = x->buffer_size - 1;
+	t_res *r = (t_res *)x->buffer;
+
+	for(i = 0; i < x->n; i++){
+		if(r[i].d >= f && r[i].d <= f){
+			atom_setfloat(buf + selpos++, r[i].f);
+			atom_setfloat(buf + selpos++, r[i].a);
+			atom_setfloat(buf + selpos++, r[i].d);
+		}else{
+			//post("%d: %f %f %f", nselpos, r[i].f, r[i].a, r[i].d);
+			atom_setfloat(buf + nselpos--, r[i].d);
+			atom_setfloat(buf + nselpos--, r[i].a);
+			atom_setfloat(buf + nselpos--, r[i].f);
+		}
+	}
+
+	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
+	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+}
+
 void rd_output_sel(t_rd *x){
 	t_rect rect;
         jbox_get_patching_rect(&((x->ob.b_ob)), &rect);

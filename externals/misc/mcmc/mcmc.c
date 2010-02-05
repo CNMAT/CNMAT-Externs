@@ -189,6 +189,7 @@ int main(void){
 
 	// better name?
 	CLASS_ATTR_DOUBLE(c, "proposal_density_width", 0, t_mcmc, proposal_density_width);
+	CLASS_ATTR_FILTER_CLIP(c, "proposal_density_width", 0.01, 10.);
 
 	CLASS_ATTR_LONG(c, "sample_mode", 0, t_mcmc, sample_mode);
 	CLASS_ATTR_LONG(c, "force_freq_change", 0, t_mcmc, force_freq_change);
@@ -206,6 +207,9 @@ int main(void){
 void *mcmc_new(t_symbol *sym, long argc, t_atom *argv){
 	t_mcmc *x;
 	int i;
+	for(i = 0; i < argc; i++){
+		postatom(argv + i);
+	}
 	if(x = (t_mcmc *)object_alloc(mcmc_class)){
 		x->freq_in = (double *)calloc(MCMC_MAX_ARRAY_LEN, sizeof(double));
 		x->amp_in = (double *)calloc(MCMC_MAX_ARRAY_LEN, sizeof(double));
@@ -443,7 +447,7 @@ long mcmc_samplePartialCDF(t_mcmc *x, double freq){
 			return i + mini;
 		}
 	}
-	return 0;
+	return mini;
 }
 
 double mcmc_accepted(t_mcmc *x){
