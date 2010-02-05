@@ -45,6 +45,7 @@
   VERSION 0.7.7: circle radii are now specified in [0-1]
   VERSION 0.7.8: locked presets are now grayed out and the mouse position outlet works
   VERSION 0.7.9: fixed a bug that would cause a crash in the anything routine
+  VERSION 0.7.10: fixed a bug in the way points were being cleared
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -1018,6 +1019,9 @@ void rbfi_removePoint(t_rbfi *x, t_point *p){
 	}
 	if(p->next){
 		p->next->prev = p->prev;
+	}
+	if(p->label){
+		hashtab_chuckkey(x->ht, p->label);
 	}
 	sysmem_freeptr((void *)p);
 	x->npoints--;
