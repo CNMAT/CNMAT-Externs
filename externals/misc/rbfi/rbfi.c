@@ -59,6 +59,7 @@
 #include "math.h"
 
 #ifdef WIN32
+#include "commonsyms.c"
 #else
 #include <mach/mach_time.h>
 #endif
