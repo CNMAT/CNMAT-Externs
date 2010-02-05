@@ -43,6 +43,7 @@
   VERSION 0.7.5: preset parameters can be adjusted by name
   VERSION 0.7.6: dump now outputs key value pairs
   VERSION 0.7.7: circle radii are now specified in [0-1]
+  VERSION 0.7.8: locked presets are now grayed out and the mouse position outlet works
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -112,6 +113,7 @@ typedef struct _rbfi{
 	long modifiers;
 	t_pt xhairs;
 	long mouse_active_beyond_rect;
+	int font_size;
 } t_rbfi;
 
 static t_symbol *rbfi_ps_coords, *rbfi_ps_name, *rbfi_ps_rgb, *rbfi_ps_hsv, /**rbfi_ps_weight, *rbfi_ps_exponent, */*rbfi_ps_inner_radius, *rbfi_ps_outer_radius, *rbfi_ps_locked;
@@ -125,6 +127,7 @@ void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
 void rbfi_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
 void rbfi_move(t_rbfi *x, double xx, double yy);
+void rbfi_outputMousePos(t_rbfi *x, t_pt pt);
 void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
 void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
 void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
@@ -257,7 +260,11 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 			//if((x->draw_circles == gensym("edit") && (x->modifiers & 0x10)) || x->draw_circles == gensym("always")){
 			{
 				if(x->always_draw_circles == 1 && (x->modifiers ^ 0x2) && (x->modifiers ^ 0x12)){
-					color = white;
+					if(p->locked){
+						color = gray;
+					}else{
+						color = white;
+					}
 					jgraphics_set_dash(g, NULL, 0, 0);
 					jgraphics_set_line_width(g, 2.);
 					jgraphics_set_source_jrgba(g, &color);
@@ -273,6 +280,9 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					}else{
 						color = gray;
 					}
+					if(p->locked){
+						color = gray;
+					}
 
 					jgraphics_set_dash(g, NULL, 0, 0);
 					jgraphics_set_line_width(g, 2.);
@@ -282,7 +292,11 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 				}
 
 				if(x->always_draw_circles == 1 && (x->modifiers ^ 0x2) && (x->modifiers ^ 0x12)){
-					color = white;
+					if(p->locked){
+						color = gray;
+					}else{
+						color = white;
+					}
 					jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 					jgraphics_set_line_width(g, 1.);
 					jgraphics_set_source_jrgba(g, &color);
@@ -299,6 +313,9 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					}else{
 						color = gray;
 					}
+					if(p->locked){
+						color = gray;
+					}
 					jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 					jgraphics_set_line_width(g, 1.);
 					jgraphics_set_source_jrgba(g, &color);
@@ -310,9 +327,19 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 			//if((x->draw_labels == gensym("edit") && (x->modifiers & 0x10)) || x->draw_labels == gensym("always")){
 			{
 				if(x->always_draw_labels && (x->modifiers ^ 0x2) && (x->modifiers ^ 0x12)){
-					color = white;
+					if(p->locked){
+						color = gray;
+					}else{
+						color = white;
+					}
+
+					if(p->locked){
+						jgraphics_select_font_face(g, "Arial", JGRAPHICS_FONT_SLANT_ITALIC, JGRAPHICS_FONT_WEIGHT_NORMAL);
+					}else{
+						jgraphics_select_font_face(g, "Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL);
+					}
 					jgraphics_set_source_jrgba(g, &(color));
-					jgraphics_set_font_size(g, 10);
+					jgraphics_set_font_size(g, x->font_size);
 					double w, h;
 					jgraphics_text_measure(g, p->label->s_name, &w, &h);
 					jgraphics_move_to(g, pt.x - (w / 2.), pt.y + (h / 2.) - 1);
@@ -327,8 +354,16 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					}else{
 						color = gray;
 					}
+
+					if(p->locked){
+						jgraphics_select_font_face(g, "Arial", JGRAPHICS_FONT_SLANT_ITALIC, JGRAPHICS_FONT_WEIGHT_NORMAL);
+						color = gray;
+					}else{
+						jgraphics_select_font_face(g, "Arial", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL);
+					}
+
 					jgraphics_set_source_jrgba(g, &(color));
-					jgraphics_set_font_size(g, 10);
+					jgraphics_set_font_size(g, x->font_size);
 					double w, h;
 					jgraphics_text_measure(g, p->label->s_name, &w, &h);
 					jgraphics_move_to(g, pt.x - (w / 2.), pt.y + (h / 2.) - 1);
@@ -449,15 +484,22 @@ void rbfi_move(t_rbfi *x, double xx, double yy){
 
 #define CIRCLE_HIT 3 // num pixels on either side of a circle that will register a hit
 
+void rbfi_outputMousePos(t_rbfi *x, t_pt pt){
+	t_rect r;
+	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	t_atom pos[2];
+	atom_setfloat(pos, pt.x / r.width);;
+	atom_setfloat(pos + 1, pt.y / r.height);
+	outlet_list(x->mouseposOutlet, NULL, 2, pos);
+}
+
 void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->modifiers = modifiers;
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 
-	t_atom pos[2];
-	atom_setfloat(pos, rbfi_scale(pt.x, 0, r.width, x->xmin, x->xmax));
-	atom_setfloat(pos + 1, rbfi_scale(pt.y, r.height, 0, x->ymin, x->ymax));
-	outlet_list(x->mouseposOutlet, NULL, 2, pos);
+	outlet_anything(x->mouseposOutlet, gensym("mousedown"), 0, NULL);
+	rbfi_outputMousePos(x, pt);
 
 	switch(modifiers){
 	case 0x10:
@@ -521,6 +563,8 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+
+	rbfi_outputMousePos(x, pt);
 
 	switch(modifiers){
 	case 0x10:
@@ -590,6 +634,7 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+	outlet_anything(x->mouseposOutlet, gensym("mouseup"), 0, NULL);
 }
 
 void rbfi_mouseleave(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -1443,7 +1488,10 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "always_draw_labels", 0, "0");
 
 	CLASS_ATTR_LONG(c, "mouse_active_beyond_rect", 0, t_rbfi, mouse_active_beyond_rect);
-	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "mouse_active_beyond_rect", 0, "1");
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "mouse_active_beyond_rect", 0, "1");
+
+	CLASS_ATTR_LONG(c, "font_size", 0, t_rbfi, font_size);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "font_size", 0, "11");
 
 	/*
 	CLASS_ATTR_SYM(c, "draw_circles", 0, t_rbfi, draw_circles);
