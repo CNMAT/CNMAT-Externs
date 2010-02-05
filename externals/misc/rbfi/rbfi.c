@@ -59,7 +59,7 @@
 #include "math.h"
 
 #ifdef WIN32
-#include "commonsyms.c"
+#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #else
 #include <mach/mach_time.h>
 #endif
