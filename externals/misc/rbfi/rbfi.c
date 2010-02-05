@@ -44,6 +44,7 @@
   VERSION 0.7.6: dump now outputs key value pairs
   VERSION 0.7.7: circle radii are now specified in [0-1]
   VERSION 0.7.8: locked presets are now grayed out and the mouse position outlet works
+  VERSION 0.7.9: fixed a bug that would cause a crash in the anything routine
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -416,18 +417,25 @@ void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 	hashtab_lookup(x->ht, name, (t_object **)&p);
 	if(p){
 		rbfi_parseAddPointArgs(p, argc, argv);
+		t_rect r;
+		jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
+		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius  * r.width, p->outer_radius * r.width);
 	}else{
+		/*
 		t_atom a[argc + 2];
 		atom_setsym(a, gensym("name"));
 		atom_setsym(a + 1, name);
 		memcpy(a + 2, argv, argc * sizeof(t_atom));
+		int i;
+		for(i = 0; i < argc + 2; i++){
+			postatom(a + i);
+		}
 		rbfi_addPoint(x, msg, argc + 2, a);
+		*/
+		object_error((t_object *)x, "no point with name %s", name->s_name);
+		return;
 	}		
-
-	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-       	p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
-	p->exponent = rbfi_computeExponentFromDistances(p->inner_radius  * r.width, p->outer_radius * r.width);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
@@ -754,7 +762,6 @@ int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 			goto bail;
 		}
 		p->label = atom_getsym(ptr++);
-		post("label = %s", p->label);	
 	}else if(s == rbfi_ps_rgb){
 		if(argc - (ptr - argv) == 0){
 			goto bail;
