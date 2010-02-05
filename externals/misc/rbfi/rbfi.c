@@ -57,7 +57,8 @@
 #include "ext_critical.h"
 #include "version.c"
 #include "math.h"
-#ifdef WINDOWS
+
+#ifdef WIN32
 #else
 #include <mach/mach_time.h>
 #endif
@@ -752,6 +753,7 @@ int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 			goto bail;
 		}
 		p->label = atom_getsym(ptr++);
+		post("label = %s", p->label);	
 	}else if(s == rbfi_ps_rgb){
 		if(argc - (ptr - argv) == 0){
 			goto bail;
@@ -1542,7 +1544,7 @@ int main(void){
 
 	common_symbols_init();
 
-#ifdef WINDOWS
+#ifdef WIN32
 #else
 	srand(mach_absolute_time());
 #endif
