@@ -409,6 +409,8 @@ void rbfi_deletePoint(t_rbfi *x, t_symbol *name){
 	if(p){
 		rbfi_removePoint(x, p);
 	}
+	jbox_invalidate_layer((t_object *)x, NULL, l_color);
+	jbox_redraw(&(x->ob));
 }
 
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
