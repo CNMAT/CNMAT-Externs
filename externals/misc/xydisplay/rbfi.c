@@ -124,6 +124,7 @@ static t_class *rbfi_class;
 void rbfi_paint(t_rbfi *x, t_object *patcherview);
 void rbfi_bang(t_rbfi *x);
 void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
+void rbfi_deletePoint(t_rbfi *x, t_symbol *name);
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
 void rbfi_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
 void rbfi_move(t_rbfi *x, double xx, double yy);
@@ -397,6 +398,14 @@ void rbfi_bang(t_rbfi *x){
 
 void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 
+}
+
+void rbfi_deletePoint(t_rbfi *x, t_symbol *name){
+	t_point *p;
+	hashtab_lookup(x->ht, name, (t_object **)&p);
+	if(p){
+		rbfi_removePoint(x, p);
+	}
 }
 
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
@@ -1439,6 +1448,7 @@ int main(void){
 	class_addmethod(c, (method)rbfi_move, "move", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)rbfi_dump, "dump", 0);
 	class_addmethod(c, (method)rbfi_addPoint, "add_point", A_GIMME, 0);
+	class_addmethod(c, (method)rbfi_deletePoint, "delete_point", A_SYM, 0);
 
     
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
