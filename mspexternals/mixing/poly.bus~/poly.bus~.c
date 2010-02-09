@@ -39,6 +39,10 @@ VERSION 0.1: Fixed a memory leak and made it so that you can safely have 2 of th
 #include "z_dsp.h"
 #include "version.c"
 
+#ifdef WIN32
+#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
+#else
+
 typedef struct _pbus{
 	t_pxobject ob;
 	t_symbol *name, **mangled_names;
