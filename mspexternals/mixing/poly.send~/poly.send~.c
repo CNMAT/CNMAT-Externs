@@ -38,6 +38,10 @@ VERSION 0.0.1: New help file
 #include "z_dsp.h"
 #include "version.c"
 
+#ifdef WIN32
+#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
+#endif
+
 typedef struct _psend{
 	t_pxobject ob;
 	t_symbol *name, *mangled_name;
