@@ -111,9 +111,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		declareAttribute("ignoreNoteOffVelocity");
 		declareAttribute("verbose");
 
-
                 if(args.length > 0)
-                        numTracks = args[0].getInt() + 1;
+                        numTracks = args[0].getInt();
 
 		if(args.length > 1) def_duration = args[1].toInt();
 		if(args.length > 2) def_velocity = args[2].toInt();
@@ -140,7 +139,6 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		initSequence();
 
 		version();
-
 	}
 
 	/* now an attribute
@@ -409,7 +407,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void recordEnable(){
 		Track[] tracks = sequence.getTracks();
 		for(int i = 0; i < numTracks; i++){
-			Track theTrack = tracks[1];
+			Track theTrack = tracks[i];
 			sequencer.recordEnable(theTrack, -1);
 			for(int j = 0; j < 16; j++)
 				recordState[i][j] = 1;
@@ -615,6 +613,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		//numTracks = originalNumTracks;
 		try{sequence = new Sequence(Sequence.PPQ, 500, numTracks);}
 		catch(InvalidMidiDataException e){e.printStackTrace();}
+
 		try{
 			sequencer = MidiSystem.getSequencer(false);
 			transmitter = sequencer.getTransmitter();
@@ -622,6 +621,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		}catch(MidiUnavailableException e){
 			e.printStackTrace();
 		}
+
 		sequencer.addMetaEventListener(this);
 		try{sequencer.setSequence(sequence);}
 		catch(InvalidMidiDataException e){e.printStackTrace();}
