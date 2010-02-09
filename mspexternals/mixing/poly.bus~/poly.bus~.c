@@ -41,7 +41,7 @@ VERSION 0.1: Fixed a memory leak and made it so that you can safely have 2 of th
 
 #ifdef WIN32
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
-#else
+#endif
 
 typedef struct _pbus{
 	t_pxobject ob;
