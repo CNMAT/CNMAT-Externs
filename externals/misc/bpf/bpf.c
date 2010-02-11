@@ -29,6 +29,7 @@
   VERSION 0.0: First try 
   VERSION 0.1: bug fixes, scaling, function names, dotted background functions, dump out now includes index number for coll, displays point coordinates in the upper right corner
   VERSION 0.1.1: added functionNames message
+  VERSION 0.2: rescaling now works properly
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -54,7 +55,7 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 #define MAX_NUM_FUNCTIONS 256 
 
 typedef struct _point{ 
- 	t_pt norm_coords;
+ 	t_pt coords;
  	struct _point *next; 
  	struct _point *prev; 
 } t_point; 
@@ -88,7 +89,6 @@ typedef struct _bpf{
 void *bpf_class; 
 
 void bpf_paint(t_bpf *x, t_object *patcherview); 
-//void bpf_editSel(t_bpf *x, double xx, double yy);
 void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_float(t_bpf *x, double f);
 void bpf_find_btn(t_point *function, double x, t_point **left, t_point **right);
@@ -105,9 +105,9 @@ void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
 void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
 void bpf_setFunction(t_bpf *x, long f); 
 void bpf_setFunctionName(t_bpf *x, t_symbol *name);
-void bpf_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords); 
-void bpf_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
-t_point *bpf_insertPoint(t_bpf *x, t_pt screen_coords, int functionNum);
+//void bpf_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords); 
+//void bpf_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
+t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum);
 void bpf_removePoint(t_bpf *x, t_point *point, int functionNum);
 void bpf_clear(t_bpf *x);
 double bpf_scale(double f, double min_in, double max_in, double min_out, double max_out);
@@ -157,7 +157,8 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 			t_point *p = x->functions[i];
 			if(p){
 				t_pt sc;
-				bpf_getScreenCoords(rect, p->norm_coords, &sc);
+				sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, 0, rect.width);
+				sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, rect.height, 0);
 				jgraphics_move_to(g, sc.x, sc.y);
 				if(p == x->selected){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
@@ -176,8 +177,8 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 			}
 			while(p){
 				t_pt sc;
-				bpf_getScreenCoords(rect, p->norm_coords, &sc);
-				//post("drawing point %f %f", sc.x, sc.y);
+				sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, 0, rect.width);
+				sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, rect.height, 0);
 				if(p == x->selected){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}else{
@@ -196,7 +197,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 					jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 				}
-				jgraphics_move_to(g, p->prev->norm_coords.x * rect.width, (1 - p->prev->norm_coords.y) * rect.height);
+				jgraphics_move_to(g, bpf_scale(p->prev->coords.x, x->xmin, x->xmax, 0, rect.width), bpf_scale(p->prev->coords.y, x->ymin, x->ymax, rect.height, 0));
 				jgraphics_line_to(g, sc.x, sc.y);
 				jgraphics_stroke(g);
 				p = p->next;
@@ -207,11 +208,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 		jgraphics_set_font_size(g, 10);
 		char buf[128];
 		if(x->selected){	
-			//double w, h;                                                                                             
-			//jgraphics_text_measure(g, p->label->s_name, &w, &h);
-			//t_pt norm_coords;
-			//bpf_getNormCoords(rect, x->selected->screen_coords, &norm_coords);
-			sprintf(buf, "%s:(%f, %f)", x->funcattr[x->currentFunction]->name, x->selected->norm_coords.x * (x->xmax - x->xmin) + x->xmin, x->selected->norm_coords.y * (x->ymax - x->ymin) + x->ymin);
+			sprintf(buf, "%s:(%f, %f)", x->funcattr[x->currentFunction]->name, x->selected->coords.x, x->selected->coords.y);
 		}else{
 			sprintf(buf, "%s", x->funcattr[x->currentFunction]->name);
 		}
@@ -221,18 +218,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 		critical_exit(x->lock);
  	} 
 } 
-/*
-void bpf_editSel(t_bpf *x, double xx, double yy){
-	t_pt screen_coords, norm_coords = {(xx - x->xmin) / (x->xmax - x->xmin), (yy - x->ymin) / (x->ymax - x->ymin)};
-	t_rect r;
-	jbox_get_patching_rect(&(x->box.b_ob), &r);
-	bpf_getScreenCoords(r, norm_coords, &screen_coords);
-	//post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
-	bpf_removePoint(x, x->selected, x->currentFunction);
-	x->selected = bpf_insertPoint(x, screen_coords, x->currentFunction);
-	jbox_redraw(&(x->box));
-}
-*/
+
 void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 	t_atom *a = argv;
 	int functionNum = x->currentFunction;
@@ -242,47 +228,30 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 			x->numFunctions = functionNum + 1;
 		}
 	}
-	t_pt norm_coords;
-	//t_rect r;
-	//jbox_get_patching_rect(&(x->box.b_ob), &r);
-	norm_coords.x = (atom_getfloat(a++) - x->xmin) / (x->xmax - x->xmin);
-	norm_coords.y = (atom_getfloat(a++) - x->ymin) / (x->ymax - x->ymin);
-	//bpf_getScreenCoords(r, norm_coords, &screen_coords);
-	//post("%f %f %f %f", norm_coords.x, norm_coords.y, screen_coords.x, screen_coords.y);
-	x->selected = bpf_insertPoint(x, norm_coords, functionNum);
+	x->selected = bpf_insertPoint(x, (t_pt){atom_getfloat(a++), atom_getfloat(a++)}, functionNum);
 	jbox_redraw(&(x->box));
 }
 
-void bpf_float(t_bpf *x, double ff){
-	double f = (ff - x->xmin) / (x->xmax - x->xmin);;
-	if(f < 0.) f = 0.;
-	if(f > 1.) f = 1.;
-	//t_rect r;
-	//jbox_get_patching_rect(&(x->box.b_ob), &r);
-	//double screenx = f * r.width;
+void bpf_float(t_bpf *x, double f){
+	//double f = (ff - x->xmin) / (x->xmax - x->xmin);;
+	if(f < x->xmin) f = 0.;
+	if(f > x->xmax) f = 1.;
 	t_atom out[3]; // function number, x, y
-	atom_setfloat(&(out[1]), ff);
+	atom_setfloat(&(out[1]), f);
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
 		atom_setlong(&(out[0]), i);
 		t_point *left = NULL, *right = NULL;
 		bpf_find_btn(p, f, &left, &right);
-		//return;
 		if(!left || !right){
 			atom_setfloat(&(out[2]), 0.);
 			outlet_list(x->out_main, NULL, 3, out);
 		}else{
-			/*
-			double m = (right->screen_coords.y - left->screen_coords.y) / (right->screen_coords.x - left->screen_coords.x);
-			double b = left->screen_coords.y - (m * left->screen_coords.x);
-			double y = (m * screenx) + b;
-			atom_setfloat(&(out[2]), (abs(y - r.height) / r.height) * (x->ymax - x->ymin) + x->ymin);
-			*/
-			double m = (right->norm_coords.y - left->norm_coords.y) / (right->norm_coords.x - left->norm_coords.x);
-			double b = left->norm_coords.y - (m * left->norm_coords.x);
+			double m = (right->coords.y - left->coords.y) / (right->coords.x - left->coords.x);
+			double b = left->coords.y - (m * left->coords.x);
 			double y = (m * f) + b;
-			atom_setfloat(&(out[2]), (y * (x->ymax - x->ymin) + x->ymin));
+			atom_setfloat(&(out[2]), y);
 			outlet_list(x->out_main, NULL, 3, out);
 		}
 	}
@@ -294,13 +263,13 @@ void bpf_find_btn(t_point *function, double x, t_point **left, t_point **right){
 		return;
 	}
 	t_point *ptr = function;
-	if(x < function->norm_coords.x){
+	if(x < function->coords.x){
 		*left = NULL;
 		*right = function;
 		return;
 	}
 	while(ptr->next){
-		if(x >= ptr->norm_coords.x && x <= ptr->next->norm_coords.x){
+		if(x >= ptr->coords.x && x <= ptr->next->coords.x){
 			*left = ptr;
 			*right = ptr->next;
 			return;
@@ -316,13 +285,19 @@ t_point *bpf_select(t_bpf *x, t_pt p){
 	t_point *min_ptr = NULL;
 	t_point *ptr = x->functions[x->currentFunction];
 	double xdif, ydif;
-	t_pt sc;
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.b_ob), &r);
 
-	bpf_getScreenCoords(r, p, &sc);
+	t_pt p_sc;
+	p_sc.x = bpf_scale(p.x, x->xmin, x->xmax, 0, r.width);
+	p_sc.y = bpf_scale(p.y, x->ymin, x->ymax, r.height, 0);
+
 	while(ptr){
-		if((xdif = fabs(sc.x - ptr->norm_coords.x * r.width)) < 3 && (ydif = fabs(sc.y - (1 - ptr->norm_coords.y) * r.height)) < 3){
+		t_pt sc;
+		sc.x = bpf_scale(ptr->coords.x, x->xmin, x->xmax, 0, r.width);
+		sc.y = bpf_scale(ptr->coords.y, x->ymin, x->ymax, r.height, 0);
+		//post("%f %f %f %f", p_sc.x, p_sc.y, sc.x, sc.y);
+		if((xdif = fabs(sc.x - p_sc.x)) < 3 && (ydif = fabs(sc.y - p_sc.y)) < 3){
 			if(xdif + ydif < min){
 				min = xdif + ydif;
 				min_ptr = ptr;
@@ -351,22 +326,22 @@ t_max_err bpf_notify(t_bpf *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){ 
  	//post("0x%X", modifiers); 
  	t_rect r; 
-	t_pt norm_coords;
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
-	bpf_getNormCoords(r, pt, &norm_coords);
+	t_pt coords;
+	coords.x = bpf_scale(pt.x, 0, r.width, x->xmin, x->xmax);
+	coords.y = bpf_scale(pt.y, r.height, 0, x->ymin, x->ymax);
 	switch(modifiers){
 	case 0x10:
 		// no modifiers.  
-		//post("inserting %f %f", pt.x, pt.y);
-		if(x->selected = bpf_select(x, norm_coords)){
+		if(x->selected = bpf_select(x, coords)){
 			break;
 		}else{
-			x->selected = bpf_insertPoint(x, norm_coords, x->currentFunction);
+			x->selected = bpf_insertPoint(x, coords, x->currentFunction);
 		}
 		break;
 	case 0x12:
 		// shift.  
-		if(x->selected = bpf_select(x, pt)){
+		if(x->selected = bpf_select(x, coords)){
 			bpf_removePoint(x, x->selected, x->currentFunction);
 			break;
 		}
@@ -392,12 +367,14 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		pt.y = r.height;
 	}
 
-	t_pt norm_coords;
-	bpf_getNormCoords(r, pt, &norm_coords);
+	t_pt sc;
+	sc.x = bpf_scale(pt.x, 0, r.width, x->xmin, x->xmax);
+	sc.y = bpf_scale(pt.y, r.height, 0, x->ymin, x->ymax);
+
 	switch(modifiers){
 	case 0x10:
 		bpf_removePoint(x, x->selected, x->currentFunction);
-		x->selected = bpf_insertPoint(x, norm_coords, x->currentFunction);
+		x->selected = bpf_insertPoint(x, sc, x->currentFunction);
 		break;
 	case 0x12:
 		break;
@@ -415,14 +392,10 @@ void bpf_outputSelection(t_bpf *x){
 	if(!(x->selected)){
 		return;
 	}
-	//t_rect r;
-	//jbox_get_patching_rect(&(x->box.b_ob), &r);
-	//t_pt norm_coords;
 	t_atom out[3];
-	//bpf_getNormCoords(r, x->selected->screen_coords, &norm_coords);
 	atom_setlong(&(out[0]), x->currentFunction);
-	atom_setfloat(&(out[1]), x->selected->norm_coords.x * (x->xmax - x->xmin) + x->xmin);
-	atom_setfloat(&(out[2]), x->selected->norm_coords.y * (x->ymax - x->ymin) + x->ymin);
+	atom_setfloat(&(out[1]), x->selected->coords.x);
+	atom_setfloat(&(out[2]), x->selected->coords.y);
 	outlet_list(x->out_sel, NULL, 3, out);
 }
 
@@ -489,6 +462,7 @@ void bpf_setFunctionName(t_bpf *x, t_symbol *name){
 	jbox_redraw(&(x->box));
 }
 
+/*
 void bpf_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords){
 	norm_coords->x = screen_coords.x / r.width;
 	norm_coords->y = fabs(r.height - screen_coords.y) / r.height;
@@ -498,18 +472,18 @@ void bpf_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords){
 	screen_coords->x = norm_coords.x * r.width;
 	screen_coords->y = fabs((norm_coords.y * r.height) - r.height);
 }
+*/
 
-t_point *bpf_insertPoint(t_bpf *x, t_pt norm_coords, int functionNum){
+t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum){
 	critical_enter(x->lock);
 	t_point **function = &(x->functions[functionNum]);
 	t_point *p = (t_point *)calloc(1, sizeof(t_point));
-	p->norm_coords = norm_coords;
-	//post("insertPoint: %f %f", p->norm_coords.x, p->norm_coords.y);
+	p->coords = coords;
 	if(*function == NULL){
 		p->prev = NULL;
 		p->next = NULL;
 		*function = p;
-	}else if(p->norm_coords.x < (*function)->norm_coords.x){
+	}else if(p->coords.x < (*function)->coords.x){
 		p->prev = NULL;
 		p->next = (*function);
 		(*function)->prev = p;
@@ -520,7 +494,7 @@ t_point *bpf_insertPoint(t_bpf *x, t_pt norm_coords, int functionNum){
 		current = (*function);
 		next = current->next;
 		while(next){
-			if(p->norm_coords.x >= current->norm_coords.x && p->norm_coords.x <= next->norm_coords.x){
+			if(p->coords.x >= current->coords.x && p->coords.x <= next->coords.x){
 				current->next = p;
 				next->prev = p;
 				p->next = next;
@@ -536,7 +510,6 @@ t_point *bpf_insertPoint(t_bpf *x, t_pt norm_coords, int functionNum){
 		current->next = p;
 	}
  out:
-	//post("point: %f %f", p->norm_coords.x, p->norm_coords.y);
 	critical_exit(x->lock);
 	return p;
 }
@@ -591,18 +564,13 @@ double bpf_scale(double f, double min_in, double max_in, double min_out, double 
 void bpf_dump(t_bpf *x){
 	int i, point_num = 0;
 	t_atom out[4];
-	t_pt norm_coords;
-	t_rect r;
-	jbox_get_patching_rect(&(x->box.b_ob), &r);
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
 		atom_setlong(&(out[1]), i);
-		//atom_setsym(&(out[1]), gensym(x->funcattr[i]->name));
 		while(p){
 			atom_setlong(&(out[0]), point_num++);
-			//bpf_getNormCoords(r, p->screen_coords, &norm_coords);
-			atom_setfloat(&(out[2]), p->norm_coords.x * (x->xmax - x->xmin) + x->xmin);
-			atom_setfloat(&(out[3]), p->norm_coords.y * (x->ymax - x->ymin) + x->ymin);
+			atom_setfloat(&(out[2]), p->coords.x);
+			atom_setfloat(&(out[3]), p->coords.y);
 			outlet_list(x->out_dump, NULL, 4, out);
 			p = p->next;
 		}
@@ -663,49 +631,23 @@ int main(void){
  	class_addmethod(c, (method)bpf_addFunction, "addFunction", A_GIMME, 0); 
  	class_addmethod(c, (method)bpf_functionList, "functionList", A_GIMME, 0); 
  	class_addmethod(c, (method)bpf_setFunction, "setFunction", A_LONG, 0); 
-	//class_addmethod(c, (method)bpf_editSel, "editSelection", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)bpf_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_clear, "clear", 0);
 	class_addmethod(c, (method)bpf_dump, "dump", 0);
 	class_addmethod(c, (method)bpf_setFunctionName, "setFunctionName", A_SYM, 0);
-	//class_addmethod(c, (method)bpf_read, "read", A_GIMME, 0);
-	//class_addmethod(c, (method)bpf_write, "write", A_GIMME, 0);
-	//class_addmethod(c, (method)myobject_write, "test", A_DEFSYM, 0);
 
 	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_bpf, xmin);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmin", 0, "0.0");
-	//t_object *attr = (t_object *)class_attr_get(c, gensym("xmin"));
-	//object_method(attr, gensym("setmethod"), USESYM(set), bpf_xmin_set);
 
         CLASS_ATTR_DOUBLE(c, "xmax", 0, t_bpf, xmax);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmax", 0, "1.0");
-	//attr = (t_object *)class_attr_get(c, gensym("xmax"));
-	//object_method(attr, gensym("setmethod"), USESYM(set), bpf_xmax_set);
-
 
         CLASS_ATTR_DOUBLE(c, "ymin", 0, t_bpf, ymin);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymin", 0, "0.0");
-	//attr = (t_object *)class_attr_get(c, gensym("ymin"));
-	//object_method(attr, gensym("setmethod"), USESYM(set), bpf_ymin_set);
 
         CLASS_ATTR_DOUBLE(c, "ymax", 0, t_bpf, ymax);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymax", 0, "1.0");
-	//attr = (t_object *)class_attr_get(c, gensym("ymax"));
-	//object_method(attr, gensym("setmethod"), USESYM(set), bpf_ymax_set);
-
-
-	/*
-	CLASS_ATTR_DOUBLE(c, "scalex", 0, t_bpf, scalex);
-        CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "scalex", 0, "0.0");
-        CLASS_ATTR_DOUBLE(c, "scaley", 0, t_bpf, scaley);
-        CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "scaley", 0, "1.0");
-
-        CLASS_ATTR_DOUBLE(c, "offsetx", 0, t_bpf, offsetx);
-        CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "offsetx", 0, "0.0");
-        CLASS_ATTR_DOUBLE(c, "offsety", 0, t_bpf, offsety);
-        CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "offsety", 0, "1.0");
-	*/
 
  	CLASS_STICKY_ATTR(c, "category", 0, "Color");
 
