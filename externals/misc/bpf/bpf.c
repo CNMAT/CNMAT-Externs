@@ -445,6 +445,10 @@ void bpf_setFunction(t_bpf *x, long f){
 		error("bpf: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
 		return;
 	}
+	if(f < 0){
+		error("bpf: function number must be positive");
+		return;
+	}
 	if(f > x->numFunctions - 1){
 		while(f > x->numFunctions - 1){
 			x->numFunctions++;
