@@ -30,6 +30,9 @@
   VERSION 0.1: bug fixes, scaling, function names, dotted background functions, dump out now includes index number for coll, displays point coordinates in the upper right corner
   VERSION 0.1.1: added functionNames message
   VERSION 0.2: rescaling now works properly
+  VERSION 0.2.1: clear now resets the number of functions properly
+  VERSION 0.2.2: assist function is now implemented and the second outlet behaves better when a list is sent into the obj
+  VERSION 0.2.3: x coordinate from the leftmost outlet is now correct when a float is less than xmin or greater than xmax.
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -228,14 +231,15 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 			x->numFunctions = functionNum + 1;
 		}
 	}
+	bpf_outputSelection(x);
 	x->selected = bpf_insertPoint(x, (t_pt){atom_getfloat(a++), atom_getfloat(a++)}, functionNum);
 	jbox_redraw(&(x->box));
 }
 
 void bpf_float(t_bpf *x, double f){
 	//double f = (ff - x->xmin) / (x->xmax - x->xmin);;
-	if(f < x->xmin) f = 0.;
-	if(f > x->xmax) f = 1.;
+	//if(f < x->xmin) f = 0.;
+	//if(f > x->xmax) f = 1.;
 	t_atom out[3]; // function number, x, y
 	atom_setfloat(&(out[1]), f);
 	int i;
@@ -598,11 +602,26 @@ void bpf_clear(t_bpf *x){
 	jbox_redraw(&(x->box));
 }
 
-void bpf_assist(t_bpf *x, void *b, long m, long a, char *s){ 
- 	if (m == ASSIST_OUTLET){ 
+void bpf_assist(t_bpf *x, void *b, long io, long num, char *s){ 
+ 	if(io == ASSIST_OUTLET){ 
+		switch(num){
+		case 0:
+			sprintf(s, "Functions evaluated for a given x value. (list)");
+			break;
+		case 1:
+			sprintf(s, "The (x,y) coordinates for the selected point. (list)");
+			break;
+		case 2:
+			sprintf(s, "Bang when finished dumping.");
+			break;
+		case 3:
+			sprintf(s, "Dump outlet (list)");
+			break;
+		}
  	}else{ 
- 		switch (a) {	 
+ 		switch (num) {	 
  		case 0: 
+			sprintf(s, "Input a float to evaluate the functions at that x value.");
  			break; 
  		} 
  	} 
