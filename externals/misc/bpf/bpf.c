@@ -592,8 +592,8 @@ void bpf_clear(t_bpf *x){
 		x->functions[i] = NULL;
 	}
 	critical_enter(x->lock);
-	x->numFunctions = 0;
-	x->currentFunction = 1;
+	x->numFunctions = 1;
+	x->currentFunction = 0;
 	critical_exit(x->lock);
 	jbox_redraw(&(x->box));
 }
