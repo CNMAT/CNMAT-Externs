@@ -55,6 +55,10 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 #include "jgraphics.h" 
 #include "version.c" 
 
+#ifdef WIN
+#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
+#endif
+
 #define MAX_NUM_FUNCTIONS 256 
 
 typedef struct _point{ 
