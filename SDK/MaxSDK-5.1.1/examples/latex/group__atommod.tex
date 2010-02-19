@@ -1,0 +1,222 @@
+\hypertarget{group__atommod}{
+\section{Atom Module}
+\label{group__atommod}\index{Atom Module@{Atom Module}}
+}
+
+
+Collaboration diagram for Atom Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=105pt]{group__atommod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+t\_\-jit\_\-err \hyperlink{group__atommod_ga3ba793bf8d970488f7fdee721fafcc16}{jit\_\-atom\_\-setlong} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, long b)
+\begin{DoxyCompactList}\small\item\em Sets atom value to long integer. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__atommod_gafa6fc51c30c70d54d6dd4af45042d3bd}{jit\_\-atom\_\-setfloat} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, double b)
+\begin{DoxyCompactList}\small\item\em Sets atom value to floating point number. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__atommod_ga8034b94e985f9c616c108fdf426ebcf4}{jit\_\-atom\_\-setsym} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Sets atom value to symbol. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__atommod_gaa32f4a02a9c8b281043220b713d15e3e}{jit\_\-atom\_\-setobj} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, void $\ast$b)
+\begin{DoxyCompactList}\small\item\em Sets atom value to object pointer. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atommod_gaf63b5b3ffc46134bed05adf071a7d52a}{jit\_\-atom\_\-getlong} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves atom value as long integer. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__atommod_gae5882d0bf97c939882126ba235eee409}{jit\_\-atom\_\-getfloat} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves atom value as floating point number. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__atommod_ga73b81472812e4c5475d07d9914d84f89}{jit\_\-atom\_\-getsym} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves atom value as symbol pointer. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__atommod_ga84dda6fa7e1e2f29e897c1d87a06ba8e}{jit\_\-atom\_\-getobj} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves atom value as object pointer. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atommod_ga52eb4a47524e12d8999cd8606a0d2e31}{jit\_\-atom\_\-getcharfix} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves atom value as an 8 bit fixed point number. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atommod_ga4ef6f5e500d63209a1fd5e14c49b2fa3}{jit\_\-atom\_\-arg\_\-getlong} (long $\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves atom argument at index as long integer if present. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atommod_gaa75d6ca44c5972162eb78ce62b7c39d1}{jit\_\-atom\_\-arg\_\-getfloat} (float $\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves atom argument at index as floating point number if present. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atommod_gaa6cfeff56be144abc839b07d0f8cc373}{jit\_\-atom\_\-arg\_\-getdouble} (double $\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves atom argument at index as double precision floating point number if present. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atommod_ga6be2fbebadc03614cd5e621da17ff289}{jit\_\-atom\_\-arg\_\-getsym} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves atom argument at index as symbol pointer if present. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__atommod_gaa6cfeff56be144abc839b07d0f8cc373}{
+\index{atommod@{atommod}!jit\_\-atom\_\-arg\_\-getdouble@{jit\_\-atom\_\-arg\_\-getdouble}}
+\index{jit\_\-atom\_\-arg\_\-getdouble@{jit\_\-atom\_\-arg\_\-getdouble}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-arg\_\-getdouble}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-atom\_\-arg\_\-getdouble (double $\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atommod_gaa6cfeff56be144abc839b07d0f8cc373}
+
+
+Retrieves atom argument at index as double precision floating point number if present. This function is useful for setting the values only if there is an argument at the specified index, otherwise, the input value is untouched.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]pointer to double (should contain desired default) \item[{\em idx}]atom argument index \item[{\em ac}]atom argument count \item[{\em av}]atom argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. JIT\_\-ERR\_\-NONE if successful. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_gaa75d6ca44c5972162eb78ce62b7c39d1}{
+\index{atommod@{atommod}!jit\_\-atom\_\-arg\_\-getfloat@{jit\_\-atom\_\-arg\_\-getfloat}}
+\index{jit\_\-atom\_\-arg\_\-getfloat@{jit\_\-atom\_\-arg\_\-getfloat}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-arg\_\-getfloat}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-atom\_\-arg\_\-getfloat (float $\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atommod_gaa75d6ca44c5972162eb78ce62b7c39d1}
+
+
+Retrieves atom argument at index as floating point number if present. This function is useful for setting the values only if there is an argument at the specified index, otherwise, the input value is untouched.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]pointer to float (should contain desired default) \item[{\em idx}]atom argument index \item[{\em ac}]atom argument count \item[{\em av}]atom argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. JIT\_\-ERR\_\-NONE if successful. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_ga4ef6f5e500d63209a1fd5e14c49b2fa3}{
+\index{atommod@{atommod}!jit\_\-atom\_\-arg\_\-getlong@{jit\_\-atom\_\-arg\_\-getlong}}
+\index{jit\_\-atom\_\-arg\_\-getlong@{jit\_\-atom\_\-arg\_\-getlong}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-arg\_\-getlong}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-atom\_\-arg\_\-getlong (long $\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atommod_ga4ef6f5e500d63209a1fd5e14c49b2fa3}
+
+
+Retrieves atom argument at index as long integer if present. This function is useful for setting the values only if there is an argument at the specified index, otherwise, the input value is untouched.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]pointer to long (should contain desired default) \item[{\em idx}]atom argument index \item[{\em ac}]atom argument count \item[{\em av}]atom argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. JIT\_\-ERR\_\-NONE if successful. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_ga6be2fbebadc03614cd5e621da17ff289}{
+\index{atommod@{atommod}!jit\_\-atom\_\-arg\_\-getsym@{jit\_\-atom\_\-arg\_\-getsym}}
+\index{jit\_\-atom\_\-arg\_\-getsym@{jit\_\-atom\_\-arg\_\-getsym}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-arg\_\-getsym}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-atom\_\-arg\_\-getsym ({\bf t\_\-symbol} $\ast$$\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atommod_ga6be2fbebadc03614cd5e621da17ff289}
+
+
+Retrieves atom argument at index as symbol pointer if present. This function is useful for setting the values only if there is an argument at the specified index, otherwise, the input value is untouched.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]pointer to symbol pointer (should contain desired default) \item[{\em idx}]atom argument index \item[{\em ac}]atom argument count \item[{\em av}]atom argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. JIT\_\-ERR\_\-NONE if successful. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_ga52eb4a47524e12d8999cd8606a0d2e31}{
+\index{atommod@{atommod}!jit\_\-atom\_\-getcharfix@{jit\_\-atom\_\-getcharfix}}
+\index{jit\_\-atom\_\-getcharfix@{jit\_\-atom\_\-getcharfix}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-getcharfix}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-atom\_\-getcharfix ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atommod_ga52eb4a47524e12d8999cd8606a0d2e31}
+
+
+Retrieves atom value as an 8 bit fixed point number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+8 bit fixed point value in the range 0-\/255. 0 if atom has no numeric value. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_gae5882d0bf97c939882126ba235eee409}{
+\index{atommod@{atommod}!jit\_\-atom\_\-getfloat@{jit\_\-atom\_\-getfloat}}
+\index{jit\_\-atom\_\-getfloat@{jit\_\-atom\_\-getfloat}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-getfloat}]{\setlength{\rightskip}{0pt plus 5cm}double jit\_\-atom\_\-getfloat ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atommod_gae5882d0bf97c939882126ba235eee409}
+
+
+Retrieves atom value as floating point number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+floating point value. 0 if atom has no numeric value. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_gaf63b5b3ffc46134bed05adf071a7d52a}{
+\index{atommod@{atommod}!jit\_\-atom\_\-getlong@{jit\_\-atom\_\-getlong}}
+\index{jit\_\-atom\_\-getlong@{jit\_\-atom\_\-getlong}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-getlong}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-atom\_\-getlong ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atommod_gaf63b5b3ffc46134bed05adf071a7d52a}
+
+
+Retrieves atom value as long integer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long integer value. 0 if atom has no numeric value. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_ga84dda6fa7e1e2f29e897c1d87a06ba8e}{
+\index{atommod@{atommod}!jit\_\-atom\_\-getobj@{jit\_\-atom\_\-getobj}}
+\index{jit\_\-atom\_\-getobj@{jit\_\-atom\_\-getobj}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-getobj}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-atom\_\-getobj ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atommod_ga84dda6fa7e1e2f29e897c1d87a06ba8e}
+
+
+Retrieves atom value as object pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+object pointer. NULL if atom has no object value. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_ga73b81472812e4c5475d07d9914d84f89}{
+\index{atommod@{atommod}!jit\_\-atom\_\-getsym@{jit\_\-atom\_\-getsym}}
+\index{jit\_\-atom\_\-getsym@{jit\_\-atom\_\-getsym}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-getsym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol} $\ast$ jit\_\-atom\_\-getsym ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atommod_ga73b81472812e4c5475d07d9914d84f89}
+
+
+Retrieves atom value as symbol pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+symbol pointer. \_\-jit\_\-sym\_\-nothing if atom has no symbolic value. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_gafa6fc51c30c70d54d6dd4af45042d3bd}{
+\index{atommod@{atommod}!jit\_\-atom\_\-setfloat@{jit\_\-atom\_\-setfloat}}
+\index{jit\_\-atom\_\-setfloat@{jit\_\-atom\_\-setfloat}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-setfloat}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-atom\_\-setfloat ({\bf t\_\-atom} $\ast$ {\em a}, \/  double {\em b})}}
+\label{group__atommod_gafa6fc51c30c70d54d6dd4af45042d3bd}
+
+
+Sets atom value to floating point number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer \item[{\em b}]floating point value\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_ga3ba793bf8d970488f7fdee721fafcc16}{
+\index{atommod@{atommod}!jit\_\-atom\_\-setlong@{jit\_\-atom\_\-setlong}}
+\index{jit\_\-atom\_\-setlong@{jit\_\-atom\_\-setlong}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-setlong}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-atom\_\-setlong ({\bf t\_\-atom} $\ast$ {\em a}, \/  long {\em b})}}
+\label{group__atommod_ga3ba793bf8d970488f7fdee721fafcc16}
+
+
+Sets atom value to long integer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer \item[{\em b}]integer value\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_gaa32f4a02a9c8b281043220b713d15e3e}{
+\index{atommod@{atommod}!jit\_\-atom\_\-setobj@{jit\_\-atom\_\-setobj}}
+\index{jit\_\-atom\_\-setobj@{jit\_\-atom\_\-setobj}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-setobj}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-atom\_\-setobj ({\bf t\_\-atom} $\ast$ {\em a}, \/  void $\ast$ {\em b})}}
+\label{group__atommod_gaa32f4a02a9c8b281043220b713d15e3e}
+
+
+Sets atom value to object pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer \item[{\em b}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__atommod_ga8034b94e985f9c616c108fdf426ebcf4}{
+\index{atommod@{atommod}!jit\_\-atom\_\-setsym@{jit\_\-atom\_\-setsym}}
+\index{jit\_\-atom\_\-setsym@{jit\_\-atom\_\-setsym}!atommod@{atommod}}
+\subsubsection[{jit\_\-atom\_\-setsym}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-atom\_\-setsym ({\bf t\_\-atom} $\ast$ {\em a}, \/  {\bf t\_\-symbol} $\ast$ {\em b})}}
+\label{group__atommod_ga8034b94e985f9c616c108fdf426ebcf4}
+
+
+Sets atom value to symbol. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]atom pointer \item[{\em b}]symbol value\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}

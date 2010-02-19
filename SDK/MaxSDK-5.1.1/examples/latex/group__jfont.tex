@@ -1,0 +1,234 @@
+\hypertarget{group__jfont}{
+\section{JFont}
+\label{group__jfont}\index{JFont@{JFont}}
+}
+
+
+Collaboration diagram for JFont:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=95pt]{group__jfont}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jfont_ga75f83f853e52af957c799723cac89ae5}{
+typedef struct \_\-jfont \hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont}}
+\label{group__jfont_ga75f83f853e52af957c799723cac89ae5}
+
+\begin{DoxyCompactList}\small\item\em An instance of a jgraphics font. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__jfont_gaea63403193677b088b56cb60c69c37b4}{t\_\-jgraphics\_\-font\_\-slant} \{ \par
+\hyperlink{group__jfont_ggaea63403193677b088b56cb60c69c37b4a42c9269c412c5cfaf42db4db88add2a8}{JGRAPHICS\_\-FONT\_\-SLANT\_\-NORMAL}, 
+\par
+\hyperlink{group__jfont_ggaea63403193677b088b56cb60c69c37b4a66269b2de097def1c7d8100683cae0da}{JGRAPHICS\_\-FONT\_\-SLANT\_\-ITALIC}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of slanting options for font display. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__jfont_ga29fc4356e11166a16aeae50dd5e22f86}{t\_\-jgraphics\_\-font\_\-weight} \{ \par
+\hyperlink{group__jfont_gga29fc4356e11166a16aeae50dd5e22f86a9877f7707c8073709254be3d6429909a}{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-NORMAL}, 
+\par
+\hyperlink{group__jfont_gga29fc4356e11166a16aeae50dd5e22f86aa12c9a0fb782696b77e2d991712e5761}{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-BOLD}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of font weight options for font display. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$ \hyperlink{group__jfont_gae09cf4470873157407375af651cabcff}{jfont\_\-create} (const char $\ast$family, \hyperlink{group__jfont_gaea63403193677b088b56cb60c69c37b4}{t\_\-jgraphics\_\-font\_\-slant} slant, \hyperlink{group__jfont_ga29fc4356e11166a16aeae50dd5e22f86}{t\_\-jgraphics\_\-font\_\-weight} weight, double size)
+\begin{DoxyCompactList}\small\item\em Create a new font object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$ \hyperlink{group__jfont_gaa3cdecfe931e80252a71bb6b2a9ee1f8}{jfont\_\-reference} (\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font)
+\begin{DoxyCompactList}\small\item\em Create new reference to an existing font object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jfont_gaec794a3e2e240f8b759f525c756e7f33}{jfont\_\-destroy} (\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font)
+\begin{DoxyCompactList}\small\item\em Release or free a font object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jfont_ga5857efa47dcf9dbc1822f7500c4aa5b3}{jfont\_\-set\_\-font\_\-size} (\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font, double size)
+\begin{DoxyCompactList}\small\item\em Set the size of a font object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jfont_ga40e5705b583cf366c6b7a23a88df9050}{jfont\_\-set\_\-underline} (\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font, char ul)
+\begin{DoxyCompactList}\small\item\em Set the underlining of a font object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jfont_ga244f386f53aef62b283ff492adc50a73}{jfont\_\-extents} (\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font, \hyperlink{structt__jgraphics__font__extents}{t\_\-jgraphics\_\-font\_\-extents} $\ast$extents)
+\begin{DoxyCompactList}\small\item\em Get extents of this font. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jfont_gad587e956e70581198b075cb336b4ccce}{jfont\_\-text\_\-measure} (\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font, const char $\ast$utf8, double $\ast$width, double $\ast$height)
+\begin{DoxyCompactList}\small\item\em Given a font, find out how much area is required to render a string of text. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jfont_ga77610846a756e6da12043d016273d3aa}{jfont\_\-text\_\-measure\_\-wrapped} (\hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font, const char $\ast$utf8, double wrapwidth, long includewhitespace, double $\ast$width, double $\ast$height, long $\ast$numlines)
+\begin{DoxyCompactList}\small\item\em Given a font, find out how much area is required to render a string of text, provided a horizontal maximum limit at which the text is wrapped. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jfont_gaa796e25612596182442bc072e457310d}{jfont\_\-getfontlist} (long $\ast$count, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$$\ast$list)
+\begin{DoxyCompactList}\small\item\em Get a list of font names. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jfont_gabff7a5c0793cab2aed118f82ab3d520a}{jbox\_\-get\_\-font\_\-weight} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Get the slant box's font. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jfont_ga98bc2063c505fb26829605e940ffc6d4}{jbox\_\-get\_\-font\_\-slant} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Get the slant box's font. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__jfont_gaea63403193677b088b56cb60c69c37b4}{
+\index{jfont@{jfont}!t\_\-jgraphics\_\-font\_\-slant@{t\_\-jgraphics\_\-font\_\-slant}}
+\index{t\_\-jgraphics\_\-font\_\-slant@{t\_\-jgraphics\_\-font\_\-slant}!jfont@{jfont}}
+\subsubsection[{t\_\-jgraphics\_\-font\_\-slant}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-jgraphics\_\-font\_\-slant}}}
+\label{group__jfont_gaea63403193677b088b56cb60c69c37b4}
+
+
+Enumeration of slanting options for font display. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JGRAPHICS\_\-FONT\_\-SLANT\_\-NORMAL@{JGRAPHICS\_\-FONT\_\-SLANT\_\-NORMAL}!jfont@{jfont}}\index{jfont@{jfont}!JGRAPHICS\_\-FONT\_\-SLANT\_\-NORMAL@{JGRAPHICS\_\-FONT\_\-SLANT\_\-NORMAL}}\item[{\em 
+\hypertarget{group__jfont_ggaea63403193677b088b56cb60c69c37b4a42c9269c412c5cfaf42db4db88add2a8}{
+JGRAPHICS\_\-FONT\_\-SLANT\_\-NORMAL}
+\label{group__jfont_ggaea63403193677b088b56cb60c69c37b4a42c9269c412c5cfaf42db4db88add2a8}
+}]Normal slanting (typically this means no slanting). \index{JGRAPHICS\_\-FONT\_\-SLANT\_\-ITALIC@{JGRAPHICS\_\-FONT\_\-SLANT\_\-ITALIC}!jfont@{jfont}}\index{jfont@{jfont}!JGRAPHICS\_\-FONT\_\-SLANT\_\-ITALIC@{JGRAPHICS\_\-FONT\_\-SLANT\_\-ITALIC}}\item[{\em 
+\hypertarget{group__jfont_ggaea63403193677b088b56cb60c69c37b4a66269b2de097def1c7d8100683cae0da}{
+JGRAPHICS\_\-FONT\_\-SLANT\_\-ITALIC}
+\label{group__jfont_ggaea63403193677b088b56cb60c69c37b4a66269b2de097def1c7d8100683cae0da}
+}]Italic slanting. \end{description}
+\end{Desc}
+
+\hypertarget{group__jfont_ga29fc4356e11166a16aeae50dd5e22f86}{
+\index{jfont@{jfont}!t\_\-jgraphics\_\-font\_\-weight@{t\_\-jgraphics\_\-font\_\-weight}}
+\index{t\_\-jgraphics\_\-font\_\-weight@{t\_\-jgraphics\_\-font\_\-weight}!jfont@{jfont}}
+\subsubsection[{t\_\-jgraphics\_\-font\_\-weight}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-jgraphics\_\-font\_\-weight}}}
+\label{group__jfont_ga29fc4356e11166a16aeae50dd5e22f86}
+
+
+Enumeration of font weight options for font display. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-NORMAL@{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-NORMAL}!jfont@{jfont}}\index{jfont@{jfont}!JGRAPHICS\_\-FONT\_\-WEIGHT\_\-NORMAL@{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-NORMAL}}\item[{\em 
+\hypertarget{group__jfont_gga29fc4356e11166a16aeae50dd5e22f86a9877f7707c8073709254be3d6429909a}{
+JGRAPHICS\_\-FONT\_\-WEIGHT\_\-NORMAL}
+\label{group__jfont_gga29fc4356e11166a16aeae50dd5e22f86a9877f7707c8073709254be3d6429909a}
+}]Normal font weight. \index{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-BOLD@{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-BOLD}!jfont@{jfont}}\index{jfont@{jfont}!JGRAPHICS\_\-FONT\_\-WEIGHT\_\-BOLD@{JGRAPHICS\_\-FONT\_\-WEIGHT\_\-BOLD}}\item[{\em 
+\hypertarget{group__jfont_gga29fc4356e11166a16aeae50dd5e22f86aa12c9a0fb782696b77e2d991712e5761}{
+JGRAPHICS\_\-FONT\_\-WEIGHT\_\-BOLD}
+\label{group__jfont_gga29fc4356e11166a16aeae50dd5e22f86aa12c9a0fb782696b77e2d991712e5761}
+}]Bold font weight. \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__jfont_ga98bc2063c505fb26829605e940ffc6d4}{
+\index{jfont@{jfont}!jbox\_\-get\_\-font\_\-slant@{jbox\_\-get\_\-font\_\-slant}}
+\index{jbox\_\-get\_\-font\_\-slant@{jbox\_\-get\_\-font\_\-slant}!jfont@{jfont}}
+\subsubsection[{jbox\_\-get\_\-font\_\-slant}]{\setlength{\rightskip}{0pt plus 5cm}long jbox\_\-get\_\-font\_\-slant ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jfont_ga98bc2063c505fb26829605e940ffc6d4}
+
+
+Get the slant box's font. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]An object's box. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value from the \hyperlink{group__jfont_gaea63403193677b088b56cb60c69c37b4}{t\_\-jgraphics\_\-font\_\-slant} enum. 
+\end{DoxyReturn}
+\hypertarget{group__jfont_gabff7a5c0793cab2aed118f82ab3d520a}{
+\index{jfont@{jfont}!jbox\_\-get\_\-font\_\-weight@{jbox\_\-get\_\-font\_\-weight}}
+\index{jbox\_\-get\_\-font\_\-weight@{jbox\_\-get\_\-font\_\-weight}!jfont@{jfont}}
+\subsubsection[{jbox\_\-get\_\-font\_\-weight}]{\setlength{\rightskip}{0pt plus 5cm}long jbox\_\-get\_\-font\_\-weight ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jfont_gabff7a5c0793cab2aed118f82ab3d520a}
+
+
+Get the slant box's font. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]An object's box. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value from the \hyperlink{group__jfont_ga29fc4356e11166a16aeae50dd5e22f86}{t\_\-jgraphics\_\-font\_\-weight} enum. 
+\end{DoxyReturn}
+\hypertarget{group__jfont_gae09cf4470873157407375af651cabcff}{
+\index{jfont@{jfont}!jfont\_\-create@{jfont\_\-create}}
+\index{jfont\_\-create@{jfont\_\-create}!jfont@{jfont}}
+\subsubsection[{jfont\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jfont}$\ast$ jfont\_\-create (const char $\ast$ {\em family}, \/  {\bf t\_\-jgraphics\_\-font\_\-slant} {\em slant}, \/  {\bf t\_\-jgraphics\_\-font\_\-weight} {\em weight}, \/  double {\em size})}}
+\label{group__jfont_gae09cf4470873157407375af651cabcff}
+
+
+Create a new font object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em family}]The name of the font family (e.g. Arial). \item[{\em slant}]The type of slant for the font. \item[{\em weight}]The type of weight for the font. \item[{\em size}]The size of the font. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new font object. 
+\end{DoxyReturn}
+\hypertarget{group__jfont_gaec794a3e2e240f8b759f525c756e7f33}{
+\index{jfont@{jfont}!jfont\_\-destroy@{jfont\_\-destroy}}
+\index{jfont\_\-destroy@{jfont\_\-destroy}!jfont@{jfont}}
+\subsubsection[{jfont\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void jfont\_\-destroy ({\bf t\_\-jfont} $\ast$ {\em font})}}
+\label{group__jfont_gaec794a3e2e240f8b759f525c756e7f33}
+
+
+Release or free a font object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em font}]The font object to release. \end{DoxyParams}
+\hypertarget{group__jfont_ga244f386f53aef62b283ff492adc50a73}{
+\index{jfont@{jfont}!jfont\_\-extents@{jfont\_\-extents}}
+\index{jfont\_\-extents@{jfont\_\-extents}!jfont@{jfont}}
+\subsubsection[{jfont\_\-extents}]{\setlength{\rightskip}{0pt plus 5cm}void jfont\_\-extents ({\bf t\_\-jfont} $\ast$ {\em font}, \/  {\bf t\_\-jgraphics\_\-font\_\-extents} $\ast$ {\em extents})}}
+\label{group__jfont_ga244f386f53aef62b283ff492adc50a73}
+
+
+Get extents of this font. 
+\begin{DoxyParams}{Parameters}
+\item[{\em font}]The font object. \item[{\em extents}]The font extents upon return/ \end{DoxyParams}
+\hypertarget{group__jfont_gaa796e25612596182442bc072e457310d}{
+\index{jfont@{jfont}!jfont\_\-getfontlist@{jfont\_\-getfontlist}}
+\index{jfont\_\-getfontlist@{jfont\_\-getfontlist}!jfont@{jfont}}
+\subsubsection[{jfont\_\-getfontlist}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jfont\_\-getfontlist (long $\ast$ {\em count}, \/  {\bf t\_\-symbol} $\ast$$\ast$$\ast$ {\em list})}}
+\label{group__jfont_gaa796e25612596182442bc072e457310d}
+
+
+Get a list of font names. 
+\begin{DoxyParams}{Parameters}
+\item[{\em count}]The addres of a variable to hold the count of font names in list upon return. \item[{\em list}]The address of a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$$\ast$ initialized to NULL. Upon return this will be set to an array of count \hyperlink{structt__symbol}{t\_\-symbol} pointers. This array should be freed using \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()} when you are done with it. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jfont_gaa3cdecfe931e80252a71bb6b2a9ee1f8}{
+\index{jfont@{jfont}!jfont\_\-reference@{jfont\_\-reference}}
+\index{jfont\_\-reference@{jfont\_\-reference}!jfont@{jfont}}
+\subsubsection[{jfont\_\-reference}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jfont}$\ast$ jfont\_\-reference ({\bf t\_\-jfont} $\ast$ {\em font})}}
+\label{group__jfont_gaa3cdecfe931e80252a71bb6b2a9ee1f8}
+
+
+Create new reference to an existing font object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em font}]The font object for which to obtain a reference. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new font object reference. 
+\end{DoxyReturn}
+\hypertarget{group__jfont_ga5857efa47dcf9dbc1822f7500c4aa5b3}{
+\index{jfont@{jfont}!jfont\_\-set\_\-font\_\-size@{jfont\_\-set\_\-font\_\-size}}
+\index{jfont\_\-set\_\-font\_\-size@{jfont\_\-set\_\-font\_\-size}!jfont@{jfont}}
+\subsubsection[{jfont\_\-set\_\-font\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}void jfont\_\-set\_\-font\_\-size ({\bf t\_\-jfont} $\ast$ {\em font}, \/  double {\em size})}}
+\label{group__jfont_ga5857efa47dcf9dbc1822f7500c4aa5b3}
+
+
+Set the size of a font object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em font}]The font object. \item[{\em size}]The new size for the font object. \end{DoxyParams}
+\hypertarget{group__jfont_ga40e5705b583cf366c6b7a23a88df9050}{
+\index{jfont@{jfont}!jfont\_\-set\_\-underline@{jfont\_\-set\_\-underline}}
+\index{jfont\_\-set\_\-underline@{jfont\_\-set\_\-underline}!jfont@{jfont}}
+\subsubsection[{jfont\_\-set\_\-underline}]{\setlength{\rightskip}{0pt plus 5cm}void jfont\_\-set\_\-underline ({\bf t\_\-jfont} $\ast$ {\em font}, \/  char {\em ul})}}
+\label{group__jfont_ga40e5705b583cf366c6b7a23a88df9050}
+
+
+Set the underlining of a font object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em font}]The font object. \item[{\em ul}]Pass true to underline, or false for no underlining. \end{DoxyParams}
+\hypertarget{group__jfont_gad587e956e70581198b075cb336b4ccce}{
+\index{jfont@{jfont}!jfont\_\-text\_\-measure@{jfont\_\-text\_\-measure}}
+\index{jfont\_\-text\_\-measure@{jfont\_\-text\_\-measure}!jfont@{jfont}}
+\subsubsection[{jfont\_\-text\_\-measure}]{\setlength{\rightskip}{0pt plus 5cm}void jfont\_\-text\_\-measure ({\bf t\_\-jfont} $\ast$ {\em font}, \/  const char $\ast$ {\em utf8}, \/  double $\ast$ {\em width}, \/  double $\ast$ {\em height})}}
+\label{group__jfont_gad587e956e70581198b075cb336b4ccce}
+
+
+Given a font, find out how much area is required to render a string of text. 
+\begin{DoxyParams}{Parameters}
+\item[{\em font}]The font object. \item[{\em utf8}]The text whose rendering will be measured. \item[{\em width}]The address of a variable to hold the width upon return. \item[{\em height}]The address of a variable to hold the height upon return. \end{DoxyParams}
+\hypertarget{group__jfont_ga77610846a756e6da12043d016273d3aa}{
+\index{jfont@{jfont}!jfont\_\-text\_\-measure\_\-wrapped@{jfont\_\-text\_\-measure\_\-wrapped}}
+\index{jfont\_\-text\_\-measure\_\-wrapped@{jfont\_\-text\_\-measure\_\-wrapped}!jfont@{jfont}}
+\subsubsection[{jfont\_\-text\_\-measure\_\-wrapped}]{\setlength{\rightskip}{0pt plus 5cm}void jfont\_\-text\_\-measure\_\-wrapped ({\bf t\_\-jfont} $\ast$ {\em font}, \/  const char $\ast$ {\em utf8}, \/  double {\em wrapwidth}, \/  long {\em includewhitespace}, \/  double $\ast$ {\em width}, \/  double $\ast$ {\em height}, \/  long $\ast$ {\em numlines})}}
+\label{group__jfont_ga77610846a756e6da12043d016273d3aa}
+
+
+Given a font, find out how much area is required to render a string of text, provided a horizontal maximum limit at which the text is wrapped. 
+\begin{DoxyParams}{Parameters}
+\item[{\em font}]The font object. \item[{\em utf8}]The text whose rendering will be measured. \item[{\em wrapwidth}]The maximum width, above which text should wrap onto a new line. \item[{\em includewhitespace}]If non-\/zero, include whitespace in the measurement. \item[{\em width}]The address of a variable to hold the width upon return. \item[{\em height}]The address of a variable to hold the height upon return. \item[{\em numlines}]The address of a variable to hold the number of lines of text after wrapping upon return. \end{DoxyParams}

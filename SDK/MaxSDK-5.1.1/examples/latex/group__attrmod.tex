@@ -1,0 +1,574 @@
+\hypertarget{group__attrmod}{
+\section{Attribute Module}
+\label{group__attrmod}\index{Attribute Module@{Attribute Module}}
+}
+
+
+Collaboration diagram for Attribute Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=114pt]{group__attrmod}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__jit__attribute}{t\_\-jit\_\-attribute}
+\begin{DoxyCompactList}\small\item\em \hyperlink{structt__jit__attribute}{t\_\-jit\_\-attribute} object struct. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jit__attr__offset}{t\_\-jit\_\-attr\_\-offset}
+\begin{DoxyCompactList}\small\item\em \hyperlink{structt__jit__attr__offset}{t\_\-jit\_\-attr\_\-offset} object struct. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jit__attr__offset__array}{t\_\-jit\_\-attr\_\-offset\_\-array}
+\begin{DoxyCompactList}\small\item\em \hyperlink{structt__jit__attr__offset__array}{t\_\-jit\_\-attr\_\-offset\_\-array} object struct. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jit__attr__filter__clip}{t\_\-jit\_\-attr\_\-filter\_\-clip}
+\begin{DoxyCompactList}\small\item\em \hyperlink{structt__jit__attr__filter__clip}{t\_\-jit\_\-attr\_\-filter\_\-clip} object struct. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jit__attr__filter__proc}{t\_\-jit\_\-attr\_\-filter\_\-proc}
+\begin{DoxyCompactList}\small\item\em \hyperlink{structt__jit__attr__filter__proc}{t\_\-jit\_\-attr\_\-filter\_\-proc} object struct. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jit__attr}{t\_\-jit\_\-attr}
+\begin{DoxyCompactList}\small\item\em Common attribute struct. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__attrmod_ga0c557da38fc8b2d94ca1de983e7ad603}{jit\_\-attr\_\-getname} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute name. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__attrmod_gae0ff1b6ee9a3303bbd9a0b4416640c0b}{jit\_\-attr\_\-gettype} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute type. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_ga92a547e00cde00059b6735fc6f371149}{jit\_\-attr\_\-canget} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute gettable flag. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_ga4cbadd8a5fb907e34faaef5368d2448e}{jit\_\-attr\_\-canset} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute settable flag. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_ga5c71cda4f1df64ec56442be1a7278c99}{jit\_\-attr\_\-usercanget} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute user gettable flag. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_ga89141c07259e2b3a568b7879874a20be}{jit\_\-attr\_\-usercanset} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute user settable flag. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__attrmod_gadbc0727e253f6307bda9ac0becd132a9}{jit\_\-attr\_\-getmethod} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$methodname)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute getter or setter method. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_ga9a5cdc2a025611cacfe1dd41f87fd387}{jit\_\-attr\_\-filterget} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x, void $\ast$y)
+\begin{DoxyCompactList}\small\item\em Sets attribute getter filter. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_gaa407b91c0f3a0084a20d4fab325a69ac}{jit\_\-attr\_\-filterset} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x, void $\ast$y)
+\begin{DoxyCompactList}\small\item\em Sets attribute setter filter. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_gab54f36f1cbdbdbb08ee83826ac3b47e5}{jit\_\-attr\_\-get} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x, void $\ast$parent, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Calls attribute getter to retrieve from parent object. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_ga04bb490b921cfd22290b8513d63702ec}{jit\_\-attr\_\-set} (\hyperlink{structt__jit__attr}{t\_\-jit\_\-attr} $\ast$x, void $\ast$parent, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Calls attribute setter to set in parent object. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__attrmod_ga1f1e9ce77ed7e385a52f3c91fcd0b348}{jit\_\-attribute\_\-new} (char $\ast$name, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$type, long flags, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mget, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mset)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__attribute}{t\_\-jit\_\-attribute}. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__attrmod_gaf1539159e0a0bb0238b2cf9b03ac3308}{jit\_\-attr\_\-offset\_\-new} (char $\ast$name, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$type, long flags, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mget, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mset, long offset)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__attr__offset}{t\_\-jit\_\-attr\_\-offset}. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__attrmod_ga8da2f33df7efd0c23b0b7a68ec402724}{jit\_\-attr\_\-offset\_\-array\_\-new} (char $\ast$name, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$type, long size, long flags, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mget, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mset, long offsetcount, long offset)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__attr__offset__array}{t\_\-jit\_\-attr\_\-offset\_\-array}. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__attrmod_ga867b4b84b380c259b0dada694b119fef}{jit\_\-attr\_\-filter\_\-clip\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__attr__filter__clip}{t\_\-jit\_\-attr\_\-filter\_\-clip}. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__attrmod_gaa0ab21ae210657bc79f02ac61c023b85}{jit\_\-attr\_\-filter\_\-proc\_\-new} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} proc)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__attr__filter__proc}{t\_\-jit\_\-attr\_\-filter\_\-proc}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_gaac1ed292f21de902e64b4a04ad00e2d5}{jit\_\-attr\_\-getlong} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as a long integer value. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_ga610b248e58c4026a004e73a6748715ca}{jit\_\-attr\_\-setlong} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long c)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as a long integer value. \item\end{DoxyCompactList}\item 
+float \hyperlink{group__attrmod_ga33a62b951e41b79d8d19907d96b093f6}{jit\_\-attr\_\-getfloat} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as a floating point value. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_gab30940565548004a6d2d48562aa2bc20}{jit\_\-attr\_\-setfloat} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, float c)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as a floating point value. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__attrmod_ga8e0197009251af617b25f9b27c277c21}{jit\_\-attr\_\-getsym} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as a symbol value. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_ga94cb0362d0ea100cdda79dd04abea5b3}{jit\_\-attr\_\-setsym} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$c)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as a symbol value. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_gae0183a2a3b6e01c510982ca459d81042}{jit\_\-attr\_\-getlong\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long max, long $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as an array of long integer values. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_ga7251db8eacbe7da48ed8ba887dbca6c0}{jit\_\-attr\_\-setlong\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long count, long $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as an array of long integer values. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_ga7f7021b95c16231de0a57489c40bd2e5}{jit\_\-attr\_\-getchar\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long max, \hyperlink{group__datatypes_ga65f85814a8290f9797005d3b28e7e5fc}{uchar} $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as an array of char values. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_ga3ce21cdc4980561a8b0d975230702f9a}{jit\_\-attr\_\-setchar\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long count, \hyperlink{group__datatypes_ga65f85814a8290f9797005d3b28e7e5fc}{uchar} $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as an array of char values. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_ga5282561e957ac1c113abf448250293da}{jit\_\-attr\_\-getfloat\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long max, float $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as an array of floating point values. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_gad1b9ac91879b07c1c054e90e1afef5c0}{jit\_\-attr\_\-setfloat\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long count, float $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as an array of floating point values. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_gac4994752c34ea46af06022e77e0ec229}{jit\_\-attr\_\-getdouble\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long max, double $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as an array of double precision floating point values. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_gad19a96b12e411560bafc66fae187c9f3}{jit\_\-attr\_\-setdouble\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long count, double $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as an array of double precision floating point values. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_gae6816dcde85981f51404a2194a4d6c9f}{jit\_\-attr\_\-getsym\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long max, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$vals)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value as an array of symbol values. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__attrmod_gaf0bdc59aa8a343f09d9ea4cf17541848}{jit\_\-attr\_\-setsym\_\-array} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long count, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$vals)
+\begin{DoxyCompactList}\small\item\em Sets attribute value as an array of symbol values. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__attrmod_ga86b458f3e1b105baa95cd7daa380d8f4}{jit\_\-attr\_\-symcompare} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name)
+\begin{DoxyCompactList}\small\item\em Compares symbol name with name provided. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__attrmod_ga92a547e00cde00059b6735fc6f371149}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-canget@{jit\_\-attr\_\-canget}}
+\index{jit\_\-attr\_\-canget@{jit\_\-attr\_\-canget}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-canget}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-canget ({\bf t\_\-jit\_\-attr} $\ast$ {\em x})}}
+\label{group__attrmod_ga92a547e00cde00059b6735fc6f371149}
+
+
+Retrieves attribute gettable flag. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+gettable flag
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga4cbadd8a5fb907e34faaef5368d2448e}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-canset@{jit\_\-attr\_\-canset}}
+\index{jit\_\-attr\_\-canset@{jit\_\-attr\_\-canset}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-canset}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-canset ({\bf t\_\-jit\_\-attr} $\ast$ {\em x})}}
+\label{group__attrmod_ga4cbadd8a5fb907e34faaef5368d2448e}
+
+
+Retrieves attribute settable flag. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+settable flag
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga867b4b84b380c259b0dada694b119fef}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-filter\_\-clip\_\-new@{jit\_\-attr\_\-filter\_\-clip\_\-new}}
+\index{jit\_\-attr\_\-filter\_\-clip\_\-new@{jit\_\-attr\_\-filter\_\-clip\_\-new}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-filter\_\-clip\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-attr\_\-filter\_\-clip\_\-new (void)}}
+\label{group__attrmod_ga867b4b84b380c259b0dada694b119fef}
+
+
+Constructs instance of \hyperlink{structt__jit__attr__filter__clip}{t\_\-jit\_\-attr\_\-filter\_\-clip}. \begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__attr__filter__clip}{t\_\-jit\_\-attr\_\-filter\_\-clip} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_gaa0ab21ae210657bc79f02ac61c023b85}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-filter\_\-proc\_\-new@{jit\_\-attr\_\-filter\_\-proc\_\-new}}
+\index{jit\_\-attr\_\-filter\_\-proc\_\-new@{jit\_\-attr\_\-filter\_\-proc\_\-new}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-filter\_\-proc\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-attr\_\-filter\_\-proc\_\-new ({\bf method} {\em proc})}}
+\label{group__attrmod_gaa0ab21ae210657bc79f02ac61c023b85}
+
+
+Constructs instance of \hyperlink{structt__jit__attr__filter__proc}{t\_\-jit\_\-attr\_\-filter\_\-proc}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em proc}]filter procedure\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__attr__filter__clip}{t\_\-jit\_\-attr\_\-filter\_\-clip} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga9a5cdc2a025611cacfe1dd41f87fd387}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-filterget@{jit\_\-attr\_\-filterget}}
+\index{jit\_\-attr\_\-filterget@{jit\_\-attr\_\-filterget}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-filterget}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-filterget ({\bf t\_\-jit\_\-attr} $\ast$ {\em x}, \/  void $\ast$ {\em y})}}
+\label{group__attrmod_ga9a5cdc2a025611cacfe1dd41f87fd387}
+
+
+Sets attribute getter filter. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer \item[{\em y}]getter filter object\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_gaa407b91c0f3a0084a20d4fab325a69ac}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-filterset@{jit\_\-attr\_\-filterset}}
+\index{jit\_\-attr\_\-filterset@{jit\_\-attr\_\-filterset}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-filterset}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-filterset ({\bf t\_\-jit\_\-attr} $\ast$ {\em x}, \/  void $\ast$ {\em y})}}
+\label{group__attrmod_gaa407b91c0f3a0084a20d4fab325a69ac}
+
+
+Sets attribute setter filter. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer \item[{\em y}]setter filter object\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_gab54f36f1cbdbdbb08ee83826ac3b47e5}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-get@{jit\_\-attr\_\-get}}
+\index{jit\_\-attr\_\-get@{jit\_\-attr\_\-get}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-get ({\bf t\_\-jit\_\-attr} $\ast$ {\em x}, \/  void $\ast$ {\em parent}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__attrmod_gab54f36f1cbdbdbb08ee83826ac3b47e5}
+
+
+Calls attribute getter to retrieve from parent object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer \item[{\em parent}]target object pointer \item[{\em ac}]pointer to argument count \item[{\em av}]pointer to argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga7f7021b95c16231de0a57489c40bd2e5}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getchar\_\-array@{jit\_\-attr\_\-getchar\_\-array}}
+\index{jit\_\-attr\_\-getchar\_\-array@{jit\_\-attr\_\-getchar\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getchar\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-getchar\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em max}, \/  {\bf uchar} $\ast$ {\em vals})}}
+\label{group__attrmod_ga7f7021b95c16231de0a57489c40bd2e5}
+
+
+Retrieves attribute value as an array of char values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em max}]maximum number of values to copy \item[{\em vals}]pointer to retrieved values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of values retrieved. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gac4994752c34ea46af06022e77e0ec229}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getdouble\_\-array@{jit\_\-attr\_\-getdouble\_\-array}}
+\index{jit\_\-attr\_\-getdouble\_\-array@{jit\_\-attr\_\-getdouble\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getdouble\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-getdouble\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em max}, \/  double $\ast$ {\em vals})}}
+\label{group__attrmod_gac4994752c34ea46af06022e77e0ec229}
+
+
+Retrieves attribute value as an array of double precision floating point values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em max}]maximum number of values to copy \item[{\em vals}]pointer to retrieved values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of values retrieved. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_ga33a62b951e41b79d8d19907d96b093f6}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getfloat@{jit\_\-attr\_\-getfloat}}
+\index{jit\_\-attr\_\-getfloat@{jit\_\-attr\_\-getfloat}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getfloat}]{\setlength{\rightskip}{0pt plus 5cm}float jit\_\-attr\_\-getfloat (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__attrmod_ga33a62b951e41b79d8d19907d96b093f6}
+
+
+Retrieves attribute value as a floating point value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+floating point value 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_ga5282561e957ac1c113abf448250293da}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getfloat\_\-array@{jit\_\-attr\_\-getfloat\_\-array}}
+\index{jit\_\-attr\_\-getfloat\_\-array@{jit\_\-attr\_\-getfloat\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getfloat\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-getfloat\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em max}, \/  float $\ast$ {\em vals})}}
+\label{group__attrmod_ga5282561e957ac1c113abf448250293da}
+
+
+Retrieves attribute value as an array of floating point values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em max}]maximum number of values to copy \item[{\em vals}]pointer to retrieved values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of values retrieved. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gaac1ed292f21de902e64b4a04ad00e2d5}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getlong@{jit\_\-attr\_\-getlong}}
+\index{jit\_\-attr\_\-getlong@{jit\_\-attr\_\-getlong}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getlong}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-getlong (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__attrmod_gaac1ed292f21de902e64b4a04ad00e2d5}
+
+
+Retrieves attribute value as a long integer value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long integer value 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gae0183a2a3b6e01c510982ca459d81042}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getlong\_\-array@{jit\_\-attr\_\-getlong\_\-array}}
+\index{jit\_\-attr\_\-getlong\_\-array@{jit\_\-attr\_\-getlong\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getlong\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-getlong\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em max}, \/  long $\ast$ {\em vals})}}
+\label{group__attrmod_gae0183a2a3b6e01c510982ca459d81042}
+
+
+Retrieves attribute value as an array of long integer values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em max}]maximum number of values to copy \item[{\em vals}]pointer to retrieved values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of values retrieved. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gadbc0727e253f6307bda9ac0becd132a9}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getmethod@{jit\_\-attr\_\-getmethod}}
+\index{jit\_\-attr\_\-getmethod@{jit\_\-attr\_\-getmethod}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getmethod}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} jit\_\-attr\_\-getmethod ({\bf t\_\-jit\_\-attr} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em methodname})}}
+\label{group__attrmod_gadbc0727e253f6307bda9ac0becd132a9}
+
+
+Retrieves attribute getter or setter method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer \item[{\em methodname}]\char`\"{}get\char`\"{} or \char`\"{}set\char`\"{} symbol\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+getter or setter method
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga0c557da38fc8b2d94ca1de983e7ad603}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getname@{jit\_\-attr\_\-getname}}
+\index{jit\_\-attr\_\-getname@{jit\_\-attr\_\-getname}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol} $\ast$ jit\_\-attr\_\-getname ({\bf t\_\-jit\_\-attr} $\ast$ {\em x})}}
+\label{group__attrmod_ga0c557da38fc8b2d94ca1de983e7ad603}
+
+
+Retrieves attribute name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+attribute name
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga8e0197009251af617b25f9b27c277c21}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getsym@{jit\_\-attr\_\-getsym}}
+\index{jit\_\-attr\_\-getsym@{jit\_\-attr\_\-getsym}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getsym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-attr\_\-getsym (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__attrmod_ga8e0197009251af617b25f9b27c277c21}
+
+
+Retrieves attribute value as a symbol value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+symbol value 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gae6816dcde85981f51404a2194a4d6c9f}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-getsym\_\-array@{jit\_\-attr\_\-getsym\_\-array}}
+\index{jit\_\-attr\_\-getsym\_\-array@{jit\_\-attr\_\-getsym\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-getsym\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-getsym\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em max}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em vals})}}
+\label{group__attrmod_gae6816dcde85981f51404a2194a4d6c9f}
+
+
+Retrieves attribute value as an array of symbol values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em max}]maximum number of values to copy \item[{\em vals}]pointer to retrieved values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of values retrieved. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gae0ff1b6ee9a3303bbd9a0b4416640c0b}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-gettype@{jit\_\-attr\_\-gettype}}
+\index{jit\_\-attr\_\-gettype@{jit\_\-attr\_\-gettype}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-gettype}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol} $\ast$ jit\_\-attr\_\-gettype ({\bf t\_\-jit\_\-attr} $\ast$ {\em x})}}
+\label{group__attrmod_gae0ff1b6ee9a3303bbd9a0b4416640c0b}
+
+
+Retrieves attribute type. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+attribute type
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga8da2f33df7efd0c23b0b7a68ec402724}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-offset\_\-array\_\-new@{jit\_\-attr\_\-offset\_\-array\_\-new}}
+\index{jit\_\-attr\_\-offset\_\-array\_\-new@{jit\_\-attr\_\-offset\_\-array\_\-new}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-offset\_\-array\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-attr\_\-offset\_\-array\_\-new (char $\ast$ {\em name}, \/  {\bf t\_\-symbol} $\ast$ {\em type}, \/  long {\em size}, \/  long {\em flags}, \/  {\bf method} {\em mget}, \/  {\bf method} {\em mset}, \/  long {\em offsetcount}, \/  long {\em offset})}}
+\label{group__attrmod_ga8da2f33df7efd0c23b0b7a68ec402724}
+
+
+Constructs instance of \hyperlink{structt__jit__attr__offset__array}{t\_\-jit\_\-attr\_\-offset\_\-array}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]attribute name \item[{\em type}]data type \item[{\em size}]maximum size \item[{\em flags}]privacy flags \item[{\em mget}]getter method \item[{\em mset}]setter method \item[{\em offsetcount}]byte offset to count struct member (if zero, remain fixed size with max size) \item[{\em offset}]byte offset to array struct member\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__attr__offset__array}{t\_\-jit\_\-attr\_\-offset\_\-array} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_gaf1539159e0a0bb0238b2cf9b03ac3308}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-offset\_\-new@{jit\_\-attr\_\-offset\_\-new}}
+\index{jit\_\-attr\_\-offset\_\-new@{jit\_\-attr\_\-offset\_\-new}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-offset\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-attr\_\-offset\_\-new (char $\ast$ {\em name}, \/  {\bf t\_\-symbol} $\ast$ {\em type}, \/  long {\em flags}, \/  {\bf method} {\em mget}, \/  {\bf method} {\em mset}, \/  long {\em offset})}}
+\label{group__attrmod_gaf1539159e0a0bb0238b2cf9b03ac3308}
+
+
+Constructs instance of \hyperlink{structt__jit__attr__offset}{t\_\-jit\_\-attr\_\-offset}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]attribute name \item[{\em type}]data type \item[{\em flags}]privacy flags \item[{\em mget}]getter method \item[{\em mset}]setter method \item[{\em offset}]byte offset to struct member\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__attr__offset}{t\_\-jit\_\-attr\_\-offset} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga04bb490b921cfd22290b8513d63702ec}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-set@{jit\_\-attr\_\-set}}
+\index{jit\_\-attr\_\-set@{jit\_\-attr\_\-set}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-set ({\bf t\_\-jit\_\-attr} $\ast$ {\em x}, \/  void $\ast$ {\em parent}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__attrmod_ga04bb490b921cfd22290b8513d63702ec}
+
+
+Calls attribute setter to set in parent object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer \item[{\em parent}]target object pointer \item[{\em ac}]argument count \item[{\em av}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga3ce21cdc4980561a8b0d975230702f9a}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setchar\_\-array@{jit\_\-attr\_\-setchar\_\-array}}
+\index{jit\_\-attr\_\-setchar\_\-array@{jit\_\-attr\_\-setchar\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setchar\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setchar\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em count}, \/  {\bf uchar} $\ast$ {\em vals})}}
+\label{group__attrmod_ga3ce21cdc4980561a8b0d975230702f9a}
+
+
+Sets attribute value as an array of char values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em count}]number of values \item[{\em vals}]pointer to values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gad19a96b12e411560bafc66fae187c9f3}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setdouble\_\-array@{jit\_\-attr\_\-setdouble\_\-array}}
+\index{jit\_\-attr\_\-setdouble\_\-array@{jit\_\-attr\_\-setdouble\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setdouble\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setdouble\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em count}, \/  double $\ast$ {\em vals})}}
+\label{group__attrmod_gad19a96b12e411560bafc66fae187c9f3}
+
+
+Sets attribute value as an array of double precision floating point values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em count}]number of values \item[{\em vals}]pointer to values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gab30940565548004a6d2d48562aa2bc20}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setfloat@{jit\_\-attr\_\-setfloat}}
+\index{jit\_\-attr\_\-setfloat@{jit\_\-attr\_\-setfloat}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setfloat}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setfloat (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  float {\em c})}}
+\label{group__attrmod_gab30940565548004a6d2d48562aa2bc20}
+
+
+Sets attribute value as a floating point value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em c}]value\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gad1b9ac91879b07c1c054e90e1afef5c0}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setfloat\_\-array@{jit\_\-attr\_\-setfloat\_\-array}}
+\index{jit\_\-attr\_\-setfloat\_\-array@{jit\_\-attr\_\-setfloat\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setfloat\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setfloat\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em count}, \/  float $\ast$ {\em vals})}}
+\label{group__attrmod_gad1b9ac91879b07c1c054e90e1afef5c0}
+
+
+Sets attribute value as an array of floating point values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em count}]number of values \item[{\em vals}]pointer to values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_ga610b248e58c4026a004e73a6748715ca}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setlong@{jit\_\-attr\_\-setlong}}
+\index{jit\_\-attr\_\-setlong@{jit\_\-attr\_\-setlong}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setlong}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setlong (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em c})}}
+\label{group__attrmod_ga610b248e58c4026a004e73a6748715ca}
+
+
+Sets attribute value as a long integer value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em c}]value\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_ga7251db8eacbe7da48ed8ba887dbca6c0}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setlong\_\-array@{jit\_\-attr\_\-setlong\_\-array}}
+\index{jit\_\-attr\_\-setlong\_\-array@{jit\_\-attr\_\-setlong\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setlong\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setlong\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em count}, \/  long $\ast$ {\em vals})}}
+\label{group__attrmod_ga7251db8eacbe7da48ed8ba887dbca6c0}
+
+
+Sets attribute value as an array of long integer values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em count}]number of values \item[{\em vals}]pointer to values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_ga94cb0362d0ea100cdda79dd04abea5b3}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setsym@{jit\_\-attr\_\-setsym}}
+\index{jit\_\-attr\_\-setsym@{jit\_\-attr\_\-setsym}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setsym}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setsym (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  {\bf t\_\-symbol} $\ast$ {\em c})}}
+\label{group__attrmod_ga94cb0362d0ea100cdda79dd04abea5b3}
+
+
+Sets attribute value as a symbol value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em c}]value\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_gaf0bdc59aa8a343f09d9ea4cf17541848}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-setsym\_\-array@{jit\_\-attr\_\-setsym\_\-array}}
+\index{jit\_\-attr\_\-setsym\_\-array@{jit\_\-attr\_\-setsym\_\-array}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-setsym\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-attr\_\-setsym\_\-array (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em count}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em vals})}}
+\label{group__attrmod_gaf0bdc59aa8a343f09d9ea4cf17541848}
+
+
+Sets attribute value as an array of symbol values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name \item[{\em count}]number of values \item[{\em vals}]pointer to values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_ga86b458f3e1b105baa95cd7daa380d8f4}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-symcompare@{jit\_\-attr\_\-symcompare}}
+\index{jit\_\-attr\_\-symcompare@{jit\_\-attr\_\-symcompare}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-symcompare}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-symcompare (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em name})}}
+\label{group__attrmod_ga86b458f3e1b105baa95cd7daa380d8f4}
+
+
+Compares symbol name with name provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer \item[{\em name}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if equal, 0 if not equal 
+\end{DoxyReturn}
+\hypertarget{group__attrmod_ga5c71cda4f1df64ec56442be1a7278c99}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-usercanget@{jit\_\-attr\_\-usercanget}}
+\index{jit\_\-attr\_\-usercanget@{jit\_\-attr\_\-usercanget}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-usercanget}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-usercanget ({\bf t\_\-jit\_\-attr} $\ast$ {\em x})}}
+\label{group__attrmod_ga5c71cda4f1df64ec56442be1a7278c99}
+
+
+Retrieves attribute user gettable flag. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+user gettable flag
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga89141c07259e2b3a568b7879874a20be}{
+\index{attrmod@{attrmod}!jit\_\-attr\_\-usercanset@{jit\_\-attr\_\-usercanset}}
+\index{jit\_\-attr\_\-usercanset@{jit\_\-attr\_\-usercanset}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attr\_\-usercanset}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-attr\_\-usercanset ({\bf t\_\-jit\_\-attr} $\ast$ {\em x})}}
+\label{group__attrmod_ga89141c07259e2b3a568b7879874a20be}
+
+
+Retrieves attribute user settable flag. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]attribute object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+user settable flag
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of any attribute obejct. 
+\end{DoxyWarning}
+\hypertarget{group__attrmod_ga1f1e9ce77ed7e385a52f3c91fcd0b348}{
+\index{attrmod@{attrmod}!jit\_\-attribute\_\-new@{jit\_\-attribute\_\-new}}
+\index{jit\_\-attribute\_\-new@{jit\_\-attribute\_\-new}!attrmod@{attrmod}}
+\subsubsection[{jit\_\-attribute\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-attribute\_\-new (char $\ast$ {\em name}, \/  {\bf t\_\-symbol} $\ast$ {\em type}, \/  long {\em flags}, \/  {\bf method} {\em mget}, \/  {\bf method} {\em mset})}}
+\label{group__attrmod_ga1f1e9ce77ed7e385a52f3c91fcd0b348}
+
+
+Constructs instance of \hyperlink{structt__jit__attribute}{t\_\-jit\_\-attribute}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]attribute name \item[{\em type}]data type \item[{\em flags}]privacy flags \item[{\em mget}]getter method \item[{\em mset}]setter method\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__attribute}{t\_\-jit\_\-attribute} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}

@@ -1,0 +1,313 @@
+\hypertarget{group__jmouse}{
+\section{Mouse and Keyboard}
+\label{group__jmouse}\index{Mouse and Keyboard@{Mouse and Keyboard}}
+}
+
+
+Collaboration diagram for Mouse and Keyboard:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=151pt]{group__jmouse}
+\end{center}
+\end{figure}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__jmouse_gae6e0f3193b01069c1bce512ab787a681}{t\_\-modifiers} \{ \par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681af8f7d9a027fb95ebf4c5422af789cb43}{eCommandKey} =  1, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a7ce9f8e318648eef4ca2c0cdcf02d388}{eShiftKey} =  2, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aed96b885e30356b4fe9fa683bc7642a5}{eControlKey} =  4, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aa397f65aeb5383d87df9e9a6aac41f3d}{eAltKey} =  8, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a8e53fc2f0be6a158661347c272ac99dc}{eLeftButton} =  16, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681ac8bf4c23189562374f313fd943394f7a}{eRightButton} =  32, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681af5275c58c907c6732c257cac8ba8f56f}{eMiddleButton} =  64, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aeb8f2adab43f90b789abfec48c1b7ae0}{ePopupMenu} =  128, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aa20bd26db483cff1f37697899767fdb3}{eCapsLock} =  256, 
+\par
+\hyperlink{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a5d0dfbd38a8045f96ba1c9f66bfc270b}{eAutoRepeat} =  512
+ \}
+\begin{DoxyCompactList}\small\item\em Bit mask values for various meta-\/key presses on the keyboard. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__jmouse_ga4d6e7dd3d4d260c28f3bce9b9f36f764}{t\_\-jmouse\_\-cursortype} \{ \par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7e469e4eae58ff8ba0e04c05e7d01e27}{JMOUSE\_\-CURSOR\_\-NONE}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac8245af5ede8e5566629f1a56b07be79}{JMOUSE\_\-CURSOR\_\-ARROW}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac17292952b3917c5589840be71d7ce59}{JMOUSE\_\-CURSOR\_\-WAIT}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac05d3d2e1d07b631a46539736686d4c3}{JMOUSE\_\-CURSOR\_\-IBEAM}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a35a12bc385a80316bc6896d1516a4fdb}{JMOUSE\_\-CURSOR\_\-CROSSHAIR}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7250b137e39249c7bb6c1c6eb8922c1f}{JMOUSE\_\-CURSOR\_\-COPYING}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764abccdb4469e6489b6a5dfaaf22ce8ba72}{JMOUSE\_\-CURSOR\_\-POINTINGHAND}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a774be99ae9208193fcc12e9892c5fb13}{JMOUSE\_\-CURSOR\_\-DRAGGINGHAND}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ab15152ccd94c5d58bd39762623936c0f}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTRIGHT}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a52c6ff88129c46cd0185ed62e25d79c9}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-UPDOWN}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7d196b58e9ad2fedd1364f18241538bd}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-FOURWAY}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764adfebe355c0d326a5b00eccef325b26e8}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPEDGE}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a1cb50c2c1de7463dfee84c76b4d97033}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMEDGE}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a4ab4bb1b2fc5ec983bd7cf47caaca6d0}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTEDGE}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764afea1f12d5ea482fe2c1975a73e814f70}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-RIGHTEDGE}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a12bb9da9116a40054c05181106ccc41d}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPLEFTCORNER}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a1ae8f97d47638054cc83f62a30dc8a69}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPRIGHTCORNER}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a2f3381b1c55f90dea6758fb5c5329183}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMLEFTCORNER}, 
+\par
+\hyperlink{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a4d2d8c6debf92b7113cca58446b9fb65}{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMRIGHTCORNER}
+ \}
+\begin{DoxyCompactList}\small\item\em Mouse cursor types. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jmouse_gae6e0f3193b01069c1bce512ab787a681}{t\_\-modifiers} \hyperlink{group__jmouse_gaba226c92f2227a75e696e3d302d92ca1}{jkeyboard\_\-getcurrentmodifiers} ()
+\begin{DoxyCompactList}\small\item\em Return the last known combination of modifier keys being held by the user. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jmouse_gae6e0f3193b01069c1bce512ab787a681}{t\_\-modifiers} \hyperlink{group__jmouse_ga8e41a07bb098e3855b9c60f74d29337e}{jkeyboard\_\-getcurrentmodifiers\_\-realtime} ()
+\begin{DoxyCompactList}\small\item\em Return the current combination of modifier keys being held by the user. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmouse_gaff8fb5e060894aa39293153424c5c939}{jmouse\_\-getposition\_\-global} (int $\ast$x, int $\ast$y)
+\begin{DoxyCompactList}\small\item\em Get the position of the mouse cursor in screen coordinates. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmouse_ga0e92a3887f089a7cc52d142b4e99daac}{jmouse\_\-setposition\_\-global} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Set the position of the mouse cursor in screen coordinates. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmouse_ga030290f12df92eb02c507ed271ffcde9}{jmouse\_\-setposition\_\-view} (\hyperlink{structt__object}{t\_\-object} $\ast$patcherview, double cx, double cy)
+\begin{DoxyCompactList}\small\item\em Set the position of the mouse cursor relative to the patcher canvas coordinates. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmouse_ga8d209aa8fadfbe4d5038b2041eae801e}{jmouse\_\-setposition\_\-box} (\hyperlink{structt__object}{t\_\-object} $\ast$patcherview, \hyperlink{structt__object}{t\_\-object} $\ast$box, double bx, double by)
+\begin{DoxyCompactList}\small\item\em Set the position of the mouse cursor relative to a box within the patcher canvas coordinates. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmouse_gaf8bd554aa25bb4ccd3945a227876fe47}{jmouse\_\-setcursor} (\hyperlink{structt__object}{t\_\-object} $\ast$patcherview, \hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{group__jmouse_ga4d6e7dd3d4d260c28f3bce9b9f36f764}{t\_\-jmouse\_\-cursortype} type)
+\begin{DoxyCompactList}\small\item\em Set the mouse cursor. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__jmouse_ga4d6e7dd3d4d260c28f3bce9b9f36f764}{
+\index{jmouse@{jmouse}!t\_\-jmouse\_\-cursortype@{t\_\-jmouse\_\-cursortype}}
+\index{t\_\-jmouse\_\-cursortype@{t\_\-jmouse\_\-cursortype}!jmouse@{jmouse}}
+\subsubsection[{t\_\-jmouse\_\-cursortype}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-jmouse\_\-cursortype}}}
+\label{group__jmouse_ga4d6e7dd3d4d260c28f3bce9b9f36f764}
+
+
+Mouse cursor types. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JMOUSE\_\-CURSOR\_\-NONE@{JMOUSE\_\-CURSOR\_\-NONE}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-NONE@{JMOUSE\_\-CURSOR\_\-NONE}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7e469e4eae58ff8ba0e04c05e7d01e27}{
+JMOUSE\_\-CURSOR\_\-NONE}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7e469e4eae58ff8ba0e04c05e7d01e27}
+}]None. \index{JMOUSE\_\-CURSOR\_\-ARROW@{JMOUSE\_\-CURSOR\_\-ARROW}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-ARROW@{JMOUSE\_\-CURSOR\_\-ARROW}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac8245af5ede8e5566629f1a56b07be79}{
+JMOUSE\_\-CURSOR\_\-ARROW}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac8245af5ede8e5566629f1a56b07be79}
+}]Arrow. \index{JMOUSE\_\-CURSOR\_\-WAIT@{JMOUSE\_\-CURSOR\_\-WAIT}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-WAIT@{JMOUSE\_\-CURSOR\_\-WAIT}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac17292952b3917c5589840be71d7ce59}{
+JMOUSE\_\-CURSOR\_\-WAIT}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac17292952b3917c5589840be71d7ce59}
+}]Wait. \index{JMOUSE\_\-CURSOR\_\-IBEAM@{JMOUSE\_\-CURSOR\_\-IBEAM}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-IBEAM@{JMOUSE\_\-CURSOR\_\-IBEAM}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac05d3d2e1d07b631a46539736686d4c3}{
+JMOUSE\_\-CURSOR\_\-IBEAM}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ac05d3d2e1d07b631a46539736686d4c3}
+}]I-\/Beam. \index{JMOUSE\_\-CURSOR\_\-CROSSHAIR@{JMOUSE\_\-CURSOR\_\-CROSSHAIR}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-CROSSHAIR@{JMOUSE\_\-CURSOR\_\-CROSSHAIR}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a35a12bc385a80316bc6896d1516a4fdb}{
+JMOUSE\_\-CURSOR\_\-CROSSHAIR}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a35a12bc385a80316bc6896d1516a4fdb}
+}]Crosshair. \index{JMOUSE\_\-CURSOR\_\-COPYING@{JMOUSE\_\-CURSOR\_\-COPYING}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-COPYING@{JMOUSE\_\-CURSOR\_\-COPYING}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7250b137e39249c7bb6c1c6eb8922c1f}{
+JMOUSE\_\-CURSOR\_\-COPYING}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7250b137e39249c7bb6c1c6eb8922c1f}
+}]Copying. \index{JMOUSE\_\-CURSOR\_\-POINTINGHAND@{JMOUSE\_\-CURSOR\_\-POINTINGHAND}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-POINTINGHAND@{JMOUSE\_\-CURSOR\_\-POINTINGHAND}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764abccdb4469e6489b6a5dfaaf22ce8ba72}{
+JMOUSE\_\-CURSOR\_\-POINTINGHAND}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764abccdb4469e6489b6a5dfaaf22ce8ba72}
+}]Pointing Hand. \index{JMOUSE\_\-CURSOR\_\-DRAGGINGHAND@{JMOUSE\_\-CURSOR\_\-DRAGGINGHAND}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-DRAGGINGHAND@{JMOUSE\_\-CURSOR\_\-DRAGGINGHAND}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a774be99ae9208193fcc12e9892c5fb13}{
+JMOUSE\_\-CURSOR\_\-DRAGGINGHAND}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a774be99ae9208193fcc12e9892c5fb13}
+}]Dragging Hand. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTRIGHT@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTRIGHT}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTRIGHT@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTRIGHT}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ab15152ccd94c5d58bd39762623936c0f}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTRIGHT}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764ab15152ccd94c5d58bd39762623936c0f}
+}]Left-\/Right. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-UPDOWN@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-UPDOWN}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-UPDOWN@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-UPDOWN}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a52c6ff88129c46cd0185ed62e25d79c9}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-UPDOWN}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a52c6ff88129c46cd0185ed62e25d79c9}
+}]Up-\/Down. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-FOURWAY@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-FOURWAY}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-FOURWAY@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-FOURWAY}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7d196b58e9ad2fedd1364f18241538bd}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-FOURWAY}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a7d196b58e9ad2fedd1364f18241538bd}
+}]Four Way. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPEDGE}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPEDGE}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764adfebe355c0d326a5b00eccef325b26e8}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPEDGE}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764adfebe355c0d326a5b00eccef325b26e8}
+}]Top Edge. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMEDGE}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMEDGE}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a1cb50c2c1de7463dfee84c76b4d97033}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMEDGE}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a1cb50c2c1de7463dfee84c76b4d97033}
+}]Bottom Edge. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTEDGE}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTEDGE}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a4ab4bb1b2fc5ec983bd7cf47caaca6d0}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-LEFTEDGE}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a4ab4bb1b2fc5ec983bd7cf47caaca6d0}
+}]Left Edge. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-RIGHTEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-RIGHTEDGE}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-RIGHTEDGE@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-RIGHTEDGE}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764afea1f12d5ea482fe2c1975a73e814f70}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-RIGHTEDGE}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764afea1f12d5ea482fe2c1975a73e814f70}
+}]Right Edge. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPLEFTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPLEFTCORNER}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPLEFTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPLEFTCORNER}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a12bb9da9116a40054c05181106ccc41d}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPLEFTCORNER}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a12bb9da9116a40054c05181106ccc41d}
+}]Top-\/Left Corner. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPRIGHTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPRIGHTCORNER}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPRIGHTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPRIGHTCORNER}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a1ae8f97d47638054cc83f62a30dc8a69}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-TOPRIGHTCORNER}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a1ae8f97d47638054cc83f62a30dc8a69}
+}]Top-\/Right Corner. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMLEFTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMLEFTCORNER}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMLEFTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMLEFTCORNER}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a2f3381b1c55f90dea6758fb5c5329183}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMLEFTCORNER}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a2f3381b1c55f90dea6758fb5c5329183}
+}]Bottom-\/Left Corner. \index{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMRIGHTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMRIGHTCORNER}!jmouse@{jmouse}}\index{jmouse@{jmouse}!JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMRIGHTCORNER@{JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMRIGHTCORNER}}\item[{\em 
+\hypertarget{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a4d2d8c6debf92b7113cca58446b9fb65}{
+JMOUSE\_\-CURSOR\_\-RESIZE\_\-BOTTOMRIGHTCORNER}
+\label{group__jmouse_gga4d6e7dd3d4d260c28f3bce9b9f36f764a4d2d8c6debf92b7113cca58446b9fb65}
+}]Bottom-\/Right Corner. \end{description}
+\end{Desc}
+
+\hypertarget{group__jmouse_gae6e0f3193b01069c1bce512ab787a681}{
+\index{jmouse@{jmouse}!t\_\-modifiers@{t\_\-modifiers}}
+\index{t\_\-modifiers@{t\_\-modifiers}!jmouse@{jmouse}}
+\subsubsection[{t\_\-modifiers}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-modifiers}}}
+\label{group__jmouse_gae6e0f3193b01069c1bce512ab787a681}
+
+
+Bit mask values for various meta-\/key presses on the keyboard. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{eCommandKey@{eCommandKey}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eCommandKey@{eCommandKey}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681af8f7d9a027fb95ebf4c5422af789cb43}{
+eCommandKey}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681af8f7d9a027fb95ebf4c5422af789cb43}
+}]Command Key. \index{eShiftKey@{eShiftKey}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eShiftKey@{eShiftKey}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a7ce9f8e318648eef4ca2c0cdcf02d388}{
+eShiftKey}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a7ce9f8e318648eef4ca2c0cdcf02d388}
+}]Shift Key. \index{eControlKey@{eControlKey}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eControlKey@{eControlKey}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aed96b885e30356b4fe9fa683bc7642a5}{
+eControlKey}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aed96b885e30356b4fe9fa683bc7642a5}
+}]Control Key. \index{eAltKey@{eAltKey}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eAltKey@{eAltKey}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aa397f65aeb5383d87df9e9a6aac41f3d}{
+eAltKey}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aa397f65aeb5383d87df9e9a6aac41f3d}
+}]Alt Key. \index{eLeftButton@{eLeftButton}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eLeftButton@{eLeftButton}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a8e53fc2f0be6a158661347c272ac99dc}{
+eLeftButton}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a8e53fc2f0be6a158661347c272ac99dc}
+}]Left mouse button. \index{eRightButton@{eRightButton}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eRightButton@{eRightButton}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681ac8bf4c23189562374f313fd943394f7a}{
+eRightButton}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681ac8bf4c23189562374f313fd943394f7a}
+}]Right mouse button. \index{eMiddleButton@{eMiddleButton}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eMiddleButton@{eMiddleButton}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681af5275c58c907c6732c257cac8ba8f56f}{
+eMiddleButton}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681af5275c58c907c6732c257cac8ba8f56f}
+}]Middle mouse button. \index{ePopupMenu@{ePopupMenu}!jmouse@{jmouse}}\index{jmouse@{jmouse}!ePopupMenu@{ePopupMenu}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aeb8f2adab43f90b789abfec48c1b7ae0}{
+ePopupMenu}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aeb8f2adab43f90b789abfec48c1b7ae0}
+}]Popup Menu (contextual menu requested). \index{eCapsLock@{eCapsLock}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eCapsLock@{eCapsLock}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aa20bd26db483cff1f37697899767fdb3}{
+eCapsLock}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681aa20bd26db483cff1f37697899767fdb3}
+}]Caps lock. \index{eAutoRepeat@{eAutoRepeat}!jmouse@{jmouse}}\index{jmouse@{jmouse}!eAutoRepeat@{eAutoRepeat}}\item[{\em 
+\hypertarget{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a5d0dfbd38a8045f96ba1c9f66bfc270b}{
+eAutoRepeat}
+\label{group__jmouse_ggae6e0f3193b01069c1bce512ab787a681a5d0dfbd38a8045f96ba1c9f66bfc270b}
+}]Key is generated by key press auto-\/repeat. \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__jmouse_gaba226c92f2227a75e696e3d302d92ca1}{
+\index{jmouse@{jmouse}!jkeyboard\_\-getcurrentmodifiers@{jkeyboard\_\-getcurrentmodifiers}}
+\index{jkeyboard\_\-getcurrentmodifiers@{jkeyboard\_\-getcurrentmodifiers}!jmouse@{jmouse}}
+\subsubsection[{jkeyboard\_\-getcurrentmodifiers}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-modifiers} jkeyboard\_\-getcurrentmodifiers ()}}
+\label{group__jmouse_gaba226c92f2227a75e696e3d302d92ca1}
+
+
+Return the last known combination of modifier keys being held by the user. \begin{DoxyReturn}{Returns}
+The current modifier keys that are activated. 
+\end{DoxyReturn}
+\hypertarget{group__jmouse_ga8e41a07bb098e3855b9c60f74d29337e}{
+\index{jmouse@{jmouse}!jkeyboard\_\-getcurrentmodifiers\_\-realtime@{jkeyboard\_\-getcurrentmodifiers\_\-realtime}}
+\index{jkeyboard\_\-getcurrentmodifiers\_\-realtime@{jkeyboard\_\-getcurrentmodifiers\_\-realtime}!jmouse@{jmouse}}
+\subsubsection[{jkeyboard\_\-getcurrentmodifiers\_\-realtime}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-modifiers} jkeyboard\_\-getcurrentmodifiers\_\-realtime ()}}
+\label{group__jmouse_ga8e41a07bb098e3855b9c60f74d29337e}
+
+
+Return the current combination of modifier keys being held by the user. \begin{DoxyReturn}{Returns}
+The current modifier keys that are activated. 
+\end{DoxyReturn}
+\hypertarget{group__jmouse_gaff8fb5e060894aa39293153424c5c939}{
+\index{jmouse@{jmouse}!jmouse\_\-getposition\_\-global@{jmouse\_\-getposition\_\-global}}
+\index{jmouse\_\-getposition\_\-global@{jmouse\_\-getposition\_\-global}!jmouse@{jmouse}}
+\subsubsection[{jmouse\_\-getposition\_\-global}]{\setlength{\rightskip}{0pt plus 5cm}void jmouse\_\-getposition\_\-global (int $\ast$ {\em x}, \/  int $\ast$ {\em y})}}
+\label{group__jmouse_gaff8fb5e060894aa39293153424c5c939}
+
+
+Get the position of the mouse cursor in screen coordinates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The address of a variable to hold the x-\/coordinate upon return. \item[{\em y}]The address of a variable to hold the y-\/coordinate upon return. \end{DoxyParams}
+\hypertarget{group__jmouse_gaf8bd554aa25bb4ccd3945a227876fe47}{
+\index{jmouse@{jmouse}!jmouse\_\-setcursor@{jmouse\_\-setcursor}}
+\index{jmouse\_\-setcursor@{jmouse\_\-setcursor}!jmouse@{jmouse}}
+\subsubsection[{jmouse\_\-setcursor}]{\setlength{\rightskip}{0pt plus 5cm}void jmouse\_\-setcursor ({\bf t\_\-object} $\ast$ {\em patcherview}, \/  {\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-jmouse\_\-cursortype} {\em type})}}
+\label{group__jmouse_gaf8bd554aa25bb4ccd3945a227876fe47}
+
+
+Set the mouse cursor. 
+\begin{DoxyParams}{Parameters}
+\item[{\em patcherview}]The patcherview for which the cursor should be applied. \item[{\em box}]The box for which the cursor should be applied. \item[{\em type}]The type of cursor for the mouse to use. \end{DoxyParams}
+\hypertarget{group__jmouse_ga8d209aa8fadfbe4d5038b2041eae801e}{
+\index{jmouse@{jmouse}!jmouse\_\-setposition\_\-box@{jmouse\_\-setposition\_\-box}}
+\index{jmouse\_\-setposition\_\-box@{jmouse\_\-setposition\_\-box}!jmouse@{jmouse}}
+\subsubsection[{jmouse\_\-setposition\_\-box}]{\setlength{\rightskip}{0pt plus 5cm}void jmouse\_\-setposition\_\-box ({\bf t\_\-object} $\ast$ {\em patcherview}, \/  {\bf t\_\-object} $\ast$ {\em box}, \/  double {\em bx}, \/  double {\em by})}}
+\label{group__jmouse_ga8d209aa8fadfbe4d5038b2041eae801e}
+
+
+Set the position of the mouse cursor relative to a box within the patcher canvas coordinates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em patcherview}]The patcherview containing the box upon which the mouse coordinates are based. \item[{\em box}]The box upon which the mouse coordinates are based. \item[{\em bx}]The new x-\/coordinate of the mouse cursor position. \item[{\em by}]The new y-\/coordinate of the mouse cursor position. \end{DoxyParams}
+\hypertarget{group__jmouse_ga0e92a3887f089a7cc52d142b4e99daac}{
+\index{jmouse@{jmouse}!jmouse\_\-setposition\_\-global@{jmouse\_\-setposition\_\-global}}
+\index{jmouse\_\-setposition\_\-global@{jmouse\_\-setposition\_\-global}!jmouse@{jmouse}}
+\subsubsection[{jmouse\_\-setposition\_\-global}]{\setlength{\rightskip}{0pt plus 5cm}void jmouse\_\-setposition\_\-global (int {\em x}, \/  int {\em y})}}
+\label{group__jmouse_ga0e92a3887f089a7cc52d142b4e99daac}
+
+
+Set the position of the mouse cursor in screen coordinates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The new x-\/coordinate of the mouse cursor position. \item[{\em y}]The new y-\/coordinate of the mouse cursor position. \end{DoxyParams}
+\hypertarget{group__jmouse_ga030290f12df92eb02c507ed271ffcde9}{
+\index{jmouse@{jmouse}!jmouse\_\-setposition\_\-view@{jmouse\_\-setposition\_\-view}}
+\index{jmouse\_\-setposition\_\-view@{jmouse\_\-setposition\_\-view}!jmouse@{jmouse}}
+\subsubsection[{jmouse\_\-setposition\_\-view}]{\setlength{\rightskip}{0pt plus 5cm}void jmouse\_\-setposition\_\-view ({\bf t\_\-object} $\ast$ {\em patcherview}, \/  double {\em cx}, \/  double {\em cy})}}
+\label{group__jmouse_ga030290f12df92eb02c507ed271ffcde9}
+
+
+Set the position of the mouse cursor relative to the patcher canvas coordinates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em patcherview}]The patcherview upon which the mouse coordinates are based. \item[{\em cx}]The new x-\/coordinate of the mouse cursor position. \item[{\em cy}]The new y-\/coordinate of the mouse cursor position. \end{DoxyParams}

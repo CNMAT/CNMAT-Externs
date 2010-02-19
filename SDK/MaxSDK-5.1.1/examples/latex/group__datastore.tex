@@ -1,0 +1,139 @@
+\hypertarget{group__datastore}{
+\section{Data Storage}
+\label{group__datastore}\index{Data Storage@{Data Storage}}
+}
+
+
+Max provides a number of ways of storing and manipulating data at a high level.  
+
+
+Collaboration diagram for Data Storage:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=132pt]{group__datastore}
+\end{center}
+\end{figure}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__atomarray}{Atom Array}
+
+
+\begin{DoxyCompactList}\small\item\em Max's atomarray object is a container for an array of atoms with an interface for manipulating that array. \item\end{DoxyCompactList}\item 
+\hyperlink{group__database}{Database}
+
+
+\begin{DoxyCompactList}\small\item\em Max's database support currently consists of a SQLite ( \href{http://sqlite.org}{\tt http://sqlite.org} ) extension which is loaded dynamically by Max at launch time. \item\end{DoxyCompactList}\item 
+\hyperlink{group__dictionary}{Dictionary}
+
+
+\begin{DoxyCompactList}\small\item\em In Max 5, we have a new \char`\"{}dictionary\char`\"{} object which can be used for object prototypes, object serialization, object constructors, and other tasks. \item\end{DoxyCompactList}\item 
+\hyperlink{group__hashtab}{Hash Table}
+
+
+\begin{DoxyCompactList}\small\item\em Max's hashtab object implements a hash table ( \href{http://en.wikipedia.org/wiki/Hash_table}{\tt http://en.wikipedia.org/wiki/Hash\_\-table} ). \item\end{DoxyCompactList}\item 
+\hyperlink{group__indexmap}{Index Map}
+
+
+\begin{DoxyCompactList}\small\item\em An indexmap is basically a managed array of pointers, but it allows you to derive relatively quickly the index from a pointer in the array. \item\end{DoxyCompactList}\item 
+\hyperlink{group__linklist}{Linked List}
+
+
+\begin{DoxyCompactList}\small\item\em Max's linklist object implements a doubly-\/linked-\/list ( \href{http://en.wikipedia.org/wiki/Linked_list}{\tt http://en.wikipedia.org/wiki/Linked\_\-list} ) together with a high-\/level interface for manipulating and accessing values in the list. \item\end{DoxyCompactList}\item 
+\hyperlink{group__quickmap}{Quick Map}
+
+
+\begin{DoxyCompactList}\small\item\em A quickmap implements a pair of \hyperlink{structt__hashtab}{t\_\-hashtab} hash tables so that it is fast to look up a unique value for a unique key or vice-\/versa. \item\end{DoxyCompactList}\item 
+\hyperlink{group__string}{String Object}
+
+
+\begin{DoxyCompactList}\small\item\em Max's string object is a simple wrapper for c-\/strings, useful when working with Max's \hyperlink{structt__dictionary}{t\_\-dictionary}, \hyperlink{structt__linklist}{t\_\-linklist}, or \hyperlink{structt__hashtab}{t\_\-hashtab}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__symobject}{Symbol Object}
+
+
+\begin{DoxyCompactList}\small\item\em The symobject class is a simple object that wraps a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ together with a couple of additional fields. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef long($\ast$ \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} )(void $\ast$, void $\ast$)
+\begin{DoxyCompactList}\small\item\em Comparison function pointer type. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags} \{ \par
+\hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348adc630c58c8e958a404553a08db6fd180}{OBJ\_\-FLAG\_\-OBJ} =  0x00000000, 
+\par
+\hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348aee2810996bf0475ddcb07b039b162d52}{OBJ\_\-FLAG\_\-REF} =  0x00000001, 
+\par
+\hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a862748073762ebc9f5899a8c1d63053a}{OBJ\_\-FLAG\_\-DATA} =  0x00000002, 
+\par
+\hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a03c245bc502773743d2ff575208a8b67}{OBJ\_\-FLAG\_\-MEMORY} =  0x00000004, 
+\par
+\hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a7551721629504fee7ecf5973e467de80}{OBJ\_\-FLAG\_\-SILENT} =  0x00000100, 
+\par
+\hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a20be48992fc9be2b12940730c09d704c}{OBJ\_\-FLAG\_\-INHERITABLE} =  0x00000200
+ \}
+\begin{DoxyCompactList}\small\item\em Flags used in linklist and hashtab objects. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max provides a number of ways of storing and manipulating data at a high level. It is recommended to use Max's data storage mechanisms where possible, as Max's systems are designed for thread-\/safety and integration with the rest of Max API. 
+
+\subsection{Typedef Documentation}
+\hypertarget{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{
+\index{datastore@{datastore}!t\_\-cmpfn@{t\_\-cmpfn}}
+\index{t\_\-cmpfn@{t\_\-cmpfn}!datastore@{datastore}}
+\subsubsection[{t\_\-cmpfn}]{\setlength{\rightskip}{0pt plus 5cm}typedef long($\ast$ {\bf t\_\-cmpfn})(void $\ast$, void $\ast$)}}
+\label{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}
+
+
+Comparison function pointer type. Methods that require a comparison function pointer to be passed in use this type. It should return {\ttfamily true} or {\ttfamily false} depending on the outcome of the comparison of the two linklist items passed in as arguments.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_ga2a991fb645404fe7d9d3327e5a386b80}{linklist\_\-match()} 
+
+\hyperlink{group__hashtab_gadc142f0a2a64417bb8b8d3c2959924fd}{hashtab\_\-findfirst()} 
+
+\hyperlink{group__indexmap_ga37c44ae6f93722ca5a722839ac62966d}{indexmap\_\-sort()} 
+\end{DoxySeeAlso}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{
+\index{datastore@{datastore}!e\_\-max\_\-datastore\_\-flags@{e\_\-max\_\-datastore\_\-flags}}
+\index{e\_\-max\_\-datastore\_\-flags@{e\_\-max\_\-datastore\_\-flags}!datastore@{datastore}}
+\subsubsection[{e\_\-max\_\-datastore\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-datastore\_\-flags}}}
+\label{group__datastore_gaa858d4b3815076d79624c39d9ca59348}
+
+
+Flags used in linklist and hashtab objects. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{OBJ\_\-FLAG\_\-OBJ@{OBJ\_\-FLAG\_\-OBJ}!datastore@{datastore}}\index{datastore@{datastore}!OBJ\_\-FLAG\_\-OBJ@{OBJ\_\-FLAG\_\-OBJ}}\item[{\em 
+\hypertarget{group__datastore_ggaa858d4b3815076d79624c39d9ca59348adc630c58c8e958a404553a08db6fd180}{
+OBJ\_\-FLAG\_\-OBJ}
+\label{group__datastore_ggaa858d4b3815076d79624c39d9ca59348adc630c58c8e958a404553a08db6fd180}
+}]free using \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} \index{OBJ\_\-FLAG\_\-REF@{OBJ\_\-FLAG\_\-REF}!datastore@{datastore}}\index{datastore@{datastore}!OBJ\_\-FLAG\_\-REF@{OBJ\_\-FLAG\_\-REF}}\item[{\em 
+\hypertarget{group__datastore_ggaa858d4b3815076d79624c39d9ca59348aee2810996bf0475ddcb07b039b162d52}{
+OBJ\_\-FLAG\_\-REF}
+\label{group__datastore_ggaa858d4b3815076d79624c39d9ca59348aee2810996bf0475ddcb07b039b162d52}
+}]don't free \index{OBJ\_\-FLAG\_\-DATA@{OBJ\_\-FLAG\_\-DATA}!datastore@{datastore}}\index{datastore@{datastore}!OBJ\_\-FLAG\_\-DATA@{OBJ\_\-FLAG\_\-DATA}}\item[{\em 
+\hypertarget{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a862748073762ebc9f5899a8c1d63053a}{
+OBJ\_\-FLAG\_\-DATA}
+\label{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a862748073762ebc9f5899a8c1d63053a}
+}]don't free data or call method \index{OBJ\_\-FLAG\_\-MEMORY@{OBJ\_\-FLAG\_\-MEMORY}!datastore@{datastore}}\index{datastore@{datastore}!OBJ\_\-FLAG\_\-MEMORY@{OBJ\_\-FLAG\_\-MEMORY}}\item[{\em 
+\hypertarget{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a03c245bc502773743d2ff575208a8b67}{
+OBJ\_\-FLAG\_\-MEMORY}
+\label{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a03c245bc502773743d2ff575208a8b67}
+}]don't call method, and when freeing use \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()} instead of freeobject \index{OBJ\_\-FLAG\_\-SILENT@{OBJ\_\-FLAG\_\-SILENT}!datastore@{datastore}}\index{datastore@{datastore}!OBJ\_\-FLAG\_\-SILENT@{OBJ\_\-FLAG\_\-SILENT}}\item[{\em 
+\hypertarget{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a7551721629504fee7ecf5973e467de80}{
+OBJ\_\-FLAG\_\-SILENT}
+\label{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a7551721629504fee7ecf5973e467de80}
+}]don't notify when modified \index{OBJ\_\-FLAG\_\-INHERITABLE@{OBJ\_\-FLAG\_\-INHERITABLE}!datastore@{datastore}}\index{datastore@{datastore}!OBJ\_\-FLAG\_\-INHERITABLE@{OBJ\_\-FLAG\_\-INHERITABLE}}\item[{\em 
+\hypertarget{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a20be48992fc9be2b12940730c09d704c}{
+OBJ\_\-FLAG\_\-INHERITABLE}
+\label{group__datastore_ggaa858d4b3815076d79624c39d9ca59348a20be48992fc9be2b12940730c09d704c}
+}]obexprototype entry will be inherited by subpatchers and abstractions \end{description}
+\end{Desc}
+

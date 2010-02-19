@@ -1,0 +1,261 @@
+Your object can use scripting capabilities of the patcher to learn things about its context, such as the patcher's name, hierarchy, or the peer objects to your object in its patcher.
+
+You can also modify a patcher, although any actions your object takes are not undoable and may not work in the runtime version.\hypertarget{chapter_scripting_chapter_scripting_knowing}{}\section{Knowing the Patcher}\label{chapter_scripting_chapter_scripting_knowing}
+To obtain the patcher object containing your object, you can use the obex hash table. The obex (for \char`\"{}object extensions\char`\"{}) is, more generally, a way to store and recall data in your object. In this case, however, we are just using it in a read-\/only fashion.
+
+Note that unlike the technique discussed in previous versions of the SDK, using the obex to find the patcher works at any time, not just in the new instance routine.
+
+
+\begin{DoxyCode}
+    void myobject_getmypatcher(t_myobject *x)
+    {
+        t_object *mypatcher;
+
+        obex_object_lookup(x, gensym("#P"), &mypatcher);
+        post("my patcher is at address %lx",mypatcher);
+    }
+\end{DoxyCode}
+
+
+The patcher is an opaque Max object. To access data in a patcher, you'll use attributes and methods.\hypertarget{chapter_scripting_chapter_scripting_knowing_name}{}\subsection{Patcher Name and File Path}\label{chapter_scripting_chapter_scripting_knowing_name}
+To obtain the name of the patcher and its file path (if any), obtain attribute values as shown below. 
+\begin{DoxyCode}
+        t_symbol *name = object_attr_getsym(patcher, gensym("name"));
+        t_symbol *path = object_attr_getsym(patcher, gensym("filepath"));
+\end{DoxyCode}
+
+
+These attributes may return NULL or empty symbols.\hypertarget{chapter_scripting_chapter_scripting_knowing_heirarchy}{}\subsection{Patcher Hierarchy}\label{chapter_scripting_chapter_scripting_knowing_heirarchy}
+To determine the patcher hierarchy above the patcher containing your object, you can use jpatcher\_\-getparentpatcher(). A patcher whose parent is NULL is a top-\/level patcher. Here is a loop that prints the name of each parent patcher as you ascend the hierarchy.
+
+
+\begin{DoxyCode}
+        t_object *parent, *patcher;
+        t_symbol *name;
+
+        object_obex_lookup(x, gensym("#P"), &patcher);
+        parent = patcher;
+        do {
+            parent = jpatcher_getparentpatcher(parent);
+            if (parent) {
+                name = object_attr_getsym(parent, gensym("name"));
+                if (name)
+                    post("%s",name->s_name)
+            }
+        } while (parent != NULL);
+\end{DoxyCode}
+\hypertarget{chapter_scripting_chapter_scripting_knowing_objects}{}\subsection{Getting Objects in a Patcher}\label{chapter_scripting_chapter_scripting_knowing_objects}
+To obtain the first object in a patcher, you can use \hyperlink{group__jpatcher_gafd77f63d504807973a4ce400c304b174}{jpatcher\_\-get\_\-firstobject()}. Subsequent objects are available with \hyperlink{group__jbox_ga89177ab12d45649c7209e65c97a3b128}{jbox\_\-get\_\-nextobject()}.
+
+If you haven't read the \hyperlink{chapter_ui_anatomy}{Anatomy of a UI Object}, we'll mention that the patcher does not keep a list of non-\/UI objects directly. Instead it keeps a list of UI objects called boxes, and the box that holds non-\/UI objects is called a newobj. The \char`\"{}objects\char`\"{} you obtain with calls such as \hyperlink{group__jpatcher_gafd77f63d504807973a4ce400c304b174}{jpatcher\_\-get\_\-firstobject()} are boxes. The \hyperlink{group__jbox_ga5063d165cfca9dc76162ff5757ea4852}{jbox\_\-get\_\-object()} routine can be used to get the pointer to the actual object, whether the box is a UI object or a newobj containing a non-\/UI object. In the case of UI objects such as dials and sliders, the pointer returned by \hyperlink{group__jbox_ga5063d165cfca9dc76162ff5757ea4852}{jbox\_\-get\_\-object()} will be the same as the box. But for non-\/UI objects, it will be different.
+
+Here is a function that prints the class of every object (in a box) in a patcher containing an object. 
+\begin{DoxyCode}
+    void myobject_printpeers(t_myobject *x)
+    {
+        t_object *patcher, *box, *obj;
+
+        object_obex_lookup(x, gensym("#P"), &patcher);
+
+        for (box = jpatcher_get_firstobject(patcher); box; jbox_get_nextobject(bo
+      x)) {
+            obj = jbox_get_object(box);
+            if (obj)
+                post("%s",object_classname(obj)->s_name);
+            else
+                post("box with NULL object");
+        }
+    }
+\end{DoxyCode}
+\hypertarget{chapter_scripting_chapter_scripting_knowing_iteration}{}\subsection{Iteration Using Callbacks}\label{chapter_scripting_chapter_scripting_knowing_iteration}
+As an alternative to the technique shown above, you can write a callback function for use with the patcher's iteration service. The advantage of using iteration is that you can descend into the patcher hierarchy without needing to know the details of the various objects that may contain subpatchers (patcher, poly$\sim$, bpatcher, etc.). If you want to iterate only at one level of a patcher hierarchy, you can do that too.
+
+Your iteration function is defined as follows. It will be called on every box in a patcher (and, if you specify, the patcher's subpatchers). 
+\begin{DoxyCode}
+     long myobject_iterarator(t_myobject *x, t_object *b);
+\end{DoxyCode}
+
+
+The function returns 0 if iteration should continue, or 1 if it should stop. This permits you to use an iterator as a way to search for a specific object.
+
+Here is an example of using an iterator function:
+
+
+\begin{DoxyCode}
+        t_object *patcher;
+        long result = 0;
+
+        patcher = object_obex_lookup(x, gensym("#P"), &patcher);
+
+        object_method(patcher, gensym("iterate"), myobject_iterator, (void *)x, 
+      PI_WANTBOX | PI_DEEP, &result);
+\end{DoxyCode}
+
+
+The \hyperlink{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a128de369dd62c2625aff042d820456eb}{PI\_\-WANTBOX} flag tells the patcher iterator that it should pass your iterator function the box, rather than the object contained in the box. The \hyperlink{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a615ccc19640c4714e619315b94765e48}{PI\_\-DEEP} flag means that the iteration will descend, depth first, into subpatchers. The result parameter returns the last value returned by the iterator. For example, if the iterator terminates early by returning a non-\/zero value, it will contain that value. If the iterator function does not terminate early, result will be 0.
+
+Assuming the iterator function receives boxes, here is an example iterator that prints out the class and scripting name (if any) of all of the objects in a patcher. Note that the scripting name is an attribute of the box, while the class we would like to know is of the object associated with the box.
+
+
+\begin{DoxyCode}
+    long myobject_iterator(t_myobject *x, t_object *b)
+    {
+        t_symbol *name = object_attr_getsym(b, gensym("varname"));
+        t_symbol *cls = object_classname(jbox_get_object(b));
+
+        if (name)
+            post("%s (%s)",cls->s_name, name->s_name);
+        else
+            post("%s", cls->s_name);
+        return 0;
+    }
+\end{DoxyCode}
+\hypertarget{chapter_scripting_chapter_scripting_objects}{}\section{Creating Objects}\label{chapter_scripting_chapter_scripting_objects}
+Much of the Max user interface is implemented using patcher scripting. For example, the inspectors are patchers in which an inspector object has been created. The file browser window has four or five separate scripted objects in it. Even the debug window is a dynamically scripted patcher. We point this out just to inform you that creating objects in a patcher actually works (if you get all the details right). The xxx example object shows how to use patcher scripting to create an \char`\"{}editing window\char`\"{} similar to the ones you see when double-\/clicking on a table or buffer$\sim$ object.
+
+Creating objects in a patcher generally requires the use of a \hyperlink{group__dictionary}{Dictionary} (see discussion of UI objects above), but there is a convenience function \hyperlink{group__obj_gad81c665a20c3c707decaf3403468ff47}{newobject\_\-sprintf()} that can be used to avoid some of the complexity.
+
+To create an object, your task is to set some attributes. In the absence of any specific values, an object's attributes will be set to some default, but you'll probably care, at the very least, about specifying the object's location. Here is an example that creates a toggle and metro object using a combination of attribute parse syntax and sprintf. If you're interested in creating objects with \hyperlink{group__obj_gad81c665a20c3c707decaf3403468ff47}{newobject\_\-sprintf()}, it may help to examine a Max document to see some of the attribute name -\/ value pairs used to specify objects.
+
+
+\begin{DoxyCode}
+        t_object *patcher, *toggle, *metro;
+
+        patcher = object_obex_lookup(x, gensym("#P"), &patcher);
+
+        toggle = newobject_sprintf(patcher, "@maxclass toggle @patching_position 
+      %.2f %.2f",
+            x->togxpos, x-> togxpos);
+
+        metro = newobject_sprintf(patcher, "@maxclass newobj @text metro 400 @pat
+      ching_position %.2f %.2f",
+            x->metxpos, x->metypos);
+\end{DoxyCode}
+
+
+Note that to create a non-\/UI object, you use set the maxclass attribute to newobj and the text attribute to the contents of the object box. Attributes can be specified in any order. Using the patching\_\-position attribute permits you to specify only the top-\/left corner and use the object's default size. For text objects, the default size is based on the default font for the patcher.
+
+Finally, note that \hyperlink{group__obj_gad81c665a20c3c707decaf3403468ff47}{newobject\_\-sprintf()} returns a pointer to the newly created box, not the newly created object inside the box. To get the object inside the box, use \hyperlink{group__jbox_ga5063d165cfca9dc76162ff5757ea4852}{jbox\_\-get\_\-object()}.\hypertarget{chapter_scripting_chapter_scripting_objects_connecting}{}\subsection{Connecting Objects}\label{chapter_scripting_chapter_scripting_objects_connecting}
+If you'd like to script the connections between two objects, you can do so via a message to the patcher. Assuming you have the patcher, toggle, and metro objects above, you'll create an array of atoms to send the message using \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()}.
+
+
+\begin{DoxyCode}
+        t_atom msg[4], rv;
+
+        atom_setobj(msg, toggle);       // source
+        atom_setlong(msg + 1, 0);       // outlet number (0 is leftmost)
+        atom_setobj(msg + 2, metro);    // destination
+        atom_setlong(msg + 3, 0);       // inlet number (0 is leftmost)
+
+        object_method_typed(patcher, gensym("connect"), 4, msg, &rv);
+\end{DoxyCode}
+
+
+If you want to have a hidden connection, pass an optional fifth argument that is any negative number.\hypertarget{chapter_scripting_chapter_scripting_objects_deleting}{}\section{Deleting Objects}\label{chapter_scripting_chapter_scripting_objects_deleting}
+To delete an object in a patcher you call \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} on the box. As of Max 5.0.6 this will properly redraw the patcher and remove any connected patch cords.\hypertarget{chapter_scripting_chapter_scripting_attrs}{}\section{Obtaining and Changing Patcher and Object Attributes}\label{chapter_scripting_chapter_scripting_attrs}
+You can use object attribute functions to modify the appearance and behavior of objects in a patcher or the patcher itself. Note that only a few of these attributes can be modified by the user. The C level access to attributes is much more extensive.
+
+Attributes whose type is object can be accessed via object\_\-attr\_\-getobj() / object\_\-attr\_\-setobj(). Attributes whose type is char can be accessed with object\_\-attr\_\-getchar() / object\_\-attr\_\-setchar(). Attributes whose type is long can be accessed with \hyperlink{group__attr_ga1179c4e91fb8263447ff4dfa471df953}{object\_\-attr\_\-getlong()} / \hyperlink{group__attr_ga986dd931f91666f178bdf3aace48f53b}{object\_\-attr\_\-setlong()}. Attributes whose type is symbol can be accessed via \hyperlink{group__attr_ga001b1ff245bf22db3fadabd61324d1e7}{object\_\-attr\_\-getsym()} / \hyperlink{group__attr_ga642c3b5686b08880194f74c0d5149bcf}{object\_\-attr\_\-setsym()}. For attributes that are arrays, such as colors and rectangles, use object\_\-attr\_\-getvalueof() / \hyperlink{group__attr_ga95163d72f6b7500e5986af0f23743e4f}{object\_\-attr\_\-setvalueof()}.\hypertarget{chapter_scripting_chapter_scripting_attrs_patcher}{}\subsection{Patcher Attributes}\label{chapter_scripting_chapter_scripting_attrs_patcher}
+\begin{TabularC}{4}
+\hline
+Name &Type &Settable &Description \\\cline{1-4}
+box &object &No &The box containing the patcher (NULL for top-\/level patcher)  \\\cline{1-4}
+locked &char &Yes (not in runtime) &Locked state of the patcher  \\\cline{1-4}
+presentation &char &Yes &Presentation mode of the patcher  \\\cline{1-4}
+openinpresentation &char &Yes &Will patcher open in presentation mode?  \\\cline{1-4}
+count &long &No &Number of objects in a patcher  \\\cline{1-4}
+fgcount &long &No &Number of objects in the patcher's foreground layer  \\\cline{1-4}
+bgcount &long &No &Number of objects in the patcher's background layer  \\\cline{1-4}
+numvews &long &No &Number of currently open views of the patcher  \\\cline{1-4}
+numwindowviews &long &No &Number of currently open window-\/based views of the patcher  \\\cline{1-4}
+firstobject &object &No &First box in the patcher  \\\cline{1-4}
+lastobject &object &No &Last box in the patcher  \\\cline{1-4}
+firstline &object &No &First patch cord in the patcher  \\\cline{1-4}
+firstview &object &No &First view object in the patcher  \\\cline{1-4}
+title &symbol &Yes &Window title  \\\cline{1-4}
+fulltitle &symbol &No &Complete title including \char`\"{}unlocked\char`\"{} etc.  \\\cline{1-4}
+name &symbol &No &Name (could be different from title)  \\\cline{1-4}
+filename &symbol &No &Filename  \\\cline{1-4}
+filepath &symbol &No &File path (platform-\/independent file path syntax)  \\\cline{1-4}
+fileversion &long &No &File version  \\\cline{1-4}
+noedit &char &No &Whether patcher can be unlocked  \\\cline{1-4}
+collective &object &No &Collective object, if patcher is inside a collective  \\\cline{1-4}
+cansave &char &No &Whether patcher can be saved  \\\cline{1-4}
+dirty &char &Yes (not in runtime) &Whether patcher is modified  \\\cline{1-4}
+bglocked &char &Yes &Whether background is locked  \\\cline{1-4}
+rect &double\mbox{[}4\mbox{]} &Yes &Patcher's rect (left, top, width, height)  \\\cline{1-4}
+defrect &double\mbox{[}4\mbox{]} &Yes &Patcher's default rect (used when opening the first view)  \\\cline{1-4}
+openrect &double\mbox{[}4\mbox{]} &Yes &Fixed initial window location  \\\cline{1-4}
+parentpatcher &object &No &Immediate parent patcher (NULL for toplevel patchers)  \\\cline{1-4}
+toppatcher &object &No &Topmost parent patcher (NULL for toplevel patchers)  \\\cline{1-4}
+parentclass &object &No &Class object of parent (patcher, poly$\sim$, bpatcher etc.)  \\\cline{1-4}
+bgcolor &double\mbox{[}4\mbox{]} &Yes &Locked background color (RGBA)  \\\cline{1-4}
+editing\_\-bgcolor &double\mbox{[}4\mbox{]} &Yes &Unlocked background color (RGBA)  \\\cline{1-4}
+edit\_\-framecolor &double\mbox{[}4\mbox{]} &Yes &Text editing frame color  \\\cline{1-4}
+locked\_\-iocolor &double\mbox{[}4\mbox{]} &Yes &Locked inlet/outlet color  \\\cline{1-4}
+unlocked\_\-iocolor &double\mbox{[}4\mbox{]} &Yes &Unlocked inlet/outlet color  \\\cline{1-4}
+boguscolor &double\mbox{[}4\mbox{]} &Yes &Color of uninitialized (bogus) objects  \\\cline{1-4}
+gridsize &double\mbox{[}2\mbox{]} &Yes &Editing grid size  \\\cline{1-4}
+gridonopen &char &Yes &Show grid on open  \\\cline{1-4}
+gridsnapopen &char &Yes &Snap to grid on open  \\\cline{1-4}
+imprint &char &Yes &Save default-\/valued object attributes  \\\cline{1-4}
+defaultfocusbox &symbol &Yes &Default focus box (varname)  \\\cline{1-4}
+enablehscroll &char &Yes &Show horizontal scrollbar  \\\cline{1-4}
+enablevscroll &char &Yes &Show vertical scrollbar  \\\cline{1-4}
+boxanimatetime &long &Yes &Box animation time  \\\cline{1-4}
+default\_\-fontname &symbol &Yes &Default font name  \\\cline{1-4}
+default\_\-fontface &long &Yes &Default \char`\"{}fake\char`\"{} font face (0 plain, 1, bold, 2 italic, 3 bold italic)  \\\cline{1-4}
+default\_\-fontsize &long &Yes &Default font size in points  \\\cline{1-4}
+toolbarvisible &char &Yes &Show toolbar on open  \\\cline{1-4}
+toolbarheight &long &Yes &Height of toolbar (can use 0 for invisible)  \\\cline{1-4}
+toolbarid &symbol &Yes &Name (in maxinterface.json) of toolbar, none = empty symbol  \\\cline{1-4}
+\end{TabularC}
+\hypertarget{chapter_scripting_chapter_scripting_attrs_box}{}\subsection{Box Attributes}\label{chapter_scripting_chapter_scripting_attrs_box}
+\begin{TabularC}{4}
+\hline
+Name &Type &Settable &Description \\\cline{1-4}
+rect &double\mbox{[}4\mbox{]} &Settable only &Changes both patching\_\-rect and presentation\_\-rect  \\\cline{1-4}
+presentation\_\-rect &double\mbox{[}4\mbox{]} &Yes &Presentation mode rect  \\\cline{1-4}
+patching\_\-rect &double\mbox{[}4\mbox{]} &Yes &Patching mode rect  \\\cline{1-4}
+position &double\mbox{[}2\mbox{]} &Settable only &Changes both patching\_\-position and presentation\_\-position  \\\cline{1-4}
+size &double\mbox{[}2\mbox{]} &Settable only &Changes both patching\_\-size and presentation\_\-size  \\\cline{1-4}
+patching\_\-position &double\mbox{[}2\mbox{]} &Yes &Patching mode position (top, left corner)  \\\cline{1-4}
+presentation\_\-position&d\mbox{[}2\mbox{]} &Yes &Presentation mode position  \\\cline{1-4}
+patching\_\-size &double\mbox{[}2\mbox{]} &Yes &Patching mode size (width, height)  \\\cline{1-4}
+presentation\_\-size &double\mbox{[}2\mbox{]} &Yes &Presentation mode size  \\\cline{1-4}
+maxclass &symbol &No &Name of Max class (newobj for non-\/UI objects)  \\\cline{1-4}
+object &object &No &Associated object (equivalent to jbox\_\-get\_\-object)  \\\cline{1-4}
+patcher &object &No &Containing patcher  \\\cline{1-4}
+hidden &char &Yes &Is box hidden on lock?  \\\cline{1-4}
+fontname &symbol &Yes &Font name (if box has font attributes or a text field)  \\\cline{1-4}
+fontface &long &Yes &\char`\"{}Fake\char`\"{} font face (if box has font attribute or a text field)  \\\cline{1-4}
+fontsize &long &Yes &Font size (if box has font attributes or a text field)  \\\cline{1-4}
+textcolor &double\mbox{[}4\mbox{]} &Yes &Text color (if box has font attributes or a text field)  \\\cline{1-4}
+hint &symbol &Yes &Associated hint  \\\cline{1-4}
+color &double\mbox{[}4\mbox{]} &Yes &Standard color attribute (may not be present in all objects)  \\\cline{1-4}
+nextobject &object &No &Next object in the patcher's list  \\\cline{1-4}
+prevobject &object &No &Previous object in the patcher's list  \\\cline{1-4}
+varname &symbol &Yes &Scripting name  \\\cline{1-4}
+id &symbol &No &Immutable object ID (stored in files)  \\\cline{1-4}
+canhilite &char &No &Does this object accept focus?  \\\cline{1-4}
+background &char &Yes &Include in background  \\\cline{1-4}
+ignoreclick &char &Yes &Ignores clicks  \\\cline{1-4}
+maxfilename &symbol &No &Filename if class is external  \\\cline{1-4}
+description &symbol &No &Description used by assistance  \\\cline{1-4}
+drawfirstin &char &No &Is leftmost inlet drawn?  \\\cline{1-4}
+growy &char &No &Can object grow with fixed aspect ratio?  \\\cline{1-4}
+growboth &char &No &Can object grow independently in width and height?  \\\cline{1-4}
+nogrow &char &No &Is object fixed size?  \\\cline{1-4}
+mousedragdelta &char &No &Does object use hidden-\/mouse drag tracking (number box)  \\\cline{1-4}
+textfield &object &No &Textfield object associated with this box if any  \\\cline{1-4}
+editactive &char &No &Is object the currently focused box in an unlocked patcher?  \\\cline{1-4}
+prototypename &symbol &No &Name of the prototype file used to create this object  \\\cline{1-4}
+presentation &char &Yes &Is object included in the presentation?  \\\cline{1-4}
+annotation &symbol &Yes &Text shown in clue window when mouse is over the object  \\\cline{1-4}
+numinlets &long &No &Number of inlets visible  \\\cline{1-4}
+numoutlets &long &No &Number of outlets visible  \\\cline{1-4}
+outlettype &symbol\mbox{[}\mbox{]} &No &Array of symbols with outlet types (\char`\"{}signal\char`\"{} etc.)  \\\cline{1-4}
+\end{TabularC}
+
+
+To access an attribute of a non-\/UI object, use \hyperlink{group__jbox_ga5063d165cfca9dc76162ff5757ea4852}{jbox\_\-get\_\-object()} on the box to obtain the non-\/UI object first. 

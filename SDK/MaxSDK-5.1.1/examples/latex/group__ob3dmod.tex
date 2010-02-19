@@ -1,0 +1,655 @@
+\hypertarget{group__ob3dmod}{
+\section{OB3D Module}
+\label{group__ob3dmod}\index{OB3D Module@{OB3D Module}}
+}
+
+
+Collaboration diagram for OB3D Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=106pt]{group__ob3dmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+long \hyperlink{group__ob3dmod_gad8a6b7497c6c377d4ab1a740d9abbc26}{jit\_\-gl\_\-report\_\-error} (char $\ast$prefix)
+\begin{DoxyCompactList}\small\item\em Tests for OpenGL error and reports to Max window. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ob3dmod_gafb99f462a0bd84c178284a8729facbc8}{jit\_\-gl\_\-get\_\-vendor} ()
+\begin{DoxyCompactList}\small\item\em Retrieves OpenGL vendor string. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ob3dmod_ga0a828499dc5e04fa6cbaaa0dce08ad16}{jit\_\-gl\_\-get\_\-renderer} ()
+\begin{DoxyCompactList}\small\item\em Retrieves OpenGL renderer string. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ob3dmod_gae2015d77352f442de5f37b6f6e56ac25}{jit\_\-gl\_\-get\_\-version} ()
+\begin{DoxyCompactList}\small\item\em Retrieves OpenGL version string. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ob3dmod_ga62580f14c9103c4433d4a6811c1cc364}{jit\_\-gl\_\-get\_\-glu\_\-version} ()
+\begin{DoxyCompactList}\small\item\em Retrieves OpenGL GL Utilities version string. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__ob3dmod_gaae341db507889b8c5bf5a6e0d6f9e03f}{jit\_\-gl\_\-get\_\-extensions} ()
+\begin{DoxyCompactList}\small\item\em Retrieves OpenGL extensions string. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__ob3dmod_gad29a8caf0ac02591e97cb18176eac0e0}{jit\_\-gl\_\-is\_\-min\_\-version} (int major, int minor, int release)
+\begin{DoxyCompactList}\small\item\em Tests current OpenGL version to be greater than or equal to the version provided. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__ob3dmod_ga7fbf145730cc56b69fa200adfee552a1}{jit\_\-gl\_\-is\_\-extension\_\-supported} (t\_\-jit\_\-gl\_\-context ctx, const char $\ast$ext)
+\begin{DoxyCompactList}\small\item\em Given a t\_\-jit\_\-gl\_\-context pointer, checks to see if it suppports the provided extension. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} $\ast$ \hyperlink{group__ob3dmod_gae1cfab3f91302b90cdcd8e8723295f91}{jit\_\-glchunk\_\-new} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$prim, int planes, int vertices, int indices)
+\begin{DoxyCompactList}\small\item\em Allocates and initializes a \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} $\ast$ \hyperlink{group__ob3dmod_ga5c8a73551161b7ba602c0bea2ea9e479}{jit\_\-glchunk\_\-grid\_\-new} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$prim, int planes, int width, int height)
+\begin{DoxyCompactList}\small\item\em Allocates and initializes a \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct with 2D grid matrix. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_gae4fabfa866a64f68987de90e065e604e}{jit\_\-glchunk\_\-delete} (\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Disposes \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__ob3dmod_gae9cc3acec721f3e56a41664b5891b900}{jit\_\-glchunk\_\-copy} (\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} $\ast$$\ast$new, \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} $\ast$orig)
+\begin{DoxyCompactList}\small\item\em Allocates \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct, and copies from t\_\-jit\_\-gl\_\-struct provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__ob3dmod_ga6b42cd2b3e58ff2c13d38b4bde52668d}{jit\_\-gl\_\-drawinfo\_\-setup} (void $\ast$x, \hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo)
+\begin{DoxyCompactList}\small\item\em Initializes \hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} struct with the current context and ob3d. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__ob3dmod_gafebfd86239675c14e3a78a49b5a78e92}{jit\_\-gl\_\-drawinfo\_\-active\_\-textures} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo)
+\begin{DoxyCompactList}\small\item\em Determine the number of active texture units to use. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga20352984f84477063544e3f2fa63dd78}{jit\_\-gl\_\-texcoord1f} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, float s)
+\begin{DoxyCompactList}\small\item\em Set texture coordinate for all active texture units. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga9d8dcc769098328f5177525fbc60c400}{jit\_\-gl\_\-texcoord2f} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, float s, float t)
+\begin{DoxyCompactList}\small\item\em Set texture coordinate for all active texture units. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_gaab1f76591dd2a0f9fd54d0634772a561}{jit\_\-gl\_\-texcoord3f} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, float s, float t, float r)
+\begin{DoxyCompactList}\small\item\em Set texture coordinate for all active texture units. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga452b4eb8363d573bf58970b0a035f9e2}{jit\_\-gl\_\-texcoord1fv} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, float $\ast$v)
+\begin{DoxyCompactList}\small\item\em Set texture coordinate for all active texture units. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga48fbe64a3a032f487c509f23d1b6e9ea}{jit\_\-gl\_\-texcoord2fv} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, float $\ast$v)
+\begin{DoxyCompactList}\small\item\em Set texture coordinate for all active texture units. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_gad517647e1bd68e6c1ddb6907877897c0}{jit\_\-gl\_\-texcoord3fv} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, float $\ast$v)
+\begin{DoxyCompactList}\small\item\em Set texture coordinate for all active texture units. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga2b791de45bbe16269fd787ab774348d7}{jit\_\-gl\_\-bindtexture} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long i)
+\begin{DoxyCompactList}\small\item\em Bind texture for specified texture unit. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_gac79a96d9c6d801778bd9675c4c5f51ec}{jit\_\-gl\_\-unbindtexture} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long i)
+\begin{DoxyCompactList}\small\item\em Unbind texture for specified texture unit. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_gafdefdd4ecd67b98eea24ede76032d4c4}{jit\_\-gl\_\-begincapture} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long i)
+\begin{DoxyCompactList}\small\item\em Begin texture capture. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga31fe756839195ae9d278b63c70137cee}{jit\_\-gl\_\-endcapture} (\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} $\ast$drawinfo, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long i)
+\begin{DoxyCompactList}\small\item\em End texture capture. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__ob3dmod_gaee60152a1d507a630e14f0e4f71e86f2}{jit\_\-ob3d\_\-setup} (void $\ast$jit\_\-class, long oboffset, long flags)
+\begin{DoxyCompactList}\small\item\em Adds default methods and attributes to the OB3D class. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__ob3dmod_gac27d63b4d66faf27fda165792dafa223}{jit\_\-ob3d\_\-new} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$dest\_\-name)
+\begin{DoxyCompactList}\small\item\em Allocates and initializes OB3D resources. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga5c1537df19c2d7e12ef809d3de3943d9}{jit\_\-ob3d\_\-free} (void $\ast$jit\_\-ob)
+\begin{DoxyCompactList}\small\item\em Disposes OB3D resources. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__ob3dmod_ga5e4ab4a85fa076462e640110b8dd678c}{jit\_\-ob3d\_\-set\_\-context} (void $\ast$jit\_\-ob)
+\begin{DoxyCompactList}\small\item\em Sets the current Open GL context to the context referenced by the OB3D drawto attribute. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__ob3dmod_ga71e817dad96e4b3fc54dbf3e97308b5a}{ob3d\_\-jitob\_\-get} (void $\ast$v)
+\begin{DoxyCompactList}\small\item\em Retrieves parent Jitter object from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__ob3dmod_ga4341a2f9266925591b847ba5499a6d16}{ob3d\_\-auto\_\-get} (void $\ast$v)
+\begin{DoxyCompactList}\small\item\em Retrieves automatic flag from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__ob3dmod_ga79941da00228379d7e9bcc7cfd293385}{ob3d\_\-enable\_\-get} (void $\ast$v)
+\begin{DoxyCompactList}\small\item\em Retrieves enable flag from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__ob3dmod_ga37e486174b60074e0dd6b2014f88756f}{ob3d\_\-ui\_\-get} (void $\ast$v)
+\begin{DoxyCompactList}\small\item\em Retrieves UI flag from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__ob3dmod_ga1d44805174bf6e277a042d9644631f84}{ob3d\_\-outlet\_\-get} (void $\ast$v)
+\begin{DoxyCompactList}\small\item\em Retrieves matrix outlet from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__ob3dmod_ga65a7339c9100afefc290d51c083467ab}{ob3d\_\-dirty\_\-get} (void $\ast$v)
+\begin{DoxyCompactList}\small\item\em Retrieves dirty flag from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga8e025904830302e5815a1396c87aeb03}{ob3d\_\-dirty\_\-set} (void $\ast$v, long c)
+\begin{DoxyCompactList}\small\item\em Sets dirty flag from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga354e6daa1b458570e2528e12819b0c2a}{ob3d\_\-dest\_\-dim\_\-set} (void $\ast$v, long width, long height)
+\begin{DoxyCompactList}\small\item\em Sets destination dimensions in opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_gacfadba2dc254ad30556821c5a6102012}{ob3d\_\-dest\_\-dim\_\-get} (void $\ast$v, long $\ast$width, long $\ast$height)
+\begin{DoxyCompactList}\small\item\em Gets destination dimensions from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga8fc47737ede14251b02ff14f78c29a99}{ob3d\_\-render\_\-ptr\_\-set} (void $\ast$v, void $\ast$render\_\-ptr)
+\begin{DoxyCompactList}\small\item\em Sets renderer pointer in opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__ob3dmod_gad30ba3f5fcaf53f830d8b6430f92b4dd}{ob3d\_\-render\_\-ptr\_\-get} (void $\ast$v)
+\begin{DoxyCompactList}\small\item\em Gets renderer pointer from opaque t\_\-jit\_\-ob3d struct. \item\end{DoxyCompactList}\item 
+\hypertarget{group__ob3dmod_ga6bb6d0a3847efb08150eb752257f8be9}{
+void \hyperlink{group__ob3dmod_ga6bb6d0a3847efb08150eb752257f8be9}{max\_\-ob3d\_\-setup} (void)}
+\label{group__ob3dmod_ga6bb6d0a3847efb08150eb752257f8be9}
+
+\begin{DoxyCompactList}\small\item\em Adds default methods and OB3D Max wrapper class. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga00933af2acf7bd26e6480c6e234faecd}{max\_\-jit\_\-ob3d\_\-attach} (void $\ast$x, \hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$jit\_\-ob, void $\ast$outlet)
+\begin{DoxyCompactList}\small\item\em Allocates and initializes OB3D Max wrapper related resources. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga2a6c8c09bfdbaff867e61ac74fa08a7d}{max\_\-jit\_\-ob3d\_\-detach} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Disposes OB3D Max wrapper related resources. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__ob3dmod_ga8fa7e82f9a1f64c2e5d10b2dbf340536}{max\_\-jit\_\-ob3d\_\-assist} (void $\ast$x, void $\ast$b, long m, long a, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Default OB3D Max wrapper assistance method. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga28495cb4eb40093b45f576c6ddf41ff6}{max\_\-ob3d\_\-bang} (\hyperlink{structt__object}{t\_\-max\_\-object} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Default OB3D Max wrapper bang method. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__ob3dmod_ga2060791191cae96371aeae6090d1f215}{max\_\-ob3d\_\-notify} (\hyperlink{structt__object}{t\_\-max\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$sender\_\-name, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$msg, void $\ast$p\_\-sender)
+\begin{DoxyCompactList}\small\item\em Default OB3D Max wrapper notification method. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__ob3dmod_gacb2a2ba1b2bb33377aa10b45bb3a0531}{jit\_\-ob3d\_\-draw\_\-chunk} (void $\ast$v, \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} $\ast$chunk)
+\begin{DoxyCompactList}\small\item\em Draws one \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} If the OB3D is not in matrixoutput mode, the drawing call is made directly to the renderer. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__ob3dmod_gafdefdd4ecd67b98eea24ede76032d4c4}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-begincapture@{jit\_\-gl\_\-begincapture}}
+\index{jit\_\-gl\_\-begincapture@{jit\_\-gl\_\-begincapture}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-begincapture}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-begincapture ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em i})}}
+\label{group__ob3dmod_gafdefdd4ecd67b98eea24ede76032d4c4}
+
+
+Begin texture capture. 
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em s}]texture name \item[{\em i}]ignored \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga2b791de45bbe16269fd787ab774348d7}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-bindtexture@{jit\_\-gl\_\-bindtexture}}
+\index{jit\_\-gl\_\-bindtexture@{jit\_\-gl\_\-bindtexture}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-bindtexture}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-bindtexture ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em i})}}
+\label{group__ob3dmod_ga2b791de45bbe16269fd787ab774348d7}
+
+
+Bind texture for specified texture unit. 
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em s}]texture name \item[{\em i}]texture unit \end{DoxyParams}
+\hypertarget{group__ob3dmod_gafebfd86239675c14e3a78a49b5a78e92}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-drawinfo\_\-active\_\-textures@{jit\_\-gl\_\-drawinfo\_\-active\_\-textures}}
+\index{jit\_\-gl\_\-drawinfo\_\-active\_\-textures@{jit\_\-gl\_\-drawinfo\_\-active\_\-textures}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-drawinfo\_\-active\_\-textures}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-gl\_\-drawinfo\_\-active\_\-textures ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo})}}
+\label{group__ob3dmod_gafebfd86239675c14e3a78a49b5a78e92}
+
+
+Determine the number of active texture units to use. 
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of active texture units 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga6b42cd2b3e58ff2c13d38b4bde52668d}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-drawinfo\_\-setup@{jit\_\-gl\_\-drawinfo\_\-setup}}
+\index{jit\_\-gl\_\-drawinfo\_\-setup@{jit\_\-gl\_\-drawinfo\_\-setup}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-drawinfo\_\-setup}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-gl\_\-drawinfo\_\-setup (void $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo})}}
+\label{group__ob3dmod_ga6b42cd2b3e58ff2c13d38b4bde52668d}
+
+
+Initializes \hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} struct with the current context and ob3d. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Jitter object pointer \item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga31fe756839195ae9d278b63c70137cee}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-endcapture@{jit\_\-gl\_\-endcapture}}
+\index{jit\_\-gl\_\-endcapture@{jit\_\-gl\_\-endcapture}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-endcapture}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-endcapture ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em i})}}
+\label{group__ob3dmod_ga31fe756839195ae9d278b63c70137cee}
+
+
+End texture capture. 
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em s}]texture name \item[{\em i}]ignored \end{DoxyParams}
+\hypertarget{group__ob3dmod_gaae341db507889b8c5bf5a6e0d6f9e03f}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-get\_\-extensions@{jit\_\-gl\_\-get\_\-extensions}}
+\index{jit\_\-gl\_\-get\_\-extensions@{jit\_\-gl\_\-get\_\-extensions}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-get\_\-extensions}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ jit\_\-gl\_\-get\_\-extensions ()}}
+\label{group__ob3dmod_gaae341db507889b8c5bf5a6e0d6f9e03f}
+
+
+Retrieves OpenGL extensions string. Equivalent to glGetString(GL\_\-EXTENSIONS). Assumes a valid context has been set.
+
+\begin{DoxyReturn}{Returns}
+OpenGL GL extensions string 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga62580f14c9103c4433d4a6811c1cc364}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-get\_\-glu\_\-version@{jit\_\-gl\_\-get\_\-glu\_\-version}}
+\index{jit\_\-gl\_\-get\_\-glu\_\-version@{jit\_\-gl\_\-get\_\-glu\_\-version}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-get\_\-glu\_\-version}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ jit\_\-gl\_\-get\_\-glu\_\-version ()}}
+\label{group__ob3dmod_ga62580f14c9103c4433d4a6811c1cc364}
+
+
+Retrieves OpenGL GL Utilities version string. Equivalent to glGetString(GL\_\-GLU\_\-VERSION). Assumes a valid context has been set.
+
+\begin{DoxyReturn}{Returns}
+OpenGL GL Utilities version string 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga0a828499dc5e04fa6cbaaa0dce08ad16}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-get\_\-renderer@{jit\_\-gl\_\-get\_\-renderer}}
+\index{jit\_\-gl\_\-get\_\-renderer@{jit\_\-gl\_\-get\_\-renderer}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-get\_\-renderer}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ jit\_\-gl\_\-get\_\-renderer ()}}
+\label{group__ob3dmod_ga0a828499dc5e04fa6cbaaa0dce08ad16}
+
+
+Retrieves OpenGL renderer string. Equivalent to glGetString(GL\_\-RENDERER). Assumes a valid context has been set.
+
+\begin{DoxyReturn}{Returns}
+OpenGL renderer string 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gafb99f462a0bd84c178284a8729facbc8}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-get\_\-vendor@{jit\_\-gl\_\-get\_\-vendor}}
+\index{jit\_\-gl\_\-get\_\-vendor@{jit\_\-gl\_\-get\_\-vendor}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-get\_\-vendor}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ jit\_\-gl\_\-get\_\-vendor ()}}
+\label{group__ob3dmod_gafb99f462a0bd84c178284a8729facbc8}
+
+
+Retrieves OpenGL vendor string. Equivalent to glGetString(GL\_\-VENDOR). Assumes a valid context has been set.
+
+\begin{DoxyReturn}{Returns}
+OpenGL vendor string 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gae2015d77352f442de5f37b6f6e56ac25}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-get\_\-version@{jit\_\-gl\_\-get\_\-version}}
+\index{jit\_\-gl\_\-get\_\-version@{jit\_\-gl\_\-get\_\-version}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-get\_\-version}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ jit\_\-gl\_\-get\_\-version ()}}
+\label{group__ob3dmod_gae2015d77352f442de5f37b6f6e56ac25}
+
+
+Retrieves OpenGL version string. Equivalent to glGetString(GL\_\-VERSION). Assumes a valid context has been set.
+
+\begin{DoxyReturn}{Returns}
+OpenGL version string 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga7fbf145730cc56b69fa200adfee552a1}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-is\_\-extension\_\-supported@{jit\_\-gl\_\-is\_\-extension\_\-supported}}
+\index{jit\_\-gl\_\-is\_\-extension\_\-supported@{jit\_\-gl\_\-is\_\-extension\_\-supported}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-is\_\-extension\_\-supported}]{\setlength{\rightskip}{0pt plus 5cm}char jit\_\-gl\_\-is\_\-extension\_\-supported (t\_\-jit\_\-gl\_\-context {\em ctx}, \/  const char $\ast$ {\em ext})}}
+\label{group__ob3dmod_ga7fbf145730cc56b69fa200adfee552a1}
+
+
+Given a t\_\-jit\_\-gl\_\-context pointer, checks to see if it suppports the provided extension. Equivalent to testing for the substring within the string returned by glGetString(GL\_\-EXTENSIONS).
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ctx}]t\_\-jit\_\-gl\_\-context pointer \item[{\em ext}]extension string\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if true, 0 if false. 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gad29a8caf0ac02591e97cb18176eac0e0}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-is\_\-min\_\-version@{jit\_\-gl\_\-is\_\-min\_\-version}}
+\index{jit\_\-gl\_\-is\_\-min\_\-version@{jit\_\-gl\_\-is\_\-min\_\-version}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-is\_\-min\_\-version}]{\setlength{\rightskip}{0pt plus 5cm}char jit\_\-gl\_\-is\_\-min\_\-version (int {\em major}, \/  int {\em minor}, \/  int {\em release})}}
+\label{group__ob3dmod_gad29a8caf0ac02591e97cb18176eac0e0}
+
+
+Tests current OpenGL version to be greater than or equal to the version provided. Assumes a valid context has been set.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em major}]major version number \item[{\em minor}]minor version number \item[{\em release}]release version number\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if true, 0 if false. 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gad8a6b7497c6c377d4ab1a740d9abbc26}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-report\_\-error@{jit\_\-gl\_\-report\_\-error}}
+\index{jit\_\-gl\_\-report\_\-error@{jit\_\-gl\_\-report\_\-error}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-report\_\-error}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-gl\_\-report\_\-error (char $\ast$ {\em prefix})}}
+\label{group__ob3dmod_gad8a6b7497c6c377d4ab1a740d9abbc26}
+
+
+Tests for OpenGL error and reports to Max window. 
+\begin{DoxyParams}{Parameters}
+\item[{\em prefix}]prefix string\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OpenGL error code 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga20352984f84477063544e3f2fa63dd78}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-texcoord1f@{jit\_\-gl\_\-texcoord1f}}
+\index{jit\_\-gl\_\-texcoord1f@{jit\_\-gl\_\-texcoord1f}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-texcoord1f}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-texcoord1f ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  float {\em s})}}
+\label{group__ob3dmod_ga20352984f84477063544e3f2fa63dd78}
+
+
+Set texture coordinate for all active texture units. Equivalent to glMultiTexCoord1fARB for each active texture unit.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em s}]s texture coordinate \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga452b4eb8363d573bf58970b0a035f9e2}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-texcoord1fv@{jit\_\-gl\_\-texcoord1fv}}
+\index{jit\_\-gl\_\-texcoord1fv@{jit\_\-gl\_\-texcoord1fv}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-texcoord1fv}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-texcoord1fv ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  float $\ast$ {\em v})}}
+\label{group__ob3dmod_ga452b4eb8363d573bf58970b0a035f9e2}
+
+
+Set texture coordinate for all active texture units. Equivalent to glMultiTexCoord1fvARB for each active texture unit.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em v}]texture coordinate vector \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga9d8dcc769098328f5177525fbc60c400}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-texcoord2f@{jit\_\-gl\_\-texcoord2f}}
+\index{jit\_\-gl\_\-texcoord2f@{jit\_\-gl\_\-texcoord2f}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-texcoord2f}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-texcoord2f ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  float {\em s}, \/  float {\em t})}}
+\label{group__ob3dmod_ga9d8dcc769098328f5177525fbc60c400}
+
+
+Set texture coordinate for all active texture units. Equivalent to glMultiTexCoord2fARB for each active texture unit.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em s}]s texture coordinate \item[{\em t}]t texture coordinate \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga48fbe64a3a032f487c509f23d1b6e9ea}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-texcoord2fv@{jit\_\-gl\_\-texcoord2fv}}
+\index{jit\_\-gl\_\-texcoord2fv@{jit\_\-gl\_\-texcoord2fv}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-texcoord2fv}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-texcoord2fv ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  float $\ast$ {\em v})}}
+\label{group__ob3dmod_ga48fbe64a3a032f487c509f23d1b6e9ea}
+
+
+Set texture coordinate for all active texture units. Equivalent to glMultiTexCoord2fvARB for each active texture unit.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em v}]texture coordinate vector \end{DoxyParams}
+\hypertarget{group__ob3dmod_gaab1f76591dd2a0f9fd54d0634772a561}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-texcoord3f@{jit\_\-gl\_\-texcoord3f}}
+\index{jit\_\-gl\_\-texcoord3f@{jit\_\-gl\_\-texcoord3f}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-texcoord3f}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-texcoord3f ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  float {\em s}, \/  float {\em t}, \/  float {\em r})}}
+\label{group__ob3dmod_gaab1f76591dd2a0f9fd54d0634772a561}
+
+
+Set texture coordinate for all active texture units. Equivalent to glMultiTexCoord3fARB for each active texture unit.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em s}]s texture coordinate \item[{\em t}]t texture coordinate \item[{\em r}]r texture coordinate \end{DoxyParams}
+\hypertarget{group__ob3dmod_gad517647e1bd68e6c1ddb6907877897c0}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-texcoord3fv@{jit\_\-gl\_\-texcoord3fv}}
+\index{jit\_\-gl\_\-texcoord3fv@{jit\_\-gl\_\-texcoord3fv}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-texcoord3fv}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-texcoord3fv ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  float $\ast$ {\em v})}}
+\label{group__ob3dmod_gad517647e1bd68e6c1ddb6907877897c0}
+
+
+Set texture coordinate for all active texture units. Equivalent to glMultiTexCoord3fvARB for each active texture unit.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em v}]texture coordinate vector \end{DoxyParams}
+\hypertarget{group__ob3dmod_gac79a96d9c6d801778bd9675c4c5f51ec}{
+\index{ob3dmod@{ob3dmod}!jit\_\-gl\_\-unbindtexture@{jit\_\-gl\_\-unbindtexture}}
+\index{jit\_\-gl\_\-unbindtexture@{jit\_\-gl\_\-unbindtexture}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-gl\_\-unbindtexture}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gl\_\-unbindtexture ({\bf t\_\-jit\_\-gl\_\-drawinfo} $\ast$ {\em drawinfo}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em i})}}
+\label{group__ob3dmod_gac79a96d9c6d801778bd9675c4c5f51ec}
+
+
+Unbind texture for specified texture unit. 
+\begin{DoxyParams}{Parameters}
+\item[{\em drawinfo}]\hyperlink{structt__jit__gl__drawinfo}{t\_\-jit\_\-gl\_\-drawinfo} pointer \item[{\em s}]texture name \item[{\em i}]texture unit \end{DoxyParams}
+\hypertarget{group__ob3dmod_gae9cc3acec721f3e56a41664b5891b900}{
+\index{ob3dmod@{ob3dmod}!jit\_\-glchunk\_\-copy@{jit\_\-glchunk\_\-copy}}
+\index{jit\_\-glchunk\_\-copy@{jit\_\-glchunk\_\-copy}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-glchunk\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-glchunk\_\-copy ({\bf t\_\-jit\_\-glchunk} $\ast$$\ast$ {\em new}, \/  {\bf t\_\-jit\_\-glchunk} $\ast$ {\em orig})}}
+\label{group__ob3dmod_gae9cc3acec721f3e56a41664b5891b900}
+
+
+Allocates \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct, and copies from t\_\-jit\_\-gl\_\-struct provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em new}]pointer to new \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} pointer \item[{\em orig}]priginal \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gae4fabfa866a64f68987de90e065e604e}{
+\index{ob3dmod@{ob3dmod}!jit\_\-glchunk\_\-delete@{jit\_\-glchunk\_\-delete}}
+\index{jit\_\-glchunk\_\-delete@{jit\_\-glchunk\_\-delete}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-glchunk\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-glchunk\_\-delete ({\bf t\_\-jit\_\-glchunk} $\ast$ {\em x})}}
+\label{group__ob3dmod_gae4fabfa866a64f68987de90e065e604e}
+
+
+Disposes \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga5c8a73551161b7ba602c0bea2ea9e479}{
+\index{ob3dmod@{ob3dmod}!jit\_\-glchunk\_\-grid\_\-new@{jit\_\-glchunk\_\-grid\_\-new}}
+\index{jit\_\-glchunk\_\-grid\_\-new@{jit\_\-glchunk\_\-grid\_\-new}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-glchunk\_\-grid\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-glchunk}$\ast$ jit\_\-glchunk\_\-grid\_\-new ({\bf t\_\-symbol} $\ast$ {\em prim}, \/  int {\em planes}, \/  int {\em width}, \/  int {\em height})}}
+\label{group__ob3dmod_ga5c8a73551161b7ba602c0bea2ea9e479}
+
+
+Allocates and initializes a \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct with 2D grid matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em prim}]drawing primitive name \item[{\em planes}]number of planes to allocate in vertex matrix \item[{\em width}]width of vertex matrix to allocate \item[{\em height}]height of vertex matrix to allocate\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} pointer 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gae1cfab3f91302b90cdcd8e8723295f91}{
+\index{ob3dmod@{ob3dmod}!jit\_\-glchunk\_\-new@{jit\_\-glchunk\_\-new}}
+\index{jit\_\-glchunk\_\-new@{jit\_\-glchunk\_\-new}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-glchunk\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-glchunk}$\ast$ jit\_\-glchunk\_\-new ({\bf t\_\-symbol} $\ast$ {\em prim}, \/  int {\em planes}, \/  int {\em vertices}, \/  int {\em indices})}}
+\label{group__ob3dmod_gae1cfab3f91302b90cdcd8e8723295f91}
+
+
+Allocates and initializes a \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em prim}]drawing primitive name \item[{\em planes}]number of planes to allocate in vertex matrix \item[{\em vertices}]number of vertices to allocate in vertex matrix \item[{\em indices}]number of indices to allocate in index matrix, if used\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} pointer 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gacb2a2ba1b2bb33377aa10b45bb3a0531}{
+\index{ob3dmod@{ob3dmod}!jit\_\-ob3d\_\-draw\_\-chunk@{jit\_\-ob3d\_\-draw\_\-chunk}}
+\index{jit\_\-ob3d\_\-draw\_\-chunk@{jit\_\-ob3d\_\-draw\_\-chunk}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-ob3d\_\-draw\_\-chunk}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-ob3d\_\-draw\_\-chunk (void $\ast$ {\em v}, \/  {\bf t\_\-jit\_\-glchunk} $\ast$ {\em chunk})}}
+\label{group__ob3dmod_gacb2a2ba1b2bb33377aa10b45bb3a0531}
+
+
+Draws one \hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} If the OB3D is not in matrixoutput mode, the drawing call is made directly to the renderer. Otherwise, the chunk is sent out the OB3D's outlet as a message compatible with jit.gl.render.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer \item[{\em chunk}]\hyperlink{structt__jit__glchunk}{t\_\-jit\_\-glchunk} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga5c1537df19c2d7e12ef809d3de3943d9}{
+\index{ob3dmod@{ob3dmod}!jit\_\-ob3d\_\-free@{jit\_\-ob3d\_\-free}}
+\index{jit\_\-ob3d\_\-free@{jit\_\-ob3d\_\-free}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-ob3d\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-ob3d\_\-free (void $\ast$ {\em jit\_\-ob})}}
+\label{group__ob3dmod_ga5c1537df19c2d7e12ef809d3de3943d9}
+
+
+Disposes OB3D resources. 
+\begin{DoxyParams}{Parameters}
+\item[{\em jit\_\-ob}]Jitter object pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_gac27d63b4d66faf27fda165792dafa223}{
+\index{ob3dmod@{ob3dmod}!jit\_\-ob3d\_\-new@{jit\_\-ob3d\_\-new}}
+\index{jit\_\-ob3d\_\-new@{jit\_\-ob3d\_\-new}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-ob3d\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-ob3d\_\-new (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em dest\_\-name})}}
+\label{group__ob3dmod_gac27d63b4d66faf27fda165792dafa223}
+
+
+Allocates and initializes OB3D resources. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Jitter object pointer \item[{\em dest\_\-name}]drawing destination name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-ob3d pointer (opaque) 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga5e4ab4a85fa076462e640110b8dd678c}{
+\index{ob3dmod@{ob3dmod}!jit\_\-ob3d\_\-set\_\-context@{jit\_\-ob3d\_\-set\_\-context}}
+\index{jit\_\-ob3d\_\-set\_\-context@{jit\_\-ob3d\_\-set\_\-context}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-ob3d\_\-set\_\-context}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-ob3d\_\-set\_\-context (void $\ast$ {\em jit\_\-ob})}}
+\label{group__ob3dmod_ga5e4ab4a85fa076462e640110b8dd678c}
+
+
+Sets the current Open GL context to the context referenced by the OB3D drawto attribute. \begin{DoxyWarning}{Warning}
+Not recommended for use within the draw method, as it can have adverse effects when rendering to alternate contexts as is the case when capturing to a texture.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em jit\_\-ob}]Jitter object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gaee60152a1d507a630e14f0e4f71e86f2}{
+\index{ob3dmod@{ob3dmod}!jit\_\-ob3d\_\-setup@{jit\_\-ob3d\_\-setup}}
+\index{jit\_\-ob3d\_\-setup@{jit\_\-ob3d\_\-setup}!ob3dmod@{ob3dmod}}
+\subsubsection[{jit\_\-ob3d\_\-setup}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-ob3d\_\-setup (void $\ast$ {\em jit\_\-class}, \/  long {\em oboffset}, \/  long {\em flags})}}
+\label{group__ob3dmod_gaee60152a1d507a630e14f0e4f71e86f2}
+
+
+Adds default methods and attributes to the OB3D class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em jit\_\-class}]Jitter class pointer \item[{\em oboffset}]object struct byte offset for t\_\-jit\_\-ob3d pointer \item[{\em flags}]flags to override default OB3D behavior\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-class3d pointer (opaque) 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga8fa7e82f9a1f64c2e5d10b2dbf340536}{
+\index{ob3dmod@{ob3dmod}!max\_\-jit\_\-ob3d\_\-assist@{max\_\-jit\_\-ob3d\_\-assist}}
+\index{max\_\-jit\_\-ob3d\_\-assist@{max\_\-jit\_\-ob3d\_\-assist}!ob3dmod@{ob3dmod}}
+\subsubsection[{max\_\-jit\_\-ob3d\_\-assist}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err max\_\-jit\_\-ob3d\_\-assist (void $\ast$ {\em x}, \/  void $\ast$ {\em b}, \/  long {\em m}, \/  long {\em a}, \/  char $\ast$ {\em s})}}
+\label{group__ob3dmod_ga8fa7e82f9a1f64c2e5d10b2dbf340536}
+
+
+Default OB3D Max wrapper assistance method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max object pointer \item[{\em b}]ignored \item[{\em m}]inlet or outlet type \item[{\em a}]index \item[{\em s}]output string\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga00933af2acf7bd26e6480c6e234faecd}{
+\index{ob3dmod@{ob3dmod}!max\_\-jit\_\-ob3d\_\-attach@{max\_\-jit\_\-ob3d\_\-attach}}
+\index{max\_\-jit\_\-ob3d\_\-attach@{max\_\-jit\_\-ob3d\_\-attach}!ob3dmod@{ob3dmod}}
+\subsubsection[{max\_\-jit\_\-ob3d\_\-attach}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-ob3d\_\-attach (void $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-object} $\ast$ {\em jit\_\-ob}, \/  void $\ast$ {\em outlet})}}
+\label{group__ob3dmod_ga00933af2acf7bd26e6480c6e234faecd}
+
+
+Allocates and initializes OB3D Max wrapper related resources. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em jit\_\-ob}]Jitter object pointer \item[{\em outlet}]matrix outlet pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga2a6c8c09bfdbaff867e61ac74fa08a7d}{
+\index{ob3dmod@{ob3dmod}!max\_\-jit\_\-ob3d\_\-detach@{max\_\-jit\_\-ob3d\_\-detach}}
+\index{max\_\-jit\_\-ob3d\_\-detach@{max\_\-jit\_\-ob3d\_\-detach}!ob3dmod@{ob3dmod}}
+\subsubsection[{max\_\-jit\_\-ob3d\_\-detach}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-ob3d\_\-detach (void $\ast$ {\em x})}}
+\label{group__ob3dmod_ga2a6c8c09bfdbaff867e61ac74fa08a7d}
+
+
+Disposes OB3D Max wrapper related resources. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga28495cb4eb40093b45f576c6ddf41ff6}{
+\index{ob3dmod@{ob3dmod}!max\_\-ob3d\_\-bang@{max\_\-ob3d\_\-bang}}
+\index{max\_\-ob3d\_\-bang@{max\_\-ob3d\_\-bang}!ob3dmod@{ob3dmod}}
+\subsubsection[{max\_\-ob3d\_\-bang}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-ob3d\_\-bang ({\bf t\_\-max\_\-object} $\ast$ {\em x})}}
+\label{group__ob3dmod_ga28495cb4eb40093b45f576c6ddf41ff6}
+
+
+Default OB3D Max wrapper bang method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max object pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga2060791191cae96371aeae6090d1f215}{
+\index{ob3dmod@{ob3dmod}!max\_\-ob3d\_\-notify@{max\_\-ob3d\_\-notify}}
+\index{max\_\-ob3d\_\-notify@{max\_\-ob3d\_\-notify}!ob3dmod@{ob3dmod}}
+\subsubsection[{max\_\-ob3d\_\-notify}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-ob3d\_\-notify ({\bf t\_\-max\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em sender\_\-name}, \/  {\bf t\_\-symbol} $\ast$ {\em msg}, \/  void $\ast$ {\em p\_\-sender})}}
+\label{group__ob3dmod_ga2060791191cae96371aeae6090d1f215}
+
+
+Default OB3D Max wrapper notification method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max object pointer \item[{\em sender\_\-name}]sender's object name \item[{\em msg}]notification message \item[{\em p\_\-sender}]sender's object pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga4341a2f9266925591b847ba5499a6d16}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-auto\_\-get@{ob3d\_\-auto\_\-get}}
+\index{ob3d\_\-auto\_\-get@{ob3d\_\-auto\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-auto\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}long ob3d\_\-auto\_\-get (void $\ast$ {\em v})}}
+\label{group__ob3dmod_ga4341a2f9266925591b847ba5499a6d16}
+
+
+Retrieves automatic flag from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+automatic flag 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gacfadba2dc254ad30556821c5a6102012}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-dest\_\-dim\_\-get@{ob3d\_\-dest\_\-dim\_\-get}}
+\index{ob3d\_\-dest\_\-dim\_\-get@{ob3d\_\-dest\_\-dim\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-dest\_\-dim\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void ob3d\_\-dest\_\-dim\_\-get (void $\ast$ {\em v}, \/  long $\ast$ {\em width}, \/  long $\ast$ {\em height})}}
+\label{group__ob3dmod_gacfadba2dc254ad30556821c5a6102012}
+
+
+Gets destination dimensions from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer \item[{\em width}]destination dimensions width pointer \item[{\em height}]destination dimensions height pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga354e6daa1b458570e2528e12819b0c2a}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-dest\_\-dim\_\-set@{ob3d\_\-dest\_\-dim\_\-set}}
+\index{ob3d\_\-dest\_\-dim\_\-set@{ob3d\_\-dest\_\-dim\_\-set}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-dest\_\-dim\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void ob3d\_\-dest\_\-dim\_\-set (void $\ast$ {\em v}, \/  long {\em width}, \/  long {\em height})}}
+\label{group__ob3dmod_ga354e6daa1b458570e2528e12819b0c2a}
+
+
+Sets destination dimensions in opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer \item[{\em width}]destination dimensions width \item[{\em height}]destination dimensions height \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga65a7339c9100afefc290d51c083467ab}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-dirty\_\-get@{ob3d\_\-dirty\_\-get}}
+\index{ob3d\_\-dirty\_\-get@{ob3d\_\-dirty\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-dirty\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}long ob3d\_\-dirty\_\-get (void $\ast$ {\em v})}}
+\label{group__ob3dmod_ga65a7339c9100afefc290d51c083467ab}
+
+
+Retrieves dirty flag from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+dirty flag 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga8e025904830302e5815a1396c87aeb03}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-dirty\_\-set@{ob3d\_\-dirty\_\-set}}
+\index{ob3d\_\-dirty\_\-set@{ob3d\_\-dirty\_\-set}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-dirty\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void ob3d\_\-dirty\_\-set (void $\ast$ {\em v}, \/  long {\em c})}}
+\label{group__ob3dmod_ga8e025904830302e5815a1396c87aeb03}
+
+
+Sets dirty flag from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer \item[{\em c}]dirty flag state \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga79941da00228379d7e9bcc7cfd293385}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-enable\_\-get@{ob3d\_\-enable\_\-get}}
+\index{ob3d\_\-enable\_\-get@{ob3d\_\-enable\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-enable\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}long ob3d\_\-enable\_\-get (void $\ast$ {\em v})}}
+\label{group__ob3dmod_ga79941da00228379d7e9bcc7cfd293385}
+
+
+Retrieves enable flag from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+enable flag 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga71e817dad96e4b3fc54dbf3e97308b5a}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-jitob\_\-get@{ob3d\_\-jitob\_\-get}}
+\index{ob3d\_\-jitob\_\-get@{ob3d\_\-jitob\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-jitob\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ ob3d\_\-jitob\_\-get (void $\ast$ {\em v})}}
+\label{group__ob3dmod_ga71e817dad96e4b3fc54dbf3e97308b5a}
+
+
+Retrieves parent Jitter object from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+parent Jitter object pointer 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga1d44805174bf6e277a042d9644631f84}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-outlet\_\-get@{ob3d\_\-outlet\_\-get}}
+\index{ob3d\_\-outlet\_\-get@{ob3d\_\-outlet\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-outlet\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ ob3d\_\-outlet\_\-get (void $\ast$ {\em v})}}
+\label{group__ob3dmod_ga1d44805174bf6e277a042d9644631f84}
+
+
+Retrieves matrix outlet from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+matrix outlet 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_gad30ba3f5fcaf53f830d8b6430f92b4dd}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-render\_\-ptr\_\-get@{ob3d\_\-render\_\-ptr\_\-get}}
+\index{ob3d\_\-render\_\-ptr\_\-get@{ob3d\_\-render\_\-ptr\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-render\_\-ptr\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ ob3d\_\-render\_\-ptr\_\-get (void $\ast$ {\em v})}}
+\label{group__ob3dmod_gad30ba3f5fcaf53f830d8b6430f92b4dd}
+
+
+Gets renderer pointer from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+renderer pointer 
+\end{DoxyReturn}
+\hypertarget{group__ob3dmod_ga8fc47737ede14251b02ff14f78c29a99}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-render\_\-ptr\_\-set@{ob3d\_\-render\_\-ptr\_\-set}}
+\index{ob3d\_\-render\_\-ptr\_\-set@{ob3d\_\-render\_\-ptr\_\-set}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-render\_\-ptr\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void ob3d\_\-render\_\-ptr\_\-set (void $\ast$ {\em v}, \/  void $\ast$ {\em render\_\-ptr})}}
+\label{group__ob3dmod_ga8fc47737ede14251b02ff14f78c29a99}
+
+
+Sets renderer pointer in opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer \item[{\em render\_\-ptr}]renderer pointer \end{DoxyParams}
+\hypertarget{group__ob3dmod_ga37e486174b60074e0dd6b2014f88756f}{
+\index{ob3dmod@{ob3dmod}!ob3d\_\-ui\_\-get@{ob3d\_\-ui\_\-get}}
+\index{ob3d\_\-ui\_\-get@{ob3d\_\-ui\_\-get}!ob3dmod@{ob3dmod}}
+\subsubsection[{ob3d\_\-ui\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}long ob3d\_\-ui\_\-get (void $\ast$ {\em v})}}
+\label{group__ob3dmod_ga37e486174b60074e0dd6b2014f88756f}
+
+
+Retrieves UI flag from opaque t\_\-jit\_\-ob3d struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]t\_\-jit\_\-ob3d pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+UI flag 
+\end{DoxyReturn}

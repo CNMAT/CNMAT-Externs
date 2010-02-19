@@ -1,0 +1,212 @@
+\hypertarget{group__expr}{
+\section{Extending expr}
+\label{group__expr}\index{Extending expr@{Extending expr}}
+}
+
+
+If you want to use C-\/like variable expressions that are entered by a user of your object, you can use the \char`\"{}guts\char`\"{} of Max’s expr object in your object.  
+
+
+Collaboration diagram for Extending expr:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=135pt]{group__expr}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structEx__ex}{Ex\_\-ex}
+\begin{DoxyCompactList}\small\item\em ex\_\-ex. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__expr}{t\_\-expr}
+\begin{DoxyCompactList}\small\item\em Struct for an instance of expr. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__expr_gab46405eed108482db4fc1d4fc2ef7077}{
+\#define \hyperlink{group__expr_gab46405eed108482db4fc1d4fc2ef7077}{ex\_\-int}~ex\_\-cont.v\_\-int}
+\label{group__expr_gab46405eed108482db4fc1d4fc2ef7077}
+
+\begin{DoxyCompactList}\small\item\em shortcut for accessing members of an \hyperlink{structEx__ex}{Ex\_\-ex} struct's ex\_\-cont union. \item\end{DoxyCompactList}\item 
+\hypertarget{group__expr_gad3369510d47d2972732791c0f685387e}{
+\#define \hyperlink{group__expr_gad3369510d47d2972732791c0f685387e}{ex\_\-flt}~ex\_\-cont.v\_\-flt}
+\label{group__expr_gad3369510d47d2972732791c0f685387e}
+
+\begin{DoxyCompactList}\small\item\em shortcut for accessing members of an \hyperlink{structEx__ex}{Ex\_\-ex} struct's ex\_\-cont union. \item\end{DoxyCompactList}\item 
+\hypertarget{group__expr_ga9ebc5ab45aa899ff6f98c53dd4c31f49}{
+\#define \hyperlink{group__expr_ga9ebc5ab45aa899ff6f98c53dd4c31f49}{ex\_\-op}~ex\_\-cont.op}
+\label{group__expr_ga9ebc5ab45aa899ff6f98c53dd4c31f49}
+
+\begin{DoxyCompactList}\small\item\em shortcut for accessing members of an \hyperlink{structEx__ex}{Ex\_\-ex} struct's ex\_\-cont union. \item\end{DoxyCompactList}\item 
+\hypertarget{group__expr_gacf7a6e4e930397f16dca45aa0ecbcbcf}{
+\#define \hyperlink{group__expr_gacf7a6e4e930397f16dca45aa0ecbcbcf}{ex\_\-ptr}~ex\_\-cont.ptr}
+\label{group__expr_gacf7a6e4e930397f16dca45aa0ecbcbcf}
+
+\begin{DoxyCompactList}\small\item\em shortcut for accessing members of an \hyperlink{structEx__ex}{Ex\_\-ex} struct's ex\_\-cont union. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__expr_ga64f1e232097cbd73318392635e6bab0e}{e\_\-max\_\-expr\_\-types} \{ \par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea099243d5b48eaf0e63699c974b587abf}{ET\_\-INT} =  0x1, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea968ca4519aba1e3b947f8b71fd8fe623}{ET\_\-FLT} =  0x2, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea617f0c0aa78a4df760188842fafbeda1}{ET\_\-OP} =  0x3, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0eadff34cf618701594e4cd4d2d5ff439e8}{ET\_\-STR} =  0x4, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea82f625c02be30bf2cea5c2daede0f148}{ET\_\-TBL} =  0x5, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0eaf061cdcc33a494b192516b0a2bbd1451}{ET\_\-FUNC} =  0x6, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea858df3673d71d9b70bde311f8996ac3c}{ET\_\-SYM} =  0x7, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0eab7e96238528bf76765257287c0aad73a}{ET\_\-VSYM} =  0x8, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea4358f803dd76e873c6a721a15333a8db}{ET\_\-LP} =  0x9, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea8f8eacb969330e66d85d106aac740b26}{ET\_\-LB} =  0x10, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea15d055742150743c638b75029b023a59}{ET\_\-II} =  0x11, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0eabdaba3ee25ec2645465c06c8925bb916}{ET\_\-FI} =  0x12, 
+\par
+\hyperlink{group__expr_gga64f1e232097cbd73318392635e6bab0ea170485f1277407f10d0a6ca6ca8b5cc5}{ET\_\-SI} =  0x13
+ \}
+\begin{DoxyCompactList}\small\item\em Defines for ex\_\-type. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__expr_ga7430f6be4bb5d54c7ded0a9ba6b8961f}{expr\_\-new} (short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv, \hyperlink{structt__atom}{t\_\-atom} $\ast$types)
+\begin{DoxyCompactList}\small\item\em Create a new expr object. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__expr_ga4f0cecc0328fb7598e5a264e9e41c353}{expr\_\-eval} (\hyperlink{structt__expr}{t\_\-expr} $\ast$x, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv, \hyperlink{structt__atom}{t\_\-atom} $\ast$result)
+\begin{DoxyCompactList}\small\item\em Evaluate an expression in an expr object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+If you want to use C-\/like variable expressions that are entered by a user of your object, you can use the \char`\"{}guts\char`\"{} of Max’s expr object in your object. For example, the if object uses expr routines for evaluating a conditional expression, so it can decide whether to send the message after the words then or else. The following functions provide an interface to expr. 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__expr_ga64f1e232097cbd73318392635e6bab0e}{
+\index{expr@{expr}!e\_\-max\_\-expr\_\-types@{e\_\-max\_\-expr\_\-types}}
+\index{e\_\-max\_\-expr\_\-types@{e\_\-max\_\-expr\_\-types}!expr@{expr}}
+\subsubsection[{e\_\-max\_\-expr\_\-types}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-expr\_\-types}}}
+\label{group__expr_ga64f1e232097cbd73318392635e6bab0e}
+
+
+Defines for ex\_\-type. We treat parenthesis and brackets special to keep a pointer to their match in the content. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{ET\_\-INT@{ET\_\-INT}!expr@{expr}}\index{expr@{expr}!ET\_\-INT@{ET\_\-INT}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea099243d5b48eaf0e63699c974b587abf}{
+ET\_\-INT}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea099243d5b48eaf0e63699c974b587abf}
+}]an int \index{ET\_\-FLT@{ET\_\-FLT}!expr@{expr}}\index{expr@{expr}!ET\_\-FLT@{ET\_\-FLT}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea968ca4519aba1e3b947f8b71fd8fe623}{
+ET\_\-FLT}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea968ca4519aba1e3b947f8b71fd8fe623}
+}]a float \index{ET\_\-OP@{ET\_\-OP}!expr@{expr}}\index{expr@{expr}!ET\_\-OP@{ET\_\-OP}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea617f0c0aa78a4df760188842fafbeda1}{
+ET\_\-OP}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea617f0c0aa78a4df760188842fafbeda1}
+}]operator \index{ET\_\-STR@{ET\_\-STR}!expr@{expr}}\index{expr@{expr}!ET\_\-STR@{ET\_\-STR}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0eadff34cf618701594e4cd4d2d5ff439e8}{
+ET\_\-STR}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0eadff34cf618701594e4cd4d2d5ff439e8}
+}]string \index{ET\_\-TBL@{ET\_\-TBL}!expr@{expr}}\index{expr@{expr}!ET\_\-TBL@{ET\_\-TBL}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea82f625c02be30bf2cea5c2daede0f148}{
+ET\_\-TBL}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea82f625c02be30bf2cea5c2daede0f148}
+}]a table, the content is a pointer \index{ET\_\-FUNC@{ET\_\-FUNC}!expr@{expr}}\index{expr@{expr}!ET\_\-FUNC@{ET\_\-FUNC}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0eaf061cdcc33a494b192516b0a2bbd1451}{
+ET\_\-FUNC}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0eaf061cdcc33a494b192516b0a2bbd1451}
+}]a function \index{ET\_\-SYM@{ET\_\-SYM}!expr@{expr}}\index{expr@{expr}!ET\_\-SYM@{ET\_\-SYM}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea858df3673d71d9b70bde311f8996ac3c}{
+ET\_\-SYM}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea858df3673d71d9b70bde311f8996ac3c}
+}]symbol (\char`\"{}string\char`\"{}) \index{ET\_\-VSYM@{ET\_\-VSYM}!expr@{expr}}\index{expr@{expr}!ET\_\-VSYM@{ET\_\-VSYM}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0eab7e96238528bf76765257287c0aad73a}{
+ET\_\-VSYM}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0eab7e96238528bf76765257287c0aad73a}
+}]variable symbol (\char`\"{}\$s?\char`\"{}) \index{ET\_\-LP@{ET\_\-LP}!expr@{expr}}\index{expr@{expr}!ET\_\-LP@{ET\_\-LP}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea4358f803dd76e873c6a721a15333a8db}{
+ET\_\-LP}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea4358f803dd76e873c6a721a15333a8db}
+}]left parenthesis \index{ET\_\-LB@{ET\_\-LB}!expr@{expr}}\index{expr@{expr}!ET\_\-LB@{ET\_\-LB}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea8f8eacb969330e66d85d106aac740b26}{
+ET\_\-LB}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea8f8eacb969330e66d85d106aac740b26}
+}]left bracket \index{ET\_\-II@{ET\_\-II}!expr@{expr}}\index{expr@{expr}!ET\_\-II@{ET\_\-II}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea15d055742150743c638b75029b023a59}{
+ET\_\-II}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea15d055742150743c638b75029b023a59}
+}]and integer inlet \index{ET\_\-FI@{ET\_\-FI}!expr@{expr}}\index{expr@{expr}!ET\_\-FI@{ET\_\-FI}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0eabdaba3ee25ec2645465c06c8925bb916}{
+ET\_\-FI}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0eabdaba3ee25ec2645465c06c8925bb916}
+}]float inlet \index{ET\_\-SI@{ET\_\-SI}!expr@{expr}}\index{expr@{expr}!ET\_\-SI@{ET\_\-SI}}\item[{\em 
+\hypertarget{group__expr_gga64f1e232097cbd73318392635e6bab0ea170485f1277407f10d0a6ca6ca8b5cc5}{
+ET\_\-SI}
+\label{group__expr_gga64f1e232097cbd73318392635e6bab0ea170485f1277407f10d0a6ca6ca8b5cc5}
+}]string inlet \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__expr_ga4f0cecc0328fb7598e5a264e9e41c353}{
+\index{expr@{expr}!expr\_\-eval@{expr\_\-eval}}
+\index{expr\_\-eval@{expr\_\-eval}!expr@{expr}}
+\subsubsection[{expr\_\-eval}]{\setlength{\rightskip}{0pt plus 5cm}short expr\_\-eval ({\bf t\_\-expr} $\ast$ {\em x}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv}, \/  {\bf t\_\-atom} $\ast$ {\em result})}}
+\label{group__expr_ga4f0cecc0328fb7598e5a264e9e41c353}
+
+
+Evaluate an expression in an expr object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The expr object to evaluate. \item[{\em argc}]Count of arguments in argv. \item[{\em argv}]Array of nine Atoms that will be substituted for variable arguments (such as \$i1) in the expression. Unused arguments should be of type \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{A\_\-NOTHING}. \item[{\em result}]A pre-\/existing Atom that will hold the type and value of the result of evaluating the expression. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Evaluates the expression in an expr object with arguments in argv and returns the type and value of the evaluated expression as a \hyperlink{structt__atom}{t\_\-atom} in result. result need only point to a single \hyperlink{structt__atom}{t\_\-atom}, but argv should contain at least argc Atoms. If, as in the example shown above under \hyperlink{group__expr_ga7430f6be4bb5d54c7ded0a9ba6b8961f}{expr\_\-new()}, there are “gaps” between arguments, they should be filled in with \hyperlink{structt__atom}{t\_\-atom} of type \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{A\_\-NOTHING}. 
+\end{DoxyRemark}
+\hypertarget{group__expr_ga7430f6be4bb5d54c7ded0a9ba6b8961f}{
+\index{expr@{expr}!expr\_\-new@{expr\_\-new}}
+\index{expr\_\-new@{expr\_\-new}!expr@{expr}}
+\subsubsection[{expr\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ expr\_\-new (short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv}, \/  {\bf t\_\-atom} $\ast$ {\em types})}}
+\label{group__expr_ga7430f6be4bb5d54c7ded0a9ba6b8961f}
+
+
+Create a new expr object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em argc}]Count of arguments in argv. \item[{\em argv}]Arguments that are used to create the expr. See the example below for details. \item[{\em types}]A pre-\/existing array of nine t\_\-atoms, that will hold the types of any variable arguments created in the expr. The types are returned in the a\_\-type field of each \hyperlink{structt__atom}{t\_\-atom}. If an argument was not present, \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{A\_\-NOTHING} is returned. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{group__expr_ga7430f6be4bb5d54c7ded0a9ba6b8961f}{expr\_\-new()} creates an expr object from the arguments in argv and returns the type of any expr-\/style arguments contained in argv (i.e. \$i1, etc.) in atoms in an array pointed to by types.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+types should already exist as an array of nine Atoms, all of which will be filled in by \hyperlink{group__expr_ga7430f6be4bb5d54c7ded0a9ba6b8961f}{expr\_\-new()}. If an argument was not present, it will set to type \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{A\_\-NOTHING}. For example, suppose argv pointed to the following atoms: 
+\begin{DoxyCode}
+    $i1 (A_SYM) 
+    + (A_SYM) 
+    $f3 (A_SYM) 
+    + (A_SYM) 
+    3 (A_LONG) 
+\end{DoxyCode}
+
+\end{DoxyRemark}
+After calling expr\_\-new, types would contain the following: 
+\begin{DoxyCode}
+    Index   Argument    Type        Value 
+    0   1 ($i1)     A_LONG      0 
+    1   2       A_NOTHING   0 
+    2   3 ($f3)     A_FLOAT     0.0 
+    3   4       A_NOTHING   0 
+    4   5       A_NOTHING   0 
+    5   6       A_NOTHING   0 
+    6   7       A_NOTHING   0 
+    7   8       A_NOTHING   0 
+    8   9       A_NOTHING   0
+\end{DoxyCode}
+ 

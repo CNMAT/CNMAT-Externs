@@ -1,0 +1,32 @@
+\hypertarget{group__sched}{
+\section{Timing}
+\label{group__sched}\index{Timing@{Timing}}
+}
+
+
+Collaboration diagram for Timing:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=122pt]{group__sched}
+\end{center}
+\end{figure}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__clocks}{Clocks}
+
+
+\begin{DoxyCompactList}\small\item\em Clock objects are your interface to Max’s scheduler. \item\end{DoxyCompactList}\item 
+\hyperlink{group__qelems}{Qelems}
+
+
+\begin{DoxyCompactList}\small\item\em Your object’s methods may be called at interrupt level. \item\end{DoxyCompactList}\item 
+\hyperlink{group__systime}{Systime API}
+
+
+\begin{DoxyCompactList}\small\item\em The Systime API provides the means of getting the system time, instead of the scheduler time as you would with functions like \hyperlink{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}{gettime()}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__time}{ITM Time Objects}
+
+
+\begin{DoxyCompactList}\small\item\em ITM Time Objects are a high-\/level interface to ITM, a tempo-\/based scheduler API. \item\end{DoxyCompactList}\end{DoxyCompactItemize}

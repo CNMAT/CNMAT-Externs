@@ -1,0 +1,46 @@
+\hypertarget{structt__matrix__conv__info}{
+\section{t\_\-matrix\_\-conv\_\-info Struct Reference}
+\label{structt__matrix__conv__info}\index{t\_\-matrix\_\-conv\_\-info@{t\_\-matrix\_\-conv\_\-info}}
+}
+
+
+Matrix conversion struct.  
+
+
+{\ttfamily \#include $<$jit.common.h$>$}\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__matrix__conv__info_a8c9883af7386bca409844a7ddc673cf2}{
+long \hyperlink{structt__matrix__conv__info_a8c9883af7386bca409844a7ddc673cf2}{flags}}
+\label{structt__matrix__conv__info_a8c9883af7386bca409844a7ddc673cf2}
+
+\begin{DoxyCompactList}\small\item\em flags for whether or not to use interpolation, or source/destination dimensions \item\end{DoxyCompactList}\item 
+\hypertarget{structt__matrix__conv__info_a146a141828ded3b89b8906a80abf30bd}{
+long \hyperlink{structt__matrix__conv__info_a146a141828ded3b89b8906a80abf30bd}{planemap} \mbox{[}JIT\_\-MATRIX\_\-MAX\_\-PLANECOUNT\mbox{]}}
+\label{structt__matrix__conv__info_a146a141828ded3b89b8906a80abf30bd}
+
+\begin{DoxyCompactList}\small\item\em plane mapping \item\end{DoxyCompactList}\item 
+\hypertarget{structt__matrix__conv__info_afd1cfbba1e08a281d871478776458eab}{
+long \hyperlink{structt__matrix__conv__info_afd1cfbba1e08a281d871478776458eab}{srcdimstart} \mbox{[}JIT\_\-MATRIX\_\-MAX\_\-DIMCOUNT\mbox{]}}
+\label{structt__matrix__conv__info_afd1cfbba1e08a281d871478776458eab}
+
+\begin{DoxyCompactList}\small\item\em source dimension start \item\end{DoxyCompactList}\item 
+\hypertarget{structt__matrix__conv__info_a623d341810d8d585d2c090df9410e60c}{
+long \hyperlink{structt__matrix__conv__info_a623d341810d8d585d2c090df9410e60c}{srcdimend} \mbox{[}JIT\_\-MATRIX\_\-MAX\_\-DIMCOUNT\mbox{]}}
+\label{structt__matrix__conv__info_a623d341810d8d585d2c090df9410e60c}
+
+\begin{DoxyCompactList}\small\item\em source dimension end \item\end{DoxyCompactList}\item 
+\hypertarget{structt__matrix__conv__info_a339262ad8b13129d56f426e068da8082}{
+long \hyperlink{structt__matrix__conv__info_a339262ad8b13129d56f426e068da8082}{dstdimstart} \mbox{[}JIT\_\-MATRIX\_\-MAX\_\-DIMCOUNT\mbox{]}}
+\label{structt__matrix__conv__info_a339262ad8b13129d56f426e068da8082}
+
+\begin{DoxyCompactList}\small\item\em destination dimension start \item\end{DoxyCompactList}\item 
+\hypertarget{structt__matrix__conv__info_add68cbb129b01acba35db33825fbe74a}{
+long \hyperlink{structt__matrix__conv__info_add68cbb129b01acba35db33825fbe74a}{dstdimend} \mbox{[}JIT\_\-MATRIX\_\-MAX\_\-DIMCOUNT\mbox{]}}
+\label{structt__matrix__conv__info_add68cbb129b01acba35db33825fbe74a}
+
+\begin{DoxyCompactList}\small\item\em destination dimension end \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Matrix conversion struct. Used to copy data from one matrix to another with special characteristics. 

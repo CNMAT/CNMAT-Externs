@@ -1,0 +1,266 @@
+\hypertarget{group__class__old}{
+\section{Old-\/Style Classes}
+\label{group__class__old}\index{Old-\/Style Classes@{Old-\/Style Classes}}
+}
+
+
+Collaboration diagram for Old-\/Style Classes:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=123pt]{group__class__old}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__class__old_ga24bbc5a9e8f7bb0a1c6847326e2f0a20}{setup} (\hyperlink{structt__messlist}{t\_\-messlist} $\ast$$\ast$ident, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} makefun, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} freefun, short size, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} menufun, short type,...)
+\begin{DoxyCompactList}\small\item\em Use the \hyperlink{group__class__old_ga24bbc5a9e8f7bb0a1c6847326e2f0a20}{setup()} function to initialize your class by informing Max of its size, the name of your functions that create and destroy instances, and the types of arguments passed to the instance creation function. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_ga0d9bfa416fdd861d1b2fd2d17701cbb3}{addmess} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} f, char $\ast$s, short type,...)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_ga0d9bfa416fdd861d1b2fd2d17701cbb3}{addmess()} to bind a function to a message other than the standard ones covered by \hyperlink{group__class__old_gac667faa21ecad5184005266844ed0b48}{addbang()}, \hyperlink{group__class__old_ga85afc0cd451465117ac80593d3deb4f9}{addint()}, etc. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_gac667faa21ecad5184005266844ed0b48}{addbang} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} f)
+\begin{DoxyCompactList}\small\item\em Used to bind a function to the common triggering message bang. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_ga85afc0cd451465117ac80593d3deb4f9}{addint} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} f)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_ga85afc0cd451465117ac80593d3deb4f9}{addint()} to bind a function to the int message received in the leftmost inlet. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_ga1e2089acfa6856835613d130a5b6bd7d}{addfloat} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} f)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_ga1e2089acfa6856835613d130a5b6bd7d}{addfloat()} to bind a function to the float message received in the leftmost inlet. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_gad3a69b2d38b257464c6a0f8a50efd85a}{addinx} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} f, short n)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_gad3a69b2d38b257464c6a0f8a50efd85a}{addinx()} to bind a function to a int message that will be received in an inlet other than the leftmost one. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_gad223143c8da12d8f3b7b18f9d6e5da9e}{addftx} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} f, short n)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_gad223143c8da12d8f3b7b18f9d6e5da9e}{addftx()} to bind a function to a float message that will be received in an inlet other than the leftmost one. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__class__old_ga053f428d5edcc7d663980330848e73a6}{newobject} (void $\ast$maxclass)
+\begin{DoxyCompactList}\small\item\em Use newobject to allocate the space for an instance of your class and initialize its object header. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject} (\hyperlink{structt__object}{t\_\-object} $\ast$op)
+\begin{DoxyCompactList}\small\item\em Release the memory used by a Max object. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__class__old_ga4c1f100a92d6f519ba4e93665ff54998}{newinstance} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Make a new instance of an existing Max class. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_gad8f119f6232340c85b3bb358227576b3}{alias} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Use the alias function to allow users to refer to your object by a name other than that of your shared library. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__class__old_gafb05186b12fb0dceeb3185b2f59b6307}{class\_\-setname} (char $\ast$obname, char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_gafb05186b12fb0dceeb3185b2f59b6307}{class\_\-setname()} to associate you object’s name with it’s filename on disk. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__class__old_ga78c60eb0068bce55eaa635e206cba52e}{typedmess} (\hyperlink{structt__object}{t\_\-object} $\ast$op, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$msg, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argp)
+\begin{DoxyCompactList}\small\item\em Send a typed message directly to a Max object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__class__old_gafa477f96b3a02c0ecbca2b5aa14b9ecb}{getfn} (\hyperlink{structt__object}{t\_\-object} $\ast$op, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$msg)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_gafa477f96b3a02c0ecbca2b5aa14b9ecb}{getfn()} to send an untyped message to a Max object with error checking. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__class__old_ga96dfd8b6f4c7111c34f1c2103fbdcdf0}{egetfn} (\hyperlink{structt__object}{t\_\-object} $\ast$op, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$msg)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_ga96dfd8b6f4c7111c34f1c2103fbdcdf0}{egetfn()} to send an untyped message to a Max object that always works. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__class__old_ga54a45bcc841c2033467be14e6861b548}{zgetfn} (\hyperlink{structt__object}{t\_\-object} $\ast$op, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$msg)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__class__old_ga54a45bcc841c2033467be14e6861b548}{zgetfn()} to send an untyped message to a Max object without error checking. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__class__old_gac667faa21ecad5184005266844ed0b48}{
+\index{class\_\-old@{class\_\-old}!addbang@{addbang}}
+\index{addbang@{addbang}!class_old@{class\_\-old}}
+\subsubsection[{addbang}]{\setlength{\rightskip}{0pt plus 5cm}void addbang ({\bf method} {\em f})}}
+\label{group__class__old_gac667faa21ecad5184005266844ed0b48}
+
+
+Used to bind a function to the common triggering message bang. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]Function to be the bang method. \end{DoxyParams}
+\hypertarget{group__class__old_ga1e2089acfa6856835613d130a5b6bd7d}{
+\index{class\_\-old@{class\_\-old}!addfloat@{addfloat}}
+\index{addfloat@{addfloat}!class_old@{class\_\-old}}
+\subsubsection[{addfloat}]{\setlength{\rightskip}{0pt plus 5cm}void addfloat ({\bf method} {\em f})}}
+\label{group__class__old_ga1e2089acfa6856835613d130a5b6bd7d}
+
+
+Use \hyperlink{group__class__old_ga1e2089acfa6856835613d130a5b6bd7d}{addfloat()} to bind a function to the float message received in the leftmost inlet. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]Function to be the int method. \end{DoxyParams}
+\hypertarget{group__class__old_gad223143c8da12d8f3b7b18f9d6e5da9e}{
+\index{class\_\-old@{class\_\-old}!addftx@{addftx}}
+\index{addftx@{addftx}!class_old@{class\_\-old}}
+\subsubsection[{addftx}]{\setlength{\rightskip}{0pt plus 5cm}void addftx ({\bf method} {\em f}, \/  short {\em n})}}
+\label{group__class__old_gad223143c8da12d8f3b7b18f9d6e5da9e}
+
+
+Use \hyperlink{group__class__old_gad223143c8da12d8f3b7b18f9d6e5da9e}{addftx()} to bind a function to a float message that will be received in an inlet other than the leftmost one. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]Function to be the float method. \item[{\em n}]Number of the inlet connected to this method. 1 is the first inlet to the right of the left inlet.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+This correspondence between inlet locations and messages is not automatic, but it is strongly suggested that you follow existing practice. You must set the correspondence up when creating an object of your class with proper use of intin and floatin in your instance creation function \hyperlink{chapter_anatomy_chapter_anatomy_object_new}{New Instance Routine}. 
+\end{DoxyRemark}
+\hypertarget{group__class__old_ga85afc0cd451465117ac80593d3deb4f9}{
+\index{class\_\-old@{class\_\-old}!addint@{addint}}
+\index{addint@{addint}!class_old@{class\_\-old}}
+\subsubsection[{addint}]{\setlength{\rightskip}{0pt plus 5cm}void addint ({\bf method} {\em f})}}
+\label{group__class__old_ga85afc0cd451465117ac80593d3deb4f9}
+
+
+Use \hyperlink{group__class__old_ga85afc0cd451465117ac80593d3deb4f9}{addint()} to bind a function to the int message received in the leftmost inlet. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]Function to be the int method. \end{DoxyParams}
+\hypertarget{group__class__old_gad3a69b2d38b257464c6a0f8a50efd85a}{
+\index{class\_\-old@{class\_\-old}!addinx@{addinx}}
+\index{addinx@{addinx}!class_old@{class\_\-old}}
+\subsubsection[{addinx}]{\setlength{\rightskip}{0pt plus 5cm}void addinx ({\bf method} {\em f}, \/  short {\em n})}}
+\label{group__class__old_gad3a69b2d38b257464c6a0f8a50efd85a}
+
+
+Use \hyperlink{group__class__old_gad3a69b2d38b257464c6a0f8a50efd85a}{addinx()} to bind a function to a int message that will be received in an inlet other than the leftmost one. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]Function to be the int method. \item[{\em n}]Number of the inlet connected to this method. 1 is the first inlet to the right of the left inlet.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+This correspondence between inlet locations and messages is not automatic, but it is strongly suggested that you follow existing practice. You must set the correspondence up when creating an object of your class with proper use of intin and floatin in your instance creation function \hyperlink{chapter_anatomy_chapter_anatomy_object_new}{New Instance Routine}. 
+\end{DoxyRemark}
+\hypertarget{group__class__old_ga0d9bfa416fdd861d1b2fd2d17701cbb3}{
+\index{class\_\-old@{class\_\-old}!addmess@{addmess}}
+\index{addmess@{addmess}!class_old@{class\_\-old}}
+\subsubsection[{addmess}]{\setlength{\rightskip}{0pt plus 5cm}void addmess ({\bf method} {\em f}, \/  char $\ast$ {\em s}, \/  short {\em type}, \/   {\em ...})}}
+\label{group__class__old_ga0d9bfa416fdd861d1b2fd2d17701cbb3}
+
+
+Use \hyperlink{group__class__old_ga0d9bfa416fdd861d1b2fd2d17701cbb3}{addmess()} to bind a function to a message other than the standard ones covered by \hyperlink{group__class__old_gac667faa21ecad5184005266844ed0b48}{addbang()}, \hyperlink{group__class__old_ga85afc0cd451465117ac80593d3deb4f9}{addint()}, etc. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]Function you want to be the method. \item[{\em s}]C string defining the message. \item[{\em type}]The first of one or more integers from \hyperlink{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}{e\_\-max\_\-atomtypes} specifying the arguments to the message. \item[{\em ...}]Any additional types from \hyperlink{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}{e\_\-max\_\-atomtypes} for additonal arguments. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{chapter_anatomy}{Anatomy of a Max Object} 
+\end{DoxySeeAlso}
+\hypertarget{group__class__old_gad8f119f6232340c85b3bb358227576b3}{
+\index{class\_\-old@{class\_\-old}!alias@{alias}}
+\index{alias@{alias}!class_old@{class\_\-old}}
+\subsubsection[{alias}]{\setlength{\rightskip}{0pt plus 5cm}void alias (char $\ast$ {\em name})}}
+\label{group__class__old_gad8f119f6232340c85b3bb358227576b3}
+
+
+Use the alias function to allow users to refer to your object by a name other than that of your shared library. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]An alternative name for the user to use to make an object of your class. \end{DoxyParams}
+\hypertarget{group__class__old_gafb05186b12fb0dceeb3185b2f59b6307}{
+\index{class\_\-old@{class\_\-old}!class\_\-setname@{class\_\-setname}}
+\index{class\_\-setname@{class\_\-setname}!class_old@{class\_\-old}}
+\subsubsection[{class\_\-setname}]{\setlength{\rightskip}{0pt plus 5cm}void class\_\-setname (char $\ast$ {\em obname}, \/  char $\ast$ {\em filename})}}
+\label{group__class__old_gafb05186b12fb0dceeb3185b2f59b6307}
+
+
+Use \hyperlink{group__class__old_gafb05186b12fb0dceeb3185b2f59b6307}{class\_\-setname()} to associate you object’s name with it’s filename on disk. 
+\begin{DoxyParams}{Parameters}
+\item[{\em obname}]A character string with the name of your object class as it appears in Max. \item[{\em filename}]A character string with the name of your external’s file as it appears on disk. \end{DoxyParams}
+\hypertarget{group__class__old_ga96dfd8b6f4c7111c34f1c2103fbdcdf0}{
+\index{class\_\-old@{class\_\-old}!egetfn@{egetfn}}
+\index{egetfn@{egetfn}!class_old@{class\_\-old}}
+\subsubsection[{egetfn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} egetfn ({\bf t\_\-object} $\ast$ {\em op}, \/  {\bf t\_\-symbol} $\ast$ {\em msg})}}
+\label{group__class__old_ga96dfd8b6f4c7111c34f1c2103fbdcdf0}
+
+
+Use \hyperlink{group__class__old_ga96dfd8b6f4c7111c34f1c2103fbdcdf0}{egetfn()} to send an untyped message to a Max object that always works. 
+\begin{DoxyParams}{Parameters}
+\item[{\em op}]Receiver of the message. \item[{\em msg}]Message selector. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+egetfn returns a pointer to the method bound to the message selector msg in the receiver’s message list. If the method can’t be found, a pointer to a do-\/nothing function is returned. 
+\end{DoxyReturn}
+\hypertarget{group__class__old_gadf30646e52376a37b93cc20efac65636}{
+\index{class\_\-old@{class\_\-old}!freeobject@{freeobject}}
+\index{freeobject@{freeobject}!class_old@{class\_\-old}}
+\subsubsection[{freeobject}]{\setlength{\rightskip}{0pt plus 5cm}void freeobject ({\bf t\_\-object} $\ast$ {\em op})}}
+\label{group__class__old_gadf30646e52376a37b93cc20efac65636}
+
+
+Release the memory used by a Max object. \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()} calls an object’s free function, if any, then disposes the memory used by the object itself. \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()} should be used on any instance of a standard Max object data structure, with the exception of Qelems and Atombufs. Clocks, Binbufs, Proxies, Exprs, etc. should be freed with \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em op}]The object instance pointer to free.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+This function can be replaced by the use of \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}. Unlike \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()}, \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} checkes to make sure the pointer is not NULL before trying to free it.
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__class__old_ga053f428d5edcc7d663980330848e73a6}{newobject()} 
+
+\hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} 
+\end{DoxySeeAlso}
+\hypertarget{group__class__old_gafa477f96b3a02c0ecbca2b5aa14b9ecb}{
+\index{class\_\-old@{class\_\-old}!getfn@{getfn}}
+\index{getfn@{getfn}!class_old@{class\_\-old}}
+\subsubsection[{getfn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} getfn ({\bf t\_\-object} $\ast$ {\em op}, \/  {\bf t\_\-symbol} $\ast$ {\em msg})}}
+\label{group__class__old_gafa477f96b3a02c0ecbca2b5aa14b9ecb}
+
+
+Use \hyperlink{group__class__old_gafa477f96b3a02c0ecbca2b5aa14b9ecb}{getfn()} to send an untyped message to a Max object with error checking. 
+\begin{DoxyParams}{Parameters}
+\item[{\em op}]Receiver of the message. \item[{\em msg}]Message selector. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+getfn returns a pointer to the method bound to the message selector msg in the receiver’s message list. It returns 0 and prints an error message in Max Window if the method can’t be found. 
+\end{DoxyReturn}
+\hypertarget{group__class__old_ga4c1f100a92d6f519ba4e93665ff54998}{
+\index{class\_\-old@{class\_\-old}!newinstance@{newinstance}}
+\index{newinstance@{newinstance}!class_old@{class\_\-old}}
+\subsubsection[{newinstance}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ newinstance ({\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__class__old_ga4c1f100a92d6f519ba4e93665ff54998}
+
+
+Make a new instance of an existing Max class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]className Symbol specifying the name of the class of the instance to be created. \item[{\em argc}]Count of arguments in argv. \item[{\em argv}]Array of t\_\-atoms; arguments to the class’s instance creation function.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the created object, or 0 if the class didn’t exist or there was another type of error in creating the instance.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+This function creates a new instance of the specified class. Using newinstance is equivalent to typing something in a New Object box when using Max. The difference is that no object box is created in any Patcher window, and you can send messages to the object directly without connecting any patch cords. The messages can either be type-\/ checked (using typedmess) or non-\/type-\/checked (using the members of the getfn family).
+\end{DoxyRemark}
+This function is useful for taking advantage of other already-\/defined objects that you would like to use “privately” in your object, such as tables. See the source code for the coll object for an example of using a privately defined class. \hypertarget{group__class__old_ga053f428d5edcc7d663980330848e73a6}{
+\index{class\_\-old@{class\_\-old}!newobject@{newobject}}
+\index{newobject@{newobject}!class_old@{class\_\-old}}
+\subsubsection[{newobject}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ newobject (void $\ast$ {\em maxclass})}}
+\label{group__class__old_ga053f428d5edcc7d663980330848e73a6}
+
+
+Use newobject to allocate the space for an instance of your class and initialize its object header. 
+\begin{DoxyParams}{Parameters}
+\item[{\em maxclass}]The global class variable initialized in your main routine by the setup function. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the new instance.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+You call \hyperlink{group__class__old_ga053f428d5edcc7d663980330848e73a6}{newobject()} when creating an instance of your class in your creation function. newobject allocates the proper amount of memory for an object of your class and installs a pointer to your class in the object, so that it can respond with your class’s methods if it receives a message. 
+\end{DoxyRemark}
+\hypertarget{group__class__old_ga24bbc5a9e8f7bb0a1c6847326e2f0a20}{
+\index{class\_\-old@{class\_\-old}!setup@{setup}}
+\index{setup@{setup}!class_old@{class\_\-old}}
+\subsubsection[{setup}]{\setlength{\rightskip}{0pt plus 5cm}void setup ({\bf t\_\-messlist} $\ast$$\ast$ {\em ident}, \/  {\bf method} {\em makefun}, \/  {\bf method} {\em freefun}, \/  short {\em size}, \/  {\bf method} {\em menufun}, \/  short {\em type}, \/   {\em ...})}}
+\label{group__class__old_ga24bbc5a9e8f7bb0a1c6847326e2f0a20}
+
+
+Use the \hyperlink{group__class__old_ga24bbc5a9e8f7bb0a1c6847326e2f0a20}{setup()} function to initialize your class by informing Max of its size, the name of your functions that create and destroy instances, and the types of arguments passed to the instance creation function. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ident}]A global variable in your code that points to the initialized class. \item[{\em makefun}]Your instance creation function. \item[{\em freefun}]Your instance free function (see Chapter 7). \item[{\em size}]The size of your objects data structure in bytes. Usually you use the C sizeof operator here. \item[{\em menufun}]No longer used. You should pass NULL for this parameter. \item[{\em type}]The first of a list of arguments passed to makefun when an object is created. \item[{\em ...}]Any additional arguments passed to makefun when an object is created. Together with the type parameter, this creates a standard Max type list as enumerated in \hyperlink{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}{e\_\-max\_\-atomtypes}. The final argument of the type list should be a 0. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{chapter_anatomy}{Anatomy of a Max Object} 
+\end{DoxySeeAlso}
+\hypertarget{group__class__old_ga78c60eb0068bce55eaa635e206cba52e}{
+\index{class\_\-old@{class\_\-old}!typedmess@{typedmess}}
+\index{typedmess@{typedmess}!class_old@{class\_\-old}}
+\subsubsection[{typedmess}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ typedmess ({\bf t\_\-object} $\ast$ {\em op}, \/  {\bf t\_\-symbol} $\ast$ {\em msg}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argp})}}
+\label{group__class__old_ga78c60eb0068bce55eaa635e206cba52e}
+
+
+Send a typed message directly to a Max object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em op}]Max object that will receive the message. \item[{\em msg}]The message selector. \item[{\em argc}]Count of message arguments in argv. \item[{\em argp}]Array of t\_\-atoms; the message arguments. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the receiver object can respond to the message, \hyperlink{group__class__old_ga78c60eb0068bce55eaa635e206cba52e}{typedmess()} returns the result. Otherwise, an error message will be seen in the Max window and 0 will be returned.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+typedmess sends a message to a Max object (receiver) a message with arguments. Note that the message must be a \hyperlink{structt__symbol}{t\_\-symbol}, not a character string, so you must call gensym on a string before passing it to typedmess. Also, note that untyped messages defined for classes with the argument list \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af48193ec36e53b1507d81c49873c8d7a}{A\_\-CANT} cannot be sent using typedmess. You must use \hyperlink{group__class__old_gafa477f96b3a02c0ecbca2b5aa14b9ecb}{getfn()} etc. instead.
+\end{DoxyRemark}
+Example: 
+\begin{DoxyCode}
+    //If you want to send a bang message to the object bang_me… 
+    void *bangResult; 
+    bangResult = typedmess(bang_me,gensym("bang"),0,0L);
+\end{DoxyCode}
+ \hypertarget{group__class__old_ga54a45bcc841c2033467be14e6861b548}{
+\index{class\_\-old@{class\_\-old}!zgetfn@{zgetfn}}
+\index{zgetfn@{zgetfn}!class_old@{class\_\-old}}
+\subsubsection[{zgetfn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} zgetfn ({\bf t\_\-object} $\ast$ {\em op}, \/  {\bf t\_\-symbol} $\ast$ {\em msg})}}
+\label{group__class__old_ga54a45bcc841c2033467be14e6861b548}
+
+
+Use \hyperlink{group__class__old_ga54a45bcc841c2033467be14e6861b548}{zgetfn()} to send an untyped message to a Max object without error checking. 
+\begin{DoxyParams}{Parameters}
+\item[{\em op}]Receiver of the message. \item[{\em msg}]Message selector. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+zgetfn returns a pointer to the method bound to the message selector msg in the receiver’s message list. It returns 0 but doesn’t print an error message in Max Window if the method can’t be found. 
+\end{DoxyReturn}

@@ -1,0 +1,148 @@
+\hypertarget{structt__buffer}{
+\section{t\_\-buffer Struct Reference}
+\label{structt__buffer}\index{t\_\-buffer@{t\_\-buffer}}
+}
+
+
+Data structure for the buffer$\sim$ object.  
+
+
+{\ttfamily \#include $<$buffer.h$>$}Collaboration diagram for t\_\-buffer:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=165pt]{structt__buffer__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__buffer_a5f5c5da40aa47c35198cac506996b9fb}{
+\hyperlink{structt__object}{t\_\-object} \hyperlink{structt__buffer_a5f5c5da40aa47c35198cac506996b9fb}{b\_\-obj}}
+\label{structt__buffer_a5f5c5da40aa47c35198cac506996b9fb}
+
+\begin{DoxyCompactList}\small\item\em doesn't have any signals so it doesn't need to be pxobject \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a68304a36f9a9da0d58c56117d6fece1a}{
+long \hyperlink{structt__buffer_a68304a36f9a9da0d58c56117d6fece1a}{b\_\-valid}}
+\label{structt__buffer_a68304a36f9a9da0d58c56117d6fece1a}
+
+\begin{DoxyCompactList}\small\item\em flag is off during read replacement or editing operation \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_ac1134bb20031735cac91d0e539411154}{
+float $\ast$ \hyperlink{structt__buffer_ac1134bb20031735cac91d0e539411154}{b\_\-samples}}
+\label{structt__buffer_ac1134bb20031735cac91d0e539411154}
+
+\begin{DoxyCompactList}\small\item\em stored with interleaved channels if multi-\/channel \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_aca877f0da232ca017487eac34c952c34}{
+long \hyperlink{structt__buffer_aca877f0da232ca017487eac34c952c34}{b\_\-frames}}
+\label{structt__buffer_aca877f0da232ca017487eac34c952c34}
+
+\begin{DoxyCompactList}\small\item\em number of sample frames (each one is sizeof(float) $\ast$ b\_\-nchans bytes) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a38aa1caa16c7dc52d8680c4d7d69c807}{
+long \hyperlink{structt__buffer_a38aa1caa16c7dc52d8680c4d7d69c807}{b\_\-nchans}}
+\label{structt__buffer_a38aa1caa16c7dc52d8680c4d7d69c807}
+
+\begin{DoxyCompactList}\small\item\em number of channels \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a64148c3117c0e9248bde52405cb56b2b}{
+long \hyperlink{structt__buffer_a64148c3117c0e9248bde52405cb56b2b}{b\_\-size}}
+\label{structt__buffer_a64148c3117c0e9248bde52405cb56b2b}
+
+\begin{DoxyCompactList}\small\item\em size of buffer in floats \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_ab92b893f03893fc84dd76b2f2c22714a}{
+float \hyperlink{structt__buffer_ab92b893f03893fc84dd76b2f2c22714a}{b\_\-sr}}
+\label{structt__buffer_ab92b893f03893fc84dd76b2f2c22714a}
+
+\begin{DoxyCompactList}\small\item\em sampling rate of the buffer \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_adbd53a32c0dec6053bc570779bb3b794}{
+float \hyperlink{structt__buffer_adbd53a32c0dec6053bc570779bb3b794}{b\_\-1oversr}}
+\label{structt__buffer_adbd53a32c0dec6053bc570779bb3b794}
+
+\begin{DoxyCompactList}\small\item\em 1 / sr \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_ab12d4c279979f7b9b49a997c9a277455}{
+float \hyperlink{structt__buffer_ab12d4c279979f7b9b49a997c9a277455}{b\_\-msr}}
+\label{structt__buffer_ab12d4c279979f7b9b49a997c9a277455}
+
+\begin{DoxyCompactList}\small\item\em sr $\ast$ .001 \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a580c0c31c6e42a1ca383a5483c1c0642}{
+float $\ast$ \hyperlink{structt__buffer_a580c0c31c6e42a1ca383a5483c1c0642}{b\_\-memory}}
+\label{structt__buffer_a580c0c31c6e42a1ca383a5483c1c0642}
+
+\begin{DoxyCompactList}\small\item\em pointer to where memory starts (initial padding for interp) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a0c5c9c5f21573db201bdb2502439cf72}{
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{structt__buffer_a0c5c9c5f21573db201bdb2502439cf72}{b\_\-name}}
+\label{structt__buffer_a0c5c9c5f21573db201bdb2502439cf72}
+
+\begin{DoxyCompactList}\small\item\em name of the buffer \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a328838c04c62453255265176b8cb0947}{
+long \hyperlink{structt__buffer_a328838c04c62453255265176b8cb0947}{b\_\-susloopstart}}
+\label{structt__buffer_a328838c04c62453255265176b8cb0947}
+
+\begin{DoxyCompactList}\small\item\em looping info (from AIFF file) in samples \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a09ac5cec8c1b28ca5824e28deb8cbcc1}{
+long \hyperlink{structt__buffer_a09ac5cec8c1b28ca5824e28deb8cbcc1}{b\_\-susloopend}}
+\label{structt__buffer_a09ac5cec8c1b28ca5824e28deb8cbcc1}
+
+\begin{DoxyCompactList}\small\item\em looping info (from AIFF file) in samples \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a622f16db4d88d0afa5ebc31d713ab962}{
+long \hyperlink{structt__buffer_a622f16db4d88d0afa5ebc31d713ab962}{b\_\-relloopstart}}
+\label{structt__buffer_a622f16db4d88d0afa5ebc31d713ab962}
+
+\begin{DoxyCompactList}\small\item\em looping info (from AIFF file) in samples \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a3b42440e19f989c3d7832fdc346bbb88}{
+long \hyperlink{structt__buffer_a3b42440e19f989c3d7832fdc346bbb88}{b\_\-relloopend}}
+\label{structt__buffer_a3b42440e19f989c3d7832fdc346bbb88}
+
+\begin{DoxyCompactList}\small\item\em looping info (from AIFF file) in samples \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a75e91b559ff55ea445027831e4db7e67}{
+long \hyperlink{structt__buffer_a75e91b559ff55ea445027831e4db7e67}{b\_\-format}}
+\label{structt__buffer_a75e91b559ff55ea445027831e4db7e67}
+
+\begin{DoxyCompactList}\small\item\em 'AIFF' or 'Sd2f' \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a4f2761b3209fd7c8a3dc6ce728e2976b}{
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{structt__buffer_a4f2761b3209fd7c8a3dc6ce728e2976b}{b\_\-filename}}
+\label{structt__buffer_a4f2761b3209fd7c8a3dc6ce728e2976b}
+
+\begin{DoxyCompactList}\small\item\em last file read (not written) for readagain message \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_ab39f2827a6e6b984d3a00a694877c280}{
+long \hyperlink{structt__buffer_ab39f2827a6e6b984d3a00a694877c280}{b\_\-oldnchans}}
+\label{structt__buffer_ab39f2827a6e6b984d3a00a694877c280}
+
+\begin{DoxyCompactList}\small\item\em used for resizing window in case of \# of channels change \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_ab5518aa23b30d50e4dd3c093aeed7315}{
+long \hyperlink{structt__buffer_ab5518aa23b30d50e4dd3c093aeed7315}{b\_\-outputbytes}}
+\label{structt__buffer_ab5518aa23b30d50e4dd3c093aeed7315}
+
+\begin{DoxyCompactList}\small\item\em number of bytes used for output sample (1-\/4) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_af7153171460f3fc031af7435eb51faef}{
+long \hyperlink{structt__buffer_af7153171460f3fc031af7435eb51faef}{b\_\-modtime}}
+\label{structt__buffer_af7153171460f3fc031af7435eb51faef}
+
+\begin{DoxyCompactList}\small\item\em last modified time (\char`\"{}dirty\char`\"{} method) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_af548887b07ecbe56ec0cb1bb1b6ec178}{
+struct \_\-buffer $\ast$ \hyperlink{structt__buffer_af548887b07ecbe56ec0cb1bb1b6ec178}{b\_\-peer}}
+\label{structt__buffer_af548887b07ecbe56ec0cb1bb1b6ec178}
+
+\begin{DoxyCompactList}\small\item\em objects that share this symbol (used as a link in the peers) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_af21398b09f90ab2dc395f032f4a6a6be}{
+Boolean \hyperlink{structt__buffer_af21398b09f90ab2dc395f032f4a6a6be}{b\_\-owner}}
+\label{structt__buffer_af21398b09f90ab2dc395f032f4a6a6be}
+
+\begin{DoxyCompactList}\small\item\em b\_\-memory/b\_\-samples \char`\"{}owned\char`\"{} by this object \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a99862e5daf5af41ec7295ae82f1cc90d}{
+long \hyperlink{structt__buffer_a99862e5daf5af41ec7295ae82f1cc90d}{b\_\-outputfmt}}
+\label{structt__buffer_a99862e5daf5af41ec7295ae82f1cc90d}
+
+\begin{DoxyCompactList}\small\item\em sample type (A\_\-LONG, A\_\-FLOAT, etc.) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a8b73229209b37b22a3baeadb57619699}{
+t\_\-int32\_\-atomic \hyperlink{structt__buffer_a8b73229209b37b22a3baeadb57619699}{b\_\-inuse}}
+\label{structt__buffer_a8b73229209b37b22a3baeadb57619699}
+
+\begin{DoxyCompactList}\small\item\em objects that use buffer should ATOMIC\_\-INCREMENT / ATOMIC\_\-DECREMENT this in their perform \item\end{DoxyCompactList}\item 
+\hypertarget{structt__buffer_a7e49d1b985c70b8e991021e34c07085a}{
+void $\ast$ \hyperlink{structt__buffer_a7e49d1b985c70b8e991021e34c07085a}{b\_\-dspchain}}
+\label{structt__buffer_a7e49d1b985c70b8e991021e34c07085a}
+
+\begin{DoxyCompactList}\small\item\em dspchain used for this instance \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Data structure for the buffer$\sim$ object. 

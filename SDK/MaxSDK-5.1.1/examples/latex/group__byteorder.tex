@@ -1,0 +1,251 @@
+\hypertarget{group__byteorder}{
+\section{Byte Ordering}
+\label{group__byteorder}\index{Byte Ordering@{Byte Ordering}}
+}
+
+
+Utilities for swapping the order of bytes to match the Endianness of the required platform.  
+
+
+Collaboration diagram for Byte Ordering:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=132pt]{group__byteorder}
+\end{center}
+\end{figure}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__byteorder_gaa1bcf3a033a866ca81d51e9f65ec4d3a}{C74\_\-LITTLE\_\-ENDIAN}~1
+\begin{DoxyCompactList}\small\item\em A macro that indicates whether or not the current architecture uses Litte-\/endian byte ordering (such as is used on an i386 processor). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga51aafb747c672a9623c9b6e851c5cb53}{C74\_\-BIG\_\-ENDIAN}~0
+\begin{DoxyCompactList}\small\item\em A macro that indicates whether or not the current architecture uses Big-\/endian byte ordering (such as is used on a PPC processor). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga035b5999ffd460b028adbddc114bc1ea}{BYTEORDER\_\-SWAPW16}(x)~((short)(((((unsigned short)(x))$>$$>$8)\&0x00ff)+((((unsigned short)(x))$<$$<$8)\&0xff00)))
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a short integer. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga2361fba0c30f763e8fe3fb2fe0eece43}{BYTEORDER\_\-SWAPW32}(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of an integer. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga78c51e5ecacde07ac8f68c1dc7bca801}{BYTEORDER\_\-SWAPF32}~byteorder\_\-swapf32
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a float. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga9e36111d85cc708026b869111af4d084}{BYTEORDER\_\-SWAPF64}~byteorder\_\-swapf64
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a double. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_gaa46359f7d1f29bab74afddacd9decdeb}{BYTEORDER\_\-LSBW16}(x)~(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a short integer from the native swapping to Little-\/endian (Least Significant Byte). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga24bb3ddfe733a3202d53a0d14f186105}{BYTEORDER\_\-LSBW32}(x)~(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of an integer from the native swapping to Little-\/endian (Least Significant Byte). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_gae8ff7d2f1611389be2d908c8675e344a}{BYTEORDER\_\-LSBF32}(x)~(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a float from the native swapping to Little-\/endian (Least Significant Byte). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga8fe695baca4e41252ee2017b3f2e5068}{BYTEORDER\_\-LSBF64}(x)~(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a double from the native swapping to Little-\/endian (Least Significant Byte). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_gaa99b101c1a15ccb9bf5d070aea1b23c8}{BYTEORDER\_\-MSBW16}(x)~BYTEORDER\_\-SWAPW16(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a short integer from the native swapping to Big-\/endian (Most Significant Byte). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga46ff7133babdbfa8166fbdb4d40d72a7}{BYTEORDER\_\-MSBW32}(x)~BYTEORDER\_\-SWAPW32(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of an integer from the native swapping to Big-\/endian (Most Significant Byte). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_gaa5783a6ed7c7d471150da5a9c5453f79}{BYTEORDER\_\-MSBF32}(x)~BYTEORDER\_\-SWAPF32(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a float from the native swapping to Big-\/endian (Most Significant Byte). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__byteorder_ga5b3d8dac5e677fd03f1959a2ff68784e}{BYTEORDER\_\-MSBF64}(x)~BYTEORDER\_\-SWAPF64(x)
+\begin{DoxyCompactList}\small\item\em Switch the byte ordering of a double from the native swapping to Big-\/endian (Most Significant Byte). \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Utilities for swapping the order of bytes to match the Endianness of the required platform. An introduction to the issue of endianness can be found at \href{http://en.wikipedia.org/wiki/Endianness.}{\tt http://en.wikipedia.org/wiki/Endianness.}
+
+Of particular relevance is that a Macintosh with a PPC processor uses a Big-\/endian byte ordering, whereas an Intel processor in a Mac or Windows machine will use a Little-\/endian byte ordering.
+
+These utilities are defined to assist with cases where byte ordering needs to be manipulated for floats or ints. Note that floats are subject to the same byte ordering rules as integers. While the IEEE defines the bits, the machine still defines how the bits are arranged with regard to bytes. 
+
+\subsection{Define Documentation}
+\hypertarget{group__byteorder_gae8ff7d2f1611389be2d908c8675e344a}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-LSBF32@{BYTEORDER\_\-LSBF32}}
+\index{BYTEORDER\_\-LSBF32@{BYTEORDER\_\-LSBF32}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-LSBF32}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-LSBF32(x)~(x)}}
+\label{group__byteorder_gae8ff7d2f1611389be2d908c8675e344a}
+
+
+Switch the byte ordering of a float from the native swapping to Little-\/endian (Least Significant Byte). If the current environment is already Little-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A float. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A float with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga8fe695baca4e41252ee2017b3f2e5068}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-LSBF64@{BYTEORDER\_\-LSBF64}}
+\index{BYTEORDER\_\-LSBF64@{BYTEORDER\_\-LSBF64}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-LSBF64}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-LSBF64(x)~(x)}}
+\label{group__byteorder_ga8fe695baca4e41252ee2017b3f2e5068}
+
+
+Switch the byte ordering of a double from the native swapping to Little-\/endian (Least Significant Byte). If the current environment is already Little-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A double. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A double with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_gaa46359f7d1f29bab74afddacd9decdeb}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-LSBW16@{BYTEORDER\_\-LSBW16}}
+\index{BYTEORDER\_\-LSBW16@{BYTEORDER\_\-LSBW16}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-LSBW16}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-LSBW16(x)~(x)}}
+\label{group__byteorder_gaa46359f7d1f29bab74afddacd9decdeb}
+
+
+Switch the byte ordering of a short integer from the native swapping to Little-\/endian (Least Significant Byte). If the current environment is already Little-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A short integer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A short integer with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga24bb3ddfe733a3202d53a0d14f186105}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-LSBW32@{BYTEORDER\_\-LSBW32}}
+\index{BYTEORDER\_\-LSBW32@{BYTEORDER\_\-LSBW32}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-LSBW32}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-LSBW32(x)~(x)}}
+\label{group__byteorder_ga24bb3ddfe733a3202d53a0d14f186105}
+
+
+Switch the byte ordering of an integer from the native swapping to Little-\/endian (Least Significant Byte). If the current environment is already Little-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An integer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_gaa5783a6ed7c7d471150da5a9c5453f79}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-MSBF32@{BYTEORDER\_\-MSBF32}}
+\index{BYTEORDER\_\-MSBF32@{BYTEORDER\_\-MSBF32}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-MSBF32}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-MSBF32(x)~BYTEORDER\_\-SWAPF32(x)}}
+\label{group__byteorder_gaa5783a6ed7c7d471150da5a9c5453f79}
+
+
+Switch the byte ordering of a float from the native swapping to Big-\/endian (Most Significant Byte). If the current environment is already Big-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A float. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A float with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga5b3d8dac5e677fd03f1959a2ff68784e}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-MSBF64@{BYTEORDER\_\-MSBF64}}
+\index{BYTEORDER\_\-MSBF64@{BYTEORDER\_\-MSBF64}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-MSBF64}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-MSBF64(x)~BYTEORDER\_\-SWAPF64(x)}}
+\label{group__byteorder_ga5b3d8dac5e677fd03f1959a2ff68784e}
+
+
+Switch the byte ordering of a double from the native swapping to Big-\/endian (Most Significant Byte). If the current environment is already Big-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A double. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A double with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_gaa99b101c1a15ccb9bf5d070aea1b23c8}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-MSBW16@{BYTEORDER\_\-MSBW16}}
+\index{BYTEORDER\_\-MSBW16@{BYTEORDER\_\-MSBW16}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-MSBW16}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-MSBW16(x)~BYTEORDER\_\-SWAPW16(x)}}
+\label{group__byteorder_gaa99b101c1a15ccb9bf5d070aea1b23c8}
+
+
+Switch the byte ordering of a short integer from the native swapping to Big-\/endian (Most Significant Byte). If the current environment is already Big-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A short integer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A short integer with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga46ff7133babdbfa8166fbdb4d40d72a7}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-MSBW32@{BYTEORDER\_\-MSBW32}}
+\index{BYTEORDER\_\-MSBW32@{BYTEORDER\_\-MSBW32}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-MSBW32}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-MSBW32(x)~BYTEORDER\_\-SWAPW32(x)}}
+\label{group__byteorder_ga46ff7133babdbfa8166fbdb4d40d72a7}
+
+
+Switch the byte ordering of an integer from the native swapping to Big-\/endian (Most Significant Byte). If the current environment is already Big-\/endian, then the returned value is not byteswapped.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An integer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer with the byte-\/ordering swapped if neccessary. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga78c51e5ecacde07ac8f68c1dc7bca801}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-SWAPF32@{BYTEORDER\_\-SWAPF32}}
+\index{BYTEORDER\_\-SWAPF32@{BYTEORDER\_\-SWAPF32}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-SWAPF32}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-SWAPF32~byteorder\_\-swapf32}}
+\label{group__byteorder_ga78c51e5ecacde07ac8f68c1dc7bca801}
+
+
+Switch the byte ordering of a float. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A float. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A float with the byte-\/ordering swapped. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga9e36111d85cc708026b869111af4d084}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-SWAPF64@{BYTEORDER\_\-SWAPF64}}
+\index{BYTEORDER\_\-SWAPF64@{BYTEORDER\_\-SWAPF64}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-SWAPF64}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-SWAPF64~byteorder\_\-swapf64}}
+\label{group__byteorder_ga9e36111d85cc708026b869111af4d084}
+
+
+Switch the byte ordering of a double. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A double. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A double. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga035b5999ffd460b028adbddc114bc1ea}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-SWAPW16@{BYTEORDER\_\-SWAPW16}}
+\index{BYTEORDER\_\-SWAPW16@{BYTEORDER\_\-SWAPW16}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-SWAPW16}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-SWAPW16(x)~((short)(((((unsigned short)(x))$>$$>$8)\&0x00ff)+((((unsigned short)(x))$<$$<$8)\&0xff00)))}}
+\label{group__byteorder_ga035b5999ffd460b028adbddc114bc1ea}
+
+
+Switch the byte ordering of a short integer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A short integer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A short integer with the byte-\/ordering swapped. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga2361fba0c30f763e8fe3fb2fe0eece43}{
+\index{byteorder@{byteorder}!BYTEORDER\_\-SWAPW32@{BYTEORDER\_\-SWAPW32}}
+\index{BYTEORDER\_\-SWAPW32@{BYTEORDER\_\-SWAPW32}!byteorder@{byteorder}}
+\subsubsection[{BYTEORDER\_\-SWAPW32}]{\setlength{\rightskip}{0pt plus 5cm}\#define BYTEORDER\_\-SWAPW32(x)}}
+\label{group__byteorder_ga2361fba0c30f763e8fe3fb2fe0eece43}
+{\bfseries Value:}
+\begin{DoxyCode}
+((long)(((((unsigned long)(x))>>24L)&0x000000ff)+((((unsigned long)(x))>>8L)&0x00
+      00ff00)+ \
+                                    ((((unsigned long)(x))<<24L)&0xff000000)+((((
+      unsigned long)(x))<<8L)&0x00ff0000)))
+\end{DoxyCode}
+
+
+Switch the byte ordering of an integer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An integer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer with the byte-\/ordering swapped. 
+\end{DoxyReturn}
+\hypertarget{group__byteorder_ga51aafb747c672a9623c9b6e851c5cb53}{
+\index{byteorder@{byteorder}!C74\_\-BIG\_\-ENDIAN@{C74\_\-BIG\_\-ENDIAN}}
+\index{C74\_\-BIG\_\-ENDIAN@{C74\_\-BIG\_\-ENDIAN}!byteorder@{byteorder}}
+\subsubsection[{C74\_\-BIG\_\-ENDIAN}]{\setlength{\rightskip}{0pt plus 5cm}\#define C74\_\-BIG\_\-ENDIAN~0}}
+\label{group__byteorder_ga51aafb747c672a9623c9b6e851c5cb53}
+
+
+A macro that indicates whether or not the current architecture uses Big-\/endian byte ordering (such as is used on a PPC processor). Note that this macro is always defined; it will be either a 0 or a 1. \hypertarget{group__byteorder_gaa1bcf3a033a866ca81d51e9f65ec4d3a}{
+\index{byteorder@{byteorder}!C74\_\-LITTLE\_\-ENDIAN@{C74\_\-LITTLE\_\-ENDIAN}}
+\index{C74\_\-LITTLE\_\-ENDIAN@{C74\_\-LITTLE\_\-ENDIAN}!byteorder@{byteorder}}
+\subsubsection[{C74\_\-LITTLE\_\-ENDIAN}]{\setlength{\rightskip}{0pt plus 5cm}\#define C74\_\-LITTLE\_\-ENDIAN~1}}
+\label{group__byteorder_gaa1bcf3a033a866ca81d51e9f65ec4d3a}
+
+
+A macro that indicates whether or not the current architecture uses Litte-\/endian byte ordering (such as is used on an i386 processor). Note that this macro is always defined; it will be either a 0 or a 1. 

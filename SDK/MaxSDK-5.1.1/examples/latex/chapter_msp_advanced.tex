@@ -1,0 +1,127 @@
+Here are some techniques for implementing additional features found in most signal objects.\hypertarget{chapter_msp_advanced_chapter_msp_advanced_internal_state}{}\section{Saving Internal State}\label{chapter_msp_advanced_chapter_msp_advanced_internal_state}
+To implement unit generators such as filters and ramp generators, you need to save internal state between calls to your object's perform routine. Here is a very simple low-\/pass filter (it just averages successive samples) that saves the value of the last sample in a vector to be averaged with the first sample of the next vector. First we add a field to our data structure to hold the value:
+
+
+\begin{DoxyCode}
+    typedef struct _myfilter
+    {
+        t_pxobject f_obj;
+        t_float f_sample;
+    } t_myfilter;
+\end{DoxyCode}
+
+
+Then, in our dsp method (which has one input and one output), we pass a pointer to the object as one of the DSP chain arguments. The dsp method also initializes the value of the internal state, to avoid any noise when the audio starts.
+
+
+\begin{DoxyCode}
+    void myfilter_dsp(t_myfilter *x, t_signal **sp, short *count)
+    {
+        dsp_add(myfilter_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    
+        x->f_sample = 0;
+    }
+\end{DoxyCode}
+
+
+Here is the perform routine, which obtains the internal state before entering the processing loop, then stores the most recent value after the loop is finished.
+
+
+\begin{DoxyCode}
+    t_int *myfilter_perform(t_int *w)
+    {
+        t_myfilter *x = (t_myfilter *)w[1];
+        t_float *in = (t_float *)w[2];
+        t_float *out = (t_float *)w[3];
+        int n = (int)w[4];
+        t_float samp = x->f_sample; // read from internal state
+        t_float val;
+
+        while (n--) {
+            val = *in++;
+            *out++ = (val + samp) * 0.5;
+            samp = val;
+        }
+        x->f_sample = samp;     // save to internal state
+
+        return w + 5;
+    }
+\end{DoxyCode}
+\hypertarget{chapter_msp_advanced_chapter_msp_advanced_muting}{}\section{Observing Patcher Muting}\label{chapter_msp_advanced_chapter_msp_advanced_muting}
+The enable message to the thispatcher object, as well as the MSP mute object$\sim$ can be used to disable a subpatcher. If your object is at all computationally expensive in its perform routine, it should check to see whether it has been disabled. To do this, you'll need to pass a pointer to your object as one of the DSP chain arguments when calling \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add()}. Here is a simple modification of our filter object's perform routine that checks to see if the object has been disabled.
+
+
+\begin{DoxyCode}
+    t_int *myfilter_perform(t_int *w)
+    {
+        t_myfilter *x = (t_myfilter *)w[1];
+        t_float *in = (t_float *)w[2];
+        t_float *out = (t_float *)w[3];
+        int n = (int)w[4];
+        t_float samp = x->f_sample; // read from internal state
+        t_float val;
+
+        if (x->f_obj.z_disabled)    // check for object being disabled
+            return w + 5;
+ 
+        while (n--) {
+            val = *in++;
+            *out++ = (val + samp) * 0.5;
+            samp = val;
+        }
+        x->f_sample = samp;     // save to internal state
+
+        return w + 5;
+    }
+\end{DoxyCode}
+\hypertarget{chapter_msp_advanced_chapter_msp_advanced_connections}{}\section{Using Connection Information}\label{chapter_msp_advanced_chapter_msp_advanced_connections}
+The third argument to the dsp method is an array of numbers that enumerate the number of objects connected to each of your objects inputs and outputs. More advanced dsp methods can use this information for optimization purposes. For example, if you find that your object has no inputs or outputs, you could avoid calling \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add()} altogether. The MSP signal operator objects (such as +$\sim$ and $\ast$$\sim$) to implement a basic polymorphism: they look at the connections count to determine whether the perform routine should use scalar or signal inputs. For example, if the right input has no connected signals, the user can add a scalar value sent to the right inlet.
+
+To implement this behavior, you have a few different options. The first option is to write two different perform methods, one which handles the two-\/signal case, and one which handles the scalar case. The dsp method looks at the count array and passes a different function to \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add()}. The example below assumes that the second element in the signal and count arrays (sp\mbox{[}1\mbox{]}) is the right input:
+
+
+\begin{DoxyCode}
+        if (count[1])   // signal connected
+            dsp_add(mydspobject_twosigperform, 5, x, sp[0]->s_vec, sp[1]->s_vec, 
+      sp[2]->s_vec, sp[0]->s_n);
+        else
+            dsp_add(mydspobject_scalarperform, 4, x, sp[0]->s_vec, sp[2]->s_vec, 
+      sp[0]->s_n);
+\end{DoxyCode}
+
+
+The second option is to pass the value of the count array for a particular signal to the perform method, which can make the decision whether to use the signal value or a scalar value that has been stored inside the object. In this case, many objects use a single sample value from the signal as a substitute for the scalar. Using the first sample (i.e., the value at index 0) is a technique that works for any vector size, since vector sizes could be as small as a single sample. Here is an example of this technique for an object that has two inputs and one output. The connection count for the right input signal is passed as the second argument on the DSP chain, and the right input signal vector is passed even if it not connected:
+
+
+\begin{DoxyCode}
+        dsp_add(mydspobject_perform, 6, x, count[1], sp[0]->s_vec, sp[1]->s_vec, 
+      sp[2]->s_vec, sp[0]->s_n);
+\end{DoxyCode}
+
+
+Here is a perform routine that uses the connection count information as passed in format shown above:
+
+
+\begin{DoxyCode}
+    t_int mydspobject_perform(t_int *w)
+    {
+        t_mydspobject *x = (t_mydspobject *)w[1];
+        int connected = (int)w[2];
+        t_float *in = (t_float *)w[3];
+        t_float *in2 = (t_float *)w[4];
+        t_float *out = (t_float *)w[5];
+        int n = (int)w[6];
+
+        double in2value;
+
+        // get scalar sample or use signal depending on whether signal is connect
+      ed
+
+        in2value = connected? *in2 : x->m_scalarvalue;
+
+        // do calculation here
+
+        return w + 7;
+    }
+\end{DoxyCode}
+ 

@@ -1,0 +1,205 @@
+\hypertarget{group__indexmap}{
+\section{Index Map}
+\label{group__indexmap}\index{Index Map@{Index Map}}
+}
+
+
+An indexmap is basically a managed array of pointers, but it allows you to derive relatively quickly the index from a pointer in the array.  
+
+
+Collaboration diagram for Index Map:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=120pt]{group__indexmap}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__indexmap__entry}{t\_\-indexmap\_\-entry}
+\begin{DoxyCompactList}\small\item\em An indexmap element. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__indexmap}{t\_\-indexmap}
+\begin{DoxyCompactList}\small\item\em An indexmap object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$ \hyperlink{group__indexmap_ga2e7303d05103b7e42c1a12929f5233ec}{indexmap\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Create a new indexmap object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__indexmap_ga5083e00af855e9b1a20ee5321c8fe3c9}{indexmap\_\-append} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, void $\ast$data)
+\begin{DoxyCompactList}\small\item\em Add an item to an indexmap. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__indexmap_gab5f2093d1eb48203117b8bfc32ea5c31}{indexmap\_\-move} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, void $\ast$data, long newindex)
+\begin{DoxyCompactList}\small\item\em Move an item to a different position in an indexmap. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__indexmap_ga6443c8bb19d6064f9aedacc170119215}{indexmap\_\-delete} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, void $\ast$data)
+\begin{DoxyCompactList}\small\item\em Delete a specified item from an indexmap. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__indexmap_ga7d0117753b9ed42f977b63ab62603f71}{indexmap\_\-delete\_\-index} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Delete an item from the indexmap by index. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__indexmap_ga657452348b363af34acfaeff3a536578}{indexmap\_\-delete\_\-multi} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, long count, void $\ast$$\ast$pdata)
+\begin{DoxyCompactList}\small\item\em Delete multiple specified items from an indexmap. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__indexmap_gad626671799012e2da71476fd99bdec67}{indexmap\_\-delete\_\-index\_\-multi} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, long count, long $\ast$indices)
+\begin{DoxyCompactList}\small\item\em Delete multiple items from an indexmap by index. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__indexmap_gafca8c58c30ecb6e128209e8df80a51c0}{indexmap\_\-datafromindex} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Get an item from an indexmap by index. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__indexmap_gab8e003b8468a0e4b1f5b0a16b18a9652}{indexmap\_\-indexfromdata} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, void $\ast$data, long $\ast$index)
+\begin{DoxyCompactList}\small\item\em Find the index of an item given a pointer to the item. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__indexmap_ga95b1d9e5d527db93141e56b86413aad2}{indexmap\_\-getsize} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Return the number of items in an indexmap. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__indexmap_gab6213ed82d2f91a7d48581efee62bae4}{indexmap\_\-clear} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Delete all items in an indexmap. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__indexmap_ga37c44ae6f93722ca5a722839ac62966d}{indexmap\_\-sort} (\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$x, \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} fn)
+\begin{DoxyCompactList}\small\item\em Sort the items in an indexmap. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An indexmap is basically a managed array of pointers, but it allows you to derive relatively quickly the index from a pointer in the array. The index is assumed to be 0-\/N (where N is the current size of the array). You can sort the data and retain access to an index from the data relatively quickly. There is a hashtab which holds pieces of memory that hold indices that can be referenced by the data pointer. There is also an array of data pointers -\/-\/ this is in \char`\"{}index\char`\"{} order. When operations take place on the array (insert, delete, sort), the pointers in the hashtab are updated with new indices. 
+
+\subsection{Function Documentation}
+\hypertarget{group__indexmap_ga5083e00af855e9b1a20ee5321c8fe3c9}{
+\index{indexmap@{indexmap}!indexmap\_\-append@{indexmap\_\-append}}
+\index{indexmap\_\-append@{indexmap\_\-append}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-append}]{\setlength{\rightskip}{0pt plus 5cm}void indexmap\_\-append ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  void $\ast$ {\em data})}}
+\label{group__indexmap_ga5083e00af855e9b1a20ee5321c8fe3c9}
+
+
+Add an item to an indexmap. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em data}]The item to add. \end{DoxyParams}
+\hypertarget{group__indexmap_gab6213ed82d2f91a7d48581efee62bae4}{
+\index{indexmap@{indexmap}!indexmap\_\-clear@{indexmap\_\-clear}}
+\index{indexmap\_\-clear@{indexmap\_\-clear}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void indexmap\_\-clear ({\bf t\_\-indexmap} $\ast$ {\em x})}}
+\label{group__indexmap_gab6213ed82d2f91a7d48581efee62bae4}
+
+
+Delete all items in an indexmap. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \end{DoxyParams}
+\hypertarget{group__indexmap_gafca8c58c30ecb6e128209e8df80a51c0}{
+\index{indexmap@{indexmap}!indexmap\_\-datafromindex@{indexmap\_\-datafromindex}}
+\index{indexmap\_\-datafromindex@{indexmap\_\-datafromindex}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-datafromindex}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ indexmap\_\-datafromindex ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__indexmap_gafca8c58c30ecb6e128209e8df80a51c0}
+
+
+Get an item from an indexmap by index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em index}]The index from which to fetch a stored item. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The item stored at the specified index. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_ga6443c8bb19d6064f9aedacc170119215}{
+\index{indexmap@{indexmap}!indexmap\_\-delete@{indexmap\_\-delete}}
+\index{indexmap\_\-delete@{indexmap\_\-delete}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} indexmap\_\-delete ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  void $\ast$ {\em data})}}
+\label{group__indexmap_ga6443c8bb19d6064f9aedacc170119215}
+
+
+Delete a specified item from an indexmap. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em data}]The item pointer to remove from the indexmap. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_ga7d0117753b9ed42f977b63ab62603f71}{
+\index{indexmap@{indexmap}!indexmap\_\-delete\_\-index@{indexmap\_\-delete\_\-index}}
+\index{indexmap\_\-delete\_\-index@{indexmap\_\-delete\_\-index}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-delete\_\-index}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} indexmap\_\-delete\_\-index ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__indexmap_ga7d0117753b9ed42f977b63ab62603f71}
+
+
+Delete an item from the indexmap by index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em index}]The index of the item to remove from the indexmap. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_gad626671799012e2da71476fd99bdec67}{
+\index{indexmap@{indexmap}!indexmap\_\-delete\_\-index\_\-multi@{indexmap\_\-delete\_\-index\_\-multi}}
+\index{indexmap\_\-delete\_\-index\_\-multi@{indexmap\_\-delete\_\-index\_\-multi}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-delete\_\-index\_\-multi}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} indexmap\_\-delete\_\-index\_\-multi ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  long {\em count}, \/  long $\ast$ {\em indices})}}
+\label{group__indexmap_gad626671799012e2da71476fd99bdec67}
+
+
+Delete multiple items from an indexmap by index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em count}]The number of items to remove from the indexmap. \item[{\em indices}]The address of the first of an array of index numbers to remove the indexmap. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_ga657452348b363af34acfaeff3a536578}{
+\index{indexmap@{indexmap}!indexmap\_\-delete\_\-multi@{indexmap\_\-delete\_\-multi}}
+\index{indexmap\_\-delete\_\-multi@{indexmap\_\-delete\_\-multi}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-delete\_\-multi}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} indexmap\_\-delete\_\-multi ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  long {\em count}, \/  void $\ast$$\ast$ {\em pdata})}}
+\label{group__indexmap_ga657452348b363af34acfaeff3a536578}
+
+
+Delete multiple specified items from an indexmap. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em count}]The number of items to remove from the indexmap. \item[{\em pdata}]The address of the first of an array of item pointers to remove from the indexmap. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_ga95b1d9e5d527db93141e56b86413aad2}{
+\index{indexmap@{indexmap}!indexmap\_\-getsize@{indexmap\_\-getsize}}
+\index{indexmap\_\-getsize@{indexmap\_\-getsize}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-getsize}]{\setlength{\rightskip}{0pt plus 5cm}long indexmap\_\-getsize ({\bf t\_\-indexmap} $\ast$ {\em x})}}
+\label{group__indexmap_ga95b1d9e5d527db93141e56b86413aad2}
+
+
+Return the number of items in an indexmap. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of items in the indexmap. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_gab8e003b8468a0e4b1f5b0a16b18a9652}{
+\index{indexmap@{indexmap}!indexmap\_\-indexfromdata@{indexmap\_\-indexfromdata}}
+\index{indexmap\_\-indexfromdata@{indexmap\_\-indexfromdata}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-indexfromdata}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} indexmap\_\-indexfromdata ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  void $\ast$ {\em data}, \/  long $\ast$ {\em index})}}
+\label{group__indexmap_gab8e003b8468a0e4b1f5b0a16b18a9652}
+
+
+Find the index of an item given a pointer to the item. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em data}]The item whose index you wish to look up. \item[{\em index}]The address of a variable to hold the retrieved index. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_gab5f2093d1eb48203117b8bfc32ea5c31}{
+\index{indexmap@{indexmap}!indexmap\_\-move@{indexmap\_\-move}}
+\index{indexmap\_\-move@{indexmap\_\-move}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-move}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} indexmap\_\-move ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  void $\ast$ {\em data}, \/  long {\em newindex})}}
+\label{group__indexmap_gab5f2093d1eb48203117b8bfc32ea5c31}
+
+
+Move an item to a different position in an indexmap. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em data}]The item in the indexmap to move. \item[{\em newindex}]The new index to which to move the item. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_ga2e7303d05103b7e42c1a12929f5233ec}{
+\index{indexmap@{indexmap}!indexmap\_\-new@{indexmap\_\-new}}
+\index{indexmap\_\-new@{indexmap\_\-new}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-indexmap}$\ast$ indexmap\_\-new (void)}}
+\label{group__indexmap_ga2e7303d05103b7e42c1a12929f5233ec}
+
+
+Create a new indexmap object. \begin{DoxyReturn}{Returns}
+Pointer to the new indexmap object. 
+\end{DoxyReturn}
+\hypertarget{group__indexmap_ga37c44ae6f93722ca5a722839ac62966d}{
+\index{indexmap@{indexmap}!indexmap\_\-sort@{indexmap\_\-sort}}
+\index{indexmap\_\-sort@{indexmap\_\-sort}!indexmap@{indexmap}}
+\subsubsection[{indexmap\_\-sort}]{\setlength{\rightskip}{0pt plus 5cm}void indexmap\_\-sort ({\bf t\_\-indexmap} $\ast$ {\em x}, \/  {\bf t\_\-cmpfn} {\em fn})}}
+\label{group__indexmap_ga37c44ae6f93722ca5a722839ac62966d}
+
+
+Sort the items in an indexmap. Item are sorted using a \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} function that is passed in as an argument.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The indexmap instance. \item[{\em fn}]The function used to sort the list. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_gaf01b5f67a8ceccdd75cff34f6ecdd8c2}{linklist\_\-sort()} 
+\end{DoxySeeAlso}

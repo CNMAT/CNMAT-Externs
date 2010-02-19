@@ -1,0 +1,103 @@
+\hypertarget{group__jsvg}{
+\section{Scalable Vector Graphics}
+\label{group__jsvg}\index{Scalable Vector Graphics@{Scalable Vector Graphics}}
+}
+
+
+Collaboration diagram for Scalable Vector Graphics:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=149pt]{group__jsvg}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} $\ast$ \hyperlink{group__jsvg_ga3b185fbdeba32bc51a9935a91a97eba5}{jsvg\_\-create\_\-from\_\-file} (const char $\ast$filename, short path)
+\begin{DoxyCompactList}\small\item\em Read an SVG file, return a \hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} $\ast$ \hyperlink{group__jsvg_ga1c2545a3afc0538ead5aa46903bad73d}{jsvg\_\-create\_\-from\_\-resource} (const void $\ast$moduleRef, const char $\ast$resname)
+\begin{DoxyCompactList}\small\item\em Read an SVG file from a resource. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} $\ast$ \hyperlink{group__jsvg_gae8173348a7e250c0e762438a75dacee3}{jsvg\_\-create\_\-from\_\-xmlstring} (const char $\ast$svgXML)
+\begin{DoxyCompactList}\small\item\em Create an SVG object from a string containing the SVG's XML. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsvg_ga84eaba3340526cf8984bb8354993304f}{jsvg\_\-get\_\-size} (\hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} $\ast$svg, double $\ast$width, double $\ast$height)
+\begin{DoxyCompactList}\small\item\em Retrieve the size of an SVG object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsvg_ga4b65c02fa6c10d1a9c6260ec1b30e453}{jsvg\_\-destroy} (\hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} $\ast$svg)
+\begin{DoxyCompactList}\small\item\em Free a \hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsvg_gab30c5cd674073ae36d226a89f0825ecd}{jsvg\_\-render} (\hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} $\ast$svg, \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g)
+\begin{DoxyCompactList}\small\item\em Render an SVG into a graphics context. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__jsvg_ga3b185fbdeba32bc51a9935a91a97eba5}{
+\index{jsvg@{jsvg}!jsvg\_\-create\_\-from\_\-file@{jsvg\_\-create\_\-from\_\-file}}
+\index{jsvg\_\-create\_\-from\_\-file@{jsvg\_\-create\_\-from\_\-file}!jsvg@{jsvg}}
+\subsubsection[{jsvg\_\-create\_\-from\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsvg}$\ast$ jsvg\_\-create\_\-from\_\-file (const char $\ast$ {\em filename}, \/  short {\em path})}}
+\label{group__jsvg_ga3b185fbdeba32bc51a9935a91a97eba5}
+
+
+Read an SVG file, return a \hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em filename}]The name of the file to read. \item[{\em path}]The path id of the file to read. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new SVG object. 
+\end{DoxyReturn}
+\hypertarget{group__jsvg_ga1c2545a3afc0538ead5aa46903bad73d}{
+\index{jsvg@{jsvg}!jsvg\_\-create\_\-from\_\-resource@{jsvg\_\-create\_\-from\_\-resource}}
+\index{jsvg\_\-create\_\-from\_\-resource@{jsvg\_\-create\_\-from\_\-resource}!jsvg@{jsvg}}
+\subsubsection[{jsvg\_\-create\_\-from\_\-resource}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsvg}$\ast$ jsvg\_\-create\_\-from\_\-resource (const void $\ast$ {\em moduleRef}, \/  const char $\ast$ {\em resname})}}
+\label{group__jsvg_ga1c2545a3afc0538ead5aa46903bad73d}
+
+
+Read an SVG file from a resource. 
+\begin{DoxyParams}{Parameters}
+\item[{\em moduleRef}]The external's moduleRef. \item[{\em resname}]The name of the SVG resource. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new SVG object. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__jsurface_gabb5d09a9d36912e1685bad2799992117}{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource()} 
+\end{DoxySeeAlso}
+\hypertarget{group__jsvg_gae8173348a7e250c0e762438a75dacee3}{
+\index{jsvg@{jsvg}!jsvg\_\-create\_\-from\_\-xmlstring@{jsvg\_\-create\_\-from\_\-xmlstring}}
+\index{jsvg\_\-create\_\-from\_\-xmlstring@{jsvg\_\-create\_\-from\_\-xmlstring}!jsvg@{jsvg}}
+\subsubsection[{jsvg\_\-create\_\-from\_\-xmlstring}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsvg}$\ast$ jsvg\_\-create\_\-from\_\-xmlstring (const char $\ast$ {\em svgXML})}}
+\label{group__jsvg_gae8173348a7e250c0e762438a75dacee3}
+
+
+Create an SVG object from a string containing the SVG's XML. 
+\begin{DoxyParams}{Parameters}
+\item[{\em svgXML}]The SVG source. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new SVG object. 
+\end{DoxyReturn}
+\hypertarget{group__jsvg_ga4b65c02fa6c10d1a9c6260ec1b30e453}{
+\index{jsvg@{jsvg}!jsvg\_\-destroy@{jsvg\_\-destroy}}
+\index{jsvg\_\-destroy@{jsvg\_\-destroy}!jsvg@{jsvg}}
+\subsubsection[{jsvg\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void jsvg\_\-destroy ({\bf t\_\-jsvg} $\ast$ {\em svg})}}
+\label{group__jsvg_ga4b65c02fa6c10d1a9c6260ec1b30e453}
+
+
+Free a \hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em svg}]The object to free. \end{DoxyParams}
+\hypertarget{group__jsvg_ga84eaba3340526cf8984bb8354993304f}{
+\index{jsvg@{jsvg}!jsvg\_\-get\_\-size@{jsvg\_\-get\_\-size}}
+\index{jsvg\_\-get\_\-size@{jsvg\_\-get\_\-size}!jsvg@{jsvg}}
+\subsubsection[{jsvg\_\-get\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}void jsvg\_\-get\_\-size ({\bf t\_\-jsvg} $\ast$ {\em svg}, \/  double $\ast$ {\em width}, \/  double $\ast$ {\em height})}}
+\label{group__jsvg_ga84eaba3340526cf8984bb8354993304f}
+
+
+Retrieve the size of an SVG object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em svg}]An SVG object. \item[{\em width}]The address of a variable that will be set to the width upon return. \item[{\em height}]The address of a variable that will be set to the width upon return. \end{DoxyParams}
+\hypertarget{group__jsvg_gab30c5cd674073ae36d226a89f0825ecd}{
+\index{jsvg@{jsvg}!jsvg\_\-render@{jsvg\_\-render}}
+\index{jsvg\_\-render@{jsvg\_\-render}!jsvg@{jsvg}}
+\subsubsection[{jsvg\_\-render}]{\setlength{\rightskip}{0pt plus 5cm}void jsvg\_\-render ({\bf t\_\-jsvg} $\ast$ {\em svg}, \/  {\bf t\_\-jgraphics} $\ast$ {\em g})}}
+\label{group__jsvg_gab30c5cd674073ae36d226a89f0825ecd}
+
+
+Render an SVG into a graphics context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em svg}]The SVG object to render. \item[{\em g}]The graphics context in which to render. \end{DoxyParams}

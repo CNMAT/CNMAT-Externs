@@ -1,0 +1,38 @@
+\hypertarget{group__pfft}{
+\section{PFFT}
+\label{group__pfft}\index{PFFT@{PFFT}}
+}
+
+
+When an object is instantiated, it is possible to determine if it is being created in pfft$\sim$ context in the new method.  
+
+
+Collaboration diagram for PFFT:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=80pt]{group__pfft}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__pfftpub}{t\_\-pfftpub}
+\begin{DoxyCompactList}\small\item\em Public FFT Patcher struct. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+When an object is instantiated, it is possible to determine if it is being created in pfft$\sim$ context in the new method. In the new method (and only at this time), you can check the s\_\-thing member of the \hyperlink{structt__symbol}{t\_\-symbol} '\_\-\_\-pfft$\sim$\_\-\_\-'. If this is non-\/null, then you will have a pointer to a \hyperlink{structt__pfftpub}{t\_\-pfftpub} struct.
+
+
+\begin{DoxyCode}
+    t_pfftpub *pfft_parent = (t_pfftpub*) gensym("__pfft~__")->s_thing;
+
+    if (pfft_parent) {
+        // in a pfft~ context
+    }
+    else {
+        // not in a pfft~
+    }
+\end{DoxyCode}
+ 

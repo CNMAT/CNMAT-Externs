@@ -1,0 +1,1071 @@
+\hypertarget{group__obj}{
+\section{Objects}
+\label{group__obj}\index{Objects@{Objects}}
+}
+
+
+More information for this section can be gleaned from the pattrsdk.pdf in the Max 4.5.5 SDK.  
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__messlist}{t\_\-messlist}
+\begin{DoxyCompactList}\small\item\em A list of symbols and their corresponding methods, complete with typechecking information. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__tinyobject}{t\_\-tinyobject}
+\begin{DoxyCompactList}\small\item\em The tiny object structure sits at the head of any object to which you may pass messages (and which you may feed to \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()}). \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__object}{t\_\-object}
+\begin{DoxyCompactList}\small\item\em The structure for the head of any object which wants to have inlets or outlets, or support attributes. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__obj_ga94630370ae389fb1189282fa0742f310}{
+\#define \hyperlink{group__obj_ga94630370ae389fb1189282fa0742f310}{MAGIC}~1758379419L}
+\label{group__obj_ga94630370ae389fb1189282fa0742f310}
+
+\begin{DoxyCompactList}\small\item\em Magic number used to determine if memory pointed to by a \hyperlink{structt__object}{t\_\-object}$\ast$ is valid. \item\end{DoxyCompactList}\item 
+\hypertarget{group__obj_gabf8c1d20a4f4e731d185c02820c91593}{
+\#define \hyperlink{group__obj_gabf8c1d20a4f4e731d185c02820c91593}{NOGOOD}(x)~(((struct object $\ast$)x)-\/$>$o\_\-magic != MAGIC)}
+\label{group__obj_gabf8c1d20a4f4e731d185c02820c91593}
+
+\begin{DoxyCompactList}\small\item\em Returns true if a pointer is not a valid object. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__obj_ga4c171d1ccc50f0b6ce7ad2f475eeba32}{MAXARG}~7
+\begin{DoxyCompactList}\small\item\em Maximum number of arguments that can be passed as a typed-\/list rather than using \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__obj_gad81c665a20c3c707decaf3403468ff47}{newobject\_\-sprintf} (\hyperlink{structt__object}{t\_\-object} $\ast$patcher, char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Create a new object in a specified patcher with values using a combination of attribute and sprintf syntax. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}{newobject\_\-fromdictionary} (\hyperlink{structt__object}{t\_\-object} $\ast$patcher, \hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Place a new object into a patcher. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__obj_ga020d01fb1a55690dc760450bac6a624a}{object\_\-classname\_\-compare} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name)
+\begin{DoxyCompactList}\small\item\em Determines if a particular object is an instance of a given class. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__obj_gacb89ef27c34b45e9037d877375804284}{object\_\-alloc} (\hyperlink{structt__class}{t\_\-class} $\ast$c)
+\begin{DoxyCompactList}\small\item\em Allocates the memory for an instance of an object class and initialize its object header. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__obj_gac4b370265c776db4f545d257089af1cf}{object\_\-new} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$name\_\-space, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname,...)
+\begin{DoxyCompactList}\small\item\em Allocates the memory for an instance of an object class and initialize its object header {\itshape internal to Max\/}. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__obj_ga459c71aca6316e345379eeb424ad56ff}{object\_\-new\_\-typed} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$name\_\-space, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Allocates the memory for an instance of an object class and initialize its object header {\itshape internal to Max\/}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Call the free function and release the memory for an instance of an internal object class previously instantiated using \hyperlink{group__obj_gac4b370265c776db4f545d257089af1cf}{object\_\-new()}, \hyperlink{group__obj_ga459c71aca6316e345379eeb424ad56ff}{object\_\-new\_\-typed()} or other new-\/style object constructor functions (e.g. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Sends an untyped message to an object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Sends a type-\/checked message to an object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gaa5ff59d2297a2dde60e3f2fe3e02eceb}{object\_\-method\_\-typedfun} (void $\ast$x, \hyperlink{structt__messlist}{t\_\-messlist} $\ast$mp, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Currently undocumented. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__obj_gaaa202dcda859bb5dcd1f186f88a43796}{object\_\-getmethod} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieves an object's \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} for a particular message selector. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__obj_gac4523e68b4be4deb6db0ea91948d3553}{object\_\-classname} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves an object instance's class name. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$name\_\-space, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Registers an object in a namespace. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__obj_ga3854b233b015cf2e157b03819ce9b65e}{object\_\-findregistered} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$name\_\-space, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Determines a registered object's pointer, given its namespace and name. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gadeb570bcae0e9bbf389d571e85d16bfa}{object\_\-findregisteredbyptr} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$name\_\-space, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$s, void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Determines the namespace and/or name of a registered object, given the object's pointer. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__obj_ga42025069e4317aef6dbe5c21c316fd85}{object\_\-attach} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$name\_\-space, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Attaches a client to a registered object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga6765e9533a3ae0d67d302f1e038c66ac}{object\_\-detach} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$name\_\-space, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Detach a client from a registered object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}{object\_\-attach\_\-byptr} (void $\ast$x, void $\ast$registeredobject)
+\begin{DoxyCompactList}\small\item\em Attaches a client to a registered object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga73adb1c1e2db98f7a500f50ac447add5}{object\_\-attach\_\-byptr\_\-register} (void $\ast$x, void $\ast$object\_\-to\_\-attach, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$reg\_\-name\_\-space)
+\begin{DoxyCompactList}\small\item\em A convenience function wrapping \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} and \hyperlink{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}{object\_\-attach\_\-byptr()}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga9be48cfb39024dc20239079eb60295cd}{object\_\-detach\_\-byptr} (void $\ast$x, void $\ast$registeredobject)
+\begin{DoxyCompactList}\small\item\em Detach a client from a registered object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga2b5b3327e03edbefe753ebd6c8b7e152}{object\_\-unregister} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Removes a registered object from a namespace. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$data)
+\begin{DoxyCompactList}\small\item\em Broadcast a message (with an optional argument) from a registered object to any attached client objects. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__class}{t\_\-class} $\ast$ \hyperlink{group__obj_ga035c5ca1d7d25921533b59451d730c44}{object\_\-class} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Determines the class of a given object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gab033973cea2f4a0b17bb48ab2f22f051}{object\_\-getvalueof} (void $\ast$x, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves the value of an object which supports the {\ttfamily getvalueof/setvalueof} interface. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga9d653fc9249f24c462f14657b969cc4d}{object\_\-setvalueof} (void $\ast$x, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Sets the value of an object which supports the {\ttfamily getvalueof/setvalueof} interface. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gaba3a848eba4f4b834c1f89377c75e281}{object\_\-obex\_\-lookup} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$val)
+\begin{DoxyCompactList}\small\item\em Retrieves the value of a data stored in the obex. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gaccdb93572405a2e9f065086f9c3dfe41}{object\_\-obex\_\-store} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$val)
+\begin{DoxyCompactList}\small\item\em Stores data in the object's obex. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__obj_ga95edf6b869d6c5be94a59e49dddb0935}{object\_\-obex\_\-dumpout} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sends data from the object's dumpout outlet. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$ \hyperlink{group__obj_ga6122e56af8de90fa7aad43ee405c6bb6}{object\_\-dictionaryarg} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieve a pointer to a dictionary passed in as an atom argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga8c420370f84f178515540831cbe4e6d8}{object\_\-method\_\-parse} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, char $\ast$parsestr, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that uses \hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} to define the arguments. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gab509bef31fc1bdf47c67525c0353e6d3}{object\_\-method\_\-format} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv, char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that uses \hyperlink{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{atom\_\-setformat()} to define the arguments. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga046f517695486f4008ae9b25ce5e41d7}{object\_\-method\_\-char} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, unsigned char v, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single char as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga975e42fc3823dadc594232652291d26d}{object\_\-method\_\-long} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long v, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single long integer as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gabd57e5e8ce873c5aa12dfc60db6cb6f1}{object\_\-method\_\-float} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, float v, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single 32bit float as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga736ef8fbda2c79dd13a88f6ab81a9f9f}{object\_\-method\_\-double} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, double v, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single 64bit float as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga5ddeb48f167ded23b1508d502e571427}{object\_\-method\_\-sym} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$v, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga5432f19c374fb8850faa7ff062561db0}{object\_\-method\_\-obj} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, \hyperlink{structt__object}{t\_\-object} $\ast$v, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single \hyperlink{structt__object}{t\_\-object}$\ast$ as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga8d2c36fbeff377ea30d4ac9d898a3d77}{object\_\-method\_\-char\_\-array} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, unsigned char $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of char values as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga76c93edf094492b8f485b7a401c616b6}{object\_\-method\_\-long\_\-array} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, long $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of long integers values as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga308d41d63efacb1187ace7d3b50b99e1}{object\_\-method\_\-float\_\-array} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, float $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of 32bit floats values as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_gaaa262193055c44fff144e3395443597a}{object\_\-method\_\-double\_\-array} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, double $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of 64bit float values as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga2a4bb953a5f7a9afee4f2f8196c4226e}{object\_\-method\_\-sym\_\-array} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ values as an argument. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__obj_ga941f7a1161a097394a6924df0c03a1ea}{object\_\-method\_\-obj\_\-array} (\hyperlink{structt__object}{t\_\-object} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of \hyperlink{structt__object}{t\_\-object}$\ast$ values as an argument. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__obj_gac4eb1b3d30abbbb754ddc38701ff1c77}{object\_\-openhelp} (\hyperlink{structt__object}{t\_\-object} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Open the help patcher for a given instance of an object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__obj_gabcf7aaca1f307e806e38100355cc97ac}{object\_\-openrefpage} (\hyperlink{structt__object}{t\_\-object} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Open the reference page for a given instance of an object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__obj_ga6d212c17722cc783102a6f5a623596c9}{object\_\-openquery} (\hyperlink{structt__object}{t\_\-object} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Open a search in the file browser for files with the name of the given object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__obj_ga5de96f9ed649a42b2133d21c38e3476b}{classname\_\-openhelp} (char $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Open the help patcher for a given object class name. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__obj_ga8e08b5bc9657c1800ee8a452e9d14d3d}{classname\_\-openrefpage} (char $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Open the reference page for a given object class name. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__obj_ga24a3ab7c91801d4b0ae377d15adfc117}{classname\_\-openquery} (char $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Open a search in the file browser for files with the name of the given class. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+More information for this section can be gleaned from the pattrsdk.pdf in the Max 4.5.5 SDK. \begin{DoxySeeAlso}{See also}
+\href{http://www.cycling74.com/twiki/bin/view/ProductDocumentation/JitterSdkObjectModel}{\tt http://www.cycling74.com/twiki/bin/view/ProductDocumentation/JitterSdkObjectModel} 
+
+\href{http://www.cycling74.com/twiki/bin/view/ProductDocumentation/JitterSdkRegNotify}{\tt http://www.cycling74.com/twiki/bin/view/ProductDocumentation/JitterSdkRegNotify} 
+\end{DoxySeeAlso}
+
+
+\subsection{Define Documentation}
+\hypertarget{group__obj_ga4c171d1ccc50f0b6ce7ad2f475eeba32}{
+\index{obj@{obj}!MAXARG@{MAXARG}}
+\index{MAXARG@{MAXARG}!obj@{obj}}
+\subsubsection[{MAXARG}]{\setlength{\rightskip}{0pt plus 5cm}\#define MAXARG~7}}
+\label{group__obj_ga4c171d1ccc50f0b6ce7ad2f475eeba32}
+
+
+Maximum number of arguments that can be passed as a typed-\/list rather than using \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME}. It is generally recommended to use \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME}. 
+
+\subsection{Function Documentation}
+\hypertarget{group__obj_ga5de96f9ed649a42b2133d21c38e3476b}{
+\index{obj@{obj}!classname\_\-openhelp@{classname\_\-openhelp}}
+\index{classname\_\-openhelp@{classname\_\-openhelp}!obj@{obj}}
+\subsubsection[{classname\_\-openhelp}]{\setlength{\rightskip}{0pt plus 5cm}void classname\_\-openhelp (char $\ast$ {\em classname})}}
+\label{group__obj_ga5de96f9ed649a42b2133d21c38e3476b}
+
+
+Open the help patcher for a given object class name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em classname}]The class name for which to open the help patcher. \end{DoxyParams}
+\hypertarget{group__obj_ga24a3ab7c91801d4b0ae377d15adfc117}{
+\index{obj@{obj}!classname\_\-openquery@{classname\_\-openquery}}
+\index{classname\_\-openquery@{classname\_\-openquery}!obj@{obj}}
+\subsubsection[{classname\_\-openquery}]{\setlength{\rightskip}{0pt plus 5cm}void classname\_\-openquery (char $\ast$ {\em classname})}}
+\label{group__obj_ga24a3ab7c91801d4b0ae377d15adfc117}
+
+
+Open a search in the file browser for files with the name of the given class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em classname}]The class name for which to query. \end{DoxyParams}
+\hypertarget{group__obj_ga8e08b5bc9657c1800ee8a452e9d14d3d}{
+\index{obj@{obj}!classname\_\-openrefpage@{classname\_\-openrefpage}}
+\index{classname\_\-openrefpage@{classname\_\-openrefpage}!obj@{obj}}
+\subsubsection[{classname\_\-openrefpage}]{\setlength{\rightskip}{0pt plus 5cm}void classname\_\-openrefpage (char $\ast$ {\em classname})}}
+\label{group__obj_ga8e08b5bc9657c1800ee8a452e9d14d3d}
+
+
+Open the reference page for a given object class name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em classname}]The class name for which to open the reference page. \end{DoxyParams}
+\hypertarget{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}{
+\index{obj@{obj}!newobject\_\-fromdictionary@{newobject\_\-fromdictionary}}
+\index{newobject\_\-fromdictionary@{newobject\_\-fromdictionary}!obj@{obj}}
+\subsubsection[{newobject\_\-fromdictionary}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ newobject\_\-fromdictionary ({\bf t\_\-object} $\ast$ {\em patcher}, \/  {\bf t\_\-dictionary} $\ast$ {\em d})}}
+\label{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}
+
+
+Place a new object into a patcher. The new object will be created based on a specification contained in a \hyperlink{group__dictionary}{Dictionary}.
+
+Create a new dictionary populated with values using a combination of attribute and sprintf syntax.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em patcher}]An instance of a patcher object. \item[{\em d}]A dictionary containing an object specification. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the newly created object instance, or NULL if creation of the object fails.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Max attribute syntax is used to define key-\/value pairs. For example, 
+\begin{DoxyCode}
+    "@key1 value @key2 another_value"
+\end{DoxyCode}
+
+
+The example below creates a new object that in a patcher whose object pointer is stored in a variable called \char`\"{}aPatcher\char`\"{}. 
+\begin{DoxyCode}
+    t_dictionary *d;
+    t_object *o;
+    char text[4];
+    
+    strncpy_zero(text, "foo", 4);
+
+    d = dictionary_sprintf("@maxclass comment @varname _name \
+        @text \"%s\" @patching_rect %.2f %.2f %.2f %.2f \
+        @fontsize %f @textcolor %f %f %f 1.0 \
+        @fontname %s @bgcolor 0.001 0.001 0.001 0.",
+        text, 20.0, 20.0, 200.0, 24.0,
+        18, 0.9, 0.9, 0.9, "Arial");
+    
+    o = newobject_fromdictionary(aPatcher, d);
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_gad81c665a20c3c707decaf3403468ff47}{newobject\_\-sprintf()} 
+
+\hyperlink{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}{newobject\_\-fromdictionary()} 
+
+\hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_gad81c665a20c3c707decaf3403468ff47}{
+\index{obj@{obj}!newobject\_\-sprintf@{newobject\_\-sprintf}}
+\index{newobject\_\-sprintf@{newobject\_\-sprintf}!obj@{obj}}
+\subsubsection[{newobject\_\-sprintf}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ newobject\_\-sprintf ({\bf t\_\-object} $\ast$ {\em patcher}, \/  char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__obj_gad81c665a20c3c707decaf3403468ff47}
+
+
+Create a new object in a specified patcher with values using a combination of attribute and sprintf syntax. 
+\begin{DoxyParams}{Parameters}
+\item[{\em patcher}]An instance of a patcher object. \item[{\em fmt}]An sprintf-\/style format string specifying key-\/value pairs with attribute nomenclature. \item[{\em ...}]One or more arguments which are to be substituted into the format string. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the newly created object instance, or NULL if creation of the object fails.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Max attribute syntax is used to define key-\/value pairs. For example, 
+\begin{DoxyCode}
+    "@key1 value @key2 another_value"
+\end{DoxyCode}
+
+
+The example below creates a new object that in a patcher whose object pointer is stored in a variable called \char`\"{}aPatcher\char`\"{}. 
+\begin{DoxyCode}
+    t_object *my_comment;
+    char text[4];
+    
+    strncpy_zero(text, "foo", 4);
+
+    my_comment = newobject_sprintf(aPatcher, "@maxclass comment @varname _name \
+        @text \"%s\" @patching_rect %.2f %.2f %.2f %.2f \
+        @fontsize %f @textcolor %f %f %f 1.0 \
+        @fontname %s @bgcolor 0.001 0.001 0.001 0.",
+        text, 20.0, 20.0, 200.0, 24.0,
+        18, 0.9, 0.9, 0.9, "Arial");
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga77d5bafc260f9fc0bf3b4ad35f2b2629}{dictionary\_\-sprintf()} 
+
+\hyperlink{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}{newobject\_\-fromdictionary()} 
+
+\hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_gacb89ef27c34b45e9037d877375804284}{
+\index{obj@{obj}!object\_\-alloc@{object\_\-alloc}}
+\index{object\_\-alloc@{object\_\-alloc}!obj@{obj}}
+\subsubsection[{object\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ object\_\-alloc ({\bf t\_\-class} $\ast$ {\em c})}}
+\label{group__obj_gacb89ef27c34b45e9037d877375804284}
+
+
+Allocates the memory for an instance of an object class and initialize its object header. It is used like the traditional function newobject, inside of an object's {\ttfamily new} method, but its use is required with obex-\/class objects.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]The class pointer, returned by \hyperlink{group__class_ga238696d466081965c2b72b3880358404}{class\_\-new()} \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns a new instance of an object class if successful, or NULL if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_ga42025069e4317aef6dbe5c21c316fd85}{
+\index{obj@{obj}!object\_\-attach@{object\_\-attach}}
+\index{object\_\-attach@{object\_\-attach}!obj@{obj}}
+\subsubsection[{object\_\-attach}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ object\_\-attach ({\bf t\_\-symbol} $\ast$ {\em name\_\-space}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em x})}}
+\label{group__obj_ga42025069e4317aef6dbe5c21c316fd85}
+
+
+Attaches a client to a registered object. Once attached, the object will receive notifications sent from the registered object (via the \hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify()} function), if it has a {\ttfamily notify} method defined and implemented.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name\_\-space}]The namespace of the registered object. This should be the same value used in \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} to register the object. If you don't know the registered object's namespace, the \hyperlink{group__obj_gadeb570bcae0e9bbf389d571e85d16bfa}{object\_\-findregisteredbyptr()} function can be used to determine it. \item[{\em s}]The name of the registered object in the namespace. If you don't know the name of the registered object, the \hyperlink{group__obj_gadeb570bcae0e9bbf389d571e85d16bfa}{object\_\-findregisteredbyptr()} function can be used to determine it. \item[{\em x}]The client object to attach. Generally, this is the pointer to your Max object.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns a pointer to the registered object (to the object referred to by the combination of {\ttfamily name\_\-space} and {\ttfamily s} arguments) if successful, or NULL if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+You should not attach an object to itself if the object is a UI object. UI objects automatically register and attach to themselves in \hyperlink{group__jbox_gaaa460d02ca3d22c54368ade59d8e330b}{jbox\_\-new()}.
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify()} 
+
+\hyperlink{group__obj_ga6765e9533a3ae0d67d302f1e038c66ac}{object\_\-detach()} 
+
+\hyperlink{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}{object\_\-attach\_\-byptr()} 
+
+\hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}{
+\index{obj@{obj}!object\_\-attach\_\-byptr@{object\_\-attach\_\-byptr}}
+\index{object\_\-attach\_\-byptr@{object\_\-attach\_\-byptr}!obj@{obj}}
+\subsubsection[{object\_\-attach\_\-byptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-attach\_\-byptr (void $\ast$ {\em x}, \/  void $\ast$ {\em registeredobject})}}
+\label{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}
+
+
+Attaches a client to a registered object. Unlike \hyperlink{group__obj_ga42025069e4317aef6dbe5c21c316fd85}{object\_\-attach()}, the client is specified by providing a pointer to that object rather than the registered name of that object.
+
+Once attached, the object will receive notifications sent from the registered object (via the \hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify()} function), if it has a {\ttfamily notify} method defined and implemented.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The attaching client object. Generally, this is the pointer to your Max object. \item[{\em registeredobject}]A pointer to the registered object to which you wish to attach. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+You should not attach an object to itself if the object is a UI object. UI objects automatically register and attach to themselves in \hyperlink{group__jbox_gaaa460d02ca3d22c54368ade59d8e330b}{jbox\_\-new()}.
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify()} 
+
+\hyperlink{group__obj_ga6765e9533a3ae0d67d302f1e038c66ac}{object\_\-detach()} 
+
+\hyperlink{group__obj_ga42025069e4317aef6dbe5c21c316fd85}{object\_\-attach()} 
+
+\hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} 
+
+\hyperlink{group__obj_ga73adb1c1e2db98f7a500f50ac447add5}{object\_\-attach\_\-byptr\_\-register()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga73adb1c1e2db98f7a500f50ac447add5}{
+\index{obj@{obj}!object\_\-attach\_\-byptr\_\-register@{object\_\-attach\_\-byptr\_\-register}}
+\index{object\_\-attach\_\-byptr\_\-register@{object\_\-attach\_\-byptr\_\-register}!obj@{obj}}
+\subsubsection[{object\_\-attach\_\-byptr\_\-register}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-attach\_\-byptr\_\-register (void $\ast$ {\em x}, \/  void $\ast$ {\em object\_\-to\_\-attach}, \/  {\bf t\_\-symbol} $\ast$ {\em reg\_\-name\_\-space})}}
+\label{group__obj_ga73adb1c1e2db98f7a500f50ac447add5}
+
+
+A convenience function wrapping \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} and \hyperlink{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}{object\_\-attach\_\-byptr()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The attaching client object. Generally, this is the pointer to your Max object. \item[{\em object\_\-to\_\-attach}]A pointer to the object to which you wish to registered and then to which to attach. \item[{\em reg\_\-name\_\-space}]The namespace in which to register the object\_\-to\_\-attach. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} 
+
+\hyperlink{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}{object\_\-attach\_\-byptr()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga035c5ca1d7d25921533b59451d730c44}{
+\index{obj@{obj}!object\_\-class@{object\_\-class}}
+\index{object\_\-class@{object\_\-class}!obj@{obj}}
+\subsubsection[{object\_\-class}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-class}$\ast$ object\_\-class (void $\ast$ {\em x})}}
+\label{group__obj_ga035c5ca1d7d25921533b59451d730c44}
+
+
+Determines the class of a given object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to test \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the \hyperlink{structt__class}{t\_\-class} $\ast$ of the object's class, if successful, or NULL, if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_gac4523e68b4be4deb6db0ea91948d3553}{
+\index{obj@{obj}!object\_\-classname@{object\_\-classname}}
+\index{object\_\-classname@{object\_\-classname}!obj@{obj}}
+\subsubsection[{object\_\-classname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ object\_\-classname (void $\ast$ {\em x})}}
+\label{group__obj_gac4523e68b4be4deb6db0ea91948d3553}
+
+
+Retrieves an object instance's class name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object instance whose class name is being queried \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The classname, or NULL if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_ga020d01fb1a55690dc760450bac6a624a}{
+\index{obj@{obj}!object\_\-classname\_\-compare@{object\_\-classname\_\-compare}}
+\index{object\_\-classname\_\-compare@{object\_\-classname\_\-compare}!obj@{obj}}
+\subsubsection[{object\_\-classname\_\-compare}]{\setlength{\rightskip}{0pt plus 5cm}long object\_\-classname\_\-compare (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em name})}}
+\label{group__obj_ga020d01fb1a55690dc760450bac6a624a}
+
+
+Determines if a particular object is an instance of a given class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to test \item[{\em name}]The name of the class to test this object against \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns 1 if the object is an instance of the named class. Otherwise, 0 is returned. 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+For instance, to determine whether an unknown object pointer is a pointer to a print object, one would call:
+\end{DoxyRemark}
+
+\begin{DoxyCode}
+    long isprint = object_classname_compare(x, gensym("print"));
+\end{DoxyCode}
+ \hypertarget{group__obj_ga6765e9533a3ae0d67d302f1e038c66ac}{
+\index{obj@{obj}!object\_\-detach@{object\_\-detach}}
+\index{object\_\-detach@{object\_\-detach}!obj@{obj}}
+\subsubsection[{object\_\-detach}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-detach ({\bf t\_\-symbol} $\ast$ {\em name\_\-space}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em x})}}
+\label{group__obj_ga6765e9533a3ae0d67d302f1e038c66ac}
+
+
+Detach a client from a registered object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name\_\-space}]The namespace of the registered object. This should be the same value used in \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} to register the object. If you don't know the registered object's namespace, the \hyperlink{group__obj_gadeb570bcae0e9bbf389d571e85d16bfa}{object\_\-findregisteredbyptr()} function can be used to determine it. \item[{\em s}]The name of the registered object in the namespace. If you don't know the name of the registered object, the \hyperlink{group__obj_gadeb570bcae0e9bbf389d571e85d16bfa}{object\_\-findregisteredbyptr()} function can be used to determine it. \item[{\em x}]The client object to attach. Generally, this is the pointer to your Max object.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_ga9be48cfb39024dc20239079eb60295cd}{
+\index{obj@{obj}!object\_\-detach\_\-byptr@{object\_\-detach\_\-byptr}}
+\index{object\_\-detach\_\-byptr@{object\_\-detach\_\-byptr}!obj@{obj}}
+\subsubsection[{object\_\-detach\_\-byptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-detach\_\-byptr (void $\ast$ {\em x}, \/  void $\ast$ {\em registeredobject})}}
+\label{group__obj_ga9be48cfb39024dc20239079eb60295cd}
+
+
+Detach a client from a registered object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The attaching client object. Generally, this is the pointer to your Max object. \item[{\em registeredobject}]The object from which to detach. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga6765e9533a3ae0d67d302f1e038c66ac}{object\_\-detach()} 
+
+\hyperlink{group__obj_ga76657298bcd43ae4f9098e3ed2b97c72}{object\_\-attach\_\-byptr()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga6122e56af8de90fa7aad43ee405c6bb6}{
+\index{obj@{obj}!object\_\-dictionaryarg@{object\_\-dictionaryarg}}
+\index{object\_\-dictionaryarg@{object\_\-dictionaryarg}!obj@{obj}}
+\subsubsection[{object\_\-dictionaryarg}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-dictionary}$\ast$ object\_\-dictionaryarg (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__obj_ga6122e56af8de90fa7aad43ee405c6bb6}
+
+
+Retrieve a pointer to a dictionary passed in as an atom argument. Use this function when working with classes that have dictionary constructors to fetch the dictionary.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms. \item[{\em av}]A pointer to the first atom in the array. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The dictionary retrieved from the atoms. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__attr_ga3109d643addc97cb6a07785a9170e2e3}{attr\_\-dictionary\_\-process()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga3854b233b015cf2e157b03819ce9b65e}{
+\index{obj@{obj}!object\_\-findregistered@{object\_\-findregistered}}
+\index{object\_\-findregistered@{object\_\-findregistered}!obj@{obj}}
+\subsubsection[{object\_\-findregistered}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ object\_\-findregistered ({\bf t\_\-symbol} $\ast$ {\em name\_\-space}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__obj_ga3854b233b015cf2e157b03819ce9b65e}
+
+
+Determines a registered object's pointer, given its namespace and name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name\_\-space}]The namespace of the registered object \item[{\em s}]The name of the registered object in the namespace\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the pointer of the registered object, if successful, or NULL, if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_gadeb570bcae0e9bbf389d571e85d16bfa}{
+\index{obj@{obj}!object\_\-findregisteredbyptr@{object\_\-findregisteredbyptr}}
+\index{object\_\-findregisteredbyptr@{object\_\-findregisteredbyptr}!obj@{obj}}
+\subsubsection[{object\_\-findregisteredbyptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-findregisteredbyptr ({\bf t\_\-symbol} $\ast$$\ast$ {\em name\_\-space}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em s}, \/  void $\ast$ {\em x})}}
+\label{group__obj_gadeb570bcae0e9bbf389d571e85d16bfa}
+
+
+Determines the namespace and/or name of a registered object, given the object's pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name\_\-space}]Pointer to a \hyperlink{structt__symbol}{t\_\-symbol} $\ast$, to receive the namespace of the registered object \item[{\em s}]Pointer to a \hyperlink{structt__symbol}{t\_\-symbol} $\ast$, to receive the name of the registered object within the namespace \item[{\em x}]Pointer to the registered object\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_ga3759846cb356195532c41e35b87522ee}{
+\index{obj@{obj}!object\_\-free@{object\_\-free}}
+\index{object\_\-free@{object\_\-free}!obj@{obj}}
+\subsubsection[{object\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-free (void $\ast$ {\em x})}}
+\label{group__obj_ga3759846cb356195532c41e35b87522ee}
+
+
+Call the free function and release the memory for an instance of an internal object class previously instantiated using \hyperlink{group__obj_gac4b370265c776db4f545d257089af1cf}{object\_\-new()}, \hyperlink{group__obj_ga459c71aca6316e345379eeb424ad56ff}{object\_\-new\_\-typed()} or other new-\/style object constructor functions (e.g. \hyperlink{group__hashtab_ga70be9bbfb9bd9383824df0832477267f}{hashtab\_\-new()}). It is, at the time of this writing, a wrapper for the traditional function \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()}, but its use is suggested with obex-\/class objects.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The pointer to the object to be freed. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_gaaa202dcda859bb5dcd1f186f88a43796}{
+\index{obj@{obj}!object\_\-getmethod@{object\_\-getmethod}}
+\index{object\_\-getmethod@{object\_\-getmethod}!obj@{obj}}
+\subsubsection[{object\_\-getmethod}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} object\_\-getmethod (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__obj_gaaa202dcda859bb5dcd1f186f88a43796}
+
+
+Retrieves an object's \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} for a particular message selector. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object whose method is being queried \item[{\em s}]The message selector \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} if successful, or 0 if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_gab033973cea2f4a0b17bb48ab2f22f051}{
+\index{obj@{obj}!object\_\-getvalueof@{object\_\-getvalueof}}
+\index{object\_\-getvalueof@{object\_\-getvalueof}!obj@{obj}}
+\subsubsection[{object\_\-getvalueof}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-getvalueof (void $\ast$ {\em x}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__obj_gab033973cea2f4a0b17bb48ab2f22f051}
+
+
+Retrieves the value of an object which supports the {\ttfamily getvalueof/setvalueof} interface. See part 2 of the pattr SDK for more information on this interface.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object whose value is of interest \item[{\em ac}]Pointer to a long variable to receive the count of arguments in {\ttfamily av}. The long variable itself should be set to 0 previous to calling this function. \item[{\em av}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} $\ast$, to receive object data. The \hyperlink{structt__atom}{t\_\-atom} $\ast$ itself should be set to NULL previous to calling this function.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Calling the \hyperlink{group__obj_gab033973cea2f4a0b17bb48ab2f22f051}{object\_\-getvalueof()} function allocates memory for any data it returns. It is the developer's responsibility to free it, using the \hyperlink{group__memory_gaa1dc485c42515917ca377dbaf15b7dcd}{freebytes()} function.
+
+Developers wishing to design objects which will support this function being called on them must define and implement a special method, {\ttfamily getvalueof}, like so: 
+\begin{DoxyCode}
+    class_addmethod(c, (method)myobject_getvalueof, "getvalueof", A_CANT, 0);
+\end{DoxyCode}
+
+
+The {\ttfamily getvalueof} method should be prototyped as: 
+\begin{DoxyCode}
+    t_max_err myobject_getvalueof(t_myobject *x, long *ac, t_atom **av);
+\end{DoxyCode}
+
+
+And implemented, generally, as: 
+\begin{DoxyCode}
+    t_max_err myobj_getvalueof(t_myobj *x, long *ac, t_atom **av) 
+    {
+        if (ac && av) {
+            if (*ac && *av) {
+                // memory has been passed in; use it.
+            } else {
+                // allocate enough memory for your data
+                *av = (t_atom *)getbytes(sizeof(t_atom));
+            }
+            *ac = 1; // our data is a single floating point value
+            atom_setfloat(*av, x->objvalue);
+        }
+        return MAX_ERR_NONE;
+    }
+
+    @remark         By convention, and to permit the interoperability of objects 
+      using the obex API, 
+                    developers should allocate memory in their <tt>getvalueof</tt
+      > methods using the getbytes() function. 
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__obj_gae740749094827ac5adc2b7145db1c596}{
+\index{obj@{obj}!object\_\-method@{object\_\-method}}
+\index{object\_\-method@{object\_\-method}!obj@{obj}}
+\subsubsection[{object\_\-method}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ object\_\-method (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__obj_gae740749094827ac5adc2b7145db1c596}
+
+
+Sends an untyped message to an object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object that will receive the message \item[{\em s}]The message selector \item[{\em ...}]Any arguments to the message\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the receiver object can respond to the message, \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()} returns the result. Otherwise, the function will return 0.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Example: To send the message {\ttfamily bang} to the object {\ttfamily bang\_\-me}: 
+\begin{DoxyCode}
+    void *bang_result;
+    bang_result = object_method(bang_me, gensym("bang"));
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__obj_ga046f517695486f4008ae9b25ce5e41d7}{
+\index{obj@{obj}!object\_\-method\_\-char@{object\_\-method\_\-char}}
+\index{object\_\-method\_\-char@{object\_\-method\_\-char}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-char}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-char ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  unsigned char {\em v}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga046f517695486f4008ae9b25ce5e41d7}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single char as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em v}]An argument to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga8d2c36fbeff377ea30d4ac9d898a3d77}{
+\index{obj@{obj}!object\_\-method\_\-char\_\-array@{object\_\-method\_\-char\_\-array}}
+\index{object\_\-method\_\-char\_\-array@{object\_\-method\_\-char\_\-array}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-char\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-char\_\-array ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  unsigned char $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga8d2c36fbeff377ea30d4ac9d898a3d77}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of char values as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em ac}]The number of arguments to pass to the method. \item[{\em av}]The address of the first of the array of arguments to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga736ef8fbda2c79dd13a88f6ab81a9f9f}{
+\index{obj@{obj}!object\_\-method\_\-double@{object\_\-method\_\-double}}
+\index{object\_\-method\_\-double@{object\_\-method\_\-double}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-double}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-double ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  double {\em v}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga736ef8fbda2c79dd13a88f6ab81a9f9f}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single 64bit float as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em v}]An argument to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_gaaa262193055c44fff144e3395443597a}{
+\index{obj@{obj}!object\_\-method\_\-double\_\-array@{object\_\-method\_\-double\_\-array}}
+\index{object\_\-method\_\-double\_\-array@{object\_\-method\_\-double\_\-array}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-double\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-double\_\-array ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  double $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_gaaa262193055c44fff144e3395443597a}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of 64bit float values as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em ac}]The number of arguments to pass to the method. \item[{\em av}]The address of the first of the array of arguments to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_gabd57e5e8ce873c5aa12dfc60db6cb6f1}{
+\index{obj@{obj}!object\_\-method\_\-float@{object\_\-method\_\-float}}
+\index{object\_\-method\_\-float@{object\_\-method\_\-float}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-float}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-float ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  float {\em v}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_gabd57e5e8ce873c5aa12dfc60db6cb6f1}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single 32bit float as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em v}]An argument to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga308d41d63efacb1187ace7d3b50b99e1}{
+\index{obj@{obj}!object\_\-method\_\-float\_\-array@{object\_\-method\_\-float\_\-array}}
+\index{object\_\-method\_\-float\_\-array@{object\_\-method\_\-float\_\-array}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-float\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-float\_\-array ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  float $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga308d41d63efacb1187ace7d3b50b99e1}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of 32bit floats values as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em ac}]The number of arguments to pass to the method. \item[{\em av}]The address of the first of the array of arguments to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_gab509bef31fc1bdf47c67525c0353e6d3}{
+\index{obj@{obj}!object\_\-method\_\-format@{object\_\-method\_\-format}}
+\index{object\_\-method\_\-format@{object\_\-method\_\-format}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-format}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-format ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  {\bf t\_\-atom} $\ast$ {\em rv}, \/  char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__obj_gab509bef31fc1bdf47c67525c0353e6d3}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that uses \hyperlink{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{atom\_\-setformat()} to define the arguments. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em rv}]The address of an atom to hold a return value. \item[{\em fmt}]An sprintf-\/style format string specifying values for the atoms. \item[{\em ...}]One or more arguments which are to be substituted into the format string. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+
+\hyperlink{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{atom\_\-setformat()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga975e42fc3823dadc594232652291d26d}{
+\index{obj@{obj}!object\_\-method\_\-long@{object\_\-method\_\-long}}
+\index{object\_\-method\_\-long@{object\_\-method\_\-long}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-long}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-long ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em v}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga975e42fc3823dadc594232652291d26d}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single long integer as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em v}]An argument to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga76c93edf094492b8f485b7a401c616b6}{
+\index{obj@{obj}!object\_\-method\_\-long\_\-array@{object\_\-method\_\-long\_\-array}}
+\index{object\_\-method\_\-long\_\-array@{object\_\-method\_\-long\_\-array}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-long\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-long\_\-array ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  long $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga76c93edf094492b8f485b7a401c616b6}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of long integers values as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em ac}]The number of arguments to pass to the method. \item[{\em av}]The address of the first of the array of arguments to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga5432f19c374fb8850faa7ff062561db0}{
+\index{obj@{obj}!object\_\-method\_\-obj@{object\_\-method\_\-obj}}
+\index{object\_\-method\_\-obj@{object\_\-method\_\-obj}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-obj}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-obj ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  {\bf t\_\-object} $\ast$ {\em v}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga5432f19c374fb8850faa7ff062561db0}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single \hyperlink{structt__object}{t\_\-object}$\ast$ as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em v}]An argument to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga941f7a1161a097394a6924df0c03a1ea}{
+\index{obj@{obj}!object\_\-method\_\-obj\_\-array@{object\_\-method\_\-obj\_\-array}}
+\index{object\_\-method\_\-obj\_\-array@{object\_\-method\_\-obj\_\-array}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-obj\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-obj\_\-array ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga941f7a1161a097394a6924df0c03a1ea}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of \hyperlink{structt__object}{t\_\-object}$\ast$ values as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em ac}]The number of arguments to pass to the method. \item[{\em av}]The address of the first of the array of arguments to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga8c420370f84f178515540831cbe4e6d8}{
+\index{obj@{obj}!object\_\-method\_\-parse@{object\_\-method\_\-parse}}
+\index{object\_\-method\_\-parse@{object\_\-method\_\-parse}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-parse}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-parse ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  char $\ast$ {\em parsestr}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga8c420370f84f178515540831cbe4e6d8}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that uses \hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} to define the arguments. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em parsestr}]A C-\/string to parse into an array of atoms to pass to the method. \item[{\em rv}]The address of an atom to hold a return value. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+
+\hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga5ddeb48f167ded23b1508d502e571427}{
+\index{obj@{obj}!object\_\-method\_\-sym@{object\_\-method\_\-sym}}
+\index{object\_\-method\_\-sym@{object\_\-method\_\-sym}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-sym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-sym ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  {\bf t\_\-symbol} $\ast$ {\em v}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga5ddeb48f167ded23b1508d502e571427}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes a single \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em v}]An argument to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga2a4bb953a5f7a9afee4f2f8196c4226e}{
+\index{obj@{obj}!object\_\-method\_\-sym\_\-array@{object\_\-method\_\-sym\_\-array}}
+\index{object\_\-method\_\-sym\_\-array@{object\_\-method\_\-sym\_\-array}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-sym\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-sym\_\-array ({\bf t\_\-object} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga2a4bb953a5f7a9afee4f2f8196c4226e}
+
+
+Convenience wrapper for \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} that passes an array of \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ values as an argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to which the message will be sent. \item[{\em s}]The name of the method to call on the object. \item[{\em ac}]The number of arguments to pass to the method. \item[{\em av}]The address of the first of the array of arguments to pass to the method. \item[{\em rv}]The address of an atom to hold a return value.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} 
+\end{DoxySeeAlso}
+\hypertarget{group__obj_ga443dee482af22e0fe83e68955d367226}{
+\index{obj@{obj}!object\_\-method\_\-typed@{object\_\-method\_\-typed}}
+\index{object\_\-method\_\-typed@{object\_\-method\_\-typed}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-typed}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-typed (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_ga443dee482af22e0fe83e68955d367226}
+
+
+Sends a type-\/checked message to an object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object that will receive the message \item[{\em s}]The message selector \item[{\em ac}]Count of message arguments in {\ttfamily av} \item[{\em av}]Array of t\_\-atoms; the message arguments \item[{\em rv}]Return value of function, if available\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+If the receiver object can respond to the message, \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()} returns the result in {\ttfamily rv}. Otherwise, {\ttfamily rv} will contain an \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{A\_\-NOTHING} atom. 
+\end{DoxyRemark}
+\hypertarget{group__obj_gaa5ff59d2297a2dde60e3f2fe3e02eceb}{
+\index{obj@{obj}!object\_\-method\_\-typedfun@{object\_\-method\_\-typedfun}}
+\index{object\_\-method\_\-typedfun@{object\_\-method\_\-typedfun}!obj@{obj}}
+\subsubsection[{object\_\-method\_\-typedfun}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-method\_\-typedfun (void $\ast$ {\em x}, \/  {\bf t\_\-messlist} $\ast$ {\em mp}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__obj_gaa5ff59d2297a2dde60e3f2fe3e02eceb}
+
+
+Currently undocumented. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object that will receive the message \item[{\em mp}]Undocumented \item[{\em s}]The message selector \item[{\em ac}]Count of message arguments in {\ttfamily av} \item[{\em av}]Array of t\_\-atoms; the message arguments \item[{\em rv}]Return value of function, if available\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+If the receiver object can respond to the message, \hyperlink{group__obj_gaa5ff59d2297a2dde60e3f2fe3e02eceb}{object\_\-method\_\-typedfun()} returns the result in {\ttfamily rv}. Otherwise, {\ttfamily rv} will contain an \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{A\_\-NOTHING} atom. 
+\end{DoxyRemark}
+\hypertarget{group__obj_gac4b370265c776db4f545d257089af1cf}{
+\index{obj@{obj}!object\_\-new@{object\_\-new}}
+\index{object\_\-new@{object\_\-new}!obj@{obj}}
+\subsubsection[{object\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ object\_\-new ({\bf t\_\-symbol} $\ast$ {\em name\_\-space}, \/  {\bf t\_\-symbol} $\ast$ {\em classname}, \/   {\em ...})}}
+\label{group__obj_gac4b370265c776db4f545d257089af1cf}
+
+
+Allocates the memory for an instance of an object class and initialize its object header {\itshape internal to Max\/}. It is used similarly to the traditional function \hyperlink{group__class__old_ga4c1f100a92d6f519ba4e93665ff54998}{newinstance()}, but its use is required with obex-\/class objects.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name\_\-space}]The desired object's name space. Typically, either the constant \hyperlink{group__class_gaf640c99a1fceb8158c2d1e77381b0320}{CLASS\_\-BOX}, for obex classes which can instantiate inside of a Max patcher (e.g. boxes, UI objects, etc.), or the constant \hyperlink{group__class_ga090d3cbc4f137661806fc1b72249a791}{CLASS\_\-NOBOX}, for classes which will only be used internally. Developers can define their own name spaces as well, but this functionality is currently undocumented. \item[{\em classname}]The name of the class of the object to be created \item[{\em ...}]Any arguments expected by the object class being instantiated\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns a new instance of the object class if successful, or NULL if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_ga459c71aca6316e345379eeb424ad56ff}{
+\index{obj@{obj}!object\_\-new\_\-typed@{object\_\-new\_\-typed}}
+\index{object\_\-new\_\-typed@{object\_\-new\_\-typed}!obj@{obj}}
+\subsubsection[{object\_\-new\_\-typed}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ object\_\-new\_\-typed ({\bf t\_\-symbol} $\ast$ {\em name\_\-space}, \/  {\bf t\_\-symbol} $\ast$ {\em classname}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__obj_ga459c71aca6316e345379eeb424ad56ff}
+
+
+Allocates the memory for an instance of an object class and initialize its object header {\itshape internal to Max\/}. It is used similarly to the traditional function \hyperlink{group__class__old_ga4c1f100a92d6f519ba4e93665ff54998}{newinstance()}, but its use is required with obex-\/class objects. The \hyperlink{group__obj_ga459c71aca6316e345379eeb424ad56ff}{object\_\-new\_\-typed()} function differs from \hyperlink{group__obj_gac4b370265c776db4f545d257089af1cf}{object\_\-new()} by its use of an atom list for object arguments—in this way, it more resembles the effect of typing something into an object box from the Max interface.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name\_\-space}]The desired object's name space. Typically, either the constant \hyperlink{group__class_gaf640c99a1fceb8158c2d1e77381b0320}{CLASS\_\-BOX}, for obex classes which can instantiate inside of a Max patcher (e.g. boxes, UI objects, etc.), or the constant \hyperlink{group__class_ga090d3cbc4f137661806fc1b72249a791}{CLASS\_\-NOBOX}, for classes which will only be used internally. Developers can define their own name spaces as well, but this functionality is currently undocumented. \item[{\em classname}]The name of the class of the object to be created \item[{\em ac}]Count of arguments in {\ttfamily av} \item[{\em av}]Array of t\_\-atoms; arguments to the class's instance creation function.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns a new instance of the object class if successful, or NULL if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{
+\index{obj@{obj}!object\_\-notify@{object\_\-notify}}
+\index{object\_\-notify@{object\_\-notify}!obj@{obj}}
+\subsubsection[{object\_\-notify}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-notify (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em data})}}
+\label{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}
+
+
+Broadcast a message (with an optional argument) from a registered object to any attached client objects. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Pointer to the registered object \item[{\em s}]The message to send \item[{\em data}]An optional argument which will be passed with the message. Sets this argument to NULL if it will be unused.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+In order for client objects to receive notifications, they must define and implement a special method, {\ttfamily notify}, like so: 
+\begin{DoxyCode}
+    class_addmethod(c, (method)myobject_notify, "notify", A_CANT, 0);
+\end{DoxyCode}
+
+
+The {\ttfamily notify} method should be prototyped as: 
+\begin{DoxyCode}
+    void myobject_notify(t_myobject *x, t_symbol *s, t_symbol *msg, void *sender,
+       void *data);
+\end{DoxyCode}
+ where {\ttfamily x} is the pointer to the receiving object, {\ttfamily s} is the name of the sending (registered) object in its namespace, {\ttfamily msg} is the sent message, {\ttfamily sender} is the pointer to the sending object, and {\ttfamily data} is an optional argument sent with the message. This value corresponds to the data argument in the \hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify()} method. 
+\end{DoxyRemark}
+\hypertarget{group__obj_ga95edf6b869d6c5be94a59e49dddb0935}{
+\index{obj@{obj}!object\_\-obex\_\-dumpout@{object\_\-obex\_\-dumpout}}
+\index{object\_\-obex\_\-dumpout@{object\_\-obex\_\-dumpout}!obj@{obj}}
+\subsubsection[{object\_\-obex\_\-dumpout}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-obex\_\-dumpout (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__obj_ga95edf6b869d6c5be94a59e49dddb0935}
+
+
+Sends data from the object's dumpout outlet. The dumpout outlet is stored in the obex using the \hyperlink{group__obj_gaccdb93572405a2e9f065086f9c3dfe41}{object\_\-obex\_\-store()} function (see above). It is used approximately like \hyperlink{group__inout_ga12798ee897e01dac21ee547c4091d8a8}{outlet\_\-anything()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object pointer. This function should only be called on instantiated objects (i.e. in the {\ttfamily new} method or later), not directly on classes (i.e. in {\ttfamily main()}). \item[{\em s}]The message selector \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \item[{\em argc}]Number of elements in the argument list in argv \item[{\em argv}]t\_\-atoms constituting the message arguments\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__obj_gaba3a848eba4f4b834c1f89377c75e281}{
+\index{obj@{obj}!object\_\-obex\_\-lookup@{object\_\-obex\_\-lookup}}
+\index{object\_\-obex\_\-lookup@{object\_\-obex\_\-lookup}!obj@{obj}}
+\subsubsection[{object\_\-obex\_\-lookup}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-obex\_\-lookup (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em val})}}
+\label{group__obj_gaba3a848eba4f4b834c1f89377c75e281}
+
+
+Retrieves the value of a data stored in the obex. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object pointer. This function should only be called on instantiated objects (i.e. in the {\ttfamily new} method or later), not directly on classes (i.e. in {\ttfamily main()}). \item[{\em key}]The symbolic name for the data to be retrieved \item[{\em val}]A pointer to a \hyperlink{structt__object}{t\_\-object} $\ast$, to be filled with the data retrieved from the obex.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+By default, pointers to the object's containing patcher and box objects are stored in the obex, under the keys 'P' and 'B', respectively. To retrieve them, the developer could do something like the following: 
+\begin{DoxyCode}
+    void post_containers(t_obexobj *x)
+    {
+        t_patcher *p;
+        t_box *b;
+
+        p = object_obex_lookup(x, gensym("#P"), (t_object **)&p);
+        b = object_obex_lookup(x, gensym("#B"), (t_object **)&b);
+
+        post("my patcher is located at 0x%X", p);
+        post("my box is located at 0x%X", b);
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__obj_gaccdb93572405a2e9f065086f9c3dfe41}{
+\index{obj@{obj}!object\_\-obex\_\-store@{object\_\-obex\_\-store}}
+\index{object\_\-obex\_\-store@{object\_\-obex\_\-store}!obj@{obj}}
+\subsubsection[{object\_\-obex\_\-store}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-obex\_\-store (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$ {\em val})}}
+\label{group__obj_gaccdb93572405a2e9f065086f9c3dfe41}
+
+
+Stores data in the object's obex. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object pointer. This function should only be called on instantiated objects (i.e. in the {\ttfamily new} method or later), not directly on classes (i.e. in {\ttfamily main()}). \item[{\em key}]A symbolic name for the data to be stored \item[{\em val}]A \hyperlink{structt__object}{t\_\-object} $\ast$, to be stored in the obex, referenced under the {\ttfamily key}.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Most developers will need to use this function for the specific purpose of storing the dumpout outlet in the obex (the dumpout outlet is used by attributes to report data in response to 'get' queries). For this, the developer should use something like the following in the object's {\ttfamily new} method: 
+\begin{DoxyCode}
+    object_obex_store(x, _sym_dumpout, outlet_new(x, NULL));
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__obj_gac4eb1b3d30abbbb754ddc38701ff1c77}{
+\index{obj@{obj}!object\_\-openhelp@{object\_\-openhelp}}
+\index{object\_\-openhelp@{object\_\-openhelp}!obj@{obj}}
+\subsubsection[{object\_\-openhelp}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-openhelp ({\bf t\_\-object} $\ast$ {\em x})}}
+\label{group__obj_gac4eb1b3d30abbbb754ddc38701ff1c77}
+
+
+Open the help patcher for a given instance of an object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object instance for which to open the help patcher. \end{DoxyParams}
+\hypertarget{group__obj_ga6d212c17722cc783102a6f5a623596c9}{
+\index{obj@{obj}!object\_\-openquery@{object\_\-openquery}}
+\index{object\_\-openquery@{object\_\-openquery}!obj@{obj}}
+\subsubsection[{object\_\-openquery}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-openquery ({\bf t\_\-object} $\ast$ {\em x})}}
+\label{group__obj_ga6d212c17722cc783102a6f5a623596c9}
+
+
+Open a search in the file browser for files with the name of the given object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object instance for which to query. \end{DoxyParams}
+\hypertarget{group__obj_gabcf7aaca1f307e806e38100355cc97ac}{
+\index{obj@{obj}!object\_\-openrefpage@{object\_\-openrefpage}}
+\index{object\_\-openrefpage@{object\_\-openrefpage}!obj@{obj}}
+\subsubsection[{object\_\-openrefpage}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-openrefpage ({\bf t\_\-object} $\ast$ {\em x})}}
+\label{group__obj_gabcf7aaca1f307e806e38100355cc97ac}
+
+
+Open the reference page for a given instance of an object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object instance for which to open the reference page. \end{DoxyParams}
+\hypertarget{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{
+\index{obj@{obj}!object\_\-register@{object\_\-register}}
+\index{object\_\-register@{object\_\-register}!obj@{obj}}
+\subsubsection[{object\_\-register}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ object\_\-register ({\bf t\_\-symbol} $\ast$ {\em name\_\-space}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em x})}}
+\label{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}
+
+
+Registers an object in a namespace. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name\_\-space}]The namespace in which to register the object. The namespace can be any symbol. If the namespace does not already exist, it is created automatically. \item[{\em s}]The name of the object in the namespace. This name will be used by other objects to attach and detach from the registered object. \item[{\em x}]The object to register\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The function returns a pointer to the registered object. Under some circumstances, object\_\-register will {\itshape duplicate\/} the object, and return a pointer to the duplicate—the developer should not assume that the pointer passed in is the same pointer that has been registered. To be safe, the returned pointer should be stored and used with the bject\_\-unregister() function.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+You should not register an object if the object is a UI object. UI objects automatically register and attach to themselves in \hyperlink{group__jbox_gaaa460d02ca3d22c54368ade59d8e330b}{jbox\_\-new()}. 
+\end{DoxyRemark}
+\hypertarget{group__obj_ga9d653fc9249f24c462f14657b969cc4d}{
+\index{obj@{obj}!object\_\-setvalueof@{object\_\-setvalueof}}
+\index{object\_\-setvalueof@{object\_\-setvalueof}!obj@{obj}}
+\subsubsection[{object\_\-setvalueof}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-setvalueof (void $\ast$ {\em x}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__obj_ga9d653fc9249f24c462f14657b969cc4d}
+
+
+Sets the value of an object which supports the {\ttfamily getvalueof/setvalueof} interface. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object whose value is of interest \item[{\em ac}]The count of arguments in {\ttfamily av} \item[{\em av}]Array of t\_\-atoms; the new desired data for the object\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Developers wishing to design objects which will support this function being called on them must define and implement a special method, {\ttfamily setvalueof}, like so: 
+\begin{DoxyCode}
+    class_addmethod(c, (method)myobject_setvalueof, "setvalueof", A_CANT, 0);
+\end{DoxyCode}
+
+
+The {\ttfamily setvalueof} method should be prototyped as: 
+\begin{DoxyCode}
+    t_max_err myobject_setvalueof(t_myobject *x, long *ac, t_atom **av);
+\end{DoxyCode}
+
+
+And implemented, generally, as: 
+\begin{DoxyCode}
+    t_max_err myobject_setvalueof(t_myobject *x, long ac, t_atom *av)
+    {
+        if (ac && av) {
+            // simulate receipt of a float value
+            myobject_float(x, atom_getfloat(av));
+        }
+        return MAX_ERR_NONE;
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__obj_ga2b5b3327e03edbefe753ebd6c8b7e152}{
+\index{obj@{obj}!object\_\-unregister@{object\_\-unregister}}
+\index{object\_\-unregister@{object\_\-unregister}!obj@{obj}}
+\subsubsection[{object\_\-unregister}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} object\_\-unregister (void $\ast$ {\em x})}}
+\label{group__obj_ga2b5b3327e03edbefe753ebd6c8b7e152}
+
+
+Removes a registered object from a namespace. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to unregister. This should be the pointer returned from the \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} function. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}

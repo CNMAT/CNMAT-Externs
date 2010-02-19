@@ -1,0 +1,411 @@
+\hypertarget{group__memory}{
+\section{Memory Management}
+\label{group__memory}\index{Memory Management@{Memory Management}}
+}
+
+
+In the past, Max has provided two separate APIs for memory management.  
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__memory_ga6ae185a510cc76224680e6156b843055}{MM\_\-UNIFIED}
+\begin{DoxyCompactList}\small\item\em This macro being defined means that getbytes and sysmem APIs for memory management are unified. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \hyperlink{group__memory_gaa513b95a076519ec168b62d85881f643}{getbytes} (short size)
+\begin{DoxyCompactList}\small\item\em Allocate small amounts of non-\/relocatable memory. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memory_gaa1dc485c42515917ca377dbaf15b7dcd}{freebytes} (void $\ast$b, short size)
+\begin{DoxyCompactList}\small\item\em Free memory allocated with \hyperlink{group__memory_gaa513b95a076519ec168b62d85881f643}{getbytes()}. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16} (short size)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16()} to allocate small amounts of non-\/relocatable memory that is aligned on a 16-\/byte boundary for use with vector optimization. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memory_gafba42d2b23405e29469392394cf41555}{freebytes16} (char $\ast$mem, short size)
+\begin{DoxyCompactList}\small\item\em Free memory allocated with \hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16()}. \item\end{DoxyCompactList}\item 
+char $\ast$$\ast$ \hyperlink{group__memory_ga50135e5f9bb18030ff1d12e9976253ab}{newhandle} (long size)
+\begin{DoxyCompactList}\small\item\em Allocate relocatable memory. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__memory_ga6402eb4bbf3acd03d3e2f1133195bac3}{growhandle} (void $\ast$h, long size)
+\begin{DoxyCompactList}\small\item\em Change the size of a handle. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memory_gae325435a83824eb6b42e0885b68b9110}{disposhandle} (char $\ast$$\ast$h)
+\begin{DoxyCompactList}\small\item\em Free the memory used by a handle you no longer need. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga70766a030fcd392d4574fa59b296a68e}{t\_\-ptr} \hyperlink{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{sysmem\_\-newptr} (long size)
+\begin{DoxyCompactList}\small\item\em Allocate memory. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga70766a030fcd392d4574fa59b296a68e}{t\_\-ptr} \hyperlink{group__memory_ga1c178a079247f715c6e34c828d375324}{sysmem\_\-newptrclear} (long size)
+\begin{DoxyCompactList}\small\item\em Allocate memory and set it to zero. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga70766a030fcd392d4574fa59b296a68e}{t\_\-ptr} \hyperlink{group__memory_gacad6bca165c7b2849fc81d8449245755}{sysmem\_\-resizeptr} (void $\ast$ptr, long newsize)
+\begin{DoxyCompactList}\small\item\em Resize an existing pointer. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga70766a030fcd392d4574fa59b296a68e}{t\_\-ptr} \hyperlink{group__memory_gaf458ca679d665984dbaa8125c88a417e}{sysmem\_\-resizeptrclear} (void $\ast$ptr, long newsize)
+\begin{DoxyCompactList}\small\item\em Resize an existing pointer and clear it. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memory_ga4f847713a1bd083030d60e8752d7c28d}{sysmem\_\-ptrsize} (void $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Find the size of a pointer. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr} (void $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Free memory allocated with \hyperlink{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{sysmem\_\-newptr()}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memory_ga527cceb7178a110b73ca01fdc41702b4}{sysmem\_\-copyptr} (const void $\ast$src, void $\ast$dst, long bytes)
+\begin{DoxyCompactList}\small\item\em Copy memory the contents of one pointer to another pointer. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} \hyperlink{group__memory_gacdacfad4785c71dc8c4ce5d4d9714d54}{sysmem\_\-newhandle} (long size)
+\begin{DoxyCompactList}\small\item\em Allocate a handle (a pointer to a pointer). \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} \hyperlink{group__memory_ga56406e70880d954e3d51b87e606c1398}{sysmem\_\-newhandleclear} (unsigned long size)
+\begin{DoxyCompactList}\small\item\em Allocate a handle (a pointer to a pointer) whose memory is set to zero. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memory_ga420520dda6015ec33876b18b860083dd}{sysmem\_\-resizehandle} (\hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} handle, long newsize)
+\begin{DoxyCompactList}\small\item\em Resize an existing handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memory_ga84cf5e5a070edef2834faf3b7beed5fe}{sysmem\_\-handlesize} (\hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} handle)
+\begin{DoxyCompactList}\small\item\em Find the size of a handle. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memory_ga5815994f7d02b77c24f8c684df9acd83}{sysmem\_\-freehandle} (\hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} handle)
+\begin{DoxyCompactList}\small\item\em Free memory allocated with \hyperlink{group__memory_gacdacfad4785c71dc8c4ce5d4d9714d54}{sysmem\_\-newhandle()}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memory_ga545ea0e5d3d8f14bda62f8ac6b3e6d71}{sysmem\_\-lockhandle} (\hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} handle, long lock)
+\begin{DoxyCompactList}\small\item\em Set the locked/unlocked state of a handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memory_gab59295d789b6a720b9ab981a39441cbc}{sysmem\_\-ptrandhand} (void $\ast$p, \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} h, long size)
+\begin{DoxyCompactList}\small\item\em Add memory to an existing handle and copy memory to the resized portion from a pointer. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memory_ga52dd152965c42f6b1e14cfdf8b102a30}{sysmem\_\-ptrbeforehand} (void $\ast$p, \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} h, unsigned long size)
+\begin{DoxyCompactList}\small\item\em Add memory to an existing handle and copy memory to the resized portion from a pointer. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memory_ga2d07c8171a047d92e8bd95f8bb5b2a70}{sysmem\_\-nullterminatehandle} (\hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} h)
+\begin{DoxyCompactList}\small\item\em Add a null terminator to a handle. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+In the past, Max has provided two separate APIs for memory management. One for allocating memory on the stack so that it was interrupt safe, including the \hyperlink{group__memory_gaa513b95a076519ec168b62d85881f643}{getbytes()} and \hyperlink{group__memory_gaa1dc485c42515917ca377dbaf15b7dcd}{freebytes()} functions. The other, the \char`\"{}sysmem\char`\"{} API, were for allocating memory on the heap where larger amounts of memory were needed and the code could be guaranteed to operate at non-\/interrupt level.
+
+Many things have changed in the environment of recent operating systems (MacOS X and Windows XP/Vista), the memory routines function differently, and the scheduler is no longer directly triggered by a hardware interrupt. In Max 5, the sysmem and getbytes API's have been unified, and thus may be used interchangeably.
+
+The memory management unification can be switched on and off in the header files if needed, to compile code for older versions of Max for example, by changing the use of \hyperlink{group__memory_ga6ae185a510cc76224680e6156b843055}{MM\_\-UNIFIED} in the Max headers.\hypertarget{group__memory_The}{}\subsection{Sysmem API}\label{group__memory_The}
+The Sysmem API provides a number of utilities for allocating and managing memory. It is relatively similar to some of the Macintosh Memory Manager API, and not too different from Standard C library memory functions. It is {\itshape not\/} safe to mix these routines with other memory routines (e.g. don’t use malloc() to allocate a pointer, and \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()} to free it). 
+
+\subsection{Define Documentation}
+\hypertarget{group__memory_ga6ae185a510cc76224680e6156b843055}{
+\index{memory@{memory}!MM\_\-UNIFIED@{MM\_\-UNIFIED}}
+\index{MM\_\-UNIFIED@{MM\_\-UNIFIED}!memory@{memory}}
+\subsubsection[{MM\_\-UNIFIED}]{\setlength{\rightskip}{0pt plus 5cm}\#define MM\_\-UNIFIED}}
+\label{group__memory_ga6ae185a510cc76224680e6156b843055}
+
+
+This macro being defined means that getbytes and sysmem APIs for memory management are unified. This is correct for Max 5, but should be commented out when compiling for old max targets. 
+
+\subsection{Function Documentation}
+\hypertarget{group__memory_gae325435a83824eb6b42e0885b68b9110}{
+\index{memory@{memory}!disposhandle@{disposhandle}}
+\index{disposhandle@{disposhandle}!memory@{memory}}
+\subsubsection[{disposhandle}]{\setlength{\rightskip}{0pt plus 5cm}void disposhandle (char $\ast$$\ast$ {\em h})}}
+\label{group__memory_gae325435a83824eb6b42e0885b68b9110}
+
+
+Free the memory used by a handle you no longer need. 
+\begin{DoxyParams}{Parameters}
+\item[{\em h}]The handle to dispose. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__memory_ga5815994f7d02b77c24f8c684df9acd83}{sysmem\_\-freehandle()} 
+\end{DoxySeeAlso}
+\hypertarget{group__memory_gaa1dc485c42515917ca377dbaf15b7dcd}{
+\index{memory@{memory}!freebytes@{freebytes}}
+\index{freebytes@{freebytes}!memory@{memory}}
+\subsubsection[{freebytes}]{\setlength{\rightskip}{0pt plus 5cm}void freebytes (void $\ast$ {\em b}, \/  short {\em size})}}
+\label{group__memory_gaa1dc485c42515917ca377dbaf15b7dcd}
+
+
+Free memory allocated with \hyperlink{group__memory_gaa513b95a076519ec168b62d85881f643}{getbytes()}. As of Max 5 it is unified with \hyperlink{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{sysmem\_\-newptr()}, which is the preferred method for allocating memory.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]A pointer to the block of memory previously allocated that you want to free. \item[{\em size}]The size the block specified (as parameter b) in bytes. \end{DoxyParams}
+\hypertarget{group__memory_gafba42d2b23405e29469392394cf41555}{
+\index{memory@{memory}!freebytes16@{freebytes16}}
+\index{freebytes16@{freebytes16}!memory@{memory}}
+\subsubsection[{freebytes16}]{\setlength{\rightskip}{0pt plus 5cm}void freebytes16 (char $\ast$ {\em mem}, \/  short {\em size})}}
+\label{group__memory_gafba42d2b23405e29469392394cf41555}
+
+
+Free memory allocated with \hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16()}. As of Max 5 it is unified with \hyperlink{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{sysmem\_\-newptr()}, which is the preferred method for allocating memory.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em mem}]A pointer to the block of memory previously allocated that you want to free. \item[{\em size}]The size the block specified (as parameter b) in bytes.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Note that \hyperlink{group__memory_gafba42d2b23405e29469392394cf41555}{freebytes16()} will cause memory corruption if you pass it memory that was allocated with \hyperlink{group__memory_gaa513b95a076519ec168b62d85881f643}{getbytes()}. Use it only with memory allocated with \hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16()}. 
+\end{DoxyRemark}
+\hypertarget{group__memory_gaa513b95a076519ec168b62d85881f643}{
+\index{memory@{memory}!getbytes@{getbytes}}
+\index{getbytes@{getbytes}!memory@{memory}}
+\subsubsection[{getbytes}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ getbytes (short {\em size})}}
+\label{group__memory_gaa513b95a076519ec168b62d85881f643}
+
+
+Allocate small amounts of non-\/relocatable memory. As of Max 5 it is unified with \hyperlink{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{sysmem\_\-newptr()}, which is the preferred method for allocating memory.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]The size to allocate in bytes (up to 32767 bytes). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the allocated memory. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga198147e2629edde67218d8a759e9d5a0}{
+\index{memory@{memory}!getbytes16@{getbytes16}}
+\index{getbytes16@{getbytes16}!memory@{memory}}
+\subsubsection[{getbytes16}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ getbytes16 (short {\em size})}}
+\label{group__memory_ga198147e2629edde67218d8a759e9d5a0}
+
+
+Use \hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16()} to allocate small amounts of non-\/relocatable memory that is aligned on a 16-\/byte boundary for use with vector optimization. 
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]The size to allocate in bytes (up to 32767 bytes). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the allocated memory.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16()} is identical to getbytes except that it returns memory that is aligned to a 16-\/byte boundary. This allows you to allocate storage for vector-\/optimized memory at interrupt level. Note that any memory allocated with \hyperlink{group__memory_ga198147e2629edde67218d8a759e9d5a0}{getbytes16()} must be freed with \hyperlink{group__memory_gafba42d2b23405e29469392394cf41555}{freebytes16()}, not \hyperlink{group__memory_gaa1dc485c42515917ca377dbaf15b7dcd}{freebytes()}. 
+\end{DoxyRemark}
+\hypertarget{group__memory_ga6402eb4bbf3acd03d3e2f1133195bac3}{
+\index{memory@{memory}!growhandle@{growhandle}}
+\index{growhandle@{growhandle}!memory@{memory}}
+\subsubsection[{growhandle}]{\setlength{\rightskip}{0pt plus 5cm}short growhandle (void $\ast$ {\em h}, \/  long {\em size})}}
+\label{group__memory_ga6402eb4bbf3acd03d3e2f1133195bac3}
+
+
+Change the size of a handle. 
+\begin{DoxyParams}{Parameters}
+\item[{\em h}]The handle to resize. \item[{\em size}]The new size to allocate in bytes. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ignored. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__memory_ga420520dda6015ec33876b18b860083dd}{sysmem\_\-resizehandle()} 
+\end{DoxySeeAlso}
+\hypertarget{group__memory_ga50135e5f9bb18030ff1d12e9976253ab}{
+\index{memory@{memory}!newhandle@{newhandle}}
+\index{newhandle@{newhandle}!memory@{memory}}
+\subsubsection[{newhandle}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$ newhandle (long {\em size})}}
+\label{group__memory_ga50135e5f9bb18030ff1d12e9976253ab}
+
+
+Allocate relocatable memory. 
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]The size to allocate in bytes. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The allocated handle. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__memory_gacdacfad4785c71dc8c4ce5d4d9714d54}{sysmem\_\-newhandle()} 
+\end{DoxySeeAlso}
+\hypertarget{group__memory_ga527cceb7178a110b73ca01fdc41702b4}{
+\index{memory@{memory}!sysmem\_\-copyptr@{sysmem\_\-copyptr}}
+\index{sysmem\_\-copyptr@{sysmem\_\-copyptr}!memory@{memory}}
+\subsubsection[{sysmem\_\-copyptr}]{\setlength{\rightskip}{0pt plus 5cm}void sysmem\_\-copyptr (const void $\ast$ {\em src}, \/  void $\ast$ {\em dst}, \/  long {\em bytes})}}
+\label{group__memory_ga527cceb7178a110b73ca01fdc41702b4}
+
+
+Copy memory the contents of one pointer to another pointer. This function is similar to BlockMove() or memcpy(). It copies the contents of the memory from the source to the destination pointer.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em src}]A pointer to the memory whose bytes will be copied. \item[{\em dst}]A pointer to the memory where the data will be copied. \item[{\em bytes}]The size in bytes of the data to be copied. \end{DoxyParams}
+\hypertarget{group__memory_ga5815994f7d02b77c24f8c684df9acd83}{
+\index{memory@{memory}!sysmem\_\-freehandle@{sysmem\_\-freehandle}}
+\index{sysmem\_\-freehandle@{sysmem\_\-freehandle}!memory@{memory}}
+\subsubsection[{sysmem\_\-freehandle}]{\setlength{\rightskip}{0pt plus 5cm}void sysmem\_\-freehandle ({\bf t\_\-handle} {\em handle})}}
+\label{group__memory_ga5815994f7d02b77c24f8c684df9acd83}
+
+
+Free memory allocated with \hyperlink{group__memory_gacdacfad4785c71dc8c4ce5d4d9714d54}{sysmem\_\-newhandle()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]The handle whose memory will be freed. \end{DoxyParams}
+\hypertarget{group__memory_ga200c82639e547869db1f3887d17102d3}{
+\index{memory@{memory}!sysmem\_\-freeptr@{sysmem\_\-freeptr}}
+\index{sysmem\_\-freeptr@{sysmem\_\-freeptr}!memory@{memory}}
+\subsubsection[{sysmem\_\-freeptr}]{\setlength{\rightskip}{0pt plus 5cm}void sysmem\_\-freeptr (void $\ast$ {\em ptr})}}
+\label{group__memory_ga200c82639e547869db1f3887d17102d3}
+
+
+Free memory allocated with \hyperlink{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{sysmem\_\-newptr()}. This function is similar to DisposePtr or free. It frees the memory that had been allocated to the given pointer.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ptr}]The pointer whose memory will be freed. \end{DoxyParams}
+\hypertarget{group__memory_ga84cf5e5a070edef2834faf3b7beed5fe}{
+\index{memory@{memory}!sysmem\_\-handlesize@{sysmem\_\-handlesize}}
+\index{sysmem\_\-handlesize@{sysmem\_\-handlesize}!memory@{memory}}
+\subsubsection[{sysmem\_\-handlesize}]{\setlength{\rightskip}{0pt plus 5cm}long sysmem\_\-handlesize ({\bf t\_\-handle} {\em handle})}}
+\label{group__memory_ga84cf5e5a070edef2834faf3b7beed5fe}
+
+
+Find the size of a handle. This function is similar to GetHandleSize().
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]The handle whose size will be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes allocated to the specified handle. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga545ea0e5d3d8f14bda62f8ac6b3e6d71}{
+\index{memory@{memory}!sysmem\_\-lockhandle@{sysmem\_\-lockhandle}}
+\index{sysmem\_\-lockhandle@{sysmem\_\-lockhandle}!memory@{memory}}
+\subsubsection[{sysmem\_\-lockhandle}]{\setlength{\rightskip}{0pt plus 5cm}long sysmem\_\-lockhandle ({\bf t\_\-handle} {\em handle}, \/  long {\em lock})}}
+\label{group__memory_ga545ea0e5d3d8f14bda62f8ac6b3e6d71}
+
+
+Set the locked/unlocked state of a handle. This function is similar to HLock or HUnlock. It sets the lock state of a handle, using a zero or non-\/zero number.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]The handle that will be locked. \item[{\em lock}]The new lock state of the handle. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The previous lock state. 
+\end{DoxyReturn}
+\hypertarget{group__memory_gacdacfad4785c71dc8c4ce5d4d9714d54}{
+\index{memory@{memory}!sysmem\_\-newhandle@{sysmem\_\-newhandle}}
+\index{sysmem\_\-newhandle@{sysmem\_\-newhandle}!memory@{memory}}
+\subsubsection[{sysmem\_\-newhandle}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-handle} sysmem\_\-newhandle (long {\em size})}}
+\label{group__memory_gacdacfad4785c71dc8c4ce5d4d9714d54}
+
+
+Allocate a handle (a pointer to a pointer). This function is similar to NewHandle(). It allocates a handle of a given number of bytes and returns a \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]The size of the handle in bytes that will be allocated. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle}. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga56406e70880d954e3d51b87e606c1398}{
+\index{memory@{memory}!sysmem\_\-newhandleclear@{sysmem\_\-newhandleclear}}
+\index{sysmem\_\-newhandleclear@{sysmem\_\-newhandleclear}!memory@{memory}}
+\subsubsection[{sysmem\_\-newhandleclear}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-handle} sysmem\_\-newhandleclear (unsigned long {\em size})}}
+\label{group__memory_ga56406e70880d954e3d51b87e606c1398}
+
+
+Allocate a handle (a pointer to a pointer) whose memory is set to zero. 
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]The size of the handle in bytes that will be allocated. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle}. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__memory_gacdacfad4785c71dc8c4ce5d4d9714d54}{sysmem\_\-newhandle()} 
+\end{DoxySeeAlso}
+\hypertarget{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{
+\index{memory@{memory}!sysmem\_\-newptr@{sysmem\_\-newptr}}
+\index{sysmem\_\-newptr@{sysmem\_\-newptr}!memory@{memory}}
+\subsubsection[{sysmem\_\-newptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-ptr} sysmem\_\-newptr (long {\em size})}}
+\label{group__memory_ga276676be214edff9fe5c9d0681f39ae6}
+
+
+Allocate memory. This function is similar to NewPtr() or malloc(). It allocates a pointer of a given number of bytes and returns a pointer to the memory allocated.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]The amount of memory to allocate. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the allocated memory, or NULL if the allocation fails. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga1c178a079247f715c6e34c828d375324}{
+\index{memory@{memory}!sysmem\_\-newptrclear@{sysmem\_\-newptrclear}}
+\index{sysmem\_\-newptrclear@{sysmem\_\-newptrclear}!memory@{memory}}
+\subsubsection[{sysmem\_\-newptrclear}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-ptr} sysmem\_\-newptrclear (long {\em size})}}
+\label{group__memory_ga1c178a079247f715c6e34c828d375324}
+
+
+Allocate memory and set it to zero. This function is similar to NewPtrClear() or calloc(). It allocates a pointer of a given number of bytes, zeroing all memory, and returns a pointer to the memory allocated.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]The amount of memory to allocate. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the allocated memory, or NULL if the allocation fails. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga2d07c8171a047d92e8bd95f8bb5b2a70}{
+\index{memory@{memory}!sysmem\_\-nullterminatehandle@{sysmem\_\-nullterminatehandle}}
+\index{sysmem\_\-nullterminatehandle@{sysmem\_\-nullterminatehandle}!memory@{memory}}
+\subsubsection[{sysmem\_\-nullterminatehandle}]{\setlength{\rightskip}{0pt plus 5cm}long sysmem\_\-nullterminatehandle ({\bf t\_\-handle} {\em h})}}
+\label{group__memory_ga2d07c8171a047d92e8bd95f8bb5b2a70}
+
+
+Add a null terminator to a handle. 
+\begin{DoxyParams}{Parameters}
+\item[{\em h}]A handle to null terminate. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__memory_gab59295d789b6a720b9ab981a39441cbc}{
+\index{memory@{memory}!sysmem\_\-ptrandhand@{sysmem\_\-ptrandhand}}
+\index{sysmem\_\-ptrandhand@{sysmem\_\-ptrandhand}!memory@{memory}}
+\subsubsection[{sysmem\_\-ptrandhand}]{\setlength{\rightskip}{0pt plus 5cm}long sysmem\_\-ptrandhand (void $\ast$ {\em p}, \/  {\bf t\_\-handle} {\em h}, \/  long {\em size})}}
+\label{group__memory_gab59295d789b6a720b9ab981a39441cbc}
+
+
+Add memory to an existing handle and copy memory to the resized portion from a pointer. This function is similar to PtrAndHand(). It resizes an existing handle by adding a given number of bytes to it and copies data from a pointer into those bytes.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The existing pointer whose data will be copied into the resized handle. \item[{\em h}]The handle which will be enlarged by the size of the pointer. \item[{\em size}]The size in bytes that will be added to the handle. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes allocated to the specified handle. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga52dd152965c42f6b1e14cfdf8b102a30}{
+\index{memory@{memory}!sysmem\_\-ptrbeforehand@{sysmem\_\-ptrbeforehand}}
+\index{sysmem\_\-ptrbeforehand@{sysmem\_\-ptrbeforehand}!memory@{memory}}
+\subsubsection[{sysmem\_\-ptrbeforehand}]{\setlength{\rightskip}{0pt plus 5cm}long sysmem\_\-ptrbeforehand (void $\ast$ {\em p}, \/  {\bf t\_\-handle} {\em h}, \/  unsigned long {\em size})}}
+\label{group__memory_ga52dd152965c42f6b1e14cfdf8b102a30}
+
+
+Add memory to an existing handle and copy memory to the resized portion from a pointer. Unlike \hyperlink{group__memory_gab59295d789b6a720b9ab981a39441cbc}{sysmem\_\-ptrandhand()}, however, this copies the ptr before the previously exising handle data.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The existing pointer whose data will be copied into the resized handle. \item[{\em h}]The handle which will be enlarged by the size of the pointer. \item[{\em size}]The size in bytes that will be added to the handle. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga4f847713a1bd083030d60e8752d7c28d}{
+\index{memory@{memory}!sysmem\_\-ptrsize@{sysmem\_\-ptrsize}}
+\index{sysmem\_\-ptrsize@{sysmem\_\-ptrsize}!memory@{memory}}
+\subsubsection[{sysmem\_\-ptrsize}]{\setlength{\rightskip}{0pt plus 5cm}long sysmem\_\-ptrsize (void $\ast$ {\em ptr})}}
+\label{group__memory_ga4f847713a1bd083030d60e8752d7c28d}
+
+
+Find the size of a pointer. This function is similar to \_\-msize().
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ptr}]The pointer whose size will be queried \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes allocated to the pointer specified. 
+\end{DoxyReturn}
+\hypertarget{group__memory_ga420520dda6015ec33876b18b860083dd}{
+\index{memory@{memory}!sysmem\_\-resizehandle@{sysmem\_\-resizehandle}}
+\index{sysmem\_\-resizehandle@{sysmem\_\-resizehandle}!memory@{memory}}
+\subsubsection[{sysmem\_\-resizehandle}]{\setlength{\rightskip}{0pt plus 5cm}long sysmem\_\-resizehandle ({\bf t\_\-handle} {\em handle}, \/  long {\em newsize})}}
+\label{group__memory_ga420520dda6015ec33876b18b860083dd}
+
+
+Resize an existing handle. This function is similar to SetHandleSize(). It resizes an existing handle to the size specified.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]The handle that will be resized. \item[{\em newsize}]The new size of the handle in bytes. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes allocated to the specified handle. 
+\end{DoxyReturn}
+\hypertarget{group__memory_gacad6bca165c7b2849fc81d8449245755}{
+\index{memory@{memory}!sysmem\_\-resizeptr@{sysmem\_\-resizeptr}}
+\index{sysmem\_\-resizeptr@{sysmem\_\-resizeptr}!memory@{memory}}
+\subsubsection[{sysmem\_\-resizeptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-ptr} sysmem\_\-resizeptr (void $\ast$ {\em ptr}, \/  long {\em newsize})}}
+\label{group__memory_gacad6bca165c7b2849fc81d8449245755}
+
+
+Resize an existing pointer. This function is similar to realloc(). It resizes an existing pointer and returns a new pointer to the resized memory.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ptr}]The pointer to the memory that will be resized. \item[{\em newsize}]The new size of the pointer in bytes. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the resized memory, or NULL if the allocation fails. 
+\end{DoxyReturn}
+\hypertarget{group__memory_gaf458ca679d665984dbaa8125c88a417e}{
+\index{memory@{memory}!sysmem\_\-resizeptrclear@{sysmem\_\-resizeptrclear}}
+\index{sysmem\_\-resizeptrclear@{sysmem\_\-resizeptrclear}!memory@{memory}}
+\subsubsection[{sysmem\_\-resizeptrclear}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-ptr} sysmem\_\-resizeptrclear (void $\ast$ {\em ptr}, \/  long {\em newsize})}}
+\label{group__memory_gaf458ca679d665984dbaa8125c88a417e}
+
+
+Resize an existing pointer and clear it. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ptr}]The pointer to the memory that will be resized. \item[{\em newsize}]The new size of the pointer in bytes. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the resized memory, or NULL if the allocation fails. 
+\end{DoxyReturn}

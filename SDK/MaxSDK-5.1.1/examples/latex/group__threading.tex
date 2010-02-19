@@ -1,0 +1,402 @@
+\hypertarget{group__threading}{
+\section{Threads}
+\label{group__threading}\index{Threads@{Threads}}
+}
+
+
+In Max, there are several threads of execution.  
+
+
+Collaboration diagram for Threads:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=120pt]{group__threading}
+\end{center}
+\end{figure}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__critical}{Critical Regions}
+
+
+\begin{DoxyCompactList}\small\item\em A critical region is a simple mechanism that prevents multiple threads from accessing at once code protected by the same critical region. \item\end{DoxyCompactList}\item 
+\hyperlink{group__mutex}{Mutexes}
+\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__threading_ga411e2e07982bdfb1803b415a350e311a}{ATOMIC\_\-INCREMENT}(pv)~(\_\-InterlockedIncrement(pv))
+\begin{DoxyCompactList}\small\item\em Use this routine for incrementing a global counter using a threadsafe and multiprocessor safe method. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__threading_gaa42a5aadef70fe57dc80d247c890c9ac}{ATOMIC\_\-DECREMENT}(pv)~(\_\-InterlockedDecrement(pv))
+\begin{DoxyCompactList}\small\item\em Use this routine for decrementing a global counter using a threadsafe and multiprocessor safe method. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__threading_ga3f508e817912b65c30d97339cf7a6e62}{
+typedef void \hyperlink{group__threading_ga3f508e817912b65c30d97339cf7a6e62}{t\_\-thread}}
+\label{group__threading_ga3f508e817912b65c30d97339cf7a6e62}
+
+\begin{DoxyCompactList}\small\item\em A Max thread. \item\end{DoxyCompactList}\item 
+\hypertarget{group__threading_gaaf0068b8e9ac28430873484727029315}{
+typedef void $\ast$ \hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread}}
+\label{group__threading_gaaf0068b8e9ac28430873484727029315}
+
+\begin{DoxyCompactList}\small\item\em An opaque thread instance pointer. \item\end{DoxyCompactList}\item 
+\hypertarget{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{
+typedef void $\ast$ \hyperlink{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{t\_\-systhread\_\-mutex}}
+\label{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}
+
+\begin{DoxyCompactList}\small\item\em An opaque mutex handle. \item\end{DoxyCompactList}\item 
+\hypertarget{group__threading_ga56cc95a6cbd27fada3a74b85a7bc3155}{
+typedef void $\ast$ \hyperlink{group__threading_ga56cc95a6cbd27fada3a74b85a7bc3155}{t\_\-systhread\_\-cond}}
+\label{group__threading_ga56cc95a6cbd27fada3a74b85a7bc3155}
+
+\begin{DoxyCompactList}\small\item\em An opaque cond handle. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__threading_gaa95d9c538a1b25404d19106739db9802}{e\_\-max\_\-systhread\_\-mutex\_\-flags} \{ \par
+\hyperlink{group__threading_ggaa95d9c538a1b25404d19106739db9802ae34f8741b28ee92a4d702bee8671bb32}{SYSTHREAD\_\-MUTEX\_\-NORMAL} =  0x00000000, 
+\par
+\hyperlink{group__threading_ggaa95d9c538a1b25404d19106739db9802abb3854e7bf495808b4251d1319cdfa45}{SYSTHREAD\_\-MUTEX\_\-ERRORCHECK} =  0x00000001, 
+\par
+\hyperlink{group__threading_ggaa95d9c538a1b25404d19106739db9802a4fa486d028b3153aac389ed24e63dddb}{SYSTHREAD\_\-MUTEX\_\-RECURSIVE} =  0x00000002
+ \}
+\begin{DoxyCompactList}\small\item\em \hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new()} flags \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}{schedule} (void $\ast$ob, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, long when, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$sym, short argc, Atom $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Cause a function to be executed at the timer level at some time in the future. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__threading_gaa9b66fe2fc601f110bd962a622f1d5a0}{schedule\_\-delay} (void $\ast$ob, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, long delay, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$sym, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Cause a function to be executed at the timer level at some time in the future specified by a delay offset. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__threading_gad60dbceb5e50471a3ec76f608a9ea35c}{isr} (void)
+\begin{DoxyCompactList}\small\item\em Determine whether your code is executing in the Max scheduler thread. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{defer} (void $\ast$ob, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$sym, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Defer execution of a function to the main thread if (and only if) your function is executing in the scheduler thread. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__threading_ga486daa40ddb16f70b663615695d18315}{defer\_\-low} (void $\ast$ob, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$sym, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Defer execution of a function to the back of the queue on the main thread. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__threading_ga7217fa33811a5ed35b970f504b4e4a79}{systhread\_\-create} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} entryproc, void $\ast$arg, long stacksize, long priority, long flags, \hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread} $\ast$thread)
+\begin{DoxyCompactList}\small\item\em Create a new thread. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__threading_gaacc57aeddc69c01e7562397bdf6f12f5}{systhread\_\-terminate} (\hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread} thread)
+\begin{DoxyCompactList}\small\item\em Forcefully kill a thread -\/-\/ not recommended. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__threading_gad1ca1694ee14824a56916d8f67d7966b}{systhread\_\-sleep} (long milliseconds)
+\begin{DoxyCompactList}\small\item\em Suspend the execution of the calling thread. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__threading_gad448ff5be27ef8233162a0e24751786f}{systhread\_\-exit} (long status)
+\begin{DoxyCompactList}\small\item\em Exit the calling thread. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__threading_gaac24a9db0d7af2343501a4e762d2ce85}{systhread\_\-join} (\hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread} thread, unsigned int $\ast$retval)
+\begin{DoxyCompactList}\small\item\em Wait for thread to quit and get return value from \hyperlink{group__threading_gad448ff5be27ef8233162a0e24751786f}{systhread\_\-exit()}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread} \hyperlink{group__threading_gab76eb3e1668b13483533c4929be5c914}{systhread\_\-self} (void)
+\begin{DoxyCompactList}\small\item\em Return the thread instance pointer for the calling thread. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__threading_ga4e4b35c628d791550e5523c4b554d466}{systhread\_\-setpriority} (\hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread} thread, int priority)
+\begin{DoxyCompactList}\small\item\em Set the thread priority for the given thread. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__threading_gaf073584f030cffc3a823601173803a95}{systhread\_\-getpriority} (\hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread} thread)
+\begin{DoxyCompactList}\small\item\em Get the thread priority for the given thread. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__threading_ga7ed1192e20bccddec517591b4a5f0f91}{systhread\_\-ismainthread} (void)
+\begin{DoxyCompactList}\small\item\em Check to see if the function currently being executed is in the main thread. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__threading_ga9bc306a6b164f705e55d1612c5ccfb78}{systhread\_\-istimerthread} (void)
+\begin{DoxyCompactList}\small\item\em Check to see if the function currently being executed is in the scheduler thread. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+In Max, there are several threads of execution. The details of these threads are highlighted in the article \char`\"{}Event Priority in Max (Scheduler vs. Queue)\char`\"{} located online at \href{http://www.cycling74.com/story/2005/5/2/133649/9742.}{\tt http://www.cycling74.com/story/2005/5/2/133649/9742.}
+
+Not all of the details of Max's threading model are expounded here. Most important to understand is that we typically deal the scheduler (which when overdrive is on runs in a separate and high priority thread) and the low priority queue (which always runs in the main application thread).
+
+\begin{DoxySeeAlso}{See also}
+\href{http://www.cycling74.com/twiki/bin/view/ProductDocumentation/JitterSdkSchedQueue}{\tt http://www.cycling74.com/twiki/bin/view/ProductDocumentation/JitterSdkSchedQueue} 
+
+\href{http://www.cycling74.com/story/2005/5/2/133649/9742}{\tt http://www.cycling74.com/story/2005/5/2/133649/9742} 
+\end{DoxySeeAlso}
+
+
+\subsection{Define Documentation}
+\hypertarget{group__threading_gaa42a5aadef70fe57dc80d247c890c9ac}{
+\index{threading@{threading}!ATOMIC\_\-DECREMENT@{ATOMIC\_\-DECREMENT}}
+\index{ATOMIC\_\-DECREMENT@{ATOMIC\_\-DECREMENT}!threading@{threading}}
+\subsubsection[{ATOMIC\_\-DECREMENT}]{\setlength{\rightskip}{0pt plus 5cm}\#define ATOMIC\_\-DECREMENT(pv)~(\_\-InterlockedDecrement(pv))}}
+\label{group__threading_gaa42a5aadef70fe57dc80d247c890c9ac}
+
+
+Use this routine for decrementing a global counter using a threadsafe and multiprocessor safe method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]pointer to the (int) counter. \end{DoxyParams}
+\hypertarget{group__threading_ga411e2e07982bdfb1803b415a350e311a}{
+\index{threading@{threading}!ATOMIC\_\-INCREMENT@{ATOMIC\_\-INCREMENT}}
+\index{ATOMIC\_\-INCREMENT@{ATOMIC\_\-INCREMENT}!threading@{threading}}
+\subsubsection[{ATOMIC\_\-INCREMENT}]{\setlength{\rightskip}{0pt plus 5cm}\#define ATOMIC\_\-INCREMENT(pv)~(\_\-InterlockedIncrement(pv))}}
+\label{group__threading_ga411e2e07982bdfb1803b415a350e311a}
+
+
+Use this routine for incrementing a global counter using a threadsafe and multiprocessor safe method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]pointer to the (int) counter. \end{DoxyParams}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__threading_gaa95d9c538a1b25404d19106739db9802}{
+\index{threading@{threading}!e\_\-max\_\-systhread\_\-mutex\_\-flags@{e\_\-max\_\-systhread\_\-mutex\_\-flags}}
+\index{e\_\-max\_\-systhread\_\-mutex\_\-flags@{e\_\-max\_\-systhread\_\-mutex\_\-flags}!threading@{threading}}
+\subsubsection[{e\_\-max\_\-systhread\_\-mutex\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-systhread\_\-mutex\_\-flags}}}
+\label{group__threading_gaa95d9c538a1b25404d19106739db9802}
+
+
+\hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new()} flags \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{SYSTHREAD\_\-MUTEX\_\-NORMAL@{SYSTHREAD\_\-MUTEX\_\-NORMAL}!threading@{threading}}\index{threading@{threading}!SYSTHREAD\_\-MUTEX\_\-NORMAL@{SYSTHREAD\_\-MUTEX\_\-NORMAL}}\item[{\em 
+\hypertarget{group__threading_ggaa95d9c538a1b25404d19106739db9802ae34f8741b28ee92a4d702bee8671bb32}{
+SYSTHREAD\_\-MUTEX\_\-NORMAL}
+\label{group__threading_ggaa95d9c538a1b25404d19106739db9802ae34f8741b28ee92a4d702bee8671bb32}
+}]Normal. \index{SYSTHREAD\_\-MUTEX\_\-ERRORCHECK@{SYSTHREAD\_\-MUTEX\_\-ERRORCHECK}!threading@{threading}}\index{threading@{threading}!SYSTHREAD\_\-MUTEX\_\-ERRORCHECK@{SYSTHREAD\_\-MUTEX\_\-ERRORCHECK}}\item[{\em 
+\hypertarget{group__threading_ggaa95d9c538a1b25404d19106739db9802abb3854e7bf495808b4251d1319cdfa45}{
+SYSTHREAD\_\-MUTEX\_\-ERRORCHECK}
+\label{group__threading_ggaa95d9c538a1b25404d19106739db9802abb3854e7bf495808b4251d1319cdfa45}
+}]Error-\/checking. \index{SYSTHREAD\_\-MUTEX\_\-RECURSIVE@{SYSTHREAD\_\-MUTEX\_\-RECURSIVE}!threading@{threading}}\index{threading@{threading}!SYSTHREAD\_\-MUTEX\_\-RECURSIVE@{SYSTHREAD\_\-MUTEX\_\-RECURSIVE}}\item[{\em 
+\hypertarget{group__threading_ggaa95d9c538a1b25404d19106739db9802a4fa486d028b3153aac389ed24e63dddb}{
+SYSTHREAD\_\-MUTEX\_\-RECURSIVE}
+\label{group__threading_ggaa95d9c538a1b25404d19106739db9802a4fa486d028b3153aac389ed24e63dddb}
+}]Recursive. \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{
+\index{threading@{threading}!defer@{defer}}
+\index{defer@{defer}!threading@{threading}}
+\subsubsection[{defer}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ defer (void $\ast$ {\em ob}, \/  {\bf method} {\em fn}, \/  {\bf t\_\-symbol} $\ast$ {\em sym}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__threading_gaa24a0c9896f1ad241e45590065c3f643}
+
+
+Defer execution of a function to the main thread if (and only if) your function is executing in the scheduler thread. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ob}]First argument passed to the function fun when it executes. \item[{\em fn}]Function to be called, see below for how it should be declared. \item[{\em sym}]Second argument passed to the function fun when it executes. \item[{\em argc}]Count of arguments in argv. argc is also the third argument passed to the function fun when it executes. \item[{\em argv}]Array containing a variable number of \hyperlink{structt__atom}{t\_\-atom} function arguments. If this argument is non-\/zero, defer allocates memory to make a copy of the arguments (according to the size passed in argc) and passes the copied array to the function fun when it executes as the fourth argument. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Return values is for internal Cycling '74 use only.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+This function uses the \hyperlink{group__threading_gad60dbceb5e50471a3ec76f608a9ea35c}{isr()} routine to determine whether you’re at the Max timer interrupt level (in the scheduler thread). If so, \hyperlink{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{defer()} creates a Qelem (see \hyperlink{group__qelems}{Qelems}), calls \hyperlink{group__qelems_gab5fa3e43e7851d1a2049ee28f5275955}{qelem\_\-front()}, and its queue function calls the function fn you passed with the specified arguments. If you’re not in the scheduler thread, the function is executed immediately with the arguments. Note that this implies that \hyperlink{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{defer()} is not appropriate for using in situations such as Device or File manager I/0 completion routines. The \hyperlink{group__threading_ga486daa40ddb16f70b663615695d18315}{defer\_\-low()} function is appropriate however, because it always defers.
+\end{DoxyRemark}
+The deferred function should be declared as follows: 
+\begin{DoxyCode}
+    void myobject_do (myObject *client, t_symbol *s, short argc, t_atom *argv);
+\end{DoxyCode}
+
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__threading_ga486daa40ddb16f70b663615695d18315}{defer\_\-low()} 
+\end{DoxySeeAlso}
+\hypertarget{group__threading_ga486daa40ddb16f70b663615695d18315}{
+\index{threading@{threading}!defer\_\-low@{defer\_\-low}}
+\index{defer\_\-low@{defer\_\-low}!threading@{threading}}
+\subsubsection[{defer\_\-low}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ defer\_\-low (void $\ast$ {\em ob}, \/  {\bf method} {\em fn}, \/  {\bf t\_\-symbol} $\ast$ {\em sym}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__threading_ga486daa40ddb16f70b663615695d18315}
+
+
+Defer execution of a function to the back of the queue on the main thread. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ob}]First argument passed to the function fun when it executes. \item[{\em fn}]Function to be called, see below for how it should be declared. \item[{\em sym}]Second argument passed to the function fun when it executes. \item[{\em argc}]Count of arguments in argv. argc is also the third argument passed to the function fun when it executes. \item[{\em argv}]Array containing a variable number of \hyperlink{structt__atom}{t\_\-atom} function arguments. If this argument is non-\/zero, defer allocates memory to make a copy of the arguments (according to the size passed in argc) and passes the copied array to the function fun when it executes as the fourth argument. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Return values is for internal Cycling '74 use only.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__threading_ga486daa40ddb16f70b663615695d18315}{defer\_\-low()} always defers a call to the function fun whether you are already in the main thread or not, and uses \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()}, not \hyperlink{group__qelems_gab5fa3e43e7851d1a2049ee28f5275955}{qelem\_\-front()}. This function is recommended for responding to messages that will cause your object to open a dialog box, such as read and write.
+\end{DoxyRemark}
+The deferred function should be declared as follows: 
+\begin{DoxyCode}
+    void myobject_do (myObject *client, t_symbol *s, short argc, t_atom *argv);
+\end{DoxyCode}
+
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{defer()} 
+\end{DoxySeeAlso}
+\hypertarget{group__threading_gad60dbceb5e50471a3ec76f608a9ea35c}{
+\index{threading@{threading}!isr@{isr}}
+\index{isr@{isr}!threading@{threading}}
+\subsubsection[{isr}]{\setlength{\rightskip}{0pt plus 5cm}long isr (void)}}
+\label{group__threading_gad60dbceb5e50471a3ec76f608a9ea35c}
+
+
+Determine whether your code is executing in the Max scheduler thread. \begin{DoxyReturn}{Returns}
+This function returns non-\/zero if you are within Max's scheduler thread, zero otherwise. Note that if your code sets up other types of interrupt-\/level callbacks, such as for other types of device drivers used in asynchronous mode, isr will return false. 
+\end{DoxyReturn}
+\hypertarget{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}{
+\index{threading@{threading}!schedule@{schedule}}
+\index{schedule@{schedule}!threading@{threading}}
+\subsubsection[{schedule}]{\setlength{\rightskip}{0pt plus 5cm}void schedule (void $\ast$ {\em ob}, \/  {\bf method} {\em fun}, \/  long {\em when}, \/  {\bf t\_\-symbol} $\ast$ {\em sym}, \/  short {\em argc}, \/  Atom $\ast$ {\em argv})}}
+\label{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}
+
+
+Cause a function to be executed at the timer level at some time in the future. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ob}]First argument passed to the function fun when it executes. \item[{\em fun}]Function to be called, see below for how it should be declared. \item[{\em when}]The logical time that the function fun will be executed. \item[{\em sym}]Second argument passed to the function fun when it executes. \item[{\em argc}]Count of arguments in argv. argc is also the third argument passed to the function fun when it executes. \item[{\em argv}]Array containing a variable number of \hyperlink{structt__atom}{t\_\-atom} function arguments. If this argument is non-\/zero, defer allocates memory to make a copy of the arguments (according to the size passed in argc) and passes the copied array to the function fun when it executes as the fourth argument.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}{schedule()} calls a function at some time in the future. Unlike \hyperlink{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{defer()}, the function is called in the scheduling loop when logical time is equal to the specified value when. This means that the function could be called at interrupt level, so it should follow the usual restrictions on interrupt-\/level conduct. The function fun passed to schedule should be declared as follows:
+\end{DoxyRemark}
+
+\begin{DoxyCode}
+    void myobject_do (myObject *client, t_symbol *s, short argc, t_atom *argv); 
+\end{DoxyCode}
+
+
+\begin{DoxyRemark}{Remarks}
+One use of \hyperlink{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}{schedule()} is as an alternative to using the lockout flag.
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{defer()} 
+\end{DoxySeeAlso}
+\hypertarget{group__threading_gaa9b66fe2fc601f110bd962a622f1d5a0}{
+\index{threading@{threading}!schedule\_\-delay@{schedule\_\-delay}}
+\index{schedule\_\-delay@{schedule\_\-delay}!threading@{threading}}
+\subsubsection[{schedule\_\-delay}]{\setlength{\rightskip}{0pt plus 5cm}void schedule\_\-delay (void $\ast$ {\em ob}, \/  {\bf method} {\em fun}, \/  long {\em delay}, \/  {\bf t\_\-symbol} $\ast$ {\em sym}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__threading_gaa9b66fe2fc601f110bd962a622f1d5a0}
+
+
+Cause a function to be executed at the timer level at some time in the future specified by a delay offset. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ob}]First argument passed to the function fun when it executes. \item[{\em fun}]Function to be called, see below for how it should be declared. \item[{\em delay}]The delay from the current time before the function will be executed. \item[{\em sym}]Second argument passed to the function fun when it executes. \item[{\em argc}]Count of arguments in argv. argc is also the third argument passed to the function fun when it executes. \item[{\em argv}]Array containing a variable number of \hyperlink{structt__atom}{t\_\-atom} function arguments. If this argument is non-\/zero, defer allocates memory to make a copy of the arguments (according to the size passed in argc) and passes the copied array to the function fun when it executes as the fourth argument.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__threading_gaa9b66fe2fc601f110bd962a622f1d5a0}{schedule\_\-delay()} is similar to schedule but allows you to specify the time as a delay rather than a specific logical time.
+\end{DoxyRemark}
+One use of \hyperlink{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}{schedule()} or \hyperlink{group__threading_gaa9b66fe2fc601f110bd962a622f1d5a0}{schedule\_\-delay()} is as an alternative to using the lockout flag. Here is an example click method that calls \hyperlink{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}{schedule()} instead of \hyperlink{group__inout_ga0b2b38216f2f4dba486bfcd2273f255e}{outlet\_\-int()} surrounded by lockout\_\-set() calls.
+
+
+\begin{DoxyCode}
+    void myobject_click (t_myobject *x, Point pt, short modifiers) 
+    { 
+        t_atom a[1]; 
+        a[0].a_type = A_LONG; 
+        a[0].a_w.w_long = Random(); 
+        schedule_delay(x, myobject_sched, 0 ,0, 1, a); 
+    } 
+
+    void myobject_sched (t_myobject *x, t_symbol *s, short ac, t_atom *av) 
+    { 
+        outlet_int(x->m_out,av->a_w.w_long); 
+    } 
+\end{DoxyCode}
+
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__threading_ga1eb8ec7623f0806dd079d7be708c19a8}{schedule()} 
+\end{DoxySeeAlso}
+\hypertarget{group__threading_ga7217fa33811a5ed35b970f504b4e4a79}{
+\index{threading@{threading}!systhread\_\-create@{systhread\_\-create}}
+\index{systhread\_\-create@{systhread\_\-create}!threading@{threading}}
+\subsubsection[{systhread\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-create ({\bf method} {\em entryproc}, \/  void $\ast$ {\em arg}, \/  long {\em stacksize}, \/  long {\em priority}, \/  long {\em flags}, \/  {\bf t\_\-systhread} $\ast$ {\em thread})}}
+\label{group__threading_ga7217fa33811a5ed35b970f504b4e4a79}
+
+
+Create a new thread. 
+\begin{DoxyParams}{Parameters}
+\item[{\em entryproc}]A method to call in the new thread when the thread is created. \item[{\em arg}]An argument to pass to the method specified for entryproc. Typically this might be a pointer to your object's struct. \item[{\em stacksize}]Not used. Pass 0 for this argument. \item[{\em priority}]Pass 0 for default priority. The priority can range from -\/32 to 32 where -\/32 is low, 0 is default and 32 is high. \item[{\em flags}]Not used. Pass 0 for this argument. \item[{\em thread}]The address of a \hyperlink{group__threading_gaaf0068b8e9ac28430873484727029315}{t\_\-systhread} where this thread's instance pointer will be stored. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}. 
+\end{DoxyReturn}
+\hypertarget{group__threading_gad448ff5be27ef8233162a0e24751786f}{
+\index{threading@{threading}!systhread\_\-exit@{systhread\_\-exit}}
+\index{systhread\_\-exit@{systhread\_\-exit}!threading@{threading}}
+\subsubsection[{systhread\_\-exit}]{\setlength{\rightskip}{0pt plus 5cm}void systhread\_\-exit (long {\em status})}}
+\label{group__threading_gad448ff5be27ef8233162a0e24751786f}
+
+
+Exit the calling thread. Call this from within a thread made using \hyperlink{group__threading_ga7217fa33811a5ed35b970f504b4e4a79}{systhread\_\-create()} when the thread is no longer needed.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em status}]You will typically pass 0 for status. This value will be accessible by \hyperlink{group__threading_gaac24a9db0d7af2343501a4e762d2ce85}{systhread\_\-join()}, if needed. \end{DoxyParams}
+\hypertarget{group__threading_gaf073584f030cffc3a823601173803a95}{
+\index{threading@{threading}!systhread\_\-getpriority@{systhread\_\-getpriority}}
+\index{systhread\_\-getpriority@{systhread\_\-getpriority}!threading@{threading}}
+\subsubsection[{systhread\_\-getpriority}]{\setlength{\rightskip}{0pt plus 5cm}int systhread\_\-getpriority ({\bf t\_\-systhread} {\em thread})}}
+\label{group__threading_gaf073584f030cffc3a823601173803a95}
+
+
+Get the thread priority for the given thread. 
+\begin{DoxyParams}{Parameters}
+\item[{\em thread}]The thread for which to find the priority. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current priority value for the given thread. 
+\end{DoxyReturn}
+\hypertarget{group__threading_ga7ed1192e20bccddec517591b4a5f0f91}{
+\index{threading@{threading}!systhread\_\-ismainthread@{systhread\_\-ismainthread}}
+\index{systhread\_\-ismainthread@{systhread\_\-ismainthread}!threading@{threading}}
+\subsubsection[{systhread\_\-ismainthread}]{\setlength{\rightskip}{0pt plus 5cm}short systhread\_\-ismainthread (void)}}
+\label{group__threading_ga7ed1192e20bccddec517591b4a5f0f91}
+
+
+Check to see if the function currently being executed is in the main thread. \begin{DoxyReturn}{Returns}
+Returns true if the function is being executed in the main thread, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__threading_ga9bc306a6b164f705e55d1612c5ccfb78}{
+\index{threading@{threading}!systhread\_\-istimerthread@{systhread\_\-istimerthread}}
+\index{systhread\_\-istimerthread@{systhread\_\-istimerthread}!threading@{threading}}
+\subsubsection[{systhread\_\-istimerthread}]{\setlength{\rightskip}{0pt plus 5cm}short systhread\_\-istimerthread (void)}}
+\label{group__threading_ga9bc306a6b164f705e55d1612c5ccfb78}
+
+
+Check to see if the function currently being executed is in the scheduler thread. \begin{DoxyReturn}{Returns}
+Returns true if the function is being executed in the main thread, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__threading_gaac24a9db0d7af2343501a4e762d2ce85}{
+\index{threading@{threading}!systhread\_\-join@{systhread\_\-join}}
+\index{systhread\_\-join@{systhread\_\-join}!threading@{threading}}
+\subsubsection[{systhread\_\-join}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-join ({\bf t\_\-systhread} {\em thread}, \/  unsigned int $\ast$ {\em retval})}}
+\label{group__threading_gaac24a9db0d7af2343501a4e762d2ce85}
+
+
+Wait for thread to quit and get return value from \hyperlink{group__threading_gad448ff5be27ef8233162a0e24751786f}{systhread\_\-exit()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em thread}]The thread to join. \item[{\em retval}]The address of a long to hold the return value (status) from \hyperlink{group__threading_gad448ff5be27ef8233162a0e24751786f}{systhread\_\-exit()}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+If your object is freed, and your thread function accesses memory from your object, then you will obviously have a memory violation. A common use of \hyperlink{group__threading_gaac24a9db0d7af2343501a4e762d2ce85}{systhread\_\-join()} is to prevent this situation by waiting (in your free method) for the thread to exit. 
+\end{DoxyRemark}
+\hypertarget{group__threading_gab76eb3e1668b13483533c4929be5c914}{
+\index{threading@{threading}!systhread\_\-self@{systhread\_\-self}}
+\index{systhread\_\-self@{systhread\_\-self}!threading@{threading}}
+\subsubsection[{systhread\_\-self}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-systhread} systhread\_\-self (void)}}
+\label{group__threading_gab76eb3e1668b13483533c4929be5c914}
+
+
+Return the thread instance pointer for the calling thread. \begin{DoxyReturn}{Returns}
+The thread instance pointer for the thread from which this function is called. 
+\end{DoxyReturn}
+\hypertarget{group__threading_ga4e4b35c628d791550e5523c4b554d466}{
+\index{threading@{threading}!systhread\_\-setpriority@{systhread\_\-setpriority}}
+\index{systhread\_\-setpriority@{systhread\_\-setpriority}!threading@{threading}}
+\subsubsection[{systhread\_\-setpriority}]{\setlength{\rightskip}{0pt plus 5cm}void systhread\_\-setpriority ({\bf t\_\-systhread} {\em thread}, \/  int {\em priority})}}
+\label{group__threading_ga4e4b35c628d791550e5523c4b554d466}
+
+
+Set the thread priority for the given thread. 
+\begin{DoxyParams}{Parameters}
+\item[{\em thread}]The thread for which to set the priority. \item[{\em priority}]A value in the range -\/32 to 32 where -\/32 is lowest, 0 is default, and 32 is highest. \end{DoxyParams}
+\hypertarget{group__threading_gad1ca1694ee14824a56916d8f67d7966b}{
+\index{threading@{threading}!systhread\_\-sleep@{systhread\_\-sleep}}
+\index{systhread\_\-sleep@{systhread\_\-sleep}!threading@{threading}}
+\subsubsection[{systhread\_\-sleep}]{\setlength{\rightskip}{0pt plus 5cm}void systhread\_\-sleep (long {\em milliseconds})}}
+\label{group__threading_gad1ca1694ee14824a56916d8f67d7966b}
+
+
+Suspend the execution of the calling thread. 
+\begin{DoxyParams}{Parameters}
+\item[{\em milliseconds}]The number of milliseconds to suspend the execution of the calling thread. The actual amount of time may be longer depending on various factors. \end{DoxyParams}
+\hypertarget{group__threading_gaacc57aeddc69c01e7562397bdf6f12f5}{
+\index{threading@{threading}!systhread\_\-terminate@{systhread\_\-terminate}}
+\index{systhread\_\-terminate@{systhread\_\-terminate}!threading@{threading}}
+\subsubsection[{systhread\_\-terminate}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-terminate ({\bf t\_\-systhread} {\em thread})}}
+\label{group__threading_gaacc57aeddc69c01e7562397bdf6f12f5}
+
+
+Forcefully kill a thread -\/-\/ not recommended. 
+\begin{DoxyParams}{Parameters}
+\item[{\em thread}]The thread to kill. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}. 
+\end{DoxyReturn}

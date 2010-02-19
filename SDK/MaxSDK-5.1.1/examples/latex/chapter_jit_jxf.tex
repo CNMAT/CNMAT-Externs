@@ -1,0 +1,171 @@
+The Jitter File Format (JXF) stores matrix data in a binary (not human-\/readable) form.
+
+When using Jitter you can create JXF files by sending the write message to a jit.matrix object. Conversely you can read JXF files from disk using the read message. This section will cover first the API functions that one can use from C to read and write JXF files. Then it will break down the file format at the bit level.\hypertarget{chapter_jit_jxf_chapter_jit_jxf_api}{}\section{The Binary JXF API}\label{chapter_jit_jxf_chapter_jit_jxf_api}
+Most Jitter users do not need or want to know about the internal binary format of a JXF-\/file. Even users who want to read and write JXF-\/files from C do not need to know the internal details if they use the functions of the Jitter API for the binary interface. Not only is the API more convenient, but using the functions provided by Cycling '74 may protect your code from having to be altered in the future in the event of a specification change.
+
+There are two primary functions one should use to read data from a JXF file. \hyperlink{group__binmod_gae7d8bcde80fd16666ab01a841f0f23b2}{jit\_\-bin\_\-read\_\-header()} reads the version number and the size of the file from the header, and has the following signature:
+
+
+\begin{DoxyCode}
+t_jit_err jit_bin_read_header(t_filehandle fh, ulong *version, long *filesize)
+\end{DoxyCode}
+
+
+\hyperlink{group__binmod_gae1bd457360f302d87be427c0bcf76b9d}{jit\_\-bin\_\-read\_\-matrix()} imports matrix data from a file to a matrix, resizing the matrix if necessary, and has the following signature:
+
+
+\begin{DoxyCode}
+t_jit_err jit_bin_read_matrix(t_filehandle fh, void *matrix)
+\end{DoxyCode}
+
+
+Here’s a chunk of code that shows how to read a matrix from disk:
+
+
+\begin{DoxyCode}
+if (!(err=path_opensysfile(filename, path, &fh, READ_PERM))) {
+   //all is well
+} else {
+   error("jit.matrix: can't open file %s",name->s_name);
+   goto out;
+}
+if (jit_bin_read_header(fh,&version,&filesize)) {
+   error("jit.matrix: improper file format %s",name->s_name);
+   sysfile_close(fh);
+   goto out;
+}
+if (jit_bin_read_matrix(fh,matrix)) {
+   error("jit.matrix: improper file format %s",name->s_name);
+   sysfile_close(fh);
+   goto out;
+}
+sysfile_close(fh);
+\end{DoxyCode}
+
+
+Similarly there are two functions one should use when writing data to a JXF file. \hyperlink{group__binmod_ga01de67893378a46116aef0fbb36b5b33}{jit\_\-bin\_\-write\_\-header()} writes a header to a file, and has the following signature:
+
+
+\begin{DoxyCode}
+t_jit_err jit_bin_write_header(t_filehandle fh, long filesize)
+\end{DoxyCode}
+
+
+\hyperlink{group__binmod_ga8102ed7929a540a5584505049870887a}{jit\_\-bin\_\-write\_\-matrix()} writes a matrix to a file, and has the following signature:
+
+
+\begin{DoxyCode}
+t_jit_err jit_bin_write_matrix(t_filehandle fh, void *matrix)
+\end{DoxyCode}
+
+
+Here’s a section of code that shows how you might write a file with one matrix. Note that the initial filesize argument to \hyperlink{group__binmod_ga01de67893378a46116aef0fbb36b5b33}{jit\_\-bin\_\-write\_\-header()} is bogus, but that the header is written again at the end of the operation when the filesize can be determined from the file position after writing the matrix.
+
+
+\begin{DoxyCode}
+if (err=path_createsysfile(filename, path, type, &fh)) {
+   error("jit.matrix: could not create file %s",name->s_name);
+   goto out;
+}
+if (jit_bin_write_header(fh,0)) {
+   error("jit.matrix: could not write header %s", matrixName->s_name);
+   sysfile_close(fh);
+   goto out;
+}
+if (jit_bin_write_matrix(fh,pointerToMatrix)) {
+   error("jit.matrix: could not write matrix %s", matrixName->s_name);
+   sysfile_close(fh);
+   goto out;
+}
+sysfile_getpos(fh, &position);
+sysfile_seteof(fh, position);
+if (jit_bin_write_header(fh,position)) {
+   error("jit.matrix: could not write header %s",
+matrixName->s_name);
+   sysfile_close(fh);
+   goto out;
+}
+sysfile_close(fh);
+\end{DoxyCode}
+\hypertarget{chapter_jit_jxf_chapter_jit_jxf_spec}{}\section{Specification of the JXF Format}\label{chapter_jit_jxf_chapter_jit_jxf_spec}
+The internal format of JXF-\/files is based on the Interchange File Format (IFF) (\href{http://en.wikipedia.org/wiki/Interchange_File_Format}{\tt http://en.wikipedia.org/wiki/Interchange\_\-File\_\-Format}). An IFF file is built up from chunks. All data in IFF files is big-\/endian. Several convenience macros defined in jit.byteorder.h are available to help convert numbers to the proper format before and after they're written to and read from a JXF file: BE\_\-I32() can be called on 32-\/bit integers, BE\_\-F32() on 32-\/bit floats, and BE\_\-F64() on 64-\/bit doubles.
+
+Each chunk in an IFF file begins with a four character Type ID. This is followed by a 32-\/bit unsigned integer specifying the size of the chunk content in bytes. In a JXF file, the 32-\/bit integer part of the first chunk tells us the size of the file, and all the subsequent chunks, which begin immediately after the first chunk, contain matrices. In the future chunks may also be used to store other kinds of data.
+
+Here is a tabular overview of an example minimal JXF file.
+
+Container Chunk
+
+\begin{TabularC}{2}
+\hline
+groupID &JIT\_\-BIN\_\-CHUNK\_\-CONTAINER ('FORM')  \\\cline{1-2}
+File size &32-\/bit int  \\\cline{1-2}
+IFF Type &JIT\_\-BIN\_\-FORMAT ('JIT!')  \\\cline{1-2}
+Format Chunk \\\cline{1-1}
+\\\cline{1-1}
+chunkID &JIT\_\-BIN\_\-CHUNK\_\-FORMAT\_\-VERSION ('FVER')  \\\cline{1-2}
+Chunk size &12 bytes  \\\cline{1-2}
+Version &JIT\_\-BIN\_\-VERSION\_\-1 (0x3C93DC80)  \\\cline{1-2}
+Matrix Chunk &\\\cline{1-2}
+chunk ID &JIT\_\-BIN\_\-CHUNK\_\-MATRIX ('MTRX')  \\\cline{1-2}
+chunk size &32-\/bit int  \\\cline{1-2}
+offset &32-\/bit int  \\\cline{1-2}
+type &4-\/char  \\\cline{1-2}
+planecount &32-\/bit int  \\\cline{1-2}
+dimcount &32-\/bit int  \\\cline{1-2}
+dim &Array of 32-\/bit ints that contain the dimensions  \\\cline{1-2}
+data &\\\cline{1-2}
+\end{TabularC}
+
+
+The data offset of the matrix chunk represents the offset, in bytes, from the beginning of the chunk to the beginning of the data portion of the chunk. The type is one of CHAR, LONG, FL32 and FL64. The dim array contains dimcount elements, each of which is a 32-\/bit int. The data portion consists of the cells of the matrix written out one at a time in row-\/major order. Planar data is multiplexed in each cell. For example, a 3-\/plane 2 by 2 matrix would be written out in the following order:
+
+\begin{TabularC}{3}
+\hline
+Plane &Dim 0 &Dim 1  \\\cline{1-3}
+0 &0 &0  \\\cline{1-3}
+1 &0 &0  \\\cline{1-3}
+2 &0 &0  \\\cline{1-3}
+0 &1 &0  \\\cline{1-3}
+1 &1 &0  \\\cline{1-3}
+2 &1 &0  \\\cline{1-3}
+0 &0 &1  \\\cline{1-3}
+1 &0 &1  \\\cline{1-3}
+2 &0 &1  \\\cline{1-3}
+0 &1 &1  \\\cline{1-3}
+1 &1 &1  \\\cline{1-3}
+2 &1 &1  \\\cline{1-3}
+\end{TabularC}
+
+
+The various chunks discussed above can be represented by the C structs listed below:
+
+
+\begin{DoxyCode}
+typedef struct _jit_bin_chunk_container
+{
+   ulong   ckid;       //'FORM'
+   long   cksize;      //filesize
+   ulong   formtype;   //'JIT!'
+} t_jit_bin_chunk_container;
+
+typedef struct _jit_bin_chunk_format_version
+{
+   ulong   ckid;       //'FVER'
+   long   cksize;      //12
+   ulong   vers;      //timestamp
+} t_jit_bin_chunk_format_version;
+
+typedef struct _jit_bin_chunk_matrix
+{
+   ulong   ckid;       //'MTRX'
+   long   cksize;      //varies(should be equal to 
+               //24+(4*dimcount)+(typesize*planecount*totalpoints))
+   long    offset;      //data offset(should be equal to 24+(4*dimcount))
+   ulong   type;      //'CHAR','LONG','FL32','FL64'
+   long   planecount;
+   long   dimcount;
+   long   dim[1];
+} t_jit_bin_chunk_matrix;
+\end{DoxyCode}
+ 

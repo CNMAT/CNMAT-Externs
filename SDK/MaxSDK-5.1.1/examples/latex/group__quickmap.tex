@@ -1,0 +1,118 @@
+\hypertarget{group__quickmap}{
+\section{Quick Map}
+\label{group__quickmap}\index{Quick Map@{Quick Map}}
+}
+
+
+A quickmap implements a pair of \hyperlink{structt__hashtab}{t\_\-hashtab} hash tables so that it is fast to look up a unique value for a unique key or vice-\/versa.  
+
+
+Collaboration diagram for Quick Map:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=121pt]{group__quickmap}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__quickmap}{t\_\-quickmap}
+\begin{DoxyCompactList}\small\item\em The quickmap object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+BEGIN\_\-USING\_\-C\_\-LINKAGE void $\ast$ \hyperlink{group__quickmap_ga0e14465f864438dc36f86dcd8bc4cea0}{quickmap\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Create a new quickmap object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__quickmap_ga4fd087f1aa587108d26d5a377efb0d0b}{quickmap\_\-add} (\hyperlink{structt__quickmap}{t\_\-quickmap} $\ast$x, void $\ast$p1, void $\ast$p2)
+\begin{DoxyCompactList}\small\item\em Add a pair of keys mapped to each other to the quickmap. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__quickmap_ga4bcc531dc606835a05358aa4ca0f92d1}{quickmap\_\-drop} (\hyperlink{structt__quickmap}{t\_\-quickmap} $\ast$x, void $\ast$p1, void $\ast$p2)
+\begin{DoxyCompactList}\small\item\em Drop a pair of keys mapped to each other in the quickmap. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__quickmap_ga2320c067e7af6bb5f3ec25cfe3155fd1}{quickmap\_\-lookup\_\-key1} (\hyperlink{structt__quickmap}{t\_\-quickmap} $\ast$x, void $\ast$p1, void $\ast$$\ast$p2)
+\begin{DoxyCompactList}\small\item\em Given a (first) key, lookup the value (the second key). \item\end{DoxyCompactList}\item 
+long \hyperlink{group__quickmap_ga5b3d684268e80a4fc51e226a50ecb2ad}{quickmap\_\-lookup\_\-key2} (\hyperlink{structt__quickmap}{t\_\-quickmap} $\ast$x, void $\ast$p1, void $\ast$$\ast$p2)
+\begin{DoxyCompactList}\small\item\em Given a (second) key, lookup the value (the first key). \item\end{DoxyCompactList}\item 
+void \hyperlink{group__quickmap_gaa5c0fc50afb5b1dccd6b81e7dd0673c1}{quickmap\_\-readonly} (\hyperlink{structt__quickmap}{t\_\-quickmap} $\ast$x, long way)
+\begin{DoxyCompactList}\small\item\em Set the readonly flag of the quickmap's hash tables. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A quickmap implements a pair of \hyperlink{structt__hashtab}{t\_\-hashtab} hash tables so that it is fast to look up a unique value for a unique key or vice-\/versa. This implies that both the keys and the values must be unique so that look-\/ups can be performed in both directions. 
+
+\subsection{Function Documentation}
+\hypertarget{group__quickmap_ga4fd087f1aa587108d26d5a377efb0d0b}{
+\index{quickmap@{quickmap}!quickmap\_\-add@{quickmap\_\-add}}
+\index{quickmap\_\-add@{quickmap\_\-add}!quickmap@{quickmap}}
+\subsubsection[{quickmap\_\-add}]{\setlength{\rightskip}{0pt plus 5cm}void quickmap\_\-add ({\bf t\_\-quickmap} $\ast$ {\em x}, \/  void $\ast$ {\em p1}, \/  void $\ast$ {\em p2})}}
+\label{group__quickmap_ga4fd087f1aa587108d26d5a377efb0d0b}
+
+
+Add a pair of keys mapped to each other to the quickmap. Note that these are considered to be a \hyperlink{structt__symbol}{t\_\-symbol} internally. This means that if you are mapping a \hyperlink{structt__symbol}{t\_\-symbol} to a \hyperlink{structt__object}{t\_\-object}, for example, the \hyperlink{structt__object}{t\_\-object} will not automatically be freed when you free the quickmap (unlike what happens when you typically free a \hyperlink{structt__hashtab}{t\_\-hashtab}).
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The quickmap instance. \item[{\em p1}]The (first) key. \item[{\em p2}]The value (or the second key). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__quickmap_ga4bcc531dc606835a05358aa4ca0f92d1}{
+\index{quickmap@{quickmap}!quickmap\_\-drop@{quickmap\_\-drop}}
+\index{quickmap\_\-drop@{quickmap\_\-drop}!quickmap@{quickmap}}
+\subsubsection[{quickmap\_\-drop}]{\setlength{\rightskip}{0pt plus 5cm}void quickmap\_\-drop ({\bf t\_\-quickmap} $\ast$ {\em x}, \/  void $\ast$ {\em p1}, \/  void $\ast$ {\em p2})}}
+\label{group__quickmap_ga4bcc531dc606835a05358aa4ca0f92d1}
+
+
+Drop a pair of keys mapped to each other in the quickmap. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The quickmap instance. \item[{\em p1}]The first key. \item[{\em p2}]The second key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__quickmap_ga2320c067e7af6bb5f3ec25cfe3155fd1}{
+\index{quickmap@{quickmap}!quickmap\_\-lookup\_\-key1@{quickmap\_\-lookup\_\-key1}}
+\index{quickmap\_\-lookup\_\-key1@{quickmap\_\-lookup\_\-key1}!quickmap@{quickmap}}
+\subsubsection[{quickmap\_\-lookup\_\-key1}]{\setlength{\rightskip}{0pt plus 5cm}long quickmap\_\-lookup\_\-key1 ({\bf t\_\-quickmap} $\ast$ {\em x}, \/  void $\ast$ {\em p1}, \/  void $\ast$$\ast$ {\em p2})}}
+\label{group__quickmap_ga2320c067e7af6bb5f3ec25cfe3155fd1}
+
+
+Given a (first) key, lookup the value (the second key). 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The quickmap instance. \item[{\em p1}]The (first) key. \item[{\em p2}]The address of a pointer which will hold the resulting key upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__quickmap_ga5b3d684268e80a4fc51e226a50ecb2ad}{
+\index{quickmap@{quickmap}!quickmap\_\-lookup\_\-key2@{quickmap\_\-lookup\_\-key2}}
+\index{quickmap\_\-lookup\_\-key2@{quickmap\_\-lookup\_\-key2}!quickmap@{quickmap}}
+\subsubsection[{quickmap\_\-lookup\_\-key2}]{\setlength{\rightskip}{0pt plus 5cm}long quickmap\_\-lookup\_\-key2 ({\bf t\_\-quickmap} $\ast$ {\em x}, \/  void $\ast$ {\em p1}, \/  void $\ast$$\ast$ {\em p2})}}
+\label{group__quickmap_ga5b3d684268e80a4fc51e226a50ecb2ad}
+
+
+Given a (second) key, lookup the value (the first key). 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The quickmap instance. \item[{\em p1}]The (second) key. \item[{\em p2}]The address of a pointer which will hold the resulting key upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__quickmap_ga0e14465f864438dc36f86dcd8bc4cea0}{
+\index{quickmap@{quickmap}!quickmap\_\-new@{quickmap\_\-new}}
+\index{quickmap\_\-new@{quickmap\_\-new}!quickmap@{quickmap}}
+\subsubsection[{quickmap\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}BEGIN\_\-USING\_\-C\_\-LINKAGE void$\ast$ quickmap\_\-new (void)}}
+\label{group__quickmap_ga0e14465f864438dc36f86dcd8bc4cea0}
+
+
+Create a new quickmap object. \begin{DoxyReturn}{Returns}
+Pointer to the new quickmap object. 
+\end{DoxyReturn}
+\hypertarget{group__quickmap_gaa5c0fc50afb5b1dccd6b81e7dd0673c1}{
+\index{quickmap@{quickmap}!quickmap\_\-readonly@{quickmap\_\-readonly}}
+\index{quickmap\_\-readonly@{quickmap\_\-readonly}!quickmap@{quickmap}}
+\subsubsection[{quickmap\_\-readonly}]{\setlength{\rightskip}{0pt plus 5cm}void quickmap\_\-readonly ({\bf t\_\-quickmap} $\ast$ {\em x}, \/  long {\em way})}}
+\label{group__quickmap_gaa5c0fc50afb5b1dccd6b81e7dd0673c1}
+
+
+Set the readonly flag of the quickmap's hash tables. See \hyperlink{group__hashtab_ga34ced5b4da65b4068829f799a53ea6bf}{hashtab\_\-readonly()} for more information about this.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The quickmap instance. \item[{\em way}]Set to true to make the quickmap readonly (disable thread protection) or false (the default) to enable thread protection. \end{DoxyParams}

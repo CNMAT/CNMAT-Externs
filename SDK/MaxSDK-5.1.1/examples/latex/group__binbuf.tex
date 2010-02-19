@@ -1,0 +1,235 @@
+\hypertarget{group__binbuf}{
+\section{Binbufs}
+\label{group__binbuf}\index{Binbufs@{Binbufs}}
+}
+
+
+You won’t need to know about the internal structure of a Binbuf, so you can use the void $\ast$ type to refer to one.  
+
+
+Collaboration diagram for Binbufs:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=106pt]{group__binbuf}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__binbuf_ga4a6b741be0bee8626b4cb25baa453060}{binbuf\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__binbuf_ga4a6b741be0bee8626b4cb25baa453060}{binbuf\_\-new()} to create and initialize a Binbuf. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}{binbuf\_\-vinsert} (void $\ast$x, char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}{binbuf\_\-vinsert()} to append a Max message to a Binbuf adding a semicolon. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert()} to append a Max message to a Binbuf adding a semicolon. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__binbuf_ga90c960507452ce76428d87c0714f9f0e}{binbuf\_\-eval} (void $\ast$x, short ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, void $\ast$to)
+\begin{DoxyCompactList}\small\item\em Use binbuf\_\-eval to evaluate a Max message in a Binbuf, passing it arguments. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__binbuf_ga0eccee2d50ae561c625cc97238f1e21a}{binbuf\_\-getatom} (void $\ast$x, long $\ast$p1, long $\ast$p2, \hyperlink{structt__atom}{t\_\-atom} $\ast$ap)
+\begin{DoxyCompactList}\small\item\em Use binbuf\_\-getatom to retrieve a single Atom from a Binbuf. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__binbuf_ga7a582c876ee074505762b30c7eef6504}{binbuf\_\-text} (void $\ast$x, char $\ast$$\ast$srcText, long n)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__binbuf_ga7a582c876ee074505762b30c7eef6504}{binbuf\_\-text()} to convert a text handle to a Binbuf. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__binbuf_ga739086c676dfaba01dff1f70e7487dd5}{binbuf\_\-totext} (void $\ast$x, char $\ast$$\ast$dstText, long $\ast$sizep)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__binbuf_ga739086c676dfaba01dff1f70e7487dd5}{binbuf\_\-totext()} to convert a Binbuf into a text handle. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__binbuf_ga716d66a159b96b7b9d87baaab33367e0}{binbuf\_\-set} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__binbuf_ga716d66a159b96b7b9d87baaab33367e0}{binbuf\_\-set()} to change the entire contents of a Binbuf. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__binbuf_ga57f584204ff1860c93ca728ca991fb15}{binbuf\_\-append} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Use binbuf\_\-append to append t\_\-atoms to a Binbuf without modifying them. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__binbuf_gacb42118a4da090a6d47954f8b299de46}{readatom} (char $\ast$outstr, char $\ast$$\ast$text, long $\ast$n, long e, \hyperlink{structt__atom}{t\_\-atom} $\ast$ap)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__binbuf_gacb42118a4da090a6d47954f8b299de46}{readatom()} to read a single Atom from a text buffer. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+You won’t need to know about the internal structure of a Binbuf, so you can use the void $\ast$ type to refer to one. 
+
+\subsection{Function Documentation}
+\hypertarget{group__binbuf_ga57f584204ff1860c93ca728ca991fb15}{
+\index{binbuf@{binbuf}!binbuf\_\-append@{binbuf\_\-append}}
+\index{binbuf\_\-append@{binbuf\_\-append}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-append}]{\setlength{\rightskip}{0pt plus 5cm}void binbuf\_\-append (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__binbuf_ga57f584204ff1860c93ca728ca991fb15}
+
+
+Use binbuf\_\-append to append t\_\-atoms to a Binbuf without modifying them. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf to receive the items. \item[{\em s}]Ignored. Pass NULL. \item[{\em argc}]Count of items in the argv array. \item[{\em argv}]Array of atoms to add to the Binbuf. \end{DoxyParams}
+\hypertarget{group__binbuf_ga90c960507452ce76428d87c0714f9f0e}{
+\index{binbuf@{binbuf}!binbuf\_\-eval@{binbuf\_\-eval}}
+\index{binbuf\_\-eval@{binbuf\_\-eval}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-eval}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ binbuf\_\-eval (void $\ast$ {\em x}, \/  short {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  void $\ast$ {\em to})}}
+\label{group__binbuf_ga90c960507452ce76428d87c0714f9f0e}
+
+
+Use binbuf\_\-eval to evaluate a Max message in a Binbuf, passing it arguments. \hyperlink{group__binbuf_ga90c960507452ce76428d87c0714f9f0e}{binbuf\_\-eval()} is an advanced function that evaluates the message in a Binbuf with arguments in argv, and sends it to receiver.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf containing the message. \item[{\em ac}]Count of items in the argv array. \item[{\em av}]Array of t\_\-atoms as the arguments to the message. \item[{\em to}]Receiver of the message.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The result of sending the message. 
+\end{DoxyReturn}
+\hypertarget{group__binbuf_ga0eccee2d50ae561c625cc97238f1e21a}{
+\index{binbuf@{binbuf}!binbuf\_\-getatom@{binbuf\_\-getatom}}
+\index{binbuf\_\-getatom@{binbuf\_\-getatom}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-getatom}]{\setlength{\rightskip}{0pt plus 5cm}short binbuf\_\-getatom (void $\ast$ {\em x}, \/  long $\ast$ {\em p1}, \/  long $\ast$ {\em p2}, \/  {\bf t\_\-atom} $\ast$ {\em ap})}}
+\label{group__binbuf_ga0eccee2d50ae561c625cc97238f1e21a}
+
+
+Use binbuf\_\-getatom to retrieve a single Atom from a Binbuf. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf containing the desired \hyperlink{structt__atom}{t\_\-atom}. \item[{\em p1}]Offset into the Binbuf’s array of types. Modified to point to the next \hyperlink{structt__atom}{t\_\-atom}. \item[{\em p2}]Offset into the Binbuf’s array of data. Modified to point to the next \hyperlink{structt__atom}{t\_\-atom}. \item[{\em ap}]Location of a \hyperlink{structt__atom}{t\_\-atom} where the retrieved data will be placed.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if there were no t\_\-atoms at the specified offsets, 0 if there’s a legitimate \hyperlink{structt__atom}{t\_\-atom} returned in result.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+To get the first \hyperlink{structt__atom}{t\_\-atom}, set both typeOffset and stuffOffset to 0. Here’s an example of getting all the items in a Binbuf: 
+\begin{DoxyCode}
+    t_atom holder; 
+    long to, so; 
+    
+    to = 0; 
+    so = 0; 
+    while (!binbuf_getatom(x, &to, &so, &holder)){
+        // do something with the t_atom
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{
+\index{binbuf@{binbuf}!binbuf\_\-insert@{binbuf\_\-insert}}
+\index{binbuf\_\-insert@{binbuf\_\-insert}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-insert}]{\setlength{\rightskip}{0pt plus 5cm}void binbuf\_\-insert (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}
+
+
+Use \hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert()} to append a Max message to a Binbuf adding a semicolon. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf to receive the items. \item[{\em s}]Ignored. Pass NULL. \item[{\em argc}]Count of items in the argv array. \item[{\em argv}]Array of t\_\-atoms to add to the Binbuf.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+You’ll use \hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert()} instead of \hyperlink{group__binbuf_ga57f584204ff1860c93ca728ca991fb15}{binbuf\_\-append()} if you were saving your object into a Binbuf and wanted a semicolon at the end. If the message is part of a file that will later be evaluated, such as a Patcher file, the first argument argv\mbox{[}0\mbox{]} will be the receiver of the message and must be a Symbol. \hyperlink{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}{binbuf\_\-vinsert()} is easier to use than \hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert()}, since you don’t have to format your data into an array of Atoms first.
+\end{DoxyRemark}
+\hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert()} will also convert the t\_\-symbols \#1 through \#9 into \$1 through \$9. This is used for saving patcher files that take arguments; you will probably never save these symbols as part of anything you are doing. \hypertarget{group__binbuf_ga4a6b741be0bee8626b4cb25baa453060}{
+\index{binbuf@{binbuf}!binbuf\_\-new@{binbuf\_\-new}}
+\index{binbuf\_\-new@{binbuf\_\-new}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ binbuf\_\-new (void)}}
+\label{group__binbuf_ga4a6b741be0bee8626b4cb25baa453060}
+
+
+Use \hyperlink{group__binbuf_ga4a6b741be0bee8626b4cb25baa453060}{binbuf\_\-new()} to create and initialize a Binbuf. \begin{DoxyReturn}{Returns}
+Returns a new binbuf if successful, otherwise NULL. 
+\end{DoxyReturn}
+\hypertarget{group__binbuf_ga716d66a159b96b7b9d87baaab33367e0}{
+\index{binbuf@{binbuf}!binbuf\_\-set@{binbuf\_\-set}}
+\index{binbuf\_\-set@{binbuf\_\-set}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void binbuf\_\-set (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__binbuf_ga716d66a159b96b7b9d87baaab33367e0}
+
+
+Use \hyperlink{group__binbuf_ga716d66a159b96b7b9d87baaab33367e0}{binbuf\_\-set()} to change the entire contents of a Binbuf. The previous contents of the Binbuf are destroyed.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf to receive the items. \item[{\em s}]Ignored. Pass NULL. \item[{\em argc}]Count of items in the argv array. \item[{\em argv}]Array of t\_\-atoms to put in the Binbuf. \end{DoxyParams}
+\hypertarget{group__binbuf_ga7a582c876ee074505762b30c7eef6504}{
+\index{binbuf@{binbuf}!binbuf\_\-text@{binbuf\_\-text}}
+\index{binbuf\_\-text@{binbuf\_\-text}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-text}]{\setlength{\rightskip}{0pt plus 5cm}short binbuf\_\-text (void $\ast$ {\em x}, \/  char $\ast$$\ast$ {\em srcText}, \/  long {\em n})}}
+\label{group__binbuf_ga7a582c876ee074505762b30c7eef6504}
+
+
+Use \hyperlink{group__binbuf_ga7a582c876ee074505762b30c7eef6504}{binbuf\_\-text()} to convert a text handle to a Binbuf. \hyperlink{group__binbuf_ga7a582c876ee074505762b30c7eef6504}{binbuf\_\-text()} parses the text in the handle srcText and converts it into binary format. Use it to evaluate a text file or text line entry into a Binbuf.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf to contain the converted text. It must have already been created with binbuf\_\-new. Its previous contents are destroyed. \item[{\em srcText}]Handle to the text to be converted. It need not be terminated with a 0. \item[{\em n}]Number of characters in the text. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If binbuf\_\-text encounters an error during its operation, a non-\/zero result is returned, otherwise it returns 0.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Note: Commas, symbols containing a dollar sign followed by a number 1-\/9, and semicolons are identified by special pseudo-\/type constants for you when your text is binbuf-\/ized.
+\end{DoxyRemark}
+The following constants in the a\_\-type field of Atoms returned by binbuf\_\-getAtom identify the special symbols \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ac105be4ef726ee36c4330e16bb24706e}{A\_\-SEMI}, \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a07c3484085a3217107acec059d17b945}{A\_\-COMMA}, and \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af0a5a9017f6b59e82a4859cd0560d36b}{A\_\-DOLLAR}.
+
+For a \hyperlink{structt__atom}{t\_\-atom} of the pseudo-\/type \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af0a5a9017f6b59e82a4859cd0560d36b}{A\_\-DOLLAR}, the a\_\-w.w\_\-long field of the \hyperlink{structt__atom}{t\_\-atom} contains the number after the dollar sign in the original text or symbol.
+
+Using these pseudo-\/types may be helpful in separating “sentences” and “phrases” in the input language you design. For example, the old pop-\/up umenu object allowed users to have spaces in between words by requiring the menu items be separated by commas. It’s reasonably easy, using \hyperlink{group__binbuf_ga0eccee2d50ae561c625cc97238f1e21a}{binbuf\_\-getatom()}, to find the commas in a Binbuf in order to determine the beginning of a new item when reading the atomized text to be displayed in the menu.
+
+If you want to use a literal comma or semicolon in a symbol, precede it with a backslash ($\backslash$) character. The backslash character can be included by using two backslashes in a row. \hypertarget{group__binbuf_ga739086c676dfaba01dff1f70e7487dd5}{
+\index{binbuf@{binbuf}!binbuf\_\-totext@{binbuf\_\-totext}}
+\index{binbuf\_\-totext@{binbuf\_\-totext}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-totext}]{\setlength{\rightskip}{0pt plus 5cm}short binbuf\_\-totext (void $\ast$ {\em x}, \/  char $\ast$$\ast$ {\em dstText}, \/  long $\ast$ {\em sizep})}}
+\label{group__binbuf_ga739086c676dfaba01dff1f70e7487dd5}
+
+
+Use \hyperlink{group__binbuf_ga739086c676dfaba01dff1f70e7487dd5}{binbuf\_\-totext()} to convert a Binbuf into a text handle. \hyperlink{group__binbuf_ga739086c676dfaba01dff1f70e7487dd5}{binbuf\_\-totext()} converts a Binbuf into text and places it in a handle. Backslashes are added to protect literal commas and semicolons contained in symbols. The pseudo-\/types are converted into commas, semicolons, or dollar-\/sign and number, without backslashes preceding them. binbuf\_\-text can read the output of binbuf\_\-totext and make the same Binbuf.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf with data to convert to text. \item[{\em dstText}]Pre-\/existing handle where the text will be placed. dstText will be resized to accomodate the text. \item[{\em sizep}]Where \hyperlink{group__binbuf_ga739086c676dfaba01dff1f70e7487dd5}{binbuf\_\-totext()} returns the number of characters in the converted text handle. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If binbuf\_\-totext runs out of memory during its operation, it returns a non-\/zero result, otherwise it returns 0. 
+\end{DoxyReturn}
+\hypertarget{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}{
+\index{binbuf@{binbuf}!binbuf\_\-vinsert@{binbuf\_\-vinsert}}
+\index{binbuf\_\-vinsert@{binbuf\_\-vinsert}!binbuf@{binbuf}}
+\subsubsection[{binbuf\_\-vinsert}]{\setlength{\rightskip}{0pt plus 5cm}void binbuf\_\-vinsert (void $\ast$ {\em x}, \/  char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}
+
+
+Use \hyperlink{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}{binbuf\_\-vinsert()} to append a Max message to a Binbuf adding a semicolon. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Binbuf containing the desired Atom. \item[{\em fmt}]A C-\/string containing one or more letters corresponding to the types of each element of the message. s for \hyperlink{structt__symbol}{t\_\-symbol}$\ast$, l for long, or f for float. \item[{\em ...}]Elements of the message, passed directly to the function as Symbols, longs, or floats.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}{binbuf\_\-vinsert()} works somewhat like a printf() for Binbufs. It allows you to pass a number of arguments of different types and insert them into a Binbuf. The entire message will then be terminated with a semicolon. Only 16 items can be passed to \hyperlink{group__binbuf_ga8bc71e59211549a9927754452b2d9e21}{binbuf\_\-vinsert()}.
+\end{DoxyRemark}
+The example below shows the implementation of a normal object’s save method. The save method requires that you build a message that begins with N (the new object) , followed by the name of your object (in this case, represented by the \hyperlink{structt__symbol}{t\_\-symbol} myobject), followed by any arguments your instance creation function requires. In this example, we save the values of two fields m\_\-val1 and m\_\-val2 defined as longs.
+
+
+\begin{DoxyCode}
+    void myobject_save (myObject *x, Binbuf *dstBuf) 
+    { 
+        binbuf_vinsert(dstBuf, "ssll", gensym("#N"), 
+            gensym("myobject"), 
+            x->m_val1, x->m_val2); 
+    }
+\end{DoxyCode}
+
+
+Suppose that such an object had written this data into a file. If you opened the file as text, you would see the following:
+
+
+\begin{DoxyCode}
+    #N myobject 10 20; 
+    #P newobj 218 82 30 myobject; 
+\end{DoxyCode}
+
+
+The first line will result in a new myobject object to be created; the creation function receives the arguments 10 and 20. The second line contains the text of the object box. The newobj message to a patcher creates the object box user interface object and attaches it to the previously created myobject object. Normally, the newex message is used. This causes the object to be created using the arguments that were typed into the object box. \hypertarget{group__binbuf_gacb42118a4da090a6d47954f8b299de46}{
+\index{binbuf@{binbuf}!readatom@{readatom}}
+\index{readatom@{readatom}!binbuf@{binbuf}}
+\subsubsection[{readatom}]{\setlength{\rightskip}{0pt plus 5cm}short readatom (char $\ast$ {\em outstr}, \/  char $\ast$$\ast$ {\em text}, \/  long $\ast$ {\em n}, \/  long {\em e}, \/  {\bf t\_\-atom} $\ast$ {\em ap})}}
+\label{group__binbuf_gacb42118a4da090a6d47954f8b299de46}
+
+
+Use \hyperlink{group__binbuf_gacb42118a4da090a6d47954f8b299de46}{readatom()} to read a single Atom from a text buffer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em outstr}]C-\/string of 256 characters that will receive the next text item read from the buffer. \item[{\em text}]Handle to the text buffer to be read. \item[{\em n}]Starts at 0, and is modified by readatom to point to the next item in the text buffer. \item[{\em e}]Number of characters in text. \item[{\em ap}]Where the resulting Atom read from the text buffer is placed. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{group__binbuf_gacb42118a4da090a6d47954f8b299de46}{readatom()} returns non-\/zero if there is more text to read, and zero if it has reached the end of the text. Note that this return value has the opposite logic from that of \hyperlink{group__binbuf_ga0eccee2d50ae561c625cc97238f1e21a}{binbuf\_\-getatom()}.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+This function provides access to the low-\/level Max text evaluator used by \hyperlink{group__binbuf_ga7a582c876ee074505762b30c7eef6504}{binbuf\_\-text()}. It is designed to operate on a handle of characters (text) and called in a loop, as in the example shown below. 
+\begin{DoxyCode}
+    long index = 0; 
+    t_atom dst; 
+    char outstr[256]; 
+    
+    while (readatom(outstr,textHandle,&index,textLength,&dst)) 
+    { 
+        // do something with the resulting Atom
+    } 
+\end{DoxyCode}
+
+
+An alternative to using readatom is to turn your text into a Binbuf using \hyperlink{group__binbuf_ga7a582c876ee074505762b30c7eef6504}{binbuf\_\-text()}, then call \hyperlink{group__binbuf_ga0eccee2d50ae561c625cc97238f1e21a}{binbuf\_\-getatom()} in a loop. 
+\end{DoxyRemark}

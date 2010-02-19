@@ -1,0 +1,198 @@
+\hypertarget{group__memorymod}{
+\section{Memory Module}
+\label{group__memorymod}\index{Memory Module@{Memory Module}}
+}
+
+
+Collaboration diagram for Memory Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=113pt]{group__memorymod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__memorymod_ga348f78687a0aabb79d772d633cc679cc}{jit\_\-getbytes} (long size)
+\begin{DoxyCompactList}\small\item\em Allocates a pointer to memory. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memorymod_ga4a6a1b9a98f66b50735f69e6acf64af0}{jit\_\-freebytes} (void $\ast$ptr, long size)
+\begin{DoxyCompactList}\small\item\em Frees a pointer to memory. \item\end{DoxyCompactList}\item 
+void $\ast$$\ast$ \hyperlink{group__memorymod_ga09f5e82fafd1de78638c36105860a635}{jit\_\-handle\_\-new} (long size)
+\begin{DoxyCompactList}\small\item\em Allocates a memory handle. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memorymod_ga2710dd7978b8e7f406b525261fb42346}{jit\_\-handle\_\-free} (void $\ast$$\ast$handle)
+\begin{DoxyCompactList}\small\item\em Frees a memory handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memorymod_gac31e411720c7f4c3ed1d6d9e4bebd513}{jit\_\-handle\_\-size\_\-get} (void $\ast$$\ast$handle)
+\begin{DoxyCompactList}\small\item\em Retrieves a memory handle's size in bytes. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__memorymod_ga326dbdb81cd24ec26384845cd624af7b}{jit\_\-handle\_\-size\_\-set} (void $\ast$$\ast$handle, long size)
+\begin{DoxyCompactList}\small\item\em Sets a memory handle's size in bytes. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memorymod_ga8beac43ecbe453e810b373739bbf1483}{jit\_\-handle\_\-lock} (void $\ast$$\ast$handle, long lock)
+\begin{DoxyCompactList}\small\item\em Sets a memory handle's lock state. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memorymod_ga84ae88848dbd4c60b8e368773ac0ca92}{jit\_\-copy\_\-bytes} (void $\ast$dest, const void $\ast$src, long bytes)
+\begin{DoxyCompactList}\small\item\em Copy bytes from source to destination pointer. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__memorymod_gad1723114dcc67cbb24e45cb59aa0bb4f}{jit\_\-freemem} (void)
+\begin{DoxyCompactList}\small\item\em Reports free memory. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__memorymod_ga7c7f1fc4d1e935c154eb285c9216623b}{jit\_\-newptr} (long size)
+\begin{DoxyCompactList}\small\item\em Allocates a pointer to memory. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__memorymod_gaa5a4969fb76823dd0c3a679a5bd01222}{jit\_\-disposeptr} (char $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Frees a pointer to memory. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__memorymod_ga84ae88848dbd4c60b8e368773ac0ca92}{
+\index{memorymod@{memorymod}!jit\_\-copy\_\-bytes@{jit\_\-copy\_\-bytes}}
+\index{jit\_\-copy\_\-bytes@{jit\_\-copy\_\-bytes}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-copy\_\-bytes}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-copy\_\-bytes (void $\ast$ {\em dest}, \/  const void $\ast$ {\em src}, \/  long {\em bytes})}}
+\label{group__memorymod_ga84ae88848dbd4c60b8e368773ac0ca92}
+
+
+Copy bytes from source to destination pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em dest}]destination pointer \item[{\em src}]source pointer \item[{\em bytes}]byte count to copy \end{DoxyParams}
+\hypertarget{group__memorymod_gaa5a4969fb76823dd0c3a679a5bd01222}{
+\index{memorymod@{memorymod}!jit\_\-disposeptr@{jit\_\-disposeptr}}
+\index{jit\_\-disposeptr@{jit\_\-disposeptr}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-disposeptr}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-disposeptr (char $\ast$ {\em ptr})}}
+\label{group__memorymod_gaa5a4969fb76823dd0c3a679a5bd01222}
+
+
+Frees a pointer to memory. \begin{DoxyWarning}{Warning}
+It is important to avoid mixing memory pools, and therefore to match calls to jit\_\-newptr and jit\_\-disposeptr.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ptr}]pointer to memory \end{DoxyParams}
+\hypertarget{group__memorymod_ga4a6a1b9a98f66b50735f69e6acf64af0}{
+\index{memorymod@{memorymod}!jit\_\-freebytes@{jit\_\-freebytes}}
+\index{jit\_\-freebytes@{jit\_\-freebytes}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-freebytes}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-freebytes (void $\ast$ {\em ptr}, \/  long {\em size})}}
+\label{group__memorymod_ga4a6a1b9a98f66b50735f69e6acf64af0}
+
+
+Frees a pointer to memory. Depending on the size of the pointer, jit\_\-freebytes will free from either the faster memory pool or the system memory pool.
+
+\begin{DoxyWarning}{Warning}
+It is important to avoid mixing memory pools, and therefore to match calls to jit\_\-getbytes and jit\_\-freebytes.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ptr}]pointer to memory \item[{\em size}]size in bytes allocated \end{DoxyParams}
+\hypertarget{group__memorymod_gad1723114dcc67cbb24e45cb59aa0bb4f}{
+\index{memorymod@{memorymod}!jit\_\-freemem@{jit\_\-freemem}}
+\index{jit\_\-freemem@{jit\_\-freemem}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-freemem}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-freemem (void)}}
+\label{group__memorymod_gad1723114dcc67cbb24e45cb59aa0bb4f}
+
+
+Reports free memory. \begin{DoxyWarning}{Warning}
+Obsolete. OS 9 only.
+\end{DoxyWarning}
+\begin{DoxyReturn}{Returns}
+free bytes 
+\end{DoxyReturn}
+\hypertarget{group__memorymod_ga348f78687a0aabb79d772d633cc679cc}{
+\index{memorymod@{memorymod}!jit\_\-getbytes@{jit\_\-getbytes}}
+\index{jit\_\-getbytes@{jit\_\-getbytes}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-getbytes}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-getbytes (long {\em size})}}
+\label{group__memorymod_ga348f78687a0aabb79d772d633cc679cc}
+
+
+Allocates a pointer to memory. Depending on the size requested, jit\_\-getbytes will allocate from either the faster memory pool or the system memory pool.
+
+\begin{DoxyWarning}{Warning}
+It is important to avoid mixing memory pools, and therefore to match calls to jit\_\-getbytes and jit\_\-freebytes.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]size in bytes to allocate\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to memory 
+\end{DoxyReturn}
+\hypertarget{group__memorymod_ga2710dd7978b8e7f406b525261fb42346}{
+\index{memorymod@{memorymod}!jit\_\-handle\_\-free@{jit\_\-handle\_\-free}}
+\index{jit\_\-handle\_\-free@{jit\_\-handle\_\-free}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-handle\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-handle\_\-free (void $\ast$$\ast$ {\em handle})}}
+\label{group__memorymod_ga2710dd7978b8e7f406b525261fb42346}
+
+
+Frees a memory handle. \begin{DoxyWarning}{Warning}
+It is important to avoid mixing memory pools, and therefore to match calls to jit\_\-handle\_\-new and jit\_\-handle\_\-free.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]memory handle \end{DoxyParams}
+\hypertarget{group__memorymod_ga8beac43ecbe453e810b373739bbf1483}{
+\index{memorymod@{memorymod}!jit\_\-handle\_\-lock@{jit\_\-handle\_\-lock}}
+\index{jit\_\-handle\_\-lock@{jit\_\-handle\_\-lock}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-handle\_\-lock}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-handle\_\-lock (void $\ast$$\ast$ {\em handle}, \/  long {\em lock})}}
+\label{group__memorymod_ga8beac43ecbe453e810b373739bbf1483}
+
+
+Sets a memory handle's lock state. 
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]memory handle \item[{\em lock}]state (1=locked, 0=unlocked)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+lock state. 
+\end{DoxyReturn}
+\hypertarget{group__memorymod_ga09f5e82fafd1de78638c36105860a635}{
+\index{memorymod@{memorymod}!jit\_\-handle\_\-new@{jit\_\-handle\_\-new}}
+\index{jit\_\-handle\_\-new@{jit\_\-handle\_\-new}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-handle\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$$\ast$ jit\_\-handle\_\-new (long {\em size})}}
+\label{group__memorymod_ga09f5e82fafd1de78638c36105860a635}
+
+
+Allocates a memory handle. Handles are relocatable sections of memory which should be locked before dereferencing, and unlocked when not in use so that they may be relocated as necessary.
+
+\begin{DoxyWarning}{Warning}
+It is important to avoid mixing memory pools, and therefore to match calls to jit\_\-handle\_\-new and jit\_\-handle\_\-free.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]size in bytes to allocate\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+memory handle 
+\end{DoxyReturn}
+\hypertarget{group__memorymod_gac31e411720c7f4c3ed1d6d9e4bebd513}{
+\index{memorymod@{memorymod}!jit\_\-handle\_\-size\_\-get@{jit\_\-handle\_\-size\_\-get}}
+\index{jit\_\-handle\_\-size\_\-get@{jit\_\-handle\_\-size\_\-get}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-handle\_\-size\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-handle\_\-size\_\-get (void $\ast$$\ast$ {\em handle})}}
+\label{group__memorymod_gac31e411720c7f4c3ed1d6d9e4bebd513}
+
+
+Retrieves a memory handle's size in bytes. 
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]memory handle\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+size in bytes 
+\end{DoxyReturn}
+\hypertarget{group__memorymod_ga326dbdb81cd24ec26384845cd624af7b}{
+\index{memorymod@{memorymod}!jit\_\-handle\_\-size\_\-set@{jit\_\-handle\_\-size\_\-set}}
+\index{jit\_\-handle\_\-size\_\-set@{jit\_\-handle\_\-size\_\-set}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-handle\_\-size\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-handle\_\-size\_\-set (void $\ast$$\ast$ {\em handle}, \/  long {\em size})}}
+\label{group__memorymod_ga326dbdb81cd24ec26384845cd624af7b}
+
+
+Sets a memory handle's size in bytes. 
+\begin{DoxyParams}{Parameters}
+\item[{\em handle}]memory handle \item[{\em size}]new size in bytes\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__memorymod_ga7c7f1fc4d1e935c154eb285c9216623b}{
+\index{memorymod@{memorymod}!jit\_\-newptr@{jit\_\-newptr}}
+\index{jit\_\-newptr@{jit\_\-newptr}!memorymod@{memorymod}}
+\subsubsection[{jit\_\-newptr}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ jit\_\-newptr (long {\em size})}}
+\label{group__memorymod_ga7c7f1fc4d1e935c154eb285c9216623b}
+
+
+Allocates a pointer to memory. Always allocates from the the system memory pool.
+
+\begin{DoxyWarning}{Warning}
+It is important to avoid mixing memory pools, and therefore to match calls to jit\_\-newptr and jit\_\-disposeptr.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em size}]size in bytes to allocate\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to memory 
+\end{DoxyReturn}

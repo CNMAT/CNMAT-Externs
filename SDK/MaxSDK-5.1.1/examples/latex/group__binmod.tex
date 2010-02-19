@@ -1,0 +1,94 @@
+\hypertarget{group__binmod}{
+\section{Binary Module}
+\label{group__binmod}\index{Binary Module@{Binary Module}}
+}
+
+
+Collaboration diagram for Binary Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=108pt]{group__binmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+t\_\-jit\_\-err \hyperlink{group__binmod_gae7d8bcde80fd16666ab01a841f0f23b2}{jit\_\-bin\_\-read\_\-header} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} fh, \hyperlink{group__datatypes_ga718b4eb2652c286f4d42dc18a8e71a1a}{ulong} $\ast$version, long $\ast$filesize)
+\begin{DoxyCompactList}\small\item\em Reads the header of a JXF binary file. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__binmod_ga8621d6d19ee0e6f5aa1af98002f533c4}{jit\_\-bin\_\-read\_\-chunk\_\-info} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} fh, \hyperlink{group__datatypes_ga718b4eb2652c286f4d42dc18a8e71a1a}{ulong} $\ast$ckid, long $\ast$cksize)
+\begin{DoxyCompactList}\small\item\em Reads the the info of a chunk from a JXF binary file. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__binmod_ga01de67893378a46116aef0fbb36b5b33}{jit\_\-bin\_\-write\_\-header} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} fh, long filesize)
+\begin{DoxyCompactList}\small\item\em Writes the header of a JXF binary file. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__binmod_gae1bd457360f302d87be427c0bcf76b9d}{jit\_\-bin\_\-read\_\-matrix} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} fh, void $\ast$matrix)
+\begin{DoxyCompactList}\small\item\em Reads matrix data from a JXF binary file. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__binmod_ga8102ed7929a540a5584505049870887a}{jit\_\-bin\_\-write\_\-matrix} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} fh, void $\ast$matrix)
+\begin{DoxyCompactList}\small\item\em Writes a matrix to a JXF binary file. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__binmod_ga8621d6d19ee0e6f5aa1af98002f533c4}{
+\index{binmod@{binmod}!jit\_\-bin\_\-read\_\-chunk\_\-info@{jit\_\-bin\_\-read\_\-chunk\_\-info}}
+\index{jit\_\-bin\_\-read\_\-chunk\_\-info@{jit\_\-bin\_\-read\_\-chunk\_\-info}!binmod@{binmod}}
+\subsubsection[{jit\_\-bin\_\-read\_\-chunk\_\-info}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-bin\_\-read\_\-chunk\_\-info ({\bf t\_\-filehandle} {\em fh}, \/  {\bf ulong} $\ast$ {\em ckid}, \/  long $\ast$ {\em cksize})}}
+\label{group__binmod_ga8621d6d19ee0e6f5aa1af98002f533c4}
+
+
+Reads the the info of a chunk from a JXF binary file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em fh}]t\_\-filehandle file handle \item[{\em ckid}]chunk ID (ie JIT\_\-BIN\_\-CHUNK\_\-CONTAINER, JIT\_\-BIN\_\-CHUNK\_\-MATRIX) \item[{\em cksize}]the size of the chunk\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__binmod_gae7d8bcde80fd16666ab01a841f0f23b2}{
+\index{binmod@{binmod}!jit\_\-bin\_\-read\_\-header@{jit\_\-bin\_\-read\_\-header}}
+\index{jit\_\-bin\_\-read\_\-header@{jit\_\-bin\_\-read\_\-header}!binmod@{binmod}}
+\subsubsection[{jit\_\-bin\_\-read\_\-header}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-bin\_\-read\_\-header ({\bf t\_\-filehandle} {\em fh}, \/  {\bf ulong} $\ast$ {\em version}, \/  long $\ast$ {\em filesize})}}
+\label{group__binmod_gae7d8bcde80fd16666ab01a841f0f23b2}
+
+
+Reads the header of a JXF binary file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em fh}]t\_\-filehandle file handle \item[{\em version}]version of the binary file format (ie JIT\_\-BIN\_\-VERSION\_\-1) \item[{\em filesize}]the size of the file\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__binmod_gae1bd457360f302d87be427c0bcf76b9d}{
+\index{binmod@{binmod}!jit\_\-bin\_\-read\_\-matrix@{jit\_\-bin\_\-read\_\-matrix}}
+\index{jit\_\-bin\_\-read\_\-matrix@{jit\_\-bin\_\-read\_\-matrix}!binmod@{binmod}}
+\subsubsection[{jit\_\-bin\_\-read\_\-matrix}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-bin\_\-read\_\-matrix ({\bf t\_\-filehandle} {\em fh}, \/  void $\ast$ {\em matrix})}}
+\label{group__binmod_gae1bd457360f302d87be427c0bcf76b9d}
+
+
+Reads matrix data from a JXF binary file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em fh}]t\_\-filehandle file handle \item[{\em matrix}]the matrix data\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__binmod_ga01de67893378a46116aef0fbb36b5b33}{
+\index{binmod@{binmod}!jit\_\-bin\_\-write\_\-header@{jit\_\-bin\_\-write\_\-header}}
+\index{jit\_\-bin\_\-write\_\-header@{jit\_\-bin\_\-write\_\-header}!binmod@{binmod}}
+\subsubsection[{jit\_\-bin\_\-write\_\-header}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-bin\_\-write\_\-header ({\bf t\_\-filehandle} {\em fh}, \/  long {\em filesize})}}
+\label{group__binmod_ga01de67893378a46116aef0fbb36b5b33}
+
+
+Writes the header of a JXF binary file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em fh}]t\_\-filehandle file handle \item[{\em filesize}]the size of the file\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}
+\hypertarget{group__binmod_ga8102ed7929a540a5584505049870887a}{
+\index{binmod@{binmod}!jit\_\-bin\_\-write\_\-matrix@{jit\_\-bin\_\-write\_\-matrix}}
+\index{jit\_\-bin\_\-write\_\-matrix@{jit\_\-bin\_\-write\_\-matrix}!binmod@{binmod}}
+\subsubsection[{jit\_\-bin\_\-write\_\-matrix}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-bin\_\-write\_\-matrix ({\bf t\_\-filehandle} {\em fh}, \/  void $\ast$ {\em matrix})}}
+\label{group__binmod_ga8102ed7929a540a5584505049870887a}
+
+
+Writes a matrix to a JXF binary file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em fh}]t\_\-filehandle file handle \item[{\em matrix}]the matrix data\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code. 
+\end{DoxyReturn}

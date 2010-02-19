@@ -1,0 +1,118 @@
+\hypertarget{group__qelems}{
+\section{Qelems}
+\label{group__qelems}\index{Qelems@{Qelems}}
+}
+
+
+Your object’s methods may be called at interrupt level.  
+
+
+Collaboration diagram for Qelems:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=96pt]{group__qelems}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__qelems_ga4d219449d88d2b9648a992152b278090}{
+typedef void $\ast$ \hyperlink{group__qelems_ga4d219449d88d2b9648a992152b278090}{t\_\-qelem}}
+\label{group__qelems_ga4d219449d88d2b9648a992152b278090}
+
+\begin{DoxyCompactList}\small\item\em A qelem. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__qelems_gaffa7e9d4d5468a8ae3c825a353609b1b}{qelem\_\-new} (void $\ast$obj, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn)
+\begin{DoxyCompactList}\small\item\em Create a new Qelem. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set} (void $\ast$q)
+\begin{DoxyCompactList}\small\item\em Cause a Qelem to execute. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qelems_ga021eca2eff6e47ff97ca112fb2eaf866}{qelem\_\-unset} (void $\ast$q)
+\begin{DoxyCompactList}\small\item\em Cancel a Qelem’s execution. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qelems_ga7cfcb3134eb0baf335847906a14a08d0}{qelem\_\-free} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Free a Qelem object created with \hyperlink{group__qelems_gaffa7e9d4d5468a8ae3c825a353609b1b}{qelem\_\-new()}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qelems_gab5fa3e43e7851d1a2049ee28f5275955}{qelem\_\-front} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Cause a Qelem to execute with a higher priority. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Your object’s methods may be called at interrupt level. This happens when the user has Overdrive mode enabled and one of your methods is called, directly or indirectly, from a scheduler Clock function. This means that you cannot count on doing certain things—like drawing, asking the user what file they would like opened, or calling any Macintosh toolbox trap that allocates or purges memory—from within any method that responds to any message that could be sent directly from another Max object. The mechanism you’ll use to get around this limitation is the Qelem (queue element) structure. Qelems also allow processor-\/intensive tasks to be done at a lower priority than in an interrupt. As an example, drawing on the screen, especially in color, takes a long time in comparison with a task like sending MIDI data.
+
+A Qelem works very much like a Clock. You create a new Qelem in your creation function with qelem\_\-new and store a pointer to it in your object. Then you write a queue function, very much like the clock function (it takes the same single argument that will usually be a pointer to your object) that will be called when the Qelem has been set. You set the Qelem to run its function by calling \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()}.
+
+Often you’ll want to use Qelems and Clocks together. For example, suppose you want to update the display for a counter that changes 20 times a second. This can be accomplished by writing a Clock function that calls \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()} and then reschedules itself for 50 milliseconds later using the technique shown in the metronome example above. This scheme works even if you call \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()} faster than the computer can draw the counter, because if a Qelem is already set, \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()} will not set it again. However, when drawing the counter, you’ll display its current value, not a specific value generated in the Clock function.
+
+Note that the Qelem-\/based defer mechanism discussed later in this chapter may be easier for lowering the priority of one-\/time events, such as opening a standard file dialog box in response to a read message.
+
+If your Qelem routine sends messages using \hyperlink{group__inout_ga0b2b38216f2f4dba486bfcd2273f255e}{outlet\_\-int()} or any other of the outlet functions, it needs to use the lockout mechanism described in the Interrupt Level Considerations section. 
+
+\subsection{Function Documentation}
+\hypertarget{group__qelems_ga7cfcb3134eb0baf335847906a14a08d0}{
+\index{qelems@{qelems}!qelem\_\-free@{qelem\_\-free}}
+\index{qelem\_\-free@{qelem\_\-free}!qelems@{qelems}}
+\subsubsection[{qelem\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void qelem\_\-free (void $\ast$ {\em x})}}
+\label{group__qelems_ga7cfcb3134eb0baf335847906a14a08d0}
+
+
+Free a Qelem object created with \hyperlink{group__qelems_gaffa7e9d4d5468a8ae3c825a353609b1b}{qelem\_\-new()}. Typically this will be in your object’s free funtion.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The Qelem to destroy. \end{DoxyParams}
+\hypertarget{group__qelems_gab5fa3e43e7851d1a2049ee28f5275955}{
+\index{qelems@{qelems}!qelem\_\-front@{qelem\_\-front}}
+\index{qelem\_\-front@{qelem\_\-front}!qelems@{qelems}}
+\subsubsection[{qelem\_\-front}]{\setlength{\rightskip}{0pt plus 5cm}void qelem\_\-front (void $\ast$ {\em x})}}
+\label{group__qelems_gab5fa3e43e7851d1a2049ee28f5275955}
+
+
+Cause a Qelem to execute with a higher priority. This function is identical to \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()}, except that the Qelem’s function is placed at the front of the list of routines to execute in the main thread instead of the back. Be polite and only use \hyperlink{group__qelems_gab5fa3e43e7851d1a2049ee28f5275955}{qelem\_\-front()} only for special time-\/critical applications.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The Qelem whose function will be executed in the main thread. \end{DoxyParams}
+\hypertarget{group__qelems_gaffa7e9d4d5468a8ae3c825a353609b1b}{
+\index{qelems@{qelems}!qelem\_\-new@{qelem\_\-new}}
+\index{qelem\_\-new@{qelem\_\-new}!qelems@{qelems}}
+\subsubsection[{qelem\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ qelem\_\-new (void $\ast$ {\em obj}, \/  {\bf method} {\em fn})}}
+\label{group__qelems_gaffa7e9d4d5468a8ae3c825a353609b1b}
+
+
+Create a new Qelem. The created Qelem will need to be freed using \hyperlink{group__qelems_ga7cfcb3134eb0baf335847906a14a08d0}{qelem\_\-free()}, do not use \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em obj}]Argument to be passed to function fun when the Qelem executes. Normally a pointer to your object. \item[{\em fn}]Function to execute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to a Qelem instance. You need to store this value to pass to \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()}.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Any kind of drawing or calling of Macintosh Toolbox routines that allocate or purge memory should be done in a Qelem function. 
+\end{DoxyRemark}
+\hypertarget{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{
+\index{qelems@{qelems}!qelem\_\-set@{qelem\_\-set}}
+\index{qelem\_\-set@{qelem\_\-set}!qelems@{qelems}}
+\subsubsection[{qelem\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void qelem\_\-set (void $\ast$ {\em q})}}
+\label{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}
+
+
+Cause a Qelem to execute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em q}]The Qelem whose function will be executed in the main thread.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The key behavior of \hyperlink{group__qelems_ga3e292aad133af89a87e167e88cc4a1b5}{qelem\_\-set()} is this: if the Qelem object has already been set, it will not be set again. (If this is not what you want, see \hyperlink{group__threading_gaa24a0c9896f1ad241e45590065c3f643}{defer()}.) This is useful if you want to redraw the state of some data when it changes, but not in response to changes that occur faster than can be drawn. A Qelem object is unset after its queue function has been called. 
+\end{DoxyRemark}
+\hypertarget{group__qelems_ga021eca2eff6e47ff97ca112fb2eaf866}{
+\index{qelems@{qelems}!qelem\_\-unset@{qelem\_\-unset}}
+\index{qelem\_\-unset@{qelem\_\-unset}!qelems@{qelems}}
+\subsubsection[{qelem\_\-unset}]{\setlength{\rightskip}{0pt plus 5cm}void qelem\_\-unset (void $\ast$ {\em q})}}
+\label{group__qelems_ga021eca2eff6e47ff97ca112fb2eaf866}
+
+
+Cancel a Qelem’s execution. If the Qelem’s function is set to be called, \hyperlink{group__qelems_ga021eca2eff6e47ff97ca112fb2eaf866}{qelem\_\-unset()} will stop it from being called. Otherwise, \hyperlink{group__qelems_ga021eca2eff6e47ff97ca112fb2eaf866}{qelem\_\-unset()} does nothing.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em q}]The Qelem whose execution you wish to cancel. \end{DoxyParams}

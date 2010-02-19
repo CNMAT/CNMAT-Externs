@@ -1,0 +1,517 @@
+\hypertarget{group__mopmod}{
+\section{MOP Module}
+\label{group__mopmod}\index{MOP Module@{MOP Module}}
+}
+
+
+Collaboration diagram for MOP Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=103pt]{group__mopmod}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}
+\begin{DoxyCompactList}\small\item\em \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object struct. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}
+\begin{DoxyCompactList}\small\item\em \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object struct. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__mopmod_gade67016225c12a230ee31e0d78f838b2}{jit\_\-mop\_\-io\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__mopmod_gabf7dab18444e7085ad858753e51a467c}{jit\_\-mop\_\-io\_\-newcopy} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}, copying settings of input. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_gaad1c85a891e17b271edf23eac393d1f7}{jit\_\-mop\_\-io\_\-free} (\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Frees instance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga9f85cf8513ff75fabea615619686e84f}{jit\_\-mop\_\-io\_\-restrict\_\-type} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Restricts the type specified in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct to those permitted by \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} instance, overwriting value in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga9cf9101515ddbe3ee3b4df7965e705f0}{jit\_\-mop\_\-io\_\-restrict\_\-planecount} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Restricts the planecount specified in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct to those permitted by \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} instance, overwriting value in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga8d5cb38974f12f1f7a140eadf36afacc}{jit\_\-mop\_\-io\_\-restrict\_\-dim} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Restricts the dimension sizes specified in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct to those permitted by \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} instance, overwriting value in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_gaebb33ac5825a27e42c476faf8724d6de}{jit\_\-mop\_\-io\_\-matrix} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x, void $\ast$m)
+\begin{DoxyCompactList}\small\item\em Sets the internal matrix reference. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__mopmod_ga9d85ffd0468e137ca0b87bd1ecfb98b4}{jit\_\-mop\_\-io\_\-getmatrix} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves the internal matrix reference. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_gaeeb0806f2942f47b2eacb7b57331dfca}{jit\_\-mop\_\-io\_\-ioproc} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} ioproc)
+\begin{DoxyCompactList}\small\item\em Sets the I/O procedure used when handling incoming matrices. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__mopmod_gaad1d3da84eefe2cb691298be3800585f}{jit\_\-mop\_\-io\_\-getioproc} (\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves the I/O procedure used when handling incoming matrices. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__mopmod_ga0ae171d2c2adebf3f8ba5183e53cd763}{jit\_\-mop\_\-new} (long inputcount, long outputcount)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$ \hyperlink{group__mopmod_ga85a06757365f8f0d153a543d7f2734c8}{jit\_\-mop\_\-newcopy} (\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Constructs instance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}, copying settings of input. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__mopmod_ga75decd451d740e633331871410fea0c2}{jit\_\-mop\_\-getinput} (\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} $\ast$x, long i)
+\begin{DoxyCompactList}\small\item\em Retrieves input at input list index specified. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__mopmod_ga372b391a6398e456818fbd9b0a023ea8}{jit\_\-mop\_\-getoutput} (\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} $\ast$x, long i)
+\begin{DoxyCompactList}\small\item\em Retrieves output at output list index specified. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__mopmod_ga311291c98d02778c52d096c591b782af}{jit\_\-mop\_\-getinputlist} (\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves input list. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__mopmod_gab75982f45862072738e43a9423f2bcd4}{jit\_\-mop\_\-getoutputlist} (\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves output list. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga3d1628d4dff72d5b10a186027a15c08f}{jit\_\-mop\_\-free} (\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Frees instance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga8923e590eaf3cdb7d92c7f982ddc169f}{jit\_\-mop\_\-single\_\-type} (void $\ast$mop, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Utility function to set the type attribute for all MOP inputs and outputs. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_gada02eaa2a5dc001cdb120a83cb093e25}{jit\_\-mop\_\-single\_\-planecount} (void $\ast$mop, long c)
+\begin{DoxyCompactList}\small\item\em Utility function to set the planecount attribute for all MOP inputs and outputs. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga9445dd7ead35149f1349d580c3f54d83}{jit\_\-mop\_\-methodall} (void $\ast$mop, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Utility function to send the same method to all MOP inputs and outputs. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga3f223fa6414f856e2484dbab7508945f}{jit\_\-mop\_\-input\_\-nolink} (void $\ast$mop, long c)
+\begin{DoxyCompactList}\small\item\em Utility function to disable all linking attributes for a MOP input. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga6878129233c6c88c43b8512db44a43ff}{jit\_\-mop\_\-output\_\-nolink} (void $\ast$mop, long c)
+\begin{DoxyCompactList}\small\item\em Utility function to disable all linking attributes for a MOP output. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga9d6c3b36f1e4a7ef30d674eda4196a5c}{jit\_\-mop\_\-ioproc\_\-copy\_\-adapt} (void $\ast$mop, void $\ast$mop\_\-io, void $\ast$matrix)
+\begin{DoxyCompactList}\small\item\em MOP I/O procedure to copy and adapt to input. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_ga446cc05043fbe3a80baa075ff1b5bebe}{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc} (void $\ast$mop, void $\ast$mop\_\-io, void $\ast$matrix)
+\begin{DoxyCompactList}\small\item\em MOP I/O procedure to copy, but truncate input. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__mopmod_gaa3d27b39f7bb88846553e413ba8d43b9}{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc\_\-zero} (void $\ast$mop, void $\ast$mop\_\-io, void $\ast$matrix)
+\begin{DoxyCompactList}\small\item\em MOP I/O procedure to copy, but truncate input. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__mopmod_gafa568f8ed923e624872fab658b283995}{jit\_\-mop\_\-ioproc\_\-tosym} (void $\ast$ioproc)
+\begin{DoxyCompactList}\small\item\em Utility to convert MOP I/O procedure function to a human-\/readable type name. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__mopmod_ga3d1628d4dff72d5b10a186027a15c08f}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-free@{jit\_\-mop\_\-free}}
+\index{jit\_\-mop\_\-free@{jit\_\-mop\_\-free}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-free ({\bf t\_\-jit\_\-mop} $\ast$ {\em x})}}
+\label{group__mopmod_ga3d1628d4dff72d5b10a186027a15c08f}
+
+
+Frees instance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+Use jit\_\-object\_\-free instead. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga75decd451d740e633331871410fea0c2}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-getinput@{jit\_\-mop\_\-getinput}}
+\index{jit\_\-mop\_\-getinput@{jit\_\-mop\_\-getinput}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-getinput}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-mop\_\-getinput ({\bf t\_\-jit\_\-mop} $\ast$ {\em x}, \/  long {\em i})}}
+\label{group__mopmod_ga75decd451d740e633331871410fea0c2}
+
+
+Retrieves input at input list index specified. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em i}]index\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga311291c98d02778c52d096c591b782af}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-getinputlist@{jit\_\-mop\_\-getinputlist}}
+\index{jit\_\-mop\_\-getinputlist@{jit\_\-mop\_\-getinputlist}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-getinputlist}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-mop\_\-getinputlist ({\bf t\_\-jit\_\-mop} $\ast$ {\em x})}}
+\label{group__mopmod_ga311291c98d02778c52d096c591b782af}
+
+
+Retrieves input list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-linklist object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga372b391a6398e456818fbd9b0a023ea8}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-getoutput@{jit\_\-mop\_\-getoutput}}
+\index{jit\_\-mop\_\-getoutput@{jit\_\-mop\_\-getoutput}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-getoutput}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-mop\_\-getoutput ({\bf t\_\-jit\_\-mop} $\ast$ {\em x}, \/  long {\em i})}}
+\label{group__mopmod_ga372b391a6398e456818fbd9b0a023ea8}
+
+
+Retrieves output at output list index specified. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em i}]index\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_gab75982f45862072738e43a9423f2bcd4}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-getoutputlist@{jit\_\-mop\_\-getoutputlist}}
+\index{jit\_\-mop\_\-getoutputlist@{jit\_\-mop\_\-getoutputlist}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-getoutputlist}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-mop\_\-getoutputlist ({\bf t\_\-jit\_\-mop} $\ast$ {\em x})}}
+\label{group__mopmod_gab75982f45862072738e43a9423f2bcd4}
+
+
+Retrieves output list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-linklist object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga3f223fa6414f856e2484dbab7508945f}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-input\_\-nolink@{jit\_\-mop\_\-input\_\-nolink}}
+\index{jit\_\-mop\_\-input\_\-nolink@{jit\_\-mop\_\-input\_\-nolink}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-input\_\-nolink}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-input\_\-nolink (void $\ast$ {\em mop}, \/  long {\em c})}}
+\label{group__mopmod_ga3f223fa6414f856e2484dbab7508945f}
+
+
+Utility function to disable all linking attributes for a MOP input. 
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em c}]input index\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__mopmod_gaad1c85a891e17b271edf23eac393d1f7}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-free@{jit\_\-mop\_\-io\_\-free}}
+\index{jit\_\-mop\_\-io\_\-free@{jit\_\-mop\_\-io\_\-free}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-io\_\-free ({\bf t\_\-jit\_\-mop} $\ast$ {\em x})}}
+\label{group__mopmod_gaad1c85a891e17b271edf23eac393d1f7}
+
+
+Frees instance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+Use jit\_\-object\_\-free instead. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_gaad1d3da84eefe2cb691298be3800585f}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-getioproc@{jit\_\-mop\_\-io\_\-getioproc}}
+\index{jit\_\-mop\_\-io\_\-getioproc@{jit\_\-mop\_\-io\_\-getioproc}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-getioproc}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} jit\_\-mop\_\-io\_\-getioproc ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x})}}
+\label{group__mopmod_gaad1d3da84eefe2cb691298be3800585f}
+
+
+Retrieves the I/O procedure used when handling incoming matrices. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+I/O procedure
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga9d85ffd0468e137ca0b87bd1ecfb98b4}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-getmatrix@{jit\_\-mop\_\-io\_\-getmatrix}}
+\index{jit\_\-mop\_\-io\_\-getmatrix@{jit\_\-mop\_\-io\_\-getmatrix}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-getmatrix}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-mop\_\-io\_\-getmatrix ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x})}}
+\label{group__mopmod_ga9d85ffd0468e137ca0b87bd1ecfb98b4}
+
+
+Retrieves the internal matrix reference. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-matrix object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_gaeeb0806f2942f47b2eacb7b57331dfca}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-ioproc@{jit\_\-mop\_\-io\_\-ioproc}}
+\index{jit\_\-mop\_\-io\_\-ioproc@{jit\_\-mop\_\-io\_\-ioproc}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-ioproc}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-io\_\-ioproc ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x}, \/  {\bf method} {\em ioproc})}}
+\label{group__mopmod_gaeeb0806f2942f47b2eacb7b57331dfca}
+
+
+Sets the I/O procedure used when handling incoming matrices. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em ioproc}]I/O procedure\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_gaebb33ac5825a27e42c476faf8724d6de}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-matrix@{jit\_\-mop\_\-io\_\-matrix}}
+\index{jit\_\-mop\_\-io\_\-matrix@{jit\_\-mop\_\-io\_\-matrix}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-matrix}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-io\_\-matrix ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x}, \/  void $\ast$ {\em m})}}
+\label{group__mopmod_gaebb33ac5825a27e42c476faf8724d6de}
+
+
+Sets the internal matrix reference. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em m}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_gade67016225c12a230ee31e0d78f838b2}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-new@{jit\_\-mop\_\-io\_\-new}}
+\index{jit\_\-mop\_\-io\_\-new@{jit\_\-mop\_\-io\_\-new}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-mop\_\-io\_\-new (void)}}
+\label{group__mopmod_gade67016225c12a230ee31e0d78f838b2}
+
+
+Constructs instance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. \begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_gabf7dab18444e7085ad858753e51a467c}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-newcopy@{jit\_\-mop\_\-io\_\-newcopy}}
+\index{jit\_\-mop\_\-io\_\-newcopy@{jit\_\-mop\_\-io\_\-newcopy}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-newcopy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-mop\_\-io\_\-newcopy ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x})}}
+\label{group__mopmod_gabf7dab18444e7085ad858753e51a467c}
+
+
+Constructs instance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}, copying settings of input. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga8d5cb38974f12f1f7a140eadf36afacc}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-restrict\_\-dim@{jit\_\-mop\_\-io\_\-restrict\_\-dim}}
+\index{jit\_\-mop\_\-io\_\-restrict\_\-dim@{jit\_\-mop\_\-io\_\-restrict\_\-dim}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-restrict\_\-dim}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-io\_\-restrict\_\-dim ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__mopmod_ga8d5cb38974f12f1f7a140eadf36afacc}
+
+
+Restricts the dimension sizes specified in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct to those permitted by \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} instance, overwriting value in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga9cf9101515ddbe3ee3b4df7965e705f0}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-restrict\_\-planecount@{jit\_\-mop\_\-io\_\-restrict\_\-planecount}}
+\index{jit\_\-mop\_\-io\_\-restrict\_\-planecount@{jit\_\-mop\_\-io\_\-restrict\_\-planecount}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-restrict\_\-planecount}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-io\_\-restrict\_\-planecount ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__mopmod_ga9cf9101515ddbe3ee3b4df7965e705f0}
+
+
+Restricts the planecount specified in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct to those permitted by \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} instance, overwriting value in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga9f85cf8513ff75fabea615619686e84f}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-io\_\-restrict\_\-type@{jit\_\-mop\_\-io\_\-restrict\_\-type}}
+\index{jit\_\-mop\_\-io\_\-restrict\_\-type@{jit\_\-mop\_\-io\_\-restrict\_\-type}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-io\_\-restrict\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-io\_\-restrict\_\-type ({\bf t\_\-jit\_\-mop\_\-io} $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__mopmod_ga9f85cf8513ff75fabea615619686e84f}
+
+
+Restricts the type specified in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct to those permitted by \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} instance, overwriting value in \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga9d6c3b36f1e4a7ef30d674eda4196a5c}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-ioproc\_\-copy\_\-adapt@{jit\_\-mop\_\-ioproc\_\-copy\_\-adapt}}
+\index{jit\_\-mop\_\-ioproc\_\-copy\_\-adapt@{jit\_\-mop\_\-ioproc\_\-copy\_\-adapt}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-ioproc\_\-copy\_\-adapt}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-ioproc\_\-copy\_\-adapt (void $\ast$ {\em mop}, \/  void $\ast$ {\em mop\_\-io}, \/  void $\ast$ {\em matrix})}}
+\label{group__mopmod_ga9d6c3b36f1e4a7ef30d674eda4196a5c}
+
+
+MOP I/O procedure to copy and adapt to input. 
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em mop\_\-io}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em matrix}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+    void *m;
+    t_jit_matrix_info info;
+    
+    if (matrix&&(m=jit_object_method(mop_io,_jit_sym_getmatrix))) {
+        jit_object_method(matrix,_jit_sym_getinfo,&info);
+        jit_object_method(mop_io,_jit_sym_restrict_type,&info);
+        jit_object_method(mop_io,_jit_sym_restrict_dim,&info);
+        jit_object_method(mop_io,_jit_sym_restrict_planecount,&info);
+        jit_object_method(m,_jit_sym_setinfo,&info);
+        jit_object_method(m,_jit_sym_frommatrix,matrix,NULL);
+    }
+
+    return JIT_ERR_NONE;
+\end{DoxyCode}
+ \hypertarget{group__mopmod_ga446cc05043fbe3a80baa075ff1b5bebe}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-ioproc\_\-copy\_\-trunc@{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc}}
+\index{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc@{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-ioproc\_\-copy\_\-trunc (void $\ast$ {\em mop}, \/  void $\ast$ {\em mop\_\-io}, \/  void $\ast$ {\em matrix})}}
+\label{group__mopmod_ga446cc05043fbe3a80baa075ff1b5bebe}
+
+
+MOP I/O procedure to copy, but truncate input. 
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em mop\_\-io}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em matrix}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+    void *m;
+    t_jit_matrix_info info;
+    
+    if (matrix&&(m=jit_object_method(mop_io,_jit_sym_getmatrix))) {
+        jit_object_method(m,_jit_sym_frommatrix_trunc,matrix);
+    }
+
+    return JIT_ERR_NONE;
+\end{DoxyCode}
+ \hypertarget{group__mopmod_gaa3d27b39f7bb88846553e413ba8d43b9}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-ioproc\_\-copy\_\-trunc\_\-zero@{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc\_\-zero}}
+\index{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc\_\-zero@{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc\_\-zero}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-ioproc\_\-copy\_\-trunc\_\-zero}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-ioproc\_\-copy\_\-trunc\_\-zero (void $\ast$ {\em mop}, \/  void $\ast$ {\em mop\_\-io}, \/  void $\ast$ {\em matrix})}}
+\label{group__mopmod_gaa3d27b39f7bb88846553e413ba8d43b9}
+
+
+MOP I/O procedure to copy, but truncate input. Zero elsewhere.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em mop\_\-io}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} object pointer \item[{\em matrix}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+    void *m;
+    t_jit_matrix_info info;
+    
+    if (matrix&&(m=jit_object_method(mop_io,_jit_sym_getmatrix))) {
+        jit_object_method(m,_jit_sym_clear);
+        jit_object_method(m,_jit_sym_frommatrix_trunc,matrix);
+    }
+
+    return JIT_ERR_NONE;
+\end{DoxyCode}
+ \hypertarget{group__mopmod_gafa568f8ed923e624872fab658b283995}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-ioproc\_\-tosym@{jit\_\-mop\_\-ioproc\_\-tosym}}
+\index{jit\_\-mop\_\-ioproc\_\-tosym@{jit\_\-mop\_\-ioproc\_\-tosym}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-ioproc\_\-tosym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-mop\_\-ioproc\_\-tosym (void $\ast$ {\em ioproc})}}
+\label{group__mopmod_gafa568f8ed923e624872fab658b283995}
+
+
+Utility to convert MOP I/O procedure function to a human-\/readable type name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ioproc}]\hyperlink{structt__jit__mop__io}{t\_\-jit\_\-mop\_\-io} procedure pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+ if (ioproc==NULL) {
+ return ps_resamp;
+ } else if (ioproc==jit_mop_ioproc_copy_adapt) {
+ return ps_adapt;   
+ } else if (ioproc==jit_mop_ioproc_copy_trunc) {
+ return ps_trunc;   
+ } else if (ioproc==jit_mop_ioproc_copy_trunc_zero) {
+ return ps_trunc_zero;  
+ } else {
+ return ps_custom;  
+ }
+ return ps_resamp;
+\end{DoxyCode}
+ \hypertarget{group__mopmod_ga9445dd7ead35149f1349d580c3f54d83}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-methodall@{jit\_\-mop\_\-methodall}}
+\index{jit\_\-mop\_\-methodall@{jit\_\-mop\_\-methodall}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-methodall}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-methodall (void $\ast$ {\em mop}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__mopmod_ga9445dd7ead35149f1349d580c3f54d83}
+
+
+Utility function to send the same method to all MOP inputs and outputs. 
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em s}]method symbol \item[{\em ...}]untyped arguments\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__mopmod_ga0ae171d2c2adebf3f8ba5183e53cd763}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-new@{jit\_\-mop\_\-new}}
+\index{jit\_\-mop\_\-new@{jit\_\-mop\_\-new}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-mop\_\-new (long {\em inputcount}, \/  long {\em outputcount})}}
+\label{group__mopmod_ga0ae171d2c2adebf3f8ba5183e53cd763}
+
+
+Constructs instance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. \begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga85a06757365f8f0d153a543d7f2734c8}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-newcopy@{jit\_\-mop\_\-newcopy}}
+\index{jit\_\-mop\_\-newcopy@{jit\_\-mop\_\-newcopy}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-newcopy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jit\_\-object} $\ast$ jit\_\-mop\_\-newcopy ({\bf t\_\-jit\_\-mop} $\ast$ {\em x})}}
+\label{group__mopmod_ga85a06757365f8f0d153a543d7f2734c8}
+
+
+Constructs instance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}, copying settings of input. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of \hyperlink{structt__jit__mop}{t\_\-jit\_\-mop}. 
+\end{DoxyWarning}
+\hypertarget{group__mopmod_ga6878129233c6c88c43b8512db44a43ff}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-output\_\-nolink@{jit\_\-mop\_\-output\_\-nolink}}
+\index{jit\_\-mop\_\-output\_\-nolink@{jit\_\-mop\_\-output\_\-nolink}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-output\_\-nolink}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-output\_\-nolink (void $\ast$ {\em mop}, \/  long {\em c})}}
+\label{group__mopmod_ga6878129233c6c88c43b8512db44a43ff}
+
+
+Utility function to disable all linking attributes for a MOP output. 
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em c}]output index\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__mopmod_gada02eaa2a5dc001cdb120a83cb093e25}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-single\_\-planecount@{jit\_\-mop\_\-single\_\-planecount}}
+\index{jit\_\-mop\_\-single\_\-planecount@{jit\_\-mop\_\-single\_\-planecount}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-single\_\-planecount}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-single\_\-planecount (void $\ast$ {\em mop}, \/  long {\em c})}}
+\label{group__mopmod_gada02eaa2a5dc001cdb120a83cb093e25}
+
+
+Utility function to set the planecount attribute for all MOP inputs and outputs. 
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em c}]planecount\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__mopmod_ga8923e590eaf3cdb7d92c7f982ddc169f}{
+\index{mopmod@{mopmod}!jit\_\-mop\_\-single\_\-type@{jit\_\-mop\_\-single\_\-type}}
+\index{jit\_\-mop\_\-single\_\-type@{jit\_\-mop\_\-single\_\-type}!mopmod@{mopmod}}
+\subsubsection[{jit\_\-mop\_\-single\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-mop\_\-single\_\-type (void $\ast$ {\em mop}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__mopmod_ga8923e590eaf3cdb7d92c7f982ddc169f}
+
+
+Utility function to set the type attribute for all MOP inputs and outputs. 
+\begin{DoxyParams}{Parameters}
+\item[{\em mop}]\hyperlink{structt__jit__mop}{t\_\-jit\_\-mop} object pointer \item[{\em s}]type symbol\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}

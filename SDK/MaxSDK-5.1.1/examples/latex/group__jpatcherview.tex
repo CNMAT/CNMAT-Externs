@@ -1,0 +1,237 @@
+\hypertarget{group__jpatcherview}{
+\section{jpatcherview}
+\label{group__jpatcherview}\index{jpatcherview@{jpatcherview}}
+}
+
+
+A view of a patcher.  
+
+
+Collaboration diagram for jpatcherview:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=112pt]{group__jpatcherview}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcherview_ga143a54662c1dea4f8170c7b62bc4cb2d}{patcherview\_\-findpatcherview} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Find a patcherview at the given screen coords. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcherview_gaf9621ecabdae9fc9d865bd42a8bc43a9}{patcherview\_\-get\_\-visible} (\hyperlink{structt__object}{t\_\-object} $\ast$pv)
+\begin{DoxyCompactList}\small\item\em Query a patcherview to determine whether it is visible. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcherview_gab8b3bb74c2341f42a1b8fb3a1dbdcbb8}{patcherview\_\-set\_\-visible} (\hyperlink{structt__object}{t\_\-object} $\ast$pv, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'visible' attribute of a patcherview. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcherview_ga310590cbb1dd9fbe5c8c228e35fe11ef}{patcherview\_\-get\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$pv, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Get the value of the rect attribute for a patcherview. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcherview_ga6025a5acb336aa81a0aad67e9de5bbca}{patcherview\_\-set\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$pv, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Set the value of the rect attribute for a patcherview. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcherview_ga1b78b4ec463f113a0c2778dbebcc8654}{patcherview\_\-get\_\-locked} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Find out if a patcherview is locked. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcherview_ga826eb120924785345d8a7851d31ce788}{patcherview\_\-set\_\-locked} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Lock or unlock a patcherview. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcherview_ga196c47fa60725d496c75b400da72d8a9}{patcherview\_\-get\_\-presentation} (\hyperlink{structt__object}{t\_\-object} $\ast$pv)
+\begin{DoxyCompactList}\small\item\em Find out if a patcherview is a presentation view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcherview_ga349cf62e72891016e0dcf8ab51c00a62}{patcherview\_\-set\_\-presentation} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Set whether or not a patcherview is a presentation view. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__jpatcherview_ga3d82e2665c64f9c4452d1737c1429293}{patcherview\_\-get\_\-zoomfactor} (\hyperlink{structt__object}{t\_\-object} $\ast$pv)
+\begin{DoxyCompactList}\small\item\em Fetch the zoom-\/factor of a patcherview. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcherview_ga5006e672580027e9ae56c49ca3148c3c}{patcherview\_\-set\_\-zoomfactor} (\hyperlink{structt__object}{t\_\-object} $\ast$pv, double d)
+\begin{DoxyCompactList}\small\item\em Set the zoom-\/factor of a patcherview. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcherview_ga37810ea052b4ecd3598cd687666c8841}{patcherview\_\-get\_\-nextview} (\hyperlink{structt__object}{t\_\-object} $\ast$pv)
+\begin{DoxyCompactList}\small\item\em Given a patcherview, find the next patcherview. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcherview_ga221544b77a5371897c96f2e94ae49c82}{patcherview\_\-get\_\-jgraphics} (\hyperlink{structt__object}{t\_\-object} $\ast$pv)
+\begin{DoxyCompactList}\small\item\em Given a patcherview, return the \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context for that view. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcherview_ga056a0684b79a940b8ee71145d9f77223}{patcherview\_\-get\_\-patcher} (\hyperlink{structt__object}{t\_\-object} $\ast$pv)
+\begin{DoxyCompactList}\small\item\em Given a patcherview, return its patcher. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A view of a patcher. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jpatcherview_ga143a54662c1dea4f8170c7b62bc4cb2d}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-findpatcherview@{patcherview\_\-findpatcherview}}
+\index{patcherview\_\-findpatcherview@{patcherview\_\-findpatcherview}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-findpatcherview}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ patcherview\_\-findpatcherview (int {\em x}, \/  int {\em y})}}
+\label{group__jpatcherview_ga143a54662c1dea4f8170c7b62bc4cb2d}
+
+
+Find a patcherview at the given screen coords. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The horizontal coordinate at which to find a patcherview. \item[{\em y}]The vertical coordinate at which to find a patcherview. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the patcherview at the specified location, or NULL if no patcherview exists at that location. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga221544b77a5371897c96f2e94ae49c82}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-jgraphics@{patcherview\_\-get\_\-jgraphics}}
+\index{patcherview\_\-get\_\-jgraphics@{patcherview\_\-get\_\-jgraphics}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-jgraphics}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ patcherview\_\-get\_\-jgraphics ({\bf t\_\-object} $\ast$ {\em pv})}}
+\label{group__jpatcherview_ga221544b77a5371897c96f2e94ae49c82}
+
+
+Given a patcherview, return the \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context for that view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context for the view. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga1b78b4ec463f113a0c2778dbebcc8654}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-locked@{patcherview\_\-get\_\-locked}}
+\index{patcherview\_\-get\_\-locked@{patcherview\_\-get\_\-locked}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-locked}]{\setlength{\rightskip}{0pt plus 5cm}char patcherview\_\-get\_\-locked ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcherview_ga1b78b4ec463f113a0c2778dbebcc8654}
+
+
+Find out if a patcherview is locked. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcherview instance whose attribute value will be fetched. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 if unlocked, otherwise returns non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga37810ea052b4ecd3598cd687666c8841}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-nextview@{patcherview\_\-get\_\-nextview}}
+\index{patcherview\_\-get\_\-nextview@{patcherview\_\-get\_\-nextview}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-nextview}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ patcherview\_\-get\_\-nextview ({\bf t\_\-object} $\ast$ {\em pv})}}
+\label{group__jpatcherview_ga37810ea052b4ecd3598cd687666c8841}
+
+
+Given a patcherview, find the next patcherview. The views of a patcher are maintained internally as a \hyperlink{structt__linklist}{t\_\-linklist}, and so the views can be traversed should you need to perform operations on all of a patcher's patcherviews.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance from which to find the next patcherview. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next patcherview in the list, or NULL if the patcherview passed in pv is the tail. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga056a0684b79a940b8ee71145d9f77223}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-patcher@{patcherview\_\-get\_\-patcher}}
+\index{patcherview\_\-get\_\-patcher@{patcherview\_\-get\_\-patcher}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-patcher}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ patcherview\_\-get\_\-patcher ({\bf t\_\-object} $\ast$ {\em pv})}}
+\label{group__jpatcherview_ga056a0684b79a940b8ee71145d9f77223}
+
+
+Given a patcherview, return its patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance for which to fetch the patcher. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga196c47fa60725d496c75b400da72d8a9}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-presentation@{patcherview\_\-get\_\-presentation}}
+\index{patcherview\_\-get\_\-presentation@{patcherview\_\-get\_\-presentation}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-presentation}]{\setlength{\rightskip}{0pt plus 5cm}char patcherview\_\-get\_\-presentation ({\bf t\_\-object} $\ast$ {\em pv})}}
+\label{group__jpatcherview_ga196c47fa60725d496c75b400da72d8a9}
+
+
+Find out if a patcherview is a presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance whose attribute value will be fetched. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 if the view is not a presentation view, otherwise returns non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga310590cbb1dd9fbe5c8c228e35fe11ef}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-rect@{patcherview\_\-get\_\-rect}}
+\index{patcherview\_\-get\_\-rect@{patcherview\_\-get\_\-rect}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} patcherview\_\-get\_\-rect ({\bf t\_\-object} $\ast$ {\em pv}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jpatcherview_ga310590cbb1dd9fbe5c8c228e35fe11ef}
+
+
+Get the value of the rect attribute for a patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance whose attribute value will be fetched. \item[{\em pr}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} struct, whose contents will be filled upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_gaf9621ecabdae9fc9d865bd42a8bc43a9}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-visible@{patcherview\_\-get\_\-visible}}
+\index{patcherview\_\-get\_\-visible@{patcherview\_\-get\_\-visible}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-visible}]{\setlength{\rightskip}{0pt plus 5cm}char patcherview\_\-get\_\-visible ({\bf t\_\-object} $\ast$ {\em pv})}}
+\label{group__jpatcherview_gaf9621ecabdae9fc9d865bd42a8bc43a9}
+
+
+Query a patcherview to determine whether it is visible. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns zero if the patcherview is invisible, otherwise returns non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga3d82e2665c64f9c4452d1737c1429293}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-get\_\-zoomfactor@{patcherview\_\-get\_\-zoomfactor}}
+\index{patcherview\_\-get\_\-zoomfactor@{patcherview\_\-get\_\-zoomfactor}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-get\_\-zoomfactor}]{\setlength{\rightskip}{0pt plus 5cm}double patcherview\_\-get\_\-zoomfactor ({\bf t\_\-object} $\ast$ {\em pv})}}
+\label{group__jpatcherview_ga3d82e2665c64f9c4452d1737c1429293}
+
+
+Fetch the zoom-\/factor of a patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance whose attribute value will be fetched. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The factor by which the view is zoomed. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga826eb120924785345d8a7851d31ce788}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-set\_\-locked@{patcherview\_\-set\_\-locked}}
+\index{patcherview\_\-set\_\-locked@{patcherview\_\-set\_\-locked}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-set\_\-locked}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} patcherview\_\-set\_\-locked ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcherview_ga826eb120924785345d8a7851d31ce788}
+
+
+Lock or unlock a patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcherview instance whose attribute value will be set. \item[{\em c}]Set this value to zero to unlock the patcherview, otherwise pass a non-\/zero value. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga349cf62e72891016e0dcf8ab51c00a62}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-set\_\-presentation@{patcherview\_\-set\_\-presentation}}
+\index{patcherview\_\-set\_\-presentation@{patcherview\_\-set\_\-presentation}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-set\_\-presentation}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} patcherview\_\-set\_\-presentation ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcherview_ga349cf62e72891016e0dcf8ab51c00a62}
+
+
+Set whether or not a patcherview is a presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcherview instance whose attribute value will be set. \item[{\em c}]Set this value to non-\/zero to make the patcherview a presentation view, otherwise pass zero. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga6025a5acb336aa81a0aad67e9de5bbca}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-set\_\-rect@{patcherview\_\-set\_\-rect}}
+\index{patcherview\_\-set\_\-rect@{patcherview\_\-set\_\-rect}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-set\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} patcherview\_\-set\_\-rect ({\bf t\_\-object} $\ast$ {\em pv}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jpatcherview_ga6025a5acb336aa81a0aad67e9de5bbca}
+
+
+Set the value of the rect attribute for a patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance whose attribute value will be set. \item[{\em pr}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} struct. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_gab8b3bb74c2341f42a1b8fb3a1dbdcbb8}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-set\_\-visible@{patcherview\_\-set\_\-visible}}
+\index{patcherview\_\-set\_\-visible@{patcherview\_\-set\_\-visible}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-set\_\-visible}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} patcherview\_\-set\_\-visible ({\bf t\_\-object} $\ast$ {\em pv}, \/  char {\em c})}}
+\label{group__jpatcherview_gab8b3bb74c2341f42a1b8fb3a1dbdcbb8}
+
+
+Set the 'visible' attribute of a patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance whose attribute will be set. \item[{\em c}]Whether or not the patcherview should be made visible. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcherview_ga5006e672580027e9ae56c49ca3148c3c}{
+\index{jpatcherview@{jpatcherview}!patcherview\_\-set\_\-zoomfactor@{patcherview\_\-set\_\-zoomfactor}}
+\index{patcherview\_\-set\_\-zoomfactor@{patcherview\_\-set\_\-zoomfactor}!jpatcherview@{jpatcherview}}
+\subsubsection[{patcherview\_\-set\_\-zoomfactor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} patcherview\_\-set\_\-zoomfactor ({\bf t\_\-object} $\ast$ {\em pv}, \/  double {\em d})}}
+\label{group__jpatcherview_ga5006e672580027e9ae56c49ca3148c3c}
+
+
+Set the zoom-\/factor of a patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pv}]The patcherview instance whose attribute value will be set. \item[{\em d}]The zoom-\/factor at which the patcherview should display the patcher. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}

@@ -1,0 +1,770 @@
+\hypertarget{group__jitter}{
+\section{Jitter}
+\label{group__jitter}\index{Jitter@{Jitter}}
+}
+
+
+Collaboration diagram for Jitter:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=146pt]{group__jitter}
+\end{center}
+\end{figure}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__atommod}{Atom Module}
+\item 
+\hyperlink{group__attrmod}{Attribute Module}
+\item 
+\hyperlink{group__binmod}{Binary Module}
+\item 
+\hyperlink{group__classmod}{Class Module}
+\item 
+\hyperlink{group__objectmod}{Object Module}
+\item 
+\hyperlink{group__utilitymod}{Miscellaneous Utility Module}
+\item 
+\hyperlink{group__linklistmod}{Linked List Module}
+\item 
+\hyperlink{group__mathmod}{Math Module}
+\item 
+\hyperlink{group__matrixmod}{Matrix Module}
+\item 
+\hyperlink{group__maxwrapmod}{Max Wrapper Module}
+\item 
+\hyperlink{group__memorymod}{Memory Module}
+\item 
+\hyperlink{group__mopmod}{MOP Module}
+\item 
+\hyperlink{group__parallelutilmod}{Parallel Utility Module}
+\item 
+\hyperlink{group__maxmopmod}{MOP Max Wrapper Module}
+\item 
+\hyperlink{group__ob3dmod}{OB3D Module}
+\item 
+\hyperlink{group__opvecmod}{Operator Vector Module}
+\item 
+\hyperlink{group__qtcodecmod}{QuickTime Codec Module}
+\item 
+\hyperlink{group__qtmoviemod}{jit.qt.movie Module}
+\item 
+\hyperlink{group__qtrecordmod}{jit.qt.record Module}
+\item 
+\hyperlink{group__qtutilsmod}{QuickTime Utilties Module}
+\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jitter_gaad15de144710f76f17f8f79442c1ee13}{
+\#define \hyperlink{group__jitter_gaad15de144710f76f17f8f79442c1ee13}{JIT\_\-ATTR\_\-GET\_\-OPAQUE}~0x00000001}
+\label{group__jitter_gaad15de144710f76f17f8f79442c1ee13}
+
+\begin{DoxyCompactList}\small\item\em private getter (all) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae7eacda8a8da4e67c363ccc33c46b6d1}{
+\#define \hyperlink{group__jitter_gae7eacda8a8da4e67c363ccc33c46b6d1}{JIT\_\-ATTR\_\-SET\_\-OPAQUE}~0x00000002}
+\label{group__jitter_gae7eacda8a8da4e67c363ccc33c46b6d1}
+
+\begin{DoxyCompactList}\small\item\em private setter (all) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga9c73a749fbf9f581b85e8ecf9a875b91}{
+\#define \hyperlink{group__jitter_ga9c73a749fbf9f581b85e8ecf9a875b91}{JIT\_\-ATTR\_\-GET\_\-OPAQUE\_\-USER}~0x00000100}
+\label{group__jitter_ga9c73a749fbf9f581b85e8ecf9a875b91}
+
+\begin{DoxyCompactList}\small\item\em private getter (user) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae998edfcacc5675e80f85d499453ea23}{
+\#define \hyperlink{group__jitter_gae998edfcacc5675e80f85d499453ea23}{JIT\_\-ATTR\_\-SET\_\-OPAQUE\_\-USER}~0x00000200}
+\label{group__jitter_gae998edfcacc5675e80f85d499453ea23}
+
+\begin{DoxyCompactList}\small\item\em private setter (user) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga13c8aa5f90991dad82d1d4dcc3623223}{
+\#define \hyperlink{group__jitter_ga13c8aa5f90991dad82d1d4dcc3623223}{JIT\_\-ATTR\_\-GET\_\-DEFER}~0x00010000}
+\label{group__jitter_ga13c8aa5f90991dad82d1d4dcc3623223}
+
+\begin{DoxyCompactList}\small\item\em defer getter (deprecated) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga671a2b2c9ef9f347d5a161b8cb9bcc9e}{
+\#define \hyperlink{group__jitter_ga671a2b2c9ef9f347d5a161b8cb9bcc9e}{JIT\_\-ATTR\_\-GET\_\-USURP}~0x00020000}
+\label{group__jitter_ga671a2b2c9ef9f347d5a161b8cb9bcc9e}
+
+\begin{DoxyCompactList}\small\item\em usurp getter (deprecated) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga810447020b75b5173d4c6776cd2653d8}{
+\#define \hyperlink{group__jitter_ga810447020b75b5173d4c6776cd2653d8}{JIT\_\-ATTR\_\-GET\_\-DEFER\_\-LOW}~0x00040000}
+\label{group__jitter_ga810447020b75b5173d4c6776cd2653d8}
+
+\begin{DoxyCompactList}\small\item\em defer getter \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga07253544f23d315b75f37accf1270a4b}{
+\#define \hyperlink{group__jitter_ga07253544f23d315b75f37accf1270a4b}{JIT\_\-ATTR\_\-GET\_\-USURP\_\-LOW}~0x00080000}
+\label{group__jitter_ga07253544f23d315b75f37accf1270a4b}
+
+\begin{DoxyCompactList}\small\item\em usurp getter \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gafb0470fc7ed5e1bbee265c131ad66488}{
+\#define \hyperlink{group__jitter_gafb0470fc7ed5e1bbee265c131ad66488}{JIT\_\-ATTR\_\-SET\_\-DEFER}~0x01000000}
+\label{group__jitter_gafb0470fc7ed5e1bbee265c131ad66488}
+
+\begin{DoxyCompactList}\small\item\em defer setter (deprecated) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga3c97eb0dab6ac2588b8a86d2823d8765}{
+\#define \hyperlink{group__jitter_ga3c97eb0dab6ac2588b8a86d2823d8765}{JIT\_\-ATTR\_\-SET\_\-USURP}~0x02000000}
+\label{group__jitter_ga3c97eb0dab6ac2588b8a86d2823d8765}
+
+\begin{DoxyCompactList}\small\item\em usurp setter (deprecated) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf76b6ca84610d13c1276c51afc2b10ba}{
+\#define \hyperlink{group__jitter_gaf76b6ca84610d13c1276c51afc2b10ba}{JIT\_\-ATTR\_\-SET\_\-DEFER\_\-LOW}~0x04000000}
+\label{group__jitter_gaf76b6ca84610d13c1276c51afc2b10ba}
+
+\begin{DoxyCompactList}\small\item\em defer setter \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga2ffda4034665d46f65461d67b1004715}{
+\#define \hyperlink{group__jitter_ga2ffda4034665d46f65461d67b1004715}{JIT\_\-ATTR\_\-SET\_\-USURP\_\-LOW}~0x08000000}
+\label{group__jitter_ga2ffda4034665d46f65461d67b1004715}
+
+\begin{DoxyCompactList}\small\item\em usurp setter \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaeb64c758a0a5e003c4b275da17170dbf}{
+\#define \hyperlink{group__jitter_gaeb64c758a0a5e003c4b275da17170dbf}{JIT\_\-MATRIX\_\-DATA\_\-HANDLE}~0x00000002}
+\label{group__jitter_gaeb64c758a0a5e003c4b275da17170dbf}
+
+\begin{DoxyCompactList}\small\item\em data is handle \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga524952b91ca521028ba5cbd43bbdb2bf}{
+\#define \hyperlink{group__jitter_ga524952b91ca521028ba5cbd43bbdb2bf}{JIT\_\-MATRIX\_\-DATA\_\-REFERENCE}~0x00000004}
+\label{group__jitter_ga524952b91ca521028ba5cbd43bbdb2bf}
+
+\begin{DoxyCompactList}\small\item\em data is reference to outside memory \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga8d2975bb5165583d45ea766784e5a60b}{
+\#define \hyperlink{group__jitter_ga8d2975bb5165583d45ea766784e5a60b}{JIT\_\-MATRIX\_\-DATA\_\-PACK\_\-TIGHT}~0x00000008}
+\label{group__jitter_ga8d2975bb5165583d45ea766784e5a60b}
+
+\begin{DoxyCompactList}\small\item\em data is tightly packed (doesn't use standard 16 byte alignment) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga54577b5c1a79b9808696965db09fa78d}{
+\#define \hyperlink{group__jitter_ga54577b5c1a79b9808696965db09fa78d}{JIT\_\-MATRIX\_\-DATA\_\-FLAGS\_\-USE}~0x00008000}
+\label{group__jitter_ga54577b5c1a79b9808696965db09fa78d}
+
+\begin{DoxyCompactList}\small\item\em necessary if using handle/reference data flags when creating jit\_\-matrix, however, it is never stored in matrix \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga3a74bc72df454ac5618a865fd3c56870}{
+\#define \hyperlink{group__jitter_ga3a74bc72df454ac5618a865fd3c56870}{JIT\_\-MATRIX\_\-MAX\_\-DIMCOUNT}~32}
+\label{group__jitter_ga3a74bc72df454ac5618a865fd3c56870}
+
+\begin{DoxyCompactList}\small\item\em maximum dimension count \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaae5121f82aa81cb79ec17220f845ea08}{
+\#define \hyperlink{group__jitter_gaae5121f82aa81cb79ec17220f845ea08}{JIT\_\-MATRIX\_\-MAX\_\-PLANECOUNT}~32}
+\label{group__jitter_gaae5121f82aa81cb79ec17220f845ea08}
+
+\begin{DoxyCompactList}\small\item\em maximum plane count \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga10156f72ad806d9e8573f47df19118bd}{
+\#define \hyperlink{group__jitter_ga10156f72ad806d9e8573f47df19118bd}{JIT\_\-MATRIX\_\-CONVERT\_\-CLAMP}~0x00000001}
+\label{group__jitter_ga10156f72ad806d9e8573f47df19118bd}
+
+\begin{DoxyCompactList}\small\item\em not currently used \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gafd3ca93ff4686581454e07c3929934bf}{
+\#define \hyperlink{group__jitter_gafd3ca93ff4686581454e07c3929934bf}{JIT\_\-MATRIX\_\-CONVERT\_\-INTERP}~0x00000002}
+\label{group__jitter_gafd3ca93ff4686581454e07c3929934bf}
+
+\begin{DoxyCompactList}\small\item\em use interpolation \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1893e85d59588d93923b0ee5ead9fd63}{
+\#define \hyperlink{group__jitter_ga1893e85d59588d93923b0ee5ead9fd63}{JIT\_\-MATRIX\_\-CONVERT\_\-SRCDIM}~0x00000004}
+\label{group__jitter_ga1893e85d59588d93923b0ee5ead9fd63}
+
+\begin{DoxyCompactList}\small\item\em use source dimensions \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1b1e7bf9ea9a7a839f68b243174b5692}{
+\#define \hyperlink{group__jitter_ga1b1e7bf9ea9a7a839f68b243174b5692}{JIT\_\-MATRIX\_\-CONVERT\_\-DSTDIM}~0x00000008}
+\label{group__jitter_ga1b1e7bf9ea9a7a839f68b243174b5692}
+
+\begin{DoxyCompactList}\small\item\em use destination dimensions \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gafc39daa7e259fa20f8fe918cb4892dc4}{
+\#define \hyperlink{group__jitter_gafc39daa7e259fa20f8fe918cb4892dc4}{JIT\_\-OB3D\_\-NO\_\-ROTATION\_\-SCALE}~1 $<$$<$ 0}
+\label{group__jitter_gafc39daa7e259fa20f8fe918cb4892dc4}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga2eee6fc87f33ea672c921cddf960d5e1}{
+\#define \hyperlink{group__jitter_ga2eee6fc87f33ea672c921cddf960d5e1}{JIT\_\-OB3D\_\-NO\_\-POLY\_\-VARS}~1 $<$$<$ 1}
+\label{group__jitter_ga2eee6fc87f33ea672c921cddf960d5e1}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gab4407b5b96c0744f03bec69e204b56bb}{
+\#define \hyperlink{group__jitter_gab4407b5b96c0744f03bec69e204b56bb}{JIT\_\-OB3D\_\-NO\_\-BLEND}~1 $<$$<$ 2}
+\label{group__jitter_gab4407b5b96c0744f03bec69e204b56bb}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf7d77e7694341904bdbd7440ae71d42e}{
+\#define \hyperlink{group__jitter_gaf7d77e7694341904bdbd7440ae71d42e}{JIT\_\-OB3D\_\-NO\_\-TEXTURE}~1 $<$$<$ 3}
+\label{group__jitter_gaf7d77e7694341904bdbd7440ae71d42e}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga015276252d0ad61f9f35ad1ea227d089}{
+\#define \hyperlink{group__jitter_ga015276252d0ad61f9f35ad1ea227d089}{JIT\_\-OB3D\_\-NO\_\-MATRIXOUTPUT}~1 $<$$<$ 4}
+\label{group__jitter_ga015276252d0ad61f9f35ad1ea227d089}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga63a89334c5c06f92792333d191b71b06}{
+\#define \hyperlink{group__jitter_ga63a89334c5c06f92792333d191b71b06}{JIT\_\-OB3D\_\-AUTO\_\-ONLY}~1 $<$$<$ 5}
+\label{group__jitter_ga63a89334c5c06f92792333d191b71b06}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaafef09ee7a36fc16e46529783df7cd72}{
+\#define \hyperlink{group__jitter_gaafef09ee7a36fc16e46529783df7cd72}{JIT\_\-OB3D\_\-DOES\_\-UI}~1 $<$$<$ 6}
+\label{group__jitter_gaafef09ee7a36fc16e46529783df7cd72}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gad4a2b2f395618bafbd7faca61106b9f7}{
+\#define \hyperlink{group__jitter_gad4a2b2f395618bafbd7faca61106b9f7}{JIT\_\-OB3D\_\-NO\_\-DEPTH}~1 $<$$<$ 7}
+\label{group__jitter_gad4a2b2f395618bafbd7faca61106b9f7}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga2ef1435359d9dca4722fb71db4b0d423}{
+\#define \hyperlink{group__jitter_ga2ef1435359d9dca4722fb71db4b0d423}{JIT\_\-OB3D\_\-NO\_\-ANTIALIAS}~1 $<$$<$ 8}
+\label{group__jitter_ga2ef1435359d9dca4722fb71db4b0d423}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf9c39790969f477fb42c3fe674eb5ca7}{
+\#define \hyperlink{group__jitter_gaf9c39790969f477fb42c3fe674eb5ca7}{JIT\_\-OB3D\_\-NO\_\-FOG}~1 $<$$<$ 9}
+\label{group__jitter_gaf9c39790969f477fb42c3fe674eb5ca7}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf7b319953ace69f17633be98233fd324}{
+\#define \hyperlink{group__jitter_gaf7b319953ace69f17633be98233fd324}{JIT\_\-OB3D\_\-NO\_\-LIGHTING\_\-MATERIAL}~1 $<$$<$ 10}
+\label{group__jitter_gaf7b319953ace69f17633be98233fd324}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1f032969c5d7b0adb353743e77736b96}{
+\#define \hyperlink{group__jitter_ga1f032969c5d7b0adb353743e77736b96}{JIT\_\-OB3D\_\-HAS\_\-LIGHTS}~1 $<$$<$ 11}
+\label{group__jitter_ga1f032969c5d7b0adb353743e77736b96}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1f324497fe983b02072b38d5c725ba2a}{
+\#define \hyperlink{group__jitter_ga1f324497fe983b02072b38d5c725ba2a}{JIT\_\-OB3D\_\-HAS\_\-CAMERA}~1 $<$$<$ 12}
+\label{group__jitter_ga1f324497fe983b02072b38d5c725ba2a}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga46c7216fed49a3b9f9f10ad4d87cea55}{
+\#define \hyperlink{group__jitter_ga46c7216fed49a3b9f9f10ad4d87cea55}{JIT\_\-OB3D\_\-IS\_\-RENDERER}~1 $<$$<$ 13}
+\label{group__jitter_ga46c7216fed49a3b9f9f10ad4d87cea55}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga6d6e4c119dbea5119a0f452a2486e590}{
+\#define \hyperlink{group__jitter_ga6d6e4c119dbea5119a0f452a2486e590}{JIT\_\-OB3D\_\-NO\_\-COLOR}~1 $<$$<$ 14}
+\label{group__jitter_ga6d6e4c119dbea5119a0f452a2486e590}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf6797493caebaf2a151563492f190b35}{
+\#define \hyperlink{group__jitter_gaf6797493caebaf2a151563492f190b35}{JIT\_\-OB3D\_\-IS\_\-SLAB}~1 $<$$<$ 15}
+\label{group__jitter_gaf6797493caebaf2a151563492f190b35}
+
+\begin{DoxyCompactList}\small\item\em ob3d flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga6f8627ede2fc37736591b2d8f8e32b5b}{
+\#define \hyperlink{group__jitter_ga6f8627ede2fc37736591b2d8f8e32b5b}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-NONE}~0x00000000}
+\label{group__jitter_ga6f8627ede2fc37736591b2d8f8e32b5b}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga60cbfeaf26417a8d6561fb9acce523d5}{
+\#define \hyperlink{group__jitter_ga60cbfeaf26417a8d6561fb9acce523d5}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-ALL}~0xFFFFFFFF}
+\label{group__jitter_ga60cbfeaf26417a8d6561fb9acce523d5}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga76b29cb7bf7f194cef194fb65df28ddd}{
+\#define \hyperlink{group__jitter_ga76b29cb7bf7f194cef194fb65df28ddd}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-JIT\_\-MATRIX}~0x00000001}
+\label{group__jitter_ga76b29cb7bf7f194cef194fb65df28ddd}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae93fd085f28675389848233a82521942}{
+\#define \hyperlink{group__jitter_gae93fd085f28675389848233a82521942}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-BANG}~0x00000002}
+\label{group__jitter_gae93fd085f28675389848233a82521942}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga7c51c91474bdbc40437dbd946df19cc5}{
+\#define \hyperlink{group__jitter_ga7c51c91474bdbc40437dbd946df19cc5}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-OUTPUTMATRIX}~0x00000004}
+\label{group__jitter_ga7c51c91474bdbc40437dbd946df19cc5}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga2da79e2f2413304655b66637eeff0326}{
+\#define \hyperlink{group__jitter_ga2da79e2f2413304655b66637eeff0326}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-NAME}~0x00000008}
+\label{group__jitter_ga2da79e2f2413304655b66637eeff0326}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf85d3bada9b15b7c5371e4cbeeffcaeb}{
+\#define \hyperlink{group__jitter_gaf85d3bada9b15b7c5371e4cbeeffcaeb}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-TYPE}~0x00000010}
+\label{group__jitter_gaf85d3bada9b15b7c5371e4cbeeffcaeb}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf138ee8c3a7120b8914c2e815ed013bd}{
+\#define \hyperlink{group__jitter_gaf138ee8c3a7120b8914c2e815ed013bd}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-DIM}~0x00000020}
+\label{group__jitter_gaf138ee8c3a7120b8914c2e815ed013bd}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga77553b6728bd9d5d6d18fe6e4d65a128}{
+\#define \hyperlink{group__jitter_ga77553b6728bd9d5d6d18fe6e4d65a128}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-PLANECOUNT}~0x00000040}
+\label{group__jitter_ga77553b6728bd9d5d6d18fe6e4d65a128}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaadd7ebf9b850b06496bdeb9414d181e4}{
+\#define \hyperlink{group__jitter_gaadd7ebf9b850b06496bdeb9414d181e4}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-CLEAR}~0x00000080}
+\label{group__jitter_gaadd7ebf9b850b06496bdeb9414d181e4}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga669c2f28bba1dfb4181ebae8f19488bc}{
+\#define \hyperlink{group__jitter_ga669c2f28bba1dfb4181ebae8f19488bc}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-NOTIFY}~0x00000100}
+\label{group__jitter_ga669c2f28bba1dfb4181ebae8f19488bc}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1c01c9fbad6e41293920117964654f61}{
+\#define \hyperlink{group__jitter_ga1c01c9fbad6e41293920117964654f61}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-ADAPT}~0x00000200}
+\label{group__jitter_ga1c01c9fbad6e41293920117964654f61}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gadad1691bc68342a60441cb884a89129d}{
+\#define \hyperlink{group__jitter_gadad1691bc68342a60441cb884a89129d}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-OUTPUTMODE}~0x00000400}
+\label{group__jitter_gadad1691bc68342a60441cb884a89129d}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaabaf165bab15a39bbd561807b3f5bb37}{
+\#define \hyperlink{group__jitter_gaabaf165bab15a39bbd561807b3f5bb37}{JIT\_\-MOP\_\-INPUT}~1}
+\label{group__jitter_gaabaf165bab15a39bbd561807b3f5bb37}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga979fc199dadb0724f942c6a48cb733a1}{
+\#define \hyperlink{group__jitter_ga979fc199dadb0724f942c6a48cb733a1}{JIT\_\-MOP\_\-OUTPUT}~2}
+\label{group__jitter_ga979fc199dadb0724f942c6a48cb733a1}
+
+\begin{DoxyCompactList}\small\item\em mop flag \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jitter_ga0eb2cd9c8e3b9803ba31069575a1ffb9}{
+typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__jitter_ga0eb2cd9c8e3b9803ba31069575a1ffb9}{t\_\-jit\_\-object}}
+\label{group__jitter_ga0eb2cd9c8e3b9803ba31069575a1ffb9}
+
+\begin{DoxyCompactList}\small\item\em object header \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jitter_ga43ff77a4b747208cc8df2fe8b295cb20}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga43ff77a4b747208cc8df2fe8b295cb20}{\_\-jit\_\-sym\_\-codec\_\-raw}}
+\label{group__jitter_ga43ff77a4b747208cc8df2fe8b295cb20}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga486364eb4af339d3e87c383b0969c567}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga486364eb4af339d3e87c383b0969c567}{\_\-jit\_\-sym\_\-codec\_\-cinepak}}
+\label{group__jitter_ga486364eb4af339d3e87c383b0969c567}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga10ca359d6aa3fcd773c8ed884cef4b77}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga10ca359d6aa3fcd773c8ed884cef4b77}{\_\-jit\_\-sym\_\-codec\_\-graphics}}
+\label{group__jitter_ga10ca359d6aa3fcd773c8ed884cef4b77}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga5fdf7d5881a2078ba7bc49c1aefb6c53}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga5fdf7d5881a2078ba7bc49c1aefb6c53}{\_\-jit\_\-sym\_\-codec\_\-animation}}
+\label{group__jitter_ga5fdf7d5881a2078ba7bc49c1aefb6c53}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gac8fe7f4903a14198abac4d2807eba7e8}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gac8fe7f4903a14198abac4d2807eba7e8}{\_\-jit\_\-sym\_\-codec\_\-video}}
+\label{group__jitter_gac8fe7f4903a14198abac4d2807eba7e8}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga145fa95179795698c563c431c94bcec6}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga145fa95179795698c563c431c94bcec6}{\_\-jit\_\-sym\_\-codec\_\-componentvideo}}
+\label{group__jitter_ga145fa95179795698c563c431c94bcec6}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae0024863097747f851a19e78c734e7b5}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae0024863097747f851a19e78c734e7b5}{\_\-jit\_\-sym\_\-codec\_\-jpeg}}
+\label{group__jitter_gae0024863097747f851a19e78c734e7b5}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga8db004bdaea9032a74262379b84dba95}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga8db004bdaea9032a74262379b84dba95}{\_\-jit\_\-sym\_\-codec\_\-mjpega}}
+\label{group__jitter_ga8db004bdaea9032a74262379b84dba95}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaff7aaf216679e914c38976e5f9df15db}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaff7aaf216679e914c38976e5f9df15db}{\_\-jit\_\-sym\_\-codec\_\-mjpegb}}
+\label{group__jitter_gaff7aaf216679e914c38976e5f9df15db}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga709f8309f58760559af349bd179b1a5e}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga709f8309f58760559af349bd179b1a5e}{\_\-jit\_\-sym\_\-codec\_\-sgi}}
+\label{group__jitter_ga709f8309f58760559af349bd179b1a5e}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga9e3f5e410192f5386c8ec75b49aa4c5d}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga9e3f5e410192f5386c8ec75b49aa4c5d}{\_\-jit\_\-sym\_\-codec\_\-planarrgb}}
+\label{group__jitter_ga9e3f5e410192f5386c8ec75b49aa4c5d}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae0f1922f59cfbe91eb5750726d67df7e}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae0f1922f59cfbe91eb5750726d67df7e}{\_\-jit\_\-sym\_\-codec\_\-macpaint}}
+\label{group__jitter_gae0f1922f59cfbe91eb5750726d67df7e}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gadd374220c19455f5e7dfca29bf09c36b}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gadd374220c19455f5e7dfca29bf09c36b}{\_\-jit\_\-sym\_\-codec\_\-gif}}
+\label{group__jitter_gadd374220c19455f5e7dfca29bf09c36b}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae852f97ee9b1de24e37c95b504bb6486}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae852f97ee9b1de24e37c95b504bb6486}{\_\-jit\_\-sym\_\-codec\_\-photocd}}
+\label{group__jitter_gae852f97ee9b1de24e37c95b504bb6486}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga7279d3cde3d770e36da997ddabec5024}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga7279d3cde3d770e36da997ddabec5024}{\_\-jit\_\-sym\_\-codec\_\-qdgx}}
+\label{group__jitter_ga7279d3cde3d770e36da997ddabec5024}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga636e00d9ed9e7ad41a0ab953268cda5e}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga636e00d9ed9e7ad41a0ab953268cda5e}{\_\-jit\_\-sym\_\-codec\_\-avrjpeg}}
+\label{group__jitter_ga636e00d9ed9e7ad41a0ab953268cda5e}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga9252e9079690343ae441d22fe55dc3ac}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga9252e9079690343ae441d22fe55dc3ac}{\_\-jit\_\-sym\_\-codec\_\-opendmljpeg}}
+\label{group__jitter_ga9252e9079690343ae441d22fe55dc3ac}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gac1b1fc063bc5e142e40abeceacf365b3}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gac1b1fc063bc5e142e40abeceacf365b3}{\_\-jit\_\-sym\_\-codec\_\-bmp}}
+\label{group__jitter_gac1b1fc063bc5e142e40abeceacf365b3}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga338bb45421a2c586d8ec57af1550f956}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga338bb45421a2c586d8ec57af1550f956}{\_\-jit\_\-sym\_\-codec\_\-winraw}}
+\label{group__jitter_ga338bb45421a2c586d8ec57af1550f956}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga260fe083d60559670bfa2c9e3c77257f}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga260fe083d60559670bfa2c9e3c77257f}{\_\-jit\_\-sym\_\-codec\_\-vector}}
+\label{group__jitter_ga260fe083d60559670bfa2c9e3c77257f}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga8bd39e0232734a56bd3dad9ce443aa3c}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga8bd39e0232734a56bd3dad9ce443aa3c}{\_\-jit\_\-sym\_\-codec\_\-qd}}
+\label{group__jitter_ga8bd39e0232734a56bd3dad9ce443aa3c}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaeaed0103ad5e42520ae0142b783c312d}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaeaed0103ad5e42520ae0142b783c312d}{\_\-jit\_\-sym\_\-codec\_\-h261}}
+\label{group__jitter_gaeaed0103ad5e42520ae0142b783c312d}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gad37e3c153d7b5df76ed4a3f593045261}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gad37e3c153d7b5df76ed4a3f593045261}{\_\-jit\_\-sym\_\-codec\_\-h263}}
+\label{group__jitter_gad37e3c153d7b5df76ed4a3f593045261}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga79c8c7827e10f38fcd5f0c3956f35a15}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga79c8c7827e10f38fcd5f0c3956f35a15}{\_\-jit\_\-sym\_\-codec\_\-dvntsc}}
+\label{group__jitter_ga79c8c7827e10f38fcd5f0c3956f35a15}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga2a8a6846182a5f1ea38694699c4153b2}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga2a8a6846182a5f1ea38694699c4153b2}{\_\-jit\_\-sym\_\-codec\_\-dvpal}}
+\label{group__jitter_ga2a8a6846182a5f1ea38694699c4153b2}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga3d1b9d4a079030cc6b8f11d1eb527eed}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga3d1b9d4a079030cc6b8f11d1eb527eed}{\_\-jit\_\-sym\_\-codec\_\-dvprontsc}}
+\label{group__jitter_ga3d1b9d4a079030cc6b8f11d1eb527eed}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae850f6b0b73f74e4fec50e352b9361aa}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae850f6b0b73f74e4fec50e352b9361aa}{\_\-jit\_\-sym\_\-codec\_\-dvpropal}}
+\label{group__jitter_gae850f6b0b73f74e4fec50e352b9361aa}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga2202e766cc46a9bfff9312c2e5660431}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga2202e766cc46a9bfff9312c2e5660431}{\_\-jit\_\-sym\_\-codec\_\-flc}}
+\label{group__jitter_ga2202e766cc46a9bfff9312c2e5660431}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga5dc2290808fc905abbb1d804867d3a52}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga5dc2290808fc905abbb1d804867d3a52}{\_\-jit\_\-sym\_\-codec\_\-targa}}
+\label{group__jitter_ga5dc2290808fc905abbb1d804867d3a52}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga8c27c5e836aa35a6522fcafddc1d8c2b}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga8c27c5e836aa35a6522fcafddc1d8c2b}{\_\-jit\_\-sym\_\-codec\_\-png}}
+\label{group__jitter_ga8c27c5e836aa35a6522fcafddc1d8c2b}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1f8a279a6ad561887c1d6f4cad544040}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga1f8a279a6ad561887c1d6f4cad544040}{\_\-jit\_\-sym\_\-codec\_\-tiff}}
+\label{group__jitter_ga1f8a279a6ad561887c1d6f4cad544040}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae19cd60b6c0aee556e197bfe57763998}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae19cd60b6c0aee556e197bfe57763998}{\_\-jit\_\-sym\_\-codec\_\-componentvideosigned}}
+\label{group__jitter_gae19cd60b6c0aee556e197bfe57763998}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gad14a48bc61f3746eea15daadd1353651}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gad14a48bc61f3746eea15daadd1353651}{\_\-jit\_\-sym\_\-codec\_\-componentvideounsigned}}
+\label{group__jitter_gad14a48bc61f3746eea15daadd1353651}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga39d0ef75961249b5815622e6eae46c66}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga39d0ef75961249b5815622e6eae46c66}{\_\-jit\_\-sym\_\-codec\_\-cmyk}}
+\label{group__jitter_ga39d0ef75961249b5815622e6eae46c66}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga838ed71ec474474595766d315e13426a}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga838ed71ec474474595766d315e13426a}{\_\-jit\_\-sym\_\-codec\_\-microsoft}}
+\label{group__jitter_ga838ed71ec474474595766d315e13426a}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga87cfbc2cb0d6a4718327a5413049c941}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga87cfbc2cb0d6a4718327a5413049c941}{\_\-jit\_\-sym\_\-codec\_\-sorenson}}
+\label{group__jitter_ga87cfbc2cb0d6a4718327a5413049c941}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae08e987d18fabc4404382feb4d0136ce}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae08e987d18fabc4404382feb4d0136ce}{\_\-jit\_\-sym\_\-codec\_\-sorenson3}}
+\label{group__jitter_gae08e987d18fabc4404382feb4d0136ce}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga35c5b015f1e2a0d64d9a824e57cab296}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga35c5b015f1e2a0d64d9a824e57cab296}{\_\-jit\_\-sym\_\-codec\_\-indeo4}}
+\label{group__jitter_ga35c5b015f1e2a0d64d9a824e57cab296}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga153a2119b188f28cb55a5dfbd48d5a26}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga153a2119b188f28cb55a5dfbd48d5a26}{\_\-jit\_\-sym\_\-codec\_\-argb64}}
+\label{group__jitter_ga153a2119b188f28cb55a5dfbd48d5a26}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga13063a55f4d20db871da9ad8eb9b8a35}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga13063a55f4d20db871da9ad8eb9b8a35}{\_\-jit\_\-sym\_\-codec\_\-rgb48}}
+\label{group__jitter_ga13063a55f4d20db871da9ad8eb9b8a35}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaea801d63908354bd736781419052964c}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaea801d63908354bd736781419052964c}{\_\-jit\_\-sym\_\-codec\_\-alphagrey32}}
+\label{group__jitter_gaea801d63908354bd736781419052964c}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae4b1f3e514247c963bd48e48b94cfd3d}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae4b1f3e514247c963bd48e48b94cfd3d}{\_\-jit\_\-sym\_\-codec\_\-grey16}}
+\label{group__jitter_gae4b1f3e514247c963bd48e48b94cfd3d}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga0922adf74aba44b0198b8d789e2fdd00}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga0922adf74aba44b0198b8d789e2fdd00}{\_\-jit\_\-sym\_\-codec\_\-mpegyuv420}}
+\label{group__jitter_ga0922adf74aba44b0198b8d789e2fdd00}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf6f7c7edbb23dc18ace0d67e6b8d1354}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaf6f7c7edbb23dc18ace0d67e6b8d1354}{\_\-jit\_\-sym\_\-codec\_\-yuv420}}
+\label{group__jitter_gaf6f7c7edbb23dc18ace0d67e6b8d1354}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga4eb2fc38b9055d2a2554800dbb9fe834}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga4eb2fc38b9055d2a2554800dbb9fe834}{\_\-jit\_\-sym\_\-codec\_\-sorensonyuv9}}
+\label{group__jitter_ga4eb2fc38b9055d2a2554800dbb9fe834}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1f93e576c7a4d0c3c886b660dfb2ea2f}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga1f93e576c7a4d0c3c886b660dfb2ea2f}{\_\-jit\_\-sym\_\-codec\_\-mpeg4}}
+\label{group__jitter_ga1f93e576c7a4d0c3c886b660dfb2ea2f}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga6f36294f085fb615ea778ce2f29291a8}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga6f36294f085fb615ea778ce2f29291a8}{\_\-jit\_\-sym\_\-codec\_\-yuv422}}
+\label{group__jitter_ga6f36294f085fb615ea778ce2f29291a8}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga5157c67b8fec3fa55c3a695597ce4189}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga5157c67b8fec3fa55c3a695597ce4189}{\_\-jit\_\-sym\_\-codec\_\-v308}}
+\label{group__jitter_ga5157c67b8fec3fa55c3a695597ce4189}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga994ce51291fde98e8bcd22a622763513}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga994ce51291fde98e8bcd22a622763513}{\_\-jit\_\-sym\_\-codec\_\-v408}}
+\label{group__jitter_ga994ce51291fde98e8bcd22a622763513}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1e4352592fd06bea6b10a4c9784f6380}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga1e4352592fd06bea6b10a4c9784f6380}{\_\-jit\_\-sym\_\-codec\_\-v216}}
+\label{group__jitter_ga1e4352592fd06bea6b10a4c9784f6380}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga4f705bd3a47a745ac81e8655feefb053}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga4f705bd3a47a745ac81e8655feefb053}{\_\-jit\_\-sym\_\-codec\_\-v210}}
+\label{group__jitter_ga4f705bd3a47a745ac81e8655feefb053}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga450940b2992dcad6161d84512cd27c30}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga450940b2992dcad6161d84512cd27c30}{\_\-jit\_\-sym\_\-codec\_\-v410}}
+\label{group__jitter_ga450940b2992dcad6161d84512cd27c30}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gac0447dbeb9c9530cd0dd6216f94f1c61}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gac0447dbeb9c9530cd0dd6216f94f1c61}{\_\-jit\_\-sym\_\-codec\_\-r408}}
+\label{group__jitter_gac0447dbeb9c9530cd0dd6216f94f1c61}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga4f5c3b3746bbc22ff0975bbf4b6f9170}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga4f5c3b3746bbc22ff0975bbf4b6f9170}{\_\-jit\_\-sym\_\-codec\_\-jpeg2000}}
+\label{group__jitter_ga4f5c3b3746bbc22ff0975bbf4b6f9170}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaeef3c7e6825664c9452860ec74dc5ce7}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaeef3c7e6825664c9452860ec74dc5ce7}{\_\-jit\_\-sym\_\-codec\_\-pixlet}}
+\label{group__jitter_gaeef3c7e6825664c9452860ec74dc5ce7}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga22bf8afe704b694228d4a259cd096355}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga22bf8afe704b694228d4a259cd096355}{\_\-jit\_\-sym\_\-codec\_\-h264}}
+\label{group__jitter_ga22bf8afe704b694228d4a259cd096355}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga34601164cb01bdbb7ba591f39c34b845}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga34601164cb01bdbb7ba591f39c34b845}{\_\-jit\_\-sym\_\-codec\_\-lossless}}
+\label{group__jitter_ga34601164cb01bdbb7ba591f39c34b845}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga04f90d04943b23bdad24e41d17c3c44f}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga04f90d04943b23bdad24e41d17c3c44f}{\_\-jit\_\-sym\_\-codec\_\-max}}
+\label{group__jitter_ga04f90d04943b23bdad24e41d17c3c44f}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga6c2610ea6ff28d44ffd36debb68592e5}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga6c2610ea6ff28d44ffd36debb68592e5}{\_\-jit\_\-sym\_\-codec\_\-min}}
+\label{group__jitter_ga6c2610ea6ff28d44ffd36debb68592e5}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga09b7e8c39e5b87da3cefcd995acf375f}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga09b7e8c39e5b87da3cefcd995acf375f}{\_\-jit\_\-sym\_\-codec\_\-low}}
+\label{group__jitter_ga09b7e8c39e5b87da3cefcd995acf375f}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga346c1416411acf9cccd2df39d9db377e}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga346c1416411acf9cccd2df39d9db377e}{\_\-jit\_\-sym\_\-codec\_\-normal}}
+\label{group__jitter_ga346c1416411acf9cccd2df39d9db377e}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga81846a335caf21d8cb9680a36dc03881}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga81846a335caf21d8cb9680a36dc03881}{\_\-jit\_\-sym\_\-codec\_\-high}}
+\label{group__jitter_ga81846a335caf21d8cb9680a36dc03881}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gafa0cfef7ddabddd7f18f73e1154e3c1c}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gafa0cfef7ddabddd7f18f73e1154e3c1c}{\_\-jit\_\-sym\_\-codec\_\-a\_\-none}}
+\label{group__jitter_gafa0cfef7ddabddd7f18f73e1154e3c1c}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gae5960549d24f8f8fb23720ae53a76edb}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gae5960549d24f8f8fb23720ae53a76edb}{\_\-jit\_\-sym\_\-codec\_\-a\_\-raw}}
+\label{group__jitter_gae5960549d24f8f8fb23720ae53a76edb}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga95acadbe30725ccc610bec32f125706b}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga95acadbe30725ccc610bec32f125706b}{\_\-jit\_\-sym\_\-codec\_\-a\_\-big16}}
+\label{group__jitter_ga95acadbe30725ccc610bec32f125706b}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga168b47dccac2a7b92bf74c9dc2e58378}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga168b47dccac2a7b92bf74c9dc2e58378}{\_\-jit\_\-sym\_\-codec\_\-a\_\-little16}}
+\label{group__jitter_ga168b47dccac2a7b92bf74c9dc2e58378}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga4a788b64cf74f82a96a5a16b5ccef259}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga4a788b64cf74f82a96a5a16b5ccef259}{\_\-jit\_\-sym\_\-codec\_\-a\_\-float32}}
+\label{group__jitter_ga4a788b64cf74f82a96a5a16b5ccef259}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga82c22b2f399ca7ff872cfa95b12358ee}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga82c22b2f399ca7ff872cfa95b12358ee}{\_\-jit\_\-sym\_\-codec\_\-a\_\-float64}}
+\label{group__jitter_ga82c22b2f399ca7ff872cfa95b12358ee}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga8dcb12ac957391cff21bebb38f9d1905}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga8dcb12ac957391cff21bebb38f9d1905}{\_\-jit\_\-sym\_\-codec\_\-a\_\-24bit}}
+\label{group__jitter_ga8dcb12ac957391cff21bebb38f9d1905}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gac6b84a1712a543c8cdd29cabd161b99c}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gac6b84a1712a543c8cdd29cabd161b99c}{\_\-jit\_\-sym\_\-codec\_\-a\_\-32bit}}
+\label{group__jitter_gac6b84a1712a543c8cdd29cabd161b99c}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga4b0986e8916e25863c49991195ace09a}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga4b0986e8916e25863c49991195ace09a}{\_\-jit\_\-sym\_\-codec\_\-a\_\-little32}}
+\label{group__jitter_ga4b0986e8916e25863c49991195ace09a}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaca8932ab7df65f0d42dc1c1b9815f1c5}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaca8932ab7df65f0d42dc1c1b9815f1c5}{\_\-jit\_\-sym\_\-codec\_\-a\_\-mace3}}
+\label{group__jitter_gaca8932ab7df65f0d42dc1c1b9815f1c5}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga6418ed42d5a144534e4914f2bd51beb7}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga6418ed42d5a144534e4914f2bd51beb7}{\_\-jit\_\-sym\_\-codec\_\-a\_\-mace6}}
+\label{group__jitter_ga6418ed42d5a144534e4914f2bd51beb7}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gad515a4c6841f905b82935a0a95432224}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gad515a4c6841f905b82935a0a95432224}{\_\-jit\_\-sym\_\-codec\_\-a\_\-cdxa4}}
+\label{group__jitter_gad515a4c6841f905b82935a0a95432224}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga87a941276047672ed71a74b2f384012f}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga87a941276047672ed71a74b2f384012f}{\_\-jit\_\-sym\_\-codec\_\-a\_\-cdxa2}}
+\label{group__jitter_ga87a941276047672ed71a74b2f384012f}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf7cfddd82a641fddeaca151ee909c2b0}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaf7cfddd82a641fddeaca151ee909c2b0}{\_\-jit\_\-sym\_\-codec\_\-a\_\-ima}}
+\label{group__jitter_gaf7cfddd82a641fddeaca151ee909c2b0}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga2df564300a168369e9eec077ab672351}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga2df564300a168369e9eec077ab672351}{\_\-jit\_\-sym\_\-codec\_\-a\_\-ulaw}}
+\label{group__jitter_ga2df564300a168369e9eec077ab672351}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gaf46d5b8ae6489000faa04a78eb399e29}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gaf46d5b8ae6489000faa04a78eb399e29}{\_\-jit\_\-sym\_\-codec\_\-a\_\-alaw}}
+\label{group__jitter_gaf46d5b8ae6489000faa04a78eb399e29}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga1836652f8375090c81561194c38d8640}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga1836652f8375090c81561194c38d8640}{\_\-jit\_\-sym\_\-codec\_\-a\_\-adpcm}}
+\label{group__jitter_ga1836652f8375090c81561194c38d8640}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga01d79d25ac337c822b7bd8d921a970bb}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga01d79d25ac337c822b7bd8d921a970bb}{\_\-jit\_\-sym\_\-codec\_\-a\_\-dviima}}
+\label{group__jitter_ga01d79d25ac337c822b7bd8d921a970bb}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gab956fb931bdf7e3e2b336e6bad06c9cd}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gab956fb931bdf7e3e2b336e6bad06c9cd}{\_\-jit\_\-sym\_\-codec\_\-a\_\-dvaudio}}
+\label{group__jitter_gab956fb931bdf7e3e2b336e6bad06c9cd}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga3f264bbac66d519d81123820a1ce16de}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga3f264bbac66d519d81123820a1ce16de}{\_\-jit\_\-sym\_\-codec\_\-a\_\-qdesign}}
+\label{group__jitter_ga3f264bbac66d519d81123820a1ce16de}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga967d6a3b2f2b729c9d783c183c9c1e43}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga967d6a3b2f2b729c9d783c183c9c1e43}{\_\-jit\_\-sym\_\-codec\_\-a\_\-qdesign2}}
+\label{group__jitter_ga967d6a3b2f2b729c9d783c183c9c1e43}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga907fd7815f1e5d7bd0bf9766cdb5b273}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga907fd7815f1e5d7bd0bf9766cdb5b273}{\_\-jit\_\-sym\_\-codec\_\-a\_\-qualcomm}}
+\label{group__jitter_ga907fd7815f1e5d7bd0bf9766cdb5b273}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga16b54a72101138c40b9473e923d213e0}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga16b54a72101138c40b9473e923d213e0}{\_\-jit\_\-sym\_\-codec\_\-a\_\-mp3}}
+\label{group__jitter_ga16b54a72101138c40b9473e923d213e0}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_ga407ca595824d30275dfddd9803ef1e98}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_ga407ca595824d30275dfddd9803ef1e98}{\_\-jit\_\-sym\_\-codec\_\-a\_\-vdva}}
+\label{group__jitter_ga407ca595824d30275dfddd9803ef1e98}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\item 
+\hypertarget{group__jitter_gad42107912802e6055e747303fa8498c6}{
+JIT\_\-EX\_\-DATA \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jitter_gad42107912802e6055e747303fa8498c6}{\_\-jit\_\-sym\_\-codec\_\-a\_\-mpeg4}}
+\label{group__jitter_gad42107912802e6055e747303fa8498c6}
+
+\begin{DoxyCompactList}\small\item\em cached \hyperlink{structt__symbol}{t\_\-symbol} \item\end{DoxyCompactList}\end{DoxyCompactItemize}

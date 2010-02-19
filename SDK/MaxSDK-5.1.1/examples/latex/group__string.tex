@@ -1,0 +1,63 @@
+\hypertarget{group__string}{
+\section{String Object}
+\label{group__string}\index{String Object@{String Object}}
+}
+
+
+Max's string object is a simple wrapper for c-\/strings, useful when working with Max's \hyperlink{structt__dictionary}{t\_\-dictionary}, \hyperlink{structt__linklist}{t\_\-linklist}, or \hyperlink{structt__hashtab}{t\_\-hashtab}.  
+
+
+Collaboration diagram for String Object:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=128pt]{group__string}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__string}{t\_\-string}
+\begin{DoxyCompactList}\small\item\em The string object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__string}{t\_\-string} $\ast$ \hyperlink{group__string_ga9fce58b43883b838697077fc674a48d9}{string\_\-new} (const char $\ast$psz)
+\begin{DoxyCompactList}\small\item\em Create a new string object. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__string_ga1d65f5effcf8d1f77b45f2603280887d}{string\_\-getptr} (\hyperlink{structt__string}{t\_\-string} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Create a new string object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max's string object is a simple wrapper for c-\/strings, useful when working with Max's \hyperlink{structt__dictionary}{t\_\-dictionary}, \hyperlink{structt__linklist}{t\_\-linklist}, or \hyperlink{structt__hashtab}{t\_\-hashtab}. \begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary}{Dictionary} 
+\end{DoxySeeAlso}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__string_ga1d65f5effcf8d1f77b45f2603280887d}{
+\index{string@{string}!string\_\-getptr@{string\_\-getptr}}
+\index{string\_\-getptr@{string\_\-getptr}!string@{string}}
+\subsubsection[{string\_\-getptr}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ string\_\-getptr ({\bf t\_\-string} $\ast$ {\em x})}}
+\label{group__string_ga1d65f5effcf8d1f77b45f2603280887d}
+
+
+Create a new string object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The string object instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the internally maintained C-\/string. 
+\end{DoxyReturn}
+\hypertarget{group__string_ga9fce58b43883b838697077fc674a48d9}{
+\index{string@{string}!string\_\-new@{string\_\-new}}
+\index{string\_\-new@{string\_\-new}!string@{string}}
+\subsubsection[{string\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-string}$\ast$ string\_\-new (const char $\ast$ {\em psz})}}
+\label{group__string_ga9fce58b43883b838697077fc674a48d9}
+
+
+Create a new string object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em psz}]Pointer to a C-\/string that will be copied to memory internal to this string object instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new string object instance pointer. 
+\end{DoxyReturn}

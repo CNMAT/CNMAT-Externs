@@ -1,0 +1,376 @@
+\hypertarget{group__linklistmod}{
+\section{Linked List Module}
+\label{group__linklistmod}\index{Linked List Module@{Linked List Module}}
+}
+
+
+Collaboration diagram for Linked List Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=119pt]{group__linklistmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__linklistmod_gae31b06dd709cdaf1e035ad562bd5626f}{jit\_\-linklist\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Constructs instance of t\_\-jit\_\-linklist. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_gaab0a8e1a6848d0d6713d703ebe7b9427}{jit\_\-linklist\_\-getsize} (t\_\-jit\_\-linklist $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves the linked list size. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklistmod_ga727e60be2a2ff3426661dbac83119599}{jit\_\-linklist\_\-getindex} (t\_\-jit\_\-linklist $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Retrieves the object at the specified list index. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_ga2861d793a9f33c725e5d49946bb7e6bc}{jit\_\-linklist\_\-objptr2index} (t\_\-jit\_\-linklist $\ast$x, void $\ast$p)
+\begin{DoxyCompactList}\small\item\em Retrieves the list index for an object pointer. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_ga46b1ab616dda1cd288c0ef2bcff09ae8}{jit\_\-linklist\_\-makearray} (t\_\-jit\_\-linklist $\ast$x, void $\ast$$\ast$a, long max)
+\begin{DoxyCompactList}\small\item\em Flatten the linked list into an array. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_gabd11461161921960afdceb120d039a04}{jit\_\-linklist\_\-insertindex} (t\_\-jit\_\-linklist $\ast$x, void $\ast$o, long index)
+\begin{DoxyCompactList}\small\item\em Insert object at specified index. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_ga1c5f6c883c11c9a9f3a2ccbf2fe96f94}{jit\_\-linklist\_\-append} (t\_\-jit\_\-linklist $\ast$x, void $\ast$o)
+\begin{DoxyCompactList}\small\item\em Append object to the end of the linked list. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_ga5939ee7afe931f55c10fe78b4f562b00}{jit\_\-linklist\_\-deleteindex} (t\_\-jit\_\-linklist $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Delete object at specified index, freeing the object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_gac4958696256b4573074b1b5b48fac9db}{jit\_\-linklist\_\-chuckindex} (t\_\-jit\_\-linklist $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Remove object at specified index, without freeing the object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_gad38efced2bcc418a6daa82a41221ea3c}{jit\_\-linklist\_\-clear} (t\_\-jit\_\-linklist $\ast$x)
+\begin{DoxyCompactList}\small\item\em Clears the linked list, freeing all objects in list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_gaba0236de39f684e338ae6bf5736ae4ad}{jit\_\-linklist\_\-chuck} (t\_\-jit\_\-linklist $\ast$x)
+\begin{DoxyCompactList}\small\item\em Removes all objects from the linked list, without freeing any objects in list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_gaba23e6020b0364064707661e188037ac}{jit\_\-linklist\_\-reverse} (t\_\-jit\_\-linklist $\ast$x)
+\begin{DoxyCompactList}\small\item\em Reverses the order of objects in the linked list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_ga596c1db3539f73b998755bcb46296111}{jit\_\-linklist\_\-rotate} (t\_\-jit\_\-linklist $\ast$x, long i)
+\begin{DoxyCompactList}\small\item\em Rotates the order of objects in the linked list, by the specified number of indeces. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_ga28d9508c94d221c86ce8dc6897443992}{jit\_\-linklist\_\-shuffle} (t\_\-jit\_\-linklist $\ast$x)
+\begin{DoxyCompactList}\small\item\em Randomizes the order of objects in the linked list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_gae989e1d64d2bba31133aa79d7107f3fc}{jit\_\-linklist\_\-swap} (t\_\-jit\_\-linklist $\ast$x, long a, long b)
+\begin{DoxyCompactList}\small\item\em Swap list location of the indeces specified. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_gad879a11361215edf7d233c8c67ec66f9}{jit\_\-linklist\_\-findfirst} (t\_\-jit\_\-linklist $\ast$x, void $\ast$$\ast$o, long cmpfn(void $\ast$, void $\ast$), void $\ast$cmpdata)
+\begin{DoxyCompactList}\small\item\em Retrieves the first object that satisfies the comparison function. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_ga0d8554428ade7ae33962323087eb1809}{jit\_\-linklist\_\-findall} (t\_\-jit\_\-linklist $\ast$x, t\_\-jit\_\-linklist $\ast$$\ast$out, long cmpfn(void $\ast$, void $\ast$), void $\ast$cmpdata)
+\begin{DoxyCompactList}\small\item\em Retrieves a linked list of all objects that satisfy the comparison function. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklistmod_gad09f6bfef859b63516a2c54a347250f8}{jit\_\-linklist\_\-findcount} (t\_\-jit\_\-linklist $\ast$x, long cmpfn(void $\ast$, void $\ast$), void $\ast$cmpdata)
+\begin{DoxyCompactList}\small\item\em Retrieves the number of objects that satisfy the comparison function. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_gaeba2a3ea3a843bcae52247957926b2bc}{jit\_\-linklist\_\-methodall} (t\_\-jit\_\-linklist $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Calls a method on all objects in linked list. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklistmod_ga0c9f6670c63e65887edca9f67a6982ec}{jit\_\-linklist\_\-methodindex} (t\_\-jit\_\-linklist $\ast$x, long i, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Calls a method on the object at the specified index. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklistmod_ga31462d238515067801b11b9b55f99e7a}{jit\_\-linklist\_\-sort} (t\_\-jit\_\-linklist $\ast$x, long cmpfn(void $\ast$, void $\ast$))
+\begin{DoxyCompactList}\small\item\em Sorts linked list based on the provided comparison function. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__linklistmod_ga1c5f6c883c11c9a9f3a2ccbf2fe96f94}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-append@{jit\_\-linklist\_\-append}}
+\index{jit\_\-linklist\_\-append@{jit\_\-linklist\_\-append}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-append}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-append (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  void $\ast$ {\em o})}}
+\label{group__linklistmod_ga1c5f6c883c11c9a9f3a2ccbf2fe96f94}
+
+
+Append object to the end of the linked list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em o}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+new list length, or -\/1 if unsuccessful
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gaba0236de39f684e338ae6bf5736ae4ad}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-chuck@{jit\_\-linklist\_\-chuck}}
+\index{jit\_\-linklist\_\-chuck@{jit\_\-linklist\_\-chuck}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-chuck}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-chuck (t\_\-jit\_\-linklist $\ast$ {\em x})}}
+\label{group__linklistmod_gaba0236de39f684e338ae6bf5736ae4ad}
+
+
+Removes all objects from the linked list, without freeing any objects in list. To remove all objects from the linked list, reeing the objects, use the jit\_\-linklist\_\-clear method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gac4958696256b4573074b1b5b48fac9db}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-chuckindex@{jit\_\-linklist\_\-chuckindex}}
+\index{jit\_\-linklist\_\-chuckindex@{jit\_\-linklist\_\-chuckindex}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-chuckindex}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-chuckindex (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__linklistmod_gac4958696256b4573074b1b5b48fac9db}
+
+
+Remove object at specified index, without freeing the object. This method will not free the object. To remove from the linked list and free the object, use the jit\_\-linklist\_\-deleteindex method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em index}]index to remove (zero based)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+index removed, or -\/1 if unsuccessful
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gad38efced2bcc418a6daa82a41221ea3c}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-clear@{jit\_\-linklist\_\-clear}}
+\index{jit\_\-linklist\_\-clear@{jit\_\-linklist\_\-clear}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-clear (t\_\-jit\_\-linklist $\ast$ {\em x})}}
+\label{group__linklistmod_gad38efced2bcc418a6daa82a41221ea3c}
+
+
+Clears the linked list, freeing all objects in list. To remove all elements from the linked list without freeing the objects, use the jit\_\-linklist\_\-chuck method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga5939ee7afe931f55c10fe78b4f562b00}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-deleteindex@{jit\_\-linklist\_\-deleteindex}}
+\index{jit\_\-linklist\_\-deleteindex@{jit\_\-linklist\_\-deleteindex}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-deleteindex}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-deleteindex (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__linklistmod_ga5939ee7afe931f55c10fe78b4f562b00}
+
+
+Delete object at specified index, freeing the object. To remove from the linked list without freeing the object, use the jit\_\-linklist\_\-chuckindex method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em index}]index to delete (zero based)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+index deleted, or -\/1 if unsuccessful
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga0d8554428ade7ae33962323087eb1809}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-findall@{jit\_\-linklist\_\-findall}}
+\index{jit\_\-linklist\_\-findall@{jit\_\-linklist\_\-findall}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-findall}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-findall (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  t\_\-jit\_\-linklist $\ast$$\ast$ {\em out}, \/  long  {\em cmpfn}void $\ast$, void $\ast$, \/  void $\ast$ {\em cmpdata})}}
+\label{group__linklistmod_ga0d8554428ade7ae33962323087eb1809}
+
+
+Retrieves a linked list of all objects that satisfy the comparison function. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em out}]pointer to linked list containing all objects found found (set to NULL, if not found) \item[{\em cmpfn}]comparison function pointer (should returns 1 if object matches data, otherwise 0) \item[{\em cmpdata}]opaque data used in comparison function\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gad09f6bfef859b63516a2c54a347250f8}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-findcount@{jit\_\-linklist\_\-findcount}}
+\index{jit\_\-linklist\_\-findcount@{jit\_\-linklist\_\-findcount}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-findcount}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-findcount (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long  {\em cmpfn}void $\ast$, void $\ast$, \/  void $\ast$ {\em cmpdata})}}
+\label{group__linklistmod_gad09f6bfef859b63516a2c54a347250f8}
+
+
+Retrieves the number of objects that satisfy the comparison function. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em cmpfn}]comparison function pointer (should returns 1 if object matches data, otherwise 0) \item[{\em cmpdata}]opaque data used in comparison function\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number object objects that satisfy the comparison function
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gad879a11361215edf7d233c8c67ec66f9}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-findfirst@{jit\_\-linklist\_\-findfirst}}
+\index{jit\_\-linklist\_\-findfirst@{jit\_\-linklist\_\-findfirst}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-findfirst}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-findfirst (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  void $\ast$$\ast$ {\em o}, \/  long  {\em cmpfn}void $\ast$, void $\ast$, \/  void $\ast$ {\em cmpdata})}}
+\label{group__linklistmod_gad879a11361215edf7d233c8c67ec66f9}
+
+
+Retrieves the first object that satisfies the comparison function. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em o}]pointer to object pointer found (set to NULL, if not found) \item[{\em cmpfn}]comparison function pointer (should returns 1 if object matches data, otherwise 0) \item[{\em cmpdata}]opaque data used in comparison function\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga727e60be2a2ff3426661dbac83119599}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-getindex@{jit\_\-linklist\_\-getindex}}
+\index{jit\_\-linklist\_\-getindex@{jit\_\-linklist\_\-getindex}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-getindex}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-linklist\_\-getindex (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__linklistmod_ga727e60be2a2ff3426661dbac83119599}
+
+
+Retrieves the object at the specified list index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em index}]list index ()\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gaab0a8e1a6848d0d6713d703ebe7b9427}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-getsize@{jit\_\-linklist\_\-getsize}}
+\index{jit\_\-linklist\_\-getsize@{jit\_\-linklist\_\-getsize}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-getsize}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-getsize (t\_\-jit\_\-linklist $\ast$ {\em x})}}
+\label{group__linklistmod_gaab0a8e1a6848d0d6713d703ebe7b9427}
+
+
+Retrieves the linked list size. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+linked list size
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gabd11461161921960afdceb120d039a04}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-insertindex@{jit\_\-linklist\_\-insertindex}}
+\index{jit\_\-linklist\_\-insertindex@{jit\_\-linklist\_\-insertindex}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-insertindex}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-insertindex (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  long {\em index})}}
+\label{group__linklistmod_gabd11461161921960afdceb120d039a04}
+
+
+Insert object at specified index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em o}]object pointer \item[{\em index}]index (zero based)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+index inserted at, or -\/1 if unsuccessful
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga46b1ab616dda1cd288c0ef2bcff09ae8}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-makearray@{jit\_\-linklist\_\-makearray}}
+\index{jit\_\-linklist\_\-makearray@{jit\_\-linklist\_\-makearray}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-makearray}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-makearray (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  void $\ast$$\ast$ {\em a}, \/  long {\em max})}}
+\label{group__linklistmod_ga46b1ab616dda1cd288c0ef2bcff09ae8}
+
+
+Flatten the linked list into an array. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em a}]array pointer \item[{\em max}]maximum array size\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number of object pointers copied into array
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gaeba2a3ea3a843bcae52247957926b2bc}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-methodall@{jit\_\-linklist\_\-methodall}}
+\index{jit\_\-linklist\_\-methodall@{jit\_\-linklist\_\-methodall}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-methodall}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-methodall (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__linklistmod_gaeba2a3ea3a843bcae52247957926b2bc}
+
+
+Calls a method on all objects in linked list. Equivalent to calling jit\_\-object\_\-method on the object at each index.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em s}]method name \item[{\em ...}]untyped arguments\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga0c9f6670c63e65887edca9f67a6982ec}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-methodindex@{jit\_\-linklist\_\-methodindex}}
+\index{jit\_\-linklist\_\-methodindex@{jit\_\-linklist\_\-methodindex}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-methodindex}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-linklist\_\-methodindex (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long {\em i}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__linklistmod_ga0c9f6670c63e65887edca9f67a6982ec}
+
+
+Calls a method on the object at the specified index. Equivalent to calling jit\_\-object\_\-method on the object.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em i}]index \item[{\em s}]method name \item[{\em ...}]untyped arguments\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+method return value
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gae31b06dd709cdaf1e035ad562bd5626f}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-new@{jit\_\-linklist\_\-new}}
+\index{jit\_\-linklist\_\-new@{jit\_\-linklist\_\-new}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-linklist\_\-new (void)}}
+\label{group__linklistmod_gae31b06dd709cdaf1e035ad562bd5626f}
+
+
+Constructs instance of t\_\-jit\_\-linklist. \begin{DoxyReturn}{Returns}
+t\_\-jit\_\-linklist object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-new to construct a t\_\-jit\_\-linklist object. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga2861d793a9f33c725e5d49946bb7e6bc}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-objptr2index@{jit\_\-linklist\_\-objptr2index}}
+\index{jit\_\-linklist\_\-objptr2index@{jit\_\-linklist\_\-objptr2index}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-objptr2index}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-linklist\_\-objptr2index (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  void $\ast$ {\em p})}}
+\label{group__linklistmod_ga2861d793a9f33c725e5d49946bb7e6bc}
+
+
+Retrieves the list index for an object pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em p}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+object's list index (zero based), or -\/1 if not present
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gaba23e6020b0364064707661e188037ac}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-reverse@{jit\_\-linklist\_\-reverse}}
+\index{jit\_\-linklist\_\-reverse@{jit\_\-linklist\_\-reverse}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-reverse}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-reverse (t\_\-jit\_\-linklist $\ast$ {\em x})}}
+\label{group__linklistmod_gaba23e6020b0364064707661e188037ac}
+
+
+Reverses the order of objects in the linked list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga596c1db3539f73b998755bcb46296111}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-rotate@{jit\_\-linklist\_\-rotate}}
+\index{jit\_\-linklist\_\-rotate@{jit\_\-linklist\_\-rotate}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-rotate}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-rotate (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long {\em i})}}
+\label{group__linklistmod_ga596c1db3539f73b998755bcb46296111}
+
+
+Rotates the order of objects in the linked list, by the specified number of indeces. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em i}]rotation index count\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga28d9508c94d221c86ce8dc6897443992}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-shuffle@{jit\_\-linklist\_\-shuffle}}
+\index{jit\_\-linklist\_\-shuffle@{jit\_\-linklist\_\-shuffle}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-shuffle}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-shuffle (t\_\-jit\_\-linklist $\ast$ {\em x})}}
+\label{group__linklistmod_ga28d9508c94d221c86ce8dc6897443992}
+
+
+Randomizes the order of objects in the linked list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_ga31462d238515067801b11b9b55f99e7a}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-sort@{jit\_\-linklist\_\-sort}}
+\index{jit\_\-linklist\_\-sort@{jit\_\-linklist\_\-sort}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-sort}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-sort (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long  {\em cmpfn}void $\ast$, void $\ast$)}}
+\label{group__linklistmod_ga31462d238515067801b11b9b55f99e7a}
+
+
+Sorts linked list based on the provided comparison function. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em cmpfn}]comparison function pointer (returns 0 if a$>$b, otherwise 1)\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
+\hypertarget{group__linklistmod_gae989e1d64d2bba31133aa79d7107f3fc}{
+\index{linklistmod@{linklistmod}!jit\_\-linklist\_\-swap@{jit\_\-linklist\_\-swap}}
+\index{jit\_\-linklist\_\-swap@{jit\_\-linklist\_\-swap}!linklistmod@{linklistmod}}
+\subsubsection[{jit\_\-linklist\_\-swap}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-swap (t\_\-jit\_\-linklist $\ast$ {\em x}, \/  long {\em a}, \/  long {\em b})}}
+\label{group__linklistmod_gae989e1d64d2bba31133aa79d7107f3fc}
+
+
+Swap list location of the indeces specified. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer \item[{\em a}]index a \item[{\em b}]index b\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+While exported, it is recommend to use jit\_\-object\_\-method to call methods on an object when the object may not be an instance of t\_\-jit\_\-linklist, but instead an object that supports some portion of the t\_\-jit\_\-linklist interface. One instance where this is the case is inside of a MOP matrix\_\-calc method, where the arguments can be either an instance of t\_\-jit\_\-linklist, or t\_\-jit\_\-matrix which has a getindex method. 
+\end{DoxyWarning}
