@@ -3,6 +3,31 @@
 
 #ifdef MAC_VERSION
 
+#include <CoreFoundation/CFString.h>
+
+#endif
+
+#ifdef WIN_VERSION
+
+#include <QTML.h>
+#include <Movies.h>
+#include <Sound.h>
+#include <CFString.h>
+
+#endif
+
+#ifdef MAC_VERSION
+#define XQT_PathStyle kQTPOSIXPathStyle
+#endif
+
+#ifdef WIN_VERSION
+#define XQT_PathStyle kQTWindowsPathStyle
+#endif
+
+// for max 5 we will rid the kernel of XQT stuff and just have things call directly
+// by linking with qtmlClient.lib as appropriate. 
+#ifndef USE_ALTURA
+
 #define XQT_OpenMovieFilePathSpec			OpenMovieFile
 #define XQT_patcher_setport					patcher_setport
 #define XQT_patcher_restoreport				MacSetPort
@@ -19,14 +44,21 @@
 // MacToolbox Functions as exposed by Quicktime
 #define	XQT_Gestalt							Gestalt
 #define	XQT_NewHandle						NewHandle
+#define XQT_GetHandleSize					GetHandleSize
 #define	XQT_DisposeHandle					DisposeHandle
 #define	XQT_HLock							HLock
 #define	XQT_HUnlock							HUnlock
 #define	XQT_NewGWorld						NewGWorld
+#define XQT_QTNewGWorld						QTNewGWorld
 #define	XQT_DisposeGWorld					DisposeGWorld
 #define	XQT_GetGWorldPixMap					GetGWorldPixMap
 #define	XQT_GetPixBaseAddr					GetPixBaseAddr
+#ifdef MAC_VERSION
 #define	XQT_GetPixRowBytes					GetPixRowBytes
+#endif
+#ifdef WIN_VERSION
+#define XQT_GetPixRowBytes					QTGetPixMapHandleRowBytes
+#endif
 #define	XQT_LockPixels						LockPixels
 #define	XQT_UnlockPixels					UnlockPixels
 #define	XQT_GetPortBounds					GetPortBounds
@@ -114,14 +146,15 @@
 #define	XQT_SetupAIFFHeader					SetupAIFFHeader
 #define	XQT_StartMovie						StartMovie
 #define	XQT_UpdateMovie						UpdateMovie
+
+#define XQT_GetMovieNaturalBoundsRect		GetMovieNaturalBoundsRect
+#define XQT_SetMovieDrawingCompleteProc		SetMovieDrawingCompleteProc
+
+#define XQT_FixRatio						FixRatio
 	
-#endif MAC_VERSION
+#endif // #ifndef USE_ALTURA
 
-#ifdef WIN_VERSION
-
-#include <QTML.h>
-#include <Movies.h>
-#include <Sound.h>
+#ifdef USE_ALTURA
 
 #define XQT_EXTERN_API(x)	x
 
@@ -141,14 +174,14 @@ XQT_GetQuickTimeVersion( void );
 XQT_EXTERN_API( long )
 XQT_CheckFunPtr( FARPROC *ppfn, const char *name );
 
-XQT_EXTERN_API( OSErr )
-XQT_OpenMovieFilePathSpec( const PATH_SPEC* pathSpec, short* resRefNum, SInt8 permission );
+//XQT_EXTERN_API( OSErr )
+//XQT_OpenMovieFilePathSpec( const PATH_SPEC* pathSpec, short* resRefNum, SInt8 permission );
 
-XQT_EXTERN_API( long )
-XQT_QT2MaxSpecCopy(FSSpec *qt_spec, PATH_SPEC *max_spec);
+//XQT_EXTERN_API( long )
+//XQT_QT2MaxSpecCopy(FSSpec *qt_spec, PATH_SPEC *max_spec);
 
-XQT_EXTERN_API( long )
-XQT_Max2QTSpecCopy(PATH_SPEC *max_spec, FSSpec *qt_spec);
+//XQT_EXTERN_API( long )
+//XQT_Max2QTSpecCopy(PATH_SPEC *max_spec, FSSpec *qt_spec);
 
 XQT_EXTERN_API( long )
 XQT_QT2MaxGWorldCopy(GWorldPtr qt_src, GWorldPtr max_dst);
@@ -194,12 +227,14 @@ XQT_box_enddraw(struct box *x);
 XQT_EXTERN_API( OSErr )
 XQT_Gestalt( OSType selector, long *response );
 
-
 XQT_EXTERN_API( Handle )
 XQT_NewHandle( Size byteCount );
 
 XQT_EXTERN_API(void)
 XQT_DisposeHandle(Handle h);
+
+XQT_EXTERN_API( Size )
+XQT_GetHandleSize( Handle h );
 
 XQT_EXTERN_API( void )
 XQT_HLock(Handle h);
@@ -210,6 +245,15 @@ XQT_HUnlock(Handle h);
 XQT_EXTERN_API( QDErr )
 XQT_NewGWorld( GWorldPtr *offscreenGWorld, short PixelDepth, const Rect *boundsRect, 
 				  CTabHandle cTable, GDHandle aGDevice, GWorldFlags flags );
+
+XQT_EXTERN_API( OSErr )
+XQT_QTNewGWorld(
+  GWorldPtr *   offscreenGWorld,
+  OSType        PixelFormat,
+  const Rect *  boundsRect,
+  CTabHandle    cTable,
+  GDHandle      aGDevice,
+  GWorldFlags   flags);
 
 XQT_EXTERN_API( void )
 XQT_DisposeGWorld( GWorldPtr offscreenGWorld ); 
@@ -504,11 +548,59 @@ XQT_NativeRegionToMacRegion( void *nativeRegion );
 XQT_EXTERN_API( void * )
 XQT_MacRegionToNativeRegion( RgnHandle macRegion );
 
+XQT_EXTERN_API( void )
+XQT_GetMovieNaturalBoundsRect(
+  Movie   theMovie,
+  Rect *  naturalBounds);
+
+XQT_EXTERN_API( void )
+XQT_SetMovieDrawingCompleteProc(
+  Movie                     theMovie,
+  long                      flags,
+  MovieDrawingCompleteUPP   proc,
+  long                      refCon);
+
+XQT_EXTERN_API( Fixed )
+XQT_FixRatio(short numer, short denom);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif WIN_VERSION
+#endif // #ifdef USE_ALTURA
 
-#endif __XQT_STUBS_H__
+#define XQT_NewDataReferenceFromMaxPath(path,name,ref,reftype,err) \
+{ \
+CFStringRef cfs; \
+char tmpname[MAX_PATH_CHARS]; \
+char pathname[MAX_PATH_CHARS]; \
+(*(err)) = -1; \
+(*(ref)) = NULL; \
+if (!path_topotentialname(path,name,tmpname,FALSE)) { \
+	if (!path_nameconform(tmpname,pathname,PATH_STYLE_NATIVE,PATH_TYPE_PATH)) { \
+		cfs = CFStringCreateWithCString(kCFAllocatorDefault,pathname,kCFStringEncodingUTF8);\
+		if (cfs) { \
+			(*(err)) = QTNewDataReferenceFromFullPathCFString(cfs,XQT_PathStyle,0,ref,reftype); \
+			if (*(err)) (*(ref))=NULL; \
+			CFRelease(cfs); \
+		} \
+	} \
+} \
+}
+
+#define XQT_MaxPathFromDataReference(ref,reftype,path,name,err) \
+{ \
+CFStringRef cfs; \
+char tmpname[MAX_PATH_CHARS]; \
+(*(err)) = -1; \
+(*(path)) = 0; \
+if (!((*(err)) = QTGetDataReferenceFullPathCFString(ref,reftype,XQT_PathStyle,&cfs))) { \
+	if (CFStringGetCString(cfs,tmpname,MAX_PATH_CHARS,kCFStringEncodingUTF8)) \
+		(*(err)) = path_frompathname(tmpname,path,name); \
+	else (*(err)) = -1; \
+	CFRelease(cfs); \
+} \
+}
+
+#endif // #ifndef __XQT_STUBS_H__
 

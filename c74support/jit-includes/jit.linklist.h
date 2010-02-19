@@ -1,13 +1,15 @@
 /* 
 	jit.linklist.h
 
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 		
 */
 
 #ifndef _JIT_LINKLIST_H_
 #define _JIT_LINKLIST_H_
+
+#include "ext_linklist.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,7 +36,9 @@ typedef struct _jit_linklist
 	t_jit_llelem	*tail;
 } t_jit_linklist;		
 
-typedef long (*t_cmpfn)(void *, void *);
+// This is now defined in ext_linklist.h
+//typedef long (*t_cmpfn)(void *, void *);
+
 
 void jit_linklist_init(void); //manual class registration
 void *jit_linklist_new(void);
@@ -69,9 +73,14 @@ void jit_linklist_shuffle(t_jit_linklist *x);
 void jit_linklist_swap(t_jit_linklist *x, long a, long b); 
 void jit_linklist_findfirst(t_jit_linklist *x, void **o, long cmpfn(void *, void *), void *cmpdata);
 void jit_linklist_findall(t_jit_linklist *x, t_jit_linklist **out, long cmpfn(void *, void *), void *cmpdata);
+long jit_linklist_findcount(t_jit_linklist *x, long cmpfn(void *, void *), void *cmpdata); 
 void jit_linklist_methodall(t_jit_linklist *x, t_symbol *s, ...); 
 void *jit_linklist_methodindex(t_jit_linklist *x, long i, t_symbol *s, ...); 
 void jit_linklist_sort(t_jit_linklist *x, long cmpfn(void *, void *));
+void jit_linklist_funall(t_jit_linklist *x, method fun, void *arg);
+void jit_linklist_funallsafe(t_jit_linklist *x, method fun, void *arg);
+void *jit_linklist_funindex(t_jit_linklist *x, long i, method fun, void *arg);
+
 
 #if C74_PRAGMA_STRUCT_PACKPUSH
     #pragma pack(pop)
@@ -83,5 +92,5 @@ void jit_linklist_sort(t_jit_linklist *x, long cmpfn(void *, void *));
 }
 #endif
 
-#endif //_JIT_LINKLIST_H_
+#endif _JIT_LINKLIST_H_
 

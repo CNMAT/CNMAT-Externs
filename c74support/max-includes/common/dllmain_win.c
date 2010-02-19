@@ -1,5 +1,6 @@
 #ifdef WIN_VERSION
 
+#include "ext.h"
 #include <windows.h>
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved ) 
@@ -36,5 +37,5 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved )
 	return TRUE; 
 }
 
-#endif WIN_VERSION
+#endif // #ifdef WIN_VERSION
 

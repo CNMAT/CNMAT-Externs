@@ -1,13 +1,14 @@
 /* 
 	jit.critical.h
 
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2003 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 	
 */
 
 #ifndef __JIT_CRITICAL_H__
 #define __JIT_CRITICAL_H__
+
 
 #ifdef __cplusplus
 extern "C" {
