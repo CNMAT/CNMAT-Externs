@@ -1,0 +1,372 @@
+\hypertarget{group__jsurface}{
+\section{JSurface}
+\label{group__jsurface}\index{JSurface@{JSurface}}
+}
+
+
+A surface is an abstract base class for something you render to.  
+
+
+Collaboration diagram for JSurface:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=104pt]{group__jsurface}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{
+typedef struct \_\-jsurface \hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface}}
+\label{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}
+
+\begin{DoxyCompactList}\small\item\em An instance of a jgraphics surface. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$ \hyperlink{group__jsurface_gaee5d0e140bdbece63abd62d60f44f96d}{jgraphics\_\-image\_\-surface\_\-create} (\hyperlink{group__jgraphics_ga4c4fa437dbfffb2c406787efa7701604}{t\_\-jgraphics\_\-format} format, int width, int height)
+\begin{DoxyCompactList}\small\item\em Create an image surface. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$ \hyperlink{group__jsurface_ga0aadea6674e22465d5d81148c8675d61}{jgraphics\_\-image\_\-surface\_\-create\_\-referenced} (const char $\ast$filename, short path)
+\begin{DoxyCompactList}\small\item\em Create an image surface, filling it with the contents of a file, and get a reference to the surface. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$ \hyperlink{group__jsurface_ga5b9a625daaa6d39d5fe538b714ae1c6f}{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-file} (const char $\ast$filename, short path)
+\begin{DoxyCompactList}\small\item\em Create an image surface, filling it with the contents of a file. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$ \hyperlink{group__jsurface_ga315abd7050ef53566df8fbcec80182af}{jgraphics\_\-image\_\-surface\_\-create\_\-for\_\-data} (unsigned char $\ast$data, \hyperlink{group__jgraphics_ga4c4fa437dbfffb2c406787efa7701604}{t\_\-jgraphics\_\-format} format, int width, int height, int stride, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} freefun, void $\ast$freearg)
+\begin{DoxyCompactList}\small\item\em Create an image surface from given pixel data. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$ \hyperlink{group__jsurface_ga47be6691ef1b94e86e7783e7ce38ebe9}{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata} (const void $\ast$data, unsigned long datalen)
+\begin{DoxyCompactList}\small\item\em Create a new surface from file data. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$ \hyperlink{group__jsurface_gabb5d09a9d36912e1685bad2799992117}{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource} (const void $\ast$moduleRef, const char $\ast$resname)
+\begin{DoxyCompactList}\small\item\em Create a new surface from a resource in your external. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jsurface_gacdc136f6f6a54c8a8a825ba5cb708683}{jgraphics\_\-get\_\-resource\_\-data} (const void $\ast$moduleRef, const char $\ast$resname, long extcount, \hyperlink{structt__atom}{t\_\-atom} $\ast$exts, void $\ast$$\ast$data, unsigned long $\ast$datasize)
+\begin{DoxyCompactList}\small\item\em Low-\/level routine to access an object's resource data. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$ \hyperlink{group__jsurface_gaf0948809cb6cc018e9f23e404ea9d271}{jgraphics\_\-surface\_\-reference} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Create a reference to an existing surface. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsurface_ga0fb843ca88d59c3a1c933b18cca41524}{jgraphics\_\-surface\_\-destroy} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Release or free a surface. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jsurface_ga9452f1ffe5e87c5be399a2f106d10b7c}{jgraphics\_\-image\_\-surface\_\-writepng} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$surface, const char $\ast$filename, short path, long dpi)
+\begin{DoxyCompactList}\small\item\em Export a PNG file of the contents of a surface. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__jsurface_ga28bdb47bb4dd73c793574e941eb23d13}{jgraphics\_\-image\_\-surface\_\-get\_\-width} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieve the width of a surface. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__jsurface_ga5eac45fcd4dd046cb330ddea899cdca5}{jgraphics\_\-image\_\-surface\_\-get\_\-height} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieve the height of a surface. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsurface_ga5f3bfeecac6a998770dc823c45c70775}{jgraphics\_\-image\_\-surface\_\-set\_\-pixel} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s, int x, int y, \hyperlink{structt__jrgba}{t\_\-jrgba} color)
+\begin{DoxyCompactList}\small\item\em Set the color of an individual pixel in a surface. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsurface_gad4ad8d34eb21640502f64e727d894cf4}{jgraphics\_\-image\_\-surface\_\-get\_\-pixel} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s, int x, int y, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$color)
+\begin{DoxyCompactList}\small\item\em Retrieve the color of an individual pixel in a surface. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsurface_ga488683dd70cacdedfc6018dd3c78adc7}{jgraphics\_\-image\_\-surface\_\-scroll} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s, int x, int y, int width, int height, int dx, int dy, \hyperlink{group__jgraphics_ga09a18e946c8a6cfa25dfa38154a138d8}{t\_\-jpath} $\ast$$\ast$path)
+\item 
+void \hyperlink{group__jsurface_gab6b97ae8202c210ccec29ec2b8c4f5d0}{jgraphics\_\-image\_\-surface\_\-draw} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, \hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s, \hyperlink{structt__rect}{t\_\-rect} srcRect, \hyperlink{structt__rect}{t\_\-rect} destRect)
+\begin{DoxyCompactList}\small\item\em Draw an image surface. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsurface_ga766ec5ca1b93fa9b0f3b05c49122f62c}{jgraphics\_\-image\_\-surface\_\-draw\_\-fast} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, \hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Draw an image surface quickly. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsurface_ga96f2b8270e4fba3f2438ff829dc0279b}{jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$surf, long fmt, void $\ast$$\ast$data, long $\ast$size)
+\begin{DoxyCompactList}\small\item\em Get surface data ready for manually writing to a file. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jsurface_gafb21797debfc51d220bc448ec2420687}{jgraphics\_\-image\_\-surface\_\-clear} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$s, int x, int y, int width, int height)
+\begin{DoxyCompactList}\small\item\em Set all pixels in rect to 0. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$ \hyperlink{group__jsurface_ga7748ae17fe303820fe7b0afcca104c45}{jgraphics\_\-create} (\hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$target)
+\begin{DoxyCompactList}\small\item\em Create a context to draw on a particular surface. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A surface is an abstract base class for something you render to. An image surface is a concrete instance that renders to an image in memory, essentially an offscreen bitmap. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jsurface_ga7748ae17fe303820fe7b0afcca104c45}{
+\index{jsurface@{jsurface}!jgraphics\_\-create@{jgraphics\_\-create}}
+\index{jgraphics\_\-create@{jgraphics\_\-create}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jgraphics}$\ast$ jgraphics\_\-create ({\bf t\_\-jsurface} $\ast$ {\em target})}}
+\label{group__jsurface_ga7748ae17fe303820fe7b0afcca104c45}
+
+
+Create a context to draw on a particular surface. When you are done, call \hyperlink{group__jgraphics_ga910977684c0f03be9edfb9f861905d5e}{jgraphics\_\-destroy()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em target}]The surface to which to draw. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new graphics context. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_gacdc136f6f6a54c8a8a825ba5cb708683}{
+\index{jsurface@{jsurface}!jgraphics\_\-get\_\-resource\_\-data@{jgraphics\_\-get\_\-resource\_\-data}}
+\index{jgraphics\_\-get\_\-resource\_\-data@{jgraphics\_\-get\_\-resource\_\-data}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-get\_\-resource\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jgraphics\_\-get\_\-resource\_\-data (const void $\ast$ {\em moduleRef}, \/  const char $\ast$ {\em resname}, \/  long {\em extcount}, \/  {\bf t\_\-atom} $\ast$ {\em exts}, \/  void $\ast$$\ast$ {\em data}, \/  unsigned long $\ast$ {\em datasize})}}
+\label{group__jsurface_gacdc136f6f6a54c8a8a825ba5cb708683}
+
+
+Low-\/level routine to access an object's resource data. 
+\begin{DoxyParams}{Parameters}
+\item[{\em moduleRef}]A pointer to your external's module, which is passed to your external's main() function when the class is loaded. \item[{\em resname}]Base name of the resource data (without an extension) \item[{\em extcount}]Count of possible extensions (ignored on Windows) \item[{\em exts}]Array of symbol atoms containing possible filename extensions (ignored on Windows) \item[{\em data}]Returned resource data assigned to a pointer you supply \item[{\em datasize}]Size of the data returned \end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+You are responsible for freeing any data returned in the data pointer 
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_gafb21797debfc51d220bc448ec2420687}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-clear@{jgraphics\_\-image\_\-surface\_\-clear}}
+\index{jgraphics\_\-image\_\-surface\_\-clear@{jgraphics\_\-image\_\-surface\_\-clear}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-image\_\-surface\_\-clear ({\bf t\_\-jsurface} $\ast$ {\em s}, \/  int {\em x}, \/  int {\em y}, \/  int {\em width}, \/  int {\em height})}}
+\label{group__jsurface_gafb21797debfc51d220bc448ec2420687}
+
+
+Set all pixels in rect to 0. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface to clear. \item[{\em x}]The horizontal origin of the rect to clear. \item[{\em y}]The vertical origin of the rect to clear. \item[{\em width}]The width of the rect to clear. \item[{\em height}]The height of the rect to clear. \end{DoxyParams}
+\hypertarget{group__jsurface_gaee5d0e140bdbece63abd62d60f44f96d}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-create@{jgraphics\_\-image\_\-surface\_\-create}}
+\index{jgraphics\_\-image\_\-surface\_\-create@{jgraphics\_\-image\_\-surface\_\-create}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsurface}$\ast$ jgraphics\_\-image\_\-surface\_\-create ({\bf t\_\-jgraphics\_\-format} {\em format}, \/  int {\em width}, \/  int {\em height})}}
+\label{group__jsurface_gaee5d0e140bdbece63abd62d60f44f96d}
+
+
+Create an image surface. Use \hyperlink{group__jsurface_ga0fb843ca88d59c3a1c933b18cca41524}{jgraphics\_\-surface\_\-destroy()} to free it when you are done.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em format}]Defines the color format for the new surface. \item[{\em width}]Defines the width of the new surface. \item[{\em height}]Defines the height of the new surface. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the new surface. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_ga315abd7050ef53566df8fbcec80182af}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-create\_\-for\_\-data@{jgraphics\_\-image\_\-surface\_\-create\_\-for\_\-data}}
+\index{jgraphics\_\-image\_\-surface\_\-create\_\-for\_\-data@{jgraphics\_\-image\_\-surface\_\-create\_\-for\_\-data}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-create\_\-for\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsurface}$\ast$ jgraphics\_\-image\_\-surface\_\-create\_\-for\_\-data (unsigned char $\ast$ {\em data}, \/  {\bf t\_\-jgraphics\_\-format} {\em format}, \/  int {\em width}, \/  int {\em height}, \/  int {\em stride}, \/  {\bf method} {\em freefun}, \/  void $\ast$ {\em freearg})}}
+\label{group__jsurface_ga315abd7050ef53566df8fbcec80182af}
+
+
+Create an image surface from given pixel data. Data should point to start of top line of bitmap, stride tells how to get to next line. For upside down windows bitmaps, data = (pBits-\/(height-\/1)$\ast$stride) and stride is a negative number.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em data}]The data. For example, an RGBA image loaded in memory. \item[{\em format}]The format of the data. \item[{\em width}]The width of the new surface. \item[{\em height}]The height of the new surface. \item[{\em stride}]The number of bytes between the start of rows in the dat buffer. \item[{\em freefun}]If not NULL, freefun will be called when the surface is destroyed \item[{\em freearg}]This will be passed to freefun if/when freefun is called. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the new surface. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_ga5b9a625daaa6d39d5fe538b714ae1c6f}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-file@{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-file}}
+\index{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-file@{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-file}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsurface}$\ast$ jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-file (const char $\ast$ {\em filename}, \/  short {\em path})}}
+\label{group__jsurface_ga5b9a625daaa6d39d5fe538b714ae1c6f}
+
+
+Create an image surface, filling it with the contents of a file. Use \hyperlink{group__jsurface_ga0fb843ca88d59c3a1c933b18cca41524}{jgraphics\_\-surface\_\-destroy()} to free it when you are done.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em filename}]The name of the file. \item[{\em path}]The path id of the file. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the new surface. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_ga47be6691ef1b94e86e7783e7ce38ebe9}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata@{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata}}
+\index{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata@{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsurface}$\ast$ jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata (const void $\ast$ {\em data}, \/  unsigned long {\em datalen})}}
+\label{group__jsurface_ga47be6691ef1b94e86e7783e7ce38ebe9}
+
+
+Create a new surface from file data. 
+\begin{DoxyParams}{Parameters}
+\item[{\em data}]A pointer to the raw PNG or JPG bits. \item[{\em datalen}]The number of bytes in data. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new surface. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__jsurface_ga96f2b8270e4fba3f2438ff829dc0279b}{jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata()} 
+\end{DoxySeeAlso}
+\hypertarget{group__jsurface_gabb5d09a9d36912e1685bad2799992117}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource@{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource}}
+\index{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource@{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsurface}$\ast$ jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-resource (const void $\ast$ {\em moduleRef}, \/  const char $\ast$ {\em resname})}}
+\label{group__jsurface_gabb5d09a9d36912e1685bad2799992117}
+
+
+Create a new surface from a resource in your external. 
+\begin{DoxyParams}{Parameters}
+\item[{\em moduleRef}]A pointer to your external's module, which is passed to your external's main() function when the class is loaded. \item[{\em resname}]The name of the resource in the external. \end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The following example shows an example of how this might be used in an external. 
+\begin{DoxyCode}
+    static s_my_surface = NULL;
+    
+    int main(void *moduleRef)
+    {
+        // (Do typical class initialization here)
+        
+        // now create the surface from a resource that we added to the Xcode/Visu
+      alStudio project
+        s_my_surface = jgraphics_image_surface_create_from_resource(moduleRef, "m
+      yCoolImage");
+
+        return 0;
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__jsurface_ga0aadea6674e22465d5d81148c8675d61}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-create\_\-referenced@{jgraphics\_\-image\_\-surface\_\-create\_\-referenced}}
+\index{jgraphics\_\-image\_\-surface\_\-create\_\-referenced@{jgraphics\_\-image\_\-surface\_\-create\_\-referenced}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-create\_\-referenced}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsurface}$\ast$ jgraphics\_\-image\_\-surface\_\-create\_\-referenced (const char $\ast$ {\em filename}, \/  short {\em path})}}
+\label{group__jsurface_ga0aadea6674e22465d5d81148c8675d61}
+
+
+Create an image surface, filling it with the contents of a file, and get a reference to the surface. Use \hyperlink{group__jsurface_ga0fb843ca88d59c3a1c933b18cca41524}{jgraphics\_\-surface\_\-destroy()} to release your reference to the surface when you are done.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em filename}]The name of the file. \item[{\em path}]The path id of the file. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the new surface. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_gab6b97ae8202c210ccec29ec2b8c4f5d0}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-draw@{jgraphics\_\-image\_\-surface\_\-draw}}
+\index{jgraphics\_\-image\_\-surface\_\-draw@{jgraphics\_\-image\_\-surface\_\-draw}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-draw}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-image\_\-surface\_\-draw ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  {\bf t\_\-jsurface} $\ast$ {\em s}, \/  {\bf t\_\-rect} {\em srcRect}, \/  {\bf t\_\-rect} {\em destRect})}}
+\label{group__jsurface_gab6b97ae8202c210ccec29ec2b8c4f5d0}
+
+
+Draw an image surface. This not in cairo, but, it seems silly to have to make a brush to just draw an image. This doesn't support rotations, however.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context in which to draw the surface. \item[{\em s}]The surface to draw. \item[{\em srcRect}]The rect within the surface that should be drawn. \item[{\em destRect}]The rect in the context to which to draw the srcRect. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__jsurface_ga766ec5ca1b93fa9b0f3b05c49122f62c}{jgraphics\_\-image\_\-surface\_\-draw\_\-fast()} 
+\end{DoxySeeAlso}
+\hypertarget{group__jsurface_ga766ec5ca1b93fa9b0f3b05c49122f62c}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-draw\_\-fast@{jgraphics\_\-image\_\-surface\_\-draw\_\-fast}}
+\index{jgraphics\_\-image\_\-surface\_\-draw\_\-fast@{jgraphics\_\-image\_\-surface\_\-draw\_\-fast}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-draw\_\-fast}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-image\_\-surface\_\-draw\_\-fast ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  {\bf t\_\-jsurface} $\ast$ {\em s})}}
+\label{group__jsurface_ga766ec5ca1b93fa9b0f3b05c49122f62c}
+
+
+Draw an image surface quickly. The draw\_\-fast version won't scale based on zoom factor or user transforms so make sure that this is what you want! Draws entire image, origin $\ast$can$\ast$ be shifted via zoom and user transforms (even though image is not scaled based on those same transforms)
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context in which to draw the surface. \item[{\em s}]The surface to draw. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__jsurface_gab6b97ae8202c210ccec29ec2b8c4f5d0}{jgraphics\_\-image\_\-surface\_\-draw} 
+\end{DoxySeeAlso}
+\hypertarget{group__jsurface_ga5eac45fcd4dd046cb330ddea899cdca5}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-get\_\-height@{jgraphics\_\-image\_\-surface\_\-get\_\-height}}
+\index{jgraphics\_\-image\_\-surface\_\-get\_\-height@{jgraphics\_\-image\_\-surface\_\-get\_\-height}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-get\_\-height}]{\setlength{\rightskip}{0pt plus 5cm}int jgraphics\_\-image\_\-surface\_\-get\_\-height ({\bf t\_\-jsurface} $\ast$ {\em s})}}
+\label{group__jsurface_ga5eac45fcd4dd046cb330ddea899cdca5}
+
+
+Retrieve the height of a surface. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The height of the surface. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_gad4ad8d34eb21640502f64e727d894cf4}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-get\_\-pixel@{jgraphics\_\-image\_\-surface\_\-get\_\-pixel}}
+\index{jgraphics\_\-image\_\-surface\_\-get\_\-pixel@{jgraphics\_\-image\_\-surface\_\-get\_\-pixel}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-get\_\-pixel}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-image\_\-surface\_\-get\_\-pixel ({\bf t\_\-jsurface} $\ast$ {\em s}, \/  int {\em x}, \/  int {\em y}, \/  {\bf t\_\-jrgba} $\ast$ {\em color})}}
+\label{group__jsurface_gad4ad8d34eb21640502f64e727d894cf4}
+
+
+Retrieve the color of an individual pixel in a surface. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface. \item[{\em x}]The horizontal coordinate of the pixel. \item[{\em y}]The vertical coordinate of the pixel. \item[{\em color}]The address of a valid \hyperlink{structt__jrgba}{t\_\-jrgba} struct whose values will be filled in with the color of the pixel upon return. \end{DoxyParams}
+\hypertarget{group__jsurface_ga28bdb47bb4dd73c793574e941eb23d13}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-get\_\-width@{jgraphics\_\-image\_\-surface\_\-get\_\-width}}
+\index{jgraphics\_\-image\_\-surface\_\-get\_\-width@{jgraphics\_\-image\_\-surface\_\-get\_\-width}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-get\_\-width}]{\setlength{\rightskip}{0pt plus 5cm}int jgraphics\_\-image\_\-surface\_\-get\_\-width ({\bf t\_\-jsurface} $\ast$ {\em s})}}
+\label{group__jsurface_ga28bdb47bb4dd73c793574e941eb23d13}
+
+
+Retrieve the width of a surface. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The width of the surface. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_ga488683dd70cacdedfc6018dd3c78adc7}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-scroll@{jgraphics\_\-image\_\-surface\_\-scroll}}
+\index{jgraphics\_\-image\_\-surface\_\-scroll@{jgraphics\_\-image\_\-surface\_\-scroll}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-scroll}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-image\_\-surface\_\-scroll ({\bf t\_\-jsurface} $\ast$ {\em s}, \/  int {\em x}, \/  int {\em y}, \/  int {\em width}, \/  int {\em height}, \/  int {\em dx}, \/  int {\em dy}, \/  {\bf t\_\-jpath} $\ast$$\ast$ {\em path})}}
+\label{group__jsurface_ga488683dd70cacdedfc6018dd3c78adc7}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface to scroll. \item[{\em x}]The origin of the rect to scroll. \item[{\em y}]The origin of the rect to scroll. \item[{\em width}]The width of the rect to scroll. \item[{\em height}]The height of the rect to scroll. \item[{\em dx}]The amount to scroll the surface horizontally. \item[{\em dy}]The amount to scroll the surface vertically. \item[{\em path}]Can pass NULL if you are not interested in this info. Otherwise pass a pointer and it will be returned with a path containing the invalid region. \end{DoxyParams}
+\hypertarget{group__jsurface_ga5f3bfeecac6a998770dc823c45c70775}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-set\_\-pixel@{jgraphics\_\-image\_\-surface\_\-set\_\-pixel}}
+\index{jgraphics\_\-image\_\-surface\_\-set\_\-pixel@{jgraphics\_\-image\_\-surface\_\-set\_\-pixel}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-set\_\-pixel}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-image\_\-surface\_\-set\_\-pixel ({\bf t\_\-jsurface} $\ast$ {\em s}, \/  int {\em x}, \/  int {\em y}, \/  {\bf t\_\-jrgba} {\em color})}}
+\label{group__jsurface_ga5f3bfeecac6a998770dc823c45c70775}
+
+
+Set the color of an individual pixel in a surface. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface. \item[{\em x}]The horizontal coordinate of the pixel. \item[{\em y}]The vertical coordinate of the pixel. \item[{\em color}]The color of the pixel. \end{DoxyParams}
+\hypertarget{group__jsurface_ga9452f1ffe5e87c5be399a2f106d10b7c}{
+\index{jsurface@{jsurface}!jgraphics\_\-image\_\-surface\_\-writepng@{jgraphics\_\-image\_\-surface\_\-writepng}}
+\index{jgraphics\_\-image\_\-surface\_\-writepng@{jgraphics\_\-image\_\-surface\_\-writepng}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-image\_\-surface\_\-writepng}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jgraphics\_\-image\_\-surface\_\-writepng ({\bf t\_\-jsurface} $\ast$ {\em surface}, \/  const char $\ast$ {\em filename}, \/  short {\em path}, \/  long {\em dpi})}}
+\label{group__jsurface_ga9452f1ffe5e87c5be399a2f106d10b7c}
+
+
+Export a PNG file of the contents of a surface. 
+\begin{DoxyParams}{Parameters}
+\item[{\em surface}]The surface to export. \item[{\em filename}]Specify the name of the file to create. \item[{\em path}]Specify the path id for where to create the file. \item[{\em dpi}]Define the resolution of the image (e.g. 72). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_ga0fb843ca88d59c3a1c933b18cca41524}{
+\index{jsurface@{jsurface}!jgraphics\_\-surface\_\-destroy@{jgraphics\_\-surface\_\-destroy}}
+\index{jgraphics\_\-surface\_\-destroy@{jgraphics\_\-surface\_\-destroy}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-surface\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-surface\_\-destroy ({\bf t\_\-jsurface} $\ast$ {\em s})}}
+\label{group__jsurface_ga0fb843ca88d59c3a1c933b18cca41524}
+
+
+Release or free a surface. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface to release. \end{DoxyParams}
+\hypertarget{group__jsurface_gaf0948809cb6cc018e9f23e404ea9d271}{
+\index{jsurface@{jsurface}!jgraphics\_\-surface\_\-reference@{jgraphics\_\-surface\_\-reference}}
+\index{jgraphics\_\-surface\_\-reference@{jgraphics\_\-surface\_\-reference}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-surface\_\-reference}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jsurface}$\ast$ jgraphics\_\-surface\_\-reference ({\bf t\_\-jsurface} $\ast$ {\em s})}}
+\label{group__jsurface_gaf0948809cb6cc018e9f23e404ea9d271}
+
+
+Create a reference to an existing surface. Use \hyperlink{group__jsurface_ga0fb843ca88d59c3a1c933b18cca41524}{jgraphics\_\-surface\_\-destroy()} to release your reference to the surface when you are done.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The surface to reference. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new reference to the surface. 
+\end{DoxyReturn}
+\hypertarget{group__jsurface_ga96f2b8270e4fba3f2438ff829dc0279b}{
+\index{jsurface@{jsurface}!jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata@{jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata}}
+\index{jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata@{jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata}!jsurface@{jsurface}}
+\subsubsection[{jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-write\_\-image\_\-surface\_\-to\_\-filedata ({\bf t\_\-jsurface} $\ast$ {\em surf}, \/  long {\em fmt}, \/  void $\ast$$\ast$ {\em data}, \/  long $\ast$ {\em size})}}
+\label{group__jsurface_ga96f2b8270e4fba3f2438ff829dc0279b}
+
+
+Get surface data ready for manually writing to a file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em surf}]The surface whose data will be retrieved. \item[{\em fmt}]The format for the data. This should be a selection from \hyperlink{group__jgraphics_ga81465e1a6989399e343d081defd90dbe}{t\_\-jgraphics\_\-fileformat}. \item[{\em data}]The address of a pointer that will be allocated and filled. When you are done with this data you should free it using \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}. \item[{\em size}]The address of a variable to hold the size of the data upon return.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+A good example of this is to embed the surface as a PNG in a patcher file. 
+\begin{DoxyCode}
+    long size = 0;
+    void *data = NULL;
+    
+    jgraphics_write_image_surface_to_filedata(x->j_surface, 
+      JGRAPHICS_FILEFORMAT_PNG, &data, &size);
+    if (size) {
+        x->j_format = gensym("png");
+        binarydata_appendtodictionary(data, size, gensym("data"), x->j_format, d)
+      ;
+        x->j_imagedata = data;
+        x->j_imagedatasize = size;
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__jsurface_ga47be6691ef1b94e86e7783e7ce38ebe9}{jgraphics\_\-image\_\-surface\_\-create\_\-from\_\-filedata()} 
+\end{DoxySeeAlso}

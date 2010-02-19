@@ -1,0 +1,788 @@
+\hypertarget{group__jgraphics}{
+\section{JGraphics}
+\label{group__jgraphics}\index{JGraphics@{JGraphics}}
+}
+
+
+The JGraphics API provided in Max 5 is an interface for drawing based on the API for the Cairo vector graphics library ( \href{http://en.wikipedia.org/wiki/Cairo_%28graphics%29}{\tt http://en.wikipedia.org/wiki/Cairo\_\-\%28graphics\%29} , \href{http://cairographics.org/manual/}{\tt http://cairographics.org/manual/} ).  
+
+
+Collaboration diagram for JGraphics:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{group__jgraphics}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__jgraphics__font__extents}{t\_\-jgraphics\_\-font\_\-extents}
+\begin{DoxyCompactList}\small\item\em A structure for holding information related to how much space the rendering of a given font will use. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jsurface}{JSurface}
+
+
+\begin{DoxyCompactList}\small\item\em A surface is an abstract base class for something you render to. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jsvg}{Scalable Vector Graphics}
+\item 
+\hyperlink{group__jfont}{JFont}
+\item 
+\hyperlink{group__jmatrix}{JGraphics Matrix Transformations}
+
+
+\begin{DoxyCompactList}\small\item\em The \hyperlink{structt__jmatrix}{t\_\-jmatrix} is one way to represent a transformation. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jpattern}{JPattern}
+
+
+\begin{DoxyCompactList}\small\item\em A pattern is like a brush that is used to fill a path with. \item\end{DoxyCompactList}\item 
+\hyperlink{group__color}{Colors}
+\item 
+\hyperlink{group__textfield}{TextField}
+
+
+\begin{DoxyCompactList}\small\item\em The textfield is a high-\/level text display object that may be used by a UI object to represent text in a patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{group__textlayout}{TextLayout}
+
+
+\begin{DoxyCompactList}\small\item\em A textlayout is lower-\/level text rendering object used by higher-\/level entities such as \hyperlink{group__textfield}{TextField}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jpopupmenu}{Popup Menus}
+
+
+\begin{DoxyCompactList}\small\item\em Popup menu API so externals can create popup menus that can also be drawn into. \item\end{DoxyCompactList}\item 
+\hyperlink{group__boxlayer}{Box Layer}
+
+
+\begin{DoxyCompactList}\small\item\em The boxlayer functions provide way to make it easier to use cached offscreen images (layers) in your drawing. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jgraphics_gaa3cb88e5a2a6b52ea668a1ed1bba4422}{
+\#define \hyperlink{group__jgraphics_gaa3cb88e5a2a6b52ea668a1ed1bba4422}{JGRAPHICS\_\-RECT\_\-BOTTOM}(rect)~(((rect)-\/$>$y)+((rect)-\/$>$height))}
+\label{group__jgraphics_gaa3cb88e5a2a6b52ea668a1ed1bba4422}
+
+\begin{DoxyCompactList}\small\item\em Determine the coordinate of the bottom of a rect. \item\end{DoxyCompactList}\item 
+\hypertarget{group__jgraphics_ga2e728ace124972d27dc4f7ae70c3e751}{
+\#define \hyperlink{group__jgraphics_ga2e728ace124972d27dc4f7ae70c3e751}{JGRAPHICS\_\-RECT\_\-RIGHT}(rect)~(((rect)-\/$>$x)+((rect)-\/$>$width))}
+\label{group__jgraphics_ga2e728ace124972d27dc4f7ae70c3e751}
+
+\begin{DoxyCompactList}\small\item\em Determine the coordinate of the right side of a rect. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__jgraphics_gab6eb126ec0f85fa48c30aff48a3e0f5b}{JGRAPHICS\_\-PI}~(3.1415926535897932384626433832795028842)
+\begin{DoxyCompactList}\small\item\em Utility macro to return the value of Pi. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__jgraphics_gafe32bbcad508a9ef7629a2c47719dcb5}{JGRAPHICS\_\-2PI}~(2. $\ast$ 3.1415926535897932384626433832795028842)
+\begin{DoxyCompactList}\small\item\em Utility macro to return the value of twice Pi. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__jgraphics_gad1ac187e1ba64c0b956d6fff6a3da8dc}{JGRAPHICS\_\-PIOVER2}~(0.5 $\ast$ 3.1415926535897932384626433832795028842)
+\begin{DoxyCompactList}\small\item\em Utility macro to return the value of half of Pi. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__jgraphics_gae9f23705d238432d1abb58a2ab0ac792}{JGRAPHICS\_\-3PIOVER2}~((3.0 $\ast$ JGRAPHICS\_\-PI) / 2.0)
+\begin{DoxyCompactList}\small\item\em Utility macro to return the 270º Case. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{
+typedef typedefBEGIN\_\-USING\_\-C\_\-LINKAGE struct \_\-jgraphics \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics}}
+\label{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}
+
+\begin{DoxyCompactList}\small\item\em An instance of a jgraphics drawing context. \item\end{DoxyCompactList}\item 
+\hypertarget{group__jgraphics_ga09a18e946c8a6cfa25dfa38154a138d8}{
+typedef struct \_\-jpath \hyperlink{group__jgraphics_ga09a18e946c8a6cfa25dfa38154a138d8}{t\_\-jpath}}
+\label{group__jgraphics_ga09a18e946c8a6cfa25dfa38154a138d8}
+
+\begin{DoxyCompactList}\small\item\em An instance of a jgraphics path. \item\end{DoxyCompactList}\item 
+\hypertarget{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{
+typedef struct \_\-jtextlayout \hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout}}
+\label{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}
+
+\begin{DoxyCompactList}\small\item\em An instance of a jgraphics text layout object. \item\end{DoxyCompactList}\item 
+\hypertarget{group__jgraphics_gaa936ddd5bfc6b091b730c834858326c2}{
+typedef struct \_\-jtransform \hyperlink{group__jgraphics_gaa936ddd5bfc6b091b730c834858326c2}{t\_\-jtransform}}
+\label{group__jgraphics_gaa936ddd5bfc6b091b730c834858326c2}
+
+\begin{DoxyCompactList}\small\item\em An instance of a jgraphics transform. \item\end{DoxyCompactList}\item 
+\hypertarget{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{
+typedef struct \_\-jsvg \hyperlink{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}{t\_\-jsvg}}
+\label{group__jgraphics_gaa3000c3aa85e3d7c87f59c44d5d7ccab}
+
+\begin{DoxyCompactList}\small\item\em An instance of an SVG object. \item\end{DoxyCompactList}\item 
+\hypertarget{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{
+typedef struct \_\-jpopupmenu \hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu}}
+\label{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}
+
+\begin{DoxyCompactList}\small\item\em An instance of a pop-\/up menu. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__jgraphics_ga4c4fa437dbfffb2c406787efa7701604}{t\_\-jgraphics\_\-format} \{ \par
+\hyperlink{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604a072f2e8fde1742abd692b9de9e7d1011}{JGRAPHICS\_\-FORMAT\_\-ARGB32}, 
+\par
+\hyperlink{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604a3021abdd63af373988e5d2b3a696a6d2}{JGRAPHICS\_\-FORMAT\_\-RGB24}, 
+\par
+\hyperlink{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604ad8fca751059bf8cef944dfe0b98ef191}{JGRAPHICS\_\-FORMAT\_\-A8}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of color formats used by jgraphics surfaces. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__jgraphics_ga81465e1a6989399e343d081defd90dbe}{t\_\-jgraphics\_\-fileformat} \{ \par
+\hyperlink{group__jgraphics_gga81465e1a6989399e343d081defd90dbea2370a1696e7b478145fece2d7b2ee903}{JGRAPHICS\_\-FILEFORMAT\_\-PNG}, 
+\par
+\hyperlink{group__jgraphics_gga81465e1a6989399e343d081defd90dbeae2a7397922debc6f37505eb58aa58d2f}{JGRAPHICS\_\-FILEFORMAT\_\-JPEG}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of file formats usable for jgraphics surfaces. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__jgraphics_ga3519fa317c6811b619af2d70e3c1eca7}{t\_\-jgraphics\_\-text\_\-justification} \{ \par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a5e4867b2a5e3789724b6c0d70679c4e3}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-LEFT} =  1, 
+\par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a3eb14134e02256092b705f04d20c6adb}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-RIGHT} =  2, 
+\par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7aaef852ad474ffc8ed5cfd7bf4d5813fa}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HCENTERED} =  4, 
+\par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7ab3d013abb01bb8b776878740c806be4f}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-TOP} =  8, 
+\par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a5d435b07bee873341a742c66f27d1647}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-BOTTOM} =  16, 
+\par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a38425ac2446ca233cc1c711d8ee531fe}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-VCENTERED} =  32, 
+\par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a0adcc29443836c67fed75120d2c228ae}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HJUSTIFIED} =  64, 
+\par
+\hyperlink{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a75d25a43e7cd127bf0baec24897e0f74}{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-CENTERED} =  JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HCENTERED + JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-VCENTERED
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration of text justification options, which are specified as a bitmask. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{group__jgraphics_ga706be120b247818f2ebb18d96934bb72}{jgraphics\_\-round} (double d)
+\begin{DoxyCompactList}\small\item\em Utility for rounding a double to an int. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$ \hyperlink{group__jgraphics_ga3008118a280cac02b4c64ab6d0e6926e}{jgraphics\_\-reference} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g)
+\begin{DoxyCompactList}\small\item\em Get a reference to a graphics context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga910977684c0f03be9edfb9f861905d5e}{jgraphics\_\-destroy} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g)
+\begin{DoxyCompactList}\small\item\em Release or free a graphics context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga627c4feb0dfcad9e8417472eec5aedef}{jgraphics\_\-new\_\-path} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g)
+\begin{DoxyCompactList}\small\item\em Begin a new path. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jgraphics_ga09a18e946c8a6cfa25dfa38154a138d8}{t\_\-jpath} $\ast$ \hyperlink{group__jgraphics_ga356f39bed1d63fcf843fe05b6dc861b0}{jgraphics\_\-copy\_\-path} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g)
+\begin{DoxyCompactList}\small\item\em Get a copy of the current path from a context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gaff6abc629030d751899d99c61970df79}{jgraphics\_\-path\_\-destroy} (\hyperlink{group__jgraphics_ga09a18e946c8a6cfa25dfa38154a138d8}{t\_\-jpath} $\ast$path)
+\begin{DoxyCompactList}\small\item\em Release/free a path. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga4e16e3a3ce6cc21374ba3d7ae4615f65}{jgraphics\_\-append\_\-path} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, \hyperlink{group__jgraphics_ga09a18e946c8a6cfa25dfa38154a138d8}{t\_\-jpath} $\ast$path)
+\begin{DoxyCompactList}\small\item\em Add a path to a graphics context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga22cf905279b642358789ae7ed133808f}{jgraphics\_\-close\_\-path} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g)
+\begin{DoxyCompactList}\small\item\em Close the current path in a context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga51efbf384c6dd4504c9575447dbaaa53}{jgraphics\_\-path\_\-roundcorners} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double cornerRadius)
+\begin{DoxyCompactList}\small\item\em Round out any corners in a path. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gae3c2cc2ba52f2a27bf9e09a60fa94daa}{jgraphics\_\-get\_\-current\_\-point} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double $\ast$x, double $\ast$y)
+\begin{DoxyCompactList}\small\item\em Get the current location of the cursor in a graphics context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gaeee1dd41f67614a31307cc006f4f39ce}{jgraphics\_\-arc} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double xc, double yc, double radius, double angle1, double angle2)
+\begin{DoxyCompactList}\small\item\em Add a circular, clockwise, arc to the current path. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga2dde9a34e2863ab5244057c4ef775a0c}{jgraphics\_\-ovalarc} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double xc, double yc, double radiusx, double radiusy, double angle1, double angle2)
+\begin{DoxyCompactList}\small\item\em Add a non-\/circular arc to the current path. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gaafd9fedb4ec2870714890120ae1c353d}{jgraphics\_\-arc\_\-negative} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double xc, double yc, double radius, double angle1, double angle2)
+\begin{DoxyCompactList}\small\item\em Add a circular, counter-\/clockwise, arc to the current path. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga893fefbf4f38bb4b3b83850c21f8b836}{jgraphics\_\-curve\_\-to} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x1, double y1, double x2, double y2, double x3, double y3)
+\begin{DoxyCompactList}\small\item\em Add a cubic Bezier spline to the current path. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gac3932cbd8b6a30144f0d827d7f21d16b}{jgraphics\_\-rel\_\-curve\_\-to} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x1, double y1, double x2, double y2, double x3, double y3)
+\begin{DoxyCompactList}\small\item\em Add a cubic Bezier spline to the current path, using coordinates relative to the current point. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga70ce27489e0449ec8872253373459bad}{jgraphics\_\-line\_\-to} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y)
+\begin{DoxyCompactList}\small\item\em Add a line segment to the current path. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga0669af2caff03efea7fab31484ad62eb}{jgraphics\_\-rel\_\-line\_\-to} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y)
+\begin{DoxyCompactList}\small\item\em Add a line segment to the current path, using coordinates relative to the current point. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga52651cc3a7f9b395461eadffe9e6156b}{jgraphics\_\-move\_\-to} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y)
+\begin{DoxyCompactList}\small\item\em Move the cursor to a new point and begin a new subpath. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga1d3d4ea2e22dcb02098f1f24ff937296}{jgraphics\_\-rel\_\-move\_\-to} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y)
+\begin{DoxyCompactList}\small\item\em Move the cursor to a new point and begin a new subpath, using coordinates relative to the current point. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga01f63358f24616678d69721d7d505e74}{jgraphics\_\-rectangle} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y, double width, double height)
+\begin{DoxyCompactList}\small\item\em Add a closed rectangle path in the context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gabdf52225c137e70eea1f955559d19591}{jgraphics\_\-oval} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y, double width, double height)
+\begin{DoxyCompactList}\small\item\em Deprecated -\/-\/ do not use. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga0e15af397f5f4eb1e474e31ea43e1d7c}{jgraphics\_\-rectangle\_\-rounded} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y, double width, double height, double ovalwidth, double ovalheight)
+\begin{DoxyCompactList}\small\item\em Add a closed rounded-\/rectangle path in the context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga1703b907a1167055ecea6674e00233d4}{jgraphics\_\-ellipse} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double x, double y, double width, double height)
+\begin{DoxyCompactList}\small\item\em Add a closed elliptical path in the context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga0c184facd0030b513e63162fca2225cd}{jgraphics\_\-select\_\-font\_\-face} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, const char $\ast$family, \hyperlink{group__jfont_gaea63403193677b088b56cb60c69c37b4}{t\_\-jgraphics\_\-font\_\-slant} slant, \hyperlink{group__jfont_ga29fc4356e11166a16aeae50dd5e22f86}{t\_\-jgraphics\_\-font\_\-weight} weight)
+\begin{DoxyCompactList}\small\item\em Specify a font for a graphics context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga1299d24b9d9d6b0955a214e813c6463c}{jgraphics\_\-select\_\-jfont} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, \hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$jfont)
+\begin{DoxyCompactList}\small\item\em Specify a font for a graphics context by passing a \hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gaf8c17f34bfbcd09ea7ba324a6a35cc9d}{jgraphics\_\-set\_\-font\_\-size} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double size)
+\begin{DoxyCompactList}\small\item\em Specify the font size for a context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga6753504ad26f256016c34681672d3478}{jgraphics\_\-set\_\-underline} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, char underline)
+\begin{DoxyCompactList}\small\item\em Turn underlining on/off for text in a context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga91b780fe7e636c4497d0f8ab0ebfd41e}{jgraphics\_\-show\_\-text} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, const char $\ast$utf8)
+\begin{DoxyCompactList}\small\item\em Display text at the current position in a context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga4f556e322638d6427c2ecc7932d806ed}{jgraphics\_\-font\_\-extents} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, \hyperlink{structt__jgraphics__font__extents}{t\_\-jgraphics\_\-font\_\-extents} $\ast$extents)
+\begin{DoxyCompactList}\small\item\em Return the extents of the currently selected font for a given graphics context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga3b8bb426e28bbc271f478ecc91f932f2}{jgraphics\_\-text\_\-measure} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, const char $\ast$utf8, double $\ast$width, double $\ast$height)
+\begin{DoxyCompactList}\small\item\em Return the height and width of a string given current graphics settings in a context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_gabe6cf107005eed13953f624fac4a3e25}{jgraphics\_\-text\_\-measure\_\-wrapped} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, const char $\ast$utf8, double wrapwidth, long includewhitespace, double $\ast$width, double $\ast$height, long $\ast$numlines)
+\begin{DoxyCompactList}\small\item\em Return the height, width, and number of lines that will be used to render a given string. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jgraphics_gaf794cabf13ac57d40f311bb415426925}{jgraphics\_\-system\_\-canantialiastexttotransparentbg} ()
+\begin{DoxyCompactList}\small\item\em Determine if you can anti-\/alias text to a transparent background. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga67774b45773c5a559c756bd57167dd83}{jgraphics\_\-user\_\-to\_\-device} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double $\ast$x, double $\ast$y)
+\begin{DoxyCompactList}\small\item\em User coordinates are those passed to drawing functions in a given \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga8a6b2b8982f78d417cb5a15a3fbdb2e2}{jgraphics\_\-device\_\-to\_\-user} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, double $\ast$x, double $\ast$y)
+\begin{DoxyCompactList}\small\item\em User coordinates are those passed to drawing functions in a given \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga7a23d1cdfe75bfcdb0415adc6696f4f0}{jgraphics\_\-getfiletypes} (void $\ast$dummy, long $\ast$count, long $\ast$$\ast$filetypes, char $\ast$alloc)
+\begin{DoxyCompactList}\small\item\em Get a list of of filetypes appropriate for use with jgraphics surfaces. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jgraphics_gaa8e30eaa2c74766b0c7ef3977fd8a06c}{jgraphics\_\-rectintersectsrect} (\hyperlink{structt__rect}{t\_\-rect} $\ast$r1, \hyperlink{structt__rect}{t\_\-rect} $\ast$r2)
+\begin{DoxyCompactList}\small\item\em Simple utility to test for rectangle intersection. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jgraphics_gaabca7cb7d45c92e788456a2d7dbfd4f6}{jgraphics\_\-rectcontainsrect} (\hyperlink{structt__rect}{t\_\-rect} $\ast$outer, \hyperlink{structt__rect}{t\_\-rect} $\ast$inner)
+\begin{DoxyCompactList}\small\item\em Simple utility to test for rectangle containment. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jgraphics_ga5b4eb24b41c116e3324b2da40541f8eb}{jgraphics\_\-position\_\-one\_\-rect\_\-near\_\-another\_\-rect\_\-but\_\-keep\_\-inside\_\-a\_\-third\_\-rect} (\hyperlink{structt__rect}{t\_\-rect} $\ast$positioned\_\-rect, const \hyperlink{structt__rect}{t\_\-rect} $\ast$positioned\_\-near\_\-this\_\-rect, const \hyperlink{structt__rect}{t\_\-rect} $\ast$keep\_\-inside\_\-this\_\-rect)
+\begin{DoxyCompactList}\small\item\em Generate a \hyperlink{structt__rect}{t\_\-rect} according to positioning rules. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The JGraphics API provided in Max 5 is an interface for drawing based on the API for the Cairo vector graphics library ( \href{http://en.wikipedia.org/wiki/Cairo_%28graphics%29}{\tt http://en.wikipedia.org/wiki/Cairo\_\-\%28graphics\%29} , \href{http://cairographics.org/manual/}{\tt http://cairographics.org/manual/} ). Internally, the drawing is rendered using JUCE ( \href{http://rawmaterialsoftware.com/juce/}{\tt http://rawmaterialsoftware.com/juce/} ), however JUCE functions cannot be called directly. 
+
+\subsection{Define Documentation}
+\hypertarget{group__jgraphics_gafe32bbcad508a9ef7629a2c47719dcb5}{
+\index{jgraphics@{jgraphics}!JGRAPHICS\_\-2PI@{JGRAPHICS\_\-2PI}}
+\index{JGRAPHICS\_\-2PI@{JGRAPHICS\_\-2PI}!jgraphics@{jgraphics}}
+\subsubsection[{JGRAPHICS\_\-2PI}]{\setlength{\rightskip}{0pt plus 5cm}\#define JGRAPHICS\_\-2PI~(2. $\ast$ 3.1415926535897932384626433832795028842)}}
+\label{group__jgraphics_gafe32bbcad508a9ef7629a2c47719dcb5}
+
+
+Utility macro to return the value of twice Pi. \hypertarget{group__jgraphics_gae9f23705d238432d1abb58a2ab0ac792}{
+\index{jgraphics@{jgraphics}!JGRAPHICS\_\-3PIOVER2@{JGRAPHICS\_\-3PIOVER2}}
+\index{JGRAPHICS\_\-3PIOVER2@{JGRAPHICS\_\-3PIOVER2}!jgraphics@{jgraphics}}
+\subsubsection[{JGRAPHICS\_\-3PIOVER2}]{\setlength{\rightskip}{0pt plus 5cm}\#define JGRAPHICS\_\-3PIOVER2~((3.0 $\ast$ JGRAPHICS\_\-PI) / 2.0)}}
+\label{group__jgraphics_gae9f23705d238432d1abb58a2ab0ac792}
+
+
+Utility macro to return the 270º Case. \hypertarget{group__jgraphics_gab6eb126ec0f85fa48c30aff48a3e0f5b}{
+\index{jgraphics@{jgraphics}!JGRAPHICS\_\-PI@{JGRAPHICS\_\-PI}}
+\index{JGRAPHICS\_\-PI@{JGRAPHICS\_\-PI}!jgraphics@{jgraphics}}
+\subsubsection[{JGRAPHICS\_\-PI}]{\setlength{\rightskip}{0pt plus 5cm}\#define JGRAPHICS\_\-PI~(3.1415926535897932384626433832795028842)}}
+\label{group__jgraphics_gab6eb126ec0f85fa48c30aff48a3e0f5b}
+
+
+Utility macro to return the value of Pi. \hypertarget{group__jgraphics_gad1ac187e1ba64c0b956d6fff6a3da8dc}{
+\index{jgraphics@{jgraphics}!JGRAPHICS\_\-PIOVER2@{JGRAPHICS\_\-PIOVER2}}
+\index{JGRAPHICS\_\-PIOVER2@{JGRAPHICS\_\-PIOVER2}!jgraphics@{jgraphics}}
+\subsubsection[{JGRAPHICS\_\-PIOVER2}]{\setlength{\rightskip}{0pt plus 5cm}\#define JGRAPHICS\_\-PIOVER2~(0.5 $\ast$ 3.1415926535897932384626433832795028842)}}
+\label{group__jgraphics_gad1ac187e1ba64c0b956d6fff6a3da8dc}
+
+
+Utility macro to return the value of half of Pi. 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__jgraphics_ga81465e1a6989399e343d081defd90dbe}{
+\index{jgraphics@{jgraphics}!t\_\-jgraphics\_\-fileformat@{t\_\-jgraphics\_\-fileformat}}
+\index{t\_\-jgraphics\_\-fileformat@{t\_\-jgraphics\_\-fileformat}!jgraphics@{jgraphics}}
+\subsubsection[{t\_\-jgraphics\_\-fileformat}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-jgraphics\_\-fileformat}}}
+\label{group__jgraphics_ga81465e1a6989399e343d081defd90dbe}
+
+
+Enumeration of file formats usable for jgraphics surfaces. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JGRAPHICS\_\-FILEFORMAT\_\-PNG@{JGRAPHICS\_\-FILEFORMAT\_\-PNG}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-FILEFORMAT\_\-PNG@{JGRAPHICS\_\-FILEFORMAT\_\-PNG}}\item[{\em 
+\hypertarget{group__jgraphics_gga81465e1a6989399e343d081defd90dbea2370a1696e7b478145fece2d7b2ee903}{
+JGRAPHICS\_\-FILEFORMAT\_\-PNG}
+\label{group__jgraphics_gga81465e1a6989399e343d081defd90dbea2370a1696e7b478145fece2d7b2ee903}
+}]Portable Network Graphics (PNG) format. \index{JGRAPHICS\_\-FILEFORMAT\_\-JPEG@{JGRAPHICS\_\-FILEFORMAT\_\-JPEG}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-FILEFORMAT\_\-JPEG@{JGRAPHICS\_\-FILEFORMAT\_\-JPEG}}\item[{\em 
+\hypertarget{group__jgraphics_gga81465e1a6989399e343d081defd90dbeae2a7397922debc6f37505eb58aa58d2f}{
+JGRAPHICS\_\-FILEFORMAT\_\-JPEG}
+\label{group__jgraphics_gga81465e1a6989399e343d081defd90dbeae2a7397922debc6f37505eb58aa58d2f}
+}]JPEG format. \end{description}
+\end{Desc}
+
+\hypertarget{group__jgraphics_ga4c4fa437dbfffb2c406787efa7701604}{
+\index{jgraphics@{jgraphics}!t\_\-jgraphics\_\-format@{t\_\-jgraphics\_\-format}}
+\index{t\_\-jgraphics\_\-format@{t\_\-jgraphics\_\-format}!jgraphics@{jgraphics}}
+\subsubsection[{t\_\-jgraphics\_\-format}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-jgraphics\_\-format}}}
+\label{group__jgraphics_ga4c4fa437dbfffb2c406787efa7701604}
+
+
+Enumeration of color formats used by jgraphics surfaces. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JGRAPHICS\_\-FORMAT\_\-ARGB32@{JGRAPHICS\_\-FORMAT\_\-ARGB32}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-FORMAT\_\-ARGB32@{JGRAPHICS\_\-FORMAT\_\-ARGB32}}\item[{\em 
+\hypertarget{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604a072f2e8fde1742abd692b9de9e7d1011}{
+JGRAPHICS\_\-FORMAT\_\-ARGB32}
+\label{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604a072f2e8fde1742abd692b9de9e7d1011}
+}]Color is represented using 32 bits, 8 bits each for the components, and including an alpha component. \index{JGRAPHICS\_\-FORMAT\_\-RGB24@{JGRAPHICS\_\-FORMAT\_\-RGB24}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-FORMAT\_\-RGB24@{JGRAPHICS\_\-FORMAT\_\-RGB24}}\item[{\em 
+\hypertarget{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604a3021abdd63af373988e5d2b3a696a6d2}{
+JGRAPHICS\_\-FORMAT\_\-RGB24}
+\label{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604a3021abdd63af373988e5d2b3a696a6d2}
+}]Color is represented using 32 bits, 8 bits each for the components. There is no alpha component. \index{JGRAPHICS\_\-FORMAT\_\-A8@{JGRAPHICS\_\-FORMAT\_\-A8}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-FORMAT\_\-A8@{JGRAPHICS\_\-FORMAT\_\-A8}}\item[{\em 
+\hypertarget{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604ad8fca751059bf8cef944dfe0b98ef191}{
+JGRAPHICS\_\-FORMAT\_\-A8}
+\label{group__jgraphics_gga4c4fa437dbfffb2c406787efa7701604ad8fca751059bf8cef944dfe0b98ef191}
+}]The color is represented only as an 8-\/bit alpha mask. \end{description}
+\end{Desc}
+
+\hypertarget{group__jgraphics_ga3519fa317c6811b619af2d70e3c1eca7}{
+\index{jgraphics@{jgraphics}!t\_\-jgraphics\_\-text\_\-justification@{t\_\-jgraphics\_\-text\_\-justification}}
+\index{t\_\-jgraphics\_\-text\_\-justification@{t\_\-jgraphics\_\-text\_\-justification}!jgraphics@{jgraphics}}
+\subsubsection[{t\_\-jgraphics\_\-text\_\-justification}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-jgraphics\_\-text\_\-justification}}}
+\label{group__jgraphics_ga3519fa317c6811b619af2d70e3c1eca7}
+
+
+Enumeration of text justification options, which are specified as a bitmask. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-LEFT@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-LEFT}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-LEFT@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-LEFT}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a5e4867b2a5e3789724b6c0d70679c4e3}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-LEFT}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a5e4867b2a5e3789724b6c0d70679c4e3}
+}]Justify left. \index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-RIGHT@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-RIGHT}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-RIGHT@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-RIGHT}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a3eb14134e02256092b705f04d20c6adb}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-RIGHT}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a3eb14134e02256092b705f04d20c6adb}
+}]Justify right. \index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HCENTERED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HCENTERED}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HCENTERED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HCENTERED}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7aaef852ad474ffc8ed5cfd7bf4d5813fa}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HCENTERED}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7aaef852ad474ffc8ed5cfd7bf4d5813fa}
+}]Centered horizontally. \index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-TOP@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-TOP}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-TOP@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-TOP}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7ab3d013abb01bb8b776878740c806be4f}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-TOP}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7ab3d013abb01bb8b776878740c806be4f}
+}]Justified to the top. \index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-BOTTOM@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-BOTTOM}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-BOTTOM@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-BOTTOM}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a5d435b07bee873341a742c66f27d1647}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-BOTTOM}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a5d435b07bee873341a742c66f27d1647}
+}]Justified to the bottom. \index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-VCENTERED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-VCENTERED}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-VCENTERED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-VCENTERED}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a38425ac2446ca233cc1c711d8ee531fe}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-VCENTERED}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a38425ac2446ca233cc1c711d8ee531fe}
+}]Centered vertically. \index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HJUSTIFIED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HJUSTIFIED}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HJUSTIFIED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HJUSTIFIED}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a0adcc29443836c67fed75120d2c228ae}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-HJUSTIFIED}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a0adcc29443836c67fed75120d2c228ae}
+}]Horizontally justified. \index{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-CENTERED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-CENTERED}!jgraphics@{jgraphics}}\index{jgraphics@{jgraphics}!JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-CENTERED@{JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-CENTERED}}\item[{\em 
+\hypertarget{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a75d25a43e7cd127bf0baec24897e0f74}{
+JGRAPHICS\_\-TEXT\_\-JUSTIFICATION\_\-CENTERED}
+\label{group__jgraphics_gga3519fa317c6811b619af2d70e3c1eca7a75d25a43e7cd127bf0baec24897e0f74}
+}]Shortcut for Centering both vertically and horizontally. \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__jgraphics_ga4e16e3a3ce6cc21374ba3d7ae4615f65}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-append\_\-path@{jgraphics\_\-append\_\-path}}
+\index{jgraphics\_\-append\_\-path@{jgraphics\_\-append\_\-path}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-append\_\-path}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-append\_\-path ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  {\bf t\_\-jpath} $\ast$ {\em path})}}
+\label{group__jgraphics_ga4e16e3a3ce6cc21374ba3d7ae4615f65}
+
+
+Add a path to a graphics context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em path}]The path to add. \end{DoxyParams}
+\hypertarget{group__jgraphics_gaeee1dd41f67614a31307cc006f4f39ce}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-arc@{jgraphics\_\-arc}}
+\index{jgraphics\_\-arc@{jgraphics\_\-arc}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-arc}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-arc ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em xc}, \/  double {\em yc}, \/  double {\em radius}, \/  double {\em angle1}, \/  double {\em angle2})}}
+\label{group__jgraphics_gaeee1dd41f67614a31307cc006f4f39ce}
+
+
+Add a circular, clockwise, arc to the current path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em xc}]The horizontal coordinate of the arc's center. \item[{\em yc}]The vertical coordinate of the arc's center. \item[{\em radius}]The radius of the arc. \item[{\em angle1}]The starting angle of the arc in radians. Zero radians is center right (positive x axis). \item[{\em angle2}]The terminal angle of the arc in radians. Zero radians is center right (positive x axis). \end{DoxyParams}
+\hypertarget{group__jgraphics_gaafd9fedb4ec2870714890120ae1c353d}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-arc\_\-negative@{jgraphics\_\-arc\_\-negative}}
+\index{jgraphics\_\-arc\_\-negative@{jgraphics\_\-arc\_\-negative}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-arc\_\-negative}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-arc\_\-negative ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em xc}, \/  double {\em yc}, \/  double {\em radius}, \/  double {\em angle1}, \/  double {\em angle2})}}
+\label{group__jgraphics_gaafd9fedb4ec2870714890120ae1c353d}
+
+
+Add a circular, counter-\/clockwise, arc to the current path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em xc}]The horizontal coordinate of the arc's center. \item[{\em yc}]The vertical coordinate of the arc's center. \item[{\em radius}]The radius of the arc. \item[{\em angle1}]The starting angle of the arc in radians. Zero radians is center right (positive x axis). \item[{\em angle2}]The terminal angle of the arc in radians. Zero radians is center right (positive x axis). \end{DoxyParams}
+\hypertarget{group__jgraphics_ga22cf905279b642358789ae7ed133808f}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-close\_\-path@{jgraphics\_\-close\_\-path}}
+\index{jgraphics\_\-close\_\-path@{jgraphics\_\-close\_\-path}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-close\_\-path}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-close\_\-path ({\bf t\_\-jgraphics} $\ast$ {\em g})}}
+\label{group__jgraphics_ga22cf905279b642358789ae7ed133808f}
+
+
+Close the current path in a context. This will add a line segment to close current subpath.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga356f39bed1d63fcf843fe05b6dc861b0}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-copy\_\-path@{jgraphics\_\-copy\_\-path}}
+\index{jgraphics\_\-copy\_\-path@{jgraphics\_\-copy\_\-path}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-copy\_\-path}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jpath}$\ast$ jgraphics\_\-copy\_\-path ({\bf t\_\-jgraphics} $\ast$ {\em g})}}
+\label{group__jgraphics_ga356f39bed1d63fcf843fe05b6dc861b0}
+
+
+Get a copy of the current path from a context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]A copy of the current path. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga893fefbf4f38bb4b3b83850c21f8b836}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-curve\_\-to@{jgraphics\_\-curve\_\-to}}
+\index{jgraphics\_\-curve\_\-to@{jgraphics\_\-curve\_\-to}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-curve\_\-to}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-curve\_\-to ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x1}, \/  double {\em y1}, \/  double {\em x2}, \/  double {\em y2}, \/  double {\em x3}, \/  double {\em y3})}}
+\label{group__jgraphics_ga893fefbf4f38bb4b3b83850c21f8b836}
+
+
+Add a cubic Bezier spline to the current path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x1}]The first control point. \item[{\em y1}]The first control point. \item[{\em x2}]The second control point. \item[{\em y2}]The second control point. \item[{\em x3}]The destination point. \item[{\em y3}]The destination point. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga910977684c0f03be9edfb9f861905d5e}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-destroy@{jgraphics\_\-destroy}}
+\index{jgraphics\_\-destroy@{jgraphics\_\-destroy}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-destroy ({\bf t\_\-jgraphics} $\ast$ {\em g})}}
+\label{group__jgraphics_ga910977684c0f03be9edfb9f861905d5e}
+
+
+Release or free a graphics context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The context to release. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga8a6b2b8982f78d417cb5a15a3fbdb2e2}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-device\_\-to\_\-user@{jgraphics\_\-device\_\-to\_\-user}}
+\index{jgraphics\_\-device\_\-to\_\-user@{jgraphics\_\-device\_\-to\_\-user}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-device\_\-to\_\-user}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-device\_\-to\_\-user ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double $\ast$ {\em x}, \/  double $\ast$ {\em y})}}
+\label{group__jgraphics_ga8a6b2b8982f78d417cb5a15a3fbdb2e2}
+
+
+User coordinates are those passed to drawing functions in a given \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context. Device coordinates refer to patcher canvas coordinates, before any zooming. \hypertarget{group__jgraphics_ga1703b907a1167055ecea6674e00233d4}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-ellipse@{jgraphics\_\-ellipse}}
+\index{jgraphics\_\-ellipse@{jgraphics\_\-ellipse}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-ellipse}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-ellipse ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y}, \/  double {\em width}, \/  double {\em height})}}
+\label{group__jgraphics_ga1703b907a1167055ecea6674e00233d4}
+
+
+Add a closed elliptical path in the context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The horizontal origin. \item[{\em y}]The vertical origin. \item[{\em width}]The width of the rect. \item[{\em height}]The height of the rect. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga4f556e322638d6427c2ecc7932d806ed}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-font\_\-extents@{jgraphics\_\-font\_\-extents}}
+\index{jgraphics\_\-font\_\-extents@{jgraphics\_\-font\_\-extents}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-font\_\-extents}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-font\_\-extents ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  {\bf t\_\-jgraphics\_\-font\_\-extents} $\ast$ {\em extents})}}
+\label{group__jgraphics_ga4f556e322638d6427c2ecc7932d806ed}
+
+
+Return the extents of the currently selected font for a given graphics context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]Pointer to a jgraphics context. \item[{\em extents}]The address of a \hyperlink{structt__jgraphics__font__extents}{t\_\-jgraphics\_\-font\_\-extents} structure to be filled with the results. \end{DoxyParams}
+\hypertarget{group__jgraphics_gae3c2cc2ba52f2a27bf9e09a60fa94daa}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-get\_\-current\_\-point@{jgraphics\_\-get\_\-current\_\-point}}
+\index{jgraphics\_\-get\_\-current\_\-point@{jgraphics\_\-get\_\-current\_\-point}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-get\_\-current\_\-point}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-get\_\-current\_\-point ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double $\ast$ {\em x}, \/  double $\ast$ {\em y})}}
+\label{group__jgraphics_gae3c2cc2ba52f2a27bf9e09a60fa94daa}
+
+
+Get the current location of the cursor in a graphics context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The address of a variable that will be set to the horizontal cursor location upon return. \item[{\em y}]The address of a variable that will be set to the vertical cursor location upon return. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga7a23d1cdfe75bfcdb0415adc6696f4f0}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-getfiletypes@{jgraphics\_\-getfiletypes}}
+\index{jgraphics\_\-getfiletypes@{jgraphics\_\-getfiletypes}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-getfiletypes}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-getfiletypes (void $\ast$ {\em dummy}, \/  long $\ast$ {\em count}, \/  long $\ast$$\ast$ {\em filetypes}, \/  char $\ast$ {\em alloc})}}
+\label{group__jgraphics_ga7a23d1cdfe75bfcdb0415adc6696f4f0}
+
+
+Get a list of of filetypes appropriate for use with jgraphics surfaces. 
+\begin{DoxyParams}{Parameters}
+\item[{\em dummy}]Unused. \item[{\em count}]The address of a variable to be set with the number of types in filetypes upon return. \item[{\em filetypes}]The address of a variable that will represent the array of file types upon return. \item[{\em alloc}]The address of a char that will be flagged with a 1 or a 0 depending on whether or not memory was allocated for the filetypes member.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+This example shows a common usage of \hyperlink{group__jgraphics_ga7a23d1cdfe75bfcdb0415adc6696f4f0}{jgraphics\_\-getfiletypes()}. 
+\begin{DoxyCode}
+    char       filename[MAX_PATH_CHARS];
+    long       *type = NULL;
+    long       ntype;
+    long       outtype;
+    t_max_err  err;
+    char       alloc;
+    short      path;
+    t_jsurface *surface;
+    
+    if (want_to_show_dialog) {
+        jgraphics_getfiletypes(x, &ntype, &type, &alloc);
+        err = open_dialog(filename, &path,(void *)&outtype, (void *)type, ntype);
+      
+        if (err)
+            goto out;
+    } 
+    else {      
+        strncpy_zero(filename, s->s_name, MAX_PATH_CHARS);
+        err = locatefile_extended(filename, &path, &outtype, type, ntype);
+        if (err)
+            goto out;
+    }
+    surface = jgraphics_image_surface_create_referenced(filename, path); 
+out:
+    if (alloc)
+        sysmem_freeptr((char *)type);
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__jgraphics_ga70ce27489e0449ec8872253373459bad}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-line\_\-to@{jgraphics\_\-line\_\-to}}
+\index{jgraphics\_\-line\_\-to@{jgraphics\_\-line\_\-to}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-line\_\-to}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-line\_\-to ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y})}}
+\label{group__jgraphics_ga70ce27489e0449ec8872253373459bad}
+
+
+Add a line segment to the current path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The destination point. \item[{\em y}]The destination point. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga52651cc3a7f9b395461eadffe9e6156b}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-move\_\-to@{jgraphics\_\-move\_\-to}}
+\index{jgraphics\_\-move\_\-to@{jgraphics\_\-move\_\-to}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-move\_\-to}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-move\_\-to ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y})}}
+\label{group__jgraphics_ga52651cc3a7f9b395461eadffe9e6156b}
+
+
+Move the cursor to a new point and begin a new subpath. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The new location. \item[{\em y}]The new location. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga627c4feb0dfcad9e8417472eec5aedef}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-new\_\-path@{jgraphics\_\-new\_\-path}}
+\index{jgraphics\_\-new\_\-path@{jgraphics\_\-new\_\-path}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-new\_\-path}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-new\_\-path ({\bf t\_\-jgraphics} $\ast$ {\em g})}}
+\label{group__jgraphics_ga627c4feb0dfcad9e8417472eec5aedef}
+
+
+Begin a new path. This action clears any current path in the context.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \end{DoxyParams}
+\hypertarget{group__jgraphics_gabdf52225c137e70eea1f955559d19591}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-oval@{jgraphics\_\-oval}}
+\index{jgraphics\_\-oval@{jgraphics\_\-oval}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-oval}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-oval ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y}, \/  double {\em width}, \/  double {\em height})}}
+\label{group__jgraphics_gabdf52225c137e70eea1f955559d19591}
+
+
+Deprecated -\/-\/ do not use. Adds a closed oval path in the context, however, it does not scale appropriately.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The horizontal origin. \item[{\em y}]The vertical origin. \item[{\em width}]The width of the oval. \item[{\em height}]The height of the oval. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga2dde9a34e2863ab5244057c4ef775a0c}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-ovalarc@{jgraphics\_\-ovalarc}}
+\index{jgraphics\_\-ovalarc@{jgraphics\_\-ovalarc}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-ovalarc}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-ovalarc ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em xc}, \/  double {\em yc}, \/  double {\em radiusx}, \/  double {\em radiusy}, \/  double {\em angle1}, \/  double {\em angle2})}}
+\label{group__jgraphics_ga2dde9a34e2863ab5244057c4ef775a0c}
+
+
+Add a non-\/circular arc to the current path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em xc}]The horizontal coordinate of the arc's center. \item[{\em yc}]The vertical coordinate of the arc's center. \item[{\em radiusx}]The horizontal radius of the arc. \item[{\em radiusy}]The vertical radius of the arc. \item[{\em angle1}]The starting angle of the arc in radians. Zero radians is center right (positive x axis). \item[{\em angle2}]The terminal angle of the arc in radians. Zero radians is center right (positive x axis). \end{DoxyParams}
+\hypertarget{group__jgraphics_gaff6abc629030d751899d99c61970df79}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-path\_\-destroy@{jgraphics\_\-path\_\-destroy}}
+\index{jgraphics\_\-path\_\-destroy@{jgraphics\_\-path\_\-destroy}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-path\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-path\_\-destroy ({\bf t\_\-jpath} $\ast$ {\em path})}}
+\label{group__jgraphics_gaff6abc629030d751899d99c61970df79}
+
+
+Release/free a path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em path}]The path to release. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga51efbf384c6dd4504c9575447dbaaa53}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-path\_\-roundcorners@{jgraphics\_\-path\_\-roundcorners}}
+\index{jgraphics\_\-path\_\-roundcorners@{jgraphics\_\-path\_\-roundcorners}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-path\_\-roundcorners}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-path\_\-roundcorners ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em cornerRadius})}}
+\label{group__jgraphics_ga51efbf384c6dd4504c9575447dbaaa53}
+
+
+Round out any corners in a path. This action clears any current path in the context.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em cornerRadius}]The amount by which to round corners. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga5b4eb24b41c116e3324b2da40541f8eb}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-position\_\-one\_\-rect\_\-near\_\-another\_\-rect\_\-but\_\-keep\_\-inside\_\-a\_\-third\_\-rect@{jgraphics\_\-position\_\-one\_\-rect\_\-near\_\-another\_\-rect\_\-but\_\-keep\_\-inside\_\-a\_\-third\_\-rect}}
+\index{jgraphics\_\-position\_\-one\_\-rect\_\-near\_\-another\_\-rect\_\-but\_\-keep\_\-inside\_\-a\_\-third\_\-rect@{jgraphics\_\-position\_\-one\_\-rect\_\-near\_\-another\_\-rect\_\-but\_\-keep\_\-inside\_\-a\_\-third\_\-rect}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-position\_\-one\_\-rect\_\-near\_\-another\_\-rect\_\-but\_\-keep\_\-inside\_\-a\_\-third\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-position\_\-one\_\-rect\_\-near\_\-another\_\-rect\_\-but\_\-keep\_\-inside\_\-a\_\-third\_\-rect ({\bf t\_\-rect} $\ast$ {\em positioned\_\-rect}, \/  const {\bf t\_\-rect} $\ast$ {\em positioned\_\-near\_\-this\_\-rect}, \/  const {\bf t\_\-rect} $\ast$ {\em keep\_\-inside\_\-this\_\-rect})}}
+\label{group__jgraphics_ga5b4eb24b41c116e3324b2da40541f8eb}
+
+
+Generate a \hyperlink{structt__rect}{t\_\-rect} according to positioning rules. 
+\begin{DoxyParams}{Parameters}
+\item[{\em positioned\_\-rect}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose members will be filled in upon return. \item[{\em positioned\_\-near\_\-this\_\-rect}]A pointer to a rect near which this rect should be positioned. \item[{\em keep\_\-inside\_\-this\_\-rect}]A pointer to a rect defining the limits within which the new rect must reside. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga01f63358f24616678d69721d7d505e74}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-rectangle@{jgraphics\_\-rectangle}}
+\index{jgraphics\_\-rectangle@{jgraphics\_\-rectangle}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-rectangle}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-rectangle ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y}, \/  double {\em width}, \/  double {\em height})}}
+\label{group__jgraphics_ga01f63358f24616678d69721d7d505e74}
+
+
+Add a closed rectangle path in the context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The horizontal origin. \item[{\em y}]The vertical origin. \item[{\em width}]The width of the rect. \item[{\em height}]The height of the rect. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga0e15af397f5f4eb1e474e31ea43e1d7c}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-rectangle\_\-rounded@{jgraphics\_\-rectangle\_\-rounded}}
+\index{jgraphics\_\-rectangle\_\-rounded@{jgraphics\_\-rectangle\_\-rounded}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-rectangle\_\-rounded}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-rectangle\_\-rounded ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y}, \/  double {\em width}, \/  double {\em height}, \/  double {\em ovalwidth}, \/  double {\em ovalheight})}}
+\label{group__jgraphics_ga0e15af397f5f4eb1e474e31ea43e1d7c}
+
+
+Add a closed rounded-\/rectangle path in the context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The horizontal origin. \item[{\em y}]The vertical origin. \item[{\em width}]The width of the rect. \item[{\em height}]The height of the rect. \item[{\em ovalwidth}]The width of the oval used for the round corners. \item[{\em ovalheight}]The height of the oval used for the round corners. \end{DoxyParams}
+\hypertarget{group__jgraphics_gaabca7cb7d45c92e788456a2d7dbfd4f6}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-rectcontainsrect@{jgraphics\_\-rectcontainsrect}}
+\index{jgraphics\_\-rectcontainsrect@{jgraphics\_\-rectcontainsrect}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-rectcontainsrect}]{\setlength{\rightskip}{0pt plus 5cm}long jgraphics\_\-rectcontainsrect ({\bf t\_\-rect} $\ast$ {\em outer}, \/  {\bf t\_\-rect} $\ast$ {\em inner})}}
+\label{group__jgraphics_gaabca7cb7d45c92e788456a2d7dbfd4f6}
+
+
+Simple utility to test for rectangle containment. 
+\begin{DoxyParams}{Parameters}
+\item[{\em outer}]The address of the first rect for the test. \item[{\em inner}]The address of the second rect for the test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the inner rect is completely inside the outer rect, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jgraphics_gaa8e30eaa2c74766b0c7ef3977fd8a06c}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-rectintersectsrect@{jgraphics\_\-rectintersectsrect}}
+\index{jgraphics\_\-rectintersectsrect@{jgraphics\_\-rectintersectsrect}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-rectintersectsrect}]{\setlength{\rightskip}{0pt plus 5cm}long jgraphics\_\-rectintersectsrect ({\bf t\_\-rect} $\ast$ {\em r1}, \/  {\bf t\_\-rect} $\ast$ {\em r2})}}
+\label{group__jgraphics_gaa8e30eaa2c74766b0c7ef3977fd8a06c}
+
+
+Simple utility to test for rectangle intersection. 
+\begin{DoxyParams}{Parameters}
+\item[{\em r1}]The address of the first rect for the test. \item[{\em r2}]The address of the second rect for the test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the rects intersect, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jgraphics_ga3008118a280cac02b4c64ab6d0e6926e}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-reference@{jgraphics\_\-reference}}
+\index{jgraphics\_\-reference@{jgraphics\_\-reference}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-reference}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jgraphics}$\ast$ jgraphics\_\-reference ({\bf t\_\-jgraphics} $\ast$ {\em g})}}
+\label{group__jgraphics_ga3008118a280cac02b4c64ab6d0e6926e}
+
+
+Get a reference to a graphics context. When you are done you should release your reference with \hyperlink{group__jgraphics_ga910977684c0f03be9edfb9f861905d5e}{jgraphics\_\-destroy()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The context you wish to reference. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new reference to the context. 
+\end{DoxyReturn}
+\hypertarget{group__jgraphics_gac3932cbd8b6a30144f0d827d7f21d16b}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-rel\_\-curve\_\-to@{jgraphics\_\-rel\_\-curve\_\-to}}
+\index{jgraphics\_\-rel\_\-curve\_\-to@{jgraphics\_\-rel\_\-curve\_\-to}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-rel\_\-curve\_\-to}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-rel\_\-curve\_\-to ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x1}, \/  double {\em y1}, \/  double {\em x2}, \/  double {\em y2}, \/  double {\em x3}, \/  double {\em y3})}}
+\label{group__jgraphics_gac3932cbd8b6a30144f0d827d7f21d16b}
+
+
+Add a cubic Bezier spline to the current path, using coordinates relative to the current point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x1}]The first control point. \item[{\em y1}]The first control point. \item[{\em x2}]The second control point. \item[{\em y2}]The second control point. \item[{\em x3}]The destination point. \item[{\em y3}]The destination point. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga0669af2caff03efea7fab31484ad62eb}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-rel\_\-line\_\-to@{jgraphics\_\-rel\_\-line\_\-to}}
+\index{jgraphics\_\-rel\_\-line\_\-to@{jgraphics\_\-rel\_\-line\_\-to}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-rel\_\-line\_\-to}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-rel\_\-line\_\-to ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y})}}
+\label{group__jgraphics_ga0669af2caff03efea7fab31484ad62eb}
+
+
+Add a line segment to the current path, using coordinates relative to the current point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The destination point. \item[{\em y}]The destination point. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga1d3d4ea2e22dcb02098f1f24ff937296}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-rel\_\-move\_\-to@{jgraphics\_\-rel\_\-move\_\-to}}
+\index{jgraphics\_\-rel\_\-move\_\-to@{jgraphics\_\-rel\_\-move\_\-to}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-rel\_\-move\_\-to}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-rel\_\-move\_\-to ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em x}, \/  double {\em y})}}
+\label{group__jgraphics_ga1d3d4ea2e22dcb02098f1f24ff937296}
+
+
+Move the cursor to a new point and begin a new subpath, using coordinates relative to the current point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em x}]The new location. \item[{\em y}]The new location. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga706be120b247818f2ebb18d96934bb72}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-round@{jgraphics\_\-round}}
+\index{jgraphics\_\-round@{jgraphics\_\-round}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-round}]{\setlength{\rightskip}{0pt plus 5cm}int jgraphics\_\-round (double {\em d})}}
+\label{group__jgraphics_ga706be120b247818f2ebb18d96934bb72}
+
+
+Utility for rounding a double to an int. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]floating-\/point input. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+rounded int output. 
+\end{DoxyReturn}
+\hypertarget{group__jgraphics_ga0c184facd0030b513e63162fca2225cd}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-select\_\-font\_\-face@{jgraphics\_\-select\_\-font\_\-face}}
+\index{jgraphics\_\-select\_\-font\_\-face@{jgraphics\_\-select\_\-font\_\-face}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-select\_\-font\_\-face}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-select\_\-font\_\-face ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  const char $\ast$ {\em family}, \/  {\bf t\_\-jgraphics\_\-font\_\-slant} {\em slant}, \/  {\bf t\_\-jgraphics\_\-font\_\-weight} {\em weight})}}
+\label{group__jgraphics_ga0c184facd0030b513e63162fca2225cd}
+
+
+Specify a font for a graphics context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em family}]The name of the font family (e.g. \char`\"{}Arial\char`\"{}). \item[{\em slant}]Define the slant to use for the font. \item[{\em weight}]Define the weight to use for the font. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga1299d24b9d9d6b0955a214e813c6463c}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-select\_\-jfont@{jgraphics\_\-select\_\-jfont}}
+\index{jgraphics\_\-select\_\-jfont@{jgraphics\_\-select\_\-jfont}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-select\_\-jfont}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-select\_\-jfont ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  {\bf t\_\-jfont} $\ast$ {\em jfont})}}
+\label{group__jgraphics_ga1299d24b9d9d6b0955a214e813c6463c}
+
+
+Specify a font for a graphics context by passing a \hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em jfont}]A jfont object whose attributes will be copied to the context. \end{DoxyParams}
+\hypertarget{group__jgraphics_gaf8c17f34bfbcd09ea7ba324a6a35cc9d}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-set\_\-font\_\-size@{jgraphics\_\-set\_\-font\_\-size}}
+\index{jgraphics\_\-set\_\-font\_\-size@{jgraphics\_\-set\_\-font\_\-size}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-set\_\-font\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-set\_\-font\_\-size ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double {\em size})}}
+\label{group__jgraphics_gaf8c17f34bfbcd09ea7ba324a6a35cc9d}
+
+
+Specify the font size for a context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em size}]The font size. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga6753504ad26f256016c34681672d3478}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-set\_\-underline@{jgraphics\_\-set\_\-underline}}
+\index{jgraphics\_\-set\_\-underline@{jgraphics\_\-set\_\-underline}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-set\_\-underline}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-set\_\-underline ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  char {\em underline})}}
+\label{group__jgraphics_ga6753504ad26f256016c34681672d3478}
+
+
+Turn underlining on/off for text in a context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em underline}]Pass true or false to set the appropriate behavior. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga91b780fe7e636c4497d0f8ab0ebfd41e}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-show\_\-text@{jgraphics\_\-show\_\-text}}
+\index{jgraphics\_\-show\_\-text@{jgraphics\_\-show\_\-text}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-show\_\-text}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-show\_\-text ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  const char $\ast$ {\em utf8})}}
+\label{group__jgraphics_ga91b780fe7e636c4497d0f8ab0ebfd41e}
+
+
+Display text at the current position in a context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context. \item[{\em utf8}]The text to display. \end{DoxyParams}
+\hypertarget{group__jgraphics_gaf794cabf13ac57d40f311bb415426925}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-system\_\-canantialiastexttotransparentbg@{jgraphics\_\-system\_\-canantialiastexttotransparentbg}}
+\index{jgraphics\_\-system\_\-canantialiastexttotransparentbg@{jgraphics\_\-system\_\-canantialiastexttotransparentbg}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-system\_\-canantialiastexttotransparentbg}]{\setlength{\rightskip}{0pt plus 5cm}long jgraphics\_\-system\_\-canantialiastexttotransparentbg ()}}
+\label{group__jgraphics_gaf794cabf13ac57d40f311bb415426925}
+
+
+Determine if you can anti-\/alias text to a transparent background. You might want to call this and then disable \char`\"{}useimagebuffer\char`\"{} if false $\ast$and$\ast$ you are rendering text on a transparent background.
+
+\begin{DoxyReturn}{Returns}
+Non-\/zero if you can anti-\/alias text to a transparent background. 
+\end{DoxyReturn}
+\hypertarget{group__jgraphics_ga3b8bb426e28bbc271f478ecc91f932f2}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-text\_\-measure@{jgraphics\_\-text\_\-measure}}
+\index{jgraphics\_\-text\_\-measure@{jgraphics\_\-text\_\-measure}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-text\_\-measure}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-text\_\-measure ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  const char $\ast$ {\em utf8}, \/  double $\ast$ {\em width}, \/  double $\ast$ {\em height})}}
+\label{group__jgraphics_ga3b8bb426e28bbc271f478ecc91f932f2}
+
+
+Return the height and width of a string given current graphics settings in a context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]Pointer to a jgraphics context. \item[{\em utf8}]A string containing the text whose dimensions we wish to find. \item[{\em width}]The address of a variable to be filled with the width of the rendered text. \item[{\em height}]The address of a variable to be filled with the height of the rendered text. \end{DoxyParams}
+\hypertarget{group__jgraphics_gabe6cf107005eed13953f624fac4a3e25}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-text\_\-measure\_\-wrapped@{jgraphics\_\-text\_\-measure\_\-wrapped}}
+\index{jgraphics\_\-text\_\-measure\_\-wrapped@{jgraphics\_\-text\_\-measure\_\-wrapped}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-text\_\-measure\_\-wrapped}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-text\_\-measure\_\-wrapped ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  const char $\ast$ {\em utf8}, \/  double {\em wrapwidth}, \/  long {\em includewhitespace}, \/  double $\ast$ {\em width}, \/  double $\ast$ {\em height}, \/  long $\ast$ {\em numlines})}}
+\label{group__jgraphics_gabe6cf107005eed13953f624fac4a3e25}
+
+
+Return the height, width, and number of lines that will be used to render a given string. 
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]Pointer to a jgraphics context. \item[{\em utf8}]A string containing the text whose dimensions we wish to find. \item[{\em wrapwidth}]The number of pixels in width at which the text should be wrapped if it is too long. \item[{\em includewhitespace}]Set zero to not include white space in the calculation, otherwise set this parameter to 1. \item[{\em width}]The address of a variable to be filled with the width of the rendered text. \item[{\em height}]The address of a variable to be filled with the height of the rendered text. \item[{\em numlines}]The address of a variable to be filled with the number of lines required to render the text. \end{DoxyParams}
+\hypertarget{group__jgraphics_ga67774b45773c5a559c756bd57167dd83}{
+\index{jgraphics@{jgraphics}!jgraphics\_\-user\_\-to\_\-device@{jgraphics\_\-user\_\-to\_\-device}}
+\index{jgraphics\_\-user\_\-to\_\-device@{jgraphics\_\-user\_\-to\_\-device}!jgraphics@{jgraphics}}
+\subsubsection[{jgraphics\_\-user\_\-to\_\-device}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-user\_\-to\_\-device ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  double $\ast$ {\em x}, \/  double $\ast$ {\em y})}}
+\label{group__jgraphics_ga67774b45773c5a559c756bd57167dd83}
+
+
+User coordinates are those passed to drawing functions in a given \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context. Device coordinates refer to patcher canvas coordinates, before any zooming. 

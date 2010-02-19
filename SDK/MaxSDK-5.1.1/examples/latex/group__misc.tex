@@ -1,0 +1,567 @@
+\hypertarget{group__misc}{
+\section{Miscellaneous}
+\label{group__misc}\index{Miscellaneous@{Miscellaneous}}
+}
+
+
+Collaboration diagram for Miscellaneous:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{group__misc}
+\end{center}
+\end{figure}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__console}{Console}
+\item 
+\hyperlink{group__byteorder}{Byte Ordering}
+
+
+\begin{DoxyCompactList}\small\item\em Utilities for swapping the order of bytes to match the Endianness of the required platform. \item\end{DoxyCompactList}\item 
+\hyperlink{group__expr}{Extending expr}
+
+
+\begin{DoxyCompactList}\small\item\em If you want to use C-\/like variable expressions that are entered by a user of your object, you can use the \char`\"{}guts\char`\"{} of Max’s expr object in your object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__tables}{Table Access}
+
+
+\begin{DoxyCompactList}\small\item\em You can use these functions to access named table objects. \item\end{DoxyCompactList}\item 
+\hyperlink{group__texteditors}{Text Editor Windows}
+
+
+\begin{DoxyCompactList}\small\item\em Max has a simple built-\/in text editor object that can display and edit text in conjunction with your object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__presets}{Presets}
+
+
+\begin{DoxyCompactList}\small\item\em Max contains a preset object that has the ability to send preset messages to some or all of the objects (clients) in a Patcher window. \item\end{DoxyCompactList}\item 
+\hyperlink{group__evnum}{Event and File Serial Numbers}
+
+
+\begin{DoxyCompactList}\small\item\em If you call \hyperlink{group__inout_ga0b2b38216f2f4dba486bfcd2273f255e}{outlet\_\-int()}, \hyperlink{group__inout_gafbb3f62a413f05a394391afde5b3c30f}{outlet\_\-float()}, \hyperlink{group__inout_gabdef4fbe6e1040dc28204b8070bdcda5}{outlet\_\-list()}, or \hyperlink{group__inout_ga12798ee897e01dac21ee547c4091d8a8}{outlet\_\-anything()} inside a Qelem or during some idle or interrupt time, you should increment Max’s Event Serial Number beforehand. \item\end{DoxyCompactList}\item 
+\hyperlink{group__loading__max__files}{Loading Max Files}
+
+
+\begin{DoxyCompactList}\small\item\em Several high-\/level functions permit you to load patcher files. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jmonitor}{Monitors and Displays}
+
+
+\begin{DoxyCompactList}\small\item\em Functions for finding our information about the environment. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jwind}{Windows}
+\item 
+\hyperlink{group__jmouse}{Mouse and Keyboard}
+\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__misc_ga1a07879e1cf90ff22dbd52a5408986dd}{InRange}(v, lo, hi)~((v)$<$=(hi)\&\&(v)$>$=(lo))
+\begin{DoxyCompactList}\small\item\em If a value is within the specified range, then return true. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__misc_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}(a, b)~((a)$>$(b)?(a):(b))
+\begin{DoxyCompactList}\small\item\em Return the higher of two values. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__misc_ga3acffbd305ee72dcd4593c0d8af64a4f}{MIN}(a, b)~((a)$<$(b)?(a):(b))
+\begin{DoxyCompactList}\small\item\em Return the lower of two values. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__misc_ga79f6ccd4ae5e1eb6d56058350794f877}{CLIP}(a, lo, hi)~( (a)$>$(lo)?( (a)$<$(hi)?(a):(hi) ):(lo) )
+\begin{DoxyCompactList}\small\item\em Limit values to within a specified range. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__misc_gaad95899dfbc7b5b8fe11921643ef46f0}{calcoffset}(x, y)~((long)(\&(((x $\ast$)0L)-\/$>$y)))
+\begin{DoxyCompactList}\small\item\em Find byte offset of a named member of a struct, relative to the beginning of that struct. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__misc_ga06f35de4fc025809ab1cbb06f55b6495}{BEGIN\_\-USING\_\-C\_\-LINKAGE}
+\begin{DoxyCompactList}\small\item\em Ensure that any definitions following this macro use a C-\/linkage, not a C++ linkage. \item\end{DoxyCompactList}\item 
+\hypertarget{group__misc_gaffa4cac92b5d24cbccfe6c852de92a2e}{
+\#define \hyperlink{group__misc_gaffa4cac92b5d24cbccfe6c852de92a2e}{END\_\-USING\_\-C\_\-LINKAGE}}
+\label{group__misc_gaffa4cac92b5d24cbccfe6c852de92a2e}
+
+\begin{DoxyCompactList}\small\item\em Close a definition section that was opened using \hyperlink{group__misc_ga06f35de4fc025809ab1cbb06f55b6495}{BEGIN\_\-USING\_\-C\_\-LINKAGE}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} \{ \par
+\hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} =  0, 
+\par
+\hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69dae285bdd436f17560cfd09c6b31ea397d}{MAX\_\-ERR\_\-GENERIC} =  -\/1, 
+\par
+\hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da42a29c15166206a1bbc13bcc74b2c651}{MAX\_\-ERR\_\-INVALID\_\-PTR} =  -\/2, 
+\par
+\hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da9b67faa1ffafc9b60748135e48b105d1}{MAX\_\-ERR\_\-DUPLICATE} =  -\/3, 
+\par
+\hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da5415d3c3fa523e0bb2ed1edfdbfce9be}{MAX\_\-ERR\_\-OUT\_\-OF\_\-MEM} =  -\/4
+ \}
+\begin{DoxyCompactList}\small\item\em Standard values returned by function calls with a return type of \hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err}. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__misc_ga4cf665eb75774ae52451e04f91747c25}{e\_\-max\_\-wind\_\-advise\_\-result} \{ \par
+\hyperlink{group__misc_gga4cf665eb75774ae52451e04f91747c25a9d84de609dac254d18b580c1aeb3fd32}{aaYes} =  1, 
+\par
+\hyperlink{group__misc_gga4cf665eb75774ae52451e04f91747c25a614519005d5ef9267c6f73891ea11e56}{aaNo}, 
+\par
+\hyperlink{group__misc_gga4cf665eb75774ae52451e04f91747c25a2d8f037a3e3227d4bc488ff6b9050833}{aaCancel}
+ \}
+\begin{DoxyCompactList}\small\item\em Returned values from \hyperlink{group__misc_gab127ce8d89ae72d420a44642c52cc94d}{wind\_\-advise()}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__misc_ga72a33738916b577d2df121edfea260b3}{globalsymbol\_\-reference} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$name, char $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Get a reference to an object that is bound to a \hyperlink{structt__symbol}{t\_\-symbol}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_ga5a4773570564ab729cbe4031cfff0b45}{globalsymbol\_\-dereference} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$name, char $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Stop referencing an object that is bound to a \hyperlink{structt__symbol}{t\_\-symbol}, previously referenced using \hyperlink{group__misc_ga72a33738916b577d2df121edfea260b3}{globalsymbol\_\-reference()}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__misc_gaa121ff996fcf9cfb28d1c7c11eebc428}{globalsymbol\_\-bind} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$name, long flags)
+\begin{DoxyCompactList}\small\item\em Bind an object to a \hyperlink{structt__symbol}{t\_\-symbol}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_gade40c44fddc370895da5db8f70e1868f}{globalsymbol\_\-unbind} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$name, long flags)
+\begin{DoxyCompactList}\small\item\em Remove an object from being bound to a \hyperlink{structt__symbol}{t\_\-symbol}. \item\end{DoxyCompactList}\item 
+\hypertarget{group__misc_ga157705d53ac5b0b839c72843712716c1}{
+long \hyperlink{group__misc_ga157705d53ac5b0b839c72843712716c1}{method\_\-true} (void $\ast$x)}
+\label{group__misc_ga157705d53ac5b0b839c72843712716c1}
+
+\begin{DoxyCompactList}\small\item\em A method that always returns true. \item\end{DoxyCompactList}\item 
+\hypertarget{group__misc_gaaedbb45cad3ac00f027d06e738181bd7}{
+long \hyperlink{group__misc_gaaedbb45cad3ac00f027d06e738181bd7}{method\_\-false} (void $\ast$x)}
+\label{group__misc_gaaedbb45cad3ac00f027d06e738181bd7}
+
+\begin{DoxyCompactList}\small\item\em A method that always returns false. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__misc_ga0cb594bfc861d0a72b61c067cd890122}{symbol\_\-unique} ()
+\begin{DoxyCompactList}\small\item\em Generates a unique \hyperlink{structt__symbol}{t\_\-symbol} $\ast$. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_ga0a094decd1408632226438943e55de81}{error\_\-sym} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Posts an error message to the Max window. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_gad8bf1a07113f7db2b387d5e138fe59fd}{post\_\-sym} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Posts a message to the Max window. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__misc_ga751e472fea0842d902012a41f79afcce}{symbolarray\_\-sort} (long ac, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Performs an ASCII sort on an array of \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_ga332b8831bb1a42503b13d16269fc5ade}{object\_\-obex\_\-quickref} (void $\ast$x, long $\ast$numitems, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$items)
+\begin{DoxyCompactList}\small\item\em Developers do not need to directly use the \hyperlink{group__misc_ga332b8831bb1a42503b13d16269fc5ade}{object\_\-obex\_\-quickref()} function. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_gaffc50c996275103b9d94ec309c6d8be1}{error\_\-subscribe} (\hyperlink{structt__object}{t\_\-object} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Receive messages from the error handler. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_ga155f65793ec4c34abc6746015a2beca6}{error\_\-unsubscribe} (\hyperlink{structt__object}{t\_\-object} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Remove an object as an error message recipient. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_ga0638f6ac63b75fa53c0a34db8ec8d412}{quittask\_\-install} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m, void $\ast$a)
+\begin{DoxyCompactList}\small\item\em Register a function that will be called when Max exits. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_ga99223860e2a94772b52089abfeb506f3}{quittask\_\-remove} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m)
+\begin{DoxyCompactList}\small\item\em Unregister a function previously registered with \hyperlink{group__misc_ga0638f6ac63b75fa53c0a34db8ec8d412}{quittask\_\-install()}. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__misc_ga0eaf32722b98ab4920cb6f64b45a5d5b}{maxversion} (void)
+\begin{DoxyCompactList}\small\item\em Determine version information about the current Max environment. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__misc_ga0022303fac866c8f5757aa56b67ce29d}{strncpy\_\-zero} (char $\ast$dst, const char $\ast$src, long size)
+\begin{DoxyCompactList}\small\item\em Copy the contents of one string to another, in a manner safer than the standard strcpy() or strncpy(). \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__misc_ga3ed4f46782e6a41d13ca17420c35dfb7}{strncat\_\-zero} (char $\ast$dst, const char $\ast$src, long size)
+\begin{DoxyCompactList}\small\item\em Concatenate the contents of one string onto the end of another, in a manner safer than the standard strcat() or strncat(). \item\end{DoxyCompactList}\item 
+int \hyperlink{group__misc_gab82e9c5bbc8b7fe70d16b1f6383f1cc4}{snprintf\_\-zero} (char $\ast$buffer, size\_\-t count, const char $\ast$format,...)
+\begin{DoxyCompactList}\small\item\em Copy the contents of a string together with value substitutions, in a manner safer than the standard sprintf() or snprintf(). \item\end{DoxyCompactList}\item 
+short \hyperlink{group__misc_gab127ce8d89ae72d420a44642c52cc94d}{wind\_\-advise} (\hyperlink{structt__object}{t\_\-object} $\ast$w, char $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Throw a dialog which may have text and up to three buttons. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__misc_ga85a1754ef77207af4ab7617e7487336e}{wind\_\-setcursor} (short which)
+\begin{DoxyCompactList}\small\item\em Change the cursor. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{group__misc_ga06f35de4fc025809ab1cbb06f55b6495}{
+\index{misc@{misc}!BEGIN\_\-USING\_\-C\_\-LINKAGE@{BEGIN\_\-USING\_\-C\_\-LINKAGE}}
+\index{BEGIN\_\-USING\_\-C\_\-LINKAGE@{BEGIN\_\-USING\_\-C\_\-LINKAGE}!misc@{misc}}
+\subsubsection[{BEGIN\_\-USING\_\-C\_\-LINKAGE}]{\setlength{\rightskip}{0pt plus 5cm}\#define BEGIN\_\-USING\_\-C\_\-LINKAGE}}
+\label{group__misc_ga06f35de4fc025809ab1cbb06f55b6495}
+
+
+Ensure that any definitions following this macro use a C-\/linkage, not a C++ linkage. The Max API uses C-\/linkage. This is important for objects written in C++ or that use a C++ compiler. This macro must be balanced with the \hyperlink{group__misc_gaffa4cac92b5d24cbccfe6c852de92a2e}{END\_\-USING\_\-C\_\-LINKAGE} macro. \hypertarget{group__misc_gaad95899dfbc7b5b8fe11921643ef46f0}{
+\index{misc@{misc}!calcoffset@{calcoffset}}
+\index{calcoffset@{calcoffset}!misc@{misc}}
+\subsubsection[{calcoffset}]{\setlength{\rightskip}{0pt plus 5cm}\#define calcoffset(x, \/  y)~((long)(\&(((x $\ast$)0L)-\/$>$y)))}}
+\label{group__misc_gaad95899dfbc7b5b8fe11921643ef46f0}
+
+
+Find byte offset of a named member of a struct, relative to the beginning of that struct. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The name of the struct \item[{\em y}]The name of the member \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A long integer representing the number of bytes into the struct where the member begins. 
+\end{DoxyReturn}
+\hypertarget{group__misc_ga79f6ccd4ae5e1eb6d56058350794f877}{
+\index{misc@{misc}!CLIP@{CLIP}}
+\index{CLIP@{CLIP}!misc@{misc}}
+\subsubsection[{CLIP}]{\setlength{\rightskip}{0pt plus 5cm}\#define CLIP(a, \/  lo, \/  hi)~( (a)$>$(lo)?( (a)$<$(hi)?(a):(hi) ):(lo) )}}
+\label{group__misc_ga79f6ccd4ae5e1eb6d56058350794f877}
+
+
+Limit values to within a specified range. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]The value to constrain. \item[{\em lo}]The low bound for the range. \item[{\em hi}]The high bound for the range. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the value a constrained to the range specified by lo and hi. 
+\end{DoxyReturn}
+\hypertarget{group__misc_ga1a07879e1cf90ff22dbd52a5408986dd}{
+\index{misc@{misc}!InRange@{InRange}}
+\index{InRange@{InRange}!misc@{misc}}
+\subsubsection[{InRange}]{\setlength{\rightskip}{0pt plus 5cm}\#define InRange(v, \/  lo, \/  hi)~((v)$<$=(hi)\&\&(v)$>$=(lo))}}
+\label{group__misc_ga1a07879e1cf90ff22dbd52a5408986dd}
+
+
+If a value is within the specified range, then return true. Otherwise return false.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em v}]The value to test. \item[{\em lo}]The low bound for the range. \item[{\em hi}]The high bound for the range. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if within range, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__misc_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{
+\index{misc@{misc}!MAX@{MAX}}
+\index{MAX@{MAX}!misc@{misc}}
+\subsubsection[{MAX}]{\setlength{\rightskip}{0pt plus 5cm}\#define MAX(a, \/  b)~((a)$>$(b)?(a):(b))}}
+\label{group__misc_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}
+
+
+Return the higher of two values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]The first value to compare. \item[{\em b}]The second value to compare. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the higher of a or b. 
+\end{DoxyReturn}
+\hypertarget{group__misc_ga3acffbd305ee72dcd4593c0d8af64a4f}{
+\index{misc@{misc}!MIN@{MIN}}
+\index{MIN@{MIN}!misc@{misc}}
+\subsubsection[{MIN}]{\setlength{\rightskip}{0pt plus 5cm}\#define MIN(a, \/  b)~((a)$<$(b)?(a):(b))}}
+\label{group__misc_ga3acffbd305ee72dcd4593c0d8af64a4f}
+
+
+Return the lower of two values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]The first value to compare. \item[{\em b}]The second value to compare. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the lower of a or b. 
+\end{DoxyReturn}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{
+\index{misc@{misc}!e\_\-max\_\-errorcodes@{e\_\-max\_\-errorcodes}}
+\index{e\_\-max\_\-errorcodes@{e\_\-max\_\-errorcodes}!misc@{misc}}
+\subsubsection[{e\_\-max\_\-errorcodes}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-errorcodes}}}
+\label{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}
+
+
+Standard values returned by function calls with a return type of \hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err}. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{MAX\_\-ERR\_\-NONE@{MAX\_\-ERR\_\-NONE}!misc@{misc}}\index{misc@{misc}!MAX\_\-ERR\_\-NONE@{MAX\_\-ERR\_\-NONE}}\item[{\em 
+\hypertarget{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{
+MAX\_\-ERR\_\-NONE}
+\label{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}
+}]No error. \index{MAX\_\-ERR\_\-GENERIC@{MAX\_\-ERR\_\-GENERIC}!misc@{misc}}\index{misc@{misc}!MAX\_\-ERR\_\-GENERIC@{MAX\_\-ERR\_\-GENERIC}}\item[{\em 
+\hypertarget{group__misc_gga0764dd6c02b76cca7d053ae50555d69dae285bdd436f17560cfd09c6b31ea397d}{
+MAX\_\-ERR\_\-GENERIC}
+\label{group__misc_gga0764dd6c02b76cca7d053ae50555d69dae285bdd436f17560cfd09c6b31ea397d}
+}]Generic error. \index{MAX\_\-ERR\_\-INVALID\_\-PTR@{MAX\_\-ERR\_\-INVALID\_\-PTR}!misc@{misc}}\index{misc@{misc}!MAX\_\-ERR\_\-INVALID\_\-PTR@{MAX\_\-ERR\_\-INVALID\_\-PTR}}\item[{\em 
+\hypertarget{group__misc_gga0764dd6c02b76cca7d053ae50555d69da42a29c15166206a1bbc13bcc74b2c651}{
+MAX\_\-ERR\_\-INVALID\_\-PTR}
+\label{group__misc_gga0764dd6c02b76cca7d053ae50555d69da42a29c15166206a1bbc13bcc74b2c651}
+}]Invalid Pointer. \index{MAX\_\-ERR\_\-DUPLICATE@{MAX\_\-ERR\_\-DUPLICATE}!misc@{misc}}\index{misc@{misc}!MAX\_\-ERR\_\-DUPLICATE@{MAX\_\-ERR\_\-DUPLICATE}}\item[{\em 
+\hypertarget{group__misc_gga0764dd6c02b76cca7d053ae50555d69da9b67faa1ffafc9b60748135e48b105d1}{
+MAX\_\-ERR\_\-DUPLICATE}
+\label{group__misc_gga0764dd6c02b76cca7d053ae50555d69da9b67faa1ffafc9b60748135e48b105d1}
+}]Duplicate. \index{MAX\_\-ERR\_\-OUT\_\-OF\_\-MEM@{MAX\_\-ERR\_\-OUT\_\-OF\_\-MEM}!misc@{misc}}\index{misc@{misc}!MAX\_\-ERR\_\-OUT\_\-OF\_\-MEM@{MAX\_\-ERR\_\-OUT\_\-OF\_\-MEM}}\item[{\em 
+\hypertarget{group__misc_gga0764dd6c02b76cca7d053ae50555d69da5415d3c3fa523e0bb2ed1edfdbfce9be}{
+MAX\_\-ERR\_\-OUT\_\-OF\_\-MEM}
+\label{group__misc_gga0764dd6c02b76cca7d053ae50555d69da5415d3c3fa523e0bb2ed1edfdbfce9be}
+}]Out of memory. \end{description}
+\end{Desc}
+
+\hypertarget{group__misc_ga4cf665eb75774ae52451e04f91747c25}{
+\index{misc@{misc}!e\_\-max\_\-wind\_\-advise\_\-result@{e\_\-max\_\-wind\_\-advise\_\-result}}
+\index{e\_\-max\_\-wind\_\-advise\_\-result@{e\_\-max\_\-wind\_\-advise\_\-result}!misc@{misc}}
+\subsubsection[{e\_\-max\_\-wind\_\-advise\_\-result}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-wind\_\-advise\_\-result}}}
+\label{group__misc_ga4cf665eb75774ae52451e04f91747c25}
+
+
+Returned values from \hyperlink{group__misc_gab127ce8d89ae72d420a44642c52cc94d}{wind\_\-advise()}. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{aaYes@{aaYes}!misc@{misc}}\index{misc@{misc}!aaYes@{aaYes}}\item[{\em 
+\hypertarget{group__misc_gga4cf665eb75774ae52451e04f91747c25a9d84de609dac254d18b580c1aeb3fd32}{
+aaYes}
+\label{group__misc_gga4cf665eb75774ae52451e04f91747c25a9d84de609dac254d18b580c1aeb3fd32}
+}]Yes button was choosen. \index{aaNo@{aaNo}!misc@{misc}}\index{misc@{misc}!aaNo@{aaNo}}\item[{\em 
+\hypertarget{group__misc_gga4cf665eb75774ae52451e04f91747c25a614519005d5ef9267c6f73891ea11e56}{
+aaNo}
+\label{group__misc_gga4cf665eb75774ae52451e04f91747c25a614519005d5ef9267c6f73891ea11e56}
+}]No button was choosen. \index{aaCancel@{aaCancel}!misc@{misc}}\index{misc@{misc}!aaCancel@{aaCancel}}\item[{\em 
+\hypertarget{group__misc_gga4cf665eb75774ae52451e04f91747c25a2d8f037a3e3227d4bc488ff6b9050833}{
+aaCancel}
+\label{group__misc_gga4cf665eb75774ae52451e04f91747c25a2d8f037a3e3227d4bc488ff6b9050833}
+}]Cancel button was choosen. \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__misc_gaffc50c996275103b9d94ec309c6d8be1}{
+\index{misc@{misc}!error\_\-subscribe@{error\_\-subscribe}}
+\index{error\_\-subscribe@{error\_\-subscribe}!misc@{misc}}
+\subsubsection[{error\_\-subscribe}]{\setlength{\rightskip}{0pt plus 5cm}void error\_\-subscribe ({\bf t\_\-object} $\ast$ {\em x})}}
+\label{group__misc_gaffc50c996275103b9d94ec309c6d8be1}
+
+
+Receive messages from the error handler. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to be subscribed to the error handler.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__misc_gaffc50c996275103b9d94ec309c6d8be1}{error\_\-subscribe()} enables your object to receive a message (error), followed by the list of atoms in the error message posted to the Max window.
+\end{DoxyRemark}
+Prior to calling \hyperlink{group__misc_gaffc50c996275103b9d94ec309c6d8be1}{error\_\-subscribe()}, you should bind the error message to an internal error handling routine: 
+\begin{DoxyCode}
+    addmess((method)myobject_error, "error", A_GIMME, 0);
+\end{DoxyCode}
+ Your error handling routine should be declared as follows: 
+\begin{DoxyCode}
+    void myobject_error(t_myobject *x, t_symbol *s, short argc, t_atom *argv);
+\end{DoxyCode}
+ \hypertarget{group__misc_ga0a094decd1408632226438943e55de81}{
+\index{misc@{misc}!error\_\-sym@{error\_\-sym}}
+\index{error\_\-sym@{error\_\-sym}!misc@{misc}}
+\subsubsection[{error\_\-sym}]{\setlength{\rightskip}{0pt plus 5cm}void error\_\-sym (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__misc_ga0a094decd1408632226438943e55de81}
+
+
+Posts an error message to the Max window. This function is interrupt safe.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object's pointer \item[{\em s}]Symbol to be posted as an error in the Max window \end{DoxyParams}
+\hypertarget{group__misc_ga155f65793ec4c34abc6746015a2beca6}{
+\index{misc@{misc}!error\_\-unsubscribe@{error\_\-unsubscribe}}
+\index{error\_\-unsubscribe@{error\_\-unsubscribe}!misc@{misc}}
+\subsubsection[{error\_\-unsubscribe}]{\setlength{\rightskip}{0pt plus 5cm}void error\_\-unsubscribe ({\bf t\_\-object} $\ast$ {\em x})}}
+\label{group__misc_ga155f65793ec4c34abc6746015a2beca6}
+
+
+Remove an object as an error message recipient. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to unsubscribe. \end{DoxyParams}
+\hypertarget{group__misc_gaa121ff996fcf9cfb28d1c7c11eebc428}{
+\index{misc@{misc}!globalsymbol\_\-bind@{globalsymbol\_\-bind}}
+\index{globalsymbol\_\-bind@{globalsymbol\_\-bind}!misc@{misc}}
+\subsubsection[{globalsymbol\_\-bind}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} globalsymbol\_\-bind ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em name}, \/  long {\em flags})}}
+\label{group__misc_gaa121ff996fcf9cfb28d1c7c11eebc428}
+
+
+Bind an object to a \hyperlink{structt__symbol}{t\_\-symbol}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to bind to the \hyperlink{structt__symbol}{t\_\-symbol}. \item[{\em name}]The name of the \hyperlink{structt__symbol}{t\_\-symbol} to which the object will be bound. \item[{\em flags}]Pass 0. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__misc_ga5a4773570564ab729cbe4031cfff0b45}{
+\index{misc@{misc}!globalsymbol\_\-dereference@{globalsymbol\_\-dereference}}
+\index{globalsymbol\_\-dereference@{globalsymbol\_\-dereference}!misc@{misc}}
+\subsubsection[{globalsymbol\_\-dereference}]{\setlength{\rightskip}{0pt plus 5cm}void globalsymbol\_\-dereference ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em name}, \/  char $\ast$ {\em classname})}}
+\label{group__misc_ga5a4773570564ab729cbe4031cfff0b45}
+
+
+Stop referencing an object that is bound to a \hyperlink{structt__symbol}{t\_\-symbol}, previously referenced using \hyperlink{group__misc_ga72a33738916b577d2df121edfea260b3}{globalsymbol\_\-reference()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object that is getting the reference to the symbol. \item[{\em name}]The name of the symbol to reference. \item[{\em classname}]The name of the class of which the object we are referencing should be an instance. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__misc_ga72a33738916b577d2df121edfea260b3}{globalsymbol\_\-reference()} 
+\end{DoxySeeAlso}
+\hypertarget{group__misc_ga72a33738916b577d2df121edfea260b3}{
+\index{misc@{misc}!globalsymbol\_\-reference@{globalsymbol\_\-reference}}
+\index{globalsymbol\_\-reference@{globalsymbol\_\-reference}!misc@{misc}}
+\subsubsection[{globalsymbol\_\-reference}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ globalsymbol\_\-reference ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em name}, \/  char $\ast$ {\em classname})}}
+\label{group__misc_ga72a33738916b577d2df121edfea260b3}
+
+
+Get a reference to an object that is bound to a \hyperlink{structt__symbol}{t\_\-symbol}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object that is getting the reference to the symbol. \item[{\em name}]The name of the symbol to reference. \item[{\em classname}]The name of the class of which the object we are referencing should be an instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The s\_\-thing of the \hyperlink{structt__symbol}{t\_\-symbol}.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+An example of real-\/world use is to get the buffer$\sim$ object associated with a symbol. 
+\begin{DoxyCode}
+    // the struct of our object
+    typedef struct _myobject {
+        t_object    obj;
+        t_symbol    *buffer_name;
+        t_buffer    *buffer_object;
+    } t_myobject;
+    
+    void myobject_setbuffer(t_myobject *x, t_symbol *s, long argc, t_atom *argv)
+    {       
+        if(s != x->buffer_name){
+            // Reference the buffer associated with the incoming name
+            x->buffer_object = (t_buffer *)globalsymbol_reference((t_object *)x, 
+      s->s_name, "buffer~");
+            
+            // If we were previously referenceing another buffer, we should not l
+      onger reference it.
+            globalsymbol_dereference((t_object *)x, x->buffer_name->s_name, "buff
+      er~");
+            
+            x->buffer_name = s;
+        }       
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__misc_gade40c44fddc370895da5db8f70e1868f}{
+\index{misc@{misc}!globalsymbol\_\-unbind@{globalsymbol\_\-unbind}}
+\index{globalsymbol\_\-unbind@{globalsymbol\_\-unbind}!misc@{misc}}
+\subsubsection[{globalsymbol\_\-unbind}]{\setlength{\rightskip}{0pt plus 5cm}void globalsymbol\_\-unbind ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em name}, \/  long {\em flags})}}
+\label{group__misc_gade40c44fddc370895da5db8f70e1868f}
+
+
+Remove an object from being bound to a \hyperlink{structt__symbol}{t\_\-symbol}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object from which to unbind the \hyperlink{structt__symbol}{t\_\-symbol}. \item[{\em name}]The name of the \hyperlink{structt__symbol}{t\_\-symbol} from which the object will be unbound. \item[{\em flags}]Pass 0. \end{DoxyParams}
+\hypertarget{group__misc_ga0eaf32722b98ab4920cb6f64b45a5d5b}{
+\index{misc@{misc}!maxversion@{maxversion}}
+\index{maxversion@{maxversion}!misc@{misc}}
+\subsubsection[{maxversion}]{\setlength{\rightskip}{0pt plus 5cm}short maxversion (void)}}
+\label{group__misc_ga0eaf32722b98ab4920cb6f64b45a5d5b}
+
+
+Determine version information about the current Max environment. This function returns the version number of Max. In Max versions 2.1.4 and later, this number is the version number of the Max kernel application in binary-\/coded decimal. Thus, 2.1.4 would return 214 hex or 532 decimal. Version 3.0 returns 300 hex.
+
+Use this to check for the existence of particular function macros that are only present in more recent Max versions. Versions before 2.1.4 returned 1, except for versions 2.1.1 -\/ 2.1.3 which returned 2.
+
+Bit 14 (counting from left) will be set if Max is running as a standalone application, so you should mask the lower 12 bits to get the version number.
+
+\begin{DoxyReturn}{Returns}
+The Max environment's version number. 
+\end{DoxyReturn}
+\hypertarget{group__misc_ga332b8831bb1a42503b13d16269fc5ade}{
+\index{misc@{misc}!object\_\-obex\_\-quickref@{object\_\-obex\_\-quickref}}
+\index{object\_\-obex\_\-quickref@{object\_\-obex\_\-quickref}!misc@{misc}}
+\subsubsection[{object\_\-obex\_\-quickref}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-obex\_\-quickref (void $\ast$ {\em x}, \/  long $\ast$ {\em numitems}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em items})}}
+\label{group__misc_ga332b8831bb1a42503b13d16269fc5ade}
+
+
+Developers do not need to directly use the \hyperlink{group__misc_ga332b8831bb1a42503b13d16269fc5ade}{object\_\-obex\_\-quickref()} function. It was used in Max 4 to add support for attributes to the quickref, but this is automatic in Max 5. \hypertarget{group__misc_gad8bf1a07113f7db2b387d5e138fe59fd}{
+\index{misc@{misc}!post\_\-sym@{post\_\-sym}}
+\index{post\_\-sym@{post\_\-sym}!misc@{misc}}
+\subsubsection[{post\_\-sym}]{\setlength{\rightskip}{0pt plus 5cm}void post\_\-sym (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__misc_gad8bf1a07113f7db2b387d5e138fe59fd}
+
+
+Posts a message to the Max window. This function is interrupt safe.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object's pointer \item[{\em s}]Symbol to be posted in the Max window \end{DoxyParams}
+\hypertarget{group__misc_ga0638f6ac63b75fa53c0a34db8ec8d412}{
+\index{misc@{misc}!quittask\_\-install@{quittask\_\-install}}
+\index{quittask\_\-install@{quittask\_\-install}!misc@{misc}}
+\subsubsection[{quittask\_\-install}]{\setlength{\rightskip}{0pt plus 5cm}void quittask\_\-install ({\bf method} {\em m}, \/  void $\ast$ {\em a})}}
+\label{group__misc_ga0638f6ac63b75fa53c0a34db8ec8d412}
+
+
+Register a function that will be called when Max exits. 
+\begin{DoxyParams}{Parameters}
+\item[{\em m}]A function that will be called on Max exit. \item[{\em a}]Argument to be used with method m.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__misc_ga0638f6ac63b75fa53c0a34db8ec8d412}{quittask\_\-install()} provides a mechanism for your external to register a routine to be called prior to Max shutdown. This is useful for objects that need to provide disk-\/based persistance outside the standard Max storage mechanisms, or need to shut down hardware or their connection to system software and cannot do so in the termination routine of a code fragment. 
+\end{DoxyRemark}
+\hypertarget{group__misc_ga99223860e2a94772b52089abfeb506f3}{
+\index{misc@{misc}!quittask\_\-remove@{quittask\_\-remove}}
+\index{quittask\_\-remove@{quittask\_\-remove}!misc@{misc}}
+\subsubsection[{quittask\_\-remove}]{\setlength{\rightskip}{0pt plus 5cm}void quittask\_\-remove ({\bf method} {\em m})}}
+\label{group__misc_ga99223860e2a94772b52089abfeb506f3}
+
+
+Unregister a function previously registered with \hyperlink{group__misc_ga0638f6ac63b75fa53c0a34db8ec8d412}{quittask\_\-install()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em m}]Function to be removed as a shutdown method. \end{DoxyParams}
+\hypertarget{group__misc_gab82e9c5bbc8b7fe70d16b1f6383f1cc4}{
+\index{misc@{misc}!snprintf\_\-zero@{snprintf\_\-zero}}
+\index{snprintf\_\-zero@{snprintf\_\-zero}!misc@{misc}}
+\subsubsection[{snprintf\_\-zero}]{\setlength{\rightskip}{0pt plus 5cm}int snprintf\_\-zero (char $\ast$ {\em buffer}, \/  size\_\-t {\em count}, \/  const char $\ast$ {\em format}, \/   {\em ...})}}
+\label{group__misc_gab82e9c5bbc8b7fe70d16b1f6383f1cc4}
+
+
+Copy the contents of a string together with value substitutions, in a manner safer than the standard sprintf() or snprintf(). This is the prefered function to use for this operation in Max.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em buffer}]The destination string (already allocated) for the copy. \item[{\em count}]The number of chars allocated to the buffer string. \item[{\em format}]The source string that will be copied, which may include sprintf() formatting codes for substitutions. \item[{\em ...}]An array of arguments to be substituted into the format string. \end{DoxyParams}
+\hypertarget{group__misc_ga3ed4f46782e6a41d13ca17420c35dfb7}{
+\index{misc@{misc}!strncat\_\-zero@{strncat\_\-zero}}
+\index{strncat\_\-zero@{strncat\_\-zero}!misc@{misc}}
+\subsubsection[{strncat\_\-zero}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ strncat\_\-zero (char $\ast$ {\em dst}, \/  const char $\ast$ {\em src}, \/  long {\em size})}}
+\label{group__misc_ga3ed4f46782e6a41d13ca17420c35dfb7}
+
+
+Concatenate the contents of one string onto the end of another, in a manner safer than the standard strcat() or strncat(). This is the prefered function to use for this operation in Max.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em dst}]The destination string onto whose end the src string will be appended. \item[{\em src}]The source string that will be copied. \item[{\em size}]The number of chars allocated to the dst string. \end{DoxyParams}
+\hypertarget{group__misc_ga0022303fac866c8f5757aa56b67ce29d}{
+\index{misc@{misc}!strncpy\_\-zero@{strncpy\_\-zero}}
+\index{strncpy\_\-zero@{strncpy\_\-zero}!misc@{misc}}
+\subsubsection[{strncpy\_\-zero}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ strncpy\_\-zero (char $\ast$ {\em dst}, \/  const char $\ast$ {\em src}, \/  long {\em size})}}
+\label{group__misc_ga0022303fac866c8f5757aa56b67ce29d}
+
+
+Copy the contents of one string to another, in a manner safer than the standard strcpy() or strncpy(). This is the prefered function to use for this operation in Max.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em dst}]The destination string (already allocated) for the copy. \item[{\em src}]The source string that will be copied. \item[{\em size}]The number of chars allocated to the dst string. \end{DoxyParams}
+\hypertarget{group__misc_ga0cb594bfc861d0a72b61c067cd890122}{
+\index{misc@{misc}!symbol\_\-unique@{symbol\_\-unique}}
+\index{symbol\_\-unique@{symbol\_\-unique}!misc@{misc}}
+\subsubsection[{symbol\_\-unique}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ symbol\_\-unique ()}}
+\label{group__misc_ga0cb594bfc861d0a72b61c067cd890122}
+
+
+Generates a unique \hyperlink{structt__symbol}{t\_\-symbol} $\ast$. The symbol will be formatted somewhat like \char`\"{}u123456789\char`\"{}.
+
+\begin{DoxyReturn}{Returns}
+This function returns a unique \hyperlink{structt__symbol}{t\_\-symbol} $\ast$. 
+\end{DoxyReturn}
+\hypertarget{group__misc_ga751e472fea0842d902012a41f79afcce}{
+\index{misc@{misc}!symbolarray\_\-sort@{symbolarray\_\-sort}}
+\index{symbolarray\_\-sort@{symbolarray\_\-sort}!misc@{misc}}
+\subsubsection[{symbolarray\_\-sort}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} symbolarray\_\-sort (long {\em ac}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em av})}}
+\label{group__misc_ga751e472fea0842d902012a41f79afcce}
+
+
+Performs an ASCII sort on an array of \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The count of \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s in {\ttfamily av} \item[{\em av}]An array of \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s to be sorted\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__misc_gab127ce8d89ae72d420a44642c52cc94d}{
+\index{misc@{misc}!wind\_\-advise@{wind\_\-advise}}
+\index{wind\_\-advise@{wind\_\-advise}!misc@{misc}}
+\subsubsection[{wind\_\-advise}]{\setlength{\rightskip}{0pt plus 5cm}short wind\_\-advise ({\bf t\_\-object} $\ast$ {\em w}, \/  char $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__misc_gab127ce8d89ae72d420a44642c52cc94d}
+
+
+Throw a dialog which may have text and up to three buttons. For example, this can be used to ask \char`\"{}Save changes before...\char`\"{}
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em w}]The window with which this dialog is associated. \item[{\em s}]A string with any sprintf()-\/like formatting to be displayed. \item[{\em ...}]Any variables that should be substituted in the string defined by s. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+One of the values defined in \hyperlink{group__misc_ga4cf665eb75774ae52451e04f91747c25}{e\_\-max\_\-wind\_\-advise\_\-result}, depending on what the user selected. 
+\end{DoxyReturn}
+\hypertarget{group__misc_ga85a1754ef77207af4ab7617e7487336e}{
+\index{misc@{misc}!wind\_\-setcursor@{wind\_\-setcursor}}
+\index{wind\_\-setcursor@{wind\_\-setcursor}!misc@{misc}}
+\subsubsection[{wind\_\-setcursor}]{\setlength{\rightskip}{0pt plus 5cm}void wind\_\-setcursor (short {\em which})}}
+\label{group__misc_ga85a1754ef77207af4ab7617e7487336e}
+
+
+Change the cursor. 
+\begin{DoxyParams}{Parameters}
+\item[{\em which}]One of the following predefined cursors: 
+\begin{DoxyCode}
+    #define C_ARROW     1
+    #define C_WATCH     2
+    #define C_IBEAM     3
+    #define C_HAND      4
+    #define C_CROSS     5
+    #define C_PENCIL    6
+    #define C_GROW      8
+\end{DoxyCode}
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+\hyperlink{group__misc_ga85a1754ef77207af4ab7617e7487336e}{wind\_\-setcursor()} keeps track of what the cursor was previously set to, so if something else has changed the cursor, you may not see a new cursor if you set it to the previous argument to \hyperlink{group__misc_ga85a1754ef77207af4ab7617e7487336e}{wind\_\-setcursor()}.
+\end{DoxyRemark}
+The solution is to call wind\_\-setcursor(0) before calling it with the desired cursor constant. Use wind\_\-setcursor(-\/1) to tell Max you’ll set the cursor to your own cursor directly. 

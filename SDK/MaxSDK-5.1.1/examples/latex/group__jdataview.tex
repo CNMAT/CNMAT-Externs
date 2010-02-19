@@ -1,0 +1,83 @@
+\hypertarget{group__jdataview}{
+\section{DataView}
+\label{group__jdataview}\index{DataView@{DataView}}
+}
+
+
+The jdataview object provides a mechanism to display data in a tabular format.  
+
+
+Collaboration diagram for DataView:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=120pt]{group__jdataview}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__celldesc}{t\_\-celldesc}
+\begin{DoxyCompactList}\small\item\em A dataview cell description. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jcolumn}{t\_\-jcolumn}
+\begin{DoxyCompactList}\small\item\em A dataview column. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jdataview}{t\_\-jdataview}
+\begin{DoxyCompactList}\small\item\em The dataview object. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__privatesortrec}{t\_\-privatesortrec}
+\begin{DoxyCompactList}\small\item\em used to pass data to a client sort function \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__jdataview_gade6216b46327a12840074dae041c7060}{jdataview\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Create a dataview. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jdataview_ga830dcb9370db2643336d5a0fe91fae7e}{jdataview\_\-setclient} (\hyperlink{structt__object}{t\_\-object} $\ast$dv, \hyperlink{structt__object}{t\_\-object} $\ast$client)
+\begin{DoxyCompactList}\small\item\em Set a dataview's client. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jdataview_gac7cd79780700da15849455a10e5e72b4}{jdataview\_\-getclient} (\hyperlink{structt__object}{t\_\-object} $\ast$dv)
+\begin{DoxyCompactList}\small\item\em Get a pointer to a dataview's client. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The jdataview object provides a mechanism to display data in a tabular format. In Max this is used internally for the implementation of the inspectors, file browser, preferences, and jit.cellblock object, among others.
+
+A jdataview object does not contain the information that it presents. The object you create will maintain the data and then make the data available to the dataview using the provided api. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jdataview_gac7cd79780700da15849455a10e5e72b4}{
+\index{jdataview@{jdataview}!jdataview\_\-getclient@{jdataview\_\-getclient}}
+\index{jdataview\_\-getclient@{jdataview\_\-getclient}!jdataview@{jdataview}}
+\subsubsection[{jdataview\_\-getclient}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jdataview\_\-getclient ({\bf t\_\-object} $\ast$ {\em dv})}}
+\label{group__jdataview_gac7cd79780700da15849455a10e5e72b4}
+
+
+Get a pointer to a dataview's client. The client is the object to which the dataview will send messages to get data, notify of changes to cells, etc.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em dv}]The dataview instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the dataview's client object. 
+\end{DoxyReturn}
+\hypertarget{group__jdataview_gade6216b46327a12840074dae041c7060}{
+\index{jdataview@{jdataview}!jdataview\_\-new@{jdataview\_\-new}}
+\index{jdataview\_\-new@{jdataview\_\-new}!jdataview@{jdataview}}
+\subsubsection[{jdataview\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jdataview\_\-new (void)}}
+\label{group__jdataview_gade6216b46327a12840074dae041c7060}
+
+
+Create a dataview. You should free it with \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}.
+
+\begin{DoxyReturn}{Returns}
+A pointer to the new instance. 
+\end{DoxyReturn}
+\hypertarget{group__jdataview_ga830dcb9370db2643336d5a0fe91fae7e}{
+\index{jdataview@{jdataview}!jdataview\_\-setclient@{jdataview\_\-setclient}}
+\index{jdataview\_\-setclient@{jdataview\_\-setclient}!jdataview@{jdataview}}
+\subsubsection[{jdataview\_\-setclient}]{\setlength{\rightskip}{0pt plus 5cm}void jdataview\_\-setclient ({\bf t\_\-object} $\ast$ {\em dv}, \/  {\bf t\_\-object} $\ast$ {\em client})}}
+\label{group__jdataview_ga830dcb9370db2643336d5a0fe91fae7e}
+
+
+Set a dataview's client. The client is the object to which the dataview will send messages to get data, notify of changes to cells, etc. Typically this is the object in which you are creating the dataview.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em dv}]The dataview instance. \item[{\em client}]The object to be assigned as the dataview's client. \end{DoxyParams}

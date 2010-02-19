@@ -1,0 +1,170 @@
+\hypertarget{group__jmatrix}{
+\section{JGraphics Matrix Transformations}
+\label{group__jmatrix}\index{JGraphics Matrix Transformations@{JGraphics Matrix Transformations}}
+}
+
+
+The \hyperlink{structt__jmatrix}{t\_\-jmatrix} is one way to represent a transformation.  
+
+
+Collaboration diagram for JGraphics Matrix Transformations:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=170pt]{group__jmatrix}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__jmatrix}{t\_\-jmatrix}
+\begin{DoxyCompactList}\small\item\em An affine transformation (such as scale, shear, etc). \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__jmatrix_gafb24446d0616fbfca7d8bb96ba97b4ef}{jgraphics\_\-matrix\_\-init} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x, double xx, double yx, double xy, double yy, double x0, double y0)
+\begin{DoxyCompactList}\small\item\em Set a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to an affine transformation. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_ga7f07986602f12117cfd79e82fb1338d7}{jgraphics\_\-matrix\_\-init\_\-identity} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Modify a matrix to be an identity transform. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_gad5a50cfd545eaec3cf4adb02bb4f4995}{jgraphics\_\-matrix\_\-init\_\-translate} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x, double tx, double ty)
+\begin{DoxyCompactList}\small\item\em Initialize a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to translate (offset) a point. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_ga1f8e9b71bc22f3744643cc25d24f0ac4}{jgraphics\_\-matrix\_\-init\_\-scale} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x, double sx, double sy)
+\begin{DoxyCompactList}\small\item\em Initialize a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to scale (offset) a point. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_gaa2e4de77693076fab80df039bb56990e}{jgraphics\_\-matrix\_\-init\_\-rotate} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x, double radians)
+\begin{DoxyCompactList}\small\item\em Initialize a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to rotate (offset) a point. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_gaf39440de92c4e2164d233761af8ba4b9}{jgraphics\_\-matrix\_\-translate} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x, double tx, double ty)
+\begin{DoxyCompactList}\small\item\em Apply a translation to an existing matrix. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_gaac1ee9b0dc5e54cc0cb8e5a213df1b51}{jgraphics\_\-matrix\_\-scale} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x, double sx, double sy)
+\begin{DoxyCompactList}\small\item\em Apply a scaling to an existing matrix. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_gabbe882c283d57b37da55cd4d069b55dc}{jgraphics\_\-matrix\_\-rotate} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x, double radians)
+\begin{DoxyCompactList}\small\item\em Apply a rotation to an existing matrix. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_gae46840f2ac22aee22c9b211d60f4b381}{jgraphics\_\-matrix\_\-invert} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Invert an existing matrix. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_ga496e878760928eaa1226a3ddf7e265a7}{jgraphics\_\-matrix\_\-multiply} (\hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$result, const \hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$a, const \hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Multiply two matrices: resulting matrix has effect of first applying a and then applying b. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmatrix_gae2fbe033e0d1cae567b9cea4c4c8c91d}{jgraphics\_\-matrix\_\-transform\_\-point} (const \hyperlink{structt__jmatrix}{t\_\-jmatrix} $\ast$matrix, double $\ast$x, double $\ast$y)
+\begin{DoxyCompactList}\small\item\em Transform a point using a \hyperlink{structt__jmatrix}{t\_\-jmatrix} transormation. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{structt__jmatrix}{t\_\-jmatrix} is one way to represent a transformation. You can use the \hyperlink{structt__jmatrix}{t\_\-jmatrix} in the call to jgraphics\_\-transform(), jgraphics\_\-setmatrix(), and jgraphics\_\-pattern\_\-set\_\-matrix for specifying transformations. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jmatrix_gafb24446d0616fbfca7d8bb96ba97b4ef}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-init@{jgraphics\_\-matrix\_\-init}}
+\index{jgraphics\_\-matrix\_\-init@{jgraphics\_\-matrix\_\-init}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-init ({\bf t\_\-jmatrix} $\ast$ {\em x}, \/  double {\em xx}, \/  double {\em yx}, \/  double {\em xy}, \/  double {\em yy}, \/  double {\em x0}, \/  double {\em y0})}}
+\label{group__jmatrix_gafb24446d0616fbfca7d8bb96ba97b4ef}
+
+
+Set a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to an affine transformation. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]\item[{\em xx}]\item[{\em yx}]\item[{\em xy}]\item[{\em yy}]\item[{\em x0}]\item[{\em y0}]\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+given x,y the matrix specifies the following transformation: 
+\begin{DoxyCode}
+    xnew = xx * x + xy * y + x0; 
+    ynew = yx * x + yy * y + y0;
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__jmatrix_ga7f07986602f12117cfd79e82fb1338d7}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-init\_\-identity@{jgraphics\_\-matrix\_\-init\_\-identity}}
+\index{jgraphics\_\-matrix\_\-init\_\-identity@{jgraphics\_\-matrix\_\-init\_\-identity}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-init\_\-identity}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-init\_\-identity ({\bf t\_\-jmatrix} $\ast$ {\em x})}}
+\label{group__jmatrix_ga7f07986602f12117cfd79e82fb1338d7}
+
+
+Modify a matrix to be an identity transform. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \end{DoxyParams}
+\hypertarget{group__jmatrix_gaa2e4de77693076fab80df039bb56990e}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-init\_\-rotate@{jgraphics\_\-matrix\_\-init\_\-rotate}}
+\index{jgraphics\_\-matrix\_\-init\_\-rotate@{jgraphics\_\-matrix\_\-init\_\-rotate}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-init\_\-rotate}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-init\_\-rotate ({\bf t\_\-jmatrix} $\ast$ {\em x}, \/  double {\em radians})}}
+\label{group__jmatrix_gaa2e4de77693076fab80df039bb56990e}
+
+
+Initialize a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to rotate (offset) a point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em radians}]The angle or rotation in radians. \end{DoxyParams}
+\hypertarget{group__jmatrix_ga1f8e9b71bc22f3744643cc25d24f0ac4}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-init\_\-scale@{jgraphics\_\-matrix\_\-init\_\-scale}}
+\index{jgraphics\_\-matrix\_\-init\_\-scale@{jgraphics\_\-matrix\_\-init\_\-scale}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-init\_\-scale}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-init\_\-scale ({\bf t\_\-jmatrix} $\ast$ {\em x}, \/  double {\em sx}, \/  double {\em sy})}}
+\label{group__jmatrix_ga1f8e9b71bc22f3744643cc25d24f0ac4}
+
+
+Initialize a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to scale (offset) a point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em sx}]The horizontal scale factor. \item[{\em sy}]The vertical scale factor. \end{DoxyParams}
+\hypertarget{group__jmatrix_gad5a50cfd545eaec3cf4adb02bb4f4995}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-init\_\-translate@{jgraphics\_\-matrix\_\-init\_\-translate}}
+\index{jgraphics\_\-matrix\_\-init\_\-translate@{jgraphics\_\-matrix\_\-init\_\-translate}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-init\_\-translate}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-init\_\-translate ({\bf t\_\-jmatrix} $\ast$ {\em x}, \/  double {\em tx}, \/  double {\em ty})}}
+\label{group__jmatrix_gad5a50cfd545eaec3cf4adb02bb4f4995}
+
+
+Initialize a \hyperlink{structt__jmatrix}{t\_\-jmatrix} to translate (offset) a point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em tx}]The amount of x-\/axis translation. \item[{\em ty}]The amount of y-\/axis translation. \end{DoxyParams}
+\hypertarget{group__jmatrix_gae46840f2ac22aee22c9b211d60f4b381}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-invert@{jgraphics\_\-matrix\_\-invert}}
+\index{jgraphics\_\-matrix\_\-invert@{jgraphics\_\-matrix\_\-invert}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-invert}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-invert ({\bf t\_\-jmatrix} $\ast$ {\em x})}}
+\label{group__jmatrix_gae46840f2ac22aee22c9b211d60f4b381}
+
+
+Invert an existing matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \end{DoxyParams}
+\hypertarget{group__jmatrix_ga496e878760928eaa1226a3ddf7e265a7}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-multiply@{jgraphics\_\-matrix\_\-multiply}}
+\index{jgraphics\_\-matrix\_\-multiply@{jgraphics\_\-matrix\_\-multiply}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-multiply}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-multiply ({\bf t\_\-jmatrix} $\ast$ {\em result}, \/  const {\bf t\_\-jmatrix} $\ast$ {\em a}, \/  const {\bf t\_\-jmatrix} $\ast$ {\em b})}}
+\label{group__jmatrix_ga496e878760928eaa1226a3ddf7e265a7}
+
+
+Multiply two matrices: resulting matrix has effect of first applying a and then applying b. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The resulting product \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em a}]The first operand. \item[{\em b}]The second operand. \end{DoxyParams}
+\hypertarget{group__jmatrix_gabbe882c283d57b37da55cd4d069b55dc}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-rotate@{jgraphics\_\-matrix\_\-rotate}}
+\index{jgraphics\_\-matrix\_\-rotate@{jgraphics\_\-matrix\_\-rotate}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-rotate}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-rotate ({\bf t\_\-jmatrix} $\ast$ {\em x}, \/  double {\em radians})}}
+\label{group__jmatrix_gabbe882c283d57b37da55cd4d069b55dc}
+
+
+Apply a rotation to an existing matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em radians}]The angle or rotation in radians. \end{DoxyParams}
+\hypertarget{group__jmatrix_gaac1ee9b0dc5e54cc0cb8e5a213df1b51}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-scale@{jgraphics\_\-matrix\_\-scale}}
+\index{jgraphics\_\-matrix\_\-scale@{jgraphics\_\-matrix\_\-scale}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-scale}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-scale ({\bf t\_\-jmatrix} $\ast$ {\em x}, \/  double {\em sx}, \/  double {\em sy})}}
+\label{group__jmatrix_gaac1ee9b0dc5e54cc0cb8e5a213df1b51}
+
+
+Apply a scaling to an existing matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em sx}]The horizontal scale factor. \item[{\em sy}]The vertical scale factor. \end{DoxyParams}
+\hypertarget{group__jmatrix_gae2fbe033e0d1cae567b9cea4c4c8c91d}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-transform\_\-point@{jgraphics\_\-matrix\_\-transform\_\-point}}
+\index{jgraphics\_\-matrix\_\-transform\_\-point@{jgraphics\_\-matrix\_\-transform\_\-point}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-transform\_\-point}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-transform\_\-point (const {\bf t\_\-jmatrix} $\ast$ {\em matrix}, \/  double $\ast$ {\em x}, \/  double $\ast$ {\em y})}}
+\label{group__jmatrix_gae2fbe033e0d1cae567b9cea4c4c8c91d}
+
+
+Transform a point using a \hyperlink{structt__jmatrix}{t\_\-jmatrix} transormation. 
+\begin{DoxyParams}{Parameters}
+\item[{\em matrix}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em x}]The address of the variable holding the x coordinate. \item[{\em y}]The address of the variable holding the y coordinate. \end{DoxyParams}
+\hypertarget{group__jmatrix_gaf39440de92c4e2164d233761af8ba4b9}{
+\index{jmatrix@{jmatrix}!jgraphics\_\-matrix\_\-translate@{jgraphics\_\-matrix\_\-translate}}
+\index{jgraphics\_\-matrix\_\-translate@{jgraphics\_\-matrix\_\-translate}!jmatrix@{jmatrix}}
+\subsubsection[{jgraphics\_\-matrix\_\-translate}]{\setlength{\rightskip}{0pt plus 5cm}void jgraphics\_\-matrix\_\-translate ({\bf t\_\-jmatrix} $\ast$ {\em x}, \/  double {\em tx}, \/  double {\em ty})}}
+\label{group__jmatrix_gaf39440de92c4e2164d233761af8ba4b9}
+
+
+Apply a translation to an existing matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__jmatrix}{t\_\-jmatrix}. \item[{\em tx}]The amount of x-\/axis translation. \item[{\em ty}]The amount of y-\/axis translation. \end{DoxyParams}

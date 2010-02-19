@@ -1,0 +1,529 @@
+\hypertarget{group__matrixmod}{
+\section{Matrix Module}
+\label{group__matrixmod}\index{Matrix Module@{Matrix Module}}
+}
+
+
+Collaboration diagram for Matrix Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=107pt]{group__matrixmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__matrixmod_ga42ada5c64ab9ba19ba4e58461dd1a823}{jit\_\-linklist\_\-free} (t\_\-jit\_\-linklist $\ast$x)
+\begin{DoxyCompactList}\small\item\em Frees instance of t\_\-jit\_\-linklist. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__matrixmod_gac7c617a1e6cb1cbf2a5a8cdc27697eff}{jit\_\-matrix\_\-new} (\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Constructs instance of t\_\-jit\_\-matrix. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__matrixmod_ga900b5d226f56a36d2285e64e7d501eb7}{jit\_\-matrix\_\-newcopy} (t\_\-jit\_\-matrix $\ast$copyme)
+\begin{DoxyCompactList}\small\item\em Constructs instance of t\_\-jit\_\-matrix, copying from input. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gafcd9da344bd48c0e38b36d2d70451125}{jit\_\-matrix\_\-free} (t\_\-jit\_\-matrix $\ast$x)
+\begin{DoxyCompactList}\small\item\em Frees instance of t\_\-jit\_\-matrix. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga2324cd46df9bcd18c84d6bd49bf1b091}{jit\_\-matrix\_\-setinfo} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Sets all attributes according to the \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga626c0457e1ade74e808c1afcfd22a9c2}{jit\_\-matrix\_\-setinfo\_\-ex} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Sets all attributes according to the \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct provided (including data flags). \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga52060a5a58fb6503fa66e40336df2d2c}{jit\_\-matrix\_\-getinfo} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Retrieves all attributes, copying into the \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga15e9e2b55f6ce23d2c488d8b2bf8b57b}{jit\_\-matrix\_\-getdata} (t\_\-jit\_\-matrix $\ast$x, void $\ast$$\ast$data)
+\begin{DoxyCompactList}\small\item\em Retrieves matrix data pointer. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga2c46ae2df38dcc4be2166c05710ef42a}{jit\_\-matrix\_\-data} (t\_\-jit\_\-matrix $\ast$x, void $\ast$data)
+\begin{DoxyCompactList}\small\item\em Sets matrix data pointer. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gaa3dcbf132ba94af59d39ec1b0a20aba2}{jit\_\-matrix\_\-freedata} (t\_\-jit\_\-matrix $\ast$x)
+\begin{DoxyCompactList}\small\item\em Frees matrix's internal data pointer if an internal reference and sets to NULL. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga9c068d7781425345e99576a1955366af}{jit\_\-matrix\_\-info\_\-default} (\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$info)
+\begin{DoxyCompactList}\small\item\em Initializes matrix info struct to default values. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga7dd2097e966c5365486652b6d9e32565}{jit\_\-matrix\_\-clear} (t\_\-jit\_\-matrix $\ast$x)
+\begin{DoxyCompactList}\small\item\em Sets all cells in matrix to the zero. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gacebbcc6a1a5a2211930b83e5742122e4}{jit\_\-matrix\_\-setcell1d} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga364b87f2a873467d381aac89ba90e111}{jit\_\-matrix\_\-setcell2d} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga7612675d9dc36cfd94a1adbac04e8719}{jit\_\-matrix\_\-setcell3d} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga5b631df680bd059a5dd241a803863664}{jit\_\-matrix\_\-setplane1d} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets plane of cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gaabbb38a64f1b3c79c3a9db75d18bbe81}{jit\_\-matrix\_\-setplane2d} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets plane of cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga4bd5c42b1159423126abf0d6f1ca706c}{jit\_\-matrix\_\-setplane3d} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets plane of cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gafe9683aa769a6c97e9645f889765da62}{jit\_\-matrix\_\-setcell} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga5e42c3fe24bf48e8fda494a26ead2f6d}{jit\_\-matrix\_\-getcell} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv, long $\ast$rac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$rav)
+\begin{DoxyCompactList}\small\item\em Gets cell at index to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga8082cc74c3e4d5a68167e10d865217e1}{jit\_\-matrix\_\-setall} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets all cells to the value provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gac5ec23c849581a65c094654bbba41dee}{jit\_\-matrix\_\-togworld} (t\_\-jit\_\-matrix $\ast$x, GWorldPtr gp, t\_\-gworld\_\-conv\_\-info $\ast$gcinfo)
+\begin{DoxyCompactList}\small\item\em Copies Jitter matrix data to GWorld data. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga5413151392a8876a78cd2f66b4a23279}{jit\_\-matrix\_\-fromgworld} (t\_\-jit\_\-matrix $\ast$x, GWorldPtr gp, t\_\-gworld\_\-conv\_\-info $\ast$gcinfo)
+\begin{DoxyCompactList}\small\item\em Copies Jitter matrix data from GWorld data. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gaec5dd25f1111bb4efab4b2e3fdced43e}{jit\_\-matrix\_\-frommatrix} (t\_\-jit\_\-matrix $\ast$dst\_\-matrix, t\_\-jit\_\-matrix $\ast$src\_\-matrix, \hyperlink{structt__matrix__conv__info}{t\_\-matrix\_\-conv\_\-info} $\ast$mcinfo)
+\begin{DoxyCompactList}\small\item\em Copies Jitter matrix data from another matrix. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga5f56aa2c21c39c60e7549beeb86a5120}{jit\_\-matrix\_\-op} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Applies unary or binary operator to matrix See Jitter user documentation for more information. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_ga85d4a4256d423c720489526a56803396}{jit\_\-matrix\_\-exprfill} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Fills cells according to the jit.expr expression provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__matrixmod_gae640384806be8bb78a2cb0118c629a0f}{jit\_\-matrix\_\-jit\_\-gl\_\-texture} (t\_\-jit\_\-matrix $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Copies texture information to matrix. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__matrixmod_ga42ada5c64ab9ba19ba4e58461dd1a823}{
+\index{matrixmod@{matrixmod}!jit\_\-linklist\_\-free@{jit\_\-linklist\_\-free}}
+\index{jit\_\-linklist\_\-free@{jit\_\-linklist\_\-free}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-linklist\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-linklist\_\-free (t\_\-jit\_\-linklist $\ast$ {\em x})}}
+\label{group__matrixmod_ga42ada5c64ab9ba19ba4e58461dd1a823}
+
+
+Frees instance of t\_\-jit\_\-linklist. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-linklist object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+Use jit\_\-object\_\-free instead. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga7dd2097e966c5365486652b6d9e32565}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-clear@{jit\_\-matrix\_\-clear}}
+\index{jit\_\-matrix\_\-clear@{jit\_\-matrix\_\-clear}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-clear (t\_\-jit\_\-matrix $\ast$ {\em x})}}
+\label{group__matrixmod_ga7dd2097e966c5365486652b6d9e32565}
+
+
+Sets all cells in matrix to the zero. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga2c46ae2df38dcc4be2166c05710ef42a}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-data@{jit\_\-matrix\_\-data}}
+\index{jit\_\-matrix\_\-data@{jit\_\-matrix\_\-data}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-data (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  void $\ast$ {\em data})}}
+\label{group__matrixmod_ga2c46ae2df38dcc4be2166c05710ef42a}
+
+
+Sets matrix data pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em data}]data pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga85d4a4256d423c720489526a56803396}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-exprfill@{jit\_\-matrix\_\-exprfill}}
+\index{jit\_\-matrix\_\-exprfill@{jit\_\-matrix\_\-exprfill}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-exprfill}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-exprfill (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_ga85d4a4256d423c720489526a56803396}
+
+
+Fills cells according to the jit.expr expression provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gafcd9da344bd48c0e38b36d2d70451125}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-free@{jit\_\-matrix\_\-free}}
+\index{jit\_\-matrix\_\-free@{jit\_\-matrix\_\-free}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-free (t\_\-jit\_\-matrix $\ast$ {\em x})}}
+\label{group__matrixmod_gafcd9da344bd48c0e38b36d2d70451125}
+
+
+Frees instance of t\_\-jit\_\-matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+Use jit\_\-object\_\-free instead. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gaa3dcbf132ba94af59d39ec1b0a20aba2}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-freedata@{jit\_\-matrix\_\-freedata}}
+\index{jit\_\-matrix\_\-freedata@{jit\_\-matrix\_\-freedata}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-freedata}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-freedata (t\_\-jit\_\-matrix $\ast$ {\em x})}}
+\label{group__matrixmod_gaa3dcbf132ba94af59d39ec1b0a20aba2}
+
+
+Frees matrix's internal data pointer if an internal reference and sets to NULL. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga5413151392a8876a78cd2f66b4a23279}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-fromgworld@{jit\_\-matrix\_\-fromgworld}}
+\index{jit\_\-matrix\_\-fromgworld@{jit\_\-matrix\_\-fromgworld}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-fromgworld}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-fromgworld (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  GWorldPtr {\em gp}, \/  t\_\-gworld\_\-conv\_\-info $\ast$ {\em gcinfo})}}
+\label{group__matrixmod_ga5413151392a8876a78cd2f66b4a23279}
+
+
+Copies Jitter matrix data from GWorld data. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em gp}]gworld pointer \item[{\em gcinfo}]conversion information pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gaec5dd25f1111bb4efab4b2e3fdced43e}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-frommatrix@{jit\_\-matrix\_\-frommatrix}}
+\index{jit\_\-matrix\_\-frommatrix@{jit\_\-matrix\_\-frommatrix}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-frommatrix}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-frommatrix (t\_\-jit\_\-matrix $\ast$ {\em dst\_\-matrix}, \/  t\_\-jit\_\-matrix $\ast$ {\em src\_\-matrix}, \/  {\bf t\_\-matrix\_\-conv\_\-info} $\ast$ {\em mcinfo})}}
+\label{group__matrixmod_gaec5dd25f1111bb4efab4b2e3fdced43e}
+
+
+Copies Jitter matrix data from another matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em dst\_\-matrix}]destination t\_\-jit\_\-matrix object pointer \item[{\em src\_\-matrix}]destination t\_\-jit\_\-matrix object pointer \item[{\em mcinfo}]conversion information pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga5e42c3fe24bf48e8fda494a26ead2f6d}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-getcell@{jit\_\-matrix\_\-getcell}}
+\index{jit\_\-matrix\_\-getcell@{jit\_\-matrix\_\-getcell}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-getcell}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-getcell (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv}, \/  long $\ast$ {\em rac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em rav})}}
+\label{group__matrixmod_ga5e42c3fe24bf48e8fda494a26ead2f6d}
+
+
+Gets cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector \item[{\em rac}]return value atom count \item[{\em rav}]return value atom vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga15e9e2b55f6ce23d2c488d8b2bf8b57b}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-getdata@{jit\_\-matrix\_\-getdata}}
+\index{jit\_\-matrix\_\-getdata@{jit\_\-matrix\_\-getdata}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-getdata}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-getdata (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  void $\ast$$\ast$ {\em data})}}
+\label{group__matrixmod_ga15e9e2b55f6ce23d2c488d8b2bf8b57b}
+
+
+Retrieves matrix data pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em data}]pointer to data pointer (set to NULL if matrix is not available)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga52060a5a58fb6503fa66e40336df2d2c}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-getinfo@{jit\_\-matrix\_\-getinfo}}
+\index{jit\_\-matrix\_\-getinfo@{jit\_\-matrix\_\-getinfo}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-getinfo}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-getinfo (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__matrixmod_ga52060a5a58fb6503fa66e40336df2d2c}
+
+
+Retrieves all attributes, copying into the \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga9c068d7781425345e99576a1955366af}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-info\_\-default@{jit\_\-matrix\_\-info\_\-default}}
+\index{jit\_\-matrix\_\-info\_\-default@{jit\_\-matrix\_\-info\_\-default}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-info\_\-default}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-info\_\-default ({\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__matrixmod_ga9c068d7781425345e99576a1955366af}
+
+
+Initializes matrix info struct to default values. 
+\begin{DoxyParams}{Parameters}
+\item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gae640384806be8bb78a2cb0118c629a0f}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-jit\_\-gl\_\-texture@{jit\_\-matrix\_\-jit\_\-gl\_\-texture}}
+\index{jit\_\-matrix\_\-jit\_\-gl\_\-texture@{jit\_\-matrix\_\-jit\_\-gl\_\-texture}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-jit\_\-gl\_\-texture}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-jit\_\-gl\_\-texture (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_gae640384806be8bb78a2cb0118c629a0f}
+
+
+Copies texture information to matrix. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gac7c617a1e6cb1cbf2a5a8cdc27697eff}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-new@{jit\_\-matrix\_\-new}}
+\index{jit\_\-matrix\_\-new@{jit\_\-matrix\_\-new}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-matrix\_\-new ({\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__matrixmod_gac7c617a1e6cb1cbf2a5a8cdc27697eff}
+
+
+Constructs instance of t\_\-jit\_\-matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-matrix object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga900b5d226f56a36d2285e64e7d501eb7}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-newcopy@{jit\_\-matrix\_\-newcopy}}
+\index{jit\_\-matrix\_\-newcopy@{jit\_\-matrix\_\-newcopy}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-newcopy}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-matrix\_\-newcopy (t\_\-jit\_\-matrix $\ast$ {\em copyme})}}
+\label{group__matrixmod_ga900b5d226f56a36d2285e64e7d501eb7}
+
+
+Constructs instance of t\_\-jit\_\-matrix, copying from input. 
+\begin{DoxyParams}{Parameters}
+\item[{\em copyme}]t\_\-jit\_\-matrix object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-matrix object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga5f56aa2c21c39c60e7549beeb86a5120}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-op@{jit\_\-matrix\_\-op}}
+\index{jit\_\-matrix\_\-op@{jit\_\-matrix\_\-op}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-op}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-op (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_ga5f56aa2c21c39c60e7549beeb86a5120}
+
+
+Applies unary or binary operator to matrix See Jitter user documentation for more information. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga8082cc74c3e4d5a68167e10d865217e1}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setall@{jit\_\-matrix\_\-setall}}
+\index{jit\_\-matrix\_\-setall@{jit\_\-matrix\_\-setall}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setall}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setall (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_ga8082cc74c3e4d5a68167e10d865217e1}
+
+
+Sets all cells to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gafe9683aa769a6c97e9645f889765da62}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setcell@{jit\_\-matrix\_\-setcell}}
+\index{jit\_\-matrix\_\-setcell@{jit\_\-matrix\_\-setcell}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setcell}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setcell (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_gafe9683aa769a6c97e9645f889765da62}
+
+
+Sets cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gacebbcc6a1a5a2211930b83e5742122e4}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setcell1d@{jit\_\-matrix\_\-setcell1d}}
+\index{jit\_\-matrix\_\-setcell1d@{jit\_\-matrix\_\-setcell1d}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setcell1d}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setcell1d (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_gacebbcc6a1a5a2211930b83e5742122e4}
+
+
+Sets cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga364b87f2a873467d381aac89ba90e111}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setcell2d@{jit\_\-matrix\_\-setcell2d}}
+\index{jit\_\-matrix\_\-setcell2d@{jit\_\-matrix\_\-setcell2d}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setcell2d}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setcell2d (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_ga364b87f2a873467d381aac89ba90e111}
+
+
+Sets cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga7612675d9dc36cfd94a1adbac04e8719}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setcell3d@{jit\_\-matrix\_\-setcell3d}}
+\index{jit\_\-matrix\_\-setcell3d@{jit\_\-matrix\_\-setcell3d}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setcell3d}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setcell3d (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_ga7612675d9dc36cfd94a1adbac04e8719}
+
+
+Sets cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga2324cd46df9bcd18c84d6bd49bf1b091}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setinfo@{jit\_\-matrix\_\-setinfo}}
+\index{jit\_\-matrix\_\-setinfo@{jit\_\-matrix\_\-setinfo}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setinfo}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setinfo (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__matrixmod_ga2324cd46df9bcd18c84d6bd49bf1b091}
+
+
+Sets all attributes according to the \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga626c0457e1ade74e808c1afcfd22a9c2}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setinfo\_\-ex@{jit\_\-matrix\_\-setinfo\_\-ex}}
+\index{jit\_\-matrix\_\-setinfo\_\-ex@{jit\_\-matrix\_\-setinfo\_\-ex}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setinfo\_\-ex}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setinfo\_\-ex (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em info})}}
+\label{group__matrixmod_ga626c0457e1ade74e808c1afcfd22a9c2}
+
+
+Sets all attributes according to the \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} struct provided (including data flags). 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em info}]\hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga5b631df680bd059a5dd241a803863664}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setplane1d@{jit\_\-matrix\_\-setplane1d}}
+\index{jit\_\-matrix\_\-setplane1d@{jit\_\-matrix\_\-setplane1d}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setplane1d}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setplane1d (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_ga5b631df680bd059a5dd241a803863664}
+
+
+Sets plane of cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gaabbb38a64f1b3c79c3a9db75d18bbe81}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setplane2d@{jit\_\-matrix\_\-setplane2d}}
+\index{jit\_\-matrix\_\-setplane2d@{jit\_\-matrix\_\-setplane2d}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setplane2d}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setplane2d (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_gaabbb38a64f1b3c79c3a9db75d18bbe81}
+
+
+Sets plane of cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_ga4bd5c42b1159423126abf0d6f1ca706c}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-setplane3d@{jit\_\-matrix\_\-setplane3d}}
+\index{jit\_\-matrix\_\-setplane3d@{jit\_\-matrix\_\-setplane3d}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-setplane3d}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-setplane3d (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__matrixmod_ga4bd5c42b1159423126abf0d6f1ca706c}
+
+
+Sets plane of cell at index to the value provided. See Jitter user documentation for more information.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em s}]message symbol pointer \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}
+\hypertarget{group__matrixmod_gac5ec23c849581a65c094654bbba41dee}{
+\index{matrixmod@{matrixmod}!jit\_\-matrix\_\-togworld@{jit\_\-matrix\_\-togworld}}
+\index{jit\_\-matrix\_\-togworld@{jit\_\-matrix\_\-togworld}!matrixmod@{matrixmod}}
+\subsubsection[{jit\_\-matrix\_\-togworld}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-matrix\_\-togworld (t\_\-jit\_\-matrix $\ast$ {\em x}, \/  GWorldPtr {\em gp}, \/  t\_\-gworld\_\-conv\_\-info $\ast$ {\em gcinfo})}}
+\label{group__matrixmod_gac5ec23c849581a65c094654bbba41dee}
+
+
+Copies Jitter matrix data to GWorld data. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-matrix object pointer \item[{\em gp}]gworld pointer \item[{\em gcinfo}]conversion information pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an intance of t\_\-jit\_\-matrix. 
+\end{DoxyWarning}

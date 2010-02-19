@@ -1,0 +1,668 @@
+\hypertarget{group__jpatcher}{
+\section{jpatcher}
+\label{group__jpatcher}\index{jpatcher@{jpatcher}}
+}
+
+
+The patcher.  
+
+
+Collaboration diagram for jpatcher:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=100pt]{group__jpatcher}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{group__jpatcher_ga7ffe181b1eaf48f2380c22b6483037af}{jpatcher\_\-is\_\-patcher} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Determine of a \hyperlink{structt__object}{t\_\-object}$\ast$ is a patcher object. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcher_gad55371f057913b8b26cb58c3c517a1f4}{jpatcher\_\-get\_\-box} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em If a patcher is inside a box, return its box. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jpatcher_gaf5a44f30054baae18b5019f305070612}{jpatcher\_\-get\_\-count} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Determine the number of boxes in a patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga3210a517b3c79b2fb305b9a8357fe3db}{jpatcher\_\-set\_\-locked} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Lock or unlock a patcher. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcher_gaa3af83f31fba548f05ac23e5f4144ed9}{jpatcher\_\-get\_\-presentation} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Determine whether a patcher is currently in presentation mode. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga3994f39cf34c6a1f4502e087ad6adb0a}{jpatcher\_\-set\_\-presentation} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Set a patcher to presentation mode. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcher_gafd77f63d504807973a4ce400c304b174}{jpatcher\_\-get\_\-firstobject} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Get the first box in a patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcher_gaffb5e8d5224f7aa04cdbee76a041bab7}{jpatcher\_\-get\_\-lastobject} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Get the last box in a patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcher_ga5d110fdbf8797e9d0edfa1e47afdc691}{jpatcher\_\-get\_\-firstline} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Get the first line (patch-\/cord) in a patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcher_gaccc0cfeb70fbeecbd322de7e8b9bac98}{jpatcher\_\-get\_\-firstview} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Get the first view (jpatcherview) for a given patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jpatcher_gae9067670d2885c808fa2db1e22a327d8}{jpatcher\_\-get\_\-title} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Retrieve a patcher's title. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_gadd59390cab86f13282704e8bdf4ea3ba}{jpatcher\_\-set\_\-title} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ps)
+\begin{DoxyCompactList}\small\item\em Set a patcher's title. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jpatcher_ga245a38ac7814605e198466313884a246}{jpatcher\_\-get\_\-name} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Retrieve a patcher's name. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jpatcher_gac278d621dc1eef9e3b0dbddfc6bf3f53}{jpatcher\_\-get\_\-filepath} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Retrieve a patcher's file path. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jpatcher_gaf8d1fda60ecc028f2aff88c81e8d4b4f}{jpatcher\_\-get\_\-filename} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Retrieve a patcher's file name. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcher_ga5eb01f66882115ca01028ca68c4307b3}{jpatcher\_\-get\_\-dirty} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Determine whether a patcher's dirty bit has been set. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_gaad586555902f02618e3c3fa1f977d5a5}{jpatcher\_\-set\_\-dirty} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Set a patcher's dirty bit. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcher_ga38c0179d1eb95d96f473cfde94164be4}{jpatcher\_\-get\_\-bglocked} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Determine whether a patcher's background layer is locked. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga8bdd915ec7c3de07c7c90c33b6b516bf}{jpatcher\_\-set\_\-bglocked} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Set whether a patcher's background layer is locked. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcher_gabb79c4b3f29dd61ad9725a2a8141b312}{jpatcher\_\-get\_\-bghidden} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Determine whether a patcher's background layer is hidden. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_gaace70353f26b52b10d5926ab0a6c9395}{jpatcher\_\-set\_\-bghidden} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Set whether a patcher's background layer is hidden. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatcher_ga164ac5db6109ab48fb0ca833263da801}{jpatcher\_\-get\_\-fghidden} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Determine whether a patcher's foreground layer is hidden. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga905d41f7b001aa779374307b67a07495}{jpatcher\_\-set\_\-fghidden} (\hyperlink{structt__object}{t\_\-object} $\ast$p, char c)
+\begin{DoxyCompactList}\small\item\em Set whether a patcher's foreground layer is hidden. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga66ac15a412d7fa918471a49e341a93fa}{jpatcher\_\-get\_\-editing\_\-bgcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Retrieve a patcher's editing background color. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga3e0e7d12c6e30c582fbd3da059eaca58}{jpatcher\_\-set\_\-editing\_\-bgcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Set a patcher's editing background color. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_gac08bdf16f3f65b962cdfbe2b5aa59ab0}{jpatcher\_\-get\_\-bgcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Retrieve a patcher's locked background color. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga2ddf7d6edaf305c425108a96cb32b62d}{jpatcher\_\-set\_\-bgcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Set a patcher's locked background color. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga140e8da3e2be163b5cbbb1eef350d70f}{jpatcher\_\-get\_\-gridsize} (\hyperlink{structt__object}{t\_\-object} $\ast$p, double $\ast$gridsizeX, double $\ast$gridsizeY)
+\begin{DoxyCompactList}\small\item\em Retrieve a patcher's grid size. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga34113c97506a3a5c25d3a00805f43b38}{jpatcher\_\-set\_\-gridsize} (\hyperlink{structt__object}{t\_\-object} $\ast$p, double gridsizeX, double gridsizeY)
+\begin{DoxyCompactList}\small\item\em Set a patcher's grid size. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpatcher_ga669798a90e3928a04b0f65143a7981fd}{jpatcher\_\-deleteobj} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__jbox}{t\_\-jbox} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Delete an object that is in a patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcher_ga337a58107a3555e2de7da75893840920}{jpatcher\_\-get\_\-parentpatcher} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Given a patcher, return its parent patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatcher_gab0fbb44da944b038c690efb0b2415a7a}{jpatcher\_\-get\_\-toppatcher} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Given a patcher, return the top-\/level patcher for the tree in which it exists. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_gaedf734a76297bf735810ac36e17748a1}{jpatcher\_\-get\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Query a patcher to determine its location and size. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga0a54c1b858851885088c5af970c9617d}{jpatcher\_\-set\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Set a patcher's location and size. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_ga177848d5433ff59335d06b15518f9df3}{jpatcher\_\-get\_\-defrect} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Query a patcher to determine the location and dimensions of its window when initially opened. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatcher_gacc68e225735eac71aecfc69808bf0697}{jpatcher\_\-set\_\-defrect} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Set a patcher's default location and size. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jpatcher_ga8538a0402d6936dd0838a52b4d43c56a}{jpatcher\_\-uniqueboxname} (\hyperlink{structt__object}{t\_\-object} $\ast$p, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Generate a unique name for a box in patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jpatcher_gac5cb14bf7507096591e66b88b7ad0e87}{jpatcher\_\-get\_\-default\_\-fontname} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Return the name of the default font used for new objects in a patcher. \item\end{DoxyCompactList}\item 
+float \hyperlink{group__jpatcher_ga2a84ae15f52f7793d7e14d26cf555534}{jpatcher\_\-get\_\-default\_\-fontsize} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Return the size of the default font used for new objects in a patcher. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jpatcher_ga2ab66cc8938565435fcf1fc97d73161a}{jpatcher\_\-get\_\-default\_\-fontface} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Return the index of the default font face used for new objects in a patcher. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jpatcher_gaac7f1696b3346197cb8f1c0dac954780}{jpatcher\_\-get\_\-fileversion} (\hyperlink{structt__object}{t\_\-object} $\ast$p)
+\begin{DoxyCompactList}\small\item\em Return the file version of the patcher. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jpatcher_gac06ed9b2aa744159810c7a735b8be890}{jpatcher\_\-get\_\-currentfileversion} (void)
+\begin{DoxyCompactList}\small\item\em Return the file version for any new patchers, e.g. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The patcher. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jpatcher_ga669798a90e3928a04b0f65143a7981fd}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-deleteobj@{jpatcher\_\-deleteobj}}
+\index{jpatcher\_\-deleteobj@{jpatcher\_\-deleteobj}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-deleteobj}]{\setlength{\rightskip}{0pt plus 5cm}void jpatcher\_\-deleteobj ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-jbox} $\ast$ {\em b})}}
+\label{group__jpatcher_ga669798a90e3928a04b0f65143a7981fd}
+
+
+Delete an object that is in a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher. \item[{\em b}]The object box to delete. \end{DoxyParams}
+\hypertarget{group__jpatcher_gac08bdf16f3f65b962cdfbe2b5aa59ab0}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-bgcolor@{jpatcher\_\-get\_\-bgcolor}}
+\index{jpatcher\_\-get\_\-bgcolor@{jpatcher\_\-get\_\-bgcolor}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-bgcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-get\_\-bgcolor ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jpatcher_gac08bdf16f3f65b962cdfbe2b5aa59ab0}
+
+
+Retrieve a patcher's locked background color. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \item[{\em prgba}]The address of a valid \hyperlink{structt__jrgba}{t\_\-jrgba} struct that will be filled-\/in with the current patcher color values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gabb79c4b3f29dd61ad9725a2a8141b312}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-bghidden@{jpatcher\_\-get\_\-bghidden}}
+\index{jpatcher\_\-get\_\-bghidden@{jpatcher\_\-get\_\-bghidden}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-bghidden}]{\setlength{\rightskip}{0pt plus 5cm}char jpatcher\_\-get\_\-bghidden ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gabb79c4b3f29dd61ad9725a2a8141b312}
+
+
+Determine whether a patcher's background layer is hidden. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the background layer is hidden, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga38c0179d1eb95d96f473cfde94164be4}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-bglocked@{jpatcher\_\-get\_\-bglocked}}
+\index{jpatcher\_\-get\_\-bglocked@{jpatcher\_\-get\_\-bglocked}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-bglocked}]{\setlength{\rightskip}{0pt plus 5cm}char jpatcher\_\-get\_\-bglocked ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga38c0179d1eb95d96f473cfde94164be4}
+
+
+Determine whether a patcher's background layer is locked. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the background layer is locked, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gad55371f057913b8b26cb58c3c517a1f4}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-box@{jpatcher\_\-get\_\-box}}
+\index{jpatcher\_\-get\_\-box@{jpatcher\_\-get\_\-box}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-box}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatcher\_\-get\_\-box ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gad55371f057913b8b26cb58c3c517a1f4}
+
+
+If a patcher is inside a box, return its box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the box containing the patcher, otherwise NULL. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaf5a44f30054baae18b5019f305070612}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-count@{jpatcher\_\-get\_\-count}}
+\index{jpatcher\_\-get\_\-count@{jpatcher\_\-get\_\-count}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-count}]{\setlength{\rightskip}{0pt plus 5cm}long jpatcher\_\-get\_\-count ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gaf5a44f30054baae18b5019f305070612}
+
+
+Determine the number of boxes in a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of boxes in the patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gac06ed9b2aa744159810c7a735b8be890}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-currentfileversion@{jpatcher\_\-get\_\-currentfileversion}}
+\index{jpatcher\_\-get\_\-currentfileversion@{jpatcher\_\-get\_\-currentfileversion}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-currentfileversion}]{\setlength{\rightskip}{0pt plus 5cm}long jpatcher\_\-get\_\-currentfileversion (void)}}
+\label{group__jpatcher_gac06ed9b2aa744159810c7a735b8be890}
+
+
+Return the file version for any new patchers, e.g. the current version created by Max.
+
+\begin{DoxyReturn}{Returns}
+The file version number. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga2ab66cc8938565435fcf1fc97d73161a}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-default\_\-fontface@{jpatcher\_\-get\_\-default\_\-fontface}}
+\index{jpatcher\_\-get\_\-default\_\-fontface@{jpatcher\_\-get\_\-default\_\-fontface}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-default\_\-fontface}]{\setlength{\rightskip}{0pt plus 5cm}long jpatcher\_\-get\_\-default\_\-fontface ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga2ab66cc8938565435fcf1fc97d73161a}
+
+
+Return the index of the default font face used for new objects in a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index of the default font face used for new objects in a patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gac5cb14bf7507096591e66b88b7ad0e87}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-default\_\-fontname@{jpatcher\_\-get\_\-default\_\-fontname}}
+\index{jpatcher\_\-get\_\-default\_\-fontname@{jpatcher\_\-get\_\-default\_\-fontname}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-default\_\-fontname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jpatcher\_\-get\_\-default\_\-fontname ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gac5cb14bf7507096591e66b88b7ad0e87}
+
+
+Return the name of the default font used for new objects in a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The name of the default font used for new objects in a patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga2a84ae15f52f7793d7e14d26cf555534}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-default\_\-fontsize@{jpatcher\_\-get\_\-default\_\-fontsize}}
+\index{jpatcher\_\-get\_\-default\_\-fontsize@{jpatcher\_\-get\_\-default\_\-fontsize}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-default\_\-fontsize}]{\setlength{\rightskip}{0pt plus 5cm}float jpatcher\_\-get\_\-default\_\-fontsize ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga2a84ae15f52f7793d7e14d26cf555534}
+
+
+Return the size of the default font used for new objects in a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The size of the default font used for new objects in a patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga177848d5433ff59335d06b15518f9df3}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-defrect@{jpatcher\_\-get\_\-defrect}}
+\index{jpatcher\_\-get\_\-defrect@{jpatcher\_\-get\_\-defrect}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-defrect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-get\_\-defrect ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jpatcher_ga177848d5433ff59335d06b15518f9df3}
+
+
+Query a patcher to determine the location and dimensions of its window when initially opened. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \item[{\em pr}]The address of valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled-\/in upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga5eb01f66882115ca01028ca68c4307b3}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-dirty@{jpatcher\_\-get\_\-dirty}}
+\index{jpatcher\_\-get\_\-dirty@{jpatcher\_\-get\_\-dirty}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-dirty}]{\setlength{\rightskip}{0pt plus 5cm}char jpatcher\_\-get\_\-dirty ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga5eb01f66882115ca01028ca68c4307b3}
+
+
+Determine whether a patcher's dirty bit has been set. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the patcher is dirty, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga66ac15a412d7fa918471a49e341a93fa}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-editing\_\-bgcolor@{jpatcher\_\-get\_\-editing\_\-bgcolor}}
+\index{jpatcher\_\-get\_\-editing\_\-bgcolor@{jpatcher\_\-get\_\-editing\_\-bgcolor}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-editing\_\-bgcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-get\_\-editing\_\-bgcolor ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jpatcher_ga66ac15a412d7fa918471a49e341a93fa}
+
+
+Retrieve a patcher's editing background color. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \item[{\em prgba}]The address of a valid \hyperlink{structt__jrgba}{t\_\-jrgba} struct that will be filled-\/in with the current patcher color values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga164ac5db6109ab48fb0ca833263da801}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-fghidden@{jpatcher\_\-get\_\-fghidden}}
+\index{jpatcher\_\-get\_\-fghidden@{jpatcher\_\-get\_\-fghidden}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-fghidden}]{\setlength{\rightskip}{0pt plus 5cm}char jpatcher\_\-get\_\-fghidden ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga164ac5db6109ab48fb0ca833263da801}
+
+
+Determine whether a patcher's foreground layer is hidden. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the foreground layer is hidden, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaf8d1fda60ecc028f2aff88c81e8d4b4f}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-filename@{jpatcher\_\-get\_\-filename}}
+\index{jpatcher\_\-get\_\-filename@{jpatcher\_\-get\_\-filename}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-filename}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jpatcher\_\-get\_\-filename ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gaf8d1fda60ecc028f2aff88c81e8d4b4f}
+
+
+Retrieve a patcher's file name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The patcher's file name. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gac278d621dc1eef9e3b0dbddfc6bf3f53}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-filepath@{jpatcher\_\-get\_\-filepath}}
+\index{jpatcher\_\-get\_\-filepath@{jpatcher\_\-get\_\-filepath}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-filepath}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jpatcher\_\-get\_\-filepath ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gac278d621dc1eef9e3b0dbddfc6bf3f53}
+
+
+Retrieve a patcher's file path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The patcher's file path. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaac7f1696b3346197cb8f1c0dac954780}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-fileversion@{jpatcher\_\-get\_\-fileversion}}
+\index{jpatcher\_\-get\_\-fileversion@{jpatcher\_\-get\_\-fileversion}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-fileversion}]{\setlength{\rightskip}{0pt plus 5cm}long jpatcher\_\-get\_\-fileversion ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gaac7f1696b3346197cb8f1c0dac954780}
+
+
+Return the file version of the patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to the patcher whose version number is desired. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The file version number. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga5d110fdbf8797e9d0edfa1e47afdc691}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-firstline@{jpatcher\_\-get\_\-firstline}}
+\index{jpatcher\_\-get\_\-firstline@{jpatcher\_\-get\_\-firstline}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-firstline}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatcher\_\-get\_\-firstline ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga5d110fdbf8797e9d0edfa1e47afdc691}
+
+
+Get the first line (patch-\/cord) in a patcher. All lines in a patcher are maintained internally in a \hyperlink{structt__linklist}{t\_\-linklist}. Use this function to begin traversing a patcher's lines.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The first jpatchline in a patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gafd77f63d504807973a4ce400c304b174}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-firstobject@{jpatcher\_\-get\_\-firstobject}}
+\index{jpatcher\_\-get\_\-firstobject@{jpatcher\_\-get\_\-firstobject}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-firstobject}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatcher\_\-get\_\-firstobject ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gafd77f63d504807973a4ce400c304b174}
+
+
+Get the first box in a patcher. All boxes in a patcher are maintained internally in a \hyperlink{structt__linklist}{t\_\-linklist}. Use this function together with \hyperlink{group__jbox_ga89177ab12d45649c7209e65c97a3b128}{jbox\_\-get\_\-nextobject()} to traverse a patcher.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The first box in a patcher. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__jbox_ga99be7a7b57c38335d30e6241afb86a5b}{jbox\_\-get\_\-prevobject()} \hyperlink{group__jbox_ga89177ab12d45649c7209e65c97a3b128}{jbox\_\-get\_\-nextobject()} \hyperlink{group__jpatcher_gaffb5e8d5224f7aa04cdbee76a041bab7}{jpatcher\_\-get\_\-lastobject()} 
+\end{DoxySeeAlso}
+\hypertarget{group__jpatcher_gaccc0cfeb70fbeecbd322de7e8b9bac98}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-firstview@{jpatcher\_\-get\_\-firstview}}
+\index{jpatcher\_\-get\_\-firstview@{jpatcher\_\-get\_\-firstview}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-firstview}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatcher\_\-get\_\-firstview ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gaccc0cfeb70fbeecbd322de7e8b9bac98}
+
+
+Get the first view (jpatcherview) for a given patcher. All views of a patcher are maintained internally as a \hyperlink{structt__linklist}{t\_\-linklist}. Use this function to begin traversing a patcher's views.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The first view of a patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga140e8da3e2be163b5cbbb1eef350d70f}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-gridsize@{jpatcher\_\-get\_\-gridsize}}
+\index{jpatcher\_\-get\_\-gridsize@{jpatcher\_\-get\_\-gridsize}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-gridsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-get\_\-gridsize ({\bf t\_\-object} $\ast$ {\em p}, \/  double $\ast$ {\em gridsizeX}, \/  double $\ast$ {\em gridsizeY})}}
+\label{group__jpatcher_ga140e8da3e2be163b5cbbb1eef350d70f}
+
+
+Retrieve a patcher's grid size. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \item[{\em gridsizeX}]The address of a double that will be set to the current horizontal grid spacing for the patcher. \item[{\em gridsizeY}]The address of a double that will be set to the current vertical grid spacing for the patcher. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaffb5e8d5224f7aa04cdbee76a041bab7}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-lastobject@{jpatcher\_\-get\_\-lastobject}}
+\index{jpatcher\_\-get\_\-lastobject@{jpatcher\_\-get\_\-lastobject}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-lastobject}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatcher\_\-get\_\-lastobject ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gaffb5e8d5224f7aa04cdbee76a041bab7}
+
+
+Get the last box in a patcher. All boxes in a patcher are maintained internally in a \hyperlink{structt__linklist}{t\_\-linklist}. Use this function together with \hyperlink{group__jbox_ga99be7a7b57c38335d30e6241afb86a5b}{jbox\_\-get\_\-prevobject()} to traverse a patcher.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The last box in a patcher. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__jbox_ga99be7a7b57c38335d30e6241afb86a5b}{jbox\_\-get\_\-prevobject()} \hyperlink{group__jbox_ga89177ab12d45649c7209e65c97a3b128}{jbox\_\-get\_\-nextobject()} \hyperlink{group__jpatcher_gafd77f63d504807973a4ce400c304b174}{jpatcher\_\-get\_\-firstobject()} 
+\end{DoxySeeAlso}
+\hypertarget{group__jpatcher_ga245a38ac7814605e198466313884a246}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-name@{jpatcher\_\-get\_\-name}}
+\index{jpatcher\_\-get\_\-name@{jpatcher\_\-get\_\-name}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jpatcher\_\-get\_\-name ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga245a38ac7814605e198466313884a246}
+
+
+Retrieve a patcher's name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The patcher's name. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga337a58107a3555e2de7da75893840920}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-parentpatcher@{jpatcher\_\-get\_\-parentpatcher}}
+\index{jpatcher\_\-get\_\-parentpatcher@{jpatcher\_\-get\_\-parentpatcher}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-parentpatcher}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatcher\_\-get\_\-parentpatcher ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga337a58107a3555e2de7da75893840920}
+
+
+Given a patcher, return its parent patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The patcher's parent patcher, if there is one. If there is no parent patcher (this is a top-\/level patcher) then NULL is returned. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaa3af83f31fba548f05ac23e5f4144ed9}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-presentation@{jpatcher\_\-get\_\-presentation}}
+\index{jpatcher\_\-get\_\-presentation@{jpatcher\_\-get\_\-presentation}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-presentation}]{\setlength{\rightskip}{0pt plus 5cm}char jpatcher\_\-get\_\-presentation ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gaa3af83f31fba548f05ac23e5f4144ed9}
+
+
+Determine whether a patcher is currently in presentation mode. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the patcher is in presentation mode, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaedf734a76297bf735810ac36e17748a1}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-rect@{jpatcher\_\-get\_\-rect}}
+\index{jpatcher\_\-get\_\-rect@{jpatcher\_\-get\_\-rect}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-get\_\-rect ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jpatcher_gaedf734a76297bf735810ac36e17748a1}
+
+
+Query a patcher to determine its location and size. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \item[{\em pr}]The address of valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled-\/in upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gae9067670d2885c808fa2db1e22a327d8}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-title@{jpatcher\_\-get\_\-title}}
+\index{jpatcher\_\-get\_\-title@{jpatcher\_\-get\_\-title}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-title}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jpatcher\_\-get\_\-title ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gae9067670d2885c808fa2db1e22a327d8}
+
+
+Retrieve a patcher's title. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The patcher's title. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gab0fbb44da944b038c690efb0b2415a7a}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-get\_\-toppatcher@{jpatcher\_\-get\_\-toppatcher}}
+\index{jpatcher\_\-get\_\-toppatcher@{jpatcher\_\-get\_\-toppatcher}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-get\_\-toppatcher}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatcher\_\-get\_\-toppatcher ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_gab0fbb44da944b038c690efb0b2415a7a}
+
+
+Given a patcher, return the top-\/level patcher for the tree in which it exists. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The patcher's top-\/level parent patcher. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga7ffe181b1eaf48f2380c22b6483037af}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-is\_\-patcher@{jpatcher\_\-is\_\-patcher}}
+\index{jpatcher\_\-is\_\-patcher@{jpatcher\_\-is\_\-patcher}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-is\_\-patcher}]{\setlength{\rightskip}{0pt plus 5cm}int jpatcher\_\-is\_\-patcher ({\bf t\_\-object} $\ast$ {\em p})}}
+\label{group__jpatcher_ga7ffe181b1eaf48f2380c22b6483037af}
+
+
+Determine of a \hyperlink{structt__object}{t\_\-object}$\ast$ is a patcher object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The object pointer to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the object is a patcher, otherwise returns non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga2ddf7d6edaf305c425108a96cb32b62d}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-bgcolor@{jpatcher\_\-set\_\-bgcolor}}
+\index{jpatcher\_\-set\_\-bgcolor@{jpatcher\_\-set\_\-bgcolor}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-bgcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-bgcolor ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jpatcher_ga2ddf7d6edaf305c425108a96cb32b62d}
+
+
+Set a patcher's locked background color. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \item[{\em prgba}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct containing the new color to use. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaace70353f26b52b10d5926ab0a6c9395}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-bghidden@{jpatcher\_\-set\_\-bghidden}}
+\index{jpatcher\_\-set\_\-bghidden@{jpatcher\_\-set\_\-bghidden}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-bghidden}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-bghidden ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcher_gaace70353f26b52b10d5926ab0a6c9395}
+
+
+Set whether a patcher's background layer is hidden. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher whose dirty bit will be set. \item[{\em c}]Pass true to hide the patcher's background layer, otherwise pass false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga8bdd915ec7c3de07c7c90c33b6b516bf}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-bglocked@{jpatcher\_\-set\_\-bglocked}}
+\index{jpatcher\_\-set\_\-bglocked@{jpatcher\_\-set\_\-bglocked}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-bglocked}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-bglocked ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcher_ga8bdd915ec7c3de07c7c90c33b6b516bf}
+
+
+Set whether a patcher's background layer is locked. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher whose dirty bit will be set. \item[{\em c}]Pass true to lock the patcher's background layer, otherwise pass false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gacc68e225735eac71aecfc69808bf0697}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-defrect@{jpatcher\_\-set\_\-defrect}}
+\index{jpatcher\_\-set\_\-defrect@{jpatcher\_\-set\_\-defrect}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-defrect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-defrect ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jpatcher_gacc68e225735eac71aecfc69808bf0697}
+
+
+Set a patcher's default location and size. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \item[{\em pr}]The address of a \hyperlink{structt__rect}{t\_\-rect} with the new position and size. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gaad586555902f02618e3c3fa1f977d5a5}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-dirty@{jpatcher\_\-set\_\-dirty}}
+\index{jpatcher\_\-set\_\-dirty@{jpatcher\_\-set\_\-dirty}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-dirty}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-dirty ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcher_gaad586555902f02618e3c3fa1f977d5a5}
+
+
+Set a patcher's dirty bit. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher whose dirty bit will be set. \item[{\em c}]The new value for the patcher's dirty bit (pass true or false). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga3e0e7d12c6e30c582fbd3da059eaca58}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-editing\_\-bgcolor@{jpatcher\_\-set\_\-editing\_\-bgcolor}}
+\index{jpatcher\_\-set\_\-editing\_\-bgcolor@{jpatcher\_\-set\_\-editing\_\-bgcolor}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-editing\_\-bgcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-editing\_\-bgcolor ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jpatcher_ga3e0e7d12c6e30c582fbd3da059eaca58}
+
+
+Set a patcher's editing background color. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \item[{\em prgba}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct containing the new color to use. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga905d41f7b001aa779374307b67a07495}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-fghidden@{jpatcher\_\-set\_\-fghidden}}
+\index{jpatcher\_\-set\_\-fghidden@{jpatcher\_\-set\_\-fghidden}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-fghidden}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-fghidden ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcher_ga905d41f7b001aa779374307b67a07495}
+
+
+Set whether a patcher's foreground layer is hidden. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher whose dirty bit will be set. \item[{\em c}]Pass true to hide the patcher's foreground layer, otherwise pass false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga34113c97506a3a5c25d3a00805f43b38}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-gridsize@{jpatcher\_\-set\_\-gridsize}}
+\index{jpatcher\_\-set\_\-gridsize@{jpatcher\_\-set\_\-gridsize}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-gridsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-gridsize ({\bf t\_\-object} $\ast$ {\em p}, \/  double {\em gridsizeX}, \/  double {\em gridsizeY})}}
+\label{group__jpatcher_ga34113c97506a3a5c25d3a00805f43b38}
+
+
+Set a patcher's grid size. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher to be queried. \item[{\em gridsizeX}]The new horizontal grid spacing for the patcher. \item[{\em gridsizeY}]The new vertical grid spacing for the patcher. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga3210a517b3c79b2fb305b9a8357fe3db}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-locked@{jpatcher\_\-set\_\-locked}}
+\index{jpatcher\_\-set\_\-locked@{jpatcher\_\-set\_\-locked}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-locked}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-locked ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcher_ga3210a517b3c79b2fb305b9a8357fe3db}
+
+
+Lock or unlock a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher whose locked state will be changed. \item[{\em c}]Pass true to lock a patcher, otherwise pass false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga3994f39cf34c6a1f4502e087ad6adb0a}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-presentation@{jpatcher\_\-set\_\-presentation}}
+\index{jpatcher\_\-set\_\-presentation@{jpatcher\_\-set\_\-presentation}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-presentation}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-presentation ({\bf t\_\-object} $\ast$ {\em p}, \/  char {\em c})}}
+\label{group__jpatcher_ga3994f39cf34c6a1f4502e087ad6adb0a}
+
+
+Set a patcher to presentation mode. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher whose locked state will be changed. \item[{\em c}]Pass true to switch the patcher to presentation mode, otherwise pass false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga0a54c1b858851885088c5af970c9617d}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-rect@{jpatcher\_\-set\_\-rect}}
+\index{jpatcher\_\-set\_\-rect@{jpatcher\_\-set\_\-rect}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-rect ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jpatcher_ga0a54c1b858851885088c5af970c9617d}
+
+
+Set a patcher's location and size. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \item[{\em pr}]The address of a \hyperlink{structt__rect}{t\_\-rect} with the new position and size. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_gadd59390cab86f13282704e8bdf4ea3ba}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-set\_\-title@{jpatcher\_\-set\_\-title}}
+\index{jpatcher\_\-set\_\-title@{jpatcher\_\-set\_\-title}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-set\_\-title}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatcher\_\-set\_\-title ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-symbol} $\ast$ {\em ps})}}
+\label{group__jpatcher_gadd59390cab86f13282704e8bdf4ea3ba}
+
+
+Set a patcher's title. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]The patcher whose locked state will be changed. \item[{\em ps}]The new title for the patcher. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatcher_ga8538a0402d6936dd0838a52b4d43c56a}{
+\index{jpatcher@{jpatcher}!jpatcher\_\-uniqueboxname@{jpatcher\_\-uniqueboxname}}
+\index{jpatcher\_\-uniqueboxname@{jpatcher\_\-uniqueboxname}!jpatcher@{jpatcher}}
+\subsubsection[{jpatcher\_\-uniqueboxname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jpatcher\_\-uniqueboxname ({\bf t\_\-object} $\ast$ {\em p}, \/  {\bf t\_\-symbol} $\ast$ {\em classname})}}
+\label{group__jpatcher_ga8538a0402d6936dd0838a52b4d43c56a}
+
+
+Generate a unique name for a box in patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to a patcher instance. \item[{\em classname}]The name of an object's class. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The newly-\/generated unique name. 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+This is the function used by pattr to assign names to objects in a patcher. 
+\end{DoxyRemark}

@@ -1,0 +1,87 @@
+\hypertarget{group__symobject}{
+\section{Symbol Object}
+\label{group__symobject}\index{Symbol Object@{Symbol Object}}
+}
+
+
+The symobject class is a simple object that wraps a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ together with a couple of additional fields.  
+
+
+Collaboration diagram for Symbol Object:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=132pt]{group__symobject}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__symobject}{t\_\-symobject}
+\begin{DoxyCompactList}\small\item\em The symobject data structure. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__symobject_gac66ae5925bb38fa0914f14dcc8172e2d}{symobject\_\-new} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$sym)
+\begin{DoxyCompactList}\small\item\em The symobject data structure. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__symobject_gaff1afdf1da1b882e7314874bbf44921e}{symobject\_\-linklist\_\-match} (void $\ast$a, void $\ast$b)
+\begin{DoxyCompactList}\small\item\em Utility for searching a linklist containing symobjects. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The symobject class is a simple object that wraps a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ together with a couple of additional fields. It is useful for storing symbols, possibly with additional flags or pointers, into a \hyperlink{group__hashtab}{Hash Table} or \hyperlink{group__linklist}{Linked List}.
+
+\begin{DoxyVersion}{Version}
+5.0 
+\end{DoxyVersion}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__symobject_gaff1afdf1da1b882e7314874bbf44921e}{
+\index{symobject@{symobject}!symobject\_\-linklist\_\-match@{symobject\_\-linklist\_\-match}}
+\index{symobject\_\-linklist\_\-match@{symobject\_\-linklist\_\-match}!symobject@{symobject}}
+\subsubsection[{symobject\_\-linklist\_\-match}]{\setlength{\rightskip}{0pt plus 5cm}long symobject\_\-linklist\_\-match (void $\ast$ {\em a}, \/  void $\ast$ {\em b})}}
+\label{group__symobject_gaff1afdf1da1b882e7314874bbf44921e}
+
+
+Utility for searching a linklist containing symobjects. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}](opaque) \item[{\em b}](opaque) \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if a match is found, otherwise returns false.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The following example shows one common use of the this method. 
+\begin{DoxyCode}
+    t_symobject *item = NULL;
+    long        index;
+    t_symbol    *textsym;
+    
+    textsym = gensym("something to look for");
+
+    // search for a symobject with the symbol 'something to look for'
+    index = linklist_findfirst(s_ll_history, (void **)&item, 
+      symobject_linklist_match, textsym);
+    if(index == -1){
+        // symobject not found.
+    }
+    else{
+        do something with the symobject, or with the index of the symbobject in t
+      he linklist
+    }   
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__symobject_gac66ae5925bb38fa0914f14dcc8172e2d}{
+\index{symobject@{symobject}!symobject\_\-new@{symobject\_\-new}}
+\index{symobject\_\-new@{symobject\_\-new}!symobject@{symobject}}
+\subsubsection[{symobject\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ symobject\_\-new ({\bf t\_\-symbol} $\ast$ {\em sym})}}
+\label{group__symobject_gac66ae5925bb38fa0914f14dcc8172e2d}
+
+
+The symobject data structure. 
+\begin{DoxyParams}{Parameters}
+\item[{\em sym}]A symbol with which to initialize the new symobject. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the new symobject instance. 
+\end{DoxyReturn}

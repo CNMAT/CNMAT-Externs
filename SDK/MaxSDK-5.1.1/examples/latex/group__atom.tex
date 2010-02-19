@@ -1,0 +1,927 @@
+\hypertarget{group__atom}{
+\section{Atoms}
+\label{group__atom}\index{Atoms@{Atoms}}
+}
+
+
+Collaboration diagram for Atoms:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=103pt]{group__atom}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+union \hyperlink{unionword}{word}
+\begin{DoxyCompactList}\small\item\em Union for packing any of the datum defined in \hyperlink{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}{e\_\-max\_\-atomtypes}. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__atom}{t\_\-atom}
+\begin{DoxyCompactList}\small\item\em An atom is a typed datum. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__atom_ga27eb80f98b4020e3ecab761d634a3876}{
+\#define \hyperlink{group__atom_ga27eb80f98b4020e3ecab761d634a3876}{ATOM\_\-MAX\_\-STRLEN}~(32768)}
+\label{group__atom_ga27eb80f98b4020e3ecab761d634a3876}
+
+\begin{DoxyCompactList}\small\item\em Defines the largest possible string size for an atom. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}{e\_\-max\_\-atomtypes} \{ \par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{A\_\-NOTHING} =  0, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{A\_\-FLOAT}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}{A\_\-SYM}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a7bd979db3dcf86909e24a1d1452e2205}{A\_\-DEFLONG}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a42b644240dcbb90fe67282a4d0688776}{A\_\-DEFFLOAT}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47aa010616276cb89bcd04bcba611e18d51}{A\_\-DEFSYM}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af48193ec36e53b1507d81c49873c8d7a}{A\_\-CANT}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ac105be4ef726ee36c4330e16bb24706e}{A\_\-SEMI}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a07c3484085a3217107acec059d17b945}{A\_\-COMMA}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af0a5a9017f6b59e82a4859cd0560d36b}{A\_\-DOLLAR}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a9d47aadc47f728c2af7be2ec12a4a8c5}{A\_\-DOLLSYM}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ad150bf3de9c8dc2ddfa0ca0ca2382360}{A\_\-GIMMEBACK}, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47abcb435e6fecfdcd79276dc8db1988db3}{A\_\-DEFER} =  0x41, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af563cdbe6db453f24552bbe7fe6762d8}{A\_\-USURP} =  0x42, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a4556bc5fe0d4f8cc55eda5aeeee55cf2}{A\_\-DEFER\_\-LOW} =  0x43, 
+\par
+\hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a8c844b0a1b551341a6a5e3b95d2f1152}{A\_\-USURP\_\-LOW} =  0x44
+ \}
+\begin{DoxyCompactList}\small\item\em the list of officially recognized types, including pseudotypes for commas and semicolons. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__atom_ga42fa1c131691f55dbc781a0be60e3772}{e\_\-max\_\-atom\_\-gettext\_\-flags} \{ \par
+\hyperlink{group__atom_gga42fa1c131691f55dbc781a0be60e3772a2e8bad722419a8be35f8ef13364ddcc7}{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-DEFAULT} =  0x00000000, 
+\par
+\hyperlink{group__atom_gga42fa1c131691f55dbc781a0be60e3772a433f595f519e0a4051d769db66b9b5d8}{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-TRUNCATE\_\-ZEROS} =  0x00000001, 
+\par
+\hyperlink{group__atom_gga42fa1c131691f55dbc781a0be60e3772a639f398e983f74ee2adbf39a69062a93}{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-NO\_\-QUOTE} =  0x00000002, 
+\par
+\hyperlink{group__atom_gga42fa1c131691f55dbc781a0be60e3772a8adcad05a635857f1f76aec4188e9ae9}{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-FORCE\_\-QUOTE} =  0x00000004, 
+\par
+\hyperlink{group__atom_gga42fa1c131691f55dbc781a0be60e3772a45021a54b7ef864284a15b898d169a13}{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-COMMA\_\-DELIM} =  0x00000008, 
+\par
+\hyperlink{group__atom_gga42fa1c131691f55dbc781a0be60e3772a6cffcc55e28bd69beb674fe018c18e35}{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-FORCE\_\-ZEROS} =  0x00000010, 
+\par
+\hyperlink{group__atom_gga42fa1c131691f55dbc781a0be60e3772a9a254b928e25b9023b6e3bb6b25f35b7}{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-NUM\_\-HI\_\-RES} =  0x00000020
+ \}
+\begin{DoxyCompactList}\small\item\em Flags that determine how functions convert atoms into text (C-\/strings). \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga98af493b18dfac0f8d441e16e520d5f6}{atom\_\-setlong} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, long b)
+\begin{DoxyCompactList}\small\item\em Inserts an integer into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_gae4faf28f99370e1a4ae9eab7df5bede7}{atom\_\-setfloat} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, double b)
+\begin{DoxyCompactList}\small\item\em Inserts a floating point number into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{A\_\-FLOAT}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga36c2619378802011ff0ff44bf74a807c}{atom\_\-setsym} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Inserts a \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}{A\_\-SYM}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga0ad7d5c696047effee6b6bbf04a981c4}{atom\_\-setobj} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a, void $\ast$b)
+\begin{DoxyCompactList}\small\item\em Inserts a generic pointer value into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_ga62c0a631f50db54ec654a9e40b992fe2}{atom\_\-getlong} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves a long integer value from a \hyperlink{structt__atom}{t\_\-atom}. \item\end{DoxyCompactList}\item 
+float \hyperlink{group__atom_ga28f52239a67244db2e821320702712ca}{atom\_\-getfloat} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves a floating point value from a \hyperlink{structt__atom}{t\_\-atom}. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__atom_gab43922b60c9c2aaf3a4ecabaa432ef61}{atom\_\-getsym} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves a \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ value from a \hyperlink{structt__atom}{t\_\-atom}. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__atom_ga3fa97bb8b72a394a2918cc55951f8b39}{atom\_\-getobj} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves a generic pointer value from a \hyperlink{structt__atom}{t\_\-atom}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_gae9bef849142b12c94f842faa03b3238c}{atom\_\-getcharfix} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves an unsigned integer value between 0 and 255 from a \hyperlink{structt__atom}{t\_\-atom}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_ga7959e9b765bf2eb52223587d8282a49e}{atom\_\-gettype} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Retrieves type from a \hyperlink{structt__atom}{t\_\-atom}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_gaba53e6f86741dea07cff414b9b5d6a8b}{atom\_\-arg\_\-getlong} (long $\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves the integer value of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_ga06e305ddb4fde46ef2e8b66a7e578d61}{atom\_\-arg\_\-getfloat} (float $\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves the floating point value of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_ga5f494e92bded5005a52a31738f8cbbdf}{atom\_\-arg\_\-getdouble} (double $\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves the floating point value, as a double, of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_gaeba7a400021327a46673220ef1c1ee98}{atom\_\-arg\_\-getsym} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$c, long idx, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves the \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ value of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_gad1a3b8eed4c311ec41b2d565bf40b002}{atom\_\-alloc} (long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av, char $\ast$alloc)
+\begin{DoxyCompactList}\small\item\em Allocate a single atom. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga5601306b4b76f338501cda586a6c1fde}{atom\_\-alloc\_\-array} (long minsize, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av, char $\ast$alloc)
+\begin{DoxyCompactList}\small\item\em Allocate an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga88e54464a226b4fa99113f39ca522fb2}{atom\_\-setchar\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, unsigned char $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Assign an array of char values to an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga524207025bbc13a13e901ea5c175e0bf}{atom\_\-setlong\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, long $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Assign an array of long integer values to an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga05d828d4c2a60274cf185cbcb50df208}{atom\_\-setfloat\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, float $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Assign an array of 32bit float values to an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga4a5f89178488b1e8bfe75a1f270058d5}{atom\_\-setdouble\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, double $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Assign an array of 64bit float values to an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga7955dbb1679166ac7bb15bfc1ee9b7f8}{atom\_\-setsym\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$vals)
+\begin{DoxyCompactList}\small\item\em Assign an array of \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ values to an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga6d8f3b8d919c155a69d9e6a9c010ec74}{atom\_\-setatom\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, \hyperlink{structt__atom}{t\_\-atom} $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Assign an array of \hyperlink{structt__atom}{t\_\-atom} values to an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga8ebd48ccec485451687fd5b7abcd0227}{atom\_\-setobj\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$vals)
+\begin{DoxyCompactList}\small\item\em Assign an array of \hyperlink{structt__object}{t\_\-object}$\ast$ values to an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse} (long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av, char $\ast$parsestr)
+\begin{DoxyCompactList}\small\item\em Parse a C-\/string into an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{atom\_\-setformat} (long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av, char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Create an array of atoms populated with values using sprintf-\/like syntax. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_gadf4cd1c3cae12c062fb07ffca5dbf0c0}{atom\_\-getformat} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Retrieve values from an array of atoms using sscanf-\/like syntax. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_gade94ebf977b43b151a906b2b70d12301}{atom\_\-gettext} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long $\ast$textsize, char $\ast$$\ast$text, long flags)
+\begin{DoxyCompactList}\small\item\em Convert an array of atoms into a C-\/string. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga76ec2c6ff61e5bb4e29e51f1a791db56}{atom\_\-getchar\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, unsigned char $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Fetch an array of char values from an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga0bb78863f0f99d492b5241c9158b10cc}{atom\_\-getlong\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, long $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Fetch an array of long integer values from an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga0d3bc27f1de1bacbd8026c81a7b7e3d3}{atom\_\-getfloat\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, float $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Fetch an array of 32bit float values from an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga4189a7d83f7cf03d575425ba97f0e9f9}{atom\_\-getdouble\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, double $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Fetch an array of 64bit float values from an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga48c3655238debe58e8a943dc28381953}{atom\_\-getsym\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$vals)
+\begin{DoxyCompactList}\small\item\em Fetch an array of \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ values from an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga76191e30761d55e4528b50e447f43abb}{atom\_\-getatom\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, \hyperlink{structt__atom}{t\_\-atom} $\ast$vals)
+\begin{DoxyCompactList}\small\item\em Fetch an array of \hyperlink{structt__atom}{t\_\-atom} values from an array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_gac8571c66b47e3699520695352d2eff30}{atom\_\-getobj\_\-array} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, long count, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$vals)
+\begin{DoxyCompactList}\small\item\em Fetch an array of \hyperlink{structt__object}{t\_\-object}$\ast$ values from an array of atoms. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_gaf09b95edeae2bf9704641e032d213954}{atomisstring} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Determines whether or not an atom represents a \hyperlink{structt__string}{t\_\-string} object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_gaf85b0f40648c68c0e32168029489575b}{atomisatomarray} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Determines whether or not an atom represents a \hyperlink{structt__atomarray}{t\_\-atomarray} object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atom_ga85a30af9d861ac3f5664e63c4772e77b}{atomisdictionary} (\hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Determines whether or not an atom represents a \hyperlink{structt__dictionary}{t\_\-dictionary} object. \item\end{DoxyCompactList}\item 
+BEGIN\_\-USING\_\-C\_\-LINKAGE void \hyperlink{group__atom_ga34f9b920bed69c19988fe70d7be79c18}{atom\_\-copy} (short argc1, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv1, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv2)
+\begin{DoxyCompactList}\small\item\em Copy an array of atoms. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atom_ga827d5fa3550123db43e1121fea79db1b}{postargs} (short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Print the contents of an array of atoms to the Max window. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atom_ga2c50571450b200933f47ad6c7c411388}{atom\_\-arg\_\-getobjclass} (\hyperlink{structt__object}{t\_\-object} $\ast$$\ast$x, long idx, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$cls)
+\begin{DoxyCompactList}\small\item\em Return a pointer to an object contained in an atom if it is of the specified class. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__atom_ga10405190b0d5dbec546086aec6634c9d}{atom\_\-getobjclass} (\hyperlink{structt__atom}{t\_\-atom} $\ast$av, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$cls)
+\begin{DoxyCompactList}\small\item\em Return a pointer to an object contained in an atom if it is of the specified class. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__atom_ga42fa1c131691f55dbc781a0be60e3772}{
+\index{atom@{atom}!e\_\-max\_\-atom\_\-gettext\_\-flags@{e\_\-max\_\-atom\_\-gettext\_\-flags}}
+\index{e\_\-max\_\-atom\_\-gettext\_\-flags@{e\_\-max\_\-atom\_\-gettext\_\-flags}!atom@{atom}}
+\subsubsection[{e\_\-max\_\-atom\_\-gettext\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-atom\_\-gettext\_\-flags}}}
+\label{group__atom_ga42fa1c131691f55dbc781a0be60e3772}
+
+
+Flags that determine how functions convert atoms into text (C-\/strings). \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-DEFAULT@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-DEFAULT}!atom@{atom}}\index{atom@{atom}!OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-DEFAULT@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-DEFAULT}}\item[{\em 
+\hypertarget{group__atom_gga42fa1c131691f55dbc781a0be60e3772a2e8bad722419a8be35f8ef13364ddcc7}{
+OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-DEFAULT}
+\label{group__atom_gga42fa1c131691f55dbc781a0be60e3772a2e8bad722419a8be35f8ef13364ddcc7}
+}]default translation rules for getting text from atoms \index{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-TRUNCATE\_\-ZEROS@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-TRUNCATE\_\-ZEROS}!atom@{atom}}\index{atom@{atom}!OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-TRUNCATE\_\-ZEROS@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-TRUNCATE\_\-ZEROS}}\item[{\em 
+\hypertarget{group__atom_gga42fa1c131691f55dbc781a0be60e3772a433f595f519e0a4051d769db66b9b5d8}{
+OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-TRUNCATE\_\-ZEROS}
+\label{group__atom_gga42fa1c131691f55dbc781a0be60e3772a433f595f519e0a4051d769db66b9b5d8}
+}]eliminate redundant zeros for floating point numbers (default used) \index{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-NO\_\-QUOTE@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-NO\_\-QUOTE}!atom@{atom}}\index{atom@{atom}!OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-NO\_\-QUOTE@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-NO\_\-QUOTE}}\item[{\em 
+\hypertarget{group__atom_gga42fa1c131691f55dbc781a0be60e3772a639f398e983f74ee2adbf39a69062a93}{
+OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-NO\_\-QUOTE}
+\label{group__atom_gga42fa1c131691f55dbc781a0be60e3772a639f398e983f74ee2adbf39a69062a93}
+}]don't introduce quotes around symbols with spaces \index{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-FORCE\_\-QUOTE@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-FORCE\_\-QUOTE}!atom@{atom}}\index{atom@{atom}!OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-FORCE\_\-QUOTE@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-FORCE\_\-QUOTE}}\item[{\em 
+\hypertarget{group__atom_gga42fa1c131691f55dbc781a0be60e3772a8adcad05a635857f1f76aec4188e9ae9}{
+OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-SYM\_\-FORCE\_\-QUOTE}
+\label{group__atom_gga42fa1c131691f55dbc781a0be60e3772a8adcad05a635857f1f76aec4188e9ae9}
+}]always introduce quotes around symbols (useful for JSON) \index{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-COMMA\_\-DELIM@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-COMMA\_\-DELIM}!atom@{atom}}\index{atom@{atom}!OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-COMMA\_\-DELIM@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-COMMA\_\-DELIM}}\item[{\em 
+\hypertarget{group__atom_gga42fa1c131691f55dbc781a0be60e3772a45021a54b7ef864284a15b898d169a13}{
+OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-COMMA\_\-DELIM}
+\label{group__atom_gga42fa1c131691f55dbc781a0be60e3772a45021a54b7ef864284a15b898d169a13}
+}]separate atoms with commas (useful for JSON) \index{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-FORCE\_\-ZEROS@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-FORCE\_\-ZEROS}!atom@{atom}}\index{atom@{atom}!OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-FORCE\_\-ZEROS@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-FORCE\_\-ZEROS}}\item[{\em 
+\hypertarget{group__atom_gga42fa1c131691f55dbc781a0be60e3772a6cffcc55e28bd69beb674fe018c18e35}{
+OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-FORCE\_\-ZEROS}
+\label{group__atom_gga42fa1c131691f55dbc781a0be60e3772a6cffcc55e28bd69beb674fe018c18e35}
+}]always print the zeros \index{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-NUM\_\-HI\_\-RES@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-NUM\_\-HI\_\-RES}!atom@{atom}}\index{atom@{atom}!OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-NUM\_\-HI\_\-RES@{OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-NUM\_\-HI\_\-RES}}\item[{\em 
+\hypertarget{group__atom_gga42fa1c131691f55dbc781a0be60e3772a9a254b928e25b9023b6e3bb6b25f35b7}{
+OBEX\_\-UTIL\_\-ATOM\_\-GETTEXT\_\-NUM\_\-HI\_\-RES}
+\label{group__atom_gga42fa1c131691f55dbc781a0be60e3772a9a254b928e25b9023b6e3bb6b25f35b7}
+}]print more decimal places \end{description}
+\end{Desc}
+
+\hypertarget{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}{
+\index{atom@{atom}!e\_\-max\_\-atomtypes@{e\_\-max\_\-atomtypes}}
+\index{e\_\-max\_\-atomtypes@{e\_\-max\_\-atomtypes}!atom@{atom}}
+\subsubsection[{e\_\-max\_\-atomtypes}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-atomtypes}}}
+\label{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}
+
+
+the list of officially recognized types, including pseudotypes for commas and semicolons. Used in two places: 1. the reader, when it reads a string, returns long, float, sym, comma, semi, or dollar; and 2. each object method comes with an array of them saying what types it needs, from among long, float, sym, obj, gimme, and cant.
+
+\begin{DoxyRemark}{Remarks}
+While these values are defined in an enum, you should use a long to represent the value. Using the enum type creates ambiguity in struct size and is subject to various inconsistent compiler settings. 
+\end{DoxyRemark}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{A\_\-NOTHING@{A\_\-NOTHING}!atom@{atom}}\index{atom@{atom}!A\_\-NOTHING@{A\_\-NOTHING}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}{
+A\_\-NOTHING}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a858ddb5d5927eae3fd699a82c7e174b6}
+}]no type, thus no atom \index{A\_\-LONG@{A\_\-LONG}!atom@{atom}}\index{atom@{atom}!A\_\-LONG@{A\_\-LONG}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{
+A\_\-LONG}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}
+}]long integer \index{A\_\-FLOAT@{A\_\-FLOAT}!atom@{atom}}\index{atom@{atom}!A\_\-FLOAT@{A\_\-FLOAT}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{
+A\_\-FLOAT}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}
+}]32-\/bit float \index{A\_\-SYM@{A\_\-SYM}!atom@{atom}}\index{atom@{atom}!A\_\-SYM@{A\_\-SYM}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}{
+A\_\-SYM}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}
+}]\hyperlink{structt__symbol}{t\_\-symbol} pointer \index{A\_\-OBJ@{A\_\-OBJ}!atom@{atom}}\index{atom@{atom}!A\_\-OBJ@{A\_\-OBJ}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{
+A\_\-OBJ}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}
+}]\hyperlink{structt__object}{t\_\-object} pointer (for argtype lists; passes the value of sym) \index{A\_\-DEFLONG@{A\_\-DEFLONG}!atom@{atom}}\index{atom@{atom}!A\_\-DEFLONG@{A\_\-DEFLONG}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a7bd979db3dcf86909e24a1d1452e2205}{
+A\_\-DEFLONG}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a7bd979db3dcf86909e24a1d1452e2205}
+}]long but defaults to zero \index{A\_\-DEFFLOAT@{A\_\-DEFFLOAT}!atom@{atom}}\index{atom@{atom}!A\_\-DEFFLOAT@{A\_\-DEFFLOAT}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a42b644240dcbb90fe67282a4d0688776}{
+A\_\-DEFFLOAT}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a42b644240dcbb90fe67282a4d0688776}
+}]float, but defaults to zero \index{A\_\-DEFSYM@{A\_\-DEFSYM}!atom@{atom}}\index{atom@{atom}!A\_\-DEFSYM@{A\_\-DEFSYM}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47aa010616276cb89bcd04bcba611e18d51}{
+A\_\-DEFSYM}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47aa010616276cb89bcd04bcba611e18d51}
+}]symbol, defaults to \char`\"{}\char`\"{} \index{A\_\-GIMME@{A\_\-GIMME}!atom@{atom}}\index{atom@{atom}!A\_\-GIMME@{A\_\-GIMME}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{
+A\_\-GIMME}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}
+}]request that args be passed as an array, the routine will check the types itself. \index{A\_\-CANT@{A\_\-CANT}!atom@{atom}}\index{atom@{atom}!A\_\-CANT@{A\_\-CANT}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af48193ec36e53b1507d81c49873c8d7a}{
+A\_\-CANT}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af48193ec36e53b1507d81c49873c8d7a}
+}]cannot typecheck args \index{A\_\-SEMI@{A\_\-SEMI}!atom@{atom}}\index{atom@{atom}!A\_\-SEMI@{A\_\-SEMI}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ac105be4ef726ee36c4330e16bb24706e}{
+A\_\-SEMI}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ac105be4ef726ee36c4330e16bb24706e}
+}]semicolon \index{A\_\-COMMA@{A\_\-COMMA}!atom@{atom}}\index{atom@{atom}!A\_\-COMMA@{A\_\-COMMA}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a07c3484085a3217107acec059d17b945}{
+A\_\-COMMA}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a07c3484085a3217107acec059d17b945}
+}]comma \index{A\_\-DOLLAR@{A\_\-DOLLAR}!atom@{atom}}\index{atom@{atom}!A\_\-DOLLAR@{A\_\-DOLLAR}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af0a5a9017f6b59e82a4859cd0560d36b}{
+A\_\-DOLLAR}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af0a5a9017f6b59e82a4859cd0560d36b}
+}]dollar \index{A\_\-DOLLSYM@{A\_\-DOLLSYM}!atom@{atom}}\index{atom@{atom}!A\_\-DOLLSYM@{A\_\-DOLLSYM}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a9d47aadc47f728c2af7be2ec12a4a8c5}{
+A\_\-DOLLSYM}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a9d47aadc47f728c2af7be2ec12a4a8c5}
+}]dollar \index{A\_\-GIMMEBACK@{A\_\-GIMMEBACK}!atom@{atom}}\index{atom@{atom}!A\_\-GIMMEBACK@{A\_\-GIMMEBACK}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ad150bf3de9c8dc2ddfa0ca0ca2382360}{
+A\_\-GIMMEBACK}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ad150bf3de9c8dc2ddfa0ca0ca2382360}
+}]request that args be passed as an array, the routine will check the types itself. can return atom value in final atom ptr arg. function returns long error code 0 = no err. see gimmeback\_\-meth typedef \index{A\_\-DEFER@{A\_\-DEFER}!atom@{atom}}\index{atom@{atom}!A\_\-DEFER@{A\_\-DEFER}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47abcb435e6fecfdcd79276dc8db1988db3}{
+A\_\-DEFER}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47abcb435e6fecfdcd79276dc8db1988db3}
+}]A special signature for declaring methods. This is like A\_\-GIMME, but the call is deferred. \index{A\_\-USURP@{A\_\-USURP}!atom@{atom}}\index{atom@{atom}!A\_\-USURP@{A\_\-USURP}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af563cdbe6db453f24552bbe7fe6762d8}{
+A\_\-USURP}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47af563cdbe6db453f24552bbe7fe6762d8}
+}]A special signature for declaring methods. This is like A\_\-GIMME, but the call is deferred and multiple calls within one servicing of the queue are filtered down to one call. \index{A\_\-DEFER\_\-LOW@{A\_\-DEFER\_\-LOW}!atom@{atom}}\index{atom@{atom}!A\_\-DEFER\_\-LOW@{A\_\-DEFER\_\-LOW}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a4556bc5fe0d4f8cc55eda5aeeee55cf2}{
+A\_\-DEFER\_\-LOW}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a4556bc5fe0d4f8cc55eda5aeeee55cf2}
+}]A special signature for declaring methods. This is like A\_\-GIMME, but the call is deferref to the back of the queue. \index{A\_\-USURP\_\-LOW@{A\_\-USURP\_\-LOW}!atom@{atom}}\index{atom@{atom}!A\_\-USURP\_\-LOW@{A\_\-USURP\_\-LOW}}\item[{\em 
+\hypertarget{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a8c844b0a1b551341a6a5e3b95d2f1152}{
+A\_\-USURP\_\-LOW}
+\label{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a8c844b0a1b551341a6a5e3b95d2f1152}
+}]A special signature for declaring methods. This is like A\_\-GIMME, but the call is deferred to the back of the queue and multiple calls within one servicing of the queue are filtered down to one call. \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__atom_gad1a3b8eed4c311ec41b2d565bf40b002}{
+\index{atom@{atom}!atom\_\-alloc@{atom\_\-alloc}}
+\index{atom\_\-alloc@{atom\_\-alloc}!atom@{atom}}
+\subsubsection[{atom\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-alloc (long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av}, \/  char $\ast$ {\em alloc})}}
+\label{group__atom_gad1a3b8eed4c311ec41b2d565bf40b002}
+
+
+Allocate a single atom. If ac and av are both zero then memory is allocated. Otherwise it is presumed that memory is already allocated and nothing will happen.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The address of a variable that will contain the number of atoms allocated (1). \item[{\em av}]The address of a pointer that will be set with the new allocated memory for the atom. \item[{\em alloc}]Address of a variable that will be set true is memory is allocated, otherwise false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga5601306b4b76f338501cda586a6c1fde}{
+\index{atom@{atom}!atom\_\-alloc\_\-array@{atom\_\-alloc\_\-array}}
+\index{atom\_\-alloc\_\-array@{atom\_\-alloc\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-alloc\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-alloc\_\-array (long {\em minsize}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av}, \/  char $\ast$ {\em alloc})}}
+\label{group__atom_ga5601306b4b76f338501cda586a6c1fde}
+
+
+Allocate an array of atoms. If ac and av are both zero then memory is allocated. Otherwise it is presumed that memory is already allocated and nothing will happen.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em minsize}]The minimum number of atoms that this array will need to contain. This determines the amount of memory allocated. \item[{\em ac}]The address of a variable that will contain the number of atoms allocated. \item[{\em av}]The address of a pointer that will be set with the new allocated memory for the atoms. \item[{\em alloc}]Address of a variable that will be set true is memory is allocated, otherwise false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga5f494e92bded5005a52a31738f8cbbdf}{
+\index{atom@{atom}!atom\_\-arg\_\-getdouble@{atom\_\-arg\_\-getdouble}}
+\index{atom\_\-arg\_\-getdouble@{atom\_\-arg\_\-getdouble}!atom@{atom}}
+\subsubsection[{atom\_\-arg\_\-getdouble}]{\setlength{\rightskip}{0pt plus 5cm}long atom\_\-arg\_\-getdouble (double $\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atom_ga5f494e92bded5005a52a31738f8cbbdf}
+
+
+Retrieves the floating point value, as a double, of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]Pointer to a double variable to receive the atom's data if the function is successful. Otherwise the value is left unchanged. \item[{\em idx}]Offset into the atom list of the atom of interest, starting from 0. For instance, if you want data from the 3rd atom in the atom list, {\ttfamily idx} should be set to 2. \item[{\em ac}]Count of av. \item[{\em av}]Pointer to the first \hyperlink{structt__atom}{t\_\-atom} of an atom list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga06e305ddb4fde46ef2e8b66a7e578d61}{
+\index{atom@{atom}!atom\_\-arg\_\-getfloat@{atom\_\-arg\_\-getfloat}}
+\index{atom\_\-arg\_\-getfloat@{atom\_\-arg\_\-getfloat}!atom@{atom}}
+\subsubsection[{atom\_\-arg\_\-getfloat}]{\setlength{\rightskip}{0pt plus 5cm}long atom\_\-arg\_\-getfloat (float $\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atom_ga06e305ddb4fde46ef2e8b66a7e578d61}
+
+
+Retrieves the floating point value of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]Pointer to a float variable to receive the atom's data if the function is successful. Otherwise, the value is left unchanged. \item[{\em idx}]Offset into the atom list of the atom of interest, starting from 0. For instance, if you want data from the 3rd atom in the atom list, {\ttfamily idx} should be set to 2. \item[{\em ac}]Count of av. \item[{\em av}]Pointer to the first \hyperlink{structt__atom}{t\_\-atom} of an atom list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gaba53e6f86741dea07cff414b9b5d6a8b}{
+\index{atom@{atom}!atom\_\-arg\_\-getlong@{atom\_\-arg\_\-getlong}}
+\index{atom\_\-arg\_\-getlong@{atom\_\-arg\_\-getlong}!atom@{atom}}
+\subsubsection[{atom\_\-arg\_\-getlong}]{\setlength{\rightskip}{0pt plus 5cm}long atom\_\-arg\_\-getlong (long $\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atom_gaba53e6f86741dea07cff414b9b5d6a8b}
+
+
+Retrieves the integer value of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]Pointer to a long variable to receive the atom's data if the function is successful. \item[{\em idx}]Offset into the atom list of the atom of interest, starting from 0. For instance, if you want data from the 3rd atom in the atom list, {\ttfamily idx} should be set to 2. \item[{\em ac}]Count of av. \item[{\em av}]Pointer to the first \hyperlink{structt__atom}{t\_\-atom} of an atom list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__atom_gaba53e6f86741dea07cff414b9b5d6a8b}{atom\_\-arg\_\-getlong()} function only changes the value of {\ttfamily c} if the function is successful. For instance, the following code snippet illustrates a simple, but typical use: 
+\begin{DoxyCode}
+    void myobject_mymessage(t_myobject *x, t_symbol *s, long ac, t_atom *av)
+    {
+        long var = -1;
+
+        // here, we are expecting a value of 0 or greater
+        atom_arg_getlong(&var, 0, ac, av);
+        if (val == -1) // i.e. unchanged
+            post("it is likely that the user did not provide a valid argument");
+        else {
+            ...
+        }
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__atom_ga2c50571450b200933f47ad6c7c411388}{
+\index{atom@{atom}!atom\_\-arg\_\-getobjclass@{atom\_\-arg\_\-getobjclass}}
+\index{atom\_\-arg\_\-getobjclass@{atom\_\-arg\_\-getobjclass}!atom@{atom}}
+\subsubsection[{atom\_\-arg\_\-getobjclass}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-arg\_\-getobjclass ({\bf t\_\-object} $\ast$$\ast$ {\em x}, \/  long {\em idx}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv}, \/  {\bf t\_\-symbol} $\ast$ {\em cls})}}
+\label{group__atom_ga2c50571450b200933f47ad6c7c411388}
+
+
+Return a pointer to an object contained in an atom if it is of the specified class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The address of a pointer to the object contained in av if it is of the specified class upon return. Otherwise NULL upon return. \item[{\em idx}]The index of the atom in the array from which to get the object pointer. \item[{\em argc}]The count of atoms in argv. \item[{\em argv}]The address to the first of an array of atoms. \item[{\em cls}]A symbol containing the class name of which the object should be an instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gaeba7a400021327a46673220ef1c1ee98}{
+\index{atom@{atom}!atom\_\-arg\_\-getsym@{atom\_\-arg\_\-getsym}}
+\index{atom\_\-arg\_\-getsym@{atom\_\-arg\_\-getsym}!atom@{atom}}
+\subsubsection[{atom\_\-arg\_\-getsym}]{\setlength{\rightskip}{0pt plus 5cm}long atom\_\-arg\_\-getsym ({\bf t\_\-symbol} $\ast$$\ast$ {\em c}, \/  long {\em idx}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atom_gaeba7a400021327a46673220ef1c1ee98}
+
+
+Retrieves the \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ value of a particular \hyperlink{structt__atom}{t\_\-atom} from an atom list, if the atom exists. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]Pointer to a \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ variable to receive the atom's data if the function is successful. Otherwise, the value is left unchanged. \item[{\em idx}]Offset into the atom list of the atom of interest, starting from 0. For instance, if you want data from the 3rd atom in the atom list, {\ttfamily idx} should be set to 2. \item[{\em ac}]Count of av. \item[{\em av}]Pointer to the first \hyperlink{structt__atom}{t\_\-atom} of an atom list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__atom_gaeba7a400021327a46673220ef1c1ee98}{atom\_\-arg\_\-getsym()} function only changes the value of {\ttfamily c} if the function is successful. For instance, the following code snippet illustrates a simple, but typical use: 
+\begin{DoxyCode}
+    void myobject_open(t_myobject *x, t_symbol *s, long ac, t_atom *av)
+    {
+        t_symbol *filename = _sym_nothing;
+
+        // here, we are expecting a file name.
+        // if we don't get it, open a dialog box 
+        atom_arg_getsym(&filename, 0, ac, av);
+        if (filename == _sym_nothing) { // i.e. unchanged
+            // open the file dialog box,
+            // get a value for filename
+        }
+        // do something with the filename
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__atom_ga34f9b920bed69c19988fe70d7be79c18}{
+\index{atom@{atom}!atom\_\-copy@{atom\_\-copy}}
+\index{atom\_\-copy@{atom\_\-copy}!atom@{atom}}
+\subsubsection[{atom\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}BEGIN\_\-USING\_\-C\_\-LINKAGE void atom\_\-copy (short {\em argc1}, \/  {\bf t\_\-atom} $\ast$ {\em argv1}, \/  {\bf t\_\-atom} $\ast$ {\em argv2})}}
+\label{group__atom_ga34f9b920bed69c19988fe70d7be79c18}
+
+
+Copy an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em argc1}]The count of atoms in argv1. \item[{\em argv1}]The address to the first of an array of atoms that is the source for the copy. \item[{\em argv2}]The address to the first of an array of atoms that is the destination for the copy. Note that this array must already by allocated using \hyperlink{group__memory_ga276676be214edff9fe5c9d0681f39ae6}{sysmem\_\-newptr()} or \hyperlink{group__atom_gad1a3b8eed4c311ec41b2d565bf40b002}{atom\_\-alloc()}. \end{DoxyParams}
+\hypertarget{group__atom_ga76191e30761d55e4528b50e447f43abb}{
+\index{atom@{atom}!atom\_\-getatom\_\-array@{atom\_\-getatom\_\-array}}
+\index{atom\_\-getatom\_\-array@{atom\_\-getatom\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-getatom\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getatom\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  {\bf t\_\-atom} $\ast$ {\em vals})}}
+\label{group__atom_ga76191e30761d55e4528b50e447f43abb}
+
+
+Fetch an array of \hyperlink{structt__atom}{t\_\-atom} values from an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms allocated in the av parameter. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values to fetch from the array specified by vals. \item[{\em vals}]The address of the array to which is copied the values from av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga76ec2c6ff61e5bb4e29e51f1a791db56}{
+\index{atom@{atom}!atom\_\-getchar\_\-array@{atom\_\-getchar\_\-array}}
+\index{atom\_\-getchar\_\-array@{atom\_\-getchar\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-getchar\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getchar\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  unsigned char $\ast$ {\em vals})}}
+\label{group__atom_ga76ec2c6ff61e5bb4e29e51f1a791db56}
+
+
+Fetch an array of char values from an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms allocated in the av parameter. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values to fetch from the array specified by vals. \item[{\em vals}]The address of the array to which is copied the values from av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gae9bef849142b12c94f842faa03b3238c}{
+\index{atom@{atom}!atom\_\-getcharfix@{atom\_\-getcharfix}}
+\index{atom\_\-getcharfix@{atom\_\-getcharfix}!atom@{atom}}
+\subsubsection[{atom\_\-getcharfix}]{\setlength{\rightskip}{0pt plus 5cm}long atom\_\-getcharfix ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_gae9bef849142b12c94f842faa03b3238c}
+
+
+Retrieves an unsigned integer value between 0 and 255 from a \hyperlink{structt__atom}{t\_\-atom}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value is of interest \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the value of the specified \hyperlink{structt__atom}{t\_\-atom} as an integer between 0 and 255, if possible. Otherwise, it returns 0.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+If the \hyperlink{structt__atom}{t\_\-atom} is typed \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG}, but the data falls outside of the range 0-\/255, the data is truncated to that range before output.
+
+If the \hyperlink{structt__atom}{t\_\-atom} is typed \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{A\_\-FLOAT}, the floating point value is multiplied by 255. and truncated to the range 0-\/255 before output. For example, the floating point value {\ttfamily 0.5} would be output from atom\_\-getcharfix as {\ttfamily 127} (0.5 $\ast$ 255. = 127.5).
+
+No attempt is also made to coerce \hyperlink{structt__symbol}{t\_\-symbol} data. 
+\end{DoxyRemark}
+\hypertarget{group__atom_ga4189a7d83f7cf03d575425ba97f0e9f9}{
+\index{atom@{atom}!atom\_\-getdouble\_\-array@{atom\_\-getdouble\_\-array}}
+\index{atom\_\-getdouble\_\-array@{atom\_\-getdouble\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-getdouble\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getdouble\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  double $\ast$ {\em vals})}}
+\label{group__atom_ga4189a7d83f7cf03d575425ba97f0e9f9}
+
+
+Fetch an array of 64bit float values from an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms allocated in the av parameter. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values to fetch from the array specified by vals. \item[{\em vals}]The address of the array to which is copied the values from av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga28f52239a67244db2e821320702712ca}{
+\index{atom@{atom}!atom\_\-getfloat@{atom\_\-getfloat}}
+\index{atom\_\-getfloat@{atom\_\-getfloat}!atom@{atom}}
+\subsubsection[{atom\_\-getfloat}]{\setlength{\rightskip}{0pt plus 5cm}float atom\_\-getfloat ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_ga28f52239a67244db2e821320702712ca}
+
+
+Retrieves a floating point value from a \hyperlink{structt__atom}{t\_\-atom}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value is of interest \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the value of the specified \hyperlink{structt__atom}{t\_\-atom} as a floating point number, if possible. Otherwise, it returns 0.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+If the \hyperlink{structt__atom}{t\_\-atom} is not of the type specified by the function, the function will attempt to coerce a valid value from the \hyperlink{structt__atom}{t\_\-atom}. For instance, if the \hyperlink{structt__atom}{t\_\-atom} {\ttfamily at} is set to type \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG} with a value of {\ttfamily 5}, the \hyperlink{group__atom_ga28f52239a67244db2e821320702712ca}{atom\_\-getfloat()} function will return the value of {\ttfamily at} as a float, or {\ttfamily 5.0}. An attempt is also made to coerce \hyperlink{structt__symbol}{t\_\-symbol} data. 
+\end{DoxyRemark}
+\hypertarget{group__atom_ga0d3bc27f1de1bacbd8026c81a7b7e3d3}{
+\index{atom@{atom}!atom\_\-getfloat\_\-array@{atom\_\-getfloat\_\-array}}
+\index{atom\_\-getfloat\_\-array@{atom\_\-getfloat\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-getfloat\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getfloat\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  float $\ast$ {\em vals})}}
+\label{group__atom_ga0d3bc27f1de1bacbd8026c81a7b7e3d3}
+
+
+Fetch an array of 32bit float values from an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms allocated in the av parameter. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values to fetch from the array specified by vals. \item[{\em vals}]The address of the array to which is copied the values from av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gadf4cd1c3cae12c062fb07ffca5dbf0c0}{
+\index{atom@{atom}!atom\_\-getformat@{atom\_\-getformat}}
+\index{atom\_\-getformat@{atom\_\-getformat}!atom@{atom}}
+\subsubsection[{atom\_\-getformat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getformat (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__atom_gadf4cd1c3cae12c062fb07ffca5dbf0c0}
+
+
+Retrieve values from an array of atoms using sscanf-\/like syntax. \hyperlink{group__atom_gadf4cd1c3cae12c062fb07ffca5dbf0c0}{atom\_\-getformat()} supports clfdsoaCLFDSOA tokens (primitive type scalars and arrays respectively for the char, long, float, double, \hyperlink{structt__symbol}{t\_\-symbol}$\ast$, \hyperlink{structt__object}{t\_\-object}$\ast$, \hyperlink{structt__atom}{t\_\-atom}$\ast$). It does not support vbp@ the tokens found in \hyperlink{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{atom\_\-setformat()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to parse in av. \item[{\em av}]The address of the first \hyperlink{structt__atom}{t\_\-atom} pointer in an array to parse. \item[{\em fmt}]An sscanf-\/style format string specifying types for the atoms. \item[{\em ...}]One or more arguments which are address of variables to be set according to the fmt string.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{atom\_\-setformat()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atom_ga62c0a631f50db54ec654a9e40b992fe2}{
+\index{atom@{atom}!atom\_\-getlong@{atom\_\-getlong}}
+\index{atom\_\-getlong@{atom\_\-getlong}!atom@{atom}}
+\subsubsection[{atom\_\-getlong}]{\setlength{\rightskip}{0pt plus 5cm}long atom\_\-getlong ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_ga62c0a631f50db54ec654a9e40b992fe2}
+
+
+Retrieves a long integer value from a \hyperlink{structt__atom}{t\_\-atom}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value is of interest \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the value of the specified \hyperlink{structt__atom}{t\_\-atom} as an integer, if possible. Otherwise, it returns 0. 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+If the \hyperlink{structt__atom}{t\_\-atom} is not of the type specified by the function, the function will attempt to coerce a valid value from the \hyperlink{structt__atom}{t\_\-atom}. For instance, if the \hyperlink{structt__atom}{t\_\-atom} {\ttfamily at} is set to type \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{A\_\-FLOAT} with a value of {\ttfamily 3.7}, the \hyperlink{group__atom_ga62c0a631f50db54ec654a9e40b992fe2}{atom\_\-getlong()} function will return the truncated integer value of {\ttfamily at}, or {\ttfamily 3}. An attempt is also made to coerce \hyperlink{structt__symbol}{t\_\-symbol} data. 
+\end{DoxyRemark}
+\hypertarget{group__atom_ga0bb78863f0f99d492b5241c9158b10cc}{
+\index{atom@{atom}!atom\_\-getlong\_\-array@{atom\_\-getlong\_\-array}}
+\index{atom\_\-getlong\_\-array@{atom\_\-getlong\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-getlong\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getlong\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  long $\ast$ {\em vals})}}
+\label{group__atom_ga0bb78863f0f99d492b5241c9158b10cc}
+
+
+Fetch an array of long integer values from an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms allocated in the av parameter. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values to fetch from the array specified by vals. \item[{\em vals}]The address of the array to which is copied the values from av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga3fa97bb8b72a394a2918cc55951f8b39}{
+\index{atom@{atom}!atom\_\-getobj@{atom\_\-getobj}}
+\index{atom\_\-getobj@{atom\_\-getobj}!atom@{atom}}
+\subsubsection[{atom\_\-getobj}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ atom\_\-getobj ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_ga3fa97bb8b72a394a2918cc55951f8b39}
+
+
+Retrieves a generic pointer value from a \hyperlink{structt__atom}{t\_\-atom}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value is of interest \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the value of the specified \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ}-\/typed \hyperlink{structt__atom}{t\_\-atom}, if possible. Otherwise, it returns NULL. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gac8571c66b47e3699520695352d2eff30}{
+\index{atom@{atom}!atom\_\-getobj\_\-array@{atom\_\-getobj\_\-array}}
+\index{atom\_\-getobj\_\-array@{atom\_\-getobj\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-getobj\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getobj\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em vals})}}
+\label{group__atom_gac8571c66b47e3699520695352d2eff30}
+
+
+Fetch an array of \hyperlink{structt__object}{t\_\-object}$\ast$ values from an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms allocated in the av parameter. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values to fetch from the array specified by vals. \item[{\em vals}]The address of the array to which is copied the values from av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga10405190b0d5dbec546086aec6634c9d}{
+\index{atom@{atom}!atom\_\-getobjclass@{atom\_\-getobjclass}}
+\index{atom\_\-getobjclass@{atom\_\-getobjclass}!atom@{atom}}
+\subsubsection[{atom\_\-getobjclass}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ atom\_\-getobjclass ({\bf t\_\-atom} $\ast$ {\em av}, \/  {\bf t\_\-symbol} $\ast$ {\em cls})}}
+\label{group__atom_ga10405190b0d5dbec546086aec6634c9d}
+
+
+Return a pointer to an object contained in an atom if it is of the specified class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em av}]A pointer to the atom from which to get the \hyperlink{structt__object}{t\_\-object}. \item[{\em cls}]A symbol containing the class name of which the object should be an instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the object contained in av if it is of the specified class, otherwise NULL. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gab43922b60c9c2aaf3a4ecabaa432ef61}{
+\index{atom@{atom}!atom\_\-getsym@{atom\_\-getsym}}
+\index{atom\_\-getsym@{atom\_\-getsym}!atom@{atom}}
+\subsubsection[{atom\_\-getsym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ atom\_\-getsym ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_gab43922b60c9c2aaf3a4ecabaa432ef61}
+
+
+Retrieves a \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ value from a \hyperlink{structt__atom}{t\_\-atom}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value is of interest \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the value of the specified \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}{A\_\-SYM}-\/typed \hyperlink{structt__atom}{t\_\-atom}, if possible. Otherwise, it returns an empty, but valid, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$, equivalent to {\ttfamily gensym(\char`\"{}\char`\"{})}, or {\ttfamily \_\-sym\_\-nothing}.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+No attempt is made to coerce non-\/matching data types. 
+\end{DoxyRemark}
+\hypertarget{group__atom_ga48c3655238debe58e8a943dc28381953}{
+\index{atom@{atom}!atom\_\-getsym\_\-array@{atom\_\-getsym\_\-array}}
+\index{atom\_\-getsym\_\-array@{atom\_\-getsym\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-getsym\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-getsym\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em vals})}}
+\label{group__atom_ga48c3655238debe58e8a943dc28381953}
+
+
+Fetch an array of \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ values from an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms allocated in the av parameter. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values to fetch from the array specified by vals. \item[{\em vals}]The address of the array to which is copied the values from av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gade94ebf977b43b151a906b2b70d12301}{
+\index{atom@{atom}!atom\_\-gettext@{atom\_\-gettext}}
+\index{atom\_\-gettext@{atom\_\-gettext}!atom@{atom}}
+\subsubsection[{atom\_\-gettext}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-gettext (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long $\ast$ {\em textsize}, \/  char $\ast$$\ast$ {\em text}, \/  long {\em flags})}}
+\label{group__atom_gade94ebf977b43b151a906b2b70d12301}
+
+
+Convert an array of atoms into a C-\/string. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to fetch in av. \item[{\em av}]The address of the first \hyperlink{structt__atom}{t\_\-atom} pointer in an array to retrieve. \item[{\em textsize}]The size of the string to which the atoms will be formatted and copied. \item[{\em text}]The address of the string to which the text will be written. \item[{\em flags}]Determines the rules by which atoms will be translated into text. Values are bit mask as defined by \hyperlink{group__atom_ga42fa1c131691f55dbc781a0be60e3772}{e\_\-max\_\-atom\_\-gettext\_\-flags}.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atom_ga7959e9b765bf2eb52223587d8282a49e}{
+\index{atom@{atom}!atom\_\-gettype@{atom\_\-gettype}}
+\index{atom\_\-gettype@{atom\_\-gettype}!atom@{atom}}
+\subsubsection[{atom\_\-gettype}]{\setlength{\rightskip}{0pt plus 5cm}long atom\_\-gettype ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_ga7959e9b765bf2eb52223587d8282a49e}
+
+
+Retrieves type from a \hyperlink{structt__atom}{t\_\-atom}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose type is of interest \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the type of the specified \hyperlink{structt__atom}{t\_\-atom} as defined in \hyperlink{group__atom_ga8aa6700e9f00b132eb376db6e39ade47}{e\_\-max\_\-atomtypes} 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga6d8f3b8d919c155a69d9e6a9c010ec74}{
+\index{atom@{atom}!atom\_\-setatom\_\-array@{atom\_\-setatom\_\-array}}
+\index{atom\_\-setatom\_\-array@{atom\_\-setatom\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-setatom\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setatom\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  {\bf t\_\-atom} $\ast$ {\em vals})}}
+\label{group__atom_ga6d8f3b8d919c155a69d9e6a9c010ec74}
+
+
+Assign an array of \hyperlink{structt__atom}{t\_\-atom} values to an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to try to fetch from the second array of atoms. You should have at least this number of atoms allocated in av. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values in the array specified by vals. \item[{\em vals}]The array from which to copy the values into the array of atoms at av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga88e54464a226b4fa99113f39ca522fb2}{
+\index{atom@{atom}!atom\_\-setchar\_\-array@{atom\_\-setchar\_\-array}}
+\index{atom\_\-setchar\_\-array@{atom\_\-setchar\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-setchar\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setchar\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  unsigned char $\ast$ {\em vals})}}
+\label{group__atom_ga88e54464a226b4fa99113f39ca522fb2}
+
+
+Assign an array of char values to an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to try to fetch from the array of chars. You should have at least this number of atoms allocated in av. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values in the array specified by vals. \item[{\em vals}]The array from which to copy the values into the array of atoms at av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga4a5f89178488b1e8bfe75a1f270058d5}{
+\index{atom@{atom}!atom\_\-setdouble\_\-array@{atom\_\-setdouble\_\-array}}
+\index{atom\_\-setdouble\_\-array@{atom\_\-setdouble\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-setdouble\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setdouble\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  double $\ast$ {\em vals})}}
+\label{group__atom_ga4a5f89178488b1e8bfe75a1f270058d5}
+
+
+Assign an array of 64bit float values to an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to try to fetch from the array of doubles. You should have at least this number of atoms allocated in av. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values in the array specified by vals. \item[{\em vals}]The array from which to copy the values into the array of atoms at av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gae4faf28f99370e1a4ae9eab7df5bede7}{
+\index{atom@{atom}!atom\_\-setfloat@{atom\_\-setfloat}}
+\index{atom\_\-setfloat@{atom\_\-setfloat}!atom@{atom}}
+\subsubsection[{atom\_\-setfloat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setfloat ({\bf t\_\-atom} $\ast$ {\em a}, \/  double {\em b})}}
+\label{group__atom_gae4faf28f99370e1a4ae9eab7df5bede7}
+
+
+Inserts a floating point number into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{A\_\-FLOAT}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value and type will be modified \item[{\em b}]Floating point value to copy into the \hyperlink{structt__atom}{t\_\-atom}\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga05d828d4c2a60274cf185cbcb50df208}{
+\index{atom@{atom}!atom\_\-setfloat\_\-array@{atom\_\-setfloat\_\-array}}
+\index{atom\_\-setfloat\_\-array@{atom\_\-setfloat\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-setfloat\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setfloat\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  float $\ast$ {\em vals})}}
+\label{group__atom_ga05d828d4c2a60274cf185cbcb50df208}
+
+
+Assign an array of 32bit float values to an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to try to fetch from the array of floats. You should have at least this number of atoms allocated in av. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values in the array specified by vals. \item[{\em vals}]The array from which to copy the values into the array of atoms at av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{
+\index{atom@{atom}!atom\_\-setformat@{atom\_\-setformat}}
+\index{atom\_\-setformat@{atom\_\-setformat}!atom@{atom}}
+\subsubsection[{atom\_\-setformat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setformat (long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av}, \/  char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}
+
+
+Create an array of atoms populated with values using sprintf-\/like syntax. \hyperlink{group__atom_ga7a00fdf0699ae5176d39d7ddc3529bf0}{atom\_\-setformat()} supports clfdsoaCLFDSOA tokens (primitive type scalars and arrays respectively for the char, long, float, double, \hyperlink{structt__symbol}{t\_\-symbol}$\ast$, \hyperlink{structt__object}{t\_\-object}$\ast$, \hyperlink{structt__atom}{t\_\-atom}$\ast$). It also supports vbp@ tokens (obval, binbuf, parsestr, attribute).
+
+This function allocates memory for the atoms if the ac and av parameters are NULL. Otherwise it will attempt to use any memory already allocated to av. Any allocated memory should be freed with \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The address of a variable to hold the number of returned atoms. \item[{\em av}]The address of a \hyperlink{structt__atom}{t\_\-atom} pointer to which memory may be allocated and atoms copied. \item[{\em fmt}]An sprintf-\/style format string specifying values for the atoms. \item[{\em ...}]One or more arguments which are to be substituted into the format string.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atom_gadf4cd1c3cae12c062fb07ffca5dbf0c0}{atom\_\-getformat()} 
+
+\hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atom_ga98af493b18dfac0f8d441e16e520d5f6}{
+\index{atom@{atom}!atom\_\-setlong@{atom\_\-setlong}}
+\index{atom\_\-setlong@{atom\_\-setlong}!atom@{atom}}
+\subsubsection[{atom\_\-setlong}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setlong ({\bf t\_\-atom} $\ast$ {\em a}, \/  long {\em b})}}
+\label{group__atom_ga98af493b18dfac0f8d441e16e520d5f6}
+
+
+Inserts an integer into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value and type will be modified \item[{\em b}]Integer value to copy into the \hyperlink{structt__atom}{t\_\-atom}\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga524207025bbc13a13e901ea5c175e0bf}{
+\index{atom@{atom}!atom\_\-setlong\_\-array@{atom\_\-setlong\_\-array}}
+\index{atom\_\-setlong\_\-array@{atom\_\-setlong\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-setlong\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setlong\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  long $\ast$ {\em vals})}}
+\label{group__atom_ga524207025bbc13a13e901ea5c175e0bf}
+
+
+Assign an array of long integer values to an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to try to fetch from the array of longs. You should have at least this number of atoms allocated in av. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values in the array specified by vals. \item[{\em vals}]The array from which to copy the values into the array of atoms at av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga0ad7d5c696047effee6b6bbf04a981c4}{
+\index{atom@{atom}!atom\_\-setobj@{atom\_\-setobj}}
+\index{atom\_\-setobj@{atom\_\-setobj}!atom@{atom}}
+\subsubsection[{atom\_\-setobj}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setobj ({\bf t\_\-atom} $\ast$ {\em a}, \/  void $\ast$ {\em b})}}
+\label{group__atom_ga0ad7d5c696047effee6b6bbf04a981c4}
+
+
+Inserts a generic pointer value into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value and type will be modified \item[{\em b}]Pointer value to copy into the \hyperlink{structt__atom}{t\_\-atom}\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga8ebd48ccec485451687fd5b7abcd0227}{
+\index{atom@{atom}!atom\_\-setobj\_\-array@{atom\_\-setobj\_\-array}}
+\index{atom\_\-setobj\_\-array@{atom\_\-setobj\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-setobj\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setobj\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em vals})}}
+\label{group__atom_ga8ebd48ccec485451687fd5b7abcd0227}
+
+
+Assign an array of \hyperlink{structt__object}{t\_\-object}$\ast$ values to an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to try to fetch from the array of objects. You should have at least this number of atoms allocated in av. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values in the array specified by vals. \item[{\em vals}]The array from which to copy the values into the array of atoms at av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga55938aedb41a8f3565680cf29169dc70}{
+\index{atom@{atom}!atom\_\-setparse@{atom\_\-setparse}}
+\index{atom\_\-setparse@{atom\_\-setparse}!atom@{atom}}
+\subsubsection[{atom\_\-setparse}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setparse (long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av}, \/  char $\ast$ {\em parsestr})}}
+\label{group__atom_ga55938aedb41a8f3565680cf29169dc70}
+
+
+Parse a C-\/string into an array of atoms. This function allocates memory for the atoms if the ac and av parameters are NULL. Otherwise it will attempt to use any memory already allocated to av. Any allocated memory should be freed with \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The address of a variable to hold the number of returned atoms. \item[{\em av}]The address of a \hyperlink{structt__atom}{t\_\-atom} pointer to which memory may be allocated and atoms copied. \item[{\em parsestr}]The C-\/string to parse. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The following example will parse the string \char`\"{}foo bar 1 2 3.0\char`\"{} into an array of 5 atoms. The atom types will be determined automatically as 2 \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}{A\_\-SYM} atoms, 2 \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG} atoms, and 1 \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{A\_\-FLOAT} atom. 
+\begin{DoxyCode}
+    t_atom *av =  NULL;
+    long ac = 0;
+    t_max_err err = MAX_ERR_NONE;
+    
+    err = atom_setparse(&ac, &av, "foo bar 1 2 3.0");
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__atom_ga36c2619378802011ff0ff44bf74a807c}{
+\index{atom@{atom}!atom\_\-setsym@{atom\_\-setsym}}
+\index{atom\_\-setsym@{atom\_\-setsym}!atom@{atom}}
+\subsubsection[{atom\_\-setsym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setsym ({\bf t\_\-atom} $\ast$ {\em a}, \/  {\bf t\_\-symbol} $\ast$ {\em b})}}
+\label{group__atom_ga36c2619378802011ff0ff44bf74a807c}
+
+
+Inserts a \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ into a \hyperlink{structt__atom}{t\_\-atom} and change the t\_\-atom's type to \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}{A\_\-SYM}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]Pointer to a \hyperlink{structt__atom}{t\_\-atom} whose value and type will be modified \item[{\em b}]Pointer to a \hyperlink{structt__symbol}{t\_\-symbol} to copy into the \hyperlink{structt__atom}{t\_\-atom}\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga7955dbb1679166ac7bb15bfc1ee9b7f8}{
+\index{atom@{atom}!atom\_\-setsym\_\-array@{atom\_\-setsym\_\-array}}
+\index{atom\_\-setsym\_\-array@{atom\_\-setsym\_\-array}!atom@{atom}}
+\subsubsection[{atom\_\-setsym\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atom\_\-setsym\_\-array (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  long {\em count}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em vals})}}
+\label{group__atom_ga7955dbb1679166ac7bb15bfc1ee9b7f8}
+
+
+Assign an array of \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ values to an array of atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to try to fetch from the array of symbols. You should have at least this number of atoms allocated in av. \item[{\em av}]The address to the first of an array of allocated atoms. \item[{\em count}]The number of values in the array specified by vals. \item[{\em vals}]The array from which to copy the values into the array of atoms at av. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gaf85b0f40648c68c0e32168029489575b}{
+\index{atom@{atom}!atomisatomarray@{atomisatomarray}}
+\index{atomisatomarray@{atomisatomarray}!atom@{atom}}
+\subsubsection[{atomisatomarray}]{\setlength{\rightskip}{0pt plus 5cm}long atomisatomarray ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_gaf85b0f40648c68c0e32168029489575b}
+
+
+Determines whether or not an atom represents a \hyperlink{structt__atomarray}{t\_\-atomarray} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]The address of the atom to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the \hyperlink{structt__atom}{t\_\-atom} contains a valid \hyperlink{structt__atomarray}{t\_\-atomarray} object. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga85a30af9d861ac3f5664e63c4772e77b}{
+\index{atom@{atom}!atomisdictionary@{atomisdictionary}}
+\index{atomisdictionary@{atomisdictionary}!atom@{atom}}
+\subsubsection[{atomisdictionary}]{\setlength{\rightskip}{0pt plus 5cm}long atomisdictionary ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_ga85a30af9d861ac3f5664e63c4772e77b}
+
+
+Determines whether or not an atom represents a \hyperlink{structt__dictionary}{t\_\-dictionary} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]The address of the atom to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the \hyperlink{structt__atom}{t\_\-atom} contains a valid \hyperlink{structt__dictionary}{t\_\-dictionary} object. 
+\end{DoxyReturn}
+\hypertarget{group__atom_gaf09b95edeae2bf9704641e032d213954}{
+\index{atom@{atom}!atomisstring@{atomisstring}}
+\index{atomisstring@{atomisstring}!atom@{atom}}
+\subsubsection[{atomisstring}]{\setlength{\rightskip}{0pt plus 5cm}long atomisstring ({\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atom_gaf09b95edeae2bf9704641e032d213954}
+
+
+Determines whether or not an atom represents a \hyperlink{structt__string}{t\_\-string} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]The address of the atom to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the \hyperlink{structt__atom}{t\_\-atom} contains a valid \hyperlink{structt__string}{t\_\-string} object. 
+\end{DoxyReturn}
+\hypertarget{group__atom_ga827d5fa3550123db43e1121fea79db1b}{
+\index{atom@{atom}!postargs@{postargs}}
+\index{postargs@{postargs}!atom@{atom}}
+\subsubsection[{postargs}]{\setlength{\rightskip}{0pt plus 5cm}void postargs (short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__atom_ga827d5fa3550123db43e1121fea79db1b}
+
+
+Print the contents of an array of atoms to the Max window. 
+\begin{DoxyParams}{Parameters}
+\item[{\em argc}]The count of atoms in argv. \item[{\em argv}]The address to the first of an array of atoms. \end{DoxyParams}

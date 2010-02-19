@@ -1,0 +1,238 @@
+\hypertarget{group__console}{
+\section{Console}
+\label{group__console}\index{Console@{Console}}
+}
+
+
+Collaboration diagram for Console:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{group__console}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post} (char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Print text to the Max window. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_ga94fff7e4ee19b8db6904a009117e0667}{cpost} (char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Print text to the system console. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_gaa7733e30b2951f225e24dca1ed4632b2}{error} (char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Print an error to the Max window. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_ga4cba33c91c6a8aa3d886e746e04f21af}{ouchstring} (char $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Put up an error or advisory alert box on the screen. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_gaef84325d992e0afa14b2e7b0c0515601}{postatom} (\hyperlink{structt__atom}{t\_\-atom} $\ast$ap)
+\begin{DoxyCompactList}\small\item\em Print multiple items in the same line of text in the Max window. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Print text to the Max window, linked to an instance of your object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Print text to the Max window, linked to an instance of your object, and flagged as an error (highlighted with a red background). \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_ga7ab11c5e9e345384ad282fcd5b86275c}{object\_\-warn} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Print text to the Max window, linked to an instance of your object, and flagged as a warning (highlighted with a yellow background). \item\end{DoxyCompactList}\item 
+void \hyperlink{group__console_ga42a612b12b1a24380a45ab1b9278b950}{object\_\-error\_\-obtrusive} (\hyperlink{structt__object}{t\_\-object} $\ast$x, char $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Print text to the Max window, linked to an instance of your object, and flagged as an error (highlighted with a red background), and grab the user's attention by displaying a banner in the patcher window. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__console_ga94fff7e4ee19b8db6904a009117e0667}{
+\index{console@{console}!cpost@{cpost}}
+\index{cpost@{cpost}!console@{console}}
+\subsubsection[{cpost}]{\setlength{\rightskip}{0pt plus 5cm}void cpost (char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__console_ga94fff7e4ee19b8db6904a009117e0667}
+
+
+Print text to the system console. On the Mac this post will be visible by launching Console.app in the /Applications/Utilities folder. On Windows this post will be visible by launching the dbgView.exe program, which is a free download as a part of Microsoft's SysInternals.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fmt}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Particularly on MacOS 10.5, posting to Console.app can be a computationally expensive operation. Use with care.
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()} 
+
+\hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_gaa7733e30b2951f225e24dca1ed4632b2}{
+\index{console@{console}!error@{error}}
+\index{error@{error}!console@{console}}
+\subsubsection[{error}]{\setlength{\rightskip}{0pt plus 5cm}void error (char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__console_gaa7733e30b2951f225e24dca1ed4632b2}
+
+
+Print an error to the Max window. Max 5 introduced \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()}, which provides several enhancements to \hyperlink{group__console_gaa7733e30b2951f225e24dca1ed4632b2}{error()} where a valid \hyperlink{structt__object}{t\_\-object} pointer is available.
+
+\hyperlink{group__console_gaa7733e30b2951f225e24dca1ed4632b2}{error()} is very similar to \hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()}, thought it offers two additional features:
+\begin{DoxyItemize}
+\item the post to the Max window is highlighted (with a red background).
+\item the post can be trapped with the error object in a patcher.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fmt}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} 
+
+\hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()} 
+
+\hyperlink{group__console_ga94fff7e4ee19b8db6904a009117e0667}{cpost()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{
+\index{console@{console}!object\_\-error@{object\_\-error}}
+\index{object\_\-error@{object\_\-error}!console@{console}}
+\subsubsection[{object\_\-error}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-error ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}
+
+
+Print text to the Max window, linked to an instance of your object, and flagged as an error (highlighted with a red background). Max window rows which are generated using \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} or \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} can be double-\/clicked by the user to have Max assist with locating the object in a patcher. Rows created with \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} and \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} will also automatically provide the name of the object's class in the correct column in the Max window.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A pointer to your object. \item[{\em s}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} 
+
+\hyperlink{group__console_ga7ab11c5e9e345384ad282fcd5b86275c}{object\_\-warn()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_ga42a612b12b1a24380a45ab1b9278b950}{
+\index{console@{console}!object\_\-error\_\-obtrusive@{object\_\-error\_\-obtrusive}}
+\index{object\_\-error\_\-obtrusive@{object\_\-error\_\-obtrusive}!console@{console}}
+\subsubsection[{object\_\-error\_\-obtrusive}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-error\_\-obtrusive ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__console_ga42a612b12b1a24380a45ab1b9278b950}
+
+
+Print text to the Max window, linked to an instance of your object, and flagged as an error (highlighted with a red background), and grab the user's attention by displaying a banner in the patcher window. This function should be used exceedingly sparingly, with preference given to \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} when a problem occurs.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A pointer to your object. \item[{\em s}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} 
+
+\hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_gafb92b17363269d4d26de1823cbc2492d}{
+\index{console@{console}!object\_\-post@{object\_\-post}}
+\index{object\_\-post@{object\_\-post}!console@{console}}
+\subsubsection[{object\_\-post}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-post ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__console_gafb92b17363269d4d26de1823cbc2492d}
+
+
+Print text to the Max window, linked to an instance of your object. Max window rows which are generated using \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} or \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} can be double-\/clicked by the user to have Max assist with locating the object in a patcher. Rows created with \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} and \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} will also automatically provide the name of the object's class in the correct column in the Max window.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A pointer to your object. \item[{\em s}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Example: 
+\begin{DoxyCode}
+    void myMethod(myObject *x, long someArgument)
+    {
+        object_post((t_object*)x, "This is my argument: %ld", someArgument);
+    }
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_ga7ab11c5e9e345384ad282fcd5b86275c}{
+\index{console@{console}!object\_\-warn@{object\_\-warn}}
+\index{object\_\-warn@{object\_\-warn}!console@{console}}
+\subsubsection[{object\_\-warn}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-warn ({\bf t\_\-object} $\ast$ {\em x}, \/  char $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__console_ga7ab11c5e9e345384ad282fcd5b86275c}
+
+
+Print text to the Max window, linked to an instance of your object, and flagged as a warning (highlighted with a yellow background). Max window rows which are generated using \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()}, \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()}, or object\_\-warn can be double-\/clicked by the user to have Max assist with locating the object in a patcher. Rows created with \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()}, \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()}, or \hyperlink{group__console_ga7ab11c5e9e345384ad282fcd5b86275c}{object\_\-warn()} will also automatically provide the name of the object's class in the correct column in the Max window.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A pointer to your object. \item[{\em s}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} 
+
+\hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_ga4cba33c91c6a8aa3d886e746e04f21af}{
+\index{console@{console}!ouchstring@{ouchstring}}
+\index{ouchstring@{ouchstring}!console@{console}}
+\subsubsection[{ouchstring}]{\setlength{\rightskip}{0pt plus 5cm}void ouchstring (char $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__console_ga4cba33c91c6a8aa3d886e746e04f21af}
+
+
+Put up an error or advisory alert box on the screen. Don't use this function. Instead use \hyperlink{group__console_gaa7733e30b2951f225e24dca1ed4632b2}{error()}, \hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()}, or \hyperlink{group__console_ga42a612b12b1a24380a45ab1b9278b950}{object\_\-error\_\-obtrusive()}.
+
+This function performs an sprintf() on fmtstring and items, then puts up an alert box. \hyperlink{group__console_ga4cba33c91c6a8aa3d886e746e04f21af}{ouchstring()} will queue the message to a lower priority level if it’s called in an interrupt and there is no alert box request already pending.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_gaa7733e30b2951f225e24dca1ed4632b2}{error()} 
+
+\hyperlink{group__console_ga05f7fed66fafc6e4d2e372b7f0fe4e43}{object\_\-error()} 
+
+\hyperlink{group__console_ga42a612b12b1a24380a45ab1b9278b950}{object\_\-error\_\-obtrusive()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_ga3714108f42b44384b4d58009eafc1806}{
+\index{console@{console}!post@{post}}
+\index{post@{post}!console@{console}}
+\subsubsection[{post}]{\setlength{\rightskip}{0pt plus 5cm}void post (char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__console_ga3714108f42b44384b4d58009eafc1806}
+
+
+Print text to the Max window. Max 5 introduced \hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()}, which provides several enhancements to \hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()} where a valid \hyperlink{structt__object}{t\_\-object} pointer is available.
+
+\hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()} is a printf() for the Max window. It even works from non-\/main threads, queuing up multiple lines of text to be printed when the main thread processing resumes. \hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()} can be quite useful in debugging your external object.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fmt}]A C-\/string containing text and printf-\/like codes specifying the sizes and formatting of the additional arguments. \item[{\em ...}]Arguments of any type that correspond to the format codes in fmtString.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Note that post only passes 16 bytes of arguments to sprintf, so if you want additional formatted items on a single line, use \hyperlink{group__console_gaef84325d992e0afa14b2e7b0c0515601}{postatom()}.
+\end{DoxyRemark}
+Example: 
+\begin{DoxyCode}
+    short whatIsIt; 
+
+    whatIsIt = 999; 
+    post ("the variable is %ld",(long)whatIsIt); 
+\end{DoxyCode}
+
+
+\begin{DoxyRemark}{Remarks}
+The Max Window output when this code is executed. 
+\begin{DoxyCode}
+    the variable is 999
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} 
+
+\hyperlink{group__console_gaa7733e30b2951f225e24dca1ed4632b2}{error()} 
+
+\hyperlink{group__console_ga94fff7e4ee19b8db6904a009117e0667}{cpost()} 
+\end{DoxySeeAlso}
+\hypertarget{group__console_gaef84325d992e0afa14b2e7b0c0515601}{
+\index{console@{console}!postatom@{postatom}}
+\index{postatom@{postatom}!console@{console}}
+\subsubsection[{postatom}]{\setlength{\rightskip}{0pt plus 5cm}void postatom ({\bf t\_\-atom} $\ast$ {\em ap})}}
+\label{group__console_gaef84325d992e0afa14b2e7b0c0515601}
+
+
+Print multiple items in the same line of text in the Max window. This function prints a single \hyperlink{structt__atom}{t\_\-atom} on a line in the Max window without a carriage return afterwards, as \hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()} does. Each \hyperlink{structt__atom}{t\_\-atom} printed is followed by a space character.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ap}]The address of a \hyperlink{structt__atom}{t\_\-atom} to print.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__console_gafb92b17363269d4d26de1823cbc2492d}{object\_\-post()} 
+
+\hyperlink{group__console_ga3714108f42b44384b4d58009eafc1806}{post()} 
+
+\hyperlink{group__console_ga94fff7e4ee19b8db6904a009117e0667}{cpost()} 
+\end{DoxySeeAlso}

@@ -1,0 +1,172 @@
+\hypertarget{group__systime}{
+\section{Systime API}
+\label{group__systime}\index{Systime API@{Systime API}}
+}
+
+
+The Systime API provides the means of getting the system time, instead of the scheduler time as you would with functions like \hyperlink{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}{gettime()}.  
+
+
+Collaboration diagram for Systime API:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=106pt]{group__systime}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__datetime}{t\_\-datetime}
+\begin{DoxyCompactList}\small\item\em The Systime data structure. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__systime_ga26a8d02aa000843530dcb2d350766951}{e\_\-max\_\-dateflags} \{ \par
+\hyperlink{group__systime_gga26a8d02aa000843530dcb2d350766951a03c806745c3aad02d768797ead649e20}{SYSDATEFORMAT\_\-FLAGS\_\-SHORT} =  1, 
+\par
+\hyperlink{group__systime_gga26a8d02aa000843530dcb2d350766951a44be9bae61adf4f4b802989465768d63}{SYSDATEFORMAT\_\-FLAGS\_\-MEDIUM} =  2, 
+\par
+\hyperlink{group__systime_gga26a8d02aa000843530dcb2d350766951a0cdecdf057e390773e60c3d71de7faf4}{SYSDATEFORMAT\_\-FLAGS\_\-LONG} =  3
+ \}
+\begin{DoxyCompactList}\small\item\em Flags for the \hyperlink{group__systime_ga6219d6f6543e65431086c34c35199e82}{sysdateformat\_\-formatdatetime()} function. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned long \hyperlink{group__systime_gaa7831fc0634782a0ba07b44f47be8e61}{systime\_\-ticks} (void)
+\begin{DoxyCompactList}\small\item\em Find out the operating system’s time in ticks. \item\end{DoxyCompactList}\item 
+unsigned long \hyperlink{group__systime_ga9f23c7624ff113b985a34797bbf2f728}{systime\_\-ms} (void)
+\begin{DoxyCompactList}\small\item\em Find out the operating system’s time in milliseconds. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__systime_ga53bc85cf0868e8712f32ee846642ab83}{systime\_\-datetime} (\hyperlink{structt__datetime}{t\_\-datetime} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Find out the operating system’s date and time. \item\end{DoxyCompactList}\item 
+unsigned long \hyperlink{group__systime_ga8517f74817ccaaca5eb4bd4e82823bf5}{systime\_\-seconds} (void)
+\begin{DoxyCompactList}\small\item\em Find out the operating system’s time in seconds. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__systime_gac7e909e02efabd823ce226a3234d700b}{systime\_\-secondstodate} (unsigned long secs, \hyperlink{structt__datetime}{t\_\-datetime} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Convert a time in seconds into a \hyperlink{structt__datetime}{t\_\-datetime} representation. \item\end{DoxyCompactList}\item 
+unsigned long \hyperlink{group__systime_gab102340f92f3b8136629cf88a57e61a0}{systime\_\-datetoseconds} (\hyperlink{structt__datetime}{t\_\-datetime} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Convert a \hyperlink{structt__datetime}{t\_\-datetime} representation of time into seconds. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__systime_ga18e6eef81290f753a997dd6d0019ab60}{sysdateformat\_\-strftimetodatetime} (char $\ast$strf, \hyperlink{structt__datetime}{t\_\-datetime} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Fill a \hyperlink{structt__datetime}{t\_\-datetime} struct with a datetime formatted string. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__systime_ga6219d6f6543e65431086c34c35199e82}{sysdateformat\_\-formatdatetime} (\hyperlink{structt__datetime}{t\_\-datetime} $\ast$d, long dateflags, long timeflags, char $\ast$s, long buflen)
+\begin{DoxyCompactList}\small\item\em Get a human friendly string representation of a \hyperlink{structt__datetime}{t\_\-datetime}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The Systime API provides the means of getting the system time, instead of the scheduler time as you would with functions like \hyperlink{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}{gettime()}. 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__systime_ga26a8d02aa000843530dcb2d350766951}{
+\index{systime@{systime}!e\_\-max\_\-dateflags@{e\_\-max\_\-dateflags}}
+\index{e\_\-max\_\-dateflags@{e\_\-max\_\-dateflags}!systime@{systime}}
+\subsubsection[{e\_\-max\_\-dateflags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-dateflags}}}
+\label{group__systime_ga26a8d02aa000843530dcb2d350766951}
+
+
+Flags for the \hyperlink{group__systime_ga6219d6f6543e65431086c34c35199e82}{sysdateformat\_\-formatdatetime()} function. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{SYSDATEFORMAT\_\-FLAGS\_\-SHORT@{SYSDATEFORMAT\_\-FLAGS\_\-SHORT}!systime@{systime}}\index{systime@{systime}!SYSDATEFORMAT\_\-FLAGS\_\-SHORT@{SYSDATEFORMAT\_\-FLAGS\_\-SHORT}}\item[{\em 
+\hypertarget{group__systime_gga26a8d02aa000843530dcb2d350766951a03c806745c3aad02d768797ead649e20}{
+SYSDATEFORMAT\_\-FLAGS\_\-SHORT}
+\label{group__systime_gga26a8d02aa000843530dcb2d350766951a03c806745c3aad02d768797ead649e20}
+}]short \index{SYSDATEFORMAT\_\-FLAGS\_\-MEDIUM@{SYSDATEFORMAT\_\-FLAGS\_\-MEDIUM}!systime@{systime}}\index{systime@{systime}!SYSDATEFORMAT\_\-FLAGS\_\-MEDIUM@{SYSDATEFORMAT\_\-FLAGS\_\-MEDIUM}}\item[{\em 
+\hypertarget{group__systime_gga26a8d02aa000843530dcb2d350766951a44be9bae61adf4f4b802989465768d63}{
+SYSDATEFORMAT\_\-FLAGS\_\-MEDIUM}
+\label{group__systime_gga26a8d02aa000843530dcb2d350766951a44be9bae61adf4f4b802989465768d63}
+}]medium \index{SYSDATEFORMAT\_\-FLAGS\_\-LONG@{SYSDATEFORMAT\_\-FLAGS\_\-LONG}!systime@{systime}}\index{systime@{systime}!SYSDATEFORMAT\_\-FLAGS\_\-LONG@{SYSDATEFORMAT\_\-FLAGS\_\-LONG}}\item[{\em 
+\hypertarget{group__systime_gga26a8d02aa000843530dcb2d350766951a0cdecdf057e390773e60c3d71de7faf4}{
+SYSDATEFORMAT\_\-FLAGS\_\-LONG}
+\label{group__systime_gga26a8d02aa000843530dcb2d350766951a0cdecdf057e390773e60c3d71de7faf4}
+}]long \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__systime_ga6219d6f6543e65431086c34c35199e82}{
+\index{systime@{systime}!sysdateformat\_\-formatdatetime@{sysdateformat\_\-formatdatetime}}
+\index{sysdateformat\_\-formatdatetime@{sysdateformat\_\-formatdatetime}!systime@{systime}}
+\subsubsection[{sysdateformat\_\-formatdatetime}]{\setlength{\rightskip}{0pt plus 5cm}void sysdateformat\_\-formatdatetime ({\bf t\_\-datetime} $\ast$ {\em d}, \/  long {\em dateflags}, \/  long {\em timeflags}, \/  char $\ast$ {\em s}, \/  long {\em buflen})}}
+\label{group__systime_ga6219d6f6543e65431086c34c35199e82}
+
+
+Get a human friendly string representation of a \hyperlink{structt__datetime}{t\_\-datetime}. For example: \char`\"{}Today\char`\"{}, \char`\"{}Yesterday\char`\"{}, etc.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The address of a \hyperlink{structt__datetime}{t\_\-datetime} to fill. \item[{\em dateflags}]One of the values defined in \hyperlink{group__systime_ga26a8d02aa000843530dcb2d350766951}{e\_\-max\_\-dateflags}. \item[{\em timeflags}]Currently unused. Pass 0. \item[{\em s}]An already allocated string to hold the human friendly result. \item[{\em buflen}]The number of characters allocated to the string s. \end{DoxyParams}
+\hypertarget{group__systime_ga18e6eef81290f753a997dd6d0019ab60}{
+\index{systime@{systime}!sysdateformat\_\-strftimetodatetime@{sysdateformat\_\-strftimetodatetime}}
+\index{sysdateformat\_\-strftimetodatetime@{sysdateformat\_\-strftimetodatetime}!systime@{systime}}
+\subsubsection[{sysdateformat\_\-strftimetodatetime}]{\setlength{\rightskip}{0pt plus 5cm}void sysdateformat\_\-strftimetodatetime (char $\ast$ {\em strf}, \/  {\bf t\_\-datetime} $\ast$ {\em d})}}
+\label{group__systime_ga18e6eef81290f753a997dd6d0019ab60}
+
+
+Fill a \hyperlink{structt__datetime}{t\_\-datetime} struct with a datetime formatted string. For example, the string \char`\"{}2007-\/12-\/24 12:21:00\char`\"{}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em strf}]A string containing the datetime. \item[{\em d}]The address of a \hyperlink{structt__datetime}{t\_\-datetime} to fill. \end{DoxyParams}
+\hypertarget{group__systime_ga53bc85cf0868e8712f32ee846642ab83}{
+\index{systime@{systime}!systime\_\-datetime@{systime\_\-datetime}}
+\index{systime\_\-datetime@{systime\_\-datetime}!systime@{systime}}
+\subsubsection[{systime\_\-datetime}]{\setlength{\rightskip}{0pt plus 5cm}void systime\_\-datetime ({\bf t\_\-datetime} $\ast$ {\em d})}}
+\label{group__systime_ga53bc85cf0868e8712f32ee846642ab83}
+
+
+Find out the operating system’s date and time. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]Returns the system’s date and time in a \hyperlink{structt__datetime}{t\_\-datetime} data structure. \end{DoxyParams}
+\hypertarget{group__systime_gab102340f92f3b8136629cf88a57e61a0}{
+\index{systime@{systime}!systime\_\-datetoseconds@{systime\_\-datetoseconds}}
+\index{systime\_\-datetoseconds@{systime\_\-datetoseconds}!systime@{systime}}
+\subsubsection[{systime\_\-datetoseconds}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long systime\_\-datetoseconds ({\bf t\_\-datetime} $\ast$ {\em d})}}
+\label{group__systime_gab102340f92f3b8136629cf88a57e61a0}
+
+
+Convert a \hyperlink{structt__datetime}{t\_\-datetime} representation of time into seconds. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The address of a \hyperlink{structt__datetime}{t\_\-datetime} that contains a valid period of time. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of seconds represented by d. 
+\end{DoxyReturn}
+\hypertarget{group__systime_ga9f23c7624ff113b985a34797bbf2f728}{
+\index{systime@{systime}!systime\_\-ms@{systime\_\-ms}}
+\index{systime\_\-ms@{systime\_\-ms}!systime@{systime}}
+\subsubsection[{systime\_\-ms}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long systime\_\-ms (void)}}
+\label{group__systime_ga9f23c7624ff113b985a34797bbf2f728}
+
+
+Find out the operating system’s time in milliseconds. \begin{DoxyReturn}{Returns}
+the system time in milliseconds. 
+\end{DoxyReturn}
+\hypertarget{group__systime_ga8517f74817ccaaca5eb4bd4e82823bf5}{
+\index{systime@{systime}!systime\_\-seconds@{systime\_\-seconds}}
+\index{systime\_\-seconds@{systime\_\-seconds}!systime@{systime}}
+\subsubsection[{systime\_\-seconds}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long systime\_\-seconds (void)}}
+\label{group__systime_ga8517f74817ccaaca5eb4bd4e82823bf5}
+
+
+Find out the operating system’s time in seconds. \begin{DoxyReturn}{Returns}
+the system time in seconds. 
+\end{DoxyReturn}
+\hypertarget{group__systime_gac7e909e02efabd823ce226a3234d700b}{
+\index{systime@{systime}!systime\_\-secondstodate@{systime\_\-secondstodate}}
+\index{systime\_\-secondstodate@{systime\_\-secondstodate}!systime@{systime}}
+\subsubsection[{systime\_\-secondstodate}]{\setlength{\rightskip}{0pt plus 5cm}void systime\_\-secondstodate (unsigned long {\em secs}, \/  {\bf t\_\-datetime} $\ast$ {\em d})}}
+\label{group__systime_gac7e909e02efabd823ce226a3234d700b}
+
+
+Convert a time in seconds into a \hyperlink{structt__datetime}{t\_\-datetime} representation. 
+\begin{DoxyParams}{Parameters}
+\item[{\em secs}]A number of seconds to be represented as a \hyperlink{structt__datetime}{t\_\-datetime}. \item[{\em d}]The address of a \hyperlink{structt__datetime}{t\_\-datetime} that will be filled with the converted value. \end{DoxyParams}
+\hypertarget{group__systime_gaa7831fc0634782a0ba07b44f47be8e61}{
+\index{systime@{systime}!systime\_\-ticks@{systime\_\-ticks}}
+\index{systime\_\-ticks@{systime\_\-ticks}!systime@{systime}}
+\subsubsection[{systime\_\-ticks}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long systime\_\-ticks (void)}}
+\label{group__systime_gaa7831fc0634782a0ba07b44f47be8e61}
+
+
+Find out the operating system’s time in ticks. \begin{DoxyReturn}{Returns}
+the system time in ticks. 
+\end{DoxyReturn}

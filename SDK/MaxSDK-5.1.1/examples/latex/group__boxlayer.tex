@@ -1,0 +1,116 @@
+\hypertarget{group__boxlayer}{
+\section{Box Layer}
+\label{group__boxlayer}\index{Box Layer@{Box Layer}}
+}
+
+
+The boxlayer functions provide way to make it easier to use cached offscreen images (layers) in your drawing.  
+
+
+Collaboration diagram for Box Layer:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=108pt]{group__boxlayer}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__boxlayer_gab9ef903725b25eb3e1ab584a9f29f1a4}{jbox\_\-invalidate\_\-layer} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__object}{t\_\-object} $\ast$view, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name)
+\begin{DoxyCompactList}\small\item\em Invalidate a layer, indicating that it needs to be re-\/drawn. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$ \hyperlink{group__boxlayer_ga9a6684193d5b946f1e61afebf603ad9c}{jbox\_\-start\_\-layer} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__object}{t\_\-object} $\ast$view, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name, double width, double height)
+\begin{DoxyCompactList}\small\item\em Create a layer, and ready it for drawing commands. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__boxlayer_gae8607b453997030d7bc252b40d066884}{jbox\_\-end\_\-layer} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__object}{t\_\-object} $\ast$view, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name)
+\begin{DoxyCompactList}\small\item\em Conclude a layer, indicating that it is complete and ready for painting. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__boxlayer_ga87b03b3d160e3a798c7f799773e68750}{jbox\_\-paint\_\-layer} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__object}{t\_\-object} $\ast$view, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name, double x, double y)
+\begin{DoxyCompactList}\small\item\em Paint a layer at a given position. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The boxlayer functions provide way to make it easier to use cached offscreen images (layers) in your drawing. The general idea is to do something like this:
+
+
+\begin{DoxyCode}
+    t_jgraphics *g;
+    g = jbox_start_layer(box, view, layername, width, height);
+    if (g) {
+        // draw to your new offscreen context here
+        // the second time you call jbox_start_layer() it will return NULL
+        // since you already drew it -- you don't have to do drawing the second t
+      ime
+        jbox_end_layer(box, view, layername);
+    }
+    jbox_paint_layer(box, view, layername, xpos, ypos);
+\end{DoxyCode}
+
+
+Then, if something changes where you would need to redraw the layer you invalidate it: 
+\begin{DoxyCode}
+    jbox_invalidate_layer(box, view, layername);
+\end{DoxyCode}
+ or 
+\begin{DoxyCode}
+    jbox_invalidate_layer(box, NULL, layername); // to invalidate for all views
+\end{DoxyCode}
+
+
+Each view has its own layer stored since if a patcher has multiple views each could be at a different zoom level. 
+
+\subsection{Function Documentation}
+\hypertarget{group__boxlayer_gae8607b453997030d7bc252b40d066884}{
+\index{boxlayer@{boxlayer}!jbox\_\-end\_\-layer@{jbox\_\-end\_\-layer}}
+\index{jbox\_\-end\_\-layer@{jbox\_\-end\_\-layer}!boxlayer@{boxlayer}}
+\subsubsection[{jbox\_\-end\_\-layer}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-end\_\-layer ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-object} $\ast$ {\em view}, \/  {\bf t\_\-symbol} $\ast$ {\em name})}}
+\label{group__boxlayer_gae8607b453997030d7bc252b40d066884}
+
+
+Conclude a layer, indicating that it is complete and ready for painting. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The object/box for the layer opened by \hyperlink{group__boxlayer_ga9a6684193d5b946f1e61afebf603ad9c}{jbox\_\-start\_\-layer()}. \item[{\em view}]The patcherview for the object opened by \hyperlink{group__boxlayer_ga9a6684193d5b946f1e61afebf603ad9c}{jbox\_\-start\_\-layer()}. \item[{\em name}]The name of the layer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__boxlayer_gab9ef903725b25eb3e1ab584a9f29f1a4}{
+\index{boxlayer@{boxlayer}!jbox\_\-invalidate\_\-layer@{jbox\_\-invalidate\_\-layer}}
+\index{jbox\_\-invalidate\_\-layer@{jbox\_\-invalidate\_\-layer}!boxlayer@{boxlayer}}
+\subsubsection[{jbox\_\-invalidate\_\-layer}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-invalidate\_\-layer ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-object} $\ast$ {\em view}, \/  {\bf t\_\-symbol} $\ast$ {\em name})}}
+\label{group__boxlayer_gab9ef903725b25eb3e1ab584a9f29f1a4}
+
+
+Invalidate a layer, indicating that it needs to be re-\/drawn. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The object/box to invalidate. \item[{\em view}]The patcherview for the object which should be invalidated, or NULL for all patcherviews. \item[{\em name}]The name of the layer to invalidate. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__boxlayer_ga87b03b3d160e3a798c7f799773e68750}{
+\index{boxlayer@{boxlayer}!jbox\_\-paint\_\-layer@{jbox\_\-paint\_\-layer}}
+\index{jbox\_\-paint\_\-layer@{jbox\_\-paint\_\-layer}!boxlayer@{boxlayer}}
+\subsubsection[{jbox\_\-paint\_\-layer}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-paint\_\-layer ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-object} $\ast$ {\em view}, \/  {\bf t\_\-symbol} $\ast$ {\em name}, \/  double {\em x}, \/  double {\em y})}}
+\label{group__boxlayer_ga87b03b3d160e3a798c7f799773e68750}
+
+
+Paint a layer at a given position. Note that the current color alpha value is used when painting layers to allow you to blend layers. The same is also true for \hyperlink{group__jsurface_gab6b97ae8202c210ccec29ec2b8c4f5d0}{jgraphics\_\-image\_\-surface\_\-draw()} and \hyperlink{group__jsurface_ga766ec5ca1b93fa9b0f3b05c49122f62c}{jgraphics\_\-image\_\-surface\_\-draw\_\-fast()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The object/box to be painted. \item[{\em view}]The patcherview for the object which should be painted, or NULL for all patcherviews. \item[{\em name}]The name of the layer to paint. \item[{\em x}]The x-\/coordinate for the position at which to paint the layer. \item[{\em y}]The y-\/coordinate for the position at which to paint the layer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__boxlayer_ga9a6684193d5b946f1e61afebf603ad9c}{
+\index{boxlayer@{boxlayer}!jbox\_\-start\_\-layer@{jbox\_\-start\_\-layer}}
+\index{jbox\_\-start\_\-layer@{jbox\_\-start\_\-layer}!boxlayer@{boxlayer}}
+\subsubsection[{jbox\_\-start\_\-layer}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jgraphics}$\ast$ jbox\_\-start\_\-layer ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-object} $\ast$ {\em view}, \/  {\bf t\_\-symbol} $\ast$ {\em name}, \/  double {\em width}, \/  double {\em height})}}
+\label{group__boxlayer_ga9a6684193d5b946f1e61afebf603ad9c}
+
+
+Create a layer, and ready it for drawing commands. The layer drawing commands must be wrapped with a matching call to \hyperlink{group__boxlayer_gae8607b453997030d7bc252b40d066884}{jbox\_\-end\_\-layer()} prior to calling \hyperlink{group__boxlayer_ga87b03b3d160e3a798c7f799773e68750}{jbox\_\-paint\_\-layer()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The object/box to which the layer is attached. \item[{\em view}]The patcherview for the object to which the layer is attached. \item[{\em name}]A name for this layer. \item[{\em width}]The width of the layer. \item[{\em height}]The height of the layer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} context for drawing into the layer. 
+\end{DoxyReturn}

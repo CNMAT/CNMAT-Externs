@@ -1,0 +1,192 @@
+\hypertarget{group__textlayout}{
+\section{TextLayout}
+\label{group__textlayout}\index{TextLayout@{TextLayout}}
+}
+
+
+A textlayout is lower-\/level text rendering object used by higher-\/level entities such as \hyperlink{group__textfield}{TextField}.  
+
+
+Collaboration diagram for TextLayout:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=111pt]{group__textlayout}
+\end{center}
+\end{figure}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__textlayout_ga9b00aebce7fb7877e7e4c13e18b38f08}{t\_\-jgraphics\_\-textlayout\_\-flags} \{ \par
+\hyperlink{group__textlayout_gga9b00aebce7fb7877e7e4c13e18b38f08a2e017ab0c3bba7f02373f6621bee41e8}{JGRAPHICS\_\-TEXTLAYOUT\_\-NOWRAP} =  1, 
+\par
+\hyperlink{group__textlayout_gga9b00aebce7fb7877e7e4c13e18b38f08a0c76c7621cdb18e19d7ef767e8b71fe5}{JGRAPHICS\_\-TEXTLAYOUT\_\-USEELLIPSIS} =  3
+ \}
+\begin{DoxyCompactList}\small\item\em Flags for setting text layout options. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$ \hyperlink{group__textlayout_gaf615694d8a34728f84092838b91e2a4a}{jtextlayout\_\-create} ()
+\begin{DoxyCompactList}\small\item\em Create a new textlayout object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$ \hyperlink{group__textlayout_ga97bb1d3ac51e09a5f2c22487a6e170e0}{jtextlayout\_\-withbgcolor} (\hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$bgcolor)
+\begin{DoxyCompactList}\small\item\em Create a new textlayout object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__textlayout_ga3bd3ba8982b5b42bcf8870515b708303}{jtextlayout\_\-destroy} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$textlayout)
+\begin{DoxyCompactList}\small\item\em Release/free a textlayout object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__textlayout_gac9d7684376b82def890308ca2ab7ff9e}{jtextlayout\_\-set} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$textlayout, const char $\ast$utf8, \hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$jfont, double x, double y, double width, double height, \hyperlink{group__jgraphics_ga3519fa317c6811b619af2d70e3c1eca7}{t\_\-jgraphics\_\-text\_\-justification} justification, \hyperlink{group__textlayout_ga9b00aebce7fb7877e7e4c13e18b38f08}{t\_\-jgraphics\_\-textlayout\_\-flags} flags)
+\begin{DoxyCompactList}\small\item\em Set the text and attributes of a textlayout object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__textlayout_ga73ef3d6927ae63816be07cd3314db191}{jtextlayout\_\-settextcolor} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$textlayout, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$textcolor)
+\begin{DoxyCompactList}\small\item\em Set the color to render text in a textlayout object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__textlayout_gadf112c6c73177263fd276732f237871f}{jtextlayout\_\-measure} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$textlayout, long startindex, long numchars, long includewhitespace, double $\ast$width, double $\ast$height, long $\ast$numlines)
+\begin{DoxyCompactList}\small\item\em Return a measurement of how much space will be required to draw the text of a textlayout. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__textlayout_gada972c6fcde61e14fec99a02d88bf131}{jtextlayout\_\-draw} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$tl, \hyperlink{group__jgraphics_ga4bf27bd7e21a59a427481b909d4656e7}{t\_\-jgraphics} $\ast$g)
+\begin{DoxyCompactList}\small\item\em Draw a textlayout in a given graphics context. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__textlayout_ga3a3518a4148d81d2a2aae24e5d60ea24}{jtextlayout\_\-getnumchars} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$tl)
+\begin{DoxyCompactList}\small\item\em Retrieve a count of the number of characters in a textlayout object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textlayout_gab251f42f6b58c3dd3d55a3454c82e34a}{jtextlayout\_\-getcharbox} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$tl, long index, \hyperlink{structt__rect}{t\_\-rect} $\ast$rect)
+\begin{DoxyCompactList}\small\item\em Retrieve the \hyperlink{structt__rect}{t\_\-rect} containing a character at a given index. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textlayout_ga6e1b7c2d44d3cbcb051eda74d8e47ef1}{jtextlayout\_\-getchar} (\hyperlink{group__jgraphics_ga45f6bda6903290bd6040f79fec89872b}{t\_\-jtextlayout} $\ast$tl, long index, long $\ast$pch)
+\begin{DoxyCompactList}\small\item\em Retrieve the unicode character at a given index. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A textlayout is lower-\/level text rendering object used by higher-\/level entities such as \hyperlink{group__textfield}{TextField}. 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__textlayout_ga9b00aebce7fb7877e7e4c13e18b38f08}{
+\index{textlayout@{textlayout}!t\_\-jgraphics\_\-textlayout\_\-flags@{t\_\-jgraphics\_\-textlayout\_\-flags}}
+\index{t\_\-jgraphics\_\-textlayout\_\-flags@{t\_\-jgraphics\_\-textlayout\_\-flags}!textlayout@{textlayout}}
+\subsubsection[{t\_\-jgraphics\_\-textlayout\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf t\_\-jgraphics\_\-textlayout\_\-flags}}}
+\label{group__textlayout_ga9b00aebce7fb7877e7e4c13e18b38f08}
+
+
+Flags for setting text layout options. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JGRAPHICS\_\-TEXTLAYOUT\_\-NOWRAP@{JGRAPHICS\_\-TEXTLAYOUT\_\-NOWRAP}!textlayout@{textlayout}}\index{textlayout@{textlayout}!JGRAPHICS\_\-TEXTLAYOUT\_\-NOWRAP@{JGRAPHICS\_\-TEXTLAYOUT\_\-NOWRAP}}\item[{\em 
+\hypertarget{group__textlayout_gga9b00aebce7fb7877e7e4c13e18b38f08a2e017ab0c3bba7f02373f6621bee41e8}{
+JGRAPHICS\_\-TEXTLAYOUT\_\-NOWRAP}
+\label{group__textlayout_gga9b00aebce7fb7877e7e4c13e18b38f08a2e017ab0c3bba7f02373f6621bee41e8}
+}]disable \hyperlink{unionword}{word} wrapping \index{JGRAPHICS\_\-TEXTLAYOUT\_\-USEELLIPSIS@{JGRAPHICS\_\-TEXTLAYOUT\_\-USEELLIPSIS}!textlayout@{textlayout}}\index{textlayout@{textlayout}!JGRAPHICS\_\-TEXTLAYOUT\_\-USEELLIPSIS@{JGRAPHICS\_\-TEXTLAYOUT\_\-USEELLIPSIS}}\item[{\em 
+\hypertarget{group__textlayout_gga9b00aebce7fb7877e7e4c13e18b38f08a0c76c7621cdb18e19d7ef767e8b71fe5}{
+JGRAPHICS\_\-TEXTLAYOUT\_\-USEELLIPSIS}
+\label{group__textlayout_gga9b00aebce7fb7877e7e4c13e18b38f08a0c76c7621cdb18e19d7ef767e8b71fe5}
+}]show ... if a line doesn't fit (implies NOWRAP too) \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__textlayout_gaf615694d8a34728f84092838b91e2a4a}{
+\index{textlayout@{textlayout}!jtextlayout\_\-create@{jtextlayout\_\-create}}
+\index{jtextlayout\_\-create@{jtextlayout\_\-create}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jtextlayout}$\ast$ jtextlayout\_\-create ()}}
+\label{group__textlayout_gaf615694d8a34728f84092838b91e2a4a}
+
+
+Create a new textlayout object. \begin{DoxyReturn}{Returns}
+The new textlayout object. 
+\end{DoxyReturn}
+\hypertarget{group__textlayout_ga3bd3ba8982b5b42bcf8870515b708303}{
+\index{textlayout@{textlayout}!jtextlayout\_\-destroy@{jtextlayout\_\-destroy}}
+\index{jtextlayout\_\-destroy@{jtextlayout\_\-destroy}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void jtextlayout\_\-destroy ({\bf t\_\-jtextlayout} $\ast$ {\em textlayout})}}
+\label{group__textlayout_ga3bd3ba8982b5b42bcf8870515b708303}
+
+
+Release/free a textlayout object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em textlayout}]The textlayout object to release. \end{DoxyParams}
+\hypertarget{group__textlayout_gada972c6fcde61e14fec99a02d88bf131}{
+\index{textlayout@{textlayout}!jtextlayout\_\-draw@{jtextlayout\_\-draw}}
+\index{jtextlayout\_\-draw@{jtextlayout\_\-draw}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-draw}]{\setlength{\rightskip}{0pt plus 5cm}void jtextlayout\_\-draw ({\bf t\_\-jtextlayout} $\ast$ {\em tl}, \/  {\bf t\_\-jgraphics} $\ast$ {\em g})}}
+\label{group__textlayout_gada972c6fcde61e14fec99a02d88bf131}
+
+
+Draw a textlayout in a given graphics context. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tl}]The textlayout object to query. \item[{\em g}]The graphics context in which to draw the text. \end{DoxyParams}
+\hypertarget{group__textlayout_ga6e1b7c2d44d3cbcb051eda74d8e47ef1}{
+\index{textlayout@{textlayout}!jtextlayout\_\-getchar@{jtextlayout\_\-getchar}}
+\index{jtextlayout\_\-getchar@{jtextlayout\_\-getchar}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-getchar}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jtextlayout\_\-getchar ({\bf t\_\-jtextlayout} $\ast$ {\em tl}, \/  long {\em index}, \/  long $\ast$ {\em pch})}}
+\label{group__textlayout_ga6e1b7c2d44d3cbcb051eda74d8e47ef1}
+
+
+Retrieve the unicode character at a given index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tl}]The textlayout object to query. \item[{\em index}]The index from which to fetch the unicode character. \item[{\em pch}]The address of a variable to hold the unicode character value upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textlayout_gab251f42f6b58c3dd3d55a3454c82e34a}{
+\index{textlayout@{textlayout}!jtextlayout\_\-getcharbox@{jtextlayout\_\-getcharbox}}
+\index{jtextlayout\_\-getcharbox@{jtextlayout\_\-getcharbox}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-getcharbox}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jtextlayout\_\-getcharbox ({\bf t\_\-jtextlayout} $\ast$ {\em tl}, \/  long {\em index}, \/  {\bf t\_\-rect} $\ast$ {\em rect})}}
+\label{group__textlayout_gab251f42f6b58c3dd3d55a3454c82e34a}
+
+
+Retrieve the \hyperlink{structt__rect}{t\_\-rect} containing a character at a given index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tl}]The textlayout object to query. \item[{\em index}]The index from which to fetch the unicode character. \item[{\em rect}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} which will be filled in upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textlayout_ga3a3518a4148d81d2a2aae24e5d60ea24}{
+\index{textlayout@{textlayout}!jtextlayout\_\-getnumchars@{jtextlayout\_\-getnumchars}}
+\index{jtextlayout\_\-getnumchars@{jtextlayout\_\-getnumchars}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-getnumchars}]{\setlength{\rightskip}{0pt plus 5cm}long jtextlayout\_\-getnumchars ({\bf t\_\-jtextlayout} $\ast$ {\em tl})}}
+\label{group__textlayout_ga3a3518a4148d81d2a2aae24e5d60ea24}
+
+
+Retrieve a count of the number of characters in a textlayout object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tl}]The textlayout object to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of characters. 
+\end{DoxyReturn}
+\hypertarget{group__textlayout_gadf112c6c73177263fd276732f237871f}{
+\index{textlayout@{textlayout}!jtextlayout\_\-measure@{jtextlayout\_\-measure}}
+\index{jtextlayout\_\-measure@{jtextlayout\_\-measure}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-measure}]{\setlength{\rightskip}{0pt plus 5cm}void jtextlayout\_\-measure ({\bf t\_\-jtextlayout} $\ast$ {\em textlayout}, \/  long {\em startindex}, \/  long {\em numchars}, \/  long {\em includewhitespace}, \/  double $\ast$ {\em width}, \/  double $\ast$ {\em height}, \/  long $\ast$ {\em numlines})}}
+\label{group__textlayout_gadf112c6c73177263fd276732f237871f}
+
+
+Return a measurement of how much space will be required to draw the text of a textlayout. 
+\begin{DoxyParams}{Parameters}
+\item[{\em textlayout}]The textlayout object to query. \item[{\em startindex}]You can measure a subset of the characters. This defines the character from which to start. \item[{\em numchars}]Pass -\/1 for all characters from startindex to end \item[{\em includewhitespace}]Define whether to measure with or without whitespace truncated from edges. \item[{\em width}]Returns the width of text not including any margins. \item[{\em height}]Returns the height of text not including any margins. \item[{\em numlines}]Returns the number of lines of text. \end{DoxyParams}
+\hypertarget{group__textlayout_gac9d7684376b82def890308ca2ab7ff9e}{
+\index{textlayout@{textlayout}!jtextlayout\_\-set@{jtextlayout\_\-set}}
+\index{jtextlayout\_\-set@{jtextlayout\_\-set}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void jtextlayout\_\-set ({\bf t\_\-jtextlayout} $\ast$ {\em textlayout}, \/  const char $\ast$ {\em utf8}, \/  {\bf t\_\-jfont} $\ast$ {\em jfont}, \/  double {\em x}, \/  double {\em y}, \/  double {\em width}, \/  double {\em height}, \/  {\bf t\_\-jgraphics\_\-text\_\-justification} {\em justification}, \/  {\bf t\_\-jgraphics\_\-textlayout\_\-flags} {\em flags})}}
+\label{group__textlayout_gac9d7684376b82def890308ca2ab7ff9e}
+
+
+Set the text and attributes of a textlayout object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em textlayout}]The textlayout object. \item[{\em utf8}]The text to render. \item[{\em jfont}]The font with which to render the text. \item[{\em x}]The text is placed within rect specified by x, y, width, height. \item[{\em y}]The text is placed within rect specified by x, y, width, height. \item[{\em width}]The text is placed within rect specified by x, y, width, height. \item[{\em height}]The text is placed within rect specified by x, y, width, height. \item[{\em justification}]How to justify the text within the rect. \item[{\em flags}]Additional flags to control behaviour. \end{DoxyParams}
+\hypertarget{group__textlayout_ga73ef3d6927ae63816be07cd3314db191}{
+\index{textlayout@{textlayout}!jtextlayout\_\-settextcolor@{jtextlayout\_\-settextcolor}}
+\index{jtextlayout\_\-settextcolor@{jtextlayout\_\-settextcolor}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-settextcolor}]{\setlength{\rightskip}{0pt plus 5cm}void jtextlayout\_\-settextcolor ({\bf t\_\-jtextlayout} $\ast$ {\em textlayout}, \/  {\bf t\_\-jrgba} $\ast$ {\em textcolor})}}
+\label{group__textlayout_ga73ef3d6927ae63816be07cd3314db191}
+
+
+Set the color to render text in a textlayout object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em textlayout}]The textlayout object for which to set the color. \item[{\em textcolor}]The color for the text. \end{DoxyParams}
+\hypertarget{group__textlayout_ga97bb1d3ac51e09a5f2c22487a6e170e0}{
+\index{textlayout@{textlayout}!jtextlayout\_\-withbgcolor@{jtextlayout\_\-withbgcolor}}
+\index{jtextlayout\_\-withbgcolor@{jtextlayout\_\-withbgcolor}!textlayout@{textlayout}}
+\subsubsection[{jtextlayout\_\-withbgcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jtextlayout}$\ast$ jtextlayout\_\-withbgcolor ({\bf t\_\-jgraphics} $\ast$ {\em g}, \/  {\bf t\_\-jrgba} $\ast$ {\em bgcolor})}}
+\label{group__textlayout_ga97bb1d3ac51e09a5f2c22487a6e170e0}
+
+
+Create a new textlayout object. This gives a hint to the textlayout as to what the text bgcolor will be. It won't actually paint the bg for you. But, it does let it do a better job.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em g}]The graphics context for the textlayout. \item[{\em bgcolor}]The background color for the textlayout. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new textlayout object. 
+\end{DoxyReturn}

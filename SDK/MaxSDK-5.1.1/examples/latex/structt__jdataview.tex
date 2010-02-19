@@ -1,0 +1,263 @@
+\hypertarget{structt__jdataview}{
+\section{t\_\-jdataview Struct Reference}
+\label{structt__jdataview}\index{t\_\-jdataview@{t\_\-jdataview}}
+}
+
+
+The dataview object.  
+
+
+{\ttfamily \#include $<$jdataview.h$>$}Collaboration diagram for t\_\-jdataview:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{structt__jdataview__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__jdataview_a98679942e8ec7e62f04e63f84f9c5ac1}{
+\hyperlink{structt__linklist}{t\_\-linklist} $\ast$ \hyperlink{structt__jdataview_a98679942e8ec7e62f04e63f84f9c5ac1}{d\_\-components}}
+\label{structt__jdataview_a98679942e8ec7e62f04e63f84f9c5ac1}
+
+\begin{DoxyCompactList}\small\item\em list of DataViewComponents showing this dataview \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a6e4ced20bd1e6caa51b3ad040e0f7b52}{
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{structt__jdataview_a6e4ced20bd1e6caa51b3ad040e0f7b52}{d\_\-client}}
+\label{structt__jdataview_a6e4ced20bd1e6caa51b3ad040e0f7b52}
+
+\begin{DoxyCompactList}\small\item\em object that will be sent messages to get data to display \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a5aa8158d67969e9a6571bf560ebfa909}{
+\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$ \hyperlink{structt__jdataview_a5aa8158d67969e9a6571bf560ebfa909}{d\_\-columns}}
+\label{structt__jdataview_a5aa8158d67969e9a6571bf560ebfa909}
+
+\begin{DoxyCompactList}\small\item\em columns -\/-\/ point to \hyperlink{structt__jcolumn}{t\_\-jcolumn} objects \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a92aca8b8e288b1e95f33438f3c69649b}{
+\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$ \hyperlink{structt__jdataview_a92aca8b8e288b1e95f33438f3c69649b}{d\_\-id2columns}}
+\label{structt__jdataview_a92aca8b8e288b1e95f33438f3c69649b}
+
+\begin{DoxyCompactList}\small\item\em columns from column IDs \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_aa4e072d833da84b58d512a52623cdc00}{
+\hyperlink{structt__linklist}{t\_\-linklist} $\ast$ \hyperlink{structt__jdataview_aa4e072d833da84b58d512a52623cdc00}{d\_\-colorder}}
+\label{structt__jdataview_aa4e072d833da84b58d512a52623cdc00}
+
+\begin{DoxyCompactList}\small\item\em current order of columns \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a16a76a7a04f7f5ccd1a0176a5321f4bf}{
+\hyperlink{structt__indexmap}{t\_\-indexmap} $\ast$ \hyperlink{structt__jdataview_a16a76a7a04f7f5ccd1a0176a5321f4bf}{d\_\-rowmap}}
+\label{structt__jdataview_a16a76a7a04f7f5ccd1a0176a5321f4bf}
+
+\begin{DoxyCompactList}\small\item\em collection of rows (including number of rows) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a86e55c21b1d0b4322c88f0d7713d50aa}{
+long \hyperlink{structt__jdataview_a86e55c21b1d0b4322c88f0d7713d50aa}{d\_\-numcols}}
+\label{structt__jdataview_a86e55c21b1d0b4322c88f0d7713d50aa}
+
+\begin{DoxyCompactList}\small\item\em number of columns \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a11092227711435816f53d732e481847a}{
+double \hyperlink{structt__jdataview_a11092227711435816f53d732e481847a}{d\_\-rowheight}}
+\label{structt__jdataview_a11092227711435816f53d732e481847a}
+
+\begin{DoxyCompactList}\small\item\em fixed height of a row in pixels \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_af5abbaf9f0d3b1d383c6049aceaa269b}{
+char \hyperlink{structt__jdataview_af5abbaf9f0d3b1d383c6049aceaa269b}{d\_\-autoheight}}
+\label{structt__jdataview_af5abbaf9f0d3b1d383c6049aceaa269b}
+
+\begin{DoxyCompactList}\small\item\em height determined by font \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ab3ad1cf1c6bdbc78a9f69edb014fa3eb}{
+char \hyperlink{structt__jdataview_ab3ad1cf1c6bdbc78a9f69edb014fa3eb}{d\_\-hierarchical}}
+\label{structt__jdataview_ab3ad1cf1c6bdbc78a9f69edb014fa3eb}
+
+\begin{DoxyCompactList}\small\item\em does it allow hierarchical disclosure (true / false) -\/-\/ not implemented yet \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ab40fcfd41987651067033cd2647a6470}{
+\hyperlink{structt__jrgba}{t\_\-jrgba} \hyperlink{structt__jdataview_ab40fcfd41987651067033cd2647a6470}{d\_\-rowcolor1}}
+\label{structt__jdataview_ab40fcfd41987651067033cd2647a6470}
+
+\begin{DoxyCompactList}\small\item\em odd row color (striped) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ae282d47e47d6ccc4277247e943f87c60}{
+\hyperlink{structt__jrgba}{t\_\-jrgba} \hyperlink{structt__jdataview_ae282d47e47d6ccc4277247e943f87c60}{d\_\-rowcolor2}}
+\label{structt__jdataview_ae282d47e47d6ccc4277247e943f87c60}
+
+\begin{DoxyCompactList}\small\item\em even row color \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a23fc2990566b1e92f299008e6f4c543a}{
+\hyperlink{structt__jrgba}{t\_\-jrgba} \hyperlink{structt__jdataview_a23fc2990566b1e92f299008e6f4c543a}{d\_\-selectcolor}}
+\label{structt__jdataview_a23fc2990566b1e92f299008e6f4c543a}
+
+\begin{DoxyCompactList}\small\item\em color when rows are selected \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a7353a5808d86388841d014e0e3b71b24}{
+\hyperlink{structt__jrgba}{t\_\-jrgba} \hyperlink{structt__jdataview_a7353a5808d86388841d014e0e3b71b24}{d\_\-bordercolor}}
+\label{structt__jdataview_a7353a5808d86388841d014e0e3b71b24}
+
+\begin{DoxyCompactList}\small\item\em border color \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a36e86622d0ea0c0a78db1e5b6f444572}{
+char \hyperlink{structt__jdataview_a36e86622d0ea0c0a78db1e5b6f444572}{d\_\-bordercolorset}}
+\label{structt__jdataview_a36e86622d0ea0c0a78db1e5b6f444572}
+
+\begin{DoxyCompactList}\small\item\em was border color set? if not, use JUCE default \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a449bbd0216aa228fb5d88b5da3f6329a}{
+char \hyperlink{structt__jdataview_a449bbd0216aa228fb5d88b5da3f6329a}{d\_\-canselectmultiple}}
+\label{structt__jdataview_a449bbd0216aa228fb5d88b5da3f6329a}
+
+\begin{DoxyCompactList}\small\item\em multiple rows are selectable \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_af04aed8f762b1b6194f9cb6a19094946}{
+char \hyperlink{structt__jdataview_af04aed8f762b1b6194f9cb6a19094946}{d\_\-cancopy}}
+\label{structt__jdataview_af04aed8f762b1b6194f9cb6a19094946}
+
+\begin{DoxyCompactList}\small\item\em copy enabled \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a44d2369f695e6009bfd97427553ad7b5}{
+char \hyperlink{structt__jdataview_a44d2369f695e6009bfd97427553ad7b5}{d\_\-cancut}}
+\label{structt__jdataview_a44d2369f695e6009bfd97427553ad7b5}
+
+\begin{DoxyCompactList}\small\item\em cut / clear enabled \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ac8dde0b675005c5c490d4d577047b007}{
+char \hyperlink{structt__jdataview_ac8dde0b675005c5c490d4d577047b007}{d\_\-canpaste}}
+\label{structt__jdataview_ac8dde0b675005c5c490d4d577047b007}
+
+\begin{DoxyCompactList}\small\item\em paste enabled \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ac490524a3cd9fda203116c14b24ea801}{
+char \hyperlink{structt__jdataview_ac490524a3cd9fda203116c14b24ea801}{d\_\-canrearrangerows}}
+\label{structt__jdataview_ac490524a3cd9fda203116c14b24ea801}
+
+\begin{DoxyCompactList}\small\item\em rows can be dragged to rearrange -\/-\/ may not be implemented yet \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a3dd9e3c7b86fb954205b489b193bea75}{
+char \hyperlink{structt__jdataview_a3dd9e3c7b86fb954205b489b193bea75}{d\_\-canrearrangecolumns}}
+\label{structt__jdataview_a3dd9e3c7b86fb954205b489b193bea75}
+
+\begin{DoxyCompactList}\small\item\em columns can be dragged to rearrange \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a4d2256e9fc904baaad1ff824baa3652c}{
+long \hyperlink{structt__jdataview_a4d2256e9fc904baaad1ff824baa3652c}{d\_\-viscount}}
+\label{structt__jdataview_a4d2256e9fc904baaad1ff824baa3652c}
+
+\begin{DoxyCompactList}\small\item\em number of visible views of this dataview \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a08fbca98a68cf49f0a8303c3d53c1f24}{
+long \hyperlink{structt__jdataview_a08fbca98a68cf49f0a8303c3d53c1f24}{d\_\-inset}}
+\label{structt__jdataview_a08fbca98a68cf49f0a8303c3d53c1f24}
+
+\begin{DoxyCompactList}\small\item\em inset for table inside containing component in pixels \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a05d85540947dc8892b8cab63e96e1ea7}{
+char \hyperlink{structt__jdataview_a05d85540947dc8892b8cab63e96e1ea7}{d\_\-autosizeright}}
+\label{structt__jdataview_a05d85540947dc8892b8cab63e96e1ea7}
+
+\begin{DoxyCompactList}\small\item\em right side autosizes when top-\/level component changes \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a95281c668ca437c9f92dbe7e9b2aa7ee}{
+char \hyperlink{structt__jdataview_a95281c668ca437c9f92dbe7e9b2aa7ee}{d\_\-autosizebottom}}
+\label{structt__jdataview_a95281c668ca437c9f92dbe7e9b2aa7ee}
+
+\begin{DoxyCompactList}\small\item\em bottom autosizes when top-\/level component changes \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a9f94615050eed3b93e623afb701177ea}{
+char \hyperlink{structt__jdataview_a9f94615050eed3b93e623afb701177ea}{d\_\-dragenabled}}
+\label{structt__jdataview_a9f94615050eed3b93e623afb701177ea}
+
+\begin{DoxyCompactList}\small\item\em enabled for dragging (as in drag and drop) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_aa3b66e9b33f0f14db22560bff4094066}{
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{structt__jdataview_aa3b66e9b33f0f14db22560bff4094066}{d\_\-fontname}}
+\label{structt__jdataview_aa3b66e9b33f0f14db22560bff4094066}
+
+\begin{DoxyCompactList}\small\item\em font name \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a2e4c73a5848bf9ef36f1c91db5f8c66d}{
+double \hyperlink{structt__jdataview_a2e4c73a5848bf9ef36f1c91db5f8c66d}{d\_\-fontsize}}
+\label{structt__jdataview_a2e4c73a5848bf9ef36f1c91db5f8c66d}
+
+\begin{DoxyCompactList}\small\item\em font size \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a4096d82a65d3625a0ccdcaae1b9c57be}{
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{structt__jdataview_a4096d82a65d3625a0ccdcaae1b9c57be}{d\_\-colheadercluemsg}}
+\label{structt__jdataview_a4096d82a65d3625a0ccdcaae1b9c57be}
+
+\begin{DoxyCompactList}\small\item\em message to send requesting clue text for the column headers \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a4a9617b49e26a05d13a14dd60726cca3}{
+char \hyperlink{structt__jdataview_a4a9617b49e26a05d13a14dd60726cca3}{d\_\-autosizerightcolumn}}
+\label{structt__jdataview_a4a9617b49e26a05d13a14dd60726cca3}
+
+\begin{DoxyCompactList}\small\item\em right column should stretch to remaining width of the dataview, regardless of column width \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a0a92adf0e7f4fb1b90b94b10e21a9c6e}{
+char \hyperlink{structt__jdataview_a0a92adf0e7f4fb1b90b94b10e21a9c6e}{d\_\-customselectcolor}}
+\label{structt__jdataview_a0a92adf0e7f4fb1b90b94b10e21a9c6e}
+
+\begin{DoxyCompactList}\small\item\em send getcellcolor message to draw selected cell, don't use select color \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ad54c8116bfca476f9b957a5fb0eb159f}{
+void $\ast$ \hyperlink{structt__jdataview_ad54c8116bfca476f9b957a5fb0eb159f}{d\_\-qelem}}
+\label{structt__jdataview_ad54c8116bfca476f9b957a5fb0eb159f}
+
+\begin{DoxyCompactList}\small\item\em defer updating \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a982eb026230833529a16c7e8d1ad277f}{
+long \hyperlink{structt__jdataview_a982eb026230833529a16c7e8d1ad277f}{d\_\-top\_\-inset}}
+\label{structt__jdataview_a982eb026230833529a16c7e8d1ad277f}
+
+\begin{DoxyCompactList}\small\item\em vertical inset for row background (default 0) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a9746791cd2aefd8e85dc80008b6c9aef}{
+long \hyperlink{structt__jdataview_a9746791cd2aefd8e85dc80008b6c9aef}{d\_\-bottom\_\-inset}}
+\label{structt__jdataview_a9746791cd2aefd8e85dc80008b6c9aef}
+
+\begin{DoxyCompactList}\small\item\em vertical inset for row background (default 0) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a0902ab6464260311d0710f41c13f89c5}{
+long \hyperlink{structt__jdataview_a0902ab6464260311d0710f41c13f89c5}{d\_\-borderthickness}}
+\label{structt__jdataview_a0902ab6464260311d0710f41c13f89c5}
+
+\begin{DoxyCompactList}\small\item\em border line thickness default 0 for no border \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_aa81c10c657db014e59a3391f15268822}{
+char \hyperlink{structt__jdataview_aa81c10c657db014e59a3391f15268822}{d\_\-keyfocusable}}
+\label{structt__jdataview_aa81c10c657db014e59a3391f15268822}
+
+\begin{DoxyCompactList}\small\item\em notify component to grab some keys \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a0be64b74eee9e57caa7c2d256bc2f3b9}{
+char \hyperlink{structt__jdataview_a0be64b74eee9e57caa7c2d256bc2f3b9}{d\_\-enabledeletekey}}
+\label{structt__jdataview_a0be64b74eee9e57caa7c2d256bc2f3b9}
+
+\begin{DoxyCompactList}\small\item\em delete key will delete selected rows \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a7eb84beda7ac285a975c7a01c6c3e6b4}{
+char \hyperlink{structt__jdataview_a7eb84beda7ac285a975c7a01c6c3e6b4}{d\_\-usegradient}}
+\label{structt__jdataview_a7eb84beda7ac285a975c7a01c6c3e6b4}
+
+\begin{DoxyCompactList}\small\item\em color rows with gradient between rowcolor1 (top) and rowcolor2 (bottom) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a37775d1ed1183eff412fb411dde62ee9}{
+char \hyperlink{structt__jdataview_a37775d1ed1183eff412fb411dde62ee9}{d\_\-inchange}}
+\label{structt__jdataview_a37775d1ed1183eff412fb411dde62ee9}
+
+\begin{DoxyCompactList}\small\item\em in change flag for inspector end-\/change protection system \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ae1cf57dc8c57d04a4ba60c53e4ff4c0c}{
+char \hyperlink{structt__jdataview_ae1cf57dc8c57d04a4ba60c53e4ff4c0c}{d\_\-horizscrollvisible}}
+\label{structt__jdataview_ae1cf57dc8c57d04a4ba60c53e4ff4c0c}
+
+\begin{DoxyCompactList}\small\item\em is horizontal scroll bar visible \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ac76126b5b6b6107ed9e3e60364ababc8}{
+char \hyperlink{structt__jdataview_ac76126b5b6b6107ed9e3e60364ababc8}{d\_\-vertscrollvisible}}
+\label{structt__jdataview_ac76126b5b6b6107ed9e3e60364ababc8}
+
+\begin{DoxyCompactList}\small\item\em is vertical scroll bar visible \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ad8c5c9dac492ecd0e0ab7ac9927a59bf}{
+char \hyperlink{structt__jdataview_ad8c5c9dac492ecd0e0ab7ac9927a59bf}{d\_\-scrollvisset}}
+\label{structt__jdataview_ad8c5c9dac492ecd0e0ab7ac9927a59bf}
+
+\begin{DoxyCompactList}\small\item\em has the scroll visibility ever been changed since the dv was created? \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a09105f94bf0940a163de70dc533b5574}{
+char \hyperlink{structt__jdataview_a09105f94bf0940a163de70dc533b5574}{d\_\-overridefocus}}
+\label{structt__jdataview_a09105f94bf0940a163de70dc533b5574}
+
+\begin{DoxyCompactList}\small\item\em override default focus behavior where ListBox is focused when assigning focus to the dataview \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ab2420d712c7471cb44ea215e0f8fcbe7}{
+char \hyperlink{structt__jdataview_ab2420d712c7471cb44ea215e0f8fcbe7}{d\_\-usesystemfont}}
+\label{structt__jdataview_ab2420d712c7471cb44ea215e0f8fcbe7}
+
+\begin{DoxyCompactList}\small\item\em use system font (true by default) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_af8408e92793ee283c269972430fc9ec2}{
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{structt__jdataview_af8408e92793ee283c269972430fc9ec2}{d\_\-searchcolumn}}
+\label{structt__jdataview_af8408e92793ee283c269972430fc9ec2}
+
+\begin{DoxyCompactList}\small\item\em column we ask for celltext in order to navigate the selection via the keyboard \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_ab7b3dc20f27b24591307de643b57d260}{
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{structt__jdataview_ab7b3dc20f27b24591307de643b57d260}{d\_\-returnkeycolumn}}
+\label{structt__jdataview_ab7b3dc20f27b24591307de643b57d260}
+
+\begin{DoxyCompactList}\small\item\em column that is sent the return key when a given row is selected \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_aaea7e47f03501129f1456c51c10e5993}{
+void $\ast$ \hyperlink{structt__jdataview_aaea7e47f03501129f1456c51c10e5993}{d\_\-navcache}}
+\label{structt__jdataview_aaea7e47f03501129f1456c51c10e5993}
+
+\begin{DoxyCompactList}\small\item\em sorted list of column strings for key navigation \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jdataview_a0dc3799170e5824b503dd53d64f2f4dc}{
+char \hyperlink{structt__jdataview_a0dc3799170e5824b503dd53d64f2f4dc}{d\_\-usecharheight}}
+\label{structt__jdataview_a0dc3799170e5824b503dd53d64f2f4dc}
+
+\begin{DoxyCompactList}\small\item\em use font specified in points rather than pixels (default is pixels) \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The dataview object. 

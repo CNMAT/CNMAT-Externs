@@ -1,0 +1,367 @@
+\hypertarget{group__objectmod}{
+\section{Object Module}
+\label{group__objectmod}\index{Object Module@{Object Module}}
+}
+
+
+Collaboration diagram for Object Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=109pt]{group__objectmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+long \hyperlink{group__objectmod_ga4fdf2959d720fe67e1ecc777189caa63}{jit\_\-object\_\-classname\_\-compare} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name)
+\begin{DoxyCompactList}\small\item\em Compares object's class name with the name provided. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__objectmod_gacbb8c55e2c6c564d6018b8550cf7f98f}{jit\_\-object\_\-method\_\-argsafe\_\-get} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Checks to see if symbol is safe to call as an attribute style argument. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_gabde2eb49750992ec4125af862b402342}{jit\_\-object\_\-new} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname,...)
+\begin{DoxyCompactList}\small\item\em Instantiates an object specified by class name. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_ga9e1b9b8ed4fce611de26a74c6e1452c8}{jit\_\-object\_\-method} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Calls an object method specified by method name. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_ga9c9b8591a887cddd19b313c8e995fbea}{jit\_\-object\_\-method\_\-typed} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Calls a typed object method specified by method name. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__objectmod_gaeba4eb06443064c2cb4b9c45edeb7ab2}{jit\_\-object\_\-getmethod} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieves an object method specified by method name. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__objectmod_gab5c10166fd7e2505b76a25e1cf0b6b09}{jit\_\-object\_\-attr\_\-usercanset} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Determines if an object attribute is user settable. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__objectmod_ga03b2bb6645b076c4afbba3efbd5f14b9}{jit\_\-object\_\-attr\_\-usercanget} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Determines if an object attribute is user gettable. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_ga6d62c09fe37fc74bcaaa6ab326064b6f}{jit\_\-object\_\-attr\_\-get} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$attrname)
+\begin{DoxyCompactList}\small\item\em Retrieves an object's attribute pointer specified by attribute name. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__objectmod_ga64970b62e5afe7a2cbd57efd6e9e9f74}{jit\_\-object\_\-free} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Frees an object. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__objectmod_ga2d3302646e6bf59b4960dd0656632095}{jit\_\-object\_\-classname} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves an object's class name. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_gaecadd79da84aa20fe845cc4916f25721}{jit\_\-object\_\-class} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves an object's class pointer. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_gabcf088a00f36b6af8ce5896b81e4d0ef}{jit\_\-object\_\-register} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Registers an object in the named object registry. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__objectmod_ga21f77a08c1a98aaf68e4b2913487be0f}{jit\_\-object\_\-unregister} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Unregisters an object from the named object registry. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_ga328c0beb469f32437b756852fe8583bf}{jit\_\-object\_\-findregistered} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieves a registered object associated with name. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__objectmod_gaf59274b20cbf6a44cc4269a0a4165745}{jit\_\-object\_\-findregisteredbyptr} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves a registered object's name. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__objectmod_ga213166e8beeb29aca36c57cd07c722f1}{jit\_\-object\_\-attach} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Attaches an object as a client of a named server object for notification. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__objectmod_gaa286218b643371fe28cbe261facd5b21}{jit\_\-object\_\-detach} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Detaches a client object from a named server object. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__objectmod_ga4bbd50b2d1e34de44d36e1a66a477b9f}{jit\_\-object\_\-notify} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$data)
+\begin{DoxyCompactList}\small\item\em Notifies all client objects for a named server object. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__objectmod_ga29a1be851f1e88aa459689681d8b996e}{jit\_\-object\_\-importattrs} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Imports object attributes from an XML file. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__objectmod_ga62d196313913e245d4baa69ed2308f01}{jit\_\-object\_\-exportattrs} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Exports object attributes to an XML file. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__objectmod_ga9be3b8c2e695b471dee3e9242691c472}{jit\_\-object\_\-exportsummary} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Exports object summary to an XML file. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__objectmod_ga213166e8beeb29aca36c57cd07c722f1}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-attach@{jit\_\-object\_\-attach}}
+\index{jit\_\-object\_\-attach@{jit\_\-object\_\-attach}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-attach}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-object\_\-attach ({\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em x})}}
+\label{group__objectmod_ga213166e8beeb29aca36c57cd07c722f1}
+
+
+Attaches an object as a client of a named server object for notification. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]name of server object \item[{\em x}]client object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If successful, server object pointer. Otherwise NULL. 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga6d62c09fe37fc74bcaaa6ab326064b6f}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-attr\_\-get@{jit\_\-object\_\-attr\_\-get}}
+\index{jit\_\-object\_\-attr\_\-get@{jit\_\-object\_\-attr\_\-get}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-attr\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-object\_\-attr\_\-get (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em attrname})}}
+\label{group__objectmod_ga6d62c09fe37fc74bcaaa6ab326064b6f}
+
+
+Retrieves an object's attribute pointer specified by attribute name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em attrname}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+attribute object pointer 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga03b2bb6645b076c4afbba3efbd5f14b9}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-attr\_\-usercanget@{jit\_\-object\_\-attr\_\-usercanget}}
+\index{jit\_\-object\_\-attr\_\-usercanget@{jit\_\-object\_\-attr\_\-usercanget}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-attr\_\-usercanget}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-object\_\-attr\_\-usercanget (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__objectmod_ga03b2bb6645b076c4afbba3efbd5f14b9}
+
+
+Determines if an object attribute is user gettable. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if gettable, 0 if not gettable 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gab5c10166fd7e2505b76a25e1cf0b6b09}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-attr\_\-usercanset@{jit\_\-object\_\-attr\_\-usercanset}}
+\index{jit\_\-object\_\-attr\_\-usercanset@{jit\_\-object\_\-attr\_\-usercanset}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-attr\_\-usercanset}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-object\_\-attr\_\-usercanset (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__objectmod_gab5c10166fd7e2505b76a25e1cf0b6b09}
+
+
+Determines if an object attribute is user settable. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if settable, 0 if not settable 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gaecadd79da84aa20fe845cc4916f25721}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-class@{jit\_\-object\_\-class}}
+\index{jit\_\-object\_\-class@{jit\_\-object\_\-class}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-class}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-object\_\-class (void $\ast$ {\em x})}}
+\label{group__objectmod_gaecadd79da84aa20fe845cc4916f25721}
+
+
+Retrieves an object's class pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+class pointer 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga2d3302646e6bf59b4960dd0656632095}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-classname@{jit\_\-object\_\-classname}}
+\index{jit\_\-object\_\-classname@{jit\_\-object\_\-classname}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-classname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-object\_\-classname (void $\ast$ {\em x})}}
+\label{group__objectmod_ga2d3302646e6bf59b4960dd0656632095}
+
+
+Retrieves an object's class name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+class name \hyperlink{structt__symbol}{t\_\-symbol} pointer 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga4fdf2959d720fe67e1ecc777189caa63}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-classname\_\-compare@{jit\_\-object\_\-classname\_\-compare}}
+\index{jit\_\-object\_\-classname\_\-compare@{jit\_\-object\_\-classname\_\-compare}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-classname\_\-compare}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-object\_\-classname\_\-compare (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em name})}}
+\label{group__objectmod_ga4fdf2959d720fe67e1ecc777189caa63}
+
+
+Compares object's class name with the name provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em name}]name to compare with class name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if equal, 0 if not equal 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gaa286218b643371fe28cbe261facd5b21}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-detach@{jit\_\-object\_\-detach}}
+\index{jit\_\-object\_\-detach@{jit\_\-object\_\-detach}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-detach}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-object\_\-detach ({\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em x})}}
+\label{group__objectmod_gaa286218b643371fe28cbe261facd5b21}
+
+
+Detaches a client object from a named server object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]name of server object \item[{\em x}]client object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga62d196313913e245d4baa69ed2308f01}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-exportattrs@{jit\_\-object\_\-exportattrs}}
+\index{jit\_\-object\_\-exportattrs@{jit\_\-object\_\-exportattrs}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-exportattrs}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-object\_\-exportattrs (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__objectmod_ga62d196313913e245d4baa69ed2308f01}
+
+
+Exports object attributes to an XML file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]ignored \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga9be3b8c2e695b471dee3e9242691c472}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-exportsummary@{jit\_\-object\_\-exportsummary}}
+\index{jit\_\-object\_\-exportsummary@{jit\_\-object\_\-exportsummary}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-exportsummary}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-object\_\-exportsummary (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__objectmod_ga9be3b8c2e695b471dee3e9242691c472}
+
+
+Exports object summary to an XML file. \begin{DoxyWarning}{Warning}
+Currently this function does nothing, but is reserved for future use.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]ignored \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga328c0beb469f32437b756852fe8583bf}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-findregistered@{jit\_\-object\_\-findregistered}}
+\index{jit\_\-object\_\-findregistered@{jit\_\-object\_\-findregistered}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-findregistered}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-object\_\-findregistered ({\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__objectmod_ga328c0beb469f32437b756852fe8583bf}
+
+
+Retrieves a registered object associated with name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]registered name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If successful, object pointer. Otherwise NULL. 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gaf59274b20cbf6a44cc4269a0a4165745}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-findregisteredbyptr@{jit\_\-object\_\-findregisteredbyptr}}
+\index{jit\_\-object\_\-findregisteredbyptr@{jit\_\-object\_\-findregisteredbyptr}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-findregisteredbyptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-object\_\-findregisteredbyptr (void $\ast$ {\em x})}}
+\label{group__objectmod_gaf59274b20cbf6a44cc4269a0a4165745}
+
+
+Retrieves a registered object's name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If successful, \hyperlink{structt__symbol}{t\_\-symbol} pointer name. Otherwise NULL. 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga64970b62e5afe7a2cbd57efd6e9e9f74}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-free@{jit\_\-object\_\-free}}
+\index{jit\_\-object\_\-free@{jit\_\-object\_\-free}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-object\_\-free (void $\ast$ {\em x})}}
+\label{group__objectmod_ga64970b62e5afe7a2cbd57efd6e9e9f74}
+
+
+Frees an object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gaeba4eb06443064c2cb4b9c45edeb7ab2}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-getmethod@{jit\_\-object\_\-getmethod}}
+\index{jit\_\-object\_\-getmethod@{jit\_\-object\_\-getmethod}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-getmethod}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} jit\_\-object\_\-getmethod (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__objectmod_gaeba4eb06443064c2cb4b9c45edeb7ab2}
+
+
+Retrieves an object method specified by method name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]method name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+method 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga29a1be851f1e88aa459689681d8b996e}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-importattrs@{jit\_\-object\_\-importattrs}}
+\index{jit\_\-object\_\-importattrs@{jit\_\-object\_\-importattrs}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-importattrs}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-object\_\-importattrs (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__objectmod_ga29a1be851f1e88aa459689681d8b996e}
+
+
+Imports object attributes from an XML file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]ignored \item[{\em argc}]argument count \item[{\em argv}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga9e1b9b8ed4fce611de26a74c6e1452c8}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-method@{jit\_\-object\_\-method}}
+\index{jit\_\-object\_\-method@{jit\_\-object\_\-method}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-method}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-object\_\-method (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__objectmod_ga9e1b9b8ed4fce611de26a74c6e1452c8}
+
+
+Calls an object method specified by method name. This operation is untyped, and the contents of the stack following the method name argument are blindly passed to the method called.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]method name \item[{\em ...}]untyped arguments passed on to the method \end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+It is important to know any necessary arguments for untyped constructors such as those used by jit\_\-matrix or jit\_\-attr\_\-offset.
+\end{DoxyWarning}
+\begin{DoxyReturn}{Returns}
+method dependent, but uses void $\ast$ as a super type. 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gacbb8c55e2c6c564d6018b8550cf7f98f}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-method\_\-argsafe\_\-get@{jit\_\-object\_\-method\_\-argsafe\_\-get}}
+\index{jit\_\-object\_\-method\_\-argsafe\_\-get@{jit\_\-object\_\-method\_\-argsafe\_\-get}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-method\_\-argsafe\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-object\_\-method\_\-argsafe\_\-get (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__objectmod_gacbb8c55e2c6c564d6018b8550cf7f98f}
+
+
+Checks to see if symbol is safe to call as an attribute style argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]name as used via argument\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If successful, name of method to map the argument name to. Otherwise, NULL. 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga9c9b8591a887cddd19b313c8e995fbea}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-method\_\-typed@{jit\_\-object\_\-method\_\-typed}}
+\index{jit\_\-object\_\-method\_\-typed@{jit\_\-object\_\-method\_\-typed}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-method\_\-typed}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-object\_\-method\_\-typed (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__objectmod_ga9c9b8591a887cddd19b313c8e995fbea}
+
+
+Calls a typed object method specified by method name. This operation only supports methods which are typed-\/-\/i.e. it cannot be used to call private, untyped A\_\-CANT methods.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]method name \item[{\em ac}]argument count \item[{\em av}]argument vector \item[{\em rv}]return value for A\_\-GIMMEBACK methods\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+method dependent, but uses void $\ast$ as a super type. 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gabde2eb49750992ec4125af862b402342}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-new@{jit\_\-object\_\-new}}
+\index{jit\_\-object\_\-new@{jit\_\-object\_\-new}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ jit\_\-object\_\-new ({\bf t\_\-symbol} $\ast$ {\em classname}, \/   {\em ...})}}
+\label{group__objectmod_gabde2eb49750992ec4125af862b402342}
+
+
+Instantiates an object specified by class name. This function may used to create instances of any Jitter object.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em classname}]class name \item[{\em ...}]untyped arguments passed on to the constructor \end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+It is important to know any necessary arguments for untyped constructors such as those used by jit\_\-matrix or jit\_\-attr\_\-offset.
+\end{DoxyWarning}
+\begin{DoxyReturn}{Returns}
+If successful, a valid object pointer. Otherwise, NULL. 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_ga4bbd50b2d1e34de44d36e1a66a477b9f}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-notify@{jit\_\-object\_\-notify}}
+\index{jit\_\-object\_\-notify@{jit\_\-object\_\-notify}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-notify}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-object\_\-notify (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em data})}}
+\label{group__objectmod_ga4bbd50b2d1e34de44d36e1a66a477b9f}
+
+
+Notifies all client objects for a named server object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]server object pointer \item[{\em s}]notification message \item[{\em data}]message specific data\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__objectmod_gabcf088a00f36b6af8ce5896b81e4d0ef}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-register@{jit\_\-object\_\-register}}
+\index{jit\_\-object\_\-register@{jit\_\-object\_\-register}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-register}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-object\_\-register (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__objectmod_gabcf088a00f36b6af8ce5896b81e4d0ef}
+
+
+Registers an object in the named object registry. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]object name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+It is important to use the object pointer returned by jit\_\-object\_\-register, since if there is an existing object with the same name and class, it could free the input object and pass back a reference to the previously defined object. 
+\end{DoxyWarning}
+\hypertarget{group__objectmod_ga21f77a08c1a98aaf68e4b2913487be0f}{
+\index{objectmod@{objectmod}!jit\_\-object\_\-unregister@{jit\_\-object\_\-unregister}}
+\index{jit\_\-object\_\-unregister@{jit\_\-object\_\-unregister}!objectmod@{objectmod}}
+\subsubsection[{jit\_\-object\_\-unregister}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-object\_\-unregister (void $\ast$ {\em x})}}
+\label{group__objectmod_ga21f77a08c1a98aaf68e4b2913487be0f}
+
+
+Unregisters an object from the named object registry. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}

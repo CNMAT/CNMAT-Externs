@@ -1,0 +1,108 @@
+\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_classes}{}\section{Max Wrapper Classes}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_classes}
+In order to expose the Jitter object to the Max patcher, a Max \char`\"{}wrapper\char`\"{} class must be defined. For simple classes, this is largely facilitated by a handful of utility functions that take a Jitter class and create the appropriate wrapper class with default functionality. However, there are occasions which warrant additional intervention to achieve special behavior, such as the use of additional inlets and outlets, integrating with MSP, converting matrix information to and from Max lists, etc. The first Max wrapper class we'll demonstrate won't have any extra complication beyond simply containing a basic Jitter class.
+
+In general it is preferable to design the Jitter class so that it knows nothing about the Max patcher, and that any logic necessary to communicate with the patcher is maintained in the Max wrapper class. In situations where this might seem difficult, this can typically be accomplished by making special methods in the Jitter class that are only meant to be called by the Max wrapper, or by using Jitter's object notification mechanism, which we'll discuss in a future chapter. Below is the minimal Max wrapper class for the minimal Jitter class shown in the last chapter.
+
+
+\begin{DoxyCode}
+typedef struct _max_jit_foo
+{
+   t_object       ob;
+   void         *obex;
+} t_max_jit_foo;
+
+void *class_max_jit_foo;
+
+void main()
+{   
+   void *p,*q;
+   
+   // initialize the Jitter class
+   jit_foo_init(); 
+   
+   // create the Max class as documented in Writing Max Externals
+   setup(&class_max_jit_foo, 
+      (method) max_jit_foo_new, 
+      (method) max_jit_foo_free, 
+      (short)sizeof(t_max_jit_foo), 
+      0L, A_GIMME, 0);
+
+   // specify a byte offset to keep additional information
+   p = max_jit_classex_setup(calcoffset(t_max_jit_foo, obex));
+   
+   // look up the Jitter class in the class registry
+   q = jit_class_findbyname(gensym("jit_foo"));    
+   
+   // wrap the Jitter class with the standard methods for Jitter objects
+   max_jit_classex_standard_wrap(p, q, 0);    
+
+   // add an inlet/outlet assistance method
+   addmess((method)max_jit_foo_assist, "assist", A_CANT,0);
+}
+
+void max_jit_foo_assist(t_max_jit_foo *x, void *b, long m, long a, char *s)
+{
+   // no inlet/outlet assistance
+}
+
+void max_jit_foo_free(t_max_jit_foo *x)
+{
+   // lookup the internal Jitter object instance and free
+   jit_object_free(max_jit_obex_jitob_get(x));
+   
+   // free resources associated with the obex entry
+   max_jit_obex_free(x);
+}
+
+void *max_jit_foo_new(t_symbol *s, long argc, t_atom *argv)
+{
+   t_max_jit_foo *x;
+   long attrstart;
+   void *o;
+
+   // create the wrapper object instance based on the
+   // max wrapper class, and the jitter class 
+   if (x = (t_max_jit_foo *)max_jit_obex_new(class_max_jit_foo, 
+         gensym("jit_foo"))) 
+   {
+      // add a general purpose outlet (rightmost)
+      max_jit_obex_dumpout_set(x, outlet_new(x,0L));
+      
+      // get normal args if necessary
+      attrstart = max_jit_attr_args_offset(argc,argv);
+      
+      // instantiate Jitter object
+      if (o = jit_object_new(gensym("jit_foo"))) 
+      {
+         // set internal jitter object instance 
+         max_jit_obex_jitob_set(x,o);
+         
+         // process attribute arguments
+         max_jit_attr_args(x,argc,argv);
+      } 
+      else 
+      {   
+         // couldn't instantiate, clean up and report an error
+         freeobject((void *)x);
+         x = NULL;
+         error("jit.foo: out of memory");
+      }
+   }
+
+   return (x);
+}
+\end{DoxyCode}
+\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_struct}{}\section{Object Struct}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_struct}
+The first thing you must do is define your Max class object struct. As is typical, for standard Max objects the first entry of the object struct must be of type \hyperlink{structt__object}{t\_\-object}; for UI objects, it must be of type \hyperlink{structt__jbox}{t\_\-jbox}; for MSP objects, it must be of type \hyperlink{structt__pxobject}{t\_\-pxobject}; and for MSP UI objects, it must be of type \hyperlink{structt__pxjbox}{t\_\-pxjbox}. For more information on these different Max/MSP object types, please consult the Max/MSP developer documentation. Jitter objects can be wrapped within any of these object types.
+
+You also need to define a pointer to point to extra information and resources needed to effectively wrap your Jitter class. This is typically referred to as the \char`\"{}obex\char`\"{} data, and it is where Jitter stores things like attribute information, the general purpose \char`\"{}dumpout\char`\"{}, the internal Jitter object instance, Matrix Operator resources for inlets/outlets, and other auxiliary object information that is not required in a simple Max object. As of Max 4.5 there is also the facility for making use of such additional object information for ordinary Max objects. At the time of this writing, such information is provided in the Pattr developer documentation, as it is relevant to the definition of object attributes, which may be stored and operated upon by the patcher attribute suite of objects.\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_classdef}{}\section{Defining Your Max Class}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_classdef}
+In your Max class registration, which takes place in your external's main function, you should begin by calling your Jitter class's registration function, typically named something like your\_\-object\_\-name\_\-init(). Then you should proceed to define the Max class's constructor, destructor, object struct size, and typed arguments as is typically accomplished for Max objects via the setup function. In order for your wrapper class to be able to find the obex data, you need to specify a byte offset where this pointer is located within each object instance and allocate the resource in which this is stored in your Max class. This is accomplished with the \hyperlink{group__maxwrapmod_ga773b6e6430d9de2e295419c7f038979e}{max\_\-jit\_\-classex\_\-setup()} function. You should then look up the Jitter class via \hyperlink{group__classmod_ga63eb9d25f881cd6fba11e24f9ac9b02f}{jit\_\-class\_\-findbyname()}, and wrap it via the \hyperlink{group__maxwrapmod_ga9b8377bdccc2497e02582c72204b5250}{max\_\-jit\_\-classex\_\-standard\_\-wrap()} function. The \hyperlink{group__maxwrapmod_ga9b8377bdccc2497e02582c72204b5250}{max\_\-jit\_\-classex\_\-standard\_\-wrap()} function will add all typed methods defined in the Jitter class, as well getter and setter methods for attributes that are not opaque (i.e. private), and all the methods that are common to Jitter objects like getattributes, getstate, summary, importattrs, exportattrs, etc.
+
+Now that you have wrapped the Jitter class, you can add any additional methods that you wish, such as your inlet/outlet assistance method, or something specific to the Max object. Like Jitter objects, you can also add methods which have defer or usurp wrappers, and these should be added via the \hyperlink{group__maxwrapmod_gac057d2e8d94686363fa9ae8ea0b41fee}{max\_\-addmethod\_\-defer\_\-low()} or \hyperlink{group__maxwrapmod_ga2c596151798123076dcd1d4f7d76e203}{max\_\-addmethod\_\-usurp\_\-low()} functions, rather than simply using the traditional \hyperlink{group__class__old_ga0d9bfa416fdd861d1b2fd2d17701cbb3}{addmess()} function. C\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_ctor}{}\section{Constructor}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_ctor}
+Inside the Max object constructor, there are a few things which are different than building an ordinary Max external. If your object is to respond to attribute arguments, the constructor must be defined to take variable number of typed atom arguments, accomplished with the \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME} signature. You allocate your Max object with the \hyperlink{group__maxwrapmod_gacf7fc6f3f87db8515f61b12efbcc9073}{max\_\-jit\_\-obex\_\-new()} function, instead of the traditional newobject function. You need to pass your Jitter class name to the \hyperlink{group__maxwrapmod_gacf7fc6f3f87db8515f61b12efbcc9073}{max\_\-jit\_\-obex\_\-new()} function, which also allocates and initializes your obex data. If successful, you should proceed to add your general purpose \char`\"{}dumpout\char`\"{} outlet, used for returning attribute queries and other methods that provide information like $\ast$jit.qt.movie$\ast$'s framedump method's frame number or read method success code, with the max\_\-jit\_\-object\_\-dumpout\_\-set() function. If your object is a Matrix Operator that calls \hyperlink{group__maxmopmod_gac3eaca207281516b72e81f0dc5f4bf94}{max\_\-jit\_\-mop\_\-setup\_\-simple()} you will not need to explicitly call max\_\-jit\_\-object\_\-dumpout\_\-set(), as \hyperlink{group__maxmopmod_gac3eaca207281516b72e81f0dc5f4bf94}{max\_\-jit\_\-mop\_\-setup\_\-simple()} calls max\_\-jit\_\-object\_\-dumpout\_\-set() internally.
+
+You then allocate your Jitter object with \hyperlink{group__objectmod_gabde2eb49750992ec4125af862b402342}{jit\_\-object\_\-new()}, and store it in your obex data via \hyperlink{group__maxwrapmod_gaa1b174cf92680ca46bfb189a812d2a65}{max\_\-jit\_\-obex\_\-jitob\_\-set()}. Note that this Jitter object instance can always be found with the function \hyperlink{group__maxwrapmod_ga063ab88bfc92c1a666f3ad6251834e20}{max\_\-jit\_\-obex\_\-jitob\_\-get()}. If you wish, prior to allocating your Jitter object, you can look at your non-\/attribute arguments first — those arguments up to the location returned by \hyperlink{group__maxwrapmod_ga1a28ddf72d9bdcb2096df36384b63de6}{max\_\-jit\_\-attr\_\-args\_\-offset()} — and make use of them in your Jitter object constructor. It is typical to process attribute arguments after you've allocated both the Max and Jitter object instances, with \hyperlink{group__maxwrapmod_gac1ffd4864421154c8e6364b5df9a09ff}{max\_\-jit\_\-attr\_\-args()}, which is passed the Max object instance. If you wanted to use the attribute arguments somehow in your Jitter object constructor, you would need to parse the attribute arguments yourself. If you are not able to allocate your Jitter object (as is the case if you have run out of memory or if Jitter is present but not authorized), it is important that you clean up your Max wrapper object, and return NULL.\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_dtor}{}\section{Destructor}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_dtor}
+In your Max object destructor, you additionally need to free your internal Jitter object with \hyperlink{group__objectmod_ga64970b62e5afe7a2cbd57efd6e9e9f74}{jit\_\-object\_\-free()}, and free any additional obex data with \hyperlink{group__maxwrapmod_gabcf9c466a6baa22994a66e30b54e7dd6}{max\_\-jit\_\-obex\_\-free()}. Matrix operators will typically require that \hyperlink{group__maxmopmod_ga441ff70d705e1eccff8297437c85e46c}{max\_\-jit\_\-mop\_\-free()} is called, to free the resources allocated for matrix inputs and outputs. If your object has attached to a registered object for notification via \hyperlink{group__objectmod_ga213166e8beeb29aca36c57cd07c722f1}{jit\_\-object\_\-attach()}, you should detach from that object in your destructor using \hyperlink{group__objectmod_gaa286218b643371fe28cbe261facd5b21}{jit\_\-object\_\-detach()} to prevent invalid memory accesses as the registered object might attempt to notify the memory of a now freed object. Object registration and notification is discussed in further detail in following chapters.\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_dumpout}{}\section{Dumpout}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_dumpout}
+The general purpose outlet, also known as \char`\"{}dumpout\char`\"{}, is automatically used by the Max wrapper object when calling attribute getters and several of the standard methods like summary, or getattributes. It is also available for use in any other Max method you want, most easily accessed with the \hyperlink{group__maxwrapmod_ga161cd54f4612d26057e4140b56e14729}{max\_\-jit\_\-obex\_\-dumpout()} function that operates similar to \hyperlink{group__inout_ga12798ee897e01dac21ee547c4091d8a8}{outlet\_\-anything()}, but uses the max object pointer rather than the outlet pointer as the first argument. The outlet pointer which has been set in your constructor can be queried with the \hyperlink{group__maxwrapmod_gae0f179c644d50a572a7c159db83490a5}{max\_\-jit\_\-obex\_\-dumpout\_\-get()} function, and used in the standard outlet calls. However, it is recommended for routing purposes that any output through the dumpout outlet is a message beginning with a symbol, rather than simply a bang, int, or float. Therefore, \hyperlink{group__inout_ga12798ee897e01dac21ee547c4091d8a8}{outlet\_\-anything()} makes the most sense to use.\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_inout}{}\section{Additional inlets/outlets}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_inout}
+To add additional inlets and outlets to your Max external, a few things should be noted. First, if your object is a Matrix Operator, matrix inlets and outlets will be added either through either the high level \hyperlink{group__maxmopmod_gac3eaca207281516b72e81f0dc5f4bf94}{max\_\-jit\_\-mop\_\-setup\_\-simple()}, or lower level \hyperlink{group__maxmopmod_gaec99be7b60c1cec6a8391097d5008bc6}{max\_\-jit\_\-mop\_\-inputs()} or \hyperlink{group__maxmopmod_ga07f044bc4c7fe4380f31e150844948df}{max\_\-jit\_\-mop\_\-outputs()} calls. These Matrix Operator functions will be covered in the chapter on Matrix Operators. Secondly, if your object is an MSP object, all signal inlets and outlets must be leftmost, and all non-\/signal inlets and outlets must be to the right of any single inlets or outlets—i.e. they cannot be intermixed. Lastly, additional inlets should use proxies (covered in detail in the Max/MSP developer documentation) so that your object knows which inlet a message has been received. This is accomplished with the \hyperlink{group__maxwrapmod_ga010c3e4a11d73d6553b7513719a19b7f}{max\_\-jit\_\-obex\_\-proxy\_\-new()} function. The inlet number is zero based, and you do not need to create a proxy for the leftmost inlet. Inside any methods which need to know which inlet the triggering message has been received, you can use the \hyperlink{group__maxwrapmod_ga2c0d72889d3a89cbabe1001d55c86c3e}{max\_\-jit\_\-obex\_\-inletnumber\_\-get()} function.\hypertarget{chapter_jit_maxwrappers_chapter_jit_maxwrappers_attrs}{}\section{Max Wrapper Attributes}\label{chapter_jit_maxwrappers_chapter_jit_maxwrappers_attrs}
+Sometimes you will need additional attributes which are specific to the Max wrapper class, but are not part of the internal Jitter class. Attributes objects for the Max wrapper class are defined in the same way as those for the Jitter class, documented in the previous chapter. However, these attributes are not added to the Max class with the \hyperlink{group__classmod_ga37e39db544b4d73596da1557e6c7563a}{jit\_\-class\_\-addattr()} function, but instead with the \hyperlink{group__maxwrapmod_ga888aa461197db2e7ef2fb0ae34479c3e}{max\_\-jit\_\-classex\_\-addattr()} function, which takes the classex pointer returned from \hyperlink{group__maxwrapmod_ga773b6e6430d9de2e295419c7f038979e}{max\_\-jit\_\-classex\_\-setup()}. Attribute flags, and custom getter and setter methods should be defined exactly as they would for the Jitter class. 

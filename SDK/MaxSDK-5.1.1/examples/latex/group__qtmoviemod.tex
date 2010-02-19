@@ -1,0 +1,95 @@
+\hypertarget{group__qtmoviemod}{
+\section{jit.qt.movie Module}
+\label{group__qtmoviemod}\index{jit.qt.movie Module@{jit.qt.movie Module}}
+}
+
+
+Collaboration diagram for jit.qt.movie Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=121pt]{group__qtmoviemod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+t\_\-jit\_\-qt\_\-movie $\ast$ \hyperlink{group__qtmoviemod_gaa771bc8d5b2f69cd74b5d2d69e777063}{jit\_\-qt\_\-movie\_\-new} (long width, long height)
+\begin{DoxyCompactList}\small\item\em Constructs instance of t\_\-jit\_\-qt\_\-movie. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtmoviemod_ga422c5a6770e1cc1886785a494348d84a}{jit\_\-qt\_\-movie\_\-matrix\_\-calc} (t\_\-jit\_\-qt\_\-movie $\ast$x, void $\ast$inputs, void $\ast$outputs)
+\begin{DoxyCompactList}\small\item\em matrix\_\-calc method for the jit.qt.movie object \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__qtmoviemod_ga8ce71c8eacec87a89ce1bc964de16a7a}{jit\_\-qt\_\-movie\_\-matrix\_\-to\_\-image} (t\_\-jit\_\-qt\_\-movie $\ast$x, void $\ast$o, short ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, t\_\-graphic\_\-exportsettings $\ast$gs)
+\begin{DoxyCompactList}\small\item\em Export a Jitter matrix to a QuickTime-\/compatible image file. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__qtmoviemod_ga2218192fcdfb3f999a7097b719d75c78}{jit\_\-qt\_\-movie\_\-read\_\-typed} (t\_\-jit\_\-qt\_\-movie $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)
+\begin{DoxyCompactList}\small\item\em Read a QuickTime Movie. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__qtmoviemod_ga422c5a6770e1cc1886785a494348d84a}{
+\index{qtmoviemod@{qtmoviemod}!jit\_\-qt\_\-movie\_\-matrix\_\-calc@{jit\_\-qt\_\-movie\_\-matrix\_\-calc}}
+\index{jit\_\-qt\_\-movie\_\-matrix\_\-calc@{jit\_\-qt\_\-movie\_\-matrix\_\-calc}!qtmoviemod@{qtmoviemod}}
+\subsubsection[{jit\_\-qt\_\-movie\_\-matrix\_\-calc}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-qt\_\-movie\_\-matrix\_\-calc (t\_\-jit\_\-qt\_\-movie $\ast$ {\em x}, \/  void $\ast$ {\em inputs}, \/  void $\ast$ {\em outputs})}}
+\label{group__qtmoviemod_ga422c5a6770e1cc1886785a494348d84a}
+
+
+matrix\_\-calc method for the jit.qt.movie object 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-qt\_\-movie object pointer \item[{\em inputs}]input list (unused) \item[{\em outputs}]output list (should be or contain 1 t\_\-jit\_\-matrix object)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an instance of a t\_\-jit\_\-qt\_\-movie object. 
+\end{DoxyWarning}
+\hypertarget{group__qtmoviemod_ga8ce71c8eacec87a89ce1bc964de16a7a}{
+\index{qtmoviemod@{qtmoviemod}!jit\_\-qt\_\-movie\_\-matrix\_\-to\_\-image@{jit\_\-qt\_\-movie\_\-matrix\_\-to\_\-image}}
+\index{jit\_\-qt\_\-movie\_\-matrix\_\-to\_\-image@{jit\_\-qt\_\-movie\_\-matrix\_\-to\_\-image}!qtmoviemod@{qtmoviemod}}
+\subsubsection[{jit\_\-qt\_\-movie\_\-matrix\_\-to\_\-image}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-qt\_\-movie\_\-matrix\_\-to\_\-image (t\_\-jit\_\-qt\_\-movie $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  short {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  t\_\-graphic\_\-exportsettings $\ast$ {\em gs})}}
+\label{group__qtmoviemod_ga8ce71c8eacec87a89ce1bc964de16a7a}
+
+
+Export a Jitter matrix to a QuickTime-\/compatible image file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-qt\_\-movie object pointer \item[{\em o}]t\_\-jit\_\-matrix pointer \item[{\em ac}]argument count \item[{\em av}]argument vector \item[{\em gs}]undocumented\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+Optional arguments are file type, desired file name/file path for exported image file, and a show settings dialog flag (0/1). Format is essentially the same as that of \char`\"{}exportimage\char`\"{} method to jit.qt.movie, as documented in the Jitter Reference.
+
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method on an instance of a t\_\-jit\_\-qt\_\-movie object. 
+\end{DoxyWarning}
+\hypertarget{group__qtmoviemod_gaa771bc8d5b2f69cd74b5d2d69e777063}{
+\index{qtmoviemod@{qtmoviemod}!jit\_\-qt\_\-movie\_\-new@{jit\_\-qt\_\-movie\_\-new}}
+\index{jit\_\-qt\_\-movie\_\-new@{jit\_\-qt\_\-movie\_\-new}!qtmoviemod@{qtmoviemod}}
+\subsubsection[{jit\_\-qt\_\-movie\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-qt\_\-movie$\ast$ jit\_\-qt\_\-movie\_\-new (long {\em width}, \/  long {\em height})}}
+\label{group__qtmoviemod_gaa771bc8d5b2f69cd74b5d2d69e777063}
+
+
+Constructs instance of t\_\-jit\_\-qt\_\-movie. 
+\begin{DoxyParams}{Parameters}
+\item[{\em width}]output matrix width \item[{\em height}]output matrix height\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-qt\_\-movie object pointer
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-new. 
+\end{DoxyWarning}
+\hypertarget{group__qtmoviemod_ga2218192fcdfb3f999a7097b719d75c78}{
+\index{qtmoviemod@{qtmoviemod}!jit\_\-qt\_\-movie\_\-read\_\-typed@{jit\_\-qt\_\-movie\_\-read\_\-typed}}
+\index{jit\_\-qt\_\-movie\_\-read\_\-typed@{jit\_\-qt\_\-movie\_\-read\_\-typed}!qtmoviemod@{qtmoviemod}}
+\subsubsection[{jit\_\-qt\_\-movie\_\-read\_\-typed}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-qt\_\-movie\_\-read\_\-typed (t\_\-jit\_\-qt\_\-movie $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  {\bf t\_\-atom} $\ast$ {\em rv})}}
+\label{group__qtmoviemod_ga2218192fcdfb3f999a7097b719d75c78}
+
+
+Read a QuickTime Movie. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]t\_\-jit\_\-qt\_\-movie object pointer \item[{\em s}]\hyperlink{structt__symbol}{t\_\-symbol} pointer containing method name (\char`\"{}read\char`\"{} or \char`\"{}asyncread\char`\"{}, \char`\"{}import\char`\"{}, \char`\"{}importfile\char`\"{} or \char`\"{}asyncimport\char`\"{}) \item[{\em ac}]argument count \item[{\em av}]argument vector \item[{\em rv}](optional) \hyperlink{structt__atom}{t\_\-atom} pointer, on output, will be of type A\_\-OBJ and contain a \hyperlink{structt__atomarray}{t\_\-atomarray} object with any return values\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+Optional argument is the file name/file path/URL or \char`\"{}scrap\char`\"{} to load.
+
+\begin{DoxyWarning}{Warning}
+This function is not exported, but is provided for reference when calling via jit\_\-object\_\-method\_\-typed on an instance of a t\_\-jit\_\-qt\_\-movie object. 
+\end{DoxyWarning}

@@ -1,0 +1,1130 @@
+\hypertarget{group__files}{
+\section{Files and Folders}
+\label{group__files}\index{Files and Folders@{Files and Folders}}
+}
+
+
+These routines assist your object in opening and saving files, as well as locating the user’s files in the Max search path.  
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__fileinfo}{t\_\-fileinfo}
+\begin{DoxyCompactList}\small\item\em Information about a file. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__path}{t\_\-path}
+\begin{DoxyCompactList}\small\item\em The path data structure. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__pathlink}{t\_\-pathlink}
+\begin{DoxyCompactList}\small\item\em The pathlink data structure. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__files_ga513fe2710e225c840d9295fb9884607b}{
+\#define \hyperlink{group__files_ga513fe2710e225c840d9295fb9884607b}{MAX\_\-PATH\_\-CHARS}~2048}
+\label{group__files_ga513fe2710e225c840d9295fb9884607b}
+
+\begin{DoxyCompactList}\small\item\em The size you should use when allocating strings for full paths. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__files_ga481556de2ccf516a499525edebc45ee8}{MAX\_\-FILENAME\_\-CHARS}~512
+\begin{DoxyCompactList}\small\item\em The size you should use when allocating strings for filenames. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void $\ast$ \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle}
+\begin{DoxyCompactList}\small\item\em A t\_\-filehandle is a cross-\/platform way of referring to an open file. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__files_gaaf8f3fbe8b4ab0b73258a6b782461867}{e\_\-max\_\-path\_\-styles} \{ \par
+\hyperlink{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a765ba1acf48b931a40a8e9a6bd451c76}{PATH\_\-STYLE\_\-MAX} =  0, 
+\par
+\hyperlink{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867accd897b92c35c682adb9714ce41aea2a}{PATH\_\-STYLE\_\-NATIVE}, 
+\par
+\hyperlink{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a86782cc5d0027799047c845ab43c1b49}{PATH\_\-STYLE\_\-COLON}, 
+\par
+\hyperlink{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a04dc9f3f099d8b89914a8c3137b821bf}{PATH\_\-STYLE\_\-SLASH}, 
+\par
+\hyperlink{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a3a76a78a4fb2f8e5e15e6f1a0f19c77a}{PATH\_\-STYLE\_\-NATIVE\_\-WIN}
+ \}
+\begin{DoxyCompactList}\small\item\em Constants that determine the output of \hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform()}. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__files_gac6a8a4db7a7de5fbc21188399713c7ee}{e\_\-max\_\-path\_\-types} \{ \par
+\hyperlink{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea1a5d068eb3dae46260f4253802e3e28b}{PATH\_\-TYPE\_\-IGNORE} =  0, 
+\par
+\hyperlink{group__files_ggac6a8a4db7a7de5fbc21188399713c7eead850bb682f8d77498e849865e90fa449}{PATH\_\-TYPE\_\-ABSOLUTE}, 
+\par
+\hyperlink{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea0acdd2cb86fc9700e407d57cb6818746}{PATH\_\-TYPE\_\-RELATIVE}, 
+\par
+\hyperlink{group__files_ggac6a8a4db7a7de5fbc21188399713c7eeac1a379d26316cf1d35ec7c24ce9671fd}{PATH\_\-TYPE\_\-BOOT}, 
+\par
+\hyperlink{group__files_ggac6a8a4db7a7de5fbc21188399713c7eeadb5b0a35c5564b3b96ec928bf88ae0db}{PATH\_\-TYPE\_\-C74}, 
+\par
+\hyperlink{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea76c8d7d75dcb6ac1080713187390197c}{PATH\_\-TYPE\_\-PATH}
+ \}
+\begin{DoxyCompactList}\small\item\em Constants that determine the output of \hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform()}. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__files_gaad4b197d6bb36cf68616a756fa85f1be}{e\_\-max\_\-fileinfo\_\-flags} \{ \par
+\hyperlink{group__files_ggaad4b197d6bb36cf68616a756fa85f1bea2c5109b5474f11e41c65e2e57de79fdd}{PATH\_\-FILEINFO\_\-ALIAS} =  1, 
+\par
+\hyperlink{group__files_ggaad4b197d6bb36cf68616a756fa85f1bead5a11a36a5c941eb59e9611cbb3c2148}{PATH\_\-FILEINFO\_\-FOLDER} =  2, 
+\par
+\hyperlink{group__files_ggaad4b197d6bb36cf68616a756fa85f1bea499de508df9c185edcb35a88c9ad9f36}{PATH\_\-FILEINFO\_\-PACKAGE} =  4
+ \}
+\begin{DoxyCompactList}\small\item\em Flags used to represent properties of a file in a \hyperlink{structt__fileinfo}{t\_\-fileinfo} struct. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__files_ga9ed75cc34f42beefdd8d3075ae2dbe53}{e\_\-max\_\-path\_\-folder\_\-flags} \{ \par
+\hyperlink{group__files_gga9ed75cc34f42beefdd8d3075ae2dbe53a6e0269209195a9068f33b2783df0cd19}{PATH\_\-REPORTPACKAGEASFOLDER} =  1, 
+\par
+\hyperlink{group__files_gga9ed75cc34f42beefdd8d3075ae2dbe53a62529aabdc660c87b795a0040ff95ca8}{PATH\_\-FOLDER\_\-SNIFF} =  2
+ \}
+\begin{DoxyCompactList}\small\item\em Flags used by functions such as \hyperlink{group__files_ga50f5d1b1d008024bffd65155be7e2721}{path\_\-foldernextfile()} and \hyperlink{group__files_ga80aa97732be321d9f2e2212485e0367a}{path\_\-openfolder()}. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__files_ga51fbee9f65e7ece2cae5c1e34150b7b3}{e\_\-max\_\-openfile\_\-permissions} \{ \par
+\hyperlink{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3a25b52ce173061081c84ef4706cbe8d0e}{PATH\_\-READ\_\-PERM} =  1, 
+\par
+\hyperlink{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3a9ae5da0a7f6b87b3a70e7c6778217cab}{PATH\_\-WRITE\_\-PERM} =  2, 
+\par
+\hyperlink{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3aa001dfc0c560b26b5a4a01cb40b6081c}{PATH\_\-RW\_\-PERM} =  3
+ \}
+\begin{DoxyCompactList}\small\item\em Permissions or mode with which to open a file. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__files_gaf61f48b912d9a2942d962ab5e61688fd}{e\_\-max\_\-sysfile\_\-posmodes} \{ \par
+\hyperlink{group__files_ggaf61f48b912d9a2942d962ab5e61688fda912f3ce009e04501285d5e029edef84a}{SYSFILE\_\-ATMARK} =  0, 
+\par
+\hyperlink{group__files_ggaf61f48b912d9a2942d962ab5e61688fdaf0d10ac5a565be0a7af62c2ed4ca16ec}{SYSFILE\_\-FROMSTART}, 
+\par
+\hyperlink{group__files_ggaf61f48b912d9a2942d962ab5e61688fda25ca6f4d91093fcf6ae3646376c7433c}{SYSFILE\_\-FROMLEOF}, 
+\par
+\hyperlink{group__files_ggaf61f48b912d9a2942d962ab5e61688fda016f69a42070b5f2babbb1edd4fb27c0}{SYSFILE\_\-FROMMARK}
+ \}
+\begin{DoxyCompactList}\small\item\em Modes used by \hyperlink{group__files_gab832835d3d607efef4baeca7a059c6c0}{sysfile\_\-setpos()}. \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__files_ga77d70855c1424d078789b0abe6bc94cd}{e\_\-max\_\-sysfile\_\-textflags} \{ \par
+\hyperlink{group__files_gga77d70855c1424d078789b0abe6bc94cda37e835ecc979f299ceb51fd54a7846ff}{TEXT\_\-LB\_\-NATIVE} =  0x00000001L, 
+\par
+\hyperlink{group__files_gga77d70855c1424d078789b0abe6bc94cda6b36993d91f168f154e0163f11f8cd18}{TEXT\_\-LB\_\-MAC} =  0x00000002L, 
+\par
+\hyperlink{group__files_gga77d70855c1424d078789b0abe6bc94cda1d0804396bf70029f4ad5be27da0fe59}{TEXT\_\-LB\_\-PC} =  0x00000004L, 
+\par
+\hyperlink{group__files_gga77d70855c1424d078789b0abe6bc94cda7832bdacfe3511733462b2550882c852}{TEXT\_\-LB\_\-UNIX} =  0x00000008L, 
+\par
+\hyperlink{group__files_gga77d70855c1424d078789b0abe6bc94cdae170ce3b6665f929791e1cfcc00d9eee}{TEXT\_\-ENCODING\_\-USE\_\-FILE} =  0x00000100L, 
+\par
+\hyperlink{group__files_gga77d70855c1424d078789b0abe6bc94cda134f84529c248946c91917a1e341a0db}{TEXT\_\-NULL\_\-TERMINATE} =  0x00000200L
+ \}
+\begin{DoxyCompactList}\small\item\em Flags used reading and writing text files. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+short \hyperlink{group__files_gafa1b5d658654eb52b748c0b94200f393}{path\_\-getapppath} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the Path ID of the Max application. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile} (char $\ast$name, short $\ast$outvol, short $\ast$binflag)
+\begin{DoxyCompactList}\small\item\em Find a Max document by name in the search path. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga8f43f2c9eb53933bbf354997eebb495d}{locatefiletype} (char $\ast$name, short $\ast$outvol, long filetype, long creator)
+\begin{DoxyCompactList}\small\item\em Find a Max document by name in the search path. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended} (char $\ast$name, short $\ast$outvol, long $\ast$outtype, long $\ast$filetypelist, short numtypes)
+\begin{DoxyCompactList}\small\item\em Find a Max document by name in the search path. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gaa6b2d2754cc0ba75a93deb186d326be8}{path\_\-resolvefile} (char $\ast$name, short path, short $\ast$outpath)
+\begin{DoxyCompactList}\small\item\em Resolve a Path ID plus a (possibly extended) file name into a path that identifies the file’s directory and a filename. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gab07291dc4afe564d85e458918da19df1}{path\_\-fileinfo} (char $\ast$name, short path, void $\ast$info)
+\begin{DoxyCompactList}\small\item\em Retrive a \hyperlink{structt__fileinfo}{t\_\-fileinfo} structure from a file/path combination. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gacfce0e7df61bc36f82c61ff2bbf73ffb}{path\_\-topathname} (short path, char $\ast$file, char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Create a fully qualified file name from a Path ID/file name combination. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga8c688029042bf8a21d9f1c87561be8da}{path\_\-frompathname} (char $\ast$name, short $\ast$path, char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Create a filename and Path ID combination from a fully qualified file name. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__files_ga57ecd9b35a253cc980f911c7f7c1854b}{path\_\-setdefault} (short path, short recursive)
+\begin{DoxyCompactList}\small\item\em Install a path as the default search path. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga6be29f366820a4cd2aa4f77bcfad362e}{path\_\-getdefault} (void)
+\begin{DoxyCompactList}\small\item\em Retrieve the Path ID of the default search path. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga6adeb9993cc360ea2e36a47b1a67dd95}{path\_\-getmoddate} (short path, unsigned long $\ast$date)
+\begin{DoxyCompactList}\small\item\em Determine the modification date of the selected path. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga834e354ef2df52e88d0643e503c4bf6c}{path\_\-getfilemoddate} (char $\ast$filename, short path, unsigned long $\ast$date)
+\begin{DoxyCompactList}\small\item\em Determine the modification date of the selected file. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__files_ga80aa97732be321d9f2e2212485e0367a}{path\_\-openfolder} (short path)
+\begin{DoxyCompactList}\small\item\em Prepare a directory for iteration. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga50f5d1b1d008024bffd65155be7e2721}{path\_\-foldernextfile} (void $\ast$xx, long $\ast$filetype, char $\ast$name, short descend)
+\begin{DoxyCompactList}\small\item\em Get the next file in the directory. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__files_ga63ca3fd6e4acb9f1b1e56b2d609bf4af}{path\_\-closefolder} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Complete a directory iteration. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gaf244aeb070e1903461070cd7dbe04bf4}{path\_\-opensysfile} (char $\ast$name, short path, \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} $\ast$ref, short perm)
+\begin{DoxyCompactList}\small\item\em Open a file given a filename and Path ID. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga044310e9440119f12c57e9b985a9e1a3}{path\_\-createsysfile} (char $\ast$name, short path, long type, \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} $\ast$ref)
+\begin{DoxyCompactList}\small\item\em Create a file given a type code, a filename, and a Path ID. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform} (char $\ast$src, char $\ast$dst, long style, long type)
+\begin{DoxyCompactList}\small\item\em Convert a source path string to destination path string using the specified style and type. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga80ffef5b7e9ac12ef33dd048a0607133}{path\_\-topotentialname} (short path, char $\ast$file, char $\ast$name, short check)
+\begin{DoxyCompactList}\small\item\em Create a fully qualified file name from a Path ID/file name combination, regardless of whether or not the file exists on disk. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog} (char $\ast$name, short $\ast$volptr, long $\ast$typeptr, long $\ast$types, short ntypes)
+\begin{DoxyCompactList}\small\item\em Present the user with the standard open file dialog. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gaf526009ce84aed6f6213c4a99f6bd72d}{saveas\_\-dialog} (char $\ast$filename, short $\ast$path, short $\ast$binptr)
+\begin{DoxyCompactList}\small\item\em Present the user with the standard save file dialog. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended} (char $\ast$name, short $\ast$vol, long $\ast$type, long $\ast$typelist, short numtypes)
+\begin{DoxyCompactList}\small\item\em Present the user with the standard save file dialog with your own list of file types. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__files_gaff6d7264cad52c579b9373870bed50db}{open\_\-promptset} (char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__files_gaff6d7264cad52c579b9373870bed50db}{open\_\-promptset()} to add a prompt message to the open file dialog displayed by \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__files_ga16a1f7bdea74c0e0009210a8430d0654}{saveas\_\-promptset} (char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__files_ga16a1f7bdea74c0e0009210a8430d0654}{saveas\_\-promptset()} to add a prompt message to the open file dialog displayed by \hyperlink{group__files_gaf526009ce84aed6f6213c4a99f6bd72d}{saveas\_\-dialog()} or \hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended()}. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__files_gab81ffeda175d0b35f112d8f21ba6e819}{filewatcher\_\-new} (\hyperlink{structt__object}{t\_\-object} $\ast$owner, short path, char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Create a new filewatcher. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__files_ga30ae954756330e63f7b70fd5d312a90b}{fileusage\_\-addfile} (void $\ast$w, long flags, char $\ast$name, short path)
+\begin{DoxyCompactList}\small\item\em Add a file to a collective. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_gad17b977bcb191648c2856d589c45f0d4}{sysfile\_\-close} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f)
+\begin{DoxyCompactList}\small\item\em Close a file opened with sysfile\_\-open(). \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_gae1ca61adcbe2234246d15bc7d22c4794}{sysfile\_\-read} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, long $\ast$count, void $\ast$bufptr)
+\begin{DoxyCompactList}\small\item\em Read a file from disk. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_ga968931fc659e0b0fc13ac29fc1c151b5}{sysfile\_\-readtohandle} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, char $\ast$$\ast$$\ast$h)
+\begin{DoxyCompactList}\small\item\em Read the contents of a file into a handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_gaccf3c95c4a25ea46a54bf082c649675e}{sysfile\_\-readtoptr} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, char $\ast$$\ast$p)
+\begin{DoxyCompactList}\small\item\em Read the contents of a file into a pointer. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_ga8272d55e223bfd31e96db15f73be8805}{sysfile\_\-write} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, long $\ast$count, const void $\ast$bufptr)
+\begin{DoxyCompactList}\small\item\em Write part of a file to disk. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_ga6f17a82aafd0afdf89612b8d4c123f6d}{sysfile\_\-seteof} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, long logeof)
+\begin{DoxyCompactList}\small\item\em Set the size of a file handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_ga0523b180c53fc3e0b5766abc58dc6172}{sysfile\_\-geteof} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, long $\ast$logeof)
+\begin{DoxyCompactList}\small\item\em Get the size of a file handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_gab832835d3d607efef4baeca7a059c6c0}{sysfile\_\-setpos} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, long mode, long offset)
+\begin{DoxyCompactList}\small\item\em Set the current file position of a file handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_ga01c1a63930d986e9661efe25ddbdecd6}{sysfile\_\-getpos} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, long $\ast$filepos)
+\begin{DoxyCompactList}\small\item\em Get the current file position of a file handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_ga711ee8ebe5363e23e01d3ffeef67373e}{sysfile\_\-spoolcopy} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} src, \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} dst, long size)
+\begin{DoxyCompactList}\small\item\em Copy the contents of one file handle to another file handle. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_gabb35e28302ee972648e61f9a5a61b96a}{sysfile\_\-readtextfile} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} htext, long maxlen, long flags)
+\begin{DoxyCompactList}\small\item\em Read a text file from disk. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__files_gae07b391866ede8506eb046cf0dd0f17c}{sysfile\_\-writetextfile} (\hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} f, \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle} htext, long flags)
+\begin{DoxyCompactList}\small\item\em Write a text file to disk. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga493776146a2eabc5857519950f938012}{sysfile\_\-openhandle} (char $\ast$$\ast$h, long flags, \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} $\ast$fh)
+\begin{DoxyCompactList}\small\item\em Create a \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} from a pre-\/existing handle. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__files_ga41536c47218a2e623777cab20a6cd3d9}{sysfile\_\-openptrsize} (char $\ast$p, long length, long flags, \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} $\ast$fh)
+\begin{DoxyCompactList}\small\item\em Create a \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} from a pre-\/existing pointer. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+These routines assist your object in opening and saving files, as well as locating the user’s files in the Max search path. There have been a significant number of changes to these routines (as well as the addition of many functions), so some history may be useful in understanding their use.
+
+Prior to version 4, Max used a feature of Mac OS 9 called \char`\"{}working 
+	directories\char`\"{} to specify files. When you used the \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile()} service routine, you would get back a file name and a volume number. This name (converted to a Pascal string) and the volume number could be passed to FSOpen() to open the located file for reading. The \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} routine worked similarly.
+
+In Mac OSX, working directories are no longer supported. In addition, the use of these \char`\"{}volume\char`\"{} numbers makes it somewhat difficult to port Max file routines to other operating systems, such as Windows XP, that specify files using complete pathnames (i.e., \char`\"{}C:$\backslash$dir1$\backslash$dir2$\backslash$file.pat\char`\"{}).
+
+However, it is useful to be able to refer to the path and the name of the file separately. The solution involves the retention of the volume number (now called Path ID), but with a platform-\/ independent wrapper that determines its meaning. There are now calls to locate, open, and choose files using C filename strings and Path IDs, as well as routines to convert between a \char`\"{}native\char`\"{} format for specifying a file (such as a full pathname on Windows or an FSRef on the Macintosh) to the C string and Path ID. As of Max version 5 FSSpecs, long ago deprecated by Apple, are no longer supported.
+
+Now that paths in Max have changed to use the slash style, as opposed to the old Macintosh colon style (see the Max 4.3 documentation for a description of the file path styles), there is one function in particular that you will find useful for converting between the various ways paths can be represented, including operating system native paths. This function is \hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform()}. Note that for compatibility purposes Path API functions accept paths in any number of styles, but will typically return paths, or modify paths inline to use the newer slash style. In addition to absolute paths, paths relative to the Max Folder, the \char`\"{}Cycling '74\char`\"{} folder and the boot volume are also supported. See the conformpath.help and ext\_\-path.h files for more information on the various styles and types of paths. See the \char`\"{}filebyte\char`\"{} SDK example project for a demonstration of how to use the path functions to convert a Max name and path ref pair to a Windows native path for use with CreateFile().
+
+There are a large number of service routine in the Max 4 kernel that support files, but only a handful will be needed by most external objects. In addition to the descriptions that follow, you should consult the movie, folder and filedate examples included with the SDK.\hypertarget{group__files_sysfile_api}{}\subsection{The Sysfile API}\label{group__files_sysfile_api}
+The Sysfile API provides the means of reading and writing files opened by \hyperlink{group__files_ga044310e9440119f12c57e9b985a9e1a3}{path\_\-createsysfile()} and similar. These functions all make use of an opaque structure, \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle}. See the path functions \hyperlink{group__files_gaf244aeb070e1903461070cd7dbe04bf4}{path\_\-opensysfile()} and \hyperlink{group__files_ga044310e9440119f12c57e9b985a9e1a3}{path\_\-createsysfile()} described earlier in this chapter for more information. The Sysfile API is relatively similar to parts of the old Macintosh File Manager API, and not too different from Standard C library file functions. The \char`\"{}filebyte\char`\"{} example project in the SDK shows how to use these functions to read from a file. It is not safe to mix these routines with other file routines (e.g. don’t use fopen() to open a file and \hyperlink{group__files_gad17b977bcb191648c2856d589c45f0d4}{sysfile\_\-close()} to close it).
+
+In addition to being able to use these routines to write cross-\/platform code in your max externals, another advantage of the Sysfile API is that it is able to read files stored in the collective file format on both Windows XP and Mac OSX.\hypertarget{group__files_filebyte_example}{}\subsection{Example: filebyte (notes from the IRCAM workshop)}\label{group__files_filebyte_example}
+\hypertarget{group__files_paths}{}\subsubsection{Paths}\label{group__files_paths}
+
+\begin{DoxyItemize}
+\item A number that specifies a file location
+\item Returned by \hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} and \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()}
+\item Supply a path when opening a file with \hyperlink{group__files_gaf244aeb070e1903461070cd7dbe04bf4}{path\_\-opensysfile()}
+\item Can convert path to and from pathname
+\end{DoxyItemize}\hypertarget{group__files_filehandle}{}\subsubsection{t\_\-filehandle}\label{group__files_filehandle}
+
+\begin{DoxyItemize}
+\item Returned by path\_\-opensysfile
+\item Refers to an open file you want to read or write using sysfile\_\-read / sysfile\_\-write
+\item Could refer to a file in a collective
+\end{DoxyItemize}\hypertarget{group__files_filenames}{}\subsubsection{File Names}\label{group__files_filenames}
+
+\begin{DoxyItemize}
+\item C string
+\item Max 5 filenames are UTF-\/8
+\item Max 5 supports long (unicode) filenames on both Mac and Windows
+\end{DoxyItemize}\hypertarget{group__files_filepathname}{}\subsubsection{File Path Names}\label{group__files_filepathname}
+
+\begin{DoxyItemize}
+\item Max uses a platform-\/independent path string format: volume:/path1/path2/filename returned by path\_\-topathname
+\item Can convert to platform-\/specific format using path\_\-nameconform (not needed if using path\_\-opensysfile)
+\item Platform-\/independent format must be used with path\_\-frompathname
+\end{DoxyItemize}\hypertarget{group__files_fileusage}{}\subsection{Collectives and Fileusage}\label{group__files_fileusage}
+Use the fileusage routines to add files to a collective when a user chooses to build a collective. Your object can respond to a \char`\"{}fileusage\char`\"{} message, which is sent by Max when the collective builder is building a collective using the following: 
+\begin{DoxyCode}
+    class_addmethod(c, (method)my_fileusage,    "fileusage", A_CANT, 0L);
+\end{DoxyCode}
+ Where my file usage has the prototype: 
+\begin{DoxyCode}
+    void my_fileusage(t_myObject *x, void *w);
+\end{DoxyCode}
+
+
+Then you can use \hyperlink{group__files_ga30ae954756330e63f7b70fd5d312a90b}{fileusage\_\-addfile()} to add any requisite files to the collective.\hypertarget{group__files_filewatchers}{}\subsection{Filewatchers}\label{group__files_filewatchers}
+Your object can watch a file or folder and be notified of changes. Use \hyperlink{group__files_gab81ffeda175d0b35f112d8f21ba6e819}{filewatcher\_\-new()}, filewatcher\_\-start(), and filewatcher\_\-stop() to implement this functionality. You may wish to use filewatchers sparingly as they can potentially incur computational overhead in the background. 
+
+\subsection{Define Documentation}
+\hypertarget{group__files_ga481556de2ccf516a499525edebc45ee8}{
+\index{files@{files}!MAX\_\-FILENAME\_\-CHARS@{MAX\_\-FILENAME\_\-CHARS}}
+\index{MAX\_\-FILENAME\_\-CHARS@{MAX\_\-FILENAME\_\-CHARS}!files@{files}}
+\subsubsection[{MAX\_\-FILENAME\_\-CHARS}]{\setlength{\rightskip}{0pt plus 5cm}\#define MAX\_\-FILENAME\_\-CHARS~512}}
+\label{group__files_ga481556de2ccf516a499525edebc45ee8}
+
+
+The size you should use when allocating strings for filenames. At the time of this writing it supports up to 256 UTF chars 
+
+\subsection{Typedef Documentation}
+\hypertarget{group__files_gafcb776aa74d514754e83b30995b5a5d1}{
+\index{files@{files}!t\_\-filehandle@{t\_\-filehandle}}
+\index{t\_\-filehandle@{t\_\-filehandle}!files@{files}}
+\subsubsection[{t\_\-filehandle}]{\setlength{\rightskip}{0pt plus 5cm}typedef void$\ast$ {\bf t\_\-filehandle}}}
+\label{group__files_gafcb776aa74d514754e83b30995b5a5d1}
+
+
+A t\_\-filehandle is a cross-\/platform way of referring to an open file. It is an opaque structure, meaning you don’t have access to the individual elements of the data structure. You can use a t\_\-filehandle only with the file routines in the Sysfile API. Do not use other platform-\/ specific file functions in conjunction with these functions. The perm parameter can be either READ\_\-PERM, WRITE\_\-PERM, or RW\_\-PERM. 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__files_gaad4b197d6bb36cf68616a756fa85f1be}{
+\index{files@{files}!e\_\-max\_\-fileinfo\_\-flags@{e\_\-max\_\-fileinfo\_\-flags}}
+\index{e\_\-max\_\-fileinfo\_\-flags@{e\_\-max\_\-fileinfo\_\-flags}!files@{files}}
+\subsubsection[{e\_\-max\_\-fileinfo\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-fileinfo\_\-flags}}}
+\label{group__files_gaad4b197d6bb36cf68616a756fa85f1be}
+
+
+Flags used to represent properties of a file in a \hyperlink{structt__fileinfo}{t\_\-fileinfo} struct. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{PATH\_\-FILEINFO\_\-ALIAS@{PATH\_\-FILEINFO\_\-ALIAS}!files@{files}}\index{files@{files}!PATH\_\-FILEINFO\_\-ALIAS@{PATH\_\-FILEINFO\_\-ALIAS}}\item[{\em 
+\hypertarget{group__files_ggaad4b197d6bb36cf68616a756fa85f1bea2c5109b5474f11e41c65e2e57de79fdd}{
+PATH\_\-FILEINFO\_\-ALIAS}
+\label{group__files_ggaad4b197d6bb36cf68616a756fa85f1bea2c5109b5474f11e41c65e2e57de79fdd}
+}]alias \index{PATH\_\-FILEINFO\_\-FOLDER@{PATH\_\-FILEINFO\_\-FOLDER}!files@{files}}\index{files@{files}!PATH\_\-FILEINFO\_\-FOLDER@{PATH\_\-FILEINFO\_\-FOLDER}}\item[{\em 
+\hypertarget{group__files_ggaad4b197d6bb36cf68616a756fa85f1bead5a11a36a5c941eb59e9611cbb3c2148}{
+PATH\_\-FILEINFO\_\-FOLDER}
+\label{group__files_ggaad4b197d6bb36cf68616a756fa85f1bead5a11a36a5c941eb59e9611cbb3c2148}
+}]folder \index{PATH\_\-FILEINFO\_\-PACKAGE@{PATH\_\-FILEINFO\_\-PACKAGE}!files@{files}}\index{files@{files}!PATH\_\-FILEINFO\_\-PACKAGE@{PATH\_\-FILEINFO\_\-PACKAGE}}\item[{\em 
+\hypertarget{group__files_ggaad4b197d6bb36cf68616a756fa85f1bea499de508df9c185edcb35a88c9ad9f36}{
+PATH\_\-FILEINFO\_\-PACKAGE}
+\label{group__files_ggaad4b197d6bb36cf68616a756fa85f1bea499de508df9c185edcb35a88c9ad9f36}
+}]package (Mac-\/only) \end{description}
+\end{Desc}
+
+\hypertarget{group__files_ga51fbee9f65e7ece2cae5c1e34150b7b3}{
+\index{files@{files}!e\_\-max\_\-openfile\_\-permissions@{e\_\-max\_\-openfile\_\-permissions}}
+\index{e\_\-max\_\-openfile\_\-permissions@{e\_\-max\_\-openfile\_\-permissions}!files@{files}}
+\subsubsection[{e\_\-max\_\-openfile\_\-permissions}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-openfile\_\-permissions}}}
+\label{group__files_ga51fbee9f65e7ece2cae5c1e34150b7b3}
+
+
+Permissions or mode with which to open a file. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{PATH\_\-READ\_\-PERM@{PATH\_\-READ\_\-PERM}!files@{files}}\index{files@{files}!PATH\_\-READ\_\-PERM@{PATH\_\-READ\_\-PERM}}\item[{\em 
+\hypertarget{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3a25b52ce173061081c84ef4706cbe8d0e}{
+PATH\_\-READ\_\-PERM}
+\label{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3a25b52ce173061081c84ef4706cbe8d0e}
+}]Read mode. \index{PATH\_\-WRITE\_\-PERM@{PATH\_\-WRITE\_\-PERM}!files@{files}}\index{files@{files}!PATH\_\-WRITE\_\-PERM@{PATH\_\-WRITE\_\-PERM}}\item[{\em 
+\hypertarget{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3a9ae5da0a7f6b87b3a70e7c6778217cab}{
+PATH\_\-WRITE\_\-PERM}
+\label{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3a9ae5da0a7f6b87b3a70e7c6778217cab}
+}]Write mode. \index{PATH\_\-RW\_\-PERM@{PATH\_\-RW\_\-PERM}!files@{files}}\index{files@{files}!PATH\_\-RW\_\-PERM@{PATH\_\-RW\_\-PERM}}\item[{\em 
+\hypertarget{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3aa001dfc0c560b26b5a4a01cb40b6081c}{
+PATH\_\-RW\_\-PERM}
+\label{group__files_gga51fbee9f65e7ece2cae5c1e34150b7b3aa001dfc0c560b26b5a4a01cb40b6081c}
+}]Read/Write mode. \end{description}
+\end{Desc}
+
+\hypertarget{group__files_ga9ed75cc34f42beefdd8d3075ae2dbe53}{
+\index{files@{files}!e\_\-max\_\-path\_\-folder\_\-flags@{e\_\-max\_\-path\_\-folder\_\-flags}}
+\index{e\_\-max\_\-path\_\-folder\_\-flags@{e\_\-max\_\-path\_\-folder\_\-flags}!files@{files}}
+\subsubsection[{e\_\-max\_\-path\_\-folder\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-path\_\-folder\_\-flags}}}
+\label{group__files_ga9ed75cc34f42beefdd8d3075ae2dbe53}
+
+
+Flags used by functions such as \hyperlink{group__files_ga50f5d1b1d008024bffd65155be7e2721}{path\_\-foldernextfile()} and \hyperlink{group__files_ga80aa97732be321d9f2e2212485e0367a}{path\_\-openfolder()}. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{PATH\_\-REPORTPACKAGEASFOLDER@{PATH\_\-REPORTPACKAGEASFOLDER}!files@{files}}\index{files@{files}!PATH\_\-REPORTPACKAGEASFOLDER@{PATH\_\-REPORTPACKAGEASFOLDER}}\item[{\em 
+\hypertarget{group__files_gga9ed75cc34f42beefdd8d3075ae2dbe53a6e0269209195a9068f33b2783df0cd19}{
+PATH\_\-REPORTPACKAGEASFOLDER}
+\label{group__files_gga9ed75cc34f42beefdd8d3075ae2dbe53a6e0269209195a9068f33b2783df0cd19}
+}]if not true, then a Mac OS package will be reported as a file rather than a folder. \index{PATH\_\-FOLDER\_\-SNIFF@{PATH\_\-FOLDER\_\-SNIFF}!files@{files}}\index{files@{files}!PATH\_\-FOLDER\_\-SNIFF@{PATH\_\-FOLDER\_\-SNIFF}}\item[{\em 
+\hypertarget{group__files_gga9ed75cc34f42beefdd8d3075ae2dbe53a62529aabdc660c87b795a0040ff95ca8}{
+PATH\_\-FOLDER\_\-SNIFF}
+\label{group__files_gga9ed75cc34f42beefdd8d3075ae2dbe53a62529aabdc660c87b795a0040ff95ca8}
+}]sniff \end{description}
+\end{Desc}
+
+\hypertarget{group__files_gaaf8f3fbe8b4ab0b73258a6b782461867}{
+\index{files@{files}!e\_\-max\_\-path\_\-styles@{e\_\-max\_\-path\_\-styles}}
+\index{e\_\-max\_\-path\_\-styles@{e\_\-max\_\-path\_\-styles}!files@{files}}
+\subsubsection[{e\_\-max\_\-path\_\-styles}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-path\_\-styles}}}
+\label{group__files_gaaf8f3fbe8b4ab0b73258a6b782461867}
+
+
+Constants that determine the output of \hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform()}. \begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_gac6a8a4db7a7de5fbc21188399713c7ee}{e\_\-max\_\-path\_\-types} 
+
+\hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform()} 
+\end{DoxySeeAlso}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{PATH\_\-STYLE\_\-MAX@{PATH\_\-STYLE\_\-MAX}!files@{files}}\index{files@{files}!PATH\_\-STYLE\_\-MAX@{PATH\_\-STYLE\_\-MAX}}\item[{\em 
+\hypertarget{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a765ba1acf48b931a40a8e9a6bd451c76}{
+PATH\_\-STYLE\_\-MAX}
+\label{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a765ba1acf48b931a40a8e9a6bd451c76}
+}]use PATH\_\-STYLE\_\-MAX\_\-PLAT \index{PATH\_\-STYLE\_\-NATIVE@{PATH\_\-STYLE\_\-NATIVE}!files@{files}}\index{files@{files}!PATH\_\-STYLE\_\-NATIVE@{PATH\_\-STYLE\_\-NATIVE}}\item[{\em 
+\hypertarget{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867accd897b92c35c682adb9714ce41aea2a}{
+PATH\_\-STYLE\_\-NATIVE}
+\label{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867accd897b92c35c682adb9714ce41aea2a}
+}]use PATH\_\-STYLE\_\-NATIVE\_\-PLAT \index{PATH\_\-STYLE\_\-COLON@{PATH\_\-STYLE\_\-COLON}!files@{files}}\index{files@{files}!PATH\_\-STYLE\_\-COLON@{PATH\_\-STYLE\_\-COLON}}\item[{\em 
+\hypertarget{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a86782cc5d0027799047c845ab43c1b49}{
+PATH\_\-STYLE\_\-COLON}
+\label{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a86782cc5d0027799047c845ab43c1b49}
+}]':' sep, \char`\"{}vol:\char`\"{} volume, \char`\"{}:\char`\"{} relative, \char`\"{}$^\wedge$:\char`\"{} boot \index{PATH\_\-STYLE\_\-SLASH@{PATH\_\-STYLE\_\-SLASH}!files@{files}}\index{files@{files}!PATH\_\-STYLE\_\-SLASH@{PATH\_\-STYLE\_\-SLASH}}\item[{\em 
+\hypertarget{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a04dc9f3f099d8b89914a8c3137b821bf}{
+PATH\_\-STYLE\_\-SLASH}
+\label{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a04dc9f3f099d8b89914a8c3137b821bf}
+}]'/' sep, \char`\"{}vol:/\char`\"{} volume, \char`\"{}./\char`\"{} relative, \char`\"{}/\char`\"{} boot \index{PATH\_\-STYLE\_\-NATIVE\_\-WIN@{PATH\_\-STYLE\_\-NATIVE\_\-WIN}!files@{files}}\index{files@{files}!PATH\_\-STYLE\_\-NATIVE\_\-WIN@{PATH\_\-STYLE\_\-NATIVE\_\-WIN}}\item[{\em 
+\hypertarget{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a3a76a78a4fb2f8e5e15e6f1a0f19c77a}{
+PATH\_\-STYLE\_\-NATIVE\_\-WIN}
+\label{group__files_ggaaf8f3fbe8b4ab0b73258a6b782461867a3a76a78a4fb2f8e5e15e6f1a0f19c77a}
+}]'$\backslash$' sep, \char`\"{}vol:$\backslash$$\backslash$\char`\"{} volume, \char`\"{}.$\backslash$$\backslash$\char`\"{} relative, \char`\"{}$\backslash$$\backslash$\char`\"{} boot \end{description}
+\end{Desc}
+
+\hypertarget{group__files_gac6a8a4db7a7de5fbc21188399713c7ee}{
+\index{files@{files}!e\_\-max\_\-path\_\-types@{e\_\-max\_\-path\_\-types}}
+\index{e\_\-max\_\-path\_\-types@{e\_\-max\_\-path\_\-types}!files@{files}}
+\subsubsection[{e\_\-max\_\-path\_\-types}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-path\_\-types}}}
+\label{group__files_gac6a8a4db7a7de5fbc21188399713c7ee}
+
+
+Constants that determine the output of \hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform()}. \begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_gaaf8f3fbe8b4ab0b73258a6b782461867}{e\_\-max\_\-path\_\-styles} 
+
+\hyperlink{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{path\_\-nameconform()} 
+\end{DoxySeeAlso}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{PATH\_\-TYPE\_\-IGNORE@{PATH\_\-TYPE\_\-IGNORE}!files@{files}}\index{files@{files}!PATH\_\-TYPE\_\-IGNORE@{PATH\_\-TYPE\_\-IGNORE}}\item[{\em 
+\hypertarget{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea1a5d068eb3dae46260f4253802e3e28b}{
+PATH\_\-TYPE\_\-IGNORE}
+\label{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea1a5d068eb3dae46260f4253802e3e28b}
+}]ignore \index{PATH\_\-TYPE\_\-ABSOLUTE@{PATH\_\-TYPE\_\-ABSOLUTE}!files@{files}}\index{files@{files}!PATH\_\-TYPE\_\-ABSOLUTE@{PATH\_\-TYPE\_\-ABSOLUTE}}\item[{\em 
+\hypertarget{group__files_ggac6a8a4db7a7de5fbc21188399713c7eead850bb682f8d77498e849865e90fa449}{
+PATH\_\-TYPE\_\-ABSOLUTE}
+\label{group__files_ggac6a8a4db7a7de5fbc21188399713c7eead850bb682f8d77498e849865e90fa449}
+}]absolute path \index{PATH\_\-TYPE\_\-RELATIVE@{PATH\_\-TYPE\_\-RELATIVE}!files@{files}}\index{files@{files}!PATH\_\-TYPE\_\-RELATIVE@{PATH\_\-TYPE\_\-RELATIVE}}\item[{\em 
+\hypertarget{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea0acdd2cb86fc9700e407d57cb6818746}{
+PATH\_\-TYPE\_\-RELATIVE}
+\label{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea0acdd2cb86fc9700e407d57cb6818746}
+}]relative path \index{PATH\_\-TYPE\_\-BOOT@{PATH\_\-TYPE\_\-BOOT}!files@{files}}\index{files@{files}!PATH\_\-TYPE\_\-BOOT@{PATH\_\-TYPE\_\-BOOT}}\item[{\em 
+\hypertarget{group__files_ggac6a8a4db7a7de5fbc21188399713c7eeac1a379d26316cf1d35ec7c24ce9671fd}{
+PATH\_\-TYPE\_\-BOOT}
+\label{group__files_ggac6a8a4db7a7de5fbc21188399713c7eeac1a379d26316cf1d35ec7c24ce9671fd}
+}]boot path \index{PATH\_\-TYPE\_\-C74@{PATH\_\-TYPE\_\-C74}!files@{files}}\index{files@{files}!PATH\_\-TYPE\_\-C74@{PATH\_\-TYPE\_\-C74}}\item[{\em 
+\hypertarget{group__files_ggac6a8a4db7a7de5fbc21188399713c7eeadb5b0a35c5564b3b96ec928bf88ae0db}{
+PATH\_\-TYPE\_\-C74}
+\label{group__files_ggac6a8a4db7a7de5fbc21188399713c7eeadb5b0a35c5564b3b96ec928bf88ae0db}
+}]Cycling '74 folder. \index{PATH\_\-TYPE\_\-PATH@{PATH\_\-TYPE\_\-PATH}!files@{files}}\index{files@{files}!PATH\_\-TYPE\_\-PATH@{PATH\_\-TYPE\_\-PATH}}\item[{\em 
+\hypertarget{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea76c8d7d75dcb6ac1080713187390197c}{
+PATH\_\-TYPE\_\-PATH}
+\label{group__files_ggac6a8a4db7a7de5fbc21188399713c7eea76c8d7d75dcb6ac1080713187390197c}
+}]path \end{description}
+\end{Desc}
+
+\hypertarget{group__files_gaf61f48b912d9a2942d962ab5e61688fd}{
+\index{files@{files}!e\_\-max\_\-sysfile\_\-posmodes@{e\_\-max\_\-sysfile\_\-posmodes}}
+\index{e\_\-max\_\-sysfile\_\-posmodes@{e\_\-max\_\-sysfile\_\-posmodes}!files@{files}}
+\subsubsection[{e\_\-max\_\-sysfile\_\-posmodes}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-sysfile\_\-posmodes}}}
+\label{group__files_gaf61f48b912d9a2942d962ab5e61688fd}
+
+
+Modes used by \hyperlink{group__files_gab832835d3d607efef4baeca7a059c6c0}{sysfile\_\-setpos()}. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{SYSFILE\_\-ATMARK@{SYSFILE\_\-ATMARK}!files@{files}}\index{files@{files}!SYSFILE\_\-ATMARK@{SYSFILE\_\-ATMARK}}\item[{\em 
+\hypertarget{group__files_ggaf61f48b912d9a2942d962ab5e61688fda912f3ce009e04501285d5e029edef84a}{
+SYSFILE\_\-ATMARK}
+\label{group__files_ggaf61f48b912d9a2942d962ab5e61688fda912f3ce009e04501285d5e029edef84a}
+}]? \index{SYSFILE\_\-FROMSTART@{SYSFILE\_\-FROMSTART}!files@{files}}\index{files@{files}!SYSFILE\_\-FROMSTART@{SYSFILE\_\-FROMSTART}}\item[{\em 
+\hypertarget{group__files_ggaf61f48b912d9a2942d962ab5e61688fdaf0d10ac5a565be0a7af62c2ed4ca16ec}{
+SYSFILE\_\-FROMSTART}
+\label{group__files_ggaf61f48b912d9a2942d962ab5e61688fdaf0d10ac5a565be0a7af62c2ed4ca16ec}
+}]Calculate the file position from the start of the file. \index{SYSFILE\_\-FROMLEOF@{SYSFILE\_\-FROMLEOF}!files@{files}}\index{files@{files}!SYSFILE\_\-FROMLEOF@{SYSFILE\_\-FROMLEOF}}\item[{\em 
+\hypertarget{group__files_ggaf61f48b912d9a2942d962ab5e61688fda25ca6f4d91093fcf6ae3646376c7433c}{
+SYSFILE\_\-FROMLEOF}
+\label{group__files_ggaf61f48b912d9a2942d962ab5e61688fda25ca6f4d91093fcf6ae3646376c7433c}
+}]Calculate the file position from the logical end of the file. \index{SYSFILE\_\-FROMMARK@{SYSFILE\_\-FROMMARK}!files@{files}}\index{files@{files}!SYSFILE\_\-FROMMARK@{SYSFILE\_\-FROMMARK}}\item[{\em 
+\hypertarget{group__files_ggaf61f48b912d9a2942d962ab5e61688fda016f69a42070b5f2babbb1edd4fb27c0}{
+SYSFILE\_\-FROMMARK}
+\label{group__files_ggaf61f48b912d9a2942d962ab5e61688fda016f69a42070b5f2babbb1edd4fb27c0}
+}]Calculate the file position from the current file position. \end{description}
+\end{Desc}
+
+\hypertarget{group__files_ga77d70855c1424d078789b0abe6bc94cd}{
+\index{files@{files}!e\_\-max\_\-sysfile\_\-textflags@{e\_\-max\_\-sysfile\_\-textflags}}
+\index{e\_\-max\_\-sysfile\_\-textflags@{e\_\-max\_\-sysfile\_\-textflags}!files@{files}}
+\subsubsection[{e\_\-max\_\-sysfile\_\-textflags}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf e\_\-max\_\-sysfile\_\-textflags}}}
+\label{group__files_ga77d70855c1424d078789b0abe6bc94cd}
+
+
+Flags used reading and writing text files. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{TEXT\_\-LB\_\-NATIVE@{TEXT\_\-LB\_\-NATIVE}!files@{files}}\index{files@{files}!TEXT\_\-LB\_\-NATIVE@{TEXT\_\-LB\_\-NATIVE}}\item[{\em 
+\hypertarget{group__files_gga77d70855c1424d078789b0abe6bc94cda37e835ecc979f299ceb51fd54a7846ff}{
+TEXT\_\-LB\_\-NATIVE}
+\label{group__files_gga77d70855c1424d078789b0abe6bc94cda37e835ecc979f299ceb51fd54a7846ff}
+}]Use the linebreak format native to the current platform. \index{TEXT\_\-LB\_\-MAC@{TEXT\_\-LB\_\-MAC}!files@{files}}\index{files@{files}!TEXT\_\-LB\_\-MAC@{TEXT\_\-LB\_\-MAC}}\item[{\em 
+\hypertarget{group__files_gga77d70855c1424d078789b0abe6bc94cda6b36993d91f168f154e0163f11f8cd18}{
+TEXT\_\-LB\_\-MAC}
+\label{group__files_gga77d70855c1424d078789b0abe6bc94cda6b36993d91f168f154e0163f11f8cd18}
+}]Use Macintosh line breaks. \index{TEXT\_\-LB\_\-PC@{TEXT\_\-LB\_\-PC}!files@{files}}\index{files@{files}!TEXT\_\-LB\_\-PC@{TEXT\_\-LB\_\-PC}}\item[{\em 
+\hypertarget{group__files_gga77d70855c1424d078789b0abe6bc94cda1d0804396bf70029f4ad5be27da0fe59}{
+TEXT\_\-LB\_\-PC}
+\label{group__files_gga77d70855c1424d078789b0abe6bc94cda1d0804396bf70029f4ad5be27da0fe59}
+}]Use Windows line breaks. \index{TEXT\_\-LB\_\-UNIX@{TEXT\_\-LB\_\-UNIX}!files@{files}}\index{files@{files}!TEXT\_\-LB\_\-UNIX@{TEXT\_\-LB\_\-UNIX}}\item[{\em 
+\hypertarget{group__files_gga77d70855c1424d078789b0abe6bc94cda7832bdacfe3511733462b2550882c852}{
+TEXT\_\-LB\_\-UNIX}
+\label{group__files_gga77d70855c1424d078789b0abe6bc94cda7832bdacfe3511733462b2550882c852}
+}]Use Unix line breaks. \index{TEXT\_\-ENCODING\_\-USE\_\-FILE@{TEXT\_\-ENCODING\_\-USE\_\-FILE}!files@{files}}\index{files@{files}!TEXT\_\-ENCODING\_\-USE\_\-FILE@{TEXT\_\-ENCODING\_\-USE\_\-FILE}}\item[{\em 
+\hypertarget{group__files_gga77d70855c1424d078789b0abe6bc94cdae170ce3b6665f929791e1cfcc00d9eee}{
+TEXT\_\-ENCODING\_\-USE\_\-FILE}
+\label{group__files_gga77d70855c1424d078789b0abe6bc94cdae170ce3b6665f929791e1cfcc00d9eee}
+}]If this flag is not set then the encoding is forced to UTF8. \index{TEXT\_\-NULL\_\-TERMINATE@{TEXT\_\-NULL\_\-TERMINATE}!files@{files}}\index{files@{files}!TEXT\_\-NULL\_\-TERMINATE@{TEXT\_\-NULL\_\-TERMINATE}}\item[{\em 
+\hypertarget{group__files_gga77d70855c1424d078789b0abe6bc94cda134f84529c248946c91917a1e341a0db}{
+TEXT\_\-NULL\_\-TERMINATE}
+\label{group__files_gga77d70855c1424d078789b0abe6bc94cda134f84529c248946c91917a1e341a0db}
+}]Terminate memory returned from \hyperlink{group__files_gabb35e28302ee972648e61f9a5a61b96a}{sysfile\_\-readtextfile()} with a NULL character. \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__files_ga30ae954756330e63f7b70fd5d312a90b}{
+\index{files@{files}!fileusage\_\-addfile@{fileusage\_\-addfile}}
+\index{fileusage\_\-addfile@{fileusage\_\-addfile}!files@{files}}
+\subsubsection[{fileusage\_\-addfile}]{\setlength{\rightskip}{0pt plus 5cm}void fileusage\_\-addfile (void $\ast$ {\em w}, \/  long {\em flags}, \/  char $\ast$ {\em name}, \/  short {\em path})}}
+\label{group__files_ga30ae954756330e63f7b70fd5d312a90b}
+
+
+Add a file to a collective. 
+\begin{DoxyParams}{Parameters}
+\item[{\em w}]Handle for the collective builder. \item[{\em flags}]If flags == 1, copy this file to support folder of an app instead of to the collective in an app. \item[{\em name}]The name of the file. \item[{\em path}]The path of the file to add. \end{DoxyParams}
+\hypertarget{group__files_gab81ffeda175d0b35f112d8f21ba6e819}{
+\index{files@{files}!filewatcher\_\-new@{filewatcher\_\-new}}
+\index{filewatcher\_\-new@{filewatcher\_\-new}!files@{files}}
+\subsubsection[{filewatcher\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ filewatcher\_\-new ({\bf t\_\-object} $\ast$ {\em owner}, \/  short {\em path}, \/  char $\ast$ {\em filename})}}
+\label{group__files_gab81ffeda175d0b35f112d8f21ba6e819}
+
+
+Create a new filewatcher. The file will not be actively watched until filewatcher\_\-start() is called. The filewatcher can be freed using \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em owner}]Your object. This object will receive the message \char`\"{}filechanged\char`\"{} when the watcher sees a change in the file or folder. \item[{\em path}]The path in which the file being watched resides, or the path of the folder being watched. \item[{\em filename}]The name of the file being watched, or an empty string if you are simply watching the folder specified by path. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the new filewatcher. 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The \char`\"{}filechanged\char`\"{} method should have the prototype: 
+\begin{DoxyCode}
+    void myObject_filechanged(t_myObject *x, char *filename, short path);
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{
+\index{files@{files}!locatefile@{locatefile}}
+\index{locatefile@{locatefile}!files@{files}}
+\subsubsection[{locatefile}]{\setlength{\rightskip}{0pt plus 5cm}short locatefile (char $\ast$ {\em name}, \/  short $\ast$ {\em outvol}, \/  short $\ast$ {\em binflag})}}
+\label{group__files_ga4d2637351d4a98b83e9a59ef7d500568}
+
+
+Find a Max document by name in the search path. This routine performs the same function as the routine \hyperlink{group__files_ga6be29f366820a4cd2aa4f77bcfad362e}{path\_\-getdefault()}. \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile()} searches through the directories specified by the user for Patcher files and tables in the File Preferences dialog as well as the current default path (see path\_\-getdefault) and the directory containing the Max application
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]A C string that is the name of the file to look for. \item[{\em outvol}]The Path ID containing the location of the file if it is found. \item[{\em binflag}]If the file found is in binary format (it’s of type ‘maxb’) 1 is returned here; if it’s in text format, 0 is returned.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If a file is found with the name specified by filename, locatefile returns 0, otherwise it returns non-\/zero.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+filename and vol can then be passed to binbuf\_\-read to read and open file the file. When using MAXplay, the search path consists of all subdirectories of the directory containing the MAXplay application. locatefile only searches for files of type ‘maxb’ and ‘TEXT.’
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_gaa2899b66e1457da0ee333f9407230ccd}{
+\index{files@{files}!locatefile\_\-extended@{locatefile\_\-extended}}
+\index{locatefile\_\-extended@{locatefile\_\-extended}!files@{files}}
+\subsubsection[{locatefile\_\-extended}]{\setlength{\rightskip}{0pt plus 5cm}short locatefile\_\-extended (char $\ast$ {\em name}, \/  short $\ast$ {\em outvol}, \/  long $\ast$ {\em outtype}, \/  long $\ast$ {\em filetypelist}, \/  short {\em numtypes})}}
+\label{group__files_gaa2899b66e1457da0ee333f9407230ccd}
+
+
+Find a Max document by name in the search path. This is the preferred method for file searching since its introduction in Max version 4.
+
+This routine performs the same function as the routine \hyperlink{group__files_ga6be29f366820a4cd2aa4f77bcfad362e}{path\_\-getdefault()}. \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile()} searches through the directories specified by the user for Patcher files and tables in the File Preferences dialog as well as the current default path (see path\_\-getdefault) and the directory containing the Max application
+
+\begin{DoxyVersion}{Version}
+4.0
+\end{DoxyVersion}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The file name for the search, receives actual filename. \item[{\em outvol}]The Path ID of the file (if found). \item[{\em outtype}]The file type of the file (if found). \item[{\em filetypelist}]The file type(s) that you are searching for. \item[{\em numtypes}]The number of file types in the typelist array (1 if a single entry).\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If a file is found with the name specified by filename, locatefile returns 0, otherwise it returns non-\/zero.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The old file search routines \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile()} and \hyperlink{group__files_ga8f43f2c9eb53933bbf354997eebb495d}{locatefiletype()} are still supported in Max 4, but the use of a new routine \hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} is highly recommended. However, \hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} has an important difference from \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile()} and \hyperlink{group__files_ga8f43f2c9eb53933bbf354997eebb495d}{locatefiletype()} that may require some rewriting of your code. {\itshape It modifies its name parameter\/} in certain cases, while \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile()} and \hyperlink{group__files_ga8f43f2c9eb53933bbf354997eebb495d}{locatefiletype()} do not. The two cases where it could modify the incoming filename string are 1) when an alias is specified, the file pointed to by the alias is returned; and 2) when a full path is specified, the output is the filename plus the path number of the folder it's in.
+\end{DoxyRemark}
+This is important because many people pass the s\_\-name field of a \hyperlink{structt__symbol}{t\_\-symbol} to \hyperlink{group__files_ga4d2637351d4a98b83e9a59ef7d500568}{locatefile()}. If the name field of a \hyperlink{structt__symbol}{t\_\-symbol} were to be modified, the symbol table would be corrupted. To avoid this problem, use \hyperlink{group__misc_ga0022303fac866c8f5757aa56b67ce29d}{strncpy\_\-zero()} to copy the contents of a \hyperlink{structt__symbol}{t\_\-symbol} to a character string first, as shown below: 
+\begin{DoxyCode}
+    char filename[MAX_FILENAME_CHARS]; 
+    strncpy_zero(filename,str->s_name, MAX_FILENAME_CHARS); 
+    result = locatefile_extended(filename,&path,&type,typelist,1); 
+\end{DoxyCode}
+ \hypertarget{group__files_ga8f43f2c9eb53933bbf354997eebb495d}{
+\index{files@{files}!locatefiletype@{locatefiletype}}
+\index{locatefiletype@{locatefiletype}!files@{files}}
+\subsubsection[{locatefiletype}]{\setlength{\rightskip}{0pt plus 5cm}short locatefiletype (char $\ast$ {\em name}, \/  short $\ast$ {\em outvol}, \/  long {\em filetype}, \/  long {\em creator})}}
+\label{group__files_ga8f43f2c9eb53933bbf354997eebb495d}
+
+
+Find a Max document by name in the search path. This function searches through the same directories as locatefile, but allows you to specify a type and creator of your own.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]A C string that is the name of the file to look for. \item[{\em outvol}]The Path ID containing the location of the file if it is found. \item[{\em filetype}]The filetype of the file to look for. If you pass 0L, files of all filetypes are considered. \item[{\em creator}]The creator of the file to look for. If you pass 0L, files with any creator are considered.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If a file is found with the name specified by filename, locatefile returns 0, otherwise it returns non-\/zero.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{
+\index{files@{files}!open\_\-dialog@{open\_\-dialog}}
+\index{open\_\-dialog@{open\_\-dialog}!files@{files}}
+\subsubsection[{open\_\-dialog}]{\setlength{\rightskip}{0pt plus 5cm}short open\_\-dialog (char $\ast$ {\em name}, \/  short $\ast$ {\em volptr}, \/  long $\ast$ {\em typeptr}, \/  long $\ast$ {\em types}, \/  short {\em ntypes})}}
+\label{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}
+
+
+Present the user with the standard open file dialog. This function is convenient wrapper for using Mac OS Navigation Services or Standard File for opening files.
+
+The mapping of extensions to types is configured in the C74:/init/max-\/fileformats.txt file. The standard types to use for Max files are ‘maxb’ for old-\/format binary files, ‘TEXT’ for text files, and 'JSON' for newer format patchers or other .json files.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]A C-\/string that will receive the name of the file the user wants to open. The C-\/string should be allocated with a size of at least \hyperlink{group__files_ga481556de2ccf516a499525edebc45ee8}{MAX\_\-FILENAME\_\-CHARS}. \item[{\em volptr}]Receives the Path ID of the file the user wants to open. \item[{\em typeptr}]The file type of the file the user wants to open. \item[{\em types}]A list of file types to display. This is not limited to 4 types as in the SFGetFile() trap. Pass NULL to display all types. \item[{\em ntypes}]The number of file types in typelist. Pass 0 to display all types.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if the user clicked Open in the dialog box. If the user cancelled, \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} returns a non-\/zero value.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended()} 
+
+\hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_gaff6d7264cad52c579b9373870bed50db}{
+\index{files@{files}!open\_\-promptset@{open\_\-promptset}}
+\index{open\_\-promptset@{open\_\-promptset}!files@{files}}
+\subsubsection[{open\_\-promptset}]{\setlength{\rightskip}{0pt plus 5cm}void open\_\-promptset (char $\ast$ {\em s})}}
+\label{group__files_gaff6d7264cad52c579b9373870bed50db}
+
+
+Use \hyperlink{group__files_gaff6d7264cad52c579b9373870bed50db}{open\_\-promptset()} to add a prompt message to the open file dialog displayed by \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()}. Calling this function before \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} permits a string to displayed in the dialog box instructing the user as to the purpose of the file being opened. It will only apply to the call of \hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} that immediately follows \hyperlink{group__files_gaff6d7264cad52c579b9373870bed50db}{open\_\-promptset()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]A C-\/string containing the prompt you wish to display in the dialog box. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ignore.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_ga63ca3fd6e4acb9f1b1e56b2d609bf4af}{
+\index{files@{files}!path\_\-closefolder@{path\_\-closefolder}}
+\index{path\_\-closefolder@{path\_\-closefolder}!files@{files}}
+\subsubsection[{path\_\-closefolder}]{\setlength{\rightskip}{0pt plus 5cm}void path\_\-closefolder (void $\ast$ {\em x})}}
+\label{group__files_ga63ca3fd6e4acb9f1b1e56b2d609bf4af}
+
+
+Complete a directory iteration. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The “folder state” value originally returned by \hyperlink{group__files_ga80aa97732be321d9f2e2212485e0367a}{path\_\-openfolder()}. \end{DoxyParams}
+\hypertarget{group__files_ga044310e9440119f12c57e9b985a9e1a3}{
+\index{files@{files}!path\_\-createsysfile@{path\_\-createsysfile}}
+\index{path\_\-createsysfile@{path\_\-createsysfile}!files@{files}}
+\subsubsection[{path\_\-createsysfile}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-createsysfile (char $\ast$ {\em name}, \/  short {\em path}, \/  long {\em type}, \/  {\bf t\_\-filehandle} $\ast$ {\em ref})}}
+\label{group__files_ga044310e9440119f12c57e9b985a9e1a3}
+
+
+Create a file given a type code, a filename, and a Path ID. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the file to be opened. \item[{\em path}]The Path ID of the file to be opened. \item[{\em type}]The file type of the created file. \item[{\em ref}]A \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} reference to the opened file will be returned in this parameter. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gab07291dc4afe564d85e458918da19df1}{
+\index{files@{files}!path\_\-fileinfo@{path\_\-fileinfo}}
+\index{path\_\-fileinfo@{path\_\-fileinfo}!files@{files}}
+\subsubsection[{path\_\-fileinfo}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-fileinfo (char $\ast$ {\em name}, \/  short {\em path}, \/  void $\ast$ {\em info})}}
+\label{group__files_gab07291dc4afe564d85e458918da19df1}
+
+
+Retrive a \hyperlink{structt__fileinfo}{t\_\-fileinfo} structure from a file/path combination. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The file name to be queried. \item[{\em path}]The Path ID of the file. \item[{\em info}]The address of a \hyperlink{structt__fileinfo}{t\_\-fileinfo} structure to contain the file information.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 if successful, otherwise it returns an OS-\/specific error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga50f5d1b1d008024bffd65155be7e2721}{
+\index{files@{files}!path\_\-foldernextfile@{path\_\-foldernextfile}}
+\index{path\_\-foldernextfile@{path\_\-foldernextfile}!files@{files}}
+\subsubsection[{path\_\-foldernextfile}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-foldernextfile (void $\ast$ {\em xx}, \/  long $\ast$ {\em filetype}, \/  char $\ast$ {\em name}, \/  short {\em descend})}}
+\label{group__files_ga50f5d1b1d008024bffd65155be7e2721}
+
+
+Get the next file in the directory. In conjunction with \hyperlink{group__files_ga80aa97732be321d9f2e2212485e0367a}{path\_\-openfolder()} and \hyperlink{group__files_ga63ca3fd6e4acb9f1b1e56b2d609bf4af}{path\_\-closefolder()}, this routine allows you to iterate through all of the files in a path.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em xx}]The “folder state” value returned by \hyperlink{group__files_ga80aa97732be321d9f2e2212485e0367a}{path\_\-openfolder()}. \item[{\em filetype}]Contains the file type of the file type on return. \item[{\em name}]Contains the file name of the next file on return. \item[{\em descend}]Unused. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns non-\/zero if successful, and zero when there are no more files. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_ga9ed75cc34f42beefdd8d3075ae2dbe53}{e\_\-max\_\-path\_\-folder\_\-flags} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_ga8c688029042bf8a21d9f1c87561be8da}{
+\index{files@{files}!path\_\-frompathname@{path\_\-frompathname}}
+\index{path\_\-frompathname@{path\_\-frompathname}!files@{files}}
+\subsubsection[{path\_\-frompathname}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-frompathname (char $\ast$ {\em name}, \/  short $\ast$ {\em path}, \/  char $\ast$ {\em filename})}}
+\label{group__files_ga8c688029042bf8a21d9f1c87561be8da}
+
+
+Create a filename and Path ID combination from a fully qualified file name. Note that \hyperlink{group__files_ga8c688029042bf8a21d9f1c87561be8da}{path\_\-frompathname()} does not require that the file actually exist. In this way you can use it to convert a full path you may have received as an argument to a file writing message to a form appropriate to provide to a routine such as path\_\-createfile().
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The extended file path to be converted. \item[{\em path}]Contains the Path ID on return. \item[{\em filename}]Contains the file name on return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 if successful, otherwise it returns an OS-\/specific error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gafa1b5d658654eb52b748c0b94200f393}{
+\index{files@{files}!path\_\-getapppath@{path\_\-getapppath}}
+\index{path\_\-getapppath@{path\_\-getapppath}!files@{files}}
+\subsubsection[{path\_\-getapppath}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-getapppath (void)}}
+\label{group__files_gafa1b5d658654eb52b748c0b94200f393}
+
+
+Retrieve the Path ID of the Max application. \begin{DoxyReturn}{Returns}
+The path id. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga6be29f366820a4cd2aa4f77bcfad362e}{
+\index{files@{files}!path\_\-getdefault@{path\_\-getdefault}}
+\index{path\_\-getdefault@{path\_\-getdefault}!files@{files}}
+\subsubsection[{path\_\-getdefault}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-getdefault (void)}}
+\label{group__files_ga6be29f366820a4cd2aa4f77bcfad362e}
+
+
+Retrieve the Path ID of the default search path. \begin{DoxyReturn}{Returns}
+The path id of the default search path. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga834e354ef2df52e88d0643e503c4bf6c}{
+\index{files@{files}!path\_\-getfilemoddate@{path\_\-getfilemoddate}}
+\index{path\_\-getfilemoddate@{path\_\-getfilemoddate}!files@{files}}
+\subsubsection[{path\_\-getfilemoddate}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-getfilemoddate (char $\ast$ {\em filename}, \/  short {\em path}, \/  unsigned long $\ast$ {\em date})}}
+\label{group__files_ga834e354ef2df52e88d0643e503c4bf6c}
+
+
+Determine the modification date of the selected file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em filename}]The name of the file to query. \item[{\em path}]The Path ID of the file. \item[{\em date}]The last modification date of the file upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga6adeb9993cc360ea2e36a47b1a67dd95}{
+\index{files@{files}!path\_\-getmoddate@{path\_\-getmoddate}}
+\index{path\_\-getmoddate@{path\_\-getmoddate}!files@{files}}
+\subsubsection[{path\_\-getmoddate}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-getmoddate (short {\em path}, \/  unsigned long $\ast$ {\em date})}}
+\label{group__files_ga6adeb9993cc360ea2e36a47b1a67dd95}
+
+
+Determine the modification date of the selected path. 
+\begin{DoxyParams}{Parameters}
+\item[{\em path}]The Path ID of the directory to check. \item[{\em date}]The last modification date of the directory. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gaaf014af82bc666cd974b83441eb4c9c6}{
+\index{files@{files}!path\_\-nameconform@{path\_\-nameconform}}
+\index{path\_\-nameconform@{path\_\-nameconform}!files@{files}}
+\subsubsection[{path\_\-nameconform}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-nameconform (char $\ast$ {\em src}, \/  char $\ast$ {\em dst}, \/  long {\em style}, \/  long {\em type})}}
+\label{group__files_gaaf014af82bc666cd974b83441eb4c9c6}
+
+
+Convert a source path string to destination path string using the specified style and type. 
+\begin{DoxyParams}{Parameters}
+\item[{\em src}]A pointer to source character string to be converted. \item[{\em dst}]A pointer to destination character string. \item[{\em style}]The destination filepath style, as defined in \hyperlink{group__files_gaaf8f3fbe8b4ab0b73258a6b782461867}{e\_\-max\_\-path\_\-styles} \item[{\em type}]The destination filepath type, as defined in \hyperlink{group__files_gac6a8a4db7a7de5fbc21188399713c7ee}{e\_\-max\_\-path\_\-types} \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_ga513fe2710e225c840d9295fb9884607b}{MAX\_\-PATH\_\-CHARS} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_ga80aa97732be321d9f2e2212485e0367a}{
+\index{files@{files}!path\_\-openfolder@{path\_\-openfolder}}
+\index{path\_\-openfolder@{path\_\-openfolder}!files@{files}}
+\subsubsection[{path\_\-openfolder}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ path\_\-openfolder (short {\em path})}}
+\label{group__files_ga80aa97732be321d9f2e2212485e0367a}
+
+
+Prepare a directory for iteration. 
+\begin{DoxyParams}{Parameters}
+\item[{\em path}]The directory Path ID to open. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The return value of this routine is an internal “folder state” structure used for further folder manipulation. It should be saved and used for calls to \hyperlink{group__files_ga50f5d1b1d008024bffd65155be7e2721}{path\_\-foldernextfile()} and \hyperlink{group__files_ga63ca3fd6e4acb9f1b1e56b2d609bf4af}{path\_\-closefolder()}. If the folder cannot be found or accessed, \hyperlink{group__files_ga80aa97732be321d9f2e2212485e0367a}{path\_\-openfolder()} returns 0. 
+\end{DoxyReturn}
+\hypertarget{group__files_gaf244aeb070e1903461070cd7dbe04bf4}{
+\index{files@{files}!path\_\-opensysfile@{path\_\-opensysfile}}
+\index{path\_\-opensysfile@{path\_\-opensysfile}!files@{files}}
+\subsubsection[{path\_\-opensysfile}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-opensysfile (char $\ast$ {\em name}, \/  short {\em path}, \/  {\bf t\_\-filehandle} $\ast$ {\em ref}, \/  short {\em perm})}}
+\label{group__files_gaf244aeb070e1903461070cd7dbe04bf4}
+
+
+Open a file given a filename and Path ID. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the file to be opened. \item[{\em path}]The Path ID of the file to be opened. \item[{\em ref}]A \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} reference to the opened file will be returned in this parameter. \item[{\em perm}]The permission for the opened file as defined in \hyperlink{group__files_ga51fbee9f65e7ece2cae5c1e34150b7b3}{e\_\-max\_\-openfile\_\-permissions}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gaa6b2d2754cc0ba75a93deb186d326be8}{
+\index{files@{files}!path\_\-resolvefile@{path\_\-resolvefile}}
+\index{path\_\-resolvefile@{path\_\-resolvefile}!files@{files}}
+\subsubsection[{path\_\-resolvefile}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-resolvefile (char $\ast$ {\em name}, \/  short {\em path}, \/  short $\ast$ {\em outpath})}}
+\label{group__files_gaa6b2d2754cc0ba75a93deb186d326be8}
+
+
+Resolve a Path ID plus a (possibly extended) file name into a path that identifies the file’s directory and a filename. This routine converts a name and Path ID to a standard form in which the name has no path information and does not refer to an aliased file.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]A file name (which may be fully or partially qualified), will contain the file name on return. \item[{\em path}]The Path ID to be resolved. \item[{\em outpath}]The Path ID of the returned file name.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 if successful. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga57ecd9b35a253cc980f911c7f7c1854b}{
+\index{files@{files}!path\_\-setdefault@{path\_\-setdefault}}
+\index{path\_\-setdefault@{path\_\-setdefault}!files@{files}}
+\subsubsection[{path\_\-setdefault}]{\setlength{\rightskip}{0pt plus 5cm}void path\_\-setdefault (short {\em path}, \/  short {\em recursive})}}
+\label{group__files_ga57ecd9b35a253cc980f911c7f7c1854b}
+
+
+Install a path as the default search path. The default path is searched before the Max search path. For instance, when loading a patcher from a directory outside the search path, the patcher’s directory is searched for files before the search path. \hyperlink{group__files_ga57ecd9b35a253cc980f911c7f7c1854b}{path\_\-setdefault()} allows you to set a path as the default.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em path}]The path to use as the search path. If path is already part of the Max Search path, it will not be added (since, by default, it will be searched during file searches). \item[{\em recursive}]If non-\/zero, all subdirectories will be installed in the default search list. Be very careful with the use of the recursive argument—it has the capacity to slow down file searches dramatically as the list of folders is being built. Max itself never creates a hierarchical default search path. \end{DoxyParams}
+\hypertarget{group__files_gacfce0e7df61bc36f82c61ff2bbf73ffb}{
+\index{files@{files}!path\_\-topathname@{path\_\-topathname}}
+\index{path\_\-topathname@{path\_\-topathname}!files@{files}}
+\subsubsection[{path\_\-topathname}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-topathname (short {\em path}, \/  char $\ast$ {\em file}, \/  char $\ast$ {\em name})}}
+\label{group__files_gacfce0e7df61bc36f82c61ff2bbf73ffb}
+
+
+Create a fully qualified file name from a Path ID/file name combination. Unlike \hyperlink{group__files_ga80ffef5b7e9ac12ef33dd048a0607133}{path\_\-topotentialname()}, this routine will only convert a pathname pair to a valid path string if the path exists.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em path}]The path to be used. \item[{\em file}]The file name to be used. \item[{\em name}]Loaded with the fully extended file name on return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 if successful, otherwise it returns an OS-\/specific error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga80ffef5b7e9ac12ef33dd048a0607133}{
+\index{files@{files}!path\_\-topotentialname@{path\_\-topotentialname}}
+\index{path\_\-topotentialname@{path\_\-topotentialname}!files@{files}}
+\subsubsection[{path\_\-topotentialname}]{\setlength{\rightskip}{0pt plus 5cm}short path\_\-topotentialname (short {\em path}, \/  char $\ast$ {\em file}, \/  char $\ast$ {\em name}, \/  short {\em check})}}
+\label{group__files_ga80ffef5b7e9ac12ef33dd048a0607133}
+
+
+Create a fully qualified file name from a Path ID/file name combination, regardless of whether or not the file exists on disk. 
+\begin{DoxyParams}{Parameters}
+\item[{\em path}]The path to be used. \item[{\em file}]The file name to be used. \item[{\em name}]Loaded with the fully extended file name on return. \item[{\em check}]Flag to check if a file with the given path exists. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 if successful, otherwise it returns an OS-\/specific error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_gacfce0e7df61bc36f82c61ff2bbf73ffb}{path\_\-topathname()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_gaf526009ce84aed6f6213c4a99f6bd72d}{
+\index{files@{files}!saveas\_\-dialog@{saveas\_\-dialog}}
+\index{saveas\_\-dialog@{saveas\_\-dialog}!files@{files}}
+\subsubsection[{saveas\_\-dialog}]{\setlength{\rightskip}{0pt plus 5cm}short saveas\_\-dialog (char $\ast$ {\em filename}, \/  short $\ast$ {\em path}, \/  short $\ast$ {\em binptr})}}
+\label{group__files_gaf526009ce84aed6f6213c4a99f6bd72d}
+
+
+Present the user with the standard save file dialog. The mapping of extensions to types is configured in the C74:/init/max-\/fileformats.txt file. The standard types to use for Max files are ‘maxb’ for old-\/format binary files, ‘TEXT’ for text files, and 'JSON' for newer format patchers or other .json files.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em filename}]A C-\/string containing a default name for the file to save. If the user decides to save a file, its name is returned here. The C-\/string should be allocated with a size of at least \hyperlink{group__files_ga481556de2ccf516a499525edebc45ee8}{MAX\_\-FILENAME\_\-CHARS}.\item[{\em path}]If the user decides to save the file, the Path ID of the location chosen is returned here.\item[{\em binptr}]Pass NULL for this parameter. This parameter was used in Max 4 to allow the choice of saving binary or text format patchers.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if the user choose to save the file. If the user cancelled, returns a non-\/zero value.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} 
+
+\hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended()} 
+
+\hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_ga16a1f7bdea74c0e0009210a8430d0654}{
+\index{files@{files}!saveas\_\-promptset@{saveas\_\-promptset}}
+\index{saveas\_\-promptset@{saveas\_\-promptset}!files@{files}}
+\subsubsection[{saveas\_\-promptset}]{\setlength{\rightskip}{0pt plus 5cm}void saveas\_\-promptset (char $\ast$ {\em s})}}
+\label{group__files_ga16a1f7bdea74c0e0009210a8430d0654}
+
+
+Use \hyperlink{group__files_ga16a1f7bdea74c0e0009210a8430d0654}{saveas\_\-promptset()} to add a prompt message to the open file dialog displayed by \hyperlink{group__files_gaf526009ce84aed6f6213c4a99f6bd72d}{saveas\_\-dialog()} or \hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended()}. Calling this function before \hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended()} permits a string to displayed in the dialog box instructing the user as to the purpose of the file being opened. It will only apply to the call of \hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended()} that immediately follows \hyperlink{group__files_ga16a1f7bdea74c0e0009210a8430d0654}{saveas\_\-promptset()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]A C-\/string containing the prompt you wish to display in the dialog box. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ignore.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_gad43815aaa436e518a5cc68d2a340e4de}{
+\index{files@{files}!saveasdialog\_\-extended@{saveasdialog\_\-extended}}
+\index{saveasdialog\_\-extended@{saveasdialog\_\-extended}!files@{files}}
+\subsubsection[{saveasdialog\_\-extended}]{\setlength{\rightskip}{0pt plus 5cm}short saveasdialog\_\-extended (char $\ast$ {\em name}, \/  short $\ast$ {\em vol}, \/  long $\ast$ {\em type}, \/  long $\ast$ {\em typelist}, \/  short {\em numtypes})}}
+\label{group__files_gad43815aaa436e518a5cc68d2a340e4de}
+
+
+Present the user with the standard save file dialog with your own list of file types. \hyperlink{group__files_gad43815aaa436e518a5cc68d2a340e4de}{saveasdialog\_\-extended()} is similar to \hyperlink{group__files_gaf526009ce84aed6f6213c4a99f6bd72d}{saveas\_\-dialog()}, but allows the additional feature of specifying a list of possible types. These will be displayed in a pop-\/up menu.
+
+File types found in the typelist argument that match known Max types will be displayed with descriptive text. Unmatched types will simply display the type name (for example, \char`\"{}foXx\char`\"{} is not a standard type so it would be shown in the pop-\/up menu as foXx)
+
+Known file types include:
+\begin{DoxyItemize}
+\item TEXT: text file
+\item maxb: Max binary patcher
+\item maxc: Max collective
+\item Midi: MIDI file
+\item Sd2f: Sound Designer II audio file
+\item NxTS: NeXT/Sun audio file
+\item WAVE: WAVE audio file.
+\item AIFF: AIFF audio file
+\item mP3f: Max preference file
+\item PICT: PICT graphic file
+\item MooV: Quicktime movie file
+\item aPcs: VST plug-\/in
+\item AFxP: VST effect patch data file
+\item AFxB: VST effect bank data file
+\item DATA: Raw data audio file
+\item ULAW: NeXT/Sun audio file
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]A C-\/string containing a default name for the file to save. If the user decides to save a file, its name is returned here. The C-\/string should be allocated with a size of at least \hyperlink{group__files_ga481556de2ccf516a499525edebc45ee8}{MAX\_\-FILENAME\_\-CHARS}.\item[{\em vol}]If the user decides to save the file, the Path ID of the location chosen is returned here.\item[{\em type}]Returns the type of file chosen by the user. \item[{\em typelist}]The list of types provided to the user. \item[{\em numtypes}]The number of file types in typelist.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if the user choose to save the file. If the user cancelled, returns a non-\/zero value.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__files_ga0d8fd0b13e2e623298a45e846af3fe1a}{open\_\-dialog()} 
+
+\hyperlink{group__files_gaa2899b66e1457da0ee333f9407230ccd}{locatefile\_\-extended()} 
+\end{DoxySeeAlso}
+\hypertarget{group__files_gad17b977bcb191648c2856d589c45f0d4}{
+\index{files@{files}!sysfile\_\-close@{sysfile\_\-close}}
+\index{sysfile\_\-close@{sysfile\_\-close}!files@{files}}
+\subsubsection[{sysfile\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-close ({\bf t\_\-filehandle} {\em f})}}
+\label{group__files_gad17b977bcb191648c2856d589c45f0d4}
+
+
+Close a file opened with sysfile\_\-open(). This function is similar to FSClose() or fclose(). It should be used instead of system-\/specific file closing routines in order to make max external code that will compile cross-\/platform.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure of the file the user wants to close. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga0523b180c53fc3e0b5766abc58dc6172}{
+\index{files@{files}!sysfile\_\-geteof@{sysfile\_\-geteof}}
+\index{sysfile\_\-geteof@{sysfile\_\-geteof}!files@{files}}
+\subsubsection[{sysfile\_\-geteof}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-geteof ({\bf t\_\-filehandle} {\em f}, \/  long $\ast$ {\em logeof})}}
+\label{group__files_ga0523b180c53fc3e0b5766abc58dc6172}
+
+
+Get the size of a file handle. This function is similar to and should be used instead of GetEOF(). The function gets the size of file handle in bytes, and places it in “logeof”.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The file's \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure. \item[{\em logeof}]The file size in bytes is returned to this value. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga01c1a63930d986e9661efe25ddbdecd6}{
+\index{files@{files}!sysfile\_\-getpos@{sysfile\_\-getpos}}
+\index{sysfile\_\-getpos@{sysfile\_\-getpos}!files@{files}}
+\subsubsection[{sysfile\_\-getpos}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-getpos ({\bf t\_\-filehandle} {\em f}, \/  long $\ast$ {\em filepos})}}
+\label{group__files_ga01c1a63930d986e9661efe25ddbdecd6}
+
+
+Get the current file position of a file handle. This function is similar to and should be used instead of GetFPos(). The function gets the current file position of file handle in bytes, and places it in \char`\"{}filepos\char`\"{}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The file's \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure. \item[{\em filepos}]The address of a variable to hold the current file position of file handle in bytes. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga493776146a2eabc5857519950f938012}{
+\index{files@{files}!sysfile\_\-openhandle@{sysfile\_\-openhandle}}
+\index{sysfile\_\-openhandle@{sysfile\_\-openhandle}!files@{files}}
+\subsubsection[{sysfile\_\-openhandle}]{\setlength{\rightskip}{0pt plus 5cm}short sysfile\_\-openhandle (char $\ast$$\ast$ {\em h}, \/  long {\em flags}, \/  {\bf t\_\-filehandle} $\ast$ {\em fh})}}
+\label{group__files_ga493776146a2eabc5857519950f938012}
+
+
+Create a \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} from a pre-\/existing handle. 
+\begin{DoxyParams}{Parameters}
+\item[{\em h}]A handle for some data. \item[{\em flags}]Pass 0 (additional flags are private). \item[{\em fh}]The address of a \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} which will be allocated. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga41536c47218a2e623777cab20a6cd3d9}{
+\index{files@{files}!sysfile\_\-openptrsize@{sysfile\_\-openptrsize}}
+\index{sysfile\_\-openptrsize@{sysfile\_\-openptrsize}!files@{files}}
+\subsubsection[{sysfile\_\-openptrsize}]{\setlength{\rightskip}{0pt plus 5cm}short sysfile\_\-openptrsize (char $\ast$ {\em p}, \/  long {\em length}, \/  long {\em flags}, \/  {\bf t\_\-filehandle} $\ast$ {\em fh})}}
+\label{group__files_ga41536c47218a2e623777cab20a6cd3d9}
+
+
+Create a \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} from a pre-\/existing pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]A pointer to some data. \item[{\em length}]The size of p. \item[{\em flags}]Pass 0 (additional flags are private). \item[{\em fh}]The address of a \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} which will be allocated. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gae1ca61adcbe2234246d15bc7d22c4794}{
+\index{files@{files}!sysfile\_\-read@{sysfile\_\-read}}
+\index{sysfile\_\-read@{sysfile\_\-read}!files@{files}}
+\subsubsection[{sysfile\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-read ({\bf t\_\-filehandle} {\em f}, \/  long $\ast$ {\em count}, \/  void $\ast$ {\em bufptr})}}
+\label{group__files_gae1ca61adcbe2234246d15bc7d22c4794}
+
+
+Read a file from disk. This function is similar to FSRead() or fread(). It should be used instead of these functions (or other system-\/specific file reading routines) in order to make max external code that will compile cross-\/platform. It reads “count” bytes from file handle at current file position into “bufptr”. The byte count actually read is set in “count”, and the file position is updated by the actual byte count read.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure of the file the user wants to open. \item[{\em count}]Pointer to the number of bytes that will be read from the file at the current file position. The byte count actually read is returned to this value. \item[{\em bufptr}]Pointer to the buffer that the data will be read into. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gabb35e28302ee972648e61f9a5a61b96a}{
+\index{files@{files}!sysfile\_\-readtextfile@{sysfile\_\-readtextfile}}
+\index{sysfile\_\-readtextfile@{sysfile\_\-readtextfile}!files@{files}}
+\subsubsection[{sysfile\_\-readtextfile}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-readtextfile ({\bf t\_\-filehandle} {\em f}, \/  {\bf t\_\-handle} {\em htext}, \/  long {\em maxlen}, \/  long {\em flags})}}
+\label{group__files_gabb35e28302ee972648e61f9a5a61b96a}
+
+
+Read a text file from disk. This function reads up to the maximum number of bytes given by maxlen from file handle at current file position into the htext handle, performing linebreak translation if set in flags.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure of the text file the user wants to open. \item[{\em htext}]Handle that the data will be read into. \item[{\em maxlen}]The maximum length in bytes to be read into the handle. Passing the value 0L indicates no maximum (i.e. read the entire file). \item[{\em flags}]Flags to set linebreak translation as defined in \hyperlink{group__files_ga77d70855c1424d078789b0abe6bc94cd}{e\_\-max\_\-sysfile\_\-textflags}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga968931fc659e0b0fc13ac29fc1c151b5}{
+\index{files@{files}!sysfile\_\-readtohandle@{sysfile\_\-readtohandle}}
+\index{sysfile\_\-readtohandle@{sysfile\_\-readtohandle}!files@{files}}
+\subsubsection[{sysfile\_\-readtohandle}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-readtohandle ({\bf t\_\-filehandle} {\em f}, \/  char $\ast$$\ast$$\ast$ {\em h})}}
+\label{group__files_ga968931fc659e0b0fc13ac29fc1c151b5}
+
+
+Read the contents of a file into a handle. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The open \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure to read into the handle. \item[{\em h}]The address of a handle into which the file will be read. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+You should free the pointer, when you are done with it, using \hyperlink{group__memory_ga5815994f7d02b77c24f8c684df9acd83}{sysmem\_\-freehandle()}. 
+\end{DoxyRemark}
+\hypertarget{group__files_gaccf3c95c4a25ea46a54bf082c649675e}{
+\index{files@{files}!sysfile\_\-readtoptr@{sysfile\_\-readtoptr}}
+\index{sysfile\_\-readtoptr@{sysfile\_\-readtoptr}!files@{files}}
+\subsubsection[{sysfile\_\-readtoptr}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-readtoptr ({\bf t\_\-filehandle} {\em f}, \/  char $\ast$$\ast$ {\em p})}}
+\label{group__files_gaccf3c95c4a25ea46a54bf082c649675e}
+
+
+Read the contents of a file into a pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The open \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure to read into the handle. \item[{\em p}]The address of a pointer into which the file will be read. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+You should free the pointer, when you are done with it, using \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}. 
+\end{DoxyRemark}
+\hypertarget{group__files_ga6f17a82aafd0afdf89612b8d4c123f6d}{
+\index{files@{files}!sysfile\_\-seteof@{sysfile\_\-seteof}}
+\index{sysfile\_\-seteof@{sysfile\_\-seteof}!files@{files}}
+\subsubsection[{sysfile\_\-seteof}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-seteof ({\bf t\_\-filehandle} {\em f}, \/  long {\em logeof})}}
+\label{group__files_ga6f17a82aafd0afdf89612b8d4c123f6d}
+
+
+Set the size of a file handle. This function is similar to and should be used instead of SetEOF(). The function sets the size of file handle in bytes, specified by “logeof”.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The file's \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure. \item[{\em logeof}]The file size in bytes. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gab832835d3d607efef4baeca7a059c6c0}{
+\index{files@{files}!sysfile\_\-setpos@{sysfile\_\-setpos}}
+\index{sysfile\_\-setpos@{sysfile\_\-setpos}!files@{files}}
+\subsubsection[{sysfile\_\-setpos}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-setpos ({\bf t\_\-filehandle} {\em f}, \/  long {\em mode}, \/  long {\em offset})}}
+\label{group__files_gab832835d3d607efef4baeca7a059c6c0}
+
+
+Set the current file position of a file handle. This function is similar to and should be used instead of SetFPos(). It is used to set the current file position of file handle to by the given number of offset bytes relative to the mode used, as defined in \hyperlink{group__files_gaf61f48b912d9a2942d962ab5e61688fd}{e\_\-max\_\-sysfile\_\-posmodes}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The file's \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure. \item[{\em mode}]Mode from which the offset will be calculated, as defined in \hyperlink{group__files_gaf61f48b912d9a2942d962ab5e61688fd}{e\_\-max\_\-sysfile\_\-posmodes}. \item[{\em offset}]The offset in bytes relative to the mode. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga711ee8ebe5363e23e01d3ffeef67373e}{
+\index{files@{files}!sysfile\_\-spoolcopy@{sysfile\_\-spoolcopy}}
+\index{sysfile\_\-spoolcopy@{sysfile\_\-spoolcopy}!files@{files}}
+\subsubsection[{sysfile\_\-spoolcopy}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-spoolcopy ({\bf t\_\-filehandle} {\em src}, \/  {\bf t\_\-filehandle} {\em dst}, \/  long {\em size})}}
+\label{group__files_ga711ee8ebe5363e23e01d3ffeef67373e}
+
+
+Copy the contents of one file handle to another file handle. 
+\begin{DoxyParams}{Parameters}
+\item[{\em src}]The file handle from which to copy. \item[{\em dst}]The file handle to which the copy is written. \item[{\em size}]The number of bytes to copy. If 0 the size of src will be used. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_ga8272d55e223bfd31e96db15f73be8805}{
+\index{files@{files}!sysfile\_\-write@{sysfile\_\-write}}
+\index{sysfile\_\-write@{sysfile\_\-write}!files@{files}}
+\subsubsection[{sysfile\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-write ({\bf t\_\-filehandle} {\em f}, \/  long $\ast$ {\em count}, \/  const void $\ast$ {\em bufptr})}}
+\label{group__files_ga8272d55e223bfd31e96db15f73be8805}
+
+
+Write part of a file to disk. This function is similar to FSWrite() or fwrite(). It should be used instead of these functions (or other system-\/specific file reading routines) in order to make max external code that will compile cross-\/platform. The function writes “count” bytes from “bufptr” into file handle at current file position. The byte count actually written is set in \char`\"{}count\char`\"{}, and the file position is updated by the actual byte count written.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The t\_\-filehandle structure of the file to which the user wants to write. \item[{\em count}]Pointer to the number of bytes that will be written to the file at the current file position. The byte count actually written is returned to this value. \item[{\em bufptr}]Pointer to the buffer that the data will be read from. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__files_gae07b391866ede8506eb046cf0dd0f17c}{
+\index{files@{files}!sysfile\_\-writetextfile@{sysfile\_\-writetextfile}}
+\index{sysfile\_\-writetextfile@{sysfile\_\-writetextfile}!files@{files}}
+\subsubsection[{sysfile\_\-writetextfile}]{\setlength{\rightskip}{0pt plus 5cm}long sysfile\_\-writetextfile ({\bf t\_\-filehandle} {\em f}, \/  {\bf t\_\-handle} {\em htext}, \/  long {\em flags})}}
+\label{group__files_gae07b391866ede8506eb046cf0dd0f17c}
+
+
+Write a text file to disk. This function writes a text handle to a text file performing linebreak translation if set in flags.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The \hyperlink{group__files_gafcb776aa74d514754e83b30995b5a5d1}{t\_\-filehandle} structure of the text file to which the user wants to write. \item[{\em htext}]Handle that the data that will be read from. \item[{\em flags}]Flags to set linebreak translation as defined in \hyperlink{group__files_ga77d70855c1424d078789b0abe6bc94cd}{e\_\-max\_\-sysfile\_\-textflags}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}

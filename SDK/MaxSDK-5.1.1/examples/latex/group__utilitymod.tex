@@ -1,0 +1,142 @@
+\hypertarget{group__utilitymod}{
+\section{Miscellaneous Utility Module}
+\label{group__utilitymod}\index{Miscellaneous Utility Module@{Miscellaneous Utility Module}}
+}
+
+
+Collaboration diagram for Miscellaneous Utility Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=146pt]{group__utilitymod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \hyperlink{group__utilitymod_ga830cf9c4a9f6e87767dabf29a3610181}{swapf32} (float f)
+\begin{DoxyCompactList}\small\item\em Byte swaps 32 bit floating point number. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__utilitymod_ga8eaccf938b9088a33cf4b794821ce270}{swapf64} (double f)
+\begin{DoxyCompactList}\small\item\em Byte swaps 64 bit floating point number. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__utilitymod_gace84dbb97cc894c7af080f676de34781}{jit\_\-global\_\-critical\_\-enter} (void)
+\begin{DoxyCompactList}\small\item\em Enters the global Jitter critical region. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__utilitymod_gaed36b7cd30e3ac8859cf8808c199b6de}{jit\_\-global\_\-critical\_\-exit} (void)
+\begin{DoxyCompactList}\small\item\em Exits the global Jitter critical region. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__utilitymod_gae0572119ae652a87ae84f181d439d0e9}{jit\_\-error\_\-sym} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Sends symbol based error message to Max console (safe from all threads). \item\end{DoxyCompactList}\item 
+void \hyperlink{group__utilitymod_ga65b95cf6d8f87c67d0333a6baf17aa63}{jit\_\-error\_\-code} (void $\ast$x, t\_\-jit\_\-err v)
+\begin{DoxyCompactList}\small\item\em Sends error code based error message to Max console (safe from all threads). \item\end{DoxyCompactList}\item 
+void \hyperlink{group__utilitymod_ga3b56c14bcf54b8cdc384e8cc95b09c38}{jit\_\-post\_\-sym} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Sends symbol based message to Max console (safe from all threads). \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__utilitymod_gaf2e27f1ee2e100777d3f66fb81b309f0}{jit\_\-err\_\-from\_\-max\_\-err} (\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} err)
+\begin{DoxyCompactList}\small\item\em Converts Max style error codes to Jitter style error codes. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__utilitymod_gaa3768df212e917ec778bf1a8af191c27}{jit\_\-rand\_\-setseed} (long n)
+\begin{DoxyCompactList}\small\item\em Sets global random number generator seed. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__utilitymod_ga5308a31718feaa1735e673fc59f64fd0}{jit\_\-rand} (void)
+\begin{DoxyCompactList}\small\item\em Generates a random value as a signed long integer. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__utilitymod_gaf2e27f1ee2e100777d3f66fb81b309f0}{
+\index{utilitymod@{utilitymod}!jit\_\-err\_\-from\_\-max\_\-err@{jit\_\-err\_\-from\_\-max\_\-err}}
+\index{jit\_\-err\_\-from\_\-max\_\-err@{jit\_\-err\_\-from\_\-max\_\-err}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-err\_\-from\_\-max\_\-err}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-err\_\-from\_\-max\_\-err ({\bf t\_\-max\_\-err} {\em err})}}
+\label{group__utilitymod_gaf2e27f1ee2e100777d3f66fb81b309f0}
+
+
+Converts Max style error codes to Jitter style error codes. 
+\begin{DoxyParams}{Parameters}
+\item[{\em err}]Max error code\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__utilitymod_ga65b95cf6d8f87c67d0333a6baf17aa63}{
+\index{utilitymod@{utilitymod}!jit\_\-error\_\-code@{jit\_\-error\_\-code}}
+\index{jit\_\-error\_\-code@{jit\_\-error\_\-code}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-error\_\-code}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-error\_\-code (void $\ast$ {\em x}, \/  t\_\-jit\_\-err {\em v})}}
+\label{group__utilitymod_ga65b95cf6d8f87c67d0333a6baf17aa63}
+
+
+Sends error code based error message to Max console (safe from all threads). 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em v}]error code \end{DoxyParams}
+\hypertarget{group__utilitymod_gae0572119ae652a87ae84f181d439d0e9}{
+\index{utilitymod@{utilitymod}!jit\_\-error\_\-sym@{jit\_\-error\_\-sym}}
+\index{jit\_\-error\_\-sym@{jit\_\-error\_\-sym}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-error\_\-sym}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-error\_\-sym (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__utilitymod_gae0572119ae652a87ae84f181d439d0e9}
+
+
+Sends symbol based error message to Max console (safe from all threads). 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]error message symbol \end{DoxyParams}
+\hypertarget{group__utilitymod_gace84dbb97cc894c7af080f676de34781}{
+\index{utilitymod@{utilitymod}!jit\_\-global\_\-critical\_\-enter@{jit\_\-global\_\-critical\_\-enter}}
+\index{jit\_\-global\_\-critical\_\-enter@{jit\_\-global\_\-critical\_\-enter}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-global\_\-critical\_\-enter}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-global\_\-critical\_\-enter (void)}}
+\label{group__utilitymod_gace84dbb97cc894c7af080f676de34781}
+
+
+Enters the global Jitter critical region. This function is useful for simple protection of thread sensitive operations. However, it may be too broad a lock, as it prevents any other operations that use the global critical region from working. For more localized control, I would suggest using either MaxMSP's systhread API or the platform specific locking mechanisms however, be sensitive to the possibility deadlock when locking code which calls code which may require the locking off unknown resources. \hypertarget{group__utilitymod_gaed36b7cd30e3ac8859cf8808c199b6de}{
+\index{utilitymod@{utilitymod}!jit\_\-global\_\-critical\_\-exit@{jit\_\-global\_\-critical\_\-exit}}
+\index{jit\_\-global\_\-critical\_\-exit@{jit\_\-global\_\-critical\_\-exit}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-global\_\-critical\_\-exit}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-global\_\-critical\_\-exit (void)}}
+\label{group__utilitymod_gaed36b7cd30e3ac8859cf8808c199b6de}
+
+
+Exits the global Jitter critical region. This function is useful for simple protection of thread sensitive operations. However, it may be too broad a lock, as it prevents any other operations that use the global critical region from working. For more localized control, I would suggest using either MaxMSP's systhread API or the platform specific locking mechanisms however, be sensitive to the possibility deadlock when locking code which calls code which may require the locking off unknown resources. \hypertarget{group__utilitymod_ga3b56c14bcf54b8cdc384e8cc95b09c38}{
+\index{utilitymod@{utilitymod}!jit\_\-post\_\-sym@{jit\_\-post\_\-sym}}
+\index{jit\_\-post\_\-sym@{jit\_\-post\_\-sym}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-post\_\-sym}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-post\_\-sym (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__utilitymod_ga3b56c14bcf54b8cdc384e8cc95b09c38}
+
+
+Sends symbol based message to Max console (safe from all threads). 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]object pointer \item[{\em s}]message symbol \end{DoxyParams}
+\hypertarget{group__utilitymod_ga5308a31718feaa1735e673fc59f64fd0}{
+\index{utilitymod@{utilitymod}!jit\_\-rand@{jit\_\-rand}}
+\index{jit\_\-rand@{jit\_\-rand}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-rand}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-rand (void)}}
+\label{group__utilitymod_ga5308a31718feaa1735e673fc59f64fd0}
+
+
+Generates a random value as a signed long integer. \begin{DoxyReturn}{Returns}
+random value 
+\end{DoxyReturn}
+\hypertarget{group__utilitymod_gaa3768df212e917ec778bf1a8af191c27}{
+\index{utilitymod@{utilitymod}!jit\_\-rand\_\-setseed@{jit\_\-rand\_\-setseed}}
+\index{jit\_\-rand\_\-setseed@{jit\_\-rand\_\-setseed}!utilitymod@{utilitymod}}
+\subsubsection[{jit\_\-rand\_\-setseed}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-rand\_\-setseed (long {\em n})}}
+\label{group__utilitymod_gaa3768df212e917ec778bf1a8af191c27}
+
+
+Sets global random number generator seed. 
+\begin{DoxyParams}{Parameters}
+\item[{\em n}]seed \end{DoxyParams}
+\hypertarget{group__utilitymod_ga830cf9c4a9f6e87767dabf29a3610181}{
+\index{utilitymod@{utilitymod}!swapf32@{swapf32}}
+\index{swapf32@{swapf32}!utilitymod@{utilitymod}}
+\subsubsection[{swapf32}]{\setlength{\rightskip}{0pt plus 5cm}float swapf32 (float {\em f})}}
+\label{group__utilitymod_ga830cf9c4a9f6e87767dabf29a3610181}
+
+
+Byte swaps 32 bit floating point number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]input float\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+byte swapped float 
+\end{DoxyReturn}
+\hypertarget{group__utilitymod_ga8eaccf938b9088a33cf4b794821ce270}{
+\index{utilitymod@{utilitymod}!swapf64@{swapf64}}
+\index{swapf64@{swapf64}!utilitymod@{utilitymod}}
+\subsubsection[{swapf64}]{\setlength{\rightskip}{0pt plus 5cm}double swapf64 (double {\em f})}}
+\label{group__utilitymod_ga8eaccf938b9088a33cf4b794821ce270}
+
+
+Byte swaps 64 bit floating point number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]input double\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+byte swapped double 
+\end{DoxyReturn}

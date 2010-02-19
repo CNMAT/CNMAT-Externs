@@ -1,0 +1,124 @@
+\hypertarget{group__color}{
+\section{Colors}
+\label{group__color}\index{Colors@{Colors}}
+}
+
+
+Collaboration diagram for Colors:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=98pt]{group__color}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__jrgb}{t\_\-jrgb}
+\begin{DoxyCompactList}\small\item\em A color composed of red, green, and blue components. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__jrgba}{t\_\-jrgba}
+\begin{DoxyCompactList}\small\item\em A color composed of red, green, blue, and alpha components. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__color_ga847dd3f1a2640660f12a14fab259afa8}{jrgba\_\-to\_\-atoms} (\hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$c, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Get the components of a color in an array of pre-\/allocated atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__color_ga78325ce33d8e74c79c4f1adeef3e36f7}{atoms\_\-to\_\-jrgba} (long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$c)
+\begin{DoxyCompactList}\small\item\em Set the components of a color by providing an array of atoms. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__color_ga322f6e69277981f02effe1212affed3c}{jrgba\_\-set} (\hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba, double r, double g, double b, double a)
+\begin{DoxyCompactList}\small\item\em Set the components of a color. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__color_ga24a7d1e24d38a91ab8aa02a48e5da70e}{jrgba\_\-copy} (\hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$dest, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$src)
+\begin{DoxyCompactList}\small\item\em Copy a color. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__color_ga585ffc0ec76fe1b5d0e1c50e8eef0b39}{jrgba\_\-compare} (\hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$rgba1, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$rgba2)
+\begin{DoxyCompactList}\small\item\em Compare two colors for equality. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__color_ga27b52b9c7e3b8e9fafccdfcb4caee127}{jrgba\_\-attr\_\-get} (\hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$jrgba, long $\ast$argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$argv)
+\begin{DoxyCompactList}\small\item\em Get the value of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct, returned as an array of atoms with the values for each component. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__color_ga22c35beb59c7430d6c6e25e6e1fdb8c9}{jrgba\_\-attr\_\-set} (\hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$jrgba, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Set the value of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct, given an array of atoms with the values to use. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__color_ga78325ce33d8e74c79c4f1adeef3e36f7}{
+\index{color@{color}!atoms\_\-to\_\-jrgba@{atoms\_\-to\_\-jrgba}}
+\index{atoms\_\-to\_\-jrgba@{atoms\_\-to\_\-jrgba}!color@{color}}
+\subsubsection[{atoms\_\-to\_\-jrgba}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atoms\_\-to\_\-jrgba (long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv}, \/  {\bf t\_\-jrgba} $\ast$ {\em c})}}
+\label{group__color_ga78325ce33d8e74c79c4f1adeef3e36f7}
+
+
+Set the components of a color by providing an array of atoms. If it is an array of 3 atoms, then the atoms provided should define the red, green, and blue components (in this order) in a range of \mbox{[}0.0, 1.0\mbox{]}. If a 4th atom is provided, it will define the alpha channel. If the alpha channel is not defined then it is assumed to be 1.0.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em argc}]The number of atoms in the array provided in argv. This should be 3 or 4 depending on whether or not the alpha channel is being provided. \item[{\em argv}]The address to the first of an array of atoms that define the color. \item[{\em c}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct for which the color will be defined. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__color_ga27b52b9c7e3b8e9fafccdfcb4caee127}{
+\index{color@{color}!jrgba\_\-attr\_\-get@{jrgba\_\-attr\_\-get}}
+\index{jrgba\_\-attr\_\-get@{jrgba\_\-attr\_\-get}!color@{color}}
+\subsubsection[{jrgba\_\-attr\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jrgba\_\-attr\_\-get ({\bf t\_\-jrgba} $\ast$ {\em jrgba}, \/  long $\ast$ {\em argc}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em argv})}}
+\label{group__color_ga27b52b9c7e3b8e9fafccdfcb4caee127}
+
+
+Get the value of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct, returned as an array of atoms with the values for each component. 
+\begin{DoxyParams}{Parameters}
+\item[{\em jrgba}]The color struct whose color will be retrieved. \item[{\em argc}]The address of a variable that will be set with the number of atoms in the argv array. The returned value should be 4. The value of the int should be set to 0 prior to calling this function. \item[{\em argv}]The address of a \hyperlink{structt__atom}{t\_\-atom} pointer that will receive the a new array of atoms set to the values of the jrgba struct. The pointer should be set to NULL prior to calling this function. There should be 4 atoms returned, representing alpha, red, green, and blue components. When you are done using the atoms, you are responsible for freeing the pointer using \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__color_ga22c35beb59c7430d6c6e25e6e1fdb8c9}{
+\index{color@{color}!jrgba\_\-attr\_\-set@{jrgba\_\-attr\_\-set}}
+\index{jrgba\_\-attr\_\-set@{jrgba\_\-attr\_\-set}!color@{color}}
+\subsubsection[{jrgba\_\-attr\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jrgba\_\-attr\_\-set ({\bf t\_\-jrgba} $\ast$ {\em jrgba}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__color_ga22c35beb59c7430d6c6e25e6e1fdb8c9}
+
+
+Set the value of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct, given an array of atoms with the values to use. 
+\begin{DoxyParams}{Parameters}
+\item[{\em jrgba}]The color struct whose color will be set. \item[{\em argc}]The number of atoms in the array. This must be 4. \item[{\em argv}]The address of the first of the atoms in the array. There must be 4 atoms, representing alpha, red, green, and blue components.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns the error code \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} if successful, or one of the other error codes defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes} if unsuccessful. 
+\end{DoxyReturn}
+\hypertarget{group__color_ga585ffc0ec76fe1b5d0e1c50e8eef0b39}{
+\index{color@{color}!jrgba\_\-compare@{jrgba\_\-compare}}
+\index{jrgba\_\-compare@{jrgba\_\-compare}!color@{color}}
+\subsubsection[{jrgba\_\-compare}]{\setlength{\rightskip}{0pt plus 5cm}long jrgba\_\-compare ({\bf t\_\-jrgba} $\ast$ {\em rgba1}, \/  {\bf t\_\-jrgba} $\ast$ {\em rgba2})}}
+\label{group__color_ga585ffc0ec76fe1b5d0e1c50e8eef0b39}
+
+
+Compare two colors for equality. 
+\begin{DoxyParams}{Parameters}
+\item[{\em rgba1}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct to compare. \item[{\em rgba2}]The address of another \hyperlink{structt__jrgba}{t\_\-jrgba} struct to compare. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+returns 1 if rgba1 == rgba2. 
+\end{DoxyReturn}
+\hypertarget{group__color_ga24a7d1e24d38a91ab8aa02a48e5da70e}{
+\index{color@{color}!jrgba\_\-copy@{jrgba\_\-copy}}
+\index{jrgba\_\-copy@{jrgba\_\-copy}!color@{color}}
+\subsubsection[{jrgba\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}void jrgba\_\-copy ({\bf t\_\-jrgba} $\ast$ {\em dest}, \/  {\bf t\_\-jrgba} $\ast$ {\em src})}}
+\label{group__color_ga24a7d1e24d38a91ab8aa02a48e5da70e}
+
+
+Copy a color. 
+\begin{DoxyParams}{Parameters}
+\item[{\em dest}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct to which the color will be copied. \item[{\em src}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct from which the color will be copied. \end{DoxyParams}
+\hypertarget{group__color_ga322f6e69277981f02effe1212affed3c}{
+\index{color@{color}!jrgba\_\-set@{jrgba\_\-set}}
+\index{jrgba\_\-set@{jrgba\_\-set}!color@{color}}
+\subsubsection[{jrgba\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void jrgba\_\-set ({\bf t\_\-jrgba} $\ast$ {\em prgba}, \/  double {\em r}, \/  double {\em g}, \/  double {\em b}, \/  double {\em a})}}
+\label{group__color_ga322f6e69277981f02effe1212affed3c}
+
+
+Set the components of a color. 
+\begin{DoxyParams}{Parameters}
+\item[{\em prgba}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct for which the color will be defined. \item[{\em r}]The value of the red component in a range of \mbox{[}0.0, 1.0\mbox{]}. \item[{\em g}]The value of the green component in a range of \mbox{[}0.0, 1.0\mbox{]}. \item[{\em b}]The value of the blue component in a range of \mbox{[}0.0, 1.0\mbox{]}. \item[{\em a}]The value of the alpha component in a range of \mbox{[}0.0, 1.0\mbox{]}. \end{DoxyParams}
+\hypertarget{group__color_ga847dd3f1a2640660f12a14fab259afa8}{
+\index{color@{color}!jrgba\_\-to\_\-atoms@{jrgba\_\-to\_\-atoms}}
+\index{jrgba\_\-to\_\-atoms@{jrgba\_\-to\_\-atoms}!color@{color}}
+\subsubsection[{jrgba\_\-to\_\-atoms}]{\setlength{\rightskip}{0pt plus 5cm}void jrgba\_\-to\_\-atoms ({\bf t\_\-jrgba} $\ast$ {\em c}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__color_ga847dd3f1a2640660f12a14fab259afa8}
+
+
+Get the components of a color in an array of pre-\/allocated atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em argv}]The address to the first of an array of atoms that will hold the result. At least 4 atoms must be allocated, as 4 atoms will be set by this function for the red, green, blue, and alpha components. \item[{\em c}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} struct from which the color components will be fetched. \end{DoxyParams}

@@ -1,0 +1,71 @@
+\hypertarget{group__atombuf}{
+\section{Atombufs}
+\label{group__atombuf}\index{Atombufs@{Atombufs}}
+}
+
+
+An Atombuf is an alternative to \hyperlink{group__binbuf}{Binbufs} for temporary storage of atoms.  
+
+
+Collaboration diagram for Atombufs:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=112pt]{group__atombuf}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__atombuf}{t\_\-atombuf}
+\begin{DoxyCompactList}\small\item\em The atombuf struct provides a way to pass a collection of atoms. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__atombuf_ga5748a06a4e11f4be0b90dda8415bc815}{atombuf\_\-new} (long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__atombuf_ga5748a06a4e11f4be0b90dda8415bc815}{atombuf\_\-new()} to create a new Atombuf from an array of t\_\-atoms. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atombuf_ga2c10483e31d84a12a037d154bd4051bd}{atombuf\_\-free} (\hyperlink{structt__atombuf}{t\_\-atombuf} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__atombuf_ga2c10483e31d84a12a037d154bd4051bd}{atombuf\_\-free()} to dispose of the memory used by a \hyperlink{structt__atombuf}{t\_\-atombuf}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atombuf_gada864b7fc2e47dbdbef3176de00924a2}{atombuf\_\-text} (\hyperlink{structt__atombuf}{t\_\-atombuf} $\ast$$\ast$x, char $\ast$$\ast$text, long size)
+\begin{DoxyCompactList}\small\item\em Use \hyperlink{group__atombuf_gada864b7fc2e47dbdbef3176de00924a2}{atombuf\_\-text()} to convert text to a \hyperlink{structt__atom}{t\_\-atom} array in a \hyperlink{structt__atombuf}{t\_\-atombuf}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An Atombuf is an alternative to \hyperlink{group__binbuf}{Binbufs} for temporary storage of atoms. Its principal advantage is that the internal structure is publicly available so you can manipulate the atoms in place. The standard Max text objects (message box, object box, comment) use the Atombuf structure to store their text (each \hyperlink{unionword}{word} of text is stored as a \hyperlink{structt__symbol}{t\_\-symbol} or a number). 
+
+\subsection{Function Documentation}
+\hypertarget{group__atombuf_ga2c10483e31d84a12a037d154bd4051bd}{
+\index{atombuf@{atombuf}!atombuf\_\-free@{atombuf\_\-free}}
+\index{atombuf\_\-free@{atombuf\_\-free}!atombuf@{atombuf}}
+\subsubsection[{atombuf\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void atombuf\_\-free ({\bf t\_\-atombuf} $\ast$ {\em x})}}
+\label{group__atombuf_ga2c10483e31d84a12a037d154bd4051bd}
+
+
+Use \hyperlink{group__atombuf_ga2c10483e31d84a12a037d154bd4051bd}{atombuf\_\-free()} to dispose of the memory used by a \hyperlink{structt__atombuf}{t\_\-atombuf}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{structt__atombuf}{t\_\-atombuf} to free. \end{DoxyParams}
+\hypertarget{group__atombuf_ga5748a06a4e11f4be0b90dda8415bc815}{
+\index{atombuf@{atombuf}!atombuf\_\-new@{atombuf\_\-new}}
+\index{atombuf\_\-new@{atombuf\_\-new}!atombuf@{atombuf}}
+\subsubsection[{atombuf\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ atombuf\_\-new (long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__atombuf_ga5748a06a4e11f4be0b90dda8415bc815}
+
+
+Use \hyperlink{group__atombuf_ga5748a06a4e11f4be0b90dda8415bc815}{atombuf\_\-new()} to create a new Atombuf from an array of t\_\-atoms. 
+\begin{DoxyParams}{Parameters}
+\item[{\em argc}]Number of t\_\-atoms in the argv array. May be 0. \item[{\em argv}]Array of t\_\-atoms. If creating an empty Atombuf, you may pass 0. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{group__atombuf_ga5748a06a4e11f4be0b90dda8415bc815}{atombuf\_\-new()} create a new \hyperlink{structt__atombuf}{t\_\-atombuf} and returns a pointer to it. If 0 is returned, insufficient memory was available. 
+\end{DoxyReturn}
+\hypertarget{group__atombuf_gada864b7fc2e47dbdbef3176de00924a2}{
+\index{atombuf@{atombuf}!atombuf\_\-text@{atombuf\_\-text}}
+\index{atombuf\_\-text@{atombuf\_\-text}!atombuf@{atombuf}}
+\subsubsection[{atombuf\_\-text}]{\setlength{\rightskip}{0pt plus 5cm}void atombuf\_\-text ({\bf t\_\-atombuf} $\ast$$\ast$ {\em x}, \/  char $\ast$$\ast$ {\em text}, \/  long {\em size})}}
+\label{group__atombuf_gada864b7fc2e47dbdbef3176de00924a2}
+
+
+Use \hyperlink{group__atombuf_gada864b7fc2e47dbdbef3176de00924a2}{atombuf\_\-text()} to convert text to a \hyperlink{structt__atom}{t\_\-atom} array in a \hyperlink{structt__atombuf}{t\_\-atombuf}. To use this routine to create a new Atombuf from the text buffer, first create a new empty \hyperlink{structt__atombuf}{t\_\-atombuf} with a call to atombuf\_\-new(0,NULL).
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Pointer to existing atombuf variable. The variable will be replaced by a new Atombuf containing the converted text. \item[{\em text}]Handle to the text to be converted. It need not be zero-\/terminated. \item[{\em size}]Number of characters in the text. \end{DoxyParams}

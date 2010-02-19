@@ -1,0 +1,332 @@
+\hypertarget{group__atomarray}{
+\section{Atom Array}
+\label{group__atomarray}\index{Atom Array@{Atom Array}}
+}
+
+
+Max's atomarray object is a container for an array of atoms with an interface for manipulating that array.  
+
+
+Collaboration diagram for Atom Array:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=122pt]{group__atomarray}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__atomarray}{t\_\-atomarray}
+\begin{DoxyCompactList}\small\item\em The atomarray object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__atomarray_ga9d4f9396731ae8115a08f99d02421d02}{ATOMARRAY\_\-FLAG\_\-FREECHILDREN}~(1)
+\begin{DoxyCompactList}\small\item\em The atomarray flags. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$ \hyperlink{group__atomarray_ga2896b4949e03841f4c5a71ad7f7fadf7}{atomarray\_\-new} (long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Create a new atomarray object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atomarray_gad99be67bb7fafb7987412ee8fc2802f0}{atomarray\_\-flags} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, long flags)
+\begin{DoxyCompactList}\small\item\em Set the atomarray flags. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atomarray_gae784ffaf3fce1cd4967046faf4c7a377}{atomarray\_\-getflags} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Get the atomarray flags. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atomarray_ga52b68a97eb1bb7f97411715401d9d2ad}{atomarray\_\-setatoms} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Replace the existing array contents with a new set of atoms Note that atoms provided to this function will be {\itshape copied\/}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atomarray_ga28824a30f15ddaec8b1a323f285fbe85}{atomarray\_\-getatoms} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieve a pointer to the first atom in the internal array of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atomarray_gaec25ec428f6bb7b1a1c8092b5c01f2c2}{atomarray\_\-copyatoms} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieve a copy of the atoms in the array. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__atomarray_gaef611e510133de82b09496f9ff59662f}{atomarray\_\-getsize} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Return the number of atoms in the array. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__atomarray_ga1ee643830e94d84c325fd8caa4db9d4b}{atomarray\_\-getindex} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, long index, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Copy an a specific atom from the array. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__atomarray_ga96ea96717c2ed692197361b1d02bab47}{atomarray\_\-duplicate} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Create a new atomarray object which is a copy of another atomarray object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atomarray_gad2d3608a3089f42590d744814c6fee42}{atomarray\_\-appendatom} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, \hyperlink{structt__atom}{t\_\-atom} $\ast$a)
+\begin{DoxyCompactList}\small\item\em Copy a new atom onto the end of the array. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atomarray_gae604fed9f8ca266b1b0d080e8cc929c3}{atomarray\_\-appendatoms} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Copy multiple new atoms onto the end of the array. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atomarray_gaf76d3ab0de8a7b6b0b0e32193608c2dd}{atomarray\_\-chuckindex} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Remove an atom from any location within the array. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atomarray_ga185b275ee3d94fa9a21d3ca6ece43c33}{atomarray\_\-clear} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Clear the array. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__atomarray_gacfb767a18f14fb13a0952c6ed7903de1}{atomarray\_\-funall} (\hyperlink{structt__atomarray}{t\_\-atomarray} $\ast$x, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, void $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Call the specified function for every item in the atom array. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max's atomarray object is a container for an array of atoms with an interface for manipulating that array. It can be useful for passing lists as a single atom, such as for the return value of an \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47ad150bf3de9c8dc2ddfa0ca0ca2382360}{A\_\-GIMMEBACK} method. It also used frequently in when working with Max's \hyperlink{structt__dictionary}{t\_\-dictionary} object.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary}{Dictionary} 
+\end{DoxySeeAlso}
+
+
+\subsection{Define Documentation}
+\hypertarget{group__atomarray_ga9d4f9396731ae8115a08f99d02421d02}{
+\index{atomarray@{atomarray}!ATOMARRAY\_\-FLAG\_\-FREECHILDREN@{ATOMARRAY\_\-FLAG\_\-FREECHILDREN}}
+\index{ATOMARRAY\_\-FLAG\_\-FREECHILDREN@{ATOMARRAY\_\-FLAG\_\-FREECHILDREN}!atomarray@{atomarray}}
+\subsubsection[{ATOMARRAY\_\-FLAG\_\-FREECHILDREN}]{\setlength{\rightskip}{0pt plus 5cm}\#define ATOMARRAY\_\-FLAG\_\-FREECHILDREN~(1)}}
+\label{group__atomarray_ga9d4f9396731ae8115a08f99d02421d02}
+
+
+The atomarray flags. Currently the only flag is ATOMARRAY\_\-FLAG\_\-FREECHILDREN. If set via \hyperlink{group__atomarray_gad99be67bb7fafb7987412ee8fc2802f0}{atomarray\_\-flags()} the atomarray will free any contained A\_\-OBJ atoms when the atomarray is freed. 
+
+\subsection{Function Documentation}
+\hypertarget{group__atomarray_gad2d3608a3089f42590d744814c6fee42}{
+\index{atomarray@{atomarray}!atomarray\_\-appendatom@{atomarray\_\-appendatom}}
+\index{atomarray\_\-appendatom@{atomarray\_\-appendatom}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-appendatom}]{\setlength{\rightskip}{0pt plus 5cm}void atomarray\_\-appendatom ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  {\bf t\_\-atom} $\ast$ {\em a})}}
+\label{group__atomarray_gad2d3608a3089f42590d744814c6fee42}
+
+
+Copy a new atom onto the end of the array. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em a}]A pointer to the new atom to append to the end of the array.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atomarray_gae604fed9f8ca266b1b0d080e8cc929c3}{atomarray\_\-appendatoms()} 
+
+\hyperlink{group__atomarray_ga52b68a97eb1bb7f97411715401d9d2ad}{atomarray\_\-setatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atomarray_gae604fed9f8ca266b1b0d080e8cc929c3}{
+\index{atomarray@{atomarray}!atomarray\_\-appendatoms@{atomarray\_\-appendatoms}}
+\index{atomarray\_\-appendatoms@{atomarray\_\-appendatoms}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-appendatoms}]{\setlength{\rightskip}{0pt plus 5cm}void atomarray\_\-appendatoms ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atomarray_gae604fed9f8ca266b1b0d080e8cc929c3}
+
+
+Copy multiple new atoms onto the end of the array. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em ac}]The number of new atoms to be appended to the array. \item[{\em av}]A pointer to the first of the new atoms to append to the end of the array.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atomarray_gad2d3608a3089f42590d744814c6fee42}{atomarray\_\-appendatom()} 
+
+\hyperlink{group__atomarray_ga52b68a97eb1bb7f97411715401d9d2ad}{atomarray\_\-setatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atomarray_gaf76d3ab0de8a7b6b0b0e32193608c2dd}{
+\index{atomarray@{atomarray}!atomarray\_\-chuckindex@{atomarray\_\-chuckindex}}
+\index{atomarray\_\-chuckindex@{atomarray\_\-chuckindex}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-chuckindex}]{\setlength{\rightskip}{0pt plus 5cm}void atomarray\_\-chuckindex ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__atomarray_gaf76d3ab0de8a7b6b0b0e32193608c2dd}
+
+
+Remove an atom from any location within the array. The array will be resized and collapsed to fill in the gap.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em index}]The zero-\/based index of the atom to remove from the array. \end{DoxyParams}
+\hypertarget{group__atomarray_ga185b275ee3d94fa9a21d3ca6ece43c33}{
+\index{atomarray@{atomarray}!atomarray\_\-clear@{atomarray\_\-clear}}
+\index{atomarray\_\-clear@{atomarray\_\-clear}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void atomarray\_\-clear ({\bf t\_\-atomarray} $\ast$ {\em x})}}
+\label{group__atomarray_ga185b275ee3d94fa9a21d3ca6ece43c33}
+
+
+Clear the array. Frees all of the atoms and sets the size to zero. This function does not perform a 'deep' free, meaning that any \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ} atoms will not have their object's freed. Only the references to those objects contained in the atomarray will be freed.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of atoms in the array. 
+\end{DoxyReturn}
+\hypertarget{group__atomarray_gaec25ec428f6bb7b1a1c8092b5c01f2c2}{
+\index{atomarray@{atomarray}!atomarray\_\-copyatoms@{atomarray\_\-copyatoms}}
+\index{atomarray\_\-copyatoms@{atomarray\_\-copyatoms}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-copyatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atomarray\_\-copyatoms ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__atomarray_gaec25ec428f6bb7b1a1c8092b5c01f2c2}
+
+
+Retrieve a copy of the atoms in the array. This method does not copy the atoms, btu simply provides access to them. To retrieve a copy of the atoms use \hyperlink{group__atomarray_gaec25ec428f6bb7b1a1c8092b5c01f2c2}{atomarray\_\-copyatoms()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em ac}]The address of a long where the number of atoms will be set. \item[{\em av}]The address of a \hyperlink{structt__atom}{t\_\-atom} pointer where the atoms will be allocated and copied. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+You are responsible for freeing memory allocated for the copy of the atoms returned. 
+\begin{DoxyCode}
+    long    ac = 0;
+    t_atom *av = NULL;
+    
+    atomarray_copyatoms(anAtomarray, &ac, &av);
+    if(ac && av){
+        // do something with ac and av here...
+        sysmem_freeptr(av);
+    }   
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atomarray_ga28824a30f15ddaec8b1a323f285fbe85}{atomarray\_\-getatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atomarray_ga96ea96717c2ed692197361b1d02bab47}{
+\index{atomarray@{atomarray}!atomarray\_\-duplicate@{atomarray\_\-duplicate}}
+\index{atomarray\_\-duplicate@{atomarray\_\-duplicate}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-duplicate}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ atomarray\_\-duplicate ({\bf t\_\-atomarray} $\ast$ {\em x})}}
+\label{group__atomarray_ga96ea96717c2ed692197361b1d02bab47}
+
+
+Create a new atomarray object which is a copy of another atomarray object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance which is to be copied. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new atomarray which is copied from x.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atomarray_ga2896b4949e03841f4c5a71ad7f7fadf7}{atomarray\_\-new()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atomarray_gad99be67bb7fafb7987412ee8fc2802f0}{
+\index{atomarray@{atomarray}!atomarray\_\-flags@{atomarray\_\-flags}}
+\index{atomarray\_\-flags@{atomarray\_\-flags}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}void atomarray\_\-flags ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  long {\em flags})}}
+\label{group__atomarray_gad99be67bb7fafb7987412ee8fc2802f0}
+
+
+Set the atomarray flags. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em flags}]The new value for the flags. \end{DoxyParams}
+\hypertarget{group__atomarray_gacfb767a18f14fb13a0952c6ed7903de1}{
+\index{atomarray@{atomarray}!atomarray\_\-funall@{atomarray\_\-funall}}
+\index{atomarray\_\-funall@{atomarray\_\-funall}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-funall}]{\setlength{\rightskip}{0pt plus 5cm}void atomarray\_\-funall ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  {\bf method} {\em fun}, \/  void $\ast$ {\em arg})}}
+\label{group__atomarray_gacfb767a18f14fb13a0952c6ed7903de1}
+
+
+Call the specified function for every item in the atom array. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em fun}]The function to call, specified as function pointer cast to a Max \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method}. \item[{\em arg}]An argument that you would like to pass to the function being called. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__atomarray_gacfb767a18f14fb13a0952c6ed7903de1}{atomarray\_\-funall()} method will call your function for every item in the list. It will pass both a pointer to the item in the list, and any argument that you provide. The following example shows a function that could be called by \hyperlink{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}{hashtab\_\-funall()}. 
+\begin{DoxyCode}
+    void myFun(t_atom *a, void *myArg)
+    {
+        // do something with a and myArg here
+        // a is the atom in the atom array
+    }
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{linklist\_\-funall()} 
+
+\hyperlink{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}{hashtab\_\-funall()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atomarray_ga28824a30f15ddaec8b1a323f285fbe85}{
+\index{atomarray@{atomarray}!atomarray\_\-getatoms@{atomarray\_\-getatoms}}
+\index{atomarray\_\-getatoms@{atomarray\_\-getatoms}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-getatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atomarray\_\-getatoms ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__atomarray_ga28824a30f15ddaec8b1a323f285fbe85}
+
+
+Retrieve a pointer to the first atom in the internal array of atoms. This method does not copy the atoms, btu simply provides access to them. To retrieve a copy of the atoms use \hyperlink{group__atomarray_gaec25ec428f6bb7b1a1c8092b5c01f2c2}{atomarray\_\-copyatoms()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em ac}]The address of a long where the number of atoms will be set. \item[{\em av}]The address of a \hyperlink{structt__atom}{t\_\-atom} pointer where the address of the first atom of the array will be set. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atomarray_gaec25ec428f6bb7b1a1c8092b5c01f2c2}{atomarray\_\-copyatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atomarray_gae784ffaf3fce1cd4967046faf4c7a377}{
+\index{atomarray@{atomarray}!atomarray\_\-getflags@{atomarray\_\-getflags}}
+\index{atomarray\_\-getflags@{atomarray\_\-getflags}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-getflags}]{\setlength{\rightskip}{0pt plus 5cm}long atomarray\_\-getflags ({\bf t\_\-atomarray} $\ast$ {\em x})}}
+\label{group__atomarray_gae784ffaf3fce1cd4967046faf4c7a377}
+
+
+Get the atomarray flags. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current value of the atomarray flags. 
+\end{DoxyReturn}
+\hypertarget{group__atomarray_ga1ee643830e94d84c325fd8caa4db9d4b}{
+\index{atomarray@{atomarray}!atomarray\_\-getindex@{atomarray\_\-getindex}}
+\index{atomarray\_\-getindex@{atomarray\_\-getindex}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-getindex}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atomarray\_\-getindex ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  long {\em index}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atomarray_ga1ee643830e94d84c325fd8caa4db9d4b}
+
+
+Copy an a specific atom from the array. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em index}]The zero-\/based index into the array from which to retrieve an atom pointer. \item[{\em av}]The address of an atom to contain the copy. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Example: 
+\begin{DoxyCode}
+    {
+        t_atom a;
+
+        // fetch a copy of the second atom in a previously existing array
+        atomarray_getindex(anAtomarray, 1, &a);
+        // do something with the atom here...
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__atomarray_gaef611e510133de82b09496f9ff59662f}{
+\index{atomarray@{atomarray}!atomarray\_\-getsize@{atomarray\_\-getsize}}
+\index{atomarray\_\-getsize@{atomarray\_\-getsize}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-getsize}]{\setlength{\rightskip}{0pt plus 5cm}long atomarray\_\-getsize ({\bf t\_\-atomarray} $\ast$ {\em x})}}
+\label{group__atomarray_gaef611e510133de82b09496f9ff59662f}
+
+
+Return the number of atoms in the array. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of atoms in the array. 
+\end{DoxyReturn}
+\hypertarget{group__atomarray_ga2896b4949e03841f4c5a71ad7f7fadf7}{
+\index{atomarray@{atomarray}!atomarray\_\-new@{atomarray\_\-new}}
+\index{atomarray\_\-new@{atomarray\_\-new}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-atomarray}$\ast$ atomarray\_\-new (long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atomarray_ga2896b4949e03841f4c5a71ad7f7fadf7}
+
+
+Create a new atomarray object. Note that atoms provided to this function will be {\itshape copied\/}. The copies stored internally to the atomarray instance. You can free the atomarray by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]The number of atoms to be initially contained in the atomarray. \item[{\em av}]A pointer to the first of an array of atoms to initially copy into the atomarray. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the new atomarray object.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Note that due to the unusual prototype of this method that you cannot instantiate this object using the \hyperlink{group__obj_ga459c71aca6316e345379eeb424ad56ff}{object\_\-new\_\-typed()} function. If you wish to use the dynamically bound creator to instantiate the object, you should instead should use \hyperlink{group__obj_gac4b370265c776db4f545d257089af1cf}{object\_\-new()} as demonstrated below. The primary reason that you might choose to instantiate an atomarray using \hyperlink{group__obj_gac4b370265c776db4f545d257089af1cf}{object\_\-new()} instead of \hyperlink{group__atomarray_ga2896b4949e03841f4c5a71ad7f7fadf7}{atomarray\_\-new()} is for using the atomarray object in code that is also intended to run in Max 4. 
+\begin{DoxyCode}
+    object_new(CLASS_NOBOX, gensym("atomarray"), argc, argv);
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__atomarray_ga96ea96717c2ed692197361b1d02bab47}{atomarray\_\-duplicate()} 
+\end{DoxySeeAlso}
+\hypertarget{group__atomarray_ga52b68a97eb1bb7f97411715401d9d2ad}{
+\index{atomarray@{atomarray}!atomarray\_\-setatoms@{atomarray\_\-setatoms}}
+\index{atomarray\_\-setatoms@{atomarray\_\-setatoms}!atomarray@{atomarray}}
+\subsubsection[{atomarray\_\-setatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} atomarray\_\-setatoms ({\bf t\_\-atomarray} $\ast$ {\em x}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__atomarray_ga52b68a97eb1bb7f97411715401d9d2ad}
+
+
+Replace the existing array contents with a new set of atoms Note that atoms provided to this function will be {\itshape copied\/}. The copies stored internally to the atomarray instance.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The atomarray instance. \item[{\em ac}]The number of atoms to be initially contained in the atomarray. \item[{\em av}]A pointer to the first of an array of atoms to initially copy into the atomarray. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}

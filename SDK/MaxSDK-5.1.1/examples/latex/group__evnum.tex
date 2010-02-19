@@ -1,0 +1,59 @@
+\hypertarget{group__evnum}{
+\section{Event and File Serial Numbers}
+\label{group__evnum}\index{Event and File Serial Numbers@{Event and File Serial Numbers}}
+}
+
+
+If you call \hyperlink{group__inout_ga0b2b38216f2f4dba486bfcd2273f255e}{outlet\_\-int()}, \hyperlink{group__inout_gafbb3f62a413f05a394391afde5b3c30f}{outlet\_\-float()}, \hyperlink{group__inout_gabdef4fbe6e1040dc28204b8070bdcda5}{outlet\_\-list()}, or \hyperlink{group__inout_ga12798ee897e01dac21ee547c4091d8a8}{outlet\_\-anything()} inside a Qelem or during some idle or interrupt time, you should increment Max’s Event Serial Number beforehand.  
+
+
+Collaboration diagram for Event and File Serial Numbers:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{group__evnum}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__evnum_gabe59d84de6401b7331a5cb12f8e16916}{
+void \hyperlink{group__evnum_gabe59d84de6401b7331a5cb12f8e16916}{evnum\_\-incr} (void)}
+\label{group__evnum_gabe59d84de6401b7331a5cb12f8e16916}
+
+\begin{DoxyCompactList}\small\item\em Increment the event serial number. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__evnum_gad8e1d4214caa9159893347d0c1f6198e}{evnum\_\-get} (void)
+\begin{DoxyCompactList}\small\item\em Get the current value of the event serial number. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__evnum_ga7e7dac31c7f482fec5bf64bf61cdc26b}{serialno} (void)
+\begin{DoxyCompactList}\small\item\em Get a unique number for each Patcher file saved. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+If you call \hyperlink{group__inout_ga0b2b38216f2f4dba486bfcd2273f255e}{outlet\_\-int()}, \hyperlink{group__inout_gafbb3f62a413f05a394391afde5b3c30f}{outlet\_\-float()}, \hyperlink{group__inout_gabdef4fbe6e1040dc28204b8070bdcda5}{outlet\_\-list()}, or \hyperlink{group__inout_ga12798ee897e01dac21ee547c4091d8a8}{outlet\_\-anything()} inside a Qelem or during some idle or interrupt time, you should increment Max’s Event Serial Number beforehand. This number can be read by objects that want to know if two messages they have received occurred at the same logical \char`\"{}time\char`\"{} (in response to the same event). Max increments the serial number for each tick of the clock, each key press, mouse click, and MIDI event. Note that this is different from the file serial number returned by the \hyperlink{group__evnum_ga7e7dac31c7f482fec5bf64bf61cdc26b}{serialno()} function. The file serial number is only incremented when patchers are saved in files. If more than one patcher is saved in a file, the file serial number will change but the event serial number will not.\hypertarget{group__evnum_using_event_serial_numbers}{}\subsection{Using Event Serial Numbers}\label{group__evnum_using_event_serial_numbers}
+Here is a Max patch that includes an object called simul that would use the information returned by evnum\_\-get to return a 1 if the right and left inlets receive messages at the same time, 0 if not. The number boxes below show the results of clicking on the button objects or typing a key.
+
+ 
+
+\subsection{Function Documentation}
+\hypertarget{group__evnum_gad8e1d4214caa9159893347d0c1f6198e}{
+\index{evnum@{evnum}!evnum\_\-get@{evnum\_\-get}}
+\index{evnum\_\-get@{evnum\_\-get}!evnum@{evnum}}
+\subsubsection[{evnum\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}long evnum\_\-get (void)}}
+\label{group__evnum_gad8e1d4214caa9159893347d0c1f6198e}
+
+
+Get the current value of the event serial number. \begin{DoxyReturn}{Returns}
+The current value of the event serial number. 
+\end{DoxyReturn}
+\hypertarget{group__evnum_ga7e7dac31c7f482fec5bf64bf61cdc26b}{
+\index{evnum@{evnum}!serialno@{serialno}}
+\index{serialno@{serialno}!evnum@{evnum}}
+\subsubsection[{serialno}]{\setlength{\rightskip}{0pt plus 5cm}long serialno (void)}}
+\label{group__evnum_ga7e7dac31c7f482fec5bf64bf61cdc26b}
+
+
+Get a unique number for each Patcher file saved. This function returns a serial number that is incremented each time a Patcher file is saved. This routine is useful for objects like table and coll that have multiple objects that refer to the same data, and can “embed” the data inside a Patcher file. If the serial number hasn’t changed since your object was last saved, you can detect this and avoid saving multiple copies of the object’s data.
+
+\begin{DoxyReturn}{Returns}
+The serial number. 
+\end{DoxyReturn}

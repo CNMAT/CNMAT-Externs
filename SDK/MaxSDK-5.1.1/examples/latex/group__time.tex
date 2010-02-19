@@ -1,0 +1,714 @@
+\hypertarget{group__time}{
+\section{ITM Time Objects}
+\label{group__time}\index{ITM Time Objects@{ITM Time Objects}}
+}
+
+
+ITM Time Objects are a high-\/level interface to ITM, a tempo-\/based scheduler API.  
+
+
+Collaboration diagram for ITM Time Objects:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=122pt]{group__time}
+\end{center}
+\end{figure}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5ac80606ccbb9a16c14cf81874e4de2408}{TIME\_\-FLAGS\_\-LOCATION} =  1, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5af93981eb3922895394877d099323a2e8}{TIME\_\-FLAGS\_\-TICKSONLY} =  2, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a5b35f210c105cc2e49a4c2c18c48c10c}{TIME\_\-FLAGS\_\-FIXEDONLY} =  4, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a4cb8e2884262140884e647d609747a82}{TIME\_\-FLAGS\_\-LOOKAHEAD} =  8, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a91f2cee835f5cf871a657101b6ff7b4e}{TIME\_\-FLAGS\_\-USECLOCK} =  16, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a46a7548bed973b5cef7e6fcbb5883c4f}{TIME\_\-FLAGS\_\-USEQELEM} =  32, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5ac97bc4400b25656b5570c12d6817a662}{TIME\_\-FLAGS\_\-FIXED} =  64, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5af2db490f1904d9f1e834f9ea062ad67e}{TIME\_\-FLAGS\_\-PERMANENT} =  128, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a7ddd9e0fa3dc6a7b346fc3dcee5c5c81}{TIME\_\-FLAGS\_\-TRANSPORT} =  256, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a273bc93db911e7ea106e5839d9263382}{TIME\_\-FLAGS\_\-EVENTLIST} =  512, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5ad16eb0fa4c44658f55146763452b3481}{TIME\_\-FLAGS\_\-CHECKSCHEDULE} =  1024, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a22fec8e51f11f945f8b94279a6df37df}{TIME\_\-FLAGS\_\-LISTENTICKS} =  2048, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a5f103c6561c69e7759621cd216d0176b}{TIME\_\-FLAGS\_\-NOUNITS} =  4096, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a4dc0bf02a08234ce8b66e8ecb5ec568e}{TIME\_\-FLAGS\_\-BBUSOURCE} =  8192, 
+\par
+\hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5a4d4396aa4c56efec83245821ea888235}{TIME\_\-FLAGS\_\-POSITIVE} =  16384
+ \}
+\begin{DoxyCompactList}\small\item\em Flags that determine attribute and time object behavior. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__time_ga182b0bd45ff72d9ddccebd8cc9d552d1}{itm\_\-getglobal} (void)
+\begin{DoxyCompactList}\small\item\em Return the global (default / unnamed) itm object. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__time_ga04a193f71ceaf7ce604e976a3affc99b}{itm\_\-getnamed} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, void $\ast$scheduler, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$defaultclocksourcename, long create)
+\begin{DoxyCompactList}\small\item\em Return a named itm object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga33f7a4627e3d2a77748b66d2af7a0a1a}{itm\_\-reference} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Reference an itm object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_gae6d838ad8a0834e650a7664a50b0b6e2}{itm\_\-dereference} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Stop referencing an itm object. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_ga6be6d66ebf8825d9edacec2f3e534dcb}{itm\_\-gettime} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Report the current internal time. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_gafc0e353837687e59fb54bb83ed33768f}{itm\_\-getticks} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Report the current time of the itm in ticks. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_gab8fb2f5156bb6df433d509d721a8cefd}{itm\_\-dump} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Print diagnostic information about an itm object to the Max window. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_gad8584c381f8f183ff6eaa0f4e4a4923a}{itm\_\-settimesignature} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, long num, long denom, long flags)
+\begin{DoxyCompactList}\small\item\em Set an itm object's current time signature. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga7ced567aa268c709daf2152503de8832}{itm\_\-gettimesignature} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, long $\ast$num, long $\ast$denom)
+\begin{DoxyCompactList}\small\item\em Query an itm object for its current time signature. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga844cd45c507bf4c89b91f2c2713fb128}{itm\_\-pause} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Pause the passage of time for an itm object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga1f3b1dded32c2fcbd955adb094c81d98}{itm\_\-resume} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Start the passage of time for an itm object, from it's current location. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__time_ga36ee91bc9951d71880a055445ecd7ba7}{itm\_\-getstate} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Find out if time is currently progressing for a given itm object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_gac777d53869fe6e01bdce0c34f868f648}{itm\_\-setresolution} (double res)
+\begin{DoxyCompactList}\small\item\em Set the number of ticks-\/per-\/quarter-\/note globally for the itm system. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_gaba77c4fbb00c349342b6358d80644113}{itm\_\-getresolution} (void)
+\begin{DoxyCompactList}\small\item\em Get the number of ticks-\/per-\/quarter-\/note globally from the itm system. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__time_ga0daf42c6199b38f486998f2e5d2c8a11}{itm\_\-getname} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Given an itm object, return its name. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_ga3ed676dca6666ab9f305ea81b8d1b6b7}{itm\_\-tickstoms} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, double ticks)
+\begin{DoxyCompactList}\small\item\em Convert a time value in ticks to the equivalent value in milliseconds, given the context of a specified itm object. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_gab32518269a1b30459b72e215567697ad}{itm\_\-mstoticks} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, double ms)
+\begin{DoxyCompactList}\small\item\em Convert a time value in milliseconds to the equivalent value in ticks, given the context of a specified itm object. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_gaa131b77f55df783dda39c2a97c7af440}{itm\_\-mstosamps} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, double ms)
+\begin{DoxyCompactList}\small\item\em Convert a time value in milliseconds to the equivalent value in samples, given the context of a specified itm object. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_ga554348a51466458ca16a7c8101e16f44}{itm\_\-sampstoms} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, double samps)
+\begin{DoxyCompactList}\small\item\em Convert a time value in samples to the equivalent value in milliseconds, given the context of a specified itm object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_gadca2e82e0cadd3bacd75aa6a137ac530}{itm\_\-barbeatunitstoticks} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, long bars, long beats, double units, double $\ast$ticks, char position)
+\begin{DoxyCompactList}\small\item\em Convert a time value in bbu to the equivalent value in ticks, given the context of a specified itm object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga098ba18a9c4a10c3d92445b0bf3da025}{itm\_\-tickstobarbeatunits} (\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$x, double ticks, long $\ast$bars, long $\ast$beats, double $\ast$units, char position)
+\begin{DoxyCompactList}\small\item\em Convert a time value in bbu to the equivalent value in ticks, given the context of a specified itm object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__time_ga6950c5550d8beec9d1df56c96b3c9c88}{itm\_\-isunitfixed} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$u)
+\begin{DoxyCompactList}\small\item\em Given the name of a time unit (e.g. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga6724fc34703298b8dbb12cfe17ef325e}{time\_\-stop} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Stop a currently scheduled time object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga31b3eecc1bd31944239fab1b6c309b5b}{time\_\-tick} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Execute a time object's task, then if it was already set to execute, reschedule for the current interval value of the object. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_ga714ddc564124f89899dc619137f5c64d}{time\_\-getms} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Convert the value of a time object to milliseconds. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_ga4f47a0932158cafd04fb2e0cc928b4cc}{time\_\-getticks} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Convert the value of a time object to ticks. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga2a96b168022b712f38245517a9e20a14}{time\_\-getphase} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$tx, double $\ast$phase, double $\ast$slope, double $\ast$ticks)
+\begin{DoxyCompactList}\small\item\em Return the phase of the ITM object (transport) associated with a time object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_gaf8a102f28b262991c6e4c3b79f37b611}{time\_\-listen} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$attr, long flags)
+\begin{DoxyCompactList}\small\item\em Specify that a millisecond-\/based attribute to be updated automatically when the converted milliseconds of the time object's value changes. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga7451e479ce77e4dcf7a13bbd933575ed}{time\_\-setvalue} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$tx, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Set the current value of a time object (either an interval or a position) using a Max message. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga95e5b2330715823c8a609ccd500aa361}{class\_\-time\_\-addattr} (\hyperlink{structt__class}{t\_\-class} $\ast$c, char $\ast$attrname, char $\ast$attrlabel, long flags)
+\begin{DoxyCompactList}\small\item\em Create an attribute permitting a time object to be changed in a user-\/friendly way. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__time_gaf6153d8f28738932c0ea3906a6c51696}{time\_\-new} (\hyperlink{structt__object}{t\_\-object} $\ast$owner, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$attrname, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} tick, long flags)
+\begin{DoxyCompactList}\small\item\em Create a new time object. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__time_ga2805d69712a55bf77d5083da40108cec}{time\_\-getnamed} (\hyperlink{structt__object}{t\_\-object} $\ast$owner, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$attrname)
+\begin{DoxyCompactList}\small\item\em Return a time object associated with an attribute of an owning object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__time_ga86feb1c21b06217bf699447babb169c5}{time\_\-isfixedunit} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Return whether this time object currently holds a fixed (millisecond-\/based) value. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_gae46ab99a9732990170ce0e27fb744c4b}{time\_\-schedule} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x, \hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$quantize)
+\begin{DoxyCompactList}\small\item\em Schedule a task, with optional quantization. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga96226d122f6f0d7e2e1ebe47b06d00c5}{time\_\-schedule\_\-limit} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x, \hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$quantize)
+\begin{DoxyCompactList}\small\item\em Schedule a task, with optional minimum interval,. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga75b99466073d15d4096fb34a5b172648}{time\_\-now} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$x, \hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$quantize)
+\begin{DoxyCompactList}\small\item\em Schedule a task for right now, with optional quantization. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__time_gaa1d217d3b706f718f0f77dbd78427fb0}{time\_\-getitm} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$ox)
+\begin{DoxyCompactList}\small\item\em Return the ITM object associated with this time object. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__time_gab5d282bae56be219c0c863a798140cb5}{time\_\-calcquantize} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$ox, \hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} $\ast$vitm, \hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$oq)
+\begin{DoxyCompactList}\small\item\em Calculate the quantized interval (in ticks) if this time object were to be scheduled at the current time. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__time_ga380cbe3efa2240446cb1cc2ef1195876}{time\_\-setclock} (\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} $\ast$tx, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$sc)
+\begin{DoxyCompactList}\small\item\em Associate a named setclock object with a time object (unsupported). \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+BEGIN\_\-USING\_\-C\_\-LINKAGE typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm}
+\begin{DoxyCompactList}\small\item\em A low-\/level object for tempo-\/based scheduling. \item\end{DoxyCompactList}\item 
+BEGIN\_\-USING\_\-C\_\-LINKAGE typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject}
+\begin{DoxyCompactList}\small\item\em A high-\/level time object for tempo-\/based scheduling. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+ITM Time Objects are a high-\/level interface to ITM, a tempo-\/based scheduler API. They provide an abtraction so your object can schedule events either in milliseconds (as traditional clock objects) or ticks (tempo-\/relative units). 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__time_ga99fb83031ce9923c84392b4e92f956b5}{
+\subsubsection[{"@2}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}
+\label{group__time_ga99fb83031ce9923c84392b4e92f956b5}
+
+
+Flags that determine attribute and time object behavior. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{TIME\_\-FLAGS\_\-LOCATION@{TIME\_\-FLAGS\_\-LOCATION}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-LOCATION@{TIME\_\-FLAGS\_\-LOCATION}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5ac80606ccbb9a16c14cf81874e4de2408}{
+TIME\_\-FLAGS\_\-LOCATION}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5ac80606ccbb9a16c14cf81874e4de2408}
+}]1 1 0 location-\/based bar/beat/unit values (as opposed to interval values, which are 0 0 0 relative) \index{TIME\_\-FLAGS\_\-TICKSONLY@{TIME\_\-FLAGS\_\-TICKSONLY}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-TICKSONLY@{TIME\_\-FLAGS\_\-TICKSONLY}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5af93981eb3922895394877d099323a2e8}{
+TIME\_\-FLAGS\_\-TICKSONLY}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5af93981eb3922895394877d099323a2e8}
+}]only ticks-\/based values (not ms) are acceptable \index{TIME\_\-FLAGS\_\-FIXEDONLY@{TIME\_\-FLAGS\_\-FIXEDONLY}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-FIXEDONLY@{TIME\_\-FLAGS\_\-FIXEDONLY}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a5b35f210c105cc2e49a4c2c18c48c10c}{
+TIME\_\-FLAGS\_\-FIXEDONLY}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a5b35f210c105cc2e49a4c2c18c48c10c}
+}]only fixed values (ms, hz, samples) are acceptable \index{TIME\_\-FLAGS\_\-LOOKAHEAD@{TIME\_\-FLAGS\_\-LOOKAHEAD}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-LOOKAHEAD@{TIME\_\-FLAGS\_\-LOOKAHEAD}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a4cb8e2884262140884e647d609747a82}{
+TIME\_\-FLAGS\_\-LOOKAHEAD}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a4cb8e2884262140884e647d609747a82}
+}]add lookahead attribute (unsupported) \index{TIME\_\-FLAGS\_\-USECLOCK@{TIME\_\-FLAGS\_\-USECLOCK}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-USECLOCK@{TIME\_\-FLAGS\_\-USECLOCK}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a91f2cee835f5cf871a657101b6ff7b4e}{
+TIME\_\-FLAGS\_\-USECLOCK}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a91f2cee835f5cf871a657101b6ff7b4e}
+}]this time object will schedule events, not just hold a value \index{TIME\_\-FLAGS\_\-USEQELEM@{TIME\_\-FLAGS\_\-USEQELEM}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-USEQELEM@{TIME\_\-FLAGS\_\-USEQELEM}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a46a7548bed973b5cef7e6fcbb5883c4f}{
+TIME\_\-FLAGS\_\-USEQELEM}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a46a7548bed973b5cef7e6fcbb5883c4f}
+}]this time object will defer execution of scheduled events to low priority thread \index{TIME\_\-FLAGS\_\-FIXED@{TIME\_\-FLAGS\_\-FIXED}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-FIXED@{TIME\_\-FLAGS\_\-FIXED}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5ac97bc4400b25656b5570c12d6817a662}{
+TIME\_\-FLAGS\_\-FIXED}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5ac97bc4400b25656b5570c12d6817a662}
+}]will only use normal clock (i.e., will never execute out of ITM) \index{TIME\_\-FLAGS\_\-PERMANENT@{TIME\_\-FLAGS\_\-PERMANENT}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-PERMANENT@{TIME\_\-FLAGS\_\-PERMANENT}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5af2db490f1904d9f1e834f9ea062ad67e}{
+TIME\_\-FLAGS\_\-PERMANENT}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5af2db490f1904d9f1e834f9ea062ad67e}
+}]event will be scheduled in the permanent list (tied to a specific time) \index{TIME\_\-FLAGS\_\-TRANSPORT@{TIME\_\-FLAGS\_\-TRANSPORT}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-TRANSPORT@{TIME\_\-FLAGS\_\-TRANSPORT}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a7ddd9e0fa3dc6a7b346fc3dcee5c5c81}{
+TIME\_\-FLAGS\_\-TRANSPORT}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a7ddd9e0fa3dc6a7b346fc3dcee5c5c81}
+}]add a transport attribute \index{TIME\_\-FLAGS\_\-EVENTLIST@{TIME\_\-FLAGS\_\-EVENTLIST}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-EVENTLIST@{TIME\_\-FLAGS\_\-EVENTLIST}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a273bc93db911e7ea106e5839d9263382}{
+TIME\_\-FLAGS\_\-EVENTLIST}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a273bc93db911e7ea106e5839d9263382}
+}]add an eventlist attribute (unsupported) \index{TIME\_\-FLAGS\_\-CHECKSCHEDULE@{TIME\_\-FLAGS\_\-CHECKSCHEDULE}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-CHECKSCHEDULE@{TIME\_\-FLAGS\_\-CHECKSCHEDULE}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5ad16eb0fa4c44658f55146763452b3481}{
+TIME\_\-FLAGS\_\-CHECKSCHEDULE}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5ad16eb0fa4c44658f55146763452b3481}
+}]internal use only \index{TIME\_\-FLAGS\_\-LISTENTICKS@{TIME\_\-FLAGS\_\-LISTENTICKS}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-LISTENTICKS@{TIME\_\-FLAGS\_\-LISTENTICKS}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a22fec8e51f11f945f8b94279a6df37df}{
+TIME\_\-FLAGS\_\-LISTENTICKS}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a22fec8e51f11f945f8b94279a6df37df}
+}]flag for time\_\-listen: only get notifications if the time object holds tempo-\/relative values \index{TIME\_\-FLAGS\_\-NOUNITS@{TIME\_\-FLAGS\_\-NOUNITS}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-NOUNITS@{TIME\_\-FLAGS\_\-NOUNITS}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a5f103c6561c69e7759621cd216d0176b}{
+TIME\_\-FLAGS\_\-NOUNITS}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a5f103c6561c69e7759621cd216d0176b}
+}]internal use only \index{TIME\_\-FLAGS\_\-BBUSOURCE@{TIME\_\-FLAGS\_\-BBUSOURCE}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-BBUSOURCE@{TIME\_\-FLAGS\_\-BBUSOURCE}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a4dc0bf02a08234ce8b66e8ecb5ec568e}{
+TIME\_\-FLAGS\_\-BBUSOURCE}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a4dc0bf02a08234ce8b66e8ecb5ec568e}
+}]source time was in bar/beat/unit values, need to recalculate when time sig changes \index{TIME\_\-FLAGS\_\-POSITIVE@{TIME\_\-FLAGS\_\-POSITIVE}!time@{time}}\index{time@{time}!TIME\_\-FLAGS\_\-POSITIVE@{TIME\_\-FLAGS\_\-POSITIVE}}\item[{\em 
+\hypertarget{group__time_gga99fb83031ce9923c84392b4e92f956b5a4d4396aa4c56efec83245821ea888235}{
+TIME\_\-FLAGS\_\-POSITIVE}
+\label{group__time_gga99fb83031ce9923c84392b4e92f956b5a4d4396aa4c56efec83245821ea888235}
+}]constrain any values $<$ 0 to 0 \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__time_ga95e5b2330715823c8a609ccd500aa361}{
+\index{time@{time}!class\_\-time\_\-addattr@{class\_\-time\_\-addattr}}
+\index{class\_\-time\_\-addattr@{class\_\-time\_\-addattr}!time@{time}}
+\subsubsection[{class\_\-time\_\-addattr}]{\setlength{\rightskip}{0pt plus 5cm}void class\_\-time\_\-addattr ({\bf t\_\-class} $\ast$ {\em c}, \/  char $\ast$ {\em attrname}, \/  char $\ast$ {\em attrlabel}, \/  long {\em flags})}}
+\label{group__time_ga95e5b2330715823c8a609ccd500aa361}
+
+
+Create an attribute permitting a time object to be changed in a user-\/friendly way. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]Class being initialized. \item[{\em attrname}]Name of the attribute associated with the time object. \item[{\em attrlabel}]Descriptive label for the attribute (appears in the inspector) \item[{\em flags}]Options, see \char`\"{}Flags that determine time object behavior\char`\"{} above \end{DoxyParams}
+\hypertarget{group__time_gadca2e82e0cadd3bacd75aa6a137ac530}{
+\index{time@{time}!itm\_\-barbeatunitstoticks@{itm\_\-barbeatunitstoticks}}
+\index{itm\_\-barbeatunitstoticks@{itm\_\-barbeatunitstoticks}!time@{time}}
+\subsubsection[{itm\_\-barbeatunitstoticks}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-barbeatunitstoticks ({\bf t\_\-itm} $\ast$ {\em x}, \/  long {\em bars}, \/  long {\em beats}, \/  double {\em units}, \/  double $\ast$ {\em ticks}, \/  char {\em position})}}
+\label{group__time_gadca2e82e0cadd3bacd75aa6a137ac530}
+
+
+Convert a time value in bbu to the equivalent value in ticks, given the context of a specified itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An itm object. \item[{\em bars}]The measure number of the location/position. \item[{\em beats}]The beat number of the location/position. \item[{\em units}]The number of ticks past the beat of the location/position. \item[{\em ticks}]The address of a variable to hold the number of ticks upon return. \item[{\em position}]Set this parameter to \hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5ac80606ccbb9a16c14cf81874e4de2408}{TIME\_\-FLAGS\_\-LOCATION} or to zero (for position mode). \end{DoxyParams}
+\hypertarget{group__time_gae6d838ad8a0834e650a7664a50b0b6e2}{
+\index{time@{time}!itm\_\-dereference@{itm\_\-dereference}}
+\index{itm\_\-dereference@{itm\_\-dereference}!time@{time}}
+\subsubsection[{itm\_\-dereference}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-dereference ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_gae6d838ad8a0834e650a7664a50b0b6e2}
+
+
+Stop referencing an itm object. When you are done using an itm object, you must call this function to decrement its reference count.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\hypertarget{group__time_gab8fb2f5156bb6df433d509d721a8cefd}{
+\index{time@{time}!itm\_\-dump@{itm\_\-dump}}
+\index{itm\_\-dump@{itm\_\-dump}!time@{time}}
+\subsubsection[{itm\_\-dump}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-dump ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_gab8fb2f5156bb6df433d509d721a8cefd}
+
+
+Print diagnostic information about an itm object to the Max window. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\hypertarget{group__time_ga182b0bd45ff72d9ddccebd8cc9d552d1}{
+\index{time@{time}!itm\_\-getglobal@{itm\_\-getglobal}}
+\index{itm\_\-getglobal@{itm\_\-getglobal}!time@{time}}
+\subsubsection[{itm\_\-getglobal}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ itm\_\-getglobal (void)}}
+\label{group__time_ga182b0bd45ff72d9ddccebd8cc9d552d1}
+
+
+Return the global (default / unnamed) itm object. \begin{DoxyReturn}{Returns}
+The global \hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} object. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga0daf42c6199b38f486998f2e5d2c8a11}{
+\index{time@{time}!itm\_\-getname@{itm\_\-getname}}
+\index{itm\_\-getname@{itm\_\-getname}!time@{time}}
+\subsubsection[{itm\_\-getname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ itm\_\-getname ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_ga0daf42c6199b38f486998f2e5d2c8a11}
+
+
+Given an itm object, return its name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The name of the itm. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga04a193f71ceaf7ce604e976a3affc99b}{
+\index{time@{time}!itm\_\-getnamed@{itm\_\-getnamed}}
+\index{itm\_\-getnamed@{itm\_\-getnamed}!time@{time}}
+\subsubsection[{itm\_\-getnamed}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ itm\_\-getnamed ({\bf t\_\-symbol} $\ast$ {\em s}, \/  void $\ast$ {\em scheduler}, \/  {\bf t\_\-symbol} $\ast$ {\em defaultclocksourcename}, \/  long {\em create})}}
+\label{group__time_ga04a193f71ceaf7ce604e976a3affc99b}
+
+
+Return a named itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The name of the itm to return. \item[{\em scheduler}]\item[{\em defaultclocksourcename}]\item[{\em create}]If non-\/zero, then create this named itm should it not already exist. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The global \hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} object. 
+\end{DoxyReturn}
+\hypertarget{group__time_gaba77c4fbb00c349342b6358d80644113}{
+\index{time@{time}!itm\_\-getresolution@{itm\_\-getresolution}}
+\index{itm\_\-getresolution@{itm\_\-getresolution}!time@{time}}
+\subsubsection[{itm\_\-getresolution}]{\setlength{\rightskip}{0pt plus 5cm}double itm\_\-getresolution (void)}}
+\label{group__time_gaba77c4fbb00c349342b6358d80644113}
+
+
+Get the number of ticks-\/per-\/quarter-\/note globally from the itm system. \begin{DoxyReturn}{Returns}
+The number of ticks-\/per-\/quarter-\/note. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__time_gac777d53869fe6e01bdce0c34f868f648}{itm\_\-setresolution()} 
+\end{DoxySeeAlso}
+\hypertarget{group__time_ga36ee91bc9951d71880a055445ecd7ba7}{
+\index{time@{time}!itm\_\-getstate@{itm\_\-getstate}}
+\index{itm\_\-getstate@{itm\_\-getstate}!time@{time}}
+\subsubsection[{itm\_\-getstate}]{\setlength{\rightskip}{0pt plus 5cm}long itm\_\-getstate ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_ga36ee91bc9951d71880a055445ecd7ba7}
+
+
+Find out if time is currently progressing for a given itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns non-\/zero if the time is running, or zero if it is paused. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__time_ga844cd45c507bf4c89b91f2c2713fb128}{itm\_\-pause()} 
+
+\hyperlink{group__time_ga1f3b1dded32c2fcbd955adb094c81d98}{itm\_\-resume()} 
+\end{DoxySeeAlso}
+\hypertarget{group__time_gafc0e353837687e59fb54bb83ed33768f}{
+\index{time@{time}!itm\_\-getticks@{itm\_\-getticks}}
+\index{itm\_\-getticks@{itm\_\-getticks}!time@{time}}
+\subsubsection[{itm\_\-getticks}]{\setlength{\rightskip}{0pt plus 5cm}double itm\_\-getticks ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_gafc0e353837687e59fb54bb83ed33768f}
+
+
+Report the current time of the itm in ticks. You can use functions such as \hyperlink{group__time_ga098ba18a9c4a10c3d92445b0bf3da025}{itm\_\-tickstobarbeatunits()} or \hyperlink{group__time_ga3ed676dca6666ab9f305ea81b8d1b6b7}{itm\_\-tickstoms()} to convert to a different representation of the time.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current time in ticks. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga6be6d66ebf8825d9edacec2f3e534dcb}{
+\index{time@{time}!itm\_\-gettime@{itm\_\-gettime}}
+\index{itm\_\-gettime@{itm\_\-gettime}!time@{time}}
+\subsubsection[{itm\_\-gettime}]{\setlength{\rightskip}{0pt plus 5cm}double itm\_\-gettime ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_ga6be6d66ebf8825d9edacec2f3e534dcb}
+
+
+Report the current internal time. This is the same as calling \hyperlink{group__clocks_ga04a49876d29036406f857cf22b99d9ac}{clock\_\-getftime()};
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current internal time. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga7ced567aa268c709daf2152503de8832}{
+\index{time@{time}!itm\_\-gettimesignature@{itm\_\-gettimesignature}}
+\index{itm\_\-gettimesignature@{itm\_\-gettimesignature}!time@{time}}
+\subsubsection[{itm\_\-gettimesignature}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-gettimesignature ({\bf t\_\-itm} $\ast$ {\em x}, \/  long $\ast$ {\em num}, \/  long $\ast$ {\em denom})}}
+\label{group__time_ga7ced567aa268c709daf2152503de8832}
+
+
+Query an itm object for its current time signature. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \item[{\em num}]The address of a variable to hold the top number of the time signature upon return. \item[{\em denom}]The address of a variable to hold the bottom number of the time signature upon return. \end{DoxyParams}
+\hypertarget{group__time_ga6950c5550d8beec9d1df56c96b3c9c88}{
+\index{time@{time}!itm\_\-isunitfixed@{itm\_\-isunitfixed}}
+\index{itm\_\-isunitfixed@{itm\_\-isunitfixed}!time@{time}}
+\subsubsection[{itm\_\-isunitfixed}]{\setlength{\rightskip}{0pt plus 5cm}long itm\_\-isunitfixed ({\bf t\_\-symbol} $\ast$ {\em u})}}
+\label{group__time_ga6950c5550d8beec9d1df56c96b3c9c88}
+
+
+Given the name of a time unit (e.g. 'ms', 'ticks', 'bbu', 'samples', etc.), determine whether the unit is fixed (doesn't change with tempo, time-\/signature, etc.) or whether it is flexible.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em u}]The name of the time unit. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Zero if the unit is fixed (milliseconds, for example) or non-\/zero if it is flexible (ticks, for example). 
+\end{DoxyReturn}
+\hypertarget{group__time_gaa131b77f55df783dda39c2a97c7af440}{
+\index{time@{time}!itm\_\-mstosamps@{itm\_\-mstosamps}}
+\index{itm\_\-mstosamps@{itm\_\-mstosamps}!time@{time}}
+\subsubsection[{itm\_\-mstosamps}]{\setlength{\rightskip}{0pt plus 5cm}double itm\_\-mstosamps ({\bf t\_\-itm} $\ast$ {\em x}, \/  double {\em ms})}}
+\label{group__time_gaa131b77f55df783dda39c2a97c7af440}
+
+
+Convert a time value in milliseconds to the equivalent value in samples, given the context of a specified itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An itm object. \item[{\em ms}]A time specified in ms. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The time specified in samples. 
+\end{DoxyReturn}
+\hypertarget{group__time_gab32518269a1b30459b72e215567697ad}{
+\index{time@{time}!itm\_\-mstoticks@{itm\_\-mstoticks}}
+\index{itm\_\-mstoticks@{itm\_\-mstoticks}!time@{time}}
+\subsubsection[{itm\_\-mstoticks}]{\setlength{\rightskip}{0pt plus 5cm}double itm\_\-mstoticks ({\bf t\_\-itm} $\ast$ {\em x}, \/  double {\em ms})}}
+\label{group__time_gab32518269a1b30459b72e215567697ad}
+
+
+Convert a time value in milliseconds to the equivalent value in ticks, given the context of a specified itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An itm object. \item[{\em ms}]A time specified in ms. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The time specified in ticks. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga844cd45c507bf4c89b91f2c2713fb128}{
+\index{time@{time}!itm\_\-pause@{itm\_\-pause}}
+\index{itm\_\-pause@{itm\_\-pause}!time@{time}}
+\subsubsection[{itm\_\-pause}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-pause ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_ga844cd45c507bf4c89b91f2c2713fb128}
+
+
+Pause the passage of time for an itm object. This is the equivalent to setting the state of a transport object to 0 with a toggle.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\hypertarget{group__time_ga33f7a4627e3d2a77748b66d2af7a0a1a}{
+\index{time@{time}!itm\_\-reference@{itm\_\-reference}}
+\index{itm\_\-reference@{itm\_\-reference}!time@{time}}
+\subsubsection[{itm\_\-reference}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-reference ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_ga33f7a4627e3d2a77748b66d2af7a0a1a}
+
+
+Reference an itm object. When you are using an itm object, you must call this function to increment its reference count.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\hypertarget{group__time_ga1f3b1dded32c2fcbd955adb094c81d98}{
+\index{time@{time}!itm\_\-resume@{itm\_\-resume}}
+\index{itm\_\-resume@{itm\_\-resume}!time@{time}}
+\subsubsection[{itm\_\-resume}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-resume ({\bf t\_\-itm} $\ast$ {\em x})}}
+\label{group__time_ga1f3b1dded32c2fcbd955adb094c81d98}
+
+
+Start the passage of time for an itm object, from it's current location. This is the equivalent to setting the state of a transport object to 0 with a toggle.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \end{DoxyParams}
+\hypertarget{group__time_ga554348a51466458ca16a7c8101e16f44}{
+\index{time@{time}!itm\_\-sampstoms@{itm\_\-sampstoms}}
+\index{itm\_\-sampstoms@{itm\_\-sampstoms}!time@{time}}
+\subsubsection[{itm\_\-sampstoms}]{\setlength{\rightskip}{0pt plus 5cm}double itm\_\-sampstoms ({\bf t\_\-itm} $\ast$ {\em x}, \/  double {\em samps})}}
+\label{group__time_ga554348a51466458ca16a7c8101e16f44}
+
+
+Convert a time value in samples to the equivalent value in milliseconds, given the context of a specified itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An itm object. \item[{\em samps}]A time specified in samples. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The time specified in ms. 
+\end{DoxyReturn}
+\hypertarget{group__time_gac777d53869fe6e01bdce0c34f868f648}{
+\index{time@{time}!itm\_\-setresolution@{itm\_\-setresolution}}
+\index{itm\_\-setresolution@{itm\_\-setresolution}!time@{time}}
+\subsubsection[{itm\_\-setresolution}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-setresolution (double {\em res})}}
+\label{group__time_gac777d53869fe6e01bdce0c34f868f648}
+
+
+Set the number of ticks-\/per-\/quarter-\/note globally for the itm system. The default is 480.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em res}]The number of ticks-\/per-\/quarter-\/note. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__time_gaba77c4fbb00c349342b6358d80644113}{itm\_\-getresolution()} 
+\end{DoxySeeAlso}
+\hypertarget{group__time_gad8584c381f8f183ff6eaa0f4e4a4923a}{
+\index{time@{time}!itm\_\-settimesignature@{itm\_\-settimesignature}}
+\index{itm\_\-settimesignature@{itm\_\-settimesignature}!time@{time}}
+\subsubsection[{itm\_\-settimesignature}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-settimesignature ({\bf t\_\-itm} $\ast$ {\em x}, \/  long {\em num}, \/  long {\em denom}, \/  long {\em flags})}}
+\label{group__time_gad8584c381f8f183ff6eaa0f4e4a4923a}
+
+
+Set an itm object's current time signature. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The itm object. \item[{\em num}]The top number of the time signature. \item[{\em denom}]The bottom number of the time signature. \item[{\em flags}]Currently unused -\/-\/ pass zero. \end{DoxyParams}
+\hypertarget{group__time_ga098ba18a9c4a10c3d92445b0bf3da025}{
+\index{time@{time}!itm\_\-tickstobarbeatunits@{itm\_\-tickstobarbeatunits}}
+\index{itm\_\-tickstobarbeatunits@{itm\_\-tickstobarbeatunits}!time@{time}}
+\subsubsection[{itm\_\-tickstobarbeatunits}]{\setlength{\rightskip}{0pt plus 5cm}void itm\_\-tickstobarbeatunits ({\bf t\_\-itm} $\ast$ {\em x}, \/  double {\em ticks}, \/  long $\ast$ {\em bars}, \/  long $\ast$ {\em beats}, \/  double $\ast$ {\em units}, \/  char {\em position})}}
+\label{group__time_ga098ba18a9c4a10c3d92445b0bf3da025}
+
+
+Convert a time value in bbu to the equivalent value in ticks, given the context of a specified itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An itm object. \item[{\em ticks}]The number of ticks to translate into a time represented as bars, beats, and ticks. \item[{\em bars}]The address of a variable to hold the measure number of the location/position upon return. \item[{\em beats}]The address of a variable to hold the beat number of the location/position upon return. \item[{\em units}]The address of a variable to hold the number of ticks past the beat of the location/position upon return. \item[{\em position}]Set this parameter to \hyperlink{group__time_gga99fb83031ce9923c84392b4e92f956b5ac80606ccbb9a16c14cf81874e4de2408}{TIME\_\-FLAGS\_\-LOCATION} or to zero (for position mode). \end{DoxyParams}
+\hypertarget{group__time_ga3ed676dca6666ab9f305ea81b8d1b6b7}{
+\index{time@{time}!itm\_\-tickstoms@{itm\_\-tickstoms}}
+\index{itm\_\-tickstoms@{itm\_\-tickstoms}!time@{time}}
+\subsubsection[{itm\_\-tickstoms}]{\setlength{\rightskip}{0pt plus 5cm}double itm\_\-tickstoms ({\bf t\_\-itm} $\ast$ {\em x}, \/  double {\em ticks})}}
+\label{group__time_ga3ed676dca6666ab9f305ea81b8d1b6b7}
+
+
+Convert a time value in ticks to the equivalent value in milliseconds, given the context of a specified itm object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]An itm object. \item[{\em ticks}]A time specified in ticks. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The time specified in ms. 
+\end{DoxyReturn}
+\hypertarget{group__time_gab5d282bae56be219c0c863a798140cb5}{
+\index{time@{time}!time\_\-calcquantize@{time\_\-calcquantize}}
+\index{time\_\-calcquantize@{time\_\-calcquantize}!time@{time}}
+\subsubsection[{time\_\-calcquantize}]{\setlength{\rightskip}{0pt plus 5cm}double time\_\-calcquantize ({\bf t\_\-timeobject} $\ast$ {\em ox}, \/  {\bf t\_\-itm} $\ast$ {\em vitm}, \/  {\bf t\_\-timeobject} $\ast$ {\em oq})}}
+\label{group__time_gab5d282bae56be219c0c863a798140cb5}
+
+
+Calculate the quantized interval (in ticks) if this time object were to be scheduled at the current time. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ox}]Time object. \item[{\em vitm}]The associated ITM object (use \hyperlink{group__time_gaa1d217d3b706f718f0f77dbd78427fb0}{time\_\-getitm()} to determine it). \item[{\em oq}]A time object that holds a quantization interval, can be NULL. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Interval (in ticks) for scheduling this object. 
+\end{DoxyReturn}
+\hypertarget{group__time_gaa1d217d3b706f718f0f77dbd78427fb0}{
+\index{time@{time}!time\_\-getitm@{time\_\-getitm}}
+\index{time\_\-getitm@{time\_\-getitm}!time@{time}}
+\subsubsection[{time\_\-getitm}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ time\_\-getitm ({\bf t\_\-timeobject} $\ast$ {\em ox})}}
+\label{group__time_gaa1d217d3b706f718f0f77dbd78427fb0}
+
+
+Return the ITM object associated with this time object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ox}]Time object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The associated \hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} object. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga714ddc564124f89899dc619137f5c64d}{
+\index{time@{time}!time\_\-getms@{time\_\-getms}}
+\index{time\_\-getms@{time\_\-getms}!time@{time}}
+\subsubsection[{time\_\-getms}]{\setlength{\rightskip}{0pt plus 5cm}double time\_\-getms ({\bf t\_\-timeobject} $\ast$ {\em x})}}
+\label{group__time_ga714ddc564124f89899dc619137f5c64d}
+
+
+Convert the value of a time object to milliseconds. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The time object's value, converted to milliseconds. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga2805d69712a55bf77d5083da40108cec}{
+\index{time@{time}!time\_\-getnamed@{time\_\-getnamed}}
+\index{time\_\-getnamed@{time\_\-getnamed}!time@{time}}
+\subsubsection[{time\_\-getnamed}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ time\_\-getnamed ({\bf t\_\-object} $\ast$ {\em owner}, \/  {\bf t\_\-symbol} $\ast$ {\em attrname})}}
+\label{group__time_ga2805d69712a55bf77d5083da40108cec}
+
+
+Return a time object associated with an attribute of an owning object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em owner}]Object that owns this time object (task routine, if any, will pass owner as argument). \item[{\em attrname}]Name of the attribute associated with the time object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} associated with the named attribute. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga2a96b168022b712f38245517a9e20a14}{
+\index{time@{time}!time\_\-getphase@{time\_\-getphase}}
+\index{time\_\-getphase@{time\_\-getphase}!time@{time}}
+\subsubsection[{time\_\-getphase}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-getphase ({\bf t\_\-timeobject} $\ast$ {\em tx}, \/  double $\ast$ {\em phase}, \/  double $\ast$ {\em slope}, \/  double $\ast$ {\em ticks})}}
+\label{group__time_ga2a96b168022b712f38245517a9e20a14}
+
+
+Return the phase of the ITM object (transport) associated with a time object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tx}]The time object. \item[{\em phase}]Pointer to a double to receive the progress within the specified time value of the associated ITM object. \item[{\em slope}]Pointer to a double to receive the slope (phase difference) within the specified time value of the associated ITM object. \item[{\em ticks}]\end{DoxyParams}
+\hypertarget{group__time_ga4f47a0932158cafd04fb2e0cc928b4cc}{
+\index{time@{time}!time\_\-getticks@{time\_\-getticks}}
+\index{time\_\-getticks@{time\_\-getticks}!time@{time}}
+\subsubsection[{time\_\-getticks}]{\setlength{\rightskip}{0pt plus 5cm}double time\_\-getticks ({\bf t\_\-timeobject} $\ast$ {\em x})}}
+\label{group__time_ga4f47a0932158cafd04fb2e0cc928b4cc}
+
+
+Convert the value of a time object to ticks. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The time object's value, converted to ticks. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga86feb1c21b06217bf699447babb169c5}{
+\index{time@{time}!time\_\-isfixedunit@{time\_\-isfixedunit}}
+\index{time\_\-isfixedunit@{time\_\-isfixedunit}!time@{time}}
+\subsubsection[{time\_\-isfixedunit}]{\setlength{\rightskip}{0pt plus 5cm}long time\_\-isfixedunit ({\bf t\_\-timeobject} $\ast$ {\em x})}}
+\label{group__time_ga86feb1c21b06217bf699447babb169c5}
+
+
+Return whether this time object currently holds a fixed (millisecond-\/based) value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Time object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if time object's current value is fixed, false if it is tempo-\/relative. 
+\end{DoxyReturn}
+\hypertarget{group__time_gaf8a102f28b262991c6e4c3b79f37b611}{
+\index{time@{time}!time\_\-listen@{time\_\-listen}}
+\index{time\_\-listen@{time\_\-listen}!time@{time}}
+\subsubsection[{time\_\-listen}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-listen ({\bf t\_\-timeobject} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em attr}, \/  long {\em flags})}}
+\label{group__time_gaf8a102f28b262991c6e4c3b79f37b611}
+
+
+Specify that a millisecond-\/based attribute to be updated automatically when the converted milliseconds of the time object's value changes. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object. \item[{\em attr}]Name of the millisecond based attribute in the owning object that will be updated \item[{\em flags}]If TIME\_\-FLAGS\_\-LISTENTICKS is passed here, updating will not happen if the time value is fixed (ms) based \end{DoxyParams}
+\hypertarget{group__time_gaf6153d8f28738932c0ea3906a6c51696}{
+\index{time@{time}!time\_\-new@{time\_\-new}}
+\index{time\_\-new@{time\_\-new}!time@{time}}
+\subsubsection[{time\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ time\_\-new ({\bf t\_\-object} $\ast$ {\em owner}, \/  {\bf t\_\-symbol} $\ast$ {\em attrname}, \/  {\bf method} {\em tick}, \/  long {\em flags})}}
+\label{group__time_gaf6153d8f28738932c0ea3906a6c51696}
+
+
+Create a new time object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em owner}]Object that will own this time object (task routine, if any, will pass owner as argument). \item[{\em attrname}]Name of the attribute associated with the time object. \item[{\em tick}]Task routine that will be executed (can be NULL) \item[{\em flags}]Options, see \char`\"{}Flags that determine time object behavior\char`\"{} above \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The newly created \hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject}. 
+\end{DoxyReturn}
+\hypertarget{group__time_ga75b99466073d15d4096fb34a5b172648}{
+\index{time@{time}!time\_\-now@{time\_\-now}}
+\index{time\_\-now@{time\_\-now}!time@{time}}
+\subsubsection[{time\_\-now}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-now ({\bf t\_\-timeobject} $\ast$ {\em x}, \/  {\bf t\_\-timeobject} $\ast$ {\em quantize})}}
+\label{group__time_ga75b99466073d15d4096fb34a5b172648}
+
+
+Schedule a task for right now, with optional quantization. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object that schedules temporary events. The time interval is ignored and 0 ticks is used instead. \item[{\em quantize}]A time object that holds a quantization interval, can be NULL for no quantization. \end{DoxyParams}
+\hypertarget{group__time_gae46ab99a9732990170ce0e27fb744c4b}{
+\index{time@{time}!time\_\-schedule@{time\_\-schedule}}
+\index{time\_\-schedule@{time\_\-schedule}!time@{time}}
+\subsubsection[{time\_\-schedule}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-schedule ({\bf t\_\-timeobject} $\ast$ {\em x}, \/  {\bf t\_\-timeobject} $\ast$ {\em quantize})}}
+\label{group__time_gae46ab99a9732990170ce0e27fb744c4b}
+
+
+Schedule a task, with optional quantization. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object that schedules temporary events (must have been created with TIME\_\-FLAGS\_\-USECLOCK but not TIME\_\-FLAGS\_\-PERMANENT) \item[{\em quantize}]A time object that holds a quantization interval, can be NULL for no quantization. \end{DoxyParams}
+\hypertarget{group__time_ga96226d122f6f0d7e2e1ebe47b06d00c5}{
+\index{time@{time}!time\_\-schedule\_\-limit@{time\_\-schedule\_\-limit}}
+\index{time\_\-schedule\_\-limit@{time\_\-schedule\_\-limit}!time@{time}}
+\subsubsection[{time\_\-schedule\_\-limit}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-schedule\_\-limit ({\bf t\_\-timeobject} $\ast$ {\em x}, \/  {\bf t\_\-timeobject} $\ast$ {\em quantize})}}
+\label{group__time_ga96226d122f6f0d7e2e1ebe47b06d00c5}
+
+
+Schedule a task, with optional minimum interval,. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object that schedules temporary events (must have been created with TIME\_\-FLAGS\_\-USECLOCK but not TIME\_\-FLAGS\_\-PERMANENT) \item[{\em quantize}]The minimum interval into the future when the event can occur, can be NULL if there is no minimum interval. \end{DoxyParams}
+\hypertarget{group__time_ga380cbe3efa2240446cb1cc2ef1195876}{
+\index{time@{time}!time\_\-setclock@{time\_\-setclock}}
+\index{time\_\-setclock@{time\_\-setclock}!time@{time}}
+\subsubsection[{time\_\-setclock}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-setclock ({\bf t\_\-timeobject} $\ast$ {\em tx}, \/  {\bf t\_\-symbol} $\ast$ {\em sc})}}
+\label{group__time_ga380cbe3efa2240446cb1cc2ef1195876}
+
+
+Associate a named setclock object with a time object (unsupported). 
+\begin{DoxyParams}{Parameters}
+\item[{\em tx}]Time object. \item[{\em sc}]Name of an associated setclock object. \end{DoxyParams}
+\hypertarget{group__time_ga7451e479ce77e4dcf7a13bbd933575ed}{
+\index{time@{time}!time\_\-setvalue@{time\_\-setvalue}}
+\index{time\_\-setvalue@{time\_\-setvalue}!time@{time}}
+\subsubsection[{time\_\-setvalue}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-setvalue ({\bf t\_\-timeobject} $\ast$ {\em tx}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__time_ga7451e479ce77e4dcf7a13bbd933575ed}
+
+
+Set the current value of a time object (either an interval or a position) using a Max message. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tx}]The time object. \item[{\em s}]Message selector. \item[{\em argc}]Count of arguments. \item[{\em argv}]Message arguments. \end{DoxyParams}
+\hypertarget{group__time_ga6724fc34703298b8dbb12cfe17ef325e}{
+\index{time@{time}!time\_\-stop@{time\_\-stop}}
+\index{time\_\-stop@{time\_\-stop}!time@{time}}
+\subsubsection[{time\_\-stop}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-stop ({\bf t\_\-timeobject} $\ast$ {\em x})}}
+\label{group__time_ga6724fc34703298b8dbb12cfe17ef325e}
+
+
+Stop a currently scheduled time object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object. \end{DoxyParams}
+\hypertarget{group__time_ga31b3eecc1bd31944239fab1b6c309b5b}{
+\index{time@{time}!time\_\-tick@{time\_\-tick}}
+\index{time\_\-tick@{time\_\-tick}!time@{time}}
+\subsubsection[{time\_\-tick}]{\setlength{\rightskip}{0pt plus 5cm}void time\_\-tick ({\bf t\_\-timeobject} $\ast$ {\em x})}}
+\label{group__time_ga31b3eecc1bd31944239fab1b6c309b5b}
+
+
+Execute a time object's task, then if it was already set to execute, reschedule for the current interval value of the object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The time object. \end{DoxyParams}
+
+
+\subsection{Variable Documentation}
+\hypertarget{group__time_gac656fa1f920c69cf77e6631bcec53077}{
+\index{time@{time}!t\_\-itm@{t\_\-itm}}
+\index{t\_\-itm@{t\_\-itm}!time@{time}}
+\subsubsection[{t\_\-itm}]{\setlength{\rightskip}{0pt plus 5cm}BEGIN\_\-USING\_\-C\_\-LINKAGE typedef {\bf t\_\-object} {\bf t\_\-itm}}}
+\label{group__time_gac656fa1f920c69cf77e6631bcec53077}
+
+
+A low-\/level object for tempo-\/based scheduling. \begin{DoxySeeAlso}{See also}
+\hyperlink{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{t\_\-timeobject} 
+
+\hyperlink{chapter_itm}{ITM} 
+\end{DoxySeeAlso}
+\hypertarget{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}{
+\index{time@{time}!t\_\-timeobject@{t\_\-timeobject}}
+\index{t\_\-timeobject@{t\_\-timeobject}!time@{time}}
+\subsubsection[{t\_\-timeobject}]{\setlength{\rightskip}{0pt plus 5cm}BEGIN\_\-USING\_\-C\_\-LINKAGE typedef {\bf t\_\-object} {\bf t\_\-timeobject}}}
+\label{group__time_gab568d2ffd4d84ca17c0b90cf2f7c6a40}
+
+
+A high-\/level time object for tempo-\/based scheduling. \begin{DoxySeeAlso}{See also}
+\hyperlink{group__time_gac656fa1f920c69cf77e6631bcec53077}{t\_\-itm} 
+
+\hyperlink{chapter_itm}{ITM} 
+\end{DoxySeeAlso}

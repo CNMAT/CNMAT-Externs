@@ -1,0 +1,283 @@
+\hypertarget{group__qtutilsmod}{
+\section{QuickTime Utilties Module}
+\label{group__qtutilsmod}\index{QuickTime Utilties Module@{QuickTime Utilties Module}}
+}
+
+
+Collaboration diagram for QuickTime Utilties Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=140pt]{group__qtutilsmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__qtutilsmod_ga368de0a058f98dbfcf8259528f1daa39}{jit\_\-gworld\_\-clear} (GWorldPtr gp, long c)
+\begin{DoxyCompactList}\small\item\em Set all pixels in a QuickDraw GWorld to a specified 32-\/bit value. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtutilsmod_gae02418456d361112ae3d1d6ac40a58e8}{jit\_\-gworld\_\-can\_\-coerce\_\-matrix} (t\_\-gworld\_\-conv\_\-info $\ast$gc, void $\ast$m)
+\begin{DoxyCompactList}\small\item\em Determine whether a Jitter matrix can be wrapped in a QuickDraw GWorld (without a copy). \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtutilsmod_ga96b18f81671878671095be4b05443b11}{jit\_\-gworld\_\-matrix\_\-equal\_\-dim} (GWorldPtr gp, void $\ast$m)
+\begin{DoxyCompactList}\small\item\em Test for equality of dimensions between a QuickDraw GWorld and a Jitter matrix Note: supports UYVY matrices. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__qtutilsmod_gaaead101760e06f6c88cedc03db7f4b64}{jit\_\-coerce\_\-matrix\_\-pixmap} (void $\ast$m, PixMap $\ast$pm)
+\begin{DoxyCompactList}\small\item\em Generate a QuickDraw PixMap for a given Jitter matrix. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__qtutilsmod_ga3a890ee4b21dcc12fd498103c0064025}{jit\_\-qt\_\-utils\_\-moviedataref\_\-create} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$sname, short $\ast$path, Handle $\ast$dataRef, OSType $\ast$dataRefType)
+\begin{DoxyCompactList}\small\item\em Creates a new Data Reference from a file path, returning it and the filename/path pair. \item\end{DoxyCompactList}\item 
+Movie \hyperlink{group__qtutilsmod_gaf3595ef272a7b42709d9463973b9b932}{jit\_\-qt\_\-utils\_\-moviefile\_\-create} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$sname, short $\ast$path, long flags, DataHandler $\ast$dhandler)
+\begin{DoxyCompactList}\small\item\em Creates a new QuickTime Movie from a file path, optionally returning the Data Handler and/or filename/path pair. \item\end{DoxyCompactList}\item 
+Boolean \hyperlink{group__qtutilsmod_gacd69ab321ef0b89a3ed6a74074e0fcdb}{jit\_\-qt\_\-utils\_\-tempfile} (char $\ast$name, Handle $\ast$dataRef, OSType $\ast$dataRefType)
+\begin{DoxyCompactList}\small\item\em Returns a QuickTime-\/compatible Data Reference for a named file in the system's temporary files directory. \item\end{DoxyCompactList}\item 
+Movie \hyperlink{group__qtutilsmod_ga715921eb1988d93d1a2c7d13558ba833}{jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$sname, short $\ast$path, long flags, DataHandler $\ast$dhandler)
+\begin{DoxyCompactList}\small\item\em Creates a new QuickTime Movie in the system's temporary file directory, optionally returning the movie's data handler. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtutilsmod_ga24fc912da9fe5279095b21265968a364}{jit\_\-qt\_\-utils\_\-moviefile\_\-close} (Movie movie, DataHandler dhandler)
+\begin{DoxyCompactList}\small\item\em Closes a QuickTime Movie previously created with jit\_\-qt\_\-utils\_\-moviefile\_\-create or jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create, adding the necessary movie resources. \item\end{DoxyCompactList}\item 
+Track \hyperlink{group__qtutilsmod_ga6f388f5d8b0a03ad1c35bcab9c3b2e3d}{jit\_\-qt\_\-utils\_\-trackmedia\_\-add} (Movie movie, long type, Rect $\ast$trackframe, long vol, long timescale)
+\begin{DoxyCompactList}\small\item\em Adds a new Track, with associated Media, to a QuickTime Movie. \item\end{DoxyCompactList}\item 
+Media \hyperlink{group__qtutilsmod_gaf912891dc0afef646d72b349cf4187fa}{jit\_\-qt\_\-utils\_\-trackmedia\_\-get} (Track track)
+\begin{DoxyCompactList}\small\item\em Returns the Media for a specified Track. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtutilsmod_ga26af1223bb5a5a0253635290bad62397}{jit\_\-qt\_\-utils\_\-trackmedia\_\-dispose} (Track track)
+\begin{DoxyCompactList}\small\item\em Removes a Track, with associated Media, from a QuickTime Movie. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qtutilsmod_gaa83e55dd7e304559597726c3f0ae6287}{jit\_\-qt\_\-utils\_\-type2str} (OSType type, char $\ast$typestr)
+\begin{DoxyCompactList}\small\item\em Given a four-\/char type code, return a 0-\/terminated C string. \item\end{DoxyCompactList}\item 
+OSType \hyperlink{group__qtutilsmod_gade510ea93026d6664050c98923c19338}{jit\_\-qt\_\-utils\_\-str2type} (char $\ast$typestr)
+\begin{DoxyCompactList}\small\item\em Given a C string, return a four-\/char code. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qtutilsmod_ga3ccc7712ee964822c546f6aded7adf05}{jit\_\-qt\_\-utils\_\-trackname\_\-set} (Track track, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Set the name of a QuickTime Track. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__qtutilsmod_gaf3dccb680fc0d7fff078079e21bc42e9}{jit\_\-qt\_\-utils\_\-trackname\_\-get} (Track track)
+\begin{DoxyCompactList}\small\item\em Get the name of a QuickTime Track. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__qtutilsmod_ga2672934be0a1a901c5b762e1c020e08b}{jit\_\-qt\_\-utils\_\-tracktype\_\-get} (Track track)
+\begin{DoxyCompactList}\small\item\em Get the Media Type name from a QuickTime Track. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__qtutilsmod_ga9258bae6c967cb61ffe467a2d1281dcb}{jit\_\-qt\_\-utils\_\-tracktypecode\_\-get} (Track track)
+\begin{DoxyCompactList}\small\item\em Get the four-\/char code for a Track's Media Type, formatted as a symbol. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__qtutilsmod_gaaead101760e06f6c88cedc03db7f4b64}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-coerce\_\-matrix\_\-pixmap@{jit\_\-coerce\_\-matrix\_\-pixmap}}
+\index{jit\_\-coerce\_\-matrix\_\-pixmap@{jit\_\-coerce\_\-matrix\_\-pixmap}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-coerce\_\-matrix\_\-pixmap}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-coerce\_\-matrix\_\-pixmap (void $\ast$ {\em m}, \/  PixMap $\ast$ {\em pm})}}
+\label{group__qtutilsmod_gaaead101760e06f6c88cedc03db7f4b64}
+
+
+Generate a QuickDraw PixMap for a given Jitter matrix. 
+\begin{DoxyParams}{Parameters}
+\item[{\em m}]input t\_\-jit\_\-matrix pointer \item[{\em pm}]on output, a pointer to the generated PixMap\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+The matrix should be locked previous to this call, and unlocked afterward. 
+\end{DoxyWarning}
+\hypertarget{group__qtutilsmod_gae02418456d361112ae3d1d6ac40a58e8}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-gworld\_\-can\_\-coerce\_\-matrix@{jit\_\-gworld\_\-can\_\-coerce\_\-matrix}}
+\index{jit\_\-gworld\_\-can\_\-coerce\_\-matrix@{jit\_\-gworld\_\-can\_\-coerce\_\-matrix}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-gworld\_\-can\_\-coerce\_\-matrix}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-gworld\_\-can\_\-coerce\_\-matrix (t\_\-gworld\_\-conv\_\-info $\ast$ {\em gc}, \/  void $\ast$ {\em m})}}
+\label{group__qtutilsmod_gae02418456d361112ae3d1d6ac40a58e8}
+
+
+Determine whether a Jitter matrix can be wrapped in a QuickDraw GWorld (without a copy). 
+\begin{DoxyParams}{Parameters}
+\item[{\em gc}]optional pointer to a t\_\-gworld\_\-conv\_\-info struct \item[{\em m}]input t\_\-jit\_\-matrix pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long success code (1 = can coerce, 0 = cannot coerce) 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga368de0a058f98dbfcf8259528f1daa39}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-gworld\_\-clear@{jit\_\-gworld\_\-clear}}
+\index{jit\_\-gworld\_\-clear@{jit\_\-gworld\_\-clear}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-gworld\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-gworld\_\-clear (GWorldPtr {\em gp}, \/  long {\em c})}}
+\label{group__qtutilsmod_ga368de0a058f98dbfcf8259528f1daa39}
+
+
+Set all pixels in a QuickDraw GWorld to a specified 32-\/bit value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em gp}]QuickDraw GWorldPtr \item[{\em c}]clear color \end{DoxyParams}
+\hypertarget{group__qtutilsmod_ga96b18f81671878671095be4b05443b11}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-gworld\_\-matrix\_\-equal\_\-dim@{jit\_\-gworld\_\-matrix\_\-equal\_\-dim}}
+\index{jit\_\-gworld\_\-matrix\_\-equal\_\-dim@{jit\_\-gworld\_\-matrix\_\-equal\_\-dim}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-gworld\_\-matrix\_\-equal\_\-dim}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-gworld\_\-matrix\_\-equal\_\-dim (GWorldPtr {\em gp}, \/  void $\ast$ {\em m})}}
+\label{group__qtutilsmod_ga96b18f81671878671095be4b05443b11}
+
+
+Test for equality of dimensions between a QuickDraw GWorld and a Jitter matrix Note: supports UYVY matrices. 
+\begin{DoxyParams}{Parameters}
+\item[{\em gp}]input GWorldPtr \item[{\em m}]input t\_\-jit\_\-matrix pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long success code (1 = dims are equal, 0 = dims are not equal) 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga3a890ee4b21dcc12fd498103c0064025}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-moviedataref\_\-create@{jit\_\-qt\_\-utils\_\-moviedataref\_\-create}}
+\index{jit\_\-qt\_\-utils\_\-moviedataref\_\-create@{jit\_\-qt\_\-utils\_\-moviedataref\_\-create}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-moviedataref\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-qt\_\-utils\_\-moviedataref\_\-create ({\bf t\_\-symbol} $\ast$$\ast$ {\em sname}, \/  short $\ast$ {\em path}, \/  Handle $\ast$ {\em dataRef}, \/  OSType $\ast$ {\em dataRefType})}}
+\label{group__qtutilsmod_ga3a890ee4b21dcc12fd498103c0064025}
+
+
+Creates a new Data Reference from a file path, returning it and the filename/path pair. 
+\begin{DoxyParams}{Parameters}
+\item[{\em sname}](in/out) in: file name or fully qualified path in; out: file name of opened movie file \item[{\em path}](in/out) in: only necessary if sname is unqualified; out: path of opened movie file \item[{\em dataRef}](on output) QuickTime-\/compatible Data Reference for the specified file name, must be disposed by the caller \item[{\em dataRefType}](on output) Data Reference type\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga24fc912da9fe5279095b21265968a364}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-moviefile\_\-close@{jit\_\-qt\_\-utils\_\-moviefile\_\-close}}
+\index{jit\_\-qt\_\-utils\_\-moviefile\_\-close@{jit\_\-qt\_\-utils\_\-moviefile\_\-close}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-moviefile\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-qt\_\-utils\_\-moviefile\_\-close (Movie {\em movie}, \/  DataHandler {\em dhandler})}}
+\label{group__qtutilsmod_ga24fc912da9fe5279095b21265968a364}
+
+
+Closes a QuickTime Movie previously created with jit\_\-qt\_\-utils\_\-moviefile\_\-create or jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create, adding the necessary movie resources. 
+\begin{DoxyParams}{Parameters}
+\item[{\em movie}]QuickTime Movie, as returned from one of the above-\/named functions \item[{\em dhandler}]data handler for the Movie, as returned from one of the above-\/named functions\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long QuickTime error code 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_gaf3595ef272a7b42709d9463973b9b932}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-moviefile\_\-create@{jit\_\-qt\_\-utils\_\-moviefile\_\-create}}
+\index{jit\_\-qt\_\-utils\_\-moviefile\_\-create@{jit\_\-qt\_\-utils\_\-moviefile\_\-create}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-moviefile\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}Movie jit\_\-qt\_\-utils\_\-moviefile\_\-create ({\bf t\_\-symbol} $\ast$$\ast$ {\em sname}, \/  short $\ast$ {\em path}, \/  long {\em flags}, \/  DataHandler $\ast$ {\em dhandler})}}
+\label{group__qtutilsmod_gaf3595ef272a7b42709d9463973b9b932}
+
+
+Creates a new QuickTime Movie from a file path, optionally returning the Data Handler and/or filename/path pair. 
+\begin{DoxyParams}{Parameters}
+\item[{\em sname}](in/out) in: file name or fully qualified path in; out: file name of opened movie file \item[{\em path}](in/out, optional) in: only necessary if sname is unqualified; out: path of opened movie file \item[{\em flags}]movie file creation flags (see QuickTime Documentation for more information) if no flags are specified, the following flags are used: createMovieFileDeleteCurFile $|$ createMovieFileDontCreateResFile \item[{\em dhandler}](on output, optional) data handler for the opened movie file\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Movie QuickTime Movie 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_gade510ea93026d6664050c98923c19338}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-str2type@{jit\_\-qt\_\-utils\_\-str2type}}
+\index{jit\_\-qt\_\-utils\_\-str2type@{jit\_\-qt\_\-utils\_\-str2type}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-str2type}]{\setlength{\rightskip}{0pt plus 5cm}OSType jit\_\-qt\_\-utils\_\-str2type (char $\ast$ {\em typestr})}}
+\label{group__qtutilsmod_gade510ea93026d6664050c98923c19338}
+
+
+Given a C string, return a four-\/char code. 
+\begin{DoxyParams}{Parameters}
+\item[{\em typestr}]C string\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OSType four-\/char code 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_gacd69ab321ef0b89a3ed6a74074e0fcdb}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-tempfile@{jit\_\-qt\_\-utils\_\-tempfile}}
+\index{jit\_\-qt\_\-utils\_\-tempfile@{jit\_\-qt\_\-utils\_\-tempfile}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-tempfile}]{\setlength{\rightskip}{0pt plus 5cm}Boolean jit\_\-qt\_\-utils\_\-tempfile (char $\ast$ {\em name}, \/  Handle $\ast$ {\em dataRef}, \/  OSType $\ast$ {\em dataRefType})}}
+\label{group__qtutilsmod_gacd69ab321ef0b89a3ed6a74074e0fcdb}
+
+
+Returns a QuickTime-\/compatible Data Reference for a named file in the system's temporary files directory. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]file name \item[{\em dataRef}](on output) QuickTime-\/compatible Data Reference for the specified file name, must be disposed by the caller \item[{\em dataRefType}](on output) Data Reference type\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Boolean success (true) or failure (false) 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga715921eb1988d93d1a2c7d13558ba833}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create@{jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create}}
+\index{jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create@{jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}Movie jit\_\-qt\_\-utils\_\-tempmoviefile\_\-create ({\bf t\_\-symbol} $\ast$$\ast$ {\em sname}, \/  short $\ast$ {\em path}, \/  long {\em flags}, \/  DataHandler $\ast$ {\em dhandler})}}
+\label{group__qtutilsmod_ga715921eb1988d93d1a2c7d13558ba833}
+
+
+Creates a new QuickTime Movie in the system's temporary file directory, optionally returning the movie's data handler. 
+\begin{DoxyParams}{Parameters}
+\item[{\em sname}](in/out) in: file name or fully qualified path in; out: file name of opened movie file \item[{\em path}](in/out, optional) in: only necessary if sname is unqualified; out: path of opened movie file \item[{\em flags}]movie file creation flags (see QuickTime Documentation for more information) if no flags are specified, the following flags are used: createMovieFileDeleteCurFile $|$ createMovieFileDontCreateResFile \item[{\em dhandler}](on output, optional) data handler for the opened movie file\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Movie QuickTime Movie 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga6f388f5d8b0a03ad1c35bcab9c3b2e3d}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-trackmedia\_\-add@{jit\_\-qt\_\-utils\_\-trackmedia\_\-add}}
+\index{jit\_\-qt\_\-utils\_\-trackmedia\_\-add@{jit\_\-qt\_\-utils\_\-trackmedia\_\-add}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-trackmedia\_\-add}]{\setlength{\rightskip}{0pt plus 5cm}Track jit\_\-qt\_\-utils\_\-trackmedia\_\-add (Movie {\em movie}, \/  long {\em type}, \/  Rect $\ast$ {\em trackframe}, \/  long {\em vol}, \/  long {\em timescale})}}
+\label{group__qtutilsmod_ga6f388f5d8b0a03ad1c35bcab9c3b2e3d}
+
+
+Adds a new Track, with associated Media, to a QuickTime Movie. 
+\begin{DoxyParams}{Parameters}
+\item[{\em movie}]QuickTime Movie \item[{\em type}]four-\/char code specifying the track/media type to be added (see QuickTime Documentation) \item[{\em trackframe}]the new Track's Rect, relative to the Movie's Rect \item[{\em vol}]initial value for the sound volume in the new Track \item[{\em timescale}]the new Track's timescale\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Track QuickTime Track 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga26af1223bb5a5a0253635290bad62397}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-trackmedia\_\-dispose@{jit\_\-qt\_\-utils\_\-trackmedia\_\-dispose}}
+\index{jit\_\-qt\_\-utils\_\-trackmedia\_\-dispose@{jit\_\-qt\_\-utils\_\-trackmedia\_\-dispose}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-trackmedia\_\-dispose}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-qt\_\-utils\_\-trackmedia\_\-dispose (Track {\em track})}}
+\label{group__qtutilsmod_ga26af1223bb5a5a0253635290bad62397}
+
+
+Removes a Track, with associated Media, from a QuickTime Movie. 
+\begin{DoxyParams}{Parameters}
+\item[{\em track}]QuickTime Track\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long QuickTime error code 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_gaf912891dc0afef646d72b349cf4187fa}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-trackmedia\_\-get@{jit\_\-qt\_\-utils\_\-trackmedia\_\-get}}
+\index{jit\_\-qt\_\-utils\_\-trackmedia\_\-get@{jit\_\-qt\_\-utils\_\-trackmedia\_\-get}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-trackmedia\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}Media jit\_\-qt\_\-utils\_\-trackmedia\_\-get (Track {\em track})}}
+\label{group__qtutilsmod_gaf912891dc0afef646d72b349cf4187fa}
+
+
+Returns the Media for a specified Track. 
+\begin{DoxyParams}{Parameters}
+\item[{\em track}]QuickTime Track\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Media QuickTime Media 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_gaf3dccb680fc0d7fff078079e21bc42e9}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-trackname\_\-get@{jit\_\-qt\_\-utils\_\-trackname\_\-get}}
+\index{jit\_\-qt\_\-utils\_\-trackname\_\-get@{jit\_\-qt\_\-utils\_\-trackname\_\-get}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-trackname\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-qt\_\-utils\_\-trackname\_\-get (Track {\em track})}}
+\label{group__qtutilsmod_gaf3dccb680fc0d7fff078079e21bc42e9}
+
+
+Get the name of a QuickTime Track. 
+\begin{DoxyParams}{Parameters}
+\item[{\em track}]QuickTime Track\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing Track's name 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga3ccc7712ee964822c546f6aded7adf05}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-trackname\_\-set@{jit\_\-qt\_\-utils\_\-trackname\_\-set}}
+\index{jit\_\-qt\_\-utils\_\-trackname\_\-set@{jit\_\-qt\_\-utils\_\-trackname\_\-set}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-trackname\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-qt\_\-utils\_\-trackname\_\-set (Track {\em track}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__qtutilsmod_ga3ccc7712ee964822c546f6aded7adf05}
+
+
+Set the name of a QuickTime Track. 
+\begin{DoxyParams}{Parameters}
+\item[{\em track}]QuickTime Track \item[{\em s}]track name \end{DoxyParams}
+\hypertarget{group__qtutilsmod_ga2672934be0a1a901c5b762e1c020e08b}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-tracktype\_\-get@{jit\_\-qt\_\-utils\_\-tracktype\_\-get}}
+\index{jit\_\-qt\_\-utils\_\-tracktype\_\-get@{jit\_\-qt\_\-utils\_\-tracktype\_\-get}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-tracktype\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-qt\_\-utils\_\-tracktype\_\-get (Track {\em track})}}
+\label{group__qtutilsmod_ga2672934be0a1a901c5b762e1c020e08b}
+
+
+Get the Media Type name from a QuickTime Track. 
+\begin{DoxyParams}{Parameters}
+\item[{\em track}]QuickTime Track\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing the name of the Track's Media Type 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_ga9258bae6c967cb61ffe467a2d1281dcb}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-tracktypecode\_\-get@{jit\_\-qt\_\-utils\_\-tracktypecode\_\-get}}
+\index{jit\_\-qt\_\-utils\_\-tracktypecode\_\-get@{jit\_\-qt\_\-utils\_\-tracktypecode\_\-get}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-tracktypecode\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-qt\_\-utils\_\-tracktypecode\_\-get (Track {\em track})}}
+\label{group__qtutilsmod_ga9258bae6c967cb61ffe467a2d1281dcb}
+
+
+Get the four-\/char code for a Track's Media Type, formatted as a symbol. 
+\begin{DoxyParams}{Parameters}
+\item[{\em track}]QuickTime Track\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing C string representation of the Media Type 
+\end{DoxyReturn}
+\hypertarget{group__qtutilsmod_gaa83e55dd7e304559597726c3f0ae6287}{
+\index{qtutilsmod@{qtutilsmod}!jit\_\-qt\_\-utils\_\-type2str@{jit\_\-qt\_\-utils\_\-type2str}}
+\index{jit\_\-qt\_\-utils\_\-type2str@{jit\_\-qt\_\-utils\_\-type2str}!qtutilsmod@{qtutilsmod}}
+\subsubsection[{jit\_\-qt\_\-utils\_\-type2str}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-qt\_\-utils\_\-type2str (OSType {\em type}, \/  char $\ast$ {\em typestr})}}
+\label{group__qtutilsmod_gaa83e55dd7e304559597726c3f0ae6287}
+
+
+Given a four-\/char type code, return a 0-\/terminated C string. 
+\begin{DoxyParams}{Parameters}
+\item[{\em type}]four-\/char code \item[{\em typestr}](on output) 0-\/terminated C string \end{DoxyParams}

@@ -1,0 +1,980 @@
+\hypertarget{group__dictionary}{
+\section{Dictionary}
+\label{group__dictionary}\index{Dictionary@{Dictionary}}
+}
+
+
+In Max 5, we have a new \char`\"{}dictionary\char`\"{} object which can be used for object prototypes, object serialization, object constructors, and other tasks.  
+
+
+Collaboration diagram for Dictionary:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=120pt]{group__dictionary}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry}
+\begin{DoxyCompactList}\small\item\em A dictionary entry. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__dictionary}{t\_\-dictionary}
+\begin{DoxyCompactList}\small\item\em The dictionary object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$ \hyperlink{group__dictionary_ga9d89ea4cf5b0aaf87fba6027c3ec223c}{dictionary\_\-new} ()
+\begin{DoxyCompactList}\small\item\em Create a new linklist object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gaf401b30bed5b47e5defd1421e7f14cce}{dictionary\_\-appendlong} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long value)
+\begin{DoxyCompactList}\small\item\em Add a long integer value to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga4250c0f1a0c83b1585012ea65f172e13}{dictionary\_\-appendfloat} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, double value)
+\begin{DoxyCompactList}\small\item\em Add a double-\/precision float value to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga5df20e3ac212f70d53469a3f091eae56}{dictionary\_\-appendsym} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$value)
+\begin{DoxyCompactList}\small\item\em Add a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ value to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga22f5a417a6290c508d29196c3c6d6d58}{dictionary\_\-appendatom} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__atom}{t\_\-atom} $\ast$value)
+\begin{DoxyCompactList}\small\item\em Add a \hyperlink{structt__atom}{t\_\-atom}$\ast$ value to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga9b5b07cf479be0446d6a4441c3bdf83a}{dictionary\_\-appendstring} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, const char $\ast$value)
+\begin{DoxyCompactList}\small\item\em Add a C-\/string to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga863a83cc13afbd42a09e8505bee8eea5}{dictionary\_\-appendatoms} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Add an array of atoms to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gac1f0f17da56b71ef6f21c972535ee609}{dictionary\_\-appendatomarray} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$value)
+\begin{DoxyCompactList}\small\item\em Add an \hyperlink{group__atomarray}{Atom Array} object to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga1bd7575368917037f46b5b9076e167c7}{dictionary\_\-appenddictionary} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$value)
+\begin{DoxyCompactList}\small\item\em Add a dictionary object to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga64e86e71b47a2d9719a43ec8bd376591}{dictionary\_\-appendobject} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$value)
+\begin{DoxyCompactList}\small\item\em Add an object to the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gafd215503871278e2ae02c1c747f39e46}{dictionary\_\-getlong} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long $\ast$value)
+\begin{DoxyCompactList}\small\item\em Retrieve a long integer from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga4e166c9edc4575ec89f176455a134cda}{dictionary\_\-getfloat} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, double $\ast$value)
+\begin{DoxyCompactList}\small\item\em Retrieve a double-\/precision float from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga0e5747682765d9a320bb9ccf37d9215d}{dictionary\_\-getsym} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$value)
+\begin{DoxyCompactList}\small\item\em Retrieve a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga28a8378a4710e667a63f8947261bd439}{dictionary\_\-getatom} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__atom}{t\_\-atom} $\ast$value)
+\begin{DoxyCompactList}\small\item\em Copy a \hyperlink{structt__atom}{t\_\-atom} from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gaee590f1bcea90856a26e5806637c2830}{dictionary\_\-getstring} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, const char $\ast$$\ast$value)
+\begin{DoxyCompactList}\small\item\em Retrieve a C-\/string pointer from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gacda8208be5d424b81387258098bdbaa1}{dictionary\_\-getatoms} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long $\ast$argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$argv)
+\begin{DoxyCompactList}\small\item\em Retrieve the address of a \hyperlink{structt__atom}{t\_\-atom} array of in the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{dictionary\_\-copyatoms} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long $\ast$argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$argv)
+\begin{DoxyCompactList}\small\item\em Retrieve copies of a \hyperlink{structt__atom}{t\_\-atom} array in the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gabc3bc4db8dc0898593722338262743e1}{dictionary\_\-getatomarray} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$value)
+\begin{DoxyCompactList}\small\item\em Retrieve a \hyperlink{structt__atomarray}{t\_\-atomarray} pointer from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga1bcef0af352c4f9df233818028083ea7}{dictionary\_\-getdictionary} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$value)
+\begin{DoxyCompactList}\small\item\em Retrieve a \hyperlink{structt__dictionary}{t\_\-dictionary} pointer from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gabcf91529e619908aebd380030c697052}{dictionary\_\-getobject} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$value)
+\begin{DoxyCompactList}\small\item\em Retrieve a \hyperlink{structt__object}{t\_\-object} pointer from the dictionary. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__dictionary_gac60faf9cb165c96aced356959f1faeb3}{dictionary\_\-entryisstring} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Test a key to set if the data stored with that key contains a \hyperlink{structt__string}{t\_\-string} object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__dictionary_ga7657d5e84298475261088dbce18d70d9}{dictionary\_\-entryisatomarray} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Test a key to set if the data stored with that key contains a \hyperlink{structt__atomarray}{t\_\-atomarray} object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__dictionary_gad8055f980993051fb94f8214db876ea2}{dictionary\_\-entryisdictionary} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Test a key to set if the data stored with that key contains a \hyperlink{structt__dictionary}{t\_\-dictionary} object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__dictionary_ga3da77635f06156cc82b4f6c7633b69c6}{dictionary\_\-hasentry} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Test a key to set if it exists in the dictionary. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__dictionary_ga1a080d24b75cd6a8dc20a9143f662136}{dictionary\_\-getentrycount} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Return the number of keys in a dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gae595d2340304018ee2b01e1288534ea3}{dictionary\_\-getkeys} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, long $\ast$numkeys, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$$\ast$keys)
+\begin{DoxyCompactList}\small\item\em Retrieve all of the key names stored in a dictionary. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__dictionary_ga38077c67f36917a708c4867351d6444e}{dictionary\_\-freekeys} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, long numkeys, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$keys)
+\begin{DoxyCompactList}\small\item\em Free memory allocated by the \hyperlink{group__dictionary_gae595d2340304018ee2b01e1288534ea3}{dictionary\_\-getkeys()} method. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gadc367d6d95aa0144c902d05d165f7412}{dictionary\_\-deleteentry} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Remove a value from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gadac447ba3430cc2b8083d62df41932b8}{dictionary\_\-chuckentry} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Remove a value from the dictionary without freeing it. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gafd9a85c38f7e6b1cd075664a5aa4cbc8}{dictionary\_\-clear} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Delete all values from a dictionary. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__dictionary_ga923b67932c8401f58dee86cfb3bb5110}{dictionary\_\-funall} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, void $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Call the specified function for every entry in the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__dictionary_ga866aeb04d26740768790f64203f30b7c}{dictionary\_\-entry\_\-getkey} (\hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Given a \hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry}$\ast$, return the key associated with that entry. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__dictionary_ga55877f4d0fef0a8d0badf9afc95bb7d0}{dictionary\_\-entry\_\-getvalue} (\hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry} $\ast$x, \hyperlink{structt__atom}{t\_\-atom} $\ast$value)
+\begin{DoxyCompactList}\small\item\em Given a \hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry}$\ast$, return the value associated with that entry. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gaef48a5cc22bc4c8b0fb23c7b7c3aa6a8}{dictionary\_\-copyunique} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$copyfrom)
+\begin{DoxyCompactList}\small\item\em Given 2 dictionaries, copy the keys unique to one of the dictionaries to the other dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga7beaedd2dbbc352539ccd104db7094b1}{dictionary\_\-getdeflong} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long $\ast$value, long def)
+\begin{DoxyCompactList}\small\item\em Retrieve a long integer from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga2c988f18fa22ab56aac4464bc7140438}{dictionary\_\-getdeffloat} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, double $\ast$value, double def)
+\begin{DoxyCompactList}\small\item\em Retrieve a double-\/precision float from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga2bf7497a4db16913aedb8c85036bf8c6}{dictionary\_\-getdefsym} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$value, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$def)
+\begin{DoxyCompactList}\small\item\em Retrieve a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gaa447fe7ad80586bee323e1c2bf80bdf9}{dictionary\_\-getdefatom} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__atom}{t\_\-atom} $\ast$value, \hyperlink{structt__atom}{t\_\-atom} $\ast$def)
+\begin{DoxyCompactList}\small\item\em Retrieve a \hyperlink{structt__atom}{t\_\-atom}$\ast$ from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga3ced9bab630a199d920fffc163f4fe1b}{dictionary\_\-getdefstring} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, const char $\ast$$\ast$value, char $\ast$def)
+\begin{DoxyCompactList}\small\item\em Retrieve a C-\/string from the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga2ab733c5d5fe85e31e73d5a66d75dabd}{dictionary\_\-getdefatoms} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long $\ast$argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$argv, \hyperlink{structt__atom}{t\_\-atom} $\ast$def)
+\begin{DoxyCompactList}\small\item\em Retrieve the address of a \hyperlink{structt__atom}{t\_\-atom} array of in the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_gaa886af0aad9db9bc6b08314b9b5672f9}{dictionary\_\-copydefatoms} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long $\ast$argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$argv, \hyperlink{structt__atom}{t\_\-atom} $\ast$def)
+\begin{DoxyCompactList}\small\item\em Retrieve copies of a \hyperlink{structt__atom}{t\_\-atom} array in the dictionary. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga099020753fc6918512d3bfc2b3fedafc}{dictionary\_\-dump} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, long recurse, long console)
+\begin{DoxyCompactList}\small\item\em Print the contents of a dictionary to the Max window. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga53ef6b088fed8ef360292a659a383487}{dictionary\_\-copyentries} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$src, \hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$dst, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$keys)
+\begin{DoxyCompactList}\small\item\em Copy specified entries from one dictionary to another. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$ \hyperlink{group__dictionary_ga77d5bafc260f9fc0bf3b4ad35f2b2629}{dictionary\_\-sprintf} (char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Create a new dictionary populated with values using a combination of attribute and sprintf syntax. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga2c64f2e3bce940ca992b3dd3ffe292ac}{dictionary\_\-read} (char $\ast$filename, short path, \hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$$\ast$d)
+\begin{DoxyCompactList}\small\item\em Read the specified JSON file and return a \hyperlink{structt__dictionary}{t\_\-dictionary} object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__dictionary_ga54f1888c1ca3cd84d32cd2de7a392e35}{dictionary\_\-write} (\hyperlink{structt__dictionary}{t\_\-dictionary} $\ast$d, char $\ast$filename, short path)
+\begin{DoxyCompactList}\small\item\em Serialize the specified \hyperlink{structt__dictionary}{t\_\-dictionary} object to a JSON file. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__dictionary_ga7619544926e5c62caf19176ebab5b1a2}{postdictionary} (\hyperlink{structt__object}{t\_\-object} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Print the contents of a dictionary to the Max window. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+In Max 5, we have a new \char`\"{}dictionary\char`\"{} object which can be used for object prototypes, object serialization, object constructors, and other tasks. A dictionary is ultimately a collection of atom values assigned to symbolic keys. In addition to primitive \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG}, \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a0b3aa0ab8104573dfc9cb70b5b08031f}{A\_\-FLOAT}, and \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a2d661c2a5d949566e2f1944c99bceeea}{A\_\-SYM} atom types, the \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ} atom type is used for \hyperlink{structt__atomarray}{t\_\-atomarray} (for a set of atoms assigned to a key), \hyperlink{structt__dictionary}{t\_\-dictionary} (for hierarhical use), \hyperlink{structt__string}{t\_\-string} (for large blocks of text which we don't wish to bloat the symbol table), and potentially other object data types. Internally, the dictionary object uses a combination data structure of a hash table (for fast key lookup) and a linked-\/list (to maintain ordering of information within the dictionary).
+
+Dictionaries are clonable entites, but note that all the member objects of a given dictionary may not be clonable. At the time of this writing, for example, the \hyperlink{structt__string}{t\_\-string} object is not clonable, though it will be made clonable in the near future. In order for prototype entities to be guaranteed their passage into the constructor, they must be clonable (currenlty a symbol conversion is in place for the \hyperlink{structt__string}{t\_\-string} class).\hypertarget{group__dictionary_using_dictionaries}{}\subsection{Using Dictionaries}\label{group__dictionary_using_dictionaries}
+Dictionaries are used in many places in Max 5. They can be confusing in many respects. It is easy to produce memory leaks or bugs where objects are freed twice. It is easy to confuse what type of dictionary is used for what. This page will begin with some high level information to help understand when to free and when not to free. Then, we will offer recipies for using dictionaries to accomplish common tasks.\hypertarget{group__dictionary_understanding_dictionaries}{}\subsubsection{Understanding Dictionaries}\label{group__dictionary_understanding_dictionaries}
+A dictionary stores atom values under named key entries. These atoms can contain \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ} values. When the dictionary is freed, any \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a82cc76e0d53c8fc28df167c35d5bbd1a}{A\_\-OBJ} values that are in the dictionary will also be freed. Thus, it is easy to mistakenly free objects twice, thus this is something to be careful about. For example, look at this code:
+
+
+\begin{DoxyCode}
+    t_dictionary *d = dictionary_new(); 
+    t_dictionary *sd = dictionary_new();  
+    dictionary_appenddictionary(d, gensym("subdictionary"), sd); 
+    do_something(d);
+    object_free(d);  // this will free *both* d and sd since sd is contained by d
+      
+    // freeing "sd" here would be bad
+\end{DoxyCode}
+
+
+You primarily need to keep this in mind when calling \hyperlink{group__dictionary_ga64e86e71b47a2d9719a43ec8bd376591}{dictionary\_\-appendobject()}, \hyperlink{group__dictionary_ga1bd7575368917037f46b5b9076e167c7}{dictionary\_\-appenddictionary()}, or \hyperlink{group__dictionary_gac1f0f17da56b71ef6f21c972535ee609}{dictionary\_\-appendatomarray()}. So, what do you do if you need to free a dictionary but you also want to hang on to an object that is inside of the dictionary? In this case, chuck the entry in question first. For example, let's assume that for some reason you cannot free the \char`\"{}sd\char`\"{} dictionary in the code above. Perhaps it doesn't belong to you. But, to do some operation you need to append it to a new dictionary. Then, do this:
+
+
+\begin{DoxyCode}
+    void function_foo(t_dictionary *sd) {
+      t_dictionary *d = dictionary_new(); 
+      dictionary_appenddictionary(d, gensym("subdictionary"), sd); 
+      do_something(d); 
+      dictionary_chuckentry(d, gensym("subdictionary")); 
+      object_free(d);  
+    }
+\end{DoxyCode}
+\hypertarget{group__dictionary_when_to_free_a_dictionary}{}\subsubsection{When to Free a Dictionary}\label{group__dictionary_when_to_free_a_dictionary}
+So, how do you know when you need to free a dictionary? Well, generally if you make a dictionary, you need to free it when you are done (unless you transfer ownership of the dictionary to someone else). On the other hand, if you are passed a dictionary (i.e. as a parameter of your function or method) then it is not yours to free and you should just use it. However, it is not always obvious that you made a dictionary vs just borrowed it.
+
+Here are some common (and not so common) ways to make a dictionary. These functions return a new dictionary and thus the dictionary you get should be freed when you are done, unless you pass the dictionary on to someone else who will free it at an appropriate time. Here they are: 
+\begin{DoxyItemize}
+\item \hyperlink{group__dictionary_ga9d89ea4cf5b0aaf87fba6027c3ec223c}{dictionary\_\-new()}  
+\item dictionary\_\-clone()  
+\item \hyperlink{group__dictionary_ga2c64f2e3bce940ca992b3dd3ffe292ac}{dictionary\_\-read()}  
+\item \hyperlink{group__dictionary_ga77d5bafc260f9fc0bf3b4ad35f2b2629}{dictionary\_\-sprintf()}  
+\item dictionary\_\-vsprintf()  
+\item jsonreader\_\-parse()  
+\item jpatcher\_\-monikerforobject()  
+\item class\_\-cloneprototype()  
+\item prototype\_\-getdictionary()  
+\item clipboard\_\-todictionary()  
+\item jpatchercontroller\_\-copytodictionary()  
+\item probably others of course 
+\end{DoxyItemize}
+
+Here are some functions that return borrowed dictionaries. These are dictionaries that you can use but you cannot free since you do not own them. Here they are: 
+\begin{DoxyItemize}
+\item dictionary\_\-prototypefromclass()  
+\item object\_\-refpage\_\-get\_\-class\_\-info\_\-fromclassname()  
+\item object\_\-refpage\_\-get\_\-class\_\-info()  
+\item \hyperlink{group__obj_ga6122e56af8de90fa7aad43ee405c6bb6}{object\_\-dictionaryarg()}  
+\end{DoxyItemize}
+
+Finally, most functions that accept dictionaries as parameters will not assume ownership of the dictionary. Usually the way ownership is assumed is if you add a dictionary as a subdictionary to a dictionary that you do not own. One exception is the utility newobject\_\-fromdictionary\_\-delete() who's name makes it clear that the dictionary will be deleted after calling the function.\hypertarget{group__dictionary_dictionaries_common_uses}{}\subsubsection{Some Common Uses of Dictionaries}\label{group__dictionary_dictionaries_common_uses}
+You can make a patcher by passing a dictionary to \hyperlink{group__obj_ga459c71aca6316e345379eeb424ad56ff}{object\_\-new\_\-typed()} when making a \char`\"{}jpatcher\char`\"{}. Using \hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} and \hyperlink{group__attr_gad9de140db1dba2fe588019866a048bc6}{attr\_\-args\_\-dictionary()} makes this relatively easy.
+
+Use \hyperlink{group__obj_gad81c665a20c3c707decaf3403468ff47}{newobject\_\-sprintf()} to programmatically make an object in a patch. Actually, you don't explicitly use a dictionary here! If you do want more control, so you can touch the dictionary to customize it, then see the next bullet.
+
+Use \hyperlink{group__dictionary_ga77d5bafc260f9fc0bf3b4ad35f2b2629}{dictionary\_\-sprintf()} to make a dictionary to specify a box (i.e. specify class with @maxclass attr). Then, make another dictionary and append your box dictionary to it under the key \char`\"{}box\char`\"{} via \hyperlink{group__dictionary_ga1bd7575368917037f46b5b9076e167c7}{dictionary\_\-appenddictionary()}. Finally, make your object with \hyperlink{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}{newobject\_\-fromdictionary()}.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist}{Linked List} 
+
+\hyperlink{group__hashtab}{Hash Table}
+\end{DoxySeeAlso}
+\begin{DoxyVersion}{Version}
+5.0 
+\end{DoxyVersion}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__dictionary_ga22f5a417a6290c508d29196c3c6d6d58}{
+\index{dictionary@{dictionary}!dictionary\_\-appendatom@{dictionary\_\-appendatom}}
+\index{dictionary\_\-appendatom@{dictionary\_\-appendatom}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendatom}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendatom ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-atom} $\ast$ {\em value})}}
+\label{group__dictionary_ga22f5a417a6290c508d29196c3c6d6d58}
+
+
+Add a \hyperlink{structt__atom}{t\_\-atom}$\ast$ value to the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gac1f0f17da56b71ef6f21c972535ee609}{
+\index{dictionary@{dictionary}!dictionary\_\-appendatomarray@{dictionary\_\-appendatomarray}}
+\index{dictionary\_\-appendatomarray@{dictionary\_\-appendatomarray}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendatomarray}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendatomarray ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$ {\em value})}}
+\label{group__dictionary_gac1f0f17da56b71ef6f21c972535ee609}
+
+
+Add an \hyperlink{group__atomarray}{Atom Array} object to the dictionary. Note that from this point on that you should not free the \hyperlink{structt__atomarray}{t\_\-atomarray}$\ast$, because the atomarray is now owned by the dictionary, and freeing the dictionary will free the atomarray as discussed in \hyperlink{group__dictionary_when_to_free_a_dictionary}{When to Free a Dictionary}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga863a83cc13afbd42a09e8505bee8eea5}{
+\index{dictionary@{dictionary}!dictionary\_\-appendatoms@{dictionary\_\-appendatoms}}
+\index{dictionary\_\-appendatoms@{dictionary\_\-appendatoms}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendatoms ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__dictionary_ga863a83cc13afbd42a09e8505bee8eea5}
+
+
+Add an array of atoms to the dictionary. Internally these atoms will be copied into a \hyperlink{structt__atomarray}{t\_\-atomarray} object, which will be appended to the dictionary with the given key.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em argc}]The number of atoms to append to the dictionary. \item[{\em argv}]The address of the first atom in the array to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga1bd7575368917037f46b5b9076e167c7}{
+\index{dictionary@{dictionary}!dictionary\_\-appenddictionary@{dictionary\_\-appenddictionary}}
+\index{dictionary\_\-appenddictionary@{dictionary\_\-appenddictionary}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appenddictionary}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appenddictionary ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$ {\em value})}}
+\label{group__dictionary_ga1bd7575368917037f46b5b9076e167c7}
+
+
+Add a dictionary object to the dictionary. Note that from this point on that you should not free the \hyperlink{structt__dictionary}{t\_\-dictionary}$\ast$ that is being added, because the newly-\/added dictionary is now owned by the dictionary to which it has been added, as discussed in \hyperlink{group__dictionary_when_to_free_a_dictionary}{When to Free a Dictionary}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga4250c0f1a0c83b1585012ea65f172e13}{
+\index{dictionary@{dictionary}!dictionary\_\-appendfloat@{dictionary\_\-appendfloat}}
+\index{dictionary\_\-appendfloat@{dictionary\_\-appendfloat}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendfloat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendfloat ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  double {\em value})}}
+\label{group__dictionary_ga4250c0f1a0c83b1585012ea65f172e13}
+
+
+Add a double-\/precision float value to the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gaf401b30bed5b47e5defd1421e7f14cce}{
+\index{dictionary@{dictionary}!dictionary\_\-appendlong@{dictionary\_\-appendlong}}
+\index{dictionary\_\-appendlong@{dictionary\_\-appendlong}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendlong}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendlong ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long {\em value})}}
+\label{group__dictionary_gaf401b30bed5b47e5defd1421e7f14cce}
+
+
+Add a long integer value to the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga64e86e71b47a2d9719a43ec8bd376591}{
+\index{dictionary@{dictionary}!dictionary\_\-appendobject@{dictionary\_\-appendobject}}
+\index{dictionary\_\-appendobject@{dictionary\_\-appendobject}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendobject}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendobject ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$ {\em value})}}
+\label{group__dictionary_ga64e86e71b47a2d9719a43ec8bd376591}
+
+
+Add an object to the dictionary. Note that from this point on that you should not free the \hyperlink{structt__object}{t\_\-object}$\ast$ that is being added, because the newly-\/added object is now owned by the dictionary to which it has been added, as discussed in \hyperlink{group__dictionary_when_to_free_a_dictionary}{When to Free a Dictionary}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga9b5b07cf479be0446d6a4441c3bdf83a}{
+\index{dictionary@{dictionary}!dictionary\_\-appendstring@{dictionary\_\-appendstring}}
+\index{dictionary\_\-appendstring@{dictionary\_\-appendstring}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendstring}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendstring ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  const char $\ast$ {\em value})}}
+\label{group__dictionary_ga9b5b07cf479be0446d6a4441c3bdf83a}
+
+
+Add a C-\/string to the dictionary. Internally this uses the \hyperlink{structt__symbol}{t\_\-symbol} object. It is useful to use the \hyperlink{structt__string}{t\_\-string} in dictionaries rather than the \hyperlink{structt__symbol}{t\_\-symbol} to avoid bloating Max's symbol table unnecessarily.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga5df20e3ac212f70d53469a3f091eae56}{
+\index{dictionary@{dictionary}!dictionary\_\-appendsym@{dictionary\_\-appendsym}}
+\index{dictionary\_\-appendsym@{dictionary\_\-appendsym}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-appendsym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-appendsym ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-symbol} $\ast$ {\em value})}}
+\label{group__dictionary_ga5df20e3ac212f70d53469a3f091eae56}
+
+
+Add a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ value to the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The name of the key used to index the new value. All keys must be unique. If the key name already exists, then the existing value associated with the key will be freed prior to the new value's assignment. \item[{\em value}]The new value to append to the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gadac447ba3430cc2b8083d62df41932b8}{
+\index{dictionary@{dictionary}!dictionary\_\-chuckentry@{dictionary\_\-chuckentry}}
+\index{dictionary\_\-chuckentry@{dictionary\_\-chuckentry}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-chuckentry}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-chuckentry ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__dictionary_gadac447ba3430cc2b8083d62df41932b8}
+
+
+Remove a value from the dictionary without freeing it. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to delete. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gadc367d6d95aa0144c902d05d165f7412}{dictionary\_\-deleteentry()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_gafd9a85c38f7e6b1cd075664a5aa4cbc8}{
+\index{dictionary@{dictionary}!dictionary\_\-clear@{dictionary\_\-clear}}
+\index{dictionary\_\-clear@{dictionary\_\-clear}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-clear ({\bf t\_\-dictionary} $\ast$ {\em d})}}
+\label{group__dictionary_gafd9a85c38f7e6b1cd075664a5aa4cbc8}
+
+
+Delete all values from a dictionary. This method will free the objects in the dictionary. If freeing the objects is inappropriate or undesirable then you should iterate through the dictionary and use \hyperlink{group__dictionary_gadac447ba3430cc2b8083d62df41932b8}{dictionary\_\-chuckentry()} instead.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gae595d2340304018ee2b01e1288534ea3}{dictionary\_\-getkeys()} 
+
+\hyperlink{group__dictionary_gadac447ba3430cc2b8083d62df41932b8}{dictionary\_\-chuckentry()} 
+
+\hyperlink{group__dictionary_gadc367d6d95aa0144c902d05d165f7412}{dictionary\_\-deleteentry()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{
+\index{dictionary@{dictionary}!dictionary\_\-copyatoms@{dictionary\_\-copyatoms}}
+\index{dictionary\_\-copyatoms@{dictionary\_\-copyatoms}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-copyatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-copyatoms ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long $\ast$ {\em argc}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em argv})}}
+\label{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}
+
+
+Retrieve copies of a \hyperlink{structt__atom}{t\_\-atom} array in the dictionary. The retrieved pointer of t\_\-atoms in the dictionary has memory allocated and copied to it from within the function. You are responsible for freeing it with \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em argc}]The address of a variable to hold the number of atoms in the array. \item[{\em argv}]The address of a variable to hold a pointer to the first atom in the array. You should initialize this pointer to NULL prior to passing it to \hyperlink{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{dictionary\_\-copyatoms()}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gacda8208be5d424b81387258098bdbaa1}{dictionary\_\-getatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_gaa886af0aad9db9bc6b08314b9b5672f9}{
+\index{dictionary@{dictionary}!dictionary\_\-copydefatoms@{dictionary\_\-copydefatoms}}
+\index{dictionary\_\-copydefatoms@{dictionary\_\-copydefatoms}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-copydefatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-copydefatoms ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long $\ast$ {\em argc}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em argv}, \/  {\bf t\_\-atom} $\ast$ {\em def})}}
+\label{group__dictionary_gaa886af0aad9db9bc6b08314b9b5672f9}
+
+
+Retrieve copies of a \hyperlink{structt__atom}{t\_\-atom} array in the dictionary. The retrieved pointer of t\_\-atoms in the dictionary has memory allocated and copied to it from within the function. You are responsible for freeing it with \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}. If the named key doesn't exist, then copy a default array of atoms, specified as a \hyperlink{structt__atomarray}{t\_\-atomarray}$\ast$.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em argc}]The address of a variable to hold the number of atoms in the array. \item[{\em argv}]The address of a variable to hold a pointer to the first atom in the array. You should initialize this pointer to NULL prior to passing it to \hyperlink{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{dictionary\_\-copyatoms()}. \item[{\em def}]The default values specified as an instance of the \hyperlink{structt__atomarray}{t\_\-atomarray} object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga2ab733c5d5fe85e31e73d5a66d75dabd}{dictionary\_\-getdefatoms()} 
+
+\hyperlink{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{dictionary\_\-copyatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga53ef6b088fed8ef360292a659a383487}{
+\index{dictionary@{dictionary}!dictionary\_\-copyentries@{dictionary\_\-copyentries}}
+\index{dictionary\_\-copyentries@{dictionary\_\-copyentries}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-copyentries}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-copyentries ({\bf t\_\-dictionary} $\ast$ {\em src}, \/  {\bf t\_\-dictionary} $\ast$ {\em dst}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em keys})}}
+\label{group__dictionary_ga53ef6b088fed8ef360292a659a383487}
+
+
+Copy specified entries from one dictionary to another. 
+\begin{DoxyParams}{Parameters}
+\item[{\em src}]The source dictionary from which to copy entries. \item[{\em dst}]The destination dictionary to which the entries will be copied. \item[{\em keys}]The address of the first of an array of \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ that specifies which keys to copy. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gaef48a5cc22bc4c8b0fb23c7b7c3aa6a8}{dictionary\_\-copyunique()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_gaef48a5cc22bc4c8b0fb23c7b7c3aa6a8}{
+\index{dictionary@{dictionary}!dictionary\_\-copyunique@{dictionary\_\-copyunique}}
+\index{dictionary\_\-copyunique@{dictionary\_\-copyunique}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-copyunique}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-copyunique ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-dictionary} $\ast$ {\em copyfrom})}}
+\label{group__dictionary_gaef48a5cc22bc4c8b0fb23c7b7c3aa6a8}
+
+
+Given 2 dictionaries, copy the keys unique to one of the dictionaries to the other dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]A dictionary instance. This will be the destination for any values that are copied. \item[{\em copyfrom}]A dictionary instance from which we will copy any values with unique keys. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga53ef6b088fed8ef360292a659a383487}{dictionary\_\-copyentries()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_gadc367d6d95aa0144c902d05d165f7412}{
+\index{dictionary@{dictionary}!dictionary\_\-deleteentry@{dictionary\_\-deleteentry}}
+\index{dictionary\_\-deleteentry@{dictionary\_\-deleteentry}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-deleteentry}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-deleteentry ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__dictionary_gadc367d6d95aa0144c902d05d165f7412}
+
+
+Remove a value from the dictionary. This method will free the object in the dictionary. If freeing the object is inappropriate or undesirable, use \hyperlink{group__dictionary_gadac447ba3430cc2b8083d62df41932b8}{dictionary\_\-chuckentry()} instead.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to delete. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gadac447ba3430cc2b8083d62df41932b8}{dictionary\_\-chuckentry()} 
+
+\hyperlink{group__dictionary_gafd9a85c38f7e6b1cd075664a5aa4cbc8}{dictionary\_\-clear()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga099020753fc6918512d3bfc2b3fedafc}{
+\index{dictionary@{dictionary}!dictionary\_\-dump@{dictionary\_\-dump}}
+\index{dictionary\_\-dump@{dictionary\_\-dump}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-dump}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-dump ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  long {\em recurse}, \/  long {\em console})}}
+\label{group__dictionary_ga099020753fc6918512d3bfc2b3fedafc}
+
+
+Print the contents of a dictionary to the Max window. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em recurse}]If non-\/zero, the dictionary will be recursively unravelled to the Max window. Otherwise it will only print the top level. \item[{\em console}]If non-\/zero, the dictionary will be posted to the console rather than the Max window. On the Mac you can view this using Console.app. On Windows you can use the free DbgView program which can be downloaded from Microsoft. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga866aeb04d26740768790f64203f30b7c}{
+\index{dictionary@{dictionary}!dictionary\_\-entry\_\-getkey@{dictionary\_\-entry\_\-getkey}}
+\index{dictionary\_\-entry\_\-getkey@{dictionary\_\-entry\_\-getkey}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-entry\_\-getkey}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ dictionary\_\-entry\_\-getkey ({\bf t\_\-dictionary\_\-entry} $\ast$ {\em x})}}
+\label{group__dictionary_ga866aeb04d26740768790f64203f30b7c}
+
+
+Given a \hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry}$\ast$, return the key associated with that entry. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The dictionary entry. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The key associated with the entry.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga55877f4d0fef0a8d0badf9afc95bb7d0}{dictionary\_\-entry\_\-getvalue()} 
+
+\hyperlink{group__dictionary_ga923b67932c8401f58dee86cfb3bb5110}{dictionary\_\-funall()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga55877f4d0fef0a8d0badf9afc95bb7d0}{
+\index{dictionary@{dictionary}!dictionary\_\-entry\_\-getvalue@{dictionary\_\-entry\_\-getvalue}}
+\index{dictionary\_\-entry\_\-getvalue@{dictionary\_\-entry\_\-getvalue}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-entry\_\-getvalue}]{\setlength{\rightskip}{0pt plus 5cm}void dictionary\_\-entry\_\-getvalue ({\bf t\_\-dictionary\_\-entry} $\ast$ {\em x}, \/  {\bf t\_\-atom} $\ast$ {\em value})}}
+\label{group__dictionary_ga55877f4d0fef0a8d0badf9afc95bb7d0}
+
+
+Given a \hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry}$\ast$, return the value associated with that entry. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The dictionary entry. \item[{\em value}]The address of a \hyperlink{structt__atom}{t\_\-atom} to which the value will be copied.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga866aeb04d26740768790f64203f30b7c}{dictionary\_\-entry\_\-getkey()} 
+
+\hyperlink{group__dictionary_ga923b67932c8401f58dee86cfb3bb5110}{dictionary\_\-funall()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga7657d5e84298475261088dbce18d70d9}{
+\index{dictionary@{dictionary}!dictionary\_\-entryisatomarray@{dictionary\_\-entryisatomarray}}
+\index{dictionary\_\-entryisatomarray@{dictionary\_\-entryisatomarray}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-entryisatomarray}]{\setlength{\rightskip}{0pt plus 5cm}long dictionary\_\-entryisatomarray ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__dictionary_ga7657d5e84298475261088dbce18d70d9}
+
+
+Test a key to set if the data stored with that key contains a \hyperlink{structt__atomarray}{t\_\-atomarray} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the key contains a \hyperlink{structt__atomarray}{t\_\-atomarray}, otherwise returns false. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gad8055f980993051fb94f8214db876ea2}{
+\index{dictionary@{dictionary}!dictionary\_\-entryisdictionary@{dictionary\_\-entryisdictionary}}
+\index{dictionary\_\-entryisdictionary@{dictionary\_\-entryisdictionary}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-entryisdictionary}]{\setlength{\rightskip}{0pt plus 5cm}long dictionary\_\-entryisdictionary ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__dictionary_gad8055f980993051fb94f8214db876ea2}
+
+
+Test a key to set if the data stored with that key contains a \hyperlink{structt__dictionary}{t\_\-dictionary} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the key contains a \hyperlink{structt__dictionary}{t\_\-dictionary}, otherwise returns false. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gac60faf9cb165c96aced356959f1faeb3}{
+\index{dictionary@{dictionary}!dictionary\_\-entryisstring@{dictionary\_\-entryisstring}}
+\index{dictionary\_\-entryisstring@{dictionary\_\-entryisstring}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-entryisstring}]{\setlength{\rightskip}{0pt plus 5cm}long dictionary\_\-entryisstring ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__dictionary_gac60faf9cb165c96aced356959f1faeb3}
+
+
+Test a key to set if the data stored with that key contains a \hyperlink{structt__string}{t\_\-string} object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the key contains a \hyperlink{structt__string}{t\_\-string}, otherwise returns false. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga38077c67f36917a708c4867351d6444e}{
+\index{dictionary@{dictionary}!dictionary\_\-freekeys@{dictionary\_\-freekeys}}
+\index{dictionary\_\-freekeys@{dictionary\_\-freekeys}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-freekeys}]{\setlength{\rightskip}{0pt plus 5cm}void dictionary\_\-freekeys ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  long {\em numkeys}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em keys})}}
+\label{group__dictionary_ga38077c67f36917a708c4867351d6444e}
+
+
+Free memory allocated by the \hyperlink{group__dictionary_gae595d2340304018ee2b01e1288534ea3}{dictionary\_\-getkeys()} method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em numkeys}]The address of a long where the number of keys retrieved will be set. \item[{\em keys}]The address of the first of an array \hyperlink{structt__symbol}{t\_\-symbol} pointers where the retrieved keys will be set. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gae595d2340304018ee2b01e1288534ea3}{dictionary\_\-getkeys()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga923b67932c8401f58dee86cfb3bb5110}{
+\index{dictionary@{dictionary}!dictionary\_\-funall@{dictionary\_\-funall}}
+\index{dictionary\_\-funall@{dictionary\_\-funall}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-funall}]{\setlength{\rightskip}{0pt plus 5cm}void dictionary\_\-funall ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf method} {\em fun}, \/  void $\ast$ {\em arg})}}
+\label{group__dictionary_ga923b67932c8401f58dee86cfb3bb5110}
+
+
+Call the specified function for every entry in the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em fun}]The function to call, specified as function pointer cast to a Max \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method}. \item[{\em arg}]An argument that you would like to pass to the function being called.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__dictionary_ga923b67932c8401f58dee86cfb3bb5110}{dictionary\_\-funall()} method will call your function for every entry in the dictionary. It will pass both a pointer to the \hyperlink{structt__dictionary__entry}{t\_\-dictionary\_\-entry}, and any argument that you provide. The following example shows a function that could be called by \hyperlink{group__dictionary_ga923b67932c8401f58dee86cfb3bb5110}{dictionary\_\-funall()}. 
+\begin{DoxyCode}
+    void my_function(t_dictionary_entry *entry, void* my_arg)
+    {
+        t_symbol    *key;
+        t_atom      value;
+        
+        key = dictionary_entry_getkey(entry);
+        dictionary_entry_getvalue(entry, &value);
+        
+        // do something with key, value, and my_arg...
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga866aeb04d26740768790f64203f30b7c}{dictionary\_\-entry\_\-getkey()} 
+
+\hyperlink{group__dictionary_ga55877f4d0fef0a8d0badf9afc95bb7d0}{dictionary\_\-entry\_\-getvalue()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga28a8378a4710e667a63f8947261bd439}{
+\index{dictionary@{dictionary}!dictionary\_\-getatom@{dictionary\_\-getatom}}
+\index{dictionary\_\-getatom@{dictionary\_\-getatom}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getatom}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getatom ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-atom} $\ast$ {\em value})}}
+\label{group__dictionary_ga28a8378a4710e667a63f8947261bd439}
+
+
+Copy a \hyperlink{structt__atom}{t\_\-atom} from the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gabc3bc4db8dc0898593722338262743e1}{
+\index{dictionary@{dictionary}!dictionary\_\-getatomarray@{dictionary\_\-getatomarray}}
+\index{dictionary\_\-getatomarray@{dictionary\_\-getatomarray}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getatomarray}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getatomarray ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em value})}}
+\label{group__dictionary_gabc3bc4db8dc0898593722338262743e1}
+
+
+Retrieve a \hyperlink{structt__atomarray}{t\_\-atomarray} pointer from the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gacda8208be5d424b81387258098bdbaa1}{
+\index{dictionary@{dictionary}!dictionary\_\-getatoms@{dictionary\_\-getatoms}}
+\index{dictionary\_\-getatoms@{dictionary\_\-getatoms}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getatoms ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long $\ast$ {\em argc}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em argv})}}
+\label{group__dictionary_gacda8208be5d424b81387258098bdbaa1}
+
+
+Retrieve the address of a \hyperlink{structt__atom}{t\_\-atom} array of in the dictionary. The retrieved pointer references the t\_\-atoms in the dictionary. To fetch a copy of the t\_\-atoms from the dictionary, use \hyperlink{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{dictionary\_\-copyatoms()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em argc}]The address of a variable to hold the number of atoms in the array. \item[{\em argv}]The address of a variable to hold a pointer to the first atom in the array. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{dictionary\_\-copyatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_gaa447fe7ad80586bee323e1c2bf80bdf9}{
+\index{dictionary@{dictionary}!dictionary\_\-getdefatom@{dictionary\_\-getdefatom}}
+\index{dictionary\_\-getdefatom@{dictionary\_\-getdefatom}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getdefatom}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getdefatom ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-atom} $\ast$ {\em value}, \/  {\bf t\_\-atom} $\ast$ {\em def})}}
+\label{group__dictionary_gaa447fe7ad80586bee323e1c2bf80bdf9}
+
+
+Retrieve a \hyperlink{structt__atom}{t\_\-atom}$\ast$ from the dictionary. If the named key doesn't exist, then return a specified default value.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \item[{\em def}]The default value to return in the absence of the key existing in the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga28a8378a4710e667a63f8947261bd439}{dictionary\_\-getatom()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga2ab733c5d5fe85e31e73d5a66d75dabd}{
+\index{dictionary@{dictionary}!dictionary\_\-getdefatoms@{dictionary\_\-getdefatoms}}
+\index{dictionary\_\-getdefatoms@{dictionary\_\-getdefatoms}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getdefatoms}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getdefatoms ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long $\ast$ {\em argc}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em argv}, \/  {\bf t\_\-atom} $\ast$ {\em def})}}
+\label{group__dictionary_ga2ab733c5d5fe85e31e73d5a66d75dabd}
+
+
+Retrieve the address of a \hyperlink{structt__atom}{t\_\-atom} array of in the dictionary. The retrieved pointer references the t\_\-atoms in the dictionary. To fetch a copy of the t\_\-atoms from the dictionary, use \hyperlink{group__dictionary_ga15aff654a0d97b363e7676ff7e9709fd}{dictionary\_\-copyatoms()}. If the named key doesn't exist, then return a default array of atoms, specified as a \hyperlink{structt__atomarray}{t\_\-atomarray}$\ast$.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em argc}]The address of a variable to hold the number of atoms in the array. \item[{\em argv}]The address of a variable to hold a pointer to the first atom in the array. \item[{\em def}]The default values specified as an instance of the \hyperlink{structt__atomarray}{t\_\-atomarray} object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gacda8208be5d424b81387258098bdbaa1}{dictionary\_\-getatoms()} 
+
+\hyperlink{group__dictionary_gaa886af0aad9db9bc6b08314b9b5672f9}{dictionary\_\-copydefatoms()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga2c988f18fa22ab56aac4464bc7140438}{
+\index{dictionary@{dictionary}!dictionary\_\-getdeffloat@{dictionary\_\-getdeffloat}}
+\index{dictionary\_\-getdeffloat@{dictionary\_\-getdeffloat}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getdeffloat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getdeffloat ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  double $\ast$ {\em value}, \/  double {\em def})}}
+\label{group__dictionary_ga2c988f18fa22ab56aac4464bc7140438}
+
+
+Retrieve a double-\/precision float from the dictionary. If the named key doesn't exist, then return a specified default value.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \item[{\em def}]The default value to return in the absence of the key existing in the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga4e166c9edc4575ec89f176455a134cda}{dictionary\_\-getfloat()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga7beaedd2dbbc352539ccd104db7094b1}{
+\index{dictionary@{dictionary}!dictionary\_\-getdeflong@{dictionary\_\-getdeflong}}
+\index{dictionary\_\-getdeflong@{dictionary\_\-getdeflong}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getdeflong}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getdeflong ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long $\ast$ {\em value}, \/  long {\em def})}}
+\label{group__dictionary_ga7beaedd2dbbc352539ccd104db7094b1}
+
+
+Retrieve a long integer from the dictionary. If the named key doesn't exist, then return a specified default value.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \item[{\em def}]The default value to return in the absence of the key existing in the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gafd215503871278e2ae02c1c747f39e46}{dictionary\_\-getlong()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga3ced9bab630a199d920fffc163f4fe1b}{
+\index{dictionary@{dictionary}!dictionary\_\-getdefstring@{dictionary\_\-getdefstring}}
+\index{dictionary\_\-getdefstring@{dictionary\_\-getdefstring}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getdefstring}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getdefstring ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  const char $\ast$$\ast$ {\em value}, \/  char $\ast$ {\em def})}}
+\label{group__dictionary_ga3ced9bab630a199d920fffc163f4fe1b}
+
+
+Retrieve a C-\/string from the dictionary. If the named key doesn't exist, then return a specified default value.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \item[{\em def}]The default value to return in the absence of the key existing in the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_gaee590f1bcea90856a26e5806637c2830}{dictionary\_\-getstring()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga2bf7497a4db16913aedb8c85036bf8c6}{
+\index{dictionary@{dictionary}!dictionary\_\-getdefsym@{dictionary\_\-getdefsym}}
+\index{dictionary\_\-getdefsym@{dictionary\_\-getdefsym}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getdefsym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getdefsym ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em value}, \/  {\bf t\_\-symbol} $\ast$ {\em def})}}
+\label{group__dictionary_ga2bf7497a4db16913aedb8c85036bf8c6}
+
+
+Retrieve a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ from the dictionary. If the named key doesn't exist, then return a specified default value.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \item[{\em def}]The default value to return in the absence of the key existing in the dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga0e5747682765d9a320bb9ccf37d9215d}{dictionary\_\-getsym()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga1bcef0af352c4f9df233818028083ea7}{
+\index{dictionary@{dictionary}!dictionary\_\-getdictionary@{dictionary\_\-getdictionary}}
+\index{dictionary\_\-getdictionary@{dictionary\_\-getdictionary}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getdictionary}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getdictionary ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em value})}}
+\label{group__dictionary_ga1bcef0af352c4f9df233818028083ea7}
+
+
+Retrieve a \hyperlink{structt__dictionary}{t\_\-dictionary} pointer from the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga1a080d24b75cd6a8dc20a9143f662136}{
+\index{dictionary@{dictionary}!dictionary\_\-getentrycount@{dictionary\_\-getentrycount}}
+\index{dictionary\_\-getentrycount@{dictionary\_\-getentrycount}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getentrycount}]{\setlength{\rightskip}{0pt plus 5cm}long dictionary\_\-getentrycount ({\bf t\_\-dictionary} $\ast$ {\em d})}}
+\label{group__dictionary_ga1a080d24b75cd6a8dc20a9143f662136}
+
+
+Return the number of keys in a dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of keys in the dictionary. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga4e166c9edc4575ec89f176455a134cda}{
+\index{dictionary@{dictionary}!dictionary\_\-getfloat@{dictionary\_\-getfloat}}
+\index{dictionary\_\-getfloat@{dictionary\_\-getfloat}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getfloat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getfloat ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  double $\ast$ {\em value})}}
+\label{group__dictionary_ga4e166c9edc4575ec89f176455a134cda}
+
+
+Retrieve a double-\/precision float from the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gae595d2340304018ee2b01e1288534ea3}{
+\index{dictionary@{dictionary}!dictionary\_\-getkeys@{dictionary\_\-getkeys}}
+\index{dictionary\_\-getkeys@{dictionary\_\-getkeys}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getkeys}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getkeys ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  long $\ast$ {\em numkeys}, \/  {\bf t\_\-symbol} $\ast$$\ast$$\ast$ {\em keys})}}
+\label{group__dictionary_gae595d2340304018ee2b01e1288534ea3}
+
+
+Retrieve all of the key names stored in a dictionary. The numkeys and keys parameters should be initialized to zero. The \hyperlink{group__dictionary_gae595d2340304018ee2b01e1288534ea3}{dictionary\_\-getkeys()} method will allocate memory for the keys it returns. You are then responsible for freeing this memory using \hyperlink{group__dictionary_ga38077c67f36917a708c4867351d6444e}{dictionary\_\-freekeys()}. {\itshape You must use \hyperlink{group__dictionary_ga38077c67f36917a708c4867351d6444e}{dictionary\_\-freekeys()}, not some other method for freeing the memory.\/}
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em numkeys}]The address of a long where the number of keys retrieved will be set. \item[{\em keys}]The address of the first of an array \hyperlink{structt__symbol}{t\_\-symbol} pointers where the retrieved keys will be set. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The following example demonstrates fetching all of the keys from a dictionary named 'd' in order to iterate through each item stored in the dictionary. 
+\begin{DoxyCode}
+    t_symbol    **keys = NULL;
+    long        numkeys = 0;
+    long        i;
+    t_object    *anItem;
+
+    dictionary_getkeys(d, &numkeys, &keys);
+    for(i=0; i<numkeys; i++){
+        // do something with the keys...
+    }
+    if(keys)
+        dictionary_freekeys(d, numkeys, keys);
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dictionary_ga38077c67f36917a708c4867351d6444e}{dictionary\_\-freekeys()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_gafd215503871278e2ae02c1c747f39e46}{
+\index{dictionary@{dictionary}!dictionary\_\-getlong@{dictionary\_\-getlong}}
+\index{dictionary\_\-getlong@{dictionary\_\-getlong}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getlong}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getlong ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long $\ast$ {\em value})}}
+\label{group__dictionary_gafd215503871278e2ae02c1c747f39e46}
+
+
+Retrieve a long integer from the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gabcf91529e619908aebd380030c697052}{
+\index{dictionary@{dictionary}!dictionary\_\-getobject@{dictionary\_\-getobject}}
+\index{dictionary\_\-getobject@{dictionary\_\-getobject}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getobject}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getobject ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em value})}}
+\label{group__dictionary_gabcf91529e619908aebd380030c697052}
+
+
+Retrieve a \hyperlink{structt__object}{t\_\-object} pointer from the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_gaee590f1bcea90856a26e5806637c2830}{
+\index{dictionary@{dictionary}!dictionary\_\-getstring@{dictionary\_\-getstring}}
+\index{dictionary\_\-getstring@{dictionary\_\-getstring}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getstring}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getstring ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  const char $\ast$$\ast$ {\em value})}}
+\label{group__dictionary_gaee590f1bcea90856a26e5806637c2830}
+
+
+Retrieve a C-\/string pointer from the dictionary. The retrieved pointer references the string in the dictionary, it is not a copy.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga0e5747682765d9a320bb9ccf37d9215d}{
+\index{dictionary@{dictionary}!dictionary\_\-getsym@{dictionary\_\-getsym}}
+\index{dictionary\_\-getsym@{dictionary\_\-getsym}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-getsym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-getsym ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-symbol} $\ast$$\ast$ {\em value})}}
+\label{group__dictionary_ga0e5747682765d9a320bb9ccf37d9215d}
+
+
+Retrieve a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$ from the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to lookup. \item[{\em value}]The address of variable to hold the value associated with the key. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga3da77635f06156cc82b4f6c7633b69c6}{
+\index{dictionary@{dictionary}!dictionary\_\-hasentry@{dictionary\_\-hasentry}}
+\index{dictionary\_\-hasentry@{dictionary\_\-hasentry}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-hasentry}]{\setlength{\rightskip}{0pt plus 5cm}long dictionary\_\-hasentry ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__dictionary_ga3da77635f06156cc82b4f6c7633b69c6}
+
+
+Test a key to set if it exists in the dictionary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary instance. \item[{\em key}]The key associated with the value to test. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if the key exists, otherwise returns false. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga9d89ea4cf5b0aaf87fba6027c3ec223c}{
+\index{dictionary@{dictionary}!dictionary\_\-new@{dictionary\_\-new}}
+\index{dictionary\_\-new@{dictionary\_\-new}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-dictionary}$\ast$ dictionary\_\-new ()}}
+\label{group__dictionary_ga9d89ea4cf5b0aaf87fba6027c3ec223c}
+
+
+Create a new linklist object. You can free the linklist by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}. However, you should keep in mind the guidelines provided in \hyperlink{group__dictionary_when_to_free_a_dictionary}{When to Free a Dictionary}.
+
+\begin{DoxyReturn}{Returns}
+Pointer to the new dictionary object.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga2c64f2e3bce940ca992b3dd3ffe292ac}{
+\index{dictionary@{dictionary}!dictionary\_\-read@{dictionary\_\-read}}
+\index{dictionary\_\-read@{dictionary\_\-read}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-read (char $\ast$ {\em filename}, \/  short {\em path}, \/  {\bf t\_\-dictionary} $\ast$$\ast$ {\em d})}}
+\label{group__dictionary_ga2c64f2e3bce940ca992b3dd3ffe292ac}
+
+
+Read the specified JSON file and return a \hyperlink{structt__dictionary}{t\_\-dictionary} object. You are responsible for freeing the dictionary with \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}, subject to the caveats explained in \hyperlink{group__dictionary_when_to_free_a_dictionary}{When to Free a Dictionary}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em filename}]The name of the file. \item[{\em path}]The path of the file. \item[{\em d}]The address of a \hyperlink{structt__dictionary}{t\_\-dictionary} pointer that will be set to the newly created dictionary. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga77d5bafc260f9fc0bf3b4ad35f2b2629}{
+\index{dictionary@{dictionary}!dictionary\_\-sprintf@{dictionary\_\-sprintf}}
+\index{dictionary\_\-sprintf@{dictionary\_\-sprintf}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-sprintf}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-dictionary}$\ast$ dictionary\_\-sprintf (char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__dictionary_ga77d5bafc260f9fc0bf3b4ad35f2b2629}
+
+
+Create a new dictionary populated with values using a combination of attribute and sprintf syntax. 
+\begin{DoxyParams}{Parameters}
+\item[{\em fmt}]An sprintf-\/style format string specifying key-\/value pairs with attribute nomenclature. \item[{\em ...}]One or more arguments which are to be substituted into the format string. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new dictionary instance.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Max attribute syntax is used to define key-\/value pairs. For example, 
+\begin{DoxyCode}
+    "@key1 value @key2 another_value"
+\end{DoxyCode}
+
+
+One common use of this to create dictionary that represents an element of a patcher, or even an entire patcher itself. The example below creates a dictionary that can be passed to a function like \hyperlink{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}{newobject\_\-fromdictionary()} to create a new object. 
+\begin{DoxyCode}
+    t_dictionary *d;
+    char text[4];
+    
+    strncpy_zero(text, "foo", 4);
+
+    d = dictionary_sprintf("@maxclass comment @varname _name \
+        @text \"%s\" @patching_rect %.2f %.2f %.2f %.2f \
+        @fontsize %f @textcolor %f %f %f 1.0 \
+        @fontname %s @bgcolor 0.001 0.001 0.001 0.",
+        text, 20.0, 20.0, 200.0, 24.0,
+        18, 0.9, 0.9, 0.9, "Arial");
+    
+    // do something with the dictionary here.
+    
+    object_free(d);
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_gad81c665a20c3c707decaf3403468ff47}{newobject\_\-sprintf()} 
+
+\hyperlink{group__obj_gaed2c4e1d0c80d929b97ccf07a886faeb}{newobject\_\-fromdictionary()} 
+
+\hyperlink{group__atom_ga55938aedb41a8f3565680cf29169dc70}{atom\_\-setparse()} 
+\end{DoxySeeAlso}
+\hypertarget{group__dictionary_ga54f1888c1ca3cd84d32cd2de7a392e35}{
+\index{dictionary@{dictionary}!dictionary\_\-write@{dictionary\_\-write}}
+\index{dictionary\_\-write@{dictionary\_\-write}!dictionary@{dictionary}}
+\subsubsection[{dictionary\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} dictionary\_\-write ({\bf t\_\-dictionary} $\ast$ {\em d}, \/  char $\ast$ {\em filename}, \/  short {\em path})}}
+\label{group__dictionary_ga54f1888c1ca3cd84d32cd2de7a392e35}
+
+
+Serialize the specified \hyperlink{structt__dictionary}{t\_\-dictionary} object to a JSON file. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]The dictionary to serialize into JSON format and write to disk. \item[{\em filename}]The name of the file to write. \item[{\em path}]The path to which the file should be written. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__dictionary_ga7619544926e5c62caf19176ebab5b1a2}{
+\index{dictionary@{dictionary}!postdictionary@{postdictionary}}
+\index{postdictionary@{postdictionary}!dictionary@{dictionary}}
+\subsubsection[{postdictionary}]{\setlength{\rightskip}{0pt plus 5cm}void postdictionary ({\bf t\_\-object} $\ast$ {\em d})}}
+\label{group__dictionary_ga7619544926e5c62caf19176ebab5b1a2}
+
+
+Print the contents of a dictionary to the Max window. 
+\begin{DoxyParams}{Parameters}
+\item[{\em d}]A pointer to a dictionary object. \end{DoxyParams}

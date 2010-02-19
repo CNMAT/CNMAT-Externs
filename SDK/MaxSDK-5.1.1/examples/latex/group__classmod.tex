@@ -1,0 +1,289 @@
+\hypertarget{group__classmod}{
+\section{Class Module}
+\label{group__classmod}\index{Class Module@{Class Module}}
+}
+
+
+Collaboration diagram for Class Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=105pt]{group__classmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__classmod_ga6c1c213a5c883bf32d0f22678ce2f02b}{jit\_\-class\_\-new} (char $\ast$name, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mnew, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} mfree, long size,...)
+\begin{DoxyCompactList}\small\item\em Creates a new class with the name specified by the name argument. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__classmod_gab3b84bc08f9f3ee0b29010f653c5ea77}{jit\_\-class\_\-addmethod} (void $\ast$c, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m, char $\ast$name,...)
+\begin{DoxyCompactList}\small\item\em Adds a named method to a class. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__classmod_ga37e39db544b4d73596da1557e6c7563a}{jit\_\-class\_\-addattr} (void $\ast$c, \hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$attr)
+\begin{DoxyCompactList}\small\item\em Adds an attribute to a class. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__classmod_ga408738c800435bf50d092ce52b223327}{jit\_\-class\_\-addadornment} (void $\ast$c, \hyperlink{structt__object}{t\_\-jit\_\-object} $\ast$o)
+\begin{DoxyCompactList}\small\item\em Adds an adornment to a class. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__classmod_ga1b040b25876a0905f60683413ce34ae6}{jit\_\-class\_\-adornment\_\-get} (void $\ast$c, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Retrieves an adornment from a class. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__classmod_ga2847462538894f23ae00b8265232db09}{jit\_\-class\_\-free} (void $\ast$c)
+\begin{DoxyCompactList}\small\item\em Frees a class. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__classmod_ga5af7e1d4e070475ad79840c0ca3e6f86}{jit\_\-class\_\-nameget} (void $\ast$c)
+\begin{DoxyCompactList}\small\item\em Retrieves the name of a class. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__classmod_gaeca58f03626ad49dfc7997f979ce602f}{jit\_\-class\_\-symcompare} (void $\ast$c, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$name)
+\begin{DoxyCompactList}\small\item\em Compares name of class with the name provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__classmod_ga1cf03eba09d7b3b53a8cde269c47765d}{jit\_\-class\_\-register} (void $\ast$c)
+\begin{DoxyCompactList}\small\item\em Registers class in the class registry. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{group__classmod_ga61fe690506e449d09569e3e8592b274c}{jit\_\-class\_\-method} (void $\ast$c, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$methodname)
+\begin{DoxyCompactList}\small\item\em Retrieves method function pointer for named method. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__messlist}{t\_\-messlist} $\ast$ \hyperlink{group__classmod_gaa786dc731a24864a74f94e9b19aabdba}{jit\_\-class\_\-mess} (\hyperlink{structt__class}{t\_\-jit\_\-class} $\ast$c, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$methodname)
+\begin{DoxyCompactList}\small\item\em Retrieves messlist entry for named method. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__classmod_gaf35d0b9ca105219561cb18114f4002ef}{jit\_\-class\_\-attr\_\-get} (void $\ast$c, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$attrname)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute pointer associated with name provided. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__classmod_ga63eb9d25f881cd6fba11e24f9ac9b02f}{jit\_\-class\_\-findbyname} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Retrieves class pointer associated with name provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__classmod_gac5594cb68b903b894e54ea9edb56ad61}{jit\_\-class\_\-addtypedwrapper} (void $\ast$c, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m, char $\ast$name,...)
+\begin{DoxyCompactList}\small\item\em Adds a typed wrapper method to a class. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__messlist}{t\_\-messlist} $\ast$ \hyperlink{group__classmod_ga0486ba2dc02d1ff1358f0401956d3080}{jit\_\-class\_\-typedwrapper\_\-get} (void $\ast$c, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Retrieves typed wrapper messlist pointer associated with name provided. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__classmod_gafcda1659cb3299a25f0f3f2a570a0d2f}{jit\_\-class\_\-method\_\-addargsafe} (void $\ast$c, char $\ast$argname, char $\ast$methodname)
+\begin{DoxyCompactList}\small\item\em Marks a method as safe to call as an attribute style argument. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__classmod_ga5ace294def3c0e31d3890d2f9be1af68}{jit\_\-class\_\-method\_\-argsafe\_\-get} (void $\ast$c, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Checks to see if symbol is safe to call as an attribute style argument. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__classmod_ga408738c800435bf50d092ce52b223327}{
+\index{classmod@{classmod}!jit\_\-class\_\-addadornment@{jit\_\-class\_\-addadornment}}
+\index{jit\_\-class\_\-addadornment@{jit\_\-class\_\-addadornment}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-addadornment}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-class\_\-addadornment (void $\ast$ {\em c}, \/  {\bf t\_\-jit\_\-object} $\ast$ {\em o})}}
+\label{group__classmod_ga408738c800435bf50d092ce52b223327}
+
+
+Adds an adornment to a class. Adornments provide additional state and behavior to a class. This is most commonly used for the jit\_\-mop adornment.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em o}]object to use as adornment\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga37e39db544b4d73596da1557e6c7563a}{
+\index{classmod@{classmod}!jit\_\-class\_\-addattr@{jit\_\-class\_\-addattr}}
+\index{jit\_\-class\_\-addattr@{jit\_\-class\_\-addattr}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-addattr}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-class\_\-addattr (void $\ast$ {\em c}, \/  {\bf t\_\-jit\_\-object} $\ast$ {\em attr})}}
+\label{group__classmod_ga37e39db544b4d73596da1557e6c7563a}
+
+
+Adds an attribute to a class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em attr}]attribute object\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_gab3b84bc08f9f3ee0b29010f653c5ea77}{
+\index{classmod@{classmod}!jit\_\-class\_\-addmethod@{jit\_\-class\_\-addmethod}}
+\index{jit\_\-class\_\-addmethod@{jit\_\-class\_\-addmethod}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-addmethod}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-class\_\-addmethod (void $\ast$ {\em c}, \/  {\bf method} {\em m}, \/  char $\ast$ {\em name}, \/   {\em ...})}}
+\label{group__classmod_gab3b84bc08f9f3ee0b29010f653c5ea77}
+
+
+Adds a named method to a class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em m}]function called when method is invoked \item[{\em name}]method name \item[{\em ...}]type signature for the method in the standard Max type list format (see Chapter 3 of the Writing Externals in Max document for more information)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_gac5594cb68b903b894e54ea9edb56ad61}{
+\index{classmod@{classmod}!jit\_\-class\_\-addtypedwrapper@{jit\_\-class\_\-addtypedwrapper}}
+\index{jit\_\-class\_\-addtypedwrapper@{jit\_\-class\_\-addtypedwrapper}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-addtypedwrapper}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-class\_\-addtypedwrapper (void $\ast$ {\em c}, \/  {\bf method} {\em m}, \/  char $\ast$ {\em name}, \/   {\em ...})}}
+\label{group__classmod_gac5594cb68b903b894e54ea9edb56ad61}
+
+
+Adds a typed wrapper method to a class. Typed wrappers typically are used when there is an existing private, untyped method defined for a Jitter class, but it is desirable to expose the method to language bindings which require a typed interface-\/-\/e.g. Java or JavaScript.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em m}]function called when method is invoked \item[{\em name}]method name \item[{\em ...}]type signature for the method in the standard Max type list format (see Chapter 3 of the Writing Externals in Max document for more information)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga1b040b25876a0905f60683413ce34ae6}{
+\index{classmod@{classmod}!jit\_\-class\_\-adornment\_\-get@{jit\_\-class\_\-adornment\_\-get}}
+\index{jit\_\-class\_\-adornment\_\-get@{jit\_\-class\_\-adornment\_\-get}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-adornment\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-class\_\-adornment\_\-get (void $\ast$ {\em c}, \/  {\bf t\_\-symbol} $\ast$ {\em classname})}}
+\label{group__classmod_ga1b040b25876a0905f60683413ce34ae6}
+
+
+Retrieves an adornment from a class. Adornments provide additional state and behavior to a class. This is most commonly used for the jit\_\-mop adornment.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em classname}]classname of adornment to retrieve\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_gaf35d0b9ca105219561cb18114f4002ef}{
+\index{classmod@{classmod}!jit\_\-class\_\-attr\_\-get@{jit\_\-class\_\-attr\_\-get}}
+\index{jit\_\-class\_\-attr\_\-get@{jit\_\-class\_\-attr\_\-get}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-attr\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-class\_\-attr\_\-get (void $\ast$ {\em c}, \/  {\bf t\_\-symbol} $\ast$ {\em attrname})}}
+\label{group__classmod_gaf35d0b9ca105219561cb18114f4002ef}
+
+
+Retrieves attribute pointer associated with name provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em attrname}]attribute name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+attribute object pointer 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga63eb9d25f881cd6fba11e24f9ac9b02f}{
+\index{classmod@{classmod}!jit\_\-class\_\-findbyname@{jit\_\-class\_\-findbyname}}
+\index{jit\_\-class\_\-findbyname@{jit\_\-class\_\-findbyname}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-findbyname}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-class\_\-findbyname ({\bf t\_\-symbol} $\ast$ {\em classname})}}
+\label{group__classmod_ga63eb9d25f881cd6fba11e24f9ac9b02f}
+
+
+Retrieves class pointer associated with name provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em classname}]class name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+class pointer 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga2847462538894f23ae00b8265232db09}{
+\index{classmod@{classmod}!jit\_\-class\_\-free@{jit\_\-class\_\-free}}
+\index{jit\_\-class\_\-free@{jit\_\-class\_\-free}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-class\_\-free (void $\ast$ {\em c})}}
+\label{group__classmod_ga2847462538894f23ae00b8265232db09}
+
+
+Frees a class. \begin{DoxyWarning}{Warning}
+This function is not typically used outside of jitlib.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_gaa786dc731a24864a74f94e9b19aabdba}{
+\index{classmod@{classmod}!jit\_\-class\_\-mess@{jit\_\-class\_\-mess}}
+\index{jit\_\-class\_\-mess@{jit\_\-class\_\-mess}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-mess}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-messlist}$\ast$ jit\_\-class\_\-mess ({\bf t\_\-jit\_\-class} $\ast$ {\em c}, \/  {\bf t\_\-symbol} $\ast$ {\em methodname})}}
+\label{group__classmod_gaa786dc731a24864a74f94e9b19aabdba}
+
+
+Retrieves messlist entry for named method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em methodname}]method name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__messlist}{t\_\-messlist} pointer. 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga61fe690506e449d09569e3e8592b274c}{
+\index{classmod@{classmod}!jit\_\-class\_\-method@{jit\_\-class\_\-method}}
+\index{jit\_\-class\_\-method@{jit\_\-class\_\-method}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-method}]{\setlength{\rightskip}{0pt plus 5cm}{\bf method} jit\_\-class\_\-method (void $\ast$ {\em c}, \/  {\bf t\_\-symbol} $\ast$ {\em methodname})}}
+\label{group__classmod_ga61fe690506e449d09569e3e8592b274c}
+
+
+Retrieves method function pointer for named method. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em methodname}]method name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+method function pointer. 
+\end{DoxyReturn}
+\hypertarget{group__classmod_gafcda1659cb3299a25f0f3f2a570a0d2f}{
+\index{classmod@{classmod}!jit\_\-class\_\-method\_\-addargsafe@{jit\_\-class\_\-method\_\-addargsafe}}
+\index{jit\_\-class\_\-method\_\-addargsafe@{jit\_\-class\_\-method\_\-addargsafe}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-method\_\-addargsafe}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-class\_\-method\_\-addargsafe (void $\ast$ {\em c}, \/  char $\ast$ {\em argname}, \/  char $\ast$ {\em methodname})}}
+\label{group__classmod_gafcda1659cb3299a25f0f3f2a570a0d2f}
+
+
+Marks a method as safe to call as an attribute style argument. \begin{DoxyWarning}{Warning}
+It is important that no argument settable method causes any output into the patcher, or else it could lead to a crash, or other undesired behavior.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em argname}]name as used via argument \item[{\em methodname}]name of method to map the argument name to\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga5ace294def3c0e31d3890d2f9be1af68}{
+\index{classmod@{classmod}!jit\_\-class\_\-method\_\-argsafe\_\-get@{jit\_\-class\_\-method\_\-argsafe\_\-get}}
+\index{jit\_\-class\_\-method\_\-argsafe\_\-get@{jit\_\-class\_\-method\_\-argsafe\_\-get}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-method\_\-argsafe\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-class\_\-method\_\-argsafe\_\-get (void $\ast$ {\em c}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__classmod_ga5ace294def3c0e31d3890d2f9be1af68}
+
+
+Checks to see if symbol is safe to call as an attribute style argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em s}]name as used via argument\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If successful, name of method to map the argument name to. Otherwise, NULL. 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga5af7e1d4e070475ad79840c0ca3e6f86}{
+\index{classmod@{classmod}!jit\_\-class\_\-nameget@{jit\_\-class\_\-nameget}}
+\index{jit\_\-class\_\-nameget@{jit\_\-class\_\-nameget}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-nameget}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-class\_\-nameget (void $\ast$ {\em c})}}
+\label{group__classmod_ga5af7e1d4e070475ad79840c0ca3e6f86}
+
+
+Retrieves the name of a class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing name of class 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga6c1c213a5c883bf32d0f22678ce2f02b}{
+\index{classmod@{classmod}!jit\_\-class\_\-new@{jit\_\-class\_\-new}}
+\index{jit\_\-class\_\-new@{jit\_\-class\_\-new}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ jit\_\-class\_\-new (char $\ast$ {\em name}, \/  {\bf method} {\em mnew}, \/  {\bf method} {\em mfree}, \/  long {\em size}, \/   {\em ...})}}
+\label{group__classmod_ga6c1c213a5c883bf32d0f22678ce2f02b}
+
+
+Creates a new class with the name specified by the name argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]class name \item[{\em mnew}]class constructor \item[{\em mfree}]class destructor \item[{\em size}]object struct size in bytes \item[{\em ...}]type signature for the constructor in the standard Max type list format (see Chapter 3 of the Writing Externals in Max document for more information) \end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+In order for the Jitter class to be exposed to JavaScript and Java, it is important that the constructor is typed, even if no arguments are provided-\/-\/i.e. do not use the older strategy of defining Jitter constructors as private and untyped with A\_\-CANT.
+\end{DoxyWarning}
+\begin{DoxyReturn}{Returns}
+class pointer to be used in other class functions 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga1cf03eba09d7b3b53a8cde269c47765d}{
+\index{classmod@{classmod}!jit\_\-class\_\-register@{jit\_\-class\_\-register}}
+\index{jit\_\-class\_\-register@{jit\_\-class\_\-register}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-register}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-class\_\-register (void $\ast$ {\em c})}}
+\label{group__classmod_ga1cf03eba09d7b3b53a8cde269c47765d}
+
+
+Registers class in the class registry. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__classmod_gaeca58f03626ad49dfc7997f979ce602f}{
+\index{classmod@{classmod}!jit\_\-class\_\-symcompare@{jit\_\-class\_\-symcompare}}
+\index{jit\_\-class\_\-symcompare@{jit\_\-class\_\-symcompare}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-symcompare}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-class\_\-symcompare (void $\ast$ {\em c}, \/  {\bf t\_\-symbol} $\ast$ {\em name})}}
+\label{group__classmod_gaeca58f03626ad49dfc7997f979ce602f}
+
+
+Compares name of class with the name provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em name}]name to compare with class name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if equal, 0 if not equal 
+\end{DoxyReturn}
+\hypertarget{group__classmod_ga0486ba2dc02d1ff1358f0401956d3080}{
+\index{classmod@{classmod}!jit\_\-class\_\-typedwrapper\_\-get@{jit\_\-class\_\-typedwrapper\_\-get}}
+\index{jit\_\-class\_\-typedwrapper\_\-get@{jit\_\-class\_\-typedwrapper\_\-get}!classmod@{classmod}}
+\subsubsection[{jit\_\-class\_\-typedwrapper\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-messlist}$\ast$ jit\_\-class\_\-typedwrapper\_\-get (void $\ast$ {\em c}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__classmod_ga0486ba2dc02d1ff1358f0401956d3080}
+
+
+Retrieves typed wrapper messlist pointer associated with name provided. 
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]class pointer \item[{\em s}]name\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__messlist}{t\_\-messlist} pointer 
+\end{DoxyReturn}

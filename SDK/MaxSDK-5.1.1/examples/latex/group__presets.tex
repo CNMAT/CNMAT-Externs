@@ -1,0 +1,121 @@
+\hypertarget{group__presets}{
+\section{Presets}
+\label{group__presets}\index{Presets@{Presets}}
+}
+
+
+Max contains a preset object that has the ability to send preset messages to some or all of the objects (clients) in a Patcher window.  
+
+
+Collaboration diagram for Presets:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=113pt]{group__presets}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__presets_ga5f6d86fdc24e371604b764e7581a4fcb}{preset\_\-store} (char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Give the preset object a general message to restore the current state of your object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__presets_ga178edd4c9abaecc58ca6379cf2547298}{preset\_\-set} (\hyperlink{structt__object}{t\_\-object} $\ast$obj, long val)
+\begin{DoxyCompactList}\small\item\em Restore the state of your object with a set message. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__presets_gaf1da6073fef8e3f896602cf7f9738a23}{preset\_\-int} (void $\ast$x, long n)
+\begin{DoxyCompactList}\small\item\em Restore the state of your object with an int message. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max contains a preset object that has the ability to send preset messages to some or all of the objects (clients) in a Patcher window. The preset message, sent when the user is storing a preset, is just a request for your object to tell the preset object how to restore your internal state to what it is now. Later, when the user executes a preset, the preset object will send you back the message you had previously said you wanted.
+
+The dialog goes something like this:
+
+
+\begin{DoxyItemize}
+\item During a store…preset object to Client object(s): hello, this is the preset message—tell me how to restore your stateClient object to preset object: send me int 34 (for example)
+\item During an execute…preset object to Client object: int 34
+\end{DoxyItemize}
+
+The client object won’t know the difference between receiving int 34 from a preset object and receiving a 34 in its leftmost inlet.
+
+It’s not mandatory for your object to respond to the preset message, but it is something that will make users happy. All Max user interface objects currently respond to preset messages. Note that if your object is not a user interface object and implements a preset method, the user will need to connect the outlet of the preset object to its leftmost inlet in order for it to be sent a preset message when the user stores a preset.
+
+Here’s an example of using \hyperlink{group__presets_ga5f6d86fdc24e371604b764e7581a4fcb}{preset\_\-store()} that specifies that the object would like to receive a set message. We assume it has one field, myvalue, which it would like to save and restore.
+
+
+\begin{DoxyCode}
+    void myobject_preset(myobject *x) 
+    { 
+        preset_store("ossl",x,ob_sym(x),gensym("set"),x->myvalue); 
+    }
+\end{DoxyCode}
+
+
+When this preset is executed, the object will receive a set message whose argument will be the value of myvalue. Note that the same thing can be accomplished more easily with \hyperlink{group__presets_ga178edd4c9abaecc58ca6379cf2547298}{preset\_\-set()} and \hyperlink{group__presets_gaf1da6073fef8e3f896602cf7f9738a23}{preset\_\-int()}.
+
+Don’t pass more than 12 items to \hyperlink{group__presets_ga5f6d86fdc24e371604b764e7581a4fcb}{preset\_\-store()}. If you want to store a huge amount of data in a preset, use \hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert()}.
+
+The following example locates the Binbuf into which the preset data is being collected, then calls \hyperlink{group__binbuf_gad8f2272c95a8e89f22f1a9c67272af5e}{binbuf\_\-insert()} on a previously prepared array of Atoms. It assumes that the state of your object can be restored with a set message.
+
+
+\begin{DoxyCode}
+    void myobject_preset(myObject *x) 
+    { 
+        void *preset_buf;// Binbuf that stores the preset
+        short atomCount; // number of atoms you’re storing
+        t_atom atomArray[SOMESIZE];// array of atoms to be stored
+    
+        // 1. prepare the preset "header" information
+        atom_setobj(atomArray,x); 
+        atom_setsym(atomArray+1,ob_sym(x)); 
+        atom_setsym(atomArray+2,gensym("set")); 
+        // fill atomArray+3 with object's state here and set atomCount
+    
+        // 2. find the Binbuf
+        preset_buf = gensym("_preset")->s_thing;
+    
+        // 3. store the data 
+        if (preset_buf) { 
+            binbuf_insert(preset_buf,NIL,atomCount,atomArray); 
+        } 
+    }
+\end{DoxyCode}
+ 
+
+\subsection{Function Documentation}
+\hypertarget{group__presets_gaf1da6073fef8e3f896602cf7f9738a23}{
+\index{presets@{presets}!preset\_\-int@{preset\_\-int}}
+\index{preset\_\-int@{preset\_\-int}!presets@{presets}}
+\subsubsection[{preset\_\-int}]{\setlength{\rightskip}{0pt plus 5cm}void preset\_\-int (void $\ast$ {\em x}, \/  long {\em n})}}
+\label{group__presets_gaf1da6073fef8e3f896602cf7f9738a23}
+
+
+Restore the state of your object with an int message. This function causes an int message with the argument value to be sent to your object from the preset object when the user executes a preset. All of the existing user interface objects use the int message for restoring their state when a preset is executed.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Your object. \item[{\em n}]Current value of your object. \end{DoxyParams}
+\hypertarget{group__presets_ga178edd4c9abaecc58ca6379cf2547298}{
+\index{presets@{presets}!preset\_\-set@{preset\_\-set}}
+\index{preset\_\-set@{preset\_\-set}!presets@{presets}}
+\subsubsection[{preset\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void preset\_\-set ({\bf t\_\-object} $\ast$ {\em obj}, \/  long {\em val})}}
+\label{group__presets_ga178edd4c9abaecc58ca6379cf2547298}
+
+
+Restore the state of your object with a set message. This function causes a set message with the argument value to be sent to your object from the preset object when the user executes a preset.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em obj}]Your object. \item[{\em val}]Current value of your object. \end{DoxyParams}
+\hypertarget{group__presets_ga5f6d86fdc24e371604b764e7581a4fcb}{
+\index{presets@{presets}!preset\_\-store@{preset\_\-store}}
+\index{preset\_\-store@{preset\_\-store}!presets@{presets}}
+\subsubsection[{preset\_\-store}]{\setlength{\rightskip}{0pt plus 5cm}void preset\_\-store (char $\ast$ {\em fmt}, \/   {\em ...})}}
+\label{group__presets_ga5f6d86fdc24e371604b764e7581a4fcb}
+
+
+Give the preset object a general message to restore the current state of your object. This is a general preset function for use when your object’s state cannot be restored with a simple int or set message. The example below shows the expected format for specifying what your current state is to a preset object. The first thing you supply is your object itself, followed by the symbol that is the name of your object’s class (which you can retrieve from your object using the macro ob\_\-sym, declared in ext\_\-mess.h). Next, supply the symbol that specifies the message you want receive (a method for which had better be defined in your class), followed by the arguments to this message—the current values of your object’s fields.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fmt}]C string containing one or more letters corresponding to the types of each element of the message. s for Symbol, l for long, or f for float. \item[{\em ...}]Elements of the message used to restore the state of your object, passed directly to the function as Symbols, longs, or floats. See below for an example that conforms to what the preset object expects. \end{DoxyParams}

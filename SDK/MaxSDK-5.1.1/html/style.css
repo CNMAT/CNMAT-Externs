@@ -1,0 +1,307 @@
+BLOCKQUOTE, BODY, CENTER, FORM, H5, OL, P, TD, TH, UL LI {
+	font-size: 12px; 
+	font-family: arial,verdana,geneva,helvetica,sans-serif; 
+	color: #333;
+}
+
+A:link {
+	color: #333344; 
+	background: transparent; 
+	text-decoration: underline;
+}
+
+A:visited {
+	color: #334433; 
+	background: transparent; 
+	text-decoration: underline;
+}
+
+A:active {
+	color: #333344; 
+	background: transparent; 
+	text-decoration: underline;
+}
+
+A:hover {
+	text-decoration: underline;
+}
+
+BODY {
+	margin: 15px 6px 10px 6px;
+	font-family: arial,verdana,geneva,helvetica,sans-serif; 
+	font-size: 12px; 
+	background: white;
+}
+
+HR { display: none; }
+
+H1
+{
+	left: 15px;
+	font: bold 15px Verdana;
+	position: absolute;
+	top: 26px;
+        color: white;
+	text-align: left;
+}
+H2
+{
+	margin: 0px 0px 6px 0px;
+	font: 8pt Verdana;
+	font-weight: bold;
+	text-align: left;
+}
+H3
+{
+	border-right: gray 1px solid;
+	border-top: gray 1px solid;
+	margin-top: 6px;
+	padding: 6px 6px 6px 6px;
+	margin: 6px 0px 6px 0px;
+	font: bold 8pt Verdana;
+	border-left: gray 1px solid;
+	border-bottom: gray 1px solid;
+	background-color: #cecfce;
+	text-align: left;
+}
+CODE
+{
+	padding-left: 6px;
+	color: #000063;
+}
+CAPTION
+{
+	font-weight: bold;
+}
+TABLE
+{
+	margin: 6px 6px 6px 6px;
+	font-size: 8pt;
+}
+TABLE.mdTable
+{
+	width: 100%;
+	background-color: #ddddee;
+}
+TABLE.memname
+{
+	background-color: #ddddee;
+}
+
+P
+{
+	margin: 6px 6px 6px 6px;
+}
+EM
+{
+	font-weight:bold;
+	font-style:italic;
+}
+
+
+DIV.banner
+{
+	padding: 6px 10px 0px 10px;
+	height: 40px;
+color: white;
+	background-color: #666688;
+	text-align: left;
+	font-style: italic;
+	font-size: 8pt;
+	margin-bottom: 10px;
+	-moz-border-radius: 12px;
+}
+
+A.qindex, DIV.qindex
+{
+	font-weight: bold;
+	font-size: 12px;
+padding: 10px;
+	width: 100%;
+	background-color: white;
+	text-align: center;
+}
+A.el
+{
+	color: #802020;
+	font-weight: bold;
+	font-style: normal;
+	font-variant: normal;
+	text-decoration: underline;
+}
+A.qindexHL
+{
+	background-color: #cdcdcd;
+	border: 1px solid #333;
+}
+A.elRef
+{
+	font-weight: bold;
+}
+A.code
+{
+	font-weight: bold;
+	color: #0000FF;
+	text-decoration: none;
+}
+A.codeRef
+{
+	font-weight: normal;
+	color: #4444ee;
+}
+DL.el
+{
+	margin-left: -1cm;
+}
+DIV.fragment
+{
+	border-right: medium none;
+	border-top: medium none;
+	font-size: 8pt;
+	border-left: medium none;
+	width: 100%;
+	border-bottom: medium none;
+	font-family: ProFontWindows, 'Lucida Console', Courier, 'Courier New';
+	background-color: #eeeeee;
+}
+DIV.ah
+{
+	margin-top: 3px;
+	font-weight: bold;
+	margin-bottom: 3px;
+	color: #ffffff;
+	background-color: black;
+}
+TD.md
+{
+	font-weight: bold;
+}
+TD.mdname1
+{
+	font-weight: bold;
+	color: #602020;
+}
+TD.mdname
+{
+	font-weight: bold;
+	width: 600px;
+	color: #602020;
+}
+DIV.groupHeader
+{
+	margin-top: 12px;
+	font-weight: bold;
+	margin-bottom: 6px;
+	margin-left: 16px;
+}
+DIV.groupText 
+{ 
+	margin-left: 16px; font-style: italic;
+}
+
+TD.indexkey { 
+	   background-color: #eeeeee; 
+	   font-weight: bold; 
+	   padding-right  : 10px; 
+	   padding-top    : 2px; 
+	   padding-left   : 10px; 
+	   padding-bottom : 2px; 
+	   margin-left    : 0px; 
+	   margin-right   : 0px; 
+	   margin-top     : 2px; 
+	   margin-bottom  : 2px  
+}
+TD.indexvalue { 
+	   background-color: #eeeeee; 
+	   font-style: italic; 
+	   padding-right  : 10px; 
+	   padding-top    : 2px; 
+	   padding-left   : 10px; 
+	   padding-bottom : 2px; 
+	   margin-left    : 0px; 
+	   margin-right   : 0px; 
+	   margin-top     : 2px; 
+	   margin-bottom  : 2px  
+}
+span.keyword
+{
+	color: #008000;
+}
+span.keywordtype
+{
+	color: #604020;
+}
+span.keywordflow
+{
+	color: #e08000;
+}
+span.comment
+{
+	color: #800000;
+}
+span.preprocessor
+{
+	color: #806020;
+}
+span.stringliteral
+{
+	color: #002080;
+}
+span.charliteral
+{
+	color: #008080;
+}
+TD.mdescLeft
+{
+	border-right: #e0e0e0 1px;
+	border-top: #e0e0e0 1px;
+	padding-left: 8px;
+	margin: 0px;
+	border-left: #e0e0e0 1px;
+	border-bottom: #e0e0e0 1px;
+	font-family: Verdana;
+}
+TD.mdescRight
+{
+	border-right: #e0e0e0 1px;
+	padding-right: 8px;
+	border-top: #e0e0e0 1px;
+	padding-left: 4px;
+	padding-bottom: 0px;
+	margin: 0px;
+	border-left: #e0e0e0 1px;
+	border-bottom: #e0e0e0 1px;
+	font-family: Verdana;
+}
+TD.memItemLeft
+{
+	border-right: #e0e0e0 1px;
+	padding-right: 0px;
+	border-top: #e0e0e0 1px solid;
+	padding-left: 8px;
+	font-size: 8pt;
+	font-weight: bold;
+	padding-bottom: 0px;
+	margin: 4px;
+	padding-top: 1px;
+	border-bottom: #e0e0e0 1px;
+	font-family: Verdana;
+}
+TD.memItemRight
+{
+	border-right: #e0e0e0 1px;
+	padding-right: 0px;
+	border-top: #e0e0e0 1px solid;
+	padding-left: 8px;
+	font-size: 8pt;
+	font-weight: bold;
+	padding-bottom: 0px;
+	margin: 4px;
+	padding-top: 1px;
+	border-bottom: #e0e0e0 1px;
+	font-family: Verdana;
+}
+div.footer
+{
+	font-style: italic;
+}

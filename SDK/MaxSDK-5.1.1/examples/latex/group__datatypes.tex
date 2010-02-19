@@ -1,0 +1,125 @@
+\hypertarget{group__datatypes}{
+\section{Data Types}
+\label{group__datatypes}\index{Data Types@{Data Types}}
+}
+
+
+Collaboration diagram for Data Types:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=112pt]{group__datatypes}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__rect}{t\_\-rect}
+\begin{DoxyCompactList}\small\item\em Coordinates for specifying a rectangular region. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__pt}{t\_\-pt}
+\begin{DoxyCompactList}\small\item\em Coordinates for specifying a point. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__size}{t\_\-size}
+\begin{DoxyCompactList}\small\item\em Coordinates for specifying the size of a region. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__atom}{Atoms}
+\item 
+\hyperlink{group__atombuf}{Atombufs}
+
+
+\begin{DoxyCompactList}\small\item\em An Atombuf is an alternative to \hyperlink{group__binbuf}{Binbufs} for temporary storage of atoms. \item\end{DoxyCompactList}\item 
+\hyperlink{group__binbuf}{Binbufs}
+
+
+\begin{DoxyCompactList}\small\item\em You won’t need to know about the internal structure of a Binbuf, so you can use the void $\ast$ type to refer to one. \item\end{DoxyCompactList}\item 
+\hyperlink{group__symbol}{Symbols}
+
+
+\begin{DoxyCompactList}\small\item\em Max maintains a symbol table of all strings to speed lookup for message passing. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{
+typedef void $\ast$($\ast$ \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} )(void $\ast$,...)}
+\label{group__datatypes_gac26ba0a173b50597f5738132e059b42d}
+
+\begin{DoxyCompactList}\small\item\em Function pointer type for generic methods. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_gac7e77a7761df347af29a272c2ddcb08b}{
+typedef long($\ast$ \hyperlink{group__datatypes_gac7e77a7761df347af29a272c2ddcb08b}{longmethod} )(void $\ast$,...)}
+\label{group__datatypes_gac7e77a7761df347af29a272c2ddcb08b}
+
+\begin{DoxyCompactList}\small\item\em Function pointer type for methods returning a long. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga19aa0d8eb4efccb4ec2ebb5eaac0bdb0}{
+typedef void $\ast$($\ast$ \hyperlink{group__datatypes_ga19aa0d8eb4efccb4ec2ebb5eaac0bdb0}{voidstarvoid} )()}
+\label{group__datatypes_ga19aa0d8eb4efccb4ec2ebb5eaac0bdb0}
+
+\begin{DoxyCompactList}\small\item\em Function pointer type for a function with no arguments, returning a generic pointer. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga70766a030fcd392d4574fa59b296a68e}{
+typedef char $\ast$ \hyperlink{group__datatypes_ga70766a030fcd392d4574fa59b296a68e}{t\_\-ptr}}
+\label{group__datatypes_ga70766a030fcd392d4574fa59b296a68e}
+
+\begin{DoxyCompactList}\small\item\em Generic pointer type. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{
+typedef char $\ast$$\ast$ \hyperlink{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}{t\_\-handle}}
+\label{group__datatypes_ga0fe64aac41fd3ec071cce295a41d67ad}
+
+\begin{DoxyCompactList}\small\item\em Generic pointer-\/to-\/a-\/pointer type. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga38df0c7504dc66f6dde187ac80a4db4a}{
+typedef void $\ast$ \hyperlink{group__datatypes_ga38df0c7504dc66f6dde187ac80a4db4a}{t\_\-vptr}}
+\label{group__datatypes_ga38df0c7504dc66f6dde187ac80a4db4a}
+
+\begin{DoxyCompactList}\small\item\em Void pointer type. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga8dc4a45d1f82a212ce2ef921ab611fca}{
+typedef void $\ast$($\ast$ \hyperlink{group__datatypes_ga8dc4a45d1f82a212ce2ef921ab611fca}{zero\_\-meth} )(void $\ast$x)}
+\label{group__datatypes_ga8dc4a45d1f82a212ce2ef921ab611fca}
+
+\begin{DoxyCompactList}\small\item\em Function pointer type for methods with no arguments. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_gacea7b6123eca3526399891715d3a66db}{
+typedef void $\ast$($\ast$ \hyperlink{group__datatypes_gacea7b6123eca3526399891715d3a66db}{one\_\-meth} )(void $\ast$x, void $\ast$z)}
+\label{group__datatypes_gacea7b6123eca3526399891715d3a66db}
+
+\begin{DoxyCompactList}\small\item\em Function pointer type for methods with a single argument. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_gac6d2d64c03de780f1379287c5671ef9c}{
+typedef void $\ast$($\ast$ \hyperlink{group__datatypes_gac6d2d64c03de780f1379287c5671ef9c}{two\_\-meth} )(void $\ast$x, void $\ast$z, void $\ast$a)}
+\label{group__datatypes_gac6d2d64c03de780f1379287c5671ef9c}
+
+\begin{DoxyCompactList}\small\item\em Function pointer type for methods with two arguments. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga98b3e62162a5a33fc823a88d27b50e2a}{
+typedef long $\ast$($\ast$ \hyperlink{group__datatypes_ga98b3e62162a5a33fc823a88d27b50e2a}{gimmeback\_\-meth} )(void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, \hyperlink{structt__atom}{t\_\-atom} $\ast$rv)}
+\label{group__datatypes_ga98b3e62162a5a33fc823a88d27b50e2a}
+
+\begin{DoxyCompactList}\small\item\em Function pointer type for methods that pass back a result value through the last parameter as a \hyperlink{structt__atom}{t\_\-atom}, and return an error. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga718b4eb2652c286f4d42dc18a8e71a1a}{
+typedef unsigned long \hyperlink{group__datatypes_ga718b4eb2652c286f4d42dc18a8e71a1a}{ulong}}
+\label{group__datatypes_ga718b4eb2652c286f4d42dc18a8e71a1a}
+
+\begin{DoxyCompactList}\small\item\em An unsigned long integer. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga91ad9478d81a7aaf2593e8d9c3d06a14}{
+typedef unsigned int \hyperlink{group__datatypes_ga91ad9478d81a7aaf2593e8d9c3d06a14}{uint}}
+\label{group__datatypes_ga91ad9478d81a7aaf2593e8d9c3d06a14}
+
+\begin{DoxyCompactList}\small\item\em An unsigned integer. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_gab95f123a6c9bcfee6a343170ef8c5f69}{
+typedef unsigned short \hyperlink{group__datatypes_gab95f123a6c9bcfee6a343170ef8c5f69}{ushort}}
+\label{group__datatypes_gab95f123a6c9bcfee6a343170ef8c5f69}
+
+\begin{DoxyCompactList}\small\item\em An unsigned short integer. \item\end{DoxyCompactList}\item 
+\hypertarget{group__datatypes_ga65f85814a8290f9797005d3b28e7e5fc}{
+typedef unsigned char \hyperlink{group__datatypes_ga65f85814a8290f9797005d3b28e7e5fc}{uchar}}
+\label{group__datatypes_ga65f85814a8290f9797005d3b28e7e5fc}
+
+\begin{DoxyCompactList}\small\item\em An unsigned char. \item\end{DoxyCompactList}\item 
+typedef long \hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err}
+\begin{DoxyCompactList}\small\item\em A Max error code. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group__datatypes_ga73edaae82b318855cc09fac994918165}{
+\index{datatypes@{datatypes}!t\_\-max\_\-err@{t\_\-max\_\-err}}
+\index{t\_\-max\_\-err@{t\_\-max\_\-err}!datatypes@{datatypes}}
+\subsubsection[{t\_\-max\_\-err}]{\setlength{\rightskip}{0pt plus 5cm}typedef long {\bf t\_\-max\_\-err}}}
+\label{group__datatypes_ga73edaae82b318855cc09fac994918165}
+
+
+A Max error code. Common error codes are defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}. 

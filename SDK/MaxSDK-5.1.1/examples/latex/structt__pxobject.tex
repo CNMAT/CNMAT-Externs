@@ -1,0 +1,36 @@
+\hypertarget{structt__pxobject}{
+\section{t\_\-pxobject Struct Reference}
+\label{structt__pxobject}\index{t\_\-pxobject@{t\_\-pxobject}}
+}
+
+
+Header for any non-\/ui signal processing object.  
+
+
+{\ttfamily \#include $<$z\_\-dsp.h$>$}\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__pxobject_a70794d26e031cec4b1c59cd4ff83a163}{
+struct object \hyperlink{structt__pxobject_a70794d26e031cec4b1c59cd4ff83a163}{z\_\-ob}}
+\label{structt__pxobject_a70794d26e031cec4b1c59cd4ff83a163}
+
+\begin{DoxyCompactList}\small\item\em The standard \hyperlink{structt__object}{t\_\-object} struct. \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pxobject_a70b75cdf768ff989e0d5527c15107b69}{
+long \hyperlink{structt__pxobject_a70b75cdf768ff989e0d5527c15107b69}{z\_\-disabled}}
+\label{structt__pxobject_a70b75cdf768ff989e0d5527c15107b69}
+
+\begin{DoxyCompactList}\small\item\em set to non-\/zero if this object is muted (using the pcontrol or mute$\sim$ objects) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pxobject_a958d0a9f778886711fa0d23469664b5f}{
+short \hyperlink{structt__pxobject_a958d0a9f778886711fa0d23469664b5f}{z\_\-count}}
+\label{structt__pxobject_a958d0a9f778886711fa0d23469664b5f}
+
+\begin{DoxyCompactList}\small\item\em an array that indicates what inlets/outlets are connected with signals \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pxobject_ace9ac8873bbc20c703036e4f28835ca7}{
+short \hyperlink{structt__pxobject_ace9ac8873bbc20c703036e4f28835ca7}{z\_\-misc}}
+\label{structt__pxobject_ace9ac8873bbc20c703036e4f28835ca7}
+
+\begin{DoxyCompactList}\small\item\em flags (bitmask) determining object behaviour, such as \hyperlink{group__msp_ga15695d5ba6bd17ae2e4ac01fff6d2b32}{Z\_\-NO\_\-INPLACE}, \hyperlink{group__msp_gafd451e217e2ffd6b8e158b8861fcf866}{Z\_\-PUT\_\-FIRST}, or \hyperlink{group__msp_ga38363d9e8d77f8f0fcec1a7a1d008977}{Z\_\-PUT\_\-LAST} \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header for any non-\/ui signal processing object. For ui objects use \hyperlink{structt__pxjbox}{t\_\-pxjbox}. 

@@ -1,0 +1,36 @@
+\hypertarget{structt__object}{
+\section{t\_\-object Struct Reference}
+\label{structt__object}\index{t\_\-object@{t\_\-object}}
+}
+
+
+The structure for the head of any object which wants to have inlets or outlets, or support attributes.  
+
+
+{\ttfamily \#include $<$ext\_\-mess.h$>$}\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__object_a79f4251061edbe1b55db6fb8b572f2e0}{
+struct messlist $\ast$ \hyperlink{structt__object_a79f4251061edbe1b55db6fb8b572f2e0}{o\_\-messlist}}
+\label{structt__object_a79f4251061edbe1b55db6fb8b572f2e0}
+
+\begin{DoxyCompactList}\small\item\em list of messages and methods. The -\/1 entry of the message list of an object contains a pointer to its \hyperlink{structt__class}{t\_\-class} entry. \item\end{DoxyCompactList}\item 
+\hypertarget{structt__object_a268ef5e6ca203e3767531c74d1f3da60}{
+long \hyperlink{structt__object_a268ef5e6ca203e3767531c74d1f3da60}{o\_\-magic}}
+\label{structt__object_a268ef5e6ca203e3767531c74d1f3da60}
+
+\begin{DoxyCompactList}\small\item\em magic number \item\end{DoxyCompactList}\item 
+\hypertarget{structt__object_aa992ab915e7383768f2e0c661156634c}{
+struct inlet $\ast$ \hyperlink{structt__object_aa992ab915e7383768f2e0c661156634c}{o\_\-inlet}}
+\label{structt__object_aa992ab915e7383768f2e0c661156634c}
+
+\begin{DoxyCompactList}\small\item\em list of inlets \item\end{DoxyCompactList}\item 
+\hypertarget{structt__object_af63eed332b4b9921acc6b63051c9936f}{
+struct outlet $\ast$ \hyperlink{structt__object_af63eed332b4b9921acc6b63051c9936f}{o\_\-outlet}}
+\label{structt__object_af63eed332b4b9921acc6b63051c9936f}
+
+\begin{DoxyCompactList}\small\item\em list of outlets \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The structure for the head of any object which wants to have inlets or outlets, or support attributes. 

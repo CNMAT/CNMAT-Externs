@@ -1,0 +1,703 @@
+\hypertarget{group__linklist}{
+\section{Linked List}
+\label{group__linklist}\index{Linked List@{Linked List}}
+}
+
+
+Max's linklist object implements a doubly-\/linked-\/list ( \href{http://en.wikipedia.org/wiki/Linked_list}{\tt http://en.wikipedia.org/wiki/Linked\_\-list} ) together with a high-\/level interface for manipulating and accessing values in the list.  
+
+
+Collaboration diagram for Linked List:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=121pt]{group__linklist}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__llelem}{t\_\-llelem}
+\begin{DoxyCompactList}\small\item\em A linklist element. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__linklist}{t\_\-linklist}
+\begin{DoxyCompactList}\small\item\em The linklist object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__linklist}{t\_\-linklist} $\ast$ \hyperlink{group__linklist_ga62dba349046e7f84cf34c9c80f04d44a}{linklist\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Create a new linklist object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga033f4bf2a9f806e168697b5ce0f6331e}{linklist\_\-chuck} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Free a linklist, but don't free the items it contains. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_ga71472259406fa8ceb8fad80d23259357}{linklist\_\-getsize} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Return the number of items in a linklist object. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklist_ga4d64ccb54a70c0a2a9b3fb68e495d9f4}{linklist\_\-getindex} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Return the item stored in a linklist at a specified index. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_ga6ec787cba5eb1c47c294692d4c62e609}{linklist\_\-objptr2index} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$p)
+\begin{DoxyCompactList}\small\item\em Return an item's index, given the item itself. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_ga7360ba45714cb28e2b4cd44aa8998a67}{linklist\_\-append} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o)
+\begin{DoxyCompactList}\small\item\em Add an item to the end of the list. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_gac652f2501c274abd1d8fe53626153bde}{linklist\_\-insertindex} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o, long index)
+\begin{DoxyCompactList}\small\item\em Insert an item into the list at the specified index. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_gadac3bedb5a07ebf8f1b4751cc73a2c52}{linklist\_\-insert\_\-sorted} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o, long cmpfn(void $\ast$, void $\ast$))
+\begin{DoxyCompactList}\small\item\em Insert an item into the list, keeping the list sorted according to a specified comparison function. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__llelem}{t\_\-llelem} $\ast$ \hyperlink{group__linklist_gafd9471b4a798cd55d9d5bc79000b5a93}{linklist\_\-insertafterobjptr} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o, void $\ast$objptr)
+\begin{DoxyCompactList}\small\item\em Insert an item into the list after another specified item. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__llelem}{t\_\-llelem} $\ast$ \hyperlink{group__linklist_gaaa759a9962d69633c45efac04382fb61}{linklist\_\-insertbeforeobjptr} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o, void $\ast$objptr)
+\begin{DoxyCompactList}\small\item\em Insert an item into the list before another specified item. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__llelem}{t\_\-llelem} $\ast$ \hyperlink{group__linklist_ga429e12adff823ce46dc54649a271cefd}{linklist\_\-moveafterobjptr} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o, void $\ast$objptr)
+\begin{DoxyCompactList}\small\item\em Move an existing item in the list to a position after another specified item in the list. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__llelem}{t\_\-llelem} $\ast$ \hyperlink{group__linklist_ga3a91552cbd18988575d9ae31ff863812}{linklist\_\-movebeforeobjptr} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o, void $\ast$objptr)
+\begin{DoxyCompactList}\small\item\em Move an existing item in the list to a position before another specified item in the list. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_ga8a93071a90ca14ed02a32fa09f9e13f9}{linklist\_\-deleteindex} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Remove the item from the list at the specified index and free it. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_gaa89cf5b917b41ad0c15963dd79800b50}{linklist\_\-chuckindex} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long index)
+\begin{DoxyCompactList}\small\item\em Remove the item from the list at the specified index. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga6621c47c664c57d794ea2540b62d0956}{linklist\_\-chuckobject} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$o)
+\begin{DoxyCompactList}\small\item\em Remove the specified item from the list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga551da85a8531e5785a4b748d8a86301a}{linklist\_\-clear} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Remove and free all items in the list. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_ga49aa766d6a1a63de1491f9bdfb3cfe73}{linklist\_\-makearray} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$$\ast$a, long max)
+\begin{DoxyCompactList}\small\item\em Retrieve linklist items as an array of pointers. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga4ca32e817270576a9c1137e86f33c3d6}{linklist\_\-reverse} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Reverse the order of items in the linked-\/list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga728b9e635de257787b721dddaac8e01f}{linklist\_\-rotate} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long i)
+\begin{DoxyCompactList}\small\item\em Rotate items in the linked list in circular fashion. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga58a2e5fba8b3b084a3940a23fbd3a4a1}{linklist\_\-shuffle} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Randomize the order of items in the linked-\/list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga42d158b9f76d83f58cf6780aeb9b208a}{linklist\_\-swap} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long a, long b)
+\begin{DoxyCompactList}\small\item\em Swap the position of two items in the linked-\/list, specified by index. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_gab7f3c26cb704c460892818b89a1ab004}{linklist\_\-findfirst} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$$\ast$o, long cmpfn(void $\ast$, void $\ast$), void $\ast$cmpdata)
+\begin{DoxyCompactList}\small\item\em Search the linked list for the first item meeting defined criteria. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga20253bd1c04d260171435d6b547ac787}{linklist\_\-findall} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, \hyperlink{structt__linklist}{t\_\-linklist} $\ast$$\ast$out, long cmpfn(void $\ast$, void $\ast$), void $\ast$cmpdata)
+\begin{DoxyCompactList}\small\item\em Search the linked list for all items meeting defined criteria. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga10bd8d367039e3e4b90fe720e83d0edf}{linklist\_\-methodall} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Call the named message on every object in the linklist. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklist_ga17e04336154b16c19ac13f5f62fba009}{linklist\_\-methodindex} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long i, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Call the named message on an object specified by index. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_gaf01b5f67a8ceccdd75cff34f6ecdd8c2}{linklist\_\-sort} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long cmpfn(void $\ast$, void $\ast$))
+\begin{DoxyCompactList}\small\item\em Sort the linked list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{linklist\_\-funall} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, void $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Call the specified function for every item in the linklist. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_ga27a9d3cdcacb995dcc7ce7a80daf57b6}{linklist\_\-funall\_\-break} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, void $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Call the specified function for every item in the linklist. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklist_ga289838302ecbed343839de955cd8549c}{linklist\_\-funindex} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long i, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, void $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Call the specified function for an item specified by index. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklist_ga498a96abbd74bf7e1885e97a8fb37379}{linklist\_\-substitute} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$p, void $\ast$newp)
+\begin{DoxyCompactList}\small\item\em Given an item in the list, replace it with a different value. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklist_ga9d66d4fd900d9cdd13f7520094fb1837}{linklist\_\-next} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$p, void $\ast$$\ast$next)
+\begin{DoxyCompactList}\small\item\em Given an item in the list, find the next item. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklist_ga62b4f5fce83130358e652601e1286926}{linklist\_\-prev} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$p, void $\ast$$\ast$prev)
+\begin{DoxyCompactList}\small\item\em Given an item in the list, find the previous item. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__linklist_gad45ad220a822b64458152e60f504e846}{linklist\_\-last} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, void $\ast$$\ast$item)
+\begin{DoxyCompactList}\small\item\em Return the last item (the tail) in the linked-\/list. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_ga95d07cfad7f3a651b1d42482183cd698}{linklist\_\-readonly} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long readonly)
+\begin{DoxyCompactList}\small\item\em Set the linklist's readonly bit. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}{linklist\_\-flags} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x, long flags)
+\begin{DoxyCompactList}\small\item\em Set the linklist's datastore flags. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_gacbef4ef795d257b8686aa274049efa4a}{linklist\_\-getflags} (\hyperlink{structt__linklist}{t\_\-linklist} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Get the linklist's datastore flags. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__linklist_ga2a991fb645404fe7d9d3327e5a386b80}{linklist\_\-match} (void $\ast$a, void $\ast$b)
+\begin{DoxyCompactList}\small\item\em A linklist comparison method that determines if two item pointers are equal. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max's linklist object implements a doubly-\/linked-\/list ( \href{http://en.wikipedia.org/wiki/Linked_list}{\tt http://en.wikipedia.org/wiki/Linked\_\-list} ) together with a high-\/level interface for manipulating and accessing values in the list. 
+
+\subsection{Function Documentation}
+\hypertarget{group__linklist_ga7360ba45714cb28e2b4cd44aa8998a67}{
+\index{linklist@{linklist}!linklist\_\-append@{linklist\_\-append}}
+\index{linklist\_\-append@{linklist\_\-append}!linklist@{linklist}}
+\subsubsection[{linklist\_\-append}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-append ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o})}}
+\label{group__linklist_ga7360ba45714cb28e2b4cd44aa8998a67}
+
+
+Add an item to the end of the list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The item pointer to append to the linked-\/list. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index of the item in the linklist. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga033f4bf2a9f806e168697b5ce0f6331e}{
+\index{linklist@{linklist}!linklist\_\-chuck@{linklist\_\-chuck}}
+\index{linklist\_\-chuck@{linklist\_\-chuck}!linklist@{linklist}}
+\subsubsection[{linklist\_\-chuck}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-chuck ({\bf t\_\-linklist} $\ast$ {\em x})}}
+\label{group__linklist_ga033f4bf2a9f806e168697b5ce0f6331e}
+
+
+Free a linklist, but don't free the items it contains. The linklist can contain a variety of different types of data. By default, the linklist assumes that all items are max objects with a valid \hyperlink{structt__object}{t\_\-object} header.
+
+You can alter the linklist's notion of what it contains by using the \hyperlink{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}{linklist\_\-flags()} method.
+
+When you free the linklist by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} it then tries to free all of the items it contains. If the linklist is storing a custom type of data, or should otherwise not free the data it contains, then call \hyperlink{group__linklist_ga033f4bf2a9f806e168697b5ce0f6331e}{linklist\_\-chuck()} to free the object instead of \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist object to be freed. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_gaa89cf5b917b41ad0c15963dd79800b50}{
+\index{linklist@{linklist}!linklist\_\-chuckindex@{linklist\_\-chuckindex}}
+\index{linklist\_\-chuckindex@{linklist\_\-chuckindex}!linklist@{linklist}}
+\subsubsection[{linklist\_\-chuckindex}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-chuckindex ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__linklist_gaa89cf5b917b41ad0c15963dd79800b50}
+
+
+Remove the item from the list at the specified index. You are responsible for freeing any memory associated with the item that is removed from the linklist.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em index}]The index of the item to remove. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} on successful removal, otherwise returns \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69dae285bdd436f17560cfd09c6b31ea397d}{MAX\_\-ERR\_\-GENERIC}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_ga8a93071a90ca14ed02a32fa09f9e13f9}{linklist\_\-deleteindex} 
+
+\hyperlink{group__linklist_ga6621c47c664c57d794ea2540b62d0956}{linklist\_\-chuckobject} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_ga6621c47c664c57d794ea2540b62d0956}{
+\index{linklist@{linklist}!linklist\_\-chuckobject@{linklist\_\-chuckobject}}
+\index{linklist\_\-chuckobject@{linklist\_\-chuckobject}!linklist@{linklist}}
+\subsubsection[{linklist\_\-chuckobject}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-chuckobject ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o})}}
+\label{group__linklist_ga6621c47c664c57d794ea2540b62d0956}
+
+
+Remove the specified item from the list. You are responsible for freeing any memory associated with the item that is removed from the linklist.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The pointer to the item to remove.\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_ga8a93071a90ca14ed02a32fa09f9e13f9}{linklist\_\-deleteindex} 
+
+\hyperlink{group__linklist_gaa89cf5b917b41ad0c15963dd79800b50}{linklist\_\-chuckindex} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_ga551da85a8531e5785a4b748d8a86301a}{
+\index{linklist@{linklist}!linklist\_\-clear@{linklist\_\-clear}}
+\index{linklist\_\-clear@{linklist\_\-clear}!linklist@{linklist}}
+\subsubsection[{linklist\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-clear ({\bf t\_\-linklist} $\ast$ {\em x})}}
+\label{group__linklist_ga551da85a8531e5785a4b748d8a86301a}
+
+
+Remove and free all items in the list. Freeing items in the list is subject to the same rules as \hyperlink{group__linklist_ga8a93071a90ca14ed02a32fa09f9e13f9}{linklist\_\-deleteindex()}. You can alter the linklist's notion of what it contains, and thus how items are freed, by using the \hyperlink{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}{linklist\_\-flags()} method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \end{DoxyParams}
+\hypertarget{group__linklist_ga8a93071a90ca14ed02a32fa09f9e13f9}{
+\index{linklist@{linklist}!linklist\_\-deleteindex@{linklist\_\-deleteindex}}
+\index{linklist\_\-deleteindex@{linklist\_\-deleteindex}!linklist@{linklist}}
+\subsubsection[{linklist\_\-deleteindex}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-deleteindex ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__linklist_ga8a93071a90ca14ed02a32fa09f9e13f9}
+
+
+Remove the item from the list at the specified index and free it. The linklist can contain a variety of different types of data. By default, the linklist assumes that all items are max objects with a valid \hyperlink{structt__object}{t\_\-object} header. Thus by default, it frees items by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} on them.
+
+You can alter the linklist's notion of what it contains by using the \hyperlink{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}{linklist\_\-flags()} method.
+
+If you wish to remove an item from the linklist and free it yourself, then you should use linklist\_\-chuckptr().
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em index}]The index of the item to delete. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69da6d22f77fef8b1e1b074cef5d29d935fd}{MAX\_\-ERR\_\-NONE} on successful deletion, otherwise returns \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69dae285bdd436f17560cfd09c6b31ea397d}{MAX\_\-ERR\_\-GENERIC}
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_gaa89cf5b917b41ad0c15963dd79800b50}{linklist\_\-chuckindex} 
+
+\hyperlink{group__linklist_ga6621c47c664c57d794ea2540b62d0956}{linklist\_\-chuckobject} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_ga20253bd1c04d260171435d6b547ac787}{
+\index{linklist@{linklist}!linklist\_\-findall@{linklist\_\-findall}}
+\index{linklist\_\-findall@{linklist\_\-findall}!linklist@{linklist}}
+\subsubsection[{linklist\_\-findall}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-findall ({\bf t\_\-linklist} $\ast$ {\em x}, \/  {\bf t\_\-linklist} $\ast$$\ast$ {\em out}, \/  long  {\em cmpfn}void $\ast$, void $\ast$, \/  void $\ast$ {\em cmpdata})}}
+\label{group__linklist_ga20253bd1c04d260171435d6b547ac787}
+
+
+Search the linked list for all items meeting defined criteria. The items in the list are traversed, calling a specified comparison function on each, and returning the matches in another linklist.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em out}]The address to a \hyperlink{structt__linklist}{t\_\-linklist} pointer. You should initialize the pointer to NULL before calling \hyperlink{group__linklist_ga20253bd1c04d260171435d6b547ac787}{linklist\_\-findall()}. A new linklist will be created internally by \hyperlink{group__linklist_ga20253bd1c04d260171435d6b547ac787}{linklist\_\-findall()} and returned here. \item[{\em cmpfn}]The function used to determine a match in the list. \item[{\em cmpdata}]An argument to be passed to the \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn}. This will be passed as the second of the two args to the \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn}. The first arg will be the linklist item at each iteration in the list.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The following example assumes you have a linklist called myLinkList, and \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} called myCmpFunction, and some sort of data to match in someCriteria. 
+\begin{DoxyCode}
+    t_linklist *results = NULL;
+    
+    linklist_findall(myLinkList, &results, myCmpFunction, (void *)someCriteria);
+    // do something here with the 'results' linklist
+    // then free the results linklist
+    linklist_chuck(results);
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_ga2a991fb645404fe7d9d3327e5a386b80}{linklist\_\-match} 
+
+\hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} 
+
+\hyperlink{group__linklist_gab7f3c26cb704c460892818b89a1ab004}{linklist\_\-findfirst} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_gab7f3c26cb704c460892818b89a1ab004}{
+\index{linklist@{linklist}!linklist\_\-findfirst@{linklist\_\-findfirst}}
+\index{linklist\_\-findfirst@{linklist\_\-findfirst}!linklist@{linklist}}
+\subsubsection[{linklist\_\-findfirst}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-findfirst ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$$\ast$ {\em o}, \/  long  {\em cmpfn}void $\ast$, void $\ast$, \/  void $\ast$ {\em cmpdata})}}
+\label{group__linklist_gab7f3c26cb704c460892818b89a1ab004}
+
+
+Search the linked list for the first item meeting defined criteria. The items in the list are traversed, calling a specified comparison function on each until the comparison function returns true.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The address to pointer that will be set with the matching item. \item[{\em cmpfn}]The function used to determine a match in the list. \item[{\em cmpdata}]An argument to be passed to the \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn}. This will be passed as the second of the two args to the \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn}. The first arg will be the linklist item at each iteration in the list. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index of the matching item, or -\/1 if no match is found.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The following shows how to manually do what \hyperlink{group__linklist_ga6621c47c664c57d794ea2540b62d0956}{linklist\_\-chuckobject()} does. 
+\begin{DoxyCode}
+    void *obj;
+    long index;
+    
+    index = linklist_findfirst(x, &obj, #linklist_match, o);
+    if(index != -1)
+        linklist_chuckindex(x, index);
+\end{DoxyCode}
+
+\end{DoxyRemark}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_ga2a991fb645404fe7d9d3327e5a386b80}{linklist\_\-match} 
+
+\hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} 
+
+\hyperlink{group__linklist_ga20253bd1c04d260171435d6b547ac787}{linklist\_\-findall} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}{
+\index{linklist@{linklist}!linklist\_\-flags@{linklist\_\-flags}}
+\index{linklist\_\-flags@{linklist\_\-flags}!linklist@{linklist}}
+\subsubsection[{linklist\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-flags ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em flags})}}
+\label{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}
+
+
+Set the linklist's datastore flags. The available flags are enumerated in \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. These flags control the behavior of the linklist, particularly when removing items from the list using functions such as \hyperlink{group__linklist_ga551da85a8531e5785a4b748d8a86301a}{linklist\_\-clear()}, \hyperlink{group__linklist_ga8a93071a90ca14ed02a32fa09f9e13f9}{linklist\_\-deleteindex()}, or when freeing the linklist itself.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em flags}]A valid value from the \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. The default is \hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348adc630c58c8e958a404553a08db6fd180}{OBJ\_\-FLAG\_\-OBJ}. \end{DoxyParams}
+\hypertarget{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{
+\index{linklist@{linklist}!linklist\_\-funall@{linklist\_\-funall}}
+\index{linklist\_\-funall@{linklist\_\-funall}!linklist@{linklist}}
+\subsubsection[{linklist\_\-funall}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-funall ({\bf t\_\-linklist} $\ast$ {\em x}, \/  {\bf method} {\em fun}, \/  void $\ast$ {\em arg})}}
+\label{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}
+
+
+Call the specified function for every item in the linklist. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em fun}]The function to call, specified as function pointer cast to a Max \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method}. \item[{\em arg}]An argument that you would like to pass to the function being called.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{linklist\_\-funall()} method will call your function for every item in the list. It will pass both a pointer to the item in the list, and any argument that you provide. The following example shows a function that could be called by \hyperlink{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{linklist\_\-funall()}. 
+\begin{DoxyCode}
+    void myFun(t_object *myObj, void *myArg)
+    {
+        // do something with myObj and myArg here
+        // myObj is the item in the linklist
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__linklist_ga27a9d3cdcacb995dcc7ce7a80daf57b6}{
+\index{linklist@{linklist}!linklist\_\-funall\_\-break@{linklist\_\-funall\_\-break}}
+\index{linklist\_\-funall\_\-break@{linklist\_\-funall\_\-break}!linklist@{linklist}}
+\subsubsection[{linklist\_\-funall\_\-break}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-funall\_\-break ({\bf t\_\-linklist} $\ast$ {\em x}, \/  {\bf method} {\em fun}, \/  void $\ast$ {\em arg})}}
+\label{group__linklist_ga27a9d3cdcacb995dcc7ce7a80daf57b6}
+
+
+Call the specified function for every item in the linklist. The iteration through the list will halt if the function returns a non-\/zero value.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em fun}]The function to call, specified as function pointer cast to a Max \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method}. \item[{\em arg}]An argument that you would like to pass to the function being called.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{linklist\_\-funall()} method will call your function for every item in the list. It will pass both a pointer to the item in the list, and any argument that you provide. The following example shows a function that could be called by \hyperlink{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{linklist\_\-funall()}. 
+\begin{DoxyCode}
+    long myFun(t_symbol *myListItemSymbol, void *myArg)
+    {
+        // this function is called by a linklist that contains symbols for its it
+      ems
+        if(myListItemSymbol == gensym("")){
+            error("empty symbol -- aborting linklist traversal")
+            return 1;           
+        }
+        else{
+            // do something with the symbol
+            return 0;
+        }
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__linklist_ga289838302ecbed343839de955cd8549c}{
+\index{linklist@{linklist}!linklist\_\-funindex@{linklist\_\-funindex}}
+\index{linklist\_\-funindex@{linklist\_\-funindex}!linklist@{linklist}}
+\subsubsection[{linklist\_\-funindex}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ linklist\_\-funindex ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em i}, \/  {\bf method} {\em fun}, \/  void $\ast$ {\em arg})}}
+\label{group__linklist_ga289838302ecbed343839de955cd8549c}
+
+
+Call the specified function for an item specified by index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em i}]The index of the item to which to send the message. \item[{\em fun}]The function to call, specified as function pointer cast to a Max \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method}. \item[{\em arg}]An argument that you would like to pass to the function being called.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__linklist_ga289838302ecbed343839de955cd8549c}{linklist\_\-funindex()} method will call your function for an item in the list. It will pass both a pointer to the item in the list, and any argument that you provide. The following example shows a function that could be called by \hyperlink{group__linklist_ga289838302ecbed343839de955cd8549c}{linklist\_\-funindex()}. 
+\begin{DoxyCode}
+    void myFun(t_object *myObj, void *myArg)
+    {
+        // do something with myObj and myArg here
+        // myObj is the item in the linklist
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__linklist_gacbef4ef795d257b8686aa274049efa4a}{
+\index{linklist@{linklist}!linklist\_\-getflags@{linklist\_\-getflags}}
+\index{linklist\_\-getflags@{linklist\_\-getflags}!linklist@{linklist}}
+\subsubsection[{linklist\_\-getflags}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-getflags ({\bf t\_\-linklist} $\ast$ {\em x})}}
+\label{group__linklist_gacbef4ef795d257b8686aa274049efa4a}
+
+
+Get the linklist's datastore flags. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current state of the linklist flags as enumerated in \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga4d64ccb54a70c0a2a9b3fb68e495d9f4}{
+\index{linklist@{linklist}!linklist\_\-getindex@{linklist\_\-getindex}}
+\index{linklist\_\-getindex@{linklist\_\-getindex}!linklist@{linklist}}
+\subsubsection[{linklist\_\-getindex}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ linklist\_\-getindex ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em index})}}
+\label{group__linklist_ga4d64ccb54a70c0a2a9b3fb68e495d9f4}
+
+
+Return the item stored in a linklist at a specified index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em index}]The index in the linklist to fetch. Indices are zero-\/based. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The item from the linklist stored at index. If there is no item at the index, {\ttfamily NULL} is returned 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga71472259406fa8ceb8fad80d23259357}{
+\index{linklist@{linklist}!linklist\_\-getsize@{linklist\_\-getsize}}
+\index{linklist\_\-getsize@{linklist\_\-getsize}!linklist@{linklist}}
+\subsubsection[{linklist\_\-getsize}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-getsize ({\bf t\_\-linklist} $\ast$ {\em x})}}
+\label{group__linklist_ga71472259406fa8ceb8fad80d23259357}
+
+
+Return the number of items in a linklist object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of items in the linklist object. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_gadac3bedb5a07ebf8f1b4751cc73a2c52}{
+\index{linklist@{linklist}!linklist\_\-insert\_\-sorted@{linklist\_\-insert\_\-sorted}}
+\index{linklist\_\-insert\_\-sorted@{linklist\_\-insert\_\-sorted}!linklist@{linklist}}
+\subsubsection[{linklist\_\-insert\_\-sorted}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-insert\_\-sorted ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  long  {\em cmpfn}void $\ast$, void $\ast$)}}
+\label{group__linklist_gadac3bedb5a07ebf8f1b4751cc73a2c52}
+
+
+Insert an item into the list, keeping the list sorted according to a specified comparison function. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The item pointer to insert. \item[{\em cmpfn}]A comparison function by which the list should be sorted. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index of the new item in the linklist, or -\/1 if the insert failed. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_gafd9471b4a798cd55d9d5bc79000b5a93}{
+\index{linklist@{linklist}!linklist\_\-insertafterobjptr@{linklist\_\-insertafterobjptr}}
+\index{linklist\_\-insertafterobjptr@{linklist\_\-insertafterobjptr}!linklist@{linklist}}
+\subsubsection[{linklist\_\-insertafterobjptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-llelem}$\ast$ linklist\_\-insertafterobjptr ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  void $\ast$ {\em objptr})}}
+\label{group__linklist_gafd9471b4a798cd55d9d5bc79000b5a93}
+
+
+Insert an item into the list after another specified item. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The item pointer to insert. \item[{\em objptr}]The item pointer after which to insert in the list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An opaque linklist element. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_gaaa759a9962d69633c45efac04382fb61}{
+\index{linklist@{linklist}!linklist\_\-insertbeforeobjptr@{linklist\_\-insertbeforeobjptr}}
+\index{linklist\_\-insertbeforeobjptr@{linklist\_\-insertbeforeobjptr}!linklist@{linklist}}
+\subsubsection[{linklist\_\-insertbeforeobjptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-llelem}$\ast$ linklist\_\-insertbeforeobjptr ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  void $\ast$ {\em objptr})}}
+\label{group__linklist_gaaa759a9962d69633c45efac04382fb61}
+
+
+Insert an item into the list before another specified item. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The item pointer to insert. \item[{\em objptr}]The item pointer before which to insert in the list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An opaque linklist element. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_gac652f2501c274abd1d8fe53626153bde}{
+\index{linklist@{linklist}!linklist\_\-insertindex@{linklist\_\-insertindex}}
+\index{linklist\_\-insertindex@{linklist\_\-insertindex}!linklist@{linklist}}
+\subsubsection[{linklist\_\-insertindex}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-insertindex ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  long {\em index})}}
+\label{group__linklist_gac652f2501c274abd1d8fe53626153bde}
+
+
+Insert an item into the list at the specified index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The item pointer to insert. \item[{\em index}]The index at which to insert. Index 0 is the head of the list. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index of the item in the linklist, or -\/1 if the insert failed. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_gad45ad220a822b64458152e60f504e846}{
+\index{linklist@{linklist}!linklist\_\-last@{linklist\_\-last}}
+\index{linklist\_\-last@{linklist\_\-last}!linklist@{linklist}}
+\subsubsection[{linklist\_\-last}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ linklist\_\-last ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$$\ast$ {\em item})}}
+\label{group__linklist_gad45ad220a822b64458152e60f504e846}
+
+
+Return the last item (the tail) in the linked-\/list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em item}]The address of pointer in which to store the last item in the linked-\/list. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+always returns NULL 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga49aa766d6a1a63de1491f9bdfb3cfe73}{
+\index{linklist@{linklist}!linklist\_\-makearray@{linklist\_\-makearray}}
+\index{linklist\_\-makearray@{linklist\_\-makearray}!linklist@{linklist}}
+\subsubsection[{linklist\_\-makearray}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-makearray ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$$\ast$ {\em a}, \/  long {\em max})}}
+\label{group__linklist_ga49aa766d6a1a63de1491f9bdfb3cfe73}
+
+
+Retrieve linklist items as an array of pointers. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em a}]The address of the first pointer in the array to fill. \item[{\em max}]The number of pointers in the array. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of items from the list actually returned in the array. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga2a991fb645404fe7d9d3327e5a386b80}{
+\index{linklist@{linklist}!linklist\_\-match@{linklist\_\-match}}
+\index{linklist\_\-match@{linklist\_\-match}!linklist@{linklist}}
+\subsubsection[{linklist\_\-match}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-match (void $\ast$ {\em a}, \/  void $\ast$ {\em b})}}
+\label{group__linklist_ga2a991fb645404fe7d9d3327e5a386b80}
+
+
+A linklist comparison method that determines if two item pointers are equal. 
+\begin{DoxyParams}{Parameters}
+\item[{\em a}]The first item to compare. \item[{\em b}]The second item to compare. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 1 if the items are equal, otherwise 0.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_ga10bd8d367039e3e4b90fe720e83d0edf}{
+\index{linklist@{linklist}!linklist\_\-methodall@{linklist\_\-methodall}}
+\index{linklist\_\-methodall@{linklist\_\-methodall}!linklist@{linklist}}
+\subsubsection[{linklist\_\-methodall}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-methodall ({\bf t\_\-linklist} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__linklist_ga10bd8d367039e3e4b90fe720e83d0edf}
+
+
+Call the named message on every object in the linklist. The \hyperlink{group__linklist_ga10bd8d367039e3e4b90fe720e83d0edf}{linklist\_\-methodall()} function requires that all items in the linklist are object instances with a valid \hyperlink{structt__object}{t\_\-object} header.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em s}]The name of the message to send to the objects. \item[{\em ...}]Any arguments to be sent with the message.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Internally, this function uses \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()}, meaning that no errors will be posted if the message name does not exist for the object. It also means that messages sent methods with \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME} definitions will need to be given a symbol argument prior to the argc and argv array information. 
+\end{DoxyRemark}
+\hypertarget{group__linklist_ga17e04336154b16c19ac13f5f62fba009}{
+\index{linklist@{linklist}!linklist\_\-methodindex@{linklist\_\-methodindex}}
+\index{linklist\_\-methodindex@{linklist\_\-methodindex}!linklist@{linklist}}
+\subsubsection[{linklist\_\-methodindex}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ linklist\_\-methodindex ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em i}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__linklist_ga17e04336154b16c19ac13f5f62fba009}
+
+
+Call the named message on an object specified by index. The item must be an object instance with a valid \hyperlink{structt__object}{t\_\-object} header.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em i}]The index of the item to which to send the message. \item[{\em s}]The name of the message to send to the objects. \item[{\em ...}]Any arguments to be sent with the message.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Internally, this function uses \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()}, meaning that no errors will be posted if the message name does not exist for the object. It also means that messages sent methods with \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME} definitions will need to be given a symbol argument prior to the argc and argv array information. 
+\end{DoxyRemark}
+\hypertarget{group__linklist_ga429e12adff823ce46dc54649a271cefd}{
+\index{linklist@{linklist}!linklist\_\-moveafterobjptr@{linklist\_\-moveafterobjptr}}
+\index{linklist\_\-moveafterobjptr@{linklist\_\-moveafterobjptr}!linklist@{linklist}}
+\subsubsection[{linklist\_\-moveafterobjptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-llelem}$\ast$ linklist\_\-moveafterobjptr ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  void $\ast$ {\em objptr})}}
+\label{group__linklist_ga429e12adff823ce46dc54649a271cefd}
+
+
+Move an existing item in the list to a position after another specified item in the list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The item pointer to insert. \item[{\em objptr}]The item pointer after which to move o in the list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An opaque linklist element. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga3a91552cbd18988575d9ae31ff863812}{
+\index{linklist@{linklist}!linklist\_\-movebeforeobjptr@{linklist\_\-movebeforeobjptr}}
+\index{linklist\_\-movebeforeobjptr@{linklist\_\-movebeforeobjptr}!linklist@{linklist}}
+\subsubsection[{linklist\_\-movebeforeobjptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-llelem}$\ast$ linklist\_\-movebeforeobjptr ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em o}, \/  void $\ast$ {\em objptr})}}
+\label{group__linklist_ga3a91552cbd18988575d9ae31ff863812}
+
+
+Move an existing item in the list to a position before another specified item in the list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em o}]The item pointer to insert. \item[{\em objptr}]The item pointer before which to move o in the list.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An opaque linklist element. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga62dba349046e7f84cf34c9c80f04d44a}{
+\index{linklist@{linklist}!linklist\_\-new@{linklist\_\-new}}
+\index{linklist\_\-new@{linklist\_\-new}!linklist@{linklist}}
+\subsubsection[{linklist\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-linklist}$\ast$ linklist\_\-new (void)}}
+\label{group__linklist_ga62dba349046e7f84cf34c9c80f04d44a}
+
+
+Create a new linklist object. You can free the linklist by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} on the linklist's pointer, or by using \hyperlink{group__linklist_ga033f4bf2a9f806e168697b5ce0f6331e}{linklist\_\-chuck()}.
+
+\begin{DoxyReturn}{Returns}
+Pointer to the new linklist object.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} 
+
+\hyperlink{group__linklist_ga033f4bf2a9f806e168697b5ce0f6331e}{linklist\_\-chuck()} 
+\end{DoxySeeAlso}
+\hypertarget{group__linklist_ga9d66d4fd900d9cdd13f7520094fb1837}{
+\index{linklist@{linklist}!linklist\_\-next@{linklist\_\-next}}
+\index{linklist\_\-next@{linklist\_\-next}!linklist@{linklist}}
+\subsubsection[{linklist\_\-next}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ linklist\_\-next ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em p}, \/  void $\ast$$\ast$ {\em next})}}
+\label{group__linklist_ga9d66d4fd900d9cdd13f7520094fb1837}
+
+
+Given an item in the list, find the next item. This provides an means for walking the list.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em p}]An item in the list. \item[{\em next}]The address of a pointer to set with the next item in the list. \end{DoxyParams}
+\hypertarget{group__linklist_ga6ec787cba5eb1c47c294692d4c62e609}{
+\index{linklist@{linklist}!linklist\_\-objptr2index@{linklist\_\-objptr2index}}
+\index{linklist\_\-objptr2index@{linklist\_\-objptr2index}!linklist@{linklist}}
+\subsubsection[{linklist\_\-objptr2index}]{\setlength{\rightskip}{0pt plus 5cm}long linklist\_\-objptr2index ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em p})}}
+\label{group__linklist_ga6ec787cba5eb1c47c294692d4c62e609}
+
+
+Return an item's index, given the item itself. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em p}]The item pointer to search for in the linklist. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index of the item given in the linklist. If the item is not in the linklist \hyperlink{group__misc_gga0764dd6c02b76cca7d053ae50555d69dae285bdd436f17560cfd09c6b31ea397d}{MAX\_\-ERR\_\-GENERIC} is returned. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga62b4f5fce83130358e652601e1286926}{
+\index{linklist@{linklist}!linklist\_\-prev@{linklist\_\-prev}}
+\index{linklist\_\-prev@{linklist\_\-prev}!linklist@{linklist}}
+\subsubsection[{linklist\_\-prev}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ linklist\_\-prev ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em p}, \/  void $\ast$$\ast$ {\em prev})}}
+\label{group__linklist_ga62b4f5fce83130358e652601e1286926}
+
+
+Given an item in the list, find the previous item. This provides an means for walking the list.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em p}]An item in the list. \item[{\em prev}]The address of a pointer to set with the previous item in the list. \end{DoxyParams}
+\hypertarget{group__linklist_ga95d07cfad7f3a651b1d42482183cd698}{
+\index{linklist@{linklist}!linklist\_\-readonly@{linklist\_\-readonly}}
+\index{linklist\_\-readonly@{linklist\_\-readonly}!linklist@{linklist}}
+\subsubsection[{linklist\_\-readonly}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-readonly ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em readonly})}}
+\label{group__linklist_ga95d07cfad7f3a651b1d42482183cd698}
+
+
+Set the linklist's readonly bit. By default the readonly bit is 0, indicating that it is threadsafe for both reading and writing. Setting the readonly bit to 1 will disable the linklist's theadsafety mechanism, increasing performance but at the expense of threadsafe operation. Unless you can guarantee the threading context for a linklist's use, you should leave this set to 0.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em readonly}]A 1 or 0 for setting the readonly bit. \end{DoxyParams}
+\hypertarget{group__linklist_ga4ca32e817270576a9c1137e86f33c3d6}{
+\index{linklist@{linklist}!linklist\_\-reverse@{linklist\_\-reverse}}
+\index{linklist\_\-reverse@{linklist\_\-reverse}!linklist@{linklist}}
+\subsubsection[{linklist\_\-reverse}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-reverse ({\bf t\_\-linklist} $\ast$ {\em x})}}
+\label{group__linklist_ga4ca32e817270576a9c1137e86f33c3d6}
+
+
+Reverse the order of items in the linked-\/list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \end{DoxyParams}
+\hypertarget{group__linklist_ga728b9e635de257787b721dddaac8e01f}{
+\index{linklist@{linklist}!linklist\_\-rotate@{linklist\_\-rotate}}
+\index{linklist\_\-rotate@{linklist\_\-rotate}!linklist@{linklist}}
+\subsubsection[{linklist\_\-rotate}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-rotate ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em i})}}
+\label{group__linklist_ga728b9e635de257787b721dddaac8e01f}
+
+
+Rotate items in the linked list in circular fashion. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em i}]The number of positions in the list to shift items. \end{DoxyParams}
+\hypertarget{group__linklist_ga58a2e5fba8b3b084a3940a23fbd3a4a1}{
+\index{linklist@{linklist}!linklist\_\-shuffle@{linklist\_\-shuffle}}
+\index{linklist\_\-shuffle@{linklist\_\-shuffle}!linklist@{linklist}}
+\subsubsection[{linklist\_\-shuffle}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-shuffle ({\bf t\_\-linklist} $\ast$ {\em x})}}
+\label{group__linklist_ga58a2e5fba8b3b084a3940a23fbd3a4a1}
+
+
+Randomize the order of items in the linked-\/list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \end{DoxyParams}
+\hypertarget{group__linklist_gaf01b5f67a8ceccdd75cff34f6ecdd8c2}{
+\index{linklist@{linklist}!linklist\_\-sort@{linklist\_\-sort}}
+\index{linklist\_\-sort@{linklist\_\-sort}!linklist@{linklist}}
+\subsubsection[{linklist\_\-sort}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-sort ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long  {\em cmpfn}void $\ast$, void $\ast$)}}
+\label{group__linklist_gaf01b5f67a8ceccdd75cff34f6ecdd8c2}
+
+
+Sort the linked list. The items in the list are ordered using a \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} function that is passed in as an argument.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em cmpfn}]The function used to sort the list.\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+The following is example is a real-\/world example of sorting a linklist of symbols alphabetically by first letter only. First the cmpfn is defined, then it is used in a different function by \hyperlink{group__linklist_gaf01b5f67a8ceccdd75cff34f6ecdd8c2}{linklist\_\-sort()}. 
+\begin{DoxyCode}
+    long myAlphabeticalCmpfn(void *a, void *b)
+    {
+        t_symbol *s1 = (t_symbol *)a;
+        t_symbol *s2 = (t_symbol *)b;
+
+        if(s1->s_name[0] < s2->s_name[0])
+            return true;
+        else
+            return false;
+    }
+    
+    void mySortMethod(t_myobj *x)
+    {
+        // the linklist was already created and filled with items previously 
+        linklist_sort(x->myLinkList, myAlphabeticalCmpfn);
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__linklist_ga498a96abbd74bf7e1885e97a8fb37379}{
+\index{linklist@{linklist}!linklist\_\-substitute@{linklist\_\-substitute}}
+\index{linklist\_\-substitute@{linklist\_\-substitute}!linklist@{linklist}}
+\subsubsection[{linklist\_\-substitute}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ linklist\_\-substitute ({\bf t\_\-linklist} $\ast$ {\em x}, \/  void $\ast$ {\em p}, \/  void $\ast$ {\em newp})}}
+\label{group__linklist_ga498a96abbd74bf7e1885e97a8fb37379}
+
+
+Given an item in the list, replace it with a different value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em p}]An item in the list. \item[{\em newp}]The new value. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Always returns NULL. 
+\end{DoxyReturn}
+\hypertarget{group__linklist_ga42d158b9f76d83f58cf6780aeb9b208a}{
+\index{linklist@{linklist}!linklist\_\-swap@{linklist\_\-swap}}
+\index{linklist\_\-swap@{linklist\_\-swap}!linklist@{linklist}}
+\subsubsection[{linklist\_\-swap}]{\setlength{\rightskip}{0pt plus 5cm}void linklist\_\-swap ({\bf t\_\-linklist} $\ast$ {\em x}, \/  long {\em a}, \/  long {\em b})}}
+\label{group__linklist_ga42d158b9f76d83f58cf6780aeb9b208a}
+
+
+Swap the position of two items in the linked-\/list, specified by index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The linklist instance. \item[{\em a}]The index of the first item to swap. \item[{\em b}]The index of the second item to swap. \end{DoxyParams}

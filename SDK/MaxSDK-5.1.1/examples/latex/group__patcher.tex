@@ -1,0 +1,108 @@
+\hypertarget{group__patcher}{
+\section{Patcher}
+\label{group__patcher}\index{Patcher@{Patcher}}
+}
+
+
+Max's patcher represents a graph of objects that communicate with messages.  
+
+
+Collaboration diagram for Patcher:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=112pt]{group__patcher}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__jbox}{t\_\-jbox}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{structt__jbox}{t\_\-jbox} struct provides the header for a Max user-\/interface object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jpatcher}{jpatcher}
+
+
+\begin{DoxyCompactList}\small\item\em The patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jbox}{jbox}
+
+
+\begin{DoxyCompactList}\small\item\em A box in the patcher. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jpatchline}{jpatchline}
+
+
+\begin{DoxyCompactList}\small\item\em A patch cord. \item\end{DoxyCompactList}\item 
+\hyperlink{group__jpatcherview}{jpatcherview}
+
+
+\begin{DoxyCompactList}\small\item\em A view of a patcher. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__patcher_ga17444ce85b4edde6ecc818081ffa1cfd}{t\_\-patcher}
+\begin{DoxyCompactList}\small\item\em A patcher. \item\end{DoxyCompactList}\item 
+typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__patcher_ga4ae1309e71747dc0dc5c2baba5e47bc9}{t\_\-box}
+\begin{DoxyCompactList}\small\item\em A box. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \par
+\hyperlink{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a615ccc19640c4714e619315b94765e48}{PI\_\-DEEP} =  1, 
+\par
+\hyperlink{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a4c42ad2b13496b1d6664fed514724ffa}{PI\_\-REQUIREFIRSTIN} =  2, 
+\par
+\hyperlink{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a128de369dd62c2625aff042d820456eb}{PI\_\-WANTBOX} =  4
+ \}
+\begin{DoxyCompactList}\small\item\em patcher iteration flags \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max's patcher represents a graph of objects that communicate with messages. This is the public interface to the jpatcher -\/-\/ the new patcher object in Max 5. The jpatcher is fully controllable via obex attributes and methods.
+
+The jpatcher\_\-api.h header defines constants, enumerations, symbols, structs, and functions for working with the jpatcher. It also includes utility functions for getting/setting attributes and for calling methods. These utilities are just wrapping the obex interface and thus loosely connect your code to the jpatcher implementation.
+
+Finally methods are defined for implementing your own boxes. 
+
+\subsection{Typedef Documentation}
+\hypertarget{group__patcher_ga4ae1309e71747dc0dc5c2baba5e47bc9}{
+\index{patcher@{patcher}!t\_\-box@{t\_\-box}}
+\index{t\_\-box@{t\_\-box}!patcher@{patcher}}
+\subsubsection[{t\_\-box}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf t\_\-object} {\bf t\_\-box}}}
+\label{group__patcher_ga4ae1309e71747dc0dc5c2baba5e47bc9}
+
+
+A box. As of Max 5, the box struct is opaque. Messages can be sent to a box using \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()} or \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()}, or by using \hyperlink{group__attr}{Attributes} accessors. \hypertarget{group__patcher_ga17444ce85b4edde6ecc818081ffa1cfd}{
+\index{patcher@{patcher}!t\_\-patcher@{t\_\-patcher}}
+\index{t\_\-patcher@{t\_\-patcher}!patcher@{patcher}}
+\subsubsection[{t\_\-patcher}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf t\_\-object} {\bf t\_\-patcher}}}
+\label{group__patcher_ga17444ce85b4edde6ecc818081ffa1cfd}
+
+
+A patcher. As of Max 5, the patcher struct is opaque. Messages can be sent to a patcher using \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()} or \hyperlink{group__obj_ga443dee482af22e0fe83e68955d367226}{object\_\-method\_\-typed()}, or by using \hyperlink{group__attr}{Attributes} accessors. 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__patcher_gabc6126af1d45847bc59afa0aa3216b04}{
+\subsubsection[{"@3}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}
+\label{group__patcher_gabc6126af1d45847bc59afa0aa3216b04}
+
+
+patcher iteration flags \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{PI\_\-DEEP@{PI\_\-DEEP}!patcher@{patcher}}\index{patcher@{patcher}!PI\_\-DEEP@{PI\_\-DEEP}}\item[{\em 
+\hypertarget{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a615ccc19640c4714e619315b94765e48}{
+PI\_\-DEEP}
+\label{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a615ccc19640c4714e619315b94765e48}
+}]descend into subpatchers (not used by audio library) \index{PI\_\-REQUIREFIRSTIN@{PI\_\-REQUIREFIRSTIN}!patcher@{patcher}}\index{patcher@{patcher}!PI\_\-REQUIREFIRSTIN@{PI\_\-REQUIREFIRSTIN}}\item[{\em 
+\hypertarget{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a4c42ad2b13496b1d6664fed514724ffa}{
+PI\_\-REQUIREFIRSTIN}
+\label{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a4c42ad2b13496b1d6664fed514724ffa}
+}]if b-\/$>$b\_\-firstin is NULL, do not call function \index{PI\_\-WANTBOX@{PI\_\-WANTBOX}!patcher@{patcher}}\index{patcher@{patcher}!PI\_\-WANTBOX@{PI\_\-WANTBOX}}\item[{\em 
+\hypertarget{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a128de369dd62c2625aff042d820456eb}{
+PI\_\-WANTBOX}
+\label{group__patcher_ggabc6126af1d45847bc59afa0aa3216b04a128de369dd62c2625aff042d820456eb}
+}]instead, of b-\/$>$b\_\-firstin, pass b to function, whether or not b-\/$>$b\_\-firstin is NULL \end{description}
+\end{Desc}
+

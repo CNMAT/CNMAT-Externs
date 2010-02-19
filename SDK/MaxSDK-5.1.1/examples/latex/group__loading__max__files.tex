@@ -1,0 +1,91 @@
+\hypertarget{group__loading__max__files}{
+\section{Loading Max Files}
+\label{group__loading__max__files}\index{Loading Max Files@{Loading Max Files}}
+}
+
+
+Several high-\/level functions permit you to load patcher files.  
+
+
+Collaboration diagram for Loading Max Files:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=142pt]{group__loading__max__files}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+short \hyperlink{group__loading__max__files_ga7060a31b3b59a0ba1b08cd5f7b89704b}{readtohandle} (char $\ast$name, short volume, char $\ast$$\ast$$\ast$h, long $\ast$sizep)
+\begin{DoxyCompactList}\small\item\em Load a data file into a handle. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__loading__max__files_ga1fb5c65c6c0ff9d2c92a7f95da9c7635}{fileload} (char $\ast$name, short vol)
+\begin{DoxyCompactList}\small\item\em Load a patcher file by name and volume reference number. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__loading__max__files_gaf04b19ac11c4ce1d2641aa409cbd7128}{intload} (char $\ast$name, short volume, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av, short couldedit)
+\begin{DoxyCompactList}\small\item\em Pass arguments to Max files when you open them. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__loading__max__files_ga8797a7efcb5a716e8ee0aa8a588b4a69}{stringload} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Load a patcher file located in the Max search path by name. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Several high-\/level functions permit you to load patcher files. These can be used in sophisticated objects that use Patcher objects to perform specific tasks. 
+
+\subsection{Function Documentation}
+\hypertarget{group__loading__max__files_ga1fb5c65c6c0ff9d2c92a7f95da9c7635}{
+\index{loading\_\-max\_\-files@{loading\_\-max\_\-files}!fileload@{fileload}}
+\index{fileload@{fileload}!loading_max_files@{loading\_\-max\_\-files}}
+\subsubsection[{fileload}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ fileload (char $\ast$ {\em name}, \/  short {\em vol})}}
+\label{group__loading__max__files_ga1fb5c65c6c0ff9d2c92a7f95da9c7635}
+
+
+Load a patcher file by name and volume reference number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]Filename of the patcher file to load (C string). \item[{\em vol}]Path ID specifying the location of the file. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the file is found, fileload tries to open the file, evaluate it, open a window, and bring it to the front. A pointer to the newly created Patcher is returned if loading is successful, otherwise, if the file is not found or there is insufficient memory, zero is returned. 
+\end{DoxyReturn}
+\hypertarget{group__loading__max__files_gaf04b19ac11c4ce1d2641aa409cbd7128}{
+\index{loading\_\-max\_\-files@{loading\_\-max\_\-files}!intload@{intload}}
+\index{intload@{intload}!loading_max_files@{loading\_\-max\_\-files}}
+\subsubsection[{intload}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ intload (char $\ast$ {\em name}, \/  short {\em volume}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av}, \/  short {\em couldedit})}}
+\label{group__loading__max__files_gaf04b19ac11c4ce1d2641aa409cbd7128}
+
+
+Pass arguments to Max files when you open them. This function loads the specified file and returns a pointer to the created object. Historically, \hyperlink{group__loading__max__files_gaf04b19ac11c4ce1d2641aa409cbd7128}{intload()} is was used to open patcher files, whether they are in text or Max binary format. It could also open table files whose contents begin with the \hyperlink{unionword}{word} “table.”
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]Name of the file to open. \item[{\em volume}]Path ID specifying the location of the file. \item[{\em s}]A symbol. \item[{\em ac}]Count of t\_\-atoms in av. To properly open a patcher file, ac should be 9. \item[{\em av}]Array of t\_\-atoms that will replace the changeable arguments 1-\/9. The default behavior could be to set all these to t\_\-atoms of type \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a002f28879581a6f66ea492b994b96f1e}{A\_\-LONG} with a value of 0. \item[{\em couldedit}]If non-\/zero and the file is not a patcher file, the file is opened as a text file. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If couldedit is non-\/zero and the file is not a patcher file, it is made into a text editor, and lowload returns 0. If couldedit is non-\/zero, lowload will just alert the user to an error and return 0. If there is no error, the value returned will be a pointer to a patcher or table object. 
+\end{DoxyReturn}
+\hypertarget{group__loading__max__files_ga7060a31b3b59a0ba1b08cd5f7b89704b}{
+\index{loading\_\-max\_\-files@{loading\_\-max\_\-files}!readtohandle@{readtohandle}}
+\index{readtohandle@{readtohandle}!loading_max_files@{loading\_\-max\_\-files}}
+\subsubsection[{readtohandle}]{\setlength{\rightskip}{0pt plus 5cm}short readtohandle (char $\ast$ {\em name}, \/  short {\em volume}, \/  char $\ast$$\ast$$\ast$ {\em h}, \/  long $\ast$ {\em sizep})}}
+\label{group__loading__max__files_ga7060a31b3b59a0ba1b08cd5f7b89704b}
+
+
+Load a data file into a handle. This is a low-\/level routine used for reading text and data files. You specify the file’s name and Path ID, as well as a pointer to a Handle.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]Name of the patcher file to load. \item[{\em volume}]Path ID specifying the location of the file. \item[{\em h}]Pointer to a handle variable that will receive the handle that contains the data in the file. \item[{\em sizep}]Size of the handle returned in h. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the file is found, readtohandle creates a Handle, reads all the data in the file into it, assigns the handle to the variable hp, and returns the size of the data in size. readtohandle returns 0 if the file was opened and read successfully, and non-\/zero if there was an error. 
+\end{DoxyReturn}
+\hypertarget{group__loading__max__files_ga8797a7efcb5a716e8ee0aa8a588b4a69}{
+\index{loading\_\-max\_\-files@{loading\_\-max\_\-files}!stringload@{stringload}}
+\index{stringload@{stringload}!loading_max_files@{loading\_\-max\_\-files}}
+\subsubsection[{stringload}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ stringload (char $\ast$ {\em name})}}
+\label{group__loading__max__files_ga8797a7efcb5a716e8ee0aa8a588b4a69}
+
+
+Load a patcher file located in the Max search path by name. This function searches for a patcher file, opens it, evaluates it as a patcher file, opens a window for the patcher and brings it to the front. You need only specify a filename and Max will look through its search path for the file. The search path begins with the current “default volume” that is often the volume of the last opened patcher file, then the folders specified in the File Preferences dialog, searched depth first, then finally the folder that contains the Max application.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]Filename of the patcher file to load (C string). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If \hyperlink{group__loading__max__files_ga8797a7efcb5a716e8ee0aa8a588b4a69}{stringload()} returns a non-\/zero result, you can later use \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()} to close the patcher, or just let users do it themselves. If \hyperlink{group__loading__max__files_ga8797a7efcb5a716e8ee0aa8a588b4a69}{stringload()} returns zero, no file with the specified name was found or there was insufficient memory to open it. 
+\end{DoxyReturn}

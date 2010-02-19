@@ -1,0 +1,394 @@
+\hypertarget{group__maxwrapmod}{
+\section{Max Wrapper Module}
+\label{group__maxwrapmod}\index{Max Wrapper Module@{Max Wrapper Module}}
+}
+
+
+Collaboration diagram for Max Wrapper Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=126pt]{group__maxwrapmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__maxwrapmod_ga022ce3be027665efbf00bcef827c4237}{max\_\-jit\_\-attr\_\-set} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Sets attribute value. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__maxwrapmod_ga842f21afa3ec44bf8c625eb21430fbad}{max\_\-jit\_\-attr\_\-get} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_ga2c14234e428260001a4b5ae40eb07525}{max\_\-jit\_\-attr\_\-getdump} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Retrieves attribute value and sends out dump outlet. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__maxwrapmod_ga1a28ddf72d9bdcb2096df36384b63de6}{max\_\-jit\_\-attr\_\-args\_\-offset} (short ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Determines argument offset to first attribute argument. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_gac1ffd4864421154c8e6364b5df9a09ff}{max\_\-jit\_\-attr\_\-args} (void $\ast$x, short ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Processes attribtue arguments. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_ga9b8377bdccc2497e02582c72204b5250}{max\_\-jit\_\-classex\_\-standard\_\-wrap} (void $\ast$mclass, void $\ast$jclass, long flags)
+\begin{DoxyCompactList}\small\item\em Adds standard Jitter methods, as well as public methods and attributes of the specified Jitter class. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_ga02ff83d357bb73bc66662f2b7686694d}{max\_\-addmethod\_\-defer} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Adds method to Max class that calls defer rather than the method directly. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_gac057d2e8d94686363fa9ae8ea0b41fee}{max\_\-addmethod\_\-defer\_\-low} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Adds method to Max class that calls defer\_\-low rather than the method directly. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_gac3983a058208aaf0b4d1800ce8c41b1a}{max\_\-addmethod\_\-usurp} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Adds method to Max class that uses the usurp mechanism to execute method at low priority without backlog. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_ga2c596151798123076dcd1d4f7d76e203}{max\_\-addmethod\_\-usurp\_\-low} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} m, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Adds method to Max class that uses the usurp mechanism to execute method at low priority without backlog. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__maxwrapmod_ga773b6e6430d9de2e295419c7f038979e}{max\_\-jit\_\-classex\_\-setup} (long oboffset)
+\begin{DoxyCompactList}\small\item\em Allocates and initializes special t\_\-max\_\-jit\_\-classex data, used by the Max wrapper class. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__maxwrapmod_ga888aa461197db2e7ef2fb0ae34479c3e}{max\_\-jit\_\-classex\_\-addattr} (void $\ast$x, void $\ast$attr)
+\begin{DoxyCompactList}\small\item\em Adds an attribute to the Max wrapper class. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__maxwrapmod_gacf7fc6f3f87db8515f61b12efbcc9073}{max\_\-jit\_\-obex\_\-new} (void $\ast$mc, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Allocates an initializes a new Max wrapper object instance. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_gabcf9c466a6baa22994a66e30b54e7dd6}{max\_\-jit\_\-obex\_\-free} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Frees additional resources for the Max wrapper object instance. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__maxwrapmod_gabb838d64e492c2a6bd718e2814862246}{max\_\-jit\_\-obex\_\-attr\_\-set} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Sets an attribute of the Max wrapper or the wrapped Jitter object. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__maxwrapmod_ga43ca09c039a1eb78396401a33cfdac08}{max\_\-jit\_\-obex\_\-attr\_\-get} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Retrienves an attribute of the Max wrapper or the wrapped Jitter object. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__maxwrapmod_ga063ab88bfc92c1a666f3ad6251834e20}{max\_\-jit\_\-obex\_\-jitob\_\-get} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves the wrapped Jitter object from a Max wrapper object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_gaa1b174cf92680ca46bfb189a812d2a65}{max\_\-jit\_\-obex\_\-jitob\_\-set} (void $\ast$x, void $\ast$jitob)
+\begin{DoxyCompactList}\small\item\em Sets the wrapped Jitter object for a Max wrapper object. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__maxwrapmod_ga2c0d72889d3a89cbabe1001d55c86c3e}{max\_\-jit\_\-obex\_\-inletnumber\_\-get} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves the current inlet number used by inlet proxies. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_gad00618383afdeb1a45cf7cffd5ee6c9c}{max\_\-jit\_\-obex\_\-inletnumber\_\-set} (void $\ast$x, long inletnumber)
+\begin{DoxyCompactList}\small\item\em Sets the current inlet number used by inlet proxies. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__maxwrapmod_ga010c3e4a11d73d6553b7513719a19b7f}{max\_\-jit\_\-obex\_\-proxy\_\-new} (void $\ast$x, long c)
+\begin{DoxyCompactList}\small\item\em Creates a new proxy inlet. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_ga8e63a402ecf8cef78a9093c774159a9e}{max\_\-jit\_\-obex\_\-dumpout\_\-set} (void $\ast$x, void $\ast$outlet)
+\begin{DoxyCompactList}\small\item\em Sets the Max wrapper object's dump outlet's outlet pointer. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__maxwrapmod_gae0f179c644d50a572a7c159db83490a5}{max\_\-jit\_\-obex\_\-dumpout\_\-get} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Retrieves the Max wrapper object's dump outlet's outlet pointer. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_ga161cd54f4612d26057e4140b56e14729}{max\_\-jit\_\-obex\_\-dumpout} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, short argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sends a message and arguments out the dump outlet. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__maxwrapmod_gae32503dc254a4f5fc1fb73fa0d7e0144}{max\_\-jit\_\-obex\_\-adornment\_\-get} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$classname)
+\begin{DoxyCompactList}\small\item\em Retrieves Max wrapper object adornment specified by class name. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_gabebaedc41e3bfef6f84d3752f619d045}{max\_\-jit\_\-obex\_\-gimmeback} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Calls gimmeback methods and frees any return value. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__maxwrapmod_ga9afabd186c3db8a6b4689eae00171bcd}{max\_\-jit\_\-obex\_\-gimmeback\_\-dumpout} (void $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$av)
+\begin{DoxyCompactList}\small\item\em Calls gimmeback methods and outputs any return value through the Max wrapper class' dump outlet. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__maxwrapmod_ga02ff83d357bb73bc66662f2b7686694d}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-addmethod\_\-defer@{max\_\-addmethod\_\-defer}}
+\index{max\_\-addmethod\_\-defer@{max\_\-addmethod\_\-defer}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-addmethod\_\-defer}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-addmethod\_\-defer ({\bf method} {\em m}, \/  char $\ast$ {\em s})}}
+\label{group__maxwrapmod_ga02ff83d357bb73bc66662f2b7686694d}
+
+
+Adds method to Max class that calls defer rather than the method directly. To prevent sequencing problems which arize through the use of defer, rather than defer\_\-low, you should instead use the max\_\-addmethod\_\-defer\_\-low function.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em m}]method (function pointer) \item[{\em s}]method name \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gac057d2e8d94686363fa9ae8ea0b41fee}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-addmethod\_\-defer\_\-low@{max\_\-addmethod\_\-defer\_\-low}}
+\index{max\_\-addmethod\_\-defer\_\-low@{max\_\-addmethod\_\-defer\_\-low}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-addmethod\_\-defer\_\-low}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-addmethod\_\-defer\_\-low ({\bf method} {\em m}, \/  char $\ast$ {\em s})}}
+\label{group__maxwrapmod_gac057d2e8d94686363fa9ae8ea0b41fee}
+
+
+Adds method to Max class that calls defer\_\-low rather than the method directly. 
+\begin{DoxyParams}{Parameters}
+\item[{\em m}]method (function pointer) \item[{\em s}]method name \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gac3983a058208aaf0b4d1800ce8c41b1a}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-addmethod\_\-usurp@{max\_\-addmethod\_\-usurp}}
+\index{max\_\-addmethod\_\-usurp@{max\_\-addmethod\_\-usurp}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-addmethod\_\-usurp}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-addmethod\_\-usurp ({\bf method} {\em m}, \/  char $\ast$ {\em s})}}
+\label{group__maxwrapmod_gac3983a058208aaf0b4d1800ce8c41b1a}
+
+
+Adds method to Max class that uses the usurp mechanism to execute method at low priority without backlog. Equivalent to max\_\-addmethod\_\-usurp\_\-low function.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em m}]method (function pointer) \item[{\em s}]method name \end{DoxyParams}
+\hypertarget{group__maxwrapmod_ga2c596151798123076dcd1d4f7d76e203}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-addmethod\_\-usurp\_\-low@{max\_\-addmethod\_\-usurp\_\-low}}
+\index{max\_\-addmethod\_\-usurp\_\-low@{max\_\-addmethod\_\-usurp\_\-low}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-addmethod\_\-usurp\_\-low}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-addmethod\_\-usurp\_\-low ({\bf method} {\em m}, \/  char $\ast$ {\em s})}}
+\label{group__maxwrapmod_ga2c596151798123076dcd1d4f7d76e203}
+
+
+Adds method to Max class that uses the usurp mechanism to execute method at low priority without backlog. 
+\begin{DoxyParams}{Parameters}
+\item[{\em m}]method (function pointer) \item[{\em s}]method name \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gac1ffd4864421154c8e6364b5df9a09ff}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-attr\_\-args@{max\_\-jit\_\-attr\_\-args}}
+\index{max\_\-jit\_\-attr\_\-args@{max\_\-jit\_\-attr\_\-args}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-attr\_\-args}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-attr\_\-args (void $\ast$ {\em x}, \/  short {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__maxwrapmod_gac1ffd4864421154c8e6364b5df9a09ff}
+
+
+Processes attribtue arguments. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em ac}]argument count \item[{\em av}]argument vector \end{DoxyParams}
+\hypertarget{group__maxwrapmod_ga1a28ddf72d9bdcb2096df36384b63de6}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-attr\_\-args\_\-offset@{max\_\-jit\_\-attr\_\-args\_\-offset}}
+\index{max\_\-jit\_\-attr\_\-args\_\-offset@{max\_\-jit\_\-attr\_\-args\_\-offset}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-attr\_\-args\_\-offset}]{\setlength{\rightskip}{0pt plus 5cm}long max\_\-jit\_\-attr\_\-args\_\-offset (short {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__maxwrapmod_ga1a28ddf72d9bdcb2096df36384b63de6}
+
+
+Determines argument offset to first attribute argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ac}]argument count \item[{\em av}]argument vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+argument offset 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga842f21afa3ec44bf8c625eb21430fbad}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-attr\_\-get@{max\_\-jit\_\-attr\_\-get}}
+\index{max\_\-jit\_\-attr\_\-get@{max\_\-jit\_\-attr\_\-get}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-attr\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err max\_\-jit\_\-attr\_\-get (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__maxwrapmod_ga842f21afa3ec44bf8c625eb21430fbad}
+
+
+Retrieves attribute value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]attribute name \item[{\em ac}]pointer atom count \item[{\em av}]pointer atom vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga2c14234e428260001a4b5ae40eb07525}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-attr\_\-getdump@{max\_\-jit\_\-attr\_\-getdump}}
+\index{max\_\-jit\_\-attr\_\-getdump@{max\_\-jit\_\-attr\_\-getdump}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-attr\_\-getdump}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-attr\_\-getdump (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__maxwrapmod_ga2c14234e428260001a4b5ae40eb07525}
+
+
+Retrieves attribute value and sends out dump outlet. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]attribute name \item[{\em argc}]argument count (ignored) \item[{\em argv}]argument vector (ignored) \end{DoxyParams}
+\hypertarget{group__maxwrapmod_ga022ce3be027665efbf00bcef827c4237}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-attr\_\-set@{max\_\-jit\_\-attr\_\-set}}
+\index{max\_\-jit\_\-attr\_\-set@{max\_\-jit\_\-attr\_\-set}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-attr\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-attr\_\-set (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__maxwrapmod_ga022ce3be027665efbf00bcef827c4237}
+
+
+Sets attribute value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]attribute name \item[{\em ac}]atom count \item[{\em av}]atom vector \end{DoxyParams}
+\hypertarget{group__maxwrapmod_ga888aa461197db2e7ef2fb0ae34479c3e}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-classex\_\-addattr@{max\_\-jit\_\-classex\_\-addattr}}
+\index{max\_\-jit\_\-classex\_\-addattr@{max\_\-jit\_\-classex\_\-addattr}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-classex\_\-addattr}]{\setlength{\rightskip}{0pt plus 5cm}long max\_\-jit\_\-classex\_\-addattr (void $\ast$ {\em x}, \/  void $\ast$ {\em attr})}}
+\label{group__maxwrapmod_ga888aa461197db2e7ef2fb0ae34479c3e}
+
+
+Adds an attribute to the Max wrapper class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]pointer to t\_\-max\_\-jit\_\-classex data (opaque) \item[{\em attr}]attribute object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga773b6e6430d9de2e295419c7f038979e}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-classex\_\-setup@{max\_\-jit\_\-classex\_\-setup}}
+\index{max\_\-jit\_\-classex\_\-setup@{max\_\-jit\_\-classex\_\-setup}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-classex\_\-setup}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ max\_\-jit\_\-classex\_\-setup (long {\em oboffset})}}
+\label{group__maxwrapmod_ga773b6e6430d9de2e295419c7f038979e}
+
+
+Allocates and initializes special t\_\-max\_\-jit\_\-classex data, used by the Max wrapper class. 
+\begin{DoxyParams}{Parameters}
+\item[{\em oboffset}]object struct byte offset to obex pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to t\_\-max\_\-jit\_\-classex data (opaque) 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga9b8377bdccc2497e02582c72204b5250}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-classex\_\-standard\_\-wrap@{max\_\-jit\_\-classex\_\-standard\_\-wrap}}
+\index{max\_\-jit\_\-classex\_\-standard\_\-wrap@{max\_\-jit\_\-classex\_\-standard\_\-wrap}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-classex\_\-standard\_\-wrap}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-classex\_\-standard\_\-wrap (void $\ast$ {\em mclass}, \/  void $\ast$ {\em jclass}, \/  long {\em flags})}}
+\label{group__maxwrapmod_ga9b8377bdccc2497e02582c72204b5250}
+
+
+Adds standard Jitter methods, as well as public methods and attributes of the specified Jitter class. This includes the following public methods: getattributes, getstate, summary, importattrs, exportattrs; and the following private methods: dumpout, quickref, attr\_\-getnames, attr\_\-get, attr\_\-gettarget, and attrindex.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em mclass}]Max wrapper class pointer \item[{\em jclass}]jitter class pointer \item[{\em flags}]reserved for future use (currently ignored) \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gae32503dc254a4f5fc1fb73fa0d7e0144}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-adornment\_\-get@{max\_\-jit\_\-obex\_\-adornment\_\-get}}
+\index{max\_\-jit\_\-obex\_\-adornment\_\-get@{max\_\-jit\_\-obex\_\-adornment\_\-get}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-adornment\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ max\_\-jit\_\-obex\_\-adornment\_\-get (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em classname})}}
+\label{group__maxwrapmod_gae32503dc254a4f5fc1fb73fa0d7e0144}
+
+
+Retrieves Max wrapper object adornment specified by class name. Typcially used for accessing the jit\_\-mop adornment for MOP Max wrapper objects.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em classname}]adornment classname\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+adornment pointer 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga43ca09c039a1eb78396401a33cfdac08}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-attr\_\-get@{max\_\-jit\_\-obex\_\-attr\_\-get}}
+\index{max\_\-jit\_\-obex\_\-attr\_\-get@{max\_\-jit\_\-obex\_\-attr\_\-get}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-attr\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err max\_\-jit\_\-obex\_\-attr\_\-get (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__maxwrapmod_ga43ca09c039a1eb78396401a33cfdac08}
+
+
+Retrienves an attribute of the Max wrapper or the wrapped Jitter object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]attribute name \item[{\em ac}]pointer to atom count \item[{\em av}]pointer to atom vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-error error code 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_gabb838d64e492c2a6bd718e2814862246}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-attr\_\-set@{max\_\-jit\_\-obex\_\-attr\_\-set}}
+\index{max\_\-jit\_\-obex\_\-attr\_\-set@{max\_\-jit\_\-obex\_\-attr\_\-set}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-attr\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err max\_\-jit\_\-obex\_\-attr\_\-set (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__maxwrapmod_gabb838d64e492c2a6bd718e2814862246}
+
+
+Sets an attribute of the Max wrapper or the wrapped Jitter object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]attribute name \item[{\em ac}]atom count \item[{\em av}]atom vector\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-error error code 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga161cd54f4612d26057e4140b56e14729}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-dumpout@{max\_\-jit\_\-obex\_\-dumpout}}
+\index{max\_\-jit\_\-obex\_\-dumpout@{max\_\-jit\_\-obex\_\-dumpout}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-dumpout}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-obex\_\-dumpout (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  short {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__maxwrapmod_ga161cd54f4612d26057e4140b56e14729}
+
+
+Sends a message and arguments out the dump outlet. This message is equivalent to calling outlet\_\-anything with the outlet returned by max\_\-jit\_\-obex\_\-dumpout\_\-get.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]message symbol \item[{\em argc}]argument count \item[{\em argv}]argument vector \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gae0f179c644d50a572a7c159db83490a5}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-dumpout\_\-get@{max\_\-jit\_\-obex\_\-dumpout\_\-get}}
+\index{max\_\-jit\_\-obex\_\-dumpout\_\-get@{max\_\-jit\_\-obex\_\-dumpout\_\-get}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-dumpout\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ max\_\-jit\_\-obex\_\-dumpout\_\-get (void $\ast$ {\em x})}}
+\label{group__maxwrapmod_gae0f179c644d50a572a7c159db83490a5}
+
+
+Retrieves the Max wrapper object's dump outlet's outlet pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+dump outlet pointer 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga8e63a402ecf8cef78a9093c774159a9e}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-dumpout\_\-set@{max\_\-jit\_\-obex\_\-dumpout\_\-set}}
+\index{max\_\-jit\_\-obex\_\-dumpout\_\-set@{max\_\-jit\_\-obex\_\-dumpout\_\-set}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-dumpout\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-obex\_\-dumpout\_\-set (void $\ast$ {\em x}, \/  void $\ast$ {\em outlet})}}
+\label{group__maxwrapmod_ga8e63a402ecf8cef78a9093c774159a9e}
+
+
+Sets the Max wrapper object's dump outlet's outlet pointer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em outlet}]dump outlet pointer \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gabcf9c466a6baa22994a66e30b54e7dd6}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-free@{max\_\-jit\_\-obex\_\-free}}
+\index{max\_\-jit\_\-obex\_\-free@{max\_\-jit\_\-obex\_\-free}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-obex\_\-free (void $\ast$ {\em x})}}
+\label{group__maxwrapmod_gabcf9c466a6baa22994a66e30b54e7dd6}
+
+
+Frees additional resources for the Max wrapper object instance. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gabebaedc41e3bfef6f84d3752f619d045}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-gimmeback@{max\_\-jit\_\-obex\_\-gimmeback}}
+\index{max\_\-jit\_\-obex\_\-gimmeback@{max\_\-jit\_\-obex\_\-gimmeback}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-gimmeback}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-obex\_\-gimmeback (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__maxwrapmod_gabebaedc41e3bfef6f84d3752f619d045}
+
+
+Calls gimmeback methods and frees any return value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]method name \item[{\em ac}]argument count \item[{\em av}]argument vector \end{DoxyParams}
+\hypertarget{group__maxwrapmod_ga9afabd186c3db8a6b4689eae00171bcd}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-gimmeback\_\-dumpout@{max\_\-jit\_\-obex\_\-gimmeback\_\-dumpout}}
+\index{max\_\-jit\_\-obex\_\-gimmeback\_\-dumpout@{max\_\-jit\_\-obex\_\-gimmeback\_\-dumpout}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-gimmeback\_\-dumpout}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-obex\_\-gimmeback\_\-dumpout (void $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  long {\em ac}, \/  {\bf t\_\-atom} $\ast$ {\em av})}}
+\label{group__maxwrapmod_ga9afabd186c3db8a6b4689eae00171bcd}
+
+
+Calls gimmeback methods and outputs any return value through the Max wrapper class' dump outlet. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em s}]method name \item[{\em ac}]argument count \item[{\em av}]argument vector \end{DoxyParams}
+\hypertarget{group__maxwrapmod_ga2c0d72889d3a89cbabe1001d55c86c3e}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-inletnumber\_\-get@{max\_\-jit\_\-obex\_\-inletnumber\_\-get}}
+\index{max\_\-jit\_\-obex\_\-inletnumber\_\-get@{max\_\-jit\_\-obex\_\-inletnumber\_\-get}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-inletnumber\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}long max\_\-jit\_\-obex\_\-inletnumber\_\-get (void $\ast$ {\em x})}}
+\label{group__maxwrapmod_ga2c0d72889d3a89cbabe1001d55c86c3e}
+
+
+Retrieves the current inlet number used by inlet proxies. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+current inlet index 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_gad00618383afdeb1a45cf7cffd5ee6c9c}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-inletnumber\_\-set@{max\_\-jit\_\-obex\_\-inletnumber\_\-set}}
+\index{max\_\-jit\_\-obex\_\-inletnumber\_\-set@{max\_\-jit\_\-obex\_\-inletnumber\_\-set}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-inletnumber\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-obex\_\-inletnumber\_\-set (void $\ast$ {\em x}, \/  long {\em inletnumber})}}
+\label{group__maxwrapmod_gad00618383afdeb1a45cf7cffd5ee6c9c}
+
+
+Sets the current inlet number used by inlet proxies. \begin{DoxyWarning}{Warning}
+Typically not used outside jitlib.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em inletnumber}]inlet index \end{DoxyParams}
+\hypertarget{group__maxwrapmod_ga063ab88bfc92c1a666f3ad6251834e20}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-jitob\_\-get@{max\_\-jit\_\-obex\_\-jitob\_\-get}}
+\index{max\_\-jit\_\-obex\_\-jitob\_\-get@{max\_\-jit\_\-obex\_\-jitob\_\-get}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-jitob\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ max\_\-jit\_\-obex\_\-jitob\_\-get (void $\ast$ {\em x})}}
+\label{group__maxwrapmod_ga063ab88bfc92c1a666f3ad6251834e20}
+
+
+Retrieves the wrapped Jitter object from a Max wrapper object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Jitter object pointer 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_gaa1b174cf92680ca46bfb189a812d2a65}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-jitob\_\-set@{max\_\-jit\_\-obex\_\-jitob\_\-set}}
+\index{max\_\-jit\_\-obex\_\-jitob\_\-set@{max\_\-jit\_\-obex\_\-jitob\_\-set}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-jitob\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void max\_\-jit\_\-obex\_\-jitob\_\-set (void $\ast$ {\em x}, \/  void $\ast$ {\em jitob})}}
+\label{group__maxwrapmod_gaa1b174cf92680ca46bfb189a812d2a65}
+
+
+Sets the wrapped Jitter object for a Max wrapper object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em jitob}]Jitter object pointer \end{DoxyParams}
+\hypertarget{group__maxwrapmod_gacf7fc6f3f87db8515f61b12efbcc9073}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-new@{max\_\-jit\_\-obex\_\-new}}
+\index{max\_\-jit\_\-obex\_\-new@{max\_\-jit\_\-obex\_\-new}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ max\_\-jit\_\-obex\_\-new (void $\ast$ {\em mc}, \/  {\bf t\_\-symbol} $\ast$ {\em classname})}}
+\label{group__maxwrapmod_gacf7fc6f3f87db8515f61b12efbcc9073}
+
+
+Allocates an initializes a new Max wrapper object instance. This is used in place of the newobject function.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em mc}]Max class pointer \item[{\em classname}]Jitter class name to wrap\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to new Max wrapper object instance 
+\end{DoxyReturn}
+\hypertarget{group__maxwrapmod_ga010c3e4a11d73d6553b7513719a19b7f}{
+\index{maxwrapmod@{maxwrapmod}!max\_\-jit\_\-obex\_\-proxy\_\-new@{max\_\-jit\_\-obex\_\-proxy\_\-new}}
+\index{max\_\-jit\_\-obex\_\-proxy\_\-new@{max\_\-jit\_\-obex\_\-proxy\_\-new}!maxwrapmod@{maxwrapmod}}
+\subsubsection[{max\_\-jit\_\-obex\_\-proxy\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err max\_\-jit\_\-obex\_\-proxy\_\-new (void $\ast$ {\em x}, \/  long {\em c})}}
+\label{group__maxwrapmod_ga010c3e4a11d73d6553b7513719a19b7f}
+
+
+Creates a new proxy inlet. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Max wrapper object pointer \item[{\em c}]inlet index\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}

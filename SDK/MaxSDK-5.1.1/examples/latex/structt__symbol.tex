@@ -1,0 +1,33 @@
+\hypertarget{structt__symbol}{
+\section{t\_\-symbol Struct Reference}
+\label{structt__symbol}\index{t\_\-symbol@{t\_\-symbol}}
+}
+
+
+The symbol.  
+
+
+{\ttfamily \#include $<$ext\_\-mess.h$>$}Collaboration diagram for t\_\-symbol:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=114pt]{structt__symbol__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__symbol_ae2bf70cea045897c171f39116bf536c8}{
+char $\ast$ \hyperlink{structt__symbol_ae2bf70cea045897c171f39116bf536c8}{s\_\-name}}
+\label{structt__symbol_ae2bf70cea045897c171f39116bf536c8}
+
+\begin{DoxyCompactList}\small\item\em name: a c-\/string \item\end{DoxyCompactList}\item 
+\hypertarget{structt__symbol_abd835e42c1c3ef3ed958c22cc73c9e69}{
+struct object $\ast$ \hyperlink{structt__symbol_abd835e42c1c3ef3ed958c22cc73c9e69}{s\_\-thing}}
+\label{structt__symbol_abd835e42c1c3ef3ed958c22cc73c9e69}
+
+\begin{DoxyCompactList}\small\item\em possible binding to a \hyperlink{structt__object}{t\_\-object} \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The symbol. Note: You should {\itshape never\/} manipulate the s\_\-name field of the \hyperlink{structt__symbol}{t\_\-symbol} directly! Doing so will corrupt Max's symbol table. Instead, {\itshape always\/} use \hyperlink{group__symbol_ga8268797d125a15bae1010af70b559e05}{gensym()} to get a symbol with the desired string contents for the s\_\-name field. 
