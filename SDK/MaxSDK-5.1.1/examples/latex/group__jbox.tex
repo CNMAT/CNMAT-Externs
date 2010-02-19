@@ -1,0 +1,1158 @@
+\hypertarget{group__jbox}{
+\section{jbox}
+\label{group__jbox}\index{jbox@{jbox}}
+}
+
+
+A box in the patcher.  
+
+
+Collaboration diagram for jbox:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=89pt]{group__jbox}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__jboxdrawparams}{t\_\-jboxdrawparams}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{structt__jboxdrawparams}{t\_\-jboxdrawparams} structure. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__jbox_ga9f21c69e60543de2ecbcc94db526134b}{
+\#define \hyperlink{group__jbox_ga9f21c69e60543de2ecbcc94db526134b}{JBOX\_\-DRAWFIRSTIN}~(1$<$$<$0)}
+\label{group__jbox_ga9f21c69e60543de2ecbcc94db526134b}
+
+\begin{DoxyCompactList}\small\item\em draw first inlet \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga5b6543cfc10a8912a82cebada525a770}{
+\#define \hyperlink{group__jbox_ga5b6543cfc10a8912a82cebada525a770}{JBOX\_\-NODRAWBOX}~(1$<$$<$1)}
+\label{group__jbox_ga5b6543cfc10a8912a82cebada525a770}
+
+\begin{DoxyCompactList}\small\item\em don't draw the frame \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga651b41a98977ffddd7ca2be78d01f37b}{
+\#define \hyperlink{group__jbox_ga651b41a98977ffddd7ca2be78d01f37b}{JBOX\_\-DRAWINLAST}~(1$<$$<$2)}
+\label{group__jbox_ga651b41a98977ffddd7ca2be78d01f37b}
+
+\begin{DoxyCompactList}\small\item\em draw inlets after update method \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga3a5253e4b79d030934557351547c71ba}{
+\#define \hyperlink{group__jbox_ga3a5253e4b79d030934557351547c71ba}{JBOX\_\-TRANSPARENT}~(1$<$$<$3)}
+\label{group__jbox_ga3a5253e4b79d030934557351547c71ba}
+
+\begin{DoxyCompactList}\small\item\em don't make transparent unless you need it (for efficiency) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga9e535a38aa4960b6ed5f47f361c3bd09}{
+\#define \hyperlink{group__jbox_ga9e535a38aa4960b6ed5f47f361c3bd09}{JBOX\_\-NOGROW}~(1$<$$<$4)}
+\label{group__jbox_ga9e535a38aa4960b6ed5f47f361c3bd09}
+
+\begin{DoxyCompactList}\small\item\em don't even draw grow thingie \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_gaf151bcea416076c6811b84bd5cbaf68f}{
+\#define \hyperlink{group__jbox_gaf151bcea416076c6811b84bd5cbaf68f}{JBOX\_\-GROWY}~(1$<$$<$5)}
+\label{group__jbox_gaf151bcea416076c6811b84bd5cbaf68f}
+
+\begin{DoxyCompactList}\small\item\em can grow in y direction by dragging \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_gaf7d65744237d64595b1a7e9884b03a05}{
+\#define \hyperlink{group__jbox_gaf7d65744237d64595b1a7e9884b03a05}{JBOX\_\-GROWBOTH}~(1$<$$<$6)}
+\label{group__jbox_gaf7d65744237d64595b1a7e9884b03a05}
+
+\begin{DoxyCompactList}\small\item\em can grow independently in both x and y \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga07e3f6ad55a385a4bb268f8f7b78ab3e}{
+\#define \hyperlink{group__jbox_ga07e3f6ad55a385a4bb268f8f7b78ab3e}{JBOX\_\-IGNORELOCKCLICK}~(1$<$$<$7)}
+\label{group__jbox_ga07e3f6ad55a385a4bb268f8f7b78ab3e}
+
+\begin{DoxyCompactList}\small\item\em box should ignore a click if patcher is locked \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_gae172d0c858232c903a5dd9d847f1a951}{
+\#define \hyperlink{group__jbox_gae172d0c858232c903a5dd9d847f1a951}{JBOX\_\-HILITE}~(1$<$$<$8)}
+\label{group__jbox_gae172d0c858232c903a5dd9d847f1a951}
+
+\begin{DoxyCompactList}\small\item\em flag passed to \hyperlink{group__jbox_gaaa460d02ca3d22c54368ade59d8e330b}{jbox\_\-new()} to tell max that the UI object can receive the focus when clicked on -\/-\/ may be replaced by JBOX\_\-FOCUS in the future \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga17ab73ccfb0a841d104e3f11983a0c2f}{
+\#define \hyperlink{group__jbox_ga17ab73ccfb0a841d104e3f11983a0c2f}{JBOX\_\-BACKGROUND}~(1$<$$<$9)}
+\label{group__jbox_ga17ab73ccfb0a841d104e3f11983a0c2f}
+
+\begin{DoxyCompactList}\small\item\em immediately set box into the background \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_gafc1b0cebedef206c073622cab8fc6785}{
+\#define \hyperlink{group__jbox_gafc1b0cebedef206c073622cab8fc6785}{JBOX\_\-NOFLOATINSPECTOR}~(1$<$$<$10)}
+\label{group__jbox_gafc1b0cebedef206c073622cab8fc6785}
+
+\begin{DoxyCompactList}\small\item\em no floating inspector window \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga1abed197d8348eb15df1a5c9d4bc368d}{
+\#define \hyperlink{group__jbox_ga1abed197d8348eb15df1a5c9d4bc368d}{JBOX\_\-TEXTFIELD}~(1$<$$<$11)}
+\label{group__jbox_ga1abed197d8348eb15df1a5c9d4bc368d}
+
+\begin{DoxyCompactList}\small\item\em save/load text from textfield, unless JBOX\_\-BINBUF flag is set \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_gafb46881fa4dbaf5073e1ee6929d7fa9d}{
+\#define \hyperlink{group__jbox_gafb46881fa4dbaf5073e1ee6929d7fa9d}{JBOX\_\-FIXWIDTH}~(1$<$$<$19)}
+\label{group__jbox_gafb46881fa4dbaf5073e1ee6929d7fa9d}
+
+\begin{DoxyCompactList}\small\item\em give the box a textfield based fix-\/width (bfixwidth) method \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga04c45cfbc143d2efaeac28f40cee0459}{
+\#define \hyperlink{group__jbox_ga04c45cfbc143d2efaeac28f40cee0459}{JBOX\_\-FONTATTR}~(1$<$$<$18)}
+\label{group__jbox_ga04c45cfbc143d2efaeac28f40cee0459}
+
+\begin{DoxyCompactList}\small\item\em if you want font related attribute you must add this to jbox\_\-initclass() \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_gad7eebf09211fa7da46d6d3bcc7da7f41}{
+\#define \hyperlink{group__jbox_gad7eebf09211fa7da46d6d3bcc7da7f41}{JBOX\_\-BINBUF}~(1$<$$<$14)}
+\label{group__jbox_gad7eebf09211fa7da46d6d3bcc7da7f41}
+
+\begin{DoxyCompactList}\small\item\em save/load text from b\_\-binbuf \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga31038b9d4b011ec2e594c0cfc49ac1a0}{
+\#define \hyperlink{group__jbox_ga31038b9d4b011ec2e594c0cfc49ac1a0}{JBOX\_\-MOUSEDRAGDELTA}~(1$<$$<$12)}
+\label{group__jbox_ga31038b9d4b011ec2e594c0cfc49ac1a0}
+
+\begin{DoxyCompactList}\small\item\em hides mouse cursor in drag and sends mousedragdelta instead of mousedrag (for infinite scrolling like number) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga14cb28210886cfe0df0c34f71338faf8}{
+\#define \hyperlink{group__jbox_ga14cb28210886cfe0df0c34f71338faf8}{JBOX\_\-COLOR}~(1$<$$<$13)}
+\label{group__jbox_ga14cb28210886cfe0df0c34f71338faf8}
+
+\begin{DoxyCompactList}\small\item\em support the \char`\"{}color\char`\"{} method for color customization \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_gaec3b8ac2f1d39181714818573dbb3050}{
+\#define \hyperlink{group__jbox_gaec3b8ac2f1d39181714818573dbb3050}{JBOX\_\-DRAWIOLOCKED}~(1$<$$<$15)}
+\label{group__jbox_gaec3b8ac2f1d39181714818573dbb3050}
+
+\begin{DoxyCompactList}\small\item\em draw inlets and outlets when locked (default is not to draw them) \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga73e68b629cf1778a8a6e7a6685d98df6}{
+\#define \hyperlink{group__jbox_ga73e68b629cf1778a8a6e7a6685d98df6}{JBOX\_\-DRAWBACKGROUND}~(1$<$$<$16)}
+\label{group__jbox_ga73e68b629cf1778a8a6e7a6685d98df6}
+
+\begin{DoxyCompactList}\small\item\em set to have box bg filled in for you based on getdrawparams method or brgba attribute \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__jbox_ga789716317916c1e160d4ac0ef909446b}{JBOX\_\-NOINSPECTFIRSTIN}~(1$<$$<$17)
+\begin{DoxyCompactList}\small\item\em flag for objects such as bpatcher that have a different b\_\-firstin, \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga321af2f1062fe6517c93769ffdcadb23}{
+\#define \hyperlink{group__jbox_ga321af2f1062fe6517c93769ffdcadb23}{JBOX\_\-DEFAULTNAMES}~(1$<$$<$18)}
+\label{group__jbox_ga321af2f1062fe6517c93769ffdcadb23}
+
+\begin{DoxyCompactList}\small\item\em flag instructing jbox\_\-new to attach object to the defaults object for live defaults updating \item\end{DoxyCompactList}\item 
+\hypertarget{group__jbox_ga965611b7e0990af5ded807ff00e06ac8}{
+\#define \hyperlink{group__jbox_ga965611b7e0990af5ded807ff00e06ac8}{JBOX\_\-FOCUS}~(1$<$$<$20)}
+\label{group__jbox_ga965611b7e0990af5ded807ff00e06ac8}
+
+\begin{DoxyCompactList}\small\item\em more advanced focus support (passed to jbox\_\-initclass() to add \char`\"{}nextfocus\char`\"{} and \char`\"{}prevfocus\char`\"{} attributes to the UI object). Not implemented as of 2009-\/05-\/11 \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \par
+\hyperlink{group__jbox_gga80155586fa275b28773c9b203f52cabaa0071b2aa858b0b85866ec55f920661ea}{JBOX\_\-FONTFACE\_\-REGULAR} =  0, 
+\par
+\hyperlink{group__jbox_gga80155586fa275b28773c9b203f52cabaa7c5afcc54470110f9adafe6643860e33}{JBOX\_\-FONTFACE\_\-BOLD} =  1, 
+\par
+\hyperlink{group__jbox_gga80155586fa275b28773c9b203f52cabaa804e35b0947d1056b75c0b7416aed5f1}{JBOX\_\-FONTFACE\_\-ITALIC} =  2, 
+\par
+\hyperlink{group__jbox_gga80155586fa275b28773c9b203f52cabaac504521024538cbb38406272126cb30b}{JBOX\_\-FONTFACE\_\-BOLDITALIC} =  3
+ \}
+\begin{DoxyCompactList}\small\item\em actual numerical values of the b\_\-fontface attribute; use jbox\_\-fontface() to weight \item\end{DoxyCompactList}\item 
+enum \hyperlink{group__jbox_ga956a254a140565aa9ff36a514740e021}{HitTestResult} \{ \par
+\hyperlink{group__jbox_gga956a254a140565aa9ff36a514740e021a3bb67caa8d046ec70d5f467d64a6a290}{HitNothing} =  0, 
+\par
+\hyperlink{group__jbox_gga956a254a140565aa9ff36a514740e021a221361506a6a16b6c6ef01e0df8ba1c8}{HitBox} =  1, 
+\par
+\hyperlink{group__jbox_gga956a254a140565aa9ff36a514740e021abbaf64215e72c962b14e40c5a44daaab}{HitInlet} =  2, 
+\par
+\hyperlink{group__jbox_gga956a254a140565aa9ff36a514740e021a3614154efb6de5f3dd2e9b33f04b755e}{HitOutlet} =  3, 
+\par
+\hyperlink{group__jbox_gga956a254a140565aa9ff36a514740e021ada85a1e80aea2609cb61236fce30e53c}{HitGrowBox} =  4, 
+\par
+\hyperlink{group__jbox_gga956a254a140565aa9ff36a514740e021aa40eb7d004396706e33f989330975eaa}{HitLine} =  5
+ \}
+\begin{DoxyCompactList}\small\item\em enumerations used for box decorators \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gab47a7fa918c470f60f0789baafaa7b4b}{jbox\_\-get\_\-rect\_\-for\_\-view} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__object}{t\_\-object} $\ast$patcherview, \hyperlink{structt__rect}{t\_\-rect} $\ast$rect)
+\begin{DoxyCompactList}\small\item\em Find the rect for a box in a given patcherview. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga2e9cb5c8f8c731dc7af4d4f78ddbd387}{jbox\_\-set\_\-rect\_\-for\_\-view} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__object}{t\_\-object} $\ast$patcherview, \hyperlink{structt__rect}{t\_\-rect} $\ast$rect)
+\begin{DoxyCompactList}\small\item\em Change the rect for a box in a given patcherview. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga92dedcbda2a2dbbab47e0801902c56b4}{jbox\_\-get\_\-rect\_\-for\_\-sym} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$which, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Find the rect for a box with a given attribute name. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga780de0c06bc1630cd0725174b21357f6}{jbox\_\-set\_\-rect\_\-for\_\-sym} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$which, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Change the rect for a box with a given attribute name. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gad342cd402e9dade9bb13b813a13f038c}{jbox\_\-set\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Set both the presentation rect and the patching rect. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga0e4d3502f3c114d2e9c71f309c9cade2}{jbox\_\-get\_\-patching\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Retrieve the patching rect of a box. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gab9c38504ceb26b0674eba0ee31ff776b}{jbox\_\-set\_\-patching\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Change the patching rect of a box. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga987293837d1704cf7d461832e312c0b8}{jbox\_\-get\_\-presentation\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Retrieve the presentation rect of a box. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gad7d842670d42f7959b9a388eaf716d46}{jbox\_\-set\_\-presentation\_\-rect} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__rect}{t\_\-rect} $\ast$pr)
+\begin{DoxyCompactList}\small\item\em Change the presentation rect of a box. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gae1901dd9922577bb4bcc33665dd4e7f6}{jbox\_\-set\_\-position} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__pt}{t\_\-pt} $\ast$pos)
+\begin{DoxyCompactList}\small\item\em Set the position of a box for both the presentation and patching views. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gaf2b95be91e66caa72238838b2068356f}{jbox\_\-get\_\-patching\_\-position} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__pt}{t\_\-pt} $\ast$pos)
+\begin{DoxyCompactList}\small\item\em Fetch the position of a box for the patching view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gac4baff3db6cac220f46e73a3f6986ac9}{jbox\_\-set\_\-patching\_\-position} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__pt}{t\_\-pt} $\ast$pos)
+\begin{DoxyCompactList}\small\item\em Set the position of a box for the patching view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gae4db002ae3ff252be9e0fe1fce5aaffb}{jbox\_\-get\_\-presentation\_\-position} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__pt}{t\_\-pt} $\ast$pos)
+\begin{DoxyCompactList}\small\item\em Fetch the position of a box for the presentation view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gad20f69b425b1a22686cfa909d509af60}{jbox\_\-set\_\-presentation\_\-position} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__pt}{t\_\-pt} $\ast$pos)
+\begin{DoxyCompactList}\small\item\em Set the position of a box for the presentation view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga09ce5b0e60e447cd40331f63ea8d7e9d}{jbox\_\-set\_\-size} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__size}{t\_\-size} $\ast$size)
+\begin{DoxyCompactList}\small\item\em Set the size of a box for both the presentation and patching views. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga4b2c0df4da77da3655848defe8f1828e}{jbox\_\-get\_\-patching\_\-size} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__size}{t\_\-size} $\ast$size)
+\begin{DoxyCompactList}\small\item\em Fetch the size of a box for the patching view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gab7eb5fa0028078fa1665c255ede79cf5}{jbox\_\-set\_\-patching\_\-size} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__size}{t\_\-size} $\ast$size)
+\begin{DoxyCompactList}\small\item\em Set the size of a box for the patching view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga4dc98cdc8f15efc5f0980bd4cc07f111}{jbox\_\-get\_\-presentation\_\-size} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__size}{t\_\-size} $\ast$size)
+\begin{DoxyCompactList}\small\item\em Fetch the size of a box for the presentation view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga6765c83aed47db064a1cf0581474f5c0}{jbox\_\-set\_\-presentation\_\-size} (\hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__size}{t\_\-size} $\ast$size)
+\begin{DoxyCompactList}\small\item\em Set the size of a box for the presentation view. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jbox_ga0c96d89b3e16930d8c84e4a39b21b639}{jbox\_\-get\_\-maxclass} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve the name of the class of the box's object. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jbox_ga5063d165cfca9dc76162ff5757ea4852}{jbox\_\-get\_\-object} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a pointer to the box's object. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jbox_ga628997df216439d23dac3f76cd525806}{jbox\_\-get\_\-patcher} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's patcher. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_gabf4d15efce29810349772db62c3b1341}{jbox\_\-get\_\-hidden} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's 'hidden' attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gaa83c5c91b5687838b4aa221236535b53}{jbox\_\-set\_\-hidden} (\hyperlink{structt__object}{t\_\-object} $\ast$b, char c)
+\begin{DoxyCompactList}\small\item\em Set a box's 'hidden' attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jbox_ga5a5801f294c0c6f8c5cefc686bffcdfb}{jbox\_\-get\_\-fontname} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's 'fontname' attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gaa42077bec85957796b46eac319db0ad7}{jbox\_\-set\_\-fontname} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ps)
+\begin{DoxyCompactList}\small\item\em Set a box's 'fontname' attribute. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__jbox_ga5ea741cbdbedbb94e93292fe9fdf4976}{jbox\_\-get\_\-fontsize} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's 'fontsize' attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gae6342147186d369649574cb04b0b3deb}{jbox\_\-set\_\-fontsize} (\hyperlink{structt__object}{t\_\-object} $\ast$b, double d)
+\begin{DoxyCompactList}\small\item\em Set a box's 'fontsize' attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga03c4056e731c28342a8ee17e5b86558f}{jbox\_\-get\_\-color} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's 'color' attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga211b979a249719dadd1168d72bc6df37}{jbox\_\-set\_\-color} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Set a box's 'color' attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jbox_gad9614088919b6727e6ed7feebd83d065}{jbox\_\-get\_\-hint} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's hint text as a symbol. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga7c7cc83f75351df0fa423c43592e589c}{jbox\_\-set\_\-hint} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Set a box's hint text using a symbol. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__jbox_ga80ff8da64e1e96abb21ae7e528c757c8}{jbox\_\-get\_\-hintstring} (\hyperlink{structt__object}{t\_\-object} $\ast$bb)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's hint text as a C-\/string. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jbox_gad1651ffa12cf40c55de24e892be2fa42}{jbox\_\-set\_\-hintstring} (\hyperlink{structt__object}{t\_\-object} $\ast$bb, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Set a box's hint text using a C-\/string. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__jbox_gae370a9514d4075d00eb6a336d95390b0}{jbox\_\-get\_\-annotation} (\hyperlink{structt__object}{t\_\-object} $\ast$bb)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's annotation string, if the user has given it an annotation. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jbox_ga2c9cde3892f9a68be579ea623c438dd0}{jbox\_\-set\_\-annotation} (\hyperlink{structt__object}{t\_\-object} $\ast$bb, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Set a box's annotation string. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jbox_ga89177ab12d45649c7209e65c97a3b128}{jbox\_\-get\_\-nextobject} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em The next box in the patcher's (linked) list of boxes. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jbox_ga99be7a7b57c38335d30e6241afb86a5b}{jbox\_\-get\_\-prevobject} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em The previous box in the patcher's (linked) list of boxes. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jbox_ga0ada31d7aaa4c8e04f0807a3d857a1ad}{jbox\_\-get\_\-varname} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box's scripting name. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gac4f46f657ca5087727fff6999c517d6c}{jbox\_\-set\_\-varname} (\hyperlink{structt__object}{t\_\-object} $\ast$b, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$ps)
+\begin{DoxyCompactList}\small\item\em Set a box's scripting name. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__jbox_ga0b2499248b44f3f138407129f39f274e}{jbox\_\-get\_\-id} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a boxes unique id. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_ga57ff4e001cd4725d3cb7afb5a5dd4b56}{jbox\_\-get\_\-canhilite} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box flag value from a box. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_ga453e949f39ffe6a95063a8d554e25adf}{jbox\_\-get\_\-background} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Determine whether a box is located in the patcher's background layer. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gabcff56f0530497761daf30b021378308}{jbox\_\-set\_\-background} (\hyperlink{structt__object}{t\_\-object} $\ast$b, char c)
+\begin{DoxyCompactList}\small\item\em Set whether a box should be in the background or foreground layer of a patcher. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_gaa84d6ce8c5dbd9fc69acc603b69a5fb0}{jbox\_\-get\_\-ignoreclick} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Determine whether a box ignores clicks. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga35a6799e184e79e7df4552ed1b75f652}{jbox\_\-set\_\-ignoreclick} (\hyperlink{structt__object}{t\_\-object} $\ast$b, char c)
+\begin{DoxyCompactList}\small\item\em Set whether a box ignores clicks. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_gaae56c5cb39f5835b702846e557400522}{jbox\_\-get\_\-drawfirstin} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Determine whether a box draws its first inlet. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_ga3316ca865cdfb5d3e64daba573889407}{jbox\_\-get\_\-outline} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Determine whether a box draws an outline. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga77fc6d8afcf5b91b6b998803a66ca316}{jbox\_\-set\_\-outline} (\hyperlink{structt__object}{t\_\-object} $\ast$b, char c)
+\begin{DoxyCompactList}\small\item\em Set whether a box draws an outline. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_ga1c3005aebecc67a41d0abb0f0089a6cb}{jbox\_\-get\_\-growy} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box flag value from a box. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_gaecf5b94b11c026032d94d6746d06955f}{jbox\_\-get\_\-growboth} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box flag value from a box. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_gaae265845c184a54b16ecf19cff0f7b91}{jbox\_\-get\_\-nogrow} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box flag value from a box. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_ga6e3d12a65d25b0e518ca1e246d132a7a}{jbox\_\-get\_\-drawinlast} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a box flag value from a box. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jbox_ga2f6cb01a3523876b01945baa7800e61e}{jbox\_\-get\_\-textfield} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Retrieve a pointer to a box's textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jbox_gacbedddaaeeaf5a08a9fa6a8782b86b1f}{jbox\_\-get\_\-presentation} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Determine if a box is included in the presentation view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga67bc0679e3f4456a6ac791fa1ebef568}{jbox\_\-set\_\-presentation} (\hyperlink{structt__object}{t\_\-object} $\ast$b, char c)
+\begin{DoxyCompactList}\small\item\em Determine if a box is included in the presentation view. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_gaaa460d02ca3d22c54368ade59d8e330b}{jbox\_\-new} (\hyperlink{structt__jbox}{t\_\-jbox} $\ast$b, long flags, long argc, \hyperlink{structt__atom}{t\_\-atom} $\ast$argv)
+\begin{DoxyCompactList}\small\item\em Set up your UI object's \hyperlink{structt__jbox}{t\_\-jbox} member. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jbox_ga769cbf2dd8ebf22ac21e9df271c61704}{jbox\_\-free} (\hyperlink{structt__jbox}{t\_\-jbox} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Tear down your UI object's \hyperlink{structt__jbox}{t\_\-jbox} member. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jbox_gabea75e4d5243003070cb2de04b81d3d1}{jbox\_\-ready} (\hyperlink{structt__jbox}{t\_\-jbox} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Mark the box ready to be accessed and drawn by Max. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jbox_ga92b553f8adc9994553590bbbcfd7e49d}{jbox\_\-redraw} (\hyperlink{structt__jbox}{t\_\-jbox} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Request that your object/box be re-\/drawn by Max. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jbox_ga9aa791abf47ea1cb276c5a867665a52a}{jbox\_\-notify} (\hyperlink{structt__jbox}{t\_\-jbox} $\ast$b, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$msg, void $\ast$sender, void $\ast$data)
+\begin{DoxyCompactList}\small\item\em Send a notification to a box. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A box in the patcher. 
+
+\subsection{Define Documentation}
+\hypertarget{group__jbox_ga789716317916c1e160d4ac0ef909446b}{
+\index{jbox@{jbox}!JBOX\_\-NOINSPECTFIRSTIN@{JBOX\_\-NOINSPECTFIRSTIN}}
+\index{JBOX\_\-NOINSPECTFIRSTIN@{JBOX\_\-NOINSPECTFIRSTIN}!jbox@{jbox}}
+\subsubsection[{JBOX\_\-NOINSPECTFIRSTIN}]{\setlength{\rightskip}{0pt plus 5cm}\#define JBOX\_\-NOINSPECTFIRSTIN~(1$<$$<$17)}}
+\label{group__jbox_ga789716317916c1e160d4ac0ef909446b}
+
+
+flag for objects such as bpatcher that have a different b\_\-firstin, but the attrs of the b\_\-firstin should not be shown in the inspector 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__jbox_ga80155586fa275b28773c9b203f52caba}{
+\subsubsection[{"@17}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}
+\label{group__jbox_ga80155586fa275b28773c9b203f52caba}
+
+
+actual numerical values of the b\_\-fontface attribute; use jbox\_\-fontface() to weight \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{JBOX\_\-FONTFACE\_\-REGULAR@{JBOX\_\-FONTFACE\_\-REGULAR}!jbox@{jbox}}\index{jbox@{jbox}!JBOX\_\-FONTFACE\_\-REGULAR@{JBOX\_\-FONTFACE\_\-REGULAR}}\item[{\em 
+\hypertarget{group__jbox_gga80155586fa275b28773c9b203f52cabaa0071b2aa858b0b85866ec55f920661ea}{
+JBOX\_\-FONTFACE\_\-REGULAR}
+\label{group__jbox_gga80155586fa275b28773c9b203f52cabaa0071b2aa858b0b85866ec55f920661ea}
+}]normal \index{JBOX\_\-FONTFACE\_\-BOLD@{JBOX\_\-FONTFACE\_\-BOLD}!jbox@{jbox}}\index{jbox@{jbox}!JBOX\_\-FONTFACE\_\-BOLD@{JBOX\_\-FONTFACE\_\-BOLD}}\item[{\em 
+\hypertarget{group__jbox_gga80155586fa275b28773c9b203f52cabaa7c5afcc54470110f9adafe6643860e33}{
+JBOX\_\-FONTFACE\_\-BOLD}
+\label{group__jbox_gga80155586fa275b28773c9b203f52cabaa7c5afcc54470110f9adafe6643860e33}
+}]bold \index{JBOX\_\-FONTFACE\_\-ITALIC@{JBOX\_\-FONTFACE\_\-ITALIC}!jbox@{jbox}}\index{jbox@{jbox}!JBOX\_\-FONTFACE\_\-ITALIC@{JBOX\_\-FONTFACE\_\-ITALIC}}\item[{\em 
+\hypertarget{group__jbox_gga80155586fa275b28773c9b203f52cabaa804e35b0947d1056b75c0b7416aed5f1}{
+JBOX\_\-FONTFACE\_\-ITALIC}
+\label{group__jbox_gga80155586fa275b28773c9b203f52cabaa804e35b0947d1056b75c0b7416aed5f1}
+}]italic \index{JBOX\_\-FONTFACE\_\-BOLDITALIC@{JBOX\_\-FONTFACE\_\-BOLDITALIC}!jbox@{jbox}}\index{jbox@{jbox}!JBOX\_\-FONTFACE\_\-BOLDITALIC@{JBOX\_\-FONTFACE\_\-BOLDITALIC}}\item[{\em 
+\hypertarget{group__jbox_gga80155586fa275b28773c9b203f52cabaac504521024538cbb38406272126cb30b}{
+JBOX\_\-FONTFACE\_\-BOLDITALIC}
+\label{group__jbox_gga80155586fa275b28773c9b203f52cabaac504521024538cbb38406272126cb30b}
+}]bold and italic \end{description}
+\end{Desc}
+
+\hypertarget{group__jbox_ga956a254a140565aa9ff36a514740e021}{
+\index{jbox@{jbox}!HitTestResult@{HitTestResult}}
+\index{HitTestResult@{HitTestResult}!jbox@{jbox}}
+\subsubsection[{HitTestResult}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf HitTestResult}}}
+\label{group__jbox_ga956a254a140565aa9ff36a514740e021}
+
+
+enumerations used for box decorators \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{HitNothing@{HitNothing}!jbox@{jbox}}\index{jbox@{jbox}!HitNothing@{HitNothing}}\item[{\em 
+\hypertarget{group__jbox_gga956a254a140565aa9ff36a514740e021a3bb67caa8d046ec70d5f467d64a6a290}{
+HitNothing}
+\label{group__jbox_gga956a254a140565aa9ff36a514740e021a3bb67caa8d046ec70d5f467d64a6a290}
+}]a hole in the box \index{HitBox@{HitBox}!jbox@{jbox}}\index{jbox@{jbox}!HitBox@{HitBox}}\item[{\em 
+\hypertarget{group__jbox_gga956a254a140565aa9ff36a514740e021a221361506a6a16b6c6ef01e0df8ba1c8}{
+HitBox}
+\label{group__jbox_gga956a254a140565aa9ff36a514740e021a221361506a6a16b6c6ef01e0df8ba1c8}
+}]the body of the box \index{HitInlet@{HitInlet}!jbox@{jbox}}\index{jbox@{jbox}!HitInlet@{HitInlet}}\item[{\em 
+\hypertarget{group__jbox_gga956a254a140565aa9ff36a514740e021abbaf64215e72c962b14e40c5a44daaab}{
+HitInlet}
+\label{group__jbox_gga956a254a140565aa9ff36a514740e021abbaf64215e72c962b14e40c5a44daaab}
+}]an inlet \index{HitOutlet@{HitOutlet}!jbox@{jbox}}\index{jbox@{jbox}!HitOutlet@{HitOutlet}}\item[{\em 
+\hypertarget{group__jbox_gga956a254a140565aa9ff36a514740e021a3614154efb6de5f3dd2e9b33f04b755e}{
+HitOutlet}
+\label{group__jbox_gga956a254a140565aa9ff36a514740e021a3614154efb6de5f3dd2e9b33f04b755e}
+}]an outlet \index{HitGrowBox@{HitGrowBox}!jbox@{jbox}}\index{jbox@{jbox}!HitGrowBox@{HitGrowBox}}\item[{\em 
+\hypertarget{group__jbox_gga956a254a140565aa9ff36a514740e021ada85a1e80aea2609cb61236fce30e53c}{
+HitGrowBox}
+\label{group__jbox_gga956a254a140565aa9ff36a514740e021ada85a1e80aea2609cb61236fce30e53c}
+}]the grow handle \index{HitLine@{HitLine}!jbox@{jbox}}\index{jbox@{jbox}!HitLine@{HitLine}}\item[{\em 
+\hypertarget{group__jbox_gga956a254a140565aa9ff36a514740e021aa40eb7d004396706e33f989330975eaa}{
+HitLine}
+\label{group__jbox_gga956a254a140565aa9ff36a514740e021aa40eb7d004396706e33f989330975eaa}
+}]a line \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__jbox_ga769cbf2dd8ebf22ac21e9df271c61704}{
+\index{jbox@{jbox}!jbox\_\-free@{jbox\_\-free}}
+\index{jbox\_\-free@{jbox\_\-free}!jbox@{jbox}}
+\subsubsection[{jbox\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void jbox\_\-free ({\bf t\_\-jbox} $\ast$ {\em b})}}
+\label{group__jbox_ga769cbf2dd8ebf22ac21e9df271c61704}
+
+
+Tear down your UI object's \hyperlink{structt__jbox}{t\_\-jbox} member. This should be called from your UI object's free method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The address of your object's \hyperlink{structt__jbox}{t\_\-jbox} member (which should be the first member of the object's struct). \end{DoxyParams}
+\hypertarget{group__jbox_gae370a9514d4075d00eb6a336d95390b0}{
+\index{jbox@{jbox}!jbox\_\-get\_\-annotation@{jbox\_\-get\_\-annotation}}
+\index{jbox\_\-get\_\-annotation@{jbox\_\-get\_\-annotation}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-annotation}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ jbox\_\-get\_\-annotation ({\bf t\_\-object} $\ast$ {\em bb})}}
+\label{group__jbox_gae370a9514d4075d00eb6a336d95390b0}
+
+
+Retrieve a box's annotation string, if the user has given it an annotation. 
+\begin{DoxyParams}{Parameters}
+\item[{\em bb}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The user-\/created annotation string for a box, or NULL if no string exists. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga453e949f39ffe6a95063a8d554e25adf}{
+\index{jbox@{jbox}!jbox\_\-get\_\-background@{jbox\_\-get\_\-background}}
+\index{jbox\_\-get\_\-background@{jbox\_\-get\_\-background}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-background}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-background ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga453e949f39ffe6a95063a8d554e25adf}
+
+
+Determine whether a box is located in the patcher's background layer. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Zero if the object is in the foreground, otherwise non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga57ff4e001cd4725d3cb7afb5a5dd4b56}{
+\index{jbox@{jbox}!jbox\_\-get\_\-canhilite@{jbox\_\-get\_\-canhilite}}
+\index{jbox\_\-get\_\-canhilite@{jbox\_\-get\_\-canhilite}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-canhilite}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-canhilite ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga57ff4e001cd4725d3cb7afb5a5dd4b56}
+
+
+Retrieve a box flag value from a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the canhilite bit in the box's flags. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga03c4056e731c28342a8ee17e5b86558f}{
+\index{jbox@{jbox}!jbox\_\-get\_\-color@{jbox\_\-get\_\-color}}
+\index{jbox\_\-get\_\-color@{jbox\_\-get\_\-color}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-color}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-color ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jbox_ga03c4056e731c28342a8ee17e5b86558f}
+
+
+Retrieve a box's 'color' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em prgba}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled-\/in upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaae56c5cb39f5835b702846e557400522}{
+\index{jbox@{jbox}!jbox\_\-get\_\-drawfirstin@{jbox\_\-get\_\-drawfirstin}}
+\index{jbox\_\-get\_\-drawfirstin@{jbox\_\-get\_\-drawfirstin}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-drawfirstin}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-drawfirstin ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_gaae56c5cb39f5835b702846e557400522}
+
+
+Determine whether a box draws its first inlet. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Zero if the inlet is not drawn, otherwise non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga6e3d12a65d25b0e518ca1e246d132a7a}{
+\index{jbox@{jbox}!jbox\_\-get\_\-drawinlast@{jbox\_\-get\_\-drawinlast}}
+\index{jbox\_\-get\_\-drawinlast@{jbox\_\-get\_\-drawinlast}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-drawinlast}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-drawinlast ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga6e3d12a65d25b0e518ca1e246d132a7a}
+
+
+Retrieve a box flag value from a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the drawinlast bit in the box's flags. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga5a5801f294c0c6f8c5cefc686bffcdfb}{
+\index{jbox@{jbox}!jbox\_\-get\_\-fontname@{jbox\_\-get\_\-fontname}}
+\index{jbox\_\-get\_\-fontname@{jbox\_\-get\_\-fontname}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-fontname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jbox\_\-get\_\-fontname ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga5a5801f294c0c6f8c5cefc686bffcdfb}
+
+
+Retrieve a box's 'fontname' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The font name. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga5ea741cbdbedbb94e93292fe9fdf4976}{
+\index{jbox@{jbox}!jbox\_\-get\_\-fontsize@{jbox\_\-get\_\-fontsize}}
+\index{jbox\_\-get\_\-fontsize@{jbox\_\-get\_\-fontsize}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-fontsize}]{\setlength{\rightskip}{0pt plus 5cm}double jbox\_\-get\_\-fontsize ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga5ea741cbdbedbb94e93292fe9fdf4976}
+
+
+Retrieve a box's 'fontsize' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The font size in points. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaecf5b94b11c026032d94d6746d06955f}{
+\index{jbox@{jbox}!jbox\_\-get\_\-growboth@{jbox\_\-get\_\-growboth}}
+\index{jbox\_\-get\_\-growboth@{jbox\_\-get\_\-growboth}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-growboth}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-growboth ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_gaecf5b94b11c026032d94d6746d06955f}
+
+
+Retrieve a box flag value from a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the growboth bit in the box's flags. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga1c3005aebecc67a41d0abb0f0089a6cb}{
+\index{jbox@{jbox}!jbox\_\-get\_\-growy@{jbox\_\-get\_\-growy}}
+\index{jbox\_\-get\_\-growy@{jbox\_\-get\_\-growy}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-growy}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-growy ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga1c3005aebecc67a41d0abb0f0089a6cb}
+
+
+Retrieve a box flag value from a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the growy bit in the box's flags. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gabf4d15efce29810349772db62c3b1341}{
+\index{jbox@{jbox}!jbox\_\-get\_\-hidden@{jbox\_\-get\_\-hidden}}
+\index{jbox\_\-get\_\-hidden@{jbox\_\-get\_\-hidden}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-hidden}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-hidden ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_gabf4d15efce29810349772db62c3b1341}
+
+
+Retrieve a box's 'hidden' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the box is hidden, otherwise false. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gad9614088919b6727e6ed7feebd83d065}{
+\index{jbox@{jbox}!jbox\_\-get\_\-hint@{jbox\_\-get\_\-hint}}
+\index{jbox\_\-get\_\-hint@{jbox\_\-get\_\-hint}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-hint}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jbox\_\-get\_\-hint ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_gad9614088919b6727e6ed7feebd83d065}
+
+
+Retrieve a box's hint text as a symbol. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The box's hint text. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga80ff8da64e1e96abb21ae7e528c757c8}{
+\index{jbox@{jbox}!jbox\_\-get\_\-hintstring@{jbox\_\-get\_\-hintstring}}
+\index{jbox\_\-get\_\-hintstring@{jbox\_\-get\_\-hintstring}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-hintstring}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ jbox\_\-get\_\-hintstring ({\bf t\_\-object} $\ast$ {\em bb})}}
+\label{group__jbox_ga80ff8da64e1e96abb21ae7e528c757c8}
+
+
+Retrieve a box's hint text as a C-\/string. 
+\begin{DoxyParams}{Parameters}
+\item[{\em bb}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The box's hint text. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga0b2499248b44f3f138407129f39f274e}{
+\index{jbox@{jbox}!jbox\_\-get\_\-id@{jbox\_\-get\_\-id}}
+\index{jbox\_\-get\_\-id@{jbox\_\-get\_\-id}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-id}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jbox\_\-get\_\-id ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga0b2499248b44f3f138407129f39f274e}
+
+
+Retrieve a boxes unique id. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The unique id of the object. This is a symbol that is referenced, for example, by patchlines. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaa84d6ce8c5dbd9fc69acc603b69a5fb0}{
+\index{jbox@{jbox}!jbox\_\-get\_\-ignoreclick@{jbox\_\-get\_\-ignoreclick}}
+\index{jbox\_\-get\_\-ignoreclick@{jbox\_\-get\_\-ignoreclick}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-ignoreclick}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-ignoreclick ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_gaa84d6ce8c5dbd9fc69acc603b69a5fb0}
+
+
+Determine whether a box ignores clicks. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Zero if the object responds to clicks, otherwise non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga0c96d89b3e16930d8c84e4a39b21b639}{
+\index{jbox@{jbox}!jbox\_\-get\_\-maxclass@{jbox\_\-get\_\-maxclass}}
+\index{jbox\_\-get\_\-maxclass@{jbox\_\-get\_\-maxclass}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-maxclass}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jbox\_\-get\_\-maxclass ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga0c96d89b3e16930d8c84e4a39b21b639}
+
+
+Retrieve the name of the class of the box's object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The name of the class of the box's object. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga89177ab12d45649c7209e65c97a3b128}{
+\index{jbox@{jbox}!jbox\_\-get\_\-nextobject@{jbox\_\-get\_\-nextobject}}
+\index{jbox\_\-get\_\-nextobject@{jbox\_\-get\_\-nextobject}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-nextobject}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jbox\_\-get\_\-nextobject ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga89177ab12d45649c7209e65c97a3b128}
+
+
+The next box in the patcher's (linked) list of boxes. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next box in the list. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaae265845c184a54b16ecf19cff0f7b91}{
+\index{jbox@{jbox}!jbox\_\-get\_\-nogrow@{jbox\_\-get\_\-nogrow}}
+\index{jbox\_\-get\_\-nogrow@{jbox\_\-get\_\-nogrow}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-nogrow}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-nogrow ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_gaae265845c184a54b16ecf19cff0f7b91}
+
+
+Retrieve a box flag value from a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the nogrow bit in the box's flags. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga5063d165cfca9dc76162ff5757ea4852}{
+\index{jbox@{jbox}!jbox\_\-get\_\-object@{jbox\_\-get\_\-object}}
+\index{jbox\_\-get\_\-object@{jbox\_\-get\_\-object}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-object}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jbox\_\-get\_\-object ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga5063d165cfca9dc76162ff5757ea4852}
+
+
+Retrieve a pointer to the box's object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the box's object. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga3316ca865cdfb5d3e64daba573889407}{
+\index{jbox@{jbox}!jbox\_\-get\_\-outline@{jbox\_\-get\_\-outline}}
+\index{jbox\_\-get\_\-outline@{jbox\_\-get\_\-outline}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-outline}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-outline ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga3316ca865cdfb5d3e64daba573889407}
+
+
+Determine whether a box draws an outline. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Zero if the outline is not drawn, otherwise non-\/zero. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga628997df216439d23dac3f76cd525806}{
+\index{jbox@{jbox}!jbox\_\-get\_\-patcher@{jbox\_\-get\_\-patcher}}
+\index{jbox\_\-get\_\-patcher@{jbox\_\-get\_\-patcher}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-patcher}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jbox\_\-get\_\-patcher ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga628997df216439d23dac3f76cd525806}
+
+
+Retrieve a box's patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the box has a patcher, the patcher's pointer is returned. Otherwise NULL is returned. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaf2b95be91e66caa72238838b2068356f}{
+\index{jbox@{jbox}!jbox\_\-get\_\-patching\_\-position@{jbox\_\-get\_\-patching\_\-position}}
+\index{jbox\_\-get\_\-patching\_\-position@{jbox\_\-get\_\-patching\_\-position}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-patching\_\-position}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-patching\_\-position ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-pt} $\ast$ {\em pos})}}
+\label{group__jbox_gaf2b95be91e66caa72238838b2068356f}
+
+
+Fetch the position of a box for the patching view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose position will be retrieved. \item[{\em pos}]The address of a valid \hyperlink{structt__pt}{t\_\-pt} whose x and y values will be filled in. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga0e4d3502f3c114d2e9c71f309c9cade2}{
+\index{jbox@{jbox}!jbox\_\-get\_\-patching\_\-rect@{jbox\_\-get\_\-patching\_\-rect}}
+\index{jbox\_\-get\_\-patching\_\-rect@{jbox\_\-get\_\-patching\_\-rect}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-patching\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-patching\_\-rect ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jbox_ga0e4d3502f3c114d2e9c71f309c9cade2}
+
+
+Retrieve the patching rect of a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect values will be retrieved. \item[{\em pr}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled in. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga4b2c0df4da77da3655848defe8f1828e}{
+\index{jbox@{jbox}!jbox\_\-get\_\-patching\_\-size@{jbox\_\-get\_\-patching\_\-size}}
+\index{jbox\_\-get\_\-patching\_\-size@{jbox\_\-get\_\-patching\_\-size}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-patching\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-patching\_\-size ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-size} $\ast$ {\em size})}}
+\label{group__jbox_ga4b2c0df4da77da3655848defe8f1828e}
+
+
+Fetch the size of a box for the patching view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose size will be retrieved. \item[{\em size}]The address of a valid \hyperlink{structt__size}{t\_\-size} whose width and height values will be filled in. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gacbedddaaeeaf5a08a9fa6a8782b86b1f}{
+\index{jbox@{jbox}!jbox\_\-get\_\-presentation@{jbox\_\-get\_\-presentation}}
+\index{jbox\_\-get\_\-presentation@{jbox\_\-get\_\-presentation}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-presentation}]{\setlength{\rightskip}{0pt plus 5cm}char jbox\_\-get\_\-presentation ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_gacbedddaaeeaf5a08a9fa6a8782b86b1f}
+
+
+Determine if a box is included in the presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Non-\/zero if in presentation mode, otherwise zero. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gae4db002ae3ff252be9e0fe1fce5aaffb}{
+\index{jbox@{jbox}!jbox\_\-get\_\-presentation\_\-position@{jbox\_\-get\_\-presentation\_\-position}}
+\index{jbox\_\-get\_\-presentation\_\-position@{jbox\_\-get\_\-presentation\_\-position}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-presentation\_\-position}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-presentation\_\-position ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-pt} $\ast$ {\em pos})}}
+\label{group__jbox_gae4db002ae3ff252be9e0fe1fce5aaffb}
+
+
+Fetch the position of a box for the presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose position will be retrieved. \item[{\em pos}]The address of a valid \hyperlink{structt__pt}{t\_\-pt} whose x and y values will be filled in. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga987293837d1704cf7d461832e312c0b8}{
+\index{jbox@{jbox}!jbox\_\-get\_\-presentation\_\-rect@{jbox\_\-get\_\-presentation\_\-rect}}
+\index{jbox\_\-get\_\-presentation\_\-rect@{jbox\_\-get\_\-presentation\_\-rect}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-presentation\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-presentation\_\-rect ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jbox_ga987293837d1704cf7d461832e312c0b8}
+
+
+Retrieve the presentation rect of a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect values will be retrieved. \item[{\em pr}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled in. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga4dc98cdc8f15efc5f0980bd4cc07f111}{
+\index{jbox@{jbox}!jbox\_\-get\_\-presentation\_\-size@{jbox\_\-get\_\-presentation\_\-size}}
+\index{jbox\_\-get\_\-presentation\_\-size@{jbox\_\-get\_\-presentation\_\-size}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-presentation\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-presentation\_\-size ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-size} $\ast$ {\em size})}}
+\label{group__jbox_ga4dc98cdc8f15efc5f0980bd4cc07f111}
+
+
+Fetch the size of a box for the presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose size will be retrieved. \item[{\em size}]The address of a valid \hyperlink{structt__size}{t\_\-size} whose width and height values will be filled in. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga99be7a7b57c38335d30e6241afb86a5b}{
+\index{jbox@{jbox}!jbox\_\-get\_\-prevobject@{jbox\_\-get\_\-prevobject}}
+\index{jbox\_\-get\_\-prevobject@{jbox\_\-get\_\-prevobject}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-prevobject}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jbox\_\-get\_\-prevobject ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga99be7a7b57c38335d30e6241afb86a5b}
+
+
+The previous box in the patcher's (linked) list of boxes. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next box in the list. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga92dedcbda2a2dbbab47e0801902c56b4}{
+\index{jbox@{jbox}!jbox\_\-get\_\-rect\_\-for\_\-sym@{jbox\_\-get\_\-rect\_\-for\_\-sym}}
+\index{jbox\_\-get\_\-rect\_\-for\_\-sym@{jbox\_\-get\_\-rect\_\-for\_\-sym}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-rect\_\-for\_\-sym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-rect\_\-for\_\-sym ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-symbol} $\ast$ {\em which}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jbox_ga92dedcbda2a2dbbab47e0801902c56b4}
+
+
+Find the rect for a box with a given attribute name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be fetched. \item[{\em which}]The name of the rect attribute to be fetched, for example {\ttfamily \_\-sym\_\-presentation\_\-rect} or {\ttfamily \_\-sym\_\-patching\_\-rect}. \item[{\em pr}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose members will be filled in by this function. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gab47a7fa918c470f60f0789baafaa7b4b}{
+\index{jbox@{jbox}!jbox\_\-get\_\-rect\_\-for\_\-view@{jbox\_\-get\_\-rect\_\-for\_\-view}}
+\index{jbox\_\-get\_\-rect\_\-for\_\-view@{jbox\_\-get\_\-rect\_\-for\_\-view}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-rect\_\-for\_\-view}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-get\_\-rect\_\-for\_\-view ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-object} $\ast$ {\em patcherview}, \/  {\bf t\_\-rect} $\ast$ {\em rect})}}
+\label{group__jbox_gab47a7fa918c470f60f0789baafaa7b4b}
+
+
+Find the rect for a box in a given patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be fetched. \item[{\em patcherview}]A patcherview in which the box exists. \item[{\em rect}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose members will be filled in by this function. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga2f6cb01a3523876b01945baa7800e61e}{
+\index{jbox@{jbox}!jbox\_\-get\_\-textfield@{jbox\_\-get\_\-textfield}}
+\index{jbox\_\-get\_\-textfield@{jbox\_\-get\_\-textfield}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-textfield}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jbox\_\-get\_\-textfield ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga2f6cb01a3523876b01945baa7800e61e}
+
+
+Retrieve a pointer to a box's textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The textfield for the box, assuming it has one. If the box does not own a textfield then NULL is returned. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga0ada31d7aaa4c8e04f0807a3d857a1ad}{
+\index{jbox@{jbox}!jbox\_\-get\_\-varname@{jbox\_\-get\_\-varname}}
+\index{jbox\_\-get\_\-varname@{jbox\_\-get\_\-varname}!jbox@{jbox}}
+\subsubsection[{jbox\_\-get\_\-varname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jbox\_\-get\_\-varname ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jbox_ga0ada31d7aaa4c8e04f0807a3d857a1ad}
+
+
+Retrieve a box's scripting name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The box's scripting name. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaaa460d02ca3d22c54368ade59d8e330b}{
+\index{jbox@{jbox}!jbox\_\-new@{jbox\_\-new}}
+\index{jbox\_\-new@{jbox\_\-new}!jbox@{jbox}}
+\subsubsection[{jbox\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-new ({\bf t\_\-jbox} $\ast$ {\em b}, \/  long {\em flags}, \/  long {\em argc}, \/  {\bf t\_\-atom} $\ast$ {\em argv})}}
+\label{group__jbox_gaaa460d02ca3d22c54368ade59d8e330b}
+
+
+Set up your UI object's \hyperlink{structt__jbox}{t\_\-jbox} member. This should be called from your UI object's free method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The address of your UI object's \hyperlink{structt__jbox}{t\_\-jbox} member (which should be the first member of the object's struct). \item[{\em flags}]Flags to set the box's behavior, such as \hyperlink{group__jbox_ga5b6543cfc10a8912a82cebada525a770}{JBOX\_\-NODRAWBOX}. \item[{\em argc}]The count of atoms in the argv parameter. \item[{\em argv}]The address of the first in an array of atoms to be passed to the box constructor. Typically these are simply the argument passed to your object when it is created. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga9aa791abf47ea1cb276c5a867665a52a}{
+\index{jbox@{jbox}!jbox\_\-notify@{jbox\_\-notify}}
+\index{jbox\_\-notify@{jbox\_\-notify}!jbox@{jbox}}
+\subsubsection[{jbox\_\-notify}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-notify ({\bf t\_\-jbox} $\ast$ {\em b}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/  {\bf t\_\-symbol} $\ast$ {\em msg}, \/  void $\ast$ {\em sender}, \/  void $\ast$ {\em data})}}
+\label{group__jbox_ga9aa791abf47ea1cb276c5a867665a52a}
+
+
+Send a notification to a box. This is the same as calling \hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify()} for a box.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The address of your object's \hyperlink{structt__jbox}{t\_\-jbox} member. \item[{\em s}]The name of the send object. \item[{\em msg}]The notification name. \item[{\em sender}]The sending object's address. \item[{\em data}]A pointer to some data passed to the box's notify method. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gabea75e4d5243003070cb2de04b81d3d1}{
+\index{jbox@{jbox}!jbox\_\-ready@{jbox\_\-ready}}
+\index{jbox\_\-ready@{jbox\_\-ready}!jbox@{jbox}}
+\subsubsection[{jbox\_\-ready}]{\setlength{\rightskip}{0pt plus 5cm}void jbox\_\-ready ({\bf t\_\-jbox} $\ast$ {\em b})}}
+\label{group__jbox_gabea75e4d5243003070cb2de04b81d3d1}
+
+
+Mark the box ready to be accessed and drawn by Max. This should typically be called at the end of your UI object's new method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The address of your object's \hyperlink{structt__jbox}{t\_\-jbox} member. \end{DoxyParams}
+\hypertarget{group__jbox_ga92b553f8adc9994553590bbbcfd7e49d}{
+\index{jbox@{jbox}!jbox\_\-redraw@{jbox\_\-redraw}}
+\index{jbox\_\-redraw@{jbox\_\-redraw}!jbox@{jbox}}
+\subsubsection[{jbox\_\-redraw}]{\setlength{\rightskip}{0pt plus 5cm}void jbox\_\-redraw ({\bf t\_\-jbox} $\ast$ {\em b})}}
+\label{group__jbox_ga92b553f8adc9994553590bbbcfd7e49d}
+
+
+Request that your object/box be re-\/drawn by Max. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The address of your object's \hyperlink{structt__jbox}{t\_\-jbox} member. \end{DoxyParams}
+\hypertarget{group__jbox_ga2c9cde3892f9a68be579ea623c438dd0}{
+\index{jbox@{jbox}!jbox\_\-set\_\-annotation@{jbox\_\-set\_\-annotation}}
+\index{jbox\_\-set\_\-annotation@{jbox\_\-set\_\-annotation}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-annotation}]{\setlength{\rightskip}{0pt plus 5cm}void jbox\_\-set\_\-annotation ({\bf t\_\-object} $\ast$ {\em bb}, \/  char $\ast$ {\em s})}}
+\label{group__jbox_ga2c9cde3892f9a68be579ea623c438dd0}
+
+
+Set a box's annotation string. 
+\begin{DoxyParams}{Parameters}
+\item[{\em bb}]The box to query. \item[{\em s}]The annotation string for the box. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gabcff56f0530497761daf30b021378308}{
+\index{jbox@{jbox}!jbox\_\-set\_\-background@{jbox\_\-set\_\-background}}
+\index{jbox\_\-set\_\-background@{jbox\_\-set\_\-background}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-background}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-background ({\bf t\_\-object} $\ast$ {\em b}, \/  char {\em c})}}
+\label{group__jbox_gabcff56f0530497761daf30b021378308}
+
+
+Set whether a box should be in the background or foreground layer of a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em c}]Pass zero to tell the box to appear in the foreground, or non-\/zero to indicate that the box should be in the background layer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga211b979a249719dadd1168d72bc6df37}{
+\index{jbox@{jbox}!jbox\_\-set\_\-color@{jbox\_\-set\_\-color}}
+\index{jbox\_\-set\_\-color@{jbox\_\-set\_\-color}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-color}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-color ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jbox_ga211b979a249719dadd1168d72bc6df37}
+
+
+Set a box's 'color' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em prgba}]The address of a \hyperlink{structt__rect}{t\_\-rect} containing the desired color for the box/object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaa42077bec85957796b46eac319db0ad7}{
+\index{jbox@{jbox}!jbox\_\-set\_\-fontname@{jbox\_\-set\_\-fontname}}
+\index{jbox\_\-set\_\-fontname@{jbox\_\-set\_\-fontname}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-fontname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-fontname ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-symbol} $\ast$ {\em ps})}}
+\label{group__jbox_gaa42077bec85957796b46eac319db0ad7}
+
+
+Set a box's 'fontname' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em ps}]The font name. Note that the font name may be case-\/sensitive. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gae6342147186d369649574cb04b0b3deb}{
+\index{jbox@{jbox}!jbox\_\-set\_\-fontsize@{jbox\_\-set\_\-fontsize}}
+\index{jbox\_\-set\_\-fontsize@{jbox\_\-set\_\-fontsize}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-fontsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-fontsize ({\bf t\_\-object} $\ast$ {\em b}, \/  double {\em d})}}
+\label{group__jbox_gae6342147186d369649574cb04b0b3deb}
+
+
+Set a box's 'fontsize' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em d}]The fontsize in points. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gaa83c5c91b5687838b4aa221236535b53}{
+\index{jbox@{jbox}!jbox\_\-set\_\-hidden@{jbox\_\-set\_\-hidden}}
+\index{jbox\_\-set\_\-hidden@{jbox\_\-set\_\-hidden}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-hidden}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-hidden ({\bf t\_\-object} $\ast$ {\em b}, \/  char {\em c})}}
+\label{group__jbox_gaa83c5c91b5687838b4aa221236535b53}
+
+
+Set a box's 'hidden' attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em c}]Set to true to hide the box, otherwise false. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga7c7cc83f75351df0fa423c43592e589c}{
+\index{jbox@{jbox}!jbox\_\-set\_\-hint@{jbox\_\-set\_\-hint}}
+\index{jbox\_\-set\_\-hint@{jbox\_\-set\_\-hint}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-hint}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-hint ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__jbox_ga7c7cc83f75351df0fa423c43592e589c}
+
+
+Set a box's hint text using a symbol. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em s}]The new text to use for the box's hint. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gad1651ffa12cf40c55de24e892be2fa42}{
+\index{jbox@{jbox}!jbox\_\-set\_\-hintstring@{jbox\_\-set\_\-hintstring}}
+\index{jbox\_\-set\_\-hintstring@{jbox\_\-set\_\-hintstring}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-hintstring}]{\setlength{\rightskip}{0pt plus 5cm}void jbox\_\-set\_\-hintstring ({\bf t\_\-object} $\ast$ {\em bb}, \/  char $\ast$ {\em s})}}
+\label{group__jbox_gad1651ffa12cf40c55de24e892be2fa42}
+
+
+Set a box's hint text using a C-\/string. 
+\begin{DoxyParams}{Parameters}
+\item[{\em bb}]The box to query. \item[{\em s}]The new text to use for the box's hint. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga35a6799e184e79e7df4552ed1b75f652}{
+\index{jbox@{jbox}!jbox\_\-set\_\-ignoreclick@{jbox\_\-set\_\-ignoreclick}}
+\index{jbox\_\-set\_\-ignoreclick@{jbox\_\-set\_\-ignoreclick}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-ignoreclick}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-ignoreclick ({\bf t\_\-object} $\ast$ {\em b}, \/  char {\em c})}}
+\label{group__jbox_ga35a6799e184e79e7df4552ed1b75f652}
+
+
+Set whether a box ignores clicks. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em c}]Pass zero to tell the box to respond to clicks, or non-\/zero to indicate that the box should ignore clicks. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga77fc6d8afcf5b91b6b998803a66ca316}{
+\index{jbox@{jbox}!jbox\_\-set\_\-outline@{jbox\_\-set\_\-outline}}
+\index{jbox\_\-set\_\-outline@{jbox\_\-set\_\-outline}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-outline}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-outline ({\bf t\_\-object} $\ast$ {\em b}, \/  char {\em c})}}
+\label{group__jbox_ga77fc6d8afcf5b91b6b998803a66ca316}
+
+
+Set whether a box draws an outline. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em c}]Pass zero to hide the outline, or non-\/zero to indicate that the box should draw the outline. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gac4baff3db6cac220f46e73a3f6986ac9}{
+\index{jbox@{jbox}!jbox\_\-set\_\-patching\_\-position@{jbox\_\-set\_\-patching\_\-position}}
+\index{jbox\_\-set\_\-patching\_\-position@{jbox\_\-set\_\-patching\_\-position}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-patching\_\-position}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-patching\_\-position ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-pt} $\ast$ {\em pos})}}
+\label{group__jbox_gac4baff3db6cac220f46e73a3f6986ac9}
+
+
+Set the position of a box for the patching view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose positon will be changed. \item[{\em pos}]The address of a \hyperlink{structt__pt}{t\_\-pt} with the new x and y values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gab9c38504ceb26b0674eba0ee31ff776b}{
+\index{jbox@{jbox}!jbox\_\-set\_\-patching\_\-rect@{jbox\_\-set\_\-patching\_\-rect}}
+\index{jbox\_\-set\_\-patching\_\-rect@{jbox\_\-set\_\-patching\_\-rect}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-patching\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-patching\_\-rect ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jbox_gab9c38504ceb26b0674eba0ee31ff776b}
+
+
+Change the patching rect of a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be changed. \item[{\em pr}]The address of a \hyperlink{structt__rect}{t\_\-rect} with the new rect values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gab7eb5fa0028078fa1665c255ede79cf5}{
+\index{jbox@{jbox}!jbox\_\-set\_\-patching\_\-size@{jbox\_\-set\_\-patching\_\-size}}
+\index{jbox\_\-set\_\-patching\_\-size@{jbox\_\-set\_\-patching\_\-size}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-patching\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-patching\_\-size ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-size} $\ast$ {\em size})}}
+\label{group__jbox_gab7eb5fa0028078fa1665c255ede79cf5}
+
+
+Set the size of a box for the patching view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose size will be changed. \item[{\em size}]The address of a \hyperlink{structt__size}{t\_\-size} with the new width and height values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gae1901dd9922577bb4bcc33665dd4e7f6}{
+\index{jbox@{jbox}!jbox\_\-set\_\-position@{jbox\_\-set\_\-position}}
+\index{jbox\_\-set\_\-position@{jbox\_\-set\_\-position}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-position}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-position ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-pt} $\ast$ {\em pos})}}
+\label{group__jbox_gae1901dd9922577bb4bcc33665dd4e7f6}
+
+
+Set the position of a box for both the presentation and patching views. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose position will be changed. \item[{\em pos}]The address of a \hyperlink{structt__pt}{t\_\-pt} with the new x and y values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga67bc0679e3f4456a6ac791fa1ebef568}{
+\index{jbox@{jbox}!jbox\_\-set\_\-presentation@{jbox\_\-set\_\-presentation}}
+\index{jbox\_\-set\_\-presentation@{jbox\_\-set\_\-presentation}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-presentation}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-presentation ({\bf t\_\-object} $\ast$ {\em b}, \/  char {\em c})}}
+\label{group__jbox_ga67bc0679e3f4456a6ac791fa1ebef568}
+
+
+Determine if a box is included in the presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em c}]Pass zero to remove a box from the presention view, or non-\/zero to add it to the presentation view. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Non-\/zero if in presentation mode, otherwise zero. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gad20f69b425b1a22686cfa909d509af60}{
+\index{jbox@{jbox}!jbox\_\-set\_\-presentation\_\-position@{jbox\_\-set\_\-presentation\_\-position}}
+\index{jbox\_\-set\_\-presentation\_\-position@{jbox\_\-set\_\-presentation\_\-position}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-presentation\_\-position}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-presentation\_\-position ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-pt} $\ast$ {\em pos})}}
+\label{group__jbox_gad20f69b425b1a22686cfa909d509af60}
+
+
+Set the position of a box for the presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be changed. \item[{\em pos}]The address of a \hyperlink{structt__pt}{t\_\-pt} with the new x and y values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gad7d842670d42f7959b9a388eaf716d46}{
+\index{jbox@{jbox}!jbox\_\-set\_\-presentation\_\-rect@{jbox\_\-set\_\-presentation\_\-rect}}
+\index{jbox\_\-set\_\-presentation\_\-rect@{jbox\_\-set\_\-presentation\_\-rect}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-presentation\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-presentation\_\-rect ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jbox_gad7d842670d42f7959b9a388eaf716d46}
+
+
+Change the presentation rect of a box. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be changed. \item[{\em pr}]The address of a \hyperlink{structt__rect}{t\_\-rect} with the new rect values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga6765c83aed47db064a1cf0581474f5c0}{
+\index{jbox@{jbox}!jbox\_\-set\_\-presentation\_\-size@{jbox\_\-set\_\-presentation\_\-size}}
+\index{jbox\_\-set\_\-presentation\_\-size@{jbox\_\-set\_\-presentation\_\-size}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-presentation\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-presentation\_\-size ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-size} $\ast$ {\em size})}}
+\label{group__jbox_ga6765c83aed47db064a1cf0581474f5c0}
+
+
+Set the size of a box for the presentation view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose size will be changed. \item[{\em size}]The address of a \hyperlink{structt__size}{t\_\-size} with the new width and height values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gad342cd402e9dade9bb13b813a13f038c}{
+\index{jbox@{jbox}!jbox\_\-set\_\-rect@{jbox\_\-set\_\-rect}}
+\index{jbox\_\-set\_\-rect@{jbox\_\-set\_\-rect}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-rect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-rect ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jbox_gad342cd402e9dade9bb13b813a13f038c}
+
+
+Set both the presentation rect and the patching rect. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be changed. \item[{\em pr}]The address of a \hyperlink{structt__rect}{t\_\-rect} with the new rect values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga780de0c06bc1630cd0725174b21357f6}{
+\index{jbox@{jbox}!jbox\_\-set\_\-rect\_\-for\_\-sym@{jbox\_\-set\_\-rect\_\-for\_\-sym}}
+\index{jbox\_\-set\_\-rect\_\-for\_\-sym@{jbox\_\-set\_\-rect\_\-for\_\-sym}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-rect\_\-for\_\-sym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-rect\_\-for\_\-sym ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-symbol} $\ast$ {\em which}, \/  {\bf t\_\-rect} $\ast$ {\em pr})}}
+\label{group__jbox_ga780de0c06bc1630cd0725174b21357f6}
+
+
+Change the rect for a box with a given attribute name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be changed. \item[{\em which}]The name of the rect attribute to be changed, for example {\ttfamily \_\-sym\_\-presentation\_\-rect} or {\ttfamily \_\-sym\_\-patching\_\-rect}. \item[{\em pr}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} that will replace the current values used by the box. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga2e9cb5c8f8c731dc7af4d4f78ddbd387}{
+\index{jbox@{jbox}!jbox\_\-set\_\-rect\_\-for\_\-view@{jbox\_\-set\_\-rect\_\-for\_\-view}}
+\index{jbox\_\-set\_\-rect\_\-for\_\-view@{jbox\_\-set\_\-rect\_\-for\_\-view}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-rect\_\-for\_\-view}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-rect\_\-for\_\-view ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-object} $\ast$ {\em patcherview}, \/  {\bf t\_\-rect} $\ast$ {\em rect})}}
+\label{group__jbox_ga2e9cb5c8f8c731dc7af4d4f78ddbd387}
+
+
+Change the rect for a box in a given patcherview. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose rect will be changed. \item[{\em patcherview}]A patcherview in which the box exists. \item[{\em rect}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} that will replace the current values used by the box in the given view. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_ga09ce5b0e60e447cd40331f63ea8d7e9d}{
+\index{jbox@{jbox}!jbox\_\-set\_\-size@{jbox\_\-set\_\-size}}
+\index{jbox\_\-set\_\-size@{jbox\_\-set\_\-size}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-size ({\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-size} $\ast$ {\em size})}}
+\label{group__jbox_ga09ce5b0e60e447cd40331f63ea8d7e9d}
+
+
+Set the size of a box for both the presentation and patching views. 
+\begin{DoxyParams}{Parameters}
+\item[{\em box}]The box whose size will be changed. \item[{\em size}]The address of a \hyperlink{structt__size}{t\_\-size} with the new size values. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jbox_gac4f46f657ca5087727fff6999c517d6c}{
+\index{jbox@{jbox}!jbox\_\-set\_\-varname@{jbox\_\-set\_\-varname}}
+\index{jbox\_\-set\_\-varname@{jbox\_\-set\_\-varname}!jbox@{jbox}}
+\subsubsection[{jbox\_\-set\_\-varname}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jbox\_\-set\_\-varname ({\bf t\_\-object} $\ast$ {\em b}, \/  {\bf t\_\-symbol} $\ast$ {\em ps})}}
+\label{group__jbox_gac4f46f657ca5087727fff6999c517d6c}
+
+
+Set a box's scripting name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]The box to query. \item[{\em ps}]The new scripting name for the box. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}

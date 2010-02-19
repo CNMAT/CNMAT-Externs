@@ -1,0 +1,150 @@
+\hypertarget{group__critical}{
+\section{Critical Regions}
+\label{group__critical}\index{Critical Regions@{Critical Regions}}
+}
+
+
+A critical region is a simple mechanism that prevents multiple threads from accessing at once code protected by the same critical region.  
+
+
+Collaboration diagram for Critical Regions:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=120pt]{group__critical}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__critical_gaa00494020fc3fa3005b63a294cab3886}{
+typedef void \hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical}}
+\label{group__critical_gaa00494020fc3fa3005b63a294cab3886}
+
+\begin{DoxyCompactList}\small\item\em A Max critical region. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__critical_gaaa373bcd9c8059e4887225aaf32a76d2}{critical\_\-new} (\hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Create a new critical region. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__critical_ga246445cffc822f756ac6fb34a055022d}{critical\_\-enter} (\hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} x)
+\begin{DoxyCompactList}\small\item\em Enter a critical region. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__critical_ga269f46fef96f91143fc1616a4105984c}{critical\_\-exit} (\hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} x)
+\begin{DoxyCompactList}\small\item\em Leave a critical region. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__critical_gaedbe0cba11940710c789ac01194e3712}{critical\_\-free} (\hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} x)
+\begin{DoxyCompactList}\small\item\em Free a critical region created with \hyperlink{group__critical_gaaa373bcd9c8059e4887225aaf32a76d2}{critical\_\-new()}. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__critical_ga0a4109d5c2b82f0c1022015abac175dc}{critical\_\-tryenter} (\hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} x)
+\begin{DoxyCompactList}\small\item\em Try to enter a critical region if it is not locked. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A critical region is a simple mechanism that prevents multiple threads from accessing at once code protected by the same critical region. The code fragments could be different, and in completely different modules, but as long as the critical region is the same, no two threads should call the protected code at the same time. If one thread is inside a critical region, and another thread wants to execute code protected by the same critical region, the second thread must wait for the first thread to exit the critical region. In some implementations a critical region can be set so that if it takes too long for the first thread to exit said critical region, the second thread is allowed to execute, dangerously and potentially causing crashes. This is the case for the critical regions exposed by Max and the default upper limit for a given thread to remain inside a critical region is two seconds. Despite the fact that there are two seconds of leeway provided before two threads can dangerously enter a critical region, it is important to only protect as small a portion of code as necessary with a critical region.
+
+Under Max 4.1 and earlier there was a simple protective mechanism called \char`\"{}lockout\char`\"{} that would prevent the scheduler from interrupting the low priority thread during sensitive operations such as sending data out an outlet or modifying members of a linked list. This lockout mechanism has been deprecated, and under the Mac OS X and Windows XP versions (Max 4.2 and later) does nothing. So how do you protect thread sensitive operations? Use critical regions (also known as critical sections). However, it is very important to mention that all outlet calls are now thread safe and should never be contained inside a critical region. Otherwise, this could result in serious timing problems. For other tasks which are not thread safe, such as accessing a linked list, critical regions or some other thread protection mechanism are appropriate.
+
+In Max, the \hyperlink{group__critical_ga246445cffc822f756ac6fb34a055022d}{critical\_\-enter()} function is used to enter a critical region, and the \hyperlink{group__critical_ga269f46fef96f91143fc1616a4105984c}{critical\_\-exit()} function is used to exit a critical region. It is important that in any function which uses critical regions, all control paths protected by the critical region, exit the critical region (watch out for goto or return statements). The \hyperlink{group__critical_ga246445cffc822f756ac6fb34a055022d}{critical\_\-enter()} and \hyperlink{group__critical_ga269f46fef96f91143fc1616a4105984c}{critical\_\-exit()} functions take a critical region as an argument. However, for almost all purposes, we recommend using the global critical region in which case this argument is zero. The use of multiple critical regions can cause problems such as deadlock, i.e. when thread \#1 is inside critical region A waiting on critical region B, but thread \#2 is inside critical region B and is waiting on critical region A. In a flexible programming environment such as Max, deadlock conditions are easier to generate than you might think. So unless you are completely sure of what you are doing, and absolutely need to make use of multiple critical regions to protect your code, we suggest you use the global critical region.
+
+In the following example code we show how one might use critical regions to protect the traversal of a linked list, testing to find the first element whose values is equal to \char`\"{}val\char`\"{}. If this code were not protected, another thread which was modifying the linked list could invalidate assumptions in the traversal code.
+
+
+\begin{DoxyCode}
+    critical_enter(0); 
+    for (p = head; p; p = p->next) { 
+        if (p->value == val) 
+            break; 
+    } 
+    critical_exit(0); 
+    return p;
+\end{DoxyCode}
+
+
+And just to illustrate how to ensure a critical region is exited when multiple control paths are protected by a critical region, here's a slight variant.
+
+
+\begin{DoxyCode}
+    critical_enter(0); 
+    for (p = head; p; p = p->next) { 
+        if (p->value == val) { 
+            critical_exit(0); 
+            return p; 
+        } 
+    } 
+    critical_exit(0); 
+    return NULL;
+\end{DoxyCode}
+
+
+For more information on multi-\/threaded programming, hardware interrupts, and related topics, we suggest you perform some research online or read the relevant chapters of \char`\"{}Modern Operating Systems\char`\"{} by Andrew S. Tanenbaum (Prentice Hall). At the time of writing, some relevant chapters from this book are available for download in PDF format on Prentice Hall’s web site. See:
+
+\href{http://www.prenhall.com/divisions/esm/app/author_tanenbaum/custom/mos2e/}{\tt http://www.prenhall.com/divisions/esm/app/author\_\-tanenbaum/custom/mos2e/}
+
+Look under \char`\"{}sample sections\char`\"{}. 
+
+\subsection{Function Documentation}
+\hypertarget{group__critical_ga246445cffc822f756ac6fb34a055022d}{
+\index{critical@{critical}!critical\_\-enter@{critical\_\-enter}}
+\index{critical\_\-enter@{critical\_\-enter}!critical@{critical}}
+\subsubsection[{critical\_\-enter}]{\setlength{\rightskip}{0pt plus 5cm}void critical\_\-enter ({\bf t\_\-critical} {\em x})}}
+\label{group__critical_ga246445cffc822f756ac6fb34a055022d}
+
+
+Enter a critical region. Typically you will want the argument to be zero to enter the global critical region, although you could pass your own critical created with \hyperlink{group__critical_gaaa373bcd9c8059e4887225aaf32a76d2}{critical\_\-new()}. It is important to try to keep the amount of code in the critical region to a minimum. Exit the critical region with \hyperlink{group__critical_ga269f46fef96f91143fc1616a4105984c}{critical\_\-exit()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A pointer to a \hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} struct, or zero to uses Max’s global critical region. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__critical_ga269f46fef96f91143fc1616a4105984c}{critical\_\-exit()} 
+\end{DoxySeeAlso}
+\hypertarget{group__critical_ga269f46fef96f91143fc1616a4105984c}{
+\index{critical@{critical}!critical\_\-exit@{critical\_\-exit}}
+\index{critical\_\-exit@{critical\_\-exit}!critical@{critical}}
+\subsubsection[{critical\_\-exit}]{\setlength{\rightskip}{0pt plus 5cm}void critical\_\-exit ({\bf t\_\-critical} {\em x})}}
+\label{group__critical_ga269f46fef96f91143fc1616a4105984c}
+
+
+Leave a critical region. Typically you will want the argument to be zero to exit the global critical region, although, you if you are using your own critical regions you will want to pass the same one that you previously passed to \hyperlink{group__critical_ga246445cffc822f756ac6fb34a055022d}{critical\_\-enter()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A pointer to a \hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} struct, or zero to uses Max’s global critical region. \end{DoxyParams}
+\hypertarget{group__critical_gaedbe0cba11940710c789ac01194e3712}{
+\index{critical@{critical}!critical\_\-free@{critical\_\-free}}
+\index{critical\_\-free@{critical\_\-free}!critical@{critical}}
+\subsubsection[{critical\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void critical\_\-free ({\bf t\_\-critical} {\em x})}}
+\label{group__critical_gaedbe0cba11940710c789ac01194e3712}
+
+
+Free a critical region created with \hyperlink{group__critical_gaaa373bcd9c8059e4887225aaf32a76d2}{critical\_\-new()}. If you created your own critical region, you will need to free it in your object’s free method.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The \hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} struct that will be freed. \end{DoxyParams}
+\hypertarget{group__critical_gaaa373bcd9c8059e4887225aaf32a76d2}{
+\index{critical@{critical}!critical\_\-new@{critical\_\-new}}
+\index{critical\_\-new@{critical\_\-new}!critical@{critical}}
+\subsubsection[{critical\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void critical\_\-new ({\bf t\_\-critical} $\ast$ {\em x})}}
+\label{group__critical_gaaa373bcd9c8059e4887225aaf32a76d2}
+
+
+Create a new critical region. Normally, you do not need to create your own critical region, because you can use Max’s global critical region. Only use this function (in your object’s instance creation method) if you are certain you are not able to use the global critical region.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A \hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} struct will be returned to you via this pointer. \end{DoxyParams}
+\hypertarget{group__critical_ga0a4109d5c2b82f0c1022015abac175dc}{
+\index{critical@{critical}!critical\_\-tryenter@{critical\_\-tryenter}}
+\index{critical\_\-tryenter@{critical\_\-tryenter}!critical@{critical}}
+\subsubsection[{critical\_\-tryenter}]{\setlength{\rightskip}{0pt plus 5cm}short critical\_\-tryenter ({\bf t\_\-critical} {\em x})}}
+\label{group__critical_ga0a4109d5c2b82f0c1022015abac175dc}
+
+
+Try to enter a critical region if it is not locked. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A pointer to a \hyperlink{group__critical_gaa00494020fc3fa3005b63a294cab3886}{t\_\-critical} struct, or zero to uses Max’s global critical region. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+returns non-\/zero if there was a problem entering 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__critical_ga246445cffc822f756ac6fb34a055022d}{critical\_\-enter()} 
+\end{DoxySeeAlso}

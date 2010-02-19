@@ -1,0 +1,73 @@
+\hypertarget{group__jmonitor}{
+\section{Monitors and Displays}
+\label{group__jmonitor}\index{Monitors and Displays@{Monitors and Displays}}
+}
+
+
+Functions for finding our information about the environment.  
+
+
+Collaboration diagram for Monitors and Displays:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=153pt]{group__jmonitor}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+long \hyperlink{group__jmonitor_ga2bd6c2e27e9ac7bfdd05cbf815ef1082}{jmonitor\_\-getnumdisplays} ()
+\begin{DoxyCompactList}\small\item\em Return the number of monitors on which can be displayed. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmonitor_gac11ee33880f15ef641236e864978d9af}{jmonitor\_\-getdisplayrect} (long workarea, long displayindex, \hyperlink{structt__rect}{t\_\-rect} $\ast$rect)
+\begin{DoxyCompactList}\small\item\em Return the \hyperlink{structt__rect}{t\_\-rect} for a given display. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmonitor_ga0ed7c2c443ef010c4584096967f3b00f}{jmonitor\_\-getdisplayrect\_\-foralldisplays} (long workarea, \hyperlink{structt__rect}{t\_\-rect} $\ast$rect)
+\begin{DoxyCompactList}\small\item\em Return a union of all display rects. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jmonitor_ga354f8b2efda018ec3ff2a609205a74a0}{jmonitor\_\-getdisplayrect\_\-forpoint} (long workarea, \hyperlink{structt__pt}{t\_\-pt} pt, \hyperlink{structt__rect}{t\_\-rect} $\ast$rect)
+\begin{DoxyCompactList}\small\item\em Return the \hyperlink{structt__rect}{t\_\-rect} for the display on which a point exists. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions for finding our information about the environment. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jmonitor_gac11ee33880f15ef641236e864978d9af}{
+\index{jmonitor@{jmonitor}!jmonitor\_\-getdisplayrect@{jmonitor\_\-getdisplayrect}}
+\index{jmonitor\_\-getdisplayrect@{jmonitor\_\-getdisplayrect}!jmonitor@{jmonitor}}
+\subsubsection[{jmonitor\_\-getdisplayrect}]{\setlength{\rightskip}{0pt plus 5cm}void jmonitor\_\-getdisplayrect (long {\em workarea}, \/  long {\em displayindex}, \/  {\bf t\_\-rect} $\ast$ {\em rect})}}
+\label{group__jmonitor_gac11ee33880f15ef641236e864978d9af}
+
+
+Return the \hyperlink{structt__rect}{t\_\-rect} for a given display. 
+\begin{DoxyParams}{Parameters}
+\item[{\em workarea}]Set workarea non-\/zero to clip out things like dock / task bar. \item[{\em displayindex}]The index number for a monitor. The primary monitor has an index of 0. \item[{\em rect}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled-\/in upon return. \end{DoxyParams}
+\hypertarget{group__jmonitor_ga0ed7c2c443ef010c4584096967f3b00f}{
+\index{jmonitor@{jmonitor}!jmonitor\_\-getdisplayrect\_\-foralldisplays@{jmonitor\_\-getdisplayrect\_\-foralldisplays}}
+\index{jmonitor\_\-getdisplayrect\_\-foralldisplays@{jmonitor\_\-getdisplayrect\_\-foralldisplays}!jmonitor@{jmonitor}}
+\subsubsection[{jmonitor\_\-getdisplayrect\_\-foralldisplays}]{\setlength{\rightskip}{0pt plus 5cm}void jmonitor\_\-getdisplayrect\_\-foralldisplays (long {\em workarea}, \/  {\bf t\_\-rect} $\ast$ {\em rect})}}
+\label{group__jmonitor_ga0ed7c2c443ef010c4584096967f3b00f}
+
+
+Return a union of all display rects. 
+\begin{DoxyParams}{Parameters}
+\item[{\em workarea}]Set workarea non-\/zero to clip out things like dock / task bar. \item[{\em rect}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled-\/in upon return. \end{DoxyParams}
+\hypertarget{group__jmonitor_ga354f8b2efda018ec3ff2a609205a74a0}{
+\index{jmonitor@{jmonitor}!jmonitor\_\-getdisplayrect\_\-forpoint@{jmonitor\_\-getdisplayrect\_\-forpoint}}
+\index{jmonitor\_\-getdisplayrect\_\-forpoint@{jmonitor\_\-getdisplayrect\_\-forpoint}!jmonitor@{jmonitor}}
+\subsubsection[{jmonitor\_\-getdisplayrect\_\-forpoint}]{\setlength{\rightskip}{0pt plus 5cm}void jmonitor\_\-getdisplayrect\_\-forpoint (long {\em workarea}, \/  {\bf t\_\-pt} {\em pt}, \/  {\bf t\_\-rect} $\ast$ {\em rect})}}
+\label{group__jmonitor_ga354f8b2efda018ec3ff2a609205a74a0}
+
+
+Return the \hyperlink{structt__rect}{t\_\-rect} for the display on which a point exists. 
+\begin{DoxyParams}{Parameters}
+\item[{\em workarea}]Set workarea non-\/zero to clip out things like dock / task bar. \item[{\em pt}]A point, for which the monitor will be determined and the rect recturned. \item[{\em rect}]The address of a valid \hyperlink{structt__rect}{t\_\-rect} whose values will be filled-\/in upon return. \end{DoxyParams}
+\hypertarget{group__jmonitor_ga2bd6c2e27e9ac7bfdd05cbf815ef1082}{
+\index{jmonitor@{jmonitor}!jmonitor\_\-getnumdisplays@{jmonitor\_\-getnumdisplays}}
+\index{jmonitor\_\-getnumdisplays@{jmonitor\_\-getnumdisplays}!jmonitor@{jmonitor}}
+\subsubsection[{jmonitor\_\-getnumdisplays}]{\setlength{\rightskip}{0pt plus 5cm}long jmonitor\_\-getnumdisplays ()}}
+\label{group__jmonitor_ga2bd6c2e27e9ac7bfdd05cbf815ef1082}
+
+
+Return the number of monitors on which can be displayed. \begin{DoxyReturn}{Returns}
+The number of monitors. 
+\end{DoxyReturn}

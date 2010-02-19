@@ -1,0 +1,112 @@
+\hypertarget{chapter_datastructures_chapter_datastructures_linkedlists}{}\section{Linked Lists}\label{chapter_datastructures_chapter_datastructures_linkedlists}
+The Max \hyperlink{structt__linklist}{t\_\-linklist} data structure is useful for maintaining ordered lists of items where you want to be able to insert and delete items efficiently. Random access of individual items, however, gets appreciably slower as the list grows in size. The \hyperlink{structt__linklist}{t\_\-linklist} is thread-\/safe by default, but thread safety can be turned off for performance benefits in single-\/threaded applications. However, ensure that your use of the linked list is truly single-\/threaded (based on an understanding of Max's \hyperlink{chapter_threading}{Threading} model) before turning off the thread safety features.
+
+By default, the \hyperlink{structt__linklist}{t\_\-linklist} holds pointers to Max objects. However, you can treat what the linklist holds as data rather than objects to be freed by using the \hyperlink{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}{linklist\_\-flags()} function.
+
+Here is a simple example of the use of \hyperlink{structt__linklist}{t\_\-linklist}. The code below stores five symbols, sorts them, searches for a specific item, deletes an item, prints all items, and then frees the entire structure. Since symbols in Max are never freed, \hyperlink{group__linklist_gacb89cb9e0a3b6c8e631dd00734643cdb}{linklist\_\-flags()} is used to specify that data, rather than object pointers, are being stored.
+
+
+\begin{DoxyCode}
+    void mylistfun()
+    {
+    t_linklist *list;
+
+    list = (t_linklist *)linklist_new();
+
+    linklist_flags(list, OBJ_FLAG_DATA);
+
+    // add some data
+    linklist_append(list, gensym("one"));
+    linklist_append(list, gensym("two"));
+    linklist_append(list, gensym("three"));
+    linklist_append(list, gensym("four"));
+    linklist_append(list, gensym("five"));
+
+    // sort
+
+    linklist_sort(list, (t_cmpfn)mysortfun);
+
+    // search
+
+    index = linklist_findfirst(list, &found, mysearchfun, gensym("four"));  // fi
+      nd the "four" symbol
+
+    if (index != -1)    // found
+        linklist_chuckindex(list, index);
+
+    // iterate
+
+    linklist_funall(list, myprintfun, NULL);
+
+    // delete
+
+    linklist_chuck(list);
+
+    }
+\end{DoxyCode}
+
+
+The sorting function compares two items in the list and returns non-\/zero if the first one should go before the second one.
+
+
+\begin{DoxyCode}
+    long mysortfun(void *a, void *b)
+    {
+        t_symbol *sa = (t_symbol *)a;
+        t_symbol *sb = (t_symbol *)b;
+
+        return strcmp(sa->s_name, sb->s_name) > 0;
+    }
+\end{DoxyCode}
+
+
+The search function is passed the final argument to \hyperlink{group__linklist_gab7f3c26cb704c460892818b89a1ab004}{linklist\_\-findfirst()} and, in this case, just returns the symbol that matches, which is just testing for pointer equivalence since all Max symbols are unique. You could do more sophisticated searching if you store more complex data in a linklist.
+
+
+\begin{DoxyCode}
+    long mysearchfun(t_symbol *elem, t_symbol *match)
+    {
+        return elem == match;
+    }
+\end{DoxyCode}
+
+
+The iteration function takes some action on all items in the list. The third argument to \hyperlink{group__linklist_ga6f4496ef6dc1d6d121acf25d7cd5f946}{linklist\_\-funall()} is passed as the second argument to your iteration function. In this example, we don't do anything with it.
+
+
+\begin{DoxyCode}
+    void myprintfun(t_symbol *item, void *dummy)
+    {
+        post("%s",item->s_name);
+    }
+\end{DoxyCode}
+
+
+There are many more functions for operating on linked lists you can read about by exploring the \hyperlink{group__linklist}{Linked List} function reference.\hypertarget{chapter_datastructures_chapter_datastructures_hashtabs}{}\section{Hash Tables}\label{chapter_datastructures_chapter_datastructures_hashtabs}
+A hash table is a data structure that associates some data with a unique key. If you know the key, you can get back the data much more quickly than with a linked list, particularly as the number of items stored grows larger. The Max hash table \hyperlink{structt__hashtab}{t\_\-hashtab} is optimized to work with symbol pointers as keys, but you can use any pointer or number, as long as it is unique.
+
+To create a \hyperlink{structt__hashtab}{t\_\-hashtab}, you use \hyperlink{group__hashtab_ga70be9bbfb9bd9383824df0832477267f}{hashtab\_\-new()}. To add items, use \hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store()}. To find items that have been added, use \hyperlink{group__hashtab_gadb206ea811204926bdbf1aa00ca679dc}{hashtab\_\-lookup()}.
+
+By contrast with linked lists and arrays, hash tables do not have a strong sense of ordering. You can iterate through all items using \hyperlink{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}{hashtab\_\-funall()}, but the exact order is not under your control as items are added and removed. There is also no way to \char`\"{}sort\char`\"{} a hash table.
+
+Example:
+
+The following example creates a hashtab, shows how to add some data (in this case, just a number), look it up, and delete the hashtab. 
+\begin{DoxyCode}
+    t_hashtab *tab = (t_hashtab *)hashtab_new(0);
+    long result, value;
+
+    hashtab_store(tab, gensym("a great number"), (t_object *)74);
+
+    result = hashtab_lookup(tab, gensym("a great number"), (t_object **)value);
+
+    if (!result)
+        post("found the value and it is %ld",value);
+    else
+        post("did not find the value");
+
+    hashtab_chuck(tab);
+\end{DoxyCode}
+
+
+Note that the Max \hyperlink{structt__dictionary}{t\_\-dictionary} used for managing patcher data is implemented as a \hyperlink{structt__hashtab}{t\_\-hashtab}. 

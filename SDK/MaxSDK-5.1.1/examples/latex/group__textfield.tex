@@ -1,0 +1,464 @@
+\hypertarget{group__textfield}{
+\section{TextField}
+\label{group__textfield}\index{TextField@{TextField}}
+}
+
+
+The textfield is a high-\/level text display object that may be used by a UI object to represent text in a patcher.  
+
+
+Collaboration diagram for TextField:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=106pt]{group__textfield}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__textfield_ga02adcf0c2ca273b730cdbb0030585f26}{textfield\_\-get\_\-owner} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the object that owns a particular textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga6bbb44ffcaceb666d01ba9008c898fa9}{textfield\_\-get\_\-textcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Retrieve the color of the text in a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_gaedcc4a931fedcdcc533235c28d540d32}{textfield\_\-set\_\-textcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Set the color of the text in a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga98b305f4949a40de1827a75c4b5d9d8a}{textfield\_\-get\_\-bgcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Retrieve the background color of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_gab015a56be805f8f29812c853f85a6924}{textfield\_\-set\_\-bgcolor} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Set the background color of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga36989910e25e20b150fc0a9d9988c2ca}{textfield\_\-get\_\-textmargins} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, double $\ast$pleft, double $\ast$ptop, double $\ast$pright, double $\ast$pbottom)
+\begin{DoxyCompactList}\small\item\em Retrieve the margins from the edge of the textfield to the text itself in a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_gaf04aceca2e8f20fed28a567d64822698}{textfield\_\-set\_\-textmargins} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, double left, double top, double right, double bottom)
+\begin{DoxyCompactList}\small\item\em Set the margins from the edge of the textfield to the text itself in a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_ga3ef42ba21834fa1ca912958267d6a3b0}{textfield\_\-get\_\-editonclick} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'editonclick' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_gad8e743fff1d74b2329a0da24a97ff1a5}{textfield\_\-set\_\-editonclick} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'editonclick' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_gae3eebe8d0134d575ba3f8b8b3c814e92}{textfield\_\-get\_\-selectallonedit} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'selectallonedit' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga334c020b1542124e3397f53cff31d8e1}{textfield\_\-set\_\-selectallonedit} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'selectallonedit' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_ga0d565f3cd53ee1b93ae596a5669b9ebd}{textfield\_\-get\_\-noactivate} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'noactivate' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga099f145bf99b97e77af28b517d9b25d3}{textfield\_\-set\_\-noactivate} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'noactivate' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_ga7d305f5d1c0350202305a28b39aa7d94}{textfield\_\-get\_\-readonly} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'readonly' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga465b39f09260c707dec50328c532e024}{textfield\_\-set\_\-readonly} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'readonly' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_ga8e978f15933a5209063a30c5925a21ff}{textfield\_\-get\_\-wordwrap} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'wordwrap' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga4777e4c3fc3b1c5aa7ddc319e5b2ed8e}{textfield\_\-set\_\-wordwrap} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'wordwrap' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_gaecee9184f75ab309ac993e4fb9d233d0}{textfield\_\-get\_\-useellipsis} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'useellipsis' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga797da5c445484ea732cf378190795ac5}{textfield\_\-set\_\-useellipsis} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'useellipsis' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_ga44071d73524732acc603e99602b88494}{textfield\_\-get\_\-autoscroll} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'autoscroll' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga9e62ae7b82cb76dedac2a81cdc4e2a61}{textfield\_\-set\_\-autoscroll} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'autoscroll' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_ga3252a03aaa64615f51931d0413baf69a}{textfield\_\-get\_\-wantsreturn} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'wantsreturn' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga58f4777a6d8b9a5282b16c70008ff477}{textfield\_\-set\_\-wantsreturn} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'wantsreturn' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_gaeb5fe0ef24f412513bed187ea80830c9}{textfield\_\-get\_\-wantstab} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'wantstab' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga1c00dfa29cb591e2d97cdabd6a583cc3}{textfield\_\-set\_\-wantstab} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'wantstab' attribute of a textfield. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__textfield_gadc8b41ef216b8c539456c0298ca179cd}{textfield\_\-get\_\-underline} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Return the value of the 'underline' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_gafd1fa42ebe95f4ff0e4d6c2073e4d3c7}{textfield\_\-set\_\-underline} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, char c)
+\begin{DoxyCompactList}\small\item\em Set the 'underline' attribute of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__textfield_ga68ba343fcf9437717204b5a383cd10f7}{textfield\_\-set\_\-emptytext} (\hyperlink{structt__object}{t\_\-object} $\ast$tf, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$txt)
+\begin{DoxyCompactList}\small\item\em Set the 'empty' text of a textfield. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__textfield_ga9abc9b5b91181e224a1ea249786b002f}{textfield\_\-get\_\-emptytext} (\hyperlink{structt__object}{t\_\-object} $\ast$tf)
+\begin{DoxyCompactList}\small\item\em Retrieve the 'empty' text of a textfield. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The textfield is a high-\/level text display object that may be used by a UI object to represent text in a patcher. It is built on the lower-\/level \hyperlink{group__textlayout}{TextLayout} 
+
+\subsection{Function Documentation}
+\hypertarget{group__textfield_ga44071d73524732acc603e99602b88494}{
+\index{textfield@{textfield}!textfield\_\-get\_\-autoscroll@{textfield\_\-get\_\-autoscroll}}
+\index{textfield\_\-get\_\-autoscroll@{textfield\_\-get\_\-autoscroll}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-autoscroll}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-autoscroll ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga44071d73524732acc603e99602b88494}
+
+
+Return the value of the 'autoscroll' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga98b305f4949a40de1827a75c4b5d9d8a}{
+\index{textfield@{textfield}!textfield\_\-get\_\-bgcolor@{textfield\_\-get\_\-bgcolor}}
+\index{textfield\_\-get\_\-bgcolor@{textfield\_\-get\_\-bgcolor}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-bgcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-get\_\-bgcolor ({\bf t\_\-object} $\ast$ {\em tf}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__textfield_ga98b305f4949a40de1827a75c4b5d9d8a}
+
+
+Retrieve the background color of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em prgba}]The address of a valid \hyperlink{structt__jrgba}{t\_\-jrgba} whose values will be filled-\/in upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga3ef42ba21834fa1ca912958267d6a3b0}{
+\index{textfield@{textfield}!textfield\_\-get\_\-editonclick@{textfield\_\-get\_\-editonclick}}
+\index{textfield\_\-get\_\-editonclick@{textfield\_\-get\_\-editonclick}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-editonclick}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-editonclick ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga3ef42ba21834fa1ca912958267d6a3b0}
+
+
+Return the value of the 'editonclick' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga9abc9b5b91181e224a1ea249786b002f}{
+\index{textfield@{textfield}!textfield\_\-get\_\-emptytext@{textfield\_\-get\_\-emptytext}}
+\index{textfield\_\-get\_\-emptytext@{textfield\_\-get\_\-emptytext}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-emptytext}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ textfield\_\-get\_\-emptytext ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga9abc9b5b91181e224a1ea249786b002f}
+
+
+Retrieve the 'empty' text of a textfield. The empty text is the text that is displayed in the textfield when no text is present. By default this is gensym(\char`\"{}\char`\"{}).
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current text used as the empty text. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga0d565f3cd53ee1b93ae596a5669b9ebd}{
+\index{textfield@{textfield}!textfield\_\-get\_\-noactivate@{textfield\_\-get\_\-noactivate}}
+\index{textfield\_\-get\_\-noactivate@{textfield\_\-get\_\-noactivate}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-noactivate}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-noactivate ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga0d565f3cd53ee1b93ae596a5669b9ebd}
+
+
+Return the value of the 'noactivate' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga02adcf0c2ca273b730cdbb0030585f26}{
+\index{textfield@{textfield}!textfield\_\-get\_\-owner@{textfield\_\-get\_\-owner}}
+\index{textfield\_\-get\_\-owner@{textfield\_\-get\_\-owner}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-owner}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ textfield\_\-get\_\-owner ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga02adcf0c2ca273b730cdbb0030585f26}
+
+
+Return the object that owns a particular textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the owning object. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga7d305f5d1c0350202305a28b39aa7d94}{
+\index{textfield@{textfield}!textfield\_\-get\_\-readonly@{textfield\_\-get\_\-readonly}}
+\index{textfield\_\-get\_\-readonly@{textfield\_\-get\_\-readonly}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-readonly}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-readonly ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga7d305f5d1c0350202305a28b39aa7d94}
+
+
+Return the value of the 'readonly' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gae3eebe8d0134d575ba3f8b8b3c814e92}{
+\index{textfield@{textfield}!textfield\_\-get\_\-selectallonedit@{textfield\_\-get\_\-selectallonedit}}
+\index{textfield\_\-get\_\-selectallonedit@{textfield\_\-get\_\-selectallonedit}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-selectallonedit}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-selectallonedit ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_gae3eebe8d0134d575ba3f8b8b3c814e92}
+
+
+Return the value of the 'selectallonedit' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga6bbb44ffcaceb666d01ba9008c898fa9}{
+\index{textfield@{textfield}!textfield\_\-get\_\-textcolor@{textfield\_\-get\_\-textcolor}}
+\index{textfield\_\-get\_\-textcolor@{textfield\_\-get\_\-textcolor}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-textcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-get\_\-textcolor ({\bf t\_\-object} $\ast$ {\em tf}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__textfield_ga6bbb44ffcaceb666d01ba9008c898fa9}
+
+
+Retrieve the color of the text in a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em prgba}]The address of a valid \hyperlink{structt__jrgba}{t\_\-jrgba} whose values will be filled-\/in upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga36989910e25e20b150fc0a9d9988c2ca}{
+\index{textfield@{textfield}!textfield\_\-get\_\-textmargins@{textfield\_\-get\_\-textmargins}}
+\index{textfield\_\-get\_\-textmargins@{textfield\_\-get\_\-textmargins}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-textmargins}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-get\_\-textmargins ({\bf t\_\-object} $\ast$ {\em tf}, \/  double $\ast$ {\em pleft}, \/  double $\ast$ {\em ptop}, \/  double $\ast$ {\em pright}, \/  double $\ast$ {\em pbottom})}}
+\label{group__textfield_ga36989910e25e20b150fc0a9d9988c2ca}
+
+
+Retrieve the margins from the edge of the textfield to the text itself in a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em pleft}]The address of a variable to hold the value of the left margin upon return. \item[{\em ptop}]The address of a variable to hold the value of the top margin upon return. \item[{\em pright}]The address of a variable to hold the value of the right margin upon return. \item[{\em pbottom}]The address of a variable to hold the value of the bottom margin upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gadc8b41ef216b8c539456c0298ca179cd}{
+\index{textfield@{textfield}!textfield\_\-get\_\-underline@{textfield\_\-get\_\-underline}}
+\index{textfield\_\-get\_\-underline@{textfield\_\-get\_\-underline}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-underline}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-underline ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_gadc8b41ef216b8c539456c0298ca179cd}
+
+
+Return the value of the 'underline' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gaecee9184f75ab309ac993e4fb9d233d0}{
+\index{textfield@{textfield}!textfield\_\-get\_\-useellipsis@{textfield\_\-get\_\-useellipsis}}
+\index{textfield\_\-get\_\-useellipsis@{textfield\_\-get\_\-useellipsis}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-useellipsis}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-useellipsis ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_gaecee9184f75ab309ac993e4fb9d233d0}
+
+
+Return the value of the 'useellipsis' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga3252a03aaa64615f51931d0413baf69a}{
+\index{textfield@{textfield}!textfield\_\-get\_\-wantsreturn@{textfield\_\-get\_\-wantsreturn}}
+\index{textfield\_\-get\_\-wantsreturn@{textfield\_\-get\_\-wantsreturn}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-wantsreturn}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-wantsreturn ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga3252a03aaa64615f51931d0413baf69a}
+
+
+Return the value of the 'wantsreturn' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gaeb5fe0ef24f412513bed187ea80830c9}{
+\index{textfield@{textfield}!textfield\_\-get\_\-wantstab@{textfield\_\-get\_\-wantstab}}
+\index{textfield\_\-get\_\-wantstab@{textfield\_\-get\_\-wantstab}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-wantstab}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-wantstab ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_gaeb5fe0ef24f412513bed187ea80830c9}
+
+
+Return the value of the 'wantstab' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga8e978f15933a5209063a30c5925a21ff}{
+\index{textfield@{textfield}!textfield\_\-get\_\-wordwrap@{textfield\_\-get\_\-wordwrap}}
+\index{textfield\_\-get\_\-wordwrap@{textfield\_\-get\_\-wordwrap}!textfield@{textfield}}
+\subsubsection[{textfield\_\-get\_\-wordwrap}]{\setlength{\rightskip}{0pt plus 5cm}char textfield\_\-get\_\-wordwrap ({\bf t\_\-object} $\ast$ {\em tf})}}
+\label{group__textfield_ga8e978f15933a5209063a30c5925a21ff}
+
+
+Return the value of the 'wordwrap' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of the attribute. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga9e62ae7b82cb76dedac2a81cdc4e2a61}{
+\index{textfield@{textfield}!textfield\_\-set\_\-autoscroll@{textfield\_\-set\_\-autoscroll}}
+\index{textfield\_\-set\_\-autoscroll@{textfield\_\-set\_\-autoscroll}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-autoscroll}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-autoscroll ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga9e62ae7b82cb76dedac2a81cdc4e2a61}
+
+
+Set the 'autoscroll' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gab015a56be805f8f29812c853f85a6924}{
+\index{textfield@{textfield}!textfield\_\-set\_\-bgcolor@{textfield\_\-set\_\-bgcolor}}
+\index{textfield\_\-set\_\-bgcolor@{textfield\_\-set\_\-bgcolor}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-bgcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-bgcolor ({\bf t\_\-object} $\ast$ {\em tf}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__textfield_gab015a56be805f8f29812c853f85a6924}
+
+
+Set the background color of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em prgba}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} containing the new color to use. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gad8e743fff1d74b2329a0da24a97ff1a5}{
+\index{textfield@{textfield}!textfield\_\-set\_\-editonclick@{textfield\_\-set\_\-editonclick}}
+\index{textfield\_\-set\_\-editonclick@{textfield\_\-set\_\-editonclick}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-editonclick}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-editonclick ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_gad8e743fff1d74b2329a0da24a97ff1a5}
+
+
+Set the 'editonclick' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga68ba343fcf9437717204b5a383cd10f7}{
+\index{textfield@{textfield}!textfield\_\-set\_\-emptytext@{textfield\_\-set\_\-emptytext}}
+\index{textfield\_\-set\_\-emptytext@{textfield\_\-set\_\-emptytext}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-emptytext}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-emptytext ({\bf t\_\-object} $\ast$ {\em tf}, \/  {\bf t\_\-symbol} $\ast$ {\em txt})}}
+\label{group__textfield_ga68ba343fcf9437717204b5a383cd10f7}
+
+
+Set the 'empty' text of a textfield. The empty text is the text that is displayed in the textfield when no text is present. By default this is gensym(\char`\"{}\char`\"{}).
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em txt}]A symbol containing the new text to display when the textfield has no content. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga099f145bf99b97e77af28b517d9b25d3}{
+\index{textfield@{textfield}!textfield\_\-set\_\-noactivate@{textfield\_\-set\_\-noactivate}}
+\index{textfield\_\-set\_\-noactivate@{textfield\_\-set\_\-noactivate}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-noactivate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-noactivate ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga099f145bf99b97e77af28b517d9b25d3}
+
+
+Set the 'noactivate' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga465b39f09260c707dec50328c532e024}{
+\index{textfield@{textfield}!textfield\_\-set\_\-readonly@{textfield\_\-set\_\-readonly}}
+\index{textfield\_\-set\_\-readonly@{textfield\_\-set\_\-readonly}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-readonly}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-readonly ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga465b39f09260c707dec50328c532e024}
+
+
+Set the 'readonly' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga334c020b1542124e3397f53cff31d8e1}{
+\index{textfield@{textfield}!textfield\_\-set\_\-selectallonedit@{textfield\_\-set\_\-selectallonedit}}
+\index{textfield\_\-set\_\-selectallonedit@{textfield\_\-set\_\-selectallonedit}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-selectallonedit}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-selectallonedit ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga334c020b1542124e3397f53cff31d8e1}
+
+
+Set the 'selectallonedit' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gaedcc4a931fedcdcc533235c28d540d32}{
+\index{textfield@{textfield}!textfield\_\-set\_\-textcolor@{textfield\_\-set\_\-textcolor}}
+\index{textfield\_\-set\_\-textcolor@{textfield\_\-set\_\-textcolor}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-textcolor}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-textcolor ({\bf t\_\-object} $\ast$ {\em tf}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__textfield_gaedcc4a931fedcdcc533235c28d540d32}
+
+
+Set the color of the text in a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em prgba}]The address of a \hyperlink{structt__jrgba}{t\_\-jrgba} containing the new color to use. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gaf04aceca2e8f20fed28a567d64822698}{
+\index{textfield@{textfield}!textfield\_\-set\_\-textmargins@{textfield\_\-set\_\-textmargins}}
+\index{textfield\_\-set\_\-textmargins@{textfield\_\-set\_\-textmargins}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-textmargins}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-textmargins ({\bf t\_\-object} $\ast$ {\em tf}, \/  double {\em left}, \/  double {\em top}, \/  double {\em right}, \/  double {\em bottom})}}
+\label{group__textfield_gaf04aceca2e8f20fed28a567d64822698}
+
+
+Set the margins from the edge of the textfield to the text itself in a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em left}]The new value for the left margin. \item[{\em top}]The new value for the top margin. \item[{\em right}]The new value for the right margin. \item[{\em bottom}]The new value for the bottom margin. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_gafd1fa42ebe95f4ff0e4d6c2073e4d3c7}{
+\index{textfield@{textfield}!textfield\_\-set\_\-underline@{textfield\_\-set\_\-underline}}
+\index{textfield\_\-set\_\-underline@{textfield\_\-set\_\-underline}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-underline}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-underline ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_gafd1fa42ebe95f4ff0e4d6c2073e4d3c7}
+
+
+Set the 'underline' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga797da5c445484ea732cf378190795ac5}{
+\index{textfield@{textfield}!textfield\_\-set\_\-useellipsis@{textfield\_\-set\_\-useellipsis}}
+\index{textfield\_\-set\_\-useellipsis@{textfield\_\-set\_\-useellipsis}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-useellipsis}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-useellipsis ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga797da5c445484ea732cf378190795ac5}
+
+
+Set the 'useellipsis' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga58f4777a6d8b9a5282b16c70008ff477}{
+\index{textfield@{textfield}!textfield\_\-set\_\-wantsreturn@{textfield\_\-set\_\-wantsreturn}}
+\index{textfield\_\-set\_\-wantsreturn@{textfield\_\-set\_\-wantsreturn}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-wantsreturn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-wantsreturn ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga58f4777a6d8b9a5282b16c70008ff477}
+
+
+Set the 'wantsreturn' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga1c00dfa29cb591e2d97cdabd6a583cc3}{
+\index{textfield@{textfield}!textfield\_\-set\_\-wantstab@{textfield\_\-set\_\-wantstab}}
+\index{textfield\_\-set\_\-wantstab@{textfield\_\-set\_\-wantstab}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-wantstab}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-wantstab ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga1c00dfa29cb591e2d97cdabd6a583cc3}
+
+
+Set the 'wantstab' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__textfield_ga4777e4c3fc3b1c5aa7ddc319e5b2ed8e}{
+\index{textfield@{textfield}!textfield\_\-set\_\-wordwrap@{textfield\_\-set\_\-wordwrap}}
+\index{textfield\_\-set\_\-wordwrap@{textfield\_\-set\_\-wordwrap}!textfield@{textfield}}
+\subsubsection[{textfield\_\-set\_\-wordwrap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} textfield\_\-set\_\-wordwrap ({\bf t\_\-object} $\ast$ {\em tf}, \/  char {\em c})}}
+\label{group__textfield_ga4777e4c3fc3b1c5aa7ddc319e5b2ed8e}
+
+
+Set the 'wordwrap' attribute of a textfield. 
+\begin{DoxyParams}{Parameters}
+\item[{\em tf}]The textfield instance pointer. \item[{\em c}]The new value for the attribute. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}

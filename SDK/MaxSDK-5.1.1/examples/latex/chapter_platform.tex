@@ -1,0 +1,106 @@
+\hypertarget{chapter_platform_chapter_platform_building}{}\section{Building}\label{chapter_platform_chapter_platform_building}
+This SDK documentation is accompanied by a series of projects for compiling some example Max external objects. The details of how to build these projects are documented below in separate sections for the \hyperlink{chapter_platform_chapter_platform_mac}{Mac} and \hyperlink{chapter_platform_chapter_platform_win}{Windows}.
+
+When you build the example projects, the resulting Max external will be located in a folder called \char`\"{}sdk-\/build\char`\"{} two folder-\/levels up from the project. If you leave the arrangement of folders intact, sdk-\/build will be found in the MaxSDK folder.
+
+We recommende that you add the sdk-\/build folder to your Max search path using the File Preferences window. This permits you to put the MaxSDK folder wherever you like and load the objects in Max after building them without copying them to your Cycling '74 folder.\hypertarget{chapter_platform_chapter_platform_mac}{}\section{Mac}\label{chapter_platform_chapter_platform_mac}
+Max external objects for the Mac are Mach-\/O bundles (folders that appear to be files) whose filenames must end with the .mxo extension. The example projects are in Xcode 3.x format. To download Xcode, you need to open a free Apple Developer account. For more information, visit \href{http://developer.apple.com/}{\tt http://developer.apple.com/}\hypertarget{chapter_platform_chapter_platform_mac_xcodeproj}{}\subsection{XCode Project Setup}\label{chapter_platform_chapter_platform_mac_xcodeproj}
+The example projects are set up to have Development and Deployment build configurations. The Development configuration does not optimize and builds only for the target platform you are using (i.e., PPC on a PPC machine, Intel on an Intel machine). The Deployment configuration creates a universal binary and performs optimization.
+
+The files required for this projects are included in the project folders with the except of the following two files:
+\begin{DoxyItemize}
+\item Info.plist
+\item maxmspsdk.xcconfig
+\end{DoxyItemize}
+
+These two files are located one folder-\/level up from the project folder, and are required for the Xcode project to build the Max external.\hypertarget{chapter_platform_chapter_platform_mac_linking}{}\subsection{Linking and Frameworks}\label{chapter_platform_chapter_platform_mac_linking}
+External objects use dynamic linking to access the API functions provided by the Max application. When an objects is loaded, calls to functions inside the application are resolved by the operating system to the correct memory address. Each external object Xcode project must reference MaxAPI.framework in order to link with the application. Frameworks are libraries that define the functions in the Max API. Due to the fact that \char`\"{}Max\char`\"{} could exist as an application, a standalone you create, or a library inside another application, the MaxAPI.framework does not actually contain the code to implement the functions of the Max API for external objects. It serves instead to isolate external objects from the specific library or application implementation that contains the real code.
+
+Audio objects will link against MaxAudioAPI.framework and Jitter objects link against JitterAPI.framework. Unlike MaxAPI.framework, these frameworks are real libraries. The most recent version of all frameworks will be found inside the application you are using (they are found inside the application bundle in Contents/Frameworks). In addition, there are versions inside the c74support folder provided with the SDK. These will be used only to link your objects; they are never actually executed.
+
+Xcode uses something called the Frameworks Search Path to locate frameworks when linking. The example SDK projects use a frameworks search path with a c74support folder two levels up from your the folder containing your Xcode project. If you rearrange the SDK folders, projects may not find the frameworks and will fail to link properly. Furthermore, even though we specify the frameworks search path, Xcode seems to look in /Library/Frameworks first. If you have installed a version of the Max SDK for version 4.6 or ealier, you may have older versions of MaxAPI.framework and MaxAudioAPI.framework in /Library/Frameworks. When you try to link objects that contain references to functions only defined in the newest MaxAPI.framework, the link may fail because the projects are using the old frameworks. To fix this, you'll need to remove the Max frameworks from /Library/Frameworks. If you want to develop objects for both the Max 4.6 and Max 5 SDKs on the same machine, you'll need to modify your 4.6 projects to specify a Frameworks Search Path, and relocate the 4.6 frameworks to the specified location.\hypertarget{chapter_platform_chapter_platform_win}{}\section{Windows}\label{chapter_platform_chapter_platform_win}
+Max external objects for Windows are Dynamic Link Libraries (DLLs) whose filenames must end with the .mxe extension. These DLLs will export a single function called \char`\"{}main\char`\"{} which is called by max when the external object is first loaded. Generally these DLLs will import functions of the Max API from the import library \char`\"{}MaxAPI.lib\char`\"{} which is located in the c74support$\backslash$max-\/includes$\backslash$ folder. External objects that use audio functionality will import functions from the import library \char`\"{}MaxAudio.lib\char`\"{} which is located in c74support$\backslash$msp-\/includes$\backslash$.
+
+The example projects are in Visual C++ 2008 format. A free version of Visual C++ can be obtained from Microsoft at \href{http://www.microsoft.com/express/.}{\tt http://www.microsoft.com/express/.} The projects are set up to have both a Debug and a Release configuration. The Release configuration is optimized whereas the Debug one is not. Note that for debugging purposes you can exercise your object in the Max Runtime since the copy protection for the Max Application will interfere when run under the debugger.
+
+Another thing to note is that Max has a private build of the Microsoft C Runtime Library. By linking with this version of the C runtime library you won't have to worry about deployment issues due to dependencies your external may have on Microsoft's C Runtime. When you include \char`\"{}ext.h\char`\"{} from the max API it will include ext\_\-prefix.h which for the release build will automatically cause your project to use the max C runtime library. If you prefer to use the Microsoft C Runtime you can do that by defining the C preprocessor macro MAXAPI\_\-USE\_\-MSCRT before including ext.h.\hypertarget{chapter_platform_chapter_platform_win_cygwin}{}\subsection{Compiling with Cygwin}\label{chapter_platform_chapter_platform_win_cygwin}
+It is also possible to compile Max external objects on Windows using Cygwin. The following steps show how to build the simplemax project from the MaxMSP SDK using Cygwin's gcc (Gnu Compiler Collection). This provides access to a high quality, free C compiler using the Cygwin Unix tools for Windows.\hypertarget{chapter_platform_chapter_platform_win_cygwin_requirements}{}\subsubsection{Requirements}\label{chapter_platform_chapter_platform_win_cygwin_requirements}
+Install the following Cygwin packages. Feel free to add on any other Cygwin packages that strike your fancy. The Cygwin installer and more information can be found at \href{http://www.cygwin.com/}{\tt http://www.cygwin.com/}
+
+
+\begin{DoxyItemize}
+\item Base (ALL)
+\item Devel
+\begin{DoxyItemize}
+\item binutils
+\item gcc \char`\"{}GCC Compiler\char`\"{}
+\item gcc-\/mingw \char`\"{}Mingw32 support headers and libraries for GCC\char`\"{}
+\item gcc-\/mingw-\/core \char`\"{}Mingw32 support headers and libraries for GCC\char`\"{}
+\item mingw-\/runtime
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{chapter_platform_chapter_platform_win_cygwin_steps}{}\subsubsection{Build Steps}\label{chapter_platform_chapter_platform_win_cygwin_steps}
+STEP 0: cd to the directory containing the minimum SDK example project
+
+STEP 1: 
+\begin{DoxyCode}
+        gcc -c -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -I../../c74support/max
+      -includes simplemax.c
+\end{DoxyCode}
+
+
+Description of gcc arguments:
+
+\char`\"{}-\/c\char`\"{} means compile.
+
+\char`\"{}-\/mnocygwin\char`\"{} means use the Microsoft standard C libraries, instead of Cygwin standard C libraries. This step is important if you wish to distribute your extern to people that might not have Cygwin installed.
+
+\char`\"{}-\/DWIN\_\-VERSION\char`\"{} and \char`\"{}-\/DWIN\_\-EXT\_\-VERSION\char`\"{} define these preprocessor definitions on the command line to guarantee that the header files and source code know it is being compiled for a Windows machine, instead of Macintosh.
+
+\char`\"{}-\/I../../c74support/max-\/includes\char`\"{} specifies an additional directory where the necessary headers files will be found.
+
+\char`\"{}simplemax.c\char`\"{} is the compiler input.
+
+STEP 2: 
+\begin{DoxyCode}
+        gcc -shared -mno-cygwin -o simplemax.mxe simplemax.o simplemax.def -L../.
+      ./c74support/max-includes -lMaxAPI
+\end{DoxyCode}
+
+
+Description of gcc arguments:
+
+\char`\"{}-\/shared\char`\"{} means link files to make a DLL.
+
+\char`\"{}-\/mnocygwin\char`\"{} means use the Microsoft standard C libraries, instead of Cygwin standard C libraries. This step is important if you wish to distribute your extern to people that might not have Cygwin installed.
+
+\char`\"{}-\/o simplemax.mxe\char`\"{} specifies the name of the output file.
+
+\char`\"{}simplemax.o\char`\"{} and \char`\"{}simplemax.def\char`\"{} are the linker input. The .def file is necessary to ensure that the function main will be exported.
+
+\char`\"{}-\/L../../c74support/max-\/includes\char`\"{} specifies an additional directory where library files will be found.
+
+\char`\"{}-\/lMaxAPI\char`\"{} means link to the MaxAPI.lib linker library for MaxAPI.dll.
+
+STEP 3: copy your file to a directory in your search path. For example: 
+\begin{DoxyCode}
+        cp minimum.mxe c:\Program Files\Common Files\Cycling '74\myexterns\
+\end{DoxyCode}
+\hypertarget{chapter_platform_chapter_platform_win_cygwin_notes}{}\subsubsection{Additional Notes}\label{chapter_platform_chapter_platform_win_cygwin_notes}
+You can ignore the warning that main() does not return int. This message is harmless, and only relevant to applications, not shared libraries.\hypertarget{chapter_platform_chapter_platform_settings}{}\section{Important Project Settings}\label{chapter_platform_chapter_platform_settings}
+The easiest way to create a new external is to choose one of the existing SDK examples, duplicate it, and then change only the settings that need to be changes (such as the name of the project). This will help to guarantee that important project settings are correct. Project settings of particular importance are noted below.\hypertarget{chapter_platform_chapter_platform_settings_mac}{}\subsection{Mac}\label{chapter_platform_chapter_platform_settings_mac}
+Particularly important for Max externals on the Mac are that the Info.plist is correct set up and that the \char`\"{}Force Package Info Generation\char`\"{} is set to true. Without these your object may fail to load on some machines.\hypertarget{chapter_platform_chapter_platform_settings_win}{}\subsection{Windows}\label{chapter_platform_chapter_platform_settings_win}
+In the preprocessor definitions for the Visual Studio project it is important to define WIN\_\-VERSION and EXT\_\-WIN\_\-VERSION to ensure that the headers are set up properly.\hypertarget{chapter_platform_chapter_platform_specificity}{}\section{Platform-\/specificity}\label{chapter_platform_chapter_platform_specificity}
+If you are writing a cross-\/platform object and you need to do something that is specific to one platform, the Max API headers provide some predefined symbols you can use.
+
+
+\begin{DoxyCode}
+    #ifdef MAC_VERSION
+    // do something specific to the Mac
+    #endif
+    #ifdef WIN_VERSION
+    // do something specific to Windows
+    #endif
+\end{DoxyCode}
+
+
+Another reason for conditional compilation is to handle endianness on the Mac platform. If you are still supporting PowerPC, you may have situations where the ordering of bytes within a 16-\/ or 32-\/bit \hyperlink{unionword}{word} is important. ext\_\-byteorder.h provides cross-\/platform tools for manipulating memory in an endian-\/independent way. 

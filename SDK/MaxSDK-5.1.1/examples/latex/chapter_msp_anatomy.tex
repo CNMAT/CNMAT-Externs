@@ -1,0 +1,137 @@
+An MSP object that handles audio signals is a regular Max object with a few extras.
+
+Refer to the \href{simplemsp~_8c-source.html}{\tt simplemsp$\sim$} example project source as we detail these additions. simplemsp$\sim$ is simply an object that adds a number to a signal, identical in function to the regular MSP +$\sim$ object if you were to give it an argument of 1.
+
+Here is an enumeration of the basic tasks:
+
+1) additional header files
+
+After including ext.h and ext\_\-obex.h, include z\_\-dsp.h 
+\begin{DoxyCode}
+    #include "z_dsp.h"
+\end{DoxyCode}
+
+
+2) C structure declaration
+
+The C structure declaration must begin with a \hyperlink{structt__pxobject}{t\_\-pxobject}, not a \hyperlink{structt__object}{t\_\-object}: 
+\begin{DoxyCode}
+    typedef struct _mydspobject
+    {
+        t_pxobject m_obj;
+        // rest of the structure's fields
+    } t_mydspobject;
+\end{DoxyCode}
+
+
+3) initialization routine
+
+When creating the class with \hyperlink{group__class_ga238696d466081965c2b72b3880358404}{class\_\-new()}, you must have a free function. If you have nothing special to do, use \hyperlink{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}{dsp\_\-free()}, which is defined for this purpose. If you write your own free function, the first thing it should do is call \hyperlink{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}{dsp\_\-free()}. This is essential to avoid crashes when freeing your object when audio processing is turned on. 
+\begin{DoxyCode}
+        c = class_new("mydspobject", (method)mydspobject_new, (method)dsp_free, s
+      izeof(t_mydspobject), NULL, 0);
+\end{DoxyCode}
+
+
+After creating your class with \hyperlink{group__class_ga238696d466081965c2b72b3880358404}{class\_\-new()}, you must call \hyperlink{group__msp_ga7427ae73a2ad71a1b4ef1bee2fd432fc}{class\_\-dspinit()}, which will add some standard method handlers for internal messages used by all signal objects. 
+\begin{DoxyCode}
+        class_dspinit(c);
+\end{DoxyCode}
+
+
+Your signal object needs a method that is bound to the symbol \char`\"{}dsp\char`\"{} -\/-\/ we'll detail what this method does below, but the following line needs to be added while initializing the class: 
+\begin{DoxyCode}
+        class_addmethod(c, (method)mydspobject_dsp, "dsp", A_CANT, 0);
+\end{DoxyCode}
+
+
+4) new instance routine
+
+The new instance routine must call \hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup()}, passing a pointer to the newly allocated object pointer plus a number of signal inlets the object will have. If the object has no signal inlets, you may pass 0. The \href{simplemsp~_8c-source.html}{\tt simplemsp$\sim$} object (as an example) has a single signal inlet: 
+\begin{DoxyCode}
+        dsp_setup((t_pxobject *)x, 1);
+\end{DoxyCode}
+
+
+\hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup()} will make the signal inlets (as proxies) so you need not make them yourself.
+
+If your object will have audio signal outputs, they need to be created in the new instance routine with \hyperlink{group__inout_ga451b3a1ec203ac8648a5399e209f070a}{outlet\_\-new()}. However, you will never access them directly, so you don't need to store pointers to them as you do with regular outlets. Here is an example of creating two signal outlets: 
+\begin{DoxyCode}
+        outlet_new((t_object *)x, "signal");
+        outlet_new((t_object *)x, "signal");
+\end{DoxyCode}
+
+
+5) The dsp method and perform routine
+
+The dsp method specifies the signal processing function your object defines along with its arguments. Your object's dsp method will be called when the MSP signal compiler is building a sequence of operations (known as the DSP Chain) that will be performed on each set of audio samples. The operation sequence consists of a pointers to functions (called perform routines) followed by arguments to those functions.
+
+The dsp method is declared as follows: 
+\begin{DoxyCode}
+    void mydspobject_dsp(t_mydspobject *x, t_signal **sp, short *count);
+\end{DoxyCode}
+
+
+To add an entry to the DSP chain, your dsp method uses \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add()}. The dsp method is passed an array of signals (\hyperlink{structt__signal}{t\_\-signal} pointers), which contain pointers to the actual sample memory your object's perform routine will be using for input and output. The array of signals starts with the inputs (from left to right), followed by the outputs. For example, if your object has two inputs (because your new instance routine called \hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup(x, 2)}) and three outputs (because your new instance created three signal outlets), the signal array sp would contain five items as follows: 
+\begin{DoxyCode}
+    sp[0] // left input
+    sp[1] // right input
+    sp[2] // left output
+    sp[3] // middle output
+    sp[4] // right output
+\end{DoxyCode}
+
+
+The \hyperlink{structt__signal}{t\_\-signal} data structure (defined in z\_\-dsp.h), contains two important elements: the s\_\-n field, which is the size of the signal vector, and s\_\-vec, which is a pointer to an array of 32-\/bit floats containing the signal data. All t\_\-signals your object will receive have the same size. This size is not necessarily the same as the global MSP signal vector size, because your object might be inside a patcher within a poly$\sim$ object that defines its own size. Therefore it is important to use the s\_\-n field of a signal passed to your object's dsp method.
+
+You can use a variety of strategies to pass arguments to your perform routine via \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add()}. For simple unit generators that don't store any internal state between computing vectors, it is sufficient to pass the inputs, outputs, and vector size. For objects that need to store internal state between computing vectors such as filters or ramp generators, you will pass a pointer to your object, whose data structure should contain space to store this state. The plus1$\sim$ object does not need to store internal state. It passes the input, output, and vector size to its perform routine. The plus1$\sim$ dsp method is shown below:
+
+
+\begin{DoxyCode}
+    void plus1_dsp(t_plus1 *x, t_signal **sp, short *count)
+    {
+        dsp_add(plus1_perform, 3, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    }
+\end{DoxyCode}
+
+
+The first argument to \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add()} is your perform routine, followed by the number of additional arguments you wish to copy to the DSP chain, and then the arguments.
+
+The perform routine is not a \char`\"{}method\char`\"{} in the traditional sense. It will be called within the callback of an audio driver, which, unless the user is employing the Non-\/Real Time audio driver, will typically be in a high-\/priority thread. Thread protection inside the perform routine is minimal. You can use a clock, but you cannot use qelems or outlets. The design of the perform routine is somewhat unlike other Max methods. It receives a pointer to a piece of the DSP chain and it is expected to return the location of the next perform routine on the chain. The next location is determined by the number of arguments you specified for your perform routine with your call to \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add()}. For example, if you will pass three arguments, you need to return w + 4.
+
+Here is the plus1 perform routine:
+
+
+\begin{DoxyCode}
+    t_int *plus1_perform(t_int *w)
+    {
+        t_float *in, *out;
+        int n;
+
+        in = (t_float *)w[1];       // get input signal vector
+        out = (t_float *)w[2];      // get output signal vector
+        n = (int)w[3];          // vector size
+
+    
+        while (n--)         // perform calculation on all samples
+            *out++ = *in++ + 1.;
+    
+        return w + 4;           // must return next DSP chain location
+    }
+\end{DoxyCode}
+
+
+6) Free function
+
+The free function for the class must either be \hyperlink{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}{dsp\_\-free()} or it must be written to call \hyperlink{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}{dsp\_\-free()} as shown in the example below:
+
+
+\begin{DoxyCode}
+    void mydspobject_free(t_mydspobject *x)
+    {
+        dsp_free((t_pxobject *)x);
+
+        // can do other stuff here
+    }
+\end{DoxyCode}
+ 

@@ -1,0 +1,67 @@
+\hypertarget{group__symbol}{
+\section{Symbols}
+\label{group__symbol}\index{Symbols@{Symbols}}
+}
+
+
+Max maintains a symbol table of all strings to speed lookup for message passing.  
+
+
+Collaboration diagram for Symbols:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=109pt]{group__symbol}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__symbol}{t\_\-symbol}
+\begin{DoxyCompactList}\small\item\em The symbol. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__symbol_ga8268797d125a15bae1010af70b559e05}{gensym} (char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Given a C-\/string, fetch the matching \hyperlink{structt__symbol}{t\_\-symbol} pointer from the symbol table, generating the symbol if neccessary. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max maintains a symbol table of all strings to speed lookup for message passing. If you want to access the bang symbol for example, you’ll have to use the expression gensym(\char`\"{}bang\char`\"{}). For example, \hyperlink{group__symbol_ga8268797d125a15bae1010af70b559e05}{gensym()} may be needed when sending messages directly to other Max objects such as with \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()} and \hyperlink{group__inout_ga12798ee897e01dac21ee547c4091d8a8}{outlet\_\-anything()}. These functions expect a \hyperlink{structt__symbol}{t\_\-symbol}$\ast$, they don’t \hyperlink{group__symbol_ga8268797d125a15bae1010af70b559e05}{gensym()} character strings for you.
+
+The \hyperlink{structt__symbol}{t\_\-symbol} data structure also contains a place to store an arbitrary value. The following example shows how you can use this feature to use symbols to share values among two different external object classes. (Objects of the same class can use the code resource’s global variable space to share data.) The idea is that the s\_\-thing field of a \hyperlink{structt__symbol}{t\_\-symbol} can be set to some value, and \hyperlink{group__symbol_ga8268797d125a15bae1010af70b559e05}{gensym()} will return a reference to the Symbol. Thus, the two classes just have to agree about the character string to be used. Alternatively, each could be passed a \hyperlink{structt__symbol}{t\_\-symbol} that will be used to share data.
+
+Storing a value:
+
+
+\begin{DoxyCode}
+    t_symbol *s; 
+    s = gensym("some_weird_string"); 
+    s->s_thing = (t_object *)someValue; 
+\end{DoxyCode}
+
+
+Retrieving a value:
+
+
+\begin{DoxyCode}
+    t_symbol *s; 
+    s = gensym("some_weird_string"); 
+    someValue = s->s_thing; 
+\end{DoxyCode}
+ 
+
+\subsection{Function Documentation}
+\hypertarget{group__symbol_ga8268797d125a15bae1010af70b559e05}{
+\index{symbol@{symbol}!gensym@{gensym}}
+\index{gensym@{gensym}!symbol@{symbol}}
+\subsubsection[{gensym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ gensym (char $\ast$ {\em s})}}
+\label{group__symbol_ga8268797d125a15bae1010af70b559e05}
+
+
+Given a C-\/string, fetch the matching \hyperlink{structt__symbol}{t\_\-symbol} pointer from the symbol table, generating the symbol if neccessary. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]A C-\/string to be looked up in Max’s symbol table. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the \hyperlink{structt__symbol}{t\_\-symbol} in the symbol table. 
+\end{DoxyReturn}

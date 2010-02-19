@@ -1,0 +1,63 @@
+\hypertarget{structt__pfftpub}{
+\section{t\_\-pfftpub Struct Reference}
+\label{structt__pfftpub}\index{t\_\-pfftpub@{t\_\-pfftpub}}
+}
+
+
+Public FFT Patcher struct.  
+
+
+{\ttfamily \#include $<$r\_\-pfft.h$>$}Collaboration diagram for t\_\-pfftpub:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{structt__pfftpub__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__pfftpub_aaecc60e8d4157a09878dfac79c37c338}{
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{structt__pfftpub_aaecc60e8d4157a09878dfac79c37c338}{x\_\-parent}}
+\label{structt__pfftpub_aaecc60e8d4157a09878dfac79c37c338}
+
+\begin{DoxyCompactList}\small\item\em parent patcher \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pfftpub_a4ebc5bfaf7260dbf8b7be97df00dc04a}{
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{structt__pfftpub_a4ebc5bfaf7260dbf8b7be97df00dc04a}{x\_\-patcher}}
+\label{structt__pfftpub_a4ebc5bfaf7260dbf8b7be97df00dc04a}
+
+\begin{DoxyCompactList}\small\item\em patcher loaded \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pfftpub_a141782061afc1857e5496c7a4a9d08af}{
+struct \_\-dspchain $\ast$ \hyperlink{structt__pfftpub_a141782061afc1857e5496c7a4a9d08af}{x\_\-chain}}
+\label{structt__pfftpub_a141782061afc1857e5496c7a4a9d08af}
+
+\begin{DoxyCompactList}\small\item\em dsp chain within pfft \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pfftpub_a6a316a6c000389091f78d0bf39873af8}{
+long \hyperlink{structt__pfftpub_a6a316a6c000389091f78d0bf39873af8}{x\_\-fftsize}}
+\label{structt__pfftpub_a6a316a6c000389091f78d0bf39873af8}
+
+\begin{DoxyCompactList}\small\item\em fft frame size \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pfftpub_a8fc252dd43ae7881045a1530b770c1db}{
+long \hyperlink{structt__pfftpub_a8fc252dd43ae7881045a1530b770c1db}{x\_\-ffthop}}
+\label{structt__pfftpub_a8fc252dd43ae7881045a1530b770c1db}
+
+\begin{DoxyCompactList}\small\item\em hop between fft frames \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pfftpub_a7e7e6c74c504ef54d77d61c4a83d060d}{
+long \hyperlink{structt__pfftpub_a7e7e6c74c504ef54d77d61c4a83d060d}{x\_\-fftoffset}}
+\label{structt__pfftpub_a7e7e6c74c504ef54d77d61c4a83d060d}
+
+\begin{DoxyCompactList}\small\item\em n samples offset before fft is started \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pfftpub_a5fa88e6b8dd3c99abaefe1bc9cb316b1}{
+long \hyperlink{structt__pfftpub_a5fa88e6b8dd3c99abaefe1bc9cb316b1}{x\_\-fftindex}}
+\label{structt__pfftpub_a5fa88e6b8dd3c99abaefe1bc9cb316b1}
+
+\begin{DoxyCompactList}\small\item\em current index into fft frame \item\end{DoxyCompactList}\item 
+\hypertarget{structt__pfftpub_aa2549e95d9411644da5774dd175614ef}{
+short \hyperlink{structt__pfftpub_aa2549e95d9411644da5774dd175614ef}{x\_\-fullspect}}
+\label{structt__pfftpub_aa2549e95d9411644da5774dd175614ef}
+
+\begin{DoxyCompactList}\small\item\em process half-\/spectrum (0) or full mirrored spectrum (1)? \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Public FFT Patcher struct. 

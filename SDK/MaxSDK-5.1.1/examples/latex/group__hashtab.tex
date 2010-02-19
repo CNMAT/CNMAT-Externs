@@ -1,0 +1,473 @@
+\hypertarget{group__hashtab}{
+\section{Hash Table}
+\label{group__hashtab}\index{Hash Table@{Hash Table}}
+}
+
+
+Max's hashtab object implements a hash table ( \href{http://en.wikipedia.org/wiki/Hash_table}{\tt http://en.wikipedia.org/wiki/Hash\_\-table} ).  
+
+
+Collaboration diagram for Hash Table:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=122pt]{group__hashtab}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__hashtab__entry}{t\_\-hashtab\_\-entry}
+\begin{DoxyCompactList}\small\item\em A hashtab entry. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__hashtab}{t\_\-hashtab}
+\begin{DoxyCompactList}\small\item\em The hashtab object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{group__hashtab_ga160118a25646d04cce8c75f6f3eb9207}{HASH\_\-DEFSLOTS}~57
+\begin{DoxyCompactList}\small\item\em Default number of slots in the hash table. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$ \hyperlink{group__hashtab_ga70be9bbfb9bd9383824df0832477267f}{hashtab\_\-new} (long slotcount)
+\begin{DoxyCompactList}\small\item\em Create a new hashtab object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$val)
+\begin{DoxyCompactList}\small\item\em Store an item in a hashtab with an associated key. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_ga31d25e5b56c439be3f31bf17efa36349}{hashtab\_\-store\_\-safe} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$val)
+\begin{DoxyCompactList}\small\item\em Store an item in a hashtab with an associated key. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gab09bf88c81aeb3d71b6661f20989603d}{hashtab\_\-storeflags} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$val, long flags)
+\begin{DoxyCompactList}\small\item\em Store an item in a hashtab with an associated key and also flags that define the behavior of the item. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gadb206ea811204926bdbf1aa00ca679dc}{hashtab\_\-lookup} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$val)
+\begin{DoxyCompactList}\small\item\em Return an item stored in a hashtab with the specified key. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_ga0947b6e2b1e6ed6b55b7f891536429b9}{hashtab\_\-lookupflags} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, \hyperlink{structt__object}{t\_\-object} $\ast$$\ast$val, long $\ast$flags)
+\begin{DoxyCompactList}\small\item\em Return an item stored in a hashtab with the specified key, also returning the items flags. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gadc3b33bd84f054f9a725b87e809779fc}{hashtab\_\-delete} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Remove an item from a hashtab associated with the specified key and free it. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gae7984db2865416d6da6ce20c76975321}{hashtab\_\-clear} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Delete all items stored in a hashtab. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_ga9bbf0199ef8b92a977b3bee5fd746799}{hashtab\_\-chuckkey} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Remove an item from a hashtab associated with a given key. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gac3203c76c8321cde39088beab8b4d2e8}{hashtab\_\-chuck} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Free a hashtab, but don't free the items it contains. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gadc142f0a2a64417bb8b8d3c2959924fd}{hashtab\_\-findfirst} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, void $\ast$$\ast$o, long cmpfn(void $\ast$, void $\ast$), void $\ast$cmpdata)
+\begin{DoxyCompactList}\small\item\em Search the hash table for the first item meeting defined criteria. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_ga816a6164c9565fd4269e2b9d8e8a76a3}{hashtab\_\-methodall} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$s,...)
+\begin{DoxyCompactList}\small\item\em Call the named message on every object in the hashtab. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}{hashtab\_\-funall} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fun, void $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Call the specified function for every item in the hashtab. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__hashtab_gaf0d337d2d3d31e2ea5a5a3bff01fe833}{hashtab\_\-getsize} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Return the number of items stored in a hashtab. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__hashtab_gaede9b374c667cce86eeb976940eb9c53}{hashtab\_\-print} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Post a hashtab's statistics to the Max window. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__hashtab_ga34ced5b4da65b4068829f799a53ea6bf}{hashtab\_\-readonly} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, long readonly)
+\begin{DoxyCompactList}\small\item\em Set the hashtab's readonly bit. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__hashtab_gaaaefb350afdfdbe1440dd6401ac56eb7}{hashtab\_\-flags} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, long flags)
+\begin{DoxyCompactList}\small\item\em Set the hashtab's datastore flags. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__hashtab_gacb0dd87fc4594d35d53998e7fde2c2b8}{hashtab\_\-getflags} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Get the hashtab's datastore flags. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gab5cb27719ed31725c46ff3ff52356aa8}{hashtab\_\-keyflags} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key, long flags)
+\begin{DoxyCompactList}\small\item\em Change the flags for an item stored in the hashtab with a given key. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__hashtab_ga3d1819d75d2b09aefae9d58fc8016cec}{hashtab\_\-getkeyflags} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$key)
+\begin{DoxyCompactList}\small\item\em Retrieve the flags for an item stored in the hashtab with a given key. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__hashtab_gaef45959b197448cfec26056d4d5656f0}{hashtab\_\-getkeys} (\hyperlink{structt__hashtab}{t\_\-hashtab} $\ast$x, long $\ast$kc, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$$\ast$kv)
+\begin{DoxyCompactList}\small\item\em Retrieve all of the keys stored in a hashtab. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max's hashtab object implements a hash table ( \href{http://en.wikipedia.org/wiki/Hash_table}{\tt http://en.wikipedia.org/wiki/Hash\_\-table} ). Any type of value may be stored in the table, indexed using a \hyperlink{structt__symbol}{t\_\-symbol} as the unique key.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist}{Linked List} 
+\end{DoxySeeAlso}
+
+
+\subsection{Define Documentation}
+\hypertarget{group__hashtab_ga160118a25646d04cce8c75f6f3eb9207}{
+\index{hashtab@{hashtab}!HASH\_\-DEFSLOTS@{HASH\_\-DEFSLOTS}}
+\index{HASH\_\-DEFSLOTS@{HASH\_\-DEFSLOTS}!hashtab@{hashtab}}
+\subsubsection[{HASH\_\-DEFSLOTS}]{\setlength{\rightskip}{0pt plus 5cm}\#define HASH\_\-DEFSLOTS~57}}
+\label{group__hashtab_ga160118a25646d04cce8c75f6f3eb9207}
+
+
+Default number of slots in the hash table. Creating a hashtab using \hyperlink{group__hashtab_ga70be9bbfb9bd9383824df0832477267f}{hashtab\_\-new()} with an argument of 0 will use the default number of slots. Primes typically work well for the number of slots. 
+
+\subsection{Function Documentation}
+\hypertarget{group__hashtab_gac3203c76c8321cde39088beab8b4d2e8}{
+\index{hashtab@{hashtab}!hashtab\_\-chuck@{hashtab\_\-chuck}}
+\index{hashtab\_\-chuck@{hashtab\_\-chuck}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-chuck}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-chuck ({\bf t\_\-hashtab} $\ast$ {\em x})}}
+\label{group__hashtab_gac3203c76c8321cde39088beab8b4d2e8}
+
+
+Free a hashtab, but don't free the items it contains. The hashtab can contain a variety of different types of data. By default, the hashtab assumes that all items are max objects with a valid \hyperlink{structt__object}{t\_\-object} header.
+
+You can alter the hashtab's notion of what it contains by using the \hyperlink{group__hashtab_gaaaefb350afdfdbe1440dd6401ac56eb7}{hashtab\_\-flags()} method.
+
+When you free the hashtab by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} it then tries to free all of the items it contains. If the hashtab is storing a custom type of data, or should otherwise not free the data it contains, then call \hyperlink{group__hashtab_gac3203c76c8321cde39088beab8b4d2e8}{hashtab\_\-chuck()} to free the object instead of \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab object to be freed. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_ga9bbf0199ef8b92a977b3bee5fd746799}{
+\index{hashtab@{hashtab}!hashtab\_\-chuckkey@{hashtab\_\-chuckkey}}
+\index{hashtab\_\-chuckkey@{hashtab\_\-chuckkey}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-chuckkey}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-chuckkey ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__hashtab_ga9bbf0199ef8b92a977b3bee5fd746799}
+
+
+Remove an item from a hashtab associated with a given key. You are responsible for freeing any memory associated with the item that is removed from the hashtab.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key of the item to delete. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_gadc3b33bd84f054f9a725b87e809779fc}{hashtab\_\-delete} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gae7984db2865416d6da6ce20c76975321}{
+\index{hashtab@{hashtab}!hashtab\_\-clear@{hashtab\_\-clear}}
+\index{hashtab\_\-clear@{hashtab\_\-clear}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-clear ({\bf t\_\-hashtab} $\ast$ {\em x})}}
+\label{group__hashtab_gae7984db2865416d6da6ce20c76975321}
+
+
+Delete all items stored in a hashtab. This is the equivalent of calling \hyperlink{group__hashtab_gadc3b33bd84f054f9a725b87e809779fc}{hashtab\_\-delete()} on every item in a hashtab.
+
+\begin{DoxyReturn}{Returns}
+A max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_gaaaefb350afdfdbe1440dd6401ac56eb7}{hashtab\_\-flags()} 
+
+\hyperlink{group__hashtab_gadc3b33bd84f054f9a725b87e809779fc}{hashtab\_\-delete()} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gadc3b33bd84f054f9a725b87e809779fc}{
+\index{hashtab@{hashtab}!hashtab\_\-delete@{hashtab\_\-delete}}
+\index{hashtab\_\-delete@{hashtab\_\-delete}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-delete}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-delete ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__hashtab_gadc3b33bd84f054f9a725b87e809779fc}
+
+
+Remove an item from a hashtab associated with the specified key and free it. The hashtab can contain a variety of different types of data. By default, the hashtab assumes that all items are max objects with a valid \hyperlink{structt__object}{t\_\-object} header. Thus by default, it frees items by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} on them.
+
+You can alter the hashtab's notion of what it contains by using the \hyperlink{group__hashtab_gaaaefb350afdfdbe1440dd6401ac56eb7}{hashtab\_\-flags()} method.
+
+If you wish to remove an item from the hashtab and free it yourself, then you should use \hyperlink{group__hashtab_ga9bbf0199ef8b92a977b3bee5fd746799}{hashtab\_\-chuckkey()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key of the item to delete. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_ga9bbf0199ef8b92a977b3bee5fd746799}{hashtab\_\-chuckkey()} 
+
+\hyperlink{group__hashtab_gae7984db2865416d6da6ce20c76975321}{hashtab\_\-clear()} 
+
+\hyperlink{group__hashtab_gaaaefb350afdfdbe1440dd6401ac56eb7}{hashtab\_\-flags()} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gadc142f0a2a64417bb8b8d3c2959924fd}{
+\index{hashtab@{hashtab}!hashtab\_\-findfirst@{hashtab\_\-findfirst}}
+\index{hashtab\_\-findfirst@{hashtab\_\-findfirst}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-findfirst}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-findfirst ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  void $\ast$$\ast$ {\em o}, \/  long  {\em cmpfn}void $\ast$, void $\ast$, \/  void $\ast$ {\em cmpdata})}}
+\label{group__hashtab_gadc142f0a2a64417bb8b8d3c2959924fd}
+
+
+Search the hash table for the first item meeting defined criteria. The items in the hashtab are iteratively processed, calling a specified comparison function on each until the comparison function returns true.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em o}]The address to pointer that will be set with the matching item. \item[{\em cmpfn}]The function used to determine a match in the list. \item[{\em cmpdata}]An argument to be passed to the \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn}. This will be passed as the second of the two args to the \hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn}. The first arg will be the hashtab item at each iteration in the list. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__linklist_gab7f3c26cb704c460892818b89a1ab004}{linklist\_\-findfirst()} 
+
+\hyperlink{group__datastore_gaaf4ae6dd800a2be9abd645cf70aeb38f}{t\_\-cmpfn} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gaaaefb350afdfdbe1440dd6401ac56eb7}{
+\index{hashtab@{hashtab}!hashtab\_\-flags@{hashtab\_\-flags}}
+\index{hashtab\_\-flags@{hashtab\_\-flags}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-flags}]{\setlength{\rightskip}{0pt plus 5cm}void hashtab\_\-flags ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  long {\em flags})}}
+\label{group__hashtab_gaaaefb350afdfdbe1440dd6401ac56eb7}
+
+
+Set the hashtab's datastore flags. The available flags are enumerated in \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. These flags control the behavior of the hashtab, particularly when removing items from the list using functions such as \hyperlink{group__hashtab_gae7984db2865416d6da6ce20c76975321}{hashtab\_\-clear()}, \hyperlink{group__hashtab_gadc3b33bd84f054f9a725b87e809779fc}{hashtab\_\-delete()}, or when freeing the hashtab itself.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em flags}]A valid value from the \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. The default is \hyperlink{group__datastore_ggaa858d4b3815076d79624c39d9ca59348adc630c58c8e958a404553a08db6fd180}{OBJ\_\-FLAG\_\-OBJ}. \end{DoxyParams}
+\hypertarget{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}{
+\index{hashtab@{hashtab}!hashtab\_\-funall@{hashtab\_\-funall}}
+\index{hashtab\_\-funall@{hashtab\_\-funall}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-funall}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-funall ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf method} {\em fun}, \/  void $\ast$ {\em arg})}}
+\label{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}
+
+
+Call the specified function for every item in the hashtab. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em fun}]The function to call, specified as function pointer cast to a Max \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method}. \item[{\em arg}]An argument that you would like to pass to the function being called. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The \hyperlink{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}{hashtab\_\-funall()} method will call your function for every item in the list. It will pass both a pointer to the item in the list, and any argument that you provide. The following example shows a function that could be called by \hyperlink{group__hashtab_ga37e7b5c20c9fc69e9435f788f35335dc}{hashtab\_\-funall()}. 
+\begin{DoxyCode}
+    void myFun(t_hashtab_entry *e, void *myArg)
+    {
+        if (e->key && e->value) {
+            // do something with e->key, e->value, and myArg here as appropriate
+        }
+    }
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__hashtab_gacb0dd87fc4594d35d53998e7fde2c2b8}{
+\index{hashtab@{hashtab}!hashtab\_\-getflags@{hashtab\_\-getflags}}
+\index{hashtab\_\-getflags@{hashtab\_\-getflags}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-getflags}]{\setlength{\rightskip}{0pt plus 5cm}long hashtab\_\-getflags ({\bf t\_\-hashtab} $\ast$ {\em x})}}
+\label{group__hashtab_gacb0dd87fc4594d35d53998e7fde2c2b8}
+
+
+Get the hashtab's datastore flags. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current state of the hashtab flags as enumerated in \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. 
+\end{DoxyReturn}
+\hypertarget{group__hashtab_ga3d1819d75d2b09aefae9d58fc8016cec}{
+\index{hashtab@{hashtab}!hashtab\_\-getkeyflags@{hashtab\_\-getkeyflags}}
+\index{hashtab\_\-getkeyflags@{hashtab\_\-getkeyflags}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-getkeyflags}]{\setlength{\rightskip}{0pt plus 5cm}long hashtab\_\-getkeyflags ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key})}}
+\label{group__hashtab_ga3d1819d75d2b09aefae9d58fc8016cec}
+
+
+Retrieve the flags for an item stored in the hashtab with a given key. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key in the hashtab whose flags will be returned. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The flags for the given key. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+hashtab\_\-store\_\-flags() 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gaef45959b197448cfec26056d4d5656f0}{
+\index{hashtab@{hashtab}!hashtab\_\-getkeys@{hashtab\_\-getkeys}}
+\index{hashtab\_\-getkeys@{hashtab\_\-getkeys}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-getkeys}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-getkeys ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  long $\ast$ {\em kc}, \/  {\bf t\_\-symbol} $\ast$$\ast$$\ast$ {\em kv})}}
+\label{group__hashtab_gaef45959b197448cfec26056d4d5656f0}
+
+
+Retrieve all of the keys stored in a hashtab. If the kc and kv parameters are properly initialized to zero, then \hyperlink{group__hashtab_gaef45959b197448cfec26056d4d5656f0}{hashtab\_\-getkeys()} will allocate memory for the keys it returns. You are then responsible for freeing this memory using \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em kc}]The address of a long where the number of keys retrieved will be set. \item[{\em kv}]The address of the first of an array \hyperlink{structt__symbol}{t\_\-symbol} pointers where the retrieved keys will be set. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+The following example demonstrates fetching all of the keys from a hashtab in order to iterate through each item stored in the hashtab. 
+\begin{DoxyCode}
+    t_symbol    **keys = NULL;
+    long        numKeys = 0;
+    long        i;
+    t_object    *anItem;
+
+    hashtab_getkeys(aHashtab, &numKeys, &keys);
+    for(i=0; i<numKeys; i++){
+        hashtab_lookup(aHashtab, keys[i], &anItem);
+        // Do something with anItem here...
+    }
+    if(keys)
+        sysmem_freeptr(keys);
+\end{DoxyCode}
+ 
+\end{DoxyRemark}
+\hypertarget{group__hashtab_gaf0d337d2d3d31e2ea5a5a3bff01fe833}{
+\index{hashtab@{hashtab}!hashtab\_\-getsize@{hashtab\_\-getsize}}
+\index{hashtab\_\-getsize@{hashtab\_\-getsize}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-getsize}]{\setlength{\rightskip}{0pt plus 5cm}long hashtab\_\-getsize ({\bf t\_\-hashtab} $\ast$ {\em x})}}
+\label{group__hashtab_gaf0d337d2d3d31e2ea5a5a3bff01fe833}
+
+
+Return the number of items stored in a hashtab. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of items in the hash table. 
+\end{DoxyReturn}
+\hypertarget{group__hashtab_gab5cb27719ed31725c46ff3ff52356aa8}{
+\index{hashtab@{hashtab}!hashtab\_\-keyflags@{hashtab\_\-keyflags}}
+\index{hashtab\_\-keyflags@{hashtab\_\-keyflags}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-keyflags}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-keyflags ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  long {\em flags})}}
+\label{group__hashtab_gab5cb27719ed31725c46ff3ff52356aa8}
+
+
+Change the flags for an item stored in the hashtab with a given key. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key in the hashtab whose flags will be changed. \item[{\em flags}]One of the values listed in \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+hashtab\_\-store\_\-flags() 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gadb206ea811204926bdbf1aa00ca679dc}{
+\index{hashtab@{hashtab}!hashtab\_\-lookup@{hashtab\_\-lookup}}
+\index{hashtab\_\-lookup@{hashtab\_\-lookup}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-lookup}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-lookup ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em val})}}
+\label{group__hashtab_gadb206ea811204926bdbf1aa00ca679dc}
+
+
+Return an item stored in a hashtab with the specified key. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key in the hashtab to fetch. \item[{\em val}]The address of a pointer to which the fetched value will be assigned.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store()} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_ga0947b6e2b1e6ed6b55b7f891536429b9}{
+\index{hashtab@{hashtab}!hashtab\_\-lookupflags@{hashtab\_\-lookupflags}}
+\index{hashtab\_\-lookupflags@{hashtab\_\-lookupflags}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-lookupflags}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-lookupflags ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$$\ast$ {\em val}, \/  long $\ast$ {\em flags})}}
+\label{group__hashtab_ga0947b6e2b1e6ed6b55b7f891536429b9}
+
+
+Return an item stored in a hashtab with the specified key, also returning the items flags. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key in the hashtab to fetch. \item[{\em val}]The address of a pointer to which the fetched value will be assigned. \item[{\em flags}]The address of a value to which the fetched flags will be assigned. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_gadb206ea811204926bdbf1aa00ca679dc}{hashtab\_\-lookup()} 
+
+hashtab\_\-store\_\-flags() 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_ga816a6164c9565fd4269e2b9d8e8a76a3}{
+\index{hashtab@{hashtab}!hashtab\_\-methodall@{hashtab\_\-methodall}}
+\index{hashtab\_\-methodall@{hashtab\_\-methodall}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-methodall}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-methodall ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em s}, \/   {\em ...})}}
+\label{group__hashtab_ga816a6164c9565fd4269e2b9d8e8a76a3}
+
+
+Call the named message on every object in the hashtab. The \hyperlink{group__hashtab_ga816a6164c9565fd4269e2b9d8e8a76a3}{hashtab\_\-methodall()} function requires that all items in the hashtab are object instances with a valid \hyperlink{structt__object}{t\_\-object} header.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em s}]The name of the message to send to the objects. \item[{\em ...}]Any arguments to be sent with the message. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A max error code.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Internally, this function uses \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()}, meaning that no errors will be posted if the message name does not exist for the object. It also means that messages sent methods with \hyperlink{group__atom_gga8aa6700e9f00b132eb376db6e39ade47a81c1a8550f038db16a619167a70a79b6}{A\_\-GIMME} definitions will need to be given a symbol argument prior to the argc and argv array information. 
+\end{DoxyRemark}
+\hypertarget{group__hashtab_ga70be9bbfb9bd9383824df0832477267f}{
+\index{hashtab@{hashtab}!hashtab\_\-new@{hashtab\_\-new}}
+\index{hashtab\_\-new@{hashtab\_\-new}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-hashtab}$\ast$ hashtab\_\-new (long {\em slotcount})}}
+\label{group__hashtab_ga70be9bbfb9bd9383824df0832477267f}
+
+
+Create a new hashtab object. You can free the hashtab by calling \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} on the hashtab's pointer, or by using \hyperlink{group__hashtab_gac3203c76c8321cde39088beab8b4d2e8}{hashtab\_\-chuck()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em slotcount}]The number of slots in the hash table. Prime numbers typically work well. Pass 0 to get the default size. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the new hashtab object.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_ga160118a25646d04cce8c75f6f3eb9207}{HASH\_\-DEFSLOTS} 
+
+\hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()} 
+
+\hyperlink{group__hashtab_gac3203c76c8321cde39088beab8b4d2e8}{hashtab\_\-chuck()} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gaede9b374c667cce86eeb976940eb9c53}{
+\index{hashtab@{hashtab}!hashtab\_\-print@{hashtab\_\-print}}
+\index{hashtab\_\-print@{hashtab\_\-print}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-print}]{\setlength{\rightskip}{0pt plus 5cm}void hashtab\_\-print ({\bf t\_\-hashtab} $\ast$ {\em x})}}
+\label{group__hashtab_gaede9b374c667cce86eeb976940eb9c53}
+
+
+Post a hashtab's statistics to the Max window. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \end{DoxyParams}
+\hypertarget{group__hashtab_ga34ced5b4da65b4068829f799a53ea6bf}{
+\index{hashtab@{hashtab}!hashtab\_\-readonly@{hashtab\_\-readonly}}
+\index{hashtab\_\-readonly@{hashtab\_\-readonly}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-readonly}]{\setlength{\rightskip}{0pt plus 5cm}void hashtab\_\-readonly ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  long {\em readonly})}}
+\label{group__hashtab_ga34ced5b4da65b4068829f799a53ea6bf}
+
+
+Set the hashtab's readonly bit. By default the readonly bit is 0, indicating that it is threadsafe for both reading and writing. Setting the readonly bit to 1 will disable the hashtab's theadsafety mechanism, increasing performance but at the expense of threadsafe operation. Unless you can guarantee the threading context for a hashtab's use, you should leave this set to 0.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em readonly}]A 1 or 0 for setting the readonly bit. \end{DoxyParams}
+\hypertarget{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{
+\index{hashtab@{hashtab}!hashtab\_\-store@{hashtab\_\-store}}
+\index{hashtab\_\-store@{hashtab\_\-store}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-store}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-store ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$ {\em val})}}
+\label{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}
+
+
+Store an item in a hashtab with an associated key. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key in the hashtab with which to associate the value. \item[{\em val}]The value to store.\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_gadb206ea811204926bdbf1aa00ca679dc}{hashtab\_\-lookup()} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_ga31d25e5b56c439be3f31bf17efa36349}{
+\index{hashtab@{hashtab}!hashtab\_\-store\_\-safe@{hashtab\_\-store\_\-safe}}
+\index{hashtab\_\-store\_\-safe@{hashtab\_\-store\_\-safe}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-store\_\-safe}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-store\_\-safe ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$ {\em val})}}
+\label{group__hashtab_ga31d25e5b56c439be3f31bf17efa36349}
+
+
+Store an item in a hashtab with an associated key. The difference between \hyperlink{group__hashtab_ga31d25e5b56c439be3f31bf17efa36349}{hashtab\_\-store\_\-safe()} and \hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store()} is what happens in the event of a collision in the hash table. The normal \hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store()} function will free the existing value at the collision location with \hyperlink{group__memory_ga200c82639e547869db1f3887d17102d3}{sysmem\_\-freeptr()} and then replaces it. This version doesn't try to free the existing value at the collision location, but instead just over-\/writes it.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key in the hashtab with which to associate the value. \item[{\em val}]The value to store. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store()} 
+\end{DoxySeeAlso}
+\hypertarget{group__hashtab_gab09bf88c81aeb3d71b6661f20989603d}{
+\index{hashtab@{hashtab}!hashtab\_\-storeflags@{hashtab\_\-storeflags}}
+\index{hashtab\_\-storeflags@{hashtab\_\-storeflags}!hashtab@{hashtab}}
+\subsubsection[{hashtab\_\-storeflags}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} hashtab\_\-storeflags ({\bf t\_\-hashtab} $\ast$ {\em x}, \/  {\bf t\_\-symbol} $\ast$ {\em key}, \/  {\bf t\_\-object} $\ast$ {\em val}, \/  long {\em flags})}}
+\label{group__hashtab_gab09bf88c81aeb3d71b6661f20989603d}
+
+
+Store an item in a hashtab with an associated key and also flags that define the behavior of the item. The \hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store()} method is the same as calling this method with the default (0) flags.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The hashtab instance. \item[{\em key}]The key in the hashtab with which to associate the value. \item[{\em val}]The value to store. \item[{\em flags}]One of the values listed in \hyperlink{group__datastore_gaa858d4b3815076d79624c39d9ca59348}{e\_\-max\_\-datastore\_\-flags}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__hashtab_gaa26ebe9ba21e84dd0dbb8d5aed12e5a1}{hashtab\_\-store()} 
+\end{DoxySeeAlso}

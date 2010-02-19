@@ -1,0 +1,168 @@
+\hypertarget{group__jpopupmenu}{
+\section{Popup Menus}
+\label{group__jpopupmenu}\index{Popup Menus@{Popup Menus}}
+}
+
+
+Popup menu API so externals can create popup menus that can also be drawn into.  
+
+
+Collaboration diagram for Popup Menus:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=117pt]{group__jpopupmenu}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$ \hyperlink{group__jpopupmenu_ga4ee6ff8775c88750bc002db49bdaa98b}{jpopupmenu\_\-create} ()
+\begin{DoxyCompactList}\small\item\em Create a pop-\/up menu. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpopupmenu_ga1481bf544273533000b02e31e42df65f}{jpopupmenu\_\-destroy} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu)
+\begin{DoxyCompactList}\small\item\em Free a pop-\/up menu created with \hyperlink{group__jpopupmenu_ga4ee6ff8775c88750bc002db49bdaa98b}{jpopupmenu\_\-create()}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpopupmenu_gaf4f15c09d15aaaa33d149a6109c4aa47}{jpopupmenu\_\-clear} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu)
+\begin{DoxyCompactList}\small\item\em Clear the conents of a pop-\/up menu. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpopupmenu_gaef73894f17b579c0cc6cc6d56de4ffe5}{jpopupmenu\_\-setcolors} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu, \hyperlink{structt__jrgba}{t\_\-jrgba} text, \hyperlink{structt__jrgba}{t\_\-jrgba} bg, \hyperlink{structt__jrgba}{t\_\-jrgba} highlightedtext, \hyperlink{structt__jrgba}{t\_\-jrgba} highlightedbg)
+\begin{DoxyCompactList}\small\item\em Set the colors used by a pop-\/up menu. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpopupmenu_gaf4a1c2ad6943b5095cac1932f9c39972}{jpopupmenu\_\-setfont} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu, \hyperlink{group__jfont_ga75f83f853e52af957c799723cac89ae5}{t\_\-jfont} $\ast$font)
+\begin{DoxyCompactList}\small\item\em Set the font used by a pop-\/up menu. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpopupmenu_ga1911796fed5dd59d3ab9a7471f6161a9}{jpopupmenu\_\-additem} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu, int itemid, const char $\ast$utf8Text, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$textColor, int checked, int disabled, \hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} $\ast$icon)
+\begin{DoxyCompactList}\small\item\em Add an item to a pop-\/up menu. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpopupmenu_ga5ba90215f0693fe446f0f4c64af954b1}{jpopupmenu\_\-addsubmenu} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu, const char $\ast$utf8Name, \hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$submenu, int disabled)
+\begin{DoxyCompactList}\small\item\em Add a pop-\/menu to another pop-\/menu as a submenu. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__jpopupmenu_gad948b473c9ff12c1159960dcd36fb9a2}{jpopupmenu\_\-addseperator} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu)
+\begin{DoxyCompactList}\small\item\em Add a separator to a pop-\/menu. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__jpopupmenu_ga53b05326e6d6f2def7573941d97699c0}{jpopupmenu\_\-popup} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu, \hyperlink{structt__pt}{t\_\-pt} screen, int defitemid)
+\begin{DoxyCompactList}\small\item\em Tell a menu to display at a specified location. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__jpopupmenu_ga18c3434bd119af47b3ec605b659c1654}{jpopupmenu\_\-popup\_\-abovebox} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu, \hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__object}{t\_\-object} $\ast$view, int offset, int defitemid)
+\begin{DoxyCompactList}\small\item\em Tell a menu to display above a given box in a patcher. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__jpopupmenu_gab7ff50b3fcc40c38c478f97b1848e099}{jpopupmenu\_\-popup\_\-nearbox} (\hyperlink{group__jgraphics_ga613e147be2f9655726f08f0896b9dbaa}{t\_\-jpopupmenu} $\ast$menu, \hyperlink{structt__object}{t\_\-object} $\ast$box, \hyperlink{structt__object}{t\_\-object} $\ast$view, int defitemid)
+\begin{DoxyCompactList}\small\item\em Tell a menu to display near a given box in a patcher. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Popup menu API so externals can create popup menus that can also be drawn into. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jpopupmenu_ga1911796fed5dd59d3ab9a7471f6161a9}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-additem@{jpopupmenu\_\-additem}}
+\index{jpopupmenu\_\-additem@{jpopupmenu\_\-additem}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-additem}]{\setlength{\rightskip}{0pt plus 5cm}void jpopupmenu\_\-additem ({\bf t\_\-jpopupmenu} $\ast$ {\em menu}, \/  int {\em itemid}, \/  const char $\ast$ {\em utf8Text}, \/  {\bf t\_\-jrgba} $\ast$ {\em textColor}, \/  int {\em checked}, \/  int {\em disabled}, \/  {\bf t\_\-jsurface} $\ast$ {\em icon})}}
+\label{group__jpopupmenu_ga1911796fed5dd59d3ab9a7471f6161a9}
+
+
+Add an item to a pop-\/up menu. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to which the item will be added. \item[{\em itemid}]Each menu item should be assigned a unique integer id using this parameter. \item[{\em utf8Text}]The text to display in for the menu item. \item[{\em textColor}]The color to use for the menu item, or NULL to use the default color. \item[{\em checked}]A non-\/zero value indicates that the item should have a check-\/mark next to it. \item[{\em disabled}]A non-\/zero value indicates that the item should be disabled. \item[{\em icon}]A \hyperlink{group__jsurface_ga9ced037ee8d6676fcd561e1d3420c28b}{t\_\-jsurface} will be used as an icon for the menu item if provided here. Pass NULL for no icon. \end{DoxyParams}
+\hypertarget{group__jpopupmenu_gad948b473c9ff12c1159960dcd36fb9a2}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-addseperator@{jpopupmenu\_\-addseperator}}
+\index{jpopupmenu\_\-addseperator@{jpopupmenu\_\-addseperator}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-addseperator}]{\setlength{\rightskip}{0pt plus 5cm}void jpopupmenu\_\-addseperator ({\bf t\_\-jpopupmenu} $\ast$ {\em menu})}}
+\label{group__jpopupmenu_gad948b473c9ff12c1159960dcd36fb9a2}
+
+
+Add a separator to a pop-\/menu. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to which the separator will be added. \end{DoxyParams}
+\hypertarget{group__jpopupmenu_ga5ba90215f0693fe446f0f4c64af954b1}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-addsubmenu@{jpopupmenu\_\-addsubmenu}}
+\index{jpopupmenu\_\-addsubmenu@{jpopupmenu\_\-addsubmenu}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-addsubmenu}]{\setlength{\rightskip}{0pt plus 5cm}void jpopupmenu\_\-addsubmenu ({\bf t\_\-jpopupmenu} $\ast$ {\em menu}, \/  const char $\ast$ {\em utf8Name}, \/  {\bf t\_\-jpopupmenu} $\ast$ {\em submenu}, \/  int {\em disabled})}}
+\label{group__jpopupmenu_ga5ba90215f0693fe446f0f4c64af954b1}
+
+
+Add a pop-\/menu to another pop-\/menu as a submenu. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to which a menu will be added as a submenu. \item[{\em utf8Name}]The name of the menu item. \item[{\em submenu}]The pop-\/up menu which will be used as the submenu. \item[{\em disabled}]Pass a non-\/zero value to disable the menu item. \end{DoxyParams}
+\hypertarget{group__jpopupmenu_gaf4f15c09d15aaaa33d149a6109c4aa47}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-clear@{jpopupmenu\_\-clear}}
+\index{jpopupmenu\_\-clear@{jpopupmenu\_\-clear}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void jpopupmenu\_\-clear ({\bf t\_\-jpopupmenu} $\ast$ {\em menu})}}
+\label{group__jpopupmenu_gaf4f15c09d15aaaa33d149a6109c4aa47}
+
+
+Clear the conents of a pop-\/up menu. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu whose contents will be cleared. \end{DoxyParams}
+\hypertarget{group__jpopupmenu_ga4ee6ff8775c88750bc002db49bdaa98b}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-create@{jpopupmenu\_\-create}}
+\index{jpopupmenu\_\-create@{jpopupmenu\_\-create}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-jpopupmenu}$\ast$ jpopupmenu\_\-create ()}}
+\label{group__jpopupmenu_ga4ee6ff8775c88750bc002db49bdaa98b}
+
+
+Create a pop-\/up menu. Free this pop-\/up menu using \hyperlink{group__jpopupmenu_ga1481bf544273533000b02e31e42df65f}{jpopupmenu\_\-destroy()}.
+
+\begin{DoxyReturn}{Returns}
+A pointer to the newly created jpopupmenu object. 
+\end{DoxyReturn}
+\hypertarget{group__jpopupmenu_ga1481bf544273533000b02e31e42df65f}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-destroy@{jpopupmenu\_\-destroy}}
+\index{jpopupmenu\_\-destroy@{jpopupmenu\_\-destroy}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void jpopupmenu\_\-destroy ({\bf t\_\-jpopupmenu} $\ast$ {\em menu})}}
+\label{group__jpopupmenu_ga1481bf544273533000b02e31e42df65f}
+
+
+Free a pop-\/up menu created with \hyperlink{group__jpopupmenu_ga4ee6ff8775c88750bc002db49bdaa98b}{jpopupmenu\_\-create()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to be freed. \end{DoxyParams}
+\hypertarget{group__jpopupmenu_ga53b05326e6d6f2def7573941d97699c0}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-popup@{jpopupmenu\_\-popup}}
+\index{jpopupmenu\_\-popup@{jpopupmenu\_\-popup}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-popup}]{\setlength{\rightskip}{0pt plus 5cm}int jpopupmenu\_\-popup ({\bf t\_\-jpopupmenu} $\ast$ {\em menu}, \/  {\bf t\_\-pt} {\em screen}, \/  int {\em defitemid})}}
+\label{group__jpopupmenu_ga53b05326e6d6f2def7573941d97699c0}
+
+
+Tell a menu to display at a specified location. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to display. \item[{\em screen}]The point at which to display in screen coordinates. \item[{\em defitemid}]The initially choosen item id. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The item id for the item in the menu choosen by the user. 
+\end{DoxyReturn}
+\hypertarget{group__jpopupmenu_ga18c3434bd119af47b3ec605b659c1654}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-popup\_\-abovebox@{jpopupmenu\_\-popup\_\-abovebox}}
+\index{jpopupmenu\_\-popup\_\-abovebox@{jpopupmenu\_\-popup\_\-abovebox}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-popup\_\-abovebox}]{\setlength{\rightskip}{0pt plus 5cm}int jpopupmenu\_\-popup\_\-abovebox ({\bf t\_\-jpopupmenu} $\ast$ {\em menu}, \/  {\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-object} $\ast$ {\em view}, \/  int {\em offset}, \/  int {\em defitemid})}}
+\label{group__jpopupmenu_ga18c3434bd119af47b3ec605b659c1654}
+
+
+Tell a menu to display above a given box in a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to display. \item[{\em box}]The box above which to display the menu. \item[{\em view}]The patcherview for the box in which to display the menu. \item[{\em offset}]An offset from the box position at which to display the menu. \item[{\em defitemid}]The initially choosen item id. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The item id for the item in the menu choosen by the user. 
+\end{DoxyReturn}
+\hypertarget{group__jpopupmenu_gab7ff50b3fcc40c38c478f97b1848e099}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-popup\_\-nearbox@{jpopupmenu\_\-popup\_\-nearbox}}
+\index{jpopupmenu\_\-popup\_\-nearbox@{jpopupmenu\_\-popup\_\-nearbox}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-popup\_\-nearbox}]{\setlength{\rightskip}{0pt plus 5cm}int jpopupmenu\_\-popup\_\-nearbox ({\bf t\_\-jpopupmenu} $\ast$ {\em menu}, \/  {\bf t\_\-object} $\ast$ {\em box}, \/  {\bf t\_\-object} $\ast$ {\em view}, \/  int {\em defitemid})}}
+\label{group__jpopupmenu_gab7ff50b3fcc40c38c478f97b1848e099}
+
+
+Tell a menu to display near a given box in a patcher. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to display. \item[{\em box}]The box above which to display the menu. \item[{\em view}]The patcherview for the box in which to display the menu. \item[{\em defitemid}]The initially choosen item id. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The item id for the item in the menu choosen by the user. 
+\end{DoxyReturn}
+\hypertarget{group__jpopupmenu_gaef73894f17b579c0cc6cc6d56de4ffe5}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-setcolors@{jpopupmenu\_\-setcolors}}
+\index{jpopupmenu\_\-setcolors@{jpopupmenu\_\-setcolors}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-setcolors}]{\setlength{\rightskip}{0pt plus 5cm}void jpopupmenu\_\-setcolors ({\bf t\_\-jpopupmenu} $\ast$ {\em menu}, \/  {\bf t\_\-jrgba} {\em text}, \/  {\bf t\_\-jrgba} {\em bg}, \/  {\bf t\_\-jrgba} {\em highlightedtext}, \/  {\bf t\_\-jrgba} {\em highlightedbg})}}
+\label{group__jpopupmenu_gaef73894f17b579c0cc6cc6d56de4ffe5}
+
+
+Set the colors used by a pop-\/up menu. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu to which the colors will be applied. \item[{\em text}]The text color for menu items. \item[{\em bg}]The background color for menu items. \item[{\em highlightedtext}]The text color for the highlighted menu item. \item[{\em highlightedbg}]The background color the highlighted menu item. \end{DoxyParams}
+\hypertarget{group__jpopupmenu_gaf4a1c2ad6943b5095cac1932f9c39972}{
+\index{jpopupmenu@{jpopupmenu}!jpopupmenu\_\-setfont@{jpopupmenu\_\-setfont}}
+\index{jpopupmenu\_\-setfont@{jpopupmenu\_\-setfont}!jpopupmenu@{jpopupmenu}}
+\subsubsection[{jpopupmenu\_\-setfont}]{\setlength{\rightskip}{0pt plus 5cm}void jpopupmenu\_\-setfont ({\bf t\_\-jpopupmenu} $\ast$ {\em menu}, \/  {\bf t\_\-jfont} $\ast$ {\em font})}}
+\label{group__jpopupmenu_gaf4a1c2ad6943b5095cac1932f9c39972}
+
+
+Set the font used by a pop-\/up menu. 
+\begin{DoxyParams}{Parameters}
+\item[{\em menu}]The pop-\/up menu whose font will be set. \item[{\em font}]A pointer to a font object, whose font info will be copied to the pop-\/up menu. \end{DoxyParams}

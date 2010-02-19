@@ -1,0 +1,352 @@
+\hypertarget{group__msp}{
+\section{MSP}
+\label{group__msp}\index{MSP@{MSP}}
+}
+
+
+Collaboration diagram for MSP:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=86pt]{group__msp}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__pxobject}{t\_\-pxobject}
+\begin{DoxyCompactList}\small\item\em Header for any non-\/ui signal processing object. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__signal}{t\_\-signal}
+\begin{DoxyCompactList}\small\item\em The signal data structure. \item\end{DoxyCompactList}\item 
+struct \hyperlink{structt__pxjbox}{t\_\-pxjbox}
+\begin{DoxyCompactList}\small\item\em Header for any ui signal processing object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__buffers}{Buffers}
+
+
+\begin{DoxyCompactList}\small\item\em Your object can access shared data stored in an MSP buffer$\sim$ object. \item\end{DoxyCompactList}\item 
+\hyperlink{group__pfft}{PFFT}
+
+
+\begin{DoxyCompactList}\small\item\em When an object is instantiated, it is possible to determine if it is being created in pfft$\sim$ context in the new method. \item\end{DoxyCompactList}\item 
+\hyperlink{group__poly}{Poly}
+
+
+\begin{DoxyCompactList}\small\item\em If your object is instatiated as a voice of a poly$\sim$ object, it is possible both to determine this context and to determine information about the specific voice. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__msp_ga15695d5ba6bd17ae2e4ac01fff6d2b32}{
+\#define \hyperlink{group__msp_ga15695d5ba6bd17ae2e4ac01fff6d2b32}{Z\_\-NO\_\-INPLACE}~1}
+\label{group__msp_ga15695d5ba6bd17ae2e4ac01fff6d2b32}
+
+\begin{DoxyCompactList}\small\item\em flag indicating the object doesn't want signals in place \item\end{DoxyCompactList}\item 
+\hypertarget{group__msp_ga38363d9e8d77f8f0fcec1a7a1d008977}{
+\#define \hyperlink{group__msp_ga38363d9e8d77f8f0fcec1a7a1d008977}{Z\_\-PUT\_\-LAST}~2}
+\label{group__msp_ga38363d9e8d77f8f0fcec1a7a1d008977}
+
+\begin{DoxyCompactList}\small\item\em when list of ugens is resorted, put this object at end \item\end{DoxyCompactList}\item 
+\hypertarget{group__msp_gafd451e217e2ffd6b8e158b8861fcf866}{
+\#define \hyperlink{group__msp_gafd451e217e2ffd6b8e158b8861fcf866}{Z\_\-PUT\_\-FIRST}~4}
+\label{group__msp_gafd451e217e2ffd6b8e158b8861fcf866}
+
+\begin{DoxyCompactList}\small\item\em when list of ugens is resorted, put this object at beginning \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__msp_ga598a3330b3c21701223ee0ca14316eca}{PI}~3.14159265358979323846
+\begin{DoxyCompactList}\small\item\em The pi constant. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__msp_ga4912c64aec0c943b7985db6cb61ff83a}{TWOPI}~6.28318530717958647692
+\begin{DoxyCompactList}\small\item\em Twice the pi constant. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{group__msp_ga54195c4fca76460ca07ba5101bcbc780}{PIOVERTWO}~1.57079632679489661923
+\begin{DoxyCompactList}\small\item\em Half of the pi constant. \item\end{DoxyCompactList}\item 
+\hypertarget{group__msp_gad15f054306792846a00a5f4e9e5426be}{
+\#define \hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup}~z\_\-dsp\_\-setup}
+\label{group__msp_gad15f054306792846a00a5f4e9e5426be}
+
+\begin{DoxyCompactList}\small\item\em This is commonly used rather than directly calling \hyperlink{group__msp_ga5c4d70cfb420f13386dd1473143e5825}{z\_\-dsp\_\-setup()} in MSP objects. \item\end{DoxyCompactList}\item 
+\hypertarget{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}{
+\#define \hyperlink{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}{dsp\_\-free}~z\_\-dsp\_\-free}
+\label{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}
+
+\begin{DoxyCompactList}\small\item\em This is commonly used rather than directly calling \hyperlink{group__msp_ga85762f03c915d3860f526a8bf4dd1f3f}{z\_\-dsp\_\-free()} in MSP objects. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef int \hyperlink{group__msp_gaaca420c8a41d33afb2f9e783ce6059e3}{t\_\-int}
+\begin{DoxyCompactList}\small\item\em An integer. \item\end{DoxyCompactList}\item 
+typedef float \hyperlink{group__msp_gab68e234c9dccbd3d62659023db9f9486}{t\_\-float}
+\begin{DoxyCompactList}\small\item\em A float. \item\end{DoxyCompactList}\item 
+typedef float \hyperlink{group__msp_ga8ecd36423b35083714b8740c40b57120}{t\_\-sample}
+\begin{DoxyCompactList}\small\item\em A sample value. \item\end{DoxyCompactList}\item 
+typedef \hyperlink{group__msp_gaaca420c8a41d33afb2f9e783ce6059e3}{t\_\-int} $\ast$($\ast$ \hyperlink{group__msp_gad1bc58df327774373ee9e10ad9026564}{t\_\-perfroutine} )(\hyperlink{group__msp_gaaca420c8a41d33afb2f9e783ce6059e3}{t\_\-int} $\ast$args)
+\begin{DoxyCompactList}\small\item\em A function pointer for the audio perform routine used by MSP objects to process blocks of samples. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \par
+\hyperlink{group__msp_ggadb49720dc49f7d4e4cf9adbf2948e409a29738f7ba126b5468181b4c017e573d0}{SYS\_\-MAXBLKSIZE} =  2048, 
+\par
+\hyperlink{group__msp_ggadb49720dc49f7d4e4cf9adbf2948e409a00acca9cc1491d6006a4c38127f02a90}{SYS\_\-MAXSIGS} =  250
+ \}
+\begin{DoxyCompactList}\small\item\em MSP System Properties. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{group__msp_ga8c499862db0fcf07692989aae3d84c9e}{sys\_\-getmaxblksize} (void)
+\begin{DoxyCompactList}\small\item\em Query MSP for the maximum global vector (block) size. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__msp_ga1d6745373b742617d281901bb063175d}{sys\_\-getblksize} (void)
+\begin{DoxyCompactList}\small\item\em Query MSP for the current global vector (block) size. \item\end{DoxyCompactList}\item 
+float \hyperlink{group__msp_ga9d492cbb6af86eaf0afb264e886072e5}{sys\_\-getsr} (void)
+\begin{DoxyCompactList}\small\item\em Query MSP for the global sample rate. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__msp_ga5705fd255a1bfcf9988db8945a1a4284}{sys\_\-getdspstate} (void)
+\begin{DoxyCompactList}\small\item\em Query MSP to determine whether or not it is running. \item\end{DoxyCompactList}\item 
+int \hyperlink{group__msp_gac949528775cd2346a95c4f89b91567d6}{sys\_\-getdspobjdspstate} (\hyperlink{structt__object}{t\_\-object} $\ast$o)
+\begin{DoxyCompactList}\small\item\em Query MSP to determine whether or not a given audio object is in a running dsp chain. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{dsp\_\-add} (\hyperlink{group__msp_gad1bc58df327774373ee9e10ad9026564}{t\_\-perfroutine} f, int n,...)
+\begin{DoxyCompactList}\small\item\em Call this function in your MSP object's dsp method. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__msp_gaf8709cab1b4bbbbd78010f765e83b328}{dsp\_\-addv} (\hyperlink{group__msp_gad1bc58df327774373ee9e10ad9026564}{t\_\-perfroutine} f, int n, void $\ast$$\ast$vector)
+\begin{DoxyCompactList}\small\item\em Call this function in your MSP object's dsp method. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__msp_ga5c4d70cfb420f13386dd1473143e5825}{z\_\-dsp\_\-setup} (\hyperlink{structt__pxobject}{t\_\-pxobject} $\ast$x, long nsignals)
+\begin{DoxyCompactList}\small\item\em Call this routine after creating your object in the new instance routine with \hyperlink{group__obj_gacb89ef27c34b45e9037d877375804284}{object\_\-alloc()}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__msp_ga85762f03c915d3860f526a8bf4dd1f3f}{z\_\-dsp\_\-free} (\hyperlink{structt__pxobject}{t\_\-pxobject} $\ast$x)
+\begin{DoxyCompactList}\small\item\em This function disposes of any memory used by proxies allocated by \hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup()}. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__msp_ga7427ae73a2ad71a1b4ef1bee2fd432fc}{class\_\-dspinit} (\hyperlink{structt__class}{t\_\-class} $\ast$c)
+\begin{DoxyCompactList}\small\item\em This routine must be called in your object's initialization routine. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__msp_gab2b27239f91fdd5bcc2bac299081687f}{class\_\-dspinitbox} (\hyperlink{structt__class}{t\_\-class} $\ast$c)
+\begin{DoxyCompactList}\small\item\em This routine must be called in your object's initialization routine. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__msp_gab9219b764ce65abb21bec0ea54538c14}{class\_\-dspinitjbox} (\hyperlink{structt__class}{t\_\-class} $\ast$c)
+\begin{DoxyCompactList}\small\item\em Configure a class to be ready for use with the MSP signal chain. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{group__msp_ga598a3330b3c21701223ee0ca14316eca}{
+\index{msp@{msp}!PI@{PI}}
+\index{PI@{PI}!msp@{msp}}
+\subsubsection[{PI}]{\setlength{\rightskip}{0pt plus 5cm}\#define PI~3.14159265358979323846}}
+\label{group__msp_ga598a3330b3c21701223ee0ca14316eca}
+
+
+The pi constant. \hypertarget{group__msp_ga54195c4fca76460ca07ba5101bcbc780}{
+\index{msp@{msp}!PIOVERTWO@{PIOVERTWO}}
+\index{PIOVERTWO@{PIOVERTWO}!msp@{msp}}
+\subsubsection[{PIOVERTWO}]{\setlength{\rightskip}{0pt plus 5cm}\#define PIOVERTWO~1.57079632679489661923}}
+\label{group__msp_ga54195c4fca76460ca07ba5101bcbc780}
+
+
+Half of the pi constant. \hypertarget{group__msp_ga4912c64aec0c943b7985db6cb61ff83a}{
+\index{msp@{msp}!TWOPI@{TWOPI}}
+\index{TWOPI@{TWOPI}!msp@{msp}}
+\subsubsection[{TWOPI}]{\setlength{\rightskip}{0pt plus 5cm}\#define TWOPI~6.28318530717958647692}}
+\label{group__msp_ga4912c64aec0c943b7985db6cb61ff83a}
+
+
+Twice the pi constant. 
+
+\subsection{Typedef Documentation}
+\hypertarget{group__msp_gab68e234c9dccbd3d62659023db9f9486}{
+\index{msp@{msp}!t\_\-float@{t\_\-float}}
+\index{t\_\-float@{t\_\-float}!msp@{msp}}
+\subsubsection[{t\_\-float}]{\setlength{\rightskip}{0pt plus 5cm}typedef float {\bf t\_\-float}}}
+\label{group__msp_gab68e234c9dccbd3d62659023db9f9486}
+
+
+A float. \hypertarget{group__msp_gaaca420c8a41d33afb2f9e783ce6059e3}{
+\index{msp@{msp}!t\_\-int@{t\_\-int}}
+\index{t\_\-int@{t\_\-int}!msp@{msp}}
+\subsubsection[{t\_\-int}]{\setlength{\rightskip}{0pt plus 5cm}typedef int {\bf t\_\-int}}}
+\label{group__msp_gaaca420c8a41d33afb2f9e783ce6059e3}
+
+
+An integer. \hypertarget{group__msp_gad1bc58df327774373ee9e10ad9026564}{
+\index{msp@{msp}!t\_\-perfroutine@{t\_\-perfroutine}}
+\index{t\_\-perfroutine@{t\_\-perfroutine}!msp@{msp}}
+\subsubsection[{t\_\-perfroutine}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf t\_\-int}$\ast$($\ast$ {\bf t\_\-perfroutine})({\bf t\_\-int} $\ast$args)}}
+\label{group__msp_gad1bc58df327774373ee9e10ad9026564}
+
+
+A function pointer for the audio perform routine used by MSP objects to process blocks of samples. \hypertarget{group__msp_ga8ecd36423b35083714b8740c40b57120}{
+\index{msp@{msp}!t\_\-sample@{t\_\-sample}}
+\index{t\_\-sample@{t\_\-sample}!msp@{msp}}
+\subsubsection[{t\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}typedef float {\bf t\_\-sample}}}
+\label{group__msp_ga8ecd36423b35083714b8740c40b57120}
+
+
+A sample value. 
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__msp_gadb49720dc49f7d4e4cf9adbf2948e409}{
+\subsubsection[{"@20}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}
+\label{group__msp_gadb49720dc49f7d4e4cf9adbf2948e409}
+
+
+MSP System Properties. \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{SYS\_\-MAXBLKSIZE@{SYS\_\-MAXBLKSIZE}!msp@{msp}}\index{msp@{msp}!SYS\_\-MAXBLKSIZE@{SYS\_\-MAXBLKSIZE}}\item[{\em 
+\hypertarget{group__msp_ggadb49720dc49f7d4e4cf9adbf2948e409a29738f7ba126b5468181b4c017e573d0}{
+SYS\_\-MAXBLKSIZE}
+\label{group__msp_ggadb49720dc49f7d4e4cf9adbf2948e409a29738f7ba126b5468181b4c017e573d0}
+}]a good number for a maximum signal vector size \index{SYS\_\-MAXSIGS@{SYS\_\-MAXSIGS}!msp@{msp}}\index{msp@{msp}!SYS\_\-MAXSIGS@{SYS\_\-MAXSIGS}}\item[{\em 
+\hypertarget{group__msp_ggadb49720dc49f7d4e4cf9adbf2948e409a00acca9cc1491d6006a4c38127f02a90}{
+SYS\_\-MAXSIGS}
+\label{group__msp_ggadb49720dc49f7d4e4cf9adbf2948e409a00acca9cc1491d6006a4c38127f02a90}
+}]number of signal inlets you can have in an object \end{description}
+\end{Desc}
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__msp_ga7427ae73a2ad71a1b4ef1bee2fd432fc}{
+\index{msp@{msp}!class\_\-dspinit@{class\_\-dspinit}}
+\index{class\_\-dspinit@{class\_\-dspinit}!msp@{msp}}
+\subsubsection[{class\_\-dspinit}]{\setlength{\rightskip}{0pt plus 5cm}void class\_\-dspinit ({\bf t\_\-class} $\ast$ {\em c})}}
+\label{group__msp_ga7427ae73a2ad71a1b4ef1bee2fd432fc}
+
+
+This routine must be called in your object's initialization routine. It adds a set of methods to your object's class that are called by MSP to build the DSP call chain. These methods function entirely transparently to your object so you don't have to worry about them. However, you should avoid binding anything to their names: signal, drawline, userconnect, and enable.
+
+This routine is for normal (non-\/user-\/interface objects). It must be called prior to calling \hyperlink{group__class_ga0709af4aad9570f0cb91711a5c6d34d1}{class\_\-register()} for your class.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]The class to make dsp-\/ready. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__msp_gab2b27239f91fdd5bcc2bac299081687f}{class\_\-dspinitbox()} 
+\end{DoxySeeAlso}
+\hypertarget{group__msp_gab2b27239f91fdd5bcc2bac299081687f}{
+\index{msp@{msp}!class\_\-dspinitbox@{class\_\-dspinitbox}}
+\index{class\_\-dspinitbox@{class\_\-dspinitbox}!msp@{msp}}
+\subsubsection[{class\_\-dspinitbox}]{\setlength{\rightskip}{0pt plus 5cm}void class\_\-dspinitbox ({\bf t\_\-class} $\ast$ {\em c})}}
+\label{group__msp_gab2b27239f91fdd5bcc2bac299081687f}
+
+
+This routine must be called in your object's initialization routine. It adds a set of methods to your object's class that are called by MSP to build the DSP call chain. These methods function entirely transparently to your object so you don't have to worry about them. However, you should avoid binding anything to their names: signal, drawline, userconnect, and enable.
+
+This routine is for normal user-\/interface objects.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]The class to make dsp-\/ready. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__msp_ga7427ae73a2ad71a1b4ef1bee2fd432fc}{class\_\-dspinit()} 
+\end{DoxySeeAlso}
+\hypertarget{group__msp_gab9219b764ce65abb21bec0ea54538c14}{
+\index{msp@{msp}!class\_\-dspinitjbox@{class\_\-dspinitjbox}}
+\index{class\_\-dspinitjbox@{class\_\-dspinitjbox}!msp@{msp}}
+\subsubsection[{class\_\-dspinitjbox}]{\setlength{\rightskip}{0pt plus 5cm}void class\_\-dspinitjbox ({\bf t\_\-class} $\ast$ {\em c})}}
+\label{group__msp_gab9219b764ce65abb21bec0ea54538c14}
+
+
+Configure a class to be ready for use with the MSP signal chain. You must call this function when your class is initialized (typically in the main() function) for an object to process audio.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]The pointer to the class being configured. \end{DoxyParams}
+\hypertarget{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}{
+\index{msp@{msp}!dsp\_\-add@{dsp\_\-add}}
+\index{dsp\_\-add@{dsp\_\-add}!msp@{msp}}
+\subsubsection[{dsp\_\-add}]{\setlength{\rightskip}{0pt plus 5cm}void dsp\_\-add ({\bf t\_\-perfroutine} {\em f}, \/  int {\em n}, \/   {\em ...})}}
+\label{group__msp_gae9a75fa230b1db6d8316405d4a6065cc}
+
+
+Call this function in your MSP object's dsp method. This function adds your object's perform method to the DSP call chain and specifies the arguments it will be passed. argc, the number of arguments to your perform method, should be followed by argc additional arguments, all of which must be the size of a pointer or a long.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The perform routine to use for processing audio. \item[{\em n}]The number of arguments that will follow \item[{\em ...}]The arguments that will be passed to the perform routine. \end{DoxyParams}
+\hypertarget{group__msp_gaf8709cab1b4bbbbd78010f765e83b328}{
+\index{msp@{msp}!dsp\_\-addv@{dsp\_\-addv}}
+\index{dsp\_\-addv@{dsp\_\-addv}!msp@{msp}}
+\subsubsection[{dsp\_\-addv}]{\setlength{\rightskip}{0pt plus 5cm}void dsp\_\-addv ({\bf t\_\-perfroutine} {\em f}, \/  int {\em n}, \/  void $\ast$$\ast$ {\em vector})}}
+\label{group__msp_gaf8709cab1b4bbbbd78010f765e83b328}
+
+
+Call this function in your MSP object's dsp method. Use \hyperlink{group__msp_gaf8709cab1b4bbbbd78010f765e83b328}{dsp\_\-addv()} to add your object's perform routine to the DSP call chain and specify its arguments in an array rather than as arguments to a function.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em f}]The perform routine to use for processing audio. \item[{\em n}]The number of arguments that will follow in the vector parameter. \item[{\em vector}]The arguments that will be passed to the perform routine. \end{DoxyParams}
+\hypertarget{group__msp_ga1d6745373b742617d281901bb063175d}{
+\index{msp@{msp}!sys\_\-getblksize@{sys\_\-getblksize}}
+\index{sys\_\-getblksize@{sys\_\-getblksize}!msp@{msp}}
+\subsubsection[{sys\_\-getblksize}]{\setlength{\rightskip}{0pt plus 5cm}int sys\_\-getblksize (void)}}
+\label{group__msp_ga1d6745373b742617d281901bb063175d}
+
+
+Query MSP for the current global vector (block) size. \begin{DoxyReturn}{Returns}
+The current global vector size for the MSP environment. 
+\end{DoxyReturn}
+\hypertarget{group__msp_gac949528775cd2346a95c4f89b91567d6}{
+\index{msp@{msp}!sys\_\-getdspobjdspstate@{sys\_\-getdspobjdspstate}}
+\index{sys\_\-getdspobjdspstate@{sys\_\-getdspobjdspstate}!msp@{msp}}
+\subsubsection[{sys\_\-getdspobjdspstate}]{\setlength{\rightskip}{0pt plus 5cm}int sys\_\-getdspobjdspstate ({\bf t\_\-object} $\ast$ {\em o})}}
+\label{group__msp_gac949528775cd2346a95c4f89b91567d6}
+
+
+Query MSP to determine whether or not a given audio object is in a running dsp chain. This is preferable over \hyperlink{group__msp_ga5705fd255a1bfcf9988db8945a1a4284}{sys\_\-getdspstate()} since global audio can be on but an object could be in a patcher that is not running.
+
+\begin{DoxyReturn}{Returns}
+Returns true if the MSP object is in a patcher that has audio on, otherwise returns false. 
+\end{DoxyReturn}
+\hypertarget{group__msp_ga5705fd255a1bfcf9988db8945a1a4284}{
+\index{msp@{msp}!sys\_\-getdspstate@{sys\_\-getdspstate}}
+\index{sys\_\-getdspstate@{sys\_\-getdspstate}!msp@{msp}}
+\subsubsection[{sys\_\-getdspstate}]{\setlength{\rightskip}{0pt plus 5cm}int sys\_\-getdspstate (void)}}
+\label{group__msp_ga5705fd255a1bfcf9988db8945a1a4284}
+
+
+Query MSP to determine whether or not it is running. \begin{DoxyReturn}{Returns}
+Returns true if the DSP is turned on, otherwise returns false. 
+\end{DoxyReturn}
+\hypertarget{group__msp_ga8c499862db0fcf07692989aae3d84c9e}{
+\index{msp@{msp}!sys\_\-getmaxblksize@{sys\_\-getmaxblksize}}
+\index{sys\_\-getmaxblksize@{sys\_\-getmaxblksize}!msp@{msp}}
+\subsubsection[{sys\_\-getmaxblksize}]{\setlength{\rightskip}{0pt plus 5cm}int sys\_\-getmaxblksize (void)}}
+\label{group__msp_ga8c499862db0fcf07692989aae3d84c9e}
+
+
+Query MSP for the maximum global vector (block) size. \begin{DoxyReturn}{Returns}
+The maximum global vector size for the MSP environment. 
+\end{DoxyReturn}
+\hypertarget{group__msp_ga9d492cbb6af86eaf0afb264e886072e5}{
+\index{msp@{msp}!sys\_\-getsr@{sys\_\-getsr}}
+\index{sys\_\-getsr@{sys\_\-getsr}!msp@{msp}}
+\subsubsection[{sys\_\-getsr}]{\setlength{\rightskip}{0pt plus 5cm}float sys\_\-getsr (void)}}
+\label{group__msp_ga9d492cbb6af86eaf0afb264e886072e5}
+
+
+Query MSP for the global sample rate. \begin{DoxyReturn}{Returns}
+The global sample rate of the MSP environment. 
+\end{DoxyReturn}
+\hypertarget{group__msp_ga85762f03c915d3860f526a8bf4dd1f3f}{
+\index{msp@{msp}!z\_\-dsp\_\-free@{z\_\-dsp\_\-free}}
+\index{z\_\-dsp\_\-free@{z\_\-dsp\_\-free}!msp@{msp}}
+\subsubsection[{z\_\-dsp\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void z\_\-dsp\_\-free ({\bf t\_\-pxobject} $\ast$ {\em x})}}
+\label{group__msp_ga85762f03c915d3860f526a8bf4dd1f3f}
+
+
+This function disposes of any memory used by proxies allocated by \hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup()}. It also notifies the signal compiler that the DSP call chain needs to be rebuilt if signal processing is active. You should be sure to call this before de-\/allocating any memory that might be in use by your object’s perform routine, in the event that signal processing is on when your object is freed.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The object to free. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__msp_ga9a981adf6eea7e55d11c1a0b02592a6e}{dsp\_\-free} 
+\end{DoxySeeAlso}
+\hypertarget{group__msp_ga5c4d70cfb420f13386dd1473143e5825}{
+\index{msp@{msp}!z\_\-dsp\_\-setup@{z\_\-dsp\_\-setup}}
+\index{z\_\-dsp\_\-setup@{z\_\-dsp\_\-setup}!msp@{msp}}
+\subsubsection[{z\_\-dsp\_\-setup}]{\setlength{\rightskip}{0pt plus 5cm}void z\_\-dsp\_\-setup ({\bf t\_\-pxobject} $\ast$ {\em x}, \/  long {\em nsignals})}}
+\label{group__msp_ga5c4d70cfb420f13386dd1473143e5825}
+
+
+Call this routine after creating your object in the new instance routine with \hyperlink{group__obj_gacb89ef27c34b45e9037d877375804284}{object\_\-alloc()}. Cast your object to \hyperlink{structt__pxobject}{t\_\-pxobject} as the first argument, then specify the number of signal inputs your object will have. \hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup()} initializes fields of the \hyperlink{structt__pxobject}{t\_\-pxobject} header and allocates any proxies needed (if num\_\-signal\_\-inputs is greater than 1).
+
+Some signal objects have no inputs; you should pass 0 for num\_\-signal\_\-inputs in this case. After calling \hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup()}, you can create additional non-\/signal inlets using \hyperlink{group__inout_ga8ca68c8eafef51622f263f13e047341b}{intin()}, \hyperlink{group__inout_ga01125a22c75ef028199febbe21346f0e}{floatin()}, or \hyperlink{group__inout_ga7195144cee5e8b74c10c2b17b6c6472a}{inlet\_\-new()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Your object's pointer. \item[{\em nsignals}]The number of signal/proxy inlets to create for the object. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__msp_gad15f054306792846a00a5f4e9e5426be}{dsp\_\-setup} 
+\end{DoxySeeAlso}

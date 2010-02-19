@@ -1,0 +1,73 @@
+\hypertarget{structt__jit__attr__offset}{
+\section{t\_\-jit\_\-attr\_\-offset Struct Reference}
+\label{structt__jit__attr__offset}\index{t\_\-jit\_\-attr\_\-offset@{t\_\-jit\_\-attr\_\-offset}}
+}
+
+
+\hyperlink{structt__jit__attr__offset}{t\_\-jit\_\-attr\_\-offset} object struct.  
+Collaboration diagram for t\_\-jit\_\-attr\_\-offset:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=163pt]{structt__jit__attr__offset__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structt__jit__attr__offset_ae3f193e9b7cc7e2ee122bf1489f5e783}{
+\hyperlink{structt__object}{t\_\-jit\_\-object} \hyperlink{structt__jit__attr__offset_ae3f193e9b7cc7e2ee122bf1489f5e783}{ob}}
+\label{structt__jit__attr__offset_ae3f193e9b7cc7e2ee122bf1489f5e783}
+
+\begin{DoxyCompactList}\small\item\em common object header \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_a0972d52a5b1ab0b054222cba18d98430}{
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{structt__jit__attr__offset_a0972d52a5b1ab0b054222cba18d98430}{name}}
+\label{structt__jit__attr__offset_a0972d52a5b1ab0b054222cba18d98430}
+
+\begin{DoxyCompactList}\small\item\em attribute name \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_ac12fc7ee8be014e60d5928ba38998d74}{
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{structt__jit__attr__offset_ac12fc7ee8be014e60d5928ba38998d74}{type}}
+\label{structt__jit__attr__offset_ac12fc7ee8be014e60d5928ba38998d74}
+
+\begin{DoxyCompactList}\small\item\em attribute type (char, long, float32, float64, symbol, atom, or obj) \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_a8a5df25776bcb652d64b5eede53e590d}{
+long \hyperlink{structt__jit__attr__offset_a8a5df25776bcb652d64b5eede53e590d}{flags}}
+\label{structt__jit__attr__offset_a8a5df25776bcb652d64b5eede53e590d}
+
+\begin{DoxyCompactList}\small\item\em flags for public/private get/set methods \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_ae3d7822853ecdad015fe681f8515492d}{
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{structt__jit__attr__offset_ae3d7822853ecdad015fe681f8515492d}{get}}
+\label{structt__jit__attr__offset_ae3d7822853ecdad015fe681f8515492d}
+
+\begin{DoxyCompactList}\small\item\em override default get method \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_ae6b480a6072b57db62f7227b25ce1126}{
+\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} \hyperlink{structt__jit__attr__offset_ae6b480a6072b57db62f7227b25ce1126}{set}}
+\label{structt__jit__attr__offset_ae6b480a6072b57db62f7227b25ce1126}
+
+\begin{DoxyCompactList}\small\item\em override default set method \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_a48bd2b568c1a9174f1d31de2b2b602c3}{
+void $\ast$ \hyperlink{structt__jit__attr__offset_a48bd2b568c1a9174f1d31de2b2b602c3}{filterget}}
+\label{structt__jit__attr__offset_a48bd2b568c1a9174f1d31de2b2b602c3}
+
+\begin{DoxyCompactList}\small\item\em filterobject for get method \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_a51bcddc82d3a88ec7a32e739fdb0ba13}{
+void $\ast$ \hyperlink{structt__jit__attr__offset_a51bcddc82d3a88ec7a32e739fdb0ba13}{filterset}}
+\label{structt__jit__attr__offset_a51bcddc82d3a88ec7a32e739fdb0ba13}
+
+\begin{DoxyCompactList}\small\item\em filterobject for set method \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_a51a51bec77a4abcbf694342327bc7aa4}{
+void $\ast$ \hyperlink{structt__jit__attr__offset_a51a51bec77a4abcbf694342327bc7aa4}{reserved}}
+\label{structt__jit__attr__offset_a51a51bec77a4abcbf694342327bc7aa4}
+
+\begin{DoxyCompactList}\small\item\em for future use \item\end{DoxyCompactList}\item 
+\hypertarget{structt__jit__attr__offset_a049898b5196ecf2d889840506a13f06a}{
+long \hyperlink{structt__jit__attr__offset_a049898b5196ecf2d889840506a13f06a}{offset}}
+\label{structt__jit__attr__offset_a049898b5196ecf2d889840506a13f06a}
+
+\begin{DoxyCompactList}\small\item\em byte offset to the attribute data \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{structt__jit__attr__offset}{t\_\-jit\_\-attr\_\-offset} object struct. \begin{DoxyWarning}{Warning}
+This struct should not be accessed directly, but is provided for reference. Attribute objects do not typically use attributes themselves to access members, but rather accessor methods-\/-\/i.e. use jit\_\-object\_\-method in place of the jit\_\-attr\_\-$\ast$ functions to access attribute state. 
+\end{DoxyWarning}

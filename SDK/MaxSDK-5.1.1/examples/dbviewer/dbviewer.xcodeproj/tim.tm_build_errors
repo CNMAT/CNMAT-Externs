@@ -1,0 +1,1 @@
+2009-08-04 12|44|24.934 xcodebuild[308:903] _XCDistributedBuildHostInfoTask encountered an error: Error Domain=NSPOSIXErrorDomain Code=2 UserInfo=0x389e810 "The operation couldn’t be completed. No such file or directory"

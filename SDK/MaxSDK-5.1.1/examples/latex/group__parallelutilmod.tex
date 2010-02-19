@@ -1,0 +1,94 @@
+\hypertarget{group__parallelutilmod}{
+\section{Parallel Utility Module}
+\label{group__parallelutilmod}\index{Parallel Utility Module@{Parallel Utility Module}}
+}
+
+
+Collaboration diagram for Parallel Utility Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=128pt]{group__parallelutilmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__parallelutilmod_gad3af91109732554c8d7bbdb5b575bdc3}{jit\_\-parallel\_\-ndim\_\-calc} (t\_\-jit\_\-parallel\_\-ndim $\ast$p)
+\begin{DoxyCompactList}\small\item\em Tasks N-\/dimensional matrix calcuations to multiple threads if appropriate. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__parallelutilmod_ga86f0d53ddcde42a844507338fedd829e}{jit\_\-parallel\_\-ndim\_\-simplecalc1} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn, void $\ast$data, long dimcount, long $\ast$dim, long planecount, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo1, char $\ast$bp1, long flags1)
+\begin{DoxyCompactList}\small\item\em Tasks one input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__parallelutilmod_gaeb6c9b472d61bdda9fd33aa61a36df1f}{jit\_\-parallel\_\-ndim\_\-simplecalc2} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn, void $\ast$data, long dimcount, long $\ast$dim, long planecount, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo1, char $\ast$bp1, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo2, char $\ast$bp2, long flags1, long flags2)
+\begin{DoxyCompactList}\small\item\em Tasks two input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__parallelutilmod_ga56ab668e990aecaa80cd0d37b8123c36}{jit\_\-parallel\_\-ndim\_\-simplecalc3} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn, void $\ast$data, long dimcount, long $\ast$dim, long planecount, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo1, char $\ast$bp1, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo2, char $\ast$bp2, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo3, char $\ast$bp3, long flags1, long flags2, long flags3)
+\begin{DoxyCompactList}\small\item\em Tasks three input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__parallelutilmod_gaa8c8a53219e8e31057fdf4cea80e8081}{jit\_\-parallel\_\-ndim\_\-simplecalc4} (\hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn, void $\ast$data, long dimcount, long $\ast$dim, long planecount, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo1, char $\ast$bp1, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo2, char $\ast$bp2, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo3, char $\ast$bp3, \hyperlink{structt__jit__matrix__info}{t\_\-jit\_\-matrix\_\-info} $\ast$minfo4, char $\ast$bp4, long flags1, long flags2, long flags3, long flags4)
+\begin{DoxyCompactList}\small\item\em Tasks four input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__parallelutilmod_gad3af91109732554c8d7bbdb5b575bdc3}{
+\index{parallelutilmod@{parallelutilmod}!jit\_\-parallel\_\-ndim\_\-calc@{jit\_\-parallel\_\-ndim\_\-calc}}
+\index{jit\_\-parallel\_\-ndim\_\-calc@{jit\_\-parallel\_\-ndim\_\-calc}!parallelutilmod@{parallelutilmod}}
+\subsubsection[{jit\_\-parallel\_\-ndim\_\-calc}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-parallel\_\-ndim\_\-calc (t\_\-jit\_\-parallel\_\-ndim $\ast$ {\em p})}}
+\label{group__parallelutilmod_gad3af91109732554c8d7bbdb5b575bdc3}
+
+
+Tasks N-\/dimensional matrix calcuations to multiple threads if appropriate. This function is ultimately what the other parallel utility functions call after having set up the t\_\-jit\_\-parallel\_\-ndim struct. The operation is tasked to multiple threads if all of the following conditions are met:
+\begin{DoxyItemize}
+\item multiple processors or cores are present
+\item parallel processing is enabled
+\item the size of the matrix data is larger then the parallel threshold
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]parallel ndim calc data \end{DoxyParams}
+\hypertarget{group__parallelutilmod_ga86f0d53ddcde42a844507338fedd829e}{
+\index{parallelutilmod@{parallelutilmod}!jit\_\-parallel\_\-ndim\_\-simplecalc1@{jit\_\-parallel\_\-ndim\_\-simplecalc1}}
+\index{jit\_\-parallel\_\-ndim\_\-simplecalc1@{jit\_\-parallel\_\-ndim\_\-simplecalc1}!parallelutilmod@{parallelutilmod}}
+\subsubsection[{jit\_\-parallel\_\-ndim\_\-simplecalc1}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-parallel\_\-ndim\_\-simplecalc1 ({\bf method} {\em fn}, \/  void $\ast$ {\em data}, \/  long {\em dimcount}, \/  long $\ast$ {\em dim}, \/  long {\em planecount}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo1}, \/  char $\ast$ {\em bp1}, \/  long {\em flags1})}}
+\label{group__parallelutilmod_ga86f0d53ddcde42a844507338fedd829e}
+
+
+Tasks one input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. This function fills out the t\_\-jit\_\-parallel\_\-ndim struct for a one input/output N-\/dimensional matrix calc method, and calls jit\_\-parallel\_\-ndim\_\-calc. This function does not distinguish between what is an input or output.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fn}]N-\/dimensional matrix calc method \item[{\em data}]user defined pointer (typically object) \item[{\em dimcount}]master number of dimensions to iterate \item[{\em dim}]master pointer to dimension sizes \item[{\em planecount}]master number of planes \item[{\em minfo1}]matrix info for first input/output \item[{\em bp1}]matrix data pointer for first input/output \item[{\em flags1}]parallel flags for first input/output \end{DoxyParams}
+\hypertarget{group__parallelutilmod_gaeb6c9b472d61bdda9fd33aa61a36df1f}{
+\index{parallelutilmod@{parallelutilmod}!jit\_\-parallel\_\-ndim\_\-simplecalc2@{jit\_\-parallel\_\-ndim\_\-simplecalc2}}
+\index{jit\_\-parallel\_\-ndim\_\-simplecalc2@{jit\_\-parallel\_\-ndim\_\-simplecalc2}!parallelutilmod@{parallelutilmod}}
+\subsubsection[{jit\_\-parallel\_\-ndim\_\-simplecalc2}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-parallel\_\-ndim\_\-simplecalc2 ({\bf method} {\em fn}, \/  void $\ast$ {\em data}, \/  long {\em dimcount}, \/  long $\ast$ {\em dim}, \/  long {\em planecount}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo1}, \/  char $\ast$ {\em bp1}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo2}, \/  char $\ast$ {\em bp2}, \/  long {\em flags1}, \/  long {\em flags2})}}
+\label{group__parallelutilmod_gaeb6c9b472d61bdda9fd33aa61a36df1f}
+
+
+Tasks two input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. This function fills out the t\_\-jit\_\-parallel\_\-ndim struct for a two input/output N-\/dimensional matrix calc method, and calls jit\_\-parallel\_\-ndim\_\-calc. This function does not distinguish between what is an input or output.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fn}]N-\/dimensional matrix calc method \item[{\em data}]user defined pointer (typically object) \item[{\em dimcount}]master number of dimensions to iterate \item[{\em dim}]master pointer to dimension sizes \item[{\em planecount}]master number of planes \item[{\em minfo1}]matrix info for first input/output \item[{\em bp1}]matrix data pointer for first input/output \item[{\em flags1}]parallel flags for first input/output \item[{\em minfo2}]matrix info for second input/output \item[{\em bp2}]matrix data pointer for second input/output \item[{\em flags2}]parallel flags for second input/output \end{DoxyParams}
+\hypertarget{group__parallelutilmod_ga56ab668e990aecaa80cd0d37b8123c36}{
+\index{parallelutilmod@{parallelutilmod}!jit\_\-parallel\_\-ndim\_\-simplecalc3@{jit\_\-parallel\_\-ndim\_\-simplecalc3}}
+\index{jit\_\-parallel\_\-ndim\_\-simplecalc3@{jit\_\-parallel\_\-ndim\_\-simplecalc3}!parallelutilmod@{parallelutilmod}}
+\subsubsection[{jit\_\-parallel\_\-ndim\_\-simplecalc3}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-parallel\_\-ndim\_\-simplecalc3 ({\bf method} {\em fn}, \/  void $\ast$ {\em data}, \/  long {\em dimcount}, \/  long $\ast$ {\em dim}, \/  long {\em planecount}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo1}, \/  char $\ast$ {\em bp1}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo2}, \/  char $\ast$ {\em bp2}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo3}, \/  char $\ast$ {\em bp3}, \/  long {\em flags1}, \/  long {\em flags2}, \/  long {\em flags3})}}
+\label{group__parallelutilmod_ga56ab668e990aecaa80cd0d37b8123c36}
+
+
+Tasks three input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. This function fills out the t\_\-jit\_\-parallel\_\-ndim struct for a three input/output N-\/dimensional matrix calc method, and calls jit\_\-parallel\_\-ndim\_\-calc. This function does not distinguish between what is an input or output.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fn}]N-\/dimensional matrix calc method \item[{\em data}]user defined pointer (typically object) \item[{\em dimcount}]master number of dimensions to iterate \item[{\em dim}]master pointer to dimension sizes \item[{\em planecount}]master number of planes \item[{\em minfo1}]matrix info for first input/output \item[{\em bp1}]matrix data pointer for first input/output \item[{\em flags1}]parallel flags for first input/output \item[{\em minfo2}]matrix info for second input/output \item[{\em bp2}]matrix data pointer for second input/output \item[{\em flags2}]parallel flags for second input/output \item[{\em minfo3}]matrix info for third input/output \item[{\em bp3}]matrix data pointer for third input/output \item[{\em flags3}]parallel flags for third input/output \end{DoxyParams}
+\hypertarget{group__parallelutilmod_gaa8c8a53219e8e31057fdf4cea80e8081}{
+\index{parallelutilmod@{parallelutilmod}!jit\_\-parallel\_\-ndim\_\-simplecalc4@{jit\_\-parallel\_\-ndim\_\-simplecalc4}}
+\index{jit\_\-parallel\_\-ndim\_\-simplecalc4@{jit\_\-parallel\_\-ndim\_\-simplecalc4}!parallelutilmod@{parallelutilmod}}
+\subsubsection[{jit\_\-parallel\_\-ndim\_\-simplecalc4}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-parallel\_\-ndim\_\-simplecalc4 ({\bf method} {\em fn}, \/  void $\ast$ {\em data}, \/  long {\em dimcount}, \/  long $\ast$ {\em dim}, \/  long {\em planecount}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo1}, \/  char $\ast$ {\em bp1}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo2}, \/  char $\ast$ {\em bp2}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo3}, \/  char $\ast$ {\em bp3}, \/  {\bf t\_\-jit\_\-matrix\_\-info} $\ast$ {\em minfo4}, \/  char $\ast$ {\em bp4}, \/  long {\em flags1}, \/  long {\em flags2}, \/  long {\em flags3}, \/  long {\em flags4})}}
+\label{group__parallelutilmod_gaa8c8a53219e8e31057fdf4cea80e8081}
+
+
+Tasks four input/output N-\/dimensional matrix calcuations to multiple threads if appropriate. This function fills out the t\_\-jit\_\-parallel\_\-ndim struct for a three input/output N-\/dimensional matrix calc method, and calls jit\_\-parallel\_\-ndim\_\-calc. This function does not distinguish between what is an input or output.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em fn}]N-\/dimensional matrix calc method \item[{\em data}]user defined pointer (typically object) \item[{\em dimcount}]master number of dimensions to iterate \item[{\em dim}]master pointer to dimension sizes \item[{\em planecount}]master number of planes \item[{\em minfo1}]matrix info for first input/output \item[{\em bp1}]matrix data pointer for first input/output \item[{\em flags1}]parallel flags for first input/output \item[{\em minfo2}]matrix info for second input/output \item[{\em bp2}]matrix data pointer for second input/output \item[{\em flags2}]parallel flags for second input/output \item[{\em minfo3}]matrix info for third input/output \item[{\em bp3}]matrix data pointer for third input/output \item[{\em flags3}]parallel flags for third input/output \item[{\em minfo4}]matrix info for fourth input/output \item[{\em bp4}]matrix data pointer for fourth input/output \item[{\em flags4}]parallel flags for fourth input/output \end{DoxyParams}

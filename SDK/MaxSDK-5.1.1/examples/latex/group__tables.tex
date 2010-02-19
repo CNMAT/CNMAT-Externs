@@ -1,0 +1,70 @@
+\hypertarget{group__tables}{
+\section{Table Access}
+\label{group__tables}\index{Table Access@{Table Access}}
+}
+
+
+You can use these functions to access named table objects.  
+
+
+Collaboration diagram for Table Access:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=129pt]{group__tables}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+short \hyperlink{group__tables_ga2c08d1383a235eb8c106c0f3afea6d21}{table\_\-get} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s, long $\ast$$\ast$$\ast$hp, long $\ast$sp)
+\begin{DoxyCompactList}\small\item\em Get a handle to the data in a named table object. \item\end{DoxyCompactList}\item 
+short \hyperlink{group__tables_gaa72449d4792a6108489ef63c5f5ba7a3}{table\_\-dirty} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Mark a table object as having changed data. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+You can use these functions to access named table objects. Tables have names when the user creates a table with an argument.
+
+The scenario for knowing the name of a table but not the object itself is if you were passed a \hyperlink{structt__symbol}{t\_\-symbol}, either as an argument to your creation function or in some message, with the implication being \char`\"{}do your 
+	thing with the data in the table named norris.\char`\"{} 
+
+\subsection{Function Documentation}
+\hypertarget{group__tables_gaa72449d4792a6108489ef63c5f5ba7a3}{
+\index{tables@{tables}!table\_\-dirty@{table\_\-dirty}}
+\index{table\_\-dirty@{table\_\-dirty}!tables@{tables}}
+\subsubsection[{table\_\-dirty}]{\setlength{\rightskip}{0pt plus 5cm}short table\_\-dirty ({\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__tables_gaa72449d4792a6108489ef63c5f5ba7a3}
+
+
+Mark a table object as having changed data. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]Symbol containing the name of a table object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If no table is associated with tableName, table\_\-dirty returns a non-\/zero result. 
+\end{DoxyReturn}
+\hypertarget{group__tables_ga2c08d1383a235eb8c106c0f3afea6d21}{
+\index{tables@{tables}!table\_\-get@{table\_\-get}}
+\index{table\_\-get@{table\_\-get}!tables@{tables}}
+\subsubsection[{table\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}short table\_\-get ({\bf t\_\-symbol} $\ast$ {\em s}, \/  long $\ast$$\ast$$\ast$ {\em hp}, \/  long $\ast$ {\em sp})}}
+\label{group__tables_ga2c08d1383a235eb8c106c0f3afea6d21}
+
+
+Get a handle to the data in a named table object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]Symbol containing the name of the table object to find. \item[{\em hp}]Address of a handle where the table’s data will be returned if the named table object is found. \item[{\em sp}]Number of elements in the table (its size in longs). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If no table object is associated with the symbol tableName, \hyperlink{group__tables_ga2c08d1383a235eb8c106c0f3afea6d21}{table\_\-get()} returns a non-\/zero result.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+table\_\-get searches for a table associated with the \hyperlink{structt__symbol}{t\_\-symbol} tableName. If one is found, a Handle to its elements (stored as an array of long integers) is returned and the function returns 0. Never count on a table to exist across calls to one of your methods. Call table\_\-get and check the result each time you wish to use a table.
+\end{DoxyRemark}
+Here is an example of retrieving the 40th element of a table: 
+\begin{DoxyCode}
+    long **storage,size,value; 
+    if (!table_get(gensym("somename"),&storage,&size)) { 
+        if (size > 40) 
+            value = *((*storage)+40); 
+    }
+\end{DoxyCode}
+ 

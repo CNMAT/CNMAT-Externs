@@ -1,0 +1,61 @@
+When writing objects for Max, you typically think of creating methods which are called when a message is sent to your object through the object's inlet.
+
+However, your object may receive messages directly from Max rather than using the inlet.
+
+One common example is the \char`\"{}assist\char`\"{} message, which is sent to your object when a user's mouse cursor hovers over one of your object's inlets or outlets. If your object binds a method to the \char`\"{}assist\char`\"{} message then you will be able to customize the message that is shown.
+
+This appendix serves as a quick reference for messages that are commonly sent to objects by Max, should they be implemented by the given object. Where possible, the prototypes given are actual prototypes from example objects in the SDK rather than abstractions to assist in finding the context for these calls.\hypertarget{chapter_appendix_a_appendix_a_all}{}\section{Messages for All Objects}\label{chapter_appendix_a_appendix_a_all}
+\begin{TabularC}{3}
+\hline
+acceptsdrag\_\-locked &long pictmeter\_\-acceptsdrag\_\-unlocked(t\_\-pictmeter $\ast$x, t\_\-object $\ast$drag, t\_\-object $\ast$view);&\\\cline{1-3}
+acceptsdrag\_\-unlocked &long pictmeter\_\-acceptsdrag\_\-unlocked(t\_\-pictmeter $\ast$x, t\_\-object $\ast$drag, t\_\-object $\ast$view);&\\\cline{1-3}
+assist &void pictmeter\_\-assist(t\_\-pictmeter $\ast$x, void $\ast$b, long m, long a, char $\ast$s);&\\\cline{1-3}
+dumpout &&bind this message to \hyperlink{group__obj_ga95edf6b869d6c5be94a59e49dddb0935}{object\_\-obex\_\-dumpout()} rather than defining your own method. \\\cline{1-3}
+inletinfo &void my\_\-obj(t\_\-object $\ast$x, void $\ast$b, long a, char $\ast$t) &you may bind to stdinletinfo() or define your own inletinfo method. \par
+\par
+ The 'b' parameter can be ignored, the 'a' parameter is the inlet number, and 1 or 0 should set the value of '$\ast$t' upon return. \\\cline{1-3}
+notify &t\_\-max\_\-err dbviewer\_\-notify(t\_\-dbviewer $\ast$x, t\_\-symbol $\ast$s, t\_\-symbol $\ast$msg, void $\ast$sender, void $\ast$data);&\\\cline{1-3}
+quickref &&obsolete, this is provided automatically now \\\cline{1-3}
+\end{TabularC}
+\hypertarget{chapter_appendix_a_appendix_a_nonui}{}\section{Messages for Non-\/UI Objects}\label{chapter_appendix_a_appendix_a_nonui}
+\begin{TabularC}{3}
+\hline
+dblclick &void scripto\_\-dblclick(t\_\-scripto $\ast$x);&\\\cline{1-3}
+\end{TabularC}
+\hypertarget{chapter_appendix_a_appendix_a_ui}{}\section{Messages for User Interface Objects}\label{chapter_appendix_a_appendix_a_ui}
+\begin{TabularC}{3}
+\hline
+getdrawparams &void uisimp\_\-getdrawparams(t\_\-uisimp $\ast$x, t\_\-object $\ast$patcherview, t\_\-jboxdrawparams $\ast$params);&\\\cline{1-3}
+mousedown &void scripto\_\-ui\_\-mousedown(t\_\-scripto\_\-ui $\ast$x, t\_\-object $\ast$patcherview, t\_\-pt pt, long modifiers);&\\\cline{1-3}
+mouseup &void uisimp\_\-mouseup(t\_\-uisimp $\ast$x, t\_\-object $\ast$patcherview, t\_\-pt pt, long modifiers);&\\\cline{1-3}
+mousedrag &void scripto\_\-ui\_\-mousedrag(t\_\-scripto\_\-ui $\ast$x, t\_\-object $\ast$patcherview, t\_\-pt pt, long modifiers);&\\\cline{1-3}
+mouseenter &void uisimp\_\-mouseenter(t\_\-uisimp $\ast$x, t\_\-object $\ast$patcherview, t\_\-pt pt, long modifiers);&\\\cline{1-3}
+mouseleave &void uisimp\_\-mouseleave(t\_\-uisimp $\ast$x, t\_\-object $\ast$patcherview, t\_\-pt pt, long modifiers);&\\\cline{1-3}
+mousemove &void uisimp\_\-mousemove(t\_\-uisimp $\ast$x, t\_\-object $\ast$patcherview, t\_\-pt pt, long modifiers);&\\\cline{1-3}
+paint &void pictmeter\_\-paint(t\_\-pictmeter $\ast$x, t\_\-object $\ast$patcherview);&\\\cline{1-3}
+\end{TabularC}
+\hypertarget{chapter_appendix_a_appendix_a_audio}{}\section{Message for Audio Objects}\label{chapter_appendix_a_appendix_a_audio}
+\begin{TabularC}{3}
+\hline
+dsp &void plus\_\-dsp(t\_\-plus $\ast$x, t\_\-signal $\ast$$\ast$sp, short $\ast$count);&\\\cline{1-3}
+\end{TabularC}
+\hypertarget{chapter_appendix_a_appendix_a_textedit}{}\section{Messages for Objects Containing Text Fields}\label{chapter_appendix_a_appendix_a_textedit}
+\begin{TabularC}{3}
+\hline
+key &long uitextfield\_\-key(t\_\-uitextfield $\ast$x, t\_\-object $\ast$patcherview, long keycode, long modifiers, long textcharacter);&\\\cline{1-3}
+keyfilter &long uitextfield\_\-keyfilter(t\_\-uitextfield $\ast$x, t\_\-object $\ast$patcherview, long $\ast$keycode, long $\ast$modifiers, long $\ast$textcharacter);&\\\cline{1-3}
+enter &void uitextfield\_\-enter(t\_\-uitextfield $\ast$x);&\\\cline{1-3}
+select &void uitextfield\_\-select(t\_\-uitextfield $\ast$x);&\\\cline{1-3}
+\end{TabularC}
+\hypertarget{chapter_appendix_a_appendix_a_ed}{}\section{Messages for Objects with Text Editor Windows}\label{chapter_appendix_a_appendix_a_ed}
+\begin{TabularC}{3}
+\hline
+edclose &void simpletext\_\-edclose(t\_\-simpletext $\ast$x, char $\ast$$\ast$text, long size);&\\\cline{1-3}
+\end{TabularC}
+\hypertarget{chapter_appendix_a_appendix_a_dataview}{}\section{Messages for Dataview Client Objects}\label{chapter_appendix_a_appendix_a_dataview}
+\begin{TabularC}{3}
+\hline
+getcelltext &void dbviewer\_\-getcelltext(t\_\-dbviewer $\ast$x, t\_\-symbol $\ast$colname, long index, char $\ast$text, long maxlen);&\\\cline{1-3}
+newpatcherview &void dbviewer\_\-newpatcherview(t\_\-dbviewer $\ast$x, t\_\-object $\ast$patcherview);&\\\cline{1-3}
+freepatcherview &void dbviewer\_\-freepatcherview(t\_\-dbviewer $\ast$x, t\_\-object $\ast$patcherview);&\\\cline{1-3}
+\end{TabularC}

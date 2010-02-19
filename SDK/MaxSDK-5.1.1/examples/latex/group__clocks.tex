@@ -1,0 +1,505 @@
+\hypertarget{group__clocks}{
+\section{Clocks}
+\label{group__clocks}\index{Clocks@{Clocks}}
+}
+
+
+Clock objects are your interface to Max’s scheduler.  
+
+
+Collaboration diagram for Clocks:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=93pt]{group__clocks}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__clocks_ga09c0580122113b4db2517ff8e7c8b0f2}{
+typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__clocks_ga09c0580122113b4db2517ff8e7c8b0f2}{t\_\-clock}}
+\label{group__clocks_ga09c0580122113b4db2517ff8e7c8b0f2}
+
+\begin{DoxyCompactList}\small\item\em A clock. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{group__clocks_ga6257ddd41904756699208f135f6539fd}{clock\_\-new} (void $\ast$obj, \hyperlink{group__datatypes_gac26ba0a173b50597f5738132e059b42d}{method} fn)
+\begin{DoxyCompactList}\small\item\em Create a new Clock object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay} (void $\ast$x, long n)
+\begin{DoxyCompactList}\small\item\em Schedule the execution of a Clock. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_ga64f5f8a027b39c1c14464744a9cc08ce}{clock\_\-unset} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Cancel the scheduled execution of a Clock. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_ga61719f0e0379fffbe79ae2bd5699b66f}{clock\_\-fdelay} (void $\ast$c, double time)
+\begin{DoxyCompactList}\small\item\em Schedule the execution of a Clock using a floating-\/point argument. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_ga04a49876d29036406f857cf22b99d9ac}{clock\_\-getftime} (double $\ast$time)
+\begin{DoxyCompactList}\small\item\em Find out the current logical time of the scheduler in milliseconds as a floating-\/point number. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_gadf4bd364fd019bed91a587337eb4801e}{setclock\_\-delay} (\hyperlink{structt__object}{t\_\-object} $\ast$x, void $\ast$c, long time)
+\begin{DoxyCompactList}\small\item\em Schedule a Clock on a scheduler. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_gafbc6d9baa43a561b1840b8b4ce6bed5c}{setclock\_\-unset} (\hyperlink{structt__object}{t\_\-object} $\ast$x, void $\ast$c)
+\begin{DoxyCompactList}\small\item\em Remove a Clock from a scheduler. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__clocks_ga1322ff3659b3d754298c636ad1856903}{setclock\_\-gettime} (\hyperlink{structt__object}{t\_\-object} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Find out the current time value of a setclock object. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_ga91badd52e8729b007c22461368a21854}{setclock\_\-fdelay} (\hyperlink{structt__object}{t\_\-object} $\ast$s, void $\ast$c, double time)
+\begin{DoxyCompactList}\small\item\em Schedule a Clock on a scheduler, using a floating-\/point time argument. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_gafd1993dc69a6232cf28683961c97b9e4}{setclock\_\-getftime} (\hyperlink{structt__object}{t\_\-object} $\ast$s, double $\ast$time)
+\begin{DoxyCompactList}\small\item\em Find out the current time value of a setclock object in floating-\/point milliseconds. \item\end{DoxyCompactList}\item 
+double \hyperlink{group__clocks_ga11fd7e2733b0186ff82e9766db3031e7}{systimer\_\-gettime} (void)
+\begin{DoxyCompactList}\small\item\em While most Max/MSP timing references \char`\"{}logical\char`\"{} time derived from Max's millisecond scheduler, time values produced by the \hyperlink{group__clocks_ga11fd7e2733b0186ff82e9766db3031e7}{systimer\_\-gettime()} are referenced from the CPU clock and can be used to time real world events with microsecond precision. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}{gettime} (void)
+\begin{DoxyCompactList}\small\item\em Find out the current logical time of the scheduler in milliseconds. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__clocks_ga90e58fdc4b6aa7a1485220d808d6fc4b}{scheduler\_\-new} (void)
+\begin{DoxyCompactList}\small\item\em Create a new local scheduler. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__clocks_gae6fc77faa65e6f80a26f072b2b17b31b}{scheduler\_\-set} (void $\ast$x)
+\begin{DoxyCompactList}\small\item\em Make a scheduler current, so that future related calls (such as \hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay()}) will affect the appropriate scheduler. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__clocks_ga7f67cd4fe41445e1d11afe84742a6d5f}{scheduler\_\-get} ()
+\begin{DoxyCompactList}\small\item\em Get the currently set scheduler. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group__clocks_ga18134769aacb89b12258898166a99ff2}{scheduler\_\-fromobject} (\hyperlink{structt__object}{t\_\-object} $\ast$o)
+\begin{DoxyCompactList}\small\item\em Get the scheduler associated with a given object, if any. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_ga69f8d9f511899d3f4b30f6b7a032849a}{scheduler\_\-run} (void $\ast$x, double until)
+\begin{DoxyCompactList}\small\item\em Run scheduler events to a selected time. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_gade0e21336c4b2f33046669df0d210a48}{scheduler\_\-settime} (void $\ast$x, double time)
+\begin{DoxyCompactList}\small\item\em Set the current time of the scheduler. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__clocks_gadbaa75aac36f99e3559827a55c12c36e}{scheduler\_\-gettime} (void $\ast$x, double $\ast$time)
+\begin{DoxyCompactList}\small\item\em Retrieve the current time of the selected scheduler. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Clock objects are your interface to Max’s scheduler. To use the scheduler, you create a new Clock object using clock\_\-new in your instance creation function. You also have to write a clock function that will be executed when the clock goes off, declared as follows:
+
+
+\begin{DoxyCode}
+    void myobject_tick (myobject *x); 
+\end{DoxyCode}
+
+
+The argument x is determined by the arg argument to \hyperlink{group__clocks_ga6257ddd41904756699208f135f6539fd}{clock\_\-new()}. Almost always it will be pointer to your object. Then, in one of your methods, use \hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay()} or \hyperlink{group__clocks_ga61719f0e0379fffbe79ae2bd5699b66f}{clock\_\-fdelay()} to schedule yourself. If you want unschedule yourself, call \hyperlink{group__clocks_ga64f5f8a027b39c1c14464744a9cc08ce}{clock\_\-unset()}. To find out what time it is now, use \hyperlink{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}{gettime()} or \hyperlink{group__clocks_ga04a49876d29036406f857cf22b99d9ac}{clock\_\-getftime()}. More advanced clock operations are possible with the setclock object interface described in Chapter 9. We suggest you take advantage of the higher timing precision of the floating-\/point clock routines—all standard Max 4 timing objects such as metro use them.
+
+When the user has Overdrive mode enabled, your clock function will execute at interrupt level.\hypertarget{group__clocks_clocks_using_clocks}{}\subsection{Using Clocks}\label{group__clocks_clocks_using_clocks}
+Under normal circumstances, gettime or clock\_\-getftime will not be necessary for scheduling purposes if you use clock\_\-delay or clock\_\-fdelay, but it may be useful for recording the timing of messages or events.
+
+As an example, here’s a fragment of how one might go about writing a metronome using the Max scheduler. First, here’s the data structure we’ll use.
+
+
+\begin{DoxyCode}
+    typedef struct mymetro { 
+        t_object *m_obj; 
+        void *m_clock; 
+        double m_interval; 
+        void *m_outlet; 
+    } t_mymetro;
+\end{DoxyCode}
+
+
+We’ll assume that the class has been initialized already. Here’s the instance creation function that will allocate a new Clock.
+
+
+\begin{DoxyCode}
+    void *mymetro_create (double defaultInterval) 
+    { 
+        t_mymetro *x; 
+        x = (t_mymetro *)newobject(mymetro_class); // allocate space
+        x->m_clock = clock_new(x,(method)mymetro_tick); // make a clock
+        x->m_interval = defaultInterval; // store the interval 
+        x->m_outlet = bangout(x); // outlet for ticks
+        return x; // return the new object
+    } 
+\end{DoxyCode}
+
+
+Here’s the method written to respond to the bang message that starts the metronome.
+
+
+\begin{DoxyCode}
+    void mymetro_bang (t_mymetro *x) 
+    { 
+        clock_fdelay(x->m_clock,0.); 
+    } 
+\end{DoxyCode}
+
+
+Here’s the Clock function.
+
+
+\begin{DoxyCode}
+    void mymetro_tick(t_mymetro *x) 
+    { 
+        clock_fdelay(x->m_clock, x->m_interval); 
+        // schedule another metronome tick
+        outlet_bang(x->m_outlet); // send out a bang
+    } 
+\end{DoxyCode}
+
+
+You may also want to stop the metronome at some point. Here’s a method written to respond to the message stop. It uses clock\_\-unset.
+
+
+\begin{DoxyCode}
+    void mymetro_stop (t_mymetro *x) 
+    { 
+        clock_unset(x->m_clock); 
+    }
+\end{DoxyCode}
+
+
+In your object’s free function, you should call freeobject on any Clocks you’ve created.
+
+
+\begin{DoxyCode}
+    void mymetro_free (MyMetro *x) 
+    { 
+        freeobject((t_object *)x->m_clock); 
+    }
+\end{DoxyCode}
+\hypertarget{group__clocks_setclock}{}\subsection{Scheduling with setclock Objects}\label{group__clocks_setclock}
+The setclock object allows a more general way of scheduling Clocks by generalizing the advancement of the time associated with a scheduler. Each setclock object’s \char`\"{}time\char`\"{} can be changed by a process other than the internal millisecond clock. In addition, the object implements routines that modify the mapping of the internal millisecond clock onto the current value of time in an object. Your object can call a set of routines that use either setclock or the normal millisecond clock transparently. Many Max objects accept the message clock followed by an optional symbol to set their internal scheduling to a named setclock object. The typical implementation passes the binding of a Symbol (the s\_\-thing field) to the Setclock functions. By default, the empty symbol is passed. If the binding has been linked to a setclock object, it will be used to schedule the Clock. Otherwise, the Clock is scheduled using the main internal millisecond scheduler. The Setclock data structure is a replacement for void $\ast$ since there will be no reason for external objects to access it directly.\hypertarget{group__clocks_setclock_using_the_routines}{}\subsubsection{Using the setclock Object Routines}\label{group__clocks_setclock_using_the_routines}
+Here’s an example implementation of the relevant methods of a metronome object using the Setclock routines.
+
+
+\begin{DoxyCode}
+    typedef struct metro 
+    { 
+        t_object m_ob; 
+        long m_interval; 
+        long m_running; 
+        void *m_clock; 
+        t_symbol *m_setclock; 
+    } t_metro;
+\end{DoxyCode}
+
+
+Here’s the implementation of the routines for turning the metronome on and off. Assume that in the instance creation function, the \hyperlink{structt__symbol}{t\_\-symbol} m\_\-setclock has been set to the empty symbol (gensym (\char`\"{}\char`\"{})) and m\_\-clock has been created; the clock function metro\_\-tick() is defined further on.
+
+
+\begin{DoxyCode}
+    void metro_bang(Metro *x) // turn metronome on
+    { 
+        x->m_running = 1; 
+        setclock_delay(x->m_setclock->s_thing,x->m_clock,0); 
+    } 
+
+    void metro_stop(Metro *x) 
+    { 
+        x->m_running = 0; 
+        setclock_unset(x->m_setclock->s_thing,x->m_clock); 
+    }
+\end{DoxyCode}
+
+
+Here is the implementation of the clock function metro\_\-tick() that runs periodically.
+
+
+\begin{DoxyCode}
+    void metro_tick(Metro *x) 
+    { 
+        outlet_bang(x->m_ob.o_outlet); 
+        if (x->m_running) 
+            setclock_delay(x->m_setclock->s_thing,x->m_clock,x->m_interval); 
+    } 
+\end{DoxyCode}
+
+
+Finally, here is an implementation of the method to respond to the clock message. Note that the function tries to verify that a non-\/zero value bound to the \hyperlink{structt__symbol}{t\_\-symbol} passed as an argument is in fact an instance of setclock by checking to see if it responds to the unset message. If not, the metronome refuses to assign the \hyperlink{structt__symbol}{t\_\-symbol} to its internal m\_\-setclock field.
+
+
+\begin{DoxyCode}
+    void metro_clock(Metro *x, t_symbol *s) 
+    { 
+        void *old = x->m_setclock->s_thing; 
+        void *c = 0; 
+
+        // the line below can be restated as: 
+        //  if s is the empty symbol 
+        //  or s->s_thing is zero 
+        //  or s->s_thing is non-zero and a setclock object  
+        if ((s == gensym("")) || ((c = s->s_thing) && zgetfn(c,&s_unset))) 
+        { 
+            if (old) 
+                setclock_unset(old,x->m_clock); 
+            x->m_setclock = s; 
+            if (x->m_running) 
+                setclock_delay(c,x->m_clock,0L); 
+        } 
+    } 
+\end{DoxyCode}
+\hypertarget{group__clocks_creating_schedulers}{}\subsection{Creating Schedulers}\label{group__clocks_creating_schedulers}
+If you want to schedule events independently of the time of the global Max scheduler, you can create your own scheduler with \hyperlink{group__clocks_ga90e58fdc4b6aa7a1485220d808d6fc4b}{scheduler\_\-new()}. By calling \hyperlink{group__clocks_gae6fc77faa65e6f80a26f072b2b17b31b}{scheduler\_\-set()} with the newly created scheduler, calls to \hyperlink{group__clocks_ga6257ddd41904756699208f135f6539fd}{clock\_\-new()} will create Clocks tied to your scheduler instead of Max’s global one. You can then control the time of the scheduler (using \hyperlink{group__clocks_gade0e21336c4b2f33046669df0d210a48}{scheduler\_\-settime()}) as well as when it executes clock functions (using \hyperlink{group__clocks_ga69f8d9f511899d3f4b30f6b7a032849a}{scheduler\_\-run()}). This is a more general facility than the setclock object routines, but unlike using the time from a setclock object to determine when a Clock function runs, once a Clock is tied to a scheduler. 
+
+\subsection{Function Documentation}
+\hypertarget{group__clocks_ga9ac56d198904627333de740743086920}{
+\index{clocks@{clocks}!clock\_\-delay@{clock\_\-delay}}
+\index{clock\_\-delay@{clock\_\-delay}!clocks@{clocks}}
+\subsubsection[{clock\_\-delay}]{\setlength{\rightskip}{0pt plus 5cm}void clock\_\-delay (void $\ast$ {\em x}, \/  long {\em n})}}
+\label{group__clocks_ga9ac56d198904627333de740743086920}
+
+
+Schedule the execution of a Clock. \hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay()} sets a clock to go off at a certain number of milliseconds from the current logical time.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Clock to schedule. \item[{\em n}]Delay, in milliseconds, before the Clock will execute. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_ga61719f0e0379fffbe79ae2bd5699b66f}{clock\_\-fdelay()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga61719f0e0379fffbe79ae2bd5699b66f}{
+\index{clocks@{clocks}!clock\_\-fdelay@{clock\_\-fdelay}}
+\index{clock\_\-fdelay@{clock\_\-fdelay}!clocks@{clocks}}
+\subsubsection[{clock\_\-fdelay}]{\setlength{\rightskip}{0pt plus 5cm}void clock\_\-fdelay (void $\ast$ {\em c}, \/  double {\em time})}}
+\label{group__clocks_ga61719f0e0379fffbe79ae2bd5699b66f}
+
+
+Schedule the execution of a Clock using a floating-\/point argument. \hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay()} sets a clock to go off at a certain number of milliseconds from the current logical time.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em c}]Clock to schedule. \item[{\em time}]Delay, in milliseconds, before the Clock will execute. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga04a49876d29036406f857cf22b99d9ac}{
+\index{clocks@{clocks}!clock\_\-getftime@{clock\_\-getftime}}
+\index{clock\_\-getftime@{clock\_\-getftime}!clocks@{clocks}}
+\subsubsection[{clock\_\-getftime}]{\setlength{\rightskip}{0pt plus 5cm}void clock\_\-getftime (double $\ast$ {\em time})}}
+\label{group__clocks_ga04a49876d29036406f857cf22b99d9ac}
+
+
+Find out the current logical time of the scheduler in milliseconds as a floating-\/point number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em time}]Returns the current time. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}{gettime()} 
+
+\hyperlink{group__clocks_gafd1993dc69a6232cf28683961c97b9e4}{setclock\_\-getftime()} 
+
+\hyperlink{group__clocks_ga1322ff3659b3d754298c636ad1856903}{setclock\_\-gettime()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga6257ddd41904756699208f135f6539fd}{
+\index{clocks@{clocks}!clock\_\-new@{clock\_\-new}}
+\index{clock\_\-new@{clock\_\-new}!clocks@{clocks}}
+\subsubsection[{clock\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ clock\_\-new (void $\ast$ {\em obj}, \/  {\bf method} {\em fn})}}
+\label{group__clocks_ga6257ddd41904756699208f135f6539fd}
+
+
+Create a new Clock object. Normally, \hyperlink{group__clocks_ga6257ddd41904756699208f135f6539fd}{clock\_\-new()} is called in your instance creation function—and it cannot be called from a thread other than the main thread. To get rid of a clock object you created, use \hyperlink{group__class__old_gadf30646e52376a37b93cc20efac65636}{freeobject()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em obj}]Argument that will be passed to clock function fn when it is called. This will almost always be a pointer to your object. \item[{\em fn}]Function to be called when the clock goes off, declared to take a single argument as shown in \hyperlink{group__clocks_clocks_using_clocks}{Using Clocks}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to a newly created Clock object. 
+\end{DoxyReturn}
+\hypertarget{group__clocks_ga64f5f8a027b39c1c14464744a9cc08ce}{
+\index{clocks@{clocks}!clock\_\-unset@{clock\_\-unset}}
+\index{clock\_\-unset@{clock\_\-unset}!clocks@{clocks}}
+\subsubsection[{clock\_\-unset}]{\setlength{\rightskip}{0pt plus 5cm}void clock\_\-unset (void $\ast$ {\em x})}}
+\label{group__clocks_ga64f5f8a027b39c1c14464744a9cc08ce}
+
+
+Cancel the scheduled execution of a Clock. \hyperlink{group__clocks_ga64f5f8a027b39c1c14464744a9cc08ce}{clock\_\-unset()} will do nothing (and not complain) if the Clock passed to it has not been set.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]Clock to cancel. \end{DoxyParams}
+\hypertarget{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}{
+\index{clocks@{clocks}!gettime@{gettime}}
+\index{gettime@{gettime}!clocks@{clocks}}
+\subsubsection[{gettime}]{\setlength{\rightskip}{0pt plus 5cm}long gettime (void)}}
+\label{group__clocks_gabe5d8b1c9f260d13734a328b2a60ff69}
+
+
+Find out the current logical time of the scheduler in milliseconds. \begin{DoxyReturn}{Returns}
+Returns the current time. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_ga04a49876d29036406f857cf22b99d9ac}{clock\_\-getftime()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga18134769aacb89b12258898166a99ff2}{
+\index{clocks@{clocks}!scheduler\_\-fromobject@{scheduler\_\-fromobject}}
+\index{scheduler\_\-fromobject@{scheduler\_\-fromobject}!clocks@{clocks}}
+\subsubsection[{scheduler\_\-fromobject}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ scheduler\_\-fromobject ({\bf t\_\-object} $\ast$ {\em o})}}
+\label{group__clocks_ga18134769aacb89b12258898166a99ff2}
+
+
+Get the scheduler associated with a given object, if any. 
+\begin{DoxyParams}{Parameters}
+\item[{\em o}]The object who's scheduler is to be returned. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This routine returns a pointer to the scheduler or the passed in object, 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_creating_schedulers}{Creating Schedulers} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga7f67cd4fe41445e1d11afe84742a6d5f}{
+\index{clocks@{clocks}!scheduler\_\-get@{scheduler\_\-get}}
+\index{scheduler\_\-get@{scheduler\_\-get}!clocks@{clocks}}
+\subsubsection[{scheduler\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ scheduler\_\-get ()}}
+\label{group__clocks_ga7f67cd4fe41445e1d11afe84742a6d5f}
+
+
+Get the currently set scheduler. \begin{DoxyReturn}{Returns}
+This routine returns a pointer to the current scheduler, 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_creating_schedulers}{Creating Schedulers} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_gadbaa75aac36f99e3559827a55c12c36e}{
+\index{clocks@{clocks}!scheduler\_\-gettime@{scheduler\_\-gettime}}
+\index{scheduler\_\-gettime@{scheduler\_\-gettime}!clocks@{clocks}}
+\subsubsection[{scheduler\_\-gettime}]{\setlength{\rightskip}{0pt plus 5cm}void scheduler\_\-gettime (void $\ast$ {\em x}, \/  double $\ast$ {\em time})}}
+\label{group__clocks_gadbaa75aac36f99e3559827a55c12c36e}
+
+
+Retrieve the current time of the selected scheduler. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The scheduler to query. \item[{\em time}]The current time of the selected scheduler. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_creating_schedulers}{Creating Schedulers} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga90e58fdc4b6aa7a1485220d808d6fc4b}{
+\index{clocks@{clocks}!scheduler\_\-new@{scheduler\_\-new}}
+\index{scheduler\_\-new@{scheduler\_\-new}!clocks@{clocks}}
+\subsubsection[{scheduler\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ scheduler\_\-new (void)}}
+\label{group__clocks_ga90e58fdc4b6aa7a1485220d808d6fc4b}
+
+
+Create a new local scheduler. \begin{DoxyReturn}{Returns}
+A pointer to the newly created scheduler. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_creating_schedulers}{Creating Schedulers} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga69f8d9f511899d3f4b30f6b7a032849a}{
+\index{clocks@{clocks}!scheduler\_\-run@{scheduler\_\-run}}
+\index{scheduler\_\-run@{scheduler\_\-run}!clocks@{clocks}}
+\subsubsection[{scheduler\_\-run}]{\setlength{\rightskip}{0pt plus 5cm}void scheduler\_\-run (void $\ast$ {\em x}, \/  double {\em until})}}
+\label{group__clocks_ga69f8d9f511899d3f4b30f6b7a032849a}
+
+
+Run scheduler events to a selected time. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The scheduler to advance. \item[{\em until}]The ending time for this run (in milliseconds). \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_creating_schedulers}{Creating Schedulers} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_gae6fc77faa65e6f80a26f072b2b17b31b}{
+\index{clocks@{clocks}!scheduler\_\-set@{scheduler\_\-set}}
+\index{scheduler\_\-set@{scheduler\_\-set}!clocks@{clocks}}
+\subsubsection[{scheduler\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ scheduler\_\-set (void $\ast$ {\em x})}}
+\label{group__clocks_gae6fc77faa65e6f80a26f072b2b17b31b}
+
+
+Make a scheduler current, so that future related calls (such as \hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay()}) will affect the appropriate scheduler. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The scheduler to make current. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This routine returns a pointer to the previously current scheduler, wsaved and restored when local scheduling is complete. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_creating_schedulers}{Creating Schedulers} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_gade0e21336c4b2f33046669df0d210a48}{
+\index{clocks@{clocks}!scheduler\_\-settime@{scheduler\_\-settime}}
+\index{scheduler\_\-settime@{scheduler\_\-settime}!clocks@{clocks}}
+\subsubsection[{scheduler\_\-settime}]{\setlength{\rightskip}{0pt plus 5cm}void scheduler\_\-settime (void $\ast$ {\em x}, \/  double {\em time})}}
+\label{group__clocks_gade0e21336c4b2f33046669df0d210a48}
+
+
+Set the current time of the scheduler. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The scheduler to set. \item[{\em time}]The new current time for the selected scheduler (in milliseconds). \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_creating_schedulers}{Creating Schedulers} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_gadf4bd364fd019bed91a587337eb4801e}{
+\index{clocks@{clocks}!setclock\_\-delay@{setclock\_\-delay}}
+\index{setclock\_\-delay@{setclock\_\-delay}!clocks@{clocks}}
+\subsubsection[{setclock\_\-delay}]{\setlength{\rightskip}{0pt plus 5cm}void setclock\_\-delay ({\bf t\_\-object} $\ast$ {\em x}, \/  void $\ast$ {\em c}, \/  long {\em time})}}
+\label{group__clocks_gadf4bd364fd019bed91a587337eb4801e}
+
+
+Schedule a Clock on a scheduler. Schedules the Clock c to execute at time units after the current time. If scheduler x is 0 or does not point to a setclock object, the internal millisecond scheduler is used. Otherwise c is scheduled on the setclock object’s list of Clocks. The Clock should be created with \hyperlink{group__clocks_ga6257ddd41904756699208f135f6539fd}{clock\_\-new()}, the same as for a Clock passed to \hyperlink{group__clocks_ga9ac56d198904627333de740743086920}{clock\_\-delay()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A setclock object to be used for scheduling this clock. \item[{\em c}]Clock object containing the function to be executed. \item[{\em time}]Time delay (in the units of the Setclock) from the current time when the Clock will be executed. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_setclock}{Scheduling with setclock Objects} 
+
+\hyperlink{group__clocks_ga91badd52e8729b007c22461368a21854}{setclock\_\-fdelay()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga91badd52e8729b007c22461368a21854}{
+\index{clocks@{clocks}!setclock\_\-fdelay@{setclock\_\-fdelay}}
+\index{setclock\_\-fdelay@{setclock\_\-fdelay}!clocks@{clocks}}
+\subsubsection[{setclock\_\-fdelay}]{\setlength{\rightskip}{0pt plus 5cm}void setclock\_\-fdelay ({\bf t\_\-object} $\ast$ {\em s}, \/  void $\ast$ {\em c}, \/  double {\em time})}}
+\label{group__clocks_ga91badd52e8729b007c22461368a21854}
+
+
+Schedule a Clock on a scheduler, using a floating-\/point time argument. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]A setclock object to be used for scheduling this clock. \item[{\em c}]Clock object containing the function to be executed. \item[{\em time}]Time delay (in the units of the Setclock) from the current time when the Clock will be executed. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_setclock}{Scheduling with setclock Objects} 
+
+\hyperlink{group__clocks_gadf4bd364fd019bed91a587337eb4801e}{setclock\_\-delay()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_gafd1993dc69a6232cf28683961c97b9e4}{
+\index{clocks@{clocks}!setclock\_\-getftime@{setclock\_\-getftime}}
+\index{setclock\_\-getftime@{setclock\_\-getftime}!clocks@{clocks}}
+\subsubsection[{setclock\_\-getftime}]{\setlength{\rightskip}{0pt plus 5cm}void setclock\_\-getftime ({\bf t\_\-object} $\ast$ {\em s}, \/  double $\ast$ {\em time})}}
+\label{group__clocks_gafd1993dc69a6232cf28683961c97b9e4}
+
+
+Find out the current time value of a setclock object in floating-\/point milliseconds. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]A setclock object. \item[{\em time}]The current time in milliseconds. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_setclock}{Scheduling with setclock Objects} 
+
+\hyperlink{group__clocks_ga1322ff3659b3d754298c636ad1856903}{setclock\_\-gettime()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga1322ff3659b3d754298c636ad1856903}{
+\index{clocks@{clocks}!setclock\_\-gettime@{setclock\_\-gettime}}
+\index{setclock\_\-gettime@{setclock\_\-gettime}!clocks@{clocks}}
+\subsubsection[{setclock\_\-gettime}]{\setlength{\rightskip}{0pt plus 5cm}long setclock\_\-gettime ({\bf t\_\-object} $\ast$ {\em x})}}
+\label{group__clocks_ga1322ff3659b3d754298c636ad1856903}
+
+
+Find out the current time value of a setclock object. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]A setclock object. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the current time value of the setclock object scheduler. If scheduler is 0, setclock\_\-gettime is equivalent to the function gettime that returns the current value of the internal millisecond clock. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_setclock}{Scheduling with setclock Objects} 
+
+\hyperlink{group__clocks_gafd1993dc69a6232cf28683961c97b9e4}{setclock\_\-getftime()} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_gafbc6d9baa43a561b1840b8b4ce6bed5c}{
+\index{clocks@{clocks}!setclock\_\-unset@{setclock\_\-unset}}
+\index{setclock\_\-unset@{setclock\_\-unset}!clocks@{clocks}}
+\subsubsection[{setclock\_\-unset}]{\setlength{\rightskip}{0pt plus 5cm}void setclock\_\-unset ({\bf t\_\-object} $\ast$ {\em x}, \/  void $\ast$ {\em c})}}
+\label{group__clocks_gafbc6d9baa43a561b1840b8b4ce6bed5c}
+
+
+Remove a Clock from a scheduler. This function unschedules the Clock c in the list of Clocks in the setclock object x, or the internal millisecond scheduler if scheduler is 0.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The setclock object that was used to schedule this clock. If 0, the clock is unscheduled from the internal millisecond scheduler. \item[{\em c}]Clock object to be removed from the scheduler. \end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__clocks_setclock}{Scheduling with setclock Objects} 
+\end{DoxySeeAlso}
+\hypertarget{group__clocks_ga11fd7e2733b0186ff82e9766db3031e7}{
+\index{clocks@{clocks}!systimer\_\-gettime@{systimer\_\-gettime}}
+\index{systimer\_\-gettime@{systimer\_\-gettime}!clocks@{clocks}}
+\subsubsection[{systimer\_\-gettime}]{\setlength{\rightskip}{0pt plus 5cm}double systimer\_\-gettime (void)}}
+\label{group__clocks_ga11fd7e2733b0186ff82e9766db3031e7}
+
+
+While most Max/MSP timing references \char`\"{}logical\char`\"{} time derived from Max's millisecond scheduler, time values produced by the \hyperlink{group__clocks_ga11fd7e2733b0186ff82e9766db3031e7}{systimer\_\-gettime()} are referenced from the CPU clock and can be used to time real world events with microsecond precision. The standard 'cpuclock' external in Max is a simple wrapper around this function.
+
+\begin{DoxyReturn}{Returns}
+Returns the current real-\/world time. 
+\end{DoxyReturn}

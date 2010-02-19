@@ -1,0 +1,58 @@
+\hypertarget{group__jwind}{
+\section{Windows}
+\label{group__jwind}\index{Windows@{Windows}}
+}
+
+
+Collaboration diagram for Windows:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=118pt]{group__jwind}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jwind_ga607f8f4486ff1588ff47c17df61f8af1}{jwind\_\-getactive} (void)
+\begin{DoxyCompactList}\small\item\em Get the current window, if any. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jwind_gae627d232548eaefbe00a94ff3c5a1cb6}{jwind\_\-getcount} (void)
+\begin{DoxyCompactList}\small\item\em Determine how many windows exist. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jwind_ga6a7b4f369dfdd3e17e9509cec7bdbb64}{jwind\_\-getat} (long index)
+\begin{DoxyCompactList}\small\item\em Return a pointer to the window with a given index. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__jwind_ga607f8f4486ff1588ff47c17df61f8af1}{
+\index{jwind@{jwind}!jwind\_\-getactive@{jwind\_\-getactive}}
+\index{jwind\_\-getactive@{jwind\_\-getactive}!jwind@{jwind}}
+\subsubsection[{jwind\_\-getactive}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jwind\_\-getactive (void)}}
+\label{group__jwind_ga607f8f4486ff1588ff47c17df61f8af1}
+
+
+Get the current window, if any. \begin{DoxyReturn}{Returns}
+A pointer to the current window, if there is one. Otherwise returns NULL. 
+\end{DoxyReturn}
+\hypertarget{group__jwind_ga6a7b4f369dfdd3e17e9509cec7bdbb64}{
+\index{jwind@{jwind}!jwind\_\-getat@{jwind\_\-getat}}
+\index{jwind\_\-getat@{jwind\_\-getat}!jwind@{jwind}}
+\subsubsection[{jwind\_\-getat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jwind\_\-getat (long {\em index})}}
+\label{group__jwind_ga6a7b4f369dfdd3e17e9509cec7bdbb64}
+
+
+Return a pointer to the window with a given index. 
+\begin{DoxyParams}{Parameters}
+\item[{\em index}]Get window at index (0 to count-\/1). \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to a window object. 
+\end{DoxyReturn}
+\hypertarget{group__jwind_gae627d232548eaefbe00a94ff3c5a1cb6}{
+\index{jwind@{jwind}!jwind\_\-getcount@{jwind\_\-getcount}}
+\index{jwind\_\-getcount@{jwind\_\-getcount}!jwind@{jwind}}
+\subsubsection[{jwind\_\-getcount}]{\setlength{\rightskip}{0pt plus 5cm}long jwind\_\-getcount (void)}}
+\label{group__jwind_gae627d232548eaefbe00a94ff3c5a1cb6}
+
+
+Determine how many windows exist. \begin{DoxyReturn}{Returns}
+The number of windows. 
+\end{DoxyReturn}

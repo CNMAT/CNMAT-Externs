@@ -1,0 +1,448 @@
+\hypertarget{group__database}{
+\section{Database}
+\label{group__database}\index{Database@{Database}}
+}
+
+
+Max's database support currently consists of a SQLite ( \href{http://sqlite.org}{\tt http://sqlite.org} ) extension which is loaded dynamically by Max at launch time.  
+
+
+Collaboration diagram for Database:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=118pt]{group__database}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database}
+\begin{DoxyCompactList}\small\item\em A database object. \item\end{DoxyCompactList}\item 
+typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result}
+\begin{DoxyCompactList}\small\item\em A database result object. \item\end{DoxyCompactList}\item 
+typedef \hyperlink{structt__object}{t\_\-object} \hyperlink{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{t\_\-db\_\-view}
+\begin{DoxyCompactList}\small\item\em A database view object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+BEGIN\_\-USING\_\-C\_\-LINKAGE \hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_gac709a497fcc55817c1c9292bd59eb03f}{db\_\-open} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$dbname, const char $\ast$fullpath, \hyperlink{structt__object}{t\_\-database} $\ast$$\ast$db)
+\begin{DoxyCompactList}\small\item\em Create an instance of a database. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga697cbcbe4c14944fc5a4a535039f5e1b}{db\_\-close} (\hyperlink{structt__object}{t\_\-database} $\ast$$\ast$db)
+\begin{DoxyCompactList}\small\item\em Close an open database. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga70fac948e0a17e91d80c064765d5d016}{db\_\-query} (\hyperlink{structt__object}{t\_\-database} $\ast$db, \hyperlink{structt__object}{t\_\-db\_\-result} $\ast$$\ast$dbresult, const char $\ast$sql,...)
+\begin{DoxyCompactList}\small\item\em Execute a SQL query on the database. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_gae756dda46aa61036ccc896ad9448c496}{db\_\-query\_\-silent} (\hyperlink{structt__object}{t\_\-database} $\ast$db, \hyperlink{structt__object}{t\_\-db\_\-result} $\ast$$\ast$dbresult, const char $\ast$sql,...)
+\begin{DoxyCompactList}\small\item\em Execute a SQL query on the database, temporarily overriding the database's error logging attribute. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga534b71af369d49827855be8f07cc09bc}{db\_\-query\_\-getlastinsertid} (\hyperlink{structt__object}{t\_\-database} $\ast$db, long $\ast$id)
+\begin{DoxyCompactList}\small\item\em Determine the id (key) number for the most recent INSERT query executed on the database. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga79e6ee7b7d344b372314d08b1b19fa8d}{db\_\-query\_\-table\_\-new} (\hyperlink{structt__object}{t\_\-database} $\ast$db, const char $\ast$tablename)
+\begin{DoxyCompactList}\small\item\em Create a new table in a database. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_gaafcaffcf5fea4ded0d474e1332b8a922}{db\_\-query\_\-table\_\-addcolumn} (\hyperlink{structt__object}{t\_\-database} $\ast$db, const char $\ast$tablename, const char $\ast$columnname, const char $\ast$columntype, const char $\ast$flags)
+\begin{DoxyCompactList}\small\item\em Add a new column to an existing table in a database. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_gad14964ae056aa663646f3fc3081b3b3a}{db\_\-transaction\_\-start} (\hyperlink{structt__object}{t\_\-database} $\ast$db)
+\begin{DoxyCompactList}\small\item\em Begin a database transaction. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga03a64b223d17437a2a7eb976025b5874}{db\_\-transaction\_\-end} (\hyperlink{structt__object}{t\_\-database} $\ast$db)
+\begin{DoxyCompactList}\small\item\em Finalize a database transaction. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_gabf78d551bd8ed0c81a4881663dc445be}{db\_\-transaction\_\-flush} (\hyperlink{structt__object}{t\_\-database} $\ast$db)
+\begin{DoxyCompactList}\small\item\em Force any open transactions to close. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga70b24ae188489537db137f67f5d01388}{db\_\-view\_\-create} (\hyperlink{structt__object}{t\_\-database} $\ast$db, const char $\ast$sql, \hyperlink{structt__object}{t\_\-db\_\-view} $\ast$$\ast$dbview)
+\begin{DoxyCompactList}\small\item\em A database view is a way of looking at a particular set of records in the database. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga0e0c3cfbb3459545a4868630cf6e8807}{db\_\-view\_\-remove} (\hyperlink{structt__object}{t\_\-database} $\ast$db, \hyperlink{structt__object}{t\_\-db\_\-view} $\ast$$\ast$dbview)
+\begin{DoxyCompactList}\small\item\em Remove a database view created using \hyperlink{group__database_ga70b24ae188489537db137f67f5d01388}{db\_\-view\_\-create()}. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga40de375c540b3551ba42d7a2643aa89f}{db\_\-view\_\-getresult} (\hyperlink{structt__object}{t\_\-db\_\-view} $\ast$dbview, \hyperlink{structt__object}{t\_\-db\_\-result} $\ast$$\ast$result)
+\begin{DoxyCompactList}\small\item\em Fetch the pointer for a \hyperlink{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{t\_\-db\_\-view}'s query result. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__database_ga0474ea3231e953760e5a32a277c0279d}{db\_\-view\_\-setquery} (\hyperlink{structt__object}{t\_\-db\_\-view} $\ast$dbview, char $\ast$newquery)
+\begin{DoxyCompactList}\small\item\em Set the query used by the view. \item\end{DoxyCompactList}\item 
+char $\ast$$\ast$ \hyperlink{group__database_ga66fb4403eeb6e44ddd3038c9df863ef8}{db\_\-result\_\-nextrecord} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result)
+\begin{DoxyCompactList}\small\item\em Return the next record from a set of results that you are walking. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__database_gad0d384ab3ba04958d982cede2cffa043}{db\_\-result\_\-reset} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result)
+\begin{DoxyCompactList}\small\item\em Reset the interface for walking a result's record list to the first record. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__database_ga8c7c9667ce229b8447a9a8f32b03453a}{db\_\-result\_\-clear} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result)
+\begin{DoxyCompactList}\small\item\em Zero-\/out a database result. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__database_gad5e17d5d9a14aa7a156ca508cf12eb3d}{db\_\-result\_\-numrecords} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result)
+\begin{DoxyCompactList}\small\item\em Return a count of all records in the query result. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__database_ga5bf778c6ba6cc859c41d18a2d887bd7b}{db\_\-result\_\-numfields} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result)
+\begin{DoxyCompactList}\small\item\em Return a count of all fields (columns) in the query result. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__database_ga7a9cc6a72ef3730979d0d909421076b3}{db\_\-result\_\-fieldname} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result, long fieldindex)
+\begin{DoxyCompactList}\small\item\em Return the name of a field specified by its index number. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__database_ga57619b568083f0cf5989455af0ad3d5b}{db\_\-result\_\-string} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result, long recordindex, long fieldindex)
+\begin{DoxyCompactList}\small\item\em Return a single value from a result according to its index and field coordinates. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__database_gadd498a9d44bc669bd544c781c1401e81}{db\_\-result\_\-long} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result, long recordindex, long fieldindex)
+\begin{DoxyCompactList}\small\item\em Return a single value from a result according to its index and field coordinates. \item\end{DoxyCompactList}\item 
+float \hyperlink{group__database_ga0558fcd917d24cc590ec0f426bf6bd7a}{db\_\-result\_\-float} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result, long recordindex, long fieldindex)
+\begin{DoxyCompactList}\small\item\em Return a single value from a result according to its index and field coordinates. \item\end{DoxyCompactList}\item 
+unsigned long \hyperlink{group__database_ga16ce6b68722eb623d9207b630e55b09a}{db\_\-result\_\-datetimeinseconds} (\hyperlink{structt__object}{t\_\-db\_\-result} $\ast$result, long recordindex, long fieldindex)
+\begin{DoxyCompactList}\small\item\em Return a single value from a result according to its index and field coordinates. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__database_ga051ca3fefd1d2e4fe162a943c3d15060}{db\_\-util\_\-stringtodate} (const char $\ast$string, unsigned long $\ast$date)
+\begin{DoxyCompactList}\small\item\em A utility to convert from a sql datetime string into seconds. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__database_gabf7cfbf2e7218680a8b79d250c1eae19}{db\_\-util\_\-datetostring} (const unsigned long date, char $\ast$string)
+\begin{DoxyCompactList}\small\item\em A utility to convert from seconds into a sql-\/ready datetime string. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Max's database support currently consists of a SQLite ( \href{http://sqlite.org}{\tt http://sqlite.org} ) extension which is loaded dynamically by Max at launch time. Because it is loaded dynamically, all interfacing with the sqlite object relies on Max's message passing interface, using \hyperlink{group__obj_gae740749094827ac5adc2b7145db1c596}{object\_\-method()} and related functions.
+
+For most common database needs, a C-\/interface is defined in the ext\_\-database.h header file and implemented in the ext\_\-database.c source file. The functions defined in this interface wrap the message passing calls and provide a convenient means by which you can work with databases. ext\_\-database.c is located in the 'common' folder inside of the 'max-\/includes' folder. If you use any of the functions defined ext\_\-database.h, you will need to add ext\_\-database.c to your project. 
+
+\subsection{Typedef Documentation}
+\hypertarget{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{
+\index{database@{database}!t\_\-database@{t\_\-database}}
+\index{t\_\-database@{t\_\-database}!database@{database}}
+\subsubsection[{t\_\-database}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf t\_\-object} {\bf t\_\-database}}}
+\label{group__database_gad832ea0e5fc292661fd20046cee7e3b3}
+
+
+A database object. Use \hyperlink{group__database_gac709a497fcc55817c1c9292bd59eb03f}{db\_\-open()} and \hyperlink{group__database_ga697cbcbe4c14944fc5a4a535039f5e1b}{db\_\-close()} to create and free database objects. \hypertarget{group__database_gae34db00cb98960e94b5ca58a7c21c362}{
+\index{database@{database}!t\_\-db\_\-result@{t\_\-db\_\-result}}
+\index{t\_\-db\_\-result@{t\_\-db\_\-result}!database@{database}}
+\subsubsection[{t\_\-db\_\-result}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf t\_\-object} {\bf t\_\-db\_\-result}}}
+\label{group__database_gae34db00cb98960e94b5ca58a7c21c362}
+
+
+A database result object. This is what the database object returns when a query is executed. \hypertarget{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{
+\index{database@{database}!t\_\-db\_\-view@{t\_\-db\_\-view}}
+\index{t\_\-db\_\-view@{t\_\-db\_\-view}!database@{database}}
+\subsubsection[{t\_\-db\_\-view}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf t\_\-object} {\bf t\_\-db\_\-view}}}
+\label{group__database_gac9ea40a519578e26498dd61ea98b5cf2}
+
+
+A database view object. A database view wraps a query and a result for a given database, and is always updated and in-\/sync with the database. 
+
+\subsection{Function Documentation}
+\hypertarget{group__database_ga697cbcbe4c14944fc5a4a535039f5e1b}{
+\index{database@{database}!db\_\-close@{db\_\-close}}
+\index{db\_\-close@{db\_\-close}!database@{database}}
+\subsubsection[{db\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-close ({\bf t\_\-database} $\ast$$\ast$ {\em db})}}
+\label{group__database_ga697cbcbe4c14944fc5a4a535039f5e1b}
+
+
+Close an open database. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The address of the \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. The pointer will be freed and set NULL upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_gac709a497fcc55817c1c9292bd59eb03f}{
+\index{database@{database}!db\_\-open@{db\_\-open}}
+\index{db\_\-open@{db\_\-open}!database@{database}}
+\subsubsection[{db\_\-open}]{\setlength{\rightskip}{0pt plus 5cm}BEGIN\_\-USING\_\-C\_\-LINKAGE {\bf t\_\-max\_\-err} db\_\-open ({\bf t\_\-symbol} $\ast$ {\em dbname}, \/  const char $\ast$ {\em fullpath}, \/  {\bf t\_\-database} $\ast$$\ast$ {\em db})}}
+\label{group__database_gac709a497fcc55817c1c9292bd59eb03f}
+
+
+Create an instance of a database. 
+\begin{DoxyParams}{Parameters}
+\item[{\em dbname}]The name of the database. \item[{\em fullpath}]If a database with this dbname is not already open, this will specify a full path to the location where the database is stored on disk. If NULL is passed for this argument, the database will reside in memory only. The path should be formatted as a Max style path. \item[{\em db}]The address of a \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer that will be set to point to the new database instance. If the pointer is not NULL, then it will be treated as a pre-\/existing database instance and thus will be freed. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga70fac948e0a17e91d80c064765d5d016}{
+\index{database@{database}!db\_\-query@{db\_\-query}}
+\index{db\_\-query@{db\_\-query}!database@{database}}
+\subsubsection[{db\_\-query}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-query ({\bf t\_\-database} $\ast$ {\em db}, \/  {\bf t\_\-db\_\-result} $\ast$$\ast$ {\em dbresult}, \/  const char $\ast$ {\em sql}, \/   {\em ...})}}
+\label{group__database_ga70fac948e0a17e91d80c064765d5d016}
+
+
+Execute a SQL query on the database. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \item[{\em dbresult}]The address of a \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer. If the pointer is passed-\/in set to NULL then a new dbresult will be created. If the pointer is not NULL then it is assumed to be a valid dbresult, which will be filled in with the query results. When you are done with the dbresult you should free it with \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}. \item[{\em sql}]A C-\/string containing a valid SQL query, possibly with sprintf() formatting codes. \item[{\em ...}]If an sprintf() formatting codes are used in the sql string, these values will be interpolated into the sql string. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga534b71af369d49827855be8f07cc09bc}{
+\index{database@{database}!db\_\-query\_\-getlastinsertid@{db\_\-query\_\-getlastinsertid}}
+\index{db\_\-query\_\-getlastinsertid@{db\_\-query\_\-getlastinsertid}!database@{database}}
+\subsubsection[{db\_\-query\_\-getlastinsertid}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-query\_\-getlastinsertid ({\bf t\_\-database} $\ast$ {\em db}, \/  long $\ast$ {\em id})}}
+\label{group__database_ga534b71af369d49827855be8f07cc09bc}
+
+
+Determine the id (key) number for the most recent INSERT query executed on the database. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \item[{\em id}]The address of a variable to hold the result on return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_gae756dda46aa61036ccc896ad9448c496}{
+\index{database@{database}!db\_\-query\_\-silent@{db\_\-query\_\-silent}}
+\index{db\_\-query\_\-silent@{db\_\-query\_\-silent}!database@{database}}
+\subsubsection[{db\_\-query\_\-silent}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-query\_\-silent ({\bf t\_\-database} $\ast$ {\em db}, \/  {\bf t\_\-db\_\-result} $\ast$$\ast$ {\em dbresult}, \/  const char $\ast$ {\em sql}, \/   {\em ...})}}
+\label{group__database_gae756dda46aa61036ccc896ad9448c496}
+
+
+Execute a SQL query on the database, temporarily overriding the database's error logging attribute. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \item[{\em dbresult}]The address of a \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer. If the pointer is passed-\/in set to NULL then a new dbresult will be created. If the pointer is not NULL then it is assumed to be a valid dbresult, which will be filled in with the query results. When you are done with the dbresult you should free it with \hyperlink{group__obj_ga3759846cb356195532c41e35b87522ee}{object\_\-free()}. \item[{\em sql}]A C-\/string containing a valid SQL query, possibly with sprintf() formatting codes. \item[{\em ...}]If an sprintf() formatting codes are used in the sql string, these values will be interpolated into the sql string. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_gaafcaffcf5fea4ded0d474e1332b8a922}{
+\index{database@{database}!db\_\-query\_\-table\_\-addcolumn@{db\_\-query\_\-table\_\-addcolumn}}
+\index{db\_\-query\_\-table\_\-addcolumn@{db\_\-query\_\-table\_\-addcolumn}!database@{database}}
+\subsubsection[{db\_\-query\_\-table\_\-addcolumn}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-query\_\-table\_\-addcolumn ({\bf t\_\-database} $\ast$ {\em db}, \/  const char $\ast$ {\em tablename}, \/  const char $\ast$ {\em columnname}, \/  const char $\ast$ {\em columntype}, \/  const char $\ast$ {\em flags})}}
+\label{group__database_gaafcaffcf5fea4ded0d474e1332b8a922}
+
+
+Add a new column to an existing table in a database. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \item[{\em tablename}]The name of the table to which the column should be added. \item[{\em columnname}]The name to use for the new column. \item[{\em columntype}]The SQL type for the data that will be stored in the column. For example: \char`\"{}INTEGER\char`\"{} or \char`\"{}VARCHAR\char`\"{} \item[{\em flags}]If you wish to specify any additional information for the column, then pass that here. Otherwise pass NULL. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga79e6ee7b7d344b372314d08b1b19fa8d}{
+\index{database@{database}!db\_\-query\_\-table\_\-new@{db\_\-query\_\-table\_\-new}}
+\index{db\_\-query\_\-table\_\-new@{db\_\-query\_\-table\_\-new}!database@{database}}
+\subsubsection[{db\_\-query\_\-table\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-query\_\-table\_\-new ({\bf t\_\-database} $\ast$ {\em db}, \/  const char $\ast$ {\em tablename})}}
+\label{group__database_ga79e6ee7b7d344b372314d08b1b19fa8d}
+
+
+Create a new table in a database. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \item[{\em tablename}]The name to use for the new table. The new table will be created with one column, which holds the primary key for the table, and is named according the form \{tablename\}\_\-id. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga8c7c9667ce229b8447a9a8f32b03453a}{
+\index{database@{database}!db\_\-result\_\-clear@{db\_\-result\_\-clear}}
+\index{db\_\-result\_\-clear@{db\_\-result\_\-clear}!database@{database}}
+\subsubsection[{db\_\-result\_\-clear}]{\setlength{\rightskip}{0pt plus 5cm}void db\_\-result\_\-clear ({\bf t\_\-db\_\-result} $\ast$ {\em result})}}
+\label{group__database_ga8c7c9667ce229b8447a9a8f32b03453a}
+
+
+Zero-\/out a database result. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \end{DoxyParams}
+\hypertarget{group__database_ga16ce6b68722eb623d9207b630e55b09a}{
+\index{database@{database}!db\_\-result\_\-datetimeinseconds@{db\_\-result\_\-datetimeinseconds}}
+\index{db\_\-result\_\-datetimeinseconds@{db\_\-result\_\-datetimeinseconds}!database@{database}}
+\subsubsection[{db\_\-result\_\-datetimeinseconds}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long db\_\-result\_\-datetimeinseconds ({\bf t\_\-db\_\-result} $\ast$ {\em result}, \/  long {\em recordindex}, \/  long {\em fieldindex})}}
+\label{group__database_ga16ce6b68722eb623d9207b630e55b09a}
+
+
+Return a single value from a result according to its index and field coordinates. The value will be coerced from an expected datetime field into seconds.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \item[{\em recordindex}]The zero-\/based index number of the record (row) in the result. \item[{\em fieldindex}]The zero-\/based index number of the field (column) in the result. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The datetime represented in seconds. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga7a9cc6a72ef3730979d0d909421076b3}{
+\index{database@{database}!db\_\-result\_\-fieldname@{db\_\-result\_\-fieldname}}
+\index{db\_\-result\_\-fieldname@{db\_\-result\_\-fieldname}!database@{database}}
+\subsubsection[{db\_\-result\_\-fieldname}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ db\_\-result\_\-fieldname ({\bf t\_\-db\_\-result} $\ast$ {\em result}, \/  long {\em fieldindex})}}
+\label{group__database_ga7a9cc6a72ef3730979d0d909421076b3}
+
+
+Return the name of a field specified by its index number. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \item[{\em fieldindex}]The zero-\/based index number of the field (column) in the result. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A C-\/String with the name of the field. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga0558fcd917d24cc590ec0f426bf6bd7a}{
+\index{database@{database}!db\_\-result\_\-float@{db\_\-result\_\-float}}
+\index{db\_\-result\_\-float@{db\_\-result\_\-float}!database@{database}}
+\subsubsection[{db\_\-result\_\-float}]{\setlength{\rightskip}{0pt plus 5cm}float db\_\-result\_\-float ({\bf t\_\-db\_\-result} $\ast$ {\em result}, \/  long {\em recordindex}, \/  long {\em fieldindex})}}
+\label{group__database_ga0558fcd917d24cc590ec0f426bf6bd7a}
+
+
+Return a single value from a result according to its index and field coordinates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \item[{\em recordindex}]The zero-\/based index number of the record (row) in the result. \item[{\em fieldindex}]The zero-\/based index number of the field (column) in the result. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The content of the specified cell from the result scanned out to a float. 
+\end{DoxyReturn}
+\hypertarget{group__database_gadd498a9d44bc669bd544c781c1401e81}{
+\index{database@{database}!db\_\-result\_\-long@{db\_\-result\_\-long}}
+\index{db\_\-result\_\-long@{db\_\-result\_\-long}!database@{database}}
+\subsubsection[{db\_\-result\_\-long}]{\setlength{\rightskip}{0pt plus 5cm}long db\_\-result\_\-long ({\bf t\_\-db\_\-result} $\ast$ {\em result}, \/  long {\em recordindex}, \/  long {\em fieldindex})}}
+\label{group__database_gadd498a9d44bc669bd544c781c1401e81}
+
+
+Return a single value from a result according to its index and field coordinates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \item[{\em recordindex}]The zero-\/based index number of the record (row) in the result. \item[{\em fieldindex}]The zero-\/based index number of the field (column) in the result. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The content of the specified cell from the result scanned out to a long int. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga66fb4403eeb6e44ddd3038c9df863ef8}{
+\index{database@{database}!db\_\-result\_\-nextrecord@{db\_\-result\_\-nextrecord}}
+\index{db\_\-result\_\-nextrecord@{db\_\-result\_\-nextrecord}!database@{database}}
+\subsubsection[{db\_\-result\_\-nextrecord}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$ db\_\-result\_\-nextrecord ({\bf t\_\-db\_\-result} $\ast$ {\em result})}}
+\label{group__database_ga66fb4403eeb6e44ddd3038c9df863ef8}
+
+
+Return the next record from a set of results that you are walking. When you are returned a result from a query of the database, the result is prepared for walking the results from the beginning. You can also reset the result manually to the beginning of the record list by calling \hyperlink{group__database_gad0d384ab3ba04958d982cede2cffa043}{db\_\-result\_\-reset()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An array of C-\/Strings with the values for every requested column (field) of a database record. To find out how many columns are represented in the array, use \hyperlink{group__database_ga5bf778c6ba6cc859c41d18a2d887bd7b}{db\_\-result\_\-numfields()}. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga5bf778c6ba6cc859c41d18a2d887bd7b}{
+\index{database@{database}!db\_\-result\_\-numfields@{db\_\-result\_\-numfields}}
+\index{db\_\-result\_\-numfields@{db\_\-result\_\-numfields}!database@{database}}
+\subsubsection[{db\_\-result\_\-numfields}]{\setlength{\rightskip}{0pt plus 5cm}long db\_\-result\_\-numfields ({\bf t\_\-db\_\-result} $\ast$ {\em result})}}
+\label{group__database_ga5bf778c6ba6cc859c41d18a2d887bd7b}
+
+
+Return a count of all fields (columns) in the query result. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The count of fields in the query result. 
+\end{DoxyReturn}
+\hypertarget{group__database_gad5e17d5d9a14aa7a156ca508cf12eb3d}{
+\index{database@{database}!db\_\-result\_\-numrecords@{db\_\-result\_\-numrecords}}
+\index{db\_\-result\_\-numrecords@{db\_\-result\_\-numrecords}!database@{database}}
+\subsubsection[{db\_\-result\_\-numrecords}]{\setlength{\rightskip}{0pt plus 5cm}long db\_\-result\_\-numrecords ({\bf t\_\-db\_\-result} $\ast$ {\em result})}}
+\label{group__database_gad5e17d5d9a14aa7a156ca508cf12eb3d}
+
+
+Return a count of all records in the query result. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The count of records in the query result. 
+\end{DoxyReturn}
+\hypertarget{group__database_gad0d384ab3ba04958d982cede2cffa043}{
+\index{database@{database}!db\_\-result\_\-reset@{db\_\-result\_\-reset}}
+\index{db\_\-result\_\-reset@{db\_\-result\_\-reset}!database@{database}}
+\subsubsection[{db\_\-result\_\-reset}]{\setlength{\rightskip}{0pt plus 5cm}void db\_\-result\_\-reset ({\bf t\_\-db\_\-result} $\ast$ {\em result})}}
+\label{group__database_gad0d384ab3ba04958d982cede2cffa043}
+
+
+Reset the interface for walking a result's record list to the first record. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \end{DoxyParams}
+\hypertarget{group__database_ga57619b568083f0cf5989455af0ad3d5b}{
+\index{database@{database}!db\_\-result\_\-string@{db\_\-result\_\-string}}
+\index{db\_\-result\_\-string@{db\_\-result\_\-string}!database@{database}}
+\subsubsection[{db\_\-result\_\-string}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ db\_\-result\_\-string ({\bf t\_\-db\_\-result} $\ast$ {\em result}, \/  long {\em recordindex}, \/  long {\em fieldindex})}}
+\label{group__database_ga57619b568083f0cf5989455af0ad3d5b}
+
+
+Return a single value from a result according to its index and field coordinates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em result}]The \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} pointer for your query results. \item[{\em recordindex}]The zero-\/based index number of the record (row) in the result. \item[{\em fieldindex}]The zero-\/based index number of the field (column) in the result. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A C-\/String with the content of the specified cell in the result. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga03a64b223d17437a2a7eb976025b5874}{
+\index{database@{database}!db\_\-transaction\_\-end@{db\_\-transaction\_\-end}}
+\index{db\_\-transaction\_\-end@{db\_\-transaction\_\-end}!database@{database}}
+\subsubsection[{db\_\-transaction\_\-end}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-transaction\_\-end ({\bf t\_\-database} $\ast$ {\em db})}}
+\label{group__database_ga03a64b223d17437a2a7eb976025b5874}
+
+
+Finalize a database transaction. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_gabf78d551bd8ed0c81a4881663dc445be}{
+\index{database@{database}!db\_\-transaction\_\-flush@{db\_\-transaction\_\-flush}}
+\index{db\_\-transaction\_\-flush@{db\_\-transaction\_\-flush}!database@{database}}
+\subsubsection[{db\_\-transaction\_\-flush}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-transaction\_\-flush ({\bf t\_\-database} $\ast$ {\em db})}}
+\label{group__database_gabf78d551bd8ed0c81a4881663dc445be}
+
+
+Force any open transactions to close. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_gad14964ae056aa663646f3fc3081b3b3a}{
+\index{database@{database}!db\_\-transaction\_\-start@{db\_\-transaction\_\-start}}
+\index{db\_\-transaction\_\-start@{db\_\-transaction\_\-start}!database@{database}}
+\subsubsection[{db\_\-transaction\_\-start}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-transaction\_\-start ({\bf t\_\-database} $\ast$ {\em db})}}
+\label{group__database_gad14964ae056aa663646f3fc3081b3b3a}
+
+
+Begin a database transaction. When you are working with a file-\/based database, then the database will not be flushed to disk until db\_\-transacation\_\-end() is called. This means that you can \_\-much\_\- more efficiently execute a sequence of queries in one transaction rather than independently.
+
+That database object reference counts transactions, so it is possible nest calls to db\_\-transacation\_\-start() and db\_\-transacation\_\-end(). It is important to balance all calls with db\_\-transacation\_\-end() or the database contents will never be flushed to disk.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_gabf7cfbf2e7218680a8b79d250c1eae19}{
+\index{database@{database}!db\_\-util\_\-datetostring@{db\_\-util\_\-datetostring}}
+\index{db\_\-util\_\-datetostring@{db\_\-util\_\-datetostring}!database@{database}}
+\subsubsection[{db\_\-util\_\-datetostring}]{\setlength{\rightskip}{0pt plus 5cm}void db\_\-util\_\-datetostring (const unsigned long {\em date}, \/  char $\ast$ {\em string})}}
+\label{group__database_gabf7cfbf2e7218680a8b79d250c1eae19}
+
+
+A utility to convert from seconds into a sql-\/ready datetime string. 
+\begin{DoxyParams}{Parameters}
+\item[{\em date}]The datetime represented in seconds. \item[{\em string}]The address of a valid C-\/string whose contents will be set to a SQL-\/ready string format upon return. \end{DoxyParams}
+\hypertarget{group__database_ga051ca3fefd1d2e4fe162a943c3d15060}{
+\index{database@{database}!db\_\-util\_\-stringtodate@{db\_\-util\_\-stringtodate}}
+\index{db\_\-util\_\-stringtodate@{db\_\-util\_\-stringtodate}!database@{database}}
+\subsubsection[{db\_\-util\_\-stringtodate}]{\setlength{\rightskip}{0pt plus 5cm}void db\_\-util\_\-stringtodate (const char $\ast$ {\em string}, \/  unsigned long $\ast$ {\em date})}}
+\label{group__database_ga051ca3fefd1d2e4fe162a943c3d15060}
+
+
+A utility to convert from a sql datetime string into seconds. 
+\begin{DoxyParams}{Parameters}
+\item[{\em string}]A C-\/string containing a date and time in SQL format. \item[{\em date}]The datetime represented in seconds upon return. \end{DoxyParams}
+\hypertarget{group__database_ga70b24ae188489537db137f67f5d01388}{
+\index{database@{database}!db\_\-view\_\-create@{db\_\-view\_\-create}}
+\index{db\_\-view\_\-create@{db\_\-view\_\-create}!database@{database}}
+\subsubsection[{db\_\-view\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-view\_\-create ({\bf t\_\-database} $\ast$ {\em db}, \/  const char $\ast$ {\em sql}, \/  {\bf t\_\-db\_\-view} $\ast$$\ast$ {\em dbview})}}
+\label{group__database_ga70b24ae188489537db137f67f5d01388}
+
+
+A database view is a way of looking at a particular set of records in the database. This particular set of records is defined with a standard SQL query, and the view maintains a copy of the results of the query internally. Any time the database is modified the internal result set is updated, and any objects listening to the view are notified via \hyperlink{group__obj_ga6297b81c3a70f7fb2201c7262e96bba3}{object\_\-notify()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance. \item[{\em sql}]A SQL query that defines the set of results provided by the view. \item[{\em dbview}]The address of a NULL \hyperlink{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{t\_\-db\_\-view} pointer which will be set with the new view upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga40de375c540b3551ba42d7a2643aa89f}{
+\index{database@{database}!db\_\-view\_\-getresult@{db\_\-view\_\-getresult}}
+\index{db\_\-view\_\-getresult@{db\_\-view\_\-getresult}!database@{database}}
+\subsubsection[{db\_\-view\_\-getresult}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-view\_\-getresult ({\bf t\_\-db\_\-view} $\ast$ {\em dbview}, \/  {\bf t\_\-db\_\-result} $\ast$$\ast$ {\em result})}}
+\label{group__database_ga40de375c540b3551ba42d7a2643aa89f}
+
+
+Fetch the pointer for a \hyperlink{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{t\_\-db\_\-view}'s query result. 
+\begin{DoxyParams}{Parameters}
+\item[{\em dbview}]The \hyperlink{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{t\_\-db\_\-view} pointer for your database view instance. \item[{\em result}]The address of a pointer to a \hyperlink{group__database_gae34db00cb98960e94b5ca58a7c21c362}{t\_\-db\_\-result} object. This pointer will be overwritten with the view's result pointer upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga0e0c3cfbb3459545a4868630cf6e8807}{
+\index{database@{database}!db\_\-view\_\-remove@{db\_\-view\_\-remove}}
+\index{db\_\-view\_\-remove@{db\_\-view\_\-remove}!database@{database}}
+\subsubsection[{db\_\-view\_\-remove}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-view\_\-remove ({\bf t\_\-database} $\ast$ {\em db}, \/  {\bf t\_\-db\_\-view} $\ast$$\ast$ {\em dbview})}}
+\label{group__database_ga0e0c3cfbb3459545a4868630cf6e8807}
+
+
+Remove a database view created using \hyperlink{group__database_ga70b24ae188489537db137f67f5d01388}{db\_\-view\_\-create()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em db}]The \hyperlink{group__database_gad832ea0e5fc292661fd20046cee7e3b3}{t\_\-database} pointer for your database instance for which this view was created. \item[{\em dbview}]The address of the \hyperlink{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{t\_\-db\_\-view} pointer for the view. This pointer will be freed and set NULL upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__database_ga0474ea3231e953760e5a32a277c0279d}{
+\index{database@{database}!db\_\-view\_\-setquery@{db\_\-view\_\-setquery}}
+\index{db\_\-view\_\-setquery@{db\_\-view\_\-setquery}!database@{database}}
+\subsubsection[{db\_\-view\_\-setquery}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} db\_\-view\_\-setquery ({\bf t\_\-db\_\-view} $\ast$ {\em dbview}, \/  char $\ast$ {\em newquery})}}
+\label{group__database_ga0474ea3231e953760e5a32a277c0279d}
+
+
+Set the query used by the view. 
+\begin{DoxyParams}{Parameters}
+\item[{\em dbview}]The \hyperlink{group__database_gac9ea40a519578e26498dd61ea98b5cf2}{t\_\-db\_\-view} pointer for your database view instance. \item[{\em newquery}]The SQL string to define a new query for the view, replacing the old query. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}

@@ -1,0 +1,205 @@
+\hypertarget{group__jpatchline}{
+\section{jpatchline}
+\label{group__jpatchline}\index{jpatchline@{jpatchline}}
+}
+
+
+A patch cord.  
+
+
+Collaboration diagram for jpatchline:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=104pt]{group__jpatchline}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatchline_ga22e58d4f810941cbcab9c72fd6f944a8}{jpatchline\_\-get\_\-startpoint} (\hyperlink{structt__object}{t\_\-object} $\ast$l, double $\ast$x, double $\ast$y)
+\begin{DoxyCompactList}\small\item\em Retrieve a patchline's starting point. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatchline_gae3975e752f1b21493cd7546d081e82ab}{jpatchline\_\-get\_\-endpoint} (\hyperlink{structt__object}{t\_\-object} $\ast$l, double $\ast$x, double $\ast$y)
+\begin{DoxyCompactList}\small\item\em Retrieve a patchline's ending point. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jpatchline_ga42dc7b0cc71d75625f6580987a61f0e9}{jpatchline\_\-get\_\-nummidpoints} (\hyperlink{structt__object}{t\_\-object} $\ast$l)
+\begin{DoxyCompactList}\small\item\em Determine the number of midpoints (segments) in a patchline. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatchline_ga64a77181748a3f07c149942ef60053c9}{jpatchline\_\-get\_\-box1} (\hyperlink{structt__object}{t\_\-object} $\ast$l)
+\begin{DoxyCompactList}\small\item\em Return the object box from which a patchline originates. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jpatchline_ga901d26a483f28768c842defe9ad06cfb}{jpatchline\_\-get\_\-outletnum} (\hyperlink{structt__object}{t\_\-object} $\ast$l)
+\begin{DoxyCompactList}\small\item\em Return the outlet number of the originating object box from which a patchline begins. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatchline_ga8785673e61f9b9406e4c77df1b7781b1}{jpatchline\_\-get\_\-box2} (\hyperlink{structt__object}{t\_\-object} $\ast$l)
+\begin{DoxyCompactList}\small\item\em Return the destination object box for a patchline. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__jpatchline_ga01dc2867e149ca5d165a5efd852b80b0}{jpatchline\_\-get\_\-inletnum} (\hyperlink{structt__object}{t\_\-object} $\ast$l)
+\begin{DoxyCompactList}\small\item\em Return the inlet number of the destination object box to which a patchline is connected. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__object}{t\_\-object} $\ast$ \hyperlink{group__jpatchline_ga1aed89ce61ea59fbc47a282e25398aa8}{jpatchline\_\-get\_\-nextline} (\hyperlink{structt__object}{t\_\-object} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Given a patchline, traverse to the next patchline in the (linked) list. \item\end{DoxyCompactList}\item 
+char \hyperlink{group__jpatchline_gaece283402d2f063de0fec372e7ad8fa5}{jpatchline\_\-get\_\-hidden} (\hyperlink{structt__object}{t\_\-object} $\ast$l)
+\begin{DoxyCompactList}\small\item\em Determine if a patch line is hidden. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatchline_gae5bd6fbfa02559350ee2b117a55b64d5}{jpatchline\_\-set\_\-hidden} (\hyperlink{structt__object}{t\_\-object} $\ast$l, char c)
+\begin{DoxyCompactList}\small\item\em Set a patchline's visibility. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatchline_ga9f612329fb1b675345173e56b0da8b5e}{jpatchline\_\-get\_\-color} (\hyperlink{structt__object}{t\_\-object} $\ast$l, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Get the color of a patch line. \item\end{DoxyCompactList}\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__jpatchline_ga711fb3e7a43bbfbd6922f3ac60ba7d86}{jpatchline\_\-set\_\-color} (\hyperlink{structt__object}{t\_\-object} $\ast$l, \hyperlink{structt__jrgba}{t\_\-jrgba} $\ast$prgba)
+\begin{DoxyCompactList}\small\item\em Set the color of a patch line. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A patch cord. 
+
+\subsection{Function Documentation}
+\hypertarget{group__jpatchline_ga64a77181748a3f07c149942ef60053c9}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-box1@{jpatchline\_\-get\_\-box1}}
+\index{jpatchline\_\-get\_\-box1@{jpatchline\_\-get\_\-box1}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-box1}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatchline\_\-get\_\-box1 ({\bf t\_\-object} $\ast$ {\em l})}}
+\label{group__jpatchline_ga64a77181748a3f07c149942ef60053c9}
+
+
+Return the object box from which a patchline originates. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A pointer to the patchline's instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The object box from which the patchline originates. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga8785673e61f9b9406e4c77df1b7781b1}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-box2@{jpatchline\_\-get\_\-box2}}
+\index{jpatchline\_\-get\_\-box2@{jpatchline\_\-get\_\-box2}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-box2}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatchline\_\-get\_\-box2 ({\bf t\_\-object} $\ast$ {\em l})}}
+\label{group__jpatchline_ga8785673e61f9b9406e4c77df1b7781b1}
+
+
+Return the destination object box for a patchline. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A pointer to the patchline's instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The destination object box for a patchline. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga9f612329fb1b675345173e56b0da8b5e}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-color@{jpatchline\_\-get\_\-color}}
+\index{jpatchline\_\-get\_\-color@{jpatchline\_\-get\_\-color}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-color}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatchline\_\-get\_\-color ({\bf t\_\-object} $\ast$ {\em l}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jpatchline_ga9f612329fb1b675345173e56b0da8b5e}
+
+
+Get the color of a patch line. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A patchline instance. \item[{\em prgba}]The address of a valid \hyperlink{structt__jrgba}{t\_\-jrgba} struct that will be filled with the color values of the patch line. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_gae3975e752f1b21493cd7546d081e82ab}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-endpoint@{jpatchline\_\-get\_\-endpoint}}
+\index{jpatchline\_\-get\_\-endpoint@{jpatchline\_\-get\_\-endpoint}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-endpoint}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatchline\_\-get\_\-endpoint ({\bf t\_\-object} $\ast$ {\em l}, \/  double $\ast$ {\em x}, \/  double $\ast$ {\em y})}}
+\label{group__jpatchline_gae3975e752f1b21493cd7546d081e82ab}
+
+
+Retrieve a patchline's ending point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A pointer to the patchline's instance. \item[{\em x}]The address of a variable to hold the x-\/coordinate of the ending point's position upon return. \item[{\em y}]The address of a variable to hold the y-\/coordinate of the ending point's position upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_gaece283402d2f063de0fec372e7ad8fa5}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-hidden@{jpatchline\_\-get\_\-hidden}}
+\index{jpatchline\_\-get\_\-hidden@{jpatchline\_\-get\_\-hidden}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-hidden}]{\setlength{\rightskip}{0pt plus 5cm}char jpatchline\_\-get\_\-hidden ({\bf t\_\-object} $\ast$ {\em l})}}
+\label{group__jpatchline_gaece283402d2f063de0fec372e7ad8fa5}
+
+
+Determine if a patch line is hidden. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A patchline instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Zero if the patchline is visible, non-\/zero if it is hidden. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga01dc2867e149ca5d165a5efd852b80b0}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-inletnum@{jpatchline\_\-get\_\-inletnum}}
+\index{jpatchline\_\-get\_\-inletnum@{jpatchline\_\-get\_\-inletnum}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-inletnum}]{\setlength{\rightskip}{0pt plus 5cm}long jpatchline\_\-get\_\-inletnum ({\bf t\_\-object} $\ast$ {\em l})}}
+\label{group__jpatchline_ga01dc2867e149ca5d165a5efd852b80b0}
+
+
+Return the inlet number of the destination object box to which a patchline is connected. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A pointer to the patchline's instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The inlet number. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga1aed89ce61ea59fbc47a282e25398aa8}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-nextline@{jpatchline\_\-get\_\-nextline}}
+\index{jpatchline\_\-get\_\-nextline@{jpatchline\_\-get\_\-nextline}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-nextline}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-object}$\ast$ jpatchline\_\-get\_\-nextline ({\bf t\_\-object} $\ast$ {\em b})}}
+\label{group__jpatchline_ga1aed89ce61ea59fbc47a282e25398aa8}
+
+
+Given a patchline, traverse to the next patchline in the (linked) list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em b}]A patchline instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next patchline. If the current patchline is at the end (tail) of the list, then NULL is returned. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga42dc7b0cc71d75625f6580987a61f0e9}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-nummidpoints@{jpatchline\_\-get\_\-nummidpoints}}
+\index{jpatchline\_\-get\_\-nummidpoints@{jpatchline\_\-get\_\-nummidpoints}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-nummidpoints}]{\setlength{\rightskip}{0pt plus 5cm}long jpatchline\_\-get\_\-nummidpoints ({\bf t\_\-object} $\ast$ {\em l})}}
+\label{group__jpatchline_ga42dc7b0cc71d75625f6580987a61f0e9}
+
+
+Determine the number of midpoints (segments) in a patchline. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A pointer to the patchline's instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of midpoints in the patchline. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga901d26a483f28768c842defe9ad06cfb}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-outletnum@{jpatchline\_\-get\_\-outletnum}}
+\index{jpatchline\_\-get\_\-outletnum@{jpatchline\_\-get\_\-outletnum}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-outletnum}]{\setlength{\rightskip}{0pt plus 5cm}long jpatchline\_\-get\_\-outletnum ({\bf t\_\-object} $\ast$ {\em l})}}
+\label{group__jpatchline_ga901d26a483f28768c842defe9ad06cfb}
+
+
+Return the outlet number of the originating object box from which a patchline begins. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A pointer to the patchline's instance. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The outlet number. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga22e58d4f810941cbcab9c72fd6f944a8}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-get\_\-startpoint@{jpatchline\_\-get\_\-startpoint}}
+\index{jpatchline\_\-get\_\-startpoint@{jpatchline\_\-get\_\-startpoint}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-get\_\-startpoint}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatchline\_\-get\_\-startpoint ({\bf t\_\-object} $\ast$ {\em l}, \/  double $\ast$ {\em x}, \/  double $\ast$ {\em y})}}
+\label{group__jpatchline_ga22e58d4f810941cbcab9c72fd6f944a8}
+
+
+Retrieve a patchline's starting point. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A pointer to the patchline's instance. \item[{\em x}]The address of a variable to hold the x-\/coordinate of the starting point's position upon return. \item[{\em y}]The address of a variable to hold the y-\/coordinate of the starting point's position upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_ga711fb3e7a43bbfbd6922f3ac60ba7d86}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-set\_\-color@{jpatchline\_\-set\_\-color}}
+\index{jpatchline\_\-set\_\-color@{jpatchline\_\-set\_\-color}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-set\_\-color}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatchline\_\-set\_\-color ({\bf t\_\-object} $\ast$ {\em l}, \/  {\bf t\_\-jrgba} $\ast$ {\em prgba})}}
+\label{group__jpatchline_ga711fb3e7a43bbfbd6922f3ac60ba7d86}
+
+
+Set the color of a patch line. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A patchline instance. \item[{\em prgba}]The address of a valid \hyperlink{structt__jrgba}{t\_\-jrgba} struct containing the color to use. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}
+\hypertarget{group__jpatchline_gae5bd6fbfa02559350ee2b117a55b64d5}{
+\index{jpatchline@{jpatchline}!jpatchline\_\-set\_\-hidden@{jpatchline\_\-set\_\-hidden}}
+\index{jpatchline\_\-set\_\-hidden@{jpatchline\_\-set\_\-hidden}!jpatchline@{jpatchline}}
+\subsubsection[{jpatchline\_\-set\_\-hidden}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} jpatchline\_\-set\_\-hidden ({\bf t\_\-object} $\ast$ {\em l}, \/  char {\em c})}}
+\label{group__jpatchline_gae5bd6fbfa02559350ee2b117a55b64d5}
+
+
+Set a patchline's visibility. 
+\begin{DoxyParams}{Parameters}
+\item[{\em l}]A patchline instance. \item[{\em c}]Pass 0 to make a patchline visible, or non-\/zero to hide it. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An error code. 
+\end{DoxyReturn}

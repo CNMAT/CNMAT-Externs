@@ -1,0 +1,130 @@
+\hypertarget{group__mutex}{
+\section{Mutexes}
+\label{group__mutex}\index{Mutexes@{Mutexes}}
+}
+
+
+Collaboration diagram for Mutexes:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=101pt]{group__mutex}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+long \hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new} (\hyperlink{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{t\_\-systhread\_\-mutex} $\ast$pmutex, long flags)
+\begin{DoxyCompactList}\small\item\em Create a new mutex, which can be used to place thread locks around critical code. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__mutex_ga5fdfbb20bfe5b9e6b223436758ea88b1}{systhread\_\-mutex\_\-free} (\hyperlink{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{t\_\-systhread\_\-mutex} pmutex)
+\begin{DoxyCompactList}\small\item\em Free a mutex created with \hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new()}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}{systhread\_\-mutex\_\-lock} (\hyperlink{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{t\_\-systhread\_\-mutex} pmutex)
+\begin{DoxyCompactList}\small\item\em Enter block of locked code code until a \hyperlink{group__mutex_ga74aae707e650844be8a4e51a217c9b5f}{systhread\_\-mutex\_\-unlock()} is reached. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__mutex_ga74aae707e650844be8a4e51a217c9b5f}{systhread\_\-mutex\_\-unlock} (\hyperlink{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{t\_\-systhread\_\-mutex} pmutex)
+\begin{DoxyCompactList}\small\item\em Exit a block of code locked with \hyperlink{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}{systhread\_\-mutex\_\-lock()}. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__mutex_gafa0cef91ad29e8e0625d35eadde52002}{systhread\_\-mutex\_\-trylock} (\hyperlink{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{t\_\-systhread\_\-mutex} pmutex)
+\begin{DoxyCompactList}\small\item\em Try to enter block of locked code code until a \hyperlink{group__mutex_ga74aae707e650844be8a4e51a217c9b5f}{systhread\_\-mutex\_\-unlock()} is reached. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__mutex_ga57c63515a67e9739aa0f916ae05e8a18}{systhread\_\-mutex\_\-newlock} (\hyperlink{group__threading_ga503de6f3f546ef1dd2bed57a13d9812c}{t\_\-systhread\_\-mutex} $\ast$pmutex, long flags)
+\begin{DoxyCompactList}\small\item\em Convenience utility that combines \hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new()} and \hyperlink{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}{systhread\_\-mutex\_\-lock()}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__critical}{Critical Regions} 
+\end{DoxySeeAlso}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__mutex_ga5fdfbb20bfe5b9e6b223436758ea88b1}{
+\index{mutex@{mutex}!systhread\_\-mutex\_\-free@{systhread\_\-mutex\_\-free}}
+\index{systhread\_\-mutex\_\-free@{systhread\_\-mutex\_\-free}!mutex@{mutex}}
+\subsubsection[{systhread\_\-mutex\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-mutex\_\-free ({\bf t\_\-systhread\_\-mutex} {\em pmutex})}}
+\label{group__mutex_ga5fdfbb20bfe5b9e6b223436758ea88b1}
+
+
+Free a mutex created with \hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pmutex}]The mutex instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}. 
+\end{DoxyReturn}
+\hypertarget{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}{
+\index{mutex@{mutex}!systhread\_\-mutex\_\-lock@{systhread\_\-mutex\_\-lock}}
+\index{systhread\_\-mutex\_\-lock@{systhread\_\-mutex\_\-lock}!mutex@{mutex}}
+\subsubsection[{systhread\_\-mutex\_\-lock}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-mutex\_\-lock ({\bf t\_\-systhread\_\-mutex} {\em pmutex})}}
+\label{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}
+
+
+Enter block of locked code code until a \hyperlink{group__mutex_ga74aae707e650844be8a4e51a217c9b5f}{systhread\_\-mutex\_\-unlock()} is reached. It is important to keep the code in this block as small as possible.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em pmutex}]The mutex instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__mutex_gafa0cef91ad29e8e0625d35eadde52002}{systhread\_\-mutex\_\-trylock()} 
+\end{DoxySeeAlso}
+\hypertarget{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{
+\index{mutex@{mutex}!systhread\_\-mutex\_\-new@{systhread\_\-mutex\_\-new}}
+\index{systhread\_\-mutex\_\-new@{systhread\_\-mutex\_\-new}!mutex@{mutex}}
+\subsubsection[{systhread\_\-mutex\_\-new}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-mutex\_\-new ({\bf t\_\-systhread\_\-mutex} $\ast$ {\em pmutex}, \/  long {\em flags})}}
+\label{group__mutex_gaa8cae78764c59883566ac4f861dd534e}
+
+
+Create a new mutex, which can be used to place thread locks around critical code. The mutex should be freed with \hyperlink{group__mutex_ga5fdfbb20bfe5b9e6b223436758ea88b1}{systhread\_\-mutex\_\-free()}.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em pmutex}]The address of a variable to store the mutex pointer. \item[{\em flags}]Flags to determine the behaviour of the mutex, as defined in \hyperlink{group__threading_gaa95d9c538a1b25404d19106739db9802}{e\_\-max\_\-systhread\_\-mutex\_\-flags}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}.
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+One reason to use \hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new()} instead of \hyperlink{group__critical}{Critical Regions} is to create non-\/recursive locks, which are lighter-\/weight than recursive locks. 
+\end{DoxyRemark}
+\hypertarget{group__mutex_ga57c63515a67e9739aa0f916ae05e8a18}{
+\index{mutex@{mutex}!systhread\_\-mutex\_\-newlock@{systhread\_\-mutex\_\-newlock}}
+\index{systhread\_\-mutex\_\-newlock@{systhread\_\-mutex\_\-newlock}!mutex@{mutex}}
+\subsubsection[{systhread\_\-mutex\_\-newlock}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-mutex\_\-newlock ({\bf t\_\-systhread\_\-mutex} $\ast$ {\em pmutex}, \/  long {\em flags})}}
+\label{group__mutex_ga57c63515a67e9739aa0f916ae05e8a18}
+
+
+Convenience utility that combines \hyperlink{group__mutex_gaa8cae78764c59883566ac4f861dd534e}{systhread\_\-mutex\_\-new()} and \hyperlink{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}{systhread\_\-mutex\_\-lock()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pmutex}]The address of a variable to store the mutex pointer. \item[{\em flags}]Flags to determine the behaviour of the mutex, as defined in \hyperlink{group__threading_gaa95d9c538a1b25404d19106739db9802}{e\_\-max\_\-systhread\_\-mutex\_\-flags}. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}. 
+\end{DoxyReturn}
+\hypertarget{group__mutex_gafa0cef91ad29e8e0625d35eadde52002}{
+\index{mutex@{mutex}!systhread\_\-mutex\_\-trylock@{systhread\_\-mutex\_\-trylock}}
+\index{systhread\_\-mutex\_\-trylock@{systhread\_\-mutex\_\-trylock}!mutex@{mutex}}
+\subsubsection[{systhread\_\-mutex\_\-trylock}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-mutex\_\-trylock ({\bf t\_\-systhread\_\-mutex} {\em pmutex})}}
+\label{group__mutex_gafa0cef91ad29e8e0625d35eadde52002}
+
+
+Try to enter block of locked code code until a \hyperlink{group__mutex_ga74aae707e650844be8a4e51a217c9b5f}{systhread\_\-mutex\_\-unlock()} is reached. If the lock cannot be entered, this function will return non-\/zero.
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em pmutex}]The mutex instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns non-\/zero if there was a problem entering. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}{systhread\_\-mutex\_\-lock()} 
+\end{DoxySeeAlso}
+\hypertarget{group__mutex_ga74aae707e650844be8a4e51a217c9b5f}{
+\index{mutex@{mutex}!systhread\_\-mutex\_\-unlock@{systhread\_\-mutex\_\-unlock}}
+\index{systhread\_\-mutex\_\-unlock@{systhread\_\-mutex\_\-unlock}!mutex@{mutex}}
+\subsubsection[{systhread\_\-mutex\_\-unlock}]{\setlength{\rightskip}{0pt plus 5cm}long systhread\_\-mutex\_\-unlock ({\bf t\_\-systhread\_\-mutex} {\em pmutex})}}
+\label{group__mutex_ga74aae707e650844be8a4e51a217c9b5f}
+
+
+Exit a block of code locked with \hyperlink{group__mutex_ga6a3bea4c2f5e5d133d25d78b51fb15bf}{systhread\_\-mutex\_\-lock()}. 
+\begin{DoxyParams}{Parameters}
+\item[{\em pmutex}]The mutex instance pointer. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code as defined in \hyperlink{group__misc_ga0764dd6c02b76cca7d053ae50555d69d}{e\_\-max\_\-errorcodes}. 
+\end{DoxyReturn}

@@ -1,0 +1,66 @@
+\hypertarget{group__buffers}{
+\section{Buffers}
+\label{group__buffers}\index{Buffers@{Buffers}}
+}
+
+
+Your object can access shared data stored in an MSP buffer$\sim$ object.  
+
+
+Collaboration diagram for Buffers:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=86pt]{group__buffers}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__buffer}{t\_\-buffer}
+\begin{DoxyCompactList}\small\item\em Data structure for the buffer$\sim$ object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Your object can access shared data stored in an MSP buffer$\sim$ object. Similar to table and coll objects, buffer$\sim$ objects are bound to a \hyperlink{structt__symbol}{t\_\-symbol} from which you can gain access to the \hyperlink{structt__buffer}{t\_\-buffer} struct. Consider the following example.
+
+
+\begin{DoxyCode}
+    t_symbol *s;
+    t_object *o;
+    
+    s = gensym("foo");
+    o = s->s_thing;
+    
+    // if an object is bound to the symbol "foo", then o is that object.
+    if (ob_sym(o) == gensym("buffer~")) {
+        // that object is a buffer~, so we can use it
+        x->x_buffer = (t_buffer*)o;
+        
+    }
+\end{DoxyCode}
+
+
+Having stored a pointer to the buffer$\sim$ is the first step toward working with its data. However, you must not go accessing the data directly without taking some precautions regarding thread-\/safety.
+
+To access the data in a buffer you first increment the b\_\-inuse member of the \hyperlink{structt__buffer}{t\_\-buffer}'s struct. Then you perform the requisite operations on the data, which is stored in the b\_\-samples member. When you are done you decrement the b\_\-inuse member to return it to the state in which you found it.
+
+In the past you may have set the buffer's b\_\-inuse flag directly and cleared it when you were done. This is no longer good enough, and you must instead use the threadsafe macros \hyperlink{group__threading_ga411e2e07982bdfb1803b415a350e311a}{ATOMIC\_\-INCREMENT} and \hyperlink{group__threading_gaa42a5aadef70fe57dc80d247c890c9ac}{ATOMIC\_\-DECREMENT} for modifying the b\_\-inuse flag. The example below demonstrates what this might look like in an MSP object's perform routine. Notice that extra care has been taken to ensure that the \hyperlink{group__threading_ga411e2e07982bdfb1803b415a350e311a}{ATOMIC\_\-INCREMENT} is always balanced with an \hyperlink{group__threading_gaa42a5aadef70fe57dc80d247c890c9ac}{ATOMIC\_\-DECREMENT} call.
+
+
+\begin{DoxyCode}
+    ATOMIC_INCREMENT(&x->w_buf->b_inuse);
+    if (!x->w_buf->b_valid) {
+        ATOMIC_DECREMENT(&x->w_buf->b_inuse);
+        goto byebye;
+    }
+    
+    // do something with the buffer
+    
+    ATOMIC_DECREMENT(&x->w_buf->b_inuse);
+byebye:
+    return (w + 7);
+\end{DoxyCode}
+
+
+A class that accesses buffer$\sim$ objects is the simpwave$\sim$ object that is included with Max 5 SDK example projects. 

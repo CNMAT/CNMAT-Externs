@@ -1,0 +1,220 @@
+\hypertarget{group__qtcodecmod}{
+\section{QuickTime Codec Module}
+\label{group__qtcodecmod}\index{QuickTime Codec Module@{QuickTime Codec Module}}
+}
+
+
+Collaboration diagram for QuickTime Codec Module:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=139pt]{group__qtcodecmod}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+t\_\-jit\_\-err \hyperlink{group__qtcodecmod_ga1a1524685c2ed9532370cdef0eb4b89d}{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video} (void $\ast$x, void $\ast$attr, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Drop-\/in getter function for \char`\"{}codeclist\char`\"{}-\/type attribute, returns the list of valid video codecs installed on the system. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__qtcodecmod_ga9bfde35355bacbb2c426c35d2366b81a}{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio} (void $\ast$x, void $\ast$attr, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Drop-\/in getter function for \char`\"{}codeclist\char`\"{}-\/type attribute, returns the list of valid sound compressor codecs installed on the system. \item\end{DoxyCompactList}\item 
+t\_\-jit\_\-err \hyperlink{group__qtcodecmod_ga2909d3cefe4e70be15966899854f13d7}{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx} (void $\ast$x, void $\ast$attr, long $\ast$ac, \hyperlink{structt__atom}{t\_\-atom} $\ast$$\ast$av)
+\begin{DoxyCompactList}\small\item\em Drop-\/in getter function for \char`\"{}codeclist\char`\"{}-\/type attribute, returns the list of valid graphic exporter codecs installed on the system. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qtcodecmod_gae6661384fe174c791b221987ad3e785f}{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw} (long $\ast$count, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$$\ast$names)
+\begin{DoxyCompactList}\small\item\em Returns the list of valid video codecs installed on the system. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qtcodecmod_gab22a64fb0e7c3d795aefbbc473d5cb88}{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio\_\-raw} (long $\ast$count, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$$\ast$names)
+\begin{DoxyCompactList}\small\item\em Returns the list of valid sound compressor codecs installed on the system. \item\end{DoxyCompactList}\item 
+void \hyperlink{group__qtcodecmod_gacb8c32eb74355bf583e9371479531ad5}{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx\_\-raw} (long $\ast$count, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$$\ast$$\ast$names)
+\begin{DoxyCompactList}\small\item\em Returns the list of valid graphic exporter codecs installed on the system. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__qtcodecmod_ga7e4d6b34f51704dc53f2a9d2cde641b1}{jit\_\-qt\_\-codec\_\-qual2sym} (long qual)
+\begin{DoxyCompactList}\small\item\em Convert a QuickTime Codec Quality value to a human-\/readable symbol. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtcodecmod_ga051fcec661fa05ec19ef6c3949413c18}{jit\_\-qt\_\-codec\_\-sym2qual} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Convert a codec quality symbol to a valid QuickTime Codec Quality value. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__qtcodecmod_gaadb834b497ccbddd8b68ca4407829d85}{jit\_\-qt\_\-codec\_\-type2sym\_\-valid} (long type)
+\begin{DoxyCompactList}\small\item\em Given the four-\/char type code of a QuickTime video codec, returns a human-\/readable name, assuming that the codec is installed \_\-and\_\- is supported by Jitter. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__qtcodecmod_gaa0fb2109ffc6f7b1bb729b5ea5648684}{jit\_\-qt\_\-codec\_\-type2sym} (long type)
+\begin{DoxyCompactList}\small\item\em Given the four-\/char type code of a QuickTime video codec, returns a human-\/readable name, assuming that the codec is installed. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtcodecmod_gad3c44980ff81d6d6473d86323597c0b5}{jit\_\-qt\_\-codec\_\-sym2type\_\-valid} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Given the human-\/readable name of a QuickTime video codec, returns a four-\/char code, assuming that the codec is installed \_\-and\_\- is supported by Jitter. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtcodecmod_ga7e31fb1b430d6166e865dd82f9c7ce85}{jit\_\-qt\_\-codec\_\-sym2type} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Given the human-\/readable name of a QuickTime video codec, returns a four-\/char code, assuming that the codec is installed. \item\end{DoxyCompactList}\item 
+\hyperlink{structt__symbol}{t\_\-symbol} $\ast$ \hyperlink{group__qtcodecmod_ga7544a1595e0a1776dfce856056e8e7f8}{jit\_\-qt\_\-codec\_\-acodec2sym} (long type)
+\begin{DoxyCompactList}\small\item\em Given the four-\/char type code of a QuickTime audio codec, returns a human-\/readable name, assuming that the codec is installed. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__qtcodecmod_gadfc23f47d2ad5a71faa07c5e65addff9}{jit\_\-qt\_\-codec\_\-sym2acodec} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$s)
+\begin{DoxyCompactList}\small\item\em Given the human-\/readable name of a QuickTime audio codec, returns a four-\/char code, assuming that the codec is installed. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__qtcodecmod_ga7544a1595e0a1776dfce856056e8e7f8}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-acodec2sym@{jit\_\-qt\_\-codec\_\-acodec2sym}}
+\index{jit\_\-qt\_\-codec\_\-acodec2sym@{jit\_\-qt\_\-codec\_\-acodec2sym}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-acodec2sym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-qt\_\-codec\_\-acodec2sym (long {\em type})}}
+\label{group__qtcodecmod_ga7544a1595e0a1776dfce856056e8e7f8}
+
+
+Given the four-\/char type code of a QuickTime audio codec, returns a human-\/readable name, assuming that the codec is installed. 
+\begin{DoxyParams}{Parameters}
+\item[{\em type}]four-\/char type code of a QuickTime Codec\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing a human-\/readable codec name 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_ga9bfde35355bacbb2c426c35d2366b81a}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio}}
+\index{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio (void $\ast$ {\em x}, \/  void $\ast$ {\em attr}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__qtcodecmod_ga9bfde35355bacbb2c426c35d2366b81a}
+
+
+Drop-\/in getter function for \char`\"{}codeclist\char`\"{}-\/type attribute, returns the list of valid sound compressor codecs installed on the system. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]undocumented \item[{\em attr}]undocumented \item[{\em ac}]undocumented \item[{\em av}]undocumented\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_gab22a64fb0e7c3d795aefbbc473d5cb88}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio\_\-raw@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio\_\-raw}}
+\index{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio\_\-raw@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio\_\-raw}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio\_\-raw}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-qt\_\-codec\_\-getcodeclist\_\-audio\_\-raw (long $\ast$ {\em count}, \/  {\bf t\_\-symbol} $\ast$$\ast$$\ast$ {\em names})}}
+\label{group__qtcodecmod_gab22a64fb0e7c3d795aefbbc473d5cb88}
+
+
+Returns the list of valid sound compressor codecs installed on the system. 
+\begin{DoxyParams}{Parameters}
+\item[{\em count}](on output) number of codec names returned \item[{\em names}](on output) \hyperlink{structt__symbol}{t\_\-symbol} pointer array of (count) length, containing the names of valid installed codecs \end{DoxyParams}
+\hypertarget{group__qtcodecmod_ga2909d3cefe4e70be15966899854f13d7}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx}}
+\index{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx (void $\ast$ {\em x}, \/  void $\ast$ {\em attr}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__qtcodecmod_ga2909d3cefe4e70be15966899854f13d7}
+
+
+Drop-\/in getter function for \char`\"{}codeclist\char`\"{}-\/type attribute, returns the list of valid graphic exporter codecs installed on the system. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]undocumented \item[{\em attr}]undocumented \item[{\em ac}]undocumented \item[{\em av}]undocumented\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_gacb8c32eb74355bf583e9371479531ad5}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx\_\-raw@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx\_\-raw}}
+\index{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx\_\-raw@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx\_\-raw}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx\_\-raw}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-qt\_\-codec\_\-getcodeclist\_\-gfx\_\-raw (long $\ast$ {\em count}, \/  {\bf t\_\-symbol} $\ast$$\ast$$\ast$ {\em names})}}
+\label{group__qtcodecmod_gacb8c32eb74355bf583e9371479531ad5}
+
+
+Returns the list of valid graphic exporter codecs installed on the system. 
+\begin{DoxyParams}{Parameters}
+\item[{\em count}](on output) number of codec names returned \item[{\em names}](on output) \hyperlink{structt__symbol}{t\_\-symbol} pointer array of (count) length, containing the names of valid installed codecs \end{DoxyParams}
+\hypertarget{group__qtcodecmod_ga1a1524685c2ed9532370cdef0eb4b89d}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-getcodeclist\_\-video@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video}}
+\index{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video}]{\setlength{\rightskip}{0pt plus 5cm}t\_\-jit\_\-err jit\_\-qt\_\-codec\_\-getcodeclist\_\-video (void $\ast$ {\em x}, \/  void $\ast$ {\em attr}, \/  long $\ast$ {\em ac}, \/  {\bf t\_\-atom} $\ast$$\ast$ {\em av})}}
+\label{group__qtcodecmod_ga1a1524685c2ed9532370cdef0eb4b89d}
+
+
+Drop-\/in getter function for \char`\"{}codeclist\char`\"{}-\/type attribute, returns the list of valid video codecs installed on the system. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]undocumented \item[{\em attr}]undocumented \item[{\em ac}]undocumented \item[{\em av}]undocumented\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+t\_\-jit\_\-err error code 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_gae6661384fe174c791b221987ad3e785f}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw}}
+\index{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw@{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw}]{\setlength{\rightskip}{0pt plus 5cm}void jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw (long $\ast$ {\em count}, \/  {\bf t\_\-symbol} $\ast$$\ast$$\ast$ {\em names})}}
+\label{group__qtcodecmod_gae6661384fe174c791b221987ad3e785f}
+
+
+Returns the list of valid video codecs installed on the system. 
+\begin{DoxyParams}{Parameters}
+\item[{\em count}](on output) number of codec names returned \item[{\em names}](on output) \hyperlink{structt__symbol}{t\_\-symbol} pointer array of (count) length, containing the names of valid installed codecs \end{DoxyParams}
+\hypertarget{group__qtcodecmod_ga7e4d6b34f51704dc53f2a9d2cde641b1}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-qual2sym@{jit\_\-qt\_\-codec\_\-qual2sym}}
+\index{jit\_\-qt\_\-codec\_\-qual2sym@{jit\_\-qt\_\-codec\_\-qual2sym}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-qual2sym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-qt\_\-codec\_\-qual2sym (long {\em qual})}}
+\label{group__qtcodecmod_ga7e4d6b34f51704dc53f2a9d2cde641b1}
+
+
+Convert a QuickTime Codec Quality value to a human-\/readable symbol. 
+\begin{DoxyParams}{Parameters}
+\item[{\em qual}]QuickTime Codec Quality\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing a human-\/readable quality name (lossless, min, low, normal, high, max) 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_gadfc23f47d2ad5a71faa07c5e65addff9}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-sym2acodec@{jit\_\-qt\_\-codec\_\-sym2acodec}}
+\index{jit\_\-qt\_\-codec\_\-sym2acodec@{jit\_\-qt\_\-codec\_\-sym2acodec}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-sym2acodec}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-qt\_\-codec\_\-sym2acodec ({\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__qtcodecmod_gadfc23f47d2ad5a71faa07c5e65addff9}
+
+
+Given the human-\/readable name of a QuickTime audio codec, returns a four-\/char code, assuming that the codec is installed. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]human-\/readable name of a QuickTime Codec (as returned by \char`\"{}jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw\char`\"{} or similar)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long four-\/char code 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_ga051fcec661fa05ec19ef6c3949413c18}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-sym2qual@{jit\_\-qt\_\-codec\_\-sym2qual}}
+\index{jit\_\-qt\_\-codec\_\-sym2qual@{jit\_\-qt\_\-codec\_\-sym2qual}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-sym2qual}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-qt\_\-codec\_\-sym2qual ({\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__qtcodecmod_ga051fcec661fa05ec19ef6c3949413c18}
+
+
+Convert a codec quality symbol to a valid QuickTime Codec Quality value. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]codec quality name (lossless, min, low, normal, high, max)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+QuickTime Codec Quality 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_ga7e31fb1b430d6166e865dd82f9c7ce85}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-sym2type@{jit\_\-qt\_\-codec\_\-sym2type}}
+\index{jit\_\-qt\_\-codec\_\-sym2type@{jit\_\-qt\_\-codec\_\-sym2type}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-sym2type}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-qt\_\-codec\_\-sym2type ({\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__qtcodecmod_ga7e31fb1b430d6166e865dd82f9c7ce85}
+
+
+Given the human-\/readable name of a QuickTime video codec, returns a four-\/char code, assuming that the codec is installed. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]human-\/readable name of a QuickTime Codec (as returned by \char`\"{}jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw\char`\"{} or similar)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long four-\/char code 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_gad3c44980ff81d6d6473d86323597c0b5}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-sym2type\_\-valid@{jit\_\-qt\_\-codec\_\-sym2type\_\-valid}}
+\index{jit\_\-qt\_\-codec\_\-sym2type\_\-valid@{jit\_\-qt\_\-codec\_\-sym2type\_\-valid}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-sym2type\_\-valid}]{\setlength{\rightskip}{0pt plus 5cm}long jit\_\-qt\_\-codec\_\-sym2type\_\-valid ({\bf t\_\-symbol} $\ast$ {\em s})}}
+\label{group__qtcodecmod_gad3c44980ff81d6d6473d86323597c0b5}
+
+
+Given the human-\/readable name of a QuickTime video codec, returns a four-\/char code, assuming that the codec is installed \_\-and\_\- is supported by Jitter. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]human-\/readable name of a QuickTime Codec (as returned by \char`\"{}jit\_\-qt\_\-codec\_\-getcodeclist\_\-video\_\-raw\char`\"{} or similar)\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long four-\/char code 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_gaa0fb2109ffc6f7b1bb729b5ea5648684}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-type2sym@{jit\_\-qt\_\-codec\_\-type2sym}}
+\index{jit\_\-qt\_\-codec\_\-type2sym@{jit\_\-qt\_\-codec\_\-type2sym}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-type2sym}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-qt\_\-codec\_\-type2sym (long {\em type})}}
+\label{group__qtcodecmod_gaa0fb2109ffc6f7b1bb729b5ea5648684}
+
+
+Given the four-\/char type code of a QuickTime video codec, returns a human-\/readable name, assuming that the codec is installed. 
+\begin{DoxyParams}{Parameters}
+\item[{\em type}]four-\/char type code of a QuickTime Codec\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing a human-\/readable codec name 
+\end{DoxyReturn}
+\hypertarget{group__qtcodecmod_gaadb834b497ccbddd8b68ca4407829d85}{
+\index{qtcodecmod@{qtcodecmod}!jit\_\-qt\_\-codec\_\-type2sym\_\-valid@{jit\_\-qt\_\-codec\_\-type2sym\_\-valid}}
+\index{jit\_\-qt\_\-codec\_\-type2sym\_\-valid@{jit\_\-qt\_\-codec\_\-type2sym\_\-valid}!qtcodecmod@{qtcodecmod}}
+\subsubsection[{jit\_\-qt\_\-codec\_\-type2sym\_\-valid}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-symbol}$\ast$ jit\_\-qt\_\-codec\_\-type2sym\_\-valid (long {\em type})}}
+\label{group__qtcodecmod_gaadb834b497ccbddd8b68ca4407829d85}
+
+
+Given the four-\/char type code of a QuickTime video codec, returns a human-\/readable name, assuming that the codec is installed \_\-and\_\- is supported by Jitter. 
+\begin{DoxyParams}{Parameters}
+\item[{\em type}]four-\/char type code of a QuickTime Codec\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structt__symbol}{t\_\-symbol} pointer containing a human-\/readable codec name 
+\end{DoxyReturn}

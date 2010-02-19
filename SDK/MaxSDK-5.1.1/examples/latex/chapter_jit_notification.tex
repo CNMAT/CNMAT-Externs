@@ -1,0 +1,87 @@
+In Jitter, matrices are passed around as named references between Max objects.
+
+This named reference is created since Jitter registers these matrices with the corresponding name using the \hyperlink{group__objectmod_gabcf088a00f36b6af8ce5896b81e4d0ef}{jit\_\-object\_\-register()} function. Object registration is useful for a few reasons. First, registered matrices can be resolved by name using the \hyperlink{group__objectmod_ga328c0beb469f32437b756852fe8583bf}{jit\_\-object\_\-findregistered()} function. Secondly, registered objects can sent event notification to clients who have attached to them using \hyperlink{group__objectmod_ga213166e8beeb29aca36c57cd07c722f1}{jit\_\-object\_\-attach()}. Lastly, under certain circumstances, the object registration process can be used to have multiple external references to a single instance of an object as is the case with jit.matrix.\hypertarget{chapter_jit_notification_chapter_jit_notification_reg}{}\section{Registering Named Objects}\label{chapter_jit_notification_chapter_jit_notification_reg}
+To register an object, one can use the \hyperlink{group__objectmod_gabcf088a00f36b6af8ce5896b81e4d0ef}{jit\_\-object\_\-register()} function, which is equivalent to the Max \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()} function in the namespace associated with gensym(\char`\"{}jitter\char`\"{}). For more information about \hyperlink{group__obj_gaaa97beba179d6aebd3f3ede1b5c781fa}{object\_\-register()}, please consult the Pattr SDK, which covers this and other aspects of Max's new \char`\"{}obex\char`\"{} object model. Traditionally in Jitter, we bind \hyperlink{group__objectmod_gabcf088a00f36b6af8ce5896b81e4d0ef}{jit\_\-object\_\-register()} to the \char`\"{}register\char`\"{} method for an object and use \hyperlink{group__objectmod_ga9e1b9b8ed4fce611de26a74c6e1452c8}{jit\_\-object\_\-method()} to call this method. For example, from the jit.notify SDK example:
+
+
+\begin{DoxyCode}
+// allocate the Jitter object
+if (o=jit_object_new(gensym("jit_notify"))) {
+   ...
+   // generate a unique name
+   x->servername = jit_symbol_unique(); 
+
+   // register the object with the given name
+   jit_object_method(o,_jit_sym_register,x->servername); 
+   ...
+}      
+\end{DoxyCode}
+
+
+If not using a specific name, it is good to use the jit\_\-symbol\_\-unique() function as above to generate a unique name which is slated for re-\/use once a registered object is freed. This prevents excess memory usage by the symbol table as associated with these unique names.
+
+If you wish the object to have multiple references to a single instance with some name, as is common with the jit.matrix object, it is essential to use the return value of \hyperlink{group__objectmod_gabcf088a00f36b6af8ce5896b81e4d0ef}{jit\_\-object\_\-register()} in any instance where the object pointer is saved after registration. This is because if the registered object with the same class already exists, the object attempting to be registered will be freed, and the already registered object of the same class will be returned, its reference count having been incremented. This is not typically an issue outside of registering jit.matrix objects, although you may have a need for this type of implementation in other situations. Most other situations in which object registration is used within Jitter only expects and/or permits a single instance to be registered. In the above example, we know that this is safe to do, as we are using jit\_\-symbol\_\-unique() to generate a unique name.
+
+It is also possible to unregister named objects, with the \hyperlink{group__objectmod_ga21f77a08c1a98aaf68e4b2913487be0f}{jit\_\-object\_\-unregister()} function, but typically this is handled for you when your object is freed, or if your object is registered again with a different name. This is not often used in the Jitter code base except within these contexts.\hypertarget{chapter_jit_notification_chapter_jit_notification_lookup}{}\section{Looking Up an Object by Name}\label{chapter_jit_notification_chapter_jit_notification_lookup}
+Registered objects can be found by name using the \hyperlink{group__objectmod_ga328c0beb469f32437b756852fe8583bf}{jit\_\-object\_\-findregistered()} function. For example named matrices are resolved using this function. Most Matrix Operator objects have this done for them by the default MOP code, but for example any MOP which has its own jit\_\-matrix method, such as the jit.pack SDK example will make use of \hyperlink{group__objectmod_ga328c0beb469f32437b756852fe8583bf}{jit\_\-object\_\-findregistered()} inside its jit\_\-matrix method:
+
+
+\begin{DoxyCode}
+// get our matrix name from the atom arguments provided
+matrixname = jit_atom_getsym(argv);
+
+// look up based on name
+matrix = jit_object_findregistered(matrixname);
+
+// make sure that it is a valid pointer and has a "class_jit_matrix" method which
+       returns 1
+if (matrix&&jit_object_method(matrix, _jit_sym_class_jit_matrix)) {
+   ...
+}    
+\end{DoxyCode}
+\hypertarget{chapter_jit_notification_chapter_jit_notification_attach}{}\section{Attaching to Named Objects}\label{chapter_jit_notification_chapter_jit_notification_attach}
+Once an object has been registered, it can be considered a server to which clients attach to be notified of various events. To attach to a named object, use the the \hyperlink{group__objectmod_ga213166e8beeb29aca36c57cd07c722f1}{jit\_\-object\_\-attach()} function. Similarly to detach from a named object, use the \hyperlink{group__objectmod_gaa286218b643371fe28cbe261facd5b21}{jit\_\-object\_\-detach()} function. It is typical to detach from a server in your object's destructor, or any time your object is switching which server it is attached to. For your client object to receive any notification from the server object, it is important for your object to have defined a \char`\"{}notify\char`\"{} method which will receive the notification from all objects it is attached to.
+
+Below is the jit.notify SDK example's max wrapper object's notify method, which receives some atom values from its internal Jitter object instance. Since this object is a Matrix Operator, it is important in the following example that jit.notify calls the \hyperlink{group__maxmopmod_ga7e08584771f58ce1fe0b190d27b5759b}{max\_\-jit\_\-classex\_\-mop\_\-wrap()} function with the \hyperlink{group__jitter_ga669c2f28bba1dfb4181ebae8f19488bc}{MAX\_\-JIT\_\-MOP\_\-FLAGS\_\-OWN\_\-NOTIFY} flag to override the default MOP notify method, and that we pass on all other messages to the standard \hyperlink{group__maxmopmod_ga5032d682c77bcb7e2dcdf0e77d863d3c}{max\_\-jit\_\-mop\_\-notify()} method so that the default MOP code is informed of any changes to the input and output matrices.
+
+
+\begin{DoxyCode}
+// s is the servername, msg is the message, ob is the server object pointer, 
+// and data is extra data the server might provide for a given message
+void max_jit_notify_notify(t_max_jit_notify *x, t_symbol *s, t_symbol *msg, void 
+      *ob, void *data)
+{
+   if (msg==gensym("splat")) {
+      post("notify: server=%s message=%s",s->s_name,msg->s_name);
+      if (!data) {
+         error("splat message NULL pointer");
+         return;
+      }
+      // here's where we output using the rightmost outlet
+      // we just happen to know that "data" points to a t_atom[3]
+      // alternately you could use max_jit_obex_dumpout_get just to get 
+      // the outlet pointer
+      max_jit_obex_dumpout(x,msg,3,(t_atom *)data); 
+   } else {
+      // since we are a MOP, we are also attached to all the matrices for each in
+      put/output
+      // so we need to deal with this by calling the default mop notify method 
+      // (this is how mops handle their matrices getting new names/freed/modified
+      )
+      max_jit_mop_notify(x,s,msg);
+   }
+}
+\end{DoxyCode}
+\hypertarget{chapter_jit_notification_chapter_jit_notification_notify}{}\section{Notifying Clients}\label{chapter_jit_notification_chapter_jit_notification_notify}
+If you are making an object which is to be registered, and wish to send custom notification to clients in addition to the default notification that attributes send to all clients when the attribute is modified, and the default object free notification, then you will want to use the \hyperlink{group__objectmod_ga4bbd50b2d1e34de44d36e1a66a477b9f}{jit\_\-object\_\-notify()} function. This function lets you determine a message name to use for notification and optionally specify additional, but untyped data to all clients. If you choose to send additional data to clients, it is necessary for all client code to know how to unpack this information. Below is the example from the jit.notify SDK example which uses the notification mechanism to send some data to its max wrapper object:
+
+
+\begin{DoxyCode}
+    t_atom foo[3];
+ 
+    jit_atom_setlong(&foo[0],1);
+    jit_atom_setlong(&foo[1],2);
+    jit_atom_setlong(&foo[2],3);
+    jit_object_notify(x,gensym("splat"), foo);
+\end{DoxyCode}
+ 

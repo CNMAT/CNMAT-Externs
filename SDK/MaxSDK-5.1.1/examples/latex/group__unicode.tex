@@ -1,0 +1,132 @@
+\hypertarget{group__unicode}{
+\section{Unicode}
+\label{group__unicode}\index{Unicode@{Unicode}}
+}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__charset__converter}{t\_\-charset\_\-converter}
+\begin{DoxyCompactList}\small\item\em The charset\_\-converter object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__datatypes_ga73edaae82b318855cc09fac994918165}{t\_\-max\_\-err} \hyperlink{group__unicode_ga9ec526f1940a33256f61e5d5fdf8283c}{charset\_\-convert} (\hyperlink{structt__symbol}{t\_\-symbol} $\ast$src\_\-encoding, const char $\ast$in, long inbytes, \hyperlink{structt__symbol}{t\_\-symbol} $\ast$dest\_\-encoding, char $\ast$$\ast$out, long $\ast$outbytes)
+\begin{DoxyCompactList}\small\item\em A convenience function that simplifies usage by wrapping the other charset functions. \item\end{DoxyCompactList}\item 
+unsigned short $\ast$ \hyperlink{group__unicode_ga3f69447412c37263c41fcb1d3a69f3ec}{charset\_\-utf8tounicode} (char $\ast$s, long $\ast$outlen)
+\begin{DoxyCompactList}\small\item\em Convert a UTF8 C-\/String into a 16-\/bit-\/wide-\/character array. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__unicode_gad14b26e9b1d77ef47170076d0d9e099c}{charset\_\-unicodetoutf8} (unsigned short $\ast$s, long len, long $\ast$outlen)
+\begin{DoxyCompactList}\small\item\em Convert a 16-\/bit-\/wide-\/character array into a UTF C-\/string. \item\end{DoxyCompactList}\item 
+long \hyperlink{group__unicode_ga94f22fadc5fbc03f9153099ecbc0470e}{charset\_\-utf8\_\-count} (char $\ast$utf8, long $\ast$bytecount)
+\begin{DoxyCompactList}\small\item\em Returns utf8 character count, and optionally bytecount. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__unicode_ga2c03ff86b04bcf33c0ba0915a9e1c1da}{charset\_\-utf8\_\-offset} (char $\ast$utf8, long charoffset, long $\ast$byteoffset)
+\begin{DoxyCompactList}\small\item\em Returns utf8 character offset (positive or negative), and optionally byte offset. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hypertarget{group__unicode_unicode_character_encodings}{}\subsection{Character Encodings}\label{group__unicode_unicode_character_encodings}
+Currently supported character encodings
+\begin{DoxyItemize}
+\item \_\-sym\_\-utf\_\-8; // utf-\/8, no bom
+\item \_\-sym\_\-utf\_\-16; // utf-\/16, big-\/endian
+\item \_\-sym\_\-utf\_\-16be; // utf-\/16, big-\/endian
+\item \_\-sym\_\-utf\_\-16le; // utf-\/16, little-\/endian
+\item \_\-sym\_\-iso\_\-8859\_\-1; // iso-\/8859-\/1 (latin-\/1)
+\item \_\-sym\_\-us\_\-ascii; // us-\/ascii 7-\/bit
+\item \_\-sym\_\-ms\_\-ansi; // ms-\/ansi (microsoft code page 1252)
+\item \_\-sym\_\-macroman; // mac roman
+\item 
+\item \_\-sym\_\-charset\_\-converter;
+\item \_\-sym\_\-convert;
+\end{DoxyItemize}\hypertarget{group__unicode_unicode_character_encodings_example}{}\subsubsection{Example Usage}\label{group__unicode_unicode_character_encodings_example}
+
+\begin{DoxyCode}
+    t_charset_converter *conv = object_new(CLASS_NOBOX, gensym("charset_converter
+      "), ps_macroman, ps_ms_ansi);
+    char *cstr = "Text to convert";
+    char *cvtbuffer = NULL; // to-be-allocated data buffer
+    long cvtbuflen = 0; // length of buffer on output
+
+    if (conv) {
+        // note that it isn't necessary to send in a 0-terminated string, althoug
+      h we do so here
+        if (object_method(conv, gensym("convert"), cstr, strlen(cstr) + 1, &cvtbu
+      ffer, &cvtbuflen) == ERR_NONE) {
+            // do something with the converted buffer
+            sysmem_freeptr(cvtbuffer); // free newly allocated data buffer
+        }
+        object_free(conv); // free converter
+    }
+\end{DoxyCode}
+ 
+
+\subsection{Function Documentation}
+\hypertarget{group__unicode_ga9ec526f1940a33256f61e5d5fdf8283c}{
+\index{unicode@{unicode}!charset\_\-convert@{charset\_\-convert}}
+\index{charset\_\-convert@{charset\_\-convert}!unicode@{unicode}}
+\subsubsection[{charset\_\-convert}]{\setlength{\rightskip}{0pt plus 5cm}{\bf t\_\-max\_\-err} charset\_\-convert ({\bf t\_\-symbol} $\ast$ {\em src\_\-encoding}, \/  const char $\ast$ {\em in}, \/  long {\em inbytes}, \/  {\bf t\_\-symbol} $\ast$ {\em dest\_\-encoding}, \/  char $\ast$$\ast$ {\em out}, \/  long $\ast$ {\em outbytes})}}
+\label{group__unicode_ga9ec526f1940a33256f61e5d5fdf8283c}
+
+
+A convenience function that simplifies usage by wrapping the other charset functions. 
+\begin{DoxyParams}{Parameters}
+\item[{\em src\_\-encoding}]The name encoding of the input. \item[{\em in}]The input string. \item[{\em inbytes}]The number of bytes in the input string. \item[{\em dest\_\-encoding}]The name of the encoding to use for the output. \item[{\em out}]The address of a char$\ast$, which will be allocated and filled with the string in the new encoding. \item[{\em outbytes}]The address of a value that will hold the number of bytes long the output is upon return. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Max error code. 
+\end{DoxyReturn}
+\begin{DoxyRemark}{Remarks}
+Remember to call sysmem\_\-freeptr($\ast$out) to free any allocated memory. 
+\end{DoxyRemark}
+\hypertarget{group__unicode_gad14b26e9b1d77ef47170076d0d9e099c}{
+\index{unicode@{unicode}!charset\_\-unicodetoutf8@{charset\_\-unicodetoutf8}}
+\index{charset\_\-unicodetoutf8@{charset\_\-unicodetoutf8}!unicode@{unicode}}
+\subsubsection[{charset\_\-unicodetoutf8}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ charset\_\-unicodetoutf8 (unsigned short $\ast$ {\em s}, \/  long {\em len}, \/  long $\ast$ {\em outlen})}}
+\label{group__unicode_gad14b26e9b1d77ef47170076d0d9e099c}
+
+
+Convert a 16-\/bit-\/wide-\/character array into a UTF C-\/string. Accepts either null termination, or not (len is zero in the latter case).
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]An array of wide (16-\/bit) unicode characters. \item[{\em len}]The length of s. \item[{\em outlen}]The address of a variable to hold the size of the number of chars but does not include the NULL terminator in the count. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A UTF8-\/encoded C-\/string. 
+\end{DoxyReturn}
+\hypertarget{group__unicode_ga94f22fadc5fbc03f9153099ecbc0470e}{
+\index{unicode@{unicode}!charset\_\-utf8\_\-count@{charset\_\-utf8\_\-count}}
+\index{charset\_\-utf8\_\-count@{charset\_\-utf8\_\-count}!unicode@{unicode}}
+\subsubsection[{charset\_\-utf8\_\-count}]{\setlength{\rightskip}{0pt plus 5cm}long charset\_\-utf8\_\-count (char $\ast$ {\em utf8}, \/  long $\ast$ {\em bytecount})}}
+\label{group__unicode_ga94f22fadc5fbc03f9153099ecbc0470e}
+
+
+Returns utf8 character count, and optionally bytecount. 
+\begin{DoxyParams}{Parameters}
+\item[{\em utf8}]The UTF-\/8 encoded string whose characters are to be counted. \item[{\em bytecount}]The address of a variable to hold the byte count on return. Pass NULL if you don't require the byte count. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of characters in the UTF8 string. 
+\end{DoxyReturn}
+\hypertarget{group__unicode_ga2c03ff86b04bcf33c0ba0915a9e1c1da}{
+\index{unicode@{unicode}!charset\_\-utf8\_\-offset@{charset\_\-utf8\_\-offset}}
+\index{charset\_\-utf8\_\-offset@{charset\_\-utf8\_\-offset}!unicode@{unicode}}
+\subsubsection[{charset\_\-utf8\_\-offset}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ charset\_\-utf8\_\-offset (char $\ast$ {\em utf8}, \/  long {\em charoffset}, \/  long $\ast$ {\em byteoffset})}}
+\label{group__unicode_ga2c03ff86b04bcf33c0ba0915a9e1c1da}
+
+
+Returns utf8 character offset (positive or negative), and optionally byte offset. 
+\begin{DoxyParams}{Parameters}
+\item[{\em utf8}]A UTF-\/8 encoded string. \item[{\em charoffset}]The char offset into the string at which to find the byte offset. \item[{\em byteoffset}]The address of a variable to hold the byte offset on return. Pass NULL if you don't require the byte offset. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The character offset. 
+\end{DoxyReturn}
+\hypertarget{group__unicode_ga3f69447412c37263c41fcb1d3a69f3ec}{
+\index{unicode@{unicode}!charset\_\-utf8tounicode@{charset\_\-utf8tounicode}}
+\index{charset\_\-utf8tounicode@{charset\_\-utf8tounicode}!unicode@{unicode}}
+\subsubsection[{charset\_\-utf8tounicode}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short$\ast$ charset\_\-utf8tounicode (char $\ast$ {\em s}, \/  long $\ast$ {\em outlen})}}
+\label{group__unicode_ga3f69447412c37263c41fcb1d3a69f3ec}
+
+
+Convert a UTF8 C-\/String into a 16-\/bit-\/wide-\/character array. 
+\begin{DoxyParams}{Parameters}
+\item[{\em s}]The string to be converted to unicode. \item[{\em outlen}]The address of a variable to hold the size of the number of chars but does not include the NULL terminator in the count. \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the buffer of unicode (wide) characters. 
+\end{DoxyReturn}

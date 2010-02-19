@@ -1,0 +1,59 @@
+If you are writing user interface objects for Max, it is recommended that you provide an icon for your object.
+
+Providing an icon will allow users to create an instance of your class from the object palette, and improve the user's experience in other interactions with Max including the Object Defaults inspector.\hypertarget{chapter_appendix_b_appendix_b_svg}{}\section{Object SVG Icon}\label{chapter_appendix_b_appendix_b_svg}
+To see the icons provided by Cycling '74 for objects included in Max, look in the {\bfseries Cycling '74/object-\/palettes} folder installed by Max. You fill find a variety of SVG (scalable vector graphics) files for the objects. The files are named with the same name of the class (as it is defined in your {\ttfamily main()} function) with which they are associated. You will need to place your svg in this folder for it to be found by Max.
+
+{\itshape  SVG files can be edited in a variety of software applications such as InkScape or Adobe Illustrator. You can also export SVG files from OmniGraffle on the Mac, which is how the Max's object icons were created. \/}\hypertarget{chapter_appendix_b_appendix_b_icon}{}\section{Object Palette Definition}\label{chapter_appendix_b_appendix_b_icon}
+Adding the svg file will make the icon available to Max for use in some ways. To make your icon appear in the new object palette, however, you must create a palette containing your SVG file. If you look in the {\bfseries Cycling '74/object-\/palettes} folder (where you placed your SVG file), you should notice some files with names like \char`\"{}palette1.json\char`\"{}, \char`\"{}palette2.json\char`\"{}, and \char`\"{}palette3.json\char`\"{}. For your object, you should create a new palette file.
+
+For the following example we will assume you have created an object called 'littleuifoo'. For this object we will create a palette called 'littleuifoo-\/palette.json'. The contents of this file will look like this: 
+\begin{DoxyPre}
+\{
+	"patcher" : 	\{
+		"rect" : [ 0.000000, 0.000000, 1000.000000, 1000.000000 ],
+		"bgcolor" : [ 1.000000, 1.000000, 1.000000, 1.000000 ],
+		"bglocked" : 0,
+		"defrect" : [ 10.000000, 59.000000, 1176.000000, 668.000000 ],
+		"boxes" : [ 			\{
+				"box" : 				\{
+					"maxclass" : "fpic",
+					"boxalpha" : 1.000000,
+					"presentation" : 0,
+					"destrect" : [ 0.000000, 0.000000, 0.000000, 0.000000 ],
+					"patching\_rect" : [ 241.000000, 244.000000, 100.000000, 50.000000 ],
+					"autofit" : 0,
+					"id" : "obj-1",
+					"ignoreclick" : 0,
+					"hidden" : 0,
+					"fontname" : "Courier",
+					"pic" : "littleuifoo.svg",
+					"xoffset" : 0.000000,
+					"yoffset" : 0.000000,
+					"background" : 0,
+					"presentation\_rect" : [ 0.000000, 0.000000, 0.000000, 0.000000 ],
+					"fontsize" : 12.000000,
+					"instance\_attributes" : 					\{
+						"palette\_category" : [ "Images", "Interface" ],
+						"palette\_action" : "littleuifoo"
+					\}\end{DoxyPre}
+
+
+
+\begin{DoxyPre}				\}\end{DoxyPre}
+
+
+
+\begin{DoxyPre}			\}
+ 		],
+		"lines" : [  ]
+	\}
+\}	
+\end{DoxyPre}
+
+
+Most of this palette file will be the same for any given object. The astute reader might notice that this is a JSON representation of a \hyperlink{structt__dictionary}{t\_\-dictionary} representing a patcher that includes an {\bfseries fpic} object. We care about three lines in this dictionary: 
+\begin{DoxyEnumerate}
+\item The 'pic' attribute of the fpic object determines what image will be displayed in the new-\/object palette. 
+\item The 'palette\_\-category' instance attribute will determine what categories/tabs your icon will appear under in the new-\/object palette. 
+\item The 'palette\_\-action' instance attribute will determine what object class is instantiated by when user chooses your icon. 
+\end{DoxyEnumerate}
