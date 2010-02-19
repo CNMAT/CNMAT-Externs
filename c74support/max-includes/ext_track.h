@@ -1,7 +1,6 @@
 #ifndef _EXT_TRACK_H_
 #define _EXT_TRACK_H_
 
-// information moved to ext_timeline.h
-#include "ext_timeline.h"
+// 	NOTE: This file is obsolete.
 
 #endif /* _EXT_TRACK_H_ */

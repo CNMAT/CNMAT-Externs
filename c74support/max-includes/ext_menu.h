@@ -1,6 +1,6 @@
 #ifndef _EXT_MENU_H_
 #define _EXT_MENU_H_
 
-// t_menuinfo struct definition moved to ext_maxtypes.h
+// 	NOTE: This file is obsolete.
 
 #endif /* _EXT_MENU_H_ */

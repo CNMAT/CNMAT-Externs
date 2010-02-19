@@ -1,7 +1,7 @@
 /* 
 	jit.gworld.h
 
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 	
 */

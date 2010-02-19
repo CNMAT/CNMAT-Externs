@@ -9,18 +9,61 @@
 #endif  // WIN_VERSION
 
 #ifdef __cplusplus
+/**
+	Ensure that any definitions following this macro use a C-linkage, not a C++ linkage.
+	The Max API uses C-linkage.
+	This is important for objects written in C++ or that use a C++ compiler.
+	This macro must be balanced with the #END_USING_C_LINKAGE macro.
+	@ingroup misc
+*/
 #define BEGIN_USING_C_LINKAGE \
 	extern "C" {
 #else
+/**
+	Ensure that any definitions following this macro use a C-linkage, not a C++ linkage.
+	The Max API uses C-linkage.
+	This is important for objects written in C++ or that use a C++ compiler.
+	This macro must be balanced with the #END_USING_C_LINKAGE macro.
+	@ingroup misc
+*/
 #define BEGIN_USING_C_LINKAGE
 #endif // __cplusplus
 
 #ifdef __cplusplus
+/**
+	Close a definition section that was opened using #BEGIN_USING_C_LINKAGE.
+	@ingroup misc
+*/
 #define END_USING_C_LINKAGE \
 	}
 #else
+/**
+	Close a definition section that was opened using #BEGIN_USING_C_LINKAGE.
+	@ingroup misc
+*/
 #define END_USING_C_LINKAGE
 #endif // __cplusplus
+
+#ifdef WIN_VERSION
+
+// Define MAXAPI_USE_MSCRT if you want to use the ms c runtime library.
+// Otherwise, add c74support/max-includes to your linker include paths
+// and your external will use the maxcrt thus avoiding any external dependencies.
+#ifndef MAXAPI_USE_MSCRT
+
+#ifndef _CRT_NOFORCE_MANIFEST    // avoid warning if already defined
+#define _CRT_NOFORCE_MANIFEST
+#endif
+
+#ifndef _DEBUG
+// for debug use the standard microsoft C runtime
+#pragma comment(linker,"/NODEFAULTLIB:msvcrt.lib")
+#pragma comment(lib,"maxcrt.lib")
+#endif
+
+#endif // #ifndef MAXAPI_USE_MSCRT
+
+#endif // #ifdef WIN_VERSION
 
 ////////////////////////////////////////////////////////////////////////////////
 // Mac Target
@@ -57,6 +100,13 @@
 #define C74_PRAGMA_STRUCT_PACK		0
 #define C74_STRUCT_PACK_SIZE		4
 
+// If the prefix header containing #include <Carbon/Carbon.h> is not present, then we include 
+// a minimal set of required headers here.
+#ifndef __MACTYPES__
+#include <MacTypes.h>
+#endif
+#include <sys/types.h>
+
 #endif // MAC_VERSION
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +139,7 @@
 #else
 #define C74_PRAGMA_STRUCT_PACKPUSH	0
 #endif
+
 #define C74_PRAGMA_STRUCT_PACK		1
 #define C74_STRUCT_PACK_SIZE		2
 
@@ -102,6 +153,7 @@
 #pragma warning( disable : 4245 ) // implicit unsigned/signed type conversion
 #pragma warning( disable : 4305 ) // truncation from 'type1' to 'type2' (e.g. double->float)
 
+#define _CRT_SECURE_NO_WARNINGS
 
 // crtl
 #include <stdio.h>

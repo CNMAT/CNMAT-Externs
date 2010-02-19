@@ -5,7 +5,6 @@
 #ifndef _EDIT_H_
 #define _EDIT_H_
 
-// information moved to ext_maxtypes.h
+// 	NOTE: This file is obsolete.
 
 #endif /* _EDIT_H_ */
-

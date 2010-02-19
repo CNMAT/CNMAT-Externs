@@ -1,11 +1,17 @@
-
+#include "ext.h"
 #include "ext_strings.h"
 
-#ifdef WIN32
-#include <string.h>
+#ifdef WIN_VERSION
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#ifndef WIN32
+#include <string.h>
+
+#endif // #ifdef WIN_VERSION
+
+#ifndef WIN_VERSION
 #ifndef NDEBUG
 
 char *strcpy(char *s1, const char *s2)
@@ -107,7 +113,7 @@ int strncmp(const char *s1, const char *s2, unsigned long n)
 }
 
 #endif // NDEBUG
-#endif // #ifndef WIN32
+#endif // #ifndef WIN_VERSION
 
 void ctopcpy(unsigned char *p1, char *p2)
 {

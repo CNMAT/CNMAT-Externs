@@ -1,7 +1,7 @@
 /* 
 	jit.common.h
 
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 		
 */
@@ -29,37 +29,50 @@
 #define FALSE 	0
 #endif
 
-#define JIT_ATTR_GET_OPAQUE			0x00000001
-#define JIT_ATTR_SET_OPAQUE			0x00000002
-#define JIT_ATTR_GET_OPAQUE_USER	0x00000100
-#define JIT_ATTR_SET_OPAQUE_USER	0x00000200
-#define JIT_ATTR_GET_DEFER			0x00010000
-#define JIT_ATTR_GET_USURP			0x00020000
-#define JIT_ATTR_GET_DEFER_LOW		0x00040000
-#define JIT_ATTR_GET_USURP_LOW		0x00080000
-#define JIT_ATTR_SET_DEFER			0x01000000
-#define JIT_ATTR_SET_USURP			0x02000000
-#define JIT_ATTR_SET_DEFER_LOW		0x04000000
-#define JIT_ATTR_SET_USURP_LOW		0x08000000
+#define JIT_ATTR_GET_OPAQUE			0x00000001	///< private getter (all)          @ingroup jitter
+#define JIT_ATTR_SET_OPAQUE			0x00000002	///< private setter (all)          @ingroup jitter
+#define JIT_ATTR_GET_OPAQUE_USER	0x00000100	///< private getter (user)         @ingroup jitter
+#define JIT_ATTR_SET_OPAQUE_USER	0x00000200	///< private setter (user)         @ingroup jitter
+#define JIT_ATTR_GET_DEFER			0x00010000	///< defer getter (deprecated)     @ingroup jitter
+#define JIT_ATTR_GET_USURP			0x00020000	///< usurp getter (deprecated)     @ingroup jitter
+#define JIT_ATTR_GET_DEFER_LOW		0x00040000	///< defer getter                  @ingroup jitter
+#define JIT_ATTR_GET_USURP_LOW		0x00080000	///< usurp getter                  @ingroup jitter
+#define JIT_ATTR_SET_DEFER			0x01000000	///< defer setter (deprecated)     @ingroup jitter
+#define JIT_ATTR_SET_USURP			0x02000000	///< usurp setter (deprecated)     @ingroup jitter
+#define JIT_ATTR_SET_DEFER_LOW		0x04000000	///< defer setter                  @ingroup jitter
+#define JIT_ATTR_SET_USURP_LOW		0x08000000	///< usurp setter                  @ingroup jitter
 
-//t_jit_matrix_info flags
-#define JIT_MATRIX_DATA_HANDLE		0x00000002
-#define JIT_MATRIX_DATA_REFERENCE	0x00000004 	//data is someone else's
-#define JIT_MATRIX_DATA_FLAGS_USE	0x00008000 	//necessary if using handle/reference data flags when creating
-												//jit_matrix, however, it is never stored in matrix
+// t_jit_matrix_info flags
+#define JIT_MATRIX_DATA_HANDLE		0x00000002	///< data is handle                                                   @ingroup jitter
+#define JIT_MATRIX_DATA_REFERENCE	0x00000004 	///< data is reference to outside memory                              @ingroup jitter
+#define JIT_MATRIX_DATA_PACK_TIGHT	0x00000008 	///< data is tightly packed (doesn't use standard 16 byte alignment)  @ingroup jitter
+#define JIT_MATRIX_DATA_FLAGS_USE	0x00008000 	/**< necessary if using handle/reference data flags when creating     @ingroup jitter
+												 * jit_matrix, however, it is never stored in matrix */ 
+                                                                                                        
+#define JIT_MATRIX_MAX_DIMCOUNT		32 			///< maximum dimension count                                          @ingroup jitter
+#define JIT_MATRIX_MAX_PLANECOUNT	32 			///< maximum plane count                                              @ingroup jitter
+                                                                                                        
+// t_matrix_conv_info flags                                                                                           @ingroup jitter
+#define JIT_MATRIX_CONVERT_CLAMP	0x00000001  ///< not currently used                                               @ingroup jitter
+#define JIT_MATRIX_CONVERT_INTERP	0x00000002	///< use interpolation                                                @ingroup jitter
+#define JIT_MATRIX_CONVERT_SRCDIM	0x00000004	///< use source dimensions                                            @ingroup jitter
+#define JIT_MATRIX_CONVERT_DSTDIM	0x00000008	///< use destination dimensions                                       @ingroup jitter
 
-#define JIT_MATRIX_MAX_DIMCOUNT		32 			//maximum dimension count
-#define JIT_MATRIX_MAX_PLANECOUNT	32 			//maximum plane count
-
-#define JIT_MATRIX_CONVERT_CLAMP	0x00000001  //not currently used
-#define JIT_MATRIX_CONVERT_INTERP	0x00000002
-#define JIT_MATRIX_CONVERT_SRCDIM	0x00000004
-#define JIT_MATRIX_CONVERT_DSTDIM	0x00000008
-
+#ifndef __OBEX_H__
 typedef unsigned long 	ulong;
 typedef unsigned int 	uint;
 typedef unsigned short 	ushort;
 typedef unsigned char 	uchar;
+#endif
+
+/**
+ * for passing on the stack in method calls 
+ * (no need for struct packing here, since flat array)
+ */
+typedef struct _stack_splat
+{
+	char b[64];	///< byte array to push onto stack
+} t_stack_splat;
 
 #include "jit.op.h"
 #include "jit.linklist.h"
@@ -70,71 +83,87 @@ typedef unsigned char 	uchar;
     #pragma pack(2)
 #endif
 
-//for passing on the stack in method calls
-typedef struct _stack_splat
-{
-	char b[64];
-} t_stack_splat;
-
-//common attr struct
+/**
+ * Common attribute struct.
+ * Shared by all built in attribute classes. 
+ *
+ * @ingroup attrmod
+ */
 typedef struct _jit_attr
 {
-	t_jit_object	ob;
-	t_symbol		*name;
-	t_symbol		*type;	
-	long			flags;  		//public/private get/set methods
-	method			get;    		//override default get method
-	method			set;    		//override default set method
-	void			*filterget;		//filterobject for get method
-	void			*filterset; 	//filterobject for set method
-	void			*reserved;		//for future use
-	t_symbol		*regname;
+	t_jit_object	ob;				///< common object header
+	t_symbol		*name;			///< attribute name
+	t_symbol		*type;			///< attribute type (char, long, float32, float64, symbol, atom, or obj)
+	long			flags;  		///< flags for public/private get/set methods
+	method			get;    		///< override default get method
+	method			set;    		///< override default set method
+	void			*filterget;		///< filterobject for get method
+	void			*filterset; 	///< filterobject for set method
+	void			*reserved;		///< for future use
 } t_jit_attr;		
 
+/**
+ * Matrix information struct. 
+ * Used to get/set multiple matrix attributes at once.
+ *
+ * @ingroup matrixfun
+ */
 typedef struct _jit_matrix_info
 {
-	long			size;			// in bytes (0xFFFFFFFF=UNKNOWN)
-	t_symbol		*type;			// primitive type
-	long			flags;			// my data?, handle?
-	long			dimcount;		
-	long			dim[JIT_MATRIX_MAX_DIMCOUNT];		
-	long			dimstride[JIT_MATRIX_MAX_DIMCOUNT]; // in bytes(array of size dimcount)
-	long			planecount;		// # planes
+	long			size;			///< in bytes (0xFFFFFFFF=UNKNOWN)
+	t_symbol		*type;			///< primitifve type (char, long, float32, or float64)
+	long			flags;			///< flags to specify data reference, handle, or tightly packed
+	long			dimcount;		///< number of dimensions
+	long			dim[JIT_MATRIX_MAX_DIMCOUNT];		///< dimension sizes
+	long			dimstride[JIT_MATRIX_MAX_DIMCOUNT]; ///< stride across dimensions in bytes
+	long			planecount;		///< number of planes
 } t_jit_matrix_info;
 
 
+/**
+ * Matrix conversion struct. 
+ * Used to copy data from one matrix to another with special characteristics.
+ *
+ * @ingroup matrixfun
+ */
 typedef struct _matrix_conv_info
 {
-	long 	flags;
-	long	planemap[JIT_MATRIX_MAX_PLANECOUNT];
-	long	srcdimstart[JIT_MATRIX_MAX_DIMCOUNT];		
-	long	srcdimend[JIT_MATRIX_MAX_DIMCOUNT];		
-	long	dstdimstart[JIT_MATRIX_MAX_DIMCOUNT];		
-	long	dstdimend[JIT_MATRIX_MAX_DIMCOUNT];		
+	long 	flags;									///< flags for whether or not to use interpolation, or source/destination dimensions
+	long	planemap[JIT_MATRIX_MAX_PLANECOUNT];	///< plane mapping
+	long	srcdimstart[JIT_MATRIX_MAX_DIMCOUNT];	///< source dimension start	
+	long	srcdimend[JIT_MATRIX_MAX_DIMCOUNT];		///< source dimension end
+	long	dstdimstart[JIT_MATRIX_MAX_DIMCOUNT];	///< destination dimension start	
+	long	dstdimend[JIT_MATRIX_MAX_DIMCOUNT];		///< destination dimension end
 } t_matrix_conv_info;
+
+#include "jit.parallel.utils.h"
+
 
 long jit_method_true(void *x);
 long jit_method_false(void *x);
 
 void *jit_class_new(char *name, method mnew, method mfree, long size, ...);
-t_jit_err jit_class_free(void *x);
-t_jit_err jit_class_register(void *x);
-t_jit_err jit_class_addmethod(void *x, method m, char *name, ...);
-t_jit_err jit_class_addattr(void *x,t_jit_object *attr);
-t_jit_err jit_class_addadornment(void *xx,t_jit_object *o);
-void *jit_class_adornment_get(void *xx,t_symbol *classname);
-t_symbol *jit_class_nameget(void *x);
+t_jit_err jit_class_free(void *c);
+t_jit_err jit_class_register(void *c);
+t_jit_err jit_class_addmethod(void *c, method m, char *name, ...);
+t_jit_err jit_class_addattr(void *c, t_jit_object *attr);
+t_jit_err jit_class_addadornment(void *c, t_jit_object *o);
+void *jit_class_adornment_get(void *c, t_symbol *classname);
+t_symbol *jit_class_nameget(void *c);
 void *jit_class_findbyname(t_symbol *classname);
 long jit_object_classname_compare(void *x, t_symbol *name);
-method jit_class_method(void *x, t_symbol *methodname);
-void *jit_class_attrlist_get(void *x);
-void *jit_class_attr_get(void *x, t_symbol *attrname);
+method jit_class_method(void *c, t_symbol *methodname);
+void *jit_class_attr_get(void *c, t_symbol *attrname);
+t_jit_err jit_class_addtypedwrapper(void *c, method m, char *name, ...);
+t_messlist *jit_class_typedwrapper_get(void *c, t_symbol *s);
+t_jit_err jit_class_method_addargsafe(void *c, char *argname, char *methodname);
+t_symbol *jit_class_method_argsafe_get(void *c, t_symbol *s);
 
 void *jit_object_alloc(void *c);
 void *jit_object_new(t_symbol *classname, ...);
 t_jit_err jit_object_free(void *x);
-void *jit_object_attrlist_get(void *x);
-void *jit_object_method(void *x, t_symbol *s, ...);
+void *jit_object_method(void *x, t_symbol *s, ...) JIT_WEAKLINK;
+void *jit_object_method_typed(void *x, t_symbol *s, long ac, t_atom *av, t_atom *rv);
 method jit_object_getmethod(void *x, t_symbol *s);
 t_symbol *jit_object_classname(void *x);
 void * jit_object_register(void *x, t_symbol *s);
@@ -145,12 +174,18 @@ void *jit_object_attach(t_symbol *s, void *x);
 t_jit_err jit_object_detach(t_symbol *s, void *x);
 t_jit_err jit_object_notify(void *x, t_symbol *s, void *data);
 void *jit_object_class(void *x);
-void *jit_robject_findbyptr(void *x);
+long jit_object_attr_usercanget(void *x,t_symbol *s);
+long jit_object_attr_usercanset(void *x,t_symbol *s);
+void *jit_object_attr_get(void *x, t_symbol *attrname);
+t_jit_err jit_object_importattrs(void *x, t_symbol *s, long argc, t_atom *argv);
+t_jit_err jit_object_exportattrs(void *x, t_symbol *s, long argc, t_atom *argv);
+t_jit_err jit_object_exportsummary(void *x, t_symbol *s, long argc, t_atom *argv);
+t_symbol *jit_object_method_argsafe_get(void *x, t_symbol *s);
 
 //memory functions
 void *jit_getbytes(long size);
-void *jit_freebytes(void *ptr,long size);
-void *jit_handle_new(long size);
+void jit_freebytes(void *ptr,long size);
+void **jit_handle_new(long size);
 void jit_handle_free(void **handle);
 long jit_handle_size_get(void **handle);
 t_jit_err jit_handle_size_set(void **handle, long size);
@@ -191,6 +226,7 @@ t_jit_err jit_mop_output_nolink(void *mop, long c);
 t_jit_err jit_mop_ioproc_copy_adapt(void *mop, void *mop_io, void *matrix);
 t_jit_err jit_mop_ioproc_copy_trunc(void *mop, void *mop_io, void *matrix);
 t_jit_err jit_mop_ioproc_copy_trunc_zero(void *mop, void *mop_io, void *matrix);
+t_symbol *jit_mop_ioproc_tosym(void *ioproc);
 
 //attr functions
 long max_jit_attr_args_offset(short ac, t_atom *av);
@@ -231,8 +267,16 @@ void jit_error_code(void *x,t_jit_err v); //interrupt safe
 void jit_error_sym(void *x,t_symbol *s); //interrupt safe
 void jit_post_sym(void *x,t_symbol *s);  //interrupt safe
 
+//load test
+
+#ifdef __APPLE_CC__
+#define IS_JIT_LIBRARY_AVAILABLE (jit_object_method != NULL)
+#else
+#define IS_JIT_LIBRARY_AVAILABLE (jit_object_method != NULL)
+#endif
+
 //util macros
-#define CLIP(x,a,b) (x)=(x)<(a)?(a):(x)>(b)?(b):(x)
+#define CLIP(x,a,b) (x)=(x)<(a)?(a):(x)>(b)?(b):(x)		
 #define CLAMP(x,a,b) (x)<(a)?(a):(x)>(b)?(b):(x)
 #define MAX(x,y) ((x)>(y)?(x):(y))
 #define MIN(x,y) ((x)<(y)?(x):(y))

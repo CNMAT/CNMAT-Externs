@@ -1,8 +1,6 @@
 #ifndef _EXT_MIDI_H_
 #define _EXT_MIDI_H_
 
-// this function is no longer supported
-
-void midiinfo(void *mr);
+// 	NOTE: This file is obsolete.
 
 #endif /* _EXT_MIDI_H_ */

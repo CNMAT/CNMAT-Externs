@@ -30,6 +30,7 @@ typedef struct _sndfileinfo
 } t_sndfileinfo;
 
 short sndfile_info(char *filename, short vol, unsigned long type, t_sndfileinfo *info);
+long sndfile_writeheader(t_filehandle fh, long type, long size, long nchans, long ssize, long srate, unsigned long samptype); 
 
 #if C74_PRAGMA_STRUCT_PACKPUSH
     #pragma pack(pop)

@@ -1,17 +1,20 @@
 /* 
 	jit.max.h
 
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 	
 */
 
 #ifndef __JIT_MAX_H__
 #define __JIT_MAX_H__
+
+
 #include "ext.h"
 #include "ext_proto.h"
 #include "ext_strings.h"
 #include "ext_critical.h"
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,7 +27,7 @@ extern "C" {
 #endif
 
 //atom,symbol,method shared with max
-typedef t_object 	t_jit_object; 
+typedef t_object 	t_jit_object; 		///< object header @ingroup jitter
 typedef t_class 	t_max_class;
 typedef t_object 	t_max_object;
 typedef t_messlist 	t_max_messlist;
@@ -73,11 +76,12 @@ void *max_jit_obex_adornmentlist_get(void *x);
 void max_jit_obex_adornmentlist_set(void *x, void *adornmentlist);
 void *max_jit_obex_adornment_get(void *x, t_symbol *classname);
 long max_jit_obex_addadornment(void *x,void *adornment);
+void max_jit_obex_gimmeback(void *x, t_symbol *s, long ac, t_atom *av);
+void max_jit_obex_gimmeback_dumpout(void *x, t_symbol *s, long ac, t_atom *av);
 
 long max_jit_method_is_attr(void *x, t_symbol *s);
 
 long max_jit_getqueuestate(void);
-
 
 #if C74_PRAGMA_STRUCT_PACKPUSH
     #pragma pack(pop)
