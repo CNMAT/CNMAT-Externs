@@ -1,38 +1,37 @@
 /* 
 	max.jit.mop.h
 
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 	
 */
 
 #ifndef __MAX_JIT_MOP_H__
 #define __MAX_JIT_MOP_H__
-
-#ifdef __cplusplus
-	extern "C" {
-#endif // __cplusplus
-
 //flags for greater control
-#define MAX_JIT_MOP_FLAGS_NONE 				0x00000000
-#define MAX_JIT_MOP_FLAGS_OWN_ALL 			0xFFFFFFFF
-
-#define MAX_JIT_MOP_FLAGS_OWN_JIT_MATRIX 	0x00000001
-#define MAX_JIT_MOP_FLAGS_OWN_BANG 			0x00000002
-#define MAX_JIT_MOP_FLAGS_OWN_OUTPUTMATRIX 	0x00000004
-#define MAX_JIT_MOP_FLAGS_OWN_NAME 			0x00000008
-#define MAX_JIT_MOP_FLAGS_OWN_TYPE 			0x00000010
-#define MAX_JIT_MOP_FLAGS_OWN_DIM 			0x00000020
-#define MAX_JIT_MOP_FLAGS_OWN_PLANECOUNT 	0x00000040
-#define MAX_JIT_MOP_FLAGS_OWN_CLEAR 		0x00000080
-#define MAX_JIT_MOP_FLAGS_OWN_NOTIFY 		0x00000100
-#define MAX_JIT_MOP_FLAGS_OWN_ADAPT 		0x00000200
-#define MAX_JIT_MOP_FLAGS_OWN_OUTPUTMODE 	0x00000400
-
-#define JIT_MOP_INPUT 	1
-#define JIT_MOP_OUTPUT	2
+#define MAX_JIT_MOP_FLAGS_NONE 				0x00000000            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_ALL 			0xFFFFFFFF            ///< mop flag @ingroup jitter
+                                                                     
+#define MAX_JIT_MOP_FLAGS_OWN_JIT_MATRIX 	0x00000001            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_BANG 			0x00000002            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_OUTPUTMATRIX 	0x00000004            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_NAME 			0x00000008            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_TYPE 			0x00000010            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_DIM 			0x00000020            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_PLANECOUNT 	0x00000040            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_CLEAR 		0x00000080            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_NOTIFY 		0x00000100            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_ADAPT 		0x00000200            ///< mop flag @ingroup jitter
+#define MAX_JIT_MOP_FLAGS_OWN_OUTPUTMODE 	0x00000400            ///< mop flag @ingroup jitter
+                                                                 
+#define JIT_MOP_INPUT 	1                                         ///< mop flag @ingroup jitter
+#define JIT_MOP_OUTPUT	2                                         ///< mop flag @ingroup jitter
 
 //outputmode: 0=no output, 1=calc, 2=input(no calc), 3=output(no calc)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 t_jit_err max_jit_classex_mop_wrap(void *mclass, void *jclass, long flags);
 t_jit_err max_jit_classex_mop_mproc(void *mclass, void *jclass, void *mproc); //mproc should be method(void *x, void *mop)

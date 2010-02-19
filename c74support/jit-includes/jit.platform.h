@@ -1,7 +1,7 @@
 /* 
 	jit.platform.h
 
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 	
 */
@@ -14,6 +14,24 @@
 #endif
 
 #ifdef WIN_VERSION
+
+// Define MAXAPI_USE_MSCRT if you want to use the ms c runtime library.
+// Otherwise, add c74support/max-includes to your linker include paths
+// and your external will use the maxcrt thus avoiding any external dependencies.
+#ifndef MAXAPI_USE_MSCRT
+
+#ifndef _CRT_NOFORCE_MANIFEST	// avoid warning if multiply defined
+#define _CRT_NOFORCE_MANIFEST
+#endif // #ifndef _CRT_NOFORCE_MANIFEST
+
+#ifndef _DEBUG
+// for debug use the standard microsoft C runtime
+#pragma comment(linker,"/NODEFAULTLIB:msvcrt.lib")
+#pragma comment(lib,"maxcrt.lib")
+#endif
+
+#endif // #ifndef MAXAPI_USE_MSCRT
+
 #define JIT_EX_DATA_DECL __declspec(dllexport)
 #ifdef WIN_JITLIB
 #define JIT_EX_DATA extern __declspec(dllexport)
@@ -31,21 +49,53 @@
 #include "jit.mac.h"
 #else 
 #define PREFER_POST_INC
-//#include "jit.win.h"
+#ifdef WIN_JITLIB
+//used by jitlib only
+#include "QTML.h"
+#include "jit.mac.h"
+#define ushort ushort
+#define FREDDIE ushort
+#define GetPixRowBytes(x) (0x3FFF&((*(x))->rowBytes)) //win_todo
+#endif //WIN_JITLIB
+#endif
+
+// weak link macros
+#ifdef __APPLE_CC__
+#define JIT_WEAKLINK __attribute((weak_import))
+#else
+#define JIT_WEAKLINK
 #endif
 
 #ifdef C74_MAX
 #include "jit.max.h"
 #endif
 
-//optimization
-#include "jit.altivec.h"
+//load test
+
+#ifdef __APPLE_CC__
+#define IS_JIT_LIBRARY_AVAILABLE (jit_object_method != NULL)
+#else
+#define IS_JIT_LIBRARY_AVAILABLE (jit_object_method != NULL)
+#endif
 
 //endian issues
 #include "jit.byteorder.h"
 
 //thread related
 #include "jit.critical.h"
+
+//vector
+#ifdef WIN_VERSION
+#define JIT_CAN_ALTIVEC 0
+#else
+// may want a better way to detect Mac Intel
+#if __i386__
+#define JIT_CAN_ALTIVEC 0
+#else
+#define JIT_CAN_ALTIVEC 1
+#endif
+
+#endif // !WIN_VERSION
 
 //speed macros
 #ifdef PREFER_POST_INC
@@ -67,5 +117,8 @@
 //utils
 #define calcoffset(x,y) ((long)(&(((x *)0L)->y)))
 
+#ifdef WIN_VERSION
+#define	hypot _hypot		
+#endif
 
 #endif

@@ -2,7 +2,7 @@
 /*
 
 	jit.bin.h
-	Copyright 2001-2004 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com	
 
 	jit binary file format(similar to AIFF/RIFF)
@@ -19,6 +19,7 @@
 #ifndef _JIT_BIN_H_
 #define _JIT_BIN_H_
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,7 +29,6 @@ extern "C" {
 #elif C74_PRAGMA_STRUCT_PACK
     #pragma pack(2)
 #endif
-
 
 #define JIT_BIN_MAC_TYPE  				FOUR_CHAR('JiT!')
 
@@ -72,6 +72,7 @@ typedef struct _jit_bin_chunk_matrix
 	long	dim[1];
 } t_jit_bin_chunk_matrix;
 
+
 //later we can add things like variable/value pairs, attributes, 
 //time code, comments, metadata, atom lists, audio, etc.
 
@@ -81,6 +82,7 @@ t_jit_err jit_bin_read_matrix(t_filehandle fh, void *matrix);
 
 t_jit_err jit_bin_write_header(t_filehandle fh, long filesize);
 t_jit_err jit_bin_write_matrix(t_filehandle fh, void *matrix);
+
 
 #if C74_PRAGMA_STRUCT_PACKPUSH
     #pragma pack(pop)

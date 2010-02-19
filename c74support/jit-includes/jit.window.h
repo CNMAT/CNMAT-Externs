@@ -2,11 +2,14 @@
 // jit.window.h
 //
 // author: randall jones
-// Copyright 2001-2004 - Cycling '74
+// © 2001 cycling '74
 
 #ifndef __JIT_WINDOW_H__
 #define __JIT_WINDOW_H__
 
+#if TARGET_RT_MAC_MACHO
+// don't need these includes
+#else
 #include <Devices.h>
 #include <Dialogs.h>
 #include <DriverServices.h>
@@ -19,16 +22,18 @@
 
 #include <math.h>
 #include <stdio.h>
+#endif
 
 #ifndef WIN_VERSION //win_todo
+#if TARGET_RT_MAC_MACHO
+#include <AGL/agl.h>
+#include <GLUT/glut.h>
+#else
 #include "agl.h"
 #include "glut.h"
 #endif
+#endif
 #include "jit.common.h"
-
-#ifdef __cplusplus
-	extern "C" {
-#endif 
 
 #ifndef __max_ext_wind_h
 #define __max_ext_wind_h
@@ -42,12 +47,17 @@
 #define MIN_WIND_DIM    9
 #define MAX_WIND_COORD  8192
 
-void jit_window_dragcheck(void *x);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void jit_window_dragcheck(void *x);
 t_jit_err jit_window_init(void);
 
 #ifdef __cplusplus
 }
 #endif
+
 
 #endif //__JIT_WINDOW_H__

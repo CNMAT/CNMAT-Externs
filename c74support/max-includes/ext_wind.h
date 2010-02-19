@@ -4,47 +4,59 @@
 #ifndef _EXT_WIND_H_
 #define _EXT_WIND_H_
 
-// wind structure definition moved to ext_maxtypes.h
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-t_wind *wind_new(void *assoc, short x1, short y1, short x2, short y2, long flags);
-void wind_vis(t_wind *x);
-void wind_invis(t_wind *x);
-GrafPtr wind_setport(t_wind *x);
-#ifdef WIN_VERSION
-void wind_restoreport(GrafPtr gp);
-#endif
-#ifdef MAC_VERSION
-#define wind_restoreport	SetPort
-#endif
-void wind_settitle(t_wind *x, char *s, short brackets);
-void wind_dirty(t_wind *x);
-void wind_clean(t_wind *x);
-void wind_setsmax(t_wind *x, short a, short b);
-void wind_setsval(t_wind *x, short a, short b);
-void wind_drag(method fun, void *arg, Point pt);
-short wind_defaultscroll(t_wind *x, Point pt, short pageSize);
-void wind_noworrymove(short way);
-void wind_setundo(char *str, short enable);
-void wind_setcursor(short which);
-void wind_filename(t_wind *x, char *fn, short vol, short bin);
-short wind_close(t_wind *x);
-void wind_nocancel(void);
-short wind_inhscroll(t_wind *x, Point pt);
-void wind_setbin(t_wind *x, short way);
-t_syswind wind_syswind(t_wind *x);
-void wind_setgrowbounds(t_wind *x, short minx, short miny, short maxx, short maxy);
-void *wind_validwind(void);
+/** Returned values from wind_advise()
+	@ingroup misc
+*/
+typedef enum {
+	aaYes =	1,		///< Yes button was choosen
+	aaNo,			///< No button was choosen
+	aaCancel		///< Cancel button was choosen
+} e_max_wind_advise_result;
 
-short wind_advise(t_wind *w, char *s, ...);
+
+/**	Throw a dialog which may have text and up to three buttons.  
+	For example, this can be used to ask "Save changes before..." 
+	@ingroup	misc
+	@param	w	The window with which this dialog is associated.
+	@param	s	A string with any sprintf()-like formatting to be displayed.
+	@param	...	Any variables that should be substituted in the string defined by s.
+	@return		One of the values defined in #e_max_wind_advise_result, depending on what the user selected.
+*/
+short wind_advise(t_object *w, char *s, ...);
+
+
+/**	Change the cursor.
+	@ingroup		misc
+
+	@param	which	One of the following predefined cursors:
+	@code
+	#define C_ARROW		1
+	#define C_WATCH		2
+	#define C_IBEAM		3
+	#define C_HAND		4
+	#define	C_CROSS		5
+	#define C_PENCIL	6
+	#define	C_GROW		8
+	@endcode
+
+	@remark		wind_setcursor() keeps track of what the cursor was previously set 
+				to, so if something else has changed the cursor, you may not see a new 
+				cursor if you set it to the previous argument to wind_setcursor().
+				
+				The solution is to call wind_setcursor(0) before calling it with the 
+				desired cursor constant. Use wind_setcursor(-1) to tell Max you’ll set 
+				the cursor to your own cursor directly.
+*/
+void wind_setcursor(short which);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif /* _EXT_WIND_H_ */
+#endif // _EXT_WIND_H_

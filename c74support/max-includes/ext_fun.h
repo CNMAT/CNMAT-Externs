@@ -5,6 +5,6 @@
 #ifndef _EXT_FUN_H_
 #define _EXT_FUN_H_
 
- // structure definitions moved to ext_maxtypes.h
- 
+// 	NOTE: This file is obsolete.
+
 #endif /* _EXT_FUN_H_ */

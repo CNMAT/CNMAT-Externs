@@ -1,12 +1,16 @@
 #ifndef __EXT_TYPES_H__
 #define __EXT_TYPES_H__
 
+// These definitions are required by ext_qtimage.h on Windows.
+
+/*
 #ifdef MAC_VERSION
 #ifdef __MOTO__
 #include <Types.h>
 #include <Quickdraw.h>
-#endif // __MOTO__  
+#endif // __MOTO__
 #endif // MAC_VERSION
+*/
 
 #ifdef WIN_VERSION
 

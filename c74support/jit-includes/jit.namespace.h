@@ -1,18 +1,20 @@
 #ifndef __JIT_NAMESPACE_H__
 #define __JIT_NAMESPACE_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// object structs
+typedef struct _jit_namespace_data
+{
+	t_jit_object			ob;
+	t_symbol				*name;
+	void					*data;
+} t_jit_namespace_data;
 
-#if C74_PRAGMA_STRUCT_PACKPUSH
-    #pragma pack(push, 2)
-#elif C74_PRAGMA_STRUCT_PACK
-    #pragma pack(2)
-#endif
-
-typedef struct _jit_namespace 		t_jit_namespace;
-typedef struct _jit_namespace_data	t_jit_namespace_data;
+typedef struct _jit_namespace
+{
+	t_jit_object			ob;
+	void					*reference;
+	t_jit_linklist			*list;
+} t_jit_namespace;
 
 void jit_namespace_init(void);
 void *jit_namespace_lookup(void *reference);
@@ -130,16 +132,4 @@ t_symbol *jit_object_method(t_jit_namespace_data *nsd, gensym("ob_sym"));
 	
 */
 
-
-#if C74_PRAGMA_STRUCT_PACKPUSH
-    #pragma pack(pop)
-#elif C74_PRAGMA_STRUCT_PACK
-    #pragma pack()
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
 #endif // __JIT_NAMESPACE_H__
-

@@ -1,6 +1,6 @@
 #ifndef _EXT_NUMC_H_
 #define _EXT_NUMC_H_
 
-// definition moved to ext_maxtypes.h
+// 	NOTE: This file is obsolete.
 
 #endif /* _EXT_NUMC_H_ */

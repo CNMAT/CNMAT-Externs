@@ -1,7 +1,7 @@
 /* 
 	jit.error.h
 
-	Copyright 2001-2002 - Cycling '74
+	Copyright 2001-2005 - Cycling '74
 	Joshua Kit Clayton jkc@cycling74.com
 	
 */
@@ -32,6 +32,17 @@ typedef long t_jit_err;
 #define JIT_ERR_DATA_UNAVAILABLE	FOUR_CHAR('DUVL')
 #define JIT_ERR_HW_UNAVAILABLE		FOUR_CHAR('HUVL')
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define jit_catch(x) {t_jit_err _jit_catch_err; if (_jit_catch_err=(x)) { return _jit_catch_err; }} 
+
+void jit_object_post(t_object *x, char *s, ...);
+void jit_object_error(t_object *x, char *s, ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //__JIT_ERROR_H__

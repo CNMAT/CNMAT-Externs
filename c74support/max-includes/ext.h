@@ -1,6 +1,7 @@
-
 #ifndef _EXT_H_
 #define _EXT_H_
+
+#define C74_MAX_SDK_VERSION 0x0508
 
 #include "ext_prefix.h"	/* this header must always be first */
 
@@ -21,8 +22,16 @@ typedef void *(*methodptr)(void *, ...);
 #define ASSIST_INLET 1
 #define ASSIST_OUTLET 2
 
+/**
+	This macro being defined means that getbytes and sysmem APIs for memory management are unified.
+	This is correct for Max 5, but should be commented out when compiling for old max targets.
+	@ingroup memory
+*/
+#define MM_UNIFIED
+
 #include "ext_types.h"
 #include "ext_maxtypes.h"
+#include "ext_byteorder.h"
 
 #include "ext_proto.h"
 
