@@ -46,6 +46,7 @@
   VERSION 0.7.8: locked presets are now grayed out and the mouse position outlet works
   VERSION 0.7.9: fixed a bug that would cause a crash in the anything routine
   VERSION 0.7.10: fixed a bug in the way points were being cleared
+  VERSION 0.7.11: fixed the coords message which was upside down with respect to the y-axis
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -156,6 +157,7 @@ void rbfi_outputPoints(t_rbfi *x);
 void rbfi_outputDistance(t_rbfi *x);
 void rbfi_rename(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv);
 void rbfi_dump(t_rbfi *x);
+void rbfi_toArray(t_point *linked_list, int *argc, t_atom **argv);
 void rbfi_clear(t_rbfi *x);
 void rbfi_free(t_rbfi *x);
 void rbfi_assist(t_rbfi *x, void *b, long m, long a, char *s);
@@ -450,7 +452,8 @@ void rbfi_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, d
 	while(p){
 		t_pt pt = p->pt;
 		pt.x *= r.width;
-		pt.y *= r.height;
+		//pt.y *= r.height;
+		pt.y = r.height - pt.y * r.height;
 		if(coords.x == pt.x && coords.y == pt.y){
 			memset(weights, 0, nweights * sizeof(double));
 			weights[i] = 1.;
@@ -550,6 +553,21 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	case (0x12 | 0x11):
 		// command-shift -> delete a point 
 		{
+			if(x->selected){
+				if(x->selected->locked){
+					break;
+				}
+				if(x->selected->mousestate == INSIDE_INNER_CIRCLE){
+					critical_enter(x->lock);
+					rbfi_removePoint(x, x->selected);
+					x->selected = NULL;
+					critical_exit(x->lock);
+					jbox_invalidate_layer((t_object *)x, NULL, l_color);
+				}
+			}
+		}
+		/*
+		{
 			t_point *p;
 			if(p = rbfi_selectPoint(x, pt)){
 				if(!(p->locked)){
@@ -561,6 +579,7 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				}
 			}
 		}
+		*/
 		break;
 	case 0x1a:
 		// option-shift -> make a new point
@@ -1122,12 +1141,33 @@ void rbfi_outputDistance(t_rbfi *x){
 void rbfi_dump(t_rbfi *x){
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-	t_point *p = x->points;
-	//int counter = 0;
+
+	int argc;
+	t_atom *argv = NULL;
+	rbfi_toArray(x->points, &argc, &argv);
+	int i = 0;
+	while(i < argc){
+		outlet_list(x->dumpOutlet, NULL, 12, argv + (i * 12));
+		i++;
+	}
+	outlet_anything(x->dumpOutlet, gensym("done"), 0, NULL);
+
+	if(argv){
+		sysmem_freeptr(argv);
+	}
+}
+
+void rbfi_toArray(t_point *linked_list, int *argc, t_atom **argv){
+	t_point *p = linked_list;
+	*argc = 0;
 	while(p){
-		t_atom a[12], *ptr = a;
-		//atom_setlong(ptr++, counter++);
-		//atom_setsym(ptr++, rbfi_ps_name);
+		(*argc)++;
+		p = p->next;
+	}
+	*argv = (t_atom *)sysmem_newptr(*argc * 12 * sizeof(t_atom));
+	t_atom *ptr = *argv;
+	p = linked_list;
+	while(p){
 		atom_setsym(ptr++, p->label);
 
 		atom_setsym(ptr++, rbfi_ps_coords);
@@ -1145,10 +1185,8 @@ void rbfi_dump(t_rbfi *x){
 		atom_setsym(ptr++, rbfi_ps_outer_radius);
 		atom_setfloat(ptr++, p->outer_radius);
 
-		outlet_list(x->dumpOutlet, NULL, 12, a);
 		p = p->next;
 	}
-	outlet_anything(x->dumpOutlet, gensym("done"), 0, NULL);
 }
 
 void rbfi_clear(t_rbfi *x){
@@ -1267,6 +1305,16 @@ t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av){
 	//post("getvalueof");
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+
+	if(*ac || *av){
+		post("%p %d %p", ac, *ac, av);
+	}
+	int argc;
+	t_atom *argv = NULL;
+	rbfi_toArray(x->points, ac, av);
+	*ac *= 12;
+
+	/*
 	int npoints = x->npoints;
 	if(*ac && *av){
 	}else{
@@ -1285,12 +1333,16 @@ t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av){
 		p = p->next;
 	}
 	critical_exit(x->lock);
-
+	*/
 	return MAX_ERR_NONE;
 }
 
 t_max_err rbfi_setvalueof(t_rbfi *x, long ac, t_atom *av){
-	rbfi_list(x, NULL, ac, av);
+	//rbfi_list(x, NULL, ac, av);
+	int i;
+	for(i = 0; i < ac / 12; i++){
+		rbfi_anything(x, atom_getsym(av + (i * 12)), 11, av + (i * 12) + 1);
+	}
 	return MAX_ERR_NONE;
 }
 
