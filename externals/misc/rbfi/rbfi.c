@@ -263,7 +263,8 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 			t_jrgba color;
 			t_pt pt = p->pt;
 			pt.x *= rect.width;
-			pt.y *= rect.height;
+			pt.y = rect.height - pt.y * rect.height;
+			//pt.y *= rect.height;
 			//if((x->draw_circles == gensym("edit") && (x->modifiers & 0x10)) || x->draw_circles == gensym("always")){
 			{
 				if(x->always_draw_circles == 1 && (x->modifiers ^ 0x2) && (x->modifiers ^ 0x12)){
