@@ -131,7 +131,7 @@ void rbfi_bang(t_rbfi *x);
 void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
 void rbfi_deletePoint(t_rbfi *x, t_symbol *name);
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
-void rbfi_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
+void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
 void rbfi_move(t_rbfi *x, double xx, double yy);
 void rbfi_outputMousePos(t_rbfi *x, t_pt pt);
 void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
@@ -169,7 +169,7 @@ void RGBtoHSV( double r, double g, double b, double *h, double *s, double *v );
 void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v );
 void *rbfi_new(t_symbol *msg, int argc, t_atom *argv);
 void rbfi_postPoint(t_point *p);
-
+t_max_err rbfi_notify(t_rbfi *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
 void rbfi_paint(t_rbfi *x, t_object *patcherview){
 	t_rect rect;
@@ -215,7 +215,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 						t_jrgba color = {0., 0., 0., 1.};
 						double ii = rbfi_scale(i, 0, srect.width, 0, drect.width);
 						double jj = rbfi_scale(j, 0, srect.width, 0, drect.width);
-						rbfi_computeWeights((t_pt){ii, jj}, rect, x->points, x->npoints, weights);
+						rbfi_computeWeights(x, (t_pt){ii, jj}, rect, x->points, x->npoints, weights);
 						k = 0;
 						while(p){
 							color.red += weights[k] * p->color.red;
@@ -262,9 +262,8 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 
 			t_jrgba color;
 			t_pt pt = p->pt;
-			pt.x *= rect.width;
-			pt.y = rect.height - pt.y * rect.height;
-			//pt.y *= rect.height;
+			pt.x = rbfi_scale(pt.x, x->xmin, x->xmax, 0, rect.width);
+			pt.y = rbfi_scale(pt.y, x->ymin, x->ymax, rect.height, 0);
 			//if((x->draw_circles == gensym("edit") && (x->modifiers & 0x10)) || x->draw_circles == gensym("always")){
 			{
 				if(x->always_draw_circles == 1 && (x->modifiers ^ 0x2) && (x->modifiers ^ 0x12)){
@@ -399,8 +398,6 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 }
 
 void rbfi_bang(t_rbfi *x){
-	rbfi_outputPoints(x);
-	rbfi_outputDistance(x);
 }
 
 void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
@@ -422,6 +419,9 @@ void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 	t_point *p = NULL;
 	hashtab_lookup(x->ht, name, (t_object **)&p);
 	if(p){
+		if(p->locked){
+			return;
+		}
 		rbfi_parseAddPointArgs(p, argc, argv);
 		t_rect r;
 		jbox_get_patching_rect(&((x->ob.b_ob)), &r);
@@ -446,15 +446,14 @@ void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 	jbox_redraw(&(x->ob));
 }
 
-void rbfi_computeWeights(t_pt coords, t_rect r, t_point *points, int nweights, double *weights){
+void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int nweights, double *weights){
 	t_point *p = points;
 	int i = 0;
 	double sum = 0;
 	while(p){
 		t_pt pt = p->pt;
-		pt.x *= r.width;
-		//pt.y *= r.height;
-		pt.y = r.height - pt.y * r.height;
+		pt.x = rbfi_scale(pt.x, x->xmin, x->xmax, 0, r.width);
+		pt.y = rbfi_scale(pt.y, x->ymin, x->ymax, r.height, 0);
 		if(coords.x == pt.x && coords.y == pt.y){
 			memset(weights, 0, nweights * sizeof(double));
 			weights[i] = 1.;
@@ -486,7 +485,7 @@ void rbfi_move(t_rbfi *x, double xx, double yy){
 
 	double xx_screen = rbfi_scale(xx, x->xmin, x->xmax, 0, r.width);
 	double yy_screen = rbfi_scale(yy, x->ymin, x->ymax, r.height, 0);
-	rbfi_computeWeights((t_pt){xx_screen,yy_screen}, r, x->points, x->npoints, weights);
+	rbfi_computeWeights(x, (t_pt){xx_screen,yy_screen}, r, x->points, x->npoints, weights);
 	t_atom out[2];
 	int i = 0;
 	t_point *p = x->points;
@@ -531,7 +530,7 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x10:
 		{
 			double weights[x->npoints];
-			rbfi_computeWeights(pt, r, x->points, x->npoints, weights);
+			rbfi_computeWeights(x, pt, r, x->points, x->npoints, weights);
 			t_atom out[2];
 			int i = 0;
 			t_point *p = x->points;
@@ -598,7 +597,6 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
  out:
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
-	//rbfi_outputPoints(x);
 	rbfi_outputDistance(x);
 }
 
@@ -618,7 +616,7 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				};
 			}
 			double weights[x->npoints];
-			rbfi_computeWeights(pt, r, x->points, x->npoints, weights);
+			rbfi_computeWeights(x, pt, r, x->points, x->npoints, weights);
 			t_atom out[2];
 			int i = 0;
 			t_point *p = x->points;
@@ -675,7 +673,9 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 		}
 		break;
 	}
+	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
+	rbfi_outputDistance(x);
 }
 
 void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -1074,11 +1074,6 @@ void rbfi_outputPoints(t_rbfi *x){
 			critical_enter(x->lock);
 			// since the points are pushed onto the front of the linked list, we should work backwards
 			while(p){
-				//t_pt sc = p->pt;
-				//sc.x = rbfi_scale(p->pt.x, x->xmin, x->xmax, 0., r.width);
-				//sc.y = rbfi_scale(p->pt.y, x->ymin, x->ymax, r.height, 0.);
-				//atom_setfloat(outptr--, rbfi_scale(sc.y, r.height, 0, x->ymin, x->ymax));
-				//atom_setfloat(outptr--, rbfi_scale(sc.x, 0, r.width, x->xmin, x->xmax));
 				atom_setfloat(outptr--, p->pt.y);
 				atom_setfloat(outptr--, p->pt.x);
 				atom_setsym(outptr--, p->label);
@@ -1099,11 +1094,6 @@ void rbfi_outputPoints(t_rbfi *x){
 			t_atom *ptr = out + (3 * npoints) - 1;
 			critical_enter(x->lock);
 			while(p){
-				//t_pt sc = p->pt;
-				//sc.x = rbfi_scale(p->pt.x, x->xmin, x->xmax, 0., r.width);
-				//sc.y = rbfi_scale(p->pt.y, x->ymin, x->ymax, r.height, 0.);
-				//atom_setfloat(outptr--, rbfi_scale(sc.y, r.height, 0, x->ymin, x->ymax));
-				//atom_setfloat(outptr--, rbfi_scale(sc.x, 0, r.width, x->xmin, x->xmax));
 				atom_setfloat(ptr--, p->pt.y);
 				atom_setfloat(ptr--, p->pt.x);
 				atom_setsym(ptr--, p->label);
@@ -1124,15 +1114,19 @@ void rbfi_outputPoints(t_rbfi *x){
 }
 
 void rbfi_outputDistance(t_rbfi *x){
-	if(!x->selected){
-		return;
-	}
-	critical_enter(x->lock);
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-
+	t_point *p = x->points;
+	t_atom out[x->npoints * 2];
+	t_atom *outptr = out;
+	critical_enter(x->lock);
+	while(p){
+		atom_setsym(outptr++, p->label);
+		atom_setfloat(outptr++, sqrt(pow(rbfi_scale(x->xhairs.x, 0, r.width, x->xmin, x->xmax) - p->pt.x, 2.) + pow(rbfi_scale(x->xhairs.y, r.height, 0, x->ymin, x->ymax) - p->pt.y, 2.)));
+		p = p->next;
+	}
 	critical_exit(x->lock);
-	//outlet_list(x->distanceOutlet, NULL, npoints * 2, out);
+	outlet_list(x->distanceOutlet, NULL, x->npoints * 2, out);
 }
 
 void rbfi_dump(t_rbfi *x){
@@ -1263,7 +1257,19 @@ void rbfi_assist(t_rbfi *x, void *b, long io, long index, char *s){
 	case 1:
 		switch(index){
 		case 0:
-			sprintf(s, "Point coordinates (list)");
+			sprintf(s, "Weights (list)");
+			break;
+		case 1:
+			sprintf(s, "Distance from the cursor to the centers of each preset (list)");
+			break;
+		case 2:
+			sprintf(s, "x,y coordinates of the preset being moved (list)");
+			break;
+		case 3:
+			sprintf(s, "Mouse position (list)");
+			break;
+		case 4:
+			sprintf(s, "Dump (list)");
 			break;
 		}
 		break;
@@ -1494,6 +1500,7 @@ int main(void){
 	class_addmethod(c, (method)rbfi_dump, "dump", 0);
 	class_addmethod(c, (method)rbfi_addPoint, "add_point", A_GIMME, 0);
 	class_addmethod(c, (method)rbfi_deletePoint, "delete_point", A_SYM, 0);
+	class_addmethod(c, (method)rbfi_notify, "notify", A_CANT, 0); 
 
     
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
@@ -1528,14 +1535,14 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "pointdiameter", 0, "10.0");
 
 	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_rbfi, xmin);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "xmin", 0, "0.0");
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmin", 0, "0.0");
 	CLASS_ATTR_DOUBLE(c, "xmax", 0, t_rbfi, xmax);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "xmax", 0, "1.0");
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmax", 0, "1.0");
 
 	CLASS_ATTR_DOUBLE(c, "ymin", 0, t_rbfi, ymin);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ymin", 0, "0.0");
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymin", 0, "0.0");
 	CLASS_ATTR_DOUBLE(c, "ymax", 0, t_rbfi, ymax);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "ymax", 0, "1.0");
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymax", 0, "1.0");
 
 	CLASS_ATTR_LONG(c, "always_draw_circles", 0, t_rbfi, always_draw_circles);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "always_draw_circles", 0, "0");
@@ -1613,4 +1620,16 @@ void rbfi_postPoint(t_point *p){
 	post("exponent: %f, weight: %f", p->exponent, p->weight);
 	post("inner radius: %f, outer radius: %f", p->inner_radius, p->outer_radius);
 	post("mousestate: 0x%X", p->mousestate);
+}
+
+t_max_err rbfi_notify(t_rbfi *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
+post("notify");
+	if(msg == gensym("attr_modified")){
+		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
+		if(attrname == gensym("xmin") || attrname == gensym("xmax") || attrname == gensym("ymin") || attrname == gensym("ymax")){
+			jbox_invalidate_layer((t_object *)x, NULL, l_color);
+			jbox_redraw(&(x->ob));
+		}
+	}
+	return 0;
 }
