@@ -1369,11 +1369,11 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "message",
-									"text" : "xmin 2, xmax 0, ymin 0, ymax 1",
+									"text" : "xmin 0, xmax 200, ymin 0, ymax 1",
 									"outlettype" : [ "" ],
 									"fontsize" : 11.0,
 									"numinlets" : 2,
-									"patching_rect" : [ 360.0, 68.0, 165.0, 17.0 ],
+									"patching_rect" : [ 360.0, 68.0, 177.0, 17.0 ],
 									"fontname" : "Arial",
 									"numoutlets" : 1,
 									"id" : "obj-63"
