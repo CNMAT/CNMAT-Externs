@@ -125,7 +125,7 @@ void rd_paint(t_rd *x, t_object *patcherview){
 				for(i = 0; i < x->n; i++){
 					double amp = exp((-j / (rect.width * .1)) * r[i].d);
 					c = (t_jrgba){x->datacolor.red * amp, x->datacolor.green * amp, x->datacolor.blue * amp, 1.};
-					jgraphics_image_surface_set_pixel(s, j, rd_scale(r[i].f, 0., 22050., rect.height, 0), c);
+					jgraphics_image_surface_set_pixel(s, j, rd_scale(r[i].f, x->freqmin, x->freqmax, rect.height, 0), c);
 
 					//jgraphics_set_source_jrgba(g, &c);
 					//jgraphics_ellipse(g, j, rd_scale(r[i].f, 0., 22050., rect.height, 0), 1, 1);
