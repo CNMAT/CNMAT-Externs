@@ -259,11 +259,18 @@ void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
 	}else{
 		f = rd_scale(pt.x, 0, rect.width, x->freqmin, x->freqmax);
 	}
-
-	if(f > x->selection.min){
+	if((f > x->selection.min)&&(f >= x->selection.max)){
 		x->selection.max = f;
-	}else{
+	}else if ((f <= x->selection.min)&&(f < x->selection.max)){
 		x->selection.min = f;
+				
+	}else{
+		//if its in between both, move the closest one. 
+		if (abs(f - x->selection.min) < abs(f - x->selection.max)){
+			x->selection.min = f;
+		} else {
+			x->selection.max = f;
+		}
 	}
 
 	jbox_redraw(&(x->ob));
