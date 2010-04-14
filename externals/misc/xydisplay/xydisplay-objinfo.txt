@@ -1,0 +1,7 @@
+NAME: "xydisplay"
+DESCRIPTION: "A 2-D graphical display/editor like pictctrl but supporting multiple points."
+AUTHORS: "John MacCallum"
+COPYRIGHT_YEARS: "2010"
+SVN_REVISION: "$LastChangedRevision: 587 $"
+VERSION 0.0: "First try"
+VERSION: "0.0"

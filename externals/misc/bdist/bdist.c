@@ -74,7 +74,8 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv);
 void bdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno);
 
 double bdist_beta(double x, double a, double b){
-	return gsl_sf_beta_inc(a, b, bdist_clip(x, 0., 1.));
+  //return gsl_sf_beta_inc(a, b, bdist_clip(x, 0., 1.));
+  return gsl_ran_beta_pdf(bdist_clip(x, 0., 1.), a, b);
 }
 
 void bdist_paint(t_bdist *x, t_object *patcherview){
