@@ -34,6 +34,7 @@
   VERSION 0.2.2: assist function is now implemented and the second outlet behaves better when a list is sent into the obj
   VERSION 0.2.3: x coordinate from the leftmost outlet is now correct when a float is less than xmin or greater than xmax.
   VERSION 0.2.4: x coordinates are no longer output when a float is received in the leftmost inlet
+  VERSION 0.2.5: the bang outlet (3rd) is now gone and the bang message that follows a dump now comes out the dump outlet
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -77,7 +78,7 @@ typedef struct _function_attributes{
 
 typedef struct _bpf{ 
  	t_jbox box; 
- 	void *out_main, *out_dump, *out_sel, *out_bang; 
+ 	void *out_main, *out_dump, *out_sel; 
 	t_critical lock;
  	t_point **functions; 
 	t_funcattr **funcattr;
@@ -588,7 +589,7 @@ void bpf_dump(t_bpf *x){
 			p = p->next;
 		}
 	}
-	outlet_bang(x->out_bang);
+	outlet_bang(x->out_dump);
 }
 
 void bpf_clear(t_bpf *x){
@@ -751,7 +752,6 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
  		x->box.b_firstin = (void *)x; 
 
  		x->out_dump = listout((t_object *)x); 
-		x->out_bang = bangout((t_object *)x);
 		x->out_sel = listout((t_object *)x);
  		x->out_main = listout((t_object *)x); 
 
