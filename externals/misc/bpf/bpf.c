@@ -33,6 +33,7 @@
   VERSION 0.2.1: clear now resets the number of functions properly
   VERSION 0.2.2: assist function is now implemented and the second outlet behaves better when a list is sent into the obj
   VERSION 0.2.3: x coordinate from the leftmost outlet is now correct when a float is less than xmin or greater than xmax.
+  VERSION 0.2.4: x coordinates are no longer output when a float is received in the leftmost inlet
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -244,8 +245,8 @@ void bpf_float(t_bpf *x, double f){
 	//double f = (ff - x->xmin) / (x->xmax - x->xmin);;
 	//if(f < x->xmin) f = 0.;
 	//if(f > x->xmax) f = 1.;
-	t_atom out[3]; // function number, x, y
-	atom_setfloat(&(out[1]), f);
+	t_atom out[2]; // function number, y
+	//atom_setfloat(&(out[1]), f);
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
@@ -253,14 +254,14 @@ void bpf_float(t_bpf *x, double f){
 		t_point *left = NULL, *right = NULL;
 		bpf_find_btn(p, f, &left, &right);
 		if(!left || !right){
-			atom_setfloat(&(out[2]), 0.);
-			outlet_list(x->out_main, NULL, 3, out);
+			atom_setfloat(&(out[1]), 0.);
+			outlet_list(x->out_main, NULL, 2, out);
 		}else{
 			double m = (right->coords.y - left->coords.y) / (right->coords.x - left->coords.x);
 			double b = left->coords.y - (m * left->coords.x);
 			double y = (m * f) + b;
-			atom_setfloat(&(out[2]), y);
-			outlet_list(x->out_main, NULL, 3, out);
+			atom_setfloat(&(out[1]), y);
+			outlet_list(x->out_main, NULL, 2, out);
 		}
 	}
 }
