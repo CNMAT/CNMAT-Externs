@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		522F4BF11192179700F87140 /* oio_hid_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 522F4BEF1192179700F87140 /* oio_hid_util.c */; };
+		522F4BF21192179700F87140 /* oio_hid_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 522F4BF01192179700F87140 /* oio_hid_util.h */; };
+		522F4C0A11923ABB00F87140 /* oio_hid_osc.c in Sources */ = {isa = PBXBuildFile; fileRef = 522F4C0811923ABB00F87140 /* oio_hid_osc.c */; };
+		522F4C0B11923ABB00F87140 /* oio_hid_osc.h in Headers */ = {isa = PBXBuildFile; fileRef = 522F4C0911923ABB00F87140 /* oio_hid_osc.h */; };
 		52A431D3118E082600702ADE /* oio_err.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A431D0118E082600702ADE /* oio_err.h */; };
 		52A431D4118E082600702ADE /* oio_hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 52A431D1118E082600702ADE /* oio_hid.c */; };
 		52A431D5118E082600702ADE /* oio_hid.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A431D2118E082600702ADE /* oio_hid.h */; };
@@ -18,10 +22,15 @@
 		52A431FF118E18D300702ADE /* oio_err.c in Sources */ = {isa = PBXBuildFile; fileRef = 52A431FE118E18D300702ADE /* oio_err.c */; };
 		52A43233118E214800702ADE /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52A43232118E214800702ADE /* CoreFoundation.framework */; };
 		52A43348118F3D1200702ADE /* oio.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A43346118F3D1200702ADE /* oio.h */; };
-		52A43349118F3D1200702ADE /* oio.c in Sources */ = {isa = PBXBuildFile; fileRef = 52A43347118F3D1200702ADE /* oio.c */; };
+		52A4335B118F68C000702ADE /* oio_obj.c in Sources */ = {isa = PBXBuildFile; fileRef = 52A43359118F68C000702ADE /* oio_obj.c */; };
+		52A4335C118F68C000702ADE /* oio_obj.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A4335A118F68C000702ADE /* oio_obj.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		522F4BEF1192179700F87140 /* oio_hid_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid_util.c; sourceTree = "<group>"; };
+		522F4BF01192179700F87140 /* oio_hid_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid_util.h; sourceTree = "<group>"; };
+		522F4C0811923ABB00F87140 /* oio_hid_osc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid_osc.c; sourceTree = "<group>"; };
+		522F4C0911923ABB00F87140 /* oio_hid_osc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid_osc.h; sourceTree = "<group>"; };
 		52A431D0118E082600702ADE /* oio_err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_err.h; sourceTree = "<group>"; };
 		52A431D1118E082600702ADE /* oio_hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid.c; sourceTree = "<group>"; };
 		52A431D2118E082600702ADE /* oio_hid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid.h; sourceTree = "<group>"; };
@@ -33,7 +42,8 @@
 		52A431FE118E18D300702ADE /* oio_err.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_err.c; sourceTree = "<group>"; };
 		52A43232118E214800702ADE /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		52A43346118F3D1200702ADE /* oio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio.h; sourceTree = "<group>"; };
-		52A43347118F3D1200702ADE /* oio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio.c; sourceTree = "<group>"; };
+		52A43359118F68C000702ADE /* oio_obj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_obj.c; sourceTree = "<group>"; };
+		52A4335A118F68C000702ADE /* oio_obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_obj.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* liboio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -69,14 +79,19 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				522F4C0811923ABB00F87140 /* oio_hid_osc.c */,
+				522F4C0911923ABB00F87140 /* oio_hid_osc.h */,
+				522F4BEF1192179700F87140 /* oio_hid_util.c */,
+				522F4BF01192179700F87140 /* oio_hid_util.h */,
 				52A431E6118E0F2D00702ADE /* oio_mem.h */,
 				52A431E7118E0F2D00702ADE /* oio_mem.c */,
 				52A431D0118E082600702ADE /* oio_err.h */,
 				52A431FE118E18D300702ADE /* oio_err.c */,
 				52A431D1118E082600702ADE /* oio_hid.c */,
 				52A431D2118E082600702ADE /* oio_hid.h */,
+				52A43359118F68C000702ADE /* oio_obj.c */,
+				52A4335A118F68C000702ADE /* oio_obj.h */,
 				52A43346118F3D1200702ADE /* oio.h */,
-				52A43347118F3D1200702ADE /* oio.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -107,6 +122,9 @@
 				52A431D5118E082600702ADE /* oio_hid.h in Headers */,
 				52A431E8118E0F2D00702ADE /* oio_mem.h in Headers */,
 				52A43348118F3D1200702ADE /* oio.h in Headers */,
+				52A4335C118F68C000702ADE /* oio_obj.h in Headers */,
+				522F4BF21192179700F87140 /* oio_hid_util.h in Headers */,
+				522F4C0B11923ABB00F87140 /* oio_hid_osc.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,7 +173,9 @@
 				52A431D4118E082600702ADE /* oio_hid.c in Sources */,
 				52A431E9118E0F2D00702ADE /* oio_mem.c in Sources */,
 				52A431FF118E18D300702ADE /* oio_err.c in Sources */,
-				52A43349118F3D1200702ADE /* oio.c in Sources */,
+				52A4335B118F68C000702ADE /* oio_obj.c in Sources */,
+				522F4BF11192179700F87140 /* oio_hid_util.c in Sources */,
+				522F4C0A11923ABB00F87140 /* oio_hid_osc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

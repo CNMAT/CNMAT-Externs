@@ -1,0 +1,409 @@
+Toio
+v7
+r0
+t294609056.324854
+cCheck dependencies
+cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal x86_64 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal x86_64 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal x86_64 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal x86_64 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal i386 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal i386 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal i386 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal i386 c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal ppc c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal ppc c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal ppc c com.apple.compilers.gcc.4_2
+cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal ppc c com.apple.compilers.gcc.4_2
+
+N/Developer/SDKs/MacOSX10.6.sdk
+c000000004B99A23900000000000000EE
+t1268359737
+s238
+
+N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Carbon.framework/Headers/Carbon.h
+c000000004B448EEF00000000000005FF
+t1262784239
+s1535
+
+N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h
+c000000004B569ADA0000000000000AF4
+t1263966938
+s2804
+
+N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/IOKit.framework/Headers/hid/IOHIDKeys.h
+c000000004B569D49000000000000376F
+t1263967561
+s14191
+
+N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/IOKit.framework/Headers/hid/IOHIDLib.h
+c000000004B569C030000000000000609
+t1263967235
+s1545
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/libgen.h
+c000000004AC326060000000000000790
+t1254303238
+s1936
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/stdlib.h
+c000000004AC326060000000000002DF5
+t1254303238
+s11765
+
+N/System/Library/Frameworks/Carbon.framework/Carbon
+c000000004BBE640F000000000000A5F0
+t1270768655
+s42480
+
+N/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
+c000000004B747C15000000000077CFF0
+t1265925141
+s7852016
+
+N/System/Library/Frameworks/CoreMIDI.framework/CoreMIDI
+c000000004A527027000000000015FAD0
+t1246916647
+s1440464
+
+N/System/Library/Frameworks/IOKit.framework/IOKit
+c000000004B747DD30000000000172A20
+t1265925587
+s1518112
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/liboio.a
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio.LinkFileList
+c000000004BDF291F00000000000001F4
+t1272916255
+s500
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio.o
+t1272916255
+s3308
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o
+t1272916255
+s3452
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o
+t1272916255
+s4268
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio.LinkFileList
+c000000004BDF291F00000000000001F0
+t1272916255
+s496
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio.o
+t1272916255
+s3300
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o
+t1272916255
+s3340
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o
+t1272916255
+s4200
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.LinkFileList
+c000000004BDF291F00000000000001FC
+t1272916255
+s508
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.o
+t1272916255
+s3816
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o
+t1272916255
+s4444
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o
+t1272916255
+s5352
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c
+c000000004BDF05B5000000000000003B
+t1272907189
+s59
+i"oio.h"
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h
+c000000004BDF26160000000000000086
+t1272915478
+s134
+i"oio_hid.h"
+i"oio_err.h"
+i"oio_mem.h"
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
+c000000004BDEECA500000000000001F5
+t1272900773
+s501
+i"oio_err.h"
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.h
+c000000004BDEECBF0000000000000205
+t1272900799
+s517
+i<libgen.h>
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
+c000000004BDF286700000000000008F1
+t1272916071
+s2289
+i"oio_hid.h"
+i<Carbon/Carbon.h>
+i<CoreFoundation/CoreFoundation.h>
+i<IOKit/hid/IOHIDKeys.h>
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.h
+c000000004BDF287700000000000001A9
+t1272916087
+s425
+i<IOKit/hid/IOHIDLib.h>
+i"oio_err.h"
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
+c000000004BDEECD8000000000000028A
+t1272900824
+s650
+i"oio_mem.h"
+i"oio_err.h"
+
+N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.h
+c000000004BDDDD6D00000000000001E4
+t1272831341
+s484
+i<stdlib.h>
+
+CCheck dependencies
+r0
+lSLF07#2@18"Check dependencies294609054#294609055#0(0"0(0#1#0"8017303921617874944#0"0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal i386 c com.apple.compilers.gcc.4_2
+s294609055.279068
+e294609055.402096
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.gcc.4_2
+oIn file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:1:
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h:6: warning: declaration does not declare anything
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c: In function 'oio_init':
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:4: warning: implicit declaration of function 'oio_hid_init'
+lSLF07#2@75"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294609055#294609055#0(432"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:1:/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h:6: warning: declaration does not declare anything/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c: In function 'oio_init':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:4: warning: implicit declaration of function 'oio_hid_init'2(22@37"Declaration does not declare anything294609055#93#118#2(7@89"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294609055#18446744073709551615#0#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294599989#1#0#1#0#0"0(13@108"Declaration does not declare anything in /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294609055#18446744073709551615#0#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294608278#6#0#6#0#0"0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294608278#6#0#6#0#0"0(22@47"Implicit declaration of function 'oio_hid_init'294609055#304#128#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294599989#4#0#4#0#36"implicit declaration of function '*'0(0#0#67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c4301231320#1442"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal i386 c com.apple.compilers.gcc.4_2
+s294609055.250894
+e294609055.278842
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c294609055#294609055#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c4301231320#1450"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal i386 c com.apple.compilers.gcc.4_2
+s294609055.204880
+e294609056.324784
+r0
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.gcc.4_2
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_alloc':
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: implicit declaration of function 'oio_mem_alloc'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 3 of 'CFDictionaryCreateMutable'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 4 of 'CFDictionaryCreateMutable'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:56: warning: no return statement in function returning non-void
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294609055#294609057#0(666"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_alloc':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: implicit declaration of function 'oio_mem_alloc'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 3 of 'CFDictionaryCreateMutable'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 4 of 'CFDictionaryCreateMutable'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:56: warning: no return statement in function returning non-void4(22@48"Implicit declaration of function 'oio_mem_alloc'294609056#102#134#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#52#0#52#0#36"implicit declaration of function '*'0(4@63"Incompatible type for argument 3 of 'CFDictionaryCreateMutable'294609056#236#147#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#54#0#54#0#0"0(4@63"Incompatible type for argument 4 of 'CFDictionaryCreateMutable'294609056#383#147#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#54#0#54#0#0"0(22@50"No return statement in function returning non-void294609056#530#136#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#56#0#56#0#50"no return statement in function returning non-void0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c4301231320#1450"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o1#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal i386 c com.apple.compilers.gcc.4_2
+s294609055.205674
+e294609055.250586
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c294609055#294609055#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c4301231320#1450"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal ppc c com.apple.compilers.gcc.4_2
+s294609055.476236
+e294609055.593115
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c
+xnormal
+xppc
+xc
+xcom.apple.compilers.gcc.4_2
+oIn file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:1:
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h:6: warning: declaration does not declare anything
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c: In function 'oio_init':
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:4: warning: implicit declaration of function 'oio_hid_init'
+lSLF07#2@75"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294609055#294609055#0(432"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:1:/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h:6: warning: declaration does not declare anything/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c: In function 'oio_init':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:4: warning: implicit declaration of function 'oio_hid_init'2(22@37"Declaration does not declare anything294609055#93#118#2(7@89"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294609055#18446744073709551615#0#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294599989#1#0#1#0#0"0(13@108"Declaration does not declare anything in /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294609055#18446744073709551615#0#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294608278#6#0#6#0#0"0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294608278#6#0#6#0#0"0(22@47"Implicit declaration of function 'oio_hid_init'294609055#304#128#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294599989#4#0#4#0#36"implicit declaration of function '*'0(0#0#67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c4301231320#1449"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal ppc c com.apple.compilers.gcc.4_2
+s294609055.447689
+e294609055.475987
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
+xnormal
+xppc
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c294609055#294609055#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c4301231320#1457"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal ppc c com.apple.compilers.gcc.4_2
+s294609055.387888
+e294609056.324535
+r0
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
+xnormal
+xppc
+xc
+xcom.apple.compilers.gcc.4_2
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_alloc':
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: implicit declaration of function 'oio_mem_alloc'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 3 of 'CFDictionaryCreateMutable'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 4 of 'CFDictionaryCreateMutable'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:56: warning: no return statement in function returning non-void
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294609055#294609057#0(666"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_alloc':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: implicit declaration of function 'oio_mem_alloc'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 3 of 'CFDictionaryCreateMutable'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 4 of 'CFDictionaryCreateMutable'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:56: warning: no return statement in function returning non-void4(22@48"Implicit declaration of function 'oio_mem_alloc'294609056#102#134#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#52#0#52#0#36"implicit declaration of function '*'0(4@63"Incompatible type for argument 3 of 'CFDictionaryCreateMutable'294609056#236#147#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#54#0#54#0#0"0(4@63"Incompatible type for argument 4 of 'CFDictionaryCreateMutable'294609056#383#147#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#54#0#54#0#0"0(22@50"No return statement in function returning non-void294609056#530#136#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#56#0#56#0#50"no return statement in function returning non-void0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c8011731596685044736#1457"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o1#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal ppc c com.apple.compilers.gcc.4_2
+s294609055.402351
+e294609055.447445
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
+xnormal
+xppc
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c294609055#294609055#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c4301231320#1457"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal x86_64 c com.apple.compilers.gcc.4_2
+s294609055.113183
+e294609055.387650
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+oIn file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:1:
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h:6: warning: declaration does not declare anything
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c: In function 'oio_init':
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:4: warning: implicit declaration of function 'oio_hid_init'
+lSLF07#2@75"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294609055#294609055#0(432"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:1:/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h:6: warning: declaration does not declare anything/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c: In function 'oio_init':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c:4: warning: implicit declaration of function 'oio_hid_init'2(22@37"Declaration does not declare anything294609055#93#118#2(7@89"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294609055#18446744073709551615#0#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294599989#1#0#1#0#0"0(13@108"Declaration does not declare anything in /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294609055#18446744073709551615#0#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294608278#6#0#6#0#0"0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h294608278#6#0#6#0#0"0(22@47"Implicit declaration of function 'oio_hid_init'294609055#304#128#0(6@67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c294599989#4#0#4#0#36"implicit declaration of function '*'0(0#0#67"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c4301231320#1448"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal x86_64 c com.apple.compilers.gcc.4_2
+s294609055.112226
+e294609055.204525
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c294609055#294609055#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c4301231320#1456"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o0#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal x86_64 c com.apple.compilers.gcc.4_2
+s294609055.095777
+e294609056.321174
+r0
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_connect':
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:26: warning: cast to pointer from integer of different size
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_alloc':
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: implicit declaration of function 'oio_mem_alloc'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: cast to pointer from integer of different size
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 3 of 'CFDictionaryCreateMutable'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 4 of 'CFDictionaryCreateMutable'
+o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:56: warning: no return statement in function returning non-void
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294609055#294609056#0(1034"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_connect':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:26: warning: cast to pointer from integer of different size/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_alloc':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: implicit declaration of function 'oio_mem_alloc'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:52: warning: cast to pointer from integer of different size/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 3 of 'CFDictionaryCreateMutable'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:54: error: incompatible type for argument 4 of 'CFDictionaryCreateMutable'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:56: warning: no return statement in function returning non-void6(22@46"Cast to pointer from integer of different size294609056#104#132#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#26#0#26#0#46"cast to pointer from integer of different size0(22@48"Implicit declaration of function 'oio_mem_alloc'294609056#338#134#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#52#0#52#0#36"implicit declaration of function '*'0(22@46"Cast to pointer from integer of different size294609056#472#132#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#52#0#52#0#46"cast to pointer from integer of different size0(4@63"Incompatible type for argument 3 of 'CFDictionaryCreateMutable'294609056#604#147#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#54#0#54#0#0"0(4@63"Incompatible type for argument 4 of 'CFDictionaryCreateMutable'294609056#751#147#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#54#0#54#0#0"0(22@50"No return statement in function returning non-void294609056#898#136#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294608871#56#0#56#0#50"no return statement in function returning non-void0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c3917909816998063104#1456"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o1#
+
+CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal x86_64 c com.apple.compilers.gcc.4_2
+s294609055.111286
+e294609055.204335
+r1
+xCompileC
+xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o
+x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c294609055#294609055#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c3917909816998063104#1456"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o0#
+
+CCreateUniversalBinary /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/liboio.a normal "x86_64 i386 ppc"
+r0
+
+CLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a normal i386
+r0
+
+CLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a normal ppc
+r0
+
+CLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a normal x86_64
+r0
+

@@ -20,12 +20,18 @@ void oio_mem_setResize(t_oio_mem_resize r){
 void *oio_mem_alloc(size_t n, size_t type){
 	void *ptr = oio_mem_allocator(n, type);
 	if(!ptr){
-		OIO_ERROR(OIO_ERR_MEM, oio_err_getString(OIO_ERR_MEM));
+		OIO_ERROR(OIO_ERR_MEM);
 		return NULL;
 	}
 	return ptr;
 }
-void oio_mem_free(void *ptr);
+
+void oio_mem_free(void *ptr){
+	if(ptr){
+		oio_mem_deallocator(ptr);
+	}
+}
+
 void *oio_mem_resize(void *ptr, size_t newsize);
 
 
