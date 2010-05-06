@@ -1,640 +1,0 @@
-Toio
-v7
-r0
-t294797466.250130
-cCheck dependencies
-cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal x86_64 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal x86_64 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal x86_64 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_obj.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.c normal x86_64 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_util.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c normal x86_64 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_osc.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c normal x86_64 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal i386 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal i386 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal i386 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_obj.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.c normal i386 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_util.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c normal i386 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_osc.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c normal i386 c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal ppc c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal ppc c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal ppc c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_obj.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.c normal ppc c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_util.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c normal ppc c com.apple.compilers.gcc.4_2
-cCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_osc.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c normal ppc c com.apple.compilers.gcc.4_2
-cLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a normal x86_64
-cLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a normal i386
-cLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a normal ppc
-cCreateUniversalBinary /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/liboio.a normal "x86_64 i386 ppc"
-
-N/Developer/SDKs/MacOSX10.6.sdk
-c000000004B99A23900000000000000EE
-t1268359737
-s238
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Carbon.framework/Headers/Carbon.h
-c000000004B448EEF00000000000005FF
-t1262784239
-s1535
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h
-c000000004B569ADA0000000000000AF4
-t1263966938
-s2804
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/IOKit.framework/Headers/hid/IOHIDKeys.h
-c000000004B569D49000000000000376F
-t1263967561
-s14191
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/IOKit.framework/Headers/hid/IOHIDLib.h
-c000000004B569C030000000000000609
-t1263967235
-s1545
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/libgen.h
-c000000004AC326060000000000000790
-t1254303238
-s1936
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/pthread.h
-c000000004AC3260600000000000038F0
-t1254303238
-s14576
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/stdlib.h
-c000000004AC326060000000000002DF5
-t1254303238
-s11765
-
-N/System/Library/Frameworks/Carbon.framework/Carbon
-c000000004BBE640F000000000000A5F0
-t1270768655
-s42480
-
-N/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
-c000000004B747C15000000000077CFF0
-t1265925141
-s7852016
-
-N/System/Library/Frameworks/CoreMIDI.framework/CoreMIDI
-c000000004A527027000000000015FAD0
-t1246916647
-s1440464
-
-N/System/Library/Frameworks/IOKit.framework/IOKit
-c000000004B747DD30000000000172A20
-t1265925587
-s1518112
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/liboio.a
-t1273104666
-s163556
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a
-t1273104666
-s50840
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio.LinkFileList
-c000000004BE2034100000000000002FD
-t1273103169
-s765
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio.o
-t2
-s0
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o
-t1273101305
-s3768
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o
-t1273104471
-s18412
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_osc.o
-t1273104623
-s4880
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_util.o
-t1273104666
-s12684
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o
-t1273101101
-s4576
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_obj.o
-t1273101428
-s5096
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a
-t1273104666
-s52056
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio.LinkFileList
-c000000004BE2034100000000000002F7
-t1273103169
-s759
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio.o
-t2
-s0
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o
-t1273101305
-s3584
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o
-t1273104472
-s18796
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_osc.o
-t1273104623
-s5104
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_util.o
-t1273104666
-s13560
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o
-t1273101101
-s4440
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_obj.o
-t1273101428
-s5152
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a
-t1273104666
-s60592
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.LinkFileList
-c000000004BE203410000000000000309
-t1273103169
-s777
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.o
-t2
-s0
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.i
-t1272900241
-s1501
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o
-t1273101305
-s4700
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.i
-t1273101495
-s2995125
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o
-t1273104471
-s21952
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_osc.o
-t1273104623
-s5620
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_util.o
-t1273104666
-s15440
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.i
-t1272900124
-s28403
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o
-t1273101101
-s5796
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_obj.o
-t1273101428
-s5652
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.h
-c000000004BDF3152000000000000008D
-t1272918354
-s141
-i"oio_hid.h"
-i"oio_err.h"
-i"oio_mem.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
-c000000004BE1FBF70000000000000268
-t1273101303
-s616
-i"oio_err.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.h
-c000000004BE1FA4C000000000000025D
-t1273100876
-s605
-i<libgen.h>
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
-c000000004BE208530000000000001952
-t1273104467
-s6482
-i"oio_hid.h"
-i<Carbon/Carbon.h>
-i<CoreFoundation/CoreFoundation.h>
-i<IOKit/hid/IOHIDKeys.h>
-i<pthread.h>
-i"oio_mem.h"
-i"oio_hid_util.h"
-i"oio_hid_osc.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.h
-c000000004BE1F29F00000000000003CE
-t1273098911
-s974
-i<IOKit/hid/IOHIDLib.h>
-i"oio_obj.h"
-i"oio_err.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c
-c000000004BE208EB0000000000000278
-t1273104619
-s632
-i"oio_hid_osc.h"
-i<Carbon/Carbon.h>
-i<CoreFoundation/CoreFoundation.h>
-i<IOKit/hid/IOHIDKeys.h>
-i"oio_mem.h"
-i"oio_hid_util.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.h
-c000000004BE203810000000000000102
-t1273103233
-s258
-i<IOKit/hid/IOHIDLib.h>
-i"oio_obj.h"
-i"oio_err.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c
-c000000004BE209170000000000001986
-t1273104663
-s6534
-i"oio_hid_util.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.h
-c000000004BE207F100000000000001F0
-t1273104369
-s496
-i"oio_err.h"
-i<IOKit/hid/IOHIDLib.h>
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
-c000000004BE1FB280000000000000297
-t1273101096
-s663
-i"oio_mem.h"
-i"oio_err.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.h
-c000000004BDDDD6D00000000000001E4
-t1272831341
-s484
-i<stdlib.h>
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.c
-c000000004BDF33B700000000000000B8
-t1272918967
-s184
-i"oio_obj.h"
-i"oio_mem.h"
-i"oio_hid.h"
-
-N/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.h
-c000000004BE1FC420000000000000139
-t1273101378
-s313
-
-C<C0014:'CompileC oio_mem.o':P8:W0>
-s294592924.866280
-e294592924.886933
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c294592924#294592924#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c3917909816998063104#1473"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -fpch-preprocess -E /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.i0#
-
-C<C0015:'CompileC oio_err.o':P8:W0>
-s294593041.233171
-e294593041.248859
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c294593041#294593041#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c3917909816998063104#1473"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -fpch-preprocess -E /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.i0#
-
-C<C0020:'CompileC oio_hid.o':P8:W0>
-s294794295.124631
-e294794295.344665
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:9:1: warning: "PP" redefined
-oIn file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.h:5,
-o                 from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:1:
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.h:4:1: warning: this is the location of the previous definition
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294794295#294794295#0(429"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:9:1: warning: "PP" redefinedIn file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.h:5,                 from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:1:/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.h:4:1: warning: this is the location of the previous definition2(22@14""PP" redefined294794295#0#101#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294794269#9#0#9#0#13""*" redefined0(22@47"This is the location of the previous definition294794295#295#134#3(7@93"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294794295#18446744073709551615#0#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294794269#1#0#1#0#0"0(7@93"In file included from /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.h294794295#18446744073709551615#0#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.h294791711#5#0#5#0#0"0(13@122"This is the location of the previous definition in /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.h294794295#18446744073709551615#0#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.h294794178#4#0#4#0#0"0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.h294794178#4#0#4#0#47"this is the location of the previous definition0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c3917909816998063104#1473"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -fpch-preprocess -E /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.i0#
-
-CCheck dependencies
-r0
-lSLF07#2@18"Check dependencies294797465#294797466#0(0"0(0#1#0"8017303921617874944#0"0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal i386 c com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal i386 c com.apple.compilers.gcc.4_2
-s294593601.031151
-e294593601.080445
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c294593601#294593601#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c4300911832#1450"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_err.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal i386 c com.apple.compilers.gcc.4_2
-s294797270.851906
-e294797271.884662
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_registerValueCallback':
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 3 of 'oio_error' makes pointer from integer without a cast
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797270#294797272#0(450"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_registerValueCallback':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 3 of 'oio_error' makes pointer from integer without a cast2(22@83"Passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast294797271#118#170#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797267#193#0#193#0#0"0(22@75"Passing argument 3 of 'oio_error' makes pointer from integer without a cast294797271#288#162#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797267#193#0#193#0#0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c4301231320#1450"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_osc.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c normal i386 c com.apple.compilers.gcc.4_2
-s294797423.219644
-e294797423.948172
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_osc.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c: In function 'oio_hid_osc_encode':
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:15: warning: unused variable 'usage_page'
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:14: warning: unused variable 'usage'
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:12: warning: unused variable 'timestamp'
-lSLF07#2@83"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797423#294797423#0(459"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c: In function 'oio_hid_osc_encode':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:15: warning: unused variable 'usage_page'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:14: warning: unused variable 'usage'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:12: warning: unused variable 'timestamp'3(22@28"Unused variable 'usage_page'294797423#111#118#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#15#0#15#0#19"unused variable '*'0(22@23"Unused variable 'usage'294797423#229#113#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#14#0#14#0#19"unused variable '*'0(22@27"Unused variable 'timestamp'294797423#342#117#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#12#0#12#0#19"unused variable '*'0(0#0#75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c4301231320#1458"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_osc.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_util.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c normal i386 c com.apple.compilers.gcc.4_2
-s294797466.023403
-e294797466.193045
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_util.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@84"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c294797466#294797466#0(0"0(0#0#76"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c4301231320#1460"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_hid_util.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal i386 c com.apple.compilers.gcc.4_2
-s294593627.435223
-e294593627.476402
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
-xnormal
-xi386
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c294593627#294593627#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c4300911832#1450"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch i386 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio_mem.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/i386/oio_obj.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.c normal i386 c com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal ppc c com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal ppc c com.apple.compilers.gcc.4_2
-s294593601.114349
-e294593601.153116
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c294593601#294593601#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c4300911832#1457"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_err.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal ppc c com.apple.compilers.gcc.4_2
-s294797271.578986
-e294797272.382686
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_registerValueCallback':
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 3 of 'oio_error' makes pointer from integer without a cast
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797271#294797272#0(450"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_registerValueCallback':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 3 of 'oio_error' makes pointer from integer without a cast2(22@83"Passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast294797272#118#170#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797267#193#0#193#0#0"0(22@75"Passing argument 3 of 'oio_error' makes pointer from integer without a cast294797272#288#162#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797267#193#0#193#0#0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c4301231320#1457"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_osc.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c normal ppc c com.apple.compilers.gcc.4_2
-s294797423.373131
-e294797424.009229
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_osc.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c: In function 'oio_hid_osc_encode':
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:15: warning: unused variable 'usage_page'
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:14: warning: unused variable 'usage'
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:12: warning: unused variable 'timestamp'
-lSLF07#2@83"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797423#294797424#0(459"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c: In function 'oio_hid_osc_encode':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:15: warning: unused variable 'usage_page'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:14: warning: unused variable 'usage'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:12: warning: unused variable 'timestamp'3(22@28"Unused variable 'usage_page'294797423#111#118#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#15#0#15#0#19"unused variable '*'0(22@23"Unused variable 'usage'294797423#229#113#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#14#0#14#0#19"unused variable '*'0(22@27"Unused variable 'timestamp'294797423#342#117#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#12#0#12#0#19"unused variable '*'0(0#0#75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c4301231320#1465"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_osc.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_util.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c normal ppc c com.apple.compilers.gcc.4_2
-s294797466.024279
-e294797466.194022
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_util.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@84"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c294797466#294797466#0(0"0(0#0#76"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c4301231320#1467"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_hid_util.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal ppc c com.apple.compilers.gcc.4_2
-s294593627.436524
-e294593627.478341
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
-xnormal
-xppc
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c294593627#294593627#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c4300911832#1457"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch ppc -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/ppc -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio_mem.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/ppc/oio_obj.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.c normal ppc c com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio.c normal x86_64 c com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c normal x86_64 c com.apple.compilers.gcc.4_2
-s294593600.984176
-e294593601.031018
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c294593600#294593601#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c4300911832#1456"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_err.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_err.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c normal x86_64 c com.apple.compilers.gcc.4_2
-s294797270.847746
-e294797271.756709
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_registerValueCallback':
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 3 of 'oio_error' makes pointer from integer without a cast
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797270#294797271#0(450"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c: In function 'oio_hid_registerValueCallback':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c:193: warning: passing argument 3 of 'oio_error' makes pointer from integer without a cast2(22@83"Passing argument 1 of 'oio_err_getString' makes pointer from integer without a cast294797271#118#170#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797267#193#0#193#0#0"0(22@75"Passing argument 3 of 'oio_error' makes pointer from integer without a cast294797271#288#162#0(6@71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c294797267#193#0#193#0#0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c3917909816998063104#1456"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_osc.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c normal x86_64 c com.apple.compilers.gcc.4_2
-s294797423.217993
-e294797423.901318
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_osc.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c: In function 'oio_hid_osc_encode':
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:15: warning: unused variable 'usage_page'
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:14: warning: unused variable 'usage'
-o/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:12: warning: unused variable 'timestamp'
-lSLF07#2@83"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797423#294797423#0(459"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c: In function 'oio_hid_osc_encode':/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:15: warning: unused variable 'usage_page'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:14: warning: unused variable 'usage'/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c:12: warning: unused variable 'timestamp'3(22@28"Unused variable 'usage_page'294797423#111#118#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#15#0#15#0#19"unused variable '*'0(22@23"Unused variable 'usage'294797423#229#113#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#14#0#14#0#19"unused variable '*'0(22@27"Unused variable 'timestamp'294797423#342#117#0(6@75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c294797419#12#0#12#0#19"unused variable '*'0(0#0#75"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c4301231320#1464"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_osc.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_osc.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_util.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c normal x86_64 c com.apple.compilers.gcc.4_2
-s294797466.020988
-e294797466.190171
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_util.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@84"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c294797466#294797466#0(0"0(0#0#76"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c3917909816998063104#1466"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_hid_util.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid_util.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c normal x86_64 c com.apple.compilers.gcc.4_2
-s294593627.434169
-e294593627.480678
-r1
-xCompileC
-xbuild/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@79"Compile /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c294593627#294593627#0(0"0(0#0#71"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c4300911832#1456"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-generated-files.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-own-target-headers.hmap -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-all-target-headers.hmap -iquote /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/oio-project-headers.hmap -F/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/include -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources/x86_64 -I/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/DerivedSources -c /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_mem.c -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_mem.o0#
-
-CCompileC build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_obj.o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/oio_obj.c normal x86_64 c com.apple.compilers.gcc.4_2
-r0
-
-CCreateUniversalBinary /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/liboio.a normal "x86_64 i386 ppc"
-s294797466.203505
-e294797466.249959
-r1
-xCreateUniversalBinary
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/liboio.a
-xnormal
-xx86_64 i386 ppc
-lSLF07#2@69"CreateUniversalBinary build/Release/liboio.a normal "x86_64 i386 ppc"294797466#294797466#0(0"0(0#0#77"/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/x86_64 i386 ppc4301231320#572"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    /Developer/usr/bin/libtool -static /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release/liboio.a0#
-
-CLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a normal i386
-s294797466.193179
-e294797466.200965
-r1
-xLibtool
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a
-xnormal
-xi386
-lSLF07#2@82"Libtool build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a normal i386294797466#294797466#0(0"0(0#0#0"4301231320#638"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/libtool -static -arch_only i386 -syslibroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -filelist /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/oio.LinkFileList -framework Carbon -framework CoreMIDI -framework IOKit -framework CoreFoundation -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/i386/liboio.a0#
-
-CLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a normal ppc
-s294797466.194162
-e294797466.203435
-r1
-xLibtool
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a
-xnormal
-xppc
-lSLF07#2@80"Libtool build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a normal ppc294797466#294797466#0(0"0(0#0#0"4301231320#635"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/libtool -static -arch_only ppc -syslibroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -filelist /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/oio.LinkFileList -framework Carbon -framework CoreMIDI -framework IOKit -framework CoreFoundation -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/ppc/liboio.a0#
-
-CLibtool /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a normal x86_64
-s294797466.190595
-e294797466.201267
-r1
-xLibtool
-x/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a
-xnormal
-xx86_64
-lSLF07#2@86"Libtool build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a normal x86_64294797466#294797466#0(0"0(0#0#0"4301231320#644"    cd /Users/john/Development/cnmat/trunk/max/externals/odot/liboio    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/Release -filelist /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio.LinkFileList -framework Carbon -framework CoreMIDI -framework IOKit -framework CoreFoundation -o /Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/liboio.a0#
-
