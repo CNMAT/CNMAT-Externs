@@ -6,9 +6,9 @@
 #include "oio_hid_util.h"
 #include "oio_hid_usage_strings.h"
 
-void oio_hid_osc_encodeGeneric(uint32_t usage_page, uint32_t usage, uint32_t cookie, uint64_t val, int *n, char *buf);
+void oio_hid_osc_encodeGeneric(char *name, uint32_t usage_page, uint32_t usage, uint32_t cookie, uint64_t val, int *n, char *buf);
 
-t_oio_err oio_hid_osc_encode(long *len, char **oscbuf, IOHIDDeviceRef device, IOHIDValueRef value){
+t_oio_err oio_hid_osc_encode(long *len, char **oscbuf, t_oio_hid_dev *device, IOHIDValueRef value){
 	IOHIDElementRef element = IOHIDValueGetElement(value);
 	uint64_t timestamp = IOHIDValueGetTimeStamp(value);
 	uint64_t val = IOHIDValueGetIntegerValue(value);
@@ -29,7 +29,7 @@ t_oio_err oio_hid_osc_encode(long *len, char **oscbuf, IOHIDDeviceRef device, IO
 	//oio_hid_util_dumpElementInfo(element);
 	int n;
 	char buf[1024];
-	oio_hid_osc_encodeGeneric(usage_page, usage, cookie, val, &n, buf);
+	oio_hid_osc_encodeGeneric(device->name, usage_page, usage, cookie, val, &n, buf);
 	char *ptr = buf;
 	printf("%d ", ntoh32(*((uint32_t *)buf)));
 	ptr += 4;
@@ -44,7 +44,7 @@ t_oio_err oio_hid_osc_encode(long *len, char **oscbuf, IOHIDDeviceRef device, IO
 	return OIO_ERR_NONE;
 }
 
-void oio_hid_osc_encodeGeneric(uint32_t usage_page, uint32_t usage, uint32_t cookie, uint64_t val, int *n, char *buf){
+void oio_hid_osc_encodeGeneric(char *name, uint32_t usage_page, uint32_t usage, uint32_t cookie, uint64_t val, int *n, char *buf){
 	char usage_string[256], usage_page_string[256];
 	usage_string[0] = '\0';
 	usage_page_string[0] = '\0';

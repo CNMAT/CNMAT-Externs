@@ -89,7 +89,7 @@ void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDVa
 	if(!(oio_hid_util_getDeviceByDevice(oio, (IOHIDDeviceRef)sender, &device))){
 		long len;
 		char *oscbuf;
-		oio_hid_osc_encode(&len, &oscbuf, (IOHIDDeviceRef)sender, value);
+		oio_hid_osc_encode(&len, &oscbuf, t_oio_hid_dev *device, (IOHIDDeviceRef)sender, value);
 		oio_hid_dispatch(device->input_value_callbacks, strlen(device->name), device->name);
 	}
 }
