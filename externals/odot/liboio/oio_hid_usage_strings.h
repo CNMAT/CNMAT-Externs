@@ -3,6 +3,6 @@
 
 #include <IOKit/hid/IOHIDLib.h>
 
-void oio_hid_usage_strings(uint32_t usage, uint32_t usage_page, char *usage_string, char *usage_page_string);
+void oio_hid_usage_strings(uint32_t usage_page, uint32_t usage, char *usage_page_string, char *usage_string);
 
 #endif // __OIO_HID_USAGE_STRINGS_H__
