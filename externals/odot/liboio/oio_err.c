@@ -1,4 +1,5 @@
 #include "oio_err.h"
+#include <stdio.h>
 
 char *const oio_errstr[] = {
 	"",
@@ -10,15 +11,15 @@ char *const oio_errstr[] = {
 
 t_oio_error_handler oio_error_handler;
 
-char *oio_err_getString(t_oio_err errno){
-	return oio_errstr[errno];
+char *oio_err_getString(unsigned long error_code){
+	return oio_errstr[error_code];
 }
 
-void oio_error(char *filename, unsigned long linenum, unsigned char errno, char *errstr){
+void oio_error(char *filename, unsigned long linenum, unsigned char error_code, char *errstr){
 	if(oio_error_handler){
-		oio_error_handler(filename, linenum, errno, errstr);
+		oio_error_handler(filename, linenum, error_code, errstr);
 	}else{
-		printf("%s(%d): %s (%d)\n", filename, linenum, errstr, errno);
+		printf("%s(%lu): %s (%c)\n", filename, linenum, errstr, error_code);
 	}
 }
 

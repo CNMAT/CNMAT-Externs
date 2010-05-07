@@ -3,7 +3,7 @@
 
 #include <libgen.h>
 
-typedef unsigned char t_oio_err;
+typedef unsigned long t_oio_err;
 #define OIO_ERR_NONE 0
 #define OIO_ERR_DNF 1
 #define OIO_ERR_MEM 2
@@ -12,10 +12,10 @@ typedef unsigned char t_oio_err;
 
 typedef void (*t_oio_error_handler)(char *, unsigned long, t_oio_err, char *);
 
-#define OIO_ERROR(errno) oio_error(basename(__FILE__), __LINE__, errno, oio_err_getString(errno))
+#define OIO_ERROR(error_code) oio_error(basename(__FILE__), __LINE__, error_code, oio_err_getString(error_code))
 
-char *oio_err_getString(t_oio_err errno);
-void oio_error(char *filename, unsigned long linenum, unsigned char errno, char *errstr);
+char *oio_err_getString(t_oio_err error_code);
+void oio_error(char *filename, unsigned long linenum, unsigned char error_code, char *errstr);
 void oio_err_setErrorHandler(t_oio_error_handler eh);
 
 #endif //__OIO_ERR_H__

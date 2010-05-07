@@ -119,9 +119,16 @@
 	};
 	522F4C041192344500F87140 /* oio_hid.i */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.c.preprocessed;
 		name = oio_hid.i;
 		path = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/build/oio.build/Release/oio.build/Objects-normal/x86_64/oio_hid.i";
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {824, 1.21754e+06}}";
+			sepNavSelRange = "{377, 1}";
+			sepNavVisRange = "{0, 1067}";
+			sepNavWindowFrame = "{{-1265, 26}, {1467, 1024}}";
+		};
 	};
 	522F4C051192344500F87140 /* XCBuildMessageTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -175,9 +182,9 @@
 	};
 	52A431D1118E082600702ADE /* oio_hid.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {719, 2691}}";
-			sepNavSelRange = "{6446, 0}";
-			sepNavVisRange = "{0, 695}";
+			sepNavIntBoundsRect = "{{0, 0}, {844, 3380}}";
+			sepNavSelRange = "{8034, 0}";
+			sepNavVisRange = "{31, 465}";
 			sepNavWindowFrame = "{{61, 53}, {1141, 928}}";
 		};
 	};

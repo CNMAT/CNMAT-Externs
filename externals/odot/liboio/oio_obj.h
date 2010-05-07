@@ -1,6 +1,8 @@
 #ifndef __OIO_OBJ_H__
 #define __OIO_OBJ_H__
 
+#include <libgen.h>
+
 #define PP(s, ...) printf("%s[%d]:%s(): "s"\n", basename(__FILE__), __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 typedef void (*t_oio_callback)(long, char*);

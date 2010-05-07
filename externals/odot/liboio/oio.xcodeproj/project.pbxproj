@@ -11,6 +11,8 @@
 		522F4BF21192179700F87140 /* oio_hid_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 522F4BF01192179700F87140 /* oio_hid_util.h */; };
 		522F4C0A11923ABB00F87140 /* oio_hid_osc.c in Sources */ = {isa = PBXBuildFile; fileRef = 522F4C0811923ABB00F87140 /* oio_hid_osc.c */; };
 		522F4C0B11923ABB00F87140 /* oio_hid_osc.h in Headers */ = {isa = PBXBuildFile; fileRef = 522F4C0911923ABB00F87140 /* oio_hid_osc.h */; };
+		522F4C2211937F3200F87140 /* oio_hid_usage_strings.c in Sources */ = {isa = PBXBuildFile; fileRef = 522F4C2011937F3200F87140 /* oio_hid_usage_strings.c */; };
+		522F4C2311937F3200F87140 /* oio_hid_usage_strings.h in Headers */ = {isa = PBXBuildFile; fileRef = 522F4C2111937F3200F87140 /* oio_hid_usage_strings.h */; };
 		52A431D3118E082600702ADE /* oio_err.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A431D0118E082600702ADE /* oio_err.h */; };
 		52A431D4118E082600702ADE /* oio_hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 52A431D1118E082600702ADE /* oio_hid.c */; };
 		52A431D5118E082600702ADE /* oio_hid.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A431D2118E082600702ADE /* oio_hid.h */; };
@@ -31,6 +33,8 @@
 		522F4BF01192179700F87140 /* oio_hid_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid_util.h; sourceTree = "<group>"; };
 		522F4C0811923ABB00F87140 /* oio_hid_osc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid_osc.c; sourceTree = "<group>"; };
 		522F4C0911923ABB00F87140 /* oio_hid_osc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid_osc.h; sourceTree = "<group>"; };
+		522F4C2011937F3200F87140 /* oio_hid_usage_strings.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid_usage_strings.c; sourceTree = "<group>"; };
+		522F4C2111937F3200F87140 /* oio_hid_usage_strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid_usage_strings.h; sourceTree = "<group>"; };
 		52A431D0118E082600702ADE /* oio_err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_err.h; sourceTree = "<group>"; };
 		52A431D1118E082600702ADE /* oio_hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid.c; sourceTree = "<group>"; };
 		52A431D2118E082600702ADE /* oio_hid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid.h; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				522F4C2011937F3200F87140 /* oio_hid_usage_strings.c */,
+				522F4C2111937F3200F87140 /* oio_hid_usage_strings.h */,
 				522F4C0811923ABB00F87140 /* oio_hid_osc.c */,
 				522F4C0911923ABB00F87140 /* oio_hid_osc.h */,
 				522F4BEF1192179700F87140 /* oio_hid_util.c */,
@@ -125,6 +131,7 @@
 				52A4335C118F68C000702ADE /* oio_obj.h in Headers */,
 				522F4BF21192179700F87140 /* oio_hid_util.h in Headers */,
 				522F4C0B11923ABB00F87140 /* oio_hid_osc.h in Headers */,
+				522F4C2311937F3200F87140 /* oio_hid_usage_strings.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +183,7 @@
 				52A4335B118F68C000702ADE /* oio_obj.c in Sources */,
 				522F4BF11192179700F87140 /* oio_hid_util.c in Sources */,
 				522F4C0A11923ABB00F87140 /* oio_hid_osc.c in Sources */,
+				522F4C2211937F3200F87140 /* oio_hid_usage_strings.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

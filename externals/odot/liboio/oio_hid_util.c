@@ -16,6 +16,38 @@ t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef device, long bufsize, c
 	return OIO_ERR_NONE;
 }
 
+t_oio_err oio_hid_util_getDeviceByName(t_oio *oio, const char *name, t_oio_hid_dev **device){
+	t_oio_hid *hid = oio->hid;
+	CFMutableDictionaryRef dict = hid->device_hash;
+	CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, name, kCFStringEncodingUTF8);
+	if(CFDictionaryContainsKey(dict, key)){
+		const void *val;
+		val = CFDictionaryGetValue(dict, key);
+		if(val){
+			long ptr;
+			CFNumberGetValue((CFNumberRef)val, kCFNumberLongType, &ptr);
+			if(ptr != 0){
+				*device = (t_oio_hid_dev *)ptr;
+				return OIO_ERR_NONE;
+			}
+		}
+	}
+	CFRelease(key);
+	return OIO_ERR_DNF;
+}
+
+t_oio_err oio_hid_util_getDeviceByDevice(t_oio *oio, IOHIDDeviceRef device_ref, t_oio_hid_dev **device){
+	t_oio_hid_dev *d = oio->hid->devices;
+	while(d){
+		if(d->device == device_ref){
+			*device = d;
+			return OIO_ERR_NONE;
+		}
+		d = d->next;
+	}
+	return OIO_ERR_DNF;
+}
+
 void oio_hid_util_dumpDeviceInfo(IOHIDDeviceRef device){
 	oio_hid_util_postDeviceKey(device, CFSTR( kIOHIDProductKey                    ));
 
