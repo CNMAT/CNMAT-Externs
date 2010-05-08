@@ -2,6 +2,14 @@
 #define __OIO_OBJ_H__
 
 #include <libgen.h>
+#include "oio_err.h"
+
+typedef enum _oio_dev_type{
+	OIO_DEV_DNF,
+	OIO_DEV_HID,
+	OIO_DEV_MIDI,
+	OIO_DEV_SERIAL
+} t_oio_dev_type;
 
 #define OIO_BYTE_SWAP64(x) \
 	((((x) & 0xff00000000000000LL) >> 56) | \
@@ -49,12 +57,13 @@
 
 #define PP(s, ...) printf("%s[%d]:%s(): "s"\n", basename(__FILE__), __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
-typedef void (*t_oio_callback)(long, char*);
-
 typedef struct _oio{
 	struct _oio_hid *hid;
 } t_oio;
 
+typedef void (*t_oio_callback)(t_oio *, long, char*, void *);
+
 t_oio *oio_obj_alloc(void);
+t_oio_err oio_obj_sendOSC(t_oio *oio, int n, char *buf);
 
 #endif // __OIO_OBJ_H__

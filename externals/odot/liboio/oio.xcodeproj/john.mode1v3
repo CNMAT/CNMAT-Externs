@@ -270,7 +270,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>12</integer>
+									<integer>6</integer>
 									<integer>5</integer>
 									<integer>0</integer>
 								</array>
@@ -313,7 +313,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>oio_hid.c</string>
+								<string>oio_osc_util.i</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -321,11 +321,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>oio_hid.c</string>
+										<string>oio_osc_util.i</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>522F4C0711923AB100F87140</string>
+										<string>522F4C871194B7C600F87140</string>
 										<key>history</key>
 										<array>
 											<string>52A43293118F211100702ADE</string>
@@ -335,8 +335,12 @@
 											<string>52A433B611908A9100702ADE</string>
 											<string>522F4C011192344500F87140</string>
 											<string>522F4C021192344500F87140</string>
-											<string>522F4C031192344500F87140</string>
-											<string>522F4C051192344500F87140</string>
+											<string>522F4C461194646B00F87140</string>
+											<string>522F4C471194646B00F87140</string>
+											<string>522F4C5711946D8900F87140</string>
+											<string>522F4C5811946D8900F87140</string>
+											<string>522F4C5911946D8900F87140</string>
+											<string>522F4C5A11946D8900F87140</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -511,7 +515,7 @@
 	<key>PerspectivesBarVisible</key>
 	<false/>
 	<key>PinnedNavigatorIdentifier</key>
-	<string>522F4BF71192324700F87140</string>
+	<string>522F4C6211946DB700F87140</string>
 	<key>ShelfIsVisible</key>
 	<false/>
 	<key>SourceDescription</key>

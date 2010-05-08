@@ -3,7 +3,7 @@
 
 t_oio_mem_alloc oio_mem_allocator = calloc;
 t_oio_mem_free oio_mem_deallocator = free;
-t_oio_mem_resize oio_mem_resizer = realloc;
+t_oio_mem_resize oio_mem_reallocator = realloc;
 
 void oio_mem_setAlloc(t_oio_mem_alloc a){
 	oio_mem_allocator = a;
@@ -14,7 +14,7 @@ void oio_mem_setFree(t_oio_mem_free f){
 }
 
 void oio_mem_setResize(t_oio_mem_resize r){
-	oio_mem_resizer = r;
+	oio_mem_reallocator = r;
 }
 
 void *oio_mem_alloc(size_t n, size_t type){
@@ -32,6 +32,10 @@ void oio_mem_free(void *ptr){
 	}
 }
 
-void *oio_mem_resize(void *ptr, size_t newsize);
+void *oio_mem_resize(void *ptr, size_t newsize){
+	if(ptr){
+		return oio_mem_reallocator(ptr, newsize);
+	}
+}
 
 

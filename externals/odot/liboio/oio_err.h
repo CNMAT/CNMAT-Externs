@@ -9,6 +9,7 @@ typedef unsigned long t_oio_err;
 #define OIO_ERR_MEM 2
 #define OIO_ERR_NOHID 3
 #define OIO_ERR_CFTYPE 4
+#define OIO_ERR_OSCBNDL 5
 
 typedef void (*t_oio_error_handler)(char *, unsigned long, t_oio_err, char *);
 

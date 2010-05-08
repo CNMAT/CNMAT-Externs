@@ -1,12 +1,32 @@
+/*
+To do:
+
+callbacks that we register for must include a context parameter--the max wrapper has to get its object back when the callback happens.
+the callbacks (value, connect, etc) should also get the t_oio obj (why not?)
+
+ */
+
 #include <stdlib.h>
 #include "oio.h"
+#include "oio_osc_util.h"
 
 void print_devices(t_oio *oio);
-void value_callback(long n, char *ptr);
-void connect_callback(long n, char *ptr);
-void disconnect_callback(long n, char *ptr);
+void value_callback(t_oio *oio, long n, char *ptr, void *context);
+void connect_callback(t_oio *oio, long n, char *ptr, void *context);
+void disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
 
 int main(int argc, char **argv){
+	/*
+	CFDictionaryRef plist = (CFDictionaryRef)oio_osc_util_getPlist("/Users/john/suck.plist");
+	CFShow(plist);
+	char buf[32];
+	sprintf(buf, "%d", 1356);
+	CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, buf, kCFStringEncodingUTF8);
+	const void *ptr;
+	ptr = CFDictionaryGetValue(plist, key);
+	CFShow((CFDictionaryRef)ptr);
+	*/
+
 	t_oio *oio = oio_obj_alloc();
 	print_devices(oio);
 
@@ -23,17 +43,19 @@ int main(int argc, char **argv){
 	}
 	*/
 
-	oio_hid_registerValueCallback(oio, "Apple Internal Keyboard / Trackpad", value_callback);
-	oio_hid_registerValueCallback(oio, "Apple Internal Keyboard / Trackpad 1", value_callback);
-	oio_hid_registerValueCallback(oio, "Apple Internal Keyboard / Trackpad 2", value_callback);
-	oio_hid_registerValueCallback(oio, "Apple Internal Keyboard / Trackpad 3", value_callback);
+	//oio_hid_registerValueCallback(oio, "PLAYSTATION(R)3-Controller", value_callback);
+	oio_hid_registerValueCallback(oio, "Apple-Internal-Keyboard---Trackpad", value_callback, NULL);
+	oio_hid_registerValueCallback(oio, "Apple-Internal-Keyboard---Trackpad-2", value_callback, NULL);
+	oio_hid_registerValueCallback(oio, "Apple-Internal-Keyboard---Trackpad-3", value_callback, NULL);
+	oio_hid_registerValueCallback(oio, "Apple-Internal-Keyboard---Trackpad-4", value_callback, NULL);
 
 	/*
-	oio_hid_registerValueCallback(oio, "Apple Keyboard", value_callback);
-	oio_hid_registerValueCallback(oio, "Apple Keyboard 1", value_callback);
+	oio_hid_registerValueCallback(oio, "Apple-Keyboard", value_callback);
+	oio_hid_registerValueCallback(oio, "Apple-Keyboard-2", value_callback);
 	*/
-	oio_hid_registerConnectCallback(oio, connect_callback);
-	oio_hid_registerDisconnectCallback(oio, disconnect_callback);
+	oio_hid_registerConnectCallback(oio, connect_callback, NULL);
+	oio_hid_registerDisconnectCallback(oio, disconnect_callback, NULL);
+
 
 	while(1){
 		sleep(1);
@@ -53,14 +75,16 @@ void print_devices(t_oio *oio){
 	oio_mem_free(names);
 }
 
-void value_callback(long n, char *ptr){
-	PP("%ld %s", n, ptr);
+void value_callback(t_oio *oio, long n, char *ptr, void *context){
+	PP("%ld %p", n, ptr);
+	oio_osc_util_printBundle(n, ptr, printf);
+	oio_obj_sendOSC(oio, n, ptr);
 }
 
-void connect_callback(long n, char *ptr){
+void connect_callback(t_oio *oio, long n, char *ptr, void *context){
 	PP("%s was connected", ptr);
 }
 
-void disconnect_callback(long n, char *ptr){
+void disconnect_callback(t_oio *oio, long n, char *ptr, void *context){
 	PP("%s was disconnected", ptr);
 }

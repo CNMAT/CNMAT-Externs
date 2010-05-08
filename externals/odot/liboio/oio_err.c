@@ -6,7 +6,8 @@ char *const oio_errstr[] = {
 	"Device not found",
 	"Out of memory",
 	"Couldn't get a HID Manager Ref",
-	"Couldn't convert a CFType to a C type"
+	"Couldn't convert a CFType to a C type",
+	"Bad OSC bundle"
 };
 
 t_oio_error_handler oio_error_handler;
