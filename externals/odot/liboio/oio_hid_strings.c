@@ -1,4 +1,21 @@
-#include "oio_hid_usage_strings.h"-#include-"oio_obj.h"
+#include "oio_hid_usage_strings.h"
+#include "oio_obj.h"
+
+CFStringRef oio_hid_strings_getUsagePageString(CFDictionaryRef dict, uint32_t usage_page){
+
+}
+
+CFStringRef oio_hid_strings_getUsageString(CFDictionaryRef dict, uint32_t usage){
+
+}
+
+uint32_t oio_hid_strings_getUsagePageString(CFDictionaryRef dict, uint32_t usage_page){
+
+}
+
+uint32_t oio_hid_strings_getUsageString(CFDictionaryRef dict, uint32_t usage){
+
+}
 
 void oio_hid_usage_strings(uint32_t usage_page, uint32_t usage, char *usage_page_string, char *usage_string){
 	switch(usage_page){
