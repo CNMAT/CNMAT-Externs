@@ -1,12 +1,10 @@
 #include "oio_hid.h"
-#include <Carbon/Carbon.h>
-#include <CoreFoundation/CoreFoundation.h>
-#include <IOKit/hid/IOHIDKeys.h>
 #include <pthread.h>
 #include "oio_mem.h"
 #include "oio_hid_util.h"
 #include "oio_hid_osc.h"
 #include "oio_osc_util.h"
+#include "oio_hid_strings.h"
 
 CFMutableDictionaryRef oio_hid_dict;
 
@@ -92,7 +90,7 @@ void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDVa
 	if(!(oio_hid_util_getDeviceByDevice(oio, (IOHIDDeviceRef)sender, &device))){
 		long len;
 		char *oscbuf = NULL;
-		oio_hid_osc_encode(&len, &oscbuf, device, value);
+		oio_hid_osc_encode(oio, &len, &oscbuf, device, value);
 		oio_hid_dispatch(oio, device->input_value_callbacks, len, oscbuf);
 		oio_mem_free(oscbuf);
 	}
@@ -143,10 +141,11 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 		return NULL;
 	}
 	oio_osc_util_makenice(buf);
-	strcpy(mangled, buf);
+	//strcpy(mangled, buf);
 	int i = 1;
 	t_oio_hid_dev *dev = NULL;
 	while(i < 128){
+		sprintf(mangled, "/%s/%d", buf, i++);
 		CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, mangled, kCFStringEncodingUTF8);
 		// if the key is not in the dictionary, add it
 		if(!CFDictionaryContainsKey((CFDictionaryRef)(dict), key)){
@@ -204,7 +203,6 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 				}
 			}
 		}
-		sprintf(mangled, "%s-%d", buf, ++i);
 	}
 	return dev;
 }
@@ -236,20 +234,34 @@ void oio_hid_removeDevice(t_oio *oio, IOHIDDeviceRef device){
 }
 
 t_oio_err oio_hid_registerValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f, void *context){
-	t_oio_hid_dev *dev;
-	if(oio_hid_util_getDeviceByName(oio, name, &dev)){
+	t_oio_hid_dev **dev;
+	int n;
+	if(oio_hid_util_getDevicesByName(oio, name, &n, &dev)){
 		OIO_ERROR(OIO_ERR_DNF);
 		return OIO_ERR_DNF;
 	}
-	if(dev->input_value_callbacks == NULL){
-		IOHIDDeviceRegisterInputValueCallback(dev->device, oio_hid_valueCallback, oio);
+	int i;
+	for(i = 0; i < n; i++){
+		if(dev[i]->input_value_callbacks == NULL){
+			IOHIDDeviceRegisterInputValueCallback(dev[i]->device, oio_hid_valueCallback, oio);
+		}
+		t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
+		cb->f = f;
+		cb->context = context;
+		cb->next = dev[i]->input_value_callbacks;
+		dev[i]->input_value_callbacks = cb;
+		/*
+		CFArrayRef e = IOHIDDeviceCopyMatchingElements(dev[i]->device, NULL, 0L);
+		int j;
+		for(j = 0; j < CFArrayGetCount(e); j++){
+			oio_hid_util_dumpElementInfo((IOHIDElementRef)CFArrayGetValueAtIndex(e, j));
+		}
+		*/
+		//oio_hid_util_dumpDeviceInfo(dev[i]->device);
 	}
-	t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
-	cb->f = f;
-	cb->context = context;
-	cb->next = dev->input_value_callbacks;
-	dev->input_value_callbacks = cb;
-
+	if(dev){
+		oio_mem_free(dev);
+	}
 	return OIO_ERR_NONE;
 }
 
@@ -273,6 +285,14 @@ t_oio_err oio_hid_registerDisconnectCallback(t_oio *oio, t_oio_hid_callback f, v
 	hid->disconnect_callbacks = cb;
 
 	return OIO_ERR_NONE;
+}
+
+t_oio_err oio_hid_usageFile(t_oio *oio, char *filename){
+	t_oio_err ret;
+	if(ret = oio_hid_strings_readUsageFile(oio, filename)){
+		OIO_ERROR(ret);
+	}
+	return ret;
 }
 
 void oio_hid_alloc(t_oio *oio){

@@ -1,27 +1,6 @@
 #include "oio_osc_util.h"
 #include "oio_obj.h"
 
-CFPropertyListRef oio_osc_util_getPlist(char *filepath){
-	CFDataRef data = NULL;
-	FILE *file = fopen(filepath, "r");
-	if(file){
-		int result = fseek(file, 0, SEEK_END);
-		result = ftell(file);
-		rewind(file);
-		unsigned char buf[result];
-		if(fread(buf, result, 1, file) > 0){
-			data = CFDataCreate(NULL, buf, result);
-		}
-		fclose(file);
-	}
-	if(data){
-		CFPropertyListRef plist = CFPropertyListCreateWithData(kCFAllocatorDefault, data, kCFPropertyListImmutable, NULL, NULL);
-		//CFShow(plist);
-		CFRelease(data);
-		return plist;
-	}
-	return NULL;
-}
 
 t_oio_err oio_osc_util_printMessage(int n, char *buf, int (*f)(const char *,...)){
 	char *ptr = buf;
@@ -34,7 +13,7 @@ t_oio_err oio_osc_util_printMessage(int n, char *buf, int (*f)(const char *,...)
 	ptr++;
 	f(" %c ", *ptr);
 	ptr += 3;
-	f("%llu\n", ntoh64(*((uint64_t *)ptr)));
+	f("%llu (0x%llx)\n", ntoh64(*((uint64_t *)ptr)), ntoh64(*((uint64_t *)ptr)));
 	return OIO_ERR_NONE;
 }
 

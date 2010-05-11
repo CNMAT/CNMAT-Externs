@@ -5,7 +5,6 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include "oio_err.h"
 
-CFPropertyListRef oio_osc_util_getPlist(char *filepath);
 t_oio_err oio_osc_util_printMessage(int n, char *buf, int (*f)(const char *,...));
 t_oio_err oio_osc_util_printBundle(int n, char *buf, int (*f)(const char *,...));
 void oio_osc_util_makenice(char *buf);

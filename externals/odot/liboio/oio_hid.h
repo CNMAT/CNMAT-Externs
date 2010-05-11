@@ -1,6 +1,9 @@
 #ifndef __OIO_HID_H__
 #define __OIO_HID_H__
 
+#include <Carbon/Carbon.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <IOKit/hid/IOHIDKeys.h>
 #include <IOKit/hid/IOHIDLib.h>
 #include "oio_obj.h"
 #include "oio_err.h"
@@ -27,12 +30,14 @@ typedef struct _oio_hid{
 	IOHIDManagerRef hidmanager;
 	t_oio_hid_callbackList *connect_callbacks;
 	t_oio_hid_callbackList *disconnect_callbacks;
+	CFDictionaryRef usage_pages_dict, usage_dict;
 } t_oio_hid;
 
 t_oio_err oio_hid_getDeviceNames(t_oio *oio, int *n, char ***names);
 t_oio_err oio_hid_registerValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f, void *context);
 t_oio_err oio_hid_registerConnectCallback(t_oio *oio, t_oio_hid_callback f, void *context);
 t_oio_err oio_hid_registerDisconnectCallback(t_oio *oio, t_oio_hid_callback f, void *context);
+t_oio_err oio_hid_usageFile(t_oio *oio, char *filename);
 void oio_hid_alloc(t_oio *oio);
 
 #endif // __OIO_HID_H__

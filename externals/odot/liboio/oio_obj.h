@@ -1,6 +1,8 @@
 #ifndef __OIO_OBJ_H__
 #define __OIO_OBJ_H__
 
+#include <Carbon/Carbon.h>
+#include <CoreFoundation/CoreFoundation.h>
 #include <libgen.h>
 #include "oio_err.h"
 
@@ -65,5 +67,6 @@ typedef void (*t_oio_callback)(t_oio *, long, char*, void *);
 
 t_oio *oio_obj_alloc(void);
 t_oio_err oio_obj_sendOSC(t_oio *oio, int n, char *buf);
+CFPropertyListRef oio_obj_getPlist(const char *filepath);
 
 #endif // __OIO_OBJ_H__

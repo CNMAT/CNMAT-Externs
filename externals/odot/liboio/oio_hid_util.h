@@ -7,7 +7,8 @@
 #include <IOKit/hid/IOHIDLib.h>
 
 t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef device, long bufsize, char *buf);
-t_oio_err oio_hid_util_getDeviceByName(t_oio *oio, const char *name, t_oio_hid_dev **device);
+t_oio_err oio_hid_util_getDevicesByName(t_oio *oio, const char *name, int *num_devices, t_oio_hid_dev ***device);
+t_oio_err oio_hid_util_getDevicesByOSCPattern(t_oio *oio, const char *name, int *num_devices, t_oio_hid_dev ***devices);
 t_oio_err oio_hid_util_getDeviceByDevice(t_oio *oio, IOHIDDeviceRef device_ref, t_oio_hid_dev **device);
 void oio_hid_util_dumpDeviceInfo(IOHIDDeviceRef device);
 void oio_hid_util_dumpElementInfo(IOHIDElementRef element);

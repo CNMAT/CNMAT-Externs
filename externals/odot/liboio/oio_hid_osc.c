@@ -4,13 +4,13 @@
 #include <IOKit/hid/IOHIDKeys.h>
 #include "oio_mem.h"
 #include "oio_hid_util.h"
-#include "oio_hid_usage_strings.h"
+#include "oio_hid_strings.h"
 #include "oio_osc_util.h"
 
 void oio_hid_osc_encodeRaw(char *name, uint32_t usage_page, uint32_t usage, uint32_t cookie, uint64_t val, int *n, char *buf);
 void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32_t cookie, uint64_t val, int *n, char *buf);;
 
-t_oio_err oio_hid_osc_encode(long *len, char **oscbuf, t_oio_hid_dev *device, IOHIDValueRef value){
+t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev *device, IOHIDValueRef value){
 	if(!(*oscbuf)){
 		*oscbuf = oio_mem_alloc(1024, sizeof(char));
 	}
@@ -35,7 +35,15 @@ t_oio_err oio_hid_osc_encode(long *len, char **oscbuf, t_oio_hid_dev *device, IO
 	char usage_string[256], usage_page_string[256];
 	usage_string[0] = '\0';
 	usage_page_string[0] = '\0';
-	oio_hid_usage_strings(usage_page, usage, usage_page_string, usage_string);
+	//oio_hid_usage_strings(usage_page, usage, usage_page_string, usage_string);
+	CFStringRef up = oio_hid_strings_getUsagePageString(oio, usage_page);
+	CFStringRef u = oio_hid_strings_getUsageString(oio, usage_page, usage);
+	if(up){
+		CFStringGetCString(up, usage_page_string, 256, kCFStringEncodingUTF8);
+	}
+	if(u){
+		CFStringGetCString(u, usage_string, 256, kCFStringEncodingUTF8);
+	}
 
 	oio_hid_osc_encodeRaw(device->name, usage_page, usage, cookie, val, &n, buf);
 	if(n + (ptr - *oscbuf) > oscbuf_size){
@@ -61,7 +69,7 @@ t_oio_err oio_hid_osc_encode(long *len, char **oscbuf, t_oio_hid_dev *device, IO
 void oio_hid_osc_encodeRaw(char *name, uint32_t usage_page, uint32_t usage, uint32_t cookie, uint64_t val, int *n, char *buf){
 	char *ptr = buf + 4;
 
-	ptr += sprintf(ptr, "/%s/usage-page/%d/usage/%d/cookie/%u", name, usage_page, usage, cookie);
+	ptr += sprintf(ptr, "/raw/hid%s/usage-page/%d/usage/%d/cookie/%u", name, usage_page, usage, cookie);
 	*ptr++ = '\0';
 	while((ptr - buf) % 4){
 		*ptr++ = '\0';
@@ -88,7 +96,8 @@ void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32
 		uu = unknown;
 	}
 
-	ptr += sprintf(ptr, "/%s/%s/%u", name, uu, cookie);
+	//ptr += sprintf(ptr, "%s/%s/%u", name, uu, cookie);
+	ptr += sprintf(ptr, "%s/%s", name, uu);
 	*ptr++ = '\0';
 	while((ptr - buf) % 4){
 		*ptr++ = '\0';

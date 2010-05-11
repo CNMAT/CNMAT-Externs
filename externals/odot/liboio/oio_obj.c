@@ -2,8 +2,7 @@
 #include "oio_mem.h"
 #include "oio_hid.h"
 #include <mach/mach_time.h>
-#include <Carbon/Carbon.h>
-#include <CoreFoundation/CoreFoundation.h>
+
 
 t_oio_err oio_obj_sendOSCMessage(t_oio *oio, int n, char *buf, uint64_t timestamp);
 t_oio_dev_type oio_obj_getDeviceType(t_oio *oio, char *name);
@@ -67,4 +66,26 @@ t_oio_dev_type oio_obj_getDeviceType(t_oio *oio, char *name){
 		return OIO_DEV_HID;
 	}
 	return OIO_DEV_DNF;
+}
+
+CFPropertyListRef oio_obj_getPlist(const char *filepath){
+	CFDataRef data = NULL;
+	FILE *file = fopen(filepath, "r");
+	if(file){
+		int result = fseek(file, 0, SEEK_END);
+		result = ftell(file);
+		rewind(file);
+		unsigned char buf[result];
+		if(fread(buf, result, 1, file) > 0){
+			data = CFDataCreate(NULL, buf, result);
+		}
+		fclose(file);
+	}
+	if(data){
+		CFPropertyListRef plist = CFPropertyListCreateWithData(kCFAllocatorDefault, data, kCFPropertyListImmutable, NULL, NULL);
+		//CFShow(plist);
+		CFRelease(data);
+		return plist;
+	}
+	return NULL;
 }

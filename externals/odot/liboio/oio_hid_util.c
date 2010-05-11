@@ -1,4 +1,6 @@
 #include "oio_hid_util.h"
+#include "cmmjl_osc_pattern.h"
+#include "oio_mem.h"
 
 t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef device, long bufsize, char *buf){
 	CFTypeRef productKey = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey));
@@ -16,8 +18,14 @@ t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef device, long bufsize, c
 	return OIO_ERR_NONE;
 }
 
-t_oio_err oio_hid_util_getDeviceByName(t_oio *oio, const char *name, t_oio_hid_dev **device){
+// if name is an OSC address, we run it against all device names and return all that match.  otherwise, 
+// we just look up the name in the hashtab
+t_oio_err oio_hid_util_getDevicesByName(t_oio *oio, const char *name, int *num_devices, t_oio_hid_dev ***devices){
 	t_oio_hid *hid = oio->hid;
+	if(*name == '/'){
+		// probably an OSC address
+		return oio_hid_util_getDevicesByOSCPattern(oio, name, num_devices, devices);
+	}
 	CFMutableDictionaryRef dict = hid->device_hash;
 	CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, name, kCFStringEncodingUTF8);
 	if(CFDictionaryContainsKey(dict, key)){
@@ -27,13 +35,38 @@ t_oio_err oio_hid_util_getDeviceByName(t_oio *oio, const char *name, t_oio_hid_d
 			long ptr;
 			CFNumberGetValue((CFNumberRef)val, kCFNumberLongType, &ptr);
 			if(ptr != 0){
-				*device = (t_oio_hid_dev *)ptr;
+				*devices = (t_oio_hid_dev **)oio_mem_alloc(1, sizeof(t_oio_hid_dev *));
+				**devices = (t_oio_hid_dev *)ptr;
+				*num_devices = 1;
 				return OIO_ERR_NONE;
 			}
 		}
 	}
 	CFRelease(key);
+	*num_devices = 0;
 	return OIO_ERR_DNF;
+}
+
+t_oio_err oio_hid_util_getDevicesByOSCPattern(t_oio *oio, const char *name, int *num_devices, t_oio_hid_dev ***devices){
+	t_oio_hid *hid = oio->hid;
+	t_oio_hid_dev *dd = hid->devices;
+	const char *pattern = name;
+	int n = CFDictionaryGetCount(hid->device_hash);
+	*devices = (t_oio_hid_dev **)oio_mem_alloc(n, sizeof(t_oio_hid_dev *));
+	int i = 0;
+	while(dd){
+		const char *address = dd->name;
+		const char *ret = cmmjl_osc_pattern_match(pattern, address);
+		if(ret - address == strlen(address)){
+			(*devices)[i++] = dd;
+		}
+		dd = dd->next;
+	}
+	*num_devices = i;
+	if(i == 0){
+		return OIO_ERR_DNF;
+	}
+	return OIO_ERR_NONE;
 }
 
 t_oio_err oio_hid_util_getDeviceByDevice(t_oio *oio, IOHIDDeviceRef device_ref, t_oio_hid_dev **device){
