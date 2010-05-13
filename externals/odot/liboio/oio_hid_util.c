@@ -1,8 +1,8 @@
 #include "oio_hid_util.h"
-#include "cmmjl_osc_pattern.h"
+#include "osc_match.h"
 #include "oio_mem.h"
 
-t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef device, long bufsize, char *buf){
+t_oio_err oio_hid_util_getDeviceProduct(IOHIDDeviceRef device, long bufsize, char *buf){
 	CFTypeRef productKey = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey));
 	if(productKey){
 		if(CFStringGetTypeID() == CFGetTypeID(productKey)){
@@ -18,12 +18,64 @@ t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef device, long bufsize, c
 	return OIO_ERR_NONE;
 }
 
+t_oio_err oio_hid_util_getDeviceVendorID(IOHIDDeviceRef dev, uint32_t *vid){
+	CFNumberRef id = (CFNumberRef)IOHIDDeviceGetProperty(dev, CFSTR(kIOHIDVendorIDKey));
+	uint32_t n;
+	if(id){
+		if(CFNumberGetValue(id, kCFNumberSInt32Type, &n) == false){
+			return OIO_ERR_CFTYPE;
+		}
+	}else{
+		return OIO_ERR_NOPROP;
+	}
+	*vid = n;
+	return OIO_ERR_NONE;
+}
+
+t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef dev, uint32_t *pid){
+	CFNumberRef id = (CFNumberRef)IOHIDDeviceGetProperty(dev, CFSTR(kIOHIDProductIDKey));
+	//CFShow(id);
+	uint32_t n;
+	if(id){
+		if(CFNumberGetValue(id, kCFNumberSInt32Type, &n) == false){
+			return OIO_ERR_CFTYPE;
+		}
+	}else{
+		return OIO_ERR_NOPROP;
+	}
+	*pid = n;
+	return OIO_ERR_NONE;
+}
+
+t_oio_err oio_hid_util_getDeviceVendorIDFromDeviceName(t_oio *oio, const char *name, uint32_t *vid){
+	t_oio_hid_dev **devices;
+	int n;
+	oio_hid_util_getDevicesByName(oio, name, &n, &devices);
+	if(n){
+		*vid = devices[0]->vendor_id;
+		return OIO_ERR_NONE;
+	}
+	return OIO_ERR_DNF;
+}
+
+t_oio_err oio_hid_util_getDeviceProductIDFromDeviceName(t_oio *oio, const char *name, uint32_t *pid){
+	t_oio_hid_dev **devices;
+	int n;
+	oio_hid_util_getDevicesByName(oio, name, &n, &devices);
+	if(n){
+		*pid = devices[0]->product_id;
+		return OIO_ERR_NONE;
+	}
+	return OIO_ERR_DNF;
+}
+
 // if name is an OSC address, we run it against all device names and return all that match.  otherwise, 
 // we just look up the name in the hashtab
 t_oio_err oio_hid_util_getDevicesByName(t_oio *oio, const char *name, int *num_devices, t_oio_hid_dev ***devices){
 	t_oio_hid *hid = oio->hid;
 	if(*name == '/'){
 		// probably an OSC address
+		int po, ao;
 		return oio_hid_util_getDevicesByOSCPattern(oio, name, num_devices, devices);
 	}
 	CFMutableDictionaryRef dict = hid->device_hash;
@@ -56,8 +108,10 @@ t_oio_err oio_hid_util_getDevicesByOSCPattern(t_oio *oio, const char *name, int 
 	int i = 0;
 	while(dd){
 		const char *address = dd->name;
-		const char *ret = cmmjl_osc_pattern_match(pattern, address);
-		if(ret - address == strlen(address)){
+		int pattern_offset, address_offset;
+		int ret = osc_match(pattern, address, &pattern_offset, &address_offset);
+		if(ret & OSC_MATCH_ADDRESS_COMPLETE){
+			//if(ret - address == strlen(address)){
 			(*devices)[i++] = dd;
 		}
 		dd = dd->next;
@@ -80,6 +134,7 @@ t_oio_err oio_hid_util_getDeviceByDevice(t_oio *oio, IOHIDDeviceRef device_ref, 
 	}
 	return OIO_ERR_DNF;
 }
+
 
 void oio_hid_util_dumpDeviceInfo(IOHIDDeviceRef device){
 	oio_hid_util_postDeviceKey(device, CFSTR( kIOHIDProductKey                    ));

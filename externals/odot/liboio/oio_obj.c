@@ -7,9 +7,20 @@
 t_oio_err oio_obj_sendOSCMessage(t_oio *oio, int n, char *buf, uint64_t timestamp);
 t_oio_dev_type oio_obj_getDeviceType(t_oio *oio, char *name);
 
-t_oio *oio_obj_alloc(void){
+t_oio *oio_obj_alloc(t_oio_hid_callback hid_connect_callback, 
+		     void *hid_connect_context, 
+		     t_oio_hid_callback hid_disconnect_callback, 
+		     void *hid_disconnect_context, 
+		     const char *hid_usage_plist, 
+		     const char *hid_cookie_plist){
 	t_oio *oio = (t_oio *)oio_mem_alloc(1, sizeof(t_oio));
-	oio_hid_alloc(oio);
+	oio_hid_alloc(oio, 
+		      hid_connect_callback, 
+		      hid_connect_context, 
+		      hid_disconnect_callback, 
+		      hid_disconnect_context, 
+		      hid_usage_plist, 
+		      hid_cookie_plist);
 	return oio;
 }
 

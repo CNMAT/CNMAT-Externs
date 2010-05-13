@@ -8,7 +8,7 @@
 #include "oio_osc_util.h"
 
 void oio_hid_osc_encodeRaw(char *name, uint32_t usage_page, uint32_t usage, uint32_t cookie, uint64_t val, int *n, char *buf);
-void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32_t cookie, uint64_t val, int *n, char *buf);;
+void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32_t cookie, char *cookie_string, uint64_t val, int *n, char *buf);
 
 t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev *device, IOHIDValueRef value){
 	if(!(*oscbuf)){
@@ -21,8 +21,14 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 	uint64_t val = IOHIDValueGetIntegerValue(value);
 	uint32_t usage = IOHIDElementGetUsage(element);
 	uint32_t usage_page = IOHIDElementGetUsagePage(element);
-	uint32_t type = IOHIDElementGetType(element);
+	//uint32_t type = IOHIDElementGetType(element);
 	uint32_t cookie = (uint32_t)IOHIDElementGetCookie(element);
+
+	CFNumberRef vid = IOHIDDeviceGetProperty(device->device, CFSTR(kIOHIDVendorIDKey));
+	CFNumberRef pid = IOHIDDeviceGetProperty(device->device, CFSTR(kIOHIDProductIDKey));
+	int32_t vendor_id = -1, product_id = -1;
+	CFNumberGetValue(vid, kCFNumberSInt32Type, &vendor_id);
+	CFNumberGetValue(pid, kCFNumberSInt32Type, &product_id);
 
 	char *ptr = *oscbuf;
 	strncpy(ptr, "#bundle", 8);
@@ -32,17 +38,22 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 
 	int n;
 	char buf[256];
-	char usage_string[256], usage_page_string[256];
+	char usage_string[256], usage_page_string[256], cookie_string[256];
 	usage_string[0] = '\0';
 	usage_page_string[0] = '\0';
+	cookie_string[0] = '\0';
 	//oio_hid_usage_strings(usage_page, usage, usage_page_string, usage_string);
 	CFStringRef up = oio_hid_strings_getUsagePageString(oio, usage_page);
 	CFStringRef u = oio_hid_strings_getUsageString(oio, usage_page, usage);
+	CFStringRef c = oio_hid_strings_getCookieString(oio, vendor_id, product_id, cookie);
 	if(up){
 		CFStringGetCString(up, usage_page_string, 256, kCFStringEncodingUTF8);
 	}
 	if(u){
 		CFStringGetCString(u, usage_string, 256, kCFStringEncodingUTF8);
+	}
+	if(c){
+		CFStringGetCString(c, cookie_string, 256, kCFStringEncodingUTF8);
 	}
 
 	oio_hid_osc_encodeRaw(device->name, usage_page, usage, cookie, val, &n, buf);
@@ -53,7 +64,11 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 	memcpy(ptr, buf, n);
 	ptr += n;
 
-	oio_hid_osc_encodeGeneric(device->name, usage_page_string, usage_string, cookie, val, &n, buf);
+	if(cookie_string[0] == '\0'){
+		oio_hid_osc_encodeGeneric(device->name, usage_page_string, usage_string, cookie, NULL, val, &n, buf);
+	}else{
+		oio_hid_osc_encodeGeneric(device->name, usage_page_string, usage_string, cookie, cookie_string, val, &n, buf);
+	}
 	if((n - 4) + (ptr - *oscbuf) > oscbuf_size){
 		*oscbuf = oio_mem_resize(*oscbuf, oscbuf_size * 2);
 		oscbuf_size * 2;
@@ -85,7 +100,7 @@ void oio_hid_osc_encodeRaw(char *name, uint32_t usage_page, uint32_t usage, uint
 	*n = ptr - buf;
 }
 
-void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32_t cookie, uint64_t val, int *n, char *buf){
+void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32_t cookie, char *cookie_string, uint64_t val, int *n, char *buf){
 	char *ptr = buf + 4;
 	char *unknown = "<unknown>";
 	char *up = usage_page, *uu = usage;
@@ -96,8 +111,12 @@ void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32
 		uu = unknown;
 	}
 
-	//ptr += sprintf(ptr, "%s/%s/%u", name, uu, cookie);
-	ptr += sprintf(ptr, "%s/%s", name, uu);
+	if(cookie_string){
+		// this should check the first char of the cookie_string to see if it has a /
+		ptr += sprintf(ptr, "%s%s", name, cookie_string);
+	}else{
+		ptr += sprintf(ptr, "%s/%u", name, cookie);
+	}
 	*ptr++ = '\0';
 	while((ptr - buf) % 4){
 		*ptr++ = '\0';

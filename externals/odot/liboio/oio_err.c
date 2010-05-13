@@ -7,7 +7,8 @@ char *const oio_errstr[] = {
 	"Out of memory",
 	"Couldn't get a HID Manager Ref",
 	"Couldn't convert a CFType to a C type",
-	"Bad OSC bundle"
+	"Bad OSC bundle",
+	"Couldn't look up property"
 };
 
 t_oio_error_handler oio_error_handler;

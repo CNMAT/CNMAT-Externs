@@ -65,7 +65,12 @@ typedef struct _oio{
 
 typedef void (*t_oio_callback)(t_oio *, long, char*, void *);
 
-t_oio *oio_obj_alloc(void);
+t_oio *oio_obj_alloc(t_oio_callback hid_connect_callback, 
+		     void *hid_connect_context, 
+		     t_oio_callback hid_disconnect_callback, 
+		     void *hid_disconnect_context, 
+		     const char *hid_usage_plist, 
+		     const char *hid_cookie_plist);
 t_oio_err oio_obj_sendOSC(t_oio *oio, int n, char *buf);
 CFPropertyListRef oio_obj_getPlist(const char *filepath);
 

@@ -1,11 +1,3 @@
-/*
-To do:
-
-callbacks that we register for must include a context parameter--the max wrapper has to get its object back when the callback happens.
-the callbacks (value, connect, etc) should also get the t_oio obj (why not?)
-
- */
-
 #include <stdlib.h>
 #include "oio.h"
 #include "oio_osc_util.h"
@@ -17,9 +9,10 @@ void connect_callback(t_oio *oio, long n, char *ptr, void *context);
 void disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
 
 int main(int argc, char **argv){
-	t_oio *oio = oio_obj_alloc();
+	const char *usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
+	const char *cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
+	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist);
 	print_devices(oio);
-	oio_hid_usageFile(oio, "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/HID_usage_strings.plist");
 	if(argc > 1){
 		if(!strcmp(argv[1], "-l")){
 			return 0;
@@ -58,11 +51,31 @@ int main(int argc, char **argv){
 	oio_hid_registerValueCallback(oio, "Apple-Keyboard", value_callback);
 	oio_hid_registerValueCallback(oio, "Apple-Keyboard-2", value_callback);
 	*/
-	oio_hid_registerConnectCallback(oio, connect_callback, NULL);
-	oio_hid_registerDisconnectCallback(oio, disconnect_callback, NULL);
+	//oio_hid_registerConnectCallback(oio, connect_callback, NULL);
+	//oio_hid_registerDisconnectCallback(oio, disconnect_callback, NULL);
 
+	
+	char buf[1024];
+	//sprintf(buf, "%s/%s", argv[1], "LED/green");
+	//sprintf(buf, "%s/%s", argv[1], "LEDorUID");
+	sprintf(buf, "%s/%d", argv[1], 93);
 
+	oio_hid_sendValueToDevice(oio, buf, 0);
+
+	//sprintf(buf, "%s/%s", argv[1], "write-to-backlighting");
+	sprintf(buf, "%s/%d", argv[1], 154);
+	oio_hid_sendValueToDevice(oio, buf, 1);
+
+	//sprintf(buf, "%s/%s", argv[1], "LED/12");
+	sprintf(buf, "%s/%d", argv[1], 137);
+	//oio_hid_sendValueToDevice(oio, buf, i);
+
+	int i = 0;
 	while(1){
+		//long r = rand();
+		//PP("sending %ld to %s", r, buf);
+		//oio_hid_sendValueToDevice(oio, buf, r);
+		oio_hid_sendValueToDevice(oio, buf, ++i % 2);
 		sleep(1);
 	}
 
@@ -73,11 +86,19 @@ void print_devices(t_oio *oio){
 	int i, n;
 	char **names;
 	oio_hid_getDeviceNames(oio, &n, &names);
+	printf("%2s\t%-50s\t%9s\t%9s\n", "#", "Device", "VendorID", "ProductID");
 	for(i = 0; i < n; i++){
-		PP("%d: %s", i, names[i]);
-		oio_mem_free(names[i]);
+		if(names[i]){
+			uint32_t pid = -1, vid = -1;
+			oio_hid_util_getDeviceProductIDFromDeviceName(oio, names[i], &pid);
+			oio_hid_util_getDeviceVendorIDFromDeviceName(oio, names[i], &vid);
+			printf("%2d:\t%-50s\t%9d\t%9d\n", i, names[i], vid, pid);
+			oio_mem_free(names[i]);
+		}
 	}
-	oio_mem_free(names);
+	if(names){
+		oio_mem_free(names);
+	}
 }
 
 void value_callback(t_oio *oio, long n, char *ptr, void *context){
