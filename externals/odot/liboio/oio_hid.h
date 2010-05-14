@@ -39,7 +39,8 @@ t_oio_err oio_hid_getDeviceNames(t_oio *oio, int *n, char ***names);
 t_oio_err oio_hid_registerValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f, void *context);
 t_oio_err oio_hid_registerConnectCallback(t_oio *oio, t_oio_hid_callback f, void *context);
 t_oio_err oio_hid_registerDisconnectCallback(t_oio *oio, t_oio_hid_callback f, void *context);
-t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t val);
+t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle);
+t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t timestamp, uint64_t val);
 t_oio_err oio_hid_usageFile(t_oio *oio, const char *filename);
 t_oio_err oio_hid_cookieFile(t_oio *oio, const char *filename);
 void oio_hid_alloc(t_oio *oio, 

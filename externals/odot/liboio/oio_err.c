@@ -8,6 +8,8 @@ char *const oio_errstr[] = {
 	"Couldn't get a HID Manager Ref",
 	"Couldn't convert a CFType to a C type",
 	"Bad OSC bundle",
+	"Bad OSC message",
+	"Unrecognized OSC type tag",
 	"Couldn't look up property"
 };
 

@@ -102,7 +102,38 @@ void oio_hid_dispatch(t_oio *oio, t_oio_hid_callbackList *callback_list, long n,
 	}
 }
 
-t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t val){
+t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
+	if(strncmp(bundle, "#bundle\0", 8)){
+		return OIO_ERR_OSCBNDL;
+	}
+	char *ptr = bundle + 8;
+	uint64_t timestamp = ntoh64(*((uint64_t *)ptr));
+	ptr += 8;
+	while(ptr - bundle < n){
+		int size = ntoh32(*((uint32_t *)ptr));
+		ptr += 4;
+		char *address = ptr;
+		while(*ptr++ != ','){}
+		char typetag = *ptr;
+		if(*ptr = '\0'){
+			return OIO_ERR_OSCBNDL;
+		}
+		int num_data;
+		while(*ptr++){
+			num_data++;
+		}
+
+		while((ptr - bundle) % 4){
+			ptr++;
+		}
+		uint64_t val;
+		//int n = oio_osc_util_getUInt64(typetag, ptr, &val);
+		oio_hid_sendValueToDevice(oio, address, timestamp, val);
+		ptr += n;
+	}
+}
+
+t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t timestamp, uint64_t val){
 	t_oio_hid_dev **dev;
 	int n;
 	if(oio_hid_util_getDevicesByOSCPattern(oio, osc_string, &n, &dev)){

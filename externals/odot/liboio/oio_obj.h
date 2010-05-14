@@ -29,6 +29,10 @@ typedef enum _oio_dev_type{
 	 (((x) & 0x0000ff00) << 8) | \
 	 (((x) & 0x000000ff) << 24))
 
+#define OIO_BYTE_SWAP16(x) \
+	((((x) & 0xff00) >> 8) | \
+	 (((x) & 0x00ff) << 8))
+
 #ifdef BYTE_ORDER
 #define OIO_BYTE_ORDER BYTE_ORDER
 #else
@@ -46,11 +50,15 @@ typedef enum _oio_dev_type{
 #endif
 
 #if OIO_BYTE_ORDER == OIO_LITTLE_ENDIAN
+#define hton16(x) OIO_BYTE_SWAP16(x)
+#define ntoh16(x) OIO_BYTE_SWAP16(x)
 #define hton32(x) OIO_BYTE_SWAP32(x)
 #define ntoh32(x) OIO_BYTE_SWAP32(x)
 #define hton64(x) OIO_BYTE_SWAP64(x)
 #define ntoh64(x) OIO_BYTE_SWAP64(x)
 #else
+#define hton16(x) (x)
+#define ntoh16(x) (x)
 #define hton32(x) (x)
 #define ntoh32(x) (x)
 #define hton64(x) (x)

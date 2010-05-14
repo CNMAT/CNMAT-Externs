@@ -2,6 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>5303</key>
+	<dict>
+		<key>2434</key>
+		<dict>
+			<key>15</key>
+			<string>/left/x</string>
+			<key>16</key>
+			<string>/left/y</string>
+			<key>17</key>
+			<string>/left/length</string>
+			<key>18</key>
+			<string>/right/x</string>
+			<key>19</key>
+			<string>/right/y</string>
+			<key>20</key>
+			<string>/right/length</string>
+			<key>3</key>
+			<string>/footswitch</string>
+		</dict>
+	</dict>
 	<key>1523</key>
 	<dict>
 		<key>/stick</key>

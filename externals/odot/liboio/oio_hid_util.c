@@ -75,7 +75,6 @@ t_oio_err oio_hid_util_getDevicesByName(t_oio *oio, const char *name, int *num_d
 	t_oio_hid *hid = oio->hid;
 	if(*name == '/'){
 		// probably an OSC address
-		int po, ao;
 		return oio_hid_util_getDevicesByOSCPattern(oio, name, num_devices, devices);
 	}
 	CFMutableDictionaryRef dict = hid->device_hash;

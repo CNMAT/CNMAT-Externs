@@ -229,8 +229,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -273,12 +271,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>6</integer>
-									<integer>5</integer>
-									<integer>0</integer>
-								</array>
-								<array>
-									<integer>7</integer>
+									<integer>22</integer>
 									<integer>5</integer>
 									<integer>0</integer>
 								</array>
@@ -314,12 +307,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>oio_hid_strings.c</string>
+								<string>oio_obj.i</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -327,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>oio_hid_strings.c</string>
+										<string>oio_obj.i</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>52618E27119915F700C4DC88</string>
+										<string>52618E3C119C6F1100C4DC88</string>
 										<key>history</key>
 										<array>
 											<string>52A43293118F211100702ADE</string>
@@ -339,14 +334,15 @@
 											<string>52A432AE118F233600702ADE</string>
 											<string>52A43356118F5CC400702ADE</string>
 											<string>52A433B611908A9100702ADE</string>
-											<string>522F4C011192344500F87140</string>
-											<string>522F4C021192344500F87140</string>
 											<string>522F4C461194646B00F87140</string>
 											<string>522F4C471194646B00F87140</string>
 											<string>522F4C5911946D8900F87140</string>
 											<string>522F4C9211985A9F00F87140</string>
 											<string>522F4C9411985A9F00F87140</string>
-											<string>522F4C9611985A9F00F87140</string>
+											<string>52618E37119C6F1100C4DC88</string>
+											<string>52618E38119C6F1100C4DC88</string>
+											<string>52618E39119C6F1100C4DC88</string>
+											<string>52618E3A119C6F1100C4DC88</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
