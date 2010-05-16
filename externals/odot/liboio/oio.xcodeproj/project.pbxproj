@@ -17,6 +17,9 @@
 		522F4C8B1195BDFC00F87140 /* oio_hid_strings.h in Headers */ = {isa = PBXBuildFile; fileRef = 522F4C891195BDFC00F87140 /* oio_hid_strings.h */; };
 		52618E2D1199EFF500C4DC88 /* osc_match.c in Sources */ = {isa = PBXBuildFile; fileRef = 52618E2B1199EFF500C4DC88 /* osc_match.c */; };
 		52618E2E1199EFF500C4DC88 /* osc_match.h in Headers */ = {isa = PBXBuildFile; fileRef = 52618E2C1199EFF500C4DC88 /* osc_match.h */; };
+		52618F2B119E379A00C4DC88 /* osc_byteorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 52618F28119E379A00C4DC88 /* osc_byteorder.h */; };
+		52618F2C119E379A00C4DC88 /* osc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 52618F29119E379A00C4DC88 /* osc_util.c */; };
+		52618F2D119E379A00C4DC88 /* osc_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 52618F2A119E379A00C4DC88 /* osc_util.h */; };
 		52A431D3118E082600702ADE /* oio_err.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A431D0118E082600702ADE /* oio_err.h */; };
 		52A431D4118E082600702ADE /* oio_hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 52A431D1118E082600702ADE /* oio_hid.c */; };
 		52A431D5118E082600702ADE /* oio_hid.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A431D2118E082600702ADE /* oio_hid.h */; };
@@ -43,6 +46,9 @@
 		522F4C891195BDFC00F87140 /* oio_hid_strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid_strings.h; sourceTree = "<group>"; };
 		52618E2B1199EFF500C4DC88 /* osc_match.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = osc_match.c; sourceTree = "<group>"; };
 		52618E2C1199EFF500C4DC88 /* osc_match.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osc_match.h; sourceTree = "<group>"; };
+		52618F28119E379A00C4DC88 /* osc_byteorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osc_byteorder.h; sourceTree = "<group>"; };
+		52618F29119E379A00C4DC88 /* osc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = osc_util.c; sourceTree = "<group>"; };
+		52618F2A119E379A00C4DC88 /* osc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osc_util.h; sourceTree = "<group>"; };
 		52A431D0118E082600702ADE /* oio_err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_err.h; sourceTree = "<group>"; };
 		52A431D1118E082600702ADE /* oio_hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid.c; sourceTree = "<group>"; };
 		52A431D2118E082600702ADE /* oio_hid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid.h; sourceTree = "<group>"; };
@@ -91,6 +97,9 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				52618F28119E379A00C4DC88 /* osc_byteorder.h */,
+				52618F29119E379A00C4DC88 /* osc_util.c */,
+				52618F2A119E379A00C4DC88 /* osc_util.h */,
 				52618E2B1199EFF500C4DC88 /* osc_match.c */,
 				52618E2C1199EFF500C4DC88 /* osc_match.h */,
 				522F4C881195BDFC00F87140 /* oio_hid_strings.c */,
@@ -146,6 +155,8 @@
 				522F4C531194647D00F87140 /* oio_osc_util.h in Headers */,
 				522F4C8B1195BDFC00F87140 /* oio_hid_strings.h in Headers */,
 				52618E2E1199EFF500C4DC88 /* osc_match.h in Headers */,
+				52618F2B119E379A00C4DC88 /* osc_byteorder.h in Headers */,
+				52618F2D119E379A00C4DC88 /* osc_util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +211,7 @@
 				522F4C521194647D00F87140 /* oio_osc_util.c in Sources */,
 				522F4C8A1195BDFC00F87140 /* oio_hid_strings.c in Sources */,
 				52618E2D1199EFF500C4DC88 /* osc_match.c in Sources */,
+				52618F2C119E379A00C4DC88 /* osc_util.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +241,7 @@
 				GCC_VERSION = 4.2;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = oio;
+				SDKROOT = macosx10.5;
 			};
 			name = Release;
 		};

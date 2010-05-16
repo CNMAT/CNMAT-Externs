@@ -103,6 +103,7 @@ void oio_hid_dispatch(t_oio *oio, t_oio_hid_callbackList *callback_list, long n,
 }
 
 t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
+	PP("THIS FUNCTION IS BROKEN!!");
 	if(strncmp(bundle, "#bundle\0", 8)){
 		return OIO_ERR_OSCBNDL;
 	}
@@ -131,6 +132,7 @@ t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
 		oio_hid_sendValueToDevice(oio, address, timestamp, val);
 		ptr += n;
 	}
+	return OIO_ERR_NONE;
 }
 
 t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t timestamp, uint64_t val){
@@ -161,13 +163,9 @@ t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t
 
 	int i;
 	for(i = 0; i < n; i++){
-		IOHIDDeviceRef device = dev[i]->device;
-		uint32_t vid = -1, pid = -1;
 		CFNumberRef cookie;
 	        uint32_t c = strtoul(ptr + 1, &p, 0);
 		if(p == (ptr + 1)){
-			//oio_hid_util_getDeviceVendorID(device, &vid);
-			//oio_hid_util_getDeviceProductID(device, &pid);
 			c = oio_hid_strings_getCookie(oio, dev[i]->vendor_id, dev[i]->product_id, ptr);
 		}
 		cookie = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &c);
@@ -320,8 +318,50 @@ t_oio_err oio_hid_registerValueCallback(t_oio *oio, const char *name, t_oio_hid_
 		t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
 		cb->f = f;
 		cb->context = context;
+		if(dev[i]->input_value_callbacks){
+			dev[i]->input_value_callbacks->prev = cb;
+		}
 		cb->next = dev[i]->input_value_callbacks;
 		dev[i]->input_value_callbacks = cb;
+	}
+	if(dev){
+		oio_mem_free(dev);
+	}
+	return OIO_ERR_NONE;
+}
+
+t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f){
+	t_oio_hid_dev **dev;
+	int n;
+	if(oio_hid_util_getDevicesByName(oio, name, &n, &dev)){
+		OIO_ERROR(OIO_ERR_DNF);
+		return OIO_ERR_DNF;
+	}
+	int i;
+	for(i = 0; i < n; i++){
+		t_oio_hid_dev *d = dev[i];
+		IOHIDDeviceRegisterInputValueCallback(dev[i]->device, NULL, NULL);
+		t_oio_hid_callbackList *cb = d->input_value_callbacks;
+		t_oio_hid_callbackList *next;
+		while(cb){
+			next = cb->next;
+			if(cb->f == f){
+				PP("%p matches %p", cb->f, f);
+				if(cb->prev){
+					cb->prev->next = cb->next;
+				}else{
+					d->input_value_callbacks = cb->next;
+				}
+				if(cb->next){
+					cb->next->prev = cb->prev;
+				}
+				oio_mem_free(cb);
+			}
+			cb = next;
+		}
+		if(d->input_value_callbacks){
+			IOHIDDeviceRegisterInputValueCallback(dev[i]->device, oio_hid_valueCallback, oio);
+		}
 	}
 	if(dev){
 		oio_mem_free(dev);

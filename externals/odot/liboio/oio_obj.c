@@ -2,7 +2,8 @@
 #include "oio_mem.h"
 #include "oio_hid.h"
 #include <mach/mach_time.h>
-
+#include <stdio.h>
+#include "osc_util.h"
 
 t_oio_err oio_obj_sendOSCMessage(t_oio *oio, int n, char *buf, uint64_t timestamp);
 t_oio_dev_type oio_obj_getDeviceType(t_oio *oio, char *name);
@@ -93,7 +94,10 @@ CFPropertyListRef oio_obj_getPlist(const char *filepath){
 		fclose(file);
 	}
 	if(data){
-		CFPropertyListRef plist = CFPropertyListCreateWithData(kCFAllocatorDefault, data, kCFPropertyListImmutable, NULL, NULL);
+		// this is deprecated in 10.6
+		CFPropertyListRef plist = CFPropertyListCreateFromXMLData(kCFAllocatorDefault, data, kCFPropertyListImmutable, NULL);
+		// use this when we're sure people are on 10.6
+		//CFPropertyListRef plist = CFPropertyListCreateWithData(kCFAllocatorDefault, data, kCFPropertyListImmutable, NULL, NULL);
 		//CFShow(plist);
 		CFRelease(data);
 		return plist;

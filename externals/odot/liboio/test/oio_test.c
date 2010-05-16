@@ -7,13 +7,11 @@
 void send_bundle(t_oio *oio, uint64_t timestamp, char *address, int val);
 void print_devices(t_oio *oio);
 void value_callback(t_oio *oio, long n, char *ptr, void *context);
+void print_osc_msg(t_osc_msg m, void *context);
 void connect_callback(t_oio *oio, long n, char *ptr, void *context);
 void disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
 
-//void test_macros();
-
 int main(int argc, char **argv){
-
 	const char *usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
 	const char *cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
 	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist);
@@ -26,48 +24,17 @@ int main(int argc, char **argv){
 		}
 	}
 
-	//uint32_t up = oio_hid_strings_getUsagePage(oio, "Generic Desktop");
-	//CFStringRef u = oio_hid_strings_getUsageString(oio, up, 5);
-	//CFShow(u);
-
-	/*
-	char line[256];
-	char *p = line;
-	while((*p++ = getchar()) != '\n'){
-	}
-	p--;
-	*p = '\0';
-	p = line;
-	if(p){
-		oio_hid_registerValueCallback(oio, p, value_callback);
-	}
-	*/
-
-	//oio_hid_registerValueCallback(oio, "PLAYSTATION(R)3-Controller", value_callback);
-	/*
-	oio_hid_registerValueCallback(oio, "/Apple-Internal-Keyboard---Trackpad/1", value_callback, NULL);
-	oio_hid_registerValueCallback(oio, "/Apple-Internal-Keyboard---Trackpad/2", value_callback, NULL);
-	oio_hid_registerValueCallback(oio, "/Apple-Internal-Keyboard---Trackpad/3", value_callback, NULL);
-	oio_hid_registerValueCallback(oio, "/Apple-Internal-Keyboard---Trackpad/4", value_callback, NULL);
-	*/
-	//oio_hid_registerValueCallback(oio, "/Apple-Internal-Keyboard---Trackpad/*", value_callback, NULL);
-	//oio_hid_registerValueCallback(oio, "/Game-Trak-V1.3/1", value_callback, NULL);
-	/*
-	oio_hid_registerValueCallback(oio, "Apple-Keyboard", value_callback);
-	oio_hid_registerValueCallback(oio, "Apple-Keyboard-2", value_callback);
-	*/
-	//oio_hid_registerConnectCallback(oio, connect_callback, NULL);
-	//oio_hid_registerDisconnectCallback(oio, disconnect_callback, NULL);
-
-
 	char buf[1024];
 	//sprintf(buf, "%s/%s", argv[1], "LED/green");
 	//sprintf(buf, "%s/%s", argv[1], "LEDorUID");
+	/*
 	sprintf(buf, "%s/%d", argv[1], 93);
 	send_bundle(oio, 0, buf, 0);
 	sprintf(buf, "%s/%s", argv[1], "write-to-backlighting");
 	send_bundle(oio, 0, buf, 1);
 	sprintf(buf, "%s/%s", argv[1], "LED/12");
+	*/
+	//sprintf(buf, "%s/%d", argv[1], 30);
 	int i = 0;
 	while(1){
 		send_bundle(oio, 0, buf, ++i % 2);
@@ -143,6 +110,10 @@ void print_devices(t_oio *oio){
 
 void value_callback(t_oio *oio, long n, char *ptr, void *context){
 	PP("%ld %p", n, ptr);
+	printf("[ #bundle %llu (0x%llx)\n", *((uint64_t *)(ptr + 8)), *((uint64_t *)(ptr + 8)));
+	osc_util_parseBundleWithCallback(n, ptr, print_osc_msg, context);
+	printf("]\n");
+	/*
 	t_oio_osc_msg *msg = NULL;
 	t_oio_err err = oio_osc_util_parseOSCBundle(n, ptr, &msg);
 	if(err){
@@ -160,6 +131,11 @@ void value_callback(t_oio *oio, long n, char *ptr, void *context){
 	}
 	oio_osc_util_printBundle(n, ptr, printf);
 	oio_obj_sendOSC(oio, n, ptr);
+	*/
+}
+
+void print_osc_msg(t_osc_msg m, void *context){
+	osc_util_printMsg(&m, printf);
 }
 
 void connect_callback(t_oio *oio, long n, char *ptr, void *context){

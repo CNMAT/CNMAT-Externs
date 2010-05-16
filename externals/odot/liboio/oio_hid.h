@@ -13,6 +13,7 @@ typedef t_oio_callback t_oio_hid_callback;
 typedef struct _oio_hid_callbackList{
 	t_oio_hid_callback f;
 	void *context;
+	struct _oio_hid_callbackList *prev;
 	struct _oio_hid_callbackList *next;
 } t_oio_hid_callbackList;
 
@@ -37,6 +38,7 @@ typedef struct _oio_hid{
 
 t_oio_err oio_hid_getDeviceNames(t_oio *oio, int *n, char ***names);
 t_oio_err oio_hid_registerValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f, void *context);
+t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f);
 t_oio_err oio_hid_registerConnectCallback(t_oio *oio, t_oio_hid_callback f, void *context);
 t_oio_err oio_hid_registerDisconnectCallback(t_oio *oio, t_oio_hid_callback f, void *context);
 t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle);
