@@ -35,6 +35,7 @@
   VERSION 0.2.3: x coordinate from the leftmost outlet is now correct when a float is less than xmin or greater than xmax.
   VERSION 0.2.4: x coordinates are no longer output when a float is received in the leftmost inlet
   VERSION 0.2.5: the bang outlet (3rd) is now gone and the bang message that follows a dump now comes out the dump outlet
+  VERSION 0.2.6: snap to int
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -92,6 +93,7 @@ typedef struct _bpf{
 	t_jrgba selectionColor;
 	t_jrgba textColor;
 	double xmin, xmax, ymin, ymax;
+	t_symbol *x_res, *y_res;
 	//double scalex, scaley, offsetx, offsety;
 } t_bpf; 
 
@@ -120,6 +122,8 @@ t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum);
 void bpf_removePoint(t_bpf *x, t_point *point, int functionNum);
 void bpf_clear(t_bpf *x);
 double bpf_scale(double f, double min_in, double max_in, double min_out, double max_out);
+void bpf_xminmax(t_bpf *x, double min, double max);
+void bpf_yminmax(t_bpf *x, double min, double max);
 //void bpf_read(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_doread(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_write(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
@@ -238,7 +242,14 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 		}
 	}
 	bpf_outputSelection(x);
-	x->selected = bpf_insertPoint(x, (t_pt){atom_getfloat(a++), atom_getfloat(a++)}, functionNum);
+	t_pt pt = (t_pt){atom_getfloat(a++), atom_getfloat(a++)};
+	if(x->x_res == gensym("int")){
+		pt.x = round(pt.x);
+	}
+	if(x->y_res == gensym("int")){
+		pt.y = round(pt.y);
+	}
+	x->selected = bpf_insertPoint(x, pt, functionNum);
 	jbox_redraw(&(x->box));
 }
 
@@ -321,7 +332,22 @@ t_point *bpf_select(t_bpf *x, t_pt p){
 t_max_err bpf_notify(t_bpf *x, t_symbol *s, t_symbol *msg, void *sender, void *data){ 
  	//t_symbol *attrname; 
  	if (msg == gensym("attr_modified")){ 
- 		//attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
+ 		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
+		if(attrname == gensym("x_res") || attrname == gensym("y_res")){
+			int i;
+			for(i = 0; i < x->numFunctions; i++){
+				t_point *p = x->functions[i];
+				while(p){
+					if(x->x_res == gensym("int")){
+						p->coords.x = round(p->coords.x);
+					}
+					if(x->y_res == gensym("int")){
+						p->coords.y = round(p->coords.y);
+					}
+					p = p->next;
+				}
+			}
+		}
  		//x->sel_x.click = x->sel_x.drag = x->sel_y.click = x->sel_y.drag = -1; 
  		jbox_redraw(&(x->box)); 
 	} 
@@ -346,6 +372,12 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		if(x->selected = bpf_select(x, coords)){
 			break;
 		}else{
+			if(x->x_res == gensym("int")){
+				coords.x = round(coords.x);
+			}
+			if(x->y_res == gensym("int")){
+				coords.y = round(coords.y);
+			}
 			x->selected = bpf_insertPoint(x, coords, x->currentFunction);
 		}
 		break;
@@ -380,6 +412,12 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	t_pt sc;
 	sc.x = bpf_scale(pt.x, 0, r.width, x->xmin, x->xmax);
 	sc.y = bpf_scale(pt.y, r.height, 0, x->ymin, x->ymax);
+	if(x->x_res == gensym("int")){
+		sc.x = round(sc.x);
+	}
+	if(x->y_res == gensym("int")){
+		sc.y = round(sc.y);
+	}
 
 	switch(modifiers){
 	case 0x10:
@@ -592,6 +630,18 @@ void bpf_dump(t_bpf *x){
 	outlet_bang(x->out_dump);
 }
 
+void bpf_xminmax(t_bpf *x, double min, double max){
+	x->xmin = min;
+	x->xmax = max;
+	jbox_redraw(&(x->box));
+}
+
+void bpf_yminmax(t_bpf *x, double min, double max){
+	x->ymin = min;
+	x->ymax = max;
+	jbox_redraw(&(x->box));
+}
+
 void bpf_clear(t_bpf *x){
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
@@ -669,6 +719,8 @@ int main(void){
 	class_addmethod(c, (method)bpf_clear, "clear", 0);
 	class_addmethod(c, (method)bpf_dump, "dump", 0);
 	class_addmethod(c, (method)bpf_setFunctionName, "setFunctionName", A_SYM, 0);
+	class_addmethod(c, (method)bpf_xminmax, "xminmax", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)bpf_yminmax, "yminmax", A_FLOAT, A_FLOAT, 0);
 
 	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_bpf, xmin);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmin", 0, "0.0");
@@ -681,6 +733,12 @@ int main(void){
 
         CLASS_ATTR_DOUBLE(c, "ymax", 0, t_bpf, ymax);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymax", 0, "1.0");
+
+	CLASS_ATTR_SYM(c, "x_res", 0, t_bpf, x_res);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "x_res", 0, "float");
+
+	CLASS_ATTR_SYM(c, "y_res", 0, t_bpf, y_res);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "y_res", 0, "float");
 
  	CLASS_STICKY_ATTR(c, "category", 0, "Color");
 
