@@ -35,8 +35,7 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
+#include "osc_util.h"
 
 typedef struct _omerge{
 	t_object ob;
@@ -52,13 +51,13 @@ typedef struct _omerge{
 void *omerge_class;
 
 void omerge_fullPacket(t_omerge *x, long len, long ptr);
-void omerge_cbk(t_cmmjl_osc_message msg, void *v);
 void omerge_anything(t_omerge *x, t_symbol *msg, short argc, t_atom *argv);
 void omerge_free(t_omerge *x);
 void omerge_assist(t_omerge *x, void *b, long m, long a, char *s);
 void omerge_clear(t_omerge *x);
 void *omerge_new(t_symbol *msg, short argc, t_atom *argv);
 
+t_symbol *ps_FullPacket;
 void omerge_fullPacket(t_omerge *x, long len, long ptr){
 	int inlet = proxy_getinlet((t_object *)x);
 	if(len > x->buffer_len){
@@ -69,7 +68,7 @@ void omerge_fullPacket(t_omerge *x, long len, long ptr){
 	memcpy(x->buffers[inlet], (char *)ptr, len);
 	x->buffer_pos[inlet] = len;
 	if(strncmp((char *)ptr, "#bundle\0", 8)){
-		x->buffer_pos[inlet] = cmmjl_osc_bundle_naked_message(len, x->buffers[inlet], x->buffers[inlet]);
+		x->buffer_pos[inlet] = osc_util_bundle_naked_message(len, x->buffers[inlet], x->buffers[inlet]);
 		if(x->buffer_pos[inlet] < 0){
 			error("problem bundling naked message");
 			return;
@@ -77,7 +76,7 @@ void omerge_fullPacket(t_omerge *x, long len, long ptr){
 	}
 
 	// flatten any nested bundles
-	x->buffer_pos[inlet] = cmmjl_osc_flatten(x->buffer_pos[inlet], x->buffers[inlet], x->buffers[inlet]);
+	x->buffer_pos[inlet] = osc_util_flatten(x->buffer_pos[inlet], x->buffers[inlet], x->buffers[inlet]);
 
 	//memcpy(x->buffers[inlet], (char *)ptr, len);
 	if(inlet != 0){
@@ -85,6 +84,7 @@ void omerge_fullPacket(t_omerge *x, long len, long ptr){
 	}
 
 	char buf[x->num_inlets * x->buffer_len];
+	memset(buf, '\0', x->num_inlets * x->buffer_len);
 	int bufpos = 0;
 	if(x->buffer_pos[0] > 0){
 		memcpy(buf, x->buffers[0], x->buffer_pos[0]);
@@ -94,7 +94,7 @@ void omerge_fullPacket(t_omerge *x, long len, long ptr){
 	for(i = 1; i < x->num_inlets; i++){
 		if(x->buffer_pos[i] > 0){
 			memcpy(buf + bufpos, x->buffers[i] + 16, x->buffer_pos[i] - 16);
-			bufpos += x->buffer_pos[i] - 16;
+			bufpos += (x->buffer_pos[i] - 16);
 		}
 	}
 	t_atom out[2];
@@ -139,7 +139,6 @@ void *omerge_new(t_symbol *msg, short argc, t_atom *argv){
 	t_omerge *x;
 	int i;
 	if(x = (t_omerge *)object_alloc(omerge_class)){
-		cmmjl_init(x, NAME, 0);
 		x->outlet = outlet_new(x, "FullPacket");
 		x->num_inlets = 2;
 		if(argc){
@@ -178,6 +177,7 @@ int main(void){
 	class_register(CLASS_BOX, c);
 	omerge_class = c;
 
+	ps_FullPacket = gensym("FullPacket");
 	common_symbols_init();
 	return 0;
 }

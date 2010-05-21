@@ -76,7 +76,7 @@ int osc_util_getMsgCount(int n, char *osc_bndl){
 	return count;
 }
 
-int osc_util_parseBundle(int n, char *osc_bndl, t_osc_msg **msg){
+int osc_util_parseBundle(int n, char *osc_bndl, t_osc_msg *msg){
 	char *ptr = osc_bndl;
 	if(strncmp(ptr, "#bundle\0", 8)){
 		return 1;
@@ -85,7 +85,7 @@ int osc_util_parseBundle(int n, char *osc_bndl, t_osc_msg **msg){
 	int i = 0;
 	while((ptr - osc_bndl) < n){
 		int size = ntoh32(*((uint32_t *)ptr));
-		osc_util_parseMessage(-1, ptr, msg[i]);
+		osc_util_parseMessage(-1, ptr, msg + i);
 		ptr += size + 4;
 		i++;
 	}
@@ -124,6 +124,19 @@ int osc_util_incrementArg(t_osc_msg *msg){
 	int size = osc_sizeof(tt, msg->argv);
 	msg->argv += size;
 	return 1;
+}
+
+void osc_util_printBundle(int len, char *bundle, int (*p)(const char *, ...)){
+	if(strncmp(bundle, "#bundle\0", 8)){
+		return;
+	}
+	p("[ #bundle %llu (0x%x)\n");
+	osc_util_parseBundleWithCallback(len, bundle, osc_util_printBundleCbk, (void *)p);
+	p("]\n");
+}
+
+void osc_util_printBundleCbk(t_osc_msg msg, void *context){
+	osc_util_printMsg(&msg, context);
 }
 
 void osc_util_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
@@ -208,6 +221,7 @@ long osc_util_bundle_naked_message(long n, char *ptr, char *out){
 }
 
 long osc_util_flatten(long n, char *ptr, char *out){
+	// out could be the same as ptr for an inplace operation, so do everything locally and then copy
 	if(strncmp(ptr, "#bundle\0", 8)){
 		return -1;
 	}
@@ -215,19 +229,46 @@ long osc_util_flatten(long n, char *ptr, char *out){
 		printf("%s line %d called malloc--you should use a memory pool!\n", __PRETTY_FUNCTION__, __LINE__);
 		out = malloc(n);
 	}
+	char localptr[n];
 	int i = 0, j = 0;
-	memcpy(out, ptr, 16);
+	memcpy(localptr, ptr, 16);
 	i = j = 16;
 	while(i < n){
 		if(!strncmp(ptr + i, "#bundle\0", 8)){
 			i += 16; // skip over #bundle\0, timetag, and size
 			j -= 4;
 		}else{
-			*(out + (j++)) = *(ptr + i++);
+			*(localptr + (j++)) = *(ptr + i++);
 		}
 	}
-	memset(out + j, '\0', n - j);
+	memset(localptr + j, '\0', n - j);
+	memset(out, '\0', n);
+	memcpy(out, localptr, j);
 	return j;
+}
+
+int osc_util_rename(char *buffer, 
+		    int bufferLen, 
+		    int bufferPos, 
+		    t_osc_msg *msg, 
+		    char *newAddress){
+	int start = bufferPos;
+	int len = strlen(newAddress);
+	int bp = bufferPos;
+	len += 4 - (len % 4);
+	*((long *)(buffer + bp)) = hton32(msg->size + (len - (msg->typetags - msg->address)));
+	bp += 4;
+	int actualLen = strlen(newAddress);
+	memcpy(buffer + bp, newAddress, actualLen);
+	bp += actualLen;
+	bp++;
+	while((bp - start) % 4){
+		buffer[bp++] = '\0';
+	}
+	len = msg->size - (msg->typetags - msg->address);
+	memcpy(buffer + bp, msg->typetags, len);
+	bp += len;
+	return bp - start;
 }
 
 char osc_data_lengths[128] = {

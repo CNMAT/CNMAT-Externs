@@ -35,9 +35,8 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
-//#include "cmmjl/cmmjl_osc_obj.h"
+#include "osc_util.h"
+#include "osc_match.h"
 
 typedef struct _oppnd{
 	t_object ob;
@@ -52,39 +51,42 @@ typedef struct _oppnd{
 void *oppnd_class;
 
 void oppnd_fullPacket(t_oppnd *x, long len, long ptr);
-void oppnd_cbk(t_cmmjl_osc_message msg, void *v);
+void oppnd_cbk(t_osc_msg msg, void *v);
 void oppnd_set(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv);
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv);
 void oppnd_free(t_oppnd *x);
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s);
 void *oppnd_new(t_symbol *msg, short argc, t_atom *argv);
 
+t_symbol *ps_FullPacket;
+
 void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
 	char cpy[len];
-	char buffer[len * 2];
-	memset(buffer, '\0', len * 2);
+	char buffer[len * 8];
+	memset(buffer, '\0', len * 8);
 	x->buffer = buffer;
-	x->bufferLen = len * 2;
+	x->bufferLen = len * 8;
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
+		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, cpy, cpy);
+	nn = osc_util_flatten(nn, cpy, cpy);
 
 	memcpy(buffer, cpy, 16);
 	x->bufferPos = 16;
 
 	// extract the messages from the bundle
-	cmmjl_osc_extract_messages(nn, cpy, true, oppnd_cbk, (void *)x);
+	//cmmjl_osc_extract_messages(nn, cpy, true, oppnd_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, cpy, oppnd_cbk, (void *)x);
 	/*
 	int i; 
 	post("x->bufferPos = %d", x->bufferPos);
@@ -98,29 +100,29 @@ void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
-void oppnd_cbk(t_cmmjl_osc_message msg, void *v){
+void oppnd_cbk(t_osc_msg msg, void *v){
 	t_oppnd *x = (t_oppnd *)v;
 	int ret;
 	int didmatch = 0;
-	if(x->bufferPos + msg.size > x->bufferLen){
-		realloc(x->buffer, x->bufferLen * 2);
-	}
 
 	if(x->shouldPrependAll){
 		char buf[strlen(msg.address) + strlen(x->sym_to_prepend->s_name) + 1];
 		sprintf(buf, "%s%s", x->sym_to_prepend->s_name, msg.address);
-		x->bufferPos += cmmjl_osc_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, buf);
+		x->bufferPos += osc_util_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, buf);
 		didmatch++;
 	}else{
-		if((ret = cmmjl_osc_match(x, msg.address, x->sym_to_match->s_name)) == -1){
+		//if((ret = osc_match(x, msg.address, x->sym_to_match->s_name)) == -1){
+		int po, ao;
+		ret = osc_match(msg.address, x->sym_to_match->s_name, &po, &ao);
+		if(ret == 3){
 			char buf[strlen(x->sym_to_match->s_name) + strlen(x->sym_to_prepend->s_name) + 1];
 			sprintf(buf, "%s%s", x->sym_to_prepend->s_name, x->sym_to_match->s_name);
-			x->bufferPos += cmmjl_osc_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, buf);
+			x->bufferPos += osc_util_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, buf);
 			didmatch++;
 		}
 	}
 	if(didmatch == 0){
-		*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size);
+		*((long *)(x->buffer + x->bufferPos)) = hton32(msg.size);
 		x->bufferPos += 4;
 		memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
 		x->bufferPos += msg.size;
@@ -173,7 +175,6 @@ void oppnd_free(t_oppnd *x){
 void *oppnd_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oppnd *x;
 	if(x = (t_oppnd *)object_alloc(oppnd_class)){
-		cmmjl_init(x, NAME, 0);
 		x->outlet = outlet_new(x, "FullPacket");
 		if(argc > 1){
 			x->sym_to_match = atom_getsym(argv);
@@ -201,6 +202,7 @@ int main(void){
 	class_register(CLASS_BOX, c);
 	oppnd_class = c;
 
+	ps_FullPacket = gensym("FullPacket");
 	common_symbols_init();
 	return 0;
 }

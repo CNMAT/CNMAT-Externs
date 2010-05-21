@@ -69,6 +69,8 @@ typedef struct _odotio{
 	t_critical lock;
  	t_jrgba bgcolor; 
 	int ready;
+	t_object *pv;
+	t_symbol *plistpath;
 } t_odotio; 
 
 void *odotio_class; 
@@ -93,6 +95,8 @@ void odotio_closeDevice(t_odotio *x, t_device *d);
 void odotio_addDevice(t_odotio *x, char *name);
 void odotio_removeDevice(t_odotio *x, char *name);
 void odotio_doRemoveDevice(t_odotio *x, t_device *d);
+void odotio_fullPacket(t_odotio *x, long len, long ptr);
+void odotio_anything(t_odotio *x, t_symbol *msg, int argc, t_atom *argv);
 
 void odotio_mousedown(t_odotio *x, t_object *patcherview, t_pt pt, long modifiers); 
 void odotio_mousedrag(t_odotio *x, t_object *patcherview, t_pt pt, long modifiers); 
@@ -101,7 +105,10 @@ int main(void);
 void *odotio_new(t_symbol *s, long argc, t_atom *argv); 
 void odotio_setup(t_odotio *x, t_symbol *msg, int argc, t_atom *argv);
 
+t_symbol *l_background, *l_devices;
+
 void odotio_paint(t_odotio *x, t_object *patcherview){ 
+	x->pv = patcherview;
 	if(x->ready == 0){
 		return;
 	}
@@ -114,27 +121,150 @@ void odotio_paint(t_odotio *x, t_object *patcherview){
  	// get our box's rectangle 
  	jbox_get_rect_for_view((t_object *)x, patcherview, &rect); 
 
- 	// draw the outline of the box 
- 	jgraphics_set_source_jrgba(g, &c); 
- 	jgraphics_set_line_width(g, 1); 
- 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height); 
- 	jgraphics_stroke(g); 
-
- 	jgraphics_set_source_jrgba(g, &(x->bgcolor)); 
- 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height); 
- 	jgraphics_fill(g); 
-
+	jgraphics_set_font_size(g, 12);
 	t_jrgba black = (t_jrgba){0,0,0,1.};
 
-	// vertical line after the checkboxes
-	jgraphics_set_source_jrgba(g, &black);
-	jgraphics_move_to(g, CHECKBOX_COLUMN_WIDTH, 0);
-	jgraphics_line_to(g, CHECKBOX_COLUMN_WIDTH, rect.height);
-	jgraphics_stroke(g);
+	const char *pid_label = "ProductID", *vid_label = "VendorID", *prot_label = "Protocol", *dev_label = "Device";
 
-	critical_enter(x->lock);
-	char vid[x->ndevices][128], pid[x->ndevices][128];
-	int maxvidw = 0, maxpidw = 0;
+	t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_background, rect.width, rect.height);
+	if(gg){
+		// draw the outline of the box 
+		jgraphics_set_source_jrgba(gg, &c); 
+		jgraphics_set_line_width(gg, .5); 
+		jgraphics_rectangle(gg, 0., 0., rect.width, rect.height); 
+		jgraphics_stroke(gg); 
+		double xpos = CHECKBOX_COLUMN_WIDTH, ypos = 0;
+		int i = 0;
+		while(ypos < rect.height){
+			t_jrgba c1 = x->bgcolor, c2 = (t_jrgba){0.8, 0.8, .9, 1.};
+			jgraphics_rectangle(gg, 0, ypos, rect.width, ROW_HEIGHT);
+			if(i % 2){
+				jgraphics_set_source_jrgba(gg, &c1);
+			}else{
+				jgraphics_set_source_jrgba(gg, &c2);
+			}
+			jgraphics_fill(gg);
+			ypos += ROW_HEIGHT;
+			i++;
+		}
+		jgraphics_set_source_jrgba(gg, &black);
+		jgraphics_move_to(gg, CHECKBOX_COLUMN_WIDTH, 0);
+		jgraphics_line_to(gg, CHECKBOX_COLUMN_WIDTH, rect.height);
+		jgraphics_stroke(gg);
+
+		char vid[x->ndevices][128], pid[x->ndevices][128];
+
+		double w, h;
+		jgraphics_move_to(gg, xpos, 0);
+		jgraphics_line_to(gg, xpos, rect.height);
+		jgraphics_stroke(gg);
+		xpos += PAD;
+		jgraphics_text_measure(gg, dev_label, &w, &h);
+		jgraphics_move_to(gg, xpos, ROW_HEIGHT - 3);
+		jgraphics_show_text(gg, dev_label);
+
+		xpos += (w + PAD);
+		jgraphics_move_to(gg, xpos, 0);
+		jgraphics_line_to(gg, xpos, rect.height);
+		jgraphics_stroke(gg);
+		xpos += PAD;
+		jgraphics_text_measure(gg, prot_label, &w, &h);
+		jgraphics_move_to(gg, xpos, ROW_HEIGHT - 3);
+		jgraphics_show_text(gg, prot_label);
+
+
+		jgraphics_text_measure(gg, pid_label, &w, &h);
+		xpos = (rect.width - w) - (PAD * 2);
+		jgraphics_move_to(gg, xpos, 0);
+		jgraphics_line_to(gg, xpos, rect.height);
+		jgraphics_stroke(gg);
+		xpos += PAD;
+
+		jgraphics_move_to(gg, xpos, ROW_HEIGHT - 3);
+		jgraphics_show_text(gg, pid_label);
+		xpos -= PAD;
+
+		jgraphics_text_measure(gg, vid_label, &w, &h);
+		xpos = (xpos - w) - (PAD * 2);
+		jgraphics_move_to(gg, xpos, 0);
+		jgraphics_line_to(gg, xpos, rect.height);
+		jgraphics_stroke(gg);
+		xpos += PAD;
+
+		jgraphics_move_to(gg, xpos, ROW_HEIGHT - 3);
+		jgraphics_show_text(gg, vid_label);
+
+		jgraphics_move_to(gg, 0, ROW_HEIGHT);
+		jgraphics_line_to(gg, rect.width, ROW_HEIGHT);
+		jgraphics_stroke(gg);
+
+		jbox_end_layer((t_object *)x, patcherview, l_background);
+	}
+        jbox_paint_layer((t_object *)x, patcherview, l_background, 0, 0);
+
+	gg = jbox_start_layer((t_object *)x, patcherview, l_devices, rect.width, rect.height);
+	if(gg){
+		t_device *d = x->devices;
+		double xpos, ypos;
+		int i = 1;
+		jgraphics_set_source_jrgba(g, &black);
+		jgraphics_set_line_width(gg, .5); 
+		while(d){
+			double w,h;
+			jgraphics_rectangle(gg, ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2), ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2) + ((ROW_HEIGHT * i) + 2) - 3, CHECKBOX_WIDTH, CHECKBOX_WIDTH);
+
+			jgraphics_stroke(gg);
+			if(d->open){
+				double x1 = ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2);
+				double x2 = x1 + CHECKBOX_WIDTH;
+				double y1 = ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2) + ((ROW_HEIGHT * i) + 2) - 3;
+				double y2 = y1 + CHECKBOX_WIDTH;
+				jgraphics_move_to(gg, x1, y1);
+				jgraphics_line_to(gg, x2, y2);
+				jgraphics_move_to(gg, x2, y1);
+				jgraphics_line_to(gg, x1, y2);
+				jgraphics_stroke(gg);
+			}else{
+
+			}
+
+			ypos = ((i + 1) * ROW_HEIGHT);
+			/*
+			jgraphics_move_to(gg, 0, ypos);
+			jgraphics_line_to(gg, rect.width, ypos);
+			jgraphics_stroke(gg);
+			*/
+			ypos -= 5;
+			xpos = CHECKBOX_COLUMN_WIDTH + PAD;
+			jgraphics_move_to(gg, xpos, ypos);
+			jgraphics_show_text(gg, d->protocol->s_name);
+
+			jgraphics_text_measure(gg, prot_label, &w, &h);
+			xpos = CHECKBOX_COLUMN_WIDTH + (2 * PAD) + w;
+			jgraphics_move_to(gg, xpos, ypos);
+			jgraphics_show_text(gg, d->name->s_name);
+
+			char buf[64];
+
+			jgraphics_text_measure(gg, pid_label, &w, &h);
+			xpos = rect.width - w - PAD;
+			jgraphics_move_to(gg, xpos, ypos);
+			sprintf(buf, "%d", d->product_id);
+			jgraphics_show_text(gg, buf);
+
+			jgraphics_text_measure(gg, vid_label, &w, &h);
+			xpos = xpos - (PAD * 2) - w;
+			jgraphics_move_to(gg, xpos, ypos);
+			sprintf(buf, "%d", d->vendor_id);
+			jgraphics_show_text(gg, buf);
+			i++;
+			d = d->next;
+		}
+		jbox_end_layer((t_object *)x, patcherview, l_devices);
+	}
+	jbox_paint_layer((t_object *)x, patcherview, l_devices, 0, 0);
+
+	/*
 	t_device *d = x->devices;
 	jgraphics_set_font_size(g, 12);
 	int i = 0;
@@ -186,7 +316,7 @@ void odotio_paint(t_odotio *x, t_object *patcherview){
 	}
 	critical_exit(x->lock);
 	jgraphics_stroke(g);
-
+	*/
 	/*
 	jgraphics_set_source_jrgba(g, &(x->textColor));
 	jgraphics_set_font_size(g, 10);
@@ -211,6 +341,7 @@ void odotio_open(t_odotio *x, t_symbol *sym){
 		}
 		d = d->next;
 	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 	jbox_redraw(&(x->box));
 }
 
@@ -224,6 +355,7 @@ void odotio_close(t_odotio *x, t_symbol *sym){
 		}
 		d = d->next;
 	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 	jbox_redraw(&(x->box));
 }
 
@@ -258,12 +390,14 @@ void odotio_hid_value_callback(t_oio *oio, long n, char *ptr, void *context){
 void odotio_hid_connect_callback(t_oio *oio, long n, char *ptr, void *context){
 	t_odotio *x = (t_odotio *)context;
 	odotio_addDevice(x, ptr);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 	jbox_redraw(&(x->box));
 }
 
 void odotio_hid_disconnect_callback(t_oio *oio, long n, char *ptr, void *context){
 	t_odotio *x = (t_odotio *)context;
 	odotio_removeDevice(x, ptr);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 	jbox_redraw(&(x->box));
 }
 
@@ -272,7 +406,10 @@ void odotio_list(t_odotio *x, t_symbol *msg, short argc, t_atom *argv){
 
 t_max_err odotio_notify(t_odotio *x, t_symbol *s, t_symbol *msg, void *sender, void *data){ 
  	if (msg == gensym("attr_modified")){ 
- 		//t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
+ 		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
+		if(attrname == gensym("plistpath")){
+			odotio_setup(x, NULL, 0, NULL);
+		}
  		jbox_redraw(&(x->box)); 
 	} 
 	return 0; 
@@ -307,16 +444,22 @@ void odotio_openDevice(t_odotio *x, t_device *d){
 	if(!oio_hid_registerValueCallback(x->oio, d->name->s_name, odotio_hid_value_callback, (void *)x)){
 		d->open = 1;
 	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 }
 
 void odotio_closeDevice(t_odotio *x, t_device *d){
 	oio_hid_unregisterValueCallback(x->oio, d->name->s_name, odotio_hid_value_callback);
 	d->open = 0;
+	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 }
 
 void odotio_addDevice(t_odotio *x, char *name){
 	t_device *d = (t_device *)sysmem_newptr(sizeof(t_device));
 	uint32_t pid = -1, vid = -1;
+	if(!(x->oio)){
+		printf("x->oio == NULL!\n");
+		return;
+	}
 	oio_hid_util_getDeviceProductIDFromDeviceName(x->oio, name, &pid);
 	oio_hid_util_getDeviceVendorIDFromDeviceName(x->oio, name, &vid);
 	d->name = gensym(name);
@@ -360,6 +503,15 @@ void odotio_doRemoveDevice(t_odotio *x, t_device *d){
 		d->next->prev = d->prev;
 	}
 	sysmem_freeptr(d);
+}
+
+void odotio_fullPacket(t_odotio *x, long len, long ptr){
+	//osc_util_printBundle(len, (char *)ptr, post);
+	oio_hid_sendOSCBundleToDevice(x->oio, len, (char *)ptr);
+}
+
+void odotio_anything(t_odotio *x, t_symbol *msg, int argc, t_atom *argv){
+
 }
 
 // 0x10 = no modifiers 
@@ -424,11 +576,15 @@ int main(void){
 	class_addmethod(c, (method)odotio_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)odotio_open, "open", A_SYM, 0);
 	class_addmethod(c, (method)odotio_close, "close", A_SYM, 0);
+	class_addmethod(c, (method)odotio_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	class_addmethod(c, (method)odotio_anything, "anything", A_GIMME, 0);
+
+	CLASS_ATTR_SYM(c, "plistpath", 0, t_odotio, plistpath);
 
  	CLASS_STICKY_ATTR(c, "category", 0, "Color");
 
  	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_odotio, bgcolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, ".75 .75 .75 1."); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, ".9 .9 .9 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "bgcolor", 0, "rgba", "Background Color"); 
 
  	CLASS_STICKY_ATTR_CLEAR(c, "category"); 
@@ -438,6 +594,8 @@ int main(void){
  	class_register(CLASS_BOX, c); 
  	odotio_class = c; 
 
+	l_devices = gensym("l_devices");
+	l_background = gensym("l_background");
  	version(0); 
 	
  	return 0; 
@@ -470,26 +628,30 @@ void *odotio_new(t_symbol *s, long argc, t_atom *argv){
 		; 
 
  	if(x = (t_odotio *)object_alloc(odotio_class)){ 
-		post("%s: %p", __PRETTY_FUNCTION__, x);
  		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->box.b_firstin = (void *)x; 
 		x->info_outlet = outlet_new((t_object *)x, NULL);
  		x->osc_outlet = outlet_new((t_object *)x, "FullPacket");
 		critical_new(&(x->lock));
+		x->plistpath = NULL;
  		attr_dictionary_process(x, d); 
 		x->devices = NULL;
 
 		x->ready = 0;
  		jbox_ready((t_jbox *)x); 
-		schedule_delay(x, (method)odotio_setup, 100, NULL, 0, NULL);
+		//schedule_delay(x, (method)odotio_setup, 100, NULL, 0, NULL);
  		return x; 
  	} 
  	return NULL; 
 } 
 
 void odotio_setup(t_odotio *x, t_symbol *msg, int argc, t_atom *argv){
-	const char *hid_usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
-	const char *hid_cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
-	x->oio = oio_obj_alloc(odotio_hid_connect_callback, x, odotio_hid_disconnect_callback, x, hid_usageplist, hid_cookieplist);
+	//char *hid_usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
+	//char *hid_cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
+	char hid_usageplist[128], hid_cookieplist[128];
+	sprintf(hid_usageplist, "%s/hid_usage_strings.plist", x->plistpath->s_name);
+	sprintf(hid_cookieplist, "%s/hid_cookie_strings.plist", x->plistpath->s_name);
+	oio_obj_alloc(odotio_hid_connect_callback, x, odotio_hid_disconnect_callback, x, hid_usageplist, hid_cookieplist, NULL, NULL, &(x->oio));
 	x->ready = 1;
+	oio_obj_run(x->oio);
 }

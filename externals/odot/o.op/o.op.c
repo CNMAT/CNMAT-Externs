@@ -35,10 +35,11 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
+#include "osc_match.h"
+#include "osc_util.h"
+#include "omax_util.h"
 
-typedef void (*t_oop_f)(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
+typedef void (*t_oop_f)(t_osc_msg *msg, int argc, t_atom *argv);
 
 typedef struct _oop{
 	t_object ob;
@@ -58,44 +59,43 @@ void *oop_class;
 
 void oop_fullPacket(t_oop *x, long len, long ptr);
 t_oop_f oop_getFunction(t_symbol *op);
-void oop_cbk(t_cmmjl_osc_message msg, void *v);
+void oop_cbk(t_osc_msg msg, void *v);
 void oop_free(t_oop *x);
 void oop_assist(t_oop *x, void *b, long m, long a, char *s);
 void *oop_new(t_symbol *msg, short argc, t_atom *argv);
 
 
-void oop_pass(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_plus(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_minus(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_times(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_div(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_mod(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_min(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_max(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_abs(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_avg(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_absdiff(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_fold(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_wrap(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_minusFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_modFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
+void oop_pass(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_plus(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_minus(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_times(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_div(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_mod(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_min(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_max(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_abs(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_avg(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_absdiff(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_fold(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_wrap(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_divFlip(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_minusFlip(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_modFlip(t_osc_msg *msg, int argc, t_atom *argv);
 
-void oop_scale(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
-void oop_map(t_cmmjl_osc_message *msg, int argc, t_atom *argv);
+void oop_scale(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_clip(t_osc_msg *msg, int argc, t_atom *argv);
+void oop_map(t_osc_msg *msg, int argc, t_atom *argv);
 
 
 double oop_do_clip(double f, double min, double max);
 double oop_do_scale(double f, double min_in, double max_in, double min_out, double max_out);
 
+t_symbol *ps_FullPacket;
+
 t_symbol *ps_pass, *ps_plus, *ps_minus, *ps_times, *ps_div, *ps_mod, *ps_min, *ps_max, *ps_abs, *ps_avg, *ps_absdiff, *ps_fold, *ps_wrap, *ps_divFlip, *ps_minusFlipp, *ps_modFlip, *ps_scale, *ps_clip, *ps_map;
 
 void oop_fullPacket(t_oop *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
-	if(strncmp((char *)ptr, "#bundle", 8)){
-		post("bundle");
-	}
 	char cpy[len];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
@@ -108,19 +108,20 @@ void oop_fullPacket(t_oop *x, long len, long ptr){
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
+		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, cpy, cpy);
+	nn = osc_util_flatten(nn, cpy, cpy);
 
 	memcpy(buffer, cpy, 16);
 	x->bufferPos = 16;
 
-	cmmjl_osc_extract_messages(nn, cpy, true, oop_cbk, (void *)x);
+	//cmmjl_osc_extract_messages(nn, cpy, true, oop_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, cpy, oop_cbk, (void *)x);
 
 	/*
 	int i;
@@ -135,9 +136,37 @@ void oop_fullPacket(t_oop *x, long len, long ptr){
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
-void oop_cbk(t_cmmjl_osc_message msg, void *v){
+void oop_cbk(t_osc_msg msg, void *v){
 	t_oop *x = (t_oop *)v;
 	int i;
+	int didmatch = 0;
+	for(i = 0; i < x->numPatterns; i++){
+		int po, ao;
+		int ret = osc_match(msg.address, x->patterns[i]->s_name, &po, &ao);
+		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE) || (msg.address[po] == '/'))){
+			if(x->functions[i]){
+				x->functions[i](&msg, x->numArgs[i], x->arguments[i]);
+			}
+			if(x->outputAddresses[i]){
+				x->bufferPos += osc_util_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, x->outputAddresses[i]->s_name);
+			}else{
+				*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size);
+				x->bufferPos += 4;
+				memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
+				x->bufferPos += msg.size;
+			}
+			didmatch++;
+		}else{
+
+		}
+	}
+	if(didmatch == 0){
+		*((long *)(x->buffer + x->bufferPos)) = htonl(msg.size);
+		x->bufferPos += 4;
+		memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
+		x->bufferPos += msg.size;
+	}
+	/*
 	int ret;
 	int didmatch = 0;
 
@@ -174,7 +203,7 @@ void oop_cbk(t_cmmjl_osc_message msg, void *v){
 		memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
 		x->bufferPos += msg.size;
 	}
-
+	*/
 }
 
 t_oop_f oop_getFunction(t_symbol *op){
@@ -260,7 +289,6 @@ void oop_free(t_oop *x){
 void *oop_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oop *x;
 	if(x = (t_oop *)object_alloc(oop_class)){
-		cmmjl_init(x, NAME, 0);
 		x->outlet = outlet_new(x, "FullPacket");
 		int i = 0, j = 0;
 		x->numPatterns = 0;
@@ -354,6 +382,8 @@ int main(void){
 
 	common_symbols_init();
 
+	ps_FullPacket = gensym("FullPacket");
+
 	ps_pass = gensym("pass");
 	ps_plus = gensym("+");
 	ps_minus = gensym("-");
@@ -377,11 +407,11 @@ int main(void){
 	return 0;
 }
 
-void oop_pass(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_pass(t_osc_msg *msg, int argc, t_atom *argv){
 	// no bugs with this one!
 }
 
-void oop_plus(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_plus(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
@@ -408,7 +438,7 @@ void oop_plus(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_minus(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_minus(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
@@ -431,11 +461,20 @@ void oop_minus(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 				args += 4;
 			}
 			break;
+		case 'd':
+			{
+				int64_t ii = ntoh64(*((int64_t *)args));
+				double f = *(((double *)(&ii)));
+				f -= arg;
+				*((int64_t *)args) = hton64(*(((int64_t *)(&f))));
+				args += 4;
+			}
+			break;
 		}
 	}
 }
 
-void oop_times(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_times(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
@@ -462,7 +501,7 @@ void oop_times(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_div(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_div(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
@@ -470,10 +509,20 @@ void oop_div(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 		switch(*(msg->typetags + 1 + i)){
 		case 'i':
 			{
-				int ii = ntohl(*((int *)args));
+				float ii = (float)ntoh32(*((int32_t *)args));
 				ii /= arg;
-				*((int *)args) = htonl(ii);
+				*((int32_t *)args) = hton32(*((int32_t *)&ii));
 				args += 4;
+				*(msg->typetags + 1 + i) = 'f';
+			}
+			break;
+		case 'h':
+			{
+				double ii = (double)ntoh64(*((int64_t *)args));
+				ii /= arg;
+				*((int64_t *)args) = hton64(*((int64_t *)&ii));
+				args += 4;
+				*(msg->typetags + 1 + i) = 'd';
 			}
 			break;
 		case 'f':
@@ -489,7 +538,7 @@ void oop_div(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_mod(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_mod(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	long arg = atom_getlong(argv);
@@ -517,7 +566,7 @@ void oop_mod(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_min(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_min(t_osc_msg *msg, int argc, t_atom *argv){
 	int i, j = 0;
 	double min = DBL_MAX;
 	char tt;
@@ -548,7 +597,7 @@ void oop_min(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	*((long *)(msg->argv)) = htonl(*((long *)(&fmin)));
 }
 
-void oop_max(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_max(t_osc_msg *msg, int argc, t_atom *argv){
 	int i, j = 0;
 	double max = DBL_MIN;
 	char tt;
@@ -579,7 +628,7 @@ void oop_max(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	*((long *)(msg->argv)) = htonl(*((long *)(&fmax)));
 }
 
-void oop_abs(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_abs(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	for(i = 0; i < msg->argc; i++){
@@ -606,7 +655,7 @@ void oop_abs(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_avg(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_avg(t_osc_msg *msg, int argc, t_atom *argv){
 	int i, j = 0;
 	double avg = 0;
 	char tt;
@@ -638,7 +687,7 @@ void oop_avg(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	*((long *)(msg->argv)) = htonl(*((long *)(&favg)));
 }
 
-void oop_absdiff(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_absdiff(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
@@ -665,15 +714,15 @@ void oop_absdiff(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_fold(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_fold(t_osc_msg *msg, int argc, t_atom *argv){
 	error("o.op: fold doesn't work at the moment");
 }
 
-void oop_wrap(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_wrap(t_osc_msg *msg, int argc, t_atom *argv){
 	error("o.op: wrap doesn't work at the moment");
 }
 
-void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_divFlip(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
@@ -700,7 +749,7 @@ void oop_divFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_minusFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_minusFlip(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	float arg = atom_getfloat(argv);
@@ -727,7 +776,7 @@ void oop_minusFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_modFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_modFlip(t_osc_msg *msg, int argc, t_atom *argv){
 	int i;
 	char *args = msg->argv;
 	long arg = atom_getlong(argv);
@@ -755,7 +804,7 @@ void oop_modFlip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_scale(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_scale(t_osc_msg *msg, int argc, t_atom *argv){
 	if(argc != 4){
 		error("o.op: scale needs 4 arguments, (%d)", argc);
 	}
@@ -820,7 +869,7 @@ void oop_scale(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	*/
 }
 
-void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_clip(t_osc_msg *msg, int argc, t_atom *argv){
 	if(argc != 2){
 		error("o.op: scale needs 2 arguments");
 	}
@@ -854,7 +903,7 @@ void oop_clip(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
 	}
 }
 
-void oop_map(t_cmmjl_osc_message *msg, int argc, t_atom *argv){
+void oop_map(t_osc_msg *msg, int argc, t_atom *argv){
 	oop_scale(msg, argc, argv);
 	oop_clip(msg, 2, argv + 2);
 }

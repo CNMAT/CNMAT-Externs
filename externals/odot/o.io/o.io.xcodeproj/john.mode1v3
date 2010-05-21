@@ -275,8 +275,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>14</integer>
 									<integer>13</integer>
-									<integer>12</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -299,7 +299,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>100 428 788 504 0 0 1680 1028 </string>
+						<string>35 507 788 504 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -327,11 +327,11 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>52618F01119DB63900C4DC88</string>
+										<string>521130AB11A58B3500B71D00</string>
 										<key>history</key>
 										<array>
 											<string>52618E7D119DB4DC00C4DC88</string>
-											<string>52618E7E119DB4DC00C4DC88</string>
+											<string>52112FF211A342D800B71D00</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -343,14 +343,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {580, 277}}</string>
+								<string>{{0, 0}, {580, 260}}</string>
 								<key>RubberWindowFrame</key>
-								<string>100 428 788 504 0 0 1680 1028 </string>
+								<string>35 507 788 504 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>277pt</string>
+							<string>260pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -363,14 +363,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 282}, {580, 181}}</string>
+								<string>{{0, 265}, {580, 198}}</string>
 								<key>RubberWindowFrame</key>
-								<string>100 428 788 504 0 0 1680 1028 </string>
+								<string>35 507 788 504 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>181pt</string>
+							<string>198pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -389,9 +389,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>52618E58119DA7F900C4DC88</string>
+				<string>5211306B11A3803D00B71D00</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>52618E59119DA7F900C4DC88</string>
+				<string>5211306C11A3803D00B71D00</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -533,7 +533,7 @@
 		<string>/Users/john/Development/cnmat/trunk/max/externals/odot/o.io/o.io.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>100 428 788 504 0 0 1680 1028 </string>
+	<string>35 507 788 504 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -610,7 +610,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>52618E5B119DA7F900C4DC88</string>
-				<string>52618E5C119DA7F900C4DC88</string>
+				<string>5211306D11A3803D00B71D00</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

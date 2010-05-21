@@ -47,57 +47,35 @@ t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef dev, uint32_t *pid){
 	return OIO_ERR_NONE;
 }
 
-t_oio_err oio_hid_util_getDeviceVendorIDFromDeviceName(t_oio *oio, const char *name, uint32_t *vid){
+t_oio_err oio_hid_util_getDeviceVendorIDFromDeviceName(t_oio *oio, char *name, uint32_t *vid){
 	t_oio_hid_dev **devices;
 	int n;
-	oio_hid_util_getDevicesByName(oio, name, &n, &devices);
+	oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&devices);
 	if(n){
 		*vid = devices[0]->vendor_id;
+		if(devices){
+			oio_mem_free(devices);
+		}
 		return OIO_ERR_NONE;
 	}
 	return OIO_ERR_DNF;
 }
 
-t_oio_err oio_hid_util_getDeviceProductIDFromDeviceName(t_oio *oio, const char *name, uint32_t *pid){
+t_oio_err oio_hid_util_getDeviceProductIDFromDeviceName(t_oio *oio, char *name, uint32_t *pid){
 	t_oio_hid_dev **devices;
 	int n;
-	oio_hid_util_getDevicesByName(oio, name, &n, &devices);
+	oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&devices);
 	if(n){
 		*pid = devices[0]->product_id;
+		if(devices){
+			oio_mem_free(devices);
+		}
 		return OIO_ERR_NONE;
 	}
 	return OIO_ERR_DNF;
 }
 
-// if name is an OSC address, we run it against all device names and return all that match.  otherwise, 
-// we just look up the name in the hashtab
-t_oio_err oio_hid_util_getDevicesByName(t_oio *oio, const char *name, int *num_devices, t_oio_hid_dev ***devices){
-	t_oio_hid *hid = oio->hid;
-	if(*name == '/'){
-		// probably an OSC address
-		return oio_hid_util_getDevicesByOSCPattern(oio, name, num_devices, devices);
-	}
-	CFMutableDictionaryRef dict = hid->device_hash;
-	CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, name, kCFStringEncodingUTF8);
-	if(CFDictionaryContainsKey(dict, key)){
-		const void *val;
-		val = CFDictionaryGetValue(dict, key);
-		if(val){
-			long ptr;
-			CFNumberGetValue((CFNumberRef)val, kCFNumberLongType, &ptr);
-			if(ptr != 0){
-				*devices = (t_oio_hid_dev **)oio_mem_alloc(1, sizeof(t_oio_hid_dev *));
-				**devices = (t_oio_hid_dev *)ptr;
-				*num_devices = 1;
-				return OIO_ERR_NONE;
-			}
-		}
-	}
-	CFRelease(key);
-	*num_devices = 0;
-	return OIO_ERR_DNF;
-}
-
+/*
 t_oio_err oio_hid_util_getDevicesByOSCPattern(t_oio *oio, const char *name, int *num_devices, t_oio_hid_dev ***devices){
 	t_oio_hid *hid = oio->hid;
 	t_oio_hid_dev *dd = hid->devices;
@@ -121,7 +99,7 @@ t_oio_err oio_hid_util_getDevicesByOSCPattern(t_oio *oio, const char *name, int 
 	}
 	return OIO_ERR_NONE;
 }
-
+*/
 t_oio_err oio_hid_util_getDeviceByDevice(t_oio *oio, IOHIDDeviceRef device_ref, t_oio_hid_dev **device){
 	t_oio_hid_dev *d = oio->hid->devices;
 	while(d){
@@ -129,7 +107,7 @@ t_oio_err oio_hid_util_getDeviceByDevice(t_oio *oio, IOHIDDeviceRef device_ref, 
 			*device = d;
 			return OIO_ERR_NONE;
 		}
-		d = d->next;
+		d = (t_oio_hid_dev *)DEV_NEXT(d);
 	}
 	return OIO_ERR_DNF;
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52112FF111A3286A00B71D00 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52112FF011A3286A00B71D00 /* CoreMIDI.framework */; };
 		52618E54119DA74100C4DC88 /* o.io.c in Sources */ = {isa = PBXBuildFile; fileRef = 52618E53119DA74100C4DC88 /* o.io.c */; };
 		52618E60119DA87F00C4DC88 /* liboio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52618E5F119DA87F00C4DC88 /* liboio.a */; };
 		52618E62119DA88A00C4DC88 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52618E61119DA88A00C4DC88 /* IOKit.framework */; };
@@ -18,6 +19,7 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		120615410BAD19EE00C1162A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52112FF011A3286A00B71D00 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = /System/Library/Frameworks/CoreMIDI.framework; sourceTree = "<absolute>"; };
 		52618E53119DA74100C4DC88 /* o.io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = o.io.c; sourceTree = "<group>"; };
 		52618E5F119DA87F00C4DC88 /* liboio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liboio.a; path = ../liboio/build/Release/liboio.a; sourceTree = SOURCE_ROOT; };
 		52618E61119DA88A00C4DC88 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -35,6 +37,7 @@
 				52618E60119DA87F00C4DC88 /* liboio.a in Frameworks */,
 				52618E62119DA88A00C4DC88 /* IOKit.framework in Frameworks */,
 				52618EBC119DB62300C4DC88 /* MaxAPI.framework in Frameworks */,
+				52112FF111A3286A00B71D00 /* CoreMIDI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +58,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				52112FF011A3286A00B71D00 /* CoreMIDI.framework */,
 				52618EBB119DB62300C4DC88 /* MaxAPI.framework */,
 				52618E5F119DA87F00C4DC88 /* liboio.a */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,

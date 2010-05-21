@@ -109,8 +109,8 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 
 void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 	t_oroute_message *m = x->messages;
-	t_atomarray *a;
-	t_atom *argv;
+	//t_atomarray *a;
+	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc;
 	char buf[len], *bufp = buf;
 	memset(buf, '\0', len);
@@ -122,15 +122,16 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 			t_atom out[2];
 			atom_setlong(out, bufp - buf);
 			atom_setlong(out + 1, (long)buf);
-			outlet_anything(x->outlets[m->outlet_num], gensym("FullPacket"), 2, out);
+			outlet_anything(x->outlets[last_outlet_num], gensym("FullPacket"), 2, out);
 			bufp = buf + 16;
 			memset(bufp, '\0', len - 16);
 		}
 		if(m->full_match){
-			a = omax_util_oscMsg2MaxAtoms(&(m->msg));
-			atomarray_getatoms(a, &argc, &argv);
-			outlet_list(x->outlets[m->outlet_num], NULL, argc - 1, argv + 1);
-			atomarray_clear(a);
+			//a = omax_util_oscMsg2MaxAtoms(&(m->msg));
+			//atomarray_getatoms(a, &argc, &argv);
+			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, &argv);
+			outlet_atoms(x->outlets[m->outlet_num], argc - 1, argv + 1);
+			//atomarray_clear(a);
 		}else{
 			char *size = bufp;
 			bufp += 4;
@@ -139,6 +140,10 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 			bufp++;
 			while((bufp - buf) % 4){
 				bufp++;
+			}
+			if(!bufp || !(m->msg.typetags)){
+				printf("memcpy about to crash %p %p %d\n", bufp, m->msg.typetags, m->msg.size - (m->msg.typetags - m->msg.address));
+				return;
 			}
 			memcpy(bufp, m->msg.typetags, m->msg.size - (m->msg.typetags - m->msg.address));
 			bufp += m->msg.size - (m->msg.typetags - m->msg.address);
@@ -153,28 +158,31 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 		atom_setlong(out + 1, (long)buf);
 		outlet_anything(x->outlets[last_outlet_num], gensym("FullPacket"), 2, out);
 	}
+	sysmem_freeptr(argv);
 }
 
 void oroute_fp(t_oroute *x, long len, char *ptr){
 	t_oroute_message *m = x->messages;
-	t_atomarray *a = NULL;
-	t_atom *argv;
+	//t_atomarray *a = NULL;
+	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc;
 	while(m){
-	        a = omax_util_oscMsg2MaxAtoms(&(m->msg));
+	        //a = omax_util_oscMsg2MaxAtoms(&(m->msg));
+		omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, &argv);
 		if(m->full_match){
-			atomarray_getatoms(a, &argc, &argv);
+			//atomarray_getatoms(a, &argc, &argv);
 			outlet_list(x->outlets[m->outlet_num], NULL, argc - 1, argv + 1);
-			atomarray_clear(a);
+			//atomarray_clear(a);
 		}else{
-			atomarray_getatoms(a, &argc, &argv);
+			//atomarray_getatoms(a, &argc, &argv);
 			if(argc){
 				outlet_anything(x->outlets[m->outlet_num], gensym(((atom_getsym(argv)->s_name) + m->offset)), argc - 1, argv + 1);
-				atomarray_clear(a);
+				//atomarray_clear(a);
 			}
 		}
 		m = m->next;
 	}
+	sysmem_freeptr(argv);
 }
 
 void oroute_cbk(t_osc_msg msg, void *context){
@@ -187,6 +195,8 @@ void oroute_cbk(t_osc_msg msg, void *context){
 	for(i = 0; i < x->numArgs; i++){
 		int po, ao;
 		int ret = osc_match(msg.address, x->args[i]->s_name, &po, &ao);
+
+		//post("pattern = %s, address = %s, ret = %d", msg.address, x->args[i]->s_name, ret);
 		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE) || (msg.address[po] == '/'))){
 			x->message_buf[x->numMessages].msg = msg;
 			x->message_buf[x->numMessages].full_match = 0;
@@ -282,6 +292,14 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 	*/
 }
 
+void oroute_set(t_oroute *x, long index, t_symbol *sym){
+	if(index < 1 || index > x->numArgs){
+		object_error((t_object *)x, "index (%d) out of bounds", index);
+		return;
+	}
+	x->args[index - 1] = sym;
+}
+
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"Probability distribution and arguments");
@@ -336,6 +354,7 @@ int main(void){
 	//class_addmethod(c, (method)oroute_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oroute_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oroute_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)oroute_set, "set", A_LONG, A_SYM, 0);
 
 	CLASS_ATTR_LONG(c, "bundlePartialMatches", 0, t_oroute, bundlePartialMatches);
     

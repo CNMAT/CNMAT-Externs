@@ -9,7 +9,6 @@
 
 CFMutableDictionaryRef oio_hid_dict;
 
-t_oio_err oio_hid_run(t_oio *oio);
 void *oio_hid_runloop(void *context);
 
 // callbacks
@@ -68,7 +67,7 @@ void oio_hid_connectCallback(void *context, IOReturn result, void *sender, IOHID
 	t_oio_hid_dev *dev = oio_hid_addDevice(oio, device);
 	(int)IOHIDDeviceOpen(device, 0L);
 	if(dev){
-		oio_hid_dispatch(oio, oio->hid->connect_callbacks, strlen(dev->name), dev->name);
+		oio_hid_dispatch(oio, oio->hid->connect_callbacks, strlen(DEV_NAME(dev)), DEV_NAME(dev));
 	}
 }
 
@@ -77,7 +76,7 @@ void oio_hid_disconnectCallback(void *context, IOReturn result, void *sender, IO
 	t_oio_hid_dev *dev;
 	oio_hid_util_getDeviceByDevice(oio, device, &dev);
 	if(dev){
-		oio_hid_dispatch(oio, oio->hid->disconnect_callbacks, strlen(dev->name), dev->name);
+		oio_hid_dispatch(oio, oio->hid->disconnect_callbacks, strlen(DEV_NAME(dev)), DEV_NAME(dev));
 	}
 	oio_hid_removeDevice(oio, device);
 }
@@ -103,6 +102,7 @@ void oio_hid_dispatch(t_oio *oio, t_oio_hid_callbackList *callback_list, long n,
 }
 
 t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
+	/*
 	PP("THIS FUNCTION IS BROKEN!!");
 	if(strncmp(bundle, "#bundle\0", 8)){
 		return OIO_ERR_OSCBNDL;
@@ -133,16 +133,53 @@ t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
 		ptr += n;
 	}
 	return OIO_ERR_NONE;
+	*/
+	uint64_t timestamp = ntoh64(*((uint64_t *)(bundle + 8)));
+	int nmsg = osc_util_getMsgCount(n, bundle);
+	t_osc_msg messages[nmsg];
+	osc_util_parseBundle(n, bundle, messages);
+	int i;
+	for(i = 0; i < nmsg; i++){
+		t_osc_msg *msg = messages + i;
+		osc_util_incrementArg(msg);
+		switch(*(msg->typetags)){
+		case 'i':
+			{
+				uint32_t l = ntoh32(*((uint32_t *)(msg->argv)));
+				oio_hid_sendValueToDevice(oio, msg->address, timestamp, (uint64_t)l);
+			}
+			break;
+		case 'h':
+			{
+				uint64_t l = ntoh64(*((uint64_t *)(msg->argv)));
+				oio_hid_sendValueToDevice(oio, msg->address, timestamp, l);
+			}
+			break;
+		case 'f':
+			{
+				uint32_t l = ntoh32(*((uint32_t *)(msg->argv)));
+				oio_hid_sendValueToDevice(oio, msg->address, timestamp, (uint64_t)*((float *)&l));
+			}
+			break;
+		case 'd':
+			{
+				uint64_t l = ntoh64(*((uint64_t *)(msg->argv)));
+				oio_hid_sendValueToDevice(oio, msg->address, timestamp, (uint64_t)*((double *)&l));
+			}
+			break;
+		}
+	}
+	return OIO_ERR_NONE;
 }
 
-t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t timestamp, uint64_t val){
+t_oio_err oio_hid_sendValueToDevice(t_oio *oio, char *osc_string, uint64_t timestamp, uint64_t val){
 	t_oio_hid_dev **dev;
 	int n;
-	if(oio_hid_util_getDevicesByOSCPattern(oio, osc_string, &n, &dev)){
+	if(oio_obj_getDevicesByName(oio, osc_string, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&dev)){
 		OIO_ERROR(OIO_ERR_DNF);
 		return OIO_ERR_DNF;
 	}
-	const char *ptr = osc_string;
+	char *ptr = osc_string;
 	// skip over the product name
 	ptr++;
 	while(*ptr++ != '/'){}
@@ -173,14 +210,20 @@ t_oio_err oio_hid_sendValueToDevice(t_oio *oio, const char *osc_string, uint64_t
 		CFMutableDictionaryRef mdict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 		CFDictionarySetValue(mdict, CFSTR(kIOHIDElementCookieKey), cookie);
 		CFArrayRef elements = IOHIDDeviceCopyMatchingElements(dev[i]->device, mdict, 0L);
+		CFRelease(mdict);
 		if(elements){
 			int j;
 			for(j = 0; j < CFArrayGetCount(elements); j++){
 				IOHIDElementRef element = (IOHIDElementRef)CFArrayGetValueAtIndex(elements, j);
 				IOHIDValueRef value = IOHIDValueCreateWithIntegerValue(kCFAllocatorDefault, element, mach_absolute_time(), val);
 				IOHIDDeviceSetValue(dev[i]->device, element, value);
+				CFRelease(value);
 			}
 		}
+		CFRelease(cookie);
+	}
+	if(dev){
+		oio_mem_free(dev);
 	}
 	return OIO_ERR_NONE;
 }
@@ -227,6 +270,7 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 			// check to see if there is a / at the beg of the string
 	      		ptr += sprintf(ptr, "%s", dstring);
 		}
+		CFRelease(name);
 	}else{
 	}
 	//oio_osc_util_makenice(buf);
@@ -238,24 +282,24 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 		// if the key is not in the dictionary, add it
 		if(!CFDictionaryContainsKey((CFDictionaryRef)(dict), key)){
 			dev = (t_oio_hid_dev *)oio_mem_alloc(1, sizeof(t_oio_hid_dev));
-			strcpy(dev->name, mangled);
+			strcpy(DEV_NAME(dev), mangled);
 			dev->device = device;
-			dev->prev = NULL;
+			DEV_PREV(dev) = NULL;
 			dev->input_value_callbacks = NULL;
 			dev->product_id = pid;
 			dev->vendor_id = vid;
 
 			if(hid->devices){
-				hid->devices->prev = dev;
+				DEV_PREV(hid->devices) = (t_oio_generic_device *)dev;
 			}
-			dev->next = hid->devices;
+			DEV_NEXT(dev) = ((t_oio_generic_device *)hid->devices);
 			hid->devices = dev;
 			{
 				CFNumberRef val = CFNumberCreate(kCFAllocatorDefault, kCFNumberLongType, (void *)(&dev));
 				CFDictionaryAddValue(dict, key, val);
-				CFRelease(key);
 				CFRelease(val);
 			}
+			CFRelease(key);
 			break;
 		}else{
 			// if the key is in the dictionary, check to see if the device 
@@ -268,11 +312,13 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 				if(ptr != 0){
 					dev = (t_oio_hid_dev *)ptr;
 					if(dev->device == device){
+						CFRelease(key);
 						break;
 					}
 				}
 			}
 		}
+		CFRelease(key);
 	}
 	return dev;
 }
@@ -280,13 +326,13 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 void oio_hid_removeDevice(t_oio *oio, IOHIDDeviceRef device){
 	t_oio_hid_dev *d;
 	if(!(oio_hid_util_getDeviceByDevice(oio, device, &d))){
-		if(d->prev){
-			d->prev->next = d->next;
+		if(DEV_PREV(d)){
+			DEV_NEXT(DEV_PREV(d)) = DEV_NEXT(d);
 		}else{
-			oio->hid->devices = d->next;
+			oio->hid->devices = (t_oio_hid_dev *)DEV_NEXT(d);
 		}
-		if(d->next){
-			d->next->prev = d->prev;
+		if(DEV_NEXT(d)){
+			DEV_PREV(DEV_NEXT(d)) = DEV_PREV(d);
 		}
 
 		t_oio_hid_callbackList *cb = d->input_value_callbacks;
@@ -296,17 +342,17 @@ void oio_hid_removeDevice(t_oio *oio, IOHIDDeviceRef device){
 			oio_mem_free(cb);
 			cb = next;
 		}
-		CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, d->name, kCFStringEncodingUTF8);
+		CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, DEV_NAME(d), kCFStringEncodingUTF8);
 		CFDictionaryRemoveValue(oio->hid->device_hash, key);
 		CFRelease(key);
 		oio_mem_free(d);
 	}
 }
 
-t_oio_err oio_hid_registerValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f, void *context){
+t_oio_err oio_hid_registerValueCallback(t_oio *oio, char *name, t_oio_hid_callback f, void *context){
 	t_oio_hid_dev **dev;
 	int n;
-	if(oio_hid_util_getDevicesByName(oio, name, &n, &dev)){
+	if(oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&dev)){
 		OIO_ERROR(OIO_ERR_DNF);
 		return OIO_ERR_DNF;
 	}
@@ -330,10 +376,10 @@ t_oio_err oio_hid_registerValueCallback(t_oio *oio, const char *name, t_oio_hid_
 	return OIO_ERR_NONE;
 }
 
-t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, const char *name, t_oio_hid_callback f){
+t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, char *name, t_oio_hid_callback f){
 	t_oio_hid_dev **dev;
 	int n;
-	if(oio_hid_util_getDevicesByName(oio, name, &n, &dev)){
+	if(oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&dev)){
 		OIO_ERROR(OIO_ERR_DNF);
 		return OIO_ERR_DNF;
 	}
@@ -346,7 +392,6 @@ t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, const char *name, t_oio_hi
 		while(cb){
 			next = cb->next;
 			if(cb->f == f){
-				PP("%p matches %p", cb->f, f);
 				if(cb->prev){
 					cb->prev->next = cb->next;
 				}else{
@@ -391,7 +436,7 @@ t_oio_err oio_hid_registerDisconnectCallback(t_oio *oio, t_oio_hid_callback f, v
 	return OIO_ERR_NONE;
 }
 
-t_oio_err oio_hid_usageFile(t_oio *oio, const char *filename){
+t_oio_err oio_hid_usageFile(t_oio *oio, char *filename){
 	t_oio_err ret;
 	if(ret = oio_hid_strings_readUsageFile(oio, filename)){
 		OIO_ERROR(ret);
@@ -399,7 +444,7 @@ t_oio_err oio_hid_usageFile(t_oio *oio, const char *filename){
 	return ret;
 }
 
-t_oio_err oio_hid_cookieFile(t_oio *oio, const char *filename){
+t_oio_err oio_hid_cookieFile(t_oio *oio, char *filename){
 	t_oio_err ret;
 	if(ret = oio_hid_strings_readCookieFile(oio, filename)){
 		OIO_ERROR(ret);
@@ -412,8 +457,8 @@ void oio_hid_alloc(t_oio *oio,
 		   void *hid_connect_context, 
 		   t_oio_hid_callback hid_disconnect_callback, 
 		   void *hid_disconnect_context, 
-		   const char *hid_usage_plist, 
-		   const char *hid_cookie_plist){
+		   char *hid_usage_plist, 
+		   char *hid_cookie_plist){
 	t_oio_hid *hid = (t_oio_hid *)oio_mem_alloc(1, sizeof(t_oio_hid));
 	oio->hid = hid;
 	hid->devices = NULL;
@@ -440,5 +485,5 @@ void oio_hid_alloc(t_oio *oio,
 	IOHIDManagerRegisterDeviceRemovalCallback(hid->hidmanager, oio_hid_disconnectCallback, (void *)oio);
 
 	oio_hid_enumerateDevices(oio);
-	oio_hid_run(oio);
+	//oio_hid_run(oio);
 }

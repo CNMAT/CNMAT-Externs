@@ -2,6 +2,7 @@
 #include "oio.h"
 #include "oio_osc_util.h"
 #include "oio_hid_strings.h"
+#include "oio_hid_util.h"
 #include <mach/mach_time.h>
 
 void send_bundle(t_oio *oio, uint64_t timestamp, char *address, int val);
@@ -12,9 +13,10 @@ void connect_callback(t_oio *oio, long n, char *ptr, void *context);
 void disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
 
 int main(int argc, char **argv){
-	const char *usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
-	const char *cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
-	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist);
+	char *usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
+	char *cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
+	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist, NULL, NULL);
+	sleep(1);
 	print_devices(oio);
 	if(argc > 1){
 		if(!strcmp(argv[1], "-l")){
@@ -28,7 +30,7 @@ int main(int argc, char **argv){
 	//sprintf(buf, "%s/%s", argv[1], "LED/green");
 	//sprintf(buf, "%s/%s", argv[1], "LEDorUID");
 	/*
-	sprintf(buf, "%s/%d", argv[1], 93);
+	sprintf(buf, "%s/%s", argv[1], "LEDorUID");
 	send_bundle(oio, 0, buf, 0);
 	sprintf(buf, "%s/%s", argv[1], "write-to-backlighting");
 	send_bundle(oio, 0, buf, 1);
@@ -37,7 +39,7 @@ int main(int argc, char **argv){
 	//sprintf(buf, "%s/%d", argv[1], 30);
 	int i = 0;
 	while(1){
-		send_bundle(oio, 0, buf, ++i % 2);
+		//send_bundle(oio, 0, buf, ++i % 2);
 		sleep(1);
 	}
 	/*
@@ -91,15 +93,47 @@ void send_bundle(t_oio *oio, uint64_t timestamp, char *address, int val){
 
 void print_devices(t_oio *oio){
 	int i, n;
-	char **names;
+	char **names = NULL;
+
+	oio_midi_getSourceNames(oio, &n, &names);
+	printf("MIDI Sources:\n");
+	printf("\t%2s\t%-50s\n", "#", "Device");
+	for(i = 0; i < n; i++){
+		if(names[i]){
+			printf("\t%2d:\t%-50s\n", i, names[i]);
+			oio_mem_free(names[i]);
+		}
+	}
+	if(names){
+		oio_mem_free(names);
+		names = NULL;
+	}
+
+	oio_midi_getDestinationNames(oio, &n, &names);
+	printf("\n");
+	printf("MIDI Destinations:\n");
+	printf("\t%2s\t%-50s\n", "#", "Device");
+	for(i = 0; i < n; i++){
+		if(names[i]){
+			printf("\t%2d:\t%-50s\n", i, names[i]);
+			oio_mem_free(names[i]);
+		}
+	}
+	if(names){
+		oio_mem_free(names);
+		names = NULL;
+	}
+
+	printf("\n");
+	printf("HID Devices:\n");
+	printf("\t%2s\t%-50s\t%9s\t%9s\n", "#", "Device", "VendorID", "ProductID");
 	oio_hid_getDeviceNames(oio, &n, &names);
-	printf("%2s\t%-50s\t%9s\t%9s\n", "#", "Device", "VendorID", "ProductID");
 	for(i = 0; i < n; i++){
 		if(names[i]){
 			uint32_t pid = -1, vid = -1;
 			oio_hid_util_getDeviceProductIDFromDeviceName(oio, names[i], &pid);
 			oio_hid_util_getDeviceVendorIDFromDeviceName(oio, names[i], &vid);
-			printf("%2d:\t%-50s\t%9d\t%9d\n", i, names[i], vid, pid);
+			printf("\t%2d:\t%-50s\t%9d\t%9d\n", i, names[i], vid, pid);
 			oio_mem_free(names[i]);
 		}
 	}

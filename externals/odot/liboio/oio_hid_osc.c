@@ -56,7 +56,7 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 		CFStringGetCString(c, cookie_string, 256, kCFStringEncodingUTF8);
 	}
 
-	oio_hid_osc_encodeRaw(device->name, usage_page, usage, cookie, val, &n, buf);
+	oio_hid_osc_encodeRaw(DEV_NAME(device), usage_page, usage, cookie, val, &n, buf);
 	if(n + (ptr - *oscbuf) > oscbuf_size){
 		*oscbuf = oio_mem_resize(*oscbuf, oscbuf_size * 2);
 		oscbuf_size * 2;
@@ -65,9 +65,9 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 	ptr += n;
 
 	if(cookie_string[0] == '\0'){
-		oio_hid_osc_encodeGeneric(device->name, usage_page_string, usage_string, cookie, NULL, val, &n, buf);
+		oio_hid_osc_encodeGeneric(DEV_NAME(device), usage_page_string, usage_string, cookie, NULL, val, &n, buf);
 	}else{
-		oio_hid_osc_encodeGeneric(device->name, usage_page_string, usage_string, cookie, cookie_string, val, &n, buf);
+		oio_hid_osc_encodeGeneric(DEV_NAME(device), usage_page_string, usage_string, cookie, cookie_string, val, &n, buf);
 	}
 	if((n - 4) + (ptr - *oscbuf) > oscbuf_size){
 		*oscbuf = oio_mem_resize(*oscbuf, oscbuf_size * 2);
@@ -90,11 +90,11 @@ void oio_hid_osc_encodeRaw(char *name, uint32_t usage_page, uint32_t usage, uint
 		*ptr++ = '\0';
 	}
 	*ptr++ = ',';
-	*ptr++ = 'h';
+	*ptr++ = 'i';
 	*ptr++ = '\0';
 	*ptr++ = '\0';
-	*((uint64_t *)ptr) = hton64(val);
-	ptr += 8;
+	*((uint32_t *)ptr) = hton32((uint32_t)val);
+	ptr += 4;
 	*((uint32_t *)buf) = hton32(ptr - buf - 4);
 
 	*n = ptr - buf;
@@ -122,11 +122,11 @@ void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32
 		*ptr++ = '\0';
 	}
 	*ptr++ = ',';
-	*ptr++ = 'h';
+	*ptr++ = 'i';
 	*ptr++ = '\0';
 	*ptr++ = '\0';
-	*((uint64_t *)ptr) = hton64(val);
-	ptr += 8;
+	*((uint32_t *)ptr) = hton32((uint32_t)val);
+	ptr += 4;
 	*((uint32_t *)buf) = hton32(ptr - buf - 4);
 
 	*n = ptr - buf;

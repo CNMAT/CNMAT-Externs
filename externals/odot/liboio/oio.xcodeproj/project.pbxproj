@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52112D9011A0F82000B71D00 /* oio_midi.c in Sources */ = {isa = PBXBuildFile; fileRef = 52112D8E11A0F82000B71D00 /* oio_midi.c */; };
+		52112D9111A0F82000B71D00 /* oio_midi.h in Headers */ = {isa = PBXBuildFile; fileRef = 52112D8F11A0F82000B71D00 /* oio_midi.h */; };
 		522F4BF11192179700F87140 /* oio_hid_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 522F4BEF1192179700F87140 /* oio_hid_util.c */; };
 		522F4BF21192179700F87140 /* oio_hid_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 522F4BF01192179700F87140 /* oio_hid_util.h */; };
 		522F4C0A11923ABB00F87140 /* oio_hid_osc.c in Sources */ = {isa = PBXBuildFile; fileRef = 522F4C0811923ABB00F87140 /* oio_hid_osc.c */; };
@@ -36,6 +38,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		52112D8E11A0F82000B71D00 /* oio_midi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_midi.c; sourceTree = "<group>"; };
+		52112D8F11A0F82000B71D00 /* oio_midi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_midi.h; sourceTree = "<group>"; };
 		522F4BEF1192179700F87140 /* oio_hid_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid_util.c; sourceTree = "<group>"; };
 		522F4BF01192179700F87140 /* oio_hid_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_hid_util.h; sourceTree = "<group>"; };
 		522F4C0811923ABB00F87140 /* oio_hid_osc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_hid_osc.c; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				52112D8E11A0F82000B71D00 /* oio_midi.c */,
+				52112D8F11A0F82000B71D00 /* oio_midi.h */,
 				52618F28119E379A00C4DC88 /* osc_byteorder.h */,
 				52618F29119E379A00C4DC88 /* osc_util.c */,
 				52618F2A119E379A00C4DC88 /* osc_util.h */,
@@ -157,6 +163,7 @@
 				52618E2E1199EFF500C4DC88 /* osc_match.h in Headers */,
 				52618F2B119E379A00C4DC88 /* osc_byteorder.h in Headers */,
 				52618F2D119E379A00C4DC88 /* osc_util.h in Headers */,
+				52112D9111A0F82000B71D00 /* oio_midi.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +219,7 @@
 				522F4C8A1195BDFC00F87140 /* oio_hid_strings.c in Sources */,
 				52618E2D1199EFF500C4DC88 /* osc_match.c in Sources */,
 				52618F2C119E379A00C4DC88 /* osc_util.c in Sources */,
+				52112D9011A0F82000B71D00 /* oio_midi.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

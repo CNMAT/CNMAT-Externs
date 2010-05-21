@@ -31,7 +31,7 @@ CFStringRef oio_hid_strings_getCookieString(t_oio *oio, int32_t vid, int32_t pid
 	return cookie_string;
 }
 
-uint32_t oio_hid_strings_getCookie(t_oio *oio, int32_t vid, int32_t pid, const char *cookie_string){
+uint32_t oio_hid_strings_getCookie(t_oio *oio, int32_t vid, int32_t pid, char *cookie_string){
 	if(vid < 0 || pid < 0){
 		return -1;
 	}
@@ -130,7 +130,7 @@ CFStringRef oio_hid_strings_getUsageString(t_oio *oio, uint32_t usage_page, uint
 	return usage_string;
 }
 
-t_oio_err oio_hid_strings_readUsageFile(t_oio *oio, const char *filename){
+t_oio_err oio_hid_strings_readUsageFile(t_oio *oio, char *filename){
 	// This is some serious CFNastiness...
 	// We want a dictionary that will allow us to look up the usage page string for the usage page, and vice versa
 	// Then we want a dictionary that will allow us to get the contents of that page (another dictionary) using the usage page (number)
@@ -168,6 +168,7 @@ t_oio_err oio_hid_strings_readUsageFile(t_oio *oio, const char *filename){
 				strings[k++] = CFStringCreateCopy(kCFAllocatorDefault, vv[j]);
 			}
 		}
+		CFRelease(up);
 		dictarray[i] = CFDictionaryCreate(kCFAllocatorDefault, (const void **)usage, (const void **)strings, n - 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	}
 
@@ -184,7 +185,7 @@ t_oio_err oio_hid_strings_readUsageFile(t_oio *oio, const char *filename){
 	return OIO_ERR_NONE;
 }
 
-t_oio_err oio_hid_strings_readCookieFile(t_oio *oio, const char *filename){
+t_oio_err oio_hid_strings_readCookieFile(t_oio *oio, char *filename){
 	CFDictionaryRef plist = (CFDictionaryRef)oio_obj_getPlist(filename);
 	int i;
 	int plist_count = CFDictionaryGetCount(plist);
