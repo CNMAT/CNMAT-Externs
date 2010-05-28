@@ -47,6 +47,8 @@
   VERSION 0.7.9: fixed a bug that would cause a crash in the anything routine
   VERSION 0.7.10: fixed a bug in the way points were being cleared
   VERSION 0.7.11: fixed the coords message which was upside down with respect to the y-axis
+  VERSION 0.8: points now saved with patcher
+  VERSION 0.8.1: added patchercoords argument to add_point message for faking drag and drop
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -121,7 +123,7 @@ typedef struct _rbfi{
 	int font_size;
 } t_rbfi;
 
-static t_symbol *rbfi_ps_coords, *rbfi_ps_name, *rbfi_ps_rgb, *rbfi_ps_hsv, /**rbfi_ps_weight, *rbfi_ps_exponent, */*rbfi_ps_inner_radius, *rbfi_ps_outer_radius, *rbfi_ps_locked;
+static t_symbol *rbfi_ps_coords, *rbfi_ps_patchercoords, *rbfi_ps_name, *rbfi_ps_rgb, *rbfi_ps_hsv, /**rbfi_ps_weight, *rbfi_ps_exponent, */*rbfi_ps_inner_radius, *rbfi_ps_outer_radius, *rbfi_ps_locked;
 
 static t_symbol *l_color, *l_points, *l_xhairs;
 static t_class *rbfi_class;
@@ -140,7 +142,7 @@ void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
 void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
 void rbfi_mouseleave(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
 void rbfi_addPoint(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv);
-int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv);
+int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv);
 t_point *rbfi_addPointToList(t_rbfi *x, t_point point);
 t_point *rbfi_newPoint(void);
 void rbfi_initPoint(t_rbfi *x, t_point *p);
@@ -170,6 +172,9 @@ void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v );
 void *rbfi_new(t_symbol *msg, int argc, t_atom *argv);
 void rbfi_postPoint(t_point *p);
 t_max_err rbfi_notify(t_rbfi *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+t_max_err rbfi_points_get(t_rbfi *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err rbfi_points_set(t_rbfi *x, t_object *attr, long argc, t_atom *argv);
+
 
 void rbfi_paint(t_rbfi *x, t_object *patcherview){
 	t_rect rect;
@@ -422,7 +427,7 @@ void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 		if(p->locked){
 			return;
 		}
-		rbfi_parseAddPointArgs(p, argc, argv);
+		rbfi_parseAddPointArgs(x, p, argc, argv);
 		t_rect r;
 		jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
@@ -757,7 +762,7 @@ void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 void rbfi_addPoint(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv){
 	t_point p;
 	rbfi_initPoint(x, &p);
-	int ret = rbfi_parseAddPointArgs(&p, argc, argv);
+	int ret = rbfi_parseAddPointArgs(x, &p, argc, argv);
 
 	t_rect r;
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
@@ -769,7 +774,7 @@ void rbfi_addPoint(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv){
 	jbox_redraw(&(x->ob));
 }
 
-int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
+int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv){
 	if(argc == 0){
 		return 0;
 	}
@@ -785,6 +790,18 @@ int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 			goto bail;
 		}
 		p->pt = (t_pt){atom_getfloat(ptr++), atom_getfloat(ptr++)};
+	}else if(s == rbfi_ps_patchercoords){
+		if(argc - (ptr - argv) < 2){
+			goto bail;
+		}
+		t_rect r;
+		jbox_get_patching_rect(&(x->ob.b_ob), &r);
+		float xx = atom_getfloat(ptr++);
+		float yy = atom_getfloat(ptr++);
+		xx -= r.x;
+		yy -= r.y;
+		//post("%s: xx = %f yy = %f", __PRETTY_FUNCTION__, xx, yy);
+		p->pt = (t_pt){rbfi_scale(xx, 0, r.width, x->xmin, x->xmax), rbfi_scale(yy, r.height, 0, x->ymin, x->ymax)};
 	}else if(s == rbfi_ps_name){
 		if(argc - (ptr - argv) < 1){
 			goto bail;
@@ -866,7 +883,7 @@ int rbfi_parseAddPointArgs(t_point *p, int argc, t_atom *argv){
 	}else{
 		error("rbfi: unrecognized key %s", s->s_name);
 	}
-	return rbfi_parseAddPointArgs(p, argc - (ptr - argv), ptr);
+	return rbfi_parseAddPointArgs(x, p, argc - (ptr - argv), ptr);
 
  bail:
 	error("rbfi: not enough arguments for key %s", s->s_name);
@@ -1310,7 +1327,7 @@ t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av){
 	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
 
 	if(*ac || *av){
-		post("%p %d %p", ac, *ac, av);
+		//post("%p %d %p", ac, *ac, av);
 	}
 	int argc;
 	t_atom *argv = NULL;
@@ -1562,6 +1579,10 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "draw_labels", 0, "edit");
 	*/
 
+	CLASS_ATTR_ATOM_VARSIZE(c, "points", 0, t_rbfi, points, npoints, 1024);
+	CLASS_ATTR_ACCESSORS(c, "points", rbfi_points_get, rbfi_points_set);
+	CLASS_ATTR_SAVE(c, "points", 0);
+
 	CLASS_ATTR_LONG(c, "outputmode", 0, t_rbfi, outputmode);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "outputmode", 0, "0");
 
@@ -1577,6 +1598,7 @@ int main(void){
 	rbfi_class = c;
 
 	rbfi_ps_coords = gensym("coords");
+	rbfi_ps_patchercoords = gensym("patchercoords");
 	rbfi_ps_name = gensym("name");
 	rbfi_ps_rgb = gensym("rgb");
 	rbfi_ps_hsv = gensym("hsv");
@@ -1623,7 +1645,6 @@ void rbfi_postPoint(t_point *p){
 }
 
 t_max_err rbfi_notify(t_rbfi *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
-post("notify");
 	if(msg == gensym("attr_modified")){
 		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
 		if(attrname == gensym("xmin") || attrname == gensym("xmax") || attrname == gensym("ymin") || attrname == gensym("ymax")){
@@ -1632,4 +1653,47 @@ post("notify");
 		}
 	}
 	return 0;
+}
+
+t_max_err rbfi_points_get(t_rbfi *x, t_object *attr, long *argc, t_atom **argv){
+	char alloc;
+	atom_alloc_array(x->npoints * 12, argc, argv, &alloc);
+	t_atom *ptr = *argv;
+	t_point *p = x->points;
+	int i = 0;
+	while(p){
+		atom_setfloat(ptr + i++, p->pt.x);
+		atom_setfloat(ptr + i++, p->pt.y);
+		atom_setsym(ptr + i++, p->label);
+		atom_setfloat(ptr + i++, p->color.red);
+		atom_setfloat(ptr + i++, p->color.green);
+		atom_setfloat(ptr + i++, p->color.blue);
+		atom_setfloat(ptr + i++, p->color.alpha);
+		atom_setfloat(ptr + i++, p->exponent);
+		atom_setfloat(ptr + i++, p->weight);
+		atom_setfloat(ptr + i++, p->inner_radius);
+		atom_setfloat(ptr + i++, p->outer_radius);
+		atom_setlong(ptr + i++, p->locked);
+		p = p->next;
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err rbfi_points_set(t_rbfi *x, t_object *attr, long argc, t_atom *argv){
+	int i;
+	t_atom *ptr = argv;
+	for(i = 0; i < argc / 12; i++){
+		t_point p;
+		p.pt.x = atom_getfloat(ptr++);
+		p.pt.y = atom_getfloat(ptr++);
+		p.label = atom_getsym(ptr++);
+		p.color = (t_jrgba){atom_getfloat(ptr++),atom_getfloat(ptr++),atom_getfloat(ptr++),atom_getfloat(ptr++)};
+		p.exponent = atom_getfloat(ptr++);
+		p.weight = atom_getfloat(ptr++);
+		p.inner_radius = atom_getfloat(ptr++);
+		p.outer_radius = atom_getfloat(ptr++);
+		p.locked = atom_getlong(ptr++);
+		rbfi_addPointToList(x, p);
+	}
+	return MAX_ERR_NONE;
 }
