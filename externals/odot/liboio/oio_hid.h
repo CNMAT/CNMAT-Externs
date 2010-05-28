@@ -9,13 +9,7 @@
 #include "oio_err.h"
 
 typedef t_oio_callback t_oio_hid_callback;
-
-typedef struct _oio_hid_callbackList{
-	t_oio_hid_callback f;
-	void *context;
-	struct _oio_hid_callbackList *prev;
-	struct _oio_hid_callbackList *next;
-} t_oio_hid_callbackList;
+typedef t_oio_callbackList t_oio_hid_callbackList;
 
 typedef struct _oio_hid_dev{
 	t_oio_generic_device obj;

@@ -15,7 +15,6 @@ void *oio_hid_runloop(void *context);
 void oio_hid_connectCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
 void oio_hid_disconnectCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
 void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
-void oio_hid_dispatch(t_oio *oio, t_oio_hid_callbackList *callback_list, long n, char *osc);
 
 void oio_hid_sendToDevice(IOHIDDeviceRef device, IOHIDElementRef element, uint64_t value);
 
@@ -67,7 +66,7 @@ void oio_hid_connectCallback(void *context, IOReturn result, void *sender, IOHID
 	t_oio_hid_dev *dev = oio_hid_addDevice(oio, device);
 	(int)IOHIDDeviceOpen(device, 0L);
 	if(dev){
-		oio_hid_dispatch(oio, oio->hid->connect_callbacks, strlen(DEV_NAME(dev)), DEV_NAME(dev));
+		oio_obj_dispatch(oio, oio->hid->connect_callbacks, strlen(DEV_NAME(dev)), DEV_NAME(dev));
 	}
 }
 
@@ -76,7 +75,7 @@ void oio_hid_disconnectCallback(void *context, IOReturn result, void *sender, IO
 	t_oio_hid_dev *dev;
 	oio_hid_util_getDeviceByDevice(oio, device, &dev);
 	if(dev){
-		oio_hid_dispatch(oio, oio->hid->disconnect_callbacks, strlen(DEV_NAME(dev)), DEV_NAME(dev));
+		oio_obj_dispatch(oio, oio->hid->disconnect_callbacks, strlen(DEV_NAME(dev)), DEV_NAME(dev));
 	}
 	oio_hid_removeDevice(oio, device);
 }
@@ -88,16 +87,8 @@ void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDVa
 		long len;
 		char *oscbuf = NULL;
 		oio_hid_osc_encode(oio, &len, &oscbuf, device, value);
-		oio_hid_dispatch(oio, device->input_value_callbacks, len, oscbuf);
+		oio_obj_dispatch(oio, device->input_value_callbacks, len, oscbuf);
 		oio_mem_free(oscbuf);
-	}
-}
-
-void oio_hid_dispatch(t_oio *oio, t_oio_hid_callbackList *callback_list, long n, char *osc){
-	t_oio_hid_callbackList *cb = callback_list;
-	while(cb){
-		cb->f(oio, n, osc, cb->context);
-		cb = cb->next;
 	}
 }
 
@@ -175,7 +166,7 @@ t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
 t_oio_err oio_hid_sendValueToDevice(t_oio *oio, char *osc_string, uint64_t timestamp, uint64_t val){
 	t_oio_hid_dev **dev;
 	int n;
-	if(oio_obj_getDevicesByName(oio, osc_string, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&dev)){
+	if(oio_obj_getDevicesByName(oio, osc_string, &n, (t_oio_generic_device ***)&dev)){
 		OIO_ERROR(OIO_ERR_DNF);
 		return OIO_ERR_DNF;
 	}
@@ -288,6 +279,7 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 			dev->input_value_callbacks = NULL;
 			dev->product_id = pid;
 			dev->vendor_id = vid;
+			((t_oio_generic_device *)dev)->type = OIO_DEV_HID;
 
 			if(hid->devices){
 				DEV_PREV(hid->devices) = (t_oio_generic_device *)dev;
@@ -352,7 +344,7 @@ void oio_hid_removeDevice(t_oio *oio, IOHIDDeviceRef device){
 t_oio_err oio_hid_registerValueCallback(t_oio *oio, char *name, t_oio_hid_callback f, void *context){
 	t_oio_hid_dev **dev;
 	int n;
-	if(oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&dev)){
+	if(oio_obj_getDevicesByName(oio, name, &n, (t_oio_generic_device ***)&dev)){
 		OIO_ERROR(OIO_ERR_DNF);
 		return OIO_ERR_DNF;
 	}
@@ -379,7 +371,7 @@ t_oio_err oio_hid_registerValueCallback(t_oio *oio, char *name, t_oio_hid_callba
 t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, char *name, t_oio_hid_callback f){
 	t_oio_hid_dev **dev;
 	int n;
-	if(oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&dev)){
+	if(oio_obj_getDevicesByName(oio, name, &n, (t_oio_generic_device ***)&dev)){
 		OIO_ERROR(OIO_ERR_DNF);
 		return OIO_ERR_DNF;
 	}
@@ -413,7 +405,7 @@ t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, char *name, t_oio_hid_call
 	}
 	return OIO_ERR_NONE;
 }
-
+/*
 t_oio_err oio_hid_registerConnectCallback(t_oio *oio, t_oio_hid_callback f, void *context){
 	t_oio_hid *hid = oio->hid;
 	t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
@@ -435,6 +427,7 @@ t_oio_err oio_hid_registerDisconnectCallback(t_oio *oio, t_oio_hid_callback f, v
 
 	return OIO_ERR_NONE;
 }
+*/
 
 t_oio_err oio_hid_usageFile(t_oio *oio, char *filename){
 	t_oio_err ret;
@@ -453,12 +446,12 @@ t_oio_err oio_hid_cookieFile(t_oio *oio, char *filename){
 }
 
 void oio_hid_alloc(t_oio *oio, 
-		   t_oio_hid_callback hid_connect_callback, 
-		   void *hid_connect_context, 
-		   t_oio_hid_callback hid_disconnect_callback, 
-		   void *hid_disconnect_context, 
-		   char *hid_usage_plist, 
-		   char *hid_cookie_plist){
+		   t_oio_hid_callback connect_callback, 
+		   void *connect_context, 
+		   t_oio_hid_callback disconnect_callback, 
+		   void *disconnect_context, 
+		   char *usage_plist, 
+		   char *cookie_plist){
 	t_oio_hid *hid = (t_oio_hid *)oio_mem_alloc(1, sizeof(t_oio_hid));
 	oio->hid = hid;
 	hid->devices = NULL;
@@ -466,17 +459,17 @@ void oio_hid_alloc(t_oio *oio,
 	hid->connect_callbacks = NULL;
 	hid->device_hash = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	hid->cookie_strings_dict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-	if(hid_usage_plist){
-		oio_hid_usageFile(oio, hid_usage_plist);
+	if(usage_plist){
+		oio_hid_usageFile(oio, usage_plist);
 	}
-	if(hid_cookie_plist){
-		oio_hid_cookieFile(oio, hid_cookie_plist);
+	if(cookie_plist){
+		oio_hid_cookieFile(oio, cookie_plist);
 	}
-	if(hid_connect_callback){
-		oio_hid_registerConnectCallback(oio, hid_connect_callback, hid_connect_context);
+	if(connect_callback){
+		oio_obj_registerNotificationCallback(oio, &(hid->connect_callbacks), connect_callback, connect_context);
 	}
-	if(hid_connect_callback){
-		oio_hid_registerDisconnectCallback(oio, hid_disconnect_callback, hid_disconnect_context);
+	if(connect_callback){
+		oio_obj_registerNotificationCallback(oio, &(hid->disconnect_callbacks), disconnect_callback, disconnect_context);
 	}
 	hid->hidmanager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
 	IOHIDManagerSetDeviceMatching(hid->hidmanager, NULL);

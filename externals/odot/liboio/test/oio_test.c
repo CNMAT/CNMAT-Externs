@@ -15,14 +15,14 @@ void disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
 int main(int argc, char **argv){
 	char *usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
 	char *cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
-	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist, NULL, NULL);
-	sleep(1);
+	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist, connect_callback, NULL, disconnect_callback, NULL);
+	oio_obj_run(oio);
 	print_devices(oio);
 	if(argc > 1){
 		if(!strcmp(argv[1], "-l")){
 			return 0;
 		}else{
-			oio_hid_registerValueCallback(oio, argv[1], value_callback, NULL);
+			oio_obj_registerValueCallback(oio, argv[1], value_callback, NULL);
 		}
 	}
 
@@ -97,10 +97,13 @@ void print_devices(t_oio *oio){
 
 	oio_midi_getSourceNames(oio, &n, &names);
 	printf("MIDI Sources:\n");
-	printf("\t%2s\t%-50s\n", "#", "Device");
+	printf("\t%2s\t%-50s\t%9s\t%9s\n", "#", "Device", "Manufacturer", "Model");
 	for(i = 0; i < n; i++){
 		if(names[i]){
-			printf("\t%2d:\t%-50s\n", i, names[i]);
+			char manu[128], model[128];
+			oio_midi_util_getManufacturer(oio, names[i], manu);
+			oio_midi_util_getModel(oio, names[i], model);
+			printf("\t%2d:\t%-50s\t%9s\t%9s\n", i + 1, names[i], manu, model);
 			oio_mem_free(names[i]);
 		}
 	}
@@ -112,10 +115,13 @@ void print_devices(t_oio *oio){
 	oio_midi_getDestinationNames(oio, &n, &names);
 	printf("\n");
 	printf("MIDI Destinations:\n");
-	printf("\t%2s\t%-50s\n", "#", "Device");
+	printf("\t%2s\t%-50s\t%9s\t%9s\n", "#", "Device", "Manufacturer", "Model");
 	for(i = 0; i < n; i++){
 		if(names[i]){
-			printf("\t%2d:\t%-50s\n", i, names[i]);
+			char manu[128], model[128];
+			oio_midi_util_getManufacturer(oio, names[i], manu);
+			oio_midi_util_getModel(oio, names[i], model);
+			printf("\t%2d:\t%-50s\t%9s\t%9s\n", i + 1, names[i], manu, model);
 			oio_mem_free(names[i]);
 		}
 	}
@@ -133,7 +139,7 @@ void print_devices(t_oio *oio){
 			uint32_t pid = -1, vid = -1;
 			oio_hid_util_getDeviceProductIDFromDeviceName(oio, names[i], &pid);
 			oio_hid_util_getDeviceVendorIDFromDeviceName(oio, names[i], &vid);
-			printf("\t%2d:\t%-50s\t%9d\t%9d\n", i, names[i], vid, pid);
+			printf("\t%2d:\t%-50s\t%9d\t%9d\n", i + 1, names[i], vid, pid);
 			oio_mem_free(names[i]);
 		}
 	}
@@ -173,11 +179,11 @@ void print_osc_msg(t_osc_msg m, void *context){
 }
 
 void connect_callback(t_oio *oio, long n, char *ptr, void *context){
-	PP("%s was connected", ptr);
+	//PP("%s was connected", ptr);
 }
 
 void disconnect_callback(t_oio *oio, long n, char *ptr, void *context){
-	PP("%s was disconnected", ptr);
+	//PP("%s was disconnected", ptr);
 }
 
 /*

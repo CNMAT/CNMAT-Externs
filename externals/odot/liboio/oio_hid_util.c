@@ -50,7 +50,7 @@ t_oio_err oio_hid_util_getDeviceProductID(IOHIDDeviceRef dev, uint32_t *pid){
 t_oio_err oio_hid_util_getDeviceVendorIDFromDeviceName(t_oio *oio, char *name, uint32_t *vid){
 	t_oio_hid_dev **devices;
 	int n;
-	oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&devices);
+	oio_obj_getDevicesByName(oio, name, &n, (t_oio_generic_device ***)&devices);
 	if(n){
 		*vid = devices[0]->vendor_id;
 		if(devices){
@@ -64,7 +64,7 @@ t_oio_err oio_hid_util_getDeviceVendorIDFromDeviceName(t_oio *oio, char *name, u
 t_oio_err oio_hid_util_getDeviceProductIDFromDeviceName(t_oio *oio, char *name, uint32_t *pid){
 	t_oio_hid_dev **devices;
 	int n;
-	oio_obj_getDevicesByName(oio, name, (t_oio_generic_device *)oio->hid->devices, oio->hid->device_hash, &n, (t_oio_generic_device ***)&devices);
+	oio_obj_getDevicesByName(oio, name, &n, (t_oio_generic_device ***)&devices);
 	if(n){
 		*pid = devices[0]->product_id;
 		if(devices){
