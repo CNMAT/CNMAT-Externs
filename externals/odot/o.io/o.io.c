@@ -38,27 +38,60 @@
 #include "jpatcher_api.h" 
 #include "jgraphics.h" 
 #include "version.c" 
+#include "pthread.h"
 
 #include "oio.h"
 #include "oio_osc_util.h"
 #include "oio_hid_strings.h"
 #include "oio_hid_util.h"
+#include "oio_midi_util.h"
 #include "osc_match.h"
 #include <mach/mach_time.h>
 
 #define CHECKBOX_WIDTH 10
-#define CHECKBOX_COLUMN_WIDTH 20
+#define CHECKBOX_COLUMN_WIDTH 30
 #define ROW_HEIGHT 18
 #define PAD 10
 
+
+//#define THREADPOST
+#ifdef THREADPOST
+#define TP {pthread_t th = pthread_self();				\
+		struct sched_param p;					\
+		int policy;						\
+		int ret;\
+		ret = pthread_getschedparam(th, &policy, &p);			\
+		if(!ret){							\
+			post("%s: thread: %p, policy = %d, priority = %d", __PRETTY_FUNCTION__, th, policy, p.sched_priority); \
+		}else{							\
+			post("%s: thread: %p", __PRETTY_FUNCTION__, th); \
+		}							\
+	}
+#else
+#define TP 
+#endif
+
 typedef struct _device{
 	t_symbol *name;
-	int vendor_id, product_id;
 	t_symbol *protocol;
 	int open;
+	int row;
 	struct _device *prev;
 	struct _device *next;
 } t_device;
+
+typedef struct _hid_device{
+	t_device device;
+	int vendor_id, product_id;
+} t_hid_device;
+
+#define MIDI_SOURCE 2
+#define MIDI_DESTINATION 3
+typedef struct _midi_device{
+	t_device device;
+	char manufacturer[128], model[128];
+	int direction;
+} t_midi_device;
 
 typedef struct _odotio{ 
  	t_jbox box; 
@@ -76,19 +109,21 @@ typedef struct _odotio{
 void *odotio_class; 
 
 void odotio_paint(t_odotio *x, t_object *patcherview); 
+void odotio_draw_row(t_jgraphics *gg, double width, double ypos, t_symbol *protocol, const char *col1, const char *col2, char *dev_name, double col1_width, double col2_width);
+void odotio_draw_checkbox(t_jgraphics *gg, double ypos, int open);
 void odotio_open(t_odotio *x, t_symbol *sym);
 void odotio_close(t_odotio *x, t_symbol *sym);
 
-void odotio_hid_value_callback(t_oio *oio, long n, char *ptr, void *context);
-void odotio_hid_connect_callback(t_oio *oio, long n, char *ptr, void *context);
-void odotio_hid_disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
+void odotio_value_callback(t_oio *oio, long n, char *ptr, void *context);
+void odotio_connect_callback(t_oio *oio, long n, char *ptr, void *context);
+void odotio_disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
 
 void odotio_list(t_odotio *x, t_symbol *msg, short argc, t_atom *argv);
 void odotio_assist(t_odotio *x, void *b, long m, long a, char *s); 
 void odotio_free(t_odotio *x); 
 t_max_err odotio_notify(t_odotio *x, t_symbol *s, t_symbol *msg, void *sender, void *data); 
 
-t_device *odotio_getIthDevice(t_odotio *x, int ii);
+t_device *odotio_getDeviceByRow(t_odotio *x, int row);
 void odotio_toggleDevice(t_odotio *x, t_device *d);
 void odotio_openDevice(t_odotio *x, t_device *d);
 void odotio_closeDevice(t_odotio *x, t_device *d);
@@ -108,6 +143,7 @@ void odotio_setup(t_odotio *x, t_symbol *msg, int argc, t_atom *argv);
 t_symbol *l_background, *l_devices;
 
 void odotio_paint(t_odotio *x, t_object *patcherview){ 
+	TP;
 	x->pv = patcherview;
 	if(x->ready == 0){
 		return;
@@ -125,7 +161,172 @@ void odotio_paint(t_odotio *x, t_object *patcherview){
 	t_jrgba black = (t_jrgba){0,0,0,1.};
 
 	const char *pid_label = "ProductID", *vid_label = "VendorID", *prot_label = "Protocol", *dev_label = "Device";
+	const char *manu_label = "Manufacturer", *model_label = "Model";
+	double col1_width, col2_width;
+	double w, h;
+	jgraphics_text_measure(g, manu_label, &w, &h);
+	col1_width = col2_width = w + 10;
+	t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_background, rect.width, rect.height);
+	if(gg){
+		// draw the outline of the box 
+		jgraphics_set_source_jrgba(gg, &c); 
+		jgraphics_set_line_width(gg, .5); 
+		jgraphics_rectangle(gg, 0., 0., rect.width, rect.height); 
+		jgraphics_stroke(gg); 
+		double ypos = 0;
+		int i = 0;
+		while(ypos < rect.height){
+			t_jrgba c1 = x->bgcolor, c2 = (t_jrgba){0.8, 0.8, .9, 1.};
+			jgraphics_rectangle(gg, 0, ypos, rect.width, ROW_HEIGHT);
+			if(i % 2){
+				jgraphics_set_source_jrgba(gg, &c1);
+			}else{
+				jgraphics_set_source_jrgba(gg, &c2);
+			}
+			jgraphics_fill(gg);
+			ypos += ROW_HEIGHT;
+			i++;
+		}
+		jbox_end_layer((t_object *)x, patcherview, l_background);
+	}
+        jbox_paint_layer((t_object *)x, patcherview, l_background, 0, 0);
 
+	// there could be separate layers for midi, hid, etc...
+	gg = jbox_start_layer((t_object *)x, patcherview, l_devices, rect.width, rect.height);
+	if(gg){
+		// HID
+		double ypos = ROW_HEIGHT;
+		jgraphics_set_source_jrgba(gg, &black);
+		odotio_draw_row(gg, rect.width, ypos, gensym("HID"), vid_label, pid_label, "Device", col1_width, col2_width);
+		//ypos += ROW_HEIGHT;
+		t_device *d = x->devices;
+		double start = ypos;
+		int row = 1; // 0 based
+		while(d){
+			if(d->protocol == gensym("HID")){
+				odotio_draw_checkbox(gg, ypos, d->open);
+				ypos += ROW_HEIGHT;
+				char vid[32], pid[32];
+				sprintf(vid, "%d", ((t_hid_device *)d)->vendor_id);
+				sprintf(pid, "%d", ((t_hid_device *)d)->product_id);
+				odotio_draw_row(gg, rect.width, ypos, NULL, vid, pid, d->name->s_name, col1_width, col2_width);
+				d->row = row++;
+			}
+			d = d->next;
+		}
+		jgraphics_move_to(gg, CHECKBOX_COLUMN_WIDTH, start);
+		jgraphics_line_to(gg, CHECKBOX_COLUMN_WIDTH, ypos);
+		jgraphics_stroke(gg);
+
+		// MIDI
+		ypos += ROW_HEIGHT;
+		odotio_draw_row(gg, rect.width, ypos, gensym("MIDI"), "Sources", NULL, NULL, col1_width, col2_width);
+		ypos += ROW_HEIGHT;
+		row++;
+		odotio_draw_row(gg, rect.width, ypos, NULL, manu_label, model_label, "Device", col1_width, col2_width);
+		//ypos += ROW_HEIGHT;
+		d = x->devices;
+		start = ypos;
+		row++;
+		while(d){
+			if(d->protocol == gensym("MIDI") && ((t_midi_device *)d)->direction == MIDI_SOURCE){
+				odotio_draw_checkbox(gg, ypos, d->open);
+				ypos += ROW_HEIGHT;
+				odotio_draw_row(gg, rect.width, ypos, NULL, ((t_midi_device *)d)->manufacturer, ((t_midi_device *)d)->model, d->name->s_name, col1_width, col2_width);
+				d->row = row++;
+			}
+			d = d->next;
+		}
+
+		ypos += ROW_HEIGHT;
+		odotio_draw_row(gg, rect.width, ypos, gensym("MIDI"), "Destinations", NULL, NULL, col1_width, col2_width);
+		ypos += ROW_HEIGHT;
+		row++;
+		odotio_draw_row(gg, rect.width, ypos, NULL, manu_label, model_label, "Device", col1_width, col2_width);
+		//ypos += ROW_HEIGHT;
+		d = x->devices;
+		start = ypos;
+		row++;
+		while(d){
+			if(d->protocol == gensym("MIDI") && ((t_midi_device *)d)->direction == MIDI_DESTINATION){
+				odotio_draw_checkbox(gg, ypos, d->open);
+				ypos += ROW_HEIGHT;
+				odotio_draw_row(gg, rect.width, ypos, NULL, ((t_midi_device *)d)->manufacturer, ((t_midi_device *)d)->model, d->name->s_name, col1_width, col2_width);
+				d->row = row++;
+			}
+			d = d->next;
+		}
+		jgraphics_move_to(gg, CHECKBOX_COLUMN_WIDTH, start);
+		jgraphics_line_to(gg, CHECKBOX_COLUMN_WIDTH, ypos);
+		jgraphics_stroke(gg);		
+
+		jbox_end_layer((t_object *)x, patcherview, l_devices);
+	}
+	jbox_paint_layer((t_object *)x, patcherview, l_devices, 0, 0);
+}
+
+void odotio_draw_row(t_jgraphics *gg, double width, double ypos, t_symbol *protocol, const char *col1, const char *col2, char *dev_name, double col1_width, double col2_width){
+	double xpos = 2;
+	if(protocol){
+		jgraphics_move_to(gg, 2, ypos - 3);
+		jgraphics_show_text(gg, protocol->s_name);
+	}
+	xpos = CHECKBOX_COLUMN_WIDTH + PAD;
+	if(col1){
+		jgraphics_move_to(gg, xpos, ypos - 3);
+		jgraphics_show_text(gg, col1);
+	}
+	xpos = CHECKBOX_COLUMN_WIDTH + col1_width + PAD;
+	if(col2){
+		jgraphics_move_to(gg, xpos, ypos - 3);
+		jgraphics_show_text(gg, col2);
+	}
+	xpos += PAD + col2_width;
+	if(dev_name){
+		jgraphics_move_to(gg, xpos, ypos - 3);
+		jgraphics_show_text(gg, dev_name);
+	}
+	jgraphics_move_to(gg, 0, ypos);
+	jgraphics_line_to(gg, width, ypos);
+	jgraphics_stroke(gg);
+}
+
+void odotio_draw_checkbox(t_jgraphics *gg, double ypos, int open){
+	jgraphics_rectangle(gg, ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2), (ROW_HEIGHT - CHECKBOX_WIDTH) / 2 + ypos, CHECKBOX_WIDTH, CHECKBOX_WIDTH);
+	jgraphics_stroke(gg);
+	if(open){
+		double x1 = ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2);
+		double x2 = x1 + CHECKBOX_WIDTH;
+		double y1 = (ROW_HEIGHT - CHECKBOX_WIDTH) / 2 + ypos;
+		double y2 = y1 + CHECKBOX_WIDTH;
+		jgraphics_move_to(gg, x1, y1);
+		jgraphics_line_to(gg, x2, y2);
+		jgraphics_move_to(gg, x2, y1);
+		jgraphics_line_to(gg, x1, y2);
+		jgraphics_stroke(gg);
+	}
+}
+
+void odotio_paint_old(t_odotio *x, t_object *patcherview){ 
+	TP;
+	x->pv = patcherview;
+	if(x->ready == 0){
+		return;
+	}
+ 	t_rect rect; 
+ 	t_jrgba c = (t_jrgba){0,0,0,1.}; 
+
+ 	// get graphics context 
+ 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview); 
+
+ 	// get our box's rectangle 
+ 	jbox_get_rect_for_view((t_object *)x, patcherview, &rect); 
+
+	jgraphics_set_font_size(g, 12);
+	t_jrgba black = (t_jrgba){0,0,0,1.};
+
+	const char *pid_label = "ProductID", *vid_label = "VendorID", *prot_label = "Protocol", *dev_label = "Device";
+	const char *manu_label = "Manufacturer", *model_label = "Model";
 	t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_background, rect.width, rect.height);
 	if(gg){
 		// draw the outline of the box 
@@ -201,7 +402,7 @@ void odotio_paint(t_odotio *x, t_object *patcherview){
 		jbox_end_layer((t_object *)x, patcherview, l_background);
 	}
         jbox_paint_layer((t_object *)x, patcherview, l_background, 0, 0);
-
+	/*
 	gg = jbox_start_layer((t_object *)x, patcherview, l_devices, rect.width, rect.height);
 	if(gg){
 		t_device *d = x->devices;
@@ -229,11 +430,7 @@ void odotio_paint(t_odotio *x, t_object *patcherview){
 			}
 
 			ypos = ((i + 1) * ROW_HEIGHT);
-			/*
-			jgraphics_move_to(gg, 0, ypos);
-			jgraphics_line_to(gg, rect.width, ypos);
-			jgraphics_stroke(gg);
-			*/
+
 			ypos -= 5;
 			xpos = CHECKBOX_COLUMN_WIDTH + PAD;
 			jgraphics_move_to(gg, xpos, ypos);
@@ -263,76 +460,12 @@ void odotio_paint(t_odotio *x, t_object *patcherview){
 		jbox_end_layer((t_object *)x, patcherview, l_devices);
 	}
 	jbox_paint_layer((t_object *)x, patcherview, l_devices, 0, 0);
-
-	/*
-	t_device *d = x->devices;
-	jgraphics_set_font_size(g, 12);
-	int i = 0;
-	while(d){
-		jgraphics_rectangle(g, ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2), ((CHECKBOX_COLUMN_WIDTH - CHECKBOX_WIDTH) / 2) + (ROW_HEIGHT * (i + 1) + 2), CHECKBOX_WIDTH, CHECKBOX_WIDTH);
-
-		if(d->open){
-			jgraphics_fill(g);
-		}else{
-			jgraphics_stroke(g);
-		}
-		jgraphics_move_to(g, CHECKBOX_COLUMN_WIDTH + PAD, ROW_HEIGHT * (i + 2));
-		jgraphics_show_text(g, d->name->s_name);
-		double w,h;
-		sprintf(vid[i], "%-5d", d->vendor_id);
-		jgraphics_text_measure(g, vid[i], &w, &h);
-		if(w > maxvidw){
-			maxvidw = w;
-		}
-		sprintf(pid[i], "%-5d", d->product_id);
-		jgraphics_text_measure(g, pid[i], &w, &h);
-		if(w > maxpidw){
-			maxpidw = w;
-		}
-		i++;
-		d = d->next;
-	}
-	jgraphics_set_source_jrgba(g, &(x->bgcolor));
-	jgraphics_rectangle(g, rect.width - (maxvidw + maxpidw + (PAD * 4)), 0, rect.width, rect.height);
-	jgraphics_fill(g);
-	jgraphics_set_source_jrgba(g, &black);
-	for(i = 0; i < x->ndevices; i++){
-		jgraphics_move_to(g, rect.width - (maxpidw + PAD), ROW_HEIGHT * (i + 2));
-		jgraphics_show_text(g, vid[i]);
-		jgraphics_move_to(g, rect.width - ((maxvidw + PAD) + (maxpidw + (PAD * 2))), ROW_HEIGHT * (i + 2));
-		jgraphics_show_text(g, pid[i]);
-	}
-	jgraphics_move_to(g, rect.width - (maxpidw + PAD * 2), 0);
-	jgraphics_line_to(g, rect.width - (maxpidw + PAD * 2), rect.height);
-	jgraphics_stroke(g);
-
-	jgraphics_move_to(g, rect.width - ((maxvidw + PAD * 2) + (maxpidw + PAD * 2)), 0);
-	jgraphics_line_to(g, rect.width - ((maxvidw + PAD * 2) + (maxpidw + PAD * 2)), rect.height);
-	jgraphics_stroke(g);
-
-	for(i = 0; i < x->ndevices + 1; i++){
-		jgraphics_move_to(g, 0, ROW_HEIGHT * (i + 1) + 3);
-		jgraphics_line_to(g, rect.width, ROW_HEIGHT * (i + 1) + 3);
-	}
-	critical_exit(x->lock);
-	jgraphics_stroke(g);
-	*/
-	/*
-	jgraphics_set_source_jrgba(g, &(x->textColor));
-	jgraphics_set_font_size(g, 10);
-	char buf[128];
-	if(x->selected){	
-		sprintf(buf, "%s:(%f, %f)", x->funcattr[x->currentFunction]->name, x->selected->coords.x, x->selected->coords.y);
-	}else{
-		sprintf(buf, "%s", x->funcattr[x->currentFunction]->name);
-	}
-	jgraphics_move_to(g, 1, 10);
-	jgraphics_show_text(g, buf);
-	*/
+*/
 } 
 
 void odotio_open(t_odotio *x, t_symbol *sym){
-	oio_hid_registerValueCallback(x->oio, sym->s_name, odotio_hid_value_callback, (void *)x);
+	TP;
+	oio_obj_registerValueCallback(x->oio, sym->s_name, odotio_value_callback, (void *)x);
 	t_device *d = x->devices;
 	while(d){
 		int i1, i2;
@@ -346,7 +479,7 @@ void odotio_open(t_odotio *x, t_symbol *sym){
 }
 
 void odotio_close(t_odotio *x, t_symbol *sym){
-	oio_hid_unregisterValueCallback(x->oio, sym->s_name, odotio_hid_value_callback);
+	oio_obj_unregisterValueCallback(x->oio, sym->s_name, odotio_value_callback);
 	t_device *d = x->devices;
 	while(d){
 		int i1, i2;
@@ -359,42 +492,24 @@ void odotio_close(t_odotio *x, t_symbol *sym){
 	jbox_redraw(&(x->box));
 }
 
-void odotio_hid_value_callback(t_oio *oio, long n, char *ptr, void *context){
-	//PP("%ld %p", n, ptr);
+void odotio_value_callback(t_oio *oio, long n, char *ptr, void *context){
+	TP;
 	t_odotio *x = (t_odotio *)context;
 	t_atom a[2];
 	atom_setlong(a, n);
 	atom_setlong(a + 1, (long)ptr);
 	outlet_anything(x->osc_outlet, gensym("FullPacket"), 2, a);
-	/*
-	t_oio_osc_msg *msg = NULL;
-	t_oio_err err = oio_osc_util_parseOSCBundle(n, ptr, &msg);
-	if(err){
-		OIO_ERROR(err);
-	}
-	while(msg){
-		int i;
-		post("%s ", msg->address);
-		for(i = 0; i < msg->natoms; i++){
-			uint64_t l = *((uint64_t *)(msg->atoms + i));
-			post("%llu (%c) ", l, msg->atoms[i].typetag);
-		}
-		printf("\n");
-		msg = msg->next;
-	}
-	oio_osc_util_printBundle(n, ptr, printf);
-	oio_obj_sendOSC(oio, n, ptr);
-	*/
 }
 
-void odotio_hid_connect_callback(t_oio *oio, long n, char *ptr, void *context){
+void odotio_connect_callback(t_oio *oio, long n, char *ptr, void *context){
+	TP;
 	t_odotio *x = (t_odotio *)context;
 	odotio_addDevice(x, ptr);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 	jbox_redraw(&(x->box));
 }
 
-void odotio_hid_disconnect_callback(t_oio *oio, long n, char *ptr, void *context){
+void odotio_disconnect_callback(t_oio *oio, long n, char *ptr, void *context){
 	t_odotio *x = (t_odotio *)context;
 	odotio_removeDevice(x, ptr);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
@@ -415,11 +530,10 @@ t_max_err odotio_notify(t_odotio *x, t_symbol *s, t_symbol *msg, void *sender, v
 	return 0; 
 } 
 
-t_device *odotio_getIthDevice(t_odotio *x, int ii){
-	int i = 0;
+t_device *odotio_getDeviceByRow(t_odotio *x, int row){
 	t_device *d = x->devices;
 	while(d){
-		if(i++ == ii){
+		if(d->row == row){
 			break;
 		}
 		d = d->next;
@@ -441,31 +555,48 @@ void odotio_toggleDevice(t_odotio *x, t_device *d){
 }
 
 void odotio_openDevice(t_odotio *x, t_device *d){
-	if(!oio_hid_registerValueCallback(x->oio, d->name->s_name, odotio_hid_value_callback, (void *)x)){
+	if(!oio_obj_registerValueCallback(x->oio, d->name->s_name, odotio_value_callback, (void *)x)){
 		d->open = 1;
 	}
 	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 }
 
 void odotio_closeDevice(t_odotio *x, t_device *d){
-	oio_hid_unregisterValueCallback(x->oio, d->name->s_name, odotio_hid_value_callback);
+	oio_obj_unregisterValueCallback(x->oio, d->name->s_name, odotio_value_callback);
 	d->open = 0;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_devices);
 }
 
 void odotio_addDevice(t_odotio *x, char *name){
-	t_device *d = (t_device *)sysmem_newptr(sizeof(t_device));
-	uint32_t pid = -1, vid = -1;
-	if(!(x->oio)){
-		printf("x->oio == NULL!\n");
+	t_device *d = NULL;
+	int type = oio_obj_getDeviceType(x->oio, name);
+	switch(type){
+	case OIO_DEV_DNF:
+		return;
+	case OIO_DEV_HID:{
+		d = (t_device *)sysmem_newptr(sizeof(t_hid_device));
+		uint32_t pid = -1, vid = -1;
+		oio_hid_util_getDeviceProductIDFromDeviceName(x->oio, name, &pid);
+		oio_hid_util_getDeviceVendorIDFromDeviceName(x->oio, name, &vid);
+
+		((t_hid_device *)d)->vendor_id = vid;
+		((t_hid_device *)d)->product_id = pid;
+		d->protocol = gensym("HID");
+	}
+		break;
+	case OIO_DEV_MIDI:{
+		d = (t_device *)sysmem_newptr(sizeof(t_midi_device));
+		oio_midi_util_getManufacturer(x->oio, name, ((t_midi_device *)d)->manufacturer);
+		oio_midi_util_getModel(x->oio, name, ((t_midi_device *)d)->model);
+		int t;
+		oio_midi_util_getMIDIObjectType(x->oio, name, &((t_midi_device *)d)->direction);
+		d->protocol = gensym("MIDI");
+	}
+		break;
+	case OIO_DEV_SERIAL:
 		return;
 	}
-	oio_hid_util_getDeviceProductIDFromDeviceName(x->oio, name, &pid);
-	oio_hid_util_getDeviceVendorIDFromDeviceName(x->oio, name, &vid);
 	d->name = gensym(name);
-	d->vendor_id = vid;
-	d->product_id = pid;
-	d->protocol = gensym("HID");
 	d->open = 0;
 	critical_enter(x->lock);
 	if(x->devices){
@@ -506,8 +637,7 @@ void odotio_doRemoveDevice(t_odotio *x, t_device *d){
 }
 
 void odotio_fullPacket(t_odotio *x, long len, long ptr){
-	//osc_util_printBundle(len, (char *)ptr, post);
-	oio_hid_sendOSCBundleToDevice(x->oio, len, (char *)ptr);
+	//oio_hid_sendOSCBundleToDevice(x->oio, len, (char *)ptr);
 }
 
 void odotio_anything(t_odotio *x, t_symbol *msg, int argc, t_atom *argv){
@@ -525,7 +655,7 @@ void odotio_mousedown(t_odotio *x, t_object *patcherview, t_pt pt, long modifier
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 	if(pt.x < CHECKBOX_COLUMN_WIDTH){
 		int row = (int)pt.y / ROW_HEIGHT;
-		t_device *d = odotio_getIthDevice(x, row - 1);
+		t_device *d = odotio_getDeviceByRow(x, row);
 		if(d){
 			odotio_toggleDevice(x, d); // we have a header row
 		}
@@ -640,6 +770,7 @@ void *odotio_new(t_symbol *s, long argc, t_atom *argv){
 		x->ready = 0;
  		jbox_ready((t_jbox *)x); 
 		//schedule_delay(x, (method)odotio_setup, 100, NULL, 0, NULL);
+		TP;
  		return x; 
  	} 
  	return NULL; 
@@ -651,7 +782,7 @@ void odotio_setup(t_odotio *x, t_symbol *msg, int argc, t_atom *argv){
 	char hid_usageplist[128], hid_cookieplist[128];
 	sprintf(hid_usageplist, "%s/hid_usage_strings.plist", x->plistpath->s_name);
 	sprintf(hid_cookieplist, "%s/hid_cookie_strings.plist", x->plistpath->s_name);
-	oio_obj_alloc(odotio_hid_connect_callback, x, odotio_hid_disconnect_callback, x, hid_usageplist, hid_cookieplist, NULL, NULL, &(x->oio));
+	x->oio = oio_obj_alloc(odotio_connect_callback, x, odotio_disconnect_callback, x, hid_usageplist, hid_cookieplist, odotio_connect_callback, x, odotio_disconnect_callback, x);
 	x->ready = 1;
 	oio_obj_run(x->oio);
 }
