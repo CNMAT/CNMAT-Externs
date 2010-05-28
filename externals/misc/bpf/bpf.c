@@ -61,6 +61,10 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 #include "jgraphics.h" 
 #include "version.c" 
 
+#ifndef FLT_MAX
+#define FLT_MAX 999999999.f
+#endif
+
 #ifdef WIN
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #endif
