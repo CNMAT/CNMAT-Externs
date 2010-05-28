@@ -1085,7 +1085,7 @@ t_max_err xy_notify(t_xy *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
 	if(msg == gensym("attr_modified")){
 		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
 		if(attrname == gensym("xmin") || attrname == gensym("xmax") || attrname == gensym("ymin") || attrname == gensym("ymax") || attrname == gensym("connect_points") || attrname == gensym("drawlabels")){
-			jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+			jbox_invalidate_layer((t_object *)x, x->patcherview, l_points);
 			jbox_redraw(&(x->ob));
 		}
 	}
