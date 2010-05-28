@@ -35,6 +35,7 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
+#include "ext_critical.h"
 #include "omax_util.h"
 #include "osc_match.h"
 
@@ -48,9 +49,20 @@ typedef struct _oroute_message{
 	struct _oroute_message *next, *prev;
 } t_oroute_message;
 
+// local workspace to avoid having to synchronize
+// or use critical regions
+typedef struct _oroute_wksp{
+	t_symbol **args;
+	int numArgs;
+	t_oroute_message *messages;
+	t_oroute_message *message_buf;
+	int numMessages, message_buf_len;
+} t_oroute_wksp;
+
 typedef struct _oroute{
 	t_object ob;
 	void **outlets;
+	t_critical lock;
 	t_symbol **args;
 	int numArgs;
 	// we have an array of preallocated messages that we'll use, but we'll
@@ -59,20 +71,16 @@ typedef struct _oroute{
 	t_oroute_message *messages;
 	t_oroute_message *message_buf;
 	int numMessages, message_buf_len;
-	//t_cmmjl_osc_message *matched, *unmatched;
-	//int *numCharsMatched;
-	//int *matched_outlets;
-	int numMatched, numUnmatched;
 	int bundlePartialMatches;
 } t_oroute;
 
 void *oroute_class;
 
 void oroute_fullPacket(t_oroute *x, long len, long ptr);
-void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr);
-void oroute_fp(t_oroute *x, long len, char *ptr);
+void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_message *m);
+void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m);
 void oroute_cbk(t_osc_msg msg, void *context);
-void oroute_insert_msg(t_oroute *x, t_oroute_message *msg);
+void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *msg);
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv);
 void oroute_free(t_oroute *x);
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s);
@@ -96,20 +104,29 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 		}
 	}
 	nn = osc_util_flatten(nn, cpy, cpy);
-	x->messages = NULL;
-	x->numMessages = 0;
-	osc_util_parseBundleWithCallback(nn, cpy, oroute_cbk, (void *)x);
+	t_oroute_wksp wksp;
+	t_symbol *args[x->numArgs];
+	t_oroute_message mm[128];
+	memset(mm, '\0', 128 * sizeof(t_oroute_message));
+	wksp.message_buf = mm;
+	wksp.messages = NULL;
+	wksp.numMessages = 0;
+	wksp.message_buf_len = 128;
+	critical_enter(x->lock);
+	memcpy(args, x->args, x->numArgs * sizeof(t_symbol *));
+	wksp.args = args;
+	wksp.numArgs = x->numArgs;
+	critical_exit(x->lock);
+	osc_util_parseBundleWithCallback(nn, cpy, oroute_cbk, (void *)&wksp);
 	if(x->bundlePartialMatches){
-		oroute_fp_bundlePartialMatches(x, nn, cpy);
+		oroute_fp_bundlePartialMatches(x, nn, cpy, wksp.messages);
 	}else{
-		oroute_fp(x, nn, cpy);
+		oroute_fp(x, nn, cpy, mm);
 	}
 }
 
 
-void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
-	t_oroute_message *m = x->messages;
-	//t_atomarray *a;
+void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc;
 	char buf[len], *bufp = buf;
@@ -117,7 +134,9 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 	memcpy(buf, ptr, 16);
 	bufp += 16;
 	int last_outlet_num = -1;
+	//printf("*******************************************\n");
 	while(m){
+		//printf("m = %p\n", m);
 		if(last_outlet_num != m->outlet_num && last_outlet_num >= 0 && bufp - buf > 16){
 			t_atom out[2];
 			atom_setlong(out, bufp - buf);
@@ -127,11 +146,11 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 			memset(bufp, '\0', len - 16);
 		}
 		if(m->full_match){
-			//a = omax_util_oscMsg2MaxAtoms(&(m->msg));
-			//atomarray_getatoms(a, &argc, &argv);
+			//printf("crash is here %p\n", m);
+			//printf("yep: %s\n", m->msg.address);
 			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, &argv);
+			//printf("probably won't see me\n");
 			outlet_atoms(x->outlets[m->outlet_num], argc - 1, argv + 1);
-			//atomarray_clear(a);
 		}else{
 			char *size = bufp;
 			bufp += 4;
@@ -141,10 +160,7 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 			while((bufp - buf) % 4){
 				bufp++;
 			}
-			if(!bufp || !(m->msg.typetags)){
-				printf("memcpy about to crash %p %p %d\n", bufp, m->msg.typetags, m->msg.size - (m->msg.typetags - m->msg.address));
-				return;
-			}
+
 			memcpy(bufp, m->msg.typetags, m->msg.size - (m->msg.typetags - m->msg.address));
 			bufp += m->msg.size - (m->msg.typetags - m->msg.address);
 			*((uint32_t *)size) = hton32(bufp - size - 4);
@@ -161,8 +177,8 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr){
 	sysmem_freeptr(argv);
 }
 
-void oroute_fp(t_oroute *x, long len, char *ptr){
-	t_oroute_message *m = x->messages;
+void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
+	//t_oroute_message *m = x->messages;
 	//t_atomarray *a = NULL;
 	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc;
@@ -189,7 +205,7 @@ void oroute_cbk(t_osc_msg msg, void *context){
 	if(!(msg.address)){
 		return;
 	}
-	t_oroute *x = (t_oroute *)context;
+	t_oroute_wksp *x = (t_oroute_wksp *)context;
 	int i;
 	int match = 0;
 	for(i = 0; i < x->numArgs; i++){
@@ -218,33 +234,9 @@ void oroute_cbk(t_osc_msg msg, void *context){
 		oroute_insert_msg(x, &(x->message_buf[x->numMessages]));
 		x->numMessages++;
 	}
-	/*
-	t_oroute *x = (t_oroute *)v;
-	int i;
-	int ret;
-	int didmatch = 0;
-	for(i = 0; i < x->numArgs; i++){
-		char *arg = x->args[i]->s_name;
-		int l1 = strlen(msg.address);
-		int l2 = strlen(arg);
-		ret = cmmjl_osc_match(x, msg.address, arg);
-		if(ret != 0){
-			if(((ret < l1 && ret < l2) || (ret == l1 && ret < l2)) && ret != -1){
-				continue;
-			}
-			x->matched_outlets[x->numMatched] = i;	
-			x->numCharsMatched[x->numMatched] = ret;
-			x->matched[x->numMatched++] = msg;
-			didmatch += 1;
-		}
-	}
-	if(didmatch == 0){
-		x->unmatched[x->numUnmatched++] = msg;
-	}
-	*/
 }
 
-void oroute_insert_msg(t_oroute *x, t_oroute_message *message){
+void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *message){
 	t_oroute_message *msg = message;
 	t_oroute_message *m = x->messages;
 	t_oroute_message *prev = NULL;
@@ -313,6 +305,7 @@ void oroute_assist(t_oroute *x, void *b, long m, long a, char *s){
 }
 
 void oroute_free(t_oroute *x){
+	critical_free(x->lock);
 	if(x->args){
 		free(x->args);
 	}
@@ -322,23 +315,17 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oroute *x;
 	int i;
 	if(x = (t_oroute *)object_alloc(oroute_class)){
-		//cmmjl_init(x, NAME, 0);
 		int numArgs = attr_args_offset(argc, argv);
 		x->outlets = (void **)malloc((numArgs + 1) * sizeof(void *));
 		x->args = (t_symbol **)malloc(numArgs * sizeof(t_symbol *));
 		x->numArgs = numArgs;
-		x->message_buf = (t_oroute_message *)sysmem_newptr(MAX_NUM_MESSAGES * sizeof(t_oroute_message));
+		//x->message_buf = (t_oroute_message *)sysmem_newptr(MAX_NUM_MESSAGES * sizeof(t_oroute_message));
 		x->messages = NULL;
+		critical_new(&(x->lock));
 		x->outlets[numArgs] = outlet_new(x, "FullPacket"); // unmatched outlet
 		for(i = 0; i < numArgs; i++){
 			x->outlets[numArgs - 1 - i] = outlet_new(x, NULL);
 			x->args[i] = atom_getsym(argv + i);
-			//x->matched = (t_cmmjl_osc_message *)malloc(1024 * sizeof(t_cmmjl_osc_message));
-			//x->numCharsMatched = (int *)malloc(1024 * sizeof(int));
-			//x->unmatched = (t_cmmjl_osc_message *)malloc(1024 * sizeof(t_cmmjl_osc_message));
-			//x->matched_outlets = (int *)malloc(1024 * sizeof(int));
-			//x->numMatched = 0;
-			//x->numUnmatched = 0;
 		}
 		x->bundlePartialMatches = 1;
 		attr_args_process(x, argc, argv);
