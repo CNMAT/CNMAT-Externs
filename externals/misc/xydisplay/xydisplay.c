@@ -49,6 +49,10 @@
 #include "ext_critical.h"
 #include "version.c"
 
+#ifndef DBL_MAX
+#define DBL_MAX 999999999.
+#endif
+
 #ifdef WIN32
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #else
