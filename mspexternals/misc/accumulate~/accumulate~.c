@@ -27,6 +27,7 @@ DESCRIPTION: Signal integrator with signal-rate reset control, configurable boun
 AUTHORS: Andy Schmeder
 COPYRIGHT_YEARS: 2008
 SVN_REVISION: $LastChangedRevision$
+VERSION 0.3: implemented attributes properly -JM
 VERSION 0.2: Added argument syntax, updated mode controls
 VERSION 0.1: First version
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
@@ -34,6 +35,7 @@ VERSION 0.1: First version
 */
 
 #include "ext.h"
+#include "ext_obex.h"
 #include "z_dsp.h"
 #include "version.h"
 #include "version.c"
@@ -41,12 +43,13 @@ VERSION 0.1: First version
 #include <math.h>
 #include <float.h>
 #include <string.h>
-
+/*
 #define MODE_CLIP 0
 #define MODE_WRAP 1
 #define MODE_RESET 2
-
-void *acc_class;
+*/
+t_symbol *ps_clip, *ps_wrap, *ps_reset;
+t_class *acc_class;
 
 #ifndef MAXFLOAT
 #define MAXFLOAT ((float)3.40282346638528860e+38)
@@ -59,7 +62,7 @@ typedef struct _t_acc
     float start;
     float max;
     float min;
-    long  mode;
+    t_symbol  *mode;
     float scale;
 } t_acc;
 
@@ -71,148 +74,49 @@ t_int *acc_perform(t_int *w);
 void acc_free(t_acc *x);
 
 int main(void) {
-    version(0);
+    t_class *c = class_new("accumulate~", (method)acc_new, (method)acc_free, (short)sizeof(t_acc), 0L, A_GIMME, 0);
+    class_dspinit(c);
 
-    setup((t_messlist **)&acc_class, (method)acc_new, (method)acc_free,
-          (short)sizeof(t_acc), 0L, A_GIMME, 0);
-    addmess((method)acc_dsp, "dsp", A_CANT, 0);
-    
-    dsp_initclass();
-    
+    class_addmethod(c, (method)acc_dsp, "dsp", A_CANT, 0);
+
+    CLASS_ATTR_FLOAT(c, "min", 0, t_acc, min);
+    CLASS_ATTR_FLOAT(c, "max", 0, t_acc, max);
+    CLASS_ATTR_FLOAT(c, "start", 0, t_acc, start);
+    CLASS_ATTR_FLOAT(c, "scale", 0, t_acc, scale);
+    CLASS_ATTR_SYM(c, "mode", 0, t_acc, mode);
+
+    ps_clip = gensym("clip");
+    ps_wrap = gensym("wrap");
+    ps_reset = gensym("reset");
+
+    class_register(CLASS_BOX, c);
+    acc_class = c;
+
+    version(0);    
     return 0;
 }
 
 void *acc_new(t_symbol *s, short argc, t_atom *argv) {
-	t_acc *x;
+    t_acc *x;
     int i;
 	
-	x = (t_acc *)newobject(acc_class);  // dynamic alloc
-  	dsp_setup((t_pxobject *)x, 2);      // two signal inlets
+    if(x = (t_acc *)object_alloc(acc_class)){
+	    dsp_setup((t_pxobject *)x, 2);      // two signal inlets
     
-    x->current = 0.f;
-    x->start = 0.f;
-    x->max = MAXFLOAT;
-    x->min = -1.0f * MAXFLOAT;
-    x->mode = MODE_CLIP; // Saturate
-    x->scale = 1.0f;
+	    x->current = 0.f;
+	    x->start = 0.f;
+	    x->max = MAXFLOAT;
+	    x->min = -1.0f * MAXFLOAT;
+	    x->mode = ps_clip; // Saturate
+	    x->scale = 1.0f;
     
-	outlet_new((t_object *)x,"signal");
-
-    if(argc > 0) {
-
-        for(i = 0; i < argc; i++) {
-
-            if(argv[i].a_type == A_SYM) {
-                
-                if(strcmp(argv[i].a_w.w_sym->s_name, "@start") == 0) {
-                    if(i + 1 < argc) {
-                        i++;
-                        
-                        if(argv[i].a_type == A_FLOAT) {
-                            x->start = atom_getfloatarg(i,argc,argv);
-                        }
-                        else if(argv[i].a_type == A_LONG) {
-                            x->start = atom_getintarg(i,argc,argv);
-                        }
-                        else {
-                            post("accumulate~: expected float or long after @start");
-                        }
-                    } else {
-                        post("accumulate~: expected an arg after @start");
-                    }
-                }
-                
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@max") == 0) {
-                    if(i + 1 < argc) {
-                        i++;
-                        
-                        if(argv[i].a_type == A_FLOAT) {
-                            x->max = atom_getfloatarg(i,argc,argv);
-                        }
-                        else if(argv[i].a_type == A_LONG) {
-                            x->max = atom_getintarg(i,argc,argv);
-                        }
-                        else {
-                            post("accumulate~: expected float or long after @max");
-                        }
-                    } else {
-                        post("accumulate~: expected an arg after @max");
-                    }
-                }
-
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@min") == 0) {
-                    if(i + 1 < argc) {
-                        i++;
-                        
-                        if(argv[i].a_type == A_FLOAT) {
-                            x->min = atom_getfloatarg(i,argc,argv);
-                        }
-                        else if(argv[i].a_type == A_LONG) {
-                            x->min = atom_getintarg(i,argc,argv);
-                        }
-                        else {
-                            post("accumulate~: expected float or long after @min");
-                        }
-                    } else {
-                        post("accumulate~: expected an arg after @max");
-                    }
-                }
-                
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@scale") == 0) {
-                    if(i + 1 < argc) {
-                        i++;
-                        
-                        if(argv[i].a_type == A_FLOAT) {
-                            x->scale = atom_getfloatarg(i,argc,argv);
-                        }
-                        else if(argv[i].a_type == A_LONG) {
-                            x->scale = atom_getintarg(i,argc,argv);
-                        }
-                        else {
-                            post("accumulate~: expected float or long after @scale");
-                        }
-                    } else {
-                        post("accumulate~: expected an arg after @scale");
-                    }
-                }
-                
-                else if(strcmp(argv[i].a_w.w_sym->s_name, "@mode") == 0) {
-                    if(i + 1 < argc) {
-                        i++;
-
-                        if(argv[i].a_type == A_SYM) {
-                            if(strcmp(argv[i].a_w.w_sym->s_name, "clip") == 0) {
-                                x->mode = MODE_CLIP;
-                            } else if(strcmp(argv[i].a_w.w_sym->s_name, "wrap") == 0) {
-                                x->mode = MODE_WRAP;
-                            } else if(strcmp(argv[i].a_w.w_sym->s_name, "reset") == 0) {
-                                x->mode = MODE_RESET;
-                            } else {
-                                post("accumulate~: unknown @mode %s", argv[i].a_w.w_sym->s_name);
-                            }
-                        } else {
-                            post("accumulate~: expected symbol after @mode");
-                        }
-                    } else {
-                        post("accumulate~: missing argument after @mode");
-                    }
-                }
-                
-                else {
-                    
-                    post("accumulate~: unexpected arguments");
-                    
-                }
-                
-            }
-            
-        }
-        
+	    outlet_new((t_object *)x,"signal");
+	    attr_args_process(x, argc, argv);
+    
+	    x->current = x->start;
+    	return x;
     }
-    
-    x->current = x->start;
-    
-    return x;
+    return NULL;
 }
 
 void acc_dsp(t_acc *x, t_signal **sp, short int *count) {
@@ -247,7 +151,7 @@ t_int *acc_perform(t_int *w) {
 
     // here the loop is copied three times for each case to avoid unnecessary conditions in the inner loop
     
-    if (x->mode == MODE_CLIP) {
+    if (x->mode == ps_clip) {
         
         while (size--) {
         
@@ -266,7 +170,7 @@ t_int *acc_perform(t_int *w) {
             x->current = x->current * x->scale; // apply leaky integrator with one-sample delay
         }
         
-	} else if (x->mode == MODE_WRAP) { // saturation at maximum
+	} else if (x->mode == ps_wrap) { // saturation at maximum
             
         while (size--) {
 
@@ -294,7 +198,7 @@ t_int *acc_perform(t_int *w) {
             
         }
         
-    } else if (x->mode == MODE_RESET) {
+    } else if (x->mode == ps_reset) {
         
         while (size--) {
             
