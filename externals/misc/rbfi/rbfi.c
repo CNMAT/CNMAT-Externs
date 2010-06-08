@@ -49,6 +49,7 @@
   VERSION 0.7.11: fixed the coords message which was upside down with respect to the y-axis
   VERSION 0.8: points now saved with patcher
   VERSION 0.8.1: added patchercoords argument to add_point message for faking drag and drop
+  VERSION 0.8.2: added getnumpoints message, and fixed capslog bug
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -165,6 +166,7 @@ void rbfi_free(t_rbfi *x);
 void rbfi_assist(t_rbfi *x, void *b, long m, long a, char *s);
 double rbfi_scale(double f, double min_in, double max_in, double min_out, double max_out);
 double rbfi_clip(double f, double min, double max);
+void rbfi_getnumpoints(t_rbfi *x);
 t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av);
 t_max_err rbfi_setvalueof(t_rbfi *x, long ac, t_atom *av);
 void RGBtoHSV( double r, double g, double b, double *h, double *s, double *v );
@@ -532,6 +534,7 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	rbfi_outputMousePos(x, pt);
 
 	switch(modifiers){
+	case 0x110:
 	case 0x10:
 		{
 			double weights[x->npoints];
@@ -550,11 +553,13 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 			x->xhairs = pt;
 		}
 		break;
+	case 0x112:
 	case 0x12:
 		{
 			//x->selected = rbfi_selectPoint(x, pt);
 		}
 		break;
+	case (0x112 | 0x111):
 	case (0x12 | 0x11):
 		// command-shift -> delete a point 
 		{
@@ -571,21 +576,8 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				}
 			}
 		}
-		/*
-		{
-			t_point *p;
-			if(p = rbfi_selectPoint(x, pt)){
-				if(!(p->locked)){
-					rbfi_removePoint(x, p);
-					critical_enter(x->lock);
-					x->selected = NULL;
-					critical_exit(x->lock);
-					jbox_invalidate_layer((t_object *)x, NULL, l_color);
-				}
-			}
-		}
-		*/
 		break;
+	case 0x11a:
 	case 0x1a:
 		// option-shift -> make a new point
 		{
@@ -612,6 +604,7 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	rbfi_outputMousePos(x, pt);
 
 	switch(modifiers){
+	case 0x110:
 	case 0x10:
 		{
 			if(!(x->mouse_active_beyond_rect)){
@@ -636,6 +629,7 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 			x->xhairs = pt;
 		}
 		break;
+	case 0x112:
 	case 0x12:
 		// shift -> edit point
 		if(x->selected){
@@ -1320,6 +1314,12 @@ double rbfi_clip(double f, double min, double max){
 	return ff;
 }
 
+void rbfi_getnumpoints(t_rbfi *x){
+	t_atom a;
+	atom_setlong(&a, x->npoints);
+	outlet_anything(x->dumpOutlet, gensym("numpoints"), 1, &a);
+}
+
 // for pattr
 t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av){
 	//post("getvalueof");
@@ -1518,6 +1518,7 @@ int main(void){
 	class_addmethod(c, (method)rbfi_addPoint, "add_point", A_GIMME, 0);
 	class_addmethod(c, (method)rbfi_deletePoint, "delete_point", A_SYM, 0);
 	class_addmethod(c, (method)rbfi_notify, "notify", A_CANT, 0); 
+	class_addmethod(c, (method)rbfi_getnumpoints, "getnumpoints", 0);
 
     
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
