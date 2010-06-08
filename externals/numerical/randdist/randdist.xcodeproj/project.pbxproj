@@ -10,6 +10,7 @@
 		1229C0010A5C0B6700CFEE8F /* randdist.c in Sources */ = {isa = PBXBuildFile; fileRef = 1229C0000A5C0B6700CFEE8F /* randdist.c */; };
 		12C7A7920D1C58240061F6E4 /* libranddist.c in Sources */ = {isa = PBXBuildFile; fileRef = 12C7A7900D1C58230061F6E4 /* libranddist.c */; };
 		12C7A7930D1C58240061F6E4 /* libranddist.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C7A7910D1C58230061F6E4 /* libranddist.h */; };
+		52285C5B11BECC9000A1A163 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52285C5A11BECC9000A1A163 /* libgsl.a */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		BE96F6A70C60202F007BCC59 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE96F6A60C60202F007BCC59 /* MaxAPI.framework */; };
 /* End PBXBuildFile section */
@@ -19,6 +20,7 @@
 		1229C0000A5C0B6700CFEE8F /* randdist.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = randdist.c; sourceTree = "<group>"; };
 		12C7A7900D1C58230061F6E4 /* libranddist.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = libranddist.c; sourceTree = "<group>"; };
 		12C7A7910D1C58230061F6E4 /* libranddist.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = libranddist.h; sourceTree = "<group>"; };
+		52285C5A11BECC9000A1A163 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../../../../lib/gsl/lib/libgsl.a; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* randdist.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randdist.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE96F6A60C60202F007BCC59 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -30,6 +32,7 @@
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
 				BE96F6A70C60202F007BCC59 /* MaxAPI.framework in Frameworks */,
+				52285C5B11BECC9000A1A163 /* libgsl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +53,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				52285C5A11BECC9000A1A163 /* libgsl.a */,
 				BE96F6A60C60202F007BCC59 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
@@ -196,7 +200,11 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../lib/gsl/lib\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
@@ -218,10 +226,7 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = i386;
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -246,7 +251,11 @@
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = ../../../../lib/gsl/lib;
+				LIBRARY_SEARCH_PATHS = (
+					../../../../lib/gsl/lib,
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../lib/gsl/lib\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
@@ -292,7 +301,11 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../lib/gsl/lib\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";

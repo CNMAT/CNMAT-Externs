@@ -187,17 +187,19 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	// need to check that this is a valid dist.
 	x->r_dist = msg;
 	int i;
-	double sum = 0;
 	if(x->r_dist == gensym("multinomial")){
-		for(i = 0; i < argc; i++){
-			sum += atom_getfloat(argv + i + 1);
+		double sum = 0;
+		for(i = 1; i < argc; i++){
+			sum += atom_getfloat(argv + i);
+		}
+		x->r_vars[0] = argv[0];
+		for(i = 1; i < argc; i++){
+			atom_setfloat(x->r_vars + i, atom_getfloat(argv + i) / sum);
 		}
 	}else{
-		sum = 1.;
+		memcpy(x->r_vars, argv, argc * sizeof(t_atom));
 	}
-	for(i = 0; i < argc; i++){
-		atom_setfloat(x->r_vars + i, atom_getfloat(argv + i) / sum);
-	}
+
 	x->r_numVars = (int)argc;	
 
 	if(x->r_dist == ps_bivariate_gaussian){
