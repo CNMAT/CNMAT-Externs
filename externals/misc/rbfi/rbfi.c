@@ -50,6 +50,8 @@
   VERSION 0.8: points now saved with patcher
   VERSION 0.8.1: added patchercoords argument to add_point message for faking drag and drop
   VERSION 0.8.2: added getnumpoints message, and fixed capslog bug
+  VERSION 0.9: nested spaces--each point can now have it's own space
+  VERSION 0.9.1: works properly in pres mode
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -63,6 +65,7 @@
 #include "ext_critical.h"
 #include "version.c"
 #include "math.h"
+#include <sys/time.h>
 
 #ifdef WIN32
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
@@ -86,6 +89,7 @@
 //#define INSIDE_OUTER_CIRCLE 0x4
 #define ON_OUTER_CIRCLE 0x4
 
+#define NUM_FIELDS_IN_POINT 12
 typedef struct _point{
 	//double x, y;
 	t_pt pt;
@@ -96,9 +100,17 @@ typedef struct _point{
 	double inner_radius, outer_radius;
 	unsigned long mousestate;
 	int locked;
+	struct _space *space;
 	struct _point *next;
 	struct _point *prev;
 } t_point;
+
+typedef struct _space{
+	t_point *points;
+	int npoints;
+	t_point *selected;
+	struct _space *next;
+} t_space;
 
 typedef struct _rbfi{
 	t_jbox ob;
@@ -106,25 +118,27 @@ typedef struct _rbfi{
 	t_critical lock;
 	t_jrgba bgcolor, pointcolor, bordercolor, selectedcolor, labelcolor, xhaircolor;
 	float pointdiameter;
-	t_point *points;
+	t_space *spaces;
+	long nspaces;
 	t_hashtab *ht;
-	long npoints;
-	t_point *selected;
+	t_hashtab *master_hash;
 	double xmin, xmax, ymin, ymax;
-	//t_symbol *draw_circles, *draw_labels;
 	int always_draw_circles, always_draw_labels;
 	long monotonic_point_counter;
 	long outputmode;
 	long rbf;
-	long mouse_state;
 	float line_width;
 	long modifiers;
 	t_pt xhairs;
 	long mouse_active_beyond_rect;
 	int font_size;
+	struct timeval lastclick;
+	t_object *pv;
 } t_rbfi;
 
 static t_symbol *rbfi_ps_coords, *rbfi_ps_patchercoords, *rbfi_ps_name, *rbfi_ps_rgb, *rbfi_ps_hsv, /**rbfi_ps_weight, *rbfi_ps_exponent, */*rbfi_ps_inner_radius, *rbfi_ps_outer_radius, *rbfi_ps_locked;
+
+static t_symbol *ps_top, *ps_done, *ps_clear, *ps_space, *ps_numpoints, *ps_mouse_down, *ps_mouse_up;
 
 static t_symbol *l_color, *l_points, *l_xhairs;
 static t_class *rbfi_class;
@@ -136,7 +150,11 @@ void rbfi_deletePoint(t_rbfi *x, t_symbol *name);
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
 void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
 void rbfi_move(t_rbfi *x, double xx, double yy);
+void rbfi_pushPointName(t_rbfi *x, t_symbol *name);
+void rbfi_push(t_rbfi *x, t_point *p);
+void rbfi_pop(t_rbfi *x, t_symbol *top);
 void rbfi_outputMousePos(t_rbfi *x, t_pt pt);
+int rbfi_doubleclick(struct timeval t1, struct timeval t2);
 void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
 void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
 void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers);
@@ -147,7 +165,6 @@ int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv);
 t_point *rbfi_addPointToList(t_rbfi *x, t_point point);
 t_point *rbfi_newPoint(void);
 void rbfi_initPoint(t_rbfi *x, t_point *p);
-//t_point *rbfi_insertPoint(t_rbfi *x, t_pt pt, t_symbol *label);
 double rbfi_computeWeightFromDistances(double d1, double d2);
 double rbfi_computeExponentFromDistances(double d1, double d2);
 void rbfi_inner_radius(t_rbfi *x, double f);
@@ -156,11 +173,13 @@ void rbfi_exponent(t_rbfi *x, double f);
 void rbfi_weight(t_rbfi *x, double f);
 t_point *rbfi_selectPoint(t_rbfi *x, t_pt pt);
 void rbfi_removePoint(t_rbfi *x, t_point *p);
-void rbfi_outputPoints(t_rbfi *x);
 void rbfi_outputDistance(t_rbfi *x);
-void rbfi_rename(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv);
 void rbfi_dump(t_rbfi *x);
-void rbfi_toArray(t_point *linked_list, long *argc, t_atom **argv);
+int rbfi_getArraySize(t_rbfi *x);
+void rbfi_toArray(t_space *s, t_atom *ar);
+t_atom *rbfi_doToArray(t_space *s, t_atom *ar);
+t_space *rbfi_fromArray(t_hashtab *ht, long n, t_atom *ar);
+t_atom *rbfi_doFromArray(t_hashtab *ht, long n, t_atom *ar, t_space *space);
 void rbfi_clear(t_rbfi *x);
 void rbfi_free(t_rbfi *x);
 void rbfi_assist(t_rbfi *x, void *b, long m, long a, char *s);
@@ -174,11 +193,12 @@ void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v );
 void *rbfi_new(t_symbol *msg, int argc, t_atom *argv);
 void rbfi_postPoint(t_point *p);
 t_max_err rbfi_notify(t_rbfi *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
-t_max_err rbfi_points_get(t_rbfi *x, t_object *attr, long *argc, t_atom **argv);
-t_max_err rbfi_points_set(t_rbfi *x, t_object *attr, long argc, t_atom *argv);
-
+t_max_err rbfi_spaces_get(t_rbfi *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err rbfi_spaces_set(t_rbfi *x, t_object *attr, long argc, t_atom *argv);
+void rbfi_getRect(t_rbfi *x, t_rect *rect);
 
 void rbfi_paint(t_rbfi *x, t_object *patcherview){
+	x->pv = patcherview;
 	t_rect rect;
 
 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);    
@@ -214,15 +234,15 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 				int w = srect.width;
 				int h = srect.height;
 				double sum;
-				double weights[x->npoints];
+				double weights[x->spaces->npoints];
 				for(i = 0; i < w; i++){
 					for(j = 0; j < h; j++){
-						t_point *p = x->points;
+						t_point *p = x->spaces->points;
 						sum = 0;
 						t_jrgba color = {0., 0., 0., 1.};
 						double ii = rbfi_scale(i, 0, srect.width, 0, drect.width);
 						double jj = rbfi_scale(j, 0, srect.width, 0, drect.width);
-						rbfi_computeWeights(x, (t_pt){ii, jj}, rect, x->points, x->npoints, weights);
+						rbfi_computeWeights(x, (t_pt){ii, jj}, rect, x->spaces->points, x->spaces->npoints, weights);
 						k = 0;
 						while(p){
 							color.red += weights[k] * p->color.red;
@@ -251,27 +271,20 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 	// draw points
 	{
 		jgraphics_set_line_width(g, 1);
-		t_point *p = x->points;
+		t_point *p = x->spaces->points;
 		critical_enter(x->lock);
 		t_jrgba white = {1., 1., 1., 1.};
 		t_jrgba gray = {.75, .75, .75, 1.};
-		t_jrgba black = {0., 0., 0., 1.};
-		int i = 0;
 		while(p){
-			if(p == x->selected){
+			if(p == x->spaces->selected){
 				jgraphics_set_source_jrgba(g, &(white));
 			}else{
 				jgraphics_set_source_jrgba(g, &(gray));
 			}
-			double inner_p = .4, outer_p = 1.25;
-			//t_jrgba inner_color = (t_jrgba){pow(p->color.red, inner_p), pow(p->color.green, inner_p), pow(p->color.blue, inner_p), 0.6};
-			//t_jrgba outer_color = (t_jrgba){pow(p->color.red, outer_p), pow(p->color.green, outer_p), pow(p->color.blue, outer_p), 0.6};
-
 			t_jrgba color;
 			t_pt pt = p->pt;
 			pt.x = rbfi_scale(pt.x, x->xmin, x->xmax, 0, rect.width);
 			pt.y = rbfi_scale(pt.y, x->ymin, x->ymax, rect.height, 0);
-			//if((x->draw_circles == gensym("edit") && (x->modifiers & 0x10)) || x->draw_circles == gensym("always")){
 			{
 				if(x->always_draw_circles == 1 && (x->modifiers ^ 0x2) && (x->modifiers ^ 0x12)){
 					if(p->locked){
@@ -285,7 +298,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					jgraphics_ellipse(g, pt.x - p->inner_radius * rect.width, pt.y - p->inner_radius * rect.width, p->inner_radius * rect.width * 2, p->inner_radius * rect.width * 2);
 					jgraphics_stroke(g);
 				}else if(x->modifiers & 0x2){
-					if(p == x->selected){
+					if(p == x->spaces->selected){
 						if((p->mousestate == INSIDE_INNER_CIRCLE) || (p->mousestate == ON_INNER_CIRCLE)){
 							color = white;
 						}else{
@@ -317,7 +330,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					jgraphics_ellipse(g, pt.x - p->outer_radius * rect.width, pt.y - p->outer_radius * rect.width, p->outer_radius * rect.width * 2, p->outer_radius * rect.width * 2);
 					jgraphics_stroke(g);
 				}else if(x->modifiers & 0x2){
-					if(p == x->selected){
+					if(p == x->spaces->selected){
 						//post("%s is selected, comparing 0x%x to 0x%x and 0x%x", p->label->s_name, p->mousestate, (MOUSEUP | INSIDE_INNER_CIRCLE), (MOUSEUP | ON_OUTER_CIRCLE));
 						if((p->mousestate == INSIDE_INNER_CIRCLE) || (p->mousestate == ON_OUTER_CIRCLE)){
 							color = white;
@@ -359,7 +372,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 					jgraphics_move_to(g, pt.x - (w / 2.), pt.y + (h / 2.) - 1);
 					jgraphics_show_text(g, p->label->s_name);
 				}else if(x->modifiers & 0x2){
-					if(p == x->selected){
+					if(p == x->spaces->selected){
 						if(p->mousestate & 0xful){
 							color = white;
 						}else{
@@ -413,47 +426,47 @@ void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 
 void rbfi_deletePoint(t_rbfi *x, t_symbol *name){
 	t_point *p;
+	critical_enter(x->lock);
 	hashtab_lookup(x->ht, name, (t_object **)&p);
 	if(p){
 		rbfi_removePoint(x, p);
 	}
+	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
 
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 	t_symbol *name = msg;
+	if(!name){
+		object_error((t_object *)x, "bad arguments");
+		return;
+	}
 	t_point *p = NULL;
+	critical_enter(x->lock);
 	hashtab_lookup(x->ht, name, (t_object **)&p);
 	if(p){
 		if(p->locked){
+			critical_exit(x->lock);
 			return;
 		}
 		rbfi_parseAddPointArgs(x, p, argc, argv);
 		t_rect r;
-		jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+		rbfi_getRect(x, &r);
 		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius  * r.width, p->outer_radius * r.width);
 	}else{
-		/*
-		t_atom a[argc + 2];
-		atom_setsym(a, gensym("name"));
-		atom_setsym(a + 1, name);
-		memcpy(a + 2, argv, argc * sizeof(t_atom));
-		int i;
-		for(i = 0; i < argc + 2; i++){
-			postatom(a + i);
-		}
-		rbfi_addPoint(x, msg, argc + 2, a);
-		*/
 		object_error((t_object *)x, "no point with name %s", name->s_name);
+		critical_exit(x->lock);
 		return;
 	}		
+	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
 
 void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int nweights, double *weights){
+	critical_enter(x->lock);
 	t_point *p = points;
 	int i = 0;
 	double sum = 0;
@@ -464,6 +477,7 @@ void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int 
 		if(coords.x == pt.x && coords.y == pt.y){
 			memset(weights, 0, nweights * sizeof(double));
 			weights[i] = 1.;
+			critical_exit(x->lock);
 			return;
 		}else{
 			double d = sqrt(pow(coords.x - pt.x, 2.) + pow(coords.y - pt.y, 2.));
@@ -471,6 +485,7 @@ void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int 
 			if(isinf(weights[i])){
 				memset(weights, 0, nweights * sizeof(double));
 				weights[i] = 1.;
+				critical_exit(x->lock);
 				return;
 			}
 		}
@@ -478,6 +493,7 @@ void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int 
 		p = p->next;
 		i++;
 	}
+	critical_exit(x->lock);
 	for(i = 0; i < nweights; i++){
 		//post("weights[%d]: %f %f, sum = %f", i, weights[i], weights[i] / sum, sum);
 		weights[i] /= sum;
@@ -486,16 +502,16 @@ void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int 
 
 void rbfi_move(t_rbfi *x, double xx, double yy){
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	rbfi_getRect(x, &r);
 
-	double weights[x->npoints];
-
+	double weights[x->spaces->npoints];
 	double xx_screen = rbfi_scale(xx, x->xmin, x->xmax, 0, r.width);
 	double yy_screen = rbfi_scale(yy, x->ymin, x->ymax, r.height, 0);
-	rbfi_computeWeights(x, (t_pt){xx_screen,yy_screen}, r, x->points, x->npoints, weights);
+	rbfi_computeWeights(x, (t_pt){xx_screen,yy_screen}, r, x->spaces->points, x->spaces->npoints, weights);
 	t_atom out[2];
 	int i = 0;
-	t_point *p = x->points;
+	critical_enter(x->lock);
+	t_point *p = x->spaces->points;
 	while(p){
 		atom_setsym(out, p->label);
 		atom_setfloat(out + 1, weights[i]);
@@ -503,9 +519,68 @@ void rbfi_move(t_rbfi *x, double xx, double yy){
 		i++;
 		p = p->next;
 	}
-	outlet_anything(x->listOutlet, gensym("done"), 0, NULL);
 	x->xhairs = (t_pt){xx_screen,yy_screen};
+	critical_exit(x->lock);
+	outlet_anything(x->listOutlet, ps_done, 0, NULL);
 	jbox_redraw(&(x->ob));
+}
+
+void rbfi_pushPointName(t_rbfi *x, t_symbol *name){
+	if(!name){
+		return;
+	}
+	t_point *p = NULL;
+	critical_enter(x->lock);
+	hashtab_lookup(x->ht, name, (t_object **)&p);
+	if(p){
+		rbfi_push(x, p);
+	}else{
+		object_error((t_object *)x, "no point found with name %s", name->s_name);
+	}
+	critical_exit(x->lock);
+}
+
+void rbfi_push(t_rbfi *x, t_point *p){
+	critical_enter(x->lock);
+	if(p->space){
+		p->space->next = x->spaces;
+		x->spaces = p->space;
+	}else{
+		p->space = (t_space *)sysmem_newptr(sizeof(t_space));
+		t_space *s = p->space;
+		s->points = NULL;
+		s->npoints = 0;
+		p->space->next = x->spaces;
+		x->spaces = p->space;
+	}
+	critical_exit(x->lock);
+	jbox_invalidate_layer((t_object *)x, NULL, l_color);
+	jbox_redraw(&(x->ob));
+}
+
+void rbfi_pop(t_rbfi *x, t_symbol *top){
+	critical_enter(x->lock);
+	if(top == ps_top){
+		t_space *s = x->spaces;
+		while(s->next){
+			s = s->next;
+		}
+		x->spaces = s;
+	}else if(x->spaces->next){
+		x->spaces = x->spaces->next;
+	}
+	critical_exit(x->lock);
+	jbox_invalidate_layer((t_object *)x, NULL, l_color);
+	jbox_redraw(&(x->ob));
+}
+
+int rbfi_doubleclick(struct timeval t1, struct timeval t2){
+	double elapsed = (t2.tv_sec - t1.tv_sec) * 1000.;
+	elapsed += (t2.tv_sec - t1.tv_sec) / 1000.;
+	if(elapsed > 200){
+		return 0;
+	}
+	return 1;
 }
 
 // 0x10 = no modifiers 
@@ -518,7 +593,7 @@ void rbfi_move(t_rbfi *x, double xx, double yy){
 
 void rbfi_outputMousePos(t_rbfi *x, t_pt pt){
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	rbfi_getRect(x, &r);
 	t_atom pos[2];
 	atom_setfloat(pos, rbfi_scale(pt.x, 0., r.width, x->xmin, x->xmax));
 	atom_setfloat(pos + 1, rbfi_scale(pt.y, r.height, 0., x->ymin, x->ymax));
@@ -526,22 +601,27 @@ void rbfi_outputMousePos(t_rbfi *x, t_pt pt){
 }
 
 void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	int doubleclick = rbfi_doubleclick(x->lastclick, tv);
+	x->lastclick = tv;
 	x->modifiers = modifiers;
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 
-	outlet_anything(x->mouseposOutlet, gensym("mousedown"), 0, NULL);
+	outlet_anything(x->mouseposOutlet, ps_mouse_down, 0, NULL);
 	rbfi_outputMousePos(x, pt);
 
 	switch(modifiers){
 	case 0x110:
 	case 0x10:
 		{
-			double weights[x->npoints];
-			rbfi_computeWeights(x, pt, r, x->points, x->npoints, weights);
 			t_atom out[2];
 			int i = 0;
-			t_point *p = x->points;
+			critical_enter(x->lock);
+			double weights[x->spaces->npoints];
+			rbfi_computeWeights(x, pt, r, x->spaces->points, x->spaces->npoints, weights);
+			t_point *p = x->spaces->points;
 			while(p){
 				atom_setsym(out, p->label);
 				atom_setfloat(out + 1, weights[i]);
@@ -549,32 +629,39 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				i++;
 				p = p->next;
 			}
-			outlet_anything(x->listOutlet, gensym("done"), 0, NULL);
+			critical_exit(x->lock);
 			x->xhairs = pt;
+			outlet_anything(x->listOutlet, ps_done, 0, NULL);
 		}
 		break;
 	case 0x112:
 	case 0x12:
 		{
-			//x->selected = rbfi_selectPoint(x, pt);
+			critical_enter(x->lock);
+			if(doubleclick && x->spaces->selected){
+				// push into a new space
+				rbfi_push(x, x->spaces->selected);
+			}
+			critical_exit(x->lock);
+			//x->spaces->selected = rbfi_selectPoint(x, pt);
 		}
 		break;
 	case (0x112 | 0x111):
 	case (0x12 | 0x11):
 		// command-shift -> delete a point 
 		{
-			if(x->selected){
-				if(x->selected->locked){
+			critical_enter(x->lock);
+			if(x->spaces->selected){
+				if(x->spaces->selected->locked){
 					break;
 				}
-				if(x->selected->mousestate == INSIDE_INNER_CIRCLE){
-					critical_enter(x->lock);
-					rbfi_removePoint(x, x->selected);
-					x->selected = NULL;
-					critical_exit(x->lock);
+				if(x->spaces->selected->mousestate == INSIDE_INNER_CIRCLE){
+					rbfi_removePoint(x, x->spaces->selected);
+					x->spaces->selected = NULL;
 					jbox_invalidate_layer((t_object *)x, NULL, l_color);
 				}
 			}
+			critical_exit(x->lock);
 		}
 		break;
 	case 0x11a:
@@ -591,7 +678,6 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 		break;
 	}
 
- out:
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
 	rbfi_outputDistance(x);
@@ -607,17 +693,18 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x110:
 	case 0x10:
 		{
+			critical_enter(x->lock);
 			if(!(x->mouse_active_beyond_rect)){
 				pt = (t_pt){
 					rbfi_clip(pt.x, 0, r.width),
 					rbfi_clip(pt.y, 0, r.height)
 				};
 			}
-			double weights[x->npoints];
-			rbfi_computeWeights(x, pt, r, x->points, x->npoints, weights);
+			double weights[x->spaces->npoints];
+			rbfi_computeWeights(x, pt, r, x->spaces->points, x->spaces->npoints, weights);
 			t_atom out[2];
 			int i = 0;
-			t_point *p = x->points;
+			t_point *p = x->spaces->points;
 			while(p){
 				atom_setsym(out, p->label);
 				atom_setfloat(out + 1, weights[i]);
@@ -625,27 +712,29 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				i++;
 				p = p->next;
 			}
-			outlet_anything(x->listOutlet, gensym("done"), 0, NULL);
 			x->xhairs = pt;
+			critical_exit(x->lock);
+			outlet_anything(x->listOutlet, ps_done, 0, NULL);
 		}
 		break;
 	case 0x112:
 	case 0x12:
 		// shift -> edit point
-		if(x->selected){
-			if(x->selected->locked){
+		critical_enter(x->lock);
+		if(x->spaces->selected){
+			if(x->spaces->selected->locked){
 				break;
 			}
-			switch(x->selected->mousestate){
+			switch(x->spaces->selected->mousestate){
 			case INSIDE_INNER_CIRCLE:
-				x->selected->pt = (t_pt){
+				x->spaces->selected->pt = (t_pt){
 					rbfi_scale(pt.x, 0., r.width, x->xmin, x->xmax),
 					rbfi_scale(pt.y, r.height, 0., x->ymin, x->ymax)
 				};
 				break;
 			case ON_INNER_CIRCLE:
 				{
-					t_point *p = x->selected;
+					t_point *p = x->spaces->selected;
 					t_pt sc = p->pt;
 					//sc.x *= r.width;
 					//sc.y = r.height - sc.y * r.height;
@@ -658,7 +747,7 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				break;
 			case ON_OUTER_CIRCLE:
 				{
-					t_point *p = x->selected;
+					t_point *p = x->spaces->selected;
 					t_pt sc = p->pt;
 					sc.x = rbfi_scale(p->pt.x, x->xmin, x->xmax, 0., r.width);
 					sc.y = rbfi_scale(p->pt.y, x->ymin, x->ymax, r.height, 0.);
@@ -670,6 +759,7 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 			}
 		        jbox_invalidate_layer((t_object *)x, NULL, l_color);
 		}
+		critical_exit(x->lock);
 		break;
 	}
 	object_notify(x, _sym_modified, NULL);
@@ -680,14 +770,16 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 void rbfi_mouseup(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
-	outlet_anything(x->mouseposOutlet, gensym("mouseup"), 0, NULL);
+	outlet_anything(x->mouseposOutlet, ps_mouse_up, 0, NULL);
 }
 
 void rbfi_mouseleave(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->modifiers = 0;
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
-	x->selected = NULL;
+	critical_enter(x->lock);
+	x->spaces->selected = NULL;
+	critical_exit(x->lock);
 	jbox_redraw(&(x->ob));
 }
 
@@ -699,8 +791,9 @@ void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 	switch(modifiers){
 	case 0x2:
 		{
-		// shift
-			t_point *p = x->points;
+			critical_enter(x->lock);
+			// shift
+			t_point *p = x->spaces->points;
 			int i = 0;
 			while(p){
 				if(p->locked){
@@ -715,38 +808,39 @@ void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				p->mousestate = 0;
 				if(fabs(pos - p->inner_radius * r.width) <= CIRCLE_HIT){
 					p->mousestate |= ON_INNER_CIRCLE;
-					if(x->selected){
-						if(fabs(pos - p->inner_radius * r.width) < fabs(pos - x->selected->inner_radius * r.width)){
-							x->selected = p;
+					if(x->spaces->selected){
+						if(fabs(pos - p->inner_radius * r.width) < fabs(pos - x->spaces->selected->inner_radius * r.width)){
+							x->spaces->selected = p;
 						}
 					}else{
-						x->selected = p;
+						x->spaces->selected = p;
 					}
 				}else if(fabs(pos - p->outer_radius * r.width) <= CIRCLE_HIT){
 					p->mousestate |= ON_OUTER_CIRCLE;
-					if(x->selected){
-						if(fabs(pos - p->outer_radius * r.width) < fabs(pos - x->selected->outer_radius * r.width)){
-							x->selected = p;
+					if(x->spaces->selected){
+						if(fabs(pos - p->outer_radius * r.width) < fabs(pos - x->spaces->selected->outer_radius * r.width)){
+							x->spaces->selected = p;
 						}
 					}else{
-						x->selected = p;
+						x->spaces->selected = p;
 					}
 				}else if(p->inner_radius * r.width - pos >= 0){
 					p->mousestate |= INSIDE_INNER_CIRCLE;
-					if(x->selected){
-						if((p->inner_radius * r.width - pos) < (x->selected->inner_radius * r.width - pos)){
-							x->selected = p;
+					if(x->spaces->selected){
+						if((p->inner_radius * r.width - pos) < (x->spaces->selected->inner_radius * r.width - pos)){
+							x->spaces->selected = p;
 						}
 					}else{
-						x->selected = p;
+						x->spaces->selected = p;
 					}
-				}else if(p == x->selected){
-					x->selected = NULL;
+				}else if(p == x->spaces->selected){
+					x->spaces->selected = NULL;
 				}
 
 				p = p->next;
 			}
 		}
+		critical_exit(x->lock);
 		break;
 	}
 	jbox_redraw(&(x->ob));
@@ -756,14 +850,16 @@ void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 void rbfi_addPoint(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv){
 	t_point p;
 	rbfi_initPoint(x, &p);
-	int ret = rbfi_parseAddPointArgs(x, &p, argc, argv);
+	rbfi_parseAddPointArgs(x, &p, argc, argv);
 
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	rbfi_getRect(x, &r);
 	p.weight = rbfi_computeWeightFromDistances(p.inner_radius * r.width, p.outer_radius * r.width);
 	p.exponent = rbfi_computeExponentFromDistances(p.inner_radius  * r.width, p.outer_radius * r.width);
-	x->selected = rbfi_addPointToList(x, p);
-	//rbfi_postPoint(x->selected);
+	critical_enter(x->lock);
+	x->spaces->selected = rbfi_addPointToList(x, p);
+	critical_exit(x->lock);
+	//rbfi_postPoint(x->spaces->selected);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
@@ -789,7 +885,7 @@ int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv){
 			goto bail;
 		}
 		t_rect r;
-		jbox_get_patching_rect(&(x->ob.b_ob), &r);
+		rbfi_getRect(x, &r);
 		float xx = atom_getfloat(ptr++);
 		float yy = atom_getfloat(ptr++);
 		xx -= r.x;
@@ -848,16 +944,16 @@ int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv){
 			}
 		}
 		/*
-	}else if(s == rbfi_ps_weight){
-		if(argc - (ptr - argv) < 1){
-			goto bail;
-		}
-		p->weight = atom_getfloat(ptr++);
-	}else if(s == rbfi_ps_exponent){
-		if(argc - (ptr - argv) < 1){
-			goto bail;
-		}
-		p->exponent = atom_getfloat(ptr++);
+		  }else if(s == rbfi_ps_weight){
+		  if(argc - (ptr - argv) < 1){
+		  goto bail;
+		  }
+		  p->weight = atom_getfloat(ptr++);
+		  }else if(s == rbfi_ps_exponent){
+		  if(argc - (ptr - argv) < 1){
+		  goto bail;
+		  }
+		  p->exponent = atom_getfloat(ptr++);
 		*/
 	}else if(s == rbfi_ps_inner_radius){
 		if(argc - (ptr - argv) < 1){
@@ -898,6 +994,7 @@ t_point *rbfi_addPointToList(t_rbfi *x, t_point point){
 			p->inner_radius = point.inner_radius;
 			p->outer_radius = point.outer_radius;
 			p->mousestate = 0;
+			critical_exit(x->lock);
 			return p;
 		}
 	}
@@ -905,17 +1002,18 @@ t_point *rbfi_addPointToList(t_rbfi *x, t_point point){
 		p = rbfi_newPoint();
 	}
 	if(!p){
+		critical_exit(x->lock);
 		return NULL;
 	}
 	memcpy(p, &point, sizeof(t_point));
 
-	p->next = x->points;
+	p->next = x->spaces->points;
 	p->prev = NULL;
-	if(x->points){
-		x->points->prev = p;
+	if(x->spaces->points){
+		x->spaces->points->prev = p;
 	}
-	x->points = p;
-	x->npoints++;
+	x->spaces->points = p;
+	x->spaces->npoints++;
 
 	hashtab_store(ht, p->label, (t_object *)p);
 
@@ -935,21 +1033,30 @@ t_point *rbfi_newPoint(void){
 
 void rbfi_initPoint(t_rbfi *x, t_point *p){
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	rbfi_getRect(x, &r);
 	p->pt = (t_pt){(double)rand() / RAND_MAX, (double)rand() / RAND_MAX};
-	char buf[32];
-	sprintf(buf, "preset %ld", x->monotonic_point_counter++);
+	char buf[128];
+	critical_enter(x->lock);
+	if(x->spaces->next){
+		if(x->spaces->next->selected){
+			sprintf(buf, "%s/p%ld", x->spaces->next->selected->label->s_name, x->monotonic_point_counter++);
+		}else{
+			sprintf(buf, "/NULL/p%ld", x->monotonic_point_counter++);
+		}
+	}else{
+		sprintf(buf, "/p%ld", x->monotonic_point_counter++);
+	}
+	critical_exit(x->lock);
 	p->label = gensym(buf);
-	//p->color = (t_jrgba){(double)rand() / RAND_MAX, 0.75, 0.75};
-	//double rr = (double)rand() / RAND_MAX;
-	//HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), rr * 360., 0.75, 0.75);
 	HSVtoRGB(&(p->color.red), &(p->color.green), &(p->color.blue), (x->monotonic_point_counter * 20) % 360, 0.75, 0.75);
+	p->color.alpha = 0;
 	p->inner_radius = .05;
 	p->outer_radius = .2;
 	p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 	p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 	p->mousestate = 0;
 	p->locked = 0;
+	p->space = NULL;
 }
 
 #define THRESH .9
@@ -981,56 +1088,63 @@ double rbfi_computeExponentFromDistances(double d1, double d2){
 
 void rbfi_inner_radius(t_rbfi *x, double f){
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-	t_point *p = x->points;
+	rbfi_getRect(x, &r);
+	critical_enter(x->lock);
+	t_point *p = x->spaces->points;
 	while(p){
 		p->inner_radius = f;
 		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 		p = p->next;
 	}
+	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
 
 void rbfi_outer_radius(t_rbfi *x, double f){
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-	t_point *p = x->points;
+	rbfi_getRect(x, &r);
+	critical_enter(x->lock);
+	t_point *p = x->spaces->points;
 	while(p){
 		p->outer_radius = f;
 		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 		p = p->next;
 	}
-
+	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, NULL, l_color);
 	jbox_redraw(&(x->ob));
 }
 
 void rbfi_exponent(t_rbfi *x, double f){
-	t_point *p = x->points;
+	critical_enter(x->lock);
+	t_point *p = x->spaces->points;
 	while(p){
 		p->exponent = f;
 		p = p->next;
 	}
+	critical_exit(x->lock);
 	jbox_redraw(&(x->ob));
 }
 
 void rbfi_weight(t_rbfi *x, double f){
-	t_point *p = x->points;
+	critical_enter(x->lock);
+	t_point *p = x->spaces->points;
 	while(p){
 		p->weight = f;
 		p = p->next;
 	}
+	critical_exit(x->lock);
 	jbox_redraw(&(x->ob));
 }
 
 t_point *rbfi_selectPoint(t_rbfi *x, t_pt pt){
 	critical_enter(x->lock);
-	t_point *p = x->points;
+	t_point *p = x->spaces->points;
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	rbfi_getRect(x, &r);
 	while(p){
 		t_pt sc = p->pt;
 		sc.x = rbfi_scale(p->pt.x, x->xmin, x->xmax, 0., r.width);
@@ -1051,7 +1165,7 @@ void rbfi_removePoint(t_rbfi *x, t_point *p){
 	if(p->prev){
 		p->prev->next = p->next;
 	}else{
-		x->points = p->next;
+		x->spaces->points = p->next;
 	}
 	if(p->next){
 		p->next->prev = p->prev;
@@ -1060,75 +1174,15 @@ void rbfi_removePoint(t_rbfi *x, t_point *p){
 		hashtab_chuckkey(x->ht, p->label);
 	}
 	sysmem_freeptr((void *)p);
-	x->npoints--;
+	x->spaces->npoints--;
 	critical_exit(x->lock);
-}
-
-void rbfi_outputPoints(t_rbfi *x){
-	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-	if(x->selected){
-		t_atom out[2];
-		critical_enter(x->lock);
-		atom_setfloat(out, rbfi_scale(x->selected->pt.x, 0, 1., x->xmin, x->xmax));
-		atom_setfloat(out + 1, rbfi_scale(x->selected->pt.y, 1., 0, x->ymin, x->ymax));
-		critical_exit(x->lock);
-		outlet_list(x->selectedOutlet, NULL, 2, out);
-	}
-	t_point *p = x->points;
-	switch(x->outputmode){
-	case OUTPUT_CONCATENATE:
-		{
-			long outlen = x->npoints * 3;
-			t_atom out[outlen];
-			t_atom *outptr = out + outlen - 1;
-			critical_enter(x->lock);
-			// since the points are pushed onto the front of the linked list, we should work backwards
-			while(p){
-				atom_setfloat(outptr--, p->pt.y);
-				atom_setfloat(outptr--, p->pt.x);
-				atom_setsym(outptr--, p->label);
-				p = p->next;
-			}
-			critical_exit(x->lock);
-			outlet_list(x->listOutlet, NULL, outlen, out);
-		}
-		break;
-	case OUTPUT_LIST:
-		{
-			// we could go through and call the outlet for each point, but we would have to exit the critical
-			// section and then re-enter at the beginning of the while loop.  since the outlet function can 
-			// take a long time to return, we should make a copy of everything quickly and safely, and then 
-			// output our copy.
-			int npoints = x->npoints;
-			t_atom out[3 * npoints];
-			t_atom *ptr = out + (3 * npoints) - 1;
-			critical_enter(x->lock);
-			while(p){
-				atom_setfloat(ptr--, p->pt.y);
-				atom_setfloat(ptr--, p->pt.x);
-				atom_setsym(ptr--, p->label);
-				p = p->next;
-			}
-			critical_exit(x->lock);
-			int i;
-			outlet_anything(x->listOutlet, gensym("clear"), 0, NULL);
-			ptr = out;
-			for(i = 0; i < npoints; i++){
-				t_symbol *sym = atom_getsym(ptr++);
-				outlet_anything(x->listOutlet, sym, 2, ptr);
-				ptr += 2;
-			}
-		}
-		break;
-	}
 }
 
 void rbfi_outputDistance(t_rbfi *x){
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-	t_point *p = x->points;
-	t_atom out[x->npoints * 2];
+	rbfi_getRect(x, &r);
+	t_point *p = x->spaces->points;
+	t_atom out[x->spaces->npoints * 2];
 	t_atom *outptr = out;
 	critical_enter(x->lock);
 	while(p){
@@ -1137,72 +1191,167 @@ void rbfi_outputDistance(t_rbfi *x){
 		p = p->next;
 	}
 	critical_exit(x->lock);
-	outlet_list(x->distanceOutlet, NULL, x->npoints * 2, out);
+	outlet_list(x->distanceOutlet, NULL, x->spaces->npoints * 2, out);
 }
 
 void rbfi_dump(t_rbfi *x){
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
+	rbfi_getRect(x, &r);
 
 	long argc;
 	t_atom *argv = NULL;
-	rbfi_toArray(x->points, &argc, &argv);
-	int i = 0;
-	while(i < argc){
-		outlet_list(x->dumpOutlet, NULL, 12, argv + (i * 12));
-		i++;
+	critical_enter(x->lock);
+	t_space *s = x->spaces;
+	while(s->next){
+		s = s->next;
 	}
-	outlet_anything(x->dumpOutlet, gensym("done"), 0, NULL);
+	argc = rbfi_getArraySize(x);
+	argv = (t_atom *)sysmem_newptr(argc * sizeof(t_atom));
+	rbfi_toArray(s, argv);
+	critical_exit(x->lock);
+
+	outlet_list(x->dumpOutlet, NULL, argc, argv);
 
 	if(argv){
 		sysmem_freeptr(argv);
 	}
 }
 
-void rbfi_toArray(t_point *linked_list, long *argc, t_atom **argv){
-	t_point *p = linked_list;
-	*argc = 0;
-	while(p){
-		(*argc)++;
+int rbfi_getArraySize(t_rbfi *x){
+	long n = 0, i, nkeys;
+	t_symbol **keys = NULL;;
+	critical_enter(x->lock);
+	hashtab_getkeys(x->ht, &nkeys, &keys);
+	for(i = 0; i < nkeys; i++){
+		t_point *p;
+		hashtab_lookup(x->ht, keys[i], (t_object **)(&p));
+		if(p){
+			n += NUM_FIELDS_IN_POINT;
+			if(p->space){
+				n += 2;
+			}
+		}
+	}
+	critical_exit(x->lock);
+	return n + 2;
+}
+
+void rbfi_toArray(t_space *s, t_atom *ar){
+	rbfi_doToArray(s, ar);
+}
+
+t_atom *rbfi_doToArray(t_space *s, t_atom *ar){
+	t_atom *ptr = ar;
+	atom_setsym(ptr++, ps_space);
+	atom_setlong(ptr++, s->npoints);
+	t_point *p = s->points;
+	if(!p){
+		return ptr;
+	}
+	while(p->next){
 		p = p->next;
 	}
-	*argv = (t_atom *)sysmem_newptr(*argc * 12 * sizeof(t_atom));
-	t_atom *ptr = *argv;
-	p = linked_list;
 	while(p){
-		atom_setsym(ptr++, p->label);
-
-		atom_setsym(ptr++, rbfi_ps_coords);
 		atom_setfloat(ptr++, p->pt.x);
 		atom_setfloat(ptr++, p->pt.y);
-
-		atom_setsym(ptr++, rbfi_ps_rgb);
+		atom_setsym(ptr++, p->label);
 		atom_setfloat(ptr++, p->color.red);
 		atom_setfloat(ptr++, p->color.green);
 		atom_setfloat(ptr++, p->color.blue);
-
-		atom_setsym(ptr++, rbfi_ps_inner_radius);
+		atom_setfloat(ptr++, p->color.alpha);
+		atom_setfloat(ptr++, p->exponent);
+		atom_setfloat(ptr++, p->weight);
 		atom_setfloat(ptr++, p->inner_radius);
-
-		atom_setsym(ptr++, rbfi_ps_outer_radius);
 		atom_setfloat(ptr++, p->outer_radius);
-
-		p = p->next;
+		atom_setlong(ptr++, p->locked);
+		if(p->space){
+			ptr = rbfi_doToArray(p->space, ptr);
+		}
+		p = p->prev;
 	}
+	return ptr;
+}
+
+t_space *rbfi_fromArray(t_hashtab *ht, long n, t_atom *ar){
+	//t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
+	t_space *s = (t_space *)sysmem_newptr(sizeof(t_space));
+	s->points = NULL;
+	s->npoints = 0;
+	s->next = NULL;
+	rbfi_doFromArray(ht, n, ar, s);
+	return s;
+}
+
+t_atom *rbfi_doFromArray(t_hashtab *ht, long n, t_atom *ar, t_space *space){
+	t_atom *ptr = ar;
+	if(atom_gettype(ptr) == A_SYM){
+		if(atom_getsym(ptr) == gensym("space")){
+			ptr++;
+		}
+	}
+	long npoints = atom_getlong(ptr++);
+	int i;
+	for(i = 0; i < npoints; i++){
+		t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
+		p->pt.x = atom_getfloat(ptr++);
+		p->pt.y = atom_getfloat(ptr++);
+		p->label = atom_getsym(ptr++);
+		p->color = (t_jrgba){atom_getfloat(ptr++),atom_getfloat(ptr++),atom_getfloat(ptr++),atom_getfloat(ptr++)};
+		p->exponent = atom_getfloat(ptr++);
+		p->weight = atom_getfloat(ptr++);
+		p->inner_radius = atom_getfloat(ptr++);
+		p->outer_radius = atom_getfloat(ptr++);
+		p->locked = atom_getlong(ptr++);
+		p->space = NULL;
+		if(atom_gettype(ptr) == A_SYM){
+			if(atom_getsym(ptr) == gensym("space")){
+				t_space *s = (t_space *)sysmem_newptr(sizeof(t_space));
+				s->npoints = atom_getlong(ptr + 1);;
+				s->points = NULL;
+				s->next = NULL;
+				p->space = s;
+				ptr = rbfi_doFromArray(ht, n - (ptr - ar), ptr, s);
+			}
+		}
+		p->next = space->points;
+		p->prev = NULL;
+		if(space->points){
+			space->points->prev = p;
+		}
+		space->points = p;
+		space->npoints = npoints;
+		hashtab_store(ht, p->label, (t_object *)p);
+	}
+	return ptr;
 }
 
 void rbfi_clear(t_rbfi *x){
 	critical_enter(x->lock);
-	t_point *p = x->points;
-	t_point *next;
-	while(p){
-		next = p->next;
-		sysmem_freeptr(p);
-		x->npoints--;
-		p = next;
+	while(x->spaces->next){
+		x->spaces = x->spaces->next;
 	}
-	x->points = NULL;
-	x->selected = NULL;
+	long nkeys;
+	t_symbol **keys = NULL;
+	hashtab_getkeys(x->ht, &nkeys, &keys);
+	int i;
+	for(i = 0; i < nkeys; i++){
+		t_point *p = NULL;
+		hashtab_lookup(x->ht, keys[i], (t_object **)&p);
+		if(p){
+			if(p->space){
+				sysmem_freeptr(p->space);
+			}
+			sysmem_freeptr(p);
+		}
+	}
+	if(!x->spaces){
+		// this shouldn't have to happen
+		x->spaces = (t_space *)sysmem_newptr(sizeof(t_space));
+	}
+	x->spaces->points = NULL;
+	x->spaces->npoints = 0;
+	x->spaces->next = NULL;
+	x->spaces->selected = NULL;
 	x->monotonic_point_counter = 0; // not really monotonic i guess...
 	hashtab_clear(x->ht);
 	critical_exit(x->lock);
@@ -1211,61 +1360,18 @@ void rbfi_clear(t_rbfi *x){
 	jbox_redraw(&(x->ob));
 }
 
-void rbfi_rename(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv){
-	critical_enter(x->lock);
-	if(argc == 1){
-		if(x->selected){
-			switch(atom_gettype(argv)){
-			case A_FLOAT:
-				{
-					char buf[32];
-					sprintf(buf, "%f", atom_getfloat(argv));
-					x->selected->label = gensym(buf);
-				}
-				break;
-			case A_LONG:
-				{
-					char buf[32];
-					sprintf(buf, "%ld", atom_getlong(argv));
-					x->selected->label = gensym(buf);
-				}
-				break;
-			case A_SYM:
-				x->selected->label = atom_getsym(argv);
-				break;
-			}
-		}
-	}else{
-		/*
-		t_point *p = x->points;
-		t_symbol *oldname = atom_getsym(argv);
-		while(p){
-			//if(p->label == oldname){
-			//}
-			p = p->next;
-		}
-		*/
-	}
-	critical_exit(x->lock);
-	jbox_redraw(&(x->ob));
-}
-
 void rbfi_free(t_rbfi *x){
 	jbox_free(&(x->ob));
-	t_point *p = x->points;
-	t_point *next = NULL;
-	while(p){
-		next = p->next;
-		sysmem_freeptr(p);
-		p = next;
-	}
 	rbfi_clear(x);
+	if(x->spaces){
+		sysmem_freeptr(x->spaces);
+	}
 	critical_free(x->lock);
 }
 
 void rbfi_assist(t_rbfi *x, void *b, long io, long index, char *s){
 	switch(io){
-	case 1:
+	case 2:
 		switch(index){
 		case 0:
 			sprintf(s, "Weights (list)");
@@ -1274,7 +1380,7 @@ void rbfi_assist(t_rbfi *x, void *b, long io, long index, char *s){
 			sprintf(s, "Distance from the cursor to the centers of each preset (list)");
 			break;
 		case 2:
-			sprintf(s, "x,y coordinates of the preset being moved (list)");
+			sprintf(s, "name and x,y coordinates of the preset being moved (list)");
 			break;
 		case 3:
 			sprintf(s, "Mouse position (list)");
@@ -1284,7 +1390,7 @@ void rbfi_assist(t_rbfi *x, void *b, long io, long index, char *s){
 			break;
 		}
 		break;
-	case 2:
+	case 1:
 		switch(index){
 		case 0:
 			sprintf(s, "All point coordinates (list)");
@@ -1316,44 +1422,44 @@ double rbfi_clip(double f, double min, double max){
 
 void rbfi_getnumpoints(t_rbfi *x){
 	t_atom a;
-	atom_setlong(&a, x->npoints);
-	outlet_anything(x->dumpOutlet, gensym("numpoints"), 1, &a);
+	critical_enter(x->lock);
+	atom_setlong(&a, x->spaces->npoints);
+	critical_exit(x->lock);
+	outlet_anything(x->dumpOutlet, ps_numpoints, 1, &a);
 }
 
 // for pattr
 t_max_err rbfi_getvalueof(t_rbfi *x, long *ac, t_atom **av){
-	//post("getvalueof");
 	t_rect r;
-	jbox_get_patching_rect(&((x->ob.b_ob)), &r);
-
-	if(*ac || *av){
-		//post("%p %d %p", ac, *ac, av);
+	rbfi_getRect(x, &r);
+	critical_enter(x->lock);
+	*ac = rbfi_getArraySize(x);
+	*av = (t_atom *)sysmem_newptr(*ac * sizeof(t_atom));
+	t_space *s = x->spaces;
+	while(s->next){
+		s = s->next;
 	}
-	int argc;
-	t_atom *argv = NULL;
-	rbfi_toArray(x->points, ac, av);
-	*ac *= 12;
-
+	rbfi_toArray(s, *av);
+	critical_exit(x->lock);
 	return MAX_ERR_NONE;
 }
 
 t_max_err rbfi_setvalueof(t_rbfi *x, long ac, t_atom *av){
-	//rbfi_list(x, NULL, ac, av);
-	int i;
-	for(i = 0; i < ac / 12; i++){
-		rbfi_anything(x, atom_getsym(av + (i * 12)), 11, av + (i * 12) + 1);
-	}
+	rbfi_clear(x);
+	critical_enter(x->lock);
+	x->spaces = rbfi_fromArray(x->ht, ac, av);
+	critical_exit(x->lock);
 	return MAX_ERR_NONE;
 }
 
-#define MIN3(x,y,z)  ((y) <= (z) ? \
-		      ((x) <= (y) ? (x) : (y)) \
-		      : \
+#define MIN3(x,y,z)  ((y) <= (z) ?		\
+		      ((x) <= (y) ? (x) : (y))	\
+		      :				\
 		      ((x) <= (z) ? (x) : (z)))
 
-#define MAX3(x,y,z)  ((y) >= (z) ? \
-		      ((x) >= (y) ? (x) : (y)) \
-		      : \
+#define MAX3(x,y,z)  ((y) >= (z) ?		\
+		      ((x) >= (y) ? (x) : (y))	\
+		      :				\
 		      ((x) >= (z) ? (x) : (z)))
 
 // http://www.cs.rit.edu/~ncs/color/t_convert.html
@@ -1470,14 +1576,19 @@ void *rbfi_new(t_symbol *msg, int argc, t_atom *argv){
 		x->selectedOutlet = outlet_new(x, NULL);
 		x->distanceOutlet = outlet_new(x, NULL);
 		x->listOutlet = outlet_new(x, NULL);
-		x->npoints = 0;
-		x->points = NULL;
-		x->monotonic_point_counter = 0;
-		x->mouse_state = 0;
-		x->xhairs = (t_pt){-10., -10.};
 
+		x->spaces = (t_space *)sysmem_newptr(sizeof(t_space));
+		x->spaces->points = NULL;
 		x->ht = hashtab_new(0);
 		hashtab_flags(x->ht, OBJ_FLAG_DATA);
+		x->spaces->npoints = 0;
+		x->spaces->next = NULL;
+
+		x->monotonic_point_counter = 0;
+		x->xhairs = (t_pt){-10., -10.};
+		gettimeofday(&(x->lastclick), NULL);
+
+		x->pv = NULL;
 
 		critical_new(&(x->lock));
 
@@ -1510,7 +1621,6 @@ int main(void){
 	class_addmethod(c, (method)rbfi_mousemove, "mousemove", A_CANT, 0);
 	class_addmethod(c, (method)rbfi_mouseleave, "mouseleave", A_CANT, 0);
 	class_addmethod(c, (method)rbfi_clear, "clear", 0);
-	class_addmethod(c, (method)rbfi_rename, "rename", A_GIMME, 0);
 	class_addmethod(c, (method)rbfi_inner_radius, "inner_radius", A_FLOAT, 0);
 	class_addmethod(c, (method)rbfi_outer_radius, "outer_radius", A_FLOAT, 0);
 	class_addmethod(c, (method)rbfi_move, "move", A_FLOAT, A_FLOAT, 0);
@@ -1519,6 +1629,8 @@ int main(void){
 	class_addmethod(c, (method)rbfi_deletePoint, "delete_point", A_SYM, 0);
 	class_addmethod(c, (method)rbfi_notify, "notify", A_CANT, 0); 
 	class_addmethod(c, (method)rbfi_getnumpoints, "getnumpoints", 0);
+	class_addmethod(c, (method)rbfi_pushPointName, "push", A_SYM, 0);
+	class_addmethod(c, (method)rbfi_pop, "pop", A_DEFSYM, 0);
 
     
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
@@ -1580,9 +1692,9 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "draw_labels", 0, "edit");
 	*/
 
-	CLASS_ATTR_ATOM_VARSIZE(c, "points", 0, t_rbfi, points, npoints, 1024);
-	CLASS_ATTR_ACCESSORS(c, "points", rbfi_points_get, rbfi_points_set);
-	CLASS_ATTR_SAVE(c, "points", 0);
+	CLASS_ATTR_ATOM_VARSIZE(c, "spaces", 0, t_rbfi, spaces, nspaces, 1024);
+	CLASS_ATTR_ACCESSORS(c, "spaces", rbfi_spaces_get, rbfi_spaces_set);
+	CLASS_ATTR_SAVE(c, "spaces", 0);
 
 	CLASS_ATTR_LONG(c, "outputmode", 0, t_rbfi, outputmode);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "outputmode", 0, "0");
@@ -1622,6 +1734,14 @@ int main(void){
 	srand(mach_absolute_time());
 #endif
 
+	ps_top = gensym("top");
+	ps_done = gensym("done");
+	ps_mouse_down = gensym("mousedown");
+	ps_mouse_up = gensym("mouseup");
+	ps_clear = gensym("clear");
+	ps_space = gensym("space");
+	ps_numpoints = gensym("numpoints");
+
 	version(0);
 
 	return 0;
@@ -1643,58 +1763,50 @@ void rbfi_postPoint(t_point *p){
 	post("exponent: %f, weight: %f", p->exponent, p->weight);
 	post("inner radius: %f, outer radius: %f", p->inner_radius, p->outer_radius);
 	post("mousestate: 0x%X", p->mousestate);
+
+	/*
+	post("data count: %d", p->datac);
+	post("data:");
+	int i;
+	for(i = 0; i < p->datac; i++){
+		postatom(p->data + i);
+	}
+	*/
 }
 
 t_max_err rbfi_notify(t_rbfi *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
 	if(msg == gensym("attr_modified")){
-		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
-		if(attrname == gensym("xmin") || attrname == gensym("xmax") || attrname == gensym("ymin") || attrname == gensym("ymax")){
-			jbox_invalidate_layer((t_object *)x, NULL, l_color);
-			jbox_redraw(&(x->ob));
-		}
+		jbox_invalidate_layer((t_object *)x, NULL, l_color);
+		jbox_invalidate_layer((t_object *)x, NULL, l_points);
+		jbox_invalidate_layer((t_object *)x, NULL, l_xhairs);
+		jbox_redraw(&(x->ob));
 	}
 	return 0;
 }
 
-t_max_err rbfi_points_get(t_rbfi *x, t_object *attr, long *argc, t_atom **argv){
-	char alloc;
-	atom_alloc_array(x->npoints * 12, argc, argv, &alloc);
-	t_atom *ptr = *argv;
-	t_point *p = x->points;
-	int i = 0;
-	while(p){
-		atom_setfloat(ptr + i++, p->pt.x);
-		atom_setfloat(ptr + i++, p->pt.y);
-		atom_setsym(ptr + i++, p->label);
-		atom_setfloat(ptr + i++, p->color.red);
-		atom_setfloat(ptr + i++, p->color.green);
-		atom_setfloat(ptr + i++, p->color.blue);
-		atom_setfloat(ptr + i++, p->color.alpha);
-		atom_setfloat(ptr + i++, p->exponent);
-		atom_setfloat(ptr + i++, p->weight);
-		atom_setfloat(ptr + i++, p->inner_radius);
-		atom_setfloat(ptr + i++, p->outer_radius);
-		atom_setlong(ptr + i++, p->locked);
-		p = p->next;
+t_max_err rbfi_spaces_get(t_rbfi *x, t_object *attr, long *argc, t_atom **argv){
+	critical_enter(x->lock);
+	t_space *s = x->spaces;
+	while(s->next){
+		s = s->next;
 	}
+
+	long n = rbfi_getArraySize(x);
+	t_atom *ar = (t_atom *)sysmem_newptr(n * sizeof(t_atom));
+	rbfi_toArray(s, ar);
+	critical_exit(x->lock);
+	*argc = n;
+	*argv = ar;
 	return MAX_ERR_NONE;
 }
 
-t_max_err rbfi_points_set(t_rbfi *x, t_object *attr, long argc, t_atom *argv){
-	int i;
-	t_atom *ptr = argv;
-	for(i = 0; i < argc / 12; i++){
-		t_point p;
-		p.pt.x = atom_getfloat(ptr++);
-		p.pt.y = atom_getfloat(ptr++);
-		p.label = atom_getsym(ptr++);
-		p.color = (t_jrgba){atom_getfloat(ptr++),atom_getfloat(ptr++),atom_getfloat(ptr++),atom_getfloat(ptr++)};
-		p.exponent = atom_getfloat(ptr++);
-		p.weight = atom_getfloat(ptr++);
-		p.inner_radius = atom_getfloat(ptr++);
-		p.outer_radius = atom_getfloat(ptr++);
-		p.locked = atom_getlong(ptr++);
-		rbfi_addPointToList(x, p);
-	}
+t_max_err rbfi_spaces_set(t_rbfi *x, t_object *attr, long argc, t_atom *argv){
+	critical_enter(x->lock);
+	x->spaces = rbfi_fromArray(x->ht, argc, argv);
+	critical_exit(x->lock);
 	return MAX_ERR_NONE;
+}
+
+void rbfi_getRect(t_rbfi *x, t_rect *rect){
+	jbox_get_rect_for_view((t_object *)&(x->ob), x->pv, rect);
 }
