@@ -39,6 +39,7 @@
   VERSION 0.3: points track location on all functions, save with patcher
   VERSION 0.3.1: added margins and point numbers that monotonically increase from left to right
   VERSION 0.3.2: multiple selections are possible
+  VERSION 0.3.3: fixed capslock bug
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -169,9 +170,7 @@ t_symbol *l_background, *l_points, **l_pos, *ps_int;
 void bpf_paint(t_bpf *x, t_object *patcherview){ 
 	x->pv = patcherview;
  	t_rect r; 
- 	t_jrgba c; 
- 	c.red = c.green = c.blue = 0; 
- 	c.alpha = 1.; 
+ 	t_jrgba c = (t_jrgba){0., 0., 0., 1.};;
 
  	// get graphics context 
  	//t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview); 
@@ -513,6 +512,7 @@ t_max_err bpf_notify(t_bpf *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 		}
 		*/
  		//x->sel_x.click = x->sel_x.drag = x->sel_y.click = x->sel_y.drag = -1; 
+		jbox_invalidate_layer((t_object *)x, x->pv, l_background);
 		jbox_invalidate_layer((t_object *)x, x->pv, l_points);
  		jbox_redraw(&(x->box)); 
 	} 
@@ -556,6 +556,7 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	coords.x = bpf_scale(pt.x, r.x, r.width, x->xmin, x->xmax);
 	coords.y = bpf_scale(pt.y, r.height, r.y, x->ymin, x->ymax);
 	switch(modifiers){
+	case 0x110:
 	case 0x10:{
 		// no modifiers.  
 		t_point *p;
@@ -597,6 +598,7 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		p->prev_selected = NULL;
 		x->selected = p;
 	}break;
+	case 0x112:
 	case 0x12:{
 		// shift.  
 		t_point *p;
@@ -605,6 +607,7 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			break;
 		}
 	}break;
+	case 0x113:
 	case 0x13:
 		x->sel_box.x = pt.x;
 		x->sel_box.y = pt.y;
@@ -640,6 +643,7 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	sc.y = bpf_scale(pt.y, r.height, r.y, x->ymin, x->ymax);
 
 	switch(modifiers){
+	case 0x110:
 	case 0x10:{
 		t_point *p = x->selected;
 		t_point *next, *prev;
@@ -673,8 +677,10 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		}
 	}
 		break;
+	case 0x112:
 	case 0x12:
 		break;
+	case 0x113:
 	case 0x13:{
 		x->sel_box.width = pt.x - x->sel_box.x;
 		x->sel_box.height = pt.y - x->sel_box.y;
