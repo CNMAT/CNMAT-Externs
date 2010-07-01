@@ -73,14 +73,14 @@ VERSION 1.2.1: Fixed a bug in cc_cfile_sec() that would cause a crash when calle
 #define OBJSIZE 65536
 
 #ifdef CC_MSP
-#define CFLAGS "-Wall -O3 -isysroot /Developer/SDKs/MacOSX10.5.sdk -I%s/c74support/max-includes -I%s/c74support/msp-includes -include %s/c74support/max-includes/macho-prefix.pch -F%s/c74support/max-includes -F%s/c74support/msp-includes -mmacosx-version-min=10.5 -fPIC"
+#define CFLAGS "-Wall -O3 -arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk -I%s/c74support/max-includes -I%s/c74support/msp-includes -include %s/c74support/max-includes/macho-prefix.pch -F%s/c74support/max-includes -F%s/c74support/msp-includes -mmacosx-version-min=10.5 -fPIC"
 
 #define LDFLAGS "-isysroot /Developer/SDKs/MacOSX10.5.sdk -F%s/c74support/max-includes -F%s/c74support/msp-includes -lmx -framework Carbon -framework MaxAPI -framework MaxAudioAPI"
 
 #else
-#define CFLAGS "-Wall -O3 -isysroot /Developer/SDKs/MacOSX10.5.sdk -I%s/c74support/max-includes -include %s/c74support/max-includes/macho-prefix.pch -F%s/c74support/max-includes -mmacosx-version-min=10.5 -fPIC"
+#define CFLAGS "-Wall -O3 -arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk -I%s/c74support/max-includes -include %s/c74support/max-includes/macho-prefix.pch -F%s/c74support/max-includes -mmacosx-version-min=10.5 -fPIC"
 
-#define LDFLAGS "-isysroot /Developer/SDKs/MacOSX10.5.sdk -F%s/c74support/max-includes -lmx -framework Carbon -framework MaxAPI"
+#define LDFLAGS "-arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk -F%s/c74support/max-includes -lmx -framework Carbon -framework MaxAPI"
 #endif
 
 typedef int (*ccmethod)(t_object *, char *, int, int, t_atom *, int, void **);
