@@ -40,6 +40,7 @@
   VERSION 0.3.1: added margins and point numbers that monotonically increase from left to right
   VERSION 0.3.2: multiple selections are possible
   VERSION 0.3.3: fixed capslock bug
+  VERSION 0.3.4: fixed a bug with the way that the background was being drawn
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
