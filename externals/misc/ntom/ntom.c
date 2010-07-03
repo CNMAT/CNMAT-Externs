@@ -117,45 +117,41 @@ void ntom_anything(t_ntom *x, t_symbol *s, long argc, t_atom *argv)
 	x->followsNote = FALSE;
 	critical_exit(x->lock);
 	
-	//if(strlen(s->s_name)<=3){
-		int t = ntom_parseSYM(x, s, x->noteCount); // why does this not work when i send a 1 but 0 works?
-		
-		if(t && argc){
-			int i;
-			for (i = 1, ap = argv; i < argc+1; i++, ap++) { 
-				switch (atom_gettype(ap)) {
-					case A_LONG:
-						critical_enter(x->lock);
-						x->mCents[x->noteCount-1] = (float)atom_getlong(ap); // all mCents should be index-1 because of noteCount++
-						x->followsNote = FALSE;
-						critical_exit(x->lock);
-						//post("%d long %f", x->noteCount, x->mCents[x->noteCount-1]);
-						break;
-					case A_FLOAT:
-						//post("%f received", atom_getfloat(ap));
-						critical_enter(x->lock);
-						x->mCents[x->noteCount-1] = atom_getfloat(ap);
-						x->followsNote = FALSE;
-						critical_exit(x->lock);
-						//post("float %f", x->mCents[x->noteCount-1]);
-						break;
-					case A_SYM:
-						t = ntom_parseSYM(x, atom_getsym(ap), x->noteCount);
-						break;
-					default:
-						break;
-				}
-				
-				if(!t)
+	int t = ntom_parseSYM(x, s, x->noteCount); 
+	
+	if(t && argc){
+		int i;
+		for (i = 1, ap = argv; i < argc+1; i++, ap++) { 
+			switch (atom_gettype(ap)) {
+				case A_LONG:
+					critical_enter(x->lock);
+					x->mCents[x->noteCount-1] = (float)atom_getlong(ap); // all mCents should be index-1 because of noteCount++
+					x->followsNote = FALSE;
+					critical_exit(x->lock);
+					//post("%d long %f", x->noteCount, x->mCents[x->noteCount-1]);
 					break;
-			}	
-		}
-		if(t)
-			ntom_calcOut(x, x->noteCount);
-	/*} else {
-		object_error((t_object *)x, "note must be in C4 format with optional +/- cent offsets (e.g. Bb5 -31)");
+				case A_FLOAT:
+					//post("%f received", atom_getfloat(ap));
+					critical_enter(x->lock);
+					x->mCents[x->noteCount-1] = atom_getfloat(ap);
+					x->followsNote = FALSE;
+					critical_exit(x->lock);
+					//post("float %f", x->mCents[x->noteCount-1]);
+					break;
+				case A_SYM:
+					t = ntom_parseSYM(x, atom_getsym(ap), x->noteCount);
+					break;
+				default:
+					break;
+			}
+			
+			if(!t)
+				break;
+		}	
 	}
-	 */
+	if(t)
+		ntom_calcOut(x, x->noteCount);
+
 }
 
 
@@ -289,23 +285,14 @@ int ntom_returnMidi(t_ntom *x, t_symbol *s)
 				break;
 		}
 	}
-	/*if( (octave = atoi(&s->s_name[strSize-1])) ){
-		octave += 1;
-		//object_post((t_object *)x, "this part works:  %d", pInt+octave*12);
-	 */
-	
+
 	return pInt + (1 + octave)*12;
-	/*} else {
-		object_error((t_object *)x, "syntax error: note needs an octave value in C4 format");
-		return 0;
-	}
-	 */
+
 }
 
-void ntom_bang(t_ntom *x) //after all that, this is really not necessary probably...
+void ntom_bang(t_ntom *x)
 {
 	outlet_list(x->outlet, NULL, x->noteCount, x->freqs);
-	//post("ok ok");
 }
 
 
