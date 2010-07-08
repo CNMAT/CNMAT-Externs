@@ -41,6 +41,7 @@
   VERSION 0.3.2: multiple selections are possible
   VERSION 0.3.3: fixed capslock bug
   VERSION 0.3.4: fixed a bug with the way that the background was being drawn
+  VERSION 0.3.5: added locks to the x and y dimensions and a step mode which turns the function into a step function
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -117,6 +118,9 @@ typedef struct _bpf{
 	int *npoints;
 	t_rect sel_box;
 	t_pt drag;
+	int lockx, locky;
+	int step;
+	double xmargin, ymargin;
 } t_bpf; 
 
 void *bpf_class; 
@@ -152,7 +156,7 @@ void bpf_clear(t_bpf *x);
 double bpf_scale(double f, double min_in, double max_in, double min_out, double max_out);
 void bpf_xminmax(t_bpf *x, double min, double max);
 void bpf_yminmax(t_bpf *x, double min, double max);
-void bpf_resizeRectWithMargins(t_rect *r);
+void bpf_resizeRectWithMargins(t_bpf *x, t_rect *r);
 //void bpf_read(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_doread(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_write(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
@@ -195,7 +199,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 	jbox_paint_layer((t_object *)x, patcherview, l_background, 0, 0);
 
 	g = jbox_start_layer((t_object *)x, patcherview, l_points, r.width, r.height);
-	bpf_resizeRectWithMargins(&r);
+	bpf_resizeRectWithMargins(x, &r);
 
  	if(g){ 
 		critical_enter(x->lock);
@@ -282,8 +286,15 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 				if(x->y_res == ps_int){
 					py = round(py);
 				}
-				jgraphics_move_to(g, bpf_scale(px, x->xmin, x->xmax, r.x, r.width), bpf_scale(py, x->ymin, x->ymax, r.height, r.y));
-				jgraphics_line_to(g, sc.x, sc.y);
+				double pysc = bpf_scale(py, x->ymin, x->ymax, r.height, r.y);
+				jgraphics_move_to(g, bpf_scale(px, x->xmin, x->xmax, r.x, r.width), pysc);
+				if(x->step && p->prev->coords.y != p->coords.y){
+					jgraphics_line_to(g, sc.x, pysc);
+					jgraphics_line_to(g, sc.x, sc.y);
+					jgraphics_ellipse(g, sc.x - 2, pysc - 2, 4, 4);
+				}else{
+					jgraphics_line_to(g, sc.x, sc.y);
+				}
 				jgraphics_stroke(g);
 				if(x->drawlabels){
 					char buf[16];
@@ -300,18 +311,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 				p = p->next;
 			}
 		}
-		/*
-		jgraphics_set_source_jrgba(g, &(x->textColor));
-		jgraphics_set_font_size(g, 10);
-		char buf[128];
-		if(x->selected){	
-			sprintf(buf, "%s:(%f, %f)", x->funcattr[x->currentFunction]->name, x->selected->coords.x, x->selected->coords.y);
-		}else{
-			sprintf(buf, "%s", x->funcattr[x->currentFunction]->name);
-		}
-		jgraphics_move_to(g, 1, 10);
-		jgraphics_show_text(g, buf);
-		*/
+
 		jgraphics_rectangle(g, x->sel_box.x, x->sel_box.y, x->sel_box.width, x->sel_box.height);
 		jgraphics_stroke(g);
 
@@ -367,7 +367,7 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 void bpf_float(t_bpf *x, double f){
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.b_ob), &r);
-	bpf_resizeRectWithMargins(&r);
+	bpf_resizeRectWithMargins(x, &r);
 	//r.x = r.y = 0;
 	t_atom out[2]; // function number, y
 	int i;
@@ -391,11 +391,16 @@ void bpf_float(t_bpf *x, double f){
 				ly = round(ly);
 				ry = round(ry);
 			}
-			double m = (ry - ly) / (rx - lx);
-			double b = ly - (m * lx);
-			double y = (m * f) + b;
-			atom_setfloat(&(out[1]), y);
-			x->pos[i] = (t_pt){bpf_scale(f, x->xmin, x->xmax, r.x, r.width) + XMARGIN, bpf_scale(y, x->ymin, x->ymax, r.height, r.y) + YMARGIN};
+			if(x->step){
+				atom_setfloat(out + 1, ly);
+				x->pos[i] = (t_pt){bpf_scale(f, x->xmin, x->xmax, r.x, r.width) + x->xmargin, bpf_scale(ly, x->ymin, x->ymax, r.height, r.y) + x->ymargin};
+			}else{
+				double m = (ry - ly) / (rx - lx);
+				double b = ly - (m * lx);
+				double y = (m * f) + b;
+				atom_setfloat(&(out[1]), y);
+				x->pos[i] = (t_pt){bpf_scale(f, x->xmin, x->xmax, r.x, r.width) + x->xmargin, bpf_scale(y, x->ymin, x->ymax, r.height, r.y) + x->ymargin};
+			}
 			if(x->drawpos){
 				jbox_invalidate_layer((t_object *)x, x->pv, l_pos[i]);
 			}
@@ -453,7 +458,7 @@ t_point *bpf_select(t_bpf *x, t_pt p_sc){
 	double xdif, ydif;
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.b_ob), &r);
-	bpf_resizeRectWithMargins(&r);
+	bpf_resizeRectWithMargins(x, &r);
 	//r.x = r.y = 0;
 
 	//t_pt p_sc;
@@ -548,9 +553,9 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
  	//post("0x%X", modifiers); 
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
-	bpf_resizeRectWithMargins(&r);
-	pt.x -= XMARGIN;
-	pt.y -= YMARGIN;
+	bpf_resizeRectWithMargins(x, &r);
+	pt.x -= x->xmargin;
+	pt.y -= x->ymargin;
 	x->drag = pt;
 	//r.x = r.y = 0;
 	t_pt coords;
@@ -624,9 +629,9 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	t_rect r;
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
-	bpf_resizeRectWithMargins(&r);
-	pt.x -= XMARGIN;
-	pt.y -= YMARGIN;
+	bpf_resizeRectWithMargins(x, &r);
+	pt.x -= x->xmargin;
+	pt.y -= x->ymargin;
 	//r.x = r.y = 0;
 	if(pt.x < 0){
 		pt.x = 0;
@@ -655,8 +660,12 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			int head = 0;
 			head = (p == x->selected);
 			t_pt pp = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
-			pp.x += (pt.x - x->drag.x);
-			pp.y += (pt.y - x->drag.y);
+			if(!x->lockx){
+				pp.x += (pt.x - x->drag.x);
+			}
+			if(!x->locky){
+				pp.y += (pt.y - x->drag.y);
+			}
 			pp.x = bpf_scale(pp.x, r.x, r.width, x->xmin, x->xmax);
 			pp.y = bpf_scale(pp.y, r.height, r.y, x->ymin, x->ymax);
 
@@ -1020,11 +1029,11 @@ void bpf_yminmax(t_bpf *x, double min, double max){
 	jbox_redraw(&(x->box));
 }
 
-void bpf_resizeRectWithMargins(t_rect *r){
-	r->x = XMARGIN;
-	r->width -= (XMARGIN * 2);
-	r->y = YMARGIN;
-	r->height -= (YMARGIN * 2);
+void bpf_resizeRectWithMargins(t_bpf *x, t_rect *r){
+	r->x = x->xmargin;
+	r->width -= (x->xmargin * 2);
+	r->y = x->ymargin;
+	r->height -= (x->ymargin * 2);
 }
 
 void bpf_clear(t_bpf *x){
@@ -1134,6 +1143,12 @@ int main(void){
         CLASS_ATTR_DOUBLE(c, "ymax", 0, t_bpf, ymax);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymax", 0, "1.0");
 
+        CLASS_ATTR_DOUBLE(c, "xmargin", 0, t_bpf, xmargin);
+        CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmargin", 0, "5.0");
+
+        CLASS_ATTR_DOUBLE(c, "ymargin", 0, t_bpf, ymargin);
+        CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymargin", 0, "5.0");
+
 	CLASS_ATTR_SYM(c, "x_res", 0, t_bpf, x_res);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "x_res", 0, "float");
 
@@ -1145,6 +1160,15 @@ int main(void){
 
 	CLASS_ATTR_LONG(c, "drawlabels", 0, t_bpf, drawlabels);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawlabels", 0, "1");
+
+	CLASS_ATTR_LONG(c, "lockx", 0, t_bpf, lockx);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "lockx", 0, "0");
+
+	CLASS_ATTR_LONG(c, "locky", 0, t_bpf, locky);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "locky", 0, "0");
+
+	CLASS_ATTR_LONG(c, "step", 0, t_bpf, step);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "step", 0, "0");
 
 	CLASS_ATTR_ATOM_VARSIZE(c, "points", 0, t_bpf, functions, numFunctions, 1024);
 	CLASS_ATTR_ACCESSORS(c, "points", bpf_points_get, bpf_points_set);
@@ -1246,6 +1270,9 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 
 		x->selected = NULL;
 		x->sel_box = (t_rect){-1, -1, 0, 0};
+
+		x->xmargin = XMARGIN;
+		x->ymargin = YMARGIN;
 
  		x->numFunctions = 1; 
  		x->currentFunction = 0; 
