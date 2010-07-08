@@ -158,7 +158,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			try{
 			Receiver r = sequencer.getReceiver();
 			ShortMessage m = new ShortMessage();
-			if(args.length == 3){
+			if(args.length >= 3){
 				m.setMessage(args[0].toInt(), args[1].toInt(), args[2].toInt());
 			}else{
 				m.setMessage(140 + getInlet(), args[0].toInt(), args[1].toInt());
