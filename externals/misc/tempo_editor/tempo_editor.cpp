@@ -32,6 +32,7 @@
   VERSION 1.2: enhancements to the grid system, better legend, muting, locking, background functions are now drawn lighter
   VERSION 1.2.1: fixed a bug in doClearFunction() which was clearing the current function, not the one passed to it.
   VERSION 1.2.2: mouse selection and dragging has been totally rewritten to allow multiple points to be selected at once
+  VERSION 1.3: lots of improvements including cut/copy/paste and beat/control point numbers
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -114,6 +115,7 @@ typedef struct _plan{
 	double error_alpha, error_beta;  // shape parameters for the beta distribution.  
 	//unfortunately, they need to be here as well as with the point above
 	double beta_ab, error_beta_ab; // we don't need to compute this every time if the values of a and b haven't changed.
+	int pointnum_left, pointnum_right;
  	struct _plan *next; 
  	struct _plan *prev; 
 } t_plan; 
@@ -143,6 +145,7 @@ typedef struct _te{
 	int show_x_axis, show_y_axis;
 	int show_major_x_grid, show_minor_x_grid, show_major_y_grid, show_minor_y_grid;
 	int show_beats;
+	long show_beat_numbers;
 	float major_grid_width_sec, major_grid_height_bps;
 	float num_minor_x_grid_divisions, num_minor_y_grid_divisions;
  	t_jrgba bgcolor; 
@@ -166,14 +169,21 @@ typedef struct _te{
 	int draw_mouse, draw_voice_legend;
 	float fs;
 	t_rect sel_box;
+	int *beatnumbuf; // temp array for storing indexes where beats are drawn
+	int beatnumbuflen;
+	int beatnumbufpos;
 } t_te; 
 
 t_class *te_class; 
 
 t_symbol *ps_cellblock, *ps_pointNum, *ps_time, *ps_dFreq, *ps_aFreq, *ps_dPhase, *ps_aPhase, *ps_alpha, *ps_beta, *ps_errorAlpha, *ps_errorBeta, *ps_error;
 
+t_symbol *te_clipboard;
+
 t_symbol *l_background, *l_xgrid, *l_ygrid, *l_xycoords, *l_legend, *l_xaxis, *l_yaxis, *l_playhead;
 t_symbol *l_function_layers[MAX_NUM_FUNCTIONS];
+
+t_critical te_clipboard_lock;
 
 void te_paint(t_te *x, t_object *patcherview); 
 t_int *te_perform(t_int *w);
@@ -211,6 +221,10 @@ t_max_err te_notify(t_te *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
 void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
 void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
 void te_mousemove(t_te *x, t_object *patcherview, t_pt pt, long modifiers);
+void te_cut(t_te *x);
+void te_copy(t_te *x);
+void te_paste(t_te *x);
+void te_pasteAtCoords(t_te *x, float x, float y);
 void te_findNearestGridPoint(t_te *x, t_pt pt_sc, t_pt *pt_out_sc);
 void te_showgrid(t_te *x, long b);
 void te_mouseup(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
@@ -288,20 +302,7 @@ void te_paint(t_te *x, t_object *patcherview){
 			t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_xgrid, rect.width, rect.height);
 			if(gg){
 				double mgws = x->major_grid_width_sec;
-				/*
-				// this is a lame attempt to do something smart with the grid 
-				// when the scale becomes such that there will be too many gridlines (or too few).
-				// it's left out because it's disorienting to not get what you asked for
-				if(mgws <= ((x->time_max - x->time_min) / rect.width) * 60){
-				while(mgws <= ((x->time_max - x->time_min) / rect.width) * 60){
-				mgws *= 2;
-				}
-				}else if(mgws >= (x->time_max - x->time_min) / 8){
-				while(mgws >= (x->time_max - x->time_min) / 8){
-				mgws /= 2.;
-				}
-				}
-				*/
+
 				double xx = x->time_min + mgws;
 				double x_sc;
 				double minor_grid_width_sec = mgws / x->num_minor_x_grid_divisions;
@@ -434,12 +435,20 @@ void te_paint(t_te *x, t_object *patcherview){
 				te_makePlan(x, prev_t, function, &plan);
 				double prev_correctedPhase = te_computeCorrectedPhase(prev_t, &plan);
 				//double prev_phase = te_computePhase(prev_t, &plan);
+				int beatnum = 1;
+				int newplan = 0;
+				int lbnx = -100, lbny = -100;
 				for(i = 0; i < rect.width * 1; i++){
 					double idx = i / 1;
 					double t = te_scale(idx, 0, rect.width, x->time_min, x->time_max);
 					double p;
 					if(!te_isPlanValid(x, t, &plan, function)){
 						te_makePlan(x, t, function, &plan);
+						if(newplan == -1){
+							newplan = 0;
+						}else{
+							newplan = 1;
+						}
 					}
 					/*
 					  if(x->show_beat_correction && function == x->currentFunction){//&& t >= plan.startTime + plan.segmentDuration_sec){
@@ -464,8 +473,47 @@ void te_paint(t_te *x, t_object *patcherview){
 					p = te_computeCorrectedPhase(t, &plan);
 					if(floor(p) > floor(prev_correctedPhase) || p - floor(p) < prev_correctedPhase - floor(prev_correctedPhase)){
 						jgraphics_move_to(gg, idx, rect.height);
-						jgraphics_line_to(gg, idx, te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0));
+						double beatheight = te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0);
+						jgraphics_line_to(gg, idx, beatheight);
 						jgraphics_stroke(gg);
+						if(function == x->currentFunction){
+							// draw the beat number over the beat
+							if(newplan){
+								beatnum = 1;
+								newplan = 0;
+							}
+							if(t >= plan.endTime){
+								beatnum = 1;
+								newplan = -1;
+							}
+							char buf[8];
+							double w, h;
+							if(beatnum == 1){
+								if(t >= plan.endTime){
+									sprintf(buf, "%d", plan.pointnum_right);
+								}else{
+									sprintf(buf, "%d", plan.pointnum_left);
+								}
+								jgraphics_text_measure(gg, buf, &w, &h);
+								jgraphics_move_to(gg, idx - (w / 2), beatheight - 25);
+								jgraphics_show_text(gg, buf);
+								jgraphics_rectangle(gg, idx - w, beatheight - 25 - h, w * 2, h * 1.3);
+								jgraphics_stroke(gg);
+								lbnx = idx + (POINT_WIDTH / 2);
+							}else{
+								sprintf(buf, "%d", beatnum);
+								jgraphics_text_measure(gg, buf, &w, &h);
+								if((idx - (w / 2)) - lbnx > 2 || (beatheight - 4) - lbny > (h / 2) + 2){
+									jgraphics_move_to(gg, idx - (w / 2), beatheight - 4);
+									jgraphics_show_text(gg, buf);
+									jgraphics_ellipse(gg, idx - 2, beatheight - 2, 4, 4);
+									jgraphics_fill(gg);
+									lbnx = idx + (w / 2);
+									lbny = beatheight - 4;
+								}
+							}
+							beatnum++;
+						}
 					}
 
 					prev_t = t;
@@ -584,6 +632,10 @@ void te_paint(t_te *x, t_object *patcherview){
 				if((x->mousestate == 0x110 || x->mousestate == 0x10) && x->currentFunction == function){
 					t_point *p = x->selected;
 					while(p){
+						if(p->whichPoint){
+							p = p->next_selected;
+							continue;
+						}
 						char buf[128];
 						t_pt pt = p->coords;
 						t_pt sc;
@@ -591,13 +643,25 @@ void te_paint(t_te *x, t_object *patcherview){
 						sprintf(buf, "%.2f %.2f", pt.x, pt.y);
 						double w, h;
 						jgraphics_text_measure(gg, buf, &w, &h);
+						t_pt topleft = (t_pt){0., 0.};
+						double pad = 2;
+						topleft = (t_pt){sc.x - (w / 2), sc.y - 45};
+
+						jgraphics_set_source_jrgba(gg, &(x->bgcolor));
+						jgraphics_rectangle(gg, topleft.x, topleft.y - h + pad, w, h);
+						jgraphics_fill(gg);
 						t_jrgba black = (t_jrgba){0., 0., 0., 1.};
 						jgraphics_set_source_jrgba(gg, &black);
+						jgraphics_move_to(gg, topleft.x, topleft.y);
+						jgraphics_show_text(gg, buf);
+
+						/*
 						if(w + sc.x + POINT_WIDTH + 2> rect.width){
 							jgraphics_move_to(gg, sc.x - POINT_WIDTH - 2 - w, sc.y - 2);
 						}else{
 							jgraphics_move_to(gg, sc.x + POINT_WIDTH + 2, sc.y - 2);
 						}
+						*/
 						jgraphics_show_text(gg, buf);
 						p = p->next_selected;
 					}
@@ -619,7 +683,7 @@ void te_paint(t_te *x, t_object *patcherview){
 						double correctionStart_sc, correctionEnd_sc;
 						int j;
 						t_plan plan;
-						te_makePlan(x, p->coords.x, function, &plan);
+						te_makePlan(x, p->coords.x + ((x->time_max - x->time_min) / rect.width), function, &plan);
 						double scx, nscx;
 						scx = te_scale(p->coords.x, x->time_min, x->time_max, 0, rect.width);
 						nscx = te_scale(p->next->coords.x, x->time_min, x->time_max, 0, rect.width);
@@ -962,9 +1026,12 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		plan->correctionStart = te_scale(p->aux_points[0], 0, 1., plan->startTime, plan->endTime);
 		plan->correctionEnd = te_scale(p->aux_points[1], 0, 1., plan->startTime, plan->endTime);
 		//te_postPlan(plan);
+		plan->pointnum_left = 0;
+		plan->pointnum_right = 1;
 		return;
 	}
 
+	int counter = 1;
 	while(p && next){
 		double scx = te_scale(p->coords.x, x->time_min, x->time_max, 0, r.width);
 		double nscx = te_scale(next->coords.x, x->time_min, x->time_max, 0, r.width);
@@ -986,8 +1053,11 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 			plan->correctionStart = te_scale(p->aux_points[0], 0, 1., plan->startTime, plan->endTime);
 			plan->correctionEnd = te_scale(p->aux_points[1], 0, 1., plan->startTime, plan->endTime);
 			//te_postPlan(plan);
+			plan->pointnum_left = counter;
+			plan->pointnum_right = counter + 1;
 			return;
 		}
+		counter++;
 		p = next;
 		next = next->next;
 	}
@@ -1014,6 +1084,8 @@ void te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		plan->correctionStart = te_scale(p->aux_points[0], 0, 1., plan->startTime, plan->endTime);
 		plan->correctionEnd = te_scale(p->aux_points[1], 0, 1., plan->startTime, plan->endTime);
 		//te_postPlan(plan);
+		plan->pointnum_left = counter;
+		plan->pointnum_right = counter;
 		return;
 
 	}
@@ -1544,6 +1616,7 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 		t_point *tmp = te_selectControlPoint(x, pt);
 		if(tmp){
 			te_clearSelected(x);
+			x->selected = tmp;
 			break;
 		}
 		tmp = te_select(x, pt);
@@ -1791,6 +1864,126 @@ void te_mousemove(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	//x->mousemove = pt;
 	//jbox_invalidate_layer((t_object *)x, patcherview, l_xycoords);
 	//jbox_redraw((t_jbox *)x);
+}
+
+void te_cut(t_te *x){
+	if(!x->selected){
+		object_error((t_object *)x, "you must select something first");
+		return;
+	}
+	critical_enter(x->lock);
+	t_point *selected = x->selected;
+	x->selected = NULL;
+	t_point *p = selected;
+	while(p){
+		if(p->next){
+			p->next->prev = p->prev;
+		}
+		if(p->prev){
+			p->prev->next = p->next;
+		}
+		p = p->next_selected;
+	}
+	critical_exit(x->lock);
+	critical_enter(te_clipboard_lock);
+	if(te_clipboard->s_thing){
+		p = (t_point *)(te_clipboard->s_thing);
+		t_point *next = NULL;
+		while(p){
+			next = p->next_selected;
+			free(p);
+			p = next;
+		}
+	}
+	te_clipboard->s_thing = (t_object *)selected;
+	critical_exit(te_clipboard_lock);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[x->currentFunction]);
+	jbox_redraw((t_jbox *)x);
+}
+
+void te_copy(t_te *x){
+	if(!x->selected){
+		object_error((t_object *)x, "you must select something first");
+		return;
+	}
+	t_point *copy = NULL, *sel = NULL;
+	critical_enter(x->lock);
+	sel = x->selected;
+	while(sel->next_selected){
+		sel = sel->next_selected;
+	}
+	while(sel){
+		t_point *p = (t_point *)calloc(1, sizeof(t_point));
+		*p = *sel;
+		p->next = NULL;
+		p->prev = NULL;
+		if(copy){
+			copy->prev_selected = p;
+		}
+		p->next_selected = copy;
+		p->prev_selected = NULL;
+		copy = p;
+		sel = sel->prev_selected;
+	}
+	critical_exit(x->lock);
+	critical_enter(te_clipboard_lock);
+	if(te_clipboard->s_thing){
+		t_point *p = (t_point *)(te_clipboard->s_thing);
+		t_point *next = NULL;
+		while(p){
+			next = p->next_selected;
+			free(p);
+			p = next;
+		}
+	}
+	te_clipboard->s_thing = (t_object *)copy;
+	critical_exit(te_clipboard_lock);
+}
+
+void te_paste(t_te *x){
+	t_point *copy = NULL;
+	t_point *cb = NULL;
+	critical_enter(te_clipboard_lock);
+	cb = (t_point *)(te_clipboard->s_thing);
+	while(cb){
+		t_point *p = (t_point *)calloc(1, sizeof(t_point));
+		*p = *cb;
+		p->next = copy;
+		copy = p;
+		cb = cb->next_selected;
+	}
+	critical_exit(te_clipboard_lock);
+	critical_enter(x->lock);
+	t_point *left = NULL, *right = NULL;
+	te_clearSelected(x);
+	while(copy){
+		t_point *next = copy->next;
+		if(x->selected){
+			x->selected->prev_selected = copy;
+		}
+		copy->prev_selected = NULL;
+		copy->next_selected = x->selected;
+		x->selected = copy;
+		te_find_btn(x->functions[x->currentFunction], copy->coords.x, &left, &right);
+		copy->prev = left;
+		copy->next = right;
+		if(left){
+			left->next = copy;
+		}else{
+			x->functions[x->currentFunction] = copy;
+		}
+		if(right){
+			right->prev = copy;
+		}
+		copy = next;
+	}
+	critical_exit(x->lock);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[x->currentFunction]);
+	jbox_redraw((t_jbox *)x);
+}
+
+void te_pasteAtCoords(t_te *x, float xx, float yy){
+	object_error((t_object *)x, "%s is not implemented yet", __PRETTY_FUNCTION__);
 }
 
 void te_findNearestGridPoint(t_te *x, t_pt pt_sc, t_pt *pt_out_sc){
@@ -2510,6 +2703,10 @@ int main(void){
 	class_addmethod(c, (method)te_muteFunction, "mutefunction", A_GIMME, 0);
 	class_addmethod(c, (method)te_lockFunction, "lockfunction", A_GIMME, 0);
 	class_addmethod(c, (method)te_showgrid, "showgrid", A_LONG, 0);
+	class_addmethod(c, (method)te_cut, "cut", 0);
+	class_addmethod(c, (method)te_copy, "copy", 0);
+	class_addmethod(c, (method)te_paste, "paste", 0);
+	class_addmethod(c, (method)te_pasteAtCoords, "pasteatcoords", A_FLOAT, A_FLOAT, 0);
 
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
@@ -2552,8 +2749,9 @@ int main(void){
 
 	CLASS_ATTR_LONG(c, "show_beats", 0, t_te, show_beats);
 	CLASS_ATTR_DEFAULT_SAVE(c, "show_beats", 0, "1");
-	CLASS_ATTR_LONG(c, "show_beats", 0, t_te, show_beats);
-	CLASS_ATTR_DEFAULT_SAVE(c, "show_beats", 0, "1");
+
+	CLASS_ATTR_LONG(c, "show_beat_numbers", 0, t_te, show_beat_numbers);
+	CLASS_ATTR_DEFAULT_SAVE(c, "show_beat_numbers", 0, "1");
 
 	CLASS_ATTR_LONG(c, "draw_mouse", 0, t_te, draw_mouse);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "draw_mouse", 0, "1");
@@ -2624,6 +2822,8 @@ int main(void){
  	class_register(CLASS_BOX, c); 
  	te_class = c; 
 
+	critical_new(&te_clipboard_lock);
+
 	common_symbols_init();
 	ps_cellblock = gensym("cellblock");
 	ps_pointNum = gensym("Point #");
@@ -2637,6 +2837,8 @@ int main(void){
 	ps_errorAlpha = gensym("E Alpha");
 	ps_errorBeta = gensym("E Beta");
 	ps_error = gensym("Error");
+
+	te_clipboard = gensym("te_clipboard");
 
 	l_background = gensym("l_background");
 	l_xgrid = gensym("l_xgrid");
