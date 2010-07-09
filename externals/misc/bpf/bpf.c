@@ -111,16 +111,18 @@ typedef struct _bpf{
 	t_jrgba selectionColor;
 	t_jrgba textColor;
 	double xmin, xmax, ymin, ymax;
-	t_symbol *x_res, *y_res;
+	t_symbol *xres, *yres;
 	t_pt *pos;
 	long drawpos, drawlabels;
 	int *monotonic_point_counter;
 	int *npoints;
 	t_rect sel_box;
 	t_pt drag;
-	int lockx, locky;
+	int lockx, locky, lockinput;
 	int step;
 	double xmargin, ymargin;
+	int labelstart;
+	int *hideFunctions;
 } t_bpf; 
 
 void *bpf_class; 
@@ -142,6 +144,7 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers);
 void bpf_mouseup(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers); 
 void bpf_outputSelection(t_bpf *x);
 void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
+void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
 void bpf_setFunction(t_bpf *x, long f); 
 void bpf_setFunctionName(t_bpf *x, t_symbol *name);
@@ -205,16 +208,19 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 		critical_enter(x->lock);
 		int i, j;
 		for(i = 0; i < x->numFunctions; i++){
-			j = 0;
+			if(x->hideFunctions[i]){
+				continue;
+			}
+			j = x->labelstart;
 			t_point *p = x->functions[i];
 			if(p){
 				t_pt sc;
-				if(x->x_res == ps_int){
+				if(x->xres == ps_int){
 					sc.x = bpf_scale(round(p->coords.x), x->xmin, x->xmax, r.x, r.width);
 				}else{
 					sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width);
 				}
-				if(x->y_res == ps_int){
+				if(x->yres == ps_int){
 					sc.y = bpf_scale(round(p->coords.y), x->ymin, x->ymax, r.height, r.y);
 				}else{
 					sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y);
@@ -250,12 +256,12 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 			}
 			while(p){
 				t_pt sc;
-				if(x->x_res == ps_int){
+				if(x->xres == ps_int){
 					sc.x = bpf_scale(round(p->coords.x), x->xmin, x->xmax, r.x, r.width);
 				}else{
 					sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width);
 				}
-				if(x->y_res == ps_int){
+				if(x->yres == ps_int){
 					sc.y = bpf_scale(round(p->coords.y), x->ymin, x->ymax, r.height, r.y);
 				}else{
 					sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y);
@@ -280,10 +286,10 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 				}
 				double px = p->prev->coords.x, py = p->prev->coords.y;
-				if(x->x_res == ps_int){
+				if(x->xres == ps_int){
 					px = round(px);
 				}
-				if(x->y_res == ps_int){
+				if(x->yres == ps_int){
 					py = round(py);
 				}
 				double pysc = bpf_scale(py, x->ymin, x->ymax, r.height, r.y);
@@ -347,7 +353,7 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 			x->numFunctions = functionNum + 1;
 		}
 	}
-	bpf_outputSelection(x);
+	//bpf_outputSelection(x);
 	t_pt pt = (t_pt){atom_getfloat(a++), atom_getfloat(a++)};
 
 	//x->selected = bpf_insertPoint(x, pt, functionNum, x->monotonic_point_counter[functionNum]++);
@@ -383,11 +389,11 @@ void bpf_float(t_bpf *x, double f){
 		}else{
 			double lx = left->coords.x, ly = left->coords.y;
 			double rx = right->coords.x, ry = right->coords.y;
-			if(x->x_res == ps_int){
+			if(x->xres == ps_int){
 				lx = round(lx);
 				rx = round(rx);
 			}
-			if(x->y_res == ps_int){
+			if(x->yres == ps_int){
 				ly = round(ly);
 				ry = round(ry);
 			}
@@ -418,7 +424,7 @@ void bpf_find_btn(t_bpf *x, t_point *function, double xx, t_point **left, t_poin
 		return;
 	}
 	t_point *ptr = function;
-	if(x->x_res == ps_int){
+	if(x->xres == ps_int){
 		if(xx < round(function->coords.x)){
 			*left = NULL;
 			*right = function;
@@ -465,19 +471,19 @@ t_point *bpf_select(t_bpf *x, t_pt p_sc){
 	//p_sc.x = bpf_scale(p.x, x->xmin, x->xmax, r.x, r.width);
 	//p_sc.y = bpf_scale(p.y, x->ymin, x->ymax, r.height, r.y);
 	/*
-	if(x->x_res == ps_int){
+	if(x->xres == ps_int){
 		p_sc.x = round(p_sc.x);
 	}
-	if(x->y_res == ps_int){
+	if(x->yres == ps_int){
 		p_sc.y = round(p_sc.y);
 	}
 	*/
 	while(ptr){
 		t_pt sc = ptr->coords;
-		if(x->x_res == ps_int){
+		if(x->xres == ps_int){
 			sc.x = round(sc.x);
 		}
-		if(x->y_res == ps_int){
+		if(x->yres == ps_int){
 			sc.y = round(sc.y);
 		}
 
@@ -501,15 +507,15 @@ t_max_err bpf_notify(t_bpf *x, t_symbol *s, t_symbol *msg, void *sender, void *d
  	if (msg == gensym("attr_modified")){ 
  		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
 		/*
-		if(attrname == gensym("x_res") || attrname == gensym("y_res")){
+		if(attrname == gensym("xres") || attrname == gensym("yres")){
 			int i;
 			for(i = 0; i < x->numFunctions; i++){
 				t_point *p = x->functions[i];
 				while(p){
-					if(x->x_res == gensym("int")){
+					if(x->xres == gensym("int")){
 						p->coords.x = round(p->coords.x);
 					}
-					if(x->y_res == gensym("int")){
+					if(x->yres == gensym("int")){
 						p->coords.y = round(p->coords.y);
 					}
 					p = p->next;
@@ -569,11 +575,11 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		t_point *s = x->selected;
 		while(s){
 			double sx = s->coords.x, sy = s->coords.y;
-			if(x->x_res == ps_int){
+			if(x->xres == ps_int){
 				sx = round(sx);
 				pt.x = round(pt.x);
 			}
-			if(x->y_res == ps_int){
+			if(x->yres == ps_int){
 				sy = round(sy);
 				pt.y = round(pt.y);
 			}
@@ -595,14 +601,16 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			}
 		}
 
-		p = bpf_insertPoint(x, coords, x->currentFunction, x->monotonic_point_counter[x->currentFunction]++);
-		p->selected = 1;
-		if(x->selected){
-			x->selected->prev_selected = p;
+		if(!x->lockinput){
+			p = bpf_insertPoint(x, coords, x->currentFunction, x->monotonic_point_counter[x->currentFunction]++);
+			p->selected = 1;
+			if(x->selected){
+				x->selected->prev_selected = p;
+			}
+			p->next_selected = x->selected;
+			p->prev_selected = NULL;
+			x->selected = p;
 		}
-		p->next_selected = x->selected;
-		p->prev_selected = NULL;
-		x->selected = p;
 	}break;
 	case 0x112:
 	case 0x12:{
@@ -736,12 +744,12 @@ void bpf_outputSelection(t_bpf *x){
 	t_atom out[3];
 	while(p){
 		atom_setlong(&(out[0]), x->currentFunction);
-		if(x->x_res == ps_int){
+		if(x->xres == ps_int){
 			atom_setfloat(&(out[1]), round(x->selected->coords.x));
 		}else{
 			atom_setfloat(&(out[1]), x->selected->coords.x);
 		}
-		if(x->y_res == ps_int){
+		if(x->yres == ps_int){
 			atom_setfloat(&(out[2]), round(x->selected->coords.y));
 		}else{
 			atom_setfloat(&(out[2]), x->selected->coords.y);
@@ -749,6 +757,7 @@ void bpf_outputSelection(t_bpf *x){
 		outlet_list(x->out_sel, NULL, 3, out);
 		p = p->next_selected;
 	}
+
 }
 
 void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
@@ -792,6 +801,23 @@ void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw(&(x->box));
+}
+
+void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
+        long function;
+        long b;
+        function = atom_getlong(argv);
+        if(argc == 3){ // from matrixctrl
+                b = atom_getlong(argv + 2);
+        }else if(argc == 2){
+                b = atom_getlong(argv + 1);
+        }else{
+                object_error((t_object *)x, "two arguments required: function number, on/off");
+                return;
+	}
+        x->hideFunctions[function] = b;
+        jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+        jbox_redraw((t_jbox *)x);
 }
 
 void bpf_setFunction(t_bpf *x, long f){
@@ -950,19 +976,17 @@ void bpf_removePoint(t_bpf *x, t_point *point, int functionNum){
 	x->npoints[functionNum]--;
 	while(p){
 		if(p == point){
-			if(p->prev){
-				if(p->next){
-					p->prev->next = p->next;
-				}else{
-					p->prev->next = NULL;
-				}
-			}
 			if(p->next){
-				if(p->prev){
-					p->next->prev = p->prev;
-				}else{
-					p->next->prev = NULL;
-				}
+				p->next->prev = p->prev;
+			}
+			if(p->prev){
+				p->prev->next = p->next;
+			}
+			if(p->next_selected){
+				p->next_selected->prev_selected = p->prev_selected;
+			}
+			if(p->prev_selected){
+				p->prev_selected->next_selected = p->next_selected;
 			}
 			if(i == 0){
 				x->functions[functionNum] = p->next;
@@ -995,12 +1019,12 @@ void bpf_dump(t_bpf *x){
 		atom_setlong(&(out[1]), i);
 		while(p){
 			atom_setlong(&(out[0]), point_num++);
-			if(x->x_res == ps_int){
+			if(x->xres == ps_int){
 				atom_setfloat(&(out[2]), round(p->coords.x));
 			}else{
 				atom_setfloat(&(out[2]), p->coords.x);
 			}
-			if(x->y_res == ps_int){
+			if(x->yres == ps_int){
 				atom_setfloat(&(out[3]), round(p->coords.y));
 			}else{
 				atom_setfloat(&(out[3]), p->coords.y);
@@ -1116,20 +1140,21 @@ int main(void){
  	class_addmethod(c, (method)bpf_mousedown, "mousedown", A_CANT, 0); 
  	class_addmethod(c, (method)bpf_mousedrag, "mousedrag", A_CANT, 0); 
  	class_addmethod(c, (method)bpf_mouseup, "mouseup", A_CANT, 0); 
- 	class_addmethod(c, (method)bpf_addFunction, "addFunction", A_GIMME, 0); 
- 	class_addmethod(c, (method)bpf_functionList, "functionList", A_GIMME, 0); 
- 	class_addmethod(c, (method)bpf_setFunction, "setFunction", A_LONG, 0); 
+ 	class_addmethod(c, (method)bpf_addFunction, "addfunction", A_GIMME, 0); 
+ 	class_addmethod(c, (method)bpf_functionList, "functionlist", A_GIMME, 0); 
+ 	class_addmethod(c, (method)bpf_setFunction, "setfunction", A_LONG, 0); 
 	class_addmethod(c, (method)bpf_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)bpf_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_clear, "clear", 0);
 	class_addmethod(c, (method)bpf_dump, "dump", 0);
-	class_addmethod(c, (method)bpf_setFunctionName, "setFunctionName", A_SYM, 0);
+	class_addmethod(c, (method)bpf_setFunctionName, "setfunctionname", A_SYM, 0);
 	class_addmethod(c, (method)bpf_xminmax, "xminmax", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_yminmax, "yminmax", A_FLOAT, A_FLOAT, 0);
 	//class_addmethod(c, (method)bpf_renumber, "renumber", 0);
 	class_addmethod(c, (method)bpf_zoomToFit, "zoomtofit", 0);
 	class_addmethod(c, (method)bpf_clearSelectedAndRedraw, "unselect", 0);
 	class_addmethod(c, (method)bpf_removeSelected, "deleteselected", 0);
+	class_addmethod(c, (method)bpf_hideFunction, "hidefunction", A_GIMME, 0);
 
 	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_bpf, xmin);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmin", 0, "0.0");
@@ -1149,11 +1174,11 @@ int main(void){
         CLASS_ATTR_DOUBLE(c, "ymargin", 0, t_bpf, ymargin);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "ymargin", 0, "5.0");
 
-	CLASS_ATTR_SYM(c, "x_res", 0, t_bpf, x_res);
-	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "x_res", 0, "float");
+	CLASS_ATTR_SYM(c, "xres", 0, t_bpf, xres);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xres", 0, "float");
 
-	CLASS_ATTR_SYM(c, "y_res", 0, t_bpf, y_res);
-	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "y_res", 0, "float");
+	CLASS_ATTR_SYM(c, "yres", 0, t_bpf, yres);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "yres", 0, "float");
 
 	CLASS_ATTR_LONG(c, "drawpos", 0, t_bpf, drawpos);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawpos", 0, "1");
@@ -1161,11 +1186,17 @@ int main(void){
 	CLASS_ATTR_LONG(c, "drawlabels", 0, t_bpf, drawlabels);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawlabels", 0, "1");
 
+	CLASS_ATTR_LONG(c, "labelstart", 0, t_bpf, labelstart);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "labelstart", 0, "0");
+
 	CLASS_ATTR_LONG(c, "lockx", 0, t_bpf, lockx);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "lockx", 0, "0");
 
 	CLASS_ATTR_LONG(c, "locky", 0, t_bpf, locky);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "locky", 0, "0");
+
+	CLASS_ATTR_LONG(c, "lockinput", 0, t_bpf, lockinput);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "lockinput", 0, "0");
 
 	CLASS_ATTR_LONG(c, "step", 0, t_bpf, step);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "step", 0, "0");
@@ -1261,6 +1292,7 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
  		x->functions = (t_point **)calloc(MAX_NUM_FUNCTIONS, sizeof(t_point *));
  		x->funcattr = (t_funcattr **)calloc(MAX_NUM_FUNCTIONS, sizeof(t_funcattr *));
 		x->pos = (t_pt *)calloc(MAX_NUM_FUNCTIONS, sizeof(t_pt));
+		x->hideFunctions = (int *)calloc(MAX_NUM_FUNCTIONS, sizeof(int));
 
 		x->monotonic_point_counter = (int *)calloc(MAX_NUM_FUNCTIONS, sizeof(int));
 		memset(x->monotonic_point_counter, '\0', MAX_NUM_FUNCTIONS * sizeof(int));
