@@ -42,6 +42,7 @@
   VERSION 0.3.3: fixed capslock bug
   VERSION 0.3.4: fixed a bug with the way that the background was being drawn
   VERSION 0.3.5: added locks to the x and y dimensions and a step mode which turns the function into a step function
+  VERSION 0.4: takes a signal as input and outputs via te_breakout~
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -62,6 +63,7 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 #include "ext_hashtab.h"
 #include "jpatcher_api.h" 
 #include "jgraphics.h" 
+#include "z_dsp.h"
 #include "version.c" 
 
 #ifndef FLT_MAX
@@ -72,7 +74,7 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #endif
 
-#define MAX_NUM_FUNCTIONS 256 
+#define MAX_NUM_FUNCTIONS 64
 
 #define XMARGIN 5
 #define YMARGIN 5
@@ -95,7 +97,7 @@ typedef struct _function_attributes{
 } t_function_attributes, t_funcattr;
 
 typedef struct _bpf{ 
- 	t_jbox box; 
+ 	t_pxjbox box; 
  	void *out_main, *out_dump, *out_sel; 
 	t_object *pv;
 	t_critical lock;
@@ -123,13 +125,19 @@ typedef struct _bpf{
 	double xmargin, ymargin;
 	int labelstart;
 	int *hideFunctions;
+	t_symbol *name;
+	t_float **ptrs;
 } t_bpf; 
 
 void *bpf_class; 
 
 void bpf_paint(t_bpf *x, t_object *patcherview); 
+void bpf_dsp(t_bpf *x, t_signal **sp, short *count);
+t_int *bpf_perform(t_int *w);
+t_symbol *bpf_mangleName(t_symbol *name, int i, int fnum);
 void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_float(t_bpf *x, double f);
+double bpf_compute(t_bpf *x, int function, double f);
 void bpf_find_btn(t_bpf *x, t_point *function, double xx, t_point **left, t_point **right);
 t_point *bpf_select(t_bpf *x, t_pt p);
 void bpf_draw_bounds(t_bpf *x, t_jgraphics *g, t_rect *rect); 
@@ -344,6 +352,46 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 	}
 } 
 
+void bpf_dsp(t_bpf *x, t_signal **sp, short *count){
+	if(count[0]){
+		dsp_add(bpf_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+	}
+}
+
+t_int *bpf_perform(t_int *w){
+	t_bpf *x = (t_bpf *)w[1];
+	int n = (int)w[2];
+	t_float *in = (t_float *)w[3];
+	int i, j;
+	if(x->name){
+		for(i = 0; i < x->numFunctions; i++){
+			if(x->functions[i] == NULL){
+				memset(x->ptrs[i], 0, n * sizeof(t_float));
+			}
+			t_symbol *name;
+			if(name = bpf_mangleName(x->name, 0, i)){
+				name->s_thing = (t_object *)(x->ptrs[i]);
+			}
+		}
+		for(i = 0; i < n; i++){
+			for(j = 0; j < x->numFunctions; j++){
+				x->ptrs[j][i] = bpf_compute(x, j, in[j]);
+			}
+		}
+	}
+
+	return w + 4;
+}
+
+t_symbol *bpf_mangleName(t_symbol *name, int i, int fnum){
+	if(!name){
+		return NULL;
+	}
+	char buf[256];
+	sprintf(buf, "bkout_%s_%d_%d", name->s_name, i, fnum);
+	return gensym(buf);
+}
+
 void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 	t_atom *a = argv;
 	int functionNum = x->currentFunction;
@@ -367,54 +415,61 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 	x->selected = p;
 	*/
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_float(t_bpf *x, double f){
 	t_rect r;
-	jbox_get_patching_rect(&(x->box.b_ob), &r);
+	jbox_get_patching_rect((t_object *)&(x->box), &r);
 	bpf_resizeRectWithMargins(x, &r);
-	//r.x = r.y = 0;
 	t_atom out[2]; // function number, y
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
-		x->pos[i] = (t_pt){-1., -1.};
-		t_point *p = x->functions[i];
 		atom_setlong(&(out[0]), i);
-		t_point *left = NULL, *right = NULL;
-		bpf_find_btn(x, p, f, &left, &right);
-		if(!left || !right){
-			atom_setfloat(&(out[1]), 0.);
-			outlet_list(x->out_main, NULL, 2, out);
-		}else{
-			double lx = left->coords.x, ly = left->coords.y;
-			double rx = right->coords.x, ry = right->coords.y;
-			if(x->xres == ps_int){
-				lx = round(lx);
-				rx = round(rx);
-			}
-			if(x->yres == ps_int){
-				ly = round(ly);
-				ry = round(ry);
-			}
-			if(x->step){
-				atom_setfloat(out + 1, ly);
-				x->pos[i] = (t_pt){bpf_scale(f, x->xmin, x->xmax, r.x, r.width) + x->xmargin, bpf_scale(ly, x->ymin, x->ymax, r.height, r.y) + x->ymargin};
-			}else{
-				double m = (ry - ly) / (rx - lx);
-				double b = ly - (m * lx);
-				double y = (m * f) + b;
-				atom_setfloat(&(out[1]), y);
-				x->pos[i] = (t_pt){bpf_scale(f, x->xmin, x->xmax, r.x, r.width) + x->xmargin, bpf_scale(y, x->ymin, x->ymax, r.height, r.y) + x->ymargin};
-			}
-			if(x->drawpos){
-				jbox_invalidate_layer((t_object *)x, x->pv, l_pos[i]);
-			}
-			outlet_list(x->out_main, NULL, 2, out);
+		double y = bpf_compute(x, i, f);
+		x->pos[i] = (t_pt){bpf_scale(f, x->xmin, x->xmax, r.x, r.width) + x->xmargin, bpf_scale(y, x->ymin, x->ymax, r.height, r.y) + x->ymargin};
+
+		atom_setfloat(&(out[1]), y);
+		if(x->drawpos){
+			jbox_invalidate_layer((t_object *)x, x->pv, l_pos[i]);
 		}
+		outlet_list(x->out_main, NULL, 2, out);
 	}
 	if(x->drawpos){
-		jbox_redraw((t_jbox *)(&x->box));
+		jbox_redraw((t_jbox *)(t_jbox *)(&x->box));
+	}
+}
+
+double bpf_compute(t_bpf *x, int function, double f){
+	t_rect r;
+	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	bpf_resizeRectWithMargins(x, &r);
+	x->pos[function] = (t_pt){-1., -1.};
+	t_point *p = x->functions[function];
+	t_point *left = NULL, *right = NULL;
+	bpf_find_btn(x, p, f, &left, &right);
+
+	if(!left || !right){
+		return 0;
+	}else{
+		double lx = left->coords.x, ly = left->coords.y;
+		double rx = right->coords.x, ry = right->coords.y;
+		if(x->xres == ps_int){
+			lx = round(lx);
+			rx = round(rx);
+		}
+		if(x->yres == ps_int){
+			ly = round(ly);
+			ry = round(ry);
+		}
+		if(x->step){
+			return ly;
+		}else{
+			double m = (ry - ly) / (rx - lx);
+			double b = ly - (m * lx);
+			double y = (m * f) + b;
+			return y;
+		}
 	}
 }
 
@@ -463,7 +518,7 @@ t_point *bpf_select(t_bpf *x, t_pt p_sc){
 	t_point *ptr = x->functions[x->currentFunction];
 	double xdif, ydif;
 	t_rect r;
-	jbox_get_patching_rect(&(x->box.b_ob), &r);
+	jbox_get_patching_rect((t_object *)&(x->box), &r);
 	bpf_resizeRectWithMargins(x, &r);
 	//r.x = r.y = 0;
 
@@ -526,7 +581,7 @@ t_max_err bpf_notify(t_bpf *x, t_symbol *s, t_symbol *msg, void *sender, void *d
  		//x->sel_x.click = x->sel_x.drag = x->sel_y.click = x->sel_y.drag = -1; 
 		jbox_invalidate_layer((t_object *)x, x->pv, l_background);
 		jbox_invalidate_layer((t_object *)x, x->pv, l_points);
- 		jbox_redraw(&(x->box)); 
+ 		jbox_redraw((t_jbox *)&(x->box)); 
 	} 
 	return 0; 
 } 
@@ -534,7 +589,7 @@ t_max_err bpf_notify(t_bpf *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 void bpf_clearSelectedAndRedraw(t_bpf *x){
 	bpf_clearSelected(x);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box)); 
+	jbox_redraw((t_jbox *)&(x->box)); 
 }
 
 void bpf_clearSelected(t_bpf *x){
@@ -631,7 +686,7 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	}
 	bpf_outputSelection(x);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
@@ -727,13 +782,13 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->drag = pt;
 	bpf_outputSelection(x);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_mouseup(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->sel_box = (t_rect){0., 0., 0., 0.};
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_outputSelection(t_bpf *x){
@@ -783,7 +838,7 @@ void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 		}
 	}
         jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
@@ -800,7 +855,7 @@ void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	x->currentFunction = 0;
 	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
@@ -817,7 +872,7 @@ void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 	}
         x->hideFunctions[function] = b;
         jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-        jbox_redraw((t_jbox *)x);
+        jbox_redraw((t_jbox *)(t_jbox *)x);
 }
 
 void bpf_setFunction(t_bpf *x, long f){
@@ -839,13 +894,13 @@ void bpf_setFunction(t_bpf *x, long f){
 	bpf_clearSelected(x);
 	critical_exit(x->lock);
         jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_setFunctionName(t_bpf *x, t_symbol *name){
 	strncpy(x->funcattr[x->currentFunction]->name, name->s_name, 64);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 /*
@@ -880,7 +935,7 @@ void bpf_renumber(t_bpf *x){
 	}
 	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw((t_jbox *)&x->box);
+	jbox_redraw((t_jbox *)(t_jbox *)&x->box);
 }
 */
 
@@ -907,7 +962,7 @@ void bpf_zoomToFit(t_bpf *x){
 		}
 	}
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw((t_jbox *)&(x->box));
+	jbox_redraw((t_jbox *)(t_jbox *)&(x->box));
 }
 
 t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum, int id){
@@ -962,7 +1017,7 @@ void bpf_removeSelected(t_bpf *x){
 	}
 	x->selected = NULL;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_removePoint(t_bpf *x, t_point *point, int functionNum){
@@ -1042,7 +1097,7 @@ void bpf_xminmax(t_bpf *x, double min, double max){
 	x->xmax = max;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	bpf_invalidateAllPos(x);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_yminmax(t_bpf *x, double min, double max){
@@ -1050,7 +1105,7 @@ void bpf_yminmax(t_bpf *x, double min, double max){
 	x->ymax = max;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	bpf_invalidateAllPos(x);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_resizeRectWithMargins(t_bpf *x, t_rect *r){
@@ -1077,7 +1132,7 @@ void bpf_clear(t_bpf *x){
 	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	bpf_invalidateAllPos(x);
-	jbox_redraw(&(x->box));
+	jbox_redraw((t_jbox *)&(x->box));
 }
 
 void bpf_invalidateAllPos(t_bpf *x){
@@ -1125,14 +1180,24 @@ void bpf_free(t_bpf *x){
 			next = next->next;
 		}
 	}
+	for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
+		if(x->ptrs[i]){
+			sysmem_freeptr(x->ptrs[i]);
+		}
+	}
+	if(x->ptrs){
+		sysmem_freeptr(x->ptrs);
+	}
 } 
 
 int main(void){ 
  	t_class *c = class_new("bpf", (method)bpf_new, (method)bpf_free, sizeof(t_bpf), 0L, A_GIMME, 0); 
+	class_dspinitjbox(c);
 
  	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
  	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
 
+	class_addmethod(c, (method)bpf_dsp, "dsp", A_CANT, 0);
  	class_addmethod(c, (method)bpf_paint, "paint", A_CANT, 0); 
  	class_addmethod(c, (method)version, "version", 0); 
  	class_addmethod(c, (method)bpf_assist, "assist", A_CANT, 0); 
@@ -1155,6 +1220,9 @@ int main(void){
 	class_addmethod(c, (method)bpf_clearSelectedAndRedraw, "unselect", 0);
 	class_addmethod(c, (method)bpf_removeSelected, "deleteselected", 0);
 	class_addmethod(c, (method)bpf_hideFunction, "hidefunction", A_GIMME, 0);
+
+	CLASS_ATTR_SYM(c, "name", 0, t_bpf, name);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "name", 0, "0");
 
 	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_bpf, xmin);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmin", 0, "0.0");
@@ -1283,7 +1351,8 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
  	if(x = (t_bpf *)object_alloc(bpf_class)){ 
 
  		jbox_new((t_jbox *)x, boxflags, argc, argv); 
- 		x->box.b_firstin = (void *)x; 
+ 		x->box.z_box.b_firstin = (void *)x; 
+		dsp_setupjbox((t_pxjbox *)x, 1);
 
  		x->out_dump = listout((t_object *)x); 
 		x->out_sel = listout((t_object *)x);
@@ -1311,6 +1380,7 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 		critical_new(&(x->lock));
 
 		int i;
+		x->ptrs = (t_float **)sysmem_newptr(MAX_NUM_FUNCTIONS * sizeof(t_float *));
 		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
 			x->funcattr[i] = (t_funcattr *)calloc(1, sizeof(t_funcattr));
 			x->funcattr[i]->line_color = x->lineColor;
@@ -1318,7 +1388,10 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 			memset(x->funcattr[i]->dash, 0, 8);
 			x->funcattr[i]->ndash = 0;
 			sprintf(x->funcattr[i]->name, "%d", i);
+			x->ptrs[i] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
 		}
+
+		x->name = NULL;
  		attr_dictionary_process(x, d); 
  		jbox_ready((t_jbox *)x); 
 
