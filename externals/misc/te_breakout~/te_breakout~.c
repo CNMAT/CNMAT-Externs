@@ -22,11 +22,12 @@
 
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   NAME: te_breakout~
-  DESCRIPTION: A breakout object for the bkouto_editor
+  DESCRIPTION: A breakout object 
   AUTHORS: John MacCallum
   COPYRIGHT_YEARS: 2009
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
+  VERSION 1.0:  generalized to work with any object like bpf
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -38,7 +39,10 @@
 typedef struct _bkout{
 	t_pxobject ob;
 	t_symbol *name;
-	int function;
+	long function;
+	long numoutlets;
+	t_float **outlets;
+	long blksize;
 } t_bkout;
 
 static t_class *bkout_class;
@@ -52,12 +56,33 @@ t_symbol *bkout_mangleName(t_symbol *name, int fnum, int i);
 void *bkout_new(t_symbol *msg, short argc, t_atom *argv);
 
 void bkout_dsp(t_bkout *x, t_signal **sp, short *count){
-	dsp_add(bkout_perform, 5, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
+	//dsp_add(bkout_perform, 5, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
+	x->blksize = sp[0]->s_n;
+	int i;
+	for(i = 0; i < x->numoutlets; i++){
+		x->outlets[i] = sp[i]->s_vec;
+	}
+	dsp_add(bkout_perform, 1, x);
 }
 
 t_int *bkout_perform(t_int *w){
 	t_bkout *x = (t_bkout *)w[1];
-	int n = (int)w[2];
+	int n = x->blksize;
+	int i;
+	for(i = 0; i < x->numoutlets; i++){
+		t_float *out = (t_float *)x->outlets[i];
+		t_symbol *name;
+		t_float *in = NULL;
+		if(name = bkout_mangleName(x->name, i, x->function)){
+			in = (t_float *)(name->s_thing);
+			//post("te_breakout~: name1 = %s, %p", name1->s_name, in1);
+		}
+		memset(out, 0, n * sizeof(t_float));
+		if(in){
+			memcpy(out, in, n * sizeof(t_float));
+		}
+	}
+	/*
 	t_float *out1 = (t_float *)w[3];
 	t_float *out2 = (t_float *)w[4];
 	t_float *out3 = (t_float *)w[5];
@@ -96,11 +121,14 @@ t_int *bkout_perform(t_int *w){
 	//int i;
 	//for(i = 0; i < n; i++){
 	//}
-    
-	return w + 6;
+	*/
+	return w + 2;
 }
 
 void bkout_free(t_bkout *x){
+	if(x->outlets){
+		sysmem_freeptr(x->outlets);
+	}
 }
 
 void bkout_assist(t_bkout *x, void *b, long io, long index, char *s){
@@ -138,7 +166,7 @@ t_symbol *bkout_mangleName(t_symbol *name, int i, int fnum){
 		return NULL;
 	}
 	char buf[256];
-	sprintf(buf, "tempo_editor_%s_%d_%d", name->s_name, i, fnum);
+	sprintf(buf, "bkout_%s_%d_%d", name->s_name, i, fnum);
 	return gensym(buf);
 }
 
@@ -151,9 +179,6 @@ void *bkout_new(t_symbol *msg, short argc, t_atom *argv){
 
 	if(x = (t_bkout *)object_alloc(bkout_class)){
 		dsp_setup((t_pxobject *)x, 0);
-		outlet_new(x, "signal");
-		outlet_new(x, "signal");
-		outlet_new(x, "signal");
 		x->name = NULL;
 		x->function = 0;
         
@@ -161,6 +186,11 @@ void *bkout_new(t_symbol *msg, short argc, t_atom *argv){
 		if(x->name == NULL){
 			error("te_breakout~: you must supply a name");
 			return NULL;
+		}
+		x->outlets = (t_float **)sysmem_newptr(x->numoutlets * sizeof(t_float *));
+		int i;
+		for(i = 0; i < x->numoutlets; i++){
+			outlet_new(x, "signal");
 		}
 
 		x->ob.z_misc = Z_PUT_LAST;
@@ -181,6 +211,7 @@ int main(void){
     
 	CLASS_ATTR_SYM(c, "name", 0, t_bkout, name);
 	CLASS_ATTR_LONG(c, "function", 0, t_bkout, function);
+	CLASS_ATTR_LONG(c, "numoutlets", 0, t_bkout, numoutlets);
 
 	class_register(CLASS_BOX, c);
 	bkout_class = c;
