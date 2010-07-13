@@ -43,6 +43,7 @@
   VERSION 0.3.4: fixed a bug with the way that the background was being drawn
   VERSION 0.3.5: added locks to the x and y dimensions and a step mode which turns the function into a step function
   VERSION 0.4: takes a signal as input and outputs via te_breakout~
+  VERSION 0.4.1: fixed a bug in the perform routine
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -181,7 +182,7 @@ void myobject_write(t_bpf *x, t_symbol *s);
 void myobject_dowrite(t_bpf *x, t_symbol *s);
 void myobject_writefile(t_bpf *x, char *filename, short path);
 
-t_symbol *l_background, *l_points, **l_pos, *ps_int;
+t_symbol *l_background, *l_points, **l_pos, *ps_int, *l_axes;
 
 void bpf_paint(t_bpf *x, t_object *patcherview){ 
 	x->pv = patcherview;
@@ -209,6 +210,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 	}
 	jbox_paint_layer((t_object *)x, patcherview, l_background, 0, 0);
 
+	// points
 	g = jbox_start_layer((t_object *)x, patcherview, l_points, r.width, r.height);
 	bpf_resizeRectWithMargins(x, &r);
 
@@ -375,7 +377,7 @@ t_int *bpf_perform(t_int *w){
 		}
 		for(i = 0; i < n; i++){
 			for(j = 0; j < x->numFunctions; j++){
-				x->ptrs[j][i] = bpf_compute(x, j, in[j]);
+				x->ptrs[j][i] = bpf_compute(x, j, in[i]);
 			}
 		}
 	}
@@ -1071,7 +1073,7 @@ void bpf_dump(t_bpf *x){
 	t_atom out[4];
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
-		atom_setlong(&(out[1]), i);
+		atom_setlong(&(out[1]), x->labelstart + i);
 		while(p){
 			atom_setlong(&(out[0]), point_num++);
 			if(x->xres == ps_int){
@@ -1394,6 +1396,7 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 		x->name = NULL;
  		attr_dictionary_process(x, d); 
  		jbox_ready((t_jbox *)x); 
+		x->box.z_misc = Z_PUT_FIRST;
 
  		return x; 
  	} 
