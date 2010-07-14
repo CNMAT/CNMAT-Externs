@@ -69,7 +69,7 @@ import javax.sound.midi.*;
 
 public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	public void version(){
-		post("midifile Version 3.0.3, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
+		post("midifile Version 3.2.3, by John MacCallum.\nCopyright (c) 2006-7 Regents of the University of California.  All rights reserved.");
 	}
 
 	private	Sequence sequence = null;
