@@ -55,6 +55,7 @@ VERSION 3.1: Sync outlet
 VERSION 3.2: Records
 VERSION 3.2.1: added setTempo(), setTimeSig() and setKeySig()
 VERSION 3.2.2: minor bug fixes and a new help file
+VERSION 3.2.3: version bump
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
