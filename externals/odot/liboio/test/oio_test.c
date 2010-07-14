@@ -15,7 +15,10 @@ void disconnect_callback(t_oio *oio, long n, char *ptr, void *context);
 int main(int argc, char **argv){
 	char *usageplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_usage_strings.plist";
 	char *cookieplist = "/Users/john/Development/cnmat/trunk/max/externals/odot/liboio/hid_cookie_strings.plist";
-	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist, connect_callback, NULL, disconnect_callback, NULL);
+	//t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, usageplist, cookieplist, connect_callback, NULL, disconnect_callback, NULL);
+	t_oio *oio = oio_obj_alloc(connect_callback, NULL, disconnect_callback, NULL, connect_callback, NULL, disconnect_callback, NULL, connect_callback, NULL, disconnect_callback, NULL);
+	oio_hid_usageFile(oio, usageplist);
+	oio_hid_cookieFile(oio, cookieplist);
 	oio_obj_run(oio);
 	print_devices(oio);
 	if(argc > 1){
@@ -140,6 +143,26 @@ void print_devices(t_oio *oio){
 			oio_hid_util_getDeviceProductIDFromDeviceName(oio, names[i], &pid);
 			oio_hid_util_getDeviceVendorIDFromDeviceName(oio, names[i], &vid);
 			printf("\t%2d:\t%-50s\t%9d\t%9d\n", i + 1, names[i], vid, pid);
+			oio_mem_free(names[i]);
+		}
+	}
+	if(names){
+		oio_mem_free(names);
+	}
+
+	// serial
+	printf("\n");
+	printf("Serial Devices:\n");
+	printf("\t%2s\t%-50s\t%9s\t%9s\n", "#", "Device", "VendorID", "ProductID");
+	//printf("\t%2s\t%-50s\n", "#", "Device");
+	oio_serial_getDeviceNames(oio, &n, &names);
+	for(i = 0; i < n; i++){
+		if(names[i]){
+			uint32_t pid = -1, vid = -1;
+			oio_serial_util_getDeviceProductIDFromDeviceName(oio, names[i], &pid);
+			oio_serial_util_getDeviceVendorIDFromDeviceName(oio, names[i], &vid);
+			printf("\t%2d:\t%-50s\t%9d\t%9d\n", i + 1, names[i], vid, pid);
+			//printf("\t%2d:\t%-50s\n", i + 1, names[i]);
 			oio_mem_free(names[i]);
 		}
 	}

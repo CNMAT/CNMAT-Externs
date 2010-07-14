@@ -42,9 +42,9 @@ void oio_hid_alloc(t_oio *oio,
 		   t_oio_hid_callback hid_connect_callback, 
 		   void *hid_connect_context, 
 		   t_oio_hid_callback hid_disconnect_callback, 
-		   void *hid_disconnect_context, 
-		   char *hid_usage_plist, 
-		   char *hid_cookie_plist);
+		   void *hid_disconnect_context);
+		   //char *hid_usage_plist, 
+		   //char *hid_cookie_plist);
 
 #endif // __OIO_HID_H__
 

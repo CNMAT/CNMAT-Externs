@@ -10,7 +10,8 @@ char *const oio_errstr[] = {
 	"Bad OSC bundle",
 	"Bad OSC message",
 	"Unrecognized OSC type tag",
-	"Couldn't look up property"
+	"Couldn't look up property",
+	"IOServiceMatching returned NULL"
 };
 
 t_oio_error_handler oio_error_handler;

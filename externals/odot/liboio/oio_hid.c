@@ -449,9 +449,9 @@ void oio_hid_alloc(t_oio *oio,
 		   t_oio_hid_callback connect_callback, 
 		   void *connect_context, 
 		   t_oio_hid_callback disconnect_callback, 
-		   void *disconnect_context, 
-		   char *usage_plist, 
-		   char *cookie_plist){
+		   void *disconnect_context){
+		   //char *usage_plist, 
+		   //char *cookie_plist){
 	t_oio_hid *hid = (t_oio_hid *)oio_mem_alloc(1, sizeof(t_oio_hid));
 	oio->hid = hid;
 	hid->devices = NULL;
@@ -459,24 +459,28 @@ void oio_hid_alloc(t_oio *oio,
 	hid->connect_callbacks = NULL;
 	hid->device_hash = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	hid->cookie_strings_dict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+
+	/*
 	if(usage_plist){
 		oio_hid_usageFile(oio, usage_plist);
 	}
 	if(cookie_plist){
 		oio_hid_cookieFile(oio, cookie_plist);
 	}
+	*/
 	if(connect_callback){
 		oio_obj_registerNotificationCallback(oio, &(hid->connect_callbacks), connect_callback, connect_context);
 	}
 	if(connect_callback){
 		oio_obj_registerNotificationCallback(oio, &(hid->disconnect_callbacks), disconnect_callback, disconnect_context);
 	}
+	
 	hid->hidmanager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
 	IOHIDManagerSetDeviceMatching(hid->hidmanager, NULL);
 
 	IOHIDManagerRegisterDeviceMatchingCallback(hid->hidmanager, oio_hid_connectCallback, (void *)oio);
 	IOHIDManagerRegisterDeviceRemovalCallback(hid->hidmanager, oio_hid_disconnectCallback, (void *)oio);
 
-	oio_hid_enumerateDevices(oio);
+	//oio_hid_enumerateDevices(oio);
 	//oio_hid_run(oio);
 }

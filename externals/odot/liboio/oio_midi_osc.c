@@ -53,7 +53,8 @@ int oio_midi_osc_encodeGeneric(t_oio *oio, char *oscbuf, t_oio_midi_dev *device,
 	unsigned char *data = (unsigned char *)(packet->data);
 	char *ptr = oscbuf, *sizeptr = oscbuf;
 	ptr += 4;
-	ptr += sprintf(ptr, "/midi%s", ((t_oio_generic_device *)device)->name);
+	//ptr += sprintf(ptr, "/midi%s", ((t_oio_generic_device *)device)->name);
+	ptr += sprintf(ptr, "%s", ((t_oio_generic_device *)device)->name);
 	if(data[0] < 144){
 		// note off
 		if(n < 2){

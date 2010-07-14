@@ -3,6 +3,7 @@
 
 #include "oio_hid.h"
 #include "oio_midi.h"
+#include "oio_serial.h"
 #include "oio_obj.h"
 #include "oio_err.h"
 #include "oio_mem.h"

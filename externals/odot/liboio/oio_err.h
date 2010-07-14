@@ -13,6 +13,7 @@ typedef unsigned long t_oio_err;
 #define OIO_ERR_OSCMSG 6
 #define OIO_ERR_OSCTAG 7
 #define OIO_ERR_NOPROP 8
+#define OIO_ERR_NOSERV 9
 
 typedef void (*t_oio_error_handler)(char *, unsigned long, t_oio_err, char *);
 

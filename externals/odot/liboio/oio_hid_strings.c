@@ -92,6 +92,9 @@ CFStringRef oio_hid_strings_getDeviceNameString(t_oio *oio, int32_t vid, int32_t
 }
 
 CFStringRef oio_hid_strings_getUsagePageString(t_oio *oio, uint32_t usage_page){
+	if(!(oio->hid->usage_pages_dict)){
+		return NULL;
+	}
 	CFNumberRef up = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &usage_page);
 	CFStringRef val = NULL;
 	if(CFDictionaryContainsKey(oio->hid->usage_pages_dict, up)){
@@ -114,6 +117,9 @@ uint32_t oio_hid_strings_getUsagePage(t_oio *oio, char *usage_page){
 }
 
 CFStringRef oio_hid_strings_getUsageString(t_oio *oio, uint32_t usage_page, uint32_t usage){
+	if(!(oio->hid->usage_dict)){
+		return NULL;
+	}
 	CFNumberRef up = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &usage_page);
 	CFNumberRef u = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &usage);
 	CFDictionaryRef usage_page_dict = NULL;

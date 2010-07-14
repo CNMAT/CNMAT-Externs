@@ -39,6 +39,10 @@
 		52A43348118F3D1200702ADE /* oio.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A43346118F3D1200702ADE /* oio.h */; };
 		52A4335B118F68C000702ADE /* oio_obj.c in Sources */ = {isa = PBXBuildFile; fileRef = 52A43359118F68C000702ADE /* oio_obj.c */; };
 		52A4335C118F68C000702ADE /* oio_obj.h in Headers */ = {isa = PBXBuildFile; fileRef = 52A4335A118F68C000702ADE /* oio_obj.h */; };
+		52F088F911CAFB6A002EDF4E /* oio_serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F088F711CAFB6A002EDF4E /* oio_serial.c */; };
+		52F088FA11CAFB6A002EDF4E /* oio_serial.h in Headers */ = {isa = PBXBuildFile; fileRef = 52F088F811CAFB6A002EDF4E /* oio_serial.h */; };
+		52F088FD11CB2BA7002EDF4E /* oio_serial_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F088FB11CB2BA7002EDF4E /* oio_serial_util.c */; };
+		52F088FE11CB2BA7002EDF4E /* oio_serial_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 52F088FC11CB2BA7002EDF4E /* oio_serial_util.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +78,10 @@
 		52A43346118F3D1200702ADE /* oio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio.h; sourceTree = "<group>"; };
 		52A43359118F68C000702ADE /* oio_obj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_obj.c; sourceTree = "<group>"; };
 		52A4335A118F68C000702ADE /* oio_obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_obj.h; sourceTree = "<group>"; };
+		52F088F711CAFB6A002EDF4E /* oio_serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_serial.c; sourceTree = "<group>"; };
+		52F088F811CAFB6A002EDF4E /* oio_serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_serial.h; sourceTree = "<group>"; };
+		52F088FB11CB2BA7002EDF4E /* oio_serial_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oio_serial_util.c; sourceTree = "<group>"; };
+		52F088FC11CB2BA7002EDF4E /* oio_serial_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oio_serial_util.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* liboio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -109,6 +117,10 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				52F088FB11CB2BA7002EDF4E /* oio_serial_util.c */,
+				52F088FC11CB2BA7002EDF4E /* oio_serial_util.h */,
+				52F088F711CAFB6A002EDF4E /* oio_serial.c */,
+				52F088F811CAFB6A002EDF4E /* oio_serial.h */,
 				521130E011AA18B200B71D00 /* oio_midi_osc.c */,
 				521130E111AA18B200B71D00 /* oio_midi_osc.h */,
 				521130DB11A9BB5600B71D00 /* oio_midi_util.c */,
@@ -178,6 +190,8 @@
 				52112D9111A0F82000B71D00 /* oio_midi.h in Headers */,
 				521130DE11A9BB5600B71D00 /* oio_midi_util.h in Headers */,
 				521130E311AA18B200B71D00 /* oio_midi_osc.h in Headers */,
+				52F088FA11CAFB6A002EDF4E /* oio_serial.h in Headers */,
+				52F088FE11CB2BA7002EDF4E /* oio_serial_util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +250,8 @@
 				52112D9011A0F82000B71D00 /* oio_midi.c in Sources */,
 				521130DD11A9BB5600B71D00 /* oio_midi_util.c in Sources */,
 				521130E211AA18B200B71D00 /* oio_midi_osc.c in Sources */,
+				52F088F911CAFB6A002EDF4E /* oio_serial.c in Sources */,
+				52F088FD11CB2BA7002EDF4E /* oio_serial_util.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

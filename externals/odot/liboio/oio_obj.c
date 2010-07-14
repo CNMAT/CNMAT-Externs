@@ -1,6 +1,7 @@
 #include "oio_obj.h"
 #include "oio_hid.h"
 #include "oio_midi.h"
+#include "oio_serial.h"
 #include "oio_mem.h"
 #include <mach/mach_time.h>
 #include <stdio.h>
@@ -13,29 +14,38 @@ t_oio *oio_obj_alloc(t_oio_hid_callback hid_connect_callback,
 		     void *hid_connect_context, 
 		     t_oio_hid_callback hid_disconnect_callback, 
 		     void *hid_disconnect_context, 
-		     char *hid_usage_plist, 
-		     char *hid_cookie_plist,
+		     //char *hid_usage_plist, 
+		     //char *hid_cookie_plist,
 		     t_oio_midi_callback midi_connect_callback,
 		     void *midi_connect_context,
 		     t_oio_midi_callback midi_disconnect_callback,
-		     void *midi_disconnect_context){
+		     void *midi_disconnect_context,
+		     t_oio_serial_callback serial_connect_callback,
+		     void *serial_connect_context,
+		     t_oio_serial_callback serial_disconnect_callback,
+		     void *serial_disconnect_context){
 	t_oio *oio = (t_oio *)oio_mem_alloc(1, sizeof(t_oio));
 	oio_hid_alloc(oio, 
 		      hid_connect_callback, 
 		      hid_connect_context, 
 		      hid_disconnect_callback, 
-		      hid_disconnect_context, 
-		      hid_usage_plist, 
-		      hid_cookie_plist);
+		      hid_disconnect_context);
+		      //hid_usage_plist, 
+		      //hid_cookie_plist);
 	oio_midi_alloc(oio,
 		       midi_connect_callback, midi_connect_context,
 		       midi_disconnect_callback, midi_disconnect_context);
+
+	oio_serial_alloc(oio,
+			 serial_connect_callback, serial_connect_context,
+			 serial_disconnect_callback, serial_disconnect_context);
 	return oio;
 }
 
 void oio_obj_run(t_oio *oio){
 	oio_hid_run(oio);
 	oio_midi_run(oio);
+	//oio_serial_run(oio);
 }
 
 t_oio_err oio_obj_sendOSC(t_oio *oio, int n, char *buf){
@@ -107,7 +117,7 @@ t_oio_err oio_obj_registerValueCallback(t_oio *oio, char *name, t_oio_callback f
 			oio_midi_registerValueCallback(oio, name, f, context);
 			break;
 		case OIO_DEV_SERIAL:
-
+			oio_serial_registerValueCallback(oio, name, f, context);
 			break;
 		}
 	}
@@ -152,6 +162,9 @@ t_oio_err oio_obj_registerNotificationCallback(t_oio *oio, t_oio_callbackList **
 	return OIO_ERR_NONE;
 }
 
+/**************************************************
+won't work!  some serial and usb devices have the same name...
+ **************************************************/
 t_oio_dev_type oio_obj_getDeviceType(t_oio *oio, char *name){
 	CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, name, kCFStringEncodingUTF8);
 	if(CFDictionaryContainsKey(oio->hid->device_hash, key)){
@@ -160,6 +173,8 @@ t_oio_dev_type oio_obj_getDeviceType(t_oio *oio, char *name){
 		return OIO_DEV_MIDI;
 	}else if(CFDictionaryContainsKey(oio->midi->destination_hash, key)){
 		return OIO_DEV_MIDI;
+	}else if(CFDictionaryContainsKey(oio->serial->device_hash, key)){
+		return OIO_DEV_SERIAL;
 	}
 	CFRelease(key);
 	return OIO_DEV_DNF;
@@ -209,11 +224,15 @@ t_oio_err oio_obj_getDevicesByName(t_oio *oio,
 	n += CFDictionaryGetCount(oio->hid->device_hash);
 	n += CFDictionaryGetCount(oio->midi->source_hash);
 	n += CFDictionaryGetCount(oio->midi->destination_hash);
+	n += CFDictionaryGetCount(oio->serial->device_hash);
 	*matched_devices = (t_oio_generic_device **)oio_mem_alloc(n, sizeof(t_oio_generic_device *));
 	*num_devices = 0;
 	int i = 0, j;
-	t_oio_generic_device *dd[3] = {(t_oio_generic_device *)(oio->hid->devices), (t_oio_generic_device *)(oio->midi->sources), (t_oio_generic_device *)(oio->midi->destinations)};
-	for(j = 0; j < 3; j++){
+	t_oio_generic_device *dd[4] = {(t_oio_generic_device *)(oio->hid->devices), 
+				       (t_oio_generic_device *)(oio->midi->sources), 
+				       (t_oio_generic_device *)(oio->midi->destinations),
+				       (t_oio_generic_device *)(oio->serial->devices)};
+	for(j = 0; j < 4; j++){
 		t_oio_generic_device *d = dd[j];
 		while(d){
 			char *address = DEV_NAME(d);
