@@ -33,6 +33,7 @@
   VERSION 1.2.1: fixed a bug in doClearFunction() which was clearing the current function, not the one passed to it.
   VERSION 1.2.2: mouse selection and dragging has been totally rewritten to allow multiple points to be selected at once
   VERSION 1.3: lots of improvements including cut/copy/paste and beat/control point numbers
+  VERSION 1.3.1: flip and reverse selected points and signal outlets that output the control point numbers and beat numbers
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -172,6 +173,7 @@ typedef struct _te{
 	int *beatnumbuf; // temp array for storing indexes where beats are drawn
 	int beatnumbuflen;
 	int beatnumbufpos;
+	int highlight_every_n;
 } t_te; 
 
 t_class *te_class; 
@@ -213,6 +215,8 @@ void te_muteFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_lockFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_addToFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_addToAllFunctions(t_te *x, double x, double y);
+void te_invertSelected(t_te *x);
+void te_reverseSelected(t_te *x);
 void te_makeColorForInt(int i, t_jrgb *c);
 void te_assist(t_te *x, void *b, long m, long a, char *s); 
 void te_free(t_te *x); 
@@ -435,21 +439,33 @@ void te_paint(t_te *x, t_object *patcherview){
 				te_makePlan(x, prev_t, function, &plan);
 				double prev_correctedPhase = te_computeCorrectedPhase(prev_t, &plan);
 				//double prev_phase = te_computePhase(prev_t, &plan);
-				int beatnum = 1;
-				int newplan = 0;
+				//int beatnum = 1;
+				//int newplan = 0;
 				int lbnx = -100, lbny = -100;
+				int highlight = 0;
 				for(i = 0; i < rect.width * 1; i++){
 					double idx = i / 1;
 					double t = te_scale(idx, 0, rect.width, x->time_min, x->time_max);
 					double p;
-					if(!te_isPlanValid(x, t, &plan, function)){
-						te_makePlan(x, t, function, &plan);
+					// the display width really isn't of good enough resolution to get 
+					// the beats accurately, so we're adding a small amount to the
+					// time to make sure that the correct beat number shows up.
+					// it might be interesting to compute more than the rect width...
+					if(!te_isPlanValid(x, t + ((x->time_max - x->time_min) / rect.width), &plan, function)){
+						te_makePlan(x, t + ((x->time_max - x->time_min) / rect.width), function, &plan);
+					}
+					/*
+					// we add a small amount of time to t to make sure that we end 
+					// up with a plan that has the nearest point as the starting point.
+					if(!te_isPlanValid(x, t + ((x->time_max - x->time_min) / rect.width), &plan, function)){
+						te_makePlan(x, t + ((x->time_max - x->time_min) / rect.width), function, &plan);
 						if(newplan == -1){
 							newplan = 0;
 						}else{
 							newplan = 1;
 						}
 					}
+					*/
 					/*
 					  if(x->show_beat_correction && function == x->currentFunction){//&& t >= plan.startTime + plan.segmentDuration_sec){
 					  jgraphics_set_source_jrgba(gg, &c);
@@ -472,12 +488,18 @@ void te_paint(t_te *x, t_object *patcherview){
 
 					p = te_computeCorrectedPhase(t, &plan);
 					if(floor(p) > floor(prev_correctedPhase) || p - floor(p) < prev_correctedPhase - floor(prev_correctedPhase)){
+						if((highlight % x->highlight_every_n) == 0 && function == x->currentFunction){
+							jgraphics_set_line_width(gg, 3.);
+						}
+						highlight++;
 						jgraphics_move_to(gg, idx, rect.height);
 						double beatheight = te_scale(te_computeTempo(t, &plan), x->freq_min, x->freq_max, rect.height, 0);
 						jgraphics_line_to(gg, idx, beatheight);
 						jgraphics_stroke(gg);
+						jgraphics_set_line_width(gg, 1.);
 						if(function == x->currentFunction){
 							// draw the beat number over the beat
+							/*
 							if(newplan){
 								beatnum = 1;
 								newplan = 0;
@@ -486,8 +508,11 @@ void te_paint(t_te *x, t_object *patcherview){
 								beatnum = 1;
 								newplan = -1;
 							}
+							*/
 							char buf[8];
 							double w, h;
+							long beatnum = lrintf(p); // cast to round down
+							beatnum++;
 							if(beatnum == 1){
 								if(t >= plan.endTime){
 									sprintf(buf, "%d", plan.pointnum_right);
@@ -501,7 +526,7 @@ void te_paint(t_te *x, t_object *patcherview){
 								jgraphics_stroke(gg);
 								lbnx = idx + (POINT_WIDTH / 2);
 							}else{
-								sprintf(buf, "%d", beatnum);
+								sprintf(buf, "%ld", beatnum);
 								jgraphics_text_measure(gg, buf, &w, &h);
 								if((idx - (w / 2)) - lbnx > 2 || (beatheight - 4) - lbny > (h / 2) + 2){
 									jgraphics_move_to(gg, idx - (w / 2), beatheight - 4);
@@ -512,7 +537,7 @@ void te_paint(t_te *x, t_object *patcherview){
 									lbny = beatheight - 4;
 								}
 							}
-							beatnum++;
+							//beatnum++;
 						}
 					}
 
@@ -889,6 +914,13 @@ void te_paint(t_te *x, t_object *patcherview){
 	critical_exit(x->lock);
 }
 
+void te_dsp(t_te *x, t_signal **sp, short *count){
+	x->fs = sp[0]->s_sr;
+	if(count[0]){
+		dsp_add(te_perform, 8, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
+	}
+}
+
 t_int *te_perform(t_int *w){
 	t_te *x = (t_te *)w[1];
 	int n = (int)w[2];
@@ -896,42 +928,57 @@ t_int *te_perform(t_int *w){
 	t_float *out_phase_wrapped = (t_float *)w[4];
 	t_float *out_phase = (t_float *)w[5];
 	t_float *out_bps = (t_float *)w[6];
+	t_float *out_pointnum = (t_float *)w[7];
+	t_float *out_beatnum = (t_float *)w[8];
+
 	int i, j;
-	t_symbol *name1, *name2, *name3;
+	t_symbol *name1, *name2, *name3, *name4, *name5;
 
 	int muted[MAX_NUM_FUNCTIONS];
 	memcpy(muted, x->muteFunctions, MAX_NUM_FUNCTIONS * sizeof(int));
 
 	for(j = 0; j < x->numFunctions; j++){
 		if(x->functions[j] == NULL){
-			memset(x->ptrs[(j * 3)], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 3) + 1], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 3) + 2], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5)], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 1], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 2], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 3], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 4], 0, n * sizeof(t_float));
 		}
 	}
 
 	x->last_x = in[0];
 
 	for(j = 0; j < x->numFunctions; j++){
-		if(name1 = te_mangleName(x->name, 1, j)){
-			name1->s_thing = (t_object *)(x->ptrs[j * 3]);
+		if(name1 = te_mangleName(x->name, 0, j)){
+			name1->s_thing = (t_object *)(x->ptrs[j * 5]);
 		}
-		if(name2 = te_mangleName(x->name, 2, j)){
-			name2->s_thing = (t_object *)(x->ptrs[(j * 3) + 1]);
+		if(name2 = te_mangleName(x->name, 1, j)){
+			name2->s_thing = (t_object *)(x->ptrs[(j * 5) + 1]);
 		}
-		if(name3 = te_mangleName(x->name, 3, j)){
-			name3->s_thing = (t_object *)(x->ptrs[(j * 3) + 2]);
+		if(name3 = te_mangleName(x->name, 2, j)){
+			name3->s_thing = (t_object *)(x->ptrs[(j * 5) + 2]);
+		}
+		if(name4 = te_mangleName(x->name, 3, j)){
+			name4->s_thing = (t_object *)(x->ptrs[(j * 5) + 3]);
+		}
+		if(name5 = te_mangleName(x->name, 4, j)){
+			name5->s_thing = (t_object *)(x->ptrs[(j * 5) + 4]);
 		}
 
 		if(x->functions[j] == NULL){
-			memset(x->ptrs[(j * 3)], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 3) + 1], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 3) + 2], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5)], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 1], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 2], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 3], 0, n * sizeof(t_float));
+			memset(x->ptrs[(j * 5) + 4], 0, n * sizeof(t_float));
 		}else{
 			if(muted[j]){
-				memset(x->ptrs[(j * 3)], 0, n * sizeof(t_float));
-				memset(x->ptrs[(j * 3) + 1], 0, n * sizeof(t_float));
-				memset(x->ptrs[(j * 3) + 2], 0, n * sizeof(t_float));
+				memset(x->ptrs[(j * 5)], 0, n * sizeof(t_float));
+				memset(x->ptrs[(j * 5) + 1], 0, n * sizeof(t_float));
+				memset(x->ptrs[(j * 5) + 2], 0, n * sizeof(t_float));
+				memset(x->ptrs[(j * 5) + 3], 0, n * sizeof(t_float));
+				memset(x->ptrs[(j * 5) + 4], 0, n * sizeof(t_float));
 				continue;
 			}
 			t_plan *plan = &(x->plans[j]);
@@ -941,50 +988,50 @@ t_int *te_perform(t_int *w){
 					te_makePlan(x, in[i], j, plan);
 				}
 
-				x->ptrs[(j * 3) + 1][i] = te_computeCorrectedPhase(in[i], plan);
+				x->ptrs[(j * 5) + 1][i] = te_computeCorrectedPhase(in[i], plan);
+				x->ptrs[(j * 5)][i] = x->ptrs[(j * 5) + 1][i] - floor(x->ptrs[(j * 5) + 1][i]);
+				x->ptrs[(j * 5) + 2][i] = (x->ptrs[(j * 5) + 1][i] - x->last_y[j]) * (x->fs/kk);
 				/*
-				  x->ptrs[(j * 3) + 1][i + 1] = x->ptrs[(j * 3) + 1][i];
-				  x->ptrs[(j * 3) + 1][i + 2] = x->ptrs[(j * 3) + 1][i];
-				  x->ptrs[(j * 3) + 1][i + 3] = x->ptrs[(j * 3) + 1][i];
+				if(j == x->currentFunction){
+					if(x->ptrs[(j * 5)][i] < (x->last_y[j] - floorf(x->last_y[j]))){
+						post("beat at time %f", in[i]);
+					}
+				}
 				*/
-
-				x->ptrs[(j * 3)][i] = x->ptrs[(j * 3) + 1][i] - floor(x->ptrs[(j * 3) + 1][i]);
-				/*
-				  x->ptrs[(j * 3)][i + 1] = x->ptrs[(j * 3)][i];
-				  x->ptrs[(j * 3)][i + 2] = x->ptrs[(j * 3)][i];
-				  x->ptrs[(j * 3)][i + 3] = x->ptrs[(j * 3)][i];
-				*/
-
-				x->ptrs[(j * 3) + 2][i] = (x->ptrs[(j * 3) + 1][i] - x->last_y[j]) * (x->fs/kk);
-				/*
-				  x->ptrs[(j * 3) + 2][i + 1] = x->ptrs[(j * 3) + 2][i];
-				  x->ptrs[(j * 3) + 2][i + 2] = x->ptrs[(j * 3) + 2][i];
-				  x->ptrs[(j * 3) + 2][i + 3] = x->ptrs[(j * 3) + 2][i];
-				*/
-				x->last_y[j] = x->ptrs[(j * 3) + 1][i];
+				x->last_y[j] = x->ptrs[(j * 5) + 1][i];
+				x->ptrs[(j * 5) + 3][i] = plan->pointnum_left;
+				x->ptrs[(j * 5) + 4][i] = floorf(x->ptrs[(j * 5) + 1][i]);
 			}
 		}
 	}
 
-	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 3], n * sizeof(t_float));
-	memcpy(out_phase, x->ptrs[x->currentFunction * 3 + 1], n * sizeof(t_float));
-	memcpy(out_bps, x->ptrs[x->currentFunction * 3 + 2], n * sizeof(t_float));
+	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 5], n * sizeof(t_float));
+	memcpy(out_phase, x->ptrs[x->currentFunction * 5 + 1], n * sizeof(t_float));
+	memcpy(out_bps, x->ptrs[x->currentFunction * 5 + 2], n * sizeof(t_float));
+	memcpy(out_pointnum, x->ptrs[x->currentFunction * 5 + 3], n * sizeof(t_float));
+	memcpy(out_beatnum, x->ptrs[x->currentFunction * 5 + 4], n * sizeof(t_float));
 
 	for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
-		if(name1 = te_mangleName(x->name, 1, j)){
+		if(name1 = te_mangleName(x->name, 0, j)){
 			name1->s_thing = NULL;
 		}
-		if(name2 = te_mangleName(x->name, 2, j)){
+		if(name2 = te_mangleName(x->name, 1, j)){
 			name2->s_thing = NULL;
 		}
-		if(name3 = te_mangleName(x->name, 3, j)){
+		if(name3 = te_mangleName(x->name, 2, j)){
 			name3->s_thing = NULL;
+		}
+		if(name4 = te_mangleName(x->name, 3, j)){
+			name4->s_thing = NULL;
+		}
+		if(name5 = te_mangleName(x->name, 4, j)){
+			name5->s_thing = NULL;
 		}
 	}
 
 	jbox_redraw((t_jbox *)x);
 
-	return w + 7;
+	return w + 9;
 }
 
 void te_makePlan(t_te *x, float f, int function, t_plan *plan){
@@ -2236,7 +2283,7 @@ void te_dump(t_te *x){
 void te_dumpBeats(t_te *x){
 	int function;
 	double t;
-	t_atom out[4];
+	t_atom out[6];
 	critical_enter(x->lock);
 	for(function = 0; function < x->numFunctions; function++){
 		if(x->functions[function] == NULL){
@@ -2246,25 +2293,47 @@ void te_dumpBeats(t_te *x){
 		te_makePlan(x, x->time_min, function, &plan);
 		double prev_phase = .9999;
 		double p, wp;
-		for(t = x->time_min; t <= x->time_max; t += (1. / 500.)){
+		for(t = x->time_min; t <= x->time_max; t += (1. / (44100. / 64.))){
 			if(!te_isPlanValid(x, t, &plan, function)){
 				te_makePlan(x, t, function, &plan);
 			}
 			p = te_computeCorrectedPhase(t, &plan);
 			wp = p - floor(p);
-
+			t_atom *ptr = out;
 			if(wp < prev_phase){
-				atom_setlong(&(out[0]), function);
-				atom_setfloat(&(out[1]), t);
-				atom_setfloat(&(out[2]), te_computeTempo(t, &plan));
-				atom_setfloat(&(out[3]), wp);
+				// we're going through fairly coarsely (1/689")
+				// when we find a beat, step backwards 1/44100"
+				// until we get a better estimate of where the beat is
+				double tt = t - (1. / 44100.);
+				double pm1 = te_computeCorrectedPhase(tt, &plan);
+				double wpm1 = pm1 - floor(pm1);
+				int ii = 0;
+				post("time = %f, phase = %f %f ->", t, p, wp);
+				while(wp > wpm1){
+					p = pm1;
+					wp = wpm1;
+					tt -= (1. / 44100.);
+					pm1 = te_computeCorrectedPhase(tt, &plan);
+					wpm1 = pm1 - floor(pm1);
+					ii++;
+				}
+				tt += (1. / 44100);
+				post("-> time = %f, phase = %f %f in %d steps", tt, p, wp, ii - 1);
+				atom_setlong(ptr++, function);
+				atom_setlong(ptr++, plan.pointnum_left);
+				atom_setlong(ptr++, (long)p);
+				atom_setfloat(ptr++, tt);
+				atom_setfloat(ptr++, te_computeTempo(tt, &plan));
+				atom_setfloat(ptr++, wp);
 				critical_exit(x->lock);
-				outlet_list(x->out_info, NULL, 4, out);
+				outlet_anything(x->out_info, gensym("dumpbeats"), ptr - out, out);
 				critical_enter(x->lock);
 			}
 			prev_phase = wp;
 		}
 	}
+	atom_setsym(out, gensym("done"));
+	outlet_anything(x->out_info, gensym("dumpbeats"), 1, out);
 	critical_exit(x->lock);
 }
 
@@ -2553,6 +2622,131 @@ void te_addToAllFunctions(t_te *x, double xx, double yy){
 	}
 }
 
+void te_invertSelected(t_te *x){
+	if(!(x->selected)){
+		return;
+	}
+	double *y = (double *)sysmem_newptr(128 * sizeof(double));
+	double *dy = (double *)sysmem_newptr(128 * sizeof(double));
+	int len = 128;
+	critical_enter(x->lock);
+	t_point *p = x->functions[x->currentFunction];
+	t_point *prev = NULL;
+	int i = 0;
+	while(p){
+		if(p->selected){
+			y[i] = p->coords.y;
+			dy[i] = p->d_freq;
+			i++;
+			if(i >= len){
+				y = (double *)sysmem_resizeptr(y, (len * 2) * sizeof(double));
+				if(!y){
+					object_error((t_object *)x, "out of memory");
+					goto out;
+				}
+				dy = (double *)sysmem_resizeptr(dy, (len * 2) * sizeof(double));
+				if(!dy){
+					object_error((t_object *)x, "out of memory");
+					goto out;
+				}
+				len *= 2;
+			}
+		}
+		p = p->next;
+	}
+	p = x->functions[x->currentFunction];
+	i = 0;
+	while(p){
+		if(p->selected){
+			if(i > 0){
+				p->coords.y = prev->coords.y - (y[i] - y[i - 1]);
+				p->d_freq = prev->d_freq - (dy[i] - dy[i - 1]);
+			}
+			prev = p;
+			i++;
+		}
+		p = p->next;
+	}
+ out:
+	sysmem_freeptr(y);
+	sysmem_freeptr(dy);
+
+	critical_exit(x->lock);
+	te_invalidateAllFunctions(x);
+	jbox_redraw((t_jbox *)x);
+}
+
+void te_reverseSelected(t_te *x){
+	if(!(x->selected)){
+		return;
+	}
+	double *y = (double *)sysmem_newptr(128 * sizeof(double));
+	double *dy = (double *)sysmem_newptr(128 * sizeof(double));
+	double *xdelta = (double *)sysmem_newptr(128 * sizeof(double));
+	int len = 128;
+	critical_enter(x->lock);
+	t_point *p = x->functions[x->currentFunction], *prev = NULL;
+	int i = 0;
+	double prevx = 0;
+	while(p){
+		// the next_selected and prev_selected linked list is not ordered by 
+		// x coords like the main linked list is.  so we have to 
+		// go through every point and check to see if it's selected
+		if(p->selected){
+			dy[i] = p->d_freq;
+			y[i] = p->coords.y;
+			if(prev){
+				xdelta[i] = p->coords.x - prev->coords.x;
+			}else{
+				xdelta[i] = 0;
+			}
+			i++;
+			if(i >= len){
+				y = (double *)sysmem_resizeptr(y, len * 2);
+				if(!y){
+					object_error((t_object *)x, "out of memory!");
+					goto out;
+				}
+				dy = (double *)sysmem_resizeptr(y, (len * 2) * sizeof(double));
+				if(!dy){
+					object_error((t_object *)x, "out of memory!");
+					goto out;
+				}
+				xdelta = (double *)sysmem_resizeptr(y, (len * 2) * sizeof(double));
+				if(!xdelta){
+					object_error((t_object *)x, "out of memory!");
+					goto out;
+				}
+				len *= 2;
+			}
+			prev = p;
+		}
+		p = p->next;
+	}
+	p = prev;
+	i = 0;
+	while(p){
+		if(p->selected){
+			p->coords.y = y[i];
+			p->d_freq = dy[i];
+			if(i > 0){
+				p->coords.x = prevx - xdelta[i];
+			}
+			prevx = p->coords.x;
+			i++;
+		}
+		p = p->prev;
+	}
+ out:
+	sysmem_freeptr(y);
+	sysmem_freeptr(dy);
+	sysmem_freeptr(xdelta);
+
+	critical_exit(x->lock);
+	te_invalidateAllFunctions(x);
+	jbox_redraw((t_jbox *)x);
+}
+
 void te_makeColorForInt(int i, t_jrgb *c){
 	int j = i;//i + 1;
 	if(j == 7){
@@ -2658,15 +2852,8 @@ t_symbol *te_mangleName(t_symbol *name, int i, int fnum){
 		return NULL;
 	}
 	char buf[256];
-	sprintf(buf, "tempo_editor_%s_%d_%d", name->s_name, i, fnum);
+	sprintf(buf, "bkout_%s_%d_%d", name->s_name, i, fnum);
 	return gensym(buf);
-}
-
-void te_dsp(t_te *x, t_signal **sp, short *count){
-	x->fs = sp[0]->s_sr;
-	if(count[0]){
-		dsp_add(te_perform, 6, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec);
-	}
 }
 
 int main(void){ 
@@ -2707,6 +2894,8 @@ int main(void){
 	class_addmethod(c, (method)te_copy, "copy", 0);
 	class_addmethod(c, (method)te_paste, "paste", 0);
 	class_addmethod(c, (method)te_pasteAtCoords, "pasteatcoords", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)te_invertSelected, "invertselected", 0);
+	class_addmethod(c, (method)te_reverseSelected, "reverseselected", 0);
 
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
@@ -2752,6 +2941,9 @@ int main(void){
 
 	CLASS_ATTR_LONG(c, "show_beat_numbers", 0, t_te, show_beat_numbers);
 	CLASS_ATTR_DEFAULT_SAVE(c, "show_beat_numbers", 0, "1");
+
+	CLASS_ATTR_LONG(c, "highlight_every_n", 0, t_te, highlight_every_n);
+	CLASS_ATTR_DEFAULT_SAVE(c, "highlight_every_n", 0, "4");
 
 	CLASS_ATTR_LONG(c, "draw_mouse", 0, t_te, draw_mouse);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "draw_mouse", 0, "1");
@@ -2900,6 +3092,8 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
  		outlet_new((t_object *)x, "signal"); 
  		outlet_new((t_object *)x, "signal"); 
  		outlet_new((t_object *)x, "signal"); 
+ 		outlet_new((t_object *)x, "signal"); 
+ 		outlet_new((t_object *)x, "signal"); 
 
 		x->time_min = 0.;
 		x->time_max = 10.;
@@ -2916,9 +3110,9 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
  		x->currentFunction = 0; 
 		critical_new(&(x->lock));
 
-		x->ptrs = (t_float **)malloc((MAX_NUM_FUNCTIONS * 3) * sizeof(t_float *));
+		x->ptrs = (t_float **)malloc((MAX_NUM_FUNCTIONS * 5) * sizeof(t_float *));
 		int i;
-		for(i = 0; i < MAX_NUM_FUNCTIONS * 3; i++){
+		for(i = 0; i < MAX_NUM_FUNCTIONS * 5; i++){
 			x->ptrs[i] = (t_float *)malloc(2048 * sizeof(t_float));
 		}
 
