@@ -34,6 +34,7 @@
   VERSION 1.2.2: mouse selection and dragging has been totally rewritten to allow multiple points to be selected at once
   VERSION 1.3: lots of improvements including cut/copy/paste and beat/control point numbers
   VERSION 1.3.1: flip and reverse selected points and signal outlets that output the control point numbers and beat numbers
+  VERSION 1.3.2: dumpbeats now takes a list of subdivisions 
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -242,7 +243,7 @@ void te_w2s(t_te *x, t_rect r, t_pt world_coords, t_pt *screen_coords);
 t_point *te_insertPoint(t_te *x, t_pt coords, int functionNum);
 void te_removePoint(t_te *x, t_point *point, int functionNum);
 void te_dump(t_te *x);
-void te_dumpBeats(t_te *x);
+void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_dumpCellblock(t_te *x);
 void te_time_minmax(t_te *x, double min, double max);
 void te_freq_minmax(t_te *x, double min, double max);
@@ -1464,16 +1465,25 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 
 void te_float(t_te *x, double f){
 	int j;
-	t_atom out[3];
+	t_atom out[6], *ptr;
 	for(j = 0; j < x->numFunctions; j++){
+		ptr = out;
+		/*
 		t_plan *plan = (x->plans + j);
 		if(te_isPlanValid(x, f, plan, j) == 0){
 			te_makePlan(x, f, j, plan);
 		}
-		atom_setlong(out, j);
-		atom_setfloat(out + 1, te_computeCorrectedTempo(f, plan));
-		atom_setfloat(out + 2, te_computeCorrectedPhase(f, plan));
-		outlet_list(x->out_info, NULL, 3, out);
+		*/
+		t_plan plan;
+		te_makePlan(x, f, j, &plan);
+		atom_setlong(ptr++, j);
+		atom_setlong(ptr++, plan.pointnum_left);
+		double ph = te_computeCorrectedPhase(f, &plan);
+		atom_setlong(ptr++, (long)ph);
+		atom_setfloat(ptr++, (float)f);
+		atom_setfloat(ptr++, te_computeCorrectedTempo(f, &plan));
+		atom_setfloat(ptr++, ph);
+		outlet_list(x->out_info, NULL, ptr - out, out);
 	}
 }
 
@@ -2280,10 +2290,10 @@ void te_dump(t_te *x){
 	outlet_anything(x->out_info, _sym_dump, 1, out);
 }
 
-void te_dumpBeats(t_te *x){
+void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	int function;
 	double t;
-	t_atom out[6];
+	t_atom out[8];
 	critical_enter(x->lock);
 	for(function = 0; function < x->numFunctions; function++){
 		if(x->functions[function] == NULL){
@@ -2291,45 +2301,61 @@ void te_dumpBeats(t_te *x){
 		}
 		t_plan plan;
 		te_makePlan(x, x->time_min, function, &plan);
-		double prev_phase = .9999;
+		//double prev_phase = .9999;
+		double prev_phase[argc + 1];
+		double subdivs[argc + 1];
+		int i;
+		prev_phase[0] = .9999;
+		subdivs[0] = 1;
+		for(i = 1; i < argc + 1; i++){
+			prev_phase[i] = .9999;
+			subdivs[i] = atom_getfloat(argv + (i - 1));
+		}
 		double p, wp;
 		for(t = x->time_min; t <= x->time_max; t += (1. / (44100. / 64.))){
 			if(!te_isPlanValid(x, t, &plan, function)){
 				te_makePlan(x, t, function, &plan);
 			}
-			p = te_computeCorrectedPhase(t, &plan);
-			wp = p - floor(p);
-			t_atom *ptr = out;
-			if(wp < prev_phase){
-				// we're going through fairly coarsely (1/689")
-				// when we find a beat, step backwards 1/44100"
-				// until we get a better estimate of where the beat is
-				double tt = t - (1. / 44100.);
-				double pm1 = te_computeCorrectedPhase(tt, &plan);
-				double wpm1 = pm1 - floor(pm1);
-				int ii = 0;
-				post("time = %f, phase = %f %f ->", t, p, wp);
-				while(wp > wpm1){
-					p = pm1;
-					wp = wpm1;
-					tt -= (1. / 44100.);
-					pm1 = te_computeCorrectedPhase(tt, &plan);
-					wpm1 = pm1 - floor(pm1);
-					ii++;
+			for(i = 0; i < argc + 1; i++){
+				p = te_computeCorrectedPhase(t, &plan) * subdivs[i];
+				wp = p - floor(p);
+				t_atom *ptr = out;
+				if(i > 0){
+					atom_setsym(ptr++, gensym("subdiv"));
 				}
-				tt += (1. / 44100);
-				post("-> time = %f, phase = %f %f in %d steps", tt, p, wp, ii - 1);
-				atom_setlong(ptr++, function);
-				atom_setlong(ptr++, plan.pointnum_left);
-				atom_setlong(ptr++, (long)p);
-				atom_setfloat(ptr++, tt);
-				atom_setfloat(ptr++, te_computeTempo(tt, &plan));
-				atom_setfloat(ptr++, wp);
-				critical_exit(x->lock);
-				outlet_anything(x->out_info, gensym("dumpbeats"), ptr - out, out);
-				critical_enter(x->lock);
+				if(wp < prev_phase[i]){
+					// we're going through fairly coarsely (1/689")
+					// when we find a beat, step backwards by 1/44100"
+					// until we get a better estimate of where the beat is
+					double tt = t - (1. / 44100.);
+					double pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
+					double wpm1 = pm1 - floor(pm1);
+					int ii = 0;
+					while(wp > wpm1){
+						p = pm1;
+						wp = wpm1;
+						tt -= (1. / 44100.);
+						pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
+						wpm1 = pm1 - floor(pm1);
+						ii++;
+					}
+					tt += (1. / 44100);
+					atom_setlong(ptr++, function);
+					atom_setlong(ptr++, plan.pointnum_left);
+					atom_setlong(ptr++, (long)(p / subdivs[i]));
+					if(i > 0){
+						atom_setlong(ptr++, (long)p % (long)subdivs[i]);
+					}
+					atom_setfloat(ptr++, tt);
+					atom_setfloat(ptr++, te_computeCorrectedTempo(tt, &plan));
+					atom_setfloat(ptr++, te_computeCorrectedPhase(tt, &plan));
+					critical_exit(x->lock);
+					outlet_anything(x->out_info, gensym("dumpbeats"), ptr - out, out);
+					critical_enter(x->lock);
+				}
+				prev_phase[i] = wp;
 			}
-			prev_phase = wp;
+			//prev_phase = wp;
 		}
 	}
 	atom_setsym(out, gensym("done"));
@@ -2463,6 +2489,10 @@ void te_dumpCellblock(t_te *x){
 }
 
 void te_time_minmax(t_te *x, double min, double max){
+	if(min == max){
+		object_error((t_object *)x, "min can't equal max");
+		return;
+	}
 	x->time_min = min;
 	x->time_max = max;
 	if(min > max){
@@ -2474,6 +2504,10 @@ void te_time_minmax(t_te *x, double min, double max){
 }
 
 void te_freq_minmax(t_te *x, double min, double max){
+	if(min == max){
+		object_error((t_object *)x, "min can't equal max");
+		return;
+	}
 	x->freq_min = min;
 	x->freq_max = max;
 	if(min > max){
@@ -2883,7 +2917,7 @@ int main(void){
 	class_addmethod(c, (method)te_dump, "dump", 0);
 	class_addmethod(c, (method)te_time_minmax, "timeminmax", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)te_freq_minmax, "freqminmax", A_FLOAT, A_FLOAT, 0);
-	class_addmethod(c, (method)te_dumpBeats, "dumpbeats", 0);
+	class_addmethod(c, (method)te_dumpBeats, "dumpbeats", A_GIMME, 0);
 	class_addmethod(c, (method)te_addToFunction, "addToFunction", A_GIMME, 0);
 	class_addmethod(c, (method)te_addToAllFunctions, "addToAllFunctions", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)te_hideFunction, "hidefunction", A_GIMME, 0);
