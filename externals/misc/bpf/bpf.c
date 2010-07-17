@@ -46,6 +46,7 @@
   VERSION 0.4.1: fixed a bug in the perform routine
   VERSION 0.5: music notation display
   VERSION 0.5.1: grid lines
+  VERSION 0.5.2: quarter tones in notation display
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -191,7 +192,12 @@ void bpf_clear(t_bpf *x);
 double bpf_scale(double f, double min_in, double max_in, double min_out, double max_out);
 void bpf_xminmax(t_bpf *x, double min, double max);
 void bpf_yminmax(t_bpf *x, double min, double max);
+void bpf_snapAllPointsToGrid(t_bpf *);
+void bpf_snapCurrentFunctionToGrid(t_bpf *x);
+void bpf_snapFunctionToGrid(t_bpf *x, int function);
+void bpf_snapSelectionToGrid(t_bpf *x);
 void bpf_resizeRectWithMargins(t_bpf *x, t_rect *r);
+
 //void bpf_read(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_doread(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_write(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
@@ -213,9 +219,9 @@ void myobject_writefile(t_bpf *x, char *filename, short path);
 t_symbol *l_background, *l_points, *l_pos, *ps_int, *l_grid;
 t_symbol *ps_bpf, *ps_notes;
 
-const char *notenames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-int notestep[] = {0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6};
-int sharps[] = {0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0};
+//const char *notenames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+int notestep[] = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6};
+int sharps[] = {0, 93, 103, 113, 0, 93, 103, 113, 0, 93, 0, 93, 103, 113, 0, 93, 103, 113, 0, 93, 103, 113, 0, 93};
 
 void bpf_paint(t_bpf *x, t_object *patcherview){ 
 	x->pv = patcherview;
@@ -385,6 +391,7 @@ void bpf_paint_bpfPosition(t_bpf *x, t_object *patcherview, t_rect r){
 	}
 } 
 
+#define DIV 24
 #define STEP 4
 #define OCTAVE (7 * STEP)
 #define SPACE 8
@@ -428,7 +435,7 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 				}else{
 					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 				}
-				int pc = (int)round(p->coords.y) % 12;
+				int pc = (int)round(p->coords.y * 2) % DIV;
 				ypos = bpf_computeNotePos(p->coords.y, r);
 				double xsc = bpf_scale(p->coords.x, x->xmin, x->xmax, 0, r.width);
 				// ledger lines
@@ -450,14 +457,19 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 					}
 				}
 				if(sharps[pc]){
-					ch = 35;
-					jgraphics_move_to(g, xsc - 8, ypos - STEP);
+					jgraphics_select_font_face(g, "Tempera", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL);
+					jgraphics_set_font_size(g, 36);
+					//ch = 35;
+					ch = sharps[pc];
+					jgraphics_move_to(g, xsc - 10, ypos - STEP);
 					jgraphics_show_text(g, &ch);
 				}
 				ch = 81;
 				if(p->coords.y < 50 || (p->coords.y > 59 && p->coords.y < 71)){
 					ch = 113;
 				}
+				jgraphics_select_font_face(g, "Sonora", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL);
+				jgraphics_set_font_size(g, 54);
 				if(p->selected){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}
@@ -725,7 +737,7 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 			pos += x->major_x_grid_width;
 		}
 	}
-	pt_out_sc->x = bpf_scale(min, x->xmin, x->xmax, 0, r.width);
+	pt_out_sc->x = bpf_scale(min, x->xmin, x->xmax, r.x, r.width);
 
 	min = 0;
 	mindiff = DBL_MAX;
@@ -778,48 +790,9 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 		}
 	}
 
-	pt_out_sc->y = bpf_scale(min, x->ymin, x->ymax, r.height, 0);
+	pt_out_sc->y = bpf_scale(min, x->ymin, x->ymax, r.height, r.y);
 }
-/*
-void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc)
-	double step;
-	t_rect r;
-	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
-	bpf_resizeRectWithMargins(x, &r);
 
-	t_pt pt;
-	pt.x = bpf_scale(pt_sc.x, 0, r.width, x->xmin, x->xmax);
-	pt.y = bpf_scale(pt_sc.y, r.height, 0., x->ymin, x->ymax);
-	pt_out_sc->x = x->xmin;
-	pt_out_sc->y = x->ymin;
-
-	if(!x->major_x_tics){
-		step = x->major_x_grid_width / (x->num_minor_x_grid_divisions + 1);
-
-		while(pt_out_sc->x <= pt.x){
-			pt_out_sc->x += step;
-		}
-		if(fabs(pt_out_sc->x - pt.x) > fabs((pt_out_sc->x - step) - pt.x)){
-			pt_out_sc->x -= step;
-		}
-		pt_out_sc->x = bpf_scale(pt_out_sc->x, x->xmin, x->xmax, 0, r.width);
-	}else{
-
-	}
-
-	if(!x->major_y_tics){
-		step = x->major_y_grid_height / (x->num_minor_y_grid_divisions + 1);
-
-		while(pt_out_sc->y <= pt.y){
-			pt_out_sc->y += step;
-		}
-		if(fabs(pt_out_sc->y - pt.y) > fabs((pt_out_sc->y - step) - pt.y)){
-			pt_out_sc->y -= step;
-		}
-		pt_out_sc->y = bpf_scale(pt_out_sc->y, x->ymin, x->ymax, r.height, 0);
-	}
-}
-*/
 void bpf_reorderPoint(t_bpf *x, t_point *p){
 	if(!p){
 		return;
@@ -863,35 +836,47 @@ void bpf_swapPoints(t_point *p1, t_point *p2){
 }
 
 double bpf_computeNotePos(double y, t_rect r){
-	int pc = (int)round(y) % 12;
+	int pc = (int)round(y * 2) % DIV;
 	int step = (notestep[pc] - 1) * STEP;
-	int oct = (int)floor((y / 12.) - 5);
-	if(!pc && round(y) > y){
+	int oct = (int)floor(((y * 2) / DIV) - 5);
+	
+	if(!pc && round(y * 2) > y * 2){
 		oct++;
 	}
+	//post("pc = %d, step = %d, oct = %d, %f", pc, step, oct, ((r.height / 2) - (oct * OCTAVE)) - step);
 	return ((r.height / 2) - (oct * OCTAVE)) - step;
 }
 
 double bpf_uncomputeNotePos(double y, t_rect r){
 	double diff = DBL_MAX;
-	int closest = 0;
-	int i;
-	for(i = 0; i < 128; i++){
-		if(fabs(bpf_computeNotePos(i, r) - y) < diff){
-			diff = fabs(bpf_computeNotePos(i, r)) - y;
-			//post("y = %f, i = %d, diff = %f, notepos = %f", y, i, diff, bpf_computeNotePos(i, r));
+	double closest = 0;
+	double i;
+	for(i = 0; i < 128; i += .5){
+		double d = fabs(bpf_computeNotePos(i, r) - y);
+		//post("y = %f, i = %f, diff = %f, notepos = %f", y, i, diff, bpf_computeNotePos(i, r));
+		if(d < diff){
+			diff = d;
 			closest = i;
 		}
 	}
+	//post("closest = %f", closest);
 	double notepos = bpf_computeNotePos(closest, r);
+	//post("notepos = %f, middle = %f", notepos, r.height / 2);
+	int cl = closest;
 	if(y < notepos - (SPACE * (2 / 3))){
-		closest += (sharps[(closest + 1) % 12]);
+		if(sharps[(cl + 1)] % DIV){
+			cl += .5;
+		}
+		//cl += (sharps[(cl + 1) % DIV]);
 	}else if(y > notepos + (SPACE * (2 / 3))){
-		if((closest % 12) > 0){
-			closest -= sharps[(closest - 1) % 12];
+		if((cl % DIV) > 0){
+			if(sharps[(cl - 1) % DIV] == 0){
+				cl -= .5;
+			}
+			//cl -= sharps[(cl - 1) % DIV];
 		}
 	}
-	return closest;
+	return cl;
 	/*
 	double nspaces = r.height / SPACE;
 	double space = (nspaces * (y / (r.height));
@@ -1164,6 +1149,11 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 				if(x->displaymode == ps_notes){
 					coords.y = bpf_uncomputeNotePos(pt.y + x->ymargin, r);
 				}
+				if(x->snaptogrid){
+					t_pt snapped = (t_pt){bpf_scale(coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(coords.y, x->ymin, x->ymax, r.height, r.y)};
+					bpf_findNearestGridPoint(x, snapped, &snapped);
+					coords = (t_pt){bpf_scale(snapped.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(snapped.y, r.height, r.y, x->ymin, x->ymax)};
+				}
 				p = bpf_insertPoint(x, coords, x->currentFunction);
 				p->selected = 1;
 				if(x->selected){
@@ -1232,17 +1222,8 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		if(x->snaptogrid){
 			t_pt snapped;
 			bpf_findNearestGridPoint(x, pt, &snapped);
-			if(x->displaymode == ps_notes){
-				pt.x = snapped.x;
-			}else{
-				pt = snapped;
-			}
+			pt = snapped;
 		}
-		/*
-		delta.x = (pt.x - x->drag.x);
-		delta.y = (pt.y - x->drag.y);
-		*/
-		//p->coords = (t_pt){bpf_scale(psc.x + delta.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(psc.y + delta.y, r.height, r.y, x->ymin, x->ymax)};
 		p->coords = (t_pt){bpf_scale(pt.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(pt.y, r.height, r.y, x->ymin, x->ymax)};
 		delta.x = pt.x - psc.x;
 		delta.y = pt.y - psc.y;
@@ -1254,51 +1235,6 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			bpf_reorderPoint(x, p);
 			p = p->next_selected;
 		}
-		/*
-		while(p){
-			next = p->next_selected;
-			prev = p->prev_selected;
-			int head = 0;
-			head = (p == x->selected);
-			t_pt pp = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
-			if(!x->lockx){
-				pp.x += (pt.x - x->drag.x);
-			}
-			if(!x->locky){
-				pp.y += (pt.y - x->drag.y);
-			}
-			if(x->snaptogrid){
-				bpf_findNearestGridPoint(x, pp, &snapped);
-				if(x->show_x_grid){
-					pp.x = snapped.x;
-				}
-				if(x->show_y_grid && x->displaymode != ps_notes){
-					pp.y = snapped.y;
-				}
-			}
-			pp.x = bpf_scale(pp.x, r.x, r.width, x->xmin, x->xmax);
-			pp.y = bpf_scale(pp.y, r.height, r.y, x->ymin, x->ymax);
-
-			bpf_removePoint(x, p, x->currentFunction);
-			if(x->displaymode == ps_notes){
-				pp.y = bpf_uncomputeNotePos(pt.y + x->ymargin, r);
-			}
-			p = bpf_insertPoint(x, pp, x->currentFunction);
-			p->selected = 1;
-			if(head){
-				x->selected = p;
-			}
-			p->next_selected = next;
-			p->prev_selected = prev;
-			if(next){
-				next->prev_selected = p;
-			}
-			if(prev){
-				prev->next_selected = p;
-			}
-			p = p->next_selected;
-		}
-		*/
 	}
 		break;
 	case 0x112:
@@ -1644,6 +1580,47 @@ void bpf_yminmax(t_bpf *x, double min, double max){
 	jbox_redraw((t_jbox *)&(x->box));
 }
 
+void bpf_snapAllPointsToGrid(t_bpf *x){
+	int i;
+	for(i = 0; i < x->numFunctions; i++){
+		bpf_snapFunctionToGrid(x, i);
+	}
+}
+
+void bpf_snapCurrentFunctionToGrid(t_bpf *x){
+	bpf_snapFunctionToGrid(x, x->currentFunction);
+}
+
+void bpf_snapFunctionToGrid(t_bpf *x, int function){
+	t_rect r;
+	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	bpf_resizeRectWithMargins(x, &r);
+	t_point *p = x->functions[function];
+	while(p){
+		t_pt sc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
+		bpf_findNearestGridPoint(x, sc, &sc);
+		p->coords = (t_pt){bpf_scale(sc.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(sc.y, r.height, r.y, x->ymin, x->ymax)};
+		p = p->next;
+	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_snapSelectionToGrid(t_bpf *x){
+	t_rect r;
+	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	bpf_resizeRectWithMargins(x, &r);
+	t_point *p = x->selected;
+	while(p){
+		t_pt sc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
+		bpf_findNearestGridPoint(x, sc, &sc);
+		p->coords = (t_pt){bpf_scale(sc.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(sc.y, r.height, r.y, x->ymin, x->ymax)};
+		p = p->next_selected;
+	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
 void bpf_resizeRectWithMargins(t_bpf *x, t_rect *r){
 	r->x = x->xmargin;
 	r->width -= (x->xmargin * 2);
@@ -1671,10 +1648,7 @@ void bpf_clear(t_bpf *x){
 }
 
 void bpf_invalidateAllPos(t_bpf *x){
-	int i;
-	for(i = 0; i < x->numFunctions; i++){
-		jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
-	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
 }
 
 void bpf_assist(t_bpf *x, void *b, long io, long num, char *s){ 
@@ -1759,6 +1733,10 @@ int main(void){
 	class_addmethod(c, (method)bpf_major_y_tics, "major_y_tics", A_GIMME, 0);
 	class_addmethod(c, (method)bpf_minor_x_tics, "minor_x_tics", A_GIMME, 0);
 	class_addmethod(c, (method)bpf_minor_y_tics, "minor_y_tics", A_GIMME, 0);
+	class_addmethod(c, (method)bpf_snapAllPointsToGrid, "snap_all_points_to_grid", 0);
+	class_addmethod(c, (method)bpf_snapCurrentFunctionToGrid, "snap_current_function_to_grid", 0);
+	class_addmethod(c, (method)bpf_snapCurrentFunctionToGrid, "snap_function_to_grid", A_LONG, 0);
+	class_addmethod(c, (method)bpf_snapSelectionToGrid, "snap_selection_to_grid", 0);
 
 	CLASS_ATTR_SYM(c, "displaymode", 0, t_bpf, displaymode);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "displaymode", 0, "bpf");
