@@ -35,6 +35,8 @@
   VERSION 1.3: lots of improvements including cut/copy/paste and beat/control point numbers
   VERSION 1.3.1: flip and reverse selected points and signal outlets that output the control point numbers and beat numbers
   VERSION 1.3.2: dumpbeats now takes a list of subdivisions 
+  VERSION 1.3.3: dumpbeats now outputs monotonic phase without resets at control points
+  VERSION 1.3.4: a few minor bugfixes
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -201,6 +203,7 @@ double te_computeCorrectedTempo(double t, t_plan *p);
 double te_computeTempo(double t, t_plan *p);
 double te_computePhase(double t, t_plan *p);
 double te_computeCorrectedPhase(double t, t_plan *p);
+double te_computeCorrectedUnwrappedMonotonicPhase(t_te *x, double t, int function, t_plan *plan);
 void te_editSel(t_te *x, double xx, double yy, double zz);
 void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_float(t_te *x, double f);
@@ -1350,6 +1353,41 @@ double te_computeCorrectedPhase(double t, t_plan *p){
 	}
 }
 
+double te_computeCorrectedUnwrappedMonotonicPhase(t_te *x, double t, int function, t_plan *plan){
+	// first, compute the phase at time t, then compute the phase at each control point
+	// adding in any additional phase incurred by a different departure phase
+	double phase = te_computeCorrectedPhase(t, plan);
+	//post("corrected phase = %f", phase);
+	t_point *p = x->functions[function];
+	if(p){
+		p = p->next;
+	}
+	while(p){
+		if(p->coords.x > t + (1. / 44100.)){
+			//post("DONE: %f %f", p->coords.x, t + (1. / 44100.));
+			break;
+		}else if(!(p->next)){
+			//post("DONE: no next point");
+			//break;
+		}
+		t_plan thisplan;
+		te_makePlan(x, p->coords.x - (1. / 44100.), function, &thisplan);
+		//post("adding %f to %f", te_computeCorrectedPhase(p->coords.x - (1. / 44100.), &thisplan), phase);
+		phase += te_computeCorrectedPhase(p->coords.x, &thisplan);
+		double dphase = p->d_phase;
+		if(dphase >= 1.){
+			while(dphase >= 1.){
+				dphase -= 1;
+			}
+		}
+		//post("dphase: adding %f to %f", dphase, phase);
+		phase += dphase;
+		p = p->next;
+	}
+	//post("PHASE: %f", phase);
+	return phase;
+}
+
 void te_editSel(t_te *x, double xx, double yy, double zz){
 }
 
@@ -1767,6 +1805,7 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	switch(modifiers){
 	case (0x11 | 0x12 | 0x18):
 	case (0x111 | 0x112 | 0x118):{
+		// using the mouse to change xmin and xmax
 		//if(modifiers == 0x13 || modifiers == 0x113){
 		t_pt scale;
 		scale.x = fabs(pt.x - x->last_mouse.x);
@@ -1787,6 +1826,10 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 			max.y = x->freq_max - (((x->freq_max - x->freq_min) / r.width) * scale.y);
 		}
 		te_time_minmax(x, min.x, max.x);
+		t_atom out[2];
+		atom_setfloat(out, min.x);
+		atom_setfloat(out + 1, max.x);
+		outlet_anything(x->out_info, gensym("timeminmax"), 2, out);
 		break;
 	}
 	case 0x13:
@@ -2348,10 +2391,19 @@ void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 					}
 					atom_setfloat(ptr++, tt);
 					atom_setfloat(ptr++, te_computeCorrectedTempo(tt, &plan));
-					atom_setfloat(ptr++, te_computeCorrectedPhase(tt, &plan));
+					//atom_setfloat(ptr++, te_computeCorrectedPhase(tt, &plan));
+					atom_setfloat(ptr++, te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan));
 					critical_exit(x->lock);
 					outlet_anything(x->out_info, gensym("dumpbeats"), ptr - out, out);
 					critical_enter(x->lock);
+					// we don't want a subdivision on the downbeat since
+					// we have a beat there already
+					if(i == 0){
+						for(; i < argc + 1; i++){
+							prev_phase[i] = wp;
+						}
+						break;
+					}
 				}
 				prev_phase[i] = wp;
 			}
