@@ -47,6 +47,7 @@
   VERSION 0.5: music notation display
   VERSION 0.5.1: grid lines
   VERSION 0.5.2: quarter tones in notation display
+  VERSION 0.5.3: a few minor bugfixes
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -176,6 +177,8 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers);
 void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers); 
 void bpf_mouseup(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers); 
 void bpf_outputSelection(t_bpf *x);
+void bpf_setNumFunctions(t_bpf *x, long n);
+void bpf_getNumFunctions(t_bpf *x);
 void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
 void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
@@ -216,8 +219,10 @@ void myobject_write(t_bpf *x, t_symbol *s);
 void myobject_dowrite(t_bpf *x, t_symbol *s);
 void myobject_writefile(t_bpf *x, char *filename, short path);
 
-t_symbol *l_background, *l_points, *l_pos, *ps_int, *l_grid;
-t_symbol *ps_bpf, *ps_notes;
+static t_symbol *l_background, *l_points, *l_pos, *ps_int, *l_grid;
+static t_symbol *ps_bpf, *ps_notes;
+
+static t_symbol *ps_done;
 
 //const char *notenames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 int notestep[] = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6};
@@ -717,7 +722,8 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 				}
 			}
 		}
-	}else{
+		pt_out_sc->x = bpf_scale(min, x->xmin, x->xmax, r.x, r.width);
+	}else if(x->major_x_grid_width > 0){
 		double pos = x->xmin;
 		while(pos < x->xmax){
 			diff = fabs(pt.x - pos);
@@ -736,8 +742,10 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 			}
 			pos += x->major_x_grid_width;
 		}
+		pt_out_sc->x = bpf_scale(min, x->xmin, x->xmax, r.x, r.width);
+	}else{
+		pt_out_sc->x = pt_sc.x;
 	}
-	pt_out_sc->x = bpf_scale(min, x->xmin, x->xmax, r.x, r.width);
 
 	min = 0;
 	mindiff = DBL_MAX;
@@ -769,7 +777,8 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 				}
 			}
 		}
-	}else{
+		pt_out_sc->y = bpf_scale(min, x->ymin, x->ymax, r.height, r.y);
+	}else if(x->major_y_grid_height > 0){
 		double pos = x->ymin;
 		while(pos < x->ymax){
 			diff = fabs(pt.y - pos);
@@ -788,9 +797,10 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 			}
 			pos += x->major_y_grid_height;
 		}
+		pt_out_sc->y = bpf_scale(min, x->ymin, x->ymax, r.height, r.y);
+	}else{
+		pt_out_sc->y = pt_sc.y;
 	}
-
-	pt_out_sc->y = bpf_scale(min, x->ymin, x->ymax, r.height, r.y);
 }
 
 void bpf_reorderPoint(t_bpf *x, t_point *p){
@@ -1294,6 +1304,16 @@ void bpf_outputSelection(t_bpf *x){
 
 }
 
+void bpf_setNumFunctions(t_bpf *x, long n){
+	x->numFunctions = n;
+}
+
+void bpf_getNumFunctions(t_bpf *x){
+	t_atom n;
+	atom_setlong(&n, x->numFunctions);
+	outlet_anything(x->out_dump, gensym("numfunctions"), 1, &n);
+}
+
 void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	critical_enter(x->lock);
 	if(x->numFunctions + 1 > MAX_NUM_FUNCTIONS){
@@ -1548,10 +1568,11 @@ void bpf_dump(t_bpf *x){
 	int i, point_num = 0;
 	t_atom out[4];
 	for(i = 0; i < x->numFunctions; i++){
+		point_num = 0;
 		t_point *p = x->functions[i];
-		atom_setlong(&(out[1]), x->labelstart + i);
+		atom_setlong(&(out[0]), x->labelstart + i);
 		while(p){
-			atom_setlong(&(out[0]), point_num++);
+			atom_setlong(&(out[1]), point_num++);
 			atom_setfloat(&(out[2]), p->coords.x);
 			atom_setfloat(&(out[3]), p->coords.y);
 
@@ -1559,7 +1580,8 @@ void bpf_dump(t_bpf *x){
 			p = p->next;
 		}
 	}
-	outlet_bang(x->out_dump);
+	//outlet_bang(x->out_dump);
+	outlet_anything(x->out_dump, ps_done, 0, NULL);
 }
 
 void bpf_xminmax(t_bpf *x, double min, double max){
@@ -1715,6 +1737,8 @@ int main(void){
  	class_addmethod(c, (method)bpf_mousedrag, "mousedrag", A_CANT, 0); 
  	class_addmethod(c, (method)bpf_mouseup, "mouseup", A_CANT, 0); 
  	class_addmethod(c, (method)bpf_addFunction, "addfunction", A_GIMME, 0); 
+ 	class_addmethod(c, (method)bpf_getNumFunctions, "getnumfunctions", 0); 
+ 	class_addmethod(c, (method)bpf_setNumFunctions, "setnumfunctions", A_LONG, 0); 
  	class_addmethod(c, (method)bpf_functionList, "functionlist", A_GIMME, 0); 
  	class_addmethod(c, (method)bpf_setFunction, "setfunction", A_LONG, 0); 
 	class_addmethod(c, (method)bpf_list, "list", A_GIMME, 0);
@@ -1873,6 +1897,7 @@ int main(void){
 	ps_int = gensym("int");
 	ps_bpf = gensym("bpf");
 	ps_notes = gensym("notes");
+	ps_done = gensym("done");
 
  	class_register(CLASS_BOX, c); 
  	bpf_class = c; 
