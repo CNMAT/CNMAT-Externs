@@ -87,7 +87,7 @@ typedef struct _point{
  	struct _point *next; 
  	struct _point *prev; 
  	struct _point *next_selected; 
- 	struct _point *prev_selected; 
+ 	struct _point *prev_selected;
 } t_point; 
 
 typedef struct _function_attributes{
@@ -99,13 +99,15 @@ typedef struct _function_attributes{
 
 
 //------->
-typedef void (*lfptr)(void *, void *, void *); //log function pointer type
+typedef void (*lfptr)(void *, void *, void *, void *); //log function pointer type
 
 typedef struct	_logNode{	
 	//not using delta for now... but could be a fast way of undoing in the future
 	//	void *delta;	//change in value
-	void *data; 
-	void *pt_ptr; //reference (t_point if in terms of points - or as andother void * data slot)
+	void *data1; 
+	void *data2;
+	void *data3;
+	//	void *pt_ptr; //reference (t_point if in terms of points - or as andother void * data slot)
 	lfptr unF; 	//pointer to undo function (reverse sign of delta)
 //	lfptr doF;  //poiter to do function
 	struct _logNode *next;
@@ -149,18 +151,29 @@ typedef struct _bpf{
 	t_logNode *history;
 	t_logNode *topNode;
 	t_logNode *logCursor;
+	t_point *origin;
+	bool mdrag;
 	//<------
 } t_bpf; 
 
 void *bpf_class; 
 
 //----->
-void bpf_undoPoint(void *x, void *point, void *functionNum);
-void bpf_doUndoFunction(t_bpf *x);
-t_logNode *bpf_getUndo(t_bpf *x);
-int bpf_historyLog(t_bpf *x, void *ref, void *data, lfptr unF);
+
+int bpf_historyLog(t_bpf *x, void *data1, void *data2, void *data3, lfptr unF);
 void bpf_printLog(t_bpf *x);
-void bpf_clearCMD(void *x, void *nothing, void *morenothing);
+void bpf_clearHistory(t_bpf *x);
+void bpf_undo(t_bpf *x);
+t_logNode *bpf_getUndo(t_bpf *x);
+t_point *bpf_replacePoint(t_bpf *x, t_point *point, int functionNum);
+t_point *bpf_separateSelectedGroup(t_bpf *x);
+
+t_point *bpf_getOrigin(t_bpf *x);
+
+void bpf_undoPointCMD(void *b, void *point, void *functionNum, void *nothing);
+void bpf_clearCMD(void *b, void *nothing, void *morenothing,void *evenmorenothing);
+void bpf_reDragCMD(void *bpf, void *origin, void *newPt, void *functionNum);
+void bpf_unDragCMD(void *bpf, void *origin, void *newPt, void *functionNum);
 //<------
 
 void bpf_paint(t_bpf *x, t_object *patcherview); 
@@ -661,6 +674,13 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		// no modifiers.  
 		t_point *p;
 		t_point *s = x->selected;
+		//---->
+		if(s){
+			post("mousedown s %p selected, at {%f, %f}",x->selected, x->selected->coords.x,x->selected->coords.y);
+			x->origin = s;
+//			x->origin = bpf_getOrigin(x);
+		}
+		//<----
 		while(s){
 			double sx = s->coords.x, sy = s->coords.y;
 			if(x->xres == ps_int){
@@ -683,6 +703,11 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			if(p = bpf_select(x, pt)){
 				p->selected = 1;
 				x->selected = p;
+				//---->
+				post("mousedown else %p selected, at {%f, %f}",x->selected, x->selected->coords.x,x->selected->coords.y);
+				x->origin = x->selected;
+//				x->origin = bpf_getOrigin(x);
+				//<----
 			}
 			if(p){
 				break;
@@ -698,6 +723,14 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			p->next_selected = x->selected;
 			p->prev_selected = NULL;
 			x->selected = p;
+			//----->
+//			x->origin = bpf_getOrigin(x);
+			x->origin = p;
+			post("mousedown new %p selected, at {%f, %f}",x->selected, x->selected->coords.x,x->selected->coords.y);
+			int *fnum = (int *)calloc(1, sizeof(int));
+			*fnum = x->currentFunction;
+			bpf_historyLog(x, p, fnum, NULL, (lfptr)&bpf_undoPointCMD);
+			//<-------
 		}
 	}break;
 	case 0x112:
@@ -723,6 +756,7 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 }
 
 void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
+	x->mdrag = TRUE;
 	t_rect r;
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 	bpf_resizeRectWithMargins(x, &r);
@@ -747,7 +781,7 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	switch(modifiers){
 	case 0x110:
 	case 0x10:{
-		t_point *p = x->selected;
+		t_point *p = x->selected;		
 		t_point *next, *prev;
 		while(p){
 			next = p->next_selected;
@@ -764,9 +798,10 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			}
 			pp.x = bpf_scale(pp.x, r.x, r.width, x->xmin, x->xmax);
 			pp.y = bpf_scale(pp.y, r.height, r.y, x->ymin, x->ymax);
-
+//			post("rem %p", p);
 			bpf_removePoint(x, p, x->currentFunction);
 			p = bpf_insertPoint(x, pp, x->currentFunction, id);
+//			post("in %p", p);
 			p->selected = 1;
 			if(head){
 				x->selected = p;
@@ -781,6 +816,7 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			}
 			p = p->next_selected;
 		}
+		
 	}
 		break;
 	case 0x112:
@@ -812,6 +848,9 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 		}
 	}break;
 	}
+	
+//	post("dragged, x->origin = %p {%f, %f}", x->origin, x->origin->coords.x, x->origin->coords.y);
+	
 	x->drag = pt;
 	bpf_outputSelection(x);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
@@ -819,10 +858,93 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 }
 
 void bpf_mouseup(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
-	x->sel_box = (t_rect){0., 0., 0., 0.};
+	//------->
+	if(x->mdrag){
+		int *fnum = (int *)calloc(1, sizeof(int));
+		*fnum = x->currentFunction;
+		t_point *o = x->origin;		
+		t_point *p = x->selected;
+		post("mouseup o %p {%f, %f} p %p {%f, %f}", o, o->coords.x, o->coords.y, p, p->coords.x, p->coords.y); // if removePoint free's points this doesn't work - find which points need to get stored (copied)
+		if((o != p) && (!p->next_selected)){
+			o->next = p;
+			bpf_historyLog(x, o, p, fnum, (lfptr)&bpf_unDragCMD);//lfptr = log function pointer typedef, see above
+			x->origin = x->selected;
+
+		} else if(x->sel_box.width && x->sel_box.height && p->next_selected){
+			x->origin = p;
+			
+			while(p){
+				post("mouseup selected %p",p);
+				p = p->next_selected;
+			}
+			
+			//bpf_printLog(x);
+	
+		} else if(p->next_selected && o->next_selected){
+			while(o && p){
+				o->next = p;
+				//post("origin select list %p o->next %p (new point = %p)  -- next_selected: %p", o, o->next, p, o->next_selected);
+				o = o->next_selected;
+				p = p->next_selected;
+			}
+			bpf_historyLog(x, x->origin, x->selected, fnum, (lfptr)&bpf_unDragCMD);
+			x->origin = x->selected;
+
+		}
+	}
+	x->sel_box = (t_rect){0., 0., 0., 0.};	
+	x->mdrag = FALSE;//	post("mouse drag = %f %f", x->drag.x, x->drag.y);
+	//<-------
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
 }
+
+//---->
+void bpf_reDragCMD(void *bpf, void *origin, void *newPt, void *functionNum){
+	//return from origin to new point
+	t_bpf *x = (t_bpf *)bpf;
+	t_point *o = (t_point *)origin;
+	t_point *n = (t_point *)newPt;
+	int fnum = *(int *)functionNum;
+	
+	bpf_removePoint(x, o, fnum);
+	bpf_insertPoint(x, n->coords, fnum, o->id);
+	//add multiple points to do
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	jbox_redraw((t_jbox *)&(x->box));
+	
+}
+
+void bpf_unDragCMD(void *bpf, void *origin, void *newPt, void *functionNum)
+{
+	//return to origin
+	t_bpf *x = (t_bpf *)bpf;
+	t_point *o = (t_point *)origin;
+	t_point *n = (t_point *)newPt;
+	int fnum = *(int *)functionNum;
+	
+	if(o->next_selected){
+		//post("orig %p new %p o->next_selected %p n->next_selected %p", o, n, o->next_selected, n->next_selected);
+		while(o && n){
+			//post("list removing {%p} inserting {%p}", n, o);
+			bpf_removePoint(x, n, fnum); //...need to protect next selected bit
+			bpf_replacePoint(x, o, fnum);
+			o = o->next_selected;
+			n = n->next_selected;
+			//post("next removing {%p} inserting {%p}", n, o);
+		}
+	} else { 
+ 
+		//post("removing {%p} inserting {%p}", n, o);
+		bpf_removePoint(x, n, fnum);
+		bpf_replacePoint(x, o, fnum);
+	}
+
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	jbox_redraw((t_jbox *)&(x->box));
+
+}
+//<----
 
 void bpf_outputSelection(t_bpf *x){
 	if(!(x->selected)){
@@ -998,6 +1120,53 @@ void bpf_zoomToFit(t_bpf *x){
 	jbox_redraw((t_jbox *)(t_jbox *)&(x->box));
 }
 
+//-------->
+t_point *bpf_replacePoint(t_bpf *x, t_point *p, int functionNum){
+	//same as insertPoint, but only places point back into next<->prev list
+	critical_enter(x->lock);
+	t_point **function = &(x->functions[functionNum]);
+//	t_point *p = (t_point *)calloc(1, sizeof(t_point));	
+//	p->coords = coords;
+//	p->id = id;
+//	x->npoints[functionNum]++;
+//	p->next_selected = p->prev_selected = NULL;
+	if(*function == NULL){
+		p->prev = NULL;
+		p->next = NULL;
+		*function = p;
+	}else if(p->coords.x < (*function)->coords.x){
+		p->prev = NULL;
+		p->next = (*function);
+		(*function)->prev = p;
+		x->functions[functionNum] = p;
+	}else{
+		int i = 1;
+		t_point *current, *next;
+		current = (*function);
+		next = current->next;
+		while(next){
+			if(p->coords.x >= current->coords.x && p->coords.x <= next->coords.x){
+				current->next = p;
+				next->prev = p;
+				p->next = next;
+				p->prev = current;
+				goto out;
+			}
+			current = next;
+			next = next->next;
+			i++;
+		}
+		p->prev = current;
+		p->next = NULL;
+		current->next = p;
+	}
+out:
+	critical_exit(x->lock);
+	return p;
+}
+//<---------
+
+
 t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum, int id){
 	critical_enter(x->lock);
 	t_point **function = &(x->functions[functionNum]);
@@ -1036,16 +1205,7 @@ t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum, int id){
 		p->next = NULL;
 		current->next = p;
 	}
-out:{
-	//----->
-	int *fnum = (int *)calloc(1, sizeof(int));
-	*fnum = functionNum;
-//	void *ppt = (void *)p;
-//	void *vpt = fnum;
-//	post("%d %d %d", functionNum, fnum, *(int *)vpt);
-	bpf_historyLog(x, p, fnum, (lfptr)&bpf_undoPoint);//lfptr = log function pointer typedef, see above
-	//<------
-}
+out:
 	critical_exit(x->lock);
 	return p;
 }
@@ -1064,8 +1224,67 @@ void bpf_removeSelected(t_bpf *x){
 
 
 //----->
-void bpf_undoPoint(void *b, void *point, void *functionNum)
-{
+
+t_point *bpf_getOrigin(t_bpf *x){
+	t_point *s = x->selected;
+	if(s->next_selected){
+
+		if(s->coords.x < s->next_selected->coords.x) //left to right selection
+			return s;
+		if(s->coords.x > s->next_selected->coords.x){ //right to left selection
+			t_point *l = s;
+			while(s->next_selected){
+				s = s->next_selected;
+				l->prev_selected = s;
+			}
+			return l;
+		}
+	}
+	return s;
+}
+
+
+t_point *bpf_separateSelectedGroup(t_bpf *x){
+	t_point *s = x->selected, *n, *first, *last, *right, *left;
+	t_point *r = s;
+	
+	//determine selection direction
+	if(s->coords.x < s->next_selected->coords.x){ //left to right selection
+		first = s;
+		left = s->prev;
+		n = left;
+		while(s){
+			if(s->next != s->next_selected){
+				n->next = s->next;
+				s->next->prev = n;
+				n = n->next;
+			}
+			s = s->next;
+		}
+		r = first;
+	}
+	if(s->coords.x > s->next_selected->coords.x){ //right to left selection
+		last = s;
+		right = s->next;
+		n = right;
+		while(s){
+			if(s->prev != s->next_selected){
+				n->prev = s->prev;
+				s->prev->next = n;
+				n = n->prev;
+			}
+			s = s->prev;
+		}
+		r = last;
+	}
+	
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	jbox_redraw((t_jbox *)&(x->box));
+	return r; //returns first point of next_selected group
+}
+
+
+void bpf_undoPointCMD(void *b, void *point, void *functionNum, void *nothing){
 	int fnum = *(int *)functionNum;
 	t_point *p = (t_point *)point;
 	t_bpf *x = (t_bpf *)b;
@@ -1076,13 +1295,16 @@ void bpf_undoPoint(void *b, void *point, void *functionNum)
 		jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 		jbox_redraw((t_jbox *)&(x->box));
 		
+	} else {
+		post("problem in undoPointCMD");
 	}
 }
+
+
 //<-------
 
 void bpf_removePoint(t_bpf *x, t_point *point, int functionNum){
 	if(!point){
-		post("no point");
 		return;
 	}
 	critical_enter(x->lock);
@@ -1090,6 +1312,8 @@ void bpf_removePoint(t_bpf *x, t_point *point, int functionNum){
 	t_point *p = *function;
 	int i = 0;
 	x->npoints[functionNum]--;
+	
+	t_point *o = x->origin;
 	while(p){
 		if(p == point){
 			if(p->next){
@@ -1098,18 +1322,35 @@ void bpf_removePoint(t_bpf *x, t_point *point, int functionNum){
 			if(p->prev){
 				p->prev->next = p->next;
 			}
-			if(p->next_selected){
-				p->next_selected->prev_selected = p->prev_selected;
-			}
-			if(p->prev_selected){
-				p->prev_selected->next_selected = p->next_selected;
-			}
 			if(i == 0){
 				x->functions[functionNum] = p->next;
 			}
-
-			if(p){
-				free(p);
+			
+			if(p == o){
+				goto out;
+			} else {
+				while(o){
+					if((p->next_selected == o->next_selected) || (p->prev_selected == o->prev_selected)){
+						post("removepoint o %p o->next_selected %p o->prev_selected %p", o, o->next_selected, o->prev_selected);
+						goto out;
+					} else {
+						o = o->next_selected;
+					}
+				}
+				
+				if(p->next_selected){
+					post("removepoint p %p p->next_selected %p", p, p->next_selected);
+					p->next_selected->prev_selected = p->prev_selected;
+				}
+				if(p->prev_selected){
+					post("removepoint p %p p->prev_selected %p", p, p->prev_selected);
+					p->prev_selected->next_selected = p->next_selected;
+				}
+				if(p){
+					free(p);
+				}
+					
+					
 			}
 			goto out;
 		}
@@ -1176,7 +1417,7 @@ void bpf_resizeRectWithMargins(t_bpf *x, t_rect *r){
 	r->height -= (x->ymargin * 2);
 }
 
-void bpf_clearCMD(void *x, void *nothing, void *morenothing)
+void bpf_clearCMD(void *x, void *nothing, void *morenothing, void *evenmorenothing)
 {
 	bpf_clear((t_bpf *)x);
 
@@ -1236,13 +1477,12 @@ void bpf_assist(t_bpf *x, void *b, long io, long num, char *s){
 
 //--------->
 
-void bpf_doUndoFunction(t_bpf *x)
+void bpf_undo(t_bpf *x)
 {
 	t_logNode *u = bpf_getUndo(x);
 	if(u){
-	//	post("doUndo %d", *(int *)u->data);
 		lfptr undoer = u->unF; //lfptr = log function pointer typedef, see above
-		undoer(x, u->pt_ptr, u->data);
+		undoer(x, u->data1, u->data2, u->data3);
 	} else {
 		post("issue in getUndo");
 	}
@@ -1255,6 +1495,7 @@ t_logNode *bpf_getUndo(t_bpf *x)
 		x->logCursor = c->prev;
 	
 	if(c){
+		post("undoing %p", c);
 		return c;
 	} else {
 		post("nothing more to undo");
@@ -1262,14 +1503,15 @@ t_logNode *bpf_getUndo(t_bpf *x)
 	}
 }
 
-int bpf_historyLog(t_bpf *x, void *ref, void *data, lfptr unF)
+int bpf_historyLog(t_bpf *x, void *data1, void *data2, void *data3, lfptr unF)
 {
 	t_logNode *hq = x->history;
 	t_logNode *c = x->logCursor;
 	t_logNode *t = x->topNode;
 	t_logNode *n = (t_logNode *)malloc(sizeof(t_logNode));
-	n->data = data;
-	n->pt_ptr = ref;
+	n->data1 = data1;
+	n->data2 = data2;
+	n->data3 = data3;
 	n->next = NULL;
 	n->unF = unF;
 	//*x->hsteps++; //add max history steps control
@@ -1278,28 +1520,18 @@ int bpf_historyLog(t_bpf *x, void *ref, void *data, lfptr unF)
 	
 	if(hq->next == NULL){
 		hq->next = n;
-		hq->prev = NULL;
+		hq->prev = hq;//hmm
 		n->prev = hq;
 		x->history = hq;
 		x->topNode = n;
 		x->logCursor = n;
-		post("1 {%p} n:%p next:%p prev:%p", n->pt_ptr, n, n->next, n->prev);
-		post("1 {%p} c:%p next:%p prev:%p", x->logCursor->pt_ptr, x->logCursor, x->logCursor->next, x->logCursor->prev);
-		post("1 {%p} t:%p next:%p prev:%p", x->topNode->pt_ptr, x->topNode, x->topNode->next, x->topNode->prev);
-/*	if(hq->data == NULL){
-		n->prev = NULL;
-		x->history = n;
-		x->topNode = n;
-		x->logCursor = n;
-*/		
+//		post("1 {%p} n:%p next:%p prev:%p", n->pt_ptr, n, n->next, n->prev);	
 	} else if(c == t){
 		t->next = n;
 		n->prev = t;
 		x->topNode = n;
 		x->logCursor = n;
-		post("2 {%p} n:%p next:%p prev:%p", n->pt_ptr, n, n->next, n->prev);
-		post("2 {%p} c:%p next:%p prev:%p", x->logCursor->pt_ptr, x->logCursor, x->logCursor->next, x->logCursor->prev);
-		post("2 {%p} t:%p next:%p prev:%p", x->topNode->pt_ptr, x->topNode, x->topNode->next, x->topNode->prev);
+//		post("2 {%p} n:%p next:%p prev:%p", n->pt_ptr, n, n->next, n->prev);
 	} else if(c != t){
 		
 		t_logNode *temp;
@@ -1307,8 +1539,14 @@ int bpf_historyLog(t_bpf *x, void *ref, void *data, lfptr unF)
 		while(f->next){
 			temp = f;
 //			post("freeing %p\n", f);
-			free(f->data);
-			free(f);
+			if(f->data1)
+				free(f->data1);
+			if(f->data2)
+				free(f->data2);
+			if(f->data3)
+				free(f->data3);
+			if(f)
+				free(f);
 			f = temp->next;
 		}
 		
@@ -1316,11 +1554,11 @@ int bpf_historyLog(t_bpf *x, void *ref, void *data, lfptr unF)
 		n->prev = c;
 		x->topNode = n;
 		x->logCursor = n;
-		post("3 {%p} n:%p next:%p prev:%p", n->pt_ptr, n, n->next, n->prev);
-		post("3 {%p} c:%p next:%p prev:%p", x->logCursor->pt_ptr, x->logCursor, x->logCursor->next, x->logCursor->prev);
-		post("3 {%p} t:%p next:%p prev:%p", x->topNode->pt_ptr, x->topNode, x->topNode->next, x->topNode->prev);
-		
+//		post("3 {%p} n:%p next:%p prev:%p", n->pt_ptr, n, n->next, n->prev);	
 	}
+
+	//bpf_printLog(x);
+	
 	return 1;
 }
 
@@ -1329,9 +1567,48 @@ void bpf_printLog(t_bpf *x)
 	t_logNode *h = x->history;
 	if(h->next){
 		while(h){
-			post("t_point %p\n \t%p \t prev: \t%p \tnext: \t%p\n", h->pt_ptr, h, h->prev, h->next);
+			post("t_point %p\n \t%p \t prev: \t%p \tnext: \t%p\n", h->data1, h, h->prev, h->next);
 			h = h->next;
 		}
+		
+		//print points
+		int i;
+		for(i = 0; i < x->numFunctions; i++){
+			t_point *p = x->functions[i];
+			t_point *next;
+			while(p){
+				next = p->next;
+				post("t_point %p", p);
+				p = next;
+				next = next->next;
+			}
+		}
+		
+	} else {
+		post("history clear\n");
+	}
+}
+
+void bpf_clearHistory(t_bpf *x)
+{
+	t_logNode *h = x->history;
+	t_logNode *next;
+	if(h->next){
+		h = h->next; //save x->history pointer
+		while(h->next){
+			next = h->next;
+			if(h->data1)
+				free(h->data1);
+			if(h->data2)
+				free(h->data2);
+			if(h->data3)
+				free(h->data3);
+
+			free(h);
+			h = next;
+		}
+		h->next = NULL;
+		x->history = h;
 	} else {
 		post("history clear\n");
 	}
@@ -1358,12 +1635,20 @@ void bpf_free(t_bpf *x){
 	//--------->
 	t_logNode *l = x->history;
 	t_logNode *nextL;
+
 	while(l){
 		nextL = l->next;
-		free(l->data);
+		if(l->data1)
+			free(l->data1);
+		if(l->data2)
+			free(l->data2);
+		if(l->data3)
+			free(l->data3);
+		//important that this is after above point freeing
 		free(l);
 		l = nextL;
 	}
+
 	//<---------
 	
 	for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
@@ -1385,8 +1670,9 @@ int main(void){
  	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
 
 	//---->
-	class_addmethod(c, (method)bpf_doUndoFunction, "undo", 0);
+	class_addmethod(c, (method)bpf_undo, "undo", 0);
 	class_addmethod(c, (method)bpf_printLog, "printLog", 0);
+	class_addmethod(c, (method)bpf_clearHistory, "clearHistory", 0);	
 	//<----
 	
 	class_addmethod(c, (method)bpf_dsp, "dsp", A_CANT, 0);
@@ -1572,16 +1858,20 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 		
 		//----->
 		t_logNode *hq = (t_logNode *)calloc(1, sizeof(t_logNode));
-		hq->data = NULL;
-		hq->pt_ptr = NULL;
-		hq->unF = &bpf_clearCMD;
+		hq->data1 = NULL;
+		hq->data2 = NULL;
+		hq->data3 = NULL;
+		hq->unF = &bpf_clearCMD; //storing base log point as clear method, always kept as node 0, new nodes are added above *hq
 //		hq->doF = NULL;
 		hq->next = NULL;
 		hq->prev = NULL;
-
+		
 		x->history = hq;
 		x->logCursor = hq;
 		x->topNode = hq;
+		
+		x->origin = (t_point *)calloc(1, sizeof(t_point));
+		x->mdrag = FALSE;
 		//<-----
 		
 		
