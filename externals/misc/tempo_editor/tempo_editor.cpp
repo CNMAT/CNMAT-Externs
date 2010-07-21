@@ -37,6 +37,7 @@
   VERSION 1.3.2: dumpbeats now takes a list of subdivisions 
   VERSION 1.3.3: dumpbeats now outputs monotonic phase without resets at control points
   VERSION 1.3.4: a few minor bugfixes
+  VERSION 1.3.5: function colors are now setable
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -139,6 +140,7 @@ typedef struct _te{
 	int hideFunctions[MAX_NUM_FUNCTIONS];
 	int muteFunctions[MAX_NUM_FUNCTIONS];
 	int lockFunctions[MAX_NUM_FUNCTIONS];
+	t_jrgba functionColors[MAX_NUM_FUNCTIONS];
 	t_plan *plans;  // used in the perform routine only
 	int dirty; // set this to non-zero to indicate that a point has been added
 	double time_min, time_max;
@@ -219,6 +221,7 @@ void te_muteFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_lockFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_addToFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_addToAllFunctions(t_te *x, double x, double y);
+void te_setFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_invertSelected(t_te *x);
 void te_reverseSelected(t_te *x);
 void te_makeColorForInt(int i, t_jrgb *c);
@@ -250,7 +253,6 @@ void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_dumpCellblock(t_te *x);
 void te_time_minmax(t_te *x, double min, double max);
 void te_freq_minmax(t_te *x, double min, double max);
-void te_postPlan(t_plan *plan);
 void te_clear(t_te *x);
 void te_clearFunction(t_te *x, int f);
 void te_clearCurrent(t_te *x);
@@ -259,6 +261,7 @@ void te_invalidateAllFunctions(t_te *x);
 void te_invalidateAll(t_te *x);
 void te_dsp(t_te *x, t_signal **sp, short *count);
 void te_postplan(t_plan *p);
+void te_postpoint(t_point *p, int (print)(const char *, ...));
 t_symbol *te_mangleName(t_symbol *name, int i, int fnum);
 int main(void); 
 void *te_new(t_symbol *s, long argc, t_atom *argv); 
@@ -266,6 +269,9 @@ void te_dumpCellblockCallback(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 
 t_max_err te_functions_get(t_te *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err te_functions_set(t_te *x, t_object *attr, long argc, t_atom *argv);
+
+t_max_err te_functionColorsGet(t_te *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err te_functionColorsSet(t_te *x, t_object *attr, long argc, t_atom *argv);
 
 void te_paint(t_te *x, t_object *patcherview){ 
 	x->pv = patcherview;
@@ -410,7 +416,8 @@ void te_paint(t_te *x, t_object *patcherview){
 	int function;
 	for(function = 0; function < x->numFunctions; function++){
 		// set up colors
-		te_makeColorForInt(function, (t_jrgb *)(&beatcolor));
+		beatcolor = x->functionColors[function];
+		//te_makeColorForInt(function, (t_jrgb *)(&beatcolor));
 		beatcolor.alpha = 1.;
 		if(x->currentFunction == function){
 			pointcolor = x->pointColor;
@@ -459,18 +466,6 @@ void te_paint(t_te *x, t_object *patcherview){
 						te_makePlan(x, t + ((x->time_max - x->time_min) / rect.width), function, &plan);
 					}
 					/*
-					// we add a small amount of time to t to make sure that we end 
-					// up with a plan that has the nearest point as the starting point.
-					if(!te_isPlanValid(x, t + ((x->time_max - x->time_min) / rect.width), &plan, function)){
-						te_makePlan(x, t + ((x->time_max - x->time_min) / rect.width), function, &plan);
-						if(newplan == -1){
-							newplan = 0;
-						}else{
-							newplan = 1;
-						}
-					}
-					*/
-					/*
 					  if(x->show_beat_correction && function == x->currentFunction){//&& t >= plan.startTime + plan.segmentDuration_sec){
 					  jgraphics_set_source_jrgba(gg, &c);
 					  p = te_computePhase(t, &plan);
@@ -503,16 +498,6 @@ void te_paint(t_te *x, t_object *patcherview){
 						jgraphics_set_line_width(gg, 1.);
 						if(function == x->currentFunction){
 							// draw the beat number over the beat
-							/*
-							if(newplan){
-								beatnum = 1;
-								newplan = 0;
-							}
-							if(t >= plan.endTime){
-								beatnum = 1;
-								newplan = -1;
-							}
-							*/
 							char buf[8];
 							double w, h;
 							long beatnum = lrintf(p); // cast to round down
@@ -816,7 +801,8 @@ void te_paint(t_te *x, t_object *patcherview){
 			jgraphics_rectangle(gg, 0, 0, 100, (x->numFunctions - 1) * COL_HEIGHT + 20);
 			jgraphics_fill(gg);
 			for(i = 0; i < x->numFunctions; i++){
-				te_makeColorForInt(i, (t_jrgb *)(&c));
+				//te_makeColorForInt(i, (t_jrgb *)(&c));
+				c = x->functionColors[i];
 				c.alpha = 1.;
 				jgraphics_set_source_jrgba(gg, &c);
 				jgraphics_set_line_width(gg, 1.); 
@@ -2570,15 +2556,6 @@ void te_freq_minmax(t_te *x, double min, double max){
 	jbox_redraw((t_jbox *)x);
 }
 
-void te_postPlan(t_plan *plan){
-	post("start time = %f, end time = %f", plan->startTime, plan->endTime);
-	post("start tempo = %f, end tempo = %f", plan->startFreq, plan->endFreq);
-	post("start phase = %f, end phase = %f", plan->startPhase, plan->endPhase);
-	post("phase error = %f %f", plan->phaseError, plan->phaseError_start);
-	post("correction starts at %f and ends at %f (%f)", plan->correctionStart, plan->correctionEnd, (plan->correctionEnd - plan->correctionStart));
-	post("state = %d", plan->state);
-}
-
 void te_clear(t_te *x){
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
@@ -2706,6 +2683,29 @@ void te_addToAllFunctions(t_te *x, double xx, double yy){
 		atom_setfloat(&(a[0]), i);
 		te_addToFunction(x, NULL, 3, a);
 	}
+}
+
+void te_setFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv){
+	if(argc < 3 || argc > 5){
+		object_error((t_object *)x, "setfunctioncolor requires between 3 and 5 arguments:\n[function number (int)] <red> <green> <blue> [alpha]");
+		return;
+	}
+	int function = x->currentFunction;
+	t_atom *ptr = argv;
+	if(atom_gettype(ptr) == A_LONG){
+		function = atom_getlong(ptr++);
+	}
+	t_jrgba color;
+	color.red = atom_getfloat(ptr++);
+	color.green = atom_getfloat(ptr++);
+	color.blue = atom_getfloat(ptr++);
+	color.alpha = 1.;
+	if(ptr - argv < argc){
+		color.alpha = atom_getfloat(ptr);
+	}
+	x->functionColors[function] = color;
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[function]);
+	jbox_redraw((t_jbox *)x);
 }
 
 void te_invertSelected(t_te *x){
@@ -2933,6 +2933,20 @@ void te_postplan(t_plan *p){
 	post("beta_ab = %f, error_beta_ab = %f", p->beta_ab, p->error_beta_ab);
 }
 
+void te_postpoint(t_point *p, int (print)(const char *, ...)){
+	print("coords = (%f %f)\n", p->coords.x, p->coords.y);
+	print("d_freq = %f\n", p->d_freq);
+	print("a_phase = %f, d_phase = %f\n", p->a_phase, p->d_phase);
+	print("aux_points = (%f, %f)\n", p->aux_points[0], p->aux_points[1]);
+	print("alpha = %f, beta = %f\n", p->alpha, p->beta);
+	print("error_alpha = %f, error_beta = %f\n", p->error_alpha, p->error_beta);
+	print("whichPoint = %f\n", p->whichPoint);
+	print("closest_point_with_same_ycoord = %p\n", p->closest_point_with_same_ycoord);
+	print("draw_snapline = %d\n", p->draw_snapline);
+	print("%p<--%p-->%p\n", p->prev, p, p->next);
+	print("selected: %p<--%p-->%p\n", p->prev_selected, p, p->next_selected);
+}
+
 t_symbol *te_mangleName(t_symbol *name, int i, int fnum){
 	if(!name){
 		return NULL;
@@ -2982,6 +2996,7 @@ int main(void){
 	class_addmethod(c, (method)te_pasteAtCoords, "pasteatcoords", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)te_invertSelected, "invertselected", 0);
 	class_addmethod(c, (method)te_reverseSelected, "reverseselected", 0);
+	class_addmethod(c, (method)te_setFunctionColor, "setfunctioncolor", A_GIMME, 0);
 
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
@@ -3004,6 +3019,10 @@ int main(void){
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "freqmin", 0, "0");
 	CLASS_ATTR_DOUBLE(c, "freqmax", 0, t_te, freq_max);
 	CLASS_ATTR_DEFAULT_SAVE_PAINT(c, "freqmax", 0, "10");
+
+	CLASS_ATTR_DOUBLE_ARRAY(c, "colors", 0, t_te, functionColors, MAX_NUM_FUNCTIONS * 4);
+	CLASS_ATTR_ACCESSORS(c, "colors", te_functionColorsGet, te_functionColorsSet);
+	CLASS_ATTR_SAVE(c, "colors", 0);
 
 	CLASS_ATTR_ATOM_VARSIZE(c, "functions", 0, t_te, functions, numFunctions, 1024);
 	CLASS_ATTR_ACCESSORS(c, "functions", te_functions_get, te_functions_set);
@@ -3198,8 +3217,13 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 
 		x->ptrs = (t_float **)malloc((MAX_NUM_FUNCTIONS * 5) * sizeof(t_float *));
 		int i;
+		t_jrgba black = (t_jrgba){0., 0., 0., 1.};
 		for(i = 0; i < MAX_NUM_FUNCTIONS * 5; i++){
 			x->ptrs[i] = (t_float *)malloc(2048 * sizeof(t_float));
+		}
+
+		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
+			x->functionColors[i] = black;
 		}
 
 		x->name = NULL;
@@ -3267,6 +3291,7 @@ t_max_err te_functions_set(t_te *x, t_object *attr, long argc, t_atom *argv){
 	x->numFunctions = 0;
 	while(ptr - argv < argc){
 		int npoints = atom_getlong(ptr++);
+		//printf("npoints = %d\n", npoints);
 		if(npoints == 0){
 			continue;
 		}
@@ -3284,11 +3309,40 @@ t_max_err te_functions_set(t_te *x, t_object *attr, long argc, t_atom *argv){
 			x->selected->error_alpha = atom_getfloat(ptr++);
 			x->selected->error_beta = atom_getfloat(ptr++);
 			x->selected->whichPoint = atom_getlong(ptr++);
+			//te_postpoint(x->selected, printf);
 		}
 	}
 	x->currentFunction = 0;
 	te_invalidateAllFunctions(x);
 	jbox_redraw((t_jbox *)x);
 	te_dumpCellblock(x);
+	return MAX_ERR_NONE;
+}
+
+t_max_err te_functionColorsGet(t_te *x, t_object *attr, long *argc, t_atom **argv){
+	char alloc;
+	t_max_err ret;
+	if(ret = atom_alloc_array(MAX_NUM_FUNCTIONS * 4, argc, argv, &alloc)){
+		return ret;
+	}
+	int i;
+	for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
+		atom_setfloat(*argv + (i * 4), x->functionColors[i].red);
+		atom_setfloat(*argv + (i * 4 + 1), x->functionColors[i].green);
+		atom_setfloat(*argv + (i * 4 + 2), x->functionColors[i].blue);
+		atom_setfloat(*argv + (i * 4 + 3), x->functionColors[i].alpha);
+	}
+
+	return MAX_ERR_NONE;
+}
+
+t_max_err te_functionColorsSet(t_te *x, t_object *attr, long argc, t_atom *argv){
+	int i;
+	for(i = 0; i < argc / 4; i++){
+		x->functionColors[i].red = atom_getfloat(argv + (i * 4));
+		x->functionColors[i].green = atom_getfloat(argv + (i * 4 + 1));
+		x->functionColors[i].blue = atom_getfloat(argv + (i * 4 + 2));
+		x->functionColors[i].alpha = atom_getfloat(argv + (i * 4 + 3));
+	}
 	return MAX_ERR_NONE;
 }
