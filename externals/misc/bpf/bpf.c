@@ -48,6 +48,8 @@
   VERSION 0.5.1: grid lines
   VERSION 0.5.2: quarter tones in notation display
   VERSION 0.5.3: a few minor bugfixes
+  VERSION 0.5.4: better positioning of notes in note mode and two more staves above and below the main ones like nslider
+  VERSION 0.5.5: colors are now setable with setfunction*color messages
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -133,8 +135,9 @@ typedef struct _bpf{
 	t_symbol *displaymode;
 	double major_x_grid_width, major_y_grid_height, num_minor_x_grid_divisions, num_minor_y_grid_divisions;
 	long show_x_grid, show_y_grid;
-	//float *major_x_tics, *major_y_tics, *minor_x_tics, *minor_y_tics;
-	float major_x_tics[1024], major_y_tics[1024], minor_x_tics[1024], minor_y_tics[1024];
+	double *major_x_tics, *major_y_tics, *minor_x_tics, *minor_y_tics;
+	int major_x_tics_buflen, minor_x_tics_buflen, major_y_tics_buflen, minor_y_tics_buflen;
+	//float major_x_tics[1024], major_y_tics[1024], minor_x_tics[1024], minor_y_tics[1024];
 	long num_major_x_tics, num_major_y_tics, num_minor_x_tics, num_minor_y_tics;
 	long snaptogrid;
 } t_bpf; 
@@ -184,6 +187,10 @@ void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
 void bpf_setFunction(t_bpf *x, long f); 
 void bpf_setFunctionName(t_bpf *x, t_symbol *name);
+void bpf_setFunctionPointColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
+void bpf_setFunctionLineColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
+void bpf_setFunctionColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
+void bpf_doSetColor(t_bpf *x, int argc, t_atom *argv, t_jrgba *c);
 //void bpf_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords); 
 //void bpf_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
 //void bpf_renumber(t_bpf *x);
@@ -209,12 +216,16 @@ int main(void);
 void *bpf_new(t_symbol *s, long argc, t_atom *argv); 
 t_max_err bpf_points_get(t_bpf *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err bpf_points_set(t_bpf *x, t_object *attr, long argc, t_atom *argv);
-/*
+
 t_max_err bpf_majorXTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv);
 t_max_err bpf_majorYTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv);
 t_max_err bpf_minorXTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv);
 t_max_err bpf_minorYTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv);
-*/
+t_max_err bpf_majorXTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err bpf_minorXTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err bpf_majorYTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err bpf_minorYTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv);
+
 void myobject_write(t_bpf *x, t_symbol *s);
 void myobject_dowrite(t_bpf *x, t_symbol *s);
 void myobject_writefile(t_bpf *x, char *filename, short path);
@@ -291,7 +302,7 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 				}else{
 					if(i == x->currentFunction){
 						jgraphics_set_dash(g, NULL, 0, 0);
-						jgraphics_set_source_jrgba(g, &(x->pointColor));
+						jgraphics_set_source_jrgba(g, &(x->funcattr[i]->point_color));
 					}else{
 						jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
@@ -321,7 +332,7 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}else{
 					if(i == x->currentFunction){
-						jgraphics_set_source_jrgba(g, &(x->pointColor));
+						jgraphics_set_source_jrgba(g, &(x->funcattr[i]->point_color));
 					}else{
 						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 					}
@@ -330,7 +341,7 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 				jgraphics_fill(g);
 				if(i == x->currentFunction){
 					jgraphics_set_dash(g, NULL, 0, 0);
-					jgraphics_set_source_jrgba(g, &(x->lineColor));
+					jgraphics_set_source_jrgba(g, &(x->funcattr[i]->line_color));
 				}else{
 					jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
@@ -401,6 +412,7 @@ void bpf_paint_bpfPosition(t_bpf *x, t_object *patcherview, t_rect r){
 #define OCTAVE (7 * STEP)
 #define SPACE 8
 
+// fonts: http://pagespro-orange.fr/christian.texier/mididesi/free/index.htm
 void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 	t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_points, r.width, r.height);
  	if(g){ 
@@ -417,6 +429,21 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 			ypos += SPACE;
 		}
 		jgraphics_stroke(g);
+
+		t_jrgba black = (t_jrgba){0., 0., 0., 0.5};
+		jgraphics_set_source_jrgba(g, &black);
+		ypos = SPACE * 8;
+		for(i = 0; i < 5; i++){
+			jgraphics_move_to(g, 0, ypos + mid);
+			jgraphics_line_to(g, r.width, ypos + mid);
+			jgraphics_move_to(g, 0, mid - ypos);
+			jgraphics_line_to(g, r.width, mid - ypos);
+			ypos += SPACE;
+		}
+		jgraphics_stroke(g);
+
+		black = (t_jrgba){0., 0., 0., 1.};
+		jgraphics_set_source_jrgba(g, &black);
 		jgraphics_select_font_face(g, "Sonora", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL);
 		jgraphics_set_font_size(g, 54);
 		char ch = 38;
@@ -424,6 +451,17 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 		jgraphics_show_text(g, &ch);
 		ch = 63;
 		jgraphics_move_to(g, 0, mid + 16);
+		jgraphics_show_text(g, &ch);
+
+		black = (t_jrgba){0., 0., 0., .5};
+		jgraphics_set_source_jrgba(g, &black);
+		jgraphics_select_font_face(g, "Sonora", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL);
+		jgraphics_set_font_size(g, 54);
+		ch = 38;
+		jgraphics_move_to(g, 0, mid - (SPACE * 9));
+		jgraphics_show_text(g, &ch);
+		ch = 63;
+		jgraphics_move_to(g, 0, mid + (SPACE * 9));
 		jgraphics_show_text(g, &ch);
 
 		// middle c is at r.height / 2
@@ -436,7 +474,7 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 			t_point *p = x->functions[function];
 			while(p){
 				if(function == x->currentFunction){
-					jgraphics_set_source_jrgba(g, &(x->pointColor));
+					jgraphics_set_source_jrgba(g, &(x->funcattr[i]->point_color));
 				}else{
 					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 				}
@@ -448,7 +486,7 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 					double ll = (r.height / 2.) - (SPACE * 6);
 					ch = 95;
 					while(ll > ypos - SPACE){
-						jgraphics_move_to(g, xsc - 2, ll);
+						jgraphics_move_to(g, xsc - 7, ll);
 						jgraphics_show_text(g, &ch);
 						ll -= SPACE;
 					}
@@ -456,7 +494,7 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 					double ll = (r.height / 2.) + (SPACE * 6);
 					ch = 95;
 					while(ll < ypos){
-						jgraphics_move_to(g, xsc - 2, ll);
+						jgraphics_move_to(g, xsc - 7, ll);
 						jgraphics_show_text(g, &ch);
 						ll += SPACE;
 					}
@@ -466,7 +504,7 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 					jgraphics_set_font_size(g, 36);
 					//ch = 35;
 					ch = sharps[pc];
-					jgraphics_move_to(g, xsc - 10, ypos - STEP);
+					jgraphics_move_to(g, xsc - 15, ypos - STEP);
 					jgraphics_show_text(g, &ch);
 				}
 				ch = 81;
@@ -478,7 +516,7 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 				if(p->selected){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}
-				jgraphics_move_to(g, xsc, ypos);
+				jgraphics_move_to(g, xsc - 5, ypos);
 				jgraphics_show_text(g, &ch);
 				p = p->next;
 			}
@@ -1336,6 +1374,8 @@ void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 			break;
 		}
 	}
+	x->funcattr[x->currentFunction]->point_color = x->pointColor;
+	x->funcattr[x->currentFunction]->line_color = x->lineColor;
         jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
 }
@@ -1400,6 +1440,55 @@ void bpf_setFunctionName(t_bpf *x, t_symbol *name){
 	strncpy(x->funcattr[x->currentFunction]->name, name->s_name, 64);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_setFunctionPointColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
+	if(argc < 3 || argc > 5){
+		object_error((t_object *)x, "%s requires between 3 and 5 arguments:\n[function number (int)] <red> <green> <blue> [alpha]", __PRETTY_FUNCTION__);
+		return;
+	}
+	int function = x->currentFunction;
+	t_atom *ptr = argv;
+	if(atom_gettype(ptr) == A_LONG){
+		function = atom_getlong(ptr++);
+	}
+	bpf_doSetColor(x, argc, argv, &(x->funcattr[function]->point_color));
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_setFunctionLineColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
+	if(argc < 3 || argc > 5){
+		object_error((t_object *)x, "%s requires between 3 and 5 arguments:\n[function number (int)] <red> <green> <blue> [alpha]", __PRETTY_FUNCTION__);
+		return;
+	}
+	int function = x->currentFunction;
+	t_atom *ptr = argv;
+	if(atom_gettype(ptr) == A_LONG){
+		function = atom_getlong(ptr++);
+	}
+	bpf_doSetColor(x, argc, argv, &(x->funcattr[function]->line_color));
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_setFunctionColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
+	bpf_setFunctionLineColor(x, msg, argc, argv);
+	bpf_setFunctionPointColor(x, msg, argc, argv);
+}
+
+void bpf_doSetColor(t_bpf *x, int argc, t_atom *argv, t_jrgba *c){
+	t_atom *ptr = argv;
+	t_jrgba color;
+	color.red = atom_getfloat(ptr++);
+	color.green = atom_getfloat(ptr++);
+	color.blue = atom_getfloat(ptr++);
+	color.alpha = 1.;
+	if(ptr - argv < argc){
+		color.alpha = atom_getfloat(ptr);
+	}
+	//x->functionColors[function] = color;
+	*c = color;
 }
 
 /*
@@ -1746,6 +1835,9 @@ int main(void){
 	class_addmethod(c, (method)bpf_clear, "clear", 0);
 	class_addmethod(c, (method)bpf_dump, "dump", 0);
 	class_addmethod(c, (method)bpf_setFunctionName, "setfunctionname", A_SYM, 0);
+	class_addmethod(c, (method)bpf_setFunctionColor, "setfunctioncolor", A_GIMME, 0);
+	class_addmethod(c, (method)bpf_setFunctionLineColor, "setfunctionlinecolor", A_GIMME, 0);
+	class_addmethod(c, (method)bpf_setFunctionPointColor, "setfunctionpointcolor", A_GIMME, 0);
 	class_addmethod(c, (method)bpf_xminmax, "xminmax", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_yminmax, "yminmax", A_FLOAT, A_FLOAT, 0);
 	//class_addmethod(c, (method)bpf_renumber, "renumber", 0);
@@ -1811,19 +1903,19 @@ int main(void){
 	CLASS_ATTR_STYLE_LABEL(c, "show_y_grid", 0, "onoff", "Show Y Grid");
 
 	CLASS_ATTR_FLOAT_VARSIZE(c, "major_x_tics", 0, t_bpf, major_x_tics, num_major_x_tics, 1024);
-	//CLASS_ATTR_ACCESSORS(c, "major_x_tics", NULL, bpf_majorXTicsSet);
+	CLASS_ATTR_ACCESSORS(c, "major_x_tics", bpf_majorXTicsGet, bpf_majorXTicsSet);
 	CLASS_ATTR_SAVE(c, "major_x_tics", 0);
 
 	CLASS_ATTR_FLOAT_VARSIZE(c, "major_y_tics", 0, t_bpf, major_y_tics, num_major_y_tics, 1024);
-	//CLASS_ATTR_ACCESSORS(c, "major_y_tics", NULL, bpf_majorYTicsSet);
+	CLASS_ATTR_ACCESSORS(c, "major_y_tics", bpf_majorYTicsGet, bpf_majorYTicsSet);
 	CLASS_ATTR_SAVE(c, "major_y_tics", 0);
 
 	CLASS_ATTR_FLOAT_VARSIZE(c, "minor_x_tics", 0, t_bpf, minor_x_tics, num_minor_x_tics, 1024);
-	//CLASS_ATTR_ACCESSORS(c, "minor_x_tics", NULL, bpf_minorXTicsSet);
+	CLASS_ATTR_ACCESSORS(c, "minor_x_tics", bpf_minorXTicsGet, bpf_minorXTicsSet);
 	CLASS_ATTR_SAVE(c, "minor_x_tics", 0);
 
 	CLASS_ATTR_FLOAT_VARSIZE(c, "minor_y_tics", 0, t_bpf, minor_y_tics, num_minor_y_tics, 1024);
-	//CLASS_ATTR_ACCESSORS(c, "minor_y_tics", NULL, bpf_minorYTicsSet);
+	CLASS_ATTR_ACCESSORS(c, "minor_y_tics", bpf_minorYTicsGet, bpf_minorYTicsSet);
 	CLASS_ATTR_SAVE(c, "minor_y_tics", 0);
 
 	CLASS_ATTR_LONG(c, "snaptogrid", 0, t_bpf, snaptogrid);
@@ -1955,22 +2047,28 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 
 		x->xmargin = XMARGIN;
 		x->ymargin = YMARGIN;
-		/*
-		x->major_x_tics = (float *)sysmem_newptr(1024 * sizeof(float));
-		x->major_y_tics = (float *)sysmem_newptr(1024 * sizeof(float));
-		x->minor_x_tics = (float *)sysmem_newptr(1024 * sizeof(float));
-		x->minor_y_tics = (float *)sysmem_newptr(1024 * sizeof(float));
-		*/
+
+		x->major_x_tics = (double *)sysmem_newptr(1024 * sizeof(double));
+		x->major_y_tics = (double *)sysmem_newptr(1024 * sizeof(double));
+		x->minor_x_tics = (double *)sysmem_newptr(1024 * sizeof(double));
+		x->minor_y_tics = (double *)sysmem_newptr(1024 * sizeof(double));
+		x->major_x_tics_buflen = 1024;
+		x->minor_x_tics_buflen = 1024;
+		x->major_y_tics_buflen = 1024;
+		x->minor_y_tics_buflen = 1024;
+
  		x->numFunctions = 1; 
  		x->currentFunction = 0; 
 		critical_new(&(x->lock));
+
+		t_jrgba black = (t_jrgba){0., 0., 0., 1.};
 
 		int i;
 		x->ptrs = (t_float **)sysmem_newptr(MAX_NUM_FUNCTIONS * sizeof(t_float *));
 		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
 			x->funcattr[i] = (t_funcattr *)calloc(1, sizeof(t_funcattr));
-			x->funcattr[i]->line_color = x->lineColor;
-			x->funcattr[i]->point_color = x->pointColor;
+			x->funcattr[i]->line_color = black;
+			x->funcattr[i]->point_color = black;
 			memset(x->funcattr[i]->dash, 0, 8);
 			x->funcattr[i]->ndash = 0;
 			sprintf(x->funcattr[i]->name, "%d", i);
@@ -1979,7 +2077,6 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 
 		x->name = NULL;
  		attr_dictionary_process(x, d); 
-		post("num tics %d %d %d %d", x->num_major_x_tics, x->num_major_y_tics, x->num_minor_x_tics, x->num_minor_y_tics);
  		jbox_ready((t_jbox *)x); 
 		x->box.z_misc = Z_PUT_FIRST;
 
@@ -2059,9 +2156,15 @@ t_max_err bpf_points_set(t_bpf *x, t_object *attr, long argc, t_atom *argv){
 	}
 	return MAX_ERR_NONE;
 }
-/*
+
 t_max_err bpf_majorXTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
-	post("%s %d", __PRETTY_FUNCTION__, argc);
+	if(argc > x->major_x_tics_buflen){
+		x->major_x_tics_buflen *= 2;
+		x->major_x_tics = (double *)sysmem_resizeptr(x->major_x_tics, x->major_x_tics_buflen * sizeof(double));
+		if(!x->major_x_tics){
+			return MAX_ERR_OUT_OF_MEM;
+		}
+	}
 	int i;
 	x->num_major_x_tics = argc;
 	for(i = 0; i < argc; i++){
@@ -2071,7 +2174,13 @@ t_max_err bpf_majorXTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
 }
 
 t_max_err bpf_majorYTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
-	post("%s %d", __PRETTY_FUNCTION__, argc);
+	if(argc > x->major_y_tics_buflen){
+		x->major_y_tics_buflen *= 2;
+		x->major_y_tics = (double *)sysmem_resizeptr(x->major_y_tics, x->major_y_tics_buflen * sizeof(double));
+		if(!x->major_y_tics){
+			return MAX_ERR_OUT_OF_MEM;
+		}
+	}
 	int i;
 	x->num_major_y_tics = argc;
 	for(i = 0; i < argc; i++){
@@ -2082,7 +2191,13 @@ t_max_err bpf_majorYTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
 
 
 t_max_err bpf_minorXTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
-	post("%s %d", __PRETTY_FUNCTION__, argc);
+	if(argc > x->minor_x_tics_buflen){
+		x->minor_x_tics_buflen *= 2;
+		x->minor_x_tics = (double *)sysmem_resizeptr(x->minor_x_tics, x->minor_x_tics_buflen * sizeof(double));
+		if(!x->minor_x_tics){
+			return MAX_ERR_OUT_OF_MEM;
+		}
+	}
 	int i;
 	x->num_minor_x_tics = argc;
 	for(i = 0; i < argc; i++){
@@ -2092,7 +2207,13 @@ t_max_err bpf_minorXTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
 }
 
 t_max_err bpf_minorYTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
-	post("%s %d", __PRETTY_FUNCTION__, argc);
+	if(argc > x->minor_y_tics_buflen){
+		x->minor_y_tics_buflen *= 2;
+		x->minor_y_tics = (double *)sysmem_resizeptr(x->minor_y_tics, x->minor_y_tics_buflen * sizeof(double));
+		if(!x->minor_y_tics){
+			return MAX_ERR_OUT_OF_MEM;
+		}
+	}
 	int i;
 	x->num_minor_y_tics = argc;
 	for(i = 0; i < argc; i++){
@@ -2100,4 +2221,56 @@ t_max_err bpf_minorYTicsSet(t_bpf *x, t_object *attr, long argc, t_atom *argv){
 	}
 	return MAX_ERR_NONE;
 }
-*/
+
+t_max_err bpf_majorXTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv){
+	if(!x->num_major_x_tics){
+		return MAX_ERR_NONE;
+	}
+	char alloc;
+	atom_alloc_array(x->num_major_x_tics, argc, argv, &alloc);
+	int i;
+	for(i = 0; i < *argc; i++){
+		atom_setfloat(*argv + i, x->major_x_tics[i]);
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err bpf_minorXTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv){
+	if(!x->num_minor_x_tics){
+		return MAX_ERR_NONE;
+	}
+	char alloc;
+	atom_alloc_array(x->num_minor_x_tics, argc, argv, &alloc);
+	int i;
+	for(i = 0; i < *argc; i++){
+		atom_setfloat(*argv + i, x->minor_x_tics[i]);
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err bpf_majorYTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv){
+	if(!x->num_major_y_tics){
+		return MAX_ERR_NONE;
+	}
+	char alloc;
+	atom_alloc_array(x->num_major_y_tics, argc, argv, &alloc);
+	int i;
+	for(i = 0; i < *argc; i++){
+		atom_setfloat(*argv + i, x->major_y_tics[i]);
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err bpf_minorYTicsGet(t_bpf *x, t_object *attr, long *argc, t_atom **argv){
+	if(!x->num_minor_y_tics){
+		return MAX_ERR_NONE;
+	}
+	char alloc;
+	atom_alloc_array(x->num_minor_y_tics, argc, argv, &alloc);
+	int i;
+	for(i = 0; i < *argc; i++){
+		atom_setfloat(*argv + i, x->minor_y_tics[i]);
+	}
+	return MAX_ERR_NONE;
+}
+
