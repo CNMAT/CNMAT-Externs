@@ -240,6 +240,9 @@ t_oio_serial_dev *oio_serial_addDevice(t_oio *oio, io_service_t device){
 			id = IORegistryEntryCreateCFProperty(device, CFSTR(kUSBVendorID), kCFAllocatorDefault, 0);
 			CFNumberGetValue(id, kCFNumberSInt32Type, &(dev->vendor_id));
 
+			id = IORegistryEntryCreateCFProperty(device, CFSTR(kUSBManufacturerStringIndex), kCFAllocatorDefault, 0);
+			CFShow(id);
+
 			((t_oio_generic_device *)dev)->type = OIO_DEV_SERIAL;
 			if(serial->devices){
 				DEV_PREV(serial->devices) = (t_oio_generic_device *)dev;

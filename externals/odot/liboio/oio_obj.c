@@ -45,7 +45,7 @@ t_oio *oio_obj_alloc(t_oio_hid_callback hid_connect_callback,
 void oio_obj_run(t_oio *oio){
 	oio_hid_run(oio);
 	oio_midi_run(oio);
-	//oio_serial_run(oio);
+	oio_serial_run(oio);
 }
 
 t_oio_err oio_obj_sendOSC(t_oio *oio, int n, char *buf){

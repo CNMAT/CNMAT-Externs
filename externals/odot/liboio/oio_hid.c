@@ -15,6 +15,7 @@ void *oio_hid_runloop(void *context);
 void oio_hid_connectCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
 void oio_hid_disconnectCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
 void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
+void oio_hid_reportCallback(void *context, IOReturn result, void *sender, IOHIDReportType type, uint32_t reportID, uint8_t *report, CFIndex reportLength);
 
 void oio_hid_sendToDevice(IOHIDDeviceRef device, IOHIDElementRef element, uint64_t value);
 
@@ -90,6 +91,15 @@ void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDVa
 		oio_obj_dispatch(oio, device->input_value_callbacks, len, oscbuf);
 		oio_mem_free(oscbuf);
 	}
+}
+
+void oio_hid_reportCallback(void *context, IOReturn result, void *sender, IOHIDReportType type, uint32_t reportID, uint8_t *report, CFIndex reportLength){
+	printf("id: %u, len = %d\n", reportID, reportLength);
+	int i;
+	for(i = 0; i < reportLength; i++){
+		printf("0x%x(%d) ", report[i], report[i]);
+	}
+	printf("\n");
 }
 
 t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
@@ -352,6 +362,8 @@ t_oio_err oio_hid_registerValueCallback(t_oio *oio, char *name, t_oio_hid_callba
 	for(i = 0; i < n; i++){
 		if(dev[i]->input_value_callbacks == NULL){
 			IOHIDDeviceRegisterInputValueCallback(dev[i]->device, oio_hid_valueCallback, oio);
+			uint8_t *buf = (uint8_t *)malloc(256);
+			IOHIDDeviceRegisterInputReportCallback(dev[i]->device, buf, 256, oio_hid_reportCallback, oio);
 		}
 		t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
 		cb->f = f;
