@@ -50,6 +50,9 @@
   VERSION 0.5.3: a few minor bugfixes
   VERSION 0.5.4: better positioning of notes in note mode and two more staves above and below the main ones like nslider
   VERSION 0.5.5: colors are now setable with setfunction*color messages
+  VERSION 0.5.6: more delete and clear functions
+  VERSION 0.5.7: minor bugfixes
+  VERSION 0.6: in step mode, the circle that appears before we step to the next point is now moveable.  this shows up as "duration" in the notes displaymode
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -89,6 +92,7 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 typedef struct _point{ 
  	t_pt coords;
 	int selected;
+	double aux_point;
  	struct _point *next; 
  	struct _point *prev; 
  	struct _point *next_selected; 
@@ -140,6 +144,8 @@ typedef struct _bpf{
 	//float major_x_tics[1024], major_y_tics[1024], minor_x_tics[1024], minor_y_tics[1024];
 	long num_major_x_tics, num_major_y_tics, num_minor_x_tics, num_minor_y_tics;
 	long snaptogrid;
+	double defaux_point;
+	int showdurations;
 } t_bpf; 
 
 void *bpf_class; 
@@ -149,8 +155,8 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r);
 void bpf_paint_bpfPosition(t_bpf *x, t_object *patcherview, t_rect r);
 void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r);
 void bpf_paintGrid(t_bpf *x, t_object *patcherview, t_rect r);
-void bpf_drawMajorXGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double xx);
-void bpf_drawMajorYGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double xx);
+void bpf_drawMajorXGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double pos, double pos_sc);
+void bpf_drawMajorYGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double pos, double pos_sc);
 void bpf_drawMinorXGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double xx);
 void bpf_drawMinorYGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double xx);
 void bpf_major_x_tics(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
@@ -166,9 +172,10 @@ t_int *bpf_perform(t_int *w);
 t_symbol *bpf_mangleName(t_symbol *name, int i, int fnum);
 void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_float(t_bpf *x, double f);
-double bpf_compute(t_bpf *x, int function, double f);
-void bpf_find_btn(t_bpf *x, t_point *function, double xx, t_point **left, t_point **right);
+double bpf_compute(t_bpf *x, int function, double f, int *point_num_to_left, int *aux_point_state);
+int bpf_find_btn(t_bpf *x, t_point *function, double xx, t_point **left, t_point **right);
 t_point *bpf_select(t_bpf *x, t_pt p);
+t_point *bpf_selectAuxPoint(t_bpf *x, t_pt p_sc);
 void bpf_draw_bounds(t_bpf *x, t_jgraphics *g, t_rect *rect); 
 void bpf_invalidateAllPos(t_bpf *x);
 void bpf_assist(t_bpf *x, void *b, long m, long a, char *s); 
@@ -199,7 +206,12 @@ t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum);
 void bpf_removeSelected(t_bpf *x);
 void bpf_removePoint(t_bpf *x, t_point *point, int functionNum);
 void bpf_clear(t_bpf *x);
+void bpf_clearFunction(t_bpf *x, long f);
+void bpf_clearCurrentFunction(t_bpf *x);
+void bpf_deleteFunction(t_bpf *x, long f);
+void bpf_deleteCurrentFunction(t_bpf *x);
 double bpf_scale(double f, double min_in, double max_in, double min_out, double max_out);
+double bpf_clip(double f, double min, double max);
 void bpf_xminmax(t_bpf *x, double min, double max);
 void bpf_yminmax(t_bpf *x, double min, double max);
 void bpf_snapAllPointsToGrid(t_bpf *);
@@ -282,6 +294,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 	t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_points, r.width, r.height);
  	if(g){ 
+		jgraphics_set_line_width(g, 1.);
 		critical_enter(x->lock);
 		int i, j;
 		for(i = 0; i < x->numFunctions; i++){
@@ -292,12 +305,12 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 			t_point *p = x->functions[i];
 			if(p){
 				t_pt sc;
-				sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width);
-				sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y);
+				sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, 0, r.width) + x->xmargin;
+				sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, 0) + x->ymargin;
 
 				jgraphics_move_to(g, sc.x, sc.y);
 				//if(p == x->selected){
-				if(p->selected){
+				if(p->selected == 1){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}else{
 					if(i == x->currentFunction){
@@ -326,9 +339,9 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 			}
 			while(p){
 				t_pt sc;
-				sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width);
-				sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y);
-				if(p->selected){
+				sc.x = bpf_scale(p->coords.x, x->xmin, x->xmax, 0, r.width) + x->xmargin;
+				sc.y = bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, 0) + x->ymargin;
+				if(p->selected == 1){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}else{
 					if(i == x->currentFunction){
@@ -347,12 +360,22 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 				}
 				double px = p->prev->coords.x, py = p->prev->coords.y;
-				double pysc = bpf_scale(py, x->ymin, x->ymax, r.height, r.y);
-				jgraphics_move_to(g, bpf_scale(px, x->xmin, x->xmax, r.x, r.width), pysc);
+				double pxsc = bpf_scale(px, x->xmin, x->xmax, 0., r.width) + x->xmargin;
+				double pysc = bpf_scale(py, x->ymin, x->ymax, r.height, 0) + x->ymargin;
+				jgraphics_move_to(g, pxsc, pysc);
 				if(x->step && p->prev->coords.y != p->coords.y){
+					double aux_point = (((sc.x - pxsc) * p->prev->aux_point) + pxsc);
+					jgraphics_line_to(g, aux_point, pysc);
+					jgraphics_ellipse(g, aux_point - 2.5, pysc - 2.5, 5, 5);
+					jgraphics_stroke(g);
+					jgraphics_move_to(g, aux_point, pysc);
 					jgraphics_line_to(g, sc.x, pysc);
 					jgraphics_line_to(g, sc.x, sc.y);
-					jgraphics_ellipse(g, sc.x - 2, pysc - 2, 4, 4);
+					jgraphics_set_line_width(g, .5);
+					jgraphics_stroke(g);
+					jgraphics_set_line_width(g, 1.);
+					//jgraphics_ellipse(g, sc.x - 2, pysc - 2, 4, 4);
+
 				}else{
 					jgraphics_line_to(g, sc.x, sc.y);
 				}
@@ -382,7 +405,7 @@ void bpf_paint_bpfPosition(t_bpf *x, t_object *patcherview, t_rect r){
 	if(x->displaymode != ps_notes){
 		int i;
 		for(i = 0; i < x->numFunctions; i++){
-			t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_pos, 4, r.height);
+			t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_pos, 4, 4);
 			if(g){
 				if(x->currentFunction == i){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
@@ -393,17 +416,17 @@ void bpf_paint_bpfPosition(t_bpf *x, t_object *patcherview, t_rect r){
 				jgraphics_fill(g);
 				jbox_end_layer((t_object *)x, patcherview, l_pos);
 			}
-			jbox_paint_layer((t_object *)x, patcherview, l_pos, x->pos[i].x - 2, x->pos[i].y - 2);
+			jbox_paint_layer((t_object *)x, patcherview, l_pos, bpf_scale(x->pos[i].x, x->xmin, x->xmax, 0., r.width) + x->xmargin + 4, bpf_scale(x->pos[i].y, x->ymin, x->ymax, r.height, 0.) + x->ymargin + 4);
 		}
 	}else{
-		t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_pos, 2, r.height);
+		t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_pos, 3, r.height + x->ymargin);
 		if(g){
-			jgraphics_move_to(g, 2, 0);
-			jgraphics_line_to(g, 2, r.height);
+			jgraphics_move_to(g, 1, 0);
+			jgraphics_line_to(g, 1, r.height + x->ymargin);
 			jgraphics_stroke(g);
 			jbox_end_layer((t_object *)x, patcherview, l_pos);
 		}
-		jbox_paint_layer((t_object *)x, patcherview, l_pos, x->pos[x->currentFunction].x - 2, 0);
+		jbox_paint_layer((t_object *)x, patcherview, l_pos, bpf_scale(x->pos[x->currentFunction].x, x->xmin, x->xmax, r.x, r.width), 0);
 	}
 } 
 
@@ -513,11 +536,26 @@ void bpf_paint_notes(t_bpf *x, t_object *patcherview, t_rect r){
 				}
 				jgraphics_select_font_face(g, "Sonora", JGRAPHICS_FONT_SLANT_NORMAL, JGRAPHICS_FONT_WEIGHT_NORMAL);
 				jgraphics_set_font_size(g, 54);
-				if(p->selected){
+				if(p->selected == 1){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}
 				jgraphics_move_to(g, xsc - 5, ypos);
 				jgraphics_show_text(g, &ch);
+
+				if(x->showdurations){
+					if(p->next){
+						// draw the "duration" (line out to aux_point)
+						double ap = bpf_scale(p->next->coords.x, x->xmin, x->xmax, 0, r.width) + x->xmargin;
+						ap = ((((ap - 10) - xsc) * p->aux_point) + xsc);
+						jgraphics_set_line_width(g, 5.);
+						jgraphics_move_to(g, xsc, ypos - STEP);
+						jgraphics_line_to(g, ap, ypos - STEP);
+						jgraphics_stroke(g);
+						jgraphics_set_line_width(g, 1.);
+						jgraphics_ellipse(g, ap - 2.5, ypos - STEP - 2.5, 5, 5);
+						jgraphics_stroke(g);
+					}
+				}
 				p = p->next;
 			}
 		}
@@ -532,66 +570,69 @@ void bpf_paintGrid(t_bpf *x, t_object *patcherview, t_rect r){
  	if(g){ 
 		double xgw = (x->major_x_grid_width / (x->xmax - x->xmin)) * r.width;
 		double ygw = (x->major_y_grid_height / (x->ymax - x->ymin)) * r.height;
-		double pos = 0;
+		double pos_sc = r.x, pos = x->xmin;
 		int i, j;
 		if(x->num_major_x_tics){
 			for(i = 0; i < x->num_major_x_tics; i++){
-				double tic = bpf_scale(x->major_x_tics[i], x->xmin, x->xmax, 0, r.width);
-				bpf_drawMajorXGridLine(x, g, r, tic);
+				double tic = bpf_scale(x->major_x_tics[i], x->xmin, x->xmax, r.x, r.width);
+				bpf_drawMajorXGridLine(x, g, r, x->major_x_tics[i], tic);
 				if(!x->num_minor_x_tics){
 					if(i < x->num_major_x_tics - 1){
 						for(j = 0; j < x->num_minor_x_grid_divisions; j++){
-							bpf_drawMinorXGridLine(x, g, r, tic + (((bpf_scale(x->major_x_tics[i + 1], x->xmin, x->xmax, 0, r.width) - tic) / (x->num_minor_x_grid_divisions)) * j));
+							bpf_drawMinorXGridLine(x, g, r, tic + (((bpf_scale(x->major_x_tics[i + 1], x->xmin, x->xmax, r.x, r.width) - tic) / (x->num_minor_x_grid_divisions)) * j));
 						}
 					}
 				}
 			}
-		}else{
-			while(pos < r.width){
-				bpf_drawMajorXGridLine(x, g, r, pos);
+		}else if(x->major_x_grid_width > 0){
+			while(pos_sc < r.width){
+				bpf_drawMajorXGridLine(x, g, r, pos, pos_sc);
 				if(!x->num_minor_x_tics){
 					for(j = 1; j < x->num_minor_x_grid_divisions; j++){
 						bpf_drawMinorXGridLine(x, g, r, pos + (j * (xgw / (x->num_minor_x_grid_divisions))));
 					}
 				}
-				pos += xgw;
+				pos_sc += xgw;
+				pos += x->major_x_grid_width;
 			}
 		}
 		if(x->num_minor_x_tics){
 			for(i = 0; i < x->num_minor_x_tics; i++){
-				double tic = bpf_scale(x->minor_x_tics[i], x->xmin, x->xmax, 0, r.width);
+				double tic = bpf_scale(x->minor_x_tics[i], x->xmin, x->xmax, r.x, r.width);
 				bpf_drawMinorXGridLine(x, g, r, tic);
 			}
 		}
 
 		if(x->displaymode != ps_notes){
-			pos = r.height;
+			pos = x->ymin;
+			pos_sc = r.height;
 			if(x->num_major_y_tics){
 				for(i = 0; i < x->num_major_y_tics; i++){
-					double tic = bpf_scale(x->major_y_tics[i], x->ymin, x->ymax, r.height, 0);
-					bpf_drawMajorYGridLine(x, g, r, tic);
+					double tic = bpf_scale(x->major_y_tics[i], x->ymin, x->ymax, r.height, r.y);
+					bpf_drawMajorYGridLine(x, g, r, x->major_y_tics[i], tic);
 					if(!x->num_minor_y_tics){
 						if(i < x->num_major_y_tics - 1){
 							for(j = 0; j < x->num_minor_y_grid_divisions; j++){
-								bpf_drawMinorYGridLine(x, g, r, tic + (((bpf_scale(x->major_y_tics[i + 1], x->ymin, x->ymax, r.height, 0) - tic) / (x->num_minor_y_grid_divisions)) * j));
+								bpf_drawMinorYGridLine(x, g, r, tic + (((bpf_scale(x->major_y_tics[i + 1], x->ymin, x->ymax, r.height, r.y) - tic) / (x->num_minor_y_grid_divisions)) * j));
 							}
 						}
 					}
 				}
-			}else{
-				while(pos > 0){
-					bpf_drawMajorYGridLine(x, g, r, pos);
+			}else if(x->major_y_grid_height > 0){
+				while(pos > r.y){
+					bpf_drawMajorYGridLine(x, g, r, pos, pos_sc);
 					if(!x->num_minor_y_tics){
 						for(j = 1; j < x->num_minor_y_grid_divisions; j++){
 							bpf_drawMinorYGridLine(x, g, r, pos - (j * (ygw / (x->num_minor_y_grid_divisions))));
 						}
 					}
-					pos -= ygw;
+					pos_sc -= ygw;
+					pos += x->major_y_grid_height;
 				}
 			}
 			if(x->num_minor_y_tics){
 				for(i = 0; i < x->num_minor_y_tics; i++){
-					double tic = bpf_scale(x->minor_y_tics[i], x->ymin, x->ymax, r.height, 0);
+					double tic = bpf_scale(x->minor_y_tics[i], x->ymin, x->ymax, r.height, r.y);
 					bpf_drawMinorYGridLine(x, g, r, tic);
 				}
 			}
@@ -604,34 +645,34 @@ void bpf_paintGrid(t_bpf *x, t_object *patcherview, t_rect r){
 	jbox_paint_layer((t_object *)x, patcherview, l_grid, r.x, r.y);
 }
 
-void bpf_drawMajorXGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double xx){
+void bpf_drawMajorXGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double pos, double pos_sc){
 	char buf[16];
 	jgraphics_set_source_jrgba(g, &(x->gridColor));
 	jgraphics_set_line_width(g, 1.5);
-	jgraphics_move_to(g, xx + 2, 10);
-	sprintf(buf, "%.02f", bpf_scale(xx, 0., r.width, x->xmin, x->xmax));
+	jgraphics_move_to(g, pos_sc + 2, 10);
+	sprintf(buf, "%.02f", pos);
 	jgraphics_show_text(g, buf);
-	jgraphics_move_to(g, xx, 0);
+	jgraphics_move_to(g, pos_sc, 0);
 	if(x->show_x_grid){
-		jgraphics_line_to(g, xx, r.height);
+		jgraphics_line_to(g, pos_sc, r.height);
 	}else{
-		jgraphics_line_to(g, xx, 10);
+		jgraphics_line_to(g, pos_sc, 10);
 	}
 	jgraphics_stroke(g);
 }
 
-void bpf_drawMajorYGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double xx){
+void bpf_drawMajorYGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double pos, double pos_sc){
 	char buf[16];
 	jgraphics_set_source_jrgba(g, &(x->gridColor));
 	jgraphics_set_line_width(g, 1.5);
-	jgraphics_move_to(g, 0, xx - 2);
-	sprintf(buf, "%.02f", bpf_scale(xx, r.height, 0., x->ymin, x->ymax));
+	jgraphics_move_to(g, 0, pos_sc - 2);
+	sprintf(buf, "%.02f", bpf_scale(pos, r.height, 0., x->ymin, x->ymax));
 	jgraphics_show_text(g, buf);
-	jgraphics_move_to(g, 0, xx);
+	jgraphics_move_to(g, 0, pos_sc);
 	if(x->show_y_grid){
-		jgraphics_line_to(g, r.width, xx);
+		jgraphics_line_to(g, r.width, pos_sc);
 	}else{
-		jgraphics_line_to(g, 25, xx);
+		jgraphics_line_to(g, 25, pos_sc);
 	}
 	jgraphics_stroke(g);
 }
@@ -944,23 +985,38 @@ t_int *bpf_perform(t_int *w){
 	int n = (int)w[2];
 	t_float *in = (t_float *)w[3];
 	int i, j;
+	t_rect r;
+	int pntl, aux_point_state;
+	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	bpf_resizeRectWithMargins(x, &r);
 	if(x->name){
 		for(i = 0; i < x->numFunctions; i++){
 			if(x->functions[i] == NULL){
-				memset(x->ptrs[i], 0, n * sizeof(t_float));
+				memset(x->ptrs[(i * 2)], 0, n * sizeof(t_float));
+				memset(x->ptrs[(i * 2) + 1], 0, n * sizeof(t_float));
 			}
 			t_symbol *name;
 			if(name = bpf_mangleName(x->name, 0, i)){
-				name->s_thing = (t_object *)(x->ptrs[i]);
+				name->s_thing = (t_object *)(x->ptrs[(i * 2)]);
+			}
+			if(name = bpf_mangleName(x->name, 1, i)){
+				name->s_thing = (t_object *)(x->ptrs[(i * 2) + 1]);
 			}
 		}
 		for(i = 0; i < n; i++){
 			for(j = 0; j < x->numFunctions; j++){
-				x->ptrs[j][i] = bpf_compute(x, j, in[i]);
+				x->ptrs[(j * 2)][i] = bpf_compute(x, j, in[i], &pntl, &aux_point_state);
+				x->ptrs[(j * 2) + 1][i] = (t_float)pntl;
 			}
 		}
+		for(i = 0; i < x->numFunctions; i++){
+			x->pos[i] = (t_pt){in[0], x->ptrs[i][0]};
+		}
 	}
-
+	if(x->drawpos){
+		//jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
+		jbox_redraw((t_jbox *)(t_jbox *)(&x->box));
+	}
 	return w + 4;
 }
 
@@ -976,7 +1032,7 @@ t_symbol *bpf_mangleName(t_symbol *name, int i, int fnum){
 void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 	t_atom *a = argv;
 	int functionNum = x->currentFunction;
-	if(argc == 3){
+	if(argc > 2){
 		functionNum = atom_getlong(a++);
 		if(functionNum > x->numFunctions - 1){
 			x->numFunctions = functionNum + 1;
@@ -986,14 +1042,10 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 	t_pt pt = (t_pt){atom_getfloat(a++), atom_getfloat(a++)};
 
 	t_point *p = bpf_insertPoint(x, pt, functionNum);
-	/*
-	if(x->selected){
-		x->selected->prev = p;
+	if(argc == 4){
+		p->aux_point = bpf_clip(atom_getfloat(a), 0., 1.);
+		post("aux = %f", p->aux_point);
 	}
-	p->next_selected = x->selected;
-	p->prev = NULL;
-	x->selected = p;
-	*/
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
 }
@@ -1002,38 +1054,51 @@ void bpf_float(t_bpf *x, double f){
 	t_rect r;
 	jbox_get_patching_rect((t_object *)&(x->box), &r);
 	bpf_resizeRectWithMargins(x, &r);
-	t_atom out[2]; // function number, y
+	t_atom out[3]; // function number, y, aux point state
 	int i;
+	int aps;
 	for(i = 0; i < x->numFunctions; i++){
 		atom_setlong(&(out[0]), i);
-		double y = bpf_compute(x, i, f);
-		x->pos[i] = (t_pt){bpf_scale(f, x->xmin, x->xmax, r.x, r.width) + x->xmargin, bpf_scale(y, x->ymin, x->ymax, r.height, r.y) + x->ymargin};
+		double y = bpf_compute(x, i, f, NULL, &aps);
+		x->pos[i] = (t_pt){f, y};
 
 		atom_setfloat(&(out[1]), y);
-		if(x->drawpos){
-			jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
-		}
-		outlet_list(x->out_main, NULL, 2, out);
+		atom_setlong(out + 2, aps);
+		outlet_list(x->out_main, NULL, 3, out);
 	}
 	if(x->drawpos){
+		jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
 		jbox_redraw((t_jbox *)(t_jbox *)(&x->box));
 	}
 }
 
-double bpf_compute(t_bpf *x, int function, double f){
+// point_num_to_left will contain the point number of the point to the left of f
+// aux_point_state will be 0 if <= to the aux point of the point to the left of f, or 1 if >
+double bpf_compute(t_bpf *x, int function, double f, int *point_num_to_left, int *aux_point_state){
 	t_rect r;
 	jbox_get_patching_rect((t_object *)&(x->box), &r);
 	bpf_resizeRectWithMargins(x, &r);
 	x->pos[function] = (t_pt){-1., -1.};
 	t_point *p = x->functions[function];
 	t_point *left = NULL, *right = NULL;
-	bpf_find_btn(x, p, f, &left, &right);
-
+	int pntl = bpf_find_btn(x, p, f, &left, &right);
+	if(point_num_to_left){
+		*point_num_to_left = pntl;
+	}
+	if(aux_point_state){
+		*aux_point_state = 0;
+	}
 	if(!left || !right){
 		return 0;
 	}else{
 		double lx = left->coords.x, ly = left->coords.y;
 		double rx = right->coords.x, ry = right->coords.y;
+
+		if(aux_point_state){
+			if((((rx - lx) * left->aux_point) + lx) >= f){
+				*aux_point_state = 1;
+			}
+		}
 
 		if(x->step){
 			return ly;
@@ -1046,29 +1111,38 @@ double bpf_compute(t_bpf *x, int function, double f){
 	}
 }
 
-void bpf_find_btn(t_bpf *x, t_point *function, double xx, t_point **left, t_point **right){
+// this function returns the number of the point to the left of xx
+int bpf_find_btn(t_bpf *x, t_point *function, double xx, t_point **left, t_point **right){
 	//post("function = %p", function);
 	if(!function){
-		return;
+		return -1;
 	}
+	int i = 0;
 	t_point *ptr = function;
 
 	if(xx < function->coords.x){
 		*left = NULL;
 		*right = function;
-		return;
+		return -1;
 	}
 	while(ptr->next){
 		if(xx >= ptr->coords.x && xx <= ptr->next->coords.x){
 			*left = ptr;
 			*right = ptr->next;
-			return;
+			if(*right){
+				if(xx == (*right)->coords.x){
+					return i + 1;
+				}
+			}
+			return i;
 		}
 		ptr = ptr->next;
+		i++;
 	}
 
 	*left = ptr;
 	*right = NULL;
+	return i;
 }
 
 t_point *bpf_select(t_bpf *x, t_pt p_sc){
@@ -1082,9 +1156,9 @@ t_point *bpf_select(t_bpf *x, t_pt p_sc){
 
 	while(ptr){
 		t_pt sc = ptr->coords;
-		sc.x = bpf_scale(sc.x, x->xmin, x->xmax, r.x, r.width);
+		sc.x = bpf_scale(sc.x, x->xmin, x->xmax, 0., r.width) + x->xmargin;
 		if(x->displaymode == ps_bpf){
-			sc.y = bpf_scale(sc.y, x->ymin, x->ymax, r.height, r.y);
+			sc.y = bpf_scale(sc.y, x->ymin, x->ymax, r.height, 0.) + x->ymargin;
 			if((xdif = fabs(sc.x - p_sc.x)) < 3 && (ydif = fabs(sc.y - p_sc.y)) < 3){
 				if(xdif + ydif < min){
 					min = xdif + ydif;
@@ -1098,6 +1172,40 @@ t_point *bpf_select(t_bpf *x, t_pt p_sc){
 					min = xdif + ydif;
 					min_ptr = ptr;
 				}
+			}
+		}
+
+		ptr = ptr->next;
+	}
+	return min_ptr;
+}
+
+t_point *bpf_selectAuxPoint(t_bpf *x, t_pt p_sc){
+	double min = DBL_MAX;
+	t_point *min_ptr = NULL;
+	t_point *ptr = x->functions[x->currentFunction];
+	double xdif, ydif;
+	t_rect r;
+	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	bpf_resizeRectWithMargins(x, &r);
+	while(ptr){
+		if(!ptr->next){
+			break;
+		}
+		t_pt sc = ptr->coords;
+		sc.x = bpf_scale(((ptr->next->coords.x - sc.x) * ptr->aux_point) + sc.x, x->xmin, x->xmax, 0., r.width) + x->xmargin;
+		if(x->displaymode == ps_bpf){
+			sc.y = bpf_scale(bpf_compute(x, x->currentFunction, ((ptr->next->coords.x - ptr->coords.x) * ptr->aux_point) + ptr->coords.x, NULL, NULL), x->ymin, x->ymax, r.height, 0.) + x->ymargin;
+		}else{
+			sc.x -= 10;
+			sc.y = bpf_computeNotePos(sc.y, r) - STEP;
+		}
+		post("sc.x = %f, sc.y = %f", sc.x, sc.y);
+		post("pc.x = %f, pc.y = %f", p_sc.x, p_sc.y);
+		if((xdif = fabs(sc.x - p_sc.x)) < 3 && (ydif = fabs(sc.y - p_sc.y)) < 3){
+			if(xdif + ydif < min){
+				min = xdif + ydif;
+				min_ptr = ptr;
 			}
 		}
 
@@ -1172,46 +1280,54 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x10:{
 		// no modifiers.  
 		t_point *p;
-		t_point *s = bpf_select(x, pt);
+		t_point *s = bpf_selectAuxPoint(x, pt);
 		if(s){
-			if(s->selected){
-				if(s != x->selected){
-					if(s->next_selected){
-						s->next_selected->prev_selected = s->prev_selected;
+			// we have an aux_point 
+			s->selected = 2;
+			bpf_clearSelected(x);
+			x->selected = s;
+		}else{
+			s = bpf_select(x, pt);
+			if(s){
+				if(s->selected == 1){
+					if(s != x->selected){
+						if(s->next_selected){
+							s->next_selected->prev_selected = s->prev_selected;
+						}
+						if(s->prev_selected){
+							s->prev_selected->next_selected = s->next_selected;
+						}
+						s->next_selected = x->selected;
+						x->selected = s;
 					}
-					if(s->prev_selected){
-						s->prev_selected->next_selected = s->next_selected;
-					}
-					s->next_selected = x->selected;
+				}else{
+					bpf_clearSelected(x);
+					s->selected = 1;
 					x->selected = s;
+					s->next_selected = s->prev_selected = NULL;
 				}
 			}else{
-				bpf_clearSelected(x);
-				s->selected = 1;
-				x->selected = s;
-				s->next_selected = s->prev_selected = NULL;
-			}
-		}else{
-			if(!x->lockinput){
-				bpf_clearSelected(x);
-				if(x->displaymode == ps_notes){
-					coords.y = bpf_uncomputeNotePos(pt.y + x->ymargin, r);
+				if(!x->lockinput){
+					bpf_clearSelected(x);
+					if(x->displaymode == ps_notes){
+						coords.y = bpf_uncomputeNotePos(pt.y + x->ymargin, r);
+					}
+					if(x->snaptogrid){
+						t_pt snapped = (t_pt){bpf_scale(coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(coords.y, x->ymin, x->ymax, r.height, r.y)};
+						bpf_findNearestGridPoint(x, snapped, &snapped);
+						coords = (t_pt){bpf_scale(snapped.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(snapped.y, r.height, r.y, x->ymin, x->ymax)};
+					}
+					p = bpf_insertPoint(x, coords, x->currentFunction);
+					p->selected = 1;
+					if(x->selected){
+						x->selected->prev_selected = p;
+					}
+					p->next_selected = x->selected;
+					p->prev_selected = NULL;
+					x->selected = p;
 				}
-				if(x->snaptogrid){
-					t_pt snapped = (t_pt){bpf_scale(coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(coords.y, x->ymin, x->ymax, r.height, r.y)};
-					bpf_findNearestGridPoint(x, snapped, &snapped);
-					coords = (t_pt){bpf_scale(snapped.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(snapped.y, r.height, r.y, x->ymin, x->ymax)};
-				}
-				p = bpf_insertPoint(x, coords, x->currentFunction);
-				p->selected = 1;
-				if(x->selected){
-					x->selected->prev_selected = p;
-				}
-				p->next_selected = x->selected;
-				p->prev_selected = NULL;
-				x->selected = p;
-			}
-		}	
+			}	
+		}
 	}break;
 	case 0x112:
 	case 0x12:{
@@ -1264,24 +1380,35 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 			break;
 		}
 		t_point *p = x->selected;
-		t_point *next, *prev;
-		t_pt psc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
-		t_pt delta;
-		if(x->snaptogrid){
-			t_pt snapped;
-			bpf_findNearestGridPoint(x, pt, &snapped);
-			pt = snapped;
-		}
-		p->coords = (t_pt){bpf_scale(pt.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(pt.y, r.height, r.y, x->ymin, x->ymax)};
-		delta.x = pt.x - psc.x;
-		delta.y = pt.y - psc.y;
-		bpf_reorderPoint(x, p);
-		p = p->next_selected;
-		while(p){
-			psc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
-			p->coords = (t_pt){bpf_scale(psc.x + delta.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(psc.y + delta.y, r.height, r.y, x->ymin, x->ymax)};
+		if(p->selected == 1){
+			// main point--we're moving it
+			t_point *next, *prev;
+			t_pt psc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
+			t_pt delta;
+			if(x->snaptogrid){
+				t_pt snapped;
+				bpf_findNearestGridPoint(x, pt, &snapped);
+				pt = snapped;
+			}
+			p->coords = (t_pt){bpf_scale(pt.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(pt.y, r.height, r.y, x->ymin, x->ymax)};
+			delta.x = pt.x - psc.x;
+			delta.y = pt.y - psc.y;
 			bpf_reorderPoint(x, p);
 			p = p->next_selected;
+			while(p){
+				psc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, r.x, r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, r.y)};
+				p->coords = (t_pt){bpf_scale(psc.x + delta.x, r.x, r.width, x->xmin, x->xmax), bpf_scale(psc.y + delta.y, r.height, r.y, x->ymin, x->ymax)};
+				bpf_reorderPoint(x, p);
+				p = p->next_selected;
+			}
+		}else{
+			// aux point
+			if(!p->next){
+				// this would be weird.
+				return;
+			}
+			double xwc = bpf_scale(pt.x, 0., r.width, x->xmin, x->xmax);
+			p->aux_point = bpf_clip((xwc - p->coords.x) / (p->next->coords.x - p->coords.x), 0., 1.);
 		}
 	}
 		break;
@@ -1560,6 +1687,7 @@ t_point *bpf_insertPoint(t_bpf *x, t_pt coords, int functionNum){
 	p->coords = coords;
 	x->npoints[functionNum]++;
 	p->next_selected = p->prev_selected = NULL;
+	p->aux_point = x->defaux_point;
 	if(*function == NULL){
 		p->prev = NULL;
 		p->next = NULL;
@@ -1633,6 +1761,9 @@ void bpf_removePoint(t_bpf *x, t_point *point, int functionNum){
 			if(i == 0){
 				x->functions[functionNum] = p->next;
 			}
+			if(x->selected == p){
+				x->selected = p->next_selected;
+			}
 
 			if(p){
 				free(p);
@@ -1651,6 +1782,16 @@ double bpf_scale(double f, double min_in, double max_in, double min_out, double 
 	float m = (max_out - min_out) / (max_in - min_in);
 	float b = (min_out - (m * min_in));
 	return m * f + b;
+}
+
+double bpf_clip(double f, double min, double max){
+	if(f < min){
+		f = min;
+	}
+	if(f > max){
+		f = max;
+	}
+	return f;
 }
 
 void bpf_dump(t_bpf *x){
@@ -1742,12 +1883,7 @@ void bpf_resizeRectWithMargins(t_bpf *x, t_rect *r){
 void bpf_clear(t_bpf *x){
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
-		t_point *p = x->functions[i];
-		if(p){
-			free(p);
-		}
-		x->functions[i] = NULL;
-		x->npoints[i] = 0;
+		bpf_clearFunction(x, i);
 	}
 	critical_enter(x->lock);
 	x->numFunctions = 1;
@@ -1756,6 +1892,42 @@ void bpf_clear(t_bpf *x){
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	bpf_invalidateAllPos(x);
 	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_clearFunction(t_bpf *x, long f){
+	critical_enter(x->lock);
+	t_point *p = x->functions[f];
+	t_point *next = NULL;
+	while(p){
+		next = p->next;
+		free(p);
+		p = next;
+	}
+	x->functions[f] = NULL;
+	x->npoints[f] = 0;
+	critical_exit(x->lock);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	bpf_invalidateAllPos(x);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_clearCurrentFunction(t_bpf *x){
+	bpf_clearFunction(x, x->currentFunction);
+}
+
+void bpf_deleteFunction(t_bpf *x, long f){
+	bpf_clearFunction(x, f);
+	int i;
+	critical_enter(x->lock);
+	for(i = f; i < x->numFunctions - 1; i++){
+		x->functions[i] = x->functions[i + 1];
+	}
+	x->functions[x->numFunctions] = NULL;
+	critical_exit(x->lock);
+}
+
+void bpf_deleteCurrentFunction(t_bpf *x){
+	bpf_deleteFunction(x, x->currentFunction);
 }
 
 void bpf_invalidateAllPos(t_bpf *x){
@@ -1788,7 +1960,8 @@ void bpf_assist(t_bpf *x, void *b, long io, long num, char *s){
 } 
 
 void bpf_free(t_bpf *x){ 
- 	jbox_free((t_jbox *)x); 
+	dsp_freejbox((t_pxjbox *)x);
+ 	//jbox_free((t_jbox *)x); 
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
 		t_point *p = x->functions[i];
@@ -1800,7 +1973,7 @@ void bpf_free(t_bpf *x){
 			next = next->next;
 		}
 	}
-	for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
+	for(i = 0; i < MAX_NUM_FUNCTIONS * 2; i++){
 		if(x->ptrs[i]){
 			sysmem_freeptr(x->ptrs[i]);
 		}
@@ -1833,6 +2006,10 @@ int main(void){
 	class_addmethod(c, (method)bpf_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)bpf_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_clear, "clear", 0);
+	class_addmethod(c, (method)bpf_clearFunction, "clearfunction", A_LONG, 0);
+	class_addmethod(c, (method)bpf_clearCurrentFunction, "clearcurrentfunction", 0);
+	class_addmethod(c, (method)bpf_deleteFunction, "deletefunction", A_LONG, 0);
+	class_addmethod(c, (method)bpf_deleteCurrentFunction, "deletecurrentfunction", 0);
 	class_addmethod(c, (method)bpf_dump, "dump", 0);
 	class_addmethod(c, (method)bpf_setFunctionName, "setfunctionname", A_SYM, 0);
 	class_addmethod(c, (method)bpf_setFunctionColor, "setfunctioncolor", A_GIMME, 0);
@@ -2061,10 +2238,13 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
  		x->currentFunction = 0; 
 		critical_new(&(x->lock));
 
+		x->defaux_point = 1.;
+		x->showdurations = 1;
+
 		t_jrgba black = (t_jrgba){0., 0., 0., 1.};
 
 		int i;
-		x->ptrs = (t_float **)sysmem_newptr(MAX_NUM_FUNCTIONS * sizeof(t_float *));
+		x->ptrs = (t_float **)sysmem_newptr(MAX_NUM_FUNCTIONS * 2 * sizeof(t_float *));
 		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
 			x->funcattr[i] = (t_funcattr *)calloc(1, sizeof(t_funcattr));
 			x->funcattr[i]->line_color = black;
@@ -2072,7 +2252,8 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 			memset(x->funcattr[i]->dash, 0, 8);
 			x->funcattr[i]->ndash = 0;
 			sprintf(x->funcattr[i]->name, "%d", i);
-			x->ptrs[i] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
+			x->ptrs[(i * 2)] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
+			x->ptrs[(i * 2) + 1] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
 		}
 
 		x->name = NULL;
@@ -2095,7 +2276,7 @@ t_max_err bpf_points_get(t_bpf *x, t_object *attr, long *argc, t_atom **argv){
 		n += 19;
 		t_point *p = x->functions[i];
 		while(p){
-			n += 2;
+			n += 3;
 			npoints[i]++;
 			p = p->next;
 		}
@@ -2125,6 +2306,7 @@ t_max_err bpf_points_get(t_bpf *x, t_object *attr, long *argc, t_atom **argv){
 		while(p){
 			atom_setfloat(ptr++, p->coords.x);
 			atom_setfloat(ptr++, p->coords.y);
+			atom_setfloat(ptr++, p->aux_point);
 			p = p->next;
 		}
 	}
@@ -2151,7 +2333,8 @@ t_max_err bpf_points_set(t_bpf *x, t_object *attr, long argc, t_atom *argv){
 		x->npoints[cf] = npoints;
 		while(--npoints){
 			t_pt pt = (t_pt){atom_getfloat(ptr++), atom_getfloat(ptr++)};
-			bpf_insertPoint(x, pt, cf);
+			t_point *p = bpf_insertPoint(x, pt, cf);
+			p->aux_point = atom_getfloat(ptr++);
 		}
 	}
 	return MAX_ERR_NONE;
