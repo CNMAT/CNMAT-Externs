@@ -38,6 +38,9 @@
   VERSION 1.3.3: dumpbeats now outputs monotonic phase without resets at control points
   VERSION 1.3.4: a few minor bugfixes
   VERSION 1.3.5: function colors are now setable
+  VERSION 1.3.6: fixed a bug with things not getting deselected, cut now no longer leaves the first point behind, and implemented pasteattime and pasteatcoords
+  VERSION 1.3.7: colors implemented better
+  VERSION 1.3.8: fixed a bug in the way that the unwrapped monotonic phase was being computed.
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -221,6 +224,7 @@ void te_muteFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_lockFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_addToFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_addToAllFunctions(t_te *x, double x, double y);
+void te_getFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_setFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_invertSelected(t_te *x);
 void te_reverseSelected(t_te *x);
@@ -235,7 +239,8 @@ void te_mousemove(t_te *x, t_object *patcherview, t_pt pt, long modifiers);
 void te_cut(t_te *x);
 void te_copy(t_te *x);
 void te_paste(t_te *x);
-void te_pasteAtCoords(t_te *x, float x, float y);
+void te_pasteAtTime(t_te *x, double time);
+void te_pasteAtCoords(t_te *x, double x, double y);
 void te_findNearestGridPoint(t_te *x, t_pt pt_sc, t_pt *pt_out_sc);
 void te_showgrid(t_te *x, long b);
 void te_mouseup(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
@@ -250,13 +255,17 @@ t_point *te_insertPoint(t_te *x, t_pt coords, int functionNum);
 void te_removePoint(t_te *x, t_point *point, int functionNum);
 void te_dump(t_te *x);
 void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv);
+void te_dumpBeatsForFunction(t_te *x, int function, int numsubdivs, t_atom *subdivs);
 void te_dumpCellblock(t_te *x);
 void te_time_minmax(t_te *x, double min, double max);
 void te_freq_minmax(t_te *x, double min, double max);
+void te_getTimeMinMax(t_te *x);
+void te_getFreqMinMax(t_te *x);
 void te_clear(t_te *x);
 void te_clearFunction(t_te *x, int f);
 void te_clearCurrent(t_te *x);
 void te_doClearFunction(t_te *x, int f);
+void te_resetFunctionColors(t_te *x);
 void te_invalidateAllFunctions(t_te *x);
 void te_invalidateAll(t_te *x);
 void te_dsp(t_te *x, t_signal **sp, short *count);
@@ -1360,14 +1369,15 @@ double te_computeCorrectedUnwrappedMonotonicPhase(t_te *x, double t, int functio
 		te_makePlan(x, p->coords.x - (1. / 44100.), function, &thisplan);
 		//post("adding %f to %f", te_computeCorrectedPhase(p->coords.x - (1. / 44100.), &thisplan), phase);
 		phase += te_computeCorrectedPhase(p->coords.x, &thisplan);
-		double dphase = p->d_phase;
-		if(dphase >= 1.){
-			while(dphase >= 1.){
-				dphase -= 1;
+		//if(fabs(p->coords.x - t) > .00001){
+			double dphase = p->d_phase;
+			if(dphase >= 1.){
+				while(dphase >= 1.){
+					dphase -= 1;
+				}
 			}
-		}
-		//post("dphase: adding %f to %f", dphase, phase);
-		phase += dphase;
+			phase -= dphase;
+			//}
 		p = p->next;
 	}
 	//post("PHASE: %f", phase);
@@ -1698,6 +1708,7 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 		if(tmp){
 			te_clearSelected(x);
 			x->selected = tmp;
+			tmp->selected = 1;
 			break;
 		}
 		tmp = te_select(x, pt);
@@ -1705,7 +1716,6 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 			if(tmp == x->selected){
 				break;
 			}else if(tmp->selected){
-				printf("tmp is selected\n");
 				// find the point that the user clicked on and make it the first element of the
 				// selected linked list.
 				if(tmp->prev_selected){
@@ -1717,12 +1727,15 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 				tmp->next_selected = x->selected;
 				x->selected = tmp;
 			}else{
+				te_clearSelected(x);
 				x->selected = tmp;
 				x->selected->selected = 1;
 			}
 			break;
 		}else{
+			te_clearSelected(x);
 			x->selected = te_insertPoint(x, wc, x->currentFunction);
+			x->selected->selected = 1;
 			x->selected->d_freq = wc.y;
 			x->selected->a_phase = x->selected->d_phase = 0.;
 			x->selected->alpha = x->selected->beta = 1.;
@@ -1815,7 +1828,8 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 		t_atom out[2];
 		atom_setfloat(out, min.x);
 		atom_setfloat(out + 1, max.x);
-		outlet_anything(x->out_info, gensym("timeminmax"), 2, out);
+		//outlet_anything(x->out_info, gensym("timeminmax"), 2, out);
+		te_getTimeMinMax(x);
 		break;
 	}
 	case 0x13:
@@ -1968,6 +1982,9 @@ void te_cut(t_te *x){
 		if(p->prev){
 			p->prev->next = p->next;
 		}
+		if(p == x->functions[x->currentFunction]){
+			x->functions[x->currentFunction] = NULL;
+		}
 		p = p->next_selected;
 	}
 	critical_exit(x->lock);
@@ -2027,17 +2044,63 @@ void te_copy(t_te *x){
 }
 
 void te_paste(t_te *x){
+	t_point *cb = NULL;
+	critical_enter(te_clipboard_lock);
+	cb = (t_point *)(te_clipboard->s_thing);
+	if(!cb){
+		critical_exit(te_clipboard_lock);
+		return;
+	}
+	double minx = DBL_MAX, miny = 0;
+	while(cb){
+		if(cb->coords.x < minx){
+			minx = cb->coords.x;
+			miny = cb->coords.y;
+		}
+		cb = cb->next_selected;
+	}
+	critical_exit(te_clipboard_lock);
+	te_pasteAtCoords(x, minx, miny);
+}
+
+void te_pasteAtTime(t_te *x, double time){
+	t_point *cb = NULL;
+	critical_enter(te_clipboard_lock);
+	cb = (t_point *)(te_clipboard->s_thing);
+	if(!cb){
+		critical_exit(te_clipboard_lock);
+		return;
+	}
+	double minx = DBL_MAX, miny = 0;
+	while(cb){
+		if(cb->coords.x < minx){
+			minx = cb->coords.x;
+			miny = cb->coords.y;
+		}
+		cb = cb->next_selected;
+	}
+	critical_exit(te_clipboard_lock);
+	te_pasteAtCoords(x, time, miny);
+}
+
+void te_pasteAtCoords(t_te *x, double xx, double yy){
 	t_point *copy = NULL;
 	t_point *cb = NULL;
 	critical_enter(te_clipboard_lock);
 	cb = (t_point *)(te_clipboard->s_thing);
+	double minx = DBL_MAX, miny = 0;
 	while(cb){
+		if(cb->coords.x < minx){
+			minx = cb->coords.x;
+			miny = cb->coords.y;
+		}
 		t_point *p = (t_point *)calloc(1, sizeof(t_point));
 		*p = *cb;
 		p->next = copy;
 		copy = p;
 		cb = cb->next_selected;
 	}
+	t_pt delta = (t_pt){xx - minx, yy - miny};
 	critical_exit(te_clipboard_lock);
 	critical_enter(x->lock);
 	t_point *left = NULL, *right = NULL;
@@ -2049,6 +2112,9 @@ void te_paste(t_te *x){
 		}
 		copy->prev_selected = NULL;
 		copy->next_selected = x->selected;
+		copy->coords.x += delta.x;
+		copy->coords.y += delta.y;
+		copy->d_freq += delta.y;
 		x->selected = copy;
 		te_find_btn(x->functions[x->currentFunction], copy->coords.x, &left, &right);
 		copy->prev = left;
@@ -2066,10 +2132,6 @@ void te_paste(t_te *x){
 	critical_exit(x->lock);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[x->currentFunction]);
 	jbox_redraw((t_jbox *)x);
-}
-
-void te_pasteAtCoords(t_te *x, float xx, float yy){
-	object_error((t_object *)x, "%s is not implemented yet", __PRETTY_FUNCTION__);
 }
 
 void te_findNearestGridPoint(t_te *x, t_pt pt_sc, t_pt *pt_out_sc){
@@ -2170,9 +2232,9 @@ void te_setFunction(t_te *x, long f){
 		error("te: function must be a positive number");
 		return;
 	}
+	te_clearSelected(x);
 	critical_enter(x->lock);
 	x->currentFunction = f;
-	x->selected = NULL;
 	critical_exit(x->lock);
 	te_dumpCellblock(x);
 	te_invalidateAllFunctions(x);
@@ -2320,81 +2382,95 @@ void te_dump(t_te *x){
 }
 
 void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv){
-	int function;
+	int i;
+	if(!argc){
+		te_dumpBeatsForFunction(x, x->currentFunction, 0, NULL);
+	}else if(argc == 1){
+		te_dumpBeatsForFunction(x, atom_getlong(argv), 0, NULL);
+	}else if(atom_getsym(argv) == gensym("*")){
+		for(i = 0; i < x->numFunctions; i++){
+			te_dumpBeatsForFunction(x, i, argc - 1, argv + 1);
+		}
+	}else{
+		te_dumpBeatsForFunction(x, atom_getlong(argv), argc - 1, argv + 1);
+	}
+}
+
+void te_dumpBeatsForFunction(t_te *x, int function, int numsubdivs, t_atom *subdivs_atoms){
+	//int function;
 	double t;
 	t_atom out[8];
 	critical_enter(x->lock);
-	for(function = 0; function < x->numFunctions; function++){
-		if(x->functions[function] == NULL){
-			continue;
+
+	if(x->functions[function] == NULL){
+		return;
+	}
+	t_plan plan;
+	te_makePlan(x, x->time_min, function, &plan);
+	//double prev_phase = .9999;
+	double prev_phase[numsubdivs + 1];
+	double subdivs[numsubdivs + 1];
+	int i;
+	prev_phase[0] = .9999;
+	subdivs[0] = 1;
+	for(i = 1; i < numsubdivs + 1; i++){
+		prev_phase[i] = .9999;
+		subdivs[i] = atom_getfloat(subdivs_atoms + (i - 1));
+	}
+	double p, wp;
+	for(t = x->time_min; t <= x->time_max; t += (1. / (44100. / 64.))){
+		if(!te_isPlanValid(x, t, &plan, function)){
+			te_makePlan(x, t, function, &plan);
 		}
-		t_plan plan;
-		te_makePlan(x, x->time_min, function, &plan);
-		//double prev_phase = .9999;
-		double prev_phase[argc + 1];
-		double subdivs[argc + 1];
-		int i;
-		prev_phase[0] = .9999;
-		subdivs[0] = 1;
-		for(i = 1; i < argc + 1; i++){
-			prev_phase[i] = .9999;
-			subdivs[i] = atom_getfloat(argv + (i - 1));
-		}
-		double p, wp;
-		for(t = x->time_min; t <= x->time_max; t += (1. / (44100. / 64.))){
-			if(!te_isPlanValid(x, t, &plan, function)){
-				te_makePlan(x, t, function, &plan);
+		for(i = 0; i < numsubdivs + 1; i++){
+			p = te_computeCorrectedPhase(t, &plan) * subdivs[i];
+			wp = p - floor(p);
+			t_atom *ptr = out;
+			if(i > 0){
+				atom_setsym(ptr++, gensym("subdiv"));
 			}
-			for(i = 0; i < argc + 1; i++){
-				p = te_computeCorrectedPhase(t, &plan) * subdivs[i];
-				wp = p - floor(p);
-				t_atom *ptr = out;
+			if(wp < prev_phase[i]){
+				// we're going through fairly coarsely (1/689")
+				// when we find a beat, step backwards by 1/44100"
+				// until we get a better estimate of where the beat is
+				double tt = t - (1. / 44100.);
+				double pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
+				double wpm1 = pm1 - floor(pm1);
+				int ii = 0;
+				while(wp > wpm1){
+					p = pm1;
+					wp = wpm1;
+					tt -= (1. / 44100.);
+					pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
+					wpm1 = pm1 - floor(pm1);
+					ii++;
+				}
+				tt += (1. / 44100);
+				atom_setlong(ptr++, function);
+				atom_setlong(ptr++, plan.pointnum_left);
+				atom_setlong(ptr++, (long)(p / subdivs[i]));
 				if(i > 0){
-					atom_setsym(ptr++, gensym("subdiv"));
+					atom_setlong(ptr++, (long)p % (long)subdivs[i]);
 				}
-				if(wp < prev_phase[i]){
-					// we're going through fairly coarsely (1/689")
-					// when we find a beat, step backwards by 1/44100"
-					// until we get a better estimate of where the beat is
-					double tt = t - (1. / 44100.);
-					double pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
-					double wpm1 = pm1 - floor(pm1);
-					int ii = 0;
-					while(wp > wpm1){
-						p = pm1;
-						wp = wpm1;
-						tt -= (1. / 44100.);
-						pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
-						wpm1 = pm1 - floor(pm1);
-						ii++;
+				atom_setfloat(ptr++, tt);
+				atom_setfloat(ptr++, te_computeCorrectedTempo(tt, &plan));
+				//atom_setfloat(ptr++, te_computeCorrectedPhase(tt, &plan));
+				atom_setfloat(ptr++, te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan));
+				critical_exit(x->lock);
+				outlet_anything(x->out_info, gensym("dumpbeats"), ptr - out, out);
+				critical_enter(x->lock);
+				// we don't want a subdivision on the downbeat since
+				// we have a beat there already
+				if(i == 0){
+					for(; i < numsubdivs + 1; i++){
+						prev_phase[i] = wp;
 					}
-					tt += (1. / 44100);
-					atom_setlong(ptr++, function);
-					atom_setlong(ptr++, plan.pointnum_left);
-					atom_setlong(ptr++, (long)(p / subdivs[i]));
-					if(i > 0){
-						atom_setlong(ptr++, (long)p % (long)subdivs[i]);
-					}
-					atom_setfloat(ptr++, tt);
-					atom_setfloat(ptr++, te_computeCorrectedTempo(tt, &plan));
-					//atom_setfloat(ptr++, te_computeCorrectedPhase(tt, &plan));
-					atom_setfloat(ptr++, te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan));
-					critical_exit(x->lock);
-					outlet_anything(x->out_info, gensym("dumpbeats"), ptr - out, out);
-					critical_enter(x->lock);
-					// we don't want a subdivision on the downbeat since
-					// we have a beat there already
-					if(i == 0){
-						for(; i < argc + 1; i++){
-							prev_phase[i] = wp;
-						}
-						break;
-					}
+					break;
 				}
-				prev_phase[i] = wp;
 			}
-			//prev_phase = wp;
+			prev_phase[i] = wp;
 		}
+		//prev_phase = wp;
 	}
 	atom_setsym(out, gensym("done"));
 	outlet_anything(x->out_info, gensym("dumpbeats"), 1, out);
@@ -2556,6 +2632,20 @@ void te_freq_minmax(t_te *x, double min, double max){
 	jbox_redraw((t_jbox *)x);
 }
 
+void te_getTimeMinMax(t_te *x){
+	t_atom out[2];
+	atom_setfloat(out, x->time_min);
+	atom_setfloat(out + 1, x->time_max);
+	outlet_anything(x->out_info, gensym("timeminmax"), 2, out);
+}
+
+void te_getFreqMinMax(t_te *x){
+	t_atom out[2];
+	atom_setfloat(out, x->freq_min);
+	atom_setfloat(out + 1, x->freq_max);
+	outlet_anything(x->out_info, gensym("freqminmax"), 2, out);
+}
+
 void te_clear(t_te *x){
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
@@ -2597,6 +2687,18 @@ void te_doClearFunction(t_te *x, int f){
 	}
 	x->functions[f] = NULL;
 	critical_exit(x->lock);
+}
+
+void te_resetFunctionColors(t_te *x){
+	int i;
+	for(i = 0; i < x->numFunctions; i++){
+		x->functionColors[i] = (t_jrgba){0., 0., 0., 1.};
+		jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[i]);
+	}
+	t_atom a;
+	atom_setlong(&a, x->currentFunction);
+	te_getFunctionColor(x, NULL, 1, &a);
+	jbox_redraw((t_jbox *)x);
 }
 
 void te_hideFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
@@ -2682,6 +2784,29 @@ void te_addToAllFunctions(t_te *x, double xx, double yy){
 	for(i = 0; i < x->numFunctions; i++){
 		atom_setfloat(&(a[0]), i);
 		te_addToFunction(x, NULL, 3, a);
+	}
+}
+
+void te_getFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv){
+	t_atom c[4];
+	int i;
+	t_symbol *functioncolor = gensym("functioncolor");
+	if(argc){
+		for(i = 0; i < argc; i++){
+			atom_setlong(c, atom_getlong(argv + i));
+			atom_setfloat(c + 1, x->functionColors[atom_getlong(argv + i)].red);
+			atom_setfloat(c + 2, x->functionColors[atom_getlong(argv + i)].green);
+			atom_setfloat(c + 3, x->functionColors[atom_getlong(argv + i)].blue);
+			outlet_anything(x->out_info, functioncolor, 4, c);
+		}
+	}else{
+		for(i = 0; i < x->numFunctions; i++){
+			atom_setlong(c, i);
+			atom_setfloat(c + 1, x->functionColors[i].red);
+			atom_setfloat(c + 2, x->functionColors[i].green);
+			atom_setfloat(c + 3, x->functionColors[i].blue);
+			outlet_anything(x->out_info, functioncolor, 4, c);
+		}
 	}
 }
 
@@ -2978,11 +3103,14 @@ int main(void){
 	class_addmethod(c, (method)te_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)te_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)te_clear, "clear", 0);
+	class_addmethod(c, (method)te_resetFunctionColors, "resetfunctioncolors", 0);
 	class_addmethod(c, (method)te_clearCurrent, "clearcurrent", 0);
 	class_addmethod(c, (method)te_clearFunction, "clearfunction", A_LONG, 0);
 	class_addmethod(c, (method)te_dump, "dump", 0);
 	class_addmethod(c, (method)te_time_minmax, "timeminmax", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)te_freq_minmax, "freqminmax", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)te_getTimeMinMax, "gettimeminmax", 0);
+	class_addmethod(c, (method)te_getFreqMinMax, "getfreqminmax", 0);
 	class_addmethod(c, (method)te_dumpBeats, "dumpbeats", A_GIMME, 0);
 	class_addmethod(c, (method)te_addToFunction, "addToFunction", A_GIMME, 0);
 	class_addmethod(c, (method)te_addToAllFunctions, "addToAllFunctions", A_FLOAT, A_FLOAT, 0);
@@ -2993,10 +3121,12 @@ int main(void){
 	class_addmethod(c, (method)te_cut, "cut", 0);
 	class_addmethod(c, (method)te_copy, "copy", 0);
 	class_addmethod(c, (method)te_paste, "paste", 0);
+	class_addmethod(c, (method)te_pasteAtTime, "pasteattime", A_FLOAT, 0);
 	class_addmethod(c, (method)te_pasteAtCoords, "pasteatcoords", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)te_invertSelected, "invertselected", 0);
 	class_addmethod(c, (method)te_reverseSelected, "reverseselected", 0);
 	class_addmethod(c, (method)te_setFunctionColor, "setfunctioncolor", A_GIMME, 0);
+	class_addmethod(c, (method)te_getFunctionColor, "getfunctioncolor", A_GIMME, 0);
 
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
@@ -3234,6 +3364,9 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		x->show_x_axis = x->show_y_axis = 1;
 
  		attr_dictionary_process(x, d); 
+		if(x->numFunctions == 0){
+			x->numFunctions = 1;
+		}
  		jbox_ready((t_jbox *)x); 
 
 		x->box.z_misc = Z_PUT_FIRST;
