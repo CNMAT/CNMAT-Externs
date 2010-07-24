@@ -992,21 +992,26 @@ t_int *bpf_perform(t_int *w){
 	if(x->name){
 		for(i = 0; i < x->numFunctions; i++){
 			if(x->functions[i] == NULL){
-				memset(x->ptrs[(i * 2)], 0, n * sizeof(t_float));
-				memset(x->ptrs[(i * 2) + 1], 0, n * sizeof(t_float));
+				memset(x->ptrs[(i * 3)], 0, n * sizeof(t_float));
+				memset(x->ptrs[(i * 3) + 1], 0, n * sizeof(t_float));
+				memset(x->ptrs[(i * 3) + 2], 0, n * sizeof(t_float));
 			}
 			t_symbol *name;
 			if(name = bpf_mangleName(x->name, 0, i)){
-				name->s_thing = (t_object *)(x->ptrs[(i * 2)]);
+				name->s_thing = (t_object *)(x->ptrs[(i * 3)]);
 			}
 			if(name = bpf_mangleName(x->name, 1, i)){
-				name->s_thing = (t_object *)(x->ptrs[(i * 2) + 1]);
+				name->s_thing = (t_object *)(x->ptrs[(i * 3) + 1]);
+			}
+			if(name = bpf_mangleName(x->name, 2, i)){
+				name->s_thing = (t_object *)(x->ptrs[(i * 3) + 2]);
 			}
 		}
 		for(i = 0; i < n; i++){
 			for(j = 0; j < x->numFunctions; j++){
-				x->ptrs[(j * 2)][i] = bpf_compute(x, j, in[i], &pntl, &aux_point_state);
-				x->ptrs[(j * 2) + 1][i] = (t_float)pntl;
+				x->ptrs[(j * 3)][i] = bpf_compute(x, j, in[i], &pntl, &aux_point_state);
+				x->ptrs[(j * 3) + 1][i] = (t_float)pntl;
+				x->ptrs[(j * 3) + 2][i] = (t_float)aux_point_state;
 			}
 		}
 		for(i = 0; i < x->numFunctions; i++){
@@ -1973,7 +1978,7 @@ void bpf_free(t_bpf *x){
 			next = next->next;
 		}
 	}
-	for(i = 0; i < MAX_NUM_FUNCTIONS * 2; i++){
+	for(i = 0; i < MAX_NUM_FUNCTIONS * 3; i++){
 		if(x->ptrs[i]){
 			sysmem_freeptr(x->ptrs[i]);
 		}
@@ -2244,7 +2249,7 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 		t_jrgba black = (t_jrgba){0., 0., 0., 1.};
 
 		int i;
-		x->ptrs = (t_float **)sysmem_newptr(MAX_NUM_FUNCTIONS * 2 * sizeof(t_float *));
+		x->ptrs = (t_float **)sysmem_newptr(MAX_NUM_FUNCTIONS * 3 * sizeof(t_float *));
 		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
 			x->funcattr[i] = (t_funcattr *)calloc(1, sizeof(t_funcattr));
 			x->funcattr[i]->line_color = black;
@@ -2252,8 +2257,9 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 			memset(x->funcattr[i]->dash, 0, 8);
 			x->funcattr[i]->ndash = 0;
 			sprintf(x->funcattr[i]->name, "%d", i);
-			x->ptrs[(i * 2)] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
-			x->ptrs[(i * 2) + 1] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
+			x->ptrs[(i * 3)] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
+			x->ptrs[(i * 3) + 1] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
+			x->ptrs[(i * 3) + 2] = (t_float *)sysmem_newptr(2048 * sizeof(t_float));
 		}
 
 		x->name = NULL;
