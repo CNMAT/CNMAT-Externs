@@ -27,6 +27,7 @@
   COPYRIGHT_YEARS: 2010
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
+  VERSION 0.1: bug fix in the log display mode and much faster drawing
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -109,12 +110,17 @@ void rd_paint(t_rd *x, t_object *patcherview){
 			for(i = 0; i < x->n; i++){
 				double xx, yy;
 				xx = rd_scale(s[i].f, x->freqmin, x->freqmax, 0, rect.width);
-				yy = rd_scale(s[i].a, x->ampmin, x->ampmax, rect.height, 0);
+				if(x->log){
+					yy = rd_scale((20. * log(s[i].a)) / log(10), x->ampmin_log, x->ampmax_log, rect.height, 0.);
+				}else{
+					yy = rd_scale(s[i].a, x->ampmin, x->ampmax, rect.height, 0);
+				}
 
 				jgraphics_move_to(g, xx, yy);
 				jgraphics_line_to(g, xx, rect.height);
+				jgraphics_stroke(g);
 			}
-			jgraphics_stroke(g);
+
 		}else if(x->mode){
 			t_jsurface *s = jgraphics_image_surface_create(JGRAPHICS_FORMAT_ARGB32, rect.width, rect.height);
 			//t_jgraphics *gg = jgraphics_create(s);
@@ -146,12 +152,12 @@ void rd_paint(t_rd *x, t_object *patcherview){
 				}else{
 					yy1 = rd_scale(r[i].a, x->ampmin, x->ampmax, rect.height, 0);
 				}
-				yy2 = (rect.height - yy1) * (.4 / sqrt(r[i].d)) + yy1;
+				yy2 = fabs((rect.height - yy1) * (.4 / sqrt(r[i].d))) + yy1;
 
 				jgraphics_move_to(g, xx, yy1);
 				jgraphics_line_to(g, xx, yy2);
+				jgraphics_stroke(g);
 			}
-			jgraphics_stroke(g);
 		}
 	}
 
@@ -175,6 +181,7 @@ void rd_paint(t_rd *x, t_object *patcherview){
 
 void rd_clear(t_rd *x){
 	x->n = 0;
+	jbox_redraw(&(x->ob));
 }
 
 void rd_bang(t_rd *x){
@@ -211,6 +218,7 @@ void rd_copy_data(t_rd *x, short argc, t_atom *argv){
 		double *tmp = realloc(x->buffer, argc * sizeof(double));
 		if(tmp){
 			x->buffer = tmp;
+			x->buffer_size = argc;
 		}else{
 			object_error((t_object *)x, "out of memory!");
 			return;
