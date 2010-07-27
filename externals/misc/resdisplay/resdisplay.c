@@ -28,6 +28,7 @@
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
   VERSION 0.1: bug fix in the log display mode and much faster drawing
+  VERSION 0.2: Info about the range and selection is now drawn at the top of the display
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -66,6 +67,7 @@ typedef struct _rd{
 	long mode;
 	t_range selection;
 	long log;
+	int num_partials_selected;
 } t_rd;
 
 static t_class *rd_class;
@@ -81,6 +83,7 @@ double rd_scale(double f, double min_in, double max_in, double min_out, double m
 void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers);
 void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers);
 void rd_output_sel(t_rd *x);
+double rd_ftom(double f);
 void rd_free(t_rd *x);
 void rd_assist(t_rd *x, void *b, long m, long a, char *s);
 void *rd_new(t_symbol *msg, int argc, t_atom *argv);
@@ -176,6 +179,27 @@ void rd_paint(t_rd *x, t_object *patcherview){
 			jgraphics_line_to(g, rd_scale(x->selection.max, x->freqmin, x->freqmax, 0, rect.width), rect.height);
 		}
 		jgraphics_stroke(g);
+	}
+
+	// info
+	{
+		char buf[128];
+		double w, h;
+		jgraphics_set_source_jrgba(g, &x->datacolor);
+		sprintf(buf, "%0.2f", x->selection.min);
+		jgraphics_text_measure(g, buf, &w, &h);
+		jgraphics_move_to(g, 0, h);
+		jgraphics_show_text(g, buf);
+
+		sprintf(buf, "%0.2f", x->selection.max);
+		jgraphics_text_measure(g, buf, &w, &h);
+		jgraphics_move_to(g, rect.width - w, h);
+		jgraphics_show_text(g, buf);
+
+		sprintf(buf, "%0.2fHz (%0.2fMc) %d/%d", x->selection.max - x->selection.min, rd_ftom(x->selection.max) - rd_ftom(x->selection.min), x->num_partials_selected, x->n);
+		jgraphics_text_measure(g, buf, &w, &h);
+		jgraphics_move_to(g, (rect.width / 2) - (w / 2), h);
+		jgraphics_show_text(g, buf);
 	}
 }
 
@@ -280,9 +304,8 @@ void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
 			x->selection.max = f;
 		}
 	}
-
-	jbox_redraw(&(x->ob));
 	rd_output_sel(x);
+	jbox_redraw(&(x->ob));
 }
 
 void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
@@ -308,7 +331,7 @@ void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
 			atom_setfloat(buf + nselpos--, r[i].f);
 		}
 	}
-
+	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
 	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
 	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
 }
@@ -345,8 +368,17 @@ void rd_output_sel(t_rd *x){
 			}
 		}
 	}
+	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
 	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
 	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+}
+
+#define BASE 27.5
+double rd_ftom(double f){
+	if(!f){
+		f = FLT_MIN;
+	}
+	return (log(f / BASE) / log(pow(2., 1. / 12.))) + 33;
 }
 
 void rd_free(t_rd *x){
@@ -418,8 +450,10 @@ void *rd_new(t_symbol *msg, int argc, t_atom *argv){
 		x->buffer_size = 1024 * 3;
 		x->n = 0;
 		x->buffer = (double *)calloc(x->buffer_size, sizeof(double));
+		x->num_partials_selected = 0;
         
 		attr_dictionary_process(x, d); 
+		x->selection = (t_range){x->freqmin, x->freqmax};
  		jbox_ready((t_jbox *)x); 
         
 		return x;
