@@ -60,6 +60,8 @@
   VERSION 0.6.5: fixed a memory bug in the grid tic code
   VERSION 0.7: point and note sizes are now resizeable and you can use the aarow keys to move a point up and down
   VERSION 0.7.1: more efficient position drawing.
+  VERSION 0.7.2: more efficient position drawing for real this time
+  VERSION 0.7.3: clearregion and clearregionforallfunctions messages
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -132,7 +134,7 @@ typedef struct _bpf{
 	t_jrgba positionColor;
 	double xmin, xmax, ymin, ymax;
 	t_pt *pos;
-	long drawpos, drawlabels;
+	long drawposition, drawlabels;
 	int *npoints;
 	t_rect sel_box;
 	t_pt drag;
@@ -154,6 +156,7 @@ typedef struct _bpf{
 	int showdurations;
 	double pointsize, noteheadsize;
 	void *update_pos_clock;
+	float position_update_rate_ms;
 } t_bpf; 
 
 void *bpf_class; 
@@ -217,6 +220,9 @@ void bpf_removePoint(t_bpf *x, t_point *point, int functionNum);
 void bpf_clear(t_bpf *x);
 void bpf_clearFunction(t_bpf *x, long f);
 void bpf_clearCurrentFunction(t_bpf *x);
+void bpf_clearRegion(t_bpf *x, double min, double max);
+void bpf_clearRegionForAllFunctions(t_bpf *x, double min, double max);
+void bpf_clearRegionForFunction(t_bpf *x, int function, double min, double max);
 void bpf_deleteFunction(t_bpf *x, long f);
 void bpf_deleteCurrentFunction(t_bpf *x);
 double bpf_scale(double f, double min_in, double max_in, double min_out, double max_out);
@@ -415,11 +421,11 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 }
 
 void bpf_updatePositionCallback(t_bpf *x){
-	if(x->drawpos){
+	if(x->drawposition){
 		jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
 		jbox_redraw((t_jbox *)&(x->box));
-		clock_fdelay(x->update_pos_clock, POSITION_UPDATE_RATE_MS);
 	}
+	clock_fdelay(x->update_pos_clock, x->position_update_rate_ms);
 }
 
 void bpf_paint_bpfPosition(t_bpf *x, t_object *patcherview, t_rect r){
@@ -428,27 +434,24 @@ void bpf_paint_bpfPosition(t_bpf *x, t_object *patcherview, t_rect r){
 		for(i = 0; i < x->numFunctions; i++){
 			t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_pos, 4, 4);
 			if(g){
-				jgraphics_set_source_jrgba(g, &(x->positionColor));
-				/*
-				if(x->currentFunction == i){
+				if(x->drawposition){
 					jgraphics_set_source_jrgba(g, &(x->positionColor));
-				}else{
-					jgraphics_set_source_jrgba(g, &(x->lineColor));
+					jgraphics_ellipse(g, 0, 0, 4, 4);
+					jgraphics_fill(g);
+					jbox_end_layer((t_object *)x, patcherview, l_pos);
 				}
-				*/
-				jgraphics_ellipse(g, 0, 0, 4, 4);
-				jgraphics_fill(g);
-				jbox_end_layer((t_object *)x, patcherview, l_pos);
 			}
 			jbox_paint_layer((t_object *)x, patcherview, l_pos, bpf_scale(x->pos[i].x, x->xmin, x->xmax, 0., r.width) - 2, bpf_scale(x->pos[i].y, x->ymin, x->ymax, r.height, 0.) - 2.);
 		}
 	}else{
 		t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_pos, 3, r.height);
 		if(g){
-			jgraphics_move_to(g, 1, 0);
-			jgraphics_line_to(g, 1, r.height);
-			jgraphics_stroke(g);
-			jbox_end_layer((t_object *)x, patcherview, l_pos);
+			if(x->drawposition){
+				jgraphics_move_to(g, 1, 0);
+				jgraphics_line_to(g, 1, r.height);
+				jgraphics_stroke(g);
+				jbox_end_layer((t_object *)x, patcherview, l_pos);
+			}
 		}
 		jbox_paint_layer((t_object *)x, patcherview, l_pos, bpf_scale(x->pos[x->currentFunction].x, x->xmin, x->xmax, 0., r.width), 0);
 	}
@@ -1023,9 +1026,8 @@ void bpf_dsp(t_bpf *x, t_signal **sp, short *count){
 }
 
 void bpf_dspstate(t_bpf *x, long n){
-	post("%s: %d", __PRETTY_FUNCTION__, n);
 	if(n){
-		clock_fdelay(x->update_pos_clock, POSITION_UPDATE_RATE_MS);
+		clock_fdelay(x->update_pos_clock, x->position_update_rate_ms);
 	}else{
 		clock_unset(x->update_pos_clock);
 	}
@@ -1115,7 +1117,7 @@ void bpf_float(t_bpf *x, double f){
 		atom_setlong(out + 2, aps);
 		outlet_list(x->out_main, NULL, 3, out);
 	}
-	if(x->drawpos){
+	if(x->drawposition){
 		jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
 		jbox_redraw((t_jbox *)(t_jbox *)(&x->box));
 	}
@@ -1442,6 +1444,7 @@ t_max_err bpf_notify(t_bpf *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 		}
 		*/
 		jbox_invalidate_layer((t_object *)x, x->pv, l_grid);
+		jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
 		jbox_invalidate_layer((t_object *)x, x->pv, l_background);
 		jbox_invalidate_layer((t_object *)x, x->pv, l_points);
  		jbox_redraw((t_jbox *)&(x->box)); 
@@ -2173,6 +2176,37 @@ void bpf_clearCurrentFunction(t_bpf *x){
 	bpf_clearFunction(x, x->currentFunction);
 }
 
+void bpf_clearRegion(t_bpf *x, double min, double max){
+	bpf_clearRegionForFunction(x, x->currentFunction, min, max);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	bpf_invalidateAllPos(x);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_clearRegionForAllFunctions(t_bpf *x, double min, double max){
+	int i;
+	for(i = 0; i < x->numFunctions; i++){
+		bpf_clearRegionForFunction(x, i, min, max);
+	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+	bpf_invalidateAllPos(x);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void bpf_clearRegionForFunction(t_bpf *x, int function, double min, double max){
+	critical_enter(x->lock);
+	t_point *p = x->functions[function];
+	t_point *next = NULL;
+	while(p){
+		next = p->next;
+		if(p->coords.x >= min && p->coords.x <= max){
+			bpf_removePoint(x, p, function);
+		}
+		p = next;
+	}
+	critical_exit(x->lock);
+}
+
 void bpf_deleteFunction(t_bpf *x, long f){
 	bpf_clearFunction(x, f);
 	int i;
@@ -2297,6 +2331,8 @@ int main(void){
 	class_addmethod(c, (method)bpf_setAllAuxPoints, "set_all_aux_points", A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_setAuxPointsForFunction, "set_aux_points_for_function", A_LONG, A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_setAuxPointsForSelection, "set_aux_points_for_selection", A_FLOAT, 0);
+	class_addmethod(c, (method)bpf_clearRegion, "clearregion", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)bpf_clearRegionForAllFunctions, "clearregionforallfunctions", A_FLOAT, A_FLOAT, 0);
 
 	CLASS_ATTR_SYM(c, "displaymode", 0, t_bpf, displaymode);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "displaymode", 0, "bpf");
@@ -2375,8 +2411,14 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "snaptogrid", 0, "0");
 	CLASS_ATTR_STYLE_LABEL(c, "snaptogrid", 0, "onoff", "Snap to Grid");
 
-	CLASS_ATTR_LONG(c, "drawpos", 0, t_bpf, drawpos);
-	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawpos", 0, "1");
+	CLASS_ATTR_LONG(c, "drawposition", 0, t_bpf, drawposition);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawposition", 0, "1");
+
+	CLASS_ATTR_FLOAT(c, "position_update_rate_ms", 0, t_bpf, position_update_rate_ms);
+	char buf[8];
+	sprintf(buf, "%f", (double)POSITION_UPDATE_RATE_MS);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "position_update_rate_ms", 0, buf);
+	CLASS_ATTR_LABEL(c, "position_update_rate_ms", 0, "Position Update Rate When DSP is On");
 
 	CLASS_ATTR_LONG(c, "drawlabels", 0, t_bpf, drawlabels);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawlabels", 0, "1");
@@ -2543,6 +2585,7 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 
 		x->name = NULL;
 
+		x->position_update_rate_ms = POSITION_UPDATE_RATE_MS;
 		x->update_pos_clock = clock_new((t_object *)x, (method)bpf_updatePositionCallback);
  		attr_dictionary_process(x, d); 
  		jbox_ready((t_jbox *)x); 
