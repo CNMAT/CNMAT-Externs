@@ -1859,15 +1859,13 @@ void te_float(t_te *x, double f){
 		*/
 		t_plan plan;
 		te_makePlan(x, f, j, &plan);
-		post("TIME = %f", f);
-		te_postplan(&plan, post);
 		atom_setlong(ptr++, j);
 		atom_setlong(ptr++, plan.pointnum_left);
 		double ph = te_computeCorrectedPhase(f, &plan);
 		atom_setlong(ptr++, (long)ph);
 		atom_setfloat(ptr++, (float)f);
 		atom_setfloat(ptr++, te_computeCorrectedTempo(f, &plan));
-		atom_setfloat(ptr++, ph);
+		atom_setfloat(ptr++, te_computeCorrectedUnwrappedMonotonicPhase(x, f, j, &plan));
 		outlet_list(x->out_info, NULL, ptr - out, out);
 	}
 }
@@ -2659,7 +2657,6 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 			}
 		}
 
-		post("here");
 		if(modifiers == 0x18 || modifiers == 0x118){
 			delta.x -= pt.x;
 			delta.y = 0;
@@ -2679,7 +2676,6 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 			}
 			te_s2w(x, r, pt, &(x->selected->coords));
 		}
-		post("delta = %f %f", delta.x, delta.y);
 
 		te_reorderPoint(x->selected);
 		te_initReorderedPoint(x, x->selected);
