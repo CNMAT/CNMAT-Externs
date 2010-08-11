@@ -2038,7 +2038,7 @@ double bpf_clip(double f, double min, double max){
 
 void bpf_dump(t_bpf *x){
 	int i, point_num = 0;
-	t_atom out[4];
+	t_atom out[5];
 	for(i = 0; i < x->numFunctions; i++){
 		point_num = 0;
 		t_point *p = x->functions[i];
@@ -2047,8 +2047,9 @@ void bpf_dump(t_bpf *x){
 			atom_setlong(&(out[1]), point_num++);
 			atom_setfloat(&(out[2]), p->coords.x);
 			atom_setfloat(&(out[3]), p->coords.y);
+			atom_setfloat(out + 4, p->aux_point);
 
-			outlet_list(x->out_dump, NULL, 4, out);
+			outlet_list(x->out_dump, NULL, 5, out);
 			p = p->next;
 		}
 	}
