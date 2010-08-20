@@ -52,6 +52,7 @@
   VERSION 1.6.1: fixed a bug with the cellblock communication code
   VERSION 1.6.2: fixed a bug in the dumpbeats function that was incorrectly computing beats around the first and last controlpoints
   VERSION 1.6.3: option/option-shift to move only along the x or y axes
+  VERSION 1.6.4: fixed a bug in te_computeCorrectedPhase that would put a beat at a controlpoint even when the phase was not 0 at that point
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -295,6 +296,7 @@ t_max_err te_notify(t_te *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
 void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
 void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
 void te_mousemove(t_te *x, t_object *patcherview, t_pt pt, long modifiers);
+void te_repeatSelection(t_te *x);
 void te_cut(t_te *x);
 void te_copy(t_te *x);
 void te_paste(t_te *x);
@@ -784,16 +786,26 @@ void te_paint(t_te *x, t_object *patcherview){
 						t_plan plan;
 						te_makePlan(x, p->coords.x + ((x->time_max - x->time_min) / rect.width), function, &plan);
 						double scx, nscx;
+						printf("%f %f \n", p->coords.x, p->next->coords.x);
 						scx = te_scale(p->coords.x, x->time_min, x->time_max, 0, rect.width);
 						nscx = te_scale(p->next->coords.x, x->time_min, x->time_max, 0, rect.width);
+
+						printf("%f %f %f %f\n", p->aux_points[0], p->aux_points[1], scx, nscx);
 						correctionStart_sc = te_scale(p->aux_points[0], 0., 1., scx, nscx);
 						correctionEnd_sc = te_scale(p->aux_points[1], 0., 1., scx, nscx);
+						if(correctionStart_sc < 0){
+							correctionStart_sc = 0.;
+						}
+						if(correctionEnd_sc > rect.width){
+							correctionEnd_sc = rect.width;
+						}
 						double freq = te_computeTempo(plan.correctionStart, &plan);
 						double freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
 						double freq_sc1 = freq_sc;
 
 						jgraphics_set_source_jrgba(gg, &(x->correctionColor));
 						jgraphics_move_to(gg, correctionStart_sc, freq_sc);
+						printf("%f %f\n", correctionStart_sc, correctionEnd_sc);
 						for(j = correctionStart_sc; j < correctionEnd_sc; j++){
 							freq = te_computeCorrectedTempo(te_scale(j, 0, rect.width, x->time_min, x->time_max), &plan);
 							freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
@@ -1675,7 +1687,7 @@ double te_computeCorrectedPhase(double t, t_plan *p){
 	default:
 		{
 			if(t == p->startTime){
-				return 0;
+				return p->startPhase;
 			}
 			double error = p->startPhase;
 			if(t >= p->startTime && t < p->correctionStart){
@@ -1739,21 +1751,57 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 
 	switch(proxy_getinlet((t_object *)x)){
 	case 0: // add points
-		if(atom_getlong(argv) >= x->numFunctions){
-			te_addFunction(x);
+		if(argc < 3){
+			object_error((t_object *)x, "you must supply at least the time and tempo of the point you want to add");
+			return;
 		}
+		long functionnum = atom_getlong(argv);
+		if(functionnum > MAX_NUM_FUNCTIONS){
+			object_error((t_object *)x, "max number of functions is currently %d", MAX_NUM_FUNCTIONS);
+			return;
+		}
+		t_atom *ptr = argv;
 		x->selected = te_insertPoint(x, (t_pt){atom_getfloat(argv + 1), atom_getfloat(argv + 2)}, atom_getlong(argv));
-
-		x->selected->d_freq = atom_getfloat(argv + 3);
-		x->selected->a_phase = atom_getfloat(argv + 4);
-		x->selected->d_phase = atom_getfloat(argv + 5);
-		x->selected->alpha = atom_getfloat(argv + 6);
-		x->selected->beta = atom_getfloat(argv + 7);
-		x->selected->error_alpha = atom_getfloat(argv + 8);
-		x->selected->error_beta = atom_getfloat(argv + 9);
+		ptr += 3;
+		x->selected->d_freq = x->selected->coords.y;
+		x->selected->a_phase = x->selected->d_phase = 0.;
+		x->selected->alpha = x->selected->beta = 1.;
+		x->selected->error_alpha = x->selected->error_beta = 2.;
 		x->selected->whichPoint = 0;
 		x->selected->aux_points[0] = x->error_offset;
 		x->selected->aux_points[1] = x->error_span + x->error_offset;
+
+		if(ptr - argv >= argc){
+			break;
+		}
+		x->selected->d_freq = atom_getfloat(ptr++);
+		if(ptr - argv >= argc){
+			break;
+		}
+		x->selected->a_phase = atom_getfloat(ptr++);
+		if(ptr - argv >= argc){
+			break;
+		}
+		x->selected->d_phase = atom_getfloat(ptr++);
+		if(ptr - argv >= argc){
+			break;
+		}
+		x->selected->alpha = atom_getfloat(ptr++);
+		if(ptr - argv >= argc){
+			break;
+		}
+		x->selected->beta = atom_getfloat(ptr++);
+		if(ptr - argv >= argc){
+			break;
+		}
+		x->selected->error_alpha = atom_getfloat(ptr++);
+		if(ptr - argv >= argc){
+			break;
+		}
+		x->selected->error_beta = atom_getfloat(ptr++);
+		if(ptr - argv >= argc){
+			break;
+		}
 		break;
 	case 1: // cellblock
 		{
@@ -2716,6 +2764,45 @@ void te_mousemove(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	//jbox_redraw((t_jbox *)x);
 }
 
+void te_repeatSelection(t_te *x){
+	t_point *p, *start = NULL, *end = NULL;
+	double starttime = DBL_MAX, endtime = 0;
+	critical_enter(x->lock);
+	p = x->selected;
+	while(p){
+		if(p->coords.x < starttime){
+			starttime = p->coords.x;
+			start = p;
+		}
+		if(p->coords.x > endtime){
+			endtime = p->coords.x;
+			end = p;
+		}
+		p = p->next_selected;
+	}
+	p = x->selected;
+	double delta = endtime - starttime;
+	t_point *newpoint = NULL;
+	while(p){
+		if(p != start){
+			newpoint = te_insertPoint(x, (t_pt){p->coords.x + delta, p->coords.y}, x->currentFunction);
+			te_initPoint(x, newpoint);
+			newpoint->alpha = p->alpha;
+			newpoint->beta = p->beta;
+			newpoint->d_freq = p->d_freq;
+		}
+		if(p == end){
+			end->alpha = start->alpha;
+			end->beta = start->beta;
+			end->d_freq = start->coords.y;
+		}
+		p = p->next_selected;
+	}
+	critical_exit(x->lock);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[x->currentFunction]);
+	jbox_redraw((t_jbox *)x);
+}
+
 void te_cut(t_te *x){
 	if(!x->selected){
 		object_error((t_object *)x, "you must select something first");
@@ -3270,7 +3357,7 @@ void te_dumpBeatsForFunction(t_te *x,
 
 	//int function;
 	double t;
-	t_atom out[8];
+	t_atom out[9];
 	critical_enter(x->lock);
 
 	if(x->functions[function] == NULL){
@@ -3340,6 +3427,7 @@ void te_dumpBeatsForFunction(t_te *x,
 						atom_setlong(ptr++, plan.pointnum_left);
 						atom_setlong(ptr++, (long)(p / subdivs[i]));
 						if(i > 0){
+							atom_setlong(ptr++, subdivs[i]);
 							atom_setlong(ptr++, (long)p % (long)subdivs[i]);
 						}
 						atom_setfloat(ptr++, tt);
@@ -4140,6 +4228,7 @@ int main(void){
 	class_addmethod(c, (method)te_addPointsAtSelectionBoundariesForAllFunctions, "add_points_at_selection_boundaries_for_all_functions", 0);
 	class_addmethod(c, (method)te_mapx, "mapx", A_GIMME, 0);
 	class_addmethod(c, (method)te_mapy, "mapy", A_GIMME, 0);
+	class_addmethod(c, (method)te_repeatSelection, "repeatselection", 0);
 
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
@@ -4314,6 +4403,7 @@ int main(void){
 	}
 
  	version(0); 
+	error("the subdivision number has been added to the output of dumpbeats!!!");
 	
  	return 0; 
 } 
