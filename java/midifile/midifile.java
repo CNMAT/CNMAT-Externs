@@ -57,6 +57,7 @@ VERSION 3.2.1: added setTempo(), setTimeSig() and setKeySig()
 VERSION 3.2.2: minor bug fixes and a new help file
 VERSION 3.2.3: version bump
 VERSION 3.2.4: added numtracks message
+VERSION 3.2.5: tempo it now output when a midi file is loaded with the read message
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -265,6 +266,11 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		//post(String.format("%x %x %x %x", mpqn, data[0], data[1], data[2]));
 
 		addMetaEvent(81, data, timeStamp);
+	}
+
+	public void getTempo(){
+		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/tempo/bpm"), Atom.newAtom(sequencer.getTempoInBPM())});
+		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/tempo/mpq"), Atom.newAtom(sequencer.getTempoInMPQ())});
 	}
 
 	public void setTimeSig(Atom[] args){
@@ -689,6 +695,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/loop/start"), Atom.newAtom(loopStart)});
 		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/loop/end"), Atom.newAtom(loopEnd)});
 		outlet(INFO_OUTLET, new Atom[]{Atom.newAtom("/loop/count"), Atom.newAtom(loopCount)});
+		getTempo();
 	}
 
 	public void mute(int t, int s){
