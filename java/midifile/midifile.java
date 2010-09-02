@@ -58,6 +58,7 @@ VERSION 3.2.2: minor bug fixes and a new help file
 VERSION 3.2.3: version bump
 VERSION 3.2.4: added numtracks message
 VERSION 3.2.5: tempo it now output when a midi file is loaded with the read message
+VERSION 3.2.6: track number is now included with dumped data
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -481,8 +482,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 
 				if(verbose) post("status = " + m.getStatus());
 				if(m.getStatus() == 255)
-					oscmessage = formatMetaMessage((MetaMessage)m, time);
-				else oscmessage = formatMidiMessage(m, time);
+					oscmessage = formatMetaMessage((MetaMessage)m, time, "/track/" + i);
+				else oscmessage = formatMidiMessage(m, time, "/track/" + i);
 				if(oscmessage != null) outlet(DUMP_OUTLET, oscmessage);
 			}
 		}
@@ -490,6 +491,10 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	}
 
 	private Atom[] formatMidiMessage(MidiMessage m, float timeStamp){
+		return formatMidiMessage(m, timeStamp, "");
+	}
+
+	private Atom[] formatMidiMessage(MidiMessage m, float timeStamp, String osc_tracknum){
 		int length = m.getLength();
 		int status = m.getStatus();
 		byte[] message = m.getMessage();
@@ -503,17 +508,18 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			if(status <= 143 && ignoreNoteOffVelocity) velocity = 0;
 			channel = status <= 143 ? status - 128 : status - 144;
 
+			String msg = osc_tracknum + "/note";
 			if(timeStamp == -1){
 				if(outputStatus){
-					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(status), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+					return new Atom[]{Atom.newAtom(msg), Atom.newAtom(status), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
 				}else{
-					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+					return new Atom[]{Atom.newAtom(msg), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
 				}
 			}else{
 				if(outputStatus){
-					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(status), Atom.newAtom(timeStamp), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+					return new Atom[]{Atom.newAtom(msg), Atom.newAtom(status), Atom.newAtom(timeStamp), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
 				}else{
-					return new Atom[]{Atom.newAtom("note"), Atom.newAtom(timeStamp), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
+					return new Atom[]{Atom.newAtom(msg), Atom.newAtom(timeStamp), Atom.newAtom(note), Atom.newAtom(velocity), Atom.newAtom(channel)};
 				}
 			}
 		}
@@ -522,6 +528,10 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 	}
 
 	private Atom[] formatMetaMessage(MetaMessage m, float timeStamp){
+		return formatMetaMessage(m, timeStamp, "");
+	}
+
+	private Atom[] formatMetaMessage(MetaMessage m, float timeStamp, String osc_tracknum){
 		int type = m.getType();
 		byte[] data = m.getData();
 
@@ -529,21 +539,21 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		//post("type = " + type);
 		switch (type) {
 			case 0:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 1:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 2:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 3:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 4:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 5:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 6:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 7:
-				return new Atom[]{Atom.newAtom("/text"), Atom.newAtom(new String(data))};
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 47: // end of track
 				outlet(BANG_OUTLET, "bang");
 				break;
@@ -557,9 +567,9 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 					val += (data[k] & 0xff) << (8 * j);
 
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom("tempo"), Atom.newAtom(ms_per_min / val)};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "tempo"), Atom.newAtom(ms_per_min / val)};
 				else
-					return new Atom[]{Atom.newAtom("tempo"), Atom.newAtom(timeStamp), Atom.newAtom(ms_per_min / val)};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "tempo"), Atom.newAtom(timeStamp), Atom.newAtom(ms_per_min / val)};
 			case 84: // SMPTE offset
 				// hour, minute, sec, frame, subframe
 
@@ -568,9 +578,9 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 				for(int i = 0; i < data.length; i++)
 					post(i + " " + data[i]);
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom("SMPTE_offset"), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "SMPTE_offset"), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
 				else
-					return new Atom[]{Atom.newAtom("SMPTE_offset"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "SMPTE_offset"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
 			case 88: // time sig
 				// returns an array of 4 bytes corresponding to:
 				//	numerator
@@ -580,17 +590,17 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 				//	number of 32nds per quarter
 
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom("time_sig"), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "time_sig"), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
 				else
-					return new Atom[]{Atom.newAtom("time_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "time_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
 			case 89: // key sig
 				// the first byte is the key sig from -7 to 7 (<0 flats, >0 sharps)
 				// second byte is 0 = major, 1 = minor
 
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom("key_sig"), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "key_sig"), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
 				else
-					return new Atom[]{Atom.newAtom("key_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "key_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
 				//default:
 				//post("found unknown meta event: " + type);
 		}
