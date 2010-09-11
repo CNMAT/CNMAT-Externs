@@ -59,6 +59,8 @@ VERSION 3.2.3: version bump
 VERSION 3.2.4: added numtracks message
 VERSION 3.2.5: tempo it now output when a midi file is loaded with the read message
 VERSION 3.2.6: track number is now included with dumped data
+VERSION 3.2.7: dump now takes a track list and issues /track/<tracknum>/done when finished 
+VERSION 3.2.8: added dumpraw message
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -181,9 +183,15 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			return;
 		}
 
-		addEventToTrack(args, getInlet());
+		Atom[] aa = new Atom[args.length + 1];
+		aa[0] = Atom.newAtom(getInlet());
+		for(int i = 0; i < args.length; i++){
+			aa[i + 1] = args[i];
+		}
+		addEventToTrack(aa);
 	}
 
+	/*
 	public void addEventToTrack(Atom[] args){
 		if(args[0].toInt() >= numtracks){
 			error("midifile: the sequence only has " + numtracks + ".  Can't add event to track number " + args[0].toInt());
@@ -195,20 +203,22 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			a[i] = args[i + 1];
 		addEventToTrack(a, args[0].toInt());
 	}
+	*/
 
-	public void addEventToTrack(Atom[] args, int t){
-		int note = args.length > 1 ? args[1].toInt() : 60;
-		int velocity = args.length > 2 ? args[2].toInt() : def_velocity;
-		int channel = args.length > 3 ? args[3].toInt() : def_channel;
-		int duration = args.length > 4 ? args[4].toInt() : def_duration;
+	public void addEventToTrack(Atom[] args){
+		int track = args[0].toInt();
+		int note = args.length > 2 ? args[2].toInt() : 60;
+		int velocity = args.length > 3 ? args[3].toInt() : def_velocity;
+		int channel = args.length > 4 ? args[4].toInt() : def_channel;
+		int duration = args.length > 5 ? args[5].toInt() : def_duration;
 		int command = velocity > 0 ? ShortMessage.NOTE_ON : ShortMessage.NOTE_OFF;
 
-		long note_on_time = args[0].toLong() * 1000;
+		long note_on_time = args[1].toLong() * 1000;
 		long note_off_time = note_on_time + (duration * 1000);
 		long note_on_tick, note_off_tick;
 
 		if(ignoreTempoChanges){
-			note_on_tick = (long)((args[0].toDouble() / 500.) * ((double)sequence.getResolution()));
+			note_on_tick = (long)((args[1].toDouble() / 500.) * ((double)sequence.getResolution()));
 			note_off_tick = (long)((note_on_tick + (((double)duration / 500.) * ((double)sequence.getResolution()))));
 		} else {
 			sequencer.setMicrosecondPosition(note_on_time);
@@ -221,8 +231,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		MidiEvent ev_off = createNoteEvent(ShortMessage.NOTE_OFF, channel, note, 0, note_off_tick);
 
 		//Track[] tracks = sequence.getTracks();
-		tracks[t].add(ev);
-		tracks[t].add(ev_off);
+		tracks[track].add(ev);
+		tracks[track].add(ev_off);
 	}
 
 	private static MidiEvent createNoteEvent(int command, int channel, int key, int velocity, long tick){
@@ -371,6 +381,7 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		numtracks = tracks.length;
 		if(verbose) postSequenceInfo();
 		getInfo();
+		//outlet(BANG_OUTLET, "bang");
 	}
 
 	public void write(){
@@ -464,30 +475,83 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 		}
 	}
 
-	public void dump(){
-		stop();
+	public void dump(int[] tracknums){
+		for(int i = 0; i < tracknums.length; i++){
+			dump(tracknums[i]);
+		}
+		outlet(BANG_OUTLET, "bang");
+	}
 
-		//Track[] tracks = sequence.getTracks();
+	public void dump(int tracknum){
+		stop();
 
 		if(tracks == null || tracks.length == 0) return;
 		openSequencer();
-		for(int i = 0; i < tracks.length; i++){
-			for(int j = 0; j < tracks[i].size(); j++){
-				MidiEvent ev = tracks[i].get(j);
-				MidiMessage m = ev.getMessage();
-				Atom[] oscmessage;
-				float time;
-				sequencer.setTickPosition(ev.getTick());
-				time = ((float)sequencer.getMicrosecondPosition()) / 1000.f;
+		for(int j = 0; j < tracks[tracknum].size(); j++){
+			MidiEvent ev = tracks[tracknum].get(j);
+			MidiMessage m = ev.getMessage();
+			Atom[] oscmessage;
+			float time;
+			sequencer.setTickPosition(ev.getTick());
+			time = ((float)sequencer.getMicrosecondPosition()) / 1000.f;
 
-				if(verbose) post("status = " + m.getStatus());
-				if(m.getStatus() == 255)
-					oscmessage = formatMetaMessage((MetaMessage)m, time, "/track/" + i);
-				else oscmessage = formatMidiMessage(m, time, "/track/" + i);
-				if(oscmessage != null) outlet(DUMP_OUTLET, oscmessage);
-			}
+			if(verbose) post("status = " + m.getStatus());
+			if(m.getStatus() == 255)
+				oscmessage = formatMetaMessage((MetaMessage)m, time, "/track/" + tracknum);
+			else oscmessage = formatMidiMessage(m, time, "/track/" + tracknum);
+			if(oscmessage != null) outlet(DUMP_OUTLET, oscmessage);
+		}
+		outlet(DUMP_OUTLET, "/track/" + tracknum + "/done");
+	}
+
+	public void dump(){
+		for(int i = 0; i < tracks.length; i++){
+			dump(i);
 		}
 		outlet(BANG_OUTLET, "bang");
+	}
+
+	public void dumpraw(int[] tracknums){
+		for(int i = 0; i < tracknums.length; i++){
+			dumpraw(tracknums[i]);
+		}
+		outlet(BANG_OUTLET, "bang");
+	}
+
+	public void dumpraw(){
+		for(int i = 0; i < tracks.length; i++){
+			dumpraw(i);
+		}
+		outlet(BANG_OUTLET, "bang");
+	}
+
+	public void dumpraw(int tracknum){
+		stop();
+
+		if(tracks == null || tracks.length == 0) return;
+		openSequencer();
+		for(int j = 0; j < tracks[tracknum].size(); j++){
+			MidiEvent ev = tracks[tracknum].get(j);
+			MidiMessage m = ev.getMessage();
+			byte[] raw = m.getMessage();
+			Atom[] out = new Atom[raw.length + 1];
+			for(int i = 0; i < raw.length; i++){
+				out[i + 1] = Atom.newAtom((int)(raw[i] & 0xFF));
+			}
+
+			sequencer.setTickPosition(ev.getTick());
+			out[0] = Atom.newAtom(((float)sequencer.getMicrosecondPosition()) / 1000.f);
+
+			outlet(DUMP_OUTLET, "/track/" + tracknum + "/raw", out);
+			/*
+			if(verbose) post("status = " + m.getStatus());
+			if(m.getStatus() == 255)
+				oscmessage = formatMetaMessage((MetaMessage)m, time, "/track/" + tracknum);
+			else oscmessage = formatMidiMessage(m, time, "/track/" + tracknum);
+			if(oscmessage != null) outlet(DUMP_OUTLET, oscmessage);
+			*/
+		}
+		outlet(DUMP_OUTLET, "/track/" + tracknum + "/done");
 	}
 
 	private Atom[] formatMidiMessage(MidiMessage m, float timeStamp){
@@ -555,8 +619,8 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 			case 7:
 				return new Atom[]{Atom.newAtom(osc_tracknum + "/text"), Atom.newAtom(new String(data))};
 			case 47: // end of track
-				outlet(BANG_OUTLET, "bang");
-				break;
+				//outlet(BANG_OUTLET, "bang");
+				return new Atom[]{Atom.newAtom(osc_tracknum + "/endoftrack")};
 			case 81: // set tempo
 				// returns the tempo in microseconds per minute.
 				float ms_per_min = 60000000.f;
@@ -567,9 +631,9 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 					val += (data[k] & 0xff) << (8 * j);
 
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom(osc_tracknum + "tempo"), Atom.newAtom(ms_per_min / val)};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/tempo"), Atom.newAtom(ms_per_min / val)};
 				else
-					return new Atom[]{Atom.newAtom(osc_tracknum + "tempo"), Atom.newAtom(timeStamp), Atom.newAtom(ms_per_min / val)};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/tempo"), Atom.newAtom(timeStamp), Atom.newAtom(ms_per_min / val)};
 			case 84: // SMPTE offset
 				// hour, minute, sec, frame, subframe
 
@@ -578,9 +642,9 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 				for(int i = 0; i < data.length; i++)
 					post(i + " " + data[i]);
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom(osc_tracknum + "SMPTE_offset"), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/SMPTE_offset"), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
 				else
-					return new Atom[]{Atom.newAtom(osc_tracknum + "SMPTE_offset"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/SMPTE_offset"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1]), Atom.newAtom(data[2]), Atom.newAtom(data[3]), Atom.newAtom(data[4])};
 			case 88: // time sig
 				// returns an array of 4 bytes corresponding to:
 				//	numerator
@@ -590,17 +654,17 @@ public class midifile extends MaxObject implements Receiver, MetaEventListener{
 				//	number of 32nds per quarter
 
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom(osc_tracknum + "time_sig"), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/time_sig"), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
 				else
-					return new Atom[]{Atom.newAtom(osc_tracknum + "time_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/time_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(Math.pow(2, data[1])), Atom.newAtom(data[2]), Atom.newAtom(data[3])};
 			case 89: // key sig
 				// the first byte is the key sig from -7 to 7 (<0 flats, >0 sharps)
 				// second byte is 0 = major, 1 = minor
 
 				if(timeStamp == -1)
-					return new Atom[]{Atom.newAtom(osc_tracknum + "key_sig"), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/key_sig"), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
 				else
-					return new Atom[]{Atom.newAtom(osc_tracknum + "key_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
+					return new Atom[]{Atom.newAtom(osc_tracknum + "/key_sig"), Atom.newAtom(timeStamp), Atom.newAtom(data[0]), Atom.newAtom(data[1])};
 				//default:
 				//post("found unknown meta event: " + type);
 		}
