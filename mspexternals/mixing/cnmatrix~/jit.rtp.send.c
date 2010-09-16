@@ -21,15 +21,12 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-   NAME: cnmatrix~
+   NAME: jit.rtp.send
    DESCRIPTION: similar to matrix~, but takes jitter matricies
-   AUTHORS: John MacCallum, Andy Schmeder, Ville Pulkki
+   AUTHORS: Yotam Mann
    COPYRIGHT_YEARS: 2009, 1999
-   SVN_REVISION: $LastChangedRevision: 587 $
-   VERSION 1.0: First version with jitter matrix support and log xfade
-   VERSION 1.0.1: Improvements in efficiency and denormal handling
-   VERSION 1.0.2: Added frame-based linear interpolation mode
-   VERSION 1.0.3: Fixed bug causing incorrect output with large matrix size
+   SVN_REVISION: $LastChangedRevision: 1 $
+	VERSION 1.0: First version with jitter matrix support and log xfade
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -40,6 +37,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "z_dsp.h"
 #include <math.h>
 #include "jit.common.h"
+#include <ffmpeg.h>
 
 #define FRAME   2
 #define FAST	1
