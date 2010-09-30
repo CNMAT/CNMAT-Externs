@@ -53,6 +53,8 @@
   VERSION 1.6.2: fixed a bug in the dumpbeats function that was incorrectly computing beats around the first and last controlpoints
   VERSION 1.6.3: option/option-shift to move only along the x or y axes
   VERSION 1.6.4: fixed a bug in te_computeCorrectedPhase that would put a beat at a controlpoint even when the phase was not 0 at that point
+  VERSION 1.6.5: fixed a bug in te_computeCorrectedMonotonicPhase() affecting the value of the phase at the control points
+  VERSION 1.6.6: superdivs are now represented by negative numbers rather than values between 0 and 1
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -324,14 +326,14 @@ void te_processArgs_r(t_te *x,
 		      long *rangelen, 
 		      double *range, 
 		      long *numsubdivs, 
-		      long *subdivs, 
+		      double *subdivs, 
 		      long *numcontrolpoints, 
 		      long *controlpoints);
 void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_dumpBeatsForFunction(t_te *x, 
 			     long function, 
 			     long numsubdivs, 
-			     long *subdivs_atoms, 
+			     double *subdivs_atoms, 
 			     double time_min, 
 			     double time_max);
 void te_dumpCellblock(t_te *x);
@@ -341,13 +343,16 @@ void te_getTimeMinMax(t_te *x);
 void te_getFreqMinMax(t_te *x);
 void te_clear(t_te *x);
 void te_clearFunction(t_te *x, int f);
+void te_clearRange(t_te *x, t_symbol *msg, int argc, t_atom *argv);
+void te_clearRangeForFunction(t_te *x, int function, float timemin, float timemax);
+void te_clearRangeForAllFunctions(t_te *x, float timemin, float timemax);
 void te_clearCurrent(t_te *x);
 void te_doClearFunction(t_te *x, int f);
 void te_resetFunctionColors(t_te *x);
 void te_invalidateAllFunctions(t_te *x);
 void te_invalidateAll(t_te *x);
 void te_dsp(t_te *x, t_signal **sp, short *count);
-void te_postplan(t_plan *p, void (*print)(char *, ...));
+void te_postplan(t_plan *p, int (*print)(const char *, ...));
 void te_postpoint(t_point *p, void (print)(char *, ...));
 t_symbol *te_mangleName(t_symbol *name, int i, int fnum);
 int main(void); 
@@ -786,11 +791,11 @@ void te_paint(t_te *x, t_object *patcherview){
 						t_plan plan;
 						te_makePlan(x, p->coords.x + ((x->time_max - x->time_min) / rect.width), function, &plan);
 						double scx, nscx;
-						printf("%f %f \n", p->coords.x, p->next->coords.x);
+						//printf("%f %f \n", p->coords.x, p->next->coords.x);
 						scx = te_scale(p->coords.x, x->time_min, x->time_max, 0, rect.width);
 						nscx = te_scale(p->next->coords.x, x->time_min, x->time_max, 0, rect.width);
 
-						printf("%f %f %f %f\n", p->aux_points[0], p->aux_points[1], scx, nscx);
+						//printf("%f %f %f %f\n", p->aux_points[0], p->aux_points[1], scx, nscx);
 						correctionStart_sc = te_scale(p->aux_points[0], 0., 1., scx, nscx);
 						correctionEnd_sc = te_scale(p->aux_points[1], 0., 1., scx, nscx);
 						if(correctionStart_sc < 0){
@@ -805,7 +810,7 @@ void te_paint(t_te *x, t_object *patcherview){
 
 						jgraphics_set_source_jrgba(gg, &(x->correctionColor));
 						jgraphics_move_to(gg, correctionStart_sc, freq_sc);
-						printf("%f %f\n", correctionStart_sc, correctionEnd_sc);
+						//printf("%f %f\n", correctionStart_sc, correctionEnd_sc);
 						for(j = correctionStart_sc; j < correctionEnd_sc; j++){
 							freq = te_computeCorrectedTempo(te_scale(j, 0, rect.width, x->time_min, x->time_max), &plan);
 							freq_sc = te_scale(freq, x->freq_min, x->freq_max, rect.height, 0);
@@ -1432,6 +1437,7 @@ int te_makePlan(t_te *x, float f, int function, t_plan *plan){
 		double scx = te_scale(p->coords.x, x->time_min, x->time_max, 0, r.width);
 		double nscx = te_scale(next->coords.x, x->time_min, x->time_max, 0, r.width);
 		if(f_sc >= scx && f_sc < nscx){
+			//printf("f_sc = %f, scx = %f, nscx = %f\n", f_sc, scx, nscx);
 			plan->alpha = p->alpha;
 			plan->beta = p->beta;
 			plan->beta_ab = boost::math::beta(plan->alpha, plan->beta);
@@ -1440,6 +1446,7 @@ int te_makePlan(t_te *x, float f, int function, t_plan *plan){
 			plan->error_beta_ab = boost::math::beta(plan->error_alpha, plan->error_beta);
 			plan->state = 0;
 			plan->startTime = p->coords.x;
+			//printf("%s: time = %f %f\n", __PRETTY_FUNCTION__, p->coords.x, next->coords.x);
 			plan->endTime = next->coords.x;
 			plan->startFreq = p->d_freq;
 			plan->endFreq = next->coords.y;
@@ -1524,6 +1531,7 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan, int function){
 			}
 		}
 		//if(fabs(p->screen_coords.x - stsc) < .001){
+		/*
 		if(fabs(p->coords.x - plan->startTime) < .001){
 			if(p->next){
 				//if(fabs(p->next->screen_coords.x - etsc) < .001){
@@ -1540,6 +1548,7 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan, int function){
 		}else{
 
 		}
+		*/
 		p = p->next;
 	}
 	return 0;
@@ -1651,6 +1660,8 @@ double te_computeCorrectedTempo(double t, t_plan *p){
 }
 
 double te_computeTempo(double t, t_plan *p){
+	//te_postplan(p, printf);
+	//printf("**************************************************\n");
 	double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
 	norm_t = te_clip(norm_t, 0., 1.);
 	//return gsl_sf_beta_inc(p->alpha, p->beta, norm_t) * (p->endFreq - p->startFreq) + p->startFreq;
@@ -1675,6 +1686,7 @@ double te_computePhase(double t, t_plan *p){
 }
 
 double te_computeCorrectedPhase(double t, t_plan *p){
+	//printf("%s: time = %f %f, freq = %f %f\n", __PRETTY_FUNCTION__, p->startTime, p->endTime, p->startFreq, p->endFreq);
 	switch(p->state){
 	case BEFORE_FIRST_POINT:
 		if(p->endPhase == 0.){
@@ -1701,7 +1713,8 @@ double te_computeCorrectedPhase(double t, t_plan *p){
 
 			double norm_t = te_scale(t, p->startTime, p->endTime, 0., 1.);
 			norm_t = te_clip(norm_t, 0., 1.);
-			return ((te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - p->startFreq, p->startFreq, p->beta_ab)) * (p->endTime - p->startTime)) + error;
+			return ((te_scaledBetaCDFInt(norm_t, p->alpha, p->beta, p->endFreq - 
+				p->startFreq, p->startFreq, p->beta_ab)) * (p->endTime - p->startTime)) + error;
 		}
 	}
 }
@@ -1710,13 +1723,16 @@ double te_computeCorrectedUnwrappedMonotonicPhase(t_te *x, double t, int functio
 	// first, compute the phase at time t, then compute the phase at each control point
 	// adding in any additional phase incurred by a different departure phase
 	double phase = te_computeCorrectedPhase(t, plan);
-	//post("corrected phase = %f", phase);
+	//printf("corrected phase = %f\n", phase);
 	t_point *p = x->functions[function];
 	if(p){
 		p = p->next;
 	}
+	int i = 0;
 	while(p){
-		if(p->coords.x > t + (1. / 44100.)){
+		if(p->coords.x > (t + (1. / 44100.)) && fabs(p->coords.x - (t + (1. / 44100.))) > .0001){
+			//post("%f > %f", p->coords.x, (t + (1. / 44100.)));
+		//if(fabs(p->coords.x - (t + (1. / 44100.))) < .0001){
 			//post("DONE: %f %f", p->coords.x, t + (1. / 44100.));
 			break;
 		}else if(!(p->next)){
@@ -1724,18 +1740,20 @@ double te_computeCorrectedUnwrappedMonotonicPhase(t_te *x, double t, int functio
 			//break;
 		}
 		t_plan thisplan;
-		te_makePlan(x, p->coords.x - (1. / 44100.), function, &thisplan);
-		//post("adding %f to %f", te_computeCorrectedPhase(p->coords.x - (1. / 44100.), &thisplan), phase);
+		te_makePlan(x, p->coords.x - (2. / 44100.), function, &thisplan);
+		//post("%f %f", p->coords.x, thisplan.startTime
+		//printf("%d: adding %f to %f (%d)\n", thisplan.pointnum_left, 
+		//te_computeCorrectedPhase(p->coords.x - (2. / 44100.), &thisplan), phase, i++);
 		phase += te_computeCorrectedPhase(p->coords.x, &thisplan);
-		//if(fabs(p->coords.x - t) > .00001){
-			double dphase = p->d_phase;
-			if(dphase >= 1.){
-				while(dphase >= 1.){
-					dphase -= 1;
-				}
+
+		double dphase = p->d_phase;
+		if(dphase >= 1.){
+			while(dphase >= 1.){
+				dphase -= 1;
 			}
-			phase -= dphase;
-			//}
+		}
+		phase -= dphase;
+
 		p = p->next;
 	}
 	//post("PHASE: %f", phase);
@@ -1895,6 +1913,7 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void te_float(t_te *x, double f){
+	//printf("%s: t = %f\n", __PRETTY_FUNCTION__, f);
 	int j;
 	t_atom out[6], *ptr;
 	for(j = 0; j < x->numFunctions; j++){
@@ -1906,10 +1925,16 @@ void te_float(t_te *x, double f){
 		}
 		*/
 		t_plan plan;
+		//printf("**************************************************\n");
 		te_makePlan(x, f, j, &plan);
 		atom_setlong(ptr++, j);
 		atom_setlong(ptr++, plan.pointnum_left);
+
+		//printf("%s: time = %f %f, freq = %f %f\n", __PRETTY_FUNCTION__, plan.startTime, 
+		//plan.endTime, plan.startFreq, plan.endFreq);
 		double ph = te_computeCorrectedPhase(f, &plan);
+		//printf("%s: correctedPhase = %f\n", __PRETTY_FUNCTION__, ph);
+		//printf("**************************************************\n");
 		atom_setlong(ptr++, (long)ph);
 		atom_setfloat(ptr++, (float)f);
 		atom_setfloat(ptr++, te_computeCorrectedTempo(f, &plan));
@@ -2011,7 +2036,7 @@ void te_selectRegion(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	double range[2];
 	// these shouldn't actually be present--we could throw an error if anything gets put in here.
 	long numsubdivs = 0;
-	long subdivs[argc];
+	double subdivs[argc];
 	long numcontrolpoints = 0;
 	long controlpoints[argc];
 	te_processArgs_r(x, NULL, argc, argv, &numfunctions, functions, &rangelen, range, &numsubdivs, subdivs, &numcontrolpoints, controlpoints);
@@ -3239,7 +3264,7 @@ void te_processArgs_r(t_te *x,
 			     long *rangelen, 
 			     double *range, 
 			     long *numsubdivs, 
-			     long *subdivs, 
+			     double *subdivs, 
 			     long *numcontrolpoints, 
 			     long *controlpoints)
 {
@@ -3269,7 +3294,7 @@ void te_processArgs_r(t_te *x,
 			}else if(k == gensym("timerange")){
 				range[(*rangelen)++] = atom_getfloat(argv);
 			}else if(k == gensym("subdivs")){
-				subdivs[(*numsubdivs)++] = atom_getlong(argv);
+				subdivs[(*numsubdivs)++] = atom_getfloat(argv);
 			}else if(k == gensym("controlpoints")){
 				controlpoints[(*numcontrolpoints)++] = atom_getlong(argv);
 			}else{
@@ -3286,22 +3311,12 @@ void te_processArgs_r(t_te *x,
 }
 
 void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv){
-	/*
-	post("%s:", __PRETTY_FUNCTION__);
-	if(msg){
-		post("msg = %s", msg->s_name);
-	}
-	int kk;
-	for(kk = 0; kk < argc; kk++){
-		postatom(argv + kk);
-	}
-	*/
 	long numfunctions = 0;
 	long functions[MAX_NUM_FUNCTIONS];
 	long rangelen = 0;
 	double range[2];
 	long numsubdivs = 0;
-	long subdivs[argc];
+	double subdivs[argc];
 	long numcontrolpoints = 0;
 	long controlpoints[argc];
 	te_processArgs_r(x, NULL, argc, argv, &numfunctions, functions, &rangelen, range, &numsubdivs, subdivs, &numcontrolpoints, controlpoints);
@@ -3347,10 +3362,20 @@ void te_dumpBeats(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	outlet_anything(x->out_info, gensym("dumpbeats"), 1, &out);
 }
 
+int te_compare(const void *a, const void *b){
+	if(*((double *)a) < *((double *)b)){
+		return -1;
+	}else if(*((double *)a) > *((double *)b)){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
 void te_dumpBeatsForFunction(t_te *x, 
 			     long function, 
 			     long numsubdivs, 
-			     long *subdivs_atoms, 
+			     double *subdivs_atoms, 
 			     double time_min, 
 			     double time_max)
 {
@@ -3374,17 +3399,30 @@ void te_dumpBeatsForFunction(t_te *x,
 	for(i = 1; i < numsubdivs + 1; i++){
 		prev_phase[i] = .9999;
 		//subdivs[i] = atom_getfloat(subdivs_atoms + (i - 1));
-		subdivs[i] = subdivs_atoms[i - 1]; // ok i know they're not atoms anymore...
+		if(subdivs_atoms[i - 1] < 1.0 && subdivs_atoms[i - 1] > 0.){
+			object_error((t_object *)x, "the use of floating point numbers to specify superdivisions has been deprecated");
+			object_error((t_object *)x, "%f should be expressed as %d", subdivs_atoms[i - 1],
+				     (int)(-1. / subdivs_atoms[i - 1]));
+		}
+		if(subdivs_atoms[i - 1] < 0){
+			subdivs[i] = 1 / fabs(subdivs_atoms[i - 1]);
+		}else{
+			subdivs[i] = subdivs_atoms[i - 1];
+		}
 	}
+	//qsort(subdivs, numsubdivs + 1, sizeof(double), te_compare);
 	double p, wp;
 	time_min = ceil(time_min * 44100.) / 44100.;
 	time_max = floor(time_max * 44100.) / 44100.;
 	for(t = time_min; t <= time_max; t += (1. / (44100. / 64.))){
 		if(!te_isPlanValid(x, t, &plan, function)){
 			te_makePlan(x, t, function, &plan);
+			//printf("plan was not valid\n");
 		}
+		//printf("time = %f\n", t);
 		for(i = 0; i < numsubdivs + 1; i++){
 			p = te_computeCorrectedPhase(t, &plan) * subdivs[i];
+			//p = te_computeCorrectedUnwrappedMonotonicPhase(x, t, function, &plan) * subdivs[i];
 			wp = p - floor(p);
 			if(subdivs[i] > 0){
 				t_atom *ptr = out;
@@ -3392,11 +3430,13 @@ void te_dumpBeatsForFunction(t_te *x,
 					atom_setsym(ptr++, gensym("subdiv"));
 				}
 				if(wp < prev_phase[i]){
+					//post("p = %f, wp = %f, prev_phase = %f", p, wp, prev_phase[i]);
 					// we're going through fairly coarsely (1/689")
 					// when we find a beat, step backwards by 1/44100"
 					// until we get a better estimate of where the beat is
 					double tt = t - (1. / 44100.);
 					double pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
+					//double pm1 = te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan) * subdivs[i];
 					double wpm1 = pm1 - floor(pm1);
 					if(plan.state == AFTER_LAST_POINT){
 						wp = plan.startPhase;
@@ -3407,6 +3447,7 @@ void te_dumpBeatsForFunction(t_te *x,
 							wp = wpm1;
 							tt -= (1. / 44100.);
 							pm1 = te_computeCorrectedPhase(tt, &plan) * subdivs[i];
+							//pm1 = te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan) * subdivs[i];
 							wpm1 = pm1 - floor(pm1);
 						}
 						tt += (1. / 44100.);
@@ -3427,13 +3468,22 @@ void te_dumpBeatsForFunction(t_te *x,
 						atom_setlong(ptr++, plan.pointnum_left);
 						atom_setlong(ptr++, (long)(p / subdivs[i]));
 						if(i > 0){
-							atom_setlong(ptr++, subdivs[i]);
-							atom_setlong(ptr++, (long)p % (long)subdivs[i]);
+							if(subdivs[i] < 1){
+								atom_setlong(ptr++, (long)(-1.0 / subdivs[i]));
+							}else{
+								atom_setlong(ptr++, (long)subdivs[i]);
+							}
+							if((long)subdivs[i] == 0){
+								atom_setlong(ptr++, 0);
+							}else{
+								atom_setlong(ptr++, (long)p % (long)subdivs[i]);
+							}
 						}
 						atom_setfloat(ptr++, tt);
-						atom_setfloat(ptr++, te_computeCorrectedTempo(tt, &plan));
+						atom_setfloat(ptr++, te_computeCorrectedTempo(tt, &plan) * subdivs[i]);
 						//atom_setfloat(ptr++, te_computeCorrectedPhase(tt, &plan));
-						atom_setfloat(ptr++, te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan));
+						//printf("%s: time = %f %f\n", __PRETTY_FUNCTION__, plan.startTime, plan.endTime);
+						atom_setfloat(ptr++, te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan) * subdivs[i]);
 						critical_exit(x->lock);
 						if(tt >= time_min && tt <= time_max){
 							// even though we are looping from t = time_min to t <= time_max
@@ -3442,17 +3492,34 @@ void te_dumpBeatsForFunction(t_te *x,
 							// location at the nearest 44.1kHz sample which may be before 
 							// time_min
 							outlet_anything(x->out_info, gensym("dumpbeats"), ptr - out, out);
+							/*
+							int kk;
+							for(kk = 0; kk < ptr - out; kk++){
+								switch(atom_gettype(out + kk)){
+								case A_LONG:
+								case A_FLOAT:
+									printf("%f ", atom_getfloat(out + kk));
+									break;
+								case A_SYM:
+									printf("%s ", atom_getsym(out + kk)->s_name);
+									break;
+								}
+							}
+							printf("\n");
+							*/
 						}
 						critical_enter(x->lock);
 					}
 					// we don't want a subdivision on the downbeat since
 					// we have a beat there already
+					/*
 					if(i == 0){
 						for(; i < numsubdivs + 1; i++){
 							prev_phase[i] = wp;
 						}
 						break;
 					}
+					*/
 				}
 			}
 			prev_phase[i] = wp;
@@ -3660,6 +3727,46 @@ void te_clearFunction(t_te *x, int f){
 	te_doClearFunction(x, f);
 	te_dumpCellblock(x);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[f]);
+	jbox_redraw((t_jbox *)x);
+}
+
+void te_clearRange(t_te *x, t_symbol *msg, int argc, t_atom *argv){
+	int function = x->currentFunction;
+	t_atom *ptr = argv;
+	if(argc > 2){
+		if(atom_gettype(ptr) == A_LONG){
+			function = atom_getlong(ptr++);
+		}else if(atom_getsym(ptr) == gensym("*")){
+			te_clearRangeForAllFunctions(x, atom_getfloat(ptr + 1), atom_getfloat(ptr + 2));
+			return;
+		}
+	}
+	te_clearRangeForFunction(x, function, atom_getfloat(ptr), atom_getfloat(ptr + 1));
+	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[function]);
+	jbox_redraw((t_jbox *)x);
+}
+
+void te_clearRangeForFunction(t_te *x, int function, float timemin, float timemax){
+	critical_enter(x->lock);
+	t_point *p = x->functions[function];
+	while(p){
+		if(p->coords.x >= timemin && p->coords.x <= timemax){
+			if(p == x->selected){
+				x->selected = NULL;
+			}
+			te_removePoint(x, p, function);
+		}
+		p = p->next;
+	}
+	critical_exit(x->lock);
+}
+
+void te_clearRangeForAllFunctions(t_te *x, float timemin, float timemax){
+	int i;
+	for(i = 0; i < x->numFunctions; i++){
+		te_clearRangeForFunction(x, i, timemin, timemax);
+		jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[i]);
+	}
 	jbox_redraw((t_jbox *)x);
 }
 
@@ -4138,7 +4245,7 @@ void te_free(t_te *x){
 	}
 } 
 
-void te_postplan(t_plan *p, void (*print)(char *, ...)){
+void te_postplan(t_plan *p, int (*print)(const char *, ...)){
 	print("state = %d\n", p->state);
 	print("startTime = %f, endTime = %f\n", p->startTime, p->endTime);
 	print("startPhase = %f, endPhase = %f\n", p->startPhase, p->endPhase);
@@ -4200,6 +4307,7 @@ int main(void){
 	class_addmethod(c, (method)te_resetFunctionColors, "resetfunctioncolors", 0);
 	class_addmethod(c, (method)te_clearCurrent, "clearcurrent", 0);
 	class_addmethod(c, (method)te_clearFunction, "clearfunction", A_LONG, 0);
+	class_addmethod(c, (method)te_clearRange, "clearrange", A_GIMME, 0);
 	class_addmethod(c, (method)te_dump, "dump", 0);
 	class_addmethod(c, (method)te_time_minmax, "timeminmax", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)te_freq_minmax, "freqminmax", A_FLOAT, A_FLOAT, 0);
@@ -4403,7 +4511,6 @@ int main(void){
 	}
 
  	version(0); 
-	error("the subdivision number has been added to the output of dumpbeats!!!");
 	
  	return 0; 
 } 
@@ -4603,3 +4710,4 @@ t_max_err te_functionColorsSet(t_te *x, t_object *attr, long argc, t_atom *argv)
 	}
 	return MAX_ERR_NONE;
 }
+
