@@ -9,9 +9,14 @@
 /* Begin PBXBuildFile section */
 		121679470FF93C67005F098E /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 121679460FF93C67005F098E /* MaxAPI.framework */; };
 		121679860FF93C6F005F098E /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 121679850FF93C6F005F098E /* commonsyms.c */; };
-		1216798D0FF975BB005F098E /* libcmmjl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1216798C0FF975BB005F098E /* libcmmjl.a */; };
 		12C9038B107BF4DB008817F2 /* o.message.c in Sources */ = {isa = PBXBuildFile; fileRef = 12C9038A107BF4DB008817F2 /* o.message.c */; };
-		12C904B0107EAD30008817F2 /* jpatcher_syms.c in Sources */ = {isa = PBXBuildFile; fileRef = 12C904AF107EAD30008817F2 /* jpatcher_syms.c */; };
+		525E7BFF1201216600D3E567 /* omax_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 525E7BFD1201216600D3E567 /* omax_util.c */; };
+		525E7C001201216600D3E567 /* omax_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 525E7BFE1201216600D3E567 /* omax_util.h */; };
+		525E7C03120128B100D3E567 /* liboio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525E7C02120128B100D3E567 /* liboio.a */; };
+		525E7C1212012A0C00D3E567 /* osc_match.c in Sources */ = {isa = PBXBuildFile; fileRef = 525E7C0E12012A0C00D3E567 /* osc_match.c */; };
+		525E7C1312012A0C00D3E567 /* osc_match.h in Headers */ = {isa = PBXBuildFile; fileRef = 525E7C0F12012A0C00D3E567 /* osc_match.h */; };
+		525E7C1412012A0C00D3E567 /* osc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 525E7C1012012A0C00D3E567 /* osc_util.c */; };
+		525E7C1512012A0C00D3E567 /* osc_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 525E7C1112012A0C00D3E567 /* osc_util.h */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
@@ -20,9 +25,14 @@
 		120615410BAD19EE00C1162A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		121679460FF93C67005F098E /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		121679850FF93C6F005F098E /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
-		1216798C0FF975BB005F098E /* libcmmjl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcmmjl.a; path = ../../../lib/libcmmjl.a; sourceTree = SOURCE_ROOT; };
 		12C9038A107BF4DB008817F2 /* o.message.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = o.message.c; sourceTree = "<group>"; };
-		12C904AF107EAD30008817F2 /* jpatcher_syms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jpatcher_syms.c; path = "../../../../../../../Downloads/MaxSDK-5.0.8/c74support/max-includes/common/jpatcher_syms.c"; sourceTree = SOURCE_ROOT; };
+		525E7BFD1201216600D3E567 /* omax_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = omax_util.c; path = ../omax_util.c; sourceTree = SOURCE_ROOT; };
+		525E7BFE1201216600D3E567 /* omax_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omax_util.h; path = ../omax_util.h; sourceTree = SOURCE_ROOT; };
+		525E7C02120128B100D3E567 /* liboio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liboio.a; path = ../liboio/build/Release/liboio.a; sourceTree = SOURCE_ROOT; };
+		525E7C0E12012A0C00D3E567 /* osc_match.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = osc_match.c; path = ../liboio/osc_match.c; sourceTree = SOURCE_ROOT; };
+		525E7C0F12012A0C00D3E567 /* osc_match.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osc_match.h; path = ../liboio/osc_match.h; sourceTree = SOURCE_ROOT; };
+		525E7C1012012A0C00D3E567 /* osc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = osc_util.c; path = ../liboio/osc_util.c; sourceTree = SOURCE_ROOT; };
+		525E7C1112012A0C00D3E567 /* osc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osc_util.h; path = ../liboio/osc_util.h; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* o.message.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = o.message.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -33,7 +43,7 @@
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
 				121679470FF93C67005F098E /* MaxAPI.framework in Frameworks */,
-				1216798D0FF975BB005F098E /* libcmmjl.a in Frameworks */,
+				525E7C03120128B100D3E567 /* liboio.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,7 +64,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1216798C0FF975BB005F098E /* libcmmjl.a */,
+				525E7C02120128B100D3E567 /* liboio.a */,
 				121679460FF93C67005F098E /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
@@ -72,9 +82,14 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				525E7C0E12012A0C00D3E567 /* osc_match.c */,
+				525E7C0F12012A0C00D3E567 /* osc_match.h */,
+				525E7C1012012A0C00D3E567 /* osc_util.c */,
+				525E7C1112012A0C00D3E567 /* osc_util.h */,
+				525E7BFD1201216600D3E567 /* omax_util.c */,
+				525E7BFE1201216600D3E567 /* omax_util.h */,
 				12C9038A107BF4DB008817F2 /* o.message.c */,
 				121679850FF93C6F005F098E /* commonsyms.c */,
-				12C904AF107EAD30008817F2 /* jpatcher_syms.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -94,6 +109,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				525E7C001201216600D3E567 /* omax_util.h in Headers */,
+				525E7C1312012A0C00D3E567 /* osc_match.h in Headers */,
+				525E7C1512012A0C00D3E567 /* osc_util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,7 +182,9 @@
 			files = (
 				121679860FF93C6F005F098E /* commonsyms.c in Sources */,
 				12C9038B107BF4DB008817F2 /* o.message.c in Sources */,
-				12C904B0107EAD30008817F2 /* jpatcher_syms.c in Sources */,
+				525E7BFF1201216600D3E567 /* omax_util.c in Sources */,
+				525E7C1212012A0C00D3E567 /* osc_match.c in Sources */,
+				525E7C1412012A0C00D3E567 /* osc_util.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,8 +225,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../liboio/build/Release\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
@@ -247,23 +269,24 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../liboio\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/..\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../liboio/build/Release\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../lib\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/../../../lib/libcmmjl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../liboio/build/Release/liboio.a\"";
 				PRODUCT_NAME = o.message;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SECTORDER_FLAGS = "";
@@ -307,8 +330,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../liboio/build/Release\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";

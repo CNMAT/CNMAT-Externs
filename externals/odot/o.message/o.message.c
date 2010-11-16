@@ -27,6 +27,7 @@
   COPYRIGHT_YEARS: 2009
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
+  VERSION 1.0: using updated lib
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -35,11 +36,15 @@
 #include "ext_obex_util.h"
 
 #include "jpatcher_api.h" 
-#include "jpatcher_syms.h"
+//#include "jpatcher_syms.h"
 #include "jgraphics.h"
 
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
+//#include "cmmjl/cmmjl.h"
+//#include "cmmjl/cmmjl_osc.h"
+#include "omax_util.h"
+#include "osc_util.h"
+#include "osc_match.h"
+#include <mach/mach_time.h>
 
 // i really don't want to reallocate...
 #define OMESSAGE_MAX_NUM_MESSAGES 1024
@@ -70,7 +75,7 @@ static t_class *omessage_class;
 
 void omessage_fullPacket(t_omessage *x, long len, long ptr);
 void omessage_doFullPacket(t_omessage *x, long len, long ptr);
-void omessage_cbk(t_cmmjl_osc_message msg, void *v);
+void omessage_cbk(t_osc_msg msg, void *v);
 void omessage_paint(t_omessage *x, t_object *patcherview);
 void omessage_atoms2text(t_omessage *x, char *buf);
 void omessage_parse_string(t_omessage *x, long len, char *string);
@@ -112,17 +117,18 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(x->buffer, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, x->buffer, x->buffer);
+		nn = osc_util_bundle_naked_message(len, x->buffer, x->buffer);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, x->buffer, x->buffer);
+	nn = osc_util_flatten(nn, x->buffer, x->buffer);
 
 	// extract the messages from the bundle
-	cmmjl_osc_extract_messages(nn, x->buffer, true, omessage_cbk, (void *)x);
+	//cmmjl_osc_extract_messages(nn, x->buffer, true, omessage_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, x->buffer, omessage_cbk, (void *)x);
 
 	int i;
 	char buf[4096];
@@ -136,18 +142,26 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	}
 }
 
-void omessage_cbk(t_cmmjl_osc_message msg, void *v){
+void omessage_cbk(t_osc_msg msg, void *v){
+	printf("%s\n", __PRETTY_FUNCTION__);
 	t_omessage *x = (t_omessage *)v;
 	int i;
 	//x->messages[x->num_messages] = msg;
-	t_cmmjl_osc_atom a[msg.argc];
-	cmmjl_osc_get_data(&msg, a);
-	atom_setsym(x->atoms + x->num_atoms++, gensym(msg.address));
+	//t_cmmjl_osc_atom a[msg.argc];
+	//cmmjl_osc_get_data(&msg, a);
+
+	//atom_setsym(x->atoms + x->num_atoms++, gensym(msg.address));
 
 	char buf[1024], data_buf[256];
 	char *bufptr = buf;
-	for(i = 0; i < msg.argc; i++){
-		cmmjl_osc_atom2maxatom(a + i, x->atoms + x->num_atoms++);
+	long len;
+	t_atom a[1024];
+	//for(i = 0; i < msg.argc; i++){
+		//cmmjl_osc_atom2maxatom(a + i, x->atoms + x->num_atoms++);
+	omax_util_oscMsg2MaxAtoms(&msg, &len, a);
+		//}
+	for(i = 0; i < len; i++){
+		x->atoms[x->num_atoms++] = a[i];
 	}
 }
 
@@ -216,8 +230,11 @@ void omessage_parse_string(t_omessage *x, long len, char *string){
 		return;
 	}
 
-	x->buffer_pos += cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
-	x->buffer_pos += cmmjl_osc_make_bundle_from_atoms(argc, argv, &(x->buffer_len), x->buffer + x->buffer_pos);
+	//x->buffer_pos += cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
+	strncpy(x->buffer, "#bundle\0", 8);
+	x->buffer_pos = 8;
+
+	x->buffer_pos += osc_util_make_bundle_from_atoms(argc, argv, &(x->buffer_len), x->buffer + x->buffer_pos);
 
 	/*
 	  int i;
@@ -388,11 +405,16 @@ void omessage_gettext(t_omessage *x){
 void omessage_make_and_output_bundle(t_omessage *x){
 	int i;
 	x->buffer_pos = 0;
-	x->buffer_pos += cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
-	ntptime now;
-	cmmjl_osc_timetag_now_to_ntp(&now);
-	cmmjl_osc_timetag_set(x->buffer_len, (long)x->buffer, &now);
-	x->buffer_pos += cmmjl_osc_make_bundle_from_atoms(x->num_atoms, x->atoms, &(x->buffer_len), x->buffer + x->buffer_pos);
+	//x->buffer_pos += cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
+	strcpy(x->buffer, "#bundle\0");
+	x->buffer_pos = 8;
+	//ntptime now;
+	//cmmjl_osc_timetag_now_to_ntp(&now);
+	//cmmjl_osc_timetag_set(x->buffer_len, (long)x->buffer, &now);
+	*((unsigned long long *)(x->buffer + x->buffer_pos)) = hton64(mach_absolute_time());
+	x->buffer_pos += 8;
+
+	x->buffer_pos += osc_util_make_bundle_from_atoms(x->num_atoms, x->atoms, &(x->buffer_len), x->buffer + x->buffer_pos);
 	//for(i = 0; i < x->buffer_pos; i++){
 	//post("%d %c 0x%x", i, x->buffer[i], x->buffer[i]);
 	//}
@@ -589,7 +611,7 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	common_symbols_init();
-	jpatcher_syms_init();
+	//jpatcher_syms_init();
 	t_class *c = class_new("o.message", (method)omessage_new, (method)omessage_free, sizeof(t_omessage), 0L, A_GIMME, 0);
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
