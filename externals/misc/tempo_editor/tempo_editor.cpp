@@ -1220,6 +1220,7 @@ void te_workerproc(t_sysparallel_worker *worker){
 			x->ptrs[(id * 5) + 1][i] = te_computeCorrectedPhase(in[i], &plan);
 			x->ptrs[(id * 5)][i] = x->ptrs[(id * 5) + 1][i] - floor(x->ptrs[(id * 5) + 1][i]);
 			x->ptrs[(id * 5) + 2][i] = (x->ptrs[(id * 5) + 1][i] - x->last_y[id]) * x->fs;
+			//x->ptrs[(id * 5) + 2][i] = te_computeCorrectedTempo(in[i], &plan);
 			x->last_y[id] = x->ptrs[(id * 5) + 1][i];
 			x->ptrs[(id * 5) + 3][i] = plan.pointnum_left;
 			x->ptrs[(id * 5) + 4][i] = floorf(x->ptrs[(id * 5) + 1][i]);
@@ -2098,7 +2099,8 @@ void te_selectRegion(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	t_rect r;
 	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
 	x->sel_box.x = te_scale(range[0], x->time_min, x->time_max, 0., r.width);
-	x->sel_box.width = te_scale(range[1] - range[0], x->time_min, x->time_max, 0, r.width);
+	x->sel_box.width = te_scale(range[1], x->time_min, x->time_max, 0, r.width);
+	x->sel_box.width -= x->sel_box.x;
 	x->sel_box.y = 0.;
 	x->sel_box.height = r.height;
 
