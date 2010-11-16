@@ -114,9 +114,9 @@ void oppnd_cbk(t_osc_msg msg, void *v){
 		//if((ret = osc_match(x, msg.address, x->sym_to_match->s_name)) == -1){
 		int po, ao;
 		ret = osc_match(msg.address, x->sym_to_match->s_name, &po, &ao);
-		if(ret == 3){
-			char buf[strlen(x->sym_to_match->s_name) + strlen(x->sym_to_prepend->s_name) + 1];
-			sprintf(buf, "%s%s", x->sym_to_prepend->s_name, x->sym_to_match->s_name);
+		if(ret == 3 || ret == 1){
+			char buf[strlen(msg.address) + strlen(x->sym_to_prepend->s_name) + 1];
+			sprintf(buf, "%s%s", x->sym_to_prepend->s_name, msg.address);
 			x->bufferPos += osc_util_rename(x->buffer, x->bufferLen, x->bufferPos, &msg, buf);
 			didmatch++;
 		}
