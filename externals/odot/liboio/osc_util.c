@@ -412,6 +412,7 @@ size_t osc_sizeof(unsigned char typetag, char *data){
 	case 'S':
 		{
 			int size = strlen(data);
+			size++;
 			while(size % 4){
 				size++;
 			}
