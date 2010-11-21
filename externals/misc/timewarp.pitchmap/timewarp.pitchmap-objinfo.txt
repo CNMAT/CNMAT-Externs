@@ -1,0 +1,7 @@
+NAME: "timewarp.pitchmap"
+DESCRIPTION: "Pitchmapping object for timewarp"
+AUTHORS: "John MacCallum "
+COPYRIGHT_YEARS: "2010"
+SVN_REVISION: "$LastChangedRevision: 587 $ "
+VERSION 0.0: "First try"
+VERSION: "0.0"
