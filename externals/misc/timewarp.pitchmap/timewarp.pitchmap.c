@@ -43,6 +43,7 @@
 #include "time.h"
 #include "omax_util.h"
 #include "osc_util.h"
+#include "osc_match.h"
 
 #define PF __PRETTY_FUNCTION__
 
@@ -72,6 +73,7 @@ typedef struct _twpm_osc_msg{
 
 #define NOTE 1
 #define DURATION 2
+#define MARKER 3
 typedef struct _event{ 
 	t_atom *time;
 	int selected;
@@ -85,9 +87,14 @@ typedef struct _event{
  	struct _event *prev_selected; 
 } t_event; 
 
+typedef struct _floatbuf{
+	long ac;
+	float *av;
+} t_floatbuf;
+
 typedef struct _twpm{ 
  	t_jbox box; 
- 	void *outlet_main, *outlet_cellblock;
+ 	void *outlet_main, *outlet_info;
 	long inlet;
 	void *proxy;
 	t_event *eventlist;
@@ -95,7 +102,7 @@ typedef struct _twpm{
 	t_event *selected;
 	t_object *pv;
 	t_critical lock;
- 	t_jrgba bgcolor, selectioncolor; 
+ 	t_jrgba bgcolor, selectioncolor, gridcolor; 
 	double xmin, xmax, ymin, ymax;
 	t_rect sel_box;
 	t_pt drag;
@@ -103,6 +110,10 @@ typedef struct _twpm{
 	int takingdump;
 	clock_t dblclick;
 	float lasttime;
+	t_hashtab *subdivs_ht;
+	t_floatbuf beatbuf;
+	t_symbol **subdivs_to_show;
+	int num_subdivs_to_show;
 } t_twpm; 
 
 void *twpm_class; 
@@ -115,8 +126,11 @@ double twpm_computeNotePos(double y, t_rect r);
 double twpm_uncomputeNotePos(double y, t_rect r);
 t_twpm_osc_msg *twpm_lookup_osc_msg(t_event *e, t_symbol *address);
 t_twpm_osc_msg *twpm_addMessageToEvent(t_event *e, t_symbol *address, int buflen, int argc, t_atom *argv);
+void twpm_show_subdivs(t_twpm *x, t_symbol *msg, int argc, t_atom *argv);
+void twpm_set_timepoints(t_twpm *x, t_symbol *msg, int argc, t_atom *argv);
 void twpm_fullPacket(t_twpm *x, long len, long ptr);
 void twpm_list(t_twpm *x, t_symbol *msg, short argc, t_atom *argv);
+void twpm_outputEvent(t_twpm *x, void *outlet, t_symbol *msg, t_event *e);
 void twpm_float(t_twpm *x, double f);
 void twpm_int(t_twpm *x, long key);
 int twpm_find_btn(t_twpm *x, double xx, t_event **left, t_event **right);
@@ -131,8 +145,10 @@ void twpm_mouseup(t_twpm *x, t_object *patcherview, t_pt pt, long modifiers);
 t_event *twpm_insertEvent(t_twpm *x, float time);
 void twpm_removeSelected(t_twpm *x);
 void twpm_removeEvent(t_twpm *x, t_event *event);
-void twpm_clear(t_twpm *x);
+void twpm_clear(t_twpm *x, t_symbol *pat);
 void twpm_unselect(t_twpm *x);
+t_floatbuf *twpm_floatbuf_alloc(int ac, float *av);
+void twpm_floatbuf_store(t_floatbuf *fb, int ac, float *av);
 t_event *twpm_event_alloc(void);
 t_twpm_osc_msg *twpm_osc_msg_alloc(t_symbol *address, long argc, t_atom *argv);
 void twpm_osc_msg_free(t_twpm_osc_msg *m);
@@ -151,7 +167,7 @@ t_max_err twpm_events_get(t_twpm *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err twpm_events_set(t_twpm *x, t_object *attr, long argc, t_atom *argv);
 
 static t_symbol *l_background, *l_notes;
-static t_symbol *ps_done, *ps_dump, *ps_notes, *ps_clear, *ps_cellblock, *ps_FullPacket, *ps_durations, *ps_time;
+static t_symbol *ps_done, *ps_dump, *ps_notes, *ps_clear, *ps_cellblock, *ps_FullPacket, *ps_durations, *ps_time, *ps_marker, *ps_beats, *ps_subdivs;
 static t_atom pa_dump, pa_clear, pa_all;
 
 //const char *notenames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
@@ -252,13 +268,71 @@ void twpm_paint_notes(t_twpm *x, t_object *patcherview, t_rect r){
 		t_event *e = x->eventlist;
 
 		black.alpha = 1.;
+
+		jgraphics_set_source_jrgba(g, &x->gridcolor);
+		if(x->beatbuf.av){
+			if(x->beatbuf.av[0] >= x->xmin){
+				int j;
+				for(j = 0; j < x->beatbuf.ac; j++){
+					float xsc = twpm_scale(x->beatbuf.av[j], x->xmin, x->xmax, 0, r.width);
+					jgraphics_move_to(g, xsc, 0);
+					jgraphics_line_to(g, xsc, 15);
+					jgraphics_stroke(g);
+				}
+			}
+		}
+
+		if(x->num_subdivs_to_show > 0){
+			int j;
+			for(j = 0; j < x->num_subdivs_to_show; j++){
+				t_floatbuf *fb = NULL;
+				hashtab_lookup(x->subdivs_ht, x->subdivs_to_show[j], (t_object **)&fb);
+				if(fb){
+					int k;
+					for(k = 0; k < fb->ac; k++){
+						float xsc = twpm_scale(fb->av[k], x->xmin, x->xmax, 0, r.width);
+						jgraphics_move_to(g, xsc, 0);
+						jgraphics_line_to(g, xsc, 10);
+						jgraphics_stroke(g);
+					}
+				}
+			}
+		}
+
 		while(e){
 			t_twpm_osc_msg *notes_msg = twpm_lookup_osc_msg(e, ps_notes);
 			t_twpm_osc_msg *durations_msg = twpm_lookup_osc_msg(e, ps_durations);
 			double duration = 0;
 			double time = atom_getfloat(e->time);
 			if(!notes_msg){
-				// rest
+				t_twpm_osc_msg *m = twpm_lookup_osc_msg(e, ps_marker);
+				double xsc = twpm_scale(time, x->xmin, x->xmax, 0, r.width);
+				if(m){
+					// marker
+					float c[4] = {0., 0., 1., 1.};
+					t_twpm_osc_msg *color = twpm_lookup_osc_msg(e, gensym("/color"));
+					if(color){
+						for(i = 0; i < color->argc; i++){
+							c[i] = atom_getfloat(color->argv + i);
+						}
+					}
+					jgraphics_set_source_rgba(g, c[0], c[1], c[2], c[3]);
+					jgraphics_move_to(g, xsc, 0);
+					jgraphics_line_to(g, xsc, r.height);
+					jgraphics_stroke(g);
+					jgraphics_move_to(g, xsc, 6);
+					jgraphics_line_to(g, xsc - 6, 0);
+					jgraphics_line_to(g, xsc + 6, 0);
+					jgraphics_close_path(g);
+					jgraphics_move_to(g, xsc, r.height - 6);
+					jgraphics_line_to(g, xsc - 6, r.height);
+					jgraphics_line_to(g, xsc + 6, r.height);
+					jgraphics_close_path(g);
+					jgraphics_fill(g);
+				}else{
+					// some other event
+
+				}
 			}else{
 				t_jrgba selcolor = x->selectioncolor;
 				t_jrgba selcolor_light = x->selectioncolor;
@@ -309,15 +383,15 @@ void twpm_paint_notes(t_twpm *x, t_object *patcherview, t_rect r){
 					if(e->selected == 1){
 						jgraphics_set_source_jrgba(g, &selcolor);
 						/*
-						if(e->selected_element){
-							if(atom_getfloat(e->selected_element) == midic){
-								jgraphics_set_source_jrgba(g, &selcolor);
-							}else{
-								jgraphics_set_source_jrgba(g, &selcolor_light);
-							}
-						}else{
-							jgraphics_set_source_jrgba(g, &selcolor);
-						}
+						  if(e->selected_element){
+						  if(atom_getfloat(e->selected_element) == midic){
+						  jgraphics_set_source_jrgba(g, &selcolor);
+						  }else{
+						  jgraphics_set_source_jrgba(g, &selcolor_light);
+						  }
+						  }else{
+						  jgraphics_set_source_jrgba(g, &selcolor);
+						  }
 						*/
 					}
 					jgraphics_move_to(g, xsc - 5, ypos);
@@ -485,6 +559,73 @@ t_twpm_osc_msg *twpm_addMessageToEvent(t_event *e, t_symbol *address, int buflen
 	return m;
 }
 
+void twpm_show_subdivs(t_twpm *x, t_symbol *msg, int argc, t_atom *argv){
+	if(x->subdivs_to_show){
+		x->subdivs_to_show = (t_symbol **)sysmem_resizeptr(x->subdivs_to_show, argc * sizeof(t_symbol *));
+	}else{
+		x->subdivs_to_show = (t_symbol **)sysmem_newptr(argc * sizeof(t_symbol *));
+	}
+	int i;
+	for(i = 0; i < argc; i++){
+		char buf[16];
+		sprintf(buf, "/subdivs/%ld", atom_getlong(argv + i));
+		post("%s: %s", PF, buf);
+		x->subdivs_to_show[i] = gensym(buf);
+	}
+	x->num_subdivs_to_show = argc;
+	jbox_invalidate_layer((t_object *)x, x->pv, l_notes);
+	jbox_redraw((t_jbox *)&(x->box)); 
+}
+
+void twpm_set_timepoints(t_twpm *x, t_symbol *msg, int argc, t_atom *argv){
+	if(atom_getsym(argv) == ps_FullPacket){
+		char *buf = (char *)atom_getlong(argv + 2);
+		long len = atom_getlong(argv + 1);
+		t_osc_msg osc_msg[osc_util_getMsgCount(len, buf)];
+		osc_util_parseBundle(len, buf, osc_msg);
+		int i;
+		for(i = 0; i < sizeof(osc_msg) / sizeof(t_osc_msg); i++){
+			long ac;
+			t_atom av[osc_util_getArgCount(osc_msg + i)];
+			t_symbol *address = NULL;
+			omax_util_oscMsg2MaxAtoms(osc_msg + i, &ac, av);
+			address = atom_getsym(av);
+			int po, ao;
+			if(address == ps_beats){
+				if(x->beatbuf.av){
+					x->beatbuf.av = (float *)sysmem_resizeptr(x->beatbuf.av, (ac - 1) * sizeof(float));
+				}else{
+					x->beatbuf.av = (float *)sysmem_newptr((ac - 1) * sizeof(float));
+				}
+				x->beatbuf.ac = ac - 1;
+				int j;
+				for(j = 1; j < ac; j++){
+					x->beatbuf.av[j - 1] = atom_getfloat(av + j);
+				}
+			}else if(osc_match(address->s_name, ps_subdivs->s_name, &po, &ao)){
+				t_floatbuf *fb = NULL;
+				hashtab_lookup(x->subdivs_ht, address, (t_object **)&fb);
+				if(!fb){
+					fb = (t_floatbuf *)sysmem_newptr(sizeof(t_floatbuf));
+				}
+				if(fb->av){
+					fb->av = (float *)sysmem_resizeptr(fb->av, (ac - 1) * sizeof(float));
+				}
+				fb->ac = ac - 1;
+				int j;
+				for(j = 1; j < ac; j++){
+					fb->av[j - 1] = atom_getfloat(av + j);
+				}
+				hashtab_store(x->subdivs_ht, address, (t_object *)fb);
+			}
+		}
+	}else{
+
+	}
+	jbox_invalidate_layer((t_object *)x, x->pv, l_notes);
+	jbox_redraw((t_jbox *)&(x->box)); 
+}
+
 void twpm_fullPacket(t_twpm *x, long len, long ptr){
 	t_event *e = twpm_event_alloc();
 	t_osc_msg *time = NULL, *notes = NULL;
@@ -498,10 +639,6 @@ void twpm_fullPacket(t_twpm *x, long len, long ptr){
 		t_symbol *address = NULL;
 		omax_util_oscMsg2MaxAtoms(msg + i, &ac, av);
 		address = atom_getsym(av);
-		int j;
-		for(j = 0; j < ac; j++){
-			postatom(av + j);
-		}
 		if(address == ps_notes){
 			notes = msg + i;
 			twpm_addMessageToEvent(e, address, DEF_NOTE_COUNT, ac - 1, av + 1);
@@ -564,7 +701,7 @@ void twpm_list(t_twpm *x, t_symbol *msg, short argc, t_atom *argv){
 					twpm_clear_osc_messages(e);
 					t_atom dump;
 					atom_setsym(&dump, ps_dump);
-					outlet_anything(x->outlet_cellblock, ps_cellblock, 1, &pa_dump);
+					outlet_anything(x->outlet_info, ps_cellblock, 1, &pa_dump);
 					x->takingdump = 0;
 					t_twpm_osc_msg *m = e->messages_ll;
 				}
@@ -576,7 +713,7 @@ void twpm_list(t_twpm *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 }
 
-void twpm_outputEvent(t_twpm *x, t_event *e){
+void twpm_outputEvent(t_twpm *x, void *outlet, t_symbol *msg, t_event *e){
 	if(!e){
 		return;
 	}
@@ -624,20 +761,23 @@ void twpm_outputEvent(t_twpm *x, t_event *e){
 
 	m = e->messages_ll;
 	while(m){
-
 		ptr += omax_util_encode_atoms(ptr, size - (ptr - bundle), m->address, m->argc, m->argv);
 		m = m->next;
 	}
-	/*
-	int i;
-	for(i = 0; i < (ptr - bundle); i++){
-		post("%d: %c %x", i, bundle[i], bundle[i]);
+
+	if(msg){
+		t_atom out[3];
+		atom_setsym(out, ps_FullPacket);
+		atom_setlong(out + 1, size);
+		atom_setlong(out + 2, (long)bundle);
+		outlet_anything(outlet, msg, 3, out);
+	}else{
+		post("here");
+		t_atom out[2];
+		atom_setlong(out, size);
+		atom_setlong(out + 1, (long)bundle);
+		outlet_anything(outlet, ps_FullPacket, 2, out);
 	}
-	*/
-	t_atom out[2];
-	atom_setlong(out, size);
-	atom_setlong(out + 1, (long)bundle);
-	outlet_anything(x->outlet_main, ps_FullPacket, 2, out);
 }
 
 void twpm_float(t_twpm *x, double f){
@@ -661,8 +801,8 @@ void twpm_float(t_twpm *x, double f){
 	double lt = floor(10000. * x->lasttime) / 10000.;
 	double tt = floor(10000. * atom_getfloat(e->time)) / 10000.;
 	while(ff >= tt){
-		if(lt < tt && ff >= tt && fabs(lt - ff) < .25){
-			twpm_outputEvent(x, e);
+		if((lt < tt && ff >= tt && fabs(lt - ff) < .25) || (ff > tt && fabs(ff - tt) < .0002 && fabs(lt - tt) > .1)){
+			twpm_outputEvent(x, x->outlet_main, NULL, e);
 		}
 		e = e->next;
 		if(!e){
@@ -748,6 +888,37 @@ t_atom *twpm_find_closest_note(t_twpm_osc_msg *m, float midic){
 	return minptr;
 }
 
+float twpm_find_closest_gridtime(t_twpm *x, float time){
+	int i, j;
+	float xx = time;
+	float diff = FLT_MAX;
+	if(x->num_subdivs_to_show > 0){
+		// don't need to go through beats cause they'll be in here
+		for(i = 0; i < x->num_subdivs_to_show; i++){
+			t_floatbuf *fb = NULL;
+			hashtab_lookup(x->subdivs_ht, x->subdivs_to_show[i], (t_object **)&fb);
+			if(fb){
+				for(j = 0; j < fb->ac; j++){
+					float d = fabs(fb->av[j] - time);
+					if(d < diff){
+						diff = d;
+						xx = fb->av[j];
+					}
+				}
+			}
+		}
+	}else if(x->beatbuf.ac > 0){
+		for(j = 0; j < x->beatbuf.ac; j++){
+			float d = fabs(x->beatbuf.av[j] - time);
+			if(d < diff){
+				diff = d;
+				xx = x->beatbuf.av[j];
+			}
+		}
+	}
+	return xx;
+}
+
 t_max_err twpm_notify(t_twpm *x, t_symbol *s, t_symbol *msg, void *sender, void *data){ 
  	if (msg == gensym("attr_modified")){ 
  		//t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
@@ -775,12 +946,11 @@ void twpm_mousedown(t_twpm *x, t_object *patcherview, t_pt pt, long modifiers){
 	float time = twpm_scale(pt.x, 0., r.width, x->xmin, x->xmax);
 	float midic = twpm_uncomputeNotePos(pt.y, r);
 
-	post("modifiers = %x", modifiers);
 	switch(modifiers){
 	case 0x10:
 	case 0x110:
 		{
-		t_event *e = x->eventlist;
+			t_event *e = x->eventlist;
 			float mintime = FLT_MAX;
 			t_event *minptr = NULL;
 			while(e){
@@ -811,21 +981,34 @@ void twpm_mousedown(t_twpm *x, t_object *patcherview, t_pt pt, long modifiers){
 				t_twpm_osc_msg *durations = twpm_lookup_osc_msg(e, ps_durations);
 				t_atom *durptr = NULL;
 				float duration = 0;
-				if(notes){
+				float etime = atom_getfloat(e->time);
+				int timematch = 0;
+				if(fabs(pt.x - twpm_scale(etime, x->xmin, x->xmax, 0, r.width)) < 5){
+					timematch = 1;
+				}
+				if(!notes){
+					t_twpm_osc_msg *m = twpm_lookup_osc_msg(e, gensym("/marker"));
+					if(m){
+						if(timematch && (pt.y < 8 || pt.y > (r.height - 8))){
+							twpm_unselect(x);
+							e->selected = 1;
+							e->note_sel = e->dur_sel = NULL;
+							e->whatselected = NOTE;
+							x->selected = e;
+							goto out;
+						}
+					}
+				}else{
 					int i;
 					for(i = 0; i < notes->argc; i++){
+						float py = twpm_computeNotePos(atom_getfloat(notes->argv + i), r) - 3;
 						if(durations){
 							if(i < durations->argc){
 								durptr = durations->argv + i;
 								duration = atom_getfloat(durations->argv + i);
 							}
 						}
-						float etime = atom_getfloat(e->time);
-						float py = twpm_computeNotePos(atom_getfloat(notes->argv + i), r) - 3;
-						int timematch = 0;
-						if(fabs(pt.x - twpm_scale(etime, x->xmin, x->xmax, 0, r.width)) < 5){
-							timematch = 1;
-						}
+
 						if(fabs(py - pt.y) < 5){
 							if(timematch){
 								// selected a note
@@ -894,9 +1077,13 @@ void twpm_mousedrag(t_twpm *x, t_object *patcherview, t_pt pt, long modifiers){
 			t_event *e = x->selected;
 			switch(e->whatselected){
 			case NOTE:
-				atom_setfloat(e->time, twpm_scale(pt.x, 0, r.width, x->xmin, x->xmax));
-				twpm_reorderEvent(x, e);
-				atom_setfloat(e->note_sel, twpm_uncomputeNotePos(pt.y, r));
+				{	
+					float tt = twpm_scale(pt.x, 0, r.width, x->xmin, x->xmax);
+					tt = twpm_find_closest_gridtime(x, tt);
+					atom_setfloat(e->time, tt);
+					twpm_reorderEvent(x, e);
+					atom_setfloat(e->note_sel, twpm_uncomputeNotePos(pt.y, r));
+				}
 				break;
 			case DURATION:
 				{
@@ -906,6 +1093,10 @@ void twpm_mousedrag(t_twpm *x, t_object *patcherview, t_pt pt, long modifiers){
 					}
 					atom_setfloat(e->dur_sel, dur);
 				}
+				break;
+			case MARKER:
+				atom_setfloat(e->time, twpm_scale(pt.x, 0, r.width, x->xmin, x->xmax));
+				twpm_reorderEvent(x, e);
 				break;
 			}
 		}
@@ -1037,11 +1228,16 @@ double twpm_clip(double f, double min, double max){
 }
 
 void twpm_dump(t_twpm *x){
+	t_event *e = x->eventlist;
+	while(e){
+		twpm_outputEvent(x, x->outlet_info, ps_dump, e);
+		e = e->next;
+	}
 }
 
 void twpm_dumpcellblock(t_twpm *x){
 	t_atom clearall[2] = {pa_clear, pa_all};
-	outlet_anything(x->outlet_cellblock, ps_cellblock, 2, clearall);
+	outlet_anything(x->outlet_info, ps_cellblock, 2, clearall);
 	t_event *e = x->selected;
 	if(e){
 		t_twpm_osc_msg *msg = e->messages_ll;
@@ -1057,7 +1253,7 @@ void twpm_dumpcellblock(t_twpm *x){
 			for(i = 0; i < msg->argc; i++){
 				*outptr++= msg->argv[i];
 			}
-			outlet_anything(x->outlet_cellblock, ps_cellblock, outptr - out, out);
+			outlet_anything(x->outlet_info, ps_cellblock, outptr - out, out);
 			msg = msg->next;
 		}
 	}
@@ -1077,18 +1273,46 @@ void twpm_yminmax(t_twpm *x, double min, double max){
 	jbox_redraw((t_jbox *)&(x->box));
 }
 
-void twpm_clear(t_twpm *x){
-	x->selected = NULL;
-	t_event *e = x->eventlist, *next = NULL;
-	while(e){
-		next = e->next;
-		twpm_clear_osc_messages(e);
-		sysmem_freeptr(e);
-		e = next;
+void twpm_clear(t_twpm *x, t_symbol *pat){
+	if(pat){
+		if(pat == ps_notes || pat == ps_marker){
+			twpm_unselect(x);
+			t_event *e = x->eventlist, *next = NULL;
+			int po, ao;
+			while(e){
+				next = e->next;
+				t_twpm_osc_msg *m = e->messages_ll;
+				while(m){
+					if(osc_match(pat->s_name, m->address->s_name, &po, &ao)){
+						if(e->prev){
+							e->prev->next = e->next;
+						}else{
+							x->eventlist = e->next;
+						}
+						if(e->next){
+							e->next->prev = e->prev;
+						}
+						twpm_clear_osc_messages(e);
+						sysmem_freeptr(e);
+					}
+					m = m->next;
+				}
+				e = next;
+			}
+		}
+	}else{
+		x->selected = NULL;
+		t_event *e = x->eventlist, *next = NULL;
+		while(e){
+			next = e->next;
+			twpm_clear_osc_messages(e);
+			sysmem_freeptr(e);
+			e = next;
+		}
+		x->eventlist = NULL;
+		x->left = NULL;
+		x->right = NULL;
 	}
-	x->eventlist = NULL;
-	x->left = NULL;
-	x->right = NULL;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_notes);
 	jbox_redraw((t_jbox *)&(x->box));
 }
@@ -1100,6 +1324,24 @@ void twpm_unselect(t_twpm *x){
 		e = e->next;
 	}
 	x->selected = NULL;
+}
+
+t_floatbuf *twpm_floatbuf_alloc(int ac, float *av){
+	t_floatbuf *fb = (t_floatbuf *)sysmem_newptr(sizeof(t_floatbuf));
+	fb->ac = 0;
+	fb->av = NULL;
+	twpm_floatbuf_store(fb, ac, av);
+	return fb;
+}
+
+void twpm_floatbuf_store(t_floatbuf *fb, int ac, float *av){
+	if(fb->av){
+		fb->av = (float *)sysmem_resizeptr(fb->av, ac * sizeof(float));
+	}else{
+		fb->av = (float *)sysmem_newptr(ac * sizeof(float));
+	}
+	memcpy(fb->av, av, ac * sizeof(float));
+	fb->ac = ac;
 }
 
 t_event *twpm_event_alloc(void){
@@ -1210,10 +1452,12 @@ int main(void){
 	class_addmethod(c, (method)twpm_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)twpm_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)twpm_int, "int", A_LONG, 0);
-	class_addmethod(c, (method)twpm_clear, "clear", 0);
+	class_addmethod(c, (method)twpm_clear, "clear", A_DEFSYM, 0);
 	class_addmethod(c, (method)twpm_dump, "dump", 0);
 	class_addmethod(c, (method)twpm_xminmax, "xminmax", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)twpm_yminmax, "yminmax", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)twpm_set_timepoints, "settimepoints", A_GIMME, 0);
+	class_addmethod(c, (method)twpm_show_subdivs, "showsubdivs", A_GIMME, 0);
 
 	CLASS_ATTR_DOUBLE(c, "xmin", 0, t_twpm, xmin);
         CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "xmin", 0, "0.0");
@@ -1245,6 +1489,10 @@ int main(void){
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "selectioncolor", 0, "1. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "selectioncolor", 0, "rgba", "Selection Color"); 
 
+ 	CLASS_ATTR_RGBA(c, "gridcolor", 0, t_twpm, gridcolor); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "gridcolor", 0, "0. 0. 1. 1."); 
+ 	CLASS_ATTR_STYLE_LABEL(c, "gridcolor", 0, "rgba", "Grid Color"); 
+
  	CLASS_STICKY_ATTR_CLEAR(c, "category"); 
 
  	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 300. 100."); 
@@ -1259,6 +1507,9 @@ int main(void){
 	ps_FullPacket = gensym("FullPacket");
 	ps_durations = gensym("/durations");
 	ps_time = gensym("/time");
+	ps_marker = gensym("/marker");
+	ps_beats = gensym("/beats");
+	ps_subdivs = gensym("/subdivs");
 	atom_setsym(&pa_clear, ps_clear);
 	atom_setsym(&pa_dump, ps_dump);
 	atom_setsym(&pa_all, gensym("all"));
@@ -1304,7 +1555,7 @@ void *twpm_new(t_symbol *s, long argc, t_atom *argv){
 
 		x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
 
-		x->outlet_cellblock = outlet_new((t_object *)x, NULL);
+		x->outlet_info = outlet_new((t_object *)x, NULL);
 		x->outlet_main = outlet_new((t_object *)x, NULL);
 		x->takingdump = 0;
 
@@ -1312,6 +1563,13 @@ void *twpm_new(t_symbol *s, long argc, t_atom *argv){
 		x->eventlist = NULL;
 		x->left = x->right = NULL;
 		x->lasttime = 0.;
+
+		x->subdivs_ht = hashtab_new(0);
+		hashtab_flags(x->subdivs_ht, OBJ_FLAG_DATA);
+		x->beatbuf.av = NULL;
+		x->beatbuf.ac = 0;
+		x->subdivs_to_show = NULL;
+		x->num_subdivs_to_show = 0;
 
 		critical_new(&(x->lock));
  		attr_dictionary_process(x, d); 
