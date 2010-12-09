@@ -41,6 +41,8 @@ VERSION 0.0: First try
 
 #define MAX_NUM_MESSAGES 1024
 
+#define PF __PRETTY_FUNCTION__
+
 typedef struct _oroute_message{
 	t_osc_msg msg;
 	int outlet_num;
@@ -72,6 +74,7 @@ typedef struct _oroute{
 	t_oroute_message *message_buf;
 	int numMessages, message_buf_len;
 	int bundlePartialMatches;
+	int max_message; // set this to note that the event originated as a max message and not a FullPacket
 } t_oroute;
 
 void *oroute_class;
@@ -104,6 +107,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 		}
 	}
 	nn = osc_util_flatten(nn, cpy, cpy);
+	//osc_util_printBundle(len, cpy, printf);
 	t_oroute_wksp wksp;
 	t_symbol *args[x->numArgs];
 	t_oroute_message mm[128];
@@ -123,18 +127,25 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	}else{
 		oroute_fp(x, nn, cpy, mm);
 	}
+	x->max_message = 0;
 }
 
-
 void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_message *m){
+	if(!m){
+		return;
+	}
 	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
-	long argc;
+	long argc = 0;
 	char buf[len], *bufp = buf;
 	memset(buf, '\0', len);
 	memcpy(buf, ptr, 16);
 	bufp += 16;
 	int last_outlet_num = -1;
 	//printf("*******************************************\n");
+	while(m->next){
+		m = m->next;
+	}
+
 	while(m){
 		//printf("m = %p\n", m);
 		if(last_outlet_num != m->outlet_num && last_outlet_num >= 0 && bufp - buf > 16){
@@ -146,18 +157,22 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_m
 			memset(bufp, '\0', len - 16);
 		}
 		if(m->full_match){
-			//printf("crash is here %p\n", m);
-			//printf("yep: %s\n", m->msg.address);
-			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, &argv);
-			//printf("probably won't see me\n");
-			outlet_atoms(x->outlets[m->outlet_num], argc - 1, argv + 1);
+			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
+			if(argc == 1){
+				outlet_bang(x->outlets[m->outlet_num]);
+			}else{
+				outlet_atoms(x->outlets[m->outlet_num], argc - 1, argv + 1);
+			}
+		}else if(x->max_message){
+			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
+			outlet_anything(x->outlets[m->outlet_num], gensym(atom_getsym(argv)->s_name + m->offset), argc - 1, argv + 1);
 		}else{
 			char *size = bufp;
 			bufp += 4;
 			strcpy(bufp, m->msg.address + m->offset);
 			bufp += strlen(m->msg.address + m->offset);
 			bufp++;
-			while((bufp - buf) % 4){
+			while((bufp - size) % 4){
 				bufp++;
 			}
 
@@ -166,7 +181,7 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_m
 			*((uint32_t *)size) = hton32(bufp - size - 4);
 		}
 		last_outlet_num = m->outlet_num;
-		m = m->next;
+		m = m->prev;
 	}
 	if(bufp - buf > 16){
 		t_atom out[2];
@@ -184,7 +199,7 @@ void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 	long argc;
 	while(m){
 	        //a = omax_util_oscMsg2MaxAtoms(&(m->msg));
-		omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, &argv);
+		omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
 		if(m->full_match){
 			//atomarray_getatoms(a, &argc, &argv);
 			outlet_list(x->outlets[m->outlet_num], NULL, argc - 1, argv + 1);
@@ -213,17 +228,22 @@ void oroute_cbk(t_osc_msg msg, void *context){
 		int ret = osc_match(msg.address, x->args[i]->s_name, &po, &ao);
 
 		//post("pattern = %s, address = %s, ret = %d", msg.address, x->args[i]->s_name, ret);
-		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE) || (msg.address[po] == '/'))){
+		int star_at_end = 0;
+		if(msg.address[po] == '*' && msg.address[po + 1] == '\0'){
+			star_at_end = 1;
+		}
+		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE) || ((msg.address[po] == '/') || star_at_end == 1))){
 			x->message_buf[x->numMessages].msg = msg;
 			x->message_buf[x->numMessages].full_match = 0;
 			x->message_buf[x->numMessages].offset = po;
-			if(ret == 3){
+			if(ret == 3 || star_at_end == 1){
 				x->message_buf[x->numMessages].full_match = 1;
 			}
 			x->message_buf[x->numMessages].outlet_num = i;
 			oroute_insert_msg(x, &(x->message_buf[x->numMessages]));
 			match = 1;
 			x->numMessages++;
+		}else{
 		}
 	}
 	if(!match){
@@ -242,10 +262,39 @@ void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *message){
 	t_oroute_message *prev = NULL;
 	msg->next = NULL;
 	msg->prev = NULL;
+
 	if(!m){
 		x->messages = msg;
 		return;
 	}
+	if(m->outlet_num >= msg->outlet_num){
+		msg->next = m;
+		m->prev = msg;
+		x->messages = msg;
+		return;
+	}	
+	while(m->outlet_num < msg->outlet_num){
+		if(!(m->next)){
+			break;
+		}
+		prev = m;
+		m = m->next;
+	}
+	if(!m){
+		m = prev;
+	}
+
+	m->next = msg;
+	msg->prev = m;       
+	/*
+	msg->next = m->next;
+	m->next = msg;
+	msg->prev = m;
+	if(msg->next){
+		msg->next->prev = msg;
+	}
+	*/
+	/*
 	while(m){
 		if(m->outlet_num <= msg->outlet_num){
 			break;
@@ -253,6 +302,7 @@ void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *message){
 		prev = m;
 		m = m->next;
 	}
+
 	if(!m){
 		m = msg;
 		msg = prev;
@@ -261,15 +311,38 @@ void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *message){
 	msg->prev = NULL;
 	if(m){
 		msg->prev = m->prev;
-		if(!(m->prev)){
+		if(!(msg->prev)){
 			x->messages = msg;
 		}
 		m->prev = msg;
 	}
-	//post("%p <-- %p --> %p", msg->prev, msg, msg->next);
+*/
+	//printf("%p <-- %p --> %p\n", msg->prev, msg, msg->next);
 }
 
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
+	if(!msg){
+		object_error((t_object *)x, "doesn't look like an OSC message");
+		return;
+	}
+	if(msg->s_name[0] != '/'){
+		object_error((t_object *)x, "OSC addresses must begin with a /");
+		return;
+	}
+	char *buffer = (char *)sysmem_newptr(1024);
+	memset(buffer, '\0', 1024);
+	t_atom av[argc + 1];
+	atom_setsym(av, msg);
+	memcpy(av + 1, argv, argc * sizeof(t_atom));
+	long len = 1024;
+	//len = osc_util_make_bundle_from_atoms(argc + 1, av, &len, buffer);
+	strncpy(buffer, "#bundle\0", 8);
+	*((long long *)(buffer + 8)) = hton64(1ll);
+	len = omax_util_encode_atoms(buffer + 16, len, msg, argc, argv);
+	x->max_message = 1;
+
+	oroute_fullPacket(x, len + 16, (long)buffer);
+
 	/*
 	int len = cmmjl_osc_get_msg_length_max(msg, argc, argv);
 	if(len == 0){
