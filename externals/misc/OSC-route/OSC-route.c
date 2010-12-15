@@ -54,6 +54,7 @@ VERSION 1.15: Fixed symbol corruption memory management bug related to "set" mes
 VERSION 1.16: Fixed possible bug when freeing the object
 VERSION 1.17: Changed outlet declaration to accomodate Jitter
 VERSION 1.17.1: Increased the size of the substrings
+VERSION 1.17.2: object_error()
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
  */
@@ -152,7 +153,7 @@ void main(fptr *f) {
 
 int RememberNextPrefix(OSCroute *x, char *prefixWithoutLeadingSlash) {
 	if (x->o_num >= MAX_NUM) {
-		error("OSC-route: too many outlets requested. (max %ld)", MAX_NUM);
+		object_error((t_object *)x, "OSC-route: too many outlets requested. (max %ld)", MAX_NUM);
 		return 0;
 	}
 
@@ -168,12 +169,12 @@ int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num) {
 
 
 	if (num < 0) {
-	  error("OSC-route: what's with the negative outlet number %ld?", num);
+	  object_error((t_object *)x, "OSC-route: what's with the negative outlet number %ld?", num);
 	  return 0;
 	}
 
 	if (num >= MAX_NUM) {
-		error("OSC-route: can't have %ld outlets (max %ld)", num, MAX_NUM);
+		object_error((t_object *)x, "OSC-route: can't have %ld outlets (max %ld)", num, MAX_NUM);
 		return 0;
 	}
 
@@ -183,7 +184,7 @@ int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num) {
 	x->o_prefix_sizes[num] = MyStrLen(prefixWithoutLeadingSlash)+1;
 	x->o_prefixes[num] = getbytes(x->o_prefix_sizes[num]);
 	if (x->o_prefixes[num] == 0) {
-		error("Out of memory saving string /%s", prefixWithoutLeadingSlash);
+		object_error((t_object *)x, "Out of memory saving string /%s", prefixWithoutLeadingSlash);
 		x->o_prefix_sizes[num] = 0;
 		return 0;
 	}
@@ -423,7 +424,7 @@ void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	}
 	
 	if (numPatternParts == MAX_PREFIX_LEVELS) {
-		error("OSC-route: exceeded MAX_PREFIX_LEVELS (%ld)", MAX_PREFIX_LEVELS);
+		object_error((t_object *)x, "OSC-route: exceeded MAX_PREFIX_LEVELS (%ld)", MAX_PREFIX_LEVELS);
 		return;
 	}
 	
