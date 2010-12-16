@@ -1,0 +1,145 @@
+// !$*UTF8*$!
+{
+	089C1669FE841209C02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Deployment;
+		activeTarget = 8D01CCC60486CAD60068D4B7 /* timewarp~ */;
+		addToTargets = (
+			8D01CCC60486CAD60068D4B7 /* timewarp~ */,
+		);
+		codeSenseManager = 526B6C4511865B1500ADFE71 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					301,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 314233430;
+			PBXWorkspaceStateSaveDate = 314233430;
+		};
+		perUserProjectItems = {
+			52E5F14A12BAD2AC009F7160 /* PBXTextBookmark */ = 52E5F14A12BAD2AC009F7160 /* PBXTextBookmark */;
+			52E5F14B12BAD2AC009F7160 /* PBXTextBookmark */ = 52E5F14B12BAD2AC009F7160 /* PBXTextBookmark */;
+			52E5F14C12BAD2AC009F7160 /* PBXBookmark */ = 52E5F14C12BAD2AC009F7160 /* PBXBookmark */;
+			52E5F14D12BAD2AC009F7160 /* PBXTextBookmark */ = 52E5F14D12BAD2AC009F7160 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 526B6C4411865B1500ADFE71 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	526B6C4411865B1500ADFE71 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	526B6C4511865B1500ADFE71 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	52D875F8120CC3B900E5FC5E /* macho-prefix.pch */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = "macho-prefix.pch";
+		path = "/Users/john/Development/cnmat/trunk/max/c74support/max-includes/macho-prefix.pch";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {677, 200}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 164}";
+		};
+	};
+	52E5F14512BAD25F009F7160 /* timewarp~.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {579, 65338}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 920}";
+		};
+	};
+	52E5F14712BAD278009F7160 /* osc_byteorder.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {519, 689}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 522}";
+		};
+	};
+	52E5F14A12BAD2AC009F7160 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 52D875F8120CC3B900E5FC5E /* macho-prefix.pch */;
+		name = "macho-prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 164;
+		vrLoc = 0;
+	};
+	52E5F14B12BAD2AC009F7160 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 52E5F14512BAD25F009F7160 /* timewarp~.cpp */;
+		name = "timewarp~.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 920;
+		vrLoc = 0;
+	};
+	52E5F14C12BAD2AC009F7160 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 52E5F14712BAD278009F7160 /* osc_byteorder.h */;
+	};
+	52E5F14D12BAD2AC009F7160 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 52E5F14712BAD278009F7160 /* osc_byteorder.h */;
+		name = "osc_byteorder.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 522;
+		vrLoc = 0;
+	};
+	8D01CCC60486CAD60068D4B7 /* timewarp~ */ = {
+		activeExec = 0;
+	};
+}
