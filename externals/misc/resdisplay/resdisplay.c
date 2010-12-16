@@ -29,6 +29,7 @@
   VERSION 0.0: First try
   VERSION 0.1: bug fix in the log display mode and much faster drawing
   VERSION 0.2: Info about the range and selection is now drawn at the top of the display
+  VERSION 0.2.1: Bang now outputs model and model comes out when loaded
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -82,6 +83,7 @@ void rd_copy_data(t_rd *x, short argc, t_atom *argv);
 double rd_scale(double f, double min_in, double max_in, double min_out, double max_out);
 void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers);
 void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers);
+void rd_output_all(t_rd *x);
 void rd_output_sel(t_rd *x);
 double rd_ftom(double f);
 void rd_free(t_rd *x);
@@ -209,6 +211,7 @@ void rd_clear(t_rd *x){
 }
 
 void rd_bang(t_rd *x){
+	rd_output_all(x);
 }
 
 void rd_int(t_rd *x, long n){
@@ -235,6 +238,7 @@ void rd_list(t_rd *x, t_symbol *msg, short argc, t_atom *argv){
 	x->sinusoids = 0;
 	x->n = argc / 3;
 	rd_copy_data(x, argc, argv);
+	rd_output_all(x);
 }
 
 void rd_copy_data(t_rd *x, short argc, t_atom *argv){
@@ -334,6 +338,16 @@ void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
 	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
 	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
 	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+}
+
+void rd_output_all(t_rd *x){
+	int i;
+	int n = (x->sinusoids ? (x->n * 2) : (x->n * 3));
+	t_atom buf[x->buffer_size];
+	for(i = 0; i < n; i++){
+		atom_setfloat(buf + i, x->buffer[i]);
+	}
+	outlet_list(x->outlet, NULL, n, buf);
 }
 
 void rd_output_sel(t_rd *x){
