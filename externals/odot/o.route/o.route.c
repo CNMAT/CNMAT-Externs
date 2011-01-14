@@ -125,7 +125,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	if(x->bundlePartialMatches){
 		oroute_fp_bundlePartialMatches(x, nn, cpy, wksp.messages);
 	}else{
-		oroute_fp(x, nn, cpy, mm);
+		oroute_fp(x, nn, cpy, wksp.messages);
 	}
 	x->max_message = 0;
 }
@@ -142,10 +142,12 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_m
 	bufp += 16;
 	int last_outlet_num = -1;
 	//printf("*******************************************\n");
+	int counter = 0;
 	while(m->next){
 		m = m->next;
+		//post("%d: %p <- %p -> %p, address: %s", counter++, m->prev, m, m->next, m->msg.address);
 	}
-
+	counter = 0;
 	while(m){
 		//printf("m = %p\n", m);
 		if(last_outlet_num != m->outlet_num && last_outlet_num >= 0 && bufp - buf > 16){
@@ -175,9 +177,15 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_m
 			while((bufp - size) % 4){
 				bufp++;
 			}
-
-			memcpy(bufp, m->msg.typetags, m->msg.size - (m->msg.typetags - m->msg.address));
-			bufp += m->msg.size - (m->msg.typetags - m->msg.address);
+			if(m->msg.typetags){
+				memcpy(bufp, m->msg.typetags, m->msg.size - (m->msg.typetags - m->msg.address));
+				bufp += m->msg.size - (m->msg.typetags - m->msg.address);
+			}else{
+				*bufp++ = ',';
+				*bufp++ = '\0';
+				*bufp++ = '\0';
+				*bufp++ = '\0';				
+			}
 			*((uint32_t *)size) = hton32(bufp - size - 4);
 		}
 		last_outlet_num = m->outlet_num;
@@ -193,10 +201,16 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_m
 }
 
 void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
+	if(!m){
+		return;
+	}
 	//t_oroute_message *m = x->messages;
 	//t_atomarray *a = NULL;
 	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc;
+	while(m->next){
+		m = m->next;
+	}
 	while(m){
 	        //a = omax_util_oscMsg2MaxAtoms(&(m->msg));
 		omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
@@ -211,7 +225,7 @@ void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 				//atomarray_clear(a);
 			}
 		}
-		m = m->next;
+		m = m->prev;
 	}
 	sysmem_freeptr(argv);
 }
@@ -268,13 +282,13 @@ void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *message){
 		return;
 	}
 	if(m->outlet_num >= msg->outlet_num){
-		msg->next = m;
+		msg->next = x->messages;
 		m->prev = msg;
 		x->messages = msg;
 		return;
-	}	
-	while(m->outlet_num < msg->outlet_num){
-		if(!(m->next)){
+	}
+	while(m){
+		if(msg->outlet_num <= m->outlet_num){
 			break;
 		}
 		prev = m;
@@ -282,42 +296,62 @@ void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *message){
 	}
 	if(!m){
 		m = prev;
+		m->next = msg;
+		msg->prev = m;
+	}else{
+		//post("%s %d <= %d %s", msg->msg.address, msg->outlet_num, m->outlet_num, m->msg.address);
+		msg->next = m;
+		msg->prev = m->prev;
+		if(m->prev){
+			m->prev->next = msg;
+		}
+		m->prev = msg;
 	}
+	/*
+	post("%s, %d", message->msg.address, message->outlet_num);
+	t_oroute_message *msg = message;
+	t_oroute_message *m = x->messages;
+	t_oroute_message *prev = NULL;
+	msg->next = NULL;
+	msg->prev = NULL;
 
-	m->next = msg;
-	msg->prev = m;       
-	/*
-	msg->next = m->next;
-	m->next = msg;
-	msg->prev = m;
-	if(msg->next){
-		msg->next->prev = msg;
+	if(!m){
+		x->messages = msg;
+		return;
 	}
-	*/
-	/*
-	while(m){
-		if(m->outlet_num <= msg->outlet_num){
+	if(m->outlet_num >= msg->outlet_num){
+		msg->next = x->messages;
+		m->prev = msg;
+		x->messages = msg;
+		return;
+	}	
+	while(m->outlet_num > msg->outlet_num){
+		if(!(m->next)){
 			break;
 		}
 		prev = m;
 		m = m->next;
 	}
-
 	if(!m){
-		m = msg;
-		msg = prev;
+		post("this can't happen, right??");
+		m = prev;
 	}
-	msg->next = m;
-	msg->prev = NULL;
-	if(m){
-		msg->prev = m->prev;
-		if(!(msg->prev)){
-			x->messages = msg;
-		}
-		m->prev = msg;
+	post("%s (%d), %s (%d)", m->msg.address, m->outlet_num, msg->msg.address, msg->outlet_num);
+	msg->prev = m;
+	msg->next = m->next;
+	if(msg->next){
+		msg->next->prev = msg;
 	}
-*/
-	//printf("%p <-- %p --> %p\n", msg->prev, msg, msg->next);
+	m->next = msg;
+	*/
+	/*
+	msg->next = m->next;
+	if(m->next){
+		m->next->prev = msg;
+	}
+	m->next = msg;
+	msg->prev = m;
+	*/
 }
 
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
