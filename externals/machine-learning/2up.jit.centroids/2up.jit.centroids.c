@@ -288,7 +288,7 @@ void free_map(e_pixdata * pMap, int width, int height)
 	if (pMap)
 	{	
 		//jit_freebytes(pMap, width * height * sizeof(e_pixdata));
-		sysmem_freeptr(pMap, width * height * sizeof(e_pixdata));
+		sysmem_freeptr(pMap);
 		pMap = 0;
 	}
 }

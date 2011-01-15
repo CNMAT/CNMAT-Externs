@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
-		546D053B09D1D535007451EB /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 546D053A09D1D535007451EB /* JitterAPI.framework */; };
+		5279088812E128B200934D68 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5279088712E128B200934D68 /* JitterAPI.framework */; };
+		527908B412E128BA00934D68 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527908B312E128BA00934D68 /* MaxAPI.framework */; };
+		527908FA12E128C000934D68 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527908F912E128C000934D68 /* MaxAudioAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B510A6780AEC78B2004D7644 /* 2up.jit.centroids.c in Sources */ = {isa = PBXBuildFile; fileRef = B510A6770AEC78B2004D7644 /* 2up.jit.centroids.c */; };
-		B58AB19E0A8EB8CE00990227 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58AB19D0A8EB8CE00990227 /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		0F5B62020919440900A62EB9 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = /Library/Frameworks/MaxAPI.framework; sourceTree = "<absolute>"; };
-		546D053A09D1D535007451EB /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = /Library/Frameworks/JitterAPI.framework; sourceTree = "<absolute>"; };
+		5279088712E128B200934D68 /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "../../../SDK/MaxSDK-5.1.1/c74support/jit-includes/JitterAPI.framework"; sourceTree = SOURCE_ROOT; };
+		527908B312E128BA00934D68 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5.1.1/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		527908F912E128C000934D68 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/MaxSDK-5.1.1/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* 2up.jit.centroids.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 2up.jit.centroids.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		B510A6770AEC78B2004D7644 /* 2up.jit.centroids.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = 2up.jit.centroids.c; sourceTree = "<group>"; };
-		B58AB19D0A8EB8CE00990227 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = /Library/Frameworks/MaxAudioAPI.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,9 +29,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */,
-				546D053B09D1D535007451EB /* JitterAPI.framework in Frameworks */,
-				B58AB19E0A8EB8CE00990227 /* MaxAudioAPI.framework in Frameworks */,
+				5279088812E128B200934D68 /* JitterAPI.framework in Frameworks */,
+				527908B412E128BA00934D68 /* MaxAPI.framework in Frameworks */,
+				527908FA12E128C000934D68 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,9 +52,9 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B58AB19D0A8EB8CE00990227 /* MaxAudioAPI.framework */,
-				546D053A09D1D535007451EB /* JitterAPI.framework */,
-				0F5B62020919440900A62EB9 /* MaxAPI.framework */,
+				527908F912E128C000934D68 /* MaxAudioAPI.framework */,
+				527908B312E128BA00934D68 /* MaxAPI.framework */,
+				5279088712E128B200934D68 /* JitterAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -174,7 +174,15 @@
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/jit-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/msp-includes\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -247,7 +255,14 @@
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/jit-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/msp-includes\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
@@ -260,7 +275,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -268,8 +283,8 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../../c74support/jit-includes",
-					"../../c74support/max-includes",
+					"../../../SDK/MaxSDK-5.1.1/c74support/jit-includes",
+					"../../../c74support/max-includes",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../../../../Applications/MaxMSP 4.6/2up-externals";
@@ -300,7 +315,15 @@
 				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/jit-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5.1.1/c74support/msp-includes\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
