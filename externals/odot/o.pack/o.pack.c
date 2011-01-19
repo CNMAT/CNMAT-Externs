@@ -35,8 +35,7 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
+#include "omax_util.h"
 
 #define MAX_ARGS 64
 
@@ -64,11 +63,13 @@ void opack_free(t_opack *x);
 void opack_assist(t_opack *x, void *b, long m, long a, char *s);
 void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 
+t_symbol *ps_FullPacket;
+
 void opack_outputBundle(t_opack *x){
 	char buffer[x->bufsize];
 	memset(buffer, '\0', x->bufsize);
-	cmmjl_osc_init_bundle(x->bufsize, buffer, NULL);
-	int len = cmmjl_osc_make_bundle(x->numAddresses, 
+	//cmmjl_osc_init_bundle(x->bufsize, buffer, NULL);
+	int len = osc_util_make_bundle(x->numAddresses, 
 					x->addresses, 
 					x->numArgs, 
 					x->typetags, 
@@ -85,6 +86,10 @@ void opack_outputBundle(t_opack *x){
 	atom_setlong(&(out[0]), len);
 	atom_setlong(&(out[1]), (long)buffer);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
+}
+
+void opack_list(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
+	opack_anything(x, NULL, argc, argv);
 }
 
 void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
@@ -123,6 +128,7 @@ void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 		x->args[address][argNum] = argv[i];
 		if(++argNum >= x->numArgs[address]){
 			address++;
+			argNum = 0;
 		}
 		if(address >= x->numAddresses){
 			break;
@@ -179,7 +185,6 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 			object_error((t_object *)x, "the first argument must be an OSC string that begins with a slash (/)");
 			return NULL;
 		}
-		cmmjl_init(x, NAME, 0);
 
 		int i;
 		int isaddress[argc];
@@ -317,6 +322,7 @@ int main(void){
 	//class_addmethod(c, (method)opack_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)opack_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)opack_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)opack_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)opack_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)opack_int, "int", A_LONG, 0);
 	class_addmethod(c, (method)opack_bang, "bang", 0);
@@ -324,6 +330,8 @@ int main(void){
     
 	class_register(CLASS_BOX, c);
 	opack_class = c;
+
+	ps_FullPacket = gensym("FullPacket");
 
 	common_symbols_init();
 	return 0;
