@@ -43,13 +43,12 @@ typedef struct _opack{
 	t_object ob;
 	void *outlet;
 	t_symbol **addresses;
-	char **typetags;
-	t_atom **args;
-	int *numArgs;
 	int numAddresses;
+	t_atom **args;
+	int *numargs;
+	int *arglen;
 	long inlet;
 	void **proxy;
-	int bufsize;
 } t_opack;
 
 void *opack_class;
@@ -66,9 +65,41 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void opack_outputBundle(t_opack *x){
-	char buffer[x->bufsize];
-	memset(buffer, '\0', x->bufsize);
-	//cmmjl_osc_init_bundle(x->bufsize, buffer, NULL);
+	int i, j;
+	int nbytes = 16;
+	for(i = 0; i < x->numAddresses; i++){
+		nbytes += 4; // size
+		// address
+		nbytes += strlen(x->addresses[i]->s_name);
+		while(nbytes % 4){
+			nbytes++;
+		}
+		// args
+		for(j = 0; j < x->numargs[i]; j++){
+			switch(atom_gettype(x->args[i] + j)){
+			case A_LONG:
+			case A_FLOAT:
+				nbytes += sizeof(double); // just to be safe...
+				break;
+			case A_SYM:
+				nbytes += strlen(atom_getsym(x->args[i] + j)->s_name);
+				while(nbytes % 4){
+					nbytes++;
+				}
+				break;
+			}
+		}
+	}
+	char buffer[nbytes];
+	memset(buffer, '\0', nbytes);
+	strncpy(buffer, "#bundle\0", 8);
+	int pos = 16;
+	// insert timetag!
+	for(i = 0; i < x->numAddresses; i++){
+		pos += omax_util_encode_atoms(buffer + pos, x->addresses[i], x->numargs[i], x->args[i]);
+	}
+	
+	/*
 	int len = osc_util_make_bundle(x->numAddresses, 
 					x->addresses, 
 					x->numArgs, 
@@ -76,6 +107,7 @@ void opack_outputBundle(t_opack *x){
 					x->args, 
 					&(x->bufsize), 
 					buffer);
+	*/
 	/*
 	int i;
 	for(i = 0; i < len; i++){
@@ -83,7 +115,7 @@ void opack_outputBundle(t_opack *x){
 	}
 	*/
 	t_atom out[2];
-	atom_setlong(&(out[0]), len);
+	atom_setlong(&(out[0]), pos);
 	atom_setlong(&(out[1]), (long)buffer);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
@@ -98,42 +130,23 @@ void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 #ifdef PAK
 	shouldOutput = 1;
 #endif
-	int address = 0;
-	int i = 0;
-	for(i = 0; i < x->numAddresses; i++){
-		if(inlet >= address && inlet < (address + x->numArgs[i])){
-			break;
-		}else{
-			address += x->numArgs[i];
-		}
-	}
-	int argNum = inlet - address;
-	address = i;
-
 	if(msg){
-		t_atom a;
-		atom_setsym(&a, msg);
-		x->args[address][argNum] = a;
-		if(++argNum >= x->numArgs[address]){
-			address++;
-		}
-		if(address >= x->numAddresses){
-			if(shouldOutput){
-				opack_outputBundle(x);
-				return;
-			}
+		argc++;
+	}
+	if(argc > x->arglen[inlet]){
+		x->args[inlet] = (t_atom *)sysmem_resizeptr(x->args[inlet], sizeof(t_atom) * argc);
+		if(x->args[inlet] == NULL){
+			object_error((t_object *)x, "Out of memory--Max will be crashing soon...");
+			return;
 		}
 	}
-	for(i = 0; i < argc; i++){
-		x->args[address][argNum] = argv[i];
-		if(++argNum >= x->numArgs[address]){
-			address++;
-			argNum = 0;
-		}
-		if(address >= x->numAddresses){
-			break;
-		}
+	if(msg){
+		atom_setsym(x->args[inlet], msg);
+		memcpy(x->args[inlet] + 1, argv, argc * sizeof(t_atom));
+	}else{
+		memcpy(x->args[inlet], argv, argc * sizeof(t_atom));
 	}
+	x->numargs[inlet] = argc;
 	if(shouldOutput){
 		opack_outputBundle(x);
 	}
@@ -186,7 +199,37 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 			return NULL;
 		}
 
+		t_atom *addresses[argc];
+		int numargs[argc];
+		int count = 0;
 		int i;
+		for(i = 0; i < argc; i++){
+			numargs[i] = 0;
+			if(atom_gettype(argv + i) == A_SYM){
+				if(atom_getsym(argv + i)->s_name[0] == '/'){
+					addresses[count++] = argv + i;
+				}else{
+					numargs[count - 1]++;
+				}
+			}else{
+				numargs[count - 1]++;
+			}
+		}
+		x->numAddresses = count;
+		x->addresses = (t_symbol **)sysmem_newptr(count * sizeof(t_symbol *));
+		x->args = (t_atom **)sysmem_newptr(count * sizeof(t_atom *));
+		x->numargs = (int *)sysmem_newptr(count * sizeof(int));
+		x->arglen = (int *)sysmem_newptr(count * sizeof(int));
+		for(i = 0; i < count; i++){
+			x->addresses[i] = atom_getsym(addresses[i]);
+			if(numargs[i] > 0){
+				x->args[i] = (t_atom *)sysmem_newptr(numargs[i] * sizeof(t_atom));
+				x->arglen[i] = numargs[i];
+				x->numargs[i] = numargs[i];
+				memcpy(x->args[i], addresses[i] + 1, numargs[i] * sizeof(t_atom));
+			}
+		}
+		/*
 		int isaddress[argc];
 		x->bufsize = 16;
 		memset(isaddress, '\0', argc * sizeof(int));
@@ -299,10 +342,11 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 				}
 			}
 		}
+		*/
 
-		x->proxy = malloc(numInlets * sizeof(void *));
-		for(i = 0; i < numInlets; i++){
-			x->proxy[i] = proxy_new((t_object *)x, numInlets - i, &(x->inlet));
+		x->proxy = (void **)sysmem_newptr(count * sizeof(void *));
+		for(i = 1; i < count; i++){
+			x->proxy[i] = proxy_new((t_object *)x, count - i, &(x->inlet));
 		}
 		x->outlet = outlet_new(x, "FullPacket");
 	}
