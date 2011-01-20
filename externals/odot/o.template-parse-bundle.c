@@ -115,7 +115,7 @@ void *otemplate_new(t_symbol *msg, short argc, t_atom *argv){
 	if(x = (t_otemplate *)object_alloc(otemplate_class)){
 		x->outlets = outlet_new((t_object *)x, NULL);
 		x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
-		x->buffers = (char *)calloc(4096, sizeof(char));
+		x->buffer = (char *)calloc(4096, sizeof(char));
 		x->buffer_pos = 0;
 
 		attr_args_process(x, argc, argv);
