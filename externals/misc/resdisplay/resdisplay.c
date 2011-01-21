@@ -30,6 +30,7 @@
   VERSION 0.1: bug fix in the log display mode and much faster drawing
   VERSION 0.2: Info about the range and selection is now drawn at the top of the display
   VERSION 0.2.1: Bang now outputs model and model comes out when loaded
+  VERSION 0.2.2: added displayrange message for compatibility with resonance-display.js
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -80,6 +81,7 @@ void rd_int(t_rd *x, long n);
 void rd_float(t_rd *x, double xx);
 void rd_list(t_rd *x, t_symbol *msg, short argc, t_atom *argv);
 void rd_copy_data(t_rd *x, short argc, t_atom *argv);
+void rd_displayrange(t_rd *x, double min, double max);
 double rd_scale(double f, double min_in, double max_in, double min_out, double max_out);
 void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers);
 void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers);
@@ -262,6 +264,17 @@ void rd_copy_data(t_rd *x, short argc, t_atom *argv){
 
 void rd_anything(t_rd *x, t_symbol *msg, short argc, t_atom *argv){
 
+}
+
+void rd_displayrange(t_rd *x, double min, double max){
+	if(min > max){
+		x->freqmin = max;
+		x->freqmax = min;
+	}else{
+		x->freqmin = min;
+		x->freqmax = max;
+	}
+	jbox_redraw(&(x->ob));
 }
 
 double rd_scale(double f, double min_in, double max_in, double min_out, double max_out){
@@ -489,6 +502,7 @@ int main(void){
 	class_addmethod(c, (method)rd_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)rd_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)rd_clear, "clear", 0);
+	class_addmethod(c, (method)rd_displayrange, "displayrange", A_FLOAT, A_FLOAT, 0);
 
 	class_addmethod(c, (method)rd_mousedown, "mousedown", A_CANT, 0);
 	class_addmethod(c, (method)rd_mousedrag, "mousedrag", A_CANT, 0);
