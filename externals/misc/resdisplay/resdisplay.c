@@ -512,15 +512,15 @@ int main(void){
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
     
  	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_rd, bgcolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, "0. 0. 0. 1."); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, "1. 1. 1. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "bgcolor", 0, "rgba", "Background Color"); 
 
  	CLASS_ATTR_RGBA(c, "datacolor", 0, t_rd, datacolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "datacolor", 0, "0. 1. 0. 1."); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "datacolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "datacolor", 0, "rgba", "Data Color"); 
 
  	CLASS_ATTR_RGBA(c, "selectioncolor", 0, t_rd, selectioncolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "selectioncolor", 0, "1. 1. 1. 1."); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "selectioncolor", 0, "0. 0. 1. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "selectioncolor", 0, "rgba", "Selection Color"); 
 
  	CLASS_ATTR_RGBA(c, "bordercolor", 0, t_rd, bordercolor); 
