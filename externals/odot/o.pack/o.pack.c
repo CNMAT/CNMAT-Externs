@@ -166,7 +166,8 @@ void opack_float(t_opack *x, double f){
 }
 
 void opack_bang(t_opack *x){
-	opack_anything(x, NULL, 0, NULL);
+	//opack_anything(x, NULL, 0, NULL);
+	opack_outputBundle(x);
 }
 
 void opack_assist(t_opack *x, void *b, long m, long a, char *s){
