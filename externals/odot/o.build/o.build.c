@@ -128,7 +128,7 @@ void obuild_list(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
 void obuild_anything(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
 	int inlet = proxy_getinlet((t_object *)x);
 	int shouldOutput = (inlet == 0);
-#ifdef PAK
+#ifdef BILD
 	shouldOutput = 1;
 #endif
 	if(msg){
@@ -358,7 +358,7 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	char *name;
-#ifdef PAK
+#ifdef BILD
 	name = "o.bild";
 #else
 	name = "o.build";
