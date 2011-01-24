@@ -16,7 +16,7 @@
 		5249DF3712E1667000B3ABA5 /* omax_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5249DF3112E1667000B3ABA5 /* omax_util.c */; };
 		5249DF3812E1667000B3ABA5 /* omax_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 5249DF3212E1667000B3ABA5 /* omax_util.h */; };
 		5249DF3A12E1667400B3ABA5 /* liboio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5249DF3912E1667400B3ABA5 /* liboio.a */; };
-		5249DFE212ED67CE00B3ABA5 /* o.bild.c in Sources */ = {isa = PBXBuildFile; fileRef = 5249DFE112ED67CE00B3ABA5 /* o.bild.c */; };
+		5249DFEC12ED693400B3ABA5 /* o.build.c in Sources */ = {isa = PBXBuildFile; fileRef = 5249DFEB12ED693400B3ABA5 /* o.build.c */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,7 +32,7 @@
 		5249DF3112E1667000B3ABA5 /* omax_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = omax_util.c; path = ../omax_util.c; sourceTree = SOURCE_ROOT; };
 		5249DF3212E1667000B3ABA5 /* omax_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omax_util.h; path = ../omax_util.h; sourceTree = SOURCE_ROOT; };
 		5249DF3912E1667400B3ABA5 /* liboio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liboio.a; path = ../liboio/build/Release/liboio.a; sourceTree = SOURCE_ROOT; };
-		5249DFE112ED67CE00B3ABA5 /* o.bild.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = o.bild.c; sourceTree = "<group>"; };
+		5249DFEB12ED693400B3ABA5 /* o.build.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = o.build.c; path = ../o.build/o.build.c; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* randdist.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randdist.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -82,7 +82,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				5249DFE112ED67CE00B3ABA5 /* o.bild.c */,
+				5249DFEB12ED693400B3ABA5 /* o.build.c */,
 				121679850FF93C6F005F098E /* commonsyms.c */,
 				5249DF2D12E1667000B3ABA5 /* osc_util.c */,
 				5249DF2E12E1667000B3ABA5 /* osc_util.h */,
@@ -184,7 +184,7 @@
 				5249DF3312E1667000B3ABA5 /* osc_util.c in Sources */,
 				5249DF3512E1667000B3ABA5 /* osc_match.c in Sources */,
 				5249DF3712E1667000B3ABA5 /* omax_util.c in Sources */,
-				5249DFE212ED67CE00B3ABA5 /* o.bild.c in Sources */,
+				5249DFEC12ED693400B3ABA5 /* o.build.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
