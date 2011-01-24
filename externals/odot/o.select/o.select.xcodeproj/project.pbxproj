@@ -280,7 +280,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../liboio/build/Release\"";
 				LIBRARY_STYLE = Bundle;
-				OTHER_CFLAGS = "";
+				OTHER_CFLAGS = "-DSELECT";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
 				PRELINK_LIBS = "";
