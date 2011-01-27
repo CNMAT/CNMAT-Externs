@@ -180,7 +180,7 @@ t_oio_err oio_midi_addDevice(t_oio *oio, t_oio_midi_dev *device, MIDIEndpointRef
 	oio_osc_util_makenice(buf);
 	int i = 1;
 	while(i < 128){
-		sprintf(mangled, "/%s/%d", buf, i++);
+		sprintf(mangled, "/midi/%s/%d", buf, i++);
 		str = CFStringCreateWithCString(kCFAllocatorDefault, mangled, kCFStringEncodingUTF8);
 		if(CFDictionaryContainsKey(device_hash, str) == false){
 			CFNumberRef val = CFNumberCreate(kCFAllocatorDefault, kCFNumberLongType, (void *)(&device));

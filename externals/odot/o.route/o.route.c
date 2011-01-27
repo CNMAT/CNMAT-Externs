@@ -73,15 +73,15 @@ typedef struct _oroute{
 	t_oroute_message *messages;
 	t_oroute_message *message_buf;
 	int numMessages, message_buf_len;
-	int bundlePartialMatches;
+	//int bundle_partial_matches;
 	int max_message; // set this to note that the event originated as a max message and not a FullPacket
 } t_oroute;
 
 void *oroute_class;
 
 void oroute_fullPacket(t_oroute *x, long len, long ptr);
-void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_message *m);
-void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m);
+void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute_message *m);
+//void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m);
 void oroute_cbk(t_osc_msg msg, void *context);
 void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *msg);
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv);
@@ -122,15 +122,17 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	wksp.numArgs = x->numArgs;
 	critical_exit(x->lock);
 	osc_util_parseBundleWithCallback(nn, cpy, oroute_cbk, (void *)&wksp);
-	if(x->bundlePartialMatches){
-		oroute_fp_bundlePartialMatches(x, nn, cpy, wksp.messages);
+	//if(x->bundle_partial_matches){
+		oroute_fp_bundle_partial_matches(x, nn, cpy, wksp.messages);
+		/*
 	}else{
 		oroute_fp(x, nn, cpy, wksp.messages);
 	}
+		*/
 	x->max_message = 0;
 }
 
-void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_message *m){
+void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 	if(!m){
 		return;
 	}
@@ -160,19 +162,32 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_m
 		}
 		if(m->full_match){
 			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
+#ifdef SELECT
+			outlet_anything(x->outlets[m->outlet_num], gensym(atom_getsym(argv)->s_name), argc - 1, argv + 1);
+#else
 			if(argc == 1){
 				outlet_bang(x->outlets[m->outlet_num]);
 			}else{
 				outlet_atoms(x->outlets[m->outlet_num], argc - 1, argv + 1);
 			}
+#endif
 		}else if(x->max_message){
 			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
+#ifdef SELECT
+			outlet_anything(x->outlets[m->outlet_num], gensym(atom_getsym(argv)->s_name), argc - 1, argv + 1);
+#else
 			outlet_anything(x->outlets[m->outlet_num], gensym(atom_getsym(argv)->s_name + m->offset), argc - 1, argv + 1);
+#endif
 		}else{
 			char *size = bufp;
 			bufp += 4;
+#ifdef SELECT
+			strcpy(bufp, m->msg.address);
+			bufp += strlen(m->msg.address);
+#else
 			strcpy(bufp, m->msg.address + m->offset);
 			bufp += strlen(m->msg.address + m->offset);
+#endif			
 			bufp++;
 			while((bufp - size) % 4){
 				bufp++;
@@ -199,7 +214,7 @@ void oroute_fp_bundlePartialMatches(t_oroute *x, long len, char *ptr, t_oroute_m
 	}
 	sysmem_freeptr(argv);
 }
-
+/*
 void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 	if(!m){
 		return;
@@ -229,7 +244,7 @@ void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 	}
 	sysmem_freeptr(argv);
 }
-
+*/
 void oroute_cbk(t_osc_msg msg, void *context){
 	if(!(msg.address)){
 		return;
@@ -372,7 +387,7 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 	//len = osc_util_make_bundle_from_atoms(argc + 1, av, &len, buffer);
 	strncpy(buffer, "#bundle\0", 8);
 	*((long long *)(buffer + 8)) = hton64(1ll);
-	len = omax_util_encode_atoms(buffer + 16, len, msg, argc, argv);
+	len = omax_util_encode_atoms(buffer + 16, msg, argc, argv);
 	x->max_message = 1;
 
 	oroute_fullPacket(x, len + 16, (long)buffer);
@@ -434,7 +449,7 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 			x->outlets[numArgs - 1 - i] = outlet_new(x, NULL);
 			x->args[i] = atom_getsym(argv + i);
 		}
-		x->bundlePartialMatches = 1;
+		//x->bundle_partial_matches = 1;
 		attr_args_process(x, argc, argv);
 	}
 		   	
@@ -442,7 +457,12 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
-	t_class *c = class_new("o.route", (method)oroute_new, (method)oroute_free, sizeof(t_oroute), 0L, A_GIMME, 0);
+#ifdef SELECT
+	char *name = "o.select";
+#else
+	char *name = "o.route";
+#endif
+	t_class *c = class_new(name, (method)oroute_new, (method)oroute_free, sizeof(t_oroute), 0L, A_GIMME, 0);
     
 	class_addmethod(c, (method)oroute_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oroute_notify, "notify", A_CANT, 0);
@@ -450,7 +470,7 @@ int main(void){
 	class_addmethod(c, (method)oroute_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oroute_set, "set", A_LONG, A_SYM, 0);
 
-	CLASS_ATTR_LONG(c, "bundlePartialMatches", 0, t_oroute, bundlePartialMatches);
+	//CLASS_ATTR_LONG(c, "bundle_partial_matches", 0, t_oroute, bundle_partial_matches);
     
 	class_register(CLASS_BOX, c);
 	oroute_class = c;

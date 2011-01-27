@@ -19,6 +19,10 @@ int osc_util_parseMessage(int n, char *buf, t_osc_msg *osc_msg){
 		ptr += 4;
 	}
 
+	osc_msg->address = NULL;
+	osc_msg->typetags = NULL;
+	osc_msg->argv = NULL;
+
 	osc_msg->size = n;
 	osc_msg->address = ptr;
 	while(*ptr++){}
@@ -40,10 +44,11 @@ int osc_util_parseMessage(int n, char *buf, t_osc_msg *osc_msg){
 	while(*ptr){
 		ptr++;
 	}
-	osc_msg->argc = ptr - osc_msg->typetags;
+	osc_msg->argc = ptr - osc_msg->typetags - 1;
 	if(osc_msg->argc == 0){
 		return 0;
 	}
+	ptr++;
 	while((ptr - buf) % 4){
 		ptr++;
 	}
@@ -111,6 +116,9 @@ int osc_util_parseBundleWithCallback(int n, char *osc_bndl, void (*f)(t_osc_msg,
 }
 
 int osc_util_incrementArg(t_osc_msg *msg){
+	if(!msg->typetags){
+		return 0;
+	}
 	char tt = *(msg->typetags);
 	if(tt == ','){
 		msg->typetags += 1;

@@ -82,66 +82,117 @@ t_oio_err oio_serial_registerValueCallback(t_oio *oio, char *name, t_oio_serial_
 
 	return OIO_ERR_NONE;
 }
-
+void cb(void *context, IOReturn result, void *foo);
 t_oio_err oio_serial_openDevice(t_oio *oio, t_oio_serial_dev *dev){
 	CFRunLoopRef runloopsource;
 	kern_return_t kr;
 	IOCFPlugInInterface **plug = NULL;
-	IOUSBInterfaceInterface **interface = NULL;
+	IOUSBInterfaceInterface300 **interface = NULL;
 	uint8_t interfaceClass, interfaceSubClass, interfaceNumEndpoints;
 	int pipeRef;
 	io_iterator_t it;
 	HRESULT result;
 	IOUSBFindInterfaceRequest request; 
-	io_service_t usbInterface;
+	io_service_t usbInterface, prev;
 	SInt32 score;
 	request.bInterfaceClass = kIOUSBFindInterfaceDontCare;
 	request.bInterfaceSubClass = kIOUSBFindInterfaceDontCare;
 	request.bInterfaceProtocol = kIOUSBFindInterfaceDontCare;
 	request.bAlternateSetting = kIOUSBFindInterfaceDontCare;
 
+	// get the last one
 	kr = (*(dev->device))->CreateInterfaceIterator(dev->device, &request, &it);
 	while(usbInterface = IOIteratorNext(it)){
-		kr = IOCreatePlugInInterfaceForService(usbInterface,
-						       kIOUSBInterfaceUserClientTypeID,
-						       kIOCFPlugInInterfaceID,
-						       &plug, &score);
+		prev = usbInterface;
+	}
+	usbInterface = prev;
 
-		kr = IOObjectRelease(usbInterface);
-		if ((kr != kIOReturnSuccess) || !plug){
-			printf("Unable to create a plug-in (%08x)\n", kr);
-			break;
+	//kr = (*interface)->GetInterfaceClass(interface, &interfaceClass);
+	//kr = (*interface)->GetInterfaceSubClass(interface, &interfaceSubClass);
+
+	// configure device
+	uint8_t new_config, nConfig;
+	IOUSBConfigurationDescriptorPtr configDesc;
+	kr = (*(dev->device))->GetNumberOfConfigurations (dev->device, &nConfig); 
+	kr = (*(dev->device))->GetConfigurationDescriptorPtr (dev->device, 0, &configDesc);
+	printf("if\n");
+	if(kr != kIOReturnSuccess){
+		//usbi_err (HANDLE_CTX (dev_handle), "GetConfigurationDescriptorPtr: %s", darwin_error_str(kr));
+		new_config = 1;
+	}else{
+		new_config = configDesc->bConfigurationValue;
+		//usbi_info (HANDLE_CTX (dev_handle), "new configuration value is %d", new_config);
+		/* set the configuration */
+		//kr = darwin_set_configuration (dev_handle, new_config);
+		kr = (*(dev->device))->SetConfiguration (dev->device, new_config);
+		//if (kr != LIBUSB_SUCCESS){
+		if(kr){
+			printf("set config failt (%08x)\n", kr);
+			//usbi_err (HANDLE_CTX (dev_handle), "could not set configuration");
+		        return kr;
 		}
-
-		result = (*plug)->QueryInterface(plug,
-						 CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID),
-						 (LPVOID *) &interface);
-		(*plug)->Release(plug);
-		if(result || !interface){
-			break;
-		}
-
-		kr = (*interface)->GetInterfaceClass(interface, &interfaceClass);
-		kr = (*interface)->GetInterfaceSubClass(interface, &interfaceSubClass);
-		//kr = (*interface)->USBInterfaceOpen(interface);
 		/*
-		if(kr != kIOReturnSuccess){
-			printf("Unable to open interface (%08x)\n", kr);
-			(void)(*interface)->Release(interface);
-			break;
+		kr = darwin_get_interface (dpriv->device, iface, &usbInterface);
+		if (kr){
+			usbi_err (HANDLE_CTX (dev_handle), "darwin_get_interface: %s", darwin_error_str(kr));
+			return darwin_to_libusb (kr);
 		}
 		*/
-		kr = (*interface)->GetNumEndpoints(interface, &interfaceNumEndpoints);
-		if(kr != kIOReturnSuccess){
-			printf("Unable to get number of endpoints (%08x)\n", kr);
-			(void) (*interface)->USBInterfaceClose(interface);
-			(void) (*interface)->Release(interface);
-			break;
-		}
-		printf("Interface has %d endpoints\n", interfaceNumEndpoints);
-		//kr = (*interface)->CreateInterfaceAsyncEventSource(interface, &runloopsource);
+
 	}
+	// plugin interface
+	kr = IOCreatePlugInInterfaceForService(usbInterface,
+					       kIOUSBInterfaceUserClientTypeID,
+					       kIOCFPlugInInterfaceID,
+					       &plug, &score);
+
+	if ((kr != kIOReturnSuccess) || !plug){
+		printf("Unable to create a plug-in (%08x)\n", kr);
+		return 0;
+	}
+
+	kr = IOObjectRelease(usbInterface);
+	result = (*plug)->QueryInterface(plug,
+					 CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID),
+					 (LPVOID *) &interface);
+	(*plug)->Release(plug);
+	if(result || !interface){
+		printf("returning\n");
+		return 0;
+	}
+
+	printf("opening...\n");
+	kr = (*interface)->USBInterfaceOpen(interface);
+
+	int count = 0;
+	while(kr != kIOReturnSuccess && count < 2){
+		kr = (*interface)->USBInterfaceOpenSeize(interface);
+		sleep(1);
+		count++;
+	}
+	if(kr != kIOReturnSuccess){
+		printf("Unable to open interface (%08x)\n", kr);
+		(void)(*interface)->Release(interface);
+		return 0;
+	}
+	printf("here!\n");
+	kr = (*interface)->GetNumEndpoints(interface, &interfaceNumEndpoints);
+	if(kr != kIOReturnSuccess){
+		printf("Unable to get number of endpoints (%08x)\n", kr);
+		(void) (*interface)->USBInterfaceClose(interface);
+		(void) (*interface)->Release(interface);
+		return 0;
+	}
+	printf("Interface has %d endpoints\n", interfaceNumEndpoints);
+	kr = (*interface)->CreateInterfaceAsyncEventSource(interface, &runloopsource);
+	char *buf = (char *)malloc(128);
+	kr = (*interface)->ReadPipeAsync(interface, 1 - interfaceNumEndpoints, buf, 128, cb, oio);
+	printf("%08x\n", kr);
 	return OIO_ERR_NONE;
+}
+
+void cb(void *context, IOReturn result, void *foo){
+	printf("holyfuckingshit\n");
 }
 
 void oio_serial_deviceAdded(void *context, io_iterator_t iterator){
@@ -223,7 +274,7 @@ t_oio_serial_dev *oio_serial_addDevice(t_oio *oio, io_service_t device){
 	t_oio_serial_dev *dev = NULL;
 	int counter = 1;
 	while(counter < 128){
-		sprintf(mangled, "/%s/%d", name, counter++);
+		sprintf(mangled, "/serial/%s/%d", name, counter++);
 		CFStringRef deviceNameAsCFString = CFStringCreateWithCString(kCFAllocatorDefault, mangled, kCFStringEncodingASCII);
 		if(!CFDictionaryContainsKey(serial->device_hash, deviceNameAsCFString)){
 			dev = (t_oio_serial_dev *)oio_mem_alloc(1, sizeof(t_oio_serial_dev));

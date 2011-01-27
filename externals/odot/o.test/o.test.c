@@ -35,9 +35,8 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
-//#include "cmmjl/cmmjl_osc_obj.h"
+#include "omax_util.h"
+#include "osc_util.h"
 
 typedef struct _otest{
 	t_object ob;
@@ -47,7 +46,7 @@ typedef struct _otest{
 	char *buffers[2];
 	int buffer_len;
 	int buffer_pos[2];
-	t_cmmjl_osc_message msg;
+	t_osc_msg msg;
 	int split_bundle;
 	int failure;
 	t_symbol *test;
@@ -58,7 +57,7 @@ typedef struct _otest{
 void *otest_class;
 
 void otest_fullPacket(t_otest *x, long len, long ptr);
-void otest_cbk(t_cmmjl_osc_message msg, void *v);
+void otest_cbk(t_osc_msg msg, void *v);
 void otest_int(t_otest *x, long l);
 void dotest_int(t_otest *x, long l);
 
@@ -79,6 +78,8 @@ void otest_assist(t_otest *x, void *b, long m, long a, char *s);
 void *otest_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err otest_notify(t_otest *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
+t_symbol *ps_FullPacket;
+
 void otest_fullPacket(t_otest *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
 	char cpy[len];
@@ -87,14 +88,14 @@ void otest_fullPacket(t_otest *x, long len, long ptr){
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
+		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, cpy, cpy);
+	nn = osc_util_flatten(nn, cpy, cpy);
 
 	memcpy(x->buffers[0], cpy, 16);
 	memcpy(x->buffers[1], cpy, 16);
@@ -103,7 +104,8 @@ void otest_fullPacket(t_otest *x, long len, long ptr){
 	x->failure = 0;
 
 	// extract the messages from the bundle
-	cmmjl_osc_extract_messages(nn, cpy, true, otest_cbk, (void *)x);
+	//cmmjl_osc_extract_messages(nn, cpy, true, otest_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, cpy, otest_cbk, (void *)x);
 
 	t_atom out[2];
 	atom_setlong(&(out[0]), x->buffer_pos[0]);
@@ -134,19 +136,21 @@ void otest_fullPacket(t_otest *x, long len, long ptr){
 	}
 }
 
-void otest_cbk(t_cmmjl_osc_message msg, void *v){
+void otest_cbk(t_osc_msg msg, void *v){
 	t_otest *x = (t_otest *)v;
 	x->msg = msg;
 	t_atom atoms[msg.argc];
-	cmmjl_osc_get_data_atoms(&msg, atoms);
+	long len = msg.argc;
+	//cmmjl_osc_get_data_atoms(&msg, atoms);
+	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
 	if(x->test_fp){
 		int i;
-		for(i = 0; i < msg.argc; i++){
+		for(i = 1; i < msg.argc + 1; i++){
 			dotest_int(x, x->test_fp(atom_getfloat(atoms + i), atom_getfloat(&(x->arg))));
 		}
 
 	}else{
-		outlet_anything(x->outlets[2], gensym(msg.address), msg.argc, atoms);
+		outlet_anything(x->outlets[2], gensym(msg.address), msg.argc, atoms + 1);
 	}
 }
 
@@ -240,7 +244,6 @@ void otest_free(t_otest *x){
 void *otest_new(t_symbol *msg, short argc, t_atom *argv){
 	t_otest *x;
 	if(x = (t_otest *)object_alloc(otest_class)){
-		cmmjl_init(x, NAME, 0);
 		x->outlets[2] = outlet_new((t_object *)x, NULL);
 		x->outlets[1] = outlet_new((t_object *)x, "FullPacket");
 		x->outlets[0] = outlet_new((t_object *)x, "FullPacket");
@@ -278,6 +281,7 @@ int main(void){
 	otest_class = c;
 
 	common_symbols_init();
+	ps_FullPacket = gensym("FullPacket");
 	return 0;
 }
 

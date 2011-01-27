@@ -49,6 +49,7 @@ typedef struct _opacket{
 	int buffer_len;
 	int buffer_pos;
 	int clear_on_bang;
+	int accumulate;
 } t_opacket;
 
 void *opacket_class;
@@ -72,6 +73,14 @@ void *opacket_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void opacket_fullPacket(t_opacket *x, long len, long ptr){
+	if(x->accumulate){
+		t_atom a[3];
+		atom_setsym(a, ps_FullPacket);
+		atom_setlong(a + 1, len);
+		atom_setlong(a + 2, ptr);
+		opacket_addtobundle(x, gensym("addtobundle"), 3, a);
+		return;
+	}
 	long n = len;
 	char buf[n * 2];
 	memcpy(buf, (char *)ptr, n);
@@ -172,6 +181,14 @@ void opacket_anything(t_opacket *x, t_symbol *msg, short argc, t_atom *argv){
 		error("o.delay: not a properly formatted OSC-style message");
 		return;
 	}
+
+	if(x->accumulate){
+		t_atom aa[argc + 1];
+		atom_setsym(aa, msg);
+		memcpy(aa + 1, argv, (argc * sizeof(t_atom)));
+		opacket_addtobundle(x, gensym("addtobundle"), argc + 1, aa);
+		return;
+	}
 	long ac = argc + 1;
 	t_atom av[ac];
 	atom_setsym(av, msg);
@@ -263,6 +280,7 @@ void *opacket_new(t_symbol *msg, short argc, t_atom *argv){
 		x->buffer = (char *)calloc(x->buffer_len, sizeof(char));
 		strncpy(x->buffer, "#bundle\0", 8);
 		x->clear_on_bang = 0;
+		x->accumulate = 0;
 		x->buffer_pos = 16;
 		attr_args_process(x, argc, argv);
 	}
@@ -287,6 +305,7 @@ int main(void){
 	class_addmethod(c, (method)opacket_timetag, "OSCTimeTag", A_LONG, A_LONG, 0);
 
 	CLASS_ATTR_LONG(c, "clearonbang", 0, t_opacket, clear_on_bang);
+	CLASS_ATTR_LONG(c, "accumulate", 0, t_opacket, accumulate);
 
 	ps_FullPacket = gensym("FullPacket");    
 	class_register(CLASS_BOX, c);

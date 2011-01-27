@@ -35,8 +35,9 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
+#include "omax_util.h"
+#include "osc_util.h"
+#include "osc_match.h"
 
 typedef struct _osplit{
 	t_object ob;
@@ -58,7 +59,7 @@ typedef struct _osplit{
 void *osplit_class;
 
 void osplit_fullPacket(t_osplit *x, long len, long ptr);
-void osplit_cbk(t_cmmjl_osc_message msg, void *v);
+void osplit_cbk(t_osc_msg msg, void *v);
 int osplit_gt(double f1, double f2);
 int osplit_gte(double f1, double f2);
 int osplit_lt(double f1, double f2);
@@ -70,6 +71,8 @@ void osplit_free(t_osplit *x);
 void osplit_assist(t_osplit *x, void *b, long m, long a, char *s);
 void *osplit_new(t_symbol *msg, short argc, t_atom *argv);
 
+t_symbol *ps_FullPacket;
+
 void osplit_fullPacket(t_osplit *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
 	memcpy(x->buffer, (char *)ptr, len);
@@ -79,17 +82,18 @@ void osplit_fullPacket(t_osplit *x, long len, long ptr){
 	int nn = len;
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(x->buffer, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, x->buffer, x->buffer);
+		nn = osc_util_bundle_naked_message(len, x->buffer, x->buffer);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, x->buffer, x->buffer);
+	nn = osc_util_flatten(nn, x->buffer, x->buffer);
 
 	// extract the messages from the bundle
-	cmmjl_osc_extract_messages(nn, x->buffer, true, osplit_cbk, (void *)x);
+	//cmmjl_osc_extract_messages(nn, x->buffer, true, osplit_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, x->buffer, osplit_cbk, (void *)x);
 
 	t_atom out[2];
 	atom_setlong(out, x->buffer_pos);
@@ -110,13 +114,15 @@ void osplit_fullPacket(t_osplit *x, long len, long ptr){
 
 }
 
-void osplit_cbk(t_cmmjl_osc_message msg, void *v){
+void osplit_cbk(t_osc_msg msg, void *v){
 	t_osplit *x = (t_osplit *)v;
 	int i;
 	int matched = 0;
 	for(i = 0; i < x->num_addresses; i++){
-		int ret = cmmjl_osc_match(x, msg.address, x->addresses[i]);
-		post("%s %s %d", msg.address, x->addresses[i], ret);
+	//int ret = cmmjl_osc_match(x, msg.address, x->addresses[i]);
+	//post("%s %s %d", msg.address, x->addresses[i], ret);
+		int po, ao;
+		int ret = osc_match(msg.address, x->addresses[i], &po, &ao);
 		if(ret == -1){
 			matched++;
 		}
@@ -124,7 +130,26 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 	if(!matched && x->num_addresses > 0){
 		return;
 	}
-	t_cmmjl_osc_atom a[msg.argc];
+	long len = msg.argc;
+	t_atom a[msg.argc];
+	omax_util_oscMsg2MaxAtoms(&msg, &len, a);
+	int n = 1;
+	post("test all args: %d, argc = %d", x->test_all_args, msg.argc);
+	if(x->test_all_args){
+		n = msg.argc;
+	}
+	post("n = %d", n);
+	for(i = 1; i < n + 1; i++){
+		post("%d, %f %f", i, atom_getfloat(a + i), x->min);
+		if(!(x->left_test(atom_getfloat(a + i), x->min))){
+			x->failure++;
+		}
+		if(!(x->right_test(atom_getfloat(a + i), x->max))){
+			x->failure++;
+		}
+	}
+	/*
+	t_osc_atom a[msg.argc];
 	cmmjl_osc_get_data(&msg, a);
 	int n = 1;
 	if(x->test_all_args){
@@ -138,6 +163,7 @@ void osplit_cbk(t_cmmjl_osc_message msg, void *v){
 			x->failure++;
 		}
 	}
+	*/
 }
 
 int osplit_gt(double f1, double f2){
@@ -221,8 +247,6 @@ void *osplit_new(t_symbol *msg, short argc, t_atom *argv){
 	t_osplit *x;
 	int i;
 	if(x = (t_osplit *)object_alloc(osplit_class)){
-		cmmjl_init(x, NAME, 0);
-
 	        x->outlets[1] = outlet_new(x, "FullPacket");
 	        x->outlets[0] = outlet_new(x, "FullPacket");
 		x->proxies[1] = proxy_new((t_object *)x, 2, &(x->inlet));
@@ -336,10 +360,12 @@ int main(void){
 	class_addmethod(c, (method)osplit_int, "int", A_LONG, 0);
 	class_addmethod(c, (method)osplit_float, "float", A_FLOAT, 0);
 
-	CLASS_ATTR_LONG(c, "test_all_args", 0, t_osplit, test_all_args);
+	CLASS_ATTR_LONG(c, "testallargs", 0, t_osplit, test_all_args);
     
 	class_register(CLASS_BOX, c);
 	osplit_class = c;
+
+	ps_FullPacket = gensym("FullPacket");
 
 	common_symbols_init();
 	return 0;

@@ -21,12 +21,13 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: o.apply
-DESCRIPTION: Apply a funcction to the contents of an OSC packet
+NAME: o.mappatch
+DESCRIPTION: Map a patch onto the contents of an OSC bundle
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2009
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 0.0: First try
+VERSION 1.0: New name
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -39,7 +40,7 @@ VERSION 0.0: First try
 #include "liboio/osc_util.h"
 #include "liboio/osc_match.h"
 
-typedef struct _oapply{
+typedef struct _omap{
 	t_object ob;
 	void *outlets[2];
 	void *proxy;
@@ -48,24 +49,24 @@ typedef struct _oapply{
 	int buffer_len;
 	int buffer_pos;
 	t_osc_msg msg;
-} t_oapply;
+} t_omap;
 
-void *oapply_class;
+void *omap_class;
 
-void oapply_fullPacket(t_oapply *x, long len, long ptr);
-void oapply_cbk(t_osc_msg msg, void *v);
-void oapply_int(t_oapply *x, long l);
-void oapply_float(t_oapply *x, double f);
-void oapply_anything(t_oapply *x, t_symbol *msg, short argc, t_atom *argv);
-void oapply_list(t_oapply *x, t_symbol *msg, short argc, t_atom *argv);
-void oapply_free(t_oapply *x);
-void oapply_assist(t_oapply *x, void *b, long m, long a, char *s);
-void *oapply_new(t_symbol *msg, short argc, t_atom *argv);
-t_max_err oapply_notify(t_oapply *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+void omap_fullPacket(t_omap *x, long len, long ptr);
+void omap_cbk(t_osc_msg msg, void *v);
+void omap_int(t_omap *x, long l);
+void omap_float(t_omap *x, double f);
+void omap_anything(t_omap *x, t_symbol *msg, short argc, t_atom *argv);
+void omap_list(t_omap *x, t_symbol *msg, short argc, t_atom *argv);
+void omap_free(t_omap *x);
+void omap_assist(t_omap *x, void *b, long m, long a, char *s);
+void *omap_new(t_symbol *msg, short argc, t_atom *argv);
+t_max_err omap_notify(t_omap *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
 t_symbol *ps_FullPacket;
 
-void oapply_fullPacket(t_oapply *x, long len, long ptr){
+void omap_fullPacket(t_omap *x, long len, long ptr){
 	if(proxy_getinlet((t_object *)x) == 1){
 		// I hope you meant to do this...
 		memcpy(x->buffer + x->buffer_pos, ((char *)ptr) + 16, len - 16);
@@ -92,8 +93,8 @@ void oapply_fullPacket(t_oapply *x, long len, long ptr){
 	x->buffer_pos = 16;
 
 	// extract the messages from the bundle
-	//cmmjl_osc_extract_messages(nn, cpy, true, oapply_cbk, (void *)x);
-	osc_util_parseBundleWithCallback(nn, cpy, oapply_cbk, (void *)x);
+	//cmmjl_osc_extract_messages(nn, cpy, true, omap_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, cpy, omap_cbk, (void *)x);
 
 	t_atom out[2];
 	atom_setlong(out, x->buffer_pos);
@@ -107,8 +108,8 @@ void oapply_fullPacket(t_oapply *x, long len, long ptr){
 	*/
 }
 
-void oapply_cbk(t_osc_msg msg, void *v){
-	t_oapply *x = (t_oapply *)v;
+void omap_cbk(t_osc_msg msg, void *v){
+	t_omap *x = (t_omap *)v;
 	x->msg = msg;
 	long len = msg.argc;
 	t_atom atoms[len + 1];
@@ -117,40 +118,40 @@ void oapply_cbk(t_osc_msg msg, void *v){
 	outlet_anything(x->outlets[1], atom_getsym(atoms), msg.argc, atoms + 1);
 }
 
-void oapply_int(t_oapply *x, long l){
+void omap_int(t_omap *x, long l){
 	if(proxy_getinlet((t_object *)x) == 0){
 		return;
 	}
 	t_atom a;
 	atom_setlong(&a, l);
-	oapply_list(x, NULL, 1, &a);
+	omap_list(x, NULL, 1, &a);
 }
 
-void oapply_float(t_oapply *x, double f){
+void omap_float(t_omap *x, double f){
 	if(proxy_getinlet((t_object *)x) == 0){
 		return;
 	}
 	t_atom a;
 	atom_setfloat(&a, f);
-	oapply_list(x, NULL, 1, &a);
+	omap_list(x, NULL, 1, &a);
 }
 
-void doapply_int(t_oapply *x, long l){
+void domap_int(t_omap *x, long l){
 
 }
 
-void oapply_anything(t_oapply *x, t_symbol *msg, short argc, t_atom *argv){
+void omap_anything(t_omap *x, t_symbol *msg, short argc, t_atom *argv){
 	if(msg){
 		t_atom a[argc + 1];
 		atom_setsym(a, msg);
 		memcpy(a + 1, argv, argc * sizeof(t_atom));
-		oapply_list(x, NULL, argc + 1, a);
+		omap_list(x, NULL, argc + 1, a);
 	}else{
-		oapply_list(x, NULL, argc, argv);
+		omap_list(x, NULL, argc, argv);
 	}
 }
 
-void oapply_list(t_oapply *x, t_symbol *msg, short argc, t_atom *argv){
+void omap_list(t_omap *x, t_symbol *msg, short argc, t_atom *argv){
 	if(proxy_getinlet((t_object *)x) != 1){
 		// not sure what to do with this...
 		return;
@@ -222,7 +223,7 @@ void oapply_list(t_oapply *x, t_symbol *msg, short argc, t_atom *argv){
 	*/
 }
 
-void oapply_assist(t_oapply *x, void *b, long m, long a, char *s){
+void omap_assist(t_omap *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"Probability distribution and arguments");
 	else {
@@ -234,13 +235,13 @@ void oapply_assist(t_oapply *x, void *b, long m, long a, char *s){
 	}
 }
 
-void oapply_free(t_oapply *x){
+void omap_free(t_omap *x){
 	object_free(x->proxy);
 }
 
-void *oapply_new(t_symbol *msg, short argc, t_atom *argv){
-	t_oapply *x;
-	if(x = (t_oapply *)object_alloc(oapply_class)){
+void *omap_new(t_symbol *msg, short argc, t_atom *argv){
+	t_omap *x;
+	if(x = (t_omap *)object_alloc(omap_class)){
 		x->outlets[1] = outlet_new((t_object *)x, NULL);
 		x->outlets[0] = outlet_new((t_object *)x, "FullPacket");
 		x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
@@ -256,19 +257,19 @@ void *oapply_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
-	t_class *c = class_new("o.apply", (method)oapply_new, (method)oapply_free, sizeof(t_oapply), 0L, A_GIMME, 0);
+	t_class *c = class_new("o.mappatch", (method)omap_new, (method)omap_free, sizeof(t_omap), 0L, A_GIMME, 0);
     
-	class_addmethod(c, (method)oapply_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
-	//class_addmethod(c, (method)oapply_notify, "notify", A_CANT, 0);
-	class_addmethod(c, (method)oapply_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)oapply_int, "int", A_LONG, 0);
-	class_addmethod(c, (method)oapply_float, "float", A_FLOAT, 0);
-	class_addmethod(c, (method)oapply_anything, "anything", A_GIMME, 0);
-	class_addmethod(c, (method)oapply_list, "list", A_GIMME, 0);
-	class_addmethod(c, (method)oapply_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)omap_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	//class_addmethod(c, (method)omap_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)omap_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)omap_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)omap_float, "float", A_FLOAT, 0);
+	class_addmethod(c, (method)omap_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)omap_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)omap_notify, "notify", A_CANT, 0);
 
 	class_register(CLASS_BOX, c);
-	oapply_class = c;
+	omap_class = c;
 
 	ps_FullPacket = gensym("FullPacket");
 
@@ -276,7 +277,7 @@ int main(void){
 	return 0;
 }
 
-t_max_err oapply_notify(t_oapply *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
+t_max_err omap_notify(t_omap *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
 	/*
 	t_symbol *attrname;
         if(msg == gensym("attr_modified")){

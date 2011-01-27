@@ -35,9 +35,9 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
-//#include "cmmjl/cmmjl_osc_obj.h"
+#include "omax_util.h"
+#include "osc_util.h"
+#include "osc_match.h"
 
 typedef struct _oex{
 	t_object ob;
@@ -53,11 +53,13 @@ typedef struct _oex{
 void *oex_class;
 
 void oex_fullPacket(t_oex *x, long len, long ptr);
-void oex_cbk(t_cmmjl_osc_message msg, void *v);
+void oex_cbk(t_osc_msg msg, void *v);
 void oex_anything(t_oex *x, t_symbol *msg, short argc, t_atom *argv);
 void oex_free(t_oex *x);
 void oex_assist(t_oex *x, void *b, long m, long a, char *s);
 void *oex_new(t_symbol *msg, short argc, t_atom *argv);
+
+t_symbol *ps_FullPacket;
 
 void oex_fullPacket(t_oex *x, long len, long ptr){
 	// make a local copy so the ref doesn't disappear out from underneath us
@@ -65,28 +67,27 @@ void oex_fullPacket(t_oex *x, long len, long ptr){
 	char cpy[len];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
-	char buffer[len * 8];
+	char *buffer = (char *)sysmem_newptr(len * 8);
 	memset(buffer, '\0', len * 8);
 	x->buffer = buffer;
-	x->bufferLen = len * 2;
+	x->bufferLen = len * 8;
 	x->bufferPos = 0;
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
+		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, cpy, cpy);
+	nn = osc_util_flatten(nn, cpy, cpy);
 
-	x->bufferPos = 0;
 	//x->bufferPos += cmmjl_osc_init_bundle(len * 2, buffer, NULL);
 	memcpy(buffer, cpy, 16); // #bundle and timestamp
 	x->bufferPos += 16;
-	cmmjl_osc_extract_messages(nn, cpy, true, oex_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, cpy, oex_cbk, (void *)x);
 	/*
 	for(i = 0; i < x->bufferPos; i++){
 		post("%d 0x%x %c", i, buffer[i], buffer[i]);
@@ -97,14 +98,17 @@ void oex_fullPacket(t_oex *x, long len, long ptr){
 	atom_setlong(out, x->bufferPos);
 	atom_setlong(out + 1, (long)buffer);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
-
+	sysmem_freeptr(buffer);
+	x->buffer = NULL;
 }
 
-void oex_cbk(t_cmmjl_osc_message msg, void *v){
+void oex_cbk(t_osc_msg msg, void *v){
 	t_oex *x = (t_oex *)v;
 	int i;
 	int ret;
-	if((ret = cmmjl_osc_match(x, msg.address, x->address->s_name)) == -1){
+	int po, ao;
+	ret = osc_match(msg.address, x->address->s_name, &po, &ao);
+	if(ret == (OSC_MATCH_PATTERN_COMPLETE | OSC_MATCH_ADDRESS_COMPLETE)){
 		int n = x->num_ex_addresses;
 		if(n != msg.argc){
 			if(n < msg.argc){
@@ -177,10 +181,11 @@ void oex_cbk(t_cmmjl_osc_message msg, void *v){
 			}
 		}
 	}else{
+		*((uint32 *)(x->buffer + x->bufferPos)) = hton32(msg.size);
+		x->bufferPos += 4;
 		memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
 		x->bufferPos += msg.size;
 	}
-
 }
 
 void oex_anything(t_oex *x, t_symbol *msg, short argc, t_atom *argv){
@@ -208,7 +213,6 @@ void *oex_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oex *x;
 	int i;
 	if(x = (t_oex *)object_alloc(oex_class)){
-		cmmjl_init(x, NAME, 0);
 		x->outlet = outlet_new(x, NULL);
 		x->address = atom_getsym(argv);
 		x->ex_addresses = (t_symbol **)malloc((argc - 1) * sizeof(t_symbol *));
@@ -232,5 +236,6 @@ int main(void){
 	oex_class = c;
 
 	common_symbols_init();
+	ps_FullPacket = gensym("FullPacket");
 	return 0;
 }

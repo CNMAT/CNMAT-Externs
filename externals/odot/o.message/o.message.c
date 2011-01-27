@@ -143,7 +143,7 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 }
 
 void omessage_cbk(t_osc_msg msg, void *v){
-	printf("%s\n", __PRETTY_FUNCTION__);
+	//printf("%s\n", __PRETTY_FUNCTION__);
 	t_omessage *x = (t_omessage *)v;
 	int i;
 	//x->messages[x->num_messages] = msg;
@@ -406,6 +406,7 @@ void omessage_make_and_output_bundle(t_omessage *x){
 	int i;
 	x->buffer_pos = 0;
 	//x->buffer_pos += cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
+	memset(x->buffer, '\0', x->buffer_len);
 	strcpy(x->buffer, "#bundle\0");
 	x->buffer_pos = 8;
 	//ntptime now;
@@ -613,6 +614,7 @@ int main(void){
 	common_symbols_init();
 	//jpatcher_syms_init();
 	t_class *c = class_new("o.message", (method)omessage_new, (method)omessage_free, sizeof(t_omessage), 0L, A_GIMME, 0);
+	alias("o.m");
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
  	jbox_initclass(c, JBOX_TEXTFIELD | JBOX_FIXWIDTH | JBOX_FONTATTR); 

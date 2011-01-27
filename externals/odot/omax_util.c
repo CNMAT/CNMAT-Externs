@@ -139,7 +139,103 @@ int osc_util_check_pos_and_resize(char *buf, int len, char *pos){
 	return len;
 }
 
+char omax_util_typetagForAtom(t_atom *a){
+	switch(atom_gettype(a)){
+	case A_FLOAT:
+		return 'f';
+	case A_LONG:
+		return 'i';
+	case A_SYM:
+		return 's';
+	}
+}
+
+int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv){
+	char *sizeptr = buf;
+	char *ptr = buf + 4;
+	strcpy(ptr, address->s_name);
+	ptr += strlen(address->s_name);
+	ptr++;
+	while((ptr - buf) % 4){
+		ptr++;
+	}
+	*ptr++ = ',';
+	int i;
+	for(i = 0; i < argc; i++){
+		*ptr++ = omax_util_typetagForAtom(argv + i);
+	}
+	ptr++;
+	while((ptr - buf) % 4){
+		ptr++;
+	}
+	for(i = 0; i < argc; i++){
+		switch(atom_gettype(argv + i)){
+		case A_FLOAT:
+			{
+				float f = atom_getfloat(argv + i);
+				*((uint32 *)ptr) = hton32(*((uint32 *)(&f)));
+				ptr += 4;
+			}
+			break;
+		case A_LONG:
+			{
+				uint32 l = atom_getlong(argv + i);
+				*((uint32 *)ptr) = hton32(l);
+				ptr += 4;
+			}
+			break;
+		case A_SYM:
+			strcpy(ptr, atom_getsym(argv + i)->s_name);
+			ptr += strlen(atom_getsym(argv + i)->s_name);
+			ptr++;
+			while((ptr - buf) % 4){
+				ptr++;
+			}
+			break;
+		}
+	}
+	*((long *)sizeptr) = htonl(ptr - buf - 4);
+	return ptr - buf;
+}
+
 int osc_util_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buffer){
+	char *bufptr = buffer;
+	if(atom_gettype(argv) != A_SYM){
+		error("%s: the first argument must be a symbol", __PRETTY_FUNCTION__);
+		return 0;
+	}
+	t_atom *address = argv;
+	t_symbol *address_sym = atom_getsym(argv);
+	/*
+	if(argc == 1){
+		return omax_util_encode_atoms(buffer, 0, address_sym, 0, NULL);
+	}
+	*/
+	if(!address_sym){
+		return 0;
+	}
+	if(address_sym->s_name[0] != '/'){
+		error("%s is not an OSC address", address_sym->s_name);
+	}
+	t_atom *ptr = argv + 1;
+	//while(1){
+		while(ptr - argv < argc){
+			if(atom_gettype(ptr) == A_SYM){
+				t_symbol *sym = atom_getsym(ptr);
+				if(sym){
+					if(sym->s_name[0] == '/'){
+						bufptr += omax_util_encode_atoms(bufptr, address_sym, ptr - address - 1, address + 1);
+						address = ptr;
+						address_sym = sym;
+					}
+				}
+			}
+			ptr++;
+		}
+		//}
+	bufptr += omax_util_encode_atoms(bufptr, address_sym, ptr - address - 1, address + 1);
+	return bufptr - buffer;
+	/*
 	int i;
 	if(atom_gettype(argv) != A_SYM){
 		return 0;
@@ -172,6 +268,14 @@ int osc_util_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buf
 					*((long *)sizeptr) = htonl((bufptr - sizeptr) - 4);
 					sizeptr = bufptr;
 					bufptr += 4;
+				}else{
+					*bufptr++ = ',';
+					*bufptr++ = '\0';
+					*bufptr++ = '\0';
+					*bufptr++ = '\0';
+					*((long *)sizeptr) = htonl((bufptr - sizeptr) - 4);
+					sizeptr = bufptr;
+					//bufptr += 4;
 				}
 				memset(argbuf, '\0', *len);
 				memset(typetags, '\0', argc);
@@ -220,4 +324,5 @@ int osc_util_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buf
 		*((long *)sizeptr) = htonl((bufptr - sizeptr) - 4);
 	}
 	return bufptr - buffer;
+	*/
 }

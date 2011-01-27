@@ -35,8 +35,8 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
+#include "osc_util.h"
+#include "omax_util.h"
 
 typedef struct _ofilter{
 	t_object ob;
@@ -46,7 +46,7 @@ typedef struct _ofilter{
 	char *buffer[2];
 	int buffer_len;
 	int buffer_pos[2];
-	t_cmmjl_osc_message msg;
+	t_osc_msg msg;
 	t_atom *argv;
 	long argc;
 } t_ofilter;
@@ -54,7 +54,7 @@ typedef struct _ofilter{
 void *ofilter_class;
 
 void ofilter_fullPacket(t_ofilter *x, long len, long ptr);
-void ofilter_cbk(t_cmmjl_osc_message msg, void *v);
+void ofilter_cbk(t_osc_msg msg, void *v);
 void ofilter_int(t_ofilter *x, long l);
 void ofilter_float(t_ofilter *x, double f);
 void ofilter_anything(t_ofilter *x, t_symbol *msg, short argc, t_atom *argv);
@@ -63,6 +63,8 @@ void ofilter_free(t_ofilter *x);
 void ofilter_assist(t_ofilter *x, void *b, long m, long a, char *s);
 void *ofilter_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err ofilter_notify(t_ofilter *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+
+t_symbol *ps_FullPacket;
 
 void ofilter_fullPacket(t_ofilter *x, long len, long ptr){
 	if(proxy_getinlet((t_object *)x) == 1){
@@ -75,14 +77,14 @@ void ofilter_fullPacket(t_ofilter *x, long len, long ptr){
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = cmmjl_osc_bundle_naked_message(len, cpy, cpy);
+		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = cmmjl_osc_flatten(nn, cpy, cpy);
+	nn = osc_util_flatten(nn, cpy, cpy);
 
 	memset(x->buffer[0], '\0', x->buffer_len);
 	memset(x->buffer[1], '\0', x->buffer_len);
@@ -93,7 +95,7 @@ void ofilter_fullPacket(t_ofilter *x, long len, long ptr){
 	x->buffer_pos[1] = 16;
 
 	// extract the messages from the bundle
-	cmmjl_osc_extract_messages(nn, cpy, true, ofilter_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, cpy, ofilter_cbk, (void *)x);
 
 	t_atom out[2];
 	atom_setlong(out, x->buffer_pos[1]);
@@ -112,20 +114,30 @@ void ofilter_fullPacket(t_ofilter *x, long len, long ptr){
 	*/
 }
 
-void ofilter_cbk(t_cmmjl_osc_message msg, void *v){
+void ofilter_cbk(t_osc_msg msg, void *v){
 	t_ofilter *x = (t_ofilter *)v;
 	x->msg = msg;
 	t_atom atoms[msg.argc];
-	cmmjl_osc_get_data_atoms(&msg, atoms);
+	//cmmjl_osc_get_data_atoms(&msg, atoms);
+	long len = msg.argc;
+	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
 	x->argc = 0;
-	outlet_anything(x->outlets[2], gensym(msg.address), msg.argc, atoms);
+	outlet_anything(x->outlets[2], gensym(msg.address), msg.argc, atoms + 1);
 	if(x->argc){
 		if(!strcmp(msg.address, atom_getsym(x->argv)->s_name)){
-			x->buffer_pos[0] += cmmjl_osc_add_to_bundle(x->buffer_len, x->buffer[0] + x->buffer_pos[0], &msg);
+			//x->buffer_pos[0] += cmmjl_osc_add_to_bundle(x->buffer_len, x->buffer[0] + x->buffer_pos[0], &msg);
+			*((uint32 *)(x->buffer[0] + x->buffer_pos[0])) = hton32(msg.size);
+			x->buffer_pos[0] += 4;
+			memcpy(x->buffer[0] + x->buffer_pos[0], msg.address, msg.size);
+			x->buffer_pos[0] += msg.size;
 			return;
 		}
 	}
-	x->buffer_pos[1] += cmmjl_osc_add_to_bundle(x->buffer_len, x->buffer[1] + x->buffer_pos[1], &msg);
+	//x->buffer_pos[1] += cmmjl_osc_add_to_bundle(x->buffer_len, x->buffer[1] + x->buffer_pos[1], &msg);
+	*((uint32 *)(x->buffer[1] + x->buffer_pos[1])) = hton32(msg.size);
+	x->buffer_pos[1] += 4;
+	memcpy(x->buffer[1] + x->buffer_pos[1], msg.address, msg.size);
+	x->buffer_pos[1] += msg.size;
 }
 
 void ofilter_int(t_ofilter *x, long l){
@@ -187,7 +199,6 @@ void ofilter_free(t_ofilter *x){
 void *ofilter_new(t_symbol *msg, short argc, t_atom *argv){
 	t_ofilter *x;
 	if(x = (t_ofilter *)object_alloc(ofilter_class)){
-		cmmjl_init(x, NAME, 0);
 		x->outlets[2] = outlet_new((t_object *)x, NULL);
 		x->outlets[1] = outlet_new((t_object *)x, "FullPacket");
 		x->outlets[0] = outlet_new((t_object *)x, "FullPacket");
@@ -222,6 +233,7 @@ int main(void){
 	ofilter_class = c;
 
 	common_symbols_init();
+	ps_FullPacket = gensym("FullPacket");
 	return 0;
 }
 

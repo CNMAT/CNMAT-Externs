@@ -262,7 +262,7 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 		return NULL;
 	}else{
 		oio_osc_util_makenice(pstring);
-		ptr += sprintf(ptr, "/%s", pstring);
+		ptr += sprintf(ptr, "/hid/%s", pstring);
 	}
 
 	CFStringRef name = NULL;

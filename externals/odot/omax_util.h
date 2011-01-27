@@ -18,5 +18,8 @@ int osc_util_make_bundle(int numAddresses,
 int osc_util_check_pos_and_resize(char *buf, int len, char *pos);
 int osc_util_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buffer);
 
+char omax_util_typetagForAtom(t_atom *a);
+int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv);
+
 
 #endif //__OMAX_UTIL_H__

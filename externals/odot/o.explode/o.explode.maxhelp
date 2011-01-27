@@ -15,44 +15,50 @@
 		"toolbarvisible" : 1,
 		"boxanimatetime" : 200,
 		"imprint" : 0,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "message",
-					"text" : "/foo 1 2 3 4 5, bang",
-					"id" : "obj-4",
+					"text" : "/bar 1 2 3 4 5, bang",
+					"fontsize" : 12.0,
 					"numinlets" : 2,
-					"fontsize" : 12.0,
 					"numoutlets" : 1,
+					"fontname" : "Arial",
 					"outlettype" : [ "" ],
-					"fontname" : "Arial",
-					"patching_rect" : [ 220.0, 60.0, 114.0, 18.0 ]
+					"patching_rect" : [ 260.0, 90.0, 115.0, 18.0 ],
+					"id" : "obj-6"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "print",
-					"id" : "obj-7",
-					"numinlets" : 1,
+					"maxclass" : "o.message",
+					"text" : "/foo 1 \n/y 2 \n/z 3 \n/a 4 \n/xx 5 \n/ww 0 \n/ii 0 \n/ur 0 \n/ae 0 ",
+					"linecount" : 9,
 					"fontsize" : 12.0,
-					"numoutlets" : 0,
+					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"numinlets" : 2,
+					"numoutlets" : 1,
 					"fontname" : "Arial",
-					"patching_rect" : [ 150.0, 230.0, 34.0, 20.0 ]
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 100.0, 310.0, 209.0, 131.0 ],
+					"id" : "obj-2"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "OpenSoundControl",
-					"id" : "obj-6",
-					"numinlets" : 1,
+					"maxclass" : "message",
+					"text" : "/foo 1 2 3 4 5, bang",
 					"fontsize" : 12.0,
-					"numoutlets" : 3,
-					"outlettype" : [ "", "", "OSCTimeTag" ],
+					"numinlets" : 2,
+					"numoutlets" : 1,
 					"fontname" : "Arial",
-					"patching_rect" : [ 100.0, 200.0, 113.0, 20.0 ]
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 220.0, 60.0, 114.0, 18.0 ],
+					"id" : "obj-4"
 				}
 
 			}
@@ -60,13 +66,13 @@
 				"box" : 				{
 					"maxclass" : "message",
 					"text" : "/foo 1 2 3, bang",
-					"id" : "obj-5",
-					"numinlets" : 2,
 					"fontsize" : 12.0,
+					"numinlets" : 2,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 100.0, 60.0, 94.0, 18.0 ]
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 100.0, 60.0, 94.0, 18.0 ],
+					"id" : "obj-5"
 				}
 
 			}
@@ -74,13 +80,13 @@
 				"box" : 				{
 					"maxclass" : "newobj",
 					"text" : "OpenSoundControl",
-					"id" : "obj-3",
-					"numinlets" : 1,
 					"fontsize" : 12.0,
+					"numinlets" : 1,
 					"numoutlets" : 3,
-					"outlettype" : [ "", "", "OSCTimeTag" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 100.0, 110.0, 113.0, 20.0 ]
+					"outlettype" : [ "", "", "OSCTimeTag" ],
+					"patching_rect" : [ 100.0, 110.0, 113.0, 20.0 ],
+					"id" : "obj-3"
 				}
 
 			}
@@ -88,21 +94,21 @@
 				"box" : 				{
 					"maxclass" : "newobj",
 					"text" : "o.explode /foo /foo /y /z /a /xx /ww /ii /ur /ae",
-					"id" : "obj-1",
-					"numinlets" : 1,
 					"fontsize" : 12.0,
+					"numinlets" : 1,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
 					"fontname" : "Arial",
-					"patching_rect" : [ 100.0, 160.0, 240.0, 20.0 ]
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 100.0, 160.0, 240.0, 20.0 ],
+					"id" : "obj-1"
 				}
 
 			}
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"source" : [ "obj-3", 0 ],
-					"destination" : [ "obj-1", 0 ],
+					"source" : [ "obj-1", 0 ],
+					"destination" : [ "obj-2", 1 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
@@ -110,8 +116,17 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-1", 0 ],
-					"destination" : [ "obj-6", 0 ],
+					"source" : [ "obj-6", 0 ],
+					"destination" : [ "obj-3", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-3", 0 ],
+					"destination" : [ "obj-1", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
@@ -130,15 +145,6 @@
 				"patchline" : 				{
 					"source" : [ "obj-5", 0 ],
 					"destination" : [ "obj-3", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-6", 1 ],
-					"destination" : [ "obj-7", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}

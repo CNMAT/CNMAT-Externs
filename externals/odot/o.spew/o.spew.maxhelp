@@ -75,7 +75,6 @@
 					"text" : "This behavior is like o.route, except that the addresses remain in tact.",
 					"linecount" : 3,
 					"id" : "obj-12",
-					"presentation_rect" : [ 278.0, 248.0, 0.0, 0.0 ],
 					"fontname" : "Arial",
 					"patching_rect" : [ 280.0, 250.0, 177.0, 48.0 ],
 					"numinlets" : 1,
@@ -103,7 +102,6 @@
 					"text" : "Arguments specify which outlet a message should come out.  All unmatched messages will come out the right outlet.",
 					"linecount" : 4,
 					"id" : "obj-9",
-					"presentation_rect" : [ 196.0, 192.0, 0.0, 0.0 ],
 					"fontname" : "Arial",
 					"patching_rect" : [ 280.0, 190.0, 177.0, 62.0 ],
 					"numinlets" : 1,
@@ -132,7 +130,6 @@
 					"outlettype" : [ "" ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"id" : "obj-7",
-					"presentation_rect" : [ 58.0, 41.0, 0.0, 0.0 ],
 					"fontname" : "Arial",
 					"patching_rect" : [ 60.0, 60.0, 124.0, 20.0 ],
 					"numinlets" : 2,
@@ -144,11 +141,11 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "comment",
-					"text" : "With no arguments, o.spew behaves like the left outlet of the OpenSoundControl object.  A bundle comes in and max messages come out",
+					"text" : "With no arguments, o.spew behaves like the middle outlet of the OpenSoundControl object.  A bundle comes in and max messages come out",
 					"linecount" : 5,
 					"id" : "obj-6",
 					"fontname" : "Arial",
-					"patching_rect" : [ 200.0, 60.0, 170.0, 75.0 ],
+					"patching_rect" : [ 200.0, 60.0, 186.0, 75.0 ],
 					"numinlets" : 1,
 					"fontsize" : 12.0,
 					"numoutlets" : 0
@@ -227,44 +224,8 @@
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"source" : [ "obj-17", 0 ],
-					"destination" : [ "obj-15", 0 ],
-					"hidden" : 1,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-1", 2 ],
-					"destination" : [ "obj-11", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-4", 0 ],
-					"destination" : [ "obj-8", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-7", 0 ],
-					"destination" : [ "obj-4", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-1", 1 ],
-					"destination" : [ "obj-3", 0 ],
+					"source" : [ "obj-2", 0 ],
+					"destination" : [ "obj-1", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
@@ -281,9 +242,45 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-2", 0 ],
-					"destination" : [ "obj-1", 0 ],
+					"source" : [ "obj-1", 1 ],
+					"destination" : [ "obj-3", 0 ],
 					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-7", 0 ],
+					"destination" : [ "obj-4", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-4", 0 ],
+					"destination" : [ "obj-8", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-1", 2 ],
+					"destination" : [ "obj-11", 0 ],
+					"hidden" : 0,
+					"midpoints" : [  ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"source" : [ "obj-17", 0 ],
+					"destination" : [ "obj-15", 0 ],
+					"hidden" : 1,
 					"midpoints" : [  ]
 				}
 

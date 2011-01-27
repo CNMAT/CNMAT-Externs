@@ -154,7 +154,9 @@ void oppnd_set(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv){
 }
 
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
-
+	char buf[strlen(msg->s_name) + strlen(x->sym_to_prepend->s_name)];
+	sprintf(buf, "%s%s", x->sym_to_prepend->s_name, msg->s_name);
+	outlet_anything(x->outlet, gensym(buf), argc, argv);
 }
 
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s){
@@ -196,6 +198,7 @@ int main(void){
 	class_addmethod(c, (method)oppnd_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oppnd_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oppnd_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)oppnd_anything, "anything", A_GIMME, 0);
 
 	class_addmethod(c, (method)oppnd_set, "set", A_GIMME, 0);
     

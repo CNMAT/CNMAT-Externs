@@ -29,6 +29,7 @@ typedef struct _oio{
 	struct _oio_hid *hid;
 	struct _oio_midi *midi;
 	struct _oio_serial *serial;
+	CFMutableDictionaryRef device_hash; // dictionary of devices stored with their automatically generated OSC name
 } t_oio;
 
 typedef void (*t_oio_callback)(t_oio *, long, char*, void *);
@@ -65,6 +66,8 @@ t_oio_err oio_obj_getDevicesByName(t_oio *oio,
 				   //CFMutableDictionaryRef hash, 
 				   int *num_devices, 
 				   t_oio_generic_device ***matched_devices);
+
+void oio_obj_makeOSCDeviceName(t_oio *oio, char *name, char **osc_name);
 t_oio_err oio_obj_registerValueCallback(t_oio *oio, char *name, t_oio_callback f, void *context);
 t_oio_err oio_obj_unregisterValueCallback(t_oio *oio, char *name, t_oio_callback f);
 t_oio_err oio_obj_registerNotificationCallback(t_oio *oio, t_oio_callbackList **callbackList, t_oio_callback f, void *context);

@@ -274,8 +274,34 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>17</integer>
-									<integer>16</integer>
+									<integer>3</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>4</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>5</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>6</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>7</integer>
+									<integer>1</integer>
+									<integer>0</integer>
+								</array>
+								<array>
+									<integer>8</integer>
+									<integer>1</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -314,7 +340,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>o.spew.c</string>
+								<string>osc_util.c</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,15 +348,15 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>o.spew.c</string>
+										<string>osc_util.c</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>5279087112DFBCF600934D68</string>
+										<string>5249DF6512E19C8D00B3ABA5</string>
 										<key>history</key>
 										<array>
+											<string>5249DF6412E19C8D00B3ABA5</string>
 											<string>5279086F12DFBCF600934D68</string>
-											<string>5279087012DFBCF600934D68</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -342,14 +368,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {580, 232}}</string>
+								<string>{{0, 0}, {580, 222}}</string>
 								<key>RubberWindowFrame</key>
 								<string>749 220 788 504 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>232pt</string>
+							<string>222pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -362,14 +388,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 237}, {580, 226}}</string>
+								<string>{{0, 227}, {580, 236}}</string>
 								<key>RubberWindowFrame</key>
 								<string>749 220 788 504 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>226pt</string>
+							<string>236pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -388,9 +414,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>5279087212DFBCF600934D68</string>
+				<string>5249DF6612E19C8D00B3ABA5</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>5279087312DFBCF600934D68</string>
+				<string>5249DF6712E19C8D00B3ABA5</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -609,7 +635,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>52618F10119DFA2500C4DC88</string>
-				<string>5279087412DFBCF600934D68</string>
+				<string>5249DF6812E19C8D00B3ABA5</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
