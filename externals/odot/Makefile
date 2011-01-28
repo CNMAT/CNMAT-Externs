@@ -11,6 +11,14 @@ $(OBJDIR)/%.mxo:
 	+cd $(notdir $(basename $@))/build/Deployment && cp -r $(notdir $(basename $@)).mxo $(OBJDIR)
 	+cd $(notdir $(basename $@)) && cp -r $(notdir $(basename $@)).maxhelp $(OBJDIR)
 
+
+win: $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxe) $(OBJDIR)/patches
+
+$(OBJDIR)/%.mxe: 
+	+cd $(notdir $(basename $@)) && $(MAKE) win -f Makefile -k
+	+cd $(notdir $(basename $@))/build-gcc && cp -r $(notdir $(basename $@)).mxe $(OBJDIR)
+	+cd $(notdir $(basename $@)) && cp -r $(notdir $(basename $@)).maxhelp $(OBJDIR)
+
 $(OBJDIR):
 	@[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
 
