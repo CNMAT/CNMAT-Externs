@@ -1279,6 +1279,7 @@ void rbfi_dump(t_rbfi *x){
 			outlet_anything(x->dumpOutlet, p->label, ptr - out, out);
 			p = p->next;
 		}
+		outlet_anything(x->dumpOutlet, gensym("done"), 0, NULL);
 	}
 	critical_exit(x->lock);
 
