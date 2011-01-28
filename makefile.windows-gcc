@@ -1,4 +1,4 @@
-CC := gcc
+CC := gcc-3
 CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION
 #MAX_INCLUDES = ../../../c74support-w32/max-includes
 #MSP_INCLUDES = ../../../c74support-w32/msp-includes

@@ -1,4 +1,4 @@
-/** @file /Users/johnmac/Development/cnmat/trunk/max/cmmjl/src/cmmjl_commonsymbols.h
+/** @file /Users/john/Development/cnmat/trunk/max/cmmjl/src/cmmjl_commonsymbols.h
 	A set of commonly used predefined t_symbols.
 
 	WARNING: THIS FILE IS GENERATED AUTOMATICALLY BY cmmjl_commonsymbols.pl.

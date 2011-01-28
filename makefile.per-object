@@ -290,7 +290,8 @@ $(CFM_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(CFM_BINARY) cfm-help-diff-warning
 $(MACHO_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(MACHO_BINARY) macho-help-diff-warning
 	@echo Building MachO download of version $(VERSION) for platform $(PLATFORM) in build-dir $(BUILD_DIR) 
 #	stuff -o -n $@ $(MACHO_BINARY) $(HELPFILE)
-	tar --unlink -czf $@ $(MORE_RELEASE_FILES) $(HELPFILE) -C $(XCODE_BUILD_DIR) $(OBJ).mxo
+	#tar --unlink -czf $@ $(MORE_RELEASE_FILES) $(HELPFILE) -C $(XCODE_BUILD_DIR) $(OBJ).mxo
+	tar -czf $@ $(MORE_RELEASE_FILES) $(HELPFILE) -C $(XCODE_BUILD_DIR) $(OBJ).mxo
 
 $(WIN_INDIVIDUAL_DOWNLOAD): $(HELPFILE) $(WIN_BINARY) win-help-diff-warning
 	@echo Building Windoze download of version $(VERSION) for platform $(PLATFORM) in build-dir $(BUILD_DIR)
