@@ -102,6 +102,7 @@ the flow of control works, so here are some hints:
    so we have to undo the Max function table macro for error() */
 #undef error
 
+#include <CoreServices/CoreServices.h>
 #include <OpenTransport.h>
 #include <OpenTptInternet.h>
 

@@ -885,7 +885,6 @@ void snippet_fill_and_stroke(t_jgraphics *cr, double width, double height)
 void snippet_gradient(t_jgraphics *cr, double width, double height)
 {
 	t_jpattern *pat;
-	
 	snippet_normalize (cr, width, height);
 	
 	pat = jgraphics_pattern_create_linear (0.0, 0.0,  0.0, 1.0);
@@ -898,12 +897,13 @@ void snippet_gradient(t_jgraphics *cr, double width, double height)
 	
 	pat = jgraphics_pattern_create_radial (0.45, 0.4, 0.1,
 									   0.4,  0.4, 0.5);
-	jgraphics_pattern_add_color_stop_rgba (pat, 0, 1, 1, 1, 1);
+	jgraphics_pattern_add_color_stop_rgba (pat, 0, 1, 0, 0, 1);
 	jgraphics_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 1);
 	jgraphics_set_source (cr, pat);
 	jgraphics_arc (cr, 0.5, 0.5, 0.3, 0, 2 * JGRAPHICS_PI);
 	jgraphics_fill (cr);
 	jgraphics_pattern_destroy (pat);
+
 }
 
 void snippet_path(t_jgraphics *cr, double width, double height)

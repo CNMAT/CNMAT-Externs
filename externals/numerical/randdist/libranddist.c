@@ -142,144 +142,6 @@ void *librdist_get_function(t_symbol *dist){
 		return NULL;
 	}
 }
-/*
-void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
-	if(argc > R_MAX_N_VARS){
-		error("randdist: too many variables");
-		return;
-	}
-
-	if(x->r_numVars < argc)
-		x->r_vars = (t_atom *)realloc(x->r_vars, argc * sizeof(t_atom));
-	x->r_vars = (t_atom *)memcpy(x->r_vars, argv, argc * sizeof(t_atom));
-	x->r_numVars = (int)argc;	
-
-	x->r_stride = 1;
-
-	if(msg){
-		if(!strcmp(msg->s_name, "gaussian")){
-			x->r_dist = R_GAUSSIAN;
-			x->r_function = rdist_gaussian;
-		}else if(!strcmp(msg->s_name, "gaussian_tail")){
-			x->r_dist = R_GAUSSIAN_TAIL;
-			x->r_function = rdist_gaussian_tail;
-		}else if(!strcmp(msg->s_name, "bivariate_gaussian")){
-			x->r_dist = R_BIVARIATE_GAUSSIAN;
-			x->r_function = rdist_bivariate_gaussian;
-			x->r_stride = 2;
-		}else if(!strcmp(msg->s_name, "exponential")){
-			x->r_dist = R_EXPONENTIAL;
-			x->r_function = rdist_exponential;
-		}else if(!strcmp(msg->s_name, "erlang")){
-			x->r_dist = R_ERLANG;
-			x->r_function = rdist_erlang;
-		}else if(!strcmp(msg->s_name, "laplace")){
-			x->r_dist = R_LAPLACE;
-			x->r_function = rdist_laplace;
-		}else if(!strcmp(msg->s_name, "exppow")){
-			x->r_dist = R_EXPPOW;
-			x->r_function = rdist_exppow;
-		}else if(!strcmp(msg->s_name, "cauchy")){
-			x->r_dist = R_CAUCHY;
-			x->r_function = rdist_cauchy;
-		}else if(!strcmp(msg->s_name, "rayleigh")){
-			x->r_dist = R_RAYLEIGH;
-			x->r_function = rdist_rayleigh;
-		}else if(!strcmp(msg->s_name, "rayleigh_tail")){
-			x->r_dist = R_RAYLEIGH_TAIL;
-			x->r_function = rdist_rayleigh_tail;
-		}else if(!strcmp(msg->s_name, "landau")){
-			x->r_dist = R_LANDAU;
-			x->r_function = rdist_landau;
-		}else if(!strcmp(msg->s_name, "levy")){
-			x->r_dist = R_LEVY;
-			x->r_function = rdist_levy;
-		}else if(!strcmp(msg->s_name, "levy_skew")){
-			x->r_dist = R_LEVY_SKEW;
-			x->r_function = rdist_levy_skew;
-		}else if(!strcmp(msg->s_name, "gamma")){
-			x->r_dist = R_GAMMA;
-			x->r_function = rdist_gamma;
-		}else if(!strcmp(msg->s_name, "uniform")){
-			x->r_dist = R_UNIFORM;
-			x->r_function = rdist_uniform;
-		}else if(!strcmp(msg->s_name, "lognormal")){
-			x->r_dist = R_LOGNORMAL;
-			x->r_function = rdist_lognormal;
-		}else if(!strcmp(msg->s_name, "chisq")){
-			x->r_dist = R_CHISQ;
-			x->r_function = rdist_chisq;
-		}else if(!strcmp(msg->s_name, "f")){
-			x->r_dist = R_F;
-			x->r_function = rdist_fdist;
-		}else if(!strcmp(msg->s_name, "t")){
-			x->r_dist = R_T;
-			x->r_function = rdist_tdist;
-		}else if(!strcmp(msg->s_name, "beta")){
-			x->r_dist = R_BETA;
-			x->r_function = rdist_beta;
-		}else if(!strcmp(msg->s_name, "logistic")){
-			x->r_dist = R_LOGISTIC;
-			x->r_function = rdist_logistic;
-		}else if(!strcmp(msg->s_name, "pareto")){
-			x->r_dist = R_PARETO;
-			x->r_function = rdist_pareto;
-		}else if(!strcmp(msg->s_name, "weibull")){
-			x->r_dist = R_WEIBULL;
-			x->r_function = rdist_weibull;
-		}else if(!strcmp(msg->s_name, "gumbel1")){
-			x->r_dist = R_GUMBEL1;
-			x->r_function = rdist_gumbel1;
-		}else if(!strcmp(msg->s_name, "gumbel2")){
-			x->r_dist = R_GUMBEL2;
-			x->r_function = rdist_gumbel2;
-		}else if(!strcmp(msg->s_name, "dirichlet")){
-			x->r_dist = R_DIRICHLET;
-			x->r_function = rdist_dirichlet;
-			x->r_stride = x->r_numVars;
-		}else if(!strcmp(msg->s_name, "poisson")){
-			x->r_dist = R_POISSON;
-			x->r_function = rdist_poisson;
-		}else if(!strcmp(msg->s_name, "bernoulli")){
-			x->r_dist = R_BERNOULLI;
-			x->r_function = rdist_bernoulli;
-		}else if(!strcmp(msg->s_name, "binomial")){
-			x->r_dist = R_BINOMIAL;
-			x->r_function = rdist_binomial;
-		}else if(!strcmp(msg->s_name, "multinomial")){
-			x->r_dist = R_MULTINOMIAL;
-			x->r_function = rdist_multinomial;
-			x->r_stride = x->r_numVars - 1;
-		}else if(!strcmp(msg->s_name, "negative_binomial")){
-			x->r_dist = R_NEGATIVE_BINOMIAL;
-			x->r_function = rdist_negative_binomial;
-		}else if(!strcmp(msg->s_name, "pascal")){
-			x->r_dist = R_PASCAL;
-			x->r_function = rdist_pascal;
-		}else if(!strcmp(msg->s_name, "geometric")){
-			x->r_dist = R_GEOMETRIC;
-			x->r_function = rdist_geometric;
-		}else if(!strcmp(msg->s_name, "hypergeometric")){
-			x->r_dist = R_HYPERGEOMETRIC;
-			x->r_function = rdist_hypergeometric;
-		}else if(!strcmp(msg->s_name, "logarithmic")){
-			x->r_dist = R_LOGARITHMIC;
-			x->r_function = rdist_logarithmic;
-		}
-	} else {
-		if(x->r_dist == R_BIVARIATE_GAUSSIAN)
-			x->r_stride = 2;
-		else if(x->r_dist == R_DIRICHLET || x->r_dist == R_MULTINOMIAL)
-			x->r_stride = x->r_numVars;
-	}
-
-        if(x->r_useBuffer){
-		x->r_threadShouldWait = 1;
-		x->r_bufferIsEmpty[0] = x->r_bufferIsEmpty[1] = 1;
-		pthread_cond_signal(&x->r_cv);
-        }
-}
-*/
 
 //void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	/*
@@ -373,9 +235,12 @@ void *rdist_fillBuffers(void *args){
 	pthread_exit(NULL);
 }
 */
+
+/*
 void rdist_seed(gsl_rng *rng, long s){
 	gsl_rng_set(rng, s);
 }
+*/
 
 int makeseed(void){
 	/* from PD x_misc.c
@@ -395,7 +260,7 @@ int makeseed(void){
 	fread(&r, sizeof(r), 1, f);
 	fclose(f);
 
-	//post("%u\n", randval);
+	//post("%u\n", r);
 	return r;
 }
 
@@ -778,7 +643,6 @@ void librdist_dirichlet(gsl_rng *rng, int argc, void *argv, int bufc, float *buf
 		gsl_ran_dirichlet(rng, k, alpha, theta);
 		for(i = 0; i < k; i++){
 			buf[i] = theta[i];
-			//post("%.20f", buf[i]);
 		}
 	}
 }

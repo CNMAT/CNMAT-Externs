@@ -37,6 +37,8 @@
   VERSION 0.0.8: outputs points after a pattr update
   VERSION 0.1: paths to connect points, renumber points, interp between points, save with patcher
   VERSION 0.1.1: points are now in the right order saved and reopened
+  VERSION 0.1.2: fixed capslock bug
+  VERSION 0.1.3: new points are now numbered to fill in the available slots.
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -97,6 +99,8 @@ typedef struct _xy{
 	t_pt interp;
 	int draw_stupid_little_point;
 	int highlight_line;
+	char *slots;
+	int nslots;
 } t_xy;
 
 static t_class *xy_class;
@@ -113,6 +117,7 @@ void xy_setPoint(t_xy *x, long n, double xx, double yy);
 void xy_doMovePoint(t_xy *x, t_point *p, double xx, double yy);
 void xy_moveSelected(t_xy *x, double xx, double yy);
 void xy_setSelected(t_xy *x, double xx, double yy);
+int xy_get_slot(t_xy *x);
 t_point *xy_findPointByPosition(t_xy *x, long n);
 void xy_select(t_xy *x, long n);
 void xy_setSelection(t_xy *x, long n);
@@ -305,11 +310,15 @@ void xy_float(t_xy *x, double f){
 }
 
 void xy_renumber(t_xy *x){
-	int n = x->npoints - 1;
+	//int n = x->npoints - 1;
 	t_point *p = x->points;
-	x->monotonic_point_counter = n;
+	//x->monotonic_point_counter = n;
+	int i = 0;
+	memset(x->slots, '\0', x->nslots);
 	while(p){
-		p->id = n--;
+		p->id = i;
+		x->slots[i] = 1;
+		i++;
 		p = p->next;
 	}
 	jbox_invalidate_layer((t_object *)x, x->patcherview, l_points);
@@ -424,6 +433,19 @@ void xy_setSelected(t_xy *x, double xx, double yy){
 	object_notify(x, _sym_modified, NULL);
 	jbox_invalidate_layer((t_object *)x, x->patcherview, l_points);
 	jbox_redraw(&(x->ob));
+}
+
+int xy_get_slot(t_xy *x){
+	int i;
+	for(i = 0; i < x->nslots; i++){
+		if(x->slots[i] == 0){
+			x->slots[i] = 1;
+			return i;
+		}
+	}
+	x->slots = (char *)sysmem_resizeptr(x->slots, x->nslots * 2);
+	x->nslots *= 2;
+	return (x->nslots / 2);
 }
 
 t_point *xy_findPointByPosition(t_xy *x, long n){
@@ -561,6 +583,7 @@ void xy_mousedown(t_xy *x, t_object *patcherview, t_pt pt, long modifiers){
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 
 	switch(modifiers){
+	case 0x110:
 	case 0x10:
 		//case 0x12:
 		{
@@ -588,6 +611,7 @@ void xy_mousedown(t_xy *x, t_object *patcherview, t_pt pt, long modifiers){
 		break;
 		//case 0x11:
 		//case (0x11 | 0x12):
+	case 0x112:
 	case 0x12:
 		{
 			critical_enter(x->lock);
@@ -614,6 +638,7 @@ void xy_mousedrag(t_xy *x, t_object *patcherview, t_pt pt, long modifiers){
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 
 	switch(modifiers){
+	case 0x110:
 	case 0x10:
 		//case 0x12:
 		critical_enter(x->lock);
@@ -647,7 +672,7 @@ t_point *xy_newPoint(t_xy *x){
 		p->next = NULL;
 		p->prev = NULL;
 		p->pt = (t_pt){0., 0.};
-		p->id = x->monotonic_point_counter++;
+		p->id = xy_get_slot(x);
 		return p;
 	}else{
 		error("xy: out of memory!  failed to allocate a new point");
@@ -698,6 +723,7 @@ void xy_addPoint(t_xy *x, t_point *p){
 
 void xy_removePoint(t_xy *x, t_point *p){
 	critical_enter(x->lock);
+	x->slots[p->id] = 0;
 	if(p->prev){
 		p->prev->next = p->next;
 	}else{
@@ -809,7 +835,7 @@ void xy_clear(t_xy *x){
 	x->points = NULL;
 	memset(x->point_hash, '\0', x->point_hash_len * sizeof(t_point *));
 	x->selected = NULL;
-	x->monotonic_point_counter = 0; // not really monotonic i guess...
+	//x->monotonic_point_counter = 0; // not really monotonic i guess...
 	critical_exit(x->lock);
 	object_notify(x, _sym_modified, NULL);
 	jbox_invalidate_layer((t_object *)x, x->patcherview, l_points);
@@ -829,6 +855,9 @@ void xy_free(t_xy *x){
 		free(x->point_hash);
 	}
 	critical_free(x->lock);
+	if(x->slots){
+		sysmem_freeptr(x->slots);
+	}
 }
 
 void xy_assist(t_xy *x, void *b, long io, long index, char *s){
@@ -952,7 +981,10 @@ void *xy_new(t_symbol *msg, int argc, t_atom *argv){
 		x->listOutlet = outlet_new(x, NULL);
 		x->npoints = 0;
 		x->points = NULL;
-		x->monotonic_point_counter = 0;
+		//x->monotonic_point_counter = 0;
+		x->nslots = 256;
+		x->slots = (char *)sysmem_newptr(x->nslots);
+		memset(x->slots, '\0', x->nslots);
 		x->pointdiameter = 3.0;
 
 		//x->ht = hashtab_new(0);

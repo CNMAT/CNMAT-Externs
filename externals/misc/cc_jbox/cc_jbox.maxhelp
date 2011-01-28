@@ -22,14 +22,13 @@
 				"box" : 				{
 					"maxclass" : "message",
 					"text" : "compile",
-					"presentation_rect" : [ 131.0, 94.0, 0.0, 0.0 ],
 					"fontsize" : 12.0,
+					"numinlets" : 2,
 					"numoutlets" : 1,
 					"patching_rect" : [ 132.0, 96.0, 52.0, 18.0 ],
 					"outlettype" : [ "" ],
 					"id" : "obj-5",
-					"fontname" : "Arial",
-					"numinlets" : 2
+					"fontname" : "Arial"
 				}
 
 			}
@@ -37,28 +36,27 @@
 				"box" : 				{
 					"maxclass" : "message",
 					"text" : "open_editor",
-					"presentation_rect" : [ 108.0, 69.0, 0.0, 0.0 ],
 					"fontsize" : 12.0,
+					"numinlets" : 2,
 					"numoutlets" : 1,
 					"patching_rect" : [ 108.0, 68.0, 74.0, 18.0 ],
 					"outlettype" : [ "" ],
 					"id" : "obj-4",
-					"fontname" : "Arial",
-					"numinlets" : 2
+					"fontname" : "Arial"
 				}
 
 			}
 , 			{
 				"box" : 				{
 					"maxclass" : "message",
-					"text" : "cfile /Users/johnmac/Development/cnmat/trunk/max/externals/misc/cc_jbox/gui.c",
+					"text" : "cfile /Users/john/Development/cnmat/trunk/max/externals/misc/cc_jbox/gui.c",
 					"fontsize" : 12.0,
+					"numinlets" : 2,
 					"numoutlets" : 1,
-					"patching_rect" : [ 64.0, 32.0, 437.0, 18.0 ],
+					"patching_rect" : [ 64.0, 32.0, 415.0, 18.0 ],
 					"outlettype" : [ "" ],
 					"id" : "obj-3",
-					"fontname" : "Arial",
-					"numinlets" : 2
+					"fontname" : "Arial"
 				}
 
 			}
@@ -66,27 +64,27 @@
 				"box" : 				{
 					"maxclass" : "cc_jbox",
 					"outlets" : 2,
-					"load" : "/private/var/tmp/gui.dylib",
-					"color" : [ 1.0, 1.0, 1.0, 1.0 ],
-					"fontsize" : 12.0,
-					"numoutlets" : 1,
 					"inlets" : 2,
+					"fontsize" : 12.0,
+					"numinlets" : 2,
+					"load" : "/private/var/tmp/gui.dylib",
+					"cfile" : "/Users/john/Development/cnmat/trunk/max/externals/misc/cc_jbox/gui.c",
+					"color" : [ 1.0, 1.0, 1.0, 1.0 ],
+					"numoutlets" : 2,
+					"maxsdk" : "/Users/john/Development/cnmat/trunk/max/SDK/MaxSDK-5",
 					"patching_rect" : [ 108.0, 124.0, 300.0, 100.0 ],
-					"outlettype" : [ "" ],
-					"textcolor" : [  ],
-					"cfile" : "/Users/johnmac/Development/cnmat/trunk/max/externals/misc/cc_jbox/gui.c",
+					"outlettype" : [ "", "" ],
 					"id" : "obj-1",
 					"fontname" : "Arial",
-					"maxsdk" : "/Users/johnmac/Development/cnmat/trunk/max/SDK/MaxSDK-5",
 					"build_path" : "/private/var/tmp",
-					"numinlets" : 1
+					"textcolor" : [  ]
 				}
 
 			}
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"source" : [ "obj-5", 0 ],
+					"source" : [ "obj-3", 0 ],
 					"destination" : [ "obj-1", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
@@ -104,7 +102,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-3", 0 ],
+					"source" : [ "obj-5", 0 ],
 					"destination" : [ "obj-1", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]

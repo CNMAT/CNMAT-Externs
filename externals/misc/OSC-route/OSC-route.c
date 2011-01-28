@@ -235,7 +235,7 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 			} else if (argv[i].a_w.w_sym == ps_slash) {
 				/* Take next argument after slash as if it were a "slashed" argument */
 				if (i+1 >= argc) {
-					post("¥ OSC-route: \"slash\" argument must be followed by another argument.");
+					object_error((t_object *)x, "\"slash\" argument must be followed by another argument.");
 					return 0;
 				}
 				
@@ -247,21 +247,21 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 					sprintf(string, "%d", argv[i+1].a_w.w_long);
 					if (RememberNextPrefix(x, string) == 0) return 0;
 				} else {
-					post("¥ OSC-route: unrecognized argument type after \"slash\".");
+					object_error((t_object *)x, "unrecognized argument type after \"slash\".");
 					return 0;
 				}
 				++i;		
 			} else {
-					post("¥ OSC-route: Unrecognized argument %s", argv[i].a_w.w_sym->s_name);
+					object_error((t_object *)x, "Unrecognized argument %s", argv[i].a_w.w_sym->s_name);
 			}
 		} else if (argv[i].a_type == A_LONG) {
-			post("¥ OSC-route: int arguments are not OK.");
+			object_error((t_object *)x, "int arguments are not OK.");
 			return 0;
 		} else if (argv[i].a_type == A_FLOAT) {
-			post("¥ OSC-route: float arguments are not OK.");
+			object_error((t_object *)x, "float arguments are not OK.");
 			return 0;
 		} else {
-			post("¥ OSC-route: unrecognized argument type!");
+			object_error((t_object *)x, "unrecognized argument type!");
 			return 0;
 		}
 	}
@@ -336,7 +336,7 @@ void OSCroute_set(OSCroute *x, long outlet, Symbol *s) {
   // outlet argument is 1-based.
 	
   if (outlet <=0 || outlet > x->o_num) {
-    post("¥ OSC-route: argument to set must be from one to the number of outlets.");
+    object_error((t_object *)x, "argument to set must be from one to the number of outlets.");
     return;
   }
 	
@@ -362,16 +362,16 @@ void OSCroute_list(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 		/* Ignore the fact that this is a "list" */
 		OSCroute_doanything(x, argv[0].a_w.w_sym, argc-1, argv+1);
 	} else if (argc == 0) {
-	  post("¥ OSC-route: can't handle empty list; it has no OSC address.");
+	  object_error((t_object *)x, "can't handle empty list; it has no OSC address.");
 	} else {
 	  if (argv[0].a_type == A_LONG) {
-	    post("¥ OSC-route: integer %d is not an OSC-address",
+	    object_error((t_object *)x, "integer %d is not an OSC-address",
 		 argv[0].a_w.w_long);
 	  } else if (argv[0].a_type == A_FLOAT) {
-	    post("¥ OSC-route: float %f is not an OSC-address",
+	    object_error((t_object *)x, "float %f is not an OSC-address",
 		 argv[0].a_w.w_float);
 	  } else {
-	    post("¥ OSC-route: invalid list starting with atom of unrecognized type... ???");
+	    object_error((t_object *)x, "invalid list starting with atom of unrecognized type... ???");
 	  }
 
 	  // Could print the rest of the arguments here...
@@ -410,7 +410,7 @@ void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	// Decompose incoming pattern into its parts
 	pattern = s->s_name;
 	if (pattern[0] != '/') {
-		post("¥ OSC-route: invalid message pattern %s does not begin with /", s->s_name);
+		object_error((t_object *)x, "invalid message pattern %s does not begin with /", s->s_name);
 		return;
 	}
 	pattern++; // Skip opening slash
@@ -474,7 +474,7 @@ void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 		
 	if (!matchedAnything) {
 		if (x->o_complainmode) {
-			post("¥ OSC-route: pattern %s did not match any prefixes", pattern);
+			object_error((t_object *)x, "pattern %s did not match any prefixes", pattern);
 		}
 
 		outlet_anything(x->o_otheroutlet, s, argc, argv);
@@ -505,7 +505,7 @@ static void OutputOSCArguments(OSCroute *x, int i, short argc, Atom *argv) {
 		} else if (argv[0].a_type == A_FLOAT) {
 			outlet_float(x->o_outlets[i], argv[0].a_w.w_float);
 		} else {
-			post("¥ OSC-route: unrecognized atom type!");
+			object_error((t_object *)x, "unrecognized atom type!");
 		}
 	}
 }

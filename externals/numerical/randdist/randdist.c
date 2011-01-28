@@ -41,12 +41,15 @@ VERSION 2.1.1: Fixed a bug that occurred when distlist was used with nonparametr
 VERSION 2.1.2: Fixed a bug with the multinomial distribution
 VERSION 2.1.3: Added multivariate hypergeometric distribution
 VERSION 2.1.4: fixed a bug with the way that multinomial arguments were being handled
+VERSION 2.1.5: seed is now an attribute to easily replicate random data
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#include <stdio.h>
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
+#include "jpatcher_api.h"
 #include "libranddist.h"
 #include "version.h"
 #include "version.c"
@@ -58,8 +61,9 @@ VERSION 2.1.4: fixed a bug with the way that multinomial arguments were being ha
 typedef struct _rdist{
         t_object r_ob;
         void *r_out0;
-	void *r_out1;
+	void *outlet_info;
         gsl_rng *r_rng; // random number generator
+	gsl_rng *rng_last;
 	gsl_ran_discrete_t *r_g; // lookup table for nonparametric pdf sampling
         t_atom r_vars[R_MAX_N_VARS];
         t_symbol *r_dist;
@@ -69,13 +73,28 @@ typedef struct _rdist{
 	int r_stride;
 	void (*r_function)(gsl_rng*, int, void*, int, float*);
 	t_atom *r_output_buffer;
+
+	long seed;
+	int saveseed;
+
+	char state[128];
+	int statelen;
+	int savestate;
 } t_rdist;
 
-void *rdist_class;
-
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
+void rdist_init_seed(t_rdist *x, t_symbol *msg, int argc, t_atom *argv);
 void rdist_bang(t_rdist *x);
 void rdist_distlist(t_rdist *x, long n);
+void rdist_setsaveseed(t_rdist *x, t_object *attr, long argc, t_atom *argv);
+void rdist_setseed(t_rdist *x, t_object *attr, long argc, t_atom *argv);
+void rdist_getseed(t_rdist *x);
+void rdist_resetseed(t_rdist *x);
+//void rdist_setsaveseed(t_rdist *x, t_object *attr, long argc, t_atom *argv);
+void rdist_setsavestate(t_rdist *x, t_object *attr, long argc, t_atom *argv);
+void rdist_setstate(t_rdist *x, t_object *attr, int argc, t_atom *argv);
+void rdist_rememberstate(t_rdist *x);
+void rdist_resetstate(t_rdist *x);
 void rdist_assist(t_rdist *x, void *b, long m, long a, char *s);
 void *rdist_new(t_symbol *msg, short argc, t_atom *argv);
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
@@ -83,25 +102,58 @@ void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv);
 void rdist_int(t_rdist *x, long n);
 void rdist_float(t_rdist *x, double n);
-void rdist_seed(t_rdist *x, long s);
+//void rdist_seed(t_rdist *x, long s);
+void rdist_dirtywindow(t_rdist *x);
 void rdist_free(t_rdist *x);
 void rdist_tellmeeverything(t_rdist *x);
 void rdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno);
 
+void rdist_loadbang(t_rdist *x);
+
+static t_class *rdist_class;
+
 int main(void){
-	setup((t_messlist **)&rdist_class, (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, A_GIMME, 0); 
+	t_class *c = class_new("randdist", (method)rdist_new, (method)rdist_free, (short)sizeof(t_rdist), 0L, A_GIMME, 0); 
 	
-	addmess((method)version, "version", 0);
-	addmess((method)rdist_assist, "assist", A_CANT, 0);
-	addbang((method)rdist_bang);
-	addmess((method)rdist_distlist, "distlist", A_DEFLONG, 0);
-        addint((method)rdist_int);
-        addfloat((method)rdist_float);
-        addmess((method)rdist_list, "list", A_GIMME, 0);
-	addmess((method)rdist_anything, "anything", A_GIMME, 0);
-        addmess((method)rdist_nonparametric, "nonparametric", A_GIMME, 0);
-        addmess((method)rdist_seed, "seed", A_LONG, 0);
-        addmess((method)rdist_tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(c, (method)version, "version", 0);
+	class_addmethod(c, (method)rdist_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)rdist_bang, "bang", 0);
+	class_addmethod(c, (method)rdist_distlist, "distlist", A_DEFLONG, 0);
+	class_addmethod(c, (method)rdist_int, "int", A_LONG, 0);
+        class_addmethod(c, (method)rdist_float, "float", A_FLOAT, 0);
+        class_addmethod(c, (method)rdist_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)rdist_anything, "anything", A_GIMME, 0);
+        class_addmethod(c, (method)rdist_nonparametric, "nonparametric", A_GIMME, 0);
+        //class_addmethod(c, (method)rdist_setstate, "state", A_GIMME, 0);
+        class_addmethod(c, (method)rdist_getseed, "getseed", 0);
+	class_addmethod(c, (method)rdist_resetseed, "resetseed", 0);
+	class_addmethod(c, (method)rdist_resetstate, "resetstate", 0);
+	class_addmethod(c, (method)rdist_rememberstate, "rememberstate", 0);
+        class_addmethod(c, (method)rdist_tellmeeverything, "tellmeeverything", 0);
+
+	class_addmethod(c, (method)rdist_loadbang, "loadbang", 0);
+
+	CLASS_ATTR_LONG(c, "seed", 0, t_rdist, seed);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "seed", 0, "-666");
+	CLASS_ATTR_ACCESSORS(c, "seed", NULL, rdist_setseed); 
+
+	CLASS_ATTR_LONG(c, "saveseed", 0, t_rdist, saveseed);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "saveseed", 0, "0");
+	CLASS_ATTR_STYLE_LABEL(c, "saveseed", 0, "onoff", "Save Seed With Patcher");
+	CLASS_ATTR_ACCESSORS(c, "saveseed", NULL, rdist_setsaveseed);
+
+	CLASS_ATTR_CHAR_VARSIZE(c, "state", 0, t_rdist, state, statelen, 128);
+	CLASS_ATTR_SAVE(c, "state", 0);
+	CLASS_ATTR_INVISIBLE(c, "state", 0);
+	CLASS_ATTR_ACCESSORS(c, "state", NULL, rdist_setstate);
+
+	CLASS_ATTR_LONG(c, "savestate", 0, t_rdist, savestate);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "savestate", 0, "0");
+	CLASS_ATTR_STYLE_LABEL(c, "savestate", 0, "onoff", "Save State With Patcher");
+	//CLASS_ATTR_ACCESSORS(c, "savestate", NULL, rdist_setsavestate);
+
+	class_register(CLASS_BOX, c);
+	rdist_class = c;
 
 	version(0);
 
@@ -113,44 +165,64 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 	int i;
 	t_atom ar[2];
 
-	x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
-	
-	x->r_out0 = outlet_new(x, 0);
+	//x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
+	if(x = (t_rdist *)object_alloc(rdist_class)){
 
-	x->r_numVars = 0;
+		x->outlet_info = outlet_new(x, NULL);	
+		x->r_out0 = outlet_new(x, 0);
 
-	// set up the random number generator	
-	gsl_rng_env_setup();
+		x->r_numVars = 0;
 
-	// waterman14 was the fastest according to my tests
-	x->r_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_waterman14);
-	
-	// seed it by reading from /dev/random on mac os x and 
-	// something similar on windows
-	gsl_rng_set(x->r_rng, makeseed());
+		// set up the random number generator	
+		gsl_rng_env_setup();
 
-	// this is really fucking important.  if there's an error and the gsl's 
-	// default handler gets called, it aborts the program!
-	gsl_set_error_handler(rdist_errorHandler);  
+		// waterman14 was the fastest according to my tests
+		x->r_rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_waterman14);
+		x->rng_last = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_waterman14);
+		x->seed = makeseed();
+		gsl_rng_set(x->r_rng, x->seed);
+		gsl_rng_set(x->rng_last, x->seed);
+       
 
-	// setup a workspace
-	x->r_output_buffer = (t_atom *)malloc(RDIST_DEFAULT_BUF_SIZE * sizeof(t_atom));
+		// this is really fucking important.  if there's an error and the gsl's 
+		// default handler gets called, it aborts the program!
+		gsl_set_error_handler(rdist_errorHandler);  
 
-	// init the lib.  just gensyms all the distribution names
-	librdist_init();
+		// setup a workspace
+		x->r_output_buffer = (t_atom *)malloc(RDIST_DEFAULT_BUF_SIZE * sizeof(t_atom));
 
-	// handle the args.  this should be done with attributes.
-	if(argc){
-		if(argv[0].a_type == A_SYM){
-			rdist_anything(x, argv[0].a_w.w_sym, argc - 1, argv + 1);
+		// init the lib.  just gensyms all the distribution names
+		librdist_init();
+
+		// handle the args.  this should be done with attributes.
+		if(argc){
+			if(argv[0].a_type == A_SYM){
+				rdist_anything(x, argv[0].a_w.w_sym, argc - 1, argv + 1);
+			}
+		} else {
+			SETFLOAT(&(ar[0]), 0.);
+			SETFLOAT(&(ar[1]), 1.);
+			rdist_anything(x, gensym("uniform"), 2, ar);
 		}
-	} else {
-		SETFLOAT(&(ar[0]), 0.);
-		SETFLOAT(&(ar[1]), 1.);
-		rdist_anything(x, gensym("uniform"), 2, ar);
+
+		attr_args_process(x, argc, argv);
+
+		schedule_delay(x, (method)rdist_init_seed, 0, NULL, 0, NULL);
+
+		return x;
 	}
 
-	return x;
+	return NULL;
+}
+
+void rdist_init_seed(t_rdist *x, t_symbol *msg, int argc, t_atom *argv){
+	if(x->saveseed == 0){
+		//rdist_setseed(x, NULL, 0, NULL);
+	}
+	if(x->savestate == 1){
+		//post("%s", __PRETTY_FUNCTION__);
+		//rdist_resetstate(x);
+	}
 }
 
 void rdist_bang(t_rdist *x){
@@ -161,6 +233,7 @@ void rdist_bang(t_rdist *x){
 
 	//msg = (stride > 1) ? gensym("list") : gensym("float");
 
+	gsl_rng_memcpy(x->rng_last, x->r_rng);
 	//post("buffer: %d, pos: %d, val: %f", x->r_whichBuffer, x->r_bufferPos, out[0].a_w.w_float);
 	if(x->r_dist == ps_nonparametric){
 		x->r_function(x->r_rng, 0, x->r_g, stride, out);
@@ -262,6 +335,7 @@ void rdist_distlist(t_rdist *x, long n){
 		error("randdist: distlist argument must be >= 1.");
 		return;
 	}
+	gsl_rng_memcpy(x->rng_last, x->r_rng);
 
 	for(i = 0; i < n; i++){
 		if(x->r_dist == gensym("nonparametric")){
@@ -277,6 +351,126 @@ void rdist_distlist(t_rdist *x, long n){
 	outlet_anything(x->r_out0, gensym("list"), n * stride, x->r_output_buffer);
 }
 
+void rdist_setsaveseed(t_rdist *x, t_object *attr, long argc, t_atom *argv){
+	if(!argc){
+		return;
+	}
+	x->saveseed = atom_getlong(argv);
+	t_atom out;
+	atom_setlong(&out, x->seed);
+	//outlet_anything(x->outlet_info, gensym("seed"), 1, &out);
+	rdist_dirtywindow(x);
+}
+
+void rdist_setseed(t_rdist *x, t_object *attr, long argc, t_atom *argv){
+	long s;
+	if(argc){
+		s = atom_getlong(argv);
+	}else{
+		s = makeseed();
+	}
+	x->seed = s;
+	gsl_rng_set(x->r_rng, s);
+}
+
+void rdist_getseed(t_rdist *x){
+	t_atom s;
+	atom_setlong(&s, x->seed);
+	outlet_anything(x->outlet_info, gensym("seed"), 1, &s);
+}
+
+void rdist_resetseed(t_rdist *x){
+	gsl_rng_set(x->r_rng, 0);
+	gsl_rng_set(x->r_rng, x->seed);
+}
+
+/*
+void rdist_setsavestate(t_rdist *x, t_object *attr, long argc, t_atom *argv){
+	if(!argc){
+		return;
+	}
+	x->savestate = atom_getlong(argv);
+	if(x->savestate != 0){
+		char buf[L_tmpnam];
+		int n = 0;
+		if(tmpnam(buf)){
+			FILE *fp = fopen(buf, "w");
+			gsl_rng_fwrite(fp, x->r_rng);
+			fclose(fp);
+			fp = fopen(buf, "r");
+			fseek(fp, 0, SEEK_END);
+			int len = ftell(fp);
+			fseek(fp, 0, SEEK_SET);
+			n = fread(x->state, 1, len, fp);
+			x->statelen = n;
+			fclose(fp);
+		}
+		rdist_dirtywindow(x);
+		t_atom out[n];
+		int i;
+		for(i = 0; i < n; i++){
+			atom_setlong(out + i, x->state[i]);
+		}
+		outlet_anything(x->outlet_info, gensym("state"), n, out);
+	}
+}
+*/
+
+void rdist_setstate(t_rdist *x, t_object *attr, int argc, t_atom *argv){
+	int i;
+	for(i = 0; i < argc; i++){
+		x->state[i] = (char)atom_getlong(argv + i);
+	}
+	x->statelen = argc;
+	rdist_resetstate(x);
+}
+
+void rdist_rememberstate(t_rdist *x){
+	char buf[L_tmpnam];
+	int n = 0;
+	if(tmpnam(buf)){
+		FILE *fp = fopen(buf, "w");
+		gsl_rng_fwrite(fp, x->rng_last);
+		fclose(fp);
+		fp = fopen(buf, "r");
+		fseek(fp, 0, SEEK_END);
+		int len = ftell(fp);
+		fseek(fp, 0, SEEK_SET);
+		n = fread(x->state, 1, len, fp);
+		x->statelen = n;
+		fclose(fp);
+	}
+	rdist_dirtywindow(x);
+	t_atom out[n];
+	int i;
+	for(i = 0; i < n; i++){
+		atom_setlong(out + i, x->state[i]);
+	}
+	outlet_anything(x->outlet_info, gensym("state"), n, out);
+}
+
+void rdist_resetstate(t_rdist *x){
+	if(x->statelen){
+		char buf[L_tmpnam];
+		if(tmpnam(buf)){
+			FILE *fp = fopen(buf, "w");
+			fwrite(x->state, 1, x->statelen, fp);
+			fclose(fp);
+			fp = fopen(buf, "r");
+			gsl_rng_fread(fp, x->r_rng);
+			fclose(fp);
+		}
+	}else{
+		object_error((t_object *)x, "there is no valid state to restore");
+		return;
+	}
+}
+
+void rdist_dirtywindow(t_rdist *x){
+	t_object *p;
+	object_obex_lookup(x, gensym("#P"), &p);
+	jpatcher_set_dirty(p, true);
+}
 
 void rdist_assist(t_rdist *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_INLET)
@@ -317,4 +511,11 @@ void rdist_free(t_rdist *x){
 
 void rdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
 	error("randdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+}
+
+void rdist_loadbang(t_rdist *x){
+	if(!x->saveseed){
+		rdist_setseed(x, NULL, 0, NULL);
+		rdist_resetseed(x);
+	}
 }

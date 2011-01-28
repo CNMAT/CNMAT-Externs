@@ -52,6 +52,8 @@
   VERSION 0.8.2: added getnumpoints message, and fixed capslog bug
   VERSION 0.9: nested spaces--each point can now have it's own space
   VERSION 0.9.1: works properly in pres mode
+  VERSION 0.9.2: mouse coords are correct when mouse_active_beyond_rect is off.
+  VERSION 0.9.3: got rid of a nipple that would occur when the innner_radius > outer_radius
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -243,6 +245,7 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 						double ii = rbfi_scale(i, 0, srect.width, 0, drect.width);
 						double jj = rbfi_scale(j, 0, srect.width, 0, drect.width);
 						rbfi_computeWeights(x, (t_pt){ii, jj}, rect, x->spaces->points, x->spaces->npoints, weights);
+
 						k = 0;
 						while(p){
 							color.red += weights[k] * p->color.red;
@@ -471,22 +474,51 @@ void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int 
 	int i = 0;
 	double sum = 0;
 	while(p){
+		if(p->inner_radius == p->outer_radius == 0){
+			weights[i] = 0;
+			continue;
+		}
 		t_pt pt = p->pt;
 		pt.x = rbfi_scale(pt.x, x->xmin, x->xmax, 0, r.width);
 		pt.y = rbfi_scale(pt.y, x->ymin, x->ymax, r.height, 0);
 		if(coords.x == pt.x && coords.y == pt.y){
-			memset(weights, 0, nweights * sizeof(double));
-			weights[i] = 1.;
+			if(p->inner_radius > p->outer_radius){
+				if(p->outer_radius == 0){
+					weights[i] = 1. / p->inner_radius;
+				}else{
+					weights[i] = 0.0;
+				}
+			}else if(p->inner_radius == 0){
+				weights[i] = 1. / p->outer_radius;
+			}else{
+				memset(weights, 0, nweights * sizeof(double));
+				weights[i] = 1.;
+			}
 			critical_exit(x->lock);
 			return;
 		}else{
-			double d = sqrt(pow(coords.x - pt.x, 2.) + pow(coords.y - pt.y, 2.));
-			weights[i] = pow(1. / d, p->exponent) * p->weight;
-			if(isinf(weights[i])){
-				memset(weights, 0, nweights * sizeof(double));
-				weights[i] = 1.;
-				critical_exit(x->lock);
-				return;
+			
+			if(p->outer_radius == 0){
+				weights[i] = 1. / p->inner_radius;
+			}else if(p->inner_radius == 0){
+				weights[i] = 1. / p->outer_radius;
+			}else{
+				double d = sqrt(pow(coords.x - pt.x, 2.) + pow(coords.y - pt.y, 2.));
+				//post("d = %f, ir = %f, or = %f", d, p->inner_radius, p->outer_radius);
+			
+				//if(d > (p->inner_radius < p->outer_radius ? p->outer_radius : p->inner_radius) * r.width * x->boobs){
+				//weights[i] = 0;
+				//}else{
+				//	weights[i] = pow(1. / d, p->exponent) * p->weight;
+				//}
+				//weights[i] = sin(weights[i] * d) / (weights[i]* d);
+				weights[i] = pow(1. / d, p->exponent) * p->weight;
+				if(isinf(weights[i])){
+					memset(weights, 0, nweights * sizeof(double));
+					weights[i] = 1.;
+					critical_exit(x->lock);
+					return;
+				}
 			}
 		}
 		sum += weights[i];
@@ -548,6 +580,7 @@ void rbfi_push(t_rbfi *x, t_point *p){
 	}else{
 		p->space = (t_space *)sysmem_newptr(sizeof(t_space));
 		t_space *s = p->space;
+		s->selected = NULL;
 		s->points = NULL;
 		s->npoints = 0;
 		p->space->next = x->spaces;
@@ -687,8 +720,6 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
  	t_rect r; 
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 
-	rbfi_outputMousePos(x, pt);
-
 	switch(modifiers){
 	case 0x110:
 	case 0x10:
@@ -762,6 +793,7 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 		critical_exit(x->lock);
 		break;
 	}
+	rbfi_outputMousePos(x, pt);
 	object_notify(x, _sym_modified, NULL);
 	jbox_redraw(&(x->ob));
 	rbfi_outputDistance(x);
@@ -836,7 +868,6 @@ void rbfi_mousemove(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 				}else if(p == x->spaces->selected){
 					x->spaces->selected = NULL;
 				}
-
 				p = p->next;
 			}
 		}
@@ -1061,7 +1092,15 @@ void rbfi_initPoint(t_rbfi *x, t_point *p){
 
 #define THRESH .9
 double rbfi_computeWeightFromDistances(double d1, double d2){
+	if(d1 == 0){
+		return 1. / d2;
+	}else if(d2 == 0){
+		return 1. / d1;
+	}
 	double dd1 = d1;
+	if(dd1 == 0){
+		dd1 = .00000001;
+	}
 	double dd2 = d2;
 	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
 		dd1 = THRESH * dd2;
@@ -1074,7 +1113,13 @@ double rbfi_computeWeightFromDistances(double d1, double d2){
 }
 
 double rbfi_computeExponentFromDistances(double d1, double d2){
+	if(d1 == 0 || d2 == 0){
+		return 1;
+	}
 	double dd1 = d1;
+	if(dd1 == 0){
+		dd1 = .00000001;
+	}
 	double dd2 = d2;
 	if((dd1 / dd2) <= 1 && (dd1 / dd2) >= THRESH){
 		dd1 = THRESH * dd2;
@@ -1275,6 +1320,7 @@ t_atom *rbfi_doToArray(t_space *s, t_atom *ar){
 t_space *rbfi_fromArray(t_hashtab *ht, long n, t_atom *ar){
 	//t_point *p = (t_point *)sysmem_newptr(sizeof(t_point));
 	t_space *s = (t_space *)sysmem_newptr(sizeof(t_space));
+	s->selected = NULL;
 	s->points = NULL;
 	s->npoints = 0;
 	s->next = NULL;
@@ -1306,6 +1352,7 @@ t_atom *rbfi_doFromArray(t_hashtab *ht, long n, t_atom *ar, t_space *space){
 		if(atom_gettype(ptr) == A_SYM){
 			if(atom_getsym(ptr) == gensym("space")){
 				t_space *s = (t_space *)sysmem_newptr(sizeof(t_space));
+				s->selected = NULL;
 				s->npoints = atom_getlong(ptr + 1);;
 				s->points = NULL;
 				s->next = NULL;
@@ -1579,6 +1626,7 @@ void *rbfi_new(t_symbol *msg, int argc, t_atom *argv){
 
 		x->spaces = (t_space *)sysmem_newptr(sizeof(t_space));
 		x->spaces->points = NULL;
+		x->spaces->selected = NULL;
 		x->ht = hashtab_new(0);
 		hashtab_flags(x->ht, OBJ_FLAG_DATA);
 		x->spaces->npoints = 0;
@@ -1632,7 +1680,6 @@ int main(void){
 	class_addmethod(c, (method)rbfi_pushPointName, "push", A_SYM, 0);
 	class_addmethod(c, (method)rbfi_pop, "pop", A_DEFSYM, 0);
 
-    
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
     
  	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_rbfi, bgcolor); 

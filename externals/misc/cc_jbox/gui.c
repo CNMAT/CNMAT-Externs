@@ -10,7 +10,7 @@ void my_paint(t_object *ob, char *user_ob, t_object *patcherview, int numoutlets
         t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);                                                          
         jbox_get_rect_for_view((t_object *)ob, patcherview, &rect);                                                                       
                                                                                    
-        t_jrgba blue = (t_jrgba){0., 0., 1., 1.};                                                      
+        t_jrgba blue = (t_jrgba){1., 0., 0., 1.};                                                      
         jgraphics_set_source_jrgba(g, &blue);                                                                                
         jgraphics_set_line_width(g, 1);                                                                                                  
         jgraphics_rectangle(g, 0., 0., rect.width, rect.height);                                                                         

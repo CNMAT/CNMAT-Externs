@@ -97,6 +97,8 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 
 #define POSITION_UPDATE_RATE_MS 100
 
+#define MAX_ARRAY_LEN 4096
+
 typedef struct _point{ 
  	t_pt coords;
 	int selected;
@@ -2392,19 +2394,19 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "show_y_grid", 0, "0");
 	CLASS_ATTR_STYLE_LABEL(c, "show_y_grid", 0, "onoff", "Show Y Grid");
 
-	CLASS_ATTR_FLOAT_VARSIZE(c, "major_x_tics", 0, t_bpf, major_x_tics, num_major_x_tics, 1024);
+	CLASS_ATTR_FLOAT_VARSIZE(c, "major_x_tics", 0, t_bpf, major_x_tics, num_major_x_tics, MAX_ARRAY_LEN);
 	CLASS_ATTR_ACCESSORS(c, "major_x_tics", bpf_majorXTicsGet, bpf_majorXTicsSet);
 	CLASS_ATTR_SAVE(c, "major_x_tics", 0);
 
-	CLASS_ATTR_FLOAT_VARSIZE(c, "major_y_tics", 0, t_bpf, major_y_tics, num_major_y_tics, 1024);
+	CLASS_ATTR_FLOAT_VARSIZE(c, "major_y_tics", 0, t_bpf, major_y_tics, num_major_y_tics, MAX_ARRAY_LEN);
 	CLASS_ATTR_ACCESSORS(c, "major_y_tics", bpf_majorYTicsGet, bpf_majorYTicsSet);
 	CLASS_ATTR_SAVE(c, "major_y_tics", 0);
 
-	CLASS_ATTR_FLOAT_VARSIZE(c, "minor_x_tics", 0, t_bpf, minor_x_tics, num_minor_x_tics, 1024);
+	CLASS_ATTR_FLOAT_VARSIZE(c, "minor_x_tics", 0, t_bpf, minor_x_tics, num_minor_x_tics, MAX_ARRAY_LEN);
 	CLASS_ATTR_ACCESSORS(c, "minor_x_tics", bpf_minorXTicsGet, bpf_minorXTicsSet);
 	CLASS_ATTR_SAVE(c, "minor_x_tics", 0);
 
-	CLASS_ATTR_FLOAT_VARSIZE(c, "minor_y_tics", 0, t_bpf, minor_y_tics, num_minor_y_tics, 1024);
+	CLASS_ATTR_FLOAT_VARSIZE(c, "minor_y_tics", 0, t_bpf, minor_y_tics, num_minor_y_tics, MAX_ARRAY_LEN);
 	CLASS_ATTR_ACCESSORS(c, "minor_y_tics", bpf_minorYTicsGet, bpf_minorYTicsSet);
 	CLASS_ATTR_SAVE(c, "minor_y_tics", 0);
 
@@ -2439,7 +2441,7 @@ int main(void){
 	CLASS_ATTR_LONG(c, "step", 0, t_bpf, step);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "step", 0, "0");
 
-	CLASS_ATTR_ATOM_VARSIZE(c, "points", 0, t_bpf, functions, numFunctions, 1024);
+	CLASS_ATTR_ATOM_VARSIZE(c, "points", 0, t_bpf, functions, numFunctions, 4096);
 	CLASS_ATTR_ACCESSORS(c, "points", bpf_points_get, bpf_points_set);
 	CLASS_ATTR_SAVE(c, "points", 0);
 
@@ -2548,14 +2550,14 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 		x->selected = NULL;
 		x->sel_box = (t_rect){-1, -1, 0, 0};
 
-		x->major_x_tics = (double *)sysmem_newptr(1024 * sizeof(double));
-		x->major_y_tics = (double *)sysmem_newptr(1024 * sizeof(double));
-		x->minor_x_tics = (double *)sysmem_newptr(1024 * sizeof(double));
-		x->minor_y_tics = (double *)sysmem_newptr(1024 * sizeof(double));
-		x->major_x_tics_buflen = 1024;
-		x->minor_x_tics_buflen = 1024;
-		x->major_y_tics_buflen = 1024;
-		x->minor_y_tics_buflen = 1024;
+		x->major_x_tics = (double *)sysmem_newptr(MAX_ARRAY_LEN * sizeof(double));
+		x->major_y_tics = (double *)sysmem_newptr(MAX_ARRAY_LEN * sizeof(double));
+		x->minor_x_tics = (double *)sysmem_newptr(MAX_ARRAY_LEN * sizeof(double));
+		x->minor_y_tics = (double *)sysmem_newptr(MAX_ARRAY_LEN * sizeof(double));
+		x->major_x_tics_buflen = MAX_ARRAY_LEN;
+		x->minor_x_tics_buflen = MAX_ARRAY_LEN;
+		x->major_y_tics_buflen = MAX_ARRAY_LEN;
+		x->minor_y_tics_buflen = MAX_ARRAY_LEN;
 		x->num_major_x_tics = 0;
 		x->num_major_y_tics = 0;
 		x->num_minor_x_tics = 0;
@@ -2635,6 +2637,7 @@ t_max_err bpf_points_get(t_bpf *x, t_object *attr, long *argc, t_atom **argv){
 		atom_setlong(ptr++, npoints[i]);
 		t_point *p = x->functions[i];
 		while(p){
+			//post("get: %f, 0x%llx", p->coords.x, *(long long *)&(p->coords.x));
 			atom_setfloat(ptr++, p->coords.x);
 			atom_setfloat(ptr++, p->coords.y);
 			atom_setfloat(ptr++, p->aux_point);
@@ -2664,6 +2667,7 @@ t_max_err bpf_points_set(t_bpf *x, t_object *attr, long argc, t_atom *argv){
 		x->npoints[cf] = npoints;
 		while(--npoints){
 			t_pt pt = (t_pt){atom_getfloat(ptr++), atom_getfloat(ptr++)};
+			//post("set: %f, 0x%llx", pt.x, *(long long *)&(pt.x));
 			t_point *p = bpf_insertPoint(x, pt, cf);
 			p->aux_point = atom_getfloat(ptr++);
 		}

@@ -761,7 +761,7 @@ void twpm_outputEvent(t_twpm *x, void *outlet, t_symbol *msg, t_event *e){
 
 	m = e->messages_ll;
 	while(m){
-		ptr += omax_util_encode_atoms(ptr, size - (ptr - bundle), m->address, m->argc, m->argv);
+		ptr += omax_util_encode_atoms(ptr, m->address, m->argc, m->argv);
 		m = m->next;
 	}
 
@@ -772,7 +772,6 @@ void twpm_outputEvent(t_twpm *x, void *outlet, t_symbol *msg, t_event *e){
 		atom_setlong(out + 2, (long)bundle);
 		outlet_anything(outlet, msg, 3, out);
 	}else{
-		post("here");
 		t_atom out[2];
 		atom_setlong(out, size);
 		atom_setlong(out + 1, (long)bundle);
@@ -1029,22 +1028,23 @@ void twpm_mousedown(t_twpm *x, t_object *patcherview, t_pt pt, long modifiers){
 								x->selected = e;
 								goto out;
 							}
-						}else if(timematch == 1){
-							// we're adding a note to a chord
-							notes->argc++;
-							if(notes->argc > notes->buflen){
-								notes->argv = (t_atom *)sysmem_resizeptr(notes->argv, notes->buflen * 2 * sizeof(t_atom));
-								notes->buflen *= 2;
-							}
-							atom_setfloat(notes->argv + notes->argc - 1, midic);
-							twpm_unselect(x);
-							x->selected = e;
-							e->selected = 1;
-							e->note_sel = notes->argv + notes->argc - 1;
-							e->dur_sel = NULL;
-							e->whatselected = NOTE;
-							goto out;
 						}
+					}
+					if(timematch == 1){
+						// we're adding a note to a chord
+						notes->argc++;
+						if(notes->argc > notes->buflen){
+							notes->argv = (t_atom *)sysmem_resizeptr(notes->argv, notes->buflen * 2 * sizeof(t_atom));
+							notes->buflen *= 2;
+						}
+						atom_setfloat(notes->argv + notes->argc - 1, midic);
+						twpm_unselect(x);
+						x->selected = e;
+						e->selected = 1;
+						e->note_sel = notes->argv + notes->argc - 1;
+						e->dur_sel = NULL;
+						e->whatselected = NOTE;
+						goto out;
 					}
 				}
 				e = e->next;
@@ -1256,6 +1256,7 @@ void twpm_dumpcellblock(t_twpm *x){
 			outlet_anything(x->outlet_info, ps_cellblock, outptr - out, out);
 			msg = msg->next;
 		}
+		twpm_outputEvent(x, x->outlet_info, NULL, e);
 	}
 }
 
@@ -1501,7 +1502,7 @@ int main(void){
 	l_notes = gensym("l_notes");
 	ps_done = gensym("done");
 	ps_dump = gensym("dump");
-	ps_notes = gensym("/notes");
+	ps_notes = gensym("/pitches");
 	ps_cellblock = gensym("cellblock");
 	ps_clear = gensym("clear");
 	ps_FullPacket = gensym("FullPacket");

@@ -33,14 +33,13 @@ t_symbol *ps_gaussian, *ps_gaussian_tail, *ps_bivariate_gaussian, *ps_exponentia
 #define R_BUFFER_SIZE 16384
 
 void librdist_init(void);
-int librdist_makeseed(void);
 void *librdist_get_function(t_symbol *dist);
 
 long librdist_getnargs(t_symbol *dist);
 float librdist_atom_getfloat(t_atom *a);
 long librdist_atom_getlong(t_atom *a);
 
-void librdist_seed(gsl_rng *rng, long s);
+//void librdist_seed(gsl_rng *rng, long s);
 int makeseed(void);
 
 void librdist_gaussian(gsl_rng *rng, int argc, void *argv, int bufc, float *buf);
