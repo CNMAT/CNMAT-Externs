@@ -54,6 +54,7 @@
   VERSION 0.9.1: works properly in pres mode
   VERSION 0.9.2: mouse coords are correct when mouse_active_beyond_rect is off.
   VERSION 0.9.3: got rid of a nipple that would occur when the innner_radius > outer_radius
+  VERSION 0.9.4: changed the format of the dump message
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -136,6 +137,7 @@ typedef struct _rbfi{
 	int font_size;
 	struct timeval lastclick;
 	t_object *pv;
+	int compat_mode;
 } t_rbfi;
 
 static t_symbol *rbfi_ps_coords, *rbfi_ps_patchercoords, *rbfi_ps_name, *rbfi_ps_rgb, *rbfi_ps_hsv, /**rbfi_ps_weight, *rbfi_ps_exponent, */*rbfi_ps_inner_radius, *rbfi_ps_outer_radius, *rbfi_ps_locked;
@@ -229,7 +231,6 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 				srect.height = ceil(rect.height / s);
 			}else{
 			}
-
 			// color
 			{
 				int i, j, k;
@@ -270,7 +271,6 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 		jbox_end_layer((t_object *)x, patcherview, l_color);
 		jbox_paint_layer((t_object *)x, patcherview, l_color, 0, 0);
 	}
-
 	// draw points
 	{
 		jgraphics_set_line_width(g, 1);
@@ -474,8 +474,9 @@ void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int 
 	int i = 0;
 	double sum = 0;
 	while(p){
-		if(p->inner_radius == p->outer_radius == 0){
+		if((p->inner_radius == 0.0) && (p->outer_radius == 0.0)){
 			weights[i] = 0;
+			p = p->next;
 			continue;
 		}
 		t_pt pt = p->pt;
@@ -1250,12 +1251,36 @@ void rbfi_dump(t_rbfi *x){
 	while(s->next){
 		s = s->next;
 	}
-	argc = rbfi_getArraySize(x);
-	argv = (t_atom *)sysmem_newptr(argc * sizeof(t_atom));
-	rbfi_toArray(s, argv);
-	critical_exit(x->lock);
 
-	outlet_list(x->dumpOutlet, NULL, argc, argv);
+	if(x->compat_mode){
+		argc = rbfi_getArraySize(x);
+		argv = (t_atom *)sysmem_newptr(argc * sizeof(t_atom));
+		rbfi_toArray(s, argv);
+
+		outlet_list(x->dumpOutlet, NULL, argc, argv);
+	}else{
+		t_point *p = x->spaces->points;
+		while(p){
+			t_atom out[16];
+			t_atom *ptr = out;
+			atom_setsym(ptr++, rbfi_ps_name);
+			atom_setsym(ptr++, p->label);
+			atom_setsym(ptr++, rbfi_ps_coords);
+			atom_setfloat(ptr++, p->pt.x);
+			atom_setfloat(ptr++, p->pt.y);
+			atom_setsym(ptr++, rbfi_ps_rgb);
+			atom_setfloat(ptr++, p->color.red);
+			atom_setfloat(ptr++, p->color.green);
+			atom_setfloat(ptr++, p->color.blue);
+			atom_setsym(ptr++, rbfi_ps_inner_radius);
+			atom_setfloat(ptr++, p->inner_radius);
+			atom_setsym(ptr++, rbfi_ps_outer_radius);
+			atom_setfloat(ptr++, p->outer_radius);
+			outlet_anything(x->dumpOutlet, p->label, ptr - out, out);
+			p = p->next;
+		}
+	}
+	critical_exit(x->lock);
 
 	if(argv){
 		sysmem_freeptr(argv);
@@ -1638,6 +1663,8 @@ void *rbfi_new(t_symbol *msg, int argc, t_atom *argv){
 
 		x->pv = NULL;
 
+		x->compat_mode = 0;
+
 		critical_new(&(x->lock));
 
 		attr_dictionary_process(x, d); 
@@ -1752,7 +1779,9 @@ int main(void){
 	CLASS_ATTR_DOUBLE(c, "line_width", 0, t_rbfi, line_width);
     	CLASS_ATTR_DEFAULTNAME_SAVE(c, "line_width", 0, "1.0");
 
-	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 200. 200."); 
+	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 200. 200.");
+
+	CLASS_ATTR_LONG(c, "compatmode", 0, t_rbfi, compat_mode);
 
 	class_register(CLASS_BOX, c);
 	rbfi_class = c;
@@ -1791,6 +1820,10 @@ int main(void){
 
 	version(0);
 
+	error("rbfi: the output of the dump message has changed, and will change again soon!");
+	error("rbfi: If you need the old behavior, set the \"compatmode\" attribute to 1.");
+	error("rbfi: In the next version of rbfi (early 2011), all output will be done with OSC bundles");
+	
 	return 0;
 }
 
