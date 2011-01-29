@@ -425,7 +425,7 @@ void oroute_set(t_oroute *x, long index, t_symbol *sym){
 	x->args[index - 1] = sym;
 	x->haswildcard[index - 1] = 0;
 	int i;
-	for(i  0; i < strlen(x->args[index - 1]->s_name); i++){
+	for(i = 0; i < strlen(x->args[index - 1]->s_name); i++){
 		switch(x->args[index - 1]->s_name[i]){
 		case '*':
 		case '[':
