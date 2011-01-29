@@ -27,6 +27,7 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2009
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 0.0: First try
+VERSION 0.1: Addresses to match can now have patterns
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -59,6 +60,7 @@ typedef struct _oroute_wksp{
 	t_oroute_message *messages;
 	t_oroute_message *message_buf;
 	int numMessages, message_buf_len;
+	int *haswildcard;
 } t_oroute_wksp;
 
 typedef struct _oroute{
@@ -66,6 +68,7 @@ typedef struct _oroute{
 	void **outlets;
 	t_critical lock;
 	t_symbol **args;
+	int *haswildcard;
 	int numArgs;
 	// we have an array of preallocated messages that we'll use, but we'll
 	// organize them in a linked list as we accumulate them so that we can 
@@ -111,6 +114,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	t_oroute_wksp wksp;
 	t_symbol *args[x->numArgs];
 	t_oroute_message mm[128];
+	int haswildcard[x->numArgs];
 	memset(mm, '\0', 128 * sizeof(t_oroute_message));
 	wksp.message_buf = mm;
 	wksp.messages = NULL;
@@ -118,6 +122,8 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	wksp.message_buf_len = 128;
 	critical_enter(x->lock);
 	memcpy(args, x->args, x->numArgs * sizeof(t_symbol *));
+	memcpy(haswildcard, x->haswildcard, x->numArgs);
+	wksp.haswildcard = haswildcard;
 	wksp.args = args;
 	wksp.numArgs = x->numArgs;
 	critical_exit(x->lock);
@@ -254,7 +260,12 @@ void oroute_cbk(t_osc_msg msg, void *context){
 	int match = 0;
 	for(i = 0; i < x->numArgs; i++){
 		int po, ao;
-		int ret = osc_match(msg.address, x->args[i]->s_name, &po, &ao);
+		int ret;
+		if(x->haswildcard[i]){
+			ret = osc_match(x->args[i]->s_name, msg.address, &ao, &po);
+		}else{
+			ret = osc_match(msg.address, x->args[i]->s_name, &po, &ao);
+		}
 
 		//post("pattern = %s, address = %s, ret = %d", msg.address, x->args[i]->s_name, ret);
 		int star_at_end = 0;
@@ -431,6 +442,9 @@ void oroute_free(t_oroute *x){
 	if(x->args){
 		free(x->args);
 	}
+	if(x->haswildcard){
+		free(x->haswildcard);
+	}
 }
 
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
@@ -440,6 +454,7 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 		int numArgs = attr_args_offset(argc, argv);
 		x->outlets = (void **)malloc((numArgs + 1) * sizeof(void *));
 		x->args = (t_symbol **)malloc(numArgs * sizeof(t_symbol *));
+		x->haswildcard = (int *)calloc(numArgs, sizeof(int));
 		x->numArgs = numArgs;
 		//x->message_buf = (t_oroute_message *)sysmem_newptr(MAX_NUM_MESSAGES * sizeof(t_oroute_message));
 		x->messages = NULL;
@@ -448,6 +463,17 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 		for(i = 0; i < numArgs; i++){
 			x->outlets[numArgs - 1 - i] = outlet_new(x, NULL);
 			x->args[i] = atom_getsym(argv + i);
+			int j;
+			for(j = 0; j < strlen(x->args[i]->s_name); j++){
+				switch(x->args[i]->s_name[j]){
+				case '*':
+				case '[':
+				case '{':
+				case '?':
+					x->haswildcard[i] = 1;
+					break;
+				}
+			}
 		}
 		//x->bundle_partial_matches = 1;
 		attr_args_process(x, argc, argv);
