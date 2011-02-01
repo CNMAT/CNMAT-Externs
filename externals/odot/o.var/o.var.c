@@ -65,6 +65,8 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation);
 void ovar_cbk(t_osc_msg msg, void *v);
 long ovar_hashtab_compute_bundle_size(t_ovar *x, t_hashtab *ht);
 void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf);
+void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
+void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long operation);
 
 void ovar_store(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
 void ovar_union(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
@@ -298,11 +300,74 @@ void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf){
 	}
 }
 
+void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
+	ovar_doanything(x, msg, argc, argv, x->operation);
+}
+
+void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long operation){
+	t_symbol *address = NULL;
+	if(msg){
+		if(*(msg->s_name) != '/'){
+			object_error((t_object *)x, "OSC address must begin with a '/'");
+			return;
+		}
+		address = msg;
+	}else{
+		if(atom_gettype(argv) == A_SYM){
+			if(*(atom_getsym(argv)->s_name) != '/'){
+				object_error((t_object *)x, "OSC address must begin with a '/'");
+				return;
+			}
+			address = atom_getsym(argv);
+			argv++;
+			argc--;
+		}
+	}
+	if(!address){
+		object_error((t_object *)x, "no OSC address found");
+		return;
+	}
+
+	int len = 20;
+	len += strlen(address->s_name);
+	len++;
+	while(len % 4){
+		len++;
+	}
+	len += argc + 2;
+	while(len % 4){
+		len++;
+	}
+	int i;
+	for(i = 0; i < argc; i++){
+		switch(atom_gettype(argv + i)){
+		case A_LONG:
+		case A_FLOAT:
+			len += 4;
+			break;
+		case A_SYM:
+			len += strlen(atom_getsym(argv + i)->s_name);
+			len++;
+			while(len % 4){
+				len++;
+			}
+			break;
+		}
+	}
+	char buf[len];
+	memset(buf, '\0', len);
+	omax_util_encode_atoms(buf + 16, address, argc, argv);
+	strncpy(buf, "#bundle\0", 8);
+	ovar_doFullPacket(x, len, (long)buf, operation);
+}
+
 void ovar_store(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
 	if(atom_gettype(argv) == A_SYM){
 		if(atom_getsym(argv) == ps_FullPacket){
 			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_NONE);
 			return;
+		}else{
+			ovar_doanything(x, NULL, argc, argv, OVAR_NONE);
 		}
 	}
 }
@@ -312,6 +377,8 @@ void ovar_union(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
 		if(atom_getsym(argv) == ps_FullPacket){
 			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_UNION);
 			return;
+		}else{
+			ovar_doanything(x, NULL, argc, argv, OVAR_UNION);
 		}
 	}
 }
@@ -321,6 +388,8 @@ void ovar_difference(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
 		if(atom_getsym(argv) == ps_FullPacket){			
 			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_DIFFERENCE);
 			return;
+		}else{
+			ovar_doanything(x, NULL, argc, argv, OVAR_DIFFERENCE);
 		}
 	}
 }
@@ -330,6 +399,8 @@ void ovar_intersection(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
 		if(atom_getsym(argv) == ps_FullPacket){
 			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_INTERSECTION);
 			return;
+		}else{
+			ovar_doanything(x, NULL, argc, argv, OVAR_INTERSECTION);
 		}
 	}
 }
@@ -447,6 +518,7 @@ int main(void){
 	class_addmethod(c, (method)ovar_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)ovar_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)ovar_bang, "bang", 0);
+	class_addmethod(c, (method)ovar_anything, "anything", A_GIMME, 0);
 
 	class_addmethod(c, (method)ovar_store, "store", A_GIMME, 0);
 	class_addmethod(c, (method)ovar_union, "union", A_GIMME, 0);
