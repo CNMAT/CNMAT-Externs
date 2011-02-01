@@ -79,7 +79,7 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 	char buffer[len * 8];
 	memset(buffer, '\0', len * 8);
 
-	struct context c = {buffer, len * 8, 0 + 16, sym_to_prepend};
+	struct context c = {buffer, len * 8, 16, sym_to_prepend};
 	//x->buffer = buffer;
 	//x->bufferLen = len * 8;
 	memcpy(cpy, (char *)ptr, len);
@@ -121,7 +121,7 @@ void oppnd_cbk(t_osc_msg msg, void *v){
 
 	char buf[strlen(msg.address) + strlen(c->sym_to_prepend->s_name) + 1];
 	sprintf(buf, "%s%s", c->sym_to_prepend->s_name, msg.address);
-	c->bufferPos += osc_util_rename(c->buffer, c->bufferLen, c->bufferPos, &msg, buf);
+	c->bufferPos += osc_util_rename(c->buffer, &msg, buf);
 	/*
 	*((long *)(x->buffer + x->bufferPos)) = hton32(msg.size);
 	x->bufferPos += 4;
@@ -159,7 +159,7 @@ void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
 		char buf[strlen(msg->s_name) + strlen(x->sym_to_prepend->s_name)];
 		sprintf(buf, "%s%s", x->sym_to_prepend->s_name, msg->s_name);
 		t_symbol *address = gensym(buf);
-		int len = omax_util_get_bundle_size_for_atoms(gensym(buf), argc - 1, argv + 1);
+		int len = omax_util_get_bundle_size_for_atoms(gensym(buf), argc, argv);
 		char oscbuf[len];
 		memset(oscbuf, '\0', len);
 		strncpy(oscbuf, "#bundle\0", 8);
