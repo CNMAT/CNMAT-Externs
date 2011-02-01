@@ -14,6 +14,8 @@
 		521130C111A58B5A00B71D00 /* osc_match.h in Headers */ = {isa = PBXBuildFile; fileRef = 521130BD11A58B5A00B71D00 /* osc_match.h */; };
 		521130C211A58B5A00B71D00 /* osc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 521130BE11A58B5A00B71D00 /* osc_util.c */; };
 		521130C311A58B5A00B71D00 /* osc_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 521130BF11A58B5A00B71D00 /* osc_util.h */; };
+		52EE1A0E12F8A68E007EE925 /* omax_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 52EE1A0C12F8A68E007EE925 /* omax_util.c */; };
+		52EE1A0F12F8A68E007EE925 /* omax_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 52EE1A0D12F8A68E007EE925 /* omax_util.h */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +29,8 @@
 		521130BD11A58B5A00B71D00 /* osc_match.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osc_match.h; path = ../liboio/osc_match.h; sourceTree = SOURCE_ROOT; };
 		521130BE11A58B5A00B71D00 /* osc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = osc_util.c; path = ../liboio/osc_util.c; sourceTree = SOURCE_ROOT; };
 		521130BF11A58B5A00B71D00 /* osc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osc_util.h; path = ../liboio/osc_util.h; sourceTree = SOURCE_ROOT; };
+		52EE1A0C12F8A68E007EE925 /* omax_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = omax_util.c; path = ../omax_util.c; sourceTree = SOURCE_ROOT; };
+		52EE1A0D12F8A68E007EE925 /* omax_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omax_util.h; path = ../omax_util.h; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* randdist.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randdist.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -74,6 +78,8 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				52EE1A0C12F8A68E007EE925 /* omax_util.c */,
+				52EE1A0D12F8A68E007EE925 /* omax_util.h */,
 				521130BC11A58B5A00B71D00 /* osc_match.c */,
 				521130BD11A58B5A00B71D00 /* osc_match.h */,
 				521130BE11A58B5A00B71D00 /* osc_util.c */,
@@ -101,6 +107,7 @@
 			files = (
 				521130C111A58B5A00B71D00 /* osc_match.h in Headers */,
 				521130C311A58B5A00B71D00 /* osc_util.h in Headers */,
+				52EE1A0F12F8A68E007EE925 /* omax_util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +180,7 @@
 				129AF098104C73BA00011B66 /* o.prepend.c in Sources */,
 				521130C011A58B5A00B71D00 /* osc_match.c in Sources */,
 				521130C211A58B5A00B71D00 /* osc_util.c in Sources */,
+				52EE1A0E12F8A68E007EE925 /* omax_util.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
