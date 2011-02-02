@@ -75,6 +75,7 @@ needs to take signals
 shift-drag while dragging a point should snap it to the y-value of the point with the closest y-value
  */
 
+#include "float.h"
 #include "version.h" 
 #include "ext.h" 
 #include "ext_obex.h" 
@@ -87,6 +88,10 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 
 #ifndef FLT_MAX
 #define FLT_MAX 999999999.f
+#endif
+
+#ifndef DBL_MAX
+#define DBL_MAX .1e300
 #endif
 
 #ifdef WIN
