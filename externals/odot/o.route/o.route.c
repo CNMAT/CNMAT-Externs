@@ -84,7 +84,7 @@ void *oroute_class;
 
 void oroute_fullPacket(t_oroute *x, long len, long ptr);
 void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute_message *m);
-//void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m);
+void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m);
 void oroute_cbk(t_osc_msg msg, void *context);
 void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *msg);
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv);
@@ -128,13 +128,12 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	wksp.numArgs = x->numArgs;
 	critical_exit(x->lock);
 	osc_util_parseBundleWithCallback(nn, cpy, oroute_cbk, (void *)&wksp);
-	//if(x->bundle_partial_matches){
-		oroute_fp_bundle_partial_matches(x, nn, cpy, wksp.messages);
-		/*
-	}else{
-		oroute_fp(x, nn, cpy, wksp.messages);
-	}
-		*/
+
+#ifdef SPEW
+	oroute_fp(x, nn, cpy, wksp.messages);
+#else
+	oroute_fp_bundle_partial_matches(x, nn, cpy, wksp.messages);
+#endif
 	x->max_message = 0;
 }
 
@@ -217,6 +216,23 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 		atom_setlong(out, bufp - buf);
 		atom_setlong(out + 1, (long)buf);
 		outlet_anything(x->outlets[last_outlet_num], gensym("FullPacket"), 2, out);
+	}
+	sysmem_freeptr(argv);
+}
+
+void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
+	if(!m){
+		return;
+	}
+	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
+	long argc;
+	while(m->next){
+		m = m->next;
+	}
+	while(m){
+		omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
+		outlet_anything(x->outlets[m->outlet_num], atom_getsym(argv), argc - 1, argv + 1);
+		m = m->prev;
 	}
 	sysmem_freeptr(argv);
 }
@@ -496,6 +512,8 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 int main(void){
 #ifdef SELECT
 	char *name = "o.select";
+#elif SPEW
+	char *name = "o.spew";
 #else
 	char *name = "o.route";
 #endif
