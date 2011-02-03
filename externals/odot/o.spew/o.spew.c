@@ -309,7 +309,7 @@ void ospew_anything(t_ospew *x, t_symbol *msg, short argc, t_atom *argv){
 	//len = osc_util_make_bundle_from_atoms(argc + 1, av, &len, buffer);
 	strncpy(buffer, "#bundle\0", 8);
 	*((long long *)(buffer + 8)) = hton64(1ll);
-	len = omax_util_encode_atoms(buffer + 16, len, msg, argc, argv);
+	len = omax_util_encode_atoms(buffer + 16, msg, argc, argv);
 	x->max_message = 1;
 
 	ospew_fullPacket(x, len + 16, (long)buffer);
