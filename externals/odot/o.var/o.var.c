@@ -65,6 +65,7 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation);
 void ovar_cbk(t_osc_msg msg, void *v);
 long ovar_hashtab_compute_bundle_size(t_ovar *x, t_hashtab *ht);
 void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf);
+void ovar_clear(t_ovar *x);
 void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
 void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long operation);
 
@@ -300,6 +301,11 @@ void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf){
 	}
 }
 
+void ovar_clear(t_ovar *x){
+	hashtab_clear(x->ht1);
+	hashtab_clear(x->ht2);
+}
+
 void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
 	ovar_doanything(x, msg, argc, argv, x->operation);
 }
@@ -328,32 +334,7 @@ void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long oper
 		return;
 	}
 
-	int len = 20;
-	len += strlen(address->s_name);
-	len++;
-	while(len % 4){
-		len++;
-	}
-	len += argc + 2;
-	while(len % 4){
-		len++;
-	}
-	int i;
-	for(i = 0; i < argc; i++){
-		switch(atom_gettype(argv + i)){
-		case A_LONG:
-		case A_FLOAT:
-			len += 4;
-			break;
-		case A_SYM:
-			len += strlen(atom_getsym(argv + i)->s_name);
-			len++;
-			while(len % 4){
-				len++;
-			}
-			break;
-		}
-	}
+	int len = omax_util_get_bundle_size_for_atoms(address, argc, argv);
 	char buf[len];
 	memset(buf, '\0', len);
 	omax_util_encode_atoms(buf + 16, address, argc, argv);
@@ -524,6 +505,8 @@ int main(void){
 	class_addmethod(c, (method)ovar_union, "union", A_GIMME, 0);
 	class_addmethod(c, (method)ovar_difference, "difference", A_GIMME, 0);
 	class_addmethod(c, (method)ovar_intersection, "intersection", A_GIMME, 0);
+
+	class_addmethod(c, (method)ovar_clear, "clear", 0);
 
 	CLASS_ATTR_SYM(c, "op", 0, t_ovar, operation);
 	CLASS_ATTR_ACCESSORS(c, "op", (method)ovar_get_op, (method)ovar_set_op);
