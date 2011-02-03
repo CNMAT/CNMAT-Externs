@@ -109,29 +109,30 @@ void omessage_fullPacket(t_omessage *x, long len, long ptr){
 }
 
 void omessage_doFullPacket(t_omessage *x, long len, long ptr){
-	// make a local copy so the ref doesn't disappear out from underneath us
-	memcpy(x->buffer, (char *)ptr, len);
-	x->buffer_pos = len;
+	//memcpy(x->buffer, (char *)ptr, len);
+	//x->buffer_pos = len;
+	char cpy[len + 16]; // in case this is a naked message
+	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 	x->num_atoms = 0;
 
 	// if the OSC packet contains a single message, turn it into a bundle
-	if(strncmp(x->buffer, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, x->buffer, x->buffer);
+	if(strncmp(cpy, "#bundle\0", 8)){
+		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = osc_util_flatten(nn, x->buffer, x->buffer);
+	nn = osc_util_flatten(nn, cpy, cpy);
 
 	// extract the messages from the bundle
 	//cmmjl_osc_extract_messages(nn, x->buffer, true, omessage_cbk, (void *)x);
-	osc_util_parseBundleWithCallback(nn, x->buffer, omessage_cbk, (void *)x);
+	osc_util_parseBundleWithCallback(nn, cpy, omessage_cbk, (void *)x);
 
 	int i;
-	char buf[4096];
+	char buf[4096]; // need to be smarter about this
 	omessage_atoms2text(x, buf);
 
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
@@ -152,8 +153,8 @@ void omessage_cbk(t_osc_msg msg, void *v){
 
 	//atom_setsym(x->atoms + x->num_atoms++, gensym(msg.address));
 
-	char buf[1024], data_buf[256];
-	char *bufptr = buf;
+	//char buf[1024], data_buf[256];
+	//char *bufptr = buf;
 	long len;
 	t_atom a[1024];
 	//for(i = 0; i < msg.argc; i++){
