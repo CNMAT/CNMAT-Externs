@@ -88,7 +88,7 @@ void oprint_cbk(t_osc_msg msg, void *v){
 	long len = msg.argc;
 	t_atom atoms[len + 1];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
-	char buf[256];
+	char buf[1024];
 	int bufpos = 0;
 	if(x->print_msgsize){
 		bufpos += sprintf(buf, "\t\t(%d) %s", msg.size, msg.address);
