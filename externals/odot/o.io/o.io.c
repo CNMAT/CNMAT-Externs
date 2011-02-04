@@ -545,7 +545,7 @@ void odotio_addDevice(t_odotio *x, char *name){
 	case OIO_DEV_DNF:
 		return;
 	case OIO_DEV_HID:{
-		printf("HID: %s\n", name);
+		//printf("HID: %s\n", name);
 		d = (t_device *)sysmem_newptr(sizeof(t_hid_device));
 		uint32_t pid = -1, vid = -1;
 		oio_hid_util_getDeviceProductIDFromDeviceName(x->oio, name, &pid);
@@ -557,7 +557,7 @@ void odotio_addDevice(t_odotio *x, char *name){
 	}
 		break;
 	case OIO_DEV_MIDI:{
-		printf("MIDI: %s\n", name);
+		//printf("MIDI: %s\n", name);
 		d = (t_device *)sysmem_newptr(sizeof(t_midi_device));
 		oio_midi_util_getManufacturer(x->oio, name, ((t_midi_device *)d)->manufacturer);
 		oio_midi_util_getModel(x->oio, name, ((t_midi_device *)d)->model);
@@ -567,7 +567,7 @@ void odotio_addDevice(t_odotio *x, char *name){
 	}
 		break;
 	case OIO_DEV_SERIAL:{
-		printf("SERIAL: %s\n", name);
+		//printf("SERIAL: %s\n", name);
 		d = (t_device *)sysmem_newptr(sizeof(t_serial_device));
 		uint32_t pid = -1, vid = -1;
 		oio_serial_util_getDeviceProductIDFromDeviceName(x->oio, name, &pid);
