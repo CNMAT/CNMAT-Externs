@@ -221,7 +221,7 @@ void ovar_cbk(t_osc_msg msg, void *v){
 
 	// omax_util_oscMsg2MaxAtoms() will stick the address in the first element
 	// of the atom array, so allocate 1 more than the number of args
-	t_atom *atoms = (t_atom *)sysmem_newptr(msg.argc + 2 * sizeof(t_atom));
+	t_atom *atoms = (t_atom *)sysmem_newptr((msg.argc + 2) * sizeof(t_atom));
 	long len = msg.argc;
 
 	// this will turn the osc mesage (a char array) into an array of atoms
