@@ -122,7 +122,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	wksp.message_buf_len = 128;
 	critical_enter(x->lock);
 	memcpy(args, x->args, x->numArgs * sizeof(t_symbol *));
-	memcpy(haswildcard, x->haswildcard, x->numArgs);
+	memcpy(haswildcard, x->haswildcard, x->numArgs * sizeof(int));
 	wksp.haswildcard = haswildcard;
 	wksp.args = args;
 	wksp.numArgs = x->numArgs;
@@ -166,10 +166,28 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 			memset(bufp, '\0', len - 16);
 		}
 		if(m->full_match){
-			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
 #ifdef SELECT
-			outlet_anything(x->outlets[m->outlet_num], gensym(atom_getsym(argv)->s_name), argc - 1, argv + 1);
+			//outlet_anything(x->outlets[m->outlet_num], gensym(atom_getsym(argv)->s_name), argc - 1, argv + 1);
+			char *size = bufp;
+			bufp += 4;
+			strcpy(bufp, m->msg.address);
+			bufp += strlen(m->msg.address);
+			bufp++;
+			while((bufp - size) % 4){
+				bufp++;
+			}
+			if(m->msg.typetags){
+				memcpy(bufp, m->msg.typetags, m->msg.size - (m->msg.typetags - m->msg.address));
+				bufp += m->msg.size - (m->msg.typetags - m->msg.address);
+			}else{
+				*bufp++ = ',';
+				*bufp++ = '\0';
+				*bufp++ = '\0';
+				*bufp++ = '\0';				
+			}
+			*((uint32_t *)size) = hton32(bufp - size - 4);
 #else
+			omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
 			if(argc == 1){
 				outlet_bang(x->outlets[m->outlet_num]);
 			}else{
@@ -279,6 +297,7 @@ void oroute_cbk(t_osc_msg msg, void *context){
 		int ret;
 		if(x->haswildcard[i]){
 			ret = osc_match(x->args[i]->s_name, msg.address, &ao, &po);
+			ret = ((ret & 1) << 1) | ((ret & 2) >> 1);
 		}else{
 			ret = osc_match(msg.address, x->args[i]->s_name, &po, &ao);
 		}
