@@ -49,6 +49,7 @@ typedef struct _oaccum{
 void *oaccum_class;
 
 void oaccum_fullPacket(t_oaccum *x, long len, long ptr);
+void oaccum_anything(t_oaccum *x, t_symbol *msg, int argc, t_atom *argv);
 void oaccum_cbk(t_osc_msg msg, void *v);
 void oaccum_free(t_oaccum *x);
 void oaccum_assist(t_oaccum *x, void *b, long m, long a, char *s);
@@ -95,6 +96,16 @@ void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
 	//osc_util_parseBundleWithCallback(nn, cpy, oaccum_cbk, (void *)x);
 }
 
+void oaccum_anything(t_oaccum *x, t_symbol *msg, int argc, t_atom *argv){
+	int len;
+	len = omax_util_get_bundle_size_for_atoms(msg, argc, argv);
+	char buf[len];
+	memset(buf, '\0', len);
+	omax_util_encode_atoms(buf + 16, msg, argc, argv);
+	strncpy(buf, "#bundle\0", 8);
+	oaccum_fullPacket(x, len, (long)buf);
+}
+
 void oaccum_bang(t_oaccum *x){
 	if(x->buffer_pos > 16){
 		t_atom out[2];
@@ -105,18 +116,6 @@ void oaccum_bang(t_oaccum *x){
 	}
 }
 
-/*
-void oaccum_cbk(t_osc_msg msg, void *v){
-	t_oaccum *x = (t_oaccum *)v;
-
-	// omax_util_oscMsg2MaxAtoms() will stick the address in the first element
-	// of the atom array, so allocate 1 more than the number of args
-	t_atom atoms[msg.argc + 1];
-	long len = msg.argc;
-	// this will turn the osc mesage (a char array) into an array of atoms
-	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
-}
-*/
 void oaccum_assist(t_oaccum *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"Probability distribution and arguments");
@@ -156,6 +155,7 @@ int main(void){
 	class_addmethod(c, (method)oaccum_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oaccum_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oaccum_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)oaccum_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oaccum_bang, "bang", 0);
 
 	class_register(CLASS_BOX, c);
