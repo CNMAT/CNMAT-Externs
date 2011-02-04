@@ -72,11 +72,16 @@ void obuild_outputBundle(t_obuild *x){
 		nbytes += 4; // size
 		// address
 		nbytes += strlen(x->addresses[i]->s_name);
+		nbytes++;
 		while(nbytes % 4){
 			nbytes++;
 		}
 		// args
+		if(x->numargs[i] > 0){
+			nbytes++; // typetag ,
+		}
 		for(j = 0; j < x->numargs[i]; j++){
+			nbytes++; // typetag
 			switch(atom_gettype(x->args[i] + j)){
 			case A_LONG:
 			case A_FLOAT:
@@ -89,6 +94,11 @@ void obuild_outputBundle(t_obuild *x){
 				}
 				break;
 			}
+		}
+		// finish up typetags
+		nbytes++;
+		while(nbytes % 4){
+			nbytes++;
 		}
 	}
 	char buffer[nbytes];
@@ -131,15 +141,22 @@ void obuild_anything(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
 #ifdef BILD
 	shouldOutput = 1;
 #endif
+	int numargs = argc;
 	if(msg){
-		argc++;
+		numargs++;
 	}
-	if(argc > x->arglen[inlet]){
-		x->args[inlet] = (t_atom *)sysmem_resizeptr(x->args[inlet], sizeof(t_atom) * argc);
+	
+	if(numargs > x->arglen[inlet]){
+		if(x->args[inlet] == NULL){
+			x->args[inlet] = (t_atom *)sysmem_newptr(sizeof(t_atom) * numargs);
+		}else{
+			x->args[inlet] = (t_atom *)sysmem_resizeptr(x->args[inlet], sizeof(t_atom) * numargs);
+		}
 		if(x->args[inlet] == NULL){
 			object_error((t_object *)x, "Out of memory--Max will be crashing soon...");
 			return;
 		}
+		x->arglen[inlet] = numargs;
 	}
 	if(msg){
 		atom_setsym(x->args[inlet], msg);
@@ -147,7 +164,7 @@ void obuild_anything(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
 	}else{
 		memcpy(x->args[inlet], argv, argc * sizeof(t_atom));
 	}
-	x->numargs[inlet] = argc;
+	x->numargs[inlet] = numargs;
 	if(shouldOutput){
 		obuild_outputBundle(x);
 	}
@@ -172,13 +189,9 @@ void obuild_bang(t_obuild *x){
 
 void obuild_assist(t_obuild *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
-		sprintf(s,"Probability distribution and arguments");
+		sprintf(s,"OSC bundle");
 	else {
-		switch (a) {	
-		case 0:
-			sprintf(s,"Random variate");
-			break;
-		}
+		sprintf(s, "Arguments for address %s", x->addresses[a]->s_name);
 	}
 }
 
@@ -196,7 +209,7 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 			return NULL;
 		}
 
-		if(atom_getsym(argv)->s_name[0] != '/'){
+		if(atom_getsym(argv)->s_name[0] != '/' && atom_getsym(argv)->s_name[0] != '#'){
 			object_error((t_object *)x, "the first argument must be an OSC string that begins with a slash (/)");
 			return NULL;
 		}
@@ -221,7 +234,9 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 		x->addresses = (t_symbol **)sysmem_newptr(count * sizeof(t_symbol *));
 		x->args = (t_atom **)sysmem_newptr(count * sizeof(t_atom *));
 		x->numargs = (int *)sysmem_newptr(count * sizeof(int));
+		memset(x->numargs, '\0', count * sizeof(int));
 		x->arglen = (int *)sysmem_newptr(count * sizeof(int));
+		memset(x->arglen, '\0', count * sizeof(int));
 		for(i = 0; i < count; i++){
 			x->addresses[i] = atom_getsym(addresses[i]);
 			if(numargs[i] > 0){
@@ -229,6 +244,8 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 				x->arglen[i] = numargs[i];
 				x->numargs[i] = numargs[i];
 				memcpy(x->args[i], addresses[i] + 1, numargs[i] * sizeof(t_atom));
+			}else{
+				x->args[i] = NULL;
 			}
 		}
 		/*
