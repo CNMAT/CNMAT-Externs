@@ -482,6 +482,8 @@ void odotio_flush(t_odotio *x, t_symbol *msg, int argc, t_atom *argv){
 	atom_setlong(out, currentbundle->len);
 	atom_setlong(out + 1, (long)currentbundle->data);
 	outlet_anything(x->osc_outlet, ps_fullpacket, 2, out);
+	sysmem_freeptr(currentbundle->data);
+	sysmem_freeptr(currentbundle);
 	clock_fdelay(x->clock, 1.);
 }
 
