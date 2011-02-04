@@ -36,8 +36,8 @@ version 1.0: Rewritten to only take one argument (the symbol to be prepended) wh
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "osc_util.h"
-#include "osc_match.h"
+#include "libo/osc_util.h"
+#include "libo/osc_match.h"
 #include "omax_util.h"
 
 typedef struct _oppnd{
@@ -79,7 +79,7 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 	char buffer[len * 8];
 	memset(buffer, '\0', len * 8);
 
-	struct context c = {buffer, len * 8, 16, sym_to_prepend};
+	struct context c = {buffer + 16, len * 8, 16, sym_to_prepend};
 	//x->buffer = buffer;
 	//x->bufferLen = len * 8;
 	memcpy(cpy, (char *)ptr, len);
@@ -102,13 +102,15 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 	// extract the messages from the bundle
 	//cmmjl_osc_extract_messages(nn, cpy, true, oppnd_cbk, (void *)x);
 	osc_util_parseBundleWithCallback(nn, cpy, oppnd_cbk, (void *)&c);
+
 	/*
 	int i; 
-	post("x->bufferPos = %d", x->bufferPos);
-	for(i = 0; i < x->bufferPos; i++){
-		post("%d %x %c", i, x->buffer[i], x->buffer[i]);
+	post("x->bufferPos = %d", c.bufferPos);
+	for(i = 0; i < c.bufferPos; i++){
+		post("%d %x %c", i, c.buffer[i], c.buffer[i]);
 	}
 	*/
+	
 	t_atom out[2];
 	atom_setlong(&(out[0]), c.bufferPos);
 	atom_setlong(&(out[1]), (long)buffer);
