@@ -437,6 +437,7 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 	x->max_message = 1;
 
 	oroute_fullPacket(x, len + 16, (long)buffer);
+	sysmem_freeptr(buffer);
 
 	/*
 	int len = cmmjl_osc_get_msg_length_max(msg, argc, argv);

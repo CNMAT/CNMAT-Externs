@@ -2,6 +2,11 @@
 #include <Carbon/Carbon.h>
 #include "osc_util.h"
 
+
+/////////////////////////////////////////////////////////////
+// old...
+/////////////////////////////////////////////////////////////
+
 int osc_util_parseMessage(int n, char *buf, t_osc_msg *osc_msg){
 	if(!osc_msg){
 		return 1;

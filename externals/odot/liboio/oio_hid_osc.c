@@ -24,7 +24,7 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 	//uint32_t type = IOHIDElementGetType(element);
 	uint32_t cookie = (uint32_t)IOHIDElementGetCookie(element);
 
-	printf("val = %llu, usage = %u, usage_page = %u\n", val, usage, usage_page);
+	//printf("val = %llu, usage = %u, usage_page = %u\n", val, usage, usage_page);
 
 	CFNumberRef vid = IOHIDDeviceGetProperty(device->device, CFSTR(kIOHIDVendorIDKey));
 	CFNumberRef pid = IOHIDDeviceGetProperty(device->device, CFSTR(kIOHIDProductIDKey));

@@ -5,8 +5,8 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 	*ac = osc_util_getArgCount(msg) + 1; 
 	//t_atom a[n + 1], *ptr = a + 1;
 	t_atom *ptr = av;
-	if(msg->address){
-		atom_setsym(ptr, gensym(msg->address));
+	if(m.address){
+		atom_setsym(ptr, gensym(m.address));
 	}else{
 		return;
 	}
@@ -148,6 +148,36 @@ char omax_util_typetagForAtom(t_atom *a){
 	case A_SYM:
 		return 's';
 	}
+}
+
+int omax_util_get_bundle_size_for_atoms(t_symbol *address, int argc, t_atom *argv){
+	int len = 20;
+	len += strlen(address->s_name);
+	len++;
+	while(len % 4){
+		len++;
+	}
+	len += argc + 2;
+	while(len % 4){
+		len++;
+	}
+	int i;
+	for(i = 0; i < argc; i++){
+		switch(atom_gettype(argv + i)){
+		case A_LONG:
+		case A_FLOAT:
+			len += 4;
+			break;
+		case A_SYM:
+			len += strlen(atom_getsym(argv + i)->s_name);
+			len++;
+			while(len % 4){
+				len++;
+			}
+			break;
+		}
+	}
+	return len;
 }
 
 int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv){

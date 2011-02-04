@@ -94,6 +94,7 @@ void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDVa
 }
 
 void oio_hid_reportCallback(void *context, IOReturn result, void *sender, IOHIDReportType type, uint32_t reportID, uint8_t *report, CFIndex reportLength){
+	return;
 	printf("id: %u, len = %d\n", reportID, reportLength);
 	int i;
 	for(i = 0; i < reportLength; i++){
