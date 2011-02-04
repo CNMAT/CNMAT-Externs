@@ -79,7 +79,7 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 	char buffer[len * 8];
 	memset(buffer, '\0', len * 8);
 
-	struct context c = {buffer + 16, len * 8, 16, sym_to_prepend};
+	struct context c = {buffer, len * 8, 16, sym_to_prepend};
 	//x->buffer = buffer;
 	//x->bufferLen = len * 8;
 	memcpy(cpy, (char *)ptr, len);
@@ -123,7 +123,7 @@ void oppnd_cbk(t_osc_msg msg, void *v){
 
 	char buf[strlen(msg.address) + strlen(c->sym_to_prepend->s_name) + 1];
 	sprintf(buf, "%s%s", c->sym_to_prepend->s_name, msg.address);
-	c->bufferPos += osc_util_rename(c->buffer, &msg, buf);
+	c->bufferPos += osc_util_rename(c->buffer + c->bufferPos, &msg, buf);
 	/*
 	*((long *)(x->buffer + x->bufferPos)) = hton32(msg.size);
 	x->bufferPos += 4;
