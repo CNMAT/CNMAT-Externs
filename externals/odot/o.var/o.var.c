@@ -88,7 +88,7 @@ void ovar_fullPacket(t_ovar *x, long len, long ptr){
 }
 
 void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
-	char cpy[len];
+	char cpy[len + 16];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 
@@ -126,8 +126,8 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
 					if(val){
-						hashtab_chuckkey(x->ht1, keys[i]);
-						hashtab_chuckkey(x->ht2, keys[i]);
+						hashtab_delete(x->ht1, keys[i]);
+						hashtab_delete(x->ht2, keys[i]);
 					}
 				}
 				if(keys){
@@ -140,8 +140,8 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht1, keys[i], (t_object **)(&val));
 					if(val){
-						hashtab_chuckkey(x->ht1, keys[i]);
-						hashtab_chuckkey(x->ht2, keys[i]);
+						hashtab_delete(x->ht1, keys[i]);
+						hashtab_delete(x->ht2, keys[i]);
 					}
 				}
 				if(keys){
@@ -160,8 +160,7 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
 					if(!val){
-						post("removing %s from 1", keys[i]->s_name);
-						hashtab_chuckkey(x->ht1, keys[i]);
+						hashtab_delete(x->ht1, keys[i]);
 					}
 				}
 				if(keys){
@@ -174,8 +173,7 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht1, keys[i], (t_object **)(&val));
 					if(!val){
-						post("removing %s from 2", keys[i]->s_name);
-						hashtab_chuckkey(x->ht2, keys[i]);
+						hashtab_delete(x->ht2, keys[i]);
 					}
 				}
 				if(keys){
@@ -221,6 +219,8 @@ void ovar_cbk(t_osc_msg msg, void *v){
 
 	// omax_util_oscMsg2MaxAtoms() will stick the address in the first element
 	// of the atom array, so allocate 1 more than the number of args
+	//printf("%d\n", msg.argc);
+	//printf("i want %d bytes\n", (msg.argc + 2) * sizeof(t_atom));
 	t_atom *atoms = (t_atom *)sysmem_newptr((msg.argc + 2) * sizeof(t_atom));
 	long len = msg.argc;
 
