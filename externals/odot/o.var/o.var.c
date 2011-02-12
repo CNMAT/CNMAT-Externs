@@ -293,7 +293,8 @@ void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf){
 	for(i = 0; i < nkeys; i++){
 		t_atom *val = NULL;
 		hashtab_lookup(ht, keys[i], (t_object **)&val);
-		ptr += osc_util_make_bundle_from_atoms(atom_getlong(val), val + 1, &i, ptr);
+		//ptr += osc_util_make_bundle_from_atoms(atom_getlong(val), val + 1, &i, ptr);
+		ptr += omax_util_encode_atoms(ptr, atom_getsym(val + 1), atom_getlong(val) - 1, val + 2);
 	}
 	
 	if(keys){
@@ -426,6 +427,7 @@ void ovar_bang(t_ovar *x){
 	char buf[len];
 	memset(buf, '\0', len);
 	ovar_hashtab_to_bundle(x, x->ht1, buf);
+	int i;
 	t_atom out[2];
 	atom_setlong(out, len);
 	atom_setlong(out + 1, (long)buf);
