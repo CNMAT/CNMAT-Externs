@@ -154,6 +154,7 @@ typedef struct _bpf{
 	t_symbol *displaymode;
 	double major_x_grid_width, major_y_grid_height, num_minor_x_grid_divisions, num_minor_y_grid_divisions;
 	long show_x_grid, show_y_grid;
+	long show_x_grid_tics, show_y_grid_tics;
 	double *major_x_tics, *major_y_tics, *minor_x_tics, *minor_y_tics;
 	int major_x_tics_buflen, minor_x_tics_buflen, major_y_tics_buflen, minor_y_tics_buflen;
 	//float major_x_tics[1024], major_y_tics[1024], minor_x_tics[1024], minor_y_tics[1024];
@@ -244,6 +245,8 @@ void bpf_setAllAuxPoints(t_bpf *x, double f);
 void bpf_setAuxPointsForFunction(t_bpf *x, int function, double f);
 void bpf_setAuxPointsForSelection(t_bpf *x, double f);
 
+void bpf_get_rect(t_bpf *x, t_rect *r);
+
 //void bpf_read(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_doread(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 //void bpf_write(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
@@ -286,7 +289,8 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
  	//t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview); 
 
  	// get our box's rectangle 
- 	jbox_get_rect_for_view((t_object *)x, patcherview, &r); 
+ 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+	//bpf_get_rect(x, &r);
 
 	t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_background, r.width, r.height);
 	if(g){
@@ -397,7 +401,7 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 					jgraphics_move_to(g, aux_point, pysc);
 					jgraphics_line_to(g, sc.x, pysc);
 					jgraphics_line_to(g, sc.x, sc.y);
-					jgraphics_set_line_width(g, .5);
+					jgraphics_set_line_width(g, 1.);
 					jgraphics_stroke(g);
 					jgraphics_set_line_width(g, 1.);
 					//jgraphics_ellipse(g, sc.x - 2, pysc - 2, 4, 4);
@@ -682,9 +686,11 @@ void bpf_drawMajorXGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double pos, doub
 	char buf[16];
 	jgraphics_set_source_jrgba(g, &(x->gridColor));
 	jgraphics_set_line_width(g, 1.5);
-	jgraphics_move_to(g, pos_sc + 2, 10);
-	sprintf(buf, "%.02f", pos);
-	jgraphics_show_text(g, buf);
+	if(x->show_x_grid_tics){
+		jgraphics_move_to(g, pos_sc + 2, 10);
+		sprintf(buf, "%.02f", pos);
+		jgraphics_show_text(g, buf);
+	}
 	jgraphics_move_to(g, pos_sc, 0);
 	if(x->show_x_grid){
 		jgraphics_line_to(g, pos_sc, r.height);
@@ -698,9 +704,11 @@ void bpf_drawMajorYGridLine(t_bpf *x, t_jgraphics *g, t_rect r, double pos, doub
 	char buf[16];
 	jgraphics_set_source_jrgba(g, &(x->gridColor));
 	jgraphics_set_line_width(g, 1.5);
-	jgraphics_move_to(g, 0, pos_sc - 2);
-	sprintf(buf, "%.02f", pos);
-	jgraphics_show_text(g, buf);
+	if(x->show_y_grid_tics){
+		jgraphics_move_to(g, 0, pos_sc - 2);
+		sprintf(buf, "%.02f", pos);
+		jgraphics_show_text(g, buf);
+	}
 	jgraphics_move_to(g, 0, pos_sc);
 	if(x->show_y_grid){
 		jgraphics_line_to(g, r.width, pos_sc);
@@ -818,7 +826,8 @@ void bpf_minor_y_tics(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 
 void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 	t_rect r;
-	jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	//jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	t_pt pt;
 	pt.x = bpf_scale(pt_sc.x, 0, r.width, x->xmin, x->xmax);
 	pt.y = bpf_scale(pt_sc.y, r.height, 0, x->ymin, x->ymax);
@@ -872,6 +881,9 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc){
 				}
 			}
 			pos += x->major_x_grid_width;
+		}
+		if(fabs(min - x->xmax) < mindiff){
+			min = x->xmax;
 		}
 		pt_out_sc->x = bpf_scale(min, x->xmin, x->xmax, 0., r.width);
 	}else{
@@ -1047,7 +1059,8 @@ t_int *bpf_perform(t_int *w){
 	int i, j;
 	t_rect r;
 	int pntl, aux_point_state;
-	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	//jbox_get_patching_rect((t_object *)&(x->box), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	if(x->name){
 		for(i = 0; i < x->numFunctions; i++){
 			if(x->functions[i] == NULL){
@@ -1111,7 +1124,8 @@ void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 
 void bpf_float(t_bpf *x, double f){
 	t_rect r;
-	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	//jbox_get_patching_rect((t_object *)&(x->box), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	t_atom out[3]; // function number, y, aux point state
 	int i;
 	int aps;
@@ -1293,7 +1307,8 @@ void bpf_int(t_bpf *x, long key){
 // aux_point_state will be 0 if <= to the aux point of the point to the left of f, or 1 if >
 double bpf_compute(t_bpf *x, int function, double f, int *point_num_to_left, int *aux_point_state){
 	t_rect r;
-	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	//jbox_get_patching_rect((t_object *)&(x->box), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	x->pos[function] = (t_pt){-1., -1.};
 	t_point *p = x->functions[function];
 	t_point *left = NULL, *right = NULL;
@@ -1367,14 +1382,14 @@ t_point *bpf_select(t_bpf *x, t_pt p_sc){
 	t_point *ptr = x->functions[x->currentFunction];
 	double xdif, ydif;
 	t_rect r;
-	jbox_get_patching_rect((t_object *)&(x->box), &r);
-
+	//jbox_get_patching_rect((t_object *)&(x->box), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	while(ptr){
 		t_pt sc = ptr->coords;
 		sc.x = bpf_scale(sc.x, x->xmin, x->xmax, 0., r.width);
 		if(x->displaymode == ps_bpf){
 			sc.y = bpf_scale(sc.y, x->ymin, x->ymax, r.height, 0.);
-			if((xdif = fabs(sc.x - p_sc.x)) < 3 && (ydif = fabs(sc.y - p_sc.y)) < 3){
+			if((xdif = fabs(sc.x - p_sc.x)) < x->pointsize && (ydif = fabs(sc.y - p_sc.y)) < x->pointsize){
 				if(xdif + ydif < min){
 					min = xdif + ydif;
 					min_ptr = ptr;
@@ -1401,7 +1416,8 @@ t_point *bpf_selectAuxPoint(t_bpf *x, t_pt p_sc){
 	t_point *ptr = x->functions[x->currentFunction];
 	double xdif, ydif;
 	t_rect r;
-	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	//jbox_get_patching_rect((t_object *)&(x->box), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	while(ptr){
 		if(!ptr->next){
 			break;
@@ -1485,10 +1501,11 @@ void bpf_clearSelected(t_bpf *x){
 // 0x12 = shift 
 // 0x94 = control 
 // 0x18 = option 
-void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){ 
+void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
+	x->pv = patcherview;
 	bpf_focus->s_thing = (t_object *)x;
  	//post("0x%X", modifiers); 
- 	t_rect r; 
+ 	t_rect r;
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
 	x->drag = pt;
 	//r.x = 0. = 0;
@@ -1575,9 +1592,11 @@ void bpf_mousedown(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 }
 
 void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
+	x->pv = patcherview;
 	bpf_focus->s_thing = (t_object *)x;
 	t_rect r;
 	jbox_get_rect_for_view((t_object *)x, patcherview, &r);
+	
 	//r.x = 0. = 0;
 	if(pt.x < 0){
 		pt.x = 0;
@@ -1697,6 +1716,7 @@ void bpf_mousedrag(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
 }
 
 void bpf_mouseup(t_bpf *x, t_object *patcherview, t_pt pt, long modifiers){
+	x->pv = patcherview;
 	x->sel_box = (t_rect){0., 0., 0., 0.};
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
@@ -2095,7 +2115,8 @@ void bpf_snapCurrentFunctionToGrid(t_bpf *x){
 
 void bpf_snapFunctionToGrid(t_bpf *x, int function){
 	t_rect r;
-	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	//jbox_get_patching_rect((t_object *)&(x->box), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	t_point *p = x->functions[function];
 	while(p){
 		t_pt sc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, 0., r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, 0.)};
@@ -2109,7 +2130,8 @@ void bpf_snapFunctionToGrid(t_bpf *x, int function){
 
 void bpf_snapSelectionToGrid(t_bpf *x){
 	t_rect r;
-	jbox_get_patching_rect((t_object *)&(x->box), &r);
+	//jbox_get_patching_rect((t_object *)&(x->box), &r);
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
 	t_point *p = x->selected;
 	while(p){
 		t_pt sc = (t_pt){bpf_scale(p->coords.x, x->xmin, x->xmax, 0., r.width), bpf_scale(p->coords.y, x->ymin, x->ymax, r.height, 0.)};
@@ -2232,6 +2254,17 @@ void bpf_deleteCurrentFunction(t_bpf *x){
 
 void bpf_invalidateAllPos(t_bpf *x){
 	jbox_invalidate_layer((t_object *)x, x->pv, l_pos);
+}
+
+void bpf_get_rect(t_bpf *x, t_rect *r){
+	printf("%c %x\n", ((t_jbox)(x->box.z_box)).b_presentation);
+	if(((t_jbox)(x->box.z_box)).b_presentation){		
+		jbox_get_rect_for_sym((t_object *)x, _sym_presentation_rect, r);
+		printf("prez: %f %f %f %f\n", r->x, r->y, r->width, r->height);
+	}else{
+		jbox_get_rect_for_sym((t_object *)x, _sym_patching_rect, r);
+		printf("patch: %f %f %f %f\n", r->x, r->y, r->width, r->height);		
+	}
 }
 
 void bpf_assist(t_bpf *x, void *b, long io, long num, char *s){ 
@@ -2399,6 +2432,14 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "show_y_grid", 0, "0");
 	CLASS_ATTR_STYLE_LABEL(c, "show_y_grid", 0, "onoff", "Show Y Grid");
 
+	CLASS_ATTR_LONG(c, "show_x_grid_tics", 0, t_bpf, show_x_grid_tics);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "show_x_grid_tics", 0, "1");
+	CLASS_ATTR_STYLE_LABEL(c, "show_x_grid_tics", 0, "onoff", "Show X Grid Ticks");
+
+	CLASS_ATTR_LONG(c, "show_y_grid_tics", 0, t_bpf, show_y_grid_tics);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "show_y_grid_tics", 0, "1");
+	CLASS_ATTR_STYLE_LABEL(c, "show_y_grid_tics", 0, "onoff", "Show Y Grid Ticks");
+
 	CLASS_ATTR_FLOAT_VARSIZE(c, "major_x_tics", 0, t_bpf, major_x_tics, num_major_x_tics, MAX_ARRAY_LEN);
 	CLASS_ATTR_ACCESSORS(c, "major_x_tics", bpf_majorXTicsGet, bpf_majorXTicsSet);
 	CLASS_ATTR_SAVE(c, "major_x_tics", 0);
@@ -2500,6 +2541,8 @@ int main(void){
 
 	bpf_focus = gensym("bpf_focus");
 	bpf_focus->s_thing = NULL;
+
+	common_symbols_init();
 
  	class_register(CLASS_BOX, c); 
  	bpf_class = c; 

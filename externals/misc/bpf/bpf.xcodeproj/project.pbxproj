@@ -10,6 +10,7 @@
 		1298AD180FC9160E001BACCC /* bpf.c in Sources */ = {isa = PBXBuildFile; fileRef = 1298AD170FC9160E001BACCC /* bpf.c */; };
 		1298AD1C0FC91630001BACCC /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1298AD1B0FC91630001BACCC /* MaxAPI.framework */; };
 		5207E6A611E7F51F00DBBF54 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5207E6A511E7F51F00DBBF54 /* MaxAudioAPI.framework */; };
+		52D0B4E0130620D600B5D8ED /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52D0B4DF130620D600B5D8ED /* commonsyms.c */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
@@ -19,6 +20,7 @@
 		1298AD170FC9160E001BACCC /* bpf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bpf.c; sourceTree = "<group>"; };
 		1298AD1B0FC91630001BACCC /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		5207E6A511E7F51F00DBBF54 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
+		52D0B4DF130620D600B5D8ED /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../SDK/MaxSDK-5.1.1/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				52D0B4DF130620D600B5D8ED /* commonsyms.c */,
 				1298AD170FC9160E001BACCC /* bpf.c */,
 			);
 			name = Source;
@@ -155,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1298AD180FC9160E001BACCC /* bpf.c in Sources */,
+				52D0B4E0130620D600B5D8ED /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
