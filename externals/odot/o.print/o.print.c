@@ -88,7 +88,9 @@ void oprint_cbk(t_osc_msg msg, void *v){
 	long len = msg.argc;
 	t_atom atoms[len + 1];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
-	char buf[1024];
+	//char buf[1024];
+	char *buf = sysmem_newptr(1024);
+	int bufsize = 1024;
 	int bufpos = 0;
 	if(x->print_msgsize){
 		bufpos += sprintf(buf, "\t\t(%d) %s", msg.size, msg.address);
@@ -100,6 +102,11 @@ void oprint_cbk(t_osc_msg msg, void *v){
 	}
 	int i;
 	for(i = 1; i < len + 1; i++){
+		if(bufsize - bufpos < 64){
+			printf("o.print: enlarging buffer by 256 bytes to %d\n", bufsize + 256);
+			buf = sysmem_resizeptr(buf, bufsize + 256);
+			bufsize += 256;
+		}
 		switch(atom_gettype(atoms + i)){
 		case A_LONG:
 			bufpos += sprintf(buf + bufpos, " %ld", atom_getlong(atoms + i));
@@ -113,6 +120,7 @@ void oprint_cbk(t_osc_msg msg, void *v){
 		}
 	}
 	post("%s", buf);
+	sysmem_freeptr(buf);
 }
 
 void oprint_assist(t_oprint *x, void *b, long m, long a, char *s){
