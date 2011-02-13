@@ -103,7 +103,6 @@ void oprint_cbk(t_osc_msg msg, void *v){
 	int i;
 	for(i = 1; i < len + 1; i++){
 		if(bufsize - bufpos < 64){
-			printf("o.print: enlarging buffer by 256 bytes to %d\n", bufsize + 256);
 			buf = sysmem_resizeptr(buf, bufsize + 256);
 			bufsize += 256;
 		}
