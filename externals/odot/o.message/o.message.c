@@ -39,14 +39,12 @@
 //#include "jpatcher_syms.h"
 #include "jgraphics.h"
 
-//#include "cmmjl/cmmjl.h"
-//#include "cmmjl/cmmjl_osc.h"
 #include "omax_util.h"
 #include "osc_util.h"
 #include "osc_match.h"
 #include <mach/mach_time.h>
 
-// i really don't want to reallocate...
+// i really don't want to sysmem_resizeptrate...
 #define OMESSAGE_MAX_NUM_MESSAGES 1024
 #define OMESSAGE_MAX_MESSAGE_LENGTH 1024
 #define BUFLEN 4096
@@ -77,7 +75,7 @@ void omessage_fullPacket(t_omessage *x, long len, long ptr);
 void omessage_doFullPacket(t_omessage *x, long len, long ptr);
 void omessage_cbk(t_osc_msg msg, void *v);
 void omessage_paint(t_omessage *x, t_object *patcherview);
-void omessage_atoms2text(t_omessage *x, char *buf);
+void omessage_atoms2text(t_omessage *x, int *buflen, char **buf);
 void omessage_parse_string(t_omessage *x, long len, char *string);
 void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av);
 void omessage_select(t_omessage *x);
@@ -132,14 +130,18 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	osc_util_parseBundleWithCallback(nn, cpy, omessage_cbk, (void *)x);
 
 	int i;
-	char buf[4096]; // need to be smarter about this
-	omessage_atoms2text(x, buf);
+	char *buf = NULL;
+	int buflen;
+	omessage_atoms2text(x, &buflen, &buf);
 
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
 	jbox_redraw((t_jbox *)x);
 
 	for(i = 0; i < x->substitutions_len; i++){
 		x->substitutions[i] = -1;
+	}
+	if(buf){
+		sysmem_freeptr(buf);
 	}
 }
 
@@ -155,12 +157,19 @@ void omessage_cbk(t_osc_msg msg, void *v){
 
 	//char buf[1024], data_buf[256];
 	//char *bufptr = buf;
-	long len;
-	t_atom a[1024];
-	//for(i = 0; i < msg.argc; i++){
-		//cmmjl_osc_atom2maxatom(a + i, x->atoms + x->num_atoms++);
+	long len = msg.argc + 1;
+	t_atom a[len];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, a);
-		//}
+
+	if(len > x->max_num_atoms){
+		x->atoms = (t_atom *)sysmem_resizeptr(x->atoms, len * sizeof(t_atom));
+		x->max_num_atoms = len + 1;
+		if(!(x->atoms)){
+			object_error((t_object *)x, "out of memory!");
+			return;
+		}
+	}
+
 	for(i = 0; i < len; i++){
 		x->atoms[x->num_atoms++] = a[i];
 	}
@@ -198,10 +207,25 @@ void omessage_paint(t_omessage *x, t_object *patcherview){
 	jgraphics_stroke(g);
 }
 
-void omessage_atoms2text(t_omessage *x, char *buf){
-	char *bufptr = buf;
+void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
+	//char *bufptr = buf;
+	if(!(*buf)){
+		*buf = sysmem_newptr(1024);
+		*buflen = 1024;
+	}
+	char *bufptr = *buf;
 	int i;
 	for(i = 0; i < x->num_atoms; i++){
+		if(*buflen - (bufptr - *buf) < 64){
+			int offset = bufptr - *buf;
+			*buf = sysmem_resizeptr(*buf, *buflen + 256);
+			if(!(*buf)){
+				object_error((t_object *)x, "out of memory!");
+				return;
+			}
+			*buflen += 256;
+			bufptr = *buf + offset;
+		}
 		switch(atom_gettype(x->atoms + i)){
 		case A_LONG:
 			bufptr += sprintf(bufptr, "%ld ", atom_getlong(x->atoms + i));
@@ -333,7 +357,7 @@ void omessage_gettext(t_omessage *x){
 				t_symbol *sym = argv[i].a_w.w_sym;
 				sub = strtol(sym->s_name, NULL, 0);
 				if(sub > x->substitutions_len){
-					int *tmp = realloc(x->substitutions, sizeof(int) * (sub * 2));
+					int *tmp = sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
 					if(tmp){
 						x->substitutions = tmp;
 					}else{
@@ -351,7 +375,7 @@ void omessage_gettext(t_omessage *x){
 			}else if(type == A_DOLLAR){
 				sub = argv[i].a_w.w_long; // atom_getlong() apparently doesn't worke with A_DOLLAR
 				if(sub > x->substitutions_len){
-					int *tmp = realloc(x->substitutions, sizeof(int) * (sub * 2));
+					int *tmp = sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
 					if(tmp){
 						x->substitutions = tmp;
 					}else{
@@ -371,7 +395,7 @@ void omessage_gettext(t_omessage *x){
 				if(*(sym->s_name) == '$'){
 					sub = strtol(sym->s_name + 1, NULL, 0);
 					if(sub > x->substitutions_len){
-						int *tmp = realloc(x->substitutions, sizeof(int) * (sub * 2));
+						int *tmp = sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
 						if(tmp){
 							x->substitutions = tmp;
 						}else{
@@ -475,6 +499,7 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void omessage_anything(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
+	printf("%s\n", __PRETTY_FUNCTION__);
 	t_atom av[argc + 1];
 	int ac = argc;
 
@@ -505,20 +530,41 @@ void omessage_settext(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 		error("o.message: %s is not a valid OSC address", address->s_name);
 		return;
 	}
+	if(x->max_num_atoms > argc){
+		sysmem_resizeptr(x->atoms, argc * sizeof(t_atom));
+		x->max_num_atoms = argc;
+		if(!(x->atoms)){
+			object_error((t_object *)x, "out of memory!");
+			return;
+		}
+	}
 	memcpy(x->atoms, argv, argc * sizeof(t_atom));
 	x->num_atoms = argc;
-	char buf[2048];
-	omessage_atoms2text(x, buf);
+	char *buf = NULL;
+	int len;
+	omessage_atoms2text(x, &len, &buf);
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
 	jbox_redraw((t_jbox *)x);
 	int i;
 	for(i = 0; i < x->substitutions_len; i++){
 		x->substitutions[i] = -1;
 	}
+	if(buf){
+		sysmem_freeptr(buf);
+	}
 }
 
 void omessage_free(t_omessage *x){
 	jbox_free((t_jbox *)x);
+	if(x->atoms){
+		sysmem_freeptr(x->atoms);
+	}
+	if(x->buffer){
+		free(x->buffer);
+	}
+	if(x->substitutions){
+		sysmem_freeptr(x->substitutions);
+	}
 }
 
 void omessage_assist(t_omessage *x, void *b, long io, long index, char *s){
@@ -577,13 +623,13 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
  		x->ob.b_firstin = (void *)x; 
 		x->outlet = outlet_new(x, NULL);
 		x->proxy = proxy_new(x, 1, &(x->inlet));
-		x->atoms = (t_atom *)malloc(OMESSAGE_MAX_NUM_MESSAGES * sizeof(t_atom));
+		x->atoms = (t_atom *)sysmem_newptr(OMESSAGE_MAX_NUM_MESSAGES * sizeof(t_atom));
 		x->max_num_atoms = OMESSAGE_MAX_NUM_MESSAGES;
 		x->num_atoms = 0;
 		x->buffer = (char *)calloc(BUFLEN, sizeof(char));
 		x->buffer_len = BUFLEN;
 		x->buffer_pos = 0;
-		x->substitutions = (int *)calloc(1024, sizeof(int));
+		x->substitutions = (int *)sysmem_newptr(1024, sizeof(int));
 		x->substitutions_len = 1024;
 
 		int i;
