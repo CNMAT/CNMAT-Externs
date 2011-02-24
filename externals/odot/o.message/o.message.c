@@ -40,8 +40,7 @@
 #include "jgraphics.h"
 
 #include "omax_util.h"
-#include "osc_util.h"
-#include "osc_match.h"
+#include "osc.h"
 #include <mach/mach_time.h>
 
 // i really don't want to sysmem_resizeptrate...
@@ -109,31 +108,39 @@ void omessage_fullPacket(t_omessage *x, long len, long ptr){
 void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	//memcpy(x->buffer, (char *)ptr, len);
 	//x->buffer_pos = len;
+	if(len == OSC_HEADER_SIZE){
+		x->num_atoms = 0;
+		char buf = '\0';
+		object_method(jbox_get_textfield((t_object *)x), gensym("settext"), &buf);
+		jbox_redraw((t_jbox *)x);
+		return;
+	}
 	char cpy[len + 16]; // in case this is a naked message
+	char *cpy_ptr = cpy;
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 	x->num_atoms = 0;
 
 	// if the OSC packet contains a single message, turn it into a bundle
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, cpy, cpy);
+	if(osc_bundle_strcmpID(cpy)){
+		nn = osc_bundle_bundleNakedMessage(len, cpy_ptr, &cpy_ptr);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = osc_util_flatten(nn, cpy, cpy);
+	nn = osc_bundle_flatten(nn, cpy_ptr, &cpy_ptr);
 
 	// extract the messages from the bundle
 	//cmmjl_osc_extract_messages(nn, x->buffer, true, omessage_cbk, (void *)x);
-	osc_util_parseBundleWithCallback(nn, cpy, omessage_cbk, (void *)x);
+	osc_bundle_getMessagesWithCallback(nn, cpy, omessage_cbk, (void *)x);
 
 	int i;
 	char *buf = NULL;
 	int buflen;
 	omessage_atoms2text(x, &buflen, &buf);
-
+	
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
 	jbox_redraw((t_jbox *)x);
 
@@ -146,7 +153,6 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 }
 
 void omessage_cbk(t_osc_msg msg, void *v){
-	//printf("%s\n", __PRETTY_FUNCTION__);
 	t_omessage *x = (t_omessage *)v;
 	int i;
 	//x->messages[x->num_messages] = msg;
@@ -338,6 +344,7 @@ void omessage_gettext(t_omessage *x){
 	char *text	= NULL;
 	t_object *textfield = jbox_get_textfield((t_object *)x);
 	object_method(textfield, gensym("gettextptr"), &text, &size);
+	//printf("%s\n", text);
 	if(size){
 		long argc = 0;
 		t_atom *argv = NULL;
@@ -357,7 +364,7 @@ void omessage_gettext(t_omessage *x){
 				t_symbol *sym = argv[i].a_w.w_sym;
 				sub = strtol(sym->s_name, NULL, 0);
 				if(sub > x->substitutions_len){
-					int *tmp = sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
+					int *tmp = (int *)sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
 					if(tmp){
 						x->substitutions = tmp;
 					}else{
@@ -375,7 +382,7 @@ void omessage_gettext(t_omessage *x){
 			}else if(type == A_DOLLAR){
 				sub = argv[i].a_w.w_long; // atom_getlong() apparently doesn't worke with A_DOLLAR
 				if(sub > x->substitutions_len){
-					int *tmp = sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
+					int *tmp = (int *)sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
 					if(tmp){
 						x->substitutions = tmp;
 					}else{
@@ -395,7 +402,7 @@ void omessage_gettext(t_omessage *x){
 				if(*(sym->s_name) == '$'){
 					sub = strtol(sym->s_name + 1, NULL, 0);
 					if(sub > x->substitutions_len){
-						int *tmp = sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
+						int *tmp = (int *)sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
 						if(tmp){
 							x->substitutions = tmp;
 						}else{
@@ -499,7 +506,6 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void omessage_anything(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
-	printf("%s\n", __PRETTY_FUNCTION__);
 	t_atom av[argc + 1];
 	int ac = argc;
 
@@ -531,7 +537,7 @@ void omessage_settext(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 		return;
 	}
 	if(x->max_num_atoms > argc){
-		sysmem_resizeptr(x->atoms, argc * sizeof(t_atom));
+		x->atoms = (t_atom *)sysmem_resizeptr(x->atoms, argc * sizeof(t_atom));
 		x->max_num_atoms = argc;
 		if(!(x->atoms)){
 			object_error((t_object *)x, "out of memory!");
@@ -629,7 +635,7 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
 		x->buffer = (char *)calloc(BUFLEN, sizeof(char));
 		x->buffer_len = BUFLEN;
 		x->buffer_pos = 0;
-		x->substitutions = (int *)sysmem_newptr(1024, sizeof(int));
+		x->substitutions = (int *)sysmem_newptr(1024 * sizeof(int));
 		x->substitutions_len = 1024;
 
 		int i;
