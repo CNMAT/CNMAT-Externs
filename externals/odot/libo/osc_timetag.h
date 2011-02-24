@@ -35,6 +35,10 @@ Audio Technologies, University of California, Berkeley.
 #ifndef __OSC_TIMETAG_H__
 #define __OSC_TIMETAG_H__
 
+#include <stdint.h>
+
+typedef uint64_t t_osc_timetag;
+
 #define TIME_NULL       0 
 #define TIME_NOW        1
 #define TIME_IMMEDIATE  2
