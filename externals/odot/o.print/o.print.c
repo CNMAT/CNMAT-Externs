@@ -35,14 +35,14 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
+#include "osc.h"
 #include "omax_util.h"
-#include "liboio/osc_util.h"
-#include "liboio/osc_match.h"
 
 typedef struct _oprint{
 	t_object ob;
 	int print_msgsize;
 	int print_typetags;
+	t_symbol *myname;
 } t_oprint;
 
 void *oprint_class;
@@ -65,22 +65,23 @@ void oprint_fullPacket(t_oprint *x, long len, long ptr){
 	char cpy[len];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
+	char *cpy_ptr = cpy;
 
 	// if the OSC packet contains a single message, turn it into a bundle
 	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, cpy, cpy);
+		nn = osc_bundle_bundleNakedMessage(len, cpy_ptr, &cpy_ptr);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
 
 	// flatten any nested bundles
-	nn = osc_util_flatten(nn, cpy, cpy);
+	nn = osc_bundle_flatten(nn, cpy_ptr, &cpy_ptr);
 
 	// extract the messages from the bundle
-	post("[ 0x%x", ntoh64(*((uint64 *)(cpy + 8))));
-	osc_util_parseBundleWithCallback(nn, cpy, oprint_cbk, (void *)x);
-	post("]");
+	post("%s: [ 0x%x", x->myname->s_name, ntoh64(*((uint64 *)(cpy + 8))));
+	osc_bundle_getMessagesWithCallback(nn, cpy, oprint_cbk, (void *)x);
+	post("%s: ]", x->myname->s_name);
 }
 
 void oprint_cbk(t_osc_msg msg, void *v){
@@ -118,7 +119,7 @@ void oprint_cbk(t_osc_msg msg, void *v){
 			break;
 		}
 	}
-	post("%s", buf);
+	post("%s: %s", x->myname->s_name, buf);
 	sysmem_freeptr(buf);
 }
 
@@ -140,6 +141,23 @@ void oprint_free(t_oprint *x){
 void *oprint_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oprint *x;
 	if(x = (t_oprint *)object_alloc(oprint_class)){
+		x->myname = gensym("o.print");
+		if(attr_args_offset(argc, argv) > 0 && argc > 0){
+			char buf[128];
+			switch(atom_gettype(argv)){
+			case A_FLOAT:
+				sprintf(buf, "%f", atom_getfloat(argv));
+				x->myname = gensym(buf);
+				break;
+			case A_LONG:
+				sprintf(buf, "%ld", atom_getlong(argv));
+				x->myname = gensym(buf);
+				break;
+			case A_SYM:
+				x->myname = atom_getsym(argv);
+				break;
+			}
+		}
 		attr_args_process(x, argc, argv);
 	}
 		   	
