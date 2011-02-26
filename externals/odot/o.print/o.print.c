@@ -102,7 +102,7 @@ void oprint_cbk(t_osc_msg msg, void *v){
 		bufpos += sprintf(buf + bufpos, " %s", msg.typetags);
 	}
 	int i;
-	for(i = 1; i < len + 1; i++){
+	for(i = 1; i < len; i++){
 		if(bufsize - bufpos < 64){
 			buf = sysmem_resizeptr(buf, bufsize + 256);
 			bufsize += 256;
