@@ -1,6 +1,6 @@
 /*
   Written by John MacCallum, The Center for New Music and Audio Technologies,
-  University of California, Berkeley.  Copyright (c) 2009, The Regents of
+  University of California, Berkeley.  Copyright (c) 2009-11, The Regents of
   the University of California (Regents). 
   Permission to use, copy, modify, distribute, and distribute modified versions
   of this software and its documentation without fee and without a signed
@@ -24,14 +24,17 @@
   NAME: o.message
   DESCRIPTION: Message box for OSC bundles
   AUTHORS: John MacCallum
-  COPYRIGHT_YEARS: 2009
+  COPYRIGHT_YEARS: 2009-11
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
   VERSION 1.0: using updated lib
+  VERSION 1.0.1: newlines now delimit messages
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#include "version.h"
 #include "ext.h"
+#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 
@@ -755,6 +758,8 @@ int main(void){
 
 	class_register(CLASS_BOX, c);
 	omessage_class = c;
+
+	version(0);
 
 	return 0;
 }
