@@ -27,6 +27,7 @@
   COPYRIGHT_YEARS: 2011
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
+  VERSION 1.0: using libo
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -35,8 +36,8 @@
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
+#include "osc.h"
 #include "omax_util.h"
-#include "osc_util.h"
 
 enum{
 	OVAR_NONE,
@@ -93,21 +94,22 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 	long nn = len;
 
 	// if the OSC packet contains a single message, turn it into a bundle
+	/*
 	if(strncmp(cpy, "#bundle\0", 8)){
 		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
 			error("problem bundling naked message");
 		}
 	}
-
+	*/
 	// flatten any nested bundles
-	nn = osc_util_flatten(nn, cpy, cpy);
+	//nn = osc_util_flatten(nn, cpy, cpy);
 
 	int inlet = proxy_getinlet((t_object *)x);
 
 	hashtab_clear(x->ht2);
 	// extract the messages from the bundle
-	osc_util_parseBundleWithCallback(nn, cpy, ovar_cbk, (void *)x);
+	osc_bundle_getMessagesWithCallback(nn, cpy, ovar_cbk, (void *)x);
 
 	if(inlet == 0){
 
@@ -518,6 +520,8 @@ int main(void){
 
 	common_symbols_init();
 	ps_FullPacket = gensym("FullPacket");
+
+	version(0);
 	return 0;
 }
 
