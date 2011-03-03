@@ -150,7 +150,10 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 	}
 	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc = 0;
-	char buf[len], *bufp = buf;
+	//char buf[len], *bufp = buf;
+	char *buf = (char *)sysmem_newptr(len);
+	char *bufp = buf;
+	int buflen = len;
 	memset(buf, '\0', len);
 	memcpy(buf, ptr, 16);
 	bufp += 16;
@@ -163,6 +166,16 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 	}
 	counter = 0;
 	while(m){
+		if((bufp - buf) + m->msg.size >= buflen){
+			int oldlen = bufp - buf;
+			buf = sysmem_resizeptr(buf, oldlen + m->msg.size);
+			if(!buf){
+				object_error((t_object *)x, "out of memory!");
+				return;
+			}
+			bufp = buf + oldlen;
+			memset(bufp, '\0', m->msg.size);
+		}
 		//printf("m = %p\n", m);
 		if(last_outlet_num != m->outlet_num && last_outlet_num >= 0 && bufp - buf > 16){
 			t_atom out[2];
@@ -217,7 +230,7 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 #else
 			strcpy(bufp, m->msg.address + m->offset);
 			bufp += strlen(m->msg.address + m->offset);
-#endif			
+#endif
 			bufp++;
 			while((bufp - size) % 4){
 				bufp++;
@@ -243,6 +256,7 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 		outlet_anything(x->outlets[last_outlet_num], gensym("FullPacket"), 2, out);
 	}
 	sysmem_freeptr(argv);
+	sysmem_freeptr(buf);
 }
 
 void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
@@ -546,6 +560,7 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 		memset(schemalist, '\0', schemalist_len);
 		omax_util_encode_atoms(schemalist, ps_oscschemalist, numArgs, argv);
 		osc_message_parseMessage(-1, schemalist, &(x->oscschemalist));
+		printf("size = %d\n", x->oscschemalist.size);
 		
 		attr_args_process(x, argc, argv);
 	}
