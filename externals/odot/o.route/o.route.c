@@ -37,8 +37,8 @@ VERSION 0.1: Addresses to match can now have patterns
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "ext_critical.h"
+#include "osc.h"
 #include "omax_util.h"
-#include "osc_match.h"
 
 #define MAX_NUM_MESSAGES 1024
 
@@ -61,6 +61,7 @@ typedef struct _oroute_wksp{
 	t_oroute_message *message_buf;
 	int numMessages, message_buf_len;
 	int *haswildcard;
+	t_osc_msg oscschemalist;
 } t_oroute_wksp;
 
 typedef struct _oroute{
@@ -78,6 +79,7 @@ typedef struct _oroute{
 	int numMessages, message_buf_len;
 	//int bundle_partial_matches;
 	int max_message; // set this to note that the event originated as a max message and not a FullPacket
+	t_osc_msg oscschemalist;
 } t_oroute;
 
 void *oroute_class;
@@ -92,6 +94,8 @@ void oroute_free(t_oroute *x);
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s);
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv);
 
+t_symbol *ps_oscschemalist;
+
 
 void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	/*
@@ -103,6 +107,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	char cpy[len];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
+	/*
 	if(strncmp(cpy, "#bundle\0", 8)){
 		nn = osc_util_bundle_naked_message(len, cpy, cpy);
 		if(nn < 0){
@@ -110,6 +115,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 		}
 	}
 	nn = osc_util_flatten(nn, cpy, cpy);
+	*/
 	//osc_util_printBundle(len, cpy, printf);
 	t_oroute_wksp wksp;
 	t_symbol *args[x->numArgs];
@@ -120,6 +126,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	wksp.messages = NULL;
 	wksp.numMessages = 0;
 	wksp.message_buf_len = 128;
+	wksp.oscschemalist = x->oscschemalist;
 	critical_enter(x->lock);
 	memcpy(args, x->args, x->numArgs * sizeof(t_symbol *));
 	memcpy(haswildcard, x->haswildcard, x->numArgs * sizeof(int));
@@ -127,7 +134,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	wksp.args = args;
 	wksp.numArgs = x->numArgs;
 	critical_exit(x->lock);
-	osc_util_parseBundleWithCallback(nn, cpy, oroute_cbk, (void *)&wksp);
+	osc_bundle_getMessagesWithCallback(nn, cpy, oroute_cbk, (void *)&wksp);
 
 #ifdef SPEW
 	oroute_fp(x, nn, cpy, wksp.messages);
@@ -322,7 +329,11 @@ void oroute_cbk(t_osc_msg msg, void *context){
 		}
 	}
 	if(!match){
-		x->message_buf[x->numMessages].msg = msg;
+		if(!strcmp(msg.address, ps_oscschemalist->s_name)){
+			x->message_buf[x->numMessages].msg = x->oscschemalist;
+		}else{
+			x->message_buf[x->numMessages].msg = msg;
+		}
 		x->message_buf[x->numMessages].full_match = 0;
 		x->message_buf[x->numMessages].offset = 0;
 		x->message_buf[x->numMessages].outlet_num = x->numArgs;
@@ -507,11 +518,20 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 		x->messages = NULL;
 		critical_new(&(x->lock));
 		x->outlets[numArgs] = outlet_new(x, "FullPacket"); // unmatched outlet
+		int schemalist_len = 24 + numArgs + 2;
+		while(schemalist_len % 4){
+			schemalist_len++;
+		}
 		for(i = 0; i < numArgs; i++){
 			x->outlets[numArgs - 1 - i] = outlet_new(x, NULL);
 			x->args[i] = atom_getsym(argv + i);
 			int j;
-			for(j = 0; j < strlen(x->args[i]->s_name); j++){
+			int len = strlen(x->args[i]->s_name);
+			schemalist_len += len + 1;
+			while(schemalist_len % 4){
+				schemalist_len++;
+			}
+			for(j = 0; j < len; j++){
 				switch(x->args[i]->s_name[j]){
 				case '*':
 				case '[':
@@ -522,7 +542,11 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 				}
 			}
 		}
-		//x->bundle_partial_matches = 1;
+		char *schemalist = sysmem_newptr(schemalist_len);
+		memset(schemalist, '\0', schemalist_len);
+		omax_util_encode_atoms(schemalist, ps_oscschemalist, numArgs, argv);
+		osc_message_parseMessage(-1, schemalist, &(x->oscschemalist));
+		
 		attr_args_process(x, argc, argv);
 	}
 		   	
@@ -549,6 +573,8 @@ int main(void){
     
 	class_register(CLASS_BOX, c);
 	oroute_class = c;
+
+	ps_oscschemalist = gensym("/osc/schema/list");
 
 	common_symbols_init();
 	return 0;
