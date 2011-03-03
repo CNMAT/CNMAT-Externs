@@ -363,24 +363,26 @@ void omessage_gettext(t_omessage *x){
 	t_object *textfield = jbox_get_textfield((t_object *)x);
 	object_method(textfield, gensym("gettextptr"), &text, &size);
 	int slen = strlen(text);
-	char tmp[slen + 2];
+	char tmp[slen + 3];
 	memcpy(tmp, text, slen);
-	tmp[slen] = '\n';
+	tmp[slen] = '\0';
 	tmp[slen + 1] = '\0';
+	tmp[slen + 2] = '\0';
 	text = tmp;
-	/*
-	if(text[slen] != '\0'){
-		text[slen] = '\0';
-	}
-	if(text[slen - 1] == ' '){
-		text[slen - 1] = '\0';
-	}
-	*/
 
 	char *newline = "\n";
-	char buf[size];
-	memcpy(buf, text, size);
-	char *token = strtok(buf, newline);
+	//char *lasts = NULL;
+	//char *token = strtok_r(buf, newline, &lasts);
+	char *token = text;
+	char *next_token = text + 1;
+	while(*next_token){
+		if(*next_token == '\n'){
+			break;
+		}
+		next_token++;
+	}
+	*next_token = '\0';
+
 	int i;
 	if(slen){
 		long argc = 0;
@@ -391,6 +393,7 @@ void omessage_gettext(t_omessage *x){
 			x->substitutions[i] = -1;
 		}
 		while(token){
+
 			t_max_err err = atom_setparse(&argc, &argv, token);
 			if(err != MAX_ERR_NONE){
 				return;
@@ -472,7 +475,19 @@ void omessage_gettext(t_omessage *x){
 			}
 			offset += argc + 1;
 			argc = 0;
-			token = strtok(NULL, newline);
+			//token = strtok_r(NULL, newline, &lasts);
+			token = next_token + 1;
+			next_token++;
+			if(*next_token == '\0'){
+				break;
+			}
+			while(*next_token){
+				if(*next_token == '\n'){
+					break;
+				}
+				next_token++;
+			}
+			*next_token = '\0';
 		}
 
 	}else{
