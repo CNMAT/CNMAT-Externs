@@ -362,13 +362,27 @@ void omessage_gettext(t_omessage *x){
 	char *text	= NULL;
 	t_object *textfield = jbox_get_textfield((t_object *)x);
 	object_method(textfield, gensym("gettextptr"), &text, &size);
-	//printf("%s\n", text);
+	int slen = strlen(text);
+	char tmp[slen + 2];
+	memcpy(tmp, text, slen);
+	tmp[slen] = '\n';
+	tmp[slen + 1] = '\0';
+	text = tmp;
+	/*
+	if(text[slen] != '\0'){
+		text[slen] = '\0';
+	}
+	if(text[slen - 1] == ' '){
+		text[slen - 1] = '\0';
+	}
+	*/
+
 	char *newline = "\n";
 	char buf[size];
 	memcpy(buf, text, size);
 	char *token = strtok(buf, newline);
 	int i;
-	if(size){
+	if(slen){
 		long argc = 0;
 		t_atom *argv = NULL;
 
@@ -467,18 +481,59 @@ void omessage_gettext(t_omessage *x){
 }
 
 void omessage_make_and_output_bundle(t_omessage *x){
+	int bufsize = 256;
+	char *buf = (char *)sysmem_newptr(bufsize);
+	char *bufptr = buf;
+	memset(buf, '\0', bufsize);
+	osc_bundle_setBundleID(bufptr);
+	// time stamp
+	bufptr += OSC_HEADER_SIZE;
+	t_atom atoms[x->num_atoms];
+	// critical enter
+	int num_atoms = x->num_atoms;
+	memcpy(atoms, x->atoms, num_atoms * sizeof(t_atom));
+	// critical exit
+
+	int i = 0;
+	while(i < num_atoms){
+		int n = 0;
+		while(i + n < num_atoms){
+			t_atom *a = atoms + i + n;
+			if(atom_gettype(a) == A_SYM){
+				if(atom_getsym(a) == gensym("\n")){
+					break;
+				}
+			}
+			n++;
+		}
+		int nbytes = omax_util_get_bundle_size_for_atoms(atom_getsym(atoms + i), n - 1, atoms + i + 1);
+		if((bufptr - buf) + nbytes >= bufsize){
+			int oldlen = bufptr - buf;
+			buf = sysmem_resizeptr(buf, bufsize + (nbytes * 4));
+			bufptr = buf + oldlen;
+			if(!buf){
+				object_error((t_object *)x, "ran out of memory!");
+				return;
+			}
+			bufsize += nbytes * 4;
+			memset(bufptr, '\0', bufsize - oldlen);
+		}
+		bufptr += omax_util_encode_atoms(bufptr, atom_getsym(atoms + i), n - 1, atoms + i + 1);
+		i += n + 1;
+	}
+	t_atom a[2];
+	atom_setlong(a, bufptr - buf);
+	atom_setlong(a + 1, (long)buf);
+	outlet_anything(x->outlet, gensym("FullPacket"), 2, a);
+	sysmem_freeptr(buf);
+	/*
 	x->buffer_pos = 0;
-	//x->buffer_pos += cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
 	memset(x->buffer, '\0', x->buffer_len);
 	strcpy(x->buffer, "#bundle\0");
 	x->buffer_pos = 8;
-	//ntptime now;
-	//cmmjl_osc_timetag_now_to_ntp(&now);
-	//cmmjl_osc_timetag_set(x->buffer_len, (long)x->buffer, &now);
 	*((unsigned long long *)(x->buffer + x->buffer_pos)) = hton64(mach_absolute_time());
 	x->buffer_pos += 8;
 
-	//x->buffer_pos += osc_util_make_bundle_from_atoms(x->num_atoms, x->atoms, &(x->buffer_len), x->buffer + x->buffer_pos);
 	int i = 0;
 	while(i < x->num_atoms){
 		int n = 0;
@@ -493,15 +548,12 @@ void omessage_make_and_output_bundle(t_omessage *x){
 		x->buffer_pos += omax_util_encode_atoms(x->buffer + x->buffer_pos, atom_getsym(x->atoms + i), n - 1, x->atoms + i + 1);
 		i += n + 1;
 	}
-	/*
-	for(i = 0; i < x->buffer_pos; i++){
-	post("%d %c 0x%x", i, x->buffer[i], x->buffer[i]);
-	}
-	*/
+
 	t_atom a[2];
 	atom_setlong(a, x->buffer_pos);
 	atom_setlong(a + 1, (long)(x->buffer));
 	outlet_anything(x->outlet, gensym("FullPacket"), 2, a);
+	*/
 }
 
 void omessage_mousedown(t_omessage *x, t_object *patcherview, t_pt pt, long modifiers){
