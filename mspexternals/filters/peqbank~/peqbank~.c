@@ -50,6 +50,8 @@ VERSION 2.2: Added "bank" message as a synonym for "list", dsp_free fixed -mz
 VERSION 2.3: Tried to make peqbank_compute() be reentrant.
 VERSION 2.3.1 Fixed crash caused by maxelem() and peqbank_reset() calling peqbank_free() --JM
 VERSION 2.4: Support for multiple channels, vector optimization, built with Intel CC
+VERSION 2.5: Support for internal generation of biquad cascade for high/low pass cheby/butterworth filter
+VERSION 2.5.1: Fix denormal problem
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 
@@ -173,7 +175,7 @@ typedef struct _peqbank {
 
 } t_peqbank;
 
-t_symbol *ps_maxelem, *ps_shelf, *ps_peq, *ps_fast, *ps_smooth, *ps_channels;
+t_symbol *ps_maxelem, *ps_shelf, *ps_peq, *ps_fast, *ps_smooth, *ps_channels, *ps_highpass, *ps_lowpass;
 
 t_int *peqbank_perform_smooth(t_int *w);
 t_int *peqbank_perform_fast(t_int *w);
@@ -194,6 +196,8 @@ void peqbank_fast(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_smooth(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_list(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
+void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
+int peqbank_cheby_coeffs(t_peqbank *x, float freq, int type, int order, float ripple);
 void peqbank_init(t_peqbank *x);
 void peqbank_assist(t_peqbank *x, void *b, long m, long a, char *s);
 void *peqbank_new(t_symbol *s, short argc, t_atom *argv);
@@ -220,6 +224,8 @@ int main(void) {
 	ps_fast    = gensym("fast");
 	ps_smooth  = gensym("smooth");
     ps_channels = gensym("channels");
+	ps_highpass = gensym("highpass");
+	ps_lowpass = gensym("lowpass");
 	
 	setup( (t_messlist **)&peqbank_class, (method)peqbank_new, (method)peqbank_free,
 			(short)sizeof(t_peqbank), 0L, A_GIMME, 0);
@@ -253,6 +259,8 @@ int main(void) {
 	addmess((method)version, "version", 0);
 	addmess((method)peqbank_tellmeeverything, "tellmeeverything", 0);
 	addmess((method)peqbank_biquads, "biquads", A_GIMME);
+	addmess((method)peqbank_cheby, "highpass", A_GIMME);
+	addmess((method)peqbank_cheby, "lowpass", A_GIMME);
 	
 	dsp_initclass();
 	
@@ -422,7 +430,7 @@ t_int *peqbank_perform_smooth(t_int *w) {
 		// interpolating away from, are not needed any more.
 		
 		if (x->freecoeff != 0) {
-			post("¥ peqbank~ disaster (smooth)!  freecoeff should be zero now!");
+			post("peqbank~: disaster (smooth)!  freecoeff should be zero now!");
 		}
 		
 #ifdef DEBUG	
@@ -445,7 +453,7 @@ t_int *peqbank_perform_fast(t_int *w) {
 	
 	if (x->coeff != x->oldcoeff) {
 		if (x->freecoeff != 0) {
-			post("¥ peqbank~ disaster (fast)!  freecoeff should be zero now!");
+			post("peqbank~: disaster (fast)!  freecoeff should be zero now!");
 		}
 		x->freecoeff = x->oldcoeff;
 		x->oldcoeff = x->coeff;		
@@ -515,7 +523,7 @@ t_int *peqbank_perform_fast_multi(t_int *w) {
 	
 	if (x->coeff != x->oldcoeff) {
 		if (x->freecoeff != 0) {
-			post("¥ peqbank~ disaster (fast)!  freecoeff should be zero now!");
+			post("peqbank~: disaster (fast)!  freecoeff should be zero now!");
 		}
 		x->freecoeff = x->oldcoeff;
 		x->oldcoeff = x->coeff;		
@@ -566,6 +574,7 @@ void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
 			}
 			
 #pragma ivdep
+#pragma loop_count min(2) max(1000) avg(20)
 			for(c = 0; c < x->b_channels; c++) {
                 yn[c] = (a0 * xn[c]) + (a1 * xm1[c]) + (a2 * xm2[c]) - (b1 * ym1[c]) - (b2 * ym2[c]);
 			}
@@ -576,6 +585,7 @@ void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
 			}
 			
 #pragma ivdep
+#pragma loop_count min(2) max(1000) avg(20)
 			for(c = 0; c < x->b_channels; c++) {
                 xm2[c] = xm1[c];
                 xm1[c] = xn[c];
@@ -851,7 +861,6 @@ void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 		return;
 	}
 	
-	
 	for (i = 0; i < argc; ++i) {
 		x->newcoeff[i] = ASFLOAT(argv[i]);
 	}
@@ -863,7 +872,184 @@ void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	swap_in_new_coeffs(x);	
 }		
 		
+void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
+	
+	float freq;
+	int order;
+	float ripple;
+	
+	int i;
+	
+	for (i = 0; i < argc; ++i) {
+		if (argv[i].a_type == A_SYM) {
+			error("peqbank~: all arguments to highpass message must be numbers");
+			return;
+		}
+	}
+	
+	if (argc == 0) {
+		error("peqbank~: message must have at least one argument");
+		return;
+	}
+	
+	if (argc > 3) {
+		error("peqbank~: message must not more than three arguments");
+		return;
+	}
+	
+	freq = 1000.;
+	
+	if(argc > 0) {
+		freq = atom_getfloatarg(0, argc, argv);
+	}
+	if(argc > 1) {
+		order = atom_getintarg(1, argc, argv);
+	} else {
+		order = 8;
+	}
+	
+	if(order % 2 != 0 || order > 8) {
+		post("peqbank~: bad order, must be even number 2-8");
+	}
+	
+	if(argc > 2) {
+		ripple = atom_getfloatarg(1, argc, argv);
+	} else {
+		ripple = 0.8;
+	}
+	
+	if (order/2 > x->b_max) {
+		error("peqbank~: not enough space for cascade (only memory for %d filters)", x->b_max);
+		return;
+	}
+	
+	if(s == ps_highpass) {
+		if(peqbank_cheby_coeffs(x, freq, 1, order, ripple) != 0) {
+			post("peqbank~: error calculating cheby filter coefficients");
+		}
+	} else {
+		if(peqbank_cheby_coeffs(x, freq, 0, order, ripple) != 0) {
+			post("peqbank~: error calculating cheby filter coefficients");
+		}
+	}
+}	
+
+int peqbank_cheby_coeffs(t_peqbank *x, float freq, int type, int order, float ripple) {
+
+	int error=0;
+
+	float FC, PR;
+	float A0, A1, A2, B1, B2;
+	float RP, IP, ES, VX, KX, T, W, M, D, K, X0, X1, X2, Y1, Y2;
+	float GAIN;
+	unsigned int LH, NP, P;
+
+	FC = freq;
+	LH = type;
+	PR = ripple;
+	NP = order;
+	
+	// sanity check input parameters
+	if ((NP < 2) || (NP > 8) || (NP % 2))
+	{
+		post("peqbank~: cheby: invalid number of poles as argument, must be an even number between 2 and 8");
+		error = 1;
+	}
+	
+	if ((LH != 1) && (LH != 0))
+	{
+		post("peqbank~: cheby: lowpass/highpass selector out of range (must be 1 or 0)");
+		error = 1;
+	}
+	
+	FC = FC / sys_getsr();
+	if (FC > 0.5f)
+	{
+		post("peqbank~: cheby: cutoff frequency out of range (fs = %f)", sys_getsr());
+		error = 1;
+	}
+	
+	if ((PR < 0) || (PR > 29))
+	{
+		post("peqbank~: cheby: percent ripple out of range");
+		error = 1;
+	}
+	
+	if (error)
+	{
+		return 1;
+	}
+	else
+	{
+		//	fprintf(stderr, "cheby: calculating biquad coefficients, FC = %f\n",FC);
+		for (P=0;P<NP/2;P++)
+		{
+			// fprintf(stderr, "cheby: calculating biquad coefficients\n");
+			// calculate pole location on unit circle
+			RP = -cos(PI/(NP*2) + P * PI/NP);
+			IP =  sin(PI/(NP*2) + P * PI/NP);
+			// fprintf(stderr, "cheby: RP = %f IP = %f\n", RP, IP);
+			
+			// warp from a circle to an ellipse
+			if (PR != 0)
+			{
+				ES = sqrt(((100.0f/(100.0f-PR))*(100.0f/(100.0f-PR)))-1.0f);
+				VX = (1.0f/NP) * log((1.0f/ES) + sqrt((1.0f/(ES*ES))+1.0f));
+				KX = (1.0f/NP) * log((1.0f/ES) + sqrt((1.0f/(ES*ES))-1.0f));
+				KX = (exp(KX) + exp(-KX))/2.0f;
+				RP = RP * ((exp(VX) - exp(-VX))/2.0f)/KX; 
+				IP = IP * ((exp(VX) + exp(-VX))/2.0f)/KX;
+			}
+			// fprintf(stderr, "cheby: after warping RP = %f IP = %f\n", RP, IP);
+			// fprintf(stderr, "cheby: ES = %f VX = %f KX = %f\n", ES, VX, KX);
+			
+			// s-domain to z-domain conversion
+			T  = 2 * tan(0.5f); 
+			W  = 2*PI*FC;
+			M  = (RP*RP) + (IP*IP);
+			D  = 4 - 4*RP*T + M*(T*T); 
+			X0 = (T*T)/D;
+			X1 = 2*(T*T)/D;
+			X2 = (T*T)/D;
+			Y1 = (8 - 2*M*(T*T))/D;
+			Y2 = (-4 - 4*RP*T - M*(T*T))/D;
+			
+			// lopass to lopass or lopass to hipass transform
+			if (LH == 1)
+				K = -cos(W/2.0f + 0.5f) / cos(W/2.0f - 0.5f);
+			if (LH == 0)
+				K =  sin(0.5f - W/2.0f) / sin(0.5f + W/2.0f);
+			
+			D  = 1.0f + Y1*K - Y2*(K*K); 
+			A0 = (X0 - X1*K + X2*(K*K))/D;
+			A1 = (-2*X0*K + X1 + X1*(K*K) - 2*X2*K)/D;
+			A2 = (X0*(K*K) - X1*K + X2)/D;
+			B1 = (2*K + Y1 + Y1*(K*K) - 2*Y2*K)/D;
+			B2 = (-(K*K) - Y1*K + Y2)/D;
+			GAIN = (1.0f - (B1 + B2)) / (A0 + A1 + A2);
+			if (LH == 1)
+			{
+				A1 = -A1;
+				B1 = -B1;
+			}
+			
+			// fprintf(stderr, "coeffs: %f %f %f %f %f : gain %f\n",A0*GAIN,A1*GAIN,A2*GAIN,B1*GAIN,B2*GAIN, GAIN);
+			
+			x->newcoeff[(P*5)]   = A0 * GAIN;
+			x->newcoeff[(P*5)+1] = A1 * GAIN;
+			x->newcoeff[(P*5)+2] = A2 * GAIN;
+			x->newcoeff[(P*5)+3] = -B1;
+			x->newcoeff[(P*5)+4] = -B2;
+		}
 		
+		/* These should happen atomically... */
+		x->b_start = 0;
+		x->b_nbpeq = P-1;    /* The first biquad is the "shelf"; the other n-1 are the "peq"s */
+		swap_in_new_coeffs(x);
+		
+		return 0;
+	}
+}
 
 void peqbank_init(t_peqbank *x) {
 	// memory allocation has been moved to peqbank_allocmem() --JM
@@ -979,9 +1165,8 @@ void peqbank_allocmem(t_peqbank *x){
 	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
 	    x->freecoeff == NIL || x->b_ym1 == NIL || x->b_ym2 == NIL || x->b_xm1 == NIL || 
 	    x->b_xm2 == NIL || x->myList == NIL) {
-		post("¥ peqbank~: warning: not enough memory.  Expect to crash soon.");
+		post("peqbank~: warning: not enough memory.  Expect to crash soon.");
 	}
-
 }
 
 void peqbank_freemem(t_peqbank *x){
@@ -1059,7 +1244,7 @@ void swap_in_new_coeffs(t_peqbank *x) {
 #endif
 
 		if (x->freecoeff == 0) {
-			post("¥ peqbank: disaster!  freecoeff shouldn't be zero here!");
+			post("peqbank: disaster!  freecoeff shouldn't be zero here!");
 			   post("  coeff = %p, oldcoeff = %p, newcoeff = %p, freecoeff = %p",
    					x->coeff, x->oldcoeff, x->newcoeff, x->freecoeff);
 
