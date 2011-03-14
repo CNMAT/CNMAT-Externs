@@ -115,6 +115,8 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 #define expf exp
 #endif
 
+#define FLUSH_TO_ZERO(fv) (((*(unsigned int*)&(fv))&0x7f800000)==0)?0.0f:(fv)
+
 
 #undef PI  /* so we can use the one below instead of the one from math.h */
 #undef TWOPI /* ditto */
@@ -415,14 +417,13 @@ t_int *peqbank_perform_smooth(t_int *w) {
 		
 			} // Interpolation loop						
 
-			x->b_xm2[k] = i2;
-			x->b_xm1[k] = i3;
-			x->b_ym2[k] = y0;
-			x->b_ym1[k] = y1;
+			x->b_xm2[k] = FLUSH_TO_ZERO(i2);
+			x->b_xm1[k] = FLUSH_TO_ZERO(i3);
+			x->b_ym2[k] = FLUSH_TO_ZERO(y0);
+			x->b_ym1[k] = FLUSH_TO_ZERO(y1);
 			k ++;
 			
 		} // cascade loop
-			
 		
 		
 		// Now that we've made it to the end of the signal vector, the "old" coefficients are
@@ -502,10 +503,10 @@ t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 			ym1 = yn;
 		}
 		
-		x->b_xm2[k] = xm2;
-		x->b_xm1[k] = xm1;
-		x->b_ym2[k] = ym2;
-		x->b_ym1[k] = ym1;		
+		x->b_xm2[k] = FLUSH_TO_ZERO(xm2);
+		x->b_xm1[k] = FLUSH_TO_ZERO(xm1);
+		x->b_ym2[k] = FLUSH_TO_ZERO(ym2);
+		x->b_ym1[k] = FLUSH_TO_ZERO(ym1);		
 		k ++;
 		
 	} // cascade loop
@@ -595,10 +596,10 @@ void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
 		}
 		
 		for(c = 0; c < x->b_channels; c++) {
-            x->b_xm2[k*x->b_channels + c] = xm2[c];
-            x->b_xm1[k*x->b_channels + c] = xm1[c];
-            x->b_ym2[k*x->b_channels + c] = ym2[c];
-            x->b_ym1[k*x->b_channels + c] = ym1[c];		
+            x->b_xm2[k*x->b_channels + c] = FLUSH_TO_ZERO(xm2[c]);
+            x->b_xm1[k*x->b_channels + c] = FLUSH_TO_ZERO(xm1[c]);
+            x->b_ym2[k*x->b_channels + c] = FLUSH_TO_ZERO(ym2[c]);
+            x->b_ym1[k*x->b_channels + c] = FLUSH_TO_ZERO(ym1[c]);		
         }
         
 		k ++;

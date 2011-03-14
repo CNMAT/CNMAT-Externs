@@ -16,7 +16,7 @@
 /* Begin PBXBuildRule section */
 		A163848E1048A2B30008DE94 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
-			compilerSpec = com.intel.compilers.icc.11_1_0;
+			compilerSpec = com.apple.compilers.gcc;
 			fileType = sourcecode.c;
 			isEditable = 1;
 			outputFiles = (
