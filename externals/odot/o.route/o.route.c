@@ -40,8 +40,6 @@ VERSION 0.1: Addresses to match can now have patterns
 #include "osc.h"
 #include "omax_util.h"
 
-#define MAX_NUM_MESSAGES 1024
-
 #define PF __PRETTY_FUNCTION__
 
 typedef struct _oroute_message{
@@ -74,10 +72,6 @@ typedef struct _oroute{
 	// we have an array of preallocated messages that we'll use, but we'll
 	// organize them in a linked list as we accumulate them so that we can 
 	// just rip through that list when it's time to output them later
-	t_oroute_message *messages;
-	t_oroute_message *message_buf;
-	int numMessages, message_buf_len;
-	//int bundle_partial_matches;
 	int max_message; // set this to note that the event originated as a max message and not a FullPacket
 	t_osc_msg oscschemalist;
 } t_oroute;
@@ -148,35 +142,32 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 	if(!m){
 		return;
 	}
-	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc = 0;
 	//char buf[len], *bufp = buf;
-	char *buf = (char *)sysmem_newptr(len);
+	char buf[len];
 	char *bufp = buf;
-	int buflen = len;
+
 	memset(buf, '\0', len);
 	memcpy(buf, ptr, 16);
 	bufp += 16;
 	int last_outlet_num = -1;
 	//printf("*******************************************\n");
 	int counter = 0;
-	while(m->next){
+	int maxnumatoms = m->msg.argc;
+	t_oroute_message *last = m;
+	while(m){
+		if(m->msg.argc > maxnumatoms){
+			maxnumatoms = m->msg.argc;
+		}
+		last = m;
 		m = m->next;
 		//post("%d: %p <- %p -> %p, address: %s", counter++, m->prev, m, m->next, m->msg.address);
 	}
+	maxnumatoms++;
+	m = last;
+	t_atom argv[maxnumatoms];
 	counter = 0;
 	while(m){
-		if((bufp - buf) + m->msg.size >= buflen){
-			int oldlen = bufp - buf;
-			buf = sysmem_resizeptr(buf, oldlen + m->msg.size);
-			if(!buf){
-				object_error((t_object *)x, "out of memory!");
-				return;
-			}
-			bufp = buf + oldlen;
-			memset(bufp, '\0', m->msg.size);
-		}
-		//printf("m = %p\n", m);
 		if(last_outlet_num != m->outlet_num && last_outlet_num >= 0 && bufp - buf > 16){
 			t_atom out[2];
 			atom_setlong(out, bufp - buf);
@@ -187,7 +178,6 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 		}
 		if(m->full_match){
 #ifdef SELECT
-			//outlet_anything(x->outlets[m->outlet_num], gensym(atom_getsym(argv)->s_name), argc - 1, argv + 1);
 			char *size = bufp;
 			bufp += 4;
 			strcpy(bufp, m->msg.address);
@@ -255,57 +245,31 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 		atom_setlong(out + 1, (long)buf);
 		outlet_anything(x->outlets[last_outlet_num], gensym("FullPacket"), 2, out);
 	}
-	sysmem_freeptr(argv);
-	sysmem_freeptr(buf);
 }
 
 void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 	if(!m){
 		return;
 	}
-	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
 	long argc;
-	while(m->next){
+	int maxnumatoms = m->msg.argc;
+	t_oroute_message *last = m;
+	while(m){
+		if(m->msg.argc > maxnumatoms){
+			maxnumatoms = m->msg.argc;
+		}
+		last = m;
 		m = m->next;
 	}
+	m = last;
+	t_atom argv[maxnumatoms];
 	while(m){
 		omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
 		outlet_anything(x->outlets[m->outlet_num], atom_getsym(argv), argc - 1, argv + 1);
 		m = m->prev;
 	}
-	sysmem_freeptr(argv);
 }
-/*
-void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
-	if(!m){
-		return;
-	}
-	//t_oroute_message *m = x->messages;
-	//t_atomarray *a = NULL;
-	t_atom *argv = (t_atom *)sysmem_newptr(128 * sizeof(t_atom));
-	long argc;
-	while(m->next){
-		m = m->next;
-	}
-	while(m){
-	        //a = omax_util_oscMsg2MaxAtoms(&(m->msg));
-		omax_util_oscMsg2MaxAtoms(&(m->msg), &argc, argv);
-		if(m->full_match){
-			//atomarray_getatoms(a, &argc, &argv);
-			outlet_list(x->outlets[m->outlet_num], NULL, argc - 1, argv + 1);
-			//atomarray_clear(a);
-		}else{
-			//atomarray_getatoms(a, &argc, &argv);
-			if(argc){
-				outlet_anything(x->outlets[m->outlet_num], gensym(((atom_getsym(argv)->s_name) + m->offset)), argc - 1, argv + 1);
-				//atomarray_clear(a);
-			}
-		}
-		m = m->prev;
-	}
-	sysmem_freeptr(argv);
-}
-*/
+
 void oroute_cbk(t_osc_msg msg, void *context){
 	if(!(msg.address)){
 		return;
@@ -449,20 +413,18 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 		object_error((t_object *)x, "OSC addresses must begin with a /");
 		return;
 	}
-	char *buffer = (char *)sysmem_newptr(1024);
-	memset(buffer, '\0', 1024);
+	int len = omax_util_get_bundle_size_for_atoms(msg, argc, argv);
+	char buffer[len];
+	memset(buffer, '\0', len);
 	t_atom av[argc + 1];
 	atom_setsym(av, msg);
 	memcpy(av + 1, argv, argc * sizeof(t_atom));
-	long len = 1024;
-	//len = osc_util_make_bundle_from_atoms(argc + 1, av, &len, buffer);
 	strncpy(buffer, "#bundle\0", 8);
 	*((long long *)(buffer + 8)) = hton64(1ll);
 	len = omax_util_encode_atoms(buffer + 16, msg, argc, argv);
 	x->max_message = 1;
 
 	oroute_fullPacket(x, len + 16, (long)buffer);
-	sysmem_freeptr(buffer);
 
 	/*
 	int len = cmmjl_osc_get_msg_length_max(msg, argc, argv);
@@ -499,11 +461,15 @@ void oroute_set(t_oroute *x, long index, t_symbol *sym){
 
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
-		sprintf(s,"Probability distribution and arguments");
+		if(a == x->numArgs){
+			sprintf(s, "Unmatched messages (delegation)");
+		}else{
+			sprintf(s, "Messages that match %s", x->args[a]->s_name);
+		}
 	else {
 		switch (a) {	
 		case 0:
-			sprintf(s,"Random variate");
+			sprintf(s,"OSC bundle (FullPacket) or Max message");
 			break;
 		}
 	}
@@ -517,6 +483,10 @@ void oroute_free(t_oroute *x){
 	if(x->haswildcard){
 		free(x->haswildcard);
 	}
+	// the address is 4 bytes into the block of memory we allocated in the new routine.
+	if(x->oscschemalist.address){
+		free(x->oscschemalist.address - 4);
+	}
 }
 
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
@@ -528,8 +498,6 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 		x->args = (t_symbol **)malloc(numArgs * sizeof(t_symbol *));
 		x->haswildcard = (int *)calloc(numArgs, sizeof(int));
 		x->numArgs = numArgs;
-		//x->message_buf = (t_oroute_message *)sysmem_newptr(MAX_NUM_MESSAGES * sizeof(t_oroute_message));
-		x->messages = NULL;
 		critical_new(&(x->lock));
 		x->outlets[numArgs] = outlet_new(x, "FullPacket"); // unmatched outlet
 		int schemalist_len = 24 + numArgs + 2;
@@ -556,11 +524,10 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 				}
 			}
 		}
-		char *schemalist = sysmem_newptr(schemalist_len);
+		char *schemalist = (char *)calloc(sizeof(char), schemalist_len);
 		memset(schemalist, '\0', schemalist_len);
 		omax_util_encode_atoms(schemalist, ps_oscschemalist, numArgs, argv);
 		osc_message_parseMessage(-1, schemalist, &(x->oscschemalist));
-		printf("size = %d\n", x->oscschemalist.size);
 		
 		attr_args_process(x, argc, argv);
 	}
@@ -577,7 +544,7 @@ int main(void){
 	char *name = "o.route";
 #endif
 	t_class *c = class_new(name, (method)oroute_new, (method)oroute_free, sizeof(t_oroute), 0L, A_GIMME, 0);
-    
+    	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)oroute_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oroute_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oroute_assist, "assist", A_CANT, 0);

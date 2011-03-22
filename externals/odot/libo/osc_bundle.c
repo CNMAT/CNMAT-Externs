@@ -30,6 +30,12 @@ t_osc_err osc_bundle_makeBundle(int len, char *buf, t_osc_bundle *bundle){
 	return osc_bundle_getMessages(len, buf, &(bundle->num_messages), &(bundle->messages));
 }
 
+t_osc_bundle *osc_bundle_alloc(void){
+	t_osc_bundle *b = (t_osc_bundle *)osc_mem_alloc(sizeof(t_osc_bundle));
+	b->messages = NULL;
+	b->num_messages = 0;
+}
+
 void osc_bundle_freeBundle(t_osc_bundle *bundle){
 	if(bundle->messages){
 		t_osc_msg *m = bundle->messages;
@@ -128,18 +134,17 @@ int osc_bundle_bundleNakedMessage(long n, char *ptr, char **out){
 		*out = (char *)osc_mem_alloc(n + 20);
 	}
 	char buf[n + OSC_HEADER_SIZE + 4];
-	osc_bundle_setBundleID(*out);
+	osc_bundle_setBundleID(buf);
 #ifndef OSC_2_0
-	*((long long *)(buf + OSC_ID_SIZE)) = 0x000000001; // now
+	*((uint64_t *)(buf + OSC_ID_SIZE)) = 0x000000001; // now
 #endif
-	*((long *)(buf + OSC_HEADER_SIZE)) = hton32(n);
+	*((uint32_t *)(buf + OSC_HEADER_SIZE)) = hton32(n);
 	memcpy(buf + OSC_HEADER_SIZE + 4, ptr, n);
 	memcpy(*out, buf, n + OSC_HEADER_SIZE + 4);
 	return n + OSC_HEADER_SIZE + 4;
 }
 
 int osc_bundle_flatten(long n, char *ptr, char **out){
-	printf("%p\n", *out);
 	// out could be the same as ptr for an inplace operation, so do everything locally and then copy
 	if(osc_bundle_strcmpID(ptr)){
 		char *cpy;
@@ -175,7 +180,8 @@ t_osc_err osc_bundle_printBundle(int len, char *buf, int (*p)(const char *, ...)
 	char timetag_string[64];
 	timetag_string[0] = '\0';
 	//ret = osc_timetag_format(osc_bundle_getTimetag(buf), timetag_string);
-	p("[ "OSC_ID" timetag: %s\n", timetag_string);
+	p("[ %s timetag: %s\n", OSC_ID, timetag_string);
+	//p("[ %s\n", OSC_ID);
 	osc_bundle_getMessagesWithCallback(len, buf, osc_bundle_printBundleCbk, (void *)p);
 	p("]\n");
 	return OSC_ERR_NONE;
@@ -250,7 +256,23 @@ t_osc_err osc_bundle_lookupAddress(t_osc_bundle *bundle, char *address, t_osc_ms
 	}
 }
 
-t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, int *len){
+t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message){
+	t_osc_msg *m = bundle->messages;
+	if(!m){
+		bundle->messages = message;
+		bundle->num_messages = 1;
+		return OSC_ERR_NONE;
+	}
+	while(m->next){
+		m = m->next;
+	}
+	m->next = message;
+	message->prev = m;
+	message->next = NULL;
+	bundle->num_messages++;
+}
+
+t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, long *len){
 	t_osc_msg *m = bundle->messages;
 	*len = OSC_HEADER_SIZE;
 	while(m){
@@ -260,7 +282,7 @@ t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, int *len){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, int *len, char **buffer){
+t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, long *len, char **buffer){
 	t_osc_err ret;
 	if(ret = osc_bundle_getSerializedLen(bundle, len)){
 		return ret;
@@ -271,4 +293,12 @@ t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, int *len, char **buffer){
 
 t_osc_err osc_bundle_serializeWithBuffer(t_osc_bundle *bundle, char *buffer){
 	t_osc_err ret;
+	char *ptr = buffer;
+	osc_bundle_setBundleID(ptr);
+	ptr += OSC_HEADER_SIZE;
+	t_osc_msg *m = bundle->messages;
+	while(m){
+		ptr += osc_message_serialize(m, ptr);
+		m = m->next;
+	}
 }

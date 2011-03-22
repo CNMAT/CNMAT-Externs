@@ -20,6 +20,13 @@ HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+/** 	\file osc_message.h
+	\author John MacCallum
+	\brief Utilities for manipulating OSC messages
+
+
+*/
+
 #ifndef __OSC_MESSAGE_H__
 #define __OSC_MESSAGE_H__
 
@@ -143,8 +150,8 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...));
 /**
  * Rename a message.
  *
- * @param len The length of the current OSC message
- * @param buffer The message to be renamed
+ * @param len The length of the current OSC message not including the 4-byte size
+ * @param buffer The message to be renamed.  The first 4 bytes can be the size in network order, or the first byte can point to the first character of the address.  This function will look at the first byte and if it is not a /, it will assume it's the size and skip over it.
  * @param new_address The new address
  * @param new_buffer The address of a buffer where the newly renamed message will be stored.
  *		This can be the same as buffer for an inplace rename as long as new_buffer is long enough
@@ -152,6 +159,18 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...));
  * @return The length of new_buffer in bytes
  */
 int osc_message_rename(int len, char *buffer, char *new_address, char **new_buffer);
+
+/**
+ * Serialize an OSC message using preallocated memory.
+ *
+ * @param m The OSC message to be serialized
+ * @param buffer A buffer to hold the serialized array
+ * @return The length of the serialized message in bytes including the 4-byte size
+ */
+int osc_message_serialize(t_osc_msg *m, char *buffer);
+
+t_osc_err osc_message_setAddress(t_osc_msg *m, char *address);
+t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int argv_len_bytes, char *argv);
 
 #ifdef __cplusplus
 }

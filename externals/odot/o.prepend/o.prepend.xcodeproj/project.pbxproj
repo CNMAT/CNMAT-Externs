@@ -245,6 +245,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -253,12 +254,11 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					..,
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = /Users/john/Development/cnmat/trunk/max/externals/odot/libo;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = (
@@ -269,7 +269,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../libo\"";
 				LIBRARY_STYLE = Bundle;
-				OTHER_CFLAGS = "";
+				OTHER_CFLAGS = "-g";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/../libo/libo.a\"";

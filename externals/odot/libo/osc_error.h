@@ -39,10 +39,40 @@ typedef uint64_t t_osc_err;
 #define OSC_ERR_NOBUNDLE 0x10
 #define OSC_ERR_OUTOFMEM 0x11
 #define OSC_ERR_NULLPTR 0x12
+#define OSC_ERR_BADTYPETAG 0x14
 
+/**
+ * Get a description of an error code.
+ *
+ * @param err The error code
+ * @return A string that describes the error.
+ */
 char *osc_error_string(t_osc_err err);
+
+/**
+ * Verify that a bundle is constructed properly.
+ *
+ * @param len The length of the bundle in bytes.
+ * @param bundle The bundle to be verified.
+ * @return An error code or #OSC_ERR_NONE
+ */
 t_osc_err osc_error_bundleSanityCheck(int len, char *bundle);
+
+/**
+ * Verify that a message is constructed properly.  The lengthe should be encoded in network
+ * order in the first 4 bytes which is why it is not passed as a parameter to the function.
+ *
+ * @param msg The message to be verified.
+ * @return An error code or #OSC_ERR_NONE
+ */
 t_osc_err osc_error_msgSanityCheck(char *msg);
+
+/**
+ * Verify that an address is a properly formated OSC address.
+ *
+ * @param address The message to be verified.
+ * @return An error code or #OSC_ERR_NONE
+ */
 t_osc_err osc_error_validateAddress(char *address);
 
 #ifdef __cplusplus

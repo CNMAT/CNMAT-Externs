@@ -47,6 +47,8 @@ char *osc_error_string(t_osc_err err){
 		return "out of memory";
 	case OSC_ERR_NULLPTR:
 		return "got a NULL pointer unexpectedly";
+	case OSC_ERR_BADTYPETAG:
+		return "encountered a discrepancy between a typetag and a piece of data";
 	default:
 		return "unrecognized error code";
 	}
@@ -63,6 +65,7 @@ t_osc_err osc_error_bundleSanityCheck(int len, char *bundle){
 		return OSC_ERR_NOBUNDLEID;
 	}
 	char *ptr = bundle + OSC_HEADER_SIZE;
+	int i = 0;
 	while((ptr - bundle) < len){
 		int size = ntoh32(*((uint32_t *)ptr));
 		int ret;

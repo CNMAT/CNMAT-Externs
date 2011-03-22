@@ -37,8 +37,7 @@ VERSION 1.0: New name
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "omax_util.h"
-#include "liboio/osc_util.h"
-#include "liboio/osc_match.h"
+#include "osc.h"
 
 typedef struct _omap{
 	t_object ob;
@@ -73,39 +72,22 @@ void omap_fullPacket(t_omap *x, long len, long ptr){
 		x->buffer_pos += len - 16;
 		return;
 	}
-	// make a local copy so the ref doesn't disappear out from underneath us
-	char cpy[len];
-	memcpy(cpy, (char *)ptr, len);
-	long nn = len;
-
-	// if the OSC packet contains a single message, turn it into a bundle
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, cpy, cpy);
-		if(nn < 0){
-			error("problem bundling naked message");
-		}
-	}
-
-	// flatten any nested bundles
-	nn = osc_util_flatten(nn, cpy, cpy);
-
-	memcpy(x->buffer, cpy, 16);
+	memset(x->buffer, '\0', x->buffer_len);
+	memcpy(x->buffer, (char *)ptr, 16);
 	x->buffer_pos = 16;
 
-	// extract the messages from the bundle
-	//cmmjl_osc_extract_messages(nn, cpy, true, omap_cbk, (void *)x);
-	osc_util_parseBundleWithCallback(nn, cpy, omap_cbk, (void *)x);
+	osc_bundle_getMessagesWithCallback(len, (char *)ptr, omap_cbk, (void *)x);
 
 	t_atom out[2];
-	atom_setlong(out, x->buffer_pos);
-	atom_setlong(out + 1, (long)x->buffer);
+	//lock
+	int buffer_pos = x->buffer_pos;
+	x->buffer_pos = 0;
+	char buffer[buffer_pos];
+	memcpy(buffer, x->buffer, buffer_pos);
+	//unlock
+	atom_setlong(out, buffer_pos);
+	atom_setlong(out + 1, (long)buffer);
 	outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
-	/*
-	int i;
-	for(i = 0; i < x->buffer_pos; i++){
-		post("%d %c 0x%x", i, x->buffer[i], x->buffer[i]);
-	}
-	*/
 }
 
 void omap_cbk(t_osc_msg msg, void *v){
@@ -160,7 +142,8 @@ void omap_list(t_omap *x, t_symbol *msg, short argc, t_atom *argv){
 		t_symbol *address = atom_getsym(argv);
 		if(*(address->s_name) == '/'){
 			//x->buffer_pos += cmmjl_osc_make_bundle_from_atoms(argc, argv, &(x->buffer_len), x->buffer + x->buffer_pos);
-			x->buffer_pos += osc_util_make_bundle_from_atoms(argc, argv, &(x->buffer_len), x->buffer + x->buffer_pos);
+			//x->buffer_pos += osc_util_make_bundle_from_atoms(argc, argv, &(x->buffer_len), x->buffer + x->buffer_pos);
+			x->buffer_pos += omax_util_encode_atoms(x->buffer + x->buffer_pos, address, argc - 1, argv + 1);
 			return;
 		}
 	}
@@ -169,7 +152,8 @@ void omap_list(t_omap *x, t_symbol *msg, short argc, t_atom *argv){
 	atom_setsym(av, address);
 	memcpy(av + 1, argv, argc * sizeof(t_atom));
 	//x->buffer_pos += cmmjl_osc_make_bundle_from_atoms(argc + 1, av, &(x->buffer_len), x->buffer + x->buffer_pos);
-	x->buffer_pos += osc_util_make_bundle_from_atoms(argc + 1, av, &(x->buffer_len), x->buffer + x->buffer_pos);
+	//x->buffer_pos += osc_util_make_bundle_from_atoms(argc + 1, av, &(x->buffer_len), x->buffer + x->buffer_pos);
+	x->buffer_pos += omax_util_encode_atoms(x->buffer + x->buffer_pos, address, argc, argv);
 
 
 	/*
@@ -258,7 +242,7 @@ void *omap_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.mappatch", (method)omap_new, (method)omap_free, sizeof(t_omap), 0L, A_GIMME, 0);
-    
+    	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)omap_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)omap_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)omap_assist, "assist", A_CANT, 0);

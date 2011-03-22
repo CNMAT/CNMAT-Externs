@@ -21,6 +21,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
 /** \file osc_mem.h
+    \author John MacCallum
 \brief Memory management functions
 
 This file contains functions for allocating, resizing, and freeing memory that
@@ -38,6 +39,7 @@ extern "C" {
 #endif
 
 #include <stdlib.h> // for size_t
+#include "osc_error.h"
 
 /**
  * Memory allocator used by libo.  Defaults to malloc.
@@ -48,7 +50,8 @@ extern "C" {
 void *osc_mem_alloc(size_t size);
 
 /**
- * Resize a block of memory.  Defaults to realloc.
+ * Resize a block of memory.  Defaults to realloc.  If ptr is NULL, this function
+ * will call osc_mem_alloc().
  *
  * @param ptr The pointer to be resized.
  * @param size The new size.
@@ -84,6 +87,36 @@ void osc_set_mem(void *(*malloc_func)(size_t),
  * @return The size.
  */
 size_t osc_sizeof(unsigned char typetag, char *data);
+
+/**
+ * Indicates whether a given typetag should have its data translated to/from network order
+ *
+ * @param typetag The typetag in question
+ * @return true or false (nonzero or zero)
+ */
+int osc_mem_shouldByteswap(unsigned char typetag);
+
+/**
+ * Byteswap a piece of data if necessary.  This function calls osc_mem_shouldByteswap() on
+ * the typetag to see whether a call to htonXX is necessary.
+ *
+ * @param typetag The typetag that will be used to determine whether a call to htonXX is necessary
+ * @param data A char array containing the data to be encoded
+ * @param out The address of a char array where the result will be placed.
+ * @return An error code or #OSC_ERR_NONE
+ */
+t_osc_err osc_mem_encodeByteorder(unsigned char typetag, char *data, char **out);
+
+/**
+ * Byteswap a piece of data if necessary.  This function calls osc_mem_shouldByteswap() on
+ * the typetag to see whether a call to ntohXX is necessary.
+ *
+ * @param typetag The typetag that will be used to determine whether a call to ntohXX is necessary
+ * @param data A char array containing the data to be encoded
+ * @param out The address of a char array where the result will be placed.
+ * @return An error code or #OSC_ERR_NONE
+ */
+t_osc_err osc_mem_decodeByteorder(unsigned char typetag, char *data, char **out);
 
 #ifdef __cplusplus
 }

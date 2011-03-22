@@ -372,7 +372,7 @@ void *oop_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.op", (method)oop_new, (method)oop_free, sizeof(t_oop), 0L, A_GIMME, 0);
-    
+    osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)oop_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oop_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oop_assist, "assist", A_CANT, 0);

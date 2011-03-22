@@ -6,6 +6,39 @@
 
 int main(int len, char **argv){
 	char buf[1024];
+	char *bufptr = buf;
+	bufptr += 4;
+	char *address = "/foo/barf";
+	strcpy(bufptr, address);
+	bufptr += strlen(address);
+	bufptr++;
+	while((bufptr - buf) % 4){
+		bufptr++;
+	}
+	*bufptr++ = ',';
+	*bufptr++ = 's';
+	*bufptr++ = '\0';
+	*bufptr++ = '\0';
+
+	char *data = "foo";
+	strcpy(bufptr, data);
+	bufptr += 3;
+	*bufptr++ = '\0';
+
+	*((uint32_t *)buf) = hton32(bufptr - buf - 4);
+
+	char buf2[1024];
+	char *bufptr2 = buf;
+	int n;
+	n = osc_bundle_bundleNakedMessage(bufptr - buf, buf, &bufptr2);
+	printf("n = %d\n", n);
+	int i;
+	for(i = 0; i < n; i++){
+		printf("%d: %c\n", i, bufptr2[i]);
+	}
+	osc_bundle_printBundle(n, bufptr2, printf);
+	/*
+	char buf[1024];
 	memset(buf, '\0', 1024);
 	char *ptr = buf;
 	osc_bundle_setBundleID(buf);
@@ -62,4 +95,5 @@ int main(int len, char **argv){
 	}
 	osc_message_free(mm);
 	osc_message_free(clone);
+	*/
 }

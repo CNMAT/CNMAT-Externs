@@ -80,7 +80,7 @@ void *opbytes_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.printbytes", (method)opbytes_new, (method)opbytes_free, sizeof(t_opbytes), 0L, A_GIMME, 0);
-    
+
 	class_addmethod(c, (method)opbytes_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)opbytes_assist, "assist", A_CANT, 0);
 

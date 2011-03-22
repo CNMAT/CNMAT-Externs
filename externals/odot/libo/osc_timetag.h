@@ -1,6 +1,5 @@
 /** 	@file osc_timetag.h Utilities for manipulating OSC timetags
 	@authors Andy Schmeder, John MacCallum
-	@addtogroup 	OSC 
 @{
 */
 /*

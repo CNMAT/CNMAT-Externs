@@ -46,10 +46,9 @@
 #include "osc.h"
 #include <mach/mach_time.h>
 
-// i really don't want to sysmem_resizeptrate...
-#define OMESSAGE_MAX_NUM_MESSAGES 1024
-#define OMESSAGE_MAX_MESSAGE_LENGTH 1024
-#define BUFLEN 4096
+#define OMESSAGE_MAX_NUM_MESSAGES 128
+#define OMESSAGE_MAX_MESSAGE_LENGTH 128
+#define BUFLEN 128
 
 typedef struct _omessage{
 	t_jbox ob;
@@ -125,6 +124,7 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	x->num_atoms = 0;
 
 	// if the OSC packet contains a single message, turn it into a bundle
+	/*
 	if(osc_bundle_strcmpID(cpy)){
 		nn = osc_bundle_bundleNakedMessage(len, cpy_ptr, &cpy_ptr);
 		if(nn < 0){
@@ -134,7 +134,7 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 
 	// flatten any nested bundles
 	nn = osc_bundle_flatten(nn, cpy_ptr, &cpy_ptr);
-
+	*/
 	// extract the messages from the bundle
 	//cmmjl_osc_extract_messages(nn, x->buffer, true, omessage_cbk, (void *)x);
 	osc_bundle_getMessagesWithCallback(nn, cpy, omessage_cbk, (void *)x);
@@ -163,14 +163,7 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 void omessage_cbk(t_osc_msg msg, void *v){
 	t_omessage *x = (t_omessage *)v;
 	int i;
-	//x->messages[x->num_messages] = msg;
-	//t_cmmjl_osc_atom a[msg.argc];
-	//cmmjl_osc_get_data(&msg, a);
 
-	//atom_setsym(x->atoms + x->num_atoms++, gensym(msg.address));
-
-	//char buf[1024], data_buf[256];
-	//char *bufptr = buf;
 	long len = msg.argc + 2;
 	t_atom a[len];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, a);
@@ -679,7 +672,7 @@ void omessage_free(t_omessage *x){
 		sysmem_freeptr(x->atoms);
 	}
 	if(x->buffer){
-		free(x->buffer);
+		sysmem_freeptr(x->buffer);
 	}
 	if(x->substitutions){
 		sysmem_freeptr(x->substitutions);
@@ -745,7 +738,7 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
 		x->atoms = (t_atom *)sysmem_newptr(OMESSAGE_MAX_NUM_MESSAGES * sizeof(t_atom));
 		x->max_num_atoms = OMESSAGE_MAX_NUM_MESSAGES;
 		x->num_atoms = 0;
-		x->buffer = (char *)calloc(BUFLEN, sizeof(char));
+		x->buffer = (char *)sysmem_newptr(BUFLEN * sizeof(char));
 		x->buffer_len = BUFLEN;
 		x->buffer_pos = 0;
 		x->substitutions = (int *)sysmem_newptr(1024 * sizeof(int));
@@ -780,6 +773,7 @@ int main(void){
 	common_symbols_init();
 	//jpatcher_syms_init();
 	t_class *c = class_new("o.message", (method)omessage_new, (method)omessage_free, sizeof(t_omessage), 0L, A_GIMME, 0);
+	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	alias("o.m");
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 

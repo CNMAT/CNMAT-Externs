@@ -51,24 +51,25 @@ typedef struct _ovar{
 	void *outlet;
 	void *proxy;
 	long inlet;
-	char **buffers;
-	int nbuffers;
-	int *buffer_len;
-	int *buffer_pos;
 	int operation;
 	t_hashtab *ht1, *ht2;
+	t_linklist *ll1, *ll2;
 } t_ovar;
 
 void *ovar_class;
 
 void ovar_fullPacket(t_ovar *x, long len, long ptr);
-void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation);
+void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation, long inlet);
 void ovar_cbk(t_osc_msg msg, void *v);
+void ovar_clearDataStructures(t_hashtab *ht, t_linklist *ll);
+void ovar_deleteItem(t_object *ob, void *context);
+long ovar_linklist_compute_bundle_size(t_ovar *x, t_linklist *ll);
+void ovar_linklist_to_bundle(t_ovar *x, t_linklist *ll, char *buf);
 long ovar_hashtab_compute_bundle_size(t_ovar *x, t_hashtab *ht);
 void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf);
 void ovar_clear(t_ovar *x);
 void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
-void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long operation);
+void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long operation, long inlet);
 
 void ovar_store(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
 void ovar_union(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
@@ -85,10 +86,10 @@ t_max_err ovar_notify(t_ovar *x, t_symbol *s, t_symbol *msg, void *sender, void 
 t_symbol *ps_FullPacket;
 
 void ovar_fullPacket(t_ovar *x, long len, long ptr){
-	ovar_doFullPacket(x, len, ptr, x->operation);
+	ovar_doFullPacket(x, len, ptr, x->operation, proxy_getinlet((t_object *)x));
 }
 
-void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
+void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation, long inlet){
 	char cpy[len + 16];
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
@@ -105,9 +106,9 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 	// flatten any nested bundles
 	//nn = osc_util_flatten(nn, cpy, cpy);
 
-	int inlet = proxy_getinlet((t_object *)x);
-
-	hashtab_clear(x->ht2);
+	//hashtab_clear(x->ht2);
+	//linklist_clear(x->ll2);
+	ovar_clearDataStructures(x->ht2, x->ll2);
 	// extract the messages from the bundle
 	osc_bundle_getMessagesWithCallback(nn, cpy, ovar_cbk, (void *)x);
 
@@ -115,7 +116,9 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 
 		switch(operation){
 		case OVAR_NONE:
-			hashtab_clear(x->ht1);
+			ovar_clearDataStructures(x->ht1, x->ll1);
+			//hashtab_clear(x->ht1);
+			//linklist_clear(x->ll1);
 		case OVAR_UNION:
 			break;
 		case OVAR_DIFFERENCE:
@@ -128,6 +131,10 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
 					if(val){
+						linklist_chuckobject(x->ll2, val);
+						val = NULL;
+						hashtab_lookup(x->ht1, keys[i], (t_object **)(&val));
+						linklist_chuckobject(x->ll1, val);
 						hashtab_delete(x->ht1, keys[i]);
 						hashtab_delete(x->ht2, keys[i]);
 					}
@@ -142,6 +149,10 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht1, keys[i], (t_object **)(&val));
 					if(val){
+						linklist_chuckobject(x->ll1, val);
+						val = NULL;
+						hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
+						linklist_chuckobject(x->ll2, val);
 						hashtab_delete(x->ht1, keys[i]);
 						hashtab_delete(x->ht2, keys[i]);
 					}
@@ -162,6 +173,9 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
 					if(!val){
+						val = NULL;
+						hashtab_lookup(x->ht1, keys[i], (t_object **)(&val));
+						linklist_chuckobject(x->ll1, val);
 						hashtab_delete(x->ht1, keys[i]);
 					}
 				}
@@ -175,6 +189,9 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 					t_atom *val = NULL;
 					hashtab_lookup(x->ht1, keys[i], (t_object **)(&val));
 					if(!val){
+						val = NULL;
+						hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
+						linklist_chuckobject(x->ll2, val);
 						hashtab_delete(x->ht2, keys[i]);
 					}
 				}
@@ -188,27 +205,38 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation){
 	}
 
 
-	t_symbol **keys = NULL;
-	long nkeys;
-	hashtab_getkeys(x->ht2, &nkeys, &keys);
+	if(inlet == 1){
+		ovar_clearDataStructures(x->ht1, x->ll1);
+	}
+
+	
+	int nkeys = linklist_getsize(x->ll2);
 	int i;
 	for(i = 0; i < nkeys; i++){
 		t_atom *val;
-		hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
+		//hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
+		val = linklist_getindex(x->ll2, i);
 		int len = atom_getlong(val) + 1;
-		t_atom *newval = (t_atom *)sysmem_newptr(len * sizeof(t_atom));
+		t_atom *newval = (t_atom *)malloc(len * sizeof(t_atom));
+		//printf("%s:%d: allocating %p (%d bytes)\n", __PRETTY_FUNCTION__, __LINE__, newval, len * sizeof(t_atom));
 		memcpy(newval, val, len * sizeof(t_atom));
-		hashtab_store(x->ht1, keys[i], (t_object *)newval);
-	}
-	if(keys){
-		sysmem_freeptr(keys);
+		t_atom *oldval = NULL;
+		hashtab_lookup(x->ht1, atom_getsym(newval + 1), (t_object **)(&oldval));
+		if(oldval){
+			linklist_insertbeforeobjptr(x->ll1, newval, oldval);
+			linklist_chuckobject(x->ll1, oldval);
+			ovar_deleteItem((t_object *)oldval, NULL);
+		}else{
+			linklist_append(x->ll1, newval);
+		}
+		hashtab_store(x->ht1, atom_getsym(newval + 1), (t_object *)newval);
 	}
 	
 	if(inlet == 0){
-		int len = ovar_hashtab_compute_bundle_size(x, x->ht1);
+		int len = ovar_linklist_compute_bundle_size(x, x->ll1);
 		char buf[len];
 		memset(buf, '\0', len);
-		ovar_hashtab_to_bundle(x, x->ht1, buf);
+		ovar_linklist_to_bundle(x, x->ll1, buf);
 		t_atom out[2];
 		atom_setlong(out, len);
 		atom_setlong(out + 1, (long)buf);
@@ -222,8 +250,9 @@ void ovar_cbk(t_osc_msg msg, void *v){
 	// omax_util_oscMsg2MaxAtoms() will stick the address in the first element
 	// of the atom array, so allocate 1 more than the number of args
 	//printf("%d\n", msg.argc);
-	//printf("i want %d bytes\n", (msg.argc + 2) * sizeof(t_atom));
-	t_atom *atoms = (t_atom *)sysmem_newptr((msg.argc + 2) * sizeof(t_atom));
+	//printf("i want %d bytes\n", (msg.argc + 2) * sizeof(t_atom));	
+	t_atom *atoms = (t_atom *)malloc((msg.argc + 2) * sizeof(t_atom));
+	//printf("%s:%d: allocating %p (%d bytes)\n", __PRETTY_FUNCTION__, __LINE__, atoms, (msg.argc + 2) * sizeof(t_atom));
 	long len = msg.argc;
 
 	// this will turn the osc mesage (a char array) into an array of atoms
@@ -232,6 +261,45 @@ void ovar_cbk(t_osc_msg msg, void *v){
 
 	// the length in the first atom is the length of the arguments plus the address
 	hashtab_store(x->ht2, atom_getsym(atoms + 1), (t_object *)atoms);
+	linklist_append(x->ll2, atoms);
+}
+
+void ovar_clearDataStructures(t_hashtab *ht, t_linklist *ll){
+	// lock
+	linklist_funall(ll, (method)ovar_deleteItem, NULL);
+	linklist_clear(ll);
+	hashtab_clear(ht);
+	// unlock
+}
+
+void ovar_deleteItem(t_object *ob, void *context){
+	if(ob){
+		//printf("%s:%d: freeing %p\n", __PRETTY_FUNCTION__, __LINE__, ob);
+		free(ob);
+	}
+}
+
+long ovar_linklist_compute_bundle_size(t_ovar *x, t_linklist *ll){
+	int n = linklist_getsize(ll);
+	int i;
+	int len = OSC_HEADER_SIZE;
+	for(i = 0; i < n; i++){
+		t_atom *atoms = linklist_getindex(ll, i);
+		len += omax_util_get_bundle_size_for_atoms(atom_getsym(atoms + 1), atom_getlong(atoms) - 1, atoms + 2) - 16;
+	}
+	return len;	
+}
+
+void ovar_linklist_to_bundle(t_ovar *x, t_linklist *ll, char *buf){
+	int n = linklist_getsize(ll);
+	int i;
+	char *bufp = buf;
+	osc_bundle_setBundleID(bufp);
+	bufp += OSC_HEADER_SIZE;
+	for(i = 0; i < n; i++){
+		t_atom *atoms = linklist_getindex(ll, i);
+		bufp += omax_util_encode_atoms(bufp, atom_getsym(atoms + 1), atom_getlong(atoms) - 1, atoms + 2);
+	}
 }
 
 long ovar_hashtab_compute_bundle_size(t_ovar *x, t_hashtab *ht){
@@ -254,7 +322,7 @@ long ovar_hashtab_compute_bundle_size(t_ovar *x, t_hashtab *ht){
 			len++;
 		}
 		// typetags
-		len += 2 + atom_getlong(val);
+		len += 1 + atom_getlong(val);
 		while(len % 4){
 			len++;
 		}
@@ -295,7 +363,6 @@ void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf){
 	for(i = 0; i < nkeys; i++){
 		t_atom *val = NULL;
 		hashtab_lookup(ht, keys[i], (t_object **)&val);
-		//ptr += osc_util_make_bundle_from_atoms(atom_getlong(val), val + 1, &i, ptr);
 		ptr += omax_util_encode_atoms(ptr, atom_getsym(val + 1), atom_getlong(val) - 1, val + 2);
 	}
 	
@@ -305,15 +372,21 @@ void ovar_hashtab_to_bundle(t_ovar *x, t_hashtab *ht, char *buf){
 }
 
 void ovar_clear(t_ovar *x){
+	ovar_clearDataStructures(x->ht1, x->ll1);
+	ovar_clearDataStructures(x->ht2, x->ll2);
+	/*
+	linklist_clear(x->ll1);
+	linklist_clear(x->ll2);
 	hashtab_clear(x->ht1);
 	hashtab_clear(x->ht2);
+	*/
 }
 
 void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
-	ovar_doanything(x, msg, argc, argv, x->operation);
+	ovar_doanything(x, msg, argc, argv, x->operation, proxy_getinlet((t_object *)x));
 }
 
-void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long operation){
+void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long operation, long inlet){
 	t_symbol *address = NULL;
 	if(msg){
 		if(*(msg->s_name) != '/'){
@@ -342,49 +415,53 @@ void ovar_doanything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv, long oper
 	memset(buf, '\0', len);
 	omax_util_encode_atoms(buf + 16, address, argc, argv);
 	strncpy(buf, "#bundle\0", 8);
-	ovar_doFullPacket(x, len, (long)buf, operation);
+	ovar_doFullPacket(x, len, (long)buf, operation, inlet);
 }
 
 void ovar_store(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
+	long inlet = proxy_getinlet((t_object *)x);
 	if(atom_gettype(argv) == A_SYM){
 		if(atom_getsym(argv) == ps_FullPacket){
-			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_NONE);
+			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_NONE, inlet);
 			return;
 		}else{
-			ovar_doanything(x, NULL, argc, argv, OVAR_NONE);
+			ovar_doanything(x, NULL, argc, argv, OVAR_NONE, inlet);
 		}
 	}
 }
 
 void ovar_union(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
+	long inlet = proxy_getinlet((t_object *)x);
 	if(atom_gettype(argv) == A_SYM){
 		if(atom_getsym(argv) == ps_FullPacket){
-			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_UNION);
+			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_UNION, inlet);
 			return;
 		}else{
-			ovar_doanything(x, NULL, argc, argv, OVAR_UNION);
+			ovar_doanything(x, NULL, argc, argv, OVAR_UNION, inlet);
 		}
 	}
 }
 
-void ovar_difference(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){	
+void ovar_difference(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
+	long inlet = proxy_getinlet((t_object *)x);
 	if(atom_gettype(argv) == A_SYM){
 		if(atom_getsym(argv) == ps_FullPacket){			
-			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_DIFFERENCE);
+			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_DIFFERENCE, inlet);
 			return;
 		}else{
-			ovar_doanything(x, NULL, argc, argv, OVAR_DIFFERENCE);
+			ovar_doanything(x, NULL, argc, argv, OVAR_DIFFERENCE, inlet);
 		}
 	}
 }
 
 void ovar_intersection(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
+	long inlet = proxy_getinlet((t_object *)x);
 	if(atom_gettype(argv) == A_SYM){
 		if(atom_getsym(argv) == ps_FullPacket){
-			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_INTERSECTION);
+			ovar_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), OVAR_INTERSECTION, inlet);
 			return;
 		}else{
-			ovar_doanything(x, NULL, argc, argv, OVAR_INTERSECTION);
+			ovar_doanything(x, NULL, argc, argv, OVAR_INTERSECTION, inlet);
 		}
 	}
 }
@@ -425,11 +502,10 @@ void ovar_set_op(t_ovar *x, t_object *attr, long argc, t_atom *argv){
 }
 
 void ovar_bang(t_ovar *x){
-	int len = ovar_hashtab_compute_bundle_size(x, x->ht1);
+	int len = ovar_linklist_compute_bundle_size(x, x->ll1);
 	char buf[len];
 	memset(buf, '\0', len);
-	ovar_hashtab_to_bundle(x, x->ht1, buf);
-	int i;
+	ovar_linklist_to_bundle(x, x->ll1, buf);
 	t_atom out[2];
 	atom_setlong(out, len);
 	atom_setlong(out + 1, (long)buf);
@@ -450,21 +526,7 @@ void ovar_assist(t_ovar *x, void *b, long m, long a, char *s){
 
 void ovar_free(t_ovar *x){
 	object_free(x->proxy);
-	int i;
-	if(x->buffers){
-		for(i = 0; i < x->nbuffers; i++){
-			if(x->buffers[i]){
-				free(x->buffers[i]);
-			}
-		}
-		free(x->buffers);
-	}
-	if(x->buffer_pos){
-		free(x->buffer_pos);
-	}
-	if(x->buffer_len){
-		free(x->buffer_len);
-	}
+	ovar_clear(x);
 }
 
 void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
@@ -472,25 +534,52 @@ void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
 	if(x = (t_ovar *)object_alloc(ovar_class)){
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
 		x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
-		x->nbuffers = 2;
-		x->buffers = (char **)calloc(x->nbuffers, sizeof(char*));
-		x->buffer_len = (int *)calloc(x->nbuffers, sizeof(int));
-		x->buffer_pos = (int *)calloc(x->nbuffers, sizeof(int));
-		int i;
-		for(i = 0; i < x->nbuffers; i++){
-			x->buffers[i] = (char *)calloc(4096, sizeof(char));
-			x->buffer_pos[i] = 0;
-			x->buffer_len[i] = 4096;
-		}
 
+		// since our objects stored in these data structures will be allocated
+		// with malloc, we need to free them manually
 		x->ht1 = hashtab_new(0);
-		hashtab_flags(x->ht1, OBJ_FLAG_MEMORY);
+		hashtab_flags(x->ht1, OBJ_FLAG_DATA);
 		x->ht2 = hashtab_new(0);
-		hashtab_flags(x->ht2, OBJ_FLAG_MEMORY);
+		hashtab_flags(x->ht2, OBJ_FLAG_DATA);
+
+		x->ll1 = (t_linklist *)linklist_new();
+		linklist_flags(x->ll1, OBJ_FLAG_DATA);
+		x->ll2 = (t_linklist *)linklist_new();
+		linklist_flags(x->ll2, OBJ_FLAG_DATA);
 		
 		x->operation = OVAR_NONE;
 
 		attr_args_process(x, argc, argv);
+
+		int nargs = attr_args_offset(argc, argv);
+		if(nargs){
+			if(atom_gettype(argv)){
+				if(osc_error_validateAddress(atom_getsym(argv)->s_name)){
+					object_error((t_object *)x, "arguments must begin with a valid OSC address");
+					return NULL;
+				}
+			}else{
+				object_error((t_object *)x, "arguments must begin with a valid OSC address");
+				return NULL;
+			}
+			t_atom *ptr = argv;
+			while(ptr - argv < nargs){
+				int len = 0;
+				while((ptr - argv) < nargs){
+					if(atom_getsym(ptr) == gensym("#")){
+						break;
+					}
+					len++;
+					ptr++;
+				}
+				t_atom *atoms = (t_atom *)malloc((len + 1) * sizeof(t_atom));
+				atom_setlong(atoms, len);
+				memcpy(atoms + 1, ptr - len, len * sizeof(t_atom));
+				hashtab_store(x->ht1, atom_getsym(ptr - len), (t_object *)atoms);
+				linklist_append(x->ll1, atoms);
+				ptr++;
+			}
+		}
 	}
 		   	
 	return(x);
@@ -498,7 +587,7 @@ void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.var", (method)ovar_new, (method)ovar_free, sizeof(t_ovar), 0L, A_GIMME, 0);
-    
+     	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)ovar_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)ovar_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)ovar_notify, "notify", A_CANT, 0);

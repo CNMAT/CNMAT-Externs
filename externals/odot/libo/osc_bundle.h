@@ -20,6 +20,11 @@ HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+/** 	\file osc_bundle.h
+	\brief Utilities for manipulating OSC bundles
+	\author John MacCallum
+*/
+
 #ifndef __OSC_BUNDLE_H__
 #define __OSC_BUNDLE_H__
 
@@ -58,6 +63,13 @@ typedef struct _osc_bundle{
  * @return An error code or #OSC_ERR_NONE
  */
 t_osc_err osc_bundle_makeBundle(int len, char *buf, t_osc_bundle *bundle);
+
+/**
+ * Allocate and initialize a bundle.  All fields will be set to 0 and all pointers to NULL.
+ *
+ * @return The newly allocated bundle.  Should be freed with osc_bundle_freeBundle().
+ */
+t_osc_bundle *osc_bundle_alloc(void);
 
 /**
  * Free a bundle.
@@ -202,13 +214,22 @@ t_osc_err osc_bundle_lookupAddressSerialized(int len, char *buf, char *address, 
 t_osc_err osc_bundle_lookupAddress(t_osc_bundle *bundle, char *address, t_osc_msg **m, int fullmatch);
 
 /**
+ * Add a message to the end of the message list of a bundle;
+ *
+ * @param bundle The bundle to which the message will be added.
+ * @param message The message to be added to the bundle.
+ * @return An error code or #OSC_ERR_NONE
+ */
+t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message);
+
+/**
  * Get the total number of bytes required to serialize a bundle.
  *
  * @param bundle The bundle whose serialized length is to be determined.
  * @param len A pointer to an int where the length will be placed
  * @return An error code or #OSC_ERR_NONE
  */
-t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, int *len);
+t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, long *len);
 
 /**
  * Serialize a #t_osc_bundle.  This function will allocate the necessary memory to serialize the
@@ -222,7 +243,7 @@ t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, int *len);
  * @param buffer A pointer to a char buffer where the serialized bundle will be placed.
  * @return An error code or #OSC_ERR_NONE
  */
-t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, int *len, char **buffer);
+t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, long *len, char **buffer);
 
 /**
  * Serialize a bundle using pre-allocated memory.  This function assumes that buffer is a pointer
@@ -240,3 +261,4 @@ t_osc_err osc_bundle_serializeWithBuffer(t_osc_bundle *bundle, char *buffer);
 #endif
 
 #endif // __OSC_BUNDLE_H__
+/**@}*/

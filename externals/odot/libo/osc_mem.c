@@ -20,8 +20,11 @@ HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
+#include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 #include "osc_mem.h"
+#include "osc_byteorder.h"
 
 static void *(*osc_mem_alloc_fp)(size_t size) = malloc;
 static void (*osc_mem_free_fp)(void *ptr) = free;
@@ -32,6 +35,9 @@ void *osc_mem_alloc(size_t size){
 }
 
 void *osc_mem_resize(void *ptr, size_t size){
+	if(!ptr){
+		return osc_mem_alloc_fp(size);
+	}
 	return osc_mem_resize_fp(ptr, size);
 }
 
@@ -203,4 +209,59 @@ size_t osc_sizeof(unsigned char typetag, char *data){
 	default:
 		return osc_data_lengths[typetag];
 	}
+}
+
+int osc_mem_shouldByteswap(unsigned char typetag){
+	switch(typetag){
+	case 'i':
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+t_osc_err osc_mem_encodeByteorder(unsigned char typetag, char *data, char **out){
+	size_t size = osc_sizeof(typetag, data);
+	if(!osc_mem_shouldByteswap(typetag)){
+		memcpy(*out, data, size);
+		return OSC_ERR_NONE;
+	}
+	char tmp[size];
+	switch(size){
+	case 1:
+		break;
+	case 2:
+		*((uint16_t *)tmp) = hton16(*((uint16_t *)data));
+		break;
+	case 4:
+		*((uint32_t *)tmp) = hton32(*((uint32_t *)data));
+		break;
+	case 8:
+		*((uint64_t *)tmp) = hton64(*((uint64_t *)data));
+		break;	
+	}
+	memcpy(*out, tmp, size);
+}
+
+t_osc_err osc_mem_decodeByteorder(unsigned char typetag, char *data, char **out){
+	size_t size = osc_sizeof(typetag, data);
+	if(!osc_mem_shouldByteswap(typetag)){
+		memcpy(*out, data, size);
+		return OSC_ERR_NONE;
+	}	
+	char tmp[size];
+	switch(size){
+	case 1:
+		break;
+	case 2:
+		*((uint16_t *)tmp) = ntoh16(*((uint16_t *)data));
+		break;
+	case 4:
+		*((uint32_t *)tmp) = ntoh32(*((uint32_t *)data));
+		break;
+	case 8:
+		*((uint64_t *)tmp) = ntoh64(*((uint64_t *)data));
+		break;	
+	}
+	memcpy(*out, tmp, size);
 }

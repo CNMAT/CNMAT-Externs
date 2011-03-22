@@ -37,7 +37,7 @@ VERSION 0.0: First try
 #include "ext_obex_util.h"
 #include "ext_hashtab.h"
 #include "omax_util.h"
-#include "osc_util.h"
+#include "osc.h"
 
 typedef t_atom (*two_op_func)(t_atom arg1, t_atom arg2);
 
@@ -108,26 +108,9 @@ t_max_err oif_notify(t_oif *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 t_symbol *ps_FullPacket;
 
 void oif_fullPacket(t_oif *x, long len, long ptr){
-	// make a local copy so the ref doesn't disappear out from underneath us
-	char cpy[len];
-	memcpy(cpy, (char *)ptr, len);
-	long nn = len;
-
-	// if the OSC packet contains a single message, turn it into a bundle
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, cpy, cpy);
-		if(nn < 0){
-			error("problem bundling naked message");
-		}
-	}
-
-	// flatten any nested bundles
-	nn = osc_util_flatten(nn, cpy, cpy);
-
-	// extract the messages from the bundle
 	hashtab_clear(x->ht);
 	x->bufpos = 0;
-	osc_util_parseBundleWithCallback(nn, cpy, oif_cbk, (void *)x);
+	osc_bundle_getMessagesWithCallback(len, (long)ptr, oif_cbk, (void *)x);
 
 	t_atom a = oif_funcall(x, &(x->function_graph));
 	t_atom out[2];
@@ -138,26 +121,6 @@ void oif_fullPacket(t_oif *x, long len, long ptr){
 	}else{
 		outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
 	}
-	//post("%d", atom_getlong(&a));
-
-	/*
-	t_symbol **keys = NULL;
-	long nkeys;
-	hashtab_getkeys(x->ht, &nkeys, &keys);
-	int i;
-	for(i = 0; i < nkeys; i++){
-		post("%s", keys[i]->s_name);
-		t_atom *a;
-		hashtab_lookup(x->ht, keys[i], (t_object **)&a);
-		int j;
-		for(j = 0; j < atom_getlong(a); j++){
-			postatom(a + j + 1);
-		}
-	}
-	for(i = 0; i < 4; i++){
-		postatom(x->atom_buf + i);
-	}
-	*/
 }
 
 void oif_cbk(t_osc_msg msg, void *v){
@@ -165,7 +128,7 @@ void oif_cbk(t_osc_msg msg, void *v){
 	long len = msg.argc + 1;
 	//t_atom atoms[len];
 	if(x->bufpos + len > x->buflen){
-		x->atom_buf = (t_atom *)realloc(x->atom_buf, x->buflen * 2 * sizeof(t_atom));
+		x->atom_buf = (t_atom *)sysmem_resizeptr(x->atom_buf, x->buflen * 2 * sizeof(t_atom));
 		x->buflen *= 2;
 	}
 	omax_util_oscMsg2MaxAtoms(&msg, &len, x->atom_buf + x->bufpos);
@@ -332,7 +295,7 @@ t_atom oif_funcall(t_oif *x, t_func *func){
 	case OIF_ADDRESS:
 		hashtab_lookup(x->ht, func->arg1.w.address, (t_object **)&arg1p);
 		if(!arg1p){
-			object_error((t_object *)x, "couldn't find data for OSC address %s", func->arg1.w.address->s_name);
+			//object_error((t_object *)x, "couldn't find data for OSC address %s", func->arg1.w.address->s_name);
 			return a;
 		}
 		narg1 = atom_getlong(arg1p);
@@ -352,7 +315,7 @@ t_atom oif_funcall(t_oif *x, t_func *func){
 	case OIF_ADDRESS:
 		hashtab_lookup(x->ht, func->arg2.w.address, (t_object **)&arg2p);
 		if(!arg2p){
-			object_error((t_object *)x, "couldn't find data for OSC address %s", func->arg2.w.address->s_name);
+			//object_error((t_object *)x, "couldn't find data for OSC address %s", func->arg2.w.address->s_name);
 			return a;
 		}
 		narg2 = atom_getlong(arg2p);
@@ -469,7 +432,7 @@ void oif_assist(t_oif *x, void *b, long m, long a, char *s){
 void oif_free(t_oif *x){
 	object_free(x->proxy);
 	if(x->atom_buf){
-		free(x->atom_buf);
+		sysmem_freeptr(x->atom_buf);
 	}
 }
 
@@ -479,7 +442,7 @@ void *oif_new(t_symbol *msg, short argc, t_atom *argv){
 		x->outlets[1] = outlet_new((t_object *)x, "FullPacket");
 		x->outlets[0] = outlet_new((t_object *)x, "FullPacket");
 		x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
-		x->atom_buf = (t_atom *)calloc(1024, sizeof(t_atom));
+		x->atom_buf = (t_atom *)sysmem_newptr(1024 * sizeof(t_atom));
 		x->buflen = 1024;
 		x->bufpos = 0;
 
@@ -507,7 +470,7 @@ void *oif_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.if", (method)oif_new, (method)oif_free, sizeof(t_oif), 0L, A_GIMME, 0);
-    
+    osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)oif_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oif_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oif_notify, "notify", A_CANT, 0);

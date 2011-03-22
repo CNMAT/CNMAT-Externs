@@ -36,8 +36,7 @@ version 1.0: Rewritten to only take one argument (the symbol to be prepended) wh
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "libo/osc_util.h"
-#include "libo/osc_match.h"
+#include "osc.h"
 #include "omax_util.h"
 
 typedef struct _oppnd{
@@ -54,6 +53,7 @@ struct context{
 	int bufferLen;
 	int bufferPos;
 	t_symbol *sym_to_prepend;
+	int sym_to_prepend_len;
 };
 
 void *oppnd_class;
@@ -63,6 +63,7 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 void oppnd_cbk(t_osc_msg msg, void *v);
 void oppnd_set(t_oppnd *x, t_symbol *sym_to_prepend);
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv);
+void oppnd_list(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv);
 void oppnd_free(t_oppnd *x);
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s);
 void *oppnd_new(t_symbol *msg, short argc, t_atom *argv);
@@ -74,46 +75,23 @@ void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
 }
 
 void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend){
-	// make a local copy so the ref doesn't disappear out from underneath us
-	char cpy[len];
-	char buffer[len * 8];
-	memset(buffer, '\0', len * 8);
-
-	struct context c = {buffer, len * 8, 16, sym_to_prepend};
-	//x->buffer = buffer;
-	//x->bufferLen = len * 8;
-	memcpy(cpy, (char *)ptr, len);
-	long nn = len;
-
-	// if the OSC packet contains a single message, turn it into a bundle
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, cpy, cpy);
-		if(nn < 0){
-			error("problem bundling naked message");
-		}
+	int msgcount = 0;
+	t_osc_err e = osc_bundle_getMsgCount(len, (char *)ptr, &msgcount);
+	if(e){
+		object_error((t_object *)x, "%s (%d)\n", osc_error_string(e), (int)e);
 	}
+	int sym_to_prepend_len = strlen(sym_to_prepend->s_name);
+	int buflen = len + (msgcount * (sym_to_prepend_len + 4));
+	char buffer[buflen];
+	memset(buffer, '\0', buflen);
+	memcpy(buffer, (char *)ptr, 16);
 
-	// flatten any nested bundles
-	nn = osc_util_flatten(nn, cpy, cpy);
+	struct context c = {buffer, buflen, 16, sym_to_prepend, sym_to_prepend_len};
+	osc_bundle_getMessagesWithCallback(len, (char *)ptr, oppnd_cbk, (void *)&c);
 
-	memcpy(buffer, cpy, 16);
-	x->bufferPos = 16;
-
-	// extract the messages from the bundle
-	//cmmjl_osc_extract_messages(nn, cpy, true, oppnd_cbk, (void *)x);
-	osc_util_parseBundleWithCallback(nn, cpy, oppnd_cbk, (void *)&c);
-
-	/*
-	int i; 
-	post("x->bufferPos = %d", c.bufferPos);
-	for(i = 0; i < c.bufferPos; i++){
-		post("%d %x %c", i, c.buffer[i], c.buffer[i]);
-	}
-	*/
-	
 	t_atom out[2];
 	atom_setlong(&(out[0]), c.bufferPos);
-	atom_setlong(&(out[1]), (long)buffer);
+	atom_setlong(&(out[1]), (long)(c.buffer));
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
@@ -121,15 +99,19 @@ void oppnd_cbk(t_osc_msg msg, void *v){
 	//t_oppnd *x = (t_oppnd *)v;
 	struct context *c = (struct context *)v;
 
-	char buf[strlen(msg.address) + strlen(c->sym_to_prepend->s_name) + 1];
+	int oldlen = strlen(msg.address);
+	int newlen = c->sym_to_prepend_len;
+	char buf[oldlen + newlen + 1];
 	sprintf(buf, "%s%s", c->sym_to_prepend->s_name, msg.address);
-	c->bufferPos += osc_util_rename(c->buffer + c->bufferPos, &msg, buf);
-	/*
-	*((long *)(x->buffer + x->bufferPos)) = hton32(msg.size);
-	x->bufferPos += 4;
-	memcpy(x->buffer + x->bufferPos, msg.address, msg.size);
-	x->bufferPos += msg.size;
-	*/
+
+	// this isn't exactly the amount of memory needed, but if anything it will be a few bytes too big.
+	char newmessage[msg.size - oldlen + newlen + 4];
+	memset(newmessage, '\0', msg.size - oldlen + newlen + 4);
+	char *ptr = newmessage;
+	int len = osc_message_rename(msg.size, msg.address, buf, &ptr);
+
+	memcpy(c->buffer + c->bufferPos, ptr, len);
+	c->bufferPos += len;
 }
 
 void oppnd_set(t_oppnd *x, t_symbol *sym_to_prepend){
@@ -173,6 +155,10 @@ void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 }
 
+void oppnd_list(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv){
+	oppnd_anything(x, x->sym_to_prepend, argc, argv);
+}
+
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"Probability distribution and arguments");
@@ -200,11 +186,13 @@ void *oppnd_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.prepend", (method)oppnd_new, (method)oppnd_free, sizeof(t_oppnd), 0L, A_GIMME, 0);
+	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
     
 	class_addmethod(c, (method)oppnd_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oppnd_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oppnd_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oppnd_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)oppnd_list, "list", A_GIMME, 0);
 
 	class_addmethod(c, (method)oppnd_set, "set", A_SYM, 0);
     

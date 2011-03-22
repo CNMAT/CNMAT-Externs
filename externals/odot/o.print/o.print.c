@@ -61,26 +61,8 @@ t_max_err oprint_notify(t_oprint *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oprint_fullPacket(t_oprint *x, long len, long ptr){
-	// make a local copy so the ref doesn't disappear out from underneath us
-	char cpy[len];
-	memcpy(cpy, (char *)ptr, len);
-	long nn = len;
-	char *cpy_ptr = cpy;
-
-	// if the OSC packet contains a single message, turn it into a bundle
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_bundle_bundleNakedMessage(len, cpy_ptr, &cpy_ptr);
-		if(nn < 0){
-			error("problem bundling naked message");
-		}
-	}
-
-	// flatten any nested bundles
-	nn = osc_bundle_flatten(nn, cpy_ptr, &cpy_ptr);
-
-	// extract the messages from the bundle
-	post("%s: [ 0x%x", x->myname->s_name, ntoh64(*((uint64 *)(cpy + 8))));
-	osc_bundle_getMessagesWithCallback(nn, cpy, oprint_cbk, (void *)x);
+	post("%s: [ 0x%x", x->myname->s_name, ntoh64(*((uint64 *)((char *)ptr + 8))));
+	osc_bundle_getMessagesWithCallback(len, (char *)ptr, oprint_cbk, (void *)x);
 	post("%s: ]", x->myname->s_name);
 }
 
@@ -90,8 +72,8 @@ void oprint_cbk(t_osc_msg msg, void *v){
 	t_atom atoms[len + 1];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
 	//char buf[1024];
-	char *buf = sysmem_newptr(1024);
-	int bufsize = 1024;
+	char buf[128];
+	int bufsize = 128;
 	int bufpos = 0;
 	if(x->print_msgsize){
 		bufpos += sprintf(buf, "\t\t(%d) %s", msg.size, msg.address);
@@ -104,8 +86,10 @@ void oprint_cbk(t_osc_msg msg, void *v){
 	int i;
 	for(i = 1; i < len; i++){
 		if(bufsize - bufpos < 64){
-			buf = sysmem_resizeptr(buf, bufsize + 256);
-			bufsize += 256;
+			//buf = sysmem_resizeptr(buf, bufsize + 256);
+			//bufsize += 256;
+			post("%s: %s \\", x->myname->s_name, buf);
+			bufpos = 0;
 		}
 		switch(atom_gettype(atoms + i)){
 		case A_LONG:
@@ -120,7 +104,6 @@ void oprint_cbk(t_osc_msg msg, void *v){
 		}
 	}
 	post("%s: %s", x->myname->s_name, buf);
-	sysmem_freeptr(buf);
 }
 
 void oprint_assist(t_oprint *x, void *b, long m, long a, char *s){
@@ -166,7 +149,7 @@ void *oprint_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.print", (method)oprint_new, (method)oprint_free, sizeof(t_oprint), 0L, A_GIMME, 0);
-    
+    	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)oprint_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oprint_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oprint_assist, "assist", A_CANT, 0);
