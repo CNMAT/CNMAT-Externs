@@ -29,6 +29,7 @@
   VERSION 0.0: First try
   VERSION 0.0.1: Added version info
   VERSION 0.1: Better help file and prevents a and b from being <= 0
+  VERSION 0.1.1: fixed a crash at initialization
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -176,6 +177,9 @@ void bdist_paint(t_bdist *x, t_object *patcherview){
 				}
 				xx2 = bdist_beta(x, i / width, a, b);
 				xx2 = bdist_scale(xx2, ymin, ymax, height, MARGIN);
+				if(isnan(xx1) || isnan(xx2)){
+					continue;
+				}
 				jgraphics_move_to(glayer, i - 1, xx1);
 				jgraphics_line_to(glayer, i, xx2);
 				jgraphics_stroke(glayer);
@@ -192,7 +196,6 @@ void bdist_paint(t_bdist *x, t_object *patcherview){
 				jgraphics_line_to(glayer, x->mean.x * rect.width, rect.height);
 				jgraphics_stroke(glayer);
 			}
-
 			if(x->showmode){
 				jgraphics_set_dash(glayer, (double[2]){4., 4.}, 2, 0);
 				if(x->displaymode == PDF){
@@ -203,7 +206,6 @@ void bdist_paint(t_bdist *x, t_object *patcherview){
 				jgraphics_line_to(glayer, x->mode.x * rect.width, rect.height);
 				jgraphics_stroke(glayer);
 			}
-
 			if(x->showvariance){
 				int i;
 				jgraphics_move_to(glayer, invar[0].x, rect.height);
@@ -452,7 +454,7 @@ void bdist_assist(t_bdist *x, void *b, long io, long index, char *s){
 	}
 }
 
-double bdist_scale(double f, double min_in, double max_in, double min_out, double max_out){
+double bdist_scale(double f, double min_in, double max_in, double min_out, double max_out){	
 	float m = (max_out - min_out) / (max_in - min_in);
 	float b = (min_out - (m * min_in));
 	return m * f + b;
@@ -561,7 +563,9 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 		x->histpos = 0;
 		x->histlen = 0;
         
-		attr_dictionary_process(x, d); 
+		attr_dictionary_process(x, d);
+		bdist_computeMoments(x);
+		object_attach_byptr_register(x, x, CLASS_BOX);
  		jbox_ready((t_jbox *)x); 
         
 		return x;
@@ -584,7 +588,7 @@ int main(void){
 	class_addmethod(c, (method)bdist_mousedown, "mousedown", A_CANT, 0);
 	class_addmethod(c, (method)bdist_mousedrag, "mousedrag", A_CANT, 0);
 	class_addmethod(c, (method)bdist_distlist, "distlist", A_GIMME, 0);
-	class_addmethod(c, (method)bdist_notify, "notify", A_GIMME, 0);
+	class_addmethod(c, (method)bdist_notify, "notify", A_CANT, 0);
     
 	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
     
@@ -603,10 +607,10 @@ int main(void){
 	CLASS_STICKY_ATTR_CLEAR(c, "category"); 
 
 	CLASS_ATTR_DOUBLE(c, "a", 0, t_bdist, a);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "a", 0, "1.0");
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "a", 0, "2.0");
 	CLASS_ATTR_FILTER_CLIP(c, "a", .000001, FLT_MAX);
 	CLASS_ATTR_DOUBLE(c, "b", 0, t_bdist, b);
-	CLASS_ATTR_DEFAULTNAME_SAVE(c, "b", 0, "1.0");
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "b", 0, "2.0");
 	CLASS_ATTR_FILTER_CLIP(c, "b", .000001, FLT_MAX);
 
 	CLASS_ATTR_LONG(c, "displaymode", 0, t_bdist, displaymode);
@@ -629,6 +633,7 @@ int main(void){
 	CLASS_ATTR_LONG(c, "drawhist", 0, t_bdist, drawhist);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "drawhist", 0, "0");
 	CLASS_ATTR_STYLE_LABEL(c, "drawhist", 0, "onoff", "Draw History");
+	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 300. 100."); 
     
 	class_register(CLASS_BOX, c);
 	bdist_class = c;
