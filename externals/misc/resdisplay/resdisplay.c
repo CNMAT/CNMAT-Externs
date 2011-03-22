@@ -31,6 +31,7 @@
   VERSION 0.2: Info about the range and selection is now drawn at the top of the display
   VERSION 0.2.1: Bang now outputs model and model comes out when loaded
   VERSION 0.2.2: added displayrange message for compatibility with resonance-display.js
+  VERSION 0.2.3: more reasonable default size
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -549,6 +550,7 @@ int main(void){
     
 	CLASS_ATTR_LONG(c, "log", 0, t_rd, log);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "log", 0, "1");
+	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 300. 100."); 
     
 	class_register(CLASS_BOX, c);
 	rd_class = c;
