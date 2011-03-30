@@ -8,14 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		12B2C6BF0F03699C0085FF67 /* bench.c in Sources */ = {isa = PBXBuildFile; fileRef = 12B2C6BE0F03699C0085FF67 /* bench.c */; };
-		BEED70E40A8153B600523D1A /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEED70E20A8153B600523D1A /* MaxAPI.framework */; };
+		52ED7D67133AB6C900C83818 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ED7D66133AB6C900C83818 /* CoreServices.framework */; };
+		52ED7E52133ABA0300C83818 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ED7E51133ABA0300C83818 /* MaxAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		129BE9670D044469004F0F92 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12B2C6BE0F03699C0085FF67 /* bench.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bench.c; sourceTree = "<group>"; };
-		BEED70E20A8153B600523D1A /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/UB-SDK/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		C93E2F590BE2704100642F09 /* bench.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bench.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		52ED7D66133AB6C900C83818 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		52ED7E51133ABA0300C83818 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		C93E2F590BE2704100642F09 /* cambio~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cambio~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -23,7 +25,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEED70E40A8153B600523D1A /* MaxAPI.framework in Frameworks */,
+				52ED7D67133AB6C900C83818 /* CoreServices.framework in Frameworks */,
+				52ED7E52133ABA0300C83818 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,7 +48,8 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BEED70E20A8153B600523D1A /* MaxAPI.framework */,
+				52ED7E51133ABA0300C83818 /* MaxAPI.framework */,
+				52ED7D66133AB6C900C83818 /* CoreServices.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -68,7 +72,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C93E2F590BE2704100642F09 /* bench.mxo */,
+				C93E2F590BE2704100642F09 /* cambio~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,7 +107,7 @@
 			name = bench;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = C93E2F590BE2704100642F09 /* bench.mxo */;
+			productReference = C93E2F590BE2704100642F09 /* cambio~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -165,8 +169,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -211,9 +217,10 @@
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -225,10 +232,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"../../../c74support/max-includes",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
+				HEADER_SEARCH_PATHS = "../../../c74support/max-includes";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../include\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
@@ -258,8 +262,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
