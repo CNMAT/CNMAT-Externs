@@ -1,10 +1,9 @@
 /*
 
-SDIF Menu Draft #5
-This one can draw a little nicer.
-by Michael Zbyszynski, 18 April 2005
+SDIF Menu 2
+by Michael Zbyszynsk
 
-Copyright (c) 2005.  The Regents of the University of California
+Copyright (c) 2005-11.  The Regents of the University of California
 (Regents). All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
@@ -38,9 +37,10 @@ University of California, Berkeley.
 NAME: SDIF-menu2
 DESCRIPTION: Attractive tabular display of information from SDIF-fileinfo about the streams in an SDIF file.  (jsui)
 AUTHORS: Michael Zbyszynski
-COPYRIGHT_YEARS: 2005-6
+COPYRIGHT_YEARS: 2005-11
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.5: This one can draw a little nicer.
+VERSION 1.0: Fixed alpha values for newer versions of Max.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
