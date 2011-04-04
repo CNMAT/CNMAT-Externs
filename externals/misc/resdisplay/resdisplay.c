@@ -45,6 +45,10 @@
 #include "version.c"
 #include "math.h"
 
+#ifndef FLT_MIN
+#define FLT_MIN 1E-37
+#endif
+
 typedef struct _res{
 	double f, a, d;
 } t_res;
