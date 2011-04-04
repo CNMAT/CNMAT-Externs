@@ -45,6 +45,8 @@
 #include "version.c"
 #include "math.h"
 
+#include "common/commonsyms.c"
+
 
 #ifndef FLT_MIN
 #define FLT_MIN 1E-37
