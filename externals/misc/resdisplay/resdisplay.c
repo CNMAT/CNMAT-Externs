@@ -45,9 +45,6 @@
 #include "version.c"
 #include "math.h"
 
-#ifdef WINDOWS
-#include "common/commonsyms.c"
-#endif
 
 #ifndef FLT_MIN
 #define FLT_MIN 1E-37
