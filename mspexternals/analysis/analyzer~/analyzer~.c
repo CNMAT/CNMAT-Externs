@@ -1158,11 +1158,14 @@ dsp_free((t_pxobject *)x);
 	if (x->WindFFT != NULL) DisposePtr((char *) x->WindFFT);
 	if (x->peakBuf != NULL) DisposePtr((char *) x->peakBuf);
 	if (x->histBuf != NULL) DisposePtr((char *) x->histBuf);
-	if (x->x_clock != NULL) freeobject((t_object *)x->x_clock);
+	//if (x->x_clock != NULL) freeobject((t_object *)x->x_clock);
 	if (x->BufBark != NULL) DisposePtr((char *) x->BufBark);
 	if (x->BufSizeBark != NULL) DisposePtr((char *) x->BufSizeBark);
 	if (x->x_out != NULL) DisposePtr((char *) x->x_out);
 	if (x->myList != NULL) DisposePtr((char *) x->myList);
+	
+	//This is an easier way, since object_free checks before freeing.  -mzed
+	object_free((t_object *)x->x_clock);
 }
 
 void analyzer_tick(t_analyzer *x) {
