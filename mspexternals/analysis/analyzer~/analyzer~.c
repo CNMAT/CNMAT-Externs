@@ -40,7 +40,7 @@
  NAME: analyzer~
  DESCRIPTION: FFT-Based Perceptual Analysis
  AUTHORS: Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski
- COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05
+ COPYRIGHT_YEARS: 1988,89,90-99,2000,01,02,03,04,05, 11
  DRUPAL_NODE: /patch/xxxx
  SVN_REVISION: $LastChangedRevision$
  version 1.2.1: Matt Wright fixed pitch_getit() bounds error and added debug info
@@ -51,6 +51,7 @@
  version 1.4.1: fixed twiddle bug in fft code - mzed
  version 1.4.2: rewrote the error messages to be more informative - JM
  version 1.4.3: the hop size is now calculated when the dsp chain is compiled - JM
+ version 1.4.4: changed the clock free method, but think there might be a different bug in the free method.
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
@@ -79,7 +80,7 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.4.3"
+#define VERSION "1.4.4"
 #define RES_ID	7079
 #define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
