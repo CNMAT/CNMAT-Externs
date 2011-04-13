@@ -311,10 +311,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					"../../../c74support/max-includes",
 					"../../../c74support/msp-includes",
 				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Development;
 		};
@@ -322,10 +324,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					"../../../c74support/max-includes",
 					"../../../c74support/msp-includes",
 				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Deployment;
 		};
@@ -333,10 +337,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					"../../../c74support/max-includes",
 					"../../../c74support/msp-includes",
 				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Default;
 		};
