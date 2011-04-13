@@ -52,10 +52,12 @@
  version 1.4.2: rewrote the error messages to be more informative - JM
  version 1.4.3: the hop size is now calculated when the dsp chain is compiled - JM
  version 1.4.4: changed the clock free method, but think there might be a different bug in the free method.
+ version 1.4.5: addex obex include for object_free -mzed
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
 #include "ext.h"
+#include "ext_obex.h";
 #include "version.h"
 #include "version.c"
 #include "z_dsp.h"
@@ -80,7 +82,7 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.4.4"
+#define VERSION "1.4.5"
 #define RES_ID	7079
 #define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
