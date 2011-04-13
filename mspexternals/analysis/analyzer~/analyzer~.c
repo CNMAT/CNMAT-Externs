@@ -1142,7 +1142,9 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 
 void  analyzer_free(t_analyzer *x) {
 
-dsp_free((t_pxobject *)x);
+	dsp_free((t_pxobject *)x);
+	//This is an easier way, since object_free checks before freeing.  -mzed
+	object_free((t_object *)x->x_clock);
 
 #ifdef __ALTIVEC__
 #pragma altivec_model on
@@ -1167,8 +1169,7 @@ dsp_free((t_pxobject *)x);
 	if (x->x_out != NULL) DisposePtr((char *) x->x_out);
 	if (x->myList != NULL) DisposePtr((char *) x->myList);
 	
-	//This is an easier way, since object_free checks before freeing.  -mzed
-	object_free((t_object *)x->x_clock);
+	
 }
 
 void analyzer_tick(t_analyzer *x) {
