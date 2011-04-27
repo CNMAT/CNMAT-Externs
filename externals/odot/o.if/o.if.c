@@ -37,6 +37,7 @@ VERSION 0.0: First try
 #include "ext_obex_util.h"
 #include "ext_hashtab.h"
 #include "omax_util.h"
+#include "omax_parser.h"
 #include "osc.h"
 
 typedef t_atom (*two_op_func)(t_atom arg1, t_atom arg2);
@@ -78,6 +79,7 @@ typedef struct _oif{
 #define ARG_SET_FUNC(a, val) (a)->w.function = val; (a)->type = OIF_FUNC
 #define ARG_SET_ADDRESS(a, val) (a)->w.address = val; (a)->type = OIF_ADDRESS
 
+//#define P2F_DEBUG
 #ifdef P2F_DEBUG
 #define P2F(a1, a2) post("%s(%f, %f)", __PRETTY_FUNCTION__, atom_getfloat(&(a1)), atom_getfloat(&(a2)))
 #else
@@ -204,13 +206,13 @@ int oif_parse(t_oif *x, char *st, t_func *func){
 	}else if(*ptr == '|' && *(ptr + 1) == '|'){
 		func->f = oif_or;
 		ptr += 3;
-	}else if(*ptr == '<'){
+	}else if(*ptr == '<' && *(ptr + 1) == ' '){
 		func->f = oif_lt;
 		ptr += 2;
 	}else if(!strncmp(ptr, "<=", 2)){
 		func->f = oif_lte;
 		ptr += 3;
-	}else if(*ptr == '>'){
+	}else if(*ptr == '>' && *(ptr + 1) == ' '){
 		func->f = oif_gt;
 		ptr += 2;
 	}else if(!strncmp(ptr, ">=", 2)){
