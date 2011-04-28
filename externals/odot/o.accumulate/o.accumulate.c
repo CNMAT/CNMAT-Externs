@@ -79,15 +79,15 @@ void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
 	//nn = osc_util_flatten(nn, cpy, cpy);
 
 	if(x->buffer_pos + nn > x->buffer_len){
-		/*
-		x->buffer = sysmem_resizeptr(x->buffer, x->buffer_pos + nn);
-		if(!x->buffer){
+		char *tmp = (char *)realloc(x->buffer, x->buffer_pos + nn);
+		if(!tmp){
 			object_error((t_object *)x, "Out of memory...sayonara max...");
 			return;
 		}
+		x->buffer = tmp;
+		memset(x->buffer + x->buffer_pos, '\0', nn);
 		x->buffer_len = x->buffer_pos + nn;
-		*/
-		oaccum_bang(x);
+		//oaccum_bang(x);
 	}
 
 	if(x->buffer_pos == 0){
@@ -149,7 +149,9 @@ void *oaccum_new(t_symbol *msg, short argc, t_atom *argv){
 		x->buffer_len = 1024;
 		if(argc){
 			if(atom_gettype(argv) == A_LONG){
-				x->buffer_len = atom_getlong(argv);
+				//x->buffer_len = atom_getlong(argv);
+				object_error((t_object *)x, "o.accumultate no longer takes an argument to specify its internal buffer size.");
+				object_error((t_object *)x, "The buffer will expand as necessary.");
 			}
 		}
 		x->buffer = (char *)malloc(x->buffer_len * sizeof(char));
@@ -162,7 +164,6 @@ void *oaccum_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.accumulate", (method)oaccum_new, (method)oaccum_free, sizeof(t_oaccum), 0L, A_GIMME, 0);
-    	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)oaccum_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oaccum_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oaccum_notify, "notify", A_CANT, 0);
