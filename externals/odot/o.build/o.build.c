@@ -39,7 +39,7 @@ VERSION 1.0: One inlet per address
 #include "omax_util.h"
 #include "osc.h"
 
-#define MAX_NUM_ARGS 64
+//#define MAX_NUM_ARGS 64
 
 typedef struct _obuild{
 	t_object ob;
@@ -51,7 +51,7 @@ typedef struct _obuild{
 	int *arglen;
 	long inlet;
 	void **proxy;
-	long max_num_args;
+	//long max_num_args;
 } t_obuild;
 
 void *obuild_class;
@@ -108,16 +108,6 @@ void obuild_outputBundle(t_obuild *x){
 	for(i = 0; i < x->numAddresses; i++){
 		pos += omax_util_encode_atoms(buffer + pos, x->addresses[i], x->numargs[i], x->args[i]);
 	}
-	
-	/*
-	int len = osc_util_make_bundle(x->numAddresses, 
-					x->addresses, 
-					x->numArgs, 
-					x->typetags, 
-					x->args, 
-					&(x->bufsize), 
-					buffer);
-	*/
 
 	t_atom out[2];
 	atom_setlong(&(out[0]), pos);
@@ -142,14 +132,26 @@ void obuild_anything(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
 	if(numargs > x->arglen[inlet]){
 		if(x->args[inlet] == NULL){
 			//x->args[inlet] = (t_atom *)sysmem_newptr(sizeof(t_atom) * numargs);
+			x->args[inlet] = (t_atom *)malloc(sizeof(t_atom) * numargs);
+			if(!x->args[inlet]){
+				object_error((t_object *)x, "out of memory!");
+				return;
+			}
 		}else{
 			//x->args[inlet] = (t_atom *)sysmem_resizeptr(x->args[inlet], sizeof(t_atom) * numargs);
+			x->args[inlet] = (t_atom *)realloc(x->args[inlet], sizeof(t_atom) * numargs);
+			if(!x->args[inlet]){
+				object_error((t_object *)x, "out of memory!");
+				return;
+			}
 		}
+		/*
 		numargs = MAX_NUM_ARGS;
 		if(x->args[inlet] == NULL){
 			object_error((t_object *)x, "Out of memory--Max will be crashing soon...");
 			return;
 		}
+		*/
 		x->arglen[inlet] = numargs;
 	}
 	if(msg){
@@ -226,11 +228,14 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 			object_error((t_object *)x, "you must supply at least 1 argument");
 			return NULL;
 		}
-		x->max_num_args = MAX_NUM_ARGS;
+		//x->max_num_args = MAX_NUM_ARGS;
 		if(atom_gettype(argv) == A_LONG){
-			x->max_num_args = atom_getlong(argv);
+			//x->max_num_args = atom_getlong(argv);
+			object_error((t_object *)x, "o.build no longer takes an integer argument to specify the list length of each inlet.");
+			object_error((t_object *)x, "The internal buffers will expand as necessary.");
 			argv++;
 			argc--;
+
 		}
 		if(atom_gettype(argv) != A_SYM){
 			object_error((t_object *)x, "the first argument must be an OSC address");
@@ -266,9 +271,10 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 		memset(x->arglen, '\0', count * sizeof(int));
 		for(i = 0; i < count; i++){
 			x->addresses[i] = atom_getsym(addresses[i]);
-			//x->args[i] = (t_atom *)malloc(numargs[i] * sizeof(t_atom));
-			x->args[i] = (t_atom *)malloc(x->max_num_args * sizeof(t_atom));
-			x->arglen[i] = x->max_num_args;
+			x->args[i] = (t_atom *)malloc(numargs[i] * sizeof(t_atom));
+			x->arglen[i] = numargs[i];
+			//x->args[i] = (t_atom *)malloc(x->max_num_args * sizeof(t_atom));
+			//x->arglen[i] = x->max_num_args;
 			x->numargs[i] = numargs[i];
 			memcpy(x->args[i], addresses[i] + 1, numargs[i] * sizeof(t_atom));
 		}
@@ -291,7 +297,7 @@ int main(void){
 	name = "o.build";
 #endif
 	t_class *c = class_new(name, (method)obuild_new, (method)obuild_free, sizeof(t_obuild), 0L, A_GIMME, 0);
-    	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
+    	//osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	//class_addmethod(c, (method)obuild_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)obuild_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)obuild_anything, "anything", A_GIMME, 0);
