@@ -148,7 +148,6 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 			buf[buflen - 1] = '\0';
 		}
 	}
-
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
 	jbox_redraw((t_jbox *)x);
 
@@ -156,7 +155,7 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 		x->substitutions[i] = -1;
 	}
 	if(buf){
-		sysmem_freeptr(buf);
+		free(buf);
 	}
 }
 
@@ -168,8 +167,8 @@ void omessage_cbk(t_osc_msg msg, void *v){
 	t_atom a[len];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, a);
 
-	if(len > x->max_num_atoms){
-		x->atoms = (t_atom *)sysmem_resizeptr(x->atoms, len * sizeof(t_atom));
+	if(len + x->num_atoms > x->max_num_atoms){
+		x->atoms = (t_atom *)realloc(x->atoms, (x->max_num_atoms + len) * sizeof(t_atom));
 		x->max_num_atoms = len + 1;
 		if(!(x->atoms)){
 			object_error((t_object *)x, "out of memory!");
@@ -217,23 +216,21 @@ void omessage_paint(t_omessage *x, t_object *patcherview){
 
 void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 	//char *bufptr = buf;
-	int len = *buflen;
-	if(!(*buf)){
-		*buf = sysmem_newptr(1024);
-		len = 1024;
-	}
-	char *bufptr = *buf;
+	char *tmpbuf;
+	int len = x->num_atoms * 8;
+	tmpbuf = (char *)malloc(len * sizeof(t_atom));
+	char *bufptr = tmpbuf;
 	int i;
 	for(i = 0; i < x->num_atoms; i++){
-		if(len - (bufptr - *buf) < 64){
-			int offset = bufptr - *buf;
-			*buf = sysmem_resizeptr(*buf, len + 256);
-			if(!(*buf)){
+		if(len - (bufptr - tmpbuf) < 64){
+			int offset = bufptr - tmpbuf;
+			tmpbuf = (char *)realloc(tmpbuf, (len * sizeof(t_atom)) + 1024);
+			if(!(tmpbuf)){
 				object_error((t_object *)x, "out of memory!");
 				return;
 			}
-			len += 256;
-			bufptr = *buf + offset;
+			len += 1024;
+			bufptr = tmpbuf + offset;
 		}
 		switch(atom_gettype(x->atoms + i)){
 		case A_LONG:
@@ -261,7 +258,8 @@ void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 			break;
 		}
 	}
-	*buflen = bufptr - *buf;
+	*buf = tmpbuf;
+	*buflen = bufptr - tmpbuf;
 }
 
 void omessage_parse_string(t_omessage *x, long len, char *string){
@@ -398,7 +396,7 @@ void omessage_gettext(t_omessage *x){
 					t_symbol *sym = argv[i].a_w.w_sym;
 					sub = strtol(sym->s_name, NULL, 0);
 					if(sub > x->substitutions_len){
-						int *tmp = (int *)sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
+						int *tmp = (int *)realloc(x->substitutions, sizeof(int) * (sub * 2));
 						if(tmp){
 							x->substitutions = tmp;
 						}else{
@@ -416,7 +414,7 @@ void omessage_gettext(t_omessage *x){
 				}else if(type == A_DOLLAR){
 					sub = argv[i].a_w.w_long; // atom_getlong() apparently doesn't worke with A_DOLLAR
 					if(sub > x->substitutions_len){
-						int *tmp = (int *)sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
+						int *tmp = (int *)realloc(x->substitutions, sizeof(int) * (sub * 2));
 						if(tmp){
 							x->substitutions = tmp;
 						}else{
@@ -436,7 +434,7 @@ void omessage_gettext(t_omessage *x){
 					if(*(sym->s_name) == '$'){
 						sub = strtol(sym->s_name + 1, NULL, 0);
 						if(sub > x->substitutions_len){
-							int *tmp = (int *)sysmem_resizeptr(x->substitutions, sizeof(int) * (sub * 2));
+							int *tmp = (int *)realloc(x->substitutions, sizeof(int) * (sub * 2));
 							if(tmp){
 								x->substitutions = tmp;
 							}else{
@@ -455,9 +453,15 @@ void omessage_gettext(t_omessage *x){
 				}else{
 
 				}
-
 			}
-
+			if(argc > x->max_num_atoms - x->num_atoms){
+				x->atoms = (t_atom *)realloc(x->atoms, (x->max_num_atoms + argc) * sizeof(t_atom));
+				if(!x->atoms){
+					object_error((t_object *)x, "out of memory!");
+					return;
+				}
+				x->max_num_atoms += argc;
+			}
 			memcpy(x->atoms + x->num_atoms, argv, argc * sizeof(t_atom));
 			x->num_atoms += argc;
 			atom_setsym(x->atoms + x->num_atoms, gensym("\n"));
@@ -490,7 +494,7 @@ void omessage_gettext(t_omessage *x){
 
 void omessage_make_and_output_bundle(t_omessage *x){
 	int bufsize = 256;
-	char *buf = (char *)sysmem_newptr(bufsize);
+	char *buf = (char *)malloc(bufsize);
 	char *bufptr = buf;
 	memset(buf, '\0', bufsize);
 	osc_bundle_setBundleID(bufptr);
@@ -517,7 +521,7 @@ void omessage_make_and_output_bundle(t_omessage *x){
 		int nbytes = omax_util_get_bundle_size_for_atoms(atom_getsym(atoms + i), n - 1, atoms + i + 1);
 		if((bufptr - buf) + nbytes >= bufsize){
 			int oldlen = bufptr - buf;
-			buf = sysmem_resizeptr(buf, bufsize + (nbytes * 4));
+			buf = (char *)realloc(buf, bufsize + (nbytes * 4));
 			bufptr = buf + oldlen;
 			if(!buf){
 				object_error((t_object *)x, "ran out of memory!");
@@ -533,7 +537,7 @@ void omessage_make_and_output_bundle(t_omessage *x){
 	atom_setlong(a, bufptr - buf);
 	atom_setlong(a + 1, (long)buf);
 	outlet_anything(x->outlet, gensym("FullPacket"), 2, a);
-	sysmem_freeptr(buf);
+	free(buf);
 	/*
 	x->buffer_pos = 0;
 	memset(x->buffer, '\0', x->buffer_len);
@@ -642,8 +646,8 @@ void omessage_settext(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 		error("o.message: %s is not a valid OSC address", address->s_name);
 		return;
 	}
-	if(x->max_num_atoms > argc){
-		x->atoms = (t_atom *)sysmem_resizeptr(x->atoms, argc * sizeof(t_atom));
+	if(argc > x->max_num_atoms){
+		x->atoms = (t_atom *)realloc(x->atoms, argc * sizeof(t_atom));
 		x->max_num_atoms = argc;
 		if(!(x->atoms)){
 			object_error((t_object *)x, "out of memory!");
@@ -662,20 +666,20 @@ void omessage_settext(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 		x->substitutions[i] = -1;
 	}
 	if(buf){
-		sysmem_freeptr(buf);
+		free(buf);
 	}
 }
 
 void omessage_free(t_omessage *x){
 	jbox_free((t_jbox *)x);
 	if(x->atoms){
-		sysmem_freeptr(x->atoms);
+		free(x->atoms);
 	}
 	if(x->buffer){
-		sysmem_freeptr(x->buffer);
+		free(x->buffer);
 	}
 	if(x->substitutions){
-		sysmem_freeptr(x->substitutions);
+		free(x->substitutions);
 	}
 }
 
@@ -735,13 +739,13 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
  		x->ob.b_firstin = (void *)x; 
 		x->outlet = outlet_new(x, NULL);
 		x->proxy = proxy_new(x, 1, &(x->inlet));
-		x->atoms = (t_atom *)sysmem_newptr(OMESSAGE_MAX_NUM_MESSAGES * sizeof(t_atom));
+		x->atoms = (t_atom *)malloc(OMESSAGE_MAX_NUM_MESSAGES * sizeof(t_atom));
 		x->max_num_atoms = OMESSAGE_MAX_NUM_MESSAGES;
 		x->num_atoms = 0;
-		x->buffer = (char *)sysmem_newptr(BUFLEN * sizeof(char));
+		x->buffer = (char *)malloc(BUFLEN * sizeof(char));
 		x->buffer_len = BUFLEN;
 		x->buffer_pos = 0;
-		x->substitutions = (int *)sysmem_newptr(1024 * sizeof(int));
+		x->substitutions = (int *)malloc(1024 * sizeof(int));
 		x->substitutions_len = 1024;
 
 		int i;
@@ -763,7 +767,6 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
  		jbox_ready((t_jbox *)x);
 
 		omessage_gettext(x);
-        
 		return x;
 	}
 	return NULL;
@@ -773,7 +776,7 @@ int main(void){
 	common_symbols_init();
 	//jpatcher_syms_init();
 	t_class *c = class_new("o.message", (method)omessage_new, (method)omessage_free, sizeof(t_omessage), 0L, A_GIMME, 0);
-	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
+	//osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	alias("o.m");
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
