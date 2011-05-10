@@ -1,0 +1,6 @@
+NAME: "partconv~"
+DESCRIPTION: "Non-uniform partitioned FFT convolution, multiple in/out and parallel multithreaded"
+AUTHORS: "Andy Schmeder, Eric Battenberg"
+COPYRIGHT_YEARS: "2011"
+VERSION 0.1: "Initial port of partconv code"
+VERSION: "0.1"
