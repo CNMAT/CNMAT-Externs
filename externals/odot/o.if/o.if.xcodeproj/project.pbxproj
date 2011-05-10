@@ -13,8 +13,7 @@
 		5249DA161294E83E00B136BE /* omax_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 5249DA141294E83E00B136BE /* omax_util.h */; };
 		5249DF8512E372D900B3ABA5 /* o.if.c in Sources */ = {isa = PBXBuildFile; fileRef = 5249DF8412E372D900B3ABA5 /* o.if.c */; };
 		5258CC3B13205E7800E29B7C /* libo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258CC3A13205E7800E29B7C /* libo.a */; };
-		52612DFF1354D91E005BB8C3 /* omax_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 52612DFD1354D91E005BB8C3 /* omax_parser.c */; };
-		52612E001354D91E005BB8C3 /* omax_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 52612DFE1354D91E005BB8C3 /* omax_parser.h */; };
+		52C0714913775C58006B48E0 /* libomax.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C0714813775C58006B48E0 /* libomax.a */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
@@ -27,8 +26,7 @@
 		5249DA141294E83E00B136BE /* omax_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omax_util.h; path = ../omax_util.h; sourceTree = SOURCE_ROOT; };
 		5249DF8412E372D900B3ABA5 /* o.if.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = o.if.c; sourceTree = "<group>"; };
 		5258CC3A13205E7800E29B7C /* libo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libo.a; path = ../libo/libo.a; sourceTree = SOURCE_ROOT; };
-		52612DFD1354D91E005BB8C3 /* omax_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = omax_parser.c; path = ../parser/omax_parser.c; sourceTree = SOURCE_ROOT; };
-		52612DFE1354D91E005BB8C3 /* omax_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = omax_parser.h; path = ../parser/omax_parser.h; sourceTree = SOURCE_ROOT; };
+		52C0714813775C58006B48E0 /* libomax.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libomax.a; path = ../parser/libomax.a; sourceTree = SOURCE_ROOT; };
 		8D01CCD20486CAD60068D4B7 /* o.if.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = o.if.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -40,6 +38,7 @@
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
 				121679470FF93C67005F098E /* MaxAPI.framework in Frameworks */,
 				5258CC3B13205E7800E29B7C /* libo.a in Frameworks */,
+				52C0714913775C58006B48E0 /* libomax.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +59,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				52C0714813775C58006B48E0 /* libomax.a */,
 				5258CC3A13205E7800E29B7C /* libo.a */,
 				121679460FF93C67005F098E /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
@@ -78,8 +78,6 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				52612DFD1354D91E005BB8C3 /* omax_parser.c */,
-				52612DFE1354D91E005BB8C3 /* omax_parser.h */,
 				5249DF8412E372D900B3ABA5 /* o.if.c */,
 				5249DA131294E83E00B136BE /* omax_util.c */,
 				5249DA141294E83E00B136BE /* omax_util.h */,
@@ -104,7 +102,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5249DA161294E83E00B136BE /* omax_util.h in Headers */,
-				52612E001354D91E005BB8C3 /* omax_parser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,7 +112,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "o.if" */;
 			buildPhases = (
-				52612E081354DAB9005BB8C3 /* ShellScript */,
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
 				8D01CCCB0486CAD60068D4B7 /* Sources */,
@@ -169,22 +165,6 @@
 		};
 /* End PBXRezBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		52612E081354DAB9005BB8C3 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd ../parser && bison -d -o omax_parser.c omax_parser.y";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		8D01CCCB0486CAD60068D4B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -193,7 +173,6 @@
 				121679860FF93C6F005F098E /* commonsyms.c in Sources */,
 				5249DA151294E83E00B136BE /* omax_util.c in Sources */,
 				5249DF8512E372D900B3ABA5 /* o.if.c in Sources */,
-				52612DFF1354D91E005BB8C3 /* omax_parser.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,9 +214,11 @@
 					/usr/local/lib,
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../libo\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../parser\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
@@ -279,24 +260,28 @@
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../libo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../parser\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../libo\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../parser\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/../libo/libo.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../libo/libo.a\" \"$(SRCROOT)/../parser/libomax.a\"";
 				PRODUCT_NAME = o.if;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SECTORDER_FLAGS = "";
@@ -341,9 +326,11 @@
 					/usr/local/lib,
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../libo\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../parser\"";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";

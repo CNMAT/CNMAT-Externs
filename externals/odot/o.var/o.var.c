@@ -205,33 +205,39 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation, long inlet
 	}
 
 
-	if(inlet == 1){
+	if(inlet == 1 || operation == OVAR_NONE){
 		ovar_clearDataStructures(x->ht1, x->ll1);
+		t_hashtab *ht = x->ht1;
+		x->ht1 = x->ht2;
+		x->ht2 = ht;
+		t_linklist *ll = x->ll1;
+		x->ll1 = x->ll2;
+		x->ll2 = ll;
+	}else{
+
+		int nkeys = linklist_getsize(x->ll2);
+		int i;
+		for(i = 0; i < nkeys; i++){
+			t_atom *val;
+			//hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
+			val = linklist_getindex(x->ll2, i);
+			int len = atom_getlong(val) + 1;
+			t_atom *newval = (t_atom *)malloc(len * sizeof(t_atom));
+			//printf("%s:%d: allocating %p (%d bytes)\n", __PRETTY_FUNCTION__, __LINE__, newval, len * sizeof(t_atom));
+			memcpy(newval, val, len * sizeof(t_atom));
+			t_atom *oldval = NULL;
+			hashtab_lookup(x->ht1, atom_getsym(newval + 1), (t_object **)(&oldval));
+			if(oldval){
+				linklist_insertbeforeobjptr(x->ll1, newval, oldval);
+				linklist_chuckobject(x->ll1, oldval);
+				ovar_deleteItem((t_object *)oldval, NULL);
+			}else{
+				linklist_append(x->ll1, newval);
+			}
+			hashtab_store(x->ht1, atom_getsym(newval + 1), (t_object *)newval);
+		}
 	}
 
-	
-	int nkeys = linklist_getsize(x->ll2);
-	int i;
-	for(i = 0; i < nkeys; i++){
-		t_atom *val;
-		//hashtab_lookup(x->ht2, keys[i], (t_object **)(&val));
-		val = linklist_getindex(x->ll2, i);
-		int len = atom_getlong(val) + 1;
-		t_atom *newval = (t_atom *)malloc(len * sizeof(t_atom));
-		//printf("%s:%d: allocating %p (%d bytes)\n", __PRETTY_FUNCTION__, __LINE__, newval, len * sizeof(t_atom));
-		memcpy(newval, val, len * sizeof(t_atom));
-		t_atom *oldval = NULL;
-		hashtab_lookup(x->ht1, atom_getsym(newval + 1), (t_object **)(&oldval));
-		if(oldval){
-			linklist_insertbeforeobjptr(x->ll1, newval, oldval);
-			linklist_chuckobject(x->ll1, oldval);
-			ovar_deleteItem((t_object *)oldval, NULL);
-		}else{
-			linklist_append(x->ll1, newval);
-		}
-		hashtab_store(x->ht1, atom_getsym(newval + 1), (t_object *)newval);
-	}
-	
 	if(inlet == 0){
 		int len = ovar_linklist_compute_bundle_size(x, x->ll1);
 		char buf[len];

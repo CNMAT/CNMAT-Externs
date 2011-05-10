@@ -357,51 +357,6 @@ void oroute_insert_msg(t_oroute_wksp *x, t_oroute_message *message){
 		}
 		m->prev = msg;
 	}
-	/*
-	post("%s, %d", message->msg.address, message->outlet_num);
-	t_oroute_message *msg = message;
-	t_oroute_message *m = x->messages;
-	t_oroute_message *prev = NULL;
-	msg->next = NULL;
-	msg->prev = NULL;
-
-	if(!m){
-		x->messages = msg;
-		return;
-	}
-	if(m->outlet_num >= msg->outlet_num){
-		msg->next = x->messages;
-		m->prev = msg;
-		x->messages = msg;
-		return;
-	}	
-	while(m->outlet_num > msg->outlet_num){
-		if(!(m->next)){
-			break;
-		}
-		prev = m;
-		m = m->next;
-	}
-	if(!m){
-		post("this can't happen, right??");
-		m = prev;
-	}
-	post("%s (%d), %s (%d)", m->msg.address, m->outlet_num, msg->msg.address, msg->outlet_num);
-	msg->prev = m;
-	msg->next = m->next;
-	if(msg->next){
-		msg->next->prev = msg;
-	}
-	m->next = msg;
-	*/
-	/*
-	msg->next = m->next;
-	if(m->next){
-		m->next->prev = msg;
-	}
-	m->next = msg;
-	msg->prev = m;
-	*/
 }
 
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){

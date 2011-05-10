@@ -60,11 +60,6 @@ t_max_err oaccum_notify(t_oaccum *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
-	// make a local copy so the ref doesn't disappear out from underneath us
-	char cpy[len];
-	memcpy(cpy, (char *)ptr, len);
-	long nn = len;
-
 	// if the OSC packet contains a single message, turn it into a bundle
 	/*
 	if(strncmp(cpy, "#bundle\0", 8)){
@@ -77,25 +72,24 @@ void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
 	
 	// flatten any nested bundles
 	//nn = osc_util_flatten(nn, cpy, cpy);
-
-	if(x->buffer_pos + nn > x->buffer_len){
-		char *tmp = (char *)realloc(x->buffer, x->buffer_pos + nn);
+	if(x->buffer_pos + len > x->buffer_len){
+		char *tmp = (char *)realloc(x->buffer, x->buffer_pos + len);
 		if(!tmp){
 			object_error((t_object *)x, "Out of memory...sayonara max...");
 			return;
 		}
 		x->buffer = tmp;
-		memset(x->buffer + x->buffer_pos, '\0', nn);
-		x->buffer_len = x->buffer_pos + nn;
+		memset(x->buffer + x->buffer_pos, '\0', len);
+		x->buffer_len = x->buffer_pos + len;
 		//oaccum_bang(x);
 	}
 
 	if(x->buffer_pos == 0){
-		memcpy(x->buffer, cpy, nn);
-		x->buffer_pos += nn;
+		memcpy(x->buffer, (char *)ptr, len);
+		x->buffer_pos += len;
 	}else{
-		memcpy(x->buffer + x->buffer_pos, cpy + 16, nn - 16);
-		x->buffer_pos += nn - 16;
+		memcpy(x->buffer + x->buffer_pos, (char *)ptr + 16, len - 16);
+		x->buffer_pos += len - 16;
 	}	
 
 	// extract the messages from the bundle
@@ -116,8 +110,10 @@ void oaccum_bang(t_oaccum *x){
 	if(x->buffer_pos > 16){
 		t_atom out[2];
 		atom_setlong(out, x->buffer_pos);
-		char outbuf[x->buffer_pos];
-		memcpy(outbuf, x->buffer, x->buffer_pos);
+		int len = x->buffer_pos;
+		char outbuf[len];
+		memcpy(outbuf, x->buffer, len);
+		memset(x->buffer, '\0', len);
 		x->buffer_pos = 0;
 		atom_setlong(out + 1, (long)outbuf);
 		outlet_anything(x->outlet, ps_FullPacket, 2, out);

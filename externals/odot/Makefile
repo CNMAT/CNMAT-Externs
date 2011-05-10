@@ -32,8 +32,7 @@ $(OBJDIR)/patches:
 	cp -r patches $(OBJDIR)
 
 .PHONY: clean
-clean: clean-libo
-	rm o.tgz
+clean: 
 	for d in $(OBJECTS); do (cd $$d; $(MAKE) clean); done
 	rm -rf $(OBJDIR)
 

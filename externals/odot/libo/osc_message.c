@@ -195,9 +195,7 @@ int osc_message_rename(int len, char *buffer, char *new_address, char **new_buff
 	memcpy(ptr, buffer + old_address_len_nullpadded, len - old_address_len_nullpadded);
 	*((uint32_t *)newbuf) = ntoh32(newlen);
 	if(!(*new_buffer)){
-		printf("asking for %d bytes\n", newlen);
 		*new_buffer = (char *)osc_mem_alloc(newlen);
-		printf("got %p\n", *new_buffer);
 	}
 	memcpy(*new_buffer, newbuf, newlen + 4);
 	return newlen + 4;
@@ -257,8 +255,9 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 			break;
 		case 'f':
 			{
-				uint32_t l = ntoh32(*((int32_t *)msg->argv));
-				p("%f ", *((float *)&l));
+				//uint32_t l = ntoh32(*((int32_t *)msg->argv));
+				//p("%f ", *((float *)&l));
+				p("%f ", *((float *)msg->argv));
 			}
 			break;
 		case 'h':
@@ -267,8 +266,9 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 			break;
 		case 'd':
 			{
-				uint64_t l = ntoh64(*((int64_t *)msg->argv));
-				p("%f ", *((double *)&l));
+				//uint64_t l = ntoh64(*((int64_t *)msg->argv));
+				//p("%f ", *((double *)&l));
+				p("%f ", *((double *)msg->argv));
 			}
 			break;
 		case 's':

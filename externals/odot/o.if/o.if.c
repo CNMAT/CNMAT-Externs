@@ -40,7 +40,11 @@ VERSION 0.0: First try
 #include "omax_parser.h"
 #include "osc.h"
 
+extern struct _omax_func t_omax_func;
+extern int yyparse (int argc, t_atom *argv, int *argp, struct _omax_func **f);
 typedef t_atom (*two_op_func)(t_atom arg1, t_atom arg2);
+
+extern void omax_parser_funcall(struct _omax_func *f, int *argc_out, t_atom **argv_out);
 
 enum types{
 	OIF_ATOM,
@@ -438,6 +442,7 @@ void oif_free(t_oif *x){
 	}
 }
 
+extern void omax_scanner_scan_atom_array(int, t_atom *, int *, t_atom **);
 void *oif_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oif *x;
 	if(x = (t_oif *)object_alloc(oif_class)){
@@ -452,6 +457,8 @@ void *oif_new(t_symbol *msg, short argc, t_atom *argv){
 		hashtab_flags(x->ht, OBJ_FLAG_DATA);
 
 		if(argc){
+#define BISON
+#ifndef BISON
 			if(atom_gettype(argv) != A_SYM){
 				object_error((t_object *)x, "expected a symbol as the first argument");
 				return NULL;
@@ -462,6 +469,27 @@ void *oif_new(t_symbol *msg, short argc, t_atom *argv){
 			}
 			x->function_string = atom_getsym(argv);
 			oif_parse(x, atom_getsym(argv)->s_name, &(x->function_graph));
+#else
+			int argclex = 0;
+			t_atom *argvlex = NULL;
+			printf("calling omax_scanner_scan_atom_array(%d, %p, ...)\n", argc, argv);
+			omax_scanner_scan_atom_array(argc, argv, &argclex, &argvlex);
+			printf("argc = %d, argclex = %d\n", argc, argclex);
+			int i;
+			for(i = 0; i < argclex; i++){
+				postatom(argvlex + i);
+			}
+			if(argvlex){
+				osc_mem_free(argvlex);
+			}
+			int counter = 0;
+			struct _omax_func *f = NULL;
+			yyparse(argclex, argvlex, &counter, &f);
+			int argc_out = 0;
+			t_atom *argv_out = NULL;
+			omax_parser_funcall(f, &argc_out, &argv_out);
+			
+#endif
 		}
 		
 		attr_args_process(x, argc, argv);

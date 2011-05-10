@@ -3,7 +3,9 @@ LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o)
 LIBO_CFILES = $(foreach F, $(LIBO_BASENAMES), $(F).c)
 LIBO_HFILES = $(foreach F, $(LIBO_BASENAMES), $(F).h) osc.h
 
-ARCH = -arch i386 -arch ppc
+ARCH = -arch i386 #-arch ppc
+CC = gcc
+OPTIMIZATION = -O3 -funroll-loops
 
 all: $(LIBO_CFILES) $(LIBO_HFILES)
 	$(MAKE) libo.a
@@ -15,14 +17,14 @@ libo.a: $(LIBO_OBJECTS)
 	ar -rcs libo.a $(LIBO_OBJECTS)
 
 %.o: %.c
-	gcc $(ARCH) -c -o $(notdir $(basename $@)).o $(notdir $(basename $@)).c
+	$(CC) $(ARCH) $(OPTIMIZATION) -c -o $(notdir $(basename $@)).o $(notdir $(basename $@)).c
 
 .PHONY: doc
 doc:
 	cd doc && doxygen Doxyfile
 
 test/osc_test: test/osc_test.c libo.a
-	+cd test && gcc $(ARCH) -L.. -lo -I.. -o osc_test osc_test.c
+	+cd test && $(CC) $(ARCH) $(OPTIMIZATION) -L.. -lo -I.. -o osc_test osc_test.c
 
 .PHONY: clean
 clean:
