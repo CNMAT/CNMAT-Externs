@@ -1,0 +1,4 @@
+LIBRARY jit.gl.simple.mxe
+
+EXPORTS
+	main

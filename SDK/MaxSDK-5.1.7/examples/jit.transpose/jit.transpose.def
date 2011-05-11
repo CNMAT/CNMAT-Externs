@@ -1,0 +1,4 @@
+LIBRARY jit.transpose.mxe
+
+EXPORTS
+	main

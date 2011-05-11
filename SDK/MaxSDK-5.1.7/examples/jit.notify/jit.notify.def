@@ -1,0 +1,4 @@
+LIBRARY jit.notify.mxe
+
+EXPORTS
+	main

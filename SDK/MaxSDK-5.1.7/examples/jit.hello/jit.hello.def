@@ -1,0 +1,4 @@
+LIBRARY jit.hello.mxe
+
+EXPORTS
+	main

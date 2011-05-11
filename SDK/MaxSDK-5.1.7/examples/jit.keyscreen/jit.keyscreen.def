@@ -1,0 +1,4 @@
+LIBRARY jit.keyscreen.mxe
+
+EXPORTS
+	main

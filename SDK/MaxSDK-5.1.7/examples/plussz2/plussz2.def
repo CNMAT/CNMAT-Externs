@@ -1,0 +1,4 @@
+LIBRARY plussz2.mxe
+
+EXPORTS
+	main

@@ -1,0 +1,5 @@
+LIBRARY dbviewer.mxe
+
+EXPORTS
+	main
+

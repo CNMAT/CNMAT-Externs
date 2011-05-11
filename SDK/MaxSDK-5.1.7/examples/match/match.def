@@ -1,0 +1,7 @@
+;match.def
+
+LIBRARY match.mxe
+
+EXPORTS
+	main
+

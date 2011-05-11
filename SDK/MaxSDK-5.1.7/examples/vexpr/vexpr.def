@@ -1,0 +1,7 @@
+;vexpr.def
+
+LIBRARY vexpr.mxe
+
+EXPORTS
+	main
+
