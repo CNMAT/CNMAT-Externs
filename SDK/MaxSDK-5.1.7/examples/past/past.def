@@ -1,0 +1,7 @@
+;past.def
+
+LIBRARY past.mxe
+
+EXPORTS
+	main
+

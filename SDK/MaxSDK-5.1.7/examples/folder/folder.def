@@ -1,0 +1,7 @@
+;folder.def
+
+LIBRARY folder.mxe
+
+EXPORTS
+	main
+

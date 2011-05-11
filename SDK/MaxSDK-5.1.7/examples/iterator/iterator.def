@@ -1,0 +1,4 @@
+LIBRARY iterator.mxe
+
+EXPORTS
+	main

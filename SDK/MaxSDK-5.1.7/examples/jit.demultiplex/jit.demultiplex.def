@@ -1,0 +1,4 @@
+LIBRARY jit.demultiplex.mxe
+
+EXPORTS
+	main

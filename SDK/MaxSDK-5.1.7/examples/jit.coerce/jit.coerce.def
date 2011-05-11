@@ -1,0 +1,4 @@
+LIBRARY jit.coerce.mxe
+
+EXPORTS
+	main
