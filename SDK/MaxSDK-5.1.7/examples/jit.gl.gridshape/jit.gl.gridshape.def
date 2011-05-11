@@ -1,0 +1,4 @@
+LIBRARY jit.gl.gridshape.mxe
+
+EXPORTS
+	main

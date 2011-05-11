@@ -1,0 +1,4 @@
+LIBRARY jit.spill.mxe
+
+EXPORTS
+	main

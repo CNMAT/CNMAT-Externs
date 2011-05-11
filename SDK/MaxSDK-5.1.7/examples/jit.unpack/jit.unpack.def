@@ -1,0 +1,4 @@
+LIBRARY jit.unpack.mxe
+
+EXPORTS
+	main

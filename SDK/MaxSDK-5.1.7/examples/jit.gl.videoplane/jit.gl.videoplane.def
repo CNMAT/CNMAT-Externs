@@ -1,0 +1,4 @@
+LIBRARY jit.gl.videoplane.mxe
+
+EXPORTS
+	main

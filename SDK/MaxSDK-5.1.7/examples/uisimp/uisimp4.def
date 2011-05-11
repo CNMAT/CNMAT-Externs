@@ -1,0 +1,7 @@
+;uisimp.def
+
+LIBRARY uisimp4.mxe
+
+EXPORTS
+	main
+

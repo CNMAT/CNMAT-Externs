@@ -1,0 +1,4 @@
+LIBRARY jit.gradient.mxe
+
+EXPORTS
+	main

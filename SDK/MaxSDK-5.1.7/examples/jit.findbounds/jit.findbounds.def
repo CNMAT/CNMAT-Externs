@@ -1,0 +1,4 @@
+LIBRARY jit.findbounds.mxe
+
+EXPORTS
+	main

@@ -1,0 +1,4 @@
+LIBRARY threadpool.mxe
+
+EXPORTS
+	main
