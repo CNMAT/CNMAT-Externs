@@ -1,6 +1,8 @@
 #include <inttypes.h>
+#include <Carbon.h>
+#include <CoreServices.h>
 #include "omax_util.h"
-#include "libo/osc.h"
+#include "osc.h"
 
 #define __ODOT_PROFILE__
 #include "profile.h"

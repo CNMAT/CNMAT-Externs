@@ -4,31 +4,32 @@
 #include "ext.h"
 
 #define OMAX_ARG_TYPE_ATOM 1
-#define OMAX_ARG_TYPE_FUNC 2
+#define OMAX_ARG_TYPE_EXPR 2
 #define OMAX_ARG_TYPE_OSCADDRESS 3
 	
-typedef struct _omax_func{
-	int (*f)(struct _omax_func *, int *, t_atom **);
-	struct _omax_func_arg *argv;
+typedef struct _omax_expr{
+	int (*f)(struct _omax_expr *, int *, double **);
+	struct _omax_expr_arg *argv;
 	int argc;
-	struct _omax_func *next, *prev;
-} t_omax_func;
+	struct _omax_expr *next, *prev;
+} t_omax_expr;
 
-typedef struct _omax_func_arg{
+typedef struct _omax_expr_arg{
 	union arg{
 		t_atom atom;
-		struct _omax_func *func;
+		struct _omax_expr *expr;
 		char *osc_address;
 	}arg;
 	int type;
-	struct _omax_func_arg *next;
-} t_omax_func_arg;
+	struct _omax_expr_arg *next;
+} t_omax_expr_arg;
 
-typedef int (*t_omax_func_ptr)(t_omax_func *f, int *argc_out, t_atom **argv_out);
+typedef int (*t_omax_funcptr)(t_omax_expr *f, int *argc_out, double **argv_out);
 
 // these all return non-zero in the case of an error
-int omax_parser_funcall(t_omax_func *f, int *argc_out, t_atom **argv_out);
-int omax_parser_getargs(t_omax_func_arg *arglist, int **argc, double **argv);
-int omax_parser_plus(struct _omax_func *f, int *argc_out, t_atom **argv_out);
+int omax_expr_funcall(t_omax_expr *f, int *argc_out, double **argv_out);
+int omax_expr_getArg(t_omax_expr_arg *arg, int *argc_out, double **argv_out);
+int omax_expr_plus(t_omax_expr *f, int *argc_out, double **argv_out);
+t_omax_expr_arg *omax_expr_arg_alloc(void);
 
 #endif // __OMAX_EXPR_H__
