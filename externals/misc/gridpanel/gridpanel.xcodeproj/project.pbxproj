@@ -248,7 +248,7 @@
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "/Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat_repositories/main/trunk/max/c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.pch";
 				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
