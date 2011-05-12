@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A40028A8137B6F7900B1B255 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = A40028A7137B6F7900B1B255 /* commonsyms.c */; };
 		A40028AC137B6F9200B1B255 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A40028AB137B6F9200B1B255 /* MaxAPI.framework */; };
+		A451FB98137B847A007A0873 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = A451FB97137B847A007A0873 /* commonsyms.c */; };
 		A48433691276475A00488F59 /* gridpanel.c in Sources */ = {isa = PBXBuildFile; fileRef = A48433681276475A00488F59 /* gridpanel.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		120615410BAD19EE00C1162A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A40028A7137B6F7900B1B255 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../../../../../../../../c_files/jml/maxlib_dev/MaxSDK-5.1.6/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		A40028AB137B6F9200B1B255 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../../../../../../../../c_files/jml/maxlib_dev/MaxSDK-5.1.6/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		A451FB97137B847A007A0873 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		A48433681276475A00488F59 /* gridpanel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridpanel.c; sourceTree = "<group>"; };
-		A484336E1276482E00488F59 /* gridpanel.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gridpanel.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		A484336E1276482E00488F59 /* gridpanel.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = gridpanel.mxo; path = /Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat_repositories/main/trunk/max/externals/misc/gridpanel/build/Deployment/gridpanel.mxo; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +62,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				A40028A7137B6F7900B1B255 /* commonsyms.c */,
+				A451FB97137B847A007A0873 /* commonsyms.c */,
 				A48433681276475A00488F59 /* gridpanel.c */,
 			);
 			name = Source;
@@ -71,7 +71,6 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A484336E1276482E00488F59 /* gridpanel.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,7 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A48433691276475A00488F59 /* gridpanel.c in Sources */,
-				A40028A8137B6F7900B1B255 /* commonsyms.c in Sources */,
+				A451FB98137B847A007A0873 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,7 +238,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../../../../../../c_files/jml/maxlib_dev/MaxSDK-5.1.6/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../MaxSDK-5.1.6/c74support/max-includes/MaxAPI.framework\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../MaxSDK-5.1.6/c74support/max-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -253,7 +252,7 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../../../../../../c_files/jml/maxlib_dev/MaxSDK-5.1.6/c74support/max-includes\"";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
