@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A40028AC137B6F9200B1B255 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A40028AB137B6F9200B1B255 /* MaxAPI.framework */; };
 		A451FB98137B847A007A0873 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = A451FB97137B847A007A0873 /* commonsyms.c */; };
+		A4755C3B137B85580031BDE3 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4755C3A137B85580031BDE3 /* MaxAPI.framework */; };
 		A48433691276475A00488F59 /* gridpanel.c in Sources */ = {isa = PBXBuildFile; fileRef = A48433681276475A00488F59 /* gridpanel.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		120615410BAD19EE00C1162A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A40028AB137B6F9200B1B255 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../../../../../../../../c_files/jml/maxlib_dev/MaxSDK-5.1.6/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		A451FB97137B847A007A0873 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
+		A4755BEE137B85360031BDE3 /* gridpanel.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gridpanel.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4755C3A137B85580031BDE3 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		A48433681276475A00488F59 /* gridpanel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridpanel.c; sourceTree = "<group>"; };
-		A484336E1276482E00488F59 /* gridpanel.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = gridpanel.mxo; path = /Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat_repositories/main/trunk/max/externals/misc/gridpanel/build/Deployment/gridpanel.mxo; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,7 +25,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A40028AC137B6F9200B1B255 /* MaxAPI.framework in Frameworks */,
+				A4755C3B137B85580031BDE3 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,7 +46,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				A40028AB137B6F9200B1B255 /* MaxAPI.framework */,
+				A4755C3A137B85580031BDE3 /* MaxAPI.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -71,6 +71,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				A4755BEE137B85360031BDE3 /* gridpanel.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,7 +106,7 @@
 			name = gridpanel;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = A484336E1276482E00488F59 /* gridpanel.mxo */;
+			productReference = A4755BEE137B85360031BDE3 /* gridpanel.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -184,8 +185,10 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_10 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/max-includes\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../MaxSDK-5.0.6/c74support/max-includes\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../MaxSDK-5.0.8/c74support/max-includes\"";
@@ -292,8 +295,10 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_7)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_8)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_9)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_10)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_10 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/max-includes\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/../../MaxSDK-5.0.6/c74support/max-includes\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/../../MaxSDK-5.0.8/c74support/max-includes\"";
