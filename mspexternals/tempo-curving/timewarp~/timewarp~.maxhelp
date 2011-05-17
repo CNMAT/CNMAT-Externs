@@ -1600,7 +1600,7 @@
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "tempo_editor",
+					"maxclass" : "timewarp~",
 					"show_minor_ygrid" : 0,
 					"show_yaxis" : 1,
 					"fontsize" : 12.0,
