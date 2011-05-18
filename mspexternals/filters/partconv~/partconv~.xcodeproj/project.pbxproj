@@ -7,21 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1745D190E7C3F7B004CB423 /* partconv~.c in Sources */ = {isa = PBXBuildFile; fileRef = A1745D180E7C3F7B004CB423 /* partconv~.c */; };
 		A1745D860E807403004CB423 /* libfftw3f.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1745D840E807403004CB423 /* libfftw3f.a */; };
 		A18EF2EF1379EB4D006AA030 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A18EF2EE1379EB4D006AA030 /* MaxAPI.framework */; };
 		A18EF3351379EB5B006AA030 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A18EF3341379EB5B006AA030 /* MaxAudioAPI.framework */; };
 		A18EF33F1379EB6D006AA030 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A18EF33E1379EB6D006AA030 /* Carbon.framework */; };
+		A1C18B90137DD20400BFB558 /* partconvMulti.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1C18B8A137DD20400BFB558 /* partconvMulti.cpp */; };
+		A1C18B91137DD20400BFB558 /* partconvMulti.h in Headers */ = {isa = PBXBuildFile; fileRef = A1C18B8B137DD20400BFB558 /* partconvMulti.h */; };
+		A1C18B92137DD20400BFB558 /* sigproc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = A1C18B8C137DD20400BFB558 /* sigproc_util.c */; };
+		A1C18B93137DD20400BFB558 /* sigproc_util.h in Headers */ = {isa = PBXBuildFile; fileRef = A1C18B8D137DD20400BFB558 /* sigproc_util.h */; };
+		A1C18B9D137DD37A00BFB558 /* runLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1C18B9B137DD37A00BFB558 /* runLevel.cpp */; };
+		A1C18B9E137DD37A00BFB558 /* runlevel.h in Headers */ = {isa = PBXBuildFile; fileRef = A1C18B9C137DD37A00BFB558 /* runlevel.h */; };
+		A1C18C4E137DDEBB00BFB558 /* partconv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1C18C4D137DDEBB00BFB558 /* partconv~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A1745D180E7C3F7B004CB423 /* partconv~.c */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.c; path = "partconv~.c"; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
 		A1745D450E7EF0AC004CB423 /* partconv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "partconv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1745D840E807403004CB423 /* libfftw3f.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfftw3f.a; sourceTree = "<group>"; };
 		A1745D850E807403004CB423 /* libfftw3f.la */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libfftw3f.la; sourceTree = "<group>"; };
-		A18EF2EE1379EB4D006AA030 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5.1.1/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		A18EF3341379EB5B006AA030 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/MaxSDK-5.1.1/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
+		A18EF2EE1379EB4D006AA030 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5.1.7/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		A18EF3341379EB5B006AA030 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/MaxSDK-5.1.7/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		A18EF33E1379EB6D006AA030 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		A1C18B8A137DD20400BFB558 /* partconvMulti.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = partconvMulti.cpp; path = ../../../../../../partconv/C/partconvMulti.cpp; sourceTree = SOURCE_ROOT; };
+		A1C18B8B137DD20400BFB558 /* partconvMulti.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = partconvMulti.h; path = ../../../../../../partconv/C/partconvMulti.h; sourceTree = SOURCE_ROOT; };
+		A1C18B8C137DD20400BFB558 /* sigproc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sigproc_util.c; path = ../../../../../../partconv/C/sigproc_util.c; sourceTree = SOURCE_ROOT; };
+		A1C18B8D137DD20400BFB558 /* sigproc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sigproc_util.h; path = ../../../../../../partconv/C/sigproc_util.h; sourceTree = SOURCE_ROOT; };
+		A1C18B97137DD34B00BFB558 /* libsndfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsndfile.dylib; sourceTree = "<group>"; };
+		A1C18B9B137DD37A00BFB558 /* runLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = runLevel.cpp; path = ../../../../../../partconv/C/runLevel.cpp; sourceTree = SOURCE_ROOT; };
+		A1C18B9C137DD37A00BFB558 /* runlevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = runlevel.h; path = ../../../../../../partconv/C/runlevel.h; sourceTree = SOURCE_ROOT; };
+		A1C18C4D137DDEBB00BFB558 /* partconv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "partconv~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +55,13 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				A1745D180E7C3F7B004CB423 /* partconv~.c */,
+				A1C18C4D137DDEBB00BFB558 /* partconv~.cpp */,
+				A1C18B9B137DD37A00BFB558 /* runLevel.cpp */,
+				A1C18B9C137DD37A00BFB558 /* runlevel.h */,
+				A1C18B8A137DD20400BFB558 /* partconvMulti.cpp */,
+				A1C18B8B137DD20400BFB558 /* partconvMulti.h */,
+				A1C18B8C137DD20400BFB558 /* sigproc_util.c */,
+				A1C18B8D137DD20400BFB558 /* sigproc_util.h */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -54,6 +73,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				A1C18B97137DD34B00BFB558 /* libsndfile.dylib */,
 				A18EF33E1379EB6D006AA030 /* Carbon.framework */,
 				A18EF3341379EB5B006AA030 /* MaxAudioAPI.framework */,
 				A18EF2EE1379EB4D006AA030 /* MaxAPI.framework */,
@@ -92,6 +112,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1C18B91137DD20400BFB558 /* partconvMulti.h in Headers */,
+				A1C18B93137DD20400BFB558 /* sigproc_util.h in Headers */,
+				A1C18B9E137DD37A00BFB558 /* runlevel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,7 +190,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1745D190E7C3F7B004CB423 /* partconv~.c in Sources */,
+				A1C18B90137DD20400BFB558 /* partconvMulti.cpp in Sources */,
+				A1C18B92137DD20400BFB558 /* sigproc_util.c in Sources */,
+				A1C18B9D137DD37A00BFB558 /* runLevel.cpp in Sources */,
+				A1C18C4E137DDEBB00BFB558 /* partconv~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +203,7 @@
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
@@ -188,10 +215,13 @@
 					"\"$(SRCROOT)/../../../c74support/msp-includes\"",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../SDK/UB-SDK\"";
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
@@ -210,11 +240,12 @@
 					"\"$(SRCROOT)\"",
 				);
 				LIBRARY_STYLE = Bundle;
+				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH)";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "peqbank~";
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				PRODUCT_NAME = "partconv~";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -229,20 +260,22 @@
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH)";
-				COPY_PHASE_STRIP = YES;
+				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
+				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
+					"../../../SDK/MaxSDK-5.1.7/c74support/**",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"\"$(SRCROOT)/../../../c74support/max-includes\"",
-					"\"$(SRCROOT)/../../../c74support/msp-includes\"",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "";
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -250,8 +283,9 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../../../c74support/max-includes",
-					"../../../c74support/msp-includes",
+					/usr/local/include,
+					"../../../SDK/MaxSDK-5.1.7/c74support/max-includes",
+					"../../../SDK/MaxSDK-5.1.7/c74support/msp-includes",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
@@ -260,8 +294,9 @@
 					"\"$(SRCROOT)\"",
 				);
 				LIBRARY_STYLE = Bundle;
+				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH)";
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-v";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
