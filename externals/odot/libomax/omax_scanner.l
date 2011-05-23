@@ -29,9 +29,12 @@ dfc       (({frac}{exp_opt}{fsuff_opt})|({dseq}{exp}{fsuff_opt}))
 hfc       (({hpref}{hfrac}{bexp}{fsuff_opt})|({hpref}{hdseq}{bexp}{fsuff_opt}))
 c99_floating_point_constant  ({dfc}|{hfc})
 
-%%
+infixop		\+\-\*\/<>=!
+infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 
+%%
 \(					{
+						/* parens */
 						atom_setsym(*yyextra, gensym("("));
 						(*yyextra)++;
 						//printf("open paren\n");
@@ -42,25 +45,60 @@ c99_floating_point_constant  ({dfc}|{hfc})
 						(*yyextra)++;
 						//printf("open paren\n");
 					}
-
 ([[:digit:]]{-}[0])[[:digit:]]* 	{
+						/* int */
 						char *endptr = NULL;
 						atom_setlong(*yyextra, strtol(yytext, &endptr, 0));
 						(*yyextra)++;
 						//printf("int: %ld\n", l);
 					}
+\/[^\/]+.*\[\[[0-9]+\]\]		{
+						/* double brackets */
+						atom_setsym(*yyextra, gensym("get_index"));
+						(*yyextra)++;
+						atom_setsym(*yyextra, gensym("("));
+						(*yyextra)++;
+						char *endptr = yytext + 1;
+						while(*endptr != '[' && endptr[-1] != '['){
+							endptr++;
+						}
+						char buf[(endptr - yytext)];
+						strncpy(buf, yytext, (endptr - yytext));
+						buf[(endptr - yytext)] = '\0';
+						atom_setsym(*yyextra, gensym(buf));
+						(*yyextra)++;
+						atom_setsym(*yyextra, gensym(","));
+						(*yyextra)++;
+						int len = (endptr - yytext) + 2;
+						endptr = NULL;
+						atom_setlong(*yyextra, strtol(yytext + len, &endptr, 0));
+						(*yyextra)++;
+						atom_setsym(*yyextra, gensym(")"));
+						(*yyextra)++;
+					}
 {c99_floating_point_constant}		{
+						/* floating point number */
 						//printf("%s: buf = %p\n", __func__, yyextra);
 						char *endptr = NULL;
 						atom_setfloat(*yyextra, strtod(yytext, &endptr));
 						(*yyextra)++;
 						//printf("float: %f\n", f);
 					}
-
-[^0-9\(\) \t\n]+[^\(\) \t\n]*		{
+[^0-9\(\) \t\n\+\-\*<>=!,]+[^\(\) \t\n\+\-\*\/<>=!,]*		{
+						/* string */
 						atom_setsym(*yyextra, gensym(yytext));
 						(*yyextra)++;
 						//printf("string: %s\n", yytext);
+					}
+\+|\-|\*|\/|<|>|<=|>=|!=     			{
+						/* infix operator */
+						atom_setsym(*yyextra, gensym(yytext));
+						(*yyextra)++;
+					}
+,					{
+						/* tiny little comma */
+						atom_setsym(*yyextra, gensym(","));
+						(*yyextra)++;
 					}
 [ \t\n]+	/* eat up whitespace */
 

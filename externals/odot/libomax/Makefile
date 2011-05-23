@@ -23,7 +23,7 @@ omax_parser.c: omax_parser.y
 omax_parser.o: omax_parser.c omax_parser.h
 	$(CC) $(ARCH) $(I) -o omax_parser.o -c omax_parser.c
 
-%.o: %.c %.h
+%.o: %.c %.h omax_parser.c omax_scanner.c omax_parser.y omax_scanner.l
 	$(CC) $(ARCH) $(I) -o $(notdir $(basename $@)).o -c $(notdir $(basename $@)).c
 
 
