@@ -31,7 +31,8 @@ static void (*osc_mem_free_fp)(void *ptr) = free;
 static void *(*osc_mem_resize_fp)(void *ptr, size_t size) = realloc;
 
 void *osc_mem_alloc(size_t size){
-	return osc_mem_alloc_fp(size);
+	void *p = osc_mem_alloc_fp(size);
+	return p;
 }
 
 void *osc_mem_resize(void *ptr, size_t size){

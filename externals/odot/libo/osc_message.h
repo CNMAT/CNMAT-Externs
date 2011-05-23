@@ -161,6 +161,15 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...));
 int osc_message_rename(int len, char *buffer, char *new_address, char **new_buffer);
 
 /**
+ * Get the size of an OSC message in bytes.  The number returned does not include the 4-byte size at the beginning of
+ * the message, i.e., this number should be used as that size.
+ *
+ * @param m The OSC message to be inspected
+ * @return The size in bytes.
+ */
+int osc_message_getSerializedSize(t_osc_msg *m);
+
+/**
  * Serialize an OSC message using preallocated memory.
  *
  * @param m The OSC message to be serialized

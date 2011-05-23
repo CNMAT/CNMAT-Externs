@@ -270,6 +270,7 @@ t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message){
 	message->prev = m;
 	message->next = NULL;
 	bundle->num_messages++;
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, long *len){
@@ -289,6 +290,7 @@ t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, long *len, char **buffer){
 	}
 	*buffer = (char *)osc_mem_alloc(*len);
 	osc_bundle_serializeWithBuffer(bundle, *buffer);
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_bundle_serializeWithBuffer(t_osc_bundle *bundle, char *buffer){
@@ -301,4 +303,5 @@ t_osc_err osc_bundle_serializeWithBuffer(t_osc_bundle *bundle, char *buffer){
 		ptr += osc_message_serialize(m, ptr);
 		m = m->next;
 	}
+	return OSC_ERR_NONE;
 }

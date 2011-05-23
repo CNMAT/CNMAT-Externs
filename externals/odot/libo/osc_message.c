@@ -305,6 +305,25 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 	osc_message_resetArgs(msg);	
 }
 
+int osc_message_getSerializedSize(t_osc_msg *m){
+	if(m->size){
+		return m->size;
+	}
+	int size = 0;
+	size += strlen(m->address);
+	size++;
+	while(size % 4){
+		size++;
+	}
+	size += m->typetag_buffer_pos;
+	size++;
+	while(size % 4){
+		size++;
+	}
+	size += m->argv_buffer_pos;
+	return size;
+}
+
 int osc_message_serialize(t_osc_msg *m, char *buffer){
 	char *ptr = buffer;
 	char *sizeptr = buffer;
@@ -313,7 +332,7 @@ int osc_message_serialize(t_osc_msg *m, char *buffer){
 	while(*tmp){
 		*ptr++ = *tmp++;
 	}
-	ptr++;
+	*ptr++ = '\0';
 	while((ptr - buffer) % 4){
 		*ptr++ = '\0';
 	}
@@ -328,22 +347,25 @@ int osc_message_serialize(t_osc_msg *m, char *buffer){
 		*ptr++ = ',';
 	}
 	memcpy(ptr, m->typetags, m->typetag_buffer_pos);
-	ptr += m->typetag_buffer_pos + 1;
+	ptr += m->typetag_buffer_pos;
+	*ptr++ = '\0';
 	while((ptr - buffer) % 4){
 		*ptr++ = '\0';
 	}
-	memcpy(ptr, m->argv, m->argv_buffer_size);
-	ptr += m->argv_buffer_pos + 1;
+	memcpy(ptr, m->argv, m->argv_buffer_pos);
+	ptr += m->argv_buffer_pos;
+	/*
 	while((ptr - buffer) % 4){
 		*ptr++ = '\0';
 	}
+	*/
  out:
-	*((uint32_t *)buffer) = htonl(ptr - buffer - 4);
+	*((uint32_t *)buffer) = htonl((ptr - buffer) - 4);
 	return ptr - buffer;
 }
 
 t_osc_err osc_message_setAddress(t_osc_msg *m, char *address){
-	int len = strlen(address);
+	int len = strlen(address) + 1;
 	if(m->address){
 		if(strlen(m->address) < len){
 			char *tmp = NULL;
@@ -357,6 +379,7 @@ t_osc_err osc_message_setAddress(t_osc_msg *m, char *address){
 		m->address = (char *)osc_mem_alloc(len);
 	}
 	memcpy(m->address, address, len);
+	m->address[len] = '\0';
 	return OSC_ERR_NONE;
 }
 
@@ -379,7 +402,12 @@ t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int a
 	memcpy(m->typetags + m->typetag_buffer_pos, typetags, ntypetags);
 	m->typetag_buffer_pos += ntypetags;
 	m->argc += ntypetags;
-
+	
+	if(m->argv == NULL){
+		m->argv = (char *)osc_mem_alloc(argv_len_bytes);
+		m->argv_buffer_size = argv_len_bytes;
+		m->argv_buffer_pos = 0;
+	}
 	if(argv_len_bytes + m->argv_buffer_pos > m->argv_buffer_size){
 		char *tmp = (char *)osc_mem_resize(m->argv, argv_len_bytes + m->argv_buffer_size);
 		if(!tmp){
@@ -390,7 +418,7 @@ t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int a
 		m->argv_buffer_size += argv_len_bytes;
 	}
 	char *ptr = argv;
-	int i;
+	int i = 0;
 	while(ptr - argv < argv_len_bytes){
 		if(i >= ntypetags){
 			return OSC_ERR_BADTYPETAG;
