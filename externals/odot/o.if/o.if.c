@@ -63,7 +63,7 @@ t_symbol *ps_FullPacket;
 
 void oif_fullPacket(t_oif *x, long len, long ptr){
 	int argc = 0;
-	double *argv = NULL;
+	t_atom64 *argv = NULL;
 	t_atom out[2];
 	atom_setlong(out, len);
 	atom_setlong(out + 1, ptr);
@@ -72,12 +72,26 @@ void oif_fullPacket(t_oif *x, long len, long ptr){
 	}else{
 		int i;
 		for(i = 0; i < argc; i++){
-			if(argv[i] == 0){
+			if(atom64_getfloat(argv + i) == 0){
 				outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
 				return;
 			}
 		}
 		outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
+	}
+}
+
+void oexpr_postConstants(t_oif *x){
+	int i;
+	for(i = 0; i < sizeof(omax_expr_constsym) / sizeof(t_omax_expr_const_rec); i++){
+		post("%s: %s (%f)", omax_expr_constsym[i].name, omax_expr_constsym[i].desc, omax_expr_constsym[i].val);
+	}
+}
+
+void oif_postFunctionNames(t_oif *x){
+	int i;
+	for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
+		post("%s: %s", omax_expr_funcsym[i].name, omax_expr_funcsym[i].desc);
 	}
 }
 
@@ -94,7 +108,7 @@ void oif_assist(t_oif *x, void *b, long m, long a, char *s){
 }
 
 void oif_free(t_oif *x){
-
+	omax_expr_free(x->function_graph);
 }
 
 void *oif_new(t_symbol *msg, short argc, t_atom *argv){
@@ -123,6 +137,9 @@ int main(void){
 	class_addmethod(c, (method)oif_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oif_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oif_notify, "notify", A_CANT, 0);
+
+	class_addmethod(c, (method)oif_postFunctions, "post-functions", 0);
+	class_addmethod(c, (method)oif_postConstants, "post-constants", 0);
 
 	class_register(CLASS_BOX, c);
 	oif_class = c;
