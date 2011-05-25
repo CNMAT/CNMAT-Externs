@@ -63,7 +63,7 @@ t_symbol *ps_FullPacket;
 
 void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	int argc = 0;
-	double *argv = NULL;
+	t_atom64 *argv = NULL;
 	t_atom out[2];
 	if(omax_expr_funcall(x->function_graph, len, (char *)ptr, &argc, &argv)){
 		atom_setlong(out, len);
@@ -77,7 +77,8 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		float argvf[argc];
 		int i;
 		for(i = 0; i < argc; i++){
-			argvf[i] = (float)argv[i];
+			//argvf[i] = (float)argv[i];
+			argvf[i] = atom64_getfloat(argv + i);
 		}
 		char tt[argc];
 		memset(tt, 'f', argc);
@@ -112,6 +113,20 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
 }
 
+void oexpr_postConstants(t_oexpr *x){
+	int i;
+	for(i = 0; i < sizeof(omax_expr_constsym) / sizeof(t_omax_expr_const_rec); i++){
+		post("%s: %s (%f)", omax_expr_constsym[i].name, omax_expr_constsym[i].desc, omax_expr_constsym[i].val);
+	}
+}
+
+void oexpr_postFunctions(t_oexpr *x){
+	int i;
+	for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
+		post("%s: %s", omax_expr_funcsym[i].name, omax_expr_funcsym[i].desc);
+	}
+}
+
 void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET){
 	}else{
@@ -123,6 +138,7 @@ void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
 }
 
 void oexpr_free(t_oexpr *x){
+	omax_expr_free(x->function_graph);
 }
 
 
@@ -135,15 +151,18 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 			int argclex = 0;
 			t_atom *argvlex = NULL;
 			omax_scanner_scan_atom_array(attr_args_offset(argc, argv), argv, &argclex, &argvlex);
+			/*
 			int i;
 			for(i = 0; i < argclex; i++){
 				postatom(argvlex + i);
 			}
+			post("**************************************************");
+			*/
+			int counter = 0;
+			yyparse(argclex, argvlex, &counter, &(x->function_graph));
 			if(argvlex){
 				osc_mem_free(argvlex);
 			}
-			int counter = 0;
-			yyparse(argclex, argvlex, &counter, &(x->function_graph));
 		}
 		x->address = gensym("/result");
 		x->addresslen = strlen(x->address->s_name);
@@ -159,6 +178,9 @@ int main(void){
 	class_addmethod(c, (method)oexpr_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oexpr_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_notify, "notify", A_CANT, 0);
+
+	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
+	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
 
 	CLASS_ATTR_SYM(c, "as", 0, t_oexpr, address);
 
