@@ -1,3 +1,28 @@
+**************************************************
+GENERAL
+**************************************************
+libomax contains code that provides a bridge between Max objects and data structures
+and the pure OSC code found in libo.  See the documentation contained in this folder
+for more information.
+
+**************************************************
+BUILD
+**************************************************
+In order to build this library, you need flex v.2.5.35 or better (http://flex.sourceforge.net/)
+and bison v.2.4.3 or better (http://www.gnu.org/software/bison/).  Once those are installed, 
+simply typing `make' in this directory should produce a file called libomax.a.
+
+To make the documentation, you'll need doxygen (http://www.stack.nl/~dimitri/doxygen/).
+Type
+
+`make doc'
+
+to build.
+
+**************************************************
+LEXER/PARSER (omax_scanner.l and omax_parser.y)
+**************************************************
+
 The lexer and parser contained in this folder don't work the way a normal flex/bison lexer/parser would.
 Since we are working with Max, our input is partially tokenized by Max's lexer and handed to us
 in the form of an atom array.  The problem is that, given input like this:

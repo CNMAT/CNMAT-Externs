@@ -90,7 +90,7 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 						(*yyextra)++;
 						//printf("string: %s\n", yytext);
 					}
-\+|\-|\*|\/|<|>|<=|>=|!=     			{
+\+|\-|\*|\/|<|>|<=|>=|!=|==|%|\|\||&&|!     			{
 						/* infix operator */
 						atom_setsym(*yyextra, gensym(yytext));
 						(*yyextra)++;

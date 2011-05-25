@@ -30,3 +30,7 @@ omax_parser.o: omax_parser.c omax_parser.h
 .PHONY: clean
 clean:
 	rm omax_scanner.[ch] omax_parser.[ch] *.o *.a
+
+.PHONY: doc
+doc:
+	cd doc && doxygen Doxyfile

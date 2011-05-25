@@ -50,9 +50,19 @@
 				 }else if(ptr[0] == ','){
 					 token = COMMA;
 				 }else{
-					 // function name
+					 // function or constant name
 					 int i;
 					 void *func = NULL;
+					 for(i = 0; i < sizeof(omax_expr_constsym) / sizeof(t_omax_expr_const_rec); i++){
+						 if(!strcmp(ptr, omax_expr_constsym[i].name)){
+							 token = ARG;
+							 t_omax_expr_arg *arg = omax_expr_arg_alloc();
+							 arg->type = OMAX_ARG_TYPE_ATOM;
+							 atom_setfloat(&(arg->arg.atom), omax_expr_constsym[i].val);
+							 lvalp->arg = arg;
+							 goto out;
+						 }
+					 }
 					 for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
 						 if(!strcmp(ptr, omax_expr_funcsym[i].name)){
 							 func = omax_expr_funcsym[i].func;
@@ -87,6 +97,9 @@
 								 break;
 							 case '!':
 								 token = NEQ;
+								 if(ptrlen == 1){
+								 	token = PREFIX_FUNC;
+								 }
 								 break;
 							 case '&':
 								 token = AND;
@@ -96,6 +109,9 @@
 								 break;
 							 case '%':
 								 token = MOD;
+								 break;
+							 case '^':
+								 token = POWER;
 								 break;
 							 default:
 								 token = PREFIX_FUNC;
@@ -115,6 +131,7 @@
 				 }
 			 }
 		 }
+	 out:
 		 *argp += 1;
 	 }
 	 return token;
@@ -172,18 +189,17 @@
 %token <arg>ARG
 %token <expr>PREFIX_FUNC
 %token <sym>LPAREN RPAREN COMMA
-%token <expr>OR
-%token <expr>AND
-%token <expr>EQ NEQ
-%token <expr>LT LTE GT GTE 
-%token <expr>ADD SUBTRACT
-%token <expr>MULTIPLY DIVIDE MOD
-%token <expr>POWER 
+
+%left <expr>OR
+%left <expr>AND
+%left <expr>EQ NEQ
+%left <expr>LT LTE GT GTE 
+%left <expr>ADD SUBTRACT
+%left <expr>MULTIPLY DIVIDE MOD
+%left <sym>NOT
+%right <expr>POWER 
 %type <arg>expn
 
-%left ADD SUBTRACT AND OR EQ NEQ LT LTE GT GTE
-%left MULTIPLY DIVIDE 
-%right POWER    
 %%
 
  /*

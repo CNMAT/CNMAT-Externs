@@ -45,6 +45,84 @@ inline t_symbol *omax_atom_getsym(t_atom *ap){
 }
 #endif
 
+void atom64_setlong(t_atom64 *a, int64_t l){
+	if(!a){
+		return;
+	}
+	a->a64_word.w_long = l;
+	a->type = A64_LONG;
+}
+
+void atom64_setfloat(t_atom64 *a, double d){
+	if(!a){
+		return;
+	}
+	a->a64_word.w_float = d;
+	a->type = A64_FLOAT;
+}
+
+void atom64_setsym(t_atom64 *a, t_symbol *s){
+	if(!a){
+		return;
+	}
+	a->a64_word.w_sym = s;
+	a->type = A64_SYM;
+}
+
+void atom64_setptr(t_atom64 *a, void *p){
+	if(!a){
+		return;
+	}
+	a->a64_word.w_ptr = p;
+	a->type = A64_PTR;
+}
+
+int64_t atom64_getlong(t_atom64 *a){
+	switch(a->type){
+	case A64_LONG:
+		return a->a64_word.w_long;
+	case A64_FLOAT:
+		return (int64_t)(a->a64_word.w_float);
+	default:
+		return 0;
+	}
+}
+
+double atom64_getfloat(t_atom64 *a){
+	switch(a->type){
+	case A64_LONG:{
+		return (double)(a->a64_word.w_long);
+	}
+	case A64_FLOAT:
+		return a->a64_word.w_float;
+	default:
+		return 0;
+	}
+}
+
+t_symbol *atom64_getsym(t_atom64 *a){
+	switch(a->type){
+	case A64_LONG:
+		{
+			char buf[64];
+			sprintf(buf, "%ld", (long int)(a->a64_word.w_long));
+			return gensym(buf);
+		}
+	case A64_FLOAT:
+		{
+			char buf[64];
+			sprintf(buf, "%f", a->a64_word.w_float);
+			return gensym(buf);
+		}
+	case A64_SYM:
+		return a->a64_word.w_sym;
+	}
+}
+
+void *atom64_getptr(t_atom64 *a){
+
+}
+
 typedef struct _context{
 	t_object *ob;
 	t_symbol *osc_classname;
