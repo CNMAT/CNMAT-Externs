@@ -140,9 +140,10 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	osc_bundle_getMessagesWithCallback(nn, cpy, omessage_cbk, (void *)x);
 
 	int i;
-	char *buf = NULL;
-	int buflen;
-	omessage_atoms2text(x, &buflen, &buf);
+	int buflen = x->num_atoms * 32;
+	char buf[buflen];
+	char *bufptr = buf;
+	omessage_atoms2text(x, &buflen, &bufptr);
 	if(buflen > 2){
 		if(buf[buflen - 2] == '\n'){
 			buf[buflen - 1] = '\0';
@@ -153,9 +154,6 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 
 	for(i = 0; i < x->substitutions_len; i++){
 		x->substitutions[i] = -1;
-	}
-	if(buf){
-		free(buf);
 	}
 }
 
@@ -216,21 +214,32 @@ void omessage_paint(t_omessage *x, t_object *patcherview){
 
 void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 	//char *bufptr = buf;
-	char *tmpbuf;
-	int len = x->num_atoms * 8;
-	tmpbuf = (char *)malloc(len * sizeof(t_atom));
+	char *tmpbuf = *buf;
+	int len;
+	if(*buflen){
+		len = *buflen;
+	}else{
+		len = x->num_atoms * 32;
+	}
+	if(!tmpbuf){
+		tmpbuf = (char *)malloc(len);
+	}
 	char *bufptr = tmpbuf;
 	int i;
 	for(i = 0; i < x->num_atoms; i++){
 		if(len - (bufptr - tmpbuf) < 64){
+			/*
 			int offset = bufptr - tmpbuf;
-			tmpbuf = (char *)realloc(tmpbuf, (len * sizeof(t_atom)) + 1024);
+			tmpbuf = (char *)realloc(tmpbuf, len + 1024);
 			if(!(tmpbuf)){
 				object_error((t_object *)x, "out of memory!");
 				return;
 			}
 			len += 1024;
 			bufptr = tmpbuf + offset;
+			*/
+			// out of memory in our buffer
+			goto out;
 		}
 		switch(atom_gettype(x->atoms + i)){
 		case A_LONG:
@@ -258,6 +267,7 @@ void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 			break;
 		}
 	}
+ out:
 	*buf = tmpbuf;
 	*buflen = bufptr - tmpbuf;
 }
@@ -537,7 +547,9 @@ void omessage_make_and_output_bundle(t_omessage *x){
 	atom_setlong(a, bufptr - buf);
 	atom_setlong(a + 1, (long)buf);
 	outlet_anything(x->outlet, gensym("FullPacket"), 2, a);
-	free(buf);
+	if(buf){
+		free(buf);
+	}
 	/*
 	x->buffer_pos = 0;
 	memset(x->buffer, '\0', x->buffer_len);
@@ -656,17 +668,15 @@ void omessage_settext(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 	memcpy(x->atoms, argv, argc * sizeof(t_atom));
 	x->num_atoms = argc;
-	char *buf = NULL;
-	int len;
-	omessage_atoms2text(x, &len, &buf);
+	int len = x->num_atoms * 32;
+	char buf[len];
+	char *bufptr = buf;
+	omessage_atoms2text(x, &len, &bufptr);
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
 	jbox_redraw((t_jbox *)x);
 	int i;
 	for(i = 0; i < x->substitutions_len; i++){
 		x->substitutions[i] = -1;
-	}
-	if(buf){
-		free(buf);
 	}
 }
 
