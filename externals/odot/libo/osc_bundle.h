@@ -97,6 +97,7 @@ t_osc_err osc_bundle_getMsgCount(int len, char *buf, int *count);
  * @param num_messages Pointer to an int where the number of messages found will be stored.
  * @param messages The address of a #t_osc_msg where the first message of a linked list will be stored.
  * @return An error code or #OSC_ERR_NONE
+ @note <em>All messages are allocated with #osc_message_alloc and should be freed by the caller.</em>
  */
 t_osc_err osc_bundle_getMessages(int len, char *buf, int *num_messages, t_osc_msg **messages);
 

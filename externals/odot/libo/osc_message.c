@@ -378,8 +378,8 @@ t_osc_err osc_message_setAddress(t_osc_msg *m, char *address){
 	}else{
 		m->address = (char *)osc_mem_alloc(len);
 	}
-	memcpy(m->address, address, len);
-	m->address[len] = '\0';
+	memcpy(m->address, address, len - 1);
+	m->address[len - 1] = '\0';
 	return OSC_ERR_NONE;
 }
 
