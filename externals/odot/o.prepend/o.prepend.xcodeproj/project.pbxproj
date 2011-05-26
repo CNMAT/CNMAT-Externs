@@ -252,12 +252,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = /Users/john/Development/cnmat/trunk/max/externals/odot/libo;
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../libomax\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../libo\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../libomax\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = (
