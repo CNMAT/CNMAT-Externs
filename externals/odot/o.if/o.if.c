@@ -81,14 +81,14 @@ void oif_fullPacket(t_oif *x, long len, long ptr){
 	}
 }
 
-void oexpr_postConstants(t_oif *x){
+void oif_postConstants(t_oif *x){
 	int i;
 	for(i = 0; i < sizeof(omax_expr_constsym) / sizeof(t_omax_expr_const_rec); i++){
 		post("%s: %s (%f)", omax_expr_constsym[i].name, omax_expr_constsym[i].desc, omax_expr_constsym[i].val);
 	}
 }
 
-void oif_postFunctionNames(t_oif *x){
+void oif_postFunctions(t_oif *x){
 	int i;
 	for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
 		post("%s: %s", omax_expr_funcsym[i].name, omax_expr_funcsym[i].desc);
@@ -120,6 +120,13 @@ void *oif_new(t_symbol *msg, short argc, t_atom *argv){
 			int argclex = 0;
 			t_atom *argvlex = NULL;
 			omax_scanner_scan_atom_array(argc, argv, &argclex, &argvlex);
+			/*
+			int i;
+			for(i = 0; i < argclex; i++){
+				postatom(argvlex + i);
+			}
+			post("**************************************************");
+			*/
 			int counter = 0;
 			yyparse(argclex, argvlex, &counter, &(x->function_graph));
 			if(argvlex){
