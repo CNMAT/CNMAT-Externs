@@ -57,7 +57,7 @@ extern "C" {
 
 typedef struct _atom64{
 	union _word{
-		int64_t w_long;
+		int32_t w_long;
 		double w_float;
 		t_symbol *w_sym;
 		void *w_ptr;
@@ -65,12 +65,12 @@ typedef struct _atom64{
 	int type;
 } t_atom64;
 
-void atom64_setlong(t_atom64 *a, int64_t l);
+void atom64_setlong(t_atom64 *a, int32_t l);
 void atom64_setfloat(t_atom64 *a, double d);
 void atom64_setsym(t_atom64 *a, t_symbol *s);
 void atom64_setptr(t_atom64 *a, void *p);
 
-int64_t atom64_getlong(t_atom64 *a);
+int32_t atom64_getlong(t_atom64 *a);
 double atom64_getfloat(t_atom64 *a);
 t_symbol *atom64_getsym(t_atom64 *a);
 void *atom64_getptr(t_atom64 *a);

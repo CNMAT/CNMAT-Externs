@@ -52,7 +52,7 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 						(*yyextra)++;
 						//printf("int: %ld\n", l);
 					}
-\/[^\/]+.*\[\[[0-9]+\]\]		{
+\/[^\/]+.*\[\[([0-9]+|\/.*)\]\]		{
 						/* double brackets */
 						atom_setsym(*yyextra, gensym("get_index"));
 						(*yyextra)++;
@@ -70,8 +70,19 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 						atom_setsym(*yyextra, gensym(","));
 						(*yyextra)++;
 						int len = (endptr - yytext) + 2;
-						endptr = NULL;
-						atom_setlong(*yyextra, strtol(yytext + len, &endptr, 0));
+						if(*(yytext + len) == '/'){
+							while(*endptr != ']' && *(endptr + 1) != ']'){
+								endptr++;
+							}
+							int len2 = endptr - (yytext + len) + 1;
+							char buf2[len2];
+							strncpy(buf2, yytext + len, len2);
+							buf2[len2] = '\0';
+							atom_setsym(*yyextra, gensym(buf2));
+						}else{
+							endptr = NULL;
+							atom_setlong(*yyextra, strtol(yytext + len, &endptr, 0));
+						}
 						(*yyextra)++;
 						atom_setsym(*yyextra, gensym(")"));
 						(*yyextra)++;
@@ -84,7 +95,7 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 						(*yyextra)++;
 						//printf("float: %f\n", f);
 					}
-[^0-9\(\) \t\n\+\-\*<>=!,]+[^\(\) \t\n\+\-\*\/<>=!,]*		{
+[^0-9\(\) \t\n\+\-\*<>=!,][^\(\) \t\n\+\-\*<>=!,]*		{
 						/* string */
 						atom_setsym(*yyextra, gensym(yytext));
 						(*yyextra)++;

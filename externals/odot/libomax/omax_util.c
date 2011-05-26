@@ -45,7 +45,7 @@ inline t_symbol *omax_atom_getsym(t_atom *ap){
 }
 #endif
 
-void atom64_setlong(t_atom64 *a, int64_t l){
+void atom64_setlong(t_atom64 *a, int32_t l){
 	if(!a){
 		return;
 	}
@@ -77,12 +77,12 @@ void atom64_setptr(t_atom64 *a, void *p){
 	a->type = A64_PTR;
 }
 
-int64_t atom64_getlong(t_atom64 *a){
+int32_t atom64_getlong(t_atom64 *a){
 	switch(a->type){
 	case A64_LONG:
 		return a->a64_word.w_long;
 	case A64_FLOAT:
-		return (int64_t)(a->a64_word.w_float);
+		return (int32_t)(a->a64_word.w_float);
 	default:
 		return 0;
 	}

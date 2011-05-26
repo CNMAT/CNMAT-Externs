@@ -37,7 +37,7 @@ int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out
 				while(osc_message_incrementArg(m)){
 					switch(*(m->typetags)){
 					case 'i':
-						atom64_setlong(argv + i, (int64_t)(ntohl(*((int32_t *)m->argv))));
+						atom64_setlong(argv + i, (ntohl(*((int32_t *)m->argv))));
 						break;
 					case 'f':
 						atom64_setfloat(argv + i, (double)(*((float *)m->argv)));
@@ -75,6 +75,12 @@ int omax_expr_call(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom
 	while(f_argv){
 		int ret = omax_expr_getArg(f_argv, len, oscbndl, argc + i, argv + i);
 		if(ret){
+			int j;
+			for(j = 0; j < i; j++){
+				if(argv[j]){
+					osc_mem_free(argv[j]);
+				}
+			}
 			return ret;
 		}
 		if(argc[i] < min_argc){
@@ -210,14 +216,18 @@ double omax_expr_mod(double f1, double f2){
 }
 
 int omax_expr_get_index(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
-	*argc_out = 1;
-	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
-	atom64_setfloat(*argv_out, 0.);
-	if(atom64_getlong(argv[1]) > argc[0] - 1){
-		error("index %d exceeds array length (%d)", atom64_getlong(argv[1]), (int)argc[0]);
-		return 1;
+	*argc_out = argc[1];
+	t_atom64 *result = (t_atom64 *)osc_mem_alloc(argc[1] * sizeof(t_atom64));
+	int i;
+	for(i = 0; i < argc[1]; i++){
+		atom64_setfloat(result + i, 0.);
+		if(atom64_getlong(argv[1] + i) > argc[0] - 1){
+			error("index %d exceeds array length (%d)", atom64_getlong(argv[1] + i), (int)argc[0]);
+			return 1;
+		}
+		atom64_setfloat(result + i, atom64_getfloat(argv[0] + (atom64_getlong(argv[1] + i))));
 	}
-	atom64_setfloat(*argv_out, atom64_getfloat(argv[0] + (atom64_getlong(argv[1]))));
+	*argv_out = result;
 	return 0;
 }
 

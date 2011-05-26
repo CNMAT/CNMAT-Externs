@@ -129,7 +129,7 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"||", omax_expr_2arg_dbl_dbl, (void *)omax_expr_or, "Logical or"},
 	{"%", omax_expr_2arg_dbl_dbl, (void *)omax_expr_mod, "Modulo"},
 	// math.h
-	{"abs", omax_expr_1arg_dbl, (void *)abs, "Absolute value"},
+	{"abs", omax_expr_1arg_dbl, (void *)fabs, "Absolute value"},
 	{"acos", omax_expr_1arg_dbl, (void *)acos, "Arc cosine"},
 	{"asin", omax_expr_1arg_dbl, (void *)asin, "Arc sine"},
 	{"atan", omax_expr_1arg_dbl, (void *)atan, "Arc tangent"},
