@@ -1,6 +1,6 @@
 VERSION = 0.1
 OBJDIR = $(CURDIR)/build
-OBJECTS = o.accumulate o.bild o.build o.if o.mappatch o.message o.prepend o.print o.printbytes\
+OBJECTS = o.accumulate o.bild o.build o.expr o.if o.mappatch o.message o.prepend o.print o.printbytes\
 o.route o.select o.spew o.var
 ODOT_BUFFER_LEN = 4096
 
