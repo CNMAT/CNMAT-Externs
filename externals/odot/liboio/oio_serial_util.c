@@ -1,6 +1,6 @@
 #include "oio_serial_util.h"
 #include "oio_serial.h"
-#include "oio_mem.h"
+#include "osc_mem.h"
 
 t_oio_err oio_serial_util_getDeviceVendorIDFromDeviceName(t_oio *oio, char *name, uint32_t *vid){
 	t_oio_serial_dev **devices;
@@ -9,7 +9,7 @@ t_oio_err oio_serial_util_getDeviceVendorIDFromDeviceName(t_oio *oio, char *name
 	if(n){
 		*vid = devices[0]->vendor_id;
 		if(devices){
-			oio_mem_free(devices);
+			osc_mem_free(devices);
 		}
 		return OIO_ERR_NONE;
 	}
@@ -23,7 +23,7 @@ t_oio_err oio_serial_util_getDeviceProductIDFromDeviceName(t_oio *oio, char *nam
 	if(n){
 		*pid = devices[0]->product_id;
 		if(devices){
-			oio_mem_free(devices);
+			osc_mem_free(devices);
 		}
 		return OIO_ERR_NONE;
 	}

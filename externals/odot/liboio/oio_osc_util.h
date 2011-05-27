@@ -3,9 +3,6 @@
 
 #include <Carbon/Carbon.h>
 #include <CoreFoundation/CoreFoundation.h>
-#include "oio_err.h"
-#include "osc_util.h"
-#include "osc_byteorder.h"
 
 void oio_osc_util_makenice(char *buf);
 uint64_t oio_osc_util_machAbsoluteToNTP(uint64_t ma);

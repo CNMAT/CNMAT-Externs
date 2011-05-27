@@ -1,6 +1,6 @@
 #include "oio_midi.h"
 #include "oio_midi_util.h"
-#include "oio_mem.h"
+#include "osc.h"
 #include "oio_osc_util.h"
 #include "oio_midi_osc.h"
 #include <pthread.h>
@@ -70,14 +70,14 @@ t_oio_err oio_midi_getNames(t_oio *oio, CFMutableDictionaryRef hash, t_oio_midi_
 	*n = CFDictionaryGetCount(hash);
 	int alloc = 0;
 	if(!ptr){
-		ptr = (char **)oio_mem_alloc(*n, sizeof(char *));
+		ptr = (char **)osc_mem_alloc(*n * sizeof(char *));
 		alloc = 1;
 	}
 	int i = 0;
 	t_oio_midi_dev *d = device_list;
 	while(d){
 		if(alloc){
-			ptr[i] = (char *)oio_mem_alloc(256, sizeof(char));
+			ptr[i] = (char *)osc_mem_alloc(256 * sizeof(char));
 		}
 		strcpy(ptr[i], DEV_NAME(d));
 		i++;
@@ -109,7 +109,7 @@ void oio_midi_enumerateDevices(t_oio *oio){
 }
 
 t_oio_midi_source *oio_midi_addSource(t_oio *oio, MIDIEndpointRef endpoint){
-	t_oio_midi_source *s = (t_oio_midi_source *)oio_mem_alloc(1, sizeof(t_oio_midi_source));
+	t_oio_midi_source *s = (t_oio_midi_source *)osc_mem_alloc(1 * sizeof(t_oio_midi_source));
 	s->dev.endpoint = 0;
 	DEV_NEXT(s) = NULL;
 	DEV_PREV(s) = NULL;
@@ -125,13 +125,13 @@ t_oio_midi_source *oio_midi_addSource(t_oio *oio, MIDIEndpointRef endpoint){
 		MIDIPortConnectSource(oio->midi->input_port, endpoint, (void *)endpoint);
 		return s;
 	}else{
-		oio_mem_free(s);
+		osc_mem_free(s);
 		return NULL;
 	}
 }
 
 t_oio_midi_destination *oio_midi_addDestination(t_oio *oio, MIDIEndpointRef endpoint){
-	t_oio_midi_destination *d = (t_oio_midi_destination *)oio_mem_alloc(1, sizeof(t_oio_midi_destination));
+	t_oio_midi_destination *d = (t_oio_midi_destination *)osc_mem_alloc(1 * sizeof(t_oio_midi_destination));
 	d->dev.endpoint = 0;
 	DEV_NEXT(d) = NULL;
 	DEV_PREV(d) = NULL;
@@ -144,7 +144,7 @@ t_oio_midi_destination *oio_midi_addDestination(t_oio *oio, MIDIEndpointRef endp
 		oio->midi->destinations = d;
 		return d;
 	}else{
-		oio_mem_free(d);
+		osc_mem_free(d);
 		return NULL;
 	}
 }
@@ -205,7 +205,7 @@ t_oio_err oio_midi_removeSource(t_oio *oio, MIDIEndpointRef source){
 	t_oio_midi_callbackList *next;
 	while(cb){
 		next = cb->next;
-		oio_mem_free(cb);
+		osc_mem_free(cb);
 		cb = next;
 	}
 	return oio_midi_removeDevice(oio, ((t_oio_midi_dev **)&(oio->midi->sources)), dev, oio->midi->source_hash);
@@ -232,7 +232,7 @@ t_oio_err oio_midi_removeDevice(t_oio *oio, t_oio_midi_dev **deviceList, t_oio_m
 
 	CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, DEV_NAME(dev), kCFStringEncodingUTF8);
 	CFDictionaryRemoveValue(device_hash, key);
-	oio_mem_free(dev);
+	osc_mem_free(dev);
 	CFRelease(key);
 	return OIO_ERR_NONE;
 }
@@ -247,7 +247,7 @@ t_oio_err oio_midi_registerValueCallback(t_oio *oio, char *name, t_oio_midi_call
 	}
 	int i;
 	for(i = 0; i < n; i++){
-		t_oio_midi_callbackList *cb = (t_oio_midi_callbackList *)oio_mem_alloc(1, sizeof(t_oio_midi_callbackList));
+		t_oio_midi_callbackList *cb = (t_oio_midi_callbackList *)osc_mem_alloc(1 * sizeof(t_oio_midi_callbackList));
 		cb->f = f;
 		cb->context = context;
 		if(sources[i]->value_callbacks){
@@ -257,7 +257,7 @@ t_oio_err oio_midi_registerValueCallback(t_oio *oio, char *name, t_oio_midi_call
 		sources[i]->value_callbacks = cb;
 	}
 	if(sources){
-		oio_mem_free(sources);
+		osc_mem_free(sources);
 	}
 	return OIO_ERR_NONE;
 }
@@ -286,7 +286,7 @@ t_oio_err oio_midi_unregisterValueCallback(t_oio *oio, char *name, t_oio_midi_ca
 				if(cb->next){
 					cb->next->prev = cb->prev;
 				}
-				oio_mem_free(cb);
+				osc_mem_free(cb);
 			}
 			cb = next;
 		}
@@ -295,7 +295,7 @@ t_oio_err oio_midi_unregisterValueCallback(t_oio *oio, char *name, t_oio_midi_ca
 		}
 	}
 	if(dev){
-		oio_mem_free(dev);
+		osc_mem_free(dev);
 	}
 	return OIO_ERR_NONE;
 }
@@ -383,7 +383,7 @@ void oio_midi_alloc(t_oio *oio,
 		    void *disconnect_context){
 		    /*const char *midi_usage_plist, 
 		      const char *hid_cookie_plist){*/
-	t_oio_midi *midi = (t_oio_midi *)oio_mem_alloc(1, sizeof(t_oio_midi));
+	t_oio_midi *midi = (t_oio_midi *)osc_mem_alloc(1 * sizeof(t_oio_midi));
 	oio->midi = midi;
 	midi->sources = NULL;
 	midi->destinations = NULL;

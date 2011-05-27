@@ -1,6 +1,6 @@
 #include "oio_hid_util.h"
 #include "osc_match.h"
-#include "oio_mem.h"
+#include "osc_mem.h"
 
 t_oio_err oio_hid_util_getDeviceProduct(IOHIDDeviceRef device, long bufsize, char *buf){
 	CFTypeRef productKey = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey));
@@ -54,7 +54,7 @@ t_oio_err oio_hid_util_getDeviceVendorIDFromDeviceName(t_oio *oio, char *name, u
 	if(n){
 		*vid = devices[0]->vendor_id;
 		if(devices){
-			oio_mem_free(devices);
+			osc_mem_free(devices);
 		}
 		return OIO_ERR_NONE;
 	}
@@ -68,7 +68,7 @@ t_oio_err oio_hid_util_getDeviceProductIDFromDeviceName(t_oio *oio, char *name, 
 	if(n){
 		*pid = devices[0]->product_id;
 		if(devices){
-			oio_mem_free(devices);
+			osc_mem_free(devices);
 		}
 		return OIO_ERR_NONE;
 	}
@@ -81,7 +81,7 @@ t_oio_err oio_hid_util_getDevicesByOSCPattern(t_oio *oio, const char *name, int 
 	t_oio_hid_dev *dd = hid->devices;
 	const char *pattern = name;
 	int n = CFDictionaryGetCount(hid->device_hash);
-	*devices = (t_oio_hid_dev **)oio_mem_alloc(n, sizeof(t_oio_hid_dev *));
+	*devices = (t_oio_hid_dev **)osc_mem_alloc(n * sizeof(t_oio_hid_dev *));
 	int i = 0;
 	while(dd){
 		const char *address = dd->name;

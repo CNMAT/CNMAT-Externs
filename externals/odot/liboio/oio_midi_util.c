@@ -1,7 +1,7 @@
 #include "oio_midi_util.h"
 #include "oio_obj.h"
 #include "oio_err.h"
-#include "oio_mem.h"
+#include "osc_mem.h"
 
 
 t_oio_err oio_midi_util_getSourceByDevice(t_oio *oio, MIDIEndpointRef source, t_oio_midi_dev **device){
@@ -31,7 +31,7 @@ t_oio_err oio_midi_util_getManufacturer(t_oio *oio, char *name, char *manu){
 	if(n){
 		strcpy(manu, devices[0]->manufacturer);
 		if(devices){
-			oio_mem_free(devices);
+			osc_mem_free(devices);
 		}
 		return OIO_ERR_NONE;
 	}
@@ -45,7 +45,7 @@ t_oio_err oio_midi_util_getModel(t_oio *oio, char *name, char *model){
 	if(n){
 		strcpy(model, devices[0]->model);
 		if(devices){
-			oio_mem_free(devices);
+			osc_mem_free(devices);
 		}
 		return OIO_ERR_NONE;
 	}
@@ -59,7 +59,7 @@ t_oio_err oio_midi_util_getMIDIObjectType(t_oio *oio, char *name, int *type){
 	if(n){
 		*type = ((t_oio_midi_dev **)devices)[0]->midi_object_type;
 		if(devices){
-			oio_mem_free(devices);
+			osc_mem_free(devices);
 		}
 		return OIO_ERR_NONE;
 	}

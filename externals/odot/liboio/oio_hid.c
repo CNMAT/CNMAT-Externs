@@ -1,10 +1,11 @@
 #include "oio_hid.h"
 #include <pthread.h>
-#include "oio_mem.h"
+#include "osc.h"
 #include "oio_hid_util.h"
 #include "oio_hid_osc.h"
 #include "oio_osc_util.h"
 #include "oio_hid_strings.h"
+#include "osc_message.h"
 #include <mach/mach_time.h>
 
 CFMutableDictionaryRef oio_hid_dict;
@@ -50,11 +51,11 @@ t_oio_err oio_hid_getDeviceNames(t_oio *oio, int *n, char ***names){
 	CFDictionaryGetKeysAndValues(dict, (const void **)&keys, (const void **)&vals);
 	*n = nn;
 	char **ptr;
-	ptr = (char **)oio_mem_alloc(nn, sizeof(char *));
+	ptr = (char **)osc_mem_alloc(nn * sizeof(char *));
 	int i;
 	for(i = 0; i < nn; i++){
 		if(keys[i]){
-			ptr[i] = oio_mem_alloc(256, sizeof(char));
+			ptr[i] = osc_mem_alloc(256 * sizeof(char));
 			CFStringGetCString(keys[i], ptr[i], 256, kCFStringEncodingUTF8);
 		}
 	}
@@ -89,7 +90,7 @@ void oio_hid_valueCallback(void *context, IOReturn result, void *sender, IOHIDVa
 		char *oscbuf = NULL;
 		oio_hid_osc_encode(oio, &len, &oscbuf, device, value);
 		oio_obj_dispatch(oio, device->input_value_callbacks, len, oscbuf);
-		oio_mem_free(oscbuf);
+		osc_mem_free(oscbuf);
 	}
 }
 
@@ -137,13 +138,14 @@ t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
 	return OIO_ERR_NONE;
 	*/
 	uint64_t timestamp = ntoh64(*((uint64_t *)(bundle + 8)));
-	int nmsg = osc_util_getMsgCount(n, bundle);
-	t_osc_msg messages[nmsg];
-	osc_util_parseBundle(n, bundle, messages);
+	int nmsg = 0;
+	osc_bundle_getMsgCount(n, bundle, &nmsg);
+	t_osc_msg *messages = NULL;
+	osc_bundle_getMessages(n, bundle, &nmsg, &messages);
+	t_osc_msg *msg = messages;
 	int i;
 	for(i = 0; i < nmsg; i++){
-		t_osc_msg *msg = messages + i;
-		osc_util_incrementArg(msg);
+		osc_message_incrementArg(msg);
 		switch(*(msg->typetags)){
 		case 'i':
 			{
@@ -170,6 +172,9 @@ t_oio_err oio_hid_sendOSCBundleToDevice(t_oio *oio, int n, char *bundle){
 			}
 			break;
 		}
+		t_osc_msg *killme = msg;
+		msg = messages->next;
+		osc_message_free(killme);
 	}
 	return OIO_ERR_NONE;
 }
@@ -225,7 +230,7 @@ t_oio_err oio_hid_sendValueToDevice(t_oio *oio, char *osc_string, uint64_t times
 		CFRelease(cookie);
 	}
 	if(dev){
-		oio_mem_free(dev);
+		osc_mem_free(dev);
 	}
 	return OIO_ERR_NONE;
 }
@@ -283,7 +288,7 @@ t_oio_hid_dev *oio_hid_addDevice(t_oio *oio, IOHIDDeviceRef device){
 		CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, mangled, kCFStringEncodingUTF8);
 		// if the key is not in the dictionary, add it
 		if(!CFDictionaryContainsKey((CFDictionaryRef)(dict), key)){
-			dev = (t_oio_hid_dev *)oio_mem_alloc(1, sizeof(t_oio_hid_dev));
+			dev = (t_oio_hid_dev *)osc_mem_alloc(1 * sizeof(t_oio_hid_dev));
 			strcpy(DEV_NAME(dev), mangled);
 			dev->device = device;
 			DEV_PREV(dev) = NULL;
@@ -342,13 +347,13 @@ void oio_hid_removeDevice(t_oio *oio, IOHIDDeviceRef device){
 		t_oio_hid_callbackList *next;
 		while(cb){
 			next = cb->next;
-			oio_mem_free(cb);
+			osc_mem_free(cb);
 			cb = next;
 		}
 		CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, DEV_NAME(d), kCFStringEncodingUTF8);
 		CFDictionaryRemoveValue(oio->hid->device_hash, key);
 		CFRelease(key);
-		oio_mem_free(d);
+		osc_mem_free(d);
 	}
 }
 
@@ -366,7 +371,7 @@ t_oio_err oio_hid_registerValueCallback(t_oio *oio, char *name, t_oio_hid_callba
 			uint8_t *buf = (uint8_t *)malloc(256);
 			IOHIDDeviceRegisterInputReportCallback(dev[i]->device, buf, 256, oio_hid_reportCallback, oio);
 		}
-		t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
+		t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)osc_mem_alloc(1 * sizeof(t_oio_hid_callbackList));
 		cb->f = f;
 		cb->context = context;
 		if(dev[i]->input_value_callbacks){
@@ -376,7 +381,7 @@ t_oio_err oio_hid_registerValueCallback(t_oio *oio, char *name, t_oio_hid_callba
 		dev[i]->input_value_callbacks = cb;
 	}
 	if(dev){
-		oio_mem_free(dev);
+		osc_mem_free(dev);
 	}
 	return OIO_ERR_NONE;
 }
@@ -405,7 +410,7 @@ t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, char *name, t_oio_hid_call
 				if(cb->next){
 					cb->next->prev = cb->prev;
 				}
-				oio_mem_free(cb);
+				osc_mem_free(cb);
 			}
 			cb = next;
 		}
@@ -414,14 +419,14 @@ t_oio_err oio_hid_unregisterValueCallback(t_oio *oio, char *name, t_oio_hid_call
 		}
 	}
 	if(dev){
-		oio_mem_free(dev);
+		osc_mem_free(dev);
 	}
 	return OIO_ERR_NONE;
 }
 /*
 t_oio_err oio_hid_registerConnectCallback(t_oio *oio, t_oio_hid_callback f, void *context){
 	t_oio_hid *hid = oio->hid;
-	t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
+	t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)osc_mem_alloc(1 * sizeof(t_oio_hid_callbackList));
 	cb->f = f;
 	cb->context = context;
 	cb->next = hid->connect_callbacks;
@@ -432,7 +437,7 @@ t_oio_err oio_hid_registerConnectCallback(t_oio *oio, t_oio_hid_callback f, void
 
 t_oio_err oio_hid_registerDisconnectCallback(t_oio *oio, t_oio_hid_callback f, void *context){
 	t_oio_hid *hid = oio->hid;
-	t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
+	t_oio_hid_callbackList *cb = (t_oio_hid_callbackList *)osc_mem_alloc(1 * sizeof(t_oio_hid_callbackList));
 	cb->f = f;
 	cb->context = context;
 	cb->next = hid->disconnect_callbacks;
@@ -465,7 +470,7 @@ void oio_hid_alloc(t_oio *oio,
 		   void *disconnect_context){
 		   //char *usage_plist, 
 		   //char *cookie_plist){
-	t_oio_hid *hid = (t_oio_hid *)oio_mem_alloc(1, sizeof(t_oio_hid));
+	t_oio_hid *hid = (t_oio_hid *)osc_mem_alloc(1 * sizeof(t_oio_hid));
 	oio->hid = hid;
 	hid->devices = NULL;
 	hid->disconnect_callbacks = NULL;

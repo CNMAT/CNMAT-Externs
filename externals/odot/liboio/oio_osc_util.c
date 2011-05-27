@@ -1,6 +1,5 @@
 #include "oio_osc_util.h"
 #include "oio_obj.h"
-#include "oio_mem.h"
 
 void oio_osc_util_makenice(char *buf){
 	int i, n = strlen(buf);

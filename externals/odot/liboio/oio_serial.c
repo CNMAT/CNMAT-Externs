@@ -1,6 +1,6 @@
 #include "oio_serial.h"
 #include "pthread.h"
-#include "oio_mem.h"
+#include "osc_mem.h"
 #include "oio_osc_util.h"
 #include "oio_serial_util.h"
 #include <IOKit/usb/USBSpec.h>
@@ -54,11 +54,11 @@ t_oio_err oio_serial_getDeviceNames(t_oio *oio, int *n, char ***names){
 	CFDictionaryGetKeysAndValues(dict, (const void **)&keys, (const void **)&vals);
 	*n = nn;
 	char **ptr;
-	ptr = (char **)oio_mem_alloc(nn, sizeof(char *));
+	ptr = (char **)osc_mem_alloc(nn * sizeof(char *));
 	int i;
 	for(i = 0; i < nn; i++){
 		if(keys[i]){
-			ptr[i] = oio_mem_alloc(256, sizeof(char));
+			ptr[i] = osc_mem_alloc(256 * sizeof(char));
 			CFStringGetCString(keys[i], ptr[i], 256, kCFStringEncodingUTF8);
 		}
 	}
@@ -239,7 +239,7 @@ void oio_serial_deviceNotification(void *context, io_service_t service, natural_
 			CFStringRef key = CFStringCreateWithCString(kCFAllocatorDefault, DEV_NAME(dev), kCFStringEncodingUTF8);
 			CFDictionaryRemoveValue(oio->serial->device_hash, key);
 			CFRelease(key);
-			oio_mem_free(dev);
+			osc_mem_free(dev);
 		}
 	}
 }
@@ -277,7 +277,7 @@ t_oio_serial_dev *oio_serial_addDevice(t_oio *oio, io_service_t device){
 		sprintf(mangled, "/serial/%s/%d", name, counter++);
 		CFStringRef deviceNameAsCFString = CFStringCreateWithCString(kCFAllocatorDefault, mangled, kCFStringEncodingASCII);
 		if(!CFDictionaryContainsKey(serial->device_hash, deviceNameAsCFString)){
-			dev = (t_oio_serial_dev *)oio_mem_alloc(1, sizeof(t_oio_serial_dev));
+			dev = (t_oio_serial_dev *)osc_mem_alloc(1 * sizeof(t_oio_serial_dev));
 			dev->obj.type = OIO_DEV_SERIAL;
 			dev->device = usbdev;
 			strcpy(DEV_NAME(dev), mangled);
@@ -292,7 +292,7 @@ t_oio_serial_dev *oio_serial_addDevice(t_oio *oio, io_service_t device){
 			CFNumberGetValue(id, kCFNumberSInt32Type, &(dev->vendor_id));
 
 			id = IORegistryEntryCreateCFProperty(device, CFSTR(kUSBManufacturerStringIndex), kCFAllocatorDefault, 0);
-			CFShow(id);
+			//CFShow(id);
 
 			((t_oio_generic_device *)dev)->type = OIO_DEV_SERIAL;
 			if(serial->devices){
@@ -332,7 +332,7 @@ void oio_serial_alloc(t_oio *oio,
 		      t_oio_serial_callback disconnect_callback, 
 		      void *disconnect_context){
 	oio->serial = NULL;
-	t_oio_serial *serial = (t_oio_serial *)oio_mem_alloc(1, sizeof(t_oio_serial));
+	t_oio_serial *serial = (t_oio_serial *)osc_mem_alloc(1 * sizeof(t_oio_serial));
 	if(!serial){
 		OIO_ERROR(OIO_ERR_MEM);
 		return;

@@ -1,6 +1,7 @@
 #include "oio_midi_osc.h"
 #include "oio_osc_util.h"
 #include "oio_obj.h"
+#include "osc.h"
 
 int oio_midi_osc_encodeRaw(t_oio *oio, char *oscbuf, t_oio_midi_dev *device, const MIDIPacket *packet);
 int oio_midi_osc_encodeGeneric(t_oio *oio, char *oscbuf, t_oio_midi_dev *device, const MIDIPacket *packet);

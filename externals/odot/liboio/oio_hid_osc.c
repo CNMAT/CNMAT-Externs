@@ -2,7 +2,7 @@
 #include <Carbon/Carbon.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/hid/IOHIDKeys.h>
-#include "oio_mem.h"
+#include "osc.h"
 #include "oio_hid_util.h"
 #include "oio_hid_strings.h"
 #include "oio_osc_util.h"
@@ -12,7 +12,7 @@ void oio_hid_osc_encodeGeneric(char *name, char *usage_page, char *usage, uint32
 
 t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev *device, IOHIDValueRef value){
 	if(!(*oscbuf)){
-		*oscbuf = oio_mem_alloc(1024, sizeof(char));
+		*oscbuf = osc_mem_alloc(1024 * sizeof(char));
 	}
 	int oscbuf_size = 1024;
 
@@ -60,7 +60,7 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 
 	oio_hid_osc_encodeRaw(DEV_NAME(device), usage_page, usage, cookie, val, &n, buf);
 	if(n + (ptr - *oscbuf) > oscbuf_size){
-		*oscbuf = oio_mem_resize(*oscbuf, oscbuf_size * 2);
+		*oscbuf = osc_mem_resize(*oscbuf, oscbuf_size * 2);
 		oscbuf_size * 2;
 	}
 	memcpy(ptr, buf, n);
@@ -72,7 +72,7 @@ t_oio_err oio_hid_osc_encode(t_oio *oio, long *len, char **oscbuf, t_oio_hid_dev
 		oio_hid_osc_encodeGeneric(DEV_NAME(device), usage_page_string, usage_string, cookie, cookie_string, val, &n, buf);
 	}
 	if((n - 4) + (ptr - *oscbuf) > oscbuf_size){
-		*oscbuf = oio_mem_resize(*oscbuf, oscbuf_size * 2);
+		*oscbuf = osc_mem_resize(*oscbuf, oscbuf_size * 2);
 		oscbuf_size * 2;
 	}
 	memcpy(ptr, buf, n);

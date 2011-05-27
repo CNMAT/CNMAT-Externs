@@ -3,6 +3,7 @@
 #include "oio_osc_util.h"
 #include "oio_hid_strings.h"
 #include "oio_hid_util.h"
+#include "osc.h"
 #include <mach/mach_time.h>
 
 void send_bundle(t_oio *oio, uint64_t timestamp, char *address, int val);
@@ -107,11 +108,11 @@ void print_devices(t_oio *oio){
 			oio_midi_util_getManufacturer(oio, names[i], manu);
 			oio_midi_util_getModel(oio, names[i], model);
 			printf("\t%2d:\t%-50s\t%9s\t%9s\n", i + 1, names[i], manu, model);
-			oio_mem_free(names[i]);
+			osc_mem_free(names[i]);
 		}
 	}
 	if(names){
-		oio_mem_free(names);
+		osc_mem_free(names);
 		names = NULL;
 	}
 
@@ -125,11 +126,11 @@ void print_devices(t_oio *oio){
 			oio_midi_util_getManufacturer(oio, names[i], manu);
 			oio_midi_util_getModel(oio, names[i], model);
 			printf("\t%2d:\t%-50s\t%9s\t%9s\n", i + 1, names[i], manu, model);
-			oio_mem_free(names[i]);
+			osc_mem_free(names[i]);
 		}
 	}
 	if(names){
-		oio_mem_free(names);
+		osc_mem_free(names);
 		names = NULL;
 	}
 
@@ -143,11 +144,11 @@ void print_devices(t_oio *oio){
 			oio_hid_util_getDeviceProductIDFromDeviceName(oio, names[i], &pid);
 			oio_hid_util_getDeviceVendorIDFromDeviceName(oio, names[i], &vid);
 			printf("\t%2d:\t%-50s\t%9d\t%9d\n", i + 1, names[i], vid, pid);
-			oio_mem_free(names[i]);
+			osc_mem_free(names[i]);
 		}
 	}
 	if(names){
-		oio_mem_free(names);
+		osc_mem_free(names);
 	}
 
 	// serial
@@ -163,18 +164,18 @@ void print_devices(t_oio *oio){
 			oio_serial_util_getDeviceVendorIDFromDeviceName(oio, names[i], &vid);
 			printf("\t%2d:\t%-50s\t%9d\t%9d\n", i + 1, names[i], vid, pid);
 			//printf("\t%2d:\t%-50s\n", i + 1, names[i]);
-			oio_mem_free(names[i]);
+			osc_mem_free(names[i]);
 		}
 	}
 	if(names){
-		oio_mem_free(names);
+		osc_mem_free(names);
 	}
 }
 
 void value_callback(t_oio *oio, long n, char *ptr, void *context){
 	PP("%ld %p", n, ptr);
 	printf("[ #bundle %llu (0x%llx)\n", *((uint64_t *)(ptr + 8)), *((uint64_t *)(ptr + 8)));
-	osc_util_parseBundleWithCallback(n, ptr, print_osc_msg, context);
+	osc_bundle_getMessagesWithCallback(n, ptr, print_osc_msg, context);
 	printf("]\n");
 	/*
 	t_oio_osc_msg *msg = NULL;
@@ -198,7 +199,7 @@ void value_callback(t_oio *oio, long n, char *ptr, void *context){
 }
 
 void print_osc_msg(t_osc_msg m, void *context){
-	osc_util_printMsg(&m, printf);
+	osc_message_printMsg(&m, printf);
 }
 
 void connect_callback(t_oio *oio, long n, char *ptr, void *context){

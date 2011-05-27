@@ -2,7 +2,7 @@
 #include "oio_hid.h"
 #include "oio_midi.h"
 #include "oio_serial.h"
-#include "oio_mem.h"
+#include "osc_mem.h"
 #include <mach/mach_time.h>
 #include <stdio.h>
 #include "osc_util.h"
@@ -24,7 +24,7 @@ t_oio *oio_obj_alloc(t_oio_hid_callback hid_connect_callback,
 		     void *serial_connect_context,
 		     t_oio_serial_callback serial_disconnect_callback,
 		     void *serial_disconnect_context){
-	t_oio *oio = (t_oio *)oio_mem_alloc(1, sizeof(t_oio));
+	t_oio *oio = (t_oio *)osc_mem_alloc(1 * sizeof(t_oio));
 	oio_hid_alloc(oio, 
 		      hid_connect_callback, 
 		      hid_connect_context, 
@@ -154,7 +154,7 @@ t_oio_err oio_obj_unregisterValueCallback(t_oio *oio, char *name, t_oio_callback
 }
 
 t_oio_err oio_obj_registerNotificationCallback(t_oio *oio, t_oio_callbackList **callbackList, t_oio_callback f, void *context){
-	t_oio_callbackList *cb = (t_oio_callbackList *)oio_mem_alloc(1, sizeof(t_oio_hid_callbackList));
+	t_oio_callbackList *cb = (t_oio_callbackList *)osc_mem_alloc(1 * sizeof(t_oio_hid_callbackList));
 	cb->f = f;
 	cb->context = context;
 	cb->next = *callbackList;
@@ -225,7 +225,7 @@ t_oio_err oio_obj_getDevicesByName(t_oio *oio,
 	n += CFDictionaryGetCount(oio->midi->source_hash);
 	n += CFDictionaryGetCount(oio->midi->destination_hash);
 	n += CFDictionaryGetCount(oio->serial->device_hash);
-	*matched_devices = (t_oio_generic_device **)oio_mem_alloc(n, sizeof(t_oio_generic_device *));
+	*matched_devices = (t_oio_generic_device **)osc_mem_alloc(n * sizeof(t_oio_generic_device *));
 	*num_devices = 0;
 	int i = 0, j;
 	t_oio_generic_device *dd[4] = {(t_oio_generic_device *)(oio->hid->devices), 
@@ -265,7 +265,7 @@ t_oio_err oio_obj_getDevicesByName(t_oio *oio,
 			long ptr;
 			CFNumberGetValue((CFNumberRef)val, kCFNumberLongType, &ptr);
 			if(ptr != 0){
-				*devices = (t_oio_hid_dev **)oio_mem_alloc(1, sizeof(t_oio_hid_dev *));
+				*devices = (t_oio_hid_dev **)osc_mem_alloc(1 * sizeof(t_oio_hid_dev *));
 				**devices = (t_oio_hid_dev *)ptr;
 				*num_devices = 1;
 				return OIO_ERR_NONE;
