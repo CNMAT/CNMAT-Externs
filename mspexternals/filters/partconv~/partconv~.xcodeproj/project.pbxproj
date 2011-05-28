@@ -24,14 +24,13 @@
 		A1745D450E7EF0AC004CB423 /* partconv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "partconv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1745D840E807403004CB423 /* libfftw3f.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfftw3f.a; sourceTree = "<group>"; };
 		A1745D850E807403004CB423 /* libfftw3f.la */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libfftw3f.la; sourceTree = "<group>"; };
-		A18EF2EE1379EB4D006AA030 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5.1.7/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		A18EF2EE1379EB4D006AA030 /* MaxAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../SDK/MaxSDK-5.1.7/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		A18EF3341379EB5B006AA030 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../SDK/MaxSDK-5.1.7/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		A18EF33E1379EB6D006AA030 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		A1C18B8A137DD20400BFB558 /* partconvMulti.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = partconvMulti.cpp; path = ../../../../../../partconv/C/partconvMulti.cpp; sourceTree = SOURCE_ROOT; };
 		A1C18B8B137DD20400BFB558 /* partconvMulti.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = partconvMulti.h; path = ../../../../../../partconv/C/partconvMulti.h; sourceTree = SOURCE_ROOT; };
 		A1C18B8C137DD20400BFB558 /* sigproc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sigproc_util.c; path = ../../../../../../partconv/C/sigproc_util.c; sourceTree = SOURCE_ROOT; };
 		A1C18B8D137DD20400BFB558 /* sigproc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sigproc_util.h; path = ../../../../../../partconv/C/sigproc_util.h; sourceTree = SOURCE_ROOT; };
-		A1C18B97137DD34B00BFB558 /* libsndfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsndfile.dylib; sourceTree = "<group>"; };
 		A1C18B9B137DD37A00BFB558 /* runLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = runLevel.cpp; path = ../../../../../../partconv/C/runLevel.cpp; sourceTree = SOURCE_ROOT; };
 		A1C18B9C137DD37A00BFB558 /* runlevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = runlevel.h; path = ../../../../../../partconv/C/runlevel.h; sourceTree = SOURCE_ROOT; };
 		A1C18C4D137DDEBB00BFB558 /* partconv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "partconv~.cpp"; sourceTree = "<group>"; };
@@ -73,7 +72,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				A1C18B97137DD34B00BFB558 /* libsndfile.dylib */,
 				A18EF33E1379EB6D006AA030 /* Carbon.framework */,
 				A18EF3341379EB5B006AA030 /* MaxAudioAPI.framework */,
 				A18EF2EE1379EB4D006AA030 /* MaxAPI.framework */,
@@ -224,7 +222,7 @@
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -277,7 +275,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.h";
+				GCC_PREFIX_HEADER = "../../../SDK/MaxSDK-5.1.7/c74support/max-includes/macho-prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
