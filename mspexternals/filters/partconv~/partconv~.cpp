@@ -385,53 +385,56 @@ void *partconv_new(t_symbol *s, short argc, t_atom *argv) {
     x->w = NULL;
     
     // default partitioning schemes
+    // modified by eric 5-19-2011
     x->scheme_32[0] = 32;
     x->scheme_32[1] = 256;
-    x->scheme_32[2] = 2048;
-    x->scheme_32[3] = 16384;
-    x->scheme_32[4] = 131072;
-    x->nparts_32 = 5;
+    x->scheme_32[2] = 1024;
+    x->scheme_32[3] = 4096;
+    x->scheme_32[4] = 16384;
+    x->scheme_32[5] = 65536;
+    x->nparts_32 = 6;
     
     x->scheme_64[0] = 64;
-    x->scheme_64[1] = 256;
+    x->scheme_64[1] = 512;
     x->scheme_64[2] = 2048;
-    x->scheme_64[3] = 16384;
-    x->scheme_64[4] = 131072;
+    x->scheme_64[3] = 8192;
+    x->scheme_64[4] = 65536;
     x->nparts_64 = 5;
     
     x->scheme_128[0] = 128;
-    x->scheme_128[1] = 256;
-    x->scheme_128[2] = 2048;
+    x->scheme_128[1] = 512;
+    x->scheme_128[2] = 4096;
     x->scheme_128[3] = 16384;
-    x->scheme_128[4] = 131072;
+    x->scheme_128[4] = 65536;
     x->nparts_128 = 5;
     
     x->scheme_256[0] = 256;
-    x->scheme_256[1] = 2048;
-    x->scheme_256[2] = 16384;
-    x->scheme_256[3] = 131072;
-    x->nparts_256 = 4;
+    x->scheme_256[1] = 1024;
+    x->scheme_256[2] = 4096;
+    x->scheme_256[3] = 16384;
+    x->scheme_256[4] = 65536;
+    x->nparts_256 = 5;
     
     x->scheme_512[0] = 512;
     x->scheme_512[1] = 2048;
-    x->scheme_512[2] = 16384;
-    x->scheme_512[3] = 131072;
+    x->scheme_512[2] = 8192;
+    x->scheme_512[3] = 65536;
     x->nparts_512 = 4;
     
     x->scheme_1024[0] = 1024;
-    x->scheme_1024[1] = 2048;
+    x->scheme_1024[1] = 4096;
     x->scheme_1024[2] = 16384;
-    x->scheme_1024[3] = 131072;
+    x->scheme_1024[3] = 65536;
     x->nparts_1024 = 4;
     
     x->scheme_2048[0] = 2048;
-    x->scheme_2048[1] = 16384;
-    x->scheme_2048[2] = 131072;
+    x->scheme_2048[1] = 8192;
+    x->scheme_2048[2] = 65536;
     x->nparts_2048 = 3;
     
     x->scheme_4096[0] = 4096;
     x->scheme_4096[1] = 16384;
-    x->scheme_4096[2] = 131072;
+    x->scheme_4096[2] = 65536;
     x->nparts_4096 = 3;
     
     // pass attrs...
