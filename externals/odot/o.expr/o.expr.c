@@ -214,7 +214,21 @@ void oexpr_postConstants(t_oexpr *x){
 void oexpr_postFunctions(t_oexpr *x){
 	int i;
 	for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
-		post("%s: %s", omax_expr_funcsym[i].name, omax_expr_funcsym[i].desc);
+		if(omax_expr_funcsym[i].numargs < 0){
+			post("%s(): %s", omax_expr_funcsym[i].desc);
+		}else if(omax_expr_funcsym[i].numargs == 0){
+			post("%s(...): %s", omax_expr_funcsym[i].desc);
+		}else{
+			char buf[256];
+			char *ptr = buf;
+			ptr += sprintf(ptr, "%s(", omax_expr_funcsym[i].name);
+			int j;
+			for(j = 0; j < omax_expr_funcsym[i].numargs; j++){
+				ptr += sprintf(ptr, "arg%d ", j + 1);
+			}
+			*(--ptr) = '\0';
+			post("%s): %s", buf, omax_expr_funcsym[i].desc);
+		}
 	}
 }
 
