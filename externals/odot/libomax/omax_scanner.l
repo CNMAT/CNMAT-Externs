@@ -32,6 +32,8 @@ c99_floating_point_constant  ({dfc}|{hfc})
 infixop		\+\-\*\/<>=!
 infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 
+%x DOUBLE_BRACKETS
+
 %%
 \(					{
 						/* parens */
@@ -39,67 +41,71 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 						(*yyextra)++;
 						//printf("open paren\n");
 					}
-
 \)					{
 						atom_setsym(*yyextra, gensym(")"));
 						(*yyextra)++;
 						//printf("open paren\n");
 					}
-([[:digit:]]{-}[0])[[:digit:]]* 	{
+<DOUBLE_BRACKETS>\[\[					{
+						//printf("open double brackets\n");
+						BEGIN(INITIAL);
+						atom_setsym(*yyextra, gensym("[["));
+						(*yyextra)++;
+					}
+<DOUBLE_BRACKETS>\]\]					{
+						//printf("close double brackets\n");
+						BEGIN(INITIAL);
+						atom_setsym(*yyextra, gensym("]]"));
+						(*yyextra)++;
+					}
+(-?([[:digit:]]{-}[0])[[:digit:]]*|0) 	{
 						/* int */
 						char *endptr = NULL;
 						atom_setlong(*yyextra, strtol(yytext, &endptr, 0));
 						(*yyextra)++;
-						//printf("int: %ld\n", l);
 					}
-\/[^\/]+.*\[\[([0-9]+|\/.*)\]\]		{
-						/* double brackets */
-						atom_setsym(*yyextra, gensym("get_index"));
-						(*yyextra)++;
-						atom_setsym(*yyextra, gensym("("));
-						(*yyextra)++;
-						char *endptr = yytext + 1;
-						while(*endptr != '[' && endptr[-1] != '['){
-							endptr++;
-						}
-						char buf[(endptr - yytext)];
-						strncpy(buf, yytext, (endptr - yytext));
-						buf[(endptr - yytext)] = '\0';
-						atom_setsym(*yyextra, gensym(buf));
-						(*yyextra)++;
-						atom_setsym(*yyextra, gensym(","));
-						(*yyextra)++;
-						int len = (endptr - yytext) + 2;
-						if(*(yytext + len) == '/'){
-							while(*endptr != ']' && *(endptr + 1) != ']'){
-								endptr++;
-							}
-							int len2 = endptr - (yytext + len) + 1;
-							char buf2[len2];
-							strncpy(buf2, yytext + len, len2);
-							buf2[len2] = '\0';
-							atom_setsym(*yyextra, gensym(buf2));
-						}else{
-							endptr = NULL;
-							atom_setlong(*yyextra, strtol(yytext + len, &endptr, 0));
-						}
-						(*yyextra)++;
-						atom_setsym(*yyextra, gensym(")"));
-						(*yyextra)++;
-					}
-{c99_floating_point_constant}		{
+-?{c99_floating_point_constant}		{
 						/* floating point number */
-						//printf("%s: buf = %p\n", __func__, yyextra);
 						char *endptr = NULL;
 						atom_setfloat(*yyextra, strtod(yytext, &endptr));
 						(*yyextra)++;
 						//printf("float: %f\n", f);
 					}
 [^0-9\(\) \t\n\+\-\*<>=!,][^\(\) \t\n\+\-\*<>=!,]*		{
-						/* string */
-						atom_setsym(*yyextra, gensym(yytext));
-						(*yyextra)++;
-						//printf("string: %s\n", yytext);
+						int i;
+						int b = 0;
+						for(i = 0; i < yyleng; i++){
+							if(yytext[i] == '[' || yytext[i] == ']'){
+								b++;
+							}else{
+								b = 0;
+							}
+							if(b == 2){
+								break;
+							}
+						}
+						if(b < 2){
+							// string 
+							atom_setsym(*yyextra, gensym(yytext));
+							(*yyextra)++;
+						}else{
+							i--;
+							if(i > 0){
+								char buf[i];
+								memcpy(buf, yytext, i);
+								buf[i] = '\0';
+								atom_setsym(*yyextra, gensym(buf));
+								(*yyextra)++;
+							}
+							char brackets[3];
+							brackets[0] = yytext[i];
+							brackets[1] = yytext[i + 1];
+							brackets[2] = '\0';
+							atom_setsym(*yyextra, gensym(brackets));
+							(*yyextra)++;
+							yyless(i + 2);
+							//BEGIN(DOUBLE_BRACKETS);
+						}
 					}
 \+|\-|\*|\/|<|>|<=|>=|!=|==|%|\|\||&&|!     			{
 						/* infix operator */
@@ -151,3 +157,52 @@ void omax_scanner_scan_atom_array(int argc, t_atom *argv, int *argc_out, t_atom 
 	}
 	*argc_out = bufptr - buf;
 }
+
+/*
+\/[^\/]+.*\[\[([0-9]+|\/.*)\]\]		{
+						// double brackets
+						atom_setsym(*yyextra, gensym("get_index"));
+						(*yyextra)++;
+						atom_setsym(*yyextra, gensym("("));
+						(*yyextra)++;
+
+						char *endptr = yytext + 1;
+						while(*endptr != '[' && endptr[-1] != '['){
+							endptr++;
+						}
+						char buf[(endptr - yytext)];
+						strncpy(buf, yytext, (endptr - yytext));
+						buf[(endptr - yytext)] = '\0';
+						atom_setsym(*yyextra, gensym(buf));
+						(*yyextra)++;
+						atom_setsym(*yyextra, gensym(","));
+						(*yyextra)++;
+						int len = (endptr - yytext) + 2;
+						if(*(yytext + len) == '/'){
+							while(*endptr != ']' && *(endptr + 1) != ']'){
+								endptr++;
+							}
+							int len2 = endptr - (yytext + len) + 1;
+							char buf2[len2];
+							strncpy(buf2, yytext + len, len2);
+							buf2[len2] = '\0';
+							atom_setsym(*yyextra, gensym(buf2));
+						}else{
+							endptr = NULL;
+							atom_setlong(*yyextra, strtol(yytext + len, &endptr, 0));
+						}
+						(*yyextra)++;
+						atom_setsym(*yyextra, gensym(")"));
+						(*yyextra)++;
+					}
+*/
+
+
+/*
+[^0-9\(\) \t\n\+\-\*<>=!,][^\(\) \t\n\+\-\*<>=!,]*		{
+						// string 
+						atom_setsym(*yyextra, gensym(yytext));
+						(*yyextra)++;
+						printf("string: %s\n", yytext);
+					}
+*/

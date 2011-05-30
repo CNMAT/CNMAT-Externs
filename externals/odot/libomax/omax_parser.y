@@ -36,7 +36,8 @@
 			 break;
 		 case A_SYM:
 			 {
-				 char *ptr = atom_getsym(argv + *argp)->s_name;
+				 t_symbol *sym = atom_getsym(argv + *argp);
+				 char *ptr = sym->s_name;
 				 if(ptr[0] == '/' && strlen(ptr) > 1){
 					 token = ARG;
 					 t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
@@ -47,6 +48,10 @@
 					 token = LPAREN;
 				 }else if(ptr[0] == ')'){
 					 token = RPAREN;
+				 }else if(sym == gensym("[[")){
+					 token = L_DOUBLE_BRACKET;
+				 }else if(sym == gensym("]]")){
+					 token = R_DOUBLE_BRACKET;
 				 }else if(ptr[0] == ','){
 					 token = COMMA;
 				 }else{
@@ -151,23 +156,6 @@
 	return 0;
  }
 
- int omax_parser_prefix_argv(t_omax_expr **f, t_omax_expr_arg **result, t_omax_expr *func, int argc, t_omax_expr_arg **argv){
-	 int i;
-	 t_omax_expr_arg *arg = *argv;
-	 for(i = 1; i < argc; i++){
-		 arg->next = *(argv + i);
-		 arg = *(argv + i);
-	 }
-	 arg->next = NULL;
-	 func->argv = *argv;
-	 func->argc = argc;
-	 *f = func;
-	 *result = omax_expr_arg_alloc();
-	 (*result)->arg.expr = func;
-	 (*result)->type = OMAX_ARG_TYPE_EXPR;
-	 return 0;
- }
-
  %}
 
  %define "api.pure"
@@ -188,7 +176,7 @@
 
 %token <arg>ARG
 %token <expr>PREFIX_FUNC
-%token <sym>LPAREN RPAREN COMMA
+%token <sym>LPAREN RPAREN COMMA L_DOUBLE_BRACKET R_DOUBLE_BRACKET
 
 %left <expr>OR
 %left <expr>AND
@@ -198,29 +186,56 @@
 %left <expr>MULTIPLY DIVIDE MOD
 %left <sym>NOT
 %right <expr>POWER 
-%type <arg>expn
+%type <arg>expn arglist
 
 %%
-
- /*
-   t_omax_expr *expr = $2;
-   $1->next = $3;
-   expr->argv = $1;
-   expr->argc = 2;
-   t_omax_expr *exprlist = *f;
-   *f = expr;
-   $$ = omax_expr_arg_alloc();
-   $$->arg.expr = expr;
-   $$->type = OMAX_ARG_TYPE_EXPR;
- */
 
 input:
 | input expn
 ;
 
+arglist: expn {
+	//printf("ARG: $$ = %p $1 = %p\n", $$, $1);
+	$$ = $1;
+	$$->next = NULL;
+ }
+| arglist COMMA expn{
+	//printf("$$ = %p arglist = %p ARG = %p\n", $$, $1, $3);
+	$3->next = NULL;
+	t_omax_expr_arg *arg = $1;
+	t_omax_expr_arg *last = arg;
+	while(arg){
+		last = arg;
+		arg = arg->next;
+	}
+	//printf("%p %p\n", $1, last);
+	last->next = $3;
+	$$ = $1;
+ }
+;
+
 expn:	ARG {;}
 |	expn ADD expn	{
 	omax_parser_infix(f, &$$, $1, $2, $3);
+ }
+|	PREFIX_FUNC LPAREN arglist RPAREN {
+	//printf("$$ = %p $3 = %p\n", $$, $3);
+	t_omax_expr *func = $1;
+	int i = 0;
+	t_omax_expr_arg *ptr = $3;
+	while(ptr){
+		ptr = ptr->next;
+		i++;
+	}
+	if(func->rec->numargs != i && func->rec->numargs != -1){
+		error("omax_parser: %s expects %d arguments, but %d were found", func->rec->name, func->rec->numargs, i);
+	}
+	func->argv = $3;
+	func->argc = i;
+	*f = func;
+	$$ = omax_expr_arg_alloc();
+	$$->arg.expr = func;
+	$$->type = OMAX_ARG_TYPE_EXPR;
  }
 |	expn SUBTRACT expn	{
 	omax_parser_infix(f, &$$, $1, $2, $3);
@@ -258,6 +273,7 @@ expn:	ARG {;}
 |	expn MOD expn	{
 	omax_parser_infix(f, &$$, $1, $2, $3);
  }
+/*
 |	PREFIX_FUNC LPAREN expn RPAREN {
 	omax_parser_prefix_argv(f, &$$, $1, 1, &$3);
  }
@@ -265,6 +281,24 @@ expn:	ARG {;}
 	t_omax_expr_arg *argv[2];
 	argv[0] = $3, argv[1] = $5;
 	omax_parser_prefix_argv(f, &$$, $1, 2, argv);
+ }
+*/
+|	ARG L_DOUBLE_BRACKET arglist R_DOUBLE_BRACKET {
+	t_omax_expr *func = osc_mem_alloc(sizeof(t_omax_expr));
+	func->rec = omax_expr_lookupFunction("get_index");
+	$1->next = $3;
+	func->argv = $1;
+	t_omax_expr_arg *ptr = $3;
+	int i = 1;
+	while(ptr){
+		ptr = ptr->next;
+		i++;
+	}
+	func->argc = i;
+	*f = func;
+	$$ = omax_expr_arg_alloc();
+	$$->arg.expr = func;
+	$$->type = OMAX_ARG_TYPE_EXPR;
  }
 | 	LPAREN expn RPAREN	{
 	$$ = $2;

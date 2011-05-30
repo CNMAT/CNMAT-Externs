@@ -35,14 +35,15 @@ typedef struct _omax_expr_arg{
 	struct _omax_expr_arg *next;
 } t_omax_expr_arg;
 
-typedef int (*t_omax_funcptr)(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+typedef int (*t_omax_funcptr)(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
 /** \struct t_omax_expr_rec
     A record that associates a function name (string) with a function pointer.
 */
 typedef struct _omax_expr_rec{
 	const char *name; /**< Name of the function as a C string. */
-	int (*func)(t_omax_expr*, int*, t_atom64**, int*, t_atom64**); /**< Function pointer */
+	int (*func)(t_omax_expr*, int, int*, t_atom64**, int*, t_atom64**); /**< Function pointer */
+	int numargs;
 	void *extra; /**< Extra field that can contain anything. */
 	const char *desc;
 } t_omax_expr_rec;
@@ -66,13 +67,14 @@ typedef struct _omax_expr_const_rec{
 int omax_expr_funcall(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out);
 int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out);
 int omax_expr_call(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out);
+t_omax_expr_rec *omax_expr_lookupFunction(char *name);
 
-int omax_expr_1arg_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_1arg_dblptr(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dblptr_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dbl_dblptr(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_1arg_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_1arg_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_2arg_dblptr_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_2arg_dbl_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
 double omax_expr_add(double f1, double f2);
 double omax_expr_subtract(double f1, double f2);
@@ -88,10 +90,14 @@ double omax_expr_and(double f1, double f2);
 double omax_expr_or(double f1, double f2);
 double omax_expr_mod(double f1, double f2);
 
-int omax_expr_sum(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_length(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_get_index(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_not(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_get_index(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_sum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_length(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_mean(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_concat(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_reverse(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_make_list(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
 t_omax_expr_arg *omax_expr_arg_alloc(void);
 void omax_expr_free(t_omax_expr *e);
@@ -115,82 +121,72 @@ static t_omax_expr_const_rec omax_expr_constsym[] = {
 
 static t_omax_expr_rec omax_expr_funcsym[] = {
 	// infix
-	{"+", omax_expr_2arg_dbl_dbl, (void *)omax_expr_add, "Add"},
-	{"-", omax_expr_2arg_dbl_dbl, (void *)omax_expr_subtract, "Subtract"},
-	{"*", omax_expr_2arg_dbl_dbl, (void *)omax_expr_multiply, "Multiply"},
-	{"/", omax_expr_2arg_dbl_dbl, (void *)omax_expr_divide, "Divide"},
-	{"<", omax_expr_2arg_dbl_dbl, (void *)omax_expr_lt, "Less than"},
-	{"<=", omax_expr_2arg_dbl_dbl, (void *)omax_expr_lte, "Less than or equal to"},
-	{">", omax_expr_2arg_dbl_dbl, (void *)omax_expr_gt, "Greater than"},
-	{">=", omax_expr_2arg_dbl_dbl, (void *)omax_expr_gte, "Greater than or equal to"},
-	{"==", omax_expr_2arg_dbl_dbl, (void *)omax_expr_eq, "Equal"},
-	{"!=", omax_expr_2arg_dbl_dbl, (void *)omax_expr_neq, "Not equal"},
-	{"&&", omax_expr_2arg_dbl_dbl, (void *)omax_expr_and, "Logical and"},
-	{"||", omax_expr_2arg_dbl_dbl, (void *)omax_expr_or, "Logical or"},
-	{"%", omax_expr_2arg_dbl_dbl, (void *)omax_expr_mod, "Modulo"},
+	{"+", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_add, "Add"},
+	{"-", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_subtract, "Subtract"},
+	{"*", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_multiply, "Multiply"},
+	{"/", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_divide, "Divide"},
+	{"<", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_lt, "Less than"},
+	{"<=", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_lte, "Less than or equal to"},
+	{">", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_gt, "Greater than"},
+	{">=", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_gte, "Greater than or equal to"},
+	{"==", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_eq, "Equal"},
+	{"!=", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_neq, "Not equal"},
+	{"&&", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_and, "Logical and"},
+	{"||", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_or, "Logical or"},
+	{"%", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_mod, "Modulo"},
 	// math.h
-	{"abs", omax_expr_1arg_dbl, (void *)fabs, "Absolute value"},
-	{"acos", omax_expr_1arg_dbl, (void *)acos, "Arc cosine"},
-	{"asin", omax_expr_1arg_dbl, (void *)asin, "Arc sine"},
-	{"atan", omax_expr_1arg_dbl, (void *)atan, "Arc tangent"},
-	{"atan2", omax_expr_2arg_dbl_dbl, (void *)atan2, "Arc tangent of y/x (arg1/arg2)"},
-	{"ceil", omax_expr_1arg_dbl, (void *)ceil, "Ceiling--round up to the nearest integer"},
-	{"cos", omax_expr_1arg_dbl, (void *)cos, "Cosine"},
-	{"cosh", omax_expr_1arg_dbl, (void *)cosh, "Hyperbolic cosine"},
-	{"exp", omax_expr_1arg_dbl, (void *)exp, "Exponential function"},
-	{"floor", omax_expr_1arg_dbl, (void *)floor, "Round down to the nearest integer"},
-	{"fmod", omax_expr_2arg_dbl_dbl, (void *)fmod, "Floating-point remainder"},
-	{"log", omax_expr_1arg_dbl, (void *)log, "Natural logarithm"},
-	{"log10", omax_expr_1arg_dbl, (void *)log10, "Base 10 logarithm"},
-	{"pow", omax_expr_2arg_dbl_dbl, (void *)pow, "Power"},
-	{"sin", omax_expr_1arg_dbl, (void *)sin, "Sine"},
-	{"sinh", omax_expr_1arg_dbl, (void *)sinh, "Hyperbolic sine"},
-	{"sqrt", omax_expr_1arg_dbl, (void *)sqrt, "Square root"},
-	{"tan", omax_expr_1arg_dbl, (void *)tan, "Tangent"},
-	{"tanh", omax_expr_1arg_dbl, (void *)tanh, "Hyperbolic tangent"},
-	{"erf", omax_expr_1arg_dbl, (void *)erf, "Error function (see http://pubs.opengroup.org/onlinepubs/007908799/xsh/erf.html)"},
-	{"erfc", omax_expr_1arg_dbl, (void *)erfc, "Complementary error function (see http://pubs.opengroup.org/onlinepubs/007908799/xsh/erf.html)"},
-	{"gamma", omax_expr_1arg_dbl, (void *)lgamma, "Log gamma function (same as \"lgamma\")"},
-	{"hypot", omax_expr_2arg_dbl_dbl, (void *)hypot, "Euclidean distance"},
-	{"j0", omax_expr_1arg_dbl, (void *)j0, "0th Bessel function of the first kind"},
-	{"j1", omax_expr_1arg_dbl, (void *)j1, "1st Bessel function of the first kind"},
-	{"jn", omax_expr_2arg_dbl_dbl, (void *)jn, "nth Bessel function of the first kind"},
-	{"lgamma", omax_expr_1arg_dbl, (void *)lgamma, "Log gamma function (same as \"gamma\")"},
-	{"y0", omax_expr_1arg_dbl, (void *)y0, "0th Bessel function of the second kind"},
-	{"y1", omax_expr_1arg_dbl, (void *)y1, "1st Bessel function of the second kind"},
-	{"yn", omax_expr_2arg_dbl_dbl, (void *)yn, "nth Bessel function of the second kind"},
-	{"acosh", omax_expr_1arg_dbl, (void *)acosh, "Inverse hyperbolic cosine"},
-	{"asinh", omax_expr_1arg_dbl, (void *)asinh, "Inverse hyperbolic sine"},
-	{"atanh", omax_expr_1arg_dbl, (void *)atanh, "Inverse hyperbolic tangent"},
-	{"cbrt", omax_expr_1arg_dbl, (void *)cbrt, "Cube root"},
-	{"expm1", omax_expr_1arg_dbl, (void *)expm1, "Exponential function (e^x - 1)"},
-	{"ilogb", omax_expr_1arg_dbl, (void *)ilogb, "Unbiased exponent"},
-	{"logb", omax_expr_1arg_dbl, (void *)logb, "Radix-independent exponent"},
-	{"nextafter", omax_expr_2arg_dbl_dbl, (void *)nextafter, "Next representable double-precision floating-point number"},
-	{"remainder", omax_expr_2arg_dbl_dbl, (void *)remainder, "Remainder function (r = x - ny where y is non-zero and n is the integral value nearest x/y)"},
-	//{"rint", omax_expr_1arg_dbl, (void *)rint, "Round to nearest integral value"},
-	{"round", omax_expr_1arg_dbl, (void *)round, "Round to nearest integral value"},
+	{"abs", omax_expr_1arg_dbl, 1, (void *)fabs, "Absolute value"},
+	{"acos", omax_expr_1arg_dbl, 1, (void *)acos, "Arc cosine"},
+	{"asin", omax_expr_1arg_dbl, 1, (void *)asin, "Arc sine"},
+	{"atan", omax_expr_1arg_dbl, 1, (void *)atan, "Arc tangent"},
+	{"atan2", omax_expr_2arg_dbl_dbl, 2, (void *)atan2, "Arc tangent of y/x (arg1/arg2)"},
+	{"ceil", omax_expr_1arg_dbl, 1, (void *)ceil, "Ceiling--round up to the nearest integer"},
+	{"cos", omax_expr_1arg_dbl, 1, (void *)cos, "Cosine"},
+	{"cosh", omax_expr_1arg_dbl, 1, (void *)cosh, "Hyperbolic cosine"},
+	{"exp", omax_expr_1arg_dbl, 1, (void *)exp, "Exponential function"},
+	{"floor", omax_expr_1arg_dbl, 1, (void *)floor, "Round down to the nearest integer"},
+	{"fmod", omax_expr_2arg_dbl_dbl, 2, (void *)fmod, "Floating-point remainder"},
+	{"log", omax_expr_1arg_dbl, 1, (void *)log, "Natural logarithm"},
+	{"log10", omax_expr_1arg_dbl, 1, (void *)log10, "Base 10 logarithm"},
+	{"pow", omax_expr_2arg_dbl_dbl, 2, (void *)pow, "Power"},
+	{"sin", omax_expr_1arg_dbl, 1, (void *)sin, "Sine"},
+	{"sinh", omax_expr_1arg_dbl, 1, (void *)sinh, "Hyperbolic sine"},
+	{"sqrt", omax_expr_1arg_dbl, 1, (void *)sqrt, "Square root"},
+	{"tan", omax_expr_1arg_dbl, 1, (void *)tan, "Tangent"},
+	{"tanh", omax_expr_1arg_dbl, 1, (void *)tanh, "Hyperbolic tangent"},
+	{"erf", omax_expr_1arg_dbl, 1, (void *)erf, "Error function (see http://pubs.opengroup.org/onlinepubs/007908799/xsh/erf.html)"},
+	{"erfc", omax_expr_1arg_dbl, 1, (void *)erfc, "Complementary error function (see http://pubs.opengroup.org/onlinepubs/007908799/xsh/erf.html)"},
+	{"gamma", omax_expr_1arg_dbl, 1, (void *)lgamma, "Log gamma function (same as \"lgamma\")"},
+	{"hypot", omax_expr_2arg_dbl_dbl, 2, (void *)hypot, "Euclidean distance"},
+	{"j0", omax_expr_1arg_dbl, 1, (void *)j0, "0th Bessel function of the first kind"},
+	{"j1", omax_expr_1arg_dbl, 1, (void *)j1, "1st Bessel function of the first kind"},
+	{"jn", omax_expr_2arg_dbl_dbl, 2, (void *)jn, "nth Bessel function of the first kind"},
+	{"lgamma", omax_expr_1arg_dbl, 1, (void *)lgamma, "Log gamma function (same as \"gamma\")"},
+	{"y0", omax_expr_1arg_dbl, 1, (void *)y0, "0th Bessel function of the second kind"},
+	{"y1", omax_expr_1arg_dbl, 1, (void *)y1, "1st Bessel function of the second kind"},
+	{"yn", omax_expr_2arg_dbl_dbl, 2, (void *)yn, "nth Bessel function of the second kind"},
+	{"acosh", omax_expr_1arg_dbl, 1, (void *)acosh, "Inverse hyperbolic cosine"},
+	{"asinh", omax_expr_1arg_dbl, 1, (void *)asinh, "Inverse hyperbolic sine"},
+	{"atanh", omax_expr_1arg_dbl, 1, (void *)atanh, "Inverse hyperbolic tangent"},
+	{"cbrt", omax_expr_1arg_dbl, 1, (void *)cbrt, "Cube root"},
+	{"expm1", omax_expr_1arg_dbl, 1, (void *)expm1, "Exponential function (e^x - 1)"},
+	{"ilogb", omax_expr_1arg_dbl, 1, (void *)ilogb, "Unbiased exponent"},
+	{"logb", omax_expr_1arg_dbl, 1, (void *)logb, "Radix-independent exponent"},
+	{"nextafter", omax_expr_2arg_dbl_dbl, 1, (void *)nextafter, "Next representable double-precision floating-point number"},
+	{"remainder", omax_expr_2arg_dbl_dbl, 2, (void *)remainder, "Remainder function (r = x - ny where y is non-zero and n is the integral value nearest x/y)"},
+	{"round", omax_expr_1arg_dbl, 1, (void *)round, "Round to nearest integral value"},
 	// misc
-	{"get_index", omax_expr_get_index, NULL, "Get an element of a list (same as [[ ]])"},
-	{"sum", omax_expr_sum, NULL, "Sum all the elements of a list"},
-	{"length", omax_expr_length, NULL, "Get the length of a list"},
-	{"!", omax_expr_not, NULL, "Logical not"}
+	{"get_index", omax_expr_get_index, -1, NULL, "Get an element of a list (same as [[ ]])"},
+	{"sum", omax_expr_sum, -1, NULL, "Sum all the elements of a list"},
+	{"length", omax_expr_length, 1, NULL, "Get the length of a list"},
+	{"avg", omax_expr_mean, 1, NULL, "The average of a list (same as mean)"},
+	{"mean", omax_expr_mean, 1, NULL, "The average of a list (same as avg)"},
+	{"concat", omax_expr_concat, -1, NULL, "Concatenate two lists"},
+	{"reverse", omax_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
+	{"rev", omax_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
+	{"make_list", omax_expr_make_list, -1, NULL, "Make a list of <arg1> copies of <arg2>.  <arg2 is optional and defaults to 0"},
+	//make-list, pad, zeros, ones
+	{"!", omax_expr_not, -1, NULL, "Logical not"}
 };
 
-/*
-static t_omax_expr_rec omax_expr_funcsym[] = {
-	{"+", omax_expr_add, 2},
-	{"-", omax_expr_subtract, 2},
-	{"*", omax_expr_multiply, 2},
-	{"/", omax_expr_divide, 2},
-	{"<", omax_expr_lt, 2},
-	{"<=", omax_expr_lte, 2},
-	{">", omax_expr_gt, 2},
-	{">=", omax_expr_gte, 2},
-	{"==", omax_expr_eq, 2},
-	{"!=", omax_expr_neq, 2},
-	{"get_index", omax_get_index, 2},
-	{"pow", pow, 2}
-};
-*/
 #endif // __OMAX_EXPR_H__

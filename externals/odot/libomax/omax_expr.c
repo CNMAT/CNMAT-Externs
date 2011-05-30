@@ -92,7 +92,7 @@ int omax_expr_call(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom
 		f_argv = f_argv->next;
 		i++;
 	}
-	int ret = f->rec->func(f, argc, argv, argc_out, argv_out);
+	int ret = f->rec->func(f, f_argc, argc, argv, argc_out, argv_out);
 	for(i = 0; i < f_argc; i++){
 		if(argv[i]){
 			osc_mem_free(argv[i]);
@@ -101,7 +101,19 @@ int omax_expr_call(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom
 	return ret;
 }
 
-int omax_expr_1arg_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+t_omax_expr_rec *omax_expr_lookupFunction(char *name){
+	t_omax_expr_rec *rec = NULL;
+	int i;
+	for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
+		if(!strcmp(name, omax_expr_funcsym[i].name)){
+			rec = omax_expr_funcsym + i;
+			break;
+		}
+	}
+	return rec;
+}
+
+int omax_expr_1arg_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	*argc_out = *argc;
 	t_atom64 *result = (t_atom64 *)osc_mem_alloc(*argc * sizeof(t_atom64));
 	double (*func)(double) = (double (*)(double))(f->rec->extra);
@@ -113,10 +125,10 @@ int omax_expr_1arg_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out
 	return 0;
 }
 
-int omax_expr_1arg_dblptr(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_1arg_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 }
 
-int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	uint32_t min_argc = argc[0], max_argc = argc[1];
 	if(argc[0] > argc[1]){
 		min_argc = argc[1], max_argc = argc[0];
@@ -153,13 +165,13 @@ int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc
 	}
 }
 
-int omax_expr_2arg_dblptr_dbl(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_2arg_dblptr_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 }
 
-int omax_expr_2arg_dbl_dblptr(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_2arg_dbl_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 }
 
-int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 }
 
 // wrappers for infix ops
@@ -215,23 +227,28 @@ double omax_expr_mod(double f1, double f2){
 	return (int)f1 % (int)f2;
 }
 
-int omax_expr_get_index(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
-	*argc_out = argc[1];
-	t_atom64 *result = (t_atom64 *)osc_mem_alloc(argc[1] * sizeof(t_atom64));
-	int i;
-	for(i = 0; i < argc[1]; i++){
-		atom64_setfloat(result + i, 0.);
-		if(atom64_getlong(argv[1] + i) > argc[0] - 1){
-			error("index %d exceeds array length (%d)", atom64_getlong(argv[1] + i), (int)argc[0]);
-			return 1;
+int omax_expr_get_index(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	int i, j, k = 0;
+	*argc_out = 0;
+	for(i = 1; i < argcc; i++){
+		(*argc_out) += argc[i];
+	}
+	t_atom64 *result = (t_atom64 *)osc_mem_alloc(*argc_out * sizeof(t_atom64));
+	for(j = 1; j < argcc; j++){
+		for(i = 0; i < argc[j]; i++){
+			atom64_setfloat(result + k, 0.);
+			if(atom64_getlong(argv[j] + i) > argc[0] - 1){
+				error("index %d exceeds array length (%d)", atom64_getlong(argv[j] + i), (int)argc[0]);
+				return 1;
+			}
+			atom64_setfloat(result + k++, atom64_getfloat(argv[0] + (atom64_getlong(argv[j] + i))));
 		}
-		atom64_setfloat(result + i, atom64_getfloat(argv[0] + (atom64_getlong(argv[1] + i))));
 	}
 	*argv_out = result;
 	return 0;
 }
 
-int omax_expr_sum(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_sum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	*argc_out = 1;
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
 	atom64_setfloat(*argv_out, 0.);
@@ -244,14 +261,68 @@ int omax_expr_sum(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_a
 	return 0;
 }
 
-int omax_expr_length(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_length(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	*argc_out = 1;
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
 	atom64_setlong(*argv_out, (int64_t)(*argc));
 	return 0;
 }
 
-int omax_expr_not(t_omax_expr *f, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+int omax_expr_mean(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = 1;
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+	double sum = 0;
+	int i;
+	for(i = 0; i < *argc; i++){
+		sum += atom64_getfloat(argv[0] + i);
+	}
+	atom64_setfloat(*argv_out, sum / *argc);
+	return 0;
+}
+
+int omax_expr_concat(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	int i, j = 0, k;
+	for(i = 0; i < argcc; i++){
+		*argc_out += argc[i];
+	}
+	*argv_out = (t_atom64 *)osc_mem_alloc(*argc_out * sizeof(t_atom64));
+	for(i = 0; i < argcc; i++){
+		for(k = 0; k < argc[i]; k++){
+			atom64_setfloat((*argv_out) + j++, atom64_getfloat(argv[i] + k));
+		}
+	}
+	return 0;
+}
+
+int omax_expr_reverse(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = *argc;
+	t_atom64 *result = (t_atom64 *)osc_mem_alloc(*argc * sizeof(t_atom64));
+	int i;
+	for(i = 0; i < *argc; i++){
+		result[i] = argv[0][argc[0] - i - 1];
+	}
+	*argv_out = result;
+	return 0;
+}
+
+int omax_expr_make_list(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	int n = atom64_getlong(*argv);
+	double val = 0.;
+	t_atom64 *result = (t_atom64 *)osc_mem_alloc(n * sizeof(t_atom64));
+	if(argcc == 2){
+		val = atom64_getfloat(argv[1]);
+	}
+	printf("val = %f\n", val);
+	int i;
+	for(i = 0; i < n; i++){
+		atom64_setfloat(result + i, val);
+ 	}
+	*argc_out = n;
+	*argv_out = result;
+	return 0;
+}
+
+int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	int i;
 	*argc_out = *argc;
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
