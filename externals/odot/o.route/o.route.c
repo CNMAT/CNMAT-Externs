@@ -461,6 +461,10 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 		}
 		for(i = 0; i < numArgs; i++){
 			x->outlets[numArgs - 1 - i] = outlet_new(x, NULL);
+			if(atom_gettype(argv + i) != A_SYM){
+				object_error((t_object *)x, "argument %d is not an OSC address", i);
+				return NULL;
+			}
 			x->args[i] = atom_getsym(argv + i);
 			int j;
 			int len = strlen(x->args[i]->s_name);
