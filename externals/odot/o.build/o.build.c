@@ -245,7 +245,7 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 			object_error((t_object *)x, "the first argument must be an OSC string that begins with a slash (/)");
 			return NULL;
 		}
-
+	
 		t_atom *addresses[argc];
 		int numargs[argc];
 		int count = 0;
@@ -253,7 +253,7 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 		for(i = 0; i < argc; i++){
 			numargs[i] = 0;
 			if(atom_gettype(argv + i) == A_SYM){
-				if(atom_getsym(argv + i)->s_name[0] == '/'){
+				if(atom_getsym(argv + i)->s_name[0] == '/' || atom_getsym(argv + i)->s_name[0] == '#'){
 					addresses[count++] = argv + i;
 				}else{
 					numargs[count - 1]++;
