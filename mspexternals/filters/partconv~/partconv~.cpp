@@ -541,7 +541,7 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
             }
             
             if(x->v != 0 && b->b_frames < (x->k * x->v)) {
-                error("partconv~: frames in buffer is less than k*v");
+                error("partconv~: frames in buffer is less than k*v (b: %u, k: %u, v: %u",b->b_frames,x->k,x->v);
                 bdata = NULL;
             }
         } else {
@@ -636,7 +636,9 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
             x->pc = new PartConvMax();
             post("partconv~: setup(FS=%d, blocksize=%d, n=%d, m=%d, k=%d, v=%d, stride=%d, scheme=%d, levels=%d, plan=%d, wisdom=%s)",
                 fs, bs, x->n, x->m, x->k, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name);
-            if(x->pc->setup(sp[0]->s_sr, x->n, x->m, x->k, bdata, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name) != 0) {
+            const int max_threads_per_level = 2;
+            const int max_level0_threads = 1;
+            if(x->pc->setup(sp[0]->s_sr, x->n, x->m, x->k, bdata, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name,max_threads_per_level, max_level0_threads) != 0) {
                 error("partconv~: setup error detected");
                 x->pc = NULL;
             }
