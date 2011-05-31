@@ -51,7 +51,8 @@
 // fftw 3
 #include "fftw3.h"
 
-#include "partconvMulti.h"
+#include "buffers.h"
+#include "partconv.h"
 
 typedef struct _partconv {
     
@@ -72,6 +73,15 @@ typedef struct _partconv {
     
     // length of filters in bank (must all be same length)
     int v;
+
+    // v internal
+    int v0;
+    
+    // max num of threads per level
+    int max_threads_per_level;
+    
+    // max num of threads at level 0
+    int max_threads_per_level0;
     
     // planing mode
     int plan;
@@ -144,6 +154,19 @@ int main(void) {
     CLASS_ATTR_ENUMINDEX(c, "plan", 0, "estimate measure patient");
     //CLASS_ATTR_SAVE(c, "plan", 0);
     
+    CLASS_ATTR_LONG(c, "max_threads_per_level", 0, t_partconv, max_threads_per_level);
+    CLASS_ATTR_LABEL(c, "max_threads_per_level", 0, "Maximum number of threads per partition level");
+    CLASS_ATTR_FILTER_MIN(c, "max_threads_per_level", 1);
+    
+    CLASS_ATTR_LONG(c, "max_threads_per_level0", 0, t_partconv, max_threads_per_level0);
+    CLASS_ATTR_LABEL(c, "max_threads_per_level0", 0, "Maximum number of threads at first partition level");
+    CLASS_ATTR_FILTER_MIN(c, "max_threads_per_level0", 0);
+    
+    CLASS_ATTR_LONG(c, "plan", 0, t_partconv, plan);
+    CLASS_ATTR_LABEL(c, "plan", 0, "FFTW plan mode");
+    CLASS_ATTR_ENUMINDEX(c, "plan", 0, "estimate measure patient");
+    //CLASS_ATTR_SAVE(c, "plan", 0);
+    
     CLASS_ATTR_LONG(c, "n", 0, t_partconv, n);
     CLASS_ATTR_FILTER_MIN(c, "n", 1);
     CLASS_ATTR_LABEL(c, "n", 0, "Number of inputs");
@@ -164,42 +187,42 @@ int main(void) {
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_32", 0, t_partconv, scheme_32, nparts_32, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_32", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_32", 0, "Partioning scheme for 32 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_32", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_32", 0);
     
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_64", 0, t_partconv, scheme_64, nparts_64, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_64", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_64", 0, "Partioning scheme for 64 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_64", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_64", 0);
     
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_128", 0, t_partconv, scheme_128, nparts_128, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_128", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_128", 0, "Partioning scheme for 128 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_128", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_128", 0);
     
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_256", 0, t_partconv, scheme_256, nparts_256, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_256", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_256", 0, "Partioning scheme for 256 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_256", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_256", 0);
     
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_512", 0, t_partconv, scheme_512, nparts_512, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_512", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_512", 0, "Partioning scheme for 512 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_512", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_512", 0);
     
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_1024", 0, t_partconv, scheme_1024, nparts_1024, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_1024", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_1024", 0, "Partioning scheme for 1024 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_1024", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_1024", 0);
     
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_2048", 0, t_partconv, scheme_2048, nparts_2048, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_2048", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_2048", 0, "Partioning scheme for 2048 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_2048", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_2048", 0);
     
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_4096", 0, t_partconv, scheme_4096, nparts_4096, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_4096", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_4096", 0, "Partioning scheme for 4096 sample block");
-    CLASS_ATTR_SAVE(c, "scheme_4096", 0);
+    //CLASS_ATTR_SAVE(c, "scheme_4096", 0);
     
     class_addmethod(c, (method)partconv_dsp, "dsp", A_CANT, 0);
 	class_addmethod(c, (method)partconv_assist, "assist", A_CANT, 0);
@@ -262,14 +285,14 @@ t_max_err partconv_scheme_set(t_partconv *x, void *attr, long argc, t_atom *argv
     if (argc >= 1 && argc <= 255) {
         // ok
     } else {
-        error("partconv~: partitioning scheme is too long, or too short");
+        object_error((t_object*)x, "partconv~: partitioning scheme is too long, or too short");
         return MAX_ERR_GENERIC;
     }
     
     // check that all elements are integers
     for(i = 0; i < argc; i++) {
         if(argv[i].a_type != A_LONG) {
-            error("partconv~: partitioning scheme must be a list of integers", i);
+            object_error((t_object*)x, "partconv~: partitioning scheme must be a list of integers", i);
             return MAX_ERR_GENERIC;
         }
     }
@@ -278,7 +301,7 @@ t_max_err partconv_scheme_set(t_partconv *x, void *attr, long argc, t_atom *argv
     
     for(i = 0; i < argc; i++) {
         if(argv[i].a_w.w_long <= partn) {
-            error("partconv~: partitioning scheme must be monotonically increasing");
+            object_error((t_object*)x, "partconv~: partitioning scheme must be monotonically increasing");
             return MAX_ERR_GENERIC;
         } else {
             partn = argv[i].a_w.w_long;
@@ -289,7 +312,7 @@ t_max_err partconv_scheme_set(t_partconv *x, void *attr, long argc, t_atom *argv
         partn = argv[i].a_w.w_long;
         
         if (((partn | (partn - 1)) + 1) / 2 != partn) {
-            error("partconv~: %d at position %d is not a power of two", partn, i);
+            object_error((t_object*)x, "partconv~: %d at position %d is not a power of two", partn, i);
             return MAX_ERR_GENERIC;
         }
     }
@@ -337,7 +360,7 @@ t_max_err partconv_scheme_set(t_partconv *x, void *attr, long argc, t_atom *argv
         scheme = &(x->scheme_4096[0]);
     }
     else {
-        error("partconv~: unknown attribute");
+        object_error((t_object*)x, "partconv~: unknown attribute");
         return MAX_ERR_GENERIC;
     }
     
@@ -375,10 +398,14 @@ void *partconv_new(t_symbol *s, short argc, t_atom *argv) {
     x->m = 1;
     x->k = 1;
     x->v = 0;
+    x->v0 = 0;
     
     // "measure" mode default
     x->plan = 1;
     x->wisdom = gensym("/tmp/partconv~.fftwf-wisdom");
+    
+    x->max_threads_per_level = 1;
+    x->max_threads_per_level0 = 0;
     
     x->input = NULL;
     x->output = NULL;
@@ -395,7 +422,7 @@ void *partconv_new(t_symbol *s, short argc, t_atom *argv) {
     x->nparts_32 = 6;
     
     x->scheme_64[0] = 64;
-    x->scheme_64[1] = 512;
+    x->scheme_64[1] = 256;
     x->scheme_64[2] = 2048;
     x->scheme_64[3] = 8192;
     x->scheme_64[4] = 65536;
@@ -500,11 +527,11 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
     //post("partconv~.dsp: n=%d, m=%d, k=%d, v=%d", x->n, x->m, x->k, x->v);
 
     if(sp[0]->s_n < 32) {
-        error("partconv~: vector size less than 32 is not supported");
+        object_error((t_object*)x, "partconv~: vector size less than 32 is not supported");
     }
     
     if(sp[0]->s_n > 4096) {
-        error("partconv~: vector size greater than 4096 is not supported");
+        object_error((t_object*)x, "partconv~: vector size greater than 4096 is not supported");
     }
     
     // setup args
@@ -521,7 +548,7 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
     bstride = 0;
 
     if(x->buffer == NULL) {
-        error("partconv~: no buffer defined");
+        object_error((t_object*)x, "partconv~: no buffer defined");
     } else {
         
         b = _sym_to_buffer(x->buffer);
@@ -533,19 +560,22 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
             // auto-guess the number of samples
             if(x->v == 0) {
                 if((b->b_frames % x->k) != 0) {
-                    error("partconv~: k does not divide into buffer length; could not automatically determine v");
+                    object_error((t_object*)x, "partconv~: k does not divide into buffer length; could not automatically determine v");
                     bdata = NULL;
                 } else {
-                    x->v = b->b_frames / x->k;
+                    x->v0 = b->b_frames / x->k;
                 }
+            } else {
+                x->v0 = x->v;
             }
+
             
-            if(x->v != 0 && b->b_frames < (x->k * x->v)) {
-                error("partconv~: frames in buffer is less than k*v (b: %u, k: %u, v: %u",b->b_frames,x->k,x->v);
+            if(b->b_frames < (x->k * x->v0)) {
+                object_error((t_object*)x, "partconv~: frames in buffer is less than k*v (b: %u, k: %u, v: %u",b->b_frames,x->k,x->v);
                 bdata = NULL;
             }
         } else {
-            error("partconv~: invalid buffer");
+            object_error((t_object*)x, "partconv~: invalid buffer");
             bdata = NULL;
         }
     }
@@ -601,7 +631,7 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
        (x->m == x->n * x->k)
         )) 
     {
-           error("partconv~: invalid channel configuration n=%d, m=%d, k=%d", x->n, x->m, x->k);
+           object_error((t_object*)x, "partconv~: invalid channel configuration n=%d, m=%d, k=%d", x->n, x->m, x->k);
     } else {
         
         // check wisdom file...
@@ -615,18 +645,18 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
                 }
                 fp = fopen(x->wisdom->s_name, "w+");
                 if(! fp) {
-                    error("partconv~: error creating wisdom file");
+                    object_error((t_object*)x, "partconv~: error creating wisdom file");
                     bdata = NULL;
                 } else {
                     fclose(fp);
                     unlink(x->wisdom->s_name);
                 }
             } else if(access(x->wisdom->s_name, R_OK) < 0) {
-                error("partconv~: error reading wisdom file");
+                object_error((t_object*)x, "partconv~: error reading wisdom file");
                 bdata = NULL;
             }
         } else {
-            error("partconv~: wisdom file is not configured");
+            object_error((t_object*)x, "partconv~: wisdom file is not configured");
             bdata = NULL;
         }
         
@@ -634,19 +664,17 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
             
             // allocate new partconv with scheme
             x->pc = new PartConvMax();
-            post("partconv~: setup(FS=%d, blocksize=%d, n=%d, m=%d, k=%d, v=%d, stride=%d, scheme=%d, levels=%d, plan=%d, wisdom=%s)",
-                fs, bs, x->n, x->m, x->k, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name);
-            const int max_threads_per_level = 2;
-            const int max_level0_threads = 1;
-            if(x->pc->setup(sp[0]->s_sr, x->n, x->m, x->k, bdata, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name,max_threads_per_level, max_level0_threads) != 0) {
-                error("partconv~: setup error detected");
+            //post("partconv~: setup(FS=%d, blocksize=%d, n=%d, m=%d, k=%d, v=%d, stride=%d, scheme=%d, levels=%d, plan=%d, wisdom=%s)",
+            //    fs, bs, x->n, x->m, x->k, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name);
+            if(x->pc->setup(sp[0]->s_sr, x->n, x->m, x->k, bdata, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name, x->max_threads_per_level, x->max_threads_per_level0) != 0) {
+                object_error((t_object*)x, "partconv~: setup error detected");
                 x->pc = NULL;
             }
         } else {
             if(bdata == NULL) {
-                error("partconv~: buffer is invalid or not defined");
+                object_error((t_object*)x, "partconv~: buffer is invalid or not defined");
             } else {
-                error("partconv~: sample rate is not set");
+                object_error((t_object*)x, "partconv~: sample rate is not set");
             }
         }
     }
