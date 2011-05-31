@@ -191,6 +191,12 @@ void oexpr_postFunctionGraph(t_omax_expr *fg){
 	post("%s", buf);
 }
 
+void oexpr_bang(t_oexpr *x){
+	char buf[16];
+	strncpy(buf, "#bundle\0", 8);
+	oexpr_fullPacket(x, 16, (long)buf);
+}
+
 void oexpr_anything(t_oexpr *x, t_symbol *msg, int argc, t_atom *argv){
 	if(msg == gensym("post-argvlex")){
 		int i;
@@ -299,6 +305,7 @@ int main(void){
 	class_addmethod(c, (method)oexpr_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)oexpr_bang, "bang", 0);
 
 	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
 	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);

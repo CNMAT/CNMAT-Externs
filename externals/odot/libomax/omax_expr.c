@@ -322,6 +322,29 @@ int omax_expr_make_list(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, i
 	return 0;
 }
 
+int omax_expr_range(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	double start, end, step = 1;
+	if(argcc < 2){
+		error("omax_expr: range requires at least 2 arguments:  start and end.");
+		return 1;
+	}
+	start = atom64_getfloat(*argv);
+	end = atom64_getfloat(argv[1]);
+	if(argcc > 2){
+		step = atom64_getfloat(argv[2]);
+ 	}
+	int n = (end - start) / step;
+	int i;
+        t_atom64 *result = (t_atom64 *)osc_mem_alloc(n * sizeof(t_atom64));
+	*argc_out = n;
+	for(i = 0; i < n; i++){
+		atom64_setfloat(result + i, start);
+		start += step;
+	}
+	*argv_out = result;
+	return 0;
+}
+
 int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	int i;
 	*argc_out = *argc;
