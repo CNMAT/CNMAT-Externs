@@ -77,15 +77,15 @@ typedef struct _partconv {
     // v internal
     int v0;
     
+    // planing mode
+    int plan;
+
     // max num of threads per level
     int max_threads_per_level;
     
     // max num of threads at level 0
     int max_threads_per_level0;
-    
-    // planing mode
-    int plan;
-    
+        
     // wisdom file
     t_symbol* wisdom;
 
@@ -177,7 +177,7 @@ int main(void) {
     
     CLASS_ATTR_LONG(c, "k", 0, t_partconv, k);
     CLASS_ATTR_FILTER_MIN(c, "k", 1);
-    CLASS_ATTR_LABEL(c, "n", 0, "Number of impulse responses");
+    CLASS_ATTR_LABEL(c, "k", 0, "Number of impulse responses");
     
     CLASS_ATTR_LONG(c, "v", 0, t_partconv, v);
     CLASS_ATTR_FILTER_MIN(c, "v", 0);
@@ -571,7 +571,7 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
 
             
             if(b->b_frames < (x->k * x->v0)) {
-                object_error((t_object*)x, "partconv~: frames in buffer is less than k*v (b: %u, k: %u, v: %u",b->b_frames,x->k,x->v);
+                object_error((t_object*)x, "partconv~: frames in buffer is less than k*v (b: %u, k: %u, v: %u",b->b_frames,x->k,x->v0);
                 bdata = NULL;
             }
         } else {
@@ -664,9 +664,9 @@ void partconv_dsp(t_partconv *x, t_signal **sp, short *connect) {
             
             // allocate new partconv with scheme
             x->pc = new PartConvMax();
-            //post("partconv~: setup(FS=%d, blocksize=%d, n=%d, m=%d, k=%d, v=%d, stride=%d, scheme=%d, levels=%d, plan=%d, wisdom=%s)",
-            //    fs, bs, x->n, x->m, x->k, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name);
-            if(x->pc->setup(sp[0]->s_sr, x->n, x->m, x->k, bdata, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name, x->max_threads_per_level, x->max_threads_per_level0) != 0) {
+            //post("partconv~: setup(FS=%d, blocksize=%d, n=%d, m=%d, k=%d, v=%d, stride=%d, scheme=%d, levels=%d, plan=%d, wisdom=%s, max_per_level=%d, max_level0=%d)",
+            //      fs, bs, x->n, x->m, x->k, x->v, bstride, scheme, *nparts, x->plan, x->wisdom->s_name, x->max_threads_per_level, x->max_threads_per_level0);
+            if(x->pc->setup(sp[0]->s_sr, x->n, x->m, x->k, bdata, x->v0, bstride, scheme, *nparts, x->plan, x->wisdom->s_name, x->max_threads_per_level, x->max_threads_per_level0) != 0) {
                 object_error((t_object*)x, "partconv~: setup error detected");
                 x->pc = NULL;
             }
