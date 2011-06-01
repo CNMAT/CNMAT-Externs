@@ -42,9 +42,8 @@
 #include "jgraphics.h" 
 #include "version.c" 
 #include "time.h"
+#include "osc.h"
 #include "omax_util.h"
-#include "osc_util.h"
-#include "osc_match.h"
 
 #define PF __PRETTY_FUNCTION__
 
@@ -261,18 +260,7 @@ void maq_dumpcellblock(t_maq *x){
 
 	int row = 0;
 	t_atom *outptr = out;
-	/*
-	atom_setsym(outptr++, gensym("set"));
-	atom_setlong(outptr++, 0);
-	atom_setlong(outptr++, row++);
-	atom_setsym(outptr++, gensym("/name"));
-	if(x->selected->name){
-		atom_setsym(outptr++, x->selected->name);
-	}else{
-		atom_setsym(outptr++, gensym("(null)"));
-	}
-	outlet_anything(x->outlet_info, ps_cellblock, outptr - out, out);
-	*/
+
 	char buf[64];
 	sprintf(buf, "%s/x/min", x->selected->name->s_name);
 	maq_outputCellblockCell_1float(x->outlet_info, 0, row++, buf, x->selected->rect.x);
@@ -400,14 +388,14 @@ void maq_add_to_bundle(t_maq *x, t_symbol *address, t_symbol *FullPacket, long l
 		return;
 	}
 	char *buf = (char *)ptr;
-	int msgcount = osc_util_getMsgCount(len, buf);
-	t_osc_msg msg[msgcount];
-	osc_util_parseBundle(len, buf, msg);
-	int i;
-	for(i = 0; i < msgcount; i++){
-		long ac = osc_util_getArgCount(msg + i);
+	int msgcount = 0;
+	osc_bundle_getMsgCount(len, buf, &msgcount);
+	t_osc_msg *msg = NULL;
+	osc_bundle_getMessages(len, buf, &msgcount, &msg);
+	while(msg){
+		long ac = osc_message_getArgCount(msg);
 		t_atom av[ac];		
-		omax_util_oscMsg2MaxAtoms(msg + i, &ac, av);
+		omax_util_oscMsg2MaxAtoms(msg, &ac, av);
 		t_maq_osc_msg *m = NULL;
 		hashtab_lookup(e->messages_ht, atom_getsym(av), (t_object **)(&m));
 		if(m){
@@ -428,6 +416,7 @@ void maq_add_to_bundle(t_maq *x, t_symbol *address, t_symbol *FullPacket, long l
 			e->messages_ll = m;
 			hashtab_store(e->messages_ht, atom_getsym(av), (t_object *)m);
 		}
+		msg = msg->next;
 	}
 	maq_dumpcellblock(x);
 }
@@ -635,7 +624,7 @@ inline long maq_addMessageToBundle_1float(char *bndl, char *address, float f){
 	}
 	strncpy(ptr, ",f", 2);
 	ptr += 4;
-	*((uint32 *)ptr) = hton32(*((uint32 *)(&f)));
+	*((uint32_t *)ptr) = *((uint32_t *)(&f));
 	ptr += 4;
 	*((uint32 *)sizeptr) = hton32(ptr - sizeptr - 4);
 	return ptr - sizeptr;
@@ -781,7 +770,7 @@ void maq_make_bundle_from_event(t_event *e, int *len, char **ret_ptr){
 			case A_FLOAT:
 				{
 					float f = atom_getfloat(m->argv + i);
-					*((uint32 *)ptr) = hton32(*((uint32 *)&f));
+					*((uint32_t *)ptr) = *((uint32_t *)(&f));
 					ptr += 4;
 				}
 				break;
