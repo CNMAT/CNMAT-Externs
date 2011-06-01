@@ -61,6 +61,7 @@ void *ovar_class;
 void ovar_fullPacket(t_ovar *x, long len, long ptr);
 void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation, long inlet);
 void ovar_cbk(t_osc_msg msg, void *v);
+void ovar_ioreport(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
 void ovar_clearDataStructures(t_hashtab *ht, t_linklist *ll);
 void ovar_deleteItem(t_object *ob, void *context);
 long ovar_linklist_compute_bundle_size(t_ovar *x, t_linklist *ll);
@@ -86,7 +87,16 @@ t_max_err ovar_notify(t_ovar *x, t_symbol *s, t_symbol *msg, void *sender, void 
 t_symbol *ps_FullPacket;
 
 void ovar_fullPacket(t_ovar *x, long len, long ptr){
-	ovar_doFullPacket(x, len, ptr, x->operation, proxy_getinlet((t_object *)x));
+	t_osc_msg *m = NULL;
+	osc_bundle_lookupAddressSerialized(len, (char *)ptr, "/osc/io/report", &m, 1);
+	if(m){
+		t_atom a[m->argc + 1];
+		long n = m->argc;
+		omax_util_oscMsg2MaxAtoms(m, &n, a);
+		ovar_ioreport(x, NULL, n, a + 1);
+	}else{
+		ovar_doFullPacket(x, len, ptr, x->operation, proxy_getinlet((t_object *)x));
+	}
 }
 
 void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation, long inlet){
@@ -94,20 +104,6 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation, long inlet
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 
-	// if the OSC packet contains a single message, turn it into a bundle
-	/*
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, cpy, cpy);
-		if(nn < 0){
-			error("problem bundling naked message");
-		}
-	}
-	*/
-	// flatten any nested bundles
-	//nn = osc_util_flatten(nn, cpy, cpy);
-
-	//hashtab_clear(x->ht2);
-	//linklist_clear(x->ll2);
 	ovar_clearDataStructures(x->ht2, x->ll2);
 	// extract the messages from the bundle
 	osc_bundle_getMessagesWithCallback(nn, cpy, ovar_cbk, (void *)x);
@@ -253,12 +249,7 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long operation, long inlet
 void ovar_cbk(t_osc_msg msg, void *v){
 	t_ovar *x = (t_ovar *)v;
 
-	// omax_util_oscMsg2MaxAtoms() will stick the address in the first element
-	// of the atom array, so allocate 1 more than the number of args
-	//printf("%d\n", msg.argc);
-	//printf("i want %d bytes\n", (msg.argc + 2) * sizeof(t_atom));	
 	t_atom *atoms = (t_atom *)malloc((msg.argc + 2) * sizeof(t_atom));
-	//printf("%s:%d: allocating %p (%d bytes)\n", __PRETTY_FUNCTION__, __LINE__, atoms, (msg.argc + 2) * sizeof(t_atom));
 	long len = msg.argc;
 
 	// this will turn the osc mesage (a char array) into an array of atoms
@@ -268,6 +259,56 @@ void ovar_cbk(t_osc_msg msg, void *v){
 	// the length in the first atom is the length of the arguments plus the address
 	hashtab_store(x->ht2, atom_getsym(atoms + 1), (t_object *)atoms);
 	linklist_append(x->ll2, atoms);
+}
+
+void ovar_ioreport(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
+	int buflen = ovar_linklist_compute_bundle_size(x, x->ll1);
+	char buf[buflen];
+	memset(buf, '\0', buflen);
+	int bufpos = 0;
+	osc_bundle_setBundleID(buf);
+	bufpos += OSC_HEADER_SIZE;
+	int i;
+	for(i = 0; i < argc; i++){
+		int j;
+		t_symbol *sym = atom_getsym(argv + i);
+		if(sym){
+			char *symptr = sym->s_name;
+			int symptrlen = strlen(symptr);
+			int wc = 0;
+			for(j = 0; j < symptrlen; j++){
+				switch(symptr[j]){
+				case '*':
+				case '[':
+				case '{':
+				case '?':
+					wc = 1;
+					break;
+				}
+				if(wc){
+					break;
+				}
+			}
+			if(wc){
+
+			}else{
+				for(j = 0; j < linklist_getsize(x->ll1); j++){
+					t_atom *a = (t_atom *)linklist_getindex(x->ll1, j);
+					t_symbol *address = atom_getsym(a + 1);
+					if(!address){
+						continue;
+					}
+					if(!strcmp(symptr, address->s_name)){
+						bufpos += omax_util_encode_atoms(buf + bufpos, address, atom_getlong(a) - 1, a + 2);
+					}
+				}
+			}
+		}
+	}
+	t_atom out[2];
+	atom_setlong(out, bufpos);
+	atom_setlong(out + 1, (long)buf);
+	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
 void ovar_clearDataStructures(t_hashtab *ht, t_linklist *ll){
@@ -599,6 +640,7 @@ int main(void){
 	class_addmethod(c, (method)ovar_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)ovar_bang, "bang", 0);
 	class_addmethod(c, (method)ovar_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)ovar_ioreport, "oscioreport", A_GIMME, 0);
 
 	class_addmethod(c, (method)ovar_store, "store", A_GIMME, 0);
 	class_addmethod(c, (method)ovar_union, "union", A_GIMME, 0);
