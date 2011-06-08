@@ -194,7 +194,7 @@ void osc_bundle_printBundleCbk(t_osc_msg msg, void *context);
  * @param fullmatch Set this to non-zero to indicate that a full match is required
  * @return An error code or OSC_ERR_NONE.
  */
-t_osc_err osc_bundle_lookupAddressSerialized(int len, char *buf, char *address, t_osc_msg **m, int fullmatch);
+t_osc_err osc_bundle_lookupAddress_s(int len, char *buf, char *address, t_osc_msg **m, int fullmatch);
 
 /**
  * Find a message in a bundle with a given address.  m is a linked list and could
@@ -230,7 +230,7 @@ t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message);
  * @param len A pointer to an int where the length will be placed
  * @return An error code or #OSC_ERR_NONE
  */
-t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, long *len);
+t_osc_err osc_bundle_getLen_s(t_osc_bundle *bundle, long *len);
 
 /**
  * Serialize a #t_osc_bundle.  This function will allocate the necessary memory to serialize the
@@ -249,7 +249,7 @@ t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, long *len, char **buffer);
 /**
  * Serialize a bundle using pre-allocated memory.  This function assumes that buffer is a pointer
  * to a block of memory large enough to hold the serialized bundle.  The number of bytes necessary
- * to hold the serialized bundle can be determined by a call to osc_bundle_getSerializedLen().
+ * to hold the serialized bundle can be determined by a call to osc_bundle_getLen_s().
  *
  * @param bundle The bundle to be serialized.
  * @param buffer A pointer to a char array to be filled with the serialized bundle.

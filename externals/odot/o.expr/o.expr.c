@@ -116,11 +116,11 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		char tt[argc];
 		memset(tt, 'f', argc);
 		osc_message_addData(newm, argc, tt, argc * sizeof(float), (char *)argvf);
-		int size = osc_message_getSerializedSize(newm);
+		int size = osc_message_getSize_s(newm);
 		char newm_ser[size + 4];
 		memset(newm_ser, '\0', size + 4);
 		osc_message_serialize(newm, newm_ser);
-		osc_bundle_lookupAddressSerialized(len, (char *)ptr, x->address->s_name, &m, 1);
+		osc_bundle_lookupAddress_s(len, (char *)ptr, x->address->s_name, &m, 1);
 		char bndl_out[len + size + 4];
 		memset(bndl_out, '\0', len + size + 4);
 		if(m){
@@ -221,9 +221,9 @@ void oexpr_postFunctions(t_oexpr *x){
 	int i;
 	for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
 		if(omax_expr_funcsym[i].numargs < 0){
-			post("%s(): %s", omax_expr_funcsym[i].desc);
+			post("%s(): %s", omax_expr_funcsym[i].name, omax_expr_funcsym[i].desc);
 		}else if(omax_expr_funcsym[i].numargs == 0){
-			post("%s(...): %s", omax_expr_funcsym[i].desc);
+			post("%s(...): %s", omax_expr_funcsym[i].name, omax_expr_funcsym[i].desc);
 		}else{
 			char buf[256];
 			char *ptr = buf;

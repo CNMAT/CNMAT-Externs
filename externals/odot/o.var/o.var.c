@@ -88,7 +88,7 @@ t_symbol *ps_FullPacket;
 
 void ovar_fullPacket(t_ovar *x, long len, long ptr){
 	t_osc_msg *m = NULL;
-	osc_bundle_lookupAddressSerialized(len, (char *)ptr, "/osc/io/report", &m, 1);
+	osc_bundle_lookupAddress_s(len, (char *)ptr, "/osc/io/report", &m, 1);
 	if(m){
 		t_atom a[m->argc + 1];
 		long n = m->argc;

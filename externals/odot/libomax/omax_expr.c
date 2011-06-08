@@ -29,7 +29,7 @@ int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out
 	case OMAX_ARG_TYPE_OSCADDRESS:
 		{
 			t_osc_msg *m = NULL;
-			osc_bundle_lookupAddressSerialized(len, oscbndl, arg->arg.osc_address, &m, 1);
+			osc_bundle_lookupAddress_s(len, oscbndl, arg->arg.osc_address, &m, 1);
 			if(m){
 				*argc_out = m->argc;
 				t_atom64 *argv = (t_atom64 *)osc_mem_alloc(m->argc * sizeof(t_atom64));
@@ -341,6 +341,26 @@ int omax_expr_range(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *
 		atom64_setfloat(result + i, start);
 		start += step;
 	}
+	*argv_out = result;
+	return 0;
+}
+
+int omax_expr_multiplex(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	int min = *argc;
+	int i, j, k = 0;
+	for(i = 1; i < argcc; i++){
+		int val = argc[i];
+		if(val < min){
+			min = val;
+		}
+	}
+	t_atom64 *result = (t_atom64 *)osc_mem_alloc(min * argcc * sizeof(t_atom64));
+	for(i = 0; i < argcc; i++){
+		for(j = 0; j < min; j++){
+			result[i + (j * argcc)] = argv[i][j];
+		}
+	}
+	*argc_out = min * argcc;
 	*argv_out = result;
 	return 0;
 }

@@ -2,7 +2,12 @@ VERSION = 0.1
 OBJDIR = $(CURDIR)/build
 OBJECTS = o.accumulate o.bild o.build o.expr o.if o.mappatch o.message o.prepend o.print o.printbytes\
 o.route o.select o.spew o.var
-ODOT_BUFFER_LEN = 4096
+ODOT_CFILES = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).c)
+ODOT_HFILES = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).h)
+ODOT_MXO = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxo)
+ODOT_MXE = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxe)
+
+#ODOT_BUFFER_LEN = 4096
 
 ARCHIVE = o.tar.gz
 UNSTABLE = o.unstable.tar.gz
@@ -11,10 +16,10 @@ SERVER_PATH = /home/www-data/berkeley.edu-cnmat.www/maxdl/files/odot/
 
 ARCH = -arch i386 -arch ppc
 
-all: $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxo) $(OBJDIR)/patches
+all: $(OBJDIR) $(ODOT_MXO) $(OBJDIR)/patches
 win: $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxe) $(OBJDIR)/patches 
 
-$(OBJDIR)/%.mxo: 
+$(ODOT_MXO):
 	+cd $(notdir $(basename $@)) && $(MAKE) -f Makefile -k
 	+cd $(notdir $(basename $@)) && $(MAKE) -f Makefile -k install
 	+cd $(notdir $(basename $@))/build/Deployment && cp -r $(notdir $(basename $@)).mxo $(OBJDIR)

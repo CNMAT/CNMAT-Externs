@@ -305,7 +305,7 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 	osc_message_resetArgs(msg);	
 }
 
-int osc_message_getSerializedSize(t_osc_msg *m){
+int osc_message_getSize_s(t_osc_msg *m){
 	if(m->size){
 		return m->size;
 	}

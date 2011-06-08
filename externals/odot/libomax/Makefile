@@ -1,7 +1,7 @@
 OMAX_BASENAMES = omax_expr omax_util
 OMAX_OBJECTS = $(foreach OBJ, $(OMAX_BASENAMES), $(OBJ).o) omax_parser.o omax_scanner.o
 OMAX_CFILES = $(foreach F, $(OMAX_BASENAMES), $(F).c)
-OMAX_HFILES = $(foreach F, $(OMAX_BASENAMES), $(F).h
+OMAX_HFILES = $(foreach F, $(OMAX_BASENAMES), $(F).h)
 
 CC = gcc
 ARCH = -arch i386
@@ -10,7 +10,7 @@ I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Ca
 
 all: libomax.a
 
-libomax.a: $(OMAX_OBJECTS)
+libomax.a: $(OMAX_OBJECTS) $(OMAX_CFILES) $(OMAX_HFILES)
 	libtool -static -o libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
 
 omax_scanner.c: omax_scanner.l

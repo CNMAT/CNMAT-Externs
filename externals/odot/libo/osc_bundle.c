@@ -47,6 +47,23 @@ void osc_bundle_freeBundle(t_osc_bundle *bundle){
 	}
 }
 
+int osc_bundle_hasNext(t_osc_msg *m){
+	if(!m){
+		return 0;
+	}
+	if(m->next){
+		return 1;
+	}
+	return 0;
+}
+
+int osc_bundle_hasNext_s(int len, char *buf, char *msgptr){
+	if(msgptr - buf >= len){
+		return 0;
+	}
+	return 1;
+}
+
 t_osc_err osc_bundle_getMsgCount(int len, char *buf, int *count){
 	t_osc_err ret;
 	if(ret = osc_error_bundleSanityCheck(len, buf)){
@@ -191,7 +208,7 @@ void osc_bundle_printBundleCbk(t_osc_msg msg, void *context){
 	osc_message_printMsg(&msg, context);
 }
 
-t_osc_err osc_bundle_lookupAddressSerialized(int len, char *buf, char *address, t_osc_msg **m, int fullmatch){
+t_osc_err osc_bundle_lookupAddress_s(int len, char *buf, char *address, t_osc_msg **m, int fullmatch){
 	char *ptr = buf + OSC_HEADER_SIZE;
 	t_osc_msg *last = NULL;
 	while(ptr - buf < len){
@@ -273,7 +290,7 @@ t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, long *len){
+t_osc_err osc_bundle_getLen_s(t_osc_bundle *bundle, long *len){
 	t_osc_msg *m = bundle->messages;
 	*len = OSC_HEADER_SIZE;
 	while(m){
@@ -285,7 +302,7 @@ t_osc_err osc_bundle_getSerializedLen(t_osc_bundle *bundle, long *len){
 
 t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, long *len, char **buffer){
 	t_osc_err ret;
-	if(ret = osc_bundle_getSerializedLen(bundle, len)){
+	if(ret = osc_bundle_getLen_s(bundle, len)){
 		return ret;
 	}
 	*buffer = (char *)osc_mem_alloc(*len);

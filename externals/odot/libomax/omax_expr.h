@@ -98,6 +98,7 @@ int omax_expr_concat(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int 
 int omax_expr_reverse(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_make_list(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_range(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_multiplex(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
 t_omax_expr_arg *omax_expr_arg_alloc(void);
@@ -187,6 +188,8 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"rev", omax_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
 	{"make_list", omax_expr_make_list, -1, NULL, "Make a list of <arg1> copies of <arg2>.  <arg2 is optional and defaults to 0"},
 	{"range", omax_expr_range, -1, NULL, "Make a list from <arg1> to <arg2> in <arg3> steps.  <arg3> is optional and defaults to 1"},
+	{"multiplex", omax_expr_multiplex, -1, NULL, "Multiplex two or more lists"},
+	{"mux", omax_expr_multiplex, -1, NULL, "Multiplex two or more lists"},
 	//make-list, pad, zeros, ones
 	{"!", omax_expr_not, -1, NULL, "Logical not"}
 };
