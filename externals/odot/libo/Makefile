@@ -3,28 +3,33 @@ LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o)
 LIBO_CFILES = $(foreach F, $(LIBO_BASENAMES), $(F).c)
 LIBO_HFILES = $(foreach F, $(LIBO_BASENAMES), $(F).h) osc.h
 
-ARCH = -arch i386 #-arch ppc
+CFLAGS += -arch i386 -O3 -funroll-loops
+WIN-CFLAGS += -mno-cygwin -O3 -funroll-loops
+#ARCH = -arch i386 #-arch ppc
 CC = gcc
-OPTIMIZATION = -O3 -funroll-loops
+#OPTIMIZATION = -O3 -funroll-loops
 
 all: $(LIBO_CFILES) $(LIBO_HFILES)
 	$(MAKE) libo.a
 	$(MAKE) test/osc_test
 
+win: $(LIBO_CFILES) $(LIBO_HFILES)
+	$(MAKE) libo.a
+	$(MAKE) test/osc_test
 
-libo.a: $(LIBO_OBJECTS) 
+libo.a: $(LIBO_OBJECTS)
 	rm -f libo.a
 	ar -rcs libo.a $(LIBO_OBJECTS)
 
 %.o: %.c
-	$(CC) $(ARCH) $(OPTIMIZATION) -c -o $(notdir $(basename $@)).o $(notdir $(basename $@)).c
+	$(CC) $(CFLAGS) -c -o $(notdir $(basename $@)).o $(notdir $(basename $@)).c
 
 .PHONY: doc
 doc:
 	cd doc && doxygen Doxyfile
 
 test/osc_test: test/osc_test.c libo.a
-	+cd test && $(CC) $(ARCH) $(OPTIMIZATION) -L.. -lo -I.. -o osc_test osc_test.c
+	+cd test && $(CC) $(CFLAGS) -L.. -lo -I.. -o osc_test osc_test.c
 
 .PHONY: clean
 clean:
