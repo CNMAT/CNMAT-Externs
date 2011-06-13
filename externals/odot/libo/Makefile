@@ -14,7 +14,7 @@ all: $(LIBO_CFILES) $(LIBO_HFILES)
 	$(MAKE) test/osc_test
 
 win: $(LIBO_CFILES) $(LIBO_HFILES)
-	echo cflags $(WIN-CFLAGS)
+	CFLAGS = $(WIN-CFLAGS)
 	$(MAKE) libo.a
 	$(MAKE) test/osc_test
 
