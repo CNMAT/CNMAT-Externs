@@ -13,8 +13,7 @@ all: $(LIBO_CFILES) $(LIBO_HFILES)
 	$(MAKE) libo.a
 	$(MAKE) test/osc_test
 
-win: $(LIBO_CFILES) $(LIBO_HFILES)
-	CFLAGS = $(WIN-CFLAGS)
+win: CFLAGS = $(WIN-CFLAGS) $(LIBO_CFILES) $(LIBO_HFILES)
 	$(MAKE) libo.a
 	$(MAKE) test/osc_test
 
