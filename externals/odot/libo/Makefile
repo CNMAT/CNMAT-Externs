@@ -14,7 +14,7 @@ all: $(LIBO_CFILES) $(LIBO_HFILES) libo.a test/osc_test
 	#$(MAKE) libo.a
 	#$(MAKE) test/osc_test
 
-win: CFLAGS += $(WIN-CFLAGS)
+win: CFLAGS += $(WIN-CFLAGS) CC = gcc-3
 win: $(LIBO_CFILES) $(LIBO_HFILES) libo.a test/osc_test
 	$(MAKE) libo.a
 	$(MAKE) test/osc_test
