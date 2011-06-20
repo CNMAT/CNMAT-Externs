@@ -65,7 +65,7 @@
 #ifdef WIN
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #endif
-
+/*
 typedef struct _maq_osc_msg{
 	t_symbol *address;
 	int argc;
@@ -74,7 +74,7 @@ typedef struct _maq_osc_msg{
 	struct _maq_osc_msg *next;
 	struct _maq_osc_msg *prev;
 } t_maq_osc_msg;
-
+*/
 #define MOVE 1
 #define RESIZE 2
 #define CLONE 4
@@ -84,8 +84,11 @@ typedef struct _event{
 	long selected;
 	long op; // move, resize, clone
 	long mouse_over_bottom_right_corner;
-	t_maq_osc_msg *messages_ll;
-	t_hashtab *messages_ht;
+	//t_maq_osc_msg *messages_ll;
+	char *oscbndl;
+	int oscbndl_size;
+	int oscbndl_len;
+	//t_hashtab *messages_ht;
 	char *slot;
  	struct _event *next; 
  	struct _event *prev; 
@@ -122,9 +125,9 @@ void maq_add_to_bundle(t_maq *x, t_symbol *address, t_symbol *FullPacket, long l
 void maq_clear_bundle(t_maq *x, t_symbol *address);
 void maq_assist(t_maq *x, void *b, long m, long a, char *s); 
 void maq_free(t_maq *x); 
-t_maq_osc_msg *maq_osc_msg_alloc(t_symbol *address, long argc, t_atom *argv);
-void maq_osc_msg_free(t_maq_osc_msg *m);
-void maq_osc_msg_freelist(t_maq_osc_msg *m);
+//t_maq_osc_msg *maq_osc_msg_alloc(t_symbol *address, long argc, t_atom *argv);
+//void maq_osc_msg_free(t_maq_osc_msg *m);
+//void maq_osc_msg_freelist(t_maq_osc_msg *m);
 void maq_clear_osc_messages(t_event *e);
 t_max_err maq_notify(t_maq *x, t_symbol *s, t_symbol *msg, void *sender, void *data); 
 void maq_delta(t_maq *x, t_rect r, t_pt pt, t_pt *delta, t_pt *deltawc);
@@ -244,7 +247,7 @@ void maq_outputCellblockCell_1float(void *outlet, long col, long row, char *addr
 	atom_setfloat(outptr++, val);
 	outlet_anything(outlet, ps_cellblock, outptr - out, out);
 }
-
+/*
 void maq_dumpcellblock(t_maq *x){
 	t_atom out[5];
 	t_symbol *ps_cellblock = gensym("cellblock");
@@ -287,7 +290,7 @@ void maq_dumpcellblock(t_maq *x){
 		m = m->next;
 	}
 }
-
+*/
 void maq_int(t_maq *x, long l){
 	switch(proxy_getinlet((t_object *)x)){
 	case 0:
@@ -306,6 +309,7 @@ void maq_int(t_maq *x, long l){
 }
 
 void maq_list(t_maq *x, t_symbol *msg, int argc, t_atom *argv){
+	/*
 	switch(proxy_getinlet((t_object *)x)){
 	case 0:
 
@@ -315,12 +319,7 @@ void maq_list(t_maq *x, t_symbol *msg, int argc, t_atom *argv){
 		if(x->takingdump == 1){
 			t_symbol *address = atom_getsym(argv + 2);
 			char buf[64];
-			/*
-			if(!strcmp("/name", address->s_name)){
-				x->selected->name = atom_getsym(argv + 3);
-				break;
-			}
-			*/
+
 			sprintf(buf, "%s/x/min", x->selected->name->s_name);
 			if(!strcmp(buf, address->s_name)){
 				x->selected->rect.x = atom_getfloat(argv + 3);
@@ -372,9 +371,9 @@ void maq_list(t_maq *x, t_symbol *msg, int argc, t_atom *argv){
 		}
 		break;
 	}
-
+	*/
 }
-
+/*
 void maq_add_to_bundle(t_maq *x, t_symbol *address, t_symbol *FullPacket, long len, long ptr){
 	t_event *e = x->eventlist;
 	while(e){
@@ -420,8 +419,9 @@ void maq_add_to_bundle(t_maq *x, t_symbol *address, t_symbol *FullPacket, long l
 	}
 	maq_dumpcellblock(x);
 }
-
+*/
 void maq_clear_bundle(t_maq *x, t_symbol *address){
+	/*
 	t_event *e = x->eventlist;
 	while(e){
 		if(e->name == address){
@@ -438,8 +438,9 @@ void maq_clear_bundle(t_maq *x, t_symbol *address){
 	hashtab_clear(e->messages_ht);
 	maq_dumpcellblock(x);
 	maq_output_osc(x, x->outlet_main, NULL, e);
+	*/
 }
-
+/*
 t_maq_osc_msg *maq_osc_msg_alloc(t_symbol *address, long argc, t_atom *argv){
 	t_maq_osc_msg *m = (t_maq_osc_msg *)sysmem_newptr(sizeof(t_maq_osc_msg));
 	m->address = address;
@@ -467,11 +468,13 @@ void maq_osc_msg_freelist(t_maq_osc_msg *m){
 		m = next;
 	}
 }
-
+*/
 void maq_clear_osc_messages(t_event *e){
+	/*
 	maq_osc_msg_freelist(e->messages_ll);
 	e->messages_ll = NULL;
 	hashtab_clear(e->messages_ht);
+	*/
 }
 
 t_max_err maq_notify(t_maq *x, t_symbol *s, t_symbol *msg, void *sender, void *data){ 
@@ -560,8 +563,8 @@ t_event *maq_event_alloc(t_maq *x){
 	e->op = 0;
 	e->mouse_over_bottom_right_corner = 0;
 	e->next = e->prev = e->next_selected = e->prev_selected = NULL;
-	e->messages_ll = NULL;
-	e->messages_ht = hashtab_new(0);
+	//e->messages_ll = NULL;
+	//e->messages_ht = hashtab_new(0);
 	hashtab_flags(e->messages_ht, OBJ_FLAG_DATA);
 	char buf[32];
 	int slot = maq_get_slot(x);
