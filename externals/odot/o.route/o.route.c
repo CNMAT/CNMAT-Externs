@@ -113,13 +113,15 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	//osc_util_printBundle(len, cpy, printf);
 	t_oroute_wksp wksp;
 	t_symbol *args[x->numArgs];
-	t_oroute_message mm[128];
+	//t_oroute_message mm[128];
+#define DEF_NUM_MSGS 128
+	t_oroute_message *mm = (t_oroute_message *)osc_mem_alloc(DEF_NUM_MSGS * sizeof(t_oroute_message));
 	int haswildcard[x->numArgs];
-	memset(mm, '\0', 128 * sizeof(t_oroute_message));
+	memset(mm, '\0', DEF_NUM_MSGS * sizeof(t_oroute_message));
 	wksp.message_buf = mm;
 	wksp.messages = NULL;
 	wksp.numMessages = 0;
-	wksp.message_buf_len = 128;
+	wksp.message_buf_len = DEF_NUM_MSGS;
 	wksp.oscschemalist = x->oscschemalist;
 	critical_enter(x->lock);
 	memcpy(args, x->args, x->numArgs * sizeof(t_symbol *));
@@ -135,6 +137,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 #else
 	oroute_fp_bundle_partial_matches(x, nn, cpy, wksp.messages);
 #endif
+	osc_mem_free(wksp.message_buf);
 	x->max_message = 0;
 }
 
@@ -293,6 +296,10 @@ void oroute_cbk(t_osc_msg msg, void *context){
 			star_at_end = 1;
 		}
 		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE) || ((msg.address[po] == '/') || star_at_end == 1))){
+			if(x->numMessages + 1 > x->message_buf_len){
+				x->message_buf = (t_oroute_message *)osc_mem_resize(x->message_buf, x->message_buf_len + DEF_NUM_MSGS);
+				x->message_buf_len += DEF_NUM_MSGS;
+			}
 			x->message_buf[x->numMessages].msg = msg;
 			x->message_buf[x->numMessages].full_match = 0;
 			x->message_buf[x->numMessages].offset = po;
@@ -307,6 +314,10 @@ void oroute_cbk(t_osc_msg msg, void *context){
 		}
 	}
 	if(!match){
+		if(x->numMessages + 1 > x->message_buf_len){
+			x->message_buf = (t_oroute_message *)osc_mem_resize(x->message_buf, x->message_buf_len + DEF_NUM_MSGS);
+			x->message_buf_len += DEF_NUM_MSGS;
+		}
 		if(!strcmp(msg.address, ps_oscschemalist->s_name)){
 			x->message_buf[x->numMessages].msg = x->oscschemalist;
 		}else{
