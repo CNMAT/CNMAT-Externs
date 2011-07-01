@@ -58,13 +58,9 @@ typedef struct _omessage{
 	char *buffer;
 	int buffer_len;
 	int buffer_pos;
-	//t_cmmjl_osc_message *messages;
-	//int max_num_messages;
-	//int num_messages;
 	t_atom *atoms;
 	int max_num_atoms;
 	int num_atoms;
-	//char **message_strings;
 	int *substitutions;
 	int substitutions_len;
 	t_jrgba frame_color, background_color, text_color;
@@ -108,8 +104,6 @@ void omessage_fullPacket(t_omessage *x, long len, long ptr){
 }
 
 void omessage_doFullPacket(t_omessage *x, long len, long ptr){
-	//memcpy(x->buffer, (char *)ptr, len);
-	//x->buffer_pos = len;
 	if(len == OSC_HEADER_SIZE){
 		x->num_atoms = 0;
 		char buf = '\0';
@@ -122,21 +116,7 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 	x->num_atoms = 0;
-
-	// if the OSC packet contains a single message, turn it into a bundle
-	/*
-	if(osc_bundle_strcmpID(cpy)){
-		nn = osc_bundle_bundleNakedMessage(len, cpy_ptr, &cpy_ptr);
-		if(nn < 0){
-			error("problem bundling naked message");
-		}
-	}
-
-	// flatten any nested bundles
-	nn = osc_bundle_flatten(nn, cpy_ptr, &cpy_ptr);
-	*/
-	// extract the messages from the bundle
-	//cmmjl_osc_extract_messages(nn, x->buffer, true, omessage_cbk, (void *)x);
+	
 	osc_bundle_getMessagesWithCallback(nn, cpy, omessage_cbk, (void *)x);
 
 	int i;
@@ -464,13 +444,14 @@ void omessage_gettext(t_omessage *x){
 
 				}
 			}
-			if(argc > x->max_num_atoms - x->num_atoms){
+			//if(argc >= (x->max_num_atoms - x->num_atoms)){
+			if((argc + 1 + x->num_atoms) >= x->max_num_atoms){
 				x->atoms = (t_atom *)realloc(x->atoms, (x->max_num_atoms + argc) * sizeof(t_atom));
 				if(!x->atoms){
 					object_error((t_object *)x, "out of memory!");
 					return;
 				}
-				x->max_num_atoms += argc;
+				x->max_num_atoms += argc + 1;
 			}
 			memcpy(x->atoms + x->num_atoms, argv, argc * sizeof(t_atom));
 			x->num_atoms += argc;
@@ -508,7 +489,7 @@ void omessage_make_and_output_bundle(t_omessage *x){
 	char *bufptr = buf;
 	memset(buf, '\0', bufsize);
 	osc_bundle_setBundleID(bufptr);
-	// time stamp
+	//osc_bundle_setTimetagNow_s(buf);
 	bufptr += OSC_HEADER_SIZE;
 	t_atom atoms[x->num_atoms];
 	// critical enter
@@ -550,34 +531,6 @@ void omessage_make_and_output_bundle(t_omessage *x){
 	if(buf){
 		free(buf);
 	}
-	/*
-	x->buffer_pos = 0;
-	memset(x->buffer, '\0', x->buffer_len);
-	strcpy(x->buffer, "#bundle\0");
-	x->buffer_pos = 8;
-	*((unsigned long long *)(x->buffer + x->buffer_pos)) = hton64(mach_absolute_time());
-	x->buffer_pos += 8;
-
-	int i = 0;
-	while(i < x->num_atoms){
-		int n = 0;
-		while(i + n < x->num_atoms){
-			if(atom_gettype(x->atoms + i + n) == A_SYM){
-				if(atom_getsym(x->atoms + i + n) == gensym("\n")){
-					break;
-				}
-			}
-			n++;
-		}
-		x->buffer_pos += omax_util_encode_atoms(x->buffer + x->buffer_pos, atom_getsym(x->atoms + i), n - 1, x->atoms + i + 1);
-		i += n + 1;
-	}
-
-	t_atom a[2];
-	atom_setlong(a, x->buffer_pos);
-	atom_setlong(a + 1, (long)(x->buffer));
-	outlet_anything(x->outlet, gensym("FullPacket"), 2, a);
-	*/
 }
 
 void omessage_mousedown(t_omessage *x, t_object *patcherview, t_pt pt, long modifiers){
