@@ -114,7 +114,11 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr){
 	t_oroute_wksp wksp;
 	t_symbol *args[x->numArgs];
 	//t_oroute_message mm[128];
-#define DEF_NUM_MSGS 128
+
+// this may seem big, but we can't use realloc since the links would be broken.
+// we can still resize, but we have to go through each element of the array and
+// fix the links.
+#define DEF_NUM_MSGS 256 
 	t_oroute_message *mm = (t_oroute_message *)osc_mem_alloc(DEF_NUM_MSGS * sizeof(t_oroute_message));
 	int haswildcard[x->numArgs];
 	memset(mm, '\0', DEF_NUM_MSGS * sizeof(t_oroute_message));
@@ -273,6 +277,21 @@ void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){
 	}
 }
 
+void oroute_copy(t_oroute_message *dest, t_oroute_message *src, int n){
+	memcpy(dest, src, n * sizeof(t_oroute_message));
+	int i;
+	for(i = 0; i < n; i++){
+		if(src[i].next){
+			int idx = src[i].next - src;
+			dest[i].next = dest + idx;
+		}
+		if(src[i].prev){
+			int idx = src[i].prev - src;
+			dest[i].prev = dest + idx;
+		}
+	}
+}
+
 void oroute_cbk(t_osc_msg msg, void *context){
 	if(!(msg.address)){
 		return;
@@ -296,9 +315,16 @@ void oroute_cbk(t_osc_msg msg, void *context){
 			star_at_end = 1;
 		}
 		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE) || ((msg.address[po] == '/') || star_at_end == 1))){
-			if(x->numMessages + 1 > x->message_buf_len){
-				x->message_buf = (t_oroute_message *)osc_mem_resize(x->message_buf, x->message_buf_len + DEF_NUM_MSGS);
-				x->message_buf_len += DEF_NUM_MSGS;
+			//printf("numMessages = %d, message_buf_len = %d\n", x->numMessages, x->message_buf_len);
+			if(x->numMessages + 1 >= x->message_buf_len){
+				int newlen = x->message_buf_len + DEF_NUM_MSGS;
+				t_oroute_message *tmp = osc_mem_alloc(newlen * sizeof(t_oroute_message));
+				oroute_copy(tmp, x->message_buf, x->numMessages);
+				osc_mem_free(x->message_buf);
+				x->message_buf = tmp;
+				x->message_buf_len = newlen;
+				//x->message_buf = (t_oroute_message *)osc_mem_resize(x->message_buf, x->message_buf_len + DEF_NUM_MSGS);
+				//x->message_buf_len += DEF_NUM_MSGS;
 			}
 			x->message_buf[x->numMessages].msg = msg;
 			x->message_buf[x->numMessages].full_match = 0;
@@ -314,9 +340,16 @@ void oroute_cbk(t_osc_msg msg, void *context){
 		}
 	}
 	if(!match){
-		if(x->numMessages + 1 > x->message_buf_len){
-			x->message_buf = (t_oroute_message *)osc_mem_resize(x->message_buf, x->message_buf_len + DEF_NUM_MSGS);
-			x->message_buf_len += DEF_NUM_MSGS;
+		//printf("numMessages = %d, message_buf_len = %d\n", x->numMessages, x->message_buf_len);
+		if(x->numMessages + 1 >= x->message_buf_len){
+			int newlen = x->message_buf_len + DEF_NUM_MSGS;
+			t_oroute_message *tmp = osc_mem_alloc(newlen * sizeof(t_oroute_message));
+			oroute_copy(tmp, x->message_buf, x->numMessages);
+			osc_mem_free(x->message_buf);
+			x->message_buf = tmp;
+			x->message_buf_len = newlen;
+			//x->message_buf = (t_oroute_message *)osc_mem_resize(x->message_buf, x->message_buf_len + DEF_NUM_MSGS);
+			//x->message_buf_len += DEF_NUM_MSGS;
 		}
 		if(!strcmp(msg.address, ps_oscschemalist->s_name)){
 			x->message_buf[x->numMessages].msg = x->oscschemalist;
