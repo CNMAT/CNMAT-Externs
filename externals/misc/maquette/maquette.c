@@ -1226,11 +1226,6 @@ void *maq_new(t_symbol *s, long argc, t_atom *argv){
 		x->otable_db = NULL;
 		x->maq_db = NULL;
 
-		//x->maq_db->obj_tab = maq_hashtab_new();
-		//x->maq_db->rtree = rtree_new();
-		//rumati_avl_new(&(x->maq_db->avltree_visible), otable_util_comp, (void *)x);
-		//rumati_avl_new(&(x->maq_db->avltree_selected), otable_util_comp, (void *)x);
-		//x->maq_db->visible_count = 0;
 		x->draw_rtree_nodes = 0;
 		x->dblclick_count = 0;
 		x->dblclick_time = clock();
@@ -1247,12 +1242,6 @@ void *maq_new(t_symbol *s, long argc, t_atom *argv){
  		attr_dictionary_process(x, d); 
 		// build the addresses after calling attr_dictionary_process() so that we have the right name
 		maq_make_addresses(x);
-		/*
-		if(x->otable_db = otable_util_refer((t_object *)x, NULL, x->name)){}
-		else{
-			x->otable_db = otable_util_make_db((t_object *)x, NULL, (t_otable_oscbndl_dtor)maq_freebundle);
-		}
-		*/
 		if(!(x->otable_db)){
 
 		}
