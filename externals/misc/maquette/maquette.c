@@ -65,7 +65,7 @@ enum{
 
 typedef struct _maq_oscbndl{
 	t_otable_oscbndl *bndl; 
-	t_rtree_rect rect;
+	t_rtree_rect rect, tmp_rect;
 	long xmin_offset, xmax_offset, ymin_offset, ymax_offset;
 	struct _maq_oscbndl *next;
 } t_maq_oscbndl;
@@ -73,17 +73,42 @@ typedef struct _maq_oscbndl{
 typedef struct _maq_db{
 	t_maxdb maxdb;
 	t_rtree *rtree;
-	RUMATI_AVL_TREE *avltree_visible, *avltree_selected;
-	int visible_count, selected_count;
 	t_maq_hashtab *obj_tab;
 } t_maq_db;
+
+typedef struct _maq_grid{
+	RUMATI_AVL_TREE *tree;
+	long n;
+	double step;
+} t_maq_grid;
+
+typedef struct _maq_markers{
+	RUMATI_AVL_TREE *tree;
+	long n, vis_n;
+	long rect_min, rect_max; // elements of the t_rect to use for this grid:  0 and 2 for x and width, or 1 and 3 for y and height
+	int rebuild; // boolean
+	float *visible;
+} t_maq_markers;
+
+#define MAQ_GRID_MAJOR_X (uint8_t)0
+#define MAQ_GRID_MINOR_X (uint8_t)1
+#define MAQ_GRID_MAJOR_Y (uint8_t)2
+#define MAQ_GRID_MINOR_Y (uint8_t)3
+
+#define MAQ_VERTICAL 0
+#define MAQ_HORIZONTAL 1
 
 typedef struct _maq{ 
  	t_jbox box; 
  	void *outlets[2];
 	t_symbol *name;
+	char oscname[64];
 	t_maq_db *maq_db;
 	t_otable_db *otable_db;
+	RUMATI_AVL_TREE *avltree_visible, *avltree_selected;
+	int visible_count, selected_count;
+	t_maq_grid grids[4];
+	t_maq_markers markers[2];
 	t_object *pv;
 	t_critical lock;
  	t_jrgba bgcolor, 
@@ -93,7 +118,9 @@ typedef struct _maq{
 		resizehandlecolor, 
 		selectedboxfillcolor, 
 		selectedboxbordercolor, 
-		selectedresizehandlecolor; 
+		selectedresizehandlecolor,
+		majorgridcolor,
+		minorgridcolor;
 	double xmin, xmax, ymin, ymax;
 	t_pt lastmouse;
 	clock_t dblclick_time;
@@ -103,7 +130,29 @@ typedef struct _maq{
 	int draw_rtree_nodes;
 	char *xmin_address, *xmax_address, *ymin_address, *ymax_address; // 4-byte padded
 	long xmin_address_len, xmax_address_len, ymin_address_len, ymax_address_len; // 4-byte padded
+	long snap_to_grid;
 } t_maq; 
+
+void maq_fp_set_markers_vertical(t_maq *x, t_osc_msg *m);
+void maq_fp_set_markers_horizontal(t_maq *x, t_osc_msg *m);
+void maq_fp_grid_major_x(t_maq *x, t_osc_msg *m);
+void maq_fp_grid_major_y(t_maq *x, t_osc_msg *m);
+void maq_fp_grid_minor_x(t_maq *x, t_osc_msg *m);
+void maq_fp_grid_minor_y(t_maq *x, t_osc_msg *m);
+
+struct maq_namerec{
+	char *name;
+	void (*f)(t_maq *x, t_osc_msg *m);
+};
+
+struct maq_namerec maq_fp_f[] = {
+	{"/markers/vertical", maq_fp_set_markers_vertical},
+	{"/markers/horizontal", maq_fp_set_markers_horizontal},
+	{"/grid/major/x", maq_fp_grid_major_x},
+	{"/grid/major/y", maq_fp_grid_major_y},
+	{"/grid/minor/x", maq_fp_grid_minor_x},
+	{"/grid/minor/y", maq_fp_grid_minor_y}
+};
 
 #define RTREE_RECT_TO_RECT(rect) ((t_rect){rect.xmin, rect.ymin, rect.xmax - rect.xmin, rect.ymax - rect.ymin})
 #define RECT_TO_RTREE_RECT(rect) ((t_rtree_rect){rect.x, rect.x + rect.width, rect.y, rect.y + rect.height})
@@ -113,6 +162,7 @@ typedef struct _maq{
 void *maq_class; 
 
 void maq_paint(t_maq *x, t_object *patcherview); 
+int maq_should_draw_grid(double smin, double smax, double wmin, double wmax, t_maq_grid *g);
 t_otable_oscbndl *maq_insert_with_coords(t_maq *x, t_rect view_rect, t_pt screen_coords, long len, char *ptr);
 t_otable_oscbndl *maq_insert(t_maq *x, long len, char *ptr);
 t_otable_oscbndl *maq_insert_with_rtree_rect(t_maq *x, t_rtree_rect r, long len, char *ptr);
@@ -141,10 +191,14 @@ void maq_print_rect(char *prefix, t_rect rect);
 void maq_print_rtree_rect(char *prefix, t_rtree_rect rect);
 void maq_rtree_destructor(t_maq *x, t_otable_oscbndl *bndl);
 void maq_make_addresses(t_maq *x);
+void maq_invalidate_all(t_maq *x);
 int main(void); 
 void *maq_new(t_symbol *s, long argc, t_atom *argv); 
+int maq_comp_atoms(void *udata, void *val1, void *val2);
 
 static t_symbol *ps_FullPacket, *ps_xmin, *ps_xmax, *ps_ymin, *ps_ymax;
+
+static t_symbol *l_grid, *l_boxes;
 
 void maq_draw_rtree_node(t_maq *x, t_jgraphics *gg, t_rtree_node *n, t_rect view){
 	if(n->node_type == RTREE_DATA){
@@ -170,7 +224,7 @@ void maq_draw_rtree_node(t_maq *x, t_jgraphics *gg, t_rtree_node *n, t_rect view
 }
 
 void maq_paint(t_maq *x, t_object *patcherview){ 
-	int visible_count = x->maq_db->visible_count;
+	int visible_count = x->visible_count;
 	double xmin = x->xmin, xmax = x->xmax, ymin = x->ymin, ymax = x->ymax;
 	t_jrgba bgcolor = x->bgcolor, 
 		bordercolor = x->bordercolor,
@@ -179,7 +233,9 @@ void maq_paint(t_maq *x, t_object *patcherview){
 		resizehandlecolor = x->resizehandlecolor, 
 		selectedboxfillcolor = x->selectedboxfillcolor, 
 		selectedboxbordercolor = x->selectedboxbordercolor, 
-		selectedresizehandlecolor = x->selectedresizehandlecolor; 
+		selectedresizehandlecolor = x->selectedresizehandlecolor,
+		majorgridcolor = x->majorgridcolor,
+		minorgridcolor = x->minorgridcolor;
 	x->pv = patcherview;
  	t_rect r; 
  	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview); 
@@ -199,40 +255,185 @@ void maq_paint(t_maq *x, t_object *patcherview){
 		return;
 	}
 
-	t_jgraphics *gg = g; //jbox_start_layer((t_object *)x, patcherview, l_main, r.width, r.height);
-	if(gg){
-		critical_enter(x->lock);
-		maxdb_lock((t_maxdb *)x->maq_db);
-		t_maq_oscbndl *b = (t_maq_oscbndl *)rumati_avl_get_smallest(x->maq_db->avltree_visible);
-		if(!b){
-			return;
+	critical_enter(x->lock);
+	maxdb_lock((t_maxdb *)x->maq_db);
+	// copy boxes
+	t_maq_oscbndl *b = (t_maq_oscbndl *)rumati_avl_get_smallest(x->avltree_visible);
+	t_rect rects[visible_count];
+	int selected[visible_count];
+	int n = 0, i;
+	while(b){
+		t_rtree_rect wr = b->rect;
+		t_rtree_rect sr = (t_rtree_rect){maq_scale(wr.xmin, xmin, xmax, 0, r.width),
+					    maq_scale(wr.xmax, xmin, xmax, 0, r.width),
+					    maq_scale(wr.ymax, ymin, ymax, r.height, 0),
+					    maq_scale(wr.ymin, ymin, ymax, r.height, 0)};
+		rects[n] = (t_rect){sr.xmin,
+				    sr.ymin,
+				    sr.xmax - sr.xmin,
+				    sr.ymax - sr.ymin};
+		t_maq_oscbndl *sel = rumati_avl_get(x->avltree_selected, (void *)b);
+		if(sel){
+			selected[n] = 1;
+		}else{
+			selected[n] = 0;
 		}
-		t_rect rects[visible_count];
-		int selected[visible_count];
-		int n = 0, i;
-		while(b){
-			t_rtree_rect wr = b->rect;
-			t_rtree_rect sr = (t_rtree_rect){maq_scale(wr.xmin, xmin, xmax, 0, r.width),
-							 maq_scale(wr.xmax, xmin, xmax, 0, r.width),
-							 maq_scale(wr.ymax, ymin, ymax, r.height, 0),
-							 maq_scale(wr.ymin, ymin, ymax, r.height, 0)};
-			rects[n] = (t_rect){sr.xmin,
-					    sr.ymin,
-					    sr.xmax - sr.xmin,
-					    sr.ymax - sr.ymin};
-			t_maq_oscbndl *sel = rumati_avl_get(x->maq_db->avltree_selected, (void *)b);
-			if(sel){
-				selected[n] = 1;
-			}else{
-				selected[n] = 0;
-			}
-			b = rumati_avl_get_greater_than(x->maq_db->avltree_visible, (void *)b);
-			n++;
-		}
-		n = visible_count;
+		b = rumati_avl_get_greater_than(x->avltree_visible, (void *)b);
+		n++;
+	}
+	n = visible_count;
 
-		maxdb_unlock((t_maxdb *)x->maq_db);
-		critical_exit(x->lock);
+	// set up grids
+	t_maq_grid grids[4];
+	for(i = 0; i < 4; i++){
+		grids[i] = x->grids[i];
+		rumati_avl_new(&(grids[i].tree), maq_comp_atoms, (void *)x);
+		int j;
+		t_atom *a = rumati_avl_get_smallest(x->grids[i].tree);
+		while(a){
+			rumati_avl_put(grids[i].tree, a, NULL);
+			a = rumati_avl_get_greater_than(x->grids[i].tree, a);
+		}
+	}
+
+	maxdb_unlock((t_maxdb *)x->maq_db);
+	critical_exit(x->lock);
+
+	t_jgraphics *gg = jbox_start_layer((t_object *)x, patcherview, l_grid, r.width, r.height);
+	if(gg){
+		jgraphics_set_source_jrgba(gg, &majorgridcolor);
+		jgraphics_set_line_width(gg, 2.);
+		for(i = 0; i < 2; i++){
+			t_maq_grid *grid = grids + i;
+			if(maq_should_draw_grid(0, r.width, xmin, xmax, grid)){
+				t_atom *a = rumati_avl_get_smallest(grid->tree);
+				while(a){
+					float val = maq_scale(atom_getfloat(a), xmin, xmax, 0, r.width);
+					jgraphics_move_to(gg, val, 0);
+					jgraphics_line_to(gg, val, r.height);
+					jgraphics_stroke(gg);
+					a = rumati_avl_get_greater_than(grid->tree, a);
+				}
+			}
+			jgraphics_set_source_jrgba(gg, &minorgridcolor);
+			jgraphics_set_line_width(gg, 1.);
+		}
+		jgraphics_set_source_jrgba(gg, &majorgridcolor);
+		jgraphics_set_line_width(gg, 2.);
+		for(i = 2; i < 4; i++){
+			t_maq_grid *grid = grids + i;
+			if(maq_should_draw_grid(0, r.height, ymin, ymax, grid)){
+				t_atom *a = rumati_avl_get_smallest(grid->tree);
+				while(a){
+					float val = maq_scale(atom_getfloat(a), ymin, ymax, 0, r.height);
+					jgraphics_move_to(gg, 0, val);
+					jgraphics_line_to(gg, r.width, val);
+					jgraphics_stroke(gg);
+					a = rumati_avl_get_greater_than(grid->tree, a);
+				}
+			}
+			jgraphics_set_source_jrgba(gg, &minorgridcolor);
+			jgraphics_set_line_width(gg, 1.);
+		}
+	}
+	jbox_end_layer((t_object *)x, patcherview, l_grid);
+	jbox_paint_layer((t_object *)x, patcherview, l_grid, 0, 0);
+
+	gg = jbox_start_layer((t_object *)x, patcherview, l_boxes, r.width, r.height);
+	if(gg){
+		/*
+		long grid_lens[4] = {0, 0, 0, 0};
+		for(i = 0; i < 4; i++){
+			t_maq_grid *grid = &(x->grids[i]);
+			grid_lens[i] = grid->vis_n;
+			if(grid->rebuild_grid){
+				grid_lens[i] = grid->grid_len;
+			}
+		}
+		float grid_major_x[x->grids[MAQ_GRID_MAJOR_X].n],
+			grid_minor_x[x->grids[MAQ_GRID_MINOR_X].n],
+			grid_major_y[x->grids[MAQ_GRID_MAJOR_Y].n],
+			grid_minor_y[x->grids[MAQ_GRID_MINOR_Y].n];
+		float *grid_arrays[4];
+		grid_arrays[MAQ_GRID_MAJOR_X] = grid_major_x;
+		grid_arrays[MAQ_GRID_MINOR_X] = grid_minor_x;
+		grid_arrays[MAQ_GRID_MAJOR_Y] = grid_major_y;
+		grid_arrays[MAQ_GRID_MINOR_Y] = grid_minor_y;
+
+
+		double srect[4] = {0, 0, r.width, r.height};
+		double wrect[4] = {xmin, ymin, xmax, ymax};
+		{	
+			int i;
+			for(i = 0; i < 4; i++){
+				t_maq_grid *grid = &(x->grids[i]);
+				if(grid->rebuild_grid){
+					RUMATI_AVL_TREE *tree = grid->tree;
+					float *grid_array = grid_arrays[i];
+					float *fptr = grid_array;
+					t_atom a_min;
+					double wmin = wrect[grid->rect_min],
+						wmax = wrect[grid->rect_max];
+
+					double smin = srect[grid->rect_min],
+						smax = srect[grid->rect_max];
+
+					atom_setfloat(&a_min, wmin);
+					t_atom *a = rumati_avl_get_greater_than_or_equal(tree, &a_min);
+					while(a){
+						*fptr++ = maq_scale(atom_getfloat(a), wmin, wmax, smin, smax);
+						a = rumati_avl_get_greater_than(tree, (void *)a);
+						if(a){
+							if(atom_getfloat(a) > wmax){
+								break;
+							}
+						}
+					}
+					grid_lens[i] = fptr - grid_array;
+					if(grid_lens[i] >= grid->vis_n){
+						grid->visible_grid = (float *)osc_mem_resize(grid->visible_grid, grid_lens[i] * sizeof(float));
+					}
+					memcpy(grid->visible_grid, grid_array, grid_lens[i]);
+					grid->vis_n = grid_lens[i];
+					grid->rebuild_grid = 0;
+				}else{
+					memcpy(grid_arrays[i], grid->visible_grid, grid->vis_n);
+				}
+			}
+		}
+*/
+
+
+		/*
+		t_jrgba gc = (t_jrgba){0., 0., .3, 1.};
+		jgraphics_set_source_jrgba(gg, &gc);
+
+		int j;
+		for(j = 0; j < grid_lens[MAQ_GRID_MAJOR_X]; j++){
+			float *grid_array = grid_arrays[MAQ_GRID_MAJOR_X];
+			jgraphics_move_to(gg, grid_array[j], 0);
+			jgraphics_line_to(gg, grid_array[j], r.height);
+		}
+
+		for(j = 0; j < grid_lens[MAQ_GRID_MINOR_X]; j++){
+			float *grid_array = grid_arrays[MAQ_GRID_MINOR_X];
+			jgraphics_move_to(gg, grid_array[j], 0);
+			jgraphics_line_to(gg, grid_array[j], r.height);
+		}
+
+		for(j = 0; j < grid_lens[MAQ_GRID_MAJOR_Y]; j++){
+			float *grid_array = grid_arrays[MAQ_GRID_MAJOR_Y];
+			jgraphics_move_to(gg, 0, grid_array[j]);
+			jgraphics_line_to(gg, r.width, grid_array[j]);
+		}
+
+		for(j = 0; j < grid_lens[MAQ_GRID_MINOR_Y]; j++){
+			float *grid_array = grid_arrays[MAQ_GRID_MINOR_Y];
+			jgraphics_move_to(gg, 0, grid_array[j]);
+			jgraphics_line_to(gg, r.width, grid_array[j]);
+		}
+		*/
+
 		for(i = 0; i < n; i++){
 			if(selected[i] == 1){
 				jgraphics_set_line_width(gg, 3.);
@@ -277,17 +478,152 @@ void maq_paint(t_maq *x, t_object *patcherview){
 		}
 	}
 
-	//jbox_end_layer((t_object *)x, patcherview, l_main);
-	//jbox_paint_layer((t_object *)x, patcherview, l_main, 0, 0);
+	jbox_end_layer((t_object *)x, patcherview, l_boxes);
+	jbox_paint_layer((t_object *)x, patcherview, l_boxes, 0, 0);
+}
+
+int maq_comp_atoms(void *udata, void *val1, void *val2){
+	float f1 = atom_getfloat((t_atom *)val1),
+		f2 = atom_getfloat((t_atom *)val2);
+	if(f1 < f2){
+		return -1;
+	}else if(f1 == f2){
+		return 0;
+	}else{
+		return 1;
+	}
+}
+
+void maq_free_atom(t_maq *x, void *a){
+	osc_mem_free(a);
+}
+
+int maq_should_draw_grid(double smin, double smax, double wmin, double wmax, t_maq_grid *g){
+	double sstep = maq_scale(g->step, wmin, wmax, smin, smax);
+	if(sstep < 4){
+		return 0;
+	}
+	return 1;
+}
+
+void maq_set_markers(t_maq *x, t_maq_markers *markers, t_osc_msg *m){
+	long len = m->argc;
+	t_atom argv[m->argc + 1];
+	markers->n = m->argc;
+	omax_util_oscMsg2MaxAtoms(m, &len, argv);
+	rumati_avl_clear(markers->tree, (RUMATI_AVL_NODE_DESTRUCTOR)maq_free_atom);
+	int i;
+	for(i = 1; i < m->argc + 1; i++){
+		t_atom *a = (t_atom *)osc_mem_alloc(sizeof(t_atom));
+		*a = argv[i];
+		t_atom *aa = NULL;
+		rumati_avl_put(markers->tree, (void *)a, (void **)&aa);
+		if(aa){
+			osc_mem_free(aa);
+		}
+	}
+}
+
+void maq_rebuild_grid(t_maq *x, uint8_t dim){
+	critical_enter(x->lock);
+	t_maq_grid *grid = x->grids + dim;
+	rumati_avl_clear(grid->tree, (RUMATI_AVL_NODE_DESTRUCTOR)maq_free_atom);
+	double min, max;
+	if(dim & 2){
+		// y
+		min = x->ymin, max = x->ymax;
+	}else{
+		// x
+		min = x->xmin, max = x->xmax;
+	}
+	min = grid->step * floor(min / grid->step);
+	max = grid->step * ceil(max / grid->step);
+	float pos = min;
+	int i = 0;
+	while(1){
+		t_atom *a = (t_atom *)osc_mem_alloc(sizeof(t_atom));
+		atom_setfloat(a, pos);
+		rumati_avl_put(grid->tree, a, NULL);
+		pos += grid->step;
+		if(pos > max){
+			break;
+		}
+	}
+	critical_exit(x->lock);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_grid);
+	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void maq_rebuild_grids(t_maq *x){
+	int i;
+	for(i = 0; i < 4; i++){
+		maq_rebuild_grid(x, i);
+	}
+}
+
+void maq_set_grid(t_maq *x, t_osc_msg *m, uint8_t dim){
+	critical_enter(x->lock);
+	if(!(m->argv)){
+		goto out;
+	}
+	uint32_t l = ntoh32(*((uint32_t *)m->argv));
+	float step = *((float *)&l);
+	x->grids[dim].step = step;
+	maq_rebuild_grid(x, dim);
+ out:
+	critical_exit(x->lock);
+}
+
+void maq_fp_set_markers_vertical(t_maq *x, t_osc_msg *m){
+	maq_set_markers(x, &(x->markers[MAQ_VERTICAL]), m);
+}
+
+void maq_fp_set_markers_horizontal(t_maq *x, t_osc_msg *m){
+	maq_set_markers(x, &(x->markers[MAQ_HORIZONTAL]), m);
+}
+
+void maq_fp_grid_major_x(t_maq *x, t_osc_msg *m){
+	maq_set_grid(x, m, MAQ_GRID_MAJOR_X);
+}
+
+void maq_fp_grid_major_y(t_maq *x, t_osc_msg *m){
+	maq_set_grid(x, m, MAQ_GRID_MAJOR_Y);
+}
+
+void maq_fp_grid_minor_x(t_maq *x, t_osc_msg *m){
+	maq_set_grid(x, m, MAQ_GRID_MINOR_X);
+}
+
+void maq_fp_grid_minor_y(t_maq *x, t_osc_msg *m){
+	maq_set_grid(x, m, MAQ_GRID_MINOR_Y);
 }
 
 void maq_fullPacket(t_maq *x, long len, long ptr){
-	maq_insert(x, len, (char *)ptr);
+	t_osc_msg *m = NULL;
+	osc_bundle_lookupAddress_s(len, (char *)ptr, x->oscname, &m, 0);
+	if(m){
+		int i;
+		for(i = 0; i < sizeof(maq_fp_f) / sizeof(struct maq_namerec); i++){
+			t_osc_msg *mm = NULL;
+			char buf[128];
+			sprintf(buf, "%s%s", x->oscname, maq_fp_f[i].name);
+			osc_bundle_lookupAddress_s(len, (char *)ptr, buf, &mm, 1);
+			if(mm){
+				maq_fp_f[i].f(x, mm);
+				// free mm
+			}
+		}
+		jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
+		jbox_redraw((t_jbox *)&(x->box));
+	}else{
+		maq_insert(x, len, (char *)ptr);
+	}
 }
 
 void maq_anything(t_maq *x, t_symbol *msg, int argc, t_atom *argv){
 	if(msg == gensym("drawrtreenodes")){
 		x->draw_rtree_nodes = atom_getlong(argv);
+		jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 		jbox_redraw((t_jbox *)&(x->box)); 
 	}else if(msg == gensym("printtree")){
 		rtree_print(x->maq_db->rtree, (void *)post);
@@ -313,12 +649,14 @@ t_max_err maq_notify(t_maq *x, t_symbol *s, t_symbol *msg, void *sender, void *d
  		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); 
 		////jbox_invalidate_layer((t_object *)x, x->pv, l_main);
 		if(attrname == ps_xmin || attrname == ps_xmax || attrname == ps_ymin || attrname == ps_ymax){
+			maq_rebuild_grids(x);
 			maq_rebuild_visible_db(x);
 		}
 		if(attrname == gensym("name")){
 			maq_make_addresses(x);
 			maq_refer(x, x->name);
 		}
+		maq_invalidate_all(x);
  		jbox_redraw((t_jbox *)&(x->box)); 
 	} 
 	return 0; 
@@ -332,11 +670,11 @@ void maq_freebundle(t_maq *x, t_otable_oscbndl *b){
 
 void maq_delete(t_maq *x){
 	maxdb_lock((t_maxdb *)x->maq_db);
-	t_maq_oscbndl *b = rumati_avl_get_smallest(x->maq_db->avltree_selected);
+	t_maq_oscbndl *b = rumati_avl_get_smallest(x->avltree_selected);
 	while(b){
-		t_maq_oscbndl *next = rumati_avl_get_greater_than(x->maq_db->avltree_selected, b);
+		t_maq_oscbndl *next = rumati_avl_get_greater_than(x->avltree_selected, b);
 		rtree_remove(x->maq_db->rtree, b->rect, b);
-		rumati_avl_delete(x->maq_db->avltree_selected, b, NULL);
+		rumati_avl_delete(x->avltree_selected, b, NULL);
 		otable_util_doRemove((t_object *)x, x->otable_db, b->bndl);
 		//maq_freebundle(x, b);
 		b = next;
@@ -344,6 +682,7 @@ void maq_delete(t_maq *x){
 	maxdb_unlock((t_maxdb *)x->maq_db);
 	otable_util_renumber((t_object *)x, x->otable_db);
 	maq_rebuild_visible_db(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 	jbox_redraw((t_jbox *)&(x->box)); 
 }
 
@@ -352,23 +691,23 @@ void maq_output_selected(t_maq *x){
 	maxdb_lock((t_maxdb *)x->otable_db);
 	long len = 0;
 	long nbndls = 0;
-	t_maq_oscbndl *b = rumati_avl_get_smallest(x->maq_db->avltree_selected);
+	t_maq_oscbndl *b = rumati_avl_get_smallest(x->avltree_selected);
 	while(b){
 		nbndls++;
 		len += b->bndl->len;
-		b = rumati_avl_get_greater_than(x->maq_db->avltree_selected, b);
+		b = rumati_avl_get_greater_than(x->avltree_selected, b);
 	}
 	char buf[len];
 	memset(buf, '\0', len);
 	long lens[nbndls];
 	char *ptr = buf;
 	int i = 0;
-	b = rumati_avl_get_smallest(x->maq_db->avltree_selected);
+	b = rumati_avl_get_smallest(x->avltree_selected);
 	while(b){
 		lens[i++] = b->bndl->len;
 		memcpy(ptr, b->bndl->ptr, b->bndl->len);
 		ptr += b->bndl->len;
-		b = rumati_avl_get_greater_than(x->maq_db->avltree_selected, b);
+		b = rumati_avl_get_greater_than(x->avltree_selected, b);
 	}
 	maxdb_unlock((t_maxdb *)x->otable_db);
 	maxdb_unlock((t_maxdb *)x->maq_db);
@@ -377,6 +716,94 @@ void maq_output_selected(t_maq *x){
 		maq_output_bundle(x, x->outlets[OUTLET_MAIN], lens[i], ptr);
 		ptr += lens[i];
 	}
+}
+
+float maq_snap_to_grid(t_maq_grid *grid, float val){
+	t_atom closest;
+	atom_setfloat(&closest, val);
+	t_atom *a1 = NULL, *a2 = NULL, *a = NULL;;
+	a1 = rumati_avl_get_greater_than_or_equal(grid->tree, &closest);
+	if(!a1){
+		return val;
+	}
+	a2 = rumati_avl_get_less_than(grid->tree, a1);
+	if(!a2){
+		return atom_getfloat(a1);
+	}
+
+	float f1 = atom_getfloat(a1), f2 = atom_getfloat(a2);
+	if(fabs(val - f1) < fabs(val - f2)){
+		return f1;
+	}else{
+		return f2;
+	}
+}
+
+t_pt maq_snap_point_to_grid(t_maq *x, t_pt w_pt){
+	t_pt pt;
+	float val1 = maq_snap_to_grid(x->grids + MAQ_GRID_MAJOR_X, w_pt.x);
+	float val2 = maq_snap_to_grid(x->grids + MAQ_GRID_MINOR_X, w_pt.x);
+	if(fabs(val1 - w_pt.x) < fabs(val2 - w_pt.x)){
+		pt.x = val1;
+	}else{
+		pt.x = val2;
+	}
+
+	val1 = maq_snap_to_grid(x->grids + MAQ_GRID_MAJOR_Y, w_pt.y);
+	val2 = maq_snap_to_grid(x->grids + MAQ_GRID_MINOR_Y, w_pt.y);
+	if(fabs(val1 - w_pt.y) < fabs(val2 - w_pt.y)){
+		pt.y = val1;
+	}else{
+		pt.y = val2;
+	}
+	return pt;
+}
+
+t_rtree_rect maq_snap_rect_to_grid(t_maq *x, t_rtree_rect w_rect){
+	t_rtree_rect rect;
+	float val1 = maq_snap_to_grid(x->grids + MAQ_GRID_MAJOR_X, w_rect.xmin);
+	float val2 = maq_snap_to_grid(x->grids + MAQ_GRID_MINOR_X, w_rect.xmin);
+	if(fabs(val1 - w_rect.xmin) < fabs(val2 - w_rect.xmin)){
+		rect.xmin = val1;
+	}else{
+		rect.xmin = val2;
+	}
+
+	val1 = maq_snap_to_grid(x->grids + MAQ_GRID_MAJOR_X, w_rect.xmax);
+	val2 = maq_snap_to_grid(x->grids + MAQ_GRID_MINOR_X, w_rect.xmax);
+	if(fabs(val1 - w_rect.xmax) < fabs(val2 - w_rect.xmax)){
+		rect.xmax = val1;
+	}else{
+		rect.xmax = val2;
+	}
+	if(fabs(rect.xmin - w_rect.xmin) < fabs(rect.xmax - w_rect.xmax)){
+		rect.xmax = w_rect.xmax - (w_rect.xmin - rect.xmin);
+	}else{
+		rect.xmin = w_rect.xmin - (w_rect.xmax - rect.xmax);
+ 	}
+
+	// y
+	val1 = maq_snap_to_grid(x->grids + MAQ_GRID_MAJOR_Y, w_rect.ymin);
+	val2 = maq_snap_to_grid(x->grids + MAQ_GRID_MINOR_Y, w_rect.ymin);
+	if(fabs(val1 - w_rect.ymin) < fabs(val2 - w_rect.ymin)){
+		rect.ymin = val1;
+	}else{
+		rect.ymin = val2;
+	}
+
+	val1 = maq_snap_to_grid(x->grids + MAQ_GRID_MAJOR_Y, w_rect.ymax);
+	val2 = maq_snap_to_grid(x->grids + MAQ_GRID_MINOR_Y, w_rect.ymax);
+	if(fabs(val1 - w_rect.ymax) < fabs(val2 - w_rect.ymax)){
+		rect.ymax = val1;
+	}else{
+		rect.ymax = val2;
+	}
+	if(fabs(rect.ymin - w_rect.ymin) < fabs(rect.ymax - w_rect.ymax)){
+		rect.ymax = w_rect.ymax - (w_rect.ymin - rect.ymin);
+	}else{
+		rect.ymin = w_rect.ymin - (w_rect.ymax - rect.ymax);
+ 	}
+	return rect;
 }
 
 void maq_output_bundle(t_maq *x, void *outlet, long len, char *ptr){
@@ -398,13 +825,13 @@ void maq_rebuild_visible_db(t_maq *x){
 	t_rtree_rect rect = (t_rtree_rect){xmin, xmax, ymin, ymax};
 	//critical_enter(x->lock);
 	//maxdb_lock((t_maxdb *)x->maq_db);
-	rumati_avl_clear(x->maq_db->avltree_visible, NULL);
+	rumati_avl_clear(x->avltree_visible, NULL);
 	rtree_search(x->maq_db->rtree, rect, &argc, &argv);
 	if(argc){
-		x->maq_db->visible_count = argc;
+		x->visible_count = argc;
 		int i;
 		for(i = 0; i < argc; i++){
-			rumati_avl_put(x->maq_db->avltree_visible, (t_maq_oscbndl *)argv[i], NULL);
+			rumati_avl_put(x->avltree_visible, (t_maq_oscbndl *)argv[i], NULL);
 		}
 	}
 	//maxdb_unlock((t_maxdb *)x->maq_db);
@@ -510,14 +937,20 @@ t_otable_oscbndl *maq_insert_bndl_with_rtree_rect(t_maq *x, t_rtree_rect r, t_ot
 			p += 4;
 		}
 	}
-	mb->rect = r;
+	mb->tmp_rect = r;
+	if(x->snap_to_grid){
+		mb->tmp_rect = maq_snap_rect_to_grid(x, r);
+	}
+	mb->rect = mb->tmp_rect;
 	b->ptr = buf;
 	b->len = p - buf;
 	critical_enter(x->lock);
 	maq_hashtab_store(x->maq_db->obj_tab, (void *)b, (void *)mb);
-	rtree_insert(x->maq_db->rtree, r, (void *)mb);
+	rtree_insert(x->maq_db->rtree, mb->rect, (void *)mb);
 	critical_exit(x->lock);
+	maxdb_notify((t_object *)x, (t_maxdb *)x->maq_db, gensym("maxdb_refresh"), NULL);
 	maq_rebuild_visible_db(x);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 	jbox_redraw(&(x->box));
 	return b;
 }
@@ -571,13 +1004,13 @@ void maq_mousedown(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 						highest = argv[i];
 					}
 				}
-				t_maq_oscbndl *bb = rumati_avl_get(x->maq_db->avltree_selected, (void *)highest);
+				t_maq_oscbndl *bb = rumati_avl_get(x->avltree_selected, (void *)highest);
 				if(!bb){
 					// if the box isn't already in the tree, clear it and stick it in 
 					//t_otable_oscbndl *copy = otable_util_makebundle((t_object *)x, NULL, 0, 0, NULL);
 					//*copy = *highest;
-					rumati_avl_clear(x->maq_db->avltree_selected, NULL);
-					rumati_avl_put(x->maq_db->avltree_selected, (void *)highest, NULL);
+					rumati_avl_clear(x->avltree_selected, NULL);
+					rumati_avl_put(x->avltree_selected, (void *)highest, NULL);
 				}
 				// if we're in the bottom right corner, prepare to do a resize
 				if(maq_should_resize(x, highest, r, wc)){
@@ -585,7 +1018,7 @@ void maq_mousedown(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 				}
 				free(argv);
 			}else{
-				rumati_avl_clear(x->maq_db->avltree_selected, NULL);
+				rumati_avl_clear(x->avltree_selected, NULL);
 			}
 			maxdb_unlock((t_maxdb *)x->maq_db);
 			maq_output_selected(x);
@@ -618,21 +1051,21 @@ void maq_mousedown(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 						highest = argv[i];
 					}
 				}
-				t_maq_oscbndl *bb = rumati_avl_get(x->maq_db->avltree_selected, (void *)highest);
+				t_maq_oscbndl *bb = rumati_avl_get(x->avltree_selected, (void *)highest);
 				if(!bb){
 					//t_maq_oscbndl *copy = otable_util_makebundle((t_object *)x, NULL, 0, 0, NULL);
 					//*copy = *highest;
-					rumati_avl_put(x->maq_db->avltree_selected, (void *)highest, NULL);
+					rumati_avl_put(x->avltree_selected, (void *)highest, NULL);
 					// if we're in the bottom right corner, prepare to do a resize
 					if(maq_should_resize(x, highest, r, wc)){
 						x->op = MAQ_RESIZE;
 					}
 				}else{
-					rumati_avl_delete(x->maq_db->avltree_selected, (void *)bb, NULL);
+					rumati_avl_delete(x->avltree_selected, (void *)bb, NULL);
 				}
 				free(argv);
 			}else{
-				rumati_avl_clear(x->maq_db->avltree_selected, NULL);
+				rumati_avl_clear(x->avltree_selected, NULL);
 			}
 			maxdb_unlock((t_maxdb *)x->maq_db);
 		}
@@ -657,13 +1090,13 @@ void maq_mousedown(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 						highest = argv[i];
 					}
 				}
-				t_maq_oscbndl *bb = rumati_avl_get(x->maq_db->avltree_selected, (void *)highest);
+				t_maq_oscbndl *bb = rumati_avl_get(x->avltree_selected, (void *)highest);
 				if(!bb){
-					rumati_avl_put(x->maq_db->avltree_selected, (void *)highest, NULL);
+					rumati_avl_put(x->avltree_selected, (void *)highest, NULL);
 				}
 				free(argv);
 			}else{
-				rumati_avl_clear(x->maq_db->avltree_selected, NULL);
+				rumati_avl_clear(x->avltree_selected, NULL);
 			}
 			maxdb_unlock((t_maxdb *)x->maq_db);
 		}
@@ -678,12 +1111,13 @@ void maq_mousedown(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 	default:
 		{
 			maxdb_lock((t_maxdb *)x->maq_db);
-			rumati_avl_clear(x->maq_db->avltree_selected, NULL);
+			rumati_avl_clear(x->avltree_selected, NULL);
 			maxdb_unlock((t_maxdb *)x->maq_db);
 		}
 	}
 	maxdb_notify((t_object *)x, (t_maxdb *)x->maq_db, gensym("refresh"), NULL);
 	//jbox_invalidate_layer((t_object *)x, x->pv, l_main);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 	jbox_redraw((t_jbox *)&(x->box)); 
 }
 
@@ -701,7 +1135,7 @@ void maq_mousedrag(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x118:
 		if(x->op == MAQ_COPY){
 			maxdb_lock((t_maxdb *)x->maq_db);
-			t_maq_oscbndl *b = rumati_avl_get_smallest(x->maq_db->avltree_selected);
+			t_maq_oscbndl *b = rumati_avl_get_smallest(x->avltree_selected);
 			t_maq_oscbndl *copylist = NULL;
 			while(b){
 				t_maq_oscbndl *copy = (t_maq_oscbndl *)osc_mem_alloc(sizeof(t_maq_oscbndl));
@@ -720,12 +1154,12 @@ void maq_mousedrag(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 				copylist = copy;
 				rtree_insert(x->maq_db->rtree, copy->rect, copy);
 				maq_hashtab_store(x->maq_db->obj_tab, copy->bndl, copy);
-				b = rumati_avl_get_greater_than(x->maq_db->avltree_selected, b);
+				b = rumati_avl_get_greater_than(x->avltree_selected, b);
 			}
-			rumati_avl_clear(x->maq_db->avltree_selected, NULL);
+			rumati_avl_clear(x->avltree_selected, NULL);
 			while(copylist){
 				//t_maq_oscbndl *copy = otable_util_copybundle((t_object *)x, copylist);
-				rumati_avl_put(x->maq_db->avltree_selected, copylist, NULL);
+				rumati_avl_put(x->avltree_selected, copylist, NULL);
 				copylist = copylist->next;
 			}
 			maxdb_unlock((t_maxdb *)x->maq_db);
@@ -740,13 +1174,18 @@ void maq_mousedrag(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 			{
 				maxdb_lock((t_maxdb *)x->maq_db);
 				maxdb_lock((t_maxdb *)x->otable_db);
-				t_maq_oscbndl *b = rumati_avl_get_smallest(x->maq_db->avltree_selected);
+				t_maq_oscbndl *b = rumati_avl_get_smallest(x->avltree_selected);
 				while(b){
 					rtree_remove(x->maq_db->rtree, b->rect, b);
-					b->rect.xmin += delta.x;
-					b->rect.xmax += delta.x;
-					b->rect.ymin += delta.y;
-					b->rect.ymax += delta.y;
+					b->tmp_rect.xmin += delta.x;
+					b->tmp_rect.xmax += delta.x;
+					b->tmp_rect.ymin += delta.y;
+					b->tmp_rect.ymax += delta.y;
+					if(x->snap_to_grid){
+						b->rect = maq_snap_rect_to_grid(x, b->tmp_rect);
+					}else{
+						b->rect = b->tmp_rect;
+					}
 					float f = b->rect.xmin;
 					*((uint32_t *)(b->bndl->ptr + b->xmin_offset)) = hton32(*((uint32_t *)(&f)));
 					f = b->rect.xmax;
@@ -756,7 +1195,7 @@ void maq_mousedrag(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 					f = b->rect.ymax;
 					*((uint32_t *)(b->bndl->ptr + b->ymax_offset)) = hton32(*((uint32_t *)(&f)));
 					rtree_insert(x->maq_db->rtree, b->rect, b);
-					b = rumati_avl_get_greater_than(x->maq_db->avltree_selected, b);
+					b = rumati_avl_get_greater_than(x->avltree_selected, b);
 				}
 				maxdb_unlock((t_maxdb *)x->otable_db);
 				maxdb_unlock((t_maxdb *)x->maq_db);
@@ -767,13 +1206,14 @@ void maq_mousedrag(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 			{
 				maxdb_lock((t_maxdb *)x->maq_db);
 				maxdb_lock((t_maxdb *)x->otable_db);
-				t_maq_oscbndl *b = rumati_avl_get_smallest(x->maq_db->avltree_selected);
+				t_maq_oscbndl *b = rumati_avl_get_smallest(x->avltree_selected);
 				while(b){
 					rtree_remove(x->maq_db->rtree, b->rect, b);
+					t_rtree_rect original_rect = b->rect, original_tmp_rect = b->tmp_rect;
 
-					double xmin = b->rect.xmin, ymax = b->rect.ymax;
-					double xmax = b->rect.xmax + delta.x;
-					double ymin = b->rect.ymin + delta.y;
+					double xmin = b->tmp_rect.xmin, ymax = b->tmp_rect.ymax;
+					double xmax = b->tmp_rect.xmax + delta.x;
+					double ymin = b->tmp_rect.ymin + delta.y;
 					double diff_sc = maq_scale(xmax - xmin, x->xmin, x->xmax, 0, r.width);
 					double resize_box_handle_size_wc = maq_scale(RESIZE_BOX_HANDLE_SIZE, 0, r.width, x->xmin, x->xmax);
 					if(diff_sc < RESIZE_BOX_HANDLE_SIZE){
@@ -784,14 +1224,26 @@ void maq_mousedrag(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 					if(diff_sc < RESIZE_BOX_HANDLE_SIZE){
 						ymin = ymax - resize_box_handle_size_wc;
 					}
-					b->rect.xmax = xmax;
-					b->rect.ymin = ymin;
-					float f = (float)xmax;
+					b->tmp_rect.xmax = xmax;
+					b->tmp_rect.ymin = ymin;
+					if(x->snap_to_grid){
+						t_pt p = maq_snap_point_to_grid(x, (t_pt){b->tmp_rect.xmax, b->tmp_rect.ymin});
+						b->rect = b->tmp_rect;
+						b->rect.xmax = p.x;
+						b->rect.ymin = p.y;
+					}else{
+						b->rect = b->tmp_rect;
+					}
+					if((b->rect.xmin >= b->rect.xmax) || (b->rect.ymin >= b->rect.ymax)){
+						b->rect = original_rect;
+						b->tmp_rect = original_tmp_rect;
+					}
+					float f = (float)b->rect.xmax;
 					*((uint32_t *)(b->bndl->ptr + b->xmax_offset)) = hton32(*((uint32_t *)(&f)));
-					f = (float)ymin;
+					f = (float)b->rect.ymin;
 					*((uint32_t *)(b->bndl->ptr + b->ymin_offset)) = hton32(*((uint32_t *)(&f)));
 					rtree_insert(x->maq_db->rtree, b->rect, b);
-					b = rumati_avl_get_greater_than(x->maq_db->avltree_selected, b);
+					b = rumati_avl_get_greater_than(x->avltree_selected, b);
 				}
 				maxdb_unlock((t_maxdb *)x->otable_db);
 				maxdb_unlock((t_maxdb *)x->maq_db);
@@ -808,6 +1260,7 @@ void maq_mousedrag(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 	x->lastmouse = pt;
 	maxdb_notify((t_object *)x, (t_maxdb *)x->maq_db, gensym("refresh"), NULL);
 	//jbox_invalidate_layer((t_object *)x, x->pv, l_main);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 	jbox_redraw((t_jbox *)&(x->box)); 
 }
 
@@ -817,12 +1270,22 @@ void maq_mouseup(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 
 	x->op = MAQ_NOTHING;
 
+	critical_enter(x->lock);
+	maxdb_lock((t_maxdb *)x->maq_db);
+	t_maq_oscbndl *b = rumati_avl_get_smallest(x->avltree_selected);
+	while(b){
+		b->tmp_rect = b->rect;
+		b = rumati_avl_get_greater_than(x->avltree_selected, b);
+	}
+	maxdb_lock((t_maxdb *)x->maq_db);
+	critical_exit(x->lock);
+
 	switch(modifiers){
 	case 0x10:
 	case 0x110:
 		if(x->selbox.width != 0 && x->selbox.height != 0){
 			maxdb_lock((t_maxdb *)x->maq_db);
-			rumati_avl_clear(x->maq_db->avltree_selected, NULL);
+			rumati_avl_clear(x->avltree_selected, NULL);
 			maxdb_unlock((t_maxdb *)x->maq_db);
 		}
 		{
@@ -850,11 +1313,11 @@ void maq_mouseup(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 			if(argc){
 				int i;
 				for(i = 0; i < argc; i++){
-					t_maq_oscbndl *bb = rumati_avl_get(x->maq_db->avltree_selected, (void *)argv[i]);
+					t_maq_oscbndl *bb = rumati_avl_get(x->avltree_selected, (void *)argv[i]);
 					if(!bb){
 						//t_maq_oscbndl *copy = otable_util_makebundle((t_object *)x, NULL, 0, 0, NULL);
 						//*copy = *(argv[i]);
-						rumati_avl_put(x->maq_db->avltree_selected, (void *)argv[i], NULL);
+						rumati_avl_put(x->avltree_selected, (void *)argv[i], NULL);
 					}
 				}
 				free(argv);
@@ -868,6 +1331,7 @@ void maq_mouseup(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 	maxdb_notify((t_object *)x, (t_maxdb *)x->maq_db, gensym("refresh"), NULL);
 	//jbox_invalidate_layer((t_object *)x, x->pv, l_main);
 	x->selbox = (t_rect){0., 0., 0., 0.};
+	jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 	jbox_redraw((t_jbox *)&(x->box)); 
 }
 
@@ -877,11 +1341,11 @@ void maq_mousemove(t_maq *x, t_object *patcherview, t_pt pt, long modifiers){
 void maq_dblclick(t_maq *x){
 	maxdb_lock((t_maxdb *)x->maq_db);
 	long indexes[x->otable_db->count];
-	t_maq_oscbndl *b = rumati_avl_get_smallest(x->maq_db->avltree_selected);
+	t_maq_oscbndl *b = rumati_avl_get_smallest(x->avltree_selected);
 	int n = 0;
 	while(b){
 		indexes[n++] = b->bndl->id;
-		b = rumati_avl_get_greater_than(x->maq_db->avltree_selected, b);
+		b = rumati_avl_get_greater_than(x->avltree_selected, b);
 	}
 	maxdb_unlock((t_maxdb *)x->maq_db);
 	int i;
@@ -893,8 +1357,8 @@ void maq_dblclick(t_maq *x){
 void maq_destroy_db(t_maq *x, t_maq_db *db){
 	maxdb_remove_notification((t_maxdb *)db, (t_object *)x);
 	maq_hashtab_destroy(db->obj_tab);
-	rumati_avl_destroy(db->avltree_visible, NULL);
-	rumati_avl_destroy(db->avltree_selected, NULL);
+	rumati_avl_destroy(x->avltree_visible, NULL);
+	rumati_avl_destroy(x->avltree_selected, NULL);
 	rtree_destroy(db->rtree, (t_rtree_dtor)maq_freebundle, x);
 	x->maq_db = NULL;
 }
@@ -924,9 +1388,9 @@ t_maq_db *maq_make_db(t_maq *x, t_symbol *name){
 	}
 	db->obj_tab = maq_hashtab_new();
 	db->rtree = rtree_new();
-	rumati_avl_new(&(db->avltree_visible), maq_comp, (void *)x);
-	rumati_avl_new(&(db->avltree_selected), maq_comp, (void *)x);
-	db->visible_count = db->selected_count = 0;
+	//rumati_avl_new(&(db->avltree_visible), maq_comp, (void *)x);
+	//rumati_avl_new(&(db->avltree_selected), maq_comp, (void *)x);
+	x->visible_count = x->selected_count = 0;
 	return db;
 }
 
@@ -949,8 +1413,8 @@ void maq_maxdb_notify(t_maq *x, t_symbol *notification_type, void *obj, t_object
 			t_maq_oscbndl *b = (t_maq_oscbndl *)maq_hashtab_lookup(x->maq_db->obj_tab, obj);
 			if(b){
 				maq_hashtab_remove(x->maq_db->obj_tab, obj);
-				rumati_avl_delete(x->maq_db->avltree_selected, b, NULL);
-				rumati_avl_delete(x->maq_db->avltree_visible, b, NULL);
+				rumati_avl_delete(x->avltree_selected, b, NULL);
+				rumati_avl_delete(x->avltree_visible, b, NULL);
 				rtree_remove(x->maq_db->rtree, b->rect, b);
 				osc_mem_free(b);
 			}
@@ -963,6 +1427,8 @@ void maq_maxdb_notify(t_maq *x, t_symbol *notification_type, void *obj, t_object
 		}
 	}
  redraw:
+	maq_rebuild_visible_db(x);
+	maq_invalidate_all(x);
 	jbox_redraw(&(x->box));
 }
 
@@ -1021,6 +1487,7 @@ void maq_xminmax(t_maq *x, double min, double max){
 	x->xmin = min;
 	x->xmax = max;
         //jbox_invalidate_layer((t_object *)x, x->pv, l_main);
+	maq_invalidate_all(x);
 	jbox_redraw((t_jbox *)&(x->box));
 }
 
@@ -1028,6 +1495,7 @@ void maq_yminmax(t_maq *x, double min, double max){
 	x->ymin = min;
 	x->ymax = max;
 	//jbox_invalidate_layer((t_object *)x, x->pv, l_main);
+	maq_invalidate_all(x);
 	jbox_redraw((t_jbox *)&(x->box));
 }
 
@@ -1047,14 +1515,20 @@ void maq_clear(t_maq *x){
 	// rtree_clear can use a destructor that just frees the t_rtree_rect that's stored
 	// in the udata field of the t_otable_oscbndl.  then call otable_util_clear and the 
 	// bundles will be freed by otable_util_freebundle
-	rumati_avl_clear(x->maq_db->avltree_selected, NULL);
-	rumati_avl_clear(x->maq_db->avltree_visible, NULL);
+	rumati_avl_clear(x->avltree_selected, NULL);
+	rumati_avl_clear(x->avltree_visible, NULL);
 	rtree_clear(x->maq_db->rtree, NULL, NULL);
 	otable_util_clear((t_object *)x, x->otable_db);
 	critical_enter(x->lock);
 
         //jbox_invalidate_layer((t_object *)x, x->pv, l_main);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 	jbox_redraw((t_jbox *)&(x->box));
+}
+
+void maq_invalidate_all(t_maq *x){
+	jbox_invalidate_layer((t_object *)x, x->pv, l_grid);
+	jbox_invalidate_layer((t_object *)x, x->pv, l_boxes);
 }
 
 void maq_assist(t_maq *x, void *b, long io, long num, char *s){ 
@@ -1068,9 +1542,14 @@ void maq_assist(t_maq *x, void *b, long io, long num, char *s){
 void maq_free(t_maq *x){ 
 	jbox_free(&(x->box));
 	maxdb_unrefer((t_object *)x, (t_maxdb *)x->maq_db);
+	maxdb_unrefer((t_object *)x, (t_maxdb *)x->otable_db);
+	critical_free(x->lock);
 } 
 
 void maq_make_addresses(t_maq *x){
+	if(!x->name){
+		return;
+	}
 	char buf[128];
 	char *params[4] = {"/x/left", "/x/right", "/y/bottom", "/y/top"};
 	char *addresses[4] = {x->xmin_address, x->xmax_address, x->ymin_address, x->ymax_address};
@@ -1089,6 +1568,11 @@ void maq_make_addresses(t_maq *x){
 		}
 		memcpy(addresses[i], buf, ptr - buf);
 		*(lens[i]) = ptr - buf;
+	}
+	if(x->name->s_name[0] != '/'){
+		sprintf(x->oscname, "/%s", x->name->s_name);
+	}else{
+		strcpy(x->oscname, x->name->s_name);
 	}
 }
 
@@ -1132,6 +1616,10 @@ int main(void){
 	CLASS_ATTR_SYM(c, "name", 0, t_maq, name);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "name", 0, "maquette");
 
+        CLASS_ATTR_LONG(c, "snap_to_grid", 0, t_maq, snap_to_grid);
+        CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "snap_to_grid", 0, "1.0");
+	CLASS_ATTR_LABEL(c, "snap_to_grid", 0, "Snap To Grid");
+
  	CLASS_STICKY_ATTR(c, "category", 0, "Color");
 
  	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_maq, bgcolor); 
@@ -1166,6 +1654,14 @@ int main(void){
  	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "selectedresizehandlecolor", 0, "0. 0. 0. 1."); 
  	CLASS_ATTR_STYLE_LABEL(c, "selectedresizehandlecolor", 0, "rgba", "Selected Resize Handle Color"); 
 
+ 	CLASS_ATTR_RGBA(c, "majorgridcolor", 0, t_maq, majorgridcolor); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "majorgridcolor", 0, "0. 0. .3 1."); 
+ 	CLASS_ATTR_STYLE_LABEL(c, "majorgridcolor", 0, "rgba", "Major Grid Color"); 
+
+ 	CLASS_ATTR_RGBA(c, "minorgridcolor", 0, t_maq, minorgridcolor); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "minorgridcolor", 0, "0. 0. .3 0.5"); 
+ 	CLASS_ATTR_STYLE_LABEL(c, "minorgridcolor", 0, "rgba", "Minor Grid Color"); 
+
  	CLASS_STICKY_ATTR_CLEAR(c, "category"); 
 
  	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 300. 100."); 
@@ -1175,6 +1671,8 @@ int main(void){
 	ps_xmax = gensym("xmax");
 	ps_ymin = gensym("ymin");
 	ps_ymax = gensym("ymax");
+	l_boxes = gensym("boxes");
+	l_grid = gensym("grid");
 
  	class_register(CLASS_BOX, c); 
  	maq_class = c; 
@@ -1185,6 +1683,27 @@ int main(void){
 	
  	return 0; 
 } 
+
+void maq_setup_grid(t_maq *x, t_maq_grid *grid, uint8_t dim){
+	rumati_avl_new(&(grid->tree), maq_comp_atoms, (void *)x);
+	grid->step = 1;
+	grid->n = 0;
+	maq_rebuild_grid(x, dim);
+}
+
+void maq_setup_markers(t_maq *x, t_maq_markers *markers, int dim){
+	rumati_avl_new(&(markers->tree), maq_comp_atoms, (void *)x);
+	if(dim == MAQ_HORIZONTAL){
+		markers->rect_min = 0;
+		markers->rect_max = 2;
+	}else{
+		markers->rect_min = 1;
+		markers->rect_max = 3;
+	}
+	markers->n = markers->vis_n = 0;
+	markers->visible = NULL;
+	markers->rebuild = 1;
+}
 
 void *maq_new(t_symbol *s, long argc, t_atom *argv){ 
  	t_maq *x = NULL; 
@@ -1225,6 +1744,18 @@ void *maq_new(t_symbol *s, long argc, t_atom *argv){
 		x->selbox = (t_rect){0., 0., 0., 0.};
 		x->otable_db = NULL;
 		x->maq_db = NULL;
+		rumati_avl_new(&(x->avltree_visible), maq_comp, (void *)x);
+		rumati_avl_new(&(x->avltree_selected), maq_comp, (void *)x);
+
+		int i;
+		for(i = 0; i < 4; i++){
+			maq_setup_grid(x, x->grids + i, i);
+			maq_rebuild_grid(x, i);
+		}		
+
+		maq_setup_markers(x, x->markers + MAQ_VERTICAL, MAQ_VERTICAL);
+		maq_setup_markers(x, x->markers + MAQ_HORIZONTAL, MAQ_HORIZONTAL);
+
 
 		x->draw_rtree_nodes = 0;
 		x->dblclick_count = 0;
