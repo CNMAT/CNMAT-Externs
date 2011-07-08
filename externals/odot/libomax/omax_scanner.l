@@ -1,6 +1,8 @@
 %{
+#ifndef WIN_VERSION
 #include <Carbon.h>
 #include <CoreServices.h>
+#endif
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
