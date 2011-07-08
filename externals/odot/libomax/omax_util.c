@@ -1056,7 +1056,7 @@ int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv)
 			break;
 		}
 	}
-	*((long *)sizeptr) = htonl(ptr - buf - 4);
+	*((long *)sizeptr) = hton32(ptr - buf - 4);
 	return ptr - buf;
 }
 
