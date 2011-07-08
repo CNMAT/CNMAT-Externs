@@ -94,15 +94,25 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
 	}
 #else
+	// we need to make a copy incase the expression contains assignment that will
+	// alter the bundle.
+	// the copy needs to use memory allocated with osc_mem_alloc in case the 
+	// bundle has to be resized during assignment
+	char *copy = (char *)osc_mem_alloc(len);
+	memcpy(copy, (char *)ptr, len);
 	int argc = 0;
 	t_atom64 *argv = NULL;
 	t_atom out[2];
-	int ret = omax_expr_funcall(x->function_graph, len, (char *)ptr, &argc, &argv);
+	int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argc, &argv);
 	if(ret){
 		atom_setlong(out, len);
 		atom_setlong(out + 1, ptr);
 		outlet_anything(x->outlet, ps_FullPacket, 2, out);
 	}else{
+		atom_setlong(out, len);
+		atom_setlong(out + 1, (long)copy);
+		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		/*
 		t_osc_msg *m = NULL;
 		t_osc_msg *newm = osc_message_alloc();
 		newm->free_internal_buffers = 1;
@@ -140,6 +150,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 			outlet_anything(x->outlet, ps_FullPacket, 2, out);
 		}
 		osc_message_free(newm);
+		*/
 	}
 	if(argv){
 		osc_mem_free(argv);
