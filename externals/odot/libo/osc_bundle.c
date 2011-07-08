@@ -398,8 +398,8 @@ t_osc_err osc_bundle_setTimetagNow_s(char *bundle){
 	if(osc_bundle_strcmpID(bundle)){
 		return OSC_ERR_NOBUNDLEID;
 	}
-	//ntptime now;
-	//osc_timetag_now_to_ntp(&now);
-	//memcpy(bundle + 8, (char *)(&now), 8);
+	ntptime now;
+	osc_timetag_now_to_ntp(&now);
+	memcpy(bundle + 8, (char *)(&now), 8);
 	return OSC_ERR_NONE;
 }
