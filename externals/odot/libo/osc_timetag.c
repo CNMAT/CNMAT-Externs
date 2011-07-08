@@ -8,7 +8,11 @@
 #include <string.h>
 
 // need htonl
+#ifdef WIN
+#include <Winsock.h>
+#else
 #include <arpa/inet.h>
+#endif
 
 // crossplatform gettimeofday
 #include "timeval.h"
