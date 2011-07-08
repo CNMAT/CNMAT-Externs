@@ -27,7 +27,11 @@
 #include "ext.h"
 #include "ext_obex.h"
 
-#define __USE_OMAX_ATOM_SETTERS__
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//#define __USE_OMAX_ATOM_SETTERS__
 
 #ifdef __USE_OMAX_ATOM_SETTERS__
 #define atom_setlong(ap, x) *(ap) = (t_atom){A_LONG, (union word)((long)(x))}
@@ -35,7 +39,7 @@
 #define atom_setsym(ap, x) *(ap) = (t_atom){A_SYM, (union word)(x)}
 #endif
 
-#define __USE_OMAX_ATOM_GETTERS__
+//#define __USE_OMAX_ATOM_GETTERS__
 
 #ifdef __USE_OMAX_ATOM_GETTERS__
 inline long omax_atom_getlong(t_atom *ap);
@@ -44,10 +48,6 @@ inline t_symbol *omax_atom_getsym(t_atom *ap);
 #define atom_getlong(ap) omax_atom_getlong(ap)
 #define atom_getfloat(ap) omax_atom_getfloat(ap)
 #define atom_getsym(ap) omax_atom_getsym(ap)
-#endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
 #define A64_LONG 1

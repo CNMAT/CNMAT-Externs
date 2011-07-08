@@ -7,17 +7,81 @@
 #include "ext_obex_util.h"
 #include "osc.h"
 
-int omax_expr_funcall(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out){
+int omax_expr_funcall(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out){
 	int ret = omax_expr_call(f, len, oscbndl, argc_out, argv_out);
+	if(f->assign_result_to_address){
+		t_osc_msg *m = NULL;
+		osc_bundle_lookupAddress_s(*len, *oscbndl, f->argv->arg.osc_address, &m, 1);
+		if(m){
+			t_osc_msg mm;
+			osc_message_clear(&mm);
+			osc_message_setAddress(&mm, f->argv->arg.osc_address);
+			int i;
+			for(i = 0; i < argc_out[0]; i++){
+				char tt;
+				char buf[4];
+				switch(argv_out[0][i].type){
+				case A64_LONG:
+					{
+						tt = 'i';
+						int32_t l = (int32_t)atom64_getlong(argv_out[0] + i);
+						*((uint32_t *)buf) = l;
+					}
+					break;
+				case A64_FLOAT:
+					{
+						float f = atom64_getfloat(argv_out[0] + i);
+						*((uint32_t *)buf) = *((uint32_t *)&f);
+						tt = 'f';
+					}
+					break;
+				default: 
+					continue;
+				}
+				osc_message_addData(&mm, 1, &tt, 4, buf);
+			}
+			long slen = osc_message_getSize(&mm);
+			char msg_s[slen + 4];
+			osc_message_serialize(&mm, msg_s);
+			osc_bundle_replaceMessage_s(len, oscbndl, osc_message_getSize(m), m->address - 4, slen, msg_s);
+			/*
+			int i = 0;
+		        while(osc_message_incrementArg(m)){
+				switch(*(m->typetags)){
+				case 'i':
+					{
+						int32_t l = (int32_t)atom64_getlong(argv_out[0] + i);
+						*((int32_t *)(m->argv)) = hton32(l);
+					}
+					break;
+				case 'f':
+					{
+						float f = (float)atom64_getfloat(argv_out[0] + i);
+						*((uint32_t *)(m->argv)) = hton32(*((uint32_t *)&f));
+					}
+					break;
+				}
+				i++;
+			}
+			*/
+		}
+	}
 	return ret;
 }
 
-int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out){
+int omax_expr_getArg(t_omax_expr_arg *arg, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out){
 	switch(arg->type){
 	case OMAX_ARG_TYPE_ATOM:
 		{
 			t_atom64 *a = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
-			atom64_setfloat(a, atom_getfloat(&(arg->arg.atom)));
+			switch(atom_gettype(&(arg->arg.atom))){
+			case A_LONG:
+				atom64_setlong(a, atom_getlong(&(arg->arg.atom)));
+				break;
+			case A_FLOAT:
+				atom64_setfloat(a, atom_getfloat(&(arg->arg.atom)));
+				break;
+			}
 			*argv_out = a;
 			*argc_out = 1;
 			return 0;
@@ -29,7 +93,7 @@ int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out
 	case OMAX_ARG_TYPE_OSCADDRESS:
 		{
 			t_osc_msg *m = NULL;
-			osc_bundle_lookupAddress_s(len, oscbndl, arg->arg.osc_address, &m, 1);
+			osc_bundle_lookupAddress_s(*len, *oscbndl, arg->arg.osc_address, &m, 1);
 			if(m){
 				*argc_out = m->argc;
 				t_atom64 *argv = (t_atom64 *)osc_mem_alloc(m->argc * sizeof(t_atom64));
@@ -37,10 +101,15 @@ int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out
 				while(osc_message_incrementArg(m)){
 					switch(*(m->typetags)){
 					case 'i':
-						atom64_setlong(argv + i, (ntohl(*((int32_t *)m->argv))));
+						atom64_setlong(argv + i, (ntoh32(*((int32_t *)m->argv))));
 						break;
 					case 'f':
-						atom64_setfloat(argv + i, (double)(*((float *)m->argv)));
+						{
+							uint32_t ii = ntoh32(*((uint32_t *)m->argv));
+							float f = *((float *)&ii);
+							atom64_setfloat(argv + i, (double)f);
+							//atom64_setfloat(argv + i, (double)(*((float *)m->argv)));
+						}
 						break;
 					case 'd':
 						atom64_setfloat(argv + i, *((double *)m->argv));
@@ -63,7 +132,7 @@ int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out
 	return 1; // this really shouldn't happen unless there's a bug somewhere
 }
 
-int omax_expr_call(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out){
+int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out){
 	int f_argc = f->argc;
 	t_omax_expr_arg *f_argv = f->argv;
 	int argc[f_argc];
@@ -227,6 +296,13 @@ double omax_expr_mod(double f1, double f2){
 	return (int)f1 % (int)f2;
 }
 
+int omax_expr_assign(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = argc[1];
+	*argv_out = (t_atom64 *)osc_mem_alloc(argc[1] * sizeof(t_atom64));
+	memcpy(*argv_out, argv[1], argc[1] * sizeof(t_atom64));
+	return 0;
+}
+
 int omax_expr_get_index(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	int i, j, k = 0;
 	*argc_out = 0;
@@ -383,6 +459,16 @@ int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *ar
 		
 		}
 	}
+	return 0;
+}
+
+int omax_expr_first(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc == 0){
+		return 0;
+	}
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+	*argc_out = 1;
+	**argv_out = **argv;
 	return 0;
 }
 

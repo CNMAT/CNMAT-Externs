@@ -98,7 +98,12 @@
 								 }
 								 break;
 							 case '=':
-								 token = EQ;
+								 if(ptrlen == 1){
+									 printf("assign\n");
+								 	token = ASSIGN;
+								 }else{
+								 	token = EQ;
+								 }
 								 break;
 							 case '!':
 								 token = NEQ;
@@ -126,11 +131,10 @@
 					 }
 					 if(!func){
 						 error("function not found");
-						 return 1; // function not found
+						 return 1;
 					 }
 					 t_omax_expr *expr = (t_omax_expr *)osc_mem_alloc(sizeof(t_omax_expr));
 					 memset(expr, '\0', sizeof(expr));
-					 //expr->f = omax_expr_prefix_func;
 					 expr->rec = omax_expr_funcsym + i;
 					 lvalp->expr = expr;
 				 }
@@ -143,6 +147,7 @@
  }
 
  int omax_parser_infix(t_omax_expr **f, t_omax_expr_arg **result, t_omax_expr_arg *arg1, t_omax_expr *infixop, t_omax_expr_arg *arg2){
+	 printf("%s\n", __func__);
 	t_omax_expr *expr = infixop;
 	arg1->next = arg2;
 	arg2->next = NULL;
@@ -155,15 +160,22 @@
 	(*result)->type = OMAX_ARG_TYPE_EXPR;
 	return 0;
  }
+ int omax_parser_assignment(t_omax_expr **f, t_omax_expr_arg **result, t_omax_expr_arg *arg1, t_omax_expr *infixop, t_omax_expr_arg *arg2){
+printf("%s\n", __func__);
+	 omax_parser_infix(f, result, arg1, infixop, arg2);
+	 (*f)->assign_result_to_address = 1;
+	 return 0;
+ }
 
  %}
 
- %define "api.pure"
+%define "api.pure"
 
  %parse-param{int argc}
  %parse-param{t_atom *argv}
  %parse-param{int *argp}
  %parse-param{t_omax_expr **f}
+
  %lex-param{int argc}
  %lex-param{t_atom *argv}
  %lex-param{int *argp}
@@ -186,6 +198,7 @@
 %left <expr>MULTIPLY DIVIDE MOD
 %left <sym>NOT
 %right <expr>POWER 
+%right <expr>ASSIGN
 %type <arg>expn arglist
 
 %%
@@ -273,6 +286,10 @@ expn:	ARG {;}
 |	expn MOD expn	{
 	omax_parser_infix(f, &$$, $1, $2, $3);
  }
+|	expn ASSIGN expn{
+	printf("%s\n", __func__);
+	omax_parser_assignment(f, &$$, $1, $2, $3);
+}
 /*
 |	PREFIX_FUNC LPAREN expn RPAREN {
 	omax_parser_prefix_argv(f, &$$, $1, 1, &$3);

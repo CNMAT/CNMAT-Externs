@@ -19,6 +19,8 @@ typedef struct _omax_expr{
 	struct _omax_expr_arg *argv; /**< Arguments to the function (linked list)*/
 	int argc; /**< Number of arguments */
 	//struct _omax_expr *next, *prev; /**< Links to the next and previous expressions */
+	t_osc_msg msg;
+	int assign_result_to_address;
 } t_omax_expr;
 
 /** \struct t_omax_expr_arg
@@ -64,9 +66,9 @@ typedef struct _omax_expr_const_rec{
 
    @returns 0 if no error, 1 if there was an error.
  */
-int omax_expr_funcall(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out);
-int omax_expr_getArg(t_omax_expr_arg *arg, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out);
-int omax_expr_call(t_omax_expr *f, int len, char *oscbndl, int *argc_out, t_atom64 **argv_out);
+int omax_expr_funcall(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
+int omax_expr_getArg(t_omax_expr_arg *arg, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
+int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
 t_omax_expr_rec *omax_expr_lookupFunction(char *name);
 
 int omax_expr_1arg_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
@@ -90,6 +92,8 @@ double omax_expr_and(double f1, double f2);
 double omax_expr_or(double f1, double f2);
 double omax_expr_mod(double f1, double f2);
 
+int omax_expr_assign(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+
 int omax_expr_get_index(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_sum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_length(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
@@ -100,6 +104,7 @@ int omax_expr_make_list(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, i
 int omax_expr_range(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_multiplex(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_first(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
 t_omax_expr_arg *omax_expr_arg_alloc(void);
 void omax_expr_free(t_omax_expr *e);
@@ -136,6 +141,7 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"&&", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_and, "Logical and"},
 	{"||", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_or, "Logical or"},
 	{"%", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_mod, "Modulo"},
+	{"=", omax_expr_assign, 2, NULL, "Assignment"},
 	// math.h
 	{"abs", omax_expr_1arg_dbl, 1, (void *)fabs, "Absolute value"},
 	{"acos", omax_expr_1arg_dbl, 1, (void *)acos, "Arc cosine"},
@@ -191,7 +197,8 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"multiplex", omax_expr_multiplex, -1, NULL, "Multiplex two or more lists"},
 	{"mux", omax_expr_multiplex, -1, NULL, "Multiplex two or more lists"},
 	//make-list, pad, zeros, ones
-	{"!", omax_expr_not, -1, NULL, "Logical not"}
+	{"!", omax_expr_not, -1, NULL, "Logical not"},
+	{"first", omax_expr_first, 1, NULL, "extract the first element of a list"}
 };
 
 #endif // __OMAX_EXPR_H__

@@ -792,26 +792,33 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 	if(numints > 0 && (numfloats == 0 && numother == 0)){
 		int32_t *buf = (int32_t *)(m.argv);
 		for(i = 0; i < m.argc; i++){
-			atom_setlong(ptr++, hton32(buf[i]));
+			atom_setlong(ptr++, ntoh32(buf[i]));
 		}
 		return;
 	}else if(numfloats > 0 && (numints == 0 && numother == 0)){
-		float *buf = (float *)(m.argv);
+		//float *buf = (float *)(m.argv);
+		int32_t *buf = (int32_t *)(m.argv);
 		for(i = 0; i < m.argc; i++){
-			atom_setfloat(ptr++, buf[i]);
+			int32_t ii = ntoh32(buf[i]);
+			atom_setfloat(ptr++, *((float *)&ii));
 		}
 		return;
 	}else if(numfloats > 0 && numints > 0 && numother == 0){
 		tt1 = m.typetags + 1;
 		int32_t *buf = (int32_t *)(m.argv);
-		float *buff = (float *)(m.argv);
+		//float *buff = (float *)(m.argv);
 		for(i = 0; i < m.argc; i++){
 			switch(tt1[i]){
 			case 'i':
-				atom_setlong(ptr++, hton32(buf[i]));
+				atom_setlong(ptr++, ntoh32(buf[i]));
 				break;
 			case 'f':
-				atom_setfloat(ptr++, buff[i]);
+				{
+					//float f = buff[i];
+					int32_t ii = ntoh32(buf[i]);
+					float f = *((float *)&ii);
+					atom_setfloat(ptr++, f);
+				}
 				break;
 			}
 		}
@@ -825,9 +832,9 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 			break;
 		case 'f':
 			{
-				//uint32_t l = ntoh32(*((int32_t *)m.argv));
-				//atom_setfloat(ptr++, *((float *)&l));
-				atom_setfloat(ptr++, *((float *)m.argv));
+				uint32_t l = ntoh32(*((int32_t *)m.argv));
+				atom_setfloat(ptr++, *((float *)&l));
+				//atom_setfloat(ptr++, *((float *)m.argv));
 			}
 			break;
 		case 'h':
@@ -836,15 +843,25 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 			break;
 		case 'd':
 			{
-				//uint64_t l = ntoh64(*((int64_t *)m.argv));
-				//atom_setfloat(ptr++, (float)*((double *)&l));
-				atom_setfloat(ptr++, *((double *)m.argv));
+				uint64_t l = ntoh64(*((int64_t *)m.argv));
+				atom_setfloat(ptr++, (float)*((double *)&l));
+				//atom_setfloat(ptr++, *((double *)m.argv));
 			}
 			break;
 		case 's':
 		case 'S':
 			atom_setsym(ptr++, gensym(m.argv));
 			break;
+		case 'H':
+			{
+				if(!strncmp(m.address, "/osc/tim", 8)){
+					// NTP timetag--convert to ISO 8601
+					char buf[128];
+					ntptime tt = (ntptime){*((uint32_t *)m.argv), *((uint32_t *)(m.argv + 4)), 1, TIME_STAMP};
+					osc_timetag_ntp_to_iso8601(&tt, buf);
+					atom_setsym(ptr++, gensym(buf));
+				}
+			}
 		case 'c':
 			atom_setlong(ptr++, (long)*(m.argv));
 			break;
@@ -908,14 +925,14 @@ int osc_util_make_bundle(int numAddresses,
 			*tt = typetags[i][j];
 			switch(*tt){
 			case 'i':
-				*((long *)ptr) = htonl(atom_getlong(args[i] + j));
+				*((long *)ptr) = hton32(atom_getlong(args[i] + j));
 				ptr += 4;
 				break;
 			case 'f':
 				{
-					//float f = atom_getfloat(args[i] + j);
-					//*((long *)ptr) = htonl(*((long *)(&f)));
-					*((float *)ptr) = atom_getfloat(args[i] + j);
+					float f = atom_getfloat(args[i] + j);
+					*((long *)ptr) = hton32(*((uint32_t *)(&f)));
+					//*((float *)ptr) = atom_getfloat(args[i] + j);
 					ptr += 4;
 				}
 				break;
@@ -934,7 +951,7 @@ int osc_util_make_bundle(int numAddresses,
 			tt++;
 			*len = osc_util_check_pos_and_resize(buffer, *len, ptr);
 		}
-		*((long *)sizeptr) = htonl(ptr - sizeptr - 4);
+		*((long *)sizeptr) = hton32(ptr - sizeptr - 4);
 	}
 	return ptr - buffer;
 }
@@ -1013,9 +1030,9 @@ int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv)
 		switch(atom_gettype(argv + i)){
 		case A_FLOAT:
 			{
-				//float f = atom_getfloat(argv + i);
-				//*((uint32_t *)ptr) = hton32(*((uint32_t *)(&f)));
-				*((float *)ptr) = atom_getfloat(argv + i);
+				float f = atom_getfloat(argv + i);
+				*((uint32_t *)ptr) = hton32(*((uint32_t *)(&f)));
+				//*((float *)ptr) = atom_getfloat(argv + i);
 				ptr += 4;
 			}
 			break;

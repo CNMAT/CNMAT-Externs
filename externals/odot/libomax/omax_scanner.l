@@ -107,7 +107,7 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 							//BEGIN(DOUBLE_BRACKETS);
 						}
 					}
-\+|\-|\*|\/|<|>|<=|>=|!=|==|%|\|\||&&|!     			{
+\+|\-|\*|\/|<|>|<=|>=|!=|==|%|\|\||&&|!|=     			{
 						/* infix operator */
 						atom_setsym(*yyextra, gensym(yytext));
 						(*yyextra)++;
