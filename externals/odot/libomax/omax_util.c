@@ -860,9 +860,9 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 				if(!strncmp(m.address, "/osc/tim", 8)){
 					// NTP timetag--convert to ISO 8601
 					char buf[128];
-					//ntptime tt = (ntptime){*((uint32_t *)m.argv), *((uint32_t *)(m.argv + 4)), 1, TIME_STAMP};
-					//osc_timetag_ntp_to_iso8601(&tt, buf);
-					//atom_setsym(ptr++, gensym(buf));
+					ntptime tt = (ntptime){*((uint32_t *)m.argv), *((uint32_t *)(m.argv + 4)), 1, TIME_STAMP};
+					osc_timetag_ntp_to_iso8601(&tt, buf);
+					atom_setsym(ptr++, gensym(buf));
 				}
 			}
 		case 'c':
