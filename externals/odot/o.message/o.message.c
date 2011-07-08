@@ -231,12 +231,19 @@ void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 			bufptr += sprintf(bufptr, "%ld ", atom_getlong(x->atoms + i));
 			break;
 		case A_FLOAT:
-			bufptr += sprintf(bufptr, "%g ", atom_getfloat(x->atoms + i));
+			bufptr += sprintf(bufptr, "%f ", atom_getfloat(x->atoms + i));
 			break;
 		case A_SYM:
 			{
 				t_symbol *sym = atom_getsym(x->atoms + i);
 				if(sym == gensym("\n")){
+					/*
+					if(*(bufptr - 1) == ' '){
+						bufptr--;
+					}
+					*bufptr++ = 0xC2;
+					*bufptr++ = 0xac;
+					*/
 					bufptr += sprintf(bufptr, "%s", sym->s_name);
 				}else{
 					bufptr += sprintf(bufptr, "%s ", sym->s_name);
@@ -254,7 +261,7 @@ void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 	}
  out:
 	*buf = tmpbuf;
-	*buflen = bufptr - tmpbuf;
+	*buflen = (bufptr - tmpbuf);
 }
 
 void omessage_parse_string(t_omessage *x, long len, char *string){
@@ -460,6 +467,7 @@ void omessage_gettext(t_omessage *x){
 			}
 			memcpy(x->atoms + x->num_atoms, argv, argc * sizeof(t_atom));
 			x->num_atoms += argc;
+			//char lf[4] = {0xc2, 0xac, '\n', '\0'};
 			atom_setsym(x->atoms + x->num_atoms, gensym("\n"));
 			x->num_atoms++;
 			if(argv){
