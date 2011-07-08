@@ -76,7 +76,7 @@ t_osc_msg *osc_bundle_next(t_osc_msg *m){
 
 char *osc_bundle_next_s(int len, char *buf, char *msgptr){
 	if(msgptr){
-		uint32_t size = ntohl(*((uint32_t *)msgptr));
+		uint32_t size = ntoh32(*((uint32_t *)msgptr));
 		if(size + (msgptr - buf) + 4 >= len){
 			return NULL;
 		}
