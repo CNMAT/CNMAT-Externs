@@ -5,20 +5,14 @@ LIBO_HFILES = $(foreach F, $(LIBO_BASENAMES), $(F).h) osc.h
 
 MAC-CFLAGS = -arch i386 -O3 -funroll-loops
 WIN-CFLAGS = -mno-cygwin -O3 -funroll-loops
-#ARCH = -arch i386 #-arch ppc
-CC = gcc
-#OPTIMIZATION = -O3 -funroll-loops
 
 all: CFLAGS += $(MAC-CFLAGS)
+all: CC = gcc
 all: $(LIBO_CFILES) $(LIBO_HFILES) libo.a test/osc_test
-	#$(MAKE) libo.a
-	#$(MAKE) test/osc_test
 
-win: CFLAGS += $(WIN-CFLAGS)
+win: CFLAGS += $(WIN-CFLAGS) -DWIN
 win: CC = gcc-3
 win: $(LIBO_CFILES) $(LIBO_HFILES) libo.a test/osc_test
-	#$(MAKE) libo.a
-	#$(MAKE) test/osc_test
 
 libo.a: $(LIBO_OBJECTS)
 	rm -f libo.a
