@@ -1,6 +1,9 @@
-#include <inttypes.h>
+#ifndef WIN_VERSION
 #include <Carbon.h>
 #include <CoreServices.h>
+#endif
+
+#include <inttypes.h>
 #include "omax_util.h"
 #include "osc.h"
 
