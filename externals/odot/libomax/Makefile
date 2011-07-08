@@ -3,12 +3,21 @@ OMAX_OBJECTS = $(foreach OBJ, $(OMAX_BASENAMES), $(OBJ).o) omax_parser.o omax_sc
 OMAX_CFILES = $(foreach F, $(OMAX_BASENAMES), $(F).c)
 OMAX_HFILES = $(foreach F, $(OMAX_BASENAMES), $(F).h)
 
-CC = gcc
-ARCH = -arch i386
+#CC = gcc
+#ARCH = -arch i386
+
+MAC-CFLAGS = -arch i386 -O3 -funroll-loops
+WIN-CFLAGS = -mno-cygwin -O3 -funroll-loops
 
 I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
 
-all: libomax.a
+all: CFLAGS += $(MAC-CFLAGS)
+all: CC = gcc
+all: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
+
+win: CFLAGS += $(WIN-CFLAGS) -DWIN
+win: CC = gcc-3
+win: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
 
 libomax.a: $(OMAX_OBJECTS) $(OMAX_CFILES) $(OMAX_HFILES)
 	libtool -static -o libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
@@ -24,7 +33,7 @@ omax_parser.o: omax_parser.c omax_parser.h
 	$(CC) $(ARCH) $(I) -o omax_parser.o -c omax_parser.c
 
 %.o: %.c %.h omax_parser.c omax_scanner.c omax_parser.y omax_scanner.l
-	$(CC) $(ARCH) $(I) -o $(notdir $(basename $@)).o -c $(notdir $(basename $@)).c
+	$(CC) $(CFLAGS) $(I) -o $(notdir $(basename $@)).o -c $(notdir $(basename $@)).c
 
 
 .PHONY: clean
