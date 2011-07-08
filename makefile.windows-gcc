@@ -23,7 +23,7 @@ CFLAGS += $(addprefix -I,$(VPATH))
 $(GCC_BUILD_DIR)/commonsyms.o: $(MAX_INCLUDES)/common/commonsyms.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
-$(GCC_BUILD_DIR)/%.o: $(gcc_build_dir)/commonsyms.o %.c
+$(GCC_BUILD_DIR)/%.o: $(GCC_BUILD_DIR)/commonsyms.o %.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 
