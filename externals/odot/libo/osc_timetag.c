@@ -10,11 +10,11 @@
 // need htonl
 #ifdef WIN_VERSION
 #include <Winsock.h>
-#include "strptime.c"
-char *strptime(const char * __restrict, const char * __restrict, struct tm * __restrict);
 #else
 #include <arpa/inet.h>
 #endif
+
+#include "time.h"
 
 // crossplatform gettimeofday
 #include "timeval.h"
