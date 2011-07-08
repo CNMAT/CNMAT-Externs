@@ -49,6 +49,8 @@ char *osc_error_string(t_osc_err err){
 		return "got a NULL pointer unexpectedly";
 	case OSC_ERR_BADTYPETAG:
 		return "encountered a discrepancy between a typetag and a piece of data";
+	case OSC_ERR_MALFORMEDMSG:
+		return "malformed message";
 	default:
 		return "unrecognized error code";
 	}

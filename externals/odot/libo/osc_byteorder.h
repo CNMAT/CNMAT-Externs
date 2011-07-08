@@ -23,6 +23,20 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #ifndef __OSC_BYTEORDER_H__
 #define __OSC_BYTEORDER_H__
 
+typedef struct uint128_ {
+	uint64_t l1, l2;
+} uint128_t;
+
+#define OSC_BYTE_SWAP16(x) \
+	((((x) & 0xff00) >> 8) | \
+	 (((x) & 0x00ff) << 8))
+
+#define OSC_BYTE_SWAP32(x) \
+	((((x) & 0xff000000) >> 24) | \
+	 (((x) & 0x00ff0000) >> 8) | \
+	 (((x) & 0x0000ff00) << 8) | \
+	 (((x) & 0x000000ff) << 24))
+
 #define OSC_BYTE_SWAP64(x) \
 	((((x) & 0xff00000000000000LL) >> 56) | \
 	 (((x) & 0x00ff000000000000LL) >> 40) | \
@@ -33,15 +47,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 	 (((x) & 0x000000000000ff00LL) << 40) | \
 	 (((x) & 0x00000000000000ffLL) << 56))
 
-#define OSC_BYTE_SWAP32(x) \
-	((((x) & 0xff000000) >> 24) | \
-	 (((x) & 0x00ff0000) >> 8) | \
-	 (((x) & 0x0000ff00) << 8) | \
-	 (((x) & 0x000000ff) << 24))
-
-#define OSC_BYTE_SWAP16(x) \
-	((((x) & 0xff00) >> 8) | \
-	 (((x) & 0x00ff) << 8))
+#define OSC_BYTE_SWAP128(x) \
+	(uint128_t){OSC_BYTE_SWAP64(((x).l2)), OSC_BYTE_SWAP64(((x).l1))}
 
 #ifdef BYTE_ORDER
 #define OSC_BYTE_ORDER BYTE_ORDER
@@ -66,6 +73,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #define ntoh32(x) OSC_BYTE_SWAP32(x)
 #define hton64(x) OSC_BYTE_SWAP64(x)
 #define ntoh64(x) OSC_BYTE_SWAP64(x)
+#define hton128(x) OSC_BYTE_SWAP128(x)
+#define ntoh128(x) OSC_BYTE_SWAP128(x)
 #else
 #define hton16(x) (x)
 #define ntoh16(x) (x)
@@ -73,6 +82,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #define ntoh32(x) (x)
 #define hton64(x) (x)
 #define ntoh64(x) (x)
+#define hton128(x) (x)
+#define ntoh128(x) (x)
 #endif
 
 #endif // __OSC_BYTEORDER_H__

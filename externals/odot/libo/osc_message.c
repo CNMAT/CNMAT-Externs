@@ -109,19 +109,23 @@ t_osc_err osc_message_parseMessage(int n, char *buf, t_osc_msg *osc_msg){
 		return OSC_ERR_NOBUNDLE;
 	}
 	char *ptr = buf;
-	// this call could contain a message that's inside a bundle in which case the
-	// size will be the first 4 bytes of buf
-	// or it could be a naked message in which case n will probably be valid.
-	if(n <= 0){
-		// assume the first 4 bytes are the size
-		n = ntoh32(*((uint32_t *)ptr));
-		if(n > 1024 && *ptr == '/'){
-			// what are the chances?  better bail out
-			return OSC_ERR_MALFORMEDADDRESS;
+
+	if(*buf == '/'){
+		if(n > 0){
+			osc_msg->size = n;
+		}else{
+			return OSC_ERR_MSGTOOSMALL;
+		}
+	}else if(*(buf + 4) == '/'){
+		osc_msg->size = ntoh32(*((uint32_t *)buf));
+		if(osc_msg->size <= 0){
+			return OSC_ERR_MSGTOOSMALL;
 		}
 		ptr += 4;
+	}else{
+		return OSC_ERR_MALFORMEDMSG;
 	}
-
+	
 	osc_msg->address = NULL;
 	osc_msg->typetags = NULL;
 	osc_msg->argv = NULL;
@@ -133,10 +137,12 @@ t_osc_err osc_message_parseMessage(int n, char *buf, t_osc_msg *osc_msg){
 		ptr++;
 	}
 	if(ptr - buf == n){
+		// this message just has an address with no data
 		return OSC_ERR_NONE;
 	}
 	// typetags are required
 	if(*ptr != ','){
+		printf("no typetags! %c\n", *ptr);
 		return OSC_ERR_NONE;
 	}
 	// we set the typetags pointer to point to the , so that the first call to osc_util_incrementArg will set it to the first
@@ -201,7 +207,7 @@ int osc_message_rename(int len, char *buffer, char *new_address, char **new_buff
 	return newlen + 4;
 }
 
-uint32_t osc_message_getSize(char *buf){
+uint32_t osc_message_getSize_s(char *buf){
 	if(!buf){
 		return 0;
 	}
@@ -255,9 +261,8 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 			break;
 		case 'f':
 			{
-				//uint32_t l = ntoh32(*((int32_t *)msg->argv));
-				//p("%f ", *((float *)&l));
-				p("%f ", *((float *)msg->argv));
+				uint32_t l = ntoh32(*((int32_t *)msg->argv));
+				p("%f ", *((float *)&l));
 			}
 			break;
 		case 'h':
@@ -266,9 +271,8 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 			break;
 		case 'd':
 			{
-				//uint64_t l = ntoh64(*((int64_t *)msg->argv));
-				//p("%f ", *((double *)&l));
-				p("%f ", *((double *)msg->argv));
+				uint64_t l = ntoh64(*((int64_t *)msg->argv));
+				p("%f ", *((double *)&l));
 			}
 			break;
 		case 's':
@@ -305,7 +309,7 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 	osc_message_resetArgs(msg);	
 }
 
-int osc_message_getSize_s(t_osc_msg *m){
+int osc_message_getSize(t_osc_msg *m){
 	if(m->size){
 		return m->size;
 	}
@@ -329,6 +333,9 @@ int osc_message_serialize(t_osc_msg *m, char *buffer){
 	char *sizeptr = buffer;
 	ptr = ptr + 4;
 	char *tmp = m->address;
+	if(!tmp){
+		return 0;
+	}
 	while(*tmp){
 		*ptr++ = *tmp++;
 	}
@@ -352,6 +359,7 @@ int osc_message_serialize(t_osc_msg *m, char *buffer){
 	while((ptr - buffer) % 4){
 		*ptr++ = '\0';
 	}
+
 	memcpy(ptr, m->argv, m->argv_buffer_pos);
 	ptr += m->argv_buffer_pos;
 	/*
@@ -360,8 +368,26 @@ int osc_message_serialize(t_osc_msg *m, char *buffer){
 	}
 	*/
  out:
-	*((uint32_t *)buffer) = htonl((ptr - buffer) - 4);
+	*((uint32_t *)buffer) = hton32((ptr - buffer) - 4);
 	return ptr - buffer;
+}
+
+t_osc_err osc_message_setSize(t_osc_msg *m){
+	m->size = 0;
+	if(m->address){
+		m->size += strlen(m->address);
+		m->size++;
+		while(m->size % 4){
+			m->size++;
+		}
+	}
+	m->size += m->typetag_buffer_pos;
+	m->size++;
+	while(m->size % 4){
+		m->size++;
+	}
+	m->size += m->argv_buffer_pos;
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_message_setAddress(t_osc_msg *m, char *address){
@@ -380,6 +406,7 @@ t_osc_err osc_message_setAddress(t_osc_msg *m, char *address){
 	}
 	memcpy(m->address, address, len - 1);
 	m->address[len - 1] = '\0';
+	osc_message_setSize(m);
 	return OSC_ERR_NONE;
 }
 
@@ -408,7 +435,7 @@ t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int a
 		m->argv_buffer_size = argv_len_bytes;
 		m->argv_buffer_pos = 0;
 	}
-	if(argv_len_bytes + m->argv_buffer_pos > m->argv_buffer_size){
+	if((argv_len_bytes + m->argv_buffer_pos) > m->argv_buffer_size){
 		char *tmp = (char *)osc_mem_resize(m->argv, argv_len_bytes + m->argv_buffer_size);
 		if(!tmp){
 			return OSC_ERR_OUTOFMEM;
@@ -419,7 +446,7 @@ t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int a
 	}
 	char *ptr = argv;
 	int i = 0;
-	while(ptr - argv < argv_len_bytes){
+	while((ptr - argv) < argv_len_bytes){
 		if(i >= ntypetags){
 			return OSC_ERR_BADTYPETAG;
 		}
@@ -430,4 +457,9 @@ t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int a
 		i++;
 		ptr += size;
 	}
+	osc_message_setSize(m);
+}
+
+void osc_message_clear(t_osc_msg *m){
+	memset((char *)m, '\0', sizeof(t_osc_msg));
 }

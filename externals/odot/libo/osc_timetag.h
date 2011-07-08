@@ -50,6 +50,10 @@ typedef struct _ntptime {
   int type;
 } ntptime;
 
+#define OSC_TIMETAG_MSGSIZE_NTP 32
+#define OSC_TIME_RECORD "/osc/time/record\0\0\0\0,s\0\0"
+#define OSC_TIME_RECORD_LEN 24
+
 // conversions 
 void osc_timetag_iso8601_to_ntp(char* s, ntptime* n);
 void osc_timetag_ntp_to_iso8601(ntptime* n, char* s);

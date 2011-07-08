@@ -25,6 +25,10 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 //#define OSC_2_0
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef OSC_2_0
 #define OSC_HEADER_SIZE 4
 #define OSC_IDENTIFIER "#OSC"
@@ -47,5 +51,9 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_mem.h"
 #include "osc_timetag.h"
 #include "osc_match.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __OSC_H__

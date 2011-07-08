@@ -40,6 +40,7 @@ typedef uint64_t t_osc_err;
 #define OSC_ERR_OUTOFMEM 0x11
 #define OSC_ERR_NULLPTR 0x12
 #define OSC_ERR_BADTYPETAG 0x14
+#define OSC_ERR_MALFORMEDMSG 0x18
 
 /**
  * Get a description of an error code.

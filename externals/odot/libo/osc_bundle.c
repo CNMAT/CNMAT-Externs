@@ -58,13 +58,35 @@ int osc_bundle_hasNext(t_osc_msg *m){
 }
 
 int osc_bundle_hasNext_s(int len, char *buf, char *msgptr){
+	if(!msgptr){
+		return 0;
+	}
 	if(msgptr - buf >= len){
 		return 0;
 	}
 	return 1;
 }
 
+t_osc_msg *osc_bundle_next(t_osc_msg *m){
+	if(m){
+		return m->next;
+	}
+	return NULL;
+}
+
+char *osc_bundle_next_s(int len, char *buf, char *msgptr){
+	if(msgptr){
+		uint32_t size = ntohl(*((uint32_t *)msgptr));
+		if(size + (msgptr - buf) + 4 >= len){
+			return NULL;
+		}
+		return msgptr + 4 + size;
+	}
+	return NULL;
+}
+
 t_osc_err osc_bundle_getMsgCount(int len, char *buf, int *count){
+	*count = 0;
 	t_osc_err ret;
 	if(ret = osc_error_bundleSanityCheck(len, buf)){
 		return ret;
@@ -115,7 +137,7 @@ t_osc_err osc_bundle_getMessagesWithCallback(int len, char *buf, void (*f)(t_osc
 	int i;
 	ptr += OSC_HEADER_SIZE;
 	while((ptr - buf) < len){
-		uint32_t size = osc_message_getSize(ptr);
+		uint32_t size = osc_message_getSize_s(ptr);
 		t_osc_msg m;
 		osc_message_parseMessage(size, ptr + 4, &m);
 		f(m, context);
@@ -212,7 +234,7 @@ t_osc_err osc_bundle_lookupAddress_s(int len, char *buf, char *address, t_osc_ms
 	char *ptr = buf + OSC_HEADER_SIZE;
 	t_osc_msg *last = NULL;
 	while(ptr - buf < len){
-		int msgsize = osc_message_getSize(ptr);
+		int msgsize = osc_message_getSize_s(ptr);
 		ptr += 4;
 		int po, ao;
 		int r = osc_match(address, ptr, &po, &ao);
@@ -265,7 +287,7 @@ t_osc_err osc_bundle_lookupAddress(t_osc_bundle *bundle, char *address, t_osc_ms
 			last = mmm;
 		}else{
 			last->next = mmm;
-			mm->prev = last;
+			mmm->prev = last;
 			last = mmm;
 		}
 	cont:
@@ -274,10 +296,16 @@ t_osc_err osc_bundle_lookupAddress(t_osc_bundle *bundle, char *address, t_osc_ms
 }
 
 t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message){
-	t_osc_msg *m = bundle->messages;
+	int num_messages = 0;
+	t_osc_msg *m = message;
+	while(m){
+		num_messages++;
+		m = m->next;
+	}
+	m = bundle->messages;
 	if(!m){
 		bundle->messages = message;
-		bundle->num_messages = 1;
+		bundle->num_messages = num_messages;
 		return OSC_ERR_NONE;
 	}
 	while(m->next){
@@ -286,15 +314,58 @@ t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message){
 	m->next = message;
 	message->prev = m;
 	message->next = NULL;
-	bundle->num_messages++;
+	bundle->num_messages += num_messages;
 	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_bundle_addMessage_s(long *len, char **bndl, t_osc_msg *msg){
+	long msglen = osc_message_getSize(msg);
+	char msg_s[msglen + 4];
+	osc_message_serialize(msg, msg_s);
+	return osc_bundle_addSerializedMessage_s(len, bndl, msglen + 4, msg_s);
+}
+
+t_osc_err osc_bundle_addSerializedMessage_s(long *len, char **bndl, long msglen, char *msg){
+	char *tmp = (char *)osc_mem_resize(*bndl, *len + msglen + 4);
+	if(!tmp){
+		return OSC_ERR_OUTOFMEM;
+	}
+	memcpy(tmp + *len, msg, msglen + 4);
+	*len = *len + msglen + 4;
+	*bndl = tmp;
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_bundle_replaceMessage_s(long *len, char **bndl, long oldmsglen, char *oldmsg, long newmsglen, char *newmsg){
+	char copy[*len - oldmsglen + newmsglen];
+	char *oldptr = *bndl, *newptr = copy;
+
+	memcpy(newptr, oldptr, oldmsg - *bndl);
+	newptr += oldmsg - *bndl;
+	oldptr += oldmsg - *bndl;
+
+	memcpy(newptr, newmsg, newmsglen + 4);
+	newptr += newmsglen + 4;
+	oldptr += oldmsglen + 4;
+
+	long r = *len - (oldptr - *bndl);
+	if(r){
+		memcpy(newptr, oldptr, r);
+	}
+	char *tmp = osc_mem_resize(*bndl, sizeof(copy));
+	if(!tmp){
+		return OSC_ERR_OUTOFMEM;
+	}
+	*bndl = tmp;
+	memcpy(*bndl, copy, sizeof(copy));
+	*len = sizeof(copy);
 }
 
 t_osc_err osc_bundle_getLen_s(t_osc_bundle *bundle, long *len){
 	t_osc_msg *m = bundle->messages;
 	*len = OSC_HEADER_SIZE;
 	while(m){
-		*len += 4 + m->size;
+		*len += (4 + m->size);
 		m = m->next;
 	}
 	return OSC_ERR_NONE;
@@ -320,5 +391,15 @@ t_osc_err osc_bundle_serializeWithBuffer(t_osc_bundle *bundle, char *buffer){
 		ptr += osc_message_serialize(m, ptr);
 		m = m->next;
 	}
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_bundle_setTimetagNow_s(char *bundle){
+	if(osc_bundle_strcmpID(bundle)){
+		return OSC_ERR_NOBUNDLEID;
+	}
+	ntptime now;
+	osc_timetag_now_to_ntp(&now);
+	memcpy(bundle + 8, (char *)(&now), 8);
 	return OSC_ERR_NONE;
 }

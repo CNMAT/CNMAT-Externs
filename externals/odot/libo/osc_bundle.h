@@ -79,6 +79,42 @@ t_osc_bundle *osc_bundle_alloc(void);
 void osc_bundle_freeBundle(t_osc_bundle *bundle);
 
 /**
+ * Find out if there is a message after the current one.
+ *
+ * @param m The current message.
+ * @return 0/1 for true or false
+ */
+int osc_bundle_hasNext(t_osc_msg *m);
+
+/**
+ * Find out if there is a message after the current one in a serialized bundle.
+ *
+ * @param len Bundle length in bytes
+ * @param buf Serialized bundle.
+ * @param msgptr The current message in the bundle.
+ * @return 0/1 for true or false.
+ */
+int osc_bundle_hasNext_s(int len, char *buf, char *msgptr);
+
+/**
+ * Get the next message in a bundle.
+ *
+ * @param m The current message.
+ * @return The next message or NULL if there isn't one
+ */
+t_osc_msg *osc_bundle_next(t_osc_msg *m);
+
+/**
+ * Get the next message in a serialized bundle.
+ *
+ * @param len Bundle length in bytes
+ * @param buf Serialized bundle.
+ * @param msgptr The current message in the bundle.
+ * @return A pointer to the next message.
+ */
+char *osc_bundle_next_s(int len, char *buf, char *msgptr);
+
+/**
  * Get the number of messages in a bundle.
  *
  * @param len Length of buf in bytes
@@ -223,6 +259,10 @@ t_osc_err osc_bundle_lookupAddress(t_osc_bundle *bundle, char *address, t_osc_ms
  */
 t_osc_err osc_bundle_addMessage(t_osc_bundle *bundle, t_osc_msg *message);
 
+t_osc_err osc_bundle_addMessage_s(long *len, char **bndl, t_osc_msg *msg);
+t_osc_err osc_bundle_addSerializedMessage_s(long *len, char **bndl, long msglen, char *msg);
+t_osc_err osc_bundle_replaceMessage_s(long *len, char **bndl, long oldmsglen, char *oldmsg, long newmsglen, char *newmsg);
+
 /**
  * Get the total number of bytes required to serialize a bundle.
  *
@@ -256,6 +296,14 @@ t_osc_err osc_bundle_serialize(t_osc_bundle *bundle, long *len, char **buffer);
  * @return An error code or #OSC_ERR_NONE
  */
 t_osc_err osc_bundle_serializeWithBuffer(t_osc_bundle *bundle, char *buffer);
+
+/**
+ * Set the timetag field of an OSC bundle to the current time.
+ *
+ * @param bundle Pointer to the OSC bundle
+ * @return An error code or #OSC_ERR_NONE
+ */
+t_osc_err osc_bundle_setTimetagNow_s(char *bundle);
 
 #ifdef __cplusplus
 }

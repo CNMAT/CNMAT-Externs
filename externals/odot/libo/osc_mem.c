@@ -128,16 +128,16 @@ char osc_data_lengths[128] = {
 	/*	62		*/	-1	,
 	/*	63		*/	-1	,
 	/*	64		*/	-1	,
-	/*	65	A	*/	-1	,
+	/*	65	A	*/	3	,
 	/*	66	B	*/	-1	,
-	/*	67	C	*/	-1	,
+	/*	67	C	*/	1	,
 	/*	68	D	*/	-1	,
 	/*	69	E	*/	-1	,
 	/*	70	F	*/	0	,
 	/*	71	G	*/	-1	,
-	/*	72	H	*/	-1	,
-	/*	73	I	*/	0	,
-	/*	74	J	*/	-1	,
+	/*	72	H	*/	8	,
+	/*	73	I	*/	4	,
+	/*	74	J	*/	16	,
 	/*	75	K	*/	-1	,
 	/*	76	L	*/	-1	,
 	/*	77	M	*/	-1	,
@@ -148,7 +148,7 @@ char osc_data_lengths[128] = {
 	/*	82	R	*/	-1	,
 	/*	83	S	*/	sizeof(char *)	,
 	/*	84	T	*/	0	,
-	/*	85	U	*/	-1	,
+	/*	85	U	*/	2	,
 	/*	86	V	*/	-1	,
 	/*	87	W	*/	-1	,
 	/*	88	X	*/	-1	,
@@ -160,7 +160,7 @@ char osc_data_lengths[128] = {
 	/*	94		*/	-1	,
 	/*	95		*/	-1	,
 	/*	96		*/	-1	,
-	/*	97	a	*/	-1	,
+	/*	97	a	*/	3	,
 	/*	98	b	*/	sizeof(char *)	,
 	/*	99	c	*/	1	,
 	/*	100	d	*/	8	,
@@ -169,7 +169,7 @@ char osc_data_lengths[128] = {
 	/*	103	g	*/	-1	,
 	/*	104	h	*/	8	,
 	/*	105	i	*/	4	,
-	/*	106	j	*/	-1	,
+	/*	106	j	*/	16	,
 	/*	107	k	*/	-1	,
 	/*	108	l	*/	-1	,
 	/*	109	m	*/	4	,
@@ -180,7 +180,7 @@ char osc_data_lengths[128] = {
 	/*	114	r	*/	4	,
 	/*	115	s	*/	sizeof(char *)	,
 	/*	116	t	*/	8	,
-	/*	117	u	*/	-1	,
+	/*	117	u	*/	2	,
 	/*	118	v	*/	-1	,
 	/*	119	w	*/	-1	,
 	/*	120	x	*/	-1	,
@@ -216,7 +216,23 @@ size_t osc_sizeof(unsigned char typetag, char *data){
 
 int osc_mem_shouldByteswap(unsigned char typetag){
 	switch(typetag){
+		// signed ints
+	case 'u':
+	case 'a':
 	case 'i':
+	case 'h':
+	case 'j':
+		// unsigned ints
+	case 'U':
+	case 'A':
+	case 'I':
+	case 'H':
+	case 'J':
+		// floats
+	case 'e':
+	case 'f':
+	case 'd':
+	case 'q':
 		return 1;
 	default:
 		return 0;
@@ -242,6 +258,9 @@ t_osc_err osc_mem_encodeByteorder(unsigned char typetag, char *data, char **out)
 	case 8:
 		*((uint64_t *)tmp) = hton64(*((uint64_t *)data));
 		break;	
+	case 16:
+		*((uint128_t *)tmp) = hton128(*((uint128_t *)data));
+		break;
 	}
 	memcpy(*out, tmp, size);
 }
@@ -264,6 +283,9 @@ t_osc_err osc_mem_decodeByteorder(unsigned char typetag, char *data, char **out)
 		break;
 	case 8:
 		*((uint64_t *)tmp) = ntoh64(*((uint64_t *)data));
+		break;
+	case 16:
+		*((uint128_t *)tmp) = ntoh128(*((uint128_t *)data));
 		break;	
 	}
 	memcpy(*out, tmp, size);

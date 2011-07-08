@@ -114,7 +114,7 @@ t_osc_err osc_message_parseMessage(int n, char *buf, t_osc_msg *osc_msg);
  * @param buf OSC message with 4-byte size in network byte order as the first 4 bytes.
  * @return The size of the message in bytes.
  */
-uint32_t osc_message_getSize(char *buf);
+uint32_t osc_message_getSize_s(char *buf);
 
 /**
  * Get the number of arguments for this OSC message
@@ -129,6 +129,20 @@ int osc_message_getArgCount(t_osc_msg *msg);
  *
  * @param msg The OSC message that will have its pointers incremented.
  * @return The number of arguments incremented (0 or 1)
+ @note When a #t_osc_msg is created with #osc_message_parseMessage, the typetag field
+ will point to the ',' indicating to this function that it is ready to be incremented.
+ To use this function, simply enter a while loop as follows:
+ @code
+t_osc_msg m;
+osc_message_parseMessage(len, oscbndl, &m);
+while(osc_message_incrementArg(&m)){
+	switch(*(m.typetags)){
+		case 'i':
+		case 'f':
+		case 's':
+	}
+}
+ @endcode
  */
 int osc_message_incrementArg(t_osc_msg *msg);
 
@@ -167,7 +181,7 @@ int osc_message_rename(int len, char *buffer, char *new_address, char **new_buff
  * @param m The OSC message to be inspected
  * @return The size in bytes.
  */
-int osc_message_getSize_s(t_osc_msg *m);
+int osc_message_getSize(t_osc_msg *m);
 
 /**
  * Serialize an OSC message using preallocated memory.
@@ -180,6 +194,7 @@ int osc_message_serialize(t_osc_msg *m, char *buffer);
 
 t_osc_err osc_message_setAddress(t_osc_msg *m, char *address);
 t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int argv_len_bytes, char *argv);
+void osc_message_clear(t_osc_msg *m);
 
 #ifdef __cplusplus
 }
