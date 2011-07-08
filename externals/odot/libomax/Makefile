@@ -7,7 +7,7 @@ OMAX_HFILES = $(foreach F, $(OMAX_BASENAMES), $(F).h)
 #ARCH = -arch i386
 
 MAC-CFLAGS = -arch i386 -O3 -funroll-loops
-WIN-CFLAGS = -mno-cygwin -O3 -funroll-loops
+WIN-CFLAGS = -mno-cygwin -O3 -funroll-loops -DWIN_VERSION
 
 I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
 
@@ -15,7 +15,7 @@ all: CFLAGS += $(MAC-CFLAGS)
 all: CC = gcc
 all: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
 
-win: CFLAGS += $(WIN-CFLAGS) -DWIN
+win: CFLAGS += $(WIN-CFLAGS)
 win: CC = gcc-3
 win: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
 
