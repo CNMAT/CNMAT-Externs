@@ -8,6 +8,9 @@
 #include <Carbon.h>
 #include <CoreServices.h>
 #endif
+#ifdef WIN_VERSION
+#include "../../../c74support/max-includes/common/commonsyms.c"
+#endif
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
