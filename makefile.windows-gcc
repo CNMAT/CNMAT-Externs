@@ -20,7 +20,7 @@ VPATH = $(sort $(dir $(MORE_SOURCE)))
 # Each directory mentioned in MORE_SOURCE might have include files too
 CFLAGS += $(addprefix -I,$(VPATH))
 
-$(GCC_BUILD_DIR)/commonsyms.o:
+$(GCC_BUILD_DIR)/commonsyms.o: $(MAX_INCLUDES)/common/commonsyms.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 $(GCC_BUILD_DIR)/%.o: $(gcc_build_dir)/commonsyms.o %.c
