@@ -231,7 +231,16 @@ void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 			bufptr += sprintf(bufptr, "%ld ", atom_getlong(x->atoms + i));
 			break;
 		case A_FLOAT:
-			bufptr += sprintf(bufptr, "%f ", atom_getfloat(x->atoms + i));
+			{
+				bufptr += sprintf(bufptr, "%f", atom_getfloat(x->atoms + i));
+				bufptr--;
+				while(*bufptr == '0'){
+					*bufptr = ' ';
+					*(bufptr + 1) = '\0';
+					bufptr--;
+				}
+				bufptr += 2;
+			}
 			break;
 		case A_SYM:
 			{
