@@ -8,7 +8,7 @@
 #include <string.h>
 
 // need htonl
-#ifdef WIN
+#ifdef WIN_VERSION
 #include <Winsock.h>
 #else
 #include <arpa/inet.h>
