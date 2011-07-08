@@ -1,5 +1,8 @@
+#ifndef WIN_VERSION
 #include <Carbon.h>
 #include <CoreServices.h>
+#endif
+
 #include "omax_parser.h"
 #include "omax_util.h"
 #include "omax_expr.h"
