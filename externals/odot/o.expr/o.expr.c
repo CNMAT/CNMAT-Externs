@@ -196,10 +196,14 @@ int oexpr_postFunctionGraph_r(t_omax_expr *fg, char *buf){
 }
 
 void oexpr_postFunctionGraph(t_omax_expr *fg){
-	char buf[128];
+	char buf[256];
 	char *ptr = buf;
-	oexpr_postFunctionGraph_r(fg, ptr);
-	post("%s", buf);
+	t_omax_expr *f = fg;
+	while(f){
+		oexpr_postFunctionGraph_r(f, ptr);
+		post("%s", buf);
+		f = f->next;
+	}
 }
 
 void oexpr_bang(t_oexpr *x){
@@ -287,8 +291,9 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 			}
 			post("**************************************************");
 			*/
-			int counter = 0;
-			yyparse(x->argclex, x->argvlex, &counter, &(x->function_graph));
+			//int counter = 0;
+			//yyparse(x->argclex, x->argvlex, &counter, &(x->function_graph));
+			omax_expr_parse(&(x->function_graph), x->argclex, x->argvlex);
 /*
 			if(argvlex){
 				osc_mem_free(argvlex);
