@@ -126,24 +126,24 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		char tt[argc];
 		memset(tt, 'f', argc);
 		osc_message_addData(newm, argc, tt, argc * sizeof(float), (char *)argvf);
-		int size = osc_message_getSize_s(newm);
+		int size = osc_message_getSize(newm);
 		char newm_ser[size + 4];
 		memset(newm_ser, '\0', size + 4);
 		osc_message_serialize(newm, newm_ser);
-		osc_bundle_lookupAddress_s(len, (char *)ptr, x->address->s_name, &m, 1);
+		osc_bundle_lookupAddress_s(len, copy, x->address->s_name, &m, 1);
 		char bndl_out[len + size + 4];
 		memset(bndl_out, '\0', len + size + 4);
 		if(m){
-			int firstpart = (m->address - 4) - ((char *)ptr);
-			memcpy(bndl_out, (char *)ptr, firstpart);
+			int firstpart = (m->address - 4) - copy;
+			memcpy(bndl_out, copy, firstpart);
 			memcpy(bndl_out + firstpart, newm_ser, size + 4);
-			memcpy(bndl_out + firstpart + size + 4, ((char *)ptr) + firstpart + m->size + 4, len - (firstpart + m->size + 4));
+			memcpy(bndl_out + firstpart + size + 4, copy + firstpart + m->size + 4, len - (firstpart + m->size + 4));
 			atom_setlong(out, len + size - m->size);
 			atom_setlong(out + 1, (long)bndl_out);
 			outlet_anything(x->outlet, ps_FullPacket, 2, out);
 			osc_message_free(m);
 		}else{
-			memcpy(bndl_out, (char *)ptr, len);
+			memcpy(bndl_out, copy, len);
 			memcpy(bndl_out + len, newm_ser, size + 4);
 			atom_setlong(out, len + size + 4);
 			atom_setlong(out + 1, (long)bndl_out);
