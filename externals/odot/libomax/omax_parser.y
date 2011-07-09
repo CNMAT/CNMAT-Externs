@@ -16,9 +16,9 @@
 #include "omax_parser.h"
 
  int yylex(YYSTYPE *lvalp, int argc, t_atom *argv, int *argp);
- void yyerror(int argc, t_atom *argv, int *argp, struct _omax_expr **f, char const *e);
+ void yyerror(struct _omax_expr **function_list, struct _omax_expr **f, int argc, t_atom *argv, int *argp, char const *e);
 
- void yyerror(int argc, t_atom *argv, int *argp, struct _omax_expr **f, char const *e){
+ void yyerror(struct _omax_expr **function_list, struct _omax_expr **f, int argc, t_atom *argv, int *argp, char const *e){
 	error("%s\n", e);
  }
 
@@ -29,116 +29,159 @@
 		 case A_LONG:
 		 case A_FLOAT:
 			 {
-			 	token = ARG;
-				t_omax_expr_arg *arg = omax_expr_arg_alloc();
-				arg->type = OMAX_ARG_TYPE_ATOM;
-				arg->arg.atom = *(argv + (*argp));
-				lvalp->arg = arg;
+				 token = ARG;
+				 t_omax_expr_arg *arg = omax_expr_arg_alloc();
+				 arg->type = OMAX_ARG_TYPE_ATOM;
+				 arg->arg.atom = *(argv + (*argp));
+				 lvalp->arg = arg;
 			 }
 			 break;
 		 case A_SYM:
 			 {
 				 t_symbol *sym = atom_getsym(argv + *argp);
 				 char *ptr = sym->s_name;
-				 if(ptr[0] == '/' && strlen(ptr) > 1){
-					 token = ARG;
-					 t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
-					 arg->type = OMAX_ARG_TYPE_OSCADDRESS;
-					 arg->arg.osc_address = atom_getsym(argv + (*argp))->s_name;
-					 lvalp->arg = arg;
-				 }else if(ptr[0] == '('){
-					 token = LPAREN;
-				 }else if(ptr[0] == ')'){
-					 token = RPAREN;
-				 }else if(sym == gensym("[[")){
-					 token = L_DOUBLE_BRACKET;
-				 }else if(sym == gensym("]]")){
-					 token = R_DOUBLE_BRACKET;
-				 }else if(ptr[0] == ','){
-					 token = COMMA;
-				 }else{
-					 // function or constant name
-					 int i;
-					 void *func = NULL;
-					 for(i = 0; i < sizeof(omax_expr_constsym) / sizeof(t_omax_expr_const_rec); i++){
-						 if(!strcmp(ptr, omax_expr_constsym[i].name)){
-							 token = ARG;
-							 t_omax_expr_arg *arg = omax_expr_arg_alloc();
-							 arg->type = OMAX_ARG_TYPE_ATOM;
-							 atom_setfloat(&(arg->arg.atom), omax_expr_constsym[i].val);
-							 lvalp->arg = arg;
-							 goto out;
-						 }
+				 // function or constant name
+				 int i;
+				 void *func = NULL;
+				 for(i = 0; i < sizeof(omax_expr_constsym) / sizeof(t_omax_expr_const_rec); i++){
+					 if(!strcmp(ptr, omax_expr_constsym[i].name)){
+						 token = ARG;
+						 t_omax_expr_arg *arg = omax_expr_arg_alloc();
+						 arg->type = OMAX_ARG_TYPE_ATOM;
+						 atom_setfloat(&(arg->arg.atom), omax_expr_constsym[i].val);
+						 lvalp->arg = arg;
+						 goto out;
 					 }
-					 for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
-						 if(!strcmp(ptr, omax_expr_funcsym[i].name)){
-							 func = omax_expr_funcsym[i].func;
-							 int ptrlen = strlen(ptr);
-							 switch(*ptr){
-							 case '+':
+				 }
+				 for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
+					 if(!strcmp(ptr, omax_expr_funcsym[i].name)){
+						 func = omax_expr_funcsym[i].func;
+						 int ptrlen = strlen(ptr);
+						 switch(*ptr){
+						 case '+':
+							 if(ptrlen == 2){
+								 switch(ptr[1]){
+								 case '+':
+									 token = INC;
+									 break;
+								 case '=':
+									 token = ASSIGN;
+									 break;
+								 }
+							 }else{
 								 token = ADD;
-								 break;
-							 case '-':
+							 }
+							 break;
+						 case '-':
+							 if(ptrlen == 2){
+								 switch(ptr[1]){
+								 case '-':
+									 token = DEC;
+									 break;
+								 case '=':
+									 token = ASSIGN;
+									 break;
+								 }
+							 }else{
 								 token = SUBTRACT;
-								 break;
-							 case '*':
+							 }
+							 break;
+						 case '*':
+							 if(ptrlen == 2){
+								 if(ptr[1] == '='){
+									 token = ASSIGN;
+								 }
+							 }else{
 								 token = MULTIPLY;
-								 break;
-							 case '/':
+							 }
+							 break;
+						 case '/':
+							 if(ptrlen == 2){
+								 if(ptr[1] == '='){
+									 token = ASSIGN;
+								 }
+							 }else{
 								 token = DIVIDE;
-								 break;
-							 case '<':
-								 token = LT;
-								 if(ptrlen == 2){
-									 token = LTE;
-								 }
-								 break;
-							 case '>':
-								 token = GT;
-								 if(ptrlen == 2){
-									 token = GTE;
-								 }
-								 break;
-							 case '=':
-								 if(ptrlen == 1){
-									 printf("assign\n");
-								 	token = ASSIGN;
-								 }else{
-								 	token = EQ;
-								 }
-								 break;
-							 case '!':
-								 token = NEQ;
-								 if(ptrlen == 1){
-								 	token = PREFIX_FUNC;
-								 }
-								 break;
-							 case '&':
-								 token = AND;
-								 break;
-							 case '|':
-								 token = OR;
-								 break;
-							 case '%':
-								 token = MOD;
-								 break;
-							 case '^':
-								 token = POWER;
-								 break;
-							 default:
+							 }
+							 break;
+						 case '<':
+							 token = LT;
+							 if(ptrlen == 2){
+								 token = LTE;
+							 }
+							 break;
+						 case '>':
+							 token = GT;
+							 if(ptrlen == 2){
+								 token = GTE;
+							 }
+							 break;
+						 case '=':
+							 if(ptrlen == 1){
+								 token = ASSIGN;
+							 }else{
+								 token = EQ;
+							 }
+							 break;
+						 case '!':
+							 token = NEQ;
+							 if(ptrlen == 1){
 								 token = PREFIX_FUNC;
 							 }
 							 break;
+						 case '&':
+							 token = AND;
+							 break;
+						 case '|':
+							 token = OR;
+							 break;
+						 case '%':
+							 if(ptrlen == 2){
+								 if(ptr[1] == '='){
+									 token = ASSIGN;
+								 }
+							 }else{
+							 	token = MOD;
+							 }
+							 break;
+						 case '^':
+							 token = POWER;
+							 break;
+						 default:
+							 token = PREFIX_FUNC;
 						 }
+						 break;
 					 }
-					 if(!func){
-						 error("function not found");
-						 return 1;
-					 }
+				 }
+				 if(func){
 					 t_omax_expr *expr = (t_omax_expr *)osc_mem_alloc(sizeof(t_omax_expr));
-					 memset(expr, '\0', sizeof(expr));
+					 memset(expr, '\0', sizeof(t_omax_expr));
 					 expr->rec = omax_expr_funcsym + i;
 					 lvalp->expr = expr;
+				 }else{
+					 if(ptr[0] == '/' && strlen(ptr) > 1){
+						 token = ARG;
+						 t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
+						 arg->type = OMAX_ARG_TYPE_OSCADDRESS;
+						 arg->arg.osc_address = atom_getsym(argv + (*argp))->s_name;
+						 lvalp->arg = arg;
+					 }else if(ptr[0] == '('){
+						 token = LPAREN;
+					 }else if(ptr[0] == ')'){
+						 token = RPAREN;
+					 }else if(sym == gensym("[[")){
+						 token = L_DOUBLE_BRACKET;
+					 }else if(sym == gensym("]]")){
+						 token = R_DOUBLE_BRACKET;
+					 }else if(ptr[0] == ','){
+						 token = COMMA;
+					 }else{
+						 token = ARG;
+						 t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
+						 arg->type = OMAX_ARG_TYPE_ATOM;
+						 arg->arg.atom = argv[*argp];
+						 lvalp->arg = arg;
+					 }
 				 }
 			 }
 		 }
@@ -149,13 +192,12 @@
  }
 
  int omax_parser_infix(t_omax_expr **f, t_omax_expr_arg **result, t_omax_expr_arg *arg1, t_omax_expr *infixop, t_omax_expr_arg *arg2){
-	 printf("%s\n", __func__);
 	t_omax_expr *expr = infixop;
 	arg1->next = arg2;
 	arg2->next = NULL;
 	expr->argv = arg1;
 	expr->argc = 2;
-	t_omax_expr *exprlist = *f;
+	//t_omax_expr *exprlist = *f;
 	*f = expr;
 	*result = omax_expr_arg_alloc();
 	(*result)->arg.expr = expr;
@@ -163,7 +205,6 @@
 	return 0;
  }
  int omax_parser_assignment(t_omax_expr **f, t_omax_expr_arg **result, t_omax_expr_arg *arg1, t_omax_expr *infixop, t_omax_expr_arg *arg2){
-printf("%s\n", __func__);
 	 omax_parser_infix(f, result, arg1, infixop, arg2);
 	 (*f)->assign_result_to_address = 1;
 	 return 0;
@@ -171,12 +212,14 @@ printf("%s\n", __func__);
 
  %}
 
+%expect 1
 %define "api.pure"
 
+ %parse-param{t_omax_expr **function_list}
+ %parse-param{t_omax_expr **f}
  %parse-param{int argc}
  %parse-param{t_atom *argv}
  %parse-param{int *argp}
- %parse-param{t_omax_expr **f}
 
  %lex-param{int argc}
  %lex-param{t_atom *argv}
@@ -190,8 +233,12 @@ printf("%s\n", __func__);
 
 %token <arg>ARG
 %token <expr>PREFIX_FUNC
-%token <sym>LPAREN RPAREN COMMA L_DOUBLE_BRACKET R_DOUBLE_BRACKET
+%token <sym>COMMA L_DOUBLE_BRACKET R_DOUBLE_BRACKET
+%left LPAREN 
+%right RPAREN
 
+%left <expr>INC DEC 
+%right <expr>ASSIGN ADD_ASSIGN SUBTRACT_ASSIGN
 %left <expr>OR
 %left <expr>AND
 %left <expr>EQ NEQ
@@ -200,22 +247,39 @@ printf("%s\n", __func__);
 %left <expr>MULTIPLY DIVIDE MOD
 %left <sym>NOT
 %right <expr>POWER 
-%right <expr>ASSIGN
+%right PREFIX_OP
+
 %type <arg>expn arglist
 
 %%
 
 input:
-| input expn
+| input expn {
+	if(*f){
+		t_omax_expr *ff = *function_list;
+		t_omax_expr *prev = NULL;
+		while(ff){
+			if(ff->putlast){
+				break;
+			}
+			prev = ff;
+			ff = ff->next;
+		}
+		(*f)->next = ff;
+		if(prev){
+			prev->next = *f;
+		}else{
+			*function_list = *f;
+		}
+	}
+}
 ;
 
 arglist: expn {
-	//printf("ARG: $$ = %p $1 = %p\n", $$, $1);
 	$$ = $1;
 	$$->next = NULL;
  }
 | arglist COMMA expn{
-	//printf("$$ = %p arglist = %p ARG = %p\n", $$, $1, $3);
 	$3->next = NULL;
 	t_omax_expr_arg *arg = $1;
 	t_omax_expr_arg *last = arg;
@@ -223,18 +287,13 @@ arglist: expn {
 		last = arg;
 		arg = arg->next;
 	}
-	//printf("%p %p\n", $1, last);
 	last->next = $3;
 	$$ = $1;
  }
 ;
 
 expn:	ARG {;}
-|	expn ADD expn	{
-	omax_parser_infix(f, &$$, $1, $2, $3);
- }
 |	PREFIX_FUNC LPAREN arglist RPAREN {
-	//printf("$$ = %p $3 = %p\n", $$, $3);
 	t_omax_expr *func = $1;
 	int i = 0;
 	t_omax_expr_arg *ptr = $3;
@@ -251,6 +310,9 @@ expn:	ARG {;}
 	$$ = omax_expr_arg_alloc();
 	$$->arg.expr = func;
 	$$->type = OMAX_ARG_TYPE_EXPR;
+ }
+|	expn ADD expn	{
+	omax_parser_infix(f, &$$, $1, $2, $3);
  }
 |	expn SUBTRACT expn	{
 	omax_parser_infix(f, &$$, $1, $2, $3);
@@ -289,19 +351,48 @@ expn:	ARG {;}
 	omax_parser_infix(f, &$$, $1, $2, $3);
  }
 |	expn ASSIGN expn{
-	printf("%s\n", __func__);
 	omax_parser_assignment(f, &$$, $1, $2, $3);
-}
-/*
-|	PREFIX_FUNC LPAREN expn RPAREN {
-	omax_parser_prefix_argv(f, &$$, $1, 1, &$3);
+ } 
+|	ARG INC{
+	t_omax_expr_arg *arg = omax_expr_arg_alloc();
+	t_atom a;
+	atom_setlong(&a, 1);
+	arg->arg.atom = a;
+	arg->type = OMAX_ARG_TYPE_ATOM;
+	//omax_parser_assignment(f, &$$, $1, $2, arg);
+	t_omax_expr *expr = $2;
+	t_omax_expr_arg *arg1 = omax_expr_arg_alloc();
+	memcpy(arg1, $1, sizeof(t_omax_expr_arg));
+	arg1->next = arg;
+	expr->argv = arg1;
+	expr->argc = 2;
+	expr->putlast = 1;
+	expr->assign_result_to_address = 1;
+	t_omax_expr *flist = *function_list;
+	t_omax_expr *prev = NULL;
+	while(flist){
+		if(flist->putlast){
+			break;
+		}
+		prev = flist;
+		flist = flist->next;
+	}
+	expr->next = flist;
+	if(prev){
+		prev->next = expr;
+	}else{
+		*function_list = expr;
+	}
+	$$ = $1;
  }
-|	PREFIX_FUNC LPAREN expn COMMA expn RPAREN {
-	t_omax_expr_arg *argv[2];
-	argv[0] = $3, argv[1] = $5;
-	omax_parser_prefix_argv(f, &$$, $1, 2, argv);
+|	INC ARG %prec PREFIX_OP{
+	t_omax_expr_arg *arg = omax_expr_arg_alloc();
+	t_atom a;
+	atom_setlong(&a, 1);
+	arg->arg.atom = a;
+	arg->type = OMAX_ARG_TYPE_ATOM;
+	omax_parser_assignment(f, &$$, $2, $1, arg);
  }
-*/
 |	ARG L_DOUBLE_BRACKET arglist R_DOUBLE_BRACKET {
 	t_omax_expr *func = osc_mem_alloc(sizeof(t_omax_expr));
 	func->rec = omax_expr_lookupFunction("get_index");

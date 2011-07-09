@@ -109,8 +109,8 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 							//BEGIN(DOUBLE_BRACKETS);
 						}
 					}
-\+|\-|\*|\/|<|>|<=|>=|!=|==|%|\|\||&&|!|=     			{
-						/* infix operator */
+\+|\-|\*|\/|<|>|<=|>=|!=|==|%|\|\||&&|!|=|\+\+|\-\-|\+=|\-=|\*=|\/=|%=|^=     			{
+						/* infix, prefix, or postfix operator */
 						atom_setsym(*yyextra, gensym(yytext));
 						(*yyextra)++;
 					}
@@ -120,6 +120,11 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 						(*yyextra)++;
 					}
 [ \t\n]+	/* eat up whitespace */
+
+[a-zA-Z]+.*					{
+						atom_setsym(*yyextra, gensym(yytext));
+						(*yyextra)++;
+					}
 
 %%
 /*

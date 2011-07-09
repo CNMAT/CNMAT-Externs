@@ -19,8 +19,9 @@ typedef struct _omax_expr{
 	struct _omax_expr_arg *argv; /**< Arguments to the function (linked list)*/
 	int argc; /**< Number of arguments */
 	//struct _omax_expr *next, *prev; /**< Links to the next and previous expressions */
-	t_osc_msg msg;
 	int assign_result_to_address;
+	struct _omax_expr *next; 
+	int putlast ; // hack
 } t_omax_expr;
 
 /** \struct t_omax_expr_arg
@@ -66,7 +67,7 @@ typedef struct _omax_expr_const_rec{
 
    @returns 0 if no error, 1 if there was an error.
  */
-int omax_expr_funcall(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
+int omax_expr_funcall(t_omax_expr *function, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
 int omax_expr_getArg(t_omax_expr_arg *arg, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
 int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
 t_omax_expr_rec *omax_expr_lookupFunction(char *name);
@@ -77,20 +78,21 @@ int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv
 int omax_expr_2arg_dblptr_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_2arg_dbl_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_2arg(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
-double omax_expr_add(double f1, double f2);
-double omax_expr_subtract(double f1, double f2);
-double omax_expr_multiply(double f1, double f2);
-double omax_expr_divide(double f1, double f2);
-double omax_expr_lt(double f1, double f2);
-double omax_expr_lte(double f1, double f2);
-double omax_expr_gt(double f1, double f2);
-double omax_expr_gte(double f1, double f2);
-double omax_expr_eq(double f1, double f2);
-double omax_expr_neq(double f1, double f2);
-double omax_expr_and(double f1, double f2);
-double omax_expr_or(double f1, double f2);
-double omax_expr_mod(double f1, double f2);
+t_atom64 omax_expr_add(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_subtract(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_multiply(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_divide(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_lt(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_lte(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_gt(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_gte(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_eq(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_neq(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_and(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_or(t_atom64 *f1, t_atom64 *f2);
+t_atom64 omax_expr_mod(t_atom64 *f1, t_atom64 *f2);
 
 int omax_expr_assign(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
@@ -109,6 +111,7 @@ int omax_expr_first(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *
 t_omax_expr_arg *omax_expr_arg_alloc(void);
 void omax_expr_free(t_omax_expr *e);
 void omax_expr_arg_free(t_omax_expr_arg *a);
+void omax_expr_parse(t_omax_expr **function_graph, long argclex, t_atom *argvlex);
 
 static t_omax_expr_const_rec omax_expr_constsym[] = {
 	{"E", M_E, "e"},
@@ -128,20 +131,26 @@ static t_omax_expr_const_rec omax_expr_constsym[] = {
 
 static t_omax_expr_rec omax_expr_funcsym[] = {
 	// infix
-	{"+", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_add, "Add"},
-	{"-", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_subtract, "Subtract"},
-	{"*", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_multiply, "Multiply"},
-	{"/", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_divide, "Divide"},
-	{"<", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_lt, "Less than"},
-	{"<=", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_lte, "Less than or equal to"},
-	{">", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_gt, "Greater than"},
-	{">=", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_gte, "Greater than or equal to"},
-	{"==", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_eq, "Equal"},
-	{"!=", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_neq, "Not equal"},
-	{"&&", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_and, "Logical and"},
-	{"||", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_or, "Logical or"},
-	{"%", omax_expr_2arg_dbl_dbl, 2, (void *)omax_expr_mod, "Modulo"},
+	{"+", omax_expr_2arg, 2, (void *)omax_expr_add, "Add"},
+	{"-", omax_expr_2arg, 2, (void *)omax_expr_subtract, "Subtract"},
+	{"*", omax_expr_2arg, 2, (void *)omax_expr_multiply, "Multiply"},
+	{"/", omax_expr_2arg, 2, (void *)omax_expr_divide, "Divide"},
+	{"<", omax_expr_2arg, 2, (void *)omax_expr_lt, "Less than"},
+	{"<=", omax_expr_2arg, 2, (void *)omax_expr_lte, "Less than or equal to"},
+	{">", omax_expr_2arg, 2, (void *)omax_expr_gt, "Greater than"},
+	{">=", omax_expr_2arg, 2, (void *)omax_expr_gte, "Greater than or equal to"},
+	{"==", omax_expr_2arg, 2, (void *)omax_expr_eq, "Equal"},
+	{"!=", omax_expr_2arg, 2, (void *)omax_expr_neq, "Not equal"},
+	{"&&", omax_expr_2arg, 2, (void *)omax_expr_and, "Logical and"},
+	{"||", omax_expr_2arg, 2, (void *)omax_expr_or, "Logical or"},
+	{"%", omax_expr_2arg, 2, (void *)omax_expr_mod, "Modulo"},
 	{"=", omax_expr_assign, 2, NULL, "Assignment"},
+	{"++", omax_expr_2arg, 1, (void *)omax_expr_add, "Increment"},
+	{"+=", omax_expr_2arg, 1, (void *)omax_expr_add, "Add and assign"},
+	{"-=", omax_expr_2arg, 1, (void *)omax_expr_subtract, "Subtract and assign"},
+	{"*=", omax_expr_2arg, 1, (void *)omax_expr_multiply, "Multiply and assign"},
+	{"/=", omax_expr_2arg, 1, (void *)omax_expr_divide, "Divide and assign"},
+	{"%=", omax_expr_2arg, 1, (void *)omax_expr_mod, "Modulo and assign"},
 	// math.h
 	{"abs", omax_expr_1arg_dbl, 1, (void *)fabs, "Absolute value"},
 	{"acos", omax_expr_1arg_dbl, 1, (void *)acos, "Arc cosine"},
