@@ -322,7 +322,7 @@ t_osc_err osc_bundle_addMessage_s(long *len, char **bndl, t_osc_msg *msg){
 	long msglen = osc_message_getSize(msg);
 	char msg_s[msglen + 4];
 	osc_message_serialize(msg, msg_s);
-	return osc_bundle_addSerializedMessage_s(len, bndl, msglen + 4, msg_s);
+	return osc_bundle_addSerializedMessage_s(len, bndl, msglen, msg_s);
 }
 
 t_osc_err osc_bundle_addSerializedMessage_s(long *len, char **bndl, long msglen, char *msg){
