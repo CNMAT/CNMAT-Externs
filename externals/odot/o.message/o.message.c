@@ -37,6 +37,7 @@
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
+#include "ext_critical.h"
 
 #include "jpatcher_api.h" 
 //#include "jpatcher_syms.h"
@@ -50,11 +51,18 @@
 #define OMESSAGE_MAX_MESSAGE_LENGTH 128
 #define BUFLEN 128
 
+typedef struct _myatombuf{
+	t_atom *atoms;
+	int num_atoms;
+	int max_num_atoms;
+} t_myatombuf;
+
 typedef struct _omessage{
 	t_jbox ob;
 	void *outlet;
 	void *proxy;
 	long inlet;
+	t_critical lock;
 	char *buffer;
 	int buffer_len;
 	int buffer_pos;
@@ -72,7 +80,7 @@ void omessage_fullPacket(t_omessage *x, long len, long ptr);
 void omessage_doFullPacket(t_omessage *x, long len, long ptr);
 void omessage_cbk(t_osc_msg msg, void *v);
 void omessage_paint(t_omessage *x, t_object *patcherview);
-void omessage_atoms2text(t_omessage *x, int *buflen, char **buf);
+void omessage_atoms2text(t_myatombuf *x, int *buflen, char **buf);
 void omessage_parse_string(t_omessage *x, long len, char *string);
 void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av);
 void omessage_select(t_omessage *x);
@@ -116,53 +124,66 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	memcpy(cpy, (char *)ptr, len);
 	long nn = len;
 	x->num_atoms = 0;
-	
-	osc_bundle_getMessagesWithCallback(nn, cpy, omessage_cbk, (void *)x);
 
+	t_myatombuf c;
+	c.num_atoms = 0;
+	c.max_num_atoms = OMESSAGE_MAX_NUM_MESSAGES;
+	c.atoms = osc_mem_alloc(sizeof(t_atom) * c.max_num_atoms);
+	
+	osc_bundle_getMessagesWithCallback(nn, cpy, omessage_cbk, (void *)&c);
 	int i;
 	int buflen = 0;
 	char *buf = NULL;
 	//int buflen = x->num_atoms * 32;
 	//char buf[buflen];
 	//char *bufptr = buf;
-	omessage_atoms2text(x, &buflen, &buf);
+	omessage_atoms2text(&c, &buflen, &buf);
 	if(buflen > 2){
 		if(buf[buflen - 2] == '\n'){
 			buf[buflen - 1] = '\0';
 		}
 	}
+	critical_enter(x->lock);
+	if(x->max_num_atoms < c.num_atoms){
+		x->atoms = (t_atom *)osc_mem_resize(x->atoms, c.num_atoms * sizeof(t_atom));
+		x->max_num_atoms = c.num_atoms;
+	}
+	x->num_atoms = c.num_atoms;
+	memcpy(x->atoms, c.atoms, c.num_atoms * sizeof(t_atom));
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
-	jbox_redraw((t_jbox *)x);
 
 	for(i = 0; i < x->substitutions_len; i++){
 		x->substitutions[i] = -1;
 	}
+	critical_exit(x->lock);
 	if(buf){
 		osc_mem_free(buf);
 	}
+	jbox_redraw((t_jbox *)x);
 }
 
 void omessage_cbk(t_osc_msg msg, void *v){
-	t_omessage *x = (t_omessage *)v;
+	//t_omessage *x = (t_omessage *)v;
+	t_myatombuf *c = (t_myatombuf *)v;
 	int i;
 
 	long len = msg.argc + 2;
 	t_atom a[len];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, a);
 
-	if(len + x->num_atoms > x->max_num_atoms){
-		x->atoms = (t_atom *)realloc(x->atoms, (x->max_num_atoms + len) * sizeof(t_atom));
-		x->max_num_atoms = len + 1;
-		if(!(x->atoms)){
-			object_error((t_object *)x, "out of memory!");
+	if(len + c->num_atoms > c->max_num_atoms){
+		c->atoms = (t_atom *)osc_mem_resize(c->atoms, (c->max_num_atoms + len) * sizeof(t_atom));
+		c->max_num_atoms = len + 1;
+		if(!(c->atoms)){
+			error("o.message: out of memory!");
 			return;
 		}
 	}
 
 	for(i = 0; i < len; i++){
-		x->atoms[x->num_atoms++] = a[i];
+		c->atoms[c->num_atoms++] = a[i];
 	}
-	atom_setsym(x->atoms + x->num_atoms++, gensym("\n"));
+	atom_setsym(c->atoms + c->num_atoms++, gensym("\n"));
 }
 
 void omessage_paint(t_omessage *x, t_object *patcherview){
@@ -197,7 +218,7 @@ void omessage_paint(t_omessage *x, t_object *patcherview){
 	jgraphics_stroke(g);
 }
 
-void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
+void omessage_atoms2text(t_myatombuf *myatombuf, int *buflen, char **buf){
 	//char *bufptr = buf;
 	/*
 	char *tmpbuf = *buf;
@@ -211,40 +232,42 @@ void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 		tmpbuf = (char *)malloc(len);
 	}
 	*/
+
 	int len = 2048;
 	char *tmpbuf = (char *)osc_mem_alloc(2048);
 	char *bufptr = tmpbuf;
 	int i;
-	for(i = 0; i < x->num_atoms; i++){
-		if(len - (bufptr - tmpbuf) < 64){
+	for(i = 0; i < myatombuf->num_atoms; i++){
+		if(len - (bufptr - tmpbuf) < 128){
 			int offset = bufptr - tmpbuf;
 			tmpbuf = (char *)osc_mem_resize(tmpbuf, len + 1024);
 			if(!(tmpbuf)){
-				object_error((t_object *)x, "out of memory!");
+				error("o.message: out of memory!");
 				return;
 			}
 			len += 1024;
 			bufptr = tmpbuf + offset;
 		}
-		switch(atom_gettype(x->atoms + i)){
+		switch(atom_gettype(myatombuf->atoms + i)){
 		case A_LONG:
-			bufptr += sprintf(bufptr, "%ld ", atom_getlong(x->atoms + i));
+			bufptr += sprintf(bufptr, "%ld ", atom_getlong(myatombuf->atoms + i));
 			break;
 		case A_FLOAT:
 			{
-				bufptr += sprintf(bufptr, "%f", atom_getfloat(x->atoms + i));
+				char *start = bufptr;
+				bufptr += sprintf(bufptr, "%f", atom_getfloat(myatombuf->atoms + i));
 				bufptr--;
 				while(*bufptr == '0'){
 					*bufptr = ' ';
 					*(bufptr + 1) = '\0';
 					bufptr--;
 				}
-				bufptr += 2;
+				bufptr++;
 			}
 			break;
 		case A_SYM:
 			{
-				t_symbol *sym = atom_getsym(x->atoms + i);
+				t_symbol *sym = atom_getsym(myatombuf->atoms + i);
 				if(sym == gensym("\n")){
 					/*
 					if(*(bufptr - 1) == ' '){
@@ -268,7 +291,6 @@ void omessage_atoms2text(t_omessage *x, int *buflen, char **buf){
 			break;
 		}
 	}
- out:
 	*buf = tmpbuf;
 	*buflen = (bufptr - tmpbuf);
 }
@@ -358,8 +380,15 @@ void omessage_enter(t_omessage *x){
 }
 
 void omessage_gettext(t_omessage *x){
-	x->num_atoms = 0;
-	x->buffer_pos = 0;
+	//printf("%s\n", __func__);
+	t_myatombuf c;
+	c.num_atoms = 0;
+	c.max_num_atoms = 128;
+	c.atoms = (t_atom *)osc_mem_alloc(c.max_num_atoms * sizeof(t_atom));
+	int buffer_pos = 0;
+	int substitutions_len = 1024;
+	int *substitutions = osc_mem_alloc(sizeof(int) * substitutions_len);
+
 	long size	= 0;
 	char *text	= NULL;
 	t_object *textfield = jbox_get_textfield((t_object *)x);
@@ -391,8 +420,8 @@ void omessage_gettext(t_omessage *x){
 		t_atom *argv = NULL;
 
 		int offset = 0;
-		for(i = 0; i < x->substitutions_len; i++){
-			x->substitutions[i] = -1;
+		for(i = 0; i < substitutions_len; i++){
+			substitutions[i] = -1;
 		}
 		while(token){
 
@@ -406,79 +435,79 @@ void omessage_gettext(t_omessage *x){
 				if(type == A_DOLLSYM){
 					t_symbol *sym = argv[i].a_w.w_sym;
 					sub = strtol(sym->s_name, NULL, 0);
-					if(sub > x->substitutions_len){
-						int *tmp = (int *)realloc(x->substitutions, sizeof(int) * (sub * 2));
+					if(sub > substitutions_len){
+						int *tmp = (int *)osc_mem_resize(substitutions, sizeof(int) * (sub * 2));
 						if(tmp){
-							x->substitutions = tmp;
+							substitutions = tmp;
 						}else{
 							error("o.message: couldn't allocate memory for %d substitutions", sub);
 							return;
 						}
 						int j;
-						for(j = x->substitutions_len; j < sub * 2; j++){
-							x->substitutions[j] = -1;
+						for(j = substitutions_len; j < sub * 2; j++){
+							substitutions[j] = -1;
 						}
-						x->substitutions_len = sub * 2;
+						substitutions_len = sub * 2;
 					}
-					x->substitutions[sub - 1] = i + offset;
+					substitutions[sub - 1] = i + offset;
 					atom_setlong(argv + i, 0);
 				}else if(type == A_DOLLAR){
 					sub = argv[i].a_w.w_long; // atom_getlong() apparently doesn't worke with A_DOLLAR
-					if(sub > x->substitutions_len){
-						int *tmp = (int *)realloc(x->substitutions, sizeof(int) * (sub * 2));
+					if(sub > substitutions_len){
+						int *tmp = (int *)osc_mem_resize(substitutions, sizeof(int) * (sub * 2));
 						if(tmp){
-							x->substitutions = tmp;
+							substitutions = tmp;
 						}else{
 							error("o.message: couldn't allocate memory for %d substitutions", sub);
 							return;
 						}
 						int j;
-						for(j = x->substitutions_len; j < sub * 2; j++){
-							x->substitutions[j] = -1;
+						for(j = substitutions_len; j < sub * 2; j++){
+							substitutions[j] = -1;
 						}
-						x->substitutions_len = sub * 2;
+						substitutions_len = sub * 2;
 					}
-					x->substitutions[sub - 1] = i + offset;
+					substitutions[sub - 1] = i + offset;
 					atom_setlong(argv + i, 0);
 				}else if(type == A_SYM){
 					t_symbol *sym = argv[i].a_w.w_sym;
 					if(*(sym->s_name) == '$'){
 						sub = strtol(sym->s_name + 1, NULL, 0);
-						if(sub > x->substitutions_len){
-							int *tmp = (int *)realloc(x->substitutions, sizeof(int) * (sub * 2));
+						if(sub > substitutions_len){
+							int *tmp = (int *)osc_mem_resize(substitutions, sizeof(int) * (sub * 2));
 							if(tmp){
-								x->substitutions = tmp;
+								substitutions = tmp;
 							}else{
 								error("o.message: couldn't allocate memory for %d substitutions", sub);
 								return;
 							}
 							int j;
-							for(j = x->substitutions_len; j < sub * 2; j++){
-								x->substitutions[j] = -1;
+							for(j = substitutions_len; j < sub * 2; j++){
+								substitutions[j] = -1;
 							}
-							x->substitutions_len = sub * 2;
+							substitutions_len = sub * 2;
 						}
-						x->substitutions[sub - 1] = i + offset;
+						substitutions[sub - 1] = i + offset;
 						atom_setlong(argv + i, 0);
 					}
 				}else{
 
 				}
 			}
-			//if(argc >= (x->max_num_atoms - x->num_atoms)){
-			if((argc + 1 + x->num_atoms) >= x->max_num_atoms){
-				x->atoms = (t_atom *)realloc(x->atoms, (x->max_num_atoms + argc) * sizeof(t_atom));
-				if(!x->atoms){
+			//if(argc >= (c.max_num_atoms - c.num_atoms)){
+			if((argc + 1 + c.num_atoms) >= c.max_num_atoms){
+				c.atoms = (t_atom *)osc_mem_resize(c.atoms, (c.max_num_atoms + argc) * sizeof(t_atom));
+				if(!c.atoms){
 					object_error((t_object *)x, "out of memory!");
 					return;
 				}
-				x->max_num_atoms += argc + 1;
+				c.max_num_atoms += argc + 1;
 			}
-			memcpy(x->atoms + x->num_atoms, argv, argc * sizeof(t_atom));
-			x->num_atoms += argc;
+			memcpy(c.atoms + c.num_atoms, argv, argc * sizeof(t_atom));
+			c.num_atoms += argc;
 			//char lf[4] = {0xc2, 0xac, '\n', '\0'};
-			atom_setsym(x->atoms + x->num_atoms, gensym("\n"));
-			x->num_atoms++;
+			atom_setsym(c.atoms + c.num_atoms, gensym("\n"));
+			c.num_atoms++;
 			if(argv){
 				sysmem_freeptr(argv);
 				argv = NULL;
@@ -503,21 +532,42 @@ void omessage_gettext(t_omessage *x){
 	}else{
 		x->buffer_pos = 0;
 	}
+	critical_enter(x->lock);
+	if(x->max_num_atoms < c.num_atoms){
+		x->atoms = (t_atom *)osc_mem_resize(x->atoms, c.num_atoms * sizeof(t_atom));
+		x->max_num_atoms = c.num_atoms;
+	}
+	memcpy(x->atoms, c.atoms, c.num_atoms * sizeof(t_atom));
+	x->num_atoms = c.num_atoms;
+
+	if(c.atoms){
+		osc_mem_free(c.atoms);
+	}
+	if(x->substitutions_len < substitutions_len){
+		x->substitutions = (int *)osc_mem_resize(x->substitutions, substitutions_len * sizeof(int));
+	}
+	memcpy(x->substitutions, substitutions, substitutions_len * sizeof(int));
+	x->substitutions_len = substitutions_len;
+	if(substitutions){
+		osc_mem_free(substitutions);
+	}
+	critical_exit(x->lock);
+	//printf("%s done\n", __func__);
 }
 
 void omessage_make_and_output_bundle(t_omessage *x){
 	int bufsize = 256;
-	char *buf = (char *)malloc(bufsize);
+	char *buf = (char *)osc_mem_alloc(bufsize);
 	char *bufptr = buf;
 	memset(buf, '\0', bufsize);
 	osc_bundle_setBundleID(bufptr);
 	//osc_bundle_setTimetagNow_s(buf);
 	bufptr += OSC_HEADER_SIZE;
 	t_atom atoms[x->num_atoms];
-	// critical enter
+	critical_enter(x->lock);
 	int num_atoms = x->num_atoms;
 	memcpy(atoms, x->atoms, num_atoms * sizeof(t_atom));
-	// critical exit
+	critical_exit(x->lock);
 
 	int i = 0;
 	while(i < num_atoms){
@@ -534,7 +584,7 @@ void omessage_make_and_output_bundle(t_omessage *x){
 		int nbytes = omax_util_get_bundle_size_for_atoms(atom_getsym(atoms + i), n - 1, atoms + i + 1);
 		if((bufptr - buf) + nbytes >= bufsize){
 			int oldlen = bufptr - buf;
-			buf = (char *)realloc(buf, bufsize + (nbytes * 4));
+			buf = (char *)osc_mem_resize(buf, bufsize + (nbytes * 4));
 			bufptr = buf + oldlen;
 			if(!buf){
 				object_error((t_object *)x, "ran out of memory!");
@@ -634,18 +684,23 @@ void omessage_settext(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 		return;
 	}
 	if(argc > x->max_num_atoms){
-		x->atoms = (t_atom *)realloc(x->atoms, argc * sizeof(t_atom));
+		x->atoms = (t_atom *)osc_mem_resize(x->atoms, argc * sizeof(t_atom));
 		x->max_num_atoms = argc;
 		if(!(x->atoms)){
 			object_error((t_object *)x, "out of memory!");
 			return;
 		}
 	}
-	memcpy(x->atoms, argv, argc * sizeof(t_atom));
-	x->num_atoms = argc;
+
+	t_myatombuf c;
+	c.num_atoms = argc;
+	c.max_num_atoms = argc;
+	c.atoms = argv;
+	//memcpy(x->atoms, argv, argc * sizeof(t_atom));
+	//x->num_atoms = argc;
 	int len = 0;
 	char *buf = NULL;
-	omessage_atoms2text(x, &len, &buf);
+	omessage_atoms2text(&c, &len, &buf);
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
 	jbox_redraw((t_jbox *)x);
 	int i;
@@ -665,6 +720,7 @@ void omessage_free(t_omessage *x){
 	if(x->substitutions){
 		free(x->substitutions);
 	}
+	critical_free(x->lock);
 }
 
 void omessage_assist(t_omessage *x, void *b, long io, long index, char *s){
@@ -723,14 +779,15 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
  		x->ob.b_firstin = (void *)x; 
 		x->outlet = outlet_new(x, NULL);
 		x->proxy = proxy_new(x, 1, &(x->inlet));
-		x->atoms = (t_atom *)malloc(OMESSAGE_MAX_NUM_MESSAGES * sizeof(t_atom));
+		x->atoms = (t_atom *)osc_mem_alloc(OMESSAGE_MAX_NUM_MESSAGES * sizeof(t_atom));
 		x->max_num_atoms = OMESSAGE_MAX_NUM_MESSAGES;
 		x->num_atoms = 0;
-		x->buffer = (char *)malloc(BUFLEN * sizeof(char));
+		x->buffer = (char *)osc_mem_alloc(BUFLEN * sizeof(char));
 		x->buffer_len = BUFLEN;
 		x->buffer_pos = 0;
-		x->substitutions = (int *)malloc(1024 * sizeof(int));
+		x->substitutions = (int *)osc_mem_alloc(1024 * sizeof(int));
 		x->substitutions_len = 1024;
+		critical_new(&(x->lock));
 
 		int i;
 		for(i = 0; i < x->substitutions_len; i++){
