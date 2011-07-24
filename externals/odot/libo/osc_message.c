@@ -44,17 +44,21 @@ t_osc_msg *osc_message_alloc(void){
 	return m;
 }
 
+void osc_message_free_internal_buffers(t_osc_msg *m){
+	if(m->address){
+		osc_mem_free(m->address);
+	}
+	if(m->typetags){
+		osc_mem_free(m->typetags);
+	}
+	if(m->argv){
+		osc_mem_free(m->argv);
+	}
+}
+
 void osc_message_free(t_osc_msg *m){
 	if(m->free_internal_buffers){
-		if(m->address){
-			osc_mem_free(m->address);
-		}
-		if(m->typetags){
-			osc_mem_free(m->typetags);
-		}
-		if(m->argv){
-			osc_mem_free(m->argv);
-		}
+		osc_message_free_internal_buffers(m);
 	}
 	osc_mem_free(m);
 }

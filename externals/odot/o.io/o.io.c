@@ -40,6 +40,8 @@
 #include "version.c" 
 #include "pthread.h"
 
+#include "osc.h"
+
 #include "oio.h"
 #include "oio_osc_util.h"
 #include "oio_hid_strings.h"

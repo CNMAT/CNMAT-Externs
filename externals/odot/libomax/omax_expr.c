@@ -12,6 +12,7 @@
 
 int omax_expr_funcall(t_omax_expr *function, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out){
 	t_omax_expr *f = function;
+	int jjj = 0;
 	while(f){
 		int ret = omax_expr_call(f, len, oscbndl, argc_out, argv_out);
 		if(ret){
@@ -71,6 +72,7 @@ int omax_expr_funcall(t_omax_expr *function, long *len, char **oscbndl, int *arg
 			}else{
 				osc_bundle_addSerializedMessage_s(len, oscbndl, slen, msg_s);
 			}
+			osc_message_free_internal_buffers(&mm);
 		}
 		f = f->next;
 	}
@@ -150,7 +152,7 @@ int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_a
 	int f_argc = f->argc;
 	t_omax_expr_arg *f_argv = f->argv;
 	int argc[f_argc];
-	memset(argc, '\0', sizeof(f_argc));
+	memset(argc, '\0', sizeof(argc));
 	t_atom64 *argv[f_argc];
 	memset(argv, '\0', sizeof(argv));
 	uint32_t min_argc = ~0, max_argc = 0;
@@ -249,7 +251,7 @@ int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv
 }
 
 int omax_expr_2arg(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
-uint32_t min_argc = argc[0], max_argc = argc[1];
+	uint32_t min_argc = argc[0], max_argc = argc[1];
 	if(argc[0] > argc[1]){
 		min_argc = argc[1], max_argc = argc[0];
 	}
@@ -300,6 +302,14 @@ int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 
 // wrappers for infix ops
 t_atom64 omax_expr_add(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1){
+		a = *f2;
+		return a;
+	}
+	if(!f2){
+		a = *f1;
+		return a;
+	}
 	if(f1->type == A64_SYM && f2->type == A64_SYM){
 		t_symbol *sym1, *sym2;
 		sym1 = atom64_getsym(f1);
@@ -319,6 +329,14 @@ t_atom64 omax_expr_add(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_subtract(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1){
+		a = *f2;
+		return a;
+	}
+	if(!f2){
+		a = *f1;
+		return a;
+	}
 	if(f1->type == A64_FLOAT || f2->type == A64_FLOAT){
 		atom64_setfloat(&a, atom64_getfloat(f1) - atom64_getfloat(f2));
 	}else{
@@ -329,6 +347,14 @@ t_atom64 omax_expr_subtract(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_multiply(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1){
+		a = *f2;
+		return a;
+	}
+	if(!f2){
+		a = *f1;
+		return a;
+	}
 	if(f1->type == A64_FLOAT || f2->type == A64_FLOAT){
 		atom64_setfloat(&a, atom64_getfloat(f1) * atom64_getfloat(f2));
 	}else{
@@ -339,6 +365,14 @@ t_atom64 omax_expr_multiply(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_divide(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1){
+		a = *f2;
+		return a;
+	}
+	if(!f2){
+		a = *f1;
+		return a;
+	}
 	if(f1->type == A64_FLOAT || f2->type == A64_FLOAT){
 		atom64_setfloat(&a, atom64_getfloat(f1) / atom64_getfloat(f2));
 	}else{
@@ -349,6 +383,10 @@ t_atom64 omax_expr_divide(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_lt(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1 || !f2){
+		atom64_setlong(&a, 0);
+		return a;
+	}
 	if((f1->type == A64_SYM) && (f2->type == A64_SYM)){
 		int ret = strcmp(atom64_getsym(f1)->s_name, atom64_getsym(f2)->s_name);
 		atom64_setlong(&a, ret < 0);
@@ -362,6 +400,10 @@ t_atom64 omax_expr_lt(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_lte(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1 || !f2){
+		atom64_setlong(&a, 0);
+		return a;
+	}
 	if((f1->type == A64_SYM) && (f2->type == A64_SYM)){
 		int ret = strcmp(atom64_getsym(f1)->s_name, atom64_getsym(f2)->s_name);
 		atom64_setlong(&a, ret <= 0);
@@ -375,6 +417,10 @@ t_atom64 omax_expr_lte(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_gt(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1 || !f2){
+		atom64_setlong(&a, 0);
+		return a;
+	}
 	if((f1->type == A64_SYM) && (f2->type == A64_SYM)){
 		int ret = strcmp(atom64_getsym(f1)->s_name, atom64_getsym(f2)->s_name);
 		atom64_setlong(&a, ret > 0);
@@ -388,6 +434,10 @@ t_atom64 omax_expr_gt(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_gte(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1 || !f2){
+		atom64_setlong(&a, 0);
+		return a;
+	}
 	if((f1->type == A64_SYM) && (f2->type == A64_SYM)){
 		int ret = strcmp(atom64_getsym(f1)->s_name, atom64_getsym(f2)->s_name);
 		atom64_setlong(&a, ret >= 0);
@@ -401,6 +451,10 @@ t_atom64 omax_expr_gte(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_eq(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1 || !f2){
+		atom64_setlong(&a, 0);
+		return a;
+	}
 	if((f1->type == A64_SYM) && (f2->type == A64_SYM)){
 		int ret = strcmp(atom64_getsym(f1)->s_name, atom64_getsym(f2)->s_name);
 		atom64_setlong(&a, ret == 0);
@@ -414,6 +468,10 @@ t_atom64 omax_expr_eq(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_neq(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1 || !f2){
+		atom64_setlong(&a, 1);
+		return a;
+	}
 	if((f1->type == A64_SYM) && (f2->type == A64_SYM)){
 		int ret = strcmp(atom64_getsym(f1)->s_name, atom64_getsym(f2)->s_name);
 		atom64_setlong(&a, ret != 0);
@@ -427,75 +485,47 @@ t_atom64 omax_expr_neq(t_atom64 *f1, t_atom64 *f2){
 
 t_atom64 omax_expr_and(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
+	if(!f1 || !f2){
+		atom64_setlong(&a, 0);
+		return a;
+	}
 	atom64_setlong(&a, atom64_getfloat(f1) && atom64_getfloat(f2));
 	return a;
 }
 
 t_atom64 omax_expr_or(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
-	atom64_setlong(&a, atom64_getfloat(f1) || atom64_getfloat(f2));
+	double ff1 = 0;
+	double ff2 = 0;
+	if(f1){
+		ff1 = atom64_getfloat(f1);
+	}
+	if(f2){
+		ff2 = atom64_getfloat(f2);
+	}
+	atom64_setlong(&a, ff1 || ff2);
 	return a;
 }
 
 t_atom64 omax_expr_mod(t_atom64 *f1, t_atom64 *f2){
 	t_atom64 a;
-	atom64_setlong(&a, atom64_getlong(f1) % atom64_getlong(f2));
+	if(!f1){
+		atom64_setfloat(&a, 0);
+		return a;
+	}
+	if(!f2){
+		a = *f1;
+		return a;
+	}
+	long ff1 = atom64_getlong(f1), ff2 = atom64_getlong(f2);
+	if(ff2 == 0){
+		a = *f1;
+		return a;
+	}
+	atom64_setlong(&a, ff1 % ff2);
 	return a;
 }
-//////////////////////////////////////////////////
-/*
-double omax_expr_add(double f1, double f2){
-	return f1 + f2;
-}
 
-double omax_expr_subtract(double f1, double f2){
-	return f1 - f2;
-}
-
-double omax_expr_multiply(double f1, double f2){
-	return f1 * f2;
-}
-
-double omax_expr_divide(double f1, double f2){
-	return f1 / f2;
-}
-
-double omax_expr_lt(double f1, double f2){
-	return f1 < f2;
-}
-
-double omax_expr_lte(double f1, double f2){
-	return f1 <= f2;
-}
-
-double omax_expr_gt(double f1, double f2){
-	return f1 > f2;
-}
-
-double omax_expr_gte(double f1, double f2){
-	return f1 >= f2;
-}
-
-double omax_expr_eq(double f1, double f2){
-	return f1 == f2;
-}
-
-double omax_expr_neq(double f1, double f2){
-	return f1 != f2;
-}
-
-double omax_expr_and(double f1, double f2){
-	return f1 && f2;
-}
-
-double omax_expr_or(double f1, double f2){
-	return f1 || f2;
-}
-
-double omax_expr_mod(double f1, double f2){
-	return (int)f1 % (int)f2;
-}
-*/
 int omax_expr_assign(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	*argc_out = argc[1];
 	*argv_out = (t_atom64 *)osc_mem_alloc(argc[1] * sizeof(t_atom64));
@@ -537,6 +567,18 @@ int omax_expr_sum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *ar
 	return 0;
 }
 
+int omax_expr_cumsum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = *argc;
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64) * *argc);
+	int i;
+	double val = 0;
+	for(i = 0; i < *argc; i++){
+		val += atom64_getfloat(argv[0] + i);
+		atom64_setfloat(argv_out[0] + i, val);
+	}
+	return 0;
+}
+
 int omax_expr_length(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	*argc_out = 1;
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
@@ -553,6 +595,14 @@ int omax_expr_mean(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *a
 		sum += atom64_getfloat(argv[0] + i);
 	}
 	atom64_setfloat(*argv_out, sum / *argc);
+	return 0;
+}
+
+int omax_expr_median(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = 1;
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+
+	//atom64_setfloat(*argv_out, max / min);
 	return 0;
 }
 
@@ -668,6 +718,260 @@ int omax_expr_first(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
 	*argc_out = 1;
 	**argv_out = **argv;
+	return 0;
+}
+
+int omax_expr_dot(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc < 2){
+		return 0;
+	}
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+	*argc_out = 1;
+	double s = 0;
+	int i;
+	for(i = 0; i < (argc[0] < argc[1] ? argc[0] : argc[1]); i++){
+		double f1 = 0, f2 = 0;
+		if(i < argc[0]){
+			f1 = atom64_getfloat(argv[0] + i);
+		}
+		if(i < argc[1]){
+			f2 = atom64_getfloat(argv[1] + i);
+		}
+		s += f1 * f2;
+	}
+	atom64_setfloat(*argv_out, s);
+	return 0;
+}
+
+int omax_expr_l2norm(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc < 0){
+		return 0;
+	}
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+	*argc_out = 1;
+	double s = 0;
+	int i;
+	for(i = 0; i < argc[0]; i++){
+		s += pow(atom64_getfloat(argv[0] + i), 2.);
+	}
+	atom64_setfloat(*argv_out, sqrt(s));
+	return 0;
+}
+
+int omax_expr_min(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc == 0){
+		return 0;
+	}
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+	*argc_out = 1;
+	int i;
+	double min = DBL_MAX;
+	int type = A64_FLOAT;
+	for(i = 0; i < argc[0]; i++){
+		double f = atom64_getfloat(argv[0] + i);
+		if(f < min){
+			min = f;
+			type = argv[0][i].type;
+		}
+	}
+	switch(type){
+	case A64_FLOAT:
+		atom64_setfloat(*argv_out, min);
+		break;
+	case A64_LONG:
+		atom64_setlong(*argv_out, (int64_t)min);
+		break;
+	}
+	return 0;
+}
+
+int omax_expr_max(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc == 0){
+		return 0;
+	}
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+	*argc_out = 1;
+	int i;
+	double max = -DBL_MAX;
+	int type = A64_FLOAT;
+	for(i = 0; i < argc[0]; i++){
+		double f = atom64_getfloat(argv[0] + i);
+		if(f > max){
+			max = f;
+			type = argv[0][i].type;
+		}
+	}
+	switch(type){
+	case A64_FLOAT:
+		atom64_setfloat(*argv_out, max);
+		break;
+	case A64_LONG:
+		atom64_setlong(*argv_out, (int64_t)max);
+		break;
+	}
+	return 0;
+}
+
+int omax_expr_extrema(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc == 0){
+		return 0;
+	}
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64) * 2);
+	*argc_out = 2;
+	int i;
+	double min = DBL_MAX, max = -DBL_MAX;
+	int min_type = A64_FLOAT, max_type = A64_FLOAT;
+	for(i = 0; i < argc[0]; i++){
+		double f = atom64_getfloat(argv[0] + i);
+		if(f > max){
+			max = f;
+			max_type = argv[0][i].type;
+		}
+		if(f < min){
+			min = f;
+			min_type = argv[0][i].type;
+		}
+	}
+
+	switch(min_type){
+	case A64_FLOAT:
+		atom64_setfloat(*argv_out, min);
+		break;
+	case A64_LONG:
+		atom64_setlong(*argv_out, (int64_t)min);
+		break;
+	}
+
+	switch(max_type){
+	case A64_FLOAT:
+		atom64_setfloat((*argv_out) + 1, max);
+		break;
+	case A64_LONG:
+		atom64_setlong((*argv_out) + 1, (int64_t)max);
+		break;
+	}
+	return 0;
+}
+
+int omax_expr_clip(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc != 3){
+		return 1;
+	}
+	double min = atom64_getfloat(argv[1]);
+	double max = atom64_getfloat(argv[2]);
+	t_atom64 *tmp = (t_atom64 *)osc_mem_alloc(argc[0]);
+	int i;
+	for(i = 0; i < argc[0]; i++){
+		if(argv[0][i].type == A64_SYM){
+			tmp[i] = argv[0][i];
+			continue;
+		}
+		double val = atom64_getfloat(argv[0] + i);
+		if(val < min){
+			val = min;
+		}
+		if(val > max){
+			val = max;
+		}
+		if(argv[0][i].type == A64_FLOAT){
+			atom64_setfloat(tmp + i, val);
+		}else{
+			atom64_setlong(tmp + i, (int64_t)val);
+		}
+	}
+	*argc_out = *argc;
+	*argv_out = tmp;
+	return 0;
+}
+
+int omax_expr_scale(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc != 5){
+		return 1;
+	}
+	double min_in = atom64_getfloat(argv[1]);
+	double max_in = atom64_getfloat(argv[2]);
+	double min_out = atom64_getfloat(argv[3]);
+	double max_out = atom64_getfloat(argv[4]);
+	double m = (max_out - min_out) / (max_in - min_in);
+	float b = (min_out - (m * min_in));
+	t_atom64 *tmp = (t_atom64 *)osc_mem_alloc(argc[0]);
+	int i;
+	for(i = 0; i < argc[0]; i++){
+		if(argv[0][i].type == A64_SYM){
+			tmp[i] = argv[0][i];
+			continue;
+		}
+		double val = atom64_getfloat(argv[0] + i);
+		val = m * val + b;
+		if(argv[0][i].type == A64_FLOAT){
+			atom64_setfloat(tmp + i, val);
+		}else{
+			atom64_setlong(tmp + i, (int64_t)val);
+		}
+	}
+	*argc_out = *argc;
+	*argv_out = tmp;
+	return 0;
+}
+
+int omax_expr_mtof(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc == 0){
+		return 1;
+	}
+	double base = 440;
+	if(argcc > 1){
+		if(argc[1] > 0){
+			base = atom64_getfloat(argv[1]);
+		}
+	}
+	t_atom64 *tmp = (t_atom64 *)osc_mem_alloc(argc[0]);
+	int i;
+	for(i = 0; i < argc[0]; i++){
+		if(argv[0][i].type == A64_SYM){
+			tmp[i] = argv[0][i];
+			continue;
+		}
+		double val = atom64_getfloat(argv[0] + i);
+		// l(2) * (1. / 12.)
+		val = base * exp(.05776226504666210911810267678817 * (val - 69));
+		atom64_setfloat(tmp + i, val);
+	}
+	*argc_out = *argc;
+	*argv_out = tmp;
+	return 0;
+}
+
+int omax_expr_ftom(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	if(argcc == 0){
+		return 1;
+	}
+	double base = 440;
+	if(argcc > 1){
+		if(argc[1] > 0){
+			base = atom64_getfloat(argv[1]);
+		}
+	}
+	t_atom64 *tmp = (t_atom64 *)osc_mem_alloc(argc[0]);
+	int i;
+	for(i = 0; i < argc[0]; i++){
+		if(argv[0][i].type == A64_SYM){
+			tmp[i] = argv[0][i];
+			continue;
+		}
+		double val = atom64_getfloat(argv[0] + i);
+		// 1. / (l(2) * (1. / 12))
+		val = (69 + (17.31234049066756088831909617202611 * log(val / base)));
+		atom64_setfloat(tmp + i, val);
+	}
+	*argc_out = *argc;
+	*argv_out = tmp;
+	return 0;
+}
+
+int omax_expr_rand(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = 1;
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom));
+	atom64_setfloat(*argv_out, (double)rand() / (double)RAND_MAX);
 	return 0;
 }
 

@@ -70,6 +70,8 @@ typedef struct _osc_msg{
  */
 t_osc_msg *osc_message_alloc(void);
 
+void osc_message_free_internal_buffers(t_osc_msg *m);
+
 /**
  * Frees a #t_osc_msg using osc_mem_free().  If the free_internal_buffers flag is set, osc_message_free()
  * will call osc_mem_free on the address, typetags, and argv fields.

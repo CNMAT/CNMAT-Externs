@@ -293,6 +293,15 @@ arglist: expn {
 ;
 
 expn:	ARG {;}
+|	PREFIX_FUNC LPAREN RPAREN {
+	t_omax_expr *func = $1;
+	func->argv = NULL;
+	func->argc = 0;
+	*f = func;
+	$$ = omax_expr_arg_alloc();
+	$$->arg.expr = func;
+	$$->type = OMAX_ARG_TYPE_EXPR;
+ }
 |	PREFIX_FUNC LPAREN arglist RPAREN {
 	t_omax_expr *func = $1;
 	int i = 0;
@@ -395,6 +404,7 @@ expn:	ARG {;}
  }
 |	ARG L_DOUBLE_BRACKET arglist R_DOUBLE_BRACKET {
 	t_omax_expr *func = osc_mem_alloc(sizeof(t_omax_expr));
+	memset(func, '\0', sizeof(t_omax_expr));
 	func->rec = omax_expr_lookupFunction("get_index");
 	$1->next = $3;
 	func->argv = $1;

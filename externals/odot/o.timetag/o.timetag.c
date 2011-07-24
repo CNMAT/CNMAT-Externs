@@ -24,9 +24,10 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 NAME: o.timetag
 DESCRIPTION: Manipulate the timetag of an OSC bundle
 AUTHORS: John MacCallum
-COPYRIGHT_YEARS: 2009
+COPYRIGHT_YEARS: 2009-11
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 0.0: First try
+VERSION 1.0: Completely revised to work with new odot objects and libs
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -35,171 +36,121 @@ VERSION 0.0: First try
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "cmmjl/cmmjl.h"
-#include "cmmjl/cmmjl_osc.h"
-#include "cmmjl/cmmjl_osc_timetag.h"
+#include "ext_critical.h"
+#include "osc.h"
+#include "omax_util.h"
 
 typedef struct _otimetag{
 	t_object ob;
 	void *outlet;
-	void *proxy;
-	char *buffer;
-	int buffer_len;
-	int buffer_pos;
-	long inlet;
-	t_symbol *op_sym;
-	void (*op)(struct _otimetag *, long, char *);
-	t_symbol *time; // now, immediate, future, or past
-	double arg;
-	ntptime prev_timetag;
-	int have_prev_timetag;
-	ntptime right_timetag;
-	int have_right_timetag;
+	t_symbol *op;
+	t_symbol *as;
+	char *timetag_msg;
+	int timetag_msg_len;
+	int timetag_msg_buf_len;
+	t_critical lock;
 } t_otimetag;
 
 
 void *otimetag_class;
 
 void otimetag_fullPacket(t_otimetag *x, long len, long ptr);
-void otimetag_op_set(t_otimetag *x, long len, char *ptr);
-void otimetag_op_add(t_otimetag *, long len, char *ptr);
-void otimetag_op_subtract(t_otimetag *, long len, char *ptr);
-void otimetag_op_multiply(t_otimetag *, long len, char *ptr);
-void otimetag_op_divide(t_otimetag *, long len, char *ptr);
-void otimetag_op_derivative(t_otimetag *, long len, char *ptr);
-void otimetag_op_synchronize(t_otimetag *, long len, char *ptr);
+void otimetag_doFullPacket(t_otimetag *x, long len, long ptr, t_symbol *op, int timetag_msg_len, char *timetag_msg);
+void otimetag_append_iso8601_msg(long len, char *ptr, long newlen, char *newptr, long iso8601len, char *iso8601, int timetag_msg_len, char *timetag_msg);
 void otimetag_output_bundle(t_otimetag *x, long len, char *buf);
-void otimetag_cbk(t_cmmjl_osc_message msg, void *v);
+void otimetag_bang(t_otimetag *x);
 void otimetag_anything(t_otimetag *x, t_symbol *msg, short argc, t_atom *argv);
-void otimetag_int(t_otimetag *x, long l);
-void otimetag_float(t_otimetag *x, double f);
 void otimetag_free(t_otimetag *x);
 void otimetag_assist(t_otimetag *x, void *b, long m, long a, char *s);
-void otimetag_clear(t_otimetag *x);
 void *otimetag_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err otimetag_notify(t_otimetag *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
-void otimetag_fullPacket(t_otimetag *x, long len, long ptr){
-	// check for buffer overflow here!
+t_symbol *ps_FullPacket, *ps_encode, *ps_decode, *ps_record;
 
-	long n = len;
-	memcpy(x->buffer, (char *)ptr, n);
-	x->buffer_pos = len;
-	if(strncmp(x->buffer, "#bundle\0", 8)){
-		if((n = cmmjl_osc_bundle_naked_message(len, x->buffer, x->buffer)) < 0){
-			error("problem bundling naked message");
+void otimetag_fullPacket(t_otimetag *x, long len, long ptr){
+	otimetag_doFullPacket(x, len, ptr, x->op, x->timetag_msg_len, x->timetag_msg);
+}
+
+void otimetag_doFullPacket(t_otimetag *x, long len, long ptr, t_symbol *op, int timetag_msg_len, char *timetag_msg){
+	if(op == ps_encode){
+		/*
+		t_osc_msg *m = NULL;
+		osc_bundle_lookupAddress_s(len, (char *)ptr, "/osc/time/record", &m, 1);
+		if(m){
+			char cpy[len];
+			memcpy(cpy, (char *)ptr, len);
+			if(m->typetags[1] == 's'){
+				// iso8601
+				ntptime ntp;
+				osc_timetag_iso8601_to_ntp(m->argv, &ntp);
+				memcpy(cpy + 8, (char *)(&ntp), 8);
+				otimetag_output_bundle(x, len, cpy);
+			}else if(m->typetags[1] == 'H' || m->typetags[1] == 'X'){
+				// ntp
+				memcpy(cpy + 8, m->argv, 8);
+				otimetag_output_bundle(x, len, cpy);
+			}else{
+				object_error((t_object *)x, "unrecognized type (%s) for timetag", m->typetags + 1);
+				return;
+			}
+		}else{
+			object_error((t_object *)x, "no message with address \"/osc/time/report\"");
 			return;
 		}
-	}
-
-	// flatten any nested bundles
-	x->buffer_pos = cmmjl_osc_flatten(n, x->buffer, x->buffer);
-
-	if(proxy_getinlet((t_object *)x) == 0){
-		x->op(x, x->buffer_pos, x->buffer);
-		cmmjl_osc_timetag_get(n, ptr, &(x->prev_timetag));
-		x->have_prev_timetag = 1;
-	}else{
-		cmmjl_osc_timetag_get(n, ptr, &(x->right_timetag));
-		x->have_right_timetag = 1;
-	}
-}
-
-void otimetag_op_set(t_otimetag *x, long len, char *ptr){
-	if(x->time == gensym("now")){
+		*/
+	}else if(op == ps_decode){
+		uint32_t t1, t2;
+		t1 = ntoh32(*((uint32_t *)(ptr + 8)));
+		t2 = ntoh32(*((uint32_t *)(ptr + 12)));
+		char iso8601[64];
+		int iso8601len = 0;
+		if(t1 == 0 && t2 == 1){
+			iso8601[0] = 'Z';
+			iso8601[1] = '\0';
+			iso8601[2] = '\0';
+			iso8601[3] = '\0';
+			iso8601len = 4;
+		}else{
+			ntptime tt = (ntptime){t1, t2, 1, TIME_IMMEDIATE};
+			memset(iso8601, '\0', 64);
+			osc_timetag_ntp_to_iso8601(&tt, iso8601);
+			iso8601len = strlen(iso8601);
+			iso8601len++;
+			while(iso8601len % 4){
+				iso8601len++;
+			}
+		}
+		long newlen = len + timetag_msg_len + iso8601len + 4;
+		char buf[newlen];
+		otimetag_append_iso8601_msg(len, (char *)ptr, newlen, buf, iso8601len, iso8601, timetag_msg_len, timetag_msg);
+		otimetag_output_bundle(x, newlen, buf);
+	}else if(op == ps_record){
 		ntptime now;
-		cmmjl_osc_timetag_now_to_ntp(&now);
-		cmmjl_osc_timetag_set(x->buffer_len, (long)x->buffer, &now);
-	}else if(x->time == gensym("immediate")){
-		cmmjl_osc_init_bundle(x->buffer_len, x->buffer, NULL);
-	}else if(x->time == gensym("future")){
-		post("future");
-		ntptime now, offset, now_plus_offset;
-		cmmjl_osc_timetag_now_to_ntp(&now);
-		cmmjl_osc_timetag_float_to_ntp(x->arg / 1000., &offset);
-		cmmjl_osc_timetag_add(&now, &offset, &now_plus_offset);
-		cmmjl_osc_timetag_set(x->buffer_len, (long)x->buffer, &now_plus_offset);
-	}else if(x->time == gensym("past")){
-		ntptime now, offset, now_plus_offset;
-		cmmjl_osc_timetag_now_to_ntp(&now);
-		cmmjl_osc_timetag_float_to_ntp((x->arg / 1000.) * -1., &offset);
-		cmmjl_osc_timetag_add(&now, &offset, &now_plus_offset);
-		cmmjl_osc_timetag_set(x->buffer_len, (long)x->buffer, &now_plus_offset);
-	}
-
-	otimetag_output_bundle(x, x->buffer_pos, x->buffer);
-}
-
-void otimetag_op_add(t_otimetag *x, long len, char *ptr){
-	ntptime tt, offset, sum;
-	cmmjl_osc_timetag_get(len, (long)ptr, &tt);
-	cmmjl_osc_timetag_float_to_ntp(x->arg / 1000., &offset);
-	cmmjl_osc_timetag_add(&tt, &offset, &sum);
-	cmmjl_osc_timetag_set(len, (long)ptr, &sum);
-	otimetag_output_bundle(x, len, ptr);
-}
-
-void otimetag_op_subtract(t_otimetag *x, long len, char *ptr){
-	ntptime tt, offset, sum;
-	cmmjl_osc_timetag_get(len, (long)ptr, &tt);
-	cmmjl_osc_timetag_float_to_ntp(x->arg / 1000., &offset);
-	offset.sign *= -1;
-	cmmjl_osc_timetag_add(&tt, &offset, &sum);
-	cmmjl_osc_timetag_set(len, (long)ptr, &sum);
-	otimetag_output_bundle(x, len, ptr);
-}
-
-void otimetag_op_multiply(t_otimetag *x, long len, char *ptr){
-	ntptime tt, result;
-	double f;
-	cmmjl_osc_timetag_get(len, (long)ptr, &tt);
-	f = cmmjl_osc_timetag_ntp_to_float(&tt);
-	f = (x->arg / 1000.) * f;
-	cmmjl_osc_timetag_float_to_ntp(f, &result);
-	cmmjl_osc_timetag_set(len, (long)ptr, &result);
-	otimetag_output_bundle(x, len, ptr);
-}
-
-void otimetag_op_divide(t_otimetag *x, long len, char *ptr){
-	ntptime tt, result;
-	double f;
-	cmmjl_osc_timetag_get(len, (long)ptr, &tt);
-	f = cmmjl_osc_timetag_ntp_to_float(&tt);
-	f = (x->arg / 1000.) / f;
-	cmmjl_osc_timetag_float_to_ntp(f, &result);
-	cmmjl_osc_timetag_set(len, (long)ptr, &result);
-	otimetag_output_bundle(x, len, ptr);
-}
-
-void otimetag_op_derivative(t_otimetag *x, long len, char *ptr){
-	if(!(x->have_prev_timetag)){
-		return;
-	}
-	ntptime tt, diff;
-	if(cmmjl_osc_timetag_is_immediate(ptr + 8) || cmmjl_osc_timetag_is_immediate((char *)(&(x->prev_timetag)))){
-			return;
-	}
-	x->prev_timetag.sign = -1;
-	cmmjl_osc_timetag_get(len, (long)ptr, &tt);
-	cmmjl_osc_timetag_add(&tt, &(x->prev_timetag), &diff);
-	double f = cmmjl_osc_timetag_ntp_to_float(&diff);
-	outlet_float(x->outlet, f);
-}
-
-void otimetag_op_synchronize(t_otimetag *x, long len, char *ptr){
-	if(x->have_right_timetag){
-		cmmjl_osc_timetag_set(len, (long)ptr, &(x->right_timetag));
-		otimetag_output_bundle(x, len, ptr);
+		osc_timetag_now_to_ntp(&now);
+		char iso8601[64];
+		memset(iso8601, '\0', 64);
+		osc_timetag_ntp_to_iso8601(&now, iso8601);
+		int iso8601len = strlen(iso8601);
+		iso8601len += 2;
+		while(iso8601len % 4){
+			iso8601len++;
+		}
+		long newlen = len + timetag_msg_len + iso8601len + 4;
+		char buf[newlen];
+		otimetag_append_iso8601_msg(len, (char *)ptr, newlen, buf, iso8601len, iso8601, timetag_msg_len, timetag_msg);
+		otimetag_output_bundle(x, newlen, buf);
 	}
 }
 
-void otimetag_op_compare(t_otimetag *x, long len, char *ptr){
-	if(!(x->have_right_timetag)){
-		return;
-	}
-	ntptime tt;
-	cmmjl_osc_timetag_get(len, (long)ptr, &tt);
-	outlet_int(x->outlet, cmmjl_osc_timetag_cmp(&(x->right_timetag), &tt));
+void otimetag_append_iso8601_msg(long len, char *ptr, long newlen, char *newptr, long iso8601len, char *iso8601, int timetag_msg_len, char *timetag_msg){
+	char *bufptr = newptr;
+	memcpy(bufptr, (char *)ptr, len);
+	bufptr += len;
+	*((uint32_t *)bufptr) = hton32(timetag_msg_len + iso8601len);
+	bufptr += 4;
+	memcpy(bufptr, timetag_msg, timetag_msg_len);
+	bufptr += timetag_msg_len;
+	memcpy(bufptr, iso8601, iso8601len);
 }
 
 void otimetag_output_bundle(t_otimetag *x, long len, char *buf){
@@ -209,20 +160,43 @@ void otimetag_output_bundle(t_otimetag *x, long len, char *buf){
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
+void otimetag_bang(t_otimetag *x){
+	int len = OSC_HEADER_SIZE;
+	char buf[len];
+	memset(buf, '\0', len);
+	osc_bundle_setBundleID(buf);
+	otimetag_doFullPacket(x, len, (long)buf, ps_record, x->timetag_msg_len, x->timetag_msg);
+}
+
 void otimetag_anything(t_otimetag *x, t_symbol *msg, short argc, t_atom *argv){
-	if(!msg){
-		error("o.delay: not a properly formatted OSC-style message");
+	if(!(msg->s_name[0] == '/')){
+		object_error((t_object *)x, "the first argument should be an OSC address beginning with a \'/\'");
 		return;
 	}
-	long ac = argc + 1;
-	t_atom av[ac];
-	atom_setsym(av, msg);
-	memcpy(av + 1, argv, argc * sizeof(t_atom));
-	char buf[4096];
-	int len = 4096;
-	cmmjl_osc_init_bundle(len, buf, NULL);
-	len = cmmjl_osc_make_bundle_from_atoms(ac, av, &len, buf + 16) + 16;
-	otimetag_output_bundle(x, len, buf);
+	int len = omax_util_get_bundle_size_for_atoms(msg, argc, argv);
+	char buf[len];
+	memset(buf, '\0', len);
+	osc_bundle_setBundleID(buf);
+	omax_util_encode_atoms(buf + OSC_HEADER_SIZE, msg, argc, argv);
+	otimetag_doFullPacket(x, len, (long)buf, ps_record, x->timetag_msg_len, x->timetag_msg);
+}
+
+void otimetag_as_set(t_otimetag *x, t_object *attr, int argc, t_atom *argv){
+	critical_enter(x->lock);
+	t_symbol *as = atom_getsym(argv);
+	int len = strlen(as->s_name);
+	char *ptr = x->timetag_msg;
+	strncpy(ptr, as->s_name, len);
+	ptr += len;
+	*ptr++ = '\0';
+	while((ptr - x->timetag_msg) % 4){
+		*ptr++ = '\0';
+	}
+	memcpy(ptr, ",s\0\0", 4);
+	ptr += 4;
+	x->timetag_msg_len = ptr - x->timetag_msg;
+	x->as = as;
+	critical_exit(x->lock);
 }
 
 void otimetag_assist(t_otimetag *x, void *b, long m, long a, char *s){
@@ -237,31 +211,23 @@ void otimetag_assist(t_otimetag *x, void *b, long m, long a, char *s){
 	}
 }
 
-void otimetag_clear(t_otimetag *x){
-}
-
 void otimetag_free(t_otimetag *x){
-	object_free(x->proxy);
+	critical_free(x->lock);
 }
 
 void *otimetag_new(t_symbol *msg, short argc, t_atom *argv){
 	t_otimetag *x;
-	int i;
 	if(x = (t_otimetag *)object_alloc(otimetag_class)){
-		cmmjl_init(x, NAME, 0);
-		object_attach_byptr_register(x, x, CLASS_BOX);
+		//object_attach_byptr_register(x, x, CLASS_BOX);
 		x->outlet = outlet_new(x, NULL);
-		x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
-		x->buffer = (char *)calloc(4096, sizeof(char));
-		x->buffer_len = 4096;
-		x->buffer_pos = 0;
-		x->op_sym = gensym("set");
-		x->op = otimetag_op_set;
-		x->time = gensym("now");
-		x->arg = 1.;
-		x->have_prev_timetag = 0;
-		x->have_right_timetag = 0;
-
+		x->op = ps_record;
+		x->as = gensym("/osc/time/record");
+		x->timetag_msg_buf_len = 128;
+		x->timetag_msg = (char *)osc_mem_alloc(x->timetag_msg_buf_len);
+		critical_new(&(x->lock));
+		t_atom a;
+		atom_setsym(&a, x->as);
+		otimetag_as_set(x, NULL, 1, &a);
 		attr_args_process(x, argc, argv);
 	}
 		   	
@@ -272,19 +238,24 @@ int main(void){
 	t_class *c = class_new("o.timetag", (method)otimetag_new, (method)otimetag_free, sizeof(t_otimetag), 0L, A_GIMME, 0);
     
 	class_addmethod(c, (method)otimetag_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
-	class_addmethod(c, (method)otimetag_notify, "notify", A_CANT, 0);
+	//class_addmethod(c, (method)otimetag_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)otimetag_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)otimetag_clear, "clear", 0);
 	class_addmethod(c, (method)otimetag_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)otimetag_bang, "bang", 0);
 
-	CLASS_ATTR_SYM(c, "op", 0, t_otimetag, op_sym);
-	CLASS_ATTR_SYM(c, "time", 0, t_otimetag, time);
-	CLASS_ATTR_DOUBLE(c, "arg", 0, t_otimetag, arg);
-    
+	CLASS_ATTR_SYM(c, "op", 0, t_otimetag, op);
+	CLASS_ATTR_SYM(c, "as", 0, t_otimetag, as);
+	CLASS_ATTR_ACCESSORS(c, "as", NULL, otimetag_as_set);
+
 	class_register(CLASS_BOX, c);
 	otimetag_class = c;
 
 	common_symbols_init();
+	ps_FullPacket = gensym("FullPacket");
+	ps_encode = gensym("encode");
+	ps_decode = gensym("decode");
+	ps_record = gensym("record");
+	version(0);
 	return 0;
 }
 
@@ -294,26 +265,6 @@ t_max_err otimetag_notify(t_otimetag *x, t_symbol *s, t_symbol *msg, void *sende
 
         if(msg == gensym("attr_modified")){
 		attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
-		if(attrname == gensym("op")){
-			if(x->op_sym == gensym("set")){
-				x->op = otimetag_op_set;
-			}else if(x->op_sym == gensym("+")){
-				x->op = otimetag_op_add;
-			}else if(x->op_sym == gensym("-")){
-				x->op = otimetag_op_subtract;
-			}else if(x->op_sym == gensym("*")){
-				x->op = otimetag_op_multiply;
-			}else if(x->op_sym == gensym("/")){
-				x->op = otimetag_op_divide;			
-			}else if(x->op_sym == gensym("derivative")){
-				x->op = otimetag_op_derivative;
-			}else if(x->op_sym == gensym("synchronize")){
-				x->op = otimetag_op_synchronize;
-			}else if(x->op_sym == gensym("compare")){
-				x->op = otimetag_op_compare;
-			}
-		}else if(attrname == gensym("time")){ 
-		}
 	}
 	return MAX_ERR_NONE;
 }

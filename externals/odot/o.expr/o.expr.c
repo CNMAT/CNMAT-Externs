@@ -38,6 +38,8 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #define NAME "o.if"
 #endif
 
+#include <mach/mach.h>
+#include <mach/mach_time.h>
 #include "ext.h"
 #include "version.c"
 #include "ext_obex.h"
@@ -79,19 +81,32 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	int argc = 0;
 	t_atom64 *argv = NULL;
 	t_atom out[2];
+	// we don't actually want to do this copy here.  we need to 
+	// have another version of omax_expr_funcall that doesn't do 
+	// assignment
+	char *copy = (char *)osc_mem_alloc(len);
+	memcpy(copy, (char *)ptr, len);
+	int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argc, &argv);
 	atom_setlong(out, len);
-	atom_setlong(out + 1, ptr);
-	if(omax_expr_funcall(x->function_graph, len, (char *)ptr, &argc, &argv)){
+	atom_setlong(out + 1, (long)copy);
+	if(ret){
 		outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
 	}else{
 		int i;
 		for(i = 0; i < argc; i++){
 			if(atom64_getfloat(argv + i) == 0){
 				outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
-				return;
+				goto out;
 			}
 		}
 		outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
+	}
+ out:
+	if(argv){
+		osc_mem_free(argv);
+	}
+	if(copy){
+		free(copy);
 	}
 #else
 	// we need to make a copy incase the expression contains assignment that will
@@ -154,6 +169,9 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
 	if(argv){
 		osc_mem_free(argv);
+	}
+	if(copy){
+		osc_mem_free(copy);
 	}
 #endif
 }
@@ -281,24 +299,10 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
 		x->address = gensym("/result");
 #endif
-		//x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
 		if(argc){
 			omax_scanner_scan_atom_array(attr_args_offset(argc, argv), argv, &(x->argclex), &(x->argvlex));
-			/*
-			int i;
-			for(i = 0; i < argclex; i++){
-				postatom(argvlex + i);
-			}
-			post("**************************************************");
-			*/
-			//int counter = 0;
-			//yyparse(x->argclex, x->argvlex, &counter, &(x->function_graph));
+			x->function_graph = NULL;
 			omax_expr_parse(&(x->function_graph), x->argclex, x->argvlex);
-/*
-			if(argvlex){
-				osc_mem_free(argvlex);
-			}
-*/
 		}
 		attr_args_process(x, argc, argv);
 #ifndef OIF
@@ -335,6 +339,8 @@ int main(void){
 
 	common_symbols_init();
 	ps_FullPacket = gensym("FullPacket");
+
+	srand(mach_absolute_time());
 
 	version(0);
 	return 0;

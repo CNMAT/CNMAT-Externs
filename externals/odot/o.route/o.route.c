@@ -151,7 +151,15 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 	}
 	long argc = 0;
 	//char buf[len], *bufp = buf;
-	char buf[len];
+	char *buf = NULL;
+	int should_free_buf = 0;
+	if(len < 65535){
+		buf = alloca(len);
+	}else{
+		buf = osc_mem_alloc(len);
+		should_free_buf = 1;
+	}
+	//char buf[len];
 	char *bufp = buf;
 
 	memset(buf, '\0', len);
@@ -172,7 +180,16 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 	}
 	maxnumatoms++;
 	m = last;
-	t_atom argv[maxnumatoms];
+	//t_atom argv[maxnumatoms];
+	t_atom *argv = NULL;
+	int should_free_argv = 0;
+	size_t maxnumatoms_bytes = maxnumatoms * sizeof(t_atom);
+	if(maxnumatoms_bytes < 65535){
+		argv = (t_atom *)alloca(maxnumatoms * sizeof(t_atom));
+	}else{
+		argv = (t_atom *)osc_mem_alloc(maxnumatoms * sizeof(t_atom));
+		should_free_argv = 1;
+	}
 	counter = 0;
 	while(m){
 		if(last_outlet_num != m->outlet_num && last_outlet_num >= 0 && bufp - buf > 16){
@@ -252,6 +269,12 @@ void oroute_fp_bundle_partial_matches(t_oroute *x, long len, char *ptr, t_oroute
 		atom_setlong(out + 1, (long)buf);
 		outlet_anything(x->outlets[last_outlet_num], gensym("FullPacket"), 2, out);
 	}
+	if(should_free_buf){
+		osc_mem_free(buf);
+ 	}
+	if(should_free_argv){
+		osc_mem_free(argv);
+ 	}
 }
 
 void oroute_fp(t_oroute *x, long len, char *ptr, t_oroute_message *m){

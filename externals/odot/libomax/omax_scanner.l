@@ -73,7 +73,7 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 						(*yyextra)++;
 						//printf("float: %f\n", f);
 					}
-[^0-9\(\) \t\n\+\-\*<>=!,][^\(\) \t\n\+\-\*<>=!,]*		{
+[^0-9\(\) \t\n\+\-\*<>=!,][^\(\) \t\n\+\-<>=!,]*		{
 						int i;
 						int b = 0;
 						for(i = 0; i < yyleng; i++){
@@ -121,7 +121,7 @@ infixop_or	  \+|\-|\*|\/|<|>|<=|>=|!=
 					}
 [ \t\n]+	/* eat up whitespace */
 
-[a-zA-Z]+.*					{
+[a-zA-Z]+[^\(\) \t\n\+\-\*\/\<>=!,]*					{
 						atom_setsym(*yyextra, gensym(yytext));
 						(*yyextra)++;
 					}

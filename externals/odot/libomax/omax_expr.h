@@ -98,15 +98,27 @@ int omax_expr_assign(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int 
 
 int omax_expr_get_index(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_sum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_cumsum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_length(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_mean(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_median(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_concat(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_reverse(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_make_list(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_range(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_multiplex(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_first(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_dot(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_l2norm(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_min(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_max(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_extrema(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_clip(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_scale(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_mtof(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_ftom(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_rand(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+
 
 t_omax_expr_arg *omax_expr_arg_alloc(void);
 void omax_expr_free(t_omax_expr *e);
@@ -194,10 +206,12 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"round", omax_expr_1arg_dbl, 1, (void *)round, "Round to nearest integral value"},
 	// misc
 	{"get_index", omax_expr_get_index, -1, NULL, "Get an element of a list (same as [[ ]])"},
-	{"sum", omax_expr_sum, -1, NULL, "Sum all the elements of a list"},
+	{"sum", omax_expr_sum, 1, NULL, "Sum all the elements of a list"},
+	{"cumsum", omax_expr_cumsum, 1, NULL, "Cumulative sum"},
 	{"length", omax_expr_length, 1, NULL, "Get the length of a list"},
 	{"avg", omax_expr_mean, 1, NULL, "The average of a list (same as mean)"},
 	{"mean", omax_expr_mean, 1, NULL, "The average of a list (same as avg)"},
+	{"median", omax_expr_median, 1, NULL, "Median of a list of values"},
 	{"concat", omax_expr_concat, -1, NULL, "Concatenate two lists"},
 	{"reverse", omax_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
 	{"rev", omax_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
@@ -207,7 +221,16 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"mux", omax_expr_multiplex, -1, NULL, "Multiplex two or more lists"},
 	//make-list, pad, zeros, ones
 	{"!", omax_expr_not, -1, NULL, "Logical not"},
-	{"first", omax_expr_first, 1, NULL, "extract the first element of a list"}
+	{"dot", omax_expr_dot, 2, NULL, "Dot product of arg1 and arg2"},
+	{"l2norm", omax_expr_l2norm, 1, NULL, "Norm of the argument"},
+	{"min", omax_expr_min, 1, NULL, "Minimum value of the arguments"},
+	{"max", omax_expr_max, 1, NULL, "Maximum value of the arguments"},
+	{"extrema", omax_expr_extrema, 1, NULL, "Min and max of the arguments"},
+	{"clip", omax_expr_clip, 3, NULL, "Clip the data between arg2 and arg3"},
+	{"scale", omax_expr_scale, 5, NULL, "Scale the data from arg1 and arg2 to arg3 and arg4"},
+	{"mtof", omax_expr_mtof, -1, NULL, "MIDI note number to frequency.  Optional arg2 sets base."},
+	{"ftom", omax_expr_ftom, -1, NULL, "Frequency to MIDI. Optional arg2 sets base."},
+	{"rand", omax_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"}
 };
 
 #endif // __OMAX_EXPR_H__

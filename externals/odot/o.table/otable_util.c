@@ -1,4 +1,5 @@
 #include "otable_util.h"
+#include "md5.h"
 
 typedef struct _otable_range{
 	t_atom min;
@@ -35,6 +36,8 @@ typedef struct _otable_args_offsets{
 	memset(&name, '\0', sizeof(t_otable_args))
 
 // private
+void otable_util_doread(t_object *x, t_symbol *sym, int argc, t_atom *argv);
+void otable_util_dowrite(t_object *x, t_symbol *sym, int argc, t_atom *argv);
 void otable_util_postArgs(t_otable_args argstruct);
 void otable_util_parseArgs(t_object *x, t_otable_args *argstruct, int argc, t_atom *argv);
 int otable_util_getDirection(t_object *x, int argc, t_atom *argv);
@@ -53,6 +56,38 @@ static t_symbol *ps_FullPacket,
 	*ps_range;
 
 // implementation
+
+#define MD 5
+#define MD_CTX MD5_CTX
+#define MDInit MD5Init
+#define MDUpdate MD5Update
+#define MDFinal MD5Final
+
+static void MDPrint (digest)
+     unsigned char digest[16];
+{
+
+	unsigned int i;
+
+	for (i = 0; i < 16; i++)
+		printf ("%02x", digest[i]);
+}
+
+static void MDString (string)
+     char *string;
+{
+	MD_CTX context;
+	unsigned char digest[16];
+	unsigned int len = strlen (string);
+
+	MDInit (&context);
+	MDUpdate (&context, string, len);
+	MDFinal (digest, &context);
+
+	printf ("MD%d (\"%s\") = ", MD, string);
+	MDPrint (digest);
+	printf ("\n");
+}
 
 void otable_util_init(void){
 	ps_FullPacket = gensym("FullPacket");
@@ -564,10 +599,12 @@ void otable_util_clear(t_object *x, t_otable_db *db){
 
 void otable_util_read(t_object *x, t_otable_db *db, t_symbol *sym){
 	otable_util_clear(x, db);
-	defer(x, (method)otable_util_doread, sym, 0, NULL);
+	t_atom a;
+	atom_setlong(&a, (long)db);
+	defer(x, (method)otable_util_doread, sym, 1, &a);
 }
 
-void otable_util_doread(t_object *x, t_otable_db *db, t_symbol *sym){
+void otable_util_doread(t_object *x, t_symbol *sym, int argc, t_atom *argv){
 	long filetype = 0, outtype;
 	char filename[512];
 	short path;
@@ -614,15 +651,56 @@ void otable_util_doread(t_object *x, t_otable_db *db, t_symbol *sym){
 				break;
 			}
 			r++;
+			break;
 		default:
 			*w++ = *r++;
 		}
 	}
 
 	size = w - buf;
-
+	t_otable_db *db = (t_otable_db *)atom_getlong(argv);
 	char *ptr = buf;
-	while((ptr - buf) < size){
+	int kk = 0;
+	while((ptr - buf) < size && kk++ < 2){
+		uint32_t private_len, len;
+		char *private, *bundle;
+		private_len = ntoh32(*((uint32_t *)ptr));
+		private = ptr + 4;
+		len = ntoh32(*((uint32_t *)(private + private_len)));
+		bundle = private + private_len + 4;
+		t_osc_msg *m = NULL;
+		osc_bundle_lookupAddress_s(private_len, private, "/private/o.table/md5", &m, 1);
+		if(m){
+			MD_CTX context;
+			unsigned char d[16];
+			MDInit(&context);
+			MDUpdate(&context, bundle, len);
+			MDFinal(d, &context);
+			unsigned char dd[16];
+			*((uint128_t *)dd) = ntoh128(*((uint128_t *)(m->argv)));
+			if(!memcmp(d, dd, 16)){
+				t_osc_msg *msg_idx = NULL, *msg_key = NULL;
+				osc_bundle_lookupAddress_s(private_len, private, "/private/o.table/index", &msg_idx, 1);
+				osc_bundle_lookupAddress_s(private_len, private, "/private/o.table/key", &msg_key, 1);
+				long long index = 0;
+				t_symbol *key = NULL;
+				if(msg_idx){
+					index = (long long)ntoh64(*((uint64_t *)msg_idx->argv));
+				}
+				if(msg_key){
+					key = gensym(msg_key->argv);
+				}
+				// this should be elsewhere
+				if(index >- db->monotonic_counter){
+					db->monotonic_counter = index + 1;
+				}
+				otable_util_doStore(x, db, key, index, len, bundle);
+			}
+		}else{
+			// throw an error for now, but really, we should look through 
+			// all the bundles for a matching md5 hash
+		}
+		/*
 		long long id = ntoh64(*((uint64_t *)ptr));
 		ptr += 8;
 		t_symbol *key = NULL;
@@ -642,20 +720,23 @@ void otable_util_doread(t_object *x, t_otable_db *db, t_symbol *sym){
 			db->monotonic_counter = id + 1;
 		}
 		otable_util_doStore(x, db, key, id, len, ptr);
-		ptr += len;
+		*/
+		ptr += len + private_len + 8;
 	}
 	osc_mem_free(buf);
 }
 
 void otable_util_write(t_object *x, t_otable_db *db, t_symbol *sym){
-	defer(x, (method)otable_util_dowrite, sym, 0, NULL);
+	t_atom a;
+	atom_setlong(&a, (long)db);
+	defer(x, (method)otable_util_dowrite, sym, 1, &a);
 }
 
-int otable_util_SLIP_encode(char *dest, char *src, int len, char *start){
+int otable_util_SLIP_encode(char *dest, char *src, int len){
 	int i;
 	char *p = dest;
 	for(i = 0; i < len; i++){
-		switch(((unsigned char *)(src))[i]){
+		switch(((unsigned char *)src)[i]){
 		case END:
 			*p++ = ESC;
 			*p++ = ESC_END;
@@ -671,11 +752,26 @@ int otable_util_SLIP_encode(char *dest, char *src, int len, char *start){
 	return p - dest;
 }
 
-void otable_util_dowrite(t_object *x, t_otable_db *db, t_symbol *sym){
+int otable_util_get_SLIP_encoded_nbytes(int len, char *buf){
+	int nbytes = 0;
+	int i;
+	for(i = 0; i < len; i++){
+		switch(((unsigned char *)buf)[i]){
+		case END:
+		case ESC:
+			nbytes++;
+			break;
+		}
+		nbytes++;
+	}
+	return nbytes;
+}
+
+void otable_util_dowrite(t_object *x, t_symbol *sym, int argc, t_atom *argv){
 	long outtype;
 	char filename[512];
 	short path;
-	if(sym == gensym("")){
+	if(sym == gensym("") || sym == NULL){
 		if(saveasdialog_extended(filename, &path, &outtype, NULL, 0)){
 			return;
 		}
@@ -689,7 +785,7 @@ void otable_util_dowrite(t_object *x, t_otable_db *db, t_symbol *sym){
 		return;
 	}
 
-
+	t_otable_db *db = (t_otable_db *)atom_getlong(argv);
 	
 	maxdb_lock((t_maxdb *)db);
 	t_otable_oscbndl *e = NULL;
@@ -710,51 +806,70 @@ void otable_util_dowrite(t_object *x, t_otable_db *db, t_symbol *sym){
 	e = head;
 	t_otable_oscbndl *next = NULL;
 	while(e){
-		long nbytes = 1; // SLIP END
-		nbytes += 8; // index
-		// key
-		if(e->key){
-			nbytes += strlen(e->key->s_name);
-		}
-		// null pad key
-		nbytes++;
-		while((nbytes - 1) % 4){
-			nbytes++;
-		}
+		char lenbuf[4];
+		*((uint32_t *)lenbuf) = hton32(e->len);
+		long nbytes = 1; // initial SLIP END
+		nbytes += otable_util_get_SLIP_encoded_nbytes(4, lenbuf);
+		nbytes += otable_util_get_SLIP_encoded_nbytes(e->len, e->ptr);
 		nbytes++; // SLIP END
-		nbytes += 4; // bundle size
-		// bundle
-		int i;
-		for(i = 0; i < e->len; i++){
-			switch(((unsigned char *)(e->ptr))[i]){
-			case END:
-			case ESC:
-				nbytes++;
-				break;
-			}
-			nbytes++;
-		}
-		char copy[nbytes];
-		char *p = copy;
-		*p++ = END; // SLIP END
-		char llptr[8];
-		*((uint64_t *)llptr) = hton64(e->id);
-		p += otable_util_SLIP_encode(p, llptr, 8, copy); // index
-		char *pp = p;
-		if(e->key){
-			// key
-			p += otable_util_SLIP_encode(p, e->key->s_name, strlen(e->key->s_name), copy);
-		}
-		// padding
-		*p++ = '\0';
-		while((p - pp) % 4){
-			*p++ = '\0';
-		}
-		*p++ = END; // SLIP END
-		*((uint32_t *)llptr) = hton32(e->len);
-		p += otable_util_SLIP_encode(p, llptr, 4, copy); // bundle len
-		p += otable_util_SLIP_encode(p, e->ptr, e->len, copy); // bundle
 
+		char copy[nbytes];
+		memset(copy, '\0', nbytes);
+		char *p = copy;
+		*p++ = END;
+		p += otable_util_SLIP_encode(p, lenbuf, 4); // bundle
+		p += otable_util_SLIP_encode(p, e->ptr, e->len); // bundle
+		*p++ = END;
+
+		MD_CTX context;
+		unsigned char d[16];
+		MDInit(&context);
+		MDUpdate(&context, e->ptr, e->len);
+		MDFinal(d, &context);
+
+		t_osc_msg msg_index, msg_md5;
+		osc_message_clear(&msg_index);
+		osc_message_clear(&msg_md5);
+		t_osc_bundle table_info;
+		table_info.messages = NULL;
+		osc_message_setAddress(&msg_index, "/private/o.table/index");
+		osc_message_addData(&msg_index, 1, "h", 8, (char *)(&(e->id)));
+		osc_bundle_addMessage(&table_info, &msg_index);
+
+		osc_message_setAddress(&msg_md5, "/private/o.table/md5");
+		osc_message_addData(&msg_md5, 1, "J", 16, (char *)d);
+		osc_bundle_addMessage(&table_info, &msg_md5);
+
+		if(e->key){
+			t_osc_msg msg_key;
+			osc_message_clear(&msg_key);
+			osc_message_setAddress(&msg_key, "/private/o.table/key");
+			osc_message_addData(&msg_key, 1, "s", strlen(e->key->s_name), e->key->s_name);
+			osc_bundle_addMessage(&table_info, &msg_key);
+		}
+
+		long slen = 0;
+		osc_bundle_getLen_s(&table_info, &slen);
+
+		char sbundle[slen];
+		memset(sbundle, '\0', slen);
+		osc_bundle_serializeWithBuffer(&table_info, sbundle);
+
+		char table_info_lenbuf[4];
+		*((uint32_t *)table_info_lenbuf) = hton32(slen);
+		long table_info_nbytes = 1;// SLIP END
+		table_info_nbytes += otable_util_get_SLIP_encoded_nbytes(4, table_info_lenbuf);
+		table_info_nbytes += otable_util_get_SLIP_encoded_nbytes(slen, sbundle);
+		table_info_nbytes++; // SLIP END
+
+		char sbundle_slip[table_info_nbytes];
+		p = sbundle_slip;
+		*p++ = END;
+		p += otable_util_SLIP_encode(p, table_info_lenbuf, 4);
+		p += otable_util_SLIP_encode(p, sbundle, slen);
+		*p++ = END;
+
+		sysfile_write(fh, &table_info_nbytes, sbundle_slip);
 		sysfile_write(fh, &nbytes, copy);
 		next = e->next;
 		otable_util_freebundle(x, e);

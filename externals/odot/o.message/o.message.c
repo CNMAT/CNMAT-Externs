@@ -263,6 +263,8 @@ void omessage_atoms2text(t_myatombuf *myatombuf, int *buflen, char **buf){
 					bufptr--;
 				}
 				bufptr++;
+				*bufptr++ = ' ';
+				*bufptr = '\0';
 			}
 			break;
 		case A_SYM:

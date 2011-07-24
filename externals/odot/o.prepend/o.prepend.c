@@ -82,7 +82,10 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 	if(e){
 		object_error((t_object *)x, "%s (%d)\n", osc_error_string(e), (int)e);
 	}
-	int sym_to_prepend_len = strlen(sym_to_prepend->s_name);
+	int sym_to_prepend_len = 0;
+	if(sym_to_prepend){
+		sym_to_prepend_len = strlen(sym_to_prepend->s_name);
+	}
 	int buflen = len + (msgcount * (sym_to_prepend_len + 4));
 	char buffer[buflen];
 	memset(buffer, '\0', buflen);
@@ -98,8 +101,12 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 }
 
 void oppnd_cbk(t_osc_msg msg, void *v){
-	//t_oppnd *x = (t_oppnd *)v;
 	struct context *c = (struct context *)v;
+	if(!(c->sym_to_prepend)){
+		memcpy(c->buffer + c->bufferPos, msg.address - 4, msg.size + 4);
+		c->bufferPos += msg.size + 4;
+		return;
+	}
 
 	int oldlen = strlen(msg.address);
 	int newlen = c->sym_to_prepend_len;
@@ -239,7 +246,10 @@ void *oppnd_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oppnd *x;
 	if(x = (t_oppnd *)object_alloc(oppnd_class)){
 		x->outlet = outlet_new(x, "FullPacket");
-		x->sym_to_prepend = atom_getsym(argv);
+		x->sym_to_prepend = NULL;
+		if(argc){
+			x->sym_to_prepend = atom_getsym(argv);
+		}
 	}
 		   	
 	return(x);
