@@ -343,7 +343,7 @@ int main(void){
 	ps_FullPacket = gensym("FullPacket");
 
 #ifdef WIN_VERSION
-	srand(GetTickCount64());
+	srand(GetTickCount());
 #else
 	srand(mach_absolute_time());
 #endif
