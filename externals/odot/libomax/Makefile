@@ -14,13 +14,17 @@ I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Ca
 all: CFLAGS += $(MAC-CFLAGS)
 all: CC = gcc
 all: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
+all: LIBTOOL = libtool -static -o libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
 
 win: CFLAGS += $(WIN-CFLAGS)
 win: CC = gcc-3
 win: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
+win: LIBTOOL = ar cru libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
+
+#ar cru libomax.a  omax_expr.o  omax_util.o omax_parser.o omax_scanner.o /usr/lib/libfl.a 
 
 libomax.a: $(OMAX_OBJECTS) $(OMAX_CFILES) $(OMAX_HFILES)
-	libtool -static -o libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
+	$(LIBTOOL)
 
 omax_scanner.c: omax_scanner.l
 	flex -o omax_scanner.c --header-file=omax_scanner.h omax_scanner.l
