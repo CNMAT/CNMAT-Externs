@@ -38,8 +38,10 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #define NAME "o.if"
 #endif
 
+#ifndef WIN_VERSION
 #include <mach/mach.h>
 #include <mach/mach_time.h>
+#endif
 #include "ext.h"
 #include "version.c"
 #include "ext_obex.h"
@@ -340,7 +342,11 @@ int main(void){
 	common_symbols_init();
 	ps_FullPacket = gensym("FullPacket");
 
+#ifdef WIN_VERSION
 	srand(mach_absolute_time());
+#else
+	srand(getTickCount64());
+#endif
 
 	version(0);
 	return 0;
