@@ -3,6 +3,7 @@
 #include <CoreServices.h>
 #endif
 
+#include <float.h>
 #include "omax_parser.h"
 #include "omax_util.h"
 #include "omax_expr.h"
