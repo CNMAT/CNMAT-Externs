@@ -598,11 +598,32 @@ int omax_expr_mean(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *a
 	return 0;
 }
 
+// this implementation of the median is not great--it just sorts 
+// the list and takes the median.  this could be optimized by 
+// implementing a median of medians algorithm or something
+int comp(const void *val1, const void *val2){
+	double v1 = atom64_getfloat((t_atom64 *)val1);
+	double v2 = atom64_getfloat((t_atom64 *)val2);
+	if(v1 < v2){
+		return -1;
+	}
+	if(v1 == v2){
+		return 0;
+	}
+	return 1;
+}
+
 int omax_expr_median(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	*argc_out = 1;
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
-
-	//atom64_setfloat(*argv_out, max / min);
+	t_atom64 tmp[*argc];
+	memcpy(tmp, *argv, *argc * sizeof(t_atom64));
+	qsort((void *)(*argv), *argc, sizeof(t_atom64), comp);
+	if((*argc % 2) == 0){
+		atom64_setfloat(*argv_out, (atom64_getfloat(*argv + (int)((*argc - 1) / 2.)) + atom64_getfloat(*argv + ((int)((*argc - 1) / 2.) + 1))) / 2.);
+	}else{
+		atom64_setfloat(*argv_out, atom64_getfloat(*argv + ((*argc - 1) / 2)));
+	}
 	return 0;
 }
 
