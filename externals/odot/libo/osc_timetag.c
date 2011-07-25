@@ -14,7 +14,7 @@
 #include <arpa/inet.h>
 #endif
 
-#include "time.h"
+#include <time.h>
 
 // crossplatform gettimeofday
 #include "timeval.h"
