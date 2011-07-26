@@ -61,7 +61,7 @@ t_max_err oprint_notify(t_oprint *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oprint_fullPacket(t_oprint *x, long len, long ptr){
-	post("%s: [ 0x%x", x->myname->s_name, ntoh64(*((uint64 *)((char *)ptr + 8))));
+	post("%s: [ 0x%x", x->myname->s_name, ntoh64(*((uint64_t *)((char *)ptr + 8))));
 	osc_bundle_getMessagesWithCallback(len, (char *)ptr, oprint_cbk, (void *)x);
 	post("%s: ]", x->myname->s_name);
 }
