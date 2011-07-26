@@ -12,6 +12,7 @@ ODOT_MXE = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxe)
 
 ARCHIVE = o.tar.gz
 UNSTABLE = o.unstable.tar.gz
+WIN-RELEASE = o.win.tar.gz
 
 SERVER_PATH = /home/www-data/berkeley.edu-cnmat.www/maxdl/files/odot/
 
@@ -57,3 +58,9 @@ unstable:
 	cd build && tar -zcvf $(UNSTABLE) *
 	@read -p "Username: " UN;\
 	scp build/$(UNSTABLE) $$UN@cnmat.berkeley.edu:$(SERVER_PATH)
+
+win-release:
+	rm -f build/$(WIN-RELEASE)
+	cd build && tar -zcvf $(WIN-RELEASE) *
+	@read 0p "Username: " UN;\
+	scp build/$(WIN-RELEASE) $$UN@cnmat.berkeley.edu:$(SERVER_PATH)
