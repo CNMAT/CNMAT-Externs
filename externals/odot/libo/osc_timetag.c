@@ -1,5 +1,6 @@
 // need sprintf, sscanf
 #include <stdio.h>
+#include <stdlib.h>
 
 // need math.h
 #include <math.h>
@@ -107,6 +108,23 @@ int osc_timetag_is_immediate(char *buf){
 
 // conversion functions
 
+// timegm is not portable.
+time_t osc_timetag_timegm (struct tm *tm) {
+	time_t ret;
+	char *tz;
+
+	tz = getenv("TZ");
+	setenv("TZ", "", 1);
+	tzset();
+	ret = mktime(tm);
+	if (tz)
+		setenv("TZ", tz, 1);
+	else
+		unsetenv("TZ");
+	tzset();
+	return ret;
+}
+
 void osc_timetag_iso8601_to_ntp(char* s, ntptime* n) {
   
     struct tm t;
@@ -122,7 +140,7 @@ void osc_timetag_iso8601_to_ntp(char* s, ntptime* n) {
     // parse the time
     strptime(s1, "%Y-%m-%dT%H:%M:%S", &t);
     
-    osc_timetag_ut_to_ntp(timegm(&t), n);
+    osc_timetag_ut_to_ntp(osc_timetag_timegm(&t), n);
     n->frac_sec = (unsigned long int)(fmod(sec, 1.0) * 4294967295.0);
 
     n->sign = 1;
