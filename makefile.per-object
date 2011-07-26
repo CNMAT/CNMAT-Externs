@@ -12,6 +12,7 @@ endif
 ifeq ($(strip $(CNMAT_MAX_INSTALL_DIR)),)
 CNMAT_MAX_INSTALL_DIR = ../../../build
 endif
+
 	
 # Now figure out the platform based on what the build target is
 # Note that these definitions of PLATFORM will be valid only within
@@ -418,7 +419,7 @@ clean:
 		 $(dir)/$(MACHO_INDIVIDUAL_DOWNLOAD_NO_DIR) )
 	rm -f *~ 
 	rm -rf $(OBJ)\ Data
-	rm -rf build
+	rm -rf $(ALL_BUILD_DIRS)
 
 
 # Diagnostic stuff for debugging
