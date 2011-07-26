@@ -152,36 +152,69 @@ int omax_expr_getArg(t_omax_expr_arg *arg, long *len, char **oscbndl, int *argc_
 int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out){
 	int f_argc = f->argc;
 	t_omax_expr_arg *f_argv = f->argv;
-	int argc[f_argc];
-	memset(argc, '\0', sizeof(argc));
-	t_atom64 *argv[f_argc];
-	memset(argv, '\0', sizeof(argv));
-	uint32_t min_argc = ~0, max_argc = 0;
 	int i = 0;
-	while(f_argv){
-		int ret = omax_expr_getArg(f_argv, len, oscbndl, argc + i, argv + i);
+	int ret = 0;
+
+	if(f->rec->func == omax_expr_if){
+		if(f_argc < 2){
+			error("omax_expr: omax_expr_if expected at least 2 arguments but only got %d\n", f_argc);
+			return 1;
+		}
+		int argc = 0;
+		t_atom64 *argv = NULL;
+		ret = omax_expr_getArg(f_argv, len, oscbndl, &argc, &argv);
 		if(ret){
-			int j;
-			for(j = 0; j < i; j++){
-				if(argv[j]){
-					osc_mem_free(argv[j]);
-				}
+			if(argv){
+				osc_mem_free(argv);
 			}
 			return ret;
 		}
-		if(argc[i] < min_argc){
-			min_argc = argc[i];
+		if(atom64_getlong(argv) && (f_argc > 1)){
+			omax_expr_getArg(f_argv->next, len, oscbndl, argc_out, argv_out);
+		}else if(f_argc > 2){
+			omax_expr_getArg(f_argv->next->next, len, oscbndl, argc_out, argv_out);
 		}
-		if(argc[i] > max_argc){
-			max_argc = argc[i];
+	}else if(f->rec->func == omax_expr_defined){
+		*argc_out = 1;
+		*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+		t_osc_msg *m = NULL;
+		osc_bundle_lookupAddress_s(*len, *oscbndl, f_argv->arg.osc_address, &m, 1);
+		if(m){
+			atom64_setlong(*argv_out, 1);
+		}else{
+			atom64_setlong(*argv_out, 0);
 		}
-		f_argv = f_argv->next;
-		i++;
-	}
-	int ret = f->rec->func(f, f_argc, argc, argv, argc_out, argv_out);
-	for(i = 0; i < f_argc; i++){
-		if(argv[i]){
-			osc_mem_free(argv[i]);
+	}else{
+		int argc[f_argc];
+		memset(argc, '\0', sizeof(argc));
+		t_atom64 *argv[f_argc];
+		memset(argv, '\0', sizeof(argv));
+		uint32_t min_argc = ~0, max_argc = 0;
+		while(f_argv){
+			int ret = omax_expr_getArg(f_argv, len, oscbndl, argc + i, argv + i);
+			if(ret){
+				int j;
+				for(j = 0; j < i; j++){
+					if(argv[j]){
+						osc_mem_free(argv[j]);
+					}
+				}
+				return ret;
+			}
+			if(argc[i] < min_argc){
+				min_argc = argc[i];
+			}
+			if(argc[i] > max_argc){
+				max_argc = argc[i];
+			}
+			f_argv = f_argv->next;
+			i++;
+		}
+		ret = f->rec->func(f, f_argc, argc, argv, argc_out, argv_out);
+		for(i = 0; i < f_argc; i++){
+			if(argv[i]){
+				osc_mem_free(argv[i]);
+			}
 		}
 	}
 	return ret;
@@ -995,6 +1028,14 @@ int omax_expr_rand(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *a
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom));
 	atom64_setfloat(*argv_out, (double)rand() / (double)RAND_MAX);
 	return 0;
+}
+
+int omax_expr_if(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	// this is a dummy function.  we'll use this to do a pointer comparison.
+}
+
+int omax_expr_defined(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	// this is a dummy function.  we'll use this to do a pointer comparison.
 }
 
 t_omax_expr_arg *omax_expr_arg_alloc(void){

@@ -118,6 +118,8 @@ int omax_expr_scale(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *
 int omax_expr_mtof(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_ftom(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 int omax_expr_rand(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_if(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_defined(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
 
 
 t_omax_expr_arg *omax_expr_arg_alloc(void);
@@ -158,11 +160,13 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"%", omax_expr_2arg, 2, (void *)omax_expr_mod, "Modulo"},
 	{"=", omax_expr_assign, 2, NULL, "Assignment"},
 	{"++", omax_expr_2arg, 1, (void *)omax_expr_add, "Increment"},
-	{"+=", omax_expr_2arg, 1, (void *)omax_expr_add, "Add and assign"},
-	{"-=", omax_expr_2arg, 1, (void *)omax_expr_subtract, "Subtract and assign"},
-	{"*=", omax_expr_2arg, 1, (void *)omax_expr_multiply, "Multiply and assign"},
-	{"/=", omax_expr_2arg, 1, (void *)omax_expr_divide, "Divide and assign"},
-	{"%=", omax_expr_2arg, 1, (void *)omax_expr_mod, "Modulo and assign"},
+	{"--", omax_expr_2arg, 1, (void *)omax_expr_add, "Decrement"},
+	{"+=", omax_expr_2arg, 2, (void *)omax_expr_add, "Add and assign"},
+	{"-=", omax_expr_2arg, 2, (void *)omax_expr_subtract, "Subtract and assign"},
+	{"*=", omax_expr_2arg, 2, (void *)omax_expr_multiply, "Multiply and assign"},
+	{"/=", omax_expr_2arg, 2, (void *)omax_expr_divide, "Divide and assign"},
+	{"%=", omax_expr_2arg, 2, (void *)omax_expr_mod, "Modulo and assign"},
+	{"??", NULL, 2, NULL, "Null coalescing operator, returns <arg1> if it exists, otherwise returns <arg2>."},
 	// math.h
 	{"abs", omax_expr_1arg_dbl, 1, (void *)fabs, "Absolute value"},
 	{"acos", omax_expr_1arg_dbl, 1, (void *)acos, "Arc cosine"},
@@ -230,7 +234,9 @@ static t_omax_expr_rec omax_expr_funcsym[] = {
 	{"scale", omax_expr_scale, 5, NULL, "Scale the data from arg1 and arg2 to arg3 and arg4"},
 	{"mtof", omax_expr_mtof, -1, NULL, "MIDI note number to frequency.  Optional arg2 sets base."},
 	{"ftom", omax_expr_ftom, -1, NULL, "Frequency to MIDI. Optional arg2 sets base."},
-	{"rand", omax_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"}
+	{"rand", omax_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"},
+	{"if", omax_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
+	{"defined", omax_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."}
 };
 
 #endif // __OMAX_EXPR_H__

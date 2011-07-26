@@ -40,6 +40,7 @@
 			 {
 				 t_symbol *sym = atom_getsym(argv + *argp);
 				 char *ptr = sym->s_name;
+				 int ptrlen = strlen(ptr);
 				 // function or constant name
 				 int i;
 				 void *func = NULL;
@@ -56,7 +57,6 @@
 				 for(i = 0; i < sizeof(omax_expr_funcsym) / sizeof(t_omax_expr_rec); i++){
 					 if(!strcmp(ptr, omax_expr_funcsym[i].name)){
 						 func = omax_expr_funcsym[i].func;
-						 int ptrlen = strlen(ptr);
 						 switch(*ptr){
 						 case '+':
 							 if(ptrlen == 2){
@@ -175,6 +175,16 @@
 						 token = R_DOUBLE_BRACKET;
 					 }else if(ptr[0] == ','){
 						 token = COMMA;
+					 }else if(ptr[0] == '?'){
+						 if(ptrlen == 2){
+							 if(ptr[1] == '?'){
+								 token = DBLQMARK;
+							 }
+						 }else{
+						 	token = QMARK;
+						 }
+					 }else if(ptr[0] == ':'){
+						 token = COLON;
 					 }else{
 						 token = ARG;
 						 t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
@@ -236,9 +246,11 @@
 %token <sym>COMMA L_DOUBLE_BRACKET R_DOUBLE_BRACKET
 %left LPAREN 
 %right RPAREN
+%right DBLCOLON
 
-%left <expr>INC DEC 
+ // low to high precedence
 %right <expr>ASSIGN ADD_ASSIGN SUBTRACT_ASSIGN
+%right QMARK COLON DBLQMARK
 %left <expr>OR
 %left <expr>AND
 %left <expr>EQ NEQ
@@ -248,6 +260,7 @@
 %left <sym>NOT
 %right <expr>POWER 
 %right PREFIX_OP
+%left <expr>INC DEC 
 
 %type <arg>expn arglist
 
@@ -418,6 +431,43 @@ expn:	ARG {;}
 	*f = func;
 	$$ = omax_expr_arg_alloc();
 	$$->arg.expr = func;
+	$$->type = OMAX_ARG_TYPE_EXPR;
+ }
+|	expn QMARK expn COLON expn {
+	t_omax_expr *func = osc_mem_alloc(sizeof(t_omax_expr));
+	memset(func, '\0', sizeof(t_omax_expr));
+	func->rec = omax_expr_lookupFunction("if");
+	$1->next = $3;
+	$3->next = $5;
+	func->argc = 3;
+	func->argv = $1;
+	*f = func;
+	$$ = omax_expr_arg_alloc();
+	$$->arg.expr = func;
+	$$->type = OMAX_ARG_TYPE_EXPR;
+}
+|	expn DBLQMARK expn {
+	t_omax_expr *ifunc = osc_mem_alloc(sizeof(t_omax_expr));
+	memset(ifunc, '\0', sizeof(t_omax_expr));
+	ifunc->rec = omax_expr_lookupFunction("if");
+	t_omax_expr *defunc = osc_mem_alloc(sizeof(t_omax_expr));
+	memset(defunc, '\0', sizeof(t_omax_expr));
+	defunc->rec = omax_expr_lookupFunction("defined");
+	defunc->argc = 1;
+	$1->next = NULL;
+	defunc->argv = $1;
+	t_omax_expr_arg *ifarg1 = omax_expr_arg_alloc();
+	t_omax_expr_arg *ifarg2 = omax_expr_arg_alloc();
+	memcpy(ifarg2, $1, sizeof(t_omax_expr_arg));
+	ifarg1->arg.expr = defunc;
+	ifarg1->type = OMAX_ARG_TYPE_EXPR;
+	ifarg1->next = ifarg2;
+	ifunc->argc = 3;
+	ifunc->argv = ifarg1;
+	ifarg2->next = $3;
+	$3->next = NULL;
+	$$ = omax_expr_arg_alloc();
+	$$->arg.expr = ifunc;
 	$$->type = OMAX_ARG_TYPE_EXPR;
  }
 | 	LPAREN expn RPAREN	{
