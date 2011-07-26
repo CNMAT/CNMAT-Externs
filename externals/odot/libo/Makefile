@@ -1,4 +1,4 @@
-LIBO_BASENAMES = osc_match osc_timetag osc_bundle osc_error osc_mem osc_message osc_bundle
+LIBO_BASENAMES = osc_match osc_timetag osc_bundle osc_error osc_mem osc_message osc_bundle strptime
 LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o)
 LIBO_CFILES = $(foreach F, $(LIBO_BASENAMES), $(F).c)
 LIBO_HFILES = $(foreach F, $(LIBO_BASENAMES), $(F).h) osc.h

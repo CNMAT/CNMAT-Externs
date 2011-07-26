@@ -20,6 +20,10 @@
 // crossplatform gettimeofday
 #include "timeval.h"
 
+// this is for windows which doesn't have
+// strptime
+#include "strptime.h"
+
 #include "osc.h"
 
 // own header
