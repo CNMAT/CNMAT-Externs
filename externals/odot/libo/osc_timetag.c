@@ -111,18 +111,41 @@ int osc_timetag_is_immediate(char *buf){
 // conversion functions
 
 // timegm is not portable.
+
+static void osc_timetag_setenv(const char *name, const char *value){
+#if !(defined _WIN32) || defined HAVE_SETENV
+  setenv(name, value, 1);
+#else
+  int len = strlen(name) + 1 + strlen(value) + 1;
+  char str[len];
+  sprintf(str, "%s=%s", name, value);
+  putenv(str);
+#endif
+}
+
+static void osc_timetag_unsetenv(const char *name){
+#if !(defined _WIN32) || defined HAVE_SETENV
+  unsetenv(name)
+#else
+    int len = strlen(name) + 2;
+  char str[len];
+  sprintf(str, "%s=", name);
+  putenv(str);
+#endif
+}
+
 time_t osc_timetag_timegm (struct tm *tm) {
 	time_t ret;
 	char *tz;
 
 	tz = getenv("TZ");
-	setenv("TZ", "", 1);
+	osc_timetag_setenv("TZ", "");
 	tzset();
 	ret = mktime(tm);
 	if (tz)
-		setenv("TZ", tz, 1);
+		osc_timetag_setenv("TZ", tz);
 	else
-		unsetenv("TZ");
+		osc_timetag_unsetenv("TZ");
 	tzset();
 	return ret;
 }
