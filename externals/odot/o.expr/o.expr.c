@@ -51,6 +51,9 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include "omax_parser.h"
 #include "osc.h"
 
+#include <libgen.h>
+#include <dlfcn.h>
+
 extern int yyparse (int argc, t_atom *argv, int *argp, t_omax_expr **f);
 extern void omax_scanner_scan_atom_array(int, t_atom *, int *, t_atom **);
 
