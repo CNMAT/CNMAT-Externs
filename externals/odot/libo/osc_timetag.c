@@ -139,7 +139,11 @@ time_t osc_timetag_timegm (struct tm *tm) {
 	char *tz;
 
 	tz = getenv("TZ");
+#ifdef WIN_VERSION
+	osc_timetag_setenv("TZ", "UTC");
+#else
 	osc_timetag_setenv("TZ", "");
+#endif
 	tzset();
 	ret = mktime(tm);
 	if (tz)
