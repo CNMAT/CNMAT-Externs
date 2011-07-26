@@ -20,6 +20,8 @@
 // crossplatform gettimeofday
 #include "timeval.h"
 
+#include "osc.h"
+
 // own header
 #include "osc_timetag.h"
 
@@ -243,8 +245,8 @@ int osc_timetag_get(long n, long ptr, ntptime *r){
 		r = NULL;
 		return 1;
 	}
-	r->sec = ntohl(*((unsigned long *)(data + 8)));
-	r->frac_sec = ntohl(*((unsigned long *)(data + 12)));
+	r->sec = ntoh32(*((unsigned long *)(data + 8)));
+	r->frac_sec = ntoh32(*((unsigned long *)(data + 12)));
 	r->sign = 1;
 	r->type = TIME_STAMP;
 	return 0;
@@ -260,7 +262,7 @@ int osc_timetag_set(long n, long ptr, ntptime *r){
 		r = NULL;
 		return 1;
 	}
-	*(unsigned long *)(data + 8) = htonl(r->sec);
-	*(unsigned long *)(data + 12) = htonl(r->frac_sec);
+	*(unsigned long *)(data + 8) = hton32(r->sec);
+	*(unsigned long *)(data + 12) = hton32(r->frac_sec);
 	return 0;
 }
