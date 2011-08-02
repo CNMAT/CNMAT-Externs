@@ -34,6 +34,7 @@ t_osc_bundle *osc_bundle_alloc(void){
 	t_osc_bundle *b = (t_osc_bundle *)osc_mem_alloc(sizeof(t_osc_bundle));
 	b->messages = NULL;
 	b->num_messages = 0;
+	b->next = NULL;
 }
 
 void osc_bundle_freeBundle(t_osc_bundle *bundle){
@@ -211,6 +212,24 @@ int osc_bundle_flatten(long n, char *ptr, char **out){
 	return j;
 }
 
+void osc_bundle_formatBundleCbk(t_osc_msg msg, void *context){
+	struct context {long *buflen; long *bufpos; char **buf;};
+	struct context *c = (struct context *)context;
+	osc_message_formatMsg(&msg, c->buflen, c->bufpos, c->buf);
+	//*(c->bufpos) += sprintf(*(c->buf) + *(c->bufpos), "\n");
+}
+
+t_osc_err osc_bundle_formatBndl(long len, 
+				char *bndl, 
+				long *buflen, 
+				long *bufpos, 
+				char **buf){
+	struct context {long *buflen; 
+		long *bufpos; 
+		char **buf;} context = {buflen, bufpos, buf};
+	osc_bundle_getMessagesWithCallback(len, bndl, osc_bundle_formatBundleCbk, (void *)&context);
+}
+
 t_osc_err osc_bundle_printBundle(int len, char *buf, int (*p)(const char *, ...)){
 	t_osc_err ret;
 	if(ret = osc_error_bundleSanityCheck(len, buf)){
@@ -219,7 +238,7 @@ t_osc_err osc_bundle_printBundle(int len, char *buf, int (*p)(const char *, ...)
 	char timetag_string[64];
 	timetag_string[0] = '\0';
 	//ret = osc_timetag_format(osc_bundle_getTimetag(buf), timetag_string);
-	p("[ %s timetag: %s\n", OSC_ID, timetag_string);
+	p("[ %s\n", OSC_ID);
 	//p("[ %s\n", OSC_ID);
 	osc_bundle_getMessagesWithCallback(len, buf, osc_bundle_printBundleCbk, (void *)p);
 	p("]\n");

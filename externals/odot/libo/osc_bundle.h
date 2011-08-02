@@ -50,6 +50,7 @@ typedef struct _osc_bundle{
 	//int *msg_offsets; 
 	//int *msg_sizes; /**< Sizes of each of the messages not including 4 byte size */
 	t_osc_msg *messages; /**< Linked list of messages*/
+	struct _osc_bundle *next; /**< Link for a list of bundles */
 } t_osc_bundle;
 
 /**
@@ -193,6 +194,12 @@ int osc_bundle_bundleNakedMessage(long len, char *buf, char **out);
  * @param out The new bundle.  buf and out can be the same.
  */
 int osc_bundle_flatten(long len, char *buf, char **out);
+
+t_osc_err osc_bundle_formatBndl(long len, 
+				char *bndl, 
+				long *buflen, 
+				long *bufpos, 
+				char **buf);
 
 /**
  * Format and print a bundle.
