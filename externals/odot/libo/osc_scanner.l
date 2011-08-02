@@ -59,7 +59,7 @@ $[1-9]+	{
 					// a strange crash that this fixes, so it's in here for now
 					double d = strtod(strdup(yytext), &endp);
 					yylval->f = d;
-					return FLOAT;
+					return OSCFLOAT;
 				}
 
 \[|\]	{
@@ -76,7 +76,7 @@ $[1-9]+	{
 						char *endp = NULL;
 						int32_t i = strtol(yytext, &endp, 0);
 						yylval->i = i;
-						return INT;
+						return OSCINT;
 					}
 
 \/[^ \t\n#]+	{

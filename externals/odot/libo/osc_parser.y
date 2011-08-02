@@ -86,8 +86,8 @@ void osc_parser_substitution(t_osc_parser_subst **subs_list, int listitem, t_osc
 	struct _osc_msg *msg;
 }
 
-%token <f>FLOAT 
-%token <i>INT DOLLARSUB OSCADDRESS_DOLLARSUB
+%token <f>OSCFLOAT 
+%token <i>OSCINT DOLLARSUB OSCADDRESS_DOLLARSUB
 %token <string>STRING OSCADDRESS 
 
  //%token ARG
@@ -129,19 +129,19 @@ arglist: '\n' {;}
 		*msg = m;
 		osc_message_addData(*msg, 1, "s", strlen($1), $1);
 	}
-	| FLOAT {
+	| OSCFLOAT {
 		t_osc_msg *m = osc_message_alloc();
 		PP("push MSG %p->%p\n", m, *msg);
-		PP("add FLOAT to MSG %p := %f\n", m, $1);
+		PP("add OSCFLOAT to MSG %p := %f\n", m, $1);
 		m->next = *msg;
 		*msg = m;
 		float f = $1;
 		osc_message_addData(*msg, 1, "f", 4, (char *)&f);
 	}
-	| INT {
+	| OSCINT {
 		t_osc_msg *m = osc_message_alloc();
 		PP("push MSG %p->%p\n", m, *msg);
-		PP("add INT to MSG %p := %d\n", m, $1);
+		PP("add OSCINT to MSG %p := %d\n", m, $1);
 		m->next = *msg;
 		*msg = m;
 		osc_message_addData(*msg, 1, "i", 4, (char *)&$1);
@@ -165,13 +165,13 @@ arglist: '\n' {;}
 		PP("add OSCADDRESS to MSG %p := %s\n", *msg, $2);
 		osc_message_addData(*msg, 1, "s", strlen($2), $2);
  	}
-	| arglist FLOAT {
-		PP("add FLOAT to MSG %p := %f\n", *msg, $2);
+	| arglist OSCFLOAT {
+		PP("add OSCFLOAT to MSG %p := %f\n", *msg, $2);
 		float f = $2;
 		osc_message_addData(*msg, 1, "f", 4, (char *)&f);
  	}
-	| arglist INT {
-		PP("add INT to MSG %p := %d\n", *msg, $2);
+	| arglist OSCINT {
+		PP("add OSCINT to MSG %p := %d\n", *msg, $2);
 		osc_message_addData(*msg, 1, "i", 4, (char *)&$2);
  	}
 	| arglist DOLLARSUB {
