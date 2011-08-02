@@ -161,7 +161,8 @@
 				 }else{
 					 if(ptr[0] == '/' && strlen(ptr) > 1){
 						 token = ARG;
-						 t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
+						 //t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
+						 t_omax_expr_arg *arg = omax_expr_arg_alloc();
 						 arg->type = OMAX_ARG_TYPE_OSCADDRESS;
 						 arg->arg.osc_address = atom_getsym(argv + (*argp))->s_name;
 						 lvalp->arg = arg;
@@ -187,7 +188,8 @@
 						 token = COLON;
 					 }else{
 						 token = ARG;
-						 t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
+						 //t_omax_expr_arg *arg = (t_omax_expr_arg *)osc_mem_alloc(sizeof(t_omax_expr_arg));
+						 t_omax_expr_arg *arg = omax_expr_arg_alloc();
 						 arg->type = OMAX_ARG_TYPE_ATOM;
 						 arg->arg.atom = argv[*argp];
 						 lvalp->arg = arg;

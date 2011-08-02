@@ -169,10 +169,21 @@ int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_a
 			}
 			return ret;
 		}
-		if(atom64_getlong(argv) && (f_argc > 1)){
-			omax_expr_getArg(f_argv->next, len, oscbndl, argc_out, argv_out);
-		}else if(f_argc > 2){
-			omax_expr_getArg(f_argv->next->next, len, oscbndl, argc_out, argv_out);
+		*argv_out = (t_atom64 *)osc_mem_alloc(argc * sizeof(t_atom64));
+		*argc_out = argc;
+		t_atom64 *arg_true = NULL, *arg_false = NULL;
+		int argc_true = 0, argc_false = 0;
+		omax_expr_getArg(f_argv->next, len, oscbndl, &argc_true, &arg_true);
+		omax_expr_getArg(f_argv->next->next, len, oscbndl, &argc_false, &arg_false);
+		int j;
+		for(j = 0; j < argc; j++){
+			if(atom64_getlong(argv + j) && (f_argc > 1)){
+				//omax_expr_getArg(f_argv->next, len, oscbndl, argc_out, argv_out);
+				(*argv_out)[j] = *arg_true;
+			}else if(f_argc > 2){
+				//omax_expr_getArg(f_argv->next->next, len, oscbndl, argc_out, argv_out);
+				(*argv_out)[j] = *arg_false;
+			}
 		}
 	}else if(f->rec->func == omax_expr_defined){
 		*argc_out = 1;
@@ -551,12 +562,21 @@ t_atom64 omax_expr_mod(t_atom64 *f1, t_atom64 *f2){
 		a = *f1;
 		return a;
 	}
-	long ff1 = atom64_getlong(f1), ff2 = atom64_getlong(f2);
-	if(ff2 == 0){
-		a = *f1;
-		return a;
+	if(f1->type == A64_FLOAT || f2->type == A64_FLOAT){
+		double ff1 = atom64_getfloat(f1), ff2 = atom64_getfloat(f2);
+		if(ff2 == 0){
+			a = *f1;
+			return a;
+		}
+		atom64_setfloat(&a, fmod(ff1, ff2));
+	}else{
+		long ff1 = atom64_getlong(f1), ff2 = atom64_getlong(f2);
+		if(ff2 == 0){
+			a = *f1;
+			return a;
+		}
+		atom64_setlong(&a, ff1 % ff2);
 	}
-	atom64_setlong(&a, ff1 % ff2);
 	return a;
 }
 

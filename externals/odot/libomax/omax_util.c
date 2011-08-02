@@ -583,8 +583,8 @@ void omax_outputState(t_object *x){
 	t_symbol **keys = NULL;
 	hashtab_getkeys(ht, &nkeys, &keys);
 
-	int len = 128;
-	char *buf = (char *)sysmem_newptr(len);
+	int len = 1024;
+	char *buf = (char *)osc_mem_alloc(len);
 
 	char *bufptr = buf;
 	memset(bufptr, '\0', len);
@@ -619,15 +619,19 @@ void omax_outputState(t_object *x){
 					t_symbol *addresssym = gensym(address);
 					int msglen = omax_util_get_bundle_size_for_atoms(addresssym, argc, argv);
 					if(msglen + (bufptr - buf) >= len){
-						bufptr = sysmem_resizeptr(bufptr, len + msglen);
+						int offset = bufptr - buf;
+						buf = osc_mem_resize(buf, len + 1024);
 						if(!bufptr){
 							object_error(x, "out of memory!");
 							return;
 						}
-						len += msglen;
+						bufptr = (buf + offset);
+						len += 1024;
 					}
 					bufptr += omax_util_encode_atoms(bufptr, addresssym, argc, argv);
-					sysmem_freeptr(argv);
+					if(argv){
+						sysmem_freeptr(argv);
+					}
 				}
 			}
 		}
@@ -639,6 +643,9 @@ void omax_outputState(t_object *x){
 		atom_setlong(out + 1, (long)buf);
 		outlet_anything(outlet, gensym("FullPacket"), 2, out);
 	}
+	if(bufptr){
+		osc_mem_free(buf);
+ 	}
 }
 
 t_max_err omax_notify(t_object *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
@@ -765,6 +772,22 @@ method omax_object_getNotificationCallback(t_object *ob){
 	return f;
 }
 
+int omax_util_getNumAtomsInOSCMsg(t_osc_msg *msg){
+	int i;
+	int n = 0;
+	for(i = 1; i < msg->argc; i++){
+		// this switch needs to handle blobs
+		switch(msg->typetags[i]){
+		case '#':
+			n += 3; // FullPacket <len> <ptr>
+			break;
+		default: 
+			n++;
+		}
+	}
+	return n;
+}
+
 void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 	t_osc_msg m = *msg;
 	*ac = osc_message_getArgCount(msg) + 1;
@@ -888,9 +911,16 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 					atom_setlong(ptr++, (long)m.argv[j]);
 				}
 			}
+		case '#':
+			{
+				atom_setsym(ptr++, gensym("FullPacket"));
+				atom_setlong(ptr++, ntoh32(*((uint32_t *)m.argv)));
+				atom_setlong(ptr++, (long)(m.argv + 4));
+			}
 			break;
 		}
 	}
+	*ac = ptr - av;
 	//return atomarray_new(n + 1, a);
 }
 
