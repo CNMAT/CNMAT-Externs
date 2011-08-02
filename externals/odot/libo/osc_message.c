@@ -41,6 +41,7 @@ t_osc_msg *osc_message_alloc(void){
 	m->argv_buffer_size = 0;
 	m->next = m->prev = NULL;
 	m->free_internal_buffers = 0;
+	m->argc = 0;
 	return m;
 }
 
@@ -255,6 +256,83 @@ void osc_message_resetArgs(t_osc_msg *msg){
 	msg->argv = msg->argv_start;
 }
 
+t_osc_err osc_message_formatMsg(t_osc_msg *msg, long *buflen, long *bufpos, char **buf){
+	t_osc_msg m = *msg;
+	if((*buflen - *bufpos) < 256){
+		*buf = osc_mem_resize(*buf, *buflen + 1024);
+		if(!(*buf)){
+			return OSC_ERR_OUTOFMEM;
+		}
+		*buflen += 1024;
+	}
+	*bufpos += sprintf(*buf + *bufpos, "%s ", m.address);
+	while(osc_message_incrementArg(&m)){
+		if((*buflen - *bufpos) < 256){
+			*buf = osc_mem_resize(*buf, *buflen + 1024);
+			if(!(*buf)){
+				return OSC_ERR_OUTOFMEM;
+			}
+			*buflen += 1024;
+		}
+		switch(*(m.typetags)){
+		case 'i':
+			*bufpos += sprintf(*buf + *bufpos, "%d ", ntoh32(*((int32_t *)m.argv)));
+			break;
+		case 'f':
+			{
+				uint32_t l = ntoh32(*((int32_t *)m.argv));
+				*bufpos += sprintf(*buf + *bufpos, "%f ", *((float *)&l));
+			}
+			break;
+		case 'h':
+		case 't':
+			*bufpos += sprintf(*buf + *bufpos, "%lld ", ntoh64(*((int64_t *)m.argv)));
+			break;
+		case 'd':
+			{
+				uint64_t l = ntoh64(*((int64_t *)m.argv));
+				*bufpos += sprintf(*buf + *bufpos, "%f ", *((double *)&l));
+			}
+			break;
+		case 's':
+		case 'S':
+			*bufpos += sprintf(*buf + *bufpos, "%s ", m.argv);
+			break;
+		case 'c':
+			*bufpos += sprintf(*buf + *bufpos, "%c ", *(m.argv));
+			break;
+		case 'T':
+			*bufpos += sprintf(*buf + *bufpos, "True ");
+			break;
+		case 'F':
+			*bufpos += sprintf(*buf + *bufpos, "False ");
+			break;
+		case 'N':
+			*bufpos += sprintf(*buf + *bufpos, "Nil ");
+			break;
+		case 'I':
+			*bufpos += sprintf(*buf + *bufpos, "Infinitum ");
+			break;
+		case 'b':
+			{
+				int j, n = osc_sizeof(*(m.typetags), m.argv);
+				*bufpos += sprintf(*buf + *bufpos, "blob (%d bytes): ", n);
+				for(j = 0; j < n; j++){
+					*bufpos += sprintf(*buf + *bufpos, "%d ", m.argv[j]);
+				}
+			}
+		case '#':
+			{
+				*bufpos += sprintf(*buf + *bufpos, "[\n");
+				osc_bundle_formatBndl(ntoh32(*((uint32_t *)m.argv)), m.argv + 4, buflen, bufpos, buf);
+				*bufpos += sprintf(*buf + *bufpos, "]");
+			}
+			break;
+		}
+	}
+	*bufpos += sprintf(*buf + *bufpos, "\n");
+}
+
 void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 	p("\t%d ", msg->size);
 	p("%s ", msg->address);
@@ -305,6 +383,10 @@ void osc_message_printMsg(t_osc_msg *msg, int (*p)(const char *, ...)){
 				for(j = 0; j < n; j++){
 					p("%d ", msg->argv[j]);
 				}
+			}
+		case '#':
+			{
+				osc_bundle_printBundle(ntoh32(*((uint32_t *)msg->argv)), msg->argv + 4, p);
 			}
 			break;
 		}
@@ -416,12 +498,13 @@ t_osc_err osc_message_setAddress(t_osc_msg *m, char *address){
 
 t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int argv_len_bytes, char *argv){
 	if(!(m->typetags)){
-		m->typetags = osc_mem_alloc(ntypetags + 1);
-		m->typetag_buffer_size = ntypetags + 1;
+		m->typetags = osc_mem_alloc(ntypetags + 2);
+		memset(m->typetags, '\0', ntypetags + 2);
+		m->typetag_buffer_size = ntypetags + 2;
 		*(m->typetags) = ',';
 		m->typetags_start = m->typetags;
 		m->typetag_buffer_pos = 1;
-	}else if(ntypetags + m->typetag_buffer_pos > m->typetag_buffer_size){
+	}else if((ntypetags + m->typetag_buffer_pos) > (m->typetag_buffer_size - 1)){
 		char *tmp = (char *)osc_mem_resize(m->typetags, ntypetags + m->typetag_buffer_size);
 		if(!tmp){
 			return OSC_ERR_OUTOFMEM;
@@ -429,6 +512,7 @@ t_osc_err osc_message_addData(t_osc_msg *m, int ntypetags, char *typetags, int a
 		m->typetags = tmp;
 		m->typetags_start = tmp;
 		m->typetag_buffer_size += ntypetags;
+		memset(m->typetags + m->typetag_buffer_pos, '\0', (m->typetag_buffer_size - m->typetag_buffer_pos));
 	}
 	memcpy(m->typetags + m->typetag_buffer_pos, typetags, ntypetags);
 	m->typetag_buffer_pos += ntypetags;

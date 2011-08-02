@@ -156,6 +156,21 @@ int osc_message_incrementArg(t_osc_msg *msg);
 void osc_message_resetArgs(t_osc_msg *msg);
 
 /**
+ * Format an OSC message as a string.
+ *
+ * @param msg The OSC message to be rendered as a string
+ * @param buflen A pointer to an int where the length of the buffer will be stored
+ * @param bufpos A pointer to the end of the buffer.
+ * @param buf A pointer to a buffer where the string will be stored
+ *
+ * @note osc_message_formatMsg will allocate and resize the buf as needed.  If 
+ * buflen and bufpos are 0 and buf is NULL, this function will allocate memory
+ * with osc_mem_alloc.  The caller is responsible for freeing buf.  If 
+ * this function runs out of memory, it will resize buf using osc_mem_resize
+ */
+t_osc_err osc_message_formatMsg(t_osc_msg *msg, long *buflen, long *bufpos, char **buf);
+
+/**
  * Format and print an OSC message.
  *
  * @param msg The OSC message to be printed.
