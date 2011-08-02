@@ -118,23 +118,23 @@ int osc_timetag_is_immediate(char *buf){
 
 static void osc_timetag_setenv(const char *name, const char *value){
 #if !(defined _WIN32) || defined HAVE_SETENV
-  setenv(name, value, 1);
+  	setenv(name, value, 1);
 #else
-  int len = strlen(name) + 1 + strlen(value) + 1;
-  char str[len];
-  sprintf(str, "%s=%s", name, value);
-  putenv(str);
+  	int len = strlen(name) + 1 + strlen(value) + 1;
+  	char str[len];
+  	sprintf(str, "%s=%s", name, value);
+  	putenv(str);
 #endif
 }
 
 static void osc_timetag_unsetenv(const char *name){
 #if !(defined _WIN32) || defined HAVE_SETENV
-  unsetenv(name)
+	unsetenv(name);
 #else
-    int len = strlen(name) + 2;
-  char str[len];
-  sprintf(str, "%s=", name);
-  putenv(str);
+    	int len = strlen(name) + 2;
+  	char str[len];
+  	sprintf(str, "%s=", name);
+  	putenv(str);
 #endif
 }
 
