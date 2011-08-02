@@ -61,13 +61,34 @@ t_max_err oprint_notify(t_oprint *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oprint_fullPacket(t_oprint *x, long len, long ptr){
-	post("%s: [ 0x%x", x->myname->s_name, ntoh64(*((uint64_t *)((char *)ptr + 8))));
-	osc_bundle_getMessagesWithCallback(len, (char *)ptr, oprint_cbk, (void *)x);
-	post("%s: ]", x->myname->s_name);
+	long buflen = 0, bufpos = 0;
+	char *buf = NULL;
+	osc_bundle_formatBndl(len, (char *)ptr, &buflen, &bufpos, &buf);
+
+	// the Max window doesn't respect newlines, so we have to do the manually
+	char *start = buf;
+	int i;
+	for(i = 0; i < bufpos; i++){
+		if(buf[i] == '\n'){
+			long n = ((buf + i) - start);
+			char line[n + 1];
+			memcpy(line, start, n);
+			line[n] = '\0';
+			post("%s: %s\n", x->myname->s_name, line);
+			start = buf + i + 1;
+		}
+	}
 }
 
 void oprint_cbk(t_osc_msg msg, void *v){
-	t_oprint *x = (t_oprint *)v;
+	struct context {long *buflen; long *bufpos; char **buf;};
+	struct context *c = (struct context *)v;
+	osc_message_formatMsg(&msg, c->buflen, c->bufpos, c->buf);
+	if(c->buf){
+		post("%s", c->buf);
+		osc_mem_free(c->buf);
+	}
+	/*
 	long len = msg.argc;
 	t_atom atoms[len + 1];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
@@ -104,6 +125,7 @@ void oprint_cbk(t_osc_msg msg, void *v){
 		}
 	}
 	post("%s: %s", x->myname->s_name, buf);
+	*/
 }
 
 void oprint_assist(t_oprint *x, void *b, long m, long a, char *s){
