@@ -132,12 +132,15 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	
 	osc_bundle_getMessagesWithCallback(nn, cpy, omessage_cbk, (void *)&c);
 	int i;
-	int buflen = 0;
+	long buflen = 0, bufpos = 0;
 	char *buf = NULL;
 	//int buflen = x->num_atoms * 32;
 	//char buf[buflen];
 	//char *bufptr = buf;
-	omessage_atoms2text(&c, &buflen, &buf);
+
+	//omessage_atoms2text(&c, &buflen, &buf);
+
+	osc_bundle_formatBndl(len, (char *)ptr, &buflen, &bufpos, &buf);
 	if(buflen > 2){
 		if(buf[buflen - 2] == '\n'){
 			buf[buflen - 1] = '\0';
@@ -534,6 +537,7 @@ void omessage_gettext(t_omessage *x){
 	}else{
 		x->buffer_pos = 0;
 	}
+
 	critical_enter(x->lock);
 	if(x->max_num_atoms < c.num_atoms){
 		x->atoms = (t_atom *)osc_mem_resize(x->atoms, c.num_atoms * sizeof(t_atom));
