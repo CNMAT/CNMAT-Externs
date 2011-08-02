@@ -32,7 +32,7 @@ osc_scanner.o: osc_scanner.c osc_scanner.h
 	$(CC) $(CFLAGS) $(I) -o osc_scanner.o -c osc_scanner.c
 
 osc_parser.c: osc_parser.y 
-	bison -v -p osc_parser_ -d -o osc_parser.c osc_parser.y
+	bison -p osc_parser_ -d -o osc_parser.c osc_parser.y
 osc_parser.o: osc_parser.c osc_parser.h
 	$(CC) $(CFLAGS) $(I) -o osc_parser.o -c osc_parser.c
 
