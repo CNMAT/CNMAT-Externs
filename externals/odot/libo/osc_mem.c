@@ -209,6 +209,8 @@ size_t osc_sizeof(unsigned char typetag, char *data){
 			}
 			return size;
 		}
+	case '#':
+		return ntoh32(*((uint32_t *)data)) + 4;
 	default:
 		return osc_data_lengths[typetag];
 	}
