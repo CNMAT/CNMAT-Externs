@@ -1,6 +1,6 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2009-11, The Regents of
+University of California, Berkeley.  Copyright (c) 2009-ll, The Regents of
 the University of California (Regents). 
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
@@ -20,44 +20,36 @@ HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-#ifndef __OSC_H__
-#define __OSC_H__
+/** 	\file osc_atom_u.h
+	\author John MacCallum
 
-//#define OSC_2_0
+*/
+
+#ifndef __OSC_ATOM_U_R__
+#define __OSC_ATOM_U_R__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifdef OSC_2_0
-#define OSC_HEADER_SIZE 4
-#define OSC_IDENTIFIER "#OSC"
-#define OSC_IDENTIFIER_SIZE 4
 
-#else
-
-#define OSC_HEADER_SIZE 16 // bundle\0 + 8 byte timetag.
-#define OSC_IDENTIFIER "#bundle\0"
-#define OSC_IDENTIFIER_SIZE 8
-#endif
-
-#define OSC_ID OSC_IDENTIFIER
-#define OSC_ID_SIZE OSC_IDENTIFIER_SIZE
-
-#include "osc_error.h"
-#include "osc_byteorder.h"
-#include "osc_bundle.h"
-#include "osc_bundle_s.h"
-#include "osc_message.h"
-#include "osc_message_s.h"
-#include "osc_message_iterator_s.h"
-#include "osc_atom_s.h"
-#include "osc_mem.h"
-#include "osc_timetag.h"
-#include "osc_match.h"
+struct _osc_atom_u{
+	union _word{
+		int32_t i;
+		int64_t h;
+		uint32_t I;
+		uint64_t H;
+		float f;
+		double d;
+		char *s;
+		char *bndl;
+	} w;
+	int typetag;
+	struct _osc_atom_u *next, *prev;
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __OSC_H__
+#endif // __OSC_ATOM_U_R__

@@ -47,7 +47,7 @@ void osc_bundle_freeBundle(t_osc_bundle *bundle){
 		}
 	}
 }
-
+//kill
 int osc_bundle_hasNext(t_osc_msg *m){
 	if(!m){
 		return 0;
@@ -57,7 +57,7 @@ int osc_bundle_hasNext(t_osc_msg *m){
 	}
 	return 0;
 }
-
+//kill
 int osc_bundle_hasNext_s(int len, char *buf, char *msgptr){
 	if(!msgptr){
 		return 0;
@@ -67,14 +67,14 @@ int osc_bundle_hasNext_s(int len, char *buf, char *msgptr){
 	}
 	return 1;
 }
-
+//kill
 t_osc_msg *osc_bundle_next(t_osc_msg *m){
 	if(m){
 		return m->next;
 	}
 	return NULL;
 }
-
+//kill
 char *osc_bundle_next_s(int len, char *buf, char *msgptr){
 	if(msgptr){
 		uint32_t size = ntoh32(*((uint32_t *)msgptr));
@@ -85,7 +85,7 @@ char *osc_bundle_next_s(int len, char *buf, char *msgptr){
 	}
 	return NULL;
 }
-
+//kill
 t_osc_err osc_bundle_getMsgCount(int len, char *buf, int *count){
 	*count = 0;
 	t_osc_err ret;

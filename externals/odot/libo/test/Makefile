@@ -1,2 +1,14 @@
-all:
-	gcc -arch i386 -lo -L.. -I.. -o osc_test osc_test.c
+LIBO_TEST_BASENAMES = osc_test osc_message_s_test osc_class_test osc_message_u_test
+
+INCLUDES = -I.. -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
+CFLAGS += -arch i386 -O3 -funroll-loops
+CC = gcc
+
+all: $(LIBO_TEST_BASENAMES) ../libo.a
+
+%: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -framework CoreServices -L.. -lo -lfl -o $@ $@.c
+
+.PHONY: clean
+clean:
+	rm -rf $(LIBO_TEST_BASENAMES)
