@@ -174,9 +174,11 @@ void omessage_cbk(t_osc_msg msg, void *v){
 	t_atom a[len];
 	omax_util_oscMsg2MaxAtoms(&msg, &len, a);
 
-	if(len + c->num_atoms > c->max_num_atoms){
+	if((len + c->num_atoms) > c->max_num_atoms){
+		//printf("%ld + %d (%ld) > %d\n", len, c->num_atoms, len + c->num_atoms, c->max_num_atoms);
+		// this may not be exactly the number of atoms needed--it may be a few too many
 		c->atoms = (t_atom *)osc_mem_resize(c->atoms, (c->max_num_atoms + len) * sizeof(t_atom));
-		c->max_num_atoms = len + 1;
+		c->max_num_atoms += len;
 		if(!(c->atoms)){
 			error("o.message: out of memory!");
 			return;
