@@ -88,7 +88,6 @@ void omessage_fullPacket(t_omessage *x, long len, long ptr);
 void omessage_doFullPacket(t_omessage *x, long len, long ptr);
 void omessage_paint(t_omessage *x, t_object *patcherview);
 void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av);
-void omessage_doSet(t_omessage *x, short argc, t_atom *argv);
 void omessage_select(t_omessage *x);
 void omessage_doselect(t_omessage *x);
 long omessage_key(t_omessage *x, t_object *patcherview, long keycode, long modifiers, long textcharacter);
@@ -266,12 +265,27 @@ void omessage_paint(t_omessage *x, t_object *patcherview){
 }
 
 void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
+	if(atom_gettype(argv) != A_SYM){
+		error("o.message: not a proper OSC message");
+		return;
+	}
+	t_symbol *address = atom_getsym(argv);
+	if(*(address->s_name) != '/'){
+		error("o.message: %s is not a valid OSC address", address->s_name);
+		return;
+	}
+
 	int len = 2048;
 	char *buf = (char *)osc_mem_alloc(2048);
 	char *bufptr = buf;
 	int i;
-	int have_subs = 0;
-	for(i = 0; i < argc; i++){
+	t_osc_bndl_u *bndl = osc_bundle_u_alloc();
+	t_osc_msg_u *msg = osc_message_u_alloc();
+	osc_message_u_setAddress(msg, address->s_name);
+	bufptr += sprintf(bufptr, "%s ", address->s_name);
+	t_osc_parser_subst *substitutions = NULL;
+	int nsubs = 0;
+	for(i = 1; i < argc; i++){
 		if(len - (bufptr - buf) < 128){
 			int offset = bufptr - buf;
 			buf = (char *)osc_mem_resize(buf, len + 1024);
@@ -284,11 +298,16 @@ void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
 		}
 		switch(atom_gettype(argv + i)){
 		case A_LONG:
-			bufptr += sprintf(bufptr, "%ld ", atom_getlong(argv + i));
+			{
+				int32_t l = atom_getlong(argv + i);
+				bufptr += sprintf(bufptr, "%"PRId32" ", l);
+				osc_message_u_appendInt32(msg, l);
+			}
 			break;
 		case A_FLOAT:
 			{
-				bufptr += sprintf(bufptr, "%f", atom_getfloat(argv + i));
+				float f = atom_getfloat(argv + i);
+				bufptr += sprintf(bufptr, "%f", f);
 				bufptr--;
 				while(*bufptr == '0'){
 					*bufptr = ' ';
@@ -298,6 +317,7 @@ void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
 				bufptr++;
 				*bufptr++ = ' ';
 				*bufptr = '\0';
+				osc_message_u_appendFloat(msg, f);
 			}
 			break;
 		case A_SYM:
@@ -308,19 +328,63 @@ void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
 				}else{
 					bufptr += sprintf(bufptr, "%s ", sym->s_name);
 				}
+				t_osc_atom_u *a = osc_message_u_appendString(msg, sym->s_name);
 				if(sym->s_name[0] == '$' && strnlen(sym->s_name, 2) > 1){
-					have_subs++;
+					t_osc_parser_subst *ss = osc_mem_alloc(sizeof(t_osc_parser_subst));
+					ss->msg = msg;
+					char *endp = NULL;
+					ss->listitem = strtol(sym->s_name + 1, &endp, 0);
+					ss->osc_atom = a;
+					ss->item_to_replace = osc_message_u_getArgCount(msg);
+					ss->next = substitutions;
+					substitutions = ss;
+					nsubs++;
 				}
 			}
 			break;
 		}
 	}
 	object_method(jbox_get_textfield((t_object *)x), gensym("settext"), buf);
+	if(buf){
+		osc_mem_free(buf);
+	}
+	osc_bundle_u_addMsg(bndl, msg);
 
-	if(have_subs){
-
+	if(x->bndl){
+		switch(x->bndltype){
+		case OMESSAGE_U:
+			osc_bundle_u_free(x->bndl);
+			break;
+		case OMESSAGE_S:
+			osc_bundle_s_free(x->bndl);
+			char *ptr = osc_bundle_s_getPtr(x->bndl);
+			if(ptr){
+				osc_mem_free(ptr);
+			}
+			break;
+		}
+		x->bndl = NULL;
+	}
+	t_osc_parser_subst *s = x->substitutions;
+	while(s){
+		t_osc_parser_subst *next = s->next;
+		osc_mem_free(s);
+		s = next;
+	}
+	x->substitutions = NULL;
+	x->nsubs = 0;
+	if(substitutions){
+		x->substitutions = substitutions;
+		x->nsubs = nsubs;
+		x->bndl = bndl;
+		x->bndltype = OMESSAGE_U;
 	}else{
-
+		long len = 0;
+		char *bndl_s = NULL;
+		osc_bundle_u_serialize(bndl, &len, &bndl_s);
+		osc_bundle_u_free(bndl);
+		x->bndl = osc_bundle_s_alloc(len, bndl_s);
+		x->bndltype = OMESSAGE_S;
 	}
 }
 
@@ -641,9 +705,10 @@ void omessage_anything(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 		omessage_list(x, NULL, ac, av);
 		break;
 	case 1:
-		omessage_doSet(x, ac, av);
+		omessage_processAtoms(x, ac, av);
 		break;
 	}
+	jbox_redraw((t_jbox *)x);
 }
 
 void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av){
@@ -657,23 +722,9 @@ void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av){
 				omessage_doFullPacket(x, atom_getlong(av + 1), atom_getlong(av + 2));
 				return;
 			}
-			omessage_doSet(x, ac, av);
+			omessage_processAtoms(x, ac, av);
 		}
 	}
-}
-
-void omessage_doSet(t_omessage *x, short argc, t_atom *argv){
-	if(atom_gettype(argv) != A_SYM){
-		error("o.message: not a proper OSC message");
-		return;
-	}
-	t_symbol *address = atom_getsym(argv);
-	if(*(address->s_name) != '/'){
-		error("o.message: %s is not a valid OSC address", address->s_name);
-		return;
-	}
-
-	omessage_processAtoms(x, argc, argv);
 	jbox_redraw((t_jbox *)x);
 }
 
