@@ -50,9 +50,15 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include "omax_expr.h"
 #include "omax_parser.h"
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_atom_u.h"
 
 #include <libgen.h>
+#ifdef WIN_VERSION
+#include <windows.h>
+#else
 #include <dlfcn.h>
+#endif
 
 extern int yyparse (int argc, t_atom *argv, int *argp, t_omax_expr **f);
 extern void omax_scanner_scan_atom_array(int, t_atom *, int *, t_atom **);
@@ -69,6 +75,11 @@ typedef struct _oexpr{
 	t_omax_expr *function_graph;
 	t_atom *argvlex;
 	int argclex;
+
+	t_object *ed;
+	char *cbuf;
+	int cbuf_size, cbuf_len;
+	t_symbol *path_to_maxsdk;
 } t_oexpr;
 
 void *oexpr_class;
@@ -77,21 +88,20 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr);
 void oexpr_free(t_oexpr *x);
 void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s);
 void *oexpr_new(t_symbol *msg, short argc, t_atom *argv);
-t_max_err oexpr_notify(t_oexpr *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
 t_symbol *ps_FullPacket;
 
 void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 #ifdef OIF
 	int argc = 0;
-	t_atom64 *argv = NULL;
+	t_osc_atom_ar_u *argv = NULL;
 	t_atom out[2];
 	// we don't actually want to do this copy here.  we need to 
 	// have another version of omax_expr_funcall that doesn't do 
 	// assignment
 	char *copy = (char *)osc_mem_alloc(len);
 	memcpy(copy, (char *)ptr, len);
-	int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argc, &argv);
+	int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argv);
 	atom_setlong(out, len);
 	atom_setlong(out + 1, (long)copy);
 	if(ret){
@@ -99,7 +109,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}else{
 		int i;
 		for(i = 0; i < argc; i++){
-			if(atom64_getfloat(argv + i) == 0){
+			if(osc_atom_u_getDouble(osc_atom_array_u_get(argv, i)) == 0){
 				outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
 				goto out;
 			}
@@ -121,9 +131,11 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	char *copy = (char *)osc_mem_alloc(len);
 	memcpy(copy, (char *)ptr, len);
 	int argc = 0;
-	t_atom64 *argv = NULL;
+	//t_atom64 *argv = NULL;
+	t_osc_atom_ar_u *argv = NULL;
 	t_atom out[2];
-	int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argc, &argv);
+	//int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argc, &argv);
+	int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argv);
 	if(ret){
 		atom_setlong(out, len);
 		atom_setlong(out + 1, ptr);
@@ -173,7 +185,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		*/
 	}
 	if(argv){
-		osc_mem_free(argv);
+		osc_atom_array_u_free(argv);
 	}
 	if(copy){
 		osc_mem_free(copy);
@@ -184,7 +196,6 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 int oexpr_postFunctionGraph_r(t_omax_expr *fg, char *buf){
 	char *ptr = buf;
 	ptr += sprintf(ptr, "(%s ", fg->rec->name);
-	int f_argc = fg->argc;
 	t_omax_expr_arg *f_argv = fg->argv;
 	while(f_argv){
 		switch(f_argv->type){
@@ -193,7 +204,7 @@ int oexpr_postFunctionGraph_r(t_omax_expr *fg, char *buf){
 				t_atom a = f_argv->arg.atom;
 				switch(atom_gettype(&a)){
 				case A_LONG:
-					ptr += sprintf(ptr, "%d ", atom_getlong(&a));
+					ptr += sprintf(ptr, "%ld ", atom_getlong(&a));
 					break;
 				case A_FLOAT:
 					ptr += sprintf(ptr, "%f ", atom_getfloat(&a));
@@ -276,6 +287,67 @@ void oexpr_postFunctions(t_oexpr *x){
 	}
 }
 
+/**************************************************
+editor and compilation
+**************************************************/
+
+int oexpr_write_template(t_oexpr *x, char *buf){
+	if(!buf){
+		return 0;
+	}
+	int len = 0;
+	//len += sprintf(buf + len, "#include \"ext.h\"\n");
+
+	return len;
+}
+
+void oexpr_edclose(t_oexpr *x, char **text, long size){
+	printf("%s\n", __func__);
+	if(size + 1 > x->cbuf_len){
+		char *tmp = (char *)osc_mem_resize(x->cbuf, (size + 1) * sizeof(char));
+		if(tmp){
+			x->cbuf = tmp;
+			x->cbuf_size = size + 1;
+		}else{
+			object_error((t_object *)x, "out of memory!");
+			return;
+		}
+	}
+	strncpy(x->cbuf, *text, size);
+	x->cbuf[size] = '\0';
+	x->cbuf_len = size + 1;
+
+	x->ed = NULL;
+}
+
+void oexpr_okclose(t_oexpr *x, char *s, short *result){
+	*result = 3;
+}
+
+void oexpr_open_editor(t_oexpr *x){
+	// this should be done only if the file was actually modified--otherwise, just use the buffer
+
+	if(x->cbuf_len == 0){
+		x->cbuf_len = oexpr_write_template(x, x->cbuf);
+	}
+
+	if(x->ed){
+		object_method(x->ed, gensym("settext"), x->cbuf, gensym("utf-8"));
+	}else{
+		x->ed = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), (t_object *)x, 0);
+		object_method(x->ed, gensym("settext"), x->cbuf, gensym("utf-8"));
+	}
+
+	object_attr_setchar(x->ed, gensym("visible"), 1);
+}
+
+void oexpr_dblclick(t_oexpr *x){
+	oexpr_open_editor(x);
+}
+
+/**************************************************
+**************************************************/
+
 void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET){
 	}else{
@@ -291,6 +363,41 @@ void oexpr_free(t_oexpr *x){
 	if(x->argvlex){
 		osc_mem_free(x->argvlex);
 	}
+}
+
+t_max_err oexpr_notify(t_oexpr *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
+	t_symbol *attrname;
+
+        if(msg == gensym("attr_modified")){
+		attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err oexpr_cbuf_set(t_oexpr *x, t_object *attr, long argc, t_atom *argv){
+	if(argc == 0){
+		return 1;
+	}
+	if(x->cbuf_size < argc){
+		x->cbuf = osc_mem_resize(x->cbuf, argc);
+		x->cbuf_size = argc;
+	}
+	int i;
+	for(i = 0; i < argc; i++){
+		x->cbuf[i] = (char)atom_getlong(argv + i);
+	}
+	x->cbuf_len = argc;
+	return 0;
+}
+
+t_max_err oexpr_cbuf_get(t_oexpr *x, t_object *attr, long *argc, t_atom **argv){
+	char alloc = 0;
+	atom_alloc_array(x->cbuf_len, argc, argv, &alloc);
+	int i;
+	for(i = 0; i < x->cbuf_len; i++){
+		atom_setlong((*argv) + i, x->cbuf[i]);
+	}
+	return 0;
 }
 
 
@@ -313,6 +420,10 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 #ifndef OIF
 		x->addresslen = strlen(x->address->s_name);
 #endif
+
+		x->cbuf_size = 4096;
+		x->cbuf = (char *)osc_mem_alloc(x->cbuf_size);
+		x->cbuf_len = 0;
 	}
 		   	
 	return(x);
@@ -334,11 +445,25 @@ int main(void){
 
 	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
 	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
+	/*
+	class_addmethod(c, (method)oexpr_edclose, "edclose", A_CANT, 0); 
+	//class_addmethod(c, (method)oexpr_edsave, "edsave", A_CANT, 0); 
+	class_addmethod(c, (method)oexpr_dblclick, "dblclick", A_CANT, 0);
+	class_addmethod(c, (method)oexpr_okclose, "okclose", A_CANT, 0);  
+	*/
 
 #ifndef OIF
-	CLASS_ATTR_SYM(c, "as", 0, t_oexpr, address);
+	//CLASS_ATTR_SYM(c, "as", 0, t_oexpr, address);
 #endif
 
+	/*
+	CLASS_ATTR_SYM(c, "maxsdk", 0, t_oexpr, path_to_maxsdk);
+	CLASS_ATTR_SAVE(c, "maxsdk", 0);
+
+	CLASS_ATTR_CHAR_ARRAY(c, "cbuf", 0, t_oexpr, cbuf, 1);
+	CLASS_ATTR_ACCESSORS(c, "cbuf", oexpr_cbuf_get, oexpr_cbuf_set);
+	CLASS_ATTR_SAVE(c, "cbuf", 0);
+	*/
 	class_register(CLASS_BOX, c);
 	oexpr_class = c;
 
@@ -355,11 +480,3 @@ int main(void){
 	return 0;
 }
 
-t_max_err oexpr_notify(t_oexpr *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
-	t_symbol *attrname;
-
-        if(msg == gensym("attr_modified")){
-		attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
-	}
-	return MAX_ERR_NONE;
-}
