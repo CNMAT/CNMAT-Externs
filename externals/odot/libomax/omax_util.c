@@ -6,6 +6,11 @@
 #include <inttypes.h>
 #include "omax_util.h"
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_byteorder.h"
+#include "osc_bundle.h"
+#include "osc_message.h"
+#include "osc_match.h"
 
 #define __ODOT_PROFILE__
 #include "profile.h"
@@ -851,6 +856,7 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 		return;
 	}
 
+	int ii = 0;
 	while(osc_message_incrementArg(&m)){
 		switch(*(m.typetags)){
 		case 'i':
@@ -923,7 +929,59 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 	*ac = ptr - av;
 	//return atomarray_new(n + 1, a);
 }
+/*
+void omax_util_oscMsg2MaxAtoms_new(t_osc_msg_s m, long *ac, t_atom *av){
+	*ac = osc_message_s_getArgCount(&m) + 1;
+	t_atom *ptr = av;
+	if(osc_message_s_getAddress(&m)){
+		atom_setsym(ptr, gensym(osc_message_s_getAddress(&m)));
+	}else{
+		return;
+	}
+	ptr++;
 
+	int numints = 0, numfloats = 0, numother = 0;
+	t_osc_msg_it_s *it = osc_msg_it_s_get(&m);
+	while(osc_msg_it_s_hasNext(it)){
+		t_osc_atom_s a = osc_msg_it_s_next(it);
+		switch(a.typetag){
+		case 'i':
+		case 'I':
+		case 'h':
+		case 'H':
+			atom_setlong(ptr++, osc_atom_s_getInt32(a));
+			break;
+		case 'f':
+		case 'd':
+			atom_setfloat(ptr++, osc_atom_s_getFloat(a));
+			break;
+		case 's':
+		case 'T':
+		case 'F':
+		case 'N':
+			atom_setsym(ptr++, gensym(osc_atom_s_getString(a)));
+			break;
+		case 'b':
+			{
+				int j, n = osc_atom_s_sizeof(a);
+				atom_setlong(ptr++, ntoh32(*((uint32_t *)(m.data))));
+				for(j = 0; j < n; j++){
+					atom_setlong(ptr++, (long)m.data[j]);
+				}
+			}
+		case '#':
+			{
+				atom_setsym(ptr++, gensym("FullPacket"));
+				atom_setlong(ptr++, ntoh32(*((uint32_t *)m.data)));
+				atom_setlong(ptr++, (long)(m.data + 4));
+			}
+			break;
+		}
+	}
+	*ac = ptr - av;
+	//return atomarray_new(n + 1, a);
+}
+*/
 int osc_util_make_bundle(int numAddresses,
 			  t_symbol **addresses, 
 			  int *numArgs,

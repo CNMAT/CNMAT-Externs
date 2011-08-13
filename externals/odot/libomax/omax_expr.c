@@ -10,6 +10,10 @@
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
+#include "osc_bundle_s.h"
+#include "osc_message_s.h"
+#include "osc_message_u.h"
+#include "osc_atom_u.h"
 
 int omax_expr_funcall(t_omax_expr *function, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out){
 	t_omax_expr *f = function;
@@ -20,60 +24,38 @@ int omax_expr_funcall(t_omax_expr *function, long *len, char **oscbndl, int *arg
 			return ret;
 		}
 		if(f->assign_result_to_address){
-			t_osc_msg *m = NULL;
-			osc_bundle_lookupAddress_s(*len, *oscbndl, f->argv->arg.osc_address, &m, 1);
+			t_osc_msg_ar_s *msg_ar = NULL;
+			osc_bundle_s_lookupAddress(*len, *oscbndl, f->argv->arg.osc_address, &msg_ar, 1);
 
-			t_osc_msg mm;
-			osc_message_clear(&mm);
-			osc_message_setAddress(&mm, f->argv->arg.osc_address);
+			t_osc_msg_u *mm = osc_message_u_alloc();
+			osc_message_u_setAddress(mm, f->argv->arg.osc_address);
 			int i;
 			for(i = 0; i < argc_out[0]; i++){
-				char tt;
-				int buflen = 4;
-				if(argv_out[0][i].type == A64_SYM){
-					buflen = strlen(atom64_getsym(argv_out[0] + i)->s_name);
-					buflen++;
-					while(buflen % 4){
-						buflen++;
-					}
-				}
-				char buf[buflen];
-				memset(buf, '\0', buflen);
 				switch(argv_out[0][i].type){
 				case A64_LONG:
-					{
-						tt = 'i';
-						int32_t l = (int32_t)atom64_getlong(argv_out[0] + i);
-						*((uint32_t *)buf) = l;
-					}
+					osc_message_u_appendInt32(mm, atom64_getlong(argv_out[0] + i));
 					break;
 				case A64_FLOAT:
-					{
-						float f = atom64_getfloat(argv_out[0] + i);
-						*((uint32_t *)buf) = *((uint32_t *)&f);
-						tt = 'f';
-					}
+					osc_message_u_appendFloat(mm, atom64_getfloat(argv_out[0] + i));
 					break;
 				case A64_SYM:
-					{
-						strcpy(buf, atom64_getsym(argv_out[0] + i)->s_name);
-						tt = 's';
-					}
+					osc_message_u_appendString(mm, atom64_getsym(argv_out[0] + i)->s_name);
 					break;
-				default: 
+				default:
 					continue;
 				}
-				osc_message_addData(&mm, 1, &tt, buflen, buf);
 			}
-			long slen = osc_message_getSize(&mm);
-			char msg_s[slen + 4];
-			osc_message_serialize(&mm, msg_s);
-			if(m){
-				osc_bundle_replaceMessage_s(len, oscbndl, osc_message_getSize(m), m->address - 4, slen, msg_s);
+			char *msg_s = NULL;
+			long len_s = 0;
+			osc_message_u_serialize(mm, &len_s, &msg_s);
+			if(msg_ar){
+				osc_bundle_s_replaceMessage(len, oscbndl, osc_message_s_getPtr(osc_message_array_s_get(msg_ar, 0)), msg_s);
+				osc_message_array_s_free(msg_ar);
 			}else{
-				osc_bundle_addSerializedMessage_s(len, oscbndl, slen, msg_s);
+				osc_bundle_s_appendMessage(len, oscbndl, msg_s);
 			}
-			osc_message_free_internal_buffers(&mm);
+			osc_message_u_free(mm);
+			osc_mem_free(msg_s);
 		}
 		f = f->next;
 	}
@@ -608,6 +590,19 @@ int omax_expr_get_index(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, i
 	return 0;
 }
 
+int omax_expr_product(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = 1;
+	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
+	atom64_setfloat(*argv_out, 0.);
+	int i;
+	double val = 1;
+	for(i = 0; i < *argc; i++){
+		val *= atom64_getfloat(argv[0] + i);
+	}
+	atom64_setfloat(*argv_out, val);
+	return 0;
+}
+
 int omax_expr_sum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
 	*argc_out = 1;
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom64));
@@ -1047,6 +1042,23 @@ int omax_expr_rand(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *a
 	*argc_out = 1;
 	*argv_out = (t_atom64 *)osc_mem_alloc(sizeof(t_atom));
 	atom64_setfloat(*argv_out, (double)rand() / (double)RAND_MAX);
+	return 0;
+}
+
+int omax_expr_sgn(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out){
+	*argc_out = *argc;
+	*argv_out = (t_atom64 *)osc_mem_alloc(*argc * sizeof(t_atom64));
+	int i;
+	for(i = 0; i < *argc; i++){
+		double f = atom64_getfloat(argv[0] + i);
+		if(f == 0){
+			atom64_setlong((*argv_out) + i, 0);
+		}else if(f < 0){
+			atom64_setlong((*argv_out) + i, -1);
+		}else{
+			atom64_setlong((*argv_out) + i, 1);
+		}
+	}
 	return 0;
 }
 

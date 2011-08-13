@@ -26,6 +26,7 @@
 #include "osc.h"
 #include "ext.h"
 #include "ext_obex.h"
+#include "osc_message.h"
 
 #ifdef __cplusplus
 extern "C" {

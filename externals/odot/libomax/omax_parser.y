@@ -12,6 +12,7 @@
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
+#include "osc_mem.h"
 #include "omax_expr.h"
 #include "omax_parser.h"
 
@@ -224,7 +225,7 @@
 
  %}
 
-%expect 1
+%expect 2
 %define "api.pure"
 
  %parse-param{t_omax_expr **function_list}
@@ -410,6 +411,46 @@ expn:	ARG {;}
 	$$ = $1;
  }
 |	INC ARG %prec PREFIX_OP{
+	t_omax_expr_arg *arg = omax_expr_arg_alloc();
+	t_atom a;
+	atom_setlong(&a, 1);
+	arg->arg.atom = a;
+	arg->type = OMAX_ARG_TYPE_ATOM;
+	omax_parser_assignment(f, &$$, $2, $1, arg);
+ }
+|	ARG DEC{
+	t_omax_expr_arg *arg = omax_expr_arg_alloc();
+	t_atom a;
+	atom_setlong(&a, 1);
+	arg->arg.atom = a;
+	arg->type = OMAX_ARG_TYPE_ATOM;
+	//omax_parser_assignment(f, &$$, $1, $2, arg);
+	t_omax_expr *expr = $2;
+	t_omax_expr_arg *arg1 = omax_expr_arg_alloc();
+	memcpy(arg1, $1, sizeof(t_omax_expr_arg));
+	arg1->next = arg;
+	expr->argv = arg1;
+	expr->argc = 2;
+	expr->putlast = 1;
+	expr->assign_result_to_address = 1;
+	t_omax_expr *flist = *function_list;
+	t_omax_expr *prev = NULL;
+	while(flist){
+		if(flist->putlast){
+			break;
+		}
+		prev = flist;
+		flist = flist->next;
+	}
+	expr->next = flist;
+	if(prev){
+		prev->next = expr;
+	}else{
+		*function_list = expr;
+	}
+	$$ = $1;
+ }
+|	DEC ARG %prec PREFIX_OP{
 	t_omax_expr_arg *arg = omax_expr_arg_alloc();
 	t_atom a;
 	atom_setlong(&a, 1);
