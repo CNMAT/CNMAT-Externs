@@ -3,6 +3,7 @@
 
 #include "ext.h"
 #include "omax_util.h"
+#include "osc_atom_u.h"
 
 #define OMAX_ARG_TYPE_ATOM 1
 #define OMAX_ARG_TYPE_EXPR 2
@@ -38,14 +39,14 @@ typedef struct _omax_expr_arg{
 	struct _omax_expr_arg *next;
 } t_omax_expr_arg;
 
-typedef int (*t_omax_funcptr)(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+typedef int (*t_omax_funcptr)(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 /** \struct t_omax_expr_rec
     A record that associates a function name (string) with a function pointer.
 */
 typedef struct _omax_expr_rec{
 	const char *name; /**< Name of the function as a C string. */
-	int (*func)(t_omax_expr*, int, int*, t_atom64**, int*, t_atom64**); /**< Function pointer */
+	int (*func)(t_omax_expr*, int, t_osc_atom_ar_u**, t_osc_atom_ar_u**); /**< Function pointer */
 	int numargs;
 	void *extra; /**< Extra field that can contain anything. */
 	const char *desc;
@@ -67,61 +68,61 @@ typedef struct _omax_expr_const_rec{
 
    @returns 0 if no error, 1 if there was an error.
  */
-int omax_expr_funcall(t_omax_expr *function, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
-int omax_expr_getArg(t_omax_expr_arg *arg, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
-int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, int *argc_out, t_atom64 **argv_out);
+int omax_expr_funcall(t_omax_expr *function, long *len, char **oscbndl, t_osc_atom_ar_u **out);
+int omax_expr_getArg(t_omax_expr_arg *arg, long *len, char **oscbndl, t_osc_atom_ar_u **out);
+int omax_expr_call(t_omax_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **out);
 t_omax_expr_rec *omax_expr_lookupFunction(char *name);
 
-int omax_expr_1arg_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_1arg_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dblptr_dbl(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dbl_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_2arg(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_1arg_dbl(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_1arg_dblptr(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_2arg_dbl_dbl(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_2arg_dblptr_dbl(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_2arg_dbl_dblptr(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_2arg_dblptr_dblptr(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_2arg(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
-t_atom64 omax_expr_add(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_subtract(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_multiply(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_divide(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_lt(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_lte(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_gt(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_gte(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_eq(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_neq(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_and(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_or(t_atom64 *f1, t_atom64 *f2);
-t_atom64 omax_expr_mod(t_atom64 *f1, t_atom64 *f2);
+void omax_expr_add(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_subtract(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_multiply(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_divide(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_lt(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_lte(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_gt(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_gte(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_eq(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_neq(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_and(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_or(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
+void omax_expr_mod(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
 
-int omax_expr_assign(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_assign(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
-int omax_expr_get_index(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_product(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_sum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_cumsum(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_length(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_mean(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_median(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_concat(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_reverse(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_make_list(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_range(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_multiplex(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_not(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_dot(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_l2norm(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_min(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_max(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_extrema(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_clip(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_scale(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_mtof(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_ftom(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_rand(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_sgn(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_if(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
-int omax_expr_defined(t_omax_expr *f, int argcc, int *argc, t_atom64 **argv, int *argc_out, t_atom64 **argv_out);
+int omax_expr_get_index(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_product(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_sum(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_cumsum(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_length(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_mean(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_median(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_concat(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_reverse(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_make_list(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_range(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_multiplex(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_not(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_dot(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_l2norm(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_min(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_max(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_extrema(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_clip(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_scale(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_mtof(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_ftom(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_rand(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_sgn(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_if(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int omax_expr_defined(t_omax_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 
 t_omax_expr_arg *omax_expr_arg_alloc(void);

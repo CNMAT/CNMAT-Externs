@@ -50,7 +50,7 @@ inline t_symbol *omax_atom_getsym(t_atom *ap);
 #define atom_getfloat(ap) omax_atom_getfloat(ap)
 #define atom_getsym(ap) omax_atom_getsym(ap)
 #endif
-
+/*
 #define A64_LONG 1
 #define A64_FLOAT 2
 #define A64_SYM 3
@@ -75,7 +75,7 @@ int32_t atom64_getlong(t_atom64 *a);
 double atom64_getfloat(t_atom64 *a);
 t_symbol *atom64_getsym(t_atom64 *a);
 void *atom64_getptr(t_atom64 *a);
-
+*/
 /**
  * An object for holding OSC-related instance data
  */

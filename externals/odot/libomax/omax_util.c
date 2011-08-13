@@ -52,7 +52,7 @@ inline t_symbol *omax_atom_getsym(t_atom *ap){
 	}
 }
 #endif
-
+/*
 void atom64_setlong(t_atom64 *a, int32_t l){
 	if(!a){
 		return;
@@ -130,7 +130,7 @@ t_symbol *atom64_getsym(t_atom64 *a){
 void *atom64_getptr(t_atom64 *a){
 
 }
-
+*/
 typedef struct _context{
 	t_object *ob;
 	t_symbol *osc_classname;
