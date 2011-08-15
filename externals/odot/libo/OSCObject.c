@@ -5,6 +5,8 @@
 #include "OSCObject.h"
 #include "OSCObject.r"
 #include "osc.h"
+#include "osc_error.h"
+#include "osc_mem.h"
 
 
 
@@ -26,4 +28,5 @@ t_osc_err osc_format(void *_self, long *buflen, char **buf){
 	if(self->format){
 		self->format(_self, buflen, buf);
 	}
+	return OSC_ERR_NONE;
 }

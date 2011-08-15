@@ -178,7 +178,7 @@ int osc_match_star(const char *pattern, const char *address){
 #if (OSC_MATCH_ENABLE_NSTARS == 1)
 int osc_match_star_r(const char *pattern, const char *address){
 	if(*address == '/' || *address == '\0'){
-		if(*pattern == '/' || *pattern == '\0' || (*pattern == '*' && (*(pattern + 1) == '/') || *(pattern + 1) == '\0')){
+		if(*pattern == '/' || *pattern == '\0' || (*pattern == '*' && ((*(pattern + 1) == '/') || *(pattern + 1) == '\0'))){
 			return 1;
 		}else{
 			return 0;
@@ -297,35 +297,3 @@ int osc_match_curly_brace(const char *pattern, const char *address){
 
 	return 1;
 }
-
-/*
-#include "stdio.h"
-
-int main() {
-
-	char* a[4] = {
-		"/foo",
-		"/foo/bar",
-		"/foo/bar/baz",
-		"/fu"
-	};
-
-	char* p = "/foo/*";
-
-	int t;
-	int q;
-	int r;
-
-	int i;
-
-	for (i = 0; i < 4; i++) {
-		r = osc_match(p, a[i], &t, &q);
-		printf("%s %s => %s %s (%d)\n", p, a[i], p+t, a[i]+q, r);
-	}
-
-	return 1;
-}
-
-
-
-*/

@@ -38,13 +38,6 @@ c99_floating_point_constant  ({dfc}|{hfc})
 
 %%
 
-\/$[1-9]+	{
-		//printf("address sub\n");
-		char *endp = NULL;
-		yylval->i = strtol(yytext + 2, &endp, 0);
-		return OSCADDRESS_DOLLARSUB;
-	}
-
 $[1-9]+	{
 		//printf("sub\n");
 		char *endp = NULL;
@@ -85,7 +78,7 @@ $[1-9]+	{
 			return OSCADDRESS;
 		}
 
-[a-zA-Z][^ \t\n]*	{
+[a-zA-Z0-9][^ \t\n]*	{
 				//printf("string\n");
 				yylval->string = strdup(yytext);
 				return STRING;

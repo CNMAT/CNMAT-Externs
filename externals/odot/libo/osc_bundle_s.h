@@ -35,15 +35,36 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include "osc_bundle_u.h"
 #include "osc_message_s.h"
 #include "osc_error.h"
+#include "osc_array.h"
 
+typedef struct _osc_bundle_s t_osc_bundle_s, t_osc_bndl_s;
+typedef t_osc_array t_osc_bundle_array_s, t_osc_bndl_ar_s;
+
+t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr);
+void osc_bundle_s_free(t_osc_bndl_s *bndl);
+char *osc_bundle_s_getPtr(t_osc_bndl_s *bndl);
+long osc_bundle_s_getLen(t_osc_bndl_s *bndl);
 t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count);
 t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_osc_msg_s*, void *), void *context);
-t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, int *nmatches, t_osc_msg_s ***m, int fullmatch);
+t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, t_osc_array **osc_msg_s_array, int fullmatch);
+t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *old, char *new);
+t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, char *msg);
 t_osc_err osc_bundle_s_setBundleID(char *buf);
 int osc_bundle_s_strcmpID(char *buf);
+t_osc_err osc_bundle_s_deserialize(long len, char *ptr, t_osc_bndl_u **bndl);
 t_osc_err osc_bundle_s_format(long len, char *bndl, long *buflen, char **buf);
+t_osc_array *osc_bundle_array_s_alloc(long len);
+
+t_osc_bundle_array_s *osc_bundle_array_s_alloc(long len);
+#define osc_bundle_array_s_free(ar) osc_array_free((ar))
+#define osc_bundle_array_s_clear(ar) osc_array_clear((ar))
+#define osc_bundle_array_s_get(ar, idx) osc_array_get((ar), (idx))
+#define osc_bundle_array_s_getLen(ar) osc_array_getLen((ar))
+#define osc_bundle_array_s_copy(ar) osc_array_copy((ar))
+#define osc_bundle_array_s_resize(ar, newlen) osc_array_resize((ar), (newlen))
 
 #ifdef __cplusplus
 }

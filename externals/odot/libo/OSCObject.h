@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "osc.h"
+#include "osc_error.h"
 
 extern const void *OSCObject;
 

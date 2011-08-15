@@ -23,6 +23,26 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 /** 	\file osc_atom_s.h
 	\author John MacCallum
 
+\brief Basic polymorphic data type for representing serialized arguments in an OSC message.
+
+osc_atom_s.h provides a basic polymorphic data type (#t_osc_atom_s) useful for  representing
+the arguments in a serialized OSC message.  Currently, it supports the following types:
+
+<table>
+<tr><th>Description</th><th>C Data type</th><th>OSC typetag</th></tr>
+<tr><td>64-bit (double) precision floating point</td><td>double</td><td>d</td></tr>
+<tr><td>32-bit (single) precision floating point</td><td>float</td><td>f</td></tr>
+<tr><td>Signed 32-bit integer</td><td>int32_t</td><td>i</td></tr>
+<tr><td>Unsigned 32-bit integer</td><td>uint32_t</td><td>h</td></tr>
+<tr><td>Signed 64-bit integer</td><td>int64_t</td><td>I</td></tr>
+<tr><td>Unsigned 64-bit integer</td><td>uint64_t</td><td>H</td></tr>
+<tr><td>String</td><td>char *</td><td>s</td></tr>
+<tr><td>True</td><td>\<none\></td><td>T</td></tr>
+<tr><td>False</td><td>\<none\></td><td>F</td></tr>
+<tr><td>Null</td><td>\<none\></td><td>N</td></tr>
+<tr><td>OSC bundle (nested)</td><td>char *</td><td>#</td></tr>
+</table>
+
 */
 
 #ifndef __OSC_ATOM_S_H__
@@ -36,9 +56,20 @@ extern "C" {
 #include <stdlib.h>
 #include "osc_error.h"
 #include "osc_byteorder.h"
+#include "osc_atom_u.h"
 
+/** \brief Opaque data type for storing an argument to an OSC message
+
+This structure is defined in osc_atom_s.r.  
+*/
 typedef struct _osc_atom_s t_osc_atom_s;
 
+/** \brief Allocate a #t_osc_atom_s and set it to refer to ptr
+
+This function will call #osc_atom_s_set().  The array that ptr points to will not be copied
+and must be freed by the caller.
+\return A #t_osc_atom_s
+ */
 t_osc_atom_s *osc_atom_s_alloc(char typetag, char *ptr);
 void osc_atom_s_set(t_osc_atom_s *a, char typetag, char *ptr);
 char osc_atom_s_getTypetag(t_osc_atom_s *a);
@@ -66,7 +97,7 @@ void osc_atom_s_setFalse(t_osc_atom_s *a);
 void osc_atom_s_setNull(t_osc_atom_s *a);
 
 size_t osc_atom_s_sizeof(t_osc_atom_s *a);
-
+t_osc_err osc_atom_s_deserialize(t_osc_atom_s *a, t_osc_atom_u **a_u);
 t_osc_err osc_atom_s_format(t_osc_atom_s *a, long *buflen, char **buf);
 
 #ifdef __cplusplus

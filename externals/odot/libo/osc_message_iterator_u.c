@@ -23,6 +23,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "osc.h"
+#include "osc_mem.h"
 #include "osc_message_iterator_u.h"
 #include "osc_message_iterator_u.r"
 #include "osc_message_u.h"

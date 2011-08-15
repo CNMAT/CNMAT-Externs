@@ -9,10 +9,12 @@
 #include "SerializedOSCMessage.h"
 #include "SerializedOSCMessage.r"
 #include "osc_message_s.h"
+#include "osc_error.h"
 
 static t_osc_err SerializedOSCMessage_format(SerializedOSCMessage _self, long *buflen, char **buf){
 	struct SerializedOSCMessageClass *self = _self;
 	osc_message_s_format(self->m, buflen, buf);
+	return OSC_ERR_NONE;
 }
 
 static SerializedOSCMessage SerializedOSCMessage_ctor(SerializedOSCMessage _self, va_list *ap){
@@ -28,6 +30,7 @@ static SerializedOSCMessage SerializedOSCMessage_ctor(SerializedOSCMessage _self
 static void *SerializedOSCMessage_dtor(SerializedOSCMessage _self){
 	struct SerializedOSCMessageClass *self = _self;
 	osc_message_s_free(self->m);
+	return self;
 }
 
 static const struct OSCObject _SerializedOSCMessage = {

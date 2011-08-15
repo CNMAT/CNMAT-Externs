@@ -1,7 +1,7 @@
 #ifndef __OSCOBJECT_R__
 #define __OSCOBJECT_R__
 
-#include "osc.h"
+#include "osc_error.h"
 
 struct OSCObject{
 	size_t size;

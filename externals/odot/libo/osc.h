@@ -44,18 +44,6 @@ extern "C" {
 #define OSC_ID OSC_IDENTIFIER
 #define OSC_ID_SIZE OSC_IDENTIFIER_SIZE
 
-#include "osc_error.h"
-#include "osc_byteorder.h"
-#include "osc_bundle.h"
-#include "osc_bundle_s.h"
-#include "osc_message.h"
-#include "osc_message_s.h"
-#include "osc_message_iterator_s.h"
-#include "osc_atom_s.h"
-#include "osc_mem.h"
-#include "osc_timetag.h"
-#include "osc_match.h"
-
 #ifdef __cplusplus
 }
 #endif

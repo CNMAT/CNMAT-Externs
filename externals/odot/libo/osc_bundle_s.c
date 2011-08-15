@@ -25,15 +25,40 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <string.h>
 #include <inttypes.h>
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_match.h"
+#include "osc_timetag.h"
 #include "osc_message_s.h"
 #include "osc_atom_s.h"
 #include "osc_bundle_s.h"
+#include "osc_bundle_s.r"
 #include "osc_bundle_iterator_s.h"
+#include "osc_bundle_u.h"
+#include "osc_array.h"
+
+t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr){
+	t_osc_bndl_s *b = osc_mem_alloc(sizeof(t_osc_bndl_s));
+	b->len = len;
+	b->ptr = ptr;
+	return b;
+}
+
+void osc_bundle_s_free(t_osc_bndl_s *bndl){
+	osc_mem_free(bndl);
+}
+
+char *osc_bundle_s_getPtr(t_osc_bndl_s *bndl){
+	return bndl->ptr;
+}
+
+long osc_bundle_s_getLen(t_osc_bndl_s *bndl){
+	return bndl->len;
+}
 
 t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count){
 	*count = 0;
 	t_osc_err ret;
-	if(ret = osc_error_bundleSanityCheck(len, buf)){
+	if((ret = osc_error_bundleSanityCheck(len, buf))){
 		return ret;
 	}
 	char *ptr = buf + OSC_HEADER_SIZE;
@@ -47,7 +72,7 @@ t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count){
 
 t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_osc_msg_s*, void *), void *context){
 	int ret;
-	if(ret = osc_error_bundleSanityCheck(len, buf)){
+	if((ret = osc_error_bundleSanityCheck(len, buf))){
 		return ret;
 	}
 	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, buf);
@@ -59,18 +84,11 @@ t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_o
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, int *nmatches, t_osc_msg_s ***m, int fullmatch){
-	int matchbuflen = 16, n = 0;
-	t_osc_msg_s **matches = osc_mem_alloc(matchbuflen * sizeof(t_osc_msg_s *));
+t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, t_osc_ar **osc_msg_s_array, int fullmatch){
+	int matchbuflen = 0, n = 0;
+	t_osc_msg_ar_s *ar = NULL;
 	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, buf);
 	while(osc_bndl_it_s_hasNext(it)){
-		if(n >= matchbuflen){
-			matches = osc_mem_resize(matches, (matchbuflen + 16) * sizeof(t_osc_msg_s *));
-			if(!matches){
-				return OSC_ERR_OUTOFMEM;
-			}
-			matchbuflen += 16;
-		}
 		t_osc_msg_s *current_message = osc_bndl_it_s_next(it);
 		int po, ao;
 		int r = osc_match(address, osc_message_s_getAddress(current_message), &po, &ao);
@@ -83,28 +101,66 @@ t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, int *nma
 				continue;
 			}
 		}
-		//t_osc_msg_s *mm = osc_message_s_alloc();
-		osc_message_s_copy(matches + n++, current_message);
-		/*
-		if(last == NULL){
-			*m = mm;
-			last = mm;
-		}else{
-			last->next = mm;
-			mm->prev = last;
-			last = mm;
+		//osc_message_s_copy(matches + n++, current_message);
+		if(n >= matchbuflen){
+			//matches = osc_mem_resize(matches, (matchbuflen + 16) * sizeof(t_osc_msg_s *));
+			if(!ar){
+				ar = osc_message_array_s_alloc(16);
+				if(!ar){
+					return OSC_ERR_OUTOFMEM;
+				}
+			}else{
+				t_osc_err e = osc_array_resize(ar, matchbuflen + 16);
+				if(e){
+					return e;
+				}
+			}
+			matchbuflen += 16;
 		}
-		*/
-		//cont:
-		//ptr += msgsize;
+		t_osc_msg_s *p = osc_array_get(ar, n++);
+		osc_message_s_copy(&p, current_message);
 	}
 	osc_bndl_it_s_destroy(it);
-	*nmatches = n;
-	*m = matches;
+//*nmatches = n;
+//*m = matches;
+	if(ar){
+		osc_array_resize(ar, n);
+	}
+	*osc_msg_s_array = ar;
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_s_addSerializedMessage(long *len, char **bndl, long msglen, char *msg){
+t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *oldmsg, char *newmsg){
+	uint32_t old_size = ntoh32(*((uint32_t *)oldmsg));
+	uint32_t new_size = ntoh32(*((uint32_t *)newmsg));
+	char copy[*len - (old_size + 4) + (new_size + 4)];
+	char *oldptr = *bndl, *newptr = copy;
+
+	memcpy(newptr, oldptr, oldmsg - *bndl);
+	newptr += oldmsg - *bndl;
+	oldptr += oldmsg - *bndl;
+
+	memcpy(newptr, newmsg, new_size + 4);
+	newptr += new_size + 4;
+	oldptr += old_size + 4;
+
+	long r = *len - (oldptr - *bndl);
+	if(r){
+		memcpy(newptr, oldptr, r);
+	}
+	char *tmp = osc_mem_resize(*bndl, sizeof(copy));
+	if(!tmp){
+		return OSC_ERR_OUTOFMEM;
+	}
+
+	*bndl = tmp;
+	memcpy(*bndl, copy, sizeof(copy));
+	*len = sizeof(copy);
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, char *msg){
+	uint32_t msglen = ntoh32(*((uint32_t *)msg));
 	char *tmp = (char *)osc_mem_resize(*bndl, *len + msglen + 4);
 	if(!tmp){
 		return OSC_ERR_OUTOFMEM;
@@ -120,6 +176,7 @@ t_osc_err osc_bundle_s_setBundleID(char *buf){
 		return OSC_ERR_NOBUNDLE;
 	}
 	strncpy(buf, OSC_IDENTIFIER, OSC_IDENTIFIER_SIZE);
+	return OSC_ERR_NONE;
 }
 
 int osc_bundle_s_strcmpID(char *buf){
@@ -131,22 +188,35 @@ t_osc_timetag osc_bundle_s_getTimetag(int len, char *buf){
 }
 #else
 t_osc_timetag osc_bundle_s_getTimetag(int len, char *buf){
+	return 0;
 }
 #endif
 
-extern t_osc_err osc_message_s_doFormat(t_osc_msg_s *m, long *buflen, long *bufpos, char **buf);
-
-void osc_bundle_s_formatBundleCbk(t_osc_msg_s *msg, void *context){
-	struct context {long *buflen; long *bufpos; char **buf;};
-	struct context *c = (struct context *)context;
-	osc_message_s_doFormat(msg, c->buflen, c->bufpos, c->buf);
+t_osc_err osc_bundle_s_deserialize(long len, char *ptr, t_osc_bndl_u **bndl){
+	t_osc_bndl_u *b = osc_bundle_u_alloc();
+	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, ptr);
+	while(osc_bndl_it_s_hasNext(it)){
+		t_osc_msg_s *m = osc_bndl_it_s_next(it);
+		t_osc_msg_u *um = NULL;
+		osc_message_s_deserialize(m, &um);
+		osc_bundle_u_addMsg(b, um);
+	}
+	osc_bndl_it_s_destroy(it);
+	*bndl = b;
+	return OSC_ERR_NONE;
 }
 
+extern t_osc_err osc_message_s_doFormat(t_osc_msg_s *m, long *buflen, long *bufpos, char **buf);
+
 t_osc_err osc_bundle_s_doFormat(long len, char *bndl, long *buflen, long *bufpos, char **buf){
-	struct context {long *buflen; 
-		long *bufpos; 
-		char **buf;} context = {buflen, bufpos, buf};
-	osc_bundle_s_getMessagesWithCallback(len, bndl, osc_bundle_s_formatBundleCbk, (void *)&context);
+	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, bndl);
+	while(osc_bndl_it_s_hasNext(it)){
+		t_osc_msg_s *m = osc_bndl_it_s_next(it);
+		osc_message_s_doFormat(m, buflen, bufpos, buf);
+		(*bufpos) += sprintf(*buf + *bufpos, "\n");
+	}
+	osc_bndl_it_s_destroy(it);
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_bundle_s_format(long len, char *bndl, long *buflen, char **buf){
@@ -162,3 +232,6 @@ t_osc_err osc_bundle_s_format(long len, char *bndl, long *buflen, char **buf){
 	return e;
 }
 
+t_osc_array *osc_bundle_array_s_alloc(long len){
+	return osc_array_allocWithSize(len, sizeof(t_osc_bndl_s));
+}

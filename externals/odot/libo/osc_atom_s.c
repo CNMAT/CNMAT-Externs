@@ -26,8 +26,11 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <stdint.h>
 #include <inttypes.h>
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_byteorder.h"
 #include "osc_atom_s.h"
 #include "osc_atom_s.r"
+#include "osc_atom_u.h"
 
 t_osc_atom_s *osc_atom_s_alloc(char typetag, char *ptr){
 	t_osc_atom_s *a = osc_mem_alloc(sizeof(t_osc_atom_s));
@@ -50,14 +53,6 @@ char *osc_atom_s_getData(t_osc_atom_s *a){
 
 float osc_atom_s_getFloat(t_osc_atom_s *a){
 	switch(a->typetag){
-	case 'i': // signed 32-bit int
-		return (float)(ntoh32(*((int32_t *)(a->data))));
-	case 'h': // signed 64-bit int
-		return (float)(ntoh64(*((int64_t *)(a->data))));
-	case 'I': // unsigned 32-bit int
-		return (float)(ntoh32(*((uint32_t *)(a->data))));
-	case 'H': // unsigned 64-bit int
-		return (float)(ntoh64(*((uint64_t *)(a->data))));
 	case 'f': // 32-bit IEEE 754 float
 		{
 			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
@@ -68,6 +63,14 @@ float osc_atom_s_getFloat(t_osc_atom_s *a){
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			return (float)(*((double *)&i));
 		}
+	case 'i': // signed 32-bit int
+		return (float)(ntoh32(*((int32_t *)(a->data))));
+	case 'h': // signed 64-bit int
+		return (float)(ntoh64(*((int64_t *)(a->data))));
+	case 'I': // unsigned 32-bit int
+		return (float)(ntoh32(*((uint32_t *)(a->data))));
+	case 'H': // unsigned 64-bit int
+		return (float)(ntoh64(*((uint64_t *)(a->data))));
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -85,6 +88,16 @@ float osc_atom_s_getFloat(t_osc_atom_s *a){
 
 double osc_atom_s_getDouble(t_osc_atom_s *a){
 	switch(a->typetag){
+	case 'd': // 64-bit IEEE 754 double
+		{
+			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
+			return *((double *)&i);
+		}
+	case 'f': // 32-bit IEEE 754 float
+		{
+			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
+			return (double)(*((float *)&i));
+		}
 	case 'i': // signed 32-bit int
 		return (double)(ntoh32(*((int32_t *)(a->data))));
 	case 'h': // signed 64-bit int
@@ -93,16 +106,6 @@ double osc_atom_s_getDouble(t_osc_atom_s *a){
 		return (double)(ntoh32(*((uint32_t *)(a->data))));
 	case 'H': // unsigned 64-bit int
 		return (double)(ntoh64(*((uint64_t *)(a->data))));
-	case 'f': // 32-bit IEEE 754 float
-		{
-			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
-			return (double)(*((float *)&i));
-		}
-	case 'd': // 64-bit IEEE 754 double
-		{
-			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
-			return *((double *)&i);
-		}
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -122,12 +125,6 @@ int32_t osc_atom_s_getInt32(t_osc_atom_s *a){
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return ntoh32(*((int32_t *)(a->data)));
-	case 'h': // signed 64-bit int
-		return (int32_t)(ntoh64(*((int64_t *)(a->data))));
-	case 'I': // unsigned 32-bit int
-		return ntoh32(*((uint32_t *)(a->data)));
-	case 'H': // unsigned 64-bit int
-		return (int32_t)(ntoh64(*((uint64_t *)(a->data))));
 	case 'f': // 32-bit IEEE 754 float
 		{
 			// this looks nasty, but it's correct.
@@ -142,6 +139,12 @@ int32_t osc_atom_s_getInt32(t_osc_atom_s *a){
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			return (int32_t)(*((double *)&i));
 		}
+	case 'h': // signed 64-bit int
+		return (int32_t)(ntoh64(*((int64_t *)(a->data))));
+	case 'I': // unsigned 32-bit int
+		return ntoh32(*((uint32_t *)(a->data)));
+	case 'H': // unsigned 64-bit int
+		return (int32_t)(ntoh64(*((uint64_t *)(a->data))));
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -159,24 +162,24 @@ int32_t osc_atom_s_getInt32(t_osc_atom_s *a){
 
 int64_t osc_atom_s_getInt64(t_osc_atom_s *a){
 	switch(a->typetag){
-	case 'i': // signed 32-bit int
-		return ntoh32(*((int32_t *)(a->data)));
 	case 'h': // signed 64-bit int
 		return ntoh64(*((int64_t *)(a->data)));
-	case 'I': // unsigned 32-bit int
-		return (int64_t)(ntoh32(*((uint32_t *)(a->data))));
-	case 'H': // unsigned 64-bit int
-		return (int64_t)(ntoh64(*((uint64_t *)(a->data))));
-	case 'f': // 32-bit IEEE 754 float
-		{
-			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
-			return (int64_t)(*((float *)&i));
-		}
+	case 'i': // signed 32-bit int
+		return ntoh32(*((int32_t *)(a->data)));
 	case 'd': // 64-bit IEEE 754 double
 		{
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			return (int64_t)(*((double *)&i));
 		}
+	case 'f': // 32-bit IEEE 754 float
+		{
+			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
+			return (int64_t)(*((float *)&i));
+		}
+	case 'I': // unsigned 32-bit int
+		return (int64_t)(ntoh32(*((uint32_t *)(a->data))));
+	case 'H': // unsigned 64-bit int
+		return (int64_t)(ntoh64(*((uint64_t *)(a->data))));
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -194,14 +197,10 @@ int64_t osc_atom_s_getInt64(t_osc_atom_s *a){
 
 uint32_t osc_atom_s_getUInt32(t_osc_atom_s *a){
 	switch(a->typetag){
-	case 'i': // signed 32-bit int
-		return (uint32_t)(ntoh32(*((int32_t *)(a->data))));
-	case 'h': // signed 64-bit int
-		return (uint32_t)(ntoh64(*((int64_t *)(a->data))));
 	case 'I': // unsigned 32-bit int
 		return ntoh32(*((uint32_t *)(a->data)));
-	case 'H': // unsigned 64-bit int
-		return (uint32_t)(ntoh64(*((uint64_t *)(a->data))));
+	case 'i': // signed 32-bit int
+		return (uint32_t)(ntoh32(*((int32_t *)(a->data))));
 	case 'f': // 32-bit IEEE 754 float
 		{
 			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
@@ -212,6 +211,10 @@ uint32_t osc_atom_s_getUInt32(t_osc_atom_s *a){
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			return (uint32_t)(*((double *)&i));
 		}
+	case 'h': // signed 64-bit int
+		return (uint32_t)(ntoh64(*((int64_t *)(a->data))));
+	case 'H': // unsigned 64-bit int
+		return (uint32_t)(ntoh64(*((uint64_t *)(a->data))));
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -229,14 +232,14 @@ uint32_t osc_atom_s_getUInt32(t_osc_atom_s *a){
 
 uint64_t osc_atom_s_getUInt64(t_osc_atom_s *a){
 	switch(a->typetag){
+	case 'H': // unsigned 64-bit int
+		return ntoh64(*((uint64_t *)(a->data)));
 	case 'i': // signed 32-bit int
 		return (uint64_t)(ntoh32(*((int32_t *)(a->data))));
 	case 'h': // signed 64-bit int
 		return (uint64_t)(ntoh64(*((int64_t *)(a->data))));
 	case 'I': // unsigned 32-bit int
 		return (uint64_t)(ntoh32(*((uint32_t *)(a->data))));
-	case 'H': // unsigned 64-bit int
-		return ntoh64(*((uint64_t *)(a->data)));
 	case 'f': // 32-bit IEEE 754 float
 		{
 			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
@@ -266,12 +269,6 @@ int osc_atom_s_getInt(t_osc_atom_s *a){
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return (int)(ntoh32(*((int32_t *)(a->data))));
-	case 'h': // signed 64-bit int
-		return (int)(ntoh64(*((int64_t *)(a->data))));
-	case 'I': // unsigned 32-bit int
-		return (int)(ntoh32(*((uint32_t *)(a->data))));
-	case 'H': // unsigned 64-bit int
-		return (int)(ntoh64(*((uint64_t *)(a->data))));
 	case 'f': // 32-bit IEEE 754 float
 		{
 			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
@@ -282,6 +279,12 @@ int osc_atom_s_getInt(t_osc_atom_s *a){
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			return (int)(*((double *)&i));
 		}
+	case 'h': // signed 64-bit int
+		return (int)(ntoh64(*((int64_t *)(a->data))));
+	case 'I': // unsigned 32-bit int
+		return (int)(ntoh32(*((uint32_t *)(a->data))));
+	case 'H': // unsigned 64-bit int
+		return (int)(ntoh64(*((uint64_t *)(a->data))));
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -297,14 +300,39 @@ int osc_atom_s_getInt(t_osc_atom_s *a){
 	return 0;
 }
 
-char *osc_atom_s_getString(t_osc_atom_s *a){
+char *osc_atom_s_getString(t_osc_atom_s *a){	
 	switch(a->typetag){
+	case 's': // string
+		{
+			int n = strlen(a->data);
+			char *buf = osc_mem_alloc(n + 1);
+			strncpy(buf, a->data, n + 1);
+			return buf;
+		}
 	case 'i': // signed 32-bit int
 		{
 			int32_t i = ntoh32(*((int32_t *)(a->data)));
 			int n = snprintf(NULL, 0, "%"PRId32, i);
 			char *buf = osc_mem_alloc(n + 1);
 			sprintf(buf, "%"PRId32, i);
+			return buf;
+		}
+	case 'f': // 32-bit IEEE 754 float
+		{
+			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
+			float f = *((float *)&i);
+			int n = snprintf(NULL, 0, "%f", f);
+			char *buf = osc_mem_alloc(n + 1);
+			sprintf(buf, "%g", f);
+			return buf;
+		}
+	case 'd': // 64-bit IEEE 754 double
+		{
+			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
+			double f = *((double *)&i);
+			int n = snprintf(NULL, 0, "%f", f);
+			char *buf = osc_mem_alloc(n + 1);
+			sprintf(buf, "%g", f);
 			return buf;
 		}
 	case 'h': // signed 64-bit int
@@ -331,31 +359,6 @@ char *osc_atom_s_getString(t_osc_atom_s *a){
 			sprintf(buf, "%"PRIu64, i);
 			return buf;
 		}
-	case 'f': // 32-bit IEEE 754 float
-		{
-			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
-			float f = *((float *)&i);
-			int n = snprintf(NULL, 0, "%f", f);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%g", f);
-			return buf;
-		}
-	case 'd': // 64-bit IEEE 754 double
-		{
-			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
-			double f = *((double *)&i);
-			int n = snprintf(NULL, 0, "%f", f);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%g", f);
-			return buf;
-		}
-	case 's': // string
-		{
-			int n = strlen(a->data);
-			char *buf = osc_mem_alloc(n + 1);
-			strncpy(buf, a->data, n + 1);
-			return buf;
-		}
 	case 'T': // true
 		{
 			char *buf = osc_mem_alloc(5);
@@ -379,6 +382,11 @@ char *osc_atom_s_getString(t_osc_atom_s *a){
 
 int osc_atom_s_getBool(t_osc_atom_s *a){
 	switch(a->typetag){
+	case 'T':
+		return 1;
+	case 'F':
+	case 'N':
+		return 0;
 	case 'i':
 		return !(ntoh32(*((int32_t *)a->data)) == 0);
 	case 'h':
@@ -412,11 +420,6 @@ int osc_atom_s_getBool(t_osc_atom_s *a){
 		}else{
 			return 0;
 		}
-	case 'T':
-		return 1;
-	case 'F':
-	case 'N':
-		return 0;
 	case '#':
 		return 0;
 	}
@@ -495,6 +498,52 @@ size_t osc_atom_s_sizeof(t_osc_atom_s *a){
 	return osc_sizeof(a->typetag, a->data);
 }
 
+t_osc_err osc_atom_s_deserialize(t_osc_atom_s *a, t_osc_atom_u **a_u){
+	t_osc_atom_u *atom_u = NULL;
+	if(!(*a_u)){
+		atom_u = osc_atom_u_alloc();
+	}else{
+		atom_u = *a_u;
+	}
+	// nothing to do for #
+	switch(osc_atom_s_getTypetag(a)){
+	case 'i':
+		osc_atom_u_setInt32(atom_u, osc_atom_s_getInt32(a));
+		break;
+	case 'f':
+		osc_atom_u_setFloat(atom_u, osc_atom_s_getFloat(a));
+		break;
+	case 'd':
+		osc_atom_u_setDouble(atom_u, osc_atom_s_getDouble(a));
+		break;
+	case 's':
+		osc_atom_u_setStringPtr(atom_u, osc_atom_s_getString(a));
+		break;
+	case 'h':
+		osc_atom_u_setInt64(atom_u, osc_atom_s_getInt64(a));
+		break;
+	case 'I':
+		osc_atom_u_setUInt32(atom_u, osc_atom_s_getUInt32(a));
+		break;
+	case 'H':
+		osc_atom_u_setUInt64(atom_u, osc_atom_s_getUInt64(a));
+		break;
+	case 'T':
+		osc_atom_u_setTrue(atom_u);
+		break;
+	case 'F':
+		osc_atom_u_setFalse(atom_u);
+		break;
+	case 'N':
+		osc_atom_u_setNull(atom_u);
+		break;
+	case '#':
+		;
+	}
+	*a_u = atom_u;
+	return OSC_ERR_NONE;
+}
+
 t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char **buf){
 	if((*buflen - *bufpos) < 64){
 		*buf = osc_mem_resize(*buf, *buflen + 64);
@@ -507,15 +556,6 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 	switch(osc_atom_s_getTypetag(a)){
 	case 'i':
 		*bufpos += sprintf(*buf + *bufpos, "%"PRId32" ", (int32_t)ntoh32(*((int32_t *)data)));
-		break;
-	case 'h':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRId64" ", (int64_t)ntoh64(*((int64_t *)data)));
-		break;
-	case 'I':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu32" ", (uint32_t)ntoh32(*((uint32_t *)data)));
-		break;
-	case 'H':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu64" ", (uint64_t)ntoh64(*((uint64_t *)data)));
 		break;
 	case 'f':
 		{
@@ -531,6 +571,23 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 		break;
 	case 's':
 		*bufpos += sprintf(*buf + *bufpos, "%s ", data);
+		break;
+	case '#':
+		{
+			*bufpos += sprintf(*buf + *bufpos, "[\n");
+			extern t_osc_err osc_bundle_s_doFormat(long len, char *bndl, long *buflen, long *bufpos, char **buf);
+			osc_bundle_s_doFormat(ntoh32(*((uint32_t *)data)), data + 4, buflen, bufpos, buf);
+			*bufpos += sprintf(*buf + *bufpos, "]");
+		}
+		break;
+	case 'h':
+		*bufpos += sprintf(*buf + *bufpos, "%"PRId64" ", (int64_t)ntoh64(*((int64_t *)data)));
+		break;
+	case 'I':
+		*bufpos += sprintf(*buf + *bufpos, "%"PRIu32" ", (uint32_t)ntoh32(*((uint32_t *)data)));
+		break;
+	case 'H':
+		*bufpos += sprintf(*buf + *bufpos, "%"PRIu64" ", (uint64_t)ntoh64(*((uint64_t *)data)));
 		break;
 	case 'c':
 		*bufpos += sprintf(*buf + *bufpos, "%c ", *(data));
@@ -555,12 +612,6 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 			*/
 		}
 		break;
-	case '#':
-		{
-			*bufpos += sprintf(*buf + *bufpos, "[\n");
-			osc_bundle_formatBndl(ntoh32(*((uint32_t *)data)), data + 4, buflen, bufpos, buf);
-			*bufpos += sprintf(*buf + *bufpos, "]");
-		}
 	}
 	return OSC_ERR_NONE;
 }
@@ -570,4 +621,8 @@ t_osc_err osc_atom_s_format(t_osc_atom_s *a, long *buflen, char **buf){
 	t_osc_err e = osc_atom_s_doFormat(a, &mybuflen, &mybufpos, buf);
 	*buflen = mybufpos;
 	return e;
+}
+
+t_osc_array *osc_atom_array_s_alloc(long len){
+	return osc_array_allocWithSize(len, sizeof(t_osc_atom_s));
 }

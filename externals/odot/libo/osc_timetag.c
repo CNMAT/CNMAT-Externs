@@ -25,6 +25,7 @@
 #include "strptime.h"
 
 #include "osc.h"
+#include "osc_byteorder.h"
 
 // own header
 #include "osc_timetag.h"

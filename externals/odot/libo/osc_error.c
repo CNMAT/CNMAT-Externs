@@ -24,6 +24,9 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <stdio.h>
 #include <string.h>
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_bundle.h"
+#include "osc_byteorder.h"
 
 char *osc_error_string(t_osc_err err){
 	switch(err){
@@ -67,11 +70,10 @@ t_osc_err osc_error_bundleSanityCheck(int len, char *bundle){
 		return OSC_ERR_NOBUNDLEID;
 	}
 	char *ptr = bundle + OSC_HEADER_SIZE;
-	int i = 0;
 	while((ptr - bundle) < len){
 		int size = ntoh32(*((uint32_t *)ptr));
 		int ret;
-		if(ret = osc_error_msgSanityCheck(ptr)){
+		if((ret = osc_error_msgSanityCheck(ptr))){
 			return ret;
 		}
 		ptr += size + 4;

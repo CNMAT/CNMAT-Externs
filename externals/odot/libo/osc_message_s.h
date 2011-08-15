@@ -37,6 +37,7 @@ extern "C" {
 #include <stdint.h>
 #include "osc_atom_s.h"
 #include "osc_error.h"
+#include "osc_array.h"
 
 /**
    @brief Data structure for storing a serialized OSC message.
@@ -45,6 +46,8 @@ extern "C" {
    with pointers into that array that point to the various elements of the message.
 */
 typedef struct _osc_message_s t_osc_message_s, t_osc_msg_s;
+
+typedef t_osc_array t_osc_message_array_s, t_osc_msg_ar_s;
 
 /**
    Allocate a #t_osc_msg_s object and initialize it
@@ -118,6 +121,8 @@ char *osc_message_s_getData(t_osc_msg_s *m);
  */
 int osc_message_s_getArgCount(t_osc_msg_s *m);
 
+char *osc_message_s_getPtr(t_osc_msg_s *m);
+
 /**
    @brief Return the nth typetag for OSC message m.
    This function counts the typetags from 0 starting with the first typetag
@@ -148,6 +153,8 @@ void osc_message_s_getArg(t_osc_msg_s *m, int n, t_osc_atom_s **atom);
  */
 t_osc_err osc_message_s_cacheDataOffsets(t_osc_msg_s *m);
 
+t_osc_err osc_message_s_deserialize(t_osc_msg_s *msg, t_osc_msg_u **msg_u);
+
 /**
    Convert the contents of a #t_osc_msg_s to a string suitable for display.
    @param m The #t_osc_msg_s to convert to a string.
@@ -157,6 +164,14 @@ The string will be allocated with #osc_mem_alloc and must be freed by the caller
    @return An error or #OSC_ERR_NONE
  */
 t_osc_err osc_message_s_format(t_osc_msg_s *m, long *buflen, char **buf);
+
+t_osc_message_array_s *osc_message_array_s_alloc(long len);
+#define osc_message_array_s_free(ar) osc_array_free((ar))
+#define osc_message_array_s_clear(ar) osc_array_clear((ar))
+#define osc_message_array_s_get(ar, idx) osc_array_get((ar), (idx))
+#define osc_message_array_s_getLen(ar) osc_array_getLen((ar))
+#define osc_message_array_s_copy(ar) osc_array_copy((ar))
+#define osc_message_array_s_resize(ar, newlen) osc_array_resize((ar), (newlen))
 
 
 #ifdef __cplusplus

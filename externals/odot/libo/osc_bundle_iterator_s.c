@@ -25,6 +25,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <string.h>
 #include <inttypes.h>
 #include "osc.h"
+#include "osc_mem.h"
 #include "osc_message_s.h"
 #include "osc_message_s.r"
 #include "osc_bundle_s.h"

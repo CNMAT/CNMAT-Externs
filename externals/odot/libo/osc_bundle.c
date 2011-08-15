@@ -25,6 +25,9 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <string.h>
 #include "osc.h"
 #include "osc_message.h"
+#include "osc_mem.h"
+#include "osc_byteorder.h"
+#include "osc_match.h"
 
 t_osc_err osc_bundle_makeBundle(int len, char *buf, t_osc_bundle *bundle){
 	return osc_bundle_getMessages(len, buf, &(bundle->num_messages), &(bundle->messages));

@@ -23,6 +23,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "osc.h"
+#include "osc_mem.h"
 #include "osc_message_iterator_s.h"
 #include "osc_message_iterator_s.r"
 #include "osc_message_s.h"
@@ -51,21 +53,22 @@ t_osc_atom_s *osc_message_iterator_s_next(t_osc_msg_it_s *it){
 	if(osc_message_s_getTypetag(it->msg, it->n) == '\0'){
 		return NULL;
 	}
+
+	if(osc_message_s_getTypetag(it->msg, it->n) == '\0'){
+		return NULL;
+	}
+	it->a = (t_osc_atom_s){it->dataptr, osc_message_s_getTypetag(it->msg, it->n)};
 	if(it->msg->cache_size){
 		it->dataptr += it->msg->data_size_cache[it->n];
 	}else{
 		it->dataptr += osc_sizeof(osc_message_s_getTypetag(it->msg, it->n), it->dataptr);
 	}
 	it->n++;
-	if(osc_message_s_getTypetag(it->msg, it->n) == '\0'){
-		return NULL;
-	}
-	it->a = (t_osc_atom_s){it->dataptr, osc_message_s_getTypetag(it->msg, it->n)};
 	return &(it->a);
 }
 
 int osc_message_iterator_s_hasNext(t_osc_msg_it_s *it){
-	if(osc_message_s_getTypetag(it->msg, it->n) == '\0' || osc_message_s_getTypetag(it->msg, it->n + 1) == '\0'){
+	if(osc_message_s_getTypetag(it->msg, it->n) == '\0'){// || osc_message_s_getTypetag(it->msg, it->n + 1) == '\0'){
 		return 0;
 	}
 	return 1;

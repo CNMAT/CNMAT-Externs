@@ -34,6 +34,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 extern "C" {
 #endif
 
+#include "osc_message_u.h"
+
 struct _osc_bundle_u{
 	int msgcount;
 	t_osc_msg_u *msghead, *msgtail;

@@ -265,6 +265,7 @@ t_osc_err osc_mem_encodeByteorder(unsigned char typetag, char *data, char **out)
 		break;
 	}
 	memcpy(*out, tmp, size);
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_mem_decodeByteorder(unsigned char typetag, char *data, char **out){
@@ -291,4 +292,5 @@ t_osc_err osc_mem_decodeByteorder(unsigned char typetag, char *data, char **out)
 		break;	
 	}
 	memcpy(*out, tmp, size);
+	return OSC_ERR_NONE;
 }

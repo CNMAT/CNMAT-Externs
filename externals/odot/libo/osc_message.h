@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include "osc_error.h"
 
 /**
  * Data structure for storing a deserialized OSC message.

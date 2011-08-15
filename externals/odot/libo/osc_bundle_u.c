@@ -25,6 +25,9 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <string.h>
 #include <inttypes.h>
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_byteorder.h"
+#include "osc_match.h"
 #include "osc_message_u.h"
 #include "osc_message_u.r"
 #include "osc_atom_u.h"
@@ -32,10 +35,27 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_bundle_u.h"
 #include "osc_bundle_u.r"
 #include "osc_bundle_iterator_u.h"
+#include "osc_array.h"
 
 t_osc_bndl_u *osc_bundle_u_alloc(void){
 	t_osc_bndl_u *b = osc_mem_alloc(sizeof(t_osc_bndl_u));
 	memset(b, '\0', sizeof(t_osc_bndl_u));
+	return b;
+}
+
+void osc_bundle_u_free(t_osc_bndl_u *bndl){
+	t_osc_msg_u *m = bndl->msghead;
+	while(m){
+		t_osc_msg_u *next = m->next;
+		osc_message_u_free(m);
+		m = next;
+	}
+	osc_mem_free(bndl);
+}
+
+t_osc_err osc_bundle_u_deepCopy(t_osc_bndl_u **dest, t_osc_bndl_u *src){
+
+	return OSC_ERR_NONE;
 }
 
 int osc_bundle_u_getMsgCount(t_osc_bndl_u *bndl){
@@ -52,15 +72,19 @@ t_osc_err osc_bundle_u_getMessagesWithCallback(t_osc_bndl_u *bndl, void (*f)(t_o
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, int *nmatches, t_osc_msg_u ***m, int fullmatch){
+t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_array **osc_msg_u_array, int fullmatch){
 	int matchbuflen = 16, n = 0;
-	t_osc_msg_u **matches = osc_mem_alloc(matchbuflen * sizeof(t_osc_msg_u *));
+	//t_osc_msg_u **matches = osc_mem_alloc(matchbuflen * sizeof(t_osc_msg_u *));
+	t_osc_ar *ar = osc_array_alloc(matchbuflen, t_osc_msg_u);
+	osc_array_clear(ar);
+	//memset(matches, '\0', matchbuflen * sizeof(t_osc_msg_u *));
 	t_osc_bndl_it_u *it = osc_bndl_it_u_get(bndl);
 	while(osc_bndl_it_u_hasNext(it)){
 		if(n >= matchbuflen){
-			matches = osc_mem_resize(matches, (matchbuflen + 16) * sizeof(t_osc_msg_u *));
-			if(!matches){
-				return OSC_ERR_OUTOFMEM;
+			//matches = osc_mem_resize(matches, (matchbuflen + 16) * sizeof(t_osc_msg_u *));
+			t_osc_err e = osc_array_resize(ar, matchbuflen + 16);
+			if(e){
+				return e;
 			}
 			matchbuflen += 16;
 		}
@@ -76,41 +100,82 @@ t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, int *nma
 				continue;
 			}
 		}
-		osc_message_u_copy(matches + n++, current_message);
+		//osc_message_u_copy(matches + n++, current_message);
+		t_osc_msg_u *p = osc_array_get(ar, n++);
+		osc_message_u_copy(&p, current_message);
 	}
 	osc_bndl_it_u_destroy(it);
-	*nmatches = n;
-	*m = matches;
+//*nmatches = n;
+//*m = matches;
+	osc_array_resize(ar, n);
+	*osc_msg_u_array = ar;
 	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_bundle_u_addMsg(t_osc_bndl_u *bndl, t_osc_msg_u *msg){
 	if(!(bndl->msghead)){
 		bndl->msghead = msg;
-		bndl->msgtail = msg;
+		bndl->msgtail = NULL;
 		msg->prev = msg->next = NULL;
+		return OSC_ERR_NONE;
+	}
+	if(bndl->msghead && !(bndl->msgtail)){
+		bndl->msghead->next = msg;
+		msg->prev = bndl->msghead;
+		msg->next = NULL;
+		bndl->msgtail = msg;
 		return OSC_ERR_NONE;
 	}
 	msg->prev = bndl->msgtail;
 	msg->next = NULL;
 	bndl->msgtail->next = msg;
+	bndl->msgtail = msg;
 	return OSC_ERR_NONE;
+}
+
+extern t_osc_err osc_message_u_doSerialize(t_osc_msg_u *msg, long *buflen, long *bufpos, char **buf);
+t_osc_err osc_bundle_u_doSerialize(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf){
+	if((*buflen - *bufpos) < 256){
+		*buf = osc_mem_resize(*buf, *buflen + 1024);
+		if(!(*buf)){
+			return OSC_ERR_OUTOFMEM;
+		}
+		memset(*buf + *buflen, '\0', 1024);
+		*buflen += 1024;
+	}
+	strncpy(*buf + *bufpos, OSC_IDENTIFIER, OSC_IDENTIFIER_SIZE);
+	(*bufpos) += OSC_HEADER_SIZE;
+	t_osc_msg_u *m = bndl->msghead;
+	while(m){
+		osc_message_u_doSerialize(m, buflen, bufpos, buf);
+		m = m->next;
+	}
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_bundle_u_serialize(t_osc_bundle_u *bndl, long *buflen, char **buf){
+	long bufpos = 0;
+	if(!(*buf)){
+		*buflen = 1024;
+		(*buf) = osc_mem_alloc(*buflen);
+	}
+	memset(*buf, '\0', *buflen);
+	t_osc_err e = osc_bundle_u_doSerialize(bndl, buflen, &bufpos, buf);
+	*buflen = bufpos;
+	return e;
 }
 
 extern t_osc_err osc_message_u_doFormat(t_osc_msg_u *m, long *buflen, long *bufpos, char **buf);
 
-void osc_bundle_u_formatBundleCbk(t_osc_msg_u *msg, void *context){
-	struct context {long *buflen; long *bufpos; char **buf;};
-	struct context *c = (struct context *)context;
-	osc_message_u_doFormat(msg, c->buflen, c->bufpos, c->buf);
-	*(c->bufpos) += sprintf(*(c->buf) + *(c->bufpos), "\n");
-}
-
 t_osc_err osc_bundle_u_doFormat(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf){
-	struct context {long *buflen; 
-		long *bufpos; 
-		char **buf;} context = {buflen, bufpos, buf};
-	osc_bundle_u_getMessagesWithCallback(bndl, osc_bundle_u_formatBundleCbk, (void *)&context);
+	t_osc_bndl_it_u *it = osc_bndl_it_u_get(bndl);
+	while(osc_bndl_it_u_hasNext(it)){
+		t_osc_msg_u *m = osc_bndl_it_u_next(it);
+		osc_message_u_doFormat(m, buflen, bufpos, buf);
+		(*bufpos) += sprintf(*buf + *bufpos, "\n");
+	}
+	osc_bndl_it_u_destroy(it);
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_bundle_u_format(t_osc_bndl_u *bndl, long *buflen, char **buf){
@@ -126,3 +191,6 @@ t_osc_err osc_bundle_u_format(t_osc_bndl_u *bndl, long *buflen, char **buf){
 	return e;
 }
 
+t_osc_array *osc_bundle_array_u_alloc(long len){
+	return osc_array_allocWithSize(len, sizeof(t_osc_bndl_u));
+}

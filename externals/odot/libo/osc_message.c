@@ -25,6 +25,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <string.h>
 #include "osc.h"
 #include "osc_message.h"
+#include "osc_byteorder.h"
 
 t_osc_msg *osc_message_alloc(void){
 	t_osc_msg *m = (t_osc_msg *)osc_mem_alloc(sizeof(t_osc_msg));

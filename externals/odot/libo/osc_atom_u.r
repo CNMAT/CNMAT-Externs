@@ -32,6 +32,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 extern "C" {
 #endif
 
+#include "osc_bundle_u.h"
 
 struct _osc_atom_u{
 	union _word{
@@ -42,9 +43,10 @@ struct _osc_atom_u{
 		float f;
 		double d;
 		char *s;
-		char *bndl;
+		t_osc_bndl_u *bndl;
 	} w;
 	int typetag;
+	int alloc;
 	struct _osc_atom_u *next, *prev;
 };
 

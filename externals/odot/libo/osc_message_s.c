@@ -27,6 +27,10 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc.h"
 #include "osc_message_s.h"
 #include "osc_message_s.r"
+#include "osc_message_u.h"
+#include "osc_message_iterator_s.h"
+#include "osc_array.h"
+#include "osc_mem.h"
 
 t_osc_msg_s *osc_message_s_alloc(void){
 	t_osc_msg_s *m = (t_osc_msg_s *)osc_mem_alloc(sizeof(t_osc_msg_s));
@@ -109,6 +113,10 @@ int osc_message_s_getArgCount(t_osc_msg_s *m){
 	return strlen(m->typetags) - 1;
 }
 
+char *osc_message_s_getPtr(t_osc_msg_s *m){
+	return m->size;
+}
+
 #define OSC_MESSAGE_S_CAREFUL
 char osc_message_s_getTypetag(t_osc_msg_s *m, int n){
 #ifdef OSC_MESSAGE_S_CAREFUL
@@ -165,6 +173,22 @@ t_osc_err osc_message_s_cacheDataOffsets(t_osc_msg_s *m){
 		m->data_size_cache[i] = size;
 		offset += size;
 	}
+return OSC_ERR_NONE;
+}
+
+t_osc_err osc_message_s_deserialize(t_osc_msg_s *msg, t_osc_msg_u **msg_u){
+	t_osc_msg_u *m = osc_message_u_alloc();
+	osc_message_u_setAddress(m, osc_message_s_getAddress(msg));
+	t_osc_msg_it_s *it = osc_msg_it_s_get(msg);
+	while(osc_msg_it_s_hasNext(it)){
+		t_osc_atom_s *a = osc_msg_it_s_next(it);
+		t_osc_atom_u *ua = NULL;
+		osc_atom_s_deserialize(a, &ua);
+		osc_message_u_appendAtom(m, ua);
+	}
+	osc_msg_it_s_destroy(it);
+	*msg_u = m;
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_message_s_doFormat(t_osc_msg_s *m, long *buflen, long *bufpos, char **buf);
@@ -201,7 +225,10 @@ t_osc_err osc_message_s_doFormat(t_osc_msg_s *m, long *buflen, long *bufpos, cha
 			return e;
 		}
 	}
-	*bufpos += sprintf(*buf + *bufpos, "\n");
 	osc_msg_it_s_destroy(it);
 	return OSC_ERR_NONE;
+}
+
+t_osc_array *osc_message_array_s_alloc(long len){
+	return osc_array_allocWithSize(len, sizeof(t_osc_msg_s));
 }

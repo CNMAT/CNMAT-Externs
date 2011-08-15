@@ -26,6 +26,9 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <stdint.h>
 #include <inttypes.h>
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_byteorder.h"
+#include "osc_bundle_u.h"
 #include "osc_atom_u.h"
 #include "osc_atom_u.r"
 
@@ -35,12 +38,53 @@ t_osc_atom_u *osc_atom_u_alloc(void){
 	return a;
 }
 
+void osc_atom_u_free(t_osc_atom_u *a){
+	if(a->typetag == 's'){
+		if(a->w.s){
+			osc_mem_free(a->w.s);
+		}
+	}
+	osc_mem_free(a);
+}
+
+void osc_atom_u_copy(t_osc_atom_u **dest, t_osc_atom_u *src){
+	t_osc_atom_u *aa = *dest;
+	if(!aa){
+		aa = osc_mem_alloc(sizeof(t_osc_atom_u));
+	}
+	aa->next = aa->prev = NULL;
+	aa->typetag = src->typetag;
+	aa->alloc = src->alloc;
+	switch(aa->typetag){
+	case 's':
+		{
+			aa->w.s = osc_mem_alloc(strlen(src->w.s) + 1);
+			strcpy(aa->w.s, src->w.s);
+		}
+		break;
+	default:
+		aa->w = src->w;
+	}
+	*dest = aa;
+}
+
+void osc_atom_u_clear(t_osc_atom_u *a){
+	if(a->alloc && a->typetag == 's' && a->w.s){
+		osc_mem_free(a->w.s);
+	}
+	a->alloc = 0;
+}
+
 char osc_atom_u_getTypetag(t_osc_atom_u *a){
 	return a->typetag;
 }
 
 float osc_atom_u_getFloat(t_osc_atom_u *a){
 	switch(a->typetag){
+	case 'f': // 32-bit IEEE 754 float
+		return a->w.f;
+	case 'd': // 64-bit IEEE 754 double
+		return (float)a->w.d;
 	case 'i': // signed 32-bit int
 		return (float)a->w.i;
 	case 'h': // signed 64-bit int
@@ -49,10 +93,6 @@ float osc_atom_u_getFloat(t_osc_atom_u *a){
 		return (float)a->w.I;
 	case 'H': // unsigned 64-bit int
 		return (float)a->w.H;
-	case 'f': // 32-bit IEEE 754 float
-		return a->w.f;
-	case 'd': // 64-bit IEEE 754 double
-		return (float)a->w.d;
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -70,6 +110,10 @@ float osc_atom_u_getFloat(t_osc_atom_u *a){
 
 double osc_atom_u_getDouble(t_osc_atom_u *a){
 	switch(a->typetag){
+	case 'd': // 64-bit IEEE 754 double
+		return a->w.d;
+	case 'f': // 32-bit IEEE 754 float
+		return (double)a->w.f;
 	case 'i': // signed 32-bit int
 		return (double)a->w.i;
 	case 'h': // signed 64-bit int
@@ -78,10 +122,6 @@ double osc_atom_u_getDouble(t_osc_atom_u *a){
 		return (double)a->w.I;
 	case 'H': // unsigned 64-bit int
 		return (double)a->w.H;
-	case 'f': // 32-bit IEEE 754 float
-		return (double)a->w.f;
-	case 'd': // 64-bit IEEE 754 double
-		return a->w.d;
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -101,16 +141,16 @@ int32_t osc_atom_u_getInt32(t_osc_atom_u *a){
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return a->w.i;
+	case 'f': // 32-bit IEEE 754 float
+		return (int32_t)a->w.f;
+	case 'd': // 64-bit IEEE 754 double
+		return (int32_t)a->w.d;
 	case 'h': // signed 64-bit int
 		return (int32_t)a->w.h;
 	case 'I': // unsigned 32-bit int
 		return (int32_t)a->w.I;
 	case 'H': // unsigned 64-bit int
 		return (int32_t)a->w.H;
-	case 'f': // 32-bit IEEE 754 float
-		return (int32_t)a->w.f;
-	case 'd': // 64-bit IEEE 754 double
-		return (int32_t)a->w.d;
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -128,18 +168,18 @@ int32_t osc_atom_u_getInt32(t_osc_atom_u *a){
 
 int64_t osc_atom_u_getInt64(t_osc_atom_u *a){
 	switch(a->typetag){
-	case 'i': // signed 32-bit int
-		return a->w.i;
 	case 'h': // signed 64-bit int
 		return (int64_t)a->w.h;
+	case 'i': // signed 32-bit int
+		return a->w.i;
+	case 'd': // 64-bit IEEE 754 double
+		return (int64_t)a->w.d;
+	case 'f': // 32-bit IEEE 754 float
+		return (int64_t)a->w.f;
 	case 'I': // unsigned 32-bit int
 		return (int64_t)a->w.I;
 	case 'H': // unsigned 64-bit int
 		return (int64_t)a->w.H;
-	case 'f': // 32-bit IEEE 754 float
-		return (int64_t)a->w.f;
-	case 'd': // 64-bit IEEE 754 double
-		return (int64_t)a->w.d;
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -155,20 +195,20 @@ int64_t osc_atom_u_getInt64(t_osc_atom_u *a){
 	return 0;
 }
 
-uint32_t osc_atom_u_getUint32(t_osc_atom_u *a){
+uint32_t osc_atom_u_getUInt32(t_osc_atom_u *a){
 	switch(a->typetag){
-	case 'i': // signed 32-bit int
-		return a->w.i;
-	case 'h': // signed 64-bit int
-		return (uint32_t)a->w.h;
 	case 'I': // unsigned 32-bit int
 		return (uint32_t)a->w.I;
-	case 'H': // unsigned 64-bit int
-		return (uint32_t)a->w.H;
+	case 'i': // signed 32-bit int
+		return a->w.i;
 	case 'f': // 32-bit IEEE 754 float
 		return (uint32_t)a->w.f;
 	case 'd': // 64-bit IEEE 754 double
 		return (uint32_t)a->w.d;
+	case 'h': // signed 64-bit int
+		return (uint32_t)a->w.h;
+	case 'H': // unsigned 64-bit int
+		return (uint32_t)a->w.H;
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -184,16 +224,16 @@ uint32_t osc_atom_u_getUint32(t_osc_atom_u *a){
 	return 0;
 }
 
-uint64_t osc_atom_u_getUint64(t_osc_atom_u *a){
+uint64_t osc_atom_u_getUInt64(t_osc_atom_u *a){
 	switch(a->typetag){
+	case 'H': // unsigned 64-bit int
+		return (uint64_t)a->w.H;
 	case 'i': // signed 32-bit int
 		return a->w.i;
 	case 'h': // signed 64-bit int
 		return (uint64_t)a->w.h;
 	case 'I': // unsigned 32-bit int
 		return (uint64_t)a->w.I;
-	case 'H': // unsigned 64-bit int
-		return (uint64_t)a->w.H;
 	case 'f': // 32-bit IEEE 754 float
 		return (uint64_t)a->w.f;
 	case 'd': // 64-bit IEEE 754 double
@@ -217,16 +257,16 @@ int osc_atom_u_getInt(t_osc_atom_u *a){
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return a->w.i;
+	case 'f': // 32-bit IEEE 754 float
+		return (int)a->w.f;
+	case 'd': // 64-bit IEEE 754 double
+		return (int)a->w.d;
 	case 'h': // signed 64-bit int
 		return (int)a->w.h;
 	case 'I': // unsigned 32-bit int
 		return (int)a->w.I;
 	case 'H': // unsigned 64-bit int
 		return (int)a->w.H;
-	case 'f': // 32-bit IEEE 754 float
-		return (int)a->w.f;
-	case 'd': // 64-bit IEEE 754 double
-		return (int)a->w.d;
 	case 's': // string
 		{
 			char *endp = NULL;
@@ -242,13 +282,42 @@ int osc_atom_u_getInt(t_osc_atom_u *a){
 	return 0;
 }
 
+char *osc_atom_u_getStringPtr(t_osc_atom_u *a){
+	if(a->typetag == 's'){
+		return a->w.s;
+	}else{
+		return NULL;
+	}
+}
+
 char *osc_atom_u_getString(t_osc_atom_u *a){
 	switch(a->typetag){
+	case 's': // string
+		{
+			int n = strlen(a->w.s);
+			char *buf = osc_mem_alloc(n + 1);
+			strcpy(buf, a->w.s);
+			return buf;
+		}
 	case 'i': // signed 32-bit int
 		{
 			int n = snprintf(NULL, 0, "%"PRId32, a->w.i);
 			char *buf = osc_mem_alloc(n + 1);
 			sprintf(buf, "%"PRId32, a->w.i);
+			return buf;
+		}
+	case 'f': // 32-bit IEEE 754 float
+		{
+			int n = snprintf(NULL, 0, "%f", a->w.f);
+			char *buf = osc_mem_alloc(n + 1);
+			sprintf(buf, "%f", a->w.f);
+			return buf;
+		}
+	case 'd': // 64-bit IEEE 754 double
+		{
+			int n = snprintf(NULL, 0, "%f", a->w.f);
+			char *buf = osc_mem_alloc(n + 1);
+			sprintf(buf, "%f", a->w.f);
 			return buf;
 		}
 	case 'h': // signed 64-bit int
@@ -270,27 +339,6 @@ char *osc_atom_u_getString(t_osc_atom_u *a){
 			int n = snprintf(NULL, 0, "%"PRIu64, a->w.H);
 			char *buf = osc_mem_alloc(n + 1);
 			sprintf(buf, "%"PRIu64, a->w.H);
-			return buf;
-		}
-	case 'f': // 32-bit IEEE 754 float
-		{
-			int n = snprintf(NULL, 0, "%f", a->w.f);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%f", a->w.f);
-			return buf;
-		}
-	case 'd': // 64-bit IEEE 754 double
-		{
-			int n = snprintf(NULL, 0, "%f", a->w.f);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%f", a->w.f);
-			return buf;
-		}
-	case 's': // string
-		{
-			int n = strlen(a->w.s);
-			char *buf = osc_mem_alloc(n + 1);
-			strcpy(buf, a->w.s);
 			return buf;
 		}
 	case 'T': // true
@@ -315,6 +363,11 @@ char *osc_atom_u_getString(t_osc_atom_u *a){
 
 int osc_atom_u_getBool(t_osc_atom_u *a){
 	switch(a->typetag){
+	case 'T':
+		return 1;
+	case 'F':
+	case 'N':
+		return 0;
 	case 'i':
 		return !(a->w.i == 0);
 	case 'h':
@@ -342,11 +395,6 @@ int osc_atom_u_getBool(t_osc_atom_u *a){
 		}else{
 			return 0;
 		}
-	case 'T':
-		return 1;
-	case 'F':
-	case 'N':
-		return 0;
 	case '#':
 		// uh...
 		return 0;
@@ -355,58 +403,88 @@ int osc_atom_u_getBool(t_osc_atom_u *a){
 }
 
 void osc_atom_u_setFloat(t_osc_atom_u *a, float v){
+	osc_atom_u_clear(a);
 	a->w.f = v;
 	a->typetag = 'f';
 }
 
 void osc_atom_u_setDouble(t_osc_atom_u *a, double v){
+	osc_atom_u_clear(a);
 	a->w.d = v;
 	a->typetag = 'd';
 }
 
 void osc_atom_u_setInt32(t_osc_atom_u *a, int32_t v){
+	osc_atom_u_clear(a);
 	a->w.i = v;
 	a->typetag = 'i';
 }
 
 void osc_atom_u_setInt64(t_osc_atom_u *a, int64_t v){
+	osc_atom_u_clear(a);
 	a->w.h = v;
 	a->typetag = 'h';
 }
 
 void osc_atom_u_setUInt32(t_osc_atom_u *a, uint32_t v){
+	osc_atom_u_clear(a);
 	a->w.I = v;
 	a->typetag = 'I';
 }
 
 void osc_atom_u_setUInt64(t_osc_atom_u *a, uint64_t v){
+	osc_atom_u_clear(a);
 	a->w.H = v;
 	a->typetag = 'H';
 }
 
 void osc_atom_u_setString(t_osc_atom_u *a, char *v){
+	if(a->w.s && a->typetag == 's' && a->alloc){
+		long len = strlen(v) + 1;
+		a->w.s = osc_mem_resize(a->w.s, len);
+		strlcpy(a->w.s, v, len);
+	}else{
+		a->w.s = osc_mem_alloc(strlen(v) + 1);
+		strcpy(a->w.s, v);
+		a->typetag = 's';
+		a->alloc = 1;
+	}
+}
+
+void osc_atom_u_setStringPtr(t_osc_atom_u *a, char *v){
+	osc_atom_u_clear(a);
 	a->w.s = v;
 	a->typetag = 's';
 }
 
 void osc_atom_u_setBool(t_osc_atom_u *a, int v){
+	osc_atom_u_clear(a);
 	if(v == 0){
-		osc_atom_u_setTrue(a);
-	}else{
 		osc_atom_u_setFalse(a);
+	}else{
+		osc_atom_u_setTrue(a);
 	}
 }
 
 void osc_atom_u_setTrue(t_osc_atom_u *a){
+	osc_atom_u_clear(a);
 	a->typetag = 'T';
 }
 
 void osc_atom_u_setFalse(t_osc_atom_u *a){
+	osc_atom_u_clear(a);
 	a->typetag = 'F';
 }
 
 void osc_atom_u_setNull(t_osc_atom_u *a){
+	osc_atom_u_clear(a);
 	a->typetag = 'N';
+}
+
+void osc_atom_u_setBndl(t_osc_atom_u *a, t_osc_bndl_u *bndl){
+	osc_atom_u_clear(a);
+	a->w.bndl = bndl;
+	a->typetag = '#';
 }
 
 size_t osc_atom_u_sizeof(t_osc_atom_u *a){
@@ -431,6 +509,81 @@ size_t osc_atom_u_sizeof(t_osc_atom_u *a){
 	return 0;
 }
 
+t_osc_err osc_atom_u_doSerialize(t_osc_atom_u *a, long *buflen, long *bufpos, char **buf){
+	if((*buflen - *bufpos) < 64){
+		*buf = osc_mem_resize(*buf, *buflen + 64);
+		if(!(*buf)){
+			return OSC_ERR_OUTOFMEM;
+		}
+		memset(*buf + *buflen, '\0', 64);
+		(*buflen) += 64;
+	}
+	switch(osc_atom_u_getTypetag(a)){
+	case 'i':
+	case 'I':
+		*((uint32_t *)(*buf + *bufpos)) = hton32(a->w.i);
+		(*bufpos) += 4;
+		break;
+	case 'f':
+		{
+			float f = a->w.f;
+			*((uint32_t *)((*buf) + (*bufpos))) = hton32(*((uint32_t *)(&f)));
+			(*bufpos) += 4;
+
+		}
+		break;
+	case 'd':
+		{
+			double d = a->w.d;
+			*((uint64_t *)((*buf) + (*bufpos))) = hton64(*((uint64_t *)(&d)));
+			(*bufpos) += 8;
+
+		}
+		break;
+	case 's':
+		*bufpos += sprintf(*buf + *bufpos, "%s", a->w.s);
+		(*bufpos)++;
+		while((*bufpos) % 4){
+			(*bufpos)++;
+		}
+		break;
+	case '#':
+		{
+			long bndlstart = *bufpos;
+			(*bufpos) += 4;
+			extern t_osc_err osc_bundle_u_doSerialize(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf);
+			osc_bundle_u_doSerialize(a->w.bndl, buflen, bufpos, buf);
+			*((uint32_t *)(*buf + bndlstart)) = hton32((*bufpos - bndlstart) - 4);
+		}
+		break;
+	case 'h':
+	case 'H':
+		*((uint64_t *)(*buf + *bufpos)) = hton64(a->w.h);
+		(*bufpos) += 8;
+		break;
+// nothing to do for T, F, or N
+	case 'b':
+		{
+			/*
+			int j, n = osc_sizeof(*(m->typetags), a->w.);
+			*bufpos += sprintf(*buf + *bufpos, "blob (%d bytes): ", n);
+			for(j = 0; j < n; j++){
+				*bufpos += sprintf(*buf + *bufpos, "%d ", a->w.[j]);
+			}
+			*/
+		}
+		break;
+	}
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_atom_u_serialize(t_osc_atom_u *a, long *buflen, char **buf){
+	long mybuflen = *buflen, mybufpos = 0;
+	t_osc_err e = osc_atom_u_doSerialize(a, &mybuflen, &mybufpos, buf);
+	*buflen = mybufpos;
+	return e;
+}
+
 t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char **buf){
 	if((*buflen - *bufpos) < 64){
 		*buf = osc_mem_resize(*buf, *buflen + 64);
@@ -443,15 +596,6 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 	case 'i':
 		*bufpos += sprintf(*buf + *bufpos, "%"PRId32" ", a->w.i);
 		break;
-	case 'h':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRId64" ", a->w.h);
-		break;
-	case 'I':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu32" ", a->w.I);
-		break;
-	case 'H':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu64" ", a->w.H);
-		break;
 	case 'f':
 		*bufpos += sprintf(*buf + *bufpos, "%f ", a->w.f);
 		break;
@@ -461,11 +605,27 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 	case 's':
 		*bufpos += sprintf(*buf + *bufpos, "%s ", a->w.s);
 		break;
+	case '#':
+		{
+			*bufpos += sprintf(*buf + *bufpos, "[\n");
+			extern t_osc_err osc_bundle_u_doFormat(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf);
+			osc_bundle_u_doFormat(a->w.bndl, buflen, bufpos, buf);
+			*bufpos += sprintf(*buf + *bufpos, "]");
+		}
 	case 'T':
 		*bufpos += sprintf(*buf + *bufpos, "true ");
 		break;
 	case 'F':
 		*bufpos += sprintf(*buf + *bufpos, "false ");
+		break;
+	case 'h':
+		*bufpos += sprintf(*buf + *bufpos, "%"PRId64" ", a->w.h);
+		break;
+	case 'I':
+		*bufpos += sprintf(*buf + *bufpos, "%"PRIu32" ", a->w.I);
+		break;
+	case 'H':
+		*bufpos += sprintf(*buf + *bufpos, "%"PRIu64" ", a->w.H);
 		break;
 	case 'N':
 		*bufpos += sprintf(*buf + *bufpos, "NULL ");
@@ -481,19 +641,14 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 			*/
 		}
 		break;
-	case '#':
-		{
-			*bufpos += sprintf(*buf + *bufpos, "[\n");
-			osc_bundle_formatBndl(ntoh32(*((uint32_t *)a->w.bndl)), a->w.bndl + 4, buflen, bufpos, buf);
-			*bufpos += sprintf(*buf + *bufpos, "]");
-		}
 	}
 	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_atom_u_format(t_osc_atom_u *a, long *buflen, char **buf){
-	long mybuflen = 0, mybufpos = 0;
+	long mybuflen = *buflen, mybufpos = 0;
 	t_osc_err e = osc_atom_u_doFormat(a, &mybuflen, &mybufpos, buf);
 	*buflen = mybufpos;
 	return e;
 }
+
