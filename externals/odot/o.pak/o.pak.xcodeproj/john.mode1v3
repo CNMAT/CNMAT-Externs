@@ -379,9 +379,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>52DB1BF9138EFCB9001E7C8F</string>
+				<string>5208378013F9E86800F0822D</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>52DB1BFA138EFCB9001E7C8F</string>
+				<string>5208378113F9E86800F0822D</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -520,7 +520,7 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>5211309711A4BE4800B71D00</string>
-		<string>/Users/john/Development/cnmat/trunk/max/externals/odot/o.build/o.build.xcodeproj</string>
+		<string>/Users/john/Development/cnmat/trunk/max/externals/odot/o.pak/o.pak.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>656 201 788 504 0 0 1680 1028 </string>
@@ -600,7 +600,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>5211309711A4BE4800B71D00</string>
-				<string>52DB1BFB138EFCB9001E7C8F</string>
+				<string>5208378213F9E86800F0822D</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

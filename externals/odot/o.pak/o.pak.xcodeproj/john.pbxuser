@@ -2,9 +2,9 @@
 {
 	089C1669FE841209C02AAC07 /* Project object */ = {
 		activeBuildConfigurationName = Development;
-		activeTarget = 8D01CCC60486CAD60068D4B7 /* o.build */;
+		activeTarget = 8D01CCC60486CAD60068D4B7 /* o.bild */;
 		addToTargets = (
-			8D01CCC60486CAD60068D4B7 /* o.build */,
+			8D01CCC60486CAD60068D4B7 /* o.bild */,
 		);
 		codeSenseManager = 5211307811A4BCE100B71D00 /* Code sense */;
 		perUserDictionary = {
@@ -49,7 +49,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					301,
+					316,
 					60,
 					20,
 					48,
@@ -66,8 +66,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 328137912;
-			PBXWorkspaceStateSaveDate = 328137912;
+			PBXPerProjectTemplateStateSaveDate = 335145063;
+			PBXWorkspaceStateSaveDate = 335145063;
 		};
 		sourceControlManager = 5211307711A4BCE100B71D00 /* Source Control */;
 		userBuildSettings = {
@@ -87,14 +87,7 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	5249DFCB12ED60F400B3ABA5 /* o.build.c */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {558, 4940}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 952}";
-		};
-	};
-	8D01CCC60486CAD60068D4B7 /* o.build */ = {
+	8D01CCC60486CAD60068D4B7 /* o.bild */ = {
 		activeExec = 0;
 	};
 }
