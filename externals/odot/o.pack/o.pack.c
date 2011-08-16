@@ -1,6 +1,6 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2009, The Regents of
+University of California, Berkeley.  Copyright (c) 2009-11, The Regents of
 the University of California (Regents). 
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
@@ -21,13 +21,14 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: o.build
-DESCRIPTION: Build up an OSC packet
+NAME: o.pack
+DESCRIPTION: Pack messages together into an OSC bundle
 AUTHORS: John MacCallum
-COPYRIGHT_YEARS: 2009
+COPYRIGHT_YEARS: 2009-11
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 0.0: First try
 VERSION 1.0: One inlet per address
+VERSION 1.1: renamed o.pack (from o.build) 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -41,7 +42,7 @@ VERSION 1.0: One inlet per address
 
 //#define MAX_NUM_ARGS 64
 
-typedef struct _obuild{
+typedef struct _opack{
 	t_object ob;
 	void *outlet;
 	t_symbol **addresses;
@@ -52,22 +53,22 @@ typedef struct _obuild{
 	long inlet;
 	void **proxy;
 	//long max_num_args;
-} t_obuild;
+} t_opack;
 
-void *obuild_class;
+void *opack_class;
 
-void obuild_outputBundle(t_obuild *x);
-int obuild_checkPosAndResize(char *buf, int len, char *pos);
-void obuild_anything(t_obuild *x, t_symbol *msg, short argc, t_atom *argv);
-void obuild_int(t_obuild *x, long l);
-void obuild_float(t_obuild *x, double f);
-void obuild_free(t_obuild *x);
-void obuild_assist(t_obuild *x, void *b, long m, long a, char *s);
-void *obuild_new(t_symbol *msg, short argc, t_atom *argv);
+void opack_outputBundle(t_opack *x);
+int opack_checkPosAndResize(char *buf, int len, char *pos);
+void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv);
+void opack_int(t_opack *x, long l);
+void opack_float(t_opack *x, double f);
+void opack_free(t_opack *x);
+void opack_assist(t_opack *x, void *b, long m, long a, char *s);
+void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 
 t_symbol *ps_FullPacket;
 
-void obuild_outputBundle(t_obuild *x){
+void opack_outputBundle(t_opack *x){
 	int i, j;
 	int nbytes = 16;
 	for(i = 0; i < x->numAddresses; i++){
@@ -115,14 +116,14 @@ void obuild_outputBundle(t_obuild *x){
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
 }
 
-void obuild_list(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
-	obuild_anything(x, NULL, argc, argv);
+void opack_list(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
+	opack_anything(x, NULL, argc, argv);
 }
 
-void obuild_anything(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
+void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 	int inlet = proxy_getinlet((t_object *)x);
 	int shouldOutput = (inlet == 0);
-#ifdef BILD
+#ifdef PAK
 	shouldOutput = 1;
 #endif
 	int numargs = argc;
@@ -162,28 +163,28 @@ void obuild_anything(t_obuild *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 	x->numargs[inlet] = numargs;
 	if(shouldOutput){
-		obuild_outputBundle(x);
+		opack_outputBundle(x);
 	}
 }
 
-void obuild_int(t_obuild *x, long l){
+void opack_int(t_opack *x, long l){
 	t_atom a;
 	atom_setlong(&a, l);
-	obuild_anything(x, NULL, 1, &a);
+	opack_anything(x, NULL, 1, &a);
 }
 
-void obuild_float(t_obuild *x, double f){
+void opack_float(t_opack *x, double f){
 	t_atom a;
 	atom_setfloat(&a, (float)f);
-	obuild_anything(x, NULL, 1, &a);
+	opack_anything(x, NULL, 1, &a);
 }
 
-void obuild_bang(t_obuild *x){
-	//obuild_anything(x, NULL, 0, NULL);
-	obuild_outputBundle(x);
+void opack_bang(t_opack *x){
+	//opack_anything(x, NULL, 0, NULL);
+	opack_outputBundle(x);
 }
 
-void obuild_assist(t_obuild *x, void *b, long m, long a, char *s){
+void opack_assist(t_opack *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"OSC bundle");
 	else {
@@ -191,7 +192,7 @@ void obuild_assist(t_obuild *x, void *b, long m, long a, char *s){
 	}
 }
 
-void obuild_free(t_obuild *x){
+void opack_free(t_opack *x){
 	if(x->addresses){
 		free(x->addresses);
 	}
@@ -221,9 +222,9 @@ void obuild_free(t_obuild *x){
 	}
 }
 
-void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
-	t_obuild *x;
-	if(x = (t_obuild *)object_alloc(obuild_class)){
+void *opack_new(t_symbol *msg, short argc, t_atom *argv){
+	t_opack *x;
+	if(x = (t_opack *)object_alloc(opack_class)){
 		if(argc == 0){
 			object_error((t_object *)x, "you must supply at least 1 argument");
 			return NULL;
@@ -231,7 +232,7 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 		//x->max_num_args = MAX_NUM_ARGS;
 		if(atom_gettype(argv) == A_LONG){
 			//x->max_num_args = atom_getlong(argv);
-			object_error((t_object *)x, "o.build no longer takes an integer argument to specify the list length of each inlet.");
+			object_error((t_object *)x, "o.pack no longer takes an integer argument to specify the list length of each inlet.");
 			object_error((t_object *)x, "The internal buffers will expand as necessary.");
 			argv++;
 			argc--;
@@ -291,25 +292,31 @@ void *obuild_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	char *name;
-#ifdef BILD
-	name = "o.bild";
+#ifdef PAK
+	name = "o.pak";
 #else
-	name = "o.build";
+	name = "o.pack";
 #endif
-	t_class *c = class_new(name, (method)obuild_new, (method)obuild_free, sizeof(t_obuild), 0L, A_GIMME, 0);
+	t_class *c = class_new(name, (method)opack_new, (method)opack_free, sizeof(t_opack), 0L, A_GIMME, 0);
     	//osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
-	//class_addmethod(c, (method)obuild_notify, "notify", A_CANT, 0);
-	class_addmethod(c, (method)obuild_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)obuild_anything, "anything", A_GIMME, 0);
-	class_addmethod(c, (method)obuild_list, "list", A_GIMME, 0);
-	class_addmethod(c, (method)obuild_float, "float", A_FLOAT, 0);
-	class_addmethod(c, (method)obuild_int, "int", A_LONG, 0);
-	class_addmethod(c, (method)obuild_bang, "bang", 0);
+	//class_addmethod(c, (method)opack_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)opack_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)opack_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)opack_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)opack_float, "float", A_FLOAT, 0);
+	class_addmethod(c, (method)opack_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)opack_bang, "bang", 0);
 
 	class_register(CLASS_BOX, c);
-	obuild_class = c;
+	opack_class = c;
 
 	ps_FullPacket = gensym("FullPacket");
+
+#ifdef PAK
+	class_alias(c, gensym("o.bild"));
+#else
+	class_alias(c, gensym("o.build"));
+#endif
 
 	common_symbols_init();
 	return 0;
