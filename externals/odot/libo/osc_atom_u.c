@@ -43,6 +43,8 @@ void osc_atom_u_free(t_osc_atom_u *a){
 		if(a->w.s){
 			osc_mem_free(a->w.s);
 		}
+	}else if(a->typetag == '#'){
+		osc_bundle_u_free(a->w.bndl);
 	}
 	osc_mem_free(a);
 }

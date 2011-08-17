@@ -18,11 +18,11 @@
 #include <time.h>
 
 // crossplatform gettimeofday
-#include "timeval.h"
+#include "contrib/timeval.h"
 
 // this is for windows which doesn't have
 // strptime
-#include "strptime.h"
+#include "contrib/strptime.h"
 
 #include "osc.h"
 #include "osc_byteorder.h"

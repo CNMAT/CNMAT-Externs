@@ -54,6 +54,8 @@ char *osc_error_string(t_osc_err err){
 		return "encountered a discrepancy between a typetag and a piece of data";
 	case OSC_ERR_MALFORMEDMSG:
 		return "malformed message";
+	case OSC_ERR_PARSER_FUNCTIONNOTFOUND:
+		return "function not found";
 	default:
 		return "unrecognized error code";
 	}

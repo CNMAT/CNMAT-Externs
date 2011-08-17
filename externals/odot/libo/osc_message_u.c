@@ -248,10 +248,10 @@ t_osc_atom_u *osc_message_u_appendDouble(t_osc_msg_u *m, double v){
 
 t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, char *v){
 	t_osc_atom_u *a = osc_atom_u_alloc();
-	int len = strlen(v);
-	char *buf = osc_mem_alloc(len + 1);
-	strlcpy(buf, v, len + 1);
-	osc_atom_u_setString(a, buf);
+	//int len = strlen(v);
+	//char *buf = osc_mem_alloc(len + 1);
+	//strlcpy(buf, v, len + 1);
+	osc_atom_u_setString(a, v);
 	osc_message_u_appendAtom(m, a);
 	return a;
 }

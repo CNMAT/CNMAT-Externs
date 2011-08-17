@@ -1,7 +1,20 @@
-LIBO_BASENAMES = osc_match osc_timetag osc_bundle osc_bundle_s osc_bundle_u osc_bundle_iterator_s osc_bundle_iterator_u osc_error osc_mem osc_message osc_message_s osc_message_u osc_message_iterator_s osc_message_iterator_u osc_atom_s osc_atom_u osc_array osc_atom_array_s osc_atom_array_u strptime OSCObject OSCMessage SerializedOSCMessage 
-LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o) osc_scanner.o osc_parser.o
+LIBO_BASENAMES = osc_match osc_timetag osc_bundle osc_bundle_s osc_bundle_u osc_bundle_iterator_s osc_bundle_iterator_u osc_error osc_mem osc_message osc_message_s osc_message_u osc_message_iterator_s osc_message_iterator_u osc_atom_s osc_atom_u osc_array osc_atom_array_s osc_atom_array_u osc_expr contrib/strptime OSCObject OSCMessage SerializedOSCMessage 
 LIBO_CFILES = $(foreach F, $(LIBO_BASENAMES), $(F).c)
 LIBO_HFILES = $(foreach F, $(LIBO_BASENAMES), $(F).h) osc.h
+
+LIBO_SCANNER_BASENAMES = osc_scanner osc_expr_scanner
+LIBO_SCANNER_LFILES = $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).l)
+LIBO_SCANNER_CFILES = $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).c)
+LIBO_SCANNER_HFILES = $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).h)
+LIBO_SCANNER_OBJECTS = $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).o)
+
+LIBO_PARSER_BASENAMES = osc_parser osc_expr_parser
+LIBO_PARSER_LFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).l)
+LIBO_PARSER_CFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).c)
+LIBO_PARSER_HFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).h)
+LIBO_PARSER_OBJECTS = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
+
+LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
 
 CFLAGS += -Wall -O3 -funroll-loops
 
@@ -15,29 +28,29 @@ all: CC = gcc
 all: $(LIBO_CFILES) $(LIBO_HFILES) libo.a
 all: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
-
 win: CFLAGS += $(WIN-CFLAGS)
 win: CC = gcc-3
 win: $(LIBO_CFILES) $(LIBO_HFILES) libo.a test/osc_test
 win: LIBTOOL = ar cru libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
-libo.a: $(LIBO_OBJECTS)
+libo.a: $(LIBO_OBJECTS) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES)
 	rm -f libo.a
 	$(LIBTOOL)
-#ar -rcs libo.a $(LIBO_OBJECTS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(I) -c -o $(notdir $(basename $@)).o $(notdir $(basename $@)).c
+%.o: %.c 
+	$(CC) $(CFLAGS) $(I) -c -o $(basename $@).o $(basename $@).c
 
-osc_scanner.c: osc_scanner.l osc_parser.c
-	flex -o osc_scanner.c --prefix=osc_scanner_ --header-file=osc_scanner.h osc_scanner.l
-osc_scanner.o: osc_scanner.c osc_scanner.h
-	$(CC) $(CFLAGS) $(I) -o osc_scanner.o -c osc_scanner.c
+#%_scanner.o: %_scanner.c 
+#$(CC) $(CFLAGS) $(I) -c -o $(basename $@).o $(basename $@).c
 
-osc_parser.c: osc_parser.y 
-	bison -p osc_parser_ -d -o osc_parser.c osc_parser.y
-osc_parser.o: osc_parser.c osc_parser.h
-	$(CC) $(CFLAGS) $(I) -o osc_parser.o -c osc_parser.c
+%_scanner.c: %_scanner.l %_parser.c
+	flex -o $(basename $@).c --prefix=$(basename $@)_ --header-file=$(basename $@).h $(basename $@).l
+#%_scanner.o: %_scanner.c %_scanner.h
+
+%_parser.c: %_parser.y
+	bison -p $(basename $@)_ -d -o $(basename $@).c $(basename $@).y
+#%_parser.o: %_parser.c %_parser.h
+
 
 .PHONY: doc
 doc:
@@ -52,6 +65,7 @@ test-clean:
 
 .PHONY: clean
 clean:
-	rm -f *.o libo.a test/osc_test *~ osc_scanner.[ch] osc_parser.[ch]
+	rm -f *.o libo.a test/osc_test *~ $(LIBO_PARSER_CFILES) $(LIBO_PARSER_HFILES) $(LIBO_SCANNER_CFILES) $(LIBO_SCANNER_HFILES)
 	cd doc && rm -rf html latex man
 	cd test && $(MAKE) clean
+	cd contrib && rm -rf *.o

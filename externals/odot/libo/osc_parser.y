@@ -8,9 +8,6 @@
 #include <Carbon.h>
 #include <CoreServices.h>
 #endif
-#include "ext.h"
-#include "ext_obex.h"
-#include "ext_obex_util.h"
 #include "osc.h"
 #include "osc_mem.h"
 #include "osc_error.h"

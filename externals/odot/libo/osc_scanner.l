@@ -1,15 +1,5 @@
 %{
 #include "osc_parser.h"
-/*
-#ifndef WIN_VERSION
-#include <Carbon.h>
-#include <CoreServices.h>
-#endif
-#include "ext.h"
-#include "ext_obex.h"
-#include "ext_obex_util.h"
-#include "osc.h"
-*/
 
 int osc_scanner_wrap(yyscan_t scanner){
 	return 1;
