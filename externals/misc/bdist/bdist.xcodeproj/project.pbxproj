@@ -120,7 +120,11 @@
 			isa = PBXProject;
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "bdist" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -163,72 +167,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		0FF6670B096B494E00E9E0B4 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = i386;
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../MaxSDK-5.0.6/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../../MaxSDK-5.0.6/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../MaxMSP-UB-SDK/c74support/max-includes/macho-prefix.h";
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				GENERATE_MASTER_OBJECT_FILE = YES;
-				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"../../MaxMSP-UB-SDK/c74support/max-includes",
-					/usr/local/include,
-				);
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../lib/gsl/lib\"";
-				LIBRARY_STYLE = Bundle;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-lmx";
-				OTHER_REZFLAGS = "";
-				PRELINK_LIBS = /usr/local/lib/libgsl.a;
-				PRODUCT_NAME = randdist;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = mxo;
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -240,9 +178,10 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.pch";
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -260,12 +199,13 @@
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../lib/gsl/lib\"";
 				LIBRARY_STYLE = Bundle;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/../../../../lib/gsl/lib/libgsl.a\"";
 				PRODUCT_NAME = bdist;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
 				USER_HEADER_SEARCH_PATHS = "";
 				WARNING_CFLAGS = (
@@ -278,82 +218,11 @@
 			};
 			name = Deployment;
 		};
-		0FF6670D096B494E00E9E0B4 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = i386;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../SDK/MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/../../MaxSDK-5.0.6/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_5 = "\"$(SRCROOT)/../../MaxSDK-5.0.6/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../MaxMSP-UB-SDK/c74support/max-includes/macho-prefix.h";
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				GENERATE_MASTER_OBJECT_FILE = YES;
-				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"../../MaxMSP-UB-SDK/c74support/max-includes",
-					/usr/local/include,
-				);
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../lib/gsl/lib\"";
-				LIBRARY_STYLE = Bundle;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-lmx";
-				OTHER_REZFLAGS = "";
-				PRELINK_LIBS = /usr/local/lib/libgsl.a;
-				PRODUCT_NAME = randdist;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = mxo;
-			};
-			name = Default;
-		};
-		0FF6670F096B494E00E9E0B4 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = Development;
-		};
 		0FF66710096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
 			name = Deployment;
-		};
-		0FF66711096B494E00E9E0B4 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = Default;
 		};
 /* End XCBuildConfiguration section */
 
@@ -361,22 +230,18 @@
 		0FF6670A096B494E00E9E0B4 /* Build configuration list for PBXNativeTarget "bdist" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0FF6670B096B494E00E9E0B4 /* Development */,
 				0FF6670C096B494E00E9E0B4 /* Deployment */,
-				0FF6670D096B494E00E9E0B4 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Deployment;
 		};
 		0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "bdist" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0FF6670F096B494E00E9E0B4 /* Development */,
 				0FF66710096B494E00E9E0B4 /* Deployment */,
-				0FF66711096B494E00E9E0B4 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Deployment;
 		};
 /* End XCConfigurationList section */
 	};
