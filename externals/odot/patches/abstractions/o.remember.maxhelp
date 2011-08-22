@@ -1,9 +1,9 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ 25.0, 69.0, 869.0, 606.0 ],
+		"rect" : [ 162.0, 176.0, 869.0, 606.0 ],
 		"bglocked" : 0,
-		"defrect" : [ 25.0, 69.0, 869.0, 606.0 ],
+		"defrect" : [ 162.0, 176.0, 869.0, 606.0 ],
 		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 20.0,
@@ -21,30 +21,30 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.expr /dx = /horizontal - /was/horizontal (/dy = /vertical - /was/vertical)",
+					"text" : "o.expr (/dx = /horizontal - /was/horizontal) (/dy = /vertical - /was/vertical)",
+					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
-					"fontsize" : 20.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 100.0, 268.0, 693.0, 29.0 ],
+					"patching_rect" : [ 77.0, 170.0, 730.0, 29.0 ],
 					"id" : "obj-6",
 					"fontname" : "Arial",
-					"numoutlets" : 1
+					"numinlets" : 1,
+					"fontsize" : 20.0
 				}
 
 			}
 , 			{
 				"box" : 				{
 					"maxclass" : "o.message",
-					"text" : "/was/horizontal 563 \n/was/vertical 300 \n/horizontal 563 \n/vertical 300 \n/dx 0 \n/dy 0 \n",
-					"linecount" : 6,
+					"text" : "/was/horizontal 625 \n/was/vertical 201 \n/horizontal 625 \n/vertical 201 \n/shift up \n/capslock up \n/option up \n/control up \n/command down \n/dx 0 \n/dy 0 \n",
+					"linecount" : 11,
+					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"fontsize" : 20.0,
-					"numinlets" : 2,
-					"patching_rect" : [ 217.0, 343.0, 286.0, 144.0 ],
+					"patching_rect" : [ 85.0, 253.0, 286.0, 259.0 ],
+					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"id" : "obj-5",
 					"fontname" : "Arial",
-					"numoutlets" : 1,
-					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+					"numinlets" : 2,
+					"fontsize" : 20.0
 				}
 
 			}
@@ -52,13 +52,13 @@
 				"box" : 				{
 					"maxclass" : "newobj",
 					"text" : "o.remember /horizontal /vertical",
+					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"fontsize" : 20.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 270.0, 205.0, 291.0, 29.0 ],
+					"patching_rect" : [ 247.0, 108.0, 291.0, 29.0 ],
 					"id" : "obj-2",
 					"fontname" : "Arial",
-					"numoutlets" : 1
+					"numinlets" : 1,
+					"fontsize" : 20.0
 				}
 
 			}
@@ -66,13 +66,13 @@
 				"box" : 				{
 					"maxclass" : "newobj",
 					"text" : "o.io.mouse",
+					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"fontsize" : 20.0,
-					"numinlets" : 0,
-					"patching_rect" : [ 272.0, 162.0, 108.0, 29.0 ],
+					"patching_rect" : [ 249.0, 65.0, 108.0, 29.0 ],
 					"id" : "obj-1",
 					"fontname" : "Arial",
-					"numoutlets" : 1
+					"numinlets" : 0,
+					"fontsize" : 20.0
 				}
 
 			}
