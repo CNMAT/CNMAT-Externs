@@ -126,6 +126,7 @@ t_osc_expr *osc_expr_parser_postfix_incdec(t_osc_expr **exprstack, char *oscaddr
 %}
 
 %define "api.pure"
+%require "2.5"
 
 %parse-param{t_osc_expr **exprstack}
 %parse-param{void *scanner}

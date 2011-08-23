@@ -145,8 +145,6 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}else{
 			osc_atom_u_setFalse(osc_atom_array_u_get(*out, 0));
 		}
-	}else if(f->rec->func == osc_expr_exec){
-
 	}else{
 		t_osc_atom_ar_u *argv[f_argc];
 		memset(argv, '\0', sizeof(argv));
@@ -1136,6 +1134,7 @@ int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 }
 
 int osc_expr_exec(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+	/*
 	t_osc_atom_u *expr = osc_atom_array_u_get(*argv, 0);
 	if(osc_atom_u_getTypetag(expr) != 's'){
 		// we could try to assemble a string i suppose
@@ -1147,6 +1146,7 @@ int osc_expr_exec(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 		return 0;
 	}
 	//osc_expr_funcall(f, 
+	*/
 	return 0;
 }
 
