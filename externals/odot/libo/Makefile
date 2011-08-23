@@ -18,7 +18,8 @@ LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO
 
 CFLAGS += -Wall -O3 -funroll-loops
 
-MAC-CFLAGS = -arch i386 -isysroot /Developer/SDKs/MacOSX10.7.sdk -mmacosx-version-min=10.5
+MAC-SYSROOT = -isysroot /Developer/SDKs/MacOSX10.7.sdk 
+MAC-CFLAGS = -arch i386 -mmacosx-version-min=10.5 $(MAC-SYSROOT)
 WIN-CFLAGS = -mno-cygwin -DWIN_VERSION
 
 I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
