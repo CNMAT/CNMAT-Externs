@@ -28,7 +28,7 @@ c99_floating_point_constant  ({dfc}|{hfc})
 %option bison-bridge
 
 %%
-\+|-|\*|\/|%|^|! {
+\+|-|\*|\/|%|^|!|=|\[|\]|:|\? {
 	return *yytext;
 }
 \<= {
@@ -70,8 +70,11 @@ c99_floating_point_constant  ({dfc}|{hfc})
 %= {
 	return OSC_EXPR_MODEQ;
 }
-^= {
+\^= {
 	return OSC_EXPR_POWEQ;
+}
+\?\? {
+	return OSC_EXPR_DBLQMARK;
 }
 
 ,|;|\(|\)				{
@@ -101,7 +104,7 @@ c99_floating_point_constant  ({dfc}|{hfc})
 						osc_atom_u_setDouble(yylval->atom, f);
 						return OSC_EXPR_NUM;
 					}
-[^0-9\(\)\[\] \t\n\+\-\*<>=!,;][^\(\)\[\] \t\n\+\-<>=!,;]*		{
+[^0-9\(\)\[\] \t\n\+\-\*<>=!,;:][^\(\)\[\] \t\n\+\-<>=!,;:]*		{
 						// put in atom
 						yylval->atom = osc_atom_u_alloc();
 						osc_atom_u_setString(yylval->atom, yytext);

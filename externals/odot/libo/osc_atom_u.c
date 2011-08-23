@@ -78,10 +78,16 @@ void osc_atom_u_clear(t_osc_atom_u *a){
 }
 
 char osc_atom_u_getTypetag(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	return a->typetag;
 }
 
 float osc_atom_u_getFloat(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'f': // 32-bit IEEE 754 float
 		return a->w.f;
@@ -111,6 +117,9 @@ float osc_atom_u_getFloat(t_osc_atom_u *a){
 }
 
 double osc_atom_u_getDouble(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'd': // 64-bit IEEE 754 double
 		return a->w.d;
@@ -140,6 +149,9 @@ double osc_atom_u_getDouble(t_osc_atom_u *a){
 }
 
 int32_t osc_atom_u_getInt32(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return a->w.i;
@@ -169,6 +181,9 @@ int32_t osc_atom_u_getInt32(t_osc_atom_u *a){
 }
 
 int64_t osc_atom_u_getInt64(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'h': // signed 64-bit int
 		return (int64_t)a->w.h;
@@ -198,6 +213,9 @@ int64_t osc_atom_u_getInt64(t_osc_atom_u *a){
 }
 
 uint32_t osc_atom_u_getUInt32(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'I': // unsigned 32-bit int
 		return (uint32_t)a->w.I;
@@ -227,6 +245,9 @@ uint32_t osc_atom_u_getUInt32(t_osc_atom_u *a){
 }
 
 uint64_t osc_atom_u_getUInt64(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'H': // unsigned 64-bit int
 		return (uint64_t)a->w.H;
@@ -256,6 +277,9 @@ uint64_t osc_atom_u_getUInt64(t_osc_atom_u *a){
 }
 
 int osc_atom_u_getInt(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return a->w.i;
@@ -285,6 +309,9 @@ int osc_atom_u_getInt(t_osc_atom_u *a){
 }
 
 char *osc_atom_u_getStringPtr(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	if(a->typetag == 's'){
 		return a->w.s;
 	}else{
@@ -293,6 +320,9 @@ char *osc_atom_u_getStringPtr(t_osc_atom_u *a){
 }
 
 char *osc_atom_u_getString(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 's': // string
 		{
@@ -364,6 +394,9 @@ char *osc_atom_u_getString(t_osc_atom_u *a){
 }
 
 int osc_atom_u_getBool(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
 	switch(a->typetag){
 	case 'T':
 		return 1;
@@ -405,42 +438,63 @@ int osc_atom_u_getBool(t_osc_atom_u *a){
 }
 
 void osc_atom_u_setFloat(t_osc_atom_u *a, float v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.f = v;
 	a->typetag = 'f';
 }
 
 void osc_atom_u_setDouble(t_osc_atom_u *a, double v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.d = v;
 	a->typetag = 'd';
 }
 
 void osc_atom_u_setInt32(t_osc_atom_u *a, int32_t v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.i = v;
 	a->typetag = 'i';
 }
 
 void osc_atom_u_setInt64(t_osc_atom_u *a, int64_t v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.h = v;
 	a->typetag = 'h';
 }
 
 void osc_atom_u_setUInt32(t_osc_atom_u *a, uint32_t v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.I = v;
 	a->typetag = 'I';
 }
 
 void osc_atom_u_setUInt64(t_osc_atom_u *a, uint64_t v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.H = v;
 	a->typetag = 'H';
 }
 
 void osc_atom_u_setString(t_osc_atom_u *a, char *v){
+	if(!a){
+		return;
+	}
 	if(a->w.s && a->typetag == 's' && a->alloc){
 		long len = strlen(v) + 1;
 		a->w.s = osc_mem_resize(a->w.s, len);
@@ -454,12 +508,18 @@ void osc_atom_u_setString(t_osc_atom_u *a, char *v){
 }
 
 void osc_atom_u_setStringPtr(t_osc_atom_u *a, char *v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.s = v;
 	a->typetag = 's';
 }
 
 void osc_atom_u_setBool(t_osc_atom_u *a, int v){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	if(v == 0){
 		osc_atom_u_setFalse(a);
@@ -469,27 +529,42 @@ void osc_atom_u_setBool(t_osc_atom_u *a, int v){
 }
 
 void osc_atom_u_setTrue(t_osc_atom_u *a){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->typetag = 'T';
 }
 
 void osc_atom_u_setFalse(t_osc_atom_u *a){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->typetag = 'F';
 }
 
 void osc_atom_u_setNull(t_osc_atom_u *a){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->typetag = 'N';
 }
 
 void osc_atom_u_setBndl(t_osc_atom_u *a, t_osc_bndl_u *bndl){
+	if(!a){
+		return;
+	}
 	osc_atom_u_clear(a);
 	a->w.bndl = bndl;
 	a->typetag = '#';
 }
 
 size_t osc_atom_u_sizeof(t_osc_atom_u *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'i':
 	case 'I':
@@ -512,6 +587,9 @@ size_t osc_atom_u_sizeof(t_osc_atom_u *a){
 }
 
 t_osc_err osc_atom_u_doSerialize(t_osc_atom_u *a, long *buflen, long *bufpos, char **buf){
+	if(!a){
+		return OSC_ERR_NOBUNDLE;
+	}
 	if((*buflen - *bufpos) < 64){
 		*buf = osc_mem_resize(*buf, *buflen + 64);
 		if(!(*buf)){
@@ -580,6 +658,9 @@ t_osc_err osc_atom_u_doSerialize(t_osc_atom_u *a, long *buflen, long *bufpos, ch
 }
 
 t_osc_err osc_atom_u_serialize(t_osc_atom_u *a, long *buflen, char **buf){
+	if(!a){
+		return OSC_ERR_NOBUNDLE;
+	}
 	long mybuflen = *buflen, mybufpos = 0;
 	t_osc_err e = osc_atom_u_doSerialize(a, &mybuflen, &mybufpos, buf);
 	*buflen = mybufpos;
@@ -587,6 +668,9 @@ t_osc_err osc_atom_u_serialize(t_osc_atom_u *a, long *buflen, char **buf){
 }
 
 t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char **buf){
+	if(!a){
+		return OSC_ERR_NOBUNDLE;
+	}
 	if((*buflen - *bufpos) < 64){
 		*buf = osc_mem_resize(*buf, *buflen + 64);
 		if(!(*buf)){
@@ -648,6 +732,9 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 }
 
 t_osc_err osc_atom_u_format(t_osc_atom_u *a, long *buflen, char **buf){
+	if(!a){
+		return OSC_ERR_NOBUNDLE;
+	}
 	long mybuflen = *buflen, mybufpos = 0;
 	t_osc_err e = osc_atom_u_doFormat(a, &mybuflen, &mybufpos, buf);
 	*buflen = mybufpos;

@@ -59,7 +59,8 @@ void osc_expr_or(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
 void osc_expr_mod(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result);
 
 int osc_expr_assign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-
+int osc_expr_add1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_subtract1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_get_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_product(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_sum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -86,12 +87,37 @@ int osc_expr_rand(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 int osc_expr_sgn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_defined(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 t_osc_expr *osc_expr_alloc(void);
 t_osc_expr_arg *osc_expr_arg_alloc(void);
 void osc_expr_free(t_osc_expr *e);
+t_osc_expr *osc_expr_copy(t_osc_expr *e);
+t_osc_expr_arg *osc_expr_arg_copy(t_osc_expr_arg *e);
 void osc_expr_arg_free(t_osc_expr_arg *a);
-void osc_expr_pushArg(t_osc_expr *expr, t_osc_expr_arg *arg);
+
+void osc_expr_appendExpr(t_osc_expr *e, t_osc_expr *expr_to_append);
+void osc_expr_setRec(t_osc_expr *e, t_osc_expr_rec *rec);
+t_osc_expr_rec *osc_expr_getRec(t_osc_expr *e);
+void osc_expr_setNext(t_osc_expr *e, t_osc_expr *next);
+void osc_expr_setArg(t_osc_expr *e, t_osc_expr_arg *a);
+void osc_expr_prependArg(t_osc_expr *e, t_osc_expr_arg *a);
+void osc_expr_appendArg(t_osc_expr *e, t_osc_expr_arg *a);
+t_osc_expr_arg *osc_expr_getArgs(t_osc_expr *e);
+long osc_expr_getArgCount(t_osc_expr *e);
+
+void osc_expr_arg_setOSCAtom(t_osc_expr_arg *a, t_osc_atom_u *atom);
+void osc_expr_arg_setExpr(t_osc_expr_arg *a, t_osc_expr *e);
+void osc_expr_arg_setOSCAddress(t_osc_expr_arg *a, char *osc_address);
+int osc_expr_arg_getType(t_osc_expr_arg *a);
+t_osc_atom_u *osc_expr_arg_getOSCAtom(t_osc_expr_arg *a);
+t_osc_expr *osc_expr_arg_getExpr(t_osc_expr_arg *a);
+char *osc_expr_arg_getOSCAddress(t_osc_expr_arg *a);
+int osc_expr_arg_append(t_osc_expr_arg *a, t_osc_expr_arg *arg_to_append);
+void osc_expr_arg_setNext(t_osc_expr_arg *a, t_osc_expr_arg *next);
+t_osc_expr_arg *osc_expr_arg_next(t_osc_expr_arg *a);
+void osc_expr_setAssignResultToAddress(t_osc_expr *e, int val);
+int osc_expr_getAssignResultToAddress(t_osc_expr *e);
 
 void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt);
 
@@ -127,8 +153,8 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"||", osc_expr_2arg, 2, (void *)osc_expr_or, "Logical or"},
 	{"%", osc_expr_2arg, 2, (void *)osc_expr_mod, "Modulo"},
 	{"=", osc_expr_assign, 2, NULL, "Assignment"},
-	{"++", osc_expr_2arg, 1, (void *)osc_expr_add, "Increment"},
-	{"--", osc_expr_2arg, 1, (void *)osc_expr_subtract, "Decrement"},
+	{"++", osc_expr_add1, 1, NULL, "Increment"},
+	{"--", osc_expr_subtract1, 1, NULL, "Decrement"},
 	{"+=", osc_expr_2arg, 2, (void *)osc_expr_add, "Add and assign"},
 	{"-=", osc_expr_2arg, 2, (void *)osc_expr_subtract, "Subtract and assign"},
 	{"*=", osc_expr_2arg, 2, (void *)osc_expr_multiply, "Multiply and assign"},
@@ -206,7 +232,8 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"rand", osc_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"},
 	{"sgn", osc_expr_sgn, 1, NULL, "Sign function--returns -1 if <arg1> < 0, 0 if <arg1> == 0, and 1 if <arg1> > 1"},
 	{"if", osc_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
-	{"defined", osc_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."}
+	{"defined", osc_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."},
+	{"nothing", osc_expr_nothing, -1, NULL, "Just what it says"}
 };
 
 #ifdef _cplusplus

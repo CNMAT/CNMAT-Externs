@@ -48,15 +48,22 @@ t_osc_array *osc_array_allocWithSize(long len, size_t membersize){
 }
 
 void osc_array_free(t_osc_array *ar){
-	osc_mem_free(ar->ar);
-	osc_mem_free(ar);
+	if(ar){
+		osc_mem_free(ar->ar);
+		osc_mem_free(ar);
+	}
 }
 
 void osc_array_clear(t_osc_array *ar){
-	memset(ar->ar, '\0', ar->len * ar->membersize);
+	if(ar){
+		memset(ar->ar, '\0', ar->len * ar->membersize);
+	}
 }
 
 void *osc_array_get(t_osc_array *ar, long idx){
+	if(!ar){
+		return NULL;
+	}
 	if(ar->len <= idx){
 		return NULL;
 	}
@@ -64,16 +71,48 @@ void *osc_array_get(t_osc_array *ar, long idx){
 }
 
 long osc_array_getLen(t_osc_array *ar){
+	if(!ar){
+		return 0;
+	}
 	return ar->len;
 }
 
 t_osc_array *osc_array_copy(t_osc_array *array){
+	if(!array){
+		return NULL;
+	}
 	t_osc_ar *cp = osc_array_allocWithSize(array->len, array->membersize);
 	memcpy(cp->ar, array->ar, cp->len * cp->membersize);
 	return cp;
 }
 
+t_osc_err osc_array_copyInto(t_osc_array **dest, t_osc_array *src, long offset){
+	if(!src){
+		return OSC_ERR_INVAL;
+	}
+	long srclen = src->len;
+	long srcsize = src->membersize;
+	long srclen_bytes = srclen * srcsize;
+	long destlen = srclen + offset;
+	long destlen_bytes = destlen * srcsize;
+	if(!(*dest)){
+		*dest = osc_array_allocWithSize(destlen, srcsize);
+	}else{
+		if(destlen_bytes < srclen_bytes){
+			(*dest)->ar = osc_mem_resize((*dest)->ar, destlen_bytes);
+			if(!((*dest)->ar)){
+				return OSC_ERR_OUTOFMEM;
+			}
+		}
+	}
+	memcpy((*dest)->ar + (offset * srcsize), src->ar, srclen_bytes);
+	return OSC_ERR_NONE;
+}
+
 t_osc_err osc_array_resize(t_osc_array *array, int newlen){
+	if(!array){
+		return OSC_ERR_INVAL;
+	}
 	array->ar = osc_mem_resize(array->ar, newlen * array->membersize);
 	if(array->ar){
 		array->len = newlen;

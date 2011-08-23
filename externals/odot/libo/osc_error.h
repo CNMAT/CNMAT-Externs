@@ -41,6 +41,7 @@ typedef uint64_t t_osc_err;
 #define OSC_ERR_NULLPTR 0x12
 #define OSC_ERR_BADTYPETAG 0x14
 #define OSC_ERR_MALFORMEDMSG 0x18
+#define OSC_ERR_INVAL 0x20
 
 #define OSC_ERR_PARSER_FUNCTIONNOTFOUND 0x100
 

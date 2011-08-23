@@ -42,6 +42,7 @@ t_osc_atom_array_u *osc_atom_array_u_alloc(long len);
 #define osc_atom_array_u_get(ar, idx) osc_array_get((ar), (idx))
 #define osc_atom_array_u_getLen(ar) osc_array_getLen((ar))
 #define osc_atom_array_u_copy(ar) osc_array_copy((ar))
+#define osc_atom_array_u_copyInto(dest, src, offset) osc_array_copyInto((dest), (src), (offset))
 #define osc_atom_array_u_resize(ar, newlen) osc_array_resize((ar), (newlen))
 
 t_osc_err osc_atom_array_u_getDoubleArray(t_osc_atom_ar_u *array, double **out);

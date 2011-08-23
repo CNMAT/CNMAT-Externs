@@ -13,7 +13,6 @@ struct _osc_expr{
 	int argc; 
 	int assign_result_to_address;
 	struct _osc_expr *next; 
-	int putlast ; // hack
 };
 
 struct _osc_expr_arg{

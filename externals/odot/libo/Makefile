@@ -48,7 +48,7 @@ libo.a: $(LIBO_OBJECTS) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES)
 #%_scanner.o: %_scanner.c %_scanner.h
 
 %_parser.c: %_parser.y
-	bison -p $(basename $@)_ -d -o $(basename $@).c $(basename $@).y
+	bison -p $(basename $@)_ -d -v --report=itemset -o $(basename $@).c $(basename $@).y
 #%_parser.o: %_parser.c %_parser.h
 
 

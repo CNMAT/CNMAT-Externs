@@ -1,5 +1,6 @@
 %{
 #include "osc_parser.h"
+#include "osc_mem.h"
 
 int osc_scanner_wrap(yyscan_t scanner){
 	return 1;
@@ -62,17 +63,34 @@ $[1-9]+	{
 						return OSCINT;
 					}
 
-\/[^ \t\n#]+	{
-			//printf("OSC address!\n");
-			yylval->string = strdup(yytext);
+\/[^ \t\n#\"]+	{
+			//printf("OSC address: %s\n", yytext);
+			int len = strlen(yytext) + 1;
+			char *copy = osc_mem_alloc(len);
+			memcpy(copy, yytext, len);
+			yylval->string = copy;
 			return OSCADDRESS;
 		}
 
-[a-zA-Z0-9][^ \t\n]*	{
-				//printf("string\n");
-				yylval->string = strdup(yytext);
+\"(\\.|[^\"])*\" 	{
+				//printf("quoted string: %s\n", yytext);
+				int len = strlen(yytext) + 1;
+				char *copy = osc_mem_alloc(len);
+				memcpy(copy, yytext, len);
+				yylval->string = copy;
 				return STRING;
 			}
+
+			/* [a-zA-Z0-9][^ \t\n]* */
+[^ \t\"\n]*	{
+				//printf("string: %s\n", yytext);
+				int len = strlen(yytext) + 1;
+				char *copy = osc_mem_alloc(len);
+				memcpy(copy, yytext, len);
+				yylval->string = copy;
+				return STRING;
+			}
+
 
 [ \t]+
 
