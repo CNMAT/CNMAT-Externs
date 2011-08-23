@@ -18,7 +18,7 @@ LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO
 
 CFLAGS += -Wall -O3 -funroll-loops
 
-MAC-SYSROOT = MacOSX10.7.sdk 
+MAC_SYSROOT = MacOSX10.7.sdk 
 MAC-CFLAGS = -arch i386 -mmacosx-version-min=10.5 -isysroot /Developer/SDKs/$(MAC-SYSROOT)
 WIN-CFLAGS = -mno-cygwin -DWIN_VERSION
 
