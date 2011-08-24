@@ -138,14 +138,28 @@ t_osc_err osc_atom_array_u_getBoolArray(t_osc_atom_ar_u *array, char **out){
 
 t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, char **out){
 	long arlen = osc_atom_array_u_getLen(array);
+	long buflen = 256;
 	if(!(*out)){
-		*out = osc_mem_alloc(8 * arlen); // guess that each element will be around 8 chars
+		*out = osc_mem_alloc(buflen); // guess that each element will be around 8 chars
 	}
 	char *ptr = *out;
 	int i;
 	for(i = 0; i < arlen; i++){
+		if((buflen - (ptr - *out)) < 64){
+			long offset = ptr - *out;
+			char *tmp = osc_mem_resize(*out, buflen + 256);
+			if(tmp){
+				*out = tmp;
+				ptr = (*out) + offset;
+				buflen += 256;
+			}else{
+				return OSC_ERR_OUTOFMEM;
+			}
+		}
 		ptr += osc_atom_u_getString(osc_atom_array_u_get(array, i), &ptr);
+		*ptr++ = ' ';
 	}
+	*ptr++ = '\0';
 	*len = ptr - *out;
 	return OSC_ERR_NONE;
 }
