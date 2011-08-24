@@ -707,6 +707,17 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 		}
 		*buflen += 64;
 	}
+	if(osc_atom_u_getTypetag(a) == '#'){
+		*bufpos += sprintf(*buf + *bufpos, "[\n");
+		extern t_osc_err osc_bundle_u_doFormat(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf);
+		osc_bundle_u_doFormat(a->w.bndl, buflen, bufpos, buf);
+		*bufpos += sprintf(*buf + *bufpos, "]");
+	}else{
+		*bufpos += osc_atom_u_getString(a, buf);
+		(*buf)[(*bufpos)++] = ' ';
+		(*buf)[(*bufpos)] = '\0';
+	}
+	/*
 	switch(osc_atom_u_getTypetag(a)){
 	case 'i':
 		*bufpos += sprintf(*buf + *bufpos, "%"PRId32" ", a->w.i);
@@ -747,16 +758,15 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 		break;
 	case 'b':
 		{
-			/*
 			int j, n = osc_sizeof(*(m->typetags), a->w.);
 			*bufpos += sprintf(*buf + *bufpos, "blob (%d bytes): ", n);
 			for(j = 0; j < n; j++){
 				*bufpos += sprintf(*buf + *bufpos, "%d ", a->w.[j]);
 			}
-			*/
 		}
 		break;
 	}
+	*/
 	return OSC_ERR_NONE;
 }
 

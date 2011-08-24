@@ -18,7 +18,7 @@
 #include "osc_parser.h"
 #include "osc_scanner.h"
 
-//#define OSC_PARSER_DEBUG
+	//#define OSC_PARSER_DEBUG
 #ifdef OSC_PARSER_DEBUG
 #define PP(fmt, ...)printf(fmt, ##__VA_ARGS__)
 #else
@@ -147,8 +147,16 @@ bundle: {
 	}
 ;
 
-arglist: '\n' {;}
-	| STRING {
+arglist:
+/* 
+	'\n' {
+		t_osc_msg_u *m = osc_message_u_alloc();
+		PP("push MSG %p->%p\n", m, *msg);
+		PP("have message with address and no arguments\n");
+		m->next = *msg;
+		*msg = m;
+		}*/
+	STRING {
 		t_osc_msg_u *m = osc_message_u_alloc();
 		PP("push MSG %p->%p\n", m, *msg);
 		PP("add STRING to MSG %p := %s\n", m, $1);
@@ -247,6 +255,15 @@ arglist: '\n' {;}
 msg: 
 	OSCADDRESS arglist '\n' {
 		PP("set ADDRESS %p := %s\n", *msg, $1);
+		osc_message_u_setAddressPtr(*msg, $1, NULL);
+ 	}
+	| OSCADDRESS '\n' {
+		t_osc_msg_u *m = osc_message_u_alloc();
+		PP("set ADDRESS %p := %s\n", *msg, $1);
+		PP("push MSG %p->%p\n", m, *msg);
+		PP("have message with address and no arguments\n");
+		m->next = *msg;
+		*msg = m;
 		osc_message_u_setAddressPtr(*msg, $1, NULL);
  	}
 	| OSCADDRESS_DOLLARSUB arglist '\n'{

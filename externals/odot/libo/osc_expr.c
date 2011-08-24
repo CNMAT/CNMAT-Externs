@@ -1406,7 +1406,6 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 		case OSC_EXPR_ARG_TYPE_ATOM:
 			{
 				t_osc_atom_u *a = f_argv->arg.atom;
-				printf("typetag = %c\n", osc_atom_u_getTypetag(a));
 				switch(osc_atom_u_getTypetag(a)){
 				case 'i':
 					ptr += sprintf(ptr, "%"PRId32" ", osc_atom_u_getInt32(a));
