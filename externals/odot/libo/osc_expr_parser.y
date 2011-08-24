@@ -39,6 +39,17 @@ int osc_expr_parser_lex(YYSTYPE *yylval_param, yyscan_t yyscanner){
 }
 
 t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f){
+	//printf("parsing %s\n", ptr);
+	int len = strlen(ptr);
+	int alloc = 0;
+	if(ptr[len - 1] != ';'){
+		char *tmp = osc_mem_alloc(len + 2);
+		memcpy(tmp, ptr, len + 1);
+		tmp[len] = ';';
+		tmp[len + 1] = '\0';
+		ptr = tmp;
+		alloc = 1;
+	}
 	yyscan_t scanner;
 	osc_expr_scanner_lex_init(&scanner);
 	YY_BUFFER_STATE buf_state = osc_expr_scanner__scan_string(ptr, scanner);
@@ -49,6 +60,9 @@ t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f){
 	osc_expr_scanner_lex_destroy(scanner);
 
 	*f = exprstack;
+	if(alloc){
+		osc_mem_free(ptr);
+	}
 	return ret;
 }
 
@@ -113,7 +127,6 @@ t_osc_expr *osc_expr_parser_postfix_incdec(t_osc_expr **exprstack, char *oscaddr
 	}else{
 		osc_expr_appendExpr(*exprstack, e);
 	}
-	//char *ptr = osc_atom_u_getString(oscaddress); // makes a copy
 	int len = strlen(oscaddress) + 1;
 	char *ptr = osc_mem_alloc(len);
 	memcpy(ptr, oscaddress, len);
@@ -270,7 +283,7 @@ expr:
 		$$ = osc_expr_parser_infix("<=", $1, $3);
  	}
 	| arg '>' arg {
-		$$ = osc_expr_parser_infix("<", $1, $3);
+		$$ = osc_expr_parser_infix(">", $1, $3);
  	}
 	| arg OSC_EXPR_GTE arg {
 		$$ = osc_expr_parser_infix(">=", $1, $3);
@@ -308,7 +321,8 @@ expr:
 	}
 // prefix inc/dec
 	| OSC_EXPR_INC OSC_EXPR_STRING %prec OSC_EXPR_PREFIX_INC {
-		char *copy = osc_atom_u_getString($2);
+		char *copy = NULL;
+		osc_atom_u_getString($2, &copy);
 		t_osc_expr *e = osc_expr_parser_prefix_incdec(copy, "++");
 		if(!e){
 			osc_mem_free(copy);
@@ -319,7 +333,8 @@ expr:
 		$$ = e;
 	}
 	| OSC_EXPR_DEC OSC_EXPR_STRING %prec OSC_EXPR_PREFIX_DEC {
-		char *copy = osc_atom_u_getString($2);
+		char *copy = NULL;
+		osc_atom_u_getString($2, &copy);
 		t_osc_expr *e = osc_expr_parser_prefix_incdec(copy, "--");
 		if(!e){
 			osc_mem_free(copy);
@@ -331,7 +346,8 @@ expr:
 	}
 // postfix inc/dec
 	| OSC_EXPR_STRING OSC_EXPR_INC {
-		char *copy = osc_atom_u_getString($1);
+		char *copy = NULL;
+		osc_atom_u_getString($1, &copy);
 		t_osc_expr *e = osc_expr_parser_postfix_incdec(exprstack, copy, "++");
 		if(!e){
 			osc_mem_free(copy);
@@ -342,7 +358,8 @@ expr:
 		$$ = e;
 	}
 	| OSC_EXPR_STRING OSC_EXPR_DEC {
-		char *copy = osc_atom_u_getString($1);
+		char *copy = NULL;
+		osc_atom_u_getString($1, &copy);
 		t_osc_expr *e = osc_expr_parser_postfix_incdec(exprstack, copy, "--");
 		if(!e){
 			osc_mem_free(copy);
@@ -355,7 +372,8 @@ expr:
 // assignment
 	| OSC_EXPR_STRING '=' arg {
 		// basic assignment 
-		char *ptr = osc_atom_u_getString($1); // copy
+		char *ptr = NULL;
+		osc_atom_u_getString($1, &ptr);
 		if(*ptr != '/'){
 			yyerror(exprstack, scanner, "osc_expr_parser: expected \"%s\" in \"%s = ... to be an OSC address\n", ptr, ptr);
 			return 1;

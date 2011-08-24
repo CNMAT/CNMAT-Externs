@@ -28,7 +28,7 @@ c99_floating_point_constant  ({dfc}|{hfc})
 %option bison-bridge
 
 %%
-\+|-|\*|\/|%|^|!|=|\[|\]|:|\? {
+\+|-|\*|\/|%|^|!|=|\[|\]|:|\?|<|> {
 	return *yytext;
 }
 \<= {

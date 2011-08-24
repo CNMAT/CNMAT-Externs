@@ -39,9 +39,7 @@ $[1-9]+	{
 -?{c99_floating_point_constant}	{
 					//printf("float\n");
 					char *endp = NULL;
-					// i wouldn't thin this use of strdup is necessary, but i was getting
-					// a strange crash that this fixes, so it's in here for now
-					double d = strtod(strdup(yytext), &endp);
+					double d = strtod(yytext, &endp);
 					yylval->f = d;
 					return OSCFLOAT;
 				}
@@ -74,9 +72,9 @@ $[1-9]+	{
 
 \"(\\.|[^\"])*\" 	{
 				//printf("quoted string: %s\n", yytext);
-				int len = strlen(yytext) + 1;
+				int len = strlen(yytext) - 1;
 				char *copy = osc_mem_alloc(len);
-				memcpy(copy, yytext, len);
+				memcpy(copy, yytext + 1, len - 1);
 				yylval->string = copy;
 				return STRING;
 			}

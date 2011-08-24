@@ -88,6 +88,7 @@ int osc_expr_sgn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_
 int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_defined(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_exec(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 t_osc_expr *osc_expr_alloc(void);
 t_osc_expr_arg *osc_expr_arg_alloc(void);
@@ -233,7 +234,8 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"sgn", osc_expr_sgn, 1, NULL, "Sign function--returns -1 if <arg1> < 0, 0 if <arg1> == 0, and 1 if <arg1> > 1"},
 	{"if", osc_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
 	{"defined", osc_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."},
-	{"nothing", osc_expr_nothing, -1, NULL, "Just what it says"}
+	{"nothing", osc_expr_nothing, -1, NULL, "Just what it says"},
+	{"exec", osc_expr_exec, 1, NULL, "Execute a function bound to an OSC address"}
 };
 
 #ifdef _cplusplus

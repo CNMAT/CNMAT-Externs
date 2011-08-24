@@ -37,7 +37,7 @@ extern "C" {
 typedef t_osc_array t_osc_atom_array_u, t_osc_atom_ar_u;
 
 t_osc_atom_array_u *osc_atom_array_u_alloc(long len);
-#define osc_atom_array_u_free(ar) osc_array_free((ar))
+void osc_atom_array_u_free(t_osc_atom_ar_u *ar);
 #define osc_atom_array_u_clear(ar) osc_array_clear((ar))
 #define osc_atom_array_u_get(ar, idx) osc_array_get((ar), (idx))
 #define osc_atom_array_u_getLen(ar) osc_array_getLen((ar))
@@ -52,6 +52,7 @@ t_osc_err osc_atom_array_u_getInt64Array(t_osc_atom_ar_u *array, int64_t **out);
 t_osc_err osc_atom_array_u_getUInt32Array(t_osc_atom_ar_u *array, uint32_t **out);
 t_osc_err osc_atom_array_u_getUInt64Array(t_osc_atom_ar_u *array, uint64_t **out);
 t_osc_err osc_atom_array_u_getBoolArray(t_osc_atom_ar_u *array, char **out);
+t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, char **out);
 
 
 #ifdef __cplusplus

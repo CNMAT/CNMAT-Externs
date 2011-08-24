@@ -246,6 +246,13 @@ t_osc_atom_u *osc_message_u_appendDouble(t_osc_msg_u *m, double v){
 	return a;
 }
 
+t_osc_atom_u *osc_message_u_appendStringPtr(t_osc_msg_u *m, char *v){
+	t_osc_atom_u *a = osc_atom_u_alloc();
+	osc_atom_u_setStringPtr(a, v);
+	osc_message_u_appendAtom(m, a);
+	return a;
+}
+
 t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, char *v){
 	t_osc_atom_u *a = osc_atom_u_alloc();
 	//int len = strlen(v);
@@ -334,6 +341,13 @@ t_osc_atom_u *osc_message_u_prependDouble(t_osc_msg_u *m, double v){
 	return a;
 }
 
+t_osc_atom_u *osc_message_u_prependStringPtr(t_osc_msg_u *m, char *v){
+	t_osc_atom_u *a = osc_atom_u_alloc();
+	osc_atom_u_setStringPtr(a, v);
+	osc_message_u_prependAtom(m, a);
+	return a;
+}
+
 t_osc_atom_u *osc_message_u_prependString(t_osc_msg_u *m, char *v){
 	t_osc_atom_u *a = osc_atom_u_alloc();
 	int len = strlen(v);
@@ -418,6 +432,13 @@ t_osc_atom_u *osc_message_u_insertFloat(t_osc_msg_u *m, float v, int pos){
 t_osc_atom_u *osc_message_u_insertDouble(t_osc_msg_u *m, double v, int pos){
 	t_osc_atom_u *a = osc_atom_u_alloc();
 	osc_atom_u_setDouble(a, v);
+	osc_message_u_insertAtom(m, a, pos);
+	return a;
+}
+
+t_osc_atom_u *osc_message_u_insertStringPtr(t_osc_msg_u *m, char *v, int pos){
+	t_osc_atom_u *a = osc_atom_u_alloc();
+	osc_atom_u_setString(a, v);
 	osc_message_u_insertAtom(m, a, pos);
 	return a;
 }
@@ -521,6 +542,31 @@ t_osc_err osc_message_u_serialize(t_osc_msg_u *m, long *buflen, char **buf){
 }
 
 extern t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char **buf);
+
+t_osc_err osc_message_u_doFormatArgs(t_osc_msg_u *m, long *buflen, long *bufpos, char **buf){
+	if((*buflen - *bufpos) < 256){
+		*buf = osc_mem_resize(*buf, *buflen + 1024);
+		if(!(*buf)){
+			return OSC_ERR_OUTOFMEM;
+		}
+		*buflen += 1024;
+	}
+	t_osc_msg_it_u *it = osc_msg_it_u_get(m);
+	while(osc_msg_it_u_hasNext(it)){
+		t_osc_atom_u *a = osc_msg_it_u_next(it);
+		osc_atom_u_doFormat(a, buflen, bufpos, buf);
+	}
+	osc_msg_it_u_destroy(it);
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_message_u_formatArgs(t_osc_msg_u *m, long *buflen, char **buf){
+	long mybuflen = 0, mybufpos = 0;
+	t_osc_err e = osc_message_u_doFormatArgs(m, &mybuflen, &mybufpos, buf);
+	*buflen = mybufpos;
+	return e;
+}
+
 t_osc_err osc_message_u_doFormat(t_osc_msg_u *m, long *buflen, long *bufpos, char **buf){
 	if((*buflen - *bufpos) < 256){
 		*buf = osc_mem_resize(*buf, *buflen + 1024);
@@ -530,12 +576,7 @@ t_osc_err osc_message_u_doFormat(t_osc_msg_u *m, long *buflen, long *bufpos, cha
 		*buflen += 1024;
 	}
 	*bufpos += sprintf(*buf + *bufpos, "%s ", osc_message_u_getAddress(m));
-	t_osc_msg_it_u *it = osc_msg_it_u_get(m);
-	while(osc_msg_it_u_hasNext(it)){
-		t_osc_atom_u *a = osc_msg_it_u_next(it);
-		osc_atom_u_doFormat(a, buflen, bufpos, buf);
-	}
-	osc_msg_it_u_destroy(it);
+	osc_message_u_doFormatArgs(m, buflen, bufpos, buf);
 	return OSC_ERR_NONE;
 }
 

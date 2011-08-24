@@ -244,10 +244,12 @@ using #osc_mem_free().  Numeric values will be converted using sprintf(), and
 boolean values will be either "true" or "false", while NULL will be a single '\0' char.
 
 \param a A #t_osc_atom_u
+\param out A pointer to a buffer where the formatted string will be stored.
+Pass NULL to have an appropriately sized buffer allocated with #osc_mem_alloc().
 
-\return A copy of the string stored in the #t_osc_atom_u
+\return The length of the string
  */
-char *osc_atom_u_getString(t_osc_atom_u *a);
+int osc_atom_u_getString(t_osc_atom_u *a, char **out);
 
 /** \brief Return a 0 or 1
 

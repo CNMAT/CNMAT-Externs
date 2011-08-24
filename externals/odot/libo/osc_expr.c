@@ -75,6 +75,7 @@ int osc_expr_getArg(t_osc_expr_arg *arg, long *len, char **oscbndl, t_osc_atom_a
 					t_osc_msg_s *m = osc_message_array_s_get(msg_ar, 0);
 					long arg_count = osc_message_s_getArgCount(m);
 					t_osc_atom_ar_u *atom_ar = osc_atom_array_u_alloc(arg_count);
+					osc_atom_array_u_clear(atom_ar);
 					int i = 0;
 					t_osc_msg_it_s *it = osc_msg_it_s_get(m);
 					while(osc_msg_it_s_hasNext(it)){
@@ -118,21 +119,22 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 			return ret;
 		}
 		t_osc_atom_ar_u *argv_out = osc_atom_array_u_alloc(osc_atom_array_u_getLen(argv));
-		t_osc_atom_ar_u *arg_true = NULL, *arg_false = NULL;
-		osc_expr_getArg(f_argv->next, len, oscbndl, &arg_true);
-		osc_expr_getArg(f_argv->next->next, len, oscbndl, &arg_false);
 		int j;
 		for(j = 0; j < osc_atom_array_u_getLen(argv); j++){
 			if(osc_atom_u_getInt32(osc_atom_array_u_get(argv, j)) && (f_argc > 1)){
+				t_osc_atom_ar_u *arg_true = NULL;
+				osc_expr_getArg(f_argv->next, len, oscbndl, &arg_true);
 				t_osc_atom_u *a = osc_atom_array_u_get(argv_out, j);
 				osc_atom_u_copy(&a, osc_atom_array_u_get(arg_true, 0));
+				osc_atom_array_u_free(arg_true);
 			}else if(f_argc > 2){
+				t_osc_atom_ar_u *arg_false = NULL;
+				osc_expr_getArg(f_argv->next->next, len, oscbndl, &arg_false);
 				t_osc_atom_u *a = osc_atom_array_u_get(argv_out, j);
 				osc_atom_u_copy(&a, osc_atom_array_u_get(arg_false, 0));
+				osc_atom_array_u_free(arg_false);
 			}
 		}
-		osc_atom_array_u_free(arg_true);
-		osc_atom_array_u_free(arg_false);
 		osc_atom_array_u_free(argv);
 		*out = argv_out;
 	}else if(f->rec->func == osc_expr_defined){
@@ -145,6 +147,36 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}else{
 			osc_atom_u_setFalse(osc_atom_array_u_get(*out, 0));
 		}
+	}else if(f->rec->func == osc_expr_exec){
+		t_osc_atom_ar_u *arg = NULL;
+		osc_expr_getArg(f_argv, len, oscbndl, &arg);
+		if(arg){
+			if(osc_atom_u_getTypetag(osc_atom_array_u_get(arg, 0)) == 's' && osc_atom_array_u_getLen(arg) == 1){
+				char *expr = osc_atom_u_getStringPtr(osc_atom_array_u_get(arg, 0));
+				t_osc_expr *f = NULL;
+				osc_expr_parser_parseString(expr, &f);
+				if(f){
+					osc_expr_funcall(f, len, oscbndl, out);
+					osc_expr_free(f);
+				}
+			}else{
+				long buflen = 0;
+				char *buf = NULL;
+				osc_atom_array_u_getStringArray(arg, &buflen, &buf);
+				t_osc_expr *f = NULL;
+				osc_expr_parser_parseString(buf, &f);
+				if(f){
+					osc_expr_funcall(f, len, oscbndl, out);
+					osc_expr_free(f);
+				}
+				if(buf){
+					osc_mem_free(buf);
+				}
+			}
+		}else{
+			// here, we'll look for a compiled function in a hashtable
+		}
+		osc_atom_array_u_free(arg);
 	}else{
 		t_osc_atom_ar_u *argv[f_argc];
 		memset(argv, '\0', sizeof(argv));
@@ -1134,19 +1166,7 @@ int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 }
 
 int osc_expr_exec(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
-	/*
-	t_osc_atom_u *expr = osc_atom_array_u_get(*argv, 0);
-	if(osc_atom_u_getTypetag(expr) != 's'){
-		// we could try to assemble a string i suppose
-		return 0;
-	}
-	t_osc_expr *f = NULL;
-	osc_expr_parser_parseString(osc_atom_u_getStringPtr(expr), &f);
-	if(ret){
-		return 0;
-	}
-	//osc_expr_funcall(f, 
-	*/
+	// this is a dummy function.  we'll use this to do a pointer comparison.
 	return 0;
 }
 
@@ -1386,12 +1406,23 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 		case OSC_EXPR_ARG_TYPE_ATOM:
 			{
 				t_osc_atom_u *a = f_argv->arg.atom;
+				printf("typetag = %c\n", osc_atom_u_getTypetag(a));
 				switch(osc_atom_u_getTypetag(a)){
 				case 'i':
 					ptr += sprintf(ptr, "%"PRId32" ", osc_atom_u_getInt32(a));
 					break;
+				case 'h':
+					ptr += sprintf(ptr, "%"PRIu32" ", osc_atom_u_getUInt32(a));
+					break;
+				case 'I':
+					ptr += sprintf(ptr, "%"PRId64" ", osc_atom_u_getInt64(a));
+					break;
+				case 'H':
+					ptr += sprintf(ptr, "%"PRIu64" ", osc_atom_u_getUInt64(a));
+					break;
+				case 'd':
 				case 'f':
-					ptr += sprintf(ptr, "%f ", osc_atom_u_getFloat(a));
+					ptr += sprintf(ptr, "%f ", osc_atom_u_getDouble(a));
 					break;
 				case 's':
 					ptr += sprintf(ptr, "%s ", osc_atom_u_getStringPtr(a));

@@ -65,6 +65,7 @@ t_osc_atom_u *osc_message_u_appendUInt32(t_osc_msg_u *m, uint32_t v);
 t_osc_atom_u *osc_message_u_appendUInt64(t_osc_msg_u *m, uint64_t v);
 t_osc_atom_u *osc_message_u_appendFloat(t_osc_msg_u *m, float v);
 t_osc_atom_u *osc_message_u_appendDouble(t_osc_msg_u *m, double v);
+t_osc_atom_u *osc_message_u_appendStringPtr(t_osc_msg_u *m, char *v);
 t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, char *v);
 t_osc_atom_u *osc_message_u_appendBool(t_osc_msg_u *m, int v);
 t_osc_atom_u *osc_message_u_appendTrue(t_osc_msg_u *m);
@@ -78,6 +79,7 @@ t_osc_atom_u *osc_message_u_prependUInt32(t_osc_msg_u *m, uint32_t v);
 t_osc_atom_u *osc_message_u_prependUInt64(t_osc_msg_u *m, uint64_t v);
 t_osc_atom_u *osc_message_u_prependFloat(t_osc_msg_u *m, float v);
 t_osc_atom_u *osc_message_u_prependDouble(t_osc_msg_u *m, double v);
+t_osc_atom_u *osc_message_u_prependStringPtr(t_osc_msg_u *m, char *v);
 t_osc_atom_u *osc_message_u_prependString(t_osc_msg_u *m, char *v);
 t_osc_atom_u *osc_message_u_prependBool(t_osc_msg_u *m, int v);
 t_osc_atom_u *osc_message_u_prependTrue(t_osc_msg_u *m);
@@ -91,6 +93,7 @@ t_osc_atom_u *osc_message_u_insertUInt32(t_osc_msg_u *m, uint32_t v, int pos);
 t_osc_atom_u *osc_message_u_insertUInt64(t_osc_msg_u *m, uint64_t v, int pos);
 t_osc_atom_u *osc_message_u_insertFloat(t_osc_msg_u *m, float v, int pos);
 t_osc_atom_u *osc_message_u_insertDouble(t_osc_msg_u *m, double v, int pos);
+t_osc_atom_u *osc_message_u_insertStringPtr(t_osc_msg_u *m, char *v, int pos);
 t_osc_atom_u *osc_message_u_insertString(t_osc_msg_u *m, char *v, int pos);
 t_osc_atom_u *osc_message_u_insertBool(t_osc_msg_u *m, int v, int pos);
 t_osc_atom_u *osc_message_u_insertTrue(t_osc_msg_u *m, int pos);
@@ -100,6 +103,7 @@ t_osc_atom_u *osc_message_u_insertBndl(t_osc_msg_u *m, t_osc_bndl_u *bndl, int p
 
 t_osc_err osc_message_u_serialize(t_osc_msg_u *m, long *buflen, char **buf);
 t_osc_err osc_message_u_format(t_osc_msg_u *m, long *buflen, char **buf);
+t_osc_err osc_message_u_formatArgs(t_osc_msg_u *m, long *buflen, char **buf);
 
 t_osc_message_array_u *osc_message_array_u_alloc(long len);
 #define osc_message_array_u_free(ar) osc_array_free((ar))

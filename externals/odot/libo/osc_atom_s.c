@@ -517,7 +517,13 @@ t_osc_err osc_atom_s_deserialize(t_osc_atom_s *a, t_osc_atom_u **a_u){
 		osc_atom_u_setDouble(atom_u, osc_atom_s_getDouble(a));
 		break;
 	case 's':
-		osc_atom_u_setStringPtr(atom_u, osc_atom_s_getString(a));
+		{
+			char *buf = osc_atom_s_getString(a);
+			osc_atom_u_setString(atom_u, buf);
+			if(buf){
+				osc_mem_free(buf);
+			}
+		}
 		break;
 	case 'h':
 		osc_atom_u_setInt64(atom_u, osc_atom_s_getInt64(a));

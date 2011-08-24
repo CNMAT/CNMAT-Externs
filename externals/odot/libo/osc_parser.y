@@ -75,7 +75,11 @@ t_osc_err osc_parser_parseString(long len, char *ptr, t_osc_bndl_u **bndl, long 
 	osc_parser_parse(&bl, &msg, nsubs, subs, scanner);
 	osc_scanner__delete_buffer(buf_state, scanner);
 	osc_scanner_lex_destroy(scanner);
-	*bndl = bl->bndl;
+	if(bl){
+		*bndl = bl->bndl;
+		osc_mem_free(bl);
+	}
+
 	return OSC_ERR_NONE;
 }
 
@@ -150,7 +154,7 @@ arglist: '\n' {;}
 		PP("add STRING to MSG %p := %s\n", m, $1);
 		m->next = *msg;
 		*msg = m;
-		osc_message_u_appendString(*msg, $1);
+		osc_message_u_appendStringPtr(*msg, $1);
   	}
 	| OSCADDRESS {
 		t_osc_msg_u *m = osc_message_u_alloc();
@@ -158,7 +162,7 @@ arglist: '\n' {;}
 		PP("add OSCADDRESS to MSG %p := %s\n", m, $1);
 		m->next = *msg;
 		*msg = m;
-		osc_message_u_appendString(*msg, $1);
+		osc_message_u_appendStringPtr(*msg, $1);
 	}
 	| OSCFLOAT {
 		t_osc_msg_u *m = osc_message_u_alloc();
@@ -184,17 +188,17 @@ arglist: '\n' {;}
 		*msg = m;
 		char buf[8];
 		sprintf(buf, "$%d", $1);
-		t_osc_atom_u *a = osc_message_u_appendString(*msg, buf);
+		t_osc_atom_u *a = osc_message_u_appendStringPtr(*msg, buf);
 		osc_parser_substitution(subs, *msg, $1, a, (*msg)->argc);
 		(*nsubs)++;
 	}
 	| arglist STRING {
 		PP("add STRING to MSG %p := %s\n", *msg, $2);
-		osc_message_u_appendString(*msg, $2);
+		osc_message_u_appendStringPtr(*msg, $2);
  	}
 	| arglist OSCADDRESS {
 		PP("add OSCADDRESS to MSG %p := %s\n", *msg, $2);
-		osc_message_u_appendString(*msg, $2);
+		osc_message_u_appendStringPtr(*msg, $2);
  	}
 	| arglist OSCFLOAT {
 		PP("add OSCFLOAT to MSG %p := %f\n", *msg, $2);
@@ -208,7 +212,7 @@ arglist: '\n' {;}
 		PP("add DOLLARSUB to MSG %p := %d\n", *msg, $2);
 		char buf[8];
 		sprintf(buf, "$%d", $2);
-		t_osc_atom_u *a = osc_message_u_appendString(*msg, buf);
+		t_osc_atom_u *a = osc_message_u_appendStringPtr(*msg, buf);
 		osc_parser_substitution(subs, *msg, $2, a, (*msg)->argc);
 		(*nsubs)++;
  	}
@@ -243,13 +247,13 @@ arglist: '\n' {;}
 msg: 
 	OSCADDRESS arglist '\n' {
 		PP("set ADDRESS %p := %s\n", *msg, $1);
-		osc_message_u_setAddress(*msg, $1);
+		osc_message_u_setAddressPtr(*msg, $1, NULL);
  	}
 	| OSCADDRESS_DOLLARSUB arglist '\n'{
 		char buf[8];
 		sprintf(buf, "/$%d", $1);
 		PP("set ADDRESS %p := %s\n", *msg, buf);
-		osc_message_u_setAddress(*msg, buf);
+		osc_message_u_setAddressPtr(*msg, buf, NULL);
 		osc_parser_substitution(subs, *msg, $1, NULL, 0);
 		(*nsubs)++;
  	}

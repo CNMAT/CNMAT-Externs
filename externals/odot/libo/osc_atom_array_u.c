@@ -30,10 +30,26 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_byteorder.h"
 #include "osc_atom_u.h"
 #include "osc_atom_u.r" // need ths to get the size of the struct
+#include "osc_array.h"
 #include "osc_atom_array_u.h"
 
 t_osc_array *osc_atom_array_u_alloc(long len){
 	return osc_array_allocWithSize(len, sizeof(t_osc_atom_u));
+}
+
+void osc_atom_array_u_free(t_osc_atom_ar_u *ar){
+	if(ar){
+		int i;
+		for(i = 0; i < osc_atom_array_u_getLen(ar); i++){
+			t_osc_atom_u *a = osc_atom_array_u_get(ar, i);
+			if(a->alloc && a->typetag == 's'){
+				if(a->w.s){
+					osc_mem_free(a->w.s);
+				}
+			}
+		}
+		osc_array_free(ar);
+	}
 }
 
 t_osc_err osc_atom_array_u_getDoubleArray(t_osc_atom_ar_u *array, double **out){
@@ -119,3 +135,18 @@ t_osc_err osc_atom_array_u_getBoolArray(t_osc_atom_ar_u *array, char **out){
 	}
 	return OSC_ERR_NONE;
 }
+
+t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, char **out){
+	long arlen = osc_atom_array_u_getLen(array);
+	if(!(*out)){
+		*out = osc_mem_alloc(8 * arlen); // guess that each element will be around 8 chars
+	}
+	char *ptr = *out;
+	int i;
+	for(i = 0; i < arlen; i++){
+		ptr += osc_atom_u_getString(osc_atom_array_u_get(array, i), &ptr);
+	}
+	*len = ptr - *out;
+	return OSC_ERR_NONE;
+}
+
