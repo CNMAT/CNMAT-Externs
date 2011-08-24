@@ -76,6 +76,12 @@ void osc_atom_u_copy(t_osc_atom_u **dest, t_osc_atom_u *src){
 	*dest = aa;
 }
 
+void osc_atom_u_setShouldFreePtr(t_osc_atom_u *a, int bool){
+	if(a){
+		a->alloc = bool;
+	}
+}
+
 void osc_atom_u_clear(t_osc_atom_u *a){
 	if(!a){
 		return;
@@ -402,7 +408,7 @@ int osc_atom_u_getString(t_osc_atom_u *a, char **out){
 				*out = osc_mem_alloc(5);
 			}
 			strncpy(*out, "true\0", 5);
-			return 5;
+			return 4;
 		}
 	case 'F': // false
 		{
@@ -410,7 +416,7 @@ int osc_atom_u_getString(t_osc_atom_u *a, char **out){
 				*out = osc_mem_alloc(6);
 			}
 			strncpy(*out, "false\0", 6);
-			return 6;
+			return 5;
 		}
 	case 'N': // NULL
 		;

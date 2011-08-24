@@ -300,84 +300,104 @@ int osc_atom_s_getInt(t_osc_atom_s *a){
 	return 0;
 }
 
-char *osc_atom_s_getString(t_osc_atom_s *a){	
+int osc_atom_s_getString(t_osc_atom_s *a, char **out){	
 	switch(a->typetag){
 	case 's': // string
 		{
 			int n = strlen(a->data);
-			char *buf = osc_mem_alloc(n + 1);
-			strncpy(buf, a->data, n + 1);
-			return buf;
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 1);
+			}
+			strncpy(*out, a->data, n + 1);
+			return n;
 		}
 	case 'i': // signed 32-bit int
 		{
 			int32_t i = ntoh32(*((int32_t *)(a->data)));
 			int n = snprintf(NULL, 0, "%"PRId32, i);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%"PRId32, i);
-			return buf;
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 1);
+			}
+			sprintf(*out, "%"PRId32, i);
+			return n;
 		}
 	case 'f': // 32-bit IEEE 754 float
 		{
 			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
 			float f = *((float *)&i);
-			int n = snprintf(NULL, 0, "%f", f);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%g", f);
-			return buf;
+			int n = snprintf(NULL, 0, "%g", f);
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 1);
+			}
+			sprintf(*out, "%g", f);
+			return n;
 		}
 	case 'd': // 64-bit IEEE 754 double
 		{
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			double f = *((double *)&i);
-			int n = snprintf(NULL, 0, "%f", f);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%g", f);
-			return buf;
+			int n = snprintf(NULL, 0, "%g", f);
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 1);
+			}
+			sprintf(*out, "%g", f);
+			return n;
 		}
 	case 'h': // signed 64-bit int
 		{
 			int64_t i = ntoh64(*((int64_t *)(a->data)));
 			int n = snprintf(NULL, 0, "%"PRId64, i);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%"PRId64, i);
-			return buf;
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 1);
+			}
+			sprintf(*out, "%"PRId64, i);
+			return n;
 		}
 	case 'I': // unsigned 32-bit int
 		{
 			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
 			int n = snprintf(NULL, 0, "%"PRIu32, i);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%"PRIu32, i);
-			return buf;
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 1);
+			}
+			sprintf(*out, "%"PRIu32, i);
+			return n;
 		}
 	case 'H': // unsigned 64-bit int
 		{
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			int n = snprintf(NULL, 0, "%"PRIu64, i);
-			char *buf = osc_mem_alloc(n + 1);
-			sprintf(buf, "%"PRIu64, i);
-			return buf;
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 1);
+			}
+			sprintf(*out, "%"PRIu64, i);
+			return n;
 		}
 	case 'T': // true
 		{
-			char *buf = osc_mem_alloc(5);
-			strncpy(buf, "true\0", 5); // i know it's null terminated--just being explicit...
-			return buf;
+			if(!(*out)){
+				*out = osc_mem_alloc(5);
+			}
+			strncpy(*out, "true\0", 5); // i know it's null terminated--just being explicit...
+			return 4;
 		}
 	case 'F': // false
 		{
-			char *buf = osc_mem_alloc(6);
-			strncpy(buf, "false\0", 6); // i know it's null terminated--just being explicit...
-			return buf;
+			if(!(*out)){
+				*out = osc_mem_alloc(6);
+			}
+			strncpy(*out, "false\0", 6); // i know it's null terminated--just being explicit...
+			return 5;
 		}
 	case 'N': // NULL
 		;
 		// fall through
 	}
-	char *buf = osc_mem_alloc(1);
-	buf[0] = '\0';
-	return buf;
+	if(!(*out)){
+		*out = osc_mem_alloc(1);
+	}
+	*out[0] = '\0';
+	return 0;
 }
 
 int osc_atom_s_getBool(t_osc_atom_s *a){
@@ -518,11 +538,10 @@ t_osc_err osc_atom_s_deserialize(t_osc_atom_s *a, t_osc_atom_u **a_u){
 		break;
 	case 's':
 		{
-			char *buf = osc_atom_s_getString(a);
-			osc_atom_u_setString(atom_u, buf);
-			if(buf){
-				osc_mem_free(buf);
-			}
+			char *buf = NULL;
+			osc_atom_s_getString(a, &buf); // allocates memory and makes a copy
+			osc_atom_u_setStringPtr(atom_u, buf);
+			osc_atom_u_setShouldFreePtr(atom_u, 1);
 		}
 		break;
 	case 'h':
@@ -551,6 +570,9 @@ t_osc_err osc_atom_s_deserialize(t_osc_atom_s *a, t_osc_atom_u **a_u){
 }
 
 t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char **buf){
+	if(!a){
+		return OSC_ERR_NOBUNDLE;
+	}
 	if((*buflen - *bufpos) < 64){
 		*buf = osc_mem_resize(*buf, *buflen + 64);
 		if(!(*buf)){
@@ -558,6 +580,23 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 		}
 		*buflen += 64;
 	}
+	if(osc_atom_s_getTypetag(a) == '#'){
+		char *data = osc_atom_s_getData(a);
+		*bufpos += sprintf(*buf + *bufpos, "[\n");
+		extern t_osc_err osc_bundle_s_doFormat(long len, char *bndl, long *buflen, long *bufpos, char **buf);
+		osc_bundle_s_doFormat(ntoh32(*((uint32_t *)data)), data + 4, buflen, bufpos, buf);
+		*bufpos += sprintf(*buf + *bufpos, "]");
+	}else{
+		char *bufptr = (*buf) + *bufpos;
+		int n = osc_atom_s_getString(a, &bufptr);
+		(*bufpos) += n;
+		char *buff = NULL;
+		osc_atom_s_getString(a, &buff);
+		osc_mem_free(buff);
+		(*buf)[(*bufpos)++] = ' ';
+		(*buf)[(*bufpos)] = '\0';
+	}
+	/*
 	char *data = osc_atom_s_getData(a);
 	switch(osc_atom_s_getTypetag(a)){
 	case 'i':
@@ -609,16 +648,15 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 		break;
 	case 'b':
 		{
-			/*
 			int j, n = osc_sizeof(*(m->typetags), data);
 			*bufpos += sprintf(*buf + *bufpos, "blob (%d bytes): ", n);
 			for(j = 0; j < n; j++){
 				*bufpos += sprintf(*buf + *bufpos, "%d ", data[j]);
 			}
-			*/
 		}
 		break;
 	}
+	*/
 	return OSC_ERR_NONE;
 }
 

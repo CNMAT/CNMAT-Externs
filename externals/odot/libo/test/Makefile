@@ -1,4 +1,4 @@
-LIBO_TEST_BASENAMES = osc_test osc_message_s_test osc_class_test osc_message_u_test osc_expr_test
+LIBO_TEST_BASENAMES = osc_test osc_message_s_test osc_class_test osc_message_u_test osc_expr_test osc_parser_test
 
 INCLUDES = -I.. -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
 CFLAGS += -arch i386 -O3 -funroll-loops

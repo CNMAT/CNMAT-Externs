@@ -133,6 +133,19 @@ no new memory will be allocated.
  */
 void osc_atom_u_copy(t_osc_atom_u **dest, t_osc_atom_u *src);
 
+/** \brief Set whether or not the data that this atom points to should be freed with the atom
+
+If this atom contains a pointer type such as a string, use this function
+to set whether or not the memory that the atoms internal pointer points to should be freed
+using #osc_mem_free() when the atom is freed.  
+
+The default is 0 (false).
+
+\param a The #t_osc_atom_u
+\param val 0 for false, non-zero for true.
+*/
+void osc_atom_u_setShouldFreePtr(t_osc_atom_u *a, int val);
+
 /** \brief Get the OSC typetag associated with the #t_osc_atom_u
 
 \param a The #t_osc_atom_u whose typetag will be returned.
