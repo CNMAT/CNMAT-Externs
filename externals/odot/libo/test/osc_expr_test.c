@@ -13,24 +13,24 @@ int foo(int argc, char **argv){
 	//char *expr = "/bar = /foo ?? 20;";
 	//char *expr = "/bar++;";
 	//char *expr = "if(abs(/t) < 10., exec(/tri), /y = 0)";
-	char *expr = "/foo = /bar ?? 666.";
+	char *expr = "/foo = /bar ?? 666."; //test expression (/bar ?? (if it exists otherwise) 666)
 	//char *expr = "/foo ??= 666.";
 
 	if(argc == 2){
-		expr = argv[1];
+		expr = argv[1]; //or pass in an expression
 	}
 	printf("expr = %s\n", expr);
-	t_osc_expr *f = NULL;
-	int ret = osc_expr_parser_parseString(expr, &f);
+	t_osc_expr *f = NULL; //f = function = lambda
+	int ret = osc_expr_parser_parseString(expr, &f); //parse expression string. returns valid or not
 	if(ret){
 		printf("parsing %s failed\n", expr);
 		osc_expr_free(f);
 		return 1;
 	}
-
+	//text representation of the function tree
 	char *functiongraph = NULL;
 	long len = 0;
-	osc_expr_formatFunctionGraph(f, &len, &functiongraph);
+	osc_expr_formatFunctionGraph(f, &len, &functiongraph); //from osc_expr.c
 	printf("functiongraph:\n");
 	printf("%s", functiongraph);
 
@@ -54,12 +54,12 @@ int foo(int argc, char **argv){
 		osc_bundle_u_addMsg(bndl, msg);
 		*/
 		//char *bndl_st = "/t 0.5\n/tri /y = 1. - abs(/t)\n";
-		char *bndl_st = "/bar 100\n";
+		char *bndl_st = "/bar 100\n"; //string representation of osc bundle
 		t_osc_bndl_u *bndl = NULL;
 		t_osc_parser_subst *subs = NULL;
 		long nsubs = 0;
-		osc_parser_parseString(strlen(bndl_st) + 2, bndl_st, &bndl, &nsubs, &subs);
-		while(subs){
+		osc_parser_parseString(strlen(bndl_st) + 2, bndl_st, &bndl, &nsubs, &subs); //unserialized oscizer
+		while(subs){ //subs is linked list of $n substitutions that need to take place
 			t_osc_parser_subst *next = subs->next;
 			osc_mem_free(subs);
 			subs = next;
@@ -67,11 +67,11 @@ int foo(int argc, char **argv){
 
 		char *sbndl = NULL;
 		long sbndl_len = 0;
-		osc_bundle_u_serialize(bndl, &sbndl_len, &sbndl);
+		osc_bundle_u_serialize(bndl, &sbndl_len, &sbndl); //serialize the bundle
 
 		char *sbuf = NULL;
 		long sbuflen = 0;
-		osc_bundle_s_format(sbndl_len, sbndl, &sbuflen, &sbuf);
+		osc_bundle_s_format(sbndl_len, sbndl, &sbuflen, &sbuf); //back to string. should look the same as input string. 
 		printf("bndl:\n%s", sbuf);
 		if(sbuf){
 			osc_mem_free(sbuf);
@@ -81,7 +81,7 @@ int foo(int argc, char **argv){
 		int n = 1;
 		for(j = 0; j < n; j++){
 			t_osc_atom_ar_u *out = NULL;
-			ret = osc_expr_funcall(f, &sbndl_len, &sbndl, &out);
+			ret = osc_expr_funcall(f, &sbndl_len, &sbndl, &out);//calls the function on the bundle
 			osc_atom_array_u_free(out);
 		}
 
