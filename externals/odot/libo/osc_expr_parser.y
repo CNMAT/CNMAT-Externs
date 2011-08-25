@@ -136,6 +136,29 @@ t_osc_expr *osc_expr_parser_postfix_incdec(t_osc_expr **exprstack, char *oscaddr
 	return e;
 }
 
+t_osc_expr *osc_expr_parser_nullCoalesce(t_osc_atom_u *address_to_check, t_osc_expr_arg *arg_if_null){
+	char *address = NULL;
+	osc_atom_u_getString(address_to_check, &address);
+	if(*address != '/'){
+		osc_mem_free(address);
+		printf("osc_expr_parser: expected \"%s\" in \"%s = ... to be an OSC address\n", address, address);
+		return NULL;
+	}
+	t_osc_expr *expr_def = osc_expr_alloc();
+	osc_expr_setRec(expr_def, osc_expr_lookupFunction("defined"));
+	t_osc_expr_arg *def_arg = osc_expr_arg_alloc();
+
+	osc_expr_arg_setOSCAddress(def_arg, address);
+	osc_expr_setArg(expr_def, def_arg);
+	t_osc_expr_arg *arg1 = osc_expr_arg_alloc();
+	osc_expr_arg_setExpr(arg1, expr_def);
+	t_osc_expr_arg *arg2 = osc_expr_arg_copy(def_arg);
+	t_osc_expr_arg *arg3 = arg_if_null;
+	osc_expr_arg_setNext(arg1, arg2);
+	osc_expr_arg_setNext(arg2, arg3);
+	return osc_expr_parser_prefix("if", arg1);
+}
+
 %}
 
 %define "api.pure"
@@ -162,7 +185,7 @@ t_osc_expr *osc_expr_parser_postfix_incdec(t_osc_expr **exprstack, char *oscaddr
 %right '=' OSC_EXPR_PLUSEQ OSC_EXPR_MINUSEQ OSC_EXPR_MULTEQ OSC_EXPR_DIVEQ OSC_EXPR_MODEQ OSC_EXPR_POWEQ
 
 // level 15
-%right OSC_EXPR_TERNARY_COND OSC_EXPR_DBLQMARK '?' ':'
+%right OSC_EXPR_TERNARY_COND OSC_EXPR_DBLQMARK OSC_EXPR_DBLQMARKEQ '?' ':'
 
 // level 14
 %left OSC_EXPR_OR
@@ -414,19 +437,28 @@ expr:
 		osc_expr_arg_append($1, $5);
 		$$ = osc_expr_parser_prefix("if", $1);
   	}
-	| arg OSC_EXPR_DBLQMARK arg {
+	| OSC_EXPR_STRING OSC_EXPR_DBLQMARK arg {
 		// null coalescing operator from C#.  
 		// /foo ?? 10 means /foo if /foo is in the bundle, otherwise 10
-		t_osc_expr *expr_def = osc_expr_alloc();
-		osc_expr_setRec(expr_def, osc_expr_lookupFunction("defined"));
-		osc_expr_setArg(expr_def, $1);
-		t_osc_expr_arg *arg1 = osc_expr_arg_alloc();
-		osc_expr_arg_setExpr(arg1, expr_def);
-		t_osc_expr_arg *arg2 = osc_expr_arg_copy($1);
-		t_osc_expr_arg *arg3 = $3;
-		osc_expr_arg_setNext(arg1, arg2);
-		osc_expr_arg_setNext(arg2, arg3);
-		$$ = osc_expr_parser_prefix("if", arg1);
+		$$ = osc_expr_parser_nullCoalesce($1, $3);
+		osc_atom_u_free($1); // the above function will copy that
+	}
+	| OSC_EXPR_STRING OSC_EXPR_DBLQMARKEQ arg {
+		// null coalescing operator from C#.  
+		// /foo ?? 10 means /foo if /foo is in the bundle, otherwise 10
+		t_osc_expr *if_expr = osc_expr_parser_nullCoalesce($1, $3);
+		if(!if_expr){
+			return 1;
+		}
+		char *ptr = NULL;
+		osc_atom_u_getString($1, &ptr);
+		t_osc_expr_arg *arg = osc_expr_arg_alloc();
+		osc_expr_arg_setOSCAddress(arg, ptr);
+		t_osc_expr_arg *arg2 = osc_expr_arg_alloc();
+		osc_expr_arg_setExpr(arg2, if_expr);
+		$$ = osc_expr_parser_infix("=", arg, arg2);
+		osc_expr_setAssignResultToAddress($$, 1);
+		osc_atom_u_free($1);
 	}
 // array lookup
 	| arg OPEN_DBL_BRKTS args CLOSE_DBL_BRKTS {

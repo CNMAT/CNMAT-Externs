@@ -76,6 +76,9 @@ c99_floating_point_constant  ({dfc}|{hfc})
 \?\? {
 	return OSC_EXPR_DBLQMARK;
 }
+\?\?= {
+	return OSC_EXPR_DBLQMARKEQ;
+}
 
 ,|;|\(|\)				{
 						return *yytext;

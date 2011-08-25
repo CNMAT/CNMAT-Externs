@@ -28,6 +28,7 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 			osc_bundle_s_lookupAddress(*len, *oscbndl, f->argv->arg.osc_address, &msg_ar, 1);
 
 			t_osc_msg_u *mm = osc_message_u_alloc();
+			printf("%p %s\n", f->argv->arg.osc_address, f->argv->arg.osc_address);
 			osc_message_u_setAddress(mm, f->argv->arg.osc_address);
 			int i;
 			for(i = 0; i < osc_atom_array_u_getLen(*out); i++){

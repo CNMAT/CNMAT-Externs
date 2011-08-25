@@ -12,7 +12,10 @@ int foo(int argc, char **argv){
 	//char *expr = "/foo = /bar == 10 ? 20 : 30;\n/foo++;";
 	//char *expr = "/bar = /foo ?? 20;";
 	//char *expr = "/bar++;";
-	char *expr = "if(abs(/t) < 10., exec(/tri), /y = 0)";
+	//char *expr = "if(abs(/t) < 10., exec(/tri), /y = 0)";
+	char *expr = "/foo = /bar ?? 666.";
+	//char *expr = "/foo ??= 666.";
+
 	if(argc == 2){
 		expr = argv[1];
 	}
@@ -50,7 +53,8 @@ int foo(int argc, char **argv){
 		osc_message_u_appendString(msg, "abs(/t)");
 		osc_bundle_u_addMsg(bndl, msg);
 		*/
-		char *bndl_st = "/t 0.5\n/tri /y = 1. - abs(/t)\n";
+		//char *bndl_st = "/t 0.5\n/tri /y = 1. - abs(/t)\n";
+		char *bndl_st = "/bar 100\n";
 		t_osc_bndl_u *bndl = NULL;
 		t_osc_parser_subst *subs = NULL;
 		long nsubs = 0;

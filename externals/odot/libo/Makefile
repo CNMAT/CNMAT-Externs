@@ -16,7 +16,7 @@ LIBO_PARSER_OBJECTS = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
 
 LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
 
-CFLAGS += -Wall -O3 -funroll-loops
+CFLAGS += -Wall -Wno-trigraphs -O3 -funroll-loops
 
 MAC_SYSROOT = MacOSX10.7.sdk 
 MAC-CFLAGS = -arch i386 -mmacosx-version-min=10.5 -isysroot /Developer/SDKs/$(MAC_SYSROOT)

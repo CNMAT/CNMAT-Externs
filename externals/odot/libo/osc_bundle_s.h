@@ -56,6 +56,10 @@ t_osc_err osc_bundle_s_setBundleID(char *buf);
 int osc_bundle_s_strcmpID(char *buf);
 t_osc_err osc_bundle_s_deserialize(long len, char *ptr, t_osc_bndl_u **bndl);
 t_osc_err osc_bundle_s_format(long len, char *bndl, long *buflen, char **buf);
+t_osc_err osc_bundle_s_union(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out);
+t_osc_err osc_bundle_s_intersection(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out);
+t_osc_err osc_bundle_s_difference(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out);
+
 t_osc_array *osc_bundle_array_s_alloc(long len);
 
 t_osc_bundle_array_s *osc_bundle_array_s_alloc(long len);
