@@ -5,6 +5,15 @@
 #include "osc_expr.h"
 #include "osc_expr_parser.h"
 
+/*
+ to run test:
+	cd libo
+	make -e clean; make -e
+ to make test file
+	make -e -k test
+	test/osc_expr_test
+ */
+
 int foo(int argc, char **argv){
 	//char *expr = "/foo = 20 + (30 + range(1, 10, 2)[[3, 4]]);";
 	//char *expr = "/foo = [10:2:30];";
