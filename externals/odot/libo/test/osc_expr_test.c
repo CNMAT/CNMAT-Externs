@@ -58,7 +58,8 @@ int foo(int argc, char **argv){
 		t_osc_bndl_u *bndl = NULL;
 		t_osc_parser_subst *subs = NULL;
 		long nsubs = 0;
-		osc_parser_parseString(strlen(bndl_st) + 2, bndl_st, &bndl, &nsubs, &subs); //unserialized oscizer
+		osc_parser_parseString(strlen(bndl_st) + 2, bndl_st, &bndl, &nsubs, &subs); //unserialized oscizer. throw valid bundles at this and see if it parses it.
+		//^multiple bundles need to be /n delimited. 
 		while(subs){ //subs is linked list of $n substitutions that need to take place
 			t_osc_parser_subst *next = subs->next;
 			osc_mem_free(subs);
