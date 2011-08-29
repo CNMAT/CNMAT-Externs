@@ -16,7 +16,7 @@ LIBO_PARSER_OBJECTS = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
 
 LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
 
-CFLAGS += -Wall -Wno-trigraphs -O3 -funroll-loops
+CFLAGS += -Wall -Wno-trigraphs -fno-strict-aliasing -O3 -funroll-loops
 
 MAC_SYSROOT = MacOSX10.7.sdk 
 MAC-CFLAGS = -arch i386 -mmacosx-version-min=10.5 -isysroot /Developer/SDKs/$(MAC_SYSROOT)
@@ -33,6 +33,10 @@ win: CFLAGS += $(WIN-CFLAGS)
 win: CC = gcc-3
 win: $(LIBO_CFILES) $(LIBO_HFILES) libo.a test/osc_test
 win: LIBTOOL = ar cru libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
+
+linux: CC = gcc
+linux: $(LIBO_CFILES) $(LIBO_HFILES) libo.a
+linux: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
 libo.a: $(LIBO_OBJECTS) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES)
 	rm -f libo.a
