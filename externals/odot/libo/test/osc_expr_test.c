@@ -63,11 +63,11 @@ int foo(int argc, char **argv){
 		osc_bundle_u_addMsg(bndl, msg);
 		*/
 		//char *bndl_st = "/t 0.5\n/tri /y = 1. - abs(/t)\n";
-		char *bndl_st = "/bar 100\n"; //string representation of osc bundle
+		char *bundle_string = "/bar 100\n"; //string representation of osc bundle
 		t_osc_bndl_u *bndl = NULL;
 		t_osc_parser_subst *subs = NULL;
 		long nsubs = 0;
-		osc_parser_parseString(strlen(bndl_st) + 2, bndl_st, &bndl, &nsubs, &subs); //unserialized oscizer. throw valid bundles at this and see if it parses it.
+		osc_parser_parseString(strlen(bundle_string) + 2, bundle_string, &bndl, &nsubs, &subs); //unserialized oscizer. throw valid bundles at this and see if it parses it.
 		//^multiple bundles need to be /n delimited. 
 		while(subs){ //subs is linked list of $n substitutions that need to take place
 			t_osc_parser_subst *next = subs->next;
@@ -116,9 +116,64 @@ int foo(int argc, char **argv){
 	}
 }
 
-int main(int argc, char **argv){
-	foo(argc, argv);
-	while(1){
-		sleep(1);
+//input an expression and a bundle with data and have it evaluate the expression and outputs the bundle as an answer. 
+int test_expression(char *expr, char *bundle_string){
+	t_osc_expr *f = NULL; //f = function = lambda
+	int ret = osc_expr_parser_parseString(expr, &f); //parse expression string. returns valid or not
+	if(ret){
+		printf("parsing %s failed\n", expr);
+		osc_expr_free(f);
+		return 0;
+	}	
+	//text representation of the function tree
+	char *functiongraph = NULL;
+	long len = 0;
+	osc_expr_formatFunctionGraph(f, &len, &functiongraph); //from osc_expr.c
+	
+	t_osc_bndl_u *bndl = NULL;
+	t_osc_parser_subst *subs = NULL;
+	long nsubs = 0;
+	osc_parser_parseString(strlen(bundle_string) + 2, bundle_string, &bndl, &nsubs, &subs); //unserialized oscizer. throw valid bundles at this and see if it parses it.
+	//^multiple bundles need to be /n delimited. 
+	while(subs){ //subs is linked list of $n substitutions that need to take place
+		t_osc_parser_subst *next = subs->next;
+		osc_mem_free(subs);
+		subs = next;
 	}
+	char *sbndl = NULL;
+	long sbndl_len = 0;
+	osc_bundle_u_serialize(bndl, &sbndl_len, &sbndl); //serialize the bundle
+	
+	t_osc_atom_ar_u *out = NULL;
+	ret = osc_expr_funcall(f, &sbndl_len, &sbndl, &out);//calls the function on the bundle
+	osc_atom_array_u_free(out);
+	
+	char *buf = NULL;
+	long buflen = 0;
+	osc_bundle_s_format(sbndl_len, sbndl, &buflen, &buf);
+	printf("bndl:\n%s", buf);
+	
+	//free all the memory
+	osc_bundle_u_free(bndl);
+	if(sbndl){
+		osc_mem_free(sbndl);
+	}
+	if(buf){
+		osc_mem_free(buf);
+	}
+	osc_expr_free(f);
+	if(functiongraph){
+		osc_mem_free(functiongraph);
+	}
+	return 1;
+	
 }
+
+int main(int argc, char **argv){
+	char *bundle_string = "/bar 100\n"; //string representation of osc bundle
+	char *expr = "/foo = /bar ?? 666."; //test expression
+	printf("returned %d\n",test_expression(expr, bundle_string));
+	
+}
+
+
