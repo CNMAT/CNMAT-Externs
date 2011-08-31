@@ -116,8 +116,8 @@ int foo(int argc, char **argv){
 	}
 }
 
-//input an expression and a bundle with data and have it evaluate the expression and outputs the bundle as an answer. 
-int test_expression(char *expr, char *bundle_string){
+//input an expression and a bundle with data and have it evaluate the expression and compares the results to answer. 
+int test_expression(char *expr, char *bundle_string, char *answer){
 	t_osc_expr *f = NULL; //f = function = lambda
 	int ret = osc_expr_parser_parseString(expr, &f); //parse expression string. returns valid or not
 	if(ret){
@@ -169,10 +169,22 @@ int test_expression(char *expr, char *bundle_string){
 	
 }
 
+void scan_file(FILE *f){
+		
+}
+
+
 int main(int argc, char **argv){
+	FILE *expression_file = fopen ("test/expressions.txt" , "r");
+	if (expression_file == NULL) perror("Error opening file");
+	char line[1024];
+	if ( fgets (line , 1024 , expression_file) != NULL ){
+		printf("%s", line);
+	}
+	//fget(expression_file);
 	char *bundle_string = "/bar 100\n"; //string representation of osc bundle
 	char *expr = "/foo = /bar ?? 666."; //test expression
-	printf("returned %d\n",test_expression(expr, bundle_string));
+	printf("returned %d\n",test_expression(expr, bundle_string, NULL));
 	
 }
 
