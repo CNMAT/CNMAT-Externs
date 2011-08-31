@@ -41,6 +41,7 @@ COPYRIGHT_YEARS: 2005-11
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.5: This one can draw a little nicer.
 VERSION 1.0: Fixed alpha values for newer versions of Max.
+VERSION 1.1: Changed default color scheme (Rama)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -56,10 +57,10 @@ var hilite = 999;
 var j = 999;
 var full = 0;
 
-var mybrgb = [0.9,0.9,0.9];
-var myfrgb = [0.,0.,0.];
-var myrgb2 = [1,1,1];
-var hilitergb = [0.2,0.2,0.8];
+var mybrgb = [0.0,0.0,0.0];
+var myfrgb = [1.,1.,1.];
+var myrgb2 = [0,0,0];
+var hilitergb = [0.2, 1., 1.];
 
 var myfont = "Sans Serif";  // Geneva on Mac, Arial on PC
 var myfontsize = 12;
