@@ -4,6 +4,7 @@
 #include "ext.h"
 #include "omax_util.h"
 #include "osc_atom_u.h"
+#include "osc_atom_array_u.h"
 
 #define OMAX_ARG_TYPE_ATOM 1
 #define OMAX_ARG_TYPE_EXPR 2
