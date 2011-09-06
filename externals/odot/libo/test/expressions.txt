@@ -1,1 +1,24 @@
-/one = /three - 2 ;/three 3 \n/four 4 \n; /three 3 \n/four 4 \n
+#this is a comment
+#test expressions must be in the form:
+#expr
+#;
+#bundle
+#;
+#answer
+#;
+#@ <-this signifies the end of a test expression
+#place a 
+#osc messages must be delimited with a newline  or newline character ( \n )
+
+/one = /three - 2
+; 
+/three 3
+/four 4
+; 
+/three 3
+/four 4
+/one 1
+;
+@
+
+#/one = /two * /three ; /two 24 \n /three -35 \n; /one -840 \n /two 24 \n /three -35\n

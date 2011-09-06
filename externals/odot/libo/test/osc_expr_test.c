@@ -116,6 +116,32 @@ int foo(int argc, char **argv){
 	}
 }
 
+//takes a string, oscizes and then turns it back into a string
+char * validate_osc_string(char * bundle_string){
+	t_osc_bndl_u *bndl = NULL;
+	t_osc_parser_subst *subs = NULL;
+	long nsubs = 0;
+	//printf("bundle: %s\n", bundle_string);
+	t_osc_err err = osc_parser_parseString(strlen(bundle_string)+2, bundle_string, &bndl, &nsubs, &subs);
+	if (err != 0){
+		printf("%s\n", osc_error_string(err));	
+	}
+	//^multiple bundles need to be /n delimited. 
+	//not using this for now
+	while(subs){ //subs is linked list of $n substitutions that need to take place
+		t_osc_parser_subst *next = subs->next;
+		osc_mem_free(subs);
+		subs = next;
+	}
+	char *sbndl = NULL;
+	long sbndl_len = 0;
+	osc_bundle_u_serialize(bndl, &sbndl_len, &sbndl); //serialize the bundle
+	char *buf = NULL;
+	long buflen = 0;
+	osc_bundle_s_format(sbndl_len, sbndl, &buflen, &buf);
+	return buf;
+}
+
 //input an expression and a bundle with data and have it evaluate the expression and compares the results to answer. 
 int test_expression(char *expr, char *bundle_string, char *answer){
 	t_osc_expr *f = NULL; //f = function = lambda
@@ -141,23 +167,28 @@ int test_expression(char *expr, char *bundle_string, char *answer){
 		osc_mem_free(subs);
 		subs = next;
 	}
-	char *sbndl = NULL;
+	char *ser_bundle = NULL;
 	long sbndl_len = 0;
-	osc_bundle_u_serialize(bndl, &sbndl_len, &sbndl); //serialize the bundle
+	osc_bundle_u_serialize(bndl, &sbndl_len, &ser_bundle); //serialize the bundle
+	
+	//char * ser_bundle = bundalize_osc_string(bundle_string);
 	
 	t_osc_atom_ar_u *out = NULL;
-	ret = osc_expr_funcall(f, &sbndl_len, &sbndl, &out);//calls the function on the bundle
+	ret = osc_expr_funcall(f, &sbndl_len, &ser_bundle, &out);//calls the function on the bundle
 	osc_atom_array_u_free(out);
 	
 	char *buf = NULL;
 	long buflen = 0;
-	osc_bundle_s_format(sbndl_len, sbndl, &buflen, &buf);
-	printf("bndl:\n%s", buf);
+	osc_bundle_s_format(sbndl_len, ser_bundle, &buflen, &buf);
+	//printf("bndl:\n%s", buf);
+	char * formated_answer = validate_osc_string(answer);
+	//make sure that the answer provided is the same as the answer computed
+	ret = compare_answer(buf, formated_answer);
 	
 	//free all the memory
 	osc_bundle_u_free(bndl);
-	if(sbndl){
-		osc_mem_free(sbndl);
+	if(ser_bundle){
+		osc_mem_free(ser_bundle);
 	}
 	if(buf){
 		osc_mem_free(buf);
@@ -166,11 +197,9 @@ int test_expression(char *expr, char *bundle_string, char *answer){
 	if(functiongraph){
 		osc_mem_free(functiongraph);
 	}
-	
-	compare_answer(buf, answer);
-	return 1;
-	
+	return ret;
 }
+
 
 int contains_str(char * str, char * substring){
 	int i;
@@ -186,13 +215,28 @@ int contains_str(char * str, char * substring){
 
 int compare_answer(char * evaled, char * answer){
 	int ret = 1;
-	char * expr = strtok (evaled,"\n");
+	char temp_evaled[strlen(evaled)];
+	strcpy(temp_evaled, evaled);
+	//printf("%s\n", evaled);
+	//test that all of the expressions are in the answer
+	char * expr = strtok (temp_evaled,"\n");
 	while (expr != NULL){
-		printf("%s in answer: %d\n", expr, contains_str(answer, expr));
+		//printf("%s\n", expr);
+		ret*=contains_str(answer, expr);
+		//printf("%s in answer: %d\n", expr, contains_str(answer, expr));
 		//ret *= (contains_str(answer, expr));
 		expr = strtok (NULL,"\n");
 	}
-	return 1;
+	//also test that all of the answers are in the expression
+	char * ans_expr = strtok (answer,"\n");
+	while (ans_expr != NULL){
+		//printf("%s\n", expr);
+		//printf("%s in expr %s: %d\n", ans_expr, evaled, contains_str(evaled, ans_expr));
+		ret*=contains_str(evaled, ans_expr);
+		//ret *= (contains_str(answer, expr));
+		ans_expr = strtok (NULL,"\n");
+	}
+	return ret;
 }
 
 void format_newline(char * str){
@@ -208,18 +252,26 @@ void format_newline(char * str){
 
 
 
-void eval_line(char * line){
+int eval_test(char * line){
 	char * expr;
 	char * bundle;
 	char * answer;
-	char delims[] = ";";
-	expr = strtok( line, delims );
-	bundle = strtok( NULL, delims );
-	answer = strtok( NULL, delims );
-	format_newline(expr);
-	format_newline(bundle);
-	format_newline(answer);
-	test_expression(expr, bundle, answer);
+	int pass;
+	if (line[0]!='#'){
+		//printf("%s\n", line);
+		char delims[] = ";";
+		expr = strtok( line, delims );
+		bundle = strtok( NULL, delims );
+		answer = strtok( NULL, delims );
+		format_newline(expr);
+		format_newline(bundle);
+		format_newline(answer);
+		pass = test_expression(expr, bundle, answer);
+		if (pass==0){
+			printf("the expression \"%s\" and bundle \"%s\" do not produce the answer \"%s\"\n", expr, bundle, answer);
+		}
+	}
+	return pass;
 	//printf("%s,%s,%s\n", expr, bundle, answer);
 	//test_expression("/one = /three - 2", "/three 3 \n", NULL);
 	//printf("%d\n",test_expression(expr, bundle, answer));	
@@ -229,10 +281,36 @@ void eval_line(char * line){
 }
 
 void eval_file(FILE *expression_file){
-	char line[1024];
-	while ( fgets (line , 1024 , expression_file) != NULL ){
-		eval_line(line);
+	char test[1024]; //the tests are currently limited to 1k
+	int testcount = 0;
+	int testpassed = 0;
+	int pos = 0;
+	char next;
+	while ( (next = fgetc(expression_file)) != EOF){
+		//printf("%c", next);
+		if (next=='#') { //gets rid of comments
+			char throwaway[1024];
+			fgets(throwaway, 1024, expression_file);
+			//printf("comment %s", throwaway);
+			continue;
+		} 
+		if (next=='@') {
+			test[pos] = '\0';
+			eval_test(test);
+			printf("test: %s\n", test);
+			pos = 0;
+			continue;
+		}
+		test[pos]=next;
+		pos++;
+		/*
+		if (line[0]!='#'){
+			testcount++;
+			testpassed+=eval_test(line);
+		}
+		 */
 	}
+	printf("%d/%d tests passed\n", testpassed, testcount);
 	//printf("returned %d\n",
 }
 
