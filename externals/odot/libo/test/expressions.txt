@@ -1,7 +1,1 @@
-"++/one", "/one 12", "/one 13"
-"/one = /two + /three", "/two 152 \n /three 1512", "/one 1664 \n /two 152 \n /three 1512"
-"/one = /two * /three", "/two 100 \n /three 123", "/one 12300 \n /two 100 \n /three 123"
-"/one = /two - /three", "/two 152 \n /three 123", "/one 12300 \n /two 100 \n /three 123"
-
-
-
+/one = /three - 2 ;/three 3 \n/four 4 \n; /three 3 \n/four 4 \n

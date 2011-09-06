@@ -133,7 +133,8 @@ int test_expression(char *expr, char *bundle_string, char *answer){
 	t_osc_bndl_u *bndl = NULL;
 	t_osc_parser_subst *subs = NULL;
 	long nsubs = 0;
-	osc_parser_parseString(strlen(bundle_string) + 2, bundle_string, &bndl, &nsubs, &subs); //unserialized oscizer. throw valid bundles at this and see if it parses it.
+	//printf("bundle: %s\n", bundle_string);
+	osc_parser_parseString(strlen(bundle_string)+2, bundle_string, &bndl, &nsubs, &subs); //unserialized oscizer. throw valid bundles at this and see if it parses it.
 	//^multiple bundles need to be /n delimited. 
 	while(subs){ //subs is linked list of $n substitutions that need to take place
 		t_osc_parser_subst *next = subs->next;
@@ -165,26 +166,86 @@ int test_expression(char *expr, char *bundle_string, char *answer){
 	if(functiongraph){
 		osc_mem_free(functiongraph);
 	}
+	
+	compare_answer(buf, answer);
 	return 1;
 	
 }
 
-void scan_file(FILE *f){
-		
+int contains_str(char * str, char * substring){
+	int i;
+	for (i = 0; i < strlen(str); i++) {
+		if ((strlen(str)+i)>=strlen(substring)){
+			if (strncmp(str+i, substring, strlen(substring)) == 0){
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+int compare_answer(char * evaled, char * answer){
+	int ret = 1;
+	char * expr = strtok (evaled,"\n");
+	while (expr != NULL){
+		printf("%s in answer: %d\n", expr, contains_str(answer, expr));
+		//ret *= (contains_str(answer, expr));
+		expr = strtok (NULL,"\n");
+	}
+	return 1;
+}
+
+void format_newline(char * str){
+	int i;
+	for(i = 1; i < strlen(str); i++){
+		if (str[i-1]=='\\' && str[i]=='n'){
+			str[i-1] = ' ';
+			str[i] = '\n';
+			
+		}
+	}
 }
 
 
+
+void eval_line(char * line){
+	char * expr;
+	char * bundle;
+	char * answer;
+	char delims[] = ";";
+	expr = strtok( line, delims );
+	bundle = strtok( NULL, delims );
+	answer = strtok( NULL, delims );
+	format_newline(expr);
+	format_newline(bundle);
+	format_newline(answer);
+	test_expression(expr, bundle, answer);
+	//printf("%s,%s,%s\n", expr, bundle, answer);
+	//test_expression("/one = /three - 2", "/three 3 \n", NULL);
+	//printf("%d\n",test_expression(expr, bundle, answer));	
+	//printf("%d\n",strncmp(bundle, "/three 3 \n", 10));
+	//format_string(bundle);
+	//printf("%s\n", bundle);
+}
+
+void eval_file(FILE *expression_file){
+	char line[1024];
+	while ( fgets (line , 1024 , expression_file) != NULL ){
+		eval_line(line);
+	}
+	//printf("returned %d\n",
+}
+
+
+
 int main(int argc, char **argv){
+	//printf("string compare %d\n", contains_str("help", "pl"));
+	//compare_answer("/foo 1 \n /test 2", "/foo 1 \n /test 2"); 
+	//add some code here that will get a file from the commandline arg
 	FILE *expression_file = fopen ("test/expressions.txt" , "r");
 	if (expression_file == NULL) perror("Error opening file");
-	char line[1024];
-	if ( fgets (line , 1024 , expression_file) != NULL ){
-		printf("%s", line);
-	}
-	//fget(expression_file);
-	char *bundle_string = "/bar 100\n"; //string representation of osc bundle
-	char *expr = "/foo = /bar ?? 666."; //test expression
-	printf("returned %d\n",test_expression(expr, bundle_string, NULL));
+	eval_file(expression_file);
+	
 	
 }
 
