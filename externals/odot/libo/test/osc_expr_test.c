@@ -184,7 +184,6 @@ int test_expression(char *expr, char *bundle_string, char *answer){
 	char * formated_answer = validate_osc_string(answer);
 	//make sure that the answer provided is the same as the answer computed
 	ret = compare_answer(buf, formated_answer);
-	
 	//free all the memory
 	osc_bundle_u_free(bndl);
 	if(ser_bundle){
@@ -217,23 +216,16 @@ int compare_answer(char * evaled, char * answer){
 	int ret = 1;
 	char temp_evaled[strlen(evaled)];
 	strcpy(temp_evaled, evaled);
-	//printf("%s\n", evaled);
-	//test that all of the expressions are in the answer
 	char * expr = strtok (temp_evaled,"\n");
+	//test if all of the expression are in the answer
 	while (expr != NULL){
-		//printf("%s\n", expr);
 		ret*=contains_str(answer, expr);
-		//printf("%s in answer: %d\n", expr, contains_str(answer, expr));
-		//ret *= (contains_str(answer, expr));
 		expr = strtok (NULL,"\n");
 	}
 	//also test that all of the answers are in the expression
 	char * ans_expr = strtok (answer,"\n");
 	while (ans_expr != NULL){
-		//printf("%s\n", expr);
-		//printf("%s in expr %s: %d\n", ans_expr, evaled, contains_str(evaled, ans_expr));
 		ret*=contains_str(evaled, ans_expr);
-		//ret *= (contains_str(answer, expr));
 		ans_expr = strtok (NULL,"\n");
 	}
 	return ret;
@@ -256,19 +248,19 @@ int eval_test(char * line){
 	char * expr;
 	char * bundle;
 	char * answer;
-	int pass;
+	int pass = 0;
 	if (line[0]!='#'){
 		//printf("%s\n", line);
 		char delims[] = ";";
 		expr = strtok( line, delims );
 		bundle = strtok( NULL, delims );
 		answer = strtok( NULL, delims );
-		format_newline(expr);
-		format_newline(bundle);
-		format_newline(answer);
+		//format_newline(expr);
+		//format_newline(bundle);
+		//format_newline(answer);
 		pass = test_expression(expr, bundle, answer);
 		if (pass==0){
-			printf("the expression \"%s\" and bundle \"%s\" do not produce the answer \"%s\"\n", expr, bundle, answer);
+			//printf("the expression \"%s\" and bundle \"%s\" do not produce the answer \"%s\"\n", expr, bundle, answer);
 		}
 	}
 	return pass;
@@ -296,8 +288,9 @@ void eval_file(FILE *expression_file){
 		} 
 		if (next=='@') {
 			test[pos] = '\0';
-			eval_test(test);
-			printf("test: %s\n", test);
+			testcount++;
+			testpassed += eval_test(test);
+			//printf("test: %s\n", test);
 			pos = 0;
 			continue;
 		}

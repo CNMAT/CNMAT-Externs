@@ -1,24 +1,81 @@
 #this is a comment
 #test expressions must be in the form:
-#expr
-#;
-#bundle
-#;
-#answer
-#;
+#@expr
+#;bundle
+#;answer
 #@ <-this signifies the end of a test expression
 #place a 
-#osc messages must be delimited with a newline  or newline character ( \n )
-
+#osc messages must be delimited with a newline or newline character ( \n )
 /one = /three - 2
-; 
-/three 3
-/four 4
-; 
-/three 3
-/four 4
+;/three 3
+;/three 3
 /one 1
 ;
 @
-
-#/one = /two * /three ; /two 24 \n /three -35 \n; /one -840 \n /two 24 \n /three -35\n
+/one = /two * 45
+;/two 3
+;/two 3
+/one 135
+;
+@
+/one = /two * 45
+;/two 3
+;/two 3
+/one 135
+;
+@
+/one = (/two * 45) + /three
+;/two 35
+/three 124
+;/two 35
+/three 124
+/one 1699
+;
+@
+/one = (/two * 45) + (/three - 581)
+;/two 35
+/three 124
+;/two 35
+/three 124
+/one 1118
+;
+@
+/one = (++/two * 45) + (/three - 581)
+;/two 34
+/three 124
+;/two 35
+/three 124
+/one 1118
+;
+@
+/one ++
+;/one 34
+;/one 35
+;
+@
+++/one
+;/one 34
+;/one 35
+;
+@
+/one = (/two * 38) + (/three / 5)
+;/two -14
+/three 125
+;/two -14
+/three 125
+/one -507
+;
+@
+/one = (/two * 38) + (/three / 5)
+;/two -14
+/three 125
+;/two -14
+/three 125
+/one -507
+;
+@
+if(2 < 3, /one = 1, /one 0)
+;/one 3
+;/one 1
+;
+@
