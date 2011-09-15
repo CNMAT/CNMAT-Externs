@@ -1578,8 +1578,8 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-6", 0 ],
-					"destination" : [ "obj-8", 0 ],
+					"source" : [ "obj-12", 0 ],
+					"destination" : [ "obj-19", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
@@ -1587,8 +1587,8 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-32", 0 ],
-					"destination" : [ "obj-13", 0 ],
+					"source" : [ "obj-16", 0 ],
+					"destination" : [ "obj-23", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
