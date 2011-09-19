@@ -196,7 +196,7 @@ arglist:
 		*msg = m;
 		char buf[8];
 		sprintf(buf, "$%d", $1);
-		t_osc_atom_u *a = osc_message_u_appendStringPtr(*msg, buf);
+		t_osc_atom_u *a = osc_message_u_appendString(*msg, buf);
 		osc_parser_substitution(subs, *msg, $1, a, (*msg)->argc);
 		(*nsubs)++;
 	}
@@ -220,7 +220,7 @@ arglist:
 		PP("add DOLLARSUB to MSG %p := %d\n", *msg, $2);
 		char buf[8];
 		sprintf(buf, "$%d", $2);
-		t_osc_atom_u *a = osc_message_u_appendStringPtr(*msg, buf);
+		t_osc_atom_u *a = osc_message_u_appendString(*msg, buf);
 		osc_parser_substitution(subs, *msg, $2, a, (*msg)->argc);
 		(*nsubs)++;
  	}

@@ -164,3 +164,41 @@ t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, cha
 	return OSC_ERR_NONE;
 }
 
+// we can't use the copy and copyInto routines in osc_array.c because we may have an atom
+// with a string that needs to be copied in which case memcpy() is not our friend.
+// so unfortunately we need to iterate through every element and copy it.
+t_osc_array *osc_atom_array_u_copy(t_osc_array *array){
+	if(!array){
+		return NULL;
+	}
+	long len = osc_array_getLen(array);
+	t_osc_ar *cp = osc_atom_array_u_alloc(len);
+	//memcpy(cp->ar, array->ar, cp->len * cp->membersize);
+	int i;
+	for(i = 0; i < len; i++){
+		t_osc_atom_u *src = osc_atom_array_u_get(array, i);
+		t_osc_atom_u *dest = osc_atom_array_u_get(cp, i);
+		osc_atom_u_copy(&dest, src);
+	}
+	return cp;
+}
+
+t_osc_err osc_atom_array_u_copyInto(t_osc_array **dest, t_osc_array *src, long offset){
+	if(!src){
+		return OSC_ERR_INVAL;
+	}
+	long srclen = osc_atom_array_u_getLen(src);
+	long destlen = srclen + offset;
+	if(!(*dest)){
+		*dest = osc_atom_array_u_alloc(destlen);
+	}else if(osc_atom_array_u_getLen(*dest) < destlen){
+		osc_atom_array_u_resize(*dest, destlen);
+	}
+	int i;
+	for(i = 0; i < srclen; i++){
+		t_osc_atom_u *s = osc_atom_array_u_get(src, i);
+		t_osc_atom_u *d = osc_atom_array_u_get(*dest, i + offset);
+		osc_atom_u_copy(&d, s);
+	}
+	return OSC_ERR_NONE;
+}

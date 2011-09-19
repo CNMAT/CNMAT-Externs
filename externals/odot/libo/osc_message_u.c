@@ -42,6 +42,9 @@ t_osc_msg_u *osc_message_u_alloc(){
 }
 
 void osc_message_u_free(t_osc_msg_u *m){
+	if(!m){
+		return;
+	}
 	if(m->address){
 		osc_mem_free(m->address);
 	}

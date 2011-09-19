@@ -719,7 +719,8 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 		osc_bundle_u_doFormat(a->w.bndl, buflen, bufpos, buf);
 		*bufpos += sprintf(*buf + *bufpos, "]");
 	}else{
-		*bufpos += osc_atom_u_getString(a, buf);
+		char *b = *buf + *bufpos;
+		(*bufpos) += osc_atom_u_getString(a, &b);
 		(*buf)[(*bufpos)++] = ' ';
 		(*buf)[(*bufpos)] = '\0';
 	}

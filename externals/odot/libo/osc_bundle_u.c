@@ -44,6 +44,9 @@ t_osc_bndl_u *osc_bundle_u_alloc(void){
 }
 
 void osc_bundle_u_free(t_osc_bndl_u *bndl){
+	if(!bndl){
+		return;
+	}
 	t_osc_msg_u *m = bndl->msghead;
 	while(m){
 		t_osc_msg_u *next = m->next;
@@ -105,8 +108,6 @@ t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_ar
 		osc_message_u_copy(&p, current_message);
 	}
 	osc_bndl_it_u_destroy(it);
-//*nmatches = n;
-//*m = matches;
 	osc_array_resize(ar, n);
 	*osc_msg_u_array = ar;
 	return OSC_ERR_NONE;

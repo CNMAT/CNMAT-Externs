@@ -25,7 +25,6 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 			osc_bundle_s_lookupAddress(*len, *oscbndl, f->argv->arg.osc_address, &msg_ar, 1);
 
 			t_osc_msg_u *mm = osc_message_u_alloc();
-			printf("%p %s\n", f->argv->arg.osc_address, f->argv->arg.osc_address);
 			osc_message_u_setAddress(mm, f->argv->arg.osc_address);
 			int i;
 			for(i = 0; i < osc_atom_array_u_getLen(*out); i++){
@@ -550,7 +549,6 @@ int osc_expr_assign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_
 		len += osc_atom_array_u_getLen(argv[i]);
 	}
 	*out = ar;
-//*out = osc_array_copy(argv[1]);
 	return 0;
 }
 
@@ -1312,6 +1310,10 @@ long osc_expr_getArgCount(t_osc_expr *e){
 
 void osc_expr_setNext(t_osc_expr *e, t_osc_expr *next){
 	e->next = next;
+}
+
+t_osc_expr *osc_expr_next(t_osc_expr *e){
+	return e->next;
 }
 
 void osc_expr_setAssignResultToAddress(t_osc_expr *e, int val){

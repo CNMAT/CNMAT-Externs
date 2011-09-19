@@ -101,6 +101,7 @@ void osc_expr_appendExpr(t_osc_expr *e, t_osc_expr *expr_to_append);
 void osc_expr_setRec(t_osc_expr *e, t_osc_expr_rec *rec);
 t_osc_expr_rec *osc_expr_getRec(t_osc_expr *e);
 void osc_expr_setNext(t_osc_expr *e, t_osc_expr *next);
+t_osc_expr *osc_expr_next(t_osc_expr *e);
 void osc_expr_setArg(t_osc_expr *e, t_osc_expr_arg *a);
 void osc_expr_prependArg(t_osc_expr *e, t_osc_expr_arg *a);
 void osc_expr_appendArg(t_osc_expr *e, t_osc_expr_arg *a);

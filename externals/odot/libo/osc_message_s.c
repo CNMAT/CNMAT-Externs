@@ -173,7 +173,7 @@ t_osc_err osc_message_s_cacheDataOffsets(t_osc_msg_s *m){
 		m->data_size_cache[i] = size;
 		offset += size;
 	}
-return OSC_ERR_NONE;
+	return OSC_ERR_NONE;
 }
 
 t_osc_err osc_message_s_deserialize(t_osc_msg_s *msg, t_osc_msg_u **msg_u){

@@ -41,8 +41,8 @@ void osc_atom_array_u_free(t_osc_atom_ar_u *ar);
 #define osc_atom_array_u_clear(ar) osc_array_clear((ar))
 #define osc_atom_array_u_get(ar, idx) osc_array_get((ar), (idx))
 #define osc_atom_array_u_getLen(ar) osc_array_getLen((ar))
-#define osc_atom_array_u_copy(ar) osc_array_copy((ar))
-#define osc_atom_array_u_copyInto(dest, src, offset) osc_array_copyInto((dest), (src), (offset))
+//#define osc_atom_array_u_copy(ar) osc_array_copy((ar))
+//#define osc_atom_array_u_copyInto(dest, src, offset) osc_array_copyInto((dest), (src), (offset))
 #define osc_atom_array_u_resize(ar, newlen) osc_array_resize((ar), (newlen))
 
 t_osc_err osc_atom_array_u_getDoubleArray(t_osc_atom_ar_u *array, double **out);
@@ -53,6 +53,8 @@ t_osc_err osc_atom_array_u_getUInt32Array(t_osc_atom_ar_u *array, uint32_t **out
 t_osc_err osc_atom_array_u_getUInt64Array(t_osc_atom_ar_u *array, uint64_t **out);
 t_osc_err osc_atom_array_u_getBoolArray(t_osc_atom_ar_u *array, char **out);
 t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, char **out);
+t_osc_array *osc_array_copy(t_osc_array *array);
+t_osc_err osc_atom_array_u_copyInto(t_osc_array **dest, t_osc_array *src, long offset);
 
 
 #ifdef __cplusplus
