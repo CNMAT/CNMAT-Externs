@@ -49,6 +49,7 @@ typedef struct _ovar{
 	long inlet;
 	long len;
 	char *bndl;
+	long buflen;
 	t_critical lock;
 } t_ovar;
 
@@ -70,15 +71,16 @@ t_symbol *ps_FullPacket;
 void ovar_doFullPacket(t_ovar *x, long len, long ptr, long inlet){
 	if(inlet == 1){
 		critical_enter(x->lock);
-		if(len > x->len){
+		if(len > x->buflen){
 			x->bndl = osc_mem_resize(x->bndl, len);
 			if(!(x->bndl)){
 				object_error((t_object *)x, "ran out of memory!\n");
 				return;
 			}
-			x->len = len;
+			x->buflen = len;
 		}
 		memcpy(x->bndl, (char *)ptr, len);
+		x->len = len;
 		critical_exit(x->lock);
 	}else{
 #if (defined UNION || defined INTERSECTION || defined DIFFERENCE)
@@ -214,6 +216,9 @@ void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
 		x->proxy = proxy_new((t_object *)x, 1, &(x->inlet));
 		critical_new(&(x->lock));
+		x->len = 0;
+		x->buflen = 0;
+		x->bndl = NULL;
 
 		//attr_args_process(x, argc, argv);
 
