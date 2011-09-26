@@ -491,18 +491,18 @@ void osc_expr_and(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result){
 		osc_atom_u_setFalse(*result);
 		return;
 	}
-	osc_atom_u_setBool(*result, osc_atom_u_getDouble(f1) && osc_atom_u_getDouble(f2));
+	osc_atom_u_setBool(*result, osc_atom_u_getBool(f1) && osc_atom_u_getBool(f2));
 	return;
 }
 
 void osc_expr_or(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result){
-	double ff1 = 0;
-	double ff2 = 0;
+	int ff1 = 0;
+	int ff2 = 0;
 	if(f1){
-		ff1 = osc_atom_u_getDouble(f1);
+		ff1 = osc_atom_u_getBool(f1);
 	}
 	if(f2){
-		ff2 = osc_atom_u_getDouble(f2);
+		ff2 = osc_atom_u_getBool(f2);
 	}
 	osc_atom_u_setBool(*result, ff1 || ff2);
 	return;
