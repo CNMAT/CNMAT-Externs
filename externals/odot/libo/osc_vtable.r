@@ -1,6 +1,6 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2009-ll, The Regents of
+University of California, Berkeley.  Copyright (c) 2011, The Regents of
 the University of California (Regents). 
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
@@ -20,34 +20,34 @@ HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-/** 	\file osc_atom_u.r
+/** 	\file osc_vtable.r
 	\author John MacCallum
 
 */
 
-#ifndef __OSC_ATOM_U_R__
-#define __OSC_ATOM_U_R__
+#ifndef __OSC_VTABLE_R__
+#define __OSC_VTABLE_R__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "osc_bundle_u.h"
+#include "osc_hashtab.h"
 
-struct _osc_atom_u{
-	union _word{
-		int32_t i;
-		int64_t h;
-		uint32_t I;
-		uint64_t H;
-		float f;
-		double d;
-		char *s;
-		t_osc_bndl_u *bndl;
-	} w;
-	int typetag;
-	int alloc;
-	struct _osc_atom_u *next, *prev;
+struct _osc_vtable_entry{
+	char *selector;
+	t_osc_vtable_method method;
+	void *context;
+};
+
+struct _osc_vtable{
+	struct _osc_vtable_entry *entries;
+	t_osc_hashtab *hashtab;
+	int num_slots;
+	int num_entries;
+	void *delegation_context;
+	t_osc_vtable_delegation_method delegation_method;
 };
 
 #ifdef __cplusplus

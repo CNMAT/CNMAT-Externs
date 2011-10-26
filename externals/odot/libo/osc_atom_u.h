@@ -116,6 +116,11 @@ typedef struct _osc_atom_u t_osc_atom_u;
  */
 t_osc_atom_u *osc_atom_u_alloc(void);
 
+/**
+  \return The size in bytes of the #t_osc_atom_u struct.
+ */
+size_t osc_atom_u_getStructSize(void);
+
 /** \brief Free a #t_osc_atom_u
 
 \param a The #t_osc_atom_u to be freed

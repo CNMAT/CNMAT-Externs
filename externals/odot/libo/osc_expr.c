@@ -144,7 +144,7 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}else{
 			osc_atom_u_setFalse(osc_atom_array_u_get(*out, 0));
 		}
-	}else if(f->rec->func == osc_expr_exec){
+	}else if(f->rec->func == osc_expr_eval){
 		t_osc_atom_ar_u *arg = NULL;
 		osc_expr_getArg(f_argv, len, oscbndl, &arg);
 		if(arg){
@@ -1161,7 +1161,7 @@ int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 	return 0;
 }
 
-int osc_expr_exec(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
 	// this is a dummy function.  we'll use this to do a pointer comparison.
 	return 0;
 }
@@ -1404,6 +1404,7 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 	while(f_argv){
 		switch(f_argv->type){
 		case OSC_EXPR_ARG_TYPE_ATOM:
+			printf("atom\n");
 			{
 				t_osc_atom_u *a = f_argv->arg.atom;
 				switch(osc_atom_u_getTypetag(a)){
@@ -1430,9 +1431,11 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 			}
 			break;
 		case OSC_EXPR_ARG_TYPE_OSCADDRESS:
+			printf("address\n");
 			ptr += sprintf(ptr, "%s ", f_argv->arg.osc_address);
 			break;
 		case OSC_EXPR_ARG_TYPE_EXPR:
+			printf("expr\n");
 			ptr += osc_expr_formatFunctionGraph_r(f_argv->arg.expr, ptr);
 			break;
 		}
@@ -1445,11 +1448,13 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 
 void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt){
 	if(!(*fmt)){
+		printf("alloc\n");
 		*fmt = osc_mem_alloc(512);
 	}
-	long bufsize = 256, bufpos = 0;
+	long bufsize = 512, bufpos = 0;
 	t_osc_expr *f = fg;
 	while(f){
+		printf("while %p\n", f);
 		if(bufpos < 256){
 			*fmt = osc_mem_resize(*fmt, bufsize + 256);
 		}

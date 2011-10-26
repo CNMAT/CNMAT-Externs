@@ -38,20 +38,36 @@ t_osc_atom_s *osc_atom_s_alloc(char typetag, char *ptr){
 	return a;
 }
 
+size_t osc_atom_s_getStructSize(void){
+	return sizeof(t_osc_atom_s);
+}
+
 void osc_atom_s_set(t_osc_atom_s *a, char typetag, char *ptr){
+	if(!a){
+		return;
+	}
 	a->typetag = typetag;
 	a->data = ptr;
 }
 
 char osc_atom_s_getTypetag(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	return a->typetag;
 }
 
 char *osc_atom_s_getData(t_osc_atom_s *a){
+	if(!a){
+		return NULL;
+	}
 	return a->data;
 }
 
 float osc_atom_s_getFloat(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'f': // 32-bit IEEE 754 float
 		{
@@ -87,6 +103,9 @@ float osc_atom_s_getFloat(t_osc_atom_s *a){
 }
 
 double osc_atom_s_getDouble(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'd': // 64-bit IEEE 754 double
 		{
@@ -122,6 +141,9 @@ double osc_atom_s_getDouble(t_osc_atom_s *a){
 }
 
 int32_t osc_atom_s_getInt32(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return ntoh32(*((int32_t *)(a->data)));
@@ -161,6 +183,9 @@ int32_t osc_atom_s_getInt32(t_osc_atom_s *a){
 }
 
 int64_t osc_atom_s_getInt64(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'h': // signed 64-bit int
 		return ntoh64(*((int64_t *)(a->data)));
@@ -196,6 +221,9 @@ int64_t osc_atom_s_getInt64(t_osc_atom_s *a){
 }
 
 uint32_t osc_atom_s_getUInt32(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'I': // unsigned 32-bit int
 		return ntoh32(*((uint32_t *)(a->data)));
@@ -231,6 +259,9 @@ uint32_t osc_atom_s_getUInt32(t_osc_atom_s *a){
 }
 
 uint64_t osc_atom_s_getUInt64(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'H': // unsigned 64-bit int
 		return ntoh64(*((uint64_t *)(a->data)));
@@ -266,6 +297,9 @@ uint64_t osc_atom_s_getUInt64(t_osc_atom_s *a){
 }
 
 int osc_atom_s_getInt(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'i': // signed 32-bit int
 		return (int)(ntoh32(*((int32_t *)(a->data))));
@@ -300,7 +334,66 @@ int osc_atom_s_getInt(t_osc_atom_s *a){
 	return 0;
 }
 
+int osc_atom_s_getStringLen(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
+	switch(a->typetag){
+	case 's': // string
+		return strlen(a->data) + 1;
+	case 'i': // signed 32-bit int
+		{
+			int32_t i = ntoh32(*((int32_t *)(a->data)));
+			int n = snprintf(NULL, 0, "%"PRId32, i);
+			return n + 1;
+		}
+	case 'f': // 32-bit IEEE 754 float
+		{
+			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
+			float f = *((float *)&i);
+			int n = snprintf(NULL, 0, "%g", f) + 1;
+			return n;
+		}
+	case 'd': // 64-bit IEEE 754 double
+		{
+			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
+			double f = *((double *)&i);
+			int n = snprintf(NULL, 0, "%g", f) + 1;
+			return n;
+		}
+	case 'h': // signed 64-bit int
+		{
+			int64_t i = ntoh64(*((int64_t *)(a->data)));
+			int n = snprintf(NULL, 0, "%"PRId64, i) + 1;
+			return n;
+		}
+	case 'I': // unsigned 32-bit int
+		{
+			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
+			int n = snprintf(NULL, 0, "%"PRIu32, i) + 1;
+			return n;
+		}
+	case 'H': // unsigned 64-bit int
+		{
+			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
+			int n = snprintf(NULL, 0, "%"PRIu64, i) + 1;
+			return n;
+		}
+	case 'T': // true
+		return 5;
+	case 'F': // false
+		return 6;
+	case 'N': // NULL
+		;
+		// fall through
+	}
+	return 0;
+}
+
 int osc_atom_s_getString(t_osc_atom_s *a, char **out){	
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 's': // string
 		{
@@ -401,6 +494,9 @@ int osc_atom_s_getString(t_osc_atom_s *a, char **out){
 }
 
 int osc_atom_s_getBool(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	switch(a->typetag){
 	case 'T':
 		return 1;
@@ -447,6 +543,9 @@ int osc_atom_s_getBool(t_osc_atom_s *a){
 }
 
 void osc_atom_s_setFloat(t_osc_atom_s *a, float v){
+	if(!a){
+		return;
+	}
 	if(a->data == NULL){
 		a->data = osc_mem_alloc(sizeof(float));
 	}
@@ -455,6 +554,9 @@ void osc_atom_s_setFloat(t_osc_atom_s *a, float v){
 }
 
 void osc_atom_s_setDouble(t_osc_atom_s *a, double v){
+	if(!a){
+		return;
+	}
 	if(a->data == NULL){
 		a->data = osc_mem_alloc(sizeof(double));
 	}
@@ -463,6 +565,9 @@ void osc_atom_s_setDouble(t_osc_atom_s *a, double v){
 }
 
 void osc_atom_s_setInt32(t_osc_atom_s *a, int32_t v){
+	if(!a){
+		return;
+	}
 	if(a->data == NULL){
 		a->data = osc_mem_alloc(4);
 	}
@@ -471,6 +576,9 @@ void osc_atom_s_setInt32(t_osc_atom_s *a, int32_t v){
 }
 
 void osc_atom_s_setInt64(t_osc_atom_s *a, int64_t v){
+	if(!a){
+		return;
+	}
 	if(a->data == NULL){
 		a->data = osc_mem_alloc(8);
 	}
@@ -479,6 +587,9 @@ void osc_atom_s_setInt64(t_osc_atom_s *a, int64_t v){
 }
 
 void osc_atom_s_setUInt32(t_osc_atom_s *a, uint32_t v){
+	if(!a){
+		return;
+	}
 	if(a->data == NULL){
 		a->data = osc_mem_alloc(4);
 	}
@@ -487,6 +598,9 @@ void osc_atom_s_setUInt32(t_osc_atom_s *a, uint32_t v){
 }
 
 void osc_atom_s_setUInt64(t_osc_atom_s *a, uint64_t v){
+	if(!a){
+		return;
+	}
 	if(a->data == NULL){
 		a->data = osc_mem_alloc(8);
 	}
@@ -495,6 +609,9 @@ void osc_atom_s_setUInt64(t_osc_atom_s *a, uint64_t v){
 }
 
 void osc_atom_s_setString(t_osc_atom_s *a, char *v){
+	if(!a){
+		return;
+	}
 	if(a->data == NULL){
 		a->data = osc_mem_alloc(strlen(v) + 1);
 	}
@@ -503,22 +620,37 @@ void osc_atom_s_setString(t_osc_atom_s *a, char *v){
 }
 
 void osc_atom_s_setTrue(t_osc_atom_s *a){
+	if(!a){
+		return;
+	}
 	a->typetag = 'T';
 }
 
 void osc_atom_s_setFalse(t_osc_atom_s *a){
+	if(!a){
+		return;
+	}
 	a->typetag = 'F';
 }
 
 void osc_atom_s_setNull(t_osc_atom_s *a){
+	if(!a){
+		return;
+	}
 	a->typetag = 'N';
 }
 
 size_t osc_atom_s_sizeof(t_osc_atom_s *a){
+	if(!a){
+		return 0;
+	}
 	return osc_sizeof(a->typetag, a->data);
 }
 
 t_osc_err osc_atom_s_deserialize(t_osc_atom_s *a, t_osc_atom_u **a_u){
+	if(!a){
+		return OSC_ERR_INVAL;
+	}
 	t_osc_atom_u *atom_u = NULL;
 	if(!(*a_u)){
 		atom_u = osc_atom_u_alloc();
@@ -661,6 +793,9 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 }
 
 t_osc_err osc_atom_s_format(t_osc_atom_s *a, long *buflen, char **buf){
+	if(!a){
+		return OSC_ERR_INVAL;
+	}
 	long mybuflen = 0, mybufpos = 0;
 	t_osc_err e = osc_atom_s_doFormat(a, &mybuflen, &mybufpos, buf);
 	*buflen = mybufpos;

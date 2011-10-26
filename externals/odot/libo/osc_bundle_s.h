@@ -44,21 +44,27 @@ typedef struct _osc_bundle_s t_osc_bundle_s, t_osc_bndl_s;
 typedef t_osc_array t_osc_bundle_array_s, t_osc_bndl_ar_s;
 
 t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr);
+size_t osc_bundle_s_getStructSize(void);
 void osc_bundle_s_free(t_osc_bndl_s *bndl);
+void osc_bundle_s_deepFree(t_osc_bndl_s *bndl);
 char *osc_bundle_s_getPtr(t_osc_bndl_s *bndl);
 long osc_bundle_s_getLen(t_osc_bndl_s *bndl);
 t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count);
 t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_osc_msg_s*, void *), void *context);
 t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, t_osc_array **osc_msg_s_array, int fullmatch);
 t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *old, char *new);
-t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, char *msg);
+t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, t_osc_msg_s *msg);
+t_osc_err osc_bundle_s_appendMessage_b(t_osc_bndl_s **bndl, t_osc_msg_s *msg);
 t_osc_err osc_bundle_s_setBundleID(char *buf);
+t_osc_err osc_bundle_s_setBundleID_b(t_osc_bndl_s *bndl);
 int osc_bundle_s_strcmpID(char *buf);
 t_osc_err osc_bundle_s_deserialize(long len, char *ptr, t_osc_bndl_u **bndl);
 t_osc_err osc_bundle_s_format(long len, char *bndl, long *buflen, char **buf);
 t_osc_err osc_bundle_s_union(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out);
 t_osc_err osc_bundle_s_intersection(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out);
 t_osc_err osc_bundle_s_difference(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out);
+// returns len which is len1 + len2 - OSC_HEADER_SIZE
+int osc_bundle_s_concat(long len1, char *bndl1, long len2, char *bndl2, char *bndl);
 
 t_osc_array *osc_bundle_array_s_alloc(long len);
 

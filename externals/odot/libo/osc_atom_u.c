@@ -38,6 +38,10 @@ t_osc_atom_u *osc_atom_u_alloc(void){
 	return a;
 }
 
+size_t osc_atom_u_getStructSize(void){
+	return sizeof(t_osc_atom_u);
+}
+
 void osc_atom_u_free(t_osc_atom_u *a){
 	if(!a){
 		return;
@@ -786,4 +790,3 @@ t_osc_err osc_atom_u_format(t_osc_atom_u *a, long *buflen, char **buf){
 	*buflen = mybufpos;
 	return e;
 }
-

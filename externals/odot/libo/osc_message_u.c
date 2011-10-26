@@ -28,6 +28,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_message_u.r"
 #include "osc_atom_u.h"
 #include "osc_atom_u.r"
+#include "osc_atom_array_u.h"
 #include "osc_message_iterator_u.h"
 #include "osc_mem.h"
 #include "osc_byteorder.h"
@@ -39,6 +40,10 @@ t_osc_msg_u *osc_message_u_alloc(){
 	}
 	osc_message_u_initMsg(m);
 	return m;
+}
+
+size_t osc_message_u_getStructSize(void){
+	return sizeof(t_osc_msg_u);
 }
 
 void osc_message_u_free(t_osc_msg_u *m){
@@ -82,6 +87,10 @@ char *osc_message_u_getAddress(t_osc_msg_u *m){
 }
 
 t_osc_err osc_message_u_setAddress(t_osc_msg_u *m, char *address){
+	if(!address){
+		m->address = NULL;
+		return OSC_ERR_NONE;
+	}
 	if(*address != '/'){
 		return OSC_ERR_MALFORMEDADDRESS;
 	}
@@ -592,4 +601,18 @@ t_osc_err osc_message_u_format(t_osc_msg_u *m, long *buflen, char **buf){
 
 t_osc_array *osc_message_array_u_alloc(long len){
 	return osc_array_allocWithSize(len, sizeof(t_osc_msg_u));
+}
+
+t_osc_array *osc_message_u_getArgArrayCopy(t_osc_msg_u *msg){
+	t_osc_atom_ar_u *atom_array = osc_atom_array_u_alloc(osc_message_u_getArgCount(msg));
+	t_osc_msg_it_u *it = osc_msg_it_u_get(msg);
+	int i = 0;
+	while(osc_msg_it_u_hasNext(it)){
+		t_osc_atom_u *src = osc_msg_it_u_next(it);
+		t_osc_atom_u *dest = osc_atom_array_u_get(atom_array, i);
+		osc_atom_u_copy(&dest, src);
+		i++;
+	}
+	osc_msg_it_u_destroy(it);
+	return atom_array;
 }

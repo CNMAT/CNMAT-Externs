@@ -35,6 +35,16 @@ int osc_match(const char *pattern, const char *address, int *pattern_offset, int
 	*address_offset = 0;
 
 	while(*address != '\0' && *pattern != '\0'){
+		/*
+		if(*pattern == '/'){
+			printf("double-slash: %s %s\n", address, pattern);
+			while(*pattern != '/' && *pattern != '\0'){
+				pattern++;
+			}
+			while(*address != '/' && *address != '\0'){
+				address++;
+			}
+			}else */
 		if(*pattern == '*'){
 			if(!osc_match_star(pattern, address)){
 				return 0;

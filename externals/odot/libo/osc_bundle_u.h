@@ -44,6 +44,7 @@ typedef struct _osc_bundle_u t_osc_bundle_u, t_osc_bndl_u;
 typedef t_osc_array t_osc_bundle_array_u, t_osc_bndl_ar_u;
 
 t_osc_bndl_u *osc_bundle_u_alloc(void);
+size_t osc_bundle_u_getStructSize(void);
 void osc_bundle_u_free(t_osc_bndl_u *bndl);
 int osc_bundle_u_getMsgCount(t_osc_bndl_u *bndl);
 t_osc_err osc_bundle_u_getMessagesWithCallback(t_osc_bndl_u *bndl, void (*f)(t_osc_msg_u*, void *), void *context);

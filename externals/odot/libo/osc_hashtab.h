@@ -1,6 +1,6 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2009-ll, The Regents of
+University of California, Berkeley.  Copyright (c) 2011, The Regents of
 the University of California (Regents). 
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
@@ -20,38 +20,32 @@ HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-/** 	\file osc_atom_u.r
+/** 	\file osc_hashtab.h
 	\author John MacCallum
 
 */
+#ifndef __OSC_HASHTAB_H__
+#define __OSC_HASHTAB_H__
 
-#ifndef __OSC_ATOM_U_R__
-#define __OSC_ATOM_U_R__
+#define OSC_HASHTYPE32 uint32_t
+#define OSC_HASHTYPE64 uint64_t
 
-#ifdef __cplusplus
-extern "C" {
+#ifdef __LP64__
+#define OSC_HASHTYPE OSC_HASHTYPE64
+#else
+#define OSC_HASHTYPE OSC_HASHTYPE32
 #endif
 
-#include "osc_bundle_u.h"
+#define OSC_HASHTAB_DEFAULT_NUM_SLOTS 541 // big to avoid a rehash
 
-struct _osc_atom_u{
-	union _word{
-		int32_t i;
-		int64_t h;
-		uint32_t I;
-		uint64_t H;
-		float f;
-		double d;
-		char *s;
-		t_osc_bndl_u *bndl;
-	} w;
-	int typetag;
-	int alloc;
-	struct _osc_atom_u *next, *prev;
-};
+typedef struct _osc_hashtab_elem t_osc_hashtab_elem;
+typedef struct _osc_hashtab t_osc_hashtab;
 
-#ifdef __cplusplus
-}
-#endif
+t_osc_hashtab *osc_hashtab_new(int nslots);
+void osc_hashtab_store(t_osc_hashtab *ht, int keylen, char *key, void *obj);
+void *osc_hashtab_lookup(t_osc_hashtab *ht, int keylen, char *key);
+void *osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key);
+void osc_hashtab_clear(t_osc_hashtab *ht);
+void osc_hashtab_destroy(t_osc_hashtab *ht);
 
-#endif // __OSC_ATOM_U_R__
+#endif // __OSC_HASHTAB_H__

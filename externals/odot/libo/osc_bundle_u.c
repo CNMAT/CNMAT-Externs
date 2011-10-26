@@ -43,6 +43,10 @@ t_osc_bndl_u *osc_bundle_u_alloc(void){
 	return b;
 }
 
+size_t osc_bundle_u_getStructSize(void){
+	return sizeof(t_osc_bndl_u);
+}
+
 void osc_bundle_u_free(t_osc_bndl_u *bndl){
 	if(!bndl){
 		return;
@@ -114,6 +118,7 @@ t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_ar
 }
 
 t_osc_err osc_bundle_u_addMsg(t_osc_bndl_u *bndl, t_osc_msg_u *msg){
+	bndl->msgcount++;
 	if(!(bndl->msghead)){
 		bndl->msghead = msg;
 		bndl->msgtail = NULL;

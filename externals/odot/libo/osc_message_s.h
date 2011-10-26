@@ -56,6 +56,11 @@ typedef t_osc_array t_osc_message_array_s, t_osc_msg_ar_s;
 t_osc_msg_s *osc_message_s_alloc(void);
 
 /**
+   @return The size of the #t_osc_msg_s struct.
+ */
+size_t osc_message_s_getStructSize(void);
+
+/**
    Free a #t_osc_msg_s object and any memory associated with it.
    @param m The OSC message to be freed
  */
@@ -74,6 +79,17 @@ void osc_message_s_initMsg(t_osc_msg_s *m);
    @param src The #t_osc_msg_s that will be copied.
  */
 void osc_message_s_copy(t_osc_msg_s **dest, t_osc_msg_s *src);
+
+/**
+   Rename a serialized message---makes a copy and places the contents in dest.  The original message
+   will remain unaffected.
+   @param dest Buffer where the copy will be placed.
+   @param src Message to be copied and renamed.
+   @param new_address_len Length of the new address.
+   @param new_address The new address.
+   @return An error or #OSC_ERR_NONE.
+ */
+t_osc_err osc_message_s_renameCopy(char *dest, t_osc_msg_s *src, int new_address_len, char *new_address);
 
 /**
    Wrap an array of bytes containing a serialized OSC message in a #t_osc_msg_s object

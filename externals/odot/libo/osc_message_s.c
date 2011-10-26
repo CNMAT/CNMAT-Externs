@@ -1,23 +1,23 @@
 /*
-Written by John MacCallum, The Center for New Music and Audio Technologies,
-University of California, Berkeley.  Copyright (c) 2009-ll, The Regents of
-the University of California (Regents). 
-Permission to use, copy, modify, distribute, and distribute modified versions
-of this software and its documentation without fee and without a signed
-licensing agreement, is hereby granted, provided that the above copyright
-notice, this paragraph and the following two paragraphs appear in all copies,
-modifications, and distributions.
+  Written by John MacCallum, The Center for New Music and Audio Technologies,
+  University of California, Berkeley.  Copyright (c) 2009-ll, The Regents of
+  the University of California (Regents). 
+  Permission to use, copy, modify, distribute, and distribute modified versions
+  of this software and its documentation without fee and without a signed
+  licensing agreement, is hereby granted, provided that the above copyright
+  notice, this paragraph and the following two paragraphs appear in all copies,
+  modifications, and distributions.
 
-IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
-SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING
-OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF REGENTS HAS
-BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+  SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING
+  OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF REGENTS HAS
+  BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
-HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
-MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+  REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+  HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+  MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
 #include <stdio.h>
@@ -36,6 +36,10 @@ t_osc_msg_s *osc_message_s_alloc(void){
 	t_osc_msg_s *m = (t_osc_msg_s *)osc_mem_alloc(sizeof(t_osc_msg_s));
 	osc_message_s_initMsg(m);
 	return m;
+}
+
+size_t osc_message_s_getStructSize(void){
+	return sizeof(t_osc_msg_s);
 }
 
 void osc_message_s_free(t_osc_msg_s *m){
@@ -83,6 +87,30 @@ t_osc_err osc_message_s_wrap(t_osc_msg_s *m, char *bytes){
 	while((m->data - bytes) % 4){
 		m->data++;
 	}
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_message_s_renameCopy(char *dest, t_osc_msg_s *src, int new_address_len, char *new_address){
+	if(!dest){
+		return OSC_ERR_NULLPTR;
+	}
+	int oldlen = osc_message_s_getSize(src);
+	int old_address_len = strlen(osc_message_s_getAddress(src));
+	int newlen = oldlen - (old_address_len - new_address_len);
+	while(newlen % 4){
+		newlen++;
+	}
+	*((uint32_t *)dest) = hton32(newlen);
+	char *ptr = dest + 4;
+	if(new_address_len > 0){
+		memcpy(ptr, new_address, new_address_len);
+	}
+	ptr += new_address_len;
+	*ptr++ = '\0';
+	while((ptr - dest) % 4){
+		*ptr++ = '\0';
+	}
+	memcpy(ptr, src->typetags, oldlen - (src->typetags - src->address));
 	return OSC_ERR_NONE;
 }
 

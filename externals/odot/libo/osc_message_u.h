@@ -44,6 +44,7 @@ typedef struct _osc_message_u t_osc_message_u, t_osc_msg_u;
 typedef t_osc_array t_osc_message_array_u, t_osc_msg_ar_u;
 
 t_osc_msg_u *osc_message_u_alloc(void);
+size_t osc_message_u_getStructSize(void);
 void osc_message_u_free(t_osc_msg_u *m);
 void osc_message_u_initMsg(t_osc_msg_u *m);
 void osc_message_u_copy(t_osc_msg_u **dest, t_osc_msg_u *src);
@@ -112,6 +113,8 @@ t_osc_message_array_u *osc_message_array_u_alloc(long len);
 #define osc_message_array_u_getLen(ar) osc_array_getLen((ar))
 #define osc_message_array_u_copy(ar) osc_array_copy((ar))
 #define osc_message_array_u_resize(ar, newlen) osc_array_resize((ar), (newlen))
+
+t_osc_array *osc_message_u_getArgArrayCopy(t_osc_msg_u *msg);
 
 #ifdef __cplusplus
 }

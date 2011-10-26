@@ -71,6 +71,7 @@ and must be freed by the caller.
 \return A #t_osc_atom_s
  */
 t_osc_atom_s *osc_atom_s_alloc(char typetag, char *ptr);
+size_t osc_atom_s_getStructSize(void);
 void osc_atom_s_set(t_osc_atom_s *a, char typetag, char *ptr);
 char osc_atom_s_getTypetag(t_osc_atom_s *a);
 char *osc_atom_s_getData(t_osc_atom_s *a);
@@ -82,6 +83,7 @@ int64_t osc_atom_s_getInt64(t_osc_atom_s *a);
 uint32_t osc_atom_s_getUInt32(t_osc_atom_s *a);
 uint64_t osc_atom_s_getUInt64(t_osc_atom_s *a);
 int osc_atom_s_getInt(t_osc_atom_s *a);
+int osc_atom_s_getStringLen(t_osc_atom_s *a);
 int osc_atom_s_getString(t_osc_atom_s *a, char **out);
 int osc_atom_s_getBool(t_osc_atom_s *a);
 
