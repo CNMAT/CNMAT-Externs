@@ -36,6 +36,8 @@ VERSION 0.0: First try
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_bundle_s.h"
 #include "omax_util.h"
 
 typedef struct _oaccum{
@@ -50,7 +52,6 @@ void *oaccum_class;
 
 void oaccum_fullPacket(t_oaccum *x, long len, long ptr);
 void oaccum_anything(t_oaccum *x, t_symbol *msg, int argc, t_atom *argv);
-void oaccum_cbk(t_osc_msg msg, void *v);
 void oaccum_bang(t_oaccum *x);
 void oaccum_free(t_oaccum *x);
 void oaccum_assist(t_oaccum *x, void *b, long m, long a, char *s);
@@ -60,18 +61,6 @@ t_max_err oaccum_notify(t_oaccum *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
-	// if the OSC packet contains a single message, turn it into a bundle
-	/*
-	if(strncmp(cpy, "#bundle\0", 8)){
-		nn = osc_util_bundle_naked_message(len, cpy, cpy);
-		if(nn < 0){
-			error("problem bundling naked message");
-		}
-	}
-	*/
-	
-	// flatten any nested bundles
-	//nn = osc_util_flatten(nn, cpy, cpy);
 	if(x->buffer_pos + len > x->buffer_len){
 		char *tmp = (char *)realloc(x->buffer, x->buffer_pos + len);
 		if(!tmp){
@@ -81,7 +70,6 @@ void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
 		x->buffer = tmp;
 		memset(x->buffer + x->buffer_pos, '\0', len);
 		x->buffer_len = x->buffer_pos + len;
-		//oaccum_bang(x);
 	}
 
 	if(x->buffer_pos == 0){
@@ -91,9 +79,6 @@ void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
 		memcpy(x->buffer + x->buffer_pos, (char *)ptr + 16, len - 16);
 		x->buffer_pos += len - 16;
 	}	
-
-	// extract the messages from the bundle
-	//osc_util_parseBundleWithCallback(nn, cpy, oaccum_cbk, (void *)x);
 }
 
 void oaccum_anything(t_oaccum *x, t_symbol *msg, int argc, t_atom *argv){
@@ -101,8 +86,8 @@ void oaccum_anything(t_oaccum *x, t_symbol *msg, int argc, t_atom *argv){
 	len = omax_util_get_bundle_size_for_atoms(msg, argc, argv);
 	char buf[len];
 	memset(buf, '\0', len);
-	omax_util_encode_atoms(buf + 16, msg, argc, argv);
-	strncpy(buf, "#bundle\0", 8);
+	omax_util_encode_atoms(buf + OSC_HEADER_SIZE, msg, argc, argv);
+	osc_bundle_s_setBundleID(buf);
 	oaccum_fullPacket(x, len, (long)buf);
 }
 
@@ -150,7 +135,7 @@ void *oaccum_new(t_symbol *msg, short argc, t_atom *argv){
 				object_error((t_object *)x, "The buffer will expand as necessary.");
 			}
 		}
-		x->buffer = (char *)malloc(x->buffer_len * sizeof(char));
+		x->buffer = (char *)osc_mem_alloc(x->buffer_len * sizeof(char));
 		memset(x->buffer, '\0', x->buffer_len);
 		x->buffer_pos = 0;
 	}
