@@ -38,6 +38,9 @@ VERSION 1.0: New name
 #include "ext_obex_util.h"
 #include "omax_util.h"
 #include "osc.h"
+#include "osc_bundle_s.h"
+#include "osc_bundle_iterator_s.h"
+#include "osc_message_s.h"
 
 typedef struct _omap{
 	t_object ob;
@@ -47,7 +50,7 @@ typedef struct _omap{
 	char *buffer;
 	int buffer_len;
 	int buffer_pos;
-	t_osc_msg msg;
+	t_osc_msg_s *msg;
 } t_omap;
 
 void *omap_class;
@@ -76,7 +79,16 @@ void omap_fullPacket(t_omap *x, long len, long ptr){
 	memcpy(x->buffer, (char *)ptr, 16);
 	x->buffer_pos = 16;
 
-	osc_bundle_getMessagesWithCallback(len, (char *)ptr, omap_cbk, (void *)x);
+	//osc_bundle_getMessagesWithCallback(len, (char *)ptr, omap_cbk, (void *)x);
+	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, (char *)ptr);
+	while(osc_bndl_it_s_hasNext(it)){
+		t_osc_msg_s *msg = osc_bndl_it_s_next(it);
+		x->msg = msg;
+		long len = osc_message_s_getArgCount(msg);
+		t_atom atoms[len + 1];
+		omax_util_oscMsg2MaxAtoms(msg, atoms);
+		outlet_anything(x->outlets[1], atom_getsym(atoms), len, atoms + 1);
+	}
 
 	t_atom out[2];
 	//lock
@@ -89,7 +101,7 @@ void omap_fullPacket(t_omap *x, long len, long ptr){
 	atom_setlong(out + 1, (long)buffer);
 	outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
 }
-
+/*
 void omap_cbk(t_osc_msg msg, void *v){
 	t_omap *x = (t_omap *)v;
 	x->msg = msg;
@@ -99,6 +111,7 @@ void omap_cbk(t_osc_msg msg, void *v){
 	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
 	outlet_anything(x->outlets[1], atom_getsym(atoms), msg.argc, atoms + 1);
 }
+*/
 
 void omap_int(t_omap *x, long l){
 	if(proxy_getinlet((t_object *)x) == 0){
@@ -141,79 +154,34 @@ void omap_list(t_omap *x, t_symbol *msg, short argc, t_atom *argv){
 	if(atom_gettype(argv) == A_SYM){
 		t_symbol *address = atom_getsym(argv);
 		if(*(address->s_name) == '/'){
-			//x->buffer_pos += cmmjl_osc_make_bundle_from_atoms(argc, argv, &(x->buffer_len), x->buffer + x->buffer_pos);
-			//x->buffer_pos += osc_util_make_bundle_from_atoms(argc, argv, &(x->buffer_len), x->buffer + x->buffer_pos);
 			x->buffer_pos += omax_util_encode_atoms(x->buffer + x->buffer_pos, address, argc - 1, argv + 1);
 			return;
 		}
 	}
-	t_symbol *address = gensym(x->msg.address);
+	t_symbol *address = gensym(osc_message_s_getAddress(x->msg));
 	t_atom av[argc + 1];
 	atom_setsym(av, address);
 	memcpy(av + 1, argv, argc * sizeof(t_atom));
-	//x->buffer_pos += cmmjl_osc_make_bundle_from_atoms(argc + 1, av, &(x->buffer_len), x->buffer + x->buffer_pos);
-	//x->buffer_pos += osc_util_make_bundle_from_atoms(argc + 1, av, &(x->buffer_len), x->buffer + x->buffer_pos);
 	x->buffer_pos += omax_util_encode_atoms(x->buffer + x->buffer_pos, address, argc, argv);
-
-
-	/*
-	if(atom_gettype(argv) == A_SYM){
-		t_symbol *sym = atom_getsym(argv);
-		if(*(sym->s_name) == '/'){
-			// full osc address
-			char *sizeptr = x->buffer + x->buffer_pos;
-			char *bufptr = x->buffer + x->buffer_pos + 4;
-			strcpy(bufptr, sym->s_name);
-			bufptr += strlen(sym->s_name);
-			bufptr++;
-			while((bufptr - sizeptr) % 4){
-				*bufptr++ = '\0';
-			}
-			*bufptr++ = ',';
-			char *ttptr = bufptr;
-			bufptr += (argc - 1);
-			while((bufptr - sizeptr) % 4){
-				*bufptr++ = '\0';
-			}
-			int i;
-			for(i = 1; i < argc - 1; i++){
-				switch(atom_gettype(argv + i)){
-				case A_FLOAT:
-					*ttptr++ = 'f';
-					*((long *)bufptr) = htonl(*((long *)(&(argv[i].a_w.w_float))));
-					bufptr += 4;
-					break;
-				case A_LONG:
-					*ttptr++ = 'i';
-					*((long *)bufptr) = htonl(atom_getlong(argv + i));
-					bufptr += 4;
-					break;
-				case A_SYM:
-					strcpy(bufptr, atom_getsym(argv + i)->s_name);
-					bufptr += strlen(bufptr);
-					while((bufptr - sizeptr) % 4){
-						*bufptr++ = '\0';
-					}
-					*ttptr++ = 's';
-					break;
-				}
-			}
-			*((long *)sizeptr) = htonl(bufptr - sizeptr - 4);
-			x->buffer_pos += bufptr - sizeptr;
-		}else{
-			// just the data
-		}
-	}
-	*/
 }
 
 void omap_assist(t_omap *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
-		sprintf(s,"Probability distribution and arguments");
+		switch(a){
+		case 0:
+			sprintf(s, "FullPacket: results of the mapping");
+			break;
+		case 1:
+			sprintf(s, "OSC-style max messages contained in the bundle");
+			break;
+		}
 	else {
 		switch (a) {	
 		case 0:
-			sprintf(s,"Random variate");
+			sprintf(s,"FullPacket");
+			break;
+		case 1:
+			sprintf(s, "Messages from the original bundle to be included in the new bundle");
 			break;
 		}
 	}
@@ -232,7 +200,6 @@ void *omap_new(t_symbol *msg, short argc, t_atom *argv){
 		x->buffer = (char *)calloc(4096, sizeof(char));
 		x->buffer_len = 4096;
 		x->buffer_pos = 0;
-
 		//object_attach_byptr_register(x, x, CLASS_BOX);
 		attr_args_process(x, argc, argv);
 	}
@@ -242,7 +209,6 @@ void *omap_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.mappatch", (method)omap_new, (method)omap_free, sizeof(t_omap), 0L, A_GIMME, 0);
-    	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)omap_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)omap_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)omap_assist, "assist", A_CANT, 0);
