@@ -39,20 +39,20 @@ VERSION 1.1: renamed o.pack (from o.build)
 #include "ext_obex_util.h"
 #include "omax_util.h"
 #include "osc.h"
+#include "osc_mem.h"
+#include "osc_bundle_u.h"
+#include "osc_message_u.h"
 
 //#define MAX_NUM_ARGS 64
 
 typedef struct _opack{
 	t_object ob;
 	void *outlet;
-	t_symbol **addresses;
-	int numAddresses;
-	t_atom **args;
-	int *numargs;
-	int *arglen;
+	t_osc_msg_ar_u *messages;
+	t_osc_bndl_u *bndl;
+	int num_messages;
 	long inlet;
 	void **proxy;
-	//long max_num_args;
 } t_opack;
 
 void *opack_class;
@@ -69,102 +69,52 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void opack_outputBundle(t_opack *x){
-	int i, j;
-	int nbytes = 16;
-	for(i = 0; i < x->numAddresses; i++){
-		nbytes += 4; // size
-		// address
-		nbytes += strlen(x->addresses[i]->s_name);
-		nbytes++;
-		while(nbytes % 4){
-			nbytes++;
-		}
-		nbytes++; // ,
-		nbytes += x->numargs[i];
-		nbytes++;
-		while(nbytes % 4){
-			nbytes++;
-		}
-		for(j = 0; j < x->numargs[i]; j++){
-			switch(atom_gettype(x->args[i] + j)){
-			case A_LONG:
-			case A_FLOAT:
-				nbytes += 4;
-				break;
-			case A_SYM:
-				nbytes += strlen(atom_getsym(x->args[i] + j)->s_name);
-				nbytes++;
-				while(nbytes % 4){
-					nbytes++;
-				}
-				break;
-			}
-		}
-	}
-	char buffer[nbytes];
-	memset(buffer, '\0', nbytes);
-	strncpy(buffer, "#bundle\0", 8);
-	int pos = 16;
-	// insert timetag!
-	for(i = 0; i < x->numAddresses; i++){
-		pos += omax_util_encode_atoms(buffer + pos, x->addresses[i], x->numargs[i], x->args[i]);
-	}
-
+	char *bndl = NULL;
+	long len = 0;
+	osc_bundle_u_serialize(x->bndl, &len, &bndl);
 	t_atom out[2];
-	atom_setlong(&(out[0]), pos);
-	atom_setlong(&(out[1]), (long)buffer);
+	atom_setlong(out, len);
+	atom_setlong(out + 1, (long)bndl);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	if(bndl){
+		osc_mem_free(bndl);
+	}
 }
 
 void opack_list(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 	opack_anything(x, NULL, argc, argv);
 }
 
-void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
-	int inlet = proxy_getinlet((t_object *)x);
-	int shouldOutput = (inlet == 0);
+void opack_doAnything(t_opack *x, t_symbol *msg, short argc, t_atom *argv, int shouldOutput, int messagenum){
 #ifdef PAK
 	shouldOutput = 1;
 #endif
-	int numargs = argc;
+	osc_message_u_clearArgs(osc_message_array_u_get(x->messages, messagenum));
 	if(msg){
-		numargs++;
+		osc_message_u_appendString(osc_message_array_u_get(x->messages, messagenum), msg->s_name);
 	}
-	if(numargs > x->arglen[inlet]){
-		if(x->args[inlet] == NULL){
-			//x->args[inlet] = (t_atom *)sysmem_newptr(sizeof(t_atom) * numargs);
-			x->args[inlet] = (t_atom *)malloc(sizeof(t_atom) * numargs);
-			if(!x->args[inlet]){
-				object_error((t_object *)x, "out of memory!");
-				return;
-			}
-		}else{
-			//x->args[inlet] = (t_atom *)sysmem_resizeptr(x->args[inlet], sizeof(t_atom) * numargs);
-			x->args[inlet] = (t_atom *)realloc(x->args[inlet], sizeof(t_atom) * numargs);
-			if(!x->args[inlet]){
-				object_error((t_object *)x, "out of memory!");
-				return;
-			}
+	int i;
+	for(i = 0; i < argc; i++){
+		switch(atom_gettype(argv + i)){
+		case A_FLOAT:
+			osc_message_u_appendDouble(osc_message_array_u_get(x->messages, messagenum), atom_getfloat(argv + i));
+			break;
+		case A_LONG:
+			osc_message_u_appendInt32(osc_message_array_u_get(x->messages, messagenum), atom_getlong(argv + i));
+			break;
+		case A_SYM:
+			osc_message_u_appendString(osc_message_array_u_get(x->messages, messagenum), atom_getsym(argv + i)->s_name);
+			break;
 		}
-		/*
-		numargs = MAX_NUM_ARGS;
-		if(x->args[inlet] == NULL){
-			object_error((t_object *)x, "Out of memory--Max will be crashing soon...");
-			return;
-		}
-		*/
-		x->arglen[inlet] = numargs;
 	}
-	if(msg){
-		atom_setsym(x->args[inlet], msg);
-		memcpy(x->args[inlet] + 1, argv, argc * sizeof(t_atom));
-	}else{
-		memcpy(x->args[inlet], argv, argc * sizeof(t_atom));
-	}
-	x->numargs[inlet] = numargs;
 	if(shouldOutput){
 		opack_outputBundle(x);
 	}
+}
+
+void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
+	int inlet = proxy_getinlet((t_object *)x);
+	opack_doAnything(x, msg, argc, argv, inlet == 0, inlet);
 }
 
 void opack_int(t_opack *x, long l){
@@ -180,7 +130,6 @@ void opack_float(t_opack *x, double f){
 }
 
 void opack_bang(t_opack *x){
-	//opack_anything(x, NULL, 0, NULL);
 	opack_outputBundle(x);
 }
 
@@ -188,32 +137,17 @@ void opack_assist(t_opack *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"OSC bundle");
 	else {
-		sprintf(s, "Arguments for address %s", x->addresses[a]->s_name);
+		sprintf(s, "Arguments for address %s", osc_message_u_getAddress(osc_message_array_u_get(x->messages, a)));
 	}
 }
 
 void opack_free(t_opack *x){
-	if(x->addresses){
-		free(x->addresses);
-	}
-	if(x->args){
-		int i;
-		for(i = 0; i < x->numAddresses; i++){
-			if(x->args[i]){
-				free(x->args[i]);
-			}
-		}
-		free(x->args);
-	}
-	if(x->numargs){
-		free(x->numargs);
-	}
-	if(x->arglen){
-		free(x->arglen);
+	if(x->messages){
+		osc_message_array_u_free(x->messages);
 	}
 	if(x->proxy){
 		int i;
-		for(i = 1; i < x->numAddresses; i++){
+		for(i = 1; i < x->num_messages; i++){
 			if(x->proxy[i]){
 				sysmem_freeptr(x->proxy[i]);
 			}
@@ -229,9 +163,8 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 			object_error((t_object *)x, "you must supply at least 1 argument");
 			return NULL;
 		}
-		//x->max_num_args = MAX_NUM_ARGS;
+
 		if(atom_gettype(argv) == A_LONG){
-			//x->max_num_args = atom_getlong(argv);
 			object_error((t_object *)x, "o.pack no longer takes an integer argument to specify the list length of each inlet.");
 			object_error((t_object *)x, "The internal buffers will expand as necessary.");
 			argv++;
@@ -263,21 +196,19 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 				numargs[count - 1]++;
 			}
 		}
-		x->numAddresses = count;
-		x->addresses = (t_symbol **)malloc(count * sizeof(t_symbol *));
-		x->args = (t_atom **)malloc(count * sizeof(t_atom *));
-		x->numargs = (int *)malloc(count * sizeof(int));
-		memset(x->numargs, '\0', count * sizeof(int));
-		x->arglen = (int *)malloc(count * sizeof(int));
-		memset(x->arglen, '\0', count * sizeof(int));
+		x->bndl = osc_bundle_u_alloc();
+		x->num_messages = count;
+		x->messages = osc_message_array_u_alloc(count);
+		osc_message_array_u_clear(x->messages);
+		int pos = 0;
 		for(i = 0; i < count; i++){
-			x->addresses[i] = atom_getsym(addresses[i]);
-			x->args[i] = (t_atom *)malloc(numargs[i] * sizeof(t_atom));
-			x->arglen[i] = numargs[i];
-			//x->args[i] = (t_atom *)malloc(x->max_num_args * sizeof(t_atom));
-			//x->arglen[i] = x->max_num_args;
-			x->numargs[i] = numargs[i];
-			memcpy(x->args[i], addresses[i] + 1, numargs[i] * sizeof(t_atom));
+			osc_message_u_setAddress(osc_message_array_u_get(x->messages, i), atom_getsym(addresses[i])->s_name);
+			pos++;
+			if(numargs[i]){
+				opack_doAnything(x, NULL, numargs[i], argv + pos, 0, i);
+			}
+			pos += numargs[i];
+			osc_bundle_u_addMsg(x->bndl, osc_message_array_u_get(x->messages, i));
 		}
 
 		x->proxy = (void **)malloc(count * sizeof(void *));
