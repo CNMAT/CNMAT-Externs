@@ -36,6 +36,7 @@ VERSION 0.0: First try
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
+#include "osc_bundle_s.h"
 #include "omax_util.h"
 
 typedef struct _oprint{
@@ -61,14 +62,14 @@ t_max_err oprint_notify(t_oprint *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oprint_fullPacket(t_oprint *x, long len, long ptr){
-	long buflen = 0, bufpos = 0;
+	long buflen = 0;
 	char *buf = NULL;
-	osc_bundle_formatBndl(len, (char *)ptr, &buflen, &bufpos, &buf);
+	osc_bundle_s_format(len, (char *)ptr, &buflen, &buf);
 
-	// the Max window doesn't respect newlines, so we have to do the manually
+	// the Max window doesn't respect newlines, so we have to do them manually
 	char *start = buf;
 	int i;
-	for(i = 0; i < bufpos; i++){
+	for(i = 0; i < buflen; i++){
 		if(buf[i] == '\n'){
 			long n = ((buf + i) - start);
 			char line[n + 1];
@@ -80,61 +81,11 @@ void oprint_fullPacket(t_oprint *x, long len, long ptr){
 	}
 }
 
-void oprint_cbk(t_osc_msg msg, void *v){
-	struct context {long *buflen; long *bufpos; char **buf;};
-	struct context *c = (struct context *)v;
-	osc_message_formatMsg(&msg, c->buflen, c->bufpos, c->buf);
-	if(c->buf){
-		post("%s", c->buf);
-		osc_mem_free(c->buf);
-	}
-	/*
-	long len = msg.argc;
-	t_atom atoms[len + 1];
-	omax_util_oscMsg2MaxAtoms(&msg, &len, atoms);
-	//char buf[1024];
-	char buf[128];
-	int bufsize = 128;
-	int bufpos = 0;
-	if(x->print_msgsize){
-		bufpos += sprintf(buf, "\t\t(%d) %s", msg.size, msg.address);
-	}else{
-		bufpos += sprintf(buf, "\t\t%s", msg.address);
-	}
-	if(x->print_typetags){
-		bufpos += sprintf(buf + bufpos, " %s", msg.typetags);
-	}
-	int i;
-	for(i = 1; i < len; i++){
-		if(bufsize - bufpos < 64){
-			//buf = sysmem_resizeptr(buf, bufsize + 256);
-			//bufsize += 256;
-			post("%s: %s \\", x->myname->s_name, buf);
-			bufpos = 0;
-		}
-		switch(atom_gettype(atoms + i)){
-		case A_LONG:
-			bufpos += sprintf(buf + bufpos, " %ld", atom_getlong(atoms + i));
-			break;
-		case A_FLOAT:
-			bufpos += sprintf(buf + bufpos, " %f", atom_getfloat(atoms + i));
-			break;
-		case A_SYM:
-			bufpos += sprintf(buf + bufpos, " %s", atom_getsym(atoms + i)->s_name);
-			break;
-		}
-	}
-	post("%s: %s", x->myname->s_name, buf);
-	*/
-}
-
 void oprint_assist(t_oprint *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
-		sprintf(s,"Probability distribution and arguments");
-	else {
+	if(m == ASSIST_INLET){
 		switch (a) {	
 		case 0:
-			sprintf(s,"Random variate");
+			sprintf(s,"FullPacket");
 			break;
 		}
 	}
@@ -171,7 +122,6 @@ void *oprint_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.print", (method)oprint_new, (method)oprint_free, sizeof(t_oprint), 0L, A_GIMME, 0);
-    	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)oprint_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oprint_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oprint_assist, "assist", A_CANT, 0);
