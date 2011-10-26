@@ -133,22 +133,31 @@ void bkout_free(t_bkout *x){
 }
 
 void bkout_assist(t_bkout *x, void *b, long io, long index, char *s){
-	switch(io){
-	case 1:
+	if (io == ASSIST_OUTLET){ 
 		switch(index){
 		case 0:
-			sprintf(s, "");
+			sprintf(s, "Wrapped phase (function %ld)", x->function);
+			break;
+		case 1:
+			sprintf(s, "Unwrapped phase (function %ld)", x->function);
+			break;
+		case 2:
+			sprintf(s, "Instantaneous tempo in beats/second (function %ld)", x->function);
+			break;
+		case 3:
+			sprintf(s, "Control point number (function %ld)", x->function);
+			break;
+		case 4:
+			sprintf(s, "Beat Number (function %ld)", x->function);
 			break;
 		}
-		break;
-	case 2:
-		switch(index){
-		case 0:
-			sprintf(s, "");
-			break;
-		}
-		break;
-	}
+ 	}else{ 
+ 		switch (index) {	 
+ 		case 0: 
+			sprintf(s, "Connect any of timewarp~'s signal outlets to this inlet");
+ 			break; 
+ 		} 
+ 	} 
 }
 
 t_max_err bkout_notify(t_bkout *x, t_symbol *s, t_symbol *msg, void *sender, void *data){ 
