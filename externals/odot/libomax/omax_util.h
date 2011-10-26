@@ -27,6 +27,7 @@
 #include "ext.h"
 #include "ext_obex.h"
 #include "osc_message.h"
+#include "osc_message_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -162,7 +163,8 @@ void *omax_object_getInfoOutlet(t_object *ob);
 method omax_object_getNotificationCallback(t_object *ob);
 
 int omax_util_getNumAtomsInOSCMsg(t_osc_msg *msg);
-void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av);
+void omax_util_oscMsg2MaxAtoms_old(t_osc_msg *msg, long *ac, t_atom *av);
+void omax_util_oscMsg2MaxAtoms(t_osc_msg_s *m, t_atom *av);
 int osc_util_make_bundle(int numAddresses,
 			  t_symbol **addresses, 
 			  int *numArgs,

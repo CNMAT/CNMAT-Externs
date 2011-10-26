@@ -11,6 +11,11 @@
 #include "osc_bundle.h"
 #include "osc_message.h"
 #include "osc_match.h"
+#include "osc_message_u.h"
+#include "osc_message_iterator_u.h"
+#include "osc_message_s.h"
+#include "osc_message_iterator_s.h"
+#include "osc_atom_s.h"
 
 #define __ODOT_PROFILE__
 #include "profile.h"
@@ -194,7 +199,7 @@ void omax_FullPacketCallback(t_osc_msg msg, void *context){
 					case OMAX_METHOD:
 						{
 							t_atom argv[msg.argc + 1];
-							omax_util_oscMsg2MaxAtoms(&msg, &argc, argv);
+							omax_util_oscMsg2MaxAtoms_old(&msg, &argc, argv);
 							object_method_typedfun(c->ob, (t_messlist *)(m->thing), ((t_messlist *)(m->thing))->m_sym, argc - 1, argv + 1, &rv);
 						}
 						break;
@@ -204,7 +209,7 @@ void omax_FullPacketCallback(t_osc_msg msg, void *context){
 							long get;
 							method f = object_attr_method(c->ob, m->sym, (void **)(&attr), &get);
 							t_atom argv[msg.argc + 1];
-							omax_util_oscMsg2MaxAtoms(&msg, &argc, argv);
+							omax_util_oscMsg2MaxAtoms_old(&msg, &argc, argv);
 							f(c->ob, attr, msg.argc, argv + 1);
 							c->should_output_state = 1;
 						}
@@ -715,7 +720,7 @@ int omax_util_getNumAtomsInOSCMsg(t_osc_msg *msg){
 	return n;
 }
 
-void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
+void omax_util_oscMsg2MaxAtoms_old(t_osc_msg *msg, long *ac, t_atom *av){
 	t_osc_msg m = *msg;
 	*ac = osc_message_getArgCount(msg) + 1;
 	t_atom *ptr = av;
@@ -851,22 +856,20 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg *msg, long *ac, t_atom *av){
 	*ac = ptr - av;
 	//return atomarray_new(n + 1, a);
 }
-/*
-void omax_util_oscMsg2MaxAtoms_new(t_osc_msg_s m, long *ac, t_atom *av){
-	*ac = osc_message_s_getArgCount(&m) + 1;
+
+void omax_util_oscMsg2MaxAtoms(t_osc_msg_s *m, t_atom *av){
 	t_atom *ptr = av;
-	if(osc_message_s_getAddress(&m)){
-		atom_setsym(ptr, gensym(osc_message_s_getAddress(&m)));
+	if(osc_message_s_getAddress(m)){
+		atom_setsym(ptr, gensym(osc_message_s_getAddress(m)));
 	}else{
-		return;
+		// there are some cases when a message won't have an address
 	}
 	ptr++;
 
-	int numints = 0, numfloats = 0, numother = 0;
-	t_osc_msg_it_s *it = osc_msg_it_s_get(&m);
+	t_osc_msg_it_s *it = osc_msg_it_s_get(m);
 	while(osc_msg_it_s_hasNext(it)){
-		t_osc_atom_s a = osc_msg_it_s_next(it);
-		switch(a.typetag){
+		t_osc_atom_s *a = osc_msg_it_s_next(it);
+		switch(osc_atom_s_getTypetag(a)){
 		case 'i':
 		case 'I':
 		case 'h':
@@ -881,29 +884,35 @@ void omax_util_oscMsg2MaxAtoms_new(t_osc_msg_s m, long *ac, t_atom *av){
 		case 'T':
 		case 'F':
 		case 'N':
-			atom_setsym(ptr++, gensym(osc_atom_s_getString(a)));
+			{
+				char buf[osc_atom_s_getStringLen(a)];
+				char *bufptr = buf;
+				osc_atom_s_getString(a, &bufptr);
+				atom_setsym(ptr++, gensym(buf));
+			}
 			break;
 		case 'b':
 			{
 				int j, n = osc_atom_s_sizeof(a);
-				atom_setlong(ptr++, ntoh32(*((uint32_t *)(m.data))));
+				char *data = osc_message_s_getData(m);
+				atom_setlong(ptr++, ntoh32(*((uint32_t *)(data))));
 				for(j = 0; j < n; j++){
-					atom_setlong(ptr++, (long)m.data[j]);
+					atom_setlong(ptr++, (long)data[j]);
 				}
 			}
 		case '#':
 			{
+				char *data = osc_message_s_getData(m);
 				atom_setsym(ptr++, gensym("FullPacket"));
-				atom_setlong(ptr++, ntoh32(*((uint32_t *)m.data)));
-				atom_setlong(ptr++, (long)(m.data + 4));
+				atom_setlong(ptr++, ntoh32(*((uint32_t *)data)));
+				atom_setlong(ptr++, (long)(data + 4));
 			}
 			break;
 		}
 	}
-	*ac = ptr - av;
-	//return atomarray_new(n + 1, a);
+	osc_msg_it_s_destroy(it);
 }
-*/
+
 int osc_util_make_bundle(int numAddresses,
 			  t_symbol **addresses, 
 			  int *numArgs,
