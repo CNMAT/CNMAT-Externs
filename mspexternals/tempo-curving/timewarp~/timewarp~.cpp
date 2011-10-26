@@ -56,6 +56,10 @@
   VERSION 1.6.5: fixed a bug in te_computeCorrectedMonotonicPhase() affecting the value of the phase at the control points
   VERSION 1.6.6: superdivs are now represented by negative numbers rather than values between 0 and 1
   VERSION 1.6.7: OSC bundles for each point are now output when changes are made to the interface
+  VERSION 1.6.8: fixed a bug that would cause max to crash when timewarp~ was instantiated, and fixed another bug that would prevent the perform routine from being notified that the tempo map had changed.
+  VERSION 1.6.9: scaletofit now takes function numbers to operate on and defaults to operating on all of them.  
+  VERSION 1.6.10: /function/* can be used to address the parameters of all functions
+  VERSION 1.6.11: minor bug fixes and outlets are now labeled
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -97,6 +101,7 @@
 #include "osc.h"
 #include "osc_bundle.h"
 #include "osc_byteorder.h"
+#include "osc_mem.h"
 #include "omax_util.h"
 
 #define MAX_NUM_FUNCTIONS 8
@@ -359,7 +364,7 @@ t_osc_point _osc_point = (t_osc_point){
 		"/selected/error/beta\0\0\0",
 		",f\0",
 		"\0\0\0"
-	};;
+	};
 
 void te_paint(t_te *x, t_object *patcherview); 
 t_int *te_perform(t_int *w);
@@ -407,8 +412,8 @@ void te_mapx(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_mapy(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_domap(t_te *x, t_symbol *msg, int argc, t_atom *argv, int xory, double *rect_coord_to_move, double *rect_dim);
 void te_scaleToFit(t_te *x, t_symbol *msg, int argc, t_atom *argv);
-void te_scaleToFitX(t_te *x);
-void te_scaleToFitY(t_te *x);
+void te_scaleToFitX(t_te *x, int numfunctions, int *functions);
+void te_scaleToFitY(t_te *x, int numfunctions, int *functions);
 void te_addToFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
 void te_addToAllFunctions(t_te *x, double x, double y);
 void te_getFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv);
@@ -1115,12 +1120,16 @@ void te_paint(t_te *x, t_object *patcherview){
 		jgraphics_set_line_width(g, 3.);
 		c.alpha = 1.;
 		jgraphics_set_source_jrgba(g, &c);
-		jgraphics_rectangle(g, x->sel_box.x, x->sel_box.y, x->sel_box.width, x->sel_box.height);
+		double sbx = te_scale(x->sel_box.x, x->time_min, x->time_max, 0, rect.width);
+		double sby = te_scale(x->sel_box.y, x->freq_min, x->freq_max, 0, rect.height);
+		double sbw = te_scale(x->sel_box.width, x->time_min, x->time_max, 0, rect.width);
+		double sbh = te_scale(x->sel_box.height, x->freq_min, x->freq_max, 0, rect.height);
+		jgraphics_rectangle(g, sbx, sby, sbw, sbh);
 		jgraphics_stroke(g);
 		jgraphics_set_line_width(g, 1.);
 		c.alpha = .3;
 		jgraphics_set_source_jrgba(g, &c);
-		jgraphics_rectangle(g, x->sel_box.x, x->sel_box.y, x->sel_box.width, x->sel_box.height);
+		jgraphics_rectangle(g, sbx, sby, sbw, sbh);
 		jgraphics_fill(g);
 	}
 
@@ -1294,7 +1303,6 @@ void te_dsp(t_te *x, t_signal **sp, short *count){
 				name5->s_thing = NULL;
 			}
 		}
-
 		dsp_add(te_perform, 8, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
 	}
 }
@@ -1644,8 +1652,9 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan, int function){
 	/***************************************************
 	 // this could be bad...
 	 ***************************************************/
-	//if(p->screen_coords.x - etsc < .001 && plan->startTime == 0.){
-	if(p->coords.x - plan->endTime < .001 && plan->startTime == 0.){
+	//if(fabs(p->coords.x - plan->endTime) < .001 && plan->startTime == 0.){
+	if(p->coords.x == plan->endTime && plan->startTime == 0.){
+		// special case where the start time is zero, but the first point is some time after that
 		return 1;
 	}
 	while(p){
@@ -1905,7 +1914,7 @@ void te_processOSC(t_te *x, char *prefix, t_hashtab *ht, int functionNum){
 	}
 	long argc_time;
 	t_atom argv_time[time->argc + 1];
-	omax_util_oscMsg2MaxAtoms(time, &argc_time, argv_time);
+	omax_util_oscMsg2MaxAtoms_old(time, &argc_time, argv_time);
 	int npoints = time->argc;
 	t_point *head = NULL, *tail = NULL;
 	int j;
@@ -1935,7 +1944,7 @@ void te_processOSC(t_te *x, char *prefix, t_hashtab *ht, int functionNum){
 		}
 		long argc;
 		t_atom argv[mm->argc + 1];
-		omax_util_oscMsg2MaxAtoms(mm, &argc, argv);
+		omax_util_oscMsg2MaxAtoms_old(mm, &argc, argv);
 		int k = 0;
 		t_point *p = head;
 		while(p){
@@ -1992,16 +2001,29 @@ void te_fullPacket(t_te *x, long len, long ptr){
 	}
 
 	t_osc_msg *m = NULL;
-	osc_bundle_lookupAddress_s(len, (char *)ptr, "/function/??/", &m, 0);	
+	//osc_bundle_lookupAddress_s(len, (char *)ptr, "/function/??/", &m, 0);	
+	osc_bundle_lookupAddress_s(len, (char *)ptr, "/function/", &m, 0);	
 	if(m){
-		int fplen = sizeof("/function");
+		int fplen = 10;
 		char fn[99];
 		memset(fn, '\0', 99);
 		while(m){
 			char *param = NULL;
-			int functionNum = strtol(m->address + fplen, &param, 0);
-			fn[functionNum] = 1;
-			hashtab_store(ht, gensym(m->address), (t_object *)m);
+			if(*(m->address + fplen) == '*'){
+				int j;
+				for(j = 0; j < x->numFunctions; j++){
+					fn[j] = 1;
+					char address[128];
+					sprintf(address, "/function/%02d/%s", j, m->address + fplen + 2);
+					t_osc_msg *mm = (t_osc_msg *)osc_mem_alloc(sizeof(t_osc_msg));
+					*mm = *m;
+					hashtab_store(ht, gensym(address), (t_object *)mm);
+				}
+			}else{
+				int functionNum = strtol(m->address + fplen, &param, 0);
+				fn[functionNum] = 1;
+				hashtab_store(ht, gensym(m->address), (t_object *)m);
+			}
 			m = m->next;
 		}
 
@@ -2436,12 +2458,17 @@ void te_selectRegion(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 
 	t_rect r;
 	jbox_get_rect_for_view((t_object *)x, x->pv, &r); //jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
+	x->sel_box.x = range[0];
+	x->sel_box.width = range[1];
+	x->sel_box.y = x->freq_max;
+	x->sel_box.height = x->freq_min;
+	/*
 	x->sel_box.x = te_scale(range[0], x->time_min, x->time_max, 0., r.width);
 	x->sel_box.width = te_scale(range[1], x->time_min, x->time_max, 0, r.width);
 	x->sel_box.width -= x->sel_box.x;
 	x->sel_box.y = 0.;
 	x->sel_box.height = r.height;
-
+	*/
 	te_clearSelected(x);
 	for(i = 0; i < numfunctions; i++){
 		te_selectPointsInBox(x, r, x->sel_box, functions[i]);
@@ -2462,6 +2489,8 @@ void te_clearSelected(t_te *x){
 		}
 	}
 	x->selected = NULL;
+	te_invalidateAll(x);
+	jbox_redraw((t_jbox *)x);
 }
 
 void te_clearSelectionBox(t_te *x){
@@ -2505,8 +2534,10 @@ void te_addPointsAtSelectionBoundariesForFunction(t_te *x, int function){
 	if(x->sel_box.width == 0 || x->sel_box.height == 0.){
 		return;
 	}
-	double left = te_scale(x->sel_box.x, 0., r.width, x->time_min, x->time_max);
-	double right = te_scale(x->sel_box.x + x->sel_box.width, 0., r.width, x->time_min, x->time_max);
+	//double left = te_scale(x->sel_box.x, 0., r.width, x->time_min, x->time_max);
+	//double right = te_scale(x->sel_box.x + x->sel_box.width, 0., r.width, x->time_min, x->time_max);
+	double left = x->sel_box.x;
+	double right = x->sel_box.x + x->sel_box.width;
 	double y;
 	t_plan plan;
 	t_point *p;
@@ -2564,7 +2595,14 @@ void te_snapSelectionToGrid(t_te *x){
 }
 
 unsigned long te_selectBox(t_te *x, t_pt pt){
-	t_rect sel_box = x->sel_box;
+	t_rect r;
+	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
+	t_rect sel_box = (t_rect){
+		te_scale(x->sel_box.x, x->time_min, x->time_max, 0, r.width),
+		te_scale(x->sel_box.y, x->freq_min, x->freq_max, 0, r.height),
+		te_scale(x->sel_box.width, x->time_min, x->time_max, 0, r.width),
+		te_scale(x->sel_box.height, x->freq_min, x->freq_max, 0, r.height)
+	};
 	unsigned long sel_box_selected = 0;
 	// the width could be 0--we don't want to select both the right and left edges, so do the
 	// right edge first
@@ -2589,13 +2627,13 @@ unsigned long te_selectBox(t_te *x, t_pt pt){
 void te_selectPointsInBox(t_te *x, t_rect drawing_rect, t_rect sel_box, int function){
 	t_point *p = x->functions[function];
 	while(p){
-		t_pt sc;
-		te_w2s(x, drawing_rect, p->coords, &sc);
+		//t_pt sc;
+		//te_w2s(x, drawing_rect, p->coords, &sc);
 		double left = sel_box.width > 0 ? sel_box.x : sel_box.x + sel_box.width;
 		double right = sel_box.width > 0 ? sel_box.x + sel_box.width : sel_box.x;
-		double top = sel_box.height > 0 ? sel_box.y : sel_box.y + sel_box.height;
-		double bottom = sel_box.height > 0 ? sel_box.y + sel_box.height : sel_box.y;
-		if(sc.x > left && sc.x < right && sc.y < bottom && sc.y > top){
+		double bottom = x->freq_max - (sel_box.height > 0 ? sel_box.y : sel_box.y + sel_box.height);
+		double top = x->freq_max - (sel_box.height > 0 ? sel_box.y + sel_box.height : sel_box.y);
+		if(p->coords.x >= left && p->coords.x <= right && p->coords.y <= bottom && p->coords.y >= top){
 			p->selected = 1;
 			p->whichPoint = 0;
 			p->next_selected = x->selected;
@@ -2813,19 +2851,31 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 			break;
 		}
 		te_clearSelected(x);
+		/*
 		x->sel_box.x = pt.x;
 		x->sel_box.y = 0;
 		x->sel_box.width = 0;
 		x->sel_box.height = r.height;
+		*/
+		x->sel_box.x = te_scale(pt.x, 0, r.width, x->time_min, x->time_max);
+		x->sel_box.y = x->freq_min;
+		x->sel_box.width = 0.;
+		x->sel_box.height = x->freq_max - x->freq_min;
 		x->sel_type = RANGE_SELECT;
 	}
 		break;
 	case 0x13:
 	case 0x113:
 		// command-shift -> selection box
+		/*
 		x->sel_box.x = pt.x;
 		x->sel_box.y = pt.y;
 		x->sel_box.width = 0;
+		x->sel_box.height = 0;
+		*/
+		x->sel_box.x = te_scale(pt.x, 0, r.width, x->time_min, x->time_max);
+		x->sel_box.y = te_scale(pt.y, 0, r.height, x->freq_min, x->freq_max);
+		x->sel_box.width = 0.;
 		x->sel_box.height = 0;
 		x->sel_type = BOX_SELECT;
 		break;
@@ -2899,7 +2949,8 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x112:{
 		// shift
 		// change dimensions of the region selection box
-		x->sel_box.width = pt.x - x->sel_box.x;
+		//printf("%s: %f %f %f\n", __func__, pt.x, te_scale(pt.x, 0, r.width, x->time_min, x->time_max), x->sel_box.x);
+		x->sel_box.width = te_scale(pt.x, 0, r.width, x->time_min, x->time_max) - x->sel_box.x;
 		te_clearSelected(x);
 		if(x->apply_selection_box_to_all_functions_by_default){
 			int function;
@@ -2915,8 +2966,8 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x113:{
 		// command shift
 		// change dimensions of the selection box
-		x->sel_box.width = pt.x - x->sel_box.x;
-		x->sel_box.height = pt.y - x->sel_box.y;
+		x->sel_box.width = te_scale(pt.x, 0, r.width, x->time_min, x->time_max) - x->sel_box.x;
+		x->sel_box.height = te_scale(pt.y, 0, r.height, x->freq_min, x->freq_max) - x->sel_box.y;
 		te_clearSelected(x);
 		if(x->apply_selection_box_to_all_functions_by_default){
 			int function;
@@ -2931,7 +2982,12 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	default:{
 		if(x->sel_box_selected){
 			unsigned long box_selected = x->sel_box_selected;
-			t_rect sel_box = x->sel_box;
+			t_rect sel_box = (t_rect){
+				te_scale(x->sel_box.x, x->time_min, x->time_max, 0, r.width),
+				te_scale(x->sel_box.y, x->freq_min, x->freq_max, 0, r.height),
+				te_scale(x->sel_box.width, x->time_min, x->time_max, 0, r.width),
+				te_scale(x->sel_box.height, x->freq_min, x->freq_max, 0, r.height)
+			};
 			if(box_selected == BOX_SELECTED){
 				t_pt delta;
 				if(modifiers == 0x18){
@@ -2997,9 +3053,19 @@ void te_mousedrag(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 					}
 				}
 				te_clearSelected(x);
-				te_selectPointsInBox(x, r, sel_box, x->currentFunction);
+				te_selectPointsInBox(x, r, (t_rect){
+						te_scale(sel_box.x, 0, r.width, x->time_min, x->time_max),
+							te_scale(sel_box.y, 0, r.height, x->freq_min, x->freq_max),
+							te_scale(sel_box.width, 0, r.width, x->time_min, x->time_max),
+							te_scale(sel_box.height, 0, r.height, x->freq_min, x->freq_max)
+							}, x->currentFunction);
 			}
-			x->sel_box = sel_box;
+			x->sel_box = (t_rect){
+				te_scale(sel_box.x, 0, r.width, x->time_min, x->time_max),
+				te_scale(sel_box.y, 0, r.height, x->freq_min, x->freq_max),
+				te_scale(sel_box.width, 0, r.width, x->time_min, x->time_max),
+				te_scale(sel_box.height, 0, r.height, x->freq_min, x->freq_max)
+			};
 			goto out;
 			break;
 		}
@@ -4689,11 +4755,11 @@ void te_mapx(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	}
 	t_rect r;
 	jbox_get_rect_for_view((t_object *)x, x->pv, &r); //jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
-	double sel_box_x = te_scale(x->sel_box.x, 0., r.width, x->time_min, x->time_max);
+	double sel_box_x = x->sel_box.x;//te_scale(x->sel_box.x, 0., r.width, x->time_min, x->time_max);
 	double sel_box_width = x->sel_box.width;
 	te_domap(x, msg, argc, argv, 0, &sel_box_x, &sel_box_width);
-	x->sel_box.x = te_scale(sel_box_x, x->time_min, x->time_max, 0., r.width);
-	x->sel_box.width = sel_box_width;
+	//x->sel_box.x = te_scale(sel_box_x, x->time_min, x->time_max, 0., r.width);
+	//x->sel_box.width = sel_box_width;
 	memset(x->plans, '\0', sizeof(t_plan) * x->numFunctions);
 	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
@@ -4706,11 +4772,11 @@ void te_mapy(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	}
 	t_rect r;
 	jbox_get_rect_for_view((t_object *)x, x->pv, &r); //jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
-	double sel_box_y = te_scale(x->sel_box.y, r.height, 0., x->freq_min, x->freq_max);
+	double sel_box_y = x->sel_box.y;//te_scale(x->sel_box.y, r.height, 0., x->freq_min, x->freq_max);
 	double sel_box_height = x->sel_box.height;
 	te_domap(x, msg, argc, argv, 1, &sel_box_y, &sel_box_height);
-	x->sel_box.y = te_scale(sel_box_y, x->freq_min, x->freq_max, r.height, 0.);
-	x->sel_box.height = sel_box_height;
+	//x->sel_box.y = te_scale(sel_box_y, x->freq_min, x->freq_max, r.height, 0.);
+	//x->sel_box.height = sel_box_height;
 	memset(x->plans, '\0', sizeof(t_plan) * x->numFunctions);
 	te_invalidateAll(x);
 	jbox_redraw((t_jbox *)x);
@@ -4748,42 +4814,77 @@ void te_domap(t_te *x, t_symbol *msg, int argc, t_atom *argv, int xory, double *
 		*rect_dim = f(*rect_dim, arg);
 	}
 	te_critical_exit(x->lock, __LINE__);
+	te_clearSelectionBox(x);
 }
 
 void te_scaleToFit(t_te *x, t_symbol *msg, int argc, t_atom *argv){
-	if(argc == 0){
-		// do both
-	}else{
-		int i;
-		for(i = 0; i < argc; i++){
-			if(atom_getsym(argv + i) == gensym("x")){
-				te_scaleToFitX(x);
-			}else if(atom_getsym(argv + i) == gensym("y")){
-				te_scaleToFitY(x);
+	int functions[MAX_NUM_FUNCTIONS] = {x->currentFunction};
+	int numfunctions = 1;
+	int xx = 0, yy = 0;
+	int i;
+	int havestar = 0;
+	for(i = 0; i < argc; i++){
+		switch(atom_gettype(argv + i)){
+		case A_LONG:
+			if(havestar){
+				//weird...
+			}else{
+				functions[numfunctions++] = atom_getlong(argv + i);
 			}
+			break;
+		case A_SYM:
+			if(atom_getsym(argv + i) == gensym("x")){
+				xx++;
+			}else if(atom_getsym(argv + i) == gensym("y")){
+				yy++;
+			}else if(atom_getsym(argv + i) == gensym("*")){
+				int j;
+				for(j = 0; j < x->numFunctions; j++){
+					functions[j] = j;
+				}
+				numfunctions = x->numFunctions;
+				havestar = 1;
+			}else{
+				object_error((t_object *)x, "unrecognized argument: %s\n", atom_getsym(argv + i)->s_name);
+				return;
+			}
+			break;
+		default:
+			object_error((t_object *)x, "unrecognized argument number %d", i);
+		}
+	}
+	if(!xx && !yy){
+		te_scaleToFitX(x, numfunctions, functions);
+		te_scaleToFitY(x, numfunctions, functions);
+	}else{
+		if(xx){
+			te_scaleToFitX(x, numfunctions, functions);
+		}
+		if(yy){
+			te_scaleToFitY(x, numfunctions, functions);
 		}
 	}
 }
 
-void te_scaleToFitX(t_te *x){
+void te_scaleToFitX(t_te *x, int numfunctions, int *functions){
 	int i;
-	for(i = 0; i < x->numFunctions; i++){
-		if(!(x->functions[i])){
+	for(i = 0; i < numfunctions; i++){
+		if(!(x->functions[functions[i]])){
 			continue;
 		}
 		double minx, maxx;
-		t_point *p = x->functions[i];
+		t_point *p = x->functions[functions[i]];
 		minx = p->coords.x;
 		while(p->next){
 			p = p->next;
 		}
 		maxx = p->coords.x;
-		p = x->functions[i];
+		p = x->functions[functions[i]];
 		while(p){
 			p->coords.x = te_scale(p->coords.x, minx, maxx, x->time_min, x->time_max);
 			p = p->next;
 		}
-		jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[i]);
+		jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[functions[i]]);
 	}
 	te_dumpSelectedOSC(x);
 	
@@ -4791,14 +4892,14 @@ void te_scaleToFitX(t_te *x){
 	jbox_redraw((t_jbox *)x);
 }
 
-void te_scaleToFitY(t_te *x){
+void te_scaleToFitY(t_te *x, int numfunctions, int *functions){
 	int i;
-	for(i = 0; i < x->numFunctions; i++){
-		if(!(x->functions[i])){
+	for(i = 0; i < numfunctions; i++){
+		if(!(x->functions[functions[i]])){
 			continue;
 		}
 		double miny = FLT_MAX, maxy = 0;
-		t_point *p = x->functions[i];
+		t_point *p = x->functions[functions[i]];
 		while(p){
 			double yy = (p->d_freq < p->coords.y ? p->d_freq : p->coords.y);
 			if(yy < miny){
@@ -4810,13 +4911,13 @@ void te_scaleToFitY(t_te *x){
 			}
 			p = p->next;
 		}
-		p = x->functions[i];
+		p = x->functions[functions[i]];
 		while(p){
 			p->coords.y = te_scale(p->coords.y, miny, maxy, x->freq_min, x->freq_max);
 			p->d_freq = te_scale(p->d_freq, miny, maxy, x->freq_min, x->freq_max);
 			p = p->next;
 		}
-		jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[i]);
+		jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[functions[i]]);
 	}
 	te_dumpSelectedOSC(x);
 	
@@ -5076,13 +5177,22 @@ void te_assist(t_te *x, void *b, long m, long a, char *s){
 			sprintf(s, "Instantaneous tempo in beats/second (function %d)", x->currentFunction);
 			break;
 		case 3:
+			sprintf(s, "Control point number (function %d)", x->currentFunction);
+			break;
+		case 4:
+			sprintf(s, "Beat Number (function %d)", x->currentFunction);
+			break;
+		case 5:
+			sprintf(s, "OSC outlet");
+			break;
+		case 6:
 			sprintf(s, "Info outlet");
 			break;
 		}
  	}else{ 
  		switch (a) {	 
  		case 0: 
-			sprintf(s, "Time (signal)");
+			sprintf(s, "Time (signal/float)");
  			break; 
  		} 
  	} 
@@ -5229,6 +5339,7 @@ int main(void){
 	class_addmethod(c, (method)te_mapy, "mapy", A_GIMME, 0);
 	class_addmethod(c, (method)te_repeatSelection, "repeatselection", 0);
 	class_addmethod(c, (method)te_scaleToFit, "scaletofit", A_GIMME, 0);
+	class_addmethod(c, (method)te_clearSelected, "clearselection", 0);
 
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
@@ -5440,8 +5551,6 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
  		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->box.z_box.b_firstin = (t_object *)x; 
 
-		dsp_setupjbox((t_pxjbox *)x, 1);
-
 		x->proxy = proxy_new((t_object *)x, 1, &(x->in));
 
 		x->out_cellblock = outlet_new((t_object *)x, NULL);
@@ -5493,8 +5602,6 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		x->position_update_rate_ms = POSITION_UPDATE_RATE_MS;
 		x->update_position_clock = clock_new((t_object *)x, (method)te_updatePositionCallback);
 
- 		jbox_ready((t_jbox *)x); 
-
 		x->box.z_misc = Z_PUT_FIRST;
 
 		*((uint32_t *)_osc_point.function_size) = hton32(sizeof(_osc_point.function_address) +
@@ -5538,6 +5645,8 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 						 sizeof(_osc_point.ebeta_data));
 
 		
+ 		jbox_ready((t_jbox *)x); 
+		dsp_setupjbox((t_pxjbox *)x, 1);
 
 		schedule_delay(x, (method)te_dumpCellblockCallback, 100, NULL, 0, NULL);
  		return x; 
