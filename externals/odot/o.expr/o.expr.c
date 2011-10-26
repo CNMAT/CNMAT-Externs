@@ -96,7 +96,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	// assignment
 	char *copy = (char *)osc_mem_alloc(len);
 	memcpy(copy, (char *)ptr, len);
-	int ret = omax_expr_funcall(x->function_graph, &len, &copy, &argv);
+	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
 	atom_setlong(out, len);
 	atom_setlong(out + 1, (long)copy);
 	if(ret){
@@ -153,28 +153,16 @@ void oexpr_paint(t_oexpr *x, t_object *patcherview){
 	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
 
 	jgraphics_set_source_jrgba(g, &(x->background_color));
-	//jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
-	jgraphics_move_to(g, 0, 0);
-	jgraphics_line_to(g, 0, rect.height - 8);
-	jgraphics_line_to(g, 8, rect.height);
-	jgraphics_line_to(g, rect.width, rect.height);
-	jgraphics_line_to(g, rect.width, 8);
-	jgraphics_line_to(g, rect.width - 8, 0);
-	jgraphics_line_to(g, 0, 0);
-	jgraphics_fill(g);
-
-	jgraphics_ellipse(g, rect.width - 16., 0., 16, 16);
-	jgraphics_ellipse(g, 0., rect.height - 16., 16., 16.);
+	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
 	jgraphics_fill(g);
 
 	jgraphics_set_source_jrgba(g, &(x->frame_color));
 	jgraphics_set_line_width(g, 2.);
-	jgraphics_move_to(g, rect.width * .75, 0.);
-	jgraphics_line_to(g, 0., 0.);
-	jgraphics_line_to(g, 0., rect.height * .25);
-	jgraphics_move_to(g, rect.width - (rect.width * .75), rect.height);
-	jgraphics_line_to(g, rect.width, rect.height);
-	jgraphics_line_to(g, rect.width, rect.height - (rect.height * .25));
+	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
+	jgraphics_stroke(g);
+
+	jgraphics_move_to(g, 3, 0);
+	jgraphics_line_to(g, 3, rect.height);
 	jgraphics_stroke(g);
 }
 
@@ -256,10 +244,10 @@ void oexpr_mouseup(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers){
 	//oexpr_output_bundle(x);
 }
 
-void oexpr_postFunctionGraph(t_osc_expr *fg){
+void oexpr_postFunctionGraph(t_oexpr *fg){
 	char *buf = NULL;
 	long len = 0;
-	t_osc_expr *f = fg;
+	t_osc_expr *f = fg->function_graph;
 	while(f){
 		osc_expr_formatFunctionGraph(f, &len, &buf);
 		post("%s", buf);
@@ -316,6 +304,7 @@ void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
 }
 
 void oexpr_free(t_oexpr *x){
+	jbox_free((t_jbox *)x);
 	osc_expr_free(x->function_graph);
 }
 
@@ -371,17 +360,16 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 			omax_expr_parse(&(x->function_graph), x->argclex, x->argvlex);
 		}
 		*/
-		//attr_args_process(x, argc, argv);
+
 		attr_dictionary_process(x, d); 
 
 		t_object *textfield = jbox_get_textfield((t_object *)x);
 		if(textfield){
 			object_attr_setchar(textfield, gensym("editwhenunlocked"), 1);
 			textfield_set_editonclick(textfield, 0);
-			textfield_set_textmargins(textfield, 3, 3, 3, 3);
+			textfield_set_textmargins(textfield, 7, 3, 3, 3);
 			textfield_set_textcolor(textfield, &(x->text_color));
 		}
-
 
  		jbox_ready((t_jbox *)x);
 		oexpr_gettext(x);
@@ -412,6 +400,7 @@ int main(void){
 
 	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
 	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
+	class_addmethod(c, (method)oexpr_postFunctionGraph, "post-function-graph", 0);
 
 	class_addmethod(c, (method)oexpr_key, "key", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_keyfilter, "keyfilter", A_CANT, 0);
