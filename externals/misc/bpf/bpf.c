@@ -62,6 +62,7 @@
   VERSION 0.7.1: more efficient position drawing.
   VERSION 0.7.2: more efficient position drawing for real this time
   VERSION 0.7.3: clearregion and clearregionforallfunctions messages
+  VERSION 0.7.4: minor bugfixes including a crash on instantiation
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
 
@@ -2257,13 +2258,10 @@ void bpf_invalidateAllPos(t_bpf *x){
 }
 
 void bpf_get_rect(t_bpf *x, t_rect *r){
-	printf("%c %x\n", ((t_jbox)(x->box.z_box)).b_presentation);
 	if(((t_jbox)(x->box.z_box)).b_presentation){		
 		jbox_get_rect_for_sym((t_object *)x, _sym_presentation_rect, r);
-		printf("prez: %f %f %f %f\n", r->x, r->y, r->width, r->height);
 	}else{
 		jbox_get_rect_for_sym((t_object *)x, _sym_patching_rect, r);
-		printf("patch: %f %f %f %f\n", r->x, r->y, r->width, r->height);		
 	}
 }
 
@@ -2275,9 +2273,6 @@ void bpf_assist(t_bpf *x, void *b, long io, long num, char *s){
 			break;
 		case 1:
 			sprintf(s, "The (x,y) coordinates for the selected point. (list)");
-			break;
-		case 2:
-			sprintf(s, "Bang when finished dumping.");
 			break;
 		case 3:
 			sprintf(s, "Dump outlet (list)");
@@ -2464,7 +2459,7 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawposition", 0, "1");
 
 	CLASS_ATTR_FLOAT(c, "position_update_rate_ms", 0, t_bpf, position_update_rate_ms);
-	char buf[8];
+	char buf[32];
 	sprintf(buf, "%f", (double)POSITION_UPDATE_RATE_MS);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "position_update_rate_ms", 0, buf);
 	CLASS_ATTR_LABEL(c, "position_update_rate_ms", 0, "Position Update Rate When DSP is On");
@@ -2581,7 +2576,6 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
  	if(x = (t_bpf *)object_alloc(bpf_class)){ 
  		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->box.z_box.b_firstin = (void *)x; 
-		dsp_setupjbox((t_pxjbox *)x, 1);
 
  		x->out_dump = listout((t_object *)x); 
 		x->out_sel = listout((t_object *)x);
@@ -2639,8 +2633,9 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 		x->position_update_rate_ms = POSITION_UPDATE_RATE_MS;
 		x->update_pos_clock = clock_new((t_object *)x, (method)bpf_updatePositionCallback);
  		attr_dictionary_process(x, d); 
- 		jbox_ready((t_jbox *)x); 
+		dsp_setupjbox((t_pxjbox *)x, 1);
 		x->box.z_misc = Z_PUT_FIRST;
+ 		jbox_ready((t_jbox *)x); 
 
  		return x; 
  	} 
