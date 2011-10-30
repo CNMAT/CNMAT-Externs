@@ -1,5 +1,5 @@
-OMAX_BASENAMES = omax_expr omax_util
-OMAX_OBJECTS = $(foreach OBJ, $(OMAX_BASENAMES), $(OBJ).o) omax_parser.o omax_scanner.o
+OMAX_BASENAMES = omax_util #omax_expr 
+OMAX_OBJECTS = $(foreach OBJ, $(OMAX_BASENAMES), $(OBJ).o) #omax_parser.o omax_scanner.o
 OMAX_CFILES = $(foreach F, $(OMAX_BASENAMES), $(F).c)
 OMAX_HFILES = $(foreach F, $(OMAX_BASENAMES), $(F).h)
 
