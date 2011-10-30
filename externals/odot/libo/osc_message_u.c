@@ -532,19 +532,20 @@ t_osc_err osc_message_u_doSerialize(t_osc_msg_u *m, long *buflen, long *bufpos, 
 		(*bufpos)++;
 	}
 
-	char *tt = *buf + *bufpos;
+	int tt = *bufpos;
 	int ntypetags = m->argc;
-	long datapos = (tt + ntypetags + 2) - (*buf);
+	long datapos = (tt + ntypetags + 2);
 	while(datapos % 4){
 		datapos++;
 	}
 
-	*tt++ = ',';
+	(*buf)[tt++] = ',';
 
 	t_osc_msg_it_u *it = osc_msg_it_u_get(m);
+	int i = 0;
 	while(osc_msg_it_u_hasNext(it)){
 		t_osc_atom_u *a = osc_msg_it_u_next(it);
-		*tt++ = osc_atom_u_getTypetag(a);
+		(*buf)[tt++] = osc_atom_u_getTypetag(a);
 		t_osc_err e = osc_atom_u_doSerialize(a, buflen, &datapos, buf);
 		if(e){
 			return e;

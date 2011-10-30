@@ -630,12 +630,12 @@ t_osc_err osc_atom_u_doSerialize(t_osc_atom_u *a, long *buflen, long *bufpos, ch
 		return OSC_ERR_NOBUNDLE;
 	}
 	if((*buflen - *bufpos) < 64){
-		*buf = osc_mem_resize(*buf, *buflen + 64);
+		*buf = osc_mem_resize(*buf, *buflen + 256);
 		if(!(*buf)){
 			return OSC_ERR_OUTOFMEM;
 		}
-		memset(*buf + *buflen, '\0', 64);
-		(*buflen) += 64;
+		memset(*buf + *buflen, '\0', 256);
+		(*buflen) += 256;
 	}
 	switch(osc_atom_u_getTypetag(a)){
 	case 'i':
