@@ -39,6 +39,7 @@ VERSION 0.1: Addresses to match can now have patterns
 #include "ext_critical.h"
 #include "osc.h"
 #include "osc_mem.h"
+#include "osc_match.h"
 #include "osc_bundle_s.h"
 #include "osc_bundle_iterator_s.h"
 #include "osc_message_s.h"
@@ -52,12 +53,15 @@ typedef struct _oroute{
 	t_object ob;
 	void **outlets;
 	t_critical lock;
-	t_symbol **args;
-	int numArgs;
+	char **selectors;
+	int nselectors;
 	t_osc_vtable *vtab;
 	int max_message; // set this to note that the event originated as a max message and not a FullPacket
-	t_osc_msg oscschemalist;
+	char *schema;
+	long schemalen;
 	struct _oroute_context *context_array;
+	void **proxy;
+	long inlet;
 } t_oroute;
 
 typedef struct _oroute_context{
@@ -71,15 +75,21 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr);
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv);
 void oroute_free(t_oroute *x);
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s);
+void oroute_set(t_oroute *x, long index, t_symbol *sym);
+void oroute_makeSchema(t_oroute *x);
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv);
 
 t_symbol *ps_oscschemalist, *ps_FullPacket;
 
 void oroute_fullPacket(t_oroute *x, long len, long ptr){
 #if (defined SELECT) || (defined SPEW)
-	osc_dispatch(x->vtab, len, (char *)ptr, 0);
+	if(x->nselectors > 0){
+		osc_dispatch_selectors(x->vtab, x->nselectors, x->selectors, len, (char *)ptr, 0);
+	}else{
+		osc_dispatch(x->vtab, len, (char *)ptr, 0);
+	}
 #else
-	osc_dispatch(x->vtab, len, (char *)ptr, 1);
+	osc_dispatch_selectors(x->vtab, x->nselectors, x->selectors, len, (char *)ptr, 1);
 #endif
 }
 
@@ -178,7 +188,11 @@ void oroute_delegation_callback(long bndllen,
 }
 
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
-	/*
+	long inlet = proxy_getinlet((t_object *)x);
+	if(inlet > 0){
+		oroute_set(x, inlet, msg);
+		return;
+	}
 	if(!msg){
 		object_error((t_object *)x, "doesn't look like an OSC message");
 		return;
@@ -187,48 +201,63 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 		object_error((t_object *)x, "OSC addresses must begin with a /");
 		return;
 	}
-	int len = omax_util_get_bundle_size_for_atoms(msg, argc, argv);
-	char buffer[len];
-	memset(buffer, '\0', len);
-	t_atom av[argc + 1];
-	atom_setsym(av, msg);
-	memcpy(av + 1, argv, argc * sizeof(t_atom));
-	strncpy(buffer, "#bundle\0", 8);
-	*((long long *)(buffer + 8)) = hton64(1ll);
-	len = omax_util_encode_atoms(buffer + 16, msg, argc, argv);
-	x->max_message = 1;
-
-	oroute_fullPacket(x, len + 16, (long)buffer);
-	*/
+	int i;
+	int match = 0;
+	for(i = 0; i < x->nselectors; i++){
+		char *s = x->selectors[i];
+		int ret, ao, po;
+		ret = osc_match(msg->s_name, s, &po, &ao);
+		// if the match failed because a trailing star at the end of the pattern didn't match,
+		// say /foo/* and /foo, we'll call it a match
+		int star_at_end = 0;
+		if(msg->s_name[po] == '*' && msg->s_name[po + 1] == '\0'){
+			star_at_end = 1;
+		}
+#if defined SELECT || defined SPEW
+		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE)) ||
+		   (po > 0 && ((msg->s_name[po] == '/') || star_at_end == 1))){
+			outlet_anything(x->outlets[i], msg, argc, argv);
+			match++;
+		}
+#else // route
+		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE))){
+			// complete match
+			if(argc){
+				outlet_list(x->outlets[i], NULL, argc, argv);
+			}else{
+				outlet_bang(x->outlets[i]);
+			}
+			match++;
+		}else if(po > 0 && ((msg->s_name[po] == '/') || star_at_end == 1)){
+			// partial match
+			t_symbol *ss = gensym(msg->s_name + po);
+			outlet_anything(x->outlets[i], ss, argc, argv);
+			match++;
+		}else{
+		}
+#endif
+	}
+	if(!match){
+		outlet_anything(x->outlets[x->nselectors], msg, argc, argv);
+	}
 }
 
 void oroute_set(t_oroute *x, long index, t_symbol *sym){
-	if(index < 1 || index > x->numArgs){
+	if(index < 1 || index > x->nselectors){
 		object_error((t_object *)x, "index (%d) out of bounds", index);
 		return;
 	}
-	x->args[index - 1] = sym;
-	/*
-	x->haswildcard[index - 1] = 0;
-	int i;
-	for(i = 0; i < strlen(x->args[index - 1]->s_name); i++){
-		switch(x->args[index - 1]->s_name[i]){
-		case '*':
-		case '[':
-		case '{':
-		case '?':
-			x->haswildcard[index - 1] = 1;
-		}
-	}
-	*/
+	osc_vtable_renameEntry(x->vtab, x->selectors[x->nselectors - (index)], sym->s_name);
+	x->selectors[x->nselectors - (index - 1)] = sym->s_name;
+	oroute_makeSchema(x);
 }
 
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
-		if(a == x->numArgs){
+		if(a == x->nselectors){
 			sprintf(s, "Unmatched messages (delegation)");
 		}else{
-			sprintf(s, "Messages that match %s", x->args[a]->s_name);
+			sprintf(s, "Messages that match %s", x->selectors[x->nselectors - a - 1]);
 		}
 	else {
 		switch (a) {	
@@ -241,8 +270,8 @@ void oroute_assist(t_oroute *x, void *b, long m, long a, char *s){
 
 void oroute_free(t_oroute *x){
 	critical_free(x->lock);
-	if(x->args){
-		free(x->args);
+	if(x->selectors){
+		free(x->selectors);
 	}
 	/*
 	if(x->haswildcard){
@@ -250,64 +279,62 @@ void oroute_free(t_oroute *x){
 	}
 	*/
 	// the address is 4 bytes into the block of memory we allocated in the new routine.
-	if(x->oscschemalist.address){
-		free(x->oscschemalist.address - 4);
+	if(x->vtab){
+		osc_vtable_free(x->vtab);
 	}
+	if(x->context_array){
+		free(x->context_array);
+	}
+	if(x->schema){
+		osc_mem_free(x->schema);
+	}
+}
+
+void oroute_makeSchema(t_oroute *x){
+	t_osc_bndl_u *bndl = osc_bundle_u_alloc();
+	t_osc_msg_u *msg = osc_message_u_alloc();
+	osc_message_u_setAddress(msg, "/osc/schema/list");
+
+	int i;
+	for(i = 0; i < x->nselectors; i++){
+		osc_message_u_appendString(msg, x->selectors[i]);
+	}
+	osc_bundle_u_addMsg(bndl, msg);
+	osc_bundle_u_serialize(bndl, &(x->schemalen), &(x->schema));
 }
 
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oroute *x;
 	int i;
 	if(x = (t_oroute *)object_alloc(oroute_class)){
-		int numArgs = attr_args_offset(argc, argv);
-		x->outlets = (void **)malloc((numArgs + 1) * sizeof(void *));
-		x->args = (t_symbol **)malloc(numArgs * sizeof(t_symbol *));
-		x->context_array = (t_oroute_context *)malloc((numArgs + 1) * sizeof(t_oroute_context));
-		//x->haswildcard = (int *)calloc(numArgs, sizeof(int));
-		x->numArgs = numArgs;
+		int nselectors = attr_args_offset(argc, argv);
+		x->outlets = (void **)malloc((nselectors + 1) * sizeof(void *));
+		x->selectors = (char **)malloc(nselectors * sizeof(char *));
+		x->context_array = (t_oroute_context *)malloc((nselectors + 1) * sizeof(t_oroute_context));
+		x->nselectors = nselectors;
 		critical_new(&(x->lock));
-		x->outlets[numArgs] = outlet_new(x, "FullPacket"); // unmatched outlet
-		int schemalist_len = 24 + numArgs + 2;
-		while(schemalist_len % 4){
-			schemalist_len++;
-		}
-		x->vtab = osc_vtable_alloc(numArgs);
-		x->context_array[numArgs].x = x;
-		x->context_array[numArgs].outlet = x->outlets[numArgs];
-		osc_vtable_setDelegationMethod(x->vtab, oroute_delegation_callback, (void *)(x->context_array + numArgs));
-		for(i = 0; i < numArgs; i++){
-			x->outlets[numArgs - 1 - i] = outlet_new(x, NULL);
+		x->outlets[nselectors] = outlet_new(x, "FullPacket"); // unmatched outlet
+		x->proxy = (void **)malloc((x->nselectors) * sizeof(void));
+
+		x->vtab = osc_vtable_alloc(nselectors);
+		x->context_array[nselectors].x = x;
+		x->context_array[nselectors].outlet = x->outlets[nselectors];
+		osc_vtable_setDelegationMethod(x->vtab, oroute_delegation_callback, (void *)(x->context_array + nselectors));
+		for(i = 0; i < nselectors; i++){
+			x->outlets[nselectors - 1 - i] = outlet_new(x, NULL);
+			x->proxy[i] = proxy_new((t_object *)x, argc - i, &(x->inlet));
 			if(atom_gettype(argv + i) != A_SYM){
 				object_error((t_object *)x, "argument %d is not an OSC address", i);
 				return NULL;
 			}
 			x->context_array[i].x = x;
-			x->context_array[i].outlet = x->outlets[numArgs - 1 - i];
-			osc_vtable_addEntry(x->vtab, atom_getsym(argv + (numArgs - 1 - i))->s_name, oroute_dispatch_callback, (void *)(x->context_array + i));
-			x->args[i] = atom_getsym(argv + i);
-
-			int len = strlen(x->args[i]->s_name);
-			schemalist_len += len + 1;
-			while(schemalist_len % 4){
-				schemalist_len++;
-			}
-			/*
-			for(j = 0; j < len; j++){
-				switch(x->args[i]->s_name[j]){
-				case '*':
-				case '[':
-				case '{':
-				case '?':
-					x->haswildcard[i] = 1;
-					break;
-				}
-			}
-			*/
+			x->context_array[i].outlet = x->outlets[nselectors - 1 - i];
+			osc_vtable_addEntry(x->vtab, atom_getsym(argv + (nselectors - 1 - i))->s_name, oroute_dispatch_callback, (void *)(x->context_array + i));
+			x->selectors[x->nselectors - i - 1] = atom_getsym(argv + i)->s_name;
 		}
-		char *schemalist = (char *)calloc(sizeof(char), schemalist_len);
-		memset(schemalist, '\0', schemalist_len);
-		omax_util_encode_atoms(schemalist, ps_oscschemalist, numArgs, argv);
-		//osc_message_parseMessage(-1, schemalist, &(x->oscschemalist));
+		x->schema = NULL;
+		x->schemalen = 0;
+		oroute_makeSchema(x);
 		
 		attr_args_process(x, argc, argv);
 	}
