@@ -86,9 +86,6 @@ void opack_list(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void opack_doAnything(t_opack *x, t_symbol *msg, short argc, t_atom *argv, int shouldOutput, int messagenum){
-#ifdef PAK
-	shouldOutput = 1;
-#endif
 	osc_message_u_clearArgs(osc_message_array_u_get(x->messages, messagenum));
 	if(msg){
 		osc_message_u_appendString(osc_message_array_u_get(x->messages, messagenum), msg->s_name);
@@ -114,7 +111,11 @@ void opack_doAnything(t_opack *x, t_symbol *msg, short argc, t_atom *argv, int s
 
 void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 	int inlet = proxy_getinlet((t_object *)x);
-	opack_doAnything(x, msg, argc, argv, inlet == 0, inlet);
+	int shouldoutput = 0;
+#ifdef PAK
+	shouldoutput = 1;
+#endif
+	opack_doAnything(x, msg, argc, argv, shouldoutput, inlet);
 }
 
 void opack_int(t_opack *x, long l){
