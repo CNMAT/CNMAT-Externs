@@ -45,7 +45,7 @@ t_osc_vtable *osc_vtable_alloc(int num_entries){
 		vtab->num_entries = 0;
 		vtab->num_slots = num_entries;
 	}
-	vtab->hashtab = osc_hashtab_new(num_entries);
+	vtab->hashtab = osc_hashtab_new(num_entries, NULL);
 	vtab->delegation_context = NULL;
 	vtab->delegation_method = NULL;
 	return vtab;
@@ -86,7 +86,15 @@ t_osc_err osc_vtable_addEntry(t_osc_vtable *vtab,
 			return OSC_ERR_OUTOFMEM;
 		}
 	}
-	t_osc_vtable_entry *entry = &(vtab->entries[vtab->num_entries]);
+	t_osc_vtable_entry *entry = osc_vtable_getEntryBySelector(vtab, selector);
+	if(entry){
+		// already an entry with this selector.  blow away the old one.
+		entry->method = method;
+		entry->context = context;
+		return OSC_ERR_NONE;
+	}
+
+	entry = &(vtab->entries[vtab->num_entries]);
 	vtab->num_entries++;
 	if(selector){
 		int len = strlen(selector);
@@ -97,10 +105,13 @@ t_osc_err osc_vtable_addEntry(t_osc_vtable *vtab,
 	entry->method = method;
 	entry->context = context;
 	if(!(vtab->hashtab)){
-		vtab->hashtab = osc_hashtab_new(-1);
+		vtab->hashtab = osc_hashtab_new(-1, NULL);
 	}
-	osc_hashtab_store(vtab->hashtab, strlen(selector), selector, entry);
+	// osc_hashtab_store doesn't make a copy of the key, so make sure to use the selector that we have 
+	// allocated memory for.
+	osc_hashtab_store(vtab->hashtab, strlen(entry->selector), entry->selector, entry);
 	return OSC_ERR_NONE;
+
 }
 
 int osc_vtable_getNumEntries(t_osc_vtable *vtab){
@@ -121,8 +132,60 @@ t_osc_vtable_entry *osc_vtable_getEntryByIndex(t_osc_vtable *vtab, int index){
 t_osc_vtable_entry *osc_vtable_getEntryBySelector(t_osc_vtable *vtab, char *selector){
 	return osc_hashtab_lookup(vtab->hashtab, strlen(selector), selector);
 }
+
+int osc_vtable_getIndexForEntry(t_osc_vtable *vtab, t_osc_vtable_entry *e){
+	if(e){
+		return (e - vtab->entries);
+	}
+	return -1;
+}
+
+int osc_vtable_getIndexForSelector(t_osc_vtable *vtab, char *selector){
+	t_osc_vtable_entry *e = osc_hashtab_lookup(vtab->hashtab, strlen(selector), selector);
+	return osc_vtable_getIndexForEntry(vtab, e);
+}
+
 char *osc_vtable_entry_getSelector(t_osc_vtable_entry *e){
 	return e->selector;
+}
+
+t_osc_err osc_vtable_rebindSelector(t_osc_vtable *vtab, char *selector, t_osc_vtable_method new_method){
+	t_osc_vtable_entry *e = osc_vtable_getEntryBySelector(vtab, selector);
+	if(!e){
+		return OSC_ERR_INVAL;
+	}
+	e->method = new_method;
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_vtable_rebindSelectorWithContext(t_osc_vtable *vtab,
+					       char *selector,
+					       t_osc_vtable_method new_method,
+					       void *new_context)
+{
+	t_osc_vtable_entry *e = osc_vtable_getEntryBySelector(vtab, selector);
+	if(!e){
+		return OSC_ERR_INVAL;
+	}
+	e->method = new_method;
+	e->context = new_context;
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_vtable_renameEntry(t_osc_vtable *vtab, char *old_selector, char *new_selector){
+	t_osc_vtable_entry *e = osc_vtable_getEntryBySelector(vtab, old_selector);
+	if(!e){
+		return OSC_ERR_INVAL;
+	}
+	int oldlen = strlen(old_selector);
+	int newlen = strlen(new_selector);
+	if(newlen > oldlen){
+		e->selector = osc_mem_resize(e->selector, newlen + 1);
+	}
+	strncpy(e->selector, new_selector, newlen + 1);
+	osc_hashtab_remove(vtab->hashtab, oldlen, old_selector, NULL);
+	osc_hashtab_store(vtab->hashtab, newlen, new_selector, (void *)e);
+	return OSC_ERR_NONE;
 }
 
 int osc_vtable_callWithEntry(t_osc_vtable *vtab,

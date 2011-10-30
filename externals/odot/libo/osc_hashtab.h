@@ -27,6 +27,10 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #ifndef __OSC_HASHTAB_H__
 #define __OSC_HASHTAB_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define OSC_HASHTYPE32 uint32_t
 #define OSC_HASHTYPE64 uint64_t
 
@@ -41,11 +45,18 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 typedef struct _osc_hashtab_elem t_osc_hashtab_elem;
 typedef struct _osc_hashtab t_osc_hashtab;
 
-t_osc_hashtab *osc_hashtab_new(int nslots);
-void osc_hashtab_store(t_osc_hashtab *ht, int keylen, char *key, void *obj);
+typedef void (*t_osc_hashtab_dtor)(void *key, void *val);
+
+t_osc_hashtab *osc_hashtab_new(int nslots, t_osc_hashtab_dtor dtor);
+void osc_hashtab_store(t_osc_hashtab *ht, int keylen, char *key, void *val);
+void osc_hashtab_storeSafe(t_osc_hashtab *ht, int keylen, char *key, void *val);
 void *osc_hashtab_lookup(t_osc_hashtab *ht, int keylen, char *key);
-void *osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key);
+void osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key, t_osc_hashtab_dtor dtor);
 void osc_hashtab_clear(t_osc_hashtab *ht);
 void osc_hashtab_destroy(t_osc_hashtab *ht);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __OSC_HASHTAB_H__

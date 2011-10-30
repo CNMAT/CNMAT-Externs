@@ -60,6 +60,14 @@ t_osc_err osc_vtable_addEntry(t_osc_vtable *vtab,
 t_osc_vtable_entry *osc_vtable_getEntryByIndex(t_osc_vtable *vtab, int index);
 t_osc_vtable_entry *osc_vtable_getEntryBySelector(t_osc_vtable *vtab, char *selector);
 char *osc_vtable_entry_getSelector(t_osc_vtable_entry *e);
+t_osc_err osc_vtable_rebindSelector(t_osc_vtable *vtab, char *selector, t_osc_vtable_method new_method);
+int osc_vtable_getIndexForEntry(t_osc_vtable *vtab, t_osc_vtable_entry *e);
+int osc_vtable_getIndexForSelector(t_osc_vtable *vtab, char *selector);
+t_osc_err osc_vtable_rebindSelectorWithContext(t_osc_vtable *vtab,
+					       char *selector,
+					       t_osc_vtable_method new_method,
+					       void *new_context);
+t_osc_err osc_vtable_renameEntry(t_osc_vtable *vtab, char *old_selector, char *new_selector);
 
 int osc_vtable_callWithEntry(t_osc_vtable *vtab,
 			     t_osc_vtable_entry *e,

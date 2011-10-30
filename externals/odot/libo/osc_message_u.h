@@ -47,6 +47,7 @@ t_osc_msg_u *osc_message_u_alloc(void);
 size_t osc_message_u_getStructSize(void);
 void osc_message_u_free(t_osc_msg_u *m);
 void osc_message_u_initMsg(t_osc_msg_u *m);
+void osc_message_u_clearArgs(t_osc_msg_u *m);
 void osc_message_u_copy(t_osc_msg_u **dest, t_osc_msg_u *src);
 t_osc_err osc_message_u_deepCopy(t_osc_msg_u **dest, t_osc_msg_u *src);
 uint32_t osc_message_u_getSize(t_osc_msg_u *m);

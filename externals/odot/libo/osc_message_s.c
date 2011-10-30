@@ -90,9 +90,9 @@ t_osc_err osc_message_s_wrap(t_osc_msg_s *m, char *bytes){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_message_s_renameCopy(char *dest, t_osc_msg_s *src, int new_address_len, char *new_address){
+int osc_message_s_renameCopy(char *dest, t_osc_msg_s *src, int new_address_len, char *new_address){
 	if(!dest){
-		return OSC_ERR_NULLPTR;
+		return 0;
 	}
 	int oldlen = osc_message_s_getSize(src);
 	int old_address_len = strlen(osc_message_s_getAddress(src));
@@ -111,7 +111,7 @@ t_osc_err osc_message_s_renameCopy(char *dest, t_osc_msg_s *src, int new_address
 		*ptr++ = '\0';
 	}
 	memcpy(ptr, src->typetags, oldlen - (src->typetags - src->address));
-	return OSC_ERR_NONE;
+	return newlen;
 }
 
 uint32_t osc_message_s_getSize(t_osc_msg_s *m){

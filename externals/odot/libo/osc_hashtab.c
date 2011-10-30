@@ -25,23 +25,13 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 */
 #include "osc_hashtab.h"
+#include "osc_hashtab.r"
 #include <stdint.h>
 #include "osc_mem.h"
 #include <stdlib.h>
 #include <string.h>
 
-struct _osc_hashtab_elem{
-	void *key;
-	void *obj;
-	struct _osc_hashtab_elem *next;
-};
-
-struct _osc_hashtab{
-	t_osc_hashtab_elem **slots;
-	long nslots;
-};
-
-long primes[] = {
+static long primes[] = {
 	17,
 	37,
 	67,
@@ -58,9 +48,9 @@ long primes[] = {
 	152287
 };
 
-void osc_hashtab_store_elem(t_osc_hashtab *ht, char *key, OSC_HASHTYPE hash, t_osc_hashtab_elem *e);
+static void osc_hashtab_store_elem(t_osc_hashtab *ht, char *key, OSC_HASHTYPE hash, t_osc_hashtab_elem *e);
 
-uint32_t osc_hash(int len, char *key){
+static uint32_t osc_hash(int len, char *key){
 #define __ELFHASH__
 #if defined __ELFHASH__
 	OSC_HASHTYPE hash = 0;
@@ -88,7 +78,7 @@ uint32_t osc_hash(int len, char *key){
 #endif
 }
 
-uint32_t osc_hashtab_getPrime(uint32_t n){
+static uint32_t osc_hashtab_getPrime(uint32_t n){
 	int i;
 	for(i = 0; i < sizeof(primes) / sizeof(long); i++){
 		if(n < primes[i]){
@@ -98,7 +88,7 @@ uint32_t osc_hashtab_getPrime(uint32_t n){
 	return primes[i];
 }
 
-void osc_hashtab_rehash(t_osc_hashtab *ht){
+static void osc_hashtab_rehash(t_osc_hashtab *ht){
 	int i;
 	for(i = 0; i < sizeof(primes) / sizeof(long); i++){
 		if(ht->nslots > primes[i]){
@@ -117,11 +107,12 @@ void osc_hashtab_rehash(t_osc_hashtab *ht){
 				}
 			}
 			osc_mem_free(oldslots);
+			return;
 		}
 	}
 }
 
-t_osc_hashtab *osc_hashtab_new(int nslots){
+t_osc_hashtab *osc_hashtab_new(int nslots, t_osc_hashtab_dtor dtor){
 	if(nslots <= 0){
 		nslots = OSC_HASHTAB_DEFAULT_NUM_SLOTS;
 	}
@@ -133,64 +124,117 @@ t_osc_hashtab *osc_hashtab_new(int nslots){
 	ht->slots = (t_osc_hashtab_elem **)osc_mem_alloc(sizeof(t_osc_hashtab_elem *) * nslots);
 	memset(ht->slots, '\0', sizeof(t_osc_hashtab_elem *) * nslots);
 	ht->nslots = nslots;
+	ht->dtor = dtor;
 	return ht;
 }
 
-void osc_hashtab_store(t_osc_hashtab *ht, int keylen, char *key, void *obj){
+static void osc_hashtab_store_elem(t_osc_hashtab *ht,
+				   char *key,
+				   OSC_HASHTYPE hash,
+				   t_osc_hashtab_elem *e)
+{
+	t_osc_hashtab_elem *ee = ht->slots[hash % ht->nslots];
+	while(ee){
+		if(!strcmp(ee->key, key)){
+			// this is not a hash collision, this is a duplicate key
+			if(ht->dtor){
+				ht->dtor(ee->key, ee->val);
+			}
+			ee->key = e->key;
+			ee->val = e->val;
+			osc_mem_free(e);
+			return;
+		}else{
+			ee = ee->next;
+		}
+	}
+	e->next = ht->slots[hash % ht->nslots];
+	ht->slots[hash % ht->nslots] = e;
+	return;
+}
+
+static void osc_hashtab_store_elem_safe(t_osc_hashtab *ht,
+					char *key,
+					OSC_HASHTYPE hash,
+					t_osc_hashtab_elem *e)
+{
+	t_osc_hashtab_elem *ee = ht->slots[hash % ht->nslots];
+	while(ee){
+		if(!strcmp(ee->key, key)){
+			// this is not a hash collision, this is a duplicate key
+			return;
+		}else{
+			ee = ee->next;
+		}
+	}
+	e->next = ht->slots[hash % ht->nslots];
+	ht->slots[hash % ht->nslots] = e;
+	return;
+}
+
+static void osc_hashtab_doStore(t_osc_hashtab *ht,
+				int keylen,
+				char *key,
+				void *val,
+				void (*store_elem)(t_osc_hashtab*,
+						   char*,
+						   OSC_HASHTYPE hash,
+						   t_osc_hashtab_elem*))
+{
 	t_osc_hashtab_elem *e = (t_osc_hashtab_elem *)osc_mem_alloc(sizeof(t_osc_hashtab_elem));
 	if(!e){
 		return;
 	}
+	// just store a pointer--the caller's responsibility to manage that.
 	e->key = key;
-	e->obj = obj;
+	e->val = val;
 	e->next = NULL;
 	OSC_HASHTYPE h = osc_hash(keylen, key);
-	osc_hashtab_store_elem(ht, key, h, e);
+	store_elem(ht, key, h, e);
 }
 
-void osc_hashtab_store_elem(t_osc_hashtab *ht, char *key, OSC_HASHTYPE hash, t_osc_hashtab_elem *e){
-	t_osc_hashtab_elem *ee = ht->slots[hash % ht->nslots];
-	while(ee){
-		if(ee->key == key){
-			return;
-		}
-		ee = ee->next;
-	}
-	e->next = ht->slots[hash % ht->nslots];
-	ht->slots[hash % ht->nslots] = e;
+// will blow away an existing entry with the same key
+void osc_hashtab_store(t_osc_hashtab *ht, int keylen, char *key, void *val){
+	osc_hashtab_doStore(ht, keylen, key, val, osc_hashtab_store_elem);
+}
+
+void osc_hashtab_storeSafe(t_osc_hashtab *ht, int keylen, char *key, void *val){
+	osc_hashtab_doStore(ht, keylen, key, val, osc_hashtab_store_elem_safe);
 }
 
 void *osc_hashtab_lookup(t_osc_hashtab *ht, int keylen, char *key){
 	OSC_HASHTYPE h = osc_hash(keylen, key);
 	t_osc_hashtab_elem *e = ht->slots[h % ht->nslots];
 	while(e){
-		if(e->key == key){
-			return e->obj;
+		if(!strcmp(e->key, key)){
+			return e->val;
 		}
 		e = e->next;
 	}
 	return NULL;
 }
 
-void *osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key){
+void osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key, t_osc_hashtab_dtor dtor){
 	OSC_HASHTYPE h = osc_hash(keylen, key);
 	t_osc_hashtab_elem *e = ht->slots[h % ht->nslots];
 	t_osc_hashtab_elem *prev = NULL;
 	while(e){
-		if(e->key == key){
-			void *obj = e->obj;
+		t_osc_hashtab_elem *next = e->next;
+		if(!strcmp(key, e->key)){
 			if(prev){
 				prev->next = e->next;
 			}else{
 				ht->slots[h % ht->nslots] = e->next;
 			}
+			if(dtor){
+				dtor(e->key, e->val);
+			}
 			osc_mem_free(e);
-			return obj;
+		}else{
+			prev = e;
 		}
-		prev = e;
-		e = e->next;
+		e = next;
 	}
-	return NULL;
 }
 
 void osc_hashtab_clear(t_osc_hashtab *ht){
@@ -199,6 +243,9 @@ void osc_hashtab_clear(t_osc_hashtab *ht){
 		t_osc_hashtab_elem *e = ht->slots[i];
 		while(e){
 			t_osc_hashtab_elem *next = e->next;
+			if(ht->dtor){
+				ht->dtor(e->key, e->val);
+			}
 			osc_mem_free(e);
 			e = next;
 		}

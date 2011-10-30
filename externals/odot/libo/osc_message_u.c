@@ -66,6 +66,17 @@ void osc_message_u_initMsg(t_osc_msg_u *m){
 	memset(m, '\0', sizeof(t_osc_msg_u));
 }
 
+void osc_message_u_clearArgs(t_osc_msg_u *m){
+	m->argc = 0;
+	t_osc_atom_u *a = m->arghead;
+	while(a){
+		t_osc_atom_u *next = a->next;
+		osc_atom_u_free(a);
+		a = next;
+	}
+	m->arghead = m->argtail = NULL;
+}
+
 void osc_message_u_copy(t_osc_msg_u **dest, t_osc_msg_u *src){
 	if(!(*dest)){
 		*dest = osc_message_u_alloc();

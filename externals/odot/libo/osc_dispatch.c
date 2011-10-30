@@ -220,3 +220,54 @@ t_osc_err osc_dispatch(t_osc_vtable *vtab,
 	osc_bundle_s_deepFree(unmatched);
 	return OSC_ERR_NONE;
 }		       
+
+t_osc_err osc_dispatch_selectors(t_osc_vtable *vtab,
+				 int nselectors,
+				 char **selectors,
+				 long bndllen,
+				 char *bndl,
+				 int strip_matched_portion_of_address)
+{
+	int nentries = osc_vtable_getNumEntries(vtab);
+	t_osc_bndl_s *partial_matches[nentries];
+	t_osc_bndl_s *complete_matches[nentries];
+	t_osc_bndl_s *unmatched = NULL;//osc_bundle_s_alloc(0, NULL);
+	//osc_bundle_s_setBundleID_b(unmatched);
+	memset(partial_matches, '\0', nentries * sizeof(t_osc_bndl_s *));
+	memset(complete_matches, '\0', nentries * sizeof(t_osc_bndl_s *));
+
+	int ret = osc_dispatch_impl(vtab,
+				    bndllen,
+				    bndl,
+				    strip_matched_portion_of_address,
+				    partial_matches,
+				    complete_matches,
+				    &unmatched);
+	if(ret){
+		return ret;
+	}
+	if(unmatched){
+		osc_vtable_delegate(vtab, bndllen, bndl, unmatched);
+	}
+
+	int i;
+	for(i = 0; i < nselectors; i++){
+		char *selector = selectors[i];
+		t_osc_vtable_entry *e = osc_vtable_getEntryBySelector(vtab, selector);
+		if(e){
+			int index = osc_vtable_getIndexForEntry(vtab, e);
+			printf("%s: %d %d %s %p\n", __func__, i, index, selector, e);
+			osc_vtable_callWithEntry(vtab, e, bndllen, bndl, partial_matches[index], complete_matches[index]);
+		}
+	}
+	for(i = 0; i < nentries; i++){
+		if(partial_matches[i]){
+			osc_bundle_s_deepFree(partial_matches[i]);
+		}
+		if(complete_matches[i]){
+			osc_bundle_s_deepFree(complete_matches[i]);
+		}
+	}
+	osc_bundle_s_deepFree(unmatched);
+	return OSC_ERR_NONE;
+}

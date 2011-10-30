@@ -42,6 +42,12 @@ t_osc_err osc_dispatch(t_osc_vtable *vtab,
 		       long bndllen,
 		       char *bndl,
 		       int strip_matched_portion_of_address);
+t_osc_err osc_dispatch_selectors(t_osc_vtable *vtab,
+				 int nselectors,
+				 char **selectors,
+				 long bndllen,
+				 char *bndl,
+				 int strip_matched_portion_of_address);
 #ifdef __cplusplus
 }
 #endif
