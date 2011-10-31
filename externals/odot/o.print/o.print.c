@@ -65,7 +65,9 @@ void oprint_fullPacket(t_oprint *x, long len, long ptr){
 	long buflen = 0;
 	char *buf = NULL;
 	osc_bundle_s_format(len, (char *)ptr, &buflen, &buf);
-
+	if(buflen == 0){
+		post("<empty bundle>");
+	}
 	// the Max window doesn't respect newlines, so we have to do them manually
 	char *start = buf;
 	int i;
