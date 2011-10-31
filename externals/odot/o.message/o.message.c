@@ -29,6 +29,7 @@
   VERSION 0.0: First try
   VERSION 1.0: using updated lib
   VERSION 1.0.1: newlines now delimit messages
+  VERSION 2.0: uses newly refactored libo and has initial support for nested bundles
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
@@ -45,11 +46,13 @@
 
 #include "omax_util.h"
 #include "osc.h"
+#include "osc_mem.h"
 #include "osc_parser.h"
 #include "osc_bundle_u.h"
 #include "osc_bundle_s.h"
 #include "osc_bundle_iterator_s.h"
 #include "osc_bundle_iterator_u.h"
+#include "osc_message_iterator_s.h"
 #include "osc_message_iterator_u.h"
 #include "osc_message_u.h"
 #include "osc_message_s.h"
@@ -168,7 +171,8 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 			while(osc_msg_it_s_hasNext(mit)){
 				t_osc_atom_s *a = osc_msg_it_s_next(mit);
 				if(osc_atom_s_getTypetag(a) == 's'){
-					char *s = osc_atom_s_getString(a);
+					char *s = NULL;
+					osc_atom_s_getString(a, &s);
 					if(s[0] == '$'){
 						if(s){
 							osc_mem_free(s);
@@ -222,9 +226,11 @@ void omessage_output_bundle(t_omessage *x){
 		case OMESSAGE_S:
 			{
 				t_osc_bndl_s *b = (t_osc_bndl_s *)(x->bndl);
-				char buf[b->len];
-				memcpy(buf, b->ptr, b->len);
-				omessage_output_osc(x->outlet, b->len, buf);
+				long len = osc_bundle_s_getLen(b);
+				char *ptr = osc_bundle_s_getPtr(b);
+				char buf[len];
+				memcpy(buf, ptr, len);
+				omessage_output_osc(x->outlet, len, buf);
 			}
 			break;
 		}
@@ -329,7 +335,7 @@ void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
 					bufptr += sprintf(bufptr, "%s ", sym->s_name);
 				}
 				t_osc_atom_u *a = osc_message_u_appendString(msg, sym->s_name);
-				if(sym->s_name[0] == '$' && strnlen(sym->s_name, 2) > 1){
+				if(sym->s_name[0] == '$' && strlen(sym->s_name) > 1){
 					t_osc_parser_subst *ss = osc_mem_alloc(sizeof(t_osc_parser_subst));
 					ss->msg = msg;
 					char *endp = NULL;
@@ -808,7 +814,6 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
 			textfield_set_textmargins(textfield, 3, 3, 3, 3);
 			textfield_set_textcolor(textfield, &(x->text_color));
 		}
-
 
  		jbox_ready((t_jbox *)x);
 
