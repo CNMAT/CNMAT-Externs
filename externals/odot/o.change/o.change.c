@@ -37,6 +37,7 @@
 #include "ext_critical.h"
 #include "ext_obex_util.h"
 #include "osc.h"
+#include "osc_mem.h"
 #include "omax_util.h"
 
 typedef struct _ochange{
