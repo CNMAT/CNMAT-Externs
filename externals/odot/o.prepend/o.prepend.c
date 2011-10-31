@@ -37,12 +37,15 @@ version 1.0: Rewritten to only take one argument (the symbol to be prepended) wh
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
+#include "osc_bundle_s.h"
+#include "osc_bundle_iterator_s.h"
 #include "omax_util.h"
 
 typedef struct _oppnd{
 	t_object ob;
 	void *outlet;
 	t_symbol *sym_to_prepend;
+	int sym_to_prepend_len;
 	char *buffer;
 	int bufferLen;
 	int bufferPos;
@@ -59,7 +62,7 @@ struct context{
 void *oppnd_class;
 
 void oppnd_fullPacket(t_oppnd *x, long len, long ptr);
-void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend);
+void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend, int sym_to_prepend_len);
 void oppnd_cbk(t_osc_msg msg, void *v);
 void oppnd_set(t_oppnd *x, t_symbol *sym_to_prepend);
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv);
@@ -73,65 +76,46 @@ void *oppnd_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
-	oppnd_doFullPacket(x, len, ptr, x->sym_to_prepend);
+	oppnd_doFullPacket(x, len, ptr, x->sym_to_prepend, x->sym_to_prepend_len);
 }
 
-void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend){
-	int msgcount = 0;
-	t_osc_err e = osc_bundle_getMsgCount(len, (char *)ptr, &msgcount);
-	if(e){
-		object_error((t_object *)x, "%s (%d)\n", osc_error_string(e), (int)e);
+void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend, int sym_to_prepend_len){
+	int num_messages = 0;
+	osc_bundle_s_getMsgCount(len, (char *)ptr, &num_messages);
+	char buf[len + (num_messages * (sym_to_prepend_len + 4))]; // not exact, but more than enough
+	char *bufptr = buf;
+	memcpy(bufptr, (char *)ptr, OSC_HEADER_SIZE);
+	bufptr += OSC_HEADER_SIZE;
+	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, (char *)ptr);
+	while(osc_bndl_it_s_hasNext(it)){
+		t_osc_msg_s *msg = osc_bndl_it_s_next(it);
+		int msg_address_len = strlen(osc_message_s_getAddress(msg));
+		char *msg_address = osc_message_s_getAddress(msg);
+		char new_address[sym_to_prepend_len + msg_address_len + 1];
+		memcpy(new_address, sym_to_prepend->s_name, sym_to_prepend_len);
+		memcpy(new_address + sym_to_prepend_len, msg_address, msg_address_len);
+		new_address[sym_to_prepend_len + msg_address_len] = '\0';
+		bufptr += osc_message_s_renameCopy(bufptr, msg, sym_to_prepend_len + msg_address_len, new_address);
+		bufptr += 4;
 	}
-	int sym_to_prepend_len = 0;
-	if(sym_to_prepend){
-		sym_to_prepend_len = strlen(sym_to_prepend->s_name);
-	}
-	int buflen = len + (msgcount * (sym_to_prepend_len + 4));
-	char buffer[buflen];
-	memset(buffer, '\0', buflen);
-	memcpy(buffer, (char *)ptr, 16);
-
-	struct context c = {buffer, buflen, 16, sym_to_prepend, sym_to_prepend_len};
-	osc_bundle_getMessagesWithCallback(len, (char *)ptr, oppnd_cbk, (void *)&c);
+	osc_bndl_it_s_destroy(it);
 
 	t_atom out[2];
-	atom_setlong(&(out[0]), c.bufferPos);
-	atom_setlong(&(out[1]), (long)(c.buffer));
+	atom_setlong(out, bufptr - buf);
+	atom_setlong(out + 1, (long)buf);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
-}
-
-void oppnd_cbk(t_osc_msg msg, void *v){
-	struct context *c = (struct context *)v;
-	if(!(c->sym_to_prepend)){
-		memcpy(c->buffer + c->bufferPos, msg.address - 4, msg.size + 4);
-		c->bufferPos += msg.size + 4;
-		return;
-	}
-
-	int oldlen = strlen(msg.address);
-	int newlen = c->sym_to_prepend_len;
-	char buf[oldlen + newlen + 1];
-	sprintf(buf, "%s%s", c->sym_to_prepend->s_name, msg.address);
-
-	// this isn't exactly the amount of memory needed, but if anything it will be a few bytes too big.
-	char newmessage[msg.size - oldlen + newlen + 4];
-	memset(newmessage, '\0', msg.size - oldlen + newlen + 4);
-	char *ptr = newmessage;
-	int len = osc_message_rename(msg.size, msg.address, buf, &ptr);
-
-	memcpy(c->buffer + c->bufferPos, ptr, len);
-	c->bufferPos += len;
 }
 
 void oppnd_set(t_oppnd *x, t_symbol *sym_to_prepend){
 	x->sym_to_prepend = sym_to_prepend;
+	x->sym_to_prepend_len = strlen(sym_to_prepend->s_name);
 }
 
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
 	t_symbol *address = msg, *sym_to_prepend = x->sym_to_prepend;
 	if(atom_gettype(argv) == A_SYM){
 		if(atom_getsym(argv) == ps_FullPacket){
-			oppnd_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), msg);
+			oppnd_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), msg, strlen(msg->s_name));
 			return;
 		}else if(atom_getsym(argv)->s_name[0] == '/'){
 			// msg and argv are both OSC addresses.  prepend msg to argv
@@ -229,11 +213,11 @@ void oppnd_long(t_oppnd *x, long l){
 
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
-		sprintf(s,"Probability distribution and arguments");
+		sprintf(s,"FullPacket with %s prepend to each address", x->sym_to_prepend->s_name);
 	else {
 		switch (a) {	
 		case 0:
-			sprintf(s,"Random variate");
+			sprintf(s,"OSC FullPacket:  %s will be prepended to each address", x->sym_to_prepend->s_name);
 			break;
 		}
 	}
@@ -249,6 +233,7 @@ void *oppnd_new(t_symbol *msg, short argc, t_atom *argv){
 		x->sym_to_prepend = NULL;
 		if(argc){
 			x->sym_to_prepend = atom_getsym(argv);
+			x->sym_to_prepend_len = strlen(x->sym_to_prepend->s_name);
 		}
 	}
 		   	
@@ -257,7 +242,6 @@ void *oppnd_new(t_symbol *msg, short argc, t_atom *argv){
 
 int main(void){
 	t_class *c = class_new("o.prepend", (method)oppnd_new, (method)oppnd_free, sizeof(t_oppnd), 0L, A_GIMME, 0);
-	osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
     
 	class_addmethod(c, (method)oppnd_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oppnd_notify, "notify", A_CANT, 0);
