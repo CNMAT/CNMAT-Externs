@@ -35,7 +35,6 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 			char *msg_s = NULL;
 			long len_s = 0;
 			osc_message_u_serialize(mm, &len_s, &msg_s);
-			printf("len_s = %ld\n", len_s);
 			if(msg_ar){
 				osc_bundle_s_replaceMessage(len, oscbndl, osc_message_s_getPtr(osc_message_array_s_get(msg_ar, 0)), msg_s);
 				osc_message_array_s_free(msg_ar);

@@ -25,7 +25,7 @@ WIN-CFLAGS = -mno-cygwin -DWIN_VERSION
 I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
 
 all: CFLAGS += $(MAC-CFLAGS)
-all: CC = llvm-gcc-4.2
+all: CC = clang
 all: $(LIBO_CFILES) $(LIBO_HFILES) libo.a
 all: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
