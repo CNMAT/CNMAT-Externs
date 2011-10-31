@@ -41,7 +41,9 @@ VERSION 1.1: renamed o.pack (from o.build)
 #include "osc.h"
 #include "osc_mem.h"
 #include "osc_bundle_u.h"
+#include "osc_bundle_iterator_u.h"
 #include "osc_message_u.h"
+#include "osc_message_iterator_u.h"
 
 //#define MAX_NUM_ARGS 64
 
@@ -71,6 +73,20 @@ t_symbol *ps_FullPacket;
 void opack_outputBundle(t_opack *x){
 	char *bndl = NULL;
 	long len = 0;
+	/*
+	t_osc_bndl_it_u *it = osc_bndl_it_u_get(x->bndl);
+	while(osc_bndl_it_u_hasNext(it)){
+		t_osc_msg_u *msg = osc_bndl_it_u_next(it);
+		t_osc_msg_it_u *mit = osc_msg_it_u_get(msg);
+		int i = 0;
+		while(osc_msg_it_u_hasNext(mit)){
+			t_osc_atom_u *a = osc_msg_it_u_next(mit);
+			printf("%d: %f\n", i++, osc_atom_u_getDouble(a));
+		}
+		osc_msg_it_u_destroy(mit);
+	}
+	osc_bndl_it_u_destroy(it);
+	*/
 	osc_bundle_u_serialize(x->bndl, &len, &bndl);
 	t_atom out[2];
 	atom_setlong(out, len);
