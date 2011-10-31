@@ -43,11 +43,12 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include <mach/mach_time.h>
 #endif
 #include "ext.h"
+#include "ext_obex.h"
 #include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "jpatcher_api.h" 
-#include "jgraphics.h"
+//#include "jpatcher_api.h" 
+//#include "jgraphics.h"
 #include "osc.h"
 #include "osc_expr.h"
 #include "osc_expr_parser.h"
@@ -55,20 +56,20 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include "osc_atom_u.h"
 
 typedef struct _oexpr{
-	t_jbox ob;
+	t_object ob;
 #ifdef OIF
 	void *outlets[2];
 #else
 	void *outlet;
 #endif
 	t_osc_expr *function_graph;
-	t_jrgba background_color, frame_color, text_color;
+	//t_jrgba background_color, frame_color, text_color;
 } t_oexpr;
 
 void *oexpr_class;
 
 void oexpr_fullPacket(t_oexpr *x, long len, long ptr);
-
+/*
 void oexpr_set(t_oexpr *x, t_symbol *s, long ac, t_atom *av);
 void oexpr_select(t_oexpr *x);
 void oexpr_doselect(t_oexpr *x);
@@ -76,9 +77,10 @@ long oexpr_key(t_oexpr *x, t_object *patcherview, long keycode, long modifiers, 
 long oexpr_keyfilter(t_oexpr *x, t_object *patcherview, long *keycode, long *modifiers, long *textcharacter);
 void oexpr_enter(t_oexpr *x);
 void oexpr_gettext(t_oexpr *x);
+*/
 void oexpr_output_bundle(t_oexpr *x);
-void oexpr_mousedown(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers);
-void oexpr_mouseup(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers);
+//void oexpr_mousedown(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers);
+//void oexpr_mouseup(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers);
 
 void oexpr_free(t_oexpr *x);
 void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s);
@@ -123,6 +125,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	// alter the bundle.
 	// the copy needs to use memory allocated with osc_mem_alloc in case the 
 	// bundle has to be resized during assignment
+	printf("len = %ld\n", len);
 	char *copy = (char *)osc_mem_alloc(len);
 	memcpy(copy, (char *)ptr, len);
 //int argc = 0;
@@ -146,7 +149,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
 #endif
 }
-
+/*
 void oexpr_paint(t_oexpr *x, t_object *patcherview){
 	t_rect rect;
 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);
@@ -243,7 +246,7 @@ void oexpr_mouseup(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers){
 	//jbox_redraw((t_jbox *)x);
 	//oexpr_output_bundle(x);
 }
-
+*/
 void oexpr_postFunctionGraph(t_oexpr *fg){
 	char *buf = NULL;
 	long len = 0;
@@ -304,11 +307,12 @@ void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
 }
 
 void oexpr_free(t_oexpr *x){
-	jbox_free((t_jbox *)x);
+	//jbox_free((t_jbox *)x);
 	osc_expr_free(x->function_graph);
 }
 
 t_max_err oexpr_notify(t_oexpr *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
+	return MAX_ERR_NONE;
 	t_symbol *attrname;
 
         if(msg == gensym("attr_modified")){
@@ -319,7 +323,7 @@ t_max_err oexpr_notify(t_oexpr *x, t_symbol *s, t_symbol *msg, void *sender, voi
 
 void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oexpr *x;
-
+	/*
 	t_dictionary *d = NULL; 
  	long boxflags; 
     
@@ -327,7 +331,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 	if(!(d = object_dictionaryarg(argc, argv))){ 
 		return NULL; 
 	} 
-    
+
 	boxflags = 0 
 		| JBOX_DRAWFIRSTIN 
 		| JBOX_NODRAWBOX
@@ -343,16 +347,44 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 		//      | JBOX_MOUSEDRAGDELTA
 		| JBOX_TEXTFIELD
 		;
-
+	*/
 	if(x = (t_oexpr *)object_alloc(oexpr_class)){
-		jbox_new((t_jbox *)x, boxflags, argc, argv); 
- 		x->ob.b_firstin = (void *)x; 
+		//jbox_new((t_jbox *)x, boxflags, argc, argv); 
+ 		//x->ob.b_firstin = (void *)x; 
 #ifdef OIF
 		x->outlets[1] = outlet_new((t_object *)x, "FullPacket");
 		x->outlets[0] = outlet_new((t_object *)x, "FullPacket");
 #else
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
 #endif
+		if(argc){
+			char buf[65536];
+			char *ptr = buf;
+			int i;
+			for(i = 0; i < argc; i++){
+				switch(atom_gettype(argv + i)){
+				case A_LONG:
+					ptr += sprintf(ptr, "%ld ", atom_getlong(argv + i));
+					break;
+				case A_FLOAT:
+					ptr += sprintf(ptr, "%f ", atom_getfloat(argv + i));
+					break;
+				case A_SYM:
+					ptr += sprintf(ptr, "%s ", atom_getsym(argv + i)->s_name);
+					break;
+				}
+			}
+			t_osc_expr *f = NULL;
+			osc_expr_parser_parseString(buf, &f);
+			if(!f){
+				object_error((t_object *)x, "error parsing %s\n", buf);
+				return NULL;
+			}
+			if(x->function_graph){
+				osc_expr_free(x->function_graph);
+			}
+			x->function_graph = f;
+		}
 		/*
 		if(argc){
 			omax_scanner_scan_atom_array(attr_args_offset(argc, argv), argv, &(x->argclex), &(x->argvlex));
@@ -361,8 +393,8 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 		}
 		*/
 
-		attr_dictionary_process(x, d); 
-
+		//attr_dictionary_process(x, d); 
+		/*
 		t_object *textfield = jbox_get_textfield((t_object *)x);
 		if(textfield){
 			object_attr_setchar(textfield, gensym("editwhenunlocked"), 1);
@@ -373,6 +405,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 
  		jbox_ready((t_jbox *)x);
 		oexpr_gettext(x);
+		*/
 	}
 		   	
 	return x;
@@ -386,22 +419,22 @@ int main(void){
 #endif
 	t_class *c = class_new(buf, (method)oexpr_new, (method)oexpr_free, sizeof(t_oexpr), 0L, A_GIMME, 0);
 
-	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
- 	jbox_initclass(c, JBOX_TEXTFIELD | JBOX_FIXWIDTH | JBOX_FONTATTR); 
+	//c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
+ 	//jbox_initclass(c, JBOX_TEXTFIELD | JBOX_FIXWIDTH | JBOX_FONTATTR); 
     
-	class_addmethod(c, (method)oexpr_paint, "paint", A_CANT, 0); 
+	//class_addmethod(c, (method)oexpr_paint, "paint", A_CANT, 0); 
 
 	//osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	class_addmethod(c, (method)oexpr_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oexpr_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)oexpr_notify, "notify", A_CANT, 0);
+	//class_addmethod(c, (method)oexpr_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oexpr_bang, "bang", 0);
 
 	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
 	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
 	class_addmethod(c, (method)oexpr_postFunctionGraph, "post-function-graph", 0);
-
+	/*
 	class_addmethod(c, (method)oexpr_key, "key", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_keyfilter, "keyfilter", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_enter, "enter", A_CANT, 0);
@@ -427,18 +460,12 @@ int main(void){
 	CLASS_ATTR_CATEGORY(c, "text_color", 0, "Color");
 
 	CLASS_ATTR_DEFAULT(c, "rect", 0, "0. 0. 150., 18.");
-
+	*/
 	class_register(CLASS_BOX, c);
 	oexpr_class = c;
 
 	common_symbols_init();
 	ps_FullPacket = gensym("FullPacket");
-
-#ifdef WIN_VERSION
-	srand(GetTickCount());
-#else
-	srand(mach_absolute_time());
-#endif
 
 	version(0);
 	return 0;
