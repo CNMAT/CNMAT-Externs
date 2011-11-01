@@ -127,7 +127,7 @@ void opack_doAnything(t_opack *x, t_symbol *msg, short argc, t_atom *argv, int s
 
 void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 	int inlet = proxy_getinlet((t_object *)x);
-	int shouldoutput = 0;
+	int shouldoutput = inlet == 0;
 #ifdef PAK
 	shouldoutput = 1;
 #endif
