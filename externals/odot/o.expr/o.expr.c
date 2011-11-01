@@ -55,6 +55,11 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include "osc_mem.h"
 #include "osc_atom_u.h"
 
+//#define __OSC_PROFILE__
+#include "osc_profile.h"
+
+double rdtsc_cps;
+
 typedef struct _oexpr{
 	t_object ob;
 #ifdef OIF
@@ -90,7 +95,6 @@ t_symbol *ps_FullPacket;
 
 void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 #ifdef OIF
-	int argc = 0;
 	t_osc_atom_ar_u *argv = NULL;
 	t_atom out[2];
 	// we don't actually want to do this copy here.  we need to 
@@ -105,7 +109,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
 	}else{
 		int i;
-		for(i = 0; i < argc; i++){
+		for(i = 0; i < osc_atom_array_u_getLen(argv); i++){
 			if(osc_atom_u_getDouble(osc_atom_array_u_get(argv, i)) == 0){
 				outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
 				goto out;
@@ -125,7 +129,6 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	// alter the bundle.
 	// the copy needs to use memory allocated with osc_mem_alloc in case the 
 	// bundle has to be resized during assignment
-	printf("len = %ld\n", len);
 	char *copy = (char *)osc_mem_alloc(len);
 	memcpy(copy, (char *)ptr, len);
 //int argc = 0;
@@ -258,6 +261,26 @@ void oexpr_postFunctionGraph(t_oexpr *fg){
 	}
 }
 
+void oexpr_postFunctionTable(t_oexpr *fg){
+	char *buf = NULL;
+	long len = 0;
+	osc_expr_formatFunctionTable(&len, &buf);
+	char *ptr1 = buf, *ptr2 = buf;
+	int i = 0;
+	while(*ptr2){
+		if(*ptr2 == '\n'){
+			*ptr2 = '\0';
+			post("%s", ptr1);
+			ptr1 = ptr2 + 1;
+			ptr2++;
+		}
+		ptr2++;
+	}
+	if(buf){
+		osc_mem_free(buf);
+	}
+}
+
 void oexpr_bang(t_oexpr *x){
 	char buf[16];
 	strncpy(buf, "#bundle\0", 8);
@@ -375,7 +398,14 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 				}
 			}
 			t_osc_expr *f = NULL;
+			TIMER_START(foo, rdtsc_cps);
 			osc_expr_parser_parseString(buf, &f);
+			TIMER_STOP(foo, rdtsc_cps);
+			TIMER_PRINTF(foo);
+			TIMER_SNPRINTF(foo, buff);
+#ifdef __OSC_PROFILE__
+			post("%s\n", buff);
+#endif
 			if(!f){
 				object_error((t_object *)x, "error parsing %s\n", buf);
 				return NULL;
@@ -434,6 +464,7 @@ int main(void){
 	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
 	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
 	class_addmethod(c, (method)oexpr_postFunctionGraph, "post-function-graph", 0);
+	class_addmethod(c, (method)oexpr_postFunctionTable, "post-function-table", 0);
 	/*
 	class_addmethod(c, (method)oexpr_key, "key", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_keyfilter, "keyfilter", A_CANT, 0);
@@ -466,6 +497,8 @@ int main(void){
 
 	common_symbols_init();
 	ps_FullPacket = gensym("FullPacket");
+
+	rdtsc_cps = RDTSC_CYCLES_PER_SECOND;
 
 	version(0);
 	return 0;
