@@ -125,6 +125,7 @@ t_osc_hashtab *osc_hashtab_new(int nslots, t_osc_hashtab_dtor dtor){
 	memset(ht->slots, '\0', sizeof(t_osc_hashtab_elem *) * nslots);
 	ht->nslots = nslots;
 	ht->dtor = dtor;
+	ht->nentries = 0;
 	return ht;
 }
 
@@ -148,6 +149,7 @@ static void osc_hashtab_store_elem(t_osc_hashtab *ht,
 			ee = ee->next;
 		}
 	}
+	ht->nentries++;
 	e->next = ht->slots[hash % ht->nslots];
 	ht->slots[hash % ht->nslots] = e;
 	return;
@@ -167,6 +169,7 @@ static void osc_hashtab_store_elem_safe(t_osc_hashtab *ht,
 			ee = ee->next;
 		}
 	}
+	ht->nentries++;
 	e->next = ht->slots[hash % ht->nslots];
 	ht->slots[hash % ht->nslots] = e;
 	return;
@@ -229,11 +232,23 @@ void osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key, t_osc_hashtab_
 			if(dtor){
 				dtor(e->key, e->val);
 			}
+			ht->nentries--;
 			osc_mem_free(e);
 		}else{
 			prev = e;
 		}
 		e = next;
+	}
+}
+
+void osc_hashtab_foreach(t_osc_hashtab *ht, void (*cb)(char *key, void *val, void *context), void *context){
+	int i;
+	for(i = 0; i < ht->nslots; i++){
+		t_osc_hashtab_elem *e = ht->slots[i];
+		while(e){
+			cb(e->key, e->val, context);
+			e = e->next;
+		}
 	}
 }
 
@@ -251,6 +266,7 @@ void osc_hashtab_clear(t_osc_hashtab *ht){
 		}
 	}
 	memset(ht->slots, '\0', ht->nslots * sizeof(t_osc_hashtab_elem *));
+	ht->nentries = 0;
 }
 
 void osc_hashtab_destroy(t_osc_hashtab *ht){

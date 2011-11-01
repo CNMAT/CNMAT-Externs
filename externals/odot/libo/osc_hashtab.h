@@ -45,7 +45,7 @@ extern "C" {
 typedef struct _osc_hashtab_elem t_osc_hashtab_elem;
 typedef struct _osc_hashtab t_osc_hashtab;
 
-typedef void (*t_osc_hashtab_dtor)(void *key, void *val);
+typedef void (*t_osc_hashtab_dtor)(char *key, void *val);
 
 t_osc_hashtab *osc_hashtab_new(int nslots, t_osc_hashtab_dtor dtor);
 void osc_hashtab_store(t_osc_hashtab *ht, int keylen, char *key, void *val);
@@ -54,6 +54,7 @@ void *osc_hashtab_lookup(t_osc_hashtab *ht, int keylen, char *key);
 void osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key, t_osc_hashtab_dtor dtor);
 void osc_hashtab_clear(t_osc_hashtab *ht);
 void osc_hashtab_destroy(t_osc_hashtab *ht);
+void osc_hashtab_foreach(t_osc_hashtab *ht, void (*cb)(char *key, void *val, void *context), void *context);
 
 #ifdef __cplusplus
 }

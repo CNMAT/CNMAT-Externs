@@ -32,6 +32,7 @@
 #include "osc.h"
 #include "osc_mem.h"
 #include "osc_bundle_s.h"
+#include "osc_bundle_iterator_s.h"
 #include "osc_message_s.h"
 #include "osc_message_u.h"
 #include "osc_message_iterator_s.h"
@@ -39,9 +40,35 @@
 #include "osc_atom_array_u.h"
 #include "osc_expr.h"
 #include "osc_expr.r"
+#include "osc_hashtab.h"
+
+t_osc_hashtab *osc_expr_funcobj_ht;
+t_osc_hashtab *osc_expr_symexpr_ht;
+void osc_expr_funcobj_dtor(char *key, void *val);
+void osc_expr_symexpr_dtor(char *key, void *val);
+
+extern t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f);
 
 int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom_ar_u **out){
 	t_osc_expr *f = function;
+	if(!f){
+		// go through bundle looking for messages that have ``eval'' as their first arg
+		t_osc_bndl_it_s *bit = osc_bndl_it_s_get(*len, *oscbndl);
+		while(osc_bndl_it_s_hasNext(bit)){
+			t_osc_msg_s *m = osc_bndl_it_s_next(bit);
+			if(osc_message_s_getArgCount(m) > 1){
+				if(osc_message_s_getTypetag(m, 0) == 's'){
+					char a[osc_atom_s_getStructSize()];
+					osc_message_s_getArg(m, 0, (t_osc_atom_s **)(&a));
+					char *str = osc_atom_s_getData((t_osc_atom_s *)a);
+					if(!strncmp(str, "eval", 4) || !strncmp(str, "EVAL", 4)){
+
+					}
+				}
+			}
+		}
+		osc_bndl_it_s_destroy(bit);
+	}
 	while(f){
 		int ret = osc_expr_call(f, len, oscbndl, out);
 		if(ret){
@@ -199,10 +226,54 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 					osc_mem_free(buf);
 				}
 			}
+			osc_atom_array_u_free(arg);
 		}else{
-			// here, we'll look for a compiled function in a hashtable
+			char *a = osc_expr_arg_getOSCAddress(f_argv);
+			if(a){
+				t_osc_expr *e = osc_hashtab_lookup(osc_expr_funcobj_ht, strlen(a), a);
+				if(e){
+					osc_expr_funcall(e, len, oscbndl, out);
+				}
+			}
 		}
-		osc_atom_array_u_free(arg);
+	}else if(f->rec->func == osc_expr_compile){
+		if(osc_expr_arg_getType(f_argv) != OSC_EXPR_ARG_TYPE_OSCADDRESS){
+			return 1;
+		}
+		char *key_orig = osc_expr_arg_getOSCAddress(f_argv);
+		int keylen = strlen(key_orig);
+		char *key = osc_mem_alloc(keylen + 1);
+		strncpy(key, key_orig, keylen + 1);
+		char *expression = NULL;
+		t_osc_expr *f = NULL;
+		int arg2type = osc_expr_arg_getType(f_argv->next);
+		if(arg2type == OSC_EXPR_ARG_TYPE_OSCADDRESS){
+			// 2nd arg is an OSC address--look it up in the bundle
+			t_osc_atom_ar_u *arg = NULL;
+			osc_expr_getArg(f_argv, len, oscbndl, &arg);
+			if(osc_atom_u_getTypetag(osc_atom_array_u_get(arg, 0)) == 's' &&
+			   osc_atom_array_u_getLen(arg) == 1){
+				osc_atom_u_getString(osc_atom_array_u_get(arg, 0), &expression);
+				osc_expr_parser_parseString(expression, &f);
+			}else{
+				long buflen = 0;
+				osc_atom_array_u_getStringArray(arg, &buflen, &expression);
+				osc_expr_parser_parseString(expression, &f);
+			}
+			osc_atom_array_u_free(arg);
+		}else if(arg2type == OSC_EXPR_ARG_TYPE_EXPR){
+			// 2nd arg is an expr
+			f = osc_expr_copy(osc_expr_arg_getExpr(f_argv->next));
+		}
+		if(f){
+			if(!osc_expr_funcobj_ht){
+				osc_expr_funcobj_ht = osc_hashtab_new(-1, osc_expr_funcobj_dtor);
+				osc_expr_symexpr_ht = osc_hashtab_new(-1, osc_expr_symexpr_dtor);
+			}
+			//printf("storing %p at %s (%p)\n", f, key, key);
+			osc_hashtab_store(osc_expr_funcobj_ht, keylen, key, f);
+			osc_hashtab_store(osc_expr_symexpr_ht, keylen, key, expression);
+		}
 	}else{
 		t_osc_atom_ar_u *argv[f_argc];
 		memset(argv, '\0', sizeof(argv));
@@ -228,6 +299,15 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}
 	}
 	return ret;
+}
+
+t_osc_expr *osc_expr_makeFuncObjFromOSCMsg_s(t_osc_msg_s *msg, int argoffset){
+	char *buf = NULL;
+	long len = 0;
+	osc_message_s_formatArgs(msg, &len, &buf, argoffset);
+	t_osc_expr *f = NULL;
+	osc_expr_parser_parseString(buf, &f);
+	return f;
 }
 
 t_osc_expr_rec *osc_expr_lookupFunction(char *name){
@@ -1207,6 +1287,11 @@ int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 	return 0;
 }
 
+int osc_expr_compile(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+	// this is a dummy function.  we'll use this to do a pointer comparison.
+	return 0;
+}
+
 t_osc_expr *osc_expr_alloc(void){
 	t_osc_expr *expr = (t_osc_expr *)osc_mem_alloc(sizeof(t_osc_expr));
 	memset(expr, '\0', sizeof(t_osc_expr));
@@ -1438,6 +1523,24 @@ t_osc_expr_arg *osc_expr_arg_next(t_osc_expr_arg *a){
 	return a->next;
 }
 
+void osc_expr_funcobj_dtor(char *key, void *val){
+	if(key){
+		osc_mem_free(key);
+	}
+	if(val){
+		osc_expr_free((t_osc_expr *)val);
+	}
+}
+
+void osc_expr_symexpr_dtor(char *key, void *val){
+	if(key){
+		osc_mem_free(key);
+	}
+	if(val){
+		osc_mem_free((char *)val);
+	}
+}
+
 int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 	char *ptr = buf;
 	ptr += sprintf(ptr, "(%s ", fg->rec->name);
@@ -1507,5 +1610,32 @@ void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt){
 		bufpos += sprintf((*fmt) + bufpos, "\n");
 		f = f->next;
 	}
+	*buflen = bufpos;
+}
+
+void osc_expr_doFormatFunctionTable(char *key, void *val, void *context){
+	struct context{
+		long *buflen;
+		long *bufpos;
+		char **buf;
+	} *ctxt = ((struct context *)context);
+	char *symexpr = osc_hashtab_lookup(osc_expr_symexpr_ht, strlen(key), key);
+	if(*(ctxt->buflen) - *(ctxt->bufpos) < 64){
+		*(ctxt->buf) = osc_mem_resize(*(ctxt->buf), *(ctxt->buflen) + 256);
+		(*(ctxt->buflen)) += 256;
+	}
+	*(ctxt->bufpos) += sprintf(*(ctxt->buf) + *(ctxt->bufpos), "address %s is bound to compiled expression:\n%s\n(function object %p)\n", key, symexpr, val);
+}
+
+void osc_expr_formatFunctionTable(long *buflen, char **buf){
+	*buflen = 256;
+	long bufpos = 0;
+	(*buf) = osc_mem_alloc(*buflen);
+	struct context{
+		long *buflen;
+		long *bufpos;
+		char **buf;
+	} context = {buflen, &bufpos, buf};
+	osc_hashtab_foreach(osc_expr_funcobj_ht, osc_expr_doFormatFunctionTable, &context);
 	*buflen = bufpos;
 }

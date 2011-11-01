@@ -181,6 +181,8 @@ The string will be allocated with #osc_mem_alloc and must be freed by the caller
  */
 t_osc_err osc_message_s_format(t_osc_msg_s *m, long *buflen, char **buf);
 
+t_osc_err osc_message_s_formatArgs(t_osc_msg_s *m, long *buflen, char **buf, int offset);
+
 t_osc_message_array_s *osc_message_array_s_alloc(long len);
 #define osc_message_array_s_free(ar) osc_array_free((ar))
 #define osc_message_array_s_clear(ar) osc_array_clear((ar))

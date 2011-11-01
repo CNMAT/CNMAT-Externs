@@ -40,7 +40,8 @@ struct _osc_hashtab_elem{
 struct _osc_hashtab{
 	t_osc_hashtab_elem **slots;
 	long nslots;
-	void (*dtor)(void *key, void *val);
+	long nentries;
+	void (*dtor)(char *key, void *val);
 };
 
 #ifdef __cplusplus

@@ -32,6 +32,7 @@ extern "C" {
 #endif
 
 #include <math.h>
+#include "osc_message_s.h"
 #include "osc_atom_u.h"
 #include "osc_atom_array_u.h"
 
@@ -64,6 +65,7 @@ typedef struct _osc_expr_const_rec{
 int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom_ar_u **out);
 int osc_expr_getArg(t_osc_expr_arg *arg, long *len, char **oscbndl, t_osc_atom_ar_u **out);
 int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **out);
+t_osc_expr *osc_expr_makeFuncObjFromOSCMsg_s(t_osc_msg_s *msg, int argoffset);
 t_osc_expr_rec *osc_expr_lookupFunction(char *name);
 t_osc_expr_const_rec *osc_expr_lookupConstant(char *name);
 
@@ -116,6 +118,7 @@ int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u
 int osc_expr_defined(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_compile(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 t_osc_expr *osc_expr_alloc(void);
 t_osc_expr_arg *osc_expr_arg_alloc(void);
@@ -149,6 +152,7 @@ void osc_expr_setAssignResultToAddress(t_osc_expr *e, int val);
 int osc_expr_getAssignResultToAddress(t_osc_expr *e);
 
 void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt);
+void osc_expr_formatFunctionTable(long *buflen, char **buf);
 
 static t_osc_expr_const_rec osc_expr_constsym[] = {
 	{"E", M_E, "e"},
@@ -263,7 +267,8 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"if", osc_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
 	{"defined", osc_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."},
 	{"nothing", osc_expr_nothing, -1, NULL, "Just what it says"},
-	{"eval", osc_expr_eval, 1, NULL, "Evaluate a function bound to an OSC address"}
+	{"eval", osc_expr_eval, 1, NULL, "Evaluate a function bound to an OSC address"},
+	{"compile", osc_expr_compile, 2, NULL, "Compile a function <arg2> and bind it to an OSC address <arg1>"}
 };
 
 #ifdef _cplusplus
