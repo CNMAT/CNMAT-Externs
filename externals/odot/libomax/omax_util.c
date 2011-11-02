@@ -703,7 +703,7 @@ method omax_object_getNotificationCallback(t_object *ob){
 	hashtab_lookup(ht, gensym("cnmat_internal_osc_notification_function"), (t_object **)(&f));
 	return f;
 }
-
+/*
 int omax_util_getNumAtomsInOSCMsg(t_osc_msg *msg){
 	int i;
 	int n = 0;
@@ -717,6 +717,24 @@ int omax_util_getNumAtomsInOSCMsg(t_osc_msg *msg){
 			n++;
 		}
 	}
+	return n;
+}
+*/
+int omax_util_getNumAtomsInOSCMsg(t_osc_msg_s *m){
+	int n = 1; // address;
+	t_osc_msg_it_s *it = osc_msg_it_s_get(m);
+	while(osc_msg_it_s_hasNext(it)){
+		t_osc_atom_s *a = osc_msg_it_s_next(it);
+		switch(osc_atom_s_getTypetag(a)){
+		case '#':
+			n += 3; // FullPacket <len> <address>
+			break;
+		default:
+			n += 1;
+			break;
+		}
+	}
+	osc_msg_it_s_destroy(it);
 	return n;
 }
 
@@ -902,7 +920,7 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg_s *m, t_atom *av){
 			}
 		case '#':
 			{
-				char *data = osc_message_s_getData(m);
+				char *data = osc_atom_s_getData(a);
 				atom_setsym(ptr++, gensym("FullPacket"));
 				atom_setlong(ptr++, ntoh32(*((uint32_t *)data)));
 				atom_setlong(ptr++, (long)(data + 4));
