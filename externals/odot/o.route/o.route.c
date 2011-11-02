@@ -123,7 +123,7 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 			while(osc_bndl_it_s_hasNext(it)){
 				t_osc_msg_s *msg = osc_bndl_it_s_next(it);
 				int argc = osc_message_s_getArgCount(msg);
-				t_atom atoms[argc + 1];
+				t_atom atoms[omax_util_getNumAtomsInOSCMsg(msg)];
 				omax_util_oscMsg2MaxAtoms(msg, atoms);
 				t_symbol *address = atom_getsym(atoms);
 				outlet_anything(((t_oroute_context *)context)->outlet, address, argc, atoms + 1);
@@ -142,13 +142,14 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 		int nmsgs = osc_bundle_s_getLen(complete_matches);
 		t_osc_bndl_it_s *it = osc_bndl_it_s_get(nmsgs,
 							osc_bundle_s_getPtr(complete_matches));
+		int i = 0;
 		while(osc_bndl_it_s_hasNext(it)){
 			t_osc_msg_s *msg = osc_bndl_it_s_next(it);
 			int argc = osc_message_s_getArgCount(msg);
 			if(argc == 0){
 				outlet_bang(((t_oroute_context *)context)->outlet);
 			}else if(argc == 1){
-				t_atom a[2];
+				t_atom a[omax_util_getNumAtomsInOSCMsg(msg)];
 				omax_util_oscMsg2MaxAtoms(msg, a);
 				switch(atom_gettype(a + 1)){
 				case A_FLOAT:
@@ -158,13 +159,18 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 					outlet_int(((t_oroute_context *)context)->outlet, atom_getlong(a + 1));
 					break;
 				case A_SYM:
-					outlet_anything(((t_oroute_context *)context)->outlet, atom_getsym(a + 1), 0, NULL);
+					if(atom_getsym(a + 1) == ps_FullPacket){
+						outlet_list(((t_oroute_context *)context)->outlet, NULL, 3, a + 1);
+					}else{
+						outlet_anything(((t_oroute_context *)context)->outlet, atom_getsym(a + 1), 0, NULL);
+					}
 					break;
 				}
 			}else{
-				t_atom atoms[argc + 1];
+				int numatoms = omax_util_getNumAtomsInOSCMsg(msg);
+				t_atom atoms[numatoms];
 				omax_util_oscMsg2MaxAtoms(msg, atoms);
-				outlet_list(((t_oroute_context *)context)->outlet, NULL, argc, atoms + 1);
+				outlet_list(((t_oroute_context *)context)->outlet, NULL, numatoms - 1, atoms + 1);
 			}
 		}
 		osc_bndl_it_s_destroy(it);
@@ -191,7 +197,7 @@ void oroute_delegation_callback(long bndllen,
 		while(osc_bndl_it_s_hasNext(it)){
 			t_osc_msg_s *msg = osc_bndl_it_s_next(it);
 			int argc = osc_message_s_getArgCount(msg);
-			t_atom atoms[argc + 1];
+			t_atom atoms[omax_util_getNumAtomsInOSCMsg(msg)];
 			omax_util_oscMsg2MaxAtoms(msg, atoms);
 			t_symbol *address = atom_getsym(atoms);
 			outlet_anything(((t_oroute_context *)context)->outlet, address, argc, atoms + 1);
