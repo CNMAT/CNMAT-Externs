@@ -241,11 +241,11 @@ t_osc_err osc_message_s_doFormatArgs(t_osc_msg_s *m, long *buflen, long *bufpos,
 	t_osc_msg_it_s *it = osc_msg_it_s_get(m);
 	int i = 0;
 	while(osc_msg_it_s_hasNext(it)){
-		while(i < offset){
+		t_osc_atom_s *a = osc_msg_it_s_next(it);
+		if(i < offset){
 			i++;
 			continue;
 		}
-		t_osc_atom_s *a = osc_msg_it_s_next(it);
 		if((*buflen - *bufpos) < 256){
 			*buf = osc_mem_resize(*buf, *buflen + 1024);
 			if(!(*buf)){

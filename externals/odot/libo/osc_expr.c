@@ -43,14 +43,13 @@
 #include "osc_hashtab.h"
 
 t_osc_hashtab *osc_expr_funcobj_ht;
-t_osc_hashtab *osc_expr_symexpr_ht;
 void osc_expr_funcobj_dtor(char *key, void *val);
-void osc_expr_symexpr_dtor(char *key, void *val);
 
 extern t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f);
 
 int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom_ar_u **out){
 	t_osc_expr *f = function;
+	int alloc = 0;
 	if(!f){
 		// go through bundle looking for messages that have ``eval'' as their first arg
 		t_osc_bndl_it_s *bit = osc_bndl_it_s_get(*len, *oscbndl);
@@ -59,16 +58,29 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 			if(osc_message_s_getArgCount(m) > 1){
 				if(osc_message_s_getTypetag(m, 0) == 's'){
 					char a[osc_atom_s_getStructSize()];
-					osc_message_s_getArg(m, 0, (t_osc_atom_s **)(&a));
+					char *ap = a;
+					osc_message_s_getArg(m, 0, (t_osc_atom_s **)(&ap));
 					char *str = osc_atom_s_getData((t_osc_atom_s *)a);
 					if(!strncmp(str, "eval", 4) || !strncmp(str, "EVAL", 4)){
-
+						char *expr = NULL;
+						long exprlen = 0;
+						osc_message_s_formatArgs(m, &exprlen, &expr, 1);
+						if(expr){
+							osc_expr_parser_parseString(expr, &f);
+						}
+						if(f){
+							alloc = 1;
+						}
+						if(expr){
+							osc_mem_free(expr);
+						}
 					}
 				}
 			}
 		}
 		osc_bndl_it_s_destroy(bit);
 	}
+	t_osc_expr *first_func = f;
 	while(f){
 		int ret = osc_expr_call(f, len, oscbndl, out);
 		if(ret){
@@ -101,6 +113,9 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 			osc_mem_free(msg_s);
 		}
 		f = f->next;
+	}
+	if(alloc){
+		osc_expr_free(first_func);
 	}
 	return 0;
 }
@@ -264,15 +279,18 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}else if(arg2type == OSC_EXPR_ARG_TYPE_EXPR){
 			// 2nd arg is an expr
 			f = osc_expr_copy(osc_expr_arg_getExpr(f_argv->next));
+		}else{
+			// free mem here
+			return 1;
 		}
 		if(f){
 			if(!osc_expr_funcobj_ht){
 				osc_expr_funcobj_ht = osc_hashtab_new(-1, osc_expr_funcobj_dtor);
-				osc_expr_symexpr_ht = osc_hashtab_new(-1, osc_expr_symexpr_dtor);
 			}
-			//printf("storing %p at %s (%p)\n", f, key, key);
 			osc_hashtab_store(osc_expr_funcobj_ht, keylen, key, f);
-			osc_hashtab_store(osc_expr_symexpr_ht, keylen, key, expression);
+		}
+		if(expression){
+			osc_mem_free(expression);
 		}
 	}else{
 		t_osc_atom_ar_u *argv[f_argc];
@@ -784,7 +802,7 @@ int osc_expr_sum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_
 		return 0;
 	}
 	int i;
-	double val = 1;
+	double val = 0;
 	for(i = 0; i < len; i++){
 		val += osc_atom_u_getDouble(osc_atom_array_u_get(*argv, i));
 	}
@@ -1532,15 +1550,6 @@ void osc_expr_funcobj_dtor(char *key, void *val){
 	}
 }
 
-void osc_expr_symexpr_dtor(char *key, void *val){
-	if(key){
-		osc_mem_free(key);
-	}
-	if(val){
-		osc_mem_free((char *)val);
-	}
-}
-
 int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 	char *ptr = buf;
 	ptr += sprintf(ptr, "(%s ", fg->rec->name);
@@ -1619,12 +1628,11 @@ void osc_expr_doFormatFunctionTable(char *key, void *val, void *context){
 		long *bufpos;
 		char **buf;
 	} *ctxt = ((struct context *)context);
-	char *symexpr = osc_hashtab_lookup(osc_expr_symexpr_ht, strlen(key), key);
 	if(*(ctxt->buflen) - *(ctxt->bufpos) < 64){
 		*(ctxt->buf) = osc_mem_resize(*(ctxt->buf), *(ctxt->buflen) + 256);
 		(*(ctxt->buflen)) += 256;
 	}
-	*(ctxt->bufpos) += sprintf(*(ctxt->buf) + *(ctxt->bufpos), "address %s is bound to compiled expression:\n%s\n(function object %p)\n", key, symexpr, val);
+	*(ctxt->bufpos) += sprintf(*(ctxt->buf) + *(ctxt->bufpos), "address %s is bound to compiled function object %p\n", key, val);
 }
 
 void osc_expr_formatFunctionTable(long *buflen, char **buf){
