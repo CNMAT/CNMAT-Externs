@@ -11,7 +11,7 @@ LIBO_SCANNER_HFILES = $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).h)
 LIBO_SCANNER_OBJECTS = $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).o)
 
 LIBO_PARSER_BASENAMES = osc_parser osc_expr_parser
-LIBO_PARSER_LFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).l)
+LIBO_PARSER_YFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).y)
 LIBO_PARSER_CFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).c)
 LIBO_PARSER_HFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).h)
 LIBO_PARSER_OBJECTS = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
@@ -52,7 +52,6 @@ libo.a: $(LIBO_OBJECTS) $(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(L
 #$(CC) $(CFLAGS) $(I) -c -o $(basename $@).o $(basename $@).c
 
 %_scanner.c: %_scanner.l %_parser.c
-	@echo "hi there\n"
 	flex -o $(basename $@).c --prefix=$(basename $@)_ --header-file=$(basename $@).h $(basename $@).l
 #%_scanner.o: %_scanner.c %_scanner.h
 
