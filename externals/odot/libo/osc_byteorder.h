@@ -23,6 +23,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #ifndef __OSC_BYTEORDER_H__
 #define __OSC_BYTEORDER_H__
 
+#include <inttypes.h>
+
 typedef struct uint128_ {
 	uint64_t l1, l2;
 } uint128_t;
