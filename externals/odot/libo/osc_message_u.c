@@ -280,7 +280,7 @@ t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, char *v){
 	t_osc_atom_u *a = osc_atom_u_alloc();
 	//int len = strlen(v);
 	//char *buf = osc_mem_alloc(len + 1);
-	//strlcpy(buf, v, len + 1);
+	//strncpy(buf, v, len + 1);
 	osc_atom_u_setString(a, v);
 	osc_message_u_appendAtom(m, a);
 	return a;
@@ -375,7 +375,7 @@ t_osc_atom_u *osc_message_u_prependString(t_osc_msg_u *m, char *v){
 	t_osc_atom_u *a = osc_atom_u_alloc();
 	int len = strlen(v);
 	char *buf = osc_mem_alloc(len + 1);
-	strlcpy(buf, v, len + 1);
+	strncpy(buf, v, len + 1);
 	osc_atom_u_setString(a, buf);
 	osc_message_u_prependAtom(m, a);
 	return a;
@@ -470,7 +470,7 @@ t_osc_atom_u *osc_message_u_insertString(t_osc_msg_u *m, char *v, int pos){
 	t_osc_atom_u *a = osc_atom_u_alloc();
 	int len = strlen(v);
 	char *buf = osc_mem_alloc(len + 1);
-	strlcpy(buf, v, len + 1);
+	strncpy(buf, v, len + 1);
 	osc_atom_u_setString(a, buf);
 	osc_message_u_insertAtom(m, a, pos);
 	return a;
@@ -526,7 +526,7 @@ t_osc_err osc_message_u_doSerialize(t_osc_msg_u *m, long *buflen, long *bufpos, 
 	(*bufpos) += 4; // size
 
 	long addresslen = strlen(m->address) + 1;
-	strlcpy(*buf + *bufpos, m->address, addresslen);
+	strncpy(*buf + *bufpos, m->address, addresslen);
 	(*bufpos) += addresslen; // includes NULL byte
 	while(*bufpos % 4){
 		(*bufpos)++;
