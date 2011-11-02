@@ -2,6 +2,7 @@ LIBO_BASENAMES = osc_match osc_timetag osc_bundle osc_bundle_s osc_bundle_u osc_
 
 LIBO_CFILES = $(foreach F, $(LIBO_BASENAMES), $(F).c)
 LIBO_HFILES = $(foreach F, $(LIBO_BASENAMES), $(F).h) osc.h
+LIBO_OFILES = $(foreach F, $(LIBO_BASENAMES), $(F).o)
 
 LIBO_SCANNER_BASENAMES = osc_scanner osc_expr_scanner
 LIBO_SCANNER_LFILES = $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).l)
@@ -15,7 +16,7 @@ LIBO_PARSER_CFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).c)
 LIBO_PARSER_HFILES = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).h)
 LIBO_PARSER_OBJECTS = $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
 
-LIBO_OBJECTS = $(foreach OBJ, $(LIBO_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_SCANNER_BASENAMES), $(OBJ).o) $(foreach OBJ, $(LIBO_PARSER_BASENAMES), $(OBJ).o)
+LIBO_OBJECTS = $(LIBO_OFILES) $(LIBO_SCANNER_OBJECTS) $(LIBO_PARSER_OBJECTS)
 
 CFLAGS += -Wall -Wno-trigraphs -fno-strict-aliasing -O3 -funroll-loops
 
@@ -23,10 +24,11 @@ MAC_SYSROOT = MacOSX10.7.sdk
 MAC-CFLAGS = -arch i386 -mmacosx-version-min=10.5 -isysroot /Developer/SDKs/$(MAC_SYSROOT)
 WIN-CFLAGS = -mno-cygwin -DWIN_VERSION
 
-I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
+MAC-INCLUDES = -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
 
 all: CFLAGS += $(MAC-CFLAGS)
 all: CC = clang
+all: I = $(MAC-INCLUDES)
 all: $(LIBO_CFILES) $(LIBO_HFILES) libo.a
 all: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
@@ -39,7 +41,7 @@ linux: CC = gcc
 linux: $(LIBO_CFILES) $(LIBO_HFILES) libo.a
 linux: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
-libo.a: $(LIBO_OBJECTS) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES)
+libo.a: $(LIBO_OBJECTS) $(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES)
 	rm -f libo.a
 	$(LIBTOOL)
 
