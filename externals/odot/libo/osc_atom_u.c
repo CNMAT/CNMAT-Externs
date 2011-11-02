@@ -537,7 +537,7 @@ void osc_atom_u_setString(t_osc_atom_u *a, char *v){
 	if(a->w.s && a->typetag == 's' && a->alloc){
 		long len = strlen(v) + 1;
 		a->w.s = osc_mem_resize(a->w.s, len);
-		strlcpy(a->w.s, v, len);
+		strncpy(a->w.s, v, len);
 	}else{
 		a->w.s = osc_mem_alloc(strlen(v) + 1);
 		strcpy(a->w.s, v);
