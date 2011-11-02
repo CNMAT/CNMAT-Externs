@@ -155,10 +155,10 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 					outlet_float(((t_oroute_context *)context)->outlet, atom_getfloat(a + 1));
 					break;
 				case A_LONG:
-					outlet_long(((t_oroute_context *)context)->outlet, atom_getlong(a + 1));
+					outlet_int(((t_oroute_context *)context)->outlet, atom_getlong(a + 1));
 					break;
 				case A_SYM:
-					outlet_sym(((t_oroute_context *)context)->outlet, atom_getsym(a + 1)->sym);
+					outlet_anything(((t_oroute_context *)context)->outlet, atom_getsym(a + 1), 0, NULL);
 					break;
 				}
 			}else{
