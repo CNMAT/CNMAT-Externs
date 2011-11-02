@@ -33,6 +33,7 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#include <string.h>
 #include "version.h"
 #include "ext.h"
 #include "version.c"
@@ -235,7 +236,10 @@ void omessage_output_bundle(t_omessage *x){
 			break;
 		}
 	}else{
-
+		char buf[OSC_HEADER_SIZE];
+		memset(buf, '\0', OSC_HEADER_SIZE);
+		osc_bundle_s_setBundleID(buf);
+		omessage_output_osc(x->outlet, OSC_HEADER_SIZE, buf);
 	}
 }
 
@@ -446,6 +450,23 @@ void omessage_gettext(t_omessage *x){
 	{
 		size = strlen(text); // the value returned in text doesn't make sense
 		if(size == 0){
+			if(x->bndl){
+				switch(x->bndltype){
+				case OMESSAGE_U:
+					osc_bundle_u_free(x->bndl);
+					break;
+				case OMESSAGE_S:
+					{
+						char *p = osc_bundle_s_getPtr(x->bndl);
+						if(p){
+							osc_mem_free(p);
+						}
+						osc_bundle_s_free(x->bndl);
+					}
+					break;
+				}
+				x->bndl = NULL;
+			}
 			return;
 		}
 		char *buf = text;
