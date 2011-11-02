@@ -139,14 +139,33 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 		outlet_anything(((t_oroute_context *)context)->outlet, ps_FullPacket, 2, out);
 	}
 	if(complete_matches){
-		t_osc_bndl_it_s *it = osc_bndl_it_s_get(osc_bundle_s_getLen(complete_matches),
+		int nmsgs = osc_bundle_s_getLen(complete_matches);
+		t_osc_bndl_it_s *it = osc_bndl_it_s_get(nmsgs,
 							osc_bundle_s_getPtr(complete_matches));
 		while(osc_bndl_it_s_hasNext(it)){
 			t_osc_msg_s *msg = osc_bndl_it_s_next(it);
 			int argc = osc_message_s_getArgCount(msg);
-			t_atom atoms[argc + 1];
-			omax_util_oscMsg2MaxAtoms(msg, atoms);
-			outlet_list(((t_oroute_context *)context)->outlet, NULL, argc, atoms + 1);
+			if(argc == 0){
+				outlet_bang(((t_oroute_context *)context)->outlet);
+			}else if(argc == 1){
+				t_atom a[2];
+				omax_util_oscMsg2MaxAtoms(msg, a);
+				switch(atom_gettype(a + 1)){
+				case A_FLOAT:
+					outlet_float(((t_oroute_context *)context)->outlet, atom_getfloat(a + 1));
+					break;
+				case A_LONG:
+					outlet_long(((t_oroute_context *)context)->outlet, atom_getlong(a + 1));
+					break;
+				case A_SYM:
+					outlet_sym(((t_oroute_context *)context)->outlet, atom_getsym(a + 1)->sym);
+					break;
+				}
+			}else{
+				t_atom atoms[argc + 1];
+				omax_util_oscMsg2MaxAtoms(msg, atoms);
+				outlet_list(((t_oroute_context *)context)->outlet, NULL, argc, atoms + 1);
+			}
 		}
 		osc_bndl_it_s_destroy(it);
 	}
