@@ -29,19 +29,19 @@ MAC-INCLUDES = -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/L
 all: CFLAGS += $(MAC-CFLAGS)
 all: CC = clang
 all: I = $(MAC-INCLUDES)
-all: $(LIBO_CFILES) $(LIBO_HFILES) libo.a
+all: $(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES) libo.a
 all: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
 win: CFLAGS += $(WIN-CFLAGS)
 win: CC = gcc-3
-win: $(LIBO_CFILES) $(LIBO_HFILES) libo.a 
+win: $(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES) libo.a 
 win: LIBTOOL = ar cru libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
 linux: CC = gcc
-linux: $(LIBO_CFILES) $(LIBO_HFILES) libo.a
+linux: $(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES) libo.a
 linux: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
-libo.a: $(LIBO_OBJECTS) $(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES)
+libo.a: $(LIBO_OBJECTS) #$(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(LIBO_PARSER_CFILES)
 	rm -f libo.a
 	$(LIBTOOL)
 
