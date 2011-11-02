@@ -10,15 +10,18 @@ MAC_SYSROOT = MacOSX10.7.sdk
 MAC-CFLAGS = -arch i386 -O3 -funroll-loops -isysroot /Developer/SDKs/$(MAC_SYSROOT) -mmacosx-version-min=10.5
 WIN-CFLAGS = -mno-cygwin -O3 -funroll-loops -DWIN_VERSION
 
-I = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
+MAC-INCLUDES = -I../../../c74support/max-includes -I../libo -I/System/Library/Frameworks/Carbon.framework/Headers -I/System/Library/Frameworks/CoreServices.framework/Headers
+WIN-INCLUDES = -I../../../c74support/max-includes -I../libo
 
 all: CFLAGS += $(MAC-CFLAGS)
-all: CC = gcc
+all: CC = clang
+all: I = $(MAC-INCLUDES)
 all: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
 all: LIBTOOL = libtool -static -o libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
 
 win: CFLAGS += $(WIN-CFLAGS)
 win: CC = gcc-3
+win: I = $(WIN-INCLUDES)
 win: $(LIBO_CFILES) $(LIBO_HFILES) libomax.a
 win: LIBTOOL = ar cru libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
 
