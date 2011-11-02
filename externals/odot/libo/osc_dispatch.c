@@ -256,7 +256,6 @@ t_osc_err osc_dispatch_selectors(t_osc_vtable *vtab,
 		t_osc_vtable_entry *e = osc_vtable_getEntryBySelector(vtab, selector);
 		if(e){
 			int index = osc_vtable_getIndexForEntry(vtab, e);
-			printf("%s: %d %d %s %p\n", __func__, i, index, selector, e);
 			osc_vtable_callWithEntry(vtab, e, bndllen, bndl, partial_matches[index], complete_matches[index]);
 		}
 	}
