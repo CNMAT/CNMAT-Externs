@@ -34,7 +34,7 @@ all: LIBTOOL = libtool -static -o libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
 win: CFLAGS += $(WIN-CFLAGS)
 win: CC = gcc-3
-win: $(LIBO_CFILES) $(LIBO_HFILES) libo.a test/osc_test
+win: $(LIBO_CFILES) $(LIBO_HFILES) libo.a 
 win: LIBTOOL = ar cru libo.a $(LIBO_OBJECTS) /usr/lib/libfl.a
 
 linux: CC = gcc
@@ -52,6 +52,7 @@ libo.a: $(LIBO_OBJECTS) $(LIBO_CFILES) $(LIBO_HFILES) $(LIBO_SCANNER_CFILES) $(L
 #$(CC) $(CFLAGS) $(I) -c -o $(basename $@).o $(basename $@).c
 
 %_scanner.c: %_scanner.l %_parser.c
+	@echo "hi there\n"
 	flex -o $(basename $@).c --prefix=$(basename $@)_ --header-file=$(basename $@).h $(basename $@).l
 #%_scanner.o: %_scanner.c %_scanner.h
 
