@@ -101,17 +101,19 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 			      void *context)
 {
 #ifdef SELECT
-	long len = osc_bundle_s_getLen(partial_matches) + osc_bundle_s_getLen(complete_matches);
-	char concat[len];
-	len = osc_bundle_s_concat(osc_bundle_s_getLen(partial_matches),
-				  osc_bundle_s_getPtr(partial_matches),
-				  osc_bundle_s_getLen(complete_matches),
-				  osc_bundle_s_getPtr(complete_matches),
-				  concat);
-	t_atom out[2];
-	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)concat);
-	outlet_anything(((t_oroute_context *)context)->outlet, ps_FullPacket, 2, out);
+	if(partial_matches || complete_matches){
+		long len = osc_bundle_s_getLen(partial_matches) + osc_bundle_s_getLen(complete_matches);
+		char concat[len];
+		len = osc_bundle_s_concat(osc_bundle_s_getLen(partial_matches),
+					  osc_bundle_s_getPtr(partial_matches),
+					  osc_bundle_s_getLen(complete_matches),
+					  osc_bundle_s_getPtr(complete_matches),
+					  concat);
+		t_atom out[2];
+		atom_setlong(out, len);
+		atom_setlong(out + 1, (long)concat);
+		outlet_anything(((t_oroute_context *)context)->outlet, ps_FullPacket, 2, out);
+	}
 #elif defined SPEW
 	t_osc_bndl_s *bndls[2] = {partial_matches, complete_matches};
 	int i;
@@ -278,18 +280,14 @@ void oroute_set(t_oroute *x, long index, t_symbol *sym){
 }
 
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
+	if(m == ASSIST_OUTLET){
 		if(a == x->nselectors){
 			sprintf(s, "Unmatched messages (delegation)");
 		}else{
 			sprintf(s, "Messages that match %s", x->selectors[x->nselectors - a - 1]);
 		}
-	else {
-		switch (a) {	
-		case 0:
-			sprintf(s,"OSC bundle (FullPacket) or Max message");
-			break;
-		}
+	}else{
+		sprintf(s,"OSC bundle (FullPacket) or Max message");
 	}
 }
 
@@ -339,7 +337,7 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv){
 		x->nselectors = nselectors;
 		critical_new(&(x->lock));
 		x->outlets[nselectors] = outlet_new(x, "FullPacket"); // unmatched outlet
-		x->proxy = (void **)malloc((x->nselectors) * sizeof(void));
+		x->proxy = (void **)malloc((x->nselectors) * sizeof(void *));
 
 		x->vtab = osc_vtable_alloc(nselectors);
 		x->context_array[nselectors].x = x;
