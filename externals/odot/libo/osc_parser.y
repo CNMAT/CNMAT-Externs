@@ -18,9 +18,9 @@
 #include "osc_parser.h"
 #include "osc_scanner.h"
 
-	//#define OSC_PARSER_DEBUG
+	#define OSC_PARSER_DEBUG
 #ifdef OSC_PARSER_DEBUG
-#define PP(fmt, ...)printf(fmt, ##__VA_ARGS__)
+#define PP(fmt, ...)printf("%d: "fmt, __LINE__, ##__VA_ARGS__)
 #else
 #define PP(fmt, ...)
 #endif
@@ -120,8 +120,6 @@ void osc_parser_substitution(t_osc_parser_subst **subs_list, t_osc_msg_u *msg, i
 %token <i>OSCINT DOLLARSUB OSCADDRESS_DOLLARSUB
 %token <string>STRING OSCADDRESS 
 
- //%token ARG
-
 %type <msg>arglist msg 
 
 %%
@@ -148,14 +146,6 @@ bundle: {
 ;
 
 arglist:
-/* 
-	'\n' {
-		t_osc_msg_u *m = osc_message_u_alloc();
-		PP("push MSG %p->%p\n", m, *msg);
-		PP("have message with address and no arguments\n");
-		m->next = *msg;
-		*msg = m;
-		}*/
 	STRING {
 		t_osc_msg_u *m = osc_message_u_alloc();
 		PP("push MSG %p->%p\n", m, *msg);
@@ -187,7 +177,8 @@ arglist:
 		m->next = *msg;
 		*msg = m;
 		osc_message_u_appendInt32(*msg, $1);
-	}
+
+	  }
 	| DOLLARSUB {
 		t_osc_msg_u *m = osc_message_u_alloc();
 		PP("push MSG %p->%p\n", m, *msg);
@@ -225,12 +216,13 @@ arglist:
 		(*nsubs)++;
  	}
 	| '[' '\n' bundle ']' {
-		if(!(*msg)){
+		printf("this one\n");
+		//if(!(*msg)){
 			t_osc_msg_u *m = osc_message_u_alloc();
 			PP("push MSG %p->%p\n", m, *msg);
 			m->next = *msg;
 			*msg = m;
-		}
+			//}
 		PP("add BNDL to MSG %p := %p\n", *msg, (*bndl)->bndl);
 		osc_message_u_appendBndl(*msg, (*bndl)->bndl);
 		PP("pop BNDL %p<-%p\n", (*bndl), (*bndl)->next);
@@ -238,6 +230,7 @@ arglist:
 		*bndl = b;
 	}
 	| arglist '[' '\n' bundle ']' {
+		printf("that one\n");
 		if(!(*msg)){
 			t_osc_msg_u *m = osc_message_u_alloc();
 			PP("push MSG %p->%p\n", m, *msg);
