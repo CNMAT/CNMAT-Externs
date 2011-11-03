@@ -216,7 +216,6 @@ arglist:
 		(*nsubs)++;
  	}
 	| '[' '\n' bundle ']' {
-		printf("this one\n");
 		//if(!(*msg)){
 			t_osc_msg_u *m = osc_message_u_alloc();
 			PP("push MSG %p->%p\n", m, *msg);
@@ -224,13 +223,20 @@ arglist:
 			*msg = m;
 			//}
 		PP("add BNDL to MSG %p := %p\n", *msg, (*bndl)->bndl);
-		osc_message_u_appendBndl(*msg, (*bndl)->bndl);
+		long len = 0;
+		char *ptr = NULL;
+		osc_bundle_u_serialize((*bndl)->bndl, &len, &ptr);
+		if(ptr){
+			osc_message_u_appendBndl(*msg, len, ptr);
+			osc_mem_free(ptr);
+		}
 		PP("pop BNDL %p<-%p\n", (*bndl), (*bndl)->next);
 		t_osc_parser_bndl_list *b = (*bndl)->next;
+		osc_bundle_u_free((*bndl)->bndl);
+		osc_mem_free(*bndl);
 		*bndl = b;
 	}
 	| arglist '[' '\n' bundle ']' {
-		printf("that one\n");
 		if(!(*msg)){
 			t_osc_msg_u *m = osc_message_u_alloc();
 			PP("push MSG %p->%p\n", m, *msg);
@@ -238,9 +244,17 @@ arglist:
 			*msg = m;
 		}
 		PP("add BNDL to MSG %p := %p\n", *msg, (*bndl)->bndl);
-		osc_message_u_appendBndl(*msg, (*bndl)->bndl);
+		long len = 0;
+		char *ptr = NULL;
+		osc_bundle_u_serialize((*bndl)->bndl, &len, &ptr);
+		if(ptr){
+			osc_message_u_appendBndl(*msg, len, ptr);
+			osc_mem_free(ptr);
+		}
 		PP("pop BNDL %p<-%p\n", (*bndl), (*bndl)->next);
 		t_osc_parser_bndl_list *b = (*bndl)->next;
+		osc_bundle_u_free((*bndl)->bndl);
+		osc_mem_free(*bndl);
 		*bndl = b;
 	}
 ;

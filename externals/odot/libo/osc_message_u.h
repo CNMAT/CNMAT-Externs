@@ -38,6 +38,7 @@ typedef struct _osc_message_u t_osc_message_u, t_osc_msg_u;
 
 #include <stdint.h>
 #include "osc_bundle_u.h"
+#include "osc_bundle_s.h"
 #include "osc_atom_u.h"
 #include "osc_array.h"
 
@@ -73,7 +74,7 @@ t_osc_atom_u *osc_message_u_appendBool(t_osc_msg_u *m, int v);
 t_osc_atom_u *osc_message_u_appendTrue(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_appendFalse(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_appendNull(t_osc_msg_u *m);
-t_osc_atom_u *osc_message_u_appendBndl(t_osc_msg_u *m, t_osc_bndl_u *bndl);
+t_osc_atom_u *osc_message_u_appendBndl(t_osc_msg_u *m, long len, char *bndl);
 
 t_osc_atom_u *osc_message_u_prependInt32(t_osc_msg_u *m, int32_t v);
 t_osc_atom_u *osc_message_u_prependInt64(t_osc_msg_u *m, int64_t v);
@@ -87,7 +88,7 @@ t_osc_atom_u *osc_message_u_prependBool(t_osc_msg_u *m, int v);
 t_osc_atom_u *osc_message_u_prependTrue(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_prependFalse(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_prependNull(t_osc_msg_u *m);
-t_osc_atom_u *osc_message_u_prependBndl(t_osc_msg_u *m, t_osc_bndl_u *bndl);
+t_osc_atom_u *osc_message_u_prependBndl(t_osc_msg_u *m, long len, char *bndl);
 
 t_osc_atom_u *osc_message_u_insertInt32(t_osc_msg_u *m, int32_t v, int pos);
 t_osc_atom_u *osc_message_u_insertInt64(t_osc_msg_u *m, int64_t v, int pos);
@@ -101,7 +102,7 @@ t_osc_atom_u *osc_message_u_insertBool(t_osc_msg_u *m, int v, int pos);
 t_osc_atom_u *osc_message_u_insertTrue(t_osc_msg_u *m, int pos);
 t_osc_atom_u *osc_message_u_insertFalse(t_osc_msg_u *m, int pos);
 t_osc_atom_u *osc_message_u_insertNull(t_osc_msg_u *m, int pos);
-t_osc_atom_u *osc_message_u_insertBndl(t_osc_msg_u *m, t_osc_bndl_u *bndl, int pos);
+t_osc_atom_u *osc_message_u_insertBndl(t_osc_msg_u *m, long len, char *bndl, int pos);
 
 t_osc_err osc_message_u_serialize(t_osc_msg_u *m, long *buflen, char **buf);
 t_osc_err osc_message_u_format(t_osc_msg_u *m, long *buflen, char **buf);

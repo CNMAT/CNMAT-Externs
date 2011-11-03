@@ -34,11 +34,6 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include "osc_atom_s.h"
-#include "osc_error.h"
-#include "osc_array.h"
-
 /**
    @brief Data structure for storing a serialized OSC message.
  
@@ -46,6 +41,11 @@ extern "C" {
    with pointers into that array that point to the various elements of the message.
 */
 typedef struct _osc_message_s t_osc_message_s, t_osc_msg_s;
+
+#include <stdint.h>
+#include "osc_atom_s.h"
+#include "osc_error.h"
+#include "osc_array.h"
 
 typedef t_osc_array t_osc_message_array_s, t_osc_msg_ar_s;
 

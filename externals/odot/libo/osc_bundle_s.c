@@ -28,12 +28,17 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_mem.h"
 #include "osc_match.h"
 #include "osc_timetag.h"
+
+#include "osc_bundle_u.h"
+#include "osc_message_u.h"
+#include "osc_atom_u.h"
+
+#include "osc_bundle_s.r"
+#include "osc_bundle_s.h"
+#include "osc_bundle_iterator_s.h"
 #include "osc_message_s.h"
 #include "osc_atom_s.h"
-#include "osc_bundle_s.h"
-#include "osc_bundle_s.r"
-#include "osc_bundle_iterator_s.h"
-#include "osc_bundle_u.h"
+
 #include "osc_array.h"
 
 t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr){

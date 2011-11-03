@@ -34,13 +34,14 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 extern "C" {
 #endif
 
+typedef struct _osc_bundle_s t_osc_bundle_s, t_osc_bndl_s;
+
 #include <stdint.h>
 #include "osc_bundle_u.h"
 #include "osc_message_s.h"
 #include "osc_error.h"
 #include "osc_array.h"
 
-typedef struct _osc_bundle_s t_osc_bundle_s, t_osc_bndl_s;
 typedef t_osc_array t_osc_bundle_array_s, t_osc_bndl_ar_s;
 
 t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr);

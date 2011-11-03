@@ -28,7 +28,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc.h"
 #include "osc_mem.h"
 #include "osc_byteorder.h"
-#include "osc_bundle_u.h"
+#include "osc_bundle_s.h"
 #include "osc_atom_u.h"
 #include "osc_atom_u.r"
 
@@ -51,7 +51,10 @@ void osc_atom_u_free(t_osc_atom_u *a){
 			osc_mem_free(a->w.s);
 		}
 	}else if(a->typetag == '#'){
-		osc_bundle_u_free(a->w.bndl);
+		if(a->alloc){ // should always be true
+			osc_mem_free(osc_bundle_s_getPtr(a->w.bndl));
+			osc_bundle_s_free(a->w.bndl);
+		}
 	}
 	osc_mem_free(a);
 }
@@ -476,6 +479,35 @@ int osc_atom_u_getBool(t_osc_atom_u *a){
 	return 0;
 }
 
+t_osc_bndl_s *osc_atom_u_getBndl(t_osc_atom_u *a){
+	if(!a){
+		return NULL;
+	}
+	if(a->typetag == '#'){
+		return a->w.bndl;
+	}else{
+		return NULL;
+	}
+}
+
+long osc_atom_u_getBndlLen(t_osc_atom_u *a){
+	t_osc_bndl_s *b = osc_atom_u_getBndl(a);
+	if(b){
+		return osc_bundle_s_getLen(a->w.bndl);
+	}else{
+		return 0;
+	}
+}
+
+char *osc_atom_u_getBndlPtr(t_osc_atom_u *a){
+	t_osc_bndl_s *b = osc_atom_u_getBndl(a);
+	if(b){
+		return osc_bundle_s_getPtr(a->w.bndl);
+	}else{
+		return NULL;
+	}
+}
+
 void osc_atom_u_setFloat(t_osc_atom_u *a, float v){
 	if(!a){
 		return;
@@ -591,13 +623,17 @@ void osc_atom_u_setNull(t_osc_atom_u *a){
 	a->typetag = 'N';
 }
 
-void osc_atom_u_setBndl(t_osc_atom_u *a, t_osc_bndl_u *bndl){
+void osc_atom_u_setBndl(t_osc_atom_u *a, long len, char *ptr){
 	if(!a){
 		return;
 	}
 	osc_atom_u_clear(a);
+	char *copy = osc_mem_alloc(len);
+	memcpy(copy, ptr, len);
+	t_osc_bndl_s *bndl = osc_bundle_s_alloc(len, copy);
 	a->w.bndl = bndl;
 	a->typetag = '#';
+	a->alloc = 1;
 }
 
 size_t osc_atom_u_sizeof(t_osc_atom_u *a){
@@ -668,11 +704,19 @@ t_osc_err osc_atom_u_doSerialize(t_osc_atom_u *a, long *buflen, long *bufpos, ch
 		break;
 	case '#':
 		{
-			long bndlstart = *bufpos;
+			long l = osc_bundle_s_getLen(a->w.bndl);
+			char *p = osc_bundle_s_getPtr(a->w.bndl);
+			if((*bufpos) - (*buflen) < l + 4){
+				(*buf) = osc_mem_resize((*buf), (*buflen) + l);
+				if(!(*buf)){
+					return OSC_ERR_OUTOFMEM;
+				}
+				(*buflen) += l;
+			}
+			*((uint32_t *)((*buf) + (*bufpos))) = hton32(l);
 			(*bufpos) += 4;
-			extern t_osc_err osc_bundle_u_doSerialize(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf);
-			osc_bundle_u_doSerialize(a->w.bndl, buflen, bufpos, buf);
-			*((uint32_t *)(*buf + bndlstart)) = hton32((*bufpos - bndlstart) - 4);
+			memcpy((*buf) + (*bufpos), p, l);
+			(*bufpos) += l;
 		}
 		break;
 	case 'h':
@@ -719,8 +763,8 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 	}
 	if(osc_atom_u_getTypetag(a) == '#'){
 		*bufpos += sprintf(*buf + *bufpos, "[\n");
-		extern t_osc_err osc_bundle_u_doFormat(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf);
-		osc_bundle_u_doFormat(a->w.bndl, buflen, bufpos, buf);
+		extern t_osc_err osc_bundle_s_doFormat(t_osc_bndl_s *bndl, long *buflen, long *bufpos, char **buf);
+		osc_bundle_s_doFormat(a->w.bndl, buflen, bufpos, buf);
 		*bufpos += sprintf(*buf + *bufpos, "]");
 	}else{
 		char *b = *buf + *bufpos;
@@ -728,56 +772,6 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 		(*buf)[(*bufpos)++] = ' ';
 		(*buf)[(*bufpos)] = '\0';
 	}
-	/*
-	switch(osc_atom_u_getTypetag(a)){
-	case 'i':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRId32" ", a->w.i);
-		break;
-	case 'f':
-		*bufpos += sprintf(*buf + *bufpos, "%f ", a->w.f);
-		break;
-	case 'd':
-		*bufpos += sprintf(*buf + *bufpos, "%f ", a->w.d);
-		break;
-	case 's':
-		*bufpos += sprintf(*buf + *bufpos, "%s ", a->w.s);
-		break;
-	case '#':
-		{
-			*bufpos += sprintf(*buf + *bufpos, "[\n");
-			extern t_osc_err osc_bundle_u_doFormat(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf);
-			osc_bundle_u_doFormat(a->w.bndl, buflen, bufpos, buf);
-			*bufpos += sprintf(*buf + *bufpos, "]");
-		}
-	case 'T':
-		*bufpos += sprintf(*buf + *bufpos, "true ");
-		break;
-	case 'F':
-		*bufpos += sprintf(*buf + *bufpos, "false ");
-		break;
-	case 'h':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRId64" ", a->w.h);
-		break;
-	case 'I':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu32" ", a->w.I);
-		break;
-	case 'H':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu64" ", a->w.H);
-		break;
-	case 'N':
-		*bufpos += sprintf(*buf + *bufpos, "NULL ");
-		break;
-	case 'b':
-		{
-			int j, n = osc_sizeof(*(m->typetags), a->w.);
-			*bufpos += sprintf(*buf + *bufpos, "blob (%d bytes): ", n);
-			for(j = 0; j < n; j++){
-				*bufpos += sprintf(*buf + *bufpos, "%d ", a->w.[j]);
-			}
-		}
-		break;
-	}
-	*/
 	return OSC_ERR_NONE;
 }
 

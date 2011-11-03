@@ -106,6 +106,7 @@ typedef struct _osc_atom_u t_osc_atom_u;
 #include <stdint.h>
 #include <stdlib.h>
 #include "osc_error.h"
+#include "osc_bundle_s.h"
 #include "osc_bundle_u.h"
 #include "osc_atom_u.h"
 #include "osc_array.h"
@@ -281,6 +282,10 @@ if the string contains "true" or "false".
  */
 int osc_atom_u_getBool(t_osc_atom_u *a);
 
+t_osc_bndl_s *osc_atom_u_getBndl(t_osc_atom_u *a);
+long osc_atom_u_getBndlLen(t_osc_atom_u *a);
+char *osc_atom_u_getBndlPtr(t_osc_atom_u *a);
+
 /** \brief Set the contents of a #t_osc_atom_u to a 32-bit floating point value.
 
 \param a The #t_osc_atom_u
@@ -378,6 +383,17 @@ Note that the #t_osc_atom_u actually has no value, only the typetag is set to 'N
 */
 void osc_atom_u_setNull(t_osc_atom_u *a);
 
+/** \brief Set the #t_osc_atom_s to point to a (serialized) #t_osc_bndl_s.
+
+The #t_osc_bndl_s that bndl points to will be copied and freed when the 
+#t_osc_atom_u is freed.
+
+\param a The #t_osc_atom_s
+\param len The length of the bundle in bytes
+\param ptr A pointer to the serialized bundle
+*/
+void osc_atom_u_setBndl(t_osc_atom_u *a, long len, char *ptr);
+
 /** \brief Set the #t_osc_atom_u to point to a(n unserialized) #t_osc_bndl_u.
 
 The #t_osc_bndl_u that bndl points to will not be copied.  The caller is responsible 
@@ -386,7 +402,7 @@ for freeing it.
 \param a The #t_osc_atom_u
 \param bndl The #t_osc_bndl_u to be referenced
 */
-void osc_atom_u_setBndl(t_osc_atom_u *a, t_osc_bndl_u *bndl);
+void osc_atom_u_setSerializedBndl(t_osc_atom_u *a, t_osc_bndl_u *bndl);
 
 /** \brief Return the size of the data represented by the #t_osc_atom_u.
 

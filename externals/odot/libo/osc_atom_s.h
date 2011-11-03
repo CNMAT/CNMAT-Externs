@@ -52,17 +52,17 @@ the arguments in a serialized OSC message.  Currently, it supports the following
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdlib.h>
-#include "osc_error.h"
-#include "osc_byteorder.h"
-#include "osc_atom_u.h"
-
 /** \brief Opaque data type for storing an argument to an OSC message
 
 This structure is defined in osc_atom_s.r.  
 */
 typedef struct _osc_atom_s t_osc_atom_s;
+
+#include <stdint.h>
+#include <stdlib.h>
+#include "osc_error.h"
+#include "osc_byteorder.h"
+#include "osc_atom_u.h"
 
 /** \brief Allocate a #t_osc_atom_s and set it to refer to ptr
 
