@@ -225,11 +225,18 @@ void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
 #if !defined UNION && !defined INTERSECTION && !defined DIFFERENCE
 		int nargs = attr_args_offset(argc, argv);
 		if(nargs){
-			if(atom_gettype(argv)){
+			if(atom_gettype(argv) == A_SYM){
 				if(osc_error_validateAddress(atom_getsym(argv)->s_name)){
 					object_error((t_object *)x, "arguments must begin with a valid OSC address");
 					return NULL;
 				}
+				t_symbol *address = atom_getsym(argv);
+				x->len = x->buflen = omax_util_get_bundle_size_for_atoms(address, argc - 1, argv + 1);
+				printf("len = %d\n", x->len);
+				x->bndl = (char *)osc_mem_alloc(x->buflen);
+				memset(x->bndl, '\0', x->len);
+				osc_bundle_s_setBundleID(x->bndl);
+				omax_util_encode_atoms(x->bndl + OSC_HEADER_SIZE, address, argc - 1, argv + 1);
 			}else{
 				object_error((t_object *)x, "arguments must begin with a valid OSC address");
 				return NULL;
