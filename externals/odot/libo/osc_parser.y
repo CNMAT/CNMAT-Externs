@@ -18,7 +18,7 @@
 #include "osc_parser.h"
 #include "osc_scanner.h"
 
-	#define OSC_PARSER_DEBUG
+	//#define OSC_PARSER_DEBUG
 #ifdef OSC_PARSER_DEBUG
 #define PP(fmt, ...)printf("%d: "fmt, __LINE__, ##__VA_ARGS__)
 #else
