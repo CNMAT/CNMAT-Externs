@@ -177,7 +177,7 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 				t_atom atoms[numatoms];
 				omax_util_oscMsg2MaxAtoms(msg, atoms);
 				if(atom_gettype(atoms + 1) == A_SYM){
-					outlet_list(((t_oroute_context *)context)->outlet, atom_getsym(atoms + 1), numatoms - 2, atoms + 2);
+					outlet_anything(((t_oroute_context *)context)->outlet, atom_getsym(atoms + 1), numatoms - 2, atoms + 2);
 				}else{
 					outlet_list(((t_oroute_context *)context)->outlet, NULL, numatoms - 1, atoms + 1);
 				}
