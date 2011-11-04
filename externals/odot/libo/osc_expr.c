@@ -265,7 +265,7 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		if(arg2type == OSC_EXPR_ARG_TYPE_OSCADDRESS){
 			// 2nd arg is an OSC address--look it up in the bundle
 			t_osc_atom_ar_u *arg = NULL;
-			osc_expr_getArg(f_argv, len, oscbndl, &arg);
+			osc_expr_getArg(f_argv->next, len, oscbndl, &arg);
 			if(osc_atom_u_getTypetag(osc_atom_array_u_get(arg, 0)) == 's' &&
 			   osc_atom_array_u_getLen(arg) == 1){
 				osc_atom_u_getString(osc_atom_array_u_get(arg, 0), &expression);
