@@ -70,23 +70,23 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 
 t_symbol *ps_FullPacket;
 
+void opack_fullPacket(t_opack *x, long len, long ptr){
+	int inlet = proxy_getinlet((t_object *)x);
+	osc_message_u_clearArgs(osc_message_array_u_get(x->messages, inlet));
+	osc_message_u_appendBndl(osc_message_array_u_get(x->messages, inlet), len, (char *)ptr);
+	int shouldoutput = inlet == 0;
+#ifdef PAK
+	shouldoutput = 0;
+#endif
+	if(shouldoutput){
+		opack_outputBundle(x);
+	}
+}
+
 void opack_outputBundle(t_opack *x){
 	char *bndl = NULL;
 	long len = 0;
-	/*
-	t_osc_bndl_it_u *it = osc_bndl_it_u_get(x->bndl);
-	while(osc_bndl_it_u_hasNext(it)){
-		t_osc_msg_u *msg = osc_bndl_it_u_next(it);
-		t_osc_msg_it_u *mit = osc_msg_it_u_get(msg);
-		int i = 0;
-		while(osc_msg_it_u_hasNext(mit)){
-			t_osc_atom_u *a = osc_msg_it_u_next(mit);
-			printf("%d: %f\n", i++, osc_atom_u_getDouble(a));
-		}
-		osc_msg_it_u_destroy(mit);
-	}
-	osc_bndl_it_u_destroy(it);
-	*/
+
 	osc_bundle_u_serialize(x->bndl, &len, &bndl);
 	t_atom out[2];
 	atom_setlong(out, len);
@@ -248,6 +248,7 @@ int main(void){
 	t_class *c = class_new(name, (method)opack_new, (method)opack_free, sizeof(t_opack), 0L, A_GIMME, 0);
     	//osc_set_mem((void *)sysmem_newptr, sysmem_freeptr, (void *)sysmem_resizeptr);
 	//class_addmethod(c, (method)opack_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)opack_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)opack_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)opack_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)opack_list, "list", A_GIMME, 0);
