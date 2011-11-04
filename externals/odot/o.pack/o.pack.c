@@ -150,6 +150,15 @@ void opack_bang(t_opack *x){
 	opack_outputBundle(x);
 }
 
+void opack_set(t_opack *x, t_symbol *address){
+	int inlet = proxy_getinlet((t_object *)x);
+	t_osc_msg_u *m = osc_message_array_u_get(x->messages, inlet);
+	t_osc_err ret;
+	if(ret = osc_message_u_setAddress(m, address->s_name)){
+		object_error((t_object *)x, "%s", osc_error_string(ret));
+	}
+}
+
 void opack_assist(t_opack *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		sprintf(s,"OSC bundle");
@@ -255,6 +264,7 @@ int main(void){
 	class_addmethod(c, (method)opack_float, "float", A_FLOAT, 0);
 	class_addmethod(c, (method)opack_int, "int", A_LONG, 0);
 	class_addmethod(c, (method)opack_bang, "bang", 0);
+	class_addmethod(c, (method)opack_set, "set", A_SYM, 0);
 
 	class_register(CLASS_BOX, c);
 	opack_class = c;
