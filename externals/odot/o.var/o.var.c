@@ -232,7 +232,6 @@ void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
 				}
 				t_symbol *address = atom_getsym(argv);
 				x->len = x->buflen = omax_util_get_bundle_size_for_atoms(address, argc - 1, argv + 1);
-				printf("len = %d\n", x->len);
 				x->bndl = (char *)osc_mem_alloc(x->buflen);
 				memset(x->bndl, '\0', x->len);
 				osc_bundle_s_setBundleID(x->bndl);

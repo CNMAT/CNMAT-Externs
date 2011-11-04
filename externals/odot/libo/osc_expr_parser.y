@@ -98,6 +98,7 @@ void yyerror(t_osc_expr **exprstack, void *scanner, char const *e, ...){
 	va_list ap;
 	va_start(ap, e);
 	vprintf(e, ap);
+	printf("\n");
 }
 
 t_osc_expr *osc_expr_parser_infix(char *function_name, t_osc_expr_arg *left, t_osc_expr_arg *right){

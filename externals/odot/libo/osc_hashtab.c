@@ -89,6 +89,9 @@ static uint32_t osc_hashtab_getPrime(uint32_t n){
 }
 
 static void osc_hashtab_rehash(t_osc_hashtab *ht){
+	if(!ht){
+		return;
+	}
 	int i;
 	for(i = 0; i < sizeof(primes) / sizeof(long); i++){
 		if(ht->nslots > primes[i]){
@@ -198,14 +201,23 @@ static void osc_hashtab_doStore(t_osc_hashtab *ht,
 
 // will blow away an existing entry with the same key
 void osc_hashtab_store(t_osc_hashtab *ht, int keylen, char *key, void *val){
+	if(!ht){
+		return;
+	}
 	osc_hashtab_doStore(ht, keylen, key, val, osc_hashtab_store_elem);
 }
 
 void osc_hashtab_storeSafe(t_osc_hashtab *ht, int keylen, char *key, void *val){
+	if(!ht){
+		return;
+	}
 	osc_hashtab_doStore(ht, keylen, key, val, osc_hashtab_store_elem_safe);
 }
 
 void *osc_hashtab_lookup(t_osc_hashtab *ht, int keylen, char *key){
+	if(!ht){
+		return NULL;
+	}
 	OSC_HASHTYPE h = osc_hash(keylen, key);
 	t_osc_hashtab_elem *e = ht->slots[h % ht->nslots];
 	while(e){
@@ -218,6 +230,9 @@ void *osc_hashtab_lookup(t_osc_hashtab *ht, int keylen, char *key){
 }
 
 void osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key, t_osc_hashtab_dtor dtor){
+	if(!ht){
+		return;
+	}
 	OSC_HASHTYPE h = osc_hash(keylen, key);
 	t_osc_hashtab_elem *e = ht->slots[h % ht->nslots];
 	t_osc_hashtab_elem *prev = NULL;
@@ -242,6 +257,9 @@ void osc_hashtab_remove(t_osc_hashtab *ht, int keylen, char *key, t_osc_hashtab_
 }
 
 void osc_hashtab_foreach(t_osc_hashtab *ht, void (*cb)(char *key, void *val, void *context), void *context){
+	if(!ht){
+		return;
+	}
 	int i;
 	for(i = 0; i < ht->nslots; i++){
 		t_osc_hashtab_elem *e = ht->slots[i];
@@ -253,6 +271,9 @@ void osc_hashtab_foreach(t_osc_hashtab *ht, void (*cb)(char *key, void *val, voi
 }
 
 void osc_hashtab_clear(t_osc_hashtab *ht){
+	if(!ht){
+		return;
+	}
 	int i;
 	for(i = 0; i < ht->nslots; i++){
 		t_osc_hashtab_elem *e = ht->slots[i];
@@ -270,6 +291,9 @@ void osc_hashtab_clear(t_osc_hashtab *ht){
 }
 
 void osc_hashtab_destroy(t_osc_hashtab *ht){
+	if(!ht){
+		return;
+	}
 	osc_hashtab_clear(ht);
 	osc_mem_free(ht->slots);
 	osc_mem_free(ht);

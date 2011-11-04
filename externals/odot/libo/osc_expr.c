@@ -1557,7 +1557,6 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 	while(f_argv){
 		switch(f_argv->type){
 		case OSC_EXPR_ARG_TYPE_ATOM:
-			printf("atom\n");
 			{
 				t_osc_atom_u *a = f_argv->arg.atom;
 				switch(osc_atom_u_getTypetag(a)){
@@ -1584,11 +1583,9 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 			}
 			break;
 		case OSC_EXPR_ARG_TYPE_OSCADDRESS:
-			printf("address\n");
 			ptr += sprintf(ptr, "%s ", f_argv->arg.osc_address);
 			break;
 		case OSC_EXPR_ARG_TYPE_EXPR:
-			printf("expr\n");
 			ptr += osc_expr_formatFunctionGraph_r(f_argv->arg.expr, ptr);
 			break;
 		}
@@ -1601,13 +1598,11 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 
 void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt){
 	if(!(*fmt)){
-		printf("alloc\n");
 		*fmt = osc_mem_alloc(512);
 	}
 	long bufsize = 512, bufpos = 0;
 	t_osc_expr *f = fg;
 	while(f){
-		printf("while %p\n", f);
 		if(bufpos < 256){
 			*fmt = osc_mem_resize(*fmt, bufsize + 256);
 		}

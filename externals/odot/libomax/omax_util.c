@@ -1017,7 +1017,7 @@ char omax_util_typetagForAtom(t_atom *a){
 }
 
 int omax_util_get_bundle_size_for_atoms(t_symbol *address, int argc, t_atom *argv){
-	int len = 20;
+	int len = OSC_HEADER_SIZE + 4; // size of first message 
 	len += strlen(address->s_name);
 	len++;
 	while(len % 4){
