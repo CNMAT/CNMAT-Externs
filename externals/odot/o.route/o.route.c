@@ -161,10 +161,13 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 					outlet_int(((t_oroute_context *)context)->outlet, atom_getlong(a + 1));
 					break;
 				case A_SYM:
-					if(atom_getsym(a + 1) == ps_FullPacket){
-						outlet_list(((t_oroute_context *)context)->outlet, NULL, 3, a + 1);
-					}else{
-						outlet_anything(((t_oroute_context *)context)->outlet, atom_getsym(a + 1), 0, NULL);
+					{
+						t_symbol *s = atom_getsym(a + 1);
+						if(s == ps_FullPacket){
+							outlet_anything(((t_oroute_context *)context)->outlet, ps_FullPacket, 2, a + 2);
+						}else{
+							outlet_anything(((t_oroute_context *)context)->outlet, atom_getsym(a + 1), 0, NULL);
+						}
 					}
 					break;
 				}
@@ -172,7 +175,11 @@ void oroute_dispatch_callback(t_osc_vtable_entry *e,
 				int numatoms = omax_util_getNumAtomsInOSCMsg(msg);
 				t_atom atoms[numatoms];
 				omax_util_oscMsg2MaxAtoms(msg, atoms);
-				outlet_list(((t_oroute_context *)context)->outlet, NULL, numatoms - 1, atoms + 1);
+				if(atom_gettype(atoms + 1) == A_SYM){
+					outlet_list(((t_oroute_context *)context)->outlet, atom_getsym(atoms + 1), numatoms - 2, atoms + 2);
+				}else{
+					outlet_list(((t_oroute_context *)context)->outlet, NULL, numatoms - 1, atoms + 1);
+				}
 			}
 		}
 		osc_bndl_it_s_destroy(it);
