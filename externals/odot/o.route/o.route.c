@@ -76,6 +76,7 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv);
 void oroute_free(t_oroute *x);
 void oroute_assist(t_oroute *x, void *b, long m, long a, char *s);
 void oroute_set(t_oroute *x, long index, t_symbol *sym);
+void oroute_doSet(t_oroute *x, long index, t_symbol *sym);
 void oroute_makeSchema(t_oroute *x);
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv);
 
@@ -224,7 +225,7 @@ void oroute_delegation_callback(long bndllen,
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 	long inlet = proxy_getinlet((t_object *)x);
 	if(inlet > 0){
-		oroute_set(x, inlet, msg);
+		oroute_doSet(x, inlet, msg);
 		return;
 	}
 	if(!msg){
@@ -277,12 +278,16 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void oroute_set(t_oroute *x, long index, t_symbol *sym){
+	oroute_doSet(x, index, sym);
+}
+
+void oroute_doSet(t_oroute *x, long index, t_symbol *sym){
 	if(index < 1 || index > x->nselectors){
 		object_error((t_object *)x, "index (%d) out of bounds", index);
 		return;
 	}
 	osc_vtable_renameEntry(x->vtab, x->selectors[x->nselectors - (index)], sym->s_name);
-	x->selectors[x->nselectors - (index - 1)] = sym->s_name;
+	x->selectors[x->nselectors - index] = sym->s_name;
 	oroute_makeSchema(x);
 }
 
