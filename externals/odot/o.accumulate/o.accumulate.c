@@ -61,6 +61,10 @@ t_max_err oaccum_notify(t_oaccum *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
+	if(len == OSC_HEADER_SIZE){
+		// empty bundle
+		return;
+	}
 	if(x->buffer_pos + len > x->buffer_len){
 		char *tmp = (char *)realloc(x->buffer, x->buffer_pos + len);
 		if(!tmp){
