@@ -161,6 +161,7 @@ void ovar_bang(t_ovar *x){
 #if (defined UNION || defined INTERSECTION || defined DIFFERENCE)
 	//char emptybndl[] = {'#', 'b', 'u', 'n', 'd', 'l', 'e', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
 	//ovar_fullPacket(x, sizeof(emptybndl), (long)emptybndl);
+	ovar_fullPacket(x, OSC_HEADER_SIZE, (long)x->emptybndl);
 #else
 	if(x->len){
 		critical_enter(x->lock);
