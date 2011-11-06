@@ -51,6 +51,7 @@ typedef struct _ovar{
 	char *bndl;
 	long buflen;
 	t_critical lock;
+	char emptybndl[OSC_HEADER_SIZE];
 } t_ovar;
 
 void *ovar_class;
@@ -158,18 +159,25 @@ void ovar_bang(t_ovar *x){
 		return;
 	}
 #if (defined UNION || defined INTERSECTION || defined DIFFERENCE)
-	char emptybndl[] = {'#', 'b', 'u', 'n', 'd', 'l', 'e', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
-	ovar_fullPacket(x, sizeof(emptybndl), (long)emptybndl);
+	//char emptybndl[] = {'#', 'b', 'u', 'n', 'd', 'l', 'e', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
+	//ovar_fullPacket(x, sizeof(emptybndl), (long)emptybndl);
 #else
-	critical_enter(x->lock);
-	long len = x->len;
-	char bndl[len];
-	memcpy(bndl, x->bndl, len);
-	critical_exit(x->lock);
-	t_atom out[2];
-	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)bndl);
-	outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	if(x->len){
+		critical_enter(x->lock);
+		long len = x->len;
+		char bndl[len];
+		memcpy(bndl, x->bndl, len);
+		critical_exit(x->lock);
+		t_atom out[2];
+		atom_setlong(out, len);
+		atom_setlong(out + 1, (long)bndl);
+		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	}else{
+		t_atom out[2];
+		atom_setlong(out, OSC_HEADER_SIZE);
+		atom_setlong(out + 1, (long)x->emptybndl);
+		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	}
 #endif
 }
 
@@ -219,6 +227,8 @@ void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
 		x->len = 0;
 		x->buflen = 0;
 		x->bndl = NULL;
+		memset(x->emptybndl, '\0', OSC_HEADER_SIZE);
+		osc_bundle_s_setBundleID(x->emptybndl);
 
 		//attr_args_process(x, argc, argv);
 
