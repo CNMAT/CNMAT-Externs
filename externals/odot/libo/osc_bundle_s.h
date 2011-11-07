@@ -50,6 +50,8 @@ void osc_bundle_s_free(t_osc_bndl_s *bndl);
 void osc_bundle_s_deepFree(t_osc_bndl_s *bndl);
 char *osc_bundle_s_getPtr(t_osc_bndl_s *bndl);
 long osc_bundle_s_getLen(t_osc_bndl_s *bndl);
+void osc_bundle_s_setLen(t_osc_bndl_s *bndl, long len);
+void osc_bundle_s_setPtr(t_osc_bndl_s *bndl, char *ptr);
 t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count);
 t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_osc_msg_s*, void *), void *context);
 t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, t_osc_array **osc_msg_s_array, int fullmatch);

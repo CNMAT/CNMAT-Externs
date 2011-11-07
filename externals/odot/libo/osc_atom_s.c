@@ -728,67 +728,6 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 		(*buf)[(*bufpos)++] = ' ';
 		(*buf)[(*bufpos)] = '\0';
 	}
-	/*
-	char *data = osc_atom_s_getData(a);
-	switch(osc_atom_s_getTypetag(a)){
-	case 'i':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRId32" ", (int32_t)ntoh32(*((int32_t *)data)));
-		break;
-	case 'f':
-		{
-			uint32_t l = ntoh32(*((uint32_t *)data));
-			*bufpos += sprintf(*buf + *bufpos, "%f ", *((float *)&l));
-		}
-		break;
-	case 'd':
-		{
-			uint64_t l = ntoh64(*((int64_t *)data));
-			*bufpos += sprintf(*buf + *bufpos, "%f ", *((double *)&l));
-		}
-		break;
-	case 's':
-		*bufpos += sprintf(*buf + *bufpos, "%s ", data);
-		break;
-	case '#':
-		{
-			*bufpos += sprintf(*buf + *bufpos, "[\n");
-			extern t_osc_err osc_bundle_s_doFormat(long len, char *bndl, long *buflen, long *bufpos, char **buf);
-			osc_bundle_s_doFormat(ntoh32(*((uint32_t *)data)), data + 4, buflen, bufpos, buf);
-			*bufpos += sprintf(*buf + *bufpos, "]");
-		}
-		break;
-	case 'h':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRId64" ", (int64_t)ntoh64(*((int64_t *)data)));
-		break;
-	case 'I':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu32" ", (uint32_t)ntoh32(*((uint32_t *)data)));
-		break;
-	case 'H':
-		*bufpos += sprintf(*buf + *bufpos, "%"PRIu64" ", (uint64_t)ntoh64(*((uint64_t *)data)));
-		break;
-	case 'c':
-		*bufpos += sprintf(*buf + *bufpos, "%c ", *(data));
-		break;
-	case 'T':
-		*bufpos += sprintf(*buf + *bufpos, "true ");
-		break;
-	case 'F':
-		*bufpos += sprintf(*buf + *bufpos, "false ");
-		break;
-	case 'N':
-		*bufpos += sprintf(*buf + *bufpos, "NULL ");
-		break;
-	case 'b':
-		{
-			int j, n = osc_sizeof(*(m->typetags), data);
-			*bufpos += sprintf(*buf + *bufpos, "blob (%d bytes): ", n);
-			for(j = 0; j < n; j++){
-				*bufpos += sprintf(*buf + *bufpos, "%d ", data[j]);
-			}
-		}
-		break;
-	}
-	*/
 	return OSC_ERR_NONE;
 }
 

@@ -57,9 +57,8 @@ t_osc_err osc_parser_parseString(long len, char *ptr, struct _osc_bundle_u **bnd
 
 %{
 
-int osc_parser_lex(YYSTYPE *yylval_param, yyscan_t yyscanner);
-int osc_parser_lex(YYSTYPE *yylval_param, yyscan_t yyscanner){
-	return osc_scanner_lex(yylval_param, yyscanner);
+int osc_parser_lex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner){
+	return osc_scanner_lex(yylval_param, yylloc_param, yyscanner);
 }
 
 int yyparse (t_osc_parser_bndl_list **bndl, t_osc_msg_u **msg, long *nsubs, t_osc_parser_subst **subs, void *scanner);
@@ -83,9 +82,9 @@ t_osc_err osc_parser_parseString(long len, char *ptr, t_osc_bndl_u **bndl, long 
 	return OSC_ERR_NONE;
 }
 
-void yyerror (t_osc_parser_bndl_list **bndl, t_osc_msg_u **msg, long *nsubs, t_osc_parser_subst **subs, void *scanner, char const *e);
-void yyerror (t_osc_parser_bndl_list **bndl, t_osc_msg_u **msg, long *nsubs, t_osc_parser_subst **subs, void *scanner, char const *e){
-	printf("error, bitches: %s\n", e);
+void yyerror (YYLTYPE *yylloc, t_osc_parser_bndl_list **bndl, t_osc_msg_u **msg, long *nsubs, t_osc_parser_subst **subs, void *scanner, char const *e){
+	printf("osc_parser: error: %s\n", e);
+	//printf("%d: %s at %s\n", yylineno, e, yytext);
 }
 
 void osc_parser_substitution(t_osc_parser_subst **subs_list, t_osc_msg_u *msg, int listitem, t_osc_atom_u *osc_atom, int item_to_replace){
@@ -101,6 +100,8 @@ void osc_parser_substitution(t_osc_parser_subst **subs_list, t_osc_msg_u *msg, i
 %}
 
 %define "api.pure"
+%locations
+
 
 %parse-param{t_osc_parser_bndl_list **bndl}
 %parse-param{t_osc_msg_u **msg}

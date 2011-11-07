@@ -82,6 +82,18 @@ long osc_bundle_s_getLen(t_osc_bndl_s *bndl){
 	return bndl->len;
 }
 
+void osc_bundle_s_setLen(t_osc_bndl_s *bndl, long len){
+	if(bndl){
+		bndl->len = len;
+	}
+}
+
+void osc_bundle_s_setPtr(t_osc_bndl_s *bndl, char *ptr){
+	if(bndl){
+		bndl->ptr = ptr;
+	}
+}
+
 t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count){
 	*count = 0;
 	t_osc_err ret;
@@ -303,7 +315,7 @@ t_osc_array *osc_bundle_array_s_alloc(long len){
 }
 
 t_osc_err osc_bundle_s_union(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out){
-	if(len1 == 0 && len2 == 0){
+	if((len1 == 0 && len2 == 0) || (len1 == OSC_HEADER_SIZE && len2 == OSC_HEADER_SIZE)){
 		return OSC_ERR_NONE;
 	}
 	if(!(*bndl_out)){
@@ -341,7 +353,7 @@ t_osc_err osc_bundle_s_union(long len1, char *bndl1, long len2, char *bndl2, lon
 }
 
 t_osc_err osc_bundle_s_intersection(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out){
-	if(len1 == 0 || len2 == 0){
+	if(len1 == 0 || len2 == 0 || len1 == OSC_HEADER_SIZE || len2 == OSC_HEADER_SIZE){
 		return OSC_ERR_NONE;
 	}
 	if(!(*bndl_out)){
@@ -370,7 +382,7 @@ t_osc_err osc_bundle_s_intersection(long len1, char *bndl1, long len2, char *bnd
 }
 
 t_osc_err osc_bundle_s_difference(long len1, char *bndl1, long len2, char *bndl2, long *len_out, char **bndl_out){
-	if(len1 == 0 && len2 == 0){
+	if((len1 == 0 && len2 == 0) || (len1 == OSC_HEADER_SIZE && len2 == OSC_HEADER_SIZE)){
 		return OSC_ERR_NONE;
 	}
 	if(!(*bndl_out)){

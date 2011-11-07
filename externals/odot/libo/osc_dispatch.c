@@ -27,6 +27,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "osc.h"
 #include "osc_dispatch.h"
 #include "osc_mem.h"
 #include "osc_error.h"
@@ -131,7 +132,7 @@ int osc_dispatch_msg(t_osc_msg_s *msg,
 
 t_osc_err osc_dispatch_impl_nest(char *selector,
 				 long bndllen,	
-			 char *bndl,
+			         char *bndl,
 				 int strip_matched_portion_of_address,
 				 t_osc_bndl_s **partial_match,
 				 t_osc_bndl_s **complete_match)
@@ -185,6 +186,15 @@ t_osc_err osc_dispatch(t_osc_vtable *vtab,
 		       char *bndl,
 		       int strip_matched_portion_of_address)
 {
+	if(bndllen == OSC_HEADER_SIZE){
+		// empty bundle--dispatch
+		char bytes[osc_bundle_s_getStructSize()];
+		t_osc_bndl_s *unmatched = (t_osc_bndl_s *)bytes;
+		osc_bundle_s_setLen(unmatched, bndllen);
+		osc_bundle_s_setLen(unmatched, bndl);
+		osc_vtable_delegate(vtab, bndllen, bndl, unmatched);
+		return OSC_ERR_NONE;
+	}
 	int nentries = osc_vtable_getNumEntries(vtab);
 	t_osc_bndl_s *partial_matches[nentries];
 	t_osc_bndl_s *complete_matches[nentries];
@@ -228,6 +238,15 @@ t_osc_err osc_dispatch_selectors(t_osc_vtable *vtab,
 				 char *bndl,
 				 int strip_matched_portion_of_address)
 {
+	if(bndllen == OSC_HEADER_SIZE){
+		// empty bundle--dispatch
+		char bytes[osc_bundle_s_getStructSize()];
+		t_osc_bndl_s *unmatched = (t_osc_bndl_s *)bytes;
+		osc_bundle_s_setLen(unmatched, bndllen);
+		osc_bundle_s_setLen(unmatched, bndl);
+		osc_vtable_delegate(vtab, bndllen, bndl, unmatched);
+		return OSC_ERR_NONE;
+	}
 	int nentries = osc_vtable_getNumEntries(vtab);
 	t_osc_bndl_s *partial_matches[nentries];
 	t_osc_bndl_s *complete_matches[nentries];

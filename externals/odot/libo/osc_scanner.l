@@ -26,6 +26,7 @@ c99_floating_point_constant  ({dfc}|{hfc})
 
 %option reentrant
 %option bison-bridge
+%option bison-locations
 
 %%
 
