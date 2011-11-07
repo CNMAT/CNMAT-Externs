@@ -186,12 +186,15 @@ t_osc_err osc_dispatch(t_osc_vtable *vtab,
 		       char *bndl,
 		       int strip_matched_portion_of_address)
 {
+	if(!bndl){
+		return OSC_ERR_NOBUNDLE;
+	}
 	if(bndllen == OSC_HEADER_SIZE){
 		// empty bundle--dispatch
 		char bytes[osc_bundle_s_getStructSize()];
 		t_osc_bndl_s *unmatched = (t_osc_bndl_s *)bytes;
 		osc_bundle_s_setLen(unmatched, bndllen);
-		osc_bundle_s_setLen(unmatched, bndl);
+		osc_bundle_s_setPtr(unmatched, bndl);
 		osc_vtable_delegate(vtab, bndllen, bndl, unmatched);
 		return OSC_ERR_NONE;
 	}
@@ -238,12 +241,15 @@ t_osc_err osc_dispatch_selectors(t_osc_vtable *vtab,
 				 char *bndl,
 				 int strip_matched_portion_of_address)
 {
+	if(!bndl){
+		return OSC_ERR_NOBUNDLE;
+	}
 	if(bndllen == OSC_HEADER_SIZE){
 		// empty bundle--dispatch
 		char bytes[osc_bundle_s_getStructSize()];
 		t_osc_bndl_s *unmatched = (t_osc_bndl_s *)bytes;
 		osc_bundle_s_setLen(unmatched, bndllen);
-		osc_bundle_s_setLen(unmatched, bndl);
+		osc_bundle_s_setPtr(unmatched, bndl);
 		osc_vtable_delegate(vtab, bndllen, bndl, unmatched);
 		return OSC_ERR_NONE;
 	}
