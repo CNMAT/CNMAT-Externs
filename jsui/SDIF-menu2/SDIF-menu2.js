@@ -1,7 +1,7 @@
 /*
 
 SDIF Menu 2
-by Michael Zbyszynsk
+by Michael Zbyszynski
 
 Copyright (c) 2005-11.  The Regents of the University of California
 (Regents). All Rights Reserved.
@@ -41,7 +41,7 @@ COPYRIGHT_YEARS: 2005-11
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.5: This one can draw a little nicer.
 VERSION 1.0: Fixed alpha values for newer versions of Max.
-VERSION 1.1: Changed default color scheme (Rama)
+VERSION 1.1: Added save methods for recall of colors
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -57,10 +57,10 @@ var hilite = 999;
 var j = 999;
 var full = 0;
 
-var mybrgb = [0.0,0.0,0.0];
-var myfrgb = [1.,1.,1.];
-var myrgb2 = [0,0,0];
-var hilitergb = [0.2, 1., 1.];
+var mybrgb = [0.1, 0.1, 0.2, 1.];
+var myfrgb = [0.2, 0.7, 1., 1.];
+var myrgb2 = [0.2, 0.1, 0.3, 1.];
+var hilitergb = [0.2, 1., 1., 1.];
 
 var myfont = "Sans Serif";  // Geneva on Mac, Arial on PC
 var myfontsize = 12;
@@ -113,42 +113,81 @@ function msg_int(a)
 	
 }
 
+//setter functions for colors -------------------------------------------------
+
 function frgb(r,g,b)
 {
-	myfrgb[0] = r/255.;
-	myfrgb[1] = g/255.;
-	myfrgb[2] = b/255.;
-	draw();
-	refresh();
-}
-
-function highlight(r,g,b)
-{
-	hilitergb[0] = r/255.;
-	hilitergb[1] = g/255.;
-	hilitergb[2] = b/255.;
+	myfrgb[0] = r;
+	myfrgb[1] = g;
+	myfrgb[2] = b;
+	myfrgb[3] = 1.;
 	draw();
 	refresh();
 }
 
 function brgb(r,g,b)
 {
-	mybrgb[0] = r/255.;
-	mybrgb[1] = g/255.;
-	mybrgb[2] = b/255.;
+	mybrgb[0] = r;
+	mybrgb[1] = g;
+	mybrgb[2] = b;
+	mybrgb[3] = 1.;
 	draw();
 	refresh();
 }
 
 function rgb2(r,g,b)
 {
-	myrgb2[0] = r/255.;
-	myrgb2[1] = g/255.;
-	myrgb2[2] = b/255.;
+	myrgb2[0] = r;
+	myrgb2[1] = g;
+	myrgb2[2] = b;
+	myrgb2[3] = 1.;
 	draw();
 	refresh();
 }
 
+function highlight(r,g,b)
+{
+	hilitergb[0] = r;
+	hilitergb[1] = g;
+	hilitergb[2] = b;
+	hilitergb[3] = 1.;
+	draw();
+	refresh();
+}
+
+//recall saved settings with unique functions--------------------------------------------------
+
+function save()
+{
+    embedmessage("r_brgb", mybrgb[0], mybrgb[1], mybrgb[2], mybrgb[3]);
+    embedmessage("r_frgb", myfrgb[0], myfrgb[1], myfrgb[2], myfrgb[3]);
+    embedmessage("r_rgb2", myrgb2[0], myrgb2[1], myrgb2[2], myrgb2[3]);
+    embedmessage("r_hlit", hilitergb[0], hilitergb[1], hilitergb[2], hilitergb[3]);
+}
+
+//getter functions for colors-----------------------------------------------------------------
+
+function r_hlit(r, g, b)
+{
+    highlight(r, g, b);
+}
+
+function r_frgb(r, g, b)
+{
+    frgb(r, g, b);
+}
+
+function r_brgb(r, g, b)
+{
+    brgb(r, g, b);
+}
+
+function r_rgb2(r, g, b)
+{
+    rgb2(r, g, b);
+}
+
+//---------------------------------------------------------------------------------------------
 
 function fsaa(v)
 {
@@ -218,7 +257,7 @@ function draw()
 		joe = "name: " + title[0] +  "   streams: " + title[1];
 		text(joe);
 		moveto(screentoworld (0, offset+3))
-		lineto (screentoworld (1000, offset+3, 0));
+		lineto(screentoworld (1000, offset+3, 0));
 		fontsize(myfontsize);
 	
 
