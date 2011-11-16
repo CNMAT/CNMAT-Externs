@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 0
+			"revision" : 1
 		}
 ,
 		"rect" : [ 285.0, 44.0, 831.0, 327.0 ],
@@ -107,8 +107,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
-					"patching_rect" : [ 440.0, 160.0, 149.0, 20.0 ],
-					"text" : "o.pack /foo bloo /bar 7 8 9"
+					"patching_rect" : [ 440.0, 160.0, 143.0, 20.0 ],
+					"text" : "o.pak /foo bloo /bar 7 8 9"
 				}
 
 			}
@@ -384,6 +384,10 @@
 			}
 , 			{
 				"name" : "o.message.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "o.pak.mxo",
 				"type" : "iLaX"
 			}
  ]
