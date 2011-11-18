@@ -288,7 +288,8 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE))){
 			// complete match
 			if(argc){
-				outlet_list(x->outlets[i], NULL, argc, argv);
+				//outlet_list(x->outlets[i], NULL, argc, argv);
+				outlet_atoms(x->outlets[i], argc, argv);
 			}else{
 				outlet_bang(x->outlets[i]);
 			}
