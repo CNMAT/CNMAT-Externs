@@ -262,7 +262,7 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"scale", osc_expr_scale, 5, NULL, "Scale the data from arg1 and arg2 to arg3 and arg4"},
 	{"mtof", osc_expr_mtof, -1, NULL, "MIDI note number to frequency.  Optional arg2 sets base."},
 	{"ftom", osc_expr_ftom, -1, NULL, "Frequency to MIDI. Optional arg2 sets base."},
-	{"rand", osc_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"},
+	//{"rand", osc_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"},
 	{"sgn", osc_expr_sgn, 1, NULL, "Sign function--returns -1 if <arg1> < 0, 0 if <arg1> == 0, and 1 if <arg1> > 1"},
 	{"if", osc_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
 	{"defined", osc_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."},

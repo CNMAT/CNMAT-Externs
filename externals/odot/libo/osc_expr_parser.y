@@ -245,8 +245,17 @@ t_osc_expr *osc_expr_parser_nullCoalesce(t_osc_atom_u *address_to_check, t_osc_e
 
 expns: 
 	| expns expr ';' {
-	 	osc_expr_setNext($2, *exprstack);
-		*exprstack = $2;
+	 	//osc_expr_setNext($2, *exprstack);
+		//*exprstack = $2;
+		if(*exprstack){
+			t_osc_expr *tmp = *exprstack;
+			while(osc_expr_next(tmp)){
+				tmp = osc_expr_next(tmp);
+			}
+			osc_expr_setNext(tmp, $2);
+		}else{
+			*exprstack = $2;
+		}
  	}
 ;
 
@@ -264,6 +273,7 @@ arg:    OSC_EXPR_NUM {
 		$$ = osc_expr_arg_alloc();
 		int oscaddress = 0;
 		if(osc_atom_u_getTypetag($1) == 's'){
+
 			char *st = osc_atom_u_getStringPtr($1);
 			if(st){
 				if(*st == '/' && st[1] != '\0'){
