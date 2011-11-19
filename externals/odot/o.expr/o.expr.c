@@ -254,10 +254,25 @@ void oexpr_postFunctionGraph(t_oexpr *fg){
 	char *buf = NULL;
 	long len = 0;
 	t_osc_expr *f = fg->function_graph;
-	while(f){
-		osc_expr_formatFunctionGraph(f, &len, &buf);
-		post("%s", buf);
-		f = osc_expr_next(f);
+	//while(f){
+	osc_expr_formatFunctionGraph(f, &len, &buf);
+	// the modulo op '%' gets consumed as a format character with cycling's post() function.
+	// so go through and escape each one with another %
+	char buf2[len * 2];
+	char *r = buf, *w = buf2;
+	int i;
+	for(i = 0; i < len; i++){
+		if(*r == '%'){
+			*w++ = '%';
+		}
+		*w++ = *r++;
+	}
+	*w = '\0';
+	post("%s", buf2);
+	//f = osc_expr_next(f);
+	//
+	if(buf){
+		osc_mem_free(buf);
 	}
 }
 
