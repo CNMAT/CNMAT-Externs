@@ -33,6 +33,7 @@
 extern "C" {
 #endif
 
+// remove these
 //#define __USE_OMAX_ATOM_SETTERS__
 
 #ifdef __USE_OMAX_ATOM_SETTERS__
@@ -41,6 +42,7 @@ extern "C" {
 #define atom_setsym(ap, x) *(ap) = (t_atom){A_SYM, (union word)(x)}
 #endif
 
+//remove these
 //#define __USE_OMAX_ATOM_GETTERS__
 
 #ifdef __USE_OMAX_ATOM_GETTERS__
@@ -52,6 +54,8 @@ inline t_symbol *omax_atom_getsym(t_atom *ap);
 #define atom_getsym(ap) omax_atom_getsym(ap)
 #endif
 
+
+// move all of this class/object stuff to a new file
 /**
  * An object for holding OSC-related instance data
  */
@@ -83,7 +87,6 @@ typedef struct _omax_method{
 	void *thing;
 } t_omax_method;
 
-//hashtab_store(omax_class_getHashtab(class_nameget(c)->s_name), omax_class_makeMethodNameOSC(class_nameget(c)->s_name, name), (t_object *)m); }
 
 #define OMAX_ADDMETHOD(c, functionpointer, name, ...)\
 	OMAX_ADDMETHOD_OSCNAME(c, functionpointer, name, omax_class_makeMethodNameOSC(class_nameget(c)->s_name, name)->s_name, __VA_ARGS__)
@@ -113,25 +116,6 @@ typedef struct _omax_method{
 		omax_class_addToSchemaList(c, omax_class_makeParamNameOSC(class_nameget(c)->s_name, name)->s_name);\
 		hashtab_store(omax_class_getHashtab(class_nameget(c)->s_name), omax_class_makeParamNameOSC(class_nameget(c)->s_name, name), (t_object *)m); }
 
-/*
-#define OMAX_ADDPARAM(c, name, datatype, flags, structname, structmember, setter, getter) \
-	{ class_addattr((c), attr_offset_new(name, USESYM(datatype), (flags), (method)getter, \
-					     (method)setter, calcoffset(structname, structmember))); \
-		t_omax_method *m = (t_omax_method *)sysmem_newptr(sizeof(t_omax_method)); \
-		m->type = OMAX_SETTER;					\
-		long get; t_object *attr = NULL;			\
-		m->m.m_fun = class_attr_method(c, gensym(name), (void **)(&attr), &get); \
-		m->m.m_sym = gensym(name);				\
-		hashtab_store(omax_class_getHashtab(class_nameget(c)->s_name), omax_class_makeSetterNameOSC(class_nameget(c)->s_name, name), (t_object *)m); \
-		m = (t_omax_method *)sysmem_newptr(sizeof(t_omax_method)); \
-		m->type = OMAX_GETTER;					\
-		get = 0; attr = NULL;					\
-		char buf[128];						\
-		sprintf(buf, "get%s", name);				\
-		m->m.m_fun = class_attr_method(c, gensym(buf), (void **)(&attr), &get); \
-		m->m.m_sym = gensym(name);				\
-		hashtab_store(omax_class_getHashtab(class_nameget(c)->s_name), omax_class_makeGetterNameOSC(class_nameget(c)->s_name, name), (t_object *)m); }
-*/	
 
 t_class *omax_class_new(char *name, method ctor, method dtor, size_t structsize, size_t osc_ob_offset, method fullpacket_method);
 void omax_init(t_object *x);
@@ -162,9 +146,19 @@ void *omax_object_getContinuationOutlet(t_object *ob);
 void *omax_object_getInfoOutlet(t_object *ob);
 method omax_object_getNotificationCallback(t_object *ob);
 
-int omax_util_getNumAtomsInOSCMsg(t_osc_msg_s *msg);
+//////////////////////////////////////////////////
+// to be removed
+//////////////////////////////////////////////////
+// shouldn't need this
+char omax_util_typetagForAtom(t_atom *a);
+// or this
+int osc_util_check_pos_and_resize(char *buf, int len, char *pos);
+// not encoding to serialized bundles any more--encode to unserialized and then serialize
+int omax_util_get_bundle_size_for_atoms(t_symbol *address, int argc, t_atom *argv);
+// this is still in use by a few things mainly (exclusively?) in this file, but should be removed soon
 void omax_util_oscMsg2MaxAtoms_old(t_osc_msg *msg, long *ac, t_atom *av);
-void omax_util_oscMsg2MaxAtoms(t_osc_msg_s *m, t_atom *av);
+// these two are very old and probably safe to remove
+int osc_util_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buffer);
 int osc_util_make_bundle(int numAddresses,
 			  t_symbol **addresses, 
 			  int *numArgs,
@@ -172,12 +166,21 @@ int osc_util_make_bundle(int numAddresses,
 			  t_atom **args, 
 			  int *len, 
 			 char *buffer);
-int osc_util_check_pos_and_resize(char *buf, int len, char *pos);
-int omax_util_get_bundle_size_for_atoms(t_symbol *address, int argc, t_atom *argv);
-int osc_util_make_bundle_from_atoms(long argc, t_atom *argv, int *len, char *buffer);
 
-char omax_util_typetagForAtom(t_atom *a);
+//////////////////////////////////////////////////
+// to be replaced
+//////////////////////////////////////////////////
+// this should be replaced by the unserialized functions below.
 int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv);
+
+//////////////////////////////////////////////////
+// new
+//////////////////////////////////////////////////
+void omax_util_maxFullPacketToOSCAtom_u(t_osc_atom_u **osc_atom, t_atom *len, t_atom *ptr);
+void omax_util_maxAtomToOSCAtom_u(t_osc_atom_u **osc_atom, t_atom *max_atom);
+void omax_util_maxAtomsToOSCMsg_u(t_osc_msg_u **msg, t_symbol *address, int argc, t_atom *argv);
+int omax_util_getNumAtomsInOSCMsg(t_osc_msg_s *msg);
+void omax_util_oscMsg2MaxAtoms(t_osc_msg_s *m, t_atom *av);
 
 #ifdef __cplusplus
 }

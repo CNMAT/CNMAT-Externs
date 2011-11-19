@@ -1047,6 +1047,56 @@ int omax_util_get_bundle_size_for_atoms(t_symbol *address, int argc, t_atom *arg
 	return len;
 }
 
+// encode a FullPacket <len> <ptr> message as a nested bundle
+void omax_util_maxFullPacketToOSCAtom_u(t_osc_atom_u **osc_atom, t_atom *len, t_atom *ptr){
+	if(!(*osc_atom)){
+		*osc_atom = osc_atom_u_alloc();
+	}
+	osc_atom_u_setBndl(*osc_atom, atom_getlong(len), (char *)atom_getlong(ptr));
+}
+
+void omax_util_maxAtomToOSCAtom_u(t_osc_atom_u **osc_atom, t_atom *max_atom){
+	if(!(*osc_atom)){
+		*osc_atom = osc_atom_u_alloc();
+	}
+	switch(atom_gettype(max_atom)){
+	case A_FLOAT:
+		osc_atom_u_setFloat(*osc_atom, atom_getfloat(max_atom));
+		break;
+	case A_LONG:
+		osc_atom_u_setInt32(*osc_atom, atom_getlong(max_atom));
+		break;
+	case A_SYM:
+		osc_atom_u_setString(*osc_atom, atom_getsym(max_atom)->s_name);
+		break;
+	}
+}
+
+void omax_util_maxAtomsToOSCMsg_u(t_osc_msg_u **msg, t_symbol *address, int argc, t_atom *argv){
+	if(!(*msg)){
+		*msg = osc_message_u_alloc();
+		if(address){
+			osc_message_u_setAddress(*msg, address->s_name);
+		}
+		int i;
+		for(i = 0; i < argc; i++){
+			t_osc_atom_u *a = NULL;
+			if(atom_gettype(argv + i) == A_SYM){
+				if((atom_getsym(argv + i) == gensym("FullPacket")) && argc - i >= 3){
+					// FullPacket to be encoded as nested bundle
+					omax_util_maxFullPacketToOSCAtom_u(&a, argv + 1, argv + 2);
+					i += 2;
+				}else{
+					omax_util_maxAtomToOSCAtom_u(&a, argv + i);
+				}
+			}else{
+				omax_util_maxAtomToOSCAtom_u(&a, argv + i);
+			}
+			osc_message_u_appendAtom(*msg, a);
+		}
+	}
+}
+
 int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv){
 	char *sizeptr = buf;
 	char *ptr = buf + 4;
@@ -1084,11 +1134,19 @@ int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv)
 			}
 			break;
 		case A_SYM:
-			strcpy(ptr, atom_getsym(argv + i)->s_name);
-			ptr += strlen(atom_getsym(argv + i)->s_name);
-			ptr++;
-			while((ptr - buf) % 4){
-				ptr++;
+			{
+				t_symbol *sym = atom_getsym(argv + i);
+				if(sym == gensym("FullPacket")){
+					// nested bundle
+
+				}else{
+					strcpy(ptr, atom_getsym(argv + i)->s_name);
+					ptr += strlen(atom_getsym(argv + i)->s_name);
+					ptr++;
+					while((ptr - buf) % 4){
+						ptr++;
+					}
+				}
 			}
 			break;
 		}
