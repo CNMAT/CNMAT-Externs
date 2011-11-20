@@ -107,6 +107,9 @@ t_symbol *ps_FullPacket;
 
 void omap_fullPacket(t_omap *x, long len, long ptr){
 	if(proxy_getinlet((t_object *)x) == 1){
+		if(!(x->msg) && !(x->bndl)){
+			return;
+		}
 		// this is the argument to an OSC messsage (nested bundle)
 		t_atom a[3];
 		atom_setsym(a, ps_FullPacket);
@@ -154,7 +157,9 @@ void omap_fullPacket(t_omap *x, long len, long ptr){
 	}
 	if(x->bndl){
 		osc_bundle_u_free(x->bndl);
+		x->bndl = NULL;
 	}
+	x->msg = NULL;
 	critical_enter(x->lock);
 	x->busy = 0;
 	if(x->fifo){
@@ -185,6 +190,9 @@ void omap_int(t_omap *x, long l){
 	if(proxy_getinlet((t_object *)x) == 0){
 		return;
 	}
+	if(!(x->msg) && !(x->bndl)){
+		return;
+	}
 	t_atom a;
 	atom_setlong(&a, l);
 	omap_list(x, NULL, 1, &a);
@@ -194,12 +202,21 @@ void omap_float(t_omap *x, double f){
 	if(proxy_getinlet((t_object *)x) == 0){
 		return;
 	}
+	if(!(x->msg) && !(x->bndl)){
+		return;
+	}
 	t_atom a;
 	atom_setfloat(&a, f);
 	omap_list(x, NULL, 1, &a);
 }
 
 void omap_anything(t_omap *x, t_symbol *msg, short argc, t_atom *argv){
+	if(proxy_getinlet((t_object *)x) == 0){
+		return;
+	}
+	if(!(x->msg) && !(x->bndl)){
+		return;
+	}
 	if(msg){
 		t_atom a[argc + 1];
 		atom_setsym(a, msg);
@@ -214,6 +231,9 @@ void omap_list(t_omap *x, t_symbol *sym, short argc, t_atom *argv){
 	// sym is always NULL
 	if(proxy_getinlet((t_object *)x) != 1){
 		// not sure what to do with this...
+		return;
+	}
+	if(!(x->msg) && !(x->bndl)){
 		return;
 	}
 	t_osc_msg_u *msg = NULL;
