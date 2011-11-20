@@ -269,6 +269,7 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 	int i;
 	int match = 0;
 	for(i = 0; i < x->nselectors; i++){
+		int outletnum = x->nselectors - i - 1;
 		char *s = x->selectors[i];
 		int ret, ao, po;
 		ret = osc_match(msg->s_name, s, &po, &ao);
@@ -281,7 +282,7 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 #if defined SELECT || defined SPEW
 		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE)) ||
 		   (po > 0 && ((msg->s_name[po] == '/') || star_at_end == 1))){
-			outlet_anything(x->outlets[i], msg, argc, argv);
+			outlet_anything(x->outlets[outletnum], msg, argc, argv);
 			match++;
 		}
 #else // route
@@ -289,15 +290,15 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 			// complete match
 			if(argc){
 				//outlet_list(x->outlets[i], NULL, argc, argv);
-				outlet_atoms(x->outlets[i], argc, argv);
+				outlet_atoms(x->outlets[outletnum], argc, argv);
 			}else{
-				outlet_bang(x->outlets[i]);
+				outlet_bang(x->outlets[outletnum]);
 			}
 			match++;
 		}else if(po > 0 && ((msg->s_name[po] == '/') || star_at_end == 1)){
 			// partial match
 			t_symbol *ss = gensym(msg->s_name + po);
-			outlet_anything(x->outlets[i], ss, argc, argv);
+			outlet_anything(x->outlets[outletnum], ss, argc, argv);
 			match++;
 		}else{
 		}
