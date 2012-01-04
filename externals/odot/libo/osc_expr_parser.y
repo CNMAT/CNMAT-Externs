@@ -146,22 +146,33 @@ t_osc_expr *osc_expr_parser_prefix_incdec(char *oscaddress, char *op){
 }
 
 t_osc_expr *osc_expr_parser_postfix_incdec(t_osc_expr **exprstack, char *oscaddress, char *op){
-	t_osc_expr *e = osc_expr_parser_prefix_incdec(oscaddress, op);
-	if(!e){
+	t_osc_expr *incdec = osc_expr_parser_prefix_incdec(oscaddress, op);
+	if(!incdec){
 		return NULL;
 	}
+	/*
 	if(!(*exprstack)){
 		*exprstack = e;
 	}else{
 		osc_expr_appendExpr(*exprstack, e);
 	}
+	*/
+	/*
 	int len = strlen(oscaddress) + 1;
 	char *ptr = osc_mem_alloc(len);
 	memcpy(ptr, oscaddress, len);
+	*/
+	t_osc_expr_arg *arg1 = osc_expr_arg_alloc();
+	osc_expr_arg_setExpr(arg1, incdec);
+	char *oscaddress_copy = NULL;
+	osc_util_strdup(&oscaddress_copy, oscaddress);
 	t_osc_expr_arg *arg2 = osc_expr_arg_alloc();
-	osc_expr_arg_setOSCAddress(arg2, ptr);
-	e = osc_expr_parser_prefix("nothing", arg2);
-	return e;
+	osc_expr_arg_setOSCAddress(arg2, oscaddress_copy);
+	osc_expr_arg_setNext(arg2, arg1);
+	//t_osc_expr *identity = osc_expr_parser_prefix("identity", arg2);
+	t_osc_expr *prog1 = osc_expr_parser_prefix("prog1", arg2);
+	//osc_expr_setNext(e2, e);
+	return prog1;
 }
 
 t_osc_expr *osc_expr_parser_nullCoalesce(t_osc_atom_u *address_to_check, t_osc_expr_arg *arg_if_null){
@@ -248,11 +259,14 @@ expns:
 	 	//osc_expr_setNext($2, *exprstack);
 		//*exprstack = $2;
 		if(*exprstack){
+			/*
 			t_osc_expr *tmp = *exprstack;
 			while(osc_expr_next(tmp)){
 				tmp = osc_expr_next(tmp);
 			}
 			osc_expr_setNext(tmp, $2);
+			*/
+			osc_expr_appendExpr(*exprstack, $2);
 		}else{
 			*exprstack = $2;
 		}

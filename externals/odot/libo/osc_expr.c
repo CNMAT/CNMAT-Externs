@@ -725,7 +725,7 @@ int osc_expr_add1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 int osc_expr_subtract1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
 	int i;
 	long len = osc_atom_array_u_getLen(*argv);
-	//*out = osc_atom_array_u_alloc(len);
+	*out = osc_atom_array_u_alloc(len);
 	for(i = 0; i < len; i++){
 		t_osc_atom_u *a = osc_atom_array_u_get(*argv, i);
 		char tt = osc_atom_u_getTypetag(a);
@@ -1294,7 +1294,7 @@ int osc_expr_defined(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 	return 0;
 }
 
-int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_identity(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
 	// pass through
 	*out = osc_atom_array_u_copy(*argv);
 	return 0;
@@ -1308,6 +1308,33 @@ int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 int osc_expr_compile(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
 	// this is a dummy function.  we'll use this to do a pointer comparison.
 	return 0;
+}
+
+int osc_expr_prog1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+	if(argc){
+		*out = osc_atom_array_u_copy(argv[0]);
+		return 0;
+	}else{
+		return 1;
+	}
+}
+
+int osc_expr_prog2(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+	if(argc > 1){
+		*out = osc_atom_array_u_copy(argv[1]);
+		return 0;
+	}else{
+		return 1;
+	}
+}
+
+int osc_expr_progn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+	if(argc){
+		*out = osc_atom_array_u_copy(argv[argc - 1]);
+		return 0;
+	}else{
+		return 1;
+	}
 }
 
 t_osc_expr *osc_expr_alloc(void){
@@ -1361,6 +1388,7 @@ void osc_expr_appendExpr(t_osc_expr *e, t_osc_expr *expr_to_append){
 	}
 	t_osc_expr *ee = e;
 	t_osc_expr *last = ee;
+
 	while(ee){
 		last = ee;
 		ee = ee->next;

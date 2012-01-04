@@ -51,7 +51,7 @@ typedef int (*t_osc_funcptr)(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_
 typedef struct _osc_expr_rec{
 	const char *name; /**< Name of the function as a C string. */
 	int (*func)(t_osc_expr*, int, t_osc_atom_ar_u**, t_osc_atom_ar_u**); /**< Function pointer */
-	int numargs;
+	int arity;
 	void *extra; /**< Extra field that can contain anything. */
 	const char *desc;
 } t_osc_expr_rec;
@@ -116,9 +116,12 @@ int osc_expr_rand(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 int osc_expr_sgn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_defined(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_nothing(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_identity(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_compile(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_prog1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_prog2(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_progn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 t_osc_expr *osc_expr_alloc(void);
 t_osc_expr_arg *osc_expr_arg_alloc(void);
@@ -266,9 +269,12 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"sgn", osc_expr_sgn, 1, NULL, "Sign function--returns -1 if <arg1> < 0, 0 if <arg1> == 0, and 1 if <arg1> > 1"},
 	{"if", osc_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
 	{"defined", osc_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."},
-	{"nothing", osc_expr_nothing, -1, NULL, "Just what it says"},
+	{"identity", osc_expr_identity, -1, NULL, "Just what it says"},
 	{"eval", osc_expr_eval, 1, NULL, "Evaluate a function bound to an OSC address"},
-	{"compile", osc_expr_compile, 2, NULL, "Compile a function <arg2> and bind it to an OSC address <arg1>"}
+	{"compile", osc_expr_compile, 2, NULL, "Compile a function <arg2> and bind it to an OSC address <arg1>"},
+	{"prog1", osc_expr_prog1, -1, NULL, "Execute a sequence of expressions and return the first one."},
+	{"prog2", osc_expr_prog2, -1, NULL, "Execute a sequence of expressions and return the second one."},
+	{"progn", osc_expr_progn, -1, NULL, "Execute a sequence of expressions and return the last one."}
 };
 
 #ifdef _cplusplus
