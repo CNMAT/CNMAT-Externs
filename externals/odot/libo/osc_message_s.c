@@ -115,8 +115,12 @@ int osc_message_s_renameCopy(char *dest, t_osc_msg_s *src, int new_address_len, 
 }
 
 uint32_t osc_message_s_getSize(t_osc_msg_s *m){
-	if(m->size){
-		return ntoh32(*((uint32_t *)(m->size)));
+	if(m){
+		if(m->size){
+			return ntoh32(*((uint32_t *)(m->size)));
+		}else{
+			return 0;
+		}
 	}else{
 		return 0;
 	}
