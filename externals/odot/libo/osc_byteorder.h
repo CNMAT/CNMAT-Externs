@@ -77,7 +77,14 @@ typedef struct uint128_ {
 #define ntoh64(x) OSC_BYTE_SWAP64(x)
 #define hton128(x) OSC_BYTE_SWAP128(x)
 #define ntoh128(x) OSC_BYTE_SWAP128(x)
+
+#define htonf32(x) OSC_BYTE_SWAP32(*((uint32_t *)&x))
+#define ntohf32(x) OSC_BYTE_SWAP32(*((uint32_t *)&x))
+#define htonf64(x) OSC_BYTE_SWAP64(*((uint64_t *)&x))
+#define ntohf64(x) OSC_BYTE_SWAP64(*((uint64_t *)&x))
+
 #else
+
 #define hton16(x) (x)
 #define ntoh16(x) (x)
 #define hton32(x) (x)
@@ -86,6 +93,12 @@ typedef struct uint128_ {
 #define ntoh64(x) (x)
 #define hton128(x) (x)
 #define ntoh128(x) (x)
+
+#define htonf32(x) (x)
+#define ntohf32(x) (x)
+#define htonf64(x) (x)
+#define ntohf64(x) (x)
+
 #endif
 
 #endif // __OSC_BYTEORDER_H__
