@@ -316,16 +316,16 @@ void oexpr_postConstants(t_oexpr *x){
 void oexpr_postFunctions(t_oexpr *x){
 	int i;
 	for(i = 0; i < sizeof(osc_expr_funcsym) / sizeof(t_osc_expr_rec); i++){
-		if(osc_expr_funcsym[i].numargs < 0){
+		if(osc_expr_funcsym[i].arity < 0){
 			post("%s(): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].desc);
-		}else if(osc_expr_funcsym[i].numargs == 0){
+		}else if(osc_expr_funcsym[i].arity == 0){
 			post("%s(...): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].desc);
 		}else{
 			char buf[256];
 			char *ptr = buf;
 			ptr += sprintf(ptr, "%s(", osc_expr_funcsym[i].name);
 			int j;
-			for(j = 0; j < osc_expr_funcsym[i].numargs; j++){
+			for(j = 0; j < osc_expr_funcsym[i].arity; j++){
 				ptr += sprintf(ptr, "arg%d ", j + 1);
 			}
 			*(--ptr) = '\0';
