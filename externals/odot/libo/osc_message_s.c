@@ -146,7 +146,11 @@ int osc_message_s_getArgCount(t_osc_msg_s *m){
 }
 
 char *osc_message_s_getPtr(t_osc_msg_s *m){
-	return m->size;
+	if(m){
+		return m->size;
+	}else{
+		return NULL;
+	}
 }
 
 #define OSC_MESSAGE_S_CAREFUL

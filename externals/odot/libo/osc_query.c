@@ -42,25 +42,14 @@
 #include "osc_message_iterator_s.h"
 #include "osc_atom_array_u.h"
 
-t_osc_err osc_query_select(int nselectors,
-			   char **selectors,
-			   long bndllen,
-			   char *bndl,
-			   int strip_matched_portion_of_address,
-			   t_osc_rset **rset)
+t_osc_err osc_query_select_impl(int nselectors,
+				char **selectors,
+				char *rec_selector,
+				long bndllen,
+				char *bndl,
+				int strip_matched_portion_of_address,
+				t_osc_rset **rset)
 {
-	if(!bndl){
-		return OSC_ERR_NOBUNDLE;
-	}
-	if(!(*rset)){
-		*rset = osc_rset_alloc();
-	}
-
-	if(bndllen == OSC_HEADER_SIZE){
-		osc_rset_addUnmatched(*rset, NULL);
-		return OSC_ERR_NONE;
-	}
-
 	t_osc_bndl_it_s *b_it = osc_bndl_it_s_get(bndllen, bndl);
 	while(osc_bndl_it_s_hasNext(b_it)){
 		t_osc_msg_s *msg = osc_bndl_it_s_next(b_it);
@@ -80,7 +69,6 @@ t_osc_err osc_query_select(int nselectors,
 			   osc_message_s_getAddress(msg)[po + 1] == '\0'){
 				star_at_end = 1;
 			}
-
 #define NEST
 #ifdef NEST
 			if(selector[ao] == '#'){
@@ -92,16 +80,17 @@ t_osc_err osc_query_select(int nselectors,
 						if(osc_atom_s_getTypetag(a) == '#'){
 							char *nested_bndl = osc_atom_s_getData(a);
 							char *sel_offset = selector + ao + 1;
-							osc_query_select(1,
-									 &sel_offset,
-									 ntoh32(*((uint32_t *)nested_bndl)),
-									 nested_bndl + 4,
-									 strip_matched_portion_of_address,
-									 rset);
+							osc_query_select_impl(1,
+									      &sel_offset,
+									      rec_selector ? rec_selector : selector,
+									      ntoh32(*((uint32_t *)nested_bndl)),
+									      nested_bndl + 4,
+									      strip_matched_portion_of_address,
+									      rset);
 						}
 					}
 					osc_msg_it_s_destroy(msg_it);
-					return 0;
+					goto out;
 				}else{
 					// this appears to be a trailing #
 					// ignore it quietly.  if we end up reporting different
@@ -113,7 +102,7 @@ t_osc_err osc_query_select(int nselectors,
 			if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE))){
 				// complete match
 				//osc_bundle_s_appendMessage_b(complete_match, msg);
-				osc_rset_addCompleteMatch(*rset, selector, msg);
+				osc_rset_addCompleteMatch(*rset, rec_selector ? rec_selector : selector, msg);
 				match++;
 			}else if(po > 0 && ((osc_message_s_getAddress(msg)[po] == '/') || star_at_end == 1)){
 				// partial match
@@ -124,20 +113,50 @@ t_osc_err osc_query_select(int nselectors,
 					char msg_s[osc_message_s_getStructSize()];
 					osc_message_s_wrap((t_osc_msg_s *)msg_s, buf);
 					//osc_bundle_s_appendMessage_b(partial_match, (t_osc_msg_s *)msg_s);
-					osc_rset_addPartialMatch(*rset, selector, (t_osc_msg_s *)msg_s);
+					osc_rset_addPartialMatch(*rset,
+								 rec_selector ? rec_selector : selector,
+								 (t_osc_msg_s *)msg_s);
 				}else{
 					//osc_bundle_s_appendMessage_b(partial_match, msg);
-					osc_rset_addPartialMatch(*rset, selector, msg);
+					osc_rset_addPartialMatch(*rset, rec_selector ? rec_selector : selector, msg);
 				}
 				match++;
 			}else{
 			}
 		}
-		if(!match){
+		if(!match && !rec_selector){
 			osc_rset_addUnmatched(*rset, msg);
 		}
 	}
+ out:
 	osc_bndl_it_s_destroy(b_it);
 
 	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_query_select(int nselectors,
+			   char **selectors,
+			   long bndllen,
+			   char *bndl,
+			   int strip_matched_portion_of_address,
+			   t_osc_rset **rset)
+{
+	if(!bndl){
+		return OSC_ERR_NOBUNDLE;
+	}
+	if(!(*rset)){
+		*rset = osc_rset_alloc();
+	}
+
+	if(bndllen == OSC_HEADER_SIZE){
+		osc_rset_addUnmatched(*rset, NULL);
+		return OSC_ERR_NONE;
+	}
+	return osc_query_select_impl(nselectors,
+				     selectors,
+				     NULL,
+				     bndllen,
+				     bndl,
+				     strip_matched_portion_of_address,
+				     rset);
 }

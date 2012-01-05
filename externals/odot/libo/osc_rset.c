@@ -63,6 +63,7 @@ void osc_rset_free(t_osc_rset *rset)
 {
 	if(rset){
 		osc_hashtab_destroy(rset->ht); 
+		osc_bundle_s_free(rset->unmatched);
 		osc_mem_free(rset);
 	}
 }
@@ -238,8 +239,8 @@ t_osc_rset_result *osc_rset_result_alloc(char *selector)
 	if(res){
 		res->selector = NULL;
 		res->selector_len = osc_util_strdup(&(res->selector), selector);
-		res->complete_matches = osc_bundle_s_alloc(0, NULL);
-		res->partial_matches = osc_bundle_s_alloc(0, NULL);
+		res->complete_matches = NULL;//osc_bundle_s_alloc(0, NULL);
+		res->partial_matches = NULL;//osc_bundle_s_alloc(0, NULL);
 		res->next = NULL;
 		res->prev = NULL;
 	}

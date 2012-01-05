@@ -204,19 +204,33 @@ t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *oldmsg, char
 	return OSC_ERR_NONE;
 }
 
+// if msg == NULL, an empty bundle will be created, or, if a bundle
+// already exists, nothing will happen.
 t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, t_osc_msg_s *msg){
 	uint32_t msglen = osc_message_s_getSize(msg);
 	char *tmp = NULL;
 	if(*bndl){
-		tmp = (char *)osc_mem_resize(*bndl, *len + msglen + 4);
+		if(msg){
+			tmp = (char *)osc_mem_resize(*bndl, *len + msglen + 4);
+		}
 	}else{
-		tmp = (char *)osc_mem_alloc(msglen + 4 + OSC_HEADER_SIZE);
+		int size;
+		if(msg){
+			size = msglen + 4;
+		}else{
+			size = 0;
+		}
+		tmp = (char *)osc_mem_alloc(size + OSC_HEADER_SIZE);
 		if(!tmp){
 			return OSC_ERR_OUTOFMEM;
 		}
 		memset(tmp + OSC_IDENTIFIER_SIZE, '\0', OSC_IDENTIFIER_SIZE);
 		osc_bundle_s_setBundleID(tmp);
 		*len = OSC_HEADER_SIZE;
+		*bndl = tmp;
+		if(!msg){
+			return OSC_ERR_NONE;
+		}
 	}
 	if(!tmp){
 		return OSC_ERR_OUTOFMEM;
