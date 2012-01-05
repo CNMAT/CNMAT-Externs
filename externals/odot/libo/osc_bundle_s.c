@@ -48,6 +48,12 @@ t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr){
 	return b;
 }
 
+t_osc_bndl_s *osc_bundle_s_allocEmptyBundle(void){
+	t_osc_bndl_s *b = osc_mem_alloc(sizeof(t_osc_bndl_s));
+	osc_bundle_s_setBundleID_b(b);
+	return b;
+}
+
 size_t osc_bundle_s_getStructSize(void){
 	return sizeof(t_osc_bndl_s);
 }
@@ -246,10 +252,17 @@ t_osc_err osc_bundle_s_setBundleID_b(t_osc_bndl_s *bndl){
 		if(!(bndl->ptr)){
 			return OSC_ERR_OUTOFMEM;
 		}
-		memset(bndl->ptr + OSC_IDENTIFIER_SIZE, '\0', OSC_IDENTIFIER_SIZE);
-		bndl->len = OSC_HEADER_SIZE;
-		strncpy(bndl->ptr, OSC_IDENTIFIER, OSC_IDENTIFIER_SIZE);
+	}else{
+		if(bndl->len < OSC_HEADER_SIZE){
+			bndl->ptr = (char *)osc_mem_resize(bndl->ptr, OSC_HEADER_SIZE);
+			if(!bndl->ptr){
+				return OSC_ERR_OUTOFMEM;
+			}
+		}
 	}
+	memset(bndl->ptr + OSC_IDENTIFIER_SIZE, '\0', OSC_HEADER_SIZE - OSC_IDENTIFIER_SIZE);
+	bndl->len = OSC_HEADER_SIZE;
+	strncpy(bndl->ptr, OSC_IDENTIFIER, OSC_IDENTIFIER_SIZE);
 	return OSC_ERR_NONE;
 }
 
