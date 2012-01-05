@@ -45,6 +45,7 @@ typedef struct _osc_bundle_s t_osc_bundle_s, t_osc_bndl_s;
 typedef t_osc_array t_osc_bundle_array_s, t_osc_bndl_ar_s;
 
 t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr);
+t_osc_bndl_s *osc_bundle_s_allocEmptyBundle(void);
 size_t osc_bundle_s_getStructSize(void);
 void osc_bundle_s_free(t_osc_bndl_s *bndl);
 void osc_bundle_s_deepFree(t_osc_bndl_s *bndl);
