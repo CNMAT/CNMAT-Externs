@@ -30,9 +30,8 @@ VERSION 0.0: First try
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "../odot_version.h"
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 
@@ -48,7 +47,7 @@ void opbytes_assist(t_opbytes *x, void *b, long m, long a, char *s);
 void *opbytes_new(t_symbol *msg, short argc, t_atom *argv);
 
 void opbytes_fullPacket(t_opbytes *x, long len, long ptr){
-	char *buf = (char *)ptr;
+	unsigned char *buf = (char *)ptr;
 	int i;
 	for(i = 0; i < len; i++){
 		post("%d %c 0x%x", i, buf[i], buf[i]);
@@ -88,5 +87,6 @@ int main(void){
 	opbytes_class = c;
 
 	common_symbols_init();
+	ODOT_PRINT_VERSION;
 	return 0;
 }

@@ -32,6 +32,6 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "../odot_version.h"
 #define INTERSECTION
 #include "../o.var/o.var.c"

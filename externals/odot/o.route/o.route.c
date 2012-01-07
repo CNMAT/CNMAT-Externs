@@ -31,9 +31,8 @@ VERSION 0.1: Addresses to match can now have patterns
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "../odot_version.h"
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "ext_critical.h"
@@ -224,7 +223,7 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 #endif
 	}
 	if(!match){
-		outlet_anything(x->outlets[x->num_selectors], msg, argc, argv);
+		outlet_anything(x->delegation_outlet, msg, argc, argv);
 	}
 }
 
@@ -379,5 +378,6 @@ int main(void)
 	ps_oscschemalist = gensym("/osc/schema/list");
 
 	common_symbols_init();
+	ODOT_PRINT_VERSION;
 	return 0;
 }

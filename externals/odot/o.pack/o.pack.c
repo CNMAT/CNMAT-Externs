@@ -32,9 +32,8 @@ VERSION 1.1: renamed o.pack (from o.build)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "../odot_version.h"
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "omax_util.h"
@@ -278,5 +277,6 @@ int main(void){
 #endif
 
 	common_symbols_init();
+	ODOT_PRINT_VERSION;
 	return 0;
 }

@@ -30,9 +30,8 @@ VERSION 0.0: First try
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "../odot_version.h"
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
@@ -160,7 +159,7 @@ int main(void){
 
 	common_symbols_init();
 	ps_FullPacket = gensym("FullPacket");
-	version(0);
+	ODOT_PRINT_VERSION;
 	return 0;
 }
 

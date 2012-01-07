@@ -31,7 +31,7 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "../odot_version.h"
 
 #ifdef OIF
 #undef NAME
@@ -44,7 +44,6 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #endif
 #include "ext.h"
 #include "ext_obex.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 //#include "jpatcher_api.h" 
@@ -309,7 +308,7 @@ void oexpr_anything(t_oexpr *x, t_symbol *msg, int argc, t_atom *argv){
 void oexpr_postConstants(t_oexpr *x){
 	int i;
 	for(i = 0; i < sizeof(osc_expr_constsym) / sizeof(t_osc_expr_const_rec); i++){
-		post("%s: %s (%f)", osc_expr_constsym[i].name, osc_expr_constsym[i].desc, osc_expr_constsym[i].val);
+		post("%s: %s (%f)", osc_expr_constsym[i].name, osc_expr_constsym[i].docstring, osc_expr_constsym[i].val);
 	}
 }
 
@@ -317,9 +316,9 @@ void oexpr_postFunctions(t_oexpr *x){
 	int i;
 	for(i = 0; i < sizeof(osc_expr_funcsym) / sizeof(t_osc_expr_rec); i++){
 		if(osc_expr_funcsym[i].arity < 0){
-			post("%s(): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].desc);
+			post("%s(): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].docstring);
 		}else if(osc_expr_funcsym[i].arity == 0){
-			post("%s(...): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].desc);
+			post("%s(...): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].docstring);
 		}else{
 			char buf[256];
 			char *ptr = buf;
@@ -329,8 +328,16 @@ void oexpr_postFunctions(t_oexpr *x){
 				ptr += sprintf(ptr, "arg%d ", j + 1);
 			}
 			*(--ptr) = '\0';
-			post("%s): %s", buf, osc_expr_funcsym[i].desc);
+			post("%s): %s", buf, osc_expr_funcsym[i].docstring);
 		}
+	}
+}
+
+void oexpr_documentation(t_oexpr *x, t_symbol *func)
+{
+	t_osc_expr_rec *rec = osc_expr_lookupFunction(func->s_name);
+	if(rec){
+		post("%s(): %s", rec->name, rec->docstring);
 	}
 }
 
@@ -480,6 +487,7 @@ int main(void){
 	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
 	class_addmethod(c, (method)oexpr_postFunctionGraph, "post-function-graph", 0);
 	class_addmethod(c, (method)oexpr_postFunctionTable, "post-function-table", 0);
+	class_addmethod(c, (method)oexpr_documentation, "documentation", A_SYM, 0);
 	/*
 	class_addmethod(c, (method)oexpr_key, "key", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_keyfilter, "keyfilter", A_CANT, 0);
@@ -515,7 +523,8 @@ int main(void){
 
 	rdtsc_cps = RDTSC_CYCLES_PER_SECOND;
 
-	version(0);
+	ODOT_PRINT_VERSION;
+
 	return 0;
 }
 

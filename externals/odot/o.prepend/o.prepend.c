@@ -31,9 +31,8 @@ version 1.0: Rewritten to only take one argument (the symbol to be prepended) wh
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "version.h"
+#include "../odot_version.h"
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
@@ -76,6 +75,9 @@ void *oppnd_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
+	if(len == OSC_HEADER_SIZE){
+		return;
+	}
 	oppnd_doFullPacket(x, len, ptr, x->sym_to_prepend, x->sym_to_prepend_len);
 }
 
@@ -266,5 +268,6 @@ int main(void){
 
 	ps_FullPacket = gensym("FullPacket");
 	common_symbols_init();
+	ODOT_PRINT_VERSION;
 	return 0;
 }

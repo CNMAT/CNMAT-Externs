@@ -34,9 +34,9 @@
 */
 
 #include <string.h>
-#include "version.h"
+#include "../odot_version.h"
+
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "ext_critical.h"
@@ -312,6 +312,14 @@ void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
 		error("o.message: not a proper OSC message");
 		return;
 	}
+	if(argc == 1){
+		// one arg and it's a symbol.  parse this as it may be an address
+		// without arguments, or it may be a complete message like "/foo 1 2 3"
+		t_osc_bndl_u *bndl = NULL;
+
+		return;
+	}
+	// else
 	t_symbol *address = atom_getsym(argv);
 	if(*(address->s_name) != '/'){
 		error("o.message: %s is not a valid OSC address", address->s_name);
@@ -931,7 +939,7 @@ int main(void){
 	ps_newline = gensym("\n");
 	ps_FullPacket = gensym("FullPacket");
 
-	version(0);
+	ODOT_PRINT_VERSION;
 
 	return 0;
 }
