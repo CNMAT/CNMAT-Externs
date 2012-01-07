@@ -977,7 +977,7 @@ int osc_expr_range(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 	return 0;
 }
 
-int osc_expr_multiplex(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_interleave(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
 	int min = osc_atom_array_u_getLen(*argv);
 	int i, j;
 	for(i = 1; i < argc; i++){

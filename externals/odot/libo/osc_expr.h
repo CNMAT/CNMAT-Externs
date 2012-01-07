@@ -53,13 +53,13 @@ typedef struct _osc_expr_rec{
 	int (*func)(t_osc_expr*, int, t_osc_atom_ar_u**, t_osc_atom_ar_u**); /**< Function pointer */
 	int arity;
 	void *extra; /**< Extra field that can contain anything. */
-	const char *desc;
+	const char *docstring;
 } t_osc_expr_rec;
 
 typedef struct _osc_expr_const_rec{
 	const char *name;
 	double val;
-	const char *desc;
+	const char *docstring;
 } t_osc_expr_const_rec;
 
 int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom_ar_u **out);
@@ -101,7 +101,7 @@ int osc_expr_concat(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_
 int osc_expr_reverse(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_make_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_range(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_multiplex(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_interleave(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_not(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_dot(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_l2norm(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -252,8 +252,7 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"rev", osc_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
 	{"make_list", osc_expr_make_list, -1, NULL, "Make a list of <arg1> copies of <arg2>.  <arg2 is optional and defaults to 0"},
 	{"range", osc_expr_range, -1, NULL, "Make a list from <arg1> to <arg2> in <arg3> steps.  <arg3> is optional and defaults to 1"},
-	{"multiplex", osc_expr_multiplex, -1, NULL, "Multiplex two or more lists"},
-	{"mux", osc_expr_multiplex, -1, NULL, "Multiplex two or more lists"},
+	{"interleave", osc_expr_interleave, -1, NULL, "Interleave two or more lists"},
 	//make-list, pad, zeros, ones
 	{"!", osc_expr_not, -1, NULL, "Logical not"},
 	{"dot", osc_expr_dot, 2, NULL, "Dot product of arg1 and arg2"},
