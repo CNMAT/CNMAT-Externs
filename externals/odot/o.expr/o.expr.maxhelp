@@ -92,26 +92,28 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-20",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 457.0, 449.0, 201.0, 20.0 ],
+									"patching_rect" : [ 445.0, 447.0, 218.0, 24.0 ],
 									"text" : "arithmetic operations work over lists"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-19",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 558.0, 338.0, 192.0, 20.0 ],
+									"patching_rect" : [ 542.0, 338.0, 192.0, 24.0 ],
 									"text" : "some list operations"
 								}
 
@@ -202,14 +204,16 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.15,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-12",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 433.0, 240.0, 192.0, 34.0 ],
+									"patching_rect" : [ 433.0, 240.0, 188.0, 52.0 ],
 									"text" : "use comma separated values to extract more than one list element"
 								}
 
@@ -244,6 +248,8 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.15,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-9",
@@ -251,7 +257,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 558.0, 176.0, 162.0, 48.0 ],
+									"patching_rect" : [ 558.0, 176.0, 162.0, 52.0 ],
 									"text" : "double-square brackets can be used to get elements out of a list"
 								}
 
@@ -487,18 +493,18 @@
  ]
 					}
 ,
-					"patching_rect" : [ 31.0, 169.0, 41.0, 20.0 ],
+					"patching_rect" : [ 258.0, 98.0, 41.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"tags" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : ""
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p lists"
@@ -521,7 +527,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 30.0, 97.0, 755.0, 632.0 ],
+						"rect" : [ 0.0, 26.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -672,21 +678,21 @@
  ]
 					}
 ,
-					"patching_rect" : [ 28.0, 206.0, 99.0, 20.0 ],
+					"patching_rect" : [ 320.0, 98.0, 138.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"tags" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : ""
+						"default_fontface" : 0
 					}
 ,
-					"text" : "p documentation"
+					"text" : "p \"more documentation\""
 				}
 
 			}
@@ -1160,18 +1166,18 @@
  ]
 					}
 ,
-					"patching_rect" : [ 29.0, 132.0, 140.0, 20.0 ],
+					"patching_rect" : [ 103.0, 98.0, 140.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"tags" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : ""
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p \"conditional operators\""
@@ -1194,7 +1200,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 0.0, 26.0, 755.0, 632.0 ],
+						"rect" : [ 30.0, 97.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1225,7 +1231,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 400.0, 221.0, 104.0, 108.0 ],
+									"patching_rect" : [ 400.0, 221.0, 92.0, 108.0 ],
 									"text" : "Arguments:\nexpression (list)\nconstant (number)\n(other) (symbol)"
 								}
 
@@ -1441,16 +1447,16 @@
 ,
 					"patching_rect" : [ 32.0, 98.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"tags" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : ""
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p basic"
