@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 0
+			"revision" : 3
 		}
 ,
 		"rect" : [ 116.0, 44.0, 804.0, 364.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 3
 						}
 ,
 						"rect" : [ 0.0, 26.0, 804.0, 338.0 ],
@@ -73,9 +73,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 279.0, 216.0, 181.0, 18.0 ],
-									"presentation_rect" : [ 276.0, 216.0, 0.0, 0.0 ],
-									"text" : "/foo FullPacket 80 -1073749980"
+									"patching_rect" : [ 279.0, 216.0, 181.0, 18.0 ]
 								}
 
 							}
@@ -103,7 +101,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 318.0, 101.0, 271.0, 48.0 ],
-									"presentation_rect" : [ 319.0, 119.0, 0.0, 0.0 ],
 									"text" : "the messages in a nested bundle must be on their own lines and the final square bracket must be on a new line"
 								}
 
@@ -131,9 +128,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 214.0, 270.0, 50.0, 18.0 ],
-									"presentation_rect" : [ 214.0, 213.0, 0.0, 0.0 ],
-									"text" : "a r s"
+									"patching_rect" : [ 214.0, 270.0, 50.0, 18.0 ]
 								}
 
 							}
@@ -146,8 +141,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 106.0, 270.0, 50.0, 18.0 ],
-									"text" : "1 2 3"
+									"patching_rect" : [ 106.0, 270.0, 50.0, 18.0 ]
 								}
 
 							}
@@ -267,18 +261,17 @@
 					}
 ,
 					"patching_rect" : [ 82.0, 147.0, 110.0, 20.0 ],
-					"presentation_rect" : [ 82.0, 147.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"default_fontsize" : 12.0,
 						"fontface" : 0,
 						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"tags" : "",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
+						"default_fontsize" : 12.0,
 						"description" : "",
-						"tags" : ""
+						"globalpatchername" : ""
 					}
 ,
 					"text" : "p \"nested bundles\""
@@ -298,7 +291,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 3
 						}
 ,
 						"rect" : [ 116.0, 70.0, 804.0, 338.0 ],
@@ -454,7 +447,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 418.0, 76.0, 50.0, 18.0 ]
+									"patching_rect" : [ 428.0, 76.0, 50.0, 18.0 ]
 								}
 
 							}
@@ -479,8 +472,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 118.0, 76.0, 303.0, 20.0 ],
-									"text" : "o.message is similar to the standard Max message box"
+									"patching_rect" : [ 118.0, 76.0, 310.0, 20.0 ],
+									"text" : "o.message is similar to the standard Max message box: "
 								}
 
 							}
@@ -563,16 +556,16 @@
 ,
 					"patching_rect" : [ 66.0, 84.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"default_fontsize" : 12.0,
 						"fontface" : 0,
 						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"tags" : "",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
+						"default_fontsize" : 12.0,
 						"description" : "",
-						"tags" : ""
+						"globalpatchername" : ""
 					}
 ,
 					"text" : "p basic"
