@@ -4,10 +4,10 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 0
+			"revision" : 2
 		}
 ,
-		"rect" : [ 416.0, 44.0, 850.0, 704.0 ],
+		"rect" : [ 17.0, 60.0, 755.0, 658.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -26,8 +26,7 @@
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
-		"showrootpatcherontab" : 0,
-		"showontab" : 0,
+		"showontab" : 1,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -41,10 +40,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
-						"rect" : [ 416.0, 70.0, 850.0, 678.0 ],
+						"rect" : [ 0.0, 26.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -72,8 +71,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 473.0, 465.0, 201.0, 20.0 ],
-									"presentation_rect" : [ 473.0, 468.0, 0.0, 0.0 ],
+									"patching_rect" : [ 457.0, 449.0, 201.0, 20.0 ],
 									"text" : "arithmetic operations work over lists"
 								}
 
@@ -86,8 +84,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 574.0, 354.0, 192.0, 20.0 ],
-									"presentation_rect" : [ 574.0, 356.0, 0.0, 0.0 ],
+									"patching_rect" : [ 558.0, 338.0, 192.0, 20.0 ],
 									"text" : "some list operations"
 								}
 
@@ -97,14 +94,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-18",
-									"linecount" : 9,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 277.0, 499.0, 247.0, 131.0 ],
-									"presentation_rect" : [ 261.0, 502.0, 0.0, 0.0 ],
-									"text" : "/bar 0 1 2 3 4 5 6 7 8 9 10 \n/len/bar 11 \n/foo 10 \n/subset 2 3 4 \n/rev 10 9 8 7 6 5 4 3 2 1 0 \n/sum 55 \n/cumsum 0 1 3 6 10 15 21 28 36 45 55 \n/extrema 0 10 \n/norm 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 \n",
+									"patching_rect" : [ 261.0, 483.0, 247.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -118,7 +112,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 277.0, 465.0, 174.0, 20.0 ],
+									"patching_rect" : [ 261.0, 449.0, 174.0, 20.0 ],
 									"text" : "o.expr /norm = /bar / max(/bar)"
 								}
 
@@ -132,7 +126,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 277.0, 381.0, 180.0, 20.0 ],
+									"patching_rect" : [ 261.0, 365.0, 180.0, 20.0 ],
 									"text" : "o.expr /extrema = extrema(/bar)"
 								}
 
@@ -142,14 +136,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-14",
-									"linecount" : 8,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 14.0, 416.5, 221.0, 117.0 ],
-									"presentation_rect" : [ 74.0, 544.0, 0.0, 0.0 ],
-									"text" : "/bar 0 1 2 3 4 5 6 7 8 9 10 \n/len/bar 11 \n/foo 10 \n/subset 2 3 4 \n/rev 10 9 8 7 6 5 4 3 2 1 0 \n/sum 55 \n/cumsum 0 1 3 6 10 15 21 28 36 45 55 \n/extrema 0 10 \n",
+									"patching_rect" : [ 14.0, 432.5, 221.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -163,7 +154,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 277.0, 354.0, 281.0, 20.0 ],
+									"patching_rect" : [ 261.0, 338.0, 281.0, 20.0 ],
 									"text" : "o.expr /sum = sum(/bar)\\; /cumsum = cumsum(/bar)"
 								}
 
@@ -177,7 +168,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 277.0, 327.0, 150.0, 20.0 ],
+									"patching_rect" : [ 261.0, 311.0, 150.0, 20.0 ],
 									"text" : "o.expr /rev = reverse(/bar)"
 								}
 
@@ -191,7 +182,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 473.0, 216.0, 192.0, 34.0 ],
+									"patching_rect" : [ 433.0, 240.0, 192.0, 34.0 ],
 									"text" : "use comma separated values to extract more than one list element"
 								}
 
@@ -201,13 +192,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-11",
-									"linecount" : 4,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 82.0, 276.0, 153.0, 62.0 ],
-									"text" : "/bar 0 1 2 3 4 5 6 7 8 9 10 \n/len/bar 11 \n/foo 10 \n/subset 2 3 4 \n",
+									"patching_rect" : [ 82.0, 308.0, 153.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -221,7 +210,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 277.0, 216.0, 167.0, 20.0 ],
+									"patching_rect" : [ 261.0, 240.0, 167.0, 20.0 ],
 									"text" : "o.expr /subset = /bar[[2\\, 3\\, 4]]"
 								}
 
@@ -231,11 +220,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-9",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 594.0, 152.0, 192.0, 34.0 ],
+									"patching_rect" : [ 558.0, 176.0, 162.0, 48.0 ],
 									"text" : "double-square brackets can be used to get elements out of a list"
 								}
 
@@ -247,7 +236,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 461.0, 27.0, 20.0, 20.0 ]
+									"patching_rect" : [ 445.0, 59.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -260,7 +249,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 461.0, 70.0, 160.0, 20.0 ],
+									"patching_rect" : [ 445.0, 94.0, 160.0, 20.0 ],
 									"text" : "o.expr /bar = make_list(5\\, 6)"
 								}
 
@@ -270,13 +259,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-6",
-									"linecount" : 3,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 82.0, 188.0, 153.0, 48.0 ],
-									"text" : "/bar 0 1 2 3 4 5 6 7 8 9 10 \n/len/bar 11 \n/foo 10 \n",
+									"patching_rect" : [ 82.0, 228.0, 153.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -290,8 +277,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 82.0, 107.0, 153.0, 21.0 ],
-									"text" : "/bar 0 1 2 3 4 5 6 7 8 9 10 \n",
+									"patching_rect" : [ 82.0, 139.0, 153.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -303,7 +289,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 277.0, 27.0, 20.0, 20.0 ]
+									"patching_rect" : [ 261.0, 59.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -316,7 +302,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 277.0, 70.0, 154.0, 20.0 ],
+									"patching_rect" : [ 261.0, 94.0, 154.0, 20.0 ],
 									"text" : "o.expr /bar = range(0.\\, 10.)"
 								}
 
@@ -330,7 +316,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 277.0, 152.0, 294.0, 20.0 ],
+									"patching_rect" : [ 261.0, 176.0, 294.0, 20.0 ],
 									"text" : "o.expr /len/bar = length(/bar)\\; /foo = /bar[[/len/bar - 1]]"
 								}
 
@@ -474,18 +460,18 @@
  ]
 					}
 ,
-					"patching_rect" : [ 126.0, 223.0, 41.0, 20.0 ],
+					"patching_rect" : [ 31.0, 169.0, 41.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"digest" : "",
 						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
+						"tags" : "",
+						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"description" : "",
-						"tags" : ""
+						"default_fontface" : 0,
+						"digest" : ""
 					}
 ,
 					"text" : "p lists"
@@ -505,10 +491,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
-						"rect" : [ 0.0, 26.0, 850.0, 678.0 ],
+						"rect" : [ 0.0, 26.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -536,7 +522,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 251.0, 81.0, 440.0, 20.0 ],
+									"patching_rect" : [ 222.0, 227.0, 311.0, 20.0 ],
 									"text" : "post the documentation for a function to the Max window"
 								}
 
@@ -550,7 +536,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 126.0, 81.0, 116.0, 18.0 ],
+									"patching_rect" : [ 97.0, 227.0, 116.0, 18.0 ],
 									"text" : "documentation ftom"
 								}
 
@@ -563,7 +549,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 280.0, 123.0, 440.0, 20.0 ],
+									"patching_rect" : [ 251.0, 269.0, 304.0, 20.0 ],
 									"text" : "post o.expr's internal representation to the Max window"
 								}
 
@@ -577,7 +563,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 155.0, 123.0, 114.0, 18.0 ],
+									"patching_rect" : [ 126.0, 269.0, 114.0, 18.0 ],
 									"text" : "post-function-graph"
 								}
 
@@ -590,7 +576,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 205.0, 38.0, 440.0, 20.0 ],
+									"patching_rect" : [ 176.0, 184.0, 440.0, 20.0 ],
 									"text" : "post the documentation for every function o.expr understands to the Max window"
 								}
 
@@ -604,7 +590,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 97.0, 38.0, 85.0, 18.0 ],
+									"patching_rect" : [ 68.0, 184.0, 85.0, 18.0 ],
 									"text" : "post-functions"
 								}
 
@@ -618,7 +604,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 97.0, 180.0, 272.0, 20.0 ],
+									"patching_rect" : [ 68.0, 326.0, 272.0, 20.0 ],
 									"text" : "o.expr /a = sin(2 * 3.14 * /freq * /time++ + /phase)"
 								}
 
@@ -659,18 +645,18 @@
  ]
 					}
 ,
-					"patching_rect" : [ 332.0, 485.0, 99.0, 20.0 ],
+					"patching_rect" : [ 28.0, 206.0, 99.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"digest" : "",
 						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
+						"tags" : "",
+						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"description" : "",
-						"tags" : ""
+						"default_fontface" : 0,
+						"digest" : ""
 					}
 ,
 					"text" : "p documentation"
@@ -690,10 +676,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
-						"rect" : [ 0.0, 26.0, 850.0, 678.0 ],
+						"rect" : [ 17.0, 86.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -717,12 +703,14 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-27",
-									"maxclass" : "comment",
+									"hidden" : 1,
+									"id" : "obj-8",
+									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 61.0, 488.0, 150.0, 20.0 ],
-									"text" : "see also:"
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 109.0, 504.0, 81.0, 20.0 ],
+									"text" : "prepend load"
 								}
 
 							}
@@ -730,13 +718,41 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-25",
+									"hidden" : 1,
+									"id" : "obj-6",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "FullPacket", "FullPacket" ],
-									"patching_rect" : [ 61.0, 520.0, 32.5, 20.0 ],
-									"text" : "o.if"
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 109.0, 528.0, 53.0, 20.0 ],
+									"text" : "pcontrol"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-3",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 109.0, 480.0, 75.0, 18.0 ],
+									"text" : "o.if.maxhelp"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-27",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 109.0, 456.0, 150.0, 20.0 ],
+									"text" : "see also:"
 								}
 
 							}
@@ -748,7 +764,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 263.0, 145.0, 197.0, 20.0 ],
+									"patching_rect" : [ 311.0, 137.0, 197.0, 20.0 ],
 									"text" : "same as"
 								}
 
@@ -761,7 +777,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 197.0, 332.0, 56.0, 20.0 ],
+									"patching_rect" : [ 245.0, 324.0, 56.0, 20.0 ],
 									"text" : "same as"
 								}
 
@@ -775,7 +791,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 237.0, 280.0, 214.0, 34.0 ],
+									"patching_rect" : [ 285.0, 272.0, 214.0, 34.0 ],
 									"text" : "null-coalescing operator.  means \"if /bar does not exist, set its value to 10\""
 								}
 
@@ -785,13 +801,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-21",
-									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 255.0, 377.0, 53.0, 35.0 ],
-									"text" : "/foo 20 \n/bar 10 \n",
+									"patching_rect" : [ 303.0, 369.0, 53.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -805,7 +819,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 255.0, 332.0, 108.0, 20.0 ],
+									"patching_rect" : [ 303.0, 324.0, 108.0, 20.0 ],
 									"text" : "o.expr /bar ??= 10"
 								}
 
@@ -819,7 +833,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 124.0, 280.0, 49.0, 20.0 ],
+									"patching_rect" : [ 172.0, 272.0, 49.0, 20.0 ],
 									"text" : "/foo 20",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -830,13 +844,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-18",
-									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 61.0, 377.0, 53.0, 35.0 ],
-									"text" : "/foo 20 \n/bar 10 \n",
+									"patching_rect" : [ 109.0, 369.0, 53.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -851,7 +863,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 61.0, 280.0, 49.0, 35.0 ],
+									"patching_rect" : [ 109.0, 272.0, 49.0, 35.0 ],
 									"text" : "/foo 20\n/bar 66",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -866,7 +878,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 61.0, 332.0, 136.0, 20.0 ],
+									"patching_rect" : [ 109.0, 324.0, 136.0, 20.0 ],
 									"text" : "o.expr /bar = /bar ?? 10"
 								}
 
@@ -879,7 +891,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.5, 107.0, 197.0, 20.0 ],
+									"patching_rect" : [ 258.5, 99.0, 197.0, 20.0 ],
 									"text" : "functional and ternary if statements"
 								}
 
@@ -889,13 +901,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-13",
-									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 321.0, 195.0, 60.0, 35.0 ],
-									"text" : "/foo 5 \n/bar true \n",
+									"patching_rect" : [ 369.0, 187.0, 60.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -909,7 +919,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 321.0, 145.0, 198.0, 20.0 ],
+									"patching_rect" : [ 369.0, 137.0, 198.0, 20.0 ],
 									"text" : "o.expr /bar = /foo < 10 ? true : false"
 								}
 
@@ -924,7 +934,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "int", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 61.0, 71.0, 50.0, 20.0 ]
+									"patching_rect" : [ 109.0, 63.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -933,13 +943,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-5",
-									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 61.0, 195.0, 60.0, 35.0 ],
-									"text" : "/foo 5 \n/bar true \n",
+									"patching_rect" : [ 109.0, 187.0, 60.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -953,7 +961,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 61.0, 107.0, 45.0, 20.0 ],
+									"patching_rect" : [ 109.0, 99.0, 45.0, 20.0 ],
 									"text" : "/foo $1",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -968,7 +976,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 61.0, 145.0, 202.0, 20.0 ],
+									"patching_rect" : [ 109.0, 137.0, 202.0, 20.0 ],
 									"text" : "o.expr /bar = if(/foo < 10\\, true\\, false)"
 								}
 
@@ -1048,6 +1056,15 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-8", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-3", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
@@ -1073,6 +1090,15 @@
 								}
 
 							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-6", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-8", 0 ]
+								}
+
+							}
  ],
 						"dependency_cache" : [ 							{
 								"name" : "o.expr.mxo",
@@ -1082,25 +1108,21 @@
 								"name" : "o.message.mxo",
 								"type" : "iLaX"
 							}
-, 							{
-								"name" : "o.if.mxo",
-								"type" : "iLaX"
-							}
  ]
 					}
 ,
-					"patching_rect" : [ 101.0, 168.0, 140.0, 20.0 ],
+					"patching_rect" : [ 29.0, 132.0, 140.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"digest" : "",
 						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
+						"tags" : "",
+						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"description" : "",
-						"tags" : ""
+						"default_fontface" : 0,
+						"digest" : ""
 					}
 ,
 					"text" : "p \"conditional operators\""
@@ -1120,10 +1142,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
-						"rect" : [ 0.0, 26.0, 850.0, 678.0 ],
+						"rect" : [ 0.0, 26.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1147,12 +1169,71 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-15",
+									"linecount" : 4,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 400.0, 221.0, 112.0, 62.0 ],
+									"presentation_rect" : [ 429.0, 113.0, 0.0, 0.0 ],
+									"text" : "Arguments:\nexpression (list)\nconstant (number)\n(other) (symbol)"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
+									"id" : "obj-12",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 80.0, 298.0, 48.0 ],
+									"presentation_rect" : [ 121.0, 397.0, 0.0, 0.0 ],
+									"text" : "Evaluate a mathematical expression on osc bundles.  Variables and operators are used to create output values.",
+									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 48.0,
+									"id" : "obj-11",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 18.0, 519.0, 62.0 ],
+									"text" : "o.expr "
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-2",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 336.0, 328.0, 273.0, 34.0 ],
+									"text" : "o.expr - evaluate a mathematical expressions on bundles"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"id" : "obj-7",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 115.0, 171.0, 110.0, 20.0 ],
+									"patching_rect" : [ 280.0, 302.0, 110.0, 20.0 ],
 									"text" : "o.expr /bar = /foo--"
 								}
 
@@ -1167,7 +1248,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 45.0, 211.0, 64.0, 35.0 ],
+									"patching_rect" : [ 210.0, 339.0, 64.0, 35.0 ],
 									"text" : "/foo 12 \n/bar 13 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1182,7 +1263,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 115.0, 132.0, 95.0, 20.0 ],
+									"patching_rect" : [ 280.0, 263.0, 110.0, 20.0 ],
 									"text" : "o.expr /foo += 3"
 								}
 
@@ -1196,7 +1277,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 45.0, 172.0, 64.0, 21.0 ],
+									"patching_rect" : [ 210.0, 303.0, 64.0, 21.0 ],
 									"text" : "/foo 13 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1211,7 +1292,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 115.0, 93.0, 94.0, 20.0 ],
+									"patching_rect" : [ 280.0, 224.0, 109.0, 20.0 ],
 									"text" : "o.expr /foo = 10"
 								}
 
@@ -1225,7 +1306,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 45.0, 133.0, 64.0, 21.0 ],
+									"patching_rect" : [ 210.0, 264.0, 64.0, 21.0 ],
 									"text" : "/foo 10 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1238,7 +1319,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 115.0, 61.0, 20.0, 20.0 ]
+									"patching_rect" : [ 280.0, 192.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -1311,16 +1392,16 @@
 ,
 					"patching_rect" : [ 32.0, 98.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"digest" : "",
 						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
+						"tags" : "",
+						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"description" : "",
-						"tags" : ""
+						"default_fontface" : 0,
+						"digest" : ""
 					}
 ,
 					"text" : "p basic"
@@ -1335,10 +1416,6 @@
 			}
 , 			{
 				"name" : "o.expr.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "o.if.mxo",
 				"type" : "iLaX"
 			}
  ]
