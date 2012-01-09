@@ -49,6 +49,7 @@ extern t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f);
 
 int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom_ar_u **out){
 	t_osc_expr *f = function;
+	/*
 	int alloc = 0;
 	if(!f){
 		// go through bundle looking for messages that have ``eval'' as their first arg
@@ -81,7 +82,8 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 		osc_bndl_it_s_destroy(bit);
 	}
 	t_osc_expr *first_func = f;
-	while(f){
+	*/
+	//while(f){
 		int ret = osc_expr_call(f, len, oscbndl, out);
 		if(ret){
 			return ret;
@@ -113,10 +115,12 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 			osc_mem_free(msg_s);
 		}
 		f = f->next;
-	}
+		//}
+	/*
 	if(alloc){
 		osc_expr_free(first_func);
 	}
+	*/
 	return 0;
 }
 
