@@ -304,7 +304,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 100.0, 174.0, 20.0 ],
+					"patching_rect" : [ 50.0, 100.0, 182.0, 20.0 ],
 					"text" : "o.overview.address_operations",
 					"varname" : "o.overview.address_operations"
 				}
@@ -318,7 +318,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 125.0, 156.0, 20.0 ],
+					"patching_rect" : [ 50.0, 125.0, 182.0, 20.0 ],
 					"text" : "o.overview.data_operations",
 					"varname" : "o.overview.data_operations"
 				}
@@ -332,7 +332,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 150.0, 124.0, 20.0 ],
+					"patching_rect" : [ 50.0, 150.0, 182.0, 20.0 ],
 					"text" : "o.overview.delegation",
 					"varname" : "o.overview.delegation"
 				}
@@ -346,7 +346,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 175.0, 130.0, 20.0 ],
+					"patching_rect" : [ 50.0, 175.0, 182.0, 20.0 ],
 					"text" : "o.overview.diagnostics",
 					"varname" : "o.overview.diagnostics"
 				}
@@ -360,7 +360,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 200.0, 150.0, 20.0 ],
+					"patching_rect" : [ 50.0, 200.0, 182.0, 20.0 ],
 					"text" : "o.overview.object_creation",
 					"varname" : "o.overview.object_creation"
 				}
@@ -374,7 +374,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 225.0, 106.0, 20.0 ],
+					"patching_rect" : [ 50.0, 225.0, 182.0, 20.0 ],
 					"text" : "o.overview.routing",
 					"varname" : "o.overview.routing"
 				}
@@ -388,7 +388,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 250.0, 110.0, 20.0 ],
+					"patching_rect" : [ 50.0, 250.0, 182.0, 20.0 ],
 					"text" : "o.overview.storage",
 					"varname" : "o.overview.storage"
 				}
