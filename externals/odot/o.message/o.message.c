@@ -758,6 +758,14 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void omessage_anything(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
+	if(!msg){
+		object_error((t_object *)x, "expected an OSC message");
+		return;
+	}
+	if(msg->s_name[0] != '/'){
+		object_error((t_object *)x, "%s is not a valid OSC address", msg->s_name);
+		return;
+	}
 	t_atom av[argc + 1];
 	int ac = argc;
 
@@ -794,6 +802,13 @@ void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av){
 		}
 	}
 	jbox_redraw((t_jbox *)x);
+}
+
+void omessage_clear(t_omessage *x)
+{
+	char buf[OSC_HEADER_SIZE];
+	memset(buf, '\0', OSC_HEADER_SIZE);
+	omessage_doFullPacket(x, OSC_HEADER_SIZE, (long)buf);
 }
 
 void omessage_output_osc(void *outlet, long len, char *ptr){
@@ -906,6 +921,7 @@ int main(void){
 	class_addmethod(c, (method)omessage_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)stdinletinfo, "inletinfo", A_CANT, 0);
 	class_addmethod(c, (method)omessage_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	class_addmethod(c, (method)omessage_clear, "clear", 0);	
 
 	class_addmethod(c, (method)omessage_key, "key", A_CANT, 0);
 	class_addmethod(c, (method)omessage_keyfilter, "keyfilter", A_CANT, 0);
