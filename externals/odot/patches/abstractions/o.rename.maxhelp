@@ -21,31 +21,31 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "o.message",
-					"text" : "/bar 21 \n",
-					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-					"outlettype" : [ "" ],
-					"fontsize" : 12.0,
-					"presentation_rect" : [ 136.0, 208.0, 0.0, 0.0 ],
-					"numinlets" : 2,
-					"patching_rect" : [ 136.0, 208.0, 50.0, 20.0 ],
+					"text" : "\n",
+					"numoutlets" : 1,
+					"patching_rect" : [ 34.0, 141.0, 130.0, 20.0 ],
 					"id" : "obj-3",
-					"fontname" : "Arial",
-					"numoutlets" : 1
+					"outlettype" : [ "" ],
+					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"fontsize" : 12.0,
+					"numinlets" : 2,
+					"fontname" : "Arial"
 				}
 
 			}
 , 			{
 				"box" : 				{
 					"maxclass" : "o.message",
-					"text" : "/foo 21",
-					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"text" : "/foo 21\n/joe thing",
+					"linecount" : 2,
+					"numoutlets" : 1,
+					"patching_rect" : [ 35.0, 59.0, 130.0, 34.0 ],
+					"id" : "obj-2",
 					"outlettype" : [ "" ],
+					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"fontsize" : 12.0,
 					"numinlets" : 2,
-					"patching_rect" : [ 136.0, 112.0, 50.0, 20.0 ],
-					"id" : "obj-2",
-					"fontname" : "Arial",
-					"numoutlets" : 1
+					"fontname" : "Arial"
 				}
 
 			}
@@ -53,21 +53,21 @@
 				"box" : 				{
 					"maxclass" : "newobj",
 					"text" : "o.rename /foo /bar",
-					"outlettype" : [ "FullPacket" ],
+					"numoutlets" : 1,
+					"patching_rect" : [ 34.0, 101.0, 109.0, 20.0 ],
+					"id" : "obj-1",
+					"outlettype" : [ "" ],
 					"fontsize" : 12.0,
 					"numinlets" : 1,
-					"patching_rect" : [ 136.0, 168.0, 109.0, 20.0 ],
-					"id" : "obj-1",
-					"fontname" : "Arial",
-					"numoutlets" : 1
+					"fontname" : "Arial"
 				}
 
 			}
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"source" : [ "obj-1", 0 ],
-					"destination" : [ "obj-3", 1 ],
+					"source" : [ "obj-2", 0 ],
+					"destination" : [ "obj-1", 0 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
@@ -75,8 +75,8 @@
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-2", 0 ],
-					"destination" : [ "obj-1", 0 ],
+					"source" : [ "obj-1", 0 ],
+					"destination" : [ "obj-3", 1 ],
 					"hidden" : 0,
 					"midpoints" : [  ]
 				}
