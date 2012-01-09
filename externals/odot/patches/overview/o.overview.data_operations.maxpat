@@ -324,13 +324,11 @@
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-97",
-					"linecount" : 3,
 					"maxclass" : "o.message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 254.0, 576.0, 62.0, 48.0 ],
-					"text" : "/midi 69 \n/gain 0.1 \n/nada 0 \n",
+					"patching_rect" : [ 254.0, 576.0, 62.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -388,8 +386,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 598.639404, 208.0, 52.0, 21.0 ],
-					"text" : "/foo 20 \n",
+					"patching_rect" : [ 598.639404, 208.0, 52.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -399,13 +396,11 @@
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-56",
-					"linecount" : 2,
 					"maxclass" : "o.message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 527.819702, 192.0, 65.0, 35.0 ],
-					"text" : "/bloo 128 \n/bar 44 \n",
+					"patching_rect" : [ 527.819702, 192.0, 65.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -447,13 +442,11 @@
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-10",
-					"linecount" : 3,
 					"maxclass" : "o.message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 457.0, 176.0, 65.0, 48.0 ],
-					"text" : "/foo 20 \n/bloo 128 \n/bar 44 \n",
+					"patching_rect" : [ 457.0, 176.0, 65.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 

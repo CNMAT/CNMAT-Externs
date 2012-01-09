@@ -7,7 +7,7 @@
 			"revision" : 2
 		}
 ,
-		"rect" : [ 23.0, 82.0, 1052.0, 571.0 ],
+		"rect" : [ 23.0, 68.0, 1052.0, 541.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,11 +28,21 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-15",
+					"maxclass" : "live.line",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 755.0, 40.0, 256.0, 7.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-8",
 					"maxclass" : "live.line",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 814.0, 320.0, 8.0, 210.0 ],
+					"patching_rect" : [ 814.0, 288.0, 8.0, 210.0 ],
 					"presentation_rect" : [ 817.0, 321.0, 0.0, 0.0 ]
 				}
 
@@ -43,7 +53,7 @@
 					"maxclass" : "live.line",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 248.0, 320.0, 8.0, 210.0 ]
+					"patching_rect" : [ 248.0, 288.0, 8.0, 210.0 ]
 				}
 
 			}
@@ -53,7 +63,7 @@
 					"maxclass" : "live.line",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 88.0, 305.0, 864.0, 5.0 ]
+					"patching_rect" : [ 88.0, 273.0, 864.0, 5.0 ]
 				}
 
 			}
@@ -65,7 +75,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 320.0, 328.0, 192.0, 20.0 ],
+					"patching_rect" : [ 320.0, 296.0, 192.0, 20.0 ],
 					"text" : "Conditional branching",
 					"underline" : 1
 				}
@@ -80,7 +90,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 448.0, 456.0, 117.0, 20.0 ],
+					"patching_rect" : [ 448.0, 424.0, 117.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -90,13 +100,11 @@
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-42",
-					"linecount" : 4,
 					"maxclass" : "o.message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 326.0, 456.0, 121.0, 62.0 ],
-					"text" : "/mysynth/1/gain 1 \n/mysynth/1/freq 440 \n/int 10 \n/unmatched 20 \n",
+					"patching_rect" : [ 322.0, 424.0, 121.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -111,7 +119,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 424.0, 360.0, 118.0, 62.0 ],
+					"patching_rect" : [ 424.0, 328.0, 118.0, 62.0 ],
 					"text" : "/mysynth/1/gain 1.0\n/mysynth/1/freq 440\n/int 10\n/unmatched 20.",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
@@ -140,7 +148,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "bang", "" ],
-					"patching_rect" : [ 560.0, 272.0, 42.0, 20.0 ],
+					"patching_rect" : [ 560.0, 240.0, 42.0, 20.0 ],
 					"text" : "select"
 				}
 
@@ -154,7 +162,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 520.0, 272.0, 38.0, 20.0 ],
+					"patching_rect" : [ 520.0, 240.0, 38.0, 20.0 ],
 					"text" : "route"
 				}
 
@@ -168,7 +176,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 448.0, 272.0, 68.0, 20.0 ],
+					"patching_rect" : [ 448.0, 240.0, 68.0, 20.0 ],
 					"text" : "OSC-route"
 				}
 
@@ -181,7 +189,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 384.0, 272.0, 280.0, 20.0 ],
+					"patching_rect" : [ 384.0, 240.0, 280.0, 20.0 ],
 					"text" : "similar to "
 				}
 
@@ -195,8 +203,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 896.0, 184.0, 93.0, 18.0 ],
-					"text" : "/unmatched 20."
+					"patching_rect" : [ 920.0, 152.0, 69.0, 18.0 ]
 				}
 
 			}
@@ -209,8 +216,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 840.0, 184.0, 43.0, 18.0 ],
-					"text" : "/int 10"
+					"patching_rect" : [ 840.0, 152.0, 71.0, 18.0 ]
 				}
 
 			}
@@ -223,8 +229,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 717.0, 184.0, 116.0, 18.0 ],
-					"text" : "/mysynth/1/freq 440"
+					"patching_rect" : [ 748.0, 152.0, 85.0, 18.0 ]
 				}
 
 			}
@@ -236,7 +241,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 814.0, 240.0, 128.0, 20.0 ],
+					"patching_rect" : [ 814.0, 208.0, 128.0, 20.0 ],
 					"text" : "output max messages"
 				}
 
@@ -249,7 +254,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 814.0, 224.0, 153.0, 20.0 ],
+					"patching_rect" : [ 814.0, 192.0, 153.0, 20.0 ],
 					"text" : "leave the addresses in tact"
 				}
 
@@ -263,7 +268,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "FullPacket" ],
-					"patching_rect" : [ 814.0, 152.0, 119.0, 20.0 ],
+					"patching_rect" : [ 814.0, 120.0, 175.0, 20.0 ],
 					"text" : "o.spew /mysynth /int"
 				}
 
@@ -277,8 +282,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 488.0, 184.0, 73.0, 21.0 ],
-					"text" : "/int 10 \n",
+					"patching_rect" : [ 488.0, 152.0, 73.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -291,7 +295,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 456.0, 240.0, 93.0, 20.0 ],
+					"patching_rect" : [ 456.0, 208.0, 93.0, 20.0 ],
 					"text" : "output a bundle"
 				}
 
@@ -305,8 +309,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 576.0, 184.0, 95.0, 21.0 ],
-					"text" : "/unmatched 20 \n",
+					"patching_rect" : [ 576.0, 152.0, 71.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -316,13 +319,11 @@
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-10",
-					"linecount" : 2,
 					"maxclass" : "o.message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 354.0, 184.0, 121.0, 35.0 ],
-					"text" : "/mysynth/1/gain 1 \n/mysynth/1/freq 440 \n",
+					"patching_rect" : [ 354.0, 152.0, 121.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -335,7 +336,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 456.0, 224.0, 153.0, 20.0 ],
+					"patching_rect" : [ 456.0, 192.0, 153.0, 20.0 ],
 					"text" : "leave the addresses in tact"
 				}
 
@@ -349,7 +350,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "FullPacket" ],
-					"patching_rect" : [ 456.0, 152.0, 191.0, 20.0 ],
+					"patching_rect" : [ 456.0, 120.0, 191.0, 20.0 ],
 					"text" : "o.select /mysynth /int"
 				}
 
@@ -363,7 +364,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 64.0, 240.0, 280.0, 34.0 ],
+					"patching_rect" : [ 64.0, 208.0, 280.0, 34.0 ],
 					"text" : "output a bundle, or if the entire address matched, output the data as a max message"
 				}
 
@@ -378,7 +379,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "int", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 160.0, 184.0, 50.0, 20.0 ]
+					"patching_rect" : [ 189.0, 152.0, 50.0, 20.0 ]
 				}
 
 			}
@@ -391,8 +392,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 216.0, 184.0, 95.0, 21.0 ],
-					"text" : "/unmatched 20 \n",
+					"patching_rect" : [ 248.0, 152.0, 95.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -406,7 +406,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 576.0, 440.0, 168.0, 34.0 ],
+					"patching_rect" : [ 576.0, 408.0, 168.0, 34.0 ],
 					"text" : "o.if supports the same syntax and functions as o.expr"
 				}
 
@@ -420,7 +420,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 552.0, 368.0, 221.0, 48.0 ],
+					"patching_rect" : [ 552.0, 336.0, 221.0, 48.0 ],
 					"text" : "o.if sends the incoming bundle through the right outlet if the result of the test is 0, and out the left outlet otherwise"
 				}
 
@@ -430,13 +430,11 @@
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-72",
-					"linecount" : 2,
 					"maxclass" : "o.message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 66.0, 184.0, 73.0, 35.0 ],
-					"text" : "/1/gain 1 \n/1/freq 440 \n",
+					"patching_rect" : [ 66.0, 152.0, 73.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -449,7 +447,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 64.0, 224.0, 280.0, 20.0 ],
+					"patching_rect" : [ 64.0, 192.0, 280.0, 20.0 ],
 					"text" : "strip off the portion of the address that matched "
 				}
 
@@ -464,7 +462,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 456.0, 72.0, 118.0, 62.0 ],
+					"patching_rect" : [ 456.0, 40.0, 118.0, 62.0 ],
 					"text" : "/mysynth/1/gain 1.0\n/mysynth/1/freq 440\n/int 10\n/unmatched 20.",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
@@ -479,7 +477,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "FullPacket" ],
-					"patching_rect" : [ 120.0, 152.0, 157.0, 20.0 ],
+					"patching_rect" : [ 120.0, 120.0, 157.0, 20.0 ],
 					"text" : "o.route /mysynth /int"
 				}
 
@@ -493,36 +491,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "FullPacket", "FullPacket" ],
-					"patching_rect" : [ 424.0, 432.0, 141.0, 20.0 ],
+					"patching_rect" : [ 424.0, 400.0, 141.0, 20.0 ],
 					"text" : "o.if /mysynth/1/gain < 10"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
-					"hidden" : 1,
-					"id" : "obj-25",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 998.0, 41.0, 50.0, 18.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
-					"hidden" : 1,
-					"id" : "obj-29",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 752.0, 24.0, 50.0, 18.0 ]
 				}
 
 			}
@@ -535,7 +505,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 755.0, 24.0, 248.0, 23.0 ],
+					"patching_rect" : [ 755.0, 23.0, 248.0, 23.0 ],
 					"text" : "Routing, selecting, and branching"
 				}
 
@@ -637,15 +607,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-25", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-29", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-5", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
@@ -658,7 +619,7 @@
 					"destination" : [ "obj-11", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 465.5, 140.0, 129.5, 140.0 ],
+					"midpoints" : [ 465.5, 108.0, 129.5, 108.0 ],
 					"source" : [ "obj-49", 0 ]
 				}
 
@@ -668,7 +629,7 @@
 					"destination" : [ "obj-16", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 465.5, 145.0, 465.5, 145.0 ],
+					"midpoints" : [ 465.5, 113.0, 465.5, 113.0 ],
 					"source" : [ "obj-49", 0 ]
 				}
 
@@ -678,7 +639,7 @@
 					"destination" : [ "obj-24", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 465.5, 140.0, 823.5, 140.0 ],
+					"midpoints" : [ 465.5, 108.0, 823.5, 108.0 ],
 					"source" : [ "obj-49", 0 ]
 				}
 
