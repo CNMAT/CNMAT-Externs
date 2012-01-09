@@ -14,8 +14,7 @@
 * Open Issues
 ** Bugs
 *** o.expr
-**** BUG [o.expr /count++ %= 8] crashes.  It doesn't compile and doesn't generate an error, but
-/count++ is not a valid lvalue
+**** BUG Syntax error when compiling multiple expressions and the last one ends with a semicolon.
 *** o.prepend
 *** o.route
 ** Feature Requests
@@ -37,13 +36,15 @@
 **** TODO Explicit cast functions (int32(), int64(), float32(), float64())
 **** TODO you get odd results with the ? : business if you don't add whitespace in the right place.
 *** o.if
-**** TODO o.if should be a special case of o.cond
-**** TODO o.when and o.unless
-
 * VERSION 1.0.3a
 ** Bugs Fixed
+*** FIXED [o.expr /count++ %= 8] crashes.  It doesn't compile and doesn't generate an error, but
+/count++ is not a valid lvalue
 *** FIXED Crash when sending an OSC-style Max message that doesn't get matched.
 ** Changelog
+*** DONE o.when and o.unless
+
+*** DONE o.if should be a special case of o.cond
 *** DONE Improve help files
 * VERSION 1.0.2a
 Released: [2012-01-06 Fri 13:10]
