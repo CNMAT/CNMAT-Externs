@@ -65,8 +65,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 275.0, 225.0, 40.0, 18.0 ],
-					"text" : "printit"
+					"patching_rect" : [ 275.0, 225.0, 89.0, 18.0 ],
+					"text" : "printit.maxhelp"
 				}
 
 			}
