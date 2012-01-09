@@ -892,16 +892,16 @@ void omax_util_oscMsg2MaxAtoms(t_osc_msg_s *m, t_atom *av){
 		case 'I':
 		case 'h':
 		case 'H':
+		case 'T':
+		case 'F':
+		case 'N':
 			atom_setlong(ptr++, osc_atom_s_getInt32(a));
 			break;
 		case 'f':
 		case 'd':
 			atom_setfloat(ptr++, osc_atom_s_getFloat(a));
 			break;
-		case 's':
-		case 'T':
-		case 'F':
-		case 'N':
+		case 's':		
 			{
 				char buf[osc_atom_s_getStringLen(a)];
 				char *bufptr = buf;
