@@ -67,6 +67,33 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-22",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 464.0, 59.0, 21.0, 20.0 ],
+									"presentation_rect" : [ 480.0, 60.0, 0.0, 0.0 ],
+									"text" : "2."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-21",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 281.0, 59.0, 21.0, 20.0 ],
+									"text" : "1."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"id" : "obj-20",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -679,7 +706,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 17.0, 86.0, 755.0, 632.0 ],
+						"rect" : [ 0.0, 26.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -700,6 +727,23 @@
 						"tags" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.06,
+									"bubbleside" : 0,
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-9",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 440.0, 157.0, 197.0, 39.0 ],
+									"presentation_rect" : [ 434.0, 86.5, 0.0, 0.0 ],
+									"text" : "ternary conditional operators"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
@@ -784,15 +828,18 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.1,
+									"bubbleside" : 2,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-22",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 272.0, 214.0, 34.0 ],
-									"text" : "null-coalescing operator.  means \"if /bar does not exist, set its value to 10\""
+									"patching_rect" : [ 301.0, 248.5, 148.5, 67.0 ],
+									"text" : "null-coalescing operator.  (means \"if /bar does not exist, set its value to 10\")"
 								}
 
 							}
@@ -885,14 +932,17 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.06,
+									"bubbleside" : 0,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-15",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 258.5, 99.0, 197.0, 20.0 ],
-									"text" : "functional and ternary if statements"
+									"patching_rect" : [ 208.0, 157.0, 135.0, 39.0 ],
+									"text" : "functional if statements"
 								}
 
 							}
@@ -1167,14 +1217,16 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.18,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-15",
-									"linecount" : 4,
+									"linecount" : 5,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 400.0, 221.0, 112.0, 62.0 ],
+									"patching_rect" : [ 400.0, 221.0, 112.0, 80.0 ],
 									"presentation_rect" : [ 429.0, 113.0, 0.0, 0.0 ],
 									"text" : "Arguments:\nexpression (list)\nconstant (number)\n(other) (symbol)"
 								}
