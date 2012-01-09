@@ -7,7 +7,7 @@
 			"revision" : 2
 		}
 ,
-		"rect" : [ 17.0, 60.0, 755.0, 658.0 ],
+		"rect" : [ 30.0, 71.0, 755.0, 658.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -26,7 +26,8 @@
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
-		"showontab" : 1,
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -72,7 +73,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 464.0, 59.0, 21.0, 20.0 ],
-									"presentation_rect" : [ 480.0, 60.0, 0.0, 0.0 ],
 									"text" : "2."
 								}
 
@@ -521,7 +521,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 0.0, 26.0, 755.0, 632.0 ],
+						"rect" : [ 30.0, 97.0, 755.0, 632.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -738,7 +738,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 440.0, 157.0, 197.0, 39.0 ],
-									"presentation_rect" : [ 434.0, 86.5, 0.0, 0.0 ],
 									"text" : "ternary conditional operators"
 								}
 
@@ -1222,12 +1221,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-15",
-									"linecount" : 5,
+									"linecount" : 7,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 400.0, 221.0, 112.0, 80.0 ],
-									"presentation_rect" : [ 429.0, 113.0, 0.0, 0.0 ],
+									"patching_rect" : [ 400.0, 221.0, 104.0, 108.0 ],
 									"text" : "Arguments:\nexpression (list)\nconstant (number)\n(other) (symbol)"
 								}
 
@@ -1243,7 +1241,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 80.0, 298.0, 48.0 ],
-									"presentation_rect" : [ 121.0, 397.0, 0.0, 0.0 ],
 									"text" : "Evaluate a mathematical expression on osc bundles.  Variables and operators are used to create output values.",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
