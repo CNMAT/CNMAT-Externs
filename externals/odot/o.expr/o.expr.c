@@ -33,9 +33,21 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 
 #include "../odot_version.h"
 
-#ifdef OIF
+#if defined (OIF)
 #undef NAME
 #define NAME "o.if"
+#elif defined (OCOND)
+#undef NAME
+#define NAME "o.cond"
+#elif defined (OUNLESS)
+#undef NAME
+#define NAME "o.unless"
+#elif defined (OWHEN)
+#undef NAME
+#define NAME "o.when"
+#else
+#undef NAME
+#define NAME "o.expr"
 #endif
 
 #ifndef WIN_VERSION
@@ -61,8 +73,8 @@ double rdtsc_cps;
 
 typedef struct _oexpr{
 	t_object ob;
-#ifdef OIF
-	void *outlets[2];
+#if defined (OIF) || defined (OCOND)
+	void **outlets;
 #else
 	void *outlet;
 #endif
@@ -93,7 +105,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
-#ifdef OIF
+#if defined (OIF) || defined (OCOND) || defined (OWHEN) || defined (OUNLESS)
 	t_osc_atom_ar_u *argv = NULL;
 	t_atom out[2];
 	// we don't actually want to do this copy here.  we need to 
@@ -101,9 +113,11 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	// assignment
 	char *copy = (char *)osc_mem_alloc(len);
 	memcpy(copy, (char *)ptr, len);
-	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
 	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)copy);
+	atom_setlong(out + 1, ptr);
+
+#if defined (OIF)
+	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
 	if(ret){
 		outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
 	}else{
@@ -123,6 +137,81 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	if(copy){
 		free(copy);
 	}
+#elif defined (OUNLESS)
+	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
+	if(ret){
+		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	}else{
+		int i;
+		for(i = 0; i < osc_atom_array_u_getLen(argv); i++){
+			if(osc_atom_u_getDouble(osc_atom_array_u_get(argv, i)) == 0){
+				outlet_anything(x->outlet, ps_FullPacket, 2, out);
+				goto out;
+			}
+		}
+	}
+ out:
+	if(argv){
+		osc_mem_free(argv);
+	}
+	if(copy){
+		free(copy);
+	}
+#elif defined (OWHEN)
+	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
+	if(ret){
+		//outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
+	}else{
+		int i;
+		for(i = 0; i < osc_atom_array_u_getLen(argv); i++){
+			if(osc_atom_u_getDouble(osc_atom_array_u_get(argv, i)) == 0){
+				goto out;
+			}
+		}
+		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	}
+ out:
+	if(argv){
+		osc_mem_free(argv);
+	}
+	if(copy){
+		free(copy);
+	}
+#elif defined (OCOND)
+	t_osc_expr *f = x->function_graph;
+	int j = 0;
+	while(f){
+		int ret = osc_expr_funcall(f, &len, &copy, &argv);
+		if(ret){
+			continue;
+		}else{
+			int i;
+			int fail = 0;
+			for(i = 0; i < osc_atom_array_u_getLen(argv); i++){
+				if(osc_atom_u_getDouble(osc_atom_array_u_get(argv, i)) == 0){
+					fail = 1;
+					break;
+				}
+			}
+			if(argv){
+				osc_mem_free(argv);
+				argv = NULL;
+			}
+			if(!fail){
+				outlet_anything(x->outlets[j], ps_FullPacket, 2, out);
+				goto out;
+			}
+		}
+		f = osc_expr_next(f);
+		j++;
+	}
+	outlet_anything(x->outlets[j], ps_FullPacket, 2, out);
+ out:
+	if(copy){
+		free(copy);
+	}
+#endif
+
 #else
 	// we need to make a copy incase the expression contains assignment that will
 	// alter the bundle.
@@ -354,6 +443,11 @@ void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
 void oexpr_free(t_oexpr *x){
 	//jbox_free((t_jbox *)x);
 	osc_expr_free(x->function_graph);
+#if defined (OIF) || defined (ocond)
+	if(x->outlets){
+		free(x->outlets);
+	}
+#endif
 }
 
 t_max_err oexpr_notify(t_oexpr *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
@@ -396,12 +490,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 	if(x = (t_oexpr *)object_alloc(oexpr_class)){
 		//jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		//x->ob.b_firstin = (void *)x; 
-#ifdef OIF
-		x->outlets[1] = outlet_new((t_object *)x, "FullPacket");
-		x->outlets[0] = outlet_new((t_object *)x, "FullPacket");
-#else
-		x->outlet = outlet_new((t_object *)x, "FullPacket");
-#endif
+		t_osc_expr *f = NULL;
 		if(argc){
 			char buf[65536];
 			char *ptr = buf;
@@ -419,16 +508,15 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 					break;
 				}
 			}
-			t_osc_expr *f = NULL;
 			TIMER_START(foo, rdtsc_cps);
-			osc_expr_parser_parseString(buf, &f);
+			int ret = osc_expr_parser_parseString(buf, &f);
 			TIMER_STOP(foo, rdtsc_cps);
 			TIMER_PRINTF(foo);
 			TIMER_SNPRINTF(foo, buff);
 #ifdef __OSC_PROFILE__
 			post("%s\n", buff);
 #endif
-			if(!f){
+			if(!f || ret){
 				object_error((t_object *)x, "error parsing %s\n", buf);
 				return NULL;
 			}
@@ -437,6 +525,35 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 			}
 			x->function_graph = f;
 		}
+		int n = 0;
+		while(f){
+			n++;
+			f = osc_expr_next(f);
+		}
+#if defined (OIF)
+		if(n == 0 || n > 1){
+			object_error((t_object *)x, "invalid number of expressions: %d", n);
+			return NULL;
+		}
+		x->outlets = malloc(2 * sizeof(void *));
+		x->outlets[1] = outlet_new((t_object *)x, "FullPacket");
+		x->outlets[0] = outlet_new((t_object *)x, "FullPacket");
+#elif defined (OUNLESS) || defined (OWHEN)
+		if(n == 0 || n > 1){
+			object_error((t_object *)x, "invalid number of expressions: %d", n);
+			return NULL;
+		}
+		x->outlet = outlet_new((t_object *)x, "FullPacket");
+#elif defined (OCOND)
+		// implicit 't' as the last condition
+		x->outlets = malloc(n + 1 * sizeof(void *));
+		int i;
+		for(i = n; i >= 0; i--){
+			x->outlets[i] = outlet_new((t_object *)x, "FullPacket");
+		}
+#else
+		x->outlet = outlet_new((t_object *)x, "FullPacket");
+#endif
 		/*
 		if(argc){
 			omax_scanner_scan_atom_array(attr_args_offset(argc, argv), argv, &(x->argclex), &(x->argvlex));
@@ -464,12 +581,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
-#ifdef OIF
-	char *buf = "o.if";
-#else
-	char *buf = "o.expr";
-#endif
-	t_class *c = class_new(buf, (method)oexpr_new, (method)oexpr_free, sizeof(t_oexpr), 0L, A_GIMME, 0);
+	t_class *c = class_new(NAME, (method)oexpr_new, (method)oexpr_free, sizeof(t_oexpr), 0L, A_GIMME, 0);
 
 	//c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
  	//jbox_initclass(c, JBOX_TEXTFIELD | JBOX_FIXWIDTH | JBOX_FONTATTR); 
