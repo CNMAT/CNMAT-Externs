@@ -222,5 +222,10 @@ if((10 > 9)&&(2 < 1)&&(1 > /doesntexist), /one = /doesntexist, /one = 1)
 /five 885
 ;
 @
-
+/one = /two + /two
+;/two cat
+;/two cat
+/one catcat
+;
+@
 
