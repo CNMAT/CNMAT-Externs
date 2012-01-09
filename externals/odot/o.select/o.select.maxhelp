@@ -4,10 +4,10 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 1
+			"revision" : 0
 		}
 ,
-		"rect" : [ 464.0, 154.0, 578.0, 559.0 ],
+		"rect" : [ 182.0, 84.0, 578.0, 559.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 1
+							"revision" : 0
 						}
 ,
 						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
@@ -68,13 +68,26 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-6",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 45.0, 26.0, 460.0, 20.0 ],
+									"text" : "o.route dispatches messages through an OSC address hierarchy."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"id" : "obj-27",
 									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 336.0, 345.0, 83.0, 35.0 ],
+									"patching_rect" : [ 335.0, 386.0, 83.0, 35.0 ],
 									"text" : "/freq 160 \n/gain 0.5 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -90,7 +103,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 191.0, 345.0, 83.0, 35.0 ],
+									"patching_rect" : [ 190.0, 386.0, 83.0, 35.0 ],
 									"text" : "/freq 29 \n/gain 0.5 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -106,7 +119,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 68.0, 282.0, 83.0, 35.0 ],
+									"patching_rect" : [ 67.0, 323.0, 83.0, 35.0 ],
 									"text" : "/2/freq 160 \n/2/gain 0.5 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -116,13 +129,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-23",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 278.0, 159.0, 161.0, 34.0 ],
+									"patching_rect" : [ 277.0, 200.0, 161.0, 34.0 ],
 									"text" : "o.route strips off the portion of the address that matched"
 								}
 
@@ -137,7 +149,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 312.0, 52.0, 50.0, 20.0 ]
+									"patching_rect" : [ 311.0, 93.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -151,7 +163,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 312.0, 82.0, 111.0, 48.0 ],
+									"patching_rect" : [ 311.0, 123.0, 111.0, 48.0 ],
 									"text" : "/mysynth/*/freq $1\n/mysynth/*/gain .5\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -167,7 +179,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 362.0, 419.0, 50.0, 20.0 ]
+									"patching_rect" : [ 361.0, 460.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -181,7 +193,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 312.0, 419.0, 50.0, 20.0 ]
+									"patching_rect" : [ 311.0, 460.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -195,7 +207,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 218.0, 419.0, 50.0, 20.0 ]
+									"patching_rect" : [ 217.0, 460.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -209,7 +221,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 168.0, 419.0, 50.0, 20.0 ]
+									"patching_rect" : [ 167.0, 460.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -217,12 +229,11 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-11",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 278.0, 209.0, 150.0, 20.0 ],
+									"patching_rect" : [ 277.0, 250.0, 150.0, 20.0 ],
 									"text" : "<--unmatched (delegation)"
 								}
 
@@ -236,7 +247,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 198.0, 209.0, 69.0, 21.0 ],
+									"patching_rect" : [ 197.0, 250.0, 69.0, 21.0 ],
 									"text" : "/nada rien \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -251,7 +262,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 312.0, 389.0, 105.0, 20.0 ],
+									"patching_rect" : [ 311.0, 430.0, 105.0, 20.0 ],
 									"text" : "o.route /freq /gain"
 								}
 
@@ -266,7 +277,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 168.0, 52.0, 50.0, 20.0 ]
+									"patching_rect" : [ 167.0, 93.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -280,7 +291,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 168.0, 82.0, 118.0, 48.0 ],
+									"patching_rect" : [ 167.0, 123.0, 118.0, 48.0 ],
 									"text" : "/mysynth/2/freq 440\n/mysynth/2/gain $1\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -295,7 +306,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 168.0, 389.0, 105.0, 20.0 ],
+									"patching_rect" : [ 167.0, 430.0, 105.0, 20.0 ],
 									"text" : "o.route /freq /gain"
 								}
 
@@ -309,7 +320,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 168.0, 282.0, 307.0, 20.0 ],
+									"patching_rect" : [ 167.0, 323.0, 307.0, 20.0 ],
 									"text" : "o.route /1 /2"
 								}
 
@@ -323,7 +334,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "FullPacket" ],
-									"patching_rect" : [ 168.0, 159.0, 99.0, 20.0 ],
+									"patching_rect" : [ 167.0, 200.0, 99.0, 20.0 ],
 									"text" : "o.route /mysynth"
 								}
 
@@ -476,18 +487,18 @@
  ]
 					}
 ,
-					"patching_rect" : [ 100.0, 185.0, 58.0, 20.0 ],
+					"patching_rect" : [ 114.0, 183.0, 58.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"globalpatchername" : "",
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial",
+						"tags" : "",
 						"default_fontsize" : 12.0,
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"tags" : "",
-						"default_fontface" : 0
+						"default_fontface" : 0,
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial"
 					}
 ,
 					"text" : "p o.route"
@@ -507,7 +518,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 1
+							"revision" : 0
 						}
 ,
 						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
@@ -534,7 +545,6 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-22",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -557,7 +567,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 0,
-											"revision" : 1
+											"revision" : 0
 										}
 ,
 										"rect" : [ 341.0, 44.0, 532.0, 577.0 ],
@@ -594,7 +604,6 @@
 												"box" : 												{
 													"fontname" : "Arial",
 													"fontsize" : 12.0,
-													"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"id" : "obj-14",
 													"linecount" : 4,
 													"maxclass" : "comment",
@@ -704,7 +713,6 @@
 												"box" : 												{
 													"fontname" : "Arial",
 													"fontsize" : 12.0,
-													"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"id" : "obj-10",
 													"linecount" : 7,
 													"maxclass" : "comment",
@@ -971,16 +979,16 @@
 ,
 									"patching_rect" : [ 195.0, 140.0, 85.0, 20.0 ],
 									"saved_object_attributes" : 									{
-										"globalpatchername" : "",
-										"digest" : "",
-										"default_fontname" : "Arial",
-										"fontname" : "Arial",
+										"tags" : "",
 										"default_fontsize" : 12.0,
 										"description" : "",
+										"globalpatchername" : "",
 										"fontface" : 0,
 										"fontsize" : 12.0,
-										"tags" : "",
-										"default_fontface" : 0
+										"default_fontface" : 0,
+										"digest" : "",
+										"default_fontname" : "Arial",
+										"fontname" : "Arial"
 									}
 ,
 									"text" : "p who_cares?"
@@ -991,7 +999,6 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-19",
 									"linecount" : 2,
 									"maxclass" : "comment",
@@ -1023,21 +1030,21 @@
  ]
 					}
 ,
-					"patching_rect" : [ 245.0, 183.0, 125.0, 20.0 ],
+					"patching_rect" : [ 245.0, 183.0, 134.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"globalpatchername" : "",
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial",
+						"tags" : "",
 						"default_fontsize" : 12.0,
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"tags" : "",
-						"default_fontface" : 0
+						"default_fontface" : 0,
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial"
 					}
 ,
-					"text" : "p see_also_osc-route"
+					"text" : "p \"see also OSC-route\""
 				}
 
 			}
@@ -1054,7 +1061,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 1
+							"revision" : 0
 						}
 ,
 						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
@@ -1081,7 +1088,6 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-43",
 									"linecount" : 3,
 									"maxclass" : "comment",
@@ -1139,13 +1145,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-32",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 112.0, 34.0, 325.0, 20.0 ],
-									"text" : "o.spew is like o.select except that it outputs Max messages"
+									"patching_rect" : [ 112.0, 19.0, 325.0, 34.0 ],
+									"text" : "o.spew dispatches messages through an OSC address hierarchy as Max messages."
 								}
 
 							}
@@ -1338,16 +1344,16 @@
 ,
 					"patching_rect" : [ 172.0, 183.0, 59.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"globalpatchername" : "",
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial",
+						"tags" : "",
 						"default_fontsize" : 12.0,
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"tags" : "",
-						"default_fontface" : 0
+						"default_fontface" : 0,
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial"
 					}
 ,
 					"text" : "p o.spew"
@@ -1367,10 +1373,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 1
+							"revision" : 0
 						}
 ,
-						"rect" : [ 464.0, 180.0, 578.0, 533.0 ],
+						"rect" : [ 182.0, 110.0, 578.0, 533.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1394,13 +1400,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-32",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 79.5, 33.0, 386.0, 20.0 ],
-									"text" : "o.select is the same as o.route except that it leaves the address intact"
+									"patching_rect" : [ 79.5, 34.0, 386.0, 34.0 ],
+									"text" : "o.select dispatches messages through an OSC address hierarchy preserving the addresses that matched."
 								}
 
 							}
@@ -1575,18 +1581,18 @@
  ]
 					}
 ,
-					"patching_rect" : [ 23.0, 185.0, 62.0, 20.0 ],
+					"patching_rect" : [ 40.0, 183.0, 62.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"globalpatchername" : "",
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial",
+						"tags" : "",
 						"default_fontsize" : 12.0,
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"tags" : "",
-						"default_fontface" : 0
+						"default_fontface" : 0,
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial"
 					}
 ,
 					"text" : "p o.select"
