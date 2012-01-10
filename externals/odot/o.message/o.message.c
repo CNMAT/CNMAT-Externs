@@ -758,21 +758,15 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void omessage_anything(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
-	if(!msg){
-		object_error((t_object *)x, "expected an OSC message");
-		return;
-	}
-	if(msg->s_name[0] != '/'){
-		object_error((t_object *)x, "%s is not a valid OSC address", msg->s_name);
-		return;
-	}
 	t_atom av[argc + 1];
 	int ac = argc;
 
 	if(msg){
 		ac = argc + 1;
 		atom_setsym(av, msg);
-		memcpy(av + 1, argv, argc * sizeof(t_atom));
+		if(argc > 0){
+			memcpy(av + 1, argv, argc * sizeof(t_atom));
+		}
 	}else{
 		memcpy(av, argv, argc * sizeof(t_atom));
 	}
@@ -800,6 +794,8 @@ void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av){
 			}
 			omessage_processAtoms(x, ac, av);
 		}
+	}else{
+		omessage_clear(t_omessage *x);
 	}
 	jbox_redraw((t_jbox *)x);
 }
