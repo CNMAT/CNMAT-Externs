@@ -181,6 +181,9 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.03,
+									"bubbleside" : 2,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-10",
@@ -188,7 +191,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 136.0, 127.0, 256.0, 48.0 ],
+									"patching_rect" : [ 136.0, 127.0, 256.0, 67.0 ],
 									"text" : "o.if sends the incoming bundle out the left outlet if the result of the test is true (non-zero), or out the right outlet otherwise"
 								}
 
