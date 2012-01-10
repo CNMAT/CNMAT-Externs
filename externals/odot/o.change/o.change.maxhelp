@@ -187,7 +187,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 14.5, 78.0, 274.0, 20.0 ],
-									"text" : "output a bundle if the content queue has changed",
+									"text" : "output a bundle if input data has changed",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
