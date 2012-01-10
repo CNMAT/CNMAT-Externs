@@ -180,14 +180,16 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.73,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-12",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 177.0, 183.0, 341.0, 34.0 ],
+									"patching_rect" : [ 304.0, 223.0, 207.0, 52.0 ],
 									"text" : "If none of the expressions evaluates to non-zero, the bundle will come out the righmost outlet."
 								}
 
@@ -222,14 +224,17 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.07,
+									"bubbleside" : 2,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-10",
-									"linecount" : 3,
+									"linecount" : 7,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 177.0, 135.0, 341.0, 48.0 ],
+									"patching_rect" : [ 138.0, 120.0, 166.0, 122.0 ],
 									"text" : "o.cond creates one outlet for each expression separated by a semicolon. The bundle will come out the outlet that corresponds to the first statement that evaluates to non-zero."
 								}
 
@@ -272,7 +277,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "int", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 78.0, 163.0, 50.0, 20.0 ]
+									"patching_rect" : [ 78.0, 112.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -285,7 +290,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 78.0, 208.0, 45.0, 20.0 ],
+									"patching_rect" : [ 78.0, 144.0, 45.0, 20.0 ],
 									"text" : "/foo $1",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
