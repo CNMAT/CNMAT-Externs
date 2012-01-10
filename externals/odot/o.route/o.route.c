@@ -187,7 +187,8 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 	int i;
 	int match = 0;
 	for(i = 0; i < x->num_selectors; i++){
-		int outletnum = x->num_selectors - i - 1;
+		//int outletnum = x->num_selectors - i - 1;
+		int outletnum = i;
 		char *s = x->selectors[i];
 		int ret, ao, po;
 		ret = osc_match(msg->s_name, s, &po, &ao);
