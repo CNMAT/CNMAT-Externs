@@ -68,6 +68,19 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-3",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 221.0, 270.0, 59.0, 20.0 ],
+									"text" : "see also:"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"hidden" : 1,
 									"id" : "obj-12",
 									"maxclass" : "newobj",
@@ -159,7 +172,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 240.0, 183.0, 160.0, 62.0 ],
+									"patching_rect" : [ 240.0, 183.0, 161.0, 62.0 ],
 									"text" : "Outputs a bundle containing all the OSC messages with addresses that are not present in both bundles"
 								}
 
@@ -169,13 +182,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-6",
-									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 114.0, 224.0, 78.0, 35.0 ],
-									"text" : "/bar 4 5 6 \n/bloo o i e n \n",
+									"patching_rect" : [ 114.0, 224.0, 78.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
