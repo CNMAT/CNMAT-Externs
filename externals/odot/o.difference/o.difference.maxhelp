@@ -74,7 +74,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 368.0, 284.0, 53.0, 20.0 ],
+									"patching_rect" : [ 368.0, 292.0, 53.0, 20.0 ],
 									"text" : "pcontrol"
 								}
 
@@ -89,7 +89,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 368.0, 264.0, 81.0, 20.0 ],
+									"patching_rect" : [ 368.0, 272.0, 81.0, 20.0 ],
 									"text" : "prepend load"
 								}
 
@@ -103,7 +103,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 280.0, 280.0, 99.0, 18.0 ],
+									"patching_rect" : [ 280.0, 288.0, 99.0, 18.0 ],
 									"text" : "o.union.maxhelp"
 								}
 
@@ -117,7 +117,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 280.0, 262.0, 131.0, 18.0 ],
+									"patching_rect" : [ 280.0, 270.0, 131.0, 18.0 ],
 									"text" : "o.intersection.maxhelp"
 								}
 
@@ -132,7 +132,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 78.0, 452.0, 20.0 ],
-									"text" : "delay a message by n milliseconds",
+									"text" : "output a bundle containing the difference between two input bundles",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
@@ -145,8 +145,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 16.0, 16.0, 179.0, 62.0 ],
-									"text" : "o.delay "
+									"patching_rect" : [ 16.0, 16.0, 274.0, 62.0 ],
+									"text" : "o.difference "
 								}
 
 							}
@@ -159,7 +159,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 240.0, 175.0, 160.0, 62.0 ],
+									"patching_rect" : [ 240.0, 183.0, 160.0, 62.0 ],
 									"text" : "Outputs a bundle containing all the OSC messages with addresses that are not present in both bundles"
 								}
 
@@ -174,7 +174,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 114.0, 216.0, 78.0, 35.0 ],
+									"patching_rect" : [ 114.0, 224.0, 78.0, 35.0 ],
 									"text" : "/bar 4 5 6 \n/bloo o i e n \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -190,7 +190,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 196.0, 116.0, 71.0, 35.0 ],
+									"patching_rect" : [ 196.0, 124.0, 71.0, 35.0 ],
 									"text" : "/foo a r s t\n/bloo o i e n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -206,7 +206,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 114.0, 116.0, 62.0, 35.0 ],
+									"patching_rect" : [ 114.0, 124.0, 62.0, 35.0 ],
 									"text" : "/foo 1 2 3\n/bar 4 5 6",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -221,7 +221,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 114.0, 175.0, 101.0, 20.0 ],
+									"patching_rect" : [ 114.0, 183.0, 101.0, 20.0 ],
 									"text" : "o.difference"
 								}
 
