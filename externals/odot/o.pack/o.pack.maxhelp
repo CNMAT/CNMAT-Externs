@@ -7,7 +7,7 @@
 			"revision" : 2
 		}
 ,
-		"rect" : [ 22.0, 63.0, 833.0, 531.0 ],
+		"rect" : [ 7.0, 44.0, 721.0, 461.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -26,7 +26,8 @@
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
-		"showontab" : 1,
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -73,7 +74,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 138.0, 100.0, 198.0, 34.0 ],
+									"patching_rect" : [ 315.0, 135.0, 198.0, 34.0 ],
 									"text" : "a bundle sent in to one of the inlets will become a nested bundle"
 								}
 
@@ -88,7 +89,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 191.0, 72.0, 76.0 ],
+									"patching_rect" : [ 227.0, 226.0, 72.0, 76.0 ],
 									"text" : "/foo [\n/bloo 1 2 3 \n/blob 4 5 6 \n]\n/bar a b c \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -104,7 +105,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 100.0, 71.0, 35.0 ],
+									"patching_rect" : [ 227.0, 135.0, 71.0, 35.0 ],
 									"text" : "/bloo 1 2 3\n/blob 4 5 6",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -119,7 +120,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 50.0, 147.0, 123.0, 20.0 ],
+									"patching_rect" : [ 227.0, 182.0, 123.0, 20.0 ],
 									"text" : "o.pack /foo /bar a b c"
 								}
 
@@ -157,16 +158,16 @@
 ,
 					"patching_rect" : [ 64.0, 120.0, 110.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontname" : "Arial",
-						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"tags" : "",
-						"description" : "",
-						"globalpatchername" : "",
-						"fontface" : 0,
-						"fontsize" : 12.0,
 						"default_fontface" : 0,
-						"digest" : ""
+						"tags" : "",
+						"fontname" : "Arial",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"globalpatchername" : "",
+						"default_fontsize" : 12.0,
+						"fontface" : 0,
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p \"nested bundles\""
@@ -189,7 +190,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 22.0, 89.0, 833.0, 505.0 ],
+						"rect" : [ 7.0, 70.0, 721.0, 435.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -213,13 +214,27 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-13",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 430.0, 100.0, 39.0, 18.0 ],
-									"text" : "sploo"
+									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
+									"id" : "obj-43",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 78.0, 481.0, 20.0 ],
+									"text" : "Combine multiple bundles into an output bundle.  The arguments determine the address.",
+									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 48.0,
+									"id" : "obj-44",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 16.0, 165.0, 62.0 ],
+									"text" : "o.pack "
 								}
 
 							}
@@ -227,12 +242,117 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-21",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 668.0, 361.0, 81.0, 20.0 ],
+									"text" : "prepend load"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-20",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 668.0, 382.0, 53.0, 20.0 ],
+									"text" : "pcontrol"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-16",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 130.0, 288.0, 224.0, 38.0 ],
+									"text" : "a bundle sent in to one of the inlets will become a nested bundle"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-14",
+									"maxclass" : "o.message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 56.0, 379.0, 72.0, 20.0 ],
+									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-3",
+									"linecount" : 2,
+									"maxclass" : "o.message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 56.0, 288.0, 71.0, 35.0 ],
+									"text" : "/bloo 1 2 3\n/blob 4 5 6",
+									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-1",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "FullPacket" ],
+									"patching_rect" : [ 56.0, 335.0, 123.0, 20.0 ],
+									"text" : "o.pack /foo /bar a b c"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-13",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 422.0, 152.0, 39.0, 18.0 ],
+									"text" : "sploo"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.2,
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"id" : "obj-12",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 540.0, 130.0, 186.0, 34.0 ],
+									"patching_rect" : [ 514.0, 182.0, 186.0, 38.0 ],
 									"text" : "default arguments can be placed after OSC addresses"
 								}
 
@@ -246,7 +366,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 490.0, 100.0, 32.5, 18.0 ],
+									"patching_rect" : [ 486.0, 152.0, 32.5, 18.0 ],
 									"text" : "123"
 								}
 
@@ -261,7 +381,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 380.0, 100.0, 50.0, 20.0 ]
+									"patching_rect" : [ 362.0, 152.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -270,13 +390,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-10",
-									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 380.0, 160.0, 71.0, 35.0 ],
-									"text" : "/foo sploo \n/bar 123 \n",
+									"patching_rect" : [ 362.0, 212.0, 71.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -290,20 +408,22 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 380.0, 130.0, 143.0, 20.0 ],
+									"patching_rect" : [ 362.0, 182.0, 143.0, 20.0 ],
 									"text" : "o.pak /foo bloo /bar 7 8 9"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.49,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-7",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 540.0, 100.0, 150.0, 20.0 ],
+									"patching_rect" : [ 522.0, 152.0, 150.0, 24.0 ],
 									"text" : "all inlets active"
 								}
 
@@ -316,7 +436,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 170.0, 100.0, 150.0, 20.0 ],
+									"patching_rect" : [ 176.0, 152.0, 150.0, 20.0 ],
 									"text" : "left inlet triggers output"
 								}
 
@@ -330,7 +450,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 120.0, 100.0, 37.0, 18.0 ],
+									"patching_rect" : [ 130.0, 152.0, 37.0, 18.0 ],
 									"text" : "1 2 3"
 								}
 
@@ -345,7 +465,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 50.0, 100.0, 50.0, 20.0 ]
+									"patching_rect" : [ 56.0, 152.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -354,12 +474,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-19",
-									"maxclass" : "newobj",
+									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 605.0, 225.0, 32.5, 20.0 ],
-									"text" : "pak"
+									"patching_rect" : [ 583.0, 382.0, 80.0, 18.0 ],
+									"text" : "pak.maxhelp"
 								}
 
 							}
@@ -368,12 +488,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-18",
-									"maxclass" : "newobj",
+									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 605.0, 195.0, 36.0, 20.0 ],
-									"text" : "pack"
+									"patching_rect" : [ 583.0, 364.0, 85.0, 18.0 ],
+									"text" : "pack.maxhelp"
 								}
 
 							}
@@ -385,7 +505,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 545.0, 195.0, 150.0, 20.0 ],
+									"patching_rect" : [ 518.0, 364.0, 62.0, 20.0 ],
 									"text" : "similar to:"
 								}
 
@@ -399,7 +519,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 160.0, 71.0, 20.0 ],
+									"patching_rect" : [ 56.0, 212.0, 71.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -413,13 +533,22 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 50.0, 130.0, 93.0, 20.0 ],
+									"patching_rect" : [ 56.0, 182.0, 93.0, 20.0 ],
 									"text" : "o.pack /foo /bar"
 								}
 
 							}
  ],
 						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-14", 1 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-1", 0 ]
+								}
+
+							}
+, 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 1 ],
 									"disabled" : 0,
@@ -439,10 +568,46 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-21", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-18", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-21", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-19", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-2", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-20", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-21", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-3", 0 ]
 								}
 
 							}
@@ -500,16 +665,16 @@
 ,
 					"patching_rect" : [ 64.0, 81.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontname" : "Arial",
-						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"tags" : "",
-						"description" : "",
-						"globalpatchername" : "",
-						"fontface" : 0,
-						"fontsize" : 12.0,
 						"default_fontface" : 0,
-						"digest" : ""
+						"tags" : "",
+						"fontname" : "Arial",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"globalpatchername" : "",
+						"default_fontsize" : 12.0,
+						"fontface" : 0,
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p basic"
