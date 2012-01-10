@@ -219,10 +219,21 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	// bundle has to be resized during assignment
 	char *copy = (char *)osc_mem_alloc(len);
 	memcpy(copy, (char *)ptr, len);
-//int argc = 0;
-	t_osc_atom_ar_u *argv = NULL;
+	int ret = 0;
+	t_osc_expr *f = x->function_graph;
+	while(f){
+		//int argc = 0;
+		t_osc_atom_ar_u *argv = NULL;
+		ret = osc_expr_funcall(f, &len, &copy, &argv);
+		if(argv){
+			osc_atom_array_u_free(argv);
+		}
+		if(ret){
+			break;
+		}
+		f = osc_expr_next(f);
+	}
 	t_atom out[2];
-	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
 	if(ret){
 		atom_setlong(out, len);
 		atom_setlong(out + 1, ptr);
@@ -231,9 +242,6 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		atom_setlong(out, len);
 		atom_setlong(out + 1, (long)copy);
 		outlet_anything(x->outlet, ps_FullPacket, 2, out);
-	}
-	if(argv){
-		osc_atom_array_u_free(argv);
 	}
 	if(copy){
 		osc_mem_free(copy);
@@ -405,9 +413,9 @@ void oexpr_postFunctions(t_oexpr *x){
 	int i;
 	for(i = 0; i < sizeof(osc_expr_funcsym) / sizeof(t_osc_expr_rec); i++){
 		if(osc_expr_funcsym[i].arity < 0){
-			post("%s(): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].docstring);
-		}else if(osc_expr_funcsym[i].arity == 0){
 			post("%s(...): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].docstring);
+		}else if(osc_expr_funcsym[i].arity == 0){
+			post("%s(): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].docstring);
 		}else{
 			char buf[256];
 			char *ptr = buf;
