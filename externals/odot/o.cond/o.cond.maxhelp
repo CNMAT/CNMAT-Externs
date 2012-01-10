@@ -44,7 +44,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 411.0, 374.0, 575.0, 370.0 ],
+						"rect" : [ 13.0, 82.0, 627.0, 449.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -64,7 +64,6 @@
 						"digest" : "",
 						"tags" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
@@ -75,7 +74,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 296.0, 376.0, 92.0, 18.0 ],
-									"presentation_rect" : [ 324.0, 361.0, 0.0, 0.0 ],
 									"text" : "o.expr.maxhelp"
 								}
 
@@ -204,7 +202,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 304.0, 223.0, 207.0, 52.0 ],
+									"patching_rect" : [ 304.0, 223.0, 208.0, 52.0 ],
 									"text" : "If none of the expressions evaluates to non-zero, the bundle will come out the righmost outlet."
 								}
 
@@ -453,9 +451,9 @@
 					"patching_rect" : [ 67.0, 42.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"default_fontface" : 0,
+						"tags" : "",
 						"fontname" : "Arial",
 						"digest" : "",
-						"tags" : "",
 						"default_fontname" : "Arial",
 						"globalpatchername" : "",
 						"default_fontsize" : 12.0,
