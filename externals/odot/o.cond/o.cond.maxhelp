@@ -69,6 +69,21 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-21",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 296.0, 376.0, 92.0, 18.0 ],
+									"presentation_rect" : [ 324.0, 361.0, 0.0, 0.0 ],
+									"text" : "o.expr.maxhelp"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
 									"id" : "obj-19",
 									"maxclass" : "comment",
@@ -315,12 +330,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-2",
-									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 57.0, 360.0, 281.0, 34.0 ],
-									"text" : "o.cond understands all of the same functions as o.expr"
+									"patching_rect" : [ 25.0, 376.0, 281.0, 20.0 ],
+									"text" : "o.cond understands all of the same functions as:"
 								}
 
 							}
@@ -358,6 +372,15 @@
 									"disabled" : 0,
 									"hidden" : 1,
 									"source" : [ "obj-17", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-17", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-21", 0 ]
 								}
 
 							}
