@@ -405,8 +405,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 16.0, 78.0, 452.0, 20.0 ],
-									"text" : "accumulate messages and bundles into a single bundle (to be sent out via a bang)",
+									"patching_rect" : [ 16.0, 78.0, 456.0, 20.0 ],
+									"text" : "display and send any given bundle with the capability to handle specified arguments",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
@@ -420,7 +420,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 16.0, 519.0, 62.0 ],
-									"text" : "o.accumulate "
+									"text" : "o.message "
 								}
 
 							}
