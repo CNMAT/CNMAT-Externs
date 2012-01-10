@@ -1341,6 +1341,148 @@ int osc_expr_progn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 	}
 }
 
+// constants
+int osc_expr_pi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_PI);
+	return 0;
+}
+
+int osc_expr_twopi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 2 * M_PI);
+	return 0;
+}
+
+int osc_expr_halfpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_PI_2);
+	return 0;
+}
+
+int osc_expr_quarterpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_PI_4);
+	return 0;
+}
+
+int osc_expr_oneoverpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_1_PI);
+	return 0;
+}
+
+int osc_expr_twooverpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_2_PI);
+	return 0;
+}
+
+int osc_expr_degtorad(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 0.017453);
+	return 0;
+}
+
+int osc_expr_radtodeg(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 57.29578);
+	return 0;
+}
+
+int osc_expr_e(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_E);
+	return 0;
+}
+
+int osc_expr_lntwo(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_LN2);
+	return 0;
+}
+
+int osc_expr_lnten(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_LN10);
+	return 0;
+}
+
+int osc_expr_logtwoe(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_LOG2E);
+	return 0;
+}
+
+int osc_expr_logtene(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_LOG10E);
+	return 0;
+}
+
+int osc_expr_sqrttwo(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_SQRT2);
+	return 0;
+}
+
+int osc_expr_sqrthalf(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	*out = osc_atom_array_u_alloc(1);
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), M_SQRT1_2);
+	return 0;
+}
+
+int osc_expr_explicitCast_float32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	return 0;
+}
+
+int osc_expr_explicitCast_float64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	return 0;
+}
+
+int osc_expr_explicitCast_int32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	return 0;
+}
+
+int osc_expr_explicitCast_int64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	return 0;
+}
+
+int osc_expr_explicitCast_uint32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	return 0;
+}
+
+int osc_expr_explicitCast_uint64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	return 0;
+}
+
+
+//int osc_expr_explicitCast(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+//{
+
+//}
+
 t_osc_expr *osc_expr_alloc(void){
 	t_osc_expr *expr = (t_osc_expr *)osc_mem_alloc(sizeof(t_osc_expr));
 	memset(expr, '\0', sizeof(t_osc_expr));
@@ -1431,14 +1573,18 @@ t_osc_expr_rec *osc_expr_getRec(t_osc_expr *e){
 }
 
 void osc_expr_setArg(t_osc_expr *e, t_osc_expr_arg *a){
-	t_osc_expr_arg *aa = a;
-	int count = 0;
-	while(aa){
-		count++;
-		aa = aa->next;
+	if(e){
+		if(a){
+			t_osc_expr_arg *aa = a;
+			int count = 0;
+			while(aa){
+				count++;
+				aa = aa->next;
+			}
+			e->argv = a;
+			e->argc = count;
+		}
 	}
-	e->argv = a;
-	e->argc = count;
 }
 
 void osc_expr_prependArg(t_osc_expr *e, t_osc_expr_arg *a){

@@ -128,7 +128,9 @@ t_osc_expr *osc_expr_parser_prefix(char *function_name, t_osc_expr_arg *arglist)
 	}
 	t_osc_expr *e = osc_expr_alloc();
 	osc_expr_setRec(e, r);
-	osc_expr_setArg(e, arglist);
+	if(arglist){
+		osc_expr_setArg(e, arglist);
+	}
 	return e;
 }
 
@@ -320,6 +322,14 @@ expr:
 // prefix function call
 	| OSC_EXPR_STRING '(' args ')' %prec OSC_EXPR_FUNC_CALL {
 		t_osc_expr *e = osc_expr_parser_prefix(osc_atom_u_getStringPtr($1), $3);
+		if(!e){
+			return 1;
+		}
+		$$ = e;
+		osc_atom_u_free($1);
+  	}
+	| OSC_EXPR_STRING '(' ')' %prec OSC_EXPR_FUNC_CALL {
+		t_osc_expr *e = osc_expr_parser_prefix(osc_atom_u_getStringPtr($1), NULL);
 		if(!e){
 			return 1;
 		}

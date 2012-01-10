@@ -123,6 +123,30 @@ int osc_expr_prog1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 int osc_expr_prog2(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_progn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
+// constants
+int osc_expr_pi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_twopi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_halfpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_quarterpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_oneoverpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_twooverpi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_degtorad(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_radtodeg(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_e(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_lntwo(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_lnten(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_logtwoe(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_logtene(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_sqrttwo(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_sqrthalf(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+
+int osc_expr_explicitCast_float32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_explicitCast_float64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_explicitCast_int32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_explicitCast_int64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_explicitCast_uint32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_explicitCast_uint64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+
 t_osc_expr *osc_expr_alloc(void);
 t_osc_expr_arg *osc_expr_arg_alloc(void);
 void osc_expr_free(t_osc_expr *e);
@@ -273,7 +297,30 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"compile", osc_expr_compile, 2, NULL, "Compile a function <arg2> and bind it to an OSC address <arg1>"},
 	{"prog1", osc_expr_prog1, -1, NULL, "Execute a sequence of expressions and return the first one."},
 	{"prog2", osc_expr_prog2, -1, NULL, "Execute a sequence of expressions and return the second one."},
-	{"progn", osc_expr_progn, -1, NULL, "Execute a sequence of expressions and return the last one."}
+	{"progn", osc_expr_progn, -1, NULL, "Execute a sequence of expressions and return the last one."},
+	//constants
+	{"pi", osc_expr_pi, 0, NULL, "pi: 3.14159..."},
+	{"twopi", osc_expr_twopi, 0, NULL, "2 * pi: 6.28318..."},
+	{"halfpi", osc_expr_halfpi, 0, NULL, "pi / 2: 1.57079..."},
+	{"quarterpi", osc_expr_quarterpi, 0, NULL, "pi / 4: 0.78539..."},
+	{"oneoverpi", osc_expr_oneoverpi, 0, NULL, "1 / pi: 0.31830..."},
+	{"twooverpi", osc_expr_twooverpi, 0, NULL, "2 / pi: 0.63661..."},
+	{"degtorad", osc_expr_degtorad, 0, NULL, "Multiply by angle to get radians (0.017453...)"},
+	{"radtodeg", osc_expr_radtodeg, 0, NULL, "Multiply by angle in radians to get degrees (57.29578...)"},
+	{"e", osc_expr_e, 0, NULL, "e: 2.718282..."},
+	{"lntwo", osc_expr_lntwo, 0, NULL, "ln 2: 0.69314..."},
+	{"lnten", osc_expr_lnten, 0, NULL, "ln 10: 2.30258..."},
+	{"logtwoe", osc_expr_logtwoe, 0, NULL, "log(2 * e): 1.44269..."},
+	{"logtene", osc_expr_logtene, 0, NULL, "log(10 * e): 0.43420..."},
+	{"sqrttwo", osc_expr_sqrttwo, 0, NULL, "sqrt(2): 1.41421..."},
+	{"sqrthalf", osc_expr_sqrthalf, 0, NULL, "sqrt(0.5): 0.70710..."},
+	// explicit cast functions
+	{"float32", osc_expr_explicitCast_float32, -1, NULL, "Cast argument(s) to float32"},
+	{"float64", osc_expr_explicitCast_float64, -1, NULL, "Cast argument(s) to float64"},
+	{"int32", osc_expr_explicitCast_int32, -1, NULL, "Cast argument(s) to int32"},
+	{"int64", osc_expr_explicitCast_int64, -1, NULL, "Cast argument(s) to int64"},
+	{"uint32", osc_expr_explicitCast_uint32, -1, NULL, "Cast argument(s) to uint32"},
+	{"uint64", osc_expr_explicitCast_uint64, -1, NULL, "Cast argument(s) to uint64"}
 };
 
 #ifdef _cplusplus
