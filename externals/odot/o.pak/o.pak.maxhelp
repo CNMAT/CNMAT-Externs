@@ -4,10 +4,10 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 1
+			"revision" : 2
 		}
 ,
-		"rect" : [ 285.0, 44.0, 833.0, 531.0 ],
+		"rect" : [ 12.0, 49.0, 744.0, 531.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -41,10 +41,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 1
+							"revision" : 2
 						}
 ,
-						"rect" : [ 285.0, 70.0, 833.0, 505.0 ],
+						"rect" : [ 12.0, 75.0, 744.0, 505.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -68,13 +68,70 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
+									"hidden" : 1,
+									"id" : "obj-23",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 625.0, 452.0, 81.0, 20.0 ],
+									"text" : "prepend load"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-22",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 625.0, 476.0, 53.0, 20.0 ],
+									"text" : "pcontrol"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
+									"id" : "obj-20",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 78.0, 600.0, 20.0 ],
+									"text" : "The o.pak object (Pronounced \"oh dot pock\") offers much of the functionality of o.pack, except all inlets are hot.",
+									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 48.0,
+									"id" : "obj-21",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 16.0, 141.0, 62.0 ],
+									"text" : "o.pak "
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"id" : "obj-16",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 138.0, 236.0, 198.0, 34.0 ],
+									"patching_rect" : [ 142.0, 290.0, 198.0, 34.0 ],
 									"text" : "a bundle sent in to one of the inlets will become a nested bundle"
 								}
 
@@ -89,7 +146,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 327.0, 72.0, 76.0 ],
+									"patching_rect" : [ 54.0, 381.0, 72.0, 76.0 ],
 									"text" : "/foo [\n/bloo 1 2 3 \n/blob 4 5 6 \n]\n/bar a b c \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -105,7 +162,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 236.0, 71.0, 35.0 ],
+									"patching_rect" : [ 54.0, 290.0, 71.0, 35.0 ],
 									"text" : "/bloo 1 2 3\n/blob 4 5 6",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -120,7 +177,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 50.0, 283.0, 123.0, 20.0 ],
+									"patching_rect" : [ 54.0, 337.0, 123.0, 20.0 ],
 									"text" : "o.pack /foo /bar a b c"
 								}
 
@@ -134,22 +191,23 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 430.0, 100.0, 39.0, 18.0 ],
+									"patching_rect" : [ 448.0, 154.0, 39.0, 18.0 ],
 									"text" : "sploo"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubbletextmargin" : 8,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-12",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 540.0, 130.0, 186.0, 34.0 ],
+									"patching_rect" : [ 534.0, 191.0, 186.0, 44.0 ],
 									"text" : "default arguments can be placed after OSC addresses"
 								}
 
@@ -163,7 +221,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 490.0, 100.0, 32.5, 18.0 ],
+									"patching_rect" : [ 508.0, 154.0, 32.5, 18.0 ],
 									"text" : "123"
 								}
 
@@ -178,7 +236,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 380.0, 100.0, 50.0, 20.0 ]
+									"patching_rect" : [ 384.0, 154.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -192,7 +250,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 380.0, 160.0, 71.0, 35.0 ],
+									"patching_rect" : [ 384.0, 230.0, 71.0, 35.0 ],
 									"text" : "/foo sploo \n/bar 123 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -207,7 +265,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 380.0, 130.0, 143.0, 20.0 ],
+									"patching_rect" : [ 384.0, 200.0, 143.0, 20.0 ],
 									"text" : "o.pak /foo bloo /bar 7 8 9"
 								}
 
@@ -216,27 +274,28 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-7",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 540.0, 100.0, 150.0, 20.0 ],
-									"text" : "all inlets active"
+									"patching_rect" : [ 544.0, 154.0, 87.0, 20.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.23,
+									"bubbletextmargin" : 8,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-6",
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 170.0, 100.0, 150.0, 20.0 ],
-									"text" : "left inlet triggers output"
+									"patching_rect" : [ 160.0, 184.0, 160.0, 58.0 ],
+									"text" : "left inlet triggers output, since all inlets are active"
 								}
 
 							}
@@ -249,7 +308,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 120.0, 100.0, 37.0, 18.0 ],
+									"patching_rect" : [ 128.0, 154.0, 37.0, 18.0 ],
 									"text" : "1 2 3"
 								}
 
@@ -264,7 +323,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 50.0, 100.0, 50.0, 20.0 ]
+									"patching_rect" : [ 54.0, 154.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -273,12 +332,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-19",
-									"maxclass" : "newobj",
+									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 605.0, 225.0, 32.5, 20.0 ],
-									"text" : "pak"
+									"patching_rect" : [ 625.0, 443.0, 79.0, 18.0 ],
+									"text" : "pak.maxhelp"
 								}
 
 							}
@@ -287,12 +346,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-18",
-									"maxclass" : "newobj",
+									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 605.0, 195.0, 36.0, 20.0 ],
-									"text" : "pack"
+									"patching_rect" : [ 625.0, 425.0, 85.0, 18.0 ],
+									"text" : "pack.maxhelp"
 								}
 
 							}
@@ -300,12 +359,11 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-17",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 545.0, 195.0, 150.0, 20.0 ],
+									"patching_rect" : [ 560.0, 425.0, 62.0, 20.0 ],
 									"text" : "similar to:"
 								}
 
@@ -319,7 +377,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 160.0, 71.0, 20.0 ],
+									"patching_rect" : [ 54.0, 214.0, 71.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -333,7 +391,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 50.0, 130.0, 93.0, 20.0 ],
+									"patching_rect" : [ 54.0, 184.0, 93.0, 20.0 ],
 									"text" : "o.pack /foo /bar"
 								}
 
@@ -368,10 +426,37 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-23", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-18", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-23", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-19", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-2", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-22", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-23", 0 ]
 								}
 
 							}
@@ -438,16 +523,16 @@
 ,
 					"patching_rect" : [ 64.0, 81.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"globalpatchername" : "",
+						"default_fontface" : 0,
+						"tags" : "",
+						"fontname" : "Arial",
 						"digest" : "",
 						"default_fontname" : "Arial",
-						"fontname" : "Arial",
+						"globalpatchername" : "",
 						"default_fontsize" : 12.0,
-						"description" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"tags" : "",
-						"default_fontface" : 0
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p basic"
