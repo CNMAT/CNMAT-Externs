@@ -7,7 +7,7 @@
 			"revision" : 2
 		}
 ,
-		"rect" : [ 23.0, 70.0, 726.0, 348.0 ],
+		"rect" : [ 23.0, 70.0, 515.0, 486.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -26,6 +26,8 @@
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -61,27 +63,44 @@
 						"description" : "",
 						"digest" : "",
 						"tags" : "",
+						"showontab" : 1,
+						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
-									"id" : "obj-15",
-									"maxclass" : "button",
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
+									"id" : "obj-7",
+									"maxclass" : "comment",
 									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 55.0, 260.0, 20.0, 20.0 ]
+									"numoutlets" : 0,
+									"patching_rect" : [ 15.0, 77.0, 452.0, 20.0 ],
+									"text" : "delay a message by n milliseconds",
+									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
-									"id" : "obj-13",
+									"fontsize" : 48.0,
+									"id" : "obj-14",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 15.0, 245.0, 20.0 ],
-									"text" : "o.delay - delay a message by n milliseconds"
+									"patching_rect" : [ 15.0, 15.0, 179.0, 62.0 ],
+									"text" : "o.delay "
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-15",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"patching_rect" : [ 115.0, 320.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -93,7 +112,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 140.0, 70.0, 150.0, 20.0 ],
+									"patching_rect" : [ 200.0, 150.0, 150.0, 20.0 ],
 									"text" : "click here to delay a bang"
 								}
 
@@ -107,7 +126,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 20.0, 180.0, 47.0, 18.0 ],
+									"patching_rect" : [ 80.0, 240.0, 47.0, 18.0 ],
 									"text" : "/foo 83"
 								}
 
@@ -119,7 +138,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 190.0, 290.0, 20.0, 20.0 ]
+									"patching_rect" : [ 250.0, 350.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -130,7 +149,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 170.0, 290.0, 20.0, 20.0 ]
+									"patching_rect" : [ 230.0, 350.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -141,7 +160,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 110.0, 70.0, 20.0, 20.0 ]
+									"patching_rect" : [ 170.0, 150.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -154,7 +173,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "bang", "bang" ],
-									"patching_rect" : [ 110.0, 130.0, 34.0, 20.0 ],
+									"patching_rect" : [ 170.0, 190.0, 34.0, 20.0 ],
 									"text" : "t b b"
 								}
 
@@ -168,7 +187,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 260.0, 220.0, 69.0, 20.0 ],
+									"patching_rect" : [ 320.0, 280.0, 69.0, 20.0 ],
 									"text" : "delay 2000"
 								}
 
@@ -181,7 +200,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 110.0, 290.0, 40.0, 20.0 ],
+									"patching_rect" : [ 170.0, 350.0, 40.0, 20.0 ],
 									"text" : "printit"
 								}
 
@@ -195,7 +214,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "FullPacket", "FullPacket", "FullPacket" ],
-									"patching_rect" : [ 110.0, 250.0, 89.0, 20.0 ],
+									"patching_rect" : [ 170.0, 310.0, 89.0, 20.0 ],
 									"text" : "OSC-schedule"
 								}
 
@@ -209,7 +228,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 110.0, 180.0, 82.0, 20.0 ],
+									"patching_rect" : [ 170.0, 240.0, 82.0, 20.0 ],
 									"text" : "/foo 93.0",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -224,7 +243,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 110.0, 220.0, 79.0, 20.0 ],
+									"patching_rect" : [ 170.0, 280.0, 79.0, 20.0 ],
 									"text" : "o.delay 2000"
 								}
 
@@ -323,7 +342,7 @@
  ],
 						"dependency_cache" : [ 							{
 								"name" : "o.delay.maxpat",
-								"bootpath" : "/Users/jml/Documents/materials/programming/max_files/2_max_externals/cnmat/cnmat_alpha_objs/build/patches/abstractions",
+								"bootpath" : "/Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat/repositories/main/trunk/max/externals/odot/patches/abstractions",
 								"type" : "JSON",
 								"implicit" : 1
 							}
@@ -348,16 +367,16 @@
 ,
 					"patching_rect" : [ 20.0, 40.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontname" : "Arial",
-						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"tags" : "",
-						"description" : "",
-						"globalpatchername" : "",
-						"fontface" : 0,
-						"fontsize" : 12.0,
 						"default_fontface" : 0,
-						"digest" : ""
+						"fontname" : "Arial",
+						"digest" : "",
+						"tags" : "",
+						"default_fontname" : "Arial",
+						"globalpatchername" : "",
+						"default_fontsize" : 12.0,
+						"fontface" : 0,
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p basic"
@@ -368,8 +387,8 @@
 		"lines" : [  ],
 		"dependency_cache" : [ 			{
 				"name" : "o.delay.maxpat",
-				"bootpath" : "/Users/jml/Documents/materials/programming/max_files/2_max_externals/cnmat/cnmat_alpha_objs/build/patches/abstractions",
-				"patcherrelativepath" : "../../../../../../../../../../2_max_externals/cnmat/cnmat_alpha_objs/build/patches/abstractions",
+				"bootpath" : "/Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat/repositories/main/trunk/max/externals/odot/patches/abstractions",
+				"patcherrelativepath" : "../patches/abstractions",
 				"type" : "JSON",
 				"implicit" : 1
 			}
