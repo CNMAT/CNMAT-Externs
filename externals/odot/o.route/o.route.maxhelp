@@ -4,10 +4,10 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 0
+			"revision" : 2
 		}
 ,
-		"rect" : [ 182.0, 84.0, 578.0, 559.0 ],
+		"rect" : [ 25.0, 63.0, 578.0, 559.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -26,8 +26,7 @@
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
-		"showrootpatcherontab" : 0,
-		"showontab" : 0,
+		"showontab" : 1,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -41,7 +40,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
 						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
@@ -68,12 +67,27 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-6",
+									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
+									"id" : "obj-12",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 45.0, 26.0, 460.0, 20.0 ],
-									"text" : "o.route dispatches messages through an OSC address hierarchy."
+									"patching_rect" : [ 10.0, 67.0, 358.0, 20.0 ],
+									"text" : "dispatch messages through an OSC address hierarchy.",
+									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 48.0,
+									"id" : "obj-1",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 10.0, 10.0, 173.0, 62.0 ],
+									"text" : "o.route "
 								}
 
 							}
@@ -127,6 +141,7 @@
 							}
 , 							{
 								"box" : 								{
+									"bubblepoint" : 0.23,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-23",
@@ -134,7 +149,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 277.0, 200.0, 161.0, 34.0 ],
+									"patching_rect" : [ 277.0, 218.0, 161.0, 34.0 ],
 									"text" : "o.route strips off the portion of the address that matched"
 								}
 
@@ -149,7 +164,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 311.0, 93.0, 50.0, 20.0 ]
+									"patching_rect" : [ 311.0, 118.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -163,7 +178,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 311.0, 123.0, 111.0, 48.0 ],
+									"patching_rect" : [ 311.0, 148.0, 111.0, 48.0 ],
 									"text" : "/mysynth/*/freq $1\n/mysynth/*/gain .5\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -179,7 +194,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 361.0, 460.0, 50.0, 20.0 ]
+									"patching_rect" : [ 366.0, 460.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -207,7 +222,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 217.0, 460.0, 50.0, 20.0 ]
+									"patching_rect" : [ 222.0, 460.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -227,14 +242,17 @@
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubblepoint" : 0.27,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-11",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 277.0, 250.0, 150.0, 20.0 ],
-									"text" : "<--unmatched (delegation)"
+									"patching_rect" : [ 277.0, 275.0, 154.0, 39.0 ],
+									"text" : "unmatched \n(delegation)"
 								}
 
 							}
@@ -247,7 +265,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 197.0, 250.0, 69.0, 21.0 ],
+									"patching_rect" : [ 197.0, 275.0, 69.0, 21.0 ],
 									"text" : "/nada rien \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -262,7 +280,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 311.0, 430.0, 105.0, 20.0 ],
+									"patching_rect" : [ 311.0, 430.0, 129.0, 20.0 ],
 									"text" : "o.route /freq /gain"
 								}
 
@@ -277,7 +295,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 167.0, 93.0, 50.0, 20.0 ]
+									"patching_rect" : [ 167.0, 118.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -291,7 +309,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 167.0, 123.0, 118.0, 48.0 ],
+									"patching_rect" : [ 167.0, 148.0, 118.0, 48.0 ],
 									"text" : "/mysynth/2/freq 440\n/mysynth/2/gain $1\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -306,7 +324,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 167.0, 430.0, 105.0, 20.0 ],
+									"patching_rect" : [ 167.0, 430.0, 129.0, 20.0 ],
 									"text" : "o.route /freq /gain"
 								}
 
@@ -334,7 +352,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "FullPacket" ],
-									"patching_rect" : [ 167.0, 200.0, 99.0, 20.0 ],
+									"patching_rect" : [ 167.0, 225.0, 99.0, 20.0 ],
 									"text" : "o.route /mysynth"
 								}
 
@@ -487,21 +505,21 @@
  ]
 					}
 ,
-					"patching_rect" : [ 30.0, 183.0, 58.0, 20.0 ],
+					"patching_rect" : [ 30.0, 183.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
+						"digest" : "",
+						"fontname" : "Arial",
+						"default_fontname" : "Arial",
 						"tags" : "",
 						"default_fontsize" : 12.0,
-						"description" : "",
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial"
+						"default_fontface" : 0
 					}
 ,
-					"text" : "p o.route"
+					"text" : "p basic"
 				}
 
 			}
@@ -518,7 +536,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
 						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
@@ -549,7 +567,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 55.0, 49.0, 436.0, 20.0 ],
+									"patching_rect" : [ 55.0, 74.0, 436.0, 20.0 ],
 									"text" : "See the OSC-route help file for an overview of the OSC pattern matching syntax"
 								}
 
@@ -567,10 +585,10 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 0,
-											"revision" : 0
+											"revision" : 2
 										}
 ,
-										"rect" : [ 341.0, 44.0, 532.0, 577.0 ],
+										"rect" : [ 93.0, 110.0, 532.0, 577.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -602,14 +620,17 @@
 											}
 , 											{
 												"box" : 												{
+													"bubble" : 1,
+													"bubblepoint" : 0.12,
+													"bubbletextmargin" : 10,
 													"fontname" : "Arial",
 													"fontsize" : 12.0,
 													"id" : "obj-14",
-													"linecount" : 4,
+													"linecount" : 5,
 													"maxclass" : "comment",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 192.0, 400.0, 252.0, 62.0 ],
+													"patching_rect" : [ 178.0, 400.0, 252.0, 89.0 ],
 													"text" : "Here, since o.route received all of the messages bundled together, it can dispatch them through the outlets in right to left order observing normal Max convention."
 												}
 
@@ -711,14 +732,17 @@
 											}
 , 											{
 												"box" : 												{
+													"bubble" : 1,
+													"bubblepoint" : 0.73,
+													"bubbletextmargin" : 10,
 													"fontname" : "Arial",
 													"fontsize" : 12.0,
 													"id" : "obj-10",
-													"linecount" : 7,
+													"linecount" : 9,
 													"maxclass" : "comment",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 208.0, 48.0, 252.0, 103.0 ],
+													"patching_rect" : [ 230.0, 36.0, 252.0, 145.0 ],
 													"text" : "In this case, the order that OSC-route will dispatch its messages will be determined by the order in which the messages were added to the OSC bundle.  In many cases this is not a problem, however, it is not always possible to ensure that the contents of the bundle will be in the order you want them in.  "
 												}
 
@@ -977,18 +1001,18 @@
  ]
 									}
 ,
-									"patching_rect" : [ 195.0, 140.0, 85.0, 20.0 ],
+									"patching_rect" : [ 195.0, 165.0, 85.0, 20.0 ],
 									"saved_object_attributes" : 									{
+										"digest" : "",
+										"fontname" : "Arial",
+										"default_fontname" : "Arial",
 										"tags" : "",
 										"default_fontsize" : 12.0,
-										"description" : "",
 										"globalpatchername" : "",
+										"description" : "",
 										"fontface" : 0,
 										"fontsize" : 12.0,
-										"default_fontface" : 0,
-										"digest" : "",
-										"default_fontname" : "Arial",
-										"fontname" : "Arial"
+										"default_fontface" : 0
 									}
 ,
 									"text" : "p who_cares?"
@@ -1004,7 +1028,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 55.0, 99.0, 436.0, 34.0 ],
+									"patching_rect" : [ 55.0, 124.0, 436.0, 34.0 ],
 									"text" : "o.route behaves like OSC-route except that it has the ability to operate on the contents of OSC bundles."
 								}
 
@@ -1032,16 +1056,16 @@
 ,
 					"patching_rect" : [ 245.0, 183.0, 134.0, 20.0 ],
 					"saved_object_attributes" : 					{
+						"digest" : "",
+						"fontname" : "Arial",
+						"default_fontname" : "Arial",
 						"tags" : "",
 						"default_fontsize" : 12.0,
-						"description" : "",
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial"
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p \"see also OSC-route\""
@@ -1061,10 +1085,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
-						"rect" : [ 182.0, 110.0, 578.0, 533.0 ],
+						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1093,7 +1117,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 313.0, 359.0, 217.0, 48.0 ],
+									"patching_rect" : [ 293.0, 379.0, 217.0, 48.0 ],
 									"text" : "with no arguments, o.spew unpacks the bundle and outputs each message as a Max message."
 								}
 
@@ -1106,7 +1130,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 160.0, 449.0, 34.0, 20.0 ],
+									"patching_rect" : [ 140.0, 469.0, 34.0, 20.0 ],
 									"text" : "print"
 								}
 
@@ -1121,7 +1145,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 160.0, 359.0, 121.0, 48.0 ],
+									"patching_rect" : [ 140.0, 379.0, 121.0, 48.0 ],
 									"text" : "/mysynth/2/freq 440.\n/mysynth/2/gain .5\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1136,7 +1160,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 160.0, 419.0, 49.0, 20.0 ],
+									"patching_rect" : [ 140.0, 439.0, 49.0, 20.0 ],
 									"text" : "o.spew"
 								}
 
@@ -1150,7 +1174,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 112.0, 19.0, 325.0, 34.0 ],
+									"patching_rect" : [ 92.0, 39.0, 325.0, 34.0 ],
 									"text" : "o.spew dispatches messages through an OSC address hierarchy as Max messages."
 								}
 
@@ -1164,7 +1188,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 265.0, 280.0, 119.0, 18.0 ],
+									"patching_rect" : [ 245.0, 300.0, 119.0, 18.0 ],
 									"text" : "/mysynth/2/gain 5.9"
 								}
 
@@ -1178,7 +1202,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 112.0, 280.0, 119.0, 18.0 ],
+									"patching_rect" : [ 92.0, 300.0, 119.0, 18.0 ],
 									"text" : "/mysynth/2/freq 440"
 								}
 
@@ -1192,7 +1216,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 160.0, 221.0, 221.0, 20.0 ],
+									"patching_rect" : [ 140.0, 241.0, 221.0, 20.0 ],
 									"text" : "o.spew /mysynth/2/freq /mysynth/2/gain"
 								}
 
@@ -1207,7 +1231,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 305.0, 78.0, 50.0, 20.0 ]
+									"patching_rect" : [ 285.0, 98.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -1221,7 +1245,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 305.0, 108.0, 111.0, 48.0 ],
+									"patching_rect" : [ 285.0, 128.0, 111.0, 48.0 ],
 									"text" : "/mysynth/*/freq $1\n/mysynth/*/gain .5\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1237,7 +1261,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 160.0, 78.0, 50.0, 20.0 ]
+									"patching_rect" : [ 140.0, 98.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -1251,7 +1275,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 160.0, 108.0, 118.0, 48.0 ],
+									"patching_rect" : [ 140.0, 128.0, 118.0, 48.0 ],
 									"text" : "/mysynth/2/freq 440\n/mysynth/2/gain $1\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1344,16 +1368,16 @@
 ,
 					"patching_rect" : [ 172.0, 183.0, 59.0, 20.0 ],
 					"saved_object_attributes" : 					{
+						"digest" : "",
+						"fontname" : "Arial",
+						"default_fontname" : "Arial",
 						"tags" : "",
 						"default_fontsize" : 12.0,
-						"description" : "",
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial"
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p o.spew"
@@ -1373,10 +1397,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
-						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
+						"rect" : [ 25.0, 89.0, 578.0, 533.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1401,11 +1425,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-32",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 79.5, 34.0, 386.0, 34.0 ],
+									"patching_rect" : [ 152.5, 65.0, 240.0, 48.0 ],
 									"text" : "o.select dispatches messages through an OSC address hierarchy preserving the addresses that matched."
 								}
 
@@ -1419,7 +1443,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 265.0, 280.0, 120.0, 21.0 ],
+									"patching_rect" : [ 265.0, 355.0, 120.0, 21.0 ],
 									"text" : "/mysynth/2/gain 0.5 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1434,7 +1458,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 112.0, 280.0, 121.0, 21.0 ],
+									"patching_rect" : [ 112.0, 355.0, 121.0, 21.0 ],
 									"text" : "/mysynth/2/freq 160 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1449,7 +1473,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 160.0, 221.0, 225.0, 20.0 ],
+									"patching_rect" : [ 160.0, 296.0, 225.0, 20.0 ],
 									"text" : "o.select /mysynth/2/freq /mysynth/2/gain"
 								}
 
@@ -1464,7 +1488,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 280.0, 78.0, 50.0, 20.0 ]
+									"patching_rect" : [ 280.0, 153.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -1478,7 +1502,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 280.0, 108.0, 111.0, 48.0 ],
+									"patching_rect" : [ 280.0, 183.0, 111.0, 48.0 ],
 									"text" : "/mysynth/*/freq $1\n/mysynth/*/gain .5\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1494,7 +1518,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 160.0, 78.0, 50.0, 20.0 ]
+									"patching_rect" : [ 160.0, 153.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -1508,7 +1532,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 160.0, 108.0, 111.0, 48.0 ],
+									"patching_rect" : [ 160.0, 183.0, 111.0, 48.0 ],
 									"text" : "/mysynth/2/freq $1\n/mysynth/2/gain .5\n/nada rien",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -1583,16 +1607,16 @@
 ,
 					"patching_rect" : [ 102.0, 183.0, 62.0, 20.0 ],
 					"saved_object_attributes" : 					{
+						"digest" : "",
+						"fontname" : "Arial",
+						"default_fontname" : "Arial",
 						"tags" : "",
 						"default_fontsize" : 12.0,
-						"description" : "",
 						"globalpatchername" : "",
+						"description" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontface" : 0,
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"fontname" : "Arial"
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p o.select"

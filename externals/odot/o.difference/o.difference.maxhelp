@@ -1,7 +1,13 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ 391.0, 101.0, 541.0, 367.0 ],
+		"appversion" : 		{
+			"major" : 6,
+			"minor" : 0,
+			"revision" : 2
+		}
+,
+		"rect" : [ 23.0, 54.0, 541.0, 367.0 ],
 		"bglocked" : 0,
 		"defrect" : [ 391.0, 101.0, 541.0, 367.0 ],
 		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
@@ -30,7 +36,13 @@
 					"fontsize" : 12.0,
 					"patcher" : 					{
 						"fileversion" : 1,
-						"rect" : [ 0.0, 44.0, 541.0, 341.0 ],
+						"appversion" : 						{
+							"major" : 6,
+							"minor" : 0,
+							"revision" : 2
+						}
+,
+						"rect" : [ 0.0, 26.0, 541.0, 341.0 ],
 						"bglocked" : 0,
 						"defrect" : [ 0.0, 44.0, 541.0, 341.0 ],
 						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
@@ -57,7 +69,7 @@
 									"id" : "obj-2",
 									"fontname" : "Arial",
 									"patching_rect" : [ 156.0, 222.0, 309.0, 34.0 ],
-									"fontsize" : 12.0
+									"text" : "Duplicate addresses will be discarded with the most recent one (in the left inlet) taking precedence."
 								}
 
 							}
@@ -82,8 +94,8 @@
 									"id" : "obj-6",
 									"fontname" : "Arial",
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 229.0, 77.0, 20.0 ],
-									"fontsize" : 12.0,
+									"patching_rect" : [ 50.0, 229.0, 78.0, 48.0 ],
+									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n/bloo o i e n \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -165,14 +177,18 @@
  ]
 					}
 ,
+					"patching_rect" : [ 53.0, 180.0, 50.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
 						"default_fontname" : "Arial",
 						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
+						"tags" : "",
+						"description" : "",
 						"globalpatchername" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0
+						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"digest" : ""
 					}
 
 				}
@@ -190,7 +206,13 @@
 					"fontsize" : 12.0,
 					"patcher" : 					{
 						"fileversion" : 1,
-						"rect" : [ 0.0, 44.0, 541.0, 341.0 ],
+						"appversion" : 						{
+							"major" : 6,
+							"minor" : 0,
+							"revision" : 2
+						}
+,
+						"rect" : [ 0.0, 26.0, 541.0, 341.0 ],
 						"bglocked" : 0,
 						"defrect" : [ 0.0, 44.0, 541.0, 341.0 ],
 						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
@@ -312,14 +334,18 @@
  ]
 					}
 ,
+					"patching_rect" : [ 52.0, 136.0, 82.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
 						"default_fontname" : "Arial",
 						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
+						"tags" : "",
+						"description" : "",
 						"globalpatchername" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0
+						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"digest" : ""
 					}
 
 				}
@@ -337,7 +363,13 @@
 					"fontsize" : 12.0,
 					"patcher" : 					{
 						"fileversion" : 1,
-						"rect" : [ 39.0, 44.0, 541.0, 341.0 ],
+						"appversion" : 						{
+							"major" : 6,
+							"minor" : 0,
+							"revision" : 2
+						}
+,
+						"rect" : [ 23.0, 80.0, 541.0, 341.0 ],
 						"bglocked" : 0,
 						"defrect" : [ 39.0, 44.0, 541.0, 341.0 ],
 						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
@@ -378,8 +410,8 @@
 									"id" : "obj-6",
 									"fontname" : "Arial",
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 229.0, 77.0, 34.0 ],
-									"fontsize" : 12.0,
+									"patching_rect" : [ 50.0, 229.0, 78.0, 35.0 ],
+									"text" : "/bar 4 5 6 \n/bloo o i e n \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -462,13 +494,16 @@
 					}
 ,
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
 						"default_fontname" : "Arial",
 						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
+						"tags" : "",
+						"description" : "",
 						"globalpatchername" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0
+						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"digest" : ""
 					}
 
 				}

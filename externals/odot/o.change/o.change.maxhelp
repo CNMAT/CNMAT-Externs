@@ -4,10 +4,10 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 0
+			"revision" : 2
 		}
 ,
-		"rect" : [ 317.0, 44.0, 500.0, 361.0 ],
+		"rect" : [ 33.0, 57.0, 500.0, 361.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
 						"rect" : [ 0.0, 26.0, 500.0, 335.0 ],
@@ -125,16 +125,16 @@
 ,
 					"patching_rect" : [ 51.0, 180.0, 105.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontname" : "Arial",
-						"default_fontface" : 0,
-						"tags" : "",
-						"globalpatchername" : "",
 						"digest" : "",
 						"default_fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"fontname" : "Arial",
+						"description" : "",
+						"tags" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontsize" : 12.0,
-						"description" : ""
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p \"similar objects\""
@@ -154,10 +154,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 2
 						}
 ,
-						"rect" : [ 317.0, 70.0, 500.0, 335.0 ],
+						"rect" : [ 33.0, 83.0, 500.0, 335.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -379,16 +379,16 @@
 ,
 					"patching_rect" : [ 51.0, 112.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontname" : "Arial",
-						"default_fontface" : 0,
-						"tags" : "",
-						"globalpatchername" : "",
 						"digest" : "",
 						"default_fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"fontname" : "Arial",
+						"description" : "",
+						"tags" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
 						"fontsize" : 12.0,
-						"default_fontsize" : 12.0,
-						"description" : ""
+						"default_fontface" : 0
 					}
 ,
 					"text" : "p basic"
