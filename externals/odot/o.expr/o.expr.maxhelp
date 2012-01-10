@@ -145,16 +145,16 @@
 ,
 									"patching_rect" : [ 237.0, 419.0, 81.0, 20.0 ],
 									"saved_object_attributes" : 									{
-										"digest" : "",
+										"default_fontface" : 0,
 										"fontname" : "Arial",
-										"default_fontname" : "Arial",
+										"digest" : "",
 										"tags" : "",
-										"default_fontsize" : 12.0,
+										"default_fontname" : "Arial",
 										"globalpatchername" : "",
-										"description" : "",
+										"default_fontsize" : 12.0,
 										"fontface" : 0,
-										"fontsize" : 12.0,
-										"default_fontface" : 0
+										"description" : "",
+										"fontsize" : 12.0
 									}
 ,
 									"text" : "p view_result"
@@ -432,7 +432,6 @@
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
 									"patching_rect" : [ 264.0, 19.0, 20.0, 20.0 ],
-									"presentation_rect" : [ 359.0, 60.0, 0.0, 0.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ],
@@ -606,16 +605,16 @@
 ,
 					"patching_rect" : [ 258.0, 98.0, 41.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
+						"default_fontface" : 0,
 						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"tags" : "",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"globalpatchername" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p lists"
@@ -666,7 +665,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 222.0, 227.0, 311.0, 20.0 ],
+									"patching_rect" : [ 222.0, 195.0, 311.0, 20.0 ],
 									"text" : "post the documentation for a function to the Max window"
 								}
 
@@ -680,7 +679,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 97.0, 227.0, 116.0, 18.0 ],
+									"patching_rect" : [ 97.0, 195.0, 116.0, 18.0 ],
 									"text" : "documentation ftom"
 								}
 
@@ -693,7 +692,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 251.0, 269.0, 304.0, 20.0 ],
+									"patching_rect" : [ 251.0, 237.0, 304.0, 20.0 ],
 									"text" : "post o.expr's internal representation to the Max window"
 								}
 
@@ -707,7 +706,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 126.0, 269.0, 114.0, 18.0 ],
+									"patching_rect" : [ 126.0, 237.0, 114.0, 18.0 ],
 									"text" : "post-function-graph"
 								}
 
@@ -720,7 +719,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 176.0, 184.0, 440.0, 20.0 ],
+									"patching_rect" : [ 176.0, 152.0, 440.0, 20.0 ],
 									"text" : "post the documentation for every function o.expr understands to the Max window"
 								}
 
@@ -734,7 +733,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 68.0, 184.0, 85.0, 18.0 ],
+									"patching_rect" : [ 68.0, 152.0, 85.0, 18.0 ],
 									"text" : "post-functions"
 								}
 
@@ -748,7 +747,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 68.0, 326.0, 272.0, 20.0 ],
+									"patching_rect" : [ 68.0, 294.0, 272.0, 20.0 ],
 									"text" : "o.expr /a = sin(2 * 3.14 * /freq * /time++ + /phase)"
 								}
 
@@ -791,16 +790,16 @@
 ,
 					"patching_rect" : [ 320.0, 98.0, 138.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
+						"default_fontface" : 0,
 						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"tags" : "",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"globalpatchername" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p \"more documentation\""
@@ -823,7 +822,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 30.0, 97.0, 652.0, 470.0 ],
+						"rect" : [ 0.0, 26.0, 652.0, 470.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -954,7 +953,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 277.0, 200.5, 148.5, 67.0 ],
+									"patching_rect" : [ 277.0, 200.5, 180.5, 67.0 ],
 									"text" : "null-coalescing operator.  (means \"if /bar does not exist, set its value to 10\")"
 								}
 
@@ -1279,16 +1278,16 @@
 ,
 					"patching_rect" : [ 103.0, 98.0, 140.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
+						"default_fontface" : 0,
 						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"tags" : "",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"globalpatchername" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p \"conditional operators\""
@@ -1311,7 +1310,7 @@
 							"revision" : 2
 						}
 ,
-						"rect" : [ 0.0, 26.0, 652.0, 470.0 ],
+						"rect" : [ 30.0, 97.0, 652.0, 470.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1333,7 +1332,6 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
-									"bubble" : 1,
 									"bubblepoint" : 0.18,
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
@@ -1342,7 +1340,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 336.0, 197.0, 92.0, 108.0 ],
+									"patching_rect" : [ 352.0, 200.0, 92.0, 104.0 ],
 									"text" : "Arguments:\nexpression (list)\nconstant (number)\n(other) (symbol)"
 								}
 
@@ -1353,12 +1351,12 @@
 									"fontsize" : 12.0,
 									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
 									"id" : "obj-12",
-									"linecount" : 3,
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 16.0, 80.0, 298.0, 48.0 ],
-									"text" : "Evaluate a mathematical expression on osc bundles.  Variables and operators are used to create output values.",
+									"patching_rect" : [ 16.0, 80.0, 328.0, 34.0 ],
+									"text" : "Evaluate a mathematical expression on OSC bundles.  Variables and operators are used to create output values.",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
@@ -1373,20 +1371,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 18.0, 519.0, 62.0 ],
 									"text" : "o.expr "
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 12.0,
-									"id" : "obj-2",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 272.0, 304.0, 273.0, 34.0 ],
-									"text" : "o.expr - evaluate a mathematical expressions on bundles"
 								}
 
 							}
@@ -1558,16 +1542,16 @@
 ,
 					"patching_rect" : [ 32.0, 98.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
+						"default_fontface" : 0,
 						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"digest" : "",
 						"tags" : "",
-						"default_fontsize" : 12.0,
+						"default_fontname" : "Arial",
 						"globalpatchername" : "",
-						"description" : "",
+						"default_fontsize" : 12.0,
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"description" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p basic"
