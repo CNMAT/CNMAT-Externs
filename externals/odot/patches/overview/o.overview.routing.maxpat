@@ -7,7 +7,7 @@
 			"revision" : 2
 		}
 ,
-		"rect" : [ 23.0, 68.0, 1052.0, 541.0 ],
+		"rect" : [ 23.0, 68.0, 1052.0, 506.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -42,8 +42,7 @@
 					"maxclass" : "live.line",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 814.0, 288.0, 8.0, 210.0 ],
-					"presentation_rect" : [ 817.0, 321.0, 0.0, 0.0 ]
+					"patching_rect" : [ 814.0, 288.0, 8.0, 210.0 ]
 				}
 
 			}
