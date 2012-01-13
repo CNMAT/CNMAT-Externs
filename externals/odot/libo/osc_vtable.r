@@ -37,6 +37,7 @@ extern "C" {
 
 struct _osc_vtable_entry{
 	char *selector;
+	struct _osc_vtable_functionObject *method_list;
 	t_osc_vtable_method method;
 	void *context;
 };

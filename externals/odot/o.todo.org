@@ -1,8 +1,8 @@
 #+STARTUP: showall
 #+TODO: TODO(t) STARTED(s) WAITING(w) BUG(b) | DONE(d) DELEGATED(e) FIXED(f)
 #+begin_src C :tangle odot_version.h
-#define ODOT_VERSION "1.0.2a" 
-#define ODOT_RELEASE_DATE "[2012-01-06 Fri 13:11]"
+#define ODOT_VERSION "1.0.4a" 
+#define ODOT_RELEASE_DATE "[2012-01-09 Mon]"
 #define ODOT_COPYRIGHT_YEARS "2008-12"
 #define ODOT_AUTHORS "John MacCallum, Adrian Freed"
 #define ODOT_COPYRIGHT_STRING "Regents of the University of California. All rights reserved."
@@ -13,10 +13,25 @@
 #+end_src
 * Open Issues
 ** Bugs
+*** General
+**** BUG All objects need to handle naked (valid) OSC messages and convert them to bundles.
+*** o.accumulate
 *** o.expr
 **** BUG Syntax error when compiling multiple expressions and the last one ends with a semicolon.
+**** BUG range() will crash when creating an infinite range (range(1, 10, -1))
+**** BUG modulo (%) doesn't print properly when sending the post-functions message
+**** BUG scale documentation string is wrong.
+**** BUG C's mod op is wrong and should be replaced with this:  mod(x, m) = x - m * sign(m) * floor(x / abs(m))
 *** o.prepend
 *** o.route
+*** o.message
+**** BUG o.message doesn't display floats like x.0 correctly--the trailing decimal doesn't show up.
+*** o.rename
+**** BUG o.rename doesn't handle partial matches correctly
+*** o.union/intersection/difference
+**** BUG duplicate addresses in the same input bundle are not removed.
+*** o.spew
+**** [o.spew /*/[xy]] doesn't work.  seems like the [xy] part is not being matched properly
 ** Feature Requests
 *** General
 **** TODO Overview / tutorial patches
@@ -28,24 +43,63 @@
 **** TODO Implement o.rename
 **** TODO A tokenizer to tokenize a string and turn it into OSC would be nice
 **** TODO libo and libomax versions need to be reported.
+**** TODO Make o.append
+**** TODO Make sure assist strings are working for all objects
+**** TODO Explicit way to convert bundle to naked OSC message
+**** TODO Objects should filter duplicate addresses (o.accumulate, o.pa(c)k, o.mappatch, o.message, o.union,
+o.intersection, o.difference.
 *** o.expr
-**** TODO Constants should become functions.
 **** TODO if() should be a special case of cond and we should have when and unless
 **** TODO Change t_osc_expr_rec to support better documentation of function parameters
 **** WAITING Codebox
-**** TODO Explicit cast functions (int32(), int64(), float32(), float64())
+**** STARTED Explicit cast functions (int32(), int64(), float32(), float64())
 **** TODO you get odd results with the ? : business if you don't add whitespace in the right place.
+**** TODO o.expr documentation strings need to be available in max so you can build menus, etc.
+**** TODO ignore # arguments
+**** TODO make-list becomes constant-array(<constant>, <n>)
+**** TODO make mod() as well as %
 *** o.if
-* VERSION 1.0.3a
+**** TODO isempty()
+**** TODO isbound(), isunbound()
+*** o.printbytes
+**** TODO Add explicit NULL bytes (instead of printing nothing)
+**** TODO Better formatting in general
+*** o.print
+**** TODO o.print should print any max messages
+*** new objects
+**** TODO o.typetages: outputs the typetags.
+** Name changes
+**** TODO o.call => o.callpatch
+**** TODO o.accumulate => o.collect
+**** TODO o.spew => o.atomize
+** Design questions
+*** The fact that o.route can output both bundles and Max data is a source of bugs.  Rewrite o.route?  
+New objects with more explicit behavior?
+* VERSION 1.0.5a
 ** Bugs Fixed
-*** FIXED [o.expr /count++ %= 8] crashes.  It doesn't compile and doesn't generate an error, but
-/count++ is not a valid lvalue
-*** FIXED Crash when sending an OSC-style Max message that doesn't get matched.
+*** FIXED bug that causes o.message to no longer do $-substitution if the input is a symbol.
+*** FIXED set with nothing after it should clear the o.message
 ** Changelog
-*** DONE o.when and o.unless
-
-*** DONE o.if should be a special case of o.cond
-*** DONE Improve help files
+* VERSION 1.0.4a
+Released: [2012-01-09 Mon]
+** Bugs Fixed
+*** FIXED o.expr only evaluating the first function if there is more than one.
+*** FIXED o.route outlets in wrong order when input is Max message
+*** FIXED Crash when sending clear (or any other non-OSC message)
+** Changelog
+*** DONE Constants should be implemented as functions.
+* VERSION 1.0.3a
+Released: [2012-01-08 Sun]
+** Bugs Fixed
+*** o.expr
+**** FIXED [o.expr /count++ %= 8] crashes.  It doesn't compile and doesn't generate an error, but
+/count++ is not a valid lvalue
+*** o.route
+**** FIXED Crash when sending an OSC-style Max message that doesn't get matched.
+** Changelog
+*** DONE New object: o.cond (generalization of o.if)
+*** DONE New objects: o.when and o.unless
+*** DONE Include Rama's improved help files
 * VERSION 1.0.2a
 Released: [2012-01-06 Fri 13:10]
 ** Bugs Fixed

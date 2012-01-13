@@ -200,11 +200,11 @@ int osc_vtable_callWithEntry(t_osc_vtable *vtab,
 }
 
 int osc_vtable_call(t_osc_vtable *vtab,
-		     char *selector,
-		     long bndllen,
-		     char *bndl,
-		     t_osc_bndl_s *partial_matches,
-		     t_osc_bndl_s *complete_matches)
+		    char *selector,
+		    long bndllen,
+		    char *bndl,
+		    t_osc_bndl_s *partial_matches,
+		    t_osc_bndl_s *complete_matches)
 {
 	t_osc_vtable_entry *e = osc_hashtab_lookup(vtab->hashtab, strlen(selector), selector);
 	if(!e){

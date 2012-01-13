@@ -75,7 +75,7 @@ void oroute_assist(t_oroute *x, void *b, long m, long a, char *s);
 void oroute_set(t_oroute *x, long index, t_symbol *sym);
 void oroute_doSet(t_oroute *x, long index, t_symbol *sym);
 void oroute_makeSchema(t_oroute *x);
-void oroute_spewBundle(void *outlet, long len, char *bndl);
+void oroute_atomizeBundle(void *outlet, long len, char *bndl);
 void oroute_outputBundle(void *outlet, long len, char *bndl);
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv);
 
@@ -86,7 +86,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr)
 	if(x->num_selectors > 0){
 		t_osc_rset *rset = NULL;
 		int strip_matched_portion_of_address = 1;
-#if (defined SELECT) || (defined SPEW)
+#if (defined SELECT) || (defined ATOMIZE)
 		strip_matched_portion_of_address = 0;
 #endif
 		osc_query_select(x->num_unique_selectors,
@@ -100,8 +100,8 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr)
 			osc_rset_free(rset);
 		}
 	}else{
-#ifdef SPEW
-		oroute_spewBundle(x->delegation_outlet, len, (char *)ptr);
+#ifdef ATOMIZE
+		oroute_atomizeBundle(x->delegation_outlet, len, (char *)ptr);
 #else
 		oroute_outputBundle(x->outlets[0], len, (char *)ptr);
 #endif
@@ -137,8 +137,8 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 			}
 #else
 			if(partial_matches){
-#ifdef SPEW
-				oroute_spewBundle(x->outlets[i],
+#ifdef ATOMIZE
+				oroute_atomizeBundle(x->outlets[i],
 						  osc_bundle_s_getLen(partial_matches),
 						  osc_bundle_s_getPtr(partial_matches));
 #else
@@ -148,8 +148,8 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 #endif
 			}
 			if(complete_matches){
-#ifdef SPEW
-				oroute_spewBundle(x->outlets[i],
+#ifdef ATOMIZE
+				oroute_atomizeBundle(x->outlets[i],
 						  osc_bundle_s_getLen(complete_matches),
 						  osc_bundle_s_getPtr(complete_matches));
 #else
@@ -198,7 +198,7 @@ void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
 		if(msg->s_name[po] == '*' && msg->s_name[po + 1] == '\0'){
 			star_at_end = 1;
 		}
-#if defined SELECT || defined SPEW
+#if defined SELECT || defined ATOMIZE
 		if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE)) ||
 		   (po > 0 && ((msg->s_name[po] == '/') || star_at_end == 1))){
 			outlet_anything(x->outlets[outletnum], msg, argc, argv);
@@ -283,7 +283,7 @@ void oroute_makeSchema(t_oroute *x)
 	osc_bundle_u_serialize(bndl, &(x->schemalen), &(x->schema));
 }
 
-void oroute_spewBundle(void *outlet, long len, char *bndl)
+void oroute_atomizeBundle(void *outlet, long len, char *bndl)
 {
 	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, bndl);
 	while(osc_bndl_it_s_hasNext(it)){
@@ -361,8 +361,8 @@ int main(void)
 {
 #ifdef SELECT
 	char *name = "o.select";
-#elif SPEW
-	char *name = "o.spew";
+#elif ATOMIZE
+	char *name = "o.atomize";
 #else
 	char *name = "o.route";
 #endif

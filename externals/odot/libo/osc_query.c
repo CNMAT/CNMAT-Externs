@@ -98,6 +98,7 @@ t_osc_err osc_query_select_impl(int nselectors,
 				}
 			}
 #endif 
+
 			// these are the conditions that constitute a match
 			if((ret & OSC_MATCH_ADDRESS_COMPLETE) && ((ret & OSC_MATCH_PATTERN_COMPLETE))){
 				// complete match

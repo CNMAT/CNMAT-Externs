@@ -171,7 +171,7 @@ t_osc_err osc_dispatch_impl(t_osc_vtable *vtab,
 						  osc_vtable_entry_getSelector(e),
 						  strip_matched_portion_of_address,
 						  partial_matches + entrynum,
-						  complete_matches +entrynum);
+						  complete_matches + entrynum);
 		}
 		if(!match){
 			osc_bundle_s_appendMessage_b(unmatched, msg);

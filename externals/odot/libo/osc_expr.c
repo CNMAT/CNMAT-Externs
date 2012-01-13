@@ -1449,6 +1449,19 @@ int osc_expr_sqrthalf(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_ato
 
 int osc_expr_explicitCast_float32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
 {
+	/*
+	if(argc){
+		out = (t_osc_atom_ar_u **)osc_mem_alloc(argc * sizeof(t_osc_atom_ar_u *));
+		int i;
+		for(i = 0; i < argc; i++){
+			int len;
+			out[i] = osc_atom_ar_u_alloc(osc_atom_ar_u_getLen(argv[i]));
+			int j;
+			for(j = 0; j < 
+			osc_atom_u_setFloat(osc_atom_ar_u_get(out[i], 
+		}
+	}
+	*/
 	return 0;
 }
 
