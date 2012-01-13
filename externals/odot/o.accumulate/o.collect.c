@@ -21,8 +21,8 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: o.accumulate
-DESCRIPTION: Accumulate OSC messages and bundles
+NAME: o.collect
+DESCRIPTION: Collect OSC messages and bundles
 AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2011
 SVN_REVISION: $LastChangedRevision: 587 $
@@ -39,27 +39,27 @@ VERSION 0.0: First try
 #include "osc_bundle_s.h"
 #include "omax_util.h"
 
-typedef struct _oaccum{
+typedef struct _ocoll{
 	t_object ob;
 	void *outlet;
 	char *buffer;
 	int buffer_len;
 	int buffer_pos;
-} t_oaccum;
+} t_ocoll;
 
-void *oaccum_class;
+void *ocoll_class;
 
-void oaccum_fullPacket(t_oaccum *x, long len, long ptr);
-void oaccum_anything(t_oaccum *x, t_symbol *msg, int argc, t_atom *argv);
-void oaccum_bang(t_oaccum *x);
-void oaccum_free(t_oaccum *x);
-void oaccum_assist(t_oaccum *x, void *b, long m, long a, char *s);
-void *oaccum_new(t_symbol *msg, short argc, t_atom *argv);
-t_max_err oaccum_notify(t_oaccum *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+void ocoll_fullPacket(t_ocoll *x, long len, long ptr);
+void ocoll_anything(t_ocoll *x, t_symbol *msg, int argc, t_atom *argv);
+void ocoll_bang(t_ocoll *x);
+void ocoll_free(t_ocoll *x);
+void ocoll_assist(t_ocoll *x, void *b, long m, long a, char *s);
+void *ocoll_new(t_symbol *msg, short argc, t_atom *argv);
+t_max_err ocoll_notify(t_ocoll *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
 t_symbol *ps_FullPacket;
 
-void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
+void ocoll_fullPacket(t_ocoll *x, long len, long ptr){
 	if(len == OSC_HEADER_SIZE){
 		// empty bundle
 		return;
@@ -84,17 +84,17 @@ void oaccum_fullPacket(t_oaccum *x, long len, long ptr){
 	}	
 }
 
-void oaccum_anything(t_oaccum *x, t_symbol *msg, int argc, t_atom *argv){
+void ocoll_anything(t_ocoll *x, t_symbol *msg, int argc, t_atom *argv){
 	int len;
 	len = omax_util_get_bundle_size_for_atoms(msg, argc, argv);
 	char buf[len];
 	memset(buf, '\0', len);
 	omax_util_encode_atoms(buf + OSC_HEADER_SIZE, msg, argc, argv);
 	osc_bundle_s_setBundleID(buf);
-	oaccum_fullPacket(x, len, (long)buf);
+	ocoll_fullPacket(x, len, (long)buf);
 }
 
-void oaccum_bang(t_oaccum *x){
+void ocoll_bang(t_ocoll *x){
 	if(x->buffer_pos > 16){
 		t_atom out[2];
 		atom_setlong(out, x->buffer_pos);
@@ -108,33 +108,33 @@ void oaccum_bang(t_oaccum *x){
 	}
 }
 
-void oaccum_assist(t_oaccum *x, void *b, long m, long a, char *s){
+void ocoll_assist(t_ocoll *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
-		sprintf(s,"OSC bundles to accumulate.");
+		sprintf(s,"OSC bundles to collect.");
 	else {
 		switch (a) {	
 		case 0:
-			sprintf(s,"An OSC bundle with all accumulated messages.");
+			sprintf(s,"An OSC bundle with all collectd messages.");
 			break;
 		}
 	}
 }
 
-void oaccum_free(t_oaccum *x){
+void ocoll_free(t_ocoll *x){
 	if(x->buffer){
 		free(x->buffer);
 	}
 }
 
-void *oaccum_new(t_symbol *msg, short argc, t_atom *argv){
-	t_oaccum *x;
-	if(x = (t_oaccum *)object_alloc(oaccum_class)){
+void *ocoll_new(t_symbol *msg, short argc, t_atom *argv){
+	t_ocoll *x;
+	if(x = (t_ocoll *)object_alloc(ocoll_class)){
 		x->outlet = outlet_new((t_object *)x, NULL);
 		x->buffer_len = 1024;
 		if(argc){
 			if(atom_gettype(argv) == A_LONG){
 				//x->buffer_len = atom_getlong(argv);
-				object_error((t_object *)x, "o.accumultate no longer takes an argument to specify its internal buffer size.");
+				object_error((t_object *)x, "o.collultate no longer takes an argument to specify its internal buffer size.");
 				object_error((t_object *)x, "The buffer will expand as necessary.");
 			}
 		}
@@ -147,15 +147,15 @@ void *oaccum_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
-	t_class *c = class_new("o.accumulate", (method)oaccum_new, (method)oaccum_free, sizeof(t_oaccum), 0L, A_GIMME, 0);
-	class_addmethod(c, (method)oaccum_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
-	class_addmethod(c, (method)oaccum_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)oaccum_notify, "notify", A_CANT, 0);
-	class_addmethod(c, (method)oaccum_anything, "anything", A_GIMME, 0);
-	class_addmethod(c, (method)oaccum_bang, "bang", 0);
+	t_class *c = class_new("o.collect", (method)ocoll_new, (method)ocoll_free, sizeof(t_ocoll), 0L, A_GIMME, 0);
+	class_addmethod(c, (method)ocoll_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	class_addmethod(c, (method)ocoll_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)ocoll_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)ocoll_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)ocoll_bang, "bang", 0);
 
 	class_register(CLASS_BOX, c);
-	oaccum_class = c;
+	ocoll_class = c;
 
 	common_symbols_init();
 	ps_FullPacket = gensym("FullPacket");
@@ -163,7 +163,7 @@ int main(void){
 	return 0;
 }
 
-t_max_err oaccum_notify(t_oaccum *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
+t_max_err ocoll_notify(t_ocoll *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
 	t_symbol *attrname;
 
         if(msg == gensym("attr_modified")){
