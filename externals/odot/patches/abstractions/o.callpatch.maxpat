@@ -7,7 +7,7 @@
 			"revision" : 0
 		}
 ,
-		"rect" : [ 2.0, 85.0, 688.0, 652.0 ],
+		"rect" : [ 616.0, 50.0, 688.0, 652.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -27,6 +27,20 @@
 		"digest" : "",
 		"tags" : "",
 		"boxes" : [ 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-7",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 296.0, 58.0, 60.0, 20.0 ],
+					"text" : "loadbang"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
@@ -862,16 +876,16 @@
 ,
 					"patching_rect" : [ 190.0, 256.0, 120.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontname" : "Arial",
-						"default_fontface" : 0,
-						"globalpatchername" : "",
-						"digest" : "",
-						"tags" : "",
-						"default_fontname" : "Arial",
-						"fontface" : 0,
 						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"digest" : "",
+						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"description" : ""
+						"fontname" : "Arial",
+						"description" : "",
+						"tags" : "",
+						"globalpatchername" : "",
+						"fontface" : 0
 					}
 ,
 					"text" : "p defunctionalization"
@@ -965,7 +979,7 @@
 									"numinlets" : 5,
 									"numoutlets" : 5,
 									"outlettype" : [ "", "", "", "", "" ],
-									"patching_rect" : [ 178.0, 100.0, 274.0, 20.0 ],
+									"patching_rect" : [ 203.0, 97.0, 274.0, 20.0 ],
 									"text" : "route as prepending multiple-value-set appending"
 								}
 
@@ -1217,16 +1231,16 @@
 ,
 									"patching_rect" : [ 240.0, 400.0, 65.0, 20.0 ],
 									"saved_object_attributes" : 									{
-										"fontname" : "Arial",
-										"default_fontface" : 0,
-										"globalpatchername" : "",
-										"digest" : "",
-										"tags" : "",
-										"default_fontname" : "Arial",
-										"fontface" : 0,
 										"fontsize" : 12.0,
+										"default_fontface" : 0,
+										"digest" : "",
+										"default_fontname" : "Arial",
 										"default_fontsize" : 12.0,
-										"description" : ""
+										"fontname" : "Arial",
+										"description" : "",
+										"tags" : "",
+										"globalpatchername" : "",
+										"fontface" : 0
 									}
 ,
 									"text" : "p prepend"
@@ -2197,16 +2211,16 @@
 ,
 					"patching_rect" : [ 96.0, 536.0, 284.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontname" : "Arial",
-						"default_fontface" : 0,
-						"globalpatchername" : "",
-						"digest" : "",
-						"tags" : "",
-						"default_fontname" : "Arial",
-						"fontface" : 0,
 						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"digest" : "",
+						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"description" : ""
+						"fontname" : "Arial",
+						"description" : "",
+						"tags" : "",
+						"globalpatchername" : "",
+						"fontface" : 0
 					}
 ,
 					"text" : "p gather_output",
@@ -2252,7 +2266,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 190.0, 280.0, 69.0, 20.0 ],
+					"patching_rect" : [ 190.0, 286.0, 69.0, 20.0 ],
 					"save" : [ "#N", "thispatcher", ";", "#Q", "end", ";" ],
 					"text" : "thispatcher"
 				}
@@ -3027,16 +3041,16 @@
 ,
 					"patching_rect" : [ 190.0, 224.0, 78.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontname" : "Arial",
-						"default_fontface" : 0,
-						"globalpatchername" : "",
-						"digest" : "",
-						"tags" : "",
-						"default_fontname" : "Arial",
-						"fontface" : 0,
 						"fontsize" : 12.0,
+						"default_fontface" : 0,
+						"digest" : "",
+						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"description" : ""
+						"fontname" : "Arial",
+						"description" : "",
+						"tags" : "",
+						"globalpatchername" : "",
+						"fontface" : 0
 					}
 ,
 					"text" : "p parse-args"
@@ -3245,6 +3259,15 @@
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-39", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-2", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-7", 0 ]
 				}
 
 			}
