@@ -1,7 +1,7 @@
 VERSION = 0.1
 OBJDIR = $(CURDIR)/build
 # o.build has to come before o.bild so that the version.[ch] will be there
-OBJECTS = o.accumulate o.change o.cond o.unless o.when o.expr o.if o.mappatch o.message \
+OBJECTS = o.collect o.change o.cond o.unless o.when o.expr o.if o.mappatch o.message \
 o.pack o.pak o.prepend\
 o.print o.printbytes o.route o.select o.atomize o.var o.union o.intersection o.difference
 ODOT_CFILES = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).c)

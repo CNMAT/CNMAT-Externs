@@ -25,6 +25,9 @@
 	\brief Random utilities used throughout the lib
 */
 
+#include <string.h>
+#include "osc_mem.h"
+
 int osc_util_strdup(char **dest, char *src)
 {
 	int len = strlen(src) + 1;

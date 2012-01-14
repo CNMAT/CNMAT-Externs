@@ -113,12 +113,14 @@ void osc_parser_substitution(t_osc_parser_subst **subs_list, t_osc_msg_u *msg, i
 %union {
 	double f;
 	int32_t i;
+	char c;
 	char *string;
 	struct _osc_message_u *msg;
 }
 
 %token <f>OSCFLOAT 
 %token <i>OSCINT DOLLARSUB OSCADDRESS_DOLLARSUB
+%token <c>OSCCHAR
 %token <string>STRING OSCADDRESS 
 
 %type <msg>arglist msg 
@@ -180,6 +182,15 @@ arglist:
 		osc_message_u_appendInt32(*msg, $1);
 
 	  }
+	| OSCCHAR {
+		t_osc_msg_u *m = osc_message_u_alloc();
+		PP("push MSG %p->%p\n", m, *msg);
+		PP("add OSCCHAR to MSG %p := %c\n", m, $1);
+		m->next = *msg;
+		*msg = m;
+		osc_message_u_appendInt8(*msg, $1);
+
+	  }
 	| DOLLARSUB {
 		t_osc_msg_u *m = osc_message_u_alloc();
 		PP("push MSG %p->%p\n", m, *msg);
@@ -207,6 +218,10 @@ arglist:
 	| arglist OSCINT {
 		PP("add OSCINT to MSG %p := %d\n", *msg, $2);
 		osc_message_u_appendInt32(*msg, $2);
+ 	}
+	| arglist OSCCHAR {
+		PP("add OSCCHAR to MSG %p := %c\n", *msg, $2);
+		osc_message_u_appendInt8(*msg, $2);
  	}
 	| arglist DOLLARSUB {
 		PP("add DOLLARSUB to MSG %p := %d\n", *msg, $2);

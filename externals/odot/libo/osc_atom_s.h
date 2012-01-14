@@ -78,8 +78,12 @@ char *osc_atom_s_getData(t_osc_atom_s *a);
 
 float osc_atom_s_getFloat(t_osc_atom_s *a);
 double osc_atom_s_getDouble(t_osc_atom_s *a);
+int8_t osc_atom_s_getInt8(t_osc_atom_s *a);
+int16_t osc_atom_s_getInt16(t_osc_atom_s *a);
 int32_t osc_atom_s_getInt32(t_osc_atom_s *a);
 int64_t osc_atom_s_getInt64(t_osc_atom_s *a);
+uint8_t osc_atom_s_getUInt8(t_osc_atom_s *a);
+uint16_t osc_atom_s_getUInt16(t_osc_atom_s *a);
 uint32_t osc_atom_s_getUInt32(t_osc_atom_s *a);
 uint64_t osc_atom_s_getUInt64(t_osc_atom_s *a);
 int osc_atom_s_getInt(t_osc_atom_s *a);
@@ -89,8 +93,12 @@ int osc_atom_s_getBool(t_osc_atom_s *a);
 
 void osc_atom_s_setFloat(t_osc_atom_s *a, float v);
 void osc_atom_s_setDouble(t_osc_atom_s *a, double v);
+void osc_atom_s_setInt8(t_osc_atom_s *a, int8_t v);
+void osc_atom_s_setInt16(t_osc_atom_s *a, int16_t v);
 void osc_atom_s_setInt32(t_osc_atom_s *a, int32_t v);
 void osc_atom_s_setInt64(t_osc_atom_s *a, int64_t v);
+void osc_atom_s_setUInt8(t_osc_atom_s *a, uint8_t v);
+void osc_atom_s_setUInt16(t_osc_atom_s *a, uint16_t v);
 void osc_atom_s_setUInt32(t_osc_atom_s *a, uint32_t v);
 void osc_atom_s_setUInt64(t_osc_atom_s *a, uint64_t v);
 void osc_atom_s_setString(t_osc_atom_s *a, char *v);

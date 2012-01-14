@@ -300,6 +300,20 @@ void osc_atom_u_setFloat(t_osc_atom_u *a, float v);
 */
 void osc_atom_u_setDouble(t_osc_atom_u *a, double v);
 
+/** \brief Set the contents of a #t_osc_atom_u to a 8-bit signed integer.
+
+\param a The #t_osc_atom_u
+\param v The value
+*/
+void osc_atom_u_setInt8(t_osc_atom_u *a, int8_t v);
+
+/** \brief Set the contents of a #t_osc_atom_u to a 16-bit signed integer.
+
+\param a The #t_osc_atom_u
+\param v The value
+*/
+void osc_atom_u_setInt16(t_osc_atom_u *a, int16_t v);
+
 /** \brief Set the contents of a #t_osc_atom_u to a 32-bit signed integer.
 
 \param a The #t_osc_atom_u
@@ -313,6 +327,20 @@ void osc_atom_u_setInt32(t_osc_atom_u *a, int32_t v);
 \param v The value
 */
 void osc_atom_u_setInt64(t_osc_atom_u *a, int64_t v);
+
+/** \brief Set the contents of a #t_osc_atom_u to a 8-bit unsigned integer.
+
+\param a The #t_osc_atom_u
+\param v The value
+*/
+void osc_atom_u_setUInt8(t_osc_atom_u *a, uint8_t v);
+
+/** \brief Set the contents of a #t_osc_atom_u to a 16-bit unsigned integer.
+
+\param a The #t_osc_atom_u
+\param v The value
+*/
+void osc_atom_u_setUInt16(t_osc_atom_u *a, uint16_t v);
 
 /** \brief Set the contents of a #t_osc_atom_u to a 32-bit unsigned integer.
 

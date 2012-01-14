@@ -795,7 +795,7 @@ void omessage_set(t_omessage *x, t_symbol *s, long ac, t_atom *av){
 			omessage_processAtoms(x, ac, av);
 		}
 	}else{
-		omessage_clear(t_omessage *x);
+		omessage_clear(x);
 	}
 	jbox_redraw((t_jbox *)x);
 }

@@ -36,9 +36,13 @@ extern "C" {
 
 struct _osc_atom_u{
 	union _word{
+		int8_t c;
+		uint8_t C;
+		int16_t u;
+		uint16_t U;
 		int32_t i;
-		int64_t h;
 		uint32_t I;
+		int64_t h;
 		uint64_t H;
 		float f;
 		double d;

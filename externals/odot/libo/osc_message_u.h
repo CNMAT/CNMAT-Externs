@@ -62,8 +62,12 @@ t_osc_err osc_message_u_appendAtom(t_osc_msg_u *m, t_osc_atom_u *a);
 t_osc_err osc_message_u_prependAtom(t_osc_msg_u *m, t_osc_atom_u *a);
 t_osc_err osc_message_u_insertAtom(t_osc_msg_u *m, t_osc_atom_u *a, int pos);
 
+t_osc_atom_u *osc_message_u_appendInt8(t_osc_msg_u *m, int8_t v);
+t_osc_atom_u *osc_message_u_appendInt16(t_osc_msg_u *m, int16_t v);
 t_osc_atom_u *osc_message_u_appendInt32(t_osc_msg_u *m, int32_t v);
 t_osc_atom_u *osc_message_u_appendInt64(t_osc_msg_u *m, int64_t v);
+t_osc_atom_u *osc_message_u_appendUInt8(t_osc_msg_u *m, uint8_t v);
+t_osc_atom_u *osc_message_u_appendUInt16(t_osc_msg_u *m, uint16_t v);
 t_osc_atom_u *osc_message_u_appendUInt32(t_osc_msg_u *m, uint32_t v);
 t_osc_atom_u *osc_message_u_appendUInt64(t_osc_msg_u *m, uint64_t v);
 t_osc_atom_u *osc_message_u_appendFloat(t_osc_msg_u *m, float v);
@@ -76,8 +80,12 @@ t_osc_atom_u *osc_message_u_appendFalse(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_appendNull(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_appendBndl(t_osc_msg_u *m, long len, char *bndl);
 
+t_osc_atom_u *osc_message_u_prependInt8(t_osc_msg_u *m, int8_t v);
+t_osc_atom_u *osc_message_u_prependInt16(t_osc_msg_u *m, int16_t v);
 t_osc_atom_u *osc_message_u_prependInt32(t_osc_msg_u *m, int32_t v);
 t_osc_atom_u *osc_message_u_prependInt64(t_osc_msg_u *m, int64_t v);
+t_osc_atom_u *osc_message_u_prependUInt8(t_osc_msg_u *m, uint8_t v);
+t_osc_atom_u *osc_message_u_prependUInt16(t_osc_msg_u *m, uint16_t v);
 t_osc_atom_u *osc_message_u_prependUInt32(t_osc_msg_u *m, uint32_t v);
 t_osc_atom_u *osc_message_u_prependUInt64(t_osc_msg_u *m, uint64_t v);
 t_osc_atom_u *osc_message_u_prependFloat(t_osc_msg_u *m, float v);
@@ -90,8 +98,12 @@ t_osc_atom_u *osc_message_u_prependFalse(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_prependNull(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_prependBndl(t_osc_msg_u *m, long len, char *bndl);
 
+t_osc_atom_u *osc_message_u_insertInt8(t_osc_msg_u *m, int8_t v, int pos);
+t_osc_atom_u *osc_message_u_insertInt16(t_osc_msg_u *m, int16_t v, int pos);
 t_osc_atom_u *osc_message_u_insertInt32(t_osc_msg_u *m, int32_t v, int pos);
 t_osc_atom_u *osc_message_u_insertInt64(t_osc_msg_u *m, int64_t v, int pos);
+t_osc_atom_u *osc_message_u_insertUInt8(t_osc_msg_u *m, uint8_t v, int pos);
+t_osc_atom_u *osc_message_u_insertUInt16(t_osc_msg_u *m, uint16_t v, int pos);
 t_osc_atom_u *osc_message_u_insertUInt32(t_osc_msg_u *m, uint32_t v, int pos);
 t_osc_atom_u *osc_message_u_insertUInt64(t_osc_msg_u *m, uint64_t v, int pos);
 t_osc_atom_u *osc_message_u_insertFloat(t_osc_msg_u *m, float v, int pos);

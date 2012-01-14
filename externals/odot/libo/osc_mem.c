@@ -130,7 +130,7 @@ char osc_data_lengths[128] = {
 	/*	64		*/	-1	,
 	/*	65	A	*/	3	,
 	/*	66	B	*/	-1	,
-	/*	67	C	*/	1	,
+	/*	67	C	*/	4	,
 	/*	68	D	*/	-1	,
 	/*	69	E	*/	-1	,
 	/*	70	F	*/	0	,
@@ -148,7 +148,7 @@ char osc_data_lengths[128] = {
 	/*	82	R	*/	-1	,
 	/*	83	S	*/	sizeof(char *)	,
 	/*	84	T	*/	0	,
-	/*	85	U	*/	2	,
+	/*	85	U	*/	4	,
 	/*	86	V	*/	-1	,
 	/*	87	W	*/	-1	,
 	/*	88	X	*/	-1	,
@@ -162,7 +162,7 @@ char osc_data_lengths[128] = {
 	/*	96		*/	-1	,
 	/*	97	a	*/	3	,
 	/*	98	b	*/	sizeof(char *)	,
-	/*	99	c	*/	1	,
+	/*	99	c	*/	4	,
 	/*	100	d	*/	8	,
 	/*	101	e	*/	-1	,
 	/*	102	f	*/	4	,
@@ -180,7 +180,7 @@ char osc_data_lengths[128] = {
 	/*	114	r	*/	4	,
 	/*	115	s	*/	sizeof(char *)	,
 	/*	116	t	*/	8	,
-	/*	117	u	*/	2	,
+	/*	117	u	*/	4	,
 	/*	118	v	*/	-1	,
 	/*	119	w	*/	-1	,
 	/*	120	x	*/	-1	,
@@ -219,12 +219,14 @@ size_t osc_sizeof(unsigned char typetag, char *data){
 int osc_mem_shouldByteswap(unsigned char typetag){
 	switch(typetag){
 		// signed ints
+	case 'c':
 	case 'u':
 	case 'a':
 	case 'i':
 	case 'h':
 	case 'j':
 		// unsigned ints
+	case 'C':
 	case 'U':
 	case 'A':
 	case 'I':

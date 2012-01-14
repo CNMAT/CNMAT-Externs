@@ -53,6 +53,10 @@ $[1-9]+	{
 		return *yytext;
 	}
 
+\'[a-zA-Z]\' {
+	yylval->c = yytext[1];
+	return OSCCHAR;
+}
 
 (-?([[:digit:]]{-}[0])[[:digit:]]*|0) 	{
 						//printf("int\n");
