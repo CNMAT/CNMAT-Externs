@@ -479,7 +479,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.call /acc /a zl join",
+									"text" : "o.callpatch /acc /a zl join",
 									"fontsize" : 12.0,
 									"id" : "obj-14",
 									"numinlets" : 1,
@@ -600,7 +600,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.call /a expr ((($f1 + 1) % 2) * ($f1 / 2)) + (($f1 % 2) * (($f1 * 3) + 1))",
+									"text" : "o.callpatch /a expr ((($f1 + 1) % 2) * ($f1 / 2)) + (($f1 % 2) * (($f1 * 3) + 1))",
 									"fontsize" : 12.0,
 									"id" : "obj-71",
 									"numinlets" : 1,
@@ -670,7 +670,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.spew /h /a /collatz /hailstone /random",
+									"text" : "o.atomize /h /a /collatz /hailstone /random",
 									"fontsize" : 12.0,
 									"id" : "obj-68",
 									"numinlets" : 1,
@@ -1583,7 +1583,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.call /acc /a zl join",
+									"text" : "o.callpatch /acc /a zl join",
 									"fontsize" : 12.0,
 									"id" : "obj-14",
 									"numinlets" : 1,
@@ -1704,7 +1704,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.call /a expr ((($f1 + 1) % 2) * ($f1 / 2)) + (($f1 % 2) * (($f1 * 3) + 1))",
+									"text" : "o.callpatch /a expr ((($f1 + 1) % 2) * ($f1 / 2)) + (($f1 % 2) * (($f1 * 3) + 1))",
 									"fontsize" : 12.0,
 									"id" : "obj-71",
 									"numinlets" : 1,
@@ -1774,7 +1774,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.spew /h /a /collatz /hailstone /random",
+									"text" : "o.atomize /h /a /collatz /hailstone /random",
 									"fontsize" : 12.0,
 									"id" : "obj-68",
 									"numinlets" : 1,
@@ -2446,7 +2446,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.call /a expr ((($f1 + 1) % 2) * ($f1 / 2)) + (($f1 % 2) * (($f1 * 3) + 1))",
+									"text" : "o.callpatch /a expr ((($f1 + 1) % 2) * ($f1 / 2)) + (($f1 % 2) * (($f1 * 3) + 1))",
 									"fontsize" : 12.0,
 									"id" : "obj-71",
 									"numinlets" : 1,
@@ -2530,7 +2530,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.spew /h /a /collatz /hailstone /random",
+									"text" : "o.atomize /h /a /collatz /hailstone /random",
 									"fontsize" : 12.0,
 									"id" : "obj-68",
 									"numinlets" : 1,
@@ -2881,7 +2881,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /hailstone zl len @as /n",
+					"text" : "o.callpatch /hailstone zl len @as /n",
 					"fontsize" : 12.0,
 					"id" : "obj-27",
 					"numinlets" : 1,

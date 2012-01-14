@@ -80,7 +80,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "FullPacket", "" ],
 					"patching_rect" : [ 360.0, 352.0, 330.0, 20.0 ],
-					"text" : "o.call /x /y expr sqrt($f1 * $f1 + $f2 * $f2) @as /euclideandist"
+					"text" : "o.callpatch /x /y expr sqrt($f1 * $f1 + $f2 * $f2) @as /euclideandist"
 				}
 
 			}
@@ -94,7 +94,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 136.0, 304.0, 181.0, 48.0 ],
-					"text" : "by default, o.call assigns the result of its operation to the address of its first argument"
+					"text" : "by default, o.callpatch assigns the result of its operation to the address of its first argument"
 				}
 
 			}
@@ -138,7 +138,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "FullPacket", "" ],
 					"patching_rect" : [ 72.0, 352.0, 225.0, 20.0 ],
-					"text" : "o.call /x /y expr sqrt($f1 * $f1 + $f2 * $f2)"
+					"text" : "o.callpatch /x /y expr sqrt($f1 * $f1 + $f2 * $f2)"
 				}
 
 			}
@@ -452,7 +452,7 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "o.call.maxpat",
+				"name" : "o.callpatch.maxpat",
 				"bootpath" : "/Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat/repositories/main/trunk/max/externals/odot/patches/abstractions",
 				"patcherrelativepath" : "../abstractions",
 				"type" : "JSON",
@@ -479,7 +479,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -487,7 +487,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

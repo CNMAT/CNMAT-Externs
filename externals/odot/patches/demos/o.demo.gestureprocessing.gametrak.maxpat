@@ -199,7 +199,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"numoutlets" : 1,
 					"id" : "obj-33",
 					"fontname" : "Arial",
@@ -343,7 +343,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /radius [zl stream 5] @as /window/radius",
+					"text" : "o.callpatch /radius [zl stream 5] @as /window/radius",
 					"numoutlets" : 2,
 					"id" : "obj-3",
 					"fontname" : "Arial",

@@ -228,7 +228,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"patching_rect" : [ 237.0, 329.0, 64.0, 17.0 ],
 					"id" : "obj-19",
 					"fontname" : "Arial",

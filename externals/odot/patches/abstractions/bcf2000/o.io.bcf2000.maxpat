@@ -95,7 +95,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"numoutlets" : 1,
 					"id" : "obj-42",
 					"fontname" : "Arial",

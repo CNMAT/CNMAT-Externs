@@ -21,7 +21,7 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /a expr $i1 * 3 + 1",
+					"text" : "o.callpatch /a expr $i1 * 3 + 1",
 					"fontsize" : 12.0,
 					"id" : "obj-16",
 					"numinlets" : 1,
@@ -374,7 +374,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.spew /h /a /collatz /hailstone /random",
+					"text" : "o.atomize /h /a /collatz /hailstone /random",
 					"fontsize" : 12.0,
 					"id" : "obj-68",
 					"numinlets" : 1,

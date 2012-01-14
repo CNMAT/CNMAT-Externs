@@ -264,7 +264,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "FullPacket", "" ],
 					"patching_rect" : [ 178.0, 336.0, 205.0, 20.0 ],
-					"text" : "o.call /x /y /z [pack 0. 0. 0.] @as /xyz"
+					"text" : "o.callpatch /x /y /z [pack 0. 0. 0.] @as /xyz"
 				}
 
 			}
@@ -1078,7 +1078,7 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "o.call.maxpat",
+				"name" : "o.callpatch.maxpat",
 				"bootpath" : "/Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat/repositories/main/trunk/max/externals/odot/patches/abstractions",
 				"patcherrelativepath" : "../abstractions",
 				"type" : "JSON",
@@ -1113,7 +1113,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -1121,7 +1121,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

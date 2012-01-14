@@ -1307,7 +1307,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"numinlets" : 1,
 					"fontsize" : 11.595187,
 					"numoutlets" : 1,

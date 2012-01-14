@@ -144,7 +144,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"numoutlets" : 1,
 					"patching_rect" : [ 313.0, 280.0, 64.0, 17.0 ],
 					"id" : "obj-9",

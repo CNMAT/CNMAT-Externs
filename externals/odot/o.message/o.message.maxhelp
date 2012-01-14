@@ -74,7 +74,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
 									"patching_rect" : [ 566.0, 242.0, 102.0, 20.0 ],
-									"text" : "o.spew /bar /bloo"
+									"text" : "o.atomize /bar /bloo"
 								}
 
 							}
@@ -129,7 +129,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
 									"patching_rect" : [ 489.0, 210.0, 49.0, 20.0 ],
-									"text" : "o.spew"
+									"text" : "o.atomize"
 								}
 
 							}
@@ -336,7 +336,7 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.spew.mxo",
+								"name" : "o.atomize.mxo",
 								"type" : "iLaX"
 							}
  ]
@@ -701,7 +701,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
  ]

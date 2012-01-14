@@ -425,7 +425,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 650.0, 202.5, 277.0, 20.0 ],
-									"text" : "prepend script newdefault o.route 100 350 o.spew"
+									"text" : "prepend script newdefault o.route 100 350 o.atomize"
 								}
 
 							}
@@ -994,7 +994,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 48.0, 528.0, 82.0, 20.0 ],
-									"text" : "o.accumulate",
+									"text" : "o.collect",
 									"varname" : "accum[2]"
 								}
 
@@ -2199,7 +2199,7 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.accumulate.mxo",
+								"name" : "o.collect.mxo",
 								"type" : "iLaX"
 							}
 , 							{
@@ -3281,7 +3281,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

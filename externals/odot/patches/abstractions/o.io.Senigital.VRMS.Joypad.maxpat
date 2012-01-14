@@ -340,7 +340,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"id" : "obj-20",
 					"fontsize" : 9.0,
 					"numinlets" : 1,

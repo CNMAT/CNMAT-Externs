@@ -234,7 +234,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.accumulate",
+									"text" : "o.collect",
 									"fontsize" : 12.0,
 									"numinlets" : 1,
 									"patching_rect" : [ 56.0, 200.0, 82.0, 20.0 ],
@@ -570,7 +570,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
 					"patching_rect" : [ 152.0, 808.0, 82.0, 20.0 ],
@@ -679,7 +679,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
 					"patching_rect" : [ 248.0, 632.0, 82.0, 20.0 ],
@@ -721,7 +721,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /n + 1",
+					"text" : "o.callpatch /n + 1",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
 					"patching_rect" : [ 248.0, 504.0, 72.0, 20.0 ],
@@ -749,7 +749,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /accept /n /maxnumtries expr ($f1 == 1) || ($f2 >= $f3)",
+					"text" : "o.callpatch /accept /n /maxnumtries expr ($f1 == 1) || ($f2 >= $f3)",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
 					"patching_rect" : [ 152.0, 448.0, 326.0, 20.0 ],
@@ -763,7 +763,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /u /px /px1 /qx /qx1 expr $f1 < (($f3 * $f4) / ($f2 * $f5)) @as /accept",
+					"text" : "o.callpatch /u /px /px1 /qx /qx1 expr $f1 < (($f3 * $f4) / ($f2 * $f5)) @as /accept",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
 					"patching_rect" : [ 152.0, 416.0, 397.0, 20.0 ],
@@ -863,7 +863,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.accumulate",
+									"text" : "o.collect",
 									"fontsize" : 12.0,
 									"numinlets" : 1,
 									"patching_rect" : [ 48.0, 368.0, 82.0, 20.0 ],
@@ -1116,7 +1116,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.accumulate",
+									"text" : "o.collect",
 									"fontsize" : 12.0,
 									"numinlets" : 1,
 									"patching_rect" : [ 48.0, 368.0, 82.0, 20.0 ],
@@ -1482,7 +1482,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.accumulate",
+									"text" : "o.collect",
 									"fontsize" : 12.0,
 									"numinlets" : 1,
 									"patching_rect" : [ 56.0, 328.0, 82.0, 20.0 ],
@@ -1834,7 +1834,7 @@
 , 							{
 								"box" : 								{
 									"maxclass" : "newobj",
-									"text" : "o.accumulate",
+									"text" : "o.collect",
 									"fontsize" : 12.0,
 									"numinlets" : 1,
 									"patching_rect" : [ 50.0, 308.0, 82.0, 20.0 ],

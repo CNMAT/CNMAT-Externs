@@ -49,7 +49,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "comment",
-					"text" : "o.call",
+					"text" : "o.callpatchpatchpatchpatch",
 					"fontface" : 1,
 					"patching_rect" : [ 658.0, 39.0, 186.0, 23.0 ],
 					"fontsize" : 14.0,
@@ -202,7 +202,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /foo [+ 10.] @appending /bar",
+					"text" : "o.callpatchpatchpatchpatch /foo [+ 10.] @appending /bar",
 					"outlettype" : [ "FullPacket", "", "FullPacket" ],
 					"patching_rect" : [ 696.0, 264.0, 194.0, 20.0 ],
 					"fontsize" : 12.0,
@@ -216,7 +216,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /foo [+ 10.] @prepending /bar",
+					"text" : "o.callpatchpatchpatchpatch /foo [+ 10.] @prepending /bar",
 					"outlettype" : [ "FullPacket", "", "FullPacket" ],
 					"patching_rect" : [ 496.0, 264.0, 198.0, 20.0 ],
 					"fontsize" : 12.0,
@@ -230,7 +230,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /foo [+ 10.] @as /bar",
+					"text" : "o.callpatchpatchpatchpatch /foo [+ 10.] @as /bar",
 					"outlettype" : [ "FullPacket", "", "FullPacket" ],
 					"patching_rect" : [ 496.0, 168.0, 151.0, 20.0 ],
 					"fontsize" : 12.0,
@@ -271,7 +271,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /foo [+ 10.]",
+					"text" : "o.callpatchpatchpatchpatch /foo [+ 10.]",
 					"outlettype" : [ "FullPacket", "", "FullPacket" ],
 					"patching_rect" : [ 120.0, 168.0, 99.0, 20.0 ],
 					"fontsize" : 12.0,
@@ -285,7 +285,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "comment",
-					"text" : "by default, o.call assigns the result to the address of the first argument",
+					"text" : "by default, o.callpatchpatchpatchpatch assigns the result to the address of the first argument",
 					"linecount" : 2,
 					"patching_rect" : [ 240.0, 168.0, 197.0, 34.0 ],
 					"fontsize" : 12.0,
@@ -452,7 +452,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /xyz [unpack 0. 0. 0.] @multiple-value-set /x /y /z",
+					"text" : "o.callpatchpatchpatchpatch /xyz [unpack 0. 0. 0.] @multiple-value-set /x /y /z",
 					"outlettype" : [ "FullPacket", "", "FullPacket" ],
 					"patching_rect" : [ 496.0, 408.0, 299.0, 20.0 ],
 					"fontsize" : 12.0,
@@ -498,7 +498,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /x /y /z [pack 0. 0. 0.] @as /xyz",
+					"text" : "o.callpatchpatchpatchpatch /x /y /z [pack 0. 0. 0.] @as /xyz",
 					"outlettype" : [ "FullPacket", "", "FullPacket" ],
 					"patching_rect" : [ 128.0, 408.0, 205.0, 20.0 ],
 					"fontsize" : 12.0,

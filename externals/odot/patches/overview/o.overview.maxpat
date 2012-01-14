@@ -665,7 +665,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -673,7 +673,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

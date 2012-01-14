@@ -676,7 +676,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"fontsize" : 9.0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],

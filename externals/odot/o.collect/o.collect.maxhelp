@@ -88,7 +88,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 16.0, 519.0, 62.0 ],
-									"text" : "o.accumulate "
+									"text" : "o.collect "
 								}
 
 							}
@@ -198,7 +198,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 114.0, 246.0, 82.0, 20.0 ],
-									"text" : "o.accumulate"
+									"text" : "o.collect"
 								}
 
 							}
@@ -241,7 +241,7 @@
 							}
  ],
 						"dependency_cache" : [ 							{
-								"name" : "o.accumulate.mxo",
+								"name" : "o.collect.mxo",
 								"type" : "iLaX"
 							}
 , 							{
@@ -358,7 +358,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 101.0, 88.0, 391.0, 39.0 ],
-									"text" : "o.accumulate collects OSC messages in a buffer and outputs them when it receives a bang, similar to these objects:"
+									"text" : "o.collect collects OSC messages in a buffer and outputs them when it receives a bang, similar to these objects:"
 								}
 
 							}
@@ -396,7 +396,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

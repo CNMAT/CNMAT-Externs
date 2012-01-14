@@ -51,7 +51,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /left/* / 4095. @prepending /norm",
+					"text" : "o.callpatch /left/* / 4095. @prepending /norm",
 					"patching_rect" : [ 1016.0, 352.0, 219.0, 20.0 ],
 					"numinlets" : 1,
 					"fontname" : "Arial",

@@ -268,7 +268,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "FullPacket" ],
 					"patching_rect" : [ 814.0, 120.0, 175.0, 20.0 ],
-					"text" : "o.spew /mysynth /int"
+					"text" : "o.atomize /mysynth /int"
 				}
 
 			}
@@ -679,7 +679,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{

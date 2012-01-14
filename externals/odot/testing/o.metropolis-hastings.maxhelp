@@ -519,7 +519,7 @@
 								"implicit" : 1
 							}
 , 							{
-								"name" : "o.call.maxpat",
+								"name" : "o.callpatch.maxpat",
 								"bootpath" : "/Users/rama/Documents/__CNMAT/cnmat/trunk/max/externals/odot/build/patches/abstractions",
 								"type" : "JSON",
 								"implicit" : 1
@@ -555,7 +555,7 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.spew.mxo",
+								"name" : "o.atomize.mxo",
 								"type" : "iLaX"
 							}
 , 							{
@@ -567,7 +567,7 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.accumulate.mxo",
+								"name" : "o.collect.mxo",
 								"type" : "iLaX"
 							}
 , 							{
@@ -1486,7 +1486,7 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "o.call.maxpat",
+				"name" : "o.callpatch.maxpat",
 				"bootpath" : "/Users/rama/Documents/__CNMAT/cnmat/trunk/max/externals/odot/build/patches/abstractions",
 				"patcherrelativepath" : "../build/patches/abstractions",
 				"type" : "JSON",
@@ -1536,7 +1536,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -1552,7 +1552,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{

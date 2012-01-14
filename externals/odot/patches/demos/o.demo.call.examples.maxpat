@@ -34,7 +34,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "comment",
-					"text" : "o.call examples\n\nreusing max patches in o.\n\nAdrian Freed 2011",
+					"text" : "o.callpatch examples\n\nreusing max patches in o.\n\nAdrian Freed 2011",
 					"linecount" : 5,
 					"numinlets" : 1,
 					"numoutlets" : 0,
@@ -90,7 +90,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /number scale 0. 127. 0. 1.",
+					"text" : "o.callpatch /number scale 0. 127. 0. 1.",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 94.0, 599.0, 184.0, 20.0 ],
@@ -134,7 +134,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numbers zl median",
+					"text" : "o.callpatch /numbers zl median",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 92.0, 482.0, 147.0, 20.0 ],
@@ -178,7 +178,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /pitches jstrigger (a.reverse())",
+					"text" : "o.callpatch /pitches jstrigger (a.reverse())",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 87.0, 195.0, 199.0, 20.0 ],
@@ -236,7 +236,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /symbols jstrigger (a[0].charAt(0)+a[1].charAt(1))",
+					"text" : "o.callpatch /symbols jstrigger (a[0].charAt(0)+a[1].charAt(1))",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 1058.0, 685.0, 299.0, 20.0 ],
@@ -278,7 +278,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numbers jstrigger (a.reverse())",
+					"text" : "o.callpatch /numbers jstrigger (a.reverse())",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 975.0, 119.0, 207.0, 20.0 ],
@@ -322,7 +322,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /number scale 0. 0.3 0. 1.",
+					"text" : "o.callpatch /number scale 0. 0.3 0. 1.",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 432.0, 706.0, 177.0, 20.0 ],
@@ -366,7 +366,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numbers minimum -1.",
+					"text" : "o.callpatch /numbers minimum -1.",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 868.0, 764.0, 161.0, 20.0 ],
@@ -395,7 +395,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /number sqrt",
+					"text" : "o.callpatch /number sqrt",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 676.0, 768.0, 109.0, 20.0 ],
@@ -424,7 +424,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /number * -1.",
+					"text" : "o.callpatch /number * -1.",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 505.0, 762.0, 111.0, 20.0 ],
@@ -453,7 +453,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /number + 1.",
+					"text" : "o.callpatch /number + 1.",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 320.0, 761.0, 110.0, 20.0 ],
@@ -498,7 +498,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /symbols zl join sir",
+					"text" : "o.callpatch /symbols zl join sir",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 1164.0, 430.0, 139.0, 20.0 ],
@@ -542,7 +542,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /e expr $f1 * $f1 * 3.141593",
+					"text" : "o.callpatch /e expr $f1 * $f1 * 3.141593",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 86.0, 289.0, 188.0, 20.0 ],
@@ -571,7 +571,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /symbols zl nth 2",
+					"text" : "o.callpatch /symbols zl nth 2",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 1162.0, 516.0, 131.0, 20.0 ],
@@ -601,7 +601,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /symbols zl sort",
+					"text" : "o.callpatch /symbols zl sort",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 935.0, 502.0, 125.0, 20.0 ],
@@ -631,7 +631,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /symbols zl scramble",
+					"text" : "o.callpatch /symbols zl scramble",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 721.0, 502.0, 153.0, 20.0 ],
@@ -660,7 +660,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /symbols zl len",
+					"text" : "o.callpatch /symbols zl len",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 514.0, 477.0, 121.0, 20.0 ],
@@ -689,7 +689,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numbers zl scramble",
+					"text" : "o.callpatch /numbers zl scramble",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 1177.0, 266.0, 156.0, 20.0 ],
@@ -718,7 +718,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numbers zl len",
+					"text" : "o.callpatch /numbers zl len",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 964.0, 286.0, 123.0, 20.0 ],
@@ -747,7 +747,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numbers zl sum",
+					"text" : "o.callpatch /numbers zl sum",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 798.0, 282.0, 130.0, 20.0 ],
@@ -776,7 +776,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numbers zl median",
+					"text" : "o.callpatch /numbers zl median",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 616.0, 284.0, 147.0, 20.0 ],
@@ -850,7 +850,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /vector vexpr $f1 * $f1",
+					"text" : "o.callpatch /vector vexpr $f1 * $f1",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"patching_rect" : [ 91.0, 386.0, 159.0, 20.0 ],

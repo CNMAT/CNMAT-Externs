@@ -35,7 +35,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.spew",
+					"text" : "o.atomize",
 					"patching_rect" : [ 425.0, 180.0, 49.0, 20.0 ],
 					"fontsize" : 12.0,
 					"numinlets" : 1,
@@ -145,7 +145,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"patching_rect" : [ 192.0, 359.0, 82.0, 20.0 ],
 					"fontsize" : 12.0,
 					"numinlets" : 1,

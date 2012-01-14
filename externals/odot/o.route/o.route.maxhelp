@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 2
+			"revision" : 4
 		}
 ,
 		"rect" : [ 25.0, 63.0, 578.0, 559.0 ],
@@ -26,7 +26,8 @@
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
-		"showontab" : 1,
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -40,10 +41,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 4
 						}
 ,
-						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
+						"rect" : [ 25.0, 89.0, 578.0, 533.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -507,16 +508,16 @@
 ,
 					"patching_rect" : [ 30.0, 183.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
-						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"default_fontface" : 0,
 						"tags" : "",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"globalpatchername" : "",
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p basic"
@@ -536,7 +537,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 4
 						}
 ,
 						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
@@ -585,7 +586,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 0,
-											"revision" : 2
+											"revision" : 4
 										}
 ,
 										"rect" : [ 93.0, 110.0, 532.0, 577.0 ],
@@ -630,7 +631,7 @@
 													"maxclass" : "comment",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 178.0, 400.0, 252.0, 89.0 ],
+													"patching_rect" : [ 178.0, 400.0, 238.0, 89.0 ],
 													"text" : "Here, since o.route received all of the messages bundled together, it can dispatch them through the outlets in right to left order observing normal Max convention."
 												}
 
@@ -715,7 +716,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 64.0, 368.0, 82.0, 20.0 ],
-													"text" : "o.accumulate"
+													"text" : "o.collect"
 												}
 
 											}
@@ -738,11 +739,11 @@
 													"fontname" : "Arial",
 													"fontsize" : 12.0,
 													"id" : "obj-10",
-													"linecount" : 9,
+													"linecount" : 10,
 													"maxclass" : "comment",
 													"numinlets" : 1,
 													"numoutlets" : 0,
-													"patching_rect" : [ 230.0, 36.0, 252.0, 145.0 ],
+													"patching_rect" : [ 230.0, 36.0, 226.0, 158.0 ],
 													"text" : "In this case, the order that OSC-route will dispatch its messages will be determined by the order in which the messages were added to the OSC bundle.  In many cases this is not a problem, however, it is not always possible to ensure that the contents of the bundle will be in the order you want them in.  "
 												}
 
@@ -991,7 +992,7 @@
 												"type" : "iLaX"
 											}
 , 											{
-												"name" : "o.accumulate.mxo",
+												"name" : "o.collect.mxo",
 												"type" : "iLaX"
 											}
 , 											{
@@ -1003,16 +1004,16 @@
 ,
 									"patching_rect" : [ 195.0, 165.0, 85.0, 20.0 ],
 									"saved_object_attributes" : 									{
-										"digest" : "",
-										"fontname" : "Arial",
-										"default_fontname" : "Arial",
+										"default_fontface" : 0,
 										"tags" : "",
+										"digest" : "",
+										"default_fontname" : "Arial",
+										"fontname" : "Arial",
 										"default_fontsize" : 12.0,
-										"globalpatchername" : "",
 										"description" : "",
+										"globalpatchername" : "",
 										"fontface" : 0,
-										"fontsize" : 12.0,
-										"default_fontface" : 0
+										"fontsize" : 12.0
 									}
 ,
 									"text" : "p who_cares?"
@@ -1044,7 +1045,7 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.accumulate.mxo",
+								"name" : "o.collect.mxo",
 								"type" : "iLaX"
 							}
 , 							{
@@ -1056,16 +1057,16 @@
 ,
 					"patching_rect" : [ 245.0, 183.0, 134.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
-						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"default_fontface" : 0,
 						"tags" : "",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"globalpatchername" : "",
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p \"see also OSC-route\""
@@ -1085,7 +1086,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 4
 						}
 ,
 						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
@@ -1118,7 +1119,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 293.0, 379.0, 217.0, 48.0 ],
-									"text" : "with no arguments, o.spew unpacks the bundle and outputs each message as a Max message."
+									"text" : "with no arguments, o.atomize unpacks the bundle and outputs each message as a Max message."
 								}
 
 							}
@@ -1160,8 +1161,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 140.0, 439.0, 49.0, 20.0 ],
-									"text" : "o.spew"
+									"patching_rect" : [ 140.0, 439.0, 61.0, 20.0 ],
+									"text" : "o.atomize"
 								}
 
 							}
@@ -1175,7 +1176,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 92.0, 39.0, 325.0, 34.0 ],
-									"text" : "o.spew dispatches messages through an OSC address hierarchy as Max messages."
+									"text" : "o.atomize dispatches messages through an OSC address hierarchy as Max messages."
 								}
 
 							}
@@ -1216,8 +1217,8 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 140.0, 241.0, 221.0, 20.0 ],
-									"text" : "o.spew /mysynth/2/freq /mysynth/2/gain"
+									"patching_rect" : [ 140.0, 241.0, 233.0, 20.0 ],
+									"text" : "o.atomize /mysynth/2/freq /mysynth/2/gain"
 								}
 
 							}
@@ -1360,27 +1361,27 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.spew.mxo",
+								"name" : "o.atomize.mxo",
 								"type" : "iLaX"
 							}
  ]
 					}
 ,
-					"patching_rect" : [ 172.0, 183.0, 59.0, 20.0 ],
+					"patching_rect" : [ 172.0, 183.0, 71.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
-						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"default_fontface" : 0,
 						"tags" : "",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"globalpatchername" : "",
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"fontsize" : 12.0
 					}
 ,
-					"text" : "p o.spew"
+					"text" : "p o.atomize"
 				}
 
 			}
@@ -1397,10 +1398,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 4
 						}
 ,
-						"rect" : [ 25.0, 89.0, 578.0, 533.0 ],
+						"rect" : [ 0.0, 26.0, 578.0, 533.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1607,16 +1608,16 @@
 ,
 					"patching_rect" : [ 102.0, 183.0, 62.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"digest" : "",
-						"fontname" : "Arial",
-						"default_fontname" : "Arial",
+						"default_fontface" : 0,
 						"tags" : "",
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"globalpatchername" : "",
 						"description" : "",
+						"globalpatchername" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
-						"default_fontface" : 0
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p o.select"
@@ -1634,7 +1635,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -1646,7 +1647,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

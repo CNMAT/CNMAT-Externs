@@ -692,7 +692,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numerator /denominator / 1. @as /y",
+					"text" : "o.callpatch /numerator /denominator / 1. @as /y",
 					"patching_rect" : [ 200.0, 424.0, 234.0, 20.0 ],
 					"numoutlets" : 3,
 					"fontsize" : 12.0,
@@ -706,7 +706,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /denominator zl 1024 sum",
+					"text" : "o.callpatch /denominator zl 1024 sum",
 					"patching_rect" : [ 200.0, 400.0, 180.0, 20.0 ],
 					"numoutlets" : 3,
 					"fontsize" : 12.0,
@@ -720,7 +720,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /numerator zl 1024 sum",
+					"text" : "o.callpatch /numerator zl 1024 sum",
 					"patching_rect" : [ 200.0, 376.0, 168.0, 20.0 ],
 					"numoutlets" : 3,
 					"fontsize" : 12.0,
@@ -734,7 +734,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /x /xx /a /w vexpr \"$f4 / pow(abs($f1 - $f2), $f3)\" @scalarmode 1 @as /denominator",
+					"text" : "o.callpatch /x /xx /a /w vexpr \"$f4 / pow(abs($f1 - $f2), $f3)\" @scalarmode 1 @as /denominator",
 					"patching_rect" : [ 200.0, 352.0, 484.0, 20.0 ],
 					"numoutlets" : 3,
 					"fontsize" : 12.0,
@@ -748,7 +748,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /yy /x /xx /a /w vexpr \"($f1 * $f5) / pow(abs($f2 - $f3), $f4)\" @scalarmode 1 @as /numerator",
+					"text" : "o.callpatch /yy /x /xx /a /w vexpr \"($f1 * $f5) / pow(abs($f2 - $f3), $f4)\" @scalarmode 1 @as /numerator",
 					"patching_rect" : [ 200.0, 328.0, 526.0, 20.0 ],
 					"numoutlets" : 3,
 					"fontsize" : 12.0,

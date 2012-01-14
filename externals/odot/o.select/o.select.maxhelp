@@ -694,7 +694,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 64.0, 368.0, 82.0, 20.0 ],
-													"text" : "o.accumulate"
+													"text" : "o.collect"
 												}
 
 											}
@@ -967,7 +967,7 @@
 												"type" : "iLaX"
 											}
 , 											{
-												"name" : "o.accumulate.mxo",
+												"name" : "o.collect.mxo",
 												"type" : "iLaX"
 											}
 , 											{
@@ -1020,7 +1020,7 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.accumulate.mxo",
+								"name" : "o.collect.mxo",
 								"type" : "iLaX"
 							}
 , 							{
@@ -1094,7 +1094,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 313.0, 359.0, 217.0, 48.0 ],
-									"text" : "with no arguments, o.spew unpacks the bundle and outputs each message as a Max message."
+									"text" : "with no arguments, o.atomize unpacks the bundle and outputs each message as a Max message."
 								}
 
 							}
@@ -1137,7 +1137,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
 									"patching_rect" : [ 160.0, 419.0, 49.0, 20.0 ],
-									"text" : "o.spew"
+									"text" : "o.atomize"
 								}
 
 							}
@@ -1151,7 +1151,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 112.0, 19.0, 325.0, 34.0 ],
-									"text" : "o.spew dispatches messages through an OSC address hierarchy as Max messages."
+									"text" : "o.atomize dispatches messages through an OSC address hierarchy as Max messages."
 								}
 
 							}
@@ -1193,7 +1193,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
 									"patching_rect" : [ 160.0, 221.0, 221.0, 20.0 ],
-									"text" : "o.spew /mysynth/2/freq /mysynth/2/gain"
+									"text" : "o.atomize /mysynth/2/freq /mysynth/2/gain"
 								}
 
 							}
@@ -1336,7 +1336,7 @@
 								"type" : "iLaX"
 							}
 , 							{
-								"name" : "o.spew.mxo",
+								"name" : "o.atomize.mxo",
 								"type" : "iLaX"
 							}
  ]
@@ -1356,7 +1356,7 @@
 						"fontname" : "Arial"
 					}
 ,
-					"text" : "p o.spew"
+					"text" : "p o.atomize"
 				}
 
 			}
@@ -1610,7 +1610,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -1622,7 +1622,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

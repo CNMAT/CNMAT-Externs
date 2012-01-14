@@ -64,7 +64,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 366.0, 222.0, 82.0, 20.0 ],
-					"text" : "o.accumulate"
+					"text" : "o.collect"
 				}
 
 			}
@@ -213,7 +213,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 18.0, 311.0, 82.0, 20.0 ],
-					"text" : "o.accumulate"
+					"text" : "o.collect"
 				}
 
 			}
@@ -373,7 +373,7 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

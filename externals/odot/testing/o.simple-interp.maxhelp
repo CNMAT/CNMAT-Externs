@@ -35,7 +35,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /foo /bar /bloo + 12.",
+					"text" : "o.callpatch /foo /bar /bloo + 12.",
 					"id" : "obj-6",
 					"fontname" : "Arial",
 					"numinlets" : 1,

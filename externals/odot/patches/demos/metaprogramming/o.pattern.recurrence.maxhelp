@@ -64,7 +64,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.pattern.recurrence o.call /sum /step [+ 0.]",
+					"text" : "o.pattern.recurrence o.callpatch /sum /step [+ 0.]",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
 					"numoutlets" : 1,

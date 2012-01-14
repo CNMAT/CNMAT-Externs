@@ -260,7 +260,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "FullPacket", "" ],
 					"patching_rect" : [ 36.0, 128.0, 141.0, 20.0 ],
-					"text" : "o.call /result /factorial * 0"
+					"text" : "o.callpatch /result /factorial * 0"
 				}
 
 			}
@@ -288,7 +288,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "FullPacket", "" ],
 					"patching_rect" : [ 36.0, 155.0, 105.0, 20.0 ],
-					"text" : "o.call /factorial - 1"
+					"text" : "o.callpatch /factorial - 1"
 				}
 
 			}
@@ -484,7 +484,7 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "o.call.maxpat",
+				"name" : "o.callpatch.maxpat",
 				"bootpath" : "/Users/rama/Documents/__CNMAT/cnmat/trunk/max/externals/odot/build/patches/abstractions",
 				"patcherrelativepath" : "../../build/patches/abstractions",
 				"type" : "JSON",
@@ -516,7 +516,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.spew.mxo",
+				"name" : "o.atomize.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -528,7 +528,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.accumulate.mxo",
+				"name" : "o.collect.mxo",
 				"type" : "iLaX"
 			}
 , 			{

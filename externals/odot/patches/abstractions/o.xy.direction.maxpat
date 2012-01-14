@@ -78,7 +78,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.accumulate",
+					"text" : "o.collect",
 					"numinlets" : 1,
 					"id" : "obj-1",
 					"fontname" : "Arial",

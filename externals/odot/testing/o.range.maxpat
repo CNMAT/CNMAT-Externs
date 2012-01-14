@@ -231,7 +231,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /acc /min zl 4096 join",
+					"text" : "o.callpatch /acc /min zl 4096 join",
 					"fontsize" : 12.0,
 					"numinlets" : 1,
 					"numoutlets" : 3,

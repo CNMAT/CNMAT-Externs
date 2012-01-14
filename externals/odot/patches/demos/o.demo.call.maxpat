@@ -52,7 +52,7 @@
 , 			{
 				"box" : 				{
 					"maxclass" : "newobj",
-					"text" : "o.call /frequency * 2.",
+					"text" : "o.callpatch /frequency * 2.",
 					"id" : "obj-20",
 					"numinlets" : 1,
 					"fontsize" : 12.0,
