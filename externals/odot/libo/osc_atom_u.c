@@ -25,6 +25,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <string.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <math.h> // for floor for formatting float
 #include "osc.h"
 #include "osc_mem.h"
 #include "osc_byteorder.h"
@@ -366,20 +367,42 @@ int osc_atom_u_getString(t_osc_atom_u *a, char **out){
 		}
 	case 'f': // 32-bit IEEE 754 float
 		{
-			int n = snprintf(NULL, 0, "%f", a->w.f);
+			float f = a->w.f;
+			int need_point = f - floorf(f) == 0 ? 1 : 0;
+			int n;
+			if(need_point){
+				n = snprintf(NULL, 0, "%g.", f);
+			}else{
+				n = snprintf(NULL, 0, "%g", f);
+			}
 			if(!(*out)){
 				*out = osc_mem_alloc(n + 1);
 			}
-			sprintf(*out, "%f", a->w.f);
+			if(need_point){
+				sprintf(*out, "%g.", f);
+			}else{
+				sprintf(*out, "%g", f);
+			}
 			return n;
 		}
 	case 'd': // 64-bit IEEE 754 double
 		{
-			int n = snprintf(NULL, 0, "%f", a->w.f);
+			double f = a->w.d;
+			int need_point = f - floor(f) == 0 ? 1 : 0;
+			int n;
+			if(need_point){
+				n = snprintf(NULL, 0, "%g.", f);
+			}else{
+				n = snprintf(NULL, 0, "%g", f);
+			}
 			if(!(*out)){
 				*out = osc_mem_alloc(n + 1);
 			}
-			sprintf(*out, "%f", a->w.f);
+			if(need_point){
+				sprintf(*out, "%g.", f);
+			}else{
+				sprintf(*out, "%g", f);
+			}
 			return n;
 		}
 	case 'h': // signed 64-bit int

@@ -142,12 +142,14 @@ int osc_expr_logtene(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 int osc_expr_sqrttwo(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_sqrthalf(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
-int osc_expr_explicitCast_float32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_explicitCast_float64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_explicitCast_int32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_explicitCast_int64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_explicitCast_uint32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_explicitCast_uint64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_explicitCast(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_explicitCast_float32(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_float64(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_int32(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_int64(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_uint32(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_uint64(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_string(t_osc_atom_u *dest, t_osc_atom_u *src);
 
 t_osc_expr *osc_expr_alloc(void);
 t_osc_expr_arg *osc_expr_arg_alloc(void);
@@ -319,12 +321,14 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"sqrttwo", osc_expr_sqrttwo, 0, NULL, "sqrt(2): 1.41421..."},
 	{"sqrthalf", osc_expr_sqrthalf, 0, NULL, "sqrt(0.5): 0.70710..."},
 	// explicit cast functions
-	{"float32", osc_expr_explicitCast_float32, -1, NULL, "Cast argument(s) to float32"},
-	{"float64", osc_expr_explicitCast_float64, -1, NULL, "Cast argument(s) to float64"},
-	{"int32", osc_expr_explicitCast_int32, -1, NULL, "Cast argument(s) to int32"},
-	{"int64", osc_expr_explicitCast_int64, -1, NULL, "Cast argument(s) to int64"},
-	{"uint32", osc_expr_explicitCast_uint32, -1, NULL, "Cast argument(s) to uint32"},
-	{"uint64", osc_expr_explicitCast_uint64, -1, NULL, "Cast argument(s) to uint64"}
+	{"float32", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_float32, "Cast to float32"},
+	{"float64", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_float64, "Cast to float64"},
+	{"int32", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_int32, "Cast to int32"},
+	{"int64", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_int64, "Cast to int64"},
+	{"uint32", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_uint32, "Cast to uint32"},
+	{"uint64", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_uint64, "Cast to uint64"},
+	{"string", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_string, "Cast to string"}
+
 };
 
 #ifdef _cplusplus

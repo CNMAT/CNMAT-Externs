@@ -1419,6 +1419,19 @@ int osc_expr_progn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 	}
 }
 
+int osc_expr_typetags(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	if(argc){
+		int len = osc_atom_array_u_getLen(*argv);
+		*out = osc_atom_array_u_alloc(len);
+		int i;
+		for(i = 0; i < len; i++){
+		}
+		return 0;
+	}
+	return 0;
+}
+
 // constants
 int osc_expr_pi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
 {
@@ -1525,54 +1538,73 @@ int osc_expr_sqrthalf(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_ato
 	return 0;
 }
 
-int osc_expr_explicitCast_float32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+int osc_expr_explicitCast(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
 {
-	/*
 	if(argc){
-		out = (t_osc_atom_ar_u **)osc_mem_alloc(argc * sizeof(t_osc_atom_ar_u *));
+		int n = osc_atom_array_u_getLen(*argv);
+		*out = osc_atom_array_u_alloc(n);
 		int i;
-		for(i = 0; i < argc; i++){
-			int len;
-			out[i] = osc_atom_ar_u_alloc(osc_atom_ar_u_getLen(argv[i]));
-			int j;
-			for(j = 0; j < 
-			osc_atom_u_setFloat(osc_atom_ar_u_get(out[i], 
+		for(i = 0; i < n; i++){
+			int ret;
+			int (*func)(t_osc_atom_u *dest, t_osc_atom_u *src) =
+				(int (*)(t_osc_atom_u *, t_osc_atom_u *))f->rec->extra;
+			ret = func(osc_atom_array_u_get(*out, i), osc_atom_array_u_get(*argv, i));
+			if(ret){
+				return ret;
+			}
 		}
 	}
-	*/
 	return 0;
 }
 
-int osc_expr_explicitCast_float64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+int osc_expr_explicitCast_float32(t_osc_atom_u *dest, t_osc_atom_u *src)
 {
+	osc_atom_u_setFloat(dest, osc_atom_u_getFloat(src));
 	return 0;
 }
 
-int osc_expr_explicitCast_int32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+int osc_expr_explicitCast_float64(t_osc_atom_u *dest, t_osc_atom_u *src)
 {
+	osc_atom_u_setDouble(dest, osc_atom_u_getDouble(src));
 	return 0;
 }
 
-int osc_expr_explicitCast_int64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+int osc_expr_explicitCast_int32(t_osc_atom_u *dest, t_osc_atom_u *src)
 {
+	osc_atom_u_setInt32(dest, osc_atom_u_getInt32(src));
 	return 0;
 }
 
-int osc_expr_explicitCast_uint32(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+int osc_expr_explicitCast_int64(t_osc_atom_u *dest, t_osc_atom_u *src)
 {
+	osc_atom_u_setInt64(dest, osc_atom_u_getInt64(src));
 	return 0;
 }
 
-int osc_expr_explicitCast_uint64(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+int osc_expr_explicitCast_uint32(t_osc_atom_u *dest, t_osc_atom_u *src)
 {
+	osc_atom_u_setUInt32(dest, osc_atom_u_getUInt32(src));
 	return 0;
 }
 
+int osc_expr_explicitCast_uint64(t_osc_atom_u *dest, t_osc_atom_u *src)
+{
+	osc_atom_u_setUInt64(dest, osc_atom_u_getUInt64(src));
+	return 0;
+}
 
-//int osc_expr_explicitCast(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
-//{
-
-//}
+int osc_expr_explicitCast_string(t_osc_atom_u *dest, t_osc_atom_u *src)
+{
+	char *s = NULL;
+	osc_atom_u_getString(src, &s);
+	if(s){
+		osc_atom_u_setString(dest, s);
+		osc_mem_free(s);
+		return 0;
+	}else{
+		return 1;
+	}
+}
 
 t_osc_expr *osc_expr_alloc(void){
 	t_osc_expr *expr = (t_osc_expr *)osc_mem_alloc(sizeof(t_osc_expr));

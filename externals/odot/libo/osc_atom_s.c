@@ -25,6 +25,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <string.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <math.h> // for floor() used in formatting floats
 #include "osc.h"
 #include "osc_mem.h"
 #include "osc_byteorder.h"
@@ -418,22 +419,42 @@ int osc_atom_s_getString(t_osc_atom_s *a, char **out){
 		{
 			uint32_t i = ntoh32(*((uint32_t *)(a->data)));
 			float f = *((float *)&i);
-			int n = snprintf(NULL, 0, "%g", f);
+			int need_point = f - floorf(f) == 0 ? 1 : 0;
+			int n;
+			if(need_point){
+				n = snprintf(NULL, 0, "%g.", f);
+			}else{
+				n = snprintf(NULL, 0, "%g", f);
+			}
 			if(!(*out)){
 				*out = osc_mem_alloc(n + 1);
 			}
-			sprintf(*out, "%g", f);
+			if((f - floorf(f)) == 0){
+				sprintf(*out, "%g.", f);
+			}else{
+				sprintf(*out, "%g", f);
+			}
 			return n;
 		}
 	case 'd': // 64-bit IEEE 754 double
 		{
 			uint64_t i = ntoh64(*((uint64_t *)(a->data)));
 			double f = *((double *)&i);
-			int n = snprintf(NULL, 0, "%g", f);
+			int need_point = f - floorf(f) == 0 ? 1 : 0;
+			int n;
+			if(need_point){
+				n = snprintf(NULL, 0, "%g.", f);
+			}else{
+				n = snprintf(NULL, 0, "%g", f);
+			}
 			if(!(*out)){
 				*out = osc_mem_alloc(n + 1);
 			}
-			sprintf(*out, "%g", f);
+			if((f - floor(f)) == 0){
+				sprintf(*out, "%g.", f);
+			}else{
+				sprintf(*out, "%g", f);
+			}
 			return n;
 		}
 	case 'h': // signed 64-bit int
