@@ -186,7 +186,7 @@ t_osc_expr *osc_expr_parser_nullCoalesce(t_osc_atom_u *address_to_check, t_osc_e
 		return NULL;
 	}
 	t_osc_expr *expr_def = osc_expr_alloc();
-	osc_expr_setRec(expr_def, osc_expr_lookupFunction("defined"));
+	osc_expr_setRec(expr_def, osc_expr_lookupFunction("bound"));
 	t_osc_expr_arg *def_arg = osc_expr_arg_alloc();
 
 	osc_expr_arg_setOSCAddress(def_arg, address);
@@ -469,6 +469,7 @@ expr:
 		osc_expr_setAssignResultToAddress($$, 1);
 		osc_atom_u_free($1);
  	}
+/*
 	| OSC_EXPR_STRING '=' '[' args ']' {
 		// assign a list of stuff
 		char *ptr = osc_atom_u_getStringPtr($1);
@@ -481,6 +482,7 @@ expr:
 		$$ = osc_expr_parser_infix("=", arg, $4);
 		osc_expr_setAssignResultToAddress($$, 1);
  	}
+*/
 // shorthand constructions
 	| '[' arg ':' arg ']' %prec OSC_EXPR_FUNC_CALL {
 		// matlab-style range
@@ -521,6 +523,9 @@ expr:
 		$$ = osc_expr_parser_infix("=", arg, arg2);
 		osc_expr_setAssignResultToAddress($$, 1);
 		osc_atom_u_free($1);
+	}
+	| '[' args ']' %prec OSC_EXPR_FUNC_CALL {
+		$$ = osc_expr_parser_prefix("list", $2);
 	}
 // array lookup
 	| arg OPEN_DBL_BRKTS args CLOSE_DBL_BRKTS {

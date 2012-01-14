@@ -42,6 +42,8 @@
 #include "osc_expr.r"
 #include "osc_hashtab.h"
 
+int _osc_expr_sign(double f);
+
 t_osc_hashtab *osc_expr_funcobj_ht;
 void osc_expr_funcobj_dtor(char *key, void *val);
 
@@ -209,7 +211,14 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}
 		osc_atom_array_u_free(argv);
 		*out = argv_out;
-	}else if(f->rec->func == osc_expr_defined){
+	}else if(f->rec->func == osc_expr_emptybundle){
+		*out = osc_atom_array_u_alloc(1);
+		if(*len == OSC_HEADER_SIZE){
+			osc_atom_u_setTrue(osc_atom_array_u_get(*out, 0));
+		}else{
+			osc_atom_u_setFalse(osc_atom_array_u_get(*out, 0));
+		}
+	}else if(f->rec->func == osc_expr_bound){
 		*out = osc_atom_array_u_alloc(1);
 		t_osc_msg_ar_s *m = NULL;
 		osc_bundle_s_lookupAddress(*len, *oscbndl, f_argv->arg.osc_address, &m, 1);
@@ -651,7 +660,13 @@ void osc_expr_or(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result){
 	return;
 }
 
-void osc_expr_mod(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result){
+double _osc_expr_fmod(double x, double m)
+{
+	return x - m * _osc_expr_sign(m) * floor(x / fabs(m));
+}
+
+void osc_expr_mod(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result)
+{
 	if(!f1){
 		osc_atom_u_setInt32(*result, 0);
 		return;
@@ -660,6 +675,7 @@ void osc_expr_mod(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result){
 		osc_atom_u_copy(result, f1);
 		return;
 	}
+	/*
 	char tt1 = osc_atom_u_getTypetag(f1), tt2 = osc_atom_u_getTypetag(f2);
 	if(tt1 == 'f' || tt1 == 'd' || tt2 == 'f' || tt2 == 'd'){
 		double ff1 = osc_atom_u_getDouble(f1), ff2 = osc_atom_u_getDouble(f2);
@@ -676,10 +692,28 @@ void osc_expr_mod(t_osc_atom_u *f1, t_osc_atom_u *f2, t_osc_atom_u **result){
 		}
 		osc_atom_u_setInt32(*result, ff1 % ff2);
 	}
+	*/
+	char tt1 = osc_atom_u_getTypetag(f1), tt2 = osc_atom_u_getTypetag(f2);
+	double ff1 = osc_atom_u_getDouble(f1), ff2 = osc_atom_u_getDouble(f2);
+	double m = _osc_expr_fmod(ff1, ff2);
+	if(tt1 == 'f' || tt1 == 'd' || tt2 == 'f' || tt2 == 'd'){
+		if(ff2 == 0){
+			osc_atom_u_copy(result, f1);
+			return;
+		}
+		osc_atom_u_setDouble(*result, m);
+	}else{
+		if(ff2 == 0){
+			osc_atom_u_copy(result, f1);
+			return;
+		}
+		osc_atom_u_setInt32(*result, (int32_t)m);
+	}
 	return;
 }
 
-int osc_expr_assign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_assign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	int len = 0;
 	int i;
 	for(i = 1; i < argc; i++){
@@ -858,7 +892,8 @@ int comp(const void *val1, const void *val2){
 	return 1;
 }
 
-int osc_expr_median(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_median(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	*out = osc_atom_array_u_alloc(1);
 	long len = osc_atom_array_u_getLen(*argv);
 	double *tmp = NULL;
@@ -877,7 +912,8 @@ int osc_expr_median(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_
 	return 0;
 }
 
-int osc_expr_concat(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_concat(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	int i, j = 0, k;
 	long len = 0;
 	for(i = 0; i < argc; i++){
@@ -894,7 +930,8 @@ int osc_expr_concat(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_
 	return 0;
 }
 
-int osc_expr_reverse(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_reverse(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	long len = osc_atom_array_u_getLen(*argv);
 	*out = osc_atom_array_u_alloc(len);
 	int i;
@@ -905,7 +942,23 @@ int osc_expr_reverse(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 	return 0;
 }
 
-int osc_expr_make_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	int outlen = 0;
+	int i;
+	for(i = 0; i < argc; i++){
+		outlen += osc_atom_array_u_getLen(argv[i]);
+	}
+	int pos = 0;
+	for(i = 0; i < argc; i++){
+		osc_atom_array_u_copyInto(out, argv[i], pos);
+		pos += osc_atom_array_u_getLen(argv[i]);
+	}
+	return 0;
+}
+
+int osc_expr_constant_array(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	int n = osc_atom_u_getInt(osc_atom_array_u_get(*argv, 0));
 	t_osc_atom_u *val = NULL;
 	*out = osc_atom_array_u_alloc(n);
@@ -947,35 +1000,38 @@ int osc_expr_range(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 			dblup = 1;
 		}
 	}
-	if(dblup){
-		double start, end, step = 1.;
-		start = osc_atom_u_getDouble(osc_atom_array_u_get(*argv, 0));
-		end = osc_atom_u_getDouble(osc_atom_array_u_get(argv[1], 0));
-		if(argc > 2){
-			step = osc_atom_u_getDouble(osc_atom_array_u_get(argv[2], 0));
+	double start, end;
+ 	start = osc_atom_u_getDouble(osc_atom_array_u_get(*argv, 0));
+ 	end = osc_atom_u_getDouble(osc_atom_array_u_get(argv[1], 0));
+ 	double step = _osc_expr_sign(end - start);
+ 	if(argc > 2){
+	 	step = osc_atom_u_getDouble(osc_atom_array_u_get(argv[2], 0));
+		char tt = osc_atom_u_getTypetag(osc_atom_array_u_get(argv[2], 0));
+		if(tt == 'f' || tt == 'd'){
+			dblup = 1;
 		}
-		int n = (end - start) / step;
-		int i = 0;
-		*out = osc_atom_array_u_alloc(n + 1);
-		while(start <= end){
+ 	}
+ 	if(_osc_expr_sign(end - start) != _osc_expr_sign(step)){
+	 	return 0;
+ 	}
+	double min = start, max = end, abs_step = fabs(step);
+	if(min > max){
+		double tmp = min;
+		min = max;
+		max = tmp;
+	}
+	int i = 0;
+	int n = (int)(((max - min) / abs_step)) + 1;
+ 	*out = osc_atom_array_u_alloc(n);
+	if(dblup){
+		for(i = 0; i < n; i++){
 			osc_atom_u_setDouble(osc_atom_array_u_get(*out, i), start);
 			start += step;
-			i++;
 		}
 	}else{
-		int32_t start, end, step = 1;
-		start = osc_atom_u_getInt32(osc_atom_array_u_get(*argv, 0));
-		end = osc_atom_u_getInt32(osc_atom_array_u_get(argv[1], 0));
-		if(argc > 2){
-			step = osc_atom_u_getInt32(osc_atom_array_u_get(argv[2], 0));
-		}
-		int n = (end - start) / step;
-		int i = 0;
-		*out = osc_atom_array_u_alloc(n + 1);
-		while(start <= end){
+		for(i = 0; i < n; i++){
 			osc_atom_u_setInt32(osc_atom_array_u_get(*out, i), start);
 			start += step;
-			i++;
 		}
 	}
 	return 0;
@@ -1236,7 +1292,8 @@ int osc_expr_mtof(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 	return 0;
 }
 
-int osc_expr_ftom(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_ftom(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	if(argc == 0){
 		return 1;
 	}
@@ -1265,13 +1322,26 @@ int osc_expr_ftom(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 	return 0;
 }
 
-int osc_expr_rand(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_rand(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	*out = osc_atom_array_u_alloc(1);
 	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), (double)rand() / (double)RAND_MAX);
 	return 0;
 }
 
-int osc_expr_sgn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int _osc_expr_sign(double f)
+{
+	if(f == 0){
+		return 0;
+	}else if(f < 0){
+		return -1;
+	}else{
+		return 1;
+	}
+}
+
+int osc_expr_sign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	long len = osc_atom_array_u_getLen(*argv);
 	*out = osc_atom_array_u_alloc(len);
 	int i;
@@ -1288,12 +1358,20 @@ int osc_expr_sgn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_
 	return 0;
 }
 
-int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	// this is a dummy function.  we'll use this to do a pointer comparison.
 	return 0;
 }
 
-int osc_expr_defined(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_bound(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	// this is a dummy function.  we'll use this to do a pointer comparison.
+	return 0;
+}
+
+int osc_expr_emptybundle(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	// this is a dummy function.  we'll use this to do a pointer comparison.
 	return 0;
 }

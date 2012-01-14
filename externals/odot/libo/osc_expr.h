@@ -99,7 +99,8 @@ int osc_expr_mean(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 int osc_expr_median(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_concat(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_reverse(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_make_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_constant_array(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_range(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_interleave(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_not(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -113,9 +114,10 @@ int osc_expr_scale(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 int osc_expr_mtof(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_ftom(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_rand(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_sgn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_sign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_defined(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_bound(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_emptybundle(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_identity(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_compile(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -263,6 +265,7 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"remainder", osc_expr_2arg_dbl_dbl, 2, (void *)remainder, "Remainder function (r = x - ny where y is non-zero and n is the integral value nearest x/y)"},
 	{"round", osc_expr_1arg_dbl, 1, (void *)round, "Round to nearest integral value"},
 	// misc
+	{"mod", osc_expr_2arg, 2, (void *)osc_expr_mod, "Modulo"},
 	{"get_index", osc_expr_get_index, -1, NULL, "Get an element of a list (same as [[ ]])"},
 	{"product", osc_expr_product, 1, NULL, "Product of all the elements of a list"},
 	{"sum", osc_expr_sum, 1, NULL, "Sum all the elements of a list"},
@@ -274,10 +277,10 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"concat", osc_expr_concat, -1, NULL, "Concatenate two lists"},
 	{"reverse", osc_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
 	{"rev", osc_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
-	{"make_list", osc_expr_make_list, -1, NULL, "Make a list of <arg1> copies of <arg2>.  <arg2 is optional and defaults to 0"},
+	{"list", osc_expr_list, -1, NULL, "Assemble the arguments into a list."},
+	{"constant_array", osc_expr_constant_array, -1, NULL, "Make a list of <arg1> copies of <arg2>.  <arg2 is optional and defaults to 0"},
 	{"range", osc_expr_range, -1, NULL, "Make a list from <arg1> to <arg2> in <arg3> steps.  <arg3> is optional and defaults to 1"},
 	{"interleave", osc_expr_interleave, -1, NULL, "Interleave two or more lists"},
-	//make-list, pad, zeros, ones
 	{"!", osc_expr_not, -1, NULL, "Logical not"},
 	{"dot", osc_expr_dot, 2, NULL, "Dot product of arg1 and arg2"},
 	{"l2norm", osc_expr_l2norm, 1, NULL, "Norm of the argument"},
@@ -285,13 +288,14 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"max", osc_expr_max, 1, NULL, "Maximum value of the arguments"},
 	{"extrema", osc_expr_extrema, 1, NULL, "Min and max of the arguments"},
 	{"clip", osc_expr_clip, 3, NULL, "Clip the data between arg2 and arg3"},
-	{"scale", osc_expr_scale, 5, NULL, "Scale the data from arg1 and arg2 to arg3 and arg4"},
+	{"scale", osc_expr_scale, 5, NULL, "Scale arg1 from arg1:arg2 to arg3:arg4"},
 	{"mtof", osc_expr_mtof, -1, NULL, "MIDI note number to frequency.  Optional arg2 sets base."},
 	{"ftom", osc_expr_ftom, -1, NULL, "Frequency to MIDI. Optional arg2 sets base."},
 	//{"rand", osc_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"},
-	{"sgn", osc_expr_sgn, 1, NULL, "Sign function--returns -1 if <arg1> < 0, 0 if <arg1> == 0, and 1 if <arg1> > 1"},
+	{"sign", osc_expr_sign, 1, NULL, "Sign function--returns -1 if <arg1> < 0, 0 if <arg1> == 0, and 1 if <arg1> > 1"},
 	{"if", osc_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
-	{"defined", osc_expr_defined, 1, NULL, "Check for the existance a message with address <arg1>."},
+	{"bound", osc_expr_bound, 1, NULL, "Check for the existance a message with address <arg1>."},
+	{"emptybundle", osc_expr_emptybundle, 0, NULL, "True if the bundle is empty, false otherwise."},
 	{"identity", osc_expr_identity, -1, NULL, "Just what it says"},
 	{"eval", osc_expr_eval, 1, NULL, "Evaluate a function bound to an OSC address"},
 	{"compile", osc_expr_compile, 2, NULL, "Compile a function <arg2> and bind it to an OSC address <arg1>"},
