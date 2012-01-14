@@ -165,7 +165,6 @@
 					}
 ,
 					"patching_rect" : [ 336.0, 98.0, 100.0, 20.0 ],
-					"presentation_rect" : [ 367.0, 101.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"globalpatchername" : "",
 						"default_fontsize" : 12.0,
@@ -199,7 +198,7 @@
 							"revision" : 4
 						}
 ,
-						"rect" : [ 30.0, 97.0, 652.0, 470.0 ],
+						"rect" : [ 0.0, 26.0, 652.0, 470.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -384,7 +383,7 @@
 							"revision" : 4
 						}
 ,
-						"rect" : [ 0.0, 26.0, 652.0, 470.0 ],
+						"rect" : [ 30.0, 97.0, 652.0, 470.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -949,9 +948,9 @@
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
-													"outlettype" : [ "" ],
-													"patching_rect" : [ 409.0, 55.0, 160.0, 20.0 ],
-													"text" : "o.expr /bar = make_list(5\\, 6)"
+													"outlettype" : [ "FullPacket" ],
+													"patching_rect" : [ 409.0, 55.0, 190.0, 20.0 ],
+													"text" : "o.expr /bar = constant_array(5\\, 6)"
 												}
 
 											}
