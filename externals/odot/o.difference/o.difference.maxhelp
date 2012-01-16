@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 2
+			"revision" : 4
 		}
 ,
 		"rect" : [ 43.0, 76.0, 541.0, 367.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 4
 						}
 ,
 						"rect" : [ 43.0, 102.0, 541.0, 341.0 ],
@@ -201,8 +201,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 196.0, 124.0, 71.0, 35.0 ],
-									"text" : "/foo a r s t\n/bloo o i e n",
+									"patching_rect" : [ 196.0, 124.0, 148.0, 35.0 ],
+									"text" : "/foo \"a\" \"r\" \"s\" \"t\" \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -218,7 +218,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 114.0, 124.0, 62.0, 35.0 ],
-									"text" : "/foo 1 2 3\n/bar 4 5 6",
+									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -306,16 +306,16 @@
 ,
 					"patching_rect" : [ 52.0, 88.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"digest" : "",
-						"tags" : "",
-						"default_fontname" : "Arial",
-						"globalpatchername" : "",
 						"default_fontsize" : 12.0,
 						"fontface" : 0,
 						"description" : "",
-						"fontsize" : 12.0
+						"fontsize" : 12.0,
+						"tags" : "",
+						"globalpatchername" : "",
+						"default_fontface" : 0,
+						"fontname" : "Arial",
+						"digest" : "",
+						"default_fontname" : "Arial"
 					}
 ,
 					"text" : "p basic"
