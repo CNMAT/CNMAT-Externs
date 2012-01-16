@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 2
+			"revision" : 4
 		}
 ,
 		"rect" : [ 39.0, 69.0, 575.0, 396.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 4
 						}
 ,
 						"rect" : [ 39.0, 95.0, 575.0, 370.0 ],
@@ -104,7 +104,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 352.0, 262.0, 105.0, 18.0 ],
-									"presentation_rect" : [ 331.0, 295.0, 0.0, 0.0 ],
 									"text" : "o.unless.maxhelp"
 								}
 
@@ -119,7 +118,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 352.0, 244.0, 98.0, 18.0 ],
-									"presentation_rect" : [ 332.0, 278.0, 0.0, 0.0 ],
 									"text" : "o.when.maxhelp"
 								}
 
@@ -191,7 +189,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 136.0, 127.0, 256.0, 67.0 ],
+									"patching_rect" : [ 136.0, 127.0, 257.0, 67.0 ],
 									"text" : "o.if sends the incoming bundle out the left outlet if the result of the test is true (non-zero), or out the right outlet otherwise"
 								}
 
@@ -247,8 +245,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 65.0, 164.0, 45.0, 20.0 ],
-									"text" : "/foo $1",
+									"patching_rect" : [ 65.0, 164.0, 71.0, 21.0 ],
+									"text" : "/foo \"$1\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -367,16 +365,16 @@
 ,
 					"patching_rect" : [ 71.0, 74.0, 37.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"fontname" : "Arial",
-						"digest" : "",
-						"tags" : "",
-						"default_fontname" : "Arial",
-						"globalpatchername" : "",
 						"default_fontsize" : 12.0,
 						"fontface" : 0,
 						"description" : "",
-						"fontsize" : 12.0
+						"fontsize" : 12.0,
+						"tags" : "",
+						"globalpatchername" : "",
+						"default_fontface" : 0,
+						"fontname" : "Arial",
+						"digest" : "",
+						"default_fontname" : "Arial"
 					}
 ,
 					"text" : "p o.if"
