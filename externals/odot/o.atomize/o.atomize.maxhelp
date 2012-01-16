@@ -7,7 +7,7 @@
 			"revision" : 4
 		}
 ,
-		"rect" : [ 26.0, 50.0, 578.0, 559.0 ],
+		"rect" : [ 17.0, 55.0, 578.0, 559.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -44,14 +44,14 @@
 							"revision" : 4
 						}
 ,
-						"rect" : [ 26.0, 76.0, 578.0, 533.0 ],
+						"rect" : [ 17.0, 81.0, 578.0, 533.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
 						"default_fontface" : 0,
 						"default_fontname" : "Arial",
 						"gridonopen" : 0,
-						"gridsize" : [ 5.0, 5.0 ],
+						"gridsize" : [ 8.0, 8.0 ],
 						"gridsnaponopen" : 0,
 						"statusbarvisible" : 2,
 						"toolbarvisible" : 1,
@@ -65,6 +65,34 @@
 						"tags" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
+									"id" : "obj-1",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 78.0, 416.0, 20.0 ],
+									"text" : "dispatch messages through an OSC address hierarchy as Max messages.",
+									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 48.0,
+									"id" : "obj-11",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 16.0, 219.0, 62.0 ],
+									"text" : "o.atomize"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
@@ -210,26 +238,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-32",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 112.0, 34.0, 325.0, 34.0 ],
-									"text" : "o.atomize dispatches messages through an OSC address hierarchy as Max messages."
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 12.0,
 									"id" : "obj-31",
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 265.0, 295.0, 119.0, 18.0 ]
+									"patching_rect" : [ 272.0, 320.0, 119.0, 18.0 ]
 								}
 
 							}
@@ -242,7 +256,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 112.0, 295.0, 119.0, 18.0 ]
+									"patching_rect" : [ 119.0, 320.0, 119.0, 18.0 ]
 								}
 
 							}
@@ -255,7 +269,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 160.0, 236.0, 233.0, 20.0 ],
+									"patching_rect" : [ 167.0, 261.0, 233.0, 20.0 ],
 									"text" : "o.atomize /mysynth/2/freq /mysynth/2/gain"
 								}
 
@@ -270,7 +284,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 305.0, 93.0, 50.0, 20.0 ]
+									"patching_rect" : [ 311.0, 155.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -284,7 +298,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 305.0, 123.0, 121.0, 48.0 ],
+									"patching_rect" : [ 311.0, 185.0, 121.0, 48.0 ],
 									"text" : "/mysynth/*/freq \"$1\" \n/mysynth/*/gain 0.5 \n/nada \"rien\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -300,7 +314,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 160.0, 93.0, 50.0, 20.0 ]
+									"patching_rect" : [ 166.0, 155.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -314,7 +328,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 160.0, 123.0, 125.0, 48.0 ],
+									"patching_rect" : [ 166.0, 185.0, 125.0, 48.0 ],
 									"text" : "/mysynth/2/freq 440 \n/mysynth/2/gain \"$1\" \n/nada \"rien\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
