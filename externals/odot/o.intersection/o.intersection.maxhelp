@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 2
+			"revision" : 4
 		}
 ,
 		"rect" : [ 31.0, 65.0, 541.0, 367.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 4
 						}
 ,
 						"rect" : [ 31.0, 91.0, 541.0, 341.0 ],
@@ -172,7 +172,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 184.0, 175.0, 168.0, 75.0 ],
+									"patching_rect" : [ 184.0, 175.0, 169.0, 75.0 ],
 									"text" : "Outputs a bundle containing all the OSC messages from the left bundle whose addresses are also present in the right bundle."
 								}
 
@@ -201,8 +201,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 156.0, 116.0, 71.0, 35.0 ],
-									"text" : "/foo a r s t\n/bloo o i e n",
+									"patching_rect" : [ 156.0, 116.0, 148.0, 35.0 ],
+									"text" : "/foo \"a\" \"r\" \"s\" \"t\" \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -218,7 +218,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 74.0, 116.0, 62.0, 35.0 ],
-									"text" : "/foo 1 2 3\n/bar 4 5 6",
+									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -306,16 +306,16 @@
 ,
 					"patching_rect" : [ 51.0, 59.0, 82.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"tags" : "",
-						"fontname" : "Arial",
-						"digest" : "",
-						"default_fontname" : "Arial",
-						"globalpatchername" : "",
 						"default_fontsize" : 12.0,
 						"fontface" : 0,
 						"description" : "",
-						"fontsize" : 12.0
+						"fontsize" : 12.0,
+						"tags" : "",
+						"globalpatchername" : "",
+						"default_fontface" : 0,
+						"fontname" : "Arial",
+						"digest" : "",
+						"default_fontname" : "Arial"
 					}
 ,
 					"text" : "p intersection"
