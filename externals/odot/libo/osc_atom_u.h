@@ -184,6 +184,30 @@ it contains NULL, a 0 will be returned.
  */
 double osc_atom_u_getDouble(t_osc_atom_u *a);
 
+/** \brief Coerce the value of the #t_osc_atom to a 8-bit signed int.
+
+This function will attempt to convert a string using strtol().  If the #t_osc_atom_u
+contains a boolean value, this function will return 0 for false, and 1 for true, if
+it contains NULL, a 0 will be returned.
+
+\param a A #t_osc_atom_u
+
+\return The value of the #t_osc_atom_u as a 8-bit signed int
+ */
+int8_t osc_atom_u_getInt8(t_osc_atom_u *a);
+
+/** \brief Coerce the value of the #t_osc_atom to a 16-bit signed int.
+
+This function will attempt to convert a string using strtol().  If the #t_osc_atom_u
+contains a boolean value, this function will return 0 for false, and 1 for true, if
+it contains NULL, a 0 will be returned.
+
+\param a A #t_osc_atom_u
+
+\return The value of the #t_osc_atom_u as a 16-bit signed int
+ */
+int16_t osc_atom_u_getInt16(t_osc_atom_u *a);
+
 /** \brief Coerce the value of the #t_osc_atom to a 32-bit signed int.
 
 This function will attempt to convert a string using strtol().  If the #t_osc_atom_u
@@ -207,6 +231,30 @@ it contains NULL, a 0 will be returned.
 \return The value of the #t_osc_atom_u as a 64-bit signed int
  */
 int64_t osc_atom_u_getInt64(t_osc_atom_u *a);
+
+/** \brief Coerce the value of the #t_osc_atom to a 8-bit unsigned signed int.
+
+This function will attempt to convert a string using strtoul().  If the #t_osc_atom_u
+contains a boolean value, this function will return 0 for false, and 1 for true, if
+it contains NULL, a 0 will be returned.
+
+\param a A #t_osc_atom_u
+
+\return The value of the #t_osc_atom_u as a 8-bit unsigned signed int
+ */
+uint8_t osc_atom_u_getUInt8(t_osc_atom_u *a);
+
+/** \brief Coerce the value of the #t_osc_atom to a 16-bit unsigned signed int.
+
+This function will attempt to convert a string using strtoul().  If the #t_osc_atom_u
+contains a boolean value, this function will return 0 for false, and 1 for true, if
+it contains NULL, a 0 will be returned.
+
+\param a A #t_osc_atom_u
+
+\return The value of the #t_osc_atom_u as a 16-bit unsigned signed int
+ */
+uint16_t osc_atom_u_getUInt16(t_osc_atom_u *a);
 
 /** \brief Coerce the value of the #t_osc_atom to a 32-bit unsigned signed int.
 
@@ -255,6 +303,8 @@ return NULL.
 it does not contain a string.
 */
 char *osc_atom_u_getStringPtr(t_osc_atom_u *a);
+
+int osc_atom_u_getQuotedString(t_osc_atom_u *a, char **out);
 
 /** \brief Return a copy of the string stored in the #t_osc_atom_u
 

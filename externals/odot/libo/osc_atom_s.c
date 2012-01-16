@@ -459,6 +459,51 @@ int osc_atom_s_getStringLen(t_osc_atom_s *a){
 	return 0;
 }
 
+int osc_atom_s_getQuotedString(t_osc_atom_s *a, char **out)
+{
+	if(!a){
+		return 0;
+	}
+	char *buf = NULL;
+	int len = osc_atom_s_getString(a, &buf);
+	if(!buf){
+		return 0;
+	}
+	if(!(*out)){
+		*out = osc_mem_alloc(len + 3);
+	}
+	int i = 0;
+	(*out)[i++] = '\"';
+	strncpy((*out) + i, buf, len);
+	i += len;
+	(*out)[i++] = '\"';
+	(*out)[i++] = '\0';
+	osc_mem_free(buf);
+	//strncpy(*out, a->data, n + 1);
+	return len + 2;
+	/*
+	switch(a->typetag){
+	case 's':
+		{
+			int n = strlen(a->w.s);
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 3);
+			}
+			int i = 0;
+			(*out)[i++] = '\"';
+			strncpy((*out) + i, a->w.s, n);
+			i += n;
+			(*out)[i++] = '\"';
+			(*out)[i++] = '\0';
+			//strncpy(*out, a->data, n + 1);
+			return n + 2;
+		}
+	default:
+		return osc_atom_u_getString(a, out);
+	}
+	*/
+}
+
 int osc_atom_s_getString(t_osc_atom_s *a, char **out){	
 	if(!a){
 		return 0;
@@ -470,8 +515,8 @@ int osc_atom_s_getString(t_osc_atom_s *a, char **out){
 			if(!(*out)){
 				*out = osc_mem_alloc(n + 1);
 			}
-			strncpy(*out, a->data, n + 1);
-			return n;
+		        strncpy(*out, a->data, n + 1);
+			return n ;
 		}
 	case 'i': // signed 32-bit int
 		{
@@ -911,13 +956,16 @@ t_osc_err osc_atom_s_doFormat(t_osc_atom_s *a, long *buflen, long *bufpos, char 
 		extern t_osc_err osc_bundle_s_doFormat(long len, char *bndl, long *buflen, long *bufpos, char **buf);
 		osc_bundle_s_doFormat(ntoh32(*((uint32_t *)data)), data + 4, buflen, bufpos, buf);
 		*bufpos += sprintf(*buf + *bufpos, "]");
+	}else if(osc_atom_s_getTypetag(a) == 's'){
+		char *bufptr = (*buf) + *bufpos;
+		int n = osc_atom_s_getQuotedString(a, &bufptr);
+		(*bufpos) += n;
+		(*buf)[(*bufpos)++] = ' ';
+		(*buf)[(*bufpos)] = '\0';
 	}else{
 		char *bufptr = (*buf) + *bufpos;
 		int n = osc_atom_s_getString(a, &bufptr);
 		(*bufpos) += n;
-		char *buff = NULL;
-		osc_atom_s_getString(a, &buff);
-		osc_mem_free(buff);
 		(*buf)[(*bufpos)++] = ' ';
 		(*buf)[(*bufpos)] = '\0';
 	}

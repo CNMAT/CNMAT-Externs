@@ -538,6 +538,17 @@ void omessage_gettext(t_omessage *x){
 			}
 			x->bndl = NULL;
 		}
+
+		// format parsed bundle and display it
+		char *formatted = NULL;
+		long formattedlen = 0;
+		osc_bundle_u_format(bndl, &formattedlen, &formatted);
+		object_method(jbox_get_textfield((t_object *)x), gensym("settext"), formatted);
+		if(formatted){
+			osc_mem_free(formatted);
+		}
+
+
 		if(subs){
 			x->bndl = bndl;
 			x->bndltype = OMESSAGE_U;

@@ -38,9 +38,9 @@ $[1-9]+	{
 	}
 
 -?{c99_floating_point_constant}	{
-					//printf("float\n");
 					char *endp = NULL;
 					double d = strtod(yytext, &endp);
+					//printf("float: %f\n", d);
 					yylval->f = d;
 					return OSCFLOAT;
 				}
@@ -54,14 +54,15 @@ $[1-9]+	{
 	}
 
 \'[a-zA-Z]\' {
+	//printf("char: %c\n", yytext[1]);
 	yylval->c = yytext[1];
 	return OSCCHAR;
 }
 
 (-?([[:digit:]]{-}[0])[[:digit:]]*|0) 	{
-						//printf("int\n");
 						char *endp = NULL;
 						int32_t i = strtol(yytext, &endp, 0);
+						//printf("int: %d\n", i);
 						yylval->i = i;
 						return OSCINT;
 					}
@@ -77,9 +78,10 @@ $[1-9]+	{
 
 \"(\\.|[^\"])*\" 	{
 				//printf("quoted string: %s\n", yytext);
-				int len = strlen(yytext) - 1;
-				char *copy = osc_mem_alloc(len);
-				memcpy(copy, yytext + 1, len - 1);
+				int len = strlen(yytext) + 1; // includes quotes and null byte
+				char *copy = osc_mem_alloc(len - 2); // don't need quotes
+				memcpy(copy, yytext + 1, len - 3);
+				copy[len - 3] = '\0';
 				yylval->string = copy;
 				return STRING;
 			}

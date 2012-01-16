@@ -237,7 +237,13 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 				t_osc_expr *f = NULL;
 				osc_expr_parser_parseString(expr, &f);
 				if(f){
-					osc_expr_funcall(f, len, oscbndl, out);
+					t_osc_atom_ar_u *ar = NULL;
+					int ret = osc_expr_funcall(f, len, oscbndl, &ar);
+					*out = osc_atom_array_u_alloc(1);
+					osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), ret);
+					if(ar){
+						osc_atom_array_u_free(ar);
+					}
 					osc_expr_free(f);
 				}
 			}else{
@@ -247,7 +253,13 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 				t_osc_expr *f = NULL;
 				osc_expr_parser_parseString(buf, &f);
 				if(f){
-					osc_expr_funcall(f, len, oscbndl, out);
+					t_osc_atom_ar_u *ar = NULL;
+					int ret = osc_expr_funcall(f, len, oscbndl, &ar);
+					*out = osc_atom_array_u_alloc(1);
+					osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), ret);
+					if(ar){
+						osc_atom_array_u_free(ar);
+					}
 					osc_expr_free(f);
 				}
 				if(buf){
@@ -260,7 +272,13 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 			if(a){
 				t_osc_expr *e = osc_hashtab_lookup(osc_expr_funcobj_ht, strlen(a), a);
 				if(e){
-					osc_expr_funcall(e, len, oscbndl, out);
+					t_osc_atom_ar_u *ar = NULL;
+					int ret = osc_expr_funcall(f, len, oscbndl, &ar);
+					*out = osc_atom_array_u_alloc(1);
+					osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), ret);
+					if(ar){
+						osc_atom_array_u_free(ar);
+					}
 				}
 			}
 		}
@@ -760,7 +778,8 @@ int osc_expr_add1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 	return 0;
 }
 
-int osc_expr_subtract1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_subtract1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	int i;
 	long len = osc_atom_array_u_getLen(*argv);
 	*out = osc_atom_array_u_alloc(len);
@@ -791,7 +810,8 @@ int osc_expr_subtract1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_at
 	return 0;
 }
 
-int osc_expr_get_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_get_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	int i, j, k = 0;
 	int argc_out = 0;
 	for(i = 1; i < argc; i++){
@@ -816,7 +836,58 @@ int osc_expr_get_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_at
 	return 0;
 }
 
-int osc_expr_product(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_assign_to_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	if(argc != 3){
+		return 1;
+	}
+	*out = osc_atom_array_u_copy(*argv);
+	int outlen = osc_atom_array_u_getLen(*out);
+	int nindexes = osc_atom_array_u_getLen(argv[1]);
+	int ndata = osc_atom_array_u_getLen(argv[2]);
+	if(nindexes == 0 || ndata == 0){
+		return 1;
+	}else if(nindexes == 1 && ndata > 1){
+		int idx = osc_atom_u_getInt(osc_atom_array_u_get(argv[1], 0));
+		if(idx >= outlen || idx < 0){
+			// error!
+			return 1;
+		}
+		t_osc_atom_u *dest = osc_atom_array_u_get(*out, idx);
+		osc_atom_u_copy(&dest, osc_atom_array_u_get(argv[2], 0));
+	}else if(nindexes > 1 && ndata == 1){
+		int i, idx;
+		t_osc_atom_u *a = osc_atom_array_u_get(argv[2], 0);
+		for(i = 0; i < nindexes; i++){
+			idx = osc_atom_u_getInt(osc_atom_array_u_get(argv[1], i));
+			if(idx >= outlen || idx < 0){
+				// error!
+				continue;
+			}
+			t_osc_atom_u *dest = osc_atom_array_u_get(*out, idx);
+			osc_atom_u_copy(&dest, a);
+		}
+	}else{
+		int i, idx;
+		int n = osc_atom_array_u_getLen(argv[1]);
+		if(osc_atom_array_u_getLen(argv[2]) < n){
+			n = osc_atom_array_u_getLen(argv[2]);
+		}
+		for(i = 0; i < n; i++){
+			idx = osc_atom_u_getInt(osc_atom_array_u_get(argv[1], i));
+			if(idx >= outlen || idx < 0){
+				// error!
+				continue;
+			}
+			t_osc_atom_u *dest = osc_atom_array_u_get(*out, idx);
+			osc_atom_u_copy(&dest, osc_atom_array_u_get(argv[2], i));
+		}
+	}
+	return 0;
+}
+
+int osc_expr_product(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	*out = osc_atom_array_u_alloc(1);
 	long len = osc_atom_array_u_getLen(*argv);
 	if(len == 0){
@@ -957,7 +1028,7 @@ int osc_expr_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 	return 0;
 }
 
-int osc_expr_constant_array(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+int osc_expr_nfill(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
 {
 	int n = osc_atom_u_getInt(osc_atom_array_u_get(*argv, 0));
 	t_osc_atom_u *val = NULL;
@@ -1426,8 +1497,9 @@ int osc_expr_typetags(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_ato
 		*out = osc_atom_array_u_alloc(len);
 		int i;
 		for(i = 0; i < len; i++){
+			char tt = osc_atom_u_getTypetag(osc_atom_array_u_get(*argv, i));
+			osc_atom_u_setInt8(osc_atom_array_u_get(*out, i), tt);
 		}
-		return 0;
 	}
 	return 0;
 }
@@ -1569,6 +1641,18 @@ int osc_expr_explicitCast_float64(t_osc_atom_u *dest, t_osc_atom_u *src)
 	return 0;
 }
 
+int osc_expr_explicitCast_int8(t_osc_atom_u *dest, t_osc_atom_u *src)
+{
+	osc_atom_u_setInt8(dest, osc_atom_u_getInt8(src));
+	return 0;
+}
+
+int osc_expr_explicitCast_int16(t_osc_atom_u *dest, t_osc_atom_u *src)
+{
+	osc_atom_u_setInt16(dest, osc_atom_u_getInt16(src));
+	return 0;
+}
+
 int osc_expr_explicitCast_int32(t_osc_atom_u *dest, t_osc_atom_u *src)
 {
 	osc_atom_u_setInt32(dest, osc_atom_u_getInt32(src));
@@ -1578,6 +1662,18 @@ int osc_expr_explicitCast_int32(t_osc_atom_u *dest, t_osc_atom_u *src)
 int osc_expr_explicitCast_int64(t_osc_atom_u *dest, t_osc_atom_u *src)
 {
 	osc_atom_u_setInt64(dest, osc_atom_u_getInt64(src));
+	return 0;
+}
+
+int osc_expr_explicitCast_uint8(t_osc_atom_u *dest, t_osc_atom_u *src)
+{
+	osc_atom_u_setUInt8(dest, osc_atom_u_getUInt8(src));
+	return 0;
+}
+
+int osc_expr_explicitCast_uint16(t_osc_atom_u *dest, t_osc_atom_u *src)
+{
+	osc_atom_u_setUInt16(dest, osc_atom_u_getUInt16(src));
 	return 0;
 }
 
@@ -1870,7 +1966,7 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 				case 'I':
 					ptr += sprintf(ptr, "%"PRId64" ", osc_atom_u_getInt64(a));
 					break;
-				case 'H':
+ 				case 'H':
 					ptr += sprintf(ptr, "%"PRIu64" ", osc_atom_u_getUInt64(a));
 					break;
 				case 'd':

@@ -503,6 +503,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 			char buf[65536];
 			char *ptr = buf;
 			int i;
+			int haspound = 0;
 			for(i = 0; i < argc; i++){
 				switch(atom_gettype(argv + i)){
 				case A_LONG:
@@ -513,6 +514,9 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 					break;
 				case A_SYM:
 					ptr += sprintf(ptr, "%s ", atom_getsym(argv + i)->s_name);
+					if(atom_getsym(argv + i)->s_name[0] == '#'){
+						haspound++;
+					}
 					break;
 				}
 			}

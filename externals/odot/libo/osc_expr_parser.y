@@ -469,6 +469,75 @@ expr:
 		osc_expr_setAssignResultToAddress($$, 1);
 		osc_atom_u_free($1);
  	}
+	| OSC_EXPR_STRING OPEN_DBL_BRKTS args CLOSE_DBL_BRKTS '=' arg{
+		char *ptr = NULL;
+		osc_atom_u_getString($1, &ptr);
+		if(*ptr != '/'){
+			yyerror(exprstack, scanner, "osc_expr_parser: expected \"%s\" in \"%s = ... to be an OSC address\n", ptr, ptr);
+			return 1;
+		}
+		t_osc_expr_arg *arg = osc_expr_arg_alloc();
+		t_osc_expr_arg *indexes = $3;
+		if(osc_expr_arg_next($3)){
+			// /foo[[1, 2, 3]] = ...
+			t_osc_expr *e = osc_expr_parser_prefix("list", $3);
+			indexes = NULL;
+			indexes = osc_expr_arg_alloc();
+			osc_expr_arg_setExpr(indexes, e);
+		}
+		osc_expr_arg_setOSCAddress(arg, ptr);
+		osc_expr_arg_append(arg, indexes);
+		osc_expr_arg_append(arg, $6);
+		//$$ = osc_expr_parser_infix("=", arg, $3);
+		$$ = osc_expr_parser_prefix("assign_to_index", arg);
+		osc_expr_setAssignResultToAddress($$, 1);
+		osc_atom_u_free($1);
+	}
+	| OSC_EXPR_STRING OPEN_DBL_BRKTS arg ':' arg CLOSE_DBL_BRKTS '=' arg{
+		char *ptr = NULL;
+		osc_atom_u_getString($1, &ptr);
+		if(*ptr != '/'){
+			yyerror(exprstack, scanner, "osc_expr_parser: expected \"%s\" in \"%s = ... to be an OSC address\n", ptr, ptr);
+			return 1;
+		}
+		t_osc_expr_arg *arg = osc_expr_arg_alloc();
+
+		osc_expr_arg_append($3, $5);
+		t_osc_expr *e = osc_expr_parser_prefix("range", $3);
+		t_osc_expr_arg *indexes = osc_expr_arg_alloc();
+		osc_expr_arg_setExpr(indexes, e);
+
+		osc_expr_arg_setOSCAddress(arg, ptr);
+		osc_expr_arg_append(arg, indexes);
+		osc_expr_arg_append(arg, $8);
+		//$$ = osc_expr_parser_infix("=", arg, $3);
+		$$ = osc_expr_parser_prefix("assign_to_index", arg);
+		osc_expr_setAssignResultToAddress($$, 1);
+		osc_atom_u_free($1);
+	}
+	| OSC_EXPR_STRING OPEN_DBL_BRKTS arg ':' arg ':' arg CLOSE_DBL_BRKTS '=' arg{
+		char *ptr = NULL;
+		osc_atom_u_getString($1, &ptr);
+		if(*ptr != '/'){
+			yyerror(exprstack, scanner, "osc_expr_parser: expected \"%s\" in \"%s = ... to be an OSC address\n", ptr, ptr);
+			return 1;
+		}
+		t_osc_expr_arg *arg = osc_expr_arg_alloc();
+
+		osc_expr_arg_append($3, $7);
+		osc_expr_arg_append($3, $5);
+		t_osc_expr *e = osc_expr_parser_prefix("range", $3);
+		t_osc_expr_arg *indexes = osc_expr_arg_alloc();
+		osc_expr_arg_setExpr(indexes, e);
+
+		osc_expr_arg_setOSCAddress(arg, ptr);
+		osc_expr_arg_append(arg, indexes);
+		osc_expr_arg_append(arg, $10);
+		//$$ = osc_expr_parser_infix("=", arg, $3);
+		$$ = osc_expr_parser_prefix("assign_to_index", arg);
+		osc_expr_setAssignResultToAddress($$, 1);
+		osc_atom_u_free($1);
+	}
 /*
 	| OSC_EXPR_STRING '=' '[' args ']' {
 		// assign a list of stuff
@@ -531,5 +600,14 @@ expr:
 	| arg OPEN_DBL_BRKTS args CLOSE_DBL_BRKTS {
 		osc_expr_arg_setNext($1, $3);
 		$$ = osc_expr_parser_prefix("get_index", $1);
+	}
+	| OSC_EXPR_STRING OPEN_DBL_BRKTS args CLOSE_DBL_BRKTS {
+		char *ptr = NULL;
+		osc_atom_u_getString($1, &ptr);
+		t_osc_expr_arg *arg = osc_expr_arg_alloc();
+		osc_expr_arg_setOSCAddress(arg, ptr);
+		osc_expr_arg_setNext(arg, $3);
+		$$ = osc_expr_parser_prefix("get_index", arg);
+		osc_atom_u_free($1);
 	}
 ;

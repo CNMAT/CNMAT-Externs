@@ -187,6 +187,90 @@ double osc_atom_u_getDouble(t_osc_atom_u *a){
 	return 0.f;
 }
 
+int8_t osc_atom_u_getInt8(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
+	switch(a->typetag){
+	case 'c': // signed 8-bit int
+		return a->w.c;
+	case 'C': // unsigned 8-bit int
+		return (int8_t)a->w.C;
+	case 'i': // signed 32-bit int
+		return (int8_t)a->w.i;
+	case 'f': // 32-bit IEEE 754 float
+		return (int8_t)a->w.f;
+	case 'd': // 64-bit IEEE 754 double
+		return (int8_t)a->w.d;
+	case 's': // string
+		{
+			char *s = a->w.s;
+			if(s){
+				return *s;
+			}
+		}
+	case 'T': // true
+		return 1;
+	case 'F': // false
+		return 0;
+	case 'u': // signed 16-bit int
+		return (int8_t)a->w.u;
+	case 'U': // unsigned 16-bit int
+		return (int8_t)a->w.U;
+	case 'h': // signed 64-bit int
+		return (int8_t)a->w.h;
+	case 'I': // unsigned 32-bit int
+		return (int8_t)a->w.I;
+	case 'H': // unsigned 64-bit int
+		return (int8_t)a->w.H;
+	case 'N': // NULL
+		return 0;
+	}
+	return 0;
+}
+
+int16_t osc_atom_u_getInt16(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
+	switch(a->typetag){
+	case 'u': // signed 16-bit int
+		return (int16_t)a->w.u;
+	case 'U': // unsigned 16-bit int
+		return (int16_t)a->w.U;
+	case 'i': // signed 32-bit int
+		return a->w.i;
+	case 'f': // 32-bit IEEE 754 float
+		return (int16_t)a->w.f;
+	case 'd': // 64-bit IEEE 754 double
+		return (int16_t)a->w.d;
+	case 's': // string
+		{
+			char *endp = NULL;
+			return (int16_t)strtol(a->w.s, &endp, 0);
+		}
+	case 'T': // true
+		return 1;
+	case 'F': // false
+		return 0;
+	case 'c': // signed 8-bit int
+		return (int16_t)a->w.c;
+	case 'C': // unsigned 8-bit int
+		return (int16_t)a->w.C;
+	case 'h': // signed 64-bit int
+		return (int16_t)a->w.h;
+	case 'I': // unsigned 32-bit int
+		return (int16_t)a->w.I;
+	case 'H': // unsigned 64-bit int
+		return (int16_t)a->w.H;
+	case 'N': // NULL
+		return 0;
+	}
+	return 0;
+}
+
+
+
 int32_t osc_atom_u_getInt32(t_osc_atom_u *a){
 	if(!a){
 		return '\0';
@@ -257,6 +341,88 @@ int64_t osc_atom_u_getInt64(t_osc_atom_u *a){
 		return (int64_t)a->w.u;
 	case 'U': // unsigned 16-bit int
 		return (int64_t)a->w.U;
+	case 'T': // true
+		return 1;
+	case 'F': // false
+		return 0;
+	case 'N': // NULL
+		return 0;
+	}
+	return 0;
+}
+
+uint8_t osc_atom_u_getUInt8(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
+	switch(a->typetag){
+	case 'C': // signed 8-bit int
+		return (uint8_t)a->w.C;
+	case 'c': // unsigned 8-bit int
+		return (uint8_t)a->w.c;
+	case 'I': // unsigned 32-bit int
+		return (uint8_t)a->w.I;
+	case 'i': // signed 32-bit int
+		return (uint8_t)a->w.i;
+	case 'f': // 32-bit IEEE 754 float
+		return (uint8_t)a->w.f;
+	case 'd': // 64-bit IEEE 754 double
+		return (uint8_t)a->w.d;
+	case 'h': // signed 64-bit int
+		return (uint8_t)a->w.h;
+	case 'H': // unsigned 64-bit int
+		return (uint8_t)a->w.H;
+	case 's': // string
+		{
+			char *s = a->w.s;
+			if(s){
+				return *s;
+			}
+		}
+	case 'u': // signed 16-bit int
+		return (uint8_t)a->w.u;
+	case 'U': // unsigned 16-bit int
+		return (uint8_t)a->w.U;
+	case 'T': // true
+		return 1;
+	case 'F': // false
+		return 0;
+	case 'N': // NULL
+		return 0;
+	}
+	return 0;
+}
+
+uint16_t osc_atom_u_getUInt16(t_osc_atom_u *a){
+	if(!a){
+		return '\0';
+	}
+	switch(a->typetag){
+	case 'U': // signed 16-bit int
+		return a->w.U;
+	case 'u': // unsigned 16-bit int
+		return (uint16_t)a->w.u;
+	case 'I': // unsigned 32-bit int
+		return (uint16_t)a->w.I;
+	case 'i': // signed 32-bit int
+		return (uint16_t)a->w.i;
+	case 'f': // 32-bit IEEE 754 float
+		return (uint16_t)a->w.f;
+	case 'd': // 64-bit IEEE 754 double
+		return (uint16_t)a->w.d;
+	case 'h': // signed 64-bit int
+		return (uint16_t)a->w.h;
+	case 'H': // unsigned 64-bit int
+		return (uint16_t)a->w.H;
+	case 's': // string
+		{
+			char *endp = NULL;
+			return (uint16_t)strtoul(a->w.s, &endp, 0);
+		}
+	case 'c': // signed 8-bit int
+		return (uint16_t)a->w.c;
+	case 'C': // unsigned 8-bit int
+		return (uint16_t)a->w.C;
 	case 'T': // true
 		return 1;
 	case 'F': // false
@@ -398,6 +564,51 @@ char *osc_atom_u_getStringPtr(t_osc_atom_u *a){
 	}
 }
 
+int osc_atom_u_getQuotedString(t_osc_atom_u *a, char **out)
+{
+	if(!a){
+		return 0;
+	}
+	char *buf = NULL;
+	int len = osc_atom_u_getString(a, &buf);
+	if(!buf){
+		return 0;
+	}
+	if(!(*out)){
+		*out = osc_mem_alloc(len + 3);
+	}
+	int i = 0;
+	(*out)[i++] = '\"';
+	strncpy((*out) + i, buf, len);
+	i += len;
+	(*out)[i++] = '\"';
+	(*out)[i++] = '\0';
+	osc_mem_free(buf);
+	//strncpy(*out, a->data, n + 1);
+	return len + 2;
+	/*
+	switch(a->typetag){
+	case 's':
+		{
+			int n = strlen(a->w.s);
+			if(!(*out)){
+				*out = osc_mem_alloc(n + 3);
+			}
+			int i = 0;
+			(*out)[i++] = '\"';
+			strncpy((*out) + i, a->w.s, n);
+			i += n;
+			(*out)[i++] = '\"';
+			(*out)[i++] = '\0';
+			//strncpy(*out, a->data, n + 1);
+			return n + 2;
+		}
+	default:
+		return osc_atom_u_getString(a, out);
+	}
+	*/
+}
+
 int osc_atom_u_getString(t_osc_atom_u *a, char **out){
 	if(!a){
 		return 0;
@@ -407,9 +618,9 @@ int osc_atom_u_getString(t_osc_atom_u *a, char **out){
 		{
 			int n = strlen(a->w.s);
 			if(!(*out)){
-				*out = osc_mem_alloc(n + 1);
+				*out = osc_mem_alloc(n);
 			}
-			strcpy(*out, a->w.s);
+			strncpy(*out, a->w.s, n + 1);
 			return n;
 		}
 	case 'i': // signed 32-bit int
@@ -929,6 +1140,11 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 		extern t_osc_err osc_bundle_s_doFormat(t_osc_bndl_s *bndl, long *buflen, long *bufpos, char **buf);
 		osc_bundle_s_doFormat(a->w.bndl, buflen, bufpos, buf);
 		*bufpos += sprintf(*buf + *bufpos, "]");
+	}else if(osc_atom_u_getTypetag(a) == 's'){
+		char *b = *buf + *bufpos;
+		(*bufpos) += osc_atom_u_getQuotedString(a, &b);
+		(*buf)[(*bufpos)++] = ' ';
+		(*buf)[(*bufpos)] = '\0';
 	}else{
 		char *b = *buf + *bufpos;
 		(*bufpos) += osc_atom_u_getString(a, &b);

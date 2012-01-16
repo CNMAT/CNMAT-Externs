@@ -91,6 +91,7 @@ int osc_expr_assign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_
 int osc_expr_add1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_subtract1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_get_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_assign_to_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_product(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_sum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_cumsum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -100,7 +101,7 @@ int osc_expr_median(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_
 int osc_expr_concat(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_reverse(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
-int osc_expr_constant_array(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_nfill(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_range(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_interleave(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_not(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -145,11 +146,17 @@ int osc_expr_sqrthalf(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_ato
 int osc_expr_explicitCast(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_explicitCast_float32(t_osc_atom_u *dest, t_osc_atom_u *src);
 int osc_expr_explicitCast_float64(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_int8(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_int16(t_osc_atom_u *dest, t_osc_atom_u *src);
 int osc_expr_explicitCast_int32(t_osc_atom_u *dest, t_osc_atom_u *src);
 int osc_expr_explicitCast_int64(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_uint8(t_osc_atom_u *dest, t_osc_atom_u *src);
+int osc_expr_explicitCast_uint16(t_osc_atom_u *dest, t_osc_atom_u *src);
 int osc_expr_explicitCast_uint32(t_osc_atom_u *dest, t_osc_atom_u *src);
 int osc_expr_explicitCast_uint64(t_osc_atom_u *dest, t_osc_atom_u *src);
 int osc_expr_explicitCast_string(t_osc_atom_u *dest, t_osc_atom_u *src);
+
+int osc_expr_typetags(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 t_osc_expr *osc_expr_alloc(void);
 t_osc_expr_arg *osc_expr_arg_alloc(void);
@@ -269,6 +276,7 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	// misc
 	{"mod", osc_expr_2arg, 2, (void *)osc_expr_mod, "Modulo"},
 	{"get_index", osc_expr_get_index, -1, NULL, "Get an element of a list (same as [[ ]])"},
+	{"assign_to_index", osc_expr_assign_to_index, 3, NULL, "Assign <arg3> to the indexes <arg2> of the address <arg1>"},
 	{"product", osc_expr_product, 1, NULL, "Product of all the elements of a list"},
 	{"sum", osc_expr_sum, 1, NULL, "Sum all the elements of a list"},
 	{"cumsum", osc_expr_cumsum, 1, NULL, "Cumulative sum"},
@@ -280,7 +288,7 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"reverse", osc_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
 	{"rev", osc_expr_reverse, 1, NULL, "Reverse the order of the elements of a list"},
 	{"list", osc_expr_list, -1, NULL, "Assemble the arguments into a list."},
-	{"constant_array", osc_expr_constant_array, -1, NULL, "Make a list of <arg1> copies of <arg2>.  <arg2 is optional and defaults to 0"},
+	{"nfill", osc_expr_nfill, -1, NULL, "Make a list of <arg1> copies of <arg2>.  <arg2 is optional and defaults to 0"},
 	{"range", osc_expr_range, -1, NULL, "Make a list from <arg1> to <arg2> in <arg3> steps.  <arg3> is optional and defaults to 1"},
 	{"interleave", osc_expr_interleave, -1, NULL, "Interleave two or more lists"},
 	{"!", osc_expr_not, -1, NULL, "Logical not"},
@@ -323,11 +331,19 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	// explicit cast functions
 	{"float32", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_float32, "Cast to float32"},
 	{"float64", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_float64, "Cast to float64"},
+	{"float", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_float32, "Cast to float (float32)"},
+	{"double", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_float64, "Cast to double (float64)"},
+	{"int8", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_int8, "Cast to int8"},
+	{"char", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_int8, "Cast to char (int8)"},
+	{"int16", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_int16, "Cast to int16"},
 	{"int32", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_int32, "Cast to int32"},
 	{"int64", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_int64, "Cast to int64"},
+	{"uint8", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_uint8, "Cast to uint8"},
+	{"uint16", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_uint16, "Cast to uint16"},
 	{"uint32", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_uint32, "Cast to uint32"},
 	{"uint64", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_uint64, "Cast to uint64"},
-	{"string", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_string, "Cast to string"}
+	{"string", osc_expr_explicitCast, 1, (void *)osc_expr_explicitCast_string, "Cast to string"},
+	{"typetags", osc_expr_typetags, 1, NULL, "Get the typetags associated with <arg1> as a list of int8s"}
 
 };
 

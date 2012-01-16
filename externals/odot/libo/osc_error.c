@@ -70,7 +70,7 @@ t_osc_err osc_error_bundleSanityCheck(int len, char *bundle){
 	if(len < OSC_HEADER_SIZE){
 		return OSC_ERR_BUNDLETOOSMALL;
 	}
-	if(osc_bundle_strcmpID(bundle)){
+	if(osc_bundle_s_strcmpID(bundle)){
 		return OSC_ERR_NOBUNDLEID;
 	}
 	char *ptr = bundle + OSC_HEADER_SIZE;
