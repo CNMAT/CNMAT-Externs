@@ -7,7 +7,7 @@
 			"revision" : 4
 		}
 ,
-		"rect" : [ 14.0, 55.0, 722.0, 312.0 ],
+		"rect" : [ 14.0, 55.0, 722.0, 329.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,6 +28,42 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"bubble" : 1,
+					"bubblepoint" : 0.3,
+					"bubbletextmargin" : 6,
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-2",
+					"linecount" : 7,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 216.0, 160.0, 115.0, 109.0 ],
+					"presentation_rect" : [ 284.0, 98.0, 0.0, 0.0 ],
+					"text" : "o.prepend automatically converts an osc-style max message into a bundle before outputting."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"bubblepoint" : 0.3,
+					"bubbleside" : 2,
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-1",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 528.0, 101.0, 176.0, 53.0 ],
+					"presentation_rect" : [ 492.0, 101.0, 0.0, 0.0 ],
+					"text" : "prepend /foo to the FullPacket msg, then prepend /bar"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
@@ -36,7 +72,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 15.0, 78.0, 328.0, 20.0 ],
-					"text" : "Prepend a given namespace on any input bundle's data",
+					"text" : "Prepend a given namespace on any input address",
 					"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 				}
 
@@ -63,7 +99,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 499.0, 179.0, 78.0, 20.0 ],
+					"patching_rect" : [ 544.0, 200.0, 78.0, 20.0 ],
 					"text" : "prepend /foo"
 				}
 
@@ -77,7 +113,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 499.0, 152.0, 91.0, 21.0 ],
+					"patching_rect" : [ 544.0, 168.0, 91.0, 21.0 ],
 					"text" : "/bar 7 8 9 \n",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
@@ -92,8 +128,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 499.0, 244.0, 91.0, 21.0 ],
-					"text" : "/foo/bar 7 8 9 \n",
+					"patching_rect" : [ 544.0, 260.0, 91.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -107,21 +142,24 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
-					"patching_rect" : [ 499.0, 209.0, 65.0, 20.0 ],
+					"patching_rect" : [ 544.0, 225.0, 65.0, 20.0 ],
 					"text" : "o.prepend"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"bubble" : 1,
+					"bubblepoint" : 0.26,
+					"bubbleside" : 2,
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-30",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 418.0, 123.0, 115.0, 20.0 ],
-					"text" : "prepend /foo to /bar"
+					"patching_rect" : [ 369.0, 120.0, 127.0, 39.0 ],
+					"text" : "prepend /foo to /bar.  "
 				}
 
 			}
@@ -134,8 +172,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 369.0, 244.0, 91.0, 21.0 ],
-					"text" : "/foo/bar 7 8 9 \n",
+					"patching_rect" : [ 369.0, 260.0, 91.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -149,7 +186,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 369.0, 152.0, 85.0, 18.0 ],
+					"patching_rect" : [ 369.0, 168.0, 85.0, 18.0 ],
 					"text" : "/foo /bar 7 8 9"
 				}
 
@@ -163,7 +200,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
-					"patching_rect" : [ 369.0, 209.0, 65.0, 20.0 ],
+					"patching_rect" : [ 369.0, 200.0, 65.0, 20.0 ],
 					"text" : "o.prepend"
 				}
 
@@ -177,20 +214,21 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 112.0, 152.0, 61.0, 18.0 ],
+					"patching_rect" : [ 152.0, 192.0, 61.0, 18.0 ],
 					"text" : "/bar 7 8 9"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"fontface" : 2,
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-24",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 92.0, 123.0, 170.0, 20.0 ],
+					"patching_rect" : [ 256.0, 296.0, 170.0, 20.0 ],
 					"text" : "prepend /foo to every address"
 				}
 
@@ -204,8 +242,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 112.0, 244.0, 91.0, 21.0 ],
-					"text" : "/foo/bar 7 8 9 \n",
+					"patching_rect" : [ 80.0, 272.0, 91.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -220,7 +257,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 182.0, 152.0, 66.0, 35.0 ],
+					"patching_rect" : [ 48.0, 168.0, 72.0, 35.0 ],
 					"text" : "/bar 1 2 3 \n/bloo 4 5 6 \n",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
@@ -235,7 +272,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
-					"patching_rect" : [ 112.0, 209.0, 88.0, 20.0 ],
+					"patching_rect" : [ 80.0, 237.0, 88.0, 20.0 ],
 					"text" : "o.prepend /foo"
 				}
 
