@@ -26,7 +26,8 @@
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
-		"showontab" : 1,
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -283,7 +284,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 305.0, 123.0, 118.0, 48.0 ],
+									"patching_rect" : [ 305.0, 123.0, 121.0, 48.0 ],
 									"text" : "/mysynth/*/freq \"$1\" \n/mysynth/*/gain 0.5 \n/nada \"rien\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
