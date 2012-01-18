@@ -37,6 +37,13 @@ $[1-9]+	{
 		return DOLLARSUB;
 	}
 
+\"$[1-9]+\"	{
+		//printf("sub\n");
+		char *endp = NULL;
+		yylval->i = strtol(yytext + 2, &endp, 0);
+		return DOLLARSUB;
+	}
+
 -?{c99_floating_point_constant}	{
 					char *endp = NULL;
 					double d = strtod(yytext, &endp);

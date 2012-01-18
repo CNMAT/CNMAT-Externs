@@ -63,10 +63,16 @@ void osc_message_u_free(t_osc_msg_u *m){
 }
 
 void osc_message_u_initMsg(t_osc_msg_u *m){
+	if(!m){
+		return;
+	}
 	memset(m, '\0', sizeof(t_osc_msg_u));
 }
 
 void osc_message_u_clearArgs(t_osc_msg_u *m){
+	if(!m){
+		return;
+	}
 	m->argc = 0;
 	t_osc_atom_u *a = m->arghead;
 	while(a){
@@ -78,6 +84,9 @@ void osc_message_u_clearArgs(t_osc_msg_u *m){
 }
 
 void osc_message_u_copy(t_osc_msg_u **dest, t_osc_msg_u *src){
+	if(!src){
+		return;
+	}
 	if(!(*dest)){
 		*dest = osc_message_u_alloc();
 	}
@@ -90,14 +99,23 @@ t_osc_err osc_message_u_deepCopy(t_osc_msg_u **dest, t_osc_msg_u *src){
 }
 
 uint32_t osc_message_u_getSize(t_osc_msg_u *m){
+	if(!m){
+		return 0;
+	}
 	return m->size;
 }
 
 char *osc_message_u_getAddress(t_osc_msg_u *m){
+	if(!m){
+		return NULL;
+	}
 	return m->address;
 }
 
 t_osc_err osc_message_u_setAddress(t_osc_msg_u *m, char *address){
+	if(!m){
+		return OSC_ERR_INVAL;
+	}
 	if(!address){
 		m->address = NULL;
 		return OSC_ERR_NONE;

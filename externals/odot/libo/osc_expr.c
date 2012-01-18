@@ -42,6 +42,11 @@
 #include "osc_expr.r"
 #include "osc_hashtab.h"
 
+//#define __OSC_PROFILE__
+#include "osc_profile.h"
+
+static double rdtsc_cps = 0;
+
 int _osc_expr_sign(double f);
 
 t_osc_hashtab *osc_expr_funcobj_ht;
@@ -228,14 +233,47 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}else{
 			osc_atom_u_setFalse(osc_atom_array_u_get(*out, 0));
 		}
+	}else if(f->rec->func == osc_expr_quote){
+		switch(f_argv->type){
+		case OSC_EXPR_ARG_TYPE_ATOM:
+			{
+				*out = osc_atom_array_u_alloc(1);
+				t_osc_atom_u *a = osc_atom_array_u_get(*out, 0);
+				osc_atom_u_copy(&a, f_argv->arg.atom);
+			}
+			return 0;
+		case OSC_EXPR_ARG_TYPE_EXPR:
+			{
+				/*
+				t_osc_err e = osc_expr_funcall(arg->arg.expr, len, oscbndl, out);
+				return e;
+				*/
+			}
+		case OSC_EXPR_ARG_TYPE_OSCADDRESS:
+			{
+
+			}
+		}
 	}else if(f->rec->func == osc_expr_eval){
+#ifdef  __OSC_PROFILE__
+		if(!rdtsc_cps){
+			rdtsc_cps = RDTSC_CYCLES_PER_SECOND;
+		}
+#endif
 		t_osc_atom_ar_u *arg = NULL;
 		osc_expr_getArg(f_argv, len, oscbndl, &arg);
 		if(arg){
 			if(osc_atom_u_getTypetag(osc_atom_array_u_get(arg, 0)) == 's' && osc_atom_array_u_getLen(arg) == 1){
 				char *expr = osc_atom_u_getStringPtr(osc_atom_array_u_get(arg, 0));
 				t_osc_expr *f = NULL;
+				TIMER_START(foo, rdtsc_cps);
 				osc_expr_parser_parseString(expr, &f);
+				TIMER_STOP(foo, rdtsc_cps);
+				TIMER_PRINTF(foo);
+				TIMER_SNPRINTF(foo, buff);
+#ifdef __OSC_PROFILE__
+				printf("%s\n", buff);
+#endif
 				if(f){
 					t_osc_atom_ar_u *ar = NULL;
 					int ret = osc_expr_funcall(f, len, oscbndl, &ar);
@@ -1488,6 +1526,12 @@ int osc_expr_progn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 	}else{
 		return 1;
 	}
+}
+
+int osc_expr_quote(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	// this is a dummy fuunction.  we'll use this to do a pointer comparison.
+	return 0;
 }
 
 int osc_expr_typetags(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)

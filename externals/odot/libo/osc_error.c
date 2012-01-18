@@ -23,10 +23,56 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_error.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include "osc.h"
 #include "osc_mem.h"
-#include "osc_bundle.h"
+#include "osc_bundle_s.h"
 #include "osc_byteorder.h"
+
+int osc_error_defaultHandler(const char * const errorstr)
+{
+	return fprintf(stderr, "%s\n", errorstr);
+}
+
+static t_osc_error_handler _osc_error_handler = osc_error_defaultHandler;
+
+int osc_error_handler(const char * const filename,
+		      const char * const functionname,
+		      int linenum,
+		      t_osc_err errorcode,
+		      const char * const moreinfo_fmt,
+		      ...)
+{
+	if(_osc_error_handler){
+		int buflen = MAX_ERR_STRING_LEN;
+		char buf[buflen];
+		char *pos = buf;
+		if(filename){
+			pos += snprintf(pos, buflen, "%s:", filename);
+		}
+		if(functionname){
+			pos += snprintf(pos, (buflen - (pos - buf)), "%s():", functionname);
+		}
+		if(linenum > 0){
+			pos += snprintf(pos, (buflen - (pos - buf)), "%d: ", linenum);
+		}
+		if(errorcode){
+			pos += snprintf(pos, (buflen - (pos - buf)), "%s (%llu)\n", osc_error_string(errorcode), (unsigned long long)errorcode);
+		}
+		va_list ap;
+		va_start(ap, moreinfo_fmt);
+		pos += vsnprintf(pos, (buflen - (pos - buf)), moreinfo_fmt, ap);
+		va_end(ap);
+
+		return _osc_error_handler(buf);
+	}
+	return 0;
+}
+
+void osc_error_setHandler(t_osc_error_handler eh)
+{
+	_osc_error_handler = eh;
+}
 
 char *osc_error_string(t_osc_err err){
 	switch(err){
@@ -58,6 +104,8 @@ char *osc_error_string(t_osc_err err){
 		return "invalid address";
 	case OSC_ERR_PARSER_FUNCTIONNOTFOUND:
 		return "function not found";
+	case OSC_ERR_EXPPARSE:
+		return "error parsing expression";
 	default:
 		return "unrecognized error code";
 	}

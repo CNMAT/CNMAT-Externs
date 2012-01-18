@@ -28,8 +28,25 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <libgen.h>
 
 typedef uint64_t t_osc_err;
+
+typedef int (*t_osc_error_handler)(const char * const errorstr);
+
+#define OSC_ERROR_VERBOSE(errorcode, moreinfo_fmt, args...)				\
+	osc_error_handler(basename(__FILE__), __func__, __LINE__, errorcode, moreinfo_fmt, ##args);
+#define OSC_ERROR_SIMPLE(errorcode, moreinfo_fmt, args...)				\
+	osc_error_handler(NULL, NULL, -1, errorcode, moreinfo_fmt, ##args);
+
+#define OSC_ERROR_VERBOSE_REPORTING
+#ifdef OSC_ERROR_VERBOSE_REPORTING
+#define osc_error OSC_ERROR_VERBOSE
+#else
+#define osc_error OSC_ERROR_SIMPLE
+#endif
+
+#define MAX_ERR_STRING_LEN 512
 
 #define OSC_ERR_NONE 0
 #define OSC_ERR_BUNDLETOOSMALL 0x1
@@ -42,8 +59,18 @@ typedef uint64_t t_osc_err;
 #define OSC_ERR_BADTYPETAG 0x14
 #define OSC_ERR_MALFORMEDMSG 0x18
 #define OSC_ERR_INVAL 0x20
+#define OSC_ERR_EXPPARSE 0x21
 
 #define OSC_ERR_PARSER_FUNCTIONNOTFOUND 0x100
+
+int osc_error_handler(const char * const filename,
+		      const char * const functionname,
+		      int linenum,
+		      t_osc_err errorcode,
+		      const char * const moreinfo_fmt,
+		      ...);
+
+void osc_error_setHandler(t_osc_error_handler eh);
 
 /**
  * Get a description of an error code.

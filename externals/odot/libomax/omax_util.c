@@ -720,6 +720,30 @@ int omax_util_getNumAtomsInOSCMsg(t_osc_msg *msg){
 	return n;
 }
 */
+
+int omax_util_liboErrorHandler(const char * const errorstr)
+{
+	// stupid max window doesn't respect newlines
+	int len = strlen(errorstr) + 1;
+	char buf[len];
+	strncpy(buf, errorstr, len);
+
+	char *s = buf;
+	char *e = buf;
+	while(*e){
+		if(*e == '\n'){
+			*e = '\0';
+			error("%s", s);
+			s = e + 1;
+		}
+		e++;
+	}
+	if(e != s){
+		error("%s", s);
+	}
+	return 0;
+}
+
 int omax_util_getNumAtomsInOSCMsg(t_osc_msg_s *m){
 	int n = 1; // address;
 	t_osc_msg_it_s *it = osc_msg_it_s_get(m);

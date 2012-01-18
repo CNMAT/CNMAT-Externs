@@ -1137,8 +1137,8 @@ t_osc_err osc_atom_u_doFormat(t_osc_atom_u *a, long *buflen, long *bufpos, char 
 	}
 	if(osc_atom_u_getTypetag(a) == '#'){
 		*bufpos += sprintf(*buf + *bufpos, "[\n");
-		extern t_osc_err osc_bundle_s_doFormat(t_osc_bndl_s *bndl, long *buflen, long *bufpos, char **buf);
-		osc_bundle_s_doFormat(a->w.bndl, buflen, bufpos, buf);
+		extern t_osc_err osc_bundle_s_doFormat(long len, char *bndl, long *buflen, long *bufpos, char **buf);
+		osc_bundle_s_doFormat(osc_bundle_s_getLen(a->w.bndl), osc_bundle_s_getPtr(a->w.bndl), buflen, bufpos, buf);
 		*bufpos += sprintf(*buf + *bufpos, "]");
 	}else if(osc_atom_u_getTypetag(a) == 's'){
 		char *b = *buf + *bufpos;

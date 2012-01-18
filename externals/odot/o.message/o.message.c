@@ -31,6 +31,10 @@
   VERSION 1.0.1: newlines now delimit messages
   VERSION 2.0: uses newly refactored libo and has initial support for nested bundles
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+0   edu.cnmat.berkeley.o.message  	0x0e258c96 osc_message_u_getAddress + 6
+1   edu.cnmat.berkeley.o.message  	0x0e2546b2 omessage_list + 274
+2   edu.cnmat.berkeley.o.message  	0x0e254548 omessage_int + 56
 */
 
 #include <string.h>
@@ -630,7 +634,10 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 			t_osc_bndl_it_u *it = osc_bndl_it_u_get(x->bndl);
 			while(osc_bndl_it_u_hasNext(it)){
 				t_osc_msg_u *msg = osc_bndl_it_u_next(it);
+				printf("here\n");
+				printf("%p\n", msg);
 				char *address = osc_message_u_getAddress(msg);
+				printf("there\n");
 				int addresslen = strlen(address) + 1;
 				char copy[addresslen];
 				char *copyptr = copy;

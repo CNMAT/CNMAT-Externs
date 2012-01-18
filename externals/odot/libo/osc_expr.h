@@ -125,6 +125,7 @@ int osc_expr_compile(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 int osc_expr_prog1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_prog2(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_progn(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_quote(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 
 // constants
 int osc_expr_pi(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -312,6 +313,7 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"prog1", osc_expr_prog1, -1, NULL, "Execute a sequence of expressions and return the first one."},
 	{"prog2", osc_expr_prog2, -1, NULL, "Execute a sequence of expressions and return the second one."},
 	{"progn", osc_expr_progn, -1, NULL, "Execute a sequence of expressions and return the last one."},
+	{"quote", osc_expr_quote, 1, NULL, "Prevent the evaluation of <arg1>."},
 	//constants
 	{"pi", osc_expr_pi, 0, NULL, "pi: 3.14159..."},
 	{"twopi", osc_expr_twopi, 0, NULL, "2 * pi: 6.28318..."},

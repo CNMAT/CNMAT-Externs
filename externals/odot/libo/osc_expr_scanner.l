@@ -25,8 +25,13 @@
 
 */
 %{
-#include "osc_expr.h"
 #include "osc_expr_parser.h"
+#include "osc_expr.h"
+
+int colnum;
+
+#define YY_USER_INIT {yylineno = 0;colnum = 0; yylloc->first_line = 0; yylloc->first_column = 0; yylloc->last_column = 0; yylloc->last_line = 0;}
+#define YY_USER_ACTION {yylloc->first_line = yylineno; yylloc->first_column = colnum; colnum=colnum+yyleng; yylloc->last_column = colnum; yylloc->last_line = yylineno;}
 
 int osc_expr_scanner_wrap(yyscan_t scanner){
 	return 1;
@@ -52,8 +57,36 @@ c99_floating_point_constant  ({dfc}|{hfc})
 
 %option reentrant
 %option bison-bridge
+%option bison-locations
+
+%x quote
 
 %%
+quote[[:space:]]*\( {
+	BEGIN(quote);
+}
+
+<quote>.* {
+	char *start = yytext;
+	char *end = start;
+	int np = 1;
+	while(np){
+		if(*end == ')'){
+			np--;
+		}else if(*end == '('){
+			np++;
+		}
+		end++;
+	}
+	yyless(end - start);
+	yylval->atom = osc_atom_u_alloc();
+	*(end - 1) = '\0';
+	osc_atom_u_setString(yylval->atom, yytext);
+	*(end - 1) = ')';
+	BEGIN(0);
+	return OSC_EXPR_QUOTED_EXPR;
+}
+
 \+|-|\*|\/|%|^|!|=|\[|\]|:|\?|<|> {
 	return *yytext;
 }
@@ -133,18 +166,19 @@ c99_floating_point_constant  ({dfc}|{hfc})
 						osc_atom_u_setDouble(yylval->atom, f);
 						return OSC_EXPR_NUM;
 					}
-[^0-9\(\)\[\] \t\n\+\-\*<>=!,;:][^\(\)\[\] \t\n\+\-<>=!,;:]*		{
+<INITIAL>[^0-9\(\)\[\] \t\n\+\-\*<>=!?,;:][^\(\)\[\] \t\n\+\-<>=!?,;:]*		{
 						// put in atom
 						yylval->atom = osc_atom_u_alloc();
-						t_osc_expr_const_rec *cs = osc_expr_lookupConstant(yytext);
-						if(cs){
-							osc_atom_u_setDouble(yylval->atom, cs->val);
-							return OSC_EXPR_NUM;
-						}else{
+						//t_osc_expr_const_rec *cs = osc_expr_lookupConstant(yytext);
+						//if(cs){
+							//osc_atom_u_setDouble(yylval->atom, cs->val);
+							//return OSC_EXPR_NUM;
+						//}else{
 							osc_atom_u_setString(yylval->atom, yytext);
 							return OSC_EXPR_STRING;
-						}
+						//}
 					}
+
 [ \t\n]+	/* eat up whitespace */
 
 %%

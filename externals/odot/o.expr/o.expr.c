@@ -56,7 +56,6 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #endif
 #include "ext.h"
 #include "ext_obex.h"
-#include "ext_obex.h"
 #include "ext_obex_util.h"
 //#include "jpatcher_api.h" 
 //#include "jgraphics.h"
@@ -65,6 +64,8 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include "osc_expr_parser.h"
 #include "osc_mem.h"
 #include "osc_atom_u.h"
+#include "osc_error.h"
+#include "omax_util.h"
 
 //#define __OSC_PROFILE__
 #include "osc_profile.h"
@@ -498,12 +499,15 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 	if(x = (t_oexpr *)object_alloc(oexpr_class)){
 		//jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		//x->ob.b_firstin = (void *)x; 
+		osc_error_setHandler(omax_util_liboErrorHandler);
 		t_osc_expr *f = NULL;
+		int haspound = 0;
+		int nfunctions = 0;
 		if(argc){
+			nfunctions = 1;
 			char buf[65536];
 			char *ptr = buf;
 			int i;
-			int haspound = 0;
 			for(i = 0; i < argc; i++){
 				switch(atom_gettype(argv + i)){
 				case A_LONG:
@@ -513,35 +517,55 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 					ptr += sprintf(ptr, "%f ", atom_getfloat(argv + i));
 					break;
 				case A_SYM:
-					ptr += sprintf(ptr, "%s ", atom_getsym(argv + i)->s_name);
-					if(atom_getsym(argv + i)->s_name[0] == '#'){
-						haspound++;
+					{
+						char *s = atom_getsym(argv + i)->s_name;
+						int len = strlen(s);
+						ptr += sprintf(ptr, "%s ", s);
+						if(*s == '#'){
+							if(len > 1){
+								if(s[1] > 47 && s[1] < 58){
+									haspound++;
+								}
+							}
+						}
+						int j;
+						for(j = 0; j < len; j++){
+							if(s[j] == ';'){
+								if(!(i == argc - 1 && j == len - 1)){
+									nfunctions++;
+								}
+							}
+						}
 					}
 					break;
 				}
 			}
-			TIMER_START(foo, rdtsc_cps);
-			int ret = osc_expr_parser_parseString(buf, &f);
-			TIMER_STOP(foo, rdtsc_cps);
-			TIMER_PRINTF(foo);
-			TIMER_SNPRINTF(foo, buff);
+			if(!haspound){
+				TIMER_START(foo, rdtsc_cps);
+				int ret = osc_expr_parser_parseString(buf, &f);
+				TIMER_STOP(foo, rdtsc_cps);
+				TIMER_PRINTF(foo);
+				TIMER_SNPRINTF(foo, buff);
 #ifdef __OSC_PROFILE__
-			post("%s\n", buff);
+				post("%s\n", buff);
 #endif
-			if(!f || ret){
-				object_error((t_object *)x, "error parsing %s\n", buf);
-				return NULL;
+				if(!f || ret){
+					object_error((t_object *)x, "error parsing %s\n", buf);
+					return NULL;
+				}
+				x->function_graph = f;
+			}else{
+				x->function_graph = NULL;
 			}
-			if(x->function_graph){
-				osc_expr_free(x->function_graph);
-			}
-			x->function_graph = f;
 		}
+		/*
 		int n = 0;
 		while(f){
 			n++;
 			f = osc_expr_next(f);
 		}
+		*/
+		int n = nfunctions;
 #if defined (OIF)
 		if(n == 0 || n > 1){
 			object_error((t_object *)x, "invalid number of expressions: %d", n);
