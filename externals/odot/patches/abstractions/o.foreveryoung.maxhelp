@@ -1,10 +1,14 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ 694.0, 253.0, 640.0, 480.0 ],
+		"appversion" : 		{
+			"major" : 6,
+			"minor" : 0,
+			"revision" : 3
+		}
+,
+		"rect" : [ 162.0, 172.0, 640.0, 480.0 ],
 		"bglocked" : 0,
-		"defrect" : [ 694.0, 253.0, 640.0, 480.0 ],
-		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
 		"default_fontface" : 0,
@@ -12,107 +16,146 @@
 		"gridonopen" : 0,
 		"gridsize" : [ 15.0, 15.0 ],
 		"gridsnaponopen" : 0,
+		"statusbarvisible" : 2,
 		"toolbarvisible" : 1,
 		"boxanimatetime" : 200,
 		"imprint" : 0,
 		"enablehscroll" : 1,
 		"enablevscroll" : 1,
 		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"maxclass" : "comment",
-					"text" : "a metronome that always runs  and at a rate defined in SI units (i.e. seconds)",
-					"linecount" : 3,
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
 					"id" : "obj-11",
-					"fontname" : "Arial",
+					"linecount" : 3,
+					"maxclass" : "comment",
 					"numinlets" : 1,
-					"patching_rect" : [ 38.0, 35.0, 156.0, 48.0 ],
 					"numoutlets" : 0,
-					"fontsize" : 12.0
+					"patching_rect" : [ 38.0, 35.0, 156.0, 48.0 ],
+					"text" : "a metronome that always runs  and at a rate defined in SI units (i.e. seconds)"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "o.message",
-					"text" : "/rate 0.227273 \n",
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
 					"id" : "obj-7",
-					"fontname" : "Arial",
+					"maxclass" : "o.message",
 					"numinlets" : 2,
-					"patching_rect" : [ 333.0, 181.0, 150.0, 20.0 ],
 					"numoutlets" : 1,
-					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"outlettype" : [ "" ],
-					"fontsize" : 12.0
+					"patching_rect" : [ 333.0, 181.0, 150.0, 21.0 ],
+					"text" : "/rate 0.227273 \n",
+					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "button",
 					"id" : "obj-5",
+					"maxclass" : "button",
 					"numinlets" : 1,
-					"patching_rect" : [ 193.0, 335.0, 20.0, 20.0 ],
 					"numoutlets" : 1,
-					"outlettype" : [ "bang" ]
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 193.0, 335.0, 20.0, 20.0 ]
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "o.foreveryoung 1.",
-					"id" : "obj-2",
 					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-2",
+					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"patching_rect" : [ 175.0, 188.0, 104.0, 20.0 ],
 					"numoutlets" : 2,
 					"outlettype" : [ "bang", "FullPacket" ],
-					"fontsize" : 12.0
+					"patching_rect" : [ 175.0, 188.0, 104.0, 20.0 ],
+					"text" : "o.foreveryoung 1."
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "o.multisliders /rate",
-					"id" : "obj-1",
 					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-1",
+					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"patching_rect" : [ 147.0, 103.0, 108.0, 20.0 ],
 					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
-					"fontsize" : 12.0
+					"patching_rect" : [ 147.0, 103.0, 108.0, 20.0 ],
+					"text" : "o.multisliders /rate"
 				}
 
 			}
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"source" : [ "obj-2", 0 ],
-					"destination" : [ "obj-5", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-1", 0 ],
 					"destination" : [ "obj-2", 0 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ]
+					"source" : [ "obj-1", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-1", 0 ],
 					"destination" : [ "obj-7", 1 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ]
+					"source" : [ "obj-1", 0 ]
 				}
 
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-5", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+ ],
+		"dependency_cache" : [ 			{
+				"name" : "o.multisliders.maxpat",
+				"bootpath" : "/Users/Yotam/Software/svn/cnmat/trunk/max/externals/odot/patches/abstractions",
+				"patcherrelativepath" : "",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "o.foreveryoung.maxpat",
+				"bootpath" : "/Users/Yotam/Software/svn/cnmat/trunk/max/externals/odot/patches/abstractions",
+				"patcherrelativepath" : "",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "o.pak.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "o.route.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "o.atomize.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "o.message.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "o.collect.mxo",
+				"type" : "iLaX"
 			}
  ]
 	}
