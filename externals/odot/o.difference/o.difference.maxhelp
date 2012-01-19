@@ -7,7 +7,7 @@
 			"revision" : 4
 		}
 ,
-		"rect" : [ 43.0, 76.0, 541.0, 367.0 ],
+		"rect" : [ 100.0, 100.0, 541.0, 367.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -44,7 +44,7 @@
 							"revision" : 4
 						}
 ,
-						"rect" : [ 43.0, 102.0, 541.0, 341.0 ],
+						"rect" : [ 100.0, 126.0, 541.0, 341.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -313,7 +313,6 @@
 						"tags" : "",
 						"globalpatchername" : "",
 						"default_fontface" : 0,
-						"fontname" : "Arial",
 						"digest" : "",
 						"default_fontname" : "Arial"
 					}

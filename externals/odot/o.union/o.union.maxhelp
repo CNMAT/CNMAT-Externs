@@ -4,10 +4,10 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 0
+			"revision" : 3
 		}
 ,
-		"rect" : [ 317.0, 44.0, 541.0, 367.0 ],
+		"rect" : [ 100.0, 100.0, 541.0, 367.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -41,10 +41,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 3
 						}
 ,
-						"rect" : [ 317.0, 70.0, 541.0, 341.0 ],
+						"rect" : [ 100.0, 126.0, 541.0, 341.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -96,13 +96,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-6",
-									"linecount" : 3,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 229.0, 78.0, 48.0 ],
-									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n/bloo o i e n \n",
+									"patching_rect" : [ 50.0, 229.0, 78.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -112,13 +110,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-5",
-									"linecount" : 2,
+									"linecount" : 4,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 132.0, 100.0, 71.0, 35.0 ],
-									"text" : "/foo a r s t\n/bloo o i e n",
+									"patching_rect" : [ 132.0, 100.0, 71.0, 62.0 ],
+									"text" : "/foo \"a\" \"r\" \"s\" \"t\" \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -134,7 +132,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 50.0, 100.0, 62.0, 35.0 ],
-									"text" : "/foo 1 2 3\n/bar 4 5 6",
+									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -196,15 +194,15 @@
 					"patching_rect" : [ 52.0, 50.0, 50.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"globalpatchername" : "",
-						"default_fontsize" : 12.0,
-						"description" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
 						"tags" : "",
+						"fontsize" : 12.0,
 						"default_fontface" : 0,
-						"fontname" : "Arial",
 						"digest" : "",
-						"default_fontname" : "Arial"
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"description" : ""
 					}
 ,
 					"text" : "p union"
@@ -224,7 +222,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 3
 						}
 ,
 						"rect" : [ 0.0, 26.0, 541.0, 341.0 ],
@@ -281,13 +279,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-5",
-									"linecount" : 2,
+									"linecount" : 4,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 132.0, 100.0, 71.0, 35.0 ],
-									"text" : "/foo a r s t\n/bloo o i e n",
+									"patching_rect" : [ 132.0, 100.0, 71.0, 62.0 ],
+									"text" : "/foo \"a\" \"r\" \"s\" \"t\" \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -303,7 +301,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 50.0, 100.0, 62.0, 35.0 ],
-									"text" : "/foo 1 2 3\n/bar 4 5 6",
+									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -365,15 +363,15 @@
 					"patching_rect" : [ 52.0, 136.0, 82.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"globalpatchername" : "",
-						"default_fontsize" : 12.0,
-						"description" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
 						"tags" : "",
+						"fontsize" : 12.0,
 						"default_fontface" : 0,
-						"fontname" : "Arial",
 						"digest" : "",
-						"default_fontname" : "Arial"
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"description" : ""
 					}
 ,
 					"text" : "p intersection"
@@ -393,7 +391,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 3
 						}
 ,
 						"rect" : [ 0.0, 26.0, 541.0, 341.0 ],
@@ -435,13 +433,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-6",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 229.0, 78.0, 35.0 ],
-									"text" : "/bar 4 5 6 \n/bloo o i e n \n",
+									"patching_rect" : [ 50.0, 229.0, 78.0, 48.0 ],
+									"text" : "/bar 4 5 6 \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -451,13 +449,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-5",
-									"linecount" : 2,
+									"linecount" : 4,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 132.0, 100.0, 71.0, 35.0 ],
-									"text" : "/foo a r s t\n/bloo o i e n",
+									"patching_rect" : [ 132.0, 100.0, 71.0, 62.0 ],
+									"text" : "/foo \"a\" \"r\" \"s\" \"t\" \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -473,7 +471,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 50.0, 100.0, 62.0, 35.0 ],
-									"text" : "/foo 1 2 3\n/bar 4 5 6",
+									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -535,15 +533,15 @@
 					"patching_rect" : [ 52.0, 88.0, 73.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"globalpatchername" : "",
-						"default_fontsize" : 12.0,
-						"description" : "",
 						"fontface" : 0,
-						"fontsize" : 12.0,
 						"tags" : "",
+						"fontsize" : 12.0,
 						"default_fontface" : 0,
-						"fontname" : "Arial",
 						"digest" : "",
-						"default_fontname" : "Arial"
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"description" : ""
 					}
 ,
 					"text" : "p difference"
