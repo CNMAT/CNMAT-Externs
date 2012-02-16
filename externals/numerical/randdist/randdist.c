@@ -54,6 +54,8 @@ VERSION 2.1.6: multivariate_hypergeometric
 #include "libranddist.h"
 #include "version.h"
 #include "version.c"
+#include <mach/mach.h>
+#include <mach/mach_time.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 
@@ -126,14 +128,14 @@ int main(void){
 	class_addmethod(c, (method)rdist_anything, "anything", A_GIMME, 0);
         class_addmethod(c, (method)rdist_nonparametric, "nonparametric", A_GIMME, 0);
         //class_addmethod(c, (method)rdist_setstate, "state", A_GIMME, 0);
-        class_addmethod(c, (method)rdist_getseed, "getseed", 0);
-	class_addmethod(c, (method)rdist_resetseed, "resetseed", 0);
-	class_addmethod(c, (method)rdist_resetstate, "resetstate", 0);
-	class_addmethod(c, (method)rdist_rememberstate, "rememberstate", 0);
+        //class_addmethod(c, (method)rdist_getseed, "getseed", 0);
+	//class_addmethod(c, (method)rdist_resetseed, "resetseed", 0);
+	//class_addmethod(c, (method)rdist_resetstate, "resetstate", 0);
+	//class_addmethod(c, (method)rdist_rememberstate, "rememberstate", 0);
         class_addmethod(c, (method)rdist_tellmeeverything, "tellmeeverything", 0);
 
 	class_addmethod(c, (method)rdist_loadbang, "loadbang", 0);
-
+	/*
 	CLASS_ATTR_LONG(c, "seed", 0, t_rdist, seed);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "seed", 0, "-666");
 	CLASS_ATTR_ACCESSORS(c, "seed", NULL, rdist_setseed); 
@@ -152,7 +154,7 @@ int main(void){
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "savestate", 0, "0");
 	CLASS_ATTR_STYLE_LABEL(c, "savestate", 0, "onoff", "Save State With Patcher");
 	//CLASS_ATTR_ACCESSORS(c, "savestate", NULL, rdist_setsavestate);
-
+	*/
 	class_register(CLASS_BOX, c);
 	rdist_class = c;
 
@@ -165,6 +167,7 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 	t_rdist *x;
 	int i;
 	t_atom ar[2];
+	srand(mach_absolute_time());
 
 	//x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
 	if(x = (t_rdist *)object_alloc(rdist_class)){
@@ -209,7 +212,7 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 
 		attr_args_process(x, argc, argv);
 
-		schedule_delay(x, (method)rdist_init_seed, 0, NULL, 0, NULL);
+		//schedule_delay(x, (method)rdist_init_seed, 0, NULL, 0, NULL);
 
 		return x;
 	}

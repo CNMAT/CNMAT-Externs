@@ -249,7 +249,7 @@ int makeseed(void){
     	random_nextseed = random_nextseed * 435898247 + 938284287;
     	return (random_nextseed & 0x7fffffff);
 	*/
-
+	/*
 	unsigned int r;
 	FILE *f;
 
@@ -259,8 +259,15 @@ int makeseed(void){
 #endif
 	fread(&r, sizeof(r), 1, f);
 	fclose(f);
-
-	return r;
+	*/
+    	static unsigned int random_nextseed;// = 1489853723;
+	if(random_nextseed == 0){
+		random_nextseed = rand();
+	}
+    	random_nextseed = random_nextseed * 435898247 + 938284287;
+	printf("r = %u\n", rand());
+	return rand();
+    	return (random_nextseed & 0x7fffffff);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
