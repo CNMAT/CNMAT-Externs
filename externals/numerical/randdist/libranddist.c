@@ -260,7 +260,6 @@ int makeseed(void){
 	fread(&r, sizeof(r), 1, f);
 	fclose(f);
 
-	//post("%u\n", r);
 	return r;
 }
 
@@ -685,6 +684,9 @@ void librdist_multinomial(gsl_rng *rng, int argc, void *argv, int bufc, float *b
 	t_atom *av = (t_atom *)argv;
 	int i, j;
 	size_t K = argc - 1;
+	if(K < 1){
+		return;
+	}
 	unsigned int N = librdist_atom_getlong(av);
 	double p[K];
 	unsigned int n[K];
@@ -749,7 +751,7 @@ void librdist_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float
 
 void librdist_multivariate_hypergeometric(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
 	t_atom *av = (t_atom *)argv;
-	unsigned long t = atom_getlong(av + (argc - 1));
+	unsigned long t = atom_getlong(av);
 	unsigned long balls[argc - 1];
 	unsigned long cumsum[argc - 1];
 	unsigned long s[argc - 1];
@@ -758,10 +760,10 @@ void librdist_multivariate_hypergeometric(gsl_rng *rng, int argc, void *argv, in
 	double b;
 
 	int i, j, k;
-	for(i = 0; i < argc - 1; i++){
-		balls[i] = atom_getlong(av + i);
-		n += balls[i];
-		cumsum[i] = n;
+	for(i = 1; i < argc; i++){
+		balls[i - 1] = atom_getlong(av + i);
+		n += balls[i - 1];
+		cumsum[i - 1] = n;
 	}
 	b = n;
 

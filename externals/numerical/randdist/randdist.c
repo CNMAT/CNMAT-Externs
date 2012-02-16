@@ -56,7 +56,7 @@ VERSION 2.1.5: seed is now an attribute to easily replicate random data
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 
-#define RDIST_DEFAULT_BUF_SIZE 1024
+#define RDIST_DEFAULT_BUF_SIZE 4096
 
 typedef struct _rdist{
         t_object r_ob;
@@ -65,7 +65,7 @@ typedef struct _rdist{
         gsl_rng *r_rng; // random number generator
 	gsl_rng *rng_last;
 	gsl_ran_discrete_t *r_g; // lookup table for nonparametric pdf sampling
-        t_atom r_vars[R_MAX_N_VARS];
+        t_atom *r_vars;
         t_symbol *r_dist;
         t_atom *r_arIn;
         short r_pmfLength;
@@ -171,6 +171,7 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 		x->outlet_info = outlet_new(x, NULL);	
 		x->r_out0 = outlet_new(x, 0);
 
+		x->r_vars = (t_atom *)calloc(R_MAX_N_VARS, sizeof(t_atom));
 		x->r_numVars = 0;
 
 		// set up the random number generator	
@@ -226,6 +227,10 @@ void rdist_init_seed(t_rdist *x, t_symbol *msg, int argc, t_atom *argv){
 }
 
 void rdist_bang(t_rdist *x){
+	if(!(x->r_function)){
+		object_error((t_object *)x, "you must specify a distribution!\n");
+		return;
+	}
 	int stride = x->r_stride;
 	float out[stride];
 	int i;
@@ -254,7 +259,7 @@ void rdist_bang(t_rdist *x){
 
 void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	if(argc > R_MAX_N_VARS){
-		error("randdist: too many variables");
+		object_error((t_object *)x, "too many variables (%d, max is %d)", argc, R_MAX_N_VARS);
 		return;
 	}
 
@@ -287,6 +292,9 @@ void rdist_anything(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 
 	x->r_function = librdist_get_function(x->r_dist);
+	if(!(x->r_function)){
+		object_error((t_object *)x, "%s is not a distribution that randdist is aware of\n", x->r_dist);
+	}
 }
 
 void rdist_nonparametric(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
@@ -325,14 +333,14 @@ void rdist_distlist(t_rdist *x, long n){
 	int stride = x->r_stride;
 	float out[n * stride];
 	if(stride * n > RDIST_DEFAULT_BUF_SIZE){
-		error("randdist: output list is too long (%d > %d)", 
+		object_error((t_object *)x, "output list is too long (%d > %d)", 
 		      n * stride, 
 		      RDIST_DEFAULT_BUF_SIZE);
 		return;
 	}
 
 	if(n < 1){
-		error("randdist: distlist argument must be >= 1.");
+		object_error((t_object *)x, "distlist argument must be >= 1.");
 		return;
 	}
 	gsl_rng_memcpy(x->rng_last, x->r_rng);
@@ -506,6 +514,9 @@ void rdist_free(t_rdist *x){
 	}
 	if(x->r_output_buffer){
 		free(x->r_output_buffer);
+	}
+	if(x->r_vars){
+		free(x->r_vars);
 	}
 }
 
