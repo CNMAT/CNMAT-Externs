@@ -42,6 +42,7 @@ VERSION 2.1.2: Fixed a bug with the multinomial distribution
 VERSION 2.1.3: Added multivariate hypergeometric distribution
 VERSION 2.1.4: fixed a bug with the way that multinomial arguments were being handled
 VERSION 2.1.5: seed is now an attribute to easily replicate random data
+VERSION 2.1.6: multivariate_hypergeometric
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
