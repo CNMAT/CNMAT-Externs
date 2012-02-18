@@ -175,6 +175,23 @@ t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, t_osc_ar
 	return OSC_ERR_NONE;
 }
 
+t_osc_err osc_bundle_s_wrapMessage(long len, char *msg, long *bndllen, char **bndl, char *alloc)
+{
+	*alloc = 0;
+	*bndllen = len + OSC_HEADER_SIZE + 4;
+	if(!(*bndl)){
+		*bndl = osc_mem_alloc(*bndllen);
+		if(!(*bndl)){
+			return OSC_ERR_OUTOFMEM;
+		}
+		*alloc = 1;
+	}
+	osc_bundle_s_setBundleID(*bndl);
+	*((int32_t *)((*bndl) + OSC_HEADER_SIZE)) = hton32(len);
+	memcpy((*bndl) + OSC_HEADER_SIZE + 4, msg, len);
+	return OSC_ERR_NONE;
+}
+
 t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *oldmsg, char *newmsg){
 	uint32_t old_size = ntoh32(*((uint32_t *)oldmsg));
 	uint32_t new_size = ntoh32(*((uint32_t *)newmsg));
@@ -207,12 +224,14 @@ t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *oldmsg, char
 // if msg == NULL, an empty bundle will be created, or, if a bundle
 // already exists, nothing will happen.
 t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, t_osc_msg_s *msg){
+	if(!msg){
+		printf("no freaking message\n");
+		return OSC_ERR_NONE;
+	}
 	uint32_t msglen = osc_message_s_getSize(msg);
 	char *tmp = NULL;
 	if(*bndl){
-		if(msg){
-			tmp = (char *)osc_mem_resize(*bndl, *len + msglen + 4);
-		}
+		tmp = (char *)osc_mem_resize(*bndl, *len + msglen + 4);
 	}else{
 		int size;
 		if(msg){
@@ -228,9 +247,6 @@ t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, t_osc_msg_s *msg){
 		osc_bundle_s_setBundleID(tmp);
 		*len = OSC_HEADER_SIZE;
 		*bndl = tmp;
-		if(!msg){
-			return OSC_ERR_NONE;
-		}
 	}
 	if(!tmp){
 		return OSC_ERR_OUTOFMEM;
@@ -348,10 +364,10 @@ t_osc_err osc_bundle_s_union(long len1, char *bndl1, long len2, char *bndl2, lon
 	if(!(*bndl_out)){
 		*bndl_out = osc_mem_alloc(len1 + len2);
 	}
-	if(len1 == 0){
+	if(len1 == 0 || len1 == OSC_HEADER_SIZE){
 		memcpy(*bndl_out, bndl2, len2);
 		*len_out = len2;
-	}else if(len2 == 0){
+	}else if(len2 == 0 || len2 == OSC_HEADER_SIZE){
 		memcpy(*bndl_out, bndl1, len1);
 		*len_out = len1;
 	}else{
@@ -415,10 +431,10 @@ t_osc_err osc_bundle_s_difference(long len1, char *bndl1, long len2, char *bndl2
 	if(!(*bndl_out)){
 		*bndl_out = osc_mem_alloc(len1 + len2);
 	}
-	if(len1 == 0){
+	if(len1 == 0 || len1 == OSC_HEADER_SIZE){
 		memcpy(*bndl_out, bndl2, len2);
 		*len_out = len2;
-	}else if(len2 == 0){
+	}else if(len2 == 0 || len2 == OSC_HEADER_SIZE){
 		memcpy(*bndl_out, bndl1, len1);
 		*len_out = len1;
 	}else{

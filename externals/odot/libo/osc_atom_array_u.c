@@ -33,11 +33,13 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_array.h"
 #include "osc_atom_array_u.h"
 
-t_osc_array *osc_atom_array_u_alloc(long len){
+t_osc_array *osc_atom_array_u_alloc(long len)
+{
 	return osc_array_allocWithSize(len, sizeof(t_osc_atom_u));
 }
 
-void osc_atom_array_u_free(t_osc_atom_ar_u *ar){
+void osc_atom_array_u_free(t_osc_atom_ar_u *ar)
+{
 	if(ar){
 		int i;
 		for(i = 0; i < osc_atom_array_u_getLen(ar); i++){
@@ -52,7 +54,8 @@ void osc_atom_array_u_free(t_osc_atom_ar_u *ar){
 	}
 }
 
-t_osc_err osc_atom_array_u_getDoubleArray(t_osc_atom_ar_u *array, double **out){
+t_osc_err osc_atom_array_u_getDoubleArray(t_osc_atom_ar_u *array, double **out)
+{
 	long len = osc_atom_array_u_getLen(array);
 	if(!(*out)){
 		*out = osc_mem_alloc(sizeof(double) * len);
@@ -64,7 +67,8 @@ t_osc_err osc_atom_array_u_getDoubleArray(t_osc_atom_ar_u *array, double **out){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_atom_array_u_getFloatArray(t_osc_atom_ar_u *array, float **out){
+t_osc_err osc_atom_array_u_getFloatArray(t_osc_atom_ar_u *array, float **out)
+{
 	long len = osc_atom_array_u_getLen(array);
 	if(!(*out)){
 		*out = osc_mem_alloc(sizeof(float) * len);
@@ -76,7 +80,8 @@ t_osc_err osc_atom_array_u_getFloatArray(t_osc_atom_ar_u *array, float **out){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_atom_array_u_getInt32Array(t_osc_atom_ar_u *array, int32_t **out){
+t_osc_err osc_atom_array_u_getInt32Array(t_osc_atom_ar_u *array, int32_t **out)
+{
 	long len = osc_atom_array_u_getLen(array);
 	if(!(*out)){
 		*out = osc_mem_alloc(sizeof(int32_t) * len);
@@ -88,7 +93,8 @@ t_osc_err osc_atom_array_u_getInt32Array(t_osc_atom_ar_u *array, int32_t **out){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_atom_array_u_getInt64Array(t_osc_atom_ar_u *array, int64_t **out){
+t_osc_err osc_atom_array_u_getInt64Array(t_osc_atom_ar_u *array, int64_t **out)
+{
 	long len = osc_atom_array_u_getLen(array);
 	if(!(*out)){
 		*out = osc_mem_alloc(sizeof(int64_t) * len);
@@ -100,7 +106,8 @@ t_osc_err osc_atom_array_u_getInt64Array(t_osc_atom_ar_u *array, int64_t **out){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_atom_array_u_getUInt32Array(t_osc_atom_ar_u *array, uint32_t **out){
+t_osc_err osc_atom_array_u_getUInt32Array(t_osc_atom_ar_u *array, uint32_t **out)
+{
 	long len = osc_atom_array_u_getLen(array);
 	if(!(*out)){
 		*out = osc_mem_alloc(sizeof(uint32_t) * len);
@@ -112,7 +119,8 @@ t_osc_err osc_atom_array_u_getUInt32Array(t_osc_atom_ar_u *array, uint32_t **out
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_atom_array_u_getUInt64Array(t_osc_atom_ar_u *array, uint64_t **out){
+t_osc_err osc_atom_array_u_getUInt64Array(t_osc_atom_ar_u *array, uint64_t **out)
+{
 	long len = osc_atom_array_u_getLen(array);
 	if(!(*out)){
 		*out = osc_mem_alloc(sizeof(uint64_t) * len);
@@ -124,7 +132,8 @@ t_osc_err osc_atom_array_u_getUInt64Array(t_osc_atom_ar_u *array, uint64_t **out
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_atom_array_u_getBoolArray(t_osc_atom_ar_u *array, char **out){
+t_osc_err osc_atom_array_u_getBoolArray(t_osc_atom_ar_u *array, char **out)
+{
 	long len = osc_atom_array_u_getLen(array);
 	if(!(*out)){
 		*out = osc_mem_alloc(sizeof(char) * len);
@@ -136,7 +145,8 @@ t_osc_err osc_atom_array_u_getBoolArray(t_osc_atom_ar_u *array, char **out){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, char **out){
+t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, char **out)
+{
 	long arlen = osc_atom_array_u_getLen(array);
 	long buflen = 256;
 	if(!(*out)){
@@ -167,7 +177,8 @@ t_osc_err osc_atom_array_u_getStringArray(t_osc_atom_ar_u *array, long *len, cha
 // we can't use the copy and copyInto routines in osc_array.c because we may have an atom
 // with a string that needs to be copied in which case memcpy() is not our friend.
 // so unfortunately we need to iterate through every element and copy it.
-t_osc_array *osc_atom_array_u_copy(t_osc_array *array){
+t_osc_array *osc_atom_array_u_copy(t_osc_array *array)
+{
 	if(!array){
 		return NULL;
 	}
@@ -183,7 +194,8 @@ t_osc_array *osc_atom_array_u_copy(t_osc_array *array){
 	return cp;
 }
 
-t_osc_err osc_atom_array_u_copyInto(t_osc_array **dest, t_osc_array *src, long offset){
+t_osc_err osc_atom_array_u_copyInto(t_osc_array **dest, t_osc_array *src, long offset)
+{
 	if(!src){
 		return OSC_ERR_INVAL;
 	}
@@ -201,4 +213,9 @@ t_osc_err osc_atom_array_u_copyInto(t_osc_array **dest, t_osc_array *src, long o
 		osc_atom_u_copy(&d, s);
 	}
 	return OSC_ERR_NONE;
+}
+
+void osc_atom_array_u_set(t_osc_atom_ar_u *ar, void *ptr, long len)
+{
+	osc_array_set(ar, ptr, len, sizeof(t_osc_atom_u));
 }

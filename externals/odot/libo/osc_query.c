@@ -110,7 +110,7 @@ t_osc_err osc_query_select_impl(int nselectors,
 				if(strip_matched_portion_of_address){
 					char buf[osc_message_s_getSize(msg) + 4];
 					char *address = osc_message_s_getAddress(msg);
-					osc_message_s_renameCopy(buf, msg, strlen(address) - ao, address + ao);
+					osc_message_s_renameCopy(buf, msg, strlen(address) - po, address + po);
 					char msg_s[osc_message_s_getStructSize()];
 					osc_message_s_wrap((t_osc_msg_s *)msg_s, buf);
 					//osc_bundle_s_appendMessage_b(partial_match, (t_osc_msg_s *)msg_s);

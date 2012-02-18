@@ -44,6 +44,19 @@ typedef struct _osc_bundle_s t_osc_bundle_s, t_osc_bndl_s;
 
 typedef t_osc_array t_osc_bundle_array_s, t_osc_bndl_ar_s;
 
+#define osc_bundle_s_wrap_naked_message(len, ptr){\
+	if(ptr && len >= 8){\
+		if(strncmp("#bundle\0", (char *)(ptr), 8)){	\
+			char *oldptr = (char *)ptr;\
+			long oldlen = len;\
+			len += 4 + OSC_HEADER_SIZE;\
+			ptr = (long)alloca(len);\
+			char alloc = 0;\
+			osc_bundle_s_wrapMessage(oldlen, oldptr, &len, (char **)(&ptr), &alloc);\
+		}\
+	}\
+}
+
 t_osc_bndl_s *osc_bundle_s_alloc(long len, char *ptr);
 t_osc_bndl_s *osc_bundle_s_allocEmptyBundle(void);
 size_t osc_bundle_s_getStructSize(void);
@@ -56,6 +69,8 @@ void osc_bundle_s_setPtr(t_osc_bndl_s *bndl, char *ptr);
 t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count);
 t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_osc_msg_s*, void *), void *context);
 t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, t_osc_array **osc_msg_s_array, int fullmatch);
+
+t_osc_err osc_bundle_s_wrapMessage(long len, char *msg, long *bndllen, char **bndl, char *alloc);
 t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *old, char *new);
 t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, t_osc_msg_s *msg);
 t_osc_err osc_bundle_s_appendMessage_b(t_osc_bndl_s **bndl, t_osc_msg_s *msg);

@@ -33,28 +33,32 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_error.h"
 #include <string.h>
 
-t_osc_array *osc_array_allocWithSize(long len, size_t membersize){
-	if(len == 0 || membersize == 0){
-		return NULL;
-	}
+t_osc_array *osc_array_allocWithSize(long len, size_t membersize)
+{
 	t_osc_array *ar = osc_mem_alloc(sizeof(t_osc_array));
 	if(!ar){
 		return NULL;
 	}
-	ar->ar = osc_mem_alloc(len * membersize);
+	if(len == 0 || membersize == 0){
+		ar->ar = NULL;
+	}else{
+		ar->ar = osc_mem_alloc(len * membersize);
+	}
 	ar->len = len;
 	ar->membersize = membersize;
 	return ar;
 }
 
-void osc_array_free(t_osc_array *ar){
+void osc_array_free(t_osc_array *ar)
+{
 	if(ar){
 		osc_mem_free(ar->ar);
 		osc_mem_free(ar);
 	}
 }
 
-void osc_array_clear(t_osc_array *ar){
+void osc_array_clear(t_osc_array *ar)
+{
 	if(ar){
 		memset(ar->ar, '\0', ar->len * ar->membersize);
 	}
@@ -70,14 +74,16 @@ void *osc_array_get(t_osc_array *ar, long idx){
 	return ar->ar + (idx * ar->membersize);
 }
 
-long osc_array_getLen(t_osc_array *ar){
+long osc_array_getLen(t_osc_array *ar)
+{
 	if(!ar){
 		return 0;
 	}
 	return ar->len;
 }
 
-t_osc_array *osc_array_copy(t_osc_array *array){
+t_osc_array *osc_array_copy(t_osc_array *array)
+{
 	if(!array){
 		return NULL;
 	}
@@ -86,7 +92,8 @@ t_osc_array *osc_array_copy(t_osc_array *array){
 	return cp;
 }
 
-t_osc_err osc_array_copyInto(t_osc_array **dest, t_osc_array *src, long offset){
+t_osc_err osc_array_copyInto(t_osc_array **dest, t_osc_array *src, long offset)
+{
 	if(!src){
 		return OSC_ERR_INVAL;
 	}
@@ -109,7 +116,8 @@ t_osc_err osc_array_copyInto(t_osc_array **dest, t_osc_array *src, long offset){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_array_resize(t_osc_array *array, int newlen){
+t_osc_err osc_array_resize(t_osc_array *array, int newlen)
+{
 	if(!array){
 		return OSC_ERR_INVAL;
 	}
@@ -120,5 +128,14 @@ t_osc_err osc_array_resize(t_osc_array *array, int newlen){
 	}else{
 		array->len = 0;
 		return OSC_ERR_OUTOFMEM;
+	}
+}
+
+void osc_array_set(t_osc_array *ar, void *ptr, long len, size_t membersize)
+{
+	if(ar){
+		ar->ar = ptr;
+		ar->len = len;
+		ar->membersize = membersize;
 	}
 }

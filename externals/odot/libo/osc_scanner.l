@@ -46,7 +46,7 @@ $[1-9]+	{
 
 -?{c99_floating_point_constant}	{
 					char *endp = NULL;
-					double d = strtod(yytext, &endp);
+					double d = strtod(yytext, &endp); 
 					//printf("float: %f\n", d);
 					yylval->f = d;
 					return OSCFLOAT;

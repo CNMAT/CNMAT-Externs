@@ -79,7 +79,9 @@ quote[[:space:]]*\( {
 		end++;
 	}
 	yyless(end - start);
-	yylval->atom = osc_atom_u_alloc();
+	if(alloc_atom){
+		yylval->atom = osc_atom_u_alloc();
+	}
 	*(end - 1) = '\0';
 	osc_atom_u_setString(yylval->atom, yytext);
 	*(end - 1) = ')';
@@ -139,6 +141,21 @@ quote[[:space:]]*\( {
 	return OSC_EXPR_DBLQMARKEQ;
 }
 
+(true|True|TRUE)			{
+						if(alloc_atom){
+							yylval->atom = osc_atom_u_alloc();
+						}
+						osc_atom_u_setTrue(yylval->atom);
+						return OSC_EXPR_NUM;
+					}
+(false|False|FALSE)			{
+						if(alloc_atom){
+							yylval->atom = osc_atom_u_alloc();
+						}
+						osc_atom_u_setFalse(yylval->atom);
+						return OSC_EXPR_NUM;
+					}
+
 ,|;|\(|\)				{
 						return *yytext;
 					}
@@ -154,7 +171,9 @@ quote[[:space:]]*\( {
 						// int 
 						char *endptr = NULL;
 						int32_t i = strtol(yytext, &endptr, 0);
-						yylval->atom = osc_atom_u_alloc();
+						if(alloc_atom){
+							yylval->atom = osc_atom_u_alloc();
+						}
 						osc_atom_u_setInt32(yylval->atom, i);
 						return OSC_EXPR_NUM;
 					}
@@ -162,13 +181,17 @@ quote[[:space:]]*\( {
 						// floating point number
 						char *endptr = NULL;
 						double f = strtod(yytext, &endptr);
-						yylval->atom = osc_atom_u_alloc();
+						if(alloc_atom){
+							yylval->atom = osc_atom_u_alloc();
+						}
 						osc_atom_u_setDouble(yylval->atom, f);
 						return OSC_EXPR_NUM;
 					}
-<INITIAL>[^0-9\(\)\[\] \t\n\+\-\*<>=!?,;:][^\(\)\[\] \t\n\+\-<>=!?,;:]*		{
+<INITIAL>[^0-9\(\)\[\] \t\n\+\-\*<>=!?,;:\"][^\(\)\[\] \t\n\+\-<>=!?,;:\"]*		{
 						// put in atom
-						yylval->atom = osc_atom_u_alloc();
+						if(alloc_atom){
+							yylval->atom = osc_atom_u_alloc();
+						}
 						//t_osc_expr_const_rec *cs = osc_expr_lookupConstant(yytext);
 						//if(cs){
 							//osc_atom_u_setDouble(yylval->atom, cs->val);
@@ -180,5 +203,8 @@ quote[[:space:]]*\( {
 					}
 
 [ \t\n]+	/* eat up whitespace */
+\"		//printf("quotes\n");/* eat up quotes */
+
+
 
 %%

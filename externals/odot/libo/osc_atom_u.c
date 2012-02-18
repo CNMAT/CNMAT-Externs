@@ -182,9 +182,9 @@ double osc_atom_u_getDouble(t_osc_atom_u *a){
 	case 'U': // unsigned 16-bit int
 		return (double)a->w.U;
 	case 'N': // NULL
-		return 0.f;
+		return 0.;
 	}
-	return 0.f;
+	return 0.;
 }
 
 int8_t osc_atom_u_getInt8(t_osc_atom_u *a){

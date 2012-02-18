@@ -58,6 +58,7 @@ typedef struct YYLTYPE{
 #define PP(fmt, ...)
 #endif
 
+
 }
 %code requires{
 #include "osc.h"
@@ -65,16 +66,22 @@ typedef struct YYLTYPE{
 #include "osc_atom_u.h"
 #include "osc_expr.h"
 
+
+#define YY_DECL int osc_expr_scanner_lex \
+		(YYSTYPE * yylval_param, YYLTYPE * yylloc_param , yyscan_t yyscanner, int alloc_atom)
 t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f);
 
 }
 
 %{
 
-	//int osc_expr_parser_lex(YYSTYPE *yylval_param, YYLTYPE *llocp, yyscan_t yyscanner, int *colnum);
-int osc_expr_parser_lex(YYSTYPE *yylval_param, YYLTYPE *llocp, yyscan_t yyscanner);
-int osc_expr_parser_lex(YYSTYPE *yylval_param, YYLTYPE *llocp, yyscan_t yyscanner){
-	return osc_expr_scanner_lex(yylval_param, llocp, yyscanner);
+// this is a dummy so that the compiler won't complain.  we pass the hard-coded
+// value of 1 to osc_expr_scanner_lex() inside of osc_expr_parser_lex() down below.
+int alloc_atom = 1;
+
+
+int osc_expr_parser_lex(YYSTYPE *yylval_param, YYLTYPE *llocp, yyscan_t yyscanner, int alloc_atom){
+	return osc_expr_scanner_lex(yylval_param, llocp, yyscanner, 1);
 }
 
 t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f){
@@ -361,6 +368,7 @@ t_osc_expr *osc_expr_parser_reduce_NullCoalescingOperator(YYLTYPE *llocp,
 %parse-param{void *scanner}
 %parse-param{char *input_string}
 %lex-param{void *scanner}
+%lex-param{int alloc_atom}
 
 %union {
 	t_osc_atom_u *atom;

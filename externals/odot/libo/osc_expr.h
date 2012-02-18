@@ -63,6 +63,7 @@ typedef struct _osc_expr_const_rec{
 } t_osc_expr_const_rec;
 
 int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom_ar_u **out);
+int osc_expr_evalLexExprsInBndl(long *len, char **oscbndl, t_osc_atom_ar_u **out);
 int osc_expr_getArg(t_osc_expr_arg *arg, long *len, char **oscbndl, t_osc_atom_ar_u **out);
 int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **out);
 t_osc_expr *osc_expr_makeFuncObjFromOSCMsg_s(t_osc_msg_s *msg, int argoffset);
@@ -121,6 +122,7 @@ int osc_expr_bound(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 int osc_expr_emptybundle(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_identity(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_tokenize(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_compile(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_prog1(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_prog2(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -309,6 +311,7 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	{"emptybundle", osc_expr_emptybundle, 0, NULL, "True if the bundle is empty, false otherwise."},
 	{"identity", osc_expr_identity, -1, NULL, "Just what it says"},
 	{"eval", osc_expr_eval, 1, NULL, "Evaluate a function bound to an OSC address"},
+	{"tokenize", osc_expr_tokenize, 1, NULL, "Tokenize an expression"},
 	{"compile", osc_expr_compile, 2, NULL, "Compile a function <arg2> and bind it to an OSC address <arg1>"},
 	{"prog1", osc_expr_prog1, -1, NULL, "Execute a sequence of expressions and return the first one."},
 	{"prog2", osc_expr_prog2, -1, NULL, "Execute a sequence of expressions and return the second one."},

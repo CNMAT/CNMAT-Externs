@@ -171,7 +171,7 @@ arglist:
 		PP("add OSCFLOAT to MSG %p := %f\n", m, $1);
 		m->next = *msg;
 		*msg = m;
-		osc_message_u_appendFloat(*msg, $1);
+		osc_message_u_appendDouble(*msg, $1);
 	}
 	| OSCINT {
 		t_osc_msg_u *m = osc_message_u_alloc();
@@ -213,7 +213,7 @@ arglist:
  	}
 	| arglist OSCFLOAT {
 		PP("add OSCFLOAT to MSG %p := %f\n", *msg, $2);
-		osc_message_u_appendFloat(*msg, $2);
+		osc_message_u_appendDouble(*msg, $2);
  	}
 	| arglist OSCINT {
 		PP("add OSCINT to MSG %p := %d\n", *msg, $2);

@@ -26,6 +26,7 @@
 */
 
 #include <string.h>
+#include <stdio.h>
 
 #include "osc.h"
 #include "osc_util.h"
@@ -63,7 +64,7 @@ void osc_rset_free(t_osc_rset *rset)
 {
 	if(rset){
 		osc_hashtab_destroy(rset->ht); 
-		osc_bundle_s_free(rset->unmatched);
+		osc_bundle_s_deepFree(rset->unmatched);
 		osc_mem_free(rset);
 	}
 }

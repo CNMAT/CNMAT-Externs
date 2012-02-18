@@ -40,6 +40,7 @@ long osc_array_getLen(t_osc_array *ar);
 t_osc_array *osc_array_copy(t_osc_array *array);
 t_osc_err osc_array_copyInto(t_osc_array **dest, t_osc_array *src, long offset);
 t_osc_err osc_array_resize(t_osc_array *array, int newlen);
+void osc_array_set(t_osc_array *ar, void *ptr, long len, size_t membersize);
 
 #ifdef __cplusplus
 }
