@@ -60,6 +60,7 @@ t_max_err ocoll_notify(t_ocoll *x, t_symbol *s, t_symbol *msg, void *sender, voi
 t_symbol *ps_FullPacket;
 
 void ocoll_fullPacket(t_ocoll *x, long len, long ptr){
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	if(len == OSC_HEADER_SIZE){
 		// empty bundle
 		return;
