@@ -51,8 +51,8 @@ void oprint_fullPacket(t_oprint *x, long len, long ptr);
 void oprint_cbk(t_osc_msg msg, void *v);
 void oprint_int(t_oprint *x, long l);
 void oprint_float(t_oprint *x, double f);
-void oprint_anything(t_oprint *x, t_symbol *msg, short argc, t_atom *argv);
-void oprint_list(t_oprint *x, t_symbol *msg, short argc, t_atom *argv);
+void oprint_anything(t_oprint *x, t_symbol *msg, int argc, t_atom *argv);
+void oprint_list(t_oprint *x, t_symbol *msg, int argc, t_atom *argv);
 void oprint_free(t_oprint *x);
 void oprint_assist(t_oprint *x, void *b, long m, long a, char *s);
 void *oprint_new(t_symbol *msg, short argc, t_atom *argv);
@@ -61,6 +61,7 @@ t_max_err oprint_notify(t_oprint *x, t_symbol *s, t_symbol *msg, void *sender, v
 t_symbol *ps_FullPacket;
 
 void oprint_fullPacket(t_oprint *x, long len, long ptr){
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	long buflen = 0;
 	char *buf = NULL;
 	osc_bundle_s_format(len, (char *)ptr, &buflen, &buf);
@@ -80,6 +81,40 @@ void oprint_fullPacket(t_oprint *x, long len, long ptr){
 			start = buf + i + 1;
 		}
 	}
+}
+
+void oprint_anything(t_oprint *x, t_symbol *msg, int argc, t_atom *argv)
+{
+	char *buf = NULL;
+	long len = 0;
+	atom_gettext(argc, argv, &len, &buf, 0);
+	if(msg){
+		post("%s: %s %s", x->myname->s_name, msg->s_name, buf);
+	}else{
+		post("%s: %s", x->myname->s_name, buf);
+	}
+	if(buf){
+		sysmem_freeptr(buf);
+	}
+}
+
+void oprint_list(t_oprint *x, t_symbol *msg, int argc, t_atom *argv)
+{
+	oprint_anything(x, NULL, argc, argv);
+}
+
+void oprint_int(t_oprint *x, long l)
+{
+	t_atom a;
+	atom_setlong(&a, l);
+	oprint_anything(x, NULL, 1, &a);
+}
+
+void oprint_float(t_oprint *x, double f)
+{
+	t_atom a;
+	atom_setfloat(&a, f);
+	oprint_anything(x, NULL, 1, &a);
 }
 
 void oprint_assist(t_oprint *x, void *b, long m, long a, char *s){
@@ -127,6 +162,10 @@ int main(void){
 	//class_addmethod(c, (method)oprint_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oprint_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oprint_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)oprint_anything, "anything", A_GIMME, 0);
+	class_addmethod(c, (method)oprint_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)oprint_int, "int", A_LONG, 0);
+	class_addmethod(c, (method)oprint_float, "float", A_FLOAT, 0);
 
 	CLASS_ATTR_LONG(c, "printtypetags", 0, t_oprint, print_typetags);
 	CLASS_ATTR_LONG(c, "printsize", 0, t_oprint, print_msgsize);
