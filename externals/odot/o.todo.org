@@ -11,16 +11,75 @@
 					post("Copyright (c) %s %s", ODOT_COPYRIGHT_YEARS, ODOT_COPYRIGHT_STRING);\
 					gensym("odot_version_has_been_posted")->s_thing = (void *)1;}
 #+end_src
+* Object List
+- [ ] o.atomize
+- [X] o.change
+- [ ] o.collect
+- [ ] o.cond
+- [ ] o.difference
+- [ ] o.expr
+- [ ] o.if
+- [ ] o.intersection
+- [ ] o.mappatch
+- [ ] o.message
+- [ ] o.pack
+- [ ] o.pak
+- [ ] o.prepend
+- [ ] o.print
+- [ ] o.printbytes
+- [ ] o.route
+- [ ] o.select
+- [ ] o.union
+- [ ] o.unless
+- [ ] o.var
+- [ ] o.when
 * Open Issues
 ** Bugs
 *** General
-**** BUG All objects need to handle naked (valid) OSC messages and convert them to bundles.
+**** BUG All objects need to handle naked (valid) OSC messages and convert them to bundles. [17/21]
+- [X] o.atomize
+see o.expr
+- [X] o.change
+no change necessary
+- [X] o.collect
+- [X] o.cond
+will pass the original unbundled message out
+- [X] o.difference
+- [X] o.expr
+can't be done on the stack (with alloca) as the bundle may need to be resized while evaluating expression(s)
+- [X] o.if
+will pass the original unbundled message out
+- [X] o.intersection
+- [ ] o.mappatch
+- [ ] o.message
+- [ ] o.pack
+- [ ] o.pak
+- [X] o.prepend
+- [X] o.print
+- [X] o.printbytes
+- [X] o.route
+- [X] o.select
+- [X] o.union
+- [X] o.unless
+will pass the original unbundled message out
+- [X] o.var
+- [X] o.when
+will pass the original unbundled message out
 *** o.accumulate
 *** o.expr
 **** BUG Syntax error when compiling multiple expressions and the last one ends with a semicolon.
 **** BUG modulo (%) doesn't print properly when sending the post-functions message
+**** BUG o.expr crashes if instantiated with a function with arity > 0 with no args
+*** o.message
+**** BUG osc_message_u_getAddress crashed
+**** BUG 0   edu.cnmat.berkeley.o.route    0x0f9dfdec osc_message_s_wrap + 12
+1   edu.cnmat.berkeley.o.route    	0x0f9df18c osc_bundle_iterator_s_next + 92
+2   edu.cnmat.berkeley.o.route    	0x0f9e7d38 osc_query_select_impl + 120
+3   edu.cnmat.berkeley.o.route    	0x0f9e80b0 osc_query_select + 112
+4   edu.cnmat.berkeley.o.route    	0x0f9dc03e oroute_fullPacket + 78
 *** o.prepend
-*** o.route
+**** BUG o.prepend seems to not handle regular max messages in a consistent way
+This is a bug
 *** o.rename
 **** BUG o.rename doesn't handle partial matches correctly
 *** o.union/intersection/difference
@@ -34,7 +93,6 @@ Jeff and/or Yotam are working on this
 **** TODO Support for 16-bit floats (half float)
 **** TODO Postfix type specifiers
 **** TODO o.var should support a single message as an argument (for multiple messages, use o.message)
-**** TODO A tokenizer to tokenize a string and turn it into OSC would be nice
 **** TODO libo and libomax versions need to be reported.
 **** TODO Make sure assist strings are working for all objects
 **** TODO Explicit way to convert bundle to naked OSC message
@@ -42,8 +100,10 @@ Jeff and/or Yotam are working on this
 **** STARTED Implement error handler
 this may be a lifelong project...
 **** TODO Constants need to be checked for accuracy at all precisions
-**** TODO All formatting code needs to be refactored 
+**** TODO All formatting code needs to be refactored
+**** TODO udpsend encodes lists, floats and ints with addresses with no slashes
 *** o.message
+**** TODO Post an error when a non-OSC message gets sent into the right inlet
 *** o.expr
 **** TODO if() should be a special case of cond and we should have when and unless
 **** TODO Change t_osc_expr_rec to support better documentation of function parameters
@@ -51,12 +111,16 @@ this may be a lifelong project...
 **** TODO o.expr documentation strings need to be available in max so you can build menus, etc.
 **** TODO settypetags() should work like the cast functions
 **** STARTED add malformed rules to report errors for obvious malformed constructions
+**** TODO In osc_expr.c, variable names like function and expr are used inapproapriately in osc_expr_funcall.
+In general, expressions should be called something like expr_lex (we need a way to represent
+tokenized expressions), expr_str, or expr_ir.
+As it is now, things that are really compiled expressions are being called functions.
+The use of ``function_graph'' in o.expr.c may also be inappropriate.
+**** TODO argc(), exists(), bound() should be isbound()?
 *** o.if
 *** o.printbytes
 **** TODO Add explicit NULL bytes (instead of printing nothing)
 **** TODO Better formatting in general
-*** o.print
-**** TODO o.print should print any max messages
 *** new objects
 **** TODO o.typetages: outputs the typetags.
 **** TODO o.append
@@ -67,8 +131,27 @@ New objects with more explicit behavior.
 
 * VERSION
 ** Bugs Fixed
+*** o.route
+**** FIXED a bug where o.route would not send out a bang for a complete match of an address with no data.
+**** FIXED o.route strips off the leading slash and first letter when matching a star
+**** FIXED o.route set message not working
+**** FIXED memory leak
+*** o.expr
+**** FIXED o.expr != was wrong if one arg was a string and the other wasn't
+**** FIXED bound() now returns false when an address exists but has no data
+**** FIXED if() now returns all results of the true or false calculation, not just the first one
+*** o.if/cond/when/unless
+**** FIXED memory leak
+*** o.var/union/intersection/difference
+**** FIXED crash when sending a bundle in the right inlet after sending the clear message
 ** Changelog
-
+*** o.print
+**** DONE o.print should print any max messages
+*** o.message
+**** DONE floating point tokens are now converted to doubles when the text is parsed
+*** o.expr
+**** DONE add tokenize() function to o.expr
+**** DONE true and false (also True/TRUE and False/FALSE) are now tokenized as booleans rather than strings
 * VERSION 1.0.9a
 Released: [2012-01-18 Wed]
 ** Bugs Fixed
