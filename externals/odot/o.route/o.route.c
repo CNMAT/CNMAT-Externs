@@ -77,12 +77,17 @@ void oroute_doSet(t_oroute *x, long index, t_symbol *sym);
 void oroute_makeSchema(t_oroute *x);
 void oroute_atomizeBundle(void *outlet, long len, char *bndl);
 void oroute_outputBundle(void *outlet, long len, char *bndl);
+void oroute_makeUniqueSelectors(int nselectors,
+				char **selectors,
+				int *nunique_selectors,
+				char ***unique_selectors);
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv);
 
 t_symbol *ps_oscschemalist, *ps_FullPacket;
 
 void oroute_fullPacket(t_oroute *x, long len, long ptr)
 {
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	if(x->num_selectors > 0){
 		t_osc_rset *rset = NULL;
 		int strip_matched_portion_of_address = 1;
@@ -160,7 +165,11 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 					int num_atoms = omax_util_getNumAtomsInOSCMsg(msg);
 					t_atom a[num_atoms];
 					omax_util_oscMsg2MaxAtoms(msg, a);
-					outlet_atoms(x->outlets[i], num_atoms - 1, a + 1);
+					if(num_atoms - 1 == 0){
+						outlet_bang(x->outlets[i]);
+					}else{
+						outlet_atoms(x->outlets[i], num_atoms - 1, a + 1);
+					}
 				}
 				osc_bndl_it_s_destroy(it);
 #endif
@@ -238,6 +247,10 @@ void oroute_doSet(t_oroute *x, long index, t_symbol *sym){
 		return;
 	}
 	x->selectors[x->num_selectors - index] = sym->s_name;
+	oroute_makeUniqueSelectors(x->num_selectors,
+				   x->selectors,
+				   &(x->num_unique_selectors),
+				   &(x->unique_selectors));
 	oroute_makeSchema(x);
 }
 
@@ -264,6 +277,9 @@ void oroute_free(t_oroute *x)
 	if(x->selectors){
 		free(x->selectors);
 	}
+	if(x->unique_selectors){
+		free(x->unique_selectors);
+	}
 	if(x->schema){
 		osc_mem_free(x->schema);
 	}
@@ -273,6 +289,9 @@ void oroute_makeSchema(t_oroute *x)
 {
 	t_osc_bndl_u *bndl = osc_bundle_u_alloc();
 	t_osc_msg_u *msg = osc_message_u_alloc();
+	if(!bndl || !msg){
+		return;
+	}
 	osc_message_u_setAddress(msg, "/osc/schema/list");
 
 	int i;
@@ -281,6 +300,7 @@ void oroute_makeSchema(t_oroute *x)
 	}
 	osc_bundle_u_addMsg(bndl, msg);
 	osc_bundle_u_serialize(bndl, &(x->schemalen), &(x->schema));
+	osc_bundle_u_free(bndl);
 }
 
 void oroute_atomizeBundle(void *outlet, long len, char *bndl)
@@ -306,6 +326,34 @@ void oroute_outputBundle(void *outlet, long len, char *bndl)
 	outlet_anything(outlet, ps_FullPacket, 2, out);
 }
 
+void oroute_makeUniqueSelectors(int nselectors,
+				char **selectors,
+				int *nunique_selectors,
+				char ***unique_selectors)
+{
+	if(!unique_selectors){
+		*unique_selectors = (char **)malloc(nselectors * sizeof(char *));
+	}
+	int n = 0;
+	char **us = *unique_selectors;
+	int i;
+	for(i = 0; i < nselectors; i++){
+		char *s = selectors[i];
+		int match = 0;
+		int j;
+		for(j = 0; j < n; j++){
+			if(!strcmp(us[j], s)){
+				match++;
+				break;
+			}
+		}
+		if(!match){
+			us[n++] = s;
+		}
+	}
+	*nunique_selectors = n;
+}
+
 void *oroute_new(t_symbol *msg, short argc, t_atom *argv)
 {
 	t_oroute *x;
@@ -316,9 +364,10 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv)
 		x->proxy = (void **)malloc(argc * sizeof(void *));
 		x->selectors = (char **)malloc(argc * sizeof(char *));
 		x->num_selectors = argc;
+		x->unique_selectors = (char **)malloc(x->num_selectors * sizeof(char *));
 
-		char *unique_selectors[argc];
-		int num_unique_selectors = 0;
+		//char *unique_selectors[argc];
+		//int num_unique_selectors = 0;
 		int i;
 		for(i = 0; i < argc; i++){
 			x->outlets[i] = outlet_new(x, NULL);
@@ -330,6 +379,7 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv)
 
 			char *selector = atom_getsym(argv + i)->s_name;
 			x->selectors[x->num_selectors - i - 1] = selector;
+			/*
 
 			int match = 0;
 			int j;
@@ -342,10 +392,14 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv)
 			if(!match){
 				unique_selectors[num_unique_selectors++] = selector;
 			}
+			*/
 		}
-		x->unique_selectors = (char **)malloc(num_unique_selectors * sizeof(char *));
-		memcpy(x->unique_selectors, unique_selectors, num_unique_selectors * sizeof(char **));
-		x->num_unique_selectors = num_unique_selectors;
+		oroute_makeUniqueSelectors(x->num_selectors,
+					   x->selectors,
+					   &(x->num_unique_selectors),
+					   &(x->unique_selectors));
+		//memcpy(x->unique_selectors, unique_selectors, num_unique_selectors * sizeof(char **));
+		//x->num_unique_selectors = num_unique_selectors;
 
 		x->schema = NULL;
 		x->schemalen = 0;
