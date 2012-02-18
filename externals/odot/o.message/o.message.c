@@ -634,10 +634,7 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 			t_osc_bndl_it_u *it = osc_bndl_it_u_get(x->bndl);
 			while(osc_bndl_it_u_hasNext(it)){
 				t_osc_msg_u *msg = osc_bndl_it_u_next(it);
-				printf("here\n");
-				printf("%p\n", msg);
 				char *address = osc_message_u_getAddress(msg);
-				printf("there\n");
 				int addresslen = strlen(address) + 1;
 				char copy[addresslen];
 				char *copyptr = copy;
