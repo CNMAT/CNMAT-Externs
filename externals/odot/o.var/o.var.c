@@ -69,6 +69,7 @@ t_max_err ovar_notify(t_ovar *x, t_symbol *s, t_symbol *msg, void *sender, void 
 t_symbol *ps_FullPacket;
 
 void ovar_doFullPacket(t_ovar *x, long len, long ptr, long inlet){
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	if(inlet == 1){
 		critical_enter(x->lock);
 		if(len > x->buflen){
@@ -102,6 +103,9 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long inlet){
 		atom_setlong(out, bndllen);
 		atom_setlong(out + 1, (long)bndl);
 		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		if(bndl){
+			osc_mem_free(bndl);
+		}
 #else // o.var
 		t_atom out[2];
 		atom_setlong(out, len);
@@ -117,7 +121,7 @@ void ovar_fullPacket(t_ovar *x, long len, long ptr){
 
 void ovar_clear(t_ovar *x){
 	critical_enter(x->lock);
-	osc_mem_free(x->bndl);
+	x->len = 0;
 	critical_exit(x->lock);
 }
 
@@ -214,7 +218,9 @@ void ovar_assist(t_ovar *x, void *b, long m, long a, char *s){
 
 void ovar_free(t_ovar *x){	
 	object_free(x->proxy);
-	ovar_clear(x);
+	if(x->bndl){
+		osc_mem_free(x->bndl);
+	}
 	critical_free(x->lock);
 }
 
