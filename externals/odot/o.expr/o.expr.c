@@ -112,8 +112,16 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	// we don't actually want to do this copy here.  we need to 
 	// have another version of omax_expr_funcall that doesn't do 
 	// assignment
-	char *copy = (char *)osc_mem_alloc(len);
-	memcpy(copy, (char *)ptr, len);
+
+	char *copy = NULL;
+	long copylen = 0;
+	char alloc = 0;
+	if(strncmp(ptr, "#bundle\0", 8)){
+		osc_bundle_s_wrapMessage(len, (char *)ptr, &copylen, &copy, &alloc);
+	}else{
+		copy = (char *)osc_mem_alloc(len);
+		memcpy(copy, (char *)ptr, len);
+	}
 	atom_setlong(out, len);
 	atom_setlong(out + 1, ptr);
 
@@ -133,10 +141,10 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
  out:
 	if(argv){
-		osc_mem_free(argv);
+		osc_atom_array_u_free(argv);
 	}
 	if(copy){
-		free(copy);
+		osc_mem_free(copy);
 	}
 #elif defined (OUNLESS)
 	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
@@ -153,10 +161,10 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
  out:
 	if(argv){
-		osc_mem_free(argv);
+		osc_atom_array_u_free(argv);
 	}
 	if(copy){
-		free(copy);
+		osc_mem_free(copy);
 	}
 #elif defined (OWHEN)
 	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
@@ -173,10 +181,10 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
  out:
 	if(argv){
-		osc_mem_free(argv);
+		osc_atom_array_u_free(argv);
 	}
 	if(copy){
-		free(copy);
+		osc_mem_free(copy);
 	}
 #elif defined (OCOND)
 	t_osc_expr *f = x->function_graph;
@@ -208,39 +216,56 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
 	outlet_anything(x->outlets[j], ps_FullPacket, 2, out);
  out:
+	if(argv){
+		osc_atom_array_u_free(argv);
+	}
 	if(copy){
 		free(copy);
 	}
 #endif
 
 #else
+	// o.expr
+
 	// we need to make a copy incase the expression contains assignment that will
 	// alter the bundle.
 	// the copy needs to use memory allocated with osc_mem_alloc in case the 
 	// bundle has to be resized during assignment
-	char *copy = (char *)osc_mem_alloc(len);
-	memcpy(copy, (char *)ptr, len);
+	char *copy = NULL;
+	long copylen = len;
+	if(strncmp((char *)ptr, "#bundle\0", 8)){
+		char alloc = 0;
+		osc_bundle_s_wrapMessage(len, (char *)ptr, &copylen, &copy, &alloc);
+	}else{
+		copy = (char *)osc_mem_alloc(len);
+		memcpy(copy, (char *)ptr, len);
+	}
 	int ret = 0;
 	t_osc_expr *f = x->function_graph;
-	while(f){
-		//int argc = 0;
+	if(!f){
 		t_osc_atom_ar_u *argv = NULL;
-		ret = osc_expr_funcall(f, &len, &copy, &argv);
-		if(argv){
-			osc_atom_array_u_free(argv);
+		osc_expr_evalLexExprsInBndl(&copylen, &copy, &argv);
+	}else{
+		while(f){
+			//int argc = 0;
+			t_osc_atom_ar_u *argv = NULL;
+			ret = osc_expr_funcall(f, &copylen, &copy, &argv);
+			if(argv){
+				osc_atom_array_u_free(argv);
+			}
+			if(ret){
+				break;
+			}
+			f = osc_expr_next(f);
 		}
-		if(ret){
-			break;
-		}
-		f = osc_expr_next(f);
 	}
 	t_atom out[2];
 	if(ret){
-		atom_setlong(out, len);
+		atom_setlong(out, copylen);
 		atom_setlong(out + 1, ptr);
 		outlet_anything(x->outlet, ps_FullPacket, 2, out);
 	}else{
-		atom_setlong(out, len);
+		atom_setlong(out, copylen);
 		atom_setlong(out + 1, (long)copy);
 		outlet_anything(x->outlet, ps_FullPacket, 2, out);
 	}
