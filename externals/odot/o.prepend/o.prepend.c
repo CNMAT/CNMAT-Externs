@@ -75,6 +75,7 @@ void *oppnd_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	if(len == OSC_HEADER_SIZE){
 		return;
 	}
