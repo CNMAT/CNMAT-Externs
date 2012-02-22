@@ -636,7 +636,6 @@
 						"enablehscroll" : 1,
 						"enablevscroll" : 1,
 						"devicewidth" : 0.0,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"maxclass" : "comment",
