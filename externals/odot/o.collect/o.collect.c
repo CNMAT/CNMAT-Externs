@@ -34,17 +34,20 @@ VERSION 0.0: First try
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
+#include "ext_critical.h"
 #include "osc.h"
 #include "osc_mem.h"
 #include "osc_bundle_s.h"
+#include "osc_bundle_iterator_s.h"
 #include "omax_util.h"
 
 typedef struct _ocoll{
 	t_object ob;
 	void *outlet;
 	char *buffer;
-	int buffer_len;
-	int buffer_pos;
+	long buffer_len;
+	long buffer_pos;
+	t_critical lock;
 } t_ocoll;
 
 void *ocoll_class;
@@ -65,24 +68,48 @@ void ocoll_fullPacket(t_ocoll *x, long len, long ptr){
 		// empty bundle
 		return;
 	}
+	critical_enter(x->lock);
 	if(x->buffer_pos + len > x->buffer_len){
 		char *tmp = (char *)realloc(x->buffer, x->buffer_pos + len);
 		if(!tmp){
 			object_error((t_object *)x, "Out of memory...sayonara max...");
+			critical_exit(x->lock);
 			return;
 		}
 		x->buffer = tmp;
 		memset(x->buffer + x->buffer_pos, '\0', len);
 		x->buffer_len = x->buffer_pos + len;
 	}
-
+	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, (char *)ptr);
+	while(osc_bndl_it_s_hasNext(it)){
+		t_osc_msg_s *m = osc_bndl_it_s_next(it);
+		t_osc_msg_ar_s *match = NULL;
+		osc_bundle_s_lookupAddress(x->buffer_pos, x->buffer, osc_message_s_getAddress(m), &match, 1);
+		if(!match){
+			long l = osc_message_s_getSize(m) + 4;
+			memcpy(x->buffer + x->buffer_pos, osc_message_s_getPtr(m), l);
+			x->buffer_pos += l;
+		}else{
+			// this function can resize its buffer, but we don't have to worry about that 
+			// since we already resized it above to accommidate the entire bundle
+			osc_bundle_s_replaceMessage(&(x->buffer_len),
+						    &(x->buffer),
+						    osc_message_array_s_get(match, 0),
+						    m);
+			osc_message_array_s_free(match);
+		}
+	}
+	osc_bndl_it_s_destroy(it);
+	/*
 	if(x->buffer_pos == 0){
 		memcpy(x->buffer, (char *)ptr, len);
 		x->buffer_pos += len;
 	}else{
 		memcpy(x->buffer + x->buffer_pos, (char *)ptr + 16, len - 16);
 		x->buffer_pos += len - 16;
-	}	
+	}
+	*/	
+	critical_exit(x->lock);
 }
 
 void ocoll_anything(t_ocoll *x, t_symbol *msg, int argc, t_atom *argv){
@@ -96,17 +123,27 @@ void ocoll_anything(t_ocoll *x, t_symbol *msg, int argc, t_atom *argv){
 }
 
 void ocoll_bang(t_ocoll *x){
-	if(x->buffer_pos > 16){
+//if(x->buffer_pos > 16){
+		critical_enter(x->lock);
 		t_atom out[2];
 		atom_setlong(out, x->buffer_pos);
 		int len = x->buffer_pos;
 		char outbuf[len];
 		memcpy(outbuf, x->buffer, len);
-		memset(x->buffer, '\0', len);
-		x->buffer_pos = 0;
+		memset(x->buffer + OSC_HEADER_SIZE, '\0', len - OSC_HEADER_SIZE);
+		x->buffer_pos = OSC_HEADER_SIZE;
+		critical_exit(x->lock);
 		atom_setlong(out + 1, (long)outbuf);
 		outlet_anything(x->outlet, ps_FullPacket, 2, out);
-	}
+//}
+}
+
+void ocoll_clear(t_ocoll *x)
+{
+	critical_enter(x->lock);
+	x->buffer_pos = OSC_HEADER_SIZE;
+	memset(x->buffer + OSC_HEADER_SIZE, '\0', x->buffer_len - OSC_HEADER_SIZE);
+	critical_exit(x->lock);
 }
 
 void ocoll_assist(t_ocoll *x, void *b, long m, long a, char *s){
@@ -125,6 +162,7 @@ void ocoll_free(t_ocoll *x){
 	if(x->buffer){
 		free(x->buffer);
 	}
+	critical_free(x->lock);
 }
 
 void *ocoll_new(t_symbol *msg, short argc, t_atom *argv){
@@ -141,7 +179,9 @@ void *ocoll_new(t_symbol *msg, short argc, t_atom *argv){
 		}
 		x->buffer = (char *)osc_mem_alloc(x->buffer_len * sizeof(char));
 		memset(x->buffer, '\0', x->buffer_len);
-		x->buffer_pos = 0;
+		x->buffer_pos = OSC_HEADER_SIZE;
+		osc_bundle_s_setBundleID(x->buffer);
+		critical_new(&(x->lock));
 	}
 		   	
 	return(x);

@@ -71,14 +71,18 @@ t_osc_err osc_parser_parseString(long len, char *ptr, t_osc_bndl_u **bndl, long 
 	osc_scanner_set_out(NULL, scanner);
 	t_osc_msg_u *msg = NULL;
 	t_osc_parser_bndl_list *bl = NULL;
-	osc_parser_parse(&bl, &msg, nsubs, subs, scanner);
+	int ret = osc_parser_parse(&bl, &msg, nsubs, subs, scanner);
 	osc_scanner__delete_buffer(buf_state, scanner);
 	osc_scanner_lex_destroy(scanner);
-	if(bl){
+	if(!ret){
 		*bndl = bl->bndl;
+	}
+	if(bl){
 		osc_mem_free(bl);
 	}
-
+	if(ret){
+		return OSC_ERR_PARSER;
+	}
 	return OSC_ERR_NONE;
 }
 

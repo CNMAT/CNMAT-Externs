@@ -79,9 +79,12 @@ int osc_expr_funcall(t_osc_expr *function, long *len, char **oscbndl, t_osc_atom
 		char *msg_s = NULL;
 		long len_s = 0;
 		osc_message_u_serialize(mm, &len_s, &msg_s);
+		t_osc_msg_s *osc_msg_s = osc_message_s_alloc();
+		osc_message_s_wrap(osc_msg_s, msg_s);
 		if(msg_ar){
-			osc_bundle_s_replaceMessage(len, oscbndl, osc_message_s_getPtr(osc_message_array_s_get(msg_ar, 0)), msg_s);
+			osc_bundle_s_replaceMessage(len, oscbndl, osc_message_array_s_get(msg_ar, 0), osc_msg_s);
 			osc_message_array_s_free(msg_ar);
+			osc_message_s_free(osc_msg_s);
 		}else{
 			char msg_sw[osc_message_s_getStructSize()];
 			osc_message_s_wrap((t_osc_msg_s *)msg_sw, msg_s);

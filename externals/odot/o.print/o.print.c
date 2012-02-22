@@ -81,6 +81,9 @@ void oprint_fullPacket(t_oprint *x, long len, long ptr){
 			start = buf + i + 1;
 		}
 	}
+	if(buf){
+		osc_mem_free(buf);
+	}
 }
 
 void oprint_anything(t_oprint *x, t_symbol *msg, int argc, t_atom *argv)

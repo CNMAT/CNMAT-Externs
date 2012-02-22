@@ -75,7 +75,7 @@ t_osc_msg_s *osc_bundle_iterator_s_next(t_osc_bndl_it_s *it){
 }
 
 int osc_bundle_iterator_s_hasNext(t_osc_bndl_it_s *it){
-	if(it->msgptr - it->bndl >= it->len){
+	if((it->msgptr - it->bndl >= it->len) || (it->len == OSC_HEADER_SIZE) || (it->msgptr == NULL)){
 		return 0;
 	}
 	if(it->msgptr == it->bndl && it->len > OSC_HEADER_SIZE){

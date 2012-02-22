@@ -63,6 +63,8 @@ typedef int (*t_osc_error_handler)(const char * const errorstr);
 
 #define OSC_ERR_PARSER_FUNCTIONNOTFOUND 0x100
 
+#define OSC_ERR_PARSER 0x1000
+
 int osc_error_handler(const char * const filename,
 		      const char * const functionname,
 		      int linenum,

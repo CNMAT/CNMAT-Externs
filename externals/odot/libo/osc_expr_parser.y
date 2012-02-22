@@ -196,8 +196,8 @@ int osc_expr_parser_checkArity(YYLTYPE *llocp, char *input_string, t_osc_expr_re
 			       input_string,
 			       OSC_ERR_EXPPARSE,
 			       "expected %d %s for function %s but found %d.",
-			       r->arity == 1 ? "argument" : "arguments",
 			       r->arity,
+			       r->arity == 1 ? "argument" : "arguments",
 			       r->name,
 			       i);
 		return 1;

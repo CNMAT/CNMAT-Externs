@@ -70,12 +70,13 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 t_symbol *ps_FullPacket;
 
 void opack_fullPacket(t_opack *x, long len, long ptr){
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	int inlet = proxy_getinlet((t_object *)x);
 	osc_message_u_clearArgs(osc_message_array_u_get(x->messages, inlet));
 	osc_message_u_appendBndl(osc_message_array_u_get(x->messages, inlet), len, (char *)ptr);
 	int shouldoutput = inlet == 0;
 #ifdef PAK
-	shouldoutput = 0;
+	shouldoutput = 1;
 #endif
 	if(shouldoutput){
 		opack_outputBundle(x);
@@ -213,6 +214,13 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 			numargs[i] = 0;
 			if(atom_gettype(argv + i) == A_SYM){
 				if(atom_getsym(argv + i)->s_name[0] == '/' || atom_getsym(argv + i)->s_name[0] == '#'){
+					int j;
+					for(j = 0; j < count; j++){
+						if(atom_getsym(addresses[j]) == atom_getsym(argv + i)){
+							object_error((t_object *)x, "duplicate addresses (%s) are not allowed", atom_getsym(addresses[j])->s_name);
+							return NULL;
+						}
+					}
 					addresses[count++] = argv + i;
 				}else{
 					numargs[count - 1]++;

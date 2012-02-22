@@ -1,8 +1,8 @@
 #+STARTUP: showall
 #+TODO: TODO(t) STARTED(s) WAITING(w) BUG(b) | DONE(d) DELEGATED(e) FIXED(f)
 #+begin_src C :tangle odot_version.h
-#define ODOT_VERSION "1.0.9a" 
-#define ODOT_RELEASE_DATE "[2012-01-18 Wed]"
+#define ODOT_VERSION "1.0.10a" 
+#define ODOT_RELEASE_DATE "[2012-02-21 Tue]"
 #define ODOT_COPYRIGHT_YEARS "2008-12"
 #define ODOT_AUTHORS "John MacCallum, Adrian Freed"
 #define ODOT_COPYRIGHT_STRING "Regents of the University of California. All rights reserved."
@@ -11,65 +11,13 @@
 					post("Copyright (c) %s %s", ODOT_COPYRIGHT_YEARS, ODOT_COPYRIGHT_STRING);\
 					gensym("odot_version_has_been_posted")->s_thing = (void *)1;}
 #+end_src
-* Object List
-- [ ] o.atomize
-- [X] o.change
-- [ ] o.collect
-- [ ] o.cond
-- [ ] o.difference
-- [ ] o.expr
-- [ ] o.if
-- [ ] o.intersection
-- [ ] o.mappatch
-- [ ] o.message
-- [ ] o.pack
-- [ ] o.pak
-- [ ] o.prepend
-- [ ] o.print
-- [ ] o.printbytes
-- [ ] o.route
-- [ ] o.select
-- [ ] o.union
-- [ ] o.unless
-- [ ] o.var
-- [ ] o.when
+
 * Open Issues
 ** Bugs
-*** General
-**** BUG All objects need to handle naked (valid) OSC messages and convert them to bundles. [17/21]
-- [X] o.atomize
-see o.expr
-- [X] o.change
-no change necessary
-- [X] o.collect
-- [X] o.cond
-will pass the original unbundled message out
-- [X] o.difference
-- [X] o.expr
-can't be done on the stack (with alloca) as the bundle may need to be resized while evaluating expression(s)
-- [X] o.if
-will pass the original unbundled message out
-- [X] o.intersection
-- [ ] o.mappatch
-- [ ] o.message
-- [ ] o.pack
-- [ ] o.pak
-- [X] o.prepend
-- [X] o.print
-- [X] o.printbytes
-- [X] o.route
-- [X] o.select
-- [X] o.union
-- [X] o.unless
-will pass the original unbundled message out
-- [X] o.var
-- [X] o.when
-will pass the original unbundled message out
 *** o.accumulate
 *** o.expr
 **** BUG Syntax error when compiling multiple expressions and the last one ends with a semicolon.
 **** BUG modulo (%) doesn't print properly when sending the post-functions message
-**** BUG o.expr crashes if instantiated with a function with arity > 0 with no args
 *** o.message
 **** BUG osc_message_u_getAddress crashed
 **** BUG 0   edu.cnmat.berkeley.o.route    0x0f9dfdec osc_message_s_wrap + 12
@@ -77,13 +25,8 @@ will pass the original unbundled message out
 2   edu.cnmat.berkeley.o.route    	0x0f9e7d38 osc_query_select_impl + 120
 3   edu.cnmat.berkeley.o.route    	0x0f9e80b0 osc_query_select + 112
 4   edu.cnmat.berkeley.o.route    	0x0f9dc03e oroute_fullPacket + 78
-*** o.prepend
-**** BUG o.prepend seems to not handle regular max messages in a consistent way
-This is a bug
 *** o.rename
 **** BUG o.rename doesn't handle partial matches correctly
-*** o.union/intersection/difference
-**** BUG duplicate addresses in the same input bundle are not removed.
 ** Feature Requests
 *** General
 **** DELEGATED Overview / tutorial patches
@@ -96,14 +39,21 @@ Jeff and/or Yotam are working on this
 **** TODO libo and libomax versions need to be reported.
 **** TODO Make sure assist strings are working for all objects
 **** TODO Explicit way to convert bundle to naked OSC message
-**** TODO Objects should filter duplicate addresses (o.accumulate, o.pa(c)k, o.mappatch, o.message, o.union, o.intersection, o.difference.
+**** STARTED objects that allow the creation of bundles should restrict them from having duplicate addresses [6/7]
+- [X] o.collect
+- [X] o.difference
+- [X] o.intersection
+- [ ] o.message
+- [X] o.pack
+- [X] o.pak
+- [X] o.union
 **** STARTED Implement error handler
 this may be a lifelong project...
 **** TODO Constants need to be checked for accuracy at all precisions
 **** TODO All formatting code needs to be refactored
 **** TODO udpsend encodes lists, floats and ints with addresses with no slashes
-*** o.message
-**** TODO Post an error when a non-OSC message gets sent into the right inlet
+*** o.let
+**** TODO assignment syntax should be the same as o.expr/if
 *** o.expr
 **** TODO if() should be a special case of cond and we should have when and unless
 **** TODO Change t_osc_expr_rec to support better documentation of function parameters
@@ -124,27 +74,76 @@ The use of ``function_graph'' in o.expr.c may also be inappropriate.
 *** new objects
 **** TODO o.typetages: outputs the typetags.
 **** TODO o.append
-**** TODO o.gensym
 ** Design questions
 *** The fact that o.route can output both bundles and Max data is a source of bugs.  Rewrite o.route?  
 New objects with more explicit behavior.
 
 * VERSION
 ** Bugs Fixed
+*** o.print
+**** FIXED memory leak
+*** o.route/select/atomize
+**** FIXED crash when sending a bundle to an object with no arguments
+*** o.prepend
+**** FIXED crash when sending a bundle to an object with no arguments
+** Changelog
+*** o.pak
+**** FIXED o.pak now outputs when it receives a bundle in an inlet
+	
+* VERSION 1.0.10a
+Released: [2012-02-21 Tue]
+** Bugs Fixed
+*** o.prepend
+**** FIXED o.prepend should complain when a float, int, or list is sent to it
+*** General
+**** FIXED All objects need to handle naked (valid) OSC messages and convert them to bundles. [21/21]
+- [X] o.atomize
+see o.expr
+- [X] o.change
+no change necessary
+- [X] o.collect
+- [X] o.cond
+will pass the original unbundled message out
+- [X] o.difference
+- [X] o.expr
+can't be done on the stack (with alloca) as the bundle may need to be resized while evaluating expression(s)
+- [X] o.if
+will pass the original unbundled message out
+- [X] o.intersection
+- [X] o.mappatch
+- [X] o.message
+- [X] o.pack
+- [X] o.pak
+- [X] o.prepend
+- [X] o.print
+- [X] o.printbytes
+- [X] o.route
+- [X] o.select
+- [X] o.union
+- [X] o.unless
+will pass the original unbundled message out
+- [X] o.var
+- [X] o.when
+will pass the original unbundled message out
 *** o.route
 **** FIXED a bug where o.route would not send out a bang for a complete match of an address with no data.
 **** FIXED o.route strips off the leading slash and first letter when matching a star
 **** FIXED o.route set message not working
 **** FIXED memory leak
 *** o.expr
+**** FIXED o.expr crashes if instantiated with a function with arity > 0 with no args
 **** FIXED o.expr != was wrong if one arg was a string and the other wasn't
 **** FIXED bound() now returns false when an address exists but has no data
 **** FIXED if() now returns all results of the true or false calculation, not just the first one
 *** o.if/cond/when/unless
 **** FIXED memory leak
 *** o.var/union/intersection/difference
+**** FIXED duplicate addresses in the same input bundle are not removed.
 **** FIXED crash when sending a bundle in the right inlet after sending the clear message
 ** Changelog
+*** o.message
+**** DONE Post an error when a non-OSC message gets sent into the right inlet
+**** DONE complain when parsing fails
 *** o.print
 **** DONE o.print should print any max messages
 *** o.message
@@ -152,6 +151,10 @@ New objects with more explicit behavior.
 *** o.expr
 **** DONE add tokenize() function to o.expr
 **** DONE true and false (also True/TRUE and False/FALSE) are now tokenized as booleans rather than strings
+*** o.collect
+**** DONE now outputs an empty bundle if the internal buffer is empty (instead of not doing anything)
+**** DONE o.collect now overwrites duplicate messages with the newest ones.  it assumes this is the
+intended behavior and so doesn't post an error
 * VERSION 1.0.9a
 Released: [2012-01-18 Wed]
 ** Bugs Fixed

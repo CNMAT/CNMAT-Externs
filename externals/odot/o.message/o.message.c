@@ -158,6 +158,7 @@ void omessage_fullPacket(t_omessage *x, long len, long ptr){
 }
 
 void omessage_doFullPacket(t_omessage *x, long len, long ptr){
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	if(x->bndl){
 		switch(x->bndltype){
 		case OMESSAGE_U:
@@ -493,6 +494,19 @@ void omessage_gettext(t_omessage *x){
 	t_object *textfield = jbox_get_textfield((t_object *)x);
 	object_method(textfield, gensym("gettextptr"), &text, &size);
 	{
+		if(x->bndl){
+			switch(x->bndltype){
+			case OMESSAGE_U:
+				osc_bundle_u_free(x->bndl);
+				break;
+			case OMESSAGE_S:
+				osc_bundle_s_deepFree(x->bndl);
+				break;
+			}
+			x->bndl = NULL;
+		}
+
+
 		size = strlen(text); // the value returned in text doesn't make sense
 		if(size == 0){
 			if(x->bndl){
@@ -520,29 +534,16 @@ void omessage_gettext(t_omessage *x){
 			memcpy(buf, text, size);
 			buf[size] = '\n';
 			buf[size + 1] = '\0';
+			size += 2;
 		}
 		t_osc_bndl_u *bndl = NULL;
 		t_osc_parser_subst *subs = NULL;
 		long nsubs = 0;
-		osc_parser_parseString(size + 2, buf, &bndl, &nsubs, &subs);
-		if(x->bndl){
-			switch(x->bndltype){
-			case OMESSAGE_U:
-				osc_bundle_u_free(x->bndl);
-				break;
-			case OMESSAGE_S:
-				{
-					char *p = osc_bundle_s_getPtr(x->bndl);
-					if(p){
-						osc_mem_free(p);
-					}
-					osc_bundle_s_free(x->bndl);
-				}
-				break;
-			}
-			x->bndl = NULL;
+		t_osc_err e = osc_parser_parseString(size, buf, &bndl, &nsubs, &subs);
+		if(e){
+			object_error((t_object *)x, "error parsing bundle\n");
+			return;
 		}
-
 		// format parsed bundle and display it
 		char *formatted = NULL;
 		long formattedlen = 0;

@@ -82,7 +82,15 @@ void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
 	oppnd_doFullPacket(x, len, ptr, x->sym_to_prepend, x->sym_to_prepend_len);
 }
 
-void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend, int sym_to_prepend_len){
+void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend, int sym_to_prepend_len)
+{
+	if(!sym_to_prepend){
+		t_atom out[2];
+		atom_setlong(out, len);
+		atom_setlong(out + 1, ptr);
+		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		return;
+	}
 	int num_messages = 0;
 	osc_bundle_s_getMsgCount(len, (char *)ptr, &num_messages);
 	char buf[len + (num_messages * (sym_to_prepend_len + 4))]; // not exact, but more than enough
@@ -115,6 +123,10 @@ void oppnd_set(t_oppnd *x, t_symbol *sym_to_prepend){
 }
 
 void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
+	if(!msg){
+		object_error((t_object *)x, "message must be an OSC address");
+		return;
+	}
 	t_symbol *address = msg, *sym_to_prepend = x->sym_to_prepend;
 	if(atom_gettype(argv) == A_SYM){
 		if(atom_getsym(argv) == ps_FullPacket){
@@ -160,58 +172,15 @@ void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
 	atom_setlong(out, len);
 	atom_setlong(out + 1, (long)oscbuf);
 	outlet_anything(x->outlet, ps_FullPacket, 2, out);
-	/*
-	if(atom_gettype(argv) == A_SYM){
-		if(atom_getsym(argv) == ps_FullPacket){
-			oppnd_doFullPacket(x, atom_getlong(argv + 1), atom_getlong(argv + 2), msg);
-			return;
-		}else{
-			t_symbol *sym_to_prepend = atom_getsym(argv);
-			char buf[strlen(msg->s_name) + strlen(sym_to_prepend->s_name)];
-			sprintf(buf, "%s%s", msg->s_name, sym_to_prepend->s_name);
-			t_symbol *address = gensym(buf);
-			int len = omax_util_get_bundle_size_for_atoms(gensym(buf), argc - 1, argv + 1);
-			char oscbuf[len];
-			memset(oscbuf, '\0', len);
-			strncpy(oscbuf, "#bundle\0", 8);
-			omax_util_encode_atoms(oscbuf + 16, address, argc - 1, argv + 1);
-			t_atom out[2];
-			atom_setlong(out, len);
-			atom_setlong(out + 1, (long)oscbuf);
-			outlet_anything(x->outlet, ps_FullPacket, 2, out);
-			//outlet_anything(x->outlet, gensym(buf), argc - 1, argv + 1);
-		}
-	}else{
-		char buf[strlen(msg->s_name) + strlen(x->sym_to_prepend->s_name)];
-		sprintf(buf, "%s%s", x->sym_to_prepend->s_name, msg->s_name);
-		t_symbol *address = gensym(buf);
-		int len = omax_util_get_bundle_size_for_atoms(gensym(buf), argc, argv);
-		char oscbuf[len];
-		memset(oscbuf, '\0', len);
-		strncpy(oscbuf, "#bundle\0", 8);
-		omax_util_encode_atoms(oscbuf + 16, address, argc, argv);
-		t_atom out[2];
-		atom_setlong(out, len);
-		atom_setlong(out + 1, (long)oscbuf);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
-	}
-	*/
 }
 
 void oppnd_list(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv){
-	oppnd_anything(x, NULL, argc, argv);
 }
 
 void oppnd_float(t_oppnd *x, double f){
-	t_atom a;
-	atom_setfloat(&a, f);
-	oppnd_anything(x, NULL, 1, &a);
 }
 
 void oppnd_long(t_oppnd *x, long l){
-	t_atom a;
-	atom_setlong(&a, l);
-	oppnd_anything(x, NULL, 1, &a);
 }
 
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s){
@@ -258,9 +227,9 @@ int main(void){
 	//class_addmethod(c, (method)oppnd_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oppnd_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)oppnd_anything, "anything", A_GIMME, 0);
-	class_addmethod(c, (method)oppnd_list, "list", A_GIMME, 0);
-	class_addmethod(c, (method)oppnd_float, "float", A_FLOAT, 0);
-	class_addmethod(c, (method)oppnd_long, "int", A_LONG, 0);
+	//class_addmethod(c, (method)oppnd_list, "list", A_GIMME, 0);
+	//class_addmethod(c, (method)oppnd_float, "float", A_FLOAT, 0);
+	//class_addmethod(c, (method)oppnd_long, "int", A_LONG, 0);
 
 	class_addmethod(c, (method)oppnd_set, "set", A_SYM, 0);
     

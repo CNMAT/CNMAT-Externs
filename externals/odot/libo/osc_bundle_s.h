@@ -68,10 +68,13 @@ void osc_bundle_s_setLen(t_osc_bndl_s *bndl, long len);
 void osc_bundle_s_setPtr(t_osc_bndl_s *bndl, char *ptr);
 t_osc_err osc_bundle_s_getMsgCount(int len, char *buf, int *count);
 t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_osc_msg_s*, void *), void *context);
+
+t_osc_err osc_bundle_s_addressIsBound(int len, char *buf, char *address, int fullmatch, int *res);
+t_osc_err osc_bundle_s_addressExists(int len, char *buf, char *address, int fullmatch, int *res);
 t_osc_err osc_bundle_s_lookupAddress(int len, char *buf, char *address, t_osc_array **osc_msg_s_array, int fullmatch);
 
 t_osc_err osc_bundle_s_wrapMessage(long len, char *msg, long *bndllen, char **bndl, char *alloc);
-t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, char *old, char *new);
+t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, t_osc_msg_s *oldmsg, t_osc_msg_s *newmsg);
 t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, t_osc_msg_s *msg);
 t_osc_err osc_bundle_s_appendMessage_b(t_osc_bndl_s **bndl, t_osc_msg_s *msg);
 t_osc_err osc_bundle_s_setBundleID(char *buf);

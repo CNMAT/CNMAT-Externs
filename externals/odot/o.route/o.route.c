@@ -108,7 +108,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr)
 #ifdef ATOMIZE
 		oroute_atomizeBundle(x->delegation_outlet, len, (char *)ptr);
 #else
-		oroute_outputBundle(x->outlets[0], len, (char *)ptr);
+		oroute_outputBundle(x->delegation_outlet, len, (char *)ptr);
 #endif
 	}
 }
@@ -180,6 +180,10 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 }
 
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv){
+	if(x->num_selectors == 0){
+		outlet_anything(x->delegation_outlet, msg, argc, argv);
+		return;
+	}
 	long inlet = proxy_getinlet((t_object *)x);
 	if(inlet > 0){
 		oroute_doSet(x, inlet, msg);

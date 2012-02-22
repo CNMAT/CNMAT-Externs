@@ -97,14 +97,8 @@ t_max_err omap_notify(t_omap *x, t_symbol *s, t_symbol *msg, void *sender, void 
 
 t_symbol *ps_FullPacket;
 
-/*
-0   edu.cnmat.berkeley.o.mappatch 	0x0dfbb7c2 osc_message_u_appendAtom + 18
-1   edu.cnmat.berkeley.o.mappatch 	0x0dfc32eb omax_util_maxAtomsToOSCMsg_u + 251
-2   edu.cnmat.berkeley.o.mappatch 	0x0dfb6071 omap_list + 97
-3   edu.cnmat.berkeley.o.mappatch 	0x0dfb6000 omap_anything + 160
- */
-
 void omap_fullPacket(t_omap *x, long len, long ptr){
+	osc_bundle_s_wrap_naked_message(len, ptr);
 	if(proxy_getinlet((t_object *)x) == 1){
 		if(!(x->msg) && !(x->bndl)){
 			return;

@@ -106,6 +106,8 @@ char *osc_error_string(t_osc_err err){
 		return "function not found";
 	case OSC_ERR_EXPPARSE:
 		return "error parsing expression";
+	case OSC_ERR_PARSER:
+		return "error parsing OSC bundle";
 	default:
 		return "unrecognized error code";
 	}
