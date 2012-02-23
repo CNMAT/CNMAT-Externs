@@ -56,8 +56,8 @@ $[1-9]+	{
 		return *yytext;
 	}
 
-\n	{
-		return *yytext;
+(\n[[:space:]]*)+	{
+		return '\n';
 	}
 
 \'[a-zA-Z]\' {

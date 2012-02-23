@@ -156,6 +156,10 @@ quote[[:space:]]*\( {
 						return OSC_EXPR_NUM;
 					}
 
+;+|(;[[:space:]]*)+			{
+						// attempt to get rid of repeated semicolons
+						return ';';
+					}
 ,|;|\(|\)				{
 						return *yytext;
 					}

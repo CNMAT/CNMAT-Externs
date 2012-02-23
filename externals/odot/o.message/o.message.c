@@ -529,6 +529,7 @@ void omessage_gettext(t_omessage *x){
 			return;
 		}
 		char *buf = text;
+
 		if(text[size - 1] != '\n'){
 			buf = alloca(size + 2);
 			memcpy(buf, text, size);
@@ -536,6 +537,7 @@ void omessage_gettext(t_omessage *x){
 			buf[size + 1] = '\0';
 			size += 2;
 		}
+
 		t_osc_bndl_u *bndl = NULL;
 		t_osc_parser_subst *subs = NULL;
 		long nsubs = 0;
@@ -548,6 +550,11 @@ void omessage_gettext(t_omessage *x){
 		char *formatted = NULL;
 		long formattedlen = 0;
 		osc_bundle_u_format(bndl, &formattedlen, &formatted);
+		char *ptr = formatted + (formattedlen - 1);
+		while(*ptr == '\n'){
+			*ptr = '\0';
+			*ptr--;
+		}
 		object_method(jbox_get_textfield((t_object *)x), gensym("settext"), formatted);
 		if(formatted){
 			osc_mem_free(formatted);

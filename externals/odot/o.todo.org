@@ -16,7 +16,6 @@
 ** Bugs
 *** o.accumulate
 *** o.expr
-**** BUG Syntax error when compiling multiple expressions and the last one ends with a semicolon.
 **** BUG modulo (%) doesn't print properly when sending the post-functions message
 *** o.message
 **** BUG osc_message_u_getAddress crashed
@@ -52,8 +51,6 @@ this may be a lifelong project...
 **** TODO Constants need to be checked for accuracy at all precisions
 **** TODO All formatting code needs to be refactored
 **** TODO udpsend encodes lists, floats and ints with addresses with no slashes
-*** o.let
-**** TODO assignment syntax should be the same as o.expr/if
 *** o.expr
 **** TODO if() should be a special case of cond and we should have when and unless
 **** TODO Change t_osc_expr_rec to support better documentation of function parameters
@@ -80,13 +77,19 @@ New objects with more explicit behavior.
 
 * VERSION
 ** Bugs Fixed
+*** o.expr
+**** FIXED Syntax error when compiling expressions and the last one ends with a semicolon.
 *** o.print
 **** FIXED memory leak
 *** o.route/select/atomize
 **** FIXED crash when sending a bundle to an object with no arguments
 *** o.prepend
 **** FIXED crash when sending a bundle to an object with no arguments
+*** o.message
+**** FIXED o.message no longer inserts extra newline characters after typing
 ** Changelog
+*** o.let
+**** DONE assignment syntax should be the same as o.expr/if
 *** o.pak
 **** FIXED o.pak now outputs when it receives a bundle in an inlet
 	

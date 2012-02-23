@@ -115,16 +115,17 @@ int osc_expr_evalLexExprsInBndl(long *len, char **oscbndl, t_osc_atom_ar_u **out
 					if(expr){
 						t_osc_expr *f = NULL;
 						osc_expr_parser_parseString(expr, &f);
-						if(f){
+						while(f){
 							int ret = osc_expr_funcall(f, len, oscbndl, out);
-							osc_expr_free(f);
-							if(expr){
-								osc_mem_free(expr);
-							}
 							if(ret){
+								osc_mem_free(expr);
+								osc_expr_free(f);
 								return ret;
 							}
+							f = osc_expr_next(f);
 						}
+						osc_mem_free(expr);
+						osc_expr_free(f);
 					}
 				}
 			}
@@ -283,32 +284,44 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 #ifdef __OSC_PROFILE__
 				printf("%s\n", buff);
 #endif
-				if(f){
+				int ret = 0;
+				*out = osc_atom_array_u_alloc(1);
+				osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), 0);
+				while(f){
 					t_osc_atom_ar_u *ar = NULL;
-					int ret = osc_expr_funcall(f, len, oscbndl, &ar);
-					*out = osc_atom_array_u_alloc(1);
-					osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), ret);
+					ret = osc_expr_funcall(f, len, oscbndl, &ar);
 					if(ar){
 						osc_atom_array_u_free(ar);
 					}
-					osc_expr_free(f);
+					if(ret){
+						osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), ret);
+						break;
+					}
+					f = osc_expr_next(f);
 				}
+				osc_expr_free(f);
 			}else{
 				long buflen = 0;
 				char *buf = NULL;
 				osc_atom_array_u_getStringArray(arg, &buflen, &buf);
 				t_osc_expr *f = NULL;
 				osc_expr_parser_parseString(buf, &f);
-				if(f){
+				int ret = 0;
+				*out = osc_atom_array_u_alloc(1);
+				osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), 0);
+				while(f){
 					t_osc_atom_ar_u *ar = NULL;
-					int ret = osc_expr_funcall(f, len, oscbndl, &ar);
-					*out = osc_atom_array_u_alloc(1);
-					osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), ret);
+					ret = osc_expr_funcall(f, len, oscbndl, &ar);
 					if(ar){
 						osc_atom_array_u_free(ar);
 					}
-					osc_expr_free(f);
+					if(ret){
+						osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), ret);
+						break;
+					}
+					f = osc_expr_next(f);
 				}
+				osc_expr_free(f);
 				if(buf){
 					osc_mem_free(buf);
 				}

@@ -116,7 +116,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	char *copy = NULL;
 	long copylen = 0;
 	char alloc = 0;
-	if(strncmp(ptr, "#bundle\0", 8)){
+	if(strncmp((char *)ptr, "#bundle\0", 8)){
 		osc_bundle_s_wrapMessage(len, (char *)ptr, &copylen, &copy, &alloc);
 	}else{
 		copy = (char *)osc_mem_alloc(len);
@@ -583,14 +583,14 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 				x->function_graph = NULL;
 			}
 		}
-		/*
+
 		int n = 0;
 		while(f){
 			n++;
 			f = osc_expr_next(f);
 		}
-		*/
-		int n = nfunctions;
+
+		//int n = nfunctions;
 #if defined (OIF)
 		if(n == 0 || n > 1){
 			object_error((t_object *)x, "invalid number of expressions: %d", n);

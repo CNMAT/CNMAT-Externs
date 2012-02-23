@@ -88,6 +88,10 @@ t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f){
 	//printf("parsing %s\n", ptr);
 	int len = strlen(ptr);
 	int alloc = 0;
+
+	// expressions really have to end with a semicolon, but it's nice to write single
+	// expressions without one (or to leave it off the last one), so we add one to the
+	// end of the string here just in case.
 	if(ptr[len - 1] != ';'){
 		char *tmp = osc_mem_alloc(len + 2);
 		memcpy(tmp, ptr, len + 1);
@@ -96,6 +100,7 @@ t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f){
 		ptr = tmp;
 		alloc = 1;
 	}
+
 	yyscan_t scanner;
 	osc_expr_scanner_lex_init(&scanner);
 	YY_BUFFER_STATE buf_state = osc_expr_scanner__scan_string(ptr, scanner);
@@ -418,7 +423,8 @@ t_osc_expr *osc_expr_parser_reduce_NullCoalescingOperator(YYLTYPE *llocp,
 
 %%
 
-expns: 
+expns:
+	| expns ';' {;}
 	| expns expr ';' {
 		if(*exprstack){
 			osc_expr_appendExpr(*exprstack, $2);
@@ -468,7 +474,7 @@ arg:    OSC_EXPR_NUM {
   	}
 ;
 
-expr:   
+expr:
 	'(' expr ')' {
 		$$ = $2;
   	}
