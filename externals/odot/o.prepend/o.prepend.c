@@ -186,7 +186,7 @@ void oppnd_long(t_oppnd *x, long l){
 void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET)
 		if(x->sym_to_prepend){
-			sprintf(s,"FullPacket with %s prepend to each address", x->sym_to_prepend->s_name);
+			sprintf(s,"FullPacket with %s prepended to each address", x->sym_to_prepend->s_name);
 		}else{
 			sprintf(s,"FullPacket with <nothing> prepend to each address");
 		}

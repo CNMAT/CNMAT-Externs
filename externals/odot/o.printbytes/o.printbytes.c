@@ -47,21 +47,23 @@ void opbytes_assist(t_opbytes *x, void *b, long m, long a, char *s);
 void *opbytes_new(t_symbol *msg, short argc, t_atom *argv);
 
 void opbytes_fullPacket(t_opbytes *x, long len, long ptr){
-	unsigned char *buf = (char *)ptr;
+	unsigned char *buf = (unsigned char *)ptr;
 	int i;
+	post("%-12s%-12s%s", "Byte #", "ASCII", "Decimal");
 	for(i = 0; i < len; i++){
-		post("%d %c 0x%x", i, buf[i], buf[i]);
+		if(buf[i] == '\0'){
+			post("%05d       %-14s%d", i, "'\\0'", buf[i]);
+		}else{
+			char b[32];
+			sprintf(b, "'%c'", buf[i]);
+			post("%05d       %-14s%d", i, b, buf[i]);
+		}
 	}
 }
 
 void opbytes_assist(t_opbytes *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
-		sprintf(s,"Full Packet");
-	else {
-		switch (a) {	
-		case 0:
-			break;
-		}
+	if(m == ASSIST_INLET){
+		sprintf(s,"Print each byte of an OSC FullPacket to the Max window");
 	}
 }
 

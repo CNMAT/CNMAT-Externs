@@ -79,6 +79,9 @@ typedef struct _oexpr{
 #else
 	void *outlet;
 #endif
+#ifdef OCOND
+	int num_exprs;
+#endif
 	t_osc_expr *function_graph;
 	//t_jrgba background_color, frame_color, text_color;
 } t_oexpr;
@@ -466,11 +469,27 @@ void oexpr_documentation(t_oexpr *x, t_symbol *func)
 
 void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET){
-	}else{
-		switch (a) {	
-		case 0:
-			break;
+#ifdef OCOND
+		if(a == x->num_exprs){
+			sprintf(s, "Input OSC FullPacket if all expressions return false or zero");
+		}else{
+			sprintf(s, "Input OSC FullPacket if expression %ld returns true or non-zero", a + 1);
 		}
+#elif defined(OIF)
+		if(a == 1){
+			sprintf(s, "Input OSC FullPacket if the expression returns false or zero");
+		}else{
+			sprintf(s, "Input OSC FullPacket if the expression returns true or non-zero");
+		}
+#elif defined(OWHEN)
+		sprintf(s, "Input OSC FullPacket if the expression returns true or non-zero");
+#elif defined(OUNLESS)
+		sprintf(s, "Input OSC FullPacket if the expression returns true or non-zero");
+#else
+		sprintf(s, "OSC FullPacket containing the results of the expression");
+#endif
+	}else{
+		sprintf(s, "OSC FullPacket containing addresses that the expression will be applied to");
 	}
 }
 
@@ -606,6 +625,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 		}
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
 #elif defined (OCOND)
+		x->num_exprs = n;
 		// implicit 't' as the last condition
 		x->outlets = malloc(n + 1 * sizeof(void *));
 		int i;

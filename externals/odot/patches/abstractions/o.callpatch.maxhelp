@@ -118,8 +118,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 496.0, 240.0, 50.0, 21.0 ],
-					"text" : "/foo 10 \n",
+					"patching_rect" : [ 496.0, 240.0, 52.0, 20.0 ],
+					"text" : "/foo 10 ",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -147,8 +147,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 496.0, 288.0, 73.0, 35.0 ],
-					"text" : "\n",
+					"patching_rect" : [ 496.0, 288.0, 73.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -162,8 +161,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 496.0, 192.0, 53.0, 35.0 ],
-					"text" : " \n",
+					"patching_rect" : [ 496.0, 192.0, 53.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -177,8 +175,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 496.0, 136.0, 50.0, 21.0 ],
-					"text" : "/foo 10 \n",
+					"patching_rect" : [ 496.0, 136.0, 52.0, 20.0 ],
+					"text" : "/foo 10 ",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -274,7 +272,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 240.0, 168.0, 221.0, 34.0 ],
+					"patching_rect" : [ 240.0, 168.0, 225.0, 34.0 ],
 					"text" : "by default, o.callpatch assigns the result to the address of the first argument"
 				}
 
@@ -386,8 +384,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 120.0, 136.0, 50.0, 21.0 ],
-					"text" : "/foo 10 \n",
+					"patching_rect" : [ 120.0, 136.0, 52.0, 20.0 ],
+					"text" : "/foo 10 ",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -401,8 +399,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 496.0, 376.0, 97.0, 21.0 ],
-					"text" : "/xyz 0.5 0.3 0.2 \n",
+					"patching_rect" : [ 496.0, 376.0, 97.0, 20.0 ],
+					"text" : "/xyz 0.5 0.3 0.2 ",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -416,8 +414,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 496.0, 456.0, 145.0, 35.0 ],
-					"text" : "\n",
+					"patching_rect" : [ 496.0, 456.0, 145.0, 20.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -461,7 +458,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 128.0, 352.0, 120.0, 48.0 ],
-					"text" : "/x 0.5 \n/y 0.3 \n/z 0.2 \n",
+					"text" : "/x 0.5 \n/y 0.3 \n/z 0.2 ",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -679,7 +676,7 @@
  ],
 		"dependency_cache" : [ 			{
 				"name" : "o.callpatch.maxpat",
-				"bootpath" : "/Users/Yotam/Software/svn/cnmat/trunk/max/externals/odot/patches/abstractions",
+				"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/abstractions",
 				"patcherrelativepath" : "",
 				"type" : "JSON",
 				"implicit" : 1

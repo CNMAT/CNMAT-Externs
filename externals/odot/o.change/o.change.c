@@ -123,7 +123,7 @@ void ochange_bang(t_ochange *x){
 }
 
 void ochange_assist(t_ochange *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
+	if (m == ASSIST_INLET)
 		sprintf(s, "OSC FullPacket");
 	else {
 		switch (a) {	

@@ -122,11 +122,7 @@ void oprint_float(t_oprint *x, double f)
 
 void oprint_assist(t_oprint *x, void *b, long m, long a, char *s){
 	if(m == ASSIST_INLET){
-		switch (a) {	
-		case 0:
-			sprintf(s,"FullPacket");
-			break;
-		}
+		sprintf(s,"Print the contents of an OSC FullPacket to the Max window.");
 	}
 }
 

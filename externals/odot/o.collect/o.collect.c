@@ -147,7 +147,7 @@ void ocoll_clear(t_ocoll *x)
 }
 
 void ocoll_assist(t_ocoll *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
+	if (m == ASSIST_INLET)
 		sprintf(s,"OSC bundles to collect.");
 	else {
 		switch (a) {	

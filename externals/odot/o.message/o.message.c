@@ -32,9 +32,6 @@
   VERSION 2.0: uses newly refactored libo and has initial support for nested bundles
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-0   edu.cnmat.berkeley.o.message  	0x0e258c96 osc_message_u_getAddress + 6
-1   edu.cnmat.berkeley.o.message  	0x0e2546b2 omessage_list + 274
-2   edu.cnmat.berkeley.o.message  	0x0e254548 omessage_int + 56
 */
 
 #include <string.h>
@@ -844,19 +841,18 @@ void omessage_free(t_omessage *x){
 
 void omessage_assist(t_omessage *x, void *b, long io, long index, char *s){
 	switch(io){
-	case 1:
+	case ASSIST_INLET:
 		switch(index){
 		case 0:
-			sprintf(s, "");
+			sprintf(s, "Bang sends the OSC FullPacket out");
+			break;
+		case 1:
+			sprintf(s, "Set the contents");
 			break;
 		}
 		break;
-	case 2:
-		switch(index){
-		case 0:
-			sprintf(s, "");
-			break;
-		}
+	case ASSIST_OUTLET:
+		sprintf(s, "OSC FullPacket");
 		break;
 	}
 }
