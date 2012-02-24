@@ -119,6 +119,7 @@ int osc_expr_rand(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 int osc_expr_sign(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_bound(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
+int osc_expr_exists(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_emptybundle(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_identity(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
 int osc_expr_eval(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out);
@@ -307,7 +308,8 @@ static t_osc_expr_rec osc_expr_funcsym[] = {
 	//{"rand", osc_expr_rand, 0, NULL, "Crappy UNIX rand() scaled to [0.,1.]"},
 	{"sign", osc_expr_sign, 1, NULL, "Sign function--returns -1 if <arg1> < 0, 0 if <arg1> == 0, and 1 if <arg1> > 1"},
 	{"if", osc_expr_if, -1, NULL, "Conditionally execute <arg2> or optional <arg3> based on the result of <arg1>"},
-	{"bound", osc_expr_bound, 1, NULL, "Check for the existance a message with address <arg1>."},
+	{"bound", osc_expr_bound, 1, NULL, "True if the address exists and has data bound to it, false otherwise."},
+	{"exists", osc_expr_exists, 1, NULL, "True if the address exists (regardless of whether it has data bound to it."},
 	{"emptybundle", osc_expr_emptybundle, 0, NULL, "True if the bundle is empty, false otherwise."},
 	{"identity", osc_expr_identity, -1, NULL, "Just what it says"},
 	{"eval", osc_expr_eval, 1, NULL, "Evaluate a function bound to an OSC address"},

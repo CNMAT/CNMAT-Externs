@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 2
+			"revision" : 3
 		}
 ,
 		"rect" : [ 20.0, 46.0, 775.0, 491.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 3
 						}
 ,
 						"rect" : [ 20.0, 72.0, 775.0, 465.0 ],
@@ -74,7 +74,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 17.5, 78.0, 380.0, 20.0 ],
-									"text" : "map the contents of a bundle onto a Max patch",
+									"text" : "Map the contents of a bundle onto a Max patch",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
@@ -244,7 +244,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 17.5, 315.0, 93.5, 48.0 ],
-									"text" : "/freq 44 \n/midi -36.3763 \n/nada 0 \n",
+									"text" : "/freq 44 \n/midi -36.3763 \n/nada 0 ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -288,7 +288,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 92.0, 137.0, 64.0, 48.0 ],
-									"text" : "/freq 440.\n/gain 1.\n/nada 0.",
+									"text" : "/freq 440. \n/gain 1. \n/nada 0. ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -451,14 +451,14 @@
 					"patching_rect" : [ 72.0, 86.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"default_fontface" : 0,
-						"tags" : "",
-						"fontname" : "Arial",
 						"digest" : "",
 						"default_fontname" : "Arial",
-						"globalpatchername" : "",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"fontface" : 0,
 						"description" : "",
+						"tags" : "",
+						"fontface" : 0,
+						"globalpatchername" : "",
 						"fontsize" : 12.0
 					}
 ,

@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 2
+			"revision" : 3
 		}
 ,
 		"rect" : [ 11.0, 53.0, 804.0, 364.0 ],
@@ -41,10 +41,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 3
 						}
 ,
-						"rect" : [ 0.0, 26.0, 804.0, 338.0 ],
+						"rect" : [ 11.0, 79.0, 804.0, 338.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -73,7 +73,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "FullPacket" ],
-									"patching_rect" : [ 566.0, 242.0, 102.0, 20.0 ],
+									"patching_rect" : [ 566.0, 242.0, 114.0, 20.0 ],
 									"text" : "o.atomize /bar /bloo"
 								}
 
@@ -86,8 +86,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 566.0, 274.0, 136.0, 20.0 ],
-									"text" : "print successive_output"
+									"patching_rect" : [ 566.0, 274.0, 73.0, 20.0 ],
+									"text" : "print nested"
 								}
 
 							}
@@ -128,7 +128,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 489.0, 210.0, 49.0, 20.0 ],
+									"patching_rect" : [ 489.0, 210.0, 61.0, 20.0 ],
 									"text" : "o.atomize"
 								}
 
@@ -174,7 +174,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 175.0, 274.0, 50.0, 18.0 ]
+									"patching_rect" : [ 175.0, 274.0, 50.0, 18.0 ],
+									"text" : "a r s"
 								}
 
 							}
@@ -187,7 +188,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 105.0, 274.0, 50.0, 18.0 ]
+									"patching_rect" : [ 105.0, 274.0, 50.0, 18.0 ],
+									"text" : "1 2 3"
 								}
 
 							}
@@ -230,7 +232,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 136.0, 48.0, 150.0, 62.0 ],
-									"text" : "/foo [\n/bar 1 2 3\n/bloo a r s\n]",
+									"text" : "/foo [\n/bar 1 2 3 \n/bloo \"a\" \"r\" \"s\" \n]",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -345,14 +347,14 @@
 					"patching_rect" : [ 82.0, 147.0, 110.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"default_fontface" : 0,
-						"tags" : "",
-						"fontname" : "Arial",
 						"digest" : "",
 						"default_fontname" : "Arial",
-						"globalpatchername" : "",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"fontface" : 0,
 						"description" : "",
+						"tags" : "",
+						"fontface" : 0,
+						"globalpatchername" : "",
 						"fontsize" : 12.0
 					}
 ,
@@ -373,10 +375,10 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 2
+							"revision" : 3
 						}
 ,
-						"rect" : [ 11.0, 79.0, 804.0, 338.0 ],
+						"rect" : [ 0.0, 26.0, 804.0, 338.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -406,7 +408,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 78.0, 456.0, 20.0 ],
-									"text" : "display and send any given bundle with the capability to handle specified arguments",
+									"text" : "Create and display OSC bundles.",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
@@ -488,7 +490,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 172.0, 236.0, 161.0, 20.0 ],
+									"patching_rect" : [ 185.0, 236.0, 161.0, 20.0 ],
 									"text" : "$n style variable substitution"
 								}
 
@@ -529,8 +531,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 102.0, 236.0, 65.0, 20.0 ],
-									"text" : "/foo 1 $1 3",
+									"patching_rect" : [ 102.0, 236.0, 77.0, 20.0 ],
+									"text" : "/foo 1 \"$1\" 3 ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -597,7 +599,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 102.0, 136.0, 59.0, 20.0 ],
-									"text" : "/foo 1 2 3",
+									"text" : "/foo 1 2 3 ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -667,14 +669,14 @@
 					"patching_rect" : [ 66.0, 84.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"default_fontface" : 0,
-						"tags" : "",
-						"fontname" : "Arial",
 						"digest" : "",
 						"default_fontname" : "Arial",
-						"globalpatchername" : "",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"fontface" : 0,
 						"description" : "",
+						"tags" : "",
+						"fontface" : 0,
+						"globalpatchername" : "",
 						"fontsize" : 12.0
 					}
 ,

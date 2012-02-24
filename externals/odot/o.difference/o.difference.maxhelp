@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 4
+			"revision" : 3
 		}
 ,
 		"rect" : [ 100.0, 100.0, 541.0, 367.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 4
+							"revision" : 3
 						}
 ,
 						"rect" : [ 100.0, 126.0, 541.0, 341.0 ],
@@ -144,8 +144,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 16.0, 78.0, 452.0, 20.0 ],
-									"text" : "output a bundle containing the difference between two input bundles",
+									"patching_rect" : [ 16.0, 78.0, 494.0, 20.0 ],
+									"text" : "Output a bundle containing messages with addresses that are not common to both bundles",
 									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
@@ -167,26 +167,14 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-8",
-									"linecount" : 4,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 240.0, 183.0, 161.0, 62.0 ],
-									"text" : "Outputs a bundle containing all the OSC messages with addresses that are not present in both bundles"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 12.0,
 									"id" : "obj-6",
+									"linecount" : 3,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 114.0, 224.0, 78.0, 20.0 ],
+									"patching_rect" : [ 114.0, 224.0, 78.0, 48.0 ],
+									"text" : "/bar 4 5 6 \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -202,7 +190,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 196.0, 124.0, 148.0, 35.0 ],
-									"text" : "/foo \"a\" \"r\" \"s\" \"t\" \n/bloo \"o\" \"i\" \"e\" \"n\" \n",
+									"text" : "/foo \"a\" \"r\" \"s\" \"t\" \n/bloo \"o\" \"i\" \"e\" \"n\" ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -217,8 +205,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 114.0, 124.0, 62.0, 35.0 ],
-									"text" : "/foo 1 2 3 \n/bar 4 5 6 \n",
+									"patching_rect" : [ 114.0, 124.0, 66.0, 35.0 ],
+									"text" : "/foo 1 2 3 \n/bar 4 5 6 ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -306,15 +294,16 @@
 ,
 					"patching_rect" : [ 52.0, 88.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontsize" : 12.0,
-						"fontface" : 0,
-						"description" : "",
-						"fontsize" : 12.0,
-						"tags" : "",
-						"globalpatchername" : "",
 						"default_fontface" : 0,
 						"digest" : "",
-						"default_fontname" : "Arial"
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"description" : "",
+						"tags" : "",
+						"fontface" : 0,
+						"globalpatchername" : "",
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p basic"

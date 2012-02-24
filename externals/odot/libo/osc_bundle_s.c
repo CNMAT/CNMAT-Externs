@@ -130,7 +130,7 @@ t_osc_err osc_bundle_s_getMessagesWithCallback(int len, char *buf, void (*f)(t_o
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_s_addressIsBound(int len, char *buf, char *address, int fullmatch, int *res)
+t_osc_err osc_bundle_s_addressIsBound(long len, char *buf, char *address, int fullmatch, int *res)
 {
 	*res = 0;
 	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, buf);
@@ -156,7 +156,7 @@ t_osc_err osc_bundle_s_addressIsBound(int len, char *buf, char *address, int ful
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_s_addressExists(int len, char *buf, char *address, int fullmatch, int *res)
+t_osc_err osc_bundle_s_addressExists(long len, char *buf, char *address, int fullmatch, int *res)
 {
 	*res = 0;
 	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, buf);

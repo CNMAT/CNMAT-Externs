@@ -546,9 +546,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 		osc_error_setHandler(omax_util_liboErrorHandler);
 		t_osc_expr *f = NULL;
 		int haspound = 0;
-		int nfunctions = 0;
 		if(argc){
-			nfunctions = 1;
 			char buf[65536];
 			char *ptr = buf;
 			int i;
@@ -564,27 +562,22 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 					{
 						char *s = atom_getsym(argv + i)->s_name;
 						int len = strlen(s);
-						ptr += sprintf(ptr, "%s ", s);
+						
 						if(*s == '#'){
 							if(len > 1){
 								if(s[1] > 47 && s[1] < 58){
 									haspound++;
+									ptr += sprintf(ptr, "%d ", 0);
+									break;
 								}
 							}
 						}
-						int j;
-						for(j = 0; j < len; j++){
-							if(s[j] == ';'){
-								if(!(i == argc - 1 && j == len - 1)){
-									nfunctions++;
-								}
-							}
-						}
+						ptr += sprintf(ptr, "%s ", s);
 					}
 					break;
 				}
 			}
-			if(!haspound){
+			if(1){//if(!haspound){
 				TIMER_START(foo, rdtsc_cps);
 				int ret = osc_expr_parser_parseString(buf, &f);
 				TIMER_STOP(foo, rdtsc_cps);
@@ -609,7 +602,6 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 			f = osc_expr_next(f);
 		}
 
-		//int n = nfunctions;
 #if defined (OIF)
 		if(n == 0 || n > 1){
 			object_error((t_object *)x, "invalid number of expressions: %d", n);

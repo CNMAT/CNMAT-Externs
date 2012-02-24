@@ -201,27 +201,16 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 			}
 			return ret;
 		}
-		//t_osc_atom_ar_u *argv_out = osc_atom_array_u_alloc(osc_atom_array_u_getLen(argv));
+
 		int j;
 		for(j = 0; j < osc_atom_array_u_getLen(argv); j++){
 			if(osc_atom_u_getInt32(osc_atom_array_u_get(argv, j)) && (f_argc > 1)){
-				//t_osc_atom_ar_u *arg_true = NULL;
-				//osc_expr_getArg(f_argv->next, len, oscbndl, &arg_true);
 				osc_expr_getArg(f_argv->next, len, oscbndl, out);
-				//t_osc_atom_u *a = osc_atom_array_u_get(argv_out, j);
-				//osc_atom_u_copy(&a, osc_atom_array_u_get(arg_true, 0));
-				//osc_atom_array_u_free(arg_true);
 			}else if(f_argc > 2){
-				//t_osc_atom_ar_u *arg_false = NULL;
-				//osc_expr_getArg(f_argv->next->next, len, oscbndl, &arg_false);
 				osc_expr_getArg(f_argv->next->next, len, oscbndl, out);
-				//t_osc_atom_u *a = osc_atom_array_u_get(argv_out, j);
-				//osc_atom_u_copy(&a, osc_atom_array_u_get(arg_false, 0));
-				//osc_atom_array_u_free(arg_false);
 			}
 		}
 		osc_atom_array_u_free(argv);
-		//*out = argv_out;
 	}else if(f->rec->func == osc_expr_emptybundle){
 		*out = osc_atom_array_u_alloc(1);
 		if(*len == OSC_HEADER_SIZE){
@@ -231,18 +220,14 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}
 	}else if(f->rec->func == osc_expr_bound){
 		*out = osc_atom_array_u_alloc(1);
-		t_osc_msg_ar_s *m = NULL;
-		osc_bundle_s_lookupAddress(*len, *oscbndl, f_argv->arg.osc_address, &m, 1);
-		if(m){
-			if(osc_message_s_getArgCount(osc_message_array_s_get(m, 0)) > 0){
-				osc_atom_u_setTrue(osc_atom_array_u_get(*out, 0));
-			}else{
-				osc_atom_u_setFalse(osc_atom_array_u_get(*out, 0));
-			}
-			osc_atom_array_u_free(m);
-		}else{
-			osc_atom_u_setFalse(osc_atom_array_u_get(*out, 0));
-		}
+		int res = 0;
+		osc_bundle_s_addressIsBound(*len, *oscbndl, f_argv->arg.osc_address, 1, &res);
+		osc_atom_u_setBool(osc_atom_array_u_get(*out, 0), res);
+	}else if(f->rec->func == osc_expr_exists){
+		*out = osc_atom_array_u_alloc(1);
+		int res = 0;
+		osc_bundle_s_addressExists(*len, *oscbndl, f_argv->arg.osc_address, 1, &res);
+		osc_atom_u_setBool(osc_atom_array_u_get(*out, 0), res);
 	}else if(f->rec->func == osc_expr_quote){
 		switch(f_argv->type){
 		case OSC_EXPR_ARG_TYPE_ATOM:
@@ -252,17 +237,10 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 				osc_atom_u_copy(&a, f_argv->arg.atom);
 			}
 			return 0;
-		case OSC_EXPR_ARG_TYPE_EXPR:
-			{
-				/*
-				t_osc_err e = osc_expr_funcall(arg->arg.expr, len, oscbndl, out);
-				return e;
-				*/
-			}
-		case OSC_EXPR_ARG_TYPE_OSCADDRESS:
-			{
-
-			}
+			// the parser always puts the arguments to a quote form in an OSC_EXPR_ARG_TYPE_ATOM
+			// so the next two cases will never happen.  
+		case OSC_EXPR_ARG_TYPE_EXPR:{}
+		case OSC_EXPR_ARG_TYPE_OSCADDRESS:{}
 		}
 	}else if(f->rec->func == osc_expr_eval){
 #ifdef  __OSC_PROFILE__
@@ -1606,6 +1584,12 @@ int osc_expr_if(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u
 }
 
 int osc_expr_bound(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
+	// this is a dummy function.  we'll use this to do a pointer comparison.
+	return 0;
+}
+
+int osc_expr_exists(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
 {
 	// this is a dummy function.  we'll use this to do a pointer comparison.
 	return 0;

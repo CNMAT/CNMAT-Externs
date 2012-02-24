@@ -1,10 +1,14 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ 478.0, 44.0, 575.0, 396.0 ],
+		"appversion" : 		{
+			"major" : 6,
+			"minor" : 0,
+			"revision" : 3
+		}
+,
+		"rect" : [ 331.0, 48.0, 575.0, 396.0 ],
 		"bglocked" : 0,
-		"defrect" : [ 478.0, 44.0, 575.0, 396.0 ],
-		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
 		"default_fontface" : 0,
@@ -12,206 +16,36 @@
 		"gridonopen" : 0,
 		"gridsize" : [ 10.0, 10.0 ],
 		"gridsnaponopen" : 0,
+		"statusbarvisible" : 2,
 		"toolbarvisible" : 1,
 		"boxanimatetime" : 200,
 		"imprint" : 0,
 		"enablehscroll" : 1,
 		"enablevscroll" : 1,
 		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"showrootpatcherontab" : 0,
+		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "p o.unless",
-					"fontsize" : 12.0,
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"id" : "obj-4",
 					"fontname" : "Arial",
-					"patching_rect" : [ 55.0, 209.0, 65.0, 20.0 ],
-					"patcher" : 					{
-						"fileversion" : 1,
-						"rect" : [ 0.0, 44.0, 575.0, 370.0 ],
-						"bglocked" : 0,
-						"defrect" : [ 0.0, 44.0, 575.0, 370.0 ],
-						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
-						"openinpresentation" : 0,
-						"default_fontsize" : 12.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 0,
-						"gridsize" : [ 8.0, 8.0 ],
-						"gridsnaponopen" : 0,
-						"toolbarvisible" : 1,
-						"boxanimatetime" : 200,
-						"imprint" : 0,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"boxes" : [ 							{
-								"box" : 								{
-									"maxclass" : "button",
-									"numinlets" : 1,
-									"numoutlets" : 1,
-									"id" : "obj-5",
-									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 150.0, 200.0, 20.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.unless passes the bundle through if the result of the expression is zero.  Like o.if without the left (then) outlet",
-									"linecount" : 2,
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-10",
-									"fontname" : "Arial",
-									"patching_rect" : [ 173.0, 67.0, 340.0, 34.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo 8 \n",
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-7",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 70.0, 200.0, 60.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "number",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"id" : "obj-6",
-									"fontname" : "Arial",
-									"outlettype" : [ "int", "bang" ],
-									"patching_rect" : [ 70.0, 67.0, 50.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo \"$1\" \n",
-									"linecount" : 2,
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-4",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 70.0, 112.0, 45.0, 34.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "newobj",
-									"text" : "o.unless /foo < 10",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 1,
-									"id" : "obj-3",
-									"fontname" : "Arial",
-									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 70.0, 155.0, 106.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.unless understands all of the same functions as o.expr",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-2",
-									"fontname" : "Arial",
-									"patching_rect" : [ 49.0, 264.0, 310.0, 20.0 ]
-								}
-
-							}
- ],
-						"lines" : [ 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 0 ],
-									"destination" : [ "obj-5", 0 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 0 ],
-									"destination" : [ "obj-7", 1 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-4", 0 ],
-									"destination" : [ "obj-3", 0 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-6", 0 ],
-									"destination" : [ "obj-4", 0 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
- ]
-					}
-,
-					"saved_object_attributes" : 					{
-						"fontsize" : 12.0,
-						"default_fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"default_fontface" : 0,
-						"fontface" : 0
-					}
-
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "p basic",
 					"fontsize" : 12.0,
-					"numinlets" : 0,
-					"numoutlets" : 0,
 					"id" : "obj-3",
-					"fontname" : "Arial",
-					"patching_rect" : [ 50.0, 80.0, 49.0, 20.0 ],
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
 					"patcher" : 					{
 						"fileversion" : 1,
-						"rect" : [ 478.0, 70.0, 575.0, 370.0 ],
+						"appversion" : 						{
+							"major" : 6,
+							"minor" : 0,
+							"revision" : 3
+						}
+,
+						"rect" : [ 331.0, 74.0, 575.0, 370.0 ],
 						"bglocked" : 0,
-						"defrect" : [ 478.0, 70.0, 575.0, 370.0 ],
-						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
 						"default_fontface" : 0,
@@ -219,47 +53,150 @@
 						"gridonopen" : 0,
 						"gridsize" : [ 8.0, 8.0 ],
 						"gridsnaponopen" : 0,
+						"statusbarvisible" : 2,
 						"toolbarvisible" : 1,
 						"boxanimatetime" : 200,
 						"imprint" : 0,
 						"enablehscroll" : 1,
 						"enablevscroll" : 1,
 						"devicewidth" : 0.0,
-						"visible" : 1,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.when passes the bundle through if the result of the expression is non-zero. ",
+									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
+									"id" : "obj-9",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 367.0, 295.0, 92.0, 18.0 ],
+									"text" : "o.expr.maxhelp"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-17",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 479.0, 277.0, 53.0, 20.0 ],
+									"text" : "pcontrol"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-16",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 479.0, 247.0, 81.0, 20.0 ],
+									"text" : "prepend load"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-15",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 367.0, 277.0, 105.0, 18.0 ],
+									"text" : "o.unless.maxhelp"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-14",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 367.0, 241.0, 75.0, 18.0 ],
+									"text" : "o.if.maxhelp"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-11",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 367.0, 259.0, 96.0, 18.0 ],
+									"text" : "o.cond.maxhelp"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-2",
+									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
+									"patching_rect" : [ 308.0, 241.0, 59.0, 20.0 ],
+									"text" : "see also:"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
 									"id" : "obj-12",
-									"fontname" : "Arial",
-									"patching_rect" : [ 16.0, 72.0, 430.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
 									"maxclass" : "comment",
-									"text" : "o.when ",
-									"fontsize" : 48.0,
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"id" : "obj-1",
-									"fontname" : "Arial",
-									"patching_rect" : [ 16.0, 15.0, 190.0, 62.0 ]
+									"patching_rect" : [ 16.0, 72.0, 430.0, 20.0 ],
+									"text" : "Passes the bundle through if the result of the expression is true or non-zero. ",
+									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 48.0,
+									"id" : "obj-1",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 16.0, 15.0, 190.0, 62.0 ],
+									"text" : "o.when "
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-5",
 									"maxclass" : "button",
 									"numinlets" : 1,
 									"numoutlets" : 1,
-									"id" : "obj-5",
 									"outlettype" : [ "bang" ],
 									"patching_rect" : [ 157.0, 240.0, 20.0, 20.0 ]
 								}
@@ -267,568 +204,197 @@
 							}
 , 							{
 								"box" : 								{
-									"maxclass" : "comment",
-									"text" : " Similar to o.if without the right (else) outlet",
+									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-10",
+									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"id" : "obj-10",
-									"fontname" : "Arial",
-									"patching_rect" : [ 192.0, 152.0, 237.0, 20.0 ]
+									"patching_rect" : [ 192.0, 152.0, 237.0, 20.0 ],
+									"text" : " Similar to o.if without the right (else) outlet"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"maxclass" : "o.message",
+									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+									"id" : "obj-7",
+									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
-									"id" : "obj-7",
-									"fontname" : "Arial",
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 77.0, 240.0, 60.0, 20.0 ]
+									"patching_rect" : [ 77.0, 240.0, 60.0, 20.0 ],
+									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"maxclass" : "number",
+									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-6",
+									"maxclass" : "number",
 									"numinlets" : 1,
 									"numoutlets" : 2,
-									"id" : "obj-6",
-									"fontname" : "Arial",
 									"outlettype" : [ "int", "bang" ],
+									"parameter_enable" : 0,
 									"patching_rect" : [ 77.0, 107.0, 50.0, 20.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo \"$1\" \n",
+									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+									"id" : "obj-4",
+									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
-									"id" : "obj-4",
-									"fontname" : "Arial",
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 77.0, 152.0, 76.0, 20.0 ]
+									"patching_rect" : [ 77.0, 152.0, 76.0, 20.0 ],
+									"text" : "/foo \"$1\" ",
+									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"maxclass" : "newobj",
-									"text" : "o.when /foo < 10",
+									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"id" : "obj-3",
+									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
-									"id" : "obj-3",
-									"fontname" : "Arial",
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 77.0, 195.0, 100.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.when understands all of the same functions as o.expr",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-2",
-									"fontname" : "Arial",
-									"patching_rect" : [ 56.0, 304.0, 304.0, 20.0 ]
+									"patching_rect" : [ 77.0, 195.0, 100.0, 20.0 ],
+									"text" : "o.when /foo < 10"
 								}
 
 							}
  ],
 						"lines" : [ 							{
 								"patchline" : 								{
-									"source" : [ "obj-3", 0 ],
+									"destination" : [ "obj-16", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-11", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-16", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-14", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-16", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-15", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-17", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-16", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
+									"disabled" : 0,
 									"hidden" : 0,
-									"midpoints" : [  ]
+									"source" : [ "obj-3", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"source" : [ "obj-3", 0 ],
 									"destination" : [ "obj-7", 1 ],
+									"disabled" : 0,
 									"hidden" : 0,
-									"midpoints" : [  ]
+									"source" : [ "obj-3", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"source" : [ "obj-4", 0 ],
 									"destination" : [ "obj-3", 0 ],
+									"disabled" : 0,
 									"hidden" : 0,
-									"midpoints" : [  ]
+									"source" : [ "obj-4", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"source" : [ "obj-6", 0 ],
 									"destination" : [ "obj-4", 0 ],
+									"disabled" : 0,
 									"hidden" : 0,
-									"midpoints" : [  ]
+									"source" : [ "obj-6", 0 ]
 								}
 
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-16", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-9", 0 ]
+								}
+
+							}
+ ],
+						"dependency_cache" : [ 							{
+								"name" : "o.when.mxo",
+								"type" : "iLaX"
+							}
+, 							{
+								"name" : "o.message.mxo",
+								"type" : "iLaX"
 							}
  ]
 					}
 ,
+					"patching_rect" : [ 50.0, 80.0, 49.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontsize" : 12.0,
-						"default_fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
 						"default_fontface" : 0,
-						"fontface" : 0
+						"digest" : "",
+						"default_fontname" : "Arial",
+						"fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"description" : "",
+						"tags" : "",
+						"fontface" : 0,
+						"globalpatchername" : "",
+						"fontsize" : 12.0
 					}
-
+,
+					"text" : "p basic"
 				}
 
+			}
+ ],
+		"lines" : [  ],
+		"dependency_cache" : [ 			{
+				"name" : "o.when.mxo",
+				"type" : "iLaX"
 			}
 , 			{
-				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "p o.cond",
-					"fontsize" : 12.0,
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"id" : "obj-2",
-					"fontname" : "Arial",
-					"patching_rect" : [ 55.0, 123.0, 57.0, 20.0 ],
-					"patcher" : 					{
-						"fileversion" : 1,
-						"rect" : [ 0.0, 44.0, 575.0, 370.0 ],
-						"bglocked" : 0,
-						"defrect" : [ 0.0, 44.0, 575.0, 370.0 ],
-						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
-						"openinpresentation" : 0,
-						"default_fontsize" : 12.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 0,
-						"gridsize" : [ 8.0, 8.0 ],
-						"gridsnaponopen" : 0,
-						"toolbarvisible" : 1,
-						"boxanimatetime" : 200,
-						"imprint" : 0,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"boxes" : [ 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "If none of the expressions evaluates to non-zero, the bundle will come out the righmost outlet.",
-									"linecount" : 2,
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-12",
-									"fontname" : "Arial",
-									"patching_rect" : [ 169.0, 87.0, 341.0, 34.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo 22 \n",
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-11",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 278.5, 200.0, 60.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo 22 \n",
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-9",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 210.0, 200.0, 60.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.cond creates one outlet for each expression separated by a semicolon. The bundle will come out the outlet that corresponds to the first statement that evaluates to non-zero.",
-									"linecount" : 3,
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-10",
-									"fontname" : "Arial",
-									"patching_rect" : [ 169.0, 39.0, 341.0, 48.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo 22 \n",
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-8",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 141.0, 200.0, 60.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo 8 \n",
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-7",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 70.0, 200.0, 60.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "number",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"id" : "obj-6",
-									"fontname" : "Arial",
-									"outlettype" : [ "int", "bang" ],
-									"patching_rect" : [ 70.0, 67.0, 50.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo \"$1\" \n",
-									"linecount" : 2,
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-4",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 70.0, 112.0, 45.0, 34.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "newobj",
-									"text" : "o.cond /foo < 10\\; /foo > 10\\; /foo == 10",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 4,
-									"id" : "obj-3",
-									"fontname" : "Arial",
-									"outlettype" : [ "FullPacket", "FullPacket", "FullPacket", "FullPacket" ],
-									"patching_rect" : [ 70.0, 155.0, 216.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.cond understands all of the same functions as o.expr",
-									"linecount" : 2,
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-2",
-									"fontname" : "Arial",
-									"patching_rect" : [ 49.0, 264.0, 281.0, 34.0 ]
-								}
-
-							}
- ],
-						"lines" : [ 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 3 ],
-									"destination" : [ "obj-11", 1 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 0 ],
-									"destination" : [ "obj-7", 1 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 1 ],
-									"destination" : [ "obj-8", 1 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 2 ],
-									"destination" : [ "obj-9", 1 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-4", 0 ],
-									"destination" : [ "obj-3", 0 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-6", 0 ],
-									"destination" : [ "obj-4", 0 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
- ]
-					}
-,
-					"saved_object_attributes" : 					{
-						"fontsize" : 12.0,
-						"default_fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"default_fontface" : 0,
-						"fontface" : 0
-					}
-
-				}
-
+				"name" : "o.message.mxo",
+				"type" : "iLaX"
 			}
-, 			{
-				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "p o.if",
-					"fontsize" : 12.0,
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"id" : "obj-1",
-					"fontname" : "Arial",
-					"patching_rect" : [ 55.0, 163.0, 37.0, 20.0 ],
-					"patcher" : 					{
-						"fileversion" : 1,
-						"rect" : [ 0.0, 26.0, 575.0, 370.0 ],
-						"bglocked" : 0,
-						"defrect" : [ 0.0, 26.0, 575.0, 370.0 ],
-						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
-						"openinpresentation" : 0,
-						"default_fontsize" : 12.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 0,
-						"gridsize" : [ 8.0, 8.0 ],
-						"gridsnaponopen" : 0,
-						"toolbarvisible" : 1,
-						"boxanimatetime" : 200,
-						"imprint" : 0,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"boxes" : [ 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.if sends the incoming bundle out the left outlet if the result of the test is true (non-zero), or out the right outlet otherwise",
-									"linecount" : 2,
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-10",
-									"fontname" : "Arial",
-									"patching_rect" : [ 141.0, 84.0, 335.0, 34.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo 22 \n",
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-8",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 141.0, 200.0, 60.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo 8 \n",
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-7",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 70.0, 200.0, 60.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "number",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"id" : "obj-6",
-									"fontname" : "Arial",
-									"outlettype" : [ "int", "bang" ],
-									"patching_rect" : [ 70.0, 67.0, 50.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "o.message",
-									"text" : "/foo \"$1\" \n",
-									"linecount" : 2,
-									"fontsize" : 12.0,
-									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"id" : "obj-4",
-									"fontname" : "Arial",
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 70.0, 112.0, 45.0, 34.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "newobj",
-									"text" : "o.if /foo < 10",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"id" : "obj-3",
-									"fontname" : "Arial",
-									"outlettype" : [ "FullPacket", "FullPacket" ],
-									"patching_rect" : [ 70.0, 155.0, 77.0, 20.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"maxclass" : "comment",
-									"text" : "o.if understands all of the same functions as o.expr",
-									"fontsize" : 12.0,
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"id" : "obj-2",
-									"fontname" : "Arial",
-									"patching_rect" : [ 49.0, 264.0, 281.0, 20.0 ]
-								}
-
-							}
- ],
-						"lines" : [ 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 0 ],
-									"destination" : [ "obj-7", 1 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-3", 1 ],
-									"destination" : [ "obj-8", 1 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-4", 0 ],
-									"destination" : [ "obj-3", 0 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"source" : [ "obj-6", 0 ],
-									"destination" : [ "obj-4", 0 ],
-									"hidden" : 0,
-									"midpoints" : [  ]
-								}
-
-							}
  ]
-					}
-,
-					"saved_object_attributes" : 					{
-						"fontsize" : 12.0,
-						"default_fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"fontname" : "Arial",
-						"globalpatchername" : "",
-						"default_fontface" : 0,
-						"fontface" : 0
-					}
-
-				}
-
-			}
- ],
-		"lines" : [  ]
 	}
 
 }
