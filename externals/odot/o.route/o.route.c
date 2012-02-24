@@ -76,7 +76,6 @@ void oroute_set(t_oroute *x, long index, t_symbol *sym);
 void oroute_doSet(t_oroute *x, long index, t_symbol *sym);
 void oroute_makeSchema(t_oroute *x);
 void oroute_atomizeBundle(void *outlet, long len, char *bndl);
-void oroute_outputBundle(void *outlet, long len, char *bndl);
 void oroute_makeUniqueSelectors(int nselectors,
 				char **selectors,
 				int *nunique_selectors,
@@ -108,7 +107,7 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr)
 #ifdef ATOMIZE
 		oroute_atomizeBundle(x->delegation_outlet, len, (char *)ptr);
 #else
-		oroute_outputBundle(x->delegation_outlet, len, (char *)ptr);
+		omax_util_outletOSC(x->delegation_outlet, len, (char *)ptr);
 #endif
 	}
 }
@@ -117,7 +116,7 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 {
 	t_osc_bndl_s *unmatched = osc_rset_getUnmatched(rset);
 	if(unmatched){
-		oroute_outputBundle(x->delegation_outlet,
+		omax_util_outletOSC(x->delegation_outlet,
 				    osc_bundle_s_getLen(unmatched),
 				    osc_bundle_s_getPtr(unmatched));
 	}
@@ -138,7 +137,7 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 							  osc_bundle_s_getLen(complete_matches),
 							  osc_bundle_s_getPtr(complete_matches),
 							  concat);
-				oroute_outputBundle(x->outlets[i], len, concat);
+				omax_util_outletOSC(x->outlets[i], len, concat);
 			}
 #else
 			if(partial_matches){
@@ -147,7 +146,7 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 						  osc_bundle_s_getLen(partial_matches),
 						  osc_bundle_s_getPtr(partial_matches));
 #else
-				oroute_outputBundle(x->outlets[i],
+				omax_util_outletOSC(x->outlets[i],
 						    osc_bundle_s_getLen(partial_matches),
 						    osc_bundle_s_getPtr(partial_matches));
 #endif
@@ -312,7 +311,6 @@ void oroute_atomizeBundle(void *outlet, long len, char *bndl)
 	t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, bndl);
 	while(osc_bndl_it_s_hasNext(it)){
 		t_osc_msg_s *msg = osc_bndl_it_s_next(it);
-		int argc = osc_message_s_getArgCount(msg);
 		int natoms = omax_util_getNumAtomsInOSCMsg(msg);
 		t_atom atoms[natoms];
 		omax_util_oscMsg2MaxAtoms(msg, atoms);
@@ -320,14 +318,6 @@ void oroute_atomizeBundle(void *outlet, long len, char *bndl)
 		outlet_anything(outlet, address, natoms - 1, atoms + 1);
 	}
 	osc_bndl_it_s_destroy(it);
-}
-
-void oroute_outputBundle(void *outlet, long len, char *bndl)
-{
-	t_atom out[2];
-	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)bndl);
-	outlet_anything(outlet, ps_FullPacket, 2, out);
 }
 
 void oroute_makeUniqueSelectors(int nselectors,

@@ -67,7 +67,6 @@ void opack_free(t_opack *x);
 void opack_assist(t_opack *x, void *b, long m, long a, char *s);
 void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 
-t_symbol *ps_FullPacket;
 
 void opack_fullPacket(t_opack *x, long len, long ptr){
 	osc_bundle_s_wrap_naked_message(len, ptr);
@@ -88,10 +87,7 @@ void opack_outputBundle(t_opack *x){
 	long len = 0;
 
 	osc_bundle_u_serialize(x->bndl, &len, &bndl);
-	t_atom out[2];
-	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)bndl);
-	outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	omax_util_outletOSC(x->outlet, len, bndl);
 	if(bndl){
 		osc_mem_free(bndl);
 	}
@@ -276,7 +272,6 @@ int main(void){
 	class_register(CLASS_BOX, c);
 	opack_class = c;
 
-	ps_FullPacket = gensym("FullPacket");
 
 #ifdef PAK
 	class_alias(c, gensym("o.bild"));

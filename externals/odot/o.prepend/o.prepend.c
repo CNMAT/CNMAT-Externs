@@ -85,10 +85,7 @@ void oppnd_fullPacket(t_oppnd *x, long len, long ptr){
 void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend, int sym_to_prepend_len)
 {
 	if(!sym_to_prepend){
-		t_atom out[2];
-		atom_setlong(out, len);
-		atom_setlong(out + 1, ptr);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, len, (char *)ptr);
 		return;
 	}
 	int num_messages = 0;
@@ -111,10 +108,7 @@ void oppnd_doFullPacket(t_oppnd *x, long len, long ptr, t_symbol *sym_to_prepend
 	}
 	osc_bndl_it_s_destroy(it);
 
-	t_atom out[2];
-	atom_setlong(out, bufptr - buf);
-	atom_setlong(out + 1, (long)buf);
-	outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	omax_util_outletOSC(x->outlet, bufptr - buf, buf);
 }
 
 void oppnd_set(t_oppnd *x, t_symbol *sym_to_prepend){
@@ -163,15 +157,29 @@ void oppnd_anything(t_oppnd *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 	sprintf(buf, "%s%s", sym_to_prepend_string, address_string);
 	t_symbol *newaddress = gensym(buf);
+
+	t_osc_bndl_u *bndl_u = osc_bundle_u_alloc();
+	t_osc_msg_u *msg_u = NULL;
+	t_osc_err e = omax_util_maxAtomsToOSCMsg_u(&msg_u, newaddress, argc, argv);
+	if(e){
+		object_error((t_object *)x, "%s", osc_error_string(e));
+		return;
+	}
+	osc_bundle_u_addMsg(bndl_u, msg_u);
+	long len = 0;
+	char *oscbuf = NULL;
+	osc_bundle_u_serialize(bndl_u, &len, &oscbuf);
+	if(bndl_u){
+		osc_bundle_u_free(bndl_u);
+	}
+	/*
 	int len = omax_util_get_bundle_size_for_atoms(newaddress, argc, argv);
 	char oscbuf[len];
 	memset(oscbuf, '\0', len);
 	strncpy(oscbuf, "#bundle\0", 8);
 	omax_util_encode_atoms(oscbuf + 16, newaddress, argc, argv);
-	t_atom out[2];
-	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)oscbuf);
-	outlet_anything(x->outlet, ps_FullPacket, 2, out);
+	*/
+	omax_util_outletOSC(x->outlet, len, oscbuf);
 }
 
 void oppnd_list(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv){

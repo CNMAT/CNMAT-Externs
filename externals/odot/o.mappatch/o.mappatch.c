@@ -137,14 +137,11 @@ void omap_fullPacket(t_omap *x, long len, long ptr){
 		outlet_anything(x->outlets[1], atom_getsym(atoms), len - 1, atoms + 1);
 	}
 
-	t_atom out[2];
 	// I don't think we need a lock here since we're still busy
 	char *buffer = NULL;
 	long buflen = 0;
 	osc_bundle_u_serialize(x->bndl, &buflen, &buffer);
-	atom_setlong(out, buflen);
-	atom_setlong(out + 1, (long)buffer);
-	outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
+	omax_util_outletOSC(x->outlets[0], buflen, buffer);
 	if(buffer){
 		osc_mem_free(buffer);
 	}

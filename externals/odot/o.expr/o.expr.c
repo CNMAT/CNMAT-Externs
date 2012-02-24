@@ -106,12 +106,10 @@ void oexpr_free(t_oexpr *x);
 void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s);
 void *oexpr_new(t_symbol *msg, short argc, t_atom *argv);
 
-t_symbol *ps_FullPacket;
 
 void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 #if defined (OIF) || defined (OCOND) || defined (OWHEN) || defined (OUNLESS)
 	t_osc_atom_ar_u *argv = NULL;
-	t_atom out[2];
 	// we don't actually want to do this copy here.  we need to 
 	// have another version of omax_expr_funcall that doesn't do 
 	// assignment
@@ -125,22 +123,20 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		copy = (char *)osc_mem_alloc(len);
 		memcpy(copy, (char *)ptr, len);
 	}
-	atom_setlong(out, len);
-	atom_setlong(out + 1, ptr);
 
 #if defined (OIF)
 	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
 	if(ret){
-		outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlets[1], len, (char *)ptr);
 	}else{
 		int i;
 		for(i = 0; i < osc_atom_array_u_getLen(argv); i++){
 			if(osc_atom_u_getDouble(osc_atom_array_u_get(argv, i)) == 0){
-				outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
+				omax_util_outletOSC(x->outlets[1], len, (char *)ptr);
 				goto out;
 			}
 		}
-		outlet_anything(x->outlets[0], ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlets[0], len, (char *)ptr);
 	}
  out:
 	if(argv){
@@ -152,12 +148,12 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 #elif defined (OUNLESS)
 	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
 	if(ret){
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, len, (char *)ptr);
 	}else{
 		int i;
 		for(i = 0; i < osc_atom_array_u_getLen(argv); i++){
 			if(osc_atom_u_getDouble(osc_atom_array_u_get(argv, i)) == 0){
-				outlet_anything(x->outlet, ps_FullPacket, 2, out);
+				omax_util_outletOSC(x->outlet, len, (char *)ptr);
 				goto out;
 			}
 		}
@@ -172,7 +168,6 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 #elif defined (OWHEN)
 	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
 	if(ret){
-		//outlet_anything(x->outlets[1], ps_FullPacket, 2, out);
 	}else{
 		int i;
 		for(i = 0; i < osc_atom_array_u_getLen(argv); i++){
@@ -180,7 +175,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 				goto out;
 			}
 		}
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, len, (char *)ptr);
 	}
  out:
 	if(argv){
@@ -210,14 +205,14 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 				argv = NULL;
 			}
 			if(!fail){
-				outlet_anything(x->outlets[j], ps_FullPacket, 2, out);
+				omax_util_outletOSC(x->outlets[j], len, (char *)ptr);
 				goto out;
 			}
 		}
 		f = osc_expr_next(f);
 		j++;
 	}
-	outlet_anything(x->outlets[j], ps_FullPacket, 2, out);
+	omax_util_outletOSC(x->outlets[j], len, (char *)ptr);
  out:
 	if(argv){
 		osc_atom_array_u_free(argv);
@@ -262,15 +257,10 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 			f = osc_expr_next(f);
 		}
 	}
-	t_atom out[2];
 	if(ret){
-		atom_setlong(out, copylen);
-		atom_setlong(out + 1, ptr);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, len, (char *)ptr);
 	}else{
-		atom_setlong(out, copylen);
-		atom_setlong(out + 1, (long)copy);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, copylen, copy);
 	}
 	if(copy){
 		osc_mem_free(copy);
@@ -704,7 +694,6 @@ int main(void){
 	oexpr_class = c;
 
 	common_symbols_init();
-	ps_FullPacket = gensym("FullPacket");
 
 	rdtsc_cps = RDTSC_CYCLES_PER_SECOND;
 

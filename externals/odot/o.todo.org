@@ -34,7 +34,6 @@ Jeff and/or Yotam are working on this
 **** TODO Support for blobs
 **** TODO Support for 16-bit floats (half float)
 **** TODO Postfix type specifiers
-**** TODO o.var should support a single message as an argument (for multiple messages, use o.message)
 **** TODO libo and libomax versions need to be reported.
 **** TODO Explicit way to convert bundle to naked OSC message
 **** STARTED objects that allow the creation of bundles should restrict them from having duplicate addresses [6/7]
@@ -50,6 +49,9 @@ this may be a lifelong project...
 **** TODO Constants need to be checked for accuracy at all precisions
 **** TODO All formatting code needs to be refactored
 **** TODO udpsend encodes lists, floats and ints with addresses with no slashes
+**** TODO Build documentation system that produces OSC bundles containing all info about objects
+**** STARTED Get rid of skunky code in libomax and refactor lib.  
+Get all objects up to date with the right functions from this lib
 *** o.expr
 **** TODO if() should be a special case of cond and we should have when and unless
 **** TODO Change t_osc_expr_rec to support better documentation of function parameters

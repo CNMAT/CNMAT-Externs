@@ -60,7 +60,6 @@ void ocoll_assist(t_ocoll *x, void *b, long m, long a, char *s);
 void *ocoll_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err ocoll_notify(t_ocoll *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
-t_symbol *ps_FullPacket;
 
 void ocoll_fullPacket(t_ocoll *x, long len, long ptr){
 	osc_bundle_s_wrap_naked_message(len, ptr);
@@ -100,41 +99,41 @@ void ocoll_fullPacket(t_ocoll *x, long len, long ptr){
 		}
 	}
 	osc_bndl_it_s_destroy(it);
-	/*
-	if(x->buffer_pos == 0){
-		memcpy(x->buffer, (char *)ptr, len);
-		x->buffer_pos += len;
-	}else{
-		memcpy(x->buffer + x->buffer_pos, (char *)ptr + 16, len - 16);
-		x->buffer_pos += len - 16;
-	}
-	*/	
 	critical_exit(x->lock);
 }
 
 void ocoll_anything(t_ocoll *x, t_symbol *msg, int argc, t_atom *argv){
-	int len;
-	len = omax_util_get_bundle_size_for_atoms(msg, argc, argv);
-	char buf[len];
-	memset(buf, '\0', len);
-	omax_util_encode_atoms(buf + OSC_HEADER_SIZE, msg, argc, argv);
-	osc_bundle_s_setBundleID(buf);
+	t_osc_bndl_u *bndl_u = osc_bundle_u_alloc();
+	t_osc_msg_u *msg_u = NULL;
+	t_osc_err e = omax_util_maxAtomsToOSCMsg_u(&msg_u, msg, argc, argv);
+	if(e){
+		object_error((t_object *)x, "%s", osc_error_string(e));
+		if(bndl_u){
+			osc_bundle_u_free(bndl_u);
+		}
+		return;
+	}
+	osc_bundle_u_addMsg(bndl_u, msg_u);
+	long len = 0;
+	char *buf = NULL;
+	osc_bundle_u_serialize(bndl_u, &len, &buf);
+	if(bndl_u){
+		osc_bundle_u_free(bndl_u);
+	}
+
 	ocoll_fullPacket(x, len, (long)buf);
 }
 
 void ocoll_bang(t_ocoll *x){
 //if(x->buffer_pos > 16){
 		critical_enter(x->lock);
-		t_atom out[2];
-		atom_setlong(out, x->buffer_pos);
 		int len = x->buffer_pos;
 		char outbuf[len];
 		memcpy(outbuf, x->buffer, len);
 		memset(x->buffer + OSC_HEADER_SIZE, '\0', len - OSC_HEADER_SIZE);
 		x->buffer_pos = OSC_HEADER_SIZE;
 		critical_exit(x->lock);
-		atom_setlong(out + 1, (long)outbuf);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, len, outbuf);
 //}
 }
 
@@ -199,7 +198,7 @@ int main(void){
 	ocoll_class = c;
 
 	common_symbols_init();
-	ps_FullPacket = gensym("FullPacket");
+
 	ODOT_PRINT_VERSION;
 	return 0;
 }

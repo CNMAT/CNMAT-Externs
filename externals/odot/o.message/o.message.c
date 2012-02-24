@@ -132,6 +132,7 @@ long omessage_key(t_omessage *x, t_object *patcherview, long keycode, long modif
 long omessage_keyfilter(t_omessage *x, t_object *patcherview, long *keycode, long *modifiers, long *textcharacter);
 void omessage_enter(t_omessage *x);
 void omessage_gettext(t_omessage *x);
+void omessage_clear(t_omessage *x);
 void omessage_output_bundle(t_omessage *x);
 void omessage_mousedown(t_omessage *x, t_object *patcherview, t_pt pt, long modifiers);
 void omessage_mouseup(t_omessage *x, t_object *patcherview, t_pt pt, long modifiers);
@@ -140,7 +141,7 @@ void omessage_int(t_omessage *x, long n);
 void omessage_float(t_omessage *x, double xx);
 void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv);
 void omessage_anything(t_omessage *x, t_symbol *msg, short argc, t_atom *argv);
-void omessage_output_osc(void *outlet, long len, char *ptr);
+void omax_util_outletOSC(void *outlet, long len, char *ptr);
 void omessage_free(t_omessage *x);
 void omessage_assist(t_omessage *x, void *b, long m, long a, char *s);
 void omessage_inletinfo(t_omessage *x, void *b, long index, char *t);
@@ -255,7 +256,7 @@ void omessage_output_bundle(t_omessage *x){
 				long len = 0;
 				char *ptr = NULL;
 				osc_bundle_u_serialize((t_osc_bndl_u *)(x->bndl), &len, &ptr);
-				omessage_output_osc(x->outlet, len, ptr);
+				omax_util_outletOSC(x->outlet, len, ptr);
 				osc_mem_free(ptr);
 			}
 			break;
@@ -266,7 +267,7 @@ void omessage_output_bundle(t_omessage *x){
 				char *ptr = osc_bundle_s_getPtr(b);
 				char buf[len];
 				memcpy(buf, ptr, len);
-				omessage_output_osc(x->outlet, len, buf);
+				omax_util_outletOSC(x->outlet, len, buf);
 			}
 			break;
 		}
@@ -274,7 +275,7 @@ void omessage_output_bundle(t_omessage *x){
 		char buf[OSC_HEADER_SIZE];
 		memset(buf, '\0', OSC_HEADER_SIZE);
 		osc_bundle_s_setBundleID(buf);
-		omessage_output_osc(x->outlet, OSC_HEADER_SIZE, buf);
+		omax_util_outletOSC(x->outlet, OSC_HEADER_SIZE, buf);
 	}
 }
 
@@ -317,7 +318,6 @@ void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
 	if(argc == 1){
 		// one arg and it's a symbol.  parse this as it may be an address
 		// without arguments, or it may be a complete message like "/foo 1 2 3"
-		t_osc_bndl_u *bndl = NULL;
 
 		return;
 	}
@@ -550,7 +550,7 @@ void omessage_gettext(t_omessage *x){
 		char *ptr = formatted + (formattedlen - 1);
 		while(*ptr == '\n'){
 			*ptr = '\0';
-			*ptr--;
+			ptr--;
 		}
 		object_method(jbox_get_textfield((t_object *)x), gensym("settext"), formatted);
 		if(formatted){
@@ -743,7 +743,7 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
 			long len = 0;
 			char *buf = NULL;
 			osc_bundle_u_serialize(x->bndl, &len, &buf);
-			omessage_output_osc(x->outlet, len, buf);
+			omax_util_outletOSC(x->outlet, len, buf);
 			osc_mem_free(buf);
 			t_osc_parser_subst *s = x->substitutions;
 			while(s){
@@ -827,12 +827,6 @@ void omessage_clear(t_omessage *x)
 	omessage_doFullPacket(x, OSC_HEADER_SIZE, (long)buf);
 }
 
-void omessage_output_osc(void *outlet, long len, char *ptr){
-	t_atom out[2];
-	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)ptr);
-	outlet_anything(outlet, ps_FullPacket, 2, out);
-}
 
 void omessage_free(t_omessage *x){
 	jbox_free((t_jbox *)x);

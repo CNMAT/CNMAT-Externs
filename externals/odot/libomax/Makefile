@@ -1,5 +1,5 @@
-OMAX_BASENAMES = omax_util #omax_expr 
-OMAX_OBJECTS = $(foreach OBJ, $(OMAX_BASENAMES), $(OBJ).o) #omax_parser.o omax_scanner.o
+OMAX_BASENAMES = omax_util omax_class
+OMAX_OBJECTS = $(foreach OBJ, $(OMAX_BASENAMES), $(OBJ).o) 
 OMAX_CFILES = $(foreach F, $(OMAX_BASENAMES), $(F).c)
 OMAX_HFILES = $(foreach F, $(OMAX_BASENAMES), $(F).h)
 
@@ -30,23 +30,13 @@ win: LIBTOOL = ar cru libomax.a $(OMAX_OBJECTS) /usr/lib/libfl.a
 libomax.a: $(OMAX_OBJECTS) $(OMAX_CFILES) $(OMAX_HFILES)
 	$(LIBTOOL)
 
-omax_scanner.c: omax_scanner.l
-	flex -o omax_scanner.c --header-file=omax_scanner.h omax_scanner.l
-omax_scanner.o: omax_scanner.c omax_scanner.h
-	$(CC) $(CFLAGS) $(I) -o omax_scanner.o -c omax_scanner.c
-
-omax_parser.c: omax_parser.y
-	bison -d -o omax_parser.c omax_parser.y
-omax_parser.o: omax_parser.c omax_parser.h
-	$(CC) $(CFLAGS) $(I) -o omax_parser.o -c omax_parser.c
-
-%.o: %.c %.h omax_parser.c omax_scanner.c omax_parser.y omax_scanner.l
+%.o: %.c %.h 
 	$(CC) $(CFLAGS) $(I) -o $(notdir $(basename $@)).o -c $(notdir $(basename $@)).c
 
 
 .PHONY: clean
 clean:
-	rm omax_scanner.[ch] omax_parser.[ch] *.o *.a
+	rm -f *.o *.a
 
 .PHONY: doc
 doc:

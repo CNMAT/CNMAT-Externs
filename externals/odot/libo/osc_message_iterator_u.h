@@ -53,4 +53,4 @@ int osc_message_iterator_u_hasNext(t_osc_msg_it_u *it);
 }
 #endif
 
-#endif __OSC_MESSAGE_ITERATOR_U_H__
+#endif //__OSC_MESSAGE_ITERATOR_U_H__

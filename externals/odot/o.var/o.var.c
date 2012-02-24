@@ -66,7 +66,6 @@ void ovar_assist(t_ovar *x, void *b, long m, long a, char *s);
 void *ovar_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err ovar_notify(t_ovar *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
-t_symbol *ps_FullPacket;
 
 void ovar_doFullPacket(t_ovar *x, long len, long ptr, long inlet){
 	osc_bundle_s_wrap_naked_message(len, ptr);
@@ -99,18 +98,12 @@ void ovar_doFullPacket(t_ovar *x, long len, long ptr, long inlet){
 #elif defined DIFFERENCE
 		osc_bundle_s_difference(len, (char *)ptr, copylen, copy, &bndllen, &bndl);
 #endif
-		t_atom out[2];
-		atom_setlong(out, bndllen);
-		atom_setlong(out + 1, (long)bndl);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, bndllen, bndl);
 		if(bndl){
 			osc_mem_free(bndl);
 		}
 #else // o.var
-		t_atom out[2];
-		atom_setlong(out, len);
-		atom_setlong(out + 1, ptr);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, len, (char *)ptr);
 #endif
 	}
 }
@@ -149,11 +142,29 @@ void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv){
 		return;
 	}
 
+
+	t_osc_bndl_u *bndl_u = osc_bundle_u_alloc();
+	t_osc_msg_u *msg_u = NULL;
+	t_osc_err e = omax_util_maxAtomsToOSCMsg_u(&msg_u, address, argc, argv);
+	if(e){
+		object_error((t_object *)x, "%s", osc_error_string(e));
+		return;
+	}
+	osc_bundle_u_addMsg(bndl_u, msg_u);
+	long len = 0;
+	char *buf = NULL;
+	osc_bundle_u_serialize(bndl_u, &len, &buf);
+	if(bndl_u){
+		osc_bundle_u_free(bndl_u);
+	}
+
+	/*
 	int len = omax_util_get_bundle_size_for_atoms(address, argc, argv);
 	char buf[len];
 	memset(buf, '\0', len);
 	omax_util_encode_atoms(buf + 16, address, argc, argv);
 	strncpy(buf, "#bundle\0", 8);
+	*/
 	ovar_doFullPacket(x, len, (long)buf, proxy_getinlet((t_object *)x));
 }
 
@@ -172,15 +183,9 @@ void ovar_bang(t_ovar *x){
 		char bndl[len];
 		memcpy(bndl, x->bndl, len);
 		critical_exit(x->lock);
-		t_atom out[2];
-		atom_setlong(out, len);
-		atom_setlong(out + 1, (long)bndl);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, len, bndl);
 	}else{
-		t_atom out[2];
-		atom_setlong(out, OSC_HEADER_SIZE);
-		atom_setlong(out + 1, (long)x->emptybndl);
-		outlet_anything(x->outlet, ps_FullPacket, 2, out);
+		omax_util_outletOSC(x->outlet, OSC_HEADER_SIZE, x->emptybndl);
 	}
 #endif
 }
@@ -247,11 +252,30 @@ void *ovar_new(t_symbol *msg, short argc, t_atom *argv){
 					return NULL;
 				}
 				t_symbol *address = atom_getsym(argv);
+
+
+				t_osc_bndl_u *bndl_u = osc_bundle_u_alloc();
+				t_osc_msg_u *msg_u = NULL;
+				t_osc_err e = omax_util_maxAtomsToOSCMsg_u(&msg_u, address, argc - 1, argv + 1);
+				if(e){
+					object_error((t_object *)x, "%s", osc_error_string(e));
+					return NULL;
+				}
+				osc_bundle_u_addMsg(bndl_u, msg_u);
+				x->buflen = 0;
+				x->bndl = NULL;
+				osc_bundle_u_serialize(bndl_u, &(x->buflen), &(x->bndl));
+				x->len = x->buflen;
+				if(bndl_u){
+					osc_bundle_u_free(bndl_u);
+				}
+				/*
 				x->len = x->buflen = omax_util_get_bundle_size_for_atoms(address, argc - 1, argv + 1);
 				x->bndl = (char *)osc_mem_alloc(x->buflen);
 				memset(x->bndl, '\0', x->len);
 				osc_bundle_s_setBundleID(x->bndl);
 				omax_util_encode_atoms(x->bndl + OSC_HEADER_SIZE, address, argc - 1, argv + 1);
+				*/
 			}else{
 				object_error((t_object *)x, "arguments must begin with a valid OSC address");
 				return NULL;
@@ -285,7 +309,6 @@ int main(void){
 	ovar_class = c;
 
 	common_symbols_init();
-	ps_FullPacket = gensym("FullPacket");
 
 	ODOT_PRINT_VERSION;
 	return 0;

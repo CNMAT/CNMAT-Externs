@@ -51,7 +51,6 @@ void *ochange_class;
 
 void ochange_fullPacket(t_ochange *x, long len, long ptr);
 void ochange_cbk(t_osc_msg msg, void *v);
-void ochange_output(void *outlet, long len, char *ptr);
 int ochange_copybundle(t_ochange *x, long len, char *ptr);
 void ochange_clear(t_ochange *x);
 void ochange_anything(t_ochange *x, t_symbol *msg, int argc, t_atom *argv);
@@ -60,12 +59,10 @@ void ochange_free(t_ochange *x);
 void ochange_assist(t_ochange *x, void *b, long m, long a, char *s);
 void *ochange_new(t_symbol *msg, short argc, t_atom *argv);
 
-t_symbol *ps_FullPacket;
-
 void ochange_fullPacket(t_ochange *x, long len, long ptr){
 	if(!x->buf || x->buflen == 0){
 		ochange_copybundle(x, len, (char *)ptr);
-		ochange_output(x->outlet, len, (char *)ptr);
+		omax_util_outletOSC(x->outlet, len, (char *)ptr);
 		return;
 	}
 	long buflen = x->buflen;
@@ -79,14 +76,7 @@ void ochange_fullPacket(t_ochange *x, long len, long ptr){
 		}
 	}
 	ochange_copybundle(x, len, (char *)ptr);
-	ochange_output(x->outlet, len, (char *)ptr);
-}
-
-void ochange_output(void *outlet, long len, char *ptr){
-	t_atom out[2];
-	atom_setlong(out, len);
-	atom_setlong(out + 1, (long)ptr);
-	outlet_anything(outlet, ps_FullPacket, 2, out);
+	omax_util_outletOSC(x->outlet, len, (char *)ptr);
 }
 
 int ochange_copybundle(t_ochange *x, long len, char *ptr){
@@ -119,7 +109,7 @@ void ochange_bang(t_ochange *x){
 	critical_enter(x->lock);
 	memcpy(buf, x->buf, len);
 	critical_exit(x->lock);
-	ochange_output(x->outlet, len, buf);
+	omax_util_outletOSC(x->outlet, len, buf);
 }
 
 void ochange_assist(t_ochange *x, void *b, long m, long a, char *s){
@@ -166,7 +156,6 @@ int main(void){
 	ochange_class = c;
 
 	common_symbols_init();
-	ps_FullPacket = gensym("FullPacket");
 
 	ODOT_PRINT_VERSION;
 	return 0;
