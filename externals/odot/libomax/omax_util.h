@@ -38,36 +38,6 @@
 extern "C" {
 #endif
 
-//////////////////////////////////////////////////
-// to be removed
-//////////////////////////////////////////////////
-// shouldn't need this
-char omax_util_typetagForAtom(t_atom *a);
-// or this
-//int osc_util_check_pos_and_resize(char *buf, int len, char *pos);
-// not encoding to serialized bundles any more--encode to unserialized and then serialize
-//int omax_util_get_bundle_size_for_atoms(t_symbol *address, int argc, t_atom *argv);
-// this is still in use by a few things mainly (exclusively?) in this file, but should be removed soon
-//void omax_util_oscMsg2MaxAtoms_old(t_osc_msg *msg, long *ac, t_atom *av);
-// these two are very old and probably safe to remove
-//int osc_util_make_bundle(int numAddresses,
-//t_symbol **addresses, 
-//int *numArgs,
-//char **typetags, 
-//t_atom **args, 
-//int *len, 
-//char *buffer);
-
-//////////////////////////////////////////////////
-// to be replaced
-//////////////////////////////////////////////////
-// this should be replaced by the unserialized functions below.
-int omax_util_encode_atoms(char *buf, t_symbol *address, int argc, t_atom *argv);
-
-//////////////////////////////////////////////////
-// new
-//////////////////////////////////////////////////
-
 void omax_util_outletOSC(void *outlet, long len, char *ptr);
 void omax_util_maxFullPacketToOSCAtom_u(t_osc_atom_u **osc_atom, t_atom *len, t_atom *ptr);
 void omax_util_maxAtomToOSCAtom_u(t_osc_atom_u **osc_atom, t_atom *max_atom);
