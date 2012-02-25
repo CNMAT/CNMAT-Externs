@@ -30,6 +30,14 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+
+#define OMAX_DOC_NAME "o.change"
+#define OMAX_DOC_SHORT_DESC "Output a bundle if it changes."
+#define OMAX_DOC_LONG_DESC "o.change passes a bundle through if it is different from the last bundle that it received.  Any change including reordering the contents will cause the bundle to be passed through"
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"The OSC packet if it changed."}
+#define OMAX_DOC_SEEALSO (char *[]){"change"}
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -38,6 +46,7 @@
 #include "osc.h"
 #include "osc_mem.h"
 #include "omax_util.h"
+#include "omax_doc.h"
 
 typedef struct _ochange{
 	t_object ob;
@@ -56,7 +65,6 @@ void ochange_clear(t_ochange *x);
 void ochange_anything(t_ochange *x, t_symbol *msg, int argc, t_atom *argv);
 void ochange_bang(t_ochange *x);
 void ochange_free(t_ochange *x);
-void ochange_assist(t_ochange *x, void *b, long m, long a, char *s);
 void *ochange_new(t_symbol *msg, short argc, t_atom *argv);
 
 void ochange_fullPacket(t_ochange *x, long len, long ptr){
@@ -96,14 +104,17 @@ int ochange_copybundle(t_ochange *x, long len, char *ptr){
 	return 0;
 }
 
-void ochange_clear(t_ochange *x){
+void ochange_clear(t_ochange *x)
+{
 	x->buflen = 0;
 }
 
-void ochange_anything(t_ochange *x, t_symbol *msg, int argc, t_atom *argv){
+void ochange_anything(t_ochange *x, t_symbol *msg, int argc, t_atom *argv)
+{
 }
 
-void ochange_bang(t_ochange *x){
+void ochange_bang(t_ochange *x)
+{
 	long len = x->buflen;
 	char buf[len];
 	critical_enter(x->lock);
@@ -112,26 +123,26 @@ void ochange_bang(t_ochange *x){
 	omax_util_outletOSC(x->outlet, len, buf);
 }
 
-void ochange_assist(t_ochange *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_INLET)
-		sprintf(s, "OSC FullPacket");
-	else {
-		switch (a) {	
-		case 0:
-			sprintf(s, "The bundle if it has changed.");
-			break;
-		}
-	}
+void ochange_doc(t_ochange *x)
+{
+	omax_doc_outletDoc(x->outlet);
 }
 
-void ochange_free(t_ochange *x){
+void ochange_assist(t_ochange *x, void *b, long io, long num, char *buf)
+{
+	omax_doc_assist(io, num, buf);
+}
+
+void ochange_free(t_ochange *x)
+{
 	critical_free(x->lock);
 	if(x->buf){
 		osc_mem_free(x->buf);
 	}
 }
 
-void *ochange_new(t_symbol *msg, short argc, t_atom *argv){
+void *ochange_new(t_symbol *msg, short argc, t_atom *argv)
+{
 	t_ochange *x;
 	if(x = (t_ochange *)object_alloc(ochange_class)){
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
@@ -143,10 +154,12 @@ void *ochange_new(t_symbol *msg, short argc, t_atom *argv){
 	return(x);
 }
 
-int main(void){
+int main(void)
+{
 	t_class *c = class_new("o.change", (method)ochange_new, (method)ochange_free, sizeof(t_ochange), 0L, A_GIMME, 0);
 	class_addmethod(c, (method)ochange_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)ochange_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)ochange_doc, "doc", 0);
 	//class_addmethod(c, (method)ochange_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)ochange_bang, "bang", 0);
 	class_addmethod(c, (method)ochange_anything, "anything", A_GIMME, 0);

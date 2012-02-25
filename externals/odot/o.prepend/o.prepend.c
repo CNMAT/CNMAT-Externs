@@ -31,6 +31,13 @@ version 1.0: Rewritten to only take one argument (the symbol to be prepended) wh
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define OMAX_DOC_NAME "o.prepend"
+#define OMAX_DOC_SHORT_DESC "Prepend an OSC address to every OSC address in a bundle."
+#define OMAX_DOC_LONG_DESC "o.prepend takes an OSC address as an argument and prepends it to every address in the bundle."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC packet with argument prepended."}
+#define OMAX_DOC_SEEALSO (char *[]){"prepend"}
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -39,6 +46,7 @@ version 1.0: Rewritten to only take one argument (the symbol to be prepended) wh
 #include "osc_bundle_s.h"
 #include "osc_bundle_iterator_s.h"
 #include "omax_util.h"
+#include "omax_doc.h"
 
 typedef struct _oppnd{
 	t_object ob;
@@ -69,7 +77,6 @@ void oppnd_list(t_oppnd *x, t_symbol *msg, int argc, t_atom *argv);
 void oppnd_float(t_oppnd *x, double f);
 void oppnd_long(t_oppnd *x, long l);
 void oppnd_free(t_oppnd *x);
-void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s);
 void *oppnd_new(t_symbol *msg, short argc, t_atom *argv);
 
 t_symbol *ps_FullPacket;
@@ -191,24 +198,14 @@ void oppnd_float(t_oppnd *x, double f){
 void oppnd_long(t_oppnd *x, long l){
 }
 
-void oppnd_assist(t_oppnd *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
-		if(x->sym_to_prepend){
-			sprintf(s,"FullPacket with %s prepended to each address", x->sym_to_prepend->s_name);
-		}else{
-			sprintf(s,"FullPacket with <nothing> prepend to each address");
-		}
-	else {
-		switch (a) {	
-		case 0:
-			if(x->sym_to_prepend){
-				sprintf(s,"OSC FullPacket:  %s will be prepended to each address", x->sym_to_prepend->s_name);
-			}else{
-				sprintf(s,"OSC FullPacket:  <nothing> will be prepended to each address");
-			}
-			break;
-		}
-	}
+void oppnd_doc(t_oppnd *x)
+{
+	omax_doc_outletDoc(x->outlet);
+}
+
+void oppnd_assist(t_oppnd *x, void *b, long io, long num, char *buf)
+{
+	omax_doc_assist(io, num, buf);
 }
 
 void oppnd_free(t_oppnd *x){
@@ -234,6 +231,7 @@ int main(void){
 	class_addmethod(c, (method)oppnd_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oppnd_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oppnd_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)oppnd_doc, "doc", 0);
 	class_addmethod(c, (method)oppnd_anything, "anything", A_GIMME, 0);
 	//class_addmethod(c, (method)oppnd_list, "list", A_GIMME, 0);
 	//class_addmethod(c, (method)oppnd_float, "float", A_FLOAT, 0);

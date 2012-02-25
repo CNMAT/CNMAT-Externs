@@ -30,16 +30,26 @@ VERSION 0.0: First try
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define OMAX_DOC_NAME "o.print"
+#define OMAX_DOC_SHORT_DESC "Print an OSC packet to the Max window."
+#define OMAX_DOC_LONG_DESC "o.print prints the contents of an OSC packet to the Max window and passes the packet through its outlet unaltered."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet or Max message."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC packet or Max message (same as input)."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.printbytes", "print", "printit"}
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "osc.h"
+#include "osc_mem.h"
 #include "osc_bundle_s.h"
 #include "omax_util.h"
+#include "omax_doc.h"
 
 typedef struct _oprint{
 	t_object ob;
+	void *outlet;
 	int print_msgsize;
 	int print_typetags;
 	t_symbol *myname;
@@ -54,7 +64,6 @@ void oprint_float(t_oprint *x, double f);
 void oprint_anything(t_oprint *x, t_symbol *msg, int argc, t_atom *argv);
 void oprint_list(t_oprint *x, t_symbol *msg, int argc, t_atom *argv);
 void oprint_free(t_oprint *x);
-void oprint_assist(t_oprint *x, void *b, long m, long a, char *s);
 void *oprint_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err oprint_notify(t_oprint *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
@@ -84,6 +93,7 @@ void oprint_fullPacket(t_oprint *x, long len, long ptr){
 	if(buf){
 		osc_mem_free(buf);
 	}
+	omax_util_outletOSC(x->outlet, len, (char *)ptr);
 }
 
 void oprint_anything(t_oprint *x, t_symbol *msg, int argc, t_atom *argv)
@@ -99,31 +109,41 @@ void oprint_anything(t_oprint *x, t_symbol *msg, int argc, t_atom *argv)
 	if(buf){
 		sysmem_freeptr(buf);
 	}
+	outlet_anything(x->outlet, msg, argc, argv);
 }
 
 void oprint_list(t_oprint *x, t_symbol *msg, int argc, t_atom *argv)
 {
-	oprint_anything(x, NULL, argc, argv);
+	char *buf = NULL;
+	long len = 0;
+	atom_gettext(argc, argv, &len, &buf, 0);
+	post("%s: %s", x->myname->s_name, buf);
+	if(buf){
+		sysmem_freeptr(buf);
+	}
+	outlet_list(x->outlet, NULL, argc, argv);
 }
 
 void oprint_int(t_oprint *x, long l)
 {
-	t_atom a;
-	atom_setlong(&a, l);
-	oprint_anything(x, NULL, 1, &a);
+	post("%s: %ld", x->myname->s_name, l);
+	outlet_int(x->outlet, l);
 }
 
 void oprint_float(t_oprint *x, double f)
 {
-	t_atom a;
-	atom_setfloat(&a, f);
-	oprint_anything(x, NULL, 1, &a);
+	post("%s: %f", x->myname->s_name, f);
+	outlet_float(x->outlet, f);
 }
 
-void oprint_assist(t_oprint *x, void *b, long m, long a, char *s){
-	if(m == ASSIST_INLET){
-		sprintf(s,"Print the contents of an OSC FullPacket to the Max window.");
-	}
+void oprint_doc(t_oprint *x)
+{
+	omax_doc_outletDoc(x->outlet);
+}
+
+void oprint_assist(t_oprint *x, void *b, long io, long num, char *buf)
+{
+	omax_doc_assist(io, num, buf);
 }
 
 void oprint_free(t_oprint *x){
@@ -133,6 +153,7 @@ void *oprint_new(t_symbol *msg, short argc, t_atom *argv){
 	t_oprint *x;
 	if(x = (t_oprint *)object_alloc(oprint_class)){
 		x->myname = gensym("o.print");
+		x->outlet = outlet_new(x, NULL);
 		if(attr_args_offset(argc, argv) > 0 && argc > 0){
 			char buf[128];
 			switch(atom_gettype(argv)){
@@ -160,6 +181,7 @@ int main(void){
 	class_addmethod(c, (method)oprint_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)oprint_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oprint_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)oprint_doc, "doc", 0);
 	class_addmethod(c, (method)oprint_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)oprint_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oprint_list, "list", A_GIMME, 0);

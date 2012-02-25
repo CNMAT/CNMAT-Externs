@@ -32,6 +32,24 @@ VERSION 1.1: renamed o.pack (from o.build)
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#ifdef PAK
+
+#define OMAX_DOC_NAME "o.pak"
+#define OMAX_DOC_SHORT_DESC "Bind data to addresses."
+#define OMAX_DOC_LONG_DESC "o.pak takes a OSC addresses as arguments and creates an inlet for each one.  Anything sent into an inlet is bound to the corresponding address and the OSC packet is output with all other addresses bound to their most recent values."
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC FullPacket"}
+#define OMAX_DOC_SEEALSO (char *[]){"o.pack", "pack", "pak"}
+
+#else
+
+#define OMAX_DOC_NAME "o.pack"
+#define OMAX_DOC_SHORT_DESC "Bind data to addresses."
+#define OMAX_DOC_LONG_DESC "o.pack takes a OSC addresses as arguments and creates an inlet for each one.  Anything sent into an inlet is bound to the corresponding address. Output is triggered when data is recieved in the leftmost inlet."
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC FullPacket"}
+#define OMAX_DOC_SEEALSO (char *[]){"o.pak", "pack", "pak"}
+
+#endif
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -43,6 +61,7 @@ VERSION 1.1: renamed o.pack (from o.build)
 #include "osc_bundle_iterator_u.h"
 #include "osc_message_u.h"
 #include "osc_message_iterator_u.h"
+#include "omax_doc.h"
 
 //#define MAX_NUM_ARGS 64
 
@@ -54,6 +73,7 @@ typedef struct _opack{
 	int num_messages;
 	long inlet;
 	void **proxy;
+	char **inlet_assist_strings;
 } t_opack;
 
 void *opack_class;
@@ -64,7 +84,6 @@ void opack_anything(t_opack *x, t_symbol *msg, short argc, t_atom *argv);
 void opack_int(t_opack *x, long l);
 void opack_float(t_opack *x, double f);
 void opack_free(t_opack *x);
-void opack_assist(t_opack *x, void *b, long m, long a, char *s);
 void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 
 
@@ -155,12 +174,29 @@ void opack_set(t_opack *x, t_symbol *address){
 	}
 }
 
-void opack_assist(t_opack *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
-		sprintf(s,"OSC bundle");
-	else {
-		sprintf(s, "Arguments for address %s", osc_message_u_getAddress(osc_message_array_u_get(x->messages, a)));
-	}
+void opack_doc(t_opack *x)
+{
+	_omax_doc_outletDoc(x->outlet,			
+			    OMAX_DOC_NAME,		
+			    OMAX_DOC_SHORT_DESC,	
+			    OMAX_DOC_LONG_DESC,		
+			    x->num_messages,
+			    x->inlet_assist_strings,
+			    OMAX_DOC_NOUTLETS,		
+			    OMAX_DOC_OUTLETS_DESC,	
+			    OMAX_DOC_NUM_SEE_ALSO_REFS,	
+			    OMAX_DOC_SEEALSO);
+}
+
+void opack_assist(t_opack *x, void *b, long io, long num, char *buf)
+{
+	_omax_doc_assist(io, 
+			 num,
+			 buf,
+			 x->num_messages,
+			 x->inlet_assist_strings,
+			 OMAX_DOC_NOUTLETS,
+			 OMAX_DOC_OUTLETS_DESC);
 }
 
 void opack_free(t_opack *x){
@@ -176,6 +212,13 @@ void opack_free(t_opack *x){
 		}
 		free(x->proxy);
 	}
+	int i;
+	for(i = 0; i < x->num_messages; i++){
+		if(x->inlet_assist_strings[i]){
+			osc_mem_free(x->inlet_assist_strings[i]);
+		}
+	}
+	osc_mem_free(x->inlet_assist_strings);
 }
 
 void *opack_new(t_symbol *msg, short argc, t_atom *argv){
@@ -229,6 +272,7 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 		x->num_messages = count;
 		x->messages = osc_message_array_u_alloc(count);
 		osc_message_array_u_clear(x->messages);
+		x->inlet_assist_strings = (char **)osc_mem_alloc(count * sizeof(char *));
 		int pos = 0;
 		for(i = 0; i < count; i++){
 			osc_message_u_setAddress(osc_message_array_u_get(x->messages, i), atom_getsym(addresses[i])->s_name);
@@ -238,6 +282,8 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 			}
 			pos += numargs[i];
 			osc_bundle_u_addMsg(x->bndl, osc_message_array_u_get(x->messages, i));
+			x->inlet_assist_strings[i] = (char *)osc_mem_alloc(128);
+			sprintf(x->inlet_assist_strings[i], "Arguments for address %s (%d)", atom_getsym(addresses[i])->s_name, i + 1);
 		}
 
 		x->proxy = (void **)malloc(count * sizeof(void *));
@@ -262,6 +308,7 @@ int main(void){
 	//class_addmethod(c, (method)opack_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)opack_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)opack_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)opack_doc, "doc", 0);
 	class_addmethod(c, (method)opack_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)opack_list, "list", A_GIMME, 0);
 	class_addmethod(c, (method)opack_float, "float", A_FLOAT, 0);

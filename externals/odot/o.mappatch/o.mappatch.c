@@ -31,6 +31,14 @@ VERSION 1.0: New name
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define OMAX_DOC_NAME "o.mappatch"
+#define OMAX_DOC_SHORT_DESC "Map the contents of an OSC bundle onto a Max patch."
+#define OMAX_DOC_LONG_DESC "o.mappatch takes an OSC bundle in the right inlet and outputs each of the messages contained in it in sequence out the right outlet as OSC-style Max-messages.  After processing each message, it should be sent back into the right inlet (or not if it is to be excluded from the bundle).  After all messages have been processed, the resulting bundle with any modifications will come out the left outlet."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC FullPacket", "OSC-style Max messages to be included in the bundle."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC FullPacket: results of the mapping", "OSC-style Max messages contained in the bundle."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.expr", "o.callpatch", "o.atomize"}
+
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_critical.h"
@@ -42,6 +50,7 @@ VERSION 1.0: New name
 #include "osc_bundle_s.h"
 #include "osc_bundle_iterator_s.h"
 #include "osc_message_s.h"
+#include "omax_doc.h"
 
 /*
 When a new FullPacket message comes in, we make an unserialized bundle and stick it in our object
@@ -91,7 +100,6 @@ void omap_anything(t_omap *x, t_symbol *msg, short argc, t_atom *argv);
 void omap_list(t_omap *x, t_symbol *msg, short argc, t_atom *argv);
 void omap_free(t_omap *x);
 void omap_addQitem(t_omap *x, t_omap_qitem *qi);
-void omap_assist(t_omap *x, void *b, long m, long a, char *s);
 void *omap_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err omap_notify(t_omap *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
@@ -244,7 +252,8 @@ void omap_list(t_omap *x, t_symbol *sym, short argc, t_atom *argv){
 	//x->buffer_pos += omax_util_encode_atoms(x->buffer + x->buffer_pos, address, argc, argv);
 }
 
-void omap_addQitem(t_omap *x, t_omap_qitem *qi){
+void omap_addQitem(t_omap *x, t_omap_qitem *qi)
+{
 	critical_enter(x->lock);
 	if(x->fifo){
 		t_omap_qitem *q = x->fifo;
@@ -258,29 +267,18 @@ void omap_addQitem(t_omap *x, t_omap_qitem *qi){
 	critical_exit(x->lock);
 }
 
-void omap_assist(t_omap *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET)
-		switch(a){
-		case 0:
-			sprintf(s, "FullPacket: results of the mapping");
-			break;
-		case 1:
-			sprintf(s, "OSC-style max messages contained in the bundle");
-			break;
-		}
-	else {
-		switch (a) {	
-		case 0:
-			sprintf(s,"FullPacket");
-			break;
-		case 1:
-			sprintf(s, "Messages from the original bundle to be included in the new bundle");
-			break;
-		}
-	}
+void omap_doc(t_omap *x)
+{
+	omax_doc_outletDoc(x->outlets[0]);
 }
 
-void omap_free(t_omap *x){
+void omap_assist(t_omap *x, void *b, long io, long num, char *buf)
+{
+	omax_doc_assist(io, num, buf);
+}
+
+void omap_free(t_omap *x)
+{
 	object_free(x->proxy);
 }
 
@@ -309,6 +307,7 @@ int main(void){
 	t_class *c = class_new("o.mappatch", (method)omap_new, (method)omap_free, sizeof(t_omap), 0L, A_GIMME, 0);
 	class_addmethod(c, (method)omap_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	//class_addmethod(c, (method)omap_notify, "notify", A_CANT, 0);
+	class_addmethod(c, (method)omap_doc, "doc", 0);
 	class_addmethod(c, (method)omap_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)omap_int, "int", A_LONG, 0);
 	class_addmethod(c, (method)omap_float, "float", A_FLOAT, 0);

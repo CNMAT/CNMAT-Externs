@@ -33,22 +33,58 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 
 #include "../odot_version.h"
 
-#if defined (OIF)
+#ifdef NAME
 #undef NAME
-#define NAME "o.if"
-#elif defined (OCOND)
-#undef NAME
-#define NAME "o.cond"
-#elif defined (OUNLESS)
-#undef NAME
-#define NAME "o.unless"
-#elif defined (OWHEN)
-#undef NAME
-#define NAME "o.when"
-#else
-#undef NAME
-#define NAME "o.expr"
 #endif
+
+
+#if defined (OCOND)
+
+#define OMAX_DOC_NAME "o.cond"
+#define OMAX_DOC_SHORT_DESC "Route an OSC packet out an outlet based on the results of an expression."
+#define OMAX_DOC_LONG_DESC "o.cond creates one outlet for each expression separated by a semicolon. The bundle will come out the outlet that corresponds to the first expression that evaluates to true or non-zero."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet containing addresses that the expression will be applied to."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.expr", "o.if", "o.when", "o.unless", "o.callpatch", "expr", "jit.expr"}
+
+#elif defined (OIF)
+
+#define OMAX_DOC_NAME "o.if"
+#define OMAX_DOC_SHORT_DESC "Route an OSC packet based on the results of an expression."
+#define OMAX_DOC_LONG_DESC "o.if routs the incoming bundle out the left outlet if the result of the expression is true or non-zero, and out the right outlet otherwise."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet containing addresses that the expression will be applied to."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"Input OSC FullPacket if the expression returns true or non-zero", "Input OSC FullPacket if the expression returns false or zero"}
+#define OMAX_DOC_SEEALSO (char *[]){"o.expr", "o.cond", "o.when", "o.unless", "o.callpatch", "expr", "jit.expr"}
+
+#elif defined (OWHEN)
+
+#define OMAX_DOC_NAME "o.when"
+#define OMAX_DOC_SHORT_DESC "Passes the bundle through if the result of the expression is true or non-zero."
+#define OMAX_DOC_LONG_DESC "o.when behaves like o.if with only the left-most outlet (i.e. the \"then\" outlet"
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet containing addresses that the expression will be applied to."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"Input OSC packet if the expression returns true or non-zero."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.if", "o.cond", "o.unless", "o.expr", "expr", "jit.expr"}
+
+#elif defined (OUNLESS)
+
+#define OMAX_DOC_NAME "o.unless"
+#define OMAX_DOC_SHORT_DESC "Passes the bundle through if the result of the expression is false or zero."
+#define OMAX_DOC_LONG_DESC "o.unless behaves like o.if with only the right-most outlet (i.e. the \"else\" outlet."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet containing addresses that the expression will be applied to."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"Input OSC packet if the expression returns false or zero."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.if", "o.cond", "o.when", "o.expr", "expr", "jit.expr"}
+
+#else
+
+#define OMAX_DOC_NAME "o.expr"
+#define OMAX_DOC_SHORT_DESC "Evaluate a C-like expression containing OSC addresses."
+#define OMAX_DOC_LONG_DESC "When it reveives a packet, o.expr substitutes any OSC addresses contained in the expression for the values to which they are bound in the incoming packet.  The expression is then evaluated and the resulting bundle, containing any side effects of the expression, is output."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet containing addresses that the expression will be applied to."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"The OSC packet containing the results of the expression."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.callpatch", "o.if", "o.cond", "o.when", "o.unless", "expr", "jit.expr"}
+
+#endif
+
+#define NAME OMAX_DOC_NAME
 
 #ifndef WIN_VERSION
 #include <mach/mach.h>
@@ -66,6 +102,7 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include "osc_atom_u.h"
 #include "osc_error.h"
 #include "omax_util.h"
+#include "omax_doc.h"
 
 //#define __OSC_PROFILE__
 #include "osc_profile.h"
@@ -81,6 +118,7 @@ typedef struct _oexpr{
 #endif
 #ifdef OCOND
 	int num_exprs;
+	char **outlets_desc;
 #endif
 	t_osc_expr *function_graph;
 	//t_jrgba background_color, frame_color, text_color;
@@ -103,7 +141,6 @@ void oexpr_output_bundle(t_oexpr *x);
 //void oexpr_mouseup(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers);
 
 void oexpr_free(t_oexpr *x);
-void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s);
 void *oexpr_new(t_symbol *msg, short argc, t_atom *argv);
 
 
@@ -396,7 +433,6 @@ void oexpr_postFunctionTable(t_oexpr *fg){
 	long len = 0;
 	osc_expr_formatFunctionTable(&len, &buf);
 	char *ptr1 = buf, *ptr2 = buf;
-	int i = 0;
 	while(*ptr2){
 		if(*ptr2 == '\n'){
 			*ptr2 = '\0';
@@ -457,39 +493,52 @@ void oexpr_documentation(t_oexpr *x, t_symbol *func)
 	}
 }
 
-void oexpr_assist(t_oexpr *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET){
+void oexpr_doc(t_oexpr *x)
+{
 #ifdef OCOND
-		if(a == x->num_exprs){
-			sprintf(s, "Input OSC FullPacket if all expressions return false or zero");
-		}else{
-			sprintf(s, "Input OSC FullPacket if expression %ld returns true or non-zero", a + 1);
-		}
-#elif defined(OIF)
-		if(a == 1){
-			sprintf(s, "Input OSC FullPacket if the expression returns false or zero");
-		}else{
-			sprintf(s, "Input OSC FullPacket if the expression returns true or non-zero");
-		}
-#elif defined(OWHEN)
-		sprintf(s, "Input OSC FullPacket if the expression returns true or non-zero");
-#elif defined(OUNLESS)
-		sprintf(s, "Input OSC FullPacket if the expression returns true or non-zero");
+	_omax_doc_outletDoc(x->outlets[0],			
+			    OMAX_DOC_NAME,		
+			    OMAX_DOC_SHORT_DESC,	
+			    OMAX_DOC_LONG_DESC,		
+			    OMAX_DOC_NINLETS,		
+			    OMAX_DOC_INLETS_DESC,	
+			    x->num_exprs + 1,
+			    x->outlets_desc,
+			    OMAX_DOC_NUM_SEE_ALSO_REFS,	
+			    OMAX_DOC_SEEALSO);
 #else
-		sprintf(s, "OSC FullPacket containing the results of the expression");
+#ifdef OIF
+	omax_doc_outletDoc(x->outlets[0]);
+#else
+	omax_doc_outletDoc(x->outlet);
 #endif
-	}else{
-		sprintf(s, "OSC FullPacket containing addresses that the expression will be applied to");
-	}
+#endif
+}
+
+void oexpr_assist(t_oexpr *x, void *b, long io, long num, char *buf){
+#ifdef OCOND
+	_omax_doc_assist(io, num, buf, OMAX_DOC_NINLETS, OMAX_DOC_INLETS_DESC, x->num_exprs + 1, x->outlets_desc);
+#else
+	omax_doc_assist(io, num, buf);
+#endif
 }
 
 void oexpr_free(t_oexpr *x){
 	//jbox_free((t_jbox *)x);
 	osc_expr_free(x->function_graph);
-#if defined (OIF) || defined (ocond)
+#if defined (OIF) || defined (OCOND)
 	if(x->outlets){
 		free(x->outlets);
 	}
+#endif
+#ifdef OCOND
+	int i;
+	for(i = 0; i < x->num_exprs; i++){
+		if(x->outlets_desc){
+			osc_mem_free(x->outlets_desc);
+		}
+	}
+	osc_mem_free(x->outlets_desc);
 #endif
 }
 
@@ -614,6 +663,14 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 		for(i = n; i >= 0; i--){
 			x->outlets[i] = outlet_new((t_object *)x, "FullPacket");
 		}
+
+		x->outlets_desc = (char **)osc_mem_alloc((x->num_exprs + 1) * sizeof(char *));
+		for(i = 0; i < x->num_exprs; i++){
+			x->outlets_desc[i] = (char *)osc_mem_alloc(128);
+			sprintf(x->outlets_desc[i], "Input OSC packet if expression %d returns true or non-zero", i+1);
+		}
+		x->outlets_desc[x->num_exprs] = (char *)osc_mem_alloc(128);
+		sprintf(x->outlets_desc[x->num_exprs], "Input OSC packet if all expressions return false or zero");
 #else
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
 #endif
@@ -662,7 +719,10 @@ int main(void){
 	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
 	class_addmethod(c, (method)oexpr_postFunctionGraph, "post-function-graph", 0);
 	class_addmethod(c, (method)oexpr_postFunctionTable, "post-function-table", 0);
-	class_addmethod(c, (method)oexpr_documentation, "documentation", A_SYM, 0);
+	class_addmethod(c, (method)oexpr_documentation, "func-doc", A_SYM, 0);
+	class_addmethod(c, (method)oexpr_documentation, "function-documentation", A_SYM, 0);
+
+	class_addmethod(c, (method)oexpr_doc, "doc", 0);
 	/*
 	class_addmethod(c, (method)oexpr_key, "key", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_keyfilter, "keyfilter", A_CANT, 0);

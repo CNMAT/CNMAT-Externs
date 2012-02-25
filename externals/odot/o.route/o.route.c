@@ -31,6 +31,33 @@ VERSION 0.1: Addresses to match can now have patterns
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#ifdef SELECT
+
+#define OMAX_DOC_NAME "o.select"
+#define OMAX_DOC_SHORT_DESC "Dispatch OSC messages according to an address hierarchy preserving the address."
+#define OMAX_DOC_LONG_DESC "o.select does pattern matching on addresses contained in OSC packets.  All messages in a bundle with addresses that match an address specified as an argument to o.select are bundled together and sent out the corresponding outlet with their addresses kept in tact."
+#define OMAX_DOC_SEEALSO (char *[]){"o.route", "o.atomize", "OSC-route", "route", "routepass"}
+
+#elif defined ATOMIZE
+
+#define OMAX_DOC_NAME "o.atomize"
+#define OMAX_DOC_SHORT_DESC "Dispatch OSC messages according to an address hierarchy and convert them to Max messages."
+#define OMAX_DOC_SEEALSO (char *[]){"o.route", "o.select", "OSC-route", "OpenSoundControl", "route"}
+#define OMAX_DOC_LONG_DESC "o.atomize does pattern matching on addresses contained in OSC packets.  All messages in a bundle with addresses that match an address specified as an argument to o.atomize are bundled together and sent out the corresponding outlet with their addresses kept in tact and as Max messages.  With no arguments, o.atomize simply iterates over the messages in a bundle sending them out as Max messages."
+
+#else
+
+#define OMAX_DOC_NAME "o.route"
+#define OMAX_DOC_SHORT_DESC "Dispatch OSC messages according to an address hierarchy stripping off the portion of the address that matched."
+#define OMAX_DOC_LONG_DESC "o.route does pattern matching on addresses contained in OSC packets.  All messages in a bundle with addresses that match an address specified as an argument to o.route are bundled together and sent out the corresponding outlet with the portion of the address that match removed."
+#define OMAX_DOC_SEEALSO (char *[]){"o.select", "o.atomize", "OSC-route", "route"}
+
+#endif
+
+
+
+
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -45,6 +72,7 @@ VERSION 0.1: Addresses to match can now have patterns
 #include "osc_message_iterator_s.h"
 #include "osc_message_u.h"
 #include "omax_util.h"
+#include "omax_doc.h"
 #include "osc_rset.h"
 #include "osc_query.h"
 
@@ -63,6 +91,8 @@ typedef struct _oroute{
 	struct _oroute_context *context_array;
 	void **proxy;
 	long inlet;
+	char **inlet_assist_strings;
+	char **outlet_assist_strings;
 } t_oroute;
 
 void *oroute_class;
@@ -71,7 +101,6 @@ void oroute_fullPacket(t_oroute *x, long len, long ptr);
 void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset);
 void oroute_anything(t_oroute *x, t_symbol *msg, short argc, t_atom *argv);
 void oroute_free(t_oroute *x);
-void oroute_assist(t_oroute *x, void *b, long m, long a, char *s);
 void oroute_set(t_oroute *x, long index, t_symbol *sym);
 void oroute_doSet(t_oroute *x, long index, t_symbol *sym);
 void oroute_makeSchema(t_oroute *x);
@@ -257,21 +286,33 @@ void oroute_doSet(t_oroute *x, long index, t_symbol *sym){
 	oroute_makeSchema(x);
 }
 
-void oroute_assist(t_oroute *x, void *b, long m, long a, char *s)
+void oroute_doc(t_oroute *x)
 {
-	if(m == ASSIST_OUTLET){
-		if(a == x->num_selectors){
-			sprintf(s, "Unmatched messages (delegation)");
-		}else{
-			sprintf(s, "Messages that match %s", x->selectors[x->num_selectors - a - 1]);
-		}
-	}else{
-		if(a == 0){
-			sprintf(s, "OSC bundle or Max message");
-		}else{
-			sprintf(s, "Change the selector %s", x->selectors[x->num_selectors - a]);
-		}
+	void *outlet = x->delegation_outlet;
+	if(x->num_selectors > 0){
+		x->outlets[x->num_selectors - 1];
 	}
+	_omax_doc_outletDoc(outlet,
+			    OMAX_DOC_NAME,		
+			    OMAX_DOC_SHORT_DESC,	
+			    OMAX_DOC_LONG_DESC,		
+			    x->num_selectors + 1,
+			    x->inlet_assist_strings,
+			    x->num_selectors + 1,
+			    x->outlet_assist_strings,
+			    OMAX_DOC_NUM_SEE_ALSO_REFS,	
+			    OMAX_DOC_SEEALSO);
+}
+
+void oroute_assist(t_oroute *x, void *b, long io, long num, char *buf)
+{
+	_omax_doc_assist(io,			
+			 num,			
+			 buf,			
+			 x->num_selectors + 1,
+			 x->inlet_assist_strings,
+			 x->num_selectors + 1,
+			 x->outlet_assist_strings);
 }
 
 void oroute_free(t_oroute *x)
@@ -360,8 +401,11 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv)
 		x->num_selectors = argc;
 		x->unique_selectors = (char **)malloc(x->num_selectors * sizeof(char *));
 
-		//char *unique_selectors[argc];
-		//int num_unique_selectors = 0;
+		x->inlet_assist_strings = (char **)osc_mem_alloc((argc + 1) * sizeof(char *));
+		x->outlet_assist_strings = (char **)osc_mem_alloc((argc + 1) * sizeof(char *));
+
+		x->inlet_assist_strings[0] = osc_mem_alloc(128);
+		sprintf(x->inlet_assist_strings[0], "OSC bundle or Max message");
 		int i;
 		for(i = 0; i < argc; i++){
 			x->outlets[i] = outlet_new(x, NULL);
@@ -373,27 +417,19 @@ void *oroute_new(t_symbol *msg, short argc, t_atom *argv)
 
 			char *selector = atom_getsym(argv + i)->s_name;
 			x->selectors[x->num_selectors - i - 1] = selector;
-			/*
 
-			int match = 0;
-			int j;
-			for(j = 0; j < num_unique_selectors; j++){
-				if(!strcmp(unique_selectors[j], selector)){
-					match++;
-					break;
-				}
-			}
-			if(!match){
-				unique_selectors[num_unique_selectors++] = selector;
-			}
-			*/
+			x->inlet_assist_strings[i + 1] = osc_mem_alloc(128);
+			x->outlet_assist_strings[i] = osc_mem_alloc(128);
+			sprintf(x->inlet_assist_strings[i + 1], "Change the selector %s", selector);
+			sprintf(x->outlet_assist_strings[i], "Messages that match %s", selector);
 		}
+		x->outlet_assist_strings[argc] = osc_mem_alloc(128);
+		sprintf(x->outlet_assist_strings[argc], "Unmatched messages (delegation)");
+
 		oroute_makeUniqueSelectors(x->num_selectors,
 					   x->selectors,
 					   &(x->num_unique_selectors),
 					   &(x->unique_selectors));
-		//memcpy(x->unique_selectors, unique_selectors, num_unique_selectors * sizeof(char **));
-		//x->num_unique_selectors = num_unique_selectors;
 
 		x->schema = NULL;
 		x->schemalen = 0;
@@ -417,6 +453,7 @@ int main(void)
 	t_class *c = class_new(name, (method)oroute_new, (method)oroute_free, sizeof(t_oroute), 0L, A_GIMME, 0);
 	class_addmethod(c, (method)oroute_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oroute_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)oroute_doc, "doc", 0);
 	class_addmethod(c, (method)oroute_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oroute_set, "set", A_LONG, A_SYM, 0);
 

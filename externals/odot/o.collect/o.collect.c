@@ -30,6 +30,13 @@ VERSION 0.0: First try
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define OMAX_DOC_NAME "o.collect"
+#define OMAX_DOC_SHORT_DESC "Collect OSC messages to be bundled together"
+#define OMAX_DOC_LONG_DESC "o.collect collects OSC and OSC-style Max messages to be bundled together and output on bang.  When the bundle is output, the internal buffer is cleared."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC messages to collect."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC packet containing all messages collected."}
+#define OMAX_DOC_SEEALSO (char *[]){"zl group"}
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -40,6 +47,7 @@ VERSION 0.0: First try
 #include "osc_bundle_s.h"
 #include "osc_bundle_iterator_s.h"
 #include "omax_util.h"
+#include "omax_doc.h"
 
 typedef struct _ocoll{
 	t_object ob;
@@ -56,7 +64,6 @@ void ocoll_fullPacket(t_ocoll *x, long len, long ptr);
 void ocoll_anything(t_ocoll *x, t_symbol *msg, int argc, t_atom *argv);
 void ocoll_bang(t_ocoll *x);
 void ocoll_free(t_ocoll *x);
-void ocoll_assist(t_ocoll *x, void *b, long m, long a, char *s);
 void *ocoll_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err ocoll_notify(t_ocoll *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
@@ -145,16 +152,13 @@ void ocoll_clear(t_ocoll *x)
 	critical_exit(x->lock);
 }
 
-void ocoll_assist(t_ocoll *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_INLET)
-		sprintf(s,"OSC bundles to collect.");
-	else {
-		switch (a) {	
-		case 0:
-			sprintf(s,"An OSC bundle with all collectd messages.");
-			break;
-		}
-	}
+void ocoll_doc(t_ocoll *x)
+{
+	omax_doc_outletDoc(x->outlet);
+}
+
+void ocoll_assist(t_ocoll *x, void *b, long io, long num, char *buf){
+	omax_doc_assist(io, num, buf);
 }
 
 void ocoll_free(t_ocoll *x){
@@ -172,7 +176,7 @@ void *ocoll_new(t_symbol *msg, short argc, t_atom *argv){
 		if(argc){
 			if(atom_gettype(argv) == A_LONG){
 				//x->buffer_len = atom_getlong(argv);
-				object_error((t_object *)x, "o.collultate no longer takes an argument to specify its internal buffer size.");
+				object_error((t_object *)x, "o.collect no longer takes an argument to specify its internal buffer size.");
 				object_error((t_object *)x, "The buffer will expand as necessary.");
 			}
 		}
@@ -189,6 +193,7 @@ void *ocoll_new(t_symbol *msg, short argc, t_atom *argv){
 int main(void){
 	t_class *c = class_new("o.collect", (method)ocoll_new, (method)ocoll_free, sizeof(t_ocoll), 0L, A_GIMME, 0);
 	class_addmethod(c, (method)ocoll_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	class_addmethod(c, (method)ocoll_doc, "doc", 0);
 	class_addmethod(c, (method)ocoll_assist, "assist", A_CANT, 0);
 	class_addmethod(c, (method)ocoll_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)ocoll_anything, "anything", A_GIMME, 0);

@@ -7,7 +7,7 @@
 			"revision" : 3
 		}
 ,
-		"rect" : [ 11.0, 53.0, 804.0, 364.0 ],
+		"rect" : [ 638.0, 122.0, 690.0, 663.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -44,7 +44,7 @@
 							"revision" : 3
 						}
 ,
-						"rect" : [ 11.0, 79.0, 804.0, 338.0 ],
+						"rect" : [ 0.0, 26.0, 690.0, 637.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -344,17 +344,17 @@
  ]
 					}
 ,
-					"patching_rect" : [ 82.0, 147.0, 110.0, 20.0 ],
+					"patching_rect" : [ 97.0, 162.0, 110.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"default_fontface" : 0,
 						"digest" : "",
-						"default_fontname" : "Arial",
 						"fontname" : "Arial",
+						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"description" : "",
 						"tags" : "",
-						"fontface" : 0,
 						"globalpatchername" : "",
+						"description" : "",
+						"fontface" : 0,
 						"fontsize" : 12.0
 					}
 ,
@@ -366,7 +366,7 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
-					"id" : "obj-2",
+					"id" : "obj-6",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
@@ -378,7 +378,7 @@
 							"revision" : 3
 						}
 ,
-						"rect" : [ 0.0, 26.0, 804.0, 338.0 ],
+						"rect" : [ 638.0, 148.0, 690.0, 637.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -402,41 +402,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"frgb" : [ 0.49728, 0.49728, 0.49728, 1.0 ],
-									"id" : "obj-2",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 16.0, 78.0, 456.0, 20.0 ],
-									"text" : "Create and display OSC bundles.",
-									"textcolor" : [ 0.49728, 0.49728, 0.49728, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 48.0,
-									"id" : "obj-5",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 16.0, 16.0, 519.0, 62.0 ],
-									"text" : "o.message "
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 12.0,
 									"id" : "obj-23",
 									"maxclass" : "flonum",
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 382.0, 206.0, 50.0, 20.0 ]
+									"patching_rect" : [ 335.0, 367.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -449,7 +421,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 382.0, 236.0, 83.0, 20.0 ],
+									"patching_rect" : [ 335.0, 397.0, 83.0, 20.0 ],
 									"text" : "o.pack /foo 0."
 								}
 
@@ -463,7 +435,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 382.0, 266.0, 65.0, 20.0 ],
+									"patching_rect" : [ 335.0, 427.0, 65.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -477,7 +449,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 472.0, 236.0, 196.0, 34.0 ],
+									"patching_rect" : [ 425.0, 397.0, 196.0, 34.0 ],
 									"text" : "o.message can be used to display the contents of an OSC bundle"
 								}
 
@@ -486,11 +458,11 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-12",
+									"id" : "obj-2",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 185.0, 236.0, 161.0, 20.0 ],
+									"patching_rect" : [ 138.0, 397.0, 161.0, 20.0 ],
 									"text" : "$n style variable substitution"
 								}
 
@@ -505,7 +477,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 102.0, 206.0, 50.0, 20.0 ]
+									"patching_rect" : [ 55.0, 367.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -513,11 +485,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-8",
+									"id" : "obj-5",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 102.0, 266.0, 44.0, 20.0 ],
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 55.0, 427.0, 44.0, 20.0 ],
 									"text" : "o.print"
 								}
 
@@ -526,12 +499,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-9",
+									"id" : "obj-7",
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 102.0, 236.0, 77.0, 20.0 ],
+									"patching_rect" : [ 55.0, 397.0, 77.0, 20.0 ],
 									"text" : "/foo 1 \"$1\" 3 ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -541,11 +514,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-7",
+									"id" : "obj-13",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 102.0, 166.0, 44.0, 20.0 ],
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 55.0, 327.0, 44.0, 20.0 ],
 									"text" : "o.print"
 								}
 
@@ -554,12 +528,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-6",
+									"id" : "obj-14",
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 482.0, 136.0, 50.0, 18.0 ]
+									"patching_rect" : [ 435.0, 297.0, 50.0, 18.0 ]
 								}
 
 							}
@@ -567,11 +541,11 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-4",
+									"id" : "obj-15",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 172.0, 156.0, 303.0, 20.0 ],
+									"patching_rect" : [ 125.0, 317.0, 303.0, 20.0 ],
 									"text" : "except that it outputs OSC bundles"
 								}
 
@@ -580,11 +554,11 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-3",
+									"id" : "obj-16",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 172.0, 136.0, 310.0, 20.0 ],
+									"patching_rect" : [ 125.0, 297.0, 310.0, 20.0 ],
 									"text" : "o.message is similar to the standard Max message box: "
 								}
 
@@ -593,24 +567,163 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-1",
+									"id" : "obj-19",
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 102.0, 136.0, 59.0, 20.0 ],
+									"patching_rect" : [ 55.0, 297.0, 62.0, 20.0 ],
 									"text" : "/foo 1 2 3 ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-12",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 498.0, 498.0, 150.0, 20.0 ],
+									"text" : "see also:"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-10",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 4,
+									"outlettype" : [ "", "", "", "clear" ],
+									"patching_rect" : [ 483.5, 263.0, 186.0, 20.0 ],
+									"text" : "o.helpfilehelper @obj o.message"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-9",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 30.0, 167.0, 600.0, 20.0 ],
+									"text" : "o.message behaves like the standard Max message box except that it converts its data to OSC packets."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-8",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 30.0, 119.0, 600.0, 20.0 ],
+									"text" : "Create and display OSC bundles"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 72.0,
+									"id" : "obj-6",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 30.0, 30.0, 600.0, 89.0 ],
+									"text" : "o.message"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-1",
+									"items" : "message",
+									"maxclass" : "umenu",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "int", "", "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 498.0, 520.0, 132.0, 20.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-3",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 498.0, 579.0, 53.0, 20.0 ],
+									"text" : "pcontrol"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"hidden" : 1,
+									"id" : "obj-4",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 498.0, 555.0, 138.0, 20.0 ],
+									"text" : "sprintf load %s.maxhelp"
 								}
 
 							}
  ],
 						"lines" : [ 							{
 								"patchline" : 								{
-									"destination" : [ "obj-7", 0 ],
+									"destination" : [ "obj-4", 0 ],
 									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-1", 0 ]
+									"hidden" : 1,
+									"source" : [ "obj-1", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-10", 3 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-6", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-10", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-8", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-10", 1 ]
 								}
 
 							}
@@ -618,8 +731,26 @@
 								"patchline" : 								{
 									"destination" : [ "obj-9", 0 ],
 									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-10", 2 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-7", 0 ],
+									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-11", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-13", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-19", 0 ]
 								}
 
 							}
@@ -643,16 +774,35 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-8", 0 ],
+									"destination" : [ "obj-3", 0 ],
+									"disabled" : 0,
+									"hidden" : 1,
+									"source" : [ "obj-4", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-5", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
-									"source" : [ "obj-9", 0 ]
+									"source" : [ "obj-7", 0 ]
 								}
 
 							}
  ],
 						"dependency_cache" : [ 							{
+								"name" : "o.helpfilehelper.maxpat",
+								"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/overview",
+								"type" : "JSON",
+								"implicit" : 1
+							}
+, 							{
 								"name" : "o.message.mxo",
+								"type" : "iLaX"
+							}
+, 							{
+								"name" : "o.route.mxo",
 								"type" : "iLaX"
 							}
 , 							{
@@ -666,17 +816,17 @@
  ]
 					}
 ,
-					"patching_rect" : [ 66.0, 84.0, 49.0, 20.0 ],
+					"patching_rect" : [ 50.0, 120.0, 71.0, 20.0 ],
 					"saved_object_attributes" : 					{
 						"default_fontface" : 0,
 						"digest" : "",
-						"default_fontname" : "Arial",
 						"fontname" : "Arial",
+						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"description" : "",
 						"tags" : "",
-						"fontface" : 0,
 						"globalpatchername" : "",
+						"description" : "",
+						"fontface" : 0,
 						"fontsize" : 12.0
 					}
 ,
@@ -687,7 +837,18 @@
  ],
 		"lines" : [  ],
 		"dependency_cache" : [ 			{
+				"name" : "o.helpfilehelper.maxpat",
+				"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/overview",
+				"patcherrelativepath" : "../patches/overview",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
 				"name" : "o.message.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "o.route.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -696,10 +857,6 @@
 			}
 , 			{
 				"name" : "o.pack.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "o.route.mxo",
 				"type" : "iLaX"
 			}
 , 			{

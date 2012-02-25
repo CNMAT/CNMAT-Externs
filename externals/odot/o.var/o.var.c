@@ -31,6 +31,44 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+
+#ifdef UNION
+
+#define OMAX_DOC_NAME "o.union"
+#define OMAX_DOC_SHORT_DESC "Output a bundle containing the union of all messages between two bundles."
+#define OMAX_DOC_LONG_DESC "o.union takes a bundle in the left and right inlets and takes the union of their addresses and outputs the result.  Messages with duplicate addresses are discarded with the most recent message (the one that came in the left inlet) taking precedence."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet.", "OSC packet."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC Packet containing the union of the two packets."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.difference", "o.intersection"}
+
+#elif defined INTERSECTION
+
+#define OMAX_DOC_NAME "o.intersection"
+#define OMAX_DOC_SHORT_DESC "Output a bundle containing the intersection of messages between two bundles."
+#define OMAX_DOC_LONG_DESC "o.intersection takes two bundles and forms a new bundle that contains the OSC messages from the bundle received in the left inlet whose addresses are also present in the bundle received in the right inlet."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet.", "OSC packet."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC Packet containing the intersection of the two packets."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.difference", "o.union"}
+
+#elif defined DIFFERENCE
+
+#define OMAX_DOC_NAME "o.difference"
+#define OMAX_DOC_SHORT_DESC "Output a bundle containing the difference between two bundles."
+#define OMAX_DOC_LONG_DESC "o.difference takes two bundles and forms a new bundle that contains the messages with addresses that are not common to both bundles"
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet.", "OSC packet."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC Packet containing the difference of the two packets."}
+#define OMAX_DOC_SEEALSO (char *[]){"o.union", "o.intersection"}
+
+#else
+
+#define OMAX_DOC_NAME "o.var"
+#define OMAX_DOC_SHORT_DESC "Store a bundle and bang it out later."
+#define OMAX_DOC_LONG_DESC "o.var copies an OSC packet and stores it for later use.  Since FullPacket messages are references to data stored in memory, objects wishing to store a packet must make a copy of it rather than just save the FullPacket message.  Use o.var or o.message to store a packet, not zl reg or any other normal Max object."
+#define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet will be stored and sent out immediately.  Bang to trigger output.", "OSC packet to be stored (no output)."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"Stored OSC packet."}
+
+#endif
+
 #include "../odot_version.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -40,6 +78,7 @@
 #include "osc_mem.h"
 #include "osc_bundle_s.h"
 #include "omax_util.h"
+#include "omax_doc.h"
 
 typedef struct _ovar{
 	t_object ob;
@@ -62,7 +101,6 @@ void ovar_anything(t_ovar *x, t_symbol *msg, int argc, t_atom *argv);
 void ovar_bang(t_ovar *x);
 
 void ovar_free(t_ovar *x);
-void ovar_assist(t_ovar *x, void *b, long m, long a, char *s);
 void *ovar_new(t_symbol *msg, short argc, t_atom *argv);
 t_max_err ovar_notify(t_ovar *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
@@ -190,35 +228,14 @@ void ovar_bang(t_ovar *x){
 #endif
 }
 
-void ovar_assist(t_ovar *x, void *b, long m, long a, char *s){
-	if (m == ASSIST_OUTLET){
-#ifdef UNION
-		sprintf(s,"FullPacket: Union of the left and right inlets");
-#elif defined INTERSECTION
-		sprintf(s,"FullPacket: Intersection of the left and right inlets");
-#elif defined DIFFERENCE
-		sprintf(s,"FullPacket: Difference between the left and right inlets");
-#else
-		sprintf(s, "FullPacket: Stored bundle");
-#endif
-	}else{
-		switch(a){	
-		case 0:
-#ifdef UNION
-			sprintf(s,"FullPacket: Compute union and output");
-#elif defined INTERSECTION
-			sprintf(s,"FullPacket: Compute intersection and output");
-#elif defined DIFFERENCE
-			sprintf(s,"FullPacket: Compute difference and output");
-#else
-			sprintf(s, "FullPacket: Copy and output bundle");
-#endif
-			break;
-		case 1:
-			sprintf(s, "FullPacket: Store a bundle without output");
-			break;
-		}
-	}
+void ovar_doc(t_ovar *x)
+{
+	omax_doc_outletDoc(x->outlet);
+}
+
+void ovar_assist(t_ovar *x, void *b, long io, long num, char *buf)
+{
+	omax_doc_assist(io, num, buf);
 }
 
 void ovar_free(t_ovar *x){	
@@ -299,6 +316,7 @@ int main(void){
 #endif
 	class_addmethod(c, (method)ovar_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)ovar_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)ovar_doc, "doc", 0);
 	//class_addmethod(c, (method)ovar_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)ovar_bang, "bang", 0);
 	class_addmethod(c, (method)ovar_anything, "anything", A_GIMME, 0);

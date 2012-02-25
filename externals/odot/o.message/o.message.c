@@ -34,6 +34,14 @@
 
 */
 
+#define OMAX_DOC_NAME "o.message"
+#define OMAX_DOC_SHORT_DESC "Create and display OSC bundles"
+#define OMAX_DOC_LONG_DESC "o.message behaves like the standard Max message box except that it converts its data to OSC packets."
+#define OMAX_DOC_INLETS_DESC (char *[]){"Bang sends the OSC FullPacket out.", "Set the contents."}
+#define OMAX_DOC_OUTLETS_DESC (char *[]){"OSC FullPacket"}
+#define OMAX_DOC_SEEALSO (char *[]){"message"}
+
+
 #include <string.h>
 #include "../odot_version.h"
 
@@ -60,6 +68,7 @@
 #include "osc_message_s.h"
 #include "osc_atom_u.h"
 #include "osc_atom_s.h"
+#include "omax_doc.h"
 //#include <mach/mach_time.h>
 
 #define OMESSAGE_MAX_NUM_MESSAGES 128
@@ -143,7 +152,6 @@ void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv);
 void omessage_anything(t_omessage *x, t_symbol *msg, short argc, t_atom *argv);
 void omax_util_outletOSC(void *outlet, long len, char *ptr);
 void omessage_free(t_omessage *x);
-void omessage_assist(t_omessage *x, void *b, long m, long a, char *s);
 void omessage_inletinfo(t_omessage *x, void *b, long index, char *t);
 void *omessage_new(t_symbol *msg, short argc, t_atom *argv);
 
@@ -833,22 +841,14 @@ void omessage_free(t_omessage *x){
 	critical_free(x->lock);
 }
 
-void omessage_assist(t_omessage *x, void *b, long io, long index, char *s){
-	switch(io){
-	case ASSIST_INLET:
-		switch(index){
-		case 0:
-			sprintf(s, "Bang sends the OSC FullPacket out");
-			break;
-		case 1:
-			sprintf(s, "Set the contents");
-			break;
-		}
-		break;
-	case ASSIST_OUTLET:
-		sprintf(s, "OSC FullPacket");
-		break;
-	}
+void omessage_doc(t_omessage *x)
+{
+	omax_doc_outletDoc(x->outlet);
+}
+
+void omessage_assist(t_omessage *x, void *b, long io, long num, char *buf)
+{
+	omax_doc_assist(io, num, buf);
 }
 
 
@@ -928,6 +928,7 @@ int main(void){
 	class_addmethod(c, (method)omessage_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)omessage_set, "set", A_GIMME, 0);
 	class_addmethod(c, (method)omessage_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)omessage_doc, "doc", 0);
 	class_addmethod(c, (method)stdinletinfo, "inletinfo", A_CANT, 0);
 	class_addmethod(c, (method)omessage_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)omessage_clear, "clear", 0);	
