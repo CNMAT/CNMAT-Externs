@@ -928,7 +928,7 @@ void osc_atom_u_setUInt64(t_osc_atom_u *a, uint64_t v){
 	a->typetag = 'H';
 }
 
-void osc_atom_u_setString(t_osc_atom_u *a, char *v){
+void osc_atom_u_setString(t_osc_atom_u *a, const char *v){
 	if(!a){
 		return;
 	}

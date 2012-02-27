@@ -79,7 +79,8 @@ t_osc_err osc_bundle_u_getMessagesWithCallback(t_osc_bndl_u *bndl, void (*f)(t_o
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_array **osc_msg_u_array, int fullmatch){
+t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_array **osc_msg_u_array, int fullmatch)
+{
 	int matchbuflen = 16, n = 0;
 	//t_osc_msg_u **matches = osc_mem_alloc(matchbuflen * sizeof(t_osc_msg_u *));
 	t_osc_ar *ar = osc_array_alloc(matchbuflen, t_osc_msg_u);
@@ -117,7 +118,11 @@ t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_ar
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_bundle_u_addMsg(t_osc_bndl_u *bndl, t_osc_msg_u *msg){
+t_osc_err osc_bundle_u_addMsg(t_osc_bndl_u *bndl, t_osc_msg_u *msg)
+{
+	if(!bndl || !msg){
+		return OSC_ERR_NONE;
+	}
 	bndl->msgcount++;
 	if(!(bndl->msghead)){
 		bndl->msghead = msg;
@@ -139,8 +144,39 @@ t_osc_err osc_bundle_u_addMsg(t_osc_bndl_u *bndl, t_osc_msg_u *msg){
 	return OSC_ERR_NONE;
 }
 
+t_osc_err osc_bundle_u_addMsgCopy(t_osc_bndl_u *bndl, t_osc_msg_u *msg)
+{
+	if(bndl && msg){
+		t_osc_msg_u *copy = NULL;
+		osc_message_u_deepCopy(&copy, msg);
+		osc_bundle_u_addMsg(bndl, copy);
+		return OSC_ERR_NONE;
+	}
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_bundle_u_addMsgArrayCopy(t_osc_bndl_u *bndl, t_osc_msg_ar_u *ar)
+{
+	if(!bndl){
+		return OSC_ERR_NOBUNDLE;
+	}
+	if(!ar){
+		return OSC_ERR_NONE;
+	}
+	int len = osc_message_array_u_getLen(ar);
+	if(len == 0){
+		return OSC_ERR_NONE;
+	}
+	int i;
+	for(i = 0; i < len; i++){
+		osc_bundle_u_addMsgCopy(bndl, osc_message_array_u_get(ar, i));
+	}
+	return OSC_ERR_NONE;
+}
+
 extern t_osc_err osc_message_u_doSerialize(t_osc_msg_u *msg, long *buflen, long *bufpos, char **buf);
-t_osc_err osc_bundle_u_doSerialize(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf){
+t_osc_err osc_bundle_u_doSerialize(t_osc_bndl_u *bndl, long *buflen, long *bufpos, char **buf)
+{
 	if((*buflen - *bufpos) < 256){
 		*buf = osc_mem_resize(*buf, *buflen + 1024);
 		if(!(*buf)){

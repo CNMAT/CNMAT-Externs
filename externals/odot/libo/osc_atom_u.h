@@ -415,7 +415,7 @@ freed as well.  To avoid this behavior, use #osc_atom_u_setStringPtr().
 \param a The #t_osc_atom_u
 \param v The string to be copied
 */
-void osc_atom_u_setString(t_osc_atom_u *a, char *v); // make a copy
+void osc_atom_u_setString(t_osc_atom_u *a, const char *v); // make a copy
 
 /** \brief Set the #t_osc_atom_u to point to a string.
 

@@ -32,6 +32,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "osc_message_iterator_u.h"
 #include "osc_mem.h"
 #include "osc_byteorder.h"
+#include "osc_util.h"
 
 t_osc_msg_u *osc_message_u_alloc(){
 	t_osc_msg_u *m = (t_osc_msg_u *)osc_mem_alloc(sizeof(t_osc_msg_u));
@@ -83,7 +84,8 @@ void osc_message_u_clearArgs(t_osc_msg_u *m){
 	m->arghead = m->argtail = NULL;
 }
 
-void osc_message_u_copy(t_osc_msg_u **dest, t_osc_msg_u *src){
+void osc_message_u_copy(t_osc_msg_u **dest, t_osc_msg_u *src)
+{
 	if(!src){
 		return;
 	}
@@ -93,26 +95,52 @@ void osc_message_u_copy(t_osc_msg_u **dest, t_osc_msg_u *src){
 	**dest = *src;
 }
 
-t_osc_err osc_message_u_deepCopy(t_osc_msg_u **dest, t_osc_msg_u *src){
-
+t_osc_err osc_message_u_deepCopy(t_osc_msg_u **dest, t_osc_msg_u *src)
+{
+	if(!src){
+		return OSC_ERR_NULLPTR;
+	}
+	if(!(*dest)){
+		*dest = osc_message_u_alloc();
+	}
+	(*dest)->size = src->size;
+	(*dest)->argc = src->argc;
+	if(src->address){
+		char *address = NULL;
+		osc_util_strdup(&address, src->address);
+		(*dest)->address = address;
+	}
+	t_osc_msg_it_u *it = osc_msg_it_u_get(src);
+	while(osc_msg_it_u_hasNext(it)){
+		t_osc_atom_u *a = osc_msg_it_u_next(it);
+		t_osc_atom_u *acpy = NULL;
+		osc_atom_u_copy(&acpy, a);
+		osc_message_u_appendAtom(*dest, acpy);
+	}
+	osc_msg_it_u_destroy(it);
+	(*dest)->next = NULL;
+	(*dest)->prev = NULL;
 	return OSC_ERR_NONE;
 }
 
-uint32_t osc_message_u_getSize(t_osc_msg_u *m){
+uint32_t osc_message_u_getSize(t_osc_msg_u *m)
+{
 	if(!m){
 		return 0;
 	}
 	return m->size;
 }
 
-char *osc_message_u_getAddress(t_osc_msg_u *m){
+char *osc_message_u_getAddress(t_osc_msg_u *m)
+{
 	if(!m){
 		return NULL;
 	}
 	return m->address;
 }
 
-t_osc_err osc_message_u_setAddress(t_osc_msg_u *m, char *address){
+t_osc_err osc_message_u_setAddress(t_osc_msg_u *m, char *address)
+{
 	if(!m){
 		return OSC_ERR_INVAL;
 	}
@@ -137,7 +165,8 @@ t_osc_err osc_message_u_setAddress(t_osc_msg_u *m, char *address){
 	return OSC_ERR_NONE;
 }
 
-t_osc_err osc_message_u_setAddressPtr(t_osc_msg_u *m, char *newAddress, char **oldAddress){
+t_osc_err osc_message_u_setAddressPtr(t_osc_msg_u *m, char *newAddress, char **oldAddress)
+{
 	if(oldAddress){
 		*oldAddress = m->address;
 	}
@@ -145,7 +174,8 @@ t_osc_err osc_message_u_setAddressPtr(t_osc_msg_u *m, char *newAddress, char **o
 	return OSC_ERR_NONE;
 }
 
-int osc_message_u_getArgCount(t_osc_msg_u *m){
+int osc_message_u_getArgCount(t_osc_msg_u *m)
+{
 	return m->argc;
 }
 
@@ -322,7 +352,7 @@ t_osc_atom_u *osc_message_u_appendStringPtr(t_osc_msg_u *m, char *v){
 	return a;
 }
 
-t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, char *v){
+t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, const char *v){
 	t_osc_atom_u *a = osc_atom_u_alloc();
 	//int len = strlen(v);
 	//char *buf = osc_mem_alloc(len + 1);

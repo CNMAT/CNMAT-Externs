@@ -59,7 +59,7 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 
 #define OMAX_DOC_NAME "o.when"
 #define OMAX_DOC_SHORT_DESC "Passes the bundle through if the result of the expression is true or non-zero."
-#define OMAX_DOC_LONG_DESC "o.when behaves like o.if with only the left-most outlet (i.e. the \"then\" outlet"
+#define OMAX_DOC_LONG_DESC "o.when behaves like o.if with only the left-most outlet (i.e. the \"then\" outlet)"
 #define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet containing addresses that the expression will be applied to."}
 #define OMAX_DOC_OUTLETS_DESC (char *[]){"Input OSC packet if the expression returns true or non-zero."}
 #define OMAX_DOC_SEEALSO (char *[]){"o.if", "o.cond", "o.unless", "o.expr", "expr", "jit.expr"}
@@ -68,7 +68,7 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 
 #define OMAX_DOC_NAME "o.unless"
 #define OMAX_DOC_SHORT_DESC "Passes the bundle through if the result of the expression is false or zero."
-#define OMAX_DOC_LONG_DESC "o.unless behaves like o.if with only the right-most outlet (i.e. the \"else\" outlet."
+#define OMAX_DOC_LONG_DESC "o.unless behaves like o.if with only the right-most outlet (i.e. the \"else\" outlet)."
 #define OMAX_DOC_INLETS_DESC (char *[]){"OSC packet containing addresses that the expression will be applied to."}
 #define OMAX_DOC_OUTLETS_DESC (char *[]){"Input OSC packet if the expression returns false or zero."}
 #define OMAX_DOC_SEEALSO (char *[]){"o.if", "o.cond", "o.when", "o.expr", "expr", "jit.expr"}
@@ -449,6 +449,7 @@ void oexpr_postFunctionTable(t_oexpr *fg){
 
 void oexpr_bang(t_oexpr *x){
 	char buf[16];
+	memset(buf, '\0', 16);
 	strncpy(buf, "#bundle\0", 8);
 	oexpr_fullPacket(x, 16, (long)buf);
 }
@@ -456,15 +457,16 @@ void oexpr_bang(t_oexpr *x){
 void oexpr_anything(t_oexpr *x, t_symbol *msg, int argc, t_atom *argv){
 	object_error((t_object *)x, "nope");
 }
-
+/*
 void oexpr_postConstants(t_oexpr *x){
 	int i;
 	for(i = 0; i < sizeof(osc_expr_constsym) / sizeof(t_osc_expr_const_rec); i++){
 		post("%s: %s (%f)", osc_expr_constsym[i].name, osc_expr_constsym[i].docstring, osc_expr_constsym[i].val);
 	}
 }
-
+*/
 void oexpr_postFunctions(t_oexpr *x){
+	/*
 	int i;
 	for(i = 0; i < sizeof(osc_expr_funcsym) / sizeof(t_osc_expr_rec); i++){
 		if(osc_expr_funcsym[i].arity < 0){
@@ -483,13 +485,52 @@ void oexpr_postFunctions(t_oexpr *x){
 			post("%s): %s", buf, osc_expr_funcsym[i].docstring);
 		}
 	}
+	*/
 }
 
 void oexpr_documentation(t_oexpr *x, t_symbol *func)
 {
+	/*
 	t_osc_expr_rec *rec = osc_expr_lookupFunction(func->s_name);
 	if(rec){
 		post("%s(): %s", rec->name, rec->docstring);
+	}
+	*/
+}
+
+void oexpr_doc_cat(t_oexpr *x, t_symbol *cat)
+{
+	if(cat == _sym_nothing){
+		t_osc_bndl_s *b = osc_expr_getCategories();
+		omax_util_outletOSC(x->outlet, osc_bundle_s_getLen(b), osc_bundle_s_getPtr(b));
+	}else{
+		long len = 0;
+		char *ptr = NULL;
+		osc_expr_getFunctionsForCategory(cat->s_name, &len, &ptr);
+		if(ptr){
+			omax_util_outletOSC(x->outlet, len, ptr);
+			osc_mem_free(ptr);
+		}
+	}
+}
+
+void oexpr_doc_func(t_oexpr *x, t_symbol *func)
+{
+	t_osc_bndl_u *bndl = NULL;
+	t_osc_err e = osc_expr_getDocForFunction(func->s_name, &bndl);
+	if(e){
+		object_error((t_object *)x, "%s", osc_error_string(e));
+		return;
+	}
+	if(bndl){
+		char *buf = NULL;
+		long len = 0;
+		osc_bundle_u_serialize(bndl, &len, &buf);
+		if(buf){
+			omax_util_outletOSC(x->outlet, len, buf);
+			osc_mem_free(buf);
+		}
+		osc_bundle_u_free(bndl);
 	}
 }
 
@@ -716,13 +757,16 @@ int main(void){
 	class_addmethod(c, (method)oexpr_bang, "bang", 0);
 
 	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
-	class_addmethod(c, (method)oexpr_postConstants, "post-constants", 0);
 	class_addmethod(c, (method)oexpr_postFunctionGraph, "post-function-graph", 0);
 	class_addmethod(c, (method)oexpr_postFunctionTable, "post-function-table", 0);
-	class_addmethod(c, (method)oexpr_documentation, "func-doc", A_SYM, 0);
-	class_addmethod(c, (method)oexpr_documentation, "function-documentation", A_SYM, 0);
+	//class_addmethod(c, (method)oexpr_documentation, "func-doc", A_SYM, 0);
+	//class_addmethod(c, (method)oexpr_documentation, "function-documentation", A_SYM, 0);
 
 	class_addmethod(c, (method)oexpr_doc, "doc", 0);
+	class_addmethod(c, (method)oexpr_doc_func, "doc-func", A_SYM, 0);
+	class_addmethod(c, (method)oexpr_doc_func, "doc-function", A_SYM, 0);
+	class_addmethod(c, (method)oexpr_doc_cat, "doc-cat", A_DEFSYM, 0);
+	class_addmethod(c, (method)oexpr_doc_cat, "doc-category", A_DEFSYM, 0);
 	/*
 	class_addmethod(c, (method)oexpr_key, "key", A_CANT, 0);
 	class_addmethod(c, (method)oexpr_keyfilter, "keyfilter", A_CANT, 0);

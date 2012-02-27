@@ -83,7 +83,7 @@ $[1-9]+	{
 			return OSCADDRESS;
 		}
 
-\"(\\.|[^\"])*\" 	{
+\"(\\.|[^$\"\n])*\" 	{
 				//printf("quoted string: %s\n", yytext);
 				int len = strlen(yytext) + 1; // includes quotes and null byte
 				char *copy = osc_mem_alloc(len - 2); // don't need quotes
@@ -94,7 +94,7 @@ $[1-9]+	{
 			}
 
 			/* [a-zA-Z0-9][^ \t\n]* */
-[^ \t\"\n]*	{
+[^ $\t\"\n]*	{
 				//printf("string: %s\n", yytext);
 				int len = strlen(yytext) + 1;
 				char *copy = osc_mem_alloc(len);

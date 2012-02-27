@@ -47,6 +47,17 @@
 //#define __OSC_PROFILE__
 #include "osc_profile.h"
 
+//i hope i don't have to add any more ;)
+char *osc_expr_typestrings[] = {"", "number", "list", "", "string", "", "", "", "atom", "", "", "", "", "", "", "", "expression", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "OSC address", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "boolean"};
+
+#define OSC_EXPR_MAX_TYPESTRING_LEN strlen(osc_expr_typestrings[OSC_EXPR_ARG_TYPE_NUMBER]) + strlen(osc_expr_typestrings[OSC_EXPR_ARG_TYPE_LIST]) + strlen(osc_expr_typestrings[OSC_EXPR_ARG_TYPE_STRING]) + strlen(osc_expr_typestrings[OSC_EXPR_ARG_TYPE_ATOM]) + strlen(osc_expr_typestrings[OSC_EXPR_ARG_TYPE_EXPR]) + strlen(osc_expr_typestrings[OSC_EXPR_ARG_TYPE_OSCADDRESS]) + strlen(osc_expr_typestrings[OSC_EXPR_ARG_TYPE_BOOLEAN]) + 1 + 12 // commas, spaces, and null byte
+
+char *osc_expr_categories[] = {"/math/operator/arithmetic", "/math/operator/relational", "/math/operator/logical", "/math/operator/assignment", "/math/arithmetic", "/math/trigonometric", "/math/power", "/math/conversion", "/math/specialfunction", "/math/constant", "/vector", "/statistics", "/string/operator", "/predicate", "/conditional", "/core"};
+
+// this gets created the first time it's needed and then it's never freed
+t_osc_bndl_u *osc_expr_functionBundle = NULL;
+t_osc_bndl_s *osc_expr_categoryBundle = NULL;
+
 static double rdtsc_cps = 0;
 
 int _osc_expr_sign(double f);
@@ -321,10 +332,23 @@ int osc_expr_call(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 			}
 		}
 	}else if(f->rec->func == osc_expr_tokenize){
-		char *ptr = "/foo += sin(2 * pi() * /bar)";
-		t_osc_err e = osc_expr_lex(ptr, out);
-		if(e){
-			return e;
+		//char *ptr = "/foo += sin(2 * pi() * /bar)";
+		char *expr = NULL;
+		t_osc_atom_ar_u *arg = NULL;
+		osc_expr_getArg(f_argv, len, oscbndl, &arg);
+		if(arg){
+			if(osc_atom_u_getTypetag(osc_atom_array_u_get(arg, 0)) == 's' && osc_atom_array_u_getLen(arg) == 1){
+				expr = osc_atom_u_getStringPtr(osc_atom_array_u_get(arg, 0));
+			}else{
+				long buflen = 0;
+				osc_atom_array_u_getStringArray(arg, &buflen, &expr);
+			}
+			if(expr){
+				t_osc_err e = osc_expr_lex(expr, out);
+				if(e){
+					return e;
+				}
+			}
 		}
 	}else if(f->rec->func == osc_expr_compile){
 		if(osc_expr_arg_getType(f_argv) != OSC_EXPR_ARG_TYPE_OSCADDRESS){
@@ -516,6 +540,7 @@ t_osc_expr_rec *osc_expr_lookupFunction(char *name){
 	return rec;
 }
 
+/*
 t_osc_expr_const_rec *osc_expr_lookupConstant(char *name){
 	t_osc_expr_const_rec *rec = NULL;
 	int i;
@@ -527,6 +552,7 @@ t_osc_expr_const_rec *osc_expr_lookupConstant(char *name){
 	}
 	return rec;
 }
+*/
 
 int osc_expr_1arg_dbl(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
 	long ac = osc_atom_array_u_getLen(*argv);
@@ -1037,54 +1063,81 @@ int osc_expr_assign_to_index(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_
 int osc_expr_product(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
 {
 	*out = osc_atom_array_u_alloc(1);
-	long len = osc_atom_array_u_getLen(*argv);
-	if(len == 0){
-		osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 0.);
-		return 0;
-	}
-	int i;
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 0.);
 	double val = 1;
-	for(i = 0; i < len; i++){
-		val *= osc_atom_u_getDouble(osc_atom_array_u_get(*argv, i));
+	int j;
+	for(j = 0; j < argc; j++){
+		long len = osc_atom_array_u_getLen(argv[j]);
+		if(len == 0){
+			//osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 0.);
+			//return 0;
+			continue;
+		}
+		int i;
+		for(i = 0; i < len; i++){
+			val *= osc_atom_u_getDouble(osc_atom_array_u_get(argv[j], i));
+		}
 	}
 	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), val);
 	return 0;
 }
 
-int osc_expr_sum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_sum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	*out = osc_atom_array_u_alloc(1);
-	long len = osc_atom_array_u_getLen(*argv);
-	if(len == 0){
-		osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 0.);
-		return 0;
-	}
-	int i;
-	double val = 0;
-	for(i = 0; i < len; i++){
-		val += osc_atom_u_getDouble(osc_atom_array_u_get(*argv, i));
+	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 0.);
+	double val = 1;
+	int j;
+	for(j = 0; j < argc; j++){
+		long len = osc_atom_array_u_getLen(argv[j]);
+		if(len == 0){
+			//osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), 0.);
+			//return 0;
+			continue;
+		}
+		int i;
+		for(i = 0; i < len; i++){
+			val += osc_atom_u_getDouble(osc_atom_array_u_get(argv[j], i));
+		}
 	}
 	osc_atom_u_setDouble(osc_atom_array_u_get(*out, 0), val);
 	return 0;
 }
 
-int osc_expr_cumsum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
-	*out = osc_atom_array_u_alloc(osc_atom_array_u_getLen(*argv));
+int osc_expr_cumsum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	int i;
+	int n = 0;
+	int k = 0;
 	double val = 0;
-	for(i = 0; i < osc_atom_array_u_getLen(*argv); i++){
-		val += osc_atom_u_getDouble(osc_atom_array_u_get(*argv, i));
-		osc_atom_u_setDouble(osc_atom_array_u_get(*out, i), val);
+	for(i = 0; i < argc; i++){
+		n += osc_atom_array_u_getLen(argv[i]);
+	}
+	*out = osc_atom_array_u_alloc(n);
+	for(i = 0; i < argc; i++){
+		int j;
+		for(j = 0; j < osc_atom_array_u_getLen(argv[j]); j++){
+			val += osc_atom_u_getDouble(osc_atom_array_u_get(argv[i], j));
+			osc_atom_u_setDouble(osc_atom_array_u_get(*out, k++), val);
+		}
 	}
 	return 0;
 }
 
-int osc_expr_length(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_length(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	*out = osc_atom_array_u_alloc(1);
-	osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), osc_atom_array_u_getLen(*argv));
+	int i;
+	int count = 0;
+	for(i = 0; i < argc; i++){
+		count += osc_atom_array_u_getLen(argv[i]);
+	}
+	osc_atom_u_setInt32(osc_atom_array_u_get(*out, 0), count);
 	return 0;
 }
 
-int osc_expr_mean(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_mean(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out)
+{
 	*out = osc_atom_array_u_alloc(1);
 	double sum = 0;
 	int i;
@@ -1201,9 +1254,9 @@ int osc_expr_nfill(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_a
 	return 0;
 }
 
-int osc_expr_range(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+int osc_expr_aseq(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
 	if(argc < 2){
-		printf("osc_expr: range requires at least 2 arguments:  start and end.");
+		printf("osc_expr: aseq requires at least 2 arguments:  start and end.");
 		return 1;
 	}
 	int dblup = 0;
@@ -1414,6 +1467,38 @@ int osc_expr_extrema(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom
 	t_osc_atom_u *osc = osc_atom_array_u_get(*out, 1);
 	osc_atom_u_copy(&omin, amin);
 	osc_atom_u_copy(&osc, amax);
+	return 0;
+}
+
+int osc_expr_range(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar_u **out){
+	if(argc == 0){
+		return 0;
+	}
+	*out = osc_atom_array_u_alloc(1);
+	int i;
+	double min = DBL_MAX, max = -DBL_MAX;
+	char ttmin = 'i';
+	char ttmax = 'i';
+	//t_osc_atom_u *amin = NULL, *amax = NULL;
+	for(i = 0; i < osc_atom_array_u_getLen(*argv); i++){
+		double f = osc_atom_u_getDouble(osc_atom_array_u_get(*argv, i));
+		if(f <= min){
+			min = f;
+			ttmin = osc_atom_u_getTypetag(osc_atom_array_u_get(*argv, i));
+			//amin = osc_atom_array_u_get(*argv, i);
+		}
+		if(f >= max){
+			max = f;
+			ttmax = osc_atom_u_getTypetag(osc_atom_array_u_get(*argv, i));
+			//amax = osc_atom_array_u_get(*argv, i);
+		}
+	}
+	t_osc_atom_u *r = osc_atom_array_u_get(*out, 0);
+	if(ttmin == 'f' || ttmin == 'd' || ttmax == 'f' || ttmax == 'd'){
+		osc_atom_u_setDouble(r, max - min);
+	}else{
+		osc_atom_u_setInt32(r, max - min);
+	}
 	return 0;
 }
 
@@ -2158,7 +2243,8 @@ int osc_expr_formatFunctionGraph_r(t_osc_expr *fg, char *buf){
 	return ptr - buf;
 }
 
-void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt){
+void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt)
+{
 	if(!(*fmt)){
 		*fmt = osc_mem_alloc(512);
 	}
@@ -2179,7 +2265,211 @@ void osc_expr_formatFunctionGraph(t_osc_expr *fg, long *buflen, char **fmt){
 	*buflen = bufpos;
 }
 
-void osc_expr_doFormatFunctionTable(char *key, void *val, void *context){
+void osc_expr_makeFunctionBundle(void)
+{
+	t_osc_bndl_u *b = osc_bundle_u_alloc();
+	int i;
+	char buf[128];
+	for(i = 0; i < sizeof(osc_expr_funcsym) / sizeof(t_osc_expr_rec); i++){
+		int j = 0;
+		t_osc_expr_rec r = osc_expr_funcsym[i];
+		while(r.categories[j]){
+			t_osc_msg_u *m = osc_message_u_alloc();
+			sprintf(buf, "/doc/category%s/%s", r.categories[j++], r.name);
+			osc_message_u_setAddress(m, buf);
+			osc_message_u_appendString(m, r.name);
+			osc_bundle_u_addMsg(b, m);
+		}
+	}
+	osc_expr_functionBundle = b;
+}
+
+void osc_expr_makeCategoryBundle(void)
+{
+	t_osc_bndl_u *b = osc_bundle_u_alloc();
+	int i;
+	char buf[128];
+	for(i = 0; i < sizeof(osc_expr_categories) / sizeof(char *); i++){
+		t_osc_msg_u *m = osc_message_u_alloc();
+		sprintf(buf, "/doc/category/list%s", osc_expr_categories[i]);
+		printf("%s\n", buf);
+		osc_message_u_setAddress(m, buf);
+		osc_bundle_u_addMsg(b, m);
+	}
+	long len = 0;
+	char *ptr = NULL;
+	osc_bundle_u_serialize(b, &len, &ptr);
+	osc_expr_categoryBundle = osc_bundle_s_alloc(len, ptr);
+	osc_bundle_u_free(b);
+}
+
+t_osc_bndl_s *osc_expr_getCategories(void)
+{
+	if(!osc_expr_categoryBundle){
+		osc_expr_makeCategoryBundle();
+	}
+	return osc_expr_categoryBundle;
+}
+
+t_osc_err osc_expr_getFunctionsForCategory(char *cat, long *len, char **ptr)
+{
+	if(!cat){
+		return OSC_ERR_INVAL;
+	}
+	if(!osc_expr_functionBundle){
+		osc_expr_makeFunctionBundle();
+	}
+	char buf[128];
+	if(strncmp(cat, "/doc/category", 13)){
+		sprintf(buf, "/doc/category%s", cat);
+	}else{
+		sprintf(buf, "%s", cat);
+	}
+	t_osc_msg_ar_u *ar = NULL;
+	osc_bundle_u_lookupAddress(osc_expr_functionBundle, buf, &ar, 0);
+	if(ar){
+		t_osc_bndl_u *bndl = osc_bundle_u_alloc();
+		osc_bundle_u_addMsgArrayCopy(bndl, ar);
+		osc_message_array_u_free(ar);
+		osc_bundle_u_serialize(bndl, len, ptr);
+		osc_bundle_u_free(bndl);
+	}
+	return OSC_ERR_NONE;
+}
+
+t_osc_err osc_expr_getDocForFunction(char *function_name, t_osc_bndl_u **bndl)
+{
+	t_osc_expr_rec *rec = osc_expr_lookupFunction(function_name);
+	if(rec){
+		return osc_expr_formatFunctionDoc(rec, bndl);
+	}else{
+		return OSC_ERR_EXPR_FUNCTIONNOTFOUND;
+	}
+}
+
+t_osc_err osc_expr_formatFunctionDoc(t_osc_expr_rec *rec, t_osc_bndl_u **bndl)
+{
+	if(!rec){
+		return OSC_ERR_EXPR_FUNCTIONNOTFOUND;
+	}
+	t_osc_bndl_u *b = osc_bundle_u_alloc();
+	t_osc_message_u *name = osc_message_u_alloc();
+	osc_message_u_setAddress(name, "/doc/function/name");
+	osc_message_u_appendString(name, rec->name);
+	osc_bundle_u_addMsg(b, name);
+
+	t_osc_message_u *sig = osc_message_u_alloc();
+	osc_message_u_setAddress(sig, "/doc/function/signature");
+	osc_message_u_appendString(sig, rec->signature);
+	osc_bundle_u_addMsg(b, sig);
+
+	t_osc_message_u *docstring = osc_message_u_alloc();
+	osc_message_u_setAddress(docstring, "/doc/function/docstring");
+	osc_message_u_appendString(docstring, rec->docstring);
+	osc_bundle_u_addMsg(b, docstring);
+
+	t_osc_message_u *num_required_args = osc_message_u_alloc();
+	osc_message_u_setAddress(num_required_args, "/doc/function/num_required_args");
+	osc_message_u_appendInt32(num_required_args, rec->num_required_args);
+	osc_bundle_u_addMsg(b, num_required_args);
+
+	t_osc_message_u *num_optional_args = osc_message_u_alloc();
+	osc_message_u_setAddress(num_optional_args, "/doc/function/num_optional_args");
+	osc_message_u_appendInt32(num_optional_args, rec->num_optional_args);
+	osc_bundle_u_addMsg(b, num_optional_args);
+
+	int i;
+	for(i = 0; i < rec->num_required_args; i++){
+		if(rec->required_args_names){
+			if(rec->required_args_names[i]){
+				char a[128];
+				sprintf(a, "/doc/function/arg/required/name/%d", i + 1);
+				t_osc_msg_u *m = osc_message_u_alloc();
+				osc_message_u_setAddress(m, a);
+				osc_message_u_appendString(m, rec->required_args_names[i]);
+				osc_bundle_u_addMsg(b, m);
+
+				sprintf(a, "/doc/function/arg/required/types/%d", i + 1);
+				t_osc_msg_u *mt = osc_message_u_alloc();
+				osc_message_u_setAddress(mt, a);
+				char ts[OSC_EXPR_MAX_TYPESTRING_LEN];
+				osc_expr_formatTypes(rec->required_args_types[i], ts);
+				osc_message_u_appendString(mt, ts);
+				osc_bundle_u_addMsg(b, mt);
+			}
+		}
+ 	}
+	for(i = 0; i < abs(rec->num_optional_args); i++){
+		if(rec->optional_args_names){
+			if(rec->optional_args_names[i]){
+				char a[128];
+				sprintf(a, "/doc/function/arg/optional/name/%d", i + 1);
+				t_osc_msg_u *m = osc_message_u_alloc();
+				osc_message_u_setAddress(m, a);
+				osc_message_u_appendString(m, rec->optional_args_names[i]);
+				osc_bundle_u_addMsg(b, m);
+
+				sprintf(a, "/doc/function/arg/optional/types/%d", i + 1);
+				t_osc_msg_u *mt = osc_message_u_alloc();
+				osc_message_u_setAddress(mt, a);
+				char ts[OSC_EXPR_MAX_TYPESTRING_LEN];
+				osc_expr_formatTypes(rec->optional_args_types[i], ts);
+				osc_message_u_appendString(mt, ts);
+				osc_bundle_u_addMsg(b, mt);
+			}
+		}
+	}
+	t_osc_msg_u *categories = osc_message_u_alloc();
+	osc_message_u_setAddress(categories, "/doc/function/categories");
+	i = 0;
+	while(rec->categories[i]){
+		osc_message_u_appendString(categories, rec->categories[i++]);
+	}
+	osc_bundle_u_addMsg(b, categories);
+
+	*bndl = b;
+	return OSC_ERR_NONE;
+}
+
+void osc_expr_formatTypes(int types, char *str)
+{
+	if(!str){
+		return;
+	}
+	char *ptr = str;
+	char *fmt = "%s";
+	if(types & OSC_EXPR_ARG_TYPE_NUMBER){
+		ptr += sprintf(ptr, fmt, osc_expr_typestrings[types & OSC_EXPR_ARG_TYPE_NUMBER]);
+		fmt = ", %s";
+	}
+	if(types & OSC_EXPR_ARG_TYPE_LIST){
+		ptr += sprintf(ptr, fmt, osc_expr_typestrings[types & OSC_EXPR_ARG_TYPE_LIST]);
+		fmt = ", %s";
+	}
+	if(types & OSC_EXPR_ARG_TYPE_STRING){
+		ptr += sprintf(ptr, fmt, osc_expr_typestrings[types & OSC_EXPR_ARG_TYPE_STRING]);
+		fmt = ", %s";
+	}
+	if(types & OSC_EXPR_ARG_TYPE_ATOM){
+		ptr += sprintf(ptr, fmt, osc_expr_typestrings[types & OSC_EXPR_ARG_TYPE_ATOM]);
+		fmt = ", %s";
+	}
+	if(types & OSC_EXPR_ARG_TYPE_EXPR){
+		ptr += sprintf(ptr, fmt, osc_expr_typestrings[types & OSC_EXPR_ARG_TYPE_EXPR]);
+		fmt = ", %s";
+	}
+	if(types & OSC_EXPR_ARG_TYPE_OSCADDRESS){
+		ptr += sprintf(ptr, fmt, osc_expr_typestrings[types & OSC_EXPR_ARG_TYPE_OSCADDRESS]);
+		fmt = ", %s";
+	}
+	if(types & OSC_EXPR_ARG_TYPE_BOOLEAN){
+		ptr += sprintf(ptr, fmt, osc_expr_typestrings[types & OSC_EXPR_ARG_TYPE_BOOLEAN]);
+		fmt = ", %s";
+	}
+}
+
+void osc_expr_doFormatFunctionTable(char *key, void *val, void *context)
+{
 	struct context{
 		long *buflen;
 		long *bufpos;
@@ -2192,7 +2482,8 @@ void osc_expr_doFormatFunctionTable(char *key, void *val, void *context){
 	*(ctxt->bufpos) += sprintf(*(ctxt->buf) + *(ctxt->bufpos), "address %s is bound to compiled function object %p\n", key, val);
 }
 
-void osc_expr_formatFunctionTable(long *buflen, char **buf){
+void osc_expr_formatFunctionTable(long *buflen, char **buf)
+{
 	*buflen = 256;
 	long bufpos = 0;
 	(*buf) = osc_mem_alloc(*buflen);

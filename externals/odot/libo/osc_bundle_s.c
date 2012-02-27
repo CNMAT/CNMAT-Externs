@@ -281,7 +281,7 @@ t_osc_err osc_bundle_s_replaceMessage(long *len, char **bndl, t_osc_msg_s *oldms
 // already exists, nothing will happen.
 t_osc_err osc_bundle_s_appendMessage(long *len, char **bndl, t_osc_msg_s *msg){
 	if(!msg){
-		printf("no freaking message\n");
+		//printf("no freaking message\n");
 		return OSC_ERR_NONE;
 	}
 	uint32_t msglen = osc_message_s_getSize(msg);

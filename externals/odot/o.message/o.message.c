@@ -564,8 +564,6 @@ void omessage_gettext(t_omessage *x){
 		if(formatted){
 			osc_mem_free(formatted);
 		}
-
-
 		if(subs){
 			x->bndl = bndl;
 			x->bndltype = OMESSAGE_U;
@@ -634,10 +632,36 @@ void omessage_float(t_omessage *x, double f){
 	omessage_list(x, NULL, 1, &a);
 }
 
-void omessage_list(t_omessage *x, t_symbol *msg, short argc, t_atom *argv){
+void omessage_list(t_omessage *x, t_symbol *list_sym, short argc, t_atom *argv){
 	switch(proxy_getinlet((t_object *)x)){
 	case 0:
 		{
+			if(x->bndltype == OMESSAGE_S){
+				// this is lame...  we can't just deserialize because that process 
+				// doesn't produce the $n substitution structure.  so we have 
+				// to get the text and parse it.  this is the right place to do it
+				// rather than the fullpacket function because we don't know if 
+				// we'll have to do the substitutions or not.
+				/*
+				t_osc_bndl_u *bndl = NULL;
+				osc_bundle_s_deserialize(osc_bundle_s_getLen((t_osc_bndl_s *)x->bndl),
+							 osc_bundle_s_getPtr((t_osc_bndl_s *)x->bndl),
+							 &bndl);
+				if(!bndl){
+					object_error((t_object *)x, "couldn't deserialize bundle!");
+					return;
+				}
+				x->bndl = bndl;
+				x->bndltype = OMESSAGE_U;
+				*/
+				omessage_gettext(x);
+				jbox_redraw((t_jbox *)x);
+			}
+			if(x->nsubs == 0 || x->bndltype == OMESSAGE_S){
+				object_error((t_object *)x, "can't find $n variables to substitute");
+				return;
+			}
+
 			char *original_addresses[x->nsubs];
 			t_osc_msg_u *msgs[x->nsubs];
 			long nsubs = 0;

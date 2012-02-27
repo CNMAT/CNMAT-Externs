@@ -73,7 +73,7 @@ t_osc_atom_u *osc_message_u_appendUInt64(t_osc_msg_u *m, uint64_t v);
 t_osc_atom_u *osc_message_u_appendFloat(t_osc_msg_u *m, float v);
 t_osc_atom_u *osc_message_u_appendDouble(t_osc_msg_u *m, double v);
 t_osc_atom_u *osc_message_u_appendStringPtr(t_osc_msg_u *m, char *v);
-t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, char *v);
+t_osc_atom_u *osc_message_u_appendString(t_osc_msg_u *m, const char *v);
 t_osc_atom_u *osc_message_u_appendBool(t_osc_msg_u *m, int v);
 t_osc_atom_u *osc_message_u_appendTrue(t_osc_msg_u *m);
 t_osc_atom_u *osc_message_u_appendFalse(t_osc_msg_u *m);

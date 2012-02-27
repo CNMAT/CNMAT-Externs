@@ -50,6 +50,7 @@ typedef struct YYLTYPE{
 #include "osc_error.h"
 #include "osc_expr_parser.h"
 #include "osc_expr_scanner.h"
+#include "osc_util.h"
 
 #define OSC_EXPR_PARSER_DEBUG
 #ifdef OSC_EXPR_PARSER_DEBUG
@@ -186,23 +187,44 @@ int osc_expr_parser_checkArity(YYLTYPE *llocp, char *input_string, t_osc_expr_re
 	if(!r){
 		return 1;
 	}
+	/*
 	if(r->arity < 0){
 		// variable number of arguments
 		return 0;
 	}
+	*/
 	int i = 0;
 	t_osc_expr_arg *a = arglist;
 	while(a){
 		i++;
 		a = osc_expr_arg_next(a);
 	}
-	if(i != r->arity){
+	if(i == r->num_required_args){
+		return 0;
+	}
+	if(i < r->num_required_args){
 		osc_expr_error(llocp,
 			       input_string,
 			       OSC_ERR_EXPPARSE,
 			       "expected %d %s for function %s but found %d.",
-			       r->arity,
-			       r->arity == 1 ? "argument" : "arguments",
+			       r->num_required_args,
+			       r->num_required_args == 1 ? "argument" : "arguments",
+			       r->name,
+			       i);
+		return 1;
+	}
+
+	// i is more than the num of required args.
+ 	if(r->num_optional_args < 0){
+		return 0;
+	}
+	if(r->num_optional_args == 0 || (i - r->num_required_args) > r->num_optional_args){
+		osc_expr_error(llocp,
+			       input_string,
+			       OSC_ERR_EXPPARSE,
+			       "expected %d %s for function %s but found %d.",
+			       r->num_required_args + r->num_optional_args,
+			       (r->num_required_args + r->num_optional_args) == 1 ? "argument" : "arguments",
 			       r->name,
 			       i);
 		return 1;

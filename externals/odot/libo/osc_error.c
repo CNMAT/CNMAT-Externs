@@ -102,6 +102,7 @@ char *osc_error_string(t_osc_err err){
 		return "malformed message";
 	case OSC_ERR_INVAL:
 		return "invalid address";
+	case OSC_ERR_EXPR_FUNCTIONNOTFOUND:
 	case OSC_ERR_PARSER_FUNCTIONNOTFOUND:
 		return "function not found";
 	case OSC_ERR_EXPPARSE:
