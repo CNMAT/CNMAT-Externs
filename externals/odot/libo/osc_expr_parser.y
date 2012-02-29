@@ -47,6 +47,7 @@ typedef struct YYLTYPE{
 } YYLTYPE;
 	*/
 #include "osc_expr.h"
+#include "osc_expr_func.r"
 #include "osc_error.h"
 #include "osc_expr_parser.h"
 #include "osc_expr_scanner.h"
@@ -259,6 +260,11 @@ void osc_expr_parser_reportInvalidLvalError(YYLTYPE *llocp,
 		       lvalue);
 }
 
+t_osc_expr *osc_expr_parser_reduce_PrefixFunction(YYLTYPE *llocp,
+						  char *input_string,
+						  char *function_name,
+						  t_osc_expr_arg *arglist);
+
 t_osc_expr *osc_expr_parser_reduce_InfixOperator(YYLTYPE *llocp,
 						char *input_string,
 						char *function_name,
@@ -283,9 +289,14 @@ t_osc_expr *osc_expr_parser_reduce_InfixAssignmentOperator(YYLTYPE *llocp,
 							  t_osc_expr_arg *left,
 							  t_osc_expr_arg *right)
 {
-	t_osc_expr *e = osc_expr_parser_reduce_InfixOperator(llocp, input_string, function_name, left, right);
-	osc_expr_setAssignResultToAddress(e, 1);
-	return e;
+	t_osc_expr *infix = osc_expr_parser_reduce_InfixOperator(llocp, input_string, function_name, left, right);
+	t_osc_expr_arg *assign_target = NULL;
+	osc_expr_arg_copy(&assign_target, left);
+	t_osc_expr_arg *assign_arg = osc_expr_arg_alloc();
+	osc_expr_arg_setExpr(assign_arg, infix);
+	osc_expr_arg_setNext(assign_target, assign_arg);
+	t_osc_expr *assign = osc_expr_parser_reduce_PrefixFunction(llocp, input_string, "assign", assign_target);
+	return assign;
 }
 
 t_osc_expr *osc_expr_parser_reduce_PrefixFunction(YYLTYPE *llocp,
@@ -328,9 +339,15 @@ t_osc_expr *osc_expr_parser_reduce_PrefixUnaryOperator(YYLTYPE *llocp,
 	}
 	t_osc_expr_arg *arg = osc_expr_arg_alloc();
 	osc_expr_arg_setOSCAddress(arg, ptr);
-	t_osc_expr *e = osc_expr_parser_reduce_PrefixFunction(llocp, input_string, op, arg);
-	osc_expr_setAssignResultToAddress(e, 1);
-	return e;
+	t_osc_expr *pfu = osc_expr_parser_reduce_PrefixFunction(llocp, input_string, op, arg);
+
+	t_osc_expr_arg *assign_target = NULL;
+	osc_expr_arg_copy(&assign_target, arg);
+	t_osc_expr_arg *assign_arg = osc_expr_arg_alloc();
+	osc_expr_arg_setExpr(assign_arg, pfu);
+	osc_expr_arg_setNext(assign_target, assign_arg);
+	t_osc_expr *assign = osc_expr_parser_reduce_PrefixFunction(llocp, input_string, "assign", assign_target);
+	return assign;
 }
 
 t_osc_expr *osc_expr_parser_reduce_PostfixUnaryOperator(YYLTYPE *llocp,
@@ -378,7 +395,8 @@ t_osc_expr *osc_expr_parser_reduce_NullCoalescingOperator(YYLTYPE *llocp,
 	osc_expr_setArg(expr_def, def_arg);
 	t_osc_expr_arg *arg1 = osc_expr_arg_alloc();
 	osc_expr_arg_setExpr(arg1, expr_def);
-	t_osc_expr_arg *arg2 = osc_expr_arg_copy(def_arg);
+	t_osc_expr_arg *arg2 = NULL;
+	osc_expr_arg_copy(&arg2, def_arg);
 	t_osc_expr_arg *arg3 = arg_if_null;
 	osc_expr_arg_setNext(arg1, arg2);
 	osc_expr_arg_setNext(arg2, arg3);
@@ -571,22 +589,22 @@ expr:
 		$$ = osc_expr_parser_reduce_InfixOperator(&yylloc, input_string, "||", $1, $3);
  	}
 	| arg OSC_EXPR_PLUSEQ arg {
-		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "+=", $1, $3);
+		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "+", $1, $3);
  	}
 	| arg OSC_EXPR_MINUSEQ arg {
-		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "-=", $1, $3);
+		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "-", $1, $3);
  	}
 	| arg OSC_EXPR_MULTEQ arg {
-		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "*=", $1, $3);
+		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "*", $1, $3);
  	}
 	| arg OSC_EXPR_DIVEQ arg {
-		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "/=", $1, $3);
+		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "/", $1, $3);
  	}
 	| arg OSC_EXPR_MODEQ arg {
-		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "%=", $1, $3);
+		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "%", $1, $3);
  	}
 	| arg OSC_EXPR_POWEQ arg {
-		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "^=", $1, $3);
+		$$ = osc_expr_parser_reduce_InfixAssignmentOperator(&yylloc, input_string, "^", $1, $3);
  	}
 
 // prefix not
@@ -599,7 +617,7 @@ expr:
 	| OSC_EXPR_INC OSC_EXPR_STRING %prec OSC_EXPR_PREFIX_INC {
 		char *copy = NULL;
 		osc_atom_u_getString($2, &copy);
-		t_osc_expr *e = osc_expr_parser_reduce_PrefixUnaryOperator(&yylloc, input_string, copy, "++");
+		t_osc_expr *e = osc_expr_parser_reduce_PrefixUnaryOperator(&yylloc, input_string, copy, "plus1");
 		if(!e){
 			osc_mem_free(copy);
 			osc_atom_u_free($2);
@@ -611,7 +629,7 @@ expr:
 	| OSC_EXPR_DEC OSC_EXPR_STRING %prec OSC_EXPR_PREFIX_DEC {
 		char *copy = NULL;
 		osc_atom_u_getString($2, &copy);
-		t_osc_expr *e = osc_expr_parser_reduce_PrefixUnaryOperator(&yylloc, input_string, copy, "--");
+		t_osc_expr *e = osc_expr_parser_reduce_PrefixUnaryOperator(&yylloc, input_string, copy, "minus1");
 		if(!e){
 			osc_mem_free(copy);
 			osc_atom_u_free($2);
@@ -624,7 +642,7 @@ expr:
 	| OSC_EXPR_STRING OSC_EXPR_INC {
 		char *copy = NULL;
 		osc_atom_u_getString($1, &copy);
-		t_osc_expr *e = osc_expr_parser_reduce_PostfixUnaryOperator(&yylloc, input_string, copy, "++");
+		t_osc_expr *e = osc_expr_parser_reduce_PostfixUnaryOperator(&yylloc, input_string, copy, "plus1");
 		if(!e){
 			osc_mem_free(copy);
 			osc_atom_u_free($1);
@@ -636,7 +654,7 @@ expr:
 	| OSC_EXPR_STRING OSC_EXPR_DEC {
 		char *copy = NULL;
 		osc_atom_u_getString($1, &copy);
-		t_osc_expr *e = osc_expr_parser_reduce_PostfixUnaryOperator(&yylloc, input_string, copy, "--");
+		t_osc_expr *e = osc_expr_parser_reduce_PostfixUnaryOperator(&yylloc, input_string, copy, "minus1");
 		if(!e){
 			osc_mem_free(copy);
 			osc_atom_u_free($1);
@@ -656,8 +674,7 @@ expr:
 		}
 		t_osc_expr_arg *arg = osc_expr_arg_alloc();
 		osc_expr_arg_setOSCAddress(arg, ptr);
-		$$ = osc_expr_parser_reduce_InfixOperator(&yylloc, input_string, "=", arg, $3);
-		osc_expr_setAssignResultToAddress($$, 1);
+		$$ = osc_expr_parser_reduce_InfixOperator(&yylloc, input_string, "assign", arg, $3);
 		osc_atom_u_free($1);
  	}
 	| OSC_EXPR_STRING OPEN_DBL_BRKTS args CLOSE_DBL_BRKTS '=' arg{
@@ -681,7 +698,6 @@ expr:
 		osc_expr_arg_append(arg, $6);
 		//$$ = osc_expr_parser_infix("=", arg, $3);
 		$$ = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "assign_to_index", arg);
-		osc_expr_setAssignResultToAddress($$, 1);
 		osc_atom_u_free($1);
 	}
 	| OSC_EXPR_STRING OPEN_DBL_BRKTS arg ':' arg CLOSE_DBL_BRKTS '=' arg{
@@ -694,7 +710,7 @@ expr:
 		t_osc_expr_arg *arg = osc_expr_arg_alloc();
 
 		osc_expr_arg_append($3, $5);
-		t_osc_expr *e = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "range", $3);
+		t_osc_expr *e = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "aseq", $3);
 		t_osc_expr_arg *indexes = osc_expr_arg_alloc();
 		osc_expr_arg_setExpr(indexes, e);
 
@@ -703,7 +719,6 @@ expr:
 		osc_expr_arg_append(arg, $8);
 		//$$ = osc_expr_parser_infix("=", arg, $3);
 		$$ = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "assign_to_index", arg);
-		osc_expr_setAssignResultToAddress($$, 1);
 		osc_atom_u_free($1);
 	}
 	| OSC_EXPR_STRING OPEN_DBL_BRKTS arg ':' arg ':' arg CLOSE_DBL_BRKTS '=' arg{
@@ -717,7 +732,7 @@ expr:
 
 		osc_expr_arg_append($3, $7);
 		osc_expr_arg_append($3, $5);
-		t_osc_expr *e = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "range", $3);
+		t_osc_expr *e = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "aseq", $3);
 		t_osc_expr_arg *indexes = osc_expr_arg_alloc();
 		osc_expr_arg_setExpr(indexes, e);
 
@@ -726,7 +741,6 @@ expr:
 		osc_expr_arg_append(arg, $10);
 		//$$ = osc_expr_parser_infix("=", arg, $3);
 		$$ = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "assign_to_index", arg);
-		osc_expr_setAssignResultToAddress($$, 1);
 		osc_atom_u_free($1);
 	}
 /*
@@ -747,13 +761,13 @@ expr:
 	| '[' arg ':' arg ']' %prec OSC_EXPR_FUNC_CALL {
 		// matlab-style range
 		osc_expr_arg_append($2, $4);
-		$$ = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "range", $2);
+		$$ = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "aseq", $2);
  	}
 	| '[' arg ':' arg ':' arg ']' %prec OSC_EXPR_FUNC_CALL {
 		// matlab-style range
 		osc_expr_arg_append($2, $6);
 		osc_expr_arg_append($2, $4);
-		$$ = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "range", $2);
+		$$ = osc_expr_parser_reduce_PrefixFunction(&yylloc, input_string, "aseq", $2);
  	}
 	| arg '?' arg ':' arg %prec OSC_EXPR_TERNARY_COND {
 		// ternary conditional
@@ -781,7 +795,6 @@ expr:
 		t_osc_expr_arg *arg2 = osc_expr_arg_alloc();
 		osc_expr_arg_setExpr(arg2, if_expr);
 		$$ = osc_expr_parser_reduce_InfixOperator(&yylloc, input_string, "=", arg, arg2);
-		osc_expr_setAssignResultToAddress($$, 1);
 		osc_atom_u_free($1);
 	}
 	| '[' args ']' %prec OSC_EXPR_FUNC_CALL {

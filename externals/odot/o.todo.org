@@ -50,21 +50,16 @@ this may be a lifelong project...
 **** TODO udpsend encodes lists, floats and ints with addresses with no slashes
 *** o.expr
 **** TODO if() should be a special case of cond and we should have when and unless
-**** TODO Change t_osc_expr_rec to support better documentation of function parameters
 **** WAITING Codebox
-**** TODO o.expr documentation strings need to be available in max so you can build menus, etc.
 **** TODO settypetags() should work like the cast functions
 **** STARTED add malformed rules to report errors for obvious malformed constructions
-**** TODO In osc_expr.c, variable names like function and expr are used inapproapriately in osc_expr_funcall.
-In general, expressions should be called something like expr_lex (we need a way to represent
-tokenized expressions), expr_str, or expr_ir.
-As it is now, things that are really compiled expressions are being called functions.
-The use of ``function_graph'' in o.expr.c may also be inappropriate.
 **** TODO implement compile-time argument type-checking.  this is most relevant with strings and a few functions
 like bound() that need OSC addresses
 **** TODO all functions that can't handle strings need to check for them and complain when they find them
 **** TODO get_index and assign_to_index should operate on strings as arrays
-**** TODO sprintf
+**** TODO sprintf()
+**** TODO reduce()
+**** TODO a single osc address should be a valid expression
 *** new objects
 **** TODO o.typetages: outputs the typetags.
 **** TODO o.append
@@ -80,7 +75,18 @@ New objects with more explicit behavior.
 **** FIXED a bug that would cause a crash when using $n substitutions with a bundle that 
 was not typed into the mssage box (ie, one generated elsewhere and passed in via the right inlet).
 ** Change Log
-
+*** o.expr
+**** DONE Change t_osc_expr_rec to support better documentation of function parameters
+**** DONE o.expr documentation strings need to be available in max so you can build menus, etc.
+**** DONE all operators should have functional equivalents
+**** DONE map()
+**** DONE value() (returns value associated with address)
+**** DONE getaddresses() (returns a list of all addresses in the bundle)
+**** DONE getmsgcount()
+**** DONE the range() function that used to construct an arithmetic sequence is now called aseq().  
+range() now computes the range of a list
+*** o.message
+**** DONE drawing has been made much more efficient--now comparable to the normal message box
 
 * VERSION 1.0.12a
 Released: [2012-02-24 Fri]

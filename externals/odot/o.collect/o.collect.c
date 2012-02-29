@@ -129,6 +129,9 @@ void ocoll_anything(t_ocoll *x, t_symbol *msg, int argc, t_atom *argv){
 	}
 
 	ocoll_fullPacket(x, len, (long)buf);
+	if(buf){
+		osc_mem_free(buf);
+	}
 }
 
 void ocoll_bang(t_ocoll *x){

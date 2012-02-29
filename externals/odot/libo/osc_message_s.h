@@ -65,6 +65,7 @@ size_t osc_message_s_getStructSize(void);
    @param m The OSC message to be freed
  */
 void osc_message_s_free(t_osc_msg_s *m);
+void osc_message_s_deepFree(t_osc_msg_s *m);
 
 /**
    Initialize all fields of a #t_osc_msg_s

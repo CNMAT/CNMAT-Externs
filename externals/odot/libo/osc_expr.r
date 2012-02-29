@@ -37,7 +37,6 @@ struct _osc_expr{
 	struct _osc_expr_rec *rec;
 	struct _osc_expr_arg *argv;
 	int argc; 
-	int assign_result_to_address;
 	struct _osc_expr *next; 
 };
 

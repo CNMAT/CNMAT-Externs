@@ -125,6 +125,7 @@ typedef struct _omessage{
 	t_osc_parser_subst *substitutions;
 	long nsubs;
 	t_jrgba frame_color, background_color, text_color;
+	void *qelem;
 } t_omessage;
 
 t_symbol *ps_newline, *ps_FullPacket;
@@ -253,7 +254,8 @@ void omessage_doFullPacket(t_omessage *x, long len, long ptr){
 	if(buf){
 		osc_mem_free(buf);
 	}
-	jbox_redraw((t_jbox *)x);
+	//jbox_redraw((t_jbox *)x);
+	qelem_set(x->qelem);
 }
 
 void omessage_output_bundle(t_omessage *x){
@@ -287,7 +289,8 @@ void omessage_output_bundle(t_omessage *x){
 	}
 }
 
-void omessage_paint(t_omessage *x, t_object *patcherview){
+void omessage_paint(t_omessage *x, t_object *patcherview)
+{
 	t_rect rect;
 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);
 	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
@@ -318,7 +321,13 @@ void omessage_paint(t_omessage *x, t_object *patcherview){
 	jgraphics_stroke(g);
 }
 
-void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv){
+void omessage_refresh(t_omessage *x)
+{
+	jbox_redraw((t_jbox *)x);
+}
+
+void omessage_processAtoms(t_omessage *x, int argc, t_atom *argv)
+{
 	if(atom_gettype(argv) != A_SYM){
 		error("o.message: not a proper OSC message");
 		return;
@@ -856,6 +865,7 @@ void omessage_clear(t_omessage *x)
 {
 	char buf[OSC_HEADER_SIZE];
 	memset(buf, '\0', OSC_HEADER_SIZE);
+	osc_bundle_s_setBundleID(buf);
 	omessage_doFullPacket(x, OSC_HEADER_SIZE, (long)buf);
 }
 
@@ -863,6 +873,29 @@ void omessage_clear(t_omessage *x)
 void omessage_free(t_omessage *x){
 	jbox_free((t_jbox *)x);
 	critical_free(x->lock);
+	if(x->proxy){
+		object_free(x->proxy);
+	}
+	if(x->bndl){
+		switch(x->bndltype){
+		case OMESSAGE_S:
+			osc_bundle_s_free((t_osc_bndl_s *)x->bndl);
+			break;
+		case OMESSAGE_U:
+			osc_bundle_u_free((t_osc_bndl_u *)x->bndl);
+			break;
+		}
+	}
+	if(x->substitutions){
+		t_osc_parser_subst *s = x->substitutions;
+		while(s){
+			t_osc_parser_subst *next = s->next;
+			osc_mem_free(s);
+			s = next;
+		}
+		x->substitutions = NULL;
+		x->nsubs = 0;
+	}
 }
 
 void omessage_doc(t_omessage *x)
@@ -915,6 +948,7 @@ void *omessage_new(t_symbol *msg, short argc, t_atom *argv){
 		x->bndl = NULL;
 		x->substitutions = NULL;
 		critical_new(&(x->lock));
+		x->qelem = qelem_new((t_object *)x, (method)omessage_refresh);
 		attr_dictionary_process(x, d); 
 
 		t_object *textfield = jbox_get_textfield((t_object *)x);

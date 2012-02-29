@@ -32,17 +32,23 @@
 #include "osc_array.h"
 #include "osc_mem.h"
 
-t_osc_msg_s *osc_message_s_alloc(void){
+t_osc_msg_s *osc_message_s_alloc(void)
+{
 	t_osc_msg_s *m = (t_osc_msg_s *)osc_mem_alloc(sizeof(t_osc_msg_s));
 	osc_message_s_initMsg(m);
 	return m;
 }
 
-size_t osc_message_s_getStructSize(void){
+size_t osc_message_s_getStructSize(void)
+{
 	return sizeof(t_osc_msg_s);
 }
 
-void osc_message_s_free(t_osc_msg_s *m){
+void osc_message_s_free(t_osc_msg_s *m)
+{
+	if(!m){
+		return;
+	}
 	if(m->data_offset_cache){
 		osc_mem_free(m->data_offset_cache);
 	}
@@ -52,18 +58,38 @@ void osc_message_s_free(t_osc_msg_s *m){
 	osc_mem_free(m);
 }
 
-void osc_message_s_initMsg(t_osc_msg_s *m){
+void osc_message_s_deepFree(t_osc_msg_s *m)
+{
+	if(!m){
+		return;
+	}
+	if(m->size){
+		osc_mem_free(m->size);
+	}
+	osc_message_s_free(m);
+}
+
+void osc_message_s_initMsg(t_osc_msg_s *m)
+{
+	if(!m){
+		return;
+	}
 	memset(m, '\0', sizeof(t_osc_msg_s));
 }
 
-void osc_message_s_copy(t_osc_msg_s **dest, t_osc_msg_s *src){
+void osc_message_s_copy(t_osc_msg_s **dest, t_osc_msg_s *src)
+{
 	if(!(*dest)){
 		*dest = osc_message_s_alloc();
 	}
 	**dest = *src;
 }
 
-t_osc_err osc_message_s_wrap(t_osc_msg_s *m, char *bytes){
+t_osc_err osc_message_s_wrap(t_osc_msg_s *m, char *bytes)
+{
+	if(!m){
+		return OSC_ERR_NULLPTR;
+	}
 	int len = ntoh32(*((uint32_t *)bytes));
 	m->size = bytes;
 	m->address = bytes + 4;

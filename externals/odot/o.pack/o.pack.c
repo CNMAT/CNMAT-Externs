@@ -68,7 +68,7 @@ VERSION 1.1: renamed o.pack (from o.build)
 typedef struct _opack{
 	t_object ob;
 	void *outlet;
-	t_osc_msg_ar_u *messages;
+	t_osc_msg_u **messages;
 	t_osc_bndl_u *bndl;
 	int num_messages;
 	long inlet;
@@ -90,8 +90,8 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv);
 void opack_fullPacket(t_opack *x, long len, long ptr){
 	osc_bundle_s_wrap_naked_message(len, ptr);
 	int inlet = proxy_getinlet((t_object *)x);
-	osc_message_u_clearArgs(osc_message_array_u_get(x->messages, inlet));
-	osc_message_u_appendBndl(osc_message_array_u_get(x->messages, inlet), len, (char *)ptr);
+	osc_message_u_clearArgs(x->messages[inlet]);
+	osc_message_u_appendBndl(x->messages[inlet], len, (char *)ptr);
 	int shouldoutput = inlet == 0;
 #ifdef PAK
 	shouldoutput = 1;
@@ -117,21 +117,21 @@ void opack_list(t_opack *x, t_symbol *msg, short argc, t_atom *argv){
 }
 
 void opack_doAnything(t_opack *x, t_symbol *msg, short argc, t_atom *argv, int shouldOutput, int messagenum){
-	osc_message_u_clearArgs(osc_message_array_u_get(x->messages, messagenum));
+	osc_message_u_clearArgs(x->messages[messagenum]);
 	if(msg){
-		osc_message_u_appendString(osc_message_array_u_get(x->messages, messagenum), msg->s_name);
+		osc_message_u_appendString(x->messages[messagenum], msg->s_name);
 	}
 	int i;
 	for(i = 0; i < argc; i++){
 		switch(atom_gettype(argv + i)){
 		case A_FLOAT:
-			osc_message_u_appendDouble(osc_message_array_u_get(x->messages, messagenum), atom_getfloat(argv + i));
+			osc_message_u_appendDouble(x->messages[messagenum], atom_getfloat(argv + i));
 			break;
 		case A_LONG:
-			osc_message_u_appendInt32(osc_message_array_u_get(x->messages, messagenum), atom_getlong(argv + i));
+			osc_message_u_appendInt32(x->messages[messagenum], atom_getlong(argv + i));
 			break;
 		case A_SYM:
-			osc_message_u_appendString(osc_message_array_u_get(x->messages, messagenum), atom_getsym(argv + i)->s_name);
+			osc_message_u_appendString(x->messages[messagenum], atom_getsym(argv + i)->s_name);
 			break;
 		}
 	}
@@ -167,7 +167,7 @@ void opack_bang(t_opack *x){
 
 void opack_set(t_opack *x, t_symbol *address){
 	int inlet = proxy_getinlet((t_object *)x);
-	t_osc_msg_u *m = osc_message_array_u_get(x->messages, inlet);
+	t_osc_msg_u *m = x->messages[inlet];
 	t_osc_err ret;
 	if(ret = osc_message_u_setAddress(m, address->s_name)){
 		object_error((t_object *)x, "%s", osc_error_string(ret));
@@ -200,8 +200,12 @@ void opack_assist(t_opack *x, void *b, long io, long num, char *buf)
 }
 
 void opack_free(t_opack *x){
+	// this will free all the message pointers
+	if(x->bndl){
+		osc_bundle_u_free(x->bndl);
+	}
 	if(x->messages){
-		osc_message_array_u_free(x->messages);
+		osc_mem_free(x->messages);
 	}
 	if(x->proxy){
 		int i;
@@ -270,18 +274,20 @@ void *opack_new(t_symbol *msg, short argc, t_atom *argv){
 		}
 		x->bndl = osc_bundle_u_alloc();
 		x->num_messages = count;
-		x->messages = osc_message_array_u_alloc(count);
-		osc_message_array_u_clear(x->messages);
+		//x->messages = osc_message_array_u_alloc(count);
+		x->messages = (t_osc_msg_u **)osc_mem_alloc(count * sizeof(t_osc_msg_u *));
+		//osc_message_array_u_clear(x->messages);
 		x->inlet_assist_strings = (char **)osc_mem_alloc(count * sizeof(char *));
 		int pos = 0;
 		for(i = 0; i < count; i++){
-			osc_message_u_setAddress(osc_message_array_u_get(x->messages, i), atom_getsym(addresses[i])->s_name);
+			x->messages[i] = osc_message_u_alloc();
+			osc_message_u_setAddress(x->messages[i], atom_getsym(addresses[i])->s_name);
 			pos++;
 			if(numargs[i]){
 				opack_doAnything(x, NULL, numargs[i], argv + pos, 0, i);
 			}
 			pos += numargs[i];
-			osc_bundle_u_addMsg(x->bndl, osc_message_array_u_get(x->messages, i));
+			osc_bundle_u_addMsg(x->bndl, x->messages[i]);
 			x->inlet_assist_strings[i] = (char *)osc_mem_alloc(128);
 			sprintf(x->inlet_assist_strings[i], "Arguments for address %s (%d)", atom_getsym(addresses[i])->s_name, i + 1);
 		}

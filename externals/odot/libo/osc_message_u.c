@@ -746,6 +746,24 @@ t_osc_array *osc_message_array_u_alloc(long len){
 	return osc_array_allocWithSize(len, sizeof(t_osc_msg_u));
 }
 
+void osc_message_array_u_free(t_osc_msg_ar_u *ar)
+{
+	if(ar){
+		int i;
+		int n = osc_message_array_u_getLen(ar);
+		for(i = 0; i < n; i++){
+			t_osc_msg_u *m = osc_message_array_u_get(ar, i);
+			if(m){
+				osc_message_u_clearArgs(m);
+				if(m->address){
+					osc_mem_free(m->address);
+				}
+			}
+		}
+		osc_array_free((t_osc_array *)ar);
+	}
+}
+
 t_osc_array *osc_message_u_getArgArrayCopy(t_osc_msg_u *msg){
 	t_osc_atom_ar_u *atom_array = osc_atom_array_u_alloc(osc_message_u_getArgCount(msg));
 	t_osc_msg_it_u *it = osc_msg_it_u_get(msg);

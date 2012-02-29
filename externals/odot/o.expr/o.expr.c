@@ -86,6 +86,12 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 
 #define NAME OMAX_DOC_NAME
 
+#if defined OCOND || defined OIF
+#define LEFTOUTLET x->outlets[0]
+#else
+#define LEFTOUTLET x->outlet
+#endif
+
 #ifndef WIN_VERSION
 #include <mach/mach.h>
 #include <mach/mach_time.h>
@@ -120,7 +126,7 @@ typedef struct _oexpr{
 	int num_exprs;
 	char **outlets_desc;
 #endif
-	t_osc_expr *function_graph;
+	t_osc_expr *expr;
 	//t_jrgba background_color, frame_color, text_color;
 } t_oexpr;
 
@@ -148,7 +154,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 #if defined (OIF) || defined (OCOND) || defined (OWHEN) || defined (OUNLESS)
 	t_osc_atom_ar_u *argv = NULL;
 	// we don't actually want to do this copy here.  we need to 
-	// have another version of omax_expr_funcall that doesn't do 
+	// have another version of omax_expr_eval that doesn't do 
 	// assignment
 
 	char *copy = NULL;
@@ -162,7 +168,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 	}
 
 #if defined (OIF)
-	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
+	int ret = osc_expr_eval(x->expr, &len, &copy, &argv);
 	if(ret){
 		omax_util_outletOSC(x->outlets[1], len, (char *)ptr);
 	}else{
@@ -183,7 +189,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		osc_mem_free(copy);
 	}
 #elif defined (OUNLESS)
-	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
+	int ret = osc_expr_eval(x->expr, &len, &copy, &argv);
 	if(ret){
 		omax_util_outletOSC(x->outlet, len, (char *)ptr);
 	}else{
@@ -203,7 +209,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		osc_mem_free(copy);
 	}
 #elif defined (OWHEN)
-	int ret = osc_expr_funcall(x->function_graph, &len, &copy, &argv);
+	int ret = osc_expr_eval(x->expr, &len, &copy, &argv);
 	if(ret){
 	}else{
 		int i;
@@ -222,10 +228,10 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		osc_mem_free(copy);
 	}
 #elif defined (OCOND)
-	t_osc_expr *f = x->function_graph;
+	t_osc_expr *f = x->expr;
 	int j = 0;
 	while(f){
-		int ret = osc_expr_funcall(f, &len, &copy, &argv);
+		int ret = osc_expr_eval(f, &len, &copy, &argv);
 		if(ret){
 			continue;
 		}else{
@@ -276,7 +282,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		memcpy(copy, (char *)ptr, len);
 	}
 	int ret = 0;
-	t_osc_expr *f = x->function_graph;
+	t_osc_expr *f = x->expr;
 	if(!f){
 		t_osc_atom_ar_u *argv = NULL;
 		osc_expr_evalLexExprsInBndl(&copylen, &copy, &argv);
@@ -284,7 +290,7 @@ void oexpr_fullPacket(t_oexpr *x, long len, long ptr){
 		while(f){
 			//int argc = 0;
 			t_osc_atom_ar_u *argv = NULL;
-			ret = osc_expr_funcall(f, &copylen, &copy, &argv);
+			ret = osc_expr_eval(f, &copylen, &copy, &argv);
 			if(argv){
 				osc_atom_array_u_free(argv);
 			}
@@ -384,10 +390,10 @@ void oexpr_gettext(t_oexpr *x){
 			object_error((t_object *)x, "error parsing %s\n", text);
 			return;
 		}
-		if(x->function_graph){
-			osc_expr_free(x->function_graph);
+		if(x->expr){
+			osc_expr_free(x->expr);
 		}
-		x->function_graph = f;
+		x->expr = f;
 	}
 }
 
@@ -402,12 +408,12 @@ void oexpr_mouseup(t_oexpr *x, t_object *patcherview, t_pt pt, long modifiers){
 	//oexpr_output_bundle(x);
 }
 */
-void oexpr_postFunctionGraph(t_oexpr *fg){
+void oexpr_postExprIR(t_oexpr *fg){
 	char *buf = NULL;
 	long len = 0;
-	t_osc_expr *f = fg->function_graph;
+	t_osc_expr *f = fg->expr;
 	//while(f){
-	osc_expr_formatFunctionGraph(f, &len, &buf);
+	osc_expr_format(f, &len, &buf);
 	// the modulo op '%' gets consumed as a format character with cycling's post() function.
 	// so go through and escape each one with another %
 	char buf2[len * 2];
@@ -428,7 +434,8 @@ void oexpr_postFunctionGraph(t_oexpr *fg){
 	}
 }
 
-void oexpr_postFunctionTable(t_oexpr *fg){
+void oexpr_postFunctionTable(t_oexpr *fg)
+{
 	char *buf = NULL;
 	long len = 0;
 	osc_expr_formatFunctionTable(&len, &buf);
@@ -447,68 +454,25 @@ void oexpr_postFunctionTable(t_oexpr *fg){
 	}
 }
 
-void oexpr_bang(t_oexpr *x){
+void oexpr_bang(t_oexpr *x)
+{
 	char buf[16];
 	memset(buf, '\0', 16);
 	strncpy(buf, "#bundle\0", 8);
 	oexpr_fullPacket(x, 16, (long)buf);
 }
 
-void oexpr_anything(t_oexpr *x, t_symbol *msg, int argc, t_atom *argv){
-	object_error((t_object *)x, "nope");
-}
-/*
-void oexpr_postConstants(t_oexpr *x){
-	int i;
-	for(i = 0; i < sizeof(osc_expr_constsym) / sizeof(t_osc_expr_const_rec); i++){
-		post("%s: %s (%f)", osc_expr_constsym[i].name, osc_expr_constsym[i].docstring, osc_expr_constsym[i].val);
-	}
-}
-*/
-void oexpr_postFunctions(t_oexpr *x){
-	/*
-	int i;
-	for(i = 0; i < sizeof(osc_expr_funcsym) / sizeof(t_osc_expr_rec); i++){
-		if(osc_expr_funcsym[i].arity < 0){
-			post("%s(...): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].docstring);
-		}else if(osc_expr_funcsym[i].arity == 0){
-			post("%s(): %s", osc_expr_funcsym[i].name, osc_expr_funcsym[i].docstring);
-		}else{
-			char buf[256];
-			char *ptr = buf;
-			ptr += sprintf(ptr, "%s(", osc_expr_funcsym[i].name);
-			int j;
-			for(j = 0; j < osc_expr_funcsym[i].arity; j++){
-				ptr += sprintf(ptr, "arg%d ", j + 1);
-			}
-			*(--ptr) = '\0';
-			post("%s): %s", buf, osc_expr_funcsym[i].docstring);
-		}
-	}
-	*/
-}
-
-void oexpr_documentation(t_oexpr *x, t_symbol *func)
-{
-	/*
-	t_osc_expr_rec *rec = osc_expr_lookupFunction(func->s_name);
-	if(rec){
-		post("%s(): %s", rec->name, rec->docstring);
-	}
-	*/
-}
-
 void oexpr_doc_cat(t_oexpr *x, t_symbol *cat)
 {
 	if(cat == _sym_nothing){
 		t_osc_bndl_s *b = osc_expr_getCategories();
-		omax_util_outletOSC(x->outlet, osc_bundle_s_getLen(b), osc_bundle_s_getPtr(b));
+		omax_util_outletOSC(LEFTOUTLET, osc_bundle_s_getLen(b), osc_bundle_s_getPtr(b));
 	}else{
 		long len = 0;
 		char *ptr = NULL;
 		osc_expr_getFunctionsForCategory(cat->s_name, &len, &ptr);
 		if(ptr){
-			omax_util_outletOSC(x->outlet, len, ptr);
+			omax_util_outletOSC(LEFTOUTLET, len, ptr);
 			osc_mem_free(ptr);
 		}
 	}
@@ -527,7 +491,7 @@ void oexpr_doc_func(t_oexpr *x, t_symbol *func)
 		long len = 0;
 		osc_bundle_u_serialize(bndl, &len, &buf);
 		if(buf){
-			omax_util_outletOSC(x->outlet, len, buf);
+			omax_util_outletOSC(LEFTOUTLET, len, buf);
 			osc_mem_free(buf);
 		}
 		osc_bundle_u_free(bndl);
@@ -566,7 +530,7 @@ void oexpr_assist(t_oexpr *x, void *b, long io, long num, char *buf){
 
 void oexpr_free(t_oexpr *x){
 	//jbox_free((t_jbox *)x);
-	osc_expr_free(x->function_graph);
+	osc_expr_free(x->expr);
 #if defined (OIF) || defined (OCOND)
 	if(x->outlets){
 		free(x->outlets);
@@ -670,9 +634,9 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 					object_error((t_object *)x, "error parsing %s\n", buf);
 					return NULL;
 				}
-				x->function_graph = f;
+				x->expr = f;
 			}else{
-				x->function_graph = NULL;
+				x->expr = NULL;
 			}
 		}
 
@@ -715,13 +679,6 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 #else
 		x->outlet = outlet_new((t_object *)x, "FullPacket");
 #endif
-		/*
-		if(argc){
-			omax_scanner_scan_atom_array(attr_args_offset(argc, argv), argv, &(x->argclex), &(x->argvlex));
-			x->function_graph = NULL;
-			omax_expr_parse(&(x->function_graph), x->argclex, x->argvlex);
-		}
-		*/
 
 		//attr_dictionary_process(x, d); 
 		/*
@@ -753,14 +710,9 @@ int main(void){
 	class_addmethod(c, (method)oexpr_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 	class_addmethod(c, (method)oexpr_assist, "assist", A_CANT, 0);
 	//class_addmethod(c, (method)oexpr_notify, "notify", A_CANT, 0);
-	class_addmethod(c, (method)oexpr_anything, "anything", A_GIMME, 0);
 	class_addmethod(c, (method)oexpr_bang, "bang", 0);
 
-	class_addmethod(c, (method)oexpr_postFunctions, "post-functions", 0);
-	class_addmethod(c, (method)oexpr_postFunctionGraph, "post-function-graph", 0);
-	class_addmethod(c, (method)oexpr_postFunctionTable, "post-function-table", 0);
-	//class_addmethod(c, (method)oexpr_documentation, "func-doc", A_SYM, 0);
-	//class_addmethod(c, (method)oexpr_documentation, "function-documentation", A_SYM, 0);
+	class_addmethod(c, (method)oexpr_postExprIR, "post-expr-ir", 0);
 
 	class_addmethod(c, (method)oexpr_doc, "doc", 0);
 	class_addmethod(c, (method)oexpr_doc_func, "doc-func", A_SYM, 0);
