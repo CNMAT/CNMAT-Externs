@@ -4,10 +4,10 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 0
+			"revision" : 4
 		}
 ,
-		"rect" : [ 616.0, 50.0, 688.0, 652.0 ],
+		"rect" : [ 616.0, 50.0, 1056.0, 857.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -27,6 +27,37 @@
 		"digest" : "",
 		"tags" : "",
 		"boxes" : [ 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-5",
+					"maxclass" : "newobj",
+					"numinlets" : 2,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 16.0, 242.0, 61.0, 20.0 ],
+					"text" : "route doc",
+					"varname" : "trigger[1]"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-4",
+					"linecount" : 11,
+					"maxclass" : "o.message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 635.0, 76.0, 719.0, 159.0 ],
+					"text" : "/doc/name \"o.callpatch\" \n/doc/desc/short \"Execute a Max patch or object with OSC arguments.\" \n/doc/desc/long \"o.callpatch instantiates a Max patch or object and binds OSC addresses to its inlets and outlets. It takes three groups of arguments: a list of addresses that will be bound in order from left to right to the inlets of the Max object, a max object with arguments, and an optional attribute to specify what should be done with the output. If the final attribute is omitted, the data from the left outlet of the Max object will replace the data bound to the first address.\" \n/doc/ninlets 1 \n/doc/noutlets 1 \n/doc/desc/inlet/1 \"OSC packet containing addresses that will be passed to the Max object.\" \n/doc/desc/outlet/1 \"The OSC packet containing the results of the operation.\" \n/doc/seealso \"o.expr\" \"o.if\" \"o.cond\" \"o.when\" \"o.unless\" \"expr\" \"jit.expr\" ",
+					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
@@ -54,7 +85,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 4
 						}
 ,
 						"rect" : [ 0.0, 201.0, 1049.0, 649.0 ],
@@ -424,7 +455,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 650.0, 202.5, 277.0, 20.0 ],
+									"patching_rect" : [ 650.0, 202.5, 289.0, 20.0 ],
 									"text" : "prepend script newdefault o.route 100 350 o.atomize"
 								}
 
@@ -876,16 +907,16 @@
 ,
 					"patching_rect" : [ 190.0, 256.0, 120.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontsize" : 12.0,
-						"default_fontface" : 0,
 						"digest" : "",
 						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"fontname" : "Arial",
 						"description" : "",
+						"fontname" : "Arial",
 						"tags" : "",
 						"globalpatchername" : "",
-						"fontface" : 0
+						"default_fontface" : 0,
+						"fontface" : 0,
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p defunctionalization"
@@ -906,7 +937,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 4
 						}
 ,
 						"rect" : [ 718.0, 44.0, 866.0, 741.0 ],
@@ -1013,7 +1044,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 0,
-											"revision" : 0
+											"revision" : 4
 										}
 ,
 										"rect" : [ 25.0, 69.0, 640.0, 480.0 ],
@@ -1231,16 +1262,16 @@
 ,
 									"patching_rect" : [ 240.0, 400.0, 65.0, 20.0 ],
 									"saved_object_attributes" : 									{
-										"fontsize" : 12.0,
-										"default_fontface" : 0,
 										"digest" : "",
 										"default_fontname" : "Arial",
 										"default_fontsize" : 12.0,
-										"fontname" : "Arial",
 										"description" : "",
+										"fontname" : "Arial",
 										"tags" : "",
 										"globalpatchername" : "",
-										"fontface" : 0
+										"default_fontface" : 0,
+										"fontface" : 0,
+										"fontsize" : 12.0
 									}
 ,
 									"text" : "p prepend"
@@ -2211,16 +2242,16 @@
 ,
 					"patching_rect" : [ 96.0, 536.0, 284.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontsize" : 12.0,
-						"default_fontface" : 0,
 						"digest" : "",
 						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"fontname" : "Arial",
 						"description" : "",
+						"fontname" : "Arial",
 						"tags" : "",
 						"globalpatchername" : "",
-						"fontface" : 0
+						"default_fontface" : 0,
+						"fontface" : 0,
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p gather_output",
@@ -2373,7 +2404,7 @@
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 16.0, 248.0, 25.0, 25.0 ],
+					"patching_rect" : [ 16.0, 203.0, 25.0, 25.0 ],
 					"varname" : "inlet"
 				}
 
@@ -2420,7 +2451,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 0
+							"revision" : 4
 						}
 ,
 						"rect" : [ 774.0, 86.0, 700.0, 869.0 ],
@@ -3041,16 +3072,16 @@
 ,
 					"patching_rect" : [ 190.0, 224.0, 78.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontsize" : 12.0,
-						"default_fontface" : 0,
 						"digest" : "",
 						"default_fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"fontname" : "Arial",
 						"description" : "",
+						"fontname" : "Arial",
 						"tags" : "",
 						"globalpatchername" : "",
-						"fontface" : 0
+						"default_fontface" : 0,
+						"fontface" : 0,
+						"fontsize" : 12.0
 					}
 ,
 					"text" : "p parse-args"
@@ -3087,7 +3118,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-132", 0 ],
+					"destination" : [ "obj-5", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-123", 0 ]
@@ -3264,6 +3295,33 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-133", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-4", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-132", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-2", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
@@ -3286,6 +3344,10 @@
 			}
 , 			{
 				"name" : "o.var.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "o.message.mxo",
 				"type" : "iLaX"
 			}
  ]
