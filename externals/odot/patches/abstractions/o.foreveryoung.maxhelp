@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 3
+			"revision" : 4
 		}
 ,
 		"rect" : [ 162.0, 172.0, 640.0, 480.0 ],
@@ -28,8 +28,25 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"bubble" : 1,
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
+					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"id" : "obj-3",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 294.0, 121.0, 168.0, 24.0 ],
+					"presentation_rect" : [ 316.0, 118.0, 0.0, 0.0 ],
+					"text" : "double-click to set the rate"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"id" : "obj-11",
 					"linecount" : 3,
 					"maxclass" : "comment",
@@ -49,8 +66,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 333.0, 181.0, 150.0, 21.0 ],
-					"text" : "/rate 0.227273 \n",
+					"patching_rect" : [ 333.0, 188.0, 150.0, 21.0 ],
+					"text" : "/rate 0.469697 \n",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -62,7 +79,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 193.0, 335.0, 20.0, 20.0 ]
+					"patching_rect" : [ 175.0, 240.0, 20.0, 20.0 ]
 				}
 
 			}
@@ -89,7 +106,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "FullPacket" ],
-					"patching_rect" : [ 147.0, 103.0, 108.0, 20.0 ],
+					"patching_rect" : [ 175.0, 121.0, 108.0, 20.0 ],
 					"text" : "o.multisliders /rate"
 				}
 
@@ -125,14 +142,14 @@
  ],
 		"dependency_cache" : [ 			{
 				"name" : "o.multisliders.maxpat",
-				"bootpath" : "/Users/Yotam/Software/svn/cnmat/trunk/max/externals/odot/patches/abstractions",
+				"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/abstractions",
 				"patcherrelativepath" : "",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "o.foreveryoung.maxpat",
-				"bootpath" : "/Users/Yotam/Software/svn/cnmat/trunk/max/externals/odot/patches/abstractions",
+				"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/abstractions",
 				"patcherrelativepath" : "",
 				"type" : "JSON",
 				"implicit" : 1
