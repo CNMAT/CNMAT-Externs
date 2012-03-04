@@ -39,6 +39,7 @@
 #include "osc_atom_u.h"
 #include "osc_atom_array_u.h"
 #include "osc_hashtab.h"
+#include "osc_util.h"
 
 #include "osc_expr.h"
 #include "osc_expr.r"
@@ -70,6 +71,14 @@ void osc_expr_funcobj_dtor(char *key, void *val);
 extern t_osc_err osc_expr_parser_parseString(char *ptr, t_osc_expr **f);
 t_osc_err osc_expr_lex(char *str, t_osc_atom_array_u **ar);
 
+/*
+0   edu.cnmat.berkeley.o.expr     	0x0f338fb5 osc_atom_u_copy + 53
+1   edu.cnmat.berkeley.o.expr     	0x0f33510b osc_message_u_deepCopy + 219
+2   edu.cnmat.berkeley.o.expr     	0x0f333599 osc_bundle_u_addMsgArrayCopy + 153
+3   edu.cnmat.berkeley.o.expr     	0x0f342a79 osc_expr_getFunctionsForCategory + 233
+4   edu.cnmat.berkeley.o.expr     	0x0f331519 oexpr_doc_cat + 121
+ */
+
 int osc_expr_eval(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **out)
 {
 	int f_argc = f->argc;
@@ -82,10 +91,27 @@ int osc_expr_eval(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 	//////////////////////////////////////////////////
 	if(f->rec->func == osc_expr_assign){
 		t_osc_msg_ar_s *msg_ar = NULL;
-		osc_bundle_s_lookupAddress(*len, *oscbndl, f->argv->arg.osc_address, &msg_ar, 1);
+		t_osc_atom_ar_u *address_ar = NULL;
+		char *address = NULL;
+		if(osc_expr_arg_getType(f_argv) == OSC_EXPR_ARG_TYPE_OSCADDRESS){
+			osc_util_strdup(&address, f_argv->arg.osc_address);
+		}else{
+			osc_expr_getArg(f->argv, len, oscbndl, &address_ar);
+			if(!address_ar){
+				return 1;
+			}
+			t_osc_atom_u *address_atom = osc_atom_array_u_get(address_ar, 0);
+			if(osc_atom_u_getTypetag(address_atom) != 's'){
+				osc_atom_array_u_free(address_ar);
+				return 1;
+			}
+			osc_atom_u_getString(address_atom, &address);
+			osc_atom_array_u_free(address_ar);
+		}
+		osc_bundle_s_lookupAddress(*len, *oscbndl, address, &msg_ar, 1);
 
 		t_osc_msg_u *mm = osc_message_u_alloc();
-		osc_message_u_setAddress(mm, f->argv->arg.osc_address);
+		osc_message_u_setAddress(mm, address);
 
 		osc_expr_getArg(f->argv->next, len, oscbndl, out);
 		int i;
@@ -105,6 +131,9 @@ int osc_expr_eval(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 			osc_message_array_s_free(msg_ar);
 		}else{
 			osc_bundle_s_appendMessage(len, oscbndl, (t_osc_msg_s *)osc_msg_s);
+		}
+		if(address){
+			osc_mem_free(address);
 		}
 		osc_message_u_free(mm);
 		osc_mem_free(msg_s);
@@ -324,7 +353,7 @@ int osc_expr_eval(t_osc_expr *f, long *len, char **oscbndl, t_osc_atom_ar_u **ou
 		}
 		char *funcname = osc_atom_u_getStringPtr(arg_atom);
 		t_osc_expr_rec *r = osc_expr_lookupFunction(funcname);
-		if(!f){
+		if(!r){
 			printf("function %s not found\n", funcname);
 			return 1;
 			// error
@@ -1512,6 +1541,7 @@ int osc_expr_list(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 	for(i = 0; i < argc; i++){
 		outlen += osc_atom_array_u_getLen(argv[i]);
 	}
+	*out = osc_atom_array_u_alloc(outlen);
 	int pos = 0;
 	for(i = 0; i < argc; i++){
 		osc_atom_array_u_copyInto(out, argv[i], pos);
@@ -2208,6 +2238,7 @@ int osc_expr_explicitCast(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc
 	if(argc){
 		int n = osc_atom_array_u_getLen(*argv);
 		*out = osc_atom_array_u_alloc(n);
+		osc_atom_array_u_clear(*out);
 			
 		int i;
 		for(i = 0; i < n; i++){

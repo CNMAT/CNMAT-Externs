@@ -104,7 +104,9 @@ t_osc_err osc_message_u_deepCopy(t_osc_msg_u **dest, t_osc_msg_u *src)
 		*dest = osc_message_u_alloc();
 	}
 	(*dest)->size = src->size;
-	(*dest)->argc = src->argc;
+	(*dest)->argc = 0;
+	(*dest)->arghead = NULL;
+	(*dest)->argtail = NULL;
 	if(src->address){
 		char *address = NULL;
 		osc_util_strdup(&address, src->address);
@@ -743,7 +745,11 @@ t_osc_err osc_message_u_format(t_osc_msg_u *m, long *buflen, char **buf){
 }
 
 t_osc_array *osc_message_array_u_alloc(long len){
-	return osc_array_allocWithSize(len, sizeof(t_osc_msg_u));
+	t_osc_array *ar = osc_array_allocWithSize(len, sizeof(t_osc_msg_u));
+#ifdef OSC_ARRAY_CLEAR_ON_ALLOC
+	osc_array_clear(ar);
+#endif
+	return ar;
 }
 
 void osc_message_array_u_free(t_osc_msg_ar_u *ar)

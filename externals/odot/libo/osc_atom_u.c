@@ -1070,7 +1070,7 @@ t_osc_err osc_atom_u_doSerialize(t_osc_atom_u *a, long *buflen, long *bufpos, ch
 		}
 		break;
 	case 's':
-		*bufpos += sprintf(*buf + *bufpos, "%s", a->w.s);
+		(*bufpos) += sprintf(*buf + *bufpos, "%s", a->w.s);
 		(*bufpos)++;
 		while((*bufpos) % 4){
 			(*bufpos)++;

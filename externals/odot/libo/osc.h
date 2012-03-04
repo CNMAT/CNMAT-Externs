@@ -44,6 +44,9 @@ extern "C" {
 #define OSC_ID OSC_IDENTIFIER
 #define OSC_ID_SIZE OSC_IDENTIFIER_SIZE
 
+#define OSC_ARRAY_CLEAR_ON_ALLOC 1
+
+
 #ifdef __cplusplus
 }
 #endif

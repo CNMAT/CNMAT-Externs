@@ -83,7 +83,7 @@ t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_ar
 {
 	int matchbuflen = 16, n = 0;
 	//t_osc_msg_u **matches = osc_mem_alloc(matchbuflen * sizeof(t_osc_msg_u *));
-	t_osc_ar *ar = osc_array_alloc(matchbuflen, t_osc_msg_u);
+	t_osc_msg_ar_u *ar = osc_message_array_u_alloc(matchbuflen);
 	osc_array_clear(ar);
 	//memset(matches, '\0', matchbuflen * sizeof(t_osc_msg_u *));
 	t_osc_bndl_it_u *it = osc_bndl_it_u_get(bndl);
@@ -110,7 +110,7 @@ t_osc_err osc_bundle_u_lookupAddress(t_osc_bndl_u *bndl, char *address, t_osc_ar
 		}
 		//osc_message_u_copy(matches + n++, current_message);
 		t_osc_msg_u *p = osc_array_get(ar, n++);
-		osc_message_u_copy(&p, current_message);
+		osc_message_u_deepCopy(&p, current_message);
 	}
 	osc_bndl_it_u_destroy(it);
 	osc_array_resize(ar, n);

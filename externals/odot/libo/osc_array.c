@@ -46,6 +46,10 @@ t_osc_array *osc_array_allocWithSize(long len, size_t membersize)
 	}
 	ar->len = len;
 	ar->membersize = membersize;
+
+#ifdef OSC_ARRAY_CLEAR_ON_ALLOC
+	osc_array_clear(ar);
+#endif
 	return ar;
 }
 
@@ -123,6 +127,11 @@ t_osc_err osc_array_resize(t_osc_array *array, int newlen)
 	}
 	array->ar = osc_mem_resize(array->ar, newlen * array->membersize);
 	if(array->ar){
+#ifdef OSC_ARRAY_CLEAR_ON_ALLOC
+		if(newlen > array->len){
+			memset(array->ar + (array->len * array->membersize), '\0', (newlen - array->len) * array->membersize);
+		}
+#endif
 		array->len = newlen;
 		return OSC_ERR_NONE;
 	}else{
