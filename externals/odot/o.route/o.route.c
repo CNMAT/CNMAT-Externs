@@ -145,9 +145,15 @@ void oroute_dispatch_rset(t_oroute *x, t_osc_rset *rset)
 {
 	t_osc_bndl_s *unmatched = osc_rset_getUnmatched(rset);
 	if(unmatched){
+#ifdef ATOMIZE
+		oroute_atomizeBundle(x->delegation_outlet,
+				    osc_bundle_s_getLen(unmatched),
+				    osc_bundle_s_getPtr(unmatched));
+#else
 		omax_util_outletOSC(x->delegation_outlet,
 				    osc_bundle_s_getLen(unmatched),
 				    osc_bundle_s_getPtr(unmatched));
+#endif
 	}
 	int i;
 	for(i = 0; i < x->num_selectors; i++){

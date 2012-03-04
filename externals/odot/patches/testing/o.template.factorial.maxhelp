@@ -7,7 +7,7 @@
 			"revision" : 4
 		}
 ,
-		"rect" : [ 25.0, 69.0, 640.0, 480.0 ],
+		"rect" : [ 967.0, 120.0, 640.0, 480.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,15 +28,17 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"bubble" : 1,
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
-					"id" : "obj-6",
+					"id" : "obj-5",
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 234.0, 119.0, 308.0, 20.0 ],
-					"text" : "rename an address.  addresses must match completely."
+					"patching_rect" : [ 338.0, 107.0, 254.0, 38.0 ],
+					"text" : "argument declares the address on which to perform the operation"
 				}
 
 			}
@@ -50,8 +52,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 34.0, 143.0, 130.0, 35.0 ],
-					"text" : "/foo/bar 21 \n/joe \"thing\" \n",
+					"patching_rect" : [ 34.0, 170.0, 174.0, 35.0 ],
+					"text" : "/foo 3 9 10 \n/foo/factorial 6 504 720 \n",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -61,13 +63,12 @@
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"id" : "obj-2",
-					"linecount" : 2,
 					"maxclass" : "o.message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 34.0, 54.0, 130.0, 35.0 ],
-					"text" : "/foo 21 \n/joe \"thing\" ",
+					"patching_rect" : [ 189.0, 70.0, 150.0, 20.0 ],
+					"text" : "/foo 3 9 10 ",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
@@ -80,9 +81,9 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 34.0, 101.0, 109.0, 20.0 ],
-					"text" : "o.rename /foo /bar"
+					"outlettype" : [ "FullPacket" ],
+					"patching_rect" : [ 189.0, 123.0, 135.0, 20.0 ],
+					"text" : "o.template.factorial /foo"
 				}
 
 			}
@@ -107,22 +108,18 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "o.rename.maxpat",
+				"name" : "o.template.factorial.maxpat",
 				"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/abstractions",
 				"patcherrelativepath" : "",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "o.select.mxo",
+				"name" : "o.if.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.pack.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "o.union.mxo",
+				"name" : "o.expr.mxo",
 				"type" : "iLaX"
 			}
 , 			{
@@ -130,7 +127,7 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.var.mxo",
+				"name" : "o.print.mxo",
 				"type" : "iLaX"
 			}
 , 			{

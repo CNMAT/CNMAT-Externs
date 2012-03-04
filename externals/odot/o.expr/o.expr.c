@@ -109,6 +109,8 @@ VERSION 1.0: Uses flex and bison to do the lexing/parsing
 #include "osc_error.h"
 #include "omax_util.h"
 #include "omax_doc.h"
+#include "osc_bundle_iterator_s.h"
+#include "osc_message_iterator_s.h"
 
 //#define __OSC_PROFILE__
 #include "osc_profile.h"
@@ -471,6 +473,19 @@ void oexpr_doc_cat(t_oexpr *x, t_symbol *cat)
 		long len = 0;
 		char *ptr = NULL;
 		osc_expr_getFunctionsForCategory(cat->s_name, &len, &ptr);
+/*
+		t_osc_bndl_it_s *it = osc_bndl_it_s_get(len, ptr);
+		while(osc_bndl_it_s_hasNext(it)){
+			t_osc_msg_s *m = osc_bndl_it_s_next(it);
+			t_osc_msg_it_s *it = osc_msg_it_s_get(m);
+			while(osc_msg_it_s_hasNext(it)){
+				t_osc_atom_s *a = osc_msg_it_s_next(it);
+				char *buf = NULL;
+				osc_atom_s_getString(a, &buf);
+				printf("%s %s\n", __func__, buf);
+			}
+		}
+*/
 		if(ptr){
 			omax_util_outletOSC(LEFTOUTLET, len, ptr);
 			osc_mem_free(ptr);
@@ -530,7 +545,9 @@ void oexpr_assist(t_oexpr *x, void *b, long io, long num, char *buf){
 
 void oexpr_free(t_oexpr *x){
 	//jbox_free((t_jbox *)x);
-	osc_expr_free(x->expr);
+	if(x->expr){
+		osc_expr_free(x->expr);
+	}
 #if defined (OIF) || defined (OCOND)
 	if(x->outlets){
 		free(x->outlets);
@@ -539,8 +556,8 @@ void oexpr_free(t_oexpr *x){
 #ifdef OCOND
 	int i;
 	for(i = 0; i < x->num_exprs; i++){
-		if(x->outlets_desc){
-			osc_mem_free(x->outlets_desc);
+		if(x->outlets_desc[i]){
+			osc_mem_free(x->outlets_desc[i]);
 		}
 	}
 	osc_mem_free(x->outlets_desc);
@@ -611,7 +628,7 @@ void *oexpr_new(t_symbol *msg, short argc, t_atom *argv){
 							if(len > 1){
 								if(s[1] > 47 && s[1] < 58){
 									haspound++;
-									ptr += sprintf(ptr, "%d ", 0);
+									ptr += sprintf(ptr, "/___ ");
 									break;
 								}
 							}

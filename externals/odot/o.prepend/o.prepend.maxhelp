@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 3
+			"revision" : 4
 		}
 ,
 		"rect" : [ 140.0, 85.0, 700.0, 605.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 3
+							"revision" : 4
 						}
 ,
 						"rect" : [ 140.0, 111.0, 700.0, 579.0 ],
@@ -68,12 +68,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-5",
 									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 135.0, 317.0, 120.0, 48.0 ],
+									"patching_rect" : [ 133.0, 255.5, 120.0, 48.0 ],
 									"text" : "prepend /foo to every address in the incoming bundle"
 								}
 
@@ -82,12 +83,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-2",
 									"linecount" : 5,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 447.0, 341.0, 115.0, 75.0 ],
+									"patching_rect" : [ 438.0, 283.5, 115.0, 75.0 ],
 									"text" : "o.prepend converts OSC-style Max messages into bundles before outputting."
 								}
 
@@ -96,11 +98,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-30",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 351.0, 313.0, 127.0, 20.0 ],
+									"patching_rect" : [ 342.0, 255.5, 127.0, 20.0 ],
 									"text" : "prepend /foo to /bar.  "
 								}
 
@@ -114,7 +117,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 351.0, 409.0, 91.0, 20.0 ],
+									"patching_rect" : [ 342.0, 351.5, 91.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -128,7 +131,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 351.0, 341.0, 85.0, 18.0 ],
+									"patching_rect" : [ 342.0, 283.5, 85.0, 18.0 ],
 									"text" : "/foo /bar 7 8 9"
 								}
 
@@ -142,7 +145,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 351.0, 373.0, 65.0, 20.0 ],
+									"patching_rect" : [ 342.0, 315.5, 65.0, 20.0 ],
 									"text" : "o.prepend"
 								}
 
@@ -156,7 +159,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 55.0, 413.0, 91.0, 20.0 ],
+									"patching_rect" : [ 53.0, 351.5, 91.0, 20.0 ],
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
 
@@ -171,7 +174,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 55.0, 317.0, 72.0, 35.0 ],
+									"patching_rect" : [ 53.0, 255.5, 72.0, 35.0 ],
 									"text" : "/bar 1 2 3 \n/bloo 4 5 6 ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -186,7 +189,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 55.0, 378.0, 88.0, 20.0 ],
+									"patching_rect" : [ 53.0, 316.5, 88.0, 20.0 ],
 									"text" : "o.prepend /foo"
 								}
 
@@ -195,6 +198,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-12",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -223,6 +227,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-9",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -236,6 +241,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-8",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -249,6 +255,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 72.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-6",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -397,7 +404,7 @@
  ],
 						"dependency_cache" : [ 							{
 								"name" : "o.helpfilehelper.maxpat",
-								"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/overview",
+								"bootpath" : "/Users/john/MMJ5-dev/odot/overview",
 								"type" : "JSON",
 								"implicit" : 1
 							}
@@ -418,16 +425,16 @@
 ,
 					"patching_rect" : [ 50.0, 120.0, 71.0, 20.0 ],
 					"saved_object_attributes" : 					{
+						"fontsize" : 12.0,
+						"tags" : "",
 						"default_fontface" : 0,
 						"digest" : "",
-						"fontname" : "Arial",
 						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"tags" : "",
-						"globalpatchername" : "",
 						"description" : "",
-						"fontface" : 0,
-						"fontsize" : 12.0
+						"globalpatchername" : "",
+						"fontface" : 0
 					}
 ,
 					"text" : "p basic"
@@ -438,8 +445,8 @@
 		"lines" : [  ],
 		"dependency_cache" : [ 			{
 				"name" : "o.helpfilehelper.maxpat",
-				"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/overview",
-				"patcherrelativepath" : "../patches/overview",
+				"bootpath" : "/Users/john/MMJ5-dev/odot/overview",
+				"patcherrelativepath" : "../../../../../../../MMJ5-dev/odot/overview",
 				"type" : "JSON",
 				"implicit" : 1
 			}

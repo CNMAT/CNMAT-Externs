@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 0,
-			"revision" : 3
+			"revision" : 4
 		}
 ,
 		"rect" : [ 140.0, 85.0, 658.0, 522.0 ],
@@ -41,7 +41,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 0,
-							"revision" : 3
+							"revision" : 4
 						}
 ,
 						"rect" : [ 140.0, 111.0, 658.0, 496.0 ],
@@ -99,7 +99,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "int", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 79.0, 263.0, 50.0, 20.0 ]
+									"patching_rect" : [ 120.0, 246.0, 50.0, 20.0 ]
 								}
 
 							}
@@ -108,12 +108,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
 									"id" : "obj-11",
-									"linecount" : 2,
 									"maxclass" : "o.message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 79.0, 308.0, 45.0, 34.0 ],
+									"patching_rect" : [ 120.0, 291.0, 57.0, 20.0 ],
 									"text" : "/foo \"$1\" ",
 									"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 								}
@@ -128,7 +127,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "FullPacket" ],
-									"patching_rect" : [ 79.0, 351.0, 106.0, 20.0 ],
+									"patching_rect" : [ 120.0, 334.0, 106.0, 20.0 ],
 									"text" : "o.unless /foo < 10"
 								}
 
@@ -137,6 +136,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-12",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -165,12 +165,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-9",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 30.0, 167.0, 600.0, 20.0 ],
-									"text" : "o.unless behaves like o.if with only the right-most outlet (i.e. the \"else\" outlet."
+									"text" : "o.unless behaves like o.if with only the right-most outlet (i.e. the \"else\" outlet)."
 								}
 
 							}
@@ -178,6 +179,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-8",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -191,6 +193,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 72.0,
+									"frgb" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"id" : "obj-6",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -339,7 +342,7 @@
  ],
 						"dependency_cache" : [ 							{
 								"name" : "o.helpfilehelper.maxpat",
-								"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/overview",
+								"bootpath" : "/Users/john/MMJ5-dev/odot/overview",
 								"type" : "JSON",
 								"implicit" : 1
 							}
@@ -360,16 +363,16 @@
 ,
 					"patching_rect" : [ 50.0, 120.0, 71.0, 20.0 ],
 					"saved_object_attributes" : 					{
+						"fontsize" : 12.0,
+						"tags" : "",
 						"default_fontface" : 0,
 						"digest" : "",
-						"fontname" : "Arial",
 						"default_fontname" : "Arial",
+						"fontname" : "Arial",
 						"default_fontsize" : 12.0,
-						"tags" : "",
-						"globalpatchername" : "",
 						"description" : "",
-						"fontface" : 0,
-						"fontsize" : 12.0
+						"globalpatchername" : "",
+						"fontface" : 0
 					}
 ,
 					"text" : "p basic"
@@ -380,8 +383,8 @@
 		"lines" : [  ],
 		"dependency_cache" : [ 			{
 				"name" : "o.helpfilehelper.maxpat",
-				"bootpath" : "/Users/john/Development/cnmat/trunk/max/externals/odot/patches/overview",
-				"patcherrelativepath" : "../patches/overview",
+				"bootpath" : "/Users/john/MMJ5-dev/odot/overview",
+				"patcherrelativepath" : "../../../../../../../MMJ5-dev/odot/overview",
 				"type" : "JSON",
 				"implicit" : 1
 			}

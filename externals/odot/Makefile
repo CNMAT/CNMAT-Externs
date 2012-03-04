@@ -1,13 +1,19 @@
 VERSION = 0.1
-OBJDIR = $(CURDIR)/build
+BUILDDIR = $(CURDIR)/build
+OBJDIR = $(BUILDDIR)/objects
+HELPDIR = $(BUILDDIR)/helpfiles
+PATCHDIR = patches
 # o.build has to come before o.bild so that the version.[ch] will be there
-OBJECTS = o.collect o.change o.cond o.unless o.when o.expr o.if o.mappatch o.message \
+OBJECT_LIST = o.collect o.change o.cond o.unless o.when o.expr o.if o.mappatch o.message \
 o.pack o.pak o.prepend\
 o.print o.printbytes o.route o.select o.atomize o.var o.union o.intersection o.difference
-ODOT_CFILES = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).c)
-ODOT_HFILES = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).h)
-ODOT_MXO = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxo)
-ODOT_MXE = $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxe)
+ODOT_CFILES = $(foreach OBJ, $(OBJECT_LIST), $(OBJDIR)/$(OBJ).c)
+ODOT_HFILES = $(foreach OBJ, $(OBJECT_LIST), $(OBJDIR)/$(OBJ).h)
+ODOT_MXO = $(foreach OBJ, $(OBJECT_LIST), $(OBJDIR)/$(OBJ).mxo)
+ODOT_MXE = $(foreach OBJ, $(OBJECT_LIST), $(OBJDIR)/$(OBJ).mxe)
+
+PATCHES = $(BUILDDIR)/abstractions $(BUILDDIR)/demos $(BUILDDIR)/overview
+TEXTFILES = README_ODOT.txt
 
 #ODOT_BUFFER_LEN = 4096
 
@@ -19,34 +25,44 @@ SERVER_PATH = /home/www-data/berkeley.edu-cnmat.www/maxdl/files/odot/
 
 ARCH = -arch i386 -arch ppc
 
-all: $(OBJDIR) $(ODOT_MXO) $(OBJDIR)/patches
-win: $(OBJDIR) $(foreach OBJ, $(OBJECTS), $(OBJDIR)/$(OBJ).mxe) $(OBJDIR)/patches 
+all: $(OBJDIR) $(HELPDIR) $(ODOT_MXO) $(PATCHES) DOCUMENTS
+win: $(OBJDIR) $(HELPDIR) $(ODOT_MXE) $(PATCHES) DOCUMENTS
 
 $(ODOT_MXO):
 	+cd $(notdir $(basename $@)) && $(MAKE) -f Makefile -k
 	+cd $(notdir $(basename $@)) && $(MAKE) -f Makefile -k install
 	+cd $(notdir $(basename $@))/build/Deployment && cp -r $(notdir $(basename $@)).mxo $(OBJDIR)
-	+cd $(notdir $(basename $@)) && cp -r $(notdir $(basename $@)).maxhelp $(OBJDIR)
+	+cd $(notdir $(basename $@)) && cp -r $(notdir $(basename $@)).maxhelp $(HELPDIR)
 
 $(OBJDIR)/%.mxe:
 	+cd $(notdir $(basename $@)) && $(MAKE) win -f Makefile -k
 	+cd $(notdir $(basename $@))/build-gcc && cp -r $(notdir $(basename $@)).mxe $(OBJDIR)
-	+cd $(notdir $(basename $@)) && cp -r $(notdir $(basename $@)).maxhelp $(OBJDIR)
+	+cd $(notdir $(basename $@)) && cp -r $(notdir $(basename $@)).maxhelp $(HELPDIR)
 
-$(OBJDIR):
+$(BUILDDIR):
+	@[ -d $(BUILDDIR) ] || mkdir -p $(BUILDDIR)
+
+$(OBJDIR): $(BUILDDIR)
 	@[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
 
-$(OBJDIR)/patches:
-	cp -r patches $(OBJDIR)
+$(HELPDIR): $(BUILDDIR)
+	@[ -d $(HELPDIR) ] || mkdir -p $(HELPDIR)
+
+$(BUILDDIR)/%:
+	+cd $(PATCHDIR) && cp -r $(notdir $@) $(BUILDDIR)
+
+DOCUMENTS:
+	$(foreach t, $(TEXTFILES), cp $(t) $(BUILDDIR))
 
 .PHONY: clean
 clean: 
 	rm -rf $(OBJDIR)
-	for d in $(OBJECTS); do (cd $$d; $(MAKE) clean); done
+	for d in $(OBJECT_LIST); do (cd $$d; $(MAKE) clean); done
 
 .PHONY: install
-install:
-	@for d in $(OBJECTS); do (cd $$d; $(MAKE) install); done
+install: all
+#@for d in $(OBJECT_LIST); do (cd $$d; $(MAKE) install); done
+	+cp -r build $(CNMAT_MAX_INSTALL_DIR)/odot
 
 release:
 	rm -f build/$(ARCHIVE)

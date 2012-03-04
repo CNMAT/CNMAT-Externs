@@ -14,17 +14,8 @@
 
 * Open Issues
 ** Bugs
-*** o.accumulate
 *** o.expr
-**** BUG modulo (%) doesn't print properly when sending the post-functions message
-*** o.route
-**** BUG 0   edu.cnmat.berkeley.o.route    0x0f9dfdec osc_message_s_wrap + 12
-1   edu.cnmat.berkeley.o.route    	0x0f9df18c osc_bundle_iterator_s_next + 92
-2   edu.cnmat.berkeley.o.route    	0x0f9e7d38 osc_query_select_impl + 120
-3   edu.cnmat.berkeley.o.route    	0x0f9e80b0 osc_query_select + 112
-4   edu.cnmat.berkeley.o.route    	0x0f9dc03e oroute_fullPacket + 78
-*** o.rename
-**** BUG o.rename doesn't handle partial matches correctly
+**** BUG parsing fails due to space after opening paren: o.if product(#1/temp) > 1 
 ** Feature Requests
 *** General
 **** DELEGATED Overview / tutorial patches
@@ -74,6 +65,8 @@ New objects with more explicit behavior.
 *** o.message
 **** FIXED a bug that would cause a crash when using $n substitutions with a bundle that 
 was not typed into the mssage box (ie, one generated elsewhere and passed in via the right inlet).
+*** o.cond
+**** FIXED a bug that was freeing memory twice when the object was deleted from a patch
 ** Change Log
 *** o.expr
 **** DONE Change t_osc_expr_rec to support better documentation of function parameters
@@ -87,6 +80,20 @@ was not typed into the mssage box (ie, one generated elsewhere and passed in via
 range() now computes the range of a list
 *** o.message
 **** DONE drawing has been made much more efficient--now comparable to the normal message box
+*** patches
+**** moved o.adsr~.maxpat into testing.  it needs more work to capture all the functionality of adsr~.
+**** fixed a bug in the o.bcf2000 patch where an o.message with arguments $1 $2 was failing to parse its bundle
+since $1 is not a valid osc address.  Replaced $1 with /$1 and then put a subpatch above it to remove 
+the leading slash from the incoming address
+**** moved o.countmessages to deprecated--use o.expr /count = msgcount() instead
+**** added help file for o.countup.
+**** added help file for o.delay.
+**** added help file for o.insert.
+**** added help file for o.date.
+**** added help file for o.maxplatform.
+**** fixed a bug in o.rename that would cause partial matches to become nested bundles.
+**** moved o.template.factorial to testing.  there are a few bugs that need to be sorted out before this is released.
+**** 
 
 * VERSION 1.0.12a
 Released: [2012-02-24 Fri]
