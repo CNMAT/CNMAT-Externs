@@ -55,10 +55,10 @@ $(BUILDDIR)/%:
 	+cd $(PATCHDIR) && cp -r $(notdir $@) $(BUILDDIR)
 
 package: 
-	./package.sh 
+	./package.pl
 
 archive:
-	./package.sh archive
+	./package.pl archive
 
 DOCUMENTS:
 	$(foreach t, $(TEXTFILES), cp $(t) $(BUILDDIR))
