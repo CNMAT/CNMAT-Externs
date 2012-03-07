@@ -63,16 +63,16 @@ archive:
 DOCUMENTS:
 	$(foreach t, $(TEXTFILES), cp $(t) $(BUILDDIR))
 
+.PHONY: install
+install:
+	./package.pl install $(CNMAT_MAX_INSTALL_DIR)
+
 .PHONY: clean
 clean: 
 #	for d in $(OBJECT_LIST); do (cd $$d; $(MAKE) clean); done
 	xcodebuild -project odot.xcodeproj clean
 	./package.pl clean
 
-.PHONY: install
-install: all
-#@for d in $(OBJECT_LIST); do (cd $$d; $(MAKE) install); done
-	+cp -r build $(CNMAT_MAX_INSTALL_DIR)/odot
 
 release:
 	rm -f build/$(ARCHIVE)
