@@ -26,7 +26,7 @@ my $version_file;
 open($version_file, ">latest-$platform-version") or die("can't open file: $version_file");
 print $version_file "VERSION: $version\n";
 print $version_file "PLATFORM: $platform\n";
-print $version_file "FILENAME: $dirname.tgz\n";
+print $version_file "FILENAME: $dirname.tgz\n"; 
 close($version_file);
 
 if((@ARGV) > 0){
@@ -53,7 +53,9 @@ if((@ARGV) > 0){
     if($ARGV[0] eq "archive"){
 	system("tar", "--exclude=.svn", "-z", "-c", "-v", "-f", "$dirname.tgz", $dirname);
     }elsif($ARGV[0] eq "install"){
-	#system("mkdir", "$ARGV[1]/$dirname");
-	system("tar --exclude='.svn' -c -f - $dirname | (cd $ARGV[1]; tar xfp -)");
+	unless(-d "$ARGV[1]/odot"){
+	    system("mkdir", "$ARGV[1]/odot");
+	}
+	system("(cd $dirname; tar --exclude='.svn' -c -f - *) | (cd $ARGV[1]/odot; tar xfp -)");
     }
 }
