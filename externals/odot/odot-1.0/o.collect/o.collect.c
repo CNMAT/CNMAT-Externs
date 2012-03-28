@@ -173,7 +173,7 @@ void ocoll_free(t_ocoll *x){
 
 void *ocoll_new(t_symbol *msg, short argc, t_atom *argv){
 	t_ocoll *x;
-	if(x = (t_ocoll *)object_alloc(ocoll_class)){
+	if((x = (t_ocoll *)object_alloc(ocoll_class))){
 		x->outlet = outlet_new((t_object *)x, NULL);
 		x->buffer_len = 1024;
 		if(argc){
