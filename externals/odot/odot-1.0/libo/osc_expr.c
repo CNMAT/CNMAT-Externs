@@ -1832,7 +1832,7 @@ int osc_expr_clip(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_ar
 	double min = osc_atom_u_getDouble(osc_atom_array_u_get(argv[1], 0));
 	double max = osc_atom_u_getDouble(osc_atom_array_u_get(argv[2], 0));
 	long len = osc_atom_array_u_getLen(*argv);
-	osc_atom_array_u_alloc(len);
+	*out = osc_atom_array_u_alloc(len);
 		
 	t_osc_atom_ar_u *result = *out;
 	int i;
