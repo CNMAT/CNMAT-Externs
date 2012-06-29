@@ -1,0 +1,4 @@
+LIBRARY jit.dimmap.mxe
+
+EXPORTS
+	main

@@ -1,0 +1,7 @@
+;uisimp.def
+
+LIBRARY uisimp3.mxe
+
+EXPORTS
+	main
+

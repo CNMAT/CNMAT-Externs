@@ -1,0 +1,4 @@
+LIBRARY sheep.mxe
+
+EXPORTS
+	main

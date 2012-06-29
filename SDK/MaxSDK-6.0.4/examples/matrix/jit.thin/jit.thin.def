@@ -1,0 +1,4 @@
+LIBRARY jit.thin.mxe
+
+EXPORTS
+	main

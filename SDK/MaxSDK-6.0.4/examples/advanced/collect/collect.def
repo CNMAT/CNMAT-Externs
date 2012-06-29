@@ -1,0 +1,5 @@
+LIBRARY collect.mxe
+
+EXPORTS
+	main
+

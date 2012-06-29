@@ -1,0 +1,5 @@
+LIBRARY uitextfield.mxe
+
+EXPORTS
+	main
+
