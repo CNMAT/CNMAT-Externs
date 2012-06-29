@@ -1,0 +1,7 @@
+;filedate.def
+
+LIBRARY filedate.mxe
+
+EXPORTS
+	main
+

@@ -1,0 +1,51 @@
+// Xcode target configuration settings for the Max 6 SDK
+// Used as the basis for Xcode projects to build Max externals.
+//
+// Changes to the settings in this file will be applied to all SDK examples
+// To change settings for only one of the examples, override the settings using
+// Xcode's target inspector.
+//
+// by Timothy Place
+// Copyright © 2011, Cycling '74
+
+
+// Name & Version
+PRODUCT_NAME = $(PROJECT_NAME)
+PRODUCT_VERSION = 6.0.0
+
+
+// Paths
+C74SUPPORT = $(SRCROOT)/../../../c74support
+HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
+FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
+DSTROOT = $(SRCROOT)/../../../sdk-build
+// (This next path is relative to DSTROOT)
+INSTALL_PATH = /
+
+
+// Special Files
+GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
+INFOPLIST_FILE = $(SRCROOT)/../../Info.plist
+
+
+// Architecture and Deployment
+ARCHS = i386
+SDKROOT = /Developer/SDKs/MacOSX10.6.sdk
+MACOSX_DEPLOYMENT_TARGET = 10.6
+
+
+// Compiler Version -- leave them all commented out to get the default version provided by Xcode
+// GCC_VERSION = 4.2
+GCC_VERSION = com.apple.compilers.llvmgcc42
+// GCC_VERSION = com.apple.compilers.llvm.clang.1_0
+
+
+// Preprocessor Defines
+GCC_PREPROCESSOR_DEFINITIONS = "DENORM_WANT_FIX = 1"
+
+
+// Static Configuration (don't change these)
+WRAPPER_EXTENSION = mxo;
+WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas
+DEPLOYMENT_LOCATION = YES
+GENERATE_PKGINFO_FILE = YES

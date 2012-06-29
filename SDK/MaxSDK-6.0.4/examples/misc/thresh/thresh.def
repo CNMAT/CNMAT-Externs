@@ -1,0 +1,7 @@
+;thresh.def
+
+LIBRARY thresh.mxe
+
+EXPORTS
+	main
+

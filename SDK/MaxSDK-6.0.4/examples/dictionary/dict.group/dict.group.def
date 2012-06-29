@@ -1,0 +1,7 @@
+;dict.group.def
+
+LIBRARY dict.group.mxe
+
+EXPORTS
+	main
+

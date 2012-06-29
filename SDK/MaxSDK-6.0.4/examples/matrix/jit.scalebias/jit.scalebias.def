@@ -1,0 +1,4 @@
+LIBRARY jit.scalebias.mxe
+
+EXPORTS
+	main

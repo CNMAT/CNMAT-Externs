@@ -1,0 +1,4 @@
+LIBRARY jit.print.mxe
+
+EXPORTS
+	main

@@ -1,0 +1,4 @@
+LIBRARY jit.noise.mxe
+
+EXPORTS
+	main

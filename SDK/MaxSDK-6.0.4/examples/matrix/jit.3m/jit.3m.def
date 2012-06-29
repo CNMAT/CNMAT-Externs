@@ -1,0 +1,4 @@
+LIBRARY jit.3m.mxe
+
+EXPORTS
+	main

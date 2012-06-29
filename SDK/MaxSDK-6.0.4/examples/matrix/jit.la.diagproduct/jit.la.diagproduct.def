@@ -1,0 +1,4 @@
+LIBRARY jit.la.diagproduct.mxe
+
+EXPORTS
+	main
