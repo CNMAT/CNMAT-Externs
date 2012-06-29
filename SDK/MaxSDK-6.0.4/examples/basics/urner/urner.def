@@ -1,0 +1,4 @@
+LIBRARY urner.mxe
+
+EXPORTS
+	main

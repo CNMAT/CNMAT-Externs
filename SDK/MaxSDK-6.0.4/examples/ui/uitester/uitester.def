@@ -1,0 +1,5 @@
+LIBRARY uitester.mxe
+
+EXPORTS
+	main
+

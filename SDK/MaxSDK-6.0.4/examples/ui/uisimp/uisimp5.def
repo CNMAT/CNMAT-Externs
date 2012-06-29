@@ -1,0 +1,7 @@
+;uisimp.def
+
+LIBRARY uisimp5.mxe
+
+EXPORTS
+	main
+

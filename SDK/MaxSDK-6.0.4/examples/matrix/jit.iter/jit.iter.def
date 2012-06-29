@@ -1,0 +1,4 @@
+LIBRARY jit.iter.mxe
+
+EXPORTS
+	main

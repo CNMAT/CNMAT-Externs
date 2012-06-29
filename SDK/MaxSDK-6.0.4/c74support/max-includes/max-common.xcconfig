@@ -1,0 +1,22 @@
+// Xcode target configuration settings shared across all Max projects
+// To change settings for only one project, override the settings using Xcode's target inspector.
+//
+// Timothy Place
+// Copyright © 2011, Cycling '74
+
+
+PRODUCT_NAME = $(PROJECT_NAME)
+PRODUCT_VERSION = 6.0.4
+PRODUCT_BUILD = 1974
+
+ARCHS = i386
+
+SDKROOT = $(DEVELOPER_DIR)/SDKs/MacOSX10.5.sdk
+// SDKROOT = $(DEVELOPER_DIR)/SDKs/MacOSX10.6.sdk
+
+MACOSX_DEPLOYMENT_TARGET = 10.5
+// MACOSX_DEPLOYMENT_TARGET = 10.6
+
+// GCC_VERSION = 4.2
+GCC_VERSION = com.apple.compilers.llvmgcc42
+// GCC_VERSION = com.apple.compilers.llvm.clang.1_0

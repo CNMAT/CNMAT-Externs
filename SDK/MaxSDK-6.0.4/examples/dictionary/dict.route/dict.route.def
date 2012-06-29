@@ -1,0 +1,7 @@
+;dict.route.def
+
+LIBRARY dict.route.mxe
+
+EXPORTS
+	main
+

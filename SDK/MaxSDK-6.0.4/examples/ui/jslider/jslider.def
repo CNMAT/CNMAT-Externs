@@ -1,0 +1,7 @@
+;jslider.def
+
+LIBRARY jslider.mxe
+
+EXPORTS
+	main
+

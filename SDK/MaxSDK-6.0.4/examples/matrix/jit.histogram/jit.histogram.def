@@ -1,0 +1,4 @@
+LIBRARY jit.histogram.mxe
+
+EXPORTS
+	main
