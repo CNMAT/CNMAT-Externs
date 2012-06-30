@@ -332,11 +332,11 @@ t_symbol *gensym(C74_CONST char *s);
  @return		A pointer to the #t_symbol in the symbol table.
  */
 	
-t_symbol *gensym_tr(char *s);
+//t_symbol *gensym_tr(char *s);
 
 // other translation stuff, to be documented...
 	
-char *str_tr(char *s);
+//char *str_tr(char *s);
 t_symbol *symbol_tr(t_symbol *s);
 int sprintf_tr(char *d, char *fmt, ...);
 char *mayquote(char *s);
