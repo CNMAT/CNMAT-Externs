@@ -1,0 +1,175 @@
+Ttrampoline
+v4
+r1
+cCheck dependencies
+cProcessInfoPlistFile /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/Info.plist Info.plist
+cProcessPCH /var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch.pth ../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/commonsyms.o /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.o /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+
+N/Developer/SDKs/MacOSX10.7.sdk
+c000000004EAEC1C700000000000000EE
+t1320075719
+s238
+
+N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Carbon.framework/Headers/Carbon.h
+c000000004E7A9B9600000000000005FE
+t1316658070
+s1534
+
+N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/QuickTime.framework/Headers/QuickTime.h
+c000000004E72B6870000000000000659
+t1316140679
+s1625
+
+N/System/Library/Frameworks/Carbon.framework/Carbon
+c000000004E2B426F0000000000006530
+t1311457903
+s25904
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c
+c000000004BCF898B000000000000010D
+t1271892363
+s269
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch
+c000000004BCF898C00000000000000A4
+t1271892364
+s164
+i<Carbon/Carbon.h>
+i<QuickTime/QuickTime.h>
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../c74support/max-includes/MaxAPI.framework/MaxAPI
+c000000004FED39380000000000077894
+t1340946744
+s489620
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/Info.plist
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/MacOS/trampoline
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/PkgInfo
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/commonsyms.o
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.LinkFileList
+c0000000050107A9A000000000000009D
+t1343257242
+s157
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.o
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/trampoline-i386-master.o
+t2
+s0
+
+N/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c
+c00000000501079C80000000000001F8A
+t1343257032
+s8074
+
+N/var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch.pth
+t2
+s0
+
+NInfo.plist
+c000000004D8F926200000000000002C0
+t1301254754
+s704
+
+CCheck dependencies
+r0
+lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies834fa31ab2c0b541^f706bf1ab2c0b541^---0#1#0#--18"Check dependencies36"3FFF5CB7-734D-443E-84CB-807B448FC1DE-
+
+CCompileC build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/commonsyms.o /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s364950043.498756
+e364950043.684490
+r1
+xCompileC
+xbuild/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/commonsyms.o
+x/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection139"Compile /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c99d57f1bb2c0b541^973baf1bb2c0b541^---0#0#0#-19%DVTDocumentLocation2@147"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c0000000000000000^2245"CompileC build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/commonsyms.o ../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs -fpascal-strings -O3 -Wno-return-type -Wparentheses -Wswitch -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-shorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -funroll-loops -mmacosx-version-min=10.5 -Wno-sign-conversion -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/trampoline.hmap -I/usr/local/include -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/include -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../c74support/max-includes -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment -F/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../c74support/max-includes -include /var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch -MMD -MT dependencies -MF /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/commonsyms.d -c /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c -o /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/commonsyms.o36"2D3BA33A-1CA4-4480-95F9-F0F1BC9E2ECC-
+
+CCompileC build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.o /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s364950043.498829
+e364950043.777495
+r0
+xCompileC
+xbuild/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.o
+x/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+o/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:220:4: warning: implicit declaration of function 'proxy_free' is invalid in C99 [-Wimplicit-function-declaration,3]
+o                         proxy_free(x->proxies[i]);
+o                         ^
+o/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:222:8: error: use of undeclared identifier 'proxies' [3]
+o                 free(proxies);
+o                      ^
+o/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:235:7:{235:5-235:55}: warning: using the result of an assignment as a condition without parentheses [-Wparentheses,3]
+o         if(x = (t_trampoline *)object_alloc(trampoline_class)){
+o            ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+o/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:235:7: note: place parentheses around the assignment to silence this warning [3]
+o         if(x = (t_trampoline *)object_alloc(trampoline_class)){
+o              ^
+o            (                                                 )
+ofix-it:"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c":{235:5-235:5}:"("
+ofix-it:"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c":{235:55-235:55}:")"
+o/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:235:7: note: use '==' to turn this assignment into an equality comparison [3]
+o         if(x = (t_trampoline *)object_alloc(trampoline_class)){
+o              ^
+o              ==
+ofix-it:"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c":{235:7-235:8}:"=="
+o2 warnings and 1 error generated.
+lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection86"Compile /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c67d57f1bb2c0b541^a801c71bb2c0b541^-1706"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:220:4: warning: implicit declaration of function 'proxy_free' is invalid in C99 [-Wimplicit-function-declaration,3]                         proxy_free(x->proxies[i]);                         ^/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:222:8: error: use of undeclared identifier 'proxies' [3]                 free(proxies);                      ^/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:235:7:{235:5-235:55}: warning: using the result of an assignment as a condition without parentheses [-Wparentheses,3]         if(x = (t_trampoline *)object_alloc(trampoline_class)){            ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:235:7: note: place parentheses around the assignment to silence this warning [3]         if(x = (t_trampoline *)object_alloc(trampoline_class)){              ^            (                                                 )fix-it:"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c":{235:5-235:5}:"("fix-it:"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c":{235:55-235:55}:")"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c:235:7: note: use '==' to turn this assignment into an equality comparison [3]         if(x = (t_trampoline *)object_alloc(trampoline_class)){              ^              ==fix-it:"/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c":{235:7-235:8}:"=="2 warnings and 1 error generated.3(21%IDEActivityLogMessage2@63"Implicit declaration of function 'proxy_free' is invalid in C99-364950043#0#195#-1#-23%DVTTextDocumentLocation3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^219#3#219#3#18446744073709551615#0#14"Semantic Issue--2@38"Use of undeclared identifier 'proxies'-364950043#274#136#-2#-3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^221#7#221#7#18446744073709551615#0#14"Semantic Issue--2@68"Using the result of an assignment as a condition without parentheses-364950043#466#197#5(2@63"Place parentheses around the assignment to silence this warning-364950043#791#160#-0#-3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^234#6#234#6#18446744073709551615#0#14"Semantic Issue--26%IDEActivityLogFixItMessage4@22"Fix-It: replace with (-364950043#1096#106#-0#23"com.apple.dt.IDE.fix-it3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^234#4#234#4#18446744073709551615#0#---1"(4@22"Fix-It: replace with )-364950043#1202#108#-0#23"com.apple.dt.IDE.fix-it3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^234#54#234#54#18446744073709551615#0#---1")2@60"Use '==' to turn this assignment into an equality comparison-364950043#1310#157#-0#-3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^234#6#234#6#18446744073709551615#0#14"Semantic Issue--4@23"Fix-It: replace with ==-364950043#1565#107#-0#23"com.apple.dt.IDE.fix-it3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^234#6#234#7#18446744073709551615#0#---2"==1#-3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^234#6#234#6#18446744073709551615#0#14"Semantic Issue1(3@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^234#4#234#54#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation5@94"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c0000000000000000^2139"CompileC build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.o trampoline.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs -fpascal-strings -O3 -Wno-return-type -Wparentheses -Wswitch -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-shorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -funroll-loops -mmacosx-version-min=10.5 -Wno-sign-conversion -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/trampoline.hmap -I/usr/local/include -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/include -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../c74support/max-includes -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment -F/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../c74support/max-includes -include /var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch -MMD -MT dependencies -MF /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.d -c /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/trampoline.c -o /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/i386/trampoline.o36"C9C336AD-B90D-4401-A788-90CDA6760E83-
+
+CLd /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/MacOS/trampoline normal i386
+r0
+
+CMasterObjectLink /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/Objects-normal/trampoline-i386-master.o
+r0
+
+CProcessInfoPlistFile /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/Info.plist Info.plist
+s364950042.754903
+e364950042.760801
+r1
+xProcessInfoPlistFile
+x/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/Info.plist
+xInfo.plist
+lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Process Info.plist1971c11ab2c0b541^44c3c21ab2c0b541^---0#0#0#-19%DVTDocumentLocation2@92"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/Info.plist0000000000000000^483"ProcessInfoPlistFile build/Deployment/trampoline.mxo/Contents/Info.plist Info.plist    cd /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline    builtin-infoPlistUtility Info.plist -genpkginfo /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo/Contents/Info.plist36"7ECB0D7F-408A-4ABC-9205-57E160C54B52-
+
+CProcessPCH /var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch.pth ../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s364950042.769094
+e364950043.491734
+r1
+xProcessPCH
+x/var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch.pth
+x../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection73"Precompile ../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pchfb22c51ab2c0b541^26e27d1bb2c0b541^---0#0#0#-19%DVTDocumentLocation2@144"file://localhost/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch0000000000000000^2171"ProcessPCH /var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch.pth ../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c-header -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs -fpascal-strings -O3 -Wno-return-type -Wparentheses -Wswitch -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-shorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -funroll-loops -mmacosx-version-min=10.5 -Wno-sign-conversion -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/trampoline.hmap -I/usr/local/include -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/include -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../c74support/max-includes -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/DerivedSources/i386 -I/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/trampoline.build/Deployment/trampoline.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment -F/Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../c74support/max-includes -c /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/../../../SDK/MaxSDK-5/c74support/max-includes/macho-prefix.pch -o /var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch.pth -MMD -MT dependencies -MF /var/folders/wp/mpnjb0qd5_nd95nh4fc767kh0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/macho-prefix-dvoxvzjwrbrotrcqkbecjymaepmg/macho-prefix.pch.d36"792C0835-BF10-4E06-9815-0E4EBD26C292-
+
+CTouch /Users/john/Development/cnmat/trunk/max/externals/misc/trampoline/build/Deployment/trampoline.mxo
+r0
+
