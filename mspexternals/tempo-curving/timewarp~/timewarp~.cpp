@@ -99,8 +99,13 @@
 //#include "cycle.h"
 
 #include "osc.h"
-#include "osc_bundle.h"
+#include "osc_bundle_s.h"
+#include "osc_bundle_u.h"
+#include "osc_message_s.h"
+#include "osc_message_u.h"
 #include "osc_byteorder.h"
+//#define __OSC_PROFILE__
+#include "osc_profile.h"
 #include "osc_mem.h"
 #include "omax_util.h"
 
@@ -305,7 +310,7 @@ t_symbol *l_function_layers[MAX_NUM_FUNCTIONS];
 
 t_critical te_clipboard_lock;
 
-char *params[] = {"/time", "/tempo/arrival", "/tempo/departure", "/phase/arrival", 
+const char *params[] = {"/time", "/tempo/arrival", "/tempo/departure", "/phase/arrival", 
 		  "/phase/departure", "/alpha", "/beta", "/error/alpha", "/error/beta"};
 long offsets[] = {calcoffset(t_point, coords.x), calcoffset(t_point, coords.y), calcoffset(t_point, d_freq),
 		  calcoffset(t_point, a_phase), calcoffset(t_point, d_phase), calcoffset(t_point, alpha),
@@ -519,6 +524,8 @@ void te_paint(t_te *x, t_object *patcherview){
 		if(gg){
 
 			// draw the outline of the box 
+
+
 			jgraphics_set_source_jrgba(gg, &c); 
 			jgraphics_set_line_width(gg, 1); 
 			jgraphics_rectangle(gg, 0., 0., rect.width, rect.height); 
@@ -1758,6 +1765,9 @@ double te_scaledBetaCDFInt(double z, double a, double b, double scale, double of
 		return 0;
 	}
 	z = te_clip(z, 0., 1.);
+	if(z == 0){
+		return 0;
+	}
 	//double beta_ab = gsl_sf_beta(a, b);
 	//return (offset * z + (scale * z * ((gsl_sf_beta_inc(a, b, z) * beta_ab) - (gsl_sf_beta_inc(a + 1, b, z) * gsl_sf_beta(a + 1, b)) / z)) / beta_ab);
 
@@ -1900,7 +1910,7 @@ void te_editSel(t_te *x, double xx, double yy, double zz){
 }
 
 void te_processOSC(t_te *x, char *prefix, t_hashtab *ht, int functionNum){
-	t_osc_msg *time = NULL;
+	t_osc_msg_s *time = NULL;
 	char buf[64];
 	//sprintf(buf, "/function/%02d/time", i);
 	if(prefix){
@@ -1912,10 +1922,10 @@ void te_processOSC(t_te *x, char *prefix, t_hashtab *ht, int functionNum){
 	if(!time){
 		return;
 	}
-	long argc_time;
-	t_atom argv_time[time->argc + 1];
-	omax_util_oscMsg2MaxAtoms_old(time, &argc_time, argv_time);
-	int npoints = time->argc;
+	long argc_time = omax_util_getNumAtomsInOSCMsg(time);
+	t_atom argv_time[argc_time];
+	omax_util_oscMsg2MaxAtoms(time, argv_time);
+	int npoints = osc_message_s_getArgCount(time);
 	t_point *head = NULL, *tail = NULL;
 	int j;
 	for(j = 0; j < npoints; j++){
@@ -1930,25 +1940,25 @@ void te_processOSC(t_te *x, char *prefix, t_hashtab *ht, int functionNum){
 		point->coords.x = (double)atom_getfloat(argv_time + j + 1);
 	}
 	for(j = 1; j < (int)(sizeof(params) / sizeof(char*)); j++){
-		char *param = params[j];
+		const char *param = params[j];
 		//sprintf(buf, "/function/%02d%s", i, param);
 		if(prefix){
 			sprintf(buf, "%s%s", prefix, param);
 		}else{
 			strcpy(buf, param);
 		}
-		t_osc_msg *mm = NULL;
+		t_osc_msg_s *mm = NULL;
 		hashtab_lookup(ht, gensym(buf), (t_object **)(&mm));
 		if(!mm){
 			continue;
 		}
-		long argc;
-		t_atom argv[mm->argc + 1];
-		omax_util_oscMsg2MaxAtoms_old(mm, &argc, argv);
+		long argc = omax_util_getNumAtomsInOSCMsg(mm);
+		t_atom argv[argc];
+		omax_util_oscMsg2MaxAtoms(mm, argv);
 		int k = 0;
 		t_point *p = head;
 		while(p){
-			if(k < mm->argc){
+			if(k < argc){
 				*((double *)(((char *)p) + offsets[j])) = (double)atom_getfloat(argv + k + 1);
 			}else{
 				*((double *)(((char *)p) + offsets[j])) = defaults[j];
@@ -1979,12 +1989,16 @@ void te_fullPacket(t_te *x, long len, long ptr){
 
 	int i;
 	for(i = 0; i < (int)(sizeof(params) / sizeof(char*)); i++){
-		t_osc_msg *m = NULL;
-		osc_bundle_lookupAddress_s(len, (char *)ptr, params[i], &m, 1);
-			
-		while(m){
-			hashtab_store(ht, gensym(m->address), (t_object *)m);
-			m = m->next;
+		t_osc_msg_ar_s *m = NULL;
+		osc_bundle_s_lookupAddress(len, (char *)ptr, params[i], &m, 1);
+
+		int j = 0;
+		for(j = 0; j < osc_message_array_s_getLen(m); j++){
+			t_osc_msg_s *mm = (t_osc_msg_s *)osc_message_array_s_get(m, j);
+			hashtab_store(ht, gensym(osc_message_s_getAddress(mm)), (t_object *)mm);
+		}
+		if(m){
+			osc_message_array_s_free(m);
 		}
 	}
 	if(hashtab_getsize(ht)){
@@ -1993,42 +2007,47 @@ void te_fullPacket(t_te *x, long len, long ptr){
 		long nkeys = 0;
 		hashtab_getkeys(ht, &nkeys, &keys);
 		for(i = 0; i < nkeys; i++){
-			t_osc_msg *m = NULL;
+			t_osc_msg_s *m = NULL;
 			hashtab_lookup(ht, keys[i], (t_object **)(&m));
-			osc_message_free(m);
+			osc_message_s_free(m);
 		}
 		hashtab_clear(ht);
 	}
 
-	t_osc_msg *m = NULL;
+	t_osc_msg_ar_s *m = NULL;
 	//osc_bundle_lookupAddress_s(len, (char *)ptr, "/function/??/", &m, 0);	
-	osc_bundle_lookupAddress_s(len, (char *)ptr, "/function/", &m, 0);	
+	osc_bundle_s_lookupAddress(len, (char *)ptr, "/function/", &m, 0);	
 	if(m){
 		int fplen = 10;
 		char fn[99];
 		memset(fn, '\0', 99);
-		while(m){
+		unsigned int i;
+		for(i = 0; i < osc_message_array_s_getLen(m); i++){
 			char *param = NULL;
-			if(*(m->address + fplen) == '*'){
+			t_osc_msg_s *mm = (t_osc_msg_s *)osc_message_array_s_get(m, i);
+			char *mm_address = osc_message_s_getAddress(mm);
+			if(*(mm_address + fplen) == '*'){
 				int j;
 				for(j = 0; j < x->numFunctions; j++){
 					fn[j] = 1;
 					char address[128];
-					sprintf(address, "/function/%02d/%s", j, m->address + fplen + 2);
-					t_osc_msg *mm = (t_osc_msg *)osc_mem_alloc(sizeof(t_osc_msg));
-					*mm = *m;
-					hashtab_store(ht, gensym(address), (t_object *)mm);
+					sprintf(address, "/function/%02d/%s", j, mm_address + fplen + 2);
+					t_osc_msg_s *mm_copy = osc_message_s_alloc();
+					osc_message_s_copy(&mm_copy, mm);
+					hashtab_store(ht, gensym(address), (t_object *)mm_copy);
 				}
 			}else{
-				int functionNum = strtol(m->address + fplen, &param, 0);
-				fn[functionNum] = 1;
-				hashtab_store(ht, gensym(m->address), (t_object *)m);
+				unsigned int functionNum = strtol(mm_address + fplen, &param, 0);
+				if(functionNum < sizeof(fn)){
+					fn[functionNum] = 1;
+					t_osc_msg_s *mm_copy = osc_message_s_alloc();
+					osc_message_s_copy(&mm_copy, mm);
+					hashtab_store(ht, gensym(mm_address), (t_object *)mm_copy);
+				}
 			}
-			m = m->next;
 		}
 
-		int i;
-		for(i = 0; i < 99; i++){
+		for(i = 0; i < sizeof(fn); i++){
 			if(fn[i] == 0){
 				continue;
 			}
@@ -2041,9 +2060,9 @@ void te_fullPacket(t_te *x, long len, long ptr){
 	long nkeys = 0;
 	hashtab_getkeys(ht, &nkeys, &keys);
 	for(i = 0; i < nkeys; i++){
-		t_osc_msg *m = NULL;
+		t_osc_msg_s *m = NULL;
 		hashtab_lookup(ht, keys[i], (t_object **)(&m));
-		osc_message_free(m);
+		osc_message_s_free(m);
 	}
 	hashtab_chuck(ht);
 
@@ -3643,6 +3662,133 @@ void te_removePoint(t_te *x, t_point *point, int functionNum){
 }
 
 void te_dump(t_te *x){
+	double rdtsc = RDTSC_CYCLES_PER_SECOND;
+	TIMER_START(bar, rdtsc);
+	t_osc_bndl_u *b = osc_bundle_u_alloc();
+	int i;
+	for(i = 0; i < x->numFunctions; i++){
+		t_point *p = x->functions[i];
+		if(!p){
+			continue;
+		}
+		t_osc_msg_u *m = osc_message_u_alloc();
+		char address[128];
+		sprintf(address, "/dump/function/%d", i);
+		osc_message_u_setAddress(m, address);
+
+		t_osc_bndl_u *fb = osc_bundle_u_alloc();
+
+		t_osc_msg_u *function_num = osc_message_u_alloc();
+		osc_message_u_setAddress(function_num, "/function");
+		osc_message_u_appendInt32(function_num, i);
+		osc_bundle_u_addMsg(fb, function_num);
+
+		int p_num = 0;
+		while(p){
+			t_osc_msg_u *pm = osc_message_u_alloc();
+			char pm_address[128];
+			sprintf(pm_address, "/point/%d", p_num);
+			osc_message_u_setAddress(pm, pm_address);
+
+			t_osc_bndl_u *pmb = osc_bundle_u_alloc();
+
+			//osc_bundle_u_addMsg(pmb, function_num);
+			t_osc_msg_u *pmb_function_num = osc_message_u_alloc();
+			osc_message_u_setAddress(pmb_function_num, "/function");
+			osc_message_u_appendInt32(pmb_function_num, i);
+			osc_bundle_u_addMsg(pmb, pmb_function_num);
+
+			t_osc_msg_u *point = osc_message_u_alloc();
+			osc_message_u_setAddress(point, "/point");
+			osc_message_u_appendInt32(point, p_num);
+			osc_bundle_u_addMsg(pmb, point);
+
+			t_osc_msg_u *time = osc_message_u_alloc();
+			osc_message_u_setAddress(time, "/time");
+			osc_message_u_appendFloat(time, p->coords.x);
+			osc_bundle_u_addMsg(pmb, time);
+
+			t_osc_msg_u *tempo_arrival = osc_message_u_alloc();
+			osc_message_u_setAddress(tempo_arrival, "/tempo/arrival");
+			osc_message_u_appendFloat(tempo_arrival, p->coords.y);
+			osc_bundle_u_addMsg(pmb, tempo_arrival);
+
+			t_osc_msg_u *tempo_departure = osc_message_u_alloc();
+			osc_message_u_setAddress(tempo_departure, "/tempo/departure");
+			osc_message_u_appendFloat(tempo_departure, p->d_freq);
+			osc_bundle_u_addMsg(pmb, tempo_departure);
+
+			t_osc_msg_u *phase_arrival = osc_message_u_alloc();
+			osc_message_u_setAddress(phase_arrival, "/phase/arrival");
+			osc_message_u_appendFloat(phase_arrival, p->a_phase);
+			osc_bundle_u_addMsg(pmb, phase_arrival);
+
+			t_osc_msg_u *phase_departure = osc_message_u_alloc();
+			osc_message_u_setAddress(phase_departure, "/phase/departure");
+			osc_message_u_appendFloat(phase_departure, p->d_phase);
+			osc_bundle_u_addMsg(pmb, phase_departure);
+
+			t_osc_msg_u *alpha = osc_message_u_alloc();
+			osc_message_u_setAddress(alpha, "/alpha");
+			osc_message_u_appendFloat(alpha, p->alpha);
+			osc_bundle_u_addMsg(pmb, alpha);
+
+			t_osc_msg_u *beta = osc_message_u_alloc();
+			osc_message_u_setAddress(beta, "/beta");
+			osc_message_u_appendFloat(beta, p->beta);
+			osc_bundle_u_addMsg(pmb, beta);
+
+			t_osc_msg_u *error_alpha = osc_message_u_alloc();
+			osc_message_u_setAddress(error_alpha, "/error/alpha");
+			osc_message_u_appendFloat(error_alpha, p->error_alpha);
+			osc_bundle_u_addMsg(pmb, error_alpha);
+
+			t_osc_msg_u *error_beta = osc_message_u_alloc();
+			osc_message_u_setAddress(error_beta, "/error/beta");
+			osc_message_u_appendFloat(error_beta, p->error_beta);
+			osc_bundle_u_addMsg(pmb, error_beta);
+
+			long mb_s_len = 0;
+			char *mb_s = NULL;
+			osc_bundle_u_serialize(pmb, &mb_s_len, &mb_s);
+			osc_message_u_appendBndl(pm, mb_s_len, mb_s);
+			osc_bundle_u_addMsg(fb, pm);
+
+			if(mb_s){
+				osc_mem_free(mb_s);
+			}
+			p = p->next;
+			p_num++;
+		}
+		long fb_s_len = 0;
+		char *fb_s = NULL;
+		osc_bundle_u_serialize(fb, &fb_s_len, &fb_s);
+		osc_message_u_appendBndl(m, fb_s_len, fb_s);
+		if(fb_s){
+			osc_mem_free(fb_s);
+		}
+		osc_bundle_u_addMsg(b, m);
+	}
+	long len = 0;
+	char *bndl_s = NULL;
+	osc_bundle_u_serialize(b, &len, &bndl_s);
+
+	t_atom out[2];
+	atom_setlong(out, len);
+	atom_setlong(out + 1, (long)bndl_s);
+	outlet_anything(x->out_osc, ps_FullPacket, 2, out);
+
+	osc_mem_free(bndl_s);
+	osc_bundle_u_free(b);
+
+	TIMER_STOP(bar, rdtsc);
+	TIMER_PRINTF(bar);
+	return;
+	//////////////////////////////////////////////////
+	// OLD
+	//////////////////////////////////////////////////
+	{
+	TIMER_START(foo, rdtsc);
 	t_atom out[2];
 
 	char function_address[] = "/dump/function/";
@@ -3745,11 +3891,13 @@ void te_dump(t_te *x){
 
 		if((bufpos + bndlsize) > bufsize){
 			buf = (char *)realloc(buf, bufsize + bndlsize);
+			memset(buf + bufpos, '\0', bndlsize);
+			bufsize += bndlsize;
 		}
 
 
 		int npoints4 = npoints * 4;
-		int rest = function_address_size + 2 +stt + (npoints * 4);
+		int rest = function_address_size + 2 + stt + (npoints * 4);
 
 		char fn[3];
 		sprintf(fn, "%02d", i);
@@ -3886,7 +4034,13 @@ void te_dump(t_te *x){
 	atom_setlong(out, bufpos);
 	atom_setlong(out + 1, (long)buf);
 	outlet_anything(x->out_osc, ps_FullPacket, 2, out);
-	free(buf);
+	if(buf){
+		free(buf);
+	}
+
+	TIMER_STOP(foo, rdtsc);
+	TIMER_PRINTF(foo);
+	}
 }
 
 void te_processArgs_r(t_te *x,
@@ -4007,6 +4161,64 @@ int te_compare(const void *a, const void *b){
 }
 
 void te_outputBeatOSC(t_te *x, long function, long point, long beat, float time, float tempo, float phase){
+	t_osc_bndl_u *bndl = osc_bundle_u_alloc();
+	t_osc_msg_u *msg = osc_message_u_alloc();
+	char address[32];
+	sprintf(address, "/function/%ld/beat", function);
+	osc_message_u_setAddress(msg, address);
+	t_osc_bndl_u *nested_bndl = osc_bundle_u_alloc();
+	t_osc_msg_u *function_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(function_msg, "/function");
+	osc_message_u_appendInt32(function_msg, function);
+	osc_bundle_u_addMsg(nested_bndl, function_msg);
+
+	t_osc_msg_u *point_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(point_msg, "/point");
+	osc_message_u_appendInt32(point_msg, point);
+	osc_bundle_u_addMsg(nested_bndl, point_msg);
+
+	t_osc_msg_u *beat_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(beat_msg, "/beat");
+	osc_message_u_appendInt32(beat_msg, beat);
+	osc_bundle_u_addMsg(nested_bndl, beat_msg);
+
+	t_osc_msg_u *time_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(time_msg, "/time");
+	osc_message_u_appendFloat(time_msg, time);
+	osc_bundle_u_addMsg(nested_bndl, time_msg);
+
+	t_osc_msg_u *tempo_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(tempo_msg, "/tempo");
+	osc_message_u_appendFloat(tempo_msg, tempo);
+	osc_bundle_u_addMsg(nested_bndl, tempo_msg);
+
+	t_osc_msg_u *phase_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(phase_msg, "/phase");
+	osc_message_u_appendFloat(phase_msg, phase);
+	osc_bundle_u_addMsg(nested_bndl, phase_msg);
+
+	char *nested_bndl_s = NULL;
+	long nested_bndl_len_s = 0;
+	osc_bundle_u_serialize(nested_bndl, &nested_bndl_len_s, &nested_bndl_s);
+	osc_message_u_appendBndl(msg, nested_bndl_len_s, nested_bndl_s);
+	osc_bundle_u_addMsg(bndl, msg);
+
+	char *bndl_s = NULL;
+	long bndl_len_s = 0;
+
+	osc_bundle_u_serialize(bndl, &bndl_len_s, &bndl_s);
+
+	t_atom foo[2];
+	atom_setlong(foo, bndl_len_s);
+	atom_setlong(foo + 1, (long)bndl_s);
+	outlet_anything(x->out_osc, ps_FullPacket, 2, foo);
+
+	osc_bundle_u_free(bndl);
+	osc_mem_free(nested_bndl_s);
+	osc_mem_free(bndl_s);
+
+	return;
+
 	struct {
 		char header[16];
 		char function_size[4];
@@ -4083,6 +4295,74 @@ void te_outputBeatOSC(t_te *x, long function, long point, long beat, float time,
 }
 
 void te_outputSubdivOSC(t_te *x, long function, long point, long beat, long subdivtype, long subdiv, float time, float tempo, float phase){
+	t_osc_bndl_u *bndl = osc_bundle_u_alloc();
+	t_osc_msg_u *msg = osc_message_u_alloc();
+	char address[32];
+	sprintf(address, "/function/%ld/subdiv/%ld", function, subdivtype);
+	osc_message_u_setAddress(msg, address);
+	t_osc_bndl_u *nested_bndl = osc_bundle_u_alloc();
+	t_osc_msg_u *function_msg = osc_message_u_alloc();
+
+	osc_message_u_setAddress(function_msg, "/function");
+	osc_message_u_appendInt32(function_msg, function);
+	osc_bundle_u_addMsg(nested_bndl, function_msg);
+
+	t_osc_msg_u *point_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(point_msg, "/point");
+	osc_message_u_appendInt32(point_msg, point);
+	osc_bundle_u_addMsg(nested_bndl, point_msg);
+
+	t_osc_msg_u *beat_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(beat_msg, "/beat");
+	osc_message_u_appendInt32(beat_msg, beat);
+	osc_bundle_u_addMsg(nested_bndl, beat_msg);
+
+	t_osc_msg_u *subdivtype_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(subdivtype_msg, "/subdivtype");
+	osc_message_u_appendInt32(subdivtype_msg, subdivtype);
+	osc_bundle_u_addMsg(nested_bndl, subdivtype_msg);
+
+	t_osc_msg_u *subdiv_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(subdiv_msg, "/subdiv");
+	osc_message_u_appendInt32(subdiv_msg, subdiv);
+	osc_bundle_u_addMsg(nested_bndl, subdiv_msg);
+
+	t_osc_msg_u *time_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(time_msg, "/time");
+	osc_message_u_appendFloat(time_msg, time);
+	osc_bundle_u_addMsg(nested_bndl, time_msg);
+
+	t_osc_msg_u *tempo_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(tempo_msg, "/tempo");
+	osc_message_u_appendFloat(tempo_msg, tempo);
+	osc_bundle_u_addMsg(nested_bndl, tempo_msg);
+
+	t_osc_msg_u *phase_msg = osc_message_u_alloc();
+	osc_message_u_setAddress(phase_msg, "/phase");
+	osc_message_u_appendFloat(phase_msg, phase);
+	osc_bundle_u_addMsg(nested_bndl, phase_msg);
+
+	char *nested_bndl_s = NULL;
+	long nested_bndl_len_s = 0;
+	osc_bundle_u_serialize(nested_bndl, &nested_bndl_len_s, &nested_bndl_s);
+	osc_message_u_appendBndl(msg, nested_bndl_len_s, nested_bndl_s);
+	osc_bundle_u_addMsg(bndl, msg);
+
+	char *bndl_s = NULL;
+	long bndl_len_s = 0;
+
+	osc_bundle_u_serialize(bndl, &bndl_len_s, &bndl_s);
+
+	t_atom foo[2];
+	atom_setlong(foo, bndl_len_s);
+	atom_setlong(foo + 1, (long)bndl_s);
+	outlet_anything(x->out_osc, ps_FullPacket, 2, foo);
+
+	osc_bundle_u_free(bndl);
+	osc_mem_free(nested_bndl_s);
+	osc_mem_free(bndl_s);
+
+	return;
 	struct {
 		char header[16];
 		char function_size[4];
@@ -4184,7 +4464,6 @@ void te_dumpBeatsForFunction(t_te *x,
 			     double time_min, 
 			     double time_max)
 {
-
 	//int function;
 	double t;
 	//t_atom out[9];
@@ -4532,7 +4811,7 @@ void te_freq_minmax(t_te *x, double min, double max){
 	jbox_redraw((t_jbox *)x);
 }
 
-void te_outputMinMax(t_te *x, char *minstring, char *maxstring, float minval, float maxval){
+void te_outputMinMax(t_te *x, const char *minstring, const char *maxstring, float minval, float maxval){
 	struct {
 		char header[16];
 		char min_size[4];
