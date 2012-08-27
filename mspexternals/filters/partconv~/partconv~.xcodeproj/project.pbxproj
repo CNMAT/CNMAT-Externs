@@ -139,7 +139,6 @@
 			isa = PBXProject;
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "partconv~" */;
 			compatibilityVersion = "Xcode 3.0";
-			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
