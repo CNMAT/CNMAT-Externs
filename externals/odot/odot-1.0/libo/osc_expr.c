@@ -1423,7 +1423,7 @@ int osc_expr_cumsum(t_osc_expr *f, int argc, t_osc_atom_ar_u **argv, t_osc_atom_
 		
 	for(i = 0; i < argc; i++){
 		int j;
-		for(j = 0; j < osc_atom_array_u_getLen(argv[j]); j++){
+		for(j = 0; j < osc_atom_array_u_getLen(argv[i]); j++){
 			val += osc_atom_u_getDouble(osc_atom_array_u_get(argv[i], j));
 			osc_atom_u_setDouble(osc_atom_array_u_get(*out, k++), val);
 		}
