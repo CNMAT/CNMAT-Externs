@@ -74,6 +74,8 @@
 #include <math.h>
 #include <limits.h>
 #include "ext.h"
+#include "ext_obex.h"
+#include "ext_obex_util.h"
 
 /* Undo ext.h's macro versions of some of stdio.h: */
 #undef fopen
@@ -135,7 +137,7 @@ typedef struct _SDIFtuples {
 	SDIFbuf_Buffer t_buf;           //  provides API to manipulate buffer contents
 	SDIFinterp_Interpolator t_it;   //  interpolator matrix
 	Boolean t_itValid;              //  is interpolator matrix still valid?
- 	void *t_out;
+ 	void *t_out, *t_infoout;
  	Boolean t_errorreporting;
  	Boolean t_complainedAboutEmptyBufferAlready;
 
@@ -209,9 +211,9 @@ static void SetupInterpolator(SDIFtuples *x,
                               InterpMode mode);
 void SDIFtuples_print(SDIFtuples *x);
 void SDIFtuples_tellmeeverything(SDIFtuples *x);
-void PrintOneFrame(SDIFmem_Frame f);
-void PrintFrameHeader(SDIF_FrameHeader *fh);
-void PrintMatrixHeader(SDIF_MatrixHeader *mh);
+void PrintOneFrame(SDIFtuples *x, SDIFmem_Frame f);
+void PrintFrameHeader(SDIFtuples *x, SDIF_FrameHeader *fh);
+void PrintMatrixHeader(SDIFtuples *x, SDIF_MatrixHeader *mh);
 
 
 int main(int dummy, char **dummy2) {
@@ -300,6 +302,7 @@ void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
 	x->t_errorreporting = FALSE;
 	x->t_complainedAboutEmptyBufferAlready = FALSE;
 	x->t_buffer = 0;
+	x->t_infoout = outlet_new(x, NULL);
 	x->t_out = listout(x);
 	
 	if (argc >= 1) {
@@ -1045,21 +1048,34 @@ void SDIFtuples_print(SDIFtuples *x) {
 			sdif_float64 tMin, tMax;
 		  
 			// post("* ob_sym(x->t_buffer)->s_name: %s", ob_sym(x->t_buffer)->s_name);
+
+			t_atom a;
 			
 			post("SDIFtuples: SDIF-buffer \"%s\"", x->t_buffer->s_myname->s_name);
+			atom_setsym(&a, x->t_buffer->s_myname);
+			outlet_anything(x->t_infoout, gensym("SDIF-buffer"), 1, &a);
 			if(f = SDIFbuf_GetFirstFrame(x->t_buf)) {
 	  			post("   Stream ID %ld, Frame Type %c%c%c%c", x->t_buffer->streamID,
 				     f->header.frameType[0], f->header.frameType[1], f->header.frameType[2], f->header.frameType[3]);
+				atom_setlong(&a, x->t_buffer->streamID);
+				outlet_anything(x->t_infoout, gensym("streamID"), 1, &a);
+				char buf[] = {f->header.frameType[0], f->header.frameType[1], f->header.frameType[2], f->header.frameType[3], '\0'};
+				atom_setsym(&a, gensym(buf));
+				outlet_anything(x->t_infoout, gensym("frametype"), 1, &a);
 				SDIFbuf_GetMinTime(x->t_buf, &tMin);
 				SDIFbuf_GetMaxTime(x->t_buf, &tMax);
 				post("   Min time %g, Max time %g", tMin, tMax);
+				atom_setfloat(&a, tMin);
+				outlet_anything(x->t_infoout, gensym("mintime"), 1, &a);
+				atom_setfloat(&a, tMax);
+				outlet_anything(x->t_infoout, gensym("maxtime"), 1, &a);
 			
 				// post("Calling FrameLookup(VERY_SMALL, 1)");
 				// f = (*(x->t_buffer->FrameLookup))(x->t_buffer, (sdif_float64) VERY_SMALL, 1);
 				// post("It returned %p", f);
 			
 				for (/* f already set */; f != NULL; f = f->next) {
-					PrintOneFrame(f);
+					PrintOneFrame(x, f);
 				}
 			} else {
 				post("No frames.");
@@ -1068,28 +1084,68 @@ void SDIFtuples_print(SDIFtuples *x) {
 	}
 }
 
-void PrintOneFrame(SDIFmem_Frame f) {
+void PrintOneFrame(SDIFtuples *x, SDIFmem_Frame f) {
 	SDIFmem_Matrix m;
 	if (f == 0) {
 		post("PrintOneFrame: null SDIFmem_Frame pointer");
 		return;
 	}
 	// post("SDIF frame at %p, prev is %p, next is %p", f, f->prev, f->next);
-	PrintFrameHeader(&(f->header));
+	PrintFrameHeader(x, &(f->header));
 	
 	for (m = f->matrices; m != 0; m=m->next) {
-		PrintMatrixHeader(&(m->header));
+		PrintMatrixHeader(x, &(m->header));
 	}
 }
 
-void PrintFrameHeader(SDIF_FrameHeader *fh) {
+void PrintFrameHeader(SDIFtuples *x, SDIF_FrameHeader *fh) {
 	post(" Frame header: type %c%c%c%c, size %ld, time %g, stream ID %ld, %ld matrices",
 	     fh->frameType[0], fh->frameType[1], fh->frameType[2], fh->frameType[3], 
 	     fh->size, fh->time, fh->streamID, fh->matrixCount);
+
+	t_atom a[2];
+	atom_setsym(a, gensym("type"));
+	char buf[] = {fh->frameType[0], fh->frameType[1], fh->frameType[2], fh->frameType[3], '\0'};
+	atom_setsym(a + 1, gensym(buf));
+	outlet_anything(x->t_infoout, gensym("frameheader"), 2, a);
+
+	atom_setsym(a, gensym("size"));
+	atom_setlong(a + 1, fh->size);
+	outlet_anything(x->t_infoout, gensym("frameheader"), 2, a);
+
+	atom_setsym(a, gensym("time"));
+	atom_setfloat(a + 1, fh->time);
+	outlet_anything(x->t_infoout, gensym("frameheader"), 2, a);
+
+	atom_setsym(a, gensym("streamID"));
+	atom_setlong(a + 1, fh->streamID);
+	outlet_anything(x->t_infoout, gensym("frameheader"), 2, a);
+
+	atom_setsym(a, gensym("matrixcount"));
+	atom_setlong(a + 1, fh->matrixCount);
+	outlet_anything(x->t_infoout, gensym("frameheader"), 2, a);
 }
 	
-void PrintMatrixHeader(SDIF_MatrixHeader *mh) {
+void PrintMatrixHeader(SDIFtuples *x, SDIF_MatrixHeader *mh) {
 	post("  Matrix header: type %c%c%c%c, data type 0x%x, %ld rows, %ld cols",
 	     mh->matrixType[0], mh->matrixType[1], mh->matrixType[2], mh->matrixType[3],
 	     mh->matrixDataType, mh->rowCount, mh->columnCount);
+
+	t_atom a[2];
+	atom_setsym(a, gensym("type"));
+	char buf[] = {mh->matrixType[0], mh->matrixType[1], mh->matrixType[2], mh->matrixType[3], '\0'};
+	atom_setsym(a + 1, gensym(buf));
+	outlet_anything(x->t_infoout, gensym("matrixheader"), 2, a);
+
+	atom_setsym(a, gensym("datatype"));
+	atom_setlong(a + 1, mh->matrixDataType);
+	outlet_anything(x->t_infoout, gensym("matrixheader"), 2, a);
+
+	atom_setsym(a, gensym("rowcount"));
+	atom_setlong(a + 1, mh->rowCount);
+	outlet_anything(x->t_infoout, gensym("matrixheader"), 2, a);
+
+	atom_setsym(a, gensym("colcount"));
+	atom_setlong(a + 1, mh->columnCount);
+	outlet_anything(x->t_infoout, gensym("matrixheader"), 2, a);
 }
