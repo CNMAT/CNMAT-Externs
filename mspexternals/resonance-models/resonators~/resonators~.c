@@ -172,6 +172,11 @@ const 	t_float *in = (t_float *)(w[2]);
 	}
 
 #ifdef SQUASH_DENORMALS
+	static int sq;
+	if(!sq){
+		printf("squashing denormals\n");
+		sq++;
+	}
 #if defined( __i386__ ) || defined( __x86_64__ )	
 		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting 
 		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits 
