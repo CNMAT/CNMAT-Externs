@@ -41,9 +41,10 @@
 #include "jgraphics.h" 
 #include "version.c" 
 #include "time.h"
+#include "osc.h"
 #include "omax_util.h"
-#include "osc_util.h"
-#include "osc_match.h"
+//#include "osc_util.h"
+//#include "osc_match.h"
 
 #define PF __PRETTY_FUNCTION__
 
@@ -581,14 +582,20 @@ void twpm_set_timepoints(t_twpm *x, t_symbol *msg, int argc, t_atom *argv){
 	if(atom_getsym(argv) == ps_FullPacket){
 		char *buf = (char *)atom_getlong(argv + 2);
 		long len = atom_getlong(argv + 1);
-		t_osc_msg osc_msg[osc_util_getMsgCount(len, buf)];
-		osc_util_parseBundle(len, buf, osc_msg);
-		int i;
-		for(i = 0; i < sizeof(osc_msg) / sizeof(t_osc_msg); i++){
+		//t_osc_msg osc_msg[osc_util_getMsgCount(len, buf)];
+		//osc_util_parseBundle(len, buf, osc_msg);
+		t_osc_msg *osc_msg;
+		int n = 0;
+		osc_bundle_getMessages(len, buf, &n, &osc_msg);
+		//int i;
+		//for(i = 0; i < sizeof(osc_msg) / sizeof(t_osc_msg); i++){
+		while(osc_msg){
 			long ac;
-			t_atom av[osc_util_getArgCount(osc_msg + i)];
+			//t_atom av[osc_util_getArgCount(osc_msg + i)];
+			//t_atom av[osc_util_getArgCount(osc_msg)];
+			t_atom av[osc_message_getArgCount(osc_msg)];
 			t_symbol *address = NULL;
-			omax_util_oscMsg2MaxAtoms(osc_msg + i, &ac, av);
+			omax_util_oscMsg2MaxAtoms(osc_msg, &ac, av);
 			address = atom_getsym(av);
 			int po, ao;
 			if(address == ps_beats){
@@ -618,6 +625,7 @@ void twpm_set_timepoints(t_twpm *x, t_symbol *msg, int argc, t_atom *argv){
 				}
 				hashtab_store(x->subdivs_ht, address, (t_object *)fb);
 			}
+			osc_msg = osc_msg->next;
 		}
 	}else{
 
@@ -630,25 +638,30 @@ void twpm_fullPacket(t_twpm *x, long len, long ptr){
 	t_event *e = twpm_event_alloc();
 	t_osc_msg *time = NULL, *notes = NULL;
 	char *buf = (char *)ptr;
-	t_osc_msg msg[osc_util_getMsgCount(len, buf)];
-	osc_util_parseBundle(len, buf, msg);
-	int i;
-	for(i = 0; i < sizeof(msg) / sizeof(t_osc_msg); i++){
+	//t_osc_msg msg[osc_util_getMsgCount(len, buf)];
+	//osc_util_parseBundle(len, buf, msg);
+	//int i;
+	t_osc_msg *msg;
+	int n = 0;
+	osc_bundle_getMessages(len, buf, &n, &msg);
+	//for(i = 0; i < sizeof(msg) / sizeof(t_osc_msg); i++){
+	while(msg){
 		long ac;
-		t_atom av[osc_util_getArgCount(msg + i)];
+		t_atom av[osc_message_getArgCount(msg)];
 		t_symbol *address = NULL;
-		omax_util_oscMsg2MaxAtoms(msg + i, &ac, av);
+		omax_util_oscMsg2MaxAtoms(msg, &ac, av);
 		address = atom_getsym(av);
 		if(address == ps_notes){
-			notes = msg + i;
+			notes = msg;
 			twpm_addMessageToEvent(e, address, DEF_NOTE_COUNT, ac - 1, av + 1);
 		}else if(address == ps_time){
-			time = msg + i;
+			time = msg;
 			t_twpm_osc_msg *m = twpm_addMessageToEvent(e, address, 1, 1, av + 1);
 			e->time = m->argv;
 		}else{
 			twpm_addMessageToEvent(e, address, ac - 1, ac - 1, av + 1);
 		}
+		msg = msg->next;
 	}
 	if(!time){
 		object_error((t_object *)x, "OSC bundle without /time message");
@@ -1436,7 +1449,7 @@ void twpm_free(t_twpm *x){
 } 
 
 int main(void){ 
- 	t_class *c = class_new("timewarp.pitchmap", (method)twpm_new, (method)twpm_free, sizeof(t_twpm), 0L, A_GIMME, 0); 
+ 	t_class *c = class_new("timewarp.pitchmap", (method)twpm_new, (method)twpm_free, sizeof(t_twpm), 0L, A_GIMME, 0);
 	//class_dspinitjbox(c);
 
  	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
