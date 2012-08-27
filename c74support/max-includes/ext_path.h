@@ -203,11 +203,11 @@ short path_getsupportpath(void);
 #ifdef MAC_VERSION
 
 #ifndef __FILES__
-#include <Files.h>
+#include "/System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/Files.h"
 #endif // __FILES__
 	
 short path_tofsref(C74_CONST short path, C74_CONST char *filename, FSRef *ref);
-short path_fromfsref(FSRef *ref); 
+short path_fromfsref(FSRef *ref);
 #endif // MAC_VERSION
 
 void path_namefrompathname(char *pathname, char *name);

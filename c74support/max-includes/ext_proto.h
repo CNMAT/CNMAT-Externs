@@ -332,6 +332,7 @@ t_symbol *gensym(C74_CONST char *s);
  @return		A pointer to the #t_symbol in the symbol table.
  */
 	
+#define gensym_tr gensym
 //t_symbol *gensym_tr(char *s);
 
 // other translation stuff, to be documented...
