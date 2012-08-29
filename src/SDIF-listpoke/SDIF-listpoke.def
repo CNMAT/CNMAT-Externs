@@ -1,6 +1,0 @@
-;SDIF-listpoke.def
-
-LIBRARY SDIF-listpoke
-
-EXPORTS
-	main
