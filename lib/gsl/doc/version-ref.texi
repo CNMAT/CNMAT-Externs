@@ -1,0 +1,4 @@
+@set UPDATED 30 March 2006
+@set UPDATED-MONTH March 2006
+@set EDITION 1.8
+@set VERSION 1.8
