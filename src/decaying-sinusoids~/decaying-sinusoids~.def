@@ -1,0 +1,6 @@
+;decaying-sinusoids~.def
+
+LIBRARY decaying-sinusoids~
+
+EXPORTS
+	main

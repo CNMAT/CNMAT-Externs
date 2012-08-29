@@ -1,0 +1,6 @@
+;peqbank~.def
+
+LIBRARY peqbank~
+
+EXPORTS
+	main

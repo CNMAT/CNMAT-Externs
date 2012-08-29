@@ -1,0 +1,6 @@
+NAME: "jit.rtp.send"
+DESCRIPTION: "similar to matrix~, but takes jitter matricies"
+AUTHORS: "Yotam Mann"
+COPYRIGHT_YEARS: "2009, 1999"
+SVN_REVISION: "$LastChangedRevision: 587 $"
+VERSION: ""
