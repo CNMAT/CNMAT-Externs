@@ -1,6 +1,0 @@
-;SDIF-ranges.def
-
-LIBRARY SDIF-ranges
-
-EXPORTS
-	main
