@@ -1,0 +1,55 @@
+all: include/gsl lib/libgsl.a
+
+clean:
+	rm -rf lib arch_i386 arch_ppc include
+
+lib/exists:
+	mkdir lib
+	touch $@
+
+lib/libgsl.a: lib/libgsl_ppc.a lib/libgsl_i386.a
+	echo "Making the universal binary..."
+	cd lib; lipo -create libgsl_ppc.a libgsl_i386.a -output libgsl.a
+	cd lib; ranlib libgsl.a
+
+lib/libgsl_i386.a: arch_i386/.libs/libgsl.a lib/exists
+	cp $< $@
+
+arch_i386/.libs/libgsl.a: arch_i386/Makefile
+	echo "Building i386"
+	cd arch_i386 ; make "CFLAGS +=  -arch i386"
+
+arch_i386/Makefile: arch_i386/configure
+	cd arch_i386 ; ./configure --build=i386-apple
+
+arch_i386/configure: configure arch_i386/exists
+	cp $< $@
+
+arch_i386/exists:
+	mkdir arch_i386
+	touch $@
+
+lib/libgsl_ppc.a: arch_ppc/.libs/libgsl.a lib/exists
+	cp $< $@	
+
+arch_ppc/.libs/libgsl.a: arch_ppc/Makefile
+	echo "Building PPC"
+	cd arch_ppc ; make "CFLAGS +=  -arch ppc"
+
+arch_ppc/Makefile: arch_ppc/configure
+	cd arch_ppc ; ./configure --build=powerpc-apple
+
+arch_ppc/configure: configure arch_ppc/exists
+	cp $< $@
+
+arch_ppc/exists:
+	mkdir arch_ppc
+	touch $@
+
+include/gsl: include/exists arch_i386/.libs/libgsl.a
+	mkdir $@
+	cp arch_i386/gsl/*.h include/gsl/
+
+include/exists: 
+	mkdir include
+	touch $@

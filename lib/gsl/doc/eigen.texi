@@ -1,0 +1,245 @@
+@cindex eigenvalues and eigenvectors
+This chapter describes functions for computing eigenvalues and
+eigenvectors of matrices.  There are routines for real symmetric and
+complex hermitian matrices, and eigenvalues can be computed with or
+without eigenvectors.  The algorithms used are symmetric
+bidiagonalization followed by QR reduction.
+
+@cindex LAPACK, recommended for linear algebra
+These routines are intended for ``small'' systems where simple algorithms are
+acceptable.  Anyone interested in finding eigenvalues and eigenvectors of
+large matrices will want to use the sophisticated routines found in
+@sc{lapack}. The Fortran version of @sc{lapack} is recommended as the
+standard package for large-scale linear algebra.
+
+The functions described in this chapter are declared in the header file
+@file{gsl_eigen.h}.
+
+@menu
+* Real Symmetric Matrices::     
+* Complex Hermitian Matrices::  
+* Sorting Eigenvalues and Eigenvectors::  
+* Eigenvalue and Eigenvector Examples::  
+* Eigenvalue and Eigenvector References::  
+@end menu
+
+@node Real Symmetric Matrices
+@section Real Symmetric Matrices
+@cindex symmetric matrix, real, eigensystem
+@cindex real symmetric matrix, eigensystem
+
+@deftypefun {gsl_eigen_symm_workspace *} gsl_eigen_symm_alloc (const size_t @var{n})
+This function allocates a workspace for computing eigenvalues of
+@var{n}-by-@var{n} real symmetric matrices.  The size of the workspace
+is @math{O(2n)}.
+@end deftypefun
+
+@deftypefun void gsl_eigen_symm_free (gsl_eigen_symm_workspace * @var{w})
+This function frees the memory associated with the workspace @var{w}.
+@end deftypefun
+
+@deftypefun int gsl_eigen_symm (gsl_matrix * @var{A}, gsl_vector * @var{eval}, gsl_eigen_symm_workspace * @var{w})
+This function computes the eigenvalues of the real symmetric matrix
+@var{A}.  Additional workspace of the appropriate size must be provided
+in @var{w}.  The diagonal and lower triangular part of @var{A} are
+destroyed during the computation, but the strict upper triangular part
+is not referenced.  The eigenvalues are stored in the vector @var{eval}
+and are unordered.
+@end deftypefun
+
+@deftypefun {gsl_eigen_symmv_workspace *} gsl_eigen_symmv_alloc (const size_t @var{n})
+This function allocates a workspace for computing eigenvalues and
+eigenvectors of @var{n}-by-@var{n} real symmetric matrices.  The size of
+the workspace is @math{O(4n)}.
+@end deftypefun
+
+@deftypefun void gsl_eigen_symmv_free (gsl_eigen_symmv_workspace * @var{w})
+This function frees the memory associated with the workspace @var{w}.
+@end deftypefun
+
+@deftypefun int gsl_eigen_symmv (gsl_matrix * @var{A}, gsl_vector * @var{eval}, gsl_matrix * @var{evec}, gsl_eigen_symmv_workspace * @var{w})
+This function computes the eigenvalues and eigenvectors of the real
+symmetric matrix @var{A}.  Additional workspace of the appropriate size
+must be provided in @var{w}.  The diagonal and lower triangular part of
+@var{A} are destroyed during the computation, but the strict upper
+triangular part is not referenced.  The eigenvalues are stored in the
+vector @var{eval} and are unordered.  The corresponding eigenvectors are
+stored in the columns of the matrix @var{evec}.  For example, the
+eigenvector in the first column corresponds to the first eigenvalue.
+The eigenvectors are guaranteed to be mutually orthogonal and normalised
+to unit magnitude.
+@end deftypefun
+
+@node Complex Hermitian Matrices
+@section Complex Hermitian Matrices
+
+@cindex hermitian matrix, complex, eigensystem
+@cindex complex hermitian matrix, eigensystem
+
+@deftypefun {gsl_eigen_herm_workspace *} gsl_eigen_herm_alloc (const size_t @var{n})
+This function allocates a workspace for computing eigenvalues of
+@var{n}-by-@var{n} complex hermitian matrices.  The size of the workspace
+is @math{O(3n)}.
+@end deftypefun
+
+@deftypefun void gsl_eigen_herm_free (gsl_eigen_herm_workspace * @var{w})
+This function frees the memory associated with the workspace @var{w}.
+@end deftypefun
+
+@deftypefun int gsl_eigen_herm (gsl_matrix_complex * @var{A}, gsl_vector * @var{eval}, gsl_eigen_herm_workspace * @var{w})
+This function computes the eigenvalues of the complex hermitian matrix
+@var{A}.  Additional workspace of the appropriate size must be provided
+in @var{w}.  The diagonal and lower triangular part of @var{A} are
+destroyed during the computation, but the strict upper triangular part
+is not referenced.  The imaginary parts of the diagonal are assumed to be
+zero and are not referenced. The eigenvalues are stored in the vector
+@var{eval} and are unordered.
+@end deftypefun
+
+@deftypefun {gsl_eigen_hermv_workspace *} gsl_eigen_hermv_alloc (const size_t @var{n})
+This function allocates a workspace for computing eigenvalues and
+eigenvectors of @var{n}-by-@var{n} complex hermitian matrices.  The size of
+the workspace is @math{O(5n)}.
+@end deftypefun
+
+@deftypefun void gsl_eigen_hermv_free (gsl_eigen_hermv_workspace * @var{w})
+This function frees the memory associated with the workspace @var{w}.
+@end deftypefun
+
+@deftypefun int gsl_eigen_hermv (gsl_matrix_complex * @var{A}, gsl_vector * @var{eval}, gsl_matrix_complex * @var{evec}, gsl_eigen_hermv_workspace * @var{w})
+This function computes the eigenvalues and eigenvectors of the complex
+hermitian matrix @var{A}.  Additional workspace of the appropriate size
+must be provided in @var{w}.  The diagonal and lower triangular part of
+@var{A} are destroyed during the computation, but the strict upper
+triangular part is not referenced. The imaginary parts of the diagonal
+are assumed to be zero and are not referenced.  The eigenvalues are
+stored in the vector @var{eval} and are unordered.  The corresponding
+complex eigenvectors are stored in the columns of the matrix @var{evec}.
+For example, the eigenvector in the first column corresponds to the
+first eigenvalue.  The eigenvectors are guaranteed to be mutually
+orthogonal and normalised to unit magnitude.
+@end deftypefun
+
+@node Sorting Eigenvalues and Eigenvectors
+@section Sorting Eigenvalues and Eigenvectors
+@cindex sorting eigenvalues and eigenvectors
+
+@deftypefun int gsl_eigen_symmv_sort (gsl_vector * @var{eval}, gsl_matrix * @var{evec}, gsl_eigen_sort_t @var{sort_type})
+This function simultaneously sorts the eigenvalues stored in the vector
+@var{eval} and the corresponding real eigenvectors stored in the columns
+of the matrix @var{evec} into ascending or descending order according to
+the value of the parameter @var{sort_type},
+
+@table @code
+@item GSL_EIGEN_SORT_VAL_ASC
+ascending order in numerical value
+@item GSL_EIGEN_SORT_VAL_DESC
+descending order in numerical value
+@item GSL_EIGEN_SORT_ABS_ASC
+ascending order in magnitude
+@item GSL_EIGEN_SORT_ABS_DESC
+descending order in magnitude
+@end table
+
+@end deftypefun
+
+@deftypefun int gsl_eigen_hermv_sort (gsl_vector * @var{eval}, gsl_matrix_complex * @var{evec}, gsl_eigen_sort_t @var{sort_type})
+This function simultaneously sorts the eigenvalues stored in the vector
+@var{eval} and the corresponding complex eigenvectors stored in the
+columns of the matrix @var{evec} into ascending or descending order
+according to the value of the parameter @var{sort_type} as shown above.
+@end deftypefun
+
+
+@comment @deftypefun int gsl_eigen_jacobi (gsl_matrix * @var{matrix}, gsl_vector * @var{eval}, gsl_matrix * @var{evec}, unsigned int @var{max_rot}, unsigned int * @var{nrot})
+@comment This function finds the eigenvectors and eigenvalues of a real symmetric
+@comment matrix by Jacobi iteration. The data in the input matrix is destroyed.
+@comment @end deftypefun
+
+@comment @deftypefun int gsl_la_invert_jacobi (const gsl_matrix * @var{matrix}, gsl_matrix * @var{ainv}, unsigned int @var{max_rot})
+@comment Invert a matrix by Jacobi iteration.
+@comment @end deftypefun
+
+@comment @deftypefun int gsl_eigen_sort (gsl_vector * @var{eval}, gsl_matrix * @var{evec}, gsl_eigen_sort_t @var{sort_type})
+@comment This functions sorts the eigensystem results based on eigenvalues.
+@comment Sorts in order of increasing value or increasing
+@comment absolute value, depending on the value of
+@comment @var{sort_type}, which can be @code{GSL_EIGEN_SORT_VALUE}
+@comment or @code{GSL_EIGEN_SORT_ABSVALUE}.
+@comment @end deftypefun
+
+@node Eigenvalue and Eigenvector Examples
+@section Examples
+
+The following program computes the eigenvalues and eigenvectors of the 4-th order Hilbert matrix, @math{H(i,j) = 1/(i + j + 1)}.
+
+@example
+@verbatiminclude examples/eigen.c
+@end example
+
+@noindent
+Here is the beginning of the output from the program,
+
+@example
+$ ./a.out 
+eigenvalue = 9.67023e-05
+eigenvector = 
+-0.0291933
+0.328712
+-0.791411
+0.514553
+...
+@end example
+
+@noindent
+This can be compared with the corresponding output from @sc{gnu octave},
+
+@example
+octave> [v,d] = eig(hilb(4));
+octave> diag(d)  
+ans =
+
+   9.6702e-05
+   6.7383e-03
+   1.6914e-01
+   1.5002e+00
+
+octave> v 
+v =
+
+   0.029193   0.179186  -0.582076   0.792608
+  -0.328712  -0.741918   0.370502   0.451923
+   0.791411   0.100228   0.509579   0.322416
+  -0.514553   0.638283   0.514048   0.252161
+@end example
+
+@noindent
+Note that the eigenvectors can differ by a change of sign, since the
+sign of an eigenvector is arbitrary.
+
+@node Eigenvalue and Eigenvector References
+@section References and Further Reading
+
+Further information on the algorithms described in this section can be
+found in the following book,
+
+@itemize @asis
+@item
+G. H. Golub, C. F. Van Loan, @cite{Matrix Computations} (3rd Ed, 1996),
+Johns Hopkins University Press, ISBN 0-8018-5414-8.
+@end itemize
+
+@noindent
+The @sc{lapack} library is described in,
+
+@itemize @asis
+@item
+@cite{LAPACK Users' Guide} (Third Edition, 1999), Published by SIAM,
+ISBN 0-89871-447-8.
+
+@uref{http://www.netlib.org/lapack} 
+@end itemize
+
+@noindent
+The @sc{lapack} source code can be found at the website above along with
+an online copy of the users guide.
