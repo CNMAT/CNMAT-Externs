@@ -1,6 +1,0 @@
-;SDIF-buffer.def
-
-LIBRARY SDIF-buffer
-
-EXPORTS
-	main
