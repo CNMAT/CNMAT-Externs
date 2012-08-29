@@ -1,6 +1,0 @@
-;SDIF-tuples.def
-
-LIBRARY SDIF-tuples
-
-EXPORTS
-	main
