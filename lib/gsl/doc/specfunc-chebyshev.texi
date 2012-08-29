@@ -1,0 +1,138 @@
+@comment
+@node Chebyshev Polynomials
+@section Chebyshev Polynomials
+@cindex Chebyshev polynomials
+@cindex polynomials, Chebyshev
+The Chebyshev polynomials 
+@c{$T_n(x) = \cos(n \arccos x)$}
+@math{T_n(x) = \cos(n \arccos x)} provide an 
+orthogonal basis of polynomials on the interval @math{[-1,1]},
+with the weight function 
+@c{$1 \over \sqrt{1-x^2}$}
+@math{1 \over \sqrt@{1-x^2@}}.  The first few such
+polynomials are
+
+@tex
+\beforedisplay
+$$
+\eqalign{
+ T_0(x) & = 1, \cr
+ T_1(x) & = x, \cr
+ T_2(x) & = 2 x^2 - 1.
+}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+@example
+ T_0(x) = 1,
+ T_1(x) = x,
+ T_2(x) = 2 x^2 - 1.
+@end example
+@end ifinfo
+
+
+@node The gsl_sf_cheb_series struct
+@subsection The gsl_sf_cheb_series struct
+@cindex Chebyshev series
+@cindex series, Chebyshev
+@example
+typedef struct
+@{
+  double * c;   /* coefficients                */
+  int order;    /* order of expansion          */
+  double a;     /* lower interval point        */
+  double b;     /* upper interval point        */
+  double * cp;  /* coefficients of derivative  */
+  double * ci;  /* coefficients of integral    */
+
+  /* The following exists (mostly) for the benefit
+   * of the implementation.  It is an effective single
+   * precision order, for use in single precision
+   * evaluation.  Users can use it if they like, but
+   * only they know how to calculate it, since it is
+   * specific to the approximated function.  By default,
+   * order_sp = order.
+   * It is used explicitly only by the gsl_sf_cheb_eval_mode
+   * functions, which are not meant for casual use.
+
+  int order_sp;
+@} gsl_sf_cheb_struct
+@end example
+
+
+
+@node Creation/Calculation of Chebyshev Series
+@subsection Creation/Calculation of Chebyshev Series
+
+
+@deftypefun {gsl_sf_cheb_series *} gsl_sf_cheb_new (double (*@var{func})(@var{double}), double @var{a}, double @var{b}, int @var{order})
+Calculate a Chebyshev series of specified order over
+a specified interval, for a given function.
+Return 0 on failure.
+@end deftypefun
+
+
+@deftypefun int gsl_sf_cheb_calc_e (gsl_sf_cheb_series * @var{cs}, double (*@var{func})(@var{double}))
+Calculate a Chebyshev series, but do not allocate
+a new cheb_series struct.  Instead use the one provided.
+Uses the interval (a,b) and the order with which it
+was initially created; if you want to change these, then
+use gsl_sf_cheb_new() instead.
+@comment Exceptional Return Values: GSL_EFAULT, GSL_ENOMEM
+@end deftypefun
+
+
+
+
+@node Chebyshev Series Evaluation
+@subsection Chebyshev Series Evaluation
+
+
+@deftypefun double gsl_sf_cheb_eval (const gsl_sf_cheb_series * @var{cs}, double @var{x})
+@deftypefunx int gsl_sf_cheb_eval_e (const gsl_sf_cheb_series * @var{cs}, double @var{x}, gsl_sf_result * @var{result})
+Evaluate a Chebyshev series at a given point.
+No errors can occur for a struct obtained from gsl_sf_cheb_new().
+@end deftypefun
+
+
+@deftypefun double gsl_sf_cheb_eval_n (const gsl_sf_cheb_series * @var{cs}, int @var{order}, double @var{x})
+@deftypefunx int gsl_sf_cheb_eval_n_e (const gsl_sf_cheb_series * @var{cs}, int @var{order}, double @var{x}, gsl_sf_result * @var{result})
+Evaluate a Chebyshev series at a given point, to (at most) the given order.
+No errors can occur for a struct obtained from gsl_sf_cheb_new().
+@end deftypefun
+
+
+@deftypefun double gsl_sf_cheb_eval_mode (const gsl_sf_cheb_series * @var{cs}, double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_cheb_eval_mode_e (const gsl_sf_cheb_series * @var{cs}, double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+Evaluate a Chebyshev series at a given point, using the default
+order for double precision mode(s) and the single precision
+order for other modes.
+No errors can occur for a struct obtained from gsl_sf_cheb_new().
+@end deftypefun
+
+
+@deftypefun double gsl_sf_cheb_eval_deriv (gsl_sf_cheb_series * @var{cs}, double @var{x})
+@deftypefunx int gsl_sf_cheb_eval_deriv_e (gsl_sf_cheb_series * @var{cs}, double @var{x}, gsl_sf_result * @var{result})
+Evaluate derivative of a Chebyshev series at a given point.
+@end deftypefun
+
+
+@deftypefun double gsl_sf_cheb_eval_integ (gsl_sf_cheb_series * @var{cs}, double @var{x})
+@deftypefunx int gsl_sf_cheb_eval_integ_e (gsl_sf_cheb_series * @var{cs}, double @var{x}, gsl_sf_result * @var{result})
+Evaluate integral of a Chebyshev series at a given point.  The
+integral is fixed by the condition that it equals zero at
+the left end-point, i.e. it is precisely
+@math{\int_a^x dt cs(t; a,b)}.
+@end deftypefun
+
+
+
+@node Delete a Chebyshev Expansion
+@subsection Delete a Chebyshev Expansion
+
+
+@deftypefun void gsl_sf_cheb_free (gsl_sf_cheb_series * @var{cs})
+Free a Chebyshev series previously calculated with gsl_sf_cheb_new().
+No error can occur.
+@end deftypefun

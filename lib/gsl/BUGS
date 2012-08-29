@@ -1,0 +1,403 @@
+This file is the GSL bug tracking system.  The CVS version of this
+file should be kept up-to-date.
+
+----------------------------------------------------------------------
+BUG#1 -- gsl_sf_hyperg_2F1_e fails for some arguments 
+
+From: keith.briggs@bt.com
+Subject: gsl_sf_hyperg_2F1 bug report
+Date: Thu, 31 Jan 2002 12:30:04 -0000
+
+gsl_sf_hyperg_2F1_e fails with arguments (1,13,14,0.999227196008978,&r).
+It should return 53.4645... .
+
+#include <gsl/gsl_sf.h>
+#include <stdio.h>
+
+int main (void)
+{
+  gsl_sf_result r;
+  gsl_sf_hyperg_2F1_e (1,13,14,0.999227196008978,&r);
+  printf("r = %g %g\n", r.val, r.err);
+}
+
+NOTES: The program overflows the maximum number of iterations in
+gsl_sf_hyperg_2F1, due to the presence of a nearby singularity at
+(c=a+b,x=1) so the sum is slowly convergent.
+
+The exact result is 53.46451441879150950530608621 as calculated by
+gp-pari using sumpos(k=0,gamma(a+k)*gamma(b+k)*gamma(c)*gamma(1)/
+(gamma(c+k)*gamma(1+k)*gamma(a)*gamma(b))*x^k)
+
+The code needs to be extended to handle the case c=a+b. This is the
+main problem. The case c=a+b is special and needs to be computed
+differently.  There is a special formula given for it in Abramowitz &
+Stegun 15.3.10
+
+As reported by Lee Warren <warren@atom.chem.utk.edu> another set of
+arguments which fail are:
+
+#include <gsl/gsl_sf.h>
+#include <stdio.h>
+
+int main (void)
+{
+  gsl_sf_result r;
+  gsl_sf_hyperg_2F1_e (-1, -1, -0.5, 1.5, &r);
+  printf("r = %g %g\n", r.val, r.err);
+}
+
+The correct value is -2.
+----------------------------------------------------------------------
+BUG#20 -- underflow in gsl_sf_legendre_sphPlm functions
+
+The functions gsl_sf_legendre_sphPlm and gsl_sf_legendre_sphPlm_array
+have underflows for large l,m.  Also the error can be significant in
+these cases (even though the computed value is reasonable).
+
+  gsl_sf_legendre_sphPlm_e(200, 1, -0.5,&y) -- large error
+  gsl_sf_legendre_sphPlm_e(140,135,1,&y); -- underflow
+  gsl_sf_legendre_sphPlm_e(140,135,0.99998689456491752,&y);
+
+----------------------------------------------------------------------
+BUG#41 -- improve constness in multifit
+
+Not really a bug but worth fixing.  There are a few others like this
+lurking out there.
+
+From: Jari Häkkinen <jari@chiralcomp.com>
+To: bug-gsl@gnu.org
+Subject: [Bug-gsl] 'const'ness of function arguments
+Date: Tue, 16 Aug 2005 20:37:13 +0200
+Precedence: list
+Envelope-to: bjg@network-theory.co.uk
+
+Hi all,
+I've noticed two fitting functions that probably should have a 'const' 
+qualifier on the third argument. The 'x' parameter in fdfsolver.c:
+
+int
+gsl_multifit_fdfsolver_set (gsl_multifit_fdfsolver * s,
+                              gsl_multifit_function_fdf * f,
+                              gsl_vector * x)
+
+and in fsolver.c:
+
+int
+gsl_multifit_fsolver_set (gsl_multifit_fsolver * s,
+                           gsl_multifit_function * f,
+                           gsl_vector * x)
+
+can safely be set to 'const' since these are only used for 
+initialization of another gsl_vector.
+
+----------------------------------------------------------------------
+BUG#42 -- gsl_sf_expint_E2 fails for x=0
+
+The implementation for gsl_sf_expint_E2 uses a term "x*E1(x)" but
+E1(x) is infinite at x=0, so there is an error.  E2 needs a 
+separate implementation to handle this.  Also the error term
+
+  else if(x < 100.0) {
+    const double ex = ( scale ? 1.0 : exp(-x) );
+    gsl_sf_result result_E1;
+    int stat_E1 = expint_E1_impl(x, &result_E1, scale);
+    result->val  = ex - x*result_E1.val;
+    result->err  = fabs(x) * (GSL_DBL_EPSILON*ex + result_E1.err);
+    result->err += 2.0 * GSL_DBL_EPSILON * fabs(result->val);
+    return stat_E1;
+  }
+
+should probably be 
+
+    result->err  = GSL_DBL_EPSILON*ex + fabs(x) * result_E1.err;
+
+----------------------------------------------------------------------
+BUG#43 -- knuthran is out of date
+
+From: "Charles Karney" <ckarney@sarnoff.com>
+To: James Theiler <jt@lanl.gov>
+Cc: Charles Karney <ckarney@sarnoff.com>,
+	gsl-discuss <gsl-discuss@sources.redhat.com>
+Subject: Re: GSL 1.6 random numbers (gauss.c and rng.c)
+
+One final remark.  knuthran.c is out of date!  See
+
+    http://www-cs-faculty.stanford.edu/~knuth/news02.html#rng
+    http://www-cs-faculty.stanford.edu/~knuth/programs/rng.c
+
+There are two significant changes:
+
+(1) The generator is "warmed up" more thoroughly.  (This avoids problems
+    with correlations between random streams with adjacent seeds.)
+
+(2) Only 100 out of every 1009 random numbers are used.  (This is needed
+    so that the "birthday test" is satisfied.)
+
+-- 
+Charles Karney <ckarney@sarnoff.com>
+Sarnoff Corporation, Princeton, NJ 08543-5300
+
+URL: http://charles.karney.info
+Tel: +1 609 734 2312
+Fax: +1 609 734 2323
+
+----------------------------------------------------------------------
+BUG#44 -- gamma_inc_P and gamma_inc_Q only satisfy P+Q=1 within errors
+
+The sum of gamma_inc_P and gamma_inc_Q doesn't always satisfy the
+identity P+Q=1 exactly (although it is correct within errors), due the
+slightly different branch conditions for the series and continued
+fraction expansions.  These could be made identical so that P+Q=1 exactly.
+
+#include <stdio.h>
+#include <gsl/gsl_sf_gamma.h>
+
+int
+main (void)
+{
+  gsl_sf_result r1, r2;
+  double a = 0.3, x = 1.0;
+  gsl_sf_gamma_inc_P_e (a, x, &r1);
+  gsl_sf_gamma_inc_Q_e (a, x, &r2);
+  printf("%.18e\n", r1.val);
+  printf("%.18e\n", r2.val);
+  printf("%.18e\n", r1.val + r2.val);
+}
+
+$ ./a.out
+9.156741562411074842e-01
+8.432584375889111417e-02
+9.999999999999985567e-01
+
+======================================================================
+BUG#44 - multifit array bounds error of n < p  (FIXED)
+
+From: "Yajun Wang" <yalding@cs.ust.hk>
+To: bug-gsl@gnu.org
+Subject: Re: [Bug-gsl] bug in compute_gradient_direction?
+Date: Tue, 28 Mar 2006 17:09:01 +0800
+Precedence: list
+
+Hi:
+
+I modified the example provided in gsl manual in the section of
+"Nonlinear Least-Squares Fitting". The original example have 40 terms
+to minimize, now I change it to 2. Though the error produced is not
+exactly the error from my program, I think the basically idea is the
+gsl behavior when the number of terms is less than the number of
+parameters: (N < p).
+
+The error is as follows:
+""""""
+gsl: covar.c:51: ERROR: Jacobian be rectangular M x N with M >= N
+Default GSL error handler invoked.
+""""""
+
+I suspect that gsl always expect N>= p, which might be reasonable. But
+the code should inform the user earlier, using some checkers. Because
+the error such as above is confusing for the users.
+
+Nevertheless, in my own program, I add one more dummy term to raise N
+up to p, which works quite well. Thanks for your work.
+
+regards,
+yalding
+
+
+On 3/28/06, Brian Gough <bjg@gnu.org> wrote:
+> Yajun Wang writes:
+>  > I want to use the Nonlinear Least Squares Fitting. I am working on the
+>  > sum of 3-dimensional formulas. However, the program quits quietly
+>  > whenever I have only 2 formulas to solve.
+>
+> Please can you send a example program which we can compile to
+> reproduce the problem -- thanks.
+>
+> --
+> Brian Gough
+>
+> Network Theory Ltd,
+> Publishing the GSL Manual - http://www.network-theory.co.uk/gsl/manual/
+>
+#include <stdlib.h>
+#include <stdio.h>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_multifit_nlin.h>
+
+struct data {
+  size_t n;
+  double * y;
+  double * sigma;
+};
+
+void
+print_state (size_t iter, gsl_multifit_fdfsolver * s)
+{
+  printf ("iter: %3u x = % 15.8f % 15.8f % 15.8f "
+          "|f(x)| = %g\n",
+          iter,
+          gsl_vector_get (s->x, 0),
+          gsl_vector_get (s->x, 1),
+          gsl_vector_get (s->x, 2),
+          gsl_blas_dnrm2 (s->f));
+}
+
+
+int
+expb_f (const gsl_vector * x, void *params,
+        gsl_vector * f)
+{
+  size_t n = ((struct data *)params)->n;
+  double *y = ((struct data *)params)->y;
+  double *sigma = ((struct data *) params)->sigma;
+
+  double A = gsl_vector_get (x, 0);
+  double lambda = gsl_vector_get (x, 1);
+  double b = gsl_vector_get (x, 2);
+
+  size_t i;
+
+  for (i = 0; i < n; i++)
+    {
+      /* Model Yi = A * exp(-lambda * i) + b */
+      double t = i;
+      double Yi = A * exp (-lambda * t) + b;
+      gsl_vector_set (f, i, (Yi - y[i])/sigma[i]);
+    }
+
+  return GSL_SUCCESS;
+}
+
+int
+expb_df (const gsl_vector * x, void *params,
+         gsl_matrix * J)
+{
+  size_t n = ((struct data *)params)->n;
+  double *sigma = ((struct data *) params)->sigma;
+
+  double A = gsl_vector_get (x, 0);
+  double lambda = gsl_vector_get (x, 1);
+
+  size_t i;
+
+  for (i = 0; i < n; i++)
+    {
+      /* Jacobian matrix J(i,j) = dfi / dxj, */
+      /* where fi = (Yi - yi)/sigma[i],      */
+      /*       Yi = A * exp(-lambda * i) + b  */
+      /* and the xj are the parameters (A,lambda,b) */
+      double t = i;
+      double s = sigma[i];
+      double e = exp(-lambda * t);
+      gsl_matrix_set (J, i, 0, e/s);
+      gsl_matrix_set (J, i, 1, -t * A * e/s);
+      gsl_matrix_set (J, i, 2, 1/s);
+    }
+  return GSL_SUCCESS;
+}
+
+int
+expb_fdf (const gsl_vector * x, void *params,
+          gsl_vector * f, gsl_matrix * J)
+{
+  expb_f (x, params, f);
+  expb_df (x, params, J);
+
+  return GSL_SUCCESS;
+}
+
+#define N 2
+
+int
+main (void)
+{
+  const gsl_multifit_fdfsolver_type *T;
+  gsl_multifit_fdfsolver *s;
+
+  int status;
+  size_t i, iter = 0;
+
+  const size_t n = N;
+  const size_t p = 3;
+
+  gsl_matrix *covar = gsl_matrix_alloc (p, p);
+  double y[N], sigma[N];
+  struct data d = { n, y, sigma};
+  gsl_multifit_function_fdf f;
+  double x_init[3] = { 1.0, 0.0, 0.0 };
+  gsl_vector_view x = gsl_vector_view_array (x_init, p);
+  const gsl_rng_type * type;
+  gsl_rng * r;
+
+  gsl_rng_env_setup();
+
+  type = gsl_rng_default;
+  r = gsl_rng_alloc (type);
+
+  f.f = &expb_f;
+  f.df = &expb_df;
+  f.fdf = &expb_fdf;
+  f.n = n;
+  f.p = p;
+  f.params = &d;
+
+  /* This is the data to be fitted */
+
+  for (i = 0; i < n; i++)
+    {
+      double t = i;
+      y[i] = 1.0 + 5 * exp (-0.1 * t)
+                 + gsl_ran_gaussian (r, 0.1);
+      sigma[i] = 0.1;
+      printf ("data: %d %g %g\n", i, y[i], sigma[i]);
+    };
+
+  T = gsl_multifit_fdfsolver_lmsder;
+  s = gsl_multifit_fdfsolver_alloc (T, n, p);
+  gsl_multifit_fdfsolver_set (s, &f, &x.vector);
+
+  print_state (iter, s);
+
+  do
+    {
+      iter++;
+      status = gsl_multifit_fdfsolver_iterate (s);
+
+      printf ("status = %s\n", gsl_strerror (status));
+
+      print_state (iter, s);
+
+      if (status)
+        break;
+
+      status = gsl_multifit_test_delta (s->dx, s->x,
+                                        1e-4, 1e-4);
+    }
+  while (status == GSL_CONTINUE && iter < 500);
+
+  gsl_multifit_covar (s->J, 0.0, covar);
+
+#define FIT(i) gsl_vector_get(s->x, i)
+#define ERR(i) sqrt(gsl_matrix_get(covar,i,i))
+
+  printf ("A      = %.5f +/- %.5f\n", FIT(0), ERR(0));
+  printf ("lambda = %.5f +/- %.5f\n", FIT(1), ERR(1));
+  printf ("b      = %.5f +/- %.5f\n", FIT(2), ERR(2));
+
+  {
+    double chi = gsl_blas_dnrm2(s->f);
+    printf("chisq/dof = %g\n",  pow(chi, 2.0)/ (n - p));
+  }
+
+  printf ("status = %s\n", gsl_strerror (status));
+
+  gsl_multifit_fdfsolver_free (s);
+  return 0;
+}
+
+----------------------------------------------------------------------
+Last assigned bug number = 43
