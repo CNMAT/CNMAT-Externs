@@ -1,6 +1,0 @@
-;resonators~.def
-
-LIBRARY resonators~
-
-EXPORTS
-	main
