@@ -1,6 +1,0 @@
-;list-interpolate.def
-
-LIBRARY list-interpolate
-
-EXPORTS
-	main
