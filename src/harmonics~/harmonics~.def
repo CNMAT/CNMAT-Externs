@@ -1,6 +1,0 @@
-;harmonics~.def
-
-LIBRARY harmonics~
-
-EXPORTS
-	main
