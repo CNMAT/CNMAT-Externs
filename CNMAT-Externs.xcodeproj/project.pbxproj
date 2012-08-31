@@ -1,0 +1,504 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		52F10ADC15F072B2008FC371 /* CNMAT-Externs */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 52F10ADD15F072B2008FC371 /* Build configuration list for PBXAggregateTarget "CNMAT-Externs" */;
+			buildPhases = (
+			);
+			dependencies = (
+				52F10B0115F13DA8008FC371 /* PBXTargetDependency */,
+				52F10AE115F072C6008FC371 /* PBXTargetDependency */,
+			);
+			name = "CNMAT-Externs";
+			productName = "CNMAT-Externs";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		52F10AD015F071FA008FC371 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		52F10ADB15F07231008FC371 /* 2threshattack~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AC815F071DE008FC371 /* 2threshattack~.c */; };
+		52F10AE315F0732F008FC371 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
+		52F10AE515F0733D008FC371 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
+		52F10AEB15F0A037008FC371 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
+		52F10AF515F13D86008FC371 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
+		52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		52F10AF815F13D86008FC371 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
+		52F10AF915F13D86008FC371 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
+		52F10AFF15F13D94008FC371 /* bessel.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEF15F13D41008FC371 /* bessel.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		52F10AE015F072C6008FC371 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52F10ACE15F071FA008FC371;
+			remoteInfo = "2threshattack~";
+		};
+		52F10B0015F13DA8008FC371 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52F10AF215F13D86008FC371;
+			remoteInfo = bessel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		52DE949215F1424F0097B3E8 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = lib/gsl/.libs/libgsl.a; sourceTree = "<group>"; };
+		52F10AA515F07157008FC371 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		52F10AC815F071DE008FC371 /* 2threshattack~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "2threshattack~.c"; sourceTree = "<group>"; };
+		52F10AC915F071DE008FC371 /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "2threshattack~.maxhelp"; sourceTree = "<group>"; };
+		52F10ACA15F071DE008FC371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52F10ACF15F071FA008FC371 /* 2threshattack~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "2threshattack~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52F10AE215F07305008FC371 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
+		52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
+		52F10AEA15F0A037008FC371 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
+		52F10AEC15F0A16A008FC371 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = src/version.h; sourceTree = "<group>"; };
+		52F10AEE15F13D41008FC371 /* bessel-readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bessel-readme.txt"; sourceTree = "<group>"; };
+		52F10AEF15F13D41008FC371 /* bessel.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bessel.c; sourceTree = "<group>"; };
+		52F10AF015F13D41008FC371 /* bessel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bessel.maxhelp; sourceTree = "<group>"; };
+		52F10AF115F13D41008FC371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52F10AFE15F13D86008FC371 /* bessel.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bessel.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		52F10ACC15F071FA008FC371 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52F10AD015F071FA008FC371 /* CoreFoundation.framework in Frameworks */,
+				52F10AE315F0732F008FC371 /* MaxAPI.framework in Frameworks */,
+				52F10AE515F0733D008FC371 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52F10AF615F13D86008FC371 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */,
+				52F10AF815F13D86008FC371 /* MaxAPI.framework in Frameworks */,
+				52F10AF915F13D86008FC371 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		52DE949415F142570097B3E8 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				52DE949215F1424F0097B3E8 /* libgsl.a */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		52F10A9715F07157008FC371 = {
+			isa = PBXGroup;
+			children = (
+				52F10AEC15F0A16A008FC371 /* version.h */,
+				52F10AEA15F0A037008FC371 /* commonsyms.c */,
+				52F10AED15F13D41008FC371 /* bessel */,
+				52F10AC715F071DE008FC371 /* 2threshattack~ */,
+				52DE949415F142570097B3E8 /* lib */,
+				52F10AA415F07157008FC371 /* Frameworks */,
+				52F10AA315F07157008FC371 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		52F10AA315F07157008FC371 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				52F10ACF15F071FA008FC371 /* 2threshattack~.mxo */,
+				52F10AFE15F13D86008FC371 /* bessel.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		52F10AA415F07157008FC371 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				52F10AE215F07305008FC371 /* MaxAPI.framework */,
+				52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */,
+				52F10AA515F07157008FC371 /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		52F10AC715F071DE008FC371 /* 2threshattack~ */ = {
+			isa = PBXGroup;
+			children = (
+				52F10AC815F071DE008FC371 /* 2threshattack~.c */,
+				52F10AC915F071DE008FC371 /* 2threshattack~.maxhelp */,
+				52F10ACA15F071DE008FC371 /* Info.plist */,
+			);
+			name = "2threshattack~";
+			path = "src/2threshattack~";
+			sourceTree = "<group>";
+		};
+		52F10AED15F13D41008FC371 /* bessel */ = {
+			isa = PBXGroup;
+			children = (
+				52F10AEE15F13D41008FC371 /* bessel-readme.txt */,
+				52F10AEF15F13D41008FC371 /* bessel.c */,
+				52F10AF015F13D41008FC371 /* bessel.maxhelp */,
+				52F10AF115F13D41008FC371 /* Info.plist */,
+			);
+			name = bessel;
+			path = src/bessel;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		52F10ACE15F071FA008FC371 /* 2threshattack~ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52F10AD815F071FA008FC371 /* Build configuration list for PBXNativeTarget "2threshattack~" */;
+			buildPhases = (
+				52F10ACB15F071FA008FC371 /* Sources */,
+				52F10ACC15F071FA008FC371 /* Frameworks */,
+				52F10ACD15F071FA008FC371 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "2threshattack~";
+			productName = "2threshattack~";
+			productReference = 52F10ACF15F071FA008FC371 /* 2threshattack~.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		52F10AF215F13D86008FC371 /* bessel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52F10AFB15F13D86008FC371 /* Build configuration list for PBXNativeTarget "bessel" */;
+			buildPhases = (
+				52F10AF315F13D86008FC371 /* Sources */,
+				52F10AF615F13D86008FC371 /* Frameworks */,
+				52F10AFA15F13D86008FC371 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bessel;
+			productName = "2threshattack~";
+			productReference = 52F10AFE15F13D86008FC371 /* bessel.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		52F10A9915F07157008FC371 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = CNMAT;
+			};
+			buildConfigurationList = 52F10A9C15F07157008FC371 /* Build configuration list for PBXProject "CNMAT-Externs" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 52F10A9715F07157008FC371;
+			productRefGroup = 52F10AA315F07157008FC371 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				52F10ADC15F072B2008FC371 /* CNMAT-Externs */,
+				52F10ACE15F071FA008FC371 /* 2threshattack~ */,
+				52F10AF215F13D86008FC371 /* bessel */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		52F10ACD15F071FA008FC371 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52F10AFA15F13D86008FC371 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		52F10ACB15F071FA008FC371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52F10ADB15F07231008FC371 /* 2threshattack~.c in Sources */,
+				52F10AEB15F0A037008FC371 /* commonsyms.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52F10AF315F13D86008FC371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52F10AF515F13D86008FC371 /* commonsyms.c in Sources */,
+				52F10AFF15F13D94008FC371 /* bessel.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		52F10AE115F072C6008FC371 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52F10ACE15F071FA008FC371 /* 2threshattack~ */;
+			targetProxy = 52F10AE015F072C6008FC371 /* PBXContainerItemProxy */;
+		};
+		52F10B0115F13DA8008FC371 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52F10AF215F13D86008FC371 /* bessel */;
+			targetProxy = 52F10B0015F13DA8008FC371 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		52F10AAE15F07157008FC371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "../../../macho-prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		52F10AAF15F07157008FC371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREFIX_HEADER = "../../../macho-prefix.pch";
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		52F10AD915F071FA008FC371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		52F10ADA15F071FA008FC371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		52F10ADE15F072B2008FC371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		52F10ADF15F072B2008FC371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		52F10AFC15F13D86008FC371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/lib/gsl\"",
+				);
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/lib/gsl/.libs\"",
+				);
+				OTHER_CFLAGS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		52F10AFD15F13D86008FC371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/c74support/max-includes\"",
+					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/lib/gsl\"",
+				);
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/lib/gsl/.libs\"",
+				);
+				OTHER_CFLAGS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		52F10A9C15F07157008FC371 /* Build configuration list for PBXProject "CNMAT-Externs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52F10AAE15F07157008FC371 /* Debug */,
+				52F10AAF15F07157008FC371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		52F10AD815F071FA008FC371 /* Build configuration list for PBXNativeTarget "2threshattack~" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52F10AD915F071FA008FC371 /* Debug */,
+				52F10ADA15F071FA008FC371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		52F10ADD15F072B2008FC371 /* Build configuration list for PBXAggregateTarget "CNMAT-Externs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52F10ADE15F072B2008FC371 /* Debug */,
+				52F10ADF15F072B2008FC371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		52F10AFB15F13D86008FC371 /* Build configuration list for PBXNativeTarget "bessel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52F10AFC15F13D86008FC371 /* Debug */,
+				52F10AFD15F13D86008FC371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 52F10A9915F07157008FC371 /* Project object */;
+}
