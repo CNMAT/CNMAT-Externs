@@ -31,10 +31,17 @@ VERSION 0.1: Added functions for access to different orders of Bessel functions.
 VERSION 0.2: Fixed error handler that was calling abort() due to underflow errors.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "bessel"
+#define DESCRIPTION "Bessel functions."
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2007,2012"
+
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 
 #include "math.h"
 #include <gsl/gsl_errno.h>
@@ -49,7 +56,7 @@ typedef struct _besl
 	short b_nFunctions;
 } t_besl;
 
-void *besl_class;
+t_class *besl_class;
 
 void besl_anything(t_besl *x, t_symbol *msg, short argc, t_atom *argv);
 void besl_bang(t_besl *x);
@@ -67,24 +74,25 @@ void besl_jmn(t_besl *x, int m, int n);
 
 //--------------------------------------------------------------------------
 
-int main(void)
-{
-	setup((t_messlist **)&besl_class, (method)besl_new, (method)besl_free, (short)sizeof(t_besl), 0L, 0); 
+int main(void){
+	besl_class = class_new("bessel", (method)besl_new, (method)besl_free, (short)sizeof(t_besl), 0L, 0); 
 	
-	version(0);
+	version_post_copyright();
 
-	addmess((method) version, "version", 0);
-	addbang((method)besl_bang);
-	addint((method)besl_int);
-	addfloat((method)besl_float);
-	addmess((method)besl_list, "list", A_GIMME, 0);
-	addmess((method)besl_anything, "anything", A_GIMME, 0);
-	addmess((method)besl_assist, "assist", A_CANT, 0);
-	addmess((method)besl_j0, "j0", A_FLOAT, 0);
-	addmess((method)besl_j1, "j1", A_FLOAT, 0);
-	addmess((method)besl_jn, "jn", A_FLOAT, A_LONG, 0);
-	addmess((method)besl_jmn, "jmn", A_LONG, A_LONG, 0);
+	class_addmethod(besl_class, (method) version, "version", 0);
+	class_addmethod(besl_class, (method)besl_bang, "bang", 0);
+	class_addmethod(besl_class, (method)besl_int, "int", A_LONG, 0);
+	class_addmethod(besl_class, (method)besl_float, "float", A_FLOAT, 0);
+	class_addmethod(besl_class, (method)besl_list, "list", A_GIMME, 0);
+	class_addmethod(besl_class, (method)besl_anything, "anything", A_GIMME, 0);
+	class_addmethod(besl_class, (method)besl_assist, "assist", A_CANT, 0);
+	class_addmethod(besl_class, (method)besl_j0, "j0", A_FLOAT, 0);
+	class_addmethod(besl_class, (method)besl_j1, "j1", A_FLOAT, 0);
+	class_addmethod(besl_class, (method)besl_jn, "jn", A_FLOAT, A_LONG, 0);
+	class_addmethod(besl_class, (method)besl_jmn, "jmn", A_LONG, A_LONG, 0);
 	
+	
+	class_register(CLASS_BOX, besl_class);
 	return 0;
 }
 
@@ -117,7 +125,11 @@ void *besl_new()
 {
 	t_besl *x;
 
-	x = (t_besl *)newobject(besl_class); // create a new instance of this object
+	x = (t_besl *)object_alloc(besl_class);
+	if(!x){
+		return NULL;
+	}
+ // create a new instance of this object
 	
 	x->b_out0 = outlet_new(x, 0);
 	

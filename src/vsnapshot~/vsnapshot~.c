@@ -30,10 +30,17 @@ VERSION 1.0: First version
 VERSION 1.0.1: Fixed a memory bug
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "vsnapshot~"
+#define DESCRIPTION "Like snapshot~ but outputs the entire current signal vector."
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2007,2012"
+
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 #include "z_dsp.h"
 #include "math.h"
 
@@ -50,7 +57,7 @@ typedef struct _vsht
 	int v_running;
 } t_vsht;
 
-void *vsht_class;
+t_class *vsht_class;
 
 void vsht_assist(t_vsht *x, void *b, long m, long a, char *s);
 void *vsht_new(long t);
@@ -67,21 +74,23 @@ void vsht_free(t_vsht *x);
 //--------------------------------------------------------------------------
 
 int main(void){
-	setup((t_messlist **)&vsht_class, (method)vsht_new, (method)vsht_free, (short)sizeof(t_vsht), 0L, A_DEFLONG, 0);
+	vsht_class = class_new("vsnapshot~", (method)vsht_new, (method)vsht_free, (short)sizeof(t_vsht), 0L, A_DEFLONG, 0);
 	
-	version(0);
+	version_post_copyright();
 
-	addmess((method) version, "version", 0);
-	addmess((method)vsht_dsp, "dsp", A_CANT, 0);
-	addmess((method)vsht_assist, "assist", A_CANT, 0);
-	addbang((method)vsht_bang);
+	class_addmethod(vsht_class, (method) version, "version", 0);
+	class_addmethod(vsht_class, (method)vsht_dsp, "dsp", A_CANT, 0);
+	class_addmethod(vsht_class, (method)vsht_assist, "assist", A_CANT, 0);
+	class_addmethod(vsht_class, (method)vsht_bang, "bang", 0);
 	addinx((method)vsht_in1, 1);
-	addmess((method)vsht_start, "start", 0);
-	addmess((method)vsht_stop, "stop", 0);
-	addint((method)vsht_int);
+	class_addmethod(vsht_class, (method)vsht_start, "start", 0);
+	class_addmethod(vsht_class, (method)vsht_stop, "stop", 0);
+	class_addmethod(vsht_class, (method)vsht_int, "int", A_LONG, 0);
 	
 	dsp_initclass();
 	
+	
+	class_register(CLASS_BOX, vsht_class);
 	return 0;
 }
 
@@ -99,7 +108,11 @@ void vsht_assist(t_vsht *x, void *b, long m, long a, char *s){
 void *vsht_new(long t){
 	t_vsht *x;
 
-	x = (t_vsht *)newobject(vsht_class);
+	x = (t_vsht *)object_alloc(vsht_class);
+	if(!x){
+		return NULL;
+	}
+
 	intin(x, 1);
 	dsp_setup((t_pxobject *)x, 1);
 	x->outlet = listout((t_pxobject *)x);

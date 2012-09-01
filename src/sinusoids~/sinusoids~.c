@@ -48,11 +48,18 @@ VERSION 1.9: Changed click problem on Intel by removing small random numbers fro
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
+#define NAME "sinusoids~"
+#define DESCRIPTION "Additive synthesis with a bank of (optionally bandwidth-enhanced) sinusoidal oscillators"
+#define AUTHORS "Adrian Freed"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05,06,07,08,2012"
+
 
 #include "ext.h"
+#include "ext_obex.h"
+
 
 #include "version.h"
-#include "version.c"
+
 
 #include "z_dsp.h"
 #include <math.h>
@@ -73,7 +80,8 @@ VERSION 1.9: Changed click problem on Intel by removing small random numbers fro
 #define LOGBASE2OFTABLEELEMENT 2
 
 
-void *sinusoids_class;
+t_class *sinusoids_class;
+
 float Sinetab[STABSZ];
 
 static Symbol *ps_bwe;
@@ -225,7 +233,7 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 			
 			/* if (op->debugPrintsRemaining) {
 				--(op->debugPrintsRemaining);
-				post("a %f", a);
+				object_post((t_object *)x, "a %f", a);
 			} */
 	
 			out[j] +=  a *
@@ -308,13 +316,13 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 
 	if (is_bwe) {
 		if (argc % 3 != 0) {
-			post("multiple of 3 floats (Frequency, amplitude, noisiness) required");
+			object_post((t_object *)x, "multiple of 3 floats (Frequency, amplitude, noisiness) required");
 			return;
 		}
 		nosc = argc/3;		
 	} else {
 		if (argc % 2 != 0) {
-			post("multiple of 2 floats (Frequency, amplitude) required");
+			object_post((t_object *)x, "multiple of 2 floats (Frequency, amplitude) required");
 			return;
 		}
 		nosc = argc/2;
@@ -363,7 +371,7 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 			// fp[i].next_noisiness = 0.0f;
 			fp[i].next_amplitude = 0.0f;
 			if (x->verbose) {
-				error("sinusoids~: bad frequency %f for partial %ld (killing partial)", f, i+1);
+				object_error((t_object *)x, "sinusoids~: bad frequency %f for partial %ld (killing partial)", f, i+1);
 			}
 		} else {
 			fp[i].next_phase_inc = x->pk*f;	/* frequency	*/
@@ -373,7 +381,7 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 		
 		if (b < 0.0f || b > 1.0f) {
 			if (x->verbose) {
-				error("sinusoids~: bad noisiness %f for partial %ld (setting to 0)", f, i+1);
+				object_error((t_object *)x, "sinusoids~: bad noisiness %f for partial %ld (setting to 0)", f, i+1);
 			}
 			fp[i].next_noisiness = 0.0f;
 		}
@@ -395,13 +403,17 @@ void sinusoids_assist(t_sinusoids *x, void *box, long msg, long arg, char *dstSt
        } else if (msg = ASSIST_OUTLET) {
                sprintf(dstString, "%s", "(Signal) Oscillator bank output");
        } else {
-               error("sinusoids_assist: bad msg %ld", msg);
+               object_error((t_object *)x, "sinusoids_assist: bad msg %ld", msg);
        }       
 }
 
 
 void *sinusoids_new(t_symbol *s, short argc, t_atom *argv) {
-    t_sinusoids *x = (t_sinusoids *)newobject(sinusoids_class);
+    t_sinusoids *x = (t_sinusoids *)object_alloc(sinusoids_class);
+	if(!x){
+		return NULL;
+	}
+
     int i;
     
     dsp_setup((t_pxobject *)x,0);
@@ -422,7 +434,7 @@ void *sinusoids_new(t_symbol *s, short argc, t_atom *argv) {
 		x->is_bwe = 1;
 		--argc;
 		++argv;
-		post("Bandwidth enhanced");
+		object_post((t_object *)x, "Bandwidth enhanced");
 	}
 	
     clear(x);
@@ -458,34 +470,36 @@ void Makeoscsinetable()
 
 
 
-void main(void)
-{
-	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free, 
+int main(void){
+	sinusoids_class = class_new("sinusoids~", (method)sinusoids_new, (method)dsp_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 
-	version(0);
- 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
-    post("Never expires");
+	version_post_copyright();
+ 	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
+    object_post((t_object *)x, "Never expires");
     
 //     post("sizeof(NoiseTable) %ld", NTS());
 	Makeoscsinetable();
 
 
-	addmess((method)version, "version", 0);
-	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
-	addmess((method)sinusoids_list, "list", A_GIMME, 0);
-	addmess((method)sinusoids_clear, "clear", 0);
-	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
-	addmess((method)tellmeeverything, "tellmeeverything", 0);
-	addmess((method)sinusoids_verbose, "verbose", A_LONG, 0);
+	class_addmethod(sinusoids_class, (method)version, "version", 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_list, "list", A_GIMME, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_clear, "clear", 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);
+	class_addmethod(sinusoids_class, (method)tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_verbose, "verbose", A_LONG, 0);
 	dsp_initclass();
 	
 	ps_bwe = gensym("bwe");
+
+	class_register(CLASS_BOX, sinusoids_class);
+	return 0;
 }
 
 void tellmeeverything(t_sinusoids *x) {
 	int i;
-	post("%ssinusoids~ object with %ld oscillators:", x->is_bwe ? "bandwidth-enhanced " : "", x->nosc);
+	object_post((t_object *)x, "%ssinusoids~ object with %ld oscillators:", x->is_bwe ? "bandwidth-enhanced " : "", x->nosc);
 	
 	for (i = 0; i < x->nosc; ++i) {
 		oscdesc *o = x->base+i;
@@ -499,8 +513,8 @@ void tellmeeverything(t_sinusoids *x) {
 void sinusoids_verbose(t_sinusoids *x, long v) {
 	x->verbose = v;
 	if (x->verbose) {
-   		post("sinusoids~: turned verbose mode on");
+   		object_post((t_object *)x, "sinusoids~: turned verbose mode on");
 	} else {
-   		post("sinusoids~: turned verbose mode off");
+   		object_post((t_object *)x, "sinusoids~: turned verbose mode off");
 	}
 }

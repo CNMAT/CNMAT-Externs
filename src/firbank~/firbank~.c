@@ -33,23 +33,30 @@
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+#define NAME "firbank~"
+#define DESCRIPTION "Implements optimized real FFT convolution of one ore more inputs and a bank of FIR filters using the overlap-save method."
+#define AUTHORS "Andy Schmeder"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 // stdlib
 #include <math.h>
 
 // maxmsp
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "z_dsp.h"
 #include "buffer.h"
 
 // cnmat versioning
 #include "version.h"
-#include "version.c"
+
 
 // fftw 3
 #include "fftw3.h"
 
-void *firbank_class;
+t_class *firbank_class;
 
 typedef struct _fir {
     
@@ -156,21 +163,22 @@ t_int *firbank_perform(t_int *w);
 void firbank_free(t_firbank *x);
 
 // main
-int main(void) {
+int main(void){
     
-    version(0);
+    version_post_copyright();
     
-    setup((t_messlist **)&firbank_class, (method)firbank_new, (method)firbank_free,
+    firbank_class = class_new("firbank~", (method)firbank_new, (method)firbank_free,
           (short)sizeof(t_firbank), 0L, A_GIMME, 0);
     
-    addmess((method)firbank_dsp, "dsp", A_CANT, 0);
+    class_addmethod(firbank_class, (method)firbank_dsp, "dsp", A_CANT, 0);
     
     dsp_initclass();
     
     ps_buffer_tilde = gensym("buffer~");
     
-    return 0;
     
+	class_register(CLASS_BOX, firbank_class);
+	return 0;
 }
 
 // msp arcana to extract t_buffer* from a t_symbol*
@@ -245,7 +253,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     x->n = argv[i].a_w.w_long;
                 } else {
-                    post("firbank~: expected int for @n");
+                    object_post((t_object *)x, "firbank~: expected int for @n");
                 }
             }
             
@@ -255,7 +263,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     x->k = argv[i].a_w.w_long;
                 } else {
-                    post("firbank~: expected int for @k");
+                    object_post((t_object *)x, "firbank~: expected int for @k");
                 }
             }
             
@@ -265,7 +273,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     x->m = argv[i].a_w.w_long;
                 } else {
-                    post("firbank~: expected int for @m");
+                    object_post((t_object *)x, "firbank~: expected int for @m");
                 }
             }
             
@@ -275,7 +283,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     x->framesize = argv[i].a_w.w_long;
                 } else {
-                    post("firbank~: expected int for @framesize");
+                    object_post((t_object *)x, "firbank~: expected int for @framesize");
                 }
             }
             
@@ -286,7 +294,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
                     default_buffer = argv[i].a_w.w_sym; // _sym_to_buffer(argv[i].a_w.w_sym);
                     //x->autosplit = 0;
                 } else {
-                    post("firbank~: expected symbol for @buffer");
+                    object_post((t_object *)x, "firbank~: expected symbol for @buffer");
                 }
             }
             
@@ -307,7 +315,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
                         default_channel_2 = -1;
                     }
                 } else {
-                    post("firbank~: expected int for @channel");
+                    object_post((t_object *)x, "firbank~: expected int for @channel");
                 }
             }
             
@@ -329,7 +337,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
                 } else if(strcmp(argv[i].a_w.w_sym->s_name, "timedomain") == 0) {
                     default_mode = FIRBANK_MODE_POLAR;
                 } else {
-                    post("firbank~: expected symbol, 'complex', 'polar', or 'timedomain' for @mode");
+                    object_post((t_object *)x, "firbank~: expected symbol, 'complex', 'polar', or 'timedomain' for @mode");
                 }
             }
             */
@@ -377,7 +385,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
     /*
     if(x->autosplit) {
         // configure...
-        post("firbank~: autosplit mode not supported yet");
+        object_post((t_object *)x, "firbank~: autosplit mode not supported yet");
     }
     */
     
@@ -394,7 +402,7 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
             x->filters[i].offset = i * x->framesize;
         }
     } else {
-        post("firbank~: no buffer specified");
+        object_post((t_object *)x, "firbank~: no buffer specified");
     }
     
     // setup iomap if not from initialization
@@ -514,7 +522,7 @@ void firbank_dsp(t_firbank *x, t_signal **sp, short *connect) {
     x->v = sp[0]->s_n;
 
     if(x->v != x->framesize / 2) {
-        post("firbank~: vector size (%d) is not equal to framesize / 2 (%d)", x->v, x->framesize / 2);
+        object_post((t_object *)x, "firbank~: vector size (%d) is not equal to framesize / 2 (%d)", x->v, x->framesize / 2);
     }
 
     // setup args
@@ -545,7 +553,7 @@ t_int* firbank_perform(t_int *w) {
     v = (int)(wp[2]);
     
     if(v != x->v) {
-        post("firbank~: unexpected block size, v != x->v, %d", v);
+        object_post((t_object *)x, "firbank~: unexpected block size, v != x->v, %d", v);
         return w + 3 + x->n + x->m;
     }
 
@@ -640,7 +648,7 @@ t_int* firbank_perform(t_int *w) {
                         }
                                                 
                    } else {
-                       post("firbank~: buffer for filter %d does not meet specifications", k);
+                       object_post((t_object *)x, "firbank~: buffer for filter %d does not meet specifications", k);
                    }
                         
                 } // filter state corresponds to this input

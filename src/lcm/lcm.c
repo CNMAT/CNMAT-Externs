@@ -39,11 +39,18 @@ VERSION 0.2: First release; fixed bug with typed-in arguments
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
+#define NAME "lcm (least common multiple)"
+#define DESCRIPTION "Least common multiple"
+#define AUTHORS "Matt Wright"
+#define COPYRIGHT_YEARS "1998,99,2000,01,02,03,04,05,06,07,2012"
+
 
    
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 
 #define MAXSIZE 32
 
@@ -81,12 +88,12 @@ void lcm_findLCM(LCM *x);
 
 void main(fptr *f)
 {
-	version(0);
+	version_post_copyright();
 	FNS = f;	
 		
-	setup((t_messlist **)&class, (method)lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
-	addbang((method)lcm_bang);
-	addint((method)lcm_int);
+	lcm_class = class_new("lcm (least common multiple)", (method)lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
+	class_addmethod(lcm_class, (method)lcm_bang, "bang", 0);
+	class_addmethod(lcm_class, (method)lcm_int, "int", A_LONG, 0);
 	addinx((method)lcm_in1,1);
 	addinx((method)lcm_in2,2);
 	addinx((method)lcm_in3,3);
@@ -96,14 +103,14 @@ void main(fptr *f)
 	addinx((method)lcm_in7,7);
 	addinx((method)lcm_in8,8);
 	addinx((method)lcm_in9,9);
-	addmess((method)lcm_list,"list",A_GIMME,0);
+	class_addmethod(lcm_class, (method)lcm_list,"list",A_GIMME,0);
 	
-	addmess((method)lcm_tellmeeverything,"tellmeeverything",0);
-	addmess((method)version,"version",0);
+	class_addmethod(lcm_class, (method)lcm_tellmeeverything,"tellmeeverything",0);
+	class_addmethod(lcm_class, (method)version,"version",0);
 
 	finder_addclass("Arith/Logic/Bitwise","lcm");
 	
-	version(0);
+	version_post_copyright();
 }
 
 void lcm_bang(LCM *x) {	
@@ -155,12 +162,12 @@ void lcm_in9(LCM *x, long n) {
 
 void lcm_tellmeeverything(LCM *x) {
 	int i;
-	post("LCM object has %ld numbers:", x->l_count);
+	object_post((t_object *)x, "LCM object has %ld numbers:", x->l_count);
 	for (i = 0; i < x->l_count; ++i) {
-		post("  %ld", x->l_args[i]);
+		object_post((t_object *)x, "  %ld", x->l_args[i]);
 	}
 	lcm_findLCM(x);
-	post("LCM of those numbers is %ld", x->l_theLCM);
+	object_post((t_object *)x, "LCM of those numbers is %ld", x->l_theLCM);
 }
 
 
@@ -169,12 +176,12 @@ void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 	register short i;
 	if (ac > 10) {
 		ac = 10;
-		post("lcm: warning: truncating list to 10 elements.");
+		object_post((t_object *)x, "lcm: warning: truncating list to 10 elements.");
 	}
 	
 	for (i=0; i < ac; i++) {
 		if (av[i].a_type!=A_LONG) {
-			post("lcm: list must contain nothing but ints.");
+			object_post((t_object *)x, "lcm: list must contain nothing but ints.");
 			return;
 		}
 	}

@@ -30,14 +30,20 @@ VERSION 1.0: First version
 VERSION 1.1: Now outputs its measurement in milliseconds
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "bench"
+#define DESCRIPTION "Benchmarking utility"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 #include "version.h"
 #include "ext.h"
 #include "ext_obex.h"
-#include "version.c"
+
 #include "math.h"
 //#include "sys/time.h"
 //#include "cycle.h"
+#include <CoreServices/CoreServices.h>
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #include <unistd.h>
@@ -69,7 +75,7 @@ void bench_bang(t_bench *x);
 int main(void){
 	t_class *c = class_new("bench", (method)bench_new, (method)bench_free, (short)sizeof(t_bench), 0L, A_SYM, 0);
 	
-	version(0);
+	version_post_copyright();
 
 	class_addmethod(c, (method) version, "version", 0);
 	class_addmethod(c, (method)bench_assist, "assist", A_CANT, 0);
@@ -82,6 +88,8 @@ int main(void){
 	bench_class = c;
 	class_register(CLASS_BOX, c);
 	
+	
+	class_register(CLASS_BOX, bench_class);
 	return 0;
 }
 
@@ -109,7 +117,7 @@ void *bench_new(t_symbol *mode){
 		x->out0 = floatout((t_object *)x);
 		x->t_objmode = BENCH_OUT;
 	}else {
-		error("bench~: unrecognized argument %s", mode->s_name);
+		object_error((t_object *)x, "bench~: unrecognized argument %s", mode->s_name);
 		return NULL;
 	}
 
@@ -134,7 +142,7 @@ void bench_anything(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 	}else{
 		if(proxy_getinlet((t_object *)x) == 1){
 			if(argc != 2){
-				error("bench: the right inlet should get 2 numbers, only got %d", argc);
+				object_error((t_object *)x, "bench: the right inlet should get 2 numbers, only got %d", argc);
 				return;
 			}
 			int32_t l1 = argv[0].a_w.w_long;
@@ -163,7 +171,7 @@ void bench_list(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 	}else{
 		if(proxy_getinlet((t_object *)x) == 1){
 			if(argc != 2){
-				error("bench: the right inlet should get 2 numbers, only got %d", argc);
+				object_error((t_object *)x, "bench: the right inlet should get 2 numbers, only got %d", argc);
 				return;
 			}
 			int32_t l1 = argv[0].a_w.w_long;

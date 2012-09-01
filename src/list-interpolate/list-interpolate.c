@@ -42,6 +42,11 @@ VERSION 1.8: Force Package Info Generation
 
 
 */
+#define NAME "list-interpolate"
+#define DESCRIPTION "Linearly interpolate two lists of numbers element-wise"
+#define AUTHORS "Adrian Freed and Matt Wright"
+#define COPYRIGHT_YEARS "2000,01,02,03,04,05,2012"
+
 
 /* 
    Adapted from "reson", 1999
@@ -52,7 +57,9 @@ VERSION 1.8: Force Package Info Generation
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 
 
 
@@ -95,7 +102,7 @@ static void storelist(fobj *x, struct symbol *s, int argc, struct atom *argv)
 
 	for(i=0; i<argc; ++i) {
 	 	if(argv[i].a_type != A_FLOAT) {	
-	 		post("¥ list-interpolate: list did not contain only floats; dropping");
+	 		object_post((t_object *)x, "¥ list-interpolate: list did not contain only floats; dropping");
 	 		return;
 	 	}
 	}
@@ -219,22 +226,22 @@ static void tellmeeverything(fobj *x) {
 	
 	a.a_type = A_FLOAT;
 		
-	post("list-interpolate version " VERSION " by " AUTHORS ", compiled " __DATE__ " " __TIME__);
-	post("  list length %ld, list capacity %ld", x->n, x->capacity);
-	post("  %ld steps, current count %ld", x->steps, x->countdown);
-	post("  %susing zero-pad mode", x->zeroPadMode ? "" : "NOT ");
+	object_post((t_object *)x, "list-interpolate version " VERSION " by " AUTHORS ", compiled " __DATE__ " " __TIME__);
+	object_post((t_object *)x, "  list length %ld, list capacity %ld", x->n, x->capacity);
+	object_post((t_object *)x, "  %ld steps, current count %ld", x->steps, x->countdown);
+	object_post((t_object *)x, "  %susing zero-pad mode", x->zeroPadMode ? "" : "NOT ");
 		
-	post("  oldinputs:");
+	object_post((t_object *)x, "  oldinputs:");
 	for (i = 0; i<x->n; ++i) {
 		SETFLOAT(&a, x->oldinputs[i]);
 		postatom(&a);
 	}
-	post("  newinputs:");
+	object_post((t_object *)x, "  newinputs:");
 	for (i = 0; i<x->n; ++i) {
 		SETFLOAT(&a, x->newinputs[i]);
 		postatom(&a);
 	}
-	post("  rate:");
+	object_post((t_object *)x, "  rate:");
 	for (i = 0; i<x->n; ++i) {
 		SETFLOAT(&a, x->rate[i]);
 		postatom(&a);
@@ -257,7 +264,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	
 	if (argc >= 1) {
 		if (argv[0].a_type != A_LONG) {
-			post("¥ list-interpolate: first arg must be a long (# steps)");
+			object_post((t_object *)x, "¥ list-interpolate: first arg must be a long (# steps)");
 		} else {
 			x->steps = argv[0].a_w.w_long;
 		}
@@ -266,7 +273,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->capacity = 1024;
 	if (argc >= 2) {
 		if (argv[1].a_type != A_LONG) {
-			post("¥ list-interpolate: second arg must be a long (capacity)");
+			object_post((t_object *)x, "¥ list-interpolate: second arg must be a long (capacity)");
 		} else {
 			x->capacity = argv[1].a_w.w_long;
 		}
@@ -278,7 +285,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->out = 		(Atom *) getbytes(x->capacity * sizeof(Atom));
 	
 	if (x->out == 0) {
-		post("¥ list-interpolate: not enough memory for capacity %ld!", x->capacity);
+		object_post((t_object *)x, "¥ list-interpolate: not enough memory for capacity %ld!", x->capacity);
 		
 		return 0;
 	}
@@ -310,13 +317,13 @@ void main(fptr *f)		/* called once at launch to define this class */
 	setup((t_messlist **) &iclass, (method) fnew, (method) ffree, (int) sizeof(fobj), 0L, A_GIMME, 0 );
 
 
-	addmess((method)setsteps, "steps", A_DEFLONG,0);
-	addmess((method)setzeropad, "zeropad", A_LONG,0);
-	addmess((method)newlist,"list",A_GIMME,0);
-	addmess((method)tellmeeverything, "tellmeeverything", 0);
-	addbang( (method) bangdump  );
-	addfloat( (method) floatdump  );
+	class_addmethod(_class, (method)setsteps, "steps", A_DEFLONG,0);
+	class_addmethod(_class, (method)setzeropad, "zeropad", A_LONG,0);
+	class_addmethod(_class, (method)newlist,"list",A_GIMME,0);
+	class_addmethod(_class, (method)tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(_class,  (method) bangdump  , "bang", 0);
+	class_addmethod(_class,  (method) floatdump  , "float", A_FLOAT, 0);
 	
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	object_post((t_object *)x, NAME " object version " VERSION " by " AUTHORS ".");
+	object_post((t_object *)x, "Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 }

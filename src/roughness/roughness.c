@@ -39,10 +39,17 @@ VERSION 1.2: Reads the contents of SDIF-buffers
 VERSION 1.2.1: Fixed a bug where in the computation of the denominator in rho_process_parncutt
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "roughness"
+#define DESCRIPTION "Roughness estimate based on Richard Parncutt's algorithm."
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2006,2012"
+
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 #include "math.h"
 
 #define CBW_HUTCHINSON_KNOPOFF 1
@@ -74,7 +81,7 @@ typedef struct _rho
 	int r_maxNumRows;
 } t_rho;
 
-void *rho_class;
+t_class *rho_class;
 
 void rho_anything(t_rho *x, t_symbol *msg, short argc, t_atom *argv);
 void rho_list(t_rho *x, t_symbol *msg, short argc, t_atom *argv);
@@ -106,23 +113,22 @@ static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
 
 //--------------------------------------------------------------------------
 
-int main(void)
-{
-	setup((t_messlist **)&rho_class, (method)rho_new, (method)rho_free, (short)sizeof(t_rho), 0L, 0); 
+int main(void){
+	rho_class = class_new("roughness", (method)rho_new, (method)rho_free, (short)sizeof(t_rho), 0L, 0); 
 	
-	version(0);
+	version_post_copyright();
 
-	addmess((method) version, "version", 0);
-	addbang((method)rho_bang);
-	addmess((method)rho_anything, "anything", A_GIMME, 0);
-	addmess((method)rho_list, "list", A_GIMME, 0);
-	addmess((method)rho_assist, "assist", A_CANT, 0);
-	addmess((method)rho_set_cbw_type, "set-cbw-type", A_LONG, 0);
-	addmess((method)rho_standardCurveIndex, "scIndex", A_FLOAT, 0);
-	addmess((method)rho_tellmeeverything, "tellmeeverything", 0L, 0);
-	addmess((method)rho_SDIFtime, "SDIFtime", A_FLOAT, 0);
-	addmess((method)rho_setSDIFbuffer, "set", A_SYM, 0);
-	addmess((method)rho_processSDIF, "process_SDIF", 0);
+	class_addmethod(rho_class, (method) version, "version", 0);
+	class_addmethod(rho_class, (method)rho_bang, "bang", 0);
+	class_addmethod(rho_class, (method)rho_anything, "anything", A_GIMME, 0);
+	class_addmethod(rho_class, (method)rho_list, "list", A_GIMME, 0);
+	class_addmethod(rho_class, (method)rho_assist, "assist", A_CANT, 0);
+	class_addmethod(rho_class, (method)rho_set_cbw_type, "set-cbw-type", A_LONG, 0);
+	class_addmethod(rho_class, (method)rho_standardCurveIndex, "scIndex", A_FLOAT, 0);
+	class_addmethod(rho_class, (method)rho_tellmeeverything, "tellmeeverything", 0L, 0);
+	class_addmethod(rho_class, (method)rho_SDIFtime, "SDIFtime", A_FLOAT, 0);
+	class_addmethod(rho_class, (method)rho_setSDIFbuffer, "set", A_SYM, 0);
+	class_addmethod(rho_class, (method)rho_processSDIF, "process_SDIF", 0);
 	
 	SDIFresult r;
 	
@@ -130,8 +136,10 @@ int main(void)
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
-    return 1;
-	}
+    
+	class_register(CLASS_BOX, rho_class);
+	return 0;
+}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
@@ -159,7 +167,11 @@ int main(void)
 void *rho_new(void){
 	t_rho *x;
 
-	x = (t_rho *)newobject(rho_class); // create a new instance of this object
+	x = (t_rho *)object_alloc(rho_class);
+	if(!x){
+		return NULL;
+	}
+ // create a new instance of this object
 	
 	x->r_out1 = floatout(x);	
 	
@@ -178,7 +190,7 @@ void *rho_new(void){
 	/*
 	if(argc == 2){
 		rho_setSDIFbuffer(x, argv[1].a_w.w_sym);
-		post("%s", argv[1].a_w.w_sym->s_name);
+		object_post((t_object *)x, "%s", argv[1].a_w.w_sym->s_name);
 	}
 	*/
 	
@@ -343,8 +355,8 @@ void rho_process_kk(t_rho *x){
 			if(f1 < 20 || f2 < 20) break;
 			fb = 2.27 * (((a1 - 57) / 40) + 1) * powf(f1, 0.477); // Equation 6.  This should go into the rho_cbw routine.
 			
-			post("%d %d, f1 = %f f2 = %f a1 = %f a2 = %f", i, j, f1, f2, a1, a2);
-			post("fb = %f", fb);
+			object_post((t_object *)x, "%d %d, f1 = %f f2 = %f a1 = %f a2 = %f", i, j, f1, f2, a1, a2);
+			object_post((t_object *)x, "fb = %f", fb);
 			
 			// Supra-octave domain -- and near unison domain.
 			// (We avoid calculations near zero frequency difference in order
@@ -429,15 +441,15 @@ void rho_set_cbw_type(t_rho *x, long t){
 	x->r_cbwType = t;
 	switch(t){
 		case CBW_HUTCHINSON_KNOPOFF:
-			post("Using Hutchinson and Knopoff's critical bandwidth formula:");
-			post("cbw = 1.72 * powf(f, 0.65)");
+			object_post((t_object *)x, "Using Hutchinson and Knopoff's critical bandwidth formula:");
+			object_post((t_object *)x, "cbw = 1.72 * powf(f, 0.65)");
 			return;
 		case CBW_MOORE_GLASBERG:
-			post("Using Moore and Glasberg's critical bandwidth formula:");
-			post("cbw = (0.108 * f) + 24.7");
+			object_post((t_object *)x, "Using Moore and Glasberg's critical bandwidth formula:");
+			object_post((t_object *)x, "cbw = (0.108 * f) + 24.7");
 			return;
 	}
-	error("%ld isn't a valid choice for the critical bandwidth formula.  See the help file for more info.", t);
+	object_error((t_object *)x, "%ld isn't a valid choice for the critical bandwidth formula.  See the help file for more info.", t);
 }
 
 void rho_standardCurveIndex(t_rho *x, double i){
@@ -477,15 +489,15 @@ void rho_free(t_rho *x)
 }
 
 void rho_tellmeeverything(t_rho *x){
-	version(0);
+	version_post_copyright();
 	switch(x->r_cbwType){
 		case CBW_HUTCHINSON_KNOPOFF:
-			post("Using Hutchinson and Knopoff's critical bandwidth formula:");
-			post("cbw = 1.72 * powf(f, 0.65)");
+			object_post((t_object *)x, "Using Hutchinson and Knopoff's critical bandwidth formula:");
+			object_post((t_object *)x, "cbw = 1.72 * powf(f, 0.65)");
 			return;
 		case CBW_MOORE_GLASBERG:
-			post("Using Moore and Glasberg's critical bandwidth formula:");
-			post("cbw = (0.108 * f) + 24.7");
+			object_post((t_object *)x, "Using Moore and Glasberg's critical bandwidth formula:");
+			object_post((t_object *)x, "cbw = (0.108 * f) + 24.7");
 			return;
 	}
 }
@@ -555,7 +567,7 @@ static void rho_setSDIFbuffer(t_rho *x, Symbol *bufName) {
 
 	LookupMyBuffer(x);
 	if (x->m_SDIFbuffer == 0) {
-		error("roughness: there is no SDIF-buffer \"%s\"", bufName->s_name);
+		object_error((t_object *)x, "roughness: there is no SDIF-buffer \"%s\"", bufName->s_name);
 		return;
 	}
 	x->m_complainedAboutEmptyBufferAlready = FALSE;

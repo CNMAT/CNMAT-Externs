@@ -45,6 +45,11 @@ VERSION 0.2.1: Minor improvements to the 1NVT outlet
 To-Do:  use opendialog to present a dialog box to the user
 
 */
+#define NAME "SDIF-fileinfo"
+#define DESCRIPTION "Read info about SDIF streams from an SDIF file"
+#define AUTHORS "Matt Wright"
+#define COPYRIGHT_YEARS "2005,2012"
+
 
 
 /* SDIF-fileinfo
@@ -54,6 +59,8 @@ To-Do:  use opendialog to present a dialog box to the user
 #include "./version.h" // make sure not to get ../SDIF-buffer/version.h
 
 #include "ext.h"
+#include "ext_obex.h"
+
 /* Undo ext.h's macro versions of some of stdio.h: */
 	/*
 #undef fopen
@@ -65,7 +72,7 @@ To-Do:  use opendialog to present a dialog box to the user
 #undef sscanf
 	*/
 
-#include "version.c"
+
 
 #include <stdio.h>
 #include <string.h>
@@ -115,23 +122,25 @@ void *sdif_fileinfo_class;
 
 /*==========================================================================*/
 
-void main(void)
-{	
+int main(void){	
 	SDIFresult r;
 
-	version(0);
+	version_post_copyright();
 
 	if (r = SDIF_Init()) {
 		ouchstring(NAME ": Couldn't initialize SDIF library! %s",
 		           SDIF_GetErrorString(r));
-	}
+	
+	class_register(CLASS_BOX, _class);
+	return 0;
+}
 
-	setup((t_messlist **)&sdif_fileinfo_class, (method) sdif_fileinfo_new, 0, 
+	_class = class_new("SDIF-fileinfo", (method) sdif_fileinfo_new, 0, 
 		  (short)sizeof(t_sdif_fileinfo), 0L, A_GIMME, 0);
-	addbang((method)sdif_fileinfo_bang);
-	addmess((method)sdif_fileinfo_clear, "clear", 0);
-	addmess((method)version, "version", 0);
-	addmess((method)sdif_fileinfo_scan, "scan", A_SYM, 0);
+	class_addmethod(_class, (method)sdif_fileinfo_bang, "bang", 0);
+	class_addmethod(_class, (method)sdif_fileinfo_clear, "clear", 0);
+	class_addmethod(_class, (method)version, "version", 0);
+	class_addmethod(_class, (method)sdif_fileinfo_scan, "scan", A_SYM, 0);
 
 	
 	ps_file = gensym("/file");
@@ -185,15 +194,15 @@ void sdif_fileinfo_scan(t_sdif_fileinfo *x, Symbol *s)  {
 		
 	f = OpenSDIFFile(filename);
 	if (f == NULL) {
-		error(NAME ": Couldn't read SDIF file %s", filename);
+		object_error((t_object *)x, NAME ": Couldn't read SDIF file %s", filename);
 		return;
 	} 
 		
 	do_scan(x, f, filename);
 	
 	if ((r = SDIF_CloseRead(f))) {
-		post(NAME ": error closing SDIF file %s:", filename);
-		post("%s", SDIF_GetErrorString(r));
+		object_post((t_object *)x, NAME ": error closing SDIF file %s:", filename);
+		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
 	}
 	
 	SDIFfileinfo_output(x);
@@ -228,7 +237,7 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 				sawStreamAlready = 1;
 				// Already saw this stream, so just make sure type is OK
 				if (!SDIF_Char4Eq(fh.frameType, x->x_frameType[i])) {
-					post("¥ streamlist: Warning: First frame for stream %ld", fh.streamID);
+					object_post((t_object *)x, "¥ streamlist: Warning: First frame for stream %ld", fh.streamID);
 					post("¥ had type %c%c%c%c, but frame at time %g has type %c%c%c%c",
 						 x->x_frameType[i][0], x->x_frameType[i][1],
 						 x->x_frameType[i][2], x->x_frameType[i][3],
@@ -241,7 +250,7 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 				
 		if (!sawStreamAlready) {
 			if (x->x_ns >= MAX_STREAMS) {
-				error(NAME ": SDIF file has more than %ld streams!", MAX_STREAMS);
+				object_error((t_object *)x, NAME ": SDIF file has more than %ld streams!", MAX_STREAMS);
 				return;
 			}
 			++(x->x_ns);
@@ -259,16 +268,16 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 
 		if (needToSkip) {
 			if (r = SDIF_SkipFrame(&fh, f)) {
-				post(NAME ": error skipping frame in SDIF file %s:", name);
-				post("   %s", SDIF_GetErrorString(r));
+				object_post((t_object *)x, NAME ": error skipping frame in SDIF file %s:", name);
+				object_post((t_object *)x, "   %s", SDIF_GetErrorString(r));
 				return;
 			}
 		}
 	}
 	
 	if (r != ESDIF_END_OF_DATA) {
-		post(NAME ": error reading SDIF file %s:", name);
-		post("%s", SDIF_GetErrorString(r));
+		object_post((t_object *)x, NAME ": error reading SDIF file %s:", name);
+		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
 	}
 
 	outlet_bang(x->outlet2);
@@ -287,7 +296,7 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 	
 	for (i = 0; i < fhp->matrixCount; ++i) {
         if (r = SDIF_ReadMatrixHeader(&mh, f)) {
-        	error(NAME ": error reading matrix header: %s", SDIF_GetErrorString(r));
+        	object_error((t_object *)x, NAME ": error reading matrix header: %s", SDIF_GetErrorString(r));
    			return 0;     	
 		}
 		
@@ -295,11 +304,11 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 			sz = SDIF_GetMatrixDataSize(&mh);
 			buf = (char *) getbytes(sz);
 			if (buf == 0) {
-				error(NAME ": out of memory; can't read name/value table");
+				object_error((t_object *)x, NAME ": out of memory; can't read name/value table");
 				return 0;
 			}
 			if (r = SDIF_ReadMatrixData((void *) buf, f, &mh)) {
-			    error(NAME ": error reading 1NVT matrix data: %s", SDIF_GetErrorString(r));
+			    object_error((t_object *)x, NAME ": error reading 1NVT matrix data: %s", SDIF_GetErrorString(r));
 			    return 0;
 			}
 			//post("Name/value table:");
@@ -308,10 +317,10 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 			freebytes(buf, sz);						
 		} else {
 			if (SDIF_Char4Eq("1NVT", mh.matrixType)) {
-				post(NAME ": 1NVT matrix has unexpected matrix data type 0x%x; skipping",  mh.matrixDataType);
+				object_post((t_object *)x, NAME ": 1NVT matrix has unexpected matrix data type 0x%x; skipping",  mh.matrixDataType);
 			}				
 			if (r = SDIF_SkipMatrix(&mh, f)) {
-			    error(NAME ": error skipping 1NVT matrix: %s", SDIF_GetErrorString(r));
+			    object_error((t_object *)x, NAME ": error skipping 1NVT matrix: %s", SDIF_GetErrorString(r));
 			    return 0;
 			 }
 	    }

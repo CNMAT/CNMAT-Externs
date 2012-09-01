@@ -33,12 +33,19 @@ VERSION 1.0.2: Added protection for re-entrancy in overdrive mode
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
      
 */
+#define NAME "slipOSC"
+#define DESCRIPTION "Encode and decode SLIP data to/from the Max serial object and the OSC Fullpacket message format"
+#define AUTHORS "Adrian Freed, Andy Schmeder"
+#define COPYRIGHT_YEARS "2007,2008,2012"
+
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "ext_critical.h"
 
 #include "version.h"
-#include "version.c"
+
 
 #ifdef WIN_VERSION
 // To get ntohl() on Windows
@@ -47,7 +54,8 @@ VERSION 1.0.2: Added protection for re-entrancy in overdrive mode
 #include </usr/include/w32api/winsock2.h>
 #endif
 
-void *sOSC_class;
+t_class *sOSC_class;
+
 Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket, *ps_OSCBlob;
 
 #define MAXSLIPBUF 2048
@@ -154,7 +162,7 @@ void slipencodeFullPacket(sOSC *x, long size, unsigned char *source) {
 	    stringbuf[j++] = '*';
 	}
       stringbuf[j++] = '\0';
-      post("packet %d %s", i, stringbuf);
+      object_post((t_object *)x, "packet %d %s", i, stringbuf);
     }
 #endif
     
@@ -162,7 +170,7 @@ void slipencodeFullPacket(sOSC *x, long size, unsigned char *source) {
     
   }
   else 
-    post("slipOSC: bad fullpacket");
+    object_post((t_object *)x, "slipOSC: bad fullpacket");
   
 }
   
@@ -199,7 +207,7 @@ int slipdecode(sOSC *x, unsigned char c)
 		    stringbuf[j++] = '*';
 		}
 	      stringbuf[j++] = '\0';
-	      post("slipOSC: packet %d %s", x->icount, stringbuf);
+	      object_post((t_object *)x, "slipOSC: packet %d %s", x->icount, stringbuf);
 #endif
 	      // ParseOSCPacket(x, x->slipibuf, x->icount, true);
 	      t = x->icount;
@@ -250,7 +258,7 @@ int slipdecode(sOSC *x, unsigned char c)
 	    x->istate = 3;
 	  break;
 	default:
-	  post("slipOSC: ESC not followed by ESC_END or ESC_ESC.");
+	  object_post((t_object *)x, "slipOSC: ESC not followed by ESC_END or ESC_ESC.");
 	  x->istate = 3;
 	}
       break;
@@ -286,7 +294,7 @@ void sliplist(sOSC *x, struct symbol *s, int argc, struct atom *argv)
     return;
   for(i=0; i<argc; ++i) {
     if(argv[i].a_type != A_LONG) {	
-      post("slipOSC: list did not contain only integers; dropping");
+      object_post((t_object *)x, "slipOSC: list did not contain only integers; dropping");
       return;
     }
   }
@@ -313,25 +321,25 @@ void *myobject_free(sOSC *x)
 
 void main (fptr *f) {
   
-  version(0);
+  version_post_copyright();
   
-  setup((t_messlist **)&sOSC_class, (method) sOSC_new,(method) myobject_free,(short)sizeof(sOSC),0L,A_DEFLONG,0);
+  sOSC_class = class_new("slipOSC", (method) sOSC_new,(method) myobject_free,(short)sizeof(sOSC),0L,A_DEFLONG,0);
   
 #ifdef SANITY_CHECK
-  post("*** sizeof(int4byte) = %ld", (long) sizeof(int4byte));
-  post("*** sizeof(long) = %ld", (long) sizeof(long));
+  object_post((t_object *)x, "*** sizeof(int4byte) = %ld", (long) sizeof(int4byte));
+  object_post((t_object *)x, "*** sizeof(long) = %ld", (long) sizeof(long));
 #endif
 
-  addmess((method)sOSC_assist, "assist", A_CANT,0);
-  addmess((method)version, "version", 0);
-  addmess((method)sOSC_debug, "debug", 0);
-  addmess((method)sOSC_errorreporting, "errorreporting", A_LONG, 0);
+  class_addmethod(sOSC_class, (method)sOSC_assist, "assist", A_CANT,0);
+  class_addmethod(sOSC_class, (method)version, "version", 0);
+  class_addmethod(sOSC_class, (method)sOSC_debug, "debug", 0);
+  class_addmethod(sOSC_class, (method)sOSC_errorreporting, "errorreporting", A_LONG, 0);
   
-  addint((method)slipbyte);
-  addmess((method)sliplist, "list", A_GIMME, 0);
+  class_addmethod(sOSC_class, (method)slipbyte, "int", A_LONG, 0);
+  class_addmethod(sOSC_class, (method)sliplist, "list", A_GIMME, 0);
   
-  addmess((method)sOSC_printcontents, "printcontents", 0);
-  addmess((method)slipencodeFullPacket, "FullPacket", A_LONG, A_LONG, 0);
+  class_addmethod(sOSC_class, (method)sOSC_printcontents, "printcontents", 0);
+  class_addmethod(sOSC_class, (method)slipencodeFullPacket, "FullPacket", A_LONG, A_LONG, 0);
   
   finder_addclass("Devices","slipOSC");
   // rescopy('STR#',3009);
@@ -359,7 +367,7 @@ void *sOSC_new(long arg) {
   x->out = 		(Atom *) getbytes(MAXSLIPBUF * sizeof(Atom));
   
   if (x->out == 0) {
-    post("slipOSC: not enough memory for capacity %ld!",MAXSLIPBUF);
+    object_post((t_object *)x, "slipOSC: not enough memory for capacity %ld!",MAXSLIPBUF);
     
     return 0;
   }
@@ -381,7 +389,7 @@ void sOSC_assist(sOSC *x, void *b, long m, long a, char *dst) {
     if (a == 0) {
       strcpy(dst, "Max msgs; OSC packets");
     } else {
-      error("sOSC_assist: unrecognized inlet number %ld", a);
+      object_error((t_object *)x, "sOSC_assist: unrecognized inlet number %ld", a);
     }
   } else if (m == ASSIST_OUTLET) {
     if (a == 0) {
@@ -391,10 +399,10 @@ void sOSC_assist(sOSC *x, void *b, long m, long a, char *dst) {
     } else if (a == 2) {
       strcpy(dst, "Time tag (list of two ints) from OSC packet");
     } else {
-      error("sOSC_assist: unrecognized outlet number %ld", a);
+      object_error((t_object *)x, "sOSC_assist: unrecognized outlet number %ld", a);
     }
   } else {
-    error("Unexpected msg %ld in sOSC_assist", m);
+    object_error((t_object *)x, "Unexpected msg %ld in sOSC_assist", m);
   }
 }
 
@@ -402,25 +410,25 @@ void sOSC_debug (sOSC *x) {
   x->O_debug = !x->O_debug;
   
   if (x->O_debug)
-    post("slipOSC: debug on");
+    object_post((t_object *)x, "slipOSC: debug on");
   else
-    post("slipOSC: debug off");
+    object_post((t_object *)x, "slipOSC: debug off");
 }
 
 void sOSC_errorreporting(sOSC *x, int yesno) {
   x->errorreporting = yesno;
   
   if (yesno) {
-    post("slipOSC: turning on error reporting.");
+    object_post((t_object *)x, "slipOSC: turning on error reporting.");
   } else {
-    post("slipOSC: turning off eror reporting.  What you don't know can't hurt you.");
+    object_post((t_object *)x, "slipOSC: turning off eror reporting.  What you don't know can't hurt you.");
   }
 }
 
 
 void sOSC_bang (sOSC *x) {
   if (x->O_debug) {
-    post("slipOSC: BANG! Sending buffer and resetting");
+    object_post((t_object *)x, "slipOSC: BANG! Sending buffer and resetting");
   }
 }
 
@@ -430,7 +438,7 @@ void sOSC_sendData(sOSC *x, short size, char *data) {
   char fullpacket[MAXSLIPBUF];
   
   if (x->O_debug) {
-    post("slipOSC: Sending buffer (%ld bytes)", (long) size);
+    object_post((t_object *)x, "slipOSC: Sending buffer (%ld bytes)", (long) size);
   }
   
   memcpy(fullpacket, data, size);
@@ -462,10 +470,10 @@ void sOSC_printcontents (sOSC *x) {
   m = x->slipibuf;
   n = x->icount;
   
-  post("sOSC_printcontents: buffer %p, size %ld", m, (long) n);
+  object_post((t_object *)x, "sOSC_printcontents: buffer %p, size %ld", m, (long) n);
   
   if (n % 4 != 0) {
-    post("Hey, the size isn't a multiple of 4!");
+    object_post((t_object *)x, "Hey, the size isn't a multiple of 4!");
   } else {
     for (i = 0; i < n; i += 4) {
       p = buf;
@@ -499,7 +507,7 @@ void sOSC_printcontents (sOSC *x) {
       }
       
       *p = '\0';
-      post(buf);	    		 
+      object_post((t_object *)x, buf);	    		 
     }
   }
 }
@@ -532,7 +540,7 @@ int sOSC_messageSize(char *messageName, short argc, Atom *argv) {
 	break;
 	
       default:
-	error("slipOSC: unrecognized argument type");
+	object_error((t_object *)x, "slipOSC: unrecognized argument type");
 	break;
       }
     }

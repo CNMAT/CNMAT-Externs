@@ -33,12 +33,17 @@ VERSION 0.1: First version
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
+#define NAME "accumulate~"
+#define DESCRIPTION "Signal integrator with signal-rate reset control, configurable bounds, leakiness and overflow modes"
+#define AUTHORS "Andy Schmeder"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 #include "ext.h"
 #include "ext_obex.h"
 #include "z_dsp.h"
 #include "version.h"
-#include "version.c"
+
 
 #include <math.h>
 #include <float.h>
@@ -73,7 +78,7 @@ void acc_dsp(t_acc *x, t_signal **sp, short int *count);
 t_int *acc_perform(t_int *w);
 void acc_free(t_acc *x);
 
-int main(void) {
+int main(void){
     t_class *c = class_new("accumulate~", (method)acc_new, (method)acc_free, (short)sizeof(t_acc), 0L, A_GIMME, 0);
     class_dspinit(c);
 
@@ -92,8 +97,10 @@ int main(void) {
     class_register(CLASS_BOX, c);
     acc_class = c;
 
-    version(0);    
-    return 0;
+    version_post_copyright();    
+    
+	class_register(CLASS_BOX, acc_class);
+	return 0;
 }
 
 void *acc_new(t_symbol *s, short argc, t_atom *argv) {

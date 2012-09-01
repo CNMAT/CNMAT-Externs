@@ -43,14 +43,21 @@ VERSION 0.2: signal inlet for virtual time.  Also version message.
 	©1999,2000,01,02,03,04,05,06 UC Regents, All Rights Reserved. 
 	
 */
+#define NAME "decaying-sinusoids~"
+#define DESCRIPTION "Additive synthesis of a bank of exponentially decaying sinusoids"
+#define AUTHORS "Adrian Freed and Matt Wright"
+#define COPYRIGHT_YEARS "1996,97,98,99,2000,01,02,03,04,05,06,2012"
+
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "z_dsp.h"
 #include <math.h>
 
 #include "version.h"
-#include "version.c"
+
 
 #ifdef WIN_VERSION
 #define sinf sin
@@ -65,7 +72,8 @@ VERSION 0.2: signal inlet for virtual time.  Also version message.
 #define STABSZ (1l<<TPOW)
 #define LOGBASE2OFTABLEELEMENT 2
 
-void *sinusoids_class;
+t_class *sinusoids_class;
+
 float Sinetab[STABSZ];
 
 typedef  unsigned long ulong;
@@ -253,7 +261,7 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv)
 	int i;
 	if(argc%3!=0)
 	{
-		post("multiple of 3 floats required");
+		object_post((t_object *)x, "multiple of 3 floats required");
 	}
 	else
 	{
@@ -303,7 +311,11 @@ void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 
 void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
 {
-    t_sinusoids *x = (t_sinusoids *)newobject(sinusoids_class);
+    t_sinusoids *x = (t_sinusoids *)object_alloc(sinusoids_class);
+	if(!x){
+		return NULL;
+	}
+
     dsp_setup((t_pxobject *)x,1);   // One signal inlet, for virtual time
     outlet_new((t_object *)x, "signal");
 	x->samplerate =  sys_getsr();
@@ -375,28 +387,30 @@ void sinusoids_maxtime(t_sinusoids *x, double f)
 }
 
 
-void main(void)
-{
-	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)dsp_free,
+int main(void){
+	sinusoids_class = class_new("decaying-sinusoids~", (method)sinusoids_new, (method)dsp_free,
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-	version(0);
-	post("Maximum Oscillators: %d", MAXOSCILLATORS);
-	post("Never expires");
+	version_post_copyright();
+	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
+	object_post((t_object *)x, "Never expires");
 
 
 	Makeoscsinetable();
-	addmess((method)version, "version", 0);
-	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
-	addfloat((method)sinusoids_float);
-	addmess((method)sinusoids_goto, "goto", A_FLOAT, 0);
-	addmess((method)sinusoids_rate, "rate", A_FLOAT, 0);
-	addmess((method)sinusoids_maxtime, "max_vtime", A_FLOAT, 0);
-	addmess((method)sinusoids_mintime, "min_vtime", A_FLOAT, 0);
-	addmess((method)sinusoids_list, "list", A_GIMME, 0);
-	addmess((method)sinusoids_clear, "clear", 0);
-	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
+	class_addmethod(sinusoids_class, (method)version, "version", 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_float, "float", A_FLOAT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_goto, "goto", A_FLOAT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_rate, "rate", A_FLOAT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_maxtime, "max_vtime", A_FLOAT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_mintime, "min_vtime", A_FLOAT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_list, "list", A_GIMME, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_clear, "clear", 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);
 	
 	dsp_initclass();
+
+	class_register(CLASS_BOX, sinusoids_class);
+	return 0;
 }
 
 

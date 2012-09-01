@@ -25,6 +25,11 @@ University of California, Berkeley.
      REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
      ENHANCEMENTS, OR MODIFICATIONS.
 */
+#define NAME "resonators~"
+#define DESCRIPTION "Parallel bank of resonant filters"
+#define AUTHORS "Adrian Freed"
+#define COPYRIGHT_YEARS "1996-2007,2012"
+
 
 /*
 	©1988,1989,2005,2006,2007 Adrian Freed
@@ -79,8 +84,10 @@ VERSION 1.9992: Fixed de-normalization problem using SSE
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 #include "z_dsp.h"
 #include <math.h>
 #define OGAIN
@@ -88,7 +95,8 @@ VERSION 1.9992: Fixed de-normalization problem using SSE
 
 #define SQUASH_DENORMALS
 
-void *resonators_class;
+t_class *resonators_class;
+
 #define MAXRESONANCES 1024
 typedef  struct resdesc
 {
@@ -1093,7 +1101,7 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 	}
 
 	if (argc%3!=0) {
-		post("multiple of 3 floats required (frequency amplitude decayRate");
+		object_post((t_object *)x, "multiple of 3 floats required (frequency amplitude decayRate");
 		return;
 	}
 			
@@ -1228,7 +1236,11 @@ return false;
 
 void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 {
-    t_resonators *x = (t_resonators *)newobject(resonators_class);
+    t_resonators *x = (t_resonators *)object_alloc(resonators_class);
+	if(!x){
+		return NULL;
+	}
+
 		x->samplerate =  sys_getsr();
 		if(x->samplerate<=0.0)
 			x->samplerate = 44100.0;
@@ -1306,42 +1318,45 @@ void resonators_free(t_resonators *x) {
   sysmem_freeptr(x->dbase);
 }
 
-void main(void) {
-	setup((t_messlist **)&resonators_class, (method) resonators_new, 
+int main(void){
+	resonators_class = class_new("resonators~", (method) resonators_new, 
 		  (method) resonators_free, (short)sizeof(t_resonators),
 		  0L, A_GIMME, 0);
 
-	version(0);
-	post("Portions copyright (c) 1986, 1987 Adrian Freed");
-	post("Maximum number of resonances: %d", MAXRESONANCES);
-	post("Never expires");
+	version_post_copyright();
+	object_post((t_object *)x, "Portions copyright (c) 1986, 1987 Adrian Freed");
+	object_post((t_object *)x, "Maximum number of resonances: %d", MAXRESONANCES);
+	object_post((t_object *)x, "Never expires");
 	
-	addmess((method)version, "version", 0);
-	addmess((method)resonators_dsp, "dsp", A_CANT, 0);
-	addmess((method)resonators_list, "list", A_GIMME, 0);
-	addmess((method)outputgain_list, "outputgain", A_GIMME, 0);
-	addmess((method)resonators_clear, "clear", 0);
-	addmess((method)resonators_squelch, "squelch", 0);
-	addbang((method)resonators_bang);
-	addfloat((method)resonators_float);
-	addint((method)resonators_int);
-	addmess((method)resonators_assist, "assist", A_CANT, 0);
-	addmess((method)resonators_tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(resonators_class, (method)version, "version", 0);
+	class_addmethod(resonators_class, (method)resonators_dsp, "dsp", A_CANT, 0);
+	class_addmethod(resonators_class, (method)resonators_list, "list", A_GIMME, 0);
+	class_addmethod(resonators_class, (method)outputgain_list, "outputgain", A_GIMME, 0);
+	class_addmethod(resonators_class, (method)resonators_clear, "clear", 0);
+	class_addmethod(resonators_class, (method)resonators_squelch, "squelch", 0);
+	class_addmethod(resonators_class, (method)resonators_bang, "bang", 0);
+	class_addmethod(resonators_class, (method)resonators_float, "float", A_FLOAT, 0);
+	class_addmethod(resonators_class, (method)resonators_int, "int", A_LONG, 0);
+	class_addmethod(resonators_class, (method)resonators_assist, "assist", A_CANT, 0);
+	class_addmethod(resonators_class, (method)resonators_tellmeeverything, "tellmeeverything", 0);
 	dsp_initclass();
 //	rescopy('STR#',3216);
+
+	class_register(CLASS_BOX, resonators_class);
+	return 0;
 }
 
 void resonators_tellmeeverything(t_resonators *x) {
 	int i;
 	
 	version(x);
-	post("Copyright © 1986, 1987 Adrian Freed");
+	object_post((t_object *)x, "Copyright © 1986, 1987 Adrian Freed");
 
 
 	if (x->interpolating) {
-		post("  Smooth mode: parameter changes interpolated over time");
+		object_post((t_object *)x, "  Smooth mode: parameter changes interpolated over time");
 	} else {
-		post("  Fast mode: no interpolation, more efficient");
+		object_post((t_object *)x, "  Fast mode: no interpolation, more efficient");
 	}
 
 	post("%s\n%s\n Max resonances: %d, currently computing  %d",

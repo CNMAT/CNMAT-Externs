@@ -40,6 +40,11 @@ VERSION 1.3.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
+#define NAME "harmonics~ "
+#define DESCRIPTION "MSP harmonic oscillator Bank"
+#define AUTHORS "Adrian Freed"
+#define COPYRIGHT_YEARS "1996,97,98,99,2000,2001,2002,2003,2004,2005,2006,2012"
+
 
 
 	/* harmonic oscillator bank */
@@ -66,7 +71,9 @@ VERSION 1.3.1: Force Package Info Generation
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 
 #include "z_dsp.h"
 #include <math.h>
@@ -80,7 +87,8 @@ VERSION 1.3.1: Force Package Info Generation
 #define STABSZ (1l<<TPOW)
 #define LOGBASE2OFTABLEELEMENT 2
 
-void *sinusoids_class;
+t_class *sinusoids_class;
+
 float Sinetab[STABSZ];
 
 typedef  unsigned long ulong;
@@ -144,7 +152,7 @@ static void ResetInterruptStats(t_sinusoids *x) {
 }
 
 static void ReportInterruptStats(t_sinusoids *x) {
-	post("%ld calls to perform(); parameters changed %ld times during perform().",
+	object_post((t_object *)x, "%ld calls to perform(); parameters changed %ld times during perform().",
 		 x->numTimesPerformCalled, x->numTimesParamsChangedDuringPerform);
 	ResetInterruptStats(x);
 }
@@ -372,7 +380,7 @@ static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv
 		
 	for (i=0; i< argc; ++i) {
 		if (argv[i].a_type == A_SYM) {
-			error("harmonics~: all input lists must contain only numbers");
+			object_error((t_object *)x, "harmonics~: all input lists must contain only numbers");
 			return;
 		}
 	}	
@@ -473,13 +481,13 @@ static void wave_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv)
 			}
 if(x->nosc!=512)
 			{
-				error("harmonics~: unknown wave shape");
+				object_error((t_object *)x, "harmonics~: unknown wave shape");
 				return ;
 			}
 			   argc--; argv++;
 			if ( argc>1) {
 				if (argv[0].a_type == A_SYM) {
-					error("harmonics~: frequency expected");
+					object_error((t_object *)x, "harmonics~: frequency expected");
 					return ;
 			}
 			if(argc==1)
@@ -496,7 +504,11 @@ if(x->nosc!=512)
 }
 static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
 {
-    t_sinusoids *x = (t_sinusoids *)newobject(sinusoids_class);
+    t_sinusoids *x = (t_sinusoids *)object_alloc(sinusoids_class);
+	if(!x){
+		return NULL;
+	}
+
     dsp_setup((t_pxobject *)x,0);
     outlet_new((t_object *)x, "signal");
 	x->samplerate =  sys_getsr();
@@ -566,13 +578,13 @@ static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
 			}
 			if(x->nosc!=512)
 			{
-				error("harmonics~: unknown wave shape");
+				object_error((t_object *)x, "harmonics~: unknown wave shape");
 				return x;
 			}
 			   argc--; argv++;
 			if ( argc>1) {
 				if (argv[0].a_type == A_SYM) {
-					error("harmonics~: frequency expected");
+					object_error((t_object *)x, "harmonics~: frequency expected");
 					return x;
 			}
 			if(argc==1)
@@ -639,14 +651,14 @@ static void noisiness(t_sinusoids *x, double ff)
 	
 	if (f>=0.0f && f<=1.0f) x->next_noisiness = f;
 	else
-		post("noisiness must be between 0.0 and 1.0: %d", f);
+		object_post((t_object *)x, "noisiness must be between 0.0 and 1.0: %d", f);
 }
 
 void tellmeeverything(t_sinusoids *x) {
 	int i;
 	float f0 = x->next_phase_inc / x->pk;
 
-	post(NAME " object with %ld oscillators:", x->nosc);
+	object_post((t_object *)x, NAME " object with %ld oscillators:", x->nosc);
 	
 	for (i = 0; i < x->nosc; ++i) {
 		oscdesc *o = x->base+i;
@@ -656,47 +668,49 @@ void tellmeeverything(t_sinusoids *x) {
 }
 
 
-void main(void)
-{
-	setup((t_messlist **)&sinusoids_class, (method)sinusoids_new, (method)harmonics_free, 
+int main(void){
+	sinusoids_class = class_new("harmonics~ ", (method)sinusoids_new, (method)harmonics_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 		  
-	version(0);
-	post("NB: still working on amplutide normalisation of the wave outputs");
-	post("Maximum Oscillators: %d", MAXOSCILLATORS);
+	version_post_copyright();
+	object_post((t_object *)x, "NB: still working on amplutide normalisation of the wave outputs");
+	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
 #ifndef EXPIRE
-    post("Never expires");
+    object_post((t_object *)x, "Never expires");
     
 #endif
 	Makeoscsinetable();
 
 #ifdef EXPIRE
 #define YEAR 2005
-	post("Expires 2005");
+	object_post((t_object *)x, "Expires 2005");
 	{
 		DateTimeRec date;
 		GetTime(&date);
 		if(date.year>=YEAR)
 		{
-			post("Expired");
-		}
+			object_post((t_object *)x, "Expired");
+		
+	class_register(CLASS_BOX, sinusoids_class);
+	return 0;
+}
 		else
 
 #else
 {
 #endif
 
-		addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
+		class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
 	}
-	addmess((method)sinusoids_list, "list", A_GIMME, 0);		// amplitudes
-	addmess((method)wave_list, "wave", A_GIMME, 0);		// amplitudes
-	addmess((method)sinusoids_clear, "clear", 0);
-	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
-	addmess((method)version, "version", 0);
-	addfloat((method)frequency_float);							// F0
-	    addmess((method)first_amplitude, 	"first-amplitude", 		A_FLOAT, 0);
-	    addmess((method)noisiness, 	"noisiness", 		A_FLOAT, 0);
-   	addmess((method)tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_list, "list", A_GIMME, 0);		// amplitudes
+	class_addmethod(sinusoids_class, (method)wave_list, "wave", A_GIMME, 0);		// amplitudes
+	class_addmethod(sinusoids_class, (method)sinusoids_clear, "clear", 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);
+	class_addmethod(sinusoids_class, (method)version, "version", 0);
+	class_addmethod(sinusoids_class, (method)frequency_float, "float", A_FLOAT, 0);							// F0
+	    class_addmethod(sinusoids_class, (method)first_amplitude, 	"first-amplitude", 		A_FLOAT, 0);
+	    class_addmethod(sinusoids_class, (method)noisiness, 	"noisiness", 		A_FLOAT, 0);
+   	class_addmethod(sinusoids_class, (method)tellmeeverything, "tellmeeverything", 0);
 
 	dsp_initclass();
 }

@@ -39,13 +39,20 @@ VERSION 0.1: First public release
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
+#define NAME "thread.fork"
+#define DESCRIPTION "Pass data from main thread to a secondary thread"
+#define AUTHORS "Andy Schmeder"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 // max object header
 #include "ext.h"
+#include "ext_obex.h"
+
 
 // version info
 #include "version.h"
-#include "version.c"
+
 
 #include <pthread.h>
 #include <unistd.h>
@@ -101,17 +108,17 @@ void* thread_fork_run();
 void main(fptr *f)
 {
     // post version
-    version(0);
+    version_post_copyright();
     
-    setup((t_messlist **)&thread_fork_class, (method)thread_fork_new, (method)thread_fork_free, (short)sizeof(thread_fork), 0L, A_GIMME, 0);
+    _class = class_new("thread.fork", (method)thread_fork_new, (method)thread_fork_free, (short)sizeof(thread_fork), 0L, A_GIMME, 0);
     
-    addmess((method)thread_fork_anything, "anything", A_GIMME, 0);
-    addbang((method)thread_fork_bang);
-    addfloat((method)thread_fork_float);
-    addint((method)thread_fork_int);
+    class_addmethod(_class, (method)thread_fork_anything, "anything", A_GIMME, 0);
+    class_addmethod(_class, (method)thread_fork_bang, "bang", 0);
+    class_addmethod(_class, (method)thread_fork_float, "float", A_FLOAT, 0);
+    class_addmethod(_class, (method)thread_fork_int, "int", A_LONG, 0);
     
     // tooltip helper
-    addmess((method)thread_fork_assist, "assist", A_CANT, 0);
+    class_addmethod(_class, (method)thread_fork_assist, "assist", A_CANT, 0);
     
 }
 

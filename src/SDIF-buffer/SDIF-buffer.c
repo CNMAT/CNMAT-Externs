@@ -58,6 +58,11 @@ VERSION 1.0.1: New outlet bangs when file is read
 VERSION 1.1: For Max 5
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "SDIF-buffer"
+#define DESCRIPTION "Store SDIF data in Max's memory and make it accessible to other objects"
+#define AUTHORS "Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)"
+#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,2012"
+
 
 #include "version.h"
 
@@ -65,7 +70,9 @@ VERSION 1.1: For Max 5
 
 
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 
 #include <limits.h>
 #include <string.h>
@@ -100,7 +107,8 @@ typedef struct _SDIFbuffer_private {
 
 
 /* globals */
-void *SDIFbuffer_class;
+t_class *SDIFbuffer_class;
+
 Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol;
 SDIFBuffer *AllTheBuffers;	/* A linked list of all the buffers */
 
@@ -158,28 +166,28 @@ void my_freebytes(void *bytes, int size) {
 void main(fptr *fp) {
 	SDIFresult r;
 	
-	version(0);
+	version_post_copyright();
 		
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&SDIFbuffer_class, (method)SDIFbuffer_new, (method)SDIFbuffer_free,
+	SDIFbuffer_class = class_new("SDIF-buffer", (method)SDIFbuffer_new, (method)SDIFbuffer_free,
 			(short)sizeof(SDIFBuffer), 0L, A_SYM, A_DEFSYM, 0);
 	
 	/* bind my methods to symbols */
-	addmess((method)version, "version", 0);	
-	addmess((method)SDIFbuffer_readstreamnumber, "read-stream-number", A_SYM, A_LONG, 0);
-	addmess((method)SDIFbuffer_streamlist, "streamlist", A_GIMME, 0);
-	addmess((method)SDIFbuffer_framelist, "framelist", A_GIMME, 0);
-	addmess((method)SDIFbuffer_print, "print", 0);
-	addmess((method)SDIFbuffer_clear, "clear", 0);
+	class_addmethod(SDIFbuffer_class, (method)version, "version", 0);	
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_readstreamnumber, "read-stream-number", A_SYM, A_LONG, 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_streamlist, "streamlist", A_GIMME, 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_framelist, "framelist", A_GIMME, 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_print, "print", 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_clear, "clear", 0);
 #ifdef NAVIGATION_SERVICES	
-	addmess((method)SDIFbuffer_NAVcrap, "NAVcrap", 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_NAVcrap, "NAVcrap", 0);
 #endif	
-	addmess((method)PrintAllTheBuffers, "printall", 0);
-	addmess((method)SDIFbuffer_writefile, "write", A_SYM, 0);
-	addmess((method)SDIFbuffer_changeStreamID, "change-streamID", A_LONG, 0);
-	addmess((method)SDIFbuffer_changeFrameType, "change-frametype", A_SYM, 0);
-	addmess((method)SDIFbuffer_timeShift, "timeshift", 0);
-	addmess((method)SDIFbuffer_debug, "debug", A_LONG, 0);
+	class_addmethod(SDIFbuffer_class, (method)PrintAllTheBuffers, "printall", 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_writefile, "write", A_SYM, 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_changeStreamID, "change-streamID", A_LONG, 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_changeFrameType, "change-frametype", A_SYM, 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_timeShift, "timeshift", 0);
+	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_debug, "debug", A_LONG, 0);
 
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
@@ -206,13 +214,13 @@ void main(fptr *fp) {
 	
 #ifdef NAVIGATION_SERVICES	
 	if (!NavServicesAvailable()) {
-		post("¥ SDIF-buffer: navigation services are not available.");
-		post("Opening a dialog box will probably fail.");
+		object_post((t_object *)x, "¥ SDIF-buffer: navigation services are not available.");
+		object_post((t_object *)x, "Opening a dialog box will probably fail.");
 	} else {	
 		OSErr err = NavLoad();
 		if (err != noErr) {
-			post("¥ SDIF-buffer: NavLoad() gave error %ld", (long) err);
-			post("Opening a dialog box will probably fail.");
+			object_post((t_object *)x, "¥ SDIF-buffer: NavLoad() gave error %ld", (long) err);
+			object_post((t_object *)x, "Opening a dialog box will probably fail.");
 		}
 	}
 #endif
@@ -222,7 +230,7 @@ void main(fptr *fp) {
 	ps_emptysymbol = gensym("");
 	
 	if (ps_SDIF_buffer_lookup->s_thing != 0) {
-		post("¥ SDIF-buffer: warning: SDIF-buffer-lookup s_thing not zero.");
+		object_post((t_object *)x, "¥ SDIF-buffer: warning: SDIF-buffer-lookup s_thing not zero.");
 	}
 	ps_SDIF_buffer_lookup->s_thing = (void *) MySDIFBufferLookupFunction;
 
@@ -235,7 +243,7 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 	
 
 	if (MySDIFBufferLookupFunction(name) != 0) {
-		post("¥ %s is already an SDIF-buffer!", name->s_name);
+		object_post((t_object *)x, "¥ %s is already an SDIF-buffer!", name->s_name);
 		return 0;
 	}
 	
@@ -255,7 +263,7 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 	AddNewBuffer(x);
 	
 	if (filename != ps_emptysymbol) {
-		post("Need to load sdif file %s", filename->s_name);
+		object_post((t_object *)x, "Need to load sdif file %s", filename->s_name);
 	}
 	
 	
@@ -316,7 +324,7 @@ void SDIFbuffer_changeFrameType(SDIFBuffer *x, t_symbol *newFrameType) {
 	char *type = newFrameType->s_name;
 	
 	if (type[0] == '\0' || type[1] == '\0' || type[2] == '\0' || type[3] == '\0' || type[4] != '\0') {
-		post("¥ SDIF-buffer: change-frametype: illegal type \"%s\" is not 4 characters.", type);
+		object_post((t_object *)x, "¥ SDIF-buffer: change-frametype: illegal type \"%s\" is not 4 characters.", type);
 		return;
 	}
 	
@@ -365,7 +373,7 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
   if (mode == ESDIF_WHICH_STREAM_NUMBER) {
     streamID = arg;
   } else {
-    post("SDIF-buffer: ReadStream: unrecognized mode %ld", mode);
+    object_post((t_object *)x, "SDIF-buffer: ReadStream: unrecognized mode %ld", mode);
     return;
   }  
 #ifdef KLUDGE
@@ -373,7 +381,7 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
 #endif
   
   if (privateStuff->debug) {
-    post(" SDIF-buffer debug: trying to read stream %d from file \"%s\"", streamID, filename);
+    object_post((t_object *)x, " SDIF-buffer debug: trying to read stream %d from file \"%s\"", streamID, filename);
   }
 
   //  open requested file
@@ -388,7 +396,7 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
   SDIFbuffer_doclear(x);
 
   if (privateStuff->debug) {
-    post(" SDIF-buffer debug: opened \"%s\" for reading", filename);
+    object_post((t_object *)x, " SDIF-buffer debug: opened \"%s\" for reading", filename);
   }
 
   //  read the requested stream
@@ -400,8 +408,8 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
   } else if (r == ESDIF_SUCCESS) {
   	// Do nothing
   } else if (r == ESDIF_MINUSONE_FRAMESIZE_WORKAROUND) {
-    post("Warning: file %s has frames with -1 as the frame size.", filename);
-    post("  This is illegal but I read stream %ld anyway.", streamID);
+    object_post((t_object *)x, "Warning: file %s has frames with -1 as the frame size.", filename);
+    object_post((t_object *)x, "  This is illegal but I read stream %ld anyway.", streamID);
   } else {
   	error("SDIF-buffer: Error reading stream %ld from file %s: %s", streamID, filename, 
   	      SDIF_GetErrorString(r));
@@ -427,7 +435,7 @@ void SDIFbuffer_streamlist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *a
 
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_SYM) {
-			post("SDIFbuffer_streamlist: ignoring numeric argument");
+			object_post((t_object *)x, "SDIFbuffer_streamlist: ignoring numeric argument");
 		} else {
 			one_streamlist(argv[i].a_w.w_sym);
 		}
@@ -441,7 +449,7 @@ void one_streamlist(Symbol *fileName) {
 	FILE *f;
 	SDIFresult r;
 
-	post("SDIFbuffer_streamlist for file %s", fileName->s_name);
+	object_post((t_object *)x, "SDIFbuffer_streamlist for file %s", fileName->s_name);
 	f = OpenSDIFFile(fileName->s_name);
 	if (f == NULL) {
 		/* OpenSDIFFile already printed an error message */
@@ -450,8 +458,8 @@ void one_streamlist(Symbol *fileName) {
 
 	do_streamlist(f, fileName->s_name, 0);
 	if ((r = SDIF_CloseRead(f)) != ESDIF_SUCCESS) {
-		post("SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
-		post("%s", SDIF_GetErrorString(r));
+		object_post((t_object *)x, "SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
+		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
 	}
 }
 
@@ -464,7 +472,7 @@ void SDIFbuffer_framelist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *ar
 
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_SYM) {
-			post("SDIFbuffer_framelist: ignoring numeric argument");
+			object_post((t_object *)x, "SDIFbuffer_framelist: ignoring numeric argument");
 		} else {
 			one_framelist(argv[i].a_w.w_sym);
 		}
@@ -479,7 +487,7 @@ void one_framelist(Symbol *fileName) {
 	FILE *f;
 	SDIFresult r;
 
-	post("SDIFbuffer_framelist for file %s", fileName->s_name);
+	object_post((t_object *)x, "SDIFbuffer_framelist for file %s", fileName->s_name);
 	f = OpenSDIFFile(fileName->s_name);
 	if (f == NULL) {
 		/* OpenSDIFFile already printed an error message */
@@ -488,8 +496,8 @@ void one_framelist(Symbol *fileName) {
 
 	do_streamlist(f, fileName->s_name, 1);
 	if (r = SDIF_CloseRead(f)) {
-		post("SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
-		post("%s", SDIF_GetErrorString(r));
+		object_post((t_object *)x, "SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
+		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
 	}
 
 }
@@ -515,7 +523,7 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 			if (streamsSeen.streamID[i] == fh.streamID) {
 				// Already saw this stream, so just make sure type is OK
 				if (!SDIF_Char4Eq(fh.frameType, streamsSeen.frameType[i])) {
-					post("¥ streamlist: Warning: First frame for stream %ld", fh.streamID);
+					object_post((t_object *)x, "¥ streamlist: Warning: First frame for stream %ld", fh.streamID);
 					post("¥ had type %c%c%c%c, but frame at time %g has type %c%c%c%c",
 						 streamsSeen.frameType[i][0], streamsSeen.frameType[i][1],
 						 streamsSeen.frameType[i][2], streamsSeen.frameType[i][3],
@@ -530,7 +538,7 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 			 fh.time);
 			 
 		if (streamsSeen.n >= MAX_STREAMS) {
-			post(" ¥ streamlist: error: SDIF file has more than %ld streams!", MAX_STREAMS);
+			object_post((t_object *)x, " ¥ streamlist: error: SDIF file has more than %ld streams!", MAX_STREAMS);
 		} else {
 			streamsSeen.streamID[streamsSeen.n] = fh.streamID;
 			SDIF_Copy4Bytes(streamsSeen.frameType[streamsSeen.n], fh.frameType);
@@ -546,15 +554,15 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 		}
 
 		if (r = SDIF_SkipFrame(&fh, f)) {
-			post("SDIF-buffer: error skipping frame in SDIF file %s:", name);
-			post("%s", SDIF_GetErrorString(r));
+			object_post((t_object *)x, "SDIF-buffer: error skipping frame in SDIF file %s:", name);
+			object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
 			return;
 		}
 	}
 
 	if (r != ESDIF_END_OF_DATA) {
-		post("SDIF-buffer: error reading SDIF file %s:", name);
-		post("%s", SDIF_GetErrorString(r));
+		object_post((t_object *)x, "SDIF-buffer: error reading SDIF file %s:", name);
+		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
 	}
 }	
 
@@ -610,17 +618,17 @@ void SDIFbuffer_print(SDIFBuffer *x) {
 	int numFrames;
 	sdif_float64 tMin, tMax;
 		
-	post("SDIFBuffer %s: file \"%s\"", x->s_myname->s_name, x->fileName);
+	object_post((t_object *)x, "SDIFBuffer %s: file \"%s\"", x->s_myname->s_name, x->fileName);
 	if(head = SDIFbuf_GetFirstFrame(privateStuff->buf))
 	{
   	post("   Stream ID %ld, Frame Type %c%c%c%c", x->streamID,
   		head->header.frameType[0], head->header.frameType[1], head->header.frameType[2], head->header.frameType[3]);
   	SDIFbuf_GetMinTime(privateStuff->buf, &tMin);
   	SDIFbuf_GetMaxTime(privateStuff->buf, &tMax);
-  	post("   Min time %g, Max time %g", tMin, tMax);
+  	object_post((t_object *)x, "   Min time %g, Max time %g", tMin, tMax);
   }
   else
-		post("   No frames!");
+		object_post((t_object *)x, "   No frames!");
 	
 	for (f = head, numFrames=0; f != NULL; f = f->next, ++numFrames) {
 		if (numFrames < 10) PrintOneFrame(f);
@@ -633,7 +641,7 @@ void SDIFbuffer_print(SDIFBuffer *x) {
 void PrintOneFrame(SDIFmem_Frame f) {
 	SDIFmem_Matrix m;
 	if (f == 0) {
-		post("PrintOneFrame: null SDIFmem_Frame pointer");
+		object_post((t_object *)x, "PrintOneFrame: null SDIFmem_Frame pointer");
 		return;
 	}
 	// post("SDIF frame at %p, prev is %p, next is %p", f, f->prev, f->next);
@@ -694,7 +702,7 @@ void SDIFbuffer_NAVcrap(SDIFBuffer *x) {
 	
 	
 
-	post("* about to NavGetFile");
+	object_post((t_object *)x, "* about to NavGetFile");
 	err = NavGetFile(NULL,  /* Default location is last folder opened */
 			  		 &nrr, /* where answer will go */
 			  		 NULL, /* Use default dialog options */
@@ -704,29 +712,29 @@ void SDIFbuffer_NAVcrap(SDIFBuffer *x) {
 					 NULL, /* I hope a NULL type list means we try to open any type. */
 					 (NavCallBackUserData) x);
 	if (err != noErr) {
-		post("* NavGetFile returned error %ld", (long) err);
+		object_post((t_object *)x, "* NavGetFile returned error %ld", (long) err);
 	} else {
 		if (nrr.validRecord) {
 			numItems = 99999;
 			err = AECountItems(&(nrr.selection), &numItems);
 			if (err != noErr) {
-				post("* AECountItems returned error %ld", (long) err);
+				object_post((t_object *)x, "* AECountItems returned error %ld", (long) err);
 			} else {
-				post("Ya selected %ld items", numItems);
+				object_post((t_object *)x, "Ya selected %ld items", numItems);
 				for (i = 1; i <= numItems; ++i) {
 					err = AEGetNthPtr(&(nrr.selection), i, typeFSS, &theKeyword, &typeIGot,
 									   &theSpec, sizeof(theSpec), &sizeIGot);
 					if (err != noErr) {
-						post("* AEGetNthDesc returned error %ld", (long) err);
+						object_post((t_object *)x, "* AEGetNthDesc returned error %ld", (long) err);
 					} else {
 						if (sizeIGot != sizeof(theSpec)) {
-							post("¥ surprise: size returned by AEGetNthDesc is %ld;", sizeIGot);
-							post("  but sizeof(FSSpec) is only %ld", sizeof(theSpec));
+							object_post((t_object *)x, "¥ surprise: size returned by AEGetNthDesc is %ld;", sizeIGot);
+							object_post((t_object *)x, "  but sizeof(FSSpec) is only %ld", sizeof(theSpec));
 						}
 						
 						f = FSp_fopen (&theSpec, "r"); 
 						if (f == NULL) {
-							post("¥ FSp_fopen returned NULL!");
+							object_post((t_object *)x, "¥ FSp_fopen returned NULL!");
 						} else {
 							SDIF_BeginRead(f);
 							do_streamlist(f, "The one you chose", 0);
@@ -741,15 +749,15 @@ void SDIFbuffer_NAVcrap(SDIFBuffer *x) {
 							 (long) theSpec.parID);
 						
 						PtoCstr(theSpec.name);
-						post("   name: %s", theSpec.name);
+						object_post((t_object *)x, "   name: %s", theSpec.name);
 					}
 				}
 			}
 		} else {
-			post("* validRecord is false");
+			object_post((t_object *)x, "* validRecord is false");
 		}
 
-		post("* about to dispose reply");
+		object_post((t_object *)x, "* about to dispose reply");
 		NavDisposeReply(&nrr);
 	}
 }
@@ -797,9 +805,9 @@ void DeleteBuffer(SDIFBuffer *goner) {
 void PrintAllTheBuffers(void) {
 	SDIFBuffer *b;
 	
-	post("All the SDIF-buffers:");
+	object_post((t_object *)x, "All the SDIF-buffers:");
 	for (b = AllTheBuffers; b != NULL; b = Next(b)) {
-		post("  %s", b->s_myname->s_name);
+		object_post((t_object *)x, "  %s", b->s_myname->s_name);
 	}
 }
 
@@ -820,7 +828,7 @@ void SDIFbuffer_writefile(SDIFBuffer *x, Symbol *fileName) {
 
   head = SDIFbuf_GetFirstFrame(privateStuff->buf);  
 	if (head == 0) {
-		post("¥ SDIFbuffer %s is empty; not writing", x->s_myname->s_name);
+		object_post((t_object *)x, "¥ SDIFbuffer %s is empty; not writing", x->s_myname->s_name);
 		return;
 	}
 	
@@ -889,7 +897,7 @@ void SDIFbuffer_realtimeframe(
 	// Make a frame linked list item.
 	current = SDIFmem_CreateEmptyFrame();
 	if (current == 0) {
-		post("¥ SDIF-buffer: realtimeframe: no memory for new frame.");
+		object_post((t_object *)x, "¥ SDIF-buffer: realtimeframe: no memory for new frame.");
 		return;
 	}
 	
@@ -1010,14 +1018,14 @@ void remove_glisses(
 	float *cur_data, *prev_data;
 	int rows;
 	
-	post("current %f previous %f",current->header.time, previous->header.time);
+	object_post((t_object *)x, "current %f previous %f",current->header.time, previous->header.time);
 
 	// See who has least number of rows.
 	rows = current->matrices->header.rowCount;
 	if (rows > previous->matrices->header.rowCount) 
 		rows = previous->matrices->header.rowCount;
 	
-	post("rows %i ", rows);
+	object_post((t_object *)x, "rows %i ", rows);
 	// Step through frames, if index changes and amp is large, then we zero the amplitude.
 			cur_data = current->matrices->data;
 		prev_data = previous->matrices->data;
@@ -1029,7 +1037,7 @@ void remove_glisses(
 
 		if (*cur_data != *prev_data)
 		{ 
-			post("gliss removed");
+			object_post((t_object *)x, "gliss removed");
 		 	// Then we have a gliss. Zero Both Amplitudes.
 		 	*(cur_data+2) = 0.0;
 		 	*(prev_data+2) = 0.0;
@@ -1251,22 +1259,22 @@ void SDIFbuffer_realtimeHeader(
 	
 	current = privateStuff->head;
 		
-	post("*******************************");
+	object_post((t_object *)x, "*******************************");
 	while (current != NULL)
 	{
 	
-	post("A Frame");
+	object_post((t_object *)x, "A Frame");
 	
-	post("Time: %f", current->header.time);
+	object_post((t_object *)x, "Time: %f", current->header.time);
 	
-	post("Stream ID: %i", current->header.streamID);
+	object_post((t_object *)x, "Stream ID: %i", current->header.streamID);
 	matrix_list = current->matrices;
 	
 	rows = matrix_list->header.rowCount;
 	for (r = 0; r < rows; r++)
 	{
 		data = (float*)matrix_list->data;
-		post("%f %f ",data[r*4 + 1], data[r*4 + 2]);
+		object_post((t_object *)x, "%f %f ",data[r*4 + 1], data[r*4 + 2]);
 	
 	}
 	current = current->next;

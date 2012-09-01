@@ -65,6 +65,11 @@
   VERSION 0.7.4: minor bugfixes including a crash on instantiation
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
 */
+#define NAME "bpf "
+#define DESCRIPTION "Breakpoint function editor "
+#define AUTHORS "John MacCallum "
+#define COPYRIGHT_YEARS "2009 ,2012"
+
 
 /*
 todo:
@@ -85,7 +90,7 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 #include "jpatcher_api.h" 
 #include "jgraphics.h" 
 #include "z_dsp.h"
-#include "version.c" 
+ 
 
 #ifndef FLT_MAX
 #define FLT_MAX 999999999.f
@@ -168,7 +173,7 @@ typedef struct _bpf{
 	float position_update_rate_ms;
 } t_bpf; 
 
-void *bpf_class; 
+t_class *bpf_class;
 
 void bpf_paint(t_bpf *x, t_object *patcherview); 
 void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r);
@@ -1035,7 +1040,7 @@ double bpf_uncomputeNotePos(double y, t_rect r){
 	double nspaces = r.height / SPACE;
 	double space = (nspaces * (y / (r.height));
 
-	post("space = %f", space);
+	object_post((t_object *)x, "space = %f", space);
 	*/
 }
 
@@ -1813,11 +1818,11 @@ void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv){
 
 void bpf_setFunction(t_bpf *x, long f){
 	if(f > MAX_NUM_FUNCTIONS){
-		error("bpf: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
+		object_error((t_object *)x, "bpf: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
 		return;
 	}
 	if(f < 0){
-		error("bpf: function number must be positive");
+		object_error((t_object *)x, "bpf: function number must be positive");
 		return;
 	}
 	if(f > x->numFunctions - 1){
@@ -2542,9 +2547,11 @@ int main(void){
  	class_register(CLASS_BOX, c); 
  	bpf_class = c; 
 
- 	version(0); 
+ 	version_post_copyright(); 
 	
- 	return 0; 
+ 	
+	class_register(CLASS_BOX, bpf_class);
+	return 0;
 } 
 
 void *bpf_new(t_symbol *s, long argc, t_atom *argv){ 
