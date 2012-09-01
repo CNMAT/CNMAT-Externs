@@ -50,8 +50,6 @@
 
 #include "math.h"
 
-#include "common/commonsyms.c"
-
 
 #ifndef FLT_MIN
 #define FLT_MIN 1E-37
@@ -213,7 +211,7 @@ void rd_paint(t_rd *x, t_object *patcherview){
 		jgraphics_move_to(g, rect.width - w, h);
 		jgraphics_show_text(g, buf);
 
-		sprintf(buf, "%0.2fHz (%0.2fMc) %d/%d", x->selection.max - x->selection.min, rd_ftom(x->selection.max) - rd_ftom(x->selection.min), x->num_partials_selected, x->n);
+		sprintf(buf, "%0.2fHz (%0.2fMc) %d/%ld", x->selection.max - x->selection.min, rd_ftom(x->selection.max) - rd_ftom(x->selection.min), x->num_partials_selected, x->n);
 		jgraphics_text_measure(g, buf, &w, &h);
 		jgraphics_move_to(g, (rect.width / 2) - (w / 2), h);
 		jgraphics_show_text(g, buf);
@@ -479,7 +477,7 @@ void *rd_new(t_symbol *msg, int argc, t_atom *argv){
 		//      | JBOX_TEXTFIELD
 		;
 
-	if(x = (t_rd *)object_alloc(rd_class)){
+	if((x = (t_rd *)object_alloc(rd_class))){
 		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->ob.b_firstin = (void *)x; 
 
