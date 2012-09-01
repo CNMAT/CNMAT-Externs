@@ -1063,7 +1063,7 @@ t_point *rbfi_newPoint(void){
 	if(p){
 		return p;
 	}else{
-		object_error((t_object *)x, "rbfi: out of memory!  failed to allocate a new point");
+		error("rbfi: out of memory!  failed to allocate a new point");
 		return NULL;
 	}
 }
@@ -1645,7 +1645,7 @@ void *rbfi_new(t_symbol *msg, int argc, t_atom *argv){
 		//      | JBOX_TEXTFIELD
 		;
 
-	if(x = (t_rbfi *)object_alloc(rbfi_class)){
+	if((x = (t_rbfi *)object_alloc(rbfi_class))){
 		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->ob.b_firstin = (void *)x; 
 
@@ -1826,9 +1826,9 @@ int main(void){
 
 	version_post_copyright();
 
-	object_error((t_object *)x, "rbfi: the output of the dump message has changed, and will change again soon!");
-	object_error((t_object *)x, "rbfi: If you need the old behavior, set the \"compatmode\" attribute to 1.");
-	object_error((t_object *)x, "rbfi: In the next version of rbfi (early 2011), all output will be done with OSC bundles");
+	error("rbfi: the output of the dump message has changed, and will change again soon!");
+	error("rbfi: If you need the old behavior, set the \"compatmode\" attribute to 1.");
+	error("rbfi: In the next version of rbfi (early 2011), all output will be done with OSC bundles");
 	
 	
 	class_register(CLASS_BOX, rbfi_class);
@@ -1837,20 +1837,20 @@ int main(void){
 
 void rbfi_postPoint(t_point *p){
 	if(!p){
-		object_post((t_object *)x, "p == NULL!!");
+		post("p == NULL!!");
 		return;
 	}
-	object_post((t_object *)x, "point %p:", p);
-	object_post((t_object *)x, "coords: %f %f", p->pt.x, p->pt.y);
+	post("point %p:", p);
+	post("coords: %f %f", p->pt.x, p->pt.y);
 	if(p->label){
-		object_post((t_object *)x, "label: %s", p->label->s_name);
+		post("label: %s", p->label->s_name);
 	}else{
-		object_post((t_object *)x, "no label");
+		post("no label");
 	}
-	object_post((t_object *)x, "color: %f %f %f", p->color.red, p->color.blue, p->color.green);
-	object_post((t_object *)x, "exponent: %f, weight: %f", p->exponent, p->weight);
-	object_post((t_object *)x, "inner radius: %f, outer radius: %f", p->inner_radius, p->outer_radius);
-	object_post((t_object *)x, "mousestate: 0x%X", p->mousestate);
+	post("color: %f %f %f", p->color.red, p->color.blue, p->color.green);
+	post("exponent: %f, weight: %f", p->exponent, p->weight);
+	post("inner radius: %f, outer radius: %f", p->inner_radius, p->outer_radius);
+	post("mousestate: 0x%X", p->mousestate);
 
 	/*
 	object_post((t_object *)x, "data count: %d", p->datac);
