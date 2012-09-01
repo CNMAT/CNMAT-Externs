@@ -34,8 +34,6 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #define AUTHORS "John MacCallum, Ville Pulkki"
 #define COPYRIGHT_YEARS "2009, 1999,2012"
 
-#include <Carbon/Carbon.h>
-
 #include "version.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -44,7 +42,6 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "z_dsp.h"
 #include <math.h>
 #include "jit.common.h"
-//#include <ffmpeg.h>
 
 #define FRAME   2
 #define FAST	1

@@ -43,7 +43,6 @@ VERSION 1.1: Now outputs its measurement in milliseconds
 #include "math.h"
 //#include "sys/time.h"
 //#include "cycle.h"
-#include <CoreServices/CoreServices.h>
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #include <unistd.h>

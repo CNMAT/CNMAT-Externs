@@ -38,8 +38,6 @@
 #define AUTHORS "Andy Schmeder"
 #define COPYRIGHT_YEARS "2008,2012"
 
-#include <CoreServices/CoreServices.h>
-
 // stdlib
 #include <math.h>
 
