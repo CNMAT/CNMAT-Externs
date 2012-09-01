@@ -76,7 +76,7 @@ typedef struct TrendReport
 } TrendReport;
 
 
-void *class;
+void *TrendReport_class;
 
 void TrendReport_int(TrendReport *x, int i);
 void TrendReport_float(TrendReport *x, double f);
@@ -88,12 +88,14 @@ void OutputTrend(TrendReport *x);
 
 
 
-void main(fptr *f) {
+int main(void) {
 	version_post_copyright();
 	TrendReport_class = class_new("trend-report", (method)TrendReport_new, 0L, (short)sizeof(TrendReport), 0L, A_DEFFLOAT, 0);
 	class_addmethod(TrendReport_class, (method)TrendReport_float, "float", A_FLOAT, 0);
 	class_addmethod(TrendReport_class, (method)TrendReport_int, "int", A_LONG, 0);
 	class_addmethod(TrendReport_class, (method)version, "version", 0);
+    class_register(CLASS_BOX, TrendReport_class);
+    return 0;
 }
 
 void Reset(TrendReport *x) {
@@ -109,7 +111,10 @@ void *TrendReport_new(Symbol *s, float arg)
 {
 	TrendReport *x;
 	
-	x = (TrendReport *)newobject(class);
+	x = (TrendReport *)object_alloc(TrendReport_class);
+    if(!x){
+        return NULL;
+    }
 	x->outlet = listout(x);
 	
 	if (arg == 0.0) {

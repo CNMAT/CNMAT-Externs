@@ -400,7 +400,7 @@ void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
 void sinusoids_assist(t_sinusoids *x, void *box, long msg, long arg, char *dstString) {
        if (msg == ASSIST_INLET) {
                sprintf(dstString, "%s", "(List) freq, amp, (bandwidth) tuples");
-       } else if (msg = ASSIST_OUTLET) {
+       } else if ((msg = ASSIST_OUTLET)) {
                sprintf(dstString, "%s", "(Signal) Oscillator bank output");
        } else {
                object_error((t_object *)x, "sinusoids_assist: bad msg %ld", msg);
@@ -475,8 +475,8 @@ int main(void){
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 
 	version_post_copyright();
- 	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
-    object_post((t_object *)x, "Never expires");
+ 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
+    post("Never expires");
     
 //     post("sizeof(NoiseTable) %ld", NTS());
 	Makeoscsinetable();

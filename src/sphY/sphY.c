@@ -1,18 +1,3 @@
-#include <stdlib.h>
-#include <math.h>
-
-// MaxMSP
-#include "ext.h"
-#include "ext_obex.h"
-
-
-// Franz Zotter's SH library
-#include "sh.h"
-
-// CNMAT version control
-#include "version.h"
-
-
 /**
  
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -29,6 +14,20 @@
 #define DESCRIPTION "Evaluates the real-valued spherical harmonics up to order N at a point (theta, phi)"
 #define AUTHORS "Franz Zotter, Andy Schmeder"
 #define COPYRIGHT_YEARS "2006-2008,2012"
+
+#include <stdlib.h>
+#include <math.h>
+
+// MaxMSP
+#include "ext.h"
+#include "ext_obex.h"
+
+
+// Franz Zotter's SH library
+#include "sh.h"
+
+// CNMAT version control
+#include "version.h"
 
 
 Symbol* ps_index;
@@ -63,7 +62,7 @@ void sphY_list(sphY* x, Symbol* mess, short argc, Atom* argv);
 void sphY_index(sphY* x, Symbol* mess, short argc, Atom* argv);
 
 // setup
-void main(fptr *f)
+int main(void)
 {
     
     // announce copyright
@@ -84,6 +83,8 @@ void main(fptr *f)
     ps_index = gensym("index");
     ps_r = gensym("r");
     
+    class_register(CLASS_BOX, sphY_class);
+    return 0;
 }
 
 #define ASSIST_INLET 1

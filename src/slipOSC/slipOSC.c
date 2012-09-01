@@ -312,14 +312,14 @@ void sliplist(sOSC *x, struct symbol *s, int argc, struct atom *argv)
  
 }
 
-void *myobject_free(sOSC *x);
-void *myobject_free(sOSC *x)
+void myobject_free(sOSC *x);
+void myobject_free(sOSC *x)
 {
   freeobject(x->m_proxy);
   critical_free(x->lock);
 }
 
-void main (fptr *f) {
+int main (void) {
   
   version_post_copyright();
   
@@ -345,6 +345,8 @@ void main (fptr *f) {
   // rescopy('STR#',3009);
   ps_OSCTimeTag = gensym("OSCTimeTag");
   ps_FullPacket = gensym("FullPacket");
+    class_register(CLASS_BOX, sOSC_class);
+    return 0;
 }
 
 void *sOSC_new(long arg) {

@@ -179,7 +179,7 @@ void waveguide_set_nl_neg(waveguide* w, float nl_neg)
     w->a1b = nl_neg;
 }
 
-inline void waveguide_process(waveguide *w, float in0, float in1)
+void waveguide_process(waveguide *w, float in0, float in1)
 {
 	float tmp;
 	float a1;
@@ -997,19 +997,19 @@ int main(void){
     
 	version_post_copyright();
     
-	_class = class_new("waveguide~", (method)waveguide_tilde_new, 
+	waveguide_tilde_class = class_new("waveguide~", (method)waveguide_tilde_new,
 		  (method)waveguide_tilde_free, (short)sizeof(waveguide_tilde_state),
 		  0L, A_GIMME, 0);
 
-	class_addmethod(_class, (method)waveguide_tilde_dsp, "dsp", A_CANT, 0);
-	class_addmethod(_class, (method)waveguide_tilde_list, "connect", A_GIMME, 0);
-	class_addmethod(_class, (method)waveguide_tilde_list, "set", A_GIMME, 0);
-	class_addmethod(_class, (method)waveguide_tilde_reset, "reset", 0);
+	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_dsp, "dsp", A_CANT, 0);
+	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_list, "connect", A_GIMME, 0);
+	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_list, "set", A_GIMME, 0);
+	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_reset, "reset", 0);
 
-	class_dspinit(_class);
+	class_dspinit(waveguide_tilde_class);
    
     
-	class_register(CLASS_BOX, _class);
+	class_register(CLASS_BOX, waveguide_tilde_class);
 	return 0;
 }
 

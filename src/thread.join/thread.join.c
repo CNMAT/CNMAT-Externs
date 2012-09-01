@@ -92,25 +92,27 @@ Symbol* ps_float;
 Symbol* ps_int;
 
 // setup
-void main(fptr *f)
+int main(void)
 {
     // post version
     version_post_copyright();
     
-    _class = class_new("thread.join", (method)thread_join_new, (method)thread_join_free, (short)sizeof(thread_join), 0L, A_GIMME, 0);
+    thread_join_class = class_new("thread.join", (method)thread_join_new, (method)thread_join_free, (short)sizeof(thread_join), 0L, A_GIMME, 0);
     
-    class_addmethod(_class, (method)thread_join_anything, "anything", A_GIMME, 0);
-    class_addmethod(_class, (method)thread_join_bang, "bang", 0);
-    class_addmethod(_class, (method)thread_join_float, "float", A_FLOAT, 0);
-    class_addmethod(_class, (method)thread_join_int, "int", A_LONG, 0);
+    class_addmethod(thread_join_class, (method)thread_join_anything, "anything", A_GIMME, 0);
+    class_addmethod(thread_join_class, (method)thread_join_bang, "bang", 0);
+    class_addmethod(thread_join_class, (method)thread_join_float, "float", A_FLOAT, 0);
+    class_addmethod(thread_join_class, (method)thread_join_int, "int", A_LONG, 0);
     
     // tooltip helper
-    class_addmethod(_class, (method)thread_join_assist, "assist", A_CANT, 0);
+    class_addmethod(thread_join_class, (method)thread_join_assist, "assist", A_CANT, 0);
     
     ps_bang = gensym("bang");
     ps_int = gensym("int");
     ps_float = gensym("float");
     
+    class_register(CLASS_BOX, thread_join_class);
+    return 0;
 }
 
 void *thread_join_new(Symbol* s, short argc, Atom *argv)
