@@ -37,7 +37,6 @@
 #define AUTHORS "John MacCallum"
 #define COPYRIGHT_YEARS "2009,2012"
 
-#include <CoreServices/CoreServices.h>
 #include "version.h"
 #include "ext.h"
 #include "ext_obex.h"
