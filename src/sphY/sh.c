@@ -51,7 +51,7 @@ double cSHEvaluate_im (sh *shp, int n, int m, double phi, double theta)
         return 0;
     }
     // existence of structure
-    if ((shp==0)) {
+    if (shp==0) {
         return 0;
     }
     // maximum order
@@ -71,7 +71,7 @@ double cSHEvaluate_re (sh *shp, int n, int m, double phi, double theta)
         return 0;
     }
     // existence of structure
-    if ((shp==0)) {
+    if (shp==0) {
         return 0;
     }
     // maximum order
@@ -92,7 +92,7 @@ double sHEvaluate (sh *shp, int n, int m, double phi, double theta)
         return 0;
     }
     // existence of structure
-    if ((shp==0)) {
+    if (shp==0) {
         return 0;
     }
     // maximum order

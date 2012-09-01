@@ -105,21 +105,23 @@ void thread_fork_int(thread_fork *x, int i);
 void* thread_fork_run();
 
 // setup
-void main(fptr *f)
+int main(void)
 {
     // post version
     version_post_copyright();
     
-    _class = class_new("thread.fork", (method)thread_fork_new, (method)thread_fork_free, (short)sizeof(thread_fork), 0L, A_GIMME, 0);
+    thread_fork_class = class_new("thread.fork", (method)thread_fork_new, (method)thread_fork_free, (short)sizeof(thread_fork), 0L, A_GIMME, 0);
     
-    class_addmethod(_class, (method)thread_fork_anything, "anything", A_GIMME, 0);
-    class_addmethod(_class, (method)thread_fork_bang, "bang", 0);
-    class_addmethod(_class, (method)thread_fork_float, "float", A_FLOAT, 0);
-    class_addmethod(_class, (method)thread_fork_int, "int", A_LONG, 0);
+    class_addmethod(thread_fork_class, (method)thread_fork_anything, "anything", A_GIMME, 0);
+    class_addmethod(thread_fork_class, (method)thread_fork_bang, "bang", 0);
+    class_addmethod(thread_fork_class, (method)thread_fork_float, "float", A_FLOAT, 0);
+    class_addmethod(thread_fork_class, (method)thread_fork_int, "int", A_LONG, 0);
     
     // tooltip helper
-    class_addmethod(_class, (method)thread_fork_assist, "assist", A_CANT, 0);
+    class_addmethod(thread_fork_class, (method)thread_fork_assist, "assist", A_CANT, 0);
     
+    class_register(CLASS_BOX, thread_fork_class);
+    return 0;
 }
 
 void *thread_fork_new(Symbol* s, short argc, Atom *argv)

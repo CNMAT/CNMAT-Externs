@@ -60,7 +60,7 @@ VERSION 1.1: For Max 5
 */
 #define NAME "SDIF-buffer"
 #define DESCRIPTION "Store SDIF data in Max's memory and make it accessible to other objects"
-#define AUTHORS "Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)"
+#define AUTHORS "Matt Wright and Ben \"Jacobs\" (based on sample code from David Zicarelli)"
 #define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,2012"
 
 

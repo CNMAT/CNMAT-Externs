@@ -167,7 +167,6 @@ void xy_paint(t_xy *x, t_object *patcherview){
 	x->patcherview = patcherview;
 	t_rect rect;
 
-	t_jgraphics *gg = (t_jgraphics *)patcherview_get_jgraphics(patcherview);    
 	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
 
 	t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_background, rect.width, rect.height);
@@ -975,7 +974,7 @@ void *xy_new(t_symbol *msg, int argc, t_atom *argv){
 		//      | JBOX_TEXTFIELD
 		;
 
-	if(x = (t_xy *)object_alloc(xy_class)){
+	if((x = (t_xy *)object_alloc(xy_class))){
 		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->ob.b_firstin = (void *)x; 
 
@@ -1116,12 +1115,12 @@ int main(void){
 
 void xy_postPoint(t_point *p){
 	if(!p){
-		object_post((t_object *)x, "p == NULL!!");
+		post("p == NULL!!");
 		return;
 	}
-	object_post((t_object *)x, "point %p:", p);
-	object_post((t_object *)x, "coords: %f %f", p->pt.x, p->pt.y);
-	object_post((t_object *)x, "%p<--%p-->%p", p->prev, p, p->next);
+	post("point %p:", p);
+	post("coords: %f %f", p->pt.x, p->pt.y);
+	post("%p<--%p-->%p", p->prev, p, p->next);
 }
 
 t_max_err xy_notify(t_xy *x, t_symbol *s, t_symbol *msg, void *sender, void *data){

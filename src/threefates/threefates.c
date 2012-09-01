@@ -225,7 +225,7 @@ void threefates_tellmeeverything(t_threefates *x);
  *************************************************************************************/
 
 
-void main(fptr *f)
+int main(void)
 {
 	
 	version_post_copyright();	
@@ -241,7 +241,8 @@ void main(fptr *f)
 	
 	ps_list = gensym("list");
 
-
+    class_register(CLASS_BOX, threefates_class);
+    return 0;
 }
 
 
@@ -250,8 +251,6 @@ void main(fptr *f)
  *************************************************************************************/
 
 void *threefates_new(long maxpartials, long nPartialParams) {
-	int i;
-
 	t_threefates *x;
 	
 	// post("threefates_new(%ld, %ld)", maxpartials, nPartialParams);
