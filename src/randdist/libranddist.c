@@ -461,7 +461,6 @@ void librdist_rayleigh_tail(gsl_rng *rng, int argc, void *argv, int bufc, float 
 }
 
 void librdist_landau(gsl_rng *rng, int argc, void *argv, int bufc, float *buf){
-	t_atom *av = (t_atom *)argv;
 	if(argc != librdist_getnargs(ps_landau)){
 		return;
 	}

@@ -285,12 +285,12 @@ long log2max(long n);
 
 int main(void){
 
-    object_post((t_object *)x, "Pitch~ object version " VERSION " by Tristan Jehan and Michael Zbyszynski");
-    object_post((t_object *)x, "copyright © 2001 Massachussets Institute of Technology");
-	object_post((t_object *)x, "copyright © 2007-8 UC Regents");
-    object_post((t_object *)x, "Based on Miller Puckette's fiddle~");
-    object_post((t_object *)x, "copyright © 1997-1999 Music Department UCSD");
-    object_post((t_object *)x, " ");
+    post("Pitch~ object version " VERSION " by Tristan Jehan and Michael Zbyszynski");
+    post("copyright ï¿½ 2001 Massachussets Institute of Technology");
+	post("copyright ï¿½ 2007-8 UC Regents");
+    post("Based on Miller Puckette's fiddle~");
+    post("copyright ï¿½ 1997-1999 Music Department UCSD");
+    post(" ");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
