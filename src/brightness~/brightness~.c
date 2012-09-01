@@ -156,10 +156,10 @@ long log2max(long n);
 
 int main(void){
 
-    object_post((t_object *)x, "Brightness~ object version " VERSION " by Tristan Jehan  (Media Laboratory), Adrian Freed, and Michael Zbyszynski");
-    object_post((t_object *)x, "copyright © 2001 Massachusetts Institute of Technology");
-	object_post((t_object *)x, "copyright © 2008 UC Regents");
-    object_post((t_object *)x, "");
+    post("Brightness~ object version " VERSION " by Tristan Jehan  (Media Laboratory), Adrian Freed, and Michael Zbyszynski");
+    post("copyright ï¿½ 2001 Massachusetts Institute of Technology");
+	post("copyright ï¿½ 2008 UC Regents");
+    post("");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
