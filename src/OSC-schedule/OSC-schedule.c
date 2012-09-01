@@ -145,6 +145,9 @@ int main(void)
     
     ps_FullPacket = gensym("FullPacket");
     
+    class_register(CLASS_BOX, OSCSchedule_class);
+    return 0;
+    
 }
 
 void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
