@@ -21,20 +21,20 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-   NAME: jit.rtp.send
+   NAME: cnmatrix~
    DESCRIPTION: similar to matrix~, but takes jitter matricies
-   AUTHORS: Yotam Mann
+   AUTHORS: John MacCallum, Ville Pulkki
    COPYRIGHT_YEARS: 2009, 1999
    SVN_REVISION: $LastChangedRevision: 1 $
 	VERSION 1.0: First version with jitter matrix support and log xfade
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
-#define NAME "jit.rtp.send"
+#define NAME "cnmatrix~"
 #define DESCRIPTION "similar to matrix~, but takes jitter matricies"
-#define AUTHORS "Yotam Mann"
+#define AUTHORS "John MacCallum, Ville Pulkki"
 #define COPYRIGHT_YEARS "2009, 1999,2012"
 
-
+#include <Carbon/Carbon.h>
 
 #include "version.h"
 #include "ext.h"
@@ -44,7 +44,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "z_dsp.h"
 #include <math.h>
 #include "jit.common.h"
-#include <ffmpeg.h>
+//#include <ffmpeg.h>
 
 #define FRAME   2
 #define FAST	1
@@ -91,7 +91,7 @@ int main(void){
 	ps_smooth  = gensym("smooth");
 	ps_frame  = gensym("frame");
 
-	setup( &matrix_class, matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
+	class_new("cnmatrix~", (method)matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
 		
 	class_addmethod(matrix_class, (method)matrix_dsp, "dsp", A_CANT, 0);
 	class_addmethod(matrix_class, (method)matrix_fast, "fast", A_GIMME, 0);
@@ -100,7 +100,7 @@ int main(void){
 	class_addmethod(matrix_class, (method)matrix_list, "list", A_GIMME, 0);
 	class_addmethod(matrix_class, (method)jit_matrix, "jit_matrix", A_GIMME, 0);
 	class_addmethod(matrix_class, (method)matrix_slide, "slide", A_FLOAT, 0);
-	dsp_initclass();
+	class_dspinit(matrix_class);
 
 	version_post_copyright();
 
@@ -414,7 +414,7 @@ float mygetfloat(t_atom *a){
 	}else if(a->a_type == A_LONG){
 		return (float)(a->a_w.w_long);
 	}else{
-		object_error((t_object *)x, "cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
+		error("cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
 		return 0;
 	}
 }
@@ -425,7 +425,7 @@ float mygetlong(t_atom *a){
 	}else if(a->a_type == A_LONG){
 		return a->a_w.w_long;
 	}else{
-		object_error((t_object *)x, "cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
+		error("cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
 		return 0;
 	}
 }

@@ -291,7 +291,7 @@ int main(int dummy, char **dummy2) {
 	ps_interp = gensym("interp");
 	ps_max_rows = gensym("max_rows");
 	
-	dsp_initclass();
+	class_dspinit(SDIFtuples_class);
 	return 1;
 }
 

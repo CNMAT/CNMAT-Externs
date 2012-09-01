@@ -673,10 +673,10 @@ int main(void){
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 		  
 	version_post_copyright();
-	object_post((t_object *)x, "NB: still working on amplutide normalisation of the wave outputs");
-	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
+	post("NB: still working on amplutide normalisation of the wave outputs");
+	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 #ifndef EXPIRE
-    object_post((t_object *)x, "Never expires");
+    post("Never expires");
     
 #endif
 	Makeoscsinetable();
@@ -712,5 +712,5 @@ int main(void){
 	    class_addmethod(sinusoids_class, (method)noisiness, 	"noisiness", 		A_FLOAT, 0);
    	class_addmethod(sinusoids_class, (method)tellmeeverything, "tellmeeverything", 0);
 
-	dsp_initclass();
+	class_dspinit(sinusoids_class);
 }

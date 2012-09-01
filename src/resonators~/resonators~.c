@@ -1339,7 +1339,7 @@ int main(void){
 	class_addmethod(resonators_class, (method)resonators_int, "int", A_LONG, 0);
 	class_addmethod(resonators_class, (method)resonators_assist, "assist", A_CANT, 0);
 	class_addmethod(resonators_class, (method)resonators_tellmeeverything, "tellmeeverything", 0);
-	dsp_initclass();
+	class_dspinit(resonators_class);
 //	rescopy('STR#',3216);
 
 	class_register(CLASS_BOX, resonators_class);

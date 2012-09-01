@@ -175,7 +175,7 @@ int main(void){
 	class_addmethod(brightness_class, (method)brightness_assist, "assist", A_CANT, 0);
 	class_addmethod(brightness_class, (method)brightness_float, "float", A_FLOAT, 0);
 	class_addmethod(brightness_class, (method)brightness_int, "int", A_LONG, 0);
-	dsp_initclass();
+	class_dspinit(brightness_class);
 
 	rescopy('STR#', RES_ID);
 

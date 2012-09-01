@@ -161,10 +161,10 @@ long log2max(long n);
 
 int main(void){
 
-    object_post((t_object *)x, "Loudness~ object version " VERSION " by Tristan Jehan (Media Laboratory)");
-    object_post((t_object *)x, "copyright © 2001 Massachusetts Institute of Technology");
-	object_post((t_object *)x, "copyright © 2008 UC Regents:");
-	object_post((t_object *)x, " ");
+    post("Loudness~ object version " VERSION " by Tristan Jehan (Media Laboratory)");
+    post("copyright ï¿½ 2001 Massachusetts Institute of Technology");
+	post("copyright ï¿½ 2008 UC Regents:");
+	post(" ");
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
 	ps_hamming = gensym("hamming");
@@ -182,7 +182,7 @@ int main(void){
 	class_addmethod(loudness_class, (method)loudness_linear, "linear", A_GIMME, 0);
 	class_addmethod(loudness_class, (method)loudness_float, "float", A_FLOAT, 0);
 	class_addmethod(loudness_class, (method)loudness_int, "int", A_LONG, 0);
-	dsp_initclass();
+	class_dspinit(loudness_class);
 
 	rescopy('STR#', RES_ID);
 

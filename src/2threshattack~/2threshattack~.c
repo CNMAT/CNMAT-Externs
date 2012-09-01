@@ -83,7 +83,8 @@ int main(void){
     class_addmethod(tta_class, (method)tta_set_high, "high", A_FLOAT, 0);
     class_addmethod(tta_class, (method)tta_tellmeeverything, "tellmeeverything", 0);
     
-    dsp_initclass();
+    //class_dspinit(tta_class);
+    class_dspinit(tta_class);
 
 	class_register(CLASS_BOX, tta_class);
 	return 0;

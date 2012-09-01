@@ -1006,7 +1006,7 @@ int main(void){
 	class_addmethod(_class, (method)waveguide_tilde_list, "set", A_GIMME, 0);
 	class_addmethod(_class, (method)waveguide_tilde_reset, "reset", 0);
 
-	dsp_initclass();
+	class_dspinit(_class);
    
     
 	class_register(CLASS_BOX, _class);
