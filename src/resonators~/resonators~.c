@@ -947,7 +947,7 @@ void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 	
 	if(x->doubling)
 	{
-		if (x->b_connected = connect[1])
+		if ((x->b_connected = connect[1]))
 		{
 				dsp_add(diresonators_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,  sp[0]->s_n);
 			}
@@ -958,7 +958,7 @@ void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 	else
 	{
 
-		if (x->b_connected = connect[1])
+		if ((x->b_connected = connect[1]))
 		{
 			if(x->interpolating)
 				dsp_add(iresonators_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,  sp[0]->s_n);
@@ -1324,9 +1324,9 @@ int main(void){
 		  0L, A_GIMME, 0);
 
 	version_post_copyright();
-	object_post((t_object *)x, "Portions copyright (c) 1986, 1987 Adrian Freed");
-	object_post((t_object *)x, "Maximum number of resonances: %d", MAXRESONANCES);
-	object_post((t_object *)x, "Never expires");
+	post("Portions copyright (c) 1986, 1987 Adrian Freed");
+	post("Maximum number of resonances: %d", MAXRESONANCES);
+	post("Never expires");
 	
 	class_addmethod(resonators_class, (method)version, "version", 0);
 	class_addmethod(resonators_class, (method)resonators_dsp, "dsp", A_CANT, 0);
