@@ -39,8 +39,8 @@ VERSION 0.1: min_vtime and max_vtime affect goto.  Also "clear" now doesn't clea
 VERSION 0.2: signal inlet for virtual time.  Also version message.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
-       	©1988,1989 Adrian Freed
-	©1999,2000,01,02,03,04,05,06 UC Regents, All Rights Reserved. 
+       	ï¿½1988,1989 Adrian Freed
+	ï¿½1999,2000,01,02,03,04,05,06 UC Regents, All Rights Reserved. 
 	
 */
 #define NAME "decaying-sinusoids~"
@@ -76,7 +76,7 @@ t_class *sinusoids_class;
 
 float Sinetab[STABSZ];
 
-typedef  unsigned long ulong;
+//typedef  unsigned long ulong;
 
 typedef  struct oscdesc
 {
@@ -391,8 +391,8 @@ int main(void){
 	sinusoids_class = class_new("decaying-sinusoids~", (method)sinusoids_new, (method)dsp_free,
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 	version_post_copyright();
-	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
-	object_post((t_object *)x, "Never expires");
+	post("Maximum Oscillators: %d", MAXOSCILLATORS);
+	post("Never expires");
 
 
 	Makeoscsinetable();
@@ -407,7 +407,7 @@ int main(void){
 	class_addmethod(sinusoids_class, (method)sinusoids_clear, "clear", 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);
 	
-	dsp_initclass();
+	class_dspinit(sinusoids_class);
 
 	class_register(CLASS_BOX, sinusoids_class);
 	return 0;

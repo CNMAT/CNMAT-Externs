@@ -78,7 +78,7 @@ int main(void){
 	class_addmethod(bench_class, (method)bench_dsp, "dsp", A_CANT, 0);
 	class_addmethod(bench_class, (method)bench_assist, "assist", A_CANT, 0);
 	
-	dsp_initclass();
+	class_dspinit(bench_class);
 	
 	
 	class_register(CLASS_BOX, bench_class);

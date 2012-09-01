@@ -64,7 +64,7 @@ typedef struct lcm
 } LCM;
 
 fptr *FNS;
-void *class;
+t_class *lcm_class;
 
 void lcm_bang(LCM *x);
 void lcm_int(LCM *x, long n);
@@ -86,10 +86,9 @@ long lcm (long a, long b);
 
 void lcm_findLCM(LCM *x);
 
-void main(fptr *f)
+int main(void)
 {
 	version_post_copyright();
-	FNS = f;	
 		
 	lcm_class = class_new("lcm (least common multiple)", (method)lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
 	class_addmethod(lcm_class, (method)lcm_bang, "bang", 0);
@@ -107,10 +106,10 @@ void main(fptr *f)
 	
 	class_addmethod(lcm_class, (method)lcm_tellmeeverything,"tellmeeverything",0);
 	class_addmethod(lcm_class, (method)version,"version",0);
-
-	finder_addclass("Arith/Logic/Bitwise","lcm");
 	
 	version_post_copyright();
+    class_register(CLASS_BOX, lcm_class);
+    return 0;
 }
 
 void lcm_bang(LCM *x) {	
@@ -198,7 +197,7 @@ void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 void *lcm_new(Symbol *s, short ac, Atom *av)
 {
 	LCM *x;
-	x = (LCM *)newobject(class);
+	x = (LCM *)newobject(lcm_class);
 	
 	x->l_args[0] = 1;
 

@@ -312,7 +312,7 @@ int main(void){
 
 	class_addmethod(pitch_class, (method)pitch_float, "float", A_FLOAT, 0);
 	class_addmethod(pitch_class, (method)pitch_int, "int", A_LONG, 0);
-	dsp_initclass();
+	class_dspinit(pitch_class);
 
 	rescopy('STR#', RES_ID);
 

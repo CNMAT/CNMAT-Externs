@@ -651,9 +651,7 @@ int main(void){
 
 	version_post_copyright();
 
-	
-	class_register(CLASS_BOX, bdist_class);
-	return 0;
+    return 0;
 }
 
 t_max_err bdist_notify(t_bdist *x, t_symbol *s, t_symbol *msg, void *sender, void *data){

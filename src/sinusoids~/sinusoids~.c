@@ -489,7 +489,7 @@ int main(void){
 	class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);
 	class_addmethod(sinusoids_class, (method)tellmeeverything, "tellmeeverything", 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_verbose, "verbose", A_LONG, 0);
-	dsp_initclass();
+	class_dspinit(sinusoids_class);
 	
 	ps_bwe = gensym("bwe");
 

@@ -38,6 +38,7 @@
 #define AUTHORS "Andy Schmeder"
 #define COPYRIGHT_YEARS "2008,2012"
 
+#include <CoreServices/CoreServices.h>
 
 // stdlib
 #include <math.h>
@@ -172,7 +173,7 @@ int main(void){
     
     class_addmethod(firbank_class, (method)firbank_dsp, "dsp", A_CANT, 0);
     
-    dsp_initclass();
+    class_dspinit(firbank_class);
     
     ps_buffer_tilde = gensym("buffer~");
     

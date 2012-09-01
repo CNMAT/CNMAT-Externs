@@ -125,6 +125,8 @@ void Bang(t_deinterleave *x);
 // Output our data.	
 void Output(t_deinterleave *x);
 
+void deinterleave_free(t_deinterleave *x);
+
 /**************************************************************************************
  * Main, or most central, encompassing, and critical routine.
  *************************************************************************************/
@@ -164,7 +166,10 @@ void *deinterleave_new(
 	
 	//post("Running deinterleave_new");
 
-	x = (t_deinterleave*)newobject(deinterleave_class);
+	x = (t_deinterleave *)object_alloc(deinterleave_class);
+    if(!x){
+        return NULL;
+    }
 	
 	/* 
 	 * Deal with arguments.
@@ -196,7 +201,7 @@ void *deinterleave_new(
 		x->num_outputs = 2;
 		
 	// Make outputs (in right to left order) and allocate space to hold output lists
-		for (i = x->num_outputs-1; i >= 0; --i) {
+		for (int i = x->num_outputs-1; i >= 0; --i) {
 		x->t_out[i] = listout(x);
 		x->t_list_out[i] = (Atom *) getbytes(DEFAULT_MAX_OUTARGS * sizeof(Atom));
 	}
@@ -232,9 +237,9 @@ void List(
 	
 	outsize = (short) (argc / x->num_outputs);
 	
-	if (outsize > MAX_OUTARGS) {
-		post("¥ deinterleave: can't output %ld-length list (max is %ld)",
-			 outsize, MAX_OUTARGS);
+	if (outsize > DEFAULT_MAX_OUTARGS) {
+		object_error((t_object *)x, "can't output %ld-length list (max is %ld)",
+			 outsize, DEFAULT_MAX_OUTARGS);
 		return;
 	}
 	
@@ -246,16 +251,16 @@ void List(
 		// Put args into storage.
 		for (i = 0; i < argc; i = i + x->num_outputs)
 		{	
-			x->t_list_out0[counter] = argv[i];
+			x->t_list_out[0][counter] = argv[i];
 	
 			if (x->num_outputs >= 2)
-				x->t_list_out1[counter] = argv[i+1];
+				x->t_list_out[1][counter] = argv[i+1];
 	
 			if (x->num_outputs >= 3)
-				x->t_list_out2[counter] = argv[i+2];
+				x->t_list_out[2][counter] = argv[i+2];
 	
 			if (x->num_outputs >= 4)
-				x->t_list_out3[counter] = argv[i+3];
+				x->t_list_out[3][counter] = argv[i+3];
 				
 			// increment counter.
 			counter++;
@@ -292,15 +297,15 @@ void Output(t_deinterleave *x)
 	{
 	
 		if (x->num_outputs >= 4)
-			outlet_list(x->t_out3, ps_list, x->t_outsize, x->t_list_out3);
+			outlet_list(x->t_out[3], ps_list, x->t_outsize, x->t_list_out[3]);
 	
 		if (x->num_outputs >= 3)
-			outlet_list(x->t_out2, ps_list, x->t_outsize, x->t_list_out2);
+			outlet_list(x->t_out[2], ps_list, x->t_outsize, x->t_list_out[2]);
 
 		if (x->num_outputs >= 2)
-			outlet_list(x->t_out1, ps_list, x->t_outsize, x->t_list_out1);
+			outlet_list(x->t_out[1], ps_list, x->t_outsize, x->t_list_out[1]);
 
-		outlet_list(x->t_out0, ps_list, x->t_outsize, x->t_list_out0);
+		outlet_list(x->t_out[0], ps_list, x->t_outsize, x->t_list_out[0]);
 
 	}	
 } 
