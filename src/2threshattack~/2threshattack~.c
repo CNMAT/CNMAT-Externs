@@ -64,7 +64,7 @@ typedef struct _tta
     int in_attack;
 } t_tta;    
 
-void main(void);
+int main(void);
 void *tta_new(double low, double high);
 void tta_dsp(t_tta *x, t_signal **sp, short *count);
 t_int *tta_perform(t_int *w);
