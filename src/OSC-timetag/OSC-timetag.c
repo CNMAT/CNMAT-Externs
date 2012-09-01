@@ -121,7 +121,7 @@ void OSCTimeTag_iso8601(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
 //void OSCTimeTag_tai(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
 
 // setup
-void main(fptr *f)
+int main(void)
 {
 
   // post version
@@ -160,6 +160,9 @@ void main(fptr *f)
   ps_OSCTimeTag = gensym("OSCTimeTag");
   ps_iso8601 = gensym("iso8601");
   ps_tai = gensym("tai");
+    
+    class_register(CLASS_BOX, OSCTimeTag_class);
+    return 0;
   
 }
 
@@ -420,7 +423,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       
       if(x->to == TO_F) {
 	outlet_float(x->out_p[0], OSCTimeTag_ntp_to_float(&r));
-	return;
+	return r;
       } else {
 	if(r.sign == -1) {
 	  // result undefined
@@ -446,7 +449,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       c = a * x->f;
       if(x->to == TO_F) {
 	outlet_float(x->out_p[0], c);
-	return;
+	return r;
       } else {
 	OSCTimeTag_float_to_ntp(c, &r);
       }
@@ -480,7 +483,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
     else {
       outlet_int(x->out_p[0], 1);
     }
-    return;
+    return r;
     break;
     
   case OP_DER:
@@ -497,7 +500,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       x->b.frac_sec = x->a.frac_sec;
 
       // stop
-      return;
+      return r;
       
     }
     
@@ -513,7 +516,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 	x->b.frac_sec = x->a.frac_sec;
 
 	// stop
-	return;
+	return r;
 	
       } else {
 	
@@ -529,7 +532,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 	  x->b.frac_sec = x->a.frac_sec;
 
 	  // stop
-	  return;
+	  return r;
 	  
 	} else if(r.sign == -1) { // undefined result for this output mode
 	  r.sec = 0;
@@ -601,7 +604,7 @@ void OSCTimeTag_now(OSCTimeTag *x)
 {
     
     long i;
-    i = proxy_getinlet(x);
+    i = proxy_getinlet((t_object *)x);
     
     if(i == 0) {
         x->a.type = TIME_NOW;
@@ -615,7 +618,7 @@ void OSCTimeTag_now(OSCTimeTag *x)
 void OSCTimeTag_immediate(OSCTimeTag *x)
 {
     long i;
-    i = proxy_getinlet(x);
+    i = proxy_getinlet((t_object *)x);
     
     if(i == 0) {
         x->a.type = TIME_IMMEDIATE;
@@ -631,7 +634,7 @@ void OSCTimeTag_int(OSCTimeTag *x, long int ut)
 {
 
     long i;
-    i = proxy_getinlet(x);
+    i = proxy_getinlet((t_object *)x);
     
     if(i == 0) {
         x->a.type = TIME_STAMP;
@@ -649,7 +652,7 @@ void OSCTimeTag_float(OSCTimeTag *x, double d)
     
     long i;
     
-    i = proxy_getinlet(x);
+    i = proxy_getinlet((t_object *)x);
     
     if(i == 0) {
         x->a.type = TIME_STAMP;
@@ -672,7 +675,6 @@ void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
   long i;
   unsigned long sec;
   unsigned long frac_sec;
-  unsigned long length;
 
   struct ntptime r;
   
@@ -681,7 +683,7 @@ void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
   sec = 0;
   frac_sec = 0;
   
-  i = proxy_getinlet(x);
+  i = proxy_getinlet((t_object *)x);
   if(argc == 2 && argv[0].a_type == A_LONG && argv[0].a_w.w_long >= 16 && argv[1].a_type == A_LONG && argv[1].a_w.w_long != 0) {
     
     data = (char*)argv[1].a_w.w_long;
@@ -736,7 +738,7 @@ void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
     unsigned long sec;
     unsigned long frac_sec;
     
-    i = proxy_getinlet(x);
+    i = proxy_getinlet((t_object *)x);
 
     if(argc == 2 && argv[0].a_type == A_LONG && argv[1].a_type == A_LONG) {
       
@@ -772,7 +774,7 @@ void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
 void OSCTimeTag_iso8601(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
 
     long i;
-    i = proxy_getinlet(x);
+    i = proxy_getinlet((t_object *)x);
 
     if(argc == 1 && argv[0].a_type == A_SYM) {
     
