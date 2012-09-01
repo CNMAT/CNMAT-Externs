@@ -44,6 +44,7 @@
 #define AUTHORS "Andy Schmeder"
 #define COPYRIGHT_YEARS "2008,2012"
 
+#include <CoreServices/CoreServices.h>
 
 // max object header
 #include "ext.h"
@@ -124,23 +125,23 @@ void OSCSchedule_reset(OSCSchedule* x); // clear queue
 void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv);
 
 // setup
-void main(fptr *f)
+int main(void)
 {
     
     // announce copyright
     version_post_copyright();
     
     // setup
-    _class = class_new("OSC-schedule", (method)OSCSchedule_new, (method)OSCSchedule_free, (short)sizeof(OSCSchedule), 0L, A_GIMME, 0);
+    OSCSchedule_class = class_new("OSC-schedule", (method)OSCSchedule_new, (method)OSCSchedule_free, (short)sizeof(OSCSchedule), 0L, A_GIMME, 0);
     
     // reset
-    class_addmethod(_class, (method)OSCSchedule_reset, "reset", 0);
+    class_addmethod(OSCSchedule_class, (method)OSCSchedule_reset, "reset", 0);
     
     // FullPacket
-    class_addmethod(_class, (method)OSCSchedule_FullPacket, "FullPacket", A_GIMME, 0);
+    class_addmethod(OSCSchedule_class, (method)OSCSchedule_FullPacket, "FullPacket", A_GIMME, 0);
     
     // tooltip helper
-    class_addmethod(_class, (method)OSCSchedule_assist, "assist", A_CANT, 0);
+    class_addmethod(OSCSchedule_class, (method)OSCSchedule_assist, "assist", A_CANT, 0);
     
     ps_FullPacket = gensym("FullPacket");
     
@@ -347,7 +348,7 @@ void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
     
     if(argc == 2 && argv[0].a_type == A_LONG && argv[0].a_w.w_long >= 16 && argv[1].a_type == A_LONG && argv[1].a_w.w_long != 0) {
         
-        n.length = (char*)(argv[0].a_w.w_long);
+        n.length = (argv[0].a_w.w_long);
         p_data = (char*)(argv[1].a_w.w_long);
         
         // check for queue full condition
