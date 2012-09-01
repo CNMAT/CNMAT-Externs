@@ -28,6 +28,11 @@ Written by Andy Schmeder <andy@cnmat.berkeley.edu>,
  
  
 */
+#define NAME "waveguide~"
+#define DESCRIPTION "Linear and non-linear parameterized waveguide mesh"
+#define AUTHORS "Andy Schmeder"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 /*
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -41,11 +46,13 @@ VERSION 0.1: Initial version
 
 // MMJ includes
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "z_dsp.h"
 
 // CNMAT versioning
 #include "version.h"
-#include "version.c"
+
 
 // Standard library
 #include <math.h>
@@ -462,7 +469,7 @@ t_int *waveguide_tilde_perform(t_int *w) {
     }
     
     if(x->do_reset) {
-        post("waveguide~: reset");
+        object_post((t_object *)x, "waveguide~: reset");
         waveguide_mesh_reset(x->mesh);
         x->do_reset = 0;
     }
@@ -547,18 +554,18 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             arg1 = argv[i].a_w.w_long;
                             
                             if(arg0 >= x->mesh->inputs || arg0 < 0) {
-                                post("waveguide~: connect input (%d) (n): invalid input channel", arg0);
+                                object_post((t_object *)x, "waveguide~: connect input (%d) (n): invalid input channel", arg0);
                                 return;
                             }
                             if(arg1 >= x->mesh->n || arg1 < 0) {
-                                post("waveguide~: connect input (%d) (%d): invalid node number", arg0, arg1);
+                                object_post((t_object *)x, "waveguide~: connect input (%d) (%d): invalid node number", arg0, arg1);
                                 return;
                             }
                             
                             waveguide_mesh_connect_input(x->mesh, arg0, arg1);
                             
                         } else {
-                            post("waveguide~: connect input (i) (n): requires two ints");
+                            object_post((t_object *)x, "waveguide~: connect input (i) (n): requires two ints");
                             return;
                         }
                         
@@ -572,18 +579,18 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             arg1 = argv[i].a_w.w_long;
                             
                             if(arg0 >= x->mesh->outputs || arg0 < 0) {
-                                post("waveguide~: connect output (%d) (n): invalid output channel", arg0);
+                                object_post((t_object *)x, "waveguide~: connect output (%d) (n): invalid output channel", arg0);
                                 return;
                             }
                             if(arg1 >= x->mesh->n || arg1 < 0) {
-                                post("waveguide~: connect output (%d) (%d): invalid node number", arg0, arg1);
+                                object_post((t_object *)x, "waveguide~: connect output (%d) (%d): invalid node number", arg0, arg1);
                                 return;
                             }
                             
                             waveguide_mesh_connect_output(x->mesh, arg0, arg1);
                             
                         } else {
-                            post("waveguide~: connect output (o) (n): requires two ints");
+                            object_post((t_object *)x, "waveguide~: connect output (o) (n): requires two ints");
                             return;
                         }
                         
@@ -600,34 +607,34 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             arg2 = argv[i].a_w.w_long;
 
                             if(arg0 >= x->mesh->e || arg0 < 0) {
-                                post("waveguide~: connect edge (%d) (n0) (n1): invalid edge number", arg0);
+                                object_post((t_object *)x, "waveguide~: connect edge (%d) (n0) (n1): invalid edge number", arg0);
                                 return;
                             }
                             if(arg1 >= x->mesh->n || arg1 < 0) {
-                                post("waveguide~: connect edge (%d) (%d) (n1): invalid first node number", arg0, arg1);
+                                object_post((t_object *)x, "waveguide~: connect edge (%d) (%d) (n1): invalid first node number", arg0, arg1);
                                 return;
                             }
                             if(arg2 >= x->mesh->n || arg2 < 0) {
-                                post("waveguide~: connect edge (%d) (%d) (%d): invalid second node number", arg0, arg1, arg2);
+                                object_post((t_object *)x, "waveguide~: connect edge (%d) (%d) (%d): invalid second node number", arg0, arg1, arg2);
                                 return;
                             }
                             
                             waveguide_mesh_connect_edge(x->mesh, arg0, arg1, arg2);
                             
                         } else {
-                            post("waveguide~: connect edge (e) (n0) (n1): requires three ints");
+                            object_post((t_object *)x, "waveguide~: connect edge (e) (n0) (n1): requires three ints");
                             return;
                         }
                         
                     }
                     
                     else {
-                        post("waveguide~: connect (input | output | edge): requires connection type");
+                        object_post((t_object *)x, "waveguide~: connect (input | output | edge): requires connection type");
                         return;
                     }
                     
                 } else {
-                    post("waveguide~: connect (input | output | edge): requires connection type");
+                    object_post((t_object *)x, "waveguide~: connect (input | output | edge): requires connection type");
                     return;
                 }
                 
@@ -655,13 +662,13 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             v = argv[i].a_w.w_float;
 
                             if(v <= 0.f || v >= 1.f) {
-                                post("waveguide~: set fc (%d) (%f): v out of bounds (0.0 - 1.0)", arg0, v);
+                                object_post((t_object *)x, "waveguide~: set fc (%d) (%f): v out of bounds (0.0 - 1.0)", arg0, v);
                                 return;
                             }
                             
                             if(arg0_star == 0) {
                                 if(arg0 >= x->mesh->e || arg0 < 0) {
-                                    post("waveguide~: set fc (%d) (v): invalid edge number", arg0);
+                                    object_post((t_object *)x, "waveguide~: set fc (%d) (v): invalid edge number", arg0);
                                     return;
                                 }
                                 
@@ -673,7 +680,7 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             }
                             
                         } else {
-                            post("waveguide~: set fc (e) (v): requires int, float arguments");
+                            object_post((t_object *)x, "waveguide~: set fc (e) (v): requires int, float arguments");
                             return;
                         }
                         
@@ -693,13 +700,13 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             v = argv[i].a_w.w_float;
                             
                             if(v < 0.f || v >= 1.f) {
-                                post("waveguide~: set nl_pos (%d) (%f): v out of bounds [0.0 - 1.0)", arg0, v);
+                                object_post((t_object *)x, "waveguide~: set nl_pos (%d) (%f): v out of bounds [0.0 - 1.0)", arg0, v);
                                 return;
                             }
                             
                             if(arg0_star == 0) {
                                 if(arg0 >= x->mesh->e || arg0 < 0) {
-                                    post("waveguide~: set nl_pos (%d) (v): invalid edge number", arg0);
+                                    object_post((t_object *)x, "waveguide~: set nl_pos (%d) (v): invalid edge number", arg0);
                                     return;
                                 }
                                 
@@ -711,7 +718,7 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             }
                             
                         } else {
-                            post("waveguide~: set nl_pos (e) (v): requires int, float arguments");
+                            object_post((t_object *)x, "waveguide~: set nl_pos (e) (v): requires int, float arguments");
                             return;
                         }
                         
@@ -731,13 +738,13 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             v = argv[i].a_w.w_float;
                             
                             if(v < 0.f || v >= 1.f) {
-                                post("waveguide~: set nl_neg (%d) (%f): v out of bounds [0.0 - 1.0)", arg0, v);
+                                object_post((t_object *)x, "waveguide~: set nl_neg (%d) (%f): v out of bounds [0.0 - 1.0)", arg0, v);
                                 return;
                             }
                             
                             if(arg0_star == 0) {
                                 if(arg0 >= x->mesh->e || arg0 < 0) {
-                                    post("waveguide~: set nl_neg (%d) (v): invalid edge number", arg0);
+                                    object_post((t_object *)x, "waveguide~: set nl_neg (%d) (v): invalid edge number", arg0);
                                     return;
                                 }
                                 
@@ -749,7 +756,7 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             }
                             
                         } else {
-                            post("waveguide~: set nl_neg (e) (v): requires int, float arguments");
+                            object_post((t_object *)x, "waveguide~: set nl_neg (e) (v): requires int, float arguments");
                             return;
                         }
                         
@@ -769,13 +776,13 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             v = argv[i].a_w.w_float;
                             
                             if(v < 0.f || v >= 1.f) {
-                                post("waveguide~: set nl (%d) (%f): v out of bounds [0.0 - 1.0)", arg0, v);
+                                object_post((t_object *)x, "waveguide~: set nl (%d) (%f): v out of bounds [0.0 - 1.0)", arg0, v);
                                 return;
                             }
                             
                             if(arg0_star == 0) {
                                 if(arg0 >= x->mesh->e || arg0 < 0) {
-                                    post("waveguide~: set nl (%d) (v): invalid edge number", arg0);
+                                    object_post((t_object *)x, "waveguide~: set nl (%d) (v): invalid edge number", arg0);
                                     return;
                                 }
                                 
@@ -789,7 +796,7 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             }
                             
                         } else {
-                            post("waveguide~: set nl (e) (v): requires int, float arguments");
+                            object_post((t_object *)x, "waveguide~: set nl (e) (v): requires int, float arguments");
                             return;
                         }
                         
@@ -809,18 +816,18 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             v = argv[i].a_w.w_float;
                             
                             if(v <= 0.f) {
-                                post("waveguide~: set delay (%d) (%f): v out of bounds [0.0 - Inf)", arg0, v);
+                                object_post((t_object *)x, "waveguide~: set delay (%d) (%f): v out of bounds [0.0 - Inf)", arg0, v);
                                 return;
                             }
                             
                             if(arg0_star == 0) {
                                 if(((v / 1000.) * sys_getsr()) > x->mesh->w[arg0]->size) {
-                                    post("waveguide~: set delay (%d) (%f): v too large for buffer size", arg0, v);
+                                    object_post((t_object *)x, "waveguide~: set delay (%d) (%f): v too large for buffer size", arg0, v);
                                     return;
                                 }
                                 
                                 if(arg0 >= x->mesh->e || arg0 < 0) {
-                                    post("waveguide~: set delay (%d) (v): invalid edge number", arg0);
+                                    object_post((t_object *)x, "waveguide~: set delay (%d) (v): invalid edge number", arg0);
                                     return;
                                 }
                                 
@@ -828,7 +835,7 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             } else {
                                 for(j = 0; j < x->mesh->e; j++) {
                                     if(((v / 1000.) * sys_getsr()) > x->mesh->w[j]->size) {
-                                        post("waveguide~: set delay (%d) (%f): v too large for buffer size", j, v);
+                                        object_post((t_object *)x, "waveguide~: set delay (%d) (%f): v too large for buffer size", j, v);
                                         return;
                                     }
                                     
@@ -837,29 +844,29 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
                             }
                             
                         } else {
-                            post("waveguide~: set delay (e) (v): requires int, float arguments");
+                            object_post((t_object *)x, "waveguide~: set delay (e) (v): requires int, float arguments");
                             return;
                         }
                         
                     } else {
-                        post("waveguide~: set (fc | nl_pos | nl_neg | nl | delay): command required");
+                        object_post((t_object *)x, "waveguide~: set (fc | nl_pos | nl_neg | nl | delay): command required");
                         return;
                     }
                     
                 } else {
-                    post("waveguide~: set (fc | nl_pos | nl_neg | nl | delay): command type required");
+                    object_post((t_object *)x, "waveguide~: set (fc | nl_pos | nl_neg | nl | delay): command type required");
                     return;
                 }
                     
             }
             
             else {
-                post("waveguide~: (connect | set): command required");
+                object_post((t_object *)x, "waveguide~: (connect | set): command required");
                 return;
             }
 
         } else {
-            post("waveguide~: (connect | set): command required");
+            object_post((t_object *)x, "waveguide~: (connect | set): command required");
             return;
         }
         
@@ -900,7 +907,7 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     init_e = argv[i].a_w.w_long;
                 } else {
-                    post("waveguide~: expected int for @edges");
+                    object_post((t_object *)x, "waveguide~: expected int for @edges");
                 }
             }
             
@@ -909,7 +916,7 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     init_n = argv[i].a_w.w_long;
                 } else {
-                    post("waveguide~: expected int for @nodes");
+                    object_post((t_object *)x, "waveguide~: expected int for @nodes");
                 }
             }
             
@@ -918,7 +925,7 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     init_s = argv[i].a_w.w_long;
                 } else {
-                    post("waveguide~: expected int for @size");
+                    object_post((t_object *)x, "waveguide~: expected int for @size");
                 }
             }
             
@@ -927,7 +934,7 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     init_inputs = argv[i].a_w.w_long;
                 } else {
-                    post("waveguide~: expected int for @inputs");
+                    object_post((t_object *)x, "waveguide~: expected int for @inputs");
                 }
             }
             
@@ -936,7 +943,7 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_LONG) {
                     init_outputs = argv[i].a_w.w_long;
                 } else {
-                    post("waveguide~: expected int for @outputs");
+                    object_post((t_object *)x, "waveguide~: expected int for @outputs");
                 }
             }
             
@@ -945,7 +952,7 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
                 if(i < argc && argv[i].a_type == A_FLOAT) {
                     init_delay = argv[i].a_w.w_float;
                 } else {
-                    post("waveguide~: expected float for @delay");
+                    object_post((t_object *)x, "waveguide~: expected float for @delay");
                 }
             }
         }
@@ -986,21 +993,23 @@ void waveguide_tilde_free(waveguide_tilde_state* x) {
 
 }
 
-int main(void) {
+int main(void){
     
-	version(0);
+	version_post_copyright();
     
-	setup((t_messlist **)&waveguide_tilde_class, (method)waveguide_tilde_new, 
+	_class = class_new("waveguide~", (method)waveguide_tilde_new, 
 		  (method)waveguide_tilde_free, (short)sizeof(waveguide_tilde_state),
 		  0L, A_GIMME, 0);
 
-	addmess((method)waveguide_tilde_dsp, "dsp", A_CANT, 0);
-	addmess((method)waveguide_tilde_list, "connect", A_GIMME, 0);
-	addmess((method)waveguide_tilde_list, "set", A_GIMME, 0);
-	addmess((method)waveguide_tilde_reset, "reset", 0);
+	class_addmethod(_class, (method)waveguide_tilde_dsp, "dsp", A_CANT, 0);
+	class_addmethod(_class, (method)waveguide_tilde_list, "connect", A_GIMME, 0);
+	class_addmethod(_class, (method)waveguide_tilde_list, "set", A_GIMME, 0);
+	class_addmethod(_class, (method)waveguide_tilde_reset, "reset", 0);
 
 	dsp_initclass();
    
-    return 0;
+    
+	class_register(CLASS_BOX, _class);
+	return 0;
 }
 

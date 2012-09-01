@@ -39,9 +39,16 @@
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+#define NAME "OSC-schedule"
+#define DESCRIPTION "Schedules packets using OSC time stamps"
+#define AUTHORS "Andy Schmeder"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 // max object header
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "ext_critical.h"
 
 // heap-based priority queue
@@ -52,7 +59,7 @@
 
 // version
 #include "version.h"
-#include "version.c"
+
 
 // default options
 #define DEFAULT_PACKET_SIZE 1000
@@ -100,7 +107,7 @@ typedef struct _OSCSchedule
 } OSCSchedule;
 
 /* global that holds the class definition */
-void *OSCSchedule_class;
+t_class *OSCSchedule_class;
 
 Symbol *ps_FullPacket;
 
@@ -121,19 +128,19 @@ void main(fptr *f)
 {
     
     // announce copyright
-    version(0);
+    version_post_copyright();
     
     // setup
-    setup((t_messlist **)&OSCSchedule_class, (method)OSCSchedule_new, (method)OSCSchedule_free, (short)sizeof(OSCSchedule), 0L, A_GIMME, 0);
+    _class = class_new("OSC-schedule", (method)OSCSchedule_new, (method)OSCSchedule_free, (short)sizeof(OSCSchedule), 0L, A_GIMME, 0);
     
     // reset
-    addmess((method)OSCSchedule_reset, "reset", 0);
+    class_addmethod(_class, (method)OSCSchedule_reset, "reset", 0);
     
     // FullPacket
-    addmess((method)OSCSchedule_FullPacket, "FullPacket", A_GIMME, 0);
+    class_addmethod(_class, (method)OSCSchedule_FullPacket, "FullPacket", A_GIMME, 0);
     
     // tooltip helper
-    addmess((method)OSCSchedule_assist, "assist", A_CANT, 0);
+    class_addmethod(_class, (method)OSCSchedule_assist, "assist", A_CANT, 0);
     
     ps_FullPacket = gensym("FullPacket");
     
@@ -173,10 +180,10 @@ void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
                     if(argv[i].a_type == A_FLOAT) {
                         OSCTimeTag_float_to_ntp(argv[i].a_w.w_float, &(x->precision));
                     } else {
-                        post("OSC-schedule: expected float for precision");
+                        object_post((t_object *)x, "OSC-schedule: expected float for precision");
                     }
                 } else {
-                    post("OSC-schedule: missing arg after precision");
+                    object_post((t_object *)x, "OSC-schedule: missing arg after precision");
                 }
             }
             
@@ -189,10 +196,10 @@ void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
                     if(argv[i].a_type == A_FLOAT) {
                         OSCTimeTag_float_to_ntp(argv[i].a_w.w_float, &(x->max_delay));
                     } else {
-                        post("OSC-schedule: expected float for maxdelay");
+                        object_post((t_object *)x, "OSC-schedule: expected float for maxdelay");
                     }
                 } else {
-                    post("OSC-schedule: missing arg after maxdelay");
+                    object_post((t_object *)x, "OSC-schedule: missing arg after maxdelay");
                 }
             }
             
@@ -205,10 +212,10 @@ void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
                     if(argv[i].a_type == A_LONG) {
                         x->packets_max = argv[i].a_w.w_long;
                     } else {
-                        post("OSC-schedule: expected int for queuesize");
+                        object_post((t_object *)x, "OSC-schedule: expected int for queuesize");
                     }
                 } else {
-                    post("OSC-schedule: missing arg after queuesize");
+                    object_post((t_object *)x, "OSC-schedule: missing arg after queuesize");
                 }
             }
             
@@ -221,10 +228,10 @@ void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
                     if(argv[i].a_type == A_LONG) {
                         x->packet_size = argv[i].a_w.w_long;
                     } else {
-                        post("OSC-schedule: expected int for packetsize");
+                        object_post((t_object *)x, "OSC-schedule: expected int for packetsize");
                     }
                 } else {
-                    post("OSC-schedule: missing arg after packetsize");
+                    object_post((t_object *)x, "OSC-schedule: missing arg after packetsize");
                 }
             }
         }
@@ -288,7 +295,7 @@ void OSCSchedule_assist(OSCSchedule *x, void *box, long msg, long arg, char *dst
             sprintf(dstString, "FullPacket out, having immediate timetag");
         }
     } else {
-        post("OSCTimeTag_assist: unrecognized message %ld", msg);
+        object_post((t_object *)x, "OSCTimeTag_assist: unrecognized message %ld", msg);
     }
     
 }
@@ -345,14 +352,14 @@ void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
         
         // check for queue full condition
         if(x->q.heap_size == x->packets_max) {
-            post("OSC-schedule: queue overflow");
+            object_post((t_object *)x, "OSC-schedule: queue overflow");
             outlet_anything(x->out_p[1], ps_FullPacket, 2, argv);
             return;
         }
         
         // check for length condition
         if(n.length >= x->packet_size) {
-            post("OSC-schedule: packet length %d exceeds maximum", n.length);
+            object_post((t_object *)x, "OSC-schedule: packet length %d exceeds maximum", n.length);
             outlet_anything(x->out_p[1], ps_FullPacket, 2, argv);
             return;
         }
@@ -360,7 +367,7 @@ void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
         // make sure its a bundle
         if(strcmp(p_data, "#bundle") != 0) {
             // not a bundle, send it out the 2nd outlet
-            post("OSC-schedule: input is not a bundle");
+            object_post((t_object *)x, "OSC-schedule: input is not a bundle");
             outlet_anything(x->out_p[1], ps_FullPacket, 2, argv);
             return;
         }
@@ -414,7 +421,7 @@ void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
         
         // delay exceeds maximum
         if(OSCTimeTag_cmp(&nowp1, &(n.timestamp)) < 0) {
-            post("OSC-schedule: delay exceeds maximum");
+            object_post((t_object *)x, "OSC-schedule: delay exceeds maximum");
             outlet_anything(x->out_p[1], ps_FullPacket, 2, argv);
             return;
         }

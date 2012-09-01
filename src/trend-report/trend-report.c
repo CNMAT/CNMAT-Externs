@@ -40,13 +40,20 @@ VERSION 0.2.1: Force Package Info Generation
 c.f. change point theory
 
 */
+#define NAME "trend-report"
+#define DESCRIPTION "Given an input stream of numbers, report statistics on "trends", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the "laughter" detector for Edmund Campion's "ME"."
+#define AUTHORS "Matt Wright"
+#define COPYRIGHT_YEARS "2002-06,2012"
+
  
  
 // #define DEBUG	
  
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 
 typedef struct TrendReport
 {
@@ -82,11 +89,11 @@ void OutputTrend(TrendReport *x);
 
 
 void main(fptr *f) {
-	version(0);
-	setup((t_messlist **)&class, (method)TrendReport_new, 0L, (short)sizeof(TrendReport), 0L, A_DEFFLOAT, 0);
-	addfloat((method)TrendReport_float);
-	addint((method)TrendReport_int);
-	addmess((method)version, "version", 0);
+	version_post_copyright();
+	TrendReport_class = class_new("trend-report", (method)TrendReport_new, 0L, (short)sizeof(TrendReport), 0L, A_DEFFLOAT, 0);
+	class_addmethod(TrendReport_class, (method)TrendReport_float, "float", A_FLOAT, 0);
+	class_addmethod(TrendReport_class, (method)TrendReport_int, "int", A_LONG, 0);
+	class_addmethod(TrendReport_class, (method)version, "version", 0);
 }
 
 void Reset(TrendReport *x) {

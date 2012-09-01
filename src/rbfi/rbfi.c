@@ -57,6 +57,11 @@
   VERSION 0.9.4: changed the format of the dump message
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "rbfi"
+#define DESCRIPTION "A 2-D graphical display/editor like pictctrl but supporting multiple points."
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2009,2012"
+
 
 #include "version.h"
 #include "ext.h"
@@ -66,7 +71,7 @@
 #include "jpatcher_api.h" 
 #include "jgraphics.h"
 #include "ext_critical.h"
-#include "version.c"
+
 #include "math.h"
 #include <sys/time.h>
 
@@ -903,7 +908,7 @@ int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv){
 	t_symbol *s;
 	t_atom *ptr = argv;
 	if(atom_gettype(ptr) != A_SYM){
-		error("rbfi: error parsing arguments to add_point.  expected a symbol and found something else.");
+		object_error((t_object *)x, "rbfi: error parsing arguments to add_point.  expected a symbol and found something else.");
 		return 1;
 	}
 	s = atom_getsym(ptr++);
@@ -948,7 +953,7 @@ int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv){
 				p->color.green = (double)((h & 0xff00) / 0xff);
 				p->color.blue = (double)((h & 0xff) / 0xff);
 			}else{
-				error("rbfi: unrecognized argument for key rgb");
+				object_error((t_object *)x, "rbfi: unrecognized argument for key rgb");
 				return 1;
 			}
 		}
@@ -971,7 +976,7 @@ int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv){
 				p->color.green = (double)((h & 0xff00) / 0xff);
 				p->color.blue = (double)((h & 0xff) / 0xff);
 			}else{
-				error("rbfi: unrecognized argument for key rgb");
+				object_error((t_object *)x, "rbfi: unrecognized argument for key rgb");
 				return 1;
 			}
 		}
@@ -1003,12 +1008,12 @@ int rbfi_parseAddPointArgs(t_rbfi *x, t_point *p, int argc, t_atom *argv){
 		}
 		p->locked = atom_getlong(ptr++);
 	}else{
-		error("rbfi: unrecognized key %s", s->s_name);
+		object_error((t_object *)x, "rbfi: unrecognized key %s", s->s_name);
 	}
 	return rbfi_parseAddPointArgs(x, p, argc - (ptr - argv), ptr);
 
  bail:
-	error("rbfi: not enough arguments for key %s", s->s_name);
+	object_error((t_object *)x, "rbfi: not enough arguments for key %s", s->s_name);
 	return 1;
 }
 
@@ -1058,7 +1063,7 @@ t_point *rbfi_newPoint(void){
 	if(p){
 		return p;
 	}else{
-		error("rbfi: out of memory!  failed to allocate a new point");
+		object_error((t_object *)x, "rbfi: out of memory!  failed to allocate a new point");
 		return NULL;
 	}
 }
@@ -1819,35 +1824,37 @@ int main(void){
 	ps_space = gensym("space");
 	ps_numpoints = gensym("numpoints");
 
-	version(0);
+	version_post_copyright();
 
-	error("rbfi: the output of the dump message has changed, and will change again soon!");
-	error("rbfi: If you need the old behavior, set the \"compatmode\" attribute to 1.");
-	error("rbfi: In the next version of rbfi (early 2011), all output will be done with OSC bundles");
+	object_error((t_object *)x, "rbfi: the output of the dump message has changed, and will change again soon!");
+	object_error((t_object *)x, "rbfi: If you need the old behavior, set the \"compatmode\" attribute to 1.");
+	object_error((t_object *)x, "rbfi: In the next version of rbfi (early 2011), all output will be done with OSC bundles");
 	
+	
+	class_register(CLASS_BOX, rbfi_class);
 	return 0;
 }
 
 void rbfi_postPoint(t_point *p){
 	if(!p){
-		post("p == NULL!!");
+		object_post((t_object *)x, "p == NULL!!");
 		return;
 	}
-	post("point %p:", p);
-	post("coords: %f %f", p->pt.x, p->pt.y);
+	object_post((t_object *)x, "point %p:", p);
+	object_post((t_object *)x, "coords: %f %f", p->pt.x, p->pt.y);
 	if(p->label){
-		post("label: %s", p->label->s_name);
+		object_post((t_object *)x, "label: %s", p->label->s_name);
 	}else{
-		post("no label");
+		object_post((t_object *)x, "no label");
 	}
-	post("color: %f %f %f", p->color.red, p->color.blue, p->color.green);
-	post("exponent: %f, weight: %f", p->exponent, p->weight);
-	post("inner radius: %f, outer radius: %f", p->inner_radius, p->outer_radius);
-	post("mousestate: 0x%X", p->mousestate);
+	object_post((t_object *)x, "color: %f %f %f", p->color.red, p->color.blue, p->color.green);
+	object_post((t_object *)x, "exponent: %f, weight: %f", p->exponent, p->weight);
+	object_post((t_object *)x, "inner radius: %f, outer radius: %f", p->inner_radius, p->outer_radius);
+	object_post((t_object *)x, "mousestate: 0x%X", p->mousestate);
 
 	/*
-	post("data count: %d", p->datac);
-	post("data:");
+	object_post((t_object *)x, "data count: %d", p->datac);
+	object_post((t_object *)x, "data:");
 	int i;
 	for(i = 0; i < p->datac; i++){
 		postatom(p->data + i);

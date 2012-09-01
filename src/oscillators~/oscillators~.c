@@ -43,11 +43,18 @@ VERSION 1.4: Removed spurious printing of incorrect version information
 	©1988,1989 Adrian Freed
 	©1999 UC Regents, All Rights Reserved. 
 */
+#define NAME "oscillators~"
+#define DESCRIPTION "Oscillator bank that can read waveform from a buffer~"
+#define AUTHORS "Adrian Freed"
+#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,2012"
+
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 #include "z_dsp.h"
 #include "buffer.h"
 t_symbol *ps_buffer;
@@ -60,7 +67,8 @@ t_symbol *ps_buffer;
 #define STABSZ (1l<<TPOW)
 #define LOGBASE2OFTABLEELEMENT 2
 
-void *sinusoids_class;
+t_class *sinusoids_class;
+
 float Sinetab[STABSZ];
 
 typedef  unsigned long ulong;
@@ -196,7 +204,7 @@ void oscillators_set(t_oscillators *x, t_symbol *s)
 	t_buffer *b;
 	
 	if (s==0) {
-		error("oscillators: no buffer specified");
+		object_error((t_object *)x, "oscillators: no buffer specified");
 		return;
 	}
 	
@@ -204,7 +212,7 @@ void oscillators_set(t_oscillators *x, t_symbol *s)
 	if ((b = (t_buffer *)(s->s_thing)) && ob_sym(b) == ps_buffer) {
 		x->l_buf = b;
 	} else {
-		error("oscillators: %s is not a buffer~", s->s_name);
+		object_error((t_object *)x, "oscillators: %s is not a buffer~", s->s_name);
 		x->l_buf = 0;
 	}
 }
@@ -224,7 +232,7 @@ void sinusoids_list(t_oscillators *x, t_symbol *s, short argc, t_atom *argv)
 	int i;
 	if(argc%2!=0)
 	{
-		post("multiple of 2 floats (Frequency, amplitude) required");
+		object_post((t_object *)x, "multiple of 2 floats (Frequency, amplitude) required");
 	}
 	else
 	{
@@ -310,7 +318,7 @@ void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 		    	   since the buffer~ object in question might not be loaded yet.
 		    	   Instead we'll call oscillators_set() from the dsp() routine. */
 		} else {
-			post("no buffer~.");
+			object_post((t_object *)x, "no buffer~.");
 			x->l_sym = 0;
 		}
 
@@ -321,23 +329,25 @@ void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 }
 
 
-void main(void)
-{
+int main(void){
 	setup((struct messlist **)&sinusoids_class,(method)oscillators_new, 
 	      (method)dsp_free, (short)sizeof(t_oscillators),
 	      0L, A_GIMME, 0);
-	post("Maximum Oscillators: %d", MAXOSCILLATORS);
-	post("Never expires.");
+	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
+	object_post((t_object *)x, "Never expires.");
     
-	addmess((method)sinusoids_dsp, "dsp", A_CANT, 0);
-	addmess((method)sinusoids_list, "list", A_GIMME, 0);
-	addmess((method)sinusoids_clear, "clear", 0);
-	addmess((method)sinusoids_assist, "assist", A_CANT, 0);
-	addmess((method)oscillators_set, "set", A_SYM, 0);
-	addmess((method)oscillators_noglissbirthmode, "noglissbirthmode", A_LONG, 0);
-	addmess((method)version, "version", 0);
+	class_addmethod(oscillators_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+	class_addmethod(oscillators_class, (method)sinusoids_list, "list", A_GIMME, 0);
+	class_addmethod(oscillators_class, (method)sinusoids_clear, "clear", 0);
+	class_addmethod(oscillators_class, (method)sinusoids_assist, "assist", A_CANT, 0);
+	class_addmethod(oscillators_class, (method)oscillators_set, "set", A_SYM, 0);
+	class_addmethod(oscillators_class, (method)oscillators_noglissbirthmode, "noglissbirthmode", A_LONG, 0);
+	class_addmethod(oscillators_class, (method)version, "version", 0);
 	dsp_initclass();
 	
 	ps_buffer = gensym("buffer~");
-	version(0);
+	version_post_copyright();
+
+	class_register(CLASS_BOX, oscillators_class);
+	return 0;
 }

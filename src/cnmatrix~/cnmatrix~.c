@@ -29,11 +29,18 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 	VERSION 1.0: First version with jitter matrix support and log xfade
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "jit.rtp.send"
+#define DESCRIPTION "similar to matrix~, but takes jitter matricies"
+#define AUTHORS "Yotam Mann"
+#define COPYRIGHT_YEARS "2009, 1999,2012"
+
 
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 #include "z_dsp.h"
 #include <math.h>
 #include "jit.common.h"
@@ -43,7 +50,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #define FAST	1
 #define SMOOTH  0
 
-void *matrix_class;
+t_class *matrix_class;
 
 typedef struct _matrix {
 	t_pxobject m_obj;
@@ -78,7 +85,7 @@ void matrix_free(t_matrix *x);
 
 void matrix_slide(t_matrix *x, double slide);
 
-void main(void) {
+int main(void){
 	
 	ps_fast    = gensym("fast");
 	ps_smooth  = gensym("smooth");
@@ -86,16 +93,19 @@ void main(void) {
 
 	setup( &matrix_class, matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
 		
-	addmess((method)matrix_dsp, "dsp", A_CANT, 0);
-	addmess((method)matrix_fast, "fast", A_GIMME, 0);
-	addmess((method)matrix_smooth, "smooth", A_GIMME, 0);
-	addmess((method)matrix_frame, "frame", A_GIMME, 0);
-	addmess((method)matrix_list, "list", A_GIMME, 0);
-	addmess((method)jit_matrix, "jit_matrix", A_GIMME, 0);
-	addmess((method)matrix_slide, "slide", A_FLOAT, 0);
+	class_addmethod(matrix_class, (method)matrix_dsp, "dsp", A_CANT, 0);
+	class_addmethod(matrix_class, (method)matrix_fast, "fast", A_GIMME, 0);
+	class_addmethod(matrix_class, (method)matrix_smooth, "smooth", A_GIMME, 0);
+	class_addmethod(matrix_class, (method)matrix_frame, "frame", A_GIMME, 0);
+	class_addmethod(matrix_class, (method)matrix_list, "list", A_GIMME, 0);
+	class_addmethod(matrix_class, (method)jit_matrix, "jit_matrix", A_GIMME, 0);
+	class_addmethod(matrix_class, (method)matrix_slide, "slide", A_FLOAT, 0);
 	dsp_initclass();
 
-	version(0);
+	version_post_copyright();
+
+	class_register(CLASS_BOX, matrix_class);
+	return 0;
 }
 
 t_int *matrix_perform_fast(t_int *wAsT_int) {
@@ -181,9 +191,9 @@ t_int *matrix_perform_smooth(t_int *w) {
 	}		
     
 	/*
-     post("***************");
+     object_post((t_object *)x, "***************");
      for(i = 0; i < numInlets + numOutlets; i++){
-     post("%d %p", i, w[i + 3]);
+     object_post((t_object *)x, "%d %p", i, w[i + 3]);
      }
      */
 	/*
@@ -404,7 +414,7 @@ float mygetfloat(t_atom *a){
 	}else if(a->a_type == A_LONG){
 		return (float)(a->a_w.w_long);
 	}else{
-		error("cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
+		object_error((t_object *)x, "cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
 		return 0;
 	}
 }
@@ -415,7 +425,7 @@ float mygetlong(t_atom *a){
 	}else if(a->a_type == A_LONG){
 		return a->a_w.w_long;
 	}else{
-		error("cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
+		object_error((t_object *)x, "cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
 		return 0;
 	}
 }
@@ -434,7 +444,7 @@ void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
 
 	/*
 	if(argc != x->numOutlets){
-		post("matrix~: Wrong number of panning coefficients! Should be %d.",x->numOutlets);
+		object_post((t_object *)x, "matrix~: Wrong number of panning coefficients! Should be %d.",x->numOutlets);
 	} else {
 		// new values are picked
 		coeffptr= x->coeffLists + x->m_obj.z_in*x->numOutlets;
@@ -442,11 +452,11 @@ void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
 			//post("list %d", x->m_obj.z_in * x->numOutlets + i);
 
 			if(argv[i].a_type != A_FLOAT ){
-				post("matrix~: Panning coefficients must be floats!",0);
+				object_post((t_object *)x, "matrix~: Panning coefficients must be floats!",0);
 				return;
 			}
 			if(argv[i].a_w.w_float > 10.0 || argv[i].a_w.w_float < -10.0){
-				post("matrix~: Too large pan coeff magnitude, not changed!",0);
+				object_post((t_object *)x, "matrix~: Too large pan coeff magnitude, not changed!",0);
 				coeffptr++;
 			} else {
 				*coeffptr++ = argv[i].a_w.w_float;
@@ -465,7 +475,11 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
 
 	t_int i, k;
 	t_int vs = sys_getblksize(); // Size of signal vector selected in MSP
-	t_matrix *x = (t_matrix *)newobject(matrix_class);    
+	t_matrix *x = (t_matrix *)object_alloc(matrix_class);
+	if(!x){
+		return NULL;
+	}
+    
 	t_float Fs = sys_getsr();
 	t_float *fptr,*gptr, *nptr;		
 	// Look at 1st argument

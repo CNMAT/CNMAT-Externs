@@ -39,13 +39,20 @@ VERSION 0.1: First public release
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
+#define NAME "thread.join"
+#define DESCRIPTION "Pass data from a secondary thread back to the main thread"
+#define AUTHORS "Andy Schmeder"
+#define COPYRIGHT_YEARS "2009,2012"
+
 
 // max object header
 #include "ext.h"
+#include "ext_obex.h"
+
 
 // version info
 #include "version.h"
-#include "version.c"
+
 
 /* structure definition of your object */
 typedef struct _thread_join
@@ -88,17 +95,17 @@ Symbol* ps_int;
 void main(fptr *f)
 {
     // post version
-    version(0);
+    version_post_copyright();
     
-    setup((t_messlist **)&thread_join_class, (method)thread_join_new, (method)thread_join_free, (short)sizeof(thread_join), 0L, A_GIMME, 0);
+    _class = class_new("thread.join", (method)thread_join_new, (method)thread_join_free, (short)sizeof(thread_join), 0L, A_GIMME, 0);
     
-    addmess((method)thread_join_anything, "anything", A_GIMME, 0);
-    addbang((method)thread_join_bang);
-    addfloat((method)thread_join_float);
-    addint((method)thread_join_int);
+    class_addmethod(_class, (method)thread_join_anything, "anything", A_GIMME, 0);
+    class_addmethod(_class, (method)thread_join_bang, "bang", 0);
+    class_addmethod(_class, (method)thread_join_float, "float", A_FLOAT, 0);
+    class_addmethod(_class, (method)thread_join_int, "int", A_LONG, 0);
     
     // tooltip helper
-    addmess((method)thread_join_assist, "assist", A_CANT, 0);
+    class_addmethod(_class, (method)thread_join_assist, "assist", A_CANT, 0);
     
     ps_bang = gensym("bang");
     ps_int = gensym("int");

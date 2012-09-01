@@ -56,10 +56,15 @@
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+#define NAME "analyzer~"
+#define DESCRIPTION "FFT-Based Perceptual Analysis"
+#define AUTHORS "Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05, 11,2012"
+
 #include "ext.h"
 #include "ext_obex.h";
 #include "version.h"
-#include "version.c"
+
 #include "z_dsp.h"
 #include "fft.h"
 #include <string.h>
@@ -153,7 +158,7 @@ static t_int pitch_intpartialonset[] = {
 
 #define NPARTIALONSET ((t_int)(sizeof(pitch_partialonset)/sizeof(t_float)))
 
-void *analyzer_class;
+t_class *analyzer_class;
 
 enum {Recta=0, Hann, Hamm, Blackman62, Blackman70, Blackman74, Blackman92};
 enum {Log=0, Linear};
@@ -323,13 +328,13 @@ long log2max(long n);
 #endif
 
 
-int main(void) {
+int main(void){
 
-    post("Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
-    post("copyright (c) 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
-    post("Pitch tracker based on Miller Puckette's fiddle~");
-    post("copyright (c) 1997-1999 Music Department UCSD");
-    post(" ");
+    object_post((t_object *)x, "Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
+    object_post((t_object *)x, "copyright (c) 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
+    object_post((t_object *)x, "Pitch tracker based on Miller Puckette's fiddle~");
+    object_post((t_object *)x, "copyright (c) 1997-1999 Music Department UCSD");
+    object_post((t_object *)x, " ");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
@@ -343,25 +348,27 @@ int main(void) {
 
 	setup((Messlist **)&analyzer_class, (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
 		
-	addmess((method)analyzer_dsp, "dsp", A_CANT, 0);
-	addmess((method)analyzer_assist, "assist", A_CANT, 0);
-	addmess((method)analyzer_log, "log", A_GIMME, 0);
-	addmess((method)analyzer_linear, "linear", A_GIMME, 0);
-	addmess((method)analyzer_loud, "loud", A_GIMME, 0);
-	addmess((method)analyzer_bright, "bright", A_GIMME, 0);
-    addmess((method)analyzer_print, "print", 0);
-    addmess((method)analyzer_tellmeeverything, "tellmeeverything", 0);
-    addmess((method)analyzer_amprange, "amp-range", A_FLOAT, A_FLOAT, 0);
-    addmess((method)analyzer_reattack, "reattack", A_FLOAT, A_FLOAT, 0);
-    addmess((method)analyzer_vibrato, "vibrato", A_FLOAT, A_FLOAT, 0);
-   	addmess((method)analyzer_npartial, "npartial", A_FLOAT, 0);
-   	addmess((method)analyzer_debug, "debug", A_LONG, 0);
+	class_addmethod(analyzer_class, (method)analyzer_dsp, "dsp", A_CANT, 0);
+	class_addmethod(analyzer_class, (method)analyzer_assist, "assist", A_CANT, 0);
+	class_addmethod(analyzer_class, (method)analyzer_log, "log", A_GIMME, 0);
+	class_addmethod(analyzer_class, (method)analyzer_linear, "linear", A_GIMME, 0);
+	class_addmethod(analyzer_class, (method)analyzer_loud, "loud", A_GIMME, 0);
+	class_addmethod(analyzer_class, (method)analyzer_bright, "bright", A_GIMME, 0);
+    class_addmethod(analyzer_class, (method)analyzer_print, "print", 0);
+    class_addmethod(analyzer_class, (method)analyzer_tellmeeverything, "tellmeeverything", 0);
+    class_addmethod(analyzer_class, (method)analyzer_amprange, "amp-range", A_FLOAT, A_FLOAT, 0);
+    class_addmethod(analyzer_class, (method)analyzer_reattack, "reattack", A_FLOAT, A_FLOAT, 0);
+    class_addmethod(analyzer_class, (method)analyzer_vibrato, "vibrato", A_FLOAT, A_FLOAT, 0);
+   	class_addmethod(analyzer_class, (method)analyzer_npartial, "npartial", A_FLOAT, 0);
+   	class_addmethod(analyzer_class, (method)analyzer_debug, "debug", A_LONG, 0);
 	
-	addfloat((method)analyzer_float);
-	addint((method)analyzer_int);
+	class_addmethod(analyzer_class, (method)analyzer_float, "float", A_FLOAT, 0);
+	class_addmethod(analyzer_class, (method)analyzer_int, "int", A_LONG, 0);
 	dsp_initclass();
 
 	rescopy('STR#', RES_ID);
+	
+	class_register(CLASS_BOX, analyzer_class);
 	return 0;
 }
 
@@ -453,15 +460,15 @@ void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect) {
 	//if(vs > x->BufSize) error("Analyzer~: Vector size (%d) must not be bigger than buffer size (%d)\n", vs, x->BufSize);
 	// Overlap case
 	if (x->x_overlap > x->BufSize - vs) {
-		error("Analyzer~: overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
-		error("***Analyzer~ will be left out of the dsp chain!\n");
+		object_error((t_object *)x, "Analyzer~: overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
+		object_error((t_object *)x, "***Analyzer~ will be left out of the dsp chain!\n");
 		return;
 	} else if (x->x_overlap < 1)
 		x->x_overlap = 0; 
 
 	if(vs > x->BufSize){
-		error("Analyzer~: sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
-		error("***Analyzer~ will be left out of the dsp chain!\n");
+		object_error((t_object *)x, "Analyzer~: sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
+		object_error((t_object *)x, "***Analyzer~ will be left out of the dsp chain!\n");
 		return;
 	}
 
@@ -522,7 +529,7 @@ void analyzer_int(t_analyzer *x, long n) {
 
 	x->x_hop = n; 
 	if (x->x_hop < vs) {
-		error("Analyzer~: hop size (%d) is less than ths signal vector size (%d)\n", x->x_hop, vs);
+		object_error((t_object *)x, "Analyzer~: hop size (%d) is less than ths signal vector size (%d)\n", x->x_hop, vs);
 		x->x_hop = vs;
 	} else if (x->x_hop > x->BufSize) {
 		x->x_hop = x->BufSize;
@@ -575,16 +582,16 @@ void analyzer_assist(t_analyzer *x, void *b, long m, long a, char *s) {
 
 
 void analyzer_print(t_analyzer *x) {
-    post("amp-range %.2f %.2f",  x->x_amplo, x->x_amphi);
-    post("reattack %d %.2f",  x->x_attacktime, x->x_attackthresh);
-    post("vibrato %d %.2f",  x->x_vibtime, x->x_vibdepth);
-    post("npartial %.2f",  x->x_npartial);
-    post("loud %d",  x->x_loud);
-    post("bright %d",  x->x_bright);
+    object_post((t_object *)x, "amp-range %.2f %.2f",  x->x_amplo, x->x_amphi);
+    object_post((t_object *)x, "reattack %d %.2f",  x->x_attacktime, x->x_attackthresh);
+    object_post((t_object *)x, "vibrato %d %.2f",  x->x_vibtime, x->x_vibdepth);
+    object_post((t_object *)x, "npartial %.2f",  x->x_npartial);
+    object_post((t_object *)x, "loud %d",  x->x_loud);
+    object_post((t_object *)x, "bright %d",  x->x_bright);
     if (x->x_scale == Log) {
-    	post("log");
+    	object_post((t_object *)x, "log");
     } else {
-    	post("linear");
+    	object_post((t_object *)x, "linear");
     }
 }
 
@@ -595,8 +602,8 @@ void analyzer_print(t_analyzer *x) {
 void analyzer_tellmeeverything(t_analyzer *x) {
 	long time;
 	
-	post("");
-	post("Analyzer~ state:");
+	object_post((t_object *)x, "");
+	object_post((t_object *)x, "Analyzer~ state:");
 	
 	TELLi(BufSize);
 	TELLi(BufWritePos);
@@ -609,7 +616,7 @@ void analyzer_tellmeeverything(t_analyzer *x) {
 	analyzer_print(x);
 	
 	time = gettime();
-	post("gettime(): %ld", time);
+	object_post((t_object *)x, "gettime(): %ld", time);
 }
 
 void analyzer_amprange(t_analyzer *x, t_floatarg amplo, t_floatarg amphi) {
@@ -709,7 +716,7 @@ void readx_delay(t_analyzer *x, t_atom *argv) {
 
 	if(val >= 0 && val < MAXDELAY) x->x_delay = val;
 	else{
-		error("Analyzer~: 'delay' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXDELAY, DEFDELAY);
+		object_error((t_object *)x, "Analyzer~: 'delay' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXDELAY, DEFDELAY);
 		x->x_delay = DEFDELAY;
 	}
 }
@@ -723,7 +730,7 @@ void readx_npitch(t_analyzer *x, t_atom *argv) {
 
 	if(val >= 0 && val < MAXNPITCH) x->x_npitch = val;
 	else{
-		error("Analyzer~: '# of pitches' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPITCH, DEFNPITCH);
+		object_error((t_object *)x, "Analyzer~: '# of pitches' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPITCH, DEFNPITCH);
 		x->x_npitch = DEFNPITCH;
 	}
 }
@@ -737,7 +744,7 @@ void readx_npeakanal(t_analyzer *x, t_atom *argv) {
 
 	if(val >= 0 && val < MAXNPEAK) x->x_npeakanal = val;
 	else{
-		error("Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKANAL);
+		object_error((t_object *)x, "Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKANAL);
 		x->x_npeakanal = DEFNPEAKANAL;
 	}
 }
@@ -751,7 +758,7 @@ void readx_npeakout(t_analyzer *x, t_atom *argv) {
 
 	if(val >= 0 && val < MAXNPEAK) x->x_npeakout = val;
 	else{
-		error("Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKOUT);
+		object_error((t_object *)x, "Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKOUT);
 		x->x_npeakout = DEFNPEAKOUT;
 	}
 }
@@ -768,7 +775,11 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	t_int i, j, band=0, oldband=0, sizeband=0;
 	t_int vs = sys_getblksize(); // get vector size
 	double freq = 0.0f, oldfreq = 0.0f;
-    t_analyzer *x = (t_analyzer *)newobject(analyzer_class);
+    t_analyzer *x = (t_analyzer *)object_alloc(analyzer_class);
+	if(!x){
+		return NULL;
+	}
+
     dsp_setup((t_pxobject *)x,1); // one inlet	
 	x->x_Fs = sys_getsr();
 	x->BufWritePos = 0;
@@ -922,7 +933,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	}		
 
 	if (x->x_npeakout > x->x_npeakanal) {
-		error("Analyzer~: '# of peaks to output' (%d) must not be larger than '# of peaks to analyze' (%d).  Setting the former to the latter.\n", x->x_npeakout, x->x_npeakanal);
+		object_error((t_object *)x, "Analyzer~: '# of peaks to output' (%d) must not be larger than '# of peaks to analyze' (%d).  Setting the former to the latter.\n", x->x_npeakout, x->x_npeakanal);
 		x->x_npeakout = x->x_npeakanal;
 	}
 	
@@ -965,15 +976,15 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	}
 	
 	if (x->BufSize < vs) { 
-		error("Analyzer~: Buffer size (%d) is smaller than the vector size, %d.  Setting buffer size to the signal vector size.\n", x->BufSize, vs);
+		object_error((t_object *)x, "Analyzer~: Buffer size (%d) is smaller than the vector size, %d.  Setting buffer size to the signal vector size.\n", x->BufSize, vs);
 		x->BufSize = vs;
 	} else if (x->BufSize > 65536) {
-		error("Analyzer~: Maximum FFT size is 65536 samples. Setting buffer size to 65536.\n");
+		object_error((t_object *)x, "Analyzer~: Maximum FFT size is 65536 samples. Setting buffer size to 65536.\n");
 		x->BufSize = 65536;
 	}
 	
 	if (x->FFTSize < x->BufSize) {
-		error("Analyzer~: FFT size (%d) must be less than the buffer size, %d. Setting FFT size to buffer size.\n", x->FFTSize, x->BufSize);
+		object_error((t_object *)x, "Analyzer~: FFT size (%d) must be less than the buffer size, %d. Setting FFT size to buffer size.\n", x->FFTSize, x->BufSize);
 		x->FFTSize = x->BufSize;
 	}
 
@@ -987,7 +998,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	else if ((x->FFTSize > 16384) && (x->FFTSize < 32768)) x->FFTSize = 32768;
 	else if ((x->FFTSize > 32768) && (x->FFTSize < 65536)) x->FFTSize = 65536;
 	else if (x->FFTSize > 65536) {
-		error("Analyzer~: Maximum FFT size is 65536 samples.  Setting FFT size to 65536.\n");
+		object_error((t_object *)x, "Analyzer~: Maximum FFT size is 65536 samples.  Setting FFT size to 65536.\n");
 		x->FFTSize = 65536;
 	}
 	
@@ -995,7 +1006,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	// Overlap case
 	if (x->x_overlap > x->BufSize - vs) {
 		//post("Analyzer~: You can't overlap so much...");
-		error("Analyzer~: overlap (%d) must be smaller than the buffer size (%d) minus signal vector size (%d). Setting overlap to buffersize - sigvs.\n", x->x_overlap, x->BufSize, vs);
+		object_error((t_object *)x, "Analyzer~: overlap (%d) must be smaller than the buffer size (%d) minus signal vector size (%d). Setting overlap to buffersize - sigvs.\n", x->x_overlap, x->BufSize, vs);
 		x->x_overlap = x->BufSize-vs;
 	} else if (x->x_overlap < 1)
 		x->x_overlap = 0; 
@@ -1004,15 +1015,15 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_FFTSizeOver2 = x->FFTSize/2;		
 	*/
 
-	post("--- Analyzer~ ---");	
-	post("	Buffer size = %d",x->BufSize);
-	post("	Hop size = %d",x->x_hop);
-	post("	FFT size = %d",x->FFTSize);
-	post("	Window type = %s",x->x_winName);
-	post("	Initial delay = %d",x->x_delay);
-	post("	Number of pitches = %d",x->x_npitch);
-	post("	Number of peaks to search = %d",x->x_npeakanal);
-	post("	Number of peaks to output = %d",x->x_npeakout);
+	object_post((t_object *)x, "--- Analyzer~ ---");	
+	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
+	object_post((t_object *)x, "	Hop size = %d",x->x_hop);
+	object_post((t_object *)x, "	FFT size = %d",x->FFTSize);
+	object_post((t_object *)x, "	Window type = %s",x->x_winName);
+	object_post((t_object *)x, "	Initial delay = %d",x->x_delay);
+	object_post((t_object *)x, "	Number of pitches = %d",x->x_npitch);
+	object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
+	object_post((t_object *)x, "	Number of peaks to output = %d",x->x_npeakout);
 
 	// Here comes the choice for altivec optimization or not...
 	if (sys_optimize()) { // note that we DON'T divide the vector size by four here
@@ -1020,7 +1031,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 #ifdef __ALTIVEC__ // More code and a new ptr so that x->BufFFT is vector aligned.
 #pragma altivec_model on 
 		x->x_clock = clock_new(x,(method)analyzer_tick_G4); // Call altivec-optimized tick function
-		post("	Using G4-optimized FFT");	
+		object_post((t_object *)x, "	Using G4-optimized FFT");	
 		// Allocate some memory for the altivec FFT
 		x->x_A.realp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
 		x->x_A.imagp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
@@ -1029,14 +1040,14 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     	x->x_scaleFactor = (t_float)1.0/(2.0*x->FFTSize);
 #pragma altivec_model off
 #else
-		error("  No G4 optimization available");
+		object_error((t_object *)x, "  No G4 optimization available");
 #endif
 
 	} else { // Normal tick function
 		x->x_clock = clock_new(x,(method)analyzer_tick);
 		x->memFFT = (t_float*) NewPtr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
 	}
-	post("");
+	object_post((t_object *)x, "");
 
 
 	// Allocate memory
@@ -1050,7 +1061,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 
 	/*
 	 if (x->x_Fs != DEFAULT_FS) {
-		error("Analyzer~: WARNING !!! Object set for 44.1 KHz only");
+		object_error((t_object *)x, "Analyzer~: WARNING !!! Object set for 44.1 KHz only");
 		return 0;
 	} else {
 		x->BufBark = (t_float*) NewPtr(2*NUMBAND * sizeof(t_float));
@@ -1659,7 +1670,7 @@ void pitch_getit(t_analyzer *x)
 	
 		// Get worried if you see this
 		if (fp1+7 >= spec+x->FFTSize) {
-    		post("*** fp1 %p, fp1+7 %p, spec %p, spec+FFTsize %p", fp1, fp1+7, spec, spec+x->FFTSize);
+    		object_post((t_object *)x, "*** fp1 %p, fp1+7 %p, spec %p, spec+FFTsize %p", fp1, fp1+7, spec, spec+x->FFTSize);
     	}
 	
 		if (height<h1 || height<h2 || h1*coeff<POWERTHRES*total_power || h2*coeff<POWERTHRES*total_power) continue; // Go to next
@@ -1985,7 +1996,7 @@ void pitch_getit(t_analyzer *x)
 
 // Function added by Matt
 void analyzer_debug(t_analyzer *x, long n) {
-	post("Analyzer~: debug is %ld", n);
+	object_post((t_object *)x, "Analyzer~: debug is %ld", n);
 	x->x_debug = n;
 }
 

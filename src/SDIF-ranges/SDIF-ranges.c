@@ -28,6 +28,11 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
 */
+#define NAME "SDIF-ranges"
+#define DESCRIPTION "Find ranges of data in an SDIF-buffer"
+#define AUTHORS "Matt Wright "
+#define COPYRIGHT_YEARS "2004,05,06,2012"
+
 
 /*
 
@@ -55,6 +60,8 @@ VERSION 0.1.1: Force Package Info Generation
 // #include <math.h>
 // #include <limits.h>
 #include "ext.h"
+#include "ext_obex.h"
+
 
 /* Undo ext.h's macro versions of some of stdio.h: */
 /* #undef fopen
@@ -65,7 +72,7 @@ VERSION 0.1.1: Force Package Info Generation
 #undef sprintf
 #undef sscanf */
 
-#include "version.c"
+
 
 #include <stdio.h>
 #include <limits.h>  // for SHRT_MAX
@@ -116,18 +123,18 @@ void main(fptr *fp)
 {
   SDIFresult r;
   
-	version(0);
+	version_post_copyright();
 		
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&SDIFranges_class, (method)SDIFranges_new, (method)SDIFranges_free,
+	SDIFranges_class = class_new("SDIF-ranges", (method)SDIFranges_new, (method)SDIFranges_free,
 			(short)sizeof(SDIFranges), 0L, A_GIMME, 0);
 	
 	/* bind my methods to symbols */
-    addmess((method)version, "version", 0);
-	addmess((method)SDIFranges_set, "set", A_SYM, 0);	
-	addmess((method)SDIFranges_GetMaxNumColumns, "max-columns", A_DEFSYM, 0);
-	addmess((method)SDIFranges_GetColumnRanges, "column-ranges", A_DEFSYM, 0);
-	addmess((method)SDIFranges_GetColumnRange, "column-range", A_LONG, A_DEFSYM, 0);
+    class_addmethod(SDIFranges_class, (method)version, "version", 0);
+	class_addmethod(SDIFranges_class, (method)SDIFranges_set, "set", A_SYM, 0);	
+	class_addmethod(SDIFranges_class, (method)SDIFranges_GetMaxNumColumns, "max-columns", A_DEFSYM, 0);
+	class_addmethod(SDIFranges_class, (method)SDIFranges_GetColumnRanges, "column-ranges", A_DEFSYM, 0);
+	class_addmethod(SDIFranges_class, (method)SDIFranges_GetColumnRange, "column-range", A_LONG, A_DEFSYM, 0);
 
 
 
@@ -178,7 +185,7 @@ void *SDIFranges_new(Symbol *dummy, short argc, Atom *argv) {
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
 		if (argv[0].a_type != A_SYM) {
-			error(NAME ": argument must be name of an SDIF-buffer");
+			object_error((t_object *)x, NAME ": argument must be name of an SDIF-buffer");
 		} else {
 			// post("* You want SDIF-buffer %s", argv[0].a_w.w_sym->s_name);
 			x->t_bufferSym = argv[0].a_w.w_sym;
@@ -229,7 +236,7 @@ static void SDIFranges_set(SDIFranges *x, Symbol *bufName) {
 
 	LookupMyBuffer(x);
 	if (x->t_buffer == 0) {
-		post("¥ " NAME ": warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
+		object_post((t_object *)x, "¥ " NAME ": warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
 	}
 
 }
@@ -238,13 +245,13 @@ static int resolveBufferAndMatrixType(SDIFranges *x, Symbol *matrixTypeSym, char
     int i;
 
 	if (x->t_bufferSym == 0) {
-		post("SDIFranges: no SDIF buffer name specified");
+		object_post((t_object *)x, "SDIFranges: no SDIF buffer name specified");
 		return 0;
 	}
 	
 	LookupMyBuffer(x);
 	if (x->t_buffer == 0) {
-		post("¥ SDIFranges: \"%s\" is not an SDIF buffer.", x->t_bufferSym->s_name);
+		object_post((t_object *)x, "¥ SDIFranges: \"%s\" is not an SDIF buffer.", x->t_bufferSym->s_name);
 		return 0;
 	}
 		
@@ -253,7 +260,7 @@ static int resolveBufferAndMatrixType(SDIFranges *x, Symbol *matrixTypeSym, char
 	    SDIFmem_Frame f;
 	  
 		if((f = SDIFbuf_GetFirstFrame(x->t_buf)) == NULL) {
-			post(NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
+			object_post((t_object *)x, NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
 			return 0;
 		} else {
 	  		SDIF_Copy4Bytes(matrixType, f->header.frameType);
@@ -283,7 +290,7 @@ static int doGetMaxNumColumns(SDIFranges *x, char *matrixType, sdif_int32 *answe
 	SDIFresult r = SDIFbuf_GetMaxNumColumns(x->t_buf, matrixType, answer);
 	
 	if (r==ESDIF_END_OF_DATA) {
-		post(NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
+		object_post((t_object *)x, NAME ":  SDIF-buffer %s is empty",  x->t_bufferSym->s_name);
 		return 0;
 	} else if (r==ESDIF_BAD_MATRIX_DATA_TYPE) {
 		post(NAME ":  SDIF-buffer %s has no matrices of type %c%c%c%c",
@@ -325,7 +332,7 @@ void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym) {
 			sdif_float64 *maxes = (sdif_float64 *) getbytes16(numCols * sizeof(sdif_float64));
 			
 			if (maxes == 0) {
-				error(NAME ": out of memory");
+				object_error((t_object *)x, NAME ": out of memory");
 				return;
 			}
 			SDIFbuf_GetColumnRanges(x->t_buf, matrixType, numCols, mins, maxes);
@@ -355,17 +362,17 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
 	long column = columnArg -1;  /* Max user numbers columns from 1; internally it's zero-origin. */
     
     if (columnArg <= 0) {
-    	error(NAME ": column_range: illegal column number %ld (must be >= 1)", columnArg);
+    	object_error((t_object *)x, NAME ": column_range: illegal column number %ld (must be >= 1)", columnArg);
     	return;
     } 
     
     if (!resolveBufferAndMatrixType(x, matrixTypeSym, matrixType)) {
-    	error("Couldn't resolve SDIF-buffer and/or matrix type.");
+    	object_error((t_object *)x, "Couldn't resolve SDIF-buffer and/or matrix type.");
     	return;
     }
     
 	if (!doGetMaxNumColumns(x, matrixType, &numCols)) {
-	    error("Couldn't get max num columns");
+	    object_error((t_object *)x, "Couldn't get max num columns");
 	 }
 	 
     // post("* numCols %ld, want column %ld", numCols, column);
@@ -384,7 +391,7 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
             return;
 		}
 		
-		post("**  min %f, max %f", (float) min, (float) max);
+		object_post((t_object *)x, "**  min %f, max %f", (float) min, (float) max);
 		SETLONG(outputArgs, columnArg);
 		SETFLOAT(outputArgs+1, (float) min);
 		SETFLOAT(outputArgs+2, (float) max);

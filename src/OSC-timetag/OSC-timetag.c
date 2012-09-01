@@ -41,16 +41,23 @@ VERSION 0.2: Added support for in-place operations on FullPackets
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
+#define NAME "OSC-timetag"
+#define DESCRIPTION "Generates, transforms and operates on high-resolution timestamps"
+#define AUTHORS "Andy Schmeder"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 // max object header
 #include "ext.h"
+#include "ext_obex.h"
+
 
 // need a source of time
 #include "OSC-timetag-ops.h"
 
 // version info
 #include "version.h"
-#include "version.c"
+
 
 #define OP_TAG 1
 #define OP_ADD 2
@@ -88,7 +95,7 @@ typedef struct _OSCTimeTag
 } OSCTimeTag;
 
 /* global that holds the class definition */
-void *OSCTimeTag_class;
+t_class *OSCTimeTag_class;
 
 Symbol *ps_FullPacket;
 Symbol *ps_OSCTimeTag;
@@ -118,36 +125,36 @@ void main(fptr *f)
 {
 
   // post version
-  version(0);
+  version_post_copyright();
     
-  setup((t_messlist **)&OSCTimeTag_class, (method)OSCTimeTag_new, (method)OSCTimeTag_free, (short)sizeof(OSCTimeTag), 0L, A_GIMME, 0);
+  OSCTimeTag_class = class_new("OSC-timetag", (method)OSCTimeTag_new, (method)OSCTimeTag_free, (short)sizeof(OSCTimeTag), 0L, A_GIMME, 0);
     
   // unix timestamp
-  addint((method)OSCTimeTag_int);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_int, "int", A_LONG, 0);
     
   // float time
-  addfloat((method)OSCTimeTag_float);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_float, "float", A_FLOAT, 0);
     
   // now (both inlets via proxy)
-  addmess((method)OSCTimeTag_now, "now", 0);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_now, "now", 0);
     
   // bang is equivalent to now
-  addbang((method)OSCTimeTag_now);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_now, "bang", 0);
 
   // special immediate handler (both inlets via proxy)
-  addmess((method)OSCTimeTag_immediate, "immediate", 0);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_immediate, "immediate", 0);
     
   // OSCTimeTag in (both inlets via proxy)
-  addmess((method)OSCTimeTag_OSCTimeTag, "OSCTimeTag", A_GIMME, 0);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_OSCTimeTag, "OSCTimeTag", A_GIMME, 0);
     
   // OSCTimeTag in (both inlets via proxy)
-  addmess((method)OSCTimeTag_FullPacket, "FullPacket", A_GIMME, 0);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_FullPacket, "FullPacket", A_GIMME, 0);
     
   // supports iso8601 string (both inlets via proxy)
-  addmess((method)OSCTimeTag_iso8601, "iso8601", A_GIMME, 0);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_iso8601, "iso8601", A_GIMME, 0);
     
   // tooltip helper
-  addmess((method)OSCTimeTag_assist, "assist", A_CANT, 0);
+  class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_assist, "assist", A_CANT, 0);
     
   ps_FullPacket = gensym("FullPacket");
   ps_OSCTimeTag = gensym("OSCTimeTag");
@@ -204,14 +211,14 @@ void *OSCTimeTag_new(Symbol* s, short argc, Atom *argv)
 	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "d") == 0) {
 	      x->op = OP_DER;
 	    } else {
-	      post("OSC-timetag got unknown operator %s", argv[i].a_w.w_sym->s_name);
+	      object_post((t_object *)x, "OSC-timetag got unknown operator %s", argv[i].a_w.w_sym->s_name);
 	    }
 	  } else {
-	    post("OSC-timetag got unexpected type for @op");
+	    object_post((t_object *)x, "OSC-timetag got unexpected type for @op");
 	  }
           
 	} else {
-	  post("OSC-timetag expects an operator after @op");
+	  object_post((t_object *)x, "OSC-timetag expects an operator after @op");
 	}
         
       }
@@ -248,14 +255,14 @@ void *OSCTimeTag_new(Symbol* s, short argc, Atom *argv)
 	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "#bundle") == 0) {
 	      x->to = TO_P;
 	    } else {
-	      post("OSC-timetag got unknown value for @to: %s", argv[i].a_w.w_sym->s_name);
+	      object_post((t_object *)x, "OSC-timetag got unknown value for @to: %s", argv[i].a_w.w_sym->s_name);
 	    }
 	  } else {
-	    post("OSC-timetag got unexpected type for @to");
+	    object_post((t_object *)x, "OSC-timetag got unexpected type for @to");
 	  }
           
 	} else {
-	  post("OSC-timetag expects a type after @to");
+	  object_post((t_object *)x, "OSC-timetag expects a type after @to");
 	}
         
       }
@@ -344,7 +351,7 @@ void OSCTimeTag_assist (OSCTimeTag *x, void *box, long msg, long arg, char *dstS
       }
     }
   } else {
-    post("OSCTimeTag_assist: unrecognized message %ld", msg);
+    object_post((t_object *)x, "OSCTimeTag_assist: unrecognized message %ld", msg);
   }
 }
 
@@ -757,7 +764,7 @@ void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
 	    // passive inlet
         }
     } else {
-        post("OSC-timetag: got invalid OSCTimeTag");
+        object_post((t_object *)x, "OSC-timetag: got invalid OSCTimeTag");
     }
     
 }

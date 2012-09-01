@@ -32,6 +32,11 @@
   VERSION 0.1.1: fixed a crash at initialization
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "bdist"
+#define DESCRIPTION "The beta distribution"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2009,2012"
+
 
 #include "version.h"
 #include "ext.h"
@@ -40,7 +45,7 @@
 #include "jpatcher_api.h" 
 #include "jgraphics.h"
 #include "ext_critical.h"
-#include "version.c"
+
 #include "math.h"
 
 #include "gsl/gsl_sf.h"
@@ -644,8 +649,10 @@ int main(void){
 	l_func = gensym("func");
 	l_xhairs = gensym("xhairs");
 
-	version(0);
+	version_post_copyright();
 
+	
+	class_register(CLASS_BOX, bdist_class);
 	return 0;
 }
 
@@ -662,5 +669,5 @@ t_max_err bdist_notify(t_bdist *x, t_symbol *s, t_symbol *msg, void *sender, voi
 }
 
 void bdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
-	error("bdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+	object_error((t_object *)x, "bdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
 }

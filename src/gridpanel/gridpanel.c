@@ -29,6 +29,11 @@
  VERSION 0.0: First try
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  */
+#define NAME "gridpanel"
+#define DESCRIPTION "A 2-D grid that tracks mouse location."
+#define AUTHORS "Jeff Lubow"
+#define COPYRIGHT_YEARS "2011,2012"
+
 
 #include "ext.h"
 #include "ext_obex.h"
@@ -338,7 +343,7 @@ void *gpan_new(t_symbol *msg, short argc, t_atom *argv) {
     return NULL;
 }
 
-int main(void) {
+int main(void){
     t_class *c = class_new("gridpanel", (method)gpan_new, (method)gpan_free, sizeof(t_gpan), (method)NULL, A_GIMME, 0L);
     c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
     jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR); 
@@ -397,6 +402,8 @@ int main(void) {
     gpan_class = c;
     common_symbols_init();
 
-    return 0;
+    
+	class_register(CLASS_BOX, gpan_class);
+	return 0;
 }
 

@@ -41,6 +41,11 @@
   VERSION 0.1.3: new points are now numbered to fill in the available slots.
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "xydisplay"
+#define DESCRIPTION "A 2-D graphical display/editor like pictctrl but supporting multiple points."
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2010,2012"
+
 
 #include "version.h"
 #include "ext.h"
@@ -49,7 +54,7 @@
 #include "jpatcher_api.h" 
 #include "jgraphics.h"
 #include "ext_critical.h"
-#include "version.c"
+
 
 #ifndef DBL_MAX
 #define DBL_MAX 999999999.
@@ -675,7 +680,7 @@ t_point *xy_newPoint(t_xy *x){
 		p->id = xy_get_slot(x);
 		return p;
 	}else{
-		error("xy: out of memory!  failed to allocate a new point");
+		object_error((t_object *)x, "xy: out of memory!  failed to allocate a new point");
 		return NULL;
 	}
 }
@@ -1102,19 +1107,21 @@ int main(void){
 	srand(mach_absolute_time());
 #endif
 
-	version(0);
+	version_post_copyright();
 
+	
+	class_register(CLASS_BOX, xy_class);
 	return 0;
 }
 
 void xy_postPoint(t_point *p){
 	if(!p){
-		post("p == NULL!!");
+		object_post((t_object *)x, "p == NULL!!");
 		return;
 	}
-	post("point %p:", p);
-	post("coords: %f %f", p->pt.x, p->pt.y);
-	post("%p<--%p-->%p", p->prev, p, p->next);
+	object_post((t_object *)x, "point %p:", p);
+	object_post((t_object *)x, "coords: %f %f", p->pt.x, p->pt.y);
+	object_post((t_object *)x, "%p<--%p-->%p", p->prev, p, p->next);
 }
 
 t_max_err xy_notify(t_xy *x, t_symbol *s, t_symbol *msg, void *sender, void *data){

@@ -30,13 +30,18 @@ VERSION 0.0: First try
 VERSION 0.0.1: New help file 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "poly.send~"
+#define DESCRIPTION "Multichannel, dynamically assignable output for poly~"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2009,2012"
+
 
 #include "version.h"
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "z_dsp.h"
-#include "version.c"
+
 
 #ifdef WIN32
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
@@ -180,6 +185,8 @@ int main(void){
 	psend_class = c;
 
 	common_symbols_init();
-	version(0);
+	version_post_copyright();
+	
+	class_register(CLASS_BOX, psend_class);
 	return 0;
 }
