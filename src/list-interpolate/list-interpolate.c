@@ -63,8 +63,7 @@ VERSION 1.8: Force Package Info Generation
 
 
 
-fptr *FNS;
-void *iclass;
+t_class *li_class;
 
 
 //Types
@@ -102,7 +101,7 @@ static void storelist(fobj *x, struct symbol *s, int argc, struct atom *argv)
 
 	for(i=0; i<argc; ++i) {
 	 	if(argv[i].a_type != A_FLOAT) {	
-	 		object_post((t_object *)x, "¥ list-interpolate: list did not contain only floats; dropping");
+	 		object_error((t_object *)x, "list did not contain only floats; dropping");
 	 		return;
 	 	}
 	}
@@ -191,8 +190,8 @@ static void floatdump(fobj *x, double f)
  				outlet_list(x->dataoutlet,0L,(short)x->n,x->out);
  }
 
-static void *setsteps(fobj *it, long l);
-static void *setsteps(fobj *it, long l)
+static void setsteps(fobj *it, long l);
+static void setsteps(fobj *it, long l)
 {
 	it->countdown = it->steps = l;
 }
@@ -211,8 +210,8 @@ void bangdump(fobj *x)
 	
 }
 
-static void *setzeropad(fobj *it, long l);
-static void *setzeropad(fobj *it, long l)
+static void setzeropad(fobj *it, long l);
+static void setzeropad(fobj *it, long l)
 {
 	it->zeroPadMode = l;
 }
@@ -226,7 +225,7 @@ static void tellmeeverything(fobj *x) {
 	
 	a.a_type = A_FLOAT;
 		
-	object_post((t_object *)x, "list-interpolate version " VERSION " by " AUTHORS ", compiled " __DATE__ " " __TIME__);
+	object_post((t_object *)x, "list-interpolate version by " AUTHORS ", compiled " __DATE__ " " __TIME__);
 	object_post((t_object *)x, "  list length %ld, list capacity %ld", x->n, x->capacity);
 	object_post((t_object *)x, "  %ld steps, current count %ld", x->steps, x->countdown);
 	object_post((t_object *)x, "  %susing zero-pad mode", x->zeroPadMode ? "" : "NOT ");
@@ -256,7 +255,10 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 
 	
 
-	x = (fobj *)newobject(iclass);				/* initialize an instance of this class */	
+	x = (fobj *)object_alloc(li_class);				/* initialize an instance of this class */
+    if(!x){
+        return NULL;
+    }
 	x->bangoutlet = bangout(x);   // Was listout(x)
 	x->dataoutlet = listout(x);
 
@@ -264,7 +266,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	
 	if (argc >= 1) {
 		if (argv[0].a_type != A_LONG) {
-			object_post((t_object *)x, "¥ list-interpolate: first arg must be a long (# steps)");
+			object_error((t_object *)x, "first arg must be a long (# steps)");
 		} else {
 			x->steps = argv[0].a_w.w_long;
 		}
@@ -273,7 +275,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->capacity = 1024;
 	if (argc >= 2) {
 		if (argv[1].a_type != A_LONG) {
-			object_post((t_object *)x, "¥ list-interpolate: second arg must be a long (capacity)");
+			object_error((t_object *)x, "second arg must be a long (capacity)");
 		} else {
 			x->capacity = argv[1].a_w.w_long;
 		}
@@ -285,7 +287,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->out = 		(Atom *) getbytes(x->capacity * sizeof(Atom));
 	
 	if (x->out == 0) {
-		object_post((t_object *)x, "¥ list-interpolate: not enough memory for capacity %ld!", x->capacity);
+		object_error((t_object *)x, "not enough memory for capacity %ld!", x->capacity);
 		
 		return 0;
 	}
@@ -310,20 +312,20 @@ void ffree(fobj *x) {
 	freebytes((char *) x->out, x->capacity * sizeof(Atom));
 }	
 
-void main(fptr *f)		/* called once at launch to define this class */
-{
-	FNS = f;		
-		
-	setup((t_messlist **) &iclass, (method) fnew, (method) ffree, (int) sizeof(fobj), 0L, A_GIMME, 0 );
+int main(void)		/* called once at launch to define this class */
+{		
+	setup((t_messlist **) &li_class, (method) fnew, (method) ffree, (int) sizeof(fobj), 0L, A_GIMME, 0 );
 
 
-	class_addmethod(_class, (method)setsteps, "steps", A_DEFLONG,0);
-	class_addmethod(_class, (method)setzeropad, "zeropad", A_LONG,0);
-	class_addmethod(_class, (method)newlist,"list",A_GIMME,0);
-	class_addmethod(_class, (method)tellmeeverything, "tellmeeverything", 0);
-	class_addmethod(_class,  (method) bangdump  , "bang", 0);
-	class_addmethod(_class,  (method) floatdump  , "float", A_FLOAT, 0);
+	class_addmethod(li_class, (method)setsteps, "steps", A_DEFLONG,0);
+	class_addmethod(li_class, (method)setzeropad, "zeropad", A_LONG,0);
+	class_addmethod(li_class, (method)newlist,"list",A_GIMME,0);
+	class_addmethod(li_class, (method)tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(li_class,  (method) bangdump  , "bang", 0);
+	class_addmethod(li_class,  (method) floatdump  , "float", A_FLOAT, 0);
 	
-	object_post((t_object *)x, NAME " object version " VERSION " by " AUTHORS ".");
-	object_post((t_object *)x, "Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	post(NAME " object version by " AUTHORS ".");
+	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+    class_register(CLASS_BOX, li_class);
+    return 0;
 }

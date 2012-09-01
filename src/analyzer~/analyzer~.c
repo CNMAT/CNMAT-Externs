@@ -346,7 +346,7 @@ int main(void){
 	ps_list = gensym("list");
 	ps_nolist = gensym("nolist");
 
-	setup((Messlist **)&analyzer_class, (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
+	analyzer_class = class_new("analyzer~", (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
 		
 	class_addmethod(analyzer_class, (method)analyzer_dsp, "dsp", A_CANT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_assist, "assist", A_CANT, 0);
@@ -364,9 +364,7 @@ int main(void){
 	
 	class_addmethod(analyzer_class, (method)analyzer_float, "float", A_FLOAT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_int, "int", A_LONG, 0);
-	dsp_initclass();
-
-	rescopy('STR#', RES_ID);
+	class_dspinit(analyzer_class);
 	
 	class_register(CLASS_BOX, analyzer_class);
 	return 0;

@@ -343,7 +343,7 @@ int main(void){
 	class_addmethod(oscillators_class, (method)oscillators_set, "set", A_SYM, 0);
 	class_addmethod(oscillators_class, (method)oscillators_noglissbirthmode, "noglissbirthmode", A_LONG, 0);
 	class_addmethod(oscillators_class, (method)version, "version", 0);
-	dsp_initclass();
+	class_dspinit(oscillators_class);
 	
 	ps_buffer = gensym("buffer~");
 	version_post_copyright();

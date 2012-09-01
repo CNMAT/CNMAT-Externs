@@ -272,7 +272,11 @@ void *threefates_new(long maxpartials, long nPartialParams) {
 		return 0;
 	}
 	
-	x = (t_threefates*)newobject(threefates_class);
+	x = (t_threefates *)object_alloc(threefates_class);
+	if(!x){
+		return NULL;
+	}
+
 	x->num_partial_parameters = nPartialParams;
 	x->max_osc = maxpartials;
 	

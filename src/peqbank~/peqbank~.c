@@ -271,7 +271,7 @@ int main(void){
 	class_addmethod(peqbank_class, (method)peqbank_cheby, "highpass", A_GIMME);
 	class_addmethod(peqbank_class, (method)peqbank_cheby, "lowpass", A_GIMME);
 	
-	dsp_initclass();
+	class_dspinit(peqbank_class);
 	
 	return 0;
 

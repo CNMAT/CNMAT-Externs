@@ -87,7 +87,7 @@ int main(void){
 	class_addmethod(vsht_class, (method)vsht_stop, "stop", 0);
 	class_addmethod(vsht_class, (method)vsht_int, "int", A_LONG, 0);
 	
-	dsp_initclass();
+	class_dspinit(vsht_class);
 	
 	
 	class_register(CLASS_BOX, vsht_class);
