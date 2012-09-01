@@ -172,16 +172,11 @@ int main(void){
 
 void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 	t_rdist *x;
-	int i;
 	t_atom ar[2];
 	srand(mach_absolute_time());
 
-	//x = (t_rdist *)object_alloc(rdist_class);
-	if(!x){
-		return NULL;
-	}
  // create a new instance of this object
-	if(x = (t_rdist *)object_alloc(rdist_class)){
+	if((x = (t_rdist *)object_alloc(rdist_class))){
 
 		x->outlet_info = outlet_new(x, NULL);	
 		x->r_out0 = outlet_new(x, 0);
@@ -249,7 +244,6 @@ void rdist_bang(t_rdist *x){
 	int stride = x->r_stride;
 	float out[stride];
 	int i;
-	t_symbol *msg;
 
 	//msg = (stride > 1) ? gensym("list") : gensym("float");
 
@@ -509,7 +503,6 @@ void rdist_assist(t_rdist *x, void *b, long m, long a, char *s){
 
 void rdist_tellmeeverything(t_rdist *x){
 	int i;
-	float vars[x->r_numVars];
 	object_post((t_object *)x, "Distribution: %s", x->r_dist->s_name);
 	object_post((t_object *)x, "Args:");
 	for(i = 0; i < x->r_numVars; i++){
@@ -536,7 +529,7 @@ void rdist_free(t_rdist *x){
 }
 
 void rdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
-	object_error((t_object *)x, "randdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+	error("randdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
 }
 
 void rdist_loadbang(t_rdist *x){

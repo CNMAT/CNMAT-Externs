@@ -52,7 +52,7 @@ typedef struct _pbus{
 	t_pxobject ob;
 	t_symbol *name, **mangled_names;
 	long num_channels;
-	t_float **sv;
+	double **sv;
 	long blksize;
 	long samplerate;
 	long my_id;
@@ -156,11 +156,11 @@ void pbus_assist(t_pbus *x, void *b, long io, long index, char *s){
 void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 	t_pbus *x;
 
-	if(argc < 2){
-		object_error((t_object *)x, "poly.bus~: 2 arguments required: name and number of channels");
-		return NULL;
-	}
-	if(x = (t_pbus *)object_alloc(pbus_class)){
+	if((x = (t_pbus *)object_alloc(pbus_class))){
+        if(argc < 2){
+            object_error((t_object *)x, "2 arguments required: name and number of channels");
+            return NULL;
+        }
 		dsp_setup((t_pxobject *)x, 1);
         	x->ob.z_misc = Z_NO_INPLACE;
 		x->name = atom_getsym(argv);
@@ -171,7 +171,7 @@ void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 			return NULL;
 		}
 		x->mangled_names = (t_symbol **)calloc(x->num_channels, sizeof(t_symbol *));
-		x->sv = (t_float **)calloc(x->num_channels, sizeof(t_float *));
+		x->sv = (double **)calloc(x->num_channels, sizeof(double *));
 		int i;
 		pbus_mangle(x);
 		for(i = 0; i < x->num_channels; i++){
