@@ -330,11 +330,11 @@ long log2max(long n);
 
 int main(void){
 
-    object_post((t_object *)x, "Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
-    object_post((t_object *)x, "copyright (c) 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
-    object_post((t_object *)x, "Pitch tracker based on Miller Puckette's fiddle~");
-    object_post((t_object *)x, "copyright (c) 1997-1999 Music Department UCSD");
-    object_post((t_object *)x, " ");
+    post("Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
+    post("copyright (c) 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
+    post("Pitch tracker based on Miller Puckette's fiddle~");
+    post("copyright (c) 1997-1999 Music Department UCSD");
+    post(" ");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");

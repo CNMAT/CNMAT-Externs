@@ -81,6 +81,7 @@ needs to take signals
 shift-drag while dragging a point should snap it to the y-value of the point with the closest y-value
  */
 
+#include <CoreServices/CoreServices.h>
 #include "float.h"
 #include "version.h" 
 #include "ext.h" 
