@@ -48,9 +48,16 @@
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+#define NAME "brightness~"
+#define DESCRIPTION "Spectral Centroid Measure"
+#define AUTHORS "Tristan Jehan, Adrian Freed,  and Michael Zbyszynski"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000-08,2012"
+
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "z_dsp.h"
 #include "fft.h"
 #include <string.h>
@@ -85,7 +92,7 @@
 
 enum {Recta=0, Hann, Hamm, Blackman62, Blackman70, Blackman74, Blackman92};
 
-void *brightness_class;
+t_class *brightness_class;
 
 typedef struct _brightness {
 
@@ -147,12 +154,12 @@ long log2max(long n);
 #endif
 
 
-void main(void) {
+int main(void){
 
-    post("Brightness~ object version " VERSION " by Tristan Jehan  (Media Laboratory), Adrian Freed, and Michael Zbyszynski");
-    post("copyright © 2001 Massachusetts Institute of Technology");
-	post("copyright © 2008 UC Regents");
-    post("");
+    object_post((t_object *)x, "Brightness~ object version " VERSION " by Tristan Jehan  (Media Laboratory), Adrian Freed, and Michael Zbyszynski");
+    object_post((t_object *)x, "copyright © 2001 Massachusetts Institute of Technology");
+	object_post((t_object *)x, "copyright © 2008 UC Regents");
+    object_post((t_object *)x, "");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
@@ -164,13 +171,16 @@ void main(void) {
 
 	setup((Messlist **)&brightness_class, (method)brightness_new, (method)brightness_free, (short)sizeof(t_brightness), 0L, A_GIMME, 0);
 		
-	addmess((method)brightness_dsp, "dsp", A_CANT, 0);
-	addmess((method)brightness_assist, "assist", A_CANT, 0);
-	addfloat((method)brightness_float);
-	addint((method)brightness_int);
+	class_addmethod(brightness_class, (method)brightness_dsp, "dsp", A_CANT, 0);
+	class_addmethod(brightness_class, (method)brightness_assist, "assist", A_CANT, 0);
+	class_addmethod(brightness_class, (method)brightness_float, "float", A_FLOAT, 0);
+	class_addmethod(brightness_class, (method)brightness_int, "int", A_LONG, 0);
 	dsp_initclass();
 
 	rescopy('STR#', RES_ID);
+
+	class_register(CLASS_BOX, brightness_class);
+	return 0;
 }
 
 t_int *brightness_perform(t_int *w) {
@@ -241,7 +251,7 @@ void brightness_dsp(t_brightness *x, t_signal **sp, short *connect) {
 	x->x_counter = x->x_delay;
 
 	if (vs > x->BufSize) {
-		post("Brightness~: You need to use a smaller signal vector size...");
+		object_post((t_object *)x, "Brightness~: You need to use a smaller signal vector size...");
 	} else if (connect[0]) {
 			dsp_add(brightness_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
 	}
@@ -257,7 +267,7 @@ void brightness_int(t_brightness *x, long n) {
 
 	x->x_hop = n; 
 	if (x->x_hop < vs) {
-		post("Brightness~: You can't overlap so much...");
+		object_post((t_object *)x, "Brightness~: You can't overlap so much...");
 		x->x_hop = vs;
 	} else if (x->x_hop > x->BufSize) {
 		x->x_hop = x->BufSize;
@@ -343,7 +353,7 @@ void readx_delay(t_brightness *x, t_atom *argv) {
 	} else if ((argv[4].a_type == A_FLOAT) && (argv[4].a_w.w_float >= 0) && (argv[4].a_w.w_float < MAXDELAY)) {
 		x->x_delay = (t_int)(argv[4].a_w.w_float);
 	} else {
-		post("Brightness~: 'delay' argument may be out of range... Choosing default...");
+		object_post((t_object *)x, "Brightness~: 'delay' argument may be out of range... Choosing default...");
 		x->x_delay = DEFDELAY;
 	}
 }
@@ -351,7 +361,11 @@ void readx_delay(t_brightness *x, t_atom *argv) {
 void *brightness_new(t_symbol *s, short argc, t_atom *argv) {
 	t_int i;
 	t_int vs = sys_getblksize(); // get vector size
-    t_brightness *x = (t_brightness *)newobject(brightness_class);
+    t_brightness *x = (t_brightness *)object_alloc(brightness_class);
+	if(!x){
+		return NULL;
+	}
+
     dsp_setup((t_pxobject *)x,1); // one inlet		
 	x->x_outcent = floatout((t_brightness *)x); // one outlet
 	x->x_Fs = sys_getsr();
@@ -432,15 +446,15 @@ void *brightness_new(t_symbol *s, short argc, t_atom *argv) {
 	}
 	
 	if (x->BufSize < vs) { 
-		post("Brightness~: Buffer size is smaller than the vector size, %d",vs);
+		object_post((t_object *)x, "Brightness~: Buffer size is smaller than the vector size, %d",vs);
 		x->BufSize = vs;
 	} else if (x->BufSize > 65536) {
-		post("Brightness~: Maximum FFT size is 65536 samples");
+		object_post((t_object *)x, "Brightness~: Maximum FFT size is 65536 samples");
 		x->BufSize = 65536;
 	}
 		
 	if (x->FFTSize < x->BufSize) {
-		post("Brightness~: FFT size is at least the buffer size, %d",x->BufSize);
+		object_post((t_object *)x, "Brightness~: FFT size is at least the buffer size, %d",x->BufSize);
 		x->FFTSize = x->BufSize;
 	}
 
@@ -454,13 +468,13 @@ void *brightness_new(t_symbol *s, short argc, t_atom *argv) {
 	else if ((x->FFTSize > 16384) && (x->FFTSize < 32768)) x->FFTSize = 32768;
 	else if ((x->FFTSize > 32768) && (x->FFTSize < 65536)) x->FFTSize = 65536;
 	else if (x->FFTSize > 65536) {
-		post("Brightness~: Maximum FFT size is 65536 samples");
+		object_post((t_object *)x, "Brightness~: Maximum FFT size is 65536 samples");
 		x->FFTSize = 65536;
 	}
 	
 	// Overlap case
 	if (x->x_overlap > x->BufSize-vs) {
-		post("Brightness~: You can't overlap so much...");
+		object_post((t_object *)x, "Brightness~: You can't overlap so much...");
 		x->x_overlap = x->BufSize-vs;
 	} else if (x->x_overlap < 1)
 		x->x_overlap = 0; 
@@ -468,12 +482,12 @@ void *brightness_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_hop = x->BufSize - x->x_overlap;
 	x->x_FFTSizeOver2 = x->FFTSize/2;		
 
-	post("--- Brightness~ ---");	
-	post("	Buffer size = %d",x->BufSize);
-	post("	Hop size = %d",x->x_hop);
-	post("	FFT size = %d",x->FFTSize);
-	post("	Window type = %s",x->x_winName);
-	post("	Initial delay = %d",x->x_delay);
+	object_post((t_object *)x, "--- Brightness~ ---");	
+	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
+	object_post((t_object *)x, "	Hop size = %d",x->x_hop);
+	object_post((t_object *)x, "	FFT size = %d",x->FFTSize);
+	object_post((t_object *)x, "	Window type = %s",x->x_winName);
+	object_post((t_object *)x, "	Initial delay = %d",x->x_delay);
 
 	// Here comes the choice for altivec optimization or not...
 	if (sys_optimize()) { // note that we DON'T divide the vector size by four here
@@ -481,7 +495,7 @@ void *brightness_new(t_symbol *s, short argc, t_atom *argv) {
 #ifdef __ALTIVEC__ // More code and a new ptr so that x->BufFFT is vector aligned.
 #pragma altivec_model on 
 		x->x_clock = clock_new(x,(method)brightness_tick_G4); // Call altivec-optimized tick function
-		post("	Using G4-optimized FFT");	
+		object_post((t_object *)x, "	Using G4-optimized FFT");	
 		// Allocate some memory for the altivec FFT
 		x->x_A.realp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
 		x->x_A.imagp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
@@ -489,14 +503,14 @@ void *brightness_new(t_symbol *s, short argc, t_atom *argv) {
       	x->x_setup = create_fftsetup (x->x_log2n, 0);
 #pragma altivec_model off
 #else
-		error("  No G4 optimization available");
+		object_error((t_object *)x, "  No G4 optimization available");
 #endif
 
 	} else { // Normal tick function
 		x->x_clock = clock_new(x,(method)brightness_tick);
 		x->memFFT = (t_float*) NewPtr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
 	}
-	post("");
+	object_post((t_object *)x, "");
 
 	// Allocate more memory
 	x->BufFFT = (t_float*) NewPtr(x->FFTSize * sizeof(t_float));

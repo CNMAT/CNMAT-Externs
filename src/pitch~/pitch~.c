@@ -49,9 +49,16 @@
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+#define NAME "pitch~"
+#define DESCRIPTION "Pitch tracker (based on fiddle~ from Miller Puckette)"
+#define AUTHORS "Tristan Jehan, Adrian Freed, and Michael Zbyszynski"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05,2012"
+
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "z_dsp.h"
 #include "fft.h"
 #include <string.h>
@@ -137,7 +144,7 @@ static t_int pitch_intpartialonset[] = {
 
 #define NPARTIALONSET ((t_int)(sizeof(pitch_partialonset)/sizeof(t_float)))
 
-void *pitch_class;
+t_class *pitch_class;
 
 enum {Recta=0, Hann, Hamm, Blackman62, Blackman70, Blackman74, Blackman92};
 
@@ -276,14 +283,14 @@ void pitch_tick_G4(t_pitch *x);
 long log2max(long n);
 #endif
 
-void main(void) {
+int main(void){
 
-    post("Pitch~ object version " VERSION " by Tristan Jehan and Michael Zbyszynski");
-    post("copyright © 2001 Massachussets Institute of Technology");
-	post("copyright © 2007-8 UC Regents");
-    post("Based on Miller Puckette's fiddle~");
-    post("copyright © 1997-1999 Music Department UCSD");
-    post(" ");
+    object_post((t_object *)x, "Pitch~ object version " VERSION " by Tristan Jehan and Michael Zbyszynski");
+    object_post((t_object *)x, "copyright © 2001 Massachussets Institute of Technology");
+	object_post((t_object *)x, "copyright © 2007-8 UC Regents");
+    object_post((t_object *)x, "Based on Miller Puckette's fiddle~");
+    object_post((t_object *)x, "copyright © 1997-1999 Music Department UCSD");
+    object_post((t_object *)x, " ");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
@@ -295,19 +302,22 @@ void main(void) {
 
 	setup( (Messlist **)&pitch_class, (method)pitch_new, (method)pitch_free, (short)sizeof(t_pitch), 0L, A_GIMME, 0);
 		
-	addmess((method)pitch_dsp, "dsp", A_CANT, 0);
-	addmess((method)pitch_assist, "assist", A_CANT, 0);
-    addmess((method)pitch_print, "print", 0);
-    addmess((method)pitch_amprange, "amp-range", A_FLOAT, A_FLOAT, 0);
-    addmess((method)pitch_reattack, "reattack", A_FLOAT, A_FLOAT, 0);
-    addmess((method)pitch_vibrato, "vibrato", A_FLOAT, A_FLOAT, 0);
-   	addmess((method)pitch_npartial, "npartial", A_FLOAT, 0);
+	class_addmethod(pitch_class, (method)pitch_dsp, "dsp", A_CANT, 0);
+	class_addmethod(pitch_class, (method)pitch_assist, "assist", A_CANT, 0);
+    class_addmethod(pitch_class, (method)pitch_print, "print", 0);
+    class_addmethod(pitch_class, (method)pitch_amprange, "amp-range", A_FLOAT, A_FLOAT, 0);
+    class_addmethod(pitch_class, (method)pitch_reattack, "reattack", A_FLOAT, A_FLOAT, 0);
+    class_addmethod(pitch_class, (method)pitch_vibrato, "vibrato", A_FLOAT, A_FLOAT, 0);
+   	class_addmethod(pitch_class, (method)pitch_npartial, "npartial", A_FLOAT, 0);
 
-	addfloat((method)pitch_float);
-	addint((method)pitch_int);
+	class_addmethod(pitch_class, (method)pitch_float, "float", A_FLOAT, 0);
+	class_addmethod(pitch_class, (method)pitch_int, "int", A_LONG, 0);
 	dsp_initclass();
 
 	rescopy('STR#', RES_ID);
+
+	class_register(CLASS_BOX, pitch_class);
+	return 0;
 }
 
 t_int *pitch_perform(t_int *w) {
@@ -392,7 +402,7 @@ void pitch_int(t_pitch *x, long n) {
 
 	x->x_hop = n; 
 	if (x->x_hop < vs) {
-		post("Pitch~: You can't overlap so much...");
+		object_post((t_object *)x, "Pitch~: You can't overlap so much...");
 		x->x_hop = vs;
 	} else if (x->x_hop > x->BufSize) {
 		x->x_hop = x->BufSize;
@@ -429,10 +439,10 @@ void pitch_assist(t_pitch *x, void *b, long m, long a, char *s) {
 }
 
 void pitch_print(t_pitch *x) {
-    post("amp-range %.2f %.2f",  x->x_amplo, x->x_amphi);
-    post("reattack %d %.2f",  x->x_attacktime, x->x_attackthresh);
-    post("vibrato %d %.2f",  x->x_vibtime, x->x_vibdepth);
-    post("npartial %.2f",  x->x_npartial);
+    object_post((t_object *)x, "amp-range %.2f %.2f",  x->x_amplo, x->x_amphi);
+    object_post((t_object *)x, "reattack %d %.2f",  x->x_attacktime, x->x_attackthresh);
+    object_post((t_object *)x, "vibrato %d %.2f",  x->x_vibtime, x->x_vibdepth);
+    object_post((t_object *)x, "npartial %.2f",  x->x_npartial);
 }
 
 void pitch_amprange(t_pitch *x, t_floatarg amplo, t_floatarg amphi) {
@@ -530,7 +540,7 @@ void readx_delay(t_pitch *x, t_atom *argv) {
 	} else if ((argv[4].a_type == A_FLOAT) && (argv[4].a_w.w_float >= 0) && (argv[4].a_w.w_float < MAXDELAY)) {
 		x->x_delay = (t_int)(argv[4].a_w.w_float);
 	} else {
-		post("Pitch~: 'delay' argument may be out of range... Choosing default...");
+		object_post((t_object *)x, "Pitch~: 'delay' argument may be out of range... Choosing default...");
 		x->x_delay = DEFDELAY;
 	}
 }
@@ -542,7 +552,7 @@ void readx_npitch(t_pitch *x, t_atom *argv) {
 	} else if ((argv[5].a_type == A_FLOAT) && (argv[5].a_w.w_float >= 0) && (argv[5].a_w.w_float <= MAXNPITCH)) {
 		x->x_npitch = (t_int)(argv[5].a_w.w_float);
 	} else {
-		post("Pitch~: '# of pitches' argument may be out of range... Choosing default...");
+		object_post((t_object *)x, "Pitch~: '# of pitches' argument may be out of range... Choosing default...");
 		x->x_npitch = DEFNPITCH;
 	}
 }
@@ -554,7 +564,7 @@ void readx_npeakanal(t_pitch *x, t_atom *argv) {
 	} else if ((argv[6].a_type == A_FLOAT) && (argv[6].a_w.w_float >= 0) && (argv[6].a_w.w_float <= MAXNPEAK)) {
 		x->x_npeakanal = (t_int)(argv[6].a_w.w_float);
 	} else {
-		post("Pitch~: '# of peaks to find' argument may be out of range... Choosing default...");
+		object_post((t_object *)x, "Pitch~: '# of peaks to find' argument may be out of range... Choosing default...");
 		x->x_npeakanal = DEFNPEAKANAL;
 	}
 }
@@ -566,7 +576,7 @@ void readx_npeakout(t_pitch *x, t_atom *argv) {
 	} else if ((argv[7].a_type == A_FLOAT) && (argv[7].a_w.w_float >= 0) && (argv[7].a_w.w_float <= MAXNPEAK)) {
 		x->x_npeakout = (t_int)(argv[7].a_w.w_float);
 	} else {
-		post("Pitch~: '# of peaks to output' argument may be out of range... Choosing default...");
+		object_post((t_object *)x, "Pitch~: '# of peaks to output' argument may be out of range... Choosing default...");
 		x->x_npeakout = DEFNPEAKOUT;
 	}
 }
@@ -574,7 +584,11 @@ void readx_npeakout(t_pitch *x, t_atom *argv) {
 void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
 	t_int i, j;
 	t_int vs = sys_getblksize(); // get vector size
-    t_pitch *x = (t_pitch *)newobject(pitch_class);
+    t_pitch *x = (t_pitch *)object_alloc(pitch_class);
+	if(!x){
+		return NULL;
+	}
+
     dsp_setup((t_pxobject *)x,1); // one signal inlet	
 	x->x_Fs = sys_getsr();
 	x->BufWritePos = 0;
@@ -702,7 +716,7 @@ void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
 	}		
 	
 	if (x->x_npeakout > x->x_npeakanal) {
-		post("Pitch~: You can't output more peaks than you pick...");
+		object_post((t_object *)x, "Pitch~: You can't output more peaks than you pick...");
 		x->x_npeakout = x->x_npeakanal;
 	}
 	
@@ -751,15 +765,15 @@ void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
 	}
 	
 	if (x->BufSize < vs) { 
-		post("Pitch~: Buffer size is smaller than the vector size, %d",vs);
+		object_post((t_object *)x, "Pitch~: Buffer size is smaller than the vector size, %d",vs);
 		x->BufSize = vs;
 	} else if (x->BufSize > 65536) {
-		post("Pitch~: Maximum FFT size is 65536 samples");
+		object_post((t_object *)x, "Pitch~: Maximum FFT size is 65536 samples");
 		x->BufSize = 65536;
 	}
 		
 	if (x->FFTSize < x->BufSize) {
-		post("Pitch~: FFT size is at least the buffer size, %d",x->BufSize);
+		object_post((t_object *)x, "Pitch~: FFT size is at least the buffer size, %d",x->BufSize);
 		x->FFTSize = x->BufSize;
 	}
 
@@ -773,13 +787,13 @@ void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
 	else if ((x->FFTSize > 16384) && (x->FFTSize < 32768)) x->FFTSize = 32768;
 	else if ((x->FFTSize > 32768) && (x->FFTSize < 65536)) x->FFTSize = 65536;
 	else if (x->FFTSize > 65536) {
-		post("Pitch~: Maximum FFT size is 65536 samples");
+		object_post((t_object *)x, "Pitch~: Maximum FFT size is 65536 samples");
 		x->FFTSize = 65536;
 	}
 	
 	// Overlap case
 	if (x->x_overlap > x->BufSize-vs) {
-		post("Pitch~: You can't overlap so much...");
+		object_post((t_object *)x, "Pitch~: You can't overlap so much...");
 		x->x_overlap = x->BufSize-vs;
 	} else if (x->x_overlap < 1)
 		x->x_overlap = 0; 
@@ -787,15 +801,15 @@ void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_hop = x->BufSize - x->x_overlap;
 	x->x_FFTSizeOver2 = x->FFTSize/2;		
 
-	post("--- Pitch~ ---");	
-	post("	Buffer size = %d",x->BufSize);
-	post("	Hop size = %d",x->x_hop);
-	post("	FFT size = %d",x->FFTSize);
-	post("	Window type = %s",x->x_winName);
-	post("	Initial delay = %d",x->x_delay);
-	post("	Number of pitches = %d",x->x_npitch);
-	post("	Number of peaks to search = %d",x->x_npeakanal);
-	post("	Number of peaks to output = %d",x->x_npeakout);
+	object_post((t_object *)x, "--- Pitch~ ---");	
+	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
+	object_post((t_object *)x, "	Hop size = %d",x->x_hop);
+	object_post((t_object *)x, "	FFT size = %d",x->FFTSize);
+	object_post((t_object *)x, "	Window type = %s",x->x_winName);
+	object_post((t_object *)x, "	Initial delay = %d",x->x_delay);
+	object_post((t_object *)x, "	Number of pitches = %d",x->x_npitch);
+	object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
+	object_post((t_object *)x, "	Number of peaks to output = %d",x->x_npeakout);
 
 	// Here comes the choice for altivec optimization or not...
 	if (sys_optimize()) { // note that we DON'T divide the vector size by four here
@@ -803,7 +817,7 @@ void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
 #ifdef __ALTIVEC__ // More code and a new ptr so that x->BufFFT is vector aligned.
 #pragma altivec_model on 
 		x->x_clock = clock_new(x,(method)pitch_tick_G4); // Call altivec-optimized tick function
-		post("	Using G4-optimized FFT");	
+		object_post((t_object *)x, "	Using G4-optimized FFT");	
 		// Allocate some memory for the altivec FFT
 		x->x_A.realp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
 		x->x_A.imagp = t_getbytes(x->x_FFTSizeOver2 * sizeof(t_float));
@@ -812,14 +826,14 @@ void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
     	x->x_scaleFactor = (t_float)1.0/(2.0*x->FFTSize);
 #pragma altivec_model off
 #else
-		error("  No G4 optimization available");
+		object_error((t_object *)x, "  No G4 optimization available");
 #endif
 
 	} else { // Normal tick function
 		x->x_clock = clock_new(x,(method)pitch_tick);
 		x->memFFT = (t_float*) NewPtr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
 	}
-	post("");
+	object_post((t_object *)x, "");
 
 	// Allocate memory
 	x->Buf1 = (t_int*) NewPtr(x->BufSize * sizeof(t_float)); // Careful these are pointers to integers but the content is floats

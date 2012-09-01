@@ -44,6 +44,11 @@ VERSION 0.2.6: Force Package Info Generation
 
 
 */
+#define NAME "threefates"
+#define DESCRIPTION "Deal with track birth/death for sinusoids~"
+#define AUTHORS "Tim Madden and Matt Wright"
+#define COPYRIGHT_YEARS "2000,01,02,03,04,05,2012"
+
 
 
 
@@ -70,7 +75,9 @@ VERSION 0.2.6: Force Package Info Generation
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 
 // Define the max number of parameters per oscillator (not including index).
 #define MAX_PARTIAL_PARAMS 5
@@ -137,7 +144,7 @@ typedef struct t_threefates_
 
 Symbol *ps_list;
 
-void *threefates_class;
+t_class *threefates_class;
 
 /*
  * Function Prototypes.
@@ -221,16 +228,16 @@ void threefates_tellmeeverything(t_threefates *x);
 void main(fptr *f)
 {
 	
-	version(0);	
+	version_post_copyright();	
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&threefates_class, (method) threefates_new, (method) threefates_free,
+	threefates_class = class_new("threefates", (method) threefates_new, (method) threefates_free,
 			(short)sizeof(t_threefates), 0L, A_DEFLONG, A_DEFLONG, 0);
 			
 			
 	// post("size %ld", sizeof(t_threefates));
-	addmess((method)version, "version", 0);
-	addmess((method)List, "list", A_GIMME, 0);
-	addmess((method)threefates_tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(threefates_class, (method)version, "version", 0);
+	class_addmethod(threefates_class, (method)List, "list", A_GIMME, 0);
+	class_addmethod(threefates_class, (method)threefates_tellmeeverything, "tellmeeverything", 0);
 	
 	ps_list = gensym("list");
 
@@ -289,7 +296,7 @@ void *threefates_new(long maxpartials, long nPartialParams) {
 	x->t_slotlist =  (t_slot *) sysmem_newptr(x->max_osc * sizeof(t_slot));
 
 	if (x->output_list == 0 || x->frame0 == 0 || x->frame1 == 0 || x->t_slotlist == 0) {
-	  error(NAME ": out of memory.");
+	  object_error((t_object *)x, NAME ": out of memory.");
 	  return 0;
 	}
 	
@@ -328,13 +335,13 @@ void List(
 {
 
 	if (argc > x->max_inargs) {
-	  error("threefates: %ld-element input list too big, so I'm dropping it as if you'd never sent it.", argc);
-	  error("   Maximum input list size is %ld = %ld partials * (1 index + %ld parameters per partial)", x->max_inargs, x->max_osc, x->num_partial_parameters);
+	  object_error((t_object *)x, "threefates: %ld-element input list too big, so I'm dropping it as if you'd never sent it.", argc);
+	  object_error((t_object *)x, "   Maximum input list size is %ld = %ld partials * (1 index + %ld parameters per partial)", x->max_inargs, x->max_osc, x->num_partial_parameters);
 		return;
 	}
 	
 	if (argc %  (1+ x->num_partial_parameters) != 0) {
-		error("threefates: input list length not a multiple of %ld - dropping", 1+x->num_partial_parameters);
+		object_error((t_object *)x, "threefates: input list length not a multiple of %ld - dropping", 1+x->num_partial_parameters);
 		return;
 	}
 
@@ -367,7 +374,7 @@ void List(
 	}
 	else
 	{
-		error("threefates: InputToFutureFrame returned a bad value.");
+		object_error((t_object *)x, "threefates: InputToFutureFrame returned a bad value.");
 	}
 }
 
@@ -831,25 +838,25 @@ void threefates_tellmeeverything(t_threefates *x) {
 
    post(" up to %ld oscillators, %ld params each (so input list length <= %ld, output list length <= %ld)",
         x->max_osc, x->num_partial_parameters, x->max_inargs, x->max_outargs);
-   post(" Present frame has %ld values:", GetPresentAC(x));
+   object_post((t_object *)x, " Present frame has %ld values:", GetPresentAC(x));
    for (i = 0; i < GetPresentAC(x); i+= x->num_partial_parameters+1) {
-   	  post("    ");
+   	  object_post((t_object *)x, "    ");
    	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
    	  	SETFLOAT(&a, GetPresentValue(x, i+j));
    	  	postatom(&a);
    	  }
    }
-   post(" Future frame has %ld values:", GetFutureAC(x));
+   object_post((t_object *)x, " Future frame has %ld values:", GetFutureAC(x));
    for (i = 0; i < GetFutureAC(x); i+= x->num_partial_parameters+1) {
-   	  post("    ");
+   	  object_post((t_object *)x, "    ");
    	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
    	  	SETFLOAT(&a, GetFutureValue(x, i+j));
    	  	postatom(&a);
    	  }
    }
-   post(" Slot list has %ld elements, max index %ld", x->num_slots, x->max_slot_index);
+   object_post((t_object *)x, " Slot list has %ld elements, max index %ld", x->num_slots, x->max_slot_index);
    for (i = 0; i<x->max_slot_index; i ++) {
-   		post("  index %ld %s ", x->t_slotlist[i].index, x->t_slotlist[i].is_dead ? "DEAD" : "ALIVE");
+   		object_post((t_object *)x, "  index %ld %s ", x->t_slotlist[i].index, x->t_slotlist[i].is_dead ? "DEAD" : "ALIVE");
    		for (j = 0; j<x->num_partial_parameters; ++j) {
    			SETFLOAT(&a, x->t_slotlist[i].params[j]);
    			postatom(&a);

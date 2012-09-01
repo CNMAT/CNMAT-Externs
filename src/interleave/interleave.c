@@ -38,6 +38,11 @@ VERSION 1.1: UB recompile
 VERSION 1.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "interleave"
+#define DESCRIPTION "Interleave multiple input lists to one output list.  E.g., if inputs are "A B C" and "1 2 3", the output will be "A 1 B 2 C 3"."
+#define AUTHORS "Tim Madden"
+#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+
 
 
 /**************************************************************************************
@@ -62,8 +67,10 @@ VERSION 1.1: Force Package Info Generation
  */
  
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 
 
 // Define the max number of args.
@@ -86,7 +93,7 @@ typedef struct t_interleave
 
 Symbol *ps_list;
 
-void *interleave_class;
+t_class *interleave_class;
 
 /*
  * Function Prototypes.
@@ -196,28 +203,30 @@ void List(
  *************************************************************************************/
 
 
-void main(void)
-{
+int main(void){
 	
 
 	
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&interleave_class, (method)interleave_new, (method) interleave_free,
+	interleave_class = class_new("interleave", (method)interleave_new, (method) interleave_free,
 			(short)sizeof(t_Interleave), 0L, 
 			A_GIMME, 0);
 			
-	addbang((method)Bang);			
-	addmess((method)List, "list", A_GIMME, 0);
-	addmess((method)List1, "list1", A_GIMME, 0);
-	addmess((method)List2, "list2", A_GIMME, 0);
-	addmess((method)List3, "list3", A_GIMME, 0);
-	addmess((method)List4, "list4", A_GIMME, 0);
-	addmess((method)Output, "output", A_GIMME, 0);
-	addmess((method)version, "version", 0);
+	class_addmethod(interleave_class, (method)Bang, "bang", 0);			
+	class_addmethod(interleave_class, (method)List, "list", A_GIMME, 0);
+	class_addmethod(interleave_class, (method)List1, "list1", A_GIMME, 0);
+	class_addmethod(interleave_class, (method)List2, "list2", A_GIMME, 0);
+	class_addmethod(interleave_class, (method)List3, "list3", A_GIMME, 0);
+	class_addmethod(interleave_class, (method)List4, "list4", A_GIMME, 0);
+	class_addmethod(interleave_class, (method)Output, "output", A_GIMME, 0);
+	class_addmethod(interleave_class, (method)version, "version", 0);
 
 	ps_list = gensym("list");
 
-	version(0);
+	version_post_copyright();
+
+	class_register(CLASS_BOX, interleave_class);
+	return 0;
 }
 
 
@@ -483,14 +492,14 @@ void Outputguts(
 	
 	for (i = 0; i < x->num_inputs; ++i) {
 		if (x->sublist_sizes[i] < 0) {
-			post("¥ InterleaveList: can't output because input list(s) missing.");
+			object_post((t_object *)x, "¥ InterleaveList: can't output because input list(s) missing.");
 			return;
 		}
 	}
 	
 	for (i = 1; i < x->num_inputs; ++i) {
 		if (x->sublist_sizes[i] != x->sublist_sizes[0]) {
-			post("¥ InterleaveList: input list(s) are not all the same length.");
+			object_post((t_object *)x, "¥ InterleaveList: input list(s) are not all the same length.");
 			return;
 		}
 	}

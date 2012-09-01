@@ -44,12 +44,19 @@ VERSION 0.4.1: Added min and max OSC Packet sizes as a heuristic protection agai
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
  */
+#define NAME "printit"
+#define DESCRIPTION "Really print everything about what comes in the inlet"
+#define AUTHORS "Matt Wright"
+#define COPYRIGHT_YEARS "2000-06,2012"
+
  
  
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 #include "../../../../OSC/dumpOSC/printOSCpacket.h"
 
 /* structure definition of your object */
@@ -65,7 +72,7 @@ typedef struct printit
 fptr *FNS;
 
 /* globalthat holds the class definition */
-void *printit_class;
+t_class *printit_class;
 
 /* prototypes  */
 
@@ -86,20 +93,20 @@ Symbol *ps_FullPacket;
 
 void main(fptr *f)
 {
-  version(0);
+  version_post_copyright();
 	/* tell Max about your class. The cast to short is important for 68K */
-	setup((t_messlist **)&printit_class, (method) printit_new, 0L, (short)sizeof(printit), 
+	printit_class = class_new("printit", (method) printit_new, 0L, (short)sizeof(printit), 
 		  0L, A_DEFSYM, 0);
 
 
 	/* bind your methods to symbols */
-	addbang((method)printit_bang);
-	addint((method)printit_int);
-	addfloat((method)printit_float);
-	addmess((method)printit_list, "list", A_GIMME, 0);	
-	addmess((method)printit_anything, "anything", A_GIMME, 0);
-	addmess((method)printit_assist, "assist", A_CANT, 0);
-	addmess((method)version, "version", 0);
+	class_addmethod(printit_class, (method)printit_bang, "bang", 0);
+	class_addmethod(printit_class, (method)printit_int, "int", A_LONG, 0);
+	class_addmethod(printit_class, (method)printit_float, "float", A_FLOAT, 0);
+	class_addmethod(printit_class, (method)printit_list, "list", A_GIMME, 0);	
+	class_addmethod(printit_class, (method)printit_anything, "anything", A_GIMME, 0);
+	class_addmethod(printit_class, (method)printit_assist, "assist", A_CANT, 0);
+	class_addmethod(printit_class, (method)version, "version", 0);
 
 	ps_emptysymbol = gensym("");
 	ps_printit = gensym("printit");
@@ -142,24 +149,24 @@ void printit_assist (printit *x, void *box, long msg, long arg, char *dstString)
 	} else if (msg==ASSIST_OUTLET) {
 		sprintf(dstString, "No outlet");
 	} else {
-		post("¥ printit_assist: unrecognized message %ld", msg);
+		object_post((t_object *)x, "¥ printit_assist: unrecognized message %ld", msg);
 	}
 }
 
 void printit_bang(printit *x)
 {
-	post("%s: received a bang.", x->my_name->s_name);
+	object_post((t_object *)x, "%s: received a bang.", x->my_name->s_name);
 }
 
 void printit_float(printit *x, double d)
 {
 	float f = (float) d;
-	post("%s: received a float: %f (which was passed on the stack as a double: %f)", x->my_name->s_name, f, d);
+	object_post((t_object *)x, "%s: received a float: %f (which was passed on the stack as a double: %f)", x->my_name->s_name, f, d);
 }
 
 void printit_int(printit *x, long n)
 {
-	post("%s: received an int: %ld", x->my_name->s_name, n);
+	object_post((t_object *)x, "%s: received an int: %ld", x->my_name->s_name, n);
 }
 
 static void print_args(short argc, Atom *argv) {
@@ -170,35 +177,35 @@ static void print_args(short argc, Atom *argv) {
       post(" SYMBOL \"%s\" (%p, s_thing %p)",
 	   argv[i].a_w.w_sym->s_name, argv[i].a_w.w_sym, argv[i].a_w.w_sym->s_thing);
     } else if (argv[i].a_type == A_LONG) {
-      post(" LONG   %ld", argv[i].a_w.w_long);
+      object_post((t_object *)x, " LONG   %ld", argv[i].a_w.w_long);
     } else if (argv[i].a_type == A_FLOAT) {
-      post(" FLOAT  %f", argv[i].a_w.w_float);
+      object_post((t_object *)x, " FLOAT  %f", argv[i].a_w.w_float);
     } else if (argv[i].a_type == A_SEMI) {
-      post(" A_SEMI (semicolon: \";\") - its own special undocumented Max data type");
+      object_post((t_object *)x, " A_SEMI (semicolon: \";\") - its own special undocumented Max data type");
     } else if (argv[i].a_type == A_COMMA) {
-      post(" A_COMMA (comma: \",\") - its own special undocumented Max data type");
+      object_post((t_object *)x, " A_COMMA (comma: \",\") - its own special undocumented Max data type");
     } else if (argv[i].a_type == A_DOLLAR) {
-      post(" A_DOLLAR (dollar sign: \"$\") - its own special undocumented Max data type");
+      object_post((t_object *)x, " A_DOLLAR (dollar sign: \"$\") - its own special undocumented Max data type");
     } else if (argv[i].a_type == A_NOTHING) {
-      post(" A_NOTHING (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_NOTHING (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_OBJ) {
-      post(" A_OBJ (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_OBJ (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_DEFLONG) {
-      post(" A_DEFLONG (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_DEFLONG (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_DEFFLOAT) {
-      post(" A_DEFFLOAT (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_DEFFLOAT (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_DEFSYM) {
-      post(" A_DEFSYM (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_DEFSYM (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_GIMME) {
-      post(" A_GIMME (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_GIMME (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_CANT) {
-      post(" A_CANT (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_CANT (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_DOLLSYM) {
-      post(" A_DOLLSYM (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_DOLLSYM (whatever that means---let Matt Wright know if you find out!)");
     } else if (argv[i].a_type == A_GIMMEBACK) {
-      post(" A_GIMMEBACK (whatever that means---let Matt Wright know if you find out!)");
+      object_post((t_object *)x, " A_GIMMEBACK (whatever that means---let Matt Wright know if you find out!)");
     } else {
-      post(" ¥ unrecognized argument type %d!", argv[i].a_type);
+      object_post((t_object *)x, " ¥ unrecognized argument type %d!", argv[i].a_type);
     }
   }
 }
@@ -212,7 +219,7 @@ void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
 	if (s == ps_FullPacket && argc == 2 && argv[0].a_type == A_LONG && argv[1].a_type == A_LONG) {
 	  int size = argv[0].a_w.w_long;
 	  char *bufptr = (char *) argv[1].a_w.w_long;
-	  post("It looks like an OSC packet");
+	  object_post((t_object *)x, "It looks like an OSC packet");
 	  if (size < x->min_OSCPacket_size) {
 	    post("but the size is only %ld bytes, so I won't try to print it.",
 		 size);
@@ -226,6 +233,6 @@ void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
 }
 
 void printit_list(printit *x, Symbol *s, short argc, Atom *argv) {
-	post("%s: received LIST with %d argument(s):", x->my_name->s_name, argc);
+	object_post((t_object *)x, "%s: received LIST with %d argument(s):", x->my_name->s_name, argc);
 	print_args(argc, argv);
 }

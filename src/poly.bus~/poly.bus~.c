@@ -31,13 +31,18 @@ VERSION 0.0.1: New help file
 VERSION 0.1: Fixed a memory leak and made it so that you can safely have 2 of them running at once
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "poly.bus~"
+#define DESCRIPTION "Multichannel, dynamically assignable receive for poly~"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2009,2012"
+
 
 #include "version.h"
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "z_dsp.h"
-#include "version.c"
+
 
 #ifdef WIN32
 #include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
@@ -152,7 +157,7 @@ void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 	t_pbus *x;
 
 	if(argc < 2){
-		error("poly.bus~: 2 arguments required: name and number of channels");
+		object_error((t_object *)x, "poly.bus~: 2 arguments required: name and number of channels");
 		return NULL;
 	}
 	if(x = (t_pbus *)object_alloc(pbus_class)){
@@ -162,7 +167,7 @@ void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 		x->name->s_thing = x->name->s_thing + 1;
 		x->num_channels = atom_getlong(argv + 1);
 		if(x->num_channels <= 0){
-			error("poly.bus~: number of channels must be >0");
+			object_error((t_object *)x, "poly.bus~: number of channels must be >0");
 			return NULL;
 		}
 		x->mangled_names = (t_symbol **)calloc(x->num_channels, sizeof(t_symbol *));
@@ -191,7 +196,9 @@ int main(void){
 	pbus_class = c;
 
 	common_symbols_init();
-	version(0);
+	version_post_copyright();
+	
+	class_register(CLASS_BOX, pbus_class);
 	return 0;
 }
 

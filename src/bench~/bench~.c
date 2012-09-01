@@ -29,10 +29,17 @@ SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 1.0: First version
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "bench~"
+#define DESCRIPTION "Benchmarking utility"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2008,2012"
+
 
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
+
+
 #include "z_dsp.h"
 #include "math.h"
 #include "sys/time.h"
@@ -52,7 +59,7 @@ typedef struct _bench{
 	int t_mode; 
 } t_bench;
 
-void *bench_class;
+t_class *bench_class;
 
 void bench_assist(t_bench *x, void *b, long m, long a, char *s);
 void *bench_new(t_symbol *msg, short argc, t_atom *argv);
@@ -63,16 +70,18 @@ void bench_dsp(t_bench *x, t_signal **sp, short *count);
 void bench_free(t_bench *x);
 
 int main(void){
-	setup((t_messlist **)&bench_class, (method)bench_new, (method)bench_free, (short)sizeof(t_bench), 0L, A_GIMME, 0);
+	bench_class = class_new("bench~", (method)bench_new, (method)bench_free, (short)sizeof(t_bench), 0L, A_GIMME, 0);
 	
-	version(0);
+	version_post_copyright();
 
-	addmess((method) version, "version", 0);
-	addmess((method)bench_dsp, "dsp", A_CANT, 0);
-	addmess((method)bench_assist, "assist", A_CANT, 0);
+	class_addmethod(bench_class, (method) version, "version", 0);
+	class_addmethod(bench_class, (method)bench_dsp, "dsp", A_CANT, 0);
+	class_addmethod(bench_class, (method)bench_assist, "assist", A_CANT, 0);
 	
 	dsp_initclass();
 	
+	
+	class_register(CLASS_BOX, bench_class);
 	return 0;
 }
 
@@ -86,14 +95,18 @@ void bench_assist(t_bench *x, void *b, long m, long a, char *s){
 void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 	t_bench *x;
 
-	x = (t_bench *)newobject(bench_class);
+	x = (t_bench *)object_alloc(bench_class);
+	if(!x){
+		return NULL;
+	}
+
 
 	if(!argc){
-		error("bench~: one argument is required, either in or out");
+		object_error((t_object *)x, "bench~: one argument is required, either in or out");
 		return NULL;
 	}else{
 		if(!argv[0].a_type == A_SYM){
-			error("bench~: the first argument to bench must be a symbol (either \"in\" or \"out\")");
+			object_error((t_object *)x, "bench~: the first argument to bench must be a symbol (either \"in\" or \"out\")");
 			return NULL;
 		}else if(!strcmp(argv[0].a_w.w_sym->s_name, "in")){
 			dsp_setup((t_pxobject *)x, 1);
@@ -112,7 +125,7 @@ void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 				}else if(!strcmp(argv[1].a_w.w_sym->s_name, "thru")){
 					x->t_mode = BENCH_MODE_THRU;
 				}else {
-					error("bench~: unrecognized argument %s.  Setting the mode to \"ones\"", argv[1].a_w.w_sym->s_name);
+					object_error((t_object *)x, "bench~: unrecognized argument %s.  Setting the mode to \"ones\"", argv[1].a_w.w_sym->s_name);
 					x->t_mode = BENCH_MODE_ONES;
 				}
 			}
@@ -121,7 +134,7 @@ void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 			outlet_new((t_object *)x, "signal");
 			x->t_objmode = BENCH_OUT;
 		}else {
-			error("bench~: unrecognized argument %s", argv[0].a_w.w_sym->s_name);
+			object_error((t_object *)x, "bench~: unrecognized argument %s", argv[0].a_w.w_sym->s_name);
 			return NULL;
 		}
 	}

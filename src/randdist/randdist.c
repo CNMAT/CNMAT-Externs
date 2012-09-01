@@ -45,6 +45,11 @@ VERSION 2.1.5: seed is now an attribute to easily replicate random data
 VERSION 2.1.6: multivariate_hypergeometric
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "randdist"
+#define DESCRIPTION "Random number generator with over 30 statistical distributions."
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2006-09,2012"
+
 
 #include <stdio.h>
 #include "ext.h"
@@ -53,7 +58,7 @@ VERSION 2.1.6: multivariate_hypergeometric
 #include "jpatcher_api.h"
 #include "libranddist.h"
 #include "version.h"
-#include "version.c"
+
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #include <gsl/gsl_rng.h>
@@ -158,8 +163,10 @@ int main(void){
 	class_register(CLASS_BOX, c);
 	rdist_class = c;
 
-	version(0);
+	version_post_copyright();
 
+	
+	class_register(CLASS_BOX, rdist_class);
 	return 0;
 }
 
@@ -169,7 +176,11 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 	t_atom ar[2];
 	srand(mach_absolute_time());
 
-	//x = (t_rdist *)newobject(rdist_class); // create a new instance of this object
+	//x = (t_rdist *)object_alloc(rdist_class);
+	if(!x){
+		return NULL;
+	}
+ // create a new instance of this object
 	if(x = (t_rdist *)object_alloc(rdist_class)){
 
 		x->outlet_info = outlet_new(x, NULL);	
@@ -499,10 +510,10 @@ void rdist_assist(t_rdist *x, void *b, long m, long a, char *s){
 void rdist_tellmeeverything(t_rdist *x){
 	int i;
 	float vars[x->r_numVars];
-	post("Distribution: %s", x->r_dist->s_name);
-	post("Args:");
+	object_post((t_object *)x, "Distribution: %s", x->r_dist->s_name);
+	object_post((t_object *)x, "Args:");
 	for(i = 0; i < x->r_numVars; i++){
-		post("\t%f", x->r_vars[i]);
+		object_post((t_object *)x, "\t%f", x->r_vars[i]);
 	}
 }
 
@@ -525,7 +536,7 @@ void rdist_free(t_rdist *x){
 }
 
 void rdist_errorHandler(const char * reason, const char * file, int line, int gsl_errno){
-	error("randdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
+	object_error((t_object *)x, "randdist: a(n) %s has occured in file %s at line %d (error %d)", reason, file, line, gsl_errno);
 }
 
 void rdist_loadbang(t_rdist *x){

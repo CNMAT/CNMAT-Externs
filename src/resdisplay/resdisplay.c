@@ -34,6 +34,11 @@
   VERSION 0.2.3: more reasonable default size
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "resdisplay"
+#define DESCRIPTION "Display/edit resonance models"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2010,2012"
+
 
 #include "version.h"
 #include "ext.h"
@@ -42,7 +47,7 @@
 #include "jpatcher_api.h" 
 #include "jgraphics.h"
 #include "ext_critical.h"
-#include "version.c"
+
 #include "math.h"
 
 #include "common/commonsyms.c"
@@ -564,8 +569,10 @@ int main(void){
 
 	common_symbols_init();
 
-	version(0);
+	version_post_copyright();
 
+	
+	class_register(CLASS_BOX, rd_class);
 	return 0;
 }
 

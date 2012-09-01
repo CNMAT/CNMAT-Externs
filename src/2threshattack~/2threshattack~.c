@@ -34,17 +34,24 @@ VERSION 0.2.1: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
+#define NAME "2threshattack~"
+#define DESCRIPTION "Two-threshold attack detector, aka a Schmitt Trigger (http://en.wikipedia.org/wiki/Schmitt_trigger)"
+#define AUTHORS "Matt Wright"
+#define COPYRIGHT_YEARS "2004-06,2012"
+
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 
 #include "z_dsp.h"
 
 
 
-void *tta_class;
+t_class *tta_class;
 
 typedef struct _tta
 {
@@ -66,17 +73,20 @@ void tta_set_low(t_tta *x, double low);
 void tta_set_high(t_tta *x, double high);
 void tta_tellmeeverything(t_tta *x);
 
-void main(void) {
-    version(0);
-    setup((t_messlist **)&tta_class, (method)tta_new, (method)dsp_free,
+int main(void){
+    version_post_copyright();
+    tta_class = class_new("2threshattack~", (method)tta_new, (method)dsp_free,
           (short)sizeof(t_tta), 0L, A_DEFFLOAT, A_DEFFLOAT, 0);
-    addmess((method)version, "version", 0);
-    addmess((method)tta_dsp, "dsp", A_CANT, 0);
-    addmess((method)tta_set_low, "low", A_FLOAT, 0);
-    addmess((method)tta_set_high, "high", A_FLOAT, 0);
-    addmess((method)tta_tellmeeverything, "tellmeeverything", 0);
+    class_addmethod(tta_class, (method)version, "version", 0);
+    class_addmethod(tta_class, (method)tta_dsp, "dsp", A_CANT, 0);
+    class_addmethod(tta_class, (method)tta_set_low, "low", A_FLOAT, 0);
+    class_addmethod(tta_class, (method)tta_set_high, "high", A_FLOAT, 0);
+    class_addmethod(tta_class, (method)tta_tellmeeverything, "tellmeeverything", 0);
     
     dsp_initclass();
+
+	class_register(CLASS_BOX, tta_class);
+	return 0;
 }
 
 void *tta_new(double l, double h) {
@@ -84,7 +94,11 @@ void *tta_new(double l, double h) {
 	
 	// double taua=0, taur=0;	
 	
-	x = (t_tta *)newobject(tta_class);  // dynamic alloc
+	x = (t_tta *)object_alloc(tta_class);
+	if(!x){
+		return NULL;
+	}
+  // dynamic alloc
   	dsp_setup((t_pxobject *)x,2);  // two inlets
     x->event_outlet = listout (x);	
 	outlet_new((t_object *)x,"signal");

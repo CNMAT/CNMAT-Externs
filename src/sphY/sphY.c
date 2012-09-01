@@ -3,13 +3,15 @@
 
 // MaxMSP
 #include "ext.h"
+#include "ext_obex.h"
+
 
 // Franz Zotter's SH library
 #include "sh.h"
 
 // CNMAT version control
 #include "version.h"
-#include "version.c"
+
 
 /**
  
@@ -23,6 +25,11 @@
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+#define NAME "sphY"
+#define DESCRIPTION "Evaluates the real-valued spherical harmonics up to order N at a point (theta, phi)"
+#define AUTHORS "Franz Zotter, Andy Schmeder"
+#define COPYRIGHT_YEARS "2006-2008,2012"
+
 
 Symbol* ps_index;
 Symbol* ps_r;
@@ -60,19 +67,19 @@ void main(fptr *f)
 {
     
     // announce copyright
-    version(0);
+    version_post_copyright();
     
     // setup
-    setup((t_messlist **)&sphY_class, (method)sphY_new, (method)sphY_free, (short)sizeof(sphY), 0L, A_GIMME, 0);
+    sphY_class = class_new("sphY", (method)sphY_new, (method)sphY_free, (short)sizeof(sphY), 0L, A_GIMME, 0);
     
     // reset
-    addmess((method)sphY_list, "eval", A_GIMME, 0);
+    class_addmethod(sphY_class, (method)sphY_list, "eval", A_GIMME, 0);
     
     // reset
-    addmess((method)sphY_index, "index", A_GIMME, 0);
+    class_addmethod(sphY_class, (method)sphY_index, "index", A_GIMME, 0);
     
     // tooltip helper
-    addmess((method)sphY_assist, "assist", A_CANT, 0);
+    class_addmethod(sphY_class, (method)sphY_assist, "assist", A_CANT, 0);
     
     ps_index = gensym("index");
     ps_r = gensym("r");
@@ -93,7 +100,7 @@ void sphY_assist(sphY *x, void *box, long msg, long arg, char *dstString) {
             sprintf(dstString, "list of real-valued spherical harmonics, with length (order+1)^2, or list of order, degree pairs");
         }
     } else {
-        post("sphY_assist: unrecognized message %ld", msg);
+        object_post((t_object *)x, "sphY_assist: unrecognized message %ld", msg);
     }
     
 }
@@ -120,10 +127,10 @@ void *sphY_new(Symbol* s, short argc, Atom *argv)
                     if(argv[i].a_type == A_LONG) {
                         x->order = argv[i].a_w.w_long;
                     } else {
-                        post("sphY: expected int for order");
+                        object_post((t_object *)x, "sphY: expected int for order");
                     }
                 } else {
-                    post("sphY: missing arg after order");
+                    object_post((t_object *)x, "sphY: missing arg after order");
                 }
             }
             
@@ -182,7 +189,7 @@ void sphY_list(sphY* x, Symbol* mess, short argc, Atom* argv)
         outlet_anything(x->out_p[0], ps_r, x->len, x->list_buf);
     }
     else {
-        post("sphY: invalid number of input arguments, expected two, got %d", argc);
+        object_post((t_object *)x, "sphY: invalid number of input arguments, expected two, got %d", argc);
     }
 }
 

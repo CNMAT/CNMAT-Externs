@@ -61,6 +61,11 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
             (in alternate, slower perform routine)
 
 */
+#define NAME "peqbank~"
+#define DESCRIPTION "Bank of biquad filters in series with analog-like control parameters based on shelving or parametric EQ (or low-level control in the biquad coefficient domain)"
+#define AUTHORS "Tristan Jehan, Matt Wright, Andy Schmeder"
+#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,09,2012"
+
 
 
 
@@ -101,8 +106,10 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 #include "z_dsp.h"
 #include <Memory.h>
 #include <math.h>
@@ -135,7 +142,7 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 #define SMOOTH  0
 #define MAXELEM 10
 
-void *peqbank_class;
+t_class *peqbank_class;
 
 typedef struct _peqbank {
 
@@ -217,8 +224,8 @@ void peqbank_tellmeeverything(t_peqbank *x);
 int test_normal_state(t_peqbank *x);
 int test_newcoeffs_state(t_peqbank *x);
 
-int main(void) {
-        version(0);
+int main(void){
+        version_post_copyright();
 
 	ps_maxelem = gensym("maxelem");
 	ps_shelf   = gensym("shelf");
@@ -237,32 +244,32 @@ int main(void) {
 #define EXPIRATION_STRING "Expires December 1, 2003"
 		DateTimeRec date;
 		GetTime(&date);
-		post(EXPIRATION_STRING);
+		object_post((t_object *)x, EXPIRATION_STRING);
 		if(!((date.year==2002) || (date.year==2003 && date.month < 12)))
 		{
-			post("Expired");
+			object_post((t_object *)x, "Expired");
 		}
 		else
 #else
 		post ("Never expires.");
 #endif
-		addmess((method)peqbank_dsp, "dsp", A_CANT, 0);
+		class_addmethod(peqbank_class, (method)peqbank_dsp, "dsp", A_CANT, 0);
 	}
-	addmess((method)peqbank_reset, "reset", A_GIMME, 0);
-	addmess((method)peqbank_list, "list", A_GIMME, 0);
-	addmess((method)peqbank_list, "bank", A_GIMME, 0); //This is a better name than "list," because it isn't a reservered word in Max. -mz
-	addmess((method)peqbank_maxelem, "maxelem", A_GIMME, 0);
-	addmess((method)peqbank_shelf, "shelf", A_GIMME, 0);
-	addmess((method)peqbank_peq, "peq", A_GIMME, 0);
-	addmess((method)peqbank_fast, "fast", A_GIMME, 0);
-	addmess((method)peqbank_smooth, "smooth", A_GIMME, 0);
-	addmess((method)peqbank_clear, "clear", 0);
-	addmess((method)peqbank_assist, "assist", A_CANT, 0);
-	addmess((method)version, "version", 0);
-	addmess((method)peqbank_tellmeeverything, "tellmeeverything", 0);
-	addmess((method)peqbank_biquads, "biquads", A_GIMME);
-	addmess((method)peqbank_cheby, "highpass", A_GIMME);
-	addmess((method)peqbank_cheby, "lowpass", A_GIMME);
+	class_addmethod(peqbank_class, (method)peqbank_reset, "reset", A_GIMME, 0);
+	class_addmethod(peqbank_class, (method)peqbank_list, "list", A_GIMME, 0);
+	class_addmethod(peqbank_class, (method)peqbank_list, "bank", A_GIMME, 0); //This is a better name than "list," because it isn't a reservered word in Max. -mz
+	class_addmethod(peqbank_class, (method)peqbank_maxelem, "maxelem", A_GIMME, 0);
+	class_addmethod(peqbank_class, (method)peqbank_shelf, "shelf", A_GIMME, 0);
+	class_addmethod(peqbank_class, (method)peqbank_peq, "peq", A_GIMME, 0);
+	class_addmethod(peqbank_class, (method)peqbank_fast, "fast", A_GIMME, 0);
+	class_addmethod(peqbank_class, (method)peqbank_smooth, "smooth", A_GIMME, 0);
+	class_addmethod(peqbank_class, (method)peqbank_clear, "clear", 0);
+	class_addmethod(peqbank_class, (method)peqbank_assist, "assist", A_CANT, 0);
+	class_addmethod(peqbank_class, (method)version, "version", 0);
+	class_addmethod(peqbank_class, (method)peqbank_tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(peqbank_class, (method)peqbank_biquads, "biquads", A_GIMME);
+	class_addmethod(peqbank_class, (method)peqbank_cheby, "highpass", A_GIMME);
+	class_addmethod(peqbank_class, (method)peqbank_cheby, "lowpass", A_GIMME);
 	
 	dsp_initclass();
 	
@@ -277,29 +284,29 @@ void peqbank_tellmeeverything(t_peqbank *x) {
 	version(x);
 
     if (x->b_version == SMOOTH) {
-    	post("  Smooth mode: coefficients linearly interpolated over one MSP vector");
+    	object_post((t_object *)x, "  Smooth mode: coefficients linearly interpolated over one MSP vector");
     } else if (x->b_version == FAST) {
-    	post("  Fast mode: no interpolation when filter parameters change");
+    	object_post((t_object *)x, "  Fast mode: no interpolation when filter parameters change");
     } else {
-    	post("  ERROR: object is in neither FAST mode nor SMOOTH mode!");
+    	object_post((t_object *)x, "  ERROR: object is in neither FAST mode nor SMOOTH mode!");
     }
     
-    post("  Channels: %d", x->b_channels);
+    object_post((t_object *)x, "  Channels: %d", x->b_channels);
     
     post("  coeff = %p, oldcoeff = %p, newcoeff = %p, freecoeff = %p",
     	x->coeff, x->oldcoeff, x->newcoeff, x->freecoeff);
     
-    post("  Allocated enough memory for %ld filters", x->b_max);
+    object_post((t_object *)x, "  Allocated enough memory for %ld filters", x->b_max);
     if (x->b_start == 0) {
     	post("  Shelving EQ: %.2f dB, %.2f dB, %.2f dB, %.2f Hz, %.2f Hz",
     		 x->param[0], x->param[1], x->param[2], x->param[3], x->param[4]);
     	post("  (%.1f dB below %.0f Hz, %.1f dB between, %.1f dB above %.0f Hz)",
     		 x->param[0], x->param[3], x->param[1], x->param[2], x->param[4]);
-    	post("  (biquad: %f %f %f %f %f)", x->coeff[0], x->coeff[1], x->coeff[2], x->coeff[3], x->coeff[4]);
+    	object_post((t_object *)x, "  (biquad: %f %f %f %f %f)", x->coeff[0], x->coeff[1], x->coeff[2], x->coeff[3], x->coeff[4]);
     } else {
-    	post("  No shelving EQ.");
+    	object_post((t_object *)x, "  No shelving EQ.");
     }
-    post("  Computing %ld PEQ filters:", x->b_nbpeq);
+    object_post((t_object *)x, "  Computing %ld PEQ filters:", x->b_nbpeq);
     for (i = 1; i <= x->b_nbpeq; ++i) {
     	post("   %ld: Ctr %.2fHz, BW %.2f oct, %.1fdB at DC, %.1fdB at ctr, %.1fdB at BW edges (biquad: %f %f %f %f %f)", 
     		 i, x->param[i*5], x->param[i*5+1], x->param[i*5+2], x->param[i*5+3], x->param[i*5+4],
@@ -343,7 +350,7 @@ t_int *peqbank_perform_smooth(t_int *w) {
 #ifdef DEBUG	
 	if (x->oldcoeff[3] != x->testcoeff3) {
 		if (posted == 1) {
-			post("testcoeff3 is %f, but x->oldcoeff[3] is %f!", x->testcoeff3, x->oldcoeff[3]);
+			object_post((t_object *)x, "testcoeff3 is %f, but x->oldcoeff[3] is %f!", x->testcoeff3, x->oldcoeff[3]);
 		}
 		++ posted;
 		posted = posted %100;
@@ -431,7 +438,7 @@ t_int *peqbank_perform_smooth(t_int *w) {
 		// interpolating away from, are not needed any more.
 		
 		if (x->freecoeff != 0) {
-			post("peqbank~: disaster (smooth)!  freecoeff should be zero now!");
+			object_post((t_object *)x, "peqbank~: disaster (smooth)!  freecoeff should be zero now!");
 		}
 		
 #ifdef DEBUG	
@@ -454,7 +461,7 @@ t_int *peqbank_perform_fast(t_int *w) {
 	
 	if (x->coeff != x->oldcoeff) {
 		if (x->freecoeff != 0) {
-			post("peqbank~: disaster (fast)!  freecoeff should be zero now!");
+			object_post((t_object *)x, "peqbank~: disaster (fast)!  freecoeff should be zero now!");
 		}
 		x->freecoeff = x->oldcoeff;
 		x->oldcoeff = x->coeff;		
@@ -524,7 +531,7 @@ t_int *peqbank_perform_fast_multi(t_int *w) {
 	
 	if (x->coeff != x->oldcoeff) {
 		if (x->freecoeff != 0) {
-			post("peqbank~: disaster (fast)!  freecoeff should be zero now!");
+			object_post((t_object *)x, "peqbank~: disaster (fast)!  freecoeff should be zero now!");
 		}
 		x->freecoeff = x->oldcoeff;
 		x->oldcoeff = x->coeff;		
@@ -846,19 +853,19 @@ void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type == A_SYM) {
-			error("peqbank~: all arguments to biquads message must be numbers");
+			object_error((t_object *)x, "peqbank~: all arguments to biquads message must be numbers");
 			return;
 		}
 	}
 	
 	if ((argc % 5) != 0) {
-		error("peqbank~: biquads message must have a multiple of 5 arguments");
+		object_error((t_object *)x, "peqbank~: biquads message must have a multiple of 5 arguments");
 		return;
 	}
 	
 	if ((argc / 5) > x->b_max) {
-		error("peqbank~: Too many biquad coefficients (only memory for %d filters)", x->b_max);
-		post("   (ignoring entire biquads list)");
+		object_error((t_object *)x, "peqbank~: Too many biquad coefficients (only memory for %d filters)", x->b_max);
+		object_post((t_object *)x, "   (ignoring entire biquads list)");
 		return;
 	}
 	
@@ -883,18 +890,18 @@ void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type == A_SYM) {
-			error("peqbank~: all arguments to highpass message must be numbers");
+			object_error((t_object *)x, "peqbank~: all arguments to highpass message must be numbers");
 			return;
 		}
 	}
 	
 	if (argc == 0) {
-		error("peqbank~: message must have at least one argument");
+		object_error((t_object *)x, "peqbank~: message must have at least one argument");
 		return;
 	}
 	
 	if (argc > 3) {
-		error("peqbank~: message must not more than three arguments");
+		object_error((t_object *)x, "peqbank~: message must not more than three arguments");
 		return;
 	}
 	
@@ -910,7 +917,7 @@ void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	}
 	
 	if(order % 2 != 0 || order > 8) {
-		post("peqbank~: bad order, must be even number 2-8");
+		object_post((t_object *)x, "peqbank~: bad order, must be even number 2-8");
 	}
 	
 	if(argc > 2) {
@@ -920,17 +927,17 @@ void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	}
 	
 	if (order/2 > x->b_max) {
-		error("peqbank~: not enough space for cascade (only memory for %d filters)", x->b_max);
+		object_error((t_object *)x, "peqbank~: not enough space for cascade (only memory for %d filters)", x->b_max);
 		return;
 	}
 	
 	if(s == ps_highpass) {
 		if(peqbank_cheby_coeffs(x, freq, 1, order, ripple) != 0) {
-			post("peqbank~: error calculating cheby filter coefficients");
+			object_post((t_object *)x, "peqbank~: error calculating cheby filter coefficients");
 		}
 	} else {
 		if(peqbank_cheby_coeffs(x, freq, 0, order, ripple) != 0) {
-			post("peqbank~: error calculating cheby filter coefficients");
+			object_post((t_object *)x, "peqbank~: error calculating cheby filter coefficients");
 		}
 	}
 }	
@@ -953,33 +960,35 @@ int peqbank_cheby_coeffs(t_peqbank *x, float freq, int type, int order, float ri
 	// sanity check input parameters
 	if ((NP < 2) || (NP > 8) || (NP % 2))
 	{
-		post("peqbank~: cheby: invalid number of poles as argument, must be an even number between 2 and 8");
+		object_post((t_object *)x, "peqbank~: cheby: invalid number of poles as argument, must be an even number between 2 and 8");
 		error = 1;
 	}
 	
 	if ((LH != 1) && (LH != 0))
 	{
-		post("peqbank~: cheby: lowpass/highpass selector out of range (must be 1 or 0)");
+		object_post((t_object *)x, "peqbank~: cheby: lowpass/highpass selector out of range (must be 1 or 0)");
 		error = 1;
 	}
 	
 	FC = FC / sys_getsr();
 	if (FC > 0.5f)
 	{
-		post("peqbank~: cheby: cutoff frequency out of range (fs = %f)", sys_getsr());
+		object_post((t_object *)x, "peqbank~: cheby: cutoff frequency out of range (fs = %f)", sys_getsr());
 		error = 1;
 	}
 	
 	if ((PR < 0) || (PR > 29))
 	{
-		post("peqbank~: cheby: percent ripple out of range");
+		object_post((t_object *)x, "peqbank~: cheby: percent ripple out of range");
 		error = 1;
 	}
 	
 	if (error)
 	{
-		return 1;
-	}
+		
+	class_register(CLASS_BOX, peqbank_class);
+	return 0;
+}
 	else
 	{
 		//	fprintf(stderr, "cheby: calculating biquad coefficients, FC = %f\n",FC);
@@ -1098,7 +1107,11 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
 
 	int i, rest=0;
 	 	
-	t_peqbank *x = (t_peqbank *)newobject(peqbank_class);	
+	t_peqbank *x = (t_peqbank *)object_alloc(peqbank_class);
+	if(!x){
+		return NULL;
+	}
+	
 	x->b_max = MAXELEM;
     x->b_channels = 1;
     
@@ -1166,7 +1179,7 @@ void peqbank_allocmem(t_peqbank *x){
 	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
 	    x->freecoeff == NIL || x->b_ym1 == NIL || x->b_ym2 == NIL || x->b_xm1 == NIL || 
 	    x->b_xm2 == NIL || x->myList == NIL) {
-		post("peqbank~: warning: not enough memory.  Expect to crash soon.");
+		object_post((t_object *)x, "peqbank~: warning: not enough memory.  Expect to crash soon.");
 	}
 }
 
@@ -1201,7 +1214,7 @@ void peqbank_compute(t_peqbank *x) {
 #ifdef WORRIED_ABOUT_PEQBANK_REENTRANCY
 	if (x->already_peqbank_compute) {
 	  x->need_to_recompute = 1;
-	  post("Still computing filter design from the previous message; ignoring new message.");
+	  object_post((t_object *)x, "Still computing filter design from the previous message; ignoring new message.");
 	  return;
 	}
 	/* If we get interrupted right here then we're screwed. */
@@ -1245,7 +1258,7 @@ void swap_in_new_coeffs(t_peqbank *x) {
 #endif
 
 		if (x->freecoeff == 0) {
-			post("peqbank: disaster!  freecoeff shouldn't be zero here!");
+			object_post((t_object *)x, "peqbank: disaster!  freecoeff shouldn't be zero here!");
 			   post("  coeff = %p, oldcoeff = %p, newcoeff = %p, freecoeff = %p",
    					x->coeff, x->oldcoeff, x->newcoeff, x->freecoeff);
 

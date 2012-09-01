@@ -28,6 +28,11 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
      ENHANCEMENTS, OR MODIFICATIONS.
 
 */
+#define NAME "SDIF-info"
+#define DESCRIPTION "report overall info about an SDIF-buffer"
+#define AUTHORS "Matt Wright and Ben "Jacobs""
+#define COPYRIGHT_YEARS "2002,03,04,05,06,2012"
+
 
 /*
 
@@ -52,6 +57,8 @@ VERSION 0.0.4: Force Package Info Generation
 #include <float.h>
 #include <limits.h>
 #include "ext.h"
+#include "ext_obex.h"
+
 
 /* Undo ext.h's macro versions of some of stdio.h: */
 #undef fopen
@@ -64,7 +71,7 @@ VERSION 0.0.4: Force Package Info Generation
 
 #include <stdio.h>
 
-#include "version.c"
+
 
 #include "SDIF-buffer.h"  //  includes "sdif.h", "sdif-mem.h", "sdif-buf.h"
 #define VERY_SMALL ((sdif_float64) -(DBL_MAX))
@@ -94,7 +101,7 @@ static void SDIFinfo_bang(SDIFinfo *x);
 void SDIFinfo_tellmeeverything(SDIFinfo *x);
 
 /* global that holds the class definition */
-void *SDIFinfo_class;
+t_class *SDIFinfo_class;
 
 Symbol *ps_name, *ps_filename, *ps_streamID, *ps_frameType, *ps_minTime, *ps_maxTime, 
 	   *ps_numFrames, *ps_SDIF_buffer_lookup, *ps_noFileName;
@@ -103,17 +110,17 @@ void main(fptr *fp)
 {
   SDIFresult r;
   
-	version(0);
+	version_post_copyright();
 	
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&SDIFinfo_class, (method) SDIFinfo_new, 0,
+	SDIFinfo_class = class_new("SDIF-info", (method) SDIFinfo_new, 0,
 			(short)sizeof(SDIFinfo), 0L, A_GIMME, 0);
 	
 	/* bind my methods to symbols */
-	addmess((method)version, "version", 0);
-	addmess((method)SDIFinfo_set, "set", A_SYM, 0);	
-	addbang((method)SDIFinfo_bang);
-	addmess((method)SDIFinfo_tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(SDIFinfo_class, (method)version, "version", 0);
+	class_addmethod(SDIFinfo_class, (method)SDIFinfo_set, "set", A_SYM, 0);	
+	class_addmethod(SDIFinfo_class, (method)SDIFinfo_bang, "bang", 0);
+	class_addmethod(SDIFinfo_class, (method)SDIFinfo_tellmeeverything, "tellmeeverything", 0);
 	
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
@@ -165,7 +172,7 @@ void *SDIFinfo_new(Symbol *dummy, short argc, Atom *argv) {
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
 		if (argv[0].a_type != A_SYM) {
-			post("¥ SDIF-info: argument must be name of an SDIF-buffer");
+			object_post((t_object *)x, "¥ SDIF-info: argument must be name of an SDIF-buffer");
 		} else {
 			// post("* You want SDIF-buffer %s", argv[0].a_w.w_sym->s_name);
 			x->t_bufferSym = argv[0].a_w.w_sym;
@@ -224,7 +231,7 @@ static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName) {
 
 	LookupMyBuffer(x);
 	if (x->t_buffer == 0) {
-		post("¥ SDIF-info: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
+		object_post((t_object *)x, "¥ SDIF-info: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
 	}
 }
 
@@ -237,14 +244,14 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 	Symbol *frameTypeSym;
 	
 	if (x->t_bufferSym == 0) {
-		post("¥ SDIF-info: no SDIF buffer name specified");
+		object_post((t_object *)x, "¥ SDIF-info: no SDIF buffer name specified");
 		return;
 	}
 	
 	LookupMyBuffer(x);
 
 	if (x->t_buffer == 0) {
-		post("¥ SDIF-info: \"%s\" is not an SDIF buffer.", x->t_bufferSym->s_name);
+		object_post((t_object *)x, "¥ SDIF-info: \"%s\" is not an SDIF buffer.", x->t_bufferSym->s_name);
 		return;
 	}
 
@@ -307,6 +314,6 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 }
 
 void SDIFinfo_tellmeeverything(SDIFinfo *x){
-	version(0);
-	post("buffer name: %s", x->t_bufferSym->s_name);
+	version_post_copyright();
+	object_post((t_object *)x, "buffer name: %s", x->t_bufferSym->s_name);
 }

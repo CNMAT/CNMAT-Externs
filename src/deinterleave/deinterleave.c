@@ -39,6 +39,11 @@ VERSION 1.1: Matt changed to use global version() procedure and compile on Windo
 VERSION 1.2incomplete: beginning of rewrite to have any number of outputs and to work with "message plus argument" lists; not completed, since Javascript can now do the job.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
+#define NAME "deinterleave"
+#define DESCRIPTION "Divide a large input list into multiple output lists by de-interleaving.  E.g., for 2 outputs, it will put odd-numbered elements out the left list and even-numbered elements out the right list."
+#define AUTHORS "Tim Madden and Matt Wright"
+#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+
 
 /**************************************************************************************
  * This code is a Max external for taking a list and de-interleaving it
@@ -67,8 +72,10 @@ VERSION 1.2incomplete: beginning of rewrite to have any number of outputs and to
 
 
 #include "ext.h"
+#include "ext_obex.h"
+
 #include "version.h"
-#include "version.c"
+
 
 // Define the max size of an output list
 #define DEFAULT_MAX_OUTARGS 1000
@@ -91,7 +98,7 @@ typedef struct t_deinterleave
 // Symbol (list) for output.
 Symbol *ps_list;
 
-void *deinterleave_class;
+t_class *deinterleave_class;
 
 /*
  * Function Prototypes.
@@ -123,20 +130,23 @@ void Output(t_deinterleave *x);
  *************************************************************************************/
 
 
-void main(void) {
+int main(void){
 
 	/* tell Max about my class. The cast to short is important for 68K */
-	setup((t_messlist **)&deinterleave_class, (method)deinterleave_new, (method)deinterleave_free,
+	deinterleave_class = class_new("deinterleave", (method)deinterleave_new, (method)deinterleave_free,
 			(short)sizeof(t_deinterleave), 0L, A_GIMME, 0);
 			
 			
-	addmess((method)List, "list", A_GIMME, 0);
-	addbang((method)Bang);
-	addmess((method)version, "version", 0);
+	class_addmethod(deinterleave_class, (method)List, "list", A_GIMME, 0);
+	class_addmethod(deinterleave_class, (method)Bang, "bang", 0);
+	class_addmethod(deinterleave_class, (method)version, "version", 0);
 
 	ps_list = gensym("list");
 	
-	version(0);
+	version_post_copyright();
+
+	class_register(CLASS_BOX, deinterleave_class);
+	return 0;
 }
 
 
@@ -178,7 +188,7 @@ void *deinterleave_new(
 	
 	// Allow 2 to MAX_OUTLETS outputs.
 	if (x->num_outputs > MAX_OUTLETS) {
-		post("deinterleave: can't have more than %ld outlets (compile-time constant MAX_OUTLETS)", MAX_OUTLETS);
+		object_post((t_object *)x, "deinterleave: can't have more than %ld outlets (compile-time constant MAX_OUTLETS)", MAX_OUTLETS);
 		x->num_outputs = MAX_OUTLETS;
 	}
 			
@@ -258,7 +268,7 @@ void List(
 	}
 	else
 	{
-		post("¥ deinterleave: List length must be multiple of number of outputs.");
+		object_post((t_object *)x, "¥ deinterleave: List length must be multiple of number of outputs.");
 	} 
 }
 

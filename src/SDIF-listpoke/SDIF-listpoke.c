@@ -28,6 +28,11 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
      ENHANCEMENTS, OR MODIFICATIONS.
 
 */
+#define NAME "SDIF-listpoke"
+#define DESCRIPTION "Write data from a Max list into an SDIF-buffer"
+#define AUTHORS "Matt Wright "
+#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+
 
 /*
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -57,6 +62,8 @@ VERSION 0.3: Added "tellmeeverything"; wrote a real help patch
 #include <string.h>
 // #include <float.h>
 #include "ext.h"
+#include "ext_obex.h"
+
 
 /* Undo ext.h's macro versions of some of stdio.h: */
 #undef fopen
@@ -67,7 +74,7 @@ VERSION 0.3: Added "tellmeeverything"; wrote a real help patch
 #undef sprintf
 #undef sscanf
 
-#include "version.c"
+
 
 #include <stdio.h>
 #include "SDIF-buffer.h"
@@ -107,7 +114,7 @@ Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
 
 
 /* global that holds the class definition */
-void *SDIFlistpoke_class;
+t_class *SDIFlistpoke_class;
 
 /* prototypes for my functions */
 void *SDIFlistpoke_new(Symbol *s, short argc, Atom *argv);
@@ -139,7 +146,7 @@ void main() {
 	SDIFresult r;
 	
 	
-	version(0);
+	version_post_copyright();
 	
 	r = SDIFmem_Init(my_getbytes, my_freebytes);
 	
@@ -147,20 +154,20 @@ void main() {
 		ouchstring("Couldn't initialize SDIF memory utilities! %s", SDIF_GetErrorString(r));
 	}	
 	
-	setup((t_messlist **)&SDIFlistpoke_class, (method)SDIFlistpoke_new, 0,
+	SDIFlistpoke_class = class_new("SDIF-listpoke", (method)SDIFlistpoke_new, 0,
 			(short)sizeof(SDIFlistpoke), 0L, A_GIMME, 0);
 	
 	/* bind my methods to symbols */
-        addmess((method)version, "version", 0);
-	addmess((method)SDIFlistpoke_set, "set", A_SYM, 0);	
-	addmess((method)SDIFlistpoke_errorreporting, "errorreporting", A_LONG, 0);
-	addmess((method)SDIFlistpoke_time, "time", A_FLOAT, 0);
-	addmess((method)SDIFlistpoke_numcolumns, "numcolumns", A_LONG, 0);
-	addmess((method)SDIFlistpoke_listpoke, "listpoke", A_GIMME, 0);
-	addmess((method)SDIFlistpoke_listpoke, "list", A_GIMME, 0);
-	addmess((method)SDIFlistpoke_newmatrix, "newmatrix", A_GIMME, 0);
-	addmess((method)SDIFlistpoke_matrixtype, "matrixtype", A_DEFSYM, 0);
-	addmess((method)SDIFlistpoke_tellmeeverything, "tellmeeverything", 0);
+        class_addmethod(SDIFlistpoke_class, (method)version, "version", 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_set, "set", A_SYM, 0);	
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_errorreporting, "errorreporting", A_LONG, 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_time, "time", A_FLOAT, 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_numcolumns, "numcolumns", A_LONG, 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_listpoke, "listpoke", A_GIMME, 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_listpoke, "list", A_GIMME, 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_newmatrix, "newmatrix", A_GIMME, 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_matrixtype, "matrixtype", A_DEFSYM, 0);
+	class_addmethod(SDIFlistpoke_class, (method)SDIFlistpoke_tellmeeverything, "tellmeeverything", 0);
 
   //  initialize SDIF libraries
 	if (r = SDIF_Init()) {
@@ -213,7 +220,7 @@ void *SDIFlistpoke_new(Symbol *dummy, short argc, Atom *argv) {
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
 		if (argv[0].a_type != A_SYM) {
-			post("¥ SDIF-tuples: argument must be name of an SDIF-buffer");
+			object_post((t_object *)x, "¥ SDIF-tuples: argument must be name of an SDIF-buffer");
 		} else {
 			// post("* You want SDIF-buffer %s", argv[0].a_w.w_sym->s_name);
 			x->t_bufferSym = argv[0].a_w.w_sym;
@@ -266,7 +273,7 @@ static void SDIFlistpoke_set(SDIFlistpoke *x, Symbol *bufName) {
 
 	LookupMyBuffer(x);
 	if (x->t_buffer == 0) {
-		post("¥ SDIF-tuples: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
+		object_post((t_object *)x, "¥ SDIF-tuples: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
 	}
 	x->t_complainedAboutEmptyBufferAlready = 0;
 }
@@ -282,7 +289,7 @@ static void SDIFlistpoke_time(SDIFlistpoke *x, double t) {
 
 static void SDIFlistpoke_numcolumns(SDIFlistpoke *x, long n) {
 	if (n <= 0) {
-		post("¥ SDIF-listpoke: numcolumns: number must be non-negative");
+		object_post((t_object *)x, "¥ SDIF-listpoke: numcolumns: number must be non-negative");
 	} else {
 		x->t_num_columns = n;
 	}
@@ -295,7 +302,7 @@ static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, Symbol *matrixType) {
 	} else {		
 		/* Here's where I could implement user matrix names that aren't just the 4 bytes. */
 		if (strlen(matrixType->s_name) != 4) {
-			post("¥ SDIF-tuples: matrix %s is not 4 letters!", matrixType->s_name);
+			object_post((t_object *)x, "¥ SDIF-tuples: matrix %s is not 4 letters!", matrixType->s_name);
 			return;
 		}
 		x->t_mainMatrix = 0;
@@ -312,48 +319,48 @@ static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom 
 	
 	if (argc < 5) {
 		badargs:
-		post("¥ SDIF-listpoke: newmatrix args: frametime, matrixtype, #rows, #cols, data...");
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix args: frametime, matrixtype, #rows, #cols, data...");
 		return;
 	}
 	
 	if (argv[0].a_type == A_SYM) {
-		post("¥ SDIF-listpoke: newmatrix: frame time must be a number");
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix: frame time must be a number");
 		return;
 	}
 	time = asfloat(argv[0]);
 
 
 	if (argv[1].a_type != A_SYM ) {
-		post("¥ SDIF-listpoke: newmatrix: matrix type must be a symbol");
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix: matrix type must be a symbol");
 		return;
 	}
 	
 	type = argv[1].a_w.w_sym->s_name;
 	if (type[0] == '\0' || type[1] == '\0' || type[2] == '\0' || type[3] == '\0' || type[4] != '\0') {
-		post("¥ SDIF-listpoke: newmatrix: illegal type \"%s\" is not 4 characters.", type);
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix: illegal type \"%s\" is not 4 characters.", type);
 		return;
 	}
 
 	
 	if (argv[2].a_type != A_LONG) {
-		post("¥ SDIF-listpoke: newmatrix: #rows must be an int.");
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix: #rows must be an int.");
 		return;
 	}
 	numrows = argv[2].a_w.w_long;
 
 	if (numrows <= 0) {
-		post("¥ SDIF-listpoke: newmatrix: #rows must be >= 1");
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix: #rows must be >= 1");
 		return;
 	}
 
 	if (argv[3].a_type != A_LONG) {
-		post("¥ SDIF-listpoke: newmatrix: #columns must be an int.");
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix: #columns must be an int.");
 		return;
 	}
 	numcols = argv[3].a_w.w_long;
 	
 	if (numcols <= 0) {
-		post("¥ SDIF-listpoke: newmatrix: #columns must be >= 1");
+		object_post((t_object *)x, "¥ SDIF-listpoke: newmatrix: #columns must be >= 1");
 		return;
 	}
 
@@ -361,7 +368,7 @@ static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom 
 	if (numrows*numcols != argc-4) {
 		post("¥ SDIF-listpoke: newmatrix: %ld rows times %ld columns is %ld,", 
 			  numrows, numcols, numrows*numcols);
-		post("   but there are %ld elements of matrix data.  Dropping.", argc-4);
+		object_post((t_object *)x, "   but there are %ld elements of matrix data.  Dropping.", argc-4);
 		return;
 	}
 	
@@ -406,7 +413,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 	/* Check that arguments are all numbers */
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_FLOAT && argv[i].a_type != A_LONG) {
-			post("¥ SDIF-listpoke: only numbers allowed in list.");
+			object_post((t_object *)x, "¥ SDIF-listpoke: only numbers allowed in list.");
 			return;
 		}
 	}
@@ -422,7 +429,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 	LookupMyBuffer(x);
 	
 	if (x->t_buffer == 0) {
-		post("¥ SDIF-listpoke: no buffer!");
+		object_post((t_object *)x, "¥ SDIF-listpoke: no buffer!");
 		return;
 	}
 
@@ -452,7 +459,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 		f = SDIFmem_CreateEmptyFrame();
 		
 		if (f == 0) {
-			post("¥ SDIF-listpoke: out of memory for new frame in SDIF-buffer!");
+			object_post((t_object *)x, "¥ SDIF-listpoke: out of memory for new frame in SDIF-buffer!");
 			return;
 		}
 		
@@ -462,7 +469,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 		
 		i = (*(x->t_buffer->FrameInsert))(f, x->t_buffer);
 		if (i) {
-			post("¥ SDIF-listpoke: FrameInsert returned %d", i);
+			object_post((t_object *)x, "¥ SDIF-listpoke: FrameInsert returned %d", i);
 		}
 
 				
@@ -476,7 +483,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 					 m->header.matrixType[2], m->header.matrixType[3], x->t_time);
 				r = SDIFmem_RemoveMatrix(f, m);
 				if (r != ESDIF_SUCCESS) {
-					post("¥ SDIF-listpoke: Problem removing matrix: %s", SDIF_GetErrorString(r));
+					object_post((t_object *)x, "¥ SDIF-listpoke: Problem removing matrix: %s", SDIF_GetErrorString(r));
 				}
 			}
 		}
@@ -488,7 +495,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 	m = SDIFmem_CreateEmptyMatrix();
 
 	if (m == 0) {
-		post("¥ SDIF-listpoke: out of memory for new matrix in SDIF-buffer!");
+		object_post((t_object *)x, "¥ SDIF-listpoke: out of memory for new matrix in SDIF-buffer!");
 		SDIFmem_FreeFrame(f);
 		return;
 	}
@@ -503,7 +510,7 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 
 	m->data = getbytes(argc * sizeof(float));
 	if (m->data == 0) {
-		post("¥ SDIF-listpoke: out of memory for matrix data in SDIF-buffer!");
+		object_post((t_object *)x, "¥ SDIF-listpoke: out of memory for matrix data in SDIF-buffer!");
 		SDIFmem_RemoveMatrix(f, m);
 		SDIFmem_FreeMatrix(m);
 		SDIFmem_RepairFrameHeader(f);	
@@ -535,23 +542,23 @@ static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, At
 }
 
 static void SDIFlistpoke_tellmeeverything(SDIFlistpoke *x) {
-    post("SDIF-listpoke object state");
+    object_post((t_object *)x, "SDIF-listpoke object state");
     if (x->t_buffer == 0) {
-        post("  not set to a buffer");
+        object_post((t_object *)x, "  not set to a buffer");
     } else {
-        post("  set to buffer %s", x->t_buffer->s_myname->s_name);
+        object_post((t_object *)x, "  set to buffer %s", x->t_buffer->s_myname->s_name);
     }
     
-    post("  prepared to write to time %f", x->t_time);
+    object_post((t_object *)x, "  prepared to write to time %f", x->t_time);
 
     if (x->t_mainMatrix) {
-        post("  prepared to write into the main matrix of the frame");
-        post("  (i.e., the matrix whose type is the same as the frame type.)");
+        object_post((t_object *)x, "  prepared to write into the main matrix of the frame");
+        object_post((t_object *)x, "  (i.e., the matrix whose type is the same as the frame type.)");
     } else {
         post("  prepared to write into matrix type %c%c%c%c", 
             x->t_matrixType[0], x->t_matrixType[1], x->t_matrixType[2], x->t_matrixType[3]);
     }
     
-    post("  prepared to write a %ld column matrix", x->t_num_columns);
+    object_post((t_object *)x, "  prepared to write a %ld column matrix", x->t_num_columns);
 }
 
