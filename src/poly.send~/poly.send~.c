@@ -51,7 +51,7 @@ typedef struct _psend{
 	t_pxobject ob;
 	t_symbol *name, *mangled_name;
 	long channel;
-	t_float *sv;
+	double *sv;
 	long blksize;
 	long samplerate;
 } t_psend;
@@ -157,7 +157,7 @@ t_max_err psend_getchannel(t_psend *x, t_object *attr, long *argc, t_atom **argv
 void *psend_new(t_symbol *sym, int argc, t_atom *argv){
 	t_psend *x;
 
-	if(x = (t_psend *)object_alloc(psend_class)){
+	if((x = (t_psend *)object_alloc(psend_class))){
 		dsp_setup((t_pxobject *)x, 1);
         	x->ob.z_misc = Z_NO_INPLACE;
 		x->name = NULL;
