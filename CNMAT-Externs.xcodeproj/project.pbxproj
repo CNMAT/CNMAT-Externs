@@ -995,6 +995,7 @@
 		52E44B5115F2888700C91B67 /* vsnapshot~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsnapshot~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6015F2888E00C91B67 /* waveguide~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "waveguide~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6F15F2889400C91B67 /* xydisplay.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xydisplay.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		52E44BDE15F344F500C91B67 /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = version.h; path = include/version.h; sourceTree = "<group>"; };
 		52F10AA515F07157008FC371 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		52F10AC815F071DE008FC371 /* 2threshattack~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "2threshattack~.c"; sourceTree = "<group>"; };
 		52F10AC915F071DE008FC371 /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "2threshattack~.maxhelp"; sourceTree = "<group>"; };
@@ -1003,7 +1004,6 @@
 		52F10AE215F07305008FC371 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
 		52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		52F10AEA15F0A037008FC371 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
-		52F10AEC15F0A16A008FC371 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = src/version.h; sourceTree = "<group>"; };
 		52F10AEE15F13D41008FC371 /* bessel-readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bessel-readme.txt"; sourceTree = "<group>"; };
 		52F10AEF15F13D41008FC371 /* bessel.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bessel.c; sourceTree = "<group>"; };
 		52F10AF015F13D41008FC371 /* bessel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bessel.maxhelp; sourceTree = "<group>"; };
@@ -2207,7 +2207,7 @@
 		52F10A9715F07157008FC371 = {
 			isa = PBXGroup;
 			children = (
-				52F10AEC15F0A16A008FC371 /* version.h */,
+				52E44BDE15F344F500C91B67 /* version.h */,
 				52F10AEA15F0A037008FC371 /* commonsyms.c */,
 				52F10AC715F071DE008FC371 /* 2threshattack~ */,
 				52E4476215F1888200C91B67 /* accumulate~ */,
