@@ -68,35 +68,14 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		52E4476915F1889300C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E4476C15F1889300C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4476D15F1889300C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E4476E15F1889300C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E4477415F188A000C91B67 /* accumulate~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4476315F1888200C91B67 /* accumulate~.c */; };
-		52E4479615F1890800C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E4479A15F1890800C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4479B15F1890800C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E4479C15F1890800C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
-		52E447A415F1890E00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E447A815F1890E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E447A915F1890E00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E447AA15F1890E00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
-		52E447B215F1891100C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E447B615F1891100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E447B715F1891100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E447B815F1891100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
-		52E447C015F1891500C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E447C415F1891500C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E447C515F1891500C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E447C615F1891500C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
-		52E447CE15F1891800C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E447D215F1891800C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E447D315F1891800C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E447D415F1891800C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
-		52E447DC15F1891E00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E447E015F1891E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E447E115F1891E00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E447E215F1891E00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E447E815F1893B00C91B67 /* analyzer~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4477615F188D100C91B67 /* analyzer~.c */; };
 		52E447E915F1893F00C91B67 /* bdist.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4477D15F188D100C91B67 /* bdist.c */; };
 		52E447EA15F1894900C91B67 /* bench.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4478215F188D100C91B67 /* bench.c */; };
@@ -127,66 +106,36 @@
 		52E4482215F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E4482715F1E74900C91B67 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4482615F1E74900C91B67 /* Accelerate.framework */; };
 		52E4482815F1E74900C91B67 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4482615F1E74900C91B67 /* Accelerate.framework */; };
-		52E4485515F1E99000C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E4485815F1E99000C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4485915F1E99000C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E4485A15F1E99000C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E4485B15F1E99000C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E4485C15F1E99000C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4486415F1E99B00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E4486715F1E99B00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4486815F1E99B00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E4486915F1E99B00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E4486A15F1E99B00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E4486B15F1E99B00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4487315F1E9AD00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E4487615F1E9AD00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4487715F1E9AD00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E4487815F1E9AD00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E4487915F1E9AD00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E4487A15F1E9AD00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4488215F1E9B200C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E4488515F1E9B200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4488615F1E9B200C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E4488715F1E9B200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E4488815F1E9B200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E4488915F1E9B200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4489115F1E9B700C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E4489415F1E9B700C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4489515F1E9B700C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E4489615F1E9B700C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E4489715F1E9B700C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E4489815F1E9B700C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E448A015F1E9BC00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E448A315F1E9BC00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448A415F1E9BC00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E448A515F1E9BC00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E448A615F1E9BC00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E448A715F1E9BC00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E448AF15F1E9C100C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E448B215F1E9C100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448B315F1E9C100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E448B415F1E9C100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E448B515F1E9C100C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E448B615F1E9C100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E448BE15F1E9C600C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E448C115F1E9C600C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448C215F1E9C600C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E448C315F1E9C600C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E448C415F1E9C600C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E448C515F1E9C600C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E448CD15F1E9C900C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E448D015F1E9C900C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448D115F1E9C900C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E448D215F1E9C900C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E448D315F1E9C900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E448D415F1E9C900C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E448EB15F1E9DD00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E448ED15F1E9DD00C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
 		52E448EE15F1E9DD00C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
 		52E448F015F1E9DD00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448F115F1E9DD00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E448F215F1E9DD00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E448F315F1E9DD00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E448F415F1E9DD00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E448F515F1E9DD00C91B67 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4482615F1E74900C91B67 /* Accelerate.framework */; };
@@ -201,179 +150,91 @@
 		52E4490315F1EA2000C91B67 /* list-interpolate.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4484D15F1E96D00C91B67 /* list-interpolate.c */; };
 		52E4490415F1EA2800C91B67 /* loudness~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4485115F1E96D00C91B67 /* loudness~.c */; };
 		52E4491915F1EBCD00C91B67 /* noise-table.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4484115F1E96C00C91B67 /* noise-table.c */; };
-		52E4491B15F1EC4900C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4491A15F1EC4900C91B67 /* JitterAPI.framework */; };
-		52E449BF15F287ED00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E449C215F287ED00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449C315F287ED00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E449C415F287ED00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E449C515F287ED00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E449C615F287ED00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E449CE15F287F500C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E449D115F287F500C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449D215F287F500C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E449D315F287F500C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E449D415F287F500C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E449D515F287F500C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E449DD15F287FB00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E449E015F287FB00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449E115F287FB00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E449E215F287FB00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E449E315F287FB00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E449E415F287FB00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E449EC15F2880400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E449EF15F2880400C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449F015F2880400C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E449F115F2880400C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E449F215F2880400C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E449F315F2880400C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E449FB15F2880900C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E449FE15F2880900C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449FF15F2880900C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A0015F2880900C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A0115F2880900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A0215F2880900C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A0A15F2880E00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A0D15F2880E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A0E15F2880E00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A0F15F2880E00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A1015F2880E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A1115F2880E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A1915F2881400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A1C15F2881400C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A1D15F2881400C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A1E15F2881400C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A1F15F2881400C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A2015F2881400C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A2815F2881B00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A2B15F2881B00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A2C15F2881B00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A2D15F2881B00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A2E15F2881B00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A2F15F2881B00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A3715F2882100C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A3A15F2882100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A3B15F2882100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A3C15F2882100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A3D15F2882100C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A3E15F2882100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A4615F2882500C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A4915F2882500C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A4A15F2882500C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A4B15F2882500C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A4C15F2882500C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A4D15F2882500C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A5515F2882900C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A5815F2882900C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A5915F2882900C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A5A15F2882900C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A5B15F2882900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A5C15F2882900C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A6415F2882E00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A6715F2882E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A6815F2882E00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A6915F2882E00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A6A15F2882E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A6B15F2882E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A7315F2883500C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A7615F2883500C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A7715F2883500C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A7815F2883500C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A7915F2883500C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A7A15F2883500C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A8215F2883B00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A8515F2883B00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A8615F2883B00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A8715F2883B00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A8815F2883B00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A8915F2883B00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44A9115F2884200C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44A9415F2884200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A9515F2884200C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44A9615F2884200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44A9715F2884200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44A9815F2884200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44AA015F2884A00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44AA315F2884A00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AA415F2884A00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44AA515F2884A00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44AA615F2884A00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44AA715F2884A00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44AAF15F2884F00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44AB215F2884F00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AB315F2884F00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44AB415F2884F00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44AB515F2884F00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44AB615F2884F00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44ABE15F2885600C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44AC115F2885600C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AC215F2885600C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44AC315F2885600C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44AC415F2885600C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44AC515F2885600C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44ACD15F2885D00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44AD015F2885D00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AD115F2885D00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44AD215F2885D00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44AD315F2885D00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44AD415F2885D00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44ADC15F2886200C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44ADF15F2886200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AE015F2886200C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44AE115F2886200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44AE215F2886200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44AE315F2886200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44AEB15F2886800C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44AEE15F2886800C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AEF15F2886800C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44AF015F2886800C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44AF115F2886800C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44AF215F2886800C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44AFA15F2886E00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44AFD15F2886E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AFE15F2886E00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44AFF15F2886E00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B0015F2886E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B0115F2886E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44B0915F2887200C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44B0C15F2887200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B0D15F2887200C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44B0E15F2887200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B0F15F2887200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B1015F2887200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44B1815F2887600C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44B1B15F2887600C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B1C15F2887600C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44B1D15F2887600C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B1E15F2887600C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B1F15F2887600C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44B2715F2887C00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44B2A15F2887C00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B2B15F2887C00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44B2C15F2887C00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B2D15F2887C00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B2E15F2887C00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44B3615F2888100C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44B3915F2888100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B3A15F2888100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44B3B15F2888100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B3C15F2888100C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B3D15F2888100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44B4515F2888700C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44B4815F2888700C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B4915F2888700C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44B4A15F2888700C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B4B15F2888700C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B4C15F2888700C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44B5415F2888E00C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44B5715F2888E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B5815F2888E00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44B5915F2888E00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B5A15F2888E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B5B15F2888E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E44B6315F2889400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52E44B6615F2889400C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B6715F2889400C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52E44B6815F2889400C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52E44B6915F2889400C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
 		52E44B6A15F2889400C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B7015F288EA00C91B67 /* OSC-schedule.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4492D15F2879300C91B67 /* OSC-schedule.c */; };
@@ -416,15 +277,201 @@
 		52E44B9A15F28B9700C91B67 /* xydisplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E449BB15F287C400C91B67 /* xydisplay.c */; };
 		52E44BD815F28D3500C91B67 /* OSC-timetag-ops.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4493415F2879300C91B67 /* OSC-timetag-ops.c */; };
 		52E44BD915F2999A00C91B67 /* roughness.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4496E15F2879500C91B67 /* roughness.c */; };
+		52E44BEA15F482E800C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BEB15F482E900C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BEC15F482E900C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BED15F482E900C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BEE15F482E900C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BEF15F482EA00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF015F482EA00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF115F482EA00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF215F482EA00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF315F482EA00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF415F482EA00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF515F482EB00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF615F482EB00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF715F482EB00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF815F482EB00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BF915F482EB00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BFA15F482EB00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BFB15F482EC00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BFC15F482EC00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BFD15F482EC00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BFE15F482EC00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44BFF15F482EC00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0015F482EC00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0115F482ED00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0215F482ED00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0315F482ED00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0415F482ED00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0515F482ED00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0615F482EE00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0715F482EE00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0815F482EE00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0915F482EE00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0A15F482EE00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0B15F482EF00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0C15F482EF00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0D15F482EF00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0E15F482EF00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C0F15F482EF00C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1015F482F000C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1115F482F000C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1215F482F000C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1315F482F000C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1415F482F000C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1515F482F100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1615F482F100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1715F482F100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1815F482F100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1915F482F100C91B67 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		52E44C1B15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C1C15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C1D15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C1E15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C1F15F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2015F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2115F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2215F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2315F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2415F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2515F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2615F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2715F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2815F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2915F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2A15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2B15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2C15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2D15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2E15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C2F15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3015F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3115F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3215F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3315F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3415F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3515F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3615F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3715F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3815F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3915F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3A15F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3B15F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3C15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3D15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3E15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C3F15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4015F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4115F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4215F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4315F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4415F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4515F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4615F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4715F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4815F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4915F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4A15F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		52E44C4C15F4831B00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C4D15F4831B00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C4E15F4831B00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C4F15F4831B00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5015F4831C00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5115F4831C00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5215F4831C00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5315F4831C00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5415F4831C00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5515F4831C00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5615F4831D00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5715F4831D00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5815F4831D00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5915F4831D00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5A15F4831D00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5B15F4831D00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5C15F4831E00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5D15F4831E00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5E15F4831E00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C5F15F4831E00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6015F4831E00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6115F4831E00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6215F4831F00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6315F4831F00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6415F4831F00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6515F4831F00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6615F4831F00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6715F4831F00C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6815F4832000C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6915F4832000C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6A15F4832000C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6B15F4832000C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6C15F4832000C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6D15F4832100C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6E15F4832100C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C6F15F4832100C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7015F4832100C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7115F4832100C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7215F4832200C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7315F4832200C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7415F4832200C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7515F4832200C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7615F4832200C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7715F4832200C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7815F4832300C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7915F4832300C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7A15F4832300C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7B15F4832300C91B67 /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		52E44C7D15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C7E15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C7F15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8015F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8115F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8215F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8315F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8415F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8515F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8615F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8715F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8815F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8915F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8A15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8B15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8C15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8D15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8E15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C8F15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9015F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9115F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9215F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9315F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9415F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9515F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9615F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9715F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9815F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9915F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9A15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9B15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9C15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9D15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9E15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44C9F15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA015F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA115F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA215F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA315F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA415F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA515F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA615F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA715F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA815F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CA915F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CAA15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CAB15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		52E44CAC15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		52F10AD015F071FA008FC371 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52F10ADB15F07231008FC371 /* 2threshattack~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AC815F071DE008FC371 /* 2threshattack~.c */; };
-		52F10AE315F0732F008FC371 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52F10AE515F0733D008FC371 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
-		52F10AEB15F0A037008FC371 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
-		52F10AF515F13D86008FC371 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEA15F0A037008FC371 /* commonsyms.c */; };
 		52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52F10AF815F13D86008FC371 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE215F07305008FC371 /* MaxAPI.framework */; };
-		52F10AF915F13D86008FC371 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */; };
 		52F10AFF15F13D94008FC371 /* bessel.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEF15F13D41008FC371 /* bessel.c */; };
 /* End PBXBuildFile section */
 
@@ -852,7 +899,6 @@
 		52E448CA15F1E9C600C91B67 /* lcm.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lcm.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E448D915F1E9C900C91B67 /* list-interpolate.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "list-interpolate.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E448FA15F1E9DD00C91B67 /* loudness~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "loudness~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		52E4491A15F1EC4900C91B67 /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "c74support/jit-includes/JitterAPI.framework"; sourceTree = "<group>"; };
 		52E4492B15F2879300C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4492C15F2879300C91B67 /* OSC-schedule-old.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-schedule-old.c"; sourceTree = "<group>"; };
 		52E4492D15F2879300C91B67 /* OSC-schedule.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-schedule.c"; sourceTree = "<group>"; };
@@ -996,14 +1042,15 @@
 		52E44B6015F2888E00C91B67 /* waveguide~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "waveguide~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6F15F2889400C91B67 /* xydisplay.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xydisplay.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44BDE15F344F500C91B67 /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = version.h; path = include/version.h; sourceTree = "<group>"; };
+		52E44BE915F482E800C91B67 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../max6-sdk/c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
+		52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../max6-sdk/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
+		52E44C4B15F4831B00C91B67 /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "../max6-sdk/c74support/jit-includes/JitterAPI.framework"; sourceTree = "<group>"; };
+		52E44C7C15F4835400C91B67 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../max6-sdk/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 		52F10AA515F07157008FC371 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		52F10AC815F071DE008FC371 /* 2threshattack~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "2threshattack~.c"; sourceTree = "<group>"; };
 		52F10AC915F071DE008FC371 /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "2threshattack~.maxhelp"; sourceTree = "<group>"; };
 		52F10ACA15F071DE008FC371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52F10ACF15F071FA008FC371 /* 2threshattack~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "2threshattack~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		52F10AE215F07305008FC371 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
-		52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
-		52F10AEA15F0A037008FC371 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 		52F10AEE15F13D41008FC371 /* bessel-readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bessel-readme.txt"; sourceTree = "<group>"; };
 		52F10AEF15F13D41008FC371 /* bessel.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bessel.c; sourceTree = "<group>"; };
 		52F10AF015F13D41008FC371 /* bessel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bessel.maxhelp; sourceTree = "<group>"; };
@@ -1017,10 +1064,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4476C15F1889300C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4476D15F1889300C91B67 /* MaxAPI.framework in Frameworks */,
-				52E4476E15F1889300C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481115F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4481B15F19BA100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BEB15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C1C15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C4D15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1029,11 +1077,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4479A15F1890800C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4479B15F1890800C91B67 /* MaxAPI.framework in Frameworks */,
-				52E4479C15F1890800C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481215F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4481C15F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E4482715F1E74900C91B67 /* Accelerate.framework in Frameworks */,
+				52E44BEC15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C1D15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C4E15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1042,10 +1091,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447A815F1890E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E447A915F1890E00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E447AA15F1890E00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481315F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4481D15F19BA100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BED15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C1E15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C4F15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1054,10 +1104,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447B615F1891100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E447B715F1891100C91B67 /* MaxAPI.framework in Frameworks */,
-				52E447B815F1891100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481415F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4481E15F19BA100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BEE15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C1F15F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5015F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1066,10 +1117,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447C415F1891500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E447C515F1891500C91B67 /* MaxAPI.framework in Frameworks */,
-				52E447C615F1891500C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481515F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4481F15F19BA100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BEF15F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2015F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5115F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1078,10 +1130,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447D215F1891800C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E447D315F1891800C91B67 /* MaxAPI.framework in Frameworks */,
-				52E447D415F1891800C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481715F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4482115F19BA100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF115F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2215F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5315F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1090,11 +1143,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447E015F1891E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E447E115F1891E00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E447E215F1891E00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481815F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4482215F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E4482815F1E74900C91B67 /* Accelerate.framework in Frameworks */,
+				52E44BF215F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2315F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5415F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1103,11 +1157,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4485815F1E99000C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4485915F1E99000C91B67 /* MaxAPI.framework in Frameworks */,
-				52E4485A15F1E99000C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4485B15F1E99000C91B67 /* CoreServices.framework in Frameworks */,
 				52E4485C15F1E99000C91B67 /* Carbon.framework in Frameworks */,
-				52E4491B15F1EC4900C91B67 /* JitterAPI.framework in Frameworks */,
+				52E44BF315F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2415F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5515F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1116,10 +1170,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4486715F1E99B00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4486815F1E99B00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E4486915F1E99B00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4486A15F1E99B00C91B67 /* CoreServices.framework in Frameworks */,
 				52E4486B15F1E99B00C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF415F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2515F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5615F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1128,10 +1183,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4487615F1E9AD00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4487715F1E9AD00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E4487815F1E9AD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4487915F1E9AD00C91B67 /* CoreServices.framework in Frameworks */,
 				52E4487A15F1E9AD00C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF515F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2615F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5715F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1140,10 +1196,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4488515F1E9B200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4488615F1E9B200C91B67 /* MaxAPI.framework in Frameworks */,
-				52E4488715F1E9B200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4488815F1E9B200C91B67 /* CoreServices.framework in Frameworks */,
 				52E4488915F1E9B200C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF615F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2715F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5815F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1152,10 +1209,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4489415F1E9B700C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4489515F1E9B700C91B67 /* MaxAPI.framework in Frameworks */,
-				52E4489615F1E9B700C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E4489715F1E9B700C91B67 /* CoreServices.framework in Frameworks */,
 				52E4489815F1E9B700C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF715F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2815F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5915F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1164,10 +1222,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448A315F1E9BC00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448A415F1E9BC00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E448A515F1E9BC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E448A615F1E9BC00C91B67 /* CoreServices.framework in Frameworks */,
 				52E448A715F1E9BC00C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF815F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2915F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5A15F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1176,10 +1235,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448B215F1E9C100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448B315F1E9C100C91B67 /* MaxAPI.framework in Frameworks */,
-				52E448B415F1E9C100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E448B515F1E9C100C91B67 /* CoreServices.framework in Frameworks */,
 				52E448B615F1E9C100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF915F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2A15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5B15F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1188,10 +1248,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448C115F1E9C600C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448C215F1E9C600C91B67 /* MaxAPI.framework in Frameworks */,
-				52E448C315F1E9C600C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E448C415F1E9C600C91B67 /* CoreServices.framework in Frameworks */,
 				52E448C515F1E9C600C91B67 /* Carbon.framework in Frameworks */,
+				52E44BFA15F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2B15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5C15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1200,10 +1261,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448D015F1E9C900C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448D115F1E9C900C91B67 /* MaxAPI.framework in Frameworks */,
-				52E448D215F1E9C900C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E448D315F1E9C900C91B67 /* CoreServices.framework in Frameworks */,
 				52E448D415F1E9C900C91B67 /* Carbon.framework in Frameworks */,
+				52E44BFB15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2C15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5D15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1212,11 +1274,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448F015F1E9DD00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448F115F1E9DD00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E448F215F1E9DD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E448F315F1E9DD00C91B67 /* CoreServices.framework in Frameworks */,
 				52E448F415F1E9DD00C91B67 /* Carbon.framework in Frameworks */,
 				52E448F515F1E9DD00C91B67 /* Accelerate.framework in Frameworks */,
+				52E44BFC15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2D15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5E15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1225,10 +1288,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449C215F287ED00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449C315F287ED00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E449C415F287ED00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E449C515F287ED00C91B67 /* CoreServices.framework in Frameworks */,
 				52E449C615F287ED00C91B67 /* Carbon.framework in Frameworks */,
+				52E44BFD15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2E15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5F15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1237,10 +1301,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449D115F287F500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449D215F287F500C91B67 /* MaxAPI.framework in Frameworks */,
-				52E449D315F287F500C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E449D415F287F500C91B67 /* CoreServices.framework in Frameworks */,
 				52E449D515F287F500C91B67 /* Carbon.framework in Frameworks */,
+				52E44BFE15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2F15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6015F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1249,10 +1314,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449E015F287FB00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449E115F287FB00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E449E215F287FB00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E449E315F287FB00C91B67 /* CoreServices.framework in Frameworks */,
 				52E449E415F287FB00C91B67 /* Carbon.framework in Frameworks */,
+				52E44BFF15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3015F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6115F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1261,10 +1327,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449EF15F2880400C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449F015F2880400C91B67 /* MaxAPI.framework in Frameworks */,
-				52E449F115F2880400C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E449F215F2880400C91B67 /* CoreServices.framework in Frameworks */,
 				52E449F315F2880400C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0015F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3115F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6215F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1273,10 +1340,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449FE15F2880900C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449FF15F2880900C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A0015F2880900C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A0115F2880900C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A0215F2880900C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0115F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3215F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6315F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1285,10 +1353,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A0D15F2880E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A0E15F2880E00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A0F15F2880E00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A1015F2880E00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A1115F2880E00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0215F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3315F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6415F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1297,10 +1366,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A1C15F2881400C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A1D15F2881400C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A1E15F2881400C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A1F15F2881400C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A2015F2881400C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0315F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3415F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6515F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1309,10 +1379,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A2B15F2881B00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A2C15F2881B00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A2D15F2881B00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A2E15F2881B00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A2F15F2881B00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0415F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3515F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6615F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1321,10 +1392,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A3A15F2882100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A3B15F2882100C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A3C15F2882100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A3D15F2882100C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A3E15F2882100C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0515F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3615F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6715F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1333,10 +1405,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A4915F2882500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A4A15F2882500C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A4B15F2882500C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A4C15F2882500C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A4D15F2882500C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0615F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3715F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6815F4832000C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1345,10 +1418,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A5815F2882900C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A5915F2882900C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A5A15F2882900C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A5B15F2882900C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A5C15F2882900C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0715F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3815F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6915F4832000C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1357,10 +1431,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A6715F2882E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A6815F2882E00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A6915F2882E00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A6A15F2882E00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A6B15F2882E00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0815F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3915F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6A15F4832000C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1369,10 +1444,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A7615F2883500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A7715F2883500C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A7815F2883500C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A7915F2883500C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A7A15F2883500C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0915F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3A15F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6B15F4832000C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1381,10 +1457,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A8515F2883B00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A8615F2883B00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A8715F2883B00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A8815F2883B00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A8915F2883B00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0A15F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3B15F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6C15F4832000C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1393,10 +1470,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A9415F2884200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A9515F2884200C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44A9615F2884200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44A9715F2884200C91B67 /* CoreServices.framework in Frameworks */,
 				52E44A9815F2884200C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0B15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3C15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6D15F4832100C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1405,10 +1483,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AA315F2884A00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AA415F2884A00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44AA515F2884A00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44AA615F2884A00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44AA715F2884A00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0C15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3D15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6E15F4832100C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1417,10 +1496,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AB215F2884F00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AB315F2884F00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44AB415F2884F00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44AB515F2884F00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44AB615F2884F00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0D15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3E15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C6F15F4832100C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1429,10 +1509,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AC115F2885600C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AC215F2885600C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44AC315F2885600C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44AC415F2885600C91B67 /* CoreServices.framework in Frameworks */,
 				52E44AC515F2885600C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0E15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C3F15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7015F4832100C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1441,10 +1522,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AD015F2885D00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AD115F2885D00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44AD215F2885D00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44AD315F2885D00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44AD415F2885D00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C0F15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4015F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7115F4832100C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1453,10 +1535,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44ADF15F2886200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AE015F2886200C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44AE115F2886200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44AE215F2886200C91B67 /* CoreServices.framework in Frameworks */,
 				52E44AE315F2886200C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1015F482F000C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4115F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7215F4832200C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1465,10 +1548,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AEE15F2886800C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AEF15F2886800C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44AF015F2886800C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44AF115F2886800C91B67 /* CoreServices.framework in Frameworks */,
 				52E44AF215F2886800C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1115F482F000C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4215F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7315F4832200C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1477,10 +1561,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AFD15F2886E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AFE15F2886E00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44AFF15F2886E00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B0015F2886E00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B0115F2886E00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1215F482F000C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4315F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7415F4832200C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1489,10 +1574,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B0C15F2887200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B0D15F2887200C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44B0E15F2887200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B0F15F2887200C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B1015F2887200C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1315F482F000C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4415F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7515F4832200C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1501,10 +1587,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B1B15F2887600C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B1C15F2887600C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44B1D15F2887600C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B1E15F2887600C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B1F15F2887600C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1415F482F000C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4515F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7615F4832200C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1513,10 +1600,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B2A15F2887C00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B2B15F2887C00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44B2C15F2887C00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B2D15F2887C00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B2E15F2887C00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1515F482F100C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4615F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7715F4832200C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1525,10 +1613,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B3915F2888100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B3A15F2888100C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44B3B15F2888100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B3C15F2888100C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B3D15F2888100C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1615F482F100C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4715F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7815F4832300C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1537,10 +1626,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B4815F2888700C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B4915F2888700C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44B4A15F2888700C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B4B15F2888700C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B4C15F2888700C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1715F482F100C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4815F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7915F4832300C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1549,10 +1639,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B5715F2888E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B5815F2888E00C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44B5915F2888E00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B5A15F2888E00C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B5B15F2888E00C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1815F482F100C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4915F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7A15F4832300C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1561,10 +1652,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B6615F2889400C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B6715F2889400C91B67 /* MaxAPI.framework in Frameworks */,
-				52E44B6815F2889400C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44B6915F2889400C91B67 /* CoreServices.framework in Frameworks */,
 				52E44B6A15F2889400C91B67 /* Carbon.framework in Frameworks */,
+				52E44C1915F482F100C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C4A15F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C7B15F4832300C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1573,10 +1665,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52F10AD015F071FA008FC371 /* CoreFoundation.framework in Frameworks */,
-				52F10AE315F0732F008FC371 /* MaxAPI.framework in Frameworks */,
-				52F10AE515F0733D008FC371 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481015F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4481A15F19BA100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BEA15F482E800C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C1B15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C4C15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1585,10 +1678,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */,
-				52F10AF815F13D86008FC371 /* MaxAPI.framework in Frameworks */,
-				52F10AF915F13D86008FC371 /* MaxAudioAPI.framework in Frameworks */,
 				52E4481615F19AD900C91B67 /* CoreServices.framework in Frameworks */,
 				52E4482015F19BA100C91B67 /* Carbon.framework in Frameworks */,
+				52E44BF015F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
+				52E44C2115F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
+				52E44C5215F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2207,8 +2301,8 @@
 		52F10A9715F07157008FC371 = {
 			isa = PBXGroup;
 			children = (
+				52E44C7C15F4835400C91B67 /* commonsyms.c */,
 				52E44BDE15F344F500C91B67 /* version.h */,
-				52F10AEA15F0A037008FC371 /* commonsyms.c */,
 				52F10AC715F071DE008FC371 /* 2threshattack~ */,
 				52E4476215F1888200C91B67 /* accumulate~ */,
 				52E4477515F188D100C91B67 /* analyzer~ */,
@@ -2321,12 +2415,12 @@
 		52F10AA415F07157008FC371 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				52E4491A15F1EC4900C91B67 /* JitterAPI.framework */,
+				52E44C4B15F4831B00C91B67 /* JitterAPI.framework */,
+				52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */,
+				52E44BE915F482E800C91B67 /* MaxAPI.framework */,
 				52E4482615F1E74900C91B67 /* Accelerate.framework */,
 				52E4481915F19BA100C91B67 /* Carbon.framework */,
 				52E4480F15F19AD900C91B67 /* CoreServices.framework */,
-				52F10AE215F07305008FC371 /* MaxAPI.framework */,
-				52F10AE415F0733D008FC371 /* MaxAudioAPI.framework */,
 				52F10AA515F07157008FC371 /* CoreFoundation.framework */,
 			);
 			name = Frameworks;
@@ -3592,8 +3686,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E4476915F1889300C91B67 /* commonsyms.c in Sources */,
 				52E4477415F188A000C91B67 /* accumulate~.c in Sources */,
+				52E44C7E15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3601,10 +3695,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E4479615F1890800C91B67 /* commonsyms.c in Sources */,
 				52E447E815F1893B00C91B67 /* analyzer~.c in Sources */,
 				52E4480515F18AB500C91B67 /* fft.c in Sources */,
 				52E4480715F18AB500C91B67 /* fftnobitrev.c in Sources */,
+				52E44C7F15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3612,8 +3706,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E447A415F1890E00C91B67 /* commonsyms.c in Sources */,
 				52E447E915F1893F00C91B67 /* bdist.c in Sources */,
+				52E44C8015F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3621,8 +3715,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E447B215F1891100C91B67 /* commonsyms.c in Sources */,
 				52E447EA15F1894900C91B67 /* bench.c in Sources */,
+				52E44C8115F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3630,8 +3724,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E447C015F1891500C91B67 /* commonsyms.c in Sources */,
 				52E447EB15F1894F00C91B67 /* bench~.c in Sources */,
+				52E44C8215F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3639,8 +3733,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E447CE15F1891800C91B67 /* commonsyms.c in Sources */,
 				52E447EC15F1895600C91B67 /* bpf.c in Sources */,
+				52E44C8415F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3648,10 +3742,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E447DC15F1891E00C91B67 /* commonsyms.c in Sources */,
 				52E447ED15F1895D00C91B67 /* brightness~.c in Sources */,
 				52E4480615F18AB500C91B67 /* fft.c in Sources */,
 				52E4480815F18AB500C91B67 /* fftnobitrev.c in Sources */,
+				52E44C8515F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3659,8 +3753,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E4485515F1E99000C91B67 /* commonsyms.c in Sources */,
 				52E448FB15F1E9EA00C91B67 /* cnmatrix~.c in Sources */,
+				52E44C8615F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3668,8 +3762,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E4486415F1E99B00C91B67 /* commonsyms.c in Sources */,
 				52E448FC15F1E9F000C91B67 /* decaying-sinusoids~.c in Sources */,
+				52E44C8715F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3677,8 +3771,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E4487315F1E9AD00C91B67 /* commonsyms.c in Sources */,
 				52E448FD15F1E9F700C91B67 /* deinterleave.c in Sources */,
+				52E44C8815F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3686,8 +3780,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E4488215F1E9B200C91B67 /* commonsyms.c in Sources */,
 				52E448FE15F1E9FE00C91B67 /* firbank~.c in Sources */,
+				52E44C8915F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3695,8 +3789,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E4489115F1E9B700C91B67 /* commonsyms.c in Sources */,
 				52E448FF15F1EA0400C91B67 /* gridpanel.c in Sources */,
+				52E44C8A15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3704,9 +3798,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E448A015F1E9BC00C91B67 /* commonsyms.c in Sources */,
 				52E4490015F1EA0B00C91B67 /* harmonics~.c in Sources */,
 				52E4491915F1EBCD00C91B67 /* noise-table.c in Sources */,
+				52E44C8B15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3714,8 +3808,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E448AF15F1E9C100C91B67 /* commonsyms.c in Sources */,
 				52E4490115F1EA1200C91B67 /* interleave.c in Sources */,
+				52E44C8C15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3723,8 +3817,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E448BE15F1E9C600C91B67 /* commonsyms.c in Sources */,
 				52E4490215F1EA1800C91B67 /* lcm.c in Sources */,
+				52E44C8D15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3732,8 +3826,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E448CD15F1E9C900C91B67 /* commonsyms.c in Sources */,
 				52E4490315F1EA2000C91B67 /* list-interpolate.c in Sources */,
+				52E44C8E15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3741,10 +3835,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E448EB15F1E9DD00C91B67 /* commonsyms.c in Sources */,
 				52E448ED15F1E9DD00C91B67 /* fft.c in Sources */,
 				52E448EE15F1E9DD00C91B67 /* fftnobitrev.c in Sources */,
 				52E4490415F1EA2800C91B67 /* loudness~.c in Sources */,
+				52E44C8F15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3752,10 +3846,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E449BF15F287ED00C91B67 /* commonsyms.c in Sources */,
 				52E44B7015F288EA00C91B67 /* OSC-schedule.c in Sources */,
 				52E44B7115F288EF00C91B67 /* pqops.c in Sources */,
 				52E44BD815F28D3500C91B67 /* OSC-timetag-ops.c in Sources */,
+				52E44C9015F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3763,9 +3857,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E449CE15F287F500C91B67 /* commonsyms.c in Sources */,
 				52E44B7415F28AAB00C91B67 /* OSC-timetag-ops.c in Sources */,
 				52E44B7515F28AAB00C91B67 /* OSC-timetag.c in Sources */,
+				52E44C9115F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3773,8 +3867,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E449DD15F287FB00C91B67 /* commonsyms.c in Sources */,
 				52E44B7615F28AB100C91B67 /* oscillators~.c in Sources */,
+				52E44C9215F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3782,8 +3876,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E449EC15F2880400C91B67 /* commonsyms.c in Sources */,
 				52E44B7715F28AB800C91B67 /* peqbank~.c in Sources */,
+				52E44C9315F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3791,10 +3885,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E449FB15F2880900C91B67 /* commonsyms.c in Sources */,
 				52E44B7215F2894200C91B67 /* fft.c in Sources */,
 				52E44B7315F2894600C91B67 /* fftnobitrev.c in Sources */,
 				52E44B7815F28ABE00C91B67 /* pitch~.c in Sources */,
+				52E44C9415F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3802,8 +3896,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A0A15F2880E00C91B67 /* commonsyms.c in Sources */,
 				52E44B7915F28AC500C91B67 /* poly.bus~.c in Sources */,
+				52E44C9515F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3811,8 +3905,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A1915F2881400C91B67 /* commonsyms.c in Sources */,
 				52E44B7A15F28ACB00C91B67 /* poly.send~.c in Sources */,
+				52E44C9615F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3820,9 +3914,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A2815F2881B00C91B67 /* commonsyms.c in Sources */,
 				52E44B7B15F28AD200C91B67 /* myPrintOSCpacket.c in Sources */,
 				52E44B7C15F28AD200C91B67 /* printit.c in Sources */,
+				52E44C9715F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3830,9 +3924,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A3715F2882100C91B67 /* commonsyms.c in Sources */,
 				52E44B7D15F28ADC00C91B67 /* libranddist.c in Sources */,
 				52E44B7E15F28ADC00C91B67 /* randdist.c in Sources */,
+				52E44C9815F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3840,8 +3934,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A4615F2882500C91B67 /* commonsyms.c in Sources */,
 				52E44B7F15F28AE200C91B67 /* rbfi.c in Sources */,
+				52E44C9915F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3849,8 +3943,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A5515F2882900C91B67 /* commonsyms.c in Sources */,
 				52E44B8015F28AEB00C91B67 /* resdisplay.c in Sources */,
+				52E44C9A15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3858,8 +3952,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A6415F2882E00C91B67 /* commonsyms.c in Sources */,
 				52E44B8115F28AF100C91B67 /* resonators~.c in Sources */,
+				52E44C9B15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3867,8 +3961,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A7315F2883500C91B67 /* commonsyms.c in Sources */,
 				52E44BD915F2999A00C91B67 /* roughness.c in Sources */,
+				52E44C9C15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3876,8 +3970,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A8215F2883B00C91B67 /* commonsyms.c in Sources */,
 				52E44B8315F28AFD00C91B67 /* SDIF-buffer.c in Sources */,
+				52E44C9D15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3885,8 +3979,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44A9115F2884200C91B67 /* commonsyms.c in Sources */,
 				52E44B8715F28B2E00C91B67 /* SDIF-fileinfo.c in Sources */,
+				52E44C9E15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3894,8 +3988,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44AA015F2884A00C91B67 /* commonsyms.c in Sources */,
 				52E44B8815F28B3500C91B67 /* SDIF-info.c in Sources */,
+				52E44C9F15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3903,8 +3997,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44AAF15F2884F00C91B67 /* commonsyms.c in Sources */,
 				52E44B8915F28B3F00C91B67 /* SDIF-listpoke.c in Sources */,
+				52E44CA015F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3912,8 +4006,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44ABE15F2885600C91B67 /* commonsyms.c in Sources */,
 				52E44B8A15F28B4500C91B67 /* SDIF-ranges.c in Sources */,
+				52E44CA115F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3921,8 +4015,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44ACD15F2885D00C91B67 /* commonsyms.c in Sources */,
 				52E44B8B15F28B4E00C91B67 /* SDIF-tuples.c in Sources */,
+				52E44CA215F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3930,9 +4024,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44ADC15F2886200C91B67 /* commonsyms.c in Sources */,
 				52E44B8C15F28B5A00C91B67 /* noise-table.c in Sources */,
 				52E44B8D15F28B5A00C91B67 /* sinusoids~.c in Sources */,
+				52E44CA315F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3940,8 +4034,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44AEB15F2886800C91B67 /* commonsyms.c in Sources */,
 				52E44B8E15F28B6000C91B67 /* slipOSC.c in Sources */,
+				52E44CA415F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3949,11 +4043,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44AFA15F2886E00C91B67 /* commonsyms.c in Sources */,
 				52E44B8F15F28B6B00C91B67 /* legendre_a.c in Sources */,
 				52E44B9015F28B6B00C91B67 /* sh.c in Sources */,
 				52E44B9215F28B6B00C91B67 /* sh_normalization.c in Sources */,
 				52E44B9315F28B6B00C91B67 /* sphY.c in Sources */,
+				52E44CA515F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3961,8 +4055,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B0915F2887200C91B67 /* commonsyms.c in Sources */,
 				52E44B9415F28B7400C91B67 /* thread.fork.c in Sources */,
+				52E44CA615F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3970,8 +4064,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B1815F2887600C91B67 /* commonsyms.c in Sources */,
 				52E44B9515F28B7A00C91B67 /* thread.join.c in Sources */,
+				52E44CA715F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3979,8 +4073,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B2715F2887C00C91B67 /* commonsyms.c in Sources */,
 				52E44B9615F28B8100C91B67 /* threefates.c in Sources */,
+				52E44CA815F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3988,8 +4082,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B3615F2888100C91B67 /* commonsyms.c in Sources */,
 				52E44B9715F28B8700C91B67 /* trend-report.c in Sources */,
+				52E44CA915F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3997,8 +4091,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B4515F2888700C91B67 /* commonsyms.c in Sources */,
 				52E44B9815F28B8C00C91B67 /* vsnapshot~.c in Sources */,
+				52E44CAA15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4006,8 +4100,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B5415F2888E00C91B67 /* commonsyms.c in Sources */,
 				52E44B9915F28B9200C91B67 /* waveguide~.c in Sources */,
+				52E44CAB15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4015,8 +4109,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B6315F2889400C91B67 /* commonsyms.c in Sources */,
 				52E44B9A15F28B9700C91B67 /* xydisplay.c in Sources */,
+				52E44CAC15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4025,7 +4119,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52F10ADB15F07231008FC371 /* 2threshattack~.c in Sources */,
-				52F10AEB15F0A037008FC371 /* commonsyms.c in Sources */,
+				52E44C7D15F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4033,8 +4127,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52F10AF515F13D86008FC371 /* commonsyms.c in Sources */,
 				52F10AFF15F13D94008FC371 /* bessel.c in Sources */,
+				52E44C8315F4835400C91B67 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4293,6 +4387,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4324,6 +4421,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4355,6 +4455,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4383,6 +4486,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4411,6 +4517,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4442,6 +4551,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4473,6 +4585,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4501,6 +4616,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4529,6 +4647,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4557,6 +4678,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4585,6 +4709,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4613,6 +4740,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4641,6 +4771,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -4670,6 +4803,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -4700,6 +4836,9 @@
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
 					"\"$(SRCROOT)/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4729,6 +4868,9 @@
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
 					"\"$(SRCROOT)/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4757,6 +4899,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4785,6 +4930,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4813,6 +4961,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4841,6 +4992,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4869,6 +5023,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4897,6 +5054,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4925,6 +5085,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4953,6 +5116,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -4981,6 +5147,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5012,6 +5181,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5043,6 +5215,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5071,6 +5246,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5099,6 +5277,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5127,6 +5308,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5155,6 +5339,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5183,6 +5370,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5211,6 +5401,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5240,6 +5433,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5269,6 +5465,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5297,6 +5496,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5325,6 +5527,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5353,6 +5558,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5381,6 +5589,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5409,6 +5620,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5437,6 +5651,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5465,6 +5682,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5493,6 +5713,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5521,6 +5744,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5549,6 +5775,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5577,6 +5806,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5605,6 +5837,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5633,6 +5868,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5661,6 +5899,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5689,6 +5930,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5717,6 +5961,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5748,6 +5995,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5779,6 +6029,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5807,6 +6060,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5835,6 +6091,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5863,6 +6122,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5891,6 +6153,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5919,6 +6184,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5947,6 +6215,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -5975,6 +6246,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6003,6 +6277,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6031,6 +6308,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6059,6 +6339,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6087,6 +6370,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6115,6 +6401,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6143,6 +6432,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6171,6 +6463,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6199,6 +6494,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6227,6 +6525,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6255,6 +6556,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6283,6 +6587,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6311,6 +6618,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6339,6 +6649,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6367,6 +6680,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6395,6 +6711,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6423,6 +6742,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6451,6 +6773,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6479,6 +6804,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6507,6 +6835,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6535,6 +6866,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6563,6 +6897,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6591,6 +6928,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6619,6 +6959,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6647,6 +6990,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6675,6 +7021,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6703,6 +7052,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6731,6 +7083,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6759,6 +7114,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6787,6 +7145,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6815,6 +7176,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6843,6 +7207,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6871,6 +7238,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6900,14 +7270,15 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../max6-sdk/c74support/max-includes/macho-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -6944,14 +7315,15 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREFIX_HEADER = "c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../max6-sdk/c74support/max-includes/macho-prefix.pch";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6980,6 +7352,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6999,6 +7374,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -7032,6 +7410,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -7063,6 +7444,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/c74support/max-includes\"",
 					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
