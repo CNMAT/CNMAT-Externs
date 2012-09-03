@@ -40,8 +40,8 @@ VERSION 1.2.1: Force Package Info Generation
 VERSION 1.4: Removed spurious printing of incorrect version information
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 	
-	©1988,1989 Adrian Freed
-	©1999 UC Regents, All Rights Reserved. 
+	ï¿½1988,1989 Adrian Freed
+	ï¿½1999 UC Regents, All Rights Reserved. 
 */
 #define NAME "oscillators~"
 #define DESCRIPTION "Oscillator bank that can read waveform from a buffer~"
@@ -67,7 +67,7 @@ t_symbol *ps_buffer;
 #define STABSZ (1l<<TPOW)
 #define LOGBASE2OFTABLEELEMENT 2
 
-t_class *sinusoids_class;
+t_class *oscillators_class;
 
 float Sinetab[STABSZ];
 
@@ -298,7 +298,7 @@ void sinusoids_assist(t_oscillators *x, void *b, long m, long a, char *s)
 
 void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 {
-    t_oscillators *x = (t_oscillators *)newobject(sinusoids_class);
+    t_oscillators *x = (t_oscillators *)newobject(oscillators_class);
     dsp_setup((t_pxobject *)x,0);
     outlet_new((t_object *)x, "signal");
 	x->samplerate =  sys_getsr();
@@ -330,11 +330,11 @@ void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 
 
 int main(void){
-	setup((struct messlist **)&sinusoids_class,(method)oscillators_new, 
+	oscillators_class = class_new("oscillators~",(method)oscillators_new,
 	      (method)dsp_free, (short)sizeof(t_oscillators),
 	      0L, A_GIMME, 0);
-	object_post((t_object *)x, "Maximum Oscillators: %d", MAXOSCILLATORS);
-	object_post((t_object *)x, "Never expires.");
+	post("Maximum Oscillators: %d", MAXOSCILLATORS);
+	post("Never expires.");
     
 	class_addmethod(oscillators_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
 	class_addmethod(oscillators_class, (method)sinusoids_list, "list", A_GIMME, 0);
