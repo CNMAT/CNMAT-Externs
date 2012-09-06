@@ -1,4 +1,0 @@
-LIBRARY jit.gl.cube.mxe
-
-EXPORTS
-	main

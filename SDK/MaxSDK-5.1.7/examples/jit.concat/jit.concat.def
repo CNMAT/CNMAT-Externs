@@ -1,4 +1,0 @@
-LIBRARY jit.concat.mxe
-
-EXPORTS
-	main

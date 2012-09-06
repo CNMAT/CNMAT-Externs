@@ -1,4 +1,0 @@
-LIBRARY jit.fluoride.mxe
-
-EXPORTS
-	main

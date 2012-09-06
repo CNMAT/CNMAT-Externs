@@ -1,4 +1,0 @@
-LIBRARY jit.eclipse.mxe
-
-EXPORTS
-	main

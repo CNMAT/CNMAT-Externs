@@ -1,7 +1,0 @@
-;buddy.def
-
-LIBRARY buddy.mxe
-
-EXPORTS
-	main
-

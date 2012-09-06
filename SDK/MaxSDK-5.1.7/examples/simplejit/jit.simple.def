@@ -1,4 +1,0 @@
-LIBRARY jit.simple.mxe
-
-EXPORTS
-	main

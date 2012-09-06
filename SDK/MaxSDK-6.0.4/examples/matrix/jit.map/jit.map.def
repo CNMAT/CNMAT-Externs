@@ -1,4 +1,0 @@
-LIBRARY jit.map.mxe
-
-EXPORTS
-	main
