@@ -1,4 +1,0 @@
-LIBRARY jit.turtle.mxe
-
-EXPORTS
-	main

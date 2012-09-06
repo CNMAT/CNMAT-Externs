@@ -1,4 +1,0 @@
-LIBRARY jit.charmap.mxe
-
-EXPORTS
-	main

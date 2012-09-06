@@ -1,4 +1,0 @@
-LIBRARY jit.submatrix.mxe
-
-EXPORTS
-	main

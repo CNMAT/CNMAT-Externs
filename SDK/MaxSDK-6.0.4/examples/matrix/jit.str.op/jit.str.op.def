@@ -1,4 +1,0 @@
-LIBRARY jit.str.op.mxe
-
-EXPORTS
-	main

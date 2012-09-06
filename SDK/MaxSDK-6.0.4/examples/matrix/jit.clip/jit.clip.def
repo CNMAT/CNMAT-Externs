@@ -1,4 +1,0 @@
-LIBRARY jit.clip.mxe
-
-EXPORTS
-	main

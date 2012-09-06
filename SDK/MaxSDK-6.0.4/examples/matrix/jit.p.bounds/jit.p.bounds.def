@@ -1,4 +1,0 @@
-LIBRARY jit.p.bounds.mxe
-
-EXPORTS
-	main

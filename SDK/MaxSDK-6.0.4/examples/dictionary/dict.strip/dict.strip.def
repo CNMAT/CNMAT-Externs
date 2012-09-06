@@ -1,7 +1,0 @@
-;dict.strip.def
-
-LIBRARY dict.strip.mxe
-
-EXPORTS
-	main
-

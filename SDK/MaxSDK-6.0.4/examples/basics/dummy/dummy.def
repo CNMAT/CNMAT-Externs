@@ -1,4 +1,0 @@
-LIBRARY dummy.mxe
-
-EXPORTS
-	main
