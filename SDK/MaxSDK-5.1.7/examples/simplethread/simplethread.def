@@ -1,4 +1,0 @@
-LIBRARY simplethread.mxe
-
-EXPORTS
-	main

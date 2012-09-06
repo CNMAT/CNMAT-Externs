@@ -1,4 +1,0 @@
-LIBRARY jit.split.mxe
-
-EXPORTS
-	main

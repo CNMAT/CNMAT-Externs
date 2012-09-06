@@ -1,4 +1,0 @@
-LIBRARY jit.rgb2luma.mxe
-
-EXPORTS
-	main

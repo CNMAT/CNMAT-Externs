@@ -1,4 +1,0 @@
-LIBRARY simpletext.mxe
-
-EXPORTS
-	main

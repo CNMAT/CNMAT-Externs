@@ -1,7 +1,0 @@
-;iter.def
-
-LIBRARY iter.mxe
-
-EXPORTS
-	main
-

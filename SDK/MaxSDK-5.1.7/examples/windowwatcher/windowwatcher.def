@@ -1,5 +1,0 @@
-LIBRARY dbcuelist.mxe
-
-EXPORTS
-	main
-

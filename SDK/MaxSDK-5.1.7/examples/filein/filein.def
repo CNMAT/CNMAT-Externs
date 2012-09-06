@@ -1,7 +1,0 @@
-;filein.def
-
-LIBRARY filein.mxe
-
-EXPORTS
-	main
-

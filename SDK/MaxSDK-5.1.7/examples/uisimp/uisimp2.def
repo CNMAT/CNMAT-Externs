@@ -1,7 +1,0 @@
-;uisimp.def
-
-LIBRARY uisimp2.mxe
-
-EXPORTS
-	main
-

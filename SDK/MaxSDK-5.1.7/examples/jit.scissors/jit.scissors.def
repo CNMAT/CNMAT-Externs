@@ -1,4 +1,0 @@
-LIBRARY jit.scissors.mxe
-
-EXPORTS
-	main

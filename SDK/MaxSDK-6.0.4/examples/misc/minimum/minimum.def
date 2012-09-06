@@ -1,7 +1,0 @@
-;minimum.def
-
-LIBRARY minimum.mxe
-
-EXPORTS
-	main
-
