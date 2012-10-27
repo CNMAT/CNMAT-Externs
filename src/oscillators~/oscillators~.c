@@ -71,7 +71,7 @@ t_class *oscillators_class;
 
 float Sinetab[STABSZ];
 
-typedef  unsigned long ulong;
+//typedef  unsigned long ulong;
 
 typedef  struct oscdesc
 {
