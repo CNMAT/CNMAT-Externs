@@ -86,59 +86,18 @@
 		52E4480615F18AB500C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
 		52E4480715F18AB500C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
 		52E4480815F18AB500C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
-		52E4481015F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481115F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481215F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481315F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481415F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481515F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481615F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481715F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481815F19AD900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4481A15F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4481B15F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4481C15F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4481D15F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4481E15F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4481F15F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4482015F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4482115F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4482215F19BA100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E4482715F1E74900C91B67 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4482615F1E74900C91B67 /* Accelerate.framework */; };
-		52E4482815F1E74900C91B67 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4482615F1E74900C91B67 /* Accelerate.framework */; };
 		52E4485815F1E99000C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4485B15F1E99000C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4485C15F1E99000C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E4486715F1E99B00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4486A15F1E99B00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4486B15F1E99B00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E4487615F1E9AD00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4487915F1E9AD00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4487A15F1E9AD00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E4488515F1E9B200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4488815F1E9B200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4488915F1E9B200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E4489415F1E9B700C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E4489715F1E9B700C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E4489815F1E9B700C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E448A315F1E9BC00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448A615F1E9BC00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E448A715F1E9BC00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E448B215F1E9C100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448B515F1E9C100C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E448B615F1E9C100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E448C115F1E9C600C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448C415F1E9C600C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E448C515F1E9C600C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E448D015F1E9C900C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448D315F1E9C900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E448D415F1E9C900C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E448ED15F1E9DD00C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
 		52E448EE15F1E9DD00C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
 		52E448F015F1E9DD00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448F315F1E9DD00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E448F415F1E9DD00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
-		52E448F515F1E9DD00C91B67 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4482615F1E74900C91B67 /* Accelerate.framework */; };
 		52E448FB15F1E9EA00C91B67 /* cnmatrix~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4482A15F1E96900C91B67 /* cnmatrix~.c */; };
 		52E448FC15F1E9F000C91B67 /* decaying-sinusoids~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4482E15F1E96A00C91B67 /* decaying-sinusoids~.c */; };
 		52E448FD15F1E9F700C91B67 /* deinterleave.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4483115F1E96A00C91B67 /* deinterleave.c */; };
@@ -151,92 +110,34 @@
 		52E4490415F1EA2800C91B67 /* loudness~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4485115F1E96D00C91B67 /* loudness~.c */; };
 		52E4491915F1EBCD00C91B67 /* noise-table.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4484115F1E96C00C91B67 /* noise-table.c */; };
 		52E449C215F287ED00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449C515F287ED00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E449C615F287ED00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E449D115F287F500C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449D415F287F500C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E449D515F287F500C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E449E015F287FB00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449E315F287FB00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E449E415F287FB00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E449EF15F2880400C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E449F215F2880400C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E449F315F2880400C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E449FE15F2880900C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A0115F2880900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A0215F2880900C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A0D15F2880E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A1015F2880E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A1115F2880E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A1C15F2881400C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A1F15F2881400C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A2015F2881400C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A2B15F2881B00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A2E15F2881B00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A2F15F2881B00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A3A15F2882100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A3D15F2882100C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A3E15F2882100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A4915F2882500C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A4C15F2882500C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A4D15F2882500C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A5815F2882900C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A5B15F2882900C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A5C15F2882900C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A6715F2882E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A6A15F2882E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A6B15F2882E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A7615F2883500C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A7915F2883500C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A7A15F2883500C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A8515F2883B00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A8815F2883B00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A8915F2883B00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44A9415F2884200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44A9715F2884200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44A9815F2884200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44AA315F2884A00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AA615F2884A00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44AA715F2884A00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44AB215F2884F00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AB515F2884F00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44AB615F2884F00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44AC115F2885600C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AC415F2885600C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44AC515F2885600C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44AD015F2885D00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AD315F2885D00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44AD415F2885D00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44ADF15F2886200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AE215F2886200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44AE315F2886200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44AEE15F2886800C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44AF115F2886800C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44AF215F2886800C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44AFD15F2886E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B0015F2886E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B0115F2886E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B0C15F2887200C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B0F15F2887200C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B1015F2887200C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B1B15F2887600C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B1E15F2887600C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B1F15F2887600C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B2A15F2887C00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B2D15F2887C00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B2E15F2887C00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B3915F2888100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B3C15F2888100C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B3D15F2888100C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B4815F2888700C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B4B15F2888700C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B4C15F2888700C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B5715F2888E00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B5A15F2888E00C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B5B15F2888E00C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B6615F2889400C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E44B6915F2889400C91B67 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4480F15F19AD900C91B67 /* CoreServices.framework */; };
-		52E44B6A15F2889400C91B67 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4481915F19BA100C91B67 /* Carbon.framework */; };
 		52E44B7015F288EA00C91B67 /* OSC-schedule.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4492D15F2879300C91B67 /* OSC-schedule.c */; };
 		52E44B7115F288EF00C91B67 /* pqops.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4492F15F2879300C91B67 /* pqops.c */; };
 		52E44B7215F2894200C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
@@ -473,6 +374,154 @@
 		52F10ADB15F07231008FC371 /* 2threshattack~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AC815F071DE008FC371 /* 2threshattack~.c */; };
 		52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52F10AFF15F13D94008FC371 /* bessel.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEF15F13D41008FC371 /* bessel.c */; };
+		52FF186C163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF186D163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF186E163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF186F163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1870163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1871163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1872163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1873163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1874163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1875163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1876163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1877163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1878163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1879163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF187A163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF187B163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF187C163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF187D163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF187E163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF187F163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1880163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1881163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1882163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1883163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1884163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1885163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1886163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1887163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1888163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1889163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF188A163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF188B163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF188C163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF188D163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF188E163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF188F163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1890163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1891163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1892163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1893163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1894163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1895163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1896163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1897163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1898163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF1899163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF189A163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF189B163B5C3900F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		52FF189E163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF189F163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A0163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A1163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A2163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A3163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A4163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A5163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A6163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A7163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A8163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18A9163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18AA163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18AB163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18AC163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18AD163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18AE163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18AF163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B0163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B1163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B2163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B3163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B4163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B5163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B6163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B7163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B8163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18B9163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18BA163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18BB163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18BC163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18BD163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18BE163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18BF163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C0163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C1163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C2163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C3163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C4163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C5163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C6163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C7163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C8163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18C9163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18CA163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18CB163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18CC163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18CD163B5C4B00F94922 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		52FF18CF163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D0163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D1163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D2163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D3163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D4163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D5163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D6163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D7163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D8163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18D9163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18DA163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18DB163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18DC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18DD163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18DE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18DF163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E0163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E1163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E2163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E3163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E4163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E5163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E6163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E7163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E8163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18E9163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18EA163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18EB163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18EC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18ED163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18EE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18EF163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F0163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F1163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F2163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F3163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F4163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F5163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F6163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F7163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F8163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18F9163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18FA163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18FB163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18FC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18FD163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF18FE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		52FF1903163B5C9B00F94922 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18FF163B5C9A00F94922 /* libgsl.a */; };
+		52FF1906163B5C9B00F94922 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18FF163B5C9A00F94922 /* libgsl.a */; };
+		52FF191B163B5C9E00F94922 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18FF163B5C9A00F94922 /* libgsl.a */; };
+		52FF193B163B7C8E00F94922 /* libfftw3f.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF193A163B7C8E00F94922 /* libfftw3f.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -815,7 +864,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		52DE949215F1424F0097B3E8 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = lib/gsl/.libs/libgsl.a; sourceTree = "<group>"; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
 		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -854,9 +902,6 @@
 		52E4480215F18AB500C91B67 /* fftnobitrev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fftnobitrev.c; sourceTree = "<group>"; };
 		52E4480315F18AB500C91B67 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftnobitrev.h; sourceTree = "<group>"; };
 		52E4480415F18AB500C91B67 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vDSP.h; sourceTree = "<group>"; };
-		52E4480F15F19AD900C91B67 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
-		52E4481915F19BA100C91B67 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../../System/Library/Frameworks/Carbon.framework; sourceTree = "<group>"; };
-		52E4482615F1E74900C91B67 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = ../../../../System/Library/Frameworks/Accelerate.framework; sourceTree = "<group>"; };
 		52E4482A15F1E96900C91B67 /* cnmatrix~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "cnmatrix~.c"; sourceTree = "<group>"; };
 		52E4482B15F1E96900C91B67 /* cnmatrix~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "cnmatrix~.maxhelp"; sourceTree = "<group>"; };
 		52E4482C15F1E96A00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1056,6 +1101,11 @@
 		52F10AF015F13D41008FC371 /* bessel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bessel.maxhelp; sourceTree = "<group>"; };
 		52F10AF115F13D41008FC371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52F10AFE15F13D86008FC371 /* bessel.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bessel.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		52FF186B163B5C3800F94922 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = ../../../../../System/Library/Frameworks/Accelerate.framework; sourceTree = "<group>"; };
+		52FF189D163B5C4B00F94922 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework; sourceTree = "<group>"; };
+		52FF18CE163B5C5B00F94922 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
+		52FF18FF163B5C9A00F94922 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../gsl/.libs/libgsl.a; sourceTree = "<group>"; };
+		52FF193A163B7C8E00F94922 /* libfftw3f.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfftw3f.a; path = ../fftw/.libs/libfftw3f.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1064,11 +1114,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4476C15F1889300C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4481115F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4481B15F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BEB15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C1C15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C4D15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF186D163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF189F163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D0163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1077,12 +1128,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4479A15F1890800C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4481215F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4481C15F19BA100C91B67 /* Carbon.framework in Frameworks */,
-				52E4482715F1E74900C91B67 /* Accelerate.framework in Frameworks */,
 				52E44BEC15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C1D15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C4E15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF186E163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A0163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D1163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1091,11 +1142,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447A815F1890E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4481315F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4481D15F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BED15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C1E15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C4F15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF186F163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A1163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D2163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
+				52FF1903163B5C9B00F94922 /* libgsl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1104,11 +1157,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447B615F1891100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4481415F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4481E15F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BEE15F482E900C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C1F15F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5015F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1870163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A2163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D3163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1117,11 +1171,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447C415F1891500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4481515F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4481F15F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BEF15F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2015F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5115F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1871163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A3163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D4163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1130,11 +1185,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447D215F1891800C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4481715F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4482115F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF115F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2215F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5315F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1873163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A5163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D6163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1143,12 +1199,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447E015F1891E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4481815F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4482215F19BA100C91B67 /* Carbon.framework in Frameworks */,
-				52E4482815F1E74900C91B67 /* Accelerate.framework in Frameworks */,
 				52E44BF215F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2315F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5415F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1874163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A6163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D7163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1157,11 +1213,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4485815F1E99000C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4485B15F1E99000C91B67 /* CoreServices.framework in Frameworks */,
-				52E4485C15F1E99000C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF315F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2415F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5515F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1875163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A7163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D8163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1170,11 +1227,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4486715F1E99B00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4486A15F1E99B00C91B67 /* CoreServices.framework in Frameworks */,
-				52E4486B15F1E99B00C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF415F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2515F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5615F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1876163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A8163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D9163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1183,11 +1241,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4487615F1E9AD00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4487915F1E9AD00C91B67 /* CoreServices.framework in Frameworks */,
-				52E4487A15F1E9AD00C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF515F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2615F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5715F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1877163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A9163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18DA163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1196,11 +1255,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4488515F1E9B200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4488815F1E9B200C91B67 /* CoreServices.framework in Frameworks */,
-				52E4488915F1E9B200C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF615F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2715F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5815F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1878163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18AA163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18DB163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
+				52FF193B163B7C8E00F94922 /* libfftw3f.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1209,11 +1270,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4489415F1E9B700C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E4489715F1E9B700C91B67 /* CoreServices.framework in Frameworks */,
-				52E4489815F1E9B700C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF715F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2815F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5915F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1879163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18AB163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18DC163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1222,11 +1284,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448A315F1E9BC00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448A615F1E9BC00C91B67 /* CoreServices.framework in Frameworks */,
-				52E448A715F1E9BC00C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF815F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2915F482FE00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5A15F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF187A163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18AC163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18DD163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1235,11 +1298,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448B215F1E9C100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448B515F1E9C100C91B67 /* CoreServices.framework in Frameworks */,
-				52E448B615F1E9C100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF915F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2A15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5B15F4831D00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF187B163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18AD163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18DE163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1248,11 +1312,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448C115F1E9C600C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448C415F1E9C600C91B67 /* CoreServices.framework in Frameworks */,
-				52E448C515F1E9C600C91B67 /* Carbon.framework in Frameworks */,
 				52E44BFA15F482EB00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2B15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5C15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF187C163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18AE163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18DF163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1261,11 +1326,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448D015F1E9C900C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448D315F1E9C900C91B67 /* CoreServices.framework in Frameworks */,
-				52E448D415F1E9C900C91B67 /* Carbon.framework in Frameworks */,
 				52E44BFB15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2C15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5D15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF187D163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18AF163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E0163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1274,12 +1340,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E448F015F1E9DD00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E448F315F1E9DD00C91B67 /* CoreServices.framework in Frameworks */,
-				52E448F415F1E9DD00C91B67 /* Carbon.framework in Frameworks */,
-				52E448F515F1E9DD00C91B67 /* Accelerate.framework in Frameworks */,
 				52E44BFC15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2D15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5E15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF187E163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B0163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E1163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1288,11 +1354,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449C215F287ED00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449C515F287ED00C91B67 /* CoreServices.framework in Frameworks */,
-				52E449C615F287ED00C91B67 /* Carbon.framework in Frameworks */,
 				52E44BFD15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2E15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5F15F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF187F163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B1163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E2163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1301,11 +1368,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449D115F287F500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449D415F287F500C91B67 /* CoreServices.framework in Frameworks */,
-				52E449D515F287F500C91B67 /* Carbon.framework in Frameworks */,
 				52E44BFE15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2F15F482FF00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6015F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1880163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B2163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E3163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1314,11 +1382,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449E015F287FB00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449E315F287FB00C91B67 /* CoreServices.framework in Frameworks */,
-				52E449E415F287FB00C91B67 /* Carbon.framework in Frameworks */,
 				52E44BFF15F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3015F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6115F4831E00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1881163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B3163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E4163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1327,11 +1396,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449EF15F2880400C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E449F215F2880400C91B67 /* CoreServices.framework in Frameworks */,
-				52E449F315F2880400C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0015F482EC00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3115F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6215F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1882163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B4163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E5163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1340,11 +1410,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E449FE15F2880900C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A0115F2880900C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A0215F2880900C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0115F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3215F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6315F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1883163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B5163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E6163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1353,11 +1424,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A0D15F2880E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A1015F2880E00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A1115F2880E00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0215F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3315F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6415F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1884163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B6163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E7163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1366,11 +1438,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A1C15F2881400C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A1F15F2881400C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A2015F2881400C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0315F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3415F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6515F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1885163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B7163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E8163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1379,11 +1452,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A2B15F2881B00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A2E15F2881B00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A2F15F2881B00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0415F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3515F4830000C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6615F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1886163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B8163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18E9163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1392,11 +1466,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A3A15F2882100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A3D15F2882100C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A3E15F2882100C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0515F482ED00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3615F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6715F4831F00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1887163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18B9163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18EA163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
+				52FF191B163B5C9E00F94922 /* libgsl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1405,11 +1481,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A4915F2882500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A4C15F2882500C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A4D15F2882500C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0615F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3715F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6815F4832000C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1888163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18BA163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18EB163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1418,11 +1495,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A5815F2882900C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A5B15F2882900C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A5C15F2882900C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0715F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3815F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6915F4832000C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1889163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18BB163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18EC163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1431,11 +1509,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A6715F2882E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A6A15F2882E00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A6B15F2882E00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0815F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3915F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6A15F4832000C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF188A163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18BC163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18ED163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1444,11 +1523,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A7615F2883500C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A7915F2883500C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A7A15F2883500C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0915F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3A15F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6B15F4832000C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF188B163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18BD163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18EE163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1457,11 +1537,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A8515F2883B00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A8815F2883B00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A8915F2883B00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0A15F482EE00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3B15F4830100C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6C15F4832000C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF188C163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18BE163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18EF163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1470,11 +1551,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44A9415F2884200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44A9715F2884200C91B67 /* CoreServices.framework in Frameworks */,
-				52E44A9815F2884200C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0B15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3C15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6D15F4832100C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF188D163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18BF163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F0163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1483,11 +1565,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AA315F2884A00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AA615F2884A00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44AA715F2884A00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0C15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3D15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6E15F4832100C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF188E163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C0163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F1163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1496,11 +1579,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AB215F2884F00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AB515F2884F00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44AB615F2884F00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0D15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3E15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C6F15F4832100C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF188F163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C1163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F2163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1509,11 +1593,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AC115F2885600C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AC415F2885600C91B67 /* CoreServices.framework in Frameworks */,
-				52E44AC515F2885600C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0E15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C3F15F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7015F4832100C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1890163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C2163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F3163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1522,11 +1607,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AD015F2885D00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AD315F2885D00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44AD415F2885D00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C0F15F482EF00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4015F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7115F4832100C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1891163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C3163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F4163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1535,11 +1621,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44ADF15F2886200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AE215F2886200C91B67 /* CoreServices.framework in Frameworks */,
-				52E44AE315F2886200C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1015F482F000C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4115F4830200C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7215F4832200C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1892163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C4163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F5163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1548,11 +1635,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AEE15F2886800C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44AF115F2886800C91B67 /* CoreServices.framework in Frameworks */,
-				52E44AF215F2886800C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1115F482F000C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4215F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7315F4832200C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1893163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C5163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F6163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1561,11 +1649,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44AFD15F2886E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B0015F2886E00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B0115F2886E00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1215F482F000C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4315F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7415F4832200C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1894163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C6163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F7163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1574,11 +1663,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B0C15F2887200C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B0F15F2887200C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B1015F2887200C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1315F482F000C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4415F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7515F4832200C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1895163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C7163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F8163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1587,11 +1677,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B1B15F2887600C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B1E15F2887600C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B1F15F2887600C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1415F482F000C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4515F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7615F4832200C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1896163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C8163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18F9163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1600,11 +1691,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B2A15F2887C00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B2D15F2887C00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B2E15F2887C00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1515F482F100C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4615F4830300C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7715F4832200C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1897163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18C9163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18FA163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1613,11 +1705,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B3915F2888100C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B3C15F2888100C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B3D15F2888100C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1615F482F100C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4715F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7815F4832300C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1898163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18CA163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18FB163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1626,11 +1719,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B4815F2888700C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B4B15F2888700C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B4C15F2888700C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1715F482F100C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4815F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7915F4832300C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1899163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18CB163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18FC163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1639,11 +1733,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B5715F2888E00C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B5A15F2888E00C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B5B15F2888E00C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1815F482F100C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4915F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7A15F4832300C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF189A163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18CC163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18FD163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1652,11 +1747,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E44B6615F2889400C91B67 /* CoreFoundation.framework in Frameworks */,
-				52E44B6915F2889400C91B67 /* CoreServices.framework in Frameworks */,
-				52E44B6A15F2889400C91B67 /* Carbon.framework in Frameworks */,
 				52E44C1915F482F100C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C4A15F4830400C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C7B15F4832300C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF189B163B5C3900F94922 /* Accelerate.framework in Frameworks */,
+				52FF18CD163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18FE163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1665,11 +1761,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				52F10AD015F071FA008FC371 /* CoreFoundation.framework in Frameworks */,
-				52E4481015F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4481A15F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BEA15F482E800C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C1B15F482FC00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C4C15F4831B00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF186C163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF189E163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18CF163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1678,11 +1775,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */,
-				52E4481615F19AD900C91B67 /* CoreServices.framework in Frameworks */,
-				52E4482015F19BA100C91B67 /* Carbon.framework in Frameworks */,
 				52E44BF015F482EA00C91B67 /* MaxAPI.framework in Frameworks */,
 				52E44C2115F482FD00C91B67 /* MaxAudioAPI.framework in Frameworks */,
 				52E44C5215F4831C00C91B67 /* JitterAPI.framework in Frameworks */,
+				52FF1872163B5C3800F94922 /* Accelerate.framework in Frameworks */,
+				52FF18A4163B5C4B00F94922 /* Carbon.framework in Frameworks */,
+				52FF18D5163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
+				52FF1906163B5C9B00F94922 /* libgsl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1692,8 +1791,9 @@
 		52DE949415F142570097B3E8 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				52FF193A163B7C8E00F94922 /* libfftw3f.a */,
+				52FF18FF163B5C9A00F94922 /* libgsl.a */,
 				52E447FF15F18AB500C91B67 /* Jehan-lib */,
-				52DE949215F1424F0097B3E8 /* libgsl.a */,
 			);
 			name = lib;
 			sourceTree = "<group>";
@@ -2415,12 +2515,12 @@
 		52F10AA415F07157008FC371 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				52FF18CE163B5C5B00F94922 /* CoreServices.framework */,
+				52FF189D163B5C4B00F94922 /* Carbon.framework */,
+				52FF186B163B5C3800F94922 /* Accelerate.framework */,
 				52E44C4B15F4831B00C91B67 /* JitterAPI.framework */,
 				52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */,
 				52E44BE915F482E800C91B67 /* MaxAPI.framework */,
-				52E4482615F1E74900C91B67 /* Accelerate.framework */,
-				52E4481915F19BA100C91B67 /* Carbon.framework */,
-				52E4480F15F19AD900C91B67 /* CoreServices.framework */,
 				52F10AA515F07157008FC371 /* CoreFoundation.framework */,
 			);
 			name = Frameworks;
@@ -4383,28 +4483,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4417,28 +4503,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4451,22 +4523,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4482,22 +4543,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4513,28 +4563,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4547,28 +4583,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4581,22 +4603,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4612,22 +4623,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4643,22 +4643,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4674,22 +4663,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4705,22 +4683,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4736,22 +4703,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4767,23 +4723,12 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4799,23 +4744,12 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4831,23 +4765,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/c74support/jit-includes\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4863,23 +4785,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/c74support/jit-includes\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4895,22 +4805,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4926,22 +4825,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4957,22 +4845,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -4988,22 +4865,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5019,27 +4885,19 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5050,27 +4908,19 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5081,22 +4931,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5112,22 +4951,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5143,28 +4971,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5177,28 +4991,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5211,22 +5011,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5242,22 +5031,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5273,22 +5051,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5304,22 +5071,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5335,22 +5091,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5366,22 +5111,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5397,23 +5131,12 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5429,23 +5152,12 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5461,22 +5173,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5492,22 +5193,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5523,22 +5213,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5554,22 +5233,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5585,22 +5253,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5616,22 +5273,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5647,22 +5293,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5678,22 +5313,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5709,22 +5333,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5740,22 +5353,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5771,22 +5373,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5802,22 +5393,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5833,22 +5413,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5864,22 +5433,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5895,22 +5453,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5926,22 +5473,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -5957,28 +5493,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5991,28 +5513,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6025,22 +5533,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6056,22 +5553,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6087,22 +5573,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6118,22 +5593,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6149,22 +5613,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6180,22 +5633,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6211,22 +5653,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6242,22 +5673,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6273,22 +5693,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6304,22 +5713,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6335,22 +5733,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6366,22 +5753,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6397,22 +5773,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6428,22 +5793,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6459,22 +5813,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6490,22 +5833,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6521,22 +5853,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6552,22 +5873,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6583,22 +5893,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6614,22 +5913,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6645,22 +5933,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6676,22 +5953,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6707,22 +5973,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6738,22 +5993,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6769,22 +6013,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6800,22 +6033,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6831,22 +6053,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6862,22 +6073,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6893,22 +6093,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6924,22 +6113,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6955,22 +6133,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -6986,22 +6153,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7017,22 +6173,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7048,22 +6193,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7079,22 +6213,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7110,22 +6233,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7141,22 +6253,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7172,22 +6273,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7203,22 +6293,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7234,22 +6313,11 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7273,6 +6341,7 @@
 					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					/System/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -7285,16 +6354,27 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../fftw/api\"",
+					"\"$(SRCROOT)/../gsl/gsl\"",
+					"\"$(SRCROOT)/../libomax\"",
+					"\"$(SRCROOT)/../libo\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../libo\"",
+					"\"$(SRCROOT)/../libomax\"",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+					"\"$(SRCROOT)/../gsl/.libs\"",
+				);
 				MACH_O_TYPE = mh_bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -7318,6 +6398,7 @@
 					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					/System/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -7325,16 +6406,27 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREFIX_HEADER = "../max6-sdk/c74support/max-includes/macho-prefix.pch";
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../fftw/api\"",
+					"\"$(SRCROOT)/../gsl/gsl\"",
+					"\"$(SRCROOT)/../libomax\"",
+					"\"$(SRCROOT)/../libo\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../libo\"",
+					"\"$(SRCROOT)/../libomax\"",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+					"\"$(SRCROOT)/../gsl/.libs\"",
+				);
 				MACH_O_TYPE = mh_bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OTHER_LDFLAGS = "-lmx";
@@ -7348,18 +6440,16 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7370,18 +6460,16 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7390,6 +6478,7 @@
 		52F10ADE15F072B2008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -7397,6 +6486,7 @@
 		52F10ADF15F072B2008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -7406,28 +6496,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7440,28 +6516,14 @@
 			buildSettings = {
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/c74support/max-includes\"",
-					"\"$(SRCROOT)/c74support/msp-includes\"",
-					"\"$(SRCROOT)/lib/gsl\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/lib/gsl/.libs\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
 				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
