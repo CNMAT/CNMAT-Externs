@@ -52,7 +52,7 @@ VERSION 0.1.1: Force Package Info Generation
   To-do:  ranges for a given row across all frames
 */
 
-#include "./version.h" // Make sure not to get ../SDIF-buffer/version.h
+#include "version.h" // Make sure not to get ../SDIF-buffer/version.h
 
 // #include <string.h>
 // #include <float.h>

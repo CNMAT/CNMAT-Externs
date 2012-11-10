@@ -163,7 +163,7 @@ void my_freebytes(void *bytes, int size) {
 }
 
 
-void main(fptr *fp) {
+int main(void) {
 	SDIFresult r;
 	
 	version_post_copyright();
@@ -206,7 +206,7 @@ void main(fptr *fp) {
 		ouchstring("%s: Couldn't initialize SDIF buffer utilities! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 
 	/* list object in the new object list */
@@ -214,13 +214,13 @@ void main(fptr *fp) {
 	
 #ifdef NAVIGATION_SERVICES	
 	if (!NavServicesAvailable()) {
-		object_post((t_object *)x, "¥ SDIF-buffer: navigation services are not available.");
-		object_post((t_object *)x, "Opening a dialog box will probably fail.");
+		post("¥ SDIF-buffer: navigation services are not available.");
+		post("Opening a dialog box will probably fail.");
 	} else {	
 		OSErr err = NavLoad();
 		if (err != noErr) {
-			object_post((t_object *)x, "¥ SDIF-buffer: NavLoad() gave error %ld", (long) err);
-			object_post((t_object *)x, "Opening a dialog box will probably fail.");
+			post("¥ SDIF-buffer: NavLoad() gave error %ld", (long) err);
+			post("Opening a dialog box will probably fail.");
 		}
 	}
 #endif
@@ -230,10 +230,10 @@ void main(fptr *fp) {
 	ps_emptysymbol = gensym("");
 	
 	if (ps_SDIF_buffer_lookup->s_thing != 0) {
-		object_post((t_object *)x, "¥ SDIF-buffer: warning: SDIF-buffer-lookup s_thing not zero.");
+		post("¥ SDIF-buffer: warning: SDIF-buffer-lookup s_thing not zero.");
 	}
 	ps_SDIF_buffer_lookup->s_thing = (void *) MySDIFBufferLookupFunction;
-
+	return 0;
 }
 
 void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
@@ -243,7 +243,7 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 	
 
 	if (MySDIFBufferLookupFunction(name) != 0) {
-		object_post((t_object *)x, "¥ %s is already an SDIF-buffer!", name->s_name);
+		post("¥ %s is already an SDIF-buffer!", name->s_name);
 		return 0;
 	}
 	
@@ -263,7 +263,7 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 	AddNewBuffer(x);
 	
 	if (filename != ps_emptysymbol) {
-		object_post((t_object *)x, "Need to load sdif file %s", filename->s_name);
+		post("Need to load sdif file %s", filename->s_name);
 	}
 	
 	
@@ -435,7 +435,7 @@ void SDIFbuffer_streamlist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *a
 
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_SYM) {
-			object_post((t_object *)x, "SDIFbuffer_streamlist: ignoring numeric argument");
+			post("SDIFbuffer_streamlist: ignoring numeric argument");
 		} else {
 			one_streamlist(argv[i].a_w.w_sym);
 		}
@@ -449,7 +449,7 @@ void one_streamlist(Symbol *fileName) {
 	FILE *f;
 	SDIFresult r;
 
-	object_post((t_object *)x, "SDIFbuffer_streamlist for file %s", fileName->s_name);
+	post("SDIFbuffer_streamlist for file %s", fileName->s_name);
 	f = OpenSDIFFile(fileName->s_name);
 	if (f == NULL) {
 		/* OpenSDIFFile already printed an error message */
@@ -458,8 +458,8 @@ void one_streamlist(Symbol *fileName) {
 
 	do_streamlist(f, fileName->s_name, 0);
 	if ((r = SDIF_CloseRead(f)) != ESDIF_SUCCESS) {
-		object_post((t_object *)x, "SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
-		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
+		post("SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
+		post("%s", SDIF_GetErrorString(r));
 	}
 }
 
@@ -472,7 +472,7 @@ void SDIFbuffer_framelist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *ar
 
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_SYM) {
-			object_post((t_object *)x, "SDIFbuffer_framelist: ignoring numeric argument");
+			post("SDIFbuffer_framelist: ignoring numeric argument");
 		} else {
 			one_framelist(argv[i].a_w.w_sym);
 		}
@@ -487,7 +487,7 @@ void one_framelist(Symbol *fileName) {
 	FILE *f;
 	SDIFresult r;
 
-	object_post((t_object *)x, "SDIFbuffer_framelist for file %s", fileName->s_name);
+	post("SDIFbuffer_framelist for file %s", fileName->s_name);
 	f = OpenSDIFFile(fileName->s_name);
 	if (f == NULL) {
 		/* OpenSDIFFile already printed an error message */
@@ -496,8 +496,8 @@ void one_framelist(Symbol *fileName) {
 
 	do_streamlist(f, fileName->s_name, 1);
 	if (r = SDIF_CloseRead(f)) {
-		object_post((t_object *)x, "SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
-		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
+		post("SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
+		post("%s", SDIF_GetErrorString(r));
 	}
 
 }
@@ -523,7 +523,7 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 			if (streamsSeen.streamID[i] == fh.streamID) {
 				// Already saw this stream, so just make sure type is OK
 				if (!SDIF_Char4Eq(fh.frameType, streamsSeen.frameType[i])) {
-					object_post((t_object *)x, "¥ streamlist: Warning: First frame for stream %ld", fh.streamID);
+					post("¥ streamlist: Warning: First frame for stream %ld", fh.streamID);
 					post("¥ had type %c%c%c%c, but frame at time %g has type %c%c%c%c",
 						 streamsSeen.frameType[i][0], streamsSeen.frameType[i][1],
 						 streamsSeen.frameType[i][2], streamsSeen.frameType[i][3],
@@ -538,7 +538,7 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 			 fh.time);
 			 
 		if (streamsSeen.n >= MAX_STREAMS) {
-			object_post((t_object *)x, " ¥ streamlist: error: SDIF file has more than %ld streams!", MAX_STREAMS);
+			post(" ¥ streamlist: error: SDIF file has more than %ld streams!", MAX_STREAMS);
 		} else {
 			streamsSeen.streamID[streamsSeen.n] = fh.streamID;
 			SDIF_Copy4Bytes(streamsSeen.frameType[streamsSeen.n], fh.frameType);
@@ -554,15 +554,15 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 		}
 
 		if (r = SDIF_SkipFrame(&fh, f)) {
-			object_post((t_object *)x, "SDIF-buffer: error skipping frame in SDIF file %s:", name);
-			object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
+			post("SDIF-buffer: error skipping frame in SDIF file %s:", name);
+			post("%s", SDIF_GetErrorString(r));
 			return;
 		}
 	}
 
 	if (r != ESDIF_END_OF_DATA) {
-		object_post((t_object *)x, "SDIF-buffer: error reading SDIF file %s:", name);
-		object_post((t_object *)x, "%s", SDIF_GetErrorString(r));
+		post("SDIF-buffer: error reading SDIF file %s:", name);
+		post("%s", SDIF_GetErrorString(r));
 	}
 }	
 
@@ -641,7 +641,7 @@ void SDIFbuffer_print(SDIFBuffer *x) {
 void PrintOneFrame(SDIFmem_Frame f) {
 	SDIFmem_Matrix m;
 	if (f == 0) {
-		object_post((t_object *)x, "PrintOneFrame: null SDIFmem_Frame pointer");
+		post("PrintOneFrame: null SDIFmem_Frame pointer");
 		return;
 	}
 	// post("SDIF frame at %p, prev is %p, next is %p", f, f->prev, f->next);
@@ -805,9 +805,9 @@ void DeleteBuffer(SDIFBuffer *goner) {
 void PrintAllTheBuffers(void) {
 	SDIFBuffer *b;
 	
-	object_post((t_object *)x, "All the SDIF-buffers:");
+	post("All the SDIF-buffers:");
 	for (b = AllTheBuffers; b != NULL; b = Next(b)) {
-		object_post((t_object *)x, "  %s", b->s_myname->s_name);
+		post("  %s", b->s_myname->s_name);
 	}
 }
 
@@ -1018,14 +1018,14 @@ void remove_glisses(
 	float *cur_data, *prev_data;
 	int rows;
 	
-	object_post((t_object *)x, "current %f previous %f",current->header.time, previous->header.time);
+	post("current %f previous %f",current->header.time, previous->header.time);
 
 	// See who has least number of rows.
 	rows = current->matrices->header.rowCount;
 	if (rows > previous->matrices->header.rowCount) 
 		rows = previous->matrices->header.rowCount;
 	
-	object_post((t_object *)x, "rows %i ", rows);
+	post("rows %i ", rows);
 	// Step through frames, if index changes and amp is large, then we zero the amplitude.
 			cur_data = current->matrices->data;
 		prev_data = previous->matrices->data;
@@ -1037,7 +1037,7 @@ void remove_glisses(
 
 		if (*cur_data != *prev_data)
 		{ 
-			object_post((t_object *)x, "gliss removed");
+			post("gliss removed");
 		 	// Then we have a gliss. Zero Both Amplitudes.
 		 	*(cur_data+2) = 0.0;
 		 	*(prev_data+2) = 0.0;

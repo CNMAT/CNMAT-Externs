@@ -57,7 +57,7 @@ VERSION 0.4.1: Added min and max OSC Packet sizes as a heuristic protection agai
 #include "ext_obex.h"
 
 
-#include "../../../../OSC/dumpOSC/printOSCpacket.h"
+#include "../../../CNMAT-OSC/dumpOSC/printOSCpacket.h"
 
 /* structure definition of your object */
 
@@ -91,7 +91,7 @@ Symbol *ps_FullPacket;
 
 /* initialization routine */
 
-void main(fptr *f)
+int main(void)
 {
   version_post_copyright();
 	/* tell Max about your class. The cast to short is important for 68K */
@@ -111,6 +111,7 @@ void main(fptr *f)
 	ps_emptysymbol = gensym("");
 	ps_printit = gensym("printit");
 	ps_FullPacket = gensym("FullPacket");
+	return 0;
 }
 
 
@@ -169,7 +170,7 @@ void printit_int(printit *x, long n)
 	object_post((t_object *)x, "%s: received an int: %ld", x->my_name->s_name, n);
 }
 
-static void print_args(short argc, Atom *argv) {
+static void print_args(printit *x, short argc, Atom *argv) {
   int i;
 
   for (i = 0; i < argc; ++i) {
@@ -205,7 +206,7 @@ static void print_args(short argc, Atom *argv) {
     } else if (argv[i].a_type == A_GIMMEBACK) {
       object_post((t_object *)x, " A_GIMMEBACK (whatever that means---let Matt Wright know if you find out!)");
     } else {
-      object_post((t_object *)x, " ¥ unrecognized argument type %d!", argv[i].a_type);
+      object_error((t_object *)x, "unrecognized argument type %d!", argv[i].a_type);
     }
   }
 }
@@ -214,7 +215,7 @@ void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
 	post("%s: received MESSAGE \"%s\" (%p, s_thing %p) with %d argument(s):", 
 	     x->my_name->s_name, s->s_name, s, s->s_thing, argc);
 
-	print_args(argc, argv);
+	print_args(x, argc, argv);
 	
 	if (s == ps_FullPacket && argc == 2 && argv[0].a_type == A_LONG && argv[1].a_type == A_LONG) {
 	  int size = argv[0].a_w.w_long;
@@ -234,5 +235,5 @@ void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
 
 void printit_list(printit *x, Symbol *s, short argc, Atom *argv) {
 	object_post((t_object *)x, "%s: received LIST with %d argument(s):", x->my_name->s_name, argc);
-	print_args(argc, argv);
+	print_args(x, argc, argv);
 }

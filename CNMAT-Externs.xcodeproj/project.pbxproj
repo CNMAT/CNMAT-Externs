@@ -68,6 +68,77 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		5218BADA164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
+		5218BADB164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
+		5218BADC164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
+		5218BADD164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
+		5218BADE164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
+		5218BADF164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
+		5218BAE0164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
+		5218BAE1164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
+		5218BB33164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
+		5218BB34164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
+		5218BB35164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
+		5218BB36164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
+		5218BB37164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
+		5218BB38164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
+		5218BB39164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
+		5218BB3D164DD36A00A02F42 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2B164DD36A00A02F42 /* sdif-mem.c */; };
+		5218BB3E164DD36A00A02F42 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2B164DD36A00A02F42 /* sdif-mem.c */; };
+		5218BB3F164DD36A00A02F42 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2B164DD36A00A02F42 /* sdif-mem.c */; };
+		5218BB40164DD36A00A02F42 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2B164DD36A00A02F42 /* sdif-mem.c */; };
+		5218BB41164DD36A00A02F42 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2B164DD36A00A02F42 /* sdif-mem.c */; };
+		5218BB42164DD36A00A02F42 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2B164DD36A00A02F42 /* sdif-mem.c */; };
+		5218BB43164DD36A00A02F42 /* sdif-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2B164DD36A00A02F42 /* sdif-mem.c */; };
+		5218BB47164DD36A00A02F42 /* sdif-sinusoids.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */; };
+		5218BB48164DD36A00A02F42 /* sdif-sinusoids.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */; };
+		5218BB49164DD36A00A02F42 /* sdif-sinusoids.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */; };
+		5218BB4A164DD36A00A02F42 /* sdif-sinusoids.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */; };
+		5218BB4B164DD36A00A02F42 /* sdif-sinusoids.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */; };
+		5218BB4C164DD36A00A02F42 /* sdif-sinusoids.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */; };
+		5218BB4D164DD36A00A02F42 /* sdif-sinusoids.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */; };
+		5218BB51164DD36A00A02F42 /* sdif-types.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2D164DD36A00A02F42 /* sdif-types.c */; };
+		5218BB52164DD36A00A02F42 /* sdif-types.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2D164DD36A00A02F42 /* sdif-types.c */; };
+		5218BB53164DD36A00A02F42 /* sdif-types.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2D164DD36A00A02F42 /* sdif-types.c */; };
+		5218BB54164DD36A00A02F42 /* sdif-types.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2D164DD36A00A02F42 /* sdif-types.c */; };
+		5218BB55164DD36A00A02F42 /* sdif-types.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2D164DD36A00A02F42 /* sdif-types.c */; };
+		5218BB56164DD36A00A02F42 /* sdif-types.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2D164DD36A00A02F42 /* sdif-types.c */; };
+		5218BB57164DD36A00A02F42 /* sdif-types.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2D164DD36A00A02F42 /* sdif-types.c */; };
+		5218BB5B164DD36A00A02F42 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2E164DD36A00A02F42 /* sdif-util.c */; };
+		5218BB5C164DD36A00A02F42 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2E164DD36A00A02F42 /* sdif-util.c */; };
+		5218BB5D164DD36A00A02F42 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2E164DD36A00A02F42 /* sdif-util.c */; };
+		5218BB5E164DD36A00A02F42 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2E164DD36A00A02F42 /* sdif-util.c */; };
+		5218BB5F164DD36A00A02F42 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2E164DD36A00A02F42 /* sdif-util.c */; };
+		5218BB60164DD36A00A02F42 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2E164DD36A00A02F42 /* sdif-util.c */; };
+		5218BB61164DD36A00A02F42 /* sdif-util.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2E164DD36A00A02F42 /* sdif-util.c */; };
+		5218BB65164DD36A00A02F42 /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2F164DD36A00A02F42 /* sdif.c */; };
+		5218BB66164DD36A00A02F42 /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2F164DD36A00A02F42 /* sdif.c */; };
+		5218BB67164DD36A00A02F42 /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2F164DD36A00A02F42 /* sdif.c */; };
+		5218BB68164DD36A00A02F42 /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2F164DD36A00A02F42 /* sdif.c */; };
+		5218BB69164DD36A00A02F42 /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2F164DD36A00A02F42 /* sdif.c */; };
+		5218BB6A164DD36A00A02F42 /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2F164DD36A00A02F42 /* sdif.c */; };
+		5218BB6B164DD36A00A02F42 /* sdif.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2F164DD36A00A02F42 /* sdif.c */; };
+		5218BB6F164DD40600A02F42 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB6C164DD40600A02F42 /* open-sdif-file.c */; };
+		5218BB70164DD40600A02F42 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB6C164DD40600A02F42 /* open-sdif-file.c */; };
+		5218BB71164DD40600A02F42 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB6C164DD40600A02F42 /* open-sdif-file.c */; };
+		5218BB72164DD40600A02F42 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB6C164DD40600A02F42 /* open-sdif-file.c */; };
+		5218BB73164DD40600A02F42 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB6C164DD40600A02F42 /* open-sdif-file.c */; };
+		5218BB74164DD40600A02F42 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB6C164DD40600A02F42 /* open-sdif-file.c */; };
+		5218BB75164DD40600A02F42 /* open-sdif-file.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB6C164DD40600A02F42 /* open-sdif-file.c */; };
+		5218BB78164DD87F00A02F42 /* sdif-interp-implem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */; };
+		5218BB79164DD87F00A02F42 /* sdif-interp-implem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */; };
+		5218BB7A164DD87F00A02F42 /* sdif-interp-implem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */; };
+		5218BB7B164DD87F00A02F42 /* sdif-interp-implem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */; };
+		5218BB7C164DD87F00A02F42 /* sdif-interp-implem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */; };
+		5218BB7D164DD87F00A02F42 /* sdif-interp-implem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */; };
+		5218BB7E164DD87F00A02F42 /* sdif-interp-implem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */; };
+		5218BB7F164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		5218BB80164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		5218BB81164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		5218BB82164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		5218BB83164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		5218BB84164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		5218BB85164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
 		52E4476C15F1889300C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E4477415F188A000C91B67 /* accumulate~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4476315F1888200C91B67 /* accumulate~.c */; };
 		52E4479A15F1890800C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
@@ -82,10 +153,6 @@
 		52E447EB15F1894F00C91B67 /* bench~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4478615F188D100C91B67 /* bench~.c */; };
 		52E447EC15F1895600C91B67 /* bpf.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4478B15F188D100C91B67 /* bpf.c */; };
 		52E447ED15F1895D00C91B67 /* brightness~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4479115F188D100C91B67 /* brightness~.c */; };
-		52E4480515F18AB500C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
-		52E4480615F18AB500C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
-		52E4480715F18AB500C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
-		52E4480815F18AB500C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
 		52E4485815F1E99000C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E4486715F1E99B00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E4487615F1E9AD00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
@@ -95,8 +162,6 @@
 		52E448B215F1E9C100C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E448C115F1E9C600C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E448D015F1E9C900C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52E448ED15F1E9DD00C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
-		52E448EE15F1E9DD00C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
 		52E448F015F1E9DD00C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E448FB15F1E9EA00C91B67 /* cnmatrix~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4482A15F1E96900C91B67 /* cnmatrix~.c */; };
 		52E448FC15F1E9F000C91B67 /* decaying-sinusoids~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4482E15F1E96A00C91B67 /* decaying-sinusoids~.c */; };
@@ -140,8 +205,6 @@
 		52E44B6615F2889400C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E44B7015F288EA00C91B67 /* OSC-schedule.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4492D15F2879300C91B67 /* OSC-schedule.c */; };
 		52E44B7115F288EF00C91B67 /* pqops.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4492F15F2879300C91B67 /* pqops.c */; };
-		52E44B7215F2894200C91B67 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480015F18AB500C91B67 /* fft.c */; };
-		52E44B7315F2894600C91B67 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4480215F18AB500C91B67 /* fftnobitrev.c */; };
 		52E44B7415F28AAB00C91B67 /* OSC-timetag-ops.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4493415F2879300C91B67 /* OSC-timetag-ops.c */; };
 		52E44B7515F28AAB00C91B67 /* OSC-timetag.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4493615F2879300C91B67 /* OSC-timetag.c */; };
 		52E44B7615F28AB100C91B67 /* oscillators~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4493B15F2879300C91B67 /* oscillators~.c */; };
@@ -864,6 +927,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5218BAD5164DC6E300A02F42 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = "<group>"; };
+		5218BAD6164DC6E300A02F42 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		5218BAD7164DC6E300A02F42 /* fftnobitrev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fftnobitrev.c; sourceTree = "<group>"; };
+		5218BAD8164DC6E300A02F42 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftnobitrev.h; sourceTree = "<group>"; };
+		5218BAD9164DC6E300A02F42 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vDSP.h; sourceTree = "<group>"; };
+		5218BB2A164DD36A00A02F42 /* sdif-buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-buf.c"; path = "../CNMAT-SDIF/lib/sdif-buf.c"; sourceTree = "<group>"; };
+		5218BB2B164DD36A00A02F42 /* sdif-mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-mem.c"; path = "../CNMAT-SDIF/lib/sdif-mem.c"; sourceTree = "<group>"; };
+		5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-sinusoids.c"; path = "../CNMAT-SDIF/lib/sdif-sinusoids.c"; sourceTree = "<group>"; };
+		5218BB2D164DD36A00A02F42 /* sdif-types.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-types.c"; path = "../CNMAT-SDIF/lib/sdif-types.c"; sourceTree = "<group>"; };
+		5218BB2E164DD36A00A02F42 /* sdif-util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-util.c"; path = "../CNMAT-SDIF/lib/sdif-util.c"; sourceTree = "<group>"; };
+		5218BB2F164DD36A00A02F42 /* sdif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdif.c; path = "../CNMAT-SDIF/lib/sdif.c"; sourceTree = "<group>"; };
+		5218BB6C164DD40600A02F42 /* open-sdif-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "open-sdif-file.c"; path = "utility-library/search-path/open-sdif-file.c"; sourceTree = "<group>"; };
+		5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp-implem.c"; path = "../CNMAT-SDIF/lib/sdif-interp-implem.c"; sourceTree = "<group>"; };
+		5218BB77164DD87F00A02F42 /* sdif-interp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp.c"; path = "../CNMAT-SDIF/lib/sdif-interp.c"; sourceTree = "<group>"; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
 		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -897,11 +974,6 @@
 		52E447CB15F1891500C91B67 /* bench~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "bench~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E447D915F1891800C91B67 /* bpf.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bpf.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E447E715F1891E00C91B67 /* brightness~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "brightness~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		52E4480015F18AB500C91B67 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = "<group>"; };
-		52E4480115F18AB500C91B67 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
-		52E4480215F18AB500C91B67 /* fftnobitrev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fftnobitrev.c; sourceTree = "<group>"; };
-		52E4480315F18AB500C91B67 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftnobitrev.h; sourceTree = "<group>"; };
-		52E4480415F18AB500C91B67 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vDSP.h; sourceTree = "<group>"; };
 		52E4482A15F1E96900C91B67 /* cnmatrix~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "cnmatrix~.c"; sourceTree = "<group>"; };
 		52E4482B15F1E96900C91B67 /* cnmatrix~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "cnmatrix~.maxhelp"; sourceTree = "<group>"; };
 		52E4482C15F1E96A00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1788,12 +1860,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5218BAD4164DC6E300A02F42 /* Jehan-lib */ = {
+			isa = PBXGroup;
+			children = (
+				5218BAD5164DC6E300A02F42 /* fft.c */,
+				5218BAD6164DC6E300A02F42 /* fft.h */,
+				5218BAD7164DC6E300A02F42 /* fftnobitrev.c */,
+				5218BAD8164DC6E300A02F42 /* fftnobitrev.h */,
+				5218BAD9164DC6E300A02F42 /* vDSP.h */,
+			);
+			name = "Jehan-lib";
+			path = "src/Jehan-lib";
+			sourceTree = "<group>";
+		};
 		52DE949415F142570097B3E8 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */,
+				5218BB77164DD87F00A02F42 /* sdif-interp.c */,
+				5218BB6C164DD40600A02F42 /* open-sdif-file.c */,
+				5218BB2A164DD36A00A02F42 /* sdif-buf.c */,
+				5218BB2B164DD36A00A02F42 /* sdif-mem.c */,
+				5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */,
+				5218BB2D164DD36A00A02F42 /* sdif-types.c */,
+				5218BB2E164DD36A00A02F42 /* sdif-util.c */,
+				5218BB2F164DD36A00A02F42 /* sdif.c */,
+				5218BAD4164DC6E300A02F42 /* Jehan-lib */,
 				52FF193A163B7C8E00F94922 /* libfftw3f.a */,
 				52FF18FF163B5C9A00F94922 /* libgsl.a */,
-				52E447FF15F18AB500C91B67 /* Jehan-lib */,
 			);
 			name = lib;
 			sourceTree = "<group>";
@@ -1886,19 +1980,6 @@
 			);
 			name = "brightness~";
 			path = "src/brightness~";
-			sourceTree = "<group>";
-		};
-		52E447FF15F18AB500C91B67 /* Jehan-lib */ = {
-			isa = PBXGroup;
-			children = (
-				52E4480015F18AB500C91B67 /* fft.c */,
-				52E4480115F18AB500C91B67 /* fft.h */,
-				52E4480215F18AB500C91B67 /* fftnobitrev.c */,
-				52E4480315F18AB500C91B67 /* fftnobitrev.h */,
-				52E4480415F18AB500C91B67 /* vDSP.h */,
-			);
-			name = "Jehan-lib";
-			path = "../cnmat/trunk/max/mspexternals/analysis/Jehan-lib";
 			sourceTree = "<group>";
 		};
 		52E4482915F1E96900C91B67 /* cnmatrix~ */ = {
@@ -3796,9 +3877,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447E815F1893B00C91B67 /* analyzer~.c in Sources */,
-				52E4480515F18AB500C91B67 /* fft.c in Sources */,
-				52E4480715F18AB500C91B67 /* fftnobitrev.c in Sources */,
 				52E44C7F15F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BADA164DC6E300A02F42 /* fft.c in Sources */,
+				5218BADE164DC6E300A02F42 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3843,9 +3924,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E447ED15F1895D00C91B67 /* brightness~.c in Sources */,
-				52E4480615F18AB500C91B67 /* fft.c in Sources */,
-				52E4480815F18AB500C91B67 /* fftnobitrev.c in Sources */,
 				52E44C8515F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BADB164DC6E300A02F42 /* fft.c in Sources */,
+				5218BADF164DC6E300A02F42 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3935,10 +4016,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E448ED15F1E9DD00C91B67 /* fft.c in Sources */,
-				52E448EE15F1E9DD00C91B67 /* fftnobitrev.c in Sources */,
 				52E4490415F1EA2800C91B67 /* loudness~.c in Sources */,
 				52E44C8F15F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BADC164DC6E300A02F42 /* fft.c in Sources */,
+				5218BAE0164DC6E300A02F42 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3985,10 +4066,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B7215F2894200C91B67 /* fft.c in Sources */,
-				52E44B7315F2894600C91B67 /* fftnobitrev.c in Sources */,
 				52E44B7815F28ABE00C91B67 /* pitch~.c in Sources */,
 				52E44C9415F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BADD164DC6E300A02F42 /* fft.c in Sources */,
+				5218BAE1164DC6E300A02F42 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4063,6 +4144,15 @@
 			files = (
 				52E44BD915F2999A00C91B67 /* roughness.c in Sources */,
 				52E44C9C15F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BB33164DD36A00A02F42 /* sdif-buf.c in Sources */,
+				5218BB3D164DD36A00A02F42 /* sdif-mem.c in Sources */,
+				5218BB47164DD36A00A02F42 /* sdif-sinusoids.c in Sources */,
+				5218BB51164DD36A00A02F42 /* sdif-types.c in Sources */,
+				5218BB5B164DD36A00A02F42 /* sdif-util.c in Sources */,
+				5218BB65164DD36A00A02F42 /* sdif.c in Sources */,
+				5218BB6F164DD40600A02F42 /* open-sdif-file.c in Sources */,
+				5218BB78164DD87F00A02F42 /* sdif-interp-implem.c in Sources */,
+				5218BB7F164DD87F00A02F42 /* sdif-interp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4072,6 +4162,15 @@
 			files = (
 				52E44B8315F28AFD00C91B67 /* SDIF-buffer.c in Sources */,
 				52E44C9D15F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BB34164DD36A00A02F42 /* sdif-buf.c in Sources */,
+				5218BB3E164DD36A00A02F42 /* sdif-mem.c in Sources */,
+				5218BB48164DD36A00A02F42 /* sdif-sinusoids.c in Sources */,
+				5218BB52164DD36A00A02F42 /* sdif-types.c in Sources */,
+				5218BB5C164DD36A00A02F42 /* sdif-util.c in Sources */,
+				5218BB66164DD36A00A02F42 /* sdif.c in Sources */,
+				5218BB70164DD40600A02F42 /* open-sdif-file.c in Sources */,
+				5218BB79164DD87F00A02F42 /* sdif-interp-implem.c in Sources */,
+				5218BB80164DD87F00A02F42 /* sdif-interp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4081,6 +4180,15 @@
 			files = (
 				52E44B8715F28B2E00C91B67 /* SDIF-fileinfo.c in Sources */,
 				52E44C9E15F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BB35164DD36A00A02F42 /* sdif-buf.c in Sources */,
+				5218BB3F164DD36A00A02F42 /* sdif-mem.c in Sources */,
+				5218BB49164DD36A00A02F42 /* sdif-sinusoids.c in Sources */,
+				5218BB53164DD36A00A02F42 /* sdif-types.c in Sources */,
+				5218BB5D164DD36A00A02F42 /* sdif-util.c in Sources */,
+				5218BB67164DD36A00A02F42 /* sdif.c in Sources */,
+				5218BB71164DD40600A02F42 /* open-sdif-file.c in Sources */,
+				5218BB7A164DD87F00A02F42 /* sdif-interp-implem.c in Sources */,
+				5218BB81164DD87F00A02F42 /* sdif-interp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4090,6 +4198,15 @@
 			files = (
 				52E44B8815F28B3500C91B67 /* SDIF-info.c in Sources */,
 				52E44C9F15F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BB36164DD36A00A02F42 /* sdif-buf.c in Sources */,
+				5218BB40164DD36A00A02F42 /* sdif-mem.c in Sources */,
+				5218BB4A164DD36A00A02F42 /* sdif-sinusoids.c in Sources */,
+				5218BB54164DD36A00A02F42 /* sdif-types.c in Sources */,
+				5218BB5E164DD36A00A02F42 /* sdif-util.c in Sources */,
+				5218BB68164DD36A00A02F42 /* sdif.c in Sources */,
+				5218BB72164DD40600A02F42 /* open-sdif-file.c in Sources */,
+				5218BB7B164DD87F00A02F42 /* sdif-interp-implem.c in Sources */,
+				5218BB82164DD87F00A02F42 /* sdif-interp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4099,6 +4216,15 @@
 			files = (
 				52E44B8915F28B3F00C91B67 /* SDIF-listpoke.c in Sources */,
 				52E44CA015F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BB37164DD36A00A02F42 /* sdif-buf.c in Sources */,
+				5218BB41164DD36A00A02F42 /* sdif-mem.c in Sources */,
+				5218BB4B164DD36A00A02F42 /* sdif-sinusoids.c in Sources */,
+				5218BB55164DD36A00A02F42 /* sdif-types.c in Sources */,
+				5218BB5F164DD36A00A02F42 /* sdif-util.c in Sources */,
+				5218BB69164DD36A00A02F42 /* sdif.c in Sources */,
+				5218BB73164DD40600A02F42 /* open-sdif-file.c in Sources */,
+				5218BB7C164DD87F00A02F42 /* sdif-interp-implem.c in Sources */,
+				5218BB83164DD87F00A02F42 /* sdif-interp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4108,6 +4234,15 @@
 			files = (
 				52E44B8A15F28B4500C91B67 /* SDIF-ranges.c in Sources */,
 				52E44CA115F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BB38164DD36A00A02F42 /* sdif-buf.c in Sources */,
+				5218BB42164DD36A00A02F42 /* sdif-mem.c in Sources */,
+				5218BB4C164DD36A00A02F42 /* sdif-sinusoids.c in Sources */,
+				5218BB56164DD36A00A02F42 /* sdif-types.c in Sources */,
+				5218BB60164DD36A00A02F42 /* sdif-util.c in Sources */,
+				5218BB6A164DD36A00A02F42 /* sdif.c in Sources */,
+				5218BB74164DD40600A02F42 /* open-sdif-file.c in Sources */,
+				5218BB7D164DD87F00A02F42 /* sdif-interp-implem.c in Sources */,
+				5218BB84164DD87F00A02F42 /* sdif-interp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4117,6 +4252,15 @@
 			files = (
 				52E44B8B15F28B4E00C91B67 /* SDIF-tuples.c in Sources */,
 				52E44CA215F4835400C91B67 /* commonsyms.c in Sources */,
+				5218BB39164DD36A00A02F42 /* sdif-buf.c in Sources */,
+				5218BB43164DD36A00A02F42 /* sdif-mem.c in Sources */,
+				5218BB4D164DD36A00A02F42 /* sdif-sinusoids.c in Sources */,
+				5218BB57164DD36A00A02F42 /* sdif-types.c in Sources */,
+				5218BB61164DD36A00A02F42 /* sdif-util.c in Sources */,
+				5218BB6B164DD36A00A02F42 /* sdif.c in Sources */,
+				5218BB75164DD40600A02F42 /* open-sdif-file.c in Sources */,
+				5218BB7E164DD87F00A02F42 /* sdif-interp-implem.c in Sources */,
+				5218BB85164DD87F00A02F42 /* sdif-interp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4532,7 +4676,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4552,7 +4696,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4572,7 +4716,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4592,7 +4736,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4612,7 +4756,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4632,7 +4776,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4652,7 +4796,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4672,7 +4816,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4692,7 +4836,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4712,7 +4856,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4733,7 +4877,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -4754,7 +4898,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5141,7 +5285,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5162,7 +5306,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5342,7 +5486,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5362,7 +5506,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5502,7 +5646,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5522,7 +5666,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -6364,9 +6508,11 @@
 					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
-					"\"$(SRCROOT)/../gsl/gsl\"",
+					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
 					"\"$(SRCROOT)/../libo\"",
+					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
+					"\"$(SRCROOT)/utility-library/search-path\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -6416,9 +6562,11 @@
 					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
-					"\"$(SRCROOT)/../gsl/gsl\"",
+					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
 					"\"$(SRCROOT)/../libo\"",
+					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
+					"\"$(SRCROOT)/utility-library/search-path\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -6505,7 +6653,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -6525,7 +6673,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
-				PRELINK_LIBS = "\"$(SRCROOT)/lib/gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
