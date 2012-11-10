@@ -91,7 +91,9 @@ t_class *sinusoids_class;
 
 float Sinetab[STABSZ];
 
+#if !defined(__llvm__) && !defined(__clang__)
 typedef  unsigned long ulong;
+#endif
 
 typedef  struct oscdesc
 {
