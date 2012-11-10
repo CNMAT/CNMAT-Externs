@@ -56,7 +56,7 @@ To-Do:  use opendialog to present a dialog box to the user
 */
 
 
-#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
+#include "version.h" // make sure not to get ../SDIF-buffer/version.h
 
 #include "ext.h"
 #include "ext_obex.h"
@@ -117,7 +117,7 @@ void SDIFfileinfo_output(t_sdif_fileinfo *x);
 void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf, SDIF_FrameHeader *fhp);
 
 
-void *sdif_fileinfo_class;
+t_class *sdif_fileinfo_class;
 
 
 /*==========================================================================*/
@@ -131,16 +131,16 @@ int main(void){
 		ouchstring(NAME ": Couldn't initialize SDIF library! %s",
 		           SDIF_GetErrorString(r));
 	
-	class_register(CLASS_BOX, _class);
+	class_register(CLASS_BOX, sdif_fileinfo_class);
 	return 0;
 }
 
-	_class = class_new("SDIF-fileinfo", (method) sdif_fileinfo_new, 0, 
+	sdif_fileinfo_class = class_new("SDIF-fileinfo", (method) sdif_fileinfo_new, 0,
 		  (short)sizeof(t_sdif_fileinfo), 0L, A_GIMME, 0);
-	class_addmethod(_class, (method)sdif_fileinfo_bang, "bang", 0);
-	class_addmethod(_class, (method)sdif_fileinfo_clear, "clear", 0);
-	class_addmethod(_class, (method)version, "version", 0);
-	class_addmethod(_class, (method)sdif_fileinfo_scan, "scan", A_SYM, 0);
+	class_addmethod(sdif_fileinfo_class, (method)sdif_fileinfo_bang, "bang", 0);
+	class_addmethod(sdif_fileinfo_class, (method)sdif_fileinfo_clear, "clear", 0);
+	class_addmethod(sdif_fileinfo_class, (method)version, "version", 0);
+	class_addmethod(sdif_fileinfo_class, (method)sdif_fileinfo_scan, "scan", A_SYM, 0);
 
 	
 	ps_file = gensym("/file");

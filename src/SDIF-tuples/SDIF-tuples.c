@@ -68,7 +68,7 @@
 
 
 // make sure not to get ../SDIF-buffer/version.h
-#include "./version.h" 
+#include "version.h" 
 
 #define MAX_NUM_COLUMNS 100
 #define BIGGEST_OUTPUT_LIST 3000

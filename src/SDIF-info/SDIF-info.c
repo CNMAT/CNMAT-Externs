@@ -51,7 +51,7 @@ VERSION 0.0.4: Force Package Info Generation
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
+#include "version.h" // make sure not to get ../SDIF-buffer/version.h
 
 #include <string.h>
 #include <float.h>
@@ -106,7 +106,7 @@ t_class *SDIFinfo_class;
 Symbol *ps_name, *ps_filename, *ps_streamID, *ps_frameType, *ps_minTime, *ps_maxTime, 
 	   *ps_numFrames, *ps_SDIF_buffer_lookup, *ps_noFileName;
 
-void main(fptr *fp)
+int main(void)
 {
   SDIFresult r;
   
@@ -155,7 +155,8 @@ void main(fptr *fp)
 	ps_noFileName = gensym("---no-filename---");
 	
 	/* list object in the new object list */
-	finder_addclass("Data","SDIF-info");		
+	finder_addclass("Data","SDIF-info");
+	return 0;
 }
 
 void *SDIFinfo_new(Symbol *dummy, short argc, Atom *argv) {

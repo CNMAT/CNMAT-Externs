@@ -86,7 +86,9 @@ float Sinetab[STABSZ];
 
 static Symbol *ps_bwe;
 
+#if !defined(__llvm__) && !defined(__clang__)
 typedef  unsigned long ulong;
+#endif
 
 typedef  struct oscdesc
 {

@@ -51,7 +51,7 @@ VERSION 0.3: Added "tellmeeverything"; wrote a real help patch
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#include "./version.h" // make sure not to get ../SDIF-buffer/version.h
+#include "version.h" // make sure not to get ../SDIF-buffer/version.h
 
 
 #define MAX_NUM_COLUMNS 100
