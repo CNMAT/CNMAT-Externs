@@ -111,6 +111,8 @@ int main(void)
 	ps_emptysymbol = gensym("");
 	ps_printit = gensym("printit");
 	ps_FullPacket = gensym("FullPacket");
+
+	class_register(CLASS_BOX, printit_class);
 	return 0;
 }
 
@@ -122,7 +124,10 @@ void *printit_new(Symbol *s)
 {
 	printit *x;	
 	
-	x = newobject(printit_class);		// get memory for a new object & initialize
+	x = object_alloc(printit_class);		// get memory for a new object & initialize
+	if(!x){
+		return NULL;
+	}
 	if (s == ps_emptysymbol) {
 		x->my_name = ps_printit;
 	} else {

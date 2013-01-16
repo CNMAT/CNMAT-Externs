@@ -2549,9 +2549,7 @@ int main(void){
 
  	version_post_copyright(); 
 	
- 	
-	class_register(CLASS_BOX, bpf_class);
-	return 0;
+       	return 0;
 } 
 
 void *bpf_new(t_symbol *s, long argc, t_atom *argv){ 

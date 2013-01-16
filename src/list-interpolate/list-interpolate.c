@@ -314,7 +314,7 @@ void ffree(fobj *x) {
 
 int main(void)		/* called once at launch to define this class */
 {		
-	setup((t_messlist **) &li_class, (method) fnew, (method) ffree, (int) sizeof(fobj), 0L, A_GIMME, 0 );
+	li_class = class_new("list-interpolate", (method) fnew, (method) ffree, (int) sizeof(fobj), 0L, A_GIMME, 0 );
 
 
 	class_addmethod(li_class, (method)setsteps, "steps", A_DEFLONG,0);
@@ -324,8 +324,9 @@ int main(void)		/* called once at launch to define this class */
 	class_addmethod(li_class,  (method) bangdump  , "bang", 0);
 	class_addmethod(li_class,  (method) floatdump  , "float", A_FLOAT, 0);
 	
-	post(NAME " object version by " AUTHORS ".");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	//post(NAME " object version by " AUTHORS ".");
+	//post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	version_post_copyright();
     class_register(CLASS_BOX, li_class);
     return 0;
 }

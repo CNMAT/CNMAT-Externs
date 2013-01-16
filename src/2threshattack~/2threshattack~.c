@@ -59,8 +59,8 @@ typedef struct _tta
     t_pxobject x_obj;	//  header
     void *event_outlet;
     
-    float low;
-    float high;
+    double low;
+    double high;
     int in_attack;
 } t_tta;    
 

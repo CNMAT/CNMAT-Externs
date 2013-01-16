@@ -1826,12 +1826,10 @@ int main(void){
 
 	version_post_copyright();
 
-	error("rbfi: the output of the dump message has changed, and will change again soon!");
-	error("rbfi: If you need the old behavior, set the \"compatmode\" attribute to 1.");
-	error("rbfi: In the next version of rbfi (early 2011), all output will be done with OSC bundles");
+	//error("rbfi: the output of the dump message has changed, and will change again soon!");
+	//error("rbfi: If you need the old behavior, set the \"compatmode\" attribute to 1.");
+	//error("rbfi: In the next version of rbfi (early 2011), all output will be done with OSC bundles");
 	
-	
-	class_register(CLASS_BOX, rbfi_class);
 	return 0;
 }
 

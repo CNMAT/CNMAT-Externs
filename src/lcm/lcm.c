@@ -90,9 +90,10 @@ int main(void)
 {
 	version_post_copyright();
 		
-	lcm_class = class_new("lcm (least common multiple)", (method)lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
+	lcm_class = class_new("lcm", (method)lcm_new,0L, (short)sizeof(LCM), 0L, A_GIMME, 0);
 	class_addmethod(lcm_class, (method)lcm_bang, "bang", 0);
 	class_addmethod(lcm_class, (method)lcm_int, "int", A_LONG, 0);
+	/*
 	addinx((method)lcm_in1,1);
 	addinx((method)lcm_in2,2);
 	addinx((method)lcm_in3,3);
@@ -102,12 +103,21 @@ int main(void)
 	addinx((method)lcm_in7,7);
 	addinx((method)lcm_in8,8);
 	addinx((method)lcm_in9,9);
+	*/
+	class_addmethod(lcm_class, (method)lcm_in1, "in1", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in2, "in2", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in3, "in3", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in4, "in4", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in5, "in5", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in6, "in6", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in7, "in7", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in8, "in8", A_LONG, 0);
+	class_addmethod(lcm_class, (method)lcm_in9, "in9", A_LONG, 0);
 	class_addmethod(lcm_class, (method)lcm_list,"list",A_GIMME,0);
 	
 	class_addmethod(lcm_class, (method)lcm_tellmeeverything,"tellmeeverything",0);
 	class_addmethod(lcm_class, (method)version,"version",0);
 	
-	version_post_copyright();
     class_register(CLASS_BOX, lcm_class);
     return 0;
 }
@@ -197,7 +207,10 @@ void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 void *lcm_new(Symbol *s, short ac, Atom *av)
 {
 	LCM *x;
-	x = (LCM *)newobject(lcm_class);
+	x = (LCM *)object_alloc(lcm_class);
+	if(!x){
+		return NULL;
+	}
 	
 	x->l_args[0] = 1;
 

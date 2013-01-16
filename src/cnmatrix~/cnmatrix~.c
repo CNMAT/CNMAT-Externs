@@ -88,7 +88,7 @@ int main(void){
 	ps_smooth  = gensym("smooth");
 	ps_frame  = gensym("frame");
 
-	class_new("cnmatrix~", (method)matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
+	matrix_class = class_new("cnmatrix~", (method)matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
 		
 	class_addmethod(matrix_class, (method)matrix_dsp, "dsp", A_CANT, 0);
 	class_addmethod(matrix_class, (method)matrix_fast, "fast", A_GIMME, 0);
@@ -469,11 +469,11 @@ void matrix_setgains(t_matrix *x, long in, long out, float gain){
 }
 
 void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
-
 	t_int i, k;
 	t_int vs = sys_getblksize(); // Size of signal vector selected in MSP
 	t_matrix *x = (t_matrix *)object_alloc(matrix_class);
 	if(!x){
+		post("bailing");
 		return NULL;
 	}
     
