@@ -938,6 +938,8 @@
 		5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp-implem.c"; path = "../CNMAT-SDIF/lib/sdif-interp-implem.c"; sourceTree = "<group>"; };
 		5218BB77164DD87F00A02F42 /* sdif-interp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp.c"; path = "../CNMAT-SDIF/lib/sdif-interp.c"; sourceTree = "<group>"; };
 		524981BF16A620360086F4BD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = ../include/version.h; sourceTree = "<group>"; };
+		524981C016A65BCD0086F4BD /* harmonics~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "harmonics~.maxhelp"; sourceTree = "<group>"; };
+		524981C216A65BEE0086F4BD /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxhelp; sourceTree = "<group>"; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
 		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -987,7 +989,6 @@
 		52E4483B15F1E96C00C91B67 /* gridpanel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = gridpanel.maxhelp; sourceTree = "<group>"; };
 		52E4483C15F1E96C00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4483E15F1E96C00C91B67 /* harmonics~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "harmonics~.c"; sourceTree = "<group>"; };
-		52E4483F15F1E96C00C91B67 /* harmonics~.maxpat */ = {isa = PBXFileReference; lastKnownFileType = text; path = "harmonics~.maxpat"; sourceTree = "<group>"; };
 		52E4484015F1E96C00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4484115F1E96C00C91B67 /* noise-table.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "noise-table.c"; sourceTree = "<group>"; };
 		52E4484215F1E96C00C91B67 /* noise-table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "noise-table.h"; sourceTree = "<group>"; };
@@ -1107,7 +1108,6 @@
 		52E449A015F2879600C91B67 /* sphY.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sphY.c; sourceTree = "<group>"; };
 		52E449A215F2879700C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449A315F2879700C91B67 /* thread.fork.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = thread.fork.c; sourceTree = "<group>"; };
-		52E449A415F2879700C91B67 /* thread.fork.maxpat */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxpat; sourceTree = "<group>"; };
 		52E449A615F2879700C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449A715F2879700C91B67 /* thread.join.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = thread.join.c; sourceTree = "<group>"; };
 		52E449A815F2879700C91B67 /* thread.join.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.join.maxhelp; sourceTree = "<group>"; };
@@ -2028,8 +2028,8 @@
 		52E4483D15F1E96C00C91B67 /* harmonics~ */ = {
 			isa = PBXGroup;
 			children = (
+				524981C016A65BCD0086F4BD /* harmonics~.maxhelp */,
 				52E4483E15F1E96C00C91B67 /* harmonics~.c */,
-				52E4483F15F1E96C00C91B67 /* harmonics~.maxpat */,
 				52E4484015F1E96C00C91B67 /* Info.plist */,
 				52E4484115F1E96C00C91B67 /* noise-table.c */,
 				52E4484215F1E96C00C91B67 /* noise-table.h */,
@@ -2393,9 +2393,9 @@
 		52E449A115F2879600C91B67 /* thread.fork */ = {
 			isa = PBXGroup;
 			children = (
+				524981C216A65BEE0086F4BD /* thread.fork.maxhelp */,
 				52E449A215F2879700C91B67 /* Info.plist */,
 				52E449A315F2879700C91B67 /* thread.fork.c */,
-				52E449A415F2879700C91B67 /* thread.fork.maxpat */,
 			);
 			name = thread.fork;
 			path = src/thread.fork;
