@@ -128,7 +128,10 @@ void *thread_fork_new(Symbol* s, short argc, Atom *argv)
 {
     thread_fork *x;
     
-    x = newobject(thread_fork_class);
+    x = object_alloc(thread_fork_class);
+    if(!x){
+	    return NULL;
+    }
     x->out_p[0] = outlet_new(x, NULL);
 
     pthread_create(&(x->t), NULL, thread_fork_run, x);

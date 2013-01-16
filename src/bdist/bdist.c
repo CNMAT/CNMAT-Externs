@@ -459,8 +459,8 @@ void bdist_assist(t_bdist *x, void *b, long io, long index, char *s){
 }
 
 double bdist_scale(double f, double min_in, double max_in, double min_out, double max_out){	
-	float m = (max_out - min_out) / (max_in - min_in);
-	float b = (min_out - (m * min_in));
+	double m = (max_out - min_out) / (max_in - min_in);
+	double b = (min_out - (m * min_in));
 	return m * f + b;
 }
 
@@ -529,7 +529,7 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 		//      | JBOX_TEXTFIELD
 		;
 
-	if(x = (t_bdist *)object_alloc(bdist_class)){
+	if((x = (t_bdist *)object_alloc(bdist_class))){
 		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->ob.b_firstin = (void *)x; 
 
@@ -650,7 +650,7 @@ int main(void){
 
 	version_post_copyright();
 
-    return 0;
+	return 0;
 }
 
 t_max_err bdist_notify(t_bdist *x, t_symbol *s, t_symbol *msg, void *sender, void *data){

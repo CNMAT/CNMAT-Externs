@@ -58,6 +58,7 @@
 
 #include "ext.h"
 #include "ext_obex.h"
+#include "version.h"
 
 #include "z_dsp.h"
 #include "fft.h"
@@ -76,8 +77,8 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.3.2"
-#define RES_ID	7083
+//#define VERSION "1.3.2"
+//#define RES_ID	7083
 #define t_floatarg double
 
 //#define TWOPI 6.28318530717952646f
@@ -285,12 +286,12 @@ long log2max(long n);
 
 int main(void){
 
-    post("Pitch~ object version " VERSION " by Tristan Jehan and Michael Zbyszynski");
-    post("copyright � 2001 Massachussets Institute of Technology");
-	post("copyright � 2007-8 UC Regents");
-    post("Based on Miller Puckette's fiddle~");
-    post("copyright � 1997-1999 Music Department UCSD");
-    post(" ");
+	//post("Pitch~ object version " VERSION " by Tristan Jehan and Michael Zbyszynski");
+	//post("copyright � 2001 Massachussets Institute of Technology");
+	//post("copyright � 2007-8 UC Regents");
+	//post("Based on Miller Puckette's fiddle~");
+	//post("copyright � 1997-1999 Music Department UCSD");
+	//post(" ");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
@@ -300,7 +301,7 @@ int main(void){
 	ps_blackman74 = gensym("blackman74");
 	ps_blackman92 = gensym("blackman92");
 
-	setup( (Messlist **)&pitch_class, (method)pitch_new, (method)pitch_free, (short)sizeof(t_pitch), 0L, A_GIMME, 0);
+	pitch_class = class_new("pitch~", (method)pitch_new, (method)pitch_free, (short)sizeof(t_pitch), 0L, A_GIMME, 0);
 		
 	class_addmethod(pitch_class, (method)pitch_dsp, "dsp", A_CANT, 0);
 	class_addmethod(pitch_class, (method)pitch_assist, "assist", A_CANT, 0);
@@ -314,9 +315,9 @@ int main(void){
 	class_addmethod(pitch_class, (method)pitch_int, "int", A_LONG, 0);
 	class_dspinit(pitch_class);
 
-	rescopy('STR#', RES_ID);
-
 	class_register(CLASS_BOX, pitch_class);
+
+	version_post_copyright();
 	return 0;
 }
 

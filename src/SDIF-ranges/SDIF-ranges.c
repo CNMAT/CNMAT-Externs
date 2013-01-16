@@ -119,7 +119,7 @@ void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym);
 void SDIFranges_GetColumnRange(SDIFranges *x, long column, Symbol *matrixTypeSym);
 
 
-void main(fptr *fp)
+int main(void)
 {
   SDIFresult r;
   
@@ -143,21 +143,21 @@ void main(fptr *fp)
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-        return;
+        return 0;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 	
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
@@ -167,9 +167,9 @@ void main(fptr *fp)
 	ps_column_range = gensym("/column-range");
 
 
-	/* list object in the new object list */
-	finder_addclass("Data", NAME);
-	
+	class_register(CLASS_BOX, SDIFranges_class);
+
+	return 0;	
 }
 
 void *SDIFranges_new(Symbol *dummy, short argc, Atom *argv) {
@@ -178,7 +178,10 @@ void *SDIFranges_new(Symbol *dummy, short argc, Atom *argv) {
 	
 	// post("SDIFranges_new: %s, %ld args", s->s_name, (long) argc);
 	
-	x = newobject(SDIFranges_class);
+	x = object_alloc(SDIFranges_class);
+	if(!x){
+		return NULL;
+	}
 	x->t_buffer = 0;
 	x->t_out = listout(x);
 	

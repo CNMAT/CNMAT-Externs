@@ -119,7 +119,10 @@ void *thread_join_new(Symbol* s, short argc, Atom *argv)
 {
     thread_join *x;
     
-    x = newobject(thread_join_class);
+    x = object_alloc(thread_join_class);
+    if(!x){
+	    return NULL;
+    }
     x->out_p[0] = outlet_new(x, NULL);
 
     return (x);

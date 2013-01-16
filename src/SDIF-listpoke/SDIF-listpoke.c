@@ -142,7 +142,7 @@ static void my_freebytes(void *bytes, int size) {
 }
 
 
-void main() {
+int main(void) {
 	SDIFresult r;
 	
 	
@@ -204,6 +204,10 @@ void main() {
 	ps_numcolumns = gensym("numcolumns");
 	ps_interp = gensym("interp");
 	ps_max_rows = gensym("max_rows");
+
+	class_register(CLASS_BOX, SDIFlistpoke_class);
+
+	return 0;
 	
 }
 
@@ -212,7 +216,10 @@ void *SDIFlistpoke_new(Symbol *dummy, short argc, Atom *argv) {
 	
 	// post("SDIFlistpoke_new: %s, %ld args", s->s_name, (long) argc);
 	
-	x = newobject(SDIFlistpoke_class);
+	x = object_alloc(SDIFlistpoke_class);
+	if(!x){
+		return NULL;
+	}
 	x->t_errorreporting = 0;
 	x->t_buffer = 0;
 	// x->t_out = bangout(x);

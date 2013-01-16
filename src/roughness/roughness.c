@@ -137,9 +137,8 @@ int main(void){
 		           NAME,
 		           SDIF_GetErrorString(r));
     
-	class_register(CLASS_BOX, rho_class);
-	return 0;
-}
+		return 0;
+	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
@@ -160,6 +159,8 @@ int main(void){
 	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
+
+	class_register(CLASS_BOX, rho_class);
 	
 	return 0;
 }

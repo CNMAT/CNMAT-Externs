@@ -581,10 +581,6 @@
 		52FF18FC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FD163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
-		52FF1903163B5C9B00F94922 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18FF163B5C9A00F94922 /* libgsl.a */; };
-		52FF1906163B5C9B00F94922 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18FF163B5C9A00F94922 /* libgsl.a */; };
-		52FF191B163B5C9E00F94922 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18FF163B5C9A00F94922 /* libgsl.a */; };
-		52FF193B163B7C8E00F94922 /* libfftw3f.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF193A163B7C8E00F94922 /* libfftw3f.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -941,6 +937,7 @@
 		5218BB6C164DD40600A02F42 /* open-sdif-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "open-sdif-file.c"; path = "utility-library/search-path/open-sdif-file.c"; sourceTree = "<group>"; };
 		5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp-implem.c"; path = "../CNMAT-SDIF/lib/sdif-interp-implem.c"; sourceTree = "<group>"; };
 		5218BB77164DD87F00A02F42 /* sdif-interp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp.c"; path = "../CNMAT-SDIF/lib/sdif-interp.c"; sourceTree = "<group>"; };
+		524981BF16A620360086F4BD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = ../include/version.h; sourceTree = "<group>"; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
 		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1158,7 +1155,6 @@
 		52E44B5115F2888700C91B67 /* vsnapshot~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsnapshot~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6015F2888E00C91B67 /* waveguide~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "waveguide~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6F15F2889400C91B67 /* xydisplay.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xydisplay.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		52E44BDE15F344F500C91B67 /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = version.h; path = include/version.h; sourceTree = "<group>"; };
 		52E44BE915F482E800C91B67 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../max6-sdk/c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
 		52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../max6-sdk/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		52E44C4B15F4831B00C91B67 /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "../max6-sdk/c74support/jit-includes/JitterAPI.framework"; sourceTree = "<group>"; };
@@ -1176,8 +1172,6 @@
 		52FF186B163B5C3800F94922 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = ../../../../../System/Library/Frameworks/Accelerate.framework; sourceTree = "<group>"; };
 		52FF189D163B5C4B00F94922 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework; sourceTree = "<group>"; };
 		52FF18CE163B5C5B00F94922 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
-		52FF18FF163B5C9A00F94922 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../gsl/.libs/libgsl.a; sourceTree = "<group>"; };
-		52FF193A163B7C8E00F94922 /* libfftw3f.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfftw3f.a; path = ../fftw/.libs/libfftw3f.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1220,7 +1214,6 @@
 				52FF186F163B5C3800F94922 /* Accelerate.framework in Frameworks */,
 				52FF18A1163B5C4B00F94922 /* Carbon.framework in Frameworks */,
 				52FF18D2163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
-				52FF1903163B5C9B00F94922 /* libgsl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1333,7 +1326,6 @@
 				52FF1878163B5C3800F94922 /* Accelerate.framework in Frameworks */,
 				52FF18AA163B5C4B00F94922 /* Carbon.framework in Frameworks */,
 				52FF18DB163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
-				52FF193B163B7C8E00F94922 /* libfftw3f.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1544,7 +1536,6 @@
 				52FF1887163B5C3900F94922 /* Accelerate.framework in Frameworks */,
 				52FF18B9163B5C4B00F94922 /* Carbon.framework in Frameworks */,
 				52FF18EA163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
-				52FF191B163B5C9E00F94922 /* libgsl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1853,7 +1844,6 @@
 				52FF1872163B5C3800F94922 /* Accelerate.framework in Frameworks */,
 				52FF18A4163B5C4B00F94922 /* Carbon.framework in Frameworks */,
 				52FF18D5163B5C5B00F94922 /* CoreServices.framework in Frameworks */,
-				52FF1906163B5C9B00F94922 /* libgsl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1886,8 +1876,6 @@
 				5218BB2E164DD36A00A02F42 /* sdif-util.c */,
 				5218BB2F164DD36A00A02F42 /* sdif.c */,
 				5218BAD4164DC6E300A02F42 /* Jehan-lib */,
-				52FF193A163B7C8E00F94922 /* libfftw3f.a */,
-				52FF18FF163B5C9A00F94922 /* libgsl.a */,
 			);
 			name = lib;
 			sourceTree = "<group>";
@@ -2483,7 +2471,7 @@
 			isa = PBXGroup;
 			children = (
 				52E44C7C15F4835400C91B67 /* commonsyms.c */,
-				52E44BDE15F344F500C91B67 /* version.h */,
+				524981BF16A620360086F4BD /* version.h */,
 				52F10AC715F071DE008FC371 /* 2threshattack~ */,
 				52E4476215F1888200C91B67 /* accumulate~ */,
 				52E4477515F188D100C91B67 /* analyzer~ */,
@@ -4708,6 +4696,7 @@
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
@@ -4716,6 +4705,10 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lmx",
+					"$(SOURCE_ROOT)/../gsl/.libs/libgsl.a",
+				);
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
@@ -4728,6 +4721,7 @@
 				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GENERATE_MASTER_OBJECT_FILE = YES;
@@ -4736,6 +4730,10 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lmx",
+					"$(SOURCE_ROOT)/../gsl/.libs/libgsl.a",
+				);
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
@@ -6513,6 +6511,7 @@
 					"\"$(SRCROOT)/../libo\"",
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
 					"\"$(SRCROOT)/utility-library/search-path\"",
+					"\"$(SRCROOT)/../include\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -6567,6 +6566,7 @@
 					"\"$(SRCROOT)/../libo\"",
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
 					"\"$(SRCROOT)/utility-library/search-path\"",
+					"\"$(SRCROOT)/../include\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (

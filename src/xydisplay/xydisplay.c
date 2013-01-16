@@ -1092,7 +1092,6 @@ int main(void){
 
 	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 200. 200."); 
 
-	class_register(CLASS_BOX, c);
 	xy_class = c;
 
 	l_points = gensym("l_points");

@@ -353,7 +353,10 @@ void *sOSC_new(long arg) {
   sOSC *x;
   char *buf;
   
-  x = (sOSC *) newobject(sOSC_class);
+  x = (sOSC *) object_alloc(sOSC_class);
+  if(!x){
+	  return NULL;
+  }
   x->m_proxy = proxy_new(x,1L,&x->m_inletNumber);
   
   /* Create the outlets in right to left order */

@@ -93,9 +93,14 @@ typedef struct {
     
 } waveguide;
 
+t_class *waveguide_class;
+
 waveguide* waveguide_new(int size, float fc, float nl_pos, float nl_neg)
 {
 	waveguide *w = malloc(sizeof(waveguide));
+	if(!w){
+		return NULL;
+	}
     
 	w->size = size;
 	w->buffer[0] = calloc(size, sizeof(float));
@@ -887,7 +892,10 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
     
     int i;
     
-    x = (waveguide_tilde_state*)newobject(waveguide_tilde_class);
+    x = (waveguide_tilde_state*)object_alloc(waveguide_tilde_class);
+    if(!x){
+	    return NULL;
+    }
     
     // read arguments
     // initialization args

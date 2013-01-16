@@ -236,7 +236,7 @@ int main(void){
 	ps_highpass = gensym("highpass");
 	ps_lowpass = gensym("lowpass");
 	
-	setup( (t_messlist **)&peqbank_class, (method)peqbank_new, (method)peqbank_free,
+	peqbank_class = class_new("peqbank~", (method)peqbank_new, (method)peqbank_free,
 			(short)sizeof(t_peqbank), 0L, A_GIMME, 0);
 
 	{
@@ -272,6 +272,8 @@ int main(void){
 	class_addmethod(peqbank_class, (method)peqbank_cheby, "lowpass", A_GIMME);
 	
 	class_dspinit(peqbank_class);
+
+	class_register(CLASS_BOX, peqbank_class);
 	
 	return 0;
 

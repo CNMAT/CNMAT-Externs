@@ -82,7 +82,7 @@ int main(void){
 	class_addmethod(vsht_class, (method)vsht_dsp, "dsp", A_CANT, 0);
 	class_addmethod(vsht_class, (method)vsht_assist, "assist", A_CANT, 0);
 	class_addmethod(vsht_class, (method)vsht_bang, "bang", 0);
-	addinx((method)vsht_in1, 1);
+	class_addmethod(vsht_class, (method)vsht_in1, "in1", A_LONG, 0);
 	class_addmethod(vsht_class, (method)vsht_start, "start", 0);
 	class_addmethod(vsht_class, (method)vsht_stop, "stop", 0);
 	class_addmethod(vsht_class, (method)vsht_int, "int", A_LONG, 0);
