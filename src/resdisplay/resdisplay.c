@@ -569,8 +569,6 @@ int main(void){
 
 	version_post_copyright();
 
-	
-	class_register(CLASS_BOX, rd_class);
 	return 0;
 }
 

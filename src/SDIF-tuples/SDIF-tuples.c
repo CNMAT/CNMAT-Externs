@@ -221,7 +221,7 @@ void PrintFrameHeader(SDIFtuples *x, SDIF_FrameHeader *fh);
 void PrintMatrixHeader(SDIFtuples *x, SDIF_MatrixHeader *mh);
 
 
-int main(int dummy, char **dummy2) {
+int main(void) {
 	SDIFresult r;
   
 	version_post_copyright();
@@ -277,9 +277,6 @@ int main(int dummy, char **dummy2) {
 		return 0;
 	}
 
-	/* list object in the new object list */
-	finder_addclass("Data", NAME);
-	
 	ps_SDIFbuffer = gensym("SDIF-buffer");
 	ps_SDIF_buffer_lookup = gensym("##SDIF-buffer-lookup");
 	ps_emptysymbol  = gensym("");
@@ -292,6 +289,8 @@ int main(int dummy, char **dummy2) {
 	ps_max_rows = gensym("max_rows");
 	
 	class_dspinit(SDIFtuples_class);
+
+	class_register(CLASS_BOX, SDIFtuples_class);
 	return 1;
 }
 
@@ -301,7 +300,10 @@ void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
 	
 	// post("SDIFtuples_new: %s, %ld args", s->s_name, (long) argc);
 	
-	x = newobject(SDIFtuples_class);
+	x = object_alloc(SDIFtuples_class);
+	if(!x){
+		return NULL;
+	}
 	dsp_setup((t_pxobject *)x,1); // One signal input
 	
 	x->t_errorreporting = FALSE;

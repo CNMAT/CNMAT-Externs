@@ -57,6 +57,7 @@
 
 #include "ext.h"
 #include "ext_obex.h"
+#include "version.h"
 
 #include "z_dsp.h"
 #include "fft.h"
@@ -156,10 +157,10 @@ long log2max(long n);
 
 int main(void){
 
-    post("Brightness~ object version " VERSION " by Tristan Jehan  (Media Laboratory), Adrian Freed, and Michael Zbyszynski");
-    post("copyright � 2001 Massachusetts Institute of Technology");
-	post("copyright � 2008 UC Regents");
-    post("");
+	//post("Brightness~ object version " VERSION " by Tristan Jehan  (Media Laboratory), Adrian Freed, and Michael Zbyszynski");
+	//post("copyright � 2001 Massachusetts Institute of Technology");
+	//post("copyright � 2008 UC Regents");
+	//post("");
 
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
@@ -169,7 +170,7 @@ int main(void){
 	ps_blackman74 = gensym("blackman74");
 	ps_blackman92 = gensym("blackman92");
 
-	setup((Messlist **)&brightness_class, (method)brightness_new, (method)brightness_free, (short)sizeof(t_brightness), 0L, A_GIMME, 0);
+	brightness_class = class_new("brightness~", (method)brightness_new, (method)brightness_free, (short)sizeof(t_brightness), 0L, A_GIMME, 0);
 		
 	class_addmethod(brightness_class, (method)brightness_dsp, "dsp", A_CANT, 0);
 	class_addmethod(brightness_class, (method)brightness_assist, "assist", A_CANT, 0);
@@ -177,9 +178,8 @@ int main(void){
 	class_addmethod(brightness_class, (method)brightness_int, "int", A_LONG, 0);
 	class_dspinit(brightness_class);
 
-	rescopy('STR#', RES_ID);
-
 	class_register(CLASS_BOX, brightness_class);
+	version_post_copyright();
 	return 0;
 }
 

@@ -300,7 +300,10 @@ void sinusoids_assist(t_oscillators *x, void *b, long m, long a, char *s)
 
 void *oscillators_new(t_symbol *s, short argc, t_atom *argv)
 {
-    t_oscillators *x = (t_oscillators *)newobject(oscillators_class);
+    t_oscillators *x = (t_oscillators *)object_alloc(oscillators_class);
+    if(!x){
+	    return NULL;
+    }
     dsp_setup((t_pxobject *)x,0);
     outlet_new((t_object *)x, "signal");
 	x->samplerate =  sys_getsr();

@@ -233,6 +233,8 @@ int main(void) {
 		post("¥ SDIF-buffer: warning: SDIF-buffer-lookup s_thing not zero.");
 	}
 	ps_SDIF_buffer_lookup->s_thing = (void *) MySDIFBufferLookupFunction;
+
+	class_register(CLASS_BOX, SDIFbuffer_class);
 	return 0;
 }
 
@@ -247,7 +249,10 @@ void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
 		return 0;
 	}
 	
-	x = newobject(SDIFbuffer_class);
+	x = object_alloc(SDIFbuffer_class);
+	if(!x){
+		return NULL;
+	}
 	x->s_myname = name;
 	x->FrameLookup = ListSearch;
 	x->FrameInsert = ListInsert;

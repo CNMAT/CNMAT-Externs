@@ -206,7 +206,10 @@ void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
     int i, j, c;
     
     // instantiate 
-    x = newobject(firbank_class);
+    x = object_alloc(firbank_class);
+    if(!x){
+	    return NULL;
+    }
     
     // setup defaults
     /*

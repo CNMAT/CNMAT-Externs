@@ -59,6 +59,7 @@
 
 #include "ext.h"
 #include "ext_obex.h"
+#include "version.h"
 
 #include "z_dsp.h"
 #include "fftnobitrev.h"
@@ -71,8 +72,8 @@
 #include "vDSP.h"
 #endif
 
-#define RES_ID	7078
-#define VERSION "1.3.2"
+//#define RES_ID	7078
+//#define VERSION "1.3.2"
 
 //#define TWOPI 6.28318530717952646f
 #define THREEPI 9.424777960769379f
@@ -161,10 +162,10 @@ long log2max(long n);
 
 int main(void){
 
-    post("Loudness~ object version " VERSION " by Tristan Jehan (Media Laboratory)");
-    post("copyright � 2001 Massachusetts Institute of Technology");
-	post("copyright � 2008 UC Regents:");
-	post(" ");
+	//post("Loudness~ object version " VERSION " by Tristan Jehan (Media Laboratory)");
+	//post("copyright � 2001 Massachusetts Institute of Technology");
+	//post("copyright � 2008 UC Regents:");
+	//post(" ");
 	ps_rectangular = gensym("rectangular");
 	ps_hanning = gensym("hanning");
 	ps_hamming = gensym("hamming");
@@ -174,7 +175,7 @@ int main(void){
 	ps_blackman92 = gensym("blackman92");
 	ps_time = gensym("time");
 
-	setup((Messlist **)&loudness_class, (method)loudness_new, (method)loudness_free, (short)sizeof(t_loudness), 0L, A_GIMME, 0);
+	loudness_class = class_new("loudness~", (method)loudness_new, (method)loudness_free, (short)sizeof(t_loudness), 0L, A_GIMME, 0);
 		
 	class_addmethod(loudness_class, (method)loudness_dsp, "dsp", A_CANT, 0);
 	class_addmethod(loudness_class, (method)loudness_assist, "assist", A_CANT, 0);
@@ -184,9 +185,9 @@ int main(void){
 	class_addmethod(loudness_class, (method)loudness_int, "int", A_LONG, 0);
 	class_dspinit(loudness_class);
 
-	rescopy('STR#', RES_ID);
-
 	class_register(CLASS_BOX, loudness_class);
+
+	version_post_copyright();
 	return 0;
 }
 

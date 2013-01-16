@@ -130,8 +130,6 @@ int main(void){
 	if (r = SDIF_Init()) {
 		ouchstring(NAME ": Couldn't initialize SDIF library! %s",
 		           SDIF_GetErrorString(r));
-	
-	class_register(CLASS_BOX, sdif_fileinfo_class);
 	return 0;
 }
 
@@ -148,12 +146,15 @@ int main(void){
 	ps_no_file = gensym("<no SDIF file read>");
 	ps_1NVT = gensym("/1NVT");
 
-
+	class_register(CLASS_BOX, sdif_fileinfo_class);
 }
 
 void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av) {
 	t_sdif_fileinfo *x;
-	x = newobject(sdif_fileinfo_class);	
+	x = object_alloc(sdif_fileinfo_class);	
+	if(!x){
+		return NULL;
+	}
     x->outlet2 = outlet_new(x, 0L);
     x->outlet = outlet_new(x, 0L);
 	x->print_NVT_matrices = 1;

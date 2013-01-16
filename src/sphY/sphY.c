@@ -112,7 +112,10 @@ void *sphY_new(Symbol* s, short argc, Atom *argv)
     sphY *x;
     int i;
     
-    x = (sphY*) newobject(sphY_class);
+    x = (sphY*) object_alloc(sphY_class);
+    if(!x){
+	    return NULL;
+    }
     x->order = 0;
     
     for(i = 0; i < argc; i++) {

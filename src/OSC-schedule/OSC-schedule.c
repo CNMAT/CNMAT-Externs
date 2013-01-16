@@ -156,7 +156,10 @@ void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
     OSCSchedule *x;
     int i;
     
-    x = newobject(OSCSchedule_class);
+    x = object_alloc(OSCSchedule_class);
+    if(!x){
+	    return NULL;
+    }
     
     x->packets_max = DEFAULT_QUEUE_SIZE;
     x->packet_size = DEFAULT_PACKET_SIZE;
@@ -169,7 +172,7 @@ void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
     
     x->id = 0;
     
-    x->clock = clock_new(x, OSCSchedule_tick);
+    x->clock = clock_new(x, (method)OSCSchedule_tick);
     critical_new(&x->lock);
     
     for(i = 0; i < argc; i++) {

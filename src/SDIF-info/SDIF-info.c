@@ -127,21 +127,21 @@ int main(void)
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
-    return;
+    return 0;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-    return;
+    return 0;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 
 	ps_name = gensym("/name");
@@ -155,7 +155,9 @@ int main(void)
 	ps_noFileName = gensym("---no-filename---");
 	
 	/* list object in the new object list */
-	finder_addclass("Data","SDIF-info");
+	//finder_addclass("Data","SDIF-info");
+
+	class_register(CLASS_BOX, SDIFinfo_class);
 	return 0;
 }
 
@@ -165,7 +167,10 @@ void *SDIFinfo_new(Symbol *dummy, short argc, Atom *argv) {
 	
 	// post("SDIFinfo_new: %s, %ld args", s->s_name, (long) argc);
 	
-	x = newobject(SDIFinfo_class);
+	x = object_alloc(SDIFinfo_class);
+	if(!x){
+		return NULL;
+	}
 	x->t_buffer = 0;
 	x->t_buf = NULL;
 	x->t_out = outlet_new(x, NULL);

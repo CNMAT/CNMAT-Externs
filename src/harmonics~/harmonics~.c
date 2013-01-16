@@ -671,18 +671,16 @@ void tellmeeverything(t_sinusoids *x) {
 
 
 int main(void){
-	sinusoids_class = class_new("harmonics~ ", (method)sinusoids_new, (method)harmonics_free, 
-		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
-		  
+	sinusoids_class = class_new("harmonics~", (method)sinusoids_new, (method)harmonics_free, 
+				    (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 	version_post_copyright();
 	post("NB: still working on amplutide normalisation of the wave outputs");
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 #ifndef EXPIRE
-    post("Never expires");
+	post("Never expires");
     
 #endif
 	Makeoscsinetable();
-
 #ifdef EXPIRE
 #define YEAR 2005
 	object_post((t_object *)x, "Expires 2005");
@@ -690,29 +688,33 @@ int main(void){
 		DateTimeRec date;
 		GetTime(&date);
 		if(date.year>=YEAR)
-		{
-			object_post((t_object *)x, "Expired");
+			{
+				object_post((t_object *)x, "Expired");
 		
-	class_register(CLASS_BOX, sinusoids_class);
-	return 0;
-}
+				class_register(CLASS_BOX, sinusoids_class);
+				return 0;
+			}
 		else
 
 #else
-{
+			{
 #endif
 
-		class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
-	}
-	class_addmethod(sinusoids_class, (method)sinusoids_list, "list", A_GIMME, 0);		// amplitudes
-	class_addmethod(sinusoids_class, (method)wave_list, "wave", A_GIMME, 0);		// amplitudes
-	class_addmethod(sinusoids_class, (method)sinusoids_clear, "clear", 0);
-	class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);
-	class_addmethod(sinusoids_class, (method)version, "version", 0);
-	class_addmethod(sinusoids_class, (method)frequency_float, "float", A_FLOAT, 0);							// F0
-	    class_addmethod(sinusoids_class, (method)first_amplitude, 	"first-amplitude", 		A_FLOAT, 0);
-	    class_addmethod(sinusoids_class, (method)noisiness, 	"noisiness", 		A_FLOAT, 0);
-   	class_addmethod(sinusoids_class, (method)tellmeeverything, "tellmeeverything", 0);
+				class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+			}
+		class_addmethod(sinusoids_class, (method)sinusoids_list, "list", A_GIMME, 0);		// amplitudes
+		class_addmethod(sinusoids_class, (method)wave_list, "wave", A_GIMME, 0);		// amplitudes
+		class_addmethod(sinusoids_class, (method)sinusoids_clear, "clear", 0);
+		class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);
+		class_addmethod(sinusoids_class, (method)version, "version", 0);
+		class_addmethod(sinusoids_class, (method)frequency_float, "float", A_FLOAT, 0);							// F0
+		class_addmethod(sinusoids_class, (method)first_amplitude, 	"first-amplitude", 		A_FLOAT, 0);
+		class_addmethod(sinusoids_class, (method)noisiness, 	"noisiness", 		A_FLOAT, 0);
+		class_addmethod(sinusoids_class, (method)tellmeeverything, "tellmeeverything", 0);
 
-	class_dspinit(sinusoids_class);
-}
+		class_dspinit(sinusoids_class);
+
+		class_register(CLASS_BOX, sinusoids_class);
+
+		return 0;
+	}

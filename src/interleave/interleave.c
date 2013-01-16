@@ -244,7 +244,10 @@ void *interleave_new(
 	t_Interleave *x;
 	
 
-	x = (t_Interleave*)newobject(interleave_class);
+	x = (t_Interleave*)object_alloc(interleave_class);
+	if(!x){
+		return NULL;
+	}
 	
 	x->t_out = listout(x);
 	

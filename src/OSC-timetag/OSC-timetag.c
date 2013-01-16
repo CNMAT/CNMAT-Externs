@@ -174,7 +174,10 @@ void *OSCTimeTag_new(Symbol* s, short argc, Atom *argv)
   OSCTimeTag *x;	
   int i;
     
-  x = newobject(OSCTimeTag_class);
+  x = object_alloc(OSCTimeTag_class);
+  if(!x){
+	  return NULL;
+  }
     
   x->op = OP_TAG;
   x->to = TO_T;
