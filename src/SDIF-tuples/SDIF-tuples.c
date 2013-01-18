@@ -29,8 +29,8 @@
 
 */
 #define NAME "SDIF-tuples"
-#define DESCRIPTION "Extract "tuples" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list."
-#define AUTHORS "Matt Wright and Ben "Jacobs" "
+#define DESCRIPTION "Extract \"tuples\" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list."
+#define AUTHORS "Matt Wright and Ben \"Jacobs\""
 #define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,2012"
 
 
