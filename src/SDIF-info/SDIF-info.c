@@ -30,7 +30,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 */
 #define NAME "SDIF-info"
 #define DESCRIPTION "report overall info about an SDIF-buffer"
-#define AUTHORS "Matt Wright and Ben "Jacobs""
+#define AUTHORS "Matt Wright and Ben \"Jacobs\""
 #define COPYRIGHT_YEARS "2002,03,04,05,06,2012"
 
 
