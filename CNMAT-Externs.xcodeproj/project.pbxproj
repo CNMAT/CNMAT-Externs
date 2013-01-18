@@ -68,14 +68,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		5218BADA164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
-		5218BADB164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
-		5218BADC164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
-		5218BADD164DC6E300A02F42 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD5164DC6E300A02F42 /* fft.c */; };
-		5218BADE164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
-		5218BADF164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
-		5218BAE0164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
-		5218BAE1164DC6E300A02F42 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BAD7164DC6E300A02F42 /* fftnobitrev.c */; };
 		5218BB33164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
 		5218BB34164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
 		5218BB35164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
@@ -139,6 +131,14 @@
 		5218BB83164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
 		5218BB84164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
 		5218BB85164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		52B1558216A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
+		52B1558316A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
+		52B1558416A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
+		52B1558516A8E7FA000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
+		52B1558616A8E7FA000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
+		52B1558716A8E7FA000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
+		52B1558816A8E827000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
+		52B1558916A8E832000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		52E4476C15F1889300C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E4477415F188A000C91B67 /* accumulate~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4476315F1888200C91B67 /* accumulate~.c */; };
 		52E4479A15F1890800C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
@@ -923,11 +923,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5218BAD5164DC6E300A02F42 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = "<group>"; };
-		5218BAD6164DC6E300A02F42 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
-		5218BAD7164DC6E300A02F42 /* fftnobitrev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fftnobitrev.c; sourceTree = "<group>"; };
-		5218BAD8164DC6E300A02F42 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftnobitrev.h; sourceTree = "<group>"; };
-		5218BAD9164DC6E300A02F42 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vDSP.h; sourceTree = "<group>"; };
 		5218BB2A164DD36A00A02F42 /* sdif-buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-buf.c"; path = "../CNMAT-SDIF/lib/sdif-buf.c"; sourceTree = "<group>"; };
 		5218BB2B164DD36A00A02F42 /* sdif-mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-mem.c"; path = "../CNMAT-SDIF/lib/sdif-mem.c"; sourceTree = "<group>"; };
 		5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-sinusoids.c"; path = "../CNMAT-SDIF/lib/sdif-sinusoids.c"; sourceTree = "<group>"; };
@@ -940,6 +935,11 @@
 		524981BF16A620360086F4BD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = ../include/version.h; sourceTree = "<group>"; };
 		524981C016A65BCD0086F4BD /* harmonics~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "harmonics~.maxhelp"; sourceTree = "<group>"; };
 		524981C216A65BEE0086F4BD /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxhelp; sourceTree = "<group>"; };
+		52B1557D16A8E7FA000FC2E4 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fft.c; path = "lib/Jehan-lib/fft.c"; sourceTree = SOURCE_ROOT; };
+		52B1557E16A8E7FA000FC2E4 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fft.h; path = "lib/Jehan-lib/fft.h"; sourceTree = SOURCE_ROOT; };
+		52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fftnobitrev.c; path = "lib/Jehan-lib/fftnobitrev.c"; sourceTree = SOURCE_ROOT; };
+		52B1558016A8E7FA000FC2E4 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftnobitrev.h; path = "lib/Jehan-lib/fftnobitrev.h"; sourceTree = SOURCE_ROOT; };
+		52B1558116A8E7FA000FC2E4 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vDSP.h; path = "lib/Jehan-lib/vDSP.h"; sourceTree = SOURCE_ROOT; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
 		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1853,11 +1853,11 @@
 		5218BAD4164DC6E300A02F42 /* Jehan-lib */ = {
 			isa = PBXGroup;
 			children = (
-				5218BAD5164DC6E300A02F42 /* fft.c */,
-				5218BAD6164DC6E300A02F42 /* fft.h */,
-				5218BAD7164DC6E300A02F42 /* fftnobitrev.c */,
-				5218BAD8164DC6E300A02F42 /* fftnobitrev.h */,
-				5218BAD9164DC6E300A02F42 /* vDSP.h */,
+				52B1557D16A8E7FA000FC2E4 /* fft.c */,
+				52B1557E16A8E7FA000FC2E4 /* fft.h */,
+				52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */,
+				52B1558016A8E7FA000FC2E4 /* fftnobitrev.h */,
+				52B1558116A8E7FA000FC2E4 /* vDSP.h */,
 			);
 			name = "Jehan-lib";
 			path = "src/Jehan-lib";
@@ -3866,8 +3866,8 @@
 			files = (
 				52E447E815F1893B00C91B67 /* analyzer~.c in Sources */,
 				52E44C7F15F4835400C91B67 /* commonsyms.c in Sources */,
-				5218BADA164DC6E300A02F42 /* fft.c in Sources */,
-				5218BADE164DC6E300A02F42 /* fftnobitrev.c in Sources */,
+				52B1558216A8E7FA000FC2E4 /* fft.c in Sources */,
+				52B1558516A8E7FA000FC2E4 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3913,8 +3913,8 @@
 			files = (
 				52E447ED15F1895D00C91B67 /* brightness~.c in Sources */,
 				52E44C8515F4835400C91B67 /* commonsyms.c in Sources */,
-				5218BADB164DC6E300A02F42 /* fft.c in Sources */,
-				5218BADF164DC6E300A02F42 /* fftnobitrev.c in Sources */,
+				52B1558316A8E7FA000FC2E4 /* fft.c in Sources */,
+				52B1558616A8E7FA000FC2E4 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4006,8 +4006,8 @@
 			files = (
 				52E4490415F1EA2800C91B67 /* loudness~.c in Sources */,
 				52E44C8F15F4835400C91B67 /* commonsyms.c in Sources */,
-				5218BADC164DC6E300A02F42 /* fft.c in Sources */,
-				5218BAE0164DC6E300A02F42 /* fftnobitrev.c in Sources */,
+				52B1558416A8E7FA000FC2E4 /* fft.c in Sources */,
+				52B1558716A8E7FA000FC2E4 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4056,8 +4056,8 @@
 			files = (
 				52E44B7815F28ABE00C91B67 /* pitch~.c in Sources */,
 				52E44C9415F4835400C91B67 /* commonsyms.c in Sources */,
-				5218BADD164DC6E300A02F42 /* fft.c in Sources */,
-				5218BAE1164DC6E300A02F42 /* fftnobitrev.c in Sources */,
+				52B1558816A8E827000FC2E4 /* fft.c in Sources */,
+				52B1558916A8E832000FC2E4 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6479,6 +6479,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DSTROOT = "$(PROJECT_DIR)/build";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
@@ -6539,6 +6540,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DSTROOT = "$(PROJECT_DIR)/build";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
 					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
@@ -6593,7 +6595,7 @@
 				GCC_PREFIX_HEADER = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
@@ -6613,7 +6615,7 @@
 				GCC_PREFIX_HEADER = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
