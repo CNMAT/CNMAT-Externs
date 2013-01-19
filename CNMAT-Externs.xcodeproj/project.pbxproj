@@ -932,7 +932,6 @@
 		5218BB6C164DD40600A02F42 /* open-sdif-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "open-sdif-file.c"; path = "utility-library/search-path/open-sdif-file.c"; sourceTree = "<group>"; };
 		5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp-implem.c"; path = "../CNMAT-SDIF/lib/sdif-interp-implem.c"; sourceTree = "<group>"; };
 		5218BB77164DD87F00A02F42 /* sdif-interp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp.c"; path = "../CNMAT-SDIF/lib/sdif-interp.c"; sourceTree = "<group>"; };
-		524981BF16A620360086F4BD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = ../include/version.h; sourceTree = "<group>"; };
 		524981C016A65BCD0086F4BD /* harmonics~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "harmonics~.maxhelp"; sourceTree = "<group>"; };
 		524981C216A65BEE0086F4BD /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxhelp; sourceTree = "<group>"; };
 		52B1557D16A8E7FA000FC2E4 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fft.c; path = "lib/Jehan-lib/fft.c"; sourceTree = SOURCE_ROOT; };
@@ -2471,7 +2470,6 @@
 			isa = PBXGroup;
 			children = (
 				52E44C7C15F4835400C91B67 /* commonsyms.c */,
-				524981BF16A620360086F4BD /* version.h */,
 				52F10AC715F071DE008FC371 /* 2threshattack~ */,
 				52E4476215F1888200C91B67 /* accumulate~ */,
 				52E4477515F188D100C91B67 /* analyzer~ */,
@@ -6512,7 +6510,7 @@
 					"\"$(SRCROOT)/../libo\"",
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
 					"\"$(SRCROOT)/utility-library/search-path\"",
-					"\"$(SRCROOT)/../include\"",
+					"\"$(SRCROOT)/include\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -6568,7 +6566,7 @@
 					"\"$(SRCROOT)/../libo\"",
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
 					"\"$(SRCROOT)/utility-library/search-path\"",
-					"\"$(SRCROOT)/../include\"",
+					"\"$(SRCROOT)/include\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
