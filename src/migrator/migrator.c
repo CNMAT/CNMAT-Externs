@@ -43,12 +43,16 @@ VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily remove
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define NAME "migrator"
+#define DESCRIPTION "Spectral harmony a la David Wessel"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2006-07"
+
 #include "version.h"
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "commonsyms.h"
-#include "version.c"
 #include "math.h"
 //#include "sin_tab.h"
 
@@ -194,7 +198,7 @@ int main(void){
 
 	class_register(CLASS_BOX, c);
 	mig_class = c;
-	version(0);
+	version_post_copyright();
 
 	return 0;
 }
@@ -220,7 +224,7 @@ void *mig_new(t_symbol *sym, long argc, t_atom *argv){
 		x->waitingToChangeNumOsc[1] = 0;
 
 		x->stdev = 0.0f;
-		x->nOsc = 100;
+		x->nOsc = x->nOsc_new = 100;
 		x->oscamp = 0.03f;
 
 		x->algo = MIG_ALGO_PMF;
@@ -358,7 +362,6 @@ void mig_fadeOut(t_mig *x){
 	for(i = 0; i < x->fade; i++){
 		SETFLOAT(&(x->arrayOut[((((x->counter + i) % x->nOsc) * 2) + 1)]), x->oscamp * i / x->fade);
 	}
-
 	/*
 	PDEBUG("fade out");
 	for(i = 0; i < n; i++){

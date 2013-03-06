@@ -31,9 +31,13 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define NAME "trampoline"
+#define DESCRIPTION "Trampoline tail call optimization for Max"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2011"
+
 #include "version.h"
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include <execinfo.h>
@@ -281,11 +285,13 @@ int main(void)
 	class_addmethod(c, (method)trampoline_bang, "bang", 0);
 	class_addmethod(c, (method)trampoline_fullPacket, "FullPacket", A_LONG, A_LONG, 0);
 
+	class_addmethod(c, (method)version, "version", 0);
+
 	class_register(CLASS_BOX, c);
 	trampoline_class = c;
 	ps_FullPacket = gensym("FullPacket");
 
 	common_symbols_init();
-	version(0);
+	version_post_copyright();
 	return 0;
 }

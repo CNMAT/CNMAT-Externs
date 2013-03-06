@@ -64,17 +64,21 @@ Future:
 	
 */
 
+#define NAME "res-transform"
+#define DESCRIPTION "Set of basic transformations for resonance models"
+#define AUTHORS "Adrian Freed, Matt Wright, and Michael Zbyszynski"
+#define COPYRIGHT_YEARS "1996-2006"
 
 
 #include <math.h>
 #include "ext.h"
+#include "ext_obex.h"
 #include "version.h"
-#include "version.c"
 
 
 
-fptr *FNS;
-void *resonclass;
+//fptr *FNS;
+t_class *resonclass;
 
 
 
@@ -823,7 +827,10 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	fobj *x;
 	int i;
 
-	x = (fobj *)newobject(resonclass);				/* initialize an instance of this class */	
+	x = (fobj *)object_alloc(resonclass);				/* initialize an instance of this class */	
+	if(!x){
+		return NULL;
+	}
 	x->m_proxy = proxy_new(x,1L,&x->m_inletNumber);
 	x->dataoutlet = listout(x);
 	clearit(x);
@@ -857,104 +864,108 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	return  x;
 }
 
-void main(fptr *f)		/* called once at launch to define this class */
+int main(void)		/* called once at launch to define this class */
 {
-	FNS = f;		
+	//FNS = f;		
 	alias("sin-transform");	
 	
-	setup((struct messlist **) &resonclass, (method) fnew, (method) myobject_free, (int) sizeof(fobj), 0L, A_GIMME, 0 );
+	resonclass = class_new("res-transform", (method) fnew, (method) myobject_free, (int) sizeof(fobj), 0L, A_GIMME, 0 );
 	alias("sin-transform");	
 	
-	addfloat( (method) setfreqbase );
-	addmess((method)clear, "clear", 0);
-	addmess((method)setpitch, "pitch", A_FLOAT,0);
-	addmess((method)setmidipitch, "midi-pitch", A_FLOAT,0);
-	addmess((method)setfreqbase, "frequency-base", A_FLOAT,0);
-	addmess((method)setfreqscale, "frequency-scale", A_FLOAT,0);
-	addmess((method)setfreqadd, "frequency-add", A_FLOAT,0);
-	addmess((method)setbwscale, "rate-scale", A_FLOAT,0);
-	addmess((method)setatten, "attenuate", A_FLOAT,0);
-	addmess((method)setgain, "gain-scale", A_FLOAT,0);
+	class_addmethod(resonclass, (method) setfreqbase, "float", 0);
+	class_addmethod(resonclass, (method)clear, "clear", 0);
+	class_addmethod(resonclass, (method)setpitch, "pitch", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setmidipitch, "midi-pitch", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setfreqbase, "frequency-base", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setfreqscale, "frequency-scale", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setfreqadd, "frequency-add", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setbwscale, "rate-scale", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setatten, "attenuate", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setgain, "gain-scale", A_FLOAT,0);
 	
-	addmess((method)setoneamplitude, "setoneamplitude", A_LONG, A_FLOAT, 0);
-	addmess((method)setonefrequency, "setonefrequency", A_LONG, A_FLOAT, 0);
-	addmess((method)setonerate, "setonerate", A_LONG, A_FLOAT, 0);
+	class_addmethod(resonclass, (method)setoneamplitude, "setoneamplitude", A_LONG, A_FLOAT, 0);
+	class_addmethod(resonclass, (method)setonefrequency, "setonefrequency", A_LONG, A_FLOAT, 0);
+	class_addmethod(resonclass, (method)setonerate, "setonerate", A_LONG, A_FLOAT, 0);
 
-	addmess((method)setoneresonance, "setoneresonance", A_GIMME,0);
-	addmess((method)setonesinusoid, "setonesinusoid", A_GIMME,0);
-//	addmess((method)numresonances, "numresonances", 0);
+	class_addmethod(resonclass, (method)setoneresonance, "setoneresonance", A_GIMME,0);
+	class_addmethod(resonclass, (method)setonesinusoid, "setonesinusoid", A_GIMME,0);
+//	class_addmethod(resonclass, (method)numresonances, "numresonances", 0);
 	
-	addmess((method)setslope, "spectral-slope", A_FLOAT,0);
-	addmess((method)setcenter, "spectral-corner", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setslope, "spectral-slope", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setcenter, "spectral-corner", A_FLOAT,0);
 
-	addmess((method)setclustersize, "cluster-size", A_LONG,0);
-	addmess((method)setfspread, "frequency-spread", A_FLOAT,0);
-	addmess((method)setfaround, "frequency-around", A_FLOAT,0);
-	addmess((method)setfstretch, "frequency-stretch", A_FLOAT,0);
-	addmess((method)setbwspread, "rate-spread", A_FLOAT,0);
-	addmess((method)setbwstretch, "rate-stretch", A_FLOAT,0);
-	addmess((method)setattenuationspread, "attenuation-spread", A_FLOAT,0);	
+	class_addmethod(resonclass, (method)setclustersize, "cluster-size", A_LONG,0);
+	class_addmethod(resonclass, (method)setfspread, "frequency-spread", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setfaround, "frequency-around", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setfstretch, "frequency-stretch", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setbwspread, "rate-spread", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setbwstretch, "rate-stretch", A_FLOAT,0);
+	class_addmethod(resonclass, (method)setattenuationspread, "attenuation-spread", A_FLOAT,0);	
 	
-		addmess((method)setmidipitch, "midipitch", A_DEFFLOAT,0);
-	addmess((method)setfreqbase, "frequencybase", A_DEFFLOAT,0);
-	addmess((method)setfreqscale, "frequencyscale", A_DEFFLOAT,0);
-	addmess((method)setfreqadd, "frequencyadd", A_DEFFLOAT,0);
-	addmess((method)setbwscale, "ratescale", A_DEFFLOAT,0);
-	addmess((method)setatten, "attenuate", A_DEFFLOAT,0);
-	addmess((method)setgain, "gainscale", A_DEFFLOAT,0);
+		class_addmethod(resonclass, (method)setmidipitch, "midipitch", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setfreqbase, "frequencybase", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setfreqscale, "frequencyscale", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setfreqadd, "frequencyadd", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setbwscale, "ratescale", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setatten, "attenuate", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setgain, "gainscale", A_DEFFLOAT,0);
 	
 	
-	addmess((method)setslope, "spectralslope", A_DEFFLOAT,0);
-	addmess((method)setcenter, "spectralcorner", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setslope, "spectralslope", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setcenter, "spectralcorner", A_DEFFLOAT,0);
 
-	addmess((method)setclustersize, "clustersize", A_DEFLONG,0);
-	addmess((method)setfspread, "frequencyspread", A_DEFFLOAT,0);
-	addmess((method)setfaround, "frequencyaround", A_DEFFLOAT,0);
-	addmess((method)setfstretch, "frequencystretch", A_DEFFLOAT,0);
-	addmess((method)setbwspread, "ratespread", A_DEFFLOAT,0);
-	addmess((method)setbwstretch, "ratestretch", A_DEFFLOAT,0);
-	addmess((method)setattenuationspread, "attenuationspread", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setclustersize, "clustersize", A_DEFLONG,0);
+	class_addmethod(resonclass, (method)setfspread, "frequencyspread", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setfaround, "frequencyaround", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setfstretch, "frequencystretch", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setbwspread, "ratespread", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setbwstretch, "ratestretch", A_DEFFLOAT,0);
+	class_addmethod(resonclass, (method)setattenuationspread, "attenuationspread", A_DEFFLOAT,0);	
 	
 	
-		addmess((method)setfmin, "frequencyminimum", A_DEFFLOAT,0);	
-	addmess((method)setfmax, "frequencymaximum", A_DEFFLOAT,0);	
-	addmess((method)setpartialmin, "partialminimum", A_DEFLONG,0);	
-	addmess((method)setpartialmax, "partialmaximum", A_DEFLONG,0);	
+		class_addmethod(resonclass, (method)setfmin, "frequencyminimum", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setfmax, "frequencymaximum", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setpartialmin, "partialminimum", A_DEFLONG,0);	
+	class_addmethod(resonclass, (method)setpartialmax, "partialmaximum", A_DEFLONG,0);	
 
 	
 	
-	addmess((method)setfpivot, "frequencypivot", A_DEFFLOAT,0);	
-	addmess((method)setk1, "decayrate", A_DEFFLOAT,0);	
-	addmess((method)setk2, "skew", A_DEFFLOAT,0);	
-	addmess((method)settime, "time", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setfpivot, "frequencypivot", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setk1, "decayrate", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setk2, "skew", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)settime, "time", A_DEFFLOAT,0);	
 	
 	
-	addmess((method)setoddgain, "oddgainscale", A_DEFFLOAT,0);	
-	addmess((method)setevengain, "evengainscale", A_DEFFLOAT,0);	
-	addmess((method)setevenfreqscale, "evenfrequencyscale", A_DEFFLOAT,0);	
-	addmess((method)setoddfreqscale, "oddfrequencyscale", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setoddgain, "oddgainscale", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setevengain, "evengainscale", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setevenfreqscale, "evenfrequencyscale", A_DEFFLOAT,0);	
+	class_addmethod(resonclass, (method)setoddfreqscale, "oddfrequencyscale", A_DEFFLOAT,0);	
 	
 	
 	
 	
-//addmess((method)squelch, "squelch", A_DEFFLOAT,0);
+//class_addmethod(resonclass, (method)squelch, "squelch", A_DEFFLOAT,0);
 
-//	addmess((method)setfreqrange, "frequency-range", A_FLOAT, A_FLOAT, 0);
-	addmess((method)setamprange, "gain-range", A_FLOAT, A_FLOAT, 0);
+//	class_addmethod(resonclass, (method)setfreqrange, "frequency-range", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(resonclass, (method)setamprange, "gain-range", A_FLOAT, A_FLOAT, 0);
 
-	addmess((method)fulllist,"list",A_GIMME,0);
-	addmess((method)fulllist,"resonance",A_GIMME,0);
-	addmess((method)fulllist,"resonances",A_GIMME,0);
-	addmess((method)more_resonances,"more",A_GIMME,0);
-	addmess((method)oldfulllist,"filter-form",A_GIMME,0);
-	addmess((method)formantfulllist,"formant-form",A_GIMME,0);
-	addmess((method)sinusoidal,"sinusoids",A_GIMME,0);
-	addmess((method)tellmeeverything, "tellmeeverything", 0);
-	addmess((method)version, "version", 0);
+	class_addmethod(resonclass, (method)fulllist,"list",A_GIMME,0);
+	class_addmethod(resonclass, (method)fulllist,"resonance",A_GIMME,0);
+	class_addmethod(resonclass, (method)fulllist,"resonances",A_GIMME,0);
+	class_addmethod(resonclass, (method)more_resonances,"more",A_GIMME,0);
+	class_addmethod(resonclass, (method)oldfulllist,"filter-form",A_GIMME,0);
+	class_addmethod(resonclass, (method)formantfulllist,"formant-form",A_GIMME,0);
+	class_addmethod(resonclass, (method)sinusoidal,"sinusoids",A_GIMME,0);
+	class_addmethod(resonclass, (method)tellmeeverything, "tellmeeverything", 0);
+	class_addmethod(resonclass, (method)version, "version", 0);
 
-	addbang( (method) resondump  );
-	version(0);
+	class_addmethod(resonclass, (method) resondump, "bang", 0);
+
+	class_register(CLASS_BOX, resonclass);
+
+	version_post_copyright();
 	post("  Portions copyright (c) 1986,1987 Adrian Freed");
+	return 0;
 }
 
 static void reson_assist(fobj *x, void *b, long m, long a, char *s) 

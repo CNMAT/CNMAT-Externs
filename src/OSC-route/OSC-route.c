@@ -72,9 +72,15 @@ VERSION 1.17.2: object_error()
 
 
 /* the required include files */
+
+#define NAME "OSC-route"
+#define DESCRIPTION "Message dispatching through an <A HREF=\"http://www.cnmat.berkeley.edu/OSC\">OpenSoundControl</A> address space."
+#define AUTHORS "Matt Wright, Michael Zbyszynski"
+#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,08"
+
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
 
 #include "OSC-pattern-match.h"
 
@@ -98,7 +104,7 @@ typedef struct OSCroute
 Symbol *ps_list, *ps_complain, *ps_emptySymbol, *ps_slash;
 
 /* global necessary for 68K function macros to work */
-fptr *FNS;
+//fptr *FNS;
 
 /* globalthat holds the class definition */
 void *OSCroute_class;
@@ -126,24 +132,27 @@ static int MyStrLen(const char *s);
 
 /* initialization routine */
 
-void main(fptr *f) {
-	setup((t_messlist **)&OSCroute_class, (method)OSCroute_new, (method)OSCroute_free, 
+int main(void) {
+	OSCroute_class = class_new("OSC-route", (method)OSCroute_new, (method)OSCroute_free, 
 		  (short)sizeof(OSCroute), 0L, A_GIMME, 0);
 	/* bind your methods to symbols */
-	addmess((method)OSCroute_anything, "anything", A_GIMME, 0);
-	addmess((method)OSCroute_list, "list", A_GIMME, 0);
-	addmess((method)OSCroute_assist, "assist", A_CANT, 0);
-	addmess((method)OSCroute_version, "version", 0);
-	addmess((method)OSCroute_allmessages, "allmessages", A_GIMME, 0);
-	addmess((method)OSCroute_set, "set", A_LONG, A_SYM, 0);
+	class_addmethod(OSCroute_class, (method)OSCroute_anything, "anything", A_GIMME, 0);
+	class_addmethod(OSCroute_class, (method)OSCroute_list, "list", A_GIMME, 0);
+	class_addmethod(OSCroute_class, (method)OSCroute_assist, "assist", A_CANT, 0);
+	class_addmethod(OSCroute_class, (method)version, "version", 0);
+	class_addmethod(OSCroute_class, (method)OSCroute_allmessages, "allmessages", A_GIMME, 0);
+	class_addmethod(OSCroute_class, (method)OSCroute_set, "set", A_LONG, A_SYM, 0);
 
 	ps_list = gensym("list");
 	ps_complain = gensym("complain");
 	ps_slash = gensym("slash");
 	ps_emptySymbol = gensym("");
 	
-	post(NAME " object version " VERSION " by " AUTHORS ".");
-	post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	//post(NAME " object version " VERSION " by " AUTHORS ".");
+	//post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	version_post_copyright();
+	class_register(CLASS_BOX, OSCroute_class);
+	return 0;
 
 }
 
@@ -210,7 +219,10 @@ void *OSCroute_new(Symbol *s, short argc, Atom *argv)
 	int i, j, n;
 	char *str;
 	
-	x = newobject(OSCroute_class);		// get memory for a new object & initialize
+	x = (OSCroute *)object_alloc(OSCroute_class);		// get memory for a new object & initialize
+	if(!x){
+		return NULL;
+	}
 
 	x->o_complainmode = 0;
 	x->o_num = 0;
@@ -298,8 +310,8 @@ void OSCroute_free(OSCroute *x) {
 }
 
 void OSCroute_version (OSCroute *x) {
-	post(NAME " Version " VERSION
-		  ", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);
+	//post(NAME " Version " VERSION
+	//", by " AUTHORS ". Compiled " __TIME__ " " __DATE__);
 }
 
 /* I don't know why these aren't defined in some Max #include file. */
