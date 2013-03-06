@@ -18,6 +18,7 @@ void version(void *x)
 	}else{
 		if(!(gensym("CNMAT_did_post_copyright")->s_thing)){
 			post("CNMAT Externals v%s, compiled %s", CNMAT_EXT_VERSION, CNMAT_EXT_COMPILE_DATE);
+			gensym("CNMAT_did_post_copyright")->s_thing = 1;
 		}
 		post("%s by %s.", NAME, AUTHORS);
 		post("Copyright (c) " COPYRIGHT_YEARS " Regents of the University of California.  All rights reserved.");

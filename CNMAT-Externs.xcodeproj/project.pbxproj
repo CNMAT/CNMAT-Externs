@@ -13,6 +13,13 @@
 			buildPhases = (
 			);
 			dependencies = (
+				5219622516E6C70700EA7DDF /* PBXTargetDependency */,
+				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
+				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
+				5219622B16E6C70700EA7DDF /* PBXTargetDependency */,
+				5219622D16E6C70700EA7DDF /* PBXTargetDependency */,
+				5219622F16E6C70700EA7DDF /* PBXTargetDependency */,
+				521961B616E6C25B00EA7DDF /* PBXTargetDependency */,
 				52E44B9C15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44B9E15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA015F28BD300C91B67 /* PBXTargetDependency */,
@@ -131,6 +138,73 @@
 		5218BB83164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
 		5218BB84164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
 		5218BB85164DD87F00A02F42 /* sdif-interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB77164DD87F00A02F42 /* sdif-interp.c */; };
+		521961A616E6C0ED00EA7DDF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		521961A816E6C0ED00EA7DDF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		521961A916E6C0ED00EA7DDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		521961AA16E6C0ED00EA7DDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		521961AB16E6C0ED00EA7DDF /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		521961AC16E6C0ED00EA7DDF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		521961AD16E6C0ED00EA7DDF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		521961AE16E6C0ED00EA7DDF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		521961B416E6C14800EA7DDF /* list-accum.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219618016E6C03100EA7DDF /* list-accum.c */; };
+		521961B716E6C3FE00EA7DDF /* 2threshattack~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AC815F071DE008FC371 /* 2threshattack~.c */; };
+		521961BA16E6C5EC00EA7DDF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		521961BD16E6C5EC00EA7DDF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		521961BE16E6C5EC00EA7DDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		521961BF16E6C5EC00EA7DDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		521961C016E6C5EC00EA7DDF /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		521961C116E6C5EC00EA7DDF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		521961C216E6C5EC00EA7DDF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		521961C316E6C5EC00EA7DDF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		521961CB16E6C5F900EA7DDF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		521961CE16E6C5F900EA7DDF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		521961CF16E6C5F900EA7DDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		521961D016E6C5F900EA7DDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		521961D116E6C5F900EA7DDF /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		521961D216E6C5F900EA7DDF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		521961D316E6C5F900EA7DDF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		521961D416E6C5F900EA7DDF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		521961DC16E6C5FF00EA7DDF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		521961DF16E6C5FF00EA7DDF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		521961E016E6C5FF00EA7DDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		521961E116E6C5FF00EA7DDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		521961E216E6C5FF00EA7DDF /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		521961E316E6C5FF00EA7DDF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		521961E416E6C5FF00EA7DDF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		521961E516E6C5FF00EA7DDF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		521961ED16E6C60500EA7DDF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		521961F016E6C60500EA7DDF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		521961F116E6C60500EA7DDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		521961F216E6C60500EA7DDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		521961F316E6C60500EA7DDF /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		521961F416E6C60500EA7DDF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		521961F516E6C60500EA7DDF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		521961F616E6C60500EA7DDF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		521961FE16E6C60D00EA7DDF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		5219620116E6C60D00EA7DDF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		5219620216E6C60D00EA7DDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		5219620316E6C60D00EA7DDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		5219620416E6C60D00EA7DDF /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		5219620516E6C60D00EA7DDF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		5219620616E6C60D00EA7DDF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		5219620716E6C60D00EA7DDF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		5219620F16E6C61400EA7DDF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		5219621216E6C61400EA7DDF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		5219621316E6C61400EA7DDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44BE915F482E800C91B67 /* MaxAPI.framework */; };
+		5219621416E6C61400EA7DDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C1A15F482FC00C91B67 /* MaxAudioAPI.framework */; };
+		5219621516E6C61400EA7DDF /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E44C4B15F4831B00C91B67 /* JitterAPI.framework */; };
+		5219621616E6C61400EA7DDF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		5219621716E6C61400EA7DDF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		5219621816E6C61400EA7DDF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		5219621E16E6C6AB00EA7DDF /* OpenSoundControl.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219619416E6C07200EA7DDF /* OpenSoundControl.c */; };
+		5219621F16E6C6B100EA7DDF /* migrator.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219618816E6C04A00EA7DDF /* migrator.c */; };
+		5219622016E6C6B600EA7DDF /* OSC-route.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219618416E6C03E00EA7DDF /* OSC-route.c */; };
+		5219622116E6C6C200EA7DDF /* res-transform.c in Sources */ = {isa = PBXBuildFile; fileRef = 521961A016E6C07C00EA7DDF /* res-transform.c */; };
+		5219622216E6C6D000EA7DDF /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219618C16E6C05800EA7DDF /* trampoline.c */; };
+		5219622316E6C6D600EA7DDF /* whichthread.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219619016E6C06700EA7DDF /* whichthread.c */; };
+		5219624B16E6C98000EA7DDF /* OSC-pattern-match.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219623E16E6C96D00EA7DDF /* OSC-pattern-match.c */; };
+		5219625516E6D02000EA7DDF /* OSC-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219624F16E6D01700EA7DDF /* OSC-client.c */; };
+		5219625616E6D09700EA7DDF /* OSC-timetag.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219625116E6D01700EA7DDF /* OSC-timetag.c */; };
 		52B1558216A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		52B1558316A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		52B1558416A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
@@ -434,7 +508,6 @@
 		52E44CAB15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		52E44CAC15F4835400C91B67 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		52F10AD015F071FA008FC371 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52F10ADB15F07231008FC371 /* 2threshattack~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AC815F071DE008FC371 /* 2threshattack~.c */; };
 		52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52F10AFF15F13D94008FC371 /* bessel.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AEF15F13D41008FC371 /* bessel.c */; };
 		52FF186C163B5C3800F94922 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -584,6 +657,55 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		521961B516E6C25B00EA7DDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 521961A316E6C0ED00EA7DDF;
+			remoteInfo = "list-accum";
+		};
+		5219622416E6C70700EA7DDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 521961B816E6C5EC00EA7DDF;
+			remoteInfo = "OSC-route";
+		};
+		5219622616E6C70700EA7DDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 521961C916E6C5F900EA7DDF;
+			remoteInfo = migrator;
+		};
+		5219622816E6C70700EA7DDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 521961DA16E6C5FF00EA7DDF;
+			remoteInfo = trampoline;
+		};
+		5219622A16E6C70700EA7DDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 521961EB16E6C60500EA7DDF;
+			remoteInfo = whichthread;
+		};
+		5219622C16E6C70700EA7DDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 521961FC16E6C60D00EA7DDF;
+			remoteInfo = OpenSoundControl;
+		};
+		5219622E16E6C70700EA7DDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5219620D16E6C61400EA7DDF;
+			remoteInfo = "res-transform";
+		};
 		52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
@@ -932,6 +1054,75 @@
 		5218BB6C164DD40600A02F42 /* open-sdif-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "open-sdif-file.c"; path = "utility-library/search-path/open-sdif-file.c"; sourceTree = "<group>"; };
 		5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp-implem.c"; path = "../CNMAT-SDIF/lib/sdif-interp-implem.c"; sourceTree = "<group>"; };
 		5218BB77164DD87F00A02F42 /* sdif-interp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp.c"; path = "../CNMAT-SDIF/lib/sdif-interp.c"; sourceTree = "<group>"; };
+		5219617F16E6C03100EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5219618016E6C03100EA7DDF /* list-accum.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "list-accum.c"; sourceTree = "<group>"; };
+		5219618116E6C03100EA7DDF /* list-accum.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "list-accum.maxhelp"; sourceTree = "<group>"; };
+		5219618316E6C03E00EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5219618416E6C03E00EA7DDF /* OSC-route.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-route.c"; sourceTree = "<group>"; };
+		5219618516E6C03E00EA7DDF /* OSC-route.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OSC-route.maxhelp"; sourceTree = "<group>"; };
+		5219618716E6C04A00EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5219618816E6C04A00EA7DDF /* migrator.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = migrator.c; sourceTree = "<group>"; };
+		5219618916E6C04A00EA7DDF /* migrator.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = migrator.maxhelp; sourceTree = "<group>"; };
+		5219618B16E6C05800EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5219618C16E6C05800EA7DDF /* trampoline.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = trampoline.c; sourceTree = "<group>"; };
+		5219618D16E6C05800EA7DDF /* trampoline.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = trampoline.maxhelp; sourceTree = "<group>"; };
+		5219618F16E6C06700EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5219619016E6C06700EA7DDF /* whichthread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = whichthread.c; sourceTree = "<group>"; };
+		5219619116E6C06700EA7DDF /* whichthread.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = whichthread.maxhelp; sourceTree = "<group>"; };
+		5219619316E6C07200EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5219619416E6C07200EA7DDF /* OpenSoundControl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = OpenSoundControl.c; sourceTree = "<group>"; };
+		5219619516E6C07200EA7DDF /* OpenSoundControl.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpenSoundControl.maxhelp; sourceTree = "<group>"; };
+		5219619716E6C07200EA7DDF /* OSC-receiving-example.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OSC-receiving-example.pat"; sourceTree = "<group>"; };
+		5219619816E6C07200EA7DDF /* OSC-sending-example.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OSC-sending-example.pat"; sourceTree = "<group>"; };
+		5219619A16E6C07200EA7DDF /* client-reply-tester.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "client-reply-tester.pat"; sourceTree = "<group>"; };
+		5219619B16E6C07200EA7DDF /* to-synth.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "to-synth.pat"; sourceTree = "<group>"; };
+		5219619D16E6C07C00EA7DDF /* design-notes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "design-notes.txt"; sourceTree = "<group>"; };
+		5219619E16E6C07C00EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5219619F16E6C07C00EA7DDF /* o.res-transform.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "o.res-transform.c"; sourceTree = "<group>"; };
+		521961A016E6C07C00EA7DDF /* res-transform.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "res-transform.c"; sourceTree = "<group>"; };
+		521961A116E6C07C00EA7DDF /* res-transform.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "res-transform.maxhelp"; sourceTree = "<group>"; };
+		521961A216E6C07C00EA7DDF /* sin-transform.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sin-transform.maxhelp"; sourceTree = "<group>"; };
+		521961B316E6C0ED00EA7DDF /* list-accum.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "list-accum.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		521961C816E6C5EC00EA7DDF /* OSC-route.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OSC-route.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		521961D916E6C5F900EA7DDF /* migrator.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = migrator.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		521961EA16E6C5FF00EA7DDF /* trampoline.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = trampoline.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		521961FB16E6C60500EA7DDF /* whichthread.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = whichthread.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenSoundControl.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		5219621D16E6C61400EA7DDF /* res-transform.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "res-transform.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5219623116E6C96D00EA7DDF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		5219623216E6C96D00EA7DDF /* NetworkReturnAddress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = NetworkReturnAddress.c; sourceTree = "<group>"; };
+		5219623316E6C96D00EA7DDF /* NetworkReturnAddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkReturnAddress.h; sourceTree = "<group>"; };
+		5219623416E6C96D00EA7DDF /* NetworkUDP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkUDP.h; sourceTree = "<group>"; };
+		5219623516E6C96D00EA7DDF /* OSC-address-space.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-address-space.c"; sourceTree = "<group>"; };
+		5219623616E6C96D00EA7DDF /* OSC-address-space.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-address-space.h"; sourceTree = "<group>"; };
+		5219623716E6C96D00EA7DDF /* OSC-callbacklist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-callbacklist.c"; sourceTree = "<group>"; };
+		5219623816E6C96D00EA7DDF /* OSC-callbacklist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-callbacklist.h"; sourceTree = "<group>"; };
+		5219623916E6C96D00EA7DDF /* OSC-common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-common.h"; sourceTree = "<group>"; };
+		5219623A16E6C96D00EA7DDF /* OSC-dispatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-dispatch.h"; sourceTree = "<group>"; };
+		5219623B16E6C96D00EA7DDF /* OSC-drop.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-drop.c"; sourceTree = "<group>"; };
+		5219623C16E6C96D00EA7DDF /* OSC-drop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-drop.h"; sourceTree = "<group>"; };
+		5219623D16E6C96D00EA7DDF /* OSC-internal-messages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-internal-messages.h"; sourceTree = "<group>"; };
+		5219623E16E6C96D00EA7DDF /* OSC-pattern-match.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-pattern-match.c"; sourceTree = "<group>"; };
+		5219623F16E6C96D00EA7DDF /* OSC-pattern-match.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-pattern-match.h"; sourceTree = "<group>"; };
+		5219624016E6C96D00EA7DDF /* OSC-priority-queue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-priority-queue.c"; sourceTree = "<group>"; };
+		5219624116E6C96D00EA7DDF /* OSC-priority-queue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-priority-queue.h"; sourceTree = "<group>"; };
+		5219624216E6C96D00EA7DDF /* OSC-receive.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-receive.c"; sourceTree = "<group>"; };
+		5219624316E6C96D00EA7DDF /* OSC-receive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-receive.h"; sourceTree = "<group>"; };
+		5219624416E6C96D00EA7DDF /* OSC-string-help.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-string-help.c"; sourceTree = "<group>"; };
+		5219624516E6C96D00EA7DDF /* OSC-string-help.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-string-help.h"; sourceTree = "<group>"; };
+		5219624616E6C96D00EA7DDF /* OSC-system-dependent.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-system-dependent.c"; sourceTree = "<group>"; };
+		5219624716E6C96D00EA7DDF /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		5219624816E6C96D00EA7DDF /* simplesynth-osc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "simplesynth-osc.c"; sourceTree = "<group>"; };
+		5219624916E6C96D00EA7DDF /* test-priority-queue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "test-priority-queue.c"; sourceTree = "<group>"; };
+		5219624A16E6C96D00EA7DDF /* testOSC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = testOSC.c; sourceTree = "<group>"; };
+		5219624D16E6D01700EA7DDF /* example_packetBuild.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = example_packetBuild.c; sourceTree = "<group>"; };
+		5219624E16E6D01700EA7DDF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		5219624F16E6D01700EA7DDF /* OSC-client.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-client.c"; sourceTree = "<group>"; };
+		5219625016E6D01700EA7DDF /* OSC-client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-client.h"; sourceTree = "<group>"; };
+		5219625116E6D01700EA7DDF /* OSC-timetag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-timetag.c"; sourceTree = "<group>"; };
+		5219625216E6D01700EA7DDF /* OSC-timetag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-timetag.h"; sourceTree = "<group>"; };
+		5219625316E6D01700EA7DDF /* test_OSC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_OSC.c; sourceTree = "<group>"; };
+		5219625416E6D01700EA7DDF /* test_OSC_timeTag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_OSC_timeTag.c; sourceTree = "<group>"; };
 		524981C016A65BCD0086F4BD /* harmonics~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "harmonics~.maxhelp"; sourceTree = "<group>"; };
 		524981C216A65BEE0086F4BD /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxhelp; sourceTree = "<group>"; };
 		52B1557D16A8E7FA000FC2E4 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fft.c; path = "lib/Jehan-lib/fft.c"; sourceTree = SOURCE_ROOT; };
@@ -1174,6 +1365,104 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		521961A716E6C0ED00EA7DDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961A816E6C0ED00EA7DDF /* CoreFoundation.framework in Frameworks */,
+				521961A916E6C0ED00EA7DDF /* MaxAPI.framework in Frameworks */,
+				521961AA16E6C0ED00EA7DDF /* MaxAudioAPI.framework in Frameworks */,
+				521961AB16E6C0ED00EA7DDF /* JitterAPI.framework in Frameworks */,
+				521961AC16E6C0ED00EA7DDF /* Accelerate.framework in Frameworks */,
+				521961AD16E6C0ED00EA7DDF /* Carbon.framework in Frameworks */,
+				521961AE16E6C0ED00EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961BC16E6C5EC00EA7DDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961BD16E6C5EC00EA7DDF /* CoreFoundation.framework in Frameworks */,
+				521961BE16E6C5EC00EA7DDF /* MaxAPI.framework in Frameworks */,
+				521961BF16E6C5EC00EA7DDF /* MaxAudioAPI.framework in Frameworks */,
+				521961C016E6C5EC00EA7DDF /* JitterAPI.framework in Frameworks */,
+				521961C116E6C5EC00EA7DDF /* Accelerate.framework in Frameworks */,
+				521961C216E6C5EC00EA7DDF /* Carbon.framework in Frameworks */,
+				521961C316E6C5EC00EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961CD16E6C5F900EA7DDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961CE16E6C5F900EA7DDF /* CoreFoundation.framework in Frameworks */,
+				521961CF16E6C5F900EA7DDF /* MaxAPI.framework in Frameworks */,
+				521961D016E6C5F900EA7DDF /* MaxAudioAPI.framework in Frameworks */,
+				521961D116E6C5F900EA7DDF /* JitterAPI.framework in Frameworks */,
+				521961D216E6C5F900EA7DDF /* Accelerate.framework in Frameworks */,
+				521961D316E6C5F900EA7DDF /* Carbon.framework in Frameworks */,
+				521961D416E6C5F900EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961DE16E6C5FF00EA7DDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961DF16E6C5FF00EA7DDF /* CoreFoundation.framework in Frameworks */,
+				521961E016E6C5FF00EA7DDF /* MaxAPI.framework in Frameworks */,
+				521961E116E6C5FF00EA7DDF /* MaxAudioAPI.framework in Frameworks */,
+				521961E216E6C5FF00EA7DDF /* JitterAPI.framework in Frameworks */,
+				521961E316E6C5FF00EA7DDF /* Accelerate.framework in Frameworks */,
+				521961E416E6C5FF00EA7DDF /* Carbon.framework in Frameworks */,
+				521961E516E6C5FF00EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961EF16E6C60500EA7DDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961F016E6C60500EA7DDF /* CoreFoundation.framework in Frameworks */,
+				521961F116E6C60500EA7DDF /* MaxAPI.framework in Frameworks */,
+				521961F216E6C60500EA7DDF /* MaxAudioAPI.framework in Frameworks */,
+				521961F316E6C60500EA7DDF /* JitterAPI.framework in Frameworks */,
+				521961F416E6C60500EA7DDF /* Accelerate.framework in Frameworks */,
+				521961F516E6C60500EA7DDF /* Carbon.framework in Frameworks */,
+				521961F616E6C60500EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5219620016E6C60D00EA7DDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5219620116E6C60D00EA7DDF /* CoreFoundation.framework in Frameworks */,
+				5219620216E6C60D00EA7DDF /* MaxAPI.framework in Frameworks */,
+				5219620316E6C60D00EA7DDF /* MaxAudioAPI.framework in Frameworks */,
+				5219620416E6C60D00EA7DDF /* JitterAPI.framework in Frameworks */,
+				5219620516E6C60D00EA7DDF /* Accelerate.framework in Frameworks */,
+				5219620616E6C60D00EA7DDF /* Carbon.framework in Frameworks */,
+				5219620716E6C60D00EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5219621116E6C61400EA7DDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5219621216E6C61400EA7DDF /* CoreFoundation.framework in Frameworks */,
+				5219621316E6C61400EA7DDF /* MaxAPI.framework in Frameworks */,
+				5219621416E6C61400EA7DDF /* MaxAudioAPI.framework in Frameworks */,
+				5219621516E6C61400EA7DDF /* JitterAPI.framework in Frameworks */,
+				5219621616E6C61400EA7DDF /* Accelerate.framework in Frameworks */,
+				5219621716E6C61400EA7DDF /* Carbon.framework in Frameworks */,
+				5219621816E6C61400EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		52E4476B15F1889300C91B67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1862,9 +2151,161 @@
 			path = "src/Jehan-lib";
 			sourceTree = "<group>";
 		};
+		5219617E16E6C03100EA7DDF /* list-accum */ = {
+			isa = PBXGroup;
+			children = (
+				5219617F16E6C03100EA7DDF /* Info.plist */,
+				5219618016E6C03100EA7DDF /* list-accum.c */,
+				5219618116E6C03100EA7DDF /* list-accum.maxhelp */,
+			);
+			name = "list-accum";
+			path = "src/list-accum";
+			sourceTree = "<group>";
+		};
+		5219618216E6C03E00EA7DDF /* OSC-route */ = {
+			isa = PBXGroup;
+			children = (
+				5219618316E6C03E00EA7DDF /* Info.plist */,
+				5219618416E6C03E00EA7DDF /* OSC-route.c */,
+				5219618516E6C03E00EA7DDF /* OSC-route.maxhelp */,
+			);
+			name = "OSC-route";
+			path = "src/OSC-route";
+			sourceTree = "<group>";
+		};
+		5219618616E6C04A00EA7DDF /* migrator */ = {
+			isa = PBXGroup;
+			children = (
+				5219618716E6C04A00EA7DDF /* Info.plist */,
+				5219618816E6C04A00EA7DDF /* migrator.c */,
+				5219618916E6C04A00EA7DDF /* migrator.maxhelp */,
+			);
+			name = migrator;
+			path = src/migrator;
+			sourceTree = "<group>";
+		};
+		5219618A16E6C05800EA7DDF /* trampoline */ = {
+			isa = PBXGroup;
+			children = (
+				5219618B16E6C05800EA7DDF /* Info.plist */,
+				5219618C16E6C05800EA7DDF /* trampoline.c */,
+				5219618D16E6C05800EA7DDF /* trampoline.maxhelp */,
+			);
+			name = trampoline;
+			path = src/trampoline;
+			sourceTree = "<group>";
+		};
+		5219618E16E6C06700EA7DDF /* whichthread */ = {
+			isa = PBXGroup;
+			children = (
+				5219618F16E6C06700EA7DDF /* Info.plist */,
+				5219619016E6C06700EA7DDF /* whichthread.c */,
+				5219619116E6C06700EA7DDF /* whichthread.maxhelp */,
+			);
+			name = whichthread;
+			path = src/whichthread;
+			sourceTree = "<group>";
+		};
+		5219619216E6C07200EA7DDF /* OpenSoundControl */ = {
+			isa = PBXGroup;
+			children = (
+				5219619316E6C07200EA7DDF /* Info.plist */,
+				5219619416E6C07200EA7DDF /* OpenSoundControl.c */,
+				5219619516E6C07200EA7DDF /* OpenSoundControl.maxhelp */,
+				5219619616E6C07200EA7DDF /* release */,
+				5219619916E6C07200EA7DDF /* test-patches */,
+			);
+			name = OpenSoundControl;
+			path = src/OpenSoundControl;
+			sourceTree = "<group>";
+		};
+		5219619616E6C07200EA7DDF /* release */ = {
+			isa = PBXGroup;
+			children = (
+				5219619716E6C07200EA7DDF /* OSC-receiving-example.pat */,
+				5219619816E6C07200EA7DDF /* OSC-sending-example.pat */,
+			);
+			path = release;
+			sourceTree = "<group>";
+		};
+		5219619916E6C07200EA7DDF /* test-patches */ = {
+			isa = PBXGroup;
+			children = (
+				5219619A16E6C07200EA7DDF /* client-reply-tester.pat */,
+				5219619B16E6C07200EA7DDF /* to-synth.pat */,
+			);
+			path = "test-patches";
+			sourceTree = "<group>";
+		};
+		5219619C16E6C07C00EA7DDF /* res-transform */ = {
+			isa = PBXGroup;
+			children = (
+				5219619D16E6C07C00EA7DDF /* design-notes.txt */,
+				5219619E16E6C07C00EA7DDF /* Info.plist */,
+				5219619F16E6C07C00EA7DDF /* o.res-transform.c */,
+				521961A016E6C07C00EA7DDF /* res-transform.c */,
+				521961A116E6C07C00EA7DDF /* res-transform.maxhelp */,
+				521961A216E6C07C00EA7DDF /* sin-transform.maxhelp */,
+			);
+			name = "res-transform";
+			path = "src/res-transform";
+			sourceTree = "<group>";
+		};
+		5219623016E6C96D00EA7DDF /* OSC-Kit */ = {
+			isa = PBXGroup;
+			children = (
+				5219623116E6C96D00EA7DDF /* Makefile */,
+				5219623216E6C96D00EA7DDF /* NetworkReturnAddress.c */,
+				5219623316E6C96D00EA7DDF /* NetworkReturnAddress.h */,
+				5219623416E6C96D00EA7DDF /* NetworkUDP.h */,
+				5219623516E6C96D00EA7DDF /* OSC-address-space.c */,
+				5219623616E6C96D00EA7DDF /* OSC-address-space.h */,
+				5219623716E6C96D00EA7DDF /* OSC-callbacklist.c */,
+				5219623816E6C96D00EA7DDF /* OSC-callbacklist.h */,
+				5219623916E6C96D00EA7DDF /* OSC-common.h */,
+				5219623A16E6C96D00EA7DDF /* OSC-dispatch.h */,
+				5219623B16E6C96D00EA7DDF /* OSC-drop.c */,
+				5219623C16E6C96D00EA7DDF /* OSC-drop.h */,
+				5219623D16E6C96D00EA7DDF /* OSC-internal-messages.h */,
+				5219623E16E6C96D00EA7DDF /* OSC-pattern-match.c */,
+				5219623F16E6C96D00EA7DDF /* OSC-pattern-match.h */,
+				5219624016E6C96D00EA7DDF /* OSC-priority-queue.c */,
+				5219624116E6C96D00EA7DDF /* OSC-priority-queue.h */,
+				5219624216E6C96D00EA7DDF /* OSC-receive.c */,
+				5219624316E6C96D00EA7DDF /* OSC-receive.h */,
+				5219624416E6C96D00EA7DDF /* OSC-string-help.c */,
+				5219624516E6C96D00EA7DDF /* OSC-string-help.h */,
+				5219624616E6C96D00EA7DDF /* OSC-system-dependent.c */,
+				5219624716E6C96D00EA7DDF /* README.txt */,
+				5219624816E6C96D00EA7DDF /* simplesynth-osc.c */,
+				5219624916E6C96D00EA7DDF /* test-priority-queue.c */,
+				5219624A16E6C96D00EA7DDF /* testOSC.c */,
+			);
+			name = "OSC-Kit";
+			path = "../CNMAT-OSC/OSC-Kit";
+			sourceTree = "<group>";
+		};
+		5219624C16E6D01700EA7DDF /* libOSC */ = {
+			isa = PBXGroup;
+			children = (
+				5219624D16E6D01700EA7DDF /* example_packetBuild.c */,
+				5219624E16E6D01700EA7DDF /* Makefile */,
+				5219624F16E6D01700EA7DDF /* OSC-client.c */,
+				5219625016E6D01700EA7DDF /* OSC-client.h */,
+				5219625116E6D01700EA7DDF /* OSC-timetag.c */,
+				5219625216E6D01700EA7DDF /* OSC-timetag.h */,
+				5219625316E6D01700EA7DDF /* test_OSC.c */,
+				5219625416E6D01700EA7DDF /* test_OSC_timeTag.c */,
+			);
+			name = libOSC;
+			path = "../CNMAT-OSC/libOSC";
+			sourceTree = "<group>";
+		};
 		52DE949415F142570097B3E8 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				5219624C16E6D01700EA7DDF /* libOSC */,
+				5219623016E6C96D00EA7DDF /* OSC-Kit */,
 				5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */,
 				5218BB77164DD87F00A02F42 /* sdif-interp.c */,
 				5218BB6C164DD40600A02F42 /* open-sdif-file.c */,
@@ -2487,8 +2928,12 @@
 				52E4483D15F1E96C00C91B67 /* harmonics~ */,
 				52E4484315F1E96C00C91B67 /* interleave */,
 				52E4484715F1E96D00C91B67 /* lcm */,
+				5219617E16E6C03100EA7DDF /* list-accum */,
 				52E4484B15F1E96D00C91B67 /* list-interpolate */,
 				52E4484F15F1E96D00C91B67 /* loudness~ */,
+				5219618616E6C04A00EA7DDF /* migrator */,
+				5219619216E6C07200EA7DDF /* OpenSoundControl */,
+				5219618216E6C03E00EA7DDF /* OSC-route */,
 				52E4492A15F2879300C91B67 /* OSC-schedule */,
 				52E4493215F2879300C91B67 /* OSC-timetag */,
 				52E4493915F2879300C91B67 /* oscillators~ */,
@@ -2501,6 +2946,7 @@
 				52E4495E15F2879500C91B67 /* rbfi */,
 				52E4496415F2879500C91B67 /* resdisplay */,
 				52E4496815F2879500C91B67 /* resonators~ */,
+				5219619C16E6C07C00EA7DDF /* res-transform */,
 				52E4496C15F2879500C91B67 /* roughness */,
 				52E4497015F2879500C91B67 /* SDIF-buffer */,
 				52E4497915F2879500C91B67 /* SDIF-fileinfo */,
@@ -2514,9 +2960,11 @@
 				52E449A115F2879600C91B67 /* thread.fork */,
 				52E449A515F2879700C91B67 /* thread.join */,
 				52E449A915F2879700C91B67 /* threefates */,
+				5219618A16E6C05800EA7DDF /* trampoline */,
 				52E449AD15F2879700C91B67 /* trend-report */,
 				52E449B115F287C400C91B67 /* vsnapshot~ */,
 				52E449B515F287C400C91B67 /* waveguide~ */,
+				5219618E16E6C06700EA7DDF /* whichthread */,
 				52E449B915F287C400C91B67 /* xydisplay */,
 				52DE949415F142570097B3E8 /* lib */,
 				52F10AA415F07157008FC371 /* Frameworks */,
@@ -2575,6 +3023,13 @@
 				52E44B5115F2888700C91B67 /* vsnapshot~.mxo */,
 				52E44B6015F2888E00C91B67 /* waveguide~.mxo */,
 				52E44B6F15F2889400C91B67 /* xydisplay.mxo */,
+				521961B316E6C0ED00EA7DDF /* list-accum.mxo */,
+				521961C816E6C5EC00EA7DDF /* OSC-route.mxo */,
+				521961D916E6C5F900EA7DDF /* migrator.mxo */,
+				521961EA16E6C5FF00EA7DDF /* trampoline.mxo */,
+				521961FB16E6C60500EA7DDF /* whichthread.mxo */,
+				5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */,
+				5219621D16E6C61400EA7DDF /* res-transform.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2619,6 +3074,125 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		521961A316E6C0ED00EA7DDF /* list-accum */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 521961B016E6C0ED00EA7DDF /* Build configuration list for PBXNativeTarget "list-accum" */;
+			buildPhases = (
+				521961A416E6C0ED00EA7DDF /* Sources */,
+				521961A716E6C0ED00EA7DDF /* Frameworks */,
+				521961AF16E6C0ED00EA7DDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "list-accum";
+			productName = "2threshattack~";
+			productReference = 521961B316E6C0ED00EA7DDF /* list-accum.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		521961B816E6C5EC00EA7DDF /* OSC-route */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 521961C516E6C5EC00EA7DDF /* Build configuration list for PBXNativeTarget "OSC-route" */;
+			buildPhases = (
+				521961B916E6C5EC00EA7DDF /* Sources */,
+				521961BC16E6C5EC00EA7DDF /* Frameworks */,
+				521961C416E6C5EC00EA7DDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OSC-route";
+			productName = "2threshattack~";
+			productReference = 521961C816E6C5EC00EA7DDF /* OSC-route.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		521961C916E6C5F900EA7DDF /* migrator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 521961D616E6C5F900EA7DDF /* Build configuration list for PBXNativeTarget "migrator" */;
+			buildPhases = (
+				521961CA16E6C5F900EA7DDF /* Sources */,
+				521961CD16E6C5F900EA7DDF /* Frameworks */,
+				521961D516E6C5F900EA7DDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = migrator;
+			productName = "2threshattack~";
+			productReference = 521961D916E6C5F900EA7DDF /* migrator.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		521961DA16E6C5FF00EA7DDF /* trampoline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 521961E716E6C5FF00EA7DDF /* Build configuration list for PBXNativeTarget "trampoline" */;
+			buildPhases = (
+				521961DB16E6C5FF00EA7DDF /* Sources */,
+				521961DE16E6C5FF00EA7DDF /* Frameworks */,
+				521961E616E6C5FF00EA7DDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = trampoline;
+			productName = "2threshattack~";
+			productReference = 521961EA16E6C5FF00EA7DDF /* trampoline.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		521961EB16E6C60500EA7DDF /* whichthread */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 521961F816E6C60500EA7DDF /* Build configuration list for PBXNativeTarget "whichthread" */;
+			buildPhases = (
+				521961EC16E6C60500EA7DDF /* Sources */,
+				521961EF16E6C60500EA7DDF /* Frameworks */,
+				521961F716E6C60500EA7DDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = whichthread;
+			productName = "2threshattack~";
+			productReference = 521961FB16E6C60500EA7DDF /* whichthread.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		521961FC16E6C60D00EA7DDF /* OpenSoundControl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5219620916E6C60D00EA7DDF /* Build configuration list for PBXNativeTarget "OpenSoundControl" */;
+			buildPhases = (
+				521961FD16E6C60D00EA7DDF /* Sources */,
+				5219620016E6C60D00EA7DDF /* Frameworks */,
+				5219620816E6C60D00EA7DDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OpenSoundControl;
+			productName = "2threshattack~";
+			productReference = 5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5219620D16E6C61400EA7DDF /* res-transform */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5219621A16E6C61400EA7DDF /* Build configuration list for PBXNativeTarget "res-transform" */;
+			buildPhases = (
+				5219620E16E6C61400EA7DDF /* Sources */,
+				5219621116E6C61400EA7DDF /* Frameworks */,
+				5219621916E6C61400EA7DDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "res-transform";
+			productName = "2threshattack~";
+			productReference = 5219621D16E6C61400EA7DDF /* res-transform.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
 		52E4476715F1889300C91B67 /* accumulate~ */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 52E4477015F1889300C91B67 /* Build configuration list for PBXNativeTarget "accumulate~" */;
@@ -3474,6 +4048,7 @@
 				52E4489E15F1E9BC00C91B67 /* harmonics~ */,
 				52E448AD15F1E9C100C91B67 /* interleave */,
 				52E448BC15F1E9C600C91B67 /* lcm */,
+				521961A316E6C0ED00EA7DDF /* list-accum */,
 				52E448CB15F1E9C900C91B67 /* list-interpolate */,
 				52E448E915F1E9DD00C91B67 /* loudness~ */,
 				52E449BD15F287ED00C91B67 /* OSC-schedule */,
@@ -3505,11 +4080,66 @@
 				52E44B4315F2888700C91B67 /* vsnapshot~ */,
 				52E44B5215F2888E00C91B67 /* waveguide~ */,
 				52E44B6115F2889400C91B67 /* xydisplay */,
+				521961B816E6C5EC00EA7DDF /* OSC-route */,
+				521961C916E6C5F900EA7DDF /* migrator */,
+				521961DA16E6C5FF00EA7DDF /* trampoline */,
+				521961EB16E6C60500EA7DDF /* whichthread */,
+				521961FC16E6C60D00EA7DDF /* OpenSoundControl */,
+				5219620D16E6C61400EA7DDF /* res-transform */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		521961AF16E6C0ED00EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961C416E6C5EC00EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961D516E6C5F900EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961E616E6C5FF00EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961F716E6C60500EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5219620816E6C60D00EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5219621916E6C61400EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		52E4476F15F1889300C91B67 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3849,6 +4479,72 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		521961A416E6C0ED00EA7DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961A616E6C0ED00EA7DDF /* commonsyms.c in Sources */,
+				521961B416E6C14800EA7DDF /* list-accum.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961B916E6C5EC00EA7DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961BA16E6C5EC00EA7DDF /* commonsyms.c in Sources */,
+				5219622016E6C6B600EA7DDF /* OSC-route.c in Sources */,
+				5219624B16E6C98000EA7DDF /* OSC-pattern-match.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961CA16E6C5F900EA7DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961CB16E6C5F900EA7DDF /* commonsyms.c in Sources */,
+				5219621F16E6C6B100EA7DDF /* migrator.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961DB16E6C5FF00EA7DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961DC16E6C5FF00EA7DDF /* commonsyms.c in Sources */,
+				5219622216E6C6D000EA7DDF /* trampoline.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961EC16E6C60500EA7DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961ED16E6C60500EA7DDF /* commonsyms.c in Sources */,
+				5219622316E6C6D600EA7DDF /* whichthread.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		521961FD16E6C60D00EA7DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				521961FE16E6C60D00EA7DDF /* commonsyms.c in Sources */,
+				5219621E16E6C6AB00EA7DDF /* OpenSoundControl.c in Sources */,
+				5219625516E6D02000EA7DDF /* OSC-client.c in Sources */,
+				5219625616E6D09700EA7DDF /* OSC-timetag.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5219620E16E6C61400EA7DDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5219620F16E6C61400EA7DDF /* commonsyms.c in Sources */,
+				5219622116E6C6C200EA7DDF /* res-transform.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		52E4476815F1889300C91B67 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4348,8 +5044,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52F10ADB15F07231008FC371 /* 2threshattack~.c in Sources */,
 				52E44C7D15F4835400C91B67 /* commonsyms.c in Sources */,
+				521961B716E6C3FE00EA7DDF /* 2threshattack~.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4365,6 +5061,41 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		521961B616E6C25B00EA7DDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 521961A316E6C0ED00EA7DDF /* list-accum */;
+			targetProxy = 521961B516E6C25B00EA7DDF /* PBXContainerItemProxy */;
+		};
+		5219622516E6C70700EA7DDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 521961B816E6C5EC00EA7DDF /* OSC-route */;
+			targetProxy = 5219622416E6C70700EA7DDF /* PBXContainerItemProxy */;
+		};
+		5219622716E6C70700EA7DDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 521961C916E6C5F900EA7DDF /* migrator */;
+			targetProxy = 5219622616E6C70700EA7DDF /* PBXContainerItemProxy */;
+		};
+		5219622916E6C70700EA7DDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 521961DA16E6C5FF00EA7DDF /* trampoline */;
+			targetProxy = 5219622816E6C70700EA7DDF /* PBXContainerItemProxy */;
+		};
+		5219622B16E6C70700EA7DDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 521961EB16E6C60500EA7DDF /* whichthread */;
+			targetProxy = 5219622A16E6C70700EA7DDF /* PBXContainerItemProxy */;
+		};
+		5219622D16E6C70700EA7DDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 521961FC16E6C60D00EA7DDF /* OpenSoundControl */;
+			targetProxy = 5219622C16E6C70700EA7DDF /* PBXContainerItemProxy */;
+		};
+		5219622F16E6C70700EA7DDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5219620D16E6C61400EA7DDF /* res-transform */;
+			targetProxy = 5219622E16E6C70700EA7DDF /* PBXContainerItemProxy */;
+		};
 		52E447EF15F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4476715F1889300C91B67 /* accumulate~ */;
@@ -4608,6 +5339,286 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		521961B116E6C0ED00EA7DDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = "list-accum";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		521961B216E6C0ED00EA7DDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = "list-accum";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		521961C616E6C5EC00EA7DDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = "OSC-route";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		521961C716E6C5EC00EA7DDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = "OSC-route";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		521961D716E6C5F900EA7DDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = migrator;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		521961D816E6C5F900EA7DDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = migrator;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		521961E816E6C5FF00EA7DDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = trampoline;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		521961E916E6C5FF00EA7DDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = trampoline;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		521961F916E6C60500EA7DDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = whichthread;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		521961FA16E6C60500EA7DDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = whichthread;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		5219620A16E6C60D00EA7DDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = OpenSoundControl;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		5219620B16E6C60D00EA7DDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = OpenSoundControl;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		5219621B16E6C61400EA7DDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = "res-transform";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		5219621C16E6C61400EA7DDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				PRODUCT_NAME = "res-transform";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
 		52E4477115F1889300C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6511,6 +7522,8 @@
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
 					"\"$(SRCROOT)/utility-library/search-path\"",
 					"\"$(SRCROOT)/include\"",
+					"\"$(SRCROOT)/../CNMAT-OSC/OSC-Kit\"",
+					"\"$(SRCROOT)/../CNMAT-OSC/libOSC\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -6567,6 +7580,8 @@
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
 					"\"$(SRCROOT)/utility-library/search-path\"",
 					"\"$(SRCROOT)/include\"",
+					"\"$(SRCROOT)/../CNMAT-OSC/OSC-Kit\"",
+					"\"$(SRCROOT)/../CNMAT-OSC/libOSC\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -6682,6 +7697,69 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		521961B016E6C0ED00EA7DDF /* Build configuration list for PBXNativeTarget "list-accum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				521961B116E6C0ED00EA7DDF /* Debug */,
+				521961B216E6C0ED00EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		521961C516E6C5EC00EA7DDF /* Build configuration list for PBXNativeTarget "OSC-route" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				521961C616E6C5EC00EA7DDF /* Debug */,
+				521961C716E6C5EC00EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		521961D616E6C5F900EA7DDF /* Build configuration list for PBXNativeTarget "migrator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				521961D716E6C5F900EA7DDF /* Debug */,
+				521961D816E6C5F900EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		521961E716E6C5FF00EA7DDF /* Build configuration list for PBXNativeTarget "trampoline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				521961E816E6C5FF00EA7DDF /* Debug */,
+				521961E916E6C5FF00EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		521961F816E6C60500EA7DDF /* Build configuration list for PBXNativeTarget "whichthread" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				521961F916E6C60500EA7DDF /* Debug */,
+				521961FA16E6C60500EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5219620916E6C60D00EA7DDF /* Build configuration list for PBXNativeTarget "OpenSoundControl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5219620A16E6C60D00EA7DDF /* Debug */,
+				5219620B16E6C60D00EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5219621A16E6C61400EA7DDF /* Build configuration list for PBXNativeTarget "res-transform" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5219621B16E6C61400EA7DDF /* Debug */,
+				5219621C16E6C61400EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		52E4477015F1889300C91B67 /* Build configuration list for PBXNativeTarget "accumulate~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

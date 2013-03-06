@@ -65,7 +65,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 7.0, 492.0, 72.0, 0.0 ],
+					"patching_rect" : [ 7.0, 492.0, 72.0, 17.0 ],
 					"text" : "loadmess 100"
 				}
 
@@ -101,14 +101,15 @@
 			}
 , 			{
 				"box" : 				{
-					"filename" : "resonance-display.js",
+					"color" : [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
 					"id" : "obj-6",
-					"maxclass" : "jsui",
+					"maxclass" : "resdisplay",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 154.0, 376.0, 381.0, 117.0 ]
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 154.0, 376.0, 425.0, 105.0 ]
 				}
 
 			}
@@ -122,8 +123,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 384.0, 498.0, 92.0, 15.0 ],
-					"text" : "resonance-display"
+					"patching_rect" : [ 388.0, 498.0, 51.0, 15.0 ],
+					"text" : "resdisplay"
 				}
 
 			}
@@ -3213,7 +3214,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 470.0, 618.0, 64.0, 0.0 ],
+					"patching_rect" : [ 470.0, 618.0, 64.0, 17.0 ],
 					"text" : "prepend help"
 				}
 
@@ -3243,7 +3244,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 470.0, 639.0, 45.0, 0.0 ],
+					"patching_rect" : [ 470.0, 639.0, 45.0, 17.0 ],
 					"text" : "pcontrol"
 				}
 
@@ -3342,7 +3343,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 575.0, 589.0, 294.0, 0.0 ],
+					"patching_rect" : [ 575.0, 589.0, 294.0, 25.0 ],
 					"text" : ";\rmax launch_browser http://www.cnmat.berkeley.edu/MAX/"
 				}
 
@@ -3363,7 +3364,7 @@
 			}
 , 			{
 				"box" : 				{
-					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
+					"data" : [ 593, "", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
 					"embed" : 1,
 					"id" : "obj-32",
 					"maxclass" : "fpic",
@@ -4857,7 +4858,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 39.0, 380.0, 45.0, 0.0 ],
+					"patching_rect" : [ 39.0, 380.0, 45.0, 27.0 ],
 					"text" : "loadbang"
 				}
 
@@ -6349,7 +6350,7 @@
 													"maxclass" : "inlet",
 													"numinlets" : 0,
 													"numoutlets" : 1,
-													"outlettype" : [ "list" ],
+													"outlettype" : [ "" ],
 													"patching_rect" : [ 364.0, 41.0, 15.0, 15.0 ]
 												}
 
@@ -12224,7 +12225,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 95.0, 426.0, 23.0, 0.0 ],
+					"patching_rect" : [ 95.0, 426.0, 23.0, 15.0 ],
 					"text" : "0.7"
 				}
 
@@ -12239,7 +12240,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 169.0, 355.0, 147.0, 0.0 ],
+					"patching_rect" : [ 169.0, 355.0, 147.0, 17.0 ],
 					"text" : "loadmess displayrange 0 5000"
 				}
 
@@ -12649,13 +12650,6 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "resonance-display.js",
-				"bootpath" : "/Users/john/MMJ6/CNMAT-Everything-OSX-MachO",
-				"patcherrelativepath" : "../../../../../../MMJ6/CNMAT-Everything-OSX-MachO",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "html_reference.maxpat",
 				"bootpath" : "/Users/john/MMJ6/CNMAT-Everything-OSX-MachO/CNMAT_MMJ-Depot/modules/Depot_Support",
 				"patcherrelativepath" : "../../../../../../MMJ6/CNMAT-Everything-OSX-MachO/CNMAT_MMJ-Depot/modules/Depot_Support",
@@ -12668,6 +12662,10 @@
 			}
 , 			{
 				"name" : "resonators~.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "resdisplay.mxo",
 				"type" : "iLaX"
 			}
  ]
