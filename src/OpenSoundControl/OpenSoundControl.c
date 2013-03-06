@@ -61,9 +61,14 @@ VERSION 1.9.16: Use unsigned bytes in blobs
 	
    */
 
+#define NAME "OpenSoundControl"
+#define DESCRIPTION "Format Max data to <A href=\"http://www.cnmat.berkeley.edu/OpenSoundControl\">OpenSoundControl</a> protocol and vice versa"
+#define AUTHORS "Matt Wright, Andy Schmeder"
+#define COPYRIGHT_YEARS "1996,97,98,99,2000,01,02,03,04,05"
+
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
 #include "OSC-client.h"
 
 #ifdef WIN_VERSION
@@ -129,47 +134,49 @@ where to link in the real ntohl() I'll define this evil macro: */
 void strcpy(char *s1, char *s2);
 #endif
 
-void main (fptr *f) {	
-        version(0);
-		
-	setup((t_messlist **)&OSC_class, (method) OSC_new,0L,(short)sizeof(OSC),0L,A_DEFLONG,0);
+int main (void) {	
+        OSC_class = class_new("OpenSoundControl", (method) OSC_new,0L,(short)sizeof(OSC),0L,A_DEFLONG,0);
 
 #ifdef SANITY_CHECK
 	post("*** sizeof(int4byte) = %ld", (long) sizeof(int4byte));
 	post("*** sizeof(long) = %ld", (long) sizeof(long));
 #endif
 
-	addmess((method)OSC_assist, "assist",	A_CANT,0);
-	addmess((method)version, "version", 	0);
-	addmess((method)OSC_debug, "debug", 	0);
-	addmess((method)OSC_errorreporting, "errorreporting", 	A_LONG, 0);
-	addmess((method)OSC_reset, "reset", 	0);
-	addmess((method)OSC_resetAllTheWayMode, "resetallthewaymode", 	0);
+	class_addmethod(OSC_class, (method)OSC_assist, "assist",	A_CANT,0);
+	class_addmethod(OSC_class, (method)version, "version", 	0);
+	class_addmethod(OSC_class, (method)OSC_debug, "debug", 	0);
+	class_addmethod(OSC_class, (method)OSC_errorreporting, "errorreporting", 	A_LONG, 0);
+	class_addmethod(OSC_class, (method)OSC_reset, "reset", 	0);
+	class_addmethod(OSC_class, (method)OSC_resetAllTheWayMode, "resetallthewaymode", 	0);
 
-	addmess((method)OSC_send, "send", 	0);
+	class_addmethod(OSC_class, (method)OSC_send, "send", 	0);
 
-	addmess((method)OSC_anything, "anything",	A_GIMME,0);
-	addmess((method)OSC_openBundleCB, "openbundle", 	0);
-	addmess((method)OSC_closeBundleCB, "closebundle", 	0);
-	addmess((method)OSC_openBundleCB, "[", 	0);
-	addmess((method)OSC_closeBundleCB, "]", 	0);
+	class_addmethod(OSC_class, (method)OSC_anything, "anything",	A_GIMME,0);
+	class_addmethod(OSC_class, (method)OSC_openBundleCB, "openbundle", 	0);
+	class_addmethod(OSC_class, (method)OSC_closeBundleCB, "closebundle", 	0);
+	class_addmethod(OSC_class, (method)OSC_openBundleCB, "[", 	0);
+	class_addmethod(OSC_class, (method)OSC_closeBundleCB, "]", 	0);
 
-	addbang((method)OSC_bang);
-	addmess((method)OSC_printcontents, "printcontents", 0);
-	addmess((method)OSC_NewTimeTag, "OSCTimeTag", A_LONG, A_LONG, 0);
-	addmess((method)OSC_ParseFullPacket, "FullPacket", A_LONG, A_LONG, 0);
-	addmess((method)OSC_ParsePartialPacket, "PartialPacket", A_LONG, A_LONG, 0);
-	addmess((method)OSC_ParseEvilGimme, "gimme", A_GIMME, 0);
-	addmess((method)OSC_readtypestrings, "readtypestrings", A_LONG, 0);
-	addmess((method)OSC_writetypestrings, "writetypestrings", A_LONG, 0);
+	class_addmethod(OSC_class, (method)OSC_bang, "bang", 0);
+	class_addmethod(OSC_class, (method)OSC_printcontents, "printcontents", 0);
+	class_addmethod(OSC_class, (method)OSC_NewTimeTag, "OSCTimeTag", A_LONG, A_LONG, 0);
+	class_addmethod(OSC_class, (method)OSC_ParseFullPacket, "FullPacket", A_LONG, A_LONG, 0);
+	class_addmethod(OSC_class, (method)OSC_ParsePartialPacket, "PartialPacket", A_LONG, A_LONG, 0);
+	class_addmethod(OSC_class, (method)OSC_ParseEvilGimme, "gimme", A_GIMME, 0);
+	class_addmethod(OSC_class, (method)OSC_readtypestrings, "readtypestrings", A_LONG, 0);
+	class_addmethod(OSC_class, (method)OSC_writetypestrings, "writetypestrings", A_LONG, 0);
 	
 
-	finder_addclass("Devices","OpenSoundControl");
+	//finder_addclass("Devices","OpenSoundControl");
 	//	rescopy('STR#',3009);
 	ps_gimme = gensym("gimme");
 	ps_OSCTimeTag = gensym("OSCTimeTag");
 	ps_FullPacket = gensym("FullPacket");
 	ps_OSCBlob = gensym("OSCBlob");
+
+	class_register(CLASS_BOX, OSC_class);
+	version_post_copyright();
+	return 0;
 }
 
 #define DEFAULT_BUFFER_SIZE 1024
@@ -179,7 +186,7 @@ void *OSC_new(long arg) {
 	OSC *x;
 	char *buf;
 	
-	x = (OSC *) newobject(OSC_class);
+	x = (OSC *) object_alloc(OSC_class);
 
 	/* Create the outlets in right to left order */
 	x->O_outlet3 = outlet_new(x, "OSCTimeTag");

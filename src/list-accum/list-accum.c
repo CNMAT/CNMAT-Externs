@@ -43,9 +43,14 @@ VERSION 0.6: MacCallum added a second outlet to output the length of the list.  
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define NAME "list-accum"
+#define DESCRIPTION "Accumulate a list by adding elements gradually.  Much like zl group except it can output arbitrary-length lists."
+#define AUTHORS "Michael Lee and Matt Wright"
+#define COPYRIGHT_YEARS "1996,98,98,992000,01,02,03,04,05,06"
+
 #include "version.h"
 #include "ext.h"
-#include "version.c"
+#include "ext_obex.h"
 
 struct listAccum *listAccumNew(long);
 void listAccumFree(struct listAccum *);
@@ -58,7 +63,7 @@ void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv)
 
 
 fptr *FNS;
-void *class;
+t_class *class;
 
 struct listAccum {
 	struct object l_ob;
@@ -83,7 +88,10 @@ struct listAccum *listAccumNew(long n) {
 		return 0;
 	}
 	
-	x = (struct listAccum *)newobject(class);
+	x = (struct listAccum *)object_alloc(class);
+	if(!x){
+		return NULL;
+	}
 	x->l_outlet2 = intout(x);
 	x->l_outlet = outlet_new(x,0L);
 	x->l_numAtoms = n;
@@ -197,19 +205,20 @@ void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv)
 }
 
 
-int main(void) {		
-	setup((t_messlist **)&class, (method) listAccumNew, (method)listAccumFree,
+int main(void) 
+{		
+	class = class_new("list-accum", (method) listAccumNew, (method)listAccumFree,
 		  (short) sizeof(struct listAccum), 0L, A_LONG, 0);
 
-	addbang((method)listAccumBang);
-	addint((method)listAccumInt);
-	addfloat((method)listAccumFloat);
-	addmess((method)listAccumDebug, "debug", 0);
-	addmess((method)listAccumList, "list",A_GIMME, 0);
- 	addmess((method)listAccum_anything,	"anything",	A_GIMME, 0);
-
-	finder_addclass("Data","listAccum");
+	class_addmethod(class, (method)listAccumBang, "bang", 0);
+	class_addmethod(class, (method)listAccumInt, "int", A_LONG, 0);
+	class_addmethod(class, (method)listAccumFloat, "float", A_FLOAT, 0);
+	class_addmethod(class, (method)listAccumDebug, "debug", 0);
+	class_addmethod(class, (method)listAccumList, "list",A_GIMME, 0);
+ 	class_addmethod(class, (method)listAccum_anything,	"anything",	A_GIMME, 0);
+ 	class_addmethod(class, (method)version,	"version", 0);
 	
-	version(0);
+	version_post_copyright();
+	class_register(CLASS_BOX, class);
 	return 0;
 }

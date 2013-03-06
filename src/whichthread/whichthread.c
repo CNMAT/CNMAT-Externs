@@ -21,18 +21,22 @@
 
 
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  NAME: backtrace
-  DESCRIPTION: Backtrace tail call optimization for Max
+  NAME: whichthread
+  DESCRIPTION: Report the current executing thread
   AUTHORS: John MacCallum
-  COPYRIGHT_YEARS: 2011
+  COPYRIGHT_YEARS: 2012
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
+#define NAME "whichthread"
+#define DESCRIPTION "Report the current executing thread"
+#define AUTHORS "John MacCallum"
+#define COPYRIGHT_YEARS "2012"
+
 #include "version.h"
 #include "ext.h"
-#include "version.c"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include <pthread.h>
@@ -128,5 +132,7 @@ int main(void){
 	whichthread_class = c;
 
 	common_symbols_init();
+
+	version_post_copyright();
 	return 0;
 }
