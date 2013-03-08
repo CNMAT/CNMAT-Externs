@@ -67,7 +67,7 @@ Future:
 #define NAME "res-transform"
 #define DESCRIPTION "Set of basic transformations for resonance models"
 #define AUTHORS "Adrian Freed, Matt Wright, and Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1996-2006"
+#define COPYRIGHT_YEARS "1996-2006,12,13"
 
 
 #include <math.h>

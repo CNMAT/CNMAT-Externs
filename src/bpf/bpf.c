@@ -68,7 +68,7 @@
 #define NAME "bpf "
 #define DESCRIPTION "Breakpoint function editor "
 #define AUTHORS "John MacCallum "
-#define COPYRIGHT_YEARS "2009 ,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 /*

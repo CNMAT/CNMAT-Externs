@@ -42,7 +42,7 @@ VERSION 0.1: First public release
 #define NAME "thread.join"
 #define DESCRIPTION "Pass data from a secondary thread back to the main thread"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 // max object header

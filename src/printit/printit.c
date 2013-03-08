@@ -47,7 +47,7 @@ VERSION 0.4.1: Added min and max OSC Packet sizes as a heuristic protection agai
 #define NAME "printit"
 #define DESCRIPTION "Really print everything about what comes in the inlet"
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "2000-06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
  
  

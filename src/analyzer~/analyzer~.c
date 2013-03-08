@@ -59,7 +59,7 @@
 #define NAME "analyzer~"
 #define DESCRIPTION "FFT-Based Perceptual Analysis"
 #define AUTHORS "Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05, 11,2012"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000,01-05,11-13"
 
 #include "ext.h"
 #include "ext_obex.h";

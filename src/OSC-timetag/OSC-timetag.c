@@ -44,7 +44,7 @@ VERSION 0.2: Added support for in-place operations on FullPackets
 #define NAME "OSC-timetag"
 #define DESCRIPTION "Generates, transforms and operates on high-resolution timestamps"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 // max object header

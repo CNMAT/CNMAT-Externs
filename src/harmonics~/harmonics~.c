@@ -43,7 +43,7 @@ VERSION 1.3.1: Force Package Info Generation
 #define NAME "harmonics~ "
 #define DESCRIPTION "MSP harmonic oscillator Bank"
 #define AUTHORS "Adrian Freed"
-#define COPYRIGHT_YEARS "1996,97,98,99,2000,2001,2002,2003,2004,2005,2006,2012"
+#define COPYRIGHT_YEARS "1996-99,2000-06,12,13"
 
 
 

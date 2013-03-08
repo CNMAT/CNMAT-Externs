@@ -42,7 +42,7 @@ VERSION 1.2incomplete: beginning of rewrite to have any number of outputs and to
 #define NAME "deinterleave"
 #define DESCRIPTION "Divide a large input list into multiple output lists by de-interleaving.  E.g., for 2 outputs, it will put odd-numbered elements out the left list and even-numbered elements out the right list."
 #define AUTHORS "Tim Madden and Matt Wright"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
 
 /**************************************************************************************

@@ -42,7 +42,7 @@ VERSION 0.1: First public release
 #define NAME "thread.fork"
 #define DESCRIPTION "Pass data from main thread to a secondary thread"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 // max object header

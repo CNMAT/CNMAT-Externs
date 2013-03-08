@@ -45,7 +45,7 @@ VERSION 1.8: Force Package Info Generation
 #define NAME "list-interpolate"
 #define DESCRIPTION "Linearly interpolate two lists of numbers element-wise"
 #define AUTHORS "Adrian Freed and Matt Wright"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,2012"
+#define COPYRIGHT_YEARS "2000-05,12,13"
 
 
 /* 
@@ -325,7 +325,7 @@ int main(void)		/* called once at launch to define this class */
 	class_addmethod(li_class,  (method) floatdump  , "float", A_FLOAT, 0);
 	
 	//post(NAME " object version by " AUTHORS ".");
-	//post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	//post("Copyright ï¿½ " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 	version_post_copyright();
     class_register(CLASS_BOX, li_class);
     return 0;

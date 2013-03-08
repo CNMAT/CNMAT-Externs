@@ -42,7 +42,7 @@
 #define NAME "OSC-schedule"
 #define DESCRIPTION "Schedules packets using OSC time stamps"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 #include <CoreServices/CoreServices.h>
 

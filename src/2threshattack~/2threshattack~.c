@@ -37,7 +37,7 @@ VERSION 0.2.1: Force Package Info Generation
 #define NAME "2threshattack~"
 #define DESCRIPTION "Two-threshold attack detector, aka a Schmitt Trigger (http://en.wikipedia.org/wiki/Schmitt_trigger)"
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "2004-06,2012"
+#define COPYRIGHT_YEARS "2004-06,12,13"
 
 
 

@@ -34,7 +34,7 @@ VERSION 0.2: Fixed error handler that was calling abort() due to underflow error
 #define NAME "bessel"
 #define DESCRIPTION "Bessel functions."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2007,2012"
+#define COPYRIGHT_YEARS "2007,12,13"
 
 
 #include "version.h"

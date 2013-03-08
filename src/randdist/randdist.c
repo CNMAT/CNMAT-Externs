@@ -48,7 +48,7 @@ VERSION 2.1.6: multivariate_hypergeometric
 #define NAME "randdist"
 #define DESCRIPTION "Random number generator with over 30 statistical distributions."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2006-09,2012"
+#define COPYRIGHT_YEARS "2006-09,12,13"
 
 
 #include <stdio.h>

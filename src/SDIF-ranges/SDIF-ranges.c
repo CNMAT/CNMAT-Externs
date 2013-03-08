@@ -31,7 +31,7 @@ University of California, Berkeley.
 #define NAME "SDIF-ranges"
 #define DESCRIPTION "Find ranges of data in an SDIF-buffer"
 #define AUTHORS "Matt Wright "
-#define COPYRIGHT_YEARS "2004,05,06,2012"
+#define COPYRIGHT_YEARS "2004-06,12,13"
 
 
 /*

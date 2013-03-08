@@ -51,7 +51,7 @@
 #define NAME "brightness~"
 #define DESCRIPTION "Spectral Centroid Measure"
 #define AUTHORS "Tristan Jehan, Adrian Freed,  and Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000-08,2012"
+#define COPYRIGHT_YEARS "1988-99,2000-08,12,13"
 
 
 

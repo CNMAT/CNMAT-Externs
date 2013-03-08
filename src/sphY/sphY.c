@@ -13,7 +13,7 @@
 #define NAME "sphY"
 #define DESCRIPTION "Evaluates the real-valued spherical harmonics up to order N at a point (theta, phi)"
 #define AUTHORS "Franz Zotter, Andy Schmeder"
-#define COPYRIGHT_YEARS "2006-2008,2012"
+#define COPYRIGHT_YEARS "2006-08,12,13"
 
 #include <stdlib.h>
 #include <math.h>

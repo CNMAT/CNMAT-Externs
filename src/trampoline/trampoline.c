@@ -34,7 +34,7 @@
 #define NAME "trampoline"
 #define DESCRIPTION "Trampoline tail call optimization for Max"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2011"
+#define COPYRIGHT_YEARS "2011-13"
 
 #include "version.h"
 #include "ext.h"

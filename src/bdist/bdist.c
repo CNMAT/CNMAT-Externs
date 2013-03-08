@@ -35,7 +35,7 @@
 #define NAME "bdist"
 #define DESCRIPTION "The beta distribution"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 #include "version.h"
 #include "ext.h"

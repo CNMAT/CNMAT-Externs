@@ -60,7 +60,7 @@
 #define NAME "rbfi"
 #define DESCRIPTION "A 2-D graphical display/editor like pictctrl but supporting multiple points."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 #include "version.h"

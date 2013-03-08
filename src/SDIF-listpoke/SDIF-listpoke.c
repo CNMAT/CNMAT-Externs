@@ -31,7 +31,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 #define NAME "SDIF-listpoke"
 #define DESCRIPTION "Write data from a Max list into an SDIF-buffer"
 #define AUTHORS "Matt Wright "
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
 
 /*
