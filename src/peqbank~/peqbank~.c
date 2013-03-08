@@ -64,7 +64,7 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 #define NAME "peqbank~"
 #define DESCRIPTION "Bank of biquad filters in series with analog-like control parameters based on shelving or parametric EQ (or low-level control in the biquad coefficient domain)"
 #define AUTHORS "Tristan Jehan, Matt Wright, Andy Schmeder"
-#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,09,2012"
+#define COPYRIGHT_YEARS "1999,2000-07,9,12,13"
 
 
 

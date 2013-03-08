@@ -41,9 +41,9 @@ c.f. change point theory
 
 */
 #define NAME "trend-report"
-#define DESCRIPTION "Given an input stream of numbers, report statistics on "trends", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the "laughter" detector for Edmund Campion's "ME"."
+#define DESCRIPTION "Given an input stream of numbers, report statistics on \"trends\", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the \"laughter\" detector for Edmund Campion's \"ME\"."
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "2002-06,2012"
+#define COPYRIGHT_YEARS "2002-06,12,13"
 
  
  

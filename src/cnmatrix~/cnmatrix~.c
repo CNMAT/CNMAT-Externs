@@ -32,7 +32,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #define NAME "cnmatrix~"
 #define DESCRIPTION "similar to matrix~, but takes jitter matricies"
 #define AUTHORS "John MacCallum, Ville Pulkki"
-#define COPYRIGHT_YEARS "2009, 1999,2012"
+#define COPYRIGHT_YEARS "1999,2009,12,13"
 
 #include "version.h"
 #include "ext.h"

@@ -47,7 +47,7 @@ VERSION 0.2.6: Force Package Info Generation
 #define NAME "threefates"
 #define DESCRIPTION "Deal with track birth/death for sinusoids~"
 #define AUTHORS "Tim Madden and Matt Wright"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,2012"
+#define COPYRIGHT_YEARS "2000-05,12,13"
 
 
 

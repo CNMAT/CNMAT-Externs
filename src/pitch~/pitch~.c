@@ -52,7 +52,7 @@
 #define NAME "pitch~"
 #define DESCRIPTION "Pitch tracker (based on fiddle~ from Miller Puckette)"
 #define AUTHORS "Tristan Jehan, Adrian Freed, and Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05,2012"
+#define COPYRIGHT_YEARS "1988-99,2000-05,12,13"
 
 
 

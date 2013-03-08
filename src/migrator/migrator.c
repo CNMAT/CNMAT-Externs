@@ -46,7 +46,7 @@ VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily remove
 #define NAME "migrator"
 #define DESCRIPTION "Spectral harmony a la David Wessel"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2006-07"
+#define COPYRIGHT_YEARS "2006-07,13"
 
 #include "version.h"
 #include "ext.h"

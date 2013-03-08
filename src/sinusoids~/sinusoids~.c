@@ -51,7 +51,7 @@ VERSION 1.9: Changed click problem on Intel by removing small random numbers fro
 #define NAME "sinusoids~"
 #define DESCRIPTION "Additive synthesis with a bank of (optionally bandwidth-enhanced) sinusoidal oscillators"
 #define AUTHORS "Adrian Freed"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05,06,07,08,2012"
+#define COPYRIGHT_YEARS "1988-99,2000-08,12,13"
 
 
 #include "ext.h"

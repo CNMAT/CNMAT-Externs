@@ -36,7 +36,7 @@ VERSION 1.0.2: Added protection for re-entrancy in overdrive mode
 #define NAME "slipOSC"
 #define DESCRIPTION "Encode and decode SLIP data to/from the Max serial object and the OSC Fullpacket message format"
 #define AUTHORS "Adrian Freed, Andy Schmeder"
-#define COPYRIGHT_YEARS "2007,2008,2012"
+#define COPYRIGHT_YEARS "2007-08,12,13"
 
 
 #include "ext.h"

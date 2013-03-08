@@ -76,7 +76,7 @@ VERSION 1.17.2: object_error()
 #define NAME "OSC-route"
 #define DESCRIPTION "Message dispatching through an <A HREF=\"http://www.cnmat.berkeley.edu/OSC\">OpenSoundControl</A> address space."
 #define AUTHORS "Matt Wright, Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,08"
+#define COPYRIGHT_YEARS "1999,2000-08,13"
 
 #include "version.h"
 #include "ext.h"

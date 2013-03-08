@@ -42,7 +42,7 @@ VERSION 1.2.1: Fixed a bug where in the computation of the denominator in rho_pr
 #define NAME "roughness"
 #define DESCRIPTION "Roughness estimate based on Richard Parncutt's algorithm."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2006,2012"
+#define COPYRIGHT_YEARS "2006,12,13"
 
 
 #include "version.h"

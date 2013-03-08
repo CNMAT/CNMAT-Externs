@@ -51,7 +51,7 @@
 #define NAME "loudness~"
 #define DESCRIPTION "Spectral or Time-domain Energy"
 #define AUTHORS "Tristan Jehan, Adrian Freed, and Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000-8,2012"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000-8,12,13"
 
 
 

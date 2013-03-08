@@ -46,7 +46,7 @@ VERSION 1.4: Removed spurious printing of incorrect version information
 #define NAME "oscillators~"
 #define DESCRIPTION "Oscillator bank that can read waveform from a buffer~"
 #define AUTHORS "Adrian Freed"
-#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,2012"
+#define COPYRIGHT_YEARS "1999,2000-07,12,13"
 
 
 

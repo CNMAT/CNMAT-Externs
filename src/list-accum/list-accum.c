@@ -46,7 +46,7 @@ VERSION 0.6: MacCallum added a second outlet to output the length of the list.  
 #define NAME "list-accum"
 #define DESCRIPTION "Accumulate a list by adding elements gradually.  Much like zl group except it can output arbitrary-length lists."
 #define AUTHORS "Michael Lee and Matt Wright"
-#define COPYRIGHT_YEARS "1996,98,98,992000,01,02,03,04,05,06"
+#define COPYRIGHT_YEARS "1996,98,99,2000-06,12,13"
 
 #include "version.h"
 #include "ext.h"

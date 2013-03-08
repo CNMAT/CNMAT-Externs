@@ -33,7 +33,7 @@ VERSION 1.0.1: Fixed a memory bug
 #define NAME "vsnapshot~"
 #define DESCRIPTION "Like snapshot~ but outputs the entire current signal vector."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2007,2012"
+#define COPYRIGHT_YEARS "2007,12,13"
 
 
 #include "version.h"

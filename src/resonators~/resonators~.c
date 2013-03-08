@@ -28,7 +28,7 @@ University of California, Berkeley.
 #define NAME "resonators~"
 #define DESCRIPTION "Parallel bank of resonant filters"
 #define AUTHORS "Adrian Freed"
-#define COPYRIGHT_YEARS "1996-2007,2012"
+#define COPYRIGHT_YEARS "1996-07,12,13"
 
 
 /*

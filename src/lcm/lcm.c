@@ -42,7 +42,7 @@ VERSION 0.2: First release; fixed bug with typed-in arguments
 #define NAME "lcm"
 #define DESCRIPTION "Least common multiple"
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "1998,99,2000,01,02,03,04,05,06,07,2012"
+#define COPYRIGHT_YEARS "1998,99,2000-07,12,13"
 
 
    
