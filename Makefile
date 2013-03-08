@@ -1,9 +1,12 @@
 SRCDIR = src
 OBJECTNAMES = $(shell ls src)
+JAVAOBJECTNAMES = midifile
 BUILDDIR = build/Release
 
 EXT = mxo
 win: EXT = mxe
+
+JAVA_EXT = class
 
 ARCHIVE_EXT = tgz
 STAGING_DIR = CNMAT_Externals
@@ -11,8 +14,13 @@ STAGING_DIR = CNMAT_Externals
 OBJECTS = $(foreach f, $(OBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 CFILES = $(foreach f, $(OBJECTNAMES), $(SRCDIR)/$(f)/$(f).c)
 
-all: $(CFILES) include/current_version.h
+JAVAOBJECTS = $(foreach f, $(JAVAOBJECTS), $(BUILDDIR)/$(f).$(JAVA_EXT))
+JAVAFILES = $(foreach f, $(JAVAOBJECTS), $(BUILDDIR)/$(f).java)
+
+all: $(CFILES) include/current_version.h $(JAVAOBJECTS)
 	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
+
+$(BUILDDIR)/%.$(JAVA_EXT): $(SRCDIR)/%/%.java
 
 include/current_version.h:
 	echo "#define CNMAT_EXT_VERSION \""`git describe --tags --long`"\"" > include/current_version.h
