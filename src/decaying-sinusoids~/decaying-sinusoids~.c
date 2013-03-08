@@ -46,7 +46,7 @@ VERSION 0.2: signal inlet for virtual time.  Also version message.
 #define NAME "decaying-sinusoids~"
 #define DESCRIPTION "Additive synthesis of a bank of exponentially decaying sinusoids"
 #define AUTHORS "Adrian Freed and Matt Wright"
-#define COPYRIGHT_YEARS "1996,97,98,99,2000,01,02,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "1996-99,2000-06,12,13"
 
 
 

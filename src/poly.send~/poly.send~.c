@@ -33,7 +33,7 @@ VERSION 0.0.1: New help file
 #define NAME "poly.send~"
 #define DESCRIPTION "Multichannel, dynamically assignable output for poly~"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 #include "version.h"

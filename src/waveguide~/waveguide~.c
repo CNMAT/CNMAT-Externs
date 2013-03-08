@@ -31,7 +31,7 @@ Written by Andy Schmeder <andy@cnmat.berkeley.edu>,
 #define NAME "waveguide~"
 #define DESCRIPTION "Linear and non-linear parameterized waveguide mesh"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 /*

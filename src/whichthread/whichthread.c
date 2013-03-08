@@ -33,7 +33,7 @@
 #define NAME "whichthread"
 #define DESCRIPTION "Report the current executing thread"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2012"
+#define COPYRIGHT_YEARS "2012,13"
 
 #include "version.h"
 #include "ext.h"

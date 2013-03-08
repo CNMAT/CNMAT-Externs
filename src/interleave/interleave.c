@@ -41,7 +41,7 @@ VERSION 1.1: Force Package Info Generation
 #define NAME "interleave"
 #define DESCRIPTION "Interleave multiple input lists to one output list.  E.g., if inputs are "A B C" and "1 2 3", the output will be "A 1 B 2 C 3"."
 #define AUTHORS "Tim Madden"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
 
 

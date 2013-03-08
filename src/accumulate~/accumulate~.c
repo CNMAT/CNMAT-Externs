@@ -36,7 +36,7 @@ VERSION 0.1: First version
 #define NAME "accumulate~"
 #define DESCRIPTION "Signal integrator with signal-rate reset control, configurable bounds, leakiness and overflow modes"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 #include "ext.h"

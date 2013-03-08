@@ -64,7 +64,7 @@ VERSION 1.9.16: Use unsigned bytes in blobs
 #define NAME "OpenSoundControl"
 #define DESCRIPTION "Format Max data to <A href=\"http://www.cnmat.berkeley.edu/OpenSoundControl\">OpenSoundControl</a> protocol and vice versa"
 #define AUTHORS "Matt Wright, Andy Schmeder"
-#define COPYRIGHT_YEARS "1996,97,98,99,2000,01,02,03,04,05"
+#define COPYRIGHT_YEARS "1996-99,2000-05,13"
 
 #include "version.h"
 #include "ext.h"

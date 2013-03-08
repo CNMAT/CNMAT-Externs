@@ -48,7 +48,7 @@ To-Do:  use opendialog to present a dialog box to the user
 #define NAME "SDIF-fileinfo"
 #define DESCRIPTION "Read info about SDIF streams from an SDIF file"
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "2005,2012"
+#define COPYRIGHT_YEARS "2005,12,13"
 
 
 
