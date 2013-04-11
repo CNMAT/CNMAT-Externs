@@ -158,8 +158,8 @@ t_int *tta_perform(t_int *w) {
 			if (val >= (l * highthresh)) {
 				in = 1;
 				attack = 1;
-				SETFLOAT(outputlist, val);
-				SETFLOAT(outputlist+1, l);
+				atom_setfloat(outputlist, val);
+				atom_setfloat(outputlist+1, l);
 				outlet_list (x->event_outlet, 0L, 2, outputlist);
 			}
 		}
