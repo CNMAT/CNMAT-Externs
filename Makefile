@@ -24,19 +24,11 @@ STAGING_DIR = CNMAT_Externals
 OBJECTS = $(foreach f, $(OBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 CFILES = $(foreach f, $(OBJECTNAMES), $(SRCDIR)/$(f)/$(f).c)
 
-<<<<<<< HEAD
 JAVAOBJECTS = $(foreach f, $(JAVAOBJECTS), $(BUILDDIR)/$(f).$(JAVA_EXT))
 JAVAFILES = $(foreach f, $(JAVAOBJECTS), $(BUILDDIR)/$(f).java)
 
-all: $(CFILES) include/current_version.h $(JAVAOBJECTS)
-	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
-
 $(BUILDDIR)/%.$(JAVA_EXT): $(SRCDIR)/%/%.java
 
-include/current_version.h:
-	echo "#define CNMAT_EXT_VERSION \""`git describe --tags --long`"\"" > include/current_version.h
-	echo "#define CNMAT_EXT_COMPILE_DATE \""`date`"\"" >> include/current_version.h
-=======
 CURRENT_VERSION_FILE = include/current_version.h
 
 all: $(CFILES) $(CURRENT_VERSION_FILE)
@@ -55,7 +47,6 @@ $(BUILDDIR)/%.mxe: $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 $(CURRENT_VERSION_FILE):
 	echo "#define CNMAT_EXT_VERSION \""`git describe --tags --long`"\"" > $(CURRENT_VERSION_FILE)
 	echo "#define CNMAT_EXT_COMPILE_DATE \""`date`"\"" >> $(CURRENT_VERSION_FILE)
->>>>>>> ef980f36170f0bb62495e4cd6678cbc4a9e4b34c
 
 archive: $(STAGING_DIR).$(ARCHIVE_EXT)
 
