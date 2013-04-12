@@ -59,8 +59,12 @@ VERSION 2.1.6: multivariate_hypergeometric
 #include "libranddist.h"
 #include "version.h"
 
+#ifdef WIN_VERSION
+#include <time.h>
+#else
 #include <mach/mach.h>
 #include <mach/mach_time.h>
+#endif
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 
@@ -173,7 +177,11 @@ int main(void){
 void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 	t_rdist *x;
 	t_atom ar[2];
+#ifdef WIN_VERSION
+	srand(clock());
+#else
 	srand(mach_absolute_time());
+#endif
 
  // create a new instance of this object
 	if((x = (t_rdist *)object_alloc(rdist_class))){
@@ -211,8 +219,8 @@ void *rdist_new(t_symbol *msg, short argc, t_atom *argv){
 				rdist_anything(x, argv[0].a_w.w_sym, argc - 1, argv + 1);
 			}
 		} else {
-			SETFLOAT(&(ar[0]), 0.);
-			SETFLOAT(&(ar[1]), 1.);
+			atom_setfloat(&(ar[0]), 0.);
+			atom_setfloat(&(ar[1]), 1.);
 			rdist_anything(x, gensym("uniform"), 2, ar);
 		}
 
@@ -257,7 +265,7 @@ void rdist_bang(t_rdist *x){
 
 	if(stride > 1){
 		for(i = 0; i < stride; i++){
-			SETFLOAT(x->r_output_buffer + i, out[i]);
+			atom_setfloat(x->r_output_buffer + i, out[i]);
 		}	
 		outlet_list(x->r_out0, NULL, stride, x->r_output_buffer);
 	}else{
@@ -327,13 +335,13 @@ void rdist_list(t_rdist *x, t_symbol *msg, short argc, t_atom *argv){
 
 void rdist_int(t_rdist *x, long n){	
 	t_atom argv[1];
-	SETFLOAT(argv, (double)n);
+	atom_setfloat(argv, (double)n);
 	rdist_anything(x, x->r_dist, 1, argv);
 }
 
 void rdist_float(t_rdist *x, double n){
 	t_atom argv[1];
-	SETFLOAT(argv, n);
+	atom_setfloat(argv, n);
 	rdist_anything(x, x->r_dist, 1, argv);
 }
 
@@ -361,7 +369,7 @@ void rdist_distlist(t_rdist *x, long n){
 			x->r_function(x->r_rng, x->r_numVars, x->r_vars, stride, out);
 		}
 		for(j = 0; j < stride; j++){
-			SETFLOAT(x->r_output_buffer + ((i * stride) + j), out[j]);
+			atom_setfloat(x->r_output_buffer + ((i * stride) + j), out[j]);
 		}
 	}
 	

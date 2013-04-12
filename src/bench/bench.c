@@ -43,9 +43,11 @@ VERSION 1.1: Now outputs its measurement in milliseconds
 #include "math.h"
 //#include "sys/time.h"
 //#include "cycle.h"
+#ifndef WIN_VERSION
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #include <unistd.h>
+#endif
 
 #define BENCH_IN 0
 #define BENCH_OUT 1
