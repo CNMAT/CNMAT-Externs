@@ -165,7 +165,7 @@ void besl_float(t_besl *x, double xx){
 	int i;
 	for(i = 0; i < x->b_nFunctions; i++){
 		status = gsl_sf_bessel_Jn_e(x->b_functionList[i], xx, &result);
-		SETFLOAT(out + (i), result.val);
+		atom_setfloat(out + (i), result.val);
 	}
 	outlet_list(x->b_out0, 0L, x->b_nFunctions, out);
 }
