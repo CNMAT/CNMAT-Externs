@@ -13,7 +13,8 @@ win: EXT = mxe
 win: CC = i686-w64-mingw32-gcc
 win: LD = $(CC)
 win: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT
-win: INCLUDES = -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) 
+LDFLAGS = -mno-cygwin -shared #-static-libgcc
+win: INCLUDES = -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib
 win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio
 
 JAVA_EXT = class
@@ -40,9 +41,12 @@ win: $(OBJECTS)
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/commonsyms.o $(MAX_INCLUDES)/common/commonsyms.c
 
-$(BUILDDIR)/%.mxe: $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
+$(BUILDDIR)/fft.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/fft.o lib/Jehan-lib/fft.c
+
+$(BUILDDIR)/%.mxe: $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/fft.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/$*.o $(SRCDIR)/$*/$*.c
-	$(LD) $(LDFLAGS) -o $(BUILDDIR)/$*.mxe $(BUILDDIR)/$*.o $(BUILDDIR)/commonsyms.o $(LIBS)
+	$(LD) $(LDFLAGS) -o $(BUILDDIR)/$*.mxe $(BUILDDIR)/$*.o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/fft.o $(LIBS)
 
 $(CURRENT_VERSION_FILE):
 	echo "#define CNMAT_EXT_VERSION \""`git describe --tags --long`"\"" > $(CURRENT_VERSION_FILE)
@@ -56,11 +60,16 @@ $(STAGING_DIR).$(ARCHIVE_EXT):
 	$(shell cd $(SRCDIR) && for f in `ls`; do cp $$f/$$f.maxhelp ../$(STAGING_DIR); done)
 	tar zcf $(STAGING_DIR).$(ARCHIVE_EXT) $(STAGING_DIR)
 
-.PHONY: clean
+.PHONY: clean win-clean
 clean:
 	rm -f $(CURRENT_VERSION_FILE)
 	rm -rf build
 	xcodebuild clean
+	rm -rf $(STAGING_DIR) $(STAGING_DIR).$(ARCHIVE_EXT)
+
+win-clean:
+	rm -f $(CURRENT_VERSION_FILE)
+	rm -rf build
 	rm -rf $(STAGING_DIR) $(STAGING_DIR).$(ARCHIVE_EXT)
 
 $(BUILDDIR):
