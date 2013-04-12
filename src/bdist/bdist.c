@@ -56,6 +56,20 @@
 #define PDF 0
 #define CDF 1
 
+#ifndef DBL_MIN
+#define DBL_MIN 0.000000001
+#endif
+#ifndef FLT_MIN
+#define FLT_MIN 0.000000001
+#endif
+
+#ifndef DBL_MAX
+#define DBL_MAX 10000000000.
+#endif
+#ifndef FLT_MAX
+#define FLT_MAX 10000000000.
+#endif
+
 typedef struct _bdist{
 	t_jbox ob;
 	void *outlet, *info_outlet;
