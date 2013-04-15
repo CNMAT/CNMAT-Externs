@@ -16,7 +16,7 @@ MSP_INCLUDES = $(C74SUPPORT)/msp-includes
 
 win: CC = i686-w64-mingw32-gcc
 win: LD = $(CC)
-win: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT
+win: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3
 LDFLAGS = -mno-cygwin -shared #-static-libgcc
 win: INCLUDES = -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I../gsl
 win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio
@@ -39,11 +39,13 @@ CURRENT_VERSION_FILE = include/current_version.h
 all: $(CFILES) $(CURRENT_VERSION_FILE)
 	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
 
-SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel harmonics~ interleave lcm list-accum list-interpolate oscillators~ peqbank~ poly.bus~ poly.send~ printit rbfi res-transform resdisplay resonators~ roughness rinusoids~ slipOSC sphy thread.fork thread.join threefates trampoline trend-report vsnapshot~ whichthread xydisplay
+SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay
 SIMPLEOBJECTS = $(foreach f, $(SIMPLEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
-.PHONY: win
-win: $(SIMPLEOBJECTS)
+MULTIPLEFILEOBJECTNAMES = harmonics~ randdist
+MULTIPLEFILEOBJECTS = $(foreach f, $(MULTIPLEFILEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
+
+win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS)
 
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/commonsyms.o $(MAX_INCLUDES)/common/commonsyms.c
@@ -53,6 +55,17 @@ $(BUILDDIR)/fft.o: $(BUILDDIR)
 
 $(BUILDDIR)/libranddist.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/libranddist.o src/randdist/libranddist.c
+
+$(BUILDDIR)/noise-table.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/noise-table.o src/harmonics~/noise-table.c
+
+$(BUILDDIR)/harmonics~.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(LIBS)
+
+$(BUILDDIR)/randdist.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(LIBS) -L../gsl/.libs -lgsl
 
 $(SIMPLEOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c

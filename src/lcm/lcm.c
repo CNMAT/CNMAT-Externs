@@ -63,7 +63,7 @@ typedef struct lcm
 	void *l_out;
 } LCM;
 
-fptr *FNS;
+//fptr *FNS;
 t_class *lcm_class;
 
 void lcm_bang(LCM *x);

@@ -78,11 +78,12 @@ float Sinetab[STABSZ];
 
 //typedef  unsigned long ulong;
 
+
 typedef  struct oscdesc
 {
 //	float next_amplitude;
 	float amplitude;		/* amplitude */
-	ulong phase_current;
+	unsigned long phase_current;
 //	long next_phase_inc;
 	long phase_inc;			/* frequency */
 	double gain,rate;
@@ -151,7 +152,7 @@ t_int *sinusoids2_perform(t_int *w)
 		register float a = op->pulse*exp(-o->rate*op->t)*o->gain;
 		register float ascale = exp(-o->rate*op->sampleinterval*op->rate);
 		register long pi = o->phase_inc;
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 //		register float astep = (nexta - o->amplitude)*rate;
 
 //		if(op->t<1.0)
@@ -201,7 +202,7 @@ t_int *decayingsinusoids_perform_time_input_signal(t_int *w) {
 		// register float a = op->pulse*exp(-o->rate*op->t)*o->gain;
 		// register float ascale = exp(-o->rate*op->sampleinterval*op->rate);
 		register long pi = o->phase_inc;
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 //		register float astep = (nexta - o->amplitude)*rate;
 		register float t, a;
 

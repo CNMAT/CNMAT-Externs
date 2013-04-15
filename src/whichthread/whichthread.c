@@ -41,7 +41,7 @@
 #include "ext_obex_util.h"
 #include <pthread.h>
 #include "ext_systhread.h"
-#include <execinfo.h>
+//#include <execinfo.h>
 
 #define LEFT_OUTLET 0
 #define RIGHT_OUTLET 1

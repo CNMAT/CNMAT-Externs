@@ -360,8 +360,8 @@ long strcmp(const char *s1, const char *s2)
 }
 #endif
 
-Boolean isthesymbol(char *name, t_atom *t);
-Boolean isthesymbol(char *name, t_atom *t)
+int isthesymbol(char *name, t_atom *t);
+int isthesymbol(char *name, t_atom *t)
 {
 		if(t->a_type==A_SYM && (strcmp(t->a_w.w_sym->s_name,
 						name)==0))

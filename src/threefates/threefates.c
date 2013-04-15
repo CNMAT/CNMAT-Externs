@@ -99,7 +99,7 @@ typedef struct t_slot_
 	// all the SDIF freq data. If this index is in the SDIF data, we are alive
 	// so we set to 0. If all SDIF data is processed, and we are still at 1, we died,
 	// so set amp to zero, release this slot.
-	Boolean is_dead;
+	int is_dead;
 } t_slot;
 
 
@@ -580,7 +580,7 @@ void SlotsToOutput(t_threefates *thisobject) {
 	for (i = 0; i < thisobject->max_slot_index; i++) {
 	    // Output everything except index
 	    for (j = 0; j<nparams; ++j) {
-			SETFLOAT(thisobject->output_list + outindex, thisobject->t_slotlist[i].params[j]);
+			atom_setfloat(thisobject->output_list + outindex, thisobject->t_slotlist[i].params[j]);
 			++outindex;
 		}
 	}
@@ -845,7 +845,7 @@ void threefates_tellmeeverything(t_threefates *x) {
    for (i = 0; i < GetPresentAC(x); i+= x->num_partial_parameters+1) {
    	  object_post((t_object *)x, "    ");
    	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
-   	  	SETFLOAT(&a, GetPresentValue(x, i+j));
+   	  	atom_setfloat(&a, GetPresentValue(x, i+j));
    	  	postatom(&a);
    	  }
    }
@@ -853,7 +853,7 @@ void threefates_tellmeeverything(t_threefates *x) {
    for (i = 0; i < GetFutureAC(x); i+= x->num_partial_parameters+1) {
    	  object_post((t_object *)x, "    ");
    	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
-   	  	SETFLOAT(&a, GetFutureValue(x, i+j));
+   	  	atom_setfloat(&a, GetFutureValue(x, i+j));
    	  	postatom(&a);
    	  }
    }
@@ -861,7 +861,7 @@ void threefates_tellmeeverything(t_threefates *x) {
    for (i = 0; i<x->max_slot_index; i ++) {
    		object_post((t_object *)x, "  index %ld %s ", x->t_slotlist[i].index, x->t_slotlist[i].is_dead ? "DEAD" : "ALIVE");
    		for (j = 0; j<x->num_partial_parameters; ++j) {
-   			SETFLOAT(&a, x->t_slotlist[i].params[j]);
+   			atom_setfloat(&a, x->t_slotlist[i].params[j]);
    			postatom(&a);
    	  }
    }

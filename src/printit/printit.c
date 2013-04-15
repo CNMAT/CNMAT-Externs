@@ -69,7 +69,7 @@ typedef struct printit
 } printit;
 
 /* global necessary for 68K function macros to work */
-fptr *FNS;
+//fptr *FNS;
 
 /* globalthat holds the class definition */
 t_class *printit_class;

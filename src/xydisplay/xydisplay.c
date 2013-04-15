@@ -61,7 +61,6 @@
 #endif
 
 #ifdef WIN32
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #else
 #include <mach/mach_time.h>
 #endif

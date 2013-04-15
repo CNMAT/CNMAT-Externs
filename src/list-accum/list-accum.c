@@ -62,7 +62,7 @@ void listAccumFloat(struct listAccum *, double d);
 void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv);
 
 
-fptr *FNS;
+//fptr *FNS;
 t_class *class;
 
 struct listAccum {
@@ -74,7 +74,7 @@ struct listAccum {
 	long	l_atomsInBuf;
 	Atom	*l_atoms;
 	
-	Boolean	debug;
+	int	debug;
 };
 
 
@@ -155,7 +155,7 @@ void	listAccumList(struct listAccum *x, struct symbol *s, int argc, struct atom 
 
 
 void listAccumInt(struct listAccum *x, int i) {
-  SETLONG(&(x->l_atoms[x->l_atomsInBuf]), i);
+  atom_setlong(&(x->l_atoms[x->l_atomsInBuf]), i);
   x->l_atomsInBuf++;
   if (x->debug) post("listAccum: added int %ld, that makes %ld atoms so far", i, x->l_atomsInBuf);
   if (x->l_atomsInBuf>=x->l_numAtoms) listAccumBang(x);
@@ -163,7 +163,7 @@ void listAccumInt(struct listAccum *x, int i) {
 
 void listAccumFloat(struct listAccum *x, double d) {
   float f = (float) d;
-  SETFLOAT(&(x->l_atoms[x->l_atomsInBuf]), f);
+  atom_setfloat(&(x->l_atoms[x->l_atomsInBuf]), f);
   x->l_atomsInBuf++;
   if (x->debug) post("listAccum: added float %, that makes %ld atoms so far", f, x->l_atomsInBuf);
   if (x->l_atomsInBuf>=x->l_numAtoms) listAccumBang(x);
