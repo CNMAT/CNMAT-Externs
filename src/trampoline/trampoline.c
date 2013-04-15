@@ -40,7 +40,7 @@
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include <execinfo.h>
+//#include <execinfo.h>
 
 enum{
 	T_ANYTHING,

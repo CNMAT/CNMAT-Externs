@@ -83,7 +83,7 @@ typedef	struct	fobj
 	int n;
 	int countdown;
 	int steps;
-	Boolean zeroPadMode;
+	int zeroPadMode;
 }fobj;
 
 
@@ -232,17 +232,17 @@ static void tellmeeverything(fobj *x) {
 		
 	object_post((t_object *)x, "  oldinputs:");
 	for (i = 0; i<x->n; ++i) {
-		SETFLOAT(&a, x->oldinputs[i]);
+		atom_setfloat(&a, x->oldinputs[i]);
 		postatom(&a);
 	}
 	object_post((t_object *)x, "  newinputs:");
 	for (i = 0; i<x->n; ++i) {
-		SETFLOAT(&a, x->newinputs[i]);
+		atom_setfloat(&a, x->newinputs[i]);
 		postatom(&a);
 	}
 	object_post((t_object *)x, "  rate:");
 	for (i = 0; i<x->n; ++i) {
-		SETFLOAT(&a, x->rate[i]);
+		atom_setfloat(&a, x->rate[i]);
 		postatom(&a);
 	}
 			

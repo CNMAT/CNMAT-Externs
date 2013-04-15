@@ -451,8 +451,8 @@ void sOSC_sendData(sOSC *x, short size, char *data) {
   // safe to release lock now...
   critical_exit(x->lock);
   
-  SETLONG(&arguments[0], (long) size);
-  SETLONG(&arguments[1], (long) fullpacket);
+  atom_setlong(&arguments[0], (long) size);
+  atom_setlong(&arguments[1], (long) fullpacket);
   outlet_anything(x->O_outlet1, ps_FullPacket, 2, arguments);
   
 }
@@ -559,9 +559,9 @@ int sOSC_messageSize(char *messageName, short argc, Atom *argv) {
  Stuff having to do with parsing incoming OSC packets into Max data
  *******************************************************************/
 
-void ParseOSCPacket(sOSC *x, char *buf, long n, Boolean topLevel);
+void ParseOSCPacket(sOSC *x, char *buf, long n, int topLevel);
 char *DataAfterAlignedString(char *string, char *boundary); 
-Boolean IsNiceString(char *string, char *boundary);
+int IsNiceString(char *string, char *boundary);
 #ifdef DONT_HAVE_STRING_LIBRARY
 int strncmp(char *s1, char *s2, int n);
 #endif
@@ -616,7 +616,7 @@ char *DataAfterAlignedString(char *string, char *boundary)
   return string+i;
 }
 
-Boolean IsNiceString(char *string, char *boundary)  {
+int IsNiceString(char *string, char *boundary)  {
   /* Arguments same as DataAfterAlignedString().  Is the given "string"
      really a string?  I.e., is it a sequence of isprint() characters
      terminated with 1-4 null characters to align on a 4-byte boundary? */

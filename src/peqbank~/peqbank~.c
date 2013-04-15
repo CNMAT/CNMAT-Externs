@@ -1298,7 +1298,7 @@ void swap_in_new_coeffs(t_peqbank *x) {
 	}
 
 	// Output the new coefficients out the outlet
-	for (i=0; i<(x->b_nbpeq+1)*NBPARAM; i++) SETFLOAT(x->myList+i, x->coeff[i]);		
+	for (i=0; i<(x->b_nbpeq+1)*NBPARAM; i++) atom_setfloat(x->myList+i, x->coeff[i]);		
 	outlet_list(x->b_outlet, 0L, (x->b_nbpeq+1)*NBPARAM, x->myList);
 }
 
