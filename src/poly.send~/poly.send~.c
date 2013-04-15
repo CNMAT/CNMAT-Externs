@@ -42,11 +42,6 @@ VERSION 0.0.1: New help file
 #include "ext_obex_util.h"
 #include "z_dsp.h"
 
-
-#ifdef WIN32
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
-#endif
-
 typedef struct _psend{
 	t_pxobject ob;
 	t_symbol *name, *mangled_name;

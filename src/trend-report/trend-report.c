@@ -135,10 +135,10 @@ int compare (float x, float y, float tolerance) {
 
 void OutputTrend(TrendReport *x) {
 	Atom outputList[4];
-	SETFLOAT(outputList+0, x->initialValue);
-	SETLONG(outputList+1, x->direction);
-	SETLONG(outputList+2, x->numInTrend);
-	SETFLOAT(outputList+3, x->prev);
+	atom_setfloat(outputList+0, x->initialValue);
+	atom_setlong(outputList+1, x->direction);
+	atom_setlong(outputList+2, x->numInTrend);
+	atom_setfloat(outputList+3, x->prev);
 	outlet_list(x->outlet, 0L, 4, outputList);
 }
 

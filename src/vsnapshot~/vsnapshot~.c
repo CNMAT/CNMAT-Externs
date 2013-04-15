@@ -179,7 +179,7 @@ t_int *vsht_perform(t_int *w){
 	x->v_vectorSize = n;
 
 	for(i = 0; i < n; i++){
-		SETFLOAT(x->v_currentVector + i, in[i]);
+		atom_setfloat(x->v_currentVector + i, in[i]);
 	}
 
 	return (w + 4);

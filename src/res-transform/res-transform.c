@@ -243,8 +243,8 @@ static void clearit(fobj *x)
 	x->oddgain = x->evengain = x->evenfscale = x->oddfscale = 1.0;
 }
 
-static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, Boolean old, Boolean formant, Boolean addmore);
-static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, Boolean old, Boolean formant, Boolean addmore)
+static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, int old, int formant, int addmore);
+static void storemodel(fobj *x, struct symbol *s, int argc, struct atom *argv, int old, int formant, int addmore)
 {
 if(!x->sinusoidalmodel)
 {
@@ -339,7 +339,7 @@ static void computeeverything(fobj *x)
 	 gainscale = x->gainscale,fadd= x->freqadd,srbar;
 	 int i,j,k;
 	int csize = x->clustersize;
-	Boolean squelch = ( x->squelch>=0.0);
+	int squelch = ( x->squelch>=0.0);
 	 double r;	
 		int minc = (x->sinusoidalmodel==1)?2:3;
 	

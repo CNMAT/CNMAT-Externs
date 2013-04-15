@@ -69,7 +69,7 @@ VERSION 1.9: Changed click problem on Intel by removing small random numbers fro
 #define sinf sin
 #endif
 
-#include "noise-table.h"
+#include "noise-table.c"//#include "noise-table.h"
 
 #undef PI	
 #define PI 3.14159265358979323f
@@ -114,11 +114,11 @@ typedef struct
 	float  pk;
 	float samplerate;
 	float sampleinterval;
-	int is_bwe;		// Boolean for whether this object is bandwidth-enhanced
+	int is_bwe;		// int for whether this object is bandwidth-enhanced
 	float *noisep;  // Points into the global noise table
 	
 	int debugPrintsRemaining;
-	Boolean verbose;
+	int verbose;
 } oscbank;
 typedef oscbank t_sinusoids;
 
