@@ -79,7 +79,7 @@ VERSION 1.9.16: Use unsigned bytes in blobs
 #endif
 
 void *OSC_class;
-Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket, *ps_OSCBlob;
+t_symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket, *ps_OSCBlob;
 
 typedef struct openSoundControl {
 	struct object O_ob;
@@ -104,7 +104,7 @@ void OSC_reset (OSC *x);
 void OSC_resetAllTheWayMode (OSC *x);
 void OSC_doReset (OSC *x);
 void OSC_send (OSC *x);
-void OSC_anything (OSC *x, Symbol *s, short argc, Atom *argv);
+void OSC_anything (OSC *x, t_symbol *s, short argc, t_atom *argv);
 void OSC_openBundleCB (OSC *x);
 void OSC_closeBundleCB (OSC *x);
 void OSC_bang (OSC *x);
@@ -114,13 +114,13 @@ void OSC_printcontents (OSC *x);
 void OSC_NewTimeTag(OSC *x, long seconds, long fraction);
 void OSC_ParseFullPacket(OSC *x, long size, long bufptr);
 void OSC_ParsePartialPacket(OSC *x, long size, long bufptr);
-void OSC_ParseEvilGimme(OSC *x, Symbol *s, short not_really_argc, Atom *not_really_argv);
+void OSC_ParseEvilGimme(OSC *x, t_symbol *s, short not_really_argc, t_atom *not_really_argv);
 
-void OSC_accumulateMessage(OSC *x, char *messageName, short argc, Atom *argv);
-int OSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argvp);
+void OSC_accumulateMessage(OSC *x, char *messageName, short argc, t_atom *argv);
+int OSC_stringSubstitution(char *target, char *format, short *argcp, t_atom **argvp);
 void OSC_sendBuffer(OSC *x);
 void OSC_sendData(OSC *x, short size, char *data);
-void OSC_formatData(OSC *x, char *messageName, short argc, Atom *argv);
+void OSC_formatData(OSC *x, char *messageName, short argc, t_atom *argv);
 
 #ifdef __MWERKS__
 #define DONT_HAVE_STRING_LIBRARY
@@ -379,7 +379,7 @@ void OSC_sendBuffer(OSC *x) {
 }
 
 void OSC_sendData(OSC *x, short size, char *data) {
-	Atom arguments[2];
+	t_atom arguments[2];
 	
 	if (x->O_debug) {
 		post("OpenSoundControl: Sending buffer (%ld bytes)", (long) size);
@@ -398,7 +398,7 @@ void OSC_sendData(OSC *x, short size, char *data) {
 
 #define LONGEST_MESSAGE_NAME 1024
 
-void OSC_anything (OSC *x, Symbol *s, short argc, Atom *argv) {	
+void OSC_anything (OSC *x, t_symbol *s, short argc, t_atom *argv) {	
 	char mess[LONGEST_MESSAGE_NAME];
 	
 	if (!OSC_stringSubstitution(mess, s->s_name, &argc, &argv)) {
@@ -419,7 +419,7 @@ void OSC_anything (OSC *x, Symbol *s, short argc, Atom *argv) {
 	}
 }
 
-int OSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argvp) {
+int OSC_stringSubstitution(char *target, char *format, short *argcp, t_atom **argvp) {
 	char *in, *p;
 	int i, num;
 	
@@ -546,7 +546,7 @@ int OSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argv
 	return 0;
 }
 
-void OSC_accumulateMessage(OSC *x, char *messageName, short argc, Atom *argv) {
+void OSC_accumulateMessage(OSC *x, char *messageName, short argc, t_atom *argv) {
 	/* Translate the message and add it to the internal buffer.  */
 	
 
@@ -557,7 +557,7 @@ void OSC_accumulateMessage(OSC *x, char *messageName, short argc, Atom *argv) {
 #define MAX_ARGS_TO_OSC_MSG 1024
 
 
-void OSC_formatData (OSC *x, char *messageName, short argc, Atom *argv) {
+void OSC_formatData (OSC *x, char *messageName, short argc, t_atom *argv) {
 	/* Format the given Max data into buf. */
 	   
 	int i;	
@@ -726,7 +726,7 @@ void OSC_printcontents (OSC *x) {
 /* In the old days, we used to have to compute the size of our messages
    by hand to see if there was room in the buffer. */
    
-int OSC_messageSize(char *messageName, short argc, Atom *argv) {
+int OSC_messageSize(char *messageName, short argc, t_atom *argv) {
 	int result;
 	int i;
 	
@@ -793,7 +793,7 @@ void OSC_ParseFullPacket(OSC *x, long size, long bufptr) {
 	ParseOSCPacket(x, (char *)bufptr, size, true);
 }
 
-void OSC_ParseEvilGimme(OSC *x, Symbol *s, short not_really_argc, Atom *not_really_argv) {
+void OSC_ParseEvilGimme(OSC *x, t_symbol *s, short not_really_argc, t_atom *not_really_argv) {
 	// post("Evil gimme: %d bytes, pointer %p", not_really_argc, not_really_argv);
 	ParseOSCPacket(x, (char *) not_really_argv, not_really_argc, true);
 }
@@ -836,7 +836,7 @@ int ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 		}
 
 		if (topLevel) {
-			Atom timeTagLongs[2];
+			t_atom timeTagLongs[2];
 			atom_setlong(&timeTagLongs[0], ntohl(*((long *)(buf+8))));
 			atom_setlong(&timeTagLongs[1], ntohl(*((long *)(buf+12))));
 			outlet_anything(x->O_outlet3, ps_OSCTimeTag, 2, timeTagLongs);
@@ -912,8 +912,8 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
     char *chars;
     char *string, *nextString, *typeTags, *thisType;
     unsigned char *p;
-    Symbol *addressSymbol, *argSymbol;
-	Atom args[MAXARGS];
+    t_symbol *addressSymbol, *argSymbol;
+	t_atom args[MAXARGS];
 	int numArgs = 0;
 	Boolean tooManyArgs = false;
 	

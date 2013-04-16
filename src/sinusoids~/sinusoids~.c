@@ -84,7 +84,7 @@ t_class *sinusoids_class;
 
 float Sinetab[STABSZ];
 
-static Symbol *ps_bwe;
+static t_symbol *ps_bwe;
 
 typedef  struct oscdesc
 {

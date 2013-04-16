@@ -262,7 +262,7 @@ typedef struct _analyzer {
 
 	void **x_out;			// Outlet for all Bands
 	void *x_clock;			// Use a clock for outputs... (better than Qelem)
-	Atom *myList;			// Copy of outputs as Atoms
+	t_atom *myList;			// Copy of outputs as Atoms
 	void *x_outlet;			// List of outputs for Bark decomposition
 	void *x_outloud;		// Outlet for the loudness
 	void *x_outbright;		// Outlet for the brightness
@@ -1079,7 +1079,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 			x->x_out[i] = floatout((t_analyzer *)x); // Create float outlets
 		}
 	} else {
-		x->myList   = (Atom*) sysmem_newptr(NUMBAND * sizeof(*x->myList));     
+		x->myList   = (t_atom*) sysmem_newptr(NUMBAND * sizeof(*x->myList));     
 		x->x_outlet = listout((t_analyzer *)x);	// Create a list outlet
 	}
 

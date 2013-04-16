@@ -77,7 +77,7 @@ typedef	struct	fobj
 	float *rate;
 	float *newinputs;
 	float *oldinputs;
-	Atom  *out;
+	t_atom  *out;
 	int capacity;	/* Size of these arrays */
 	
 	int n;
@@ -88,7 +88,7 @@ typedef	struct	fobj
 
 
 /* prototypes */
-void * fnew(Symbol *s, int argc, Atom *argv);
+void * fnew(t_symbol *s, int argc, t_atom *argv);
 
 
 static void storelist(fobj *x, struct symbol *s, int argc, struct atom *argv);
@@ -219,7 +219,7 @@ static void setzeropad(fobj *it, long l)
 
 static void tellmeeverything(fobj *x) {
 	int i;
-	Atom a;
+	t_atom a;
 	
 	
 	
@@ -249,7 +249,7 @@ static void tellmeeverything(fobj *x) {
 	
 }
 
-void * fnew(Symbol *s, int argc, Atom *argv) {
+void * fnew(t_symbol *s, int argc, t_atom *argv) {
 	fobj *x;
 	int i;
 
@@ -284,7 +284,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->rate = 		(float *) getbytes(x->capacity * sizeof(float));
 	x->newinputs = 	(float *) getbytes(x->capacity * sizeof(float));
 	x->oldinputs = 	(float *) getbytes(x->capacity * sizeof(float));
-	x->out = 		(Atom *) getbytes(x->capacity * sizeof(Atom));
+	x->out = 		(t_atom *) getbytes(x->capacity * sizeof(t_atom));
 	
 	if (x->out == 0) {
 		object_error((t_object *)x, "not enough memory for capacity %ld!", x->capacity);
@@ -309,7 +309,7 @@ void ffree(fobj *x) {
 	freebytes((char *) x->rate, sizeof(float));
 	freebytes((char *) x->newinputs, sizeof(float));
 	freebytes((char *) x->oldinputs, sizeof(float));
-	freebytes((char *) x->out, x->capacity * sizeof(Atom));
+	freebytes((char *) x->out, x->capacity * sizeof(t_atom));
 }	
 
 int main(void)		/* called once at launch to define this class */
