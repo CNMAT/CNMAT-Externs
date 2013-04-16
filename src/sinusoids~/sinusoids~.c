@@ -86,19 +86,15 @@ float Sinetab[STABSZ];
 
 static Symbol *ps_bwe;
 
-#if !defined(__llvm__) && !defined(__clang__)
-typedef  unsigned long ulong;
-#endif
-
 typedef  struct oscdesc
 {
 	float next_amplitude;
 	float amplitude;		/* amplitude */
-	ulong phase_current;
+	unsigned long phase_current;
 	long next_phase_inc;
 	long phase_inc;			/* frequency */
-//	ulong next_phaseadd;
-//	ulong phaseadd;			/* phase */
+//	unsigned long next_phaseadd;
+//	unsigned long phaseadd;			/* phase */
 	float noisiness;
 	float next_noisiness;
 } oscdesc;
@@ -149,10 +145,10 @@ t_int *sinusoids_perform(t_int *w) {
 	for(i=0; i<nosc; ++i) {
 		register float a = o->amplitude;
 		register long pi = o->phase_inc;
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 		register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
 		register float astep = (o->next_amplitude - o->amplitude)*rate;
-//		register ulong pa  = o->phaseadd;
+//		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 		
 		for(j=0; j<n; ++j) {
@@ -196,9 +192,9 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 	for(i=0;i<nosc;++i)
 	{
 		register long pi = o->phase_inc;
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 		register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
-//		register ulong pa  = o->phaseadd;
+//		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 		
 		register float carrier_amp, carrier_amp_inc;
