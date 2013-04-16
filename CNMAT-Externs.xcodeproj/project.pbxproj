@@ -299,7 +299,6 @@
 		52E44B8915F28B3F00C91B67 /* SDIF-listpoke.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4498215F2879600C91B67 /* SDIF-listpoke.c */; };
 		52E44B8A15F28B4500C91B67 /* SDIF-ranges.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4498715F2879600C91B67 /* SDIF-ranges.c */; };
 		52E44B8B15F28B4E00C91B67 /* SDIF-tuples.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4498A15F2879600C91B67 /* SDIF-tuples.c */; };
-		52E44B8C15F28B5A00C91B67 /* noise-table.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4498F15F2879600C91B67 /* noise-table.c */; };
 		52E44B8D15F28B5A00C91B67 /* sinusoids~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4499115F2879600C91B67 /* sinusoids~.c */; };
 		52E44B8E15F28B6000C91B67 /* slipOSC.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4499615F2879600C91B67 /* slipOSC.c */; };
 		52E44B8F15F28B6B00C91B67 /* legendre_a.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4499915F2879600C91B67 /* legendre_a.c */; };
@@ -4950,7 +4949,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52E44B8C15F28B5A00C91B67 /* noise-table.c in Sources */,
 				52E44B8D15F28B5A00C91B67 /* sinusoids~.c in Sources */,
 				52E44CA315F4835400C91B67 /* commonsyms.c in Sources */,
 			);
