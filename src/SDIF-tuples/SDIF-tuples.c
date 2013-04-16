@@ -481,9 +481,9 @@ static void SDIFtuples_interptype(SDIFtuples *x, long interptype) {
 
 static void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row) {
 	if (m->header.matrixDataType == SDIF_INT32) {
-		SETLONG(a, SDIFutil_GetMatrixCell_int32(m, column, row));
+		atom_setlong(a, SDIFutil_GetMatrixCell_int32(m, column, row));
 	} else {
-		SETFLOAT(a, SDIFutil_GetMatrixCell(m, column, row));
+		atom_setfloat(a, SDIFutil_GetMatrixCell(m, column, row));
 	}
 }
 

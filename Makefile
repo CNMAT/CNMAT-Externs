@@ -1,9 +1,7 @@
 ifeq ($(MAKECMDGOALS),win)
 EXT = mxe
-#OBJECTNAMES = 2threshattack~ OSC-route OSC-schedule OSC-timetag OpenSoundControl SDIF-buffer SDIF-fileinfo SDIF-info SDIF-listpoke SDIF-ranges SDIF-tuples accumulate~ analyzer~ bdist bessel bpf randdist
 else
 EXT = mxo
-OBJECTNAMES = $(shell ls src)
 endif
 
 SRCDIR = src
@@ -26,17 +24,21 @@ JAVA_EXT = class
 ARCHIVE_EXT = tgz
 STAGING_DIR = CNMAT_Externals
 
-OBJECTS = $(foreach f, $(OBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
-CFILES = $(foreach f, $(OBJECTNAMES), $(SRCDIR)/$(f)/$(f).c)
+#OBJECTS = $(foreach f, $(OBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
+#CFILES = $(foreach f, $(OBJECTNAMES), $(SRCDIR)/$(f)/$(f).c)
 
-JAVAOBJECTS = $(foreach f, $(JAVAOBJECTS), $(BUILDDIR)/$(f).$(JAVA_EXT))
-JAVAFILES = $(foreach f, $(JAVAOBJECTS), $(BUILDDIR)/$(f).java)
+JAVAOBJECTS = $(foreach f, $(JAVAOBJECTNAMES), $(BUILDDIR)/$(f).class)
+JAVAFILES = $(foreach f, $(JAVAOBJECTNAMES), $(BUILDDIR)/$(f).java)
 
-$(BUILDDIR)/%.$(JAVA_EXT): $(SRCDIR)/%/%.java
+$(BUILDDIR)/%.class: #$(SRCDIR)/%/%.java
+	@echo java
 
 CURRENT_VERSION_FILE = include/current_version.h
 
-all: $(CFILES) $(CURRENT_VERSION_FILE)
+all: MACOBJECTS $(JAVAOBJECTS)
+
+.PHONY: MACOBJECTS
+MACOBJECTS: $(CURRENT_VERSION_FILE)
 	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
 
 SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay

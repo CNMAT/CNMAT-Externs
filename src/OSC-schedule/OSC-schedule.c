@@ -532,8 +532,8 @@ void OSCSchedule_tick(OSCSchedule *x) {
             n = heap_extract_max(&(x->q));
             
             // dequeue and pass on the next scheduled packet
-            SETLONG(&(fp[0]), n.length);
-            SETLONG(&(fp[1]), (unsigned long int)((x->packet_data + (x->packet_size * n.id))));
+            atom_setlong(&(fp[0]), n.length);
+            atom_setlong(&(fp[1]), (unsigned long int)((x->packet_data + (x->packet_size * n.id))));
             
             x->packet_free[n.id] = 1;
             x->id = n.id; // this isn't necessary but should keep the cache footprint smaller

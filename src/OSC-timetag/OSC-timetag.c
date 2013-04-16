@@ -561,8 +561,8 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
   switch(x->to) {
 
   case TO_T:
-    SETLONG(&tt[0], r.sec);
-    SETLONG(&tt[1], r.frac_sec);
+    atom_setlong(&tt[0], r.sec);
+    atom_setlong(&tt[1], r.frac_sec);
     outlet_anything(x->out_p[0], ps_OSCTimeTag, 2, tt);
     break;
             

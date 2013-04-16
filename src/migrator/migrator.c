@@ -37,7 +37,7 @@ VERSION 1.0.6: Unlimited list length.
 VERSION 1.0.7: Now likes lists of ints too!
 VERSION 1.1: Reads the contents of SDIF-buffers.
 VERSION 1.1.1: Fixed helpfile
-VERSION 1.1.2: Now uses SETFLOAT to set the contents of atoms.
+VERSION 1.1.2: Now uses atom_setfloat to set the contents of atoms.
 VERSION 1.1.3: SDIF support fixed.
 VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily removed.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -230,7 +230,7 @@ void *mig_new(t_symbol *sym, long argc, t_atom *argv){
 		x->algo = MIG_ALGO_PMF;
 
 		for(i = 0; i < MIG_MAX_NUM_OSC; i++){
-			SETFLOAT(&(x->arrayOut[i]), 0.0);
+			atom_setfloat(&(x->arrayOut[i]), 0.0);
 		}
 
 		x->clock = clock_new((t_object *)x, (method)mig_clock_cb);
@@ -304,7 +304,7 @@ void mig_list(t_mig *x, t_symbol *msg, long argc, t_atom *argv){
 		if(argv[i].a_type == A_FLOAT)
 			x->arrayIn[i] = argv[i];
 		else
-			SETFLOAT(&(x->arrayIn[i]), (float)(argv[i].a_w.w_long));
+			atom_setfloat(&(x->arrayIn[i]), (float)(argv[i].a_w.w_long));
 	}
 	//memcpy(x->arrayIn, argv, argc * sizeof(t_atom));
 	x->arrayInLength = argc;
@@ -360,20 +360,20 @@ void mig_fadeOut(t_mig *x){
 	PDEBUG("actualNumOscToUpdate = %d", n);
 
 	for(i = 0; i < x->fade; i++){
-		SETFLOAT(&(x->arrayOut[((((x->counter + i) % x->nOsc) * 2) + 1)]), x->oscamp * i / x->fade);
+		atom_setfloat(&(x->arrayOut[((((x->counter + i) % x->nOsc) * 2) + 1)]), x->oscamp * i / x->fade);
 	}
 	/*
 	PDEBUG("fade out");
 	for(i = 0; i < n; i++){
 		osc = ((x->counter + i) % x->nOsc);
-		SETFLOAT(&(x->arrayOut[(osc * 2) + 1]), 0.);
+		atom_setfloat(&(x->arrayOut[(osc * 2) + 1]), 0.);
 		PDEBUG("zeroing %d", ((osc * 2) + 1));
 	}
 	for(i = 0; i < x->fade; i++){
 		osc = (((x->counter + n) + i) % x->nOsc);
 		if((atom_getfloat(&(x->arrayOut[(osc * 2) + 1])) > 0.f) && 
 		   (atom_getfloat(&(x->arrayOut[(osc * 2)])) != 0.f)){
-			SETFLOAT(&(x->arrayOut[(osc * 2) + 1]), (x->amp_scale[i] * x->oscamp));
+			atom_setfloat(&(x->arrayOut[(osc * 2) + 1]), (x->amp_scale[i] * x->oscamp));
 			PDEBUG("fading %d", osc);
 		}
 	}	
@@ -390,14 +390,14 @@ void mig_changeFreq(t_mig *x){
 	if(x->counter > x->nOsc){
 		// we're reducing the number of oscillators, so set this freq to 0.
 		PDEBUG("%d > %d so setting freq to 0", x->counter, x->nOsc);
-		SETFLOAT(&(x->arrayOut[(x->counter * 2)]), 0.);
+		atom_setfloat(&(x->arrayOut[(x->counter * 2)]), 0.);
 	}else{
 		for(i = 0; i < n; i++){
 			osc = ((x->counter + i) % x->nOsc);
 			if(x->stdev){
-				SETFLOAT(&(x->arrayOut[(osc * 2)]), mig_gaussBlur(x, freq, r));
+				atom_setfloat(&(x->arrayOut[(osc * 2)]), mig_gaussBlur(x, freq, r));
 			}else{
-				SETFLOAT(&(x->arrayOut[(osc * 2)]), freq);
+				atom_setfloat(&(x->arrayOut[(osc * 2)]), freq);
 			}
 			PDEBUG("changing %d", osc * 2);
 		}
@@ -412,11 +412,11 @@ void mig_fadeIn(t_mig *x){
 
 	//if(x->waitingToChangeNumOsc[0]){
 	if(x->counter > x->nOsc){
-		SETFLOAT(&(x->arrayOut[((x->counter * 2) + 1)]), 0.);
+		atom_setfloat(&(x->arrayOut[((x->counter * 2) + 1)]), 0.);
 	}else{
 		for(i = 0; i < x->fade; i++){
 			n = ((x->counter - i) < 0) ? x->nOsc + (x->counter - i) : (x->counter - i);
-			SETFLOAT(&(x->arrayOut[((n * 2) + 1)]), x->oscamp * (i + 1) / x->fade);
+			atom_setfloat(&(x->arrayOut[((n * 2) + 1)]), x->oscamp * (i + 1) / x->fade);
 		}
 	}
 
@@ -428,7 +428,7 @@ void mig_fadeIn(t_mig *x){
 		osc = (x->counter + x->actualNumOscToUpdate) - i;
 		osc = (osc + x->nOsc) % x->nOsc;
 		if(atom_getfloat(&(x->arrayOut[osc * 2])) != 0){
-			SETFLOAT(&(x->arrayOut[(osc * 2) + 1]), x->oscamp * (i + 1) / x->fade);
+			atom_setfloat(&(x->arrayOut[(osc * 2) + 1]), x->oscamp * (i + 1) / x->fade);
 			PDEBUG("fading in %d", (osc * 2) + 1);
 		}
 	}
@@ -486,12 +486,12 @@ void mig_int(t_mig *x, long n){
 		return;
 	}
 	
-	SETFLOAT(&(ar[0]), 0.0);
-	SETFLOAT(&(ar[1]), 0.0);
+	atom_setfloat(&(ar[0]), 0.0);
+	atom_setfloat(&(ar[1]), 0.0);
 	
 	clock_unset(x->clock);
 	for(i = 0; i < (int)x->nOsc * 2; i++){
-		SETFLOAT(&(x->arrayOut[i]), 0.0);
+		atom_setfloat(&(x->arrayOut[i]), 0.0);
 	}
 	outlet_list(x->out1, 0, 2, ar);
 }
@@ -671,8 +671,8 @@ t_max_err mig_nOsc(t_mig *x, t_object *attr, long argc, t_atom *argv){
 	if(x->nOsc > oldNumOsc){
 		for(i = oldNumOsc; i < x->nOsc; i++){
 			x->arrayOut[i * 2] = x->arrayIn[mig_randPMF(x) * 2];
-			//SETFLOAT(&(x->arrayOut[(i * 2)]), x->arrayIn[mig_randPMF(x) * 2].a_w.w_float);
-			SETFLOAT(&(x->arrayOut[((i * 2) + 1)]), x->oscamp);
+			//atom_setfloat(&(x->arrayOut[(i * 2)]), x->arrayIn[mig_randPMF(x) * 2].a_w.w_float);
+			atom_setfloat(&(x->arrayOut[((i * 2) + 1)]), x->oscamp);
 		}
 	}
 	return MAX_ERR_GENERIC;
@@ -705,7 +705,7 @@ void mig_nOsc_smooth(t_mig *x, long n){
 		x->counter = oldNumOsc;
 		x->nOsc = n;
 		for(i = oldNumOsc * 2; i < x->nOsc * 2; i++){
-			SETFLOAT(&(x->arrayOut[i]), 0.0);
+			atom_setfloat(&(x->arrayOut[i]), 0.0);
 		}
 	}
 }
