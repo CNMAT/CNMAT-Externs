@@ -263,22 +263,22 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 
 
 	/* /name */
-	SETSYM(outputArgs, x->t_buffer->s_myname);
+	atom_setsym(outputArgs, x->t_buffer->s_myname);
 	outlet_anything(x->t_out, ps_name, 1, outputArgs);
 
 	/* /filename */
 	{
 		if (x->t_buffer->fileName == 0) {
-			SETSYM(outputArgs, ps_noFileName);
+			atom_setsym(outputArgs, ps_noFileName);
 		} else {
 			Symbol *filenameSym = gensym(x->t_buffer->fileName);
-			SETSYM(outputArgs, filenameSym);
+			atom_setsym(outputArgs, filenameSym);
 		}
 		outlet_anything(x->t_out, ps_filename, 1, outputArgs);
 	}
 	
 	/* /streamID */
-	SETLONG(outputArgs, x->t_buffer->streamID);
+	atom_setlong(outputArgs, x->t_buffer->streamID);
 	outlet_anything(x->t_out, ps_streamID, 1, outputArgs);
 	
 	/* /frameType */
@@ -289,17 +289,17 @@ static void SDIFinfo_bang(SDIFinfo *x) {
   	frameTypeString[4] = '\0';
   	frameTypeSym = gensym(frameTypeString);
 	
-  	SETSYM(outputArgs, frameTypeSym);
+  	atom_setsym(outputArgs, frameTypeSym);
   	outlet_anything(x->t_out, ps_frameType, 1, outputArgs);
     }
 	
 	/* /minTime and /maxTime */
 	SDIFbuf_GetMinTime(x->t_buf, &tMin);
-	SETFLOAT(outputArgs, (float) tMin);
+	atom_setfloat(outputArgs, (float) tMin);
 	outlet_anything(x->t_out, ps_minTime, 1, outputArgs);
 	
 	SDIFbuf_GetMaxTime(x->t_buf, &tMax);
-	SETFLOAT(outputArgs, (float) tMax);
+	atom_setfloat(outputArgs, (float) tMax);
 	outlet_anything(x->t_out, ps_maxTime, 1, outputArgs);
 	
 	/* /numFrames */
@@ -314,7 +314,7 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 			++numFrames;
 		}
 	
-		SETLONG(outputArgs, numFrames);
+		atom_setlong(outputArgs, numFrames);
 		outlet_anything(x->t_out, ps_numFrames, 1, outputArgs);
 	}
 }

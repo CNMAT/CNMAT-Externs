@@ -938,9 +938,9 @@ void pitch_tick(t_pitch *x) {
     	t_peakout *po;
     	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
 			t_atom at[3];
-	    	SETLONG(at, i+1);
-	    	SETFLOAT(at+1, po->po_freq);
-	    	SETFLOAT(at+2, po->po_amp);
+	    	atom_setlong(at, i+1);
+	    	atom_setfloat(at+1, po->po_freq);
+	    	atom_setfloat(at+2, po->po_amp);
 	    	outlet_list(x->x_peakout, 0, 3, at);
 		}
     }
@@ -952,16 +952,16 @@ void pitch_tick(t_pitch *x) {
     if (x->x_npitch > 1) {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[3];
-			SETLONG(at, i+1);
-			SETFLOAT(at+1, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+2, ph->h_amps[x->x_histphase]);
+			atom_setlong(at, i+1);
+			atom_setfloat(at+1, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+2, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 3, at);
    		}
    	} else {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+1, ph->h_amps[x->x_histphase]);
+			atom_setfloat(at, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+1, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 2, at);
    		}
 	}   	
@@ -971,17 +971,17 @@ void pitch_tick(t_pitch *x) {
 	    for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
  			if (ph->h_pitch) {
 				t_atom at[3];
-				SETLONG(at, i+1);
-				SETFLOAT(at+1, ph->h_pitch);
-				SETFLOAT(at+2, mtof(ph->h_pitch));
+				atom_setlong(at, i+1);
+				atom_setfloat(at+1, ph->h_pitch);
+				atom_setfloat(at+2, mtof(ph->h_pitch));
 				outlet_list(x->x_noteout, 0, 3, at);
 			}
 	} else {
 		ph = x->x_hist;
  		if (ph->h_pitch) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitch);
-			SETFLOAT(at+1, mtof(ph->h_pitch));
+			atom_setfloat(at, ph->h_pitch);
+			atom_setfloat(at+1, mtof(ph->h_pitch));
 			outlet_list(x->x_noteout, 0, 2, at);
 		}
 	}
@@ -1036,9 +1036,9 @@ void pitch_tick_G4(t_pitch *x) {
     	t_peakout *po;
     	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
 			t_atom at[3];
-	    	SETLONG(at, i+1);
-	    	SETFLOAT(at+1, po->po_freq);
-	    	SETFLOAT(at+2, po->po_amp);
+	    	atom_setlong(at, i+1);
+	    	atom_setfloat(at+1, po->po_freq);
+	    	atom_setfloat(at+2, po->po_amp);
 	    	outlet_list(x->x_peakout, 0, 3, at);
 		}
     }
@@ -1050,16 +1050,16 @@ void pitch_tick_G4(t_pitch *x) {
     if (x->x_npitch > 1) {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[3];
-			SETLONG(at, i+1);
-			SETFLOAT(at+1, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+2, ph->h_amps[x->x_histphase]);
+			atom_setlong(at, i+1);
+			atom_setfloat(at+1, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+2, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 3, at);
    		}
    	} else {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+1, ph->h_amps[x->x_histphase]);
+			atom_setfloat(at, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+1, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 2, at);
    		}
 	}   	
@@ -1069,17 +1069,17 @@ void pitch_tick_G4(t_pitch *x) {
 	    for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
  			if (ph->h_pitch) {
 				t_atom at[3];
-				SETLONG(at, i+1);
-				SETFLOAT(at+1, ph->h_pitch);
-				SETFLOAT(at+2, mtof(ph->h_pitch));
+				atom_setlong(at, i+1);
+				atom_setfloat(at+1, ph->h_pitch);
+				atom_setfloat(at+2, mtof(ph->h_pitch));
 				outlet_list(x->x_noteout, 0, 3, at);
 			}
 	} else {
 		ph = x->x_hist;
  		if (ph->h_pitch) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitch);
-			SETFLOAT(at+1, mtof(ph->h_pitch));
+			atom_setfloat(at, ph->h_pitch);
+			atom_setfloat(at+1, mtof(ph->h_pitch));
 			outlet_list(x->x_noteout, 0, 2, at);
 		}
 	}

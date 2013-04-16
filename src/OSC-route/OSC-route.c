@@ -586,13 +586,13 @@ void OSCroute_allmessages(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	  // XXX bug: we need to convert '\0' back to '/' in x->o_prefixes[i]!!!
 		post("OSC:  %s/%s", prefixSymbol->s_name, x->o_prefixes[i]);
 		MyStrCopy(endOfPrefix, x->o_prefixes[i]);
-		SETSYM(a, gensym(prefixBuf));
+		atom_setsym(a, gensym(prefixBuf));
 		outlet_anything(x->o_outlets[i], s, 1, a);
 	}
 	
 	// And now the "none of the above" outlet, which outputs messages at the same
 	// level of the hierarchy as the *input* to this OSC-route object:
-	SETSYM(a, prefixSymbol);
+	atom_setsym(a, prefixSymbol);
 	outlet_anything(x->o_otheroutlet, s, 1, a);
 }
 

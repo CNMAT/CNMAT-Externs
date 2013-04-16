@@ -187,7 +187,7 @@ void sphY_list(sphY* x, Symbol* mess, short argc, Atom* argv)
         for(n=0, mn=0; n <= x->order; n++) {
             for (m = -n; m <= n; m++, mn++) {
                 value=sHEvaluate(x->shp, n, m, phi, theta);
-                SETFLOAT(&x->list_buf[mn], (float)value);
+                atom_setfloat(&x->list_buf[mn], (float)value);
             }
         }
         outlet_anything(x->out_p[0], ps_r, x->len, x->list_buf);
@@ -204,8 +204,8 @@ void sphY_index(sphY* x, Symbol* mess, short argc, Atom* argv)
     
     for(n=0, mn=0; n <= x->order; n++) {
         for (m = -n; m <= n; m++, mn++) {
-            SETLONG(&x->list_i_buf[2*mn], n);
-            SETLONG(&x->list_i_buf[2*mn+1], m);
+            atom_setlong(&x->list_i_buf[2*mn], n);
+            atom_setlong(&x->list_i_buf[2*mn+1], m);
         }
     }
     
