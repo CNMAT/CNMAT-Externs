@@ -136,8 +136,8 @@ void bench_anything(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
 		l2 = (uint32_t)(t & 0xffffffffLL);
-		SETLONG(&out[0], l1);
-		SETLONG(&out[1], l2);
+		atom_setlong(&out[0], l1);
+		atom_setlong(&out[1], l2);
 		outlet_list(x->out1, NULL, 2, out);
 		outlet_anything(x->out0, msg, argc, argv);
 	}else{
@@ -165,8 +165,8 @@ void bench_list(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
 		l2 = (uint32_t)(t & 0xffffffffLL);
-		SETLONG(&out[0], l1);
-		SETLONG(&out[1], l2);
+		atom_setlong(&out[0], l1);
+		atom_setlong(&out[1], l2);
 		outlet_list(x->out1, NULL, 2, out);
 		outlet_list(x->out0, msg, argc, argv);
 	}else{

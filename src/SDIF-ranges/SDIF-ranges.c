@@ -311,7 +311,7 @@ void SDIFranges_GetMaxNumColumns(SDIFranges *x, Symbol *matrixTypeSym) {
     if (resolveBufferAndMatrixType(x, matrixTypeSym, matrixType)) {
 		if (doGetMaxNumColumns(x, matrixType, &answer)) {
 			Atom outputArgs[1];	
-			SETLONG(outputArgs, answer);
+			atom_setlong(outputArgs, answer);
 			outlet_anything(x->t_out, ps_maxcolumns, 1, outputArgs);
 		}
 	}
@@ -341,12 +341,12 @@ void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym) {
 			SDIFbuf_GetColumnRanges(x->t_buf, matrixType, numCols, mins, maxes);
 			
 			for (i = 0; i<numCols; ++i) {
-				SETFLOAT(outputArgs+i, (float) mins[i]);
+				atom_setfloat(outputArgs+i, (float) mins[i]);
 			}
 			outlet_anything(x->t_out, ps_column_mins, numCols, outputArgs);
 			
 			for (i = 0; i<numCols; ++i) {
-				SETFLOAT(outputArgs+i, (float) maxes[i]);
+				atom_setfloat(outputArgs+i, (float) maxes[i]);
 			}
 			outlet_anything(x->t_out, ps_column_maxes, numCols, outputArgs);
 			
@@ -395,9 +395,9 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
 		}
 		
 		object_post((t_object *)x, "**  min %f, max %f", (float) min, (float) max);
-		SETLONG(outputArgs, columnArg);
-		SETFLOAT(outputArgs+1, (float) min);
-		SETFLOAT(outputArgs+2, (float) max);
+		atom_setlong(outputArgs, columnArg);
+		atom_setfloat(outputArgs+1, (float) min);
+		atom_setfloat(outputArgs+2, (float) max);
 		
 		outlet_anything(x->t_out, ps_column_range, 3, outputArgs);
 	

@@ -337,8 +337,8 @@ void SDIFfileinfo_output(t_sdif_fileinfo *x) {
 
 	// post("File %s has %d streams:", x->x_filenameSymbol->s_name, x->x_ns);
 
-	SETSYM(arguments, x->x_filenameSymbol);
-	SETLONG(arguments+1, x->x_ns);
+	atom_setsym(arguments, x->x_filenameSymbol);
+	atom_setlong(arguments+1, x->x_ns);
 	outlet_anything(x->outlet, ps_file, 2, arguments);
 
 	for (i = 0; i < x->x_ns; ++i) {
@@ -347,11 +347,11 @@ void SDIFfileinfo_output(t_sdif_fileinfo *x) {
 			 x->x_frameType[i][2], x->x_frameType[i][3], x->x_starttime[i],
 			 x->x_endtime[i], x->x_numframes[i]); */
 			 
-		SETLONG(arguments, x->x_streamID[i]);
-		SETSYM(arguments+1, x->x_frameTypeSymbol[i]);
-		SETFLOAT(arguments+2, x->x_starttime[i]);
-		SETFLOAT(arguments+3, x->x_endtime[i]);
-		SETLONG(arguments+4, x->x_numframes[i]);
+		atom_setlong(arguments, x->x_streamID[i]);
+		atom_setsym(arguments+1, x->x_frameTypeSymbol[i]);
+		atom_setfloat(arguments+2, x->x_starttime[i]);
+		atom_setfloat(arguments+3, x->x_endtime[i]);
+		atom_setlong(arguments+4, x->x_numframes[i]);
 		outlet_anything(x->outlet, ps_stream, 5, arguments);
 	}	
 }
@@ -379,13 +379,13 @@ void SDIFfileinfo_output1NVT(t_sdif_fileinfo *x, char *buf, SDIF_FrameHeader *fh
 		//post("%s %s", key, val);
 		if(i > 1){
 			t_atom out[2];
-			SETSYM(&(out[0]), gensym(key));
-			SETSYM(&(out[1]), gensym(val));
+			atom_setsym(&(out[0]), gensym(key));
+			atom_setsym(&(out[1]), gensym(val));
 			outlet_anything(x->outlet2, msg, 2, out);
 		}else{
 			/*
 			t_atom out;
-			SETSYM(&out, gensym("bang"));
+			atom_setsym(&out, gensym("bang"));
 			outlet_anything(x->outlet2, msg, 1, &out);
 			*/
 		}

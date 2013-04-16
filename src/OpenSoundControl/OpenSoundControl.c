@@ -385,8 +385,8 @@ void OSC_sendData(OSC *x, short size, char *data) {
 		post("OpenSoundControl: Sending buffer (%ld bytes)", (long) size);
 	}
 	
-	SETLONG(&arguments[0], (long) size);
-	SETLONG(&arguments[1], (long) data);
+	atom_setlong(&arguments[0], (long) size);
+	atom_setlong(&arguments[1], (long) data);
 	outlet_anything(x->O_outlet1, ps_FullPacket, 2, arguments);
 
 #ifdef OLD_EVIL_WAY
@@ -837,8 +837,8 @@ int ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
 
 		if (topLevel) {
 			Atom timeTagLongs[2];
-			SETLONG(&timeTagLongs[0], ntohl(*((long *)(buf+8))));
-			SETLONG(&timeTagLongs[1], ntohl(*((long *)(buf+12))));
+			atom_setlong(&timeTagLongs[0], ntohl(*((long *)(buf+8))));
+			atom_setlong(&timeTagLongs[1], ntohl(*((long *)(buf+12))));
 			outlet_anything(x->O_outlet3, ps_OSCTimeTag, 2, timeTagLongs);
 		}
 
@@ -936,14 +936,14 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
   		   
 	       switch (*thisType) {
 	            case 'i': case 'r': case 'm': case 'c':
-	            SETLONG(&args[numArgs], ntohl(*((int *) p)));
+	            atom_setlong(&args[numArgs], ntohl(*((int *) p)));
 	            p += 4;
 	            break;
 
 	            case 'f': 
 		      { // Pretend the 32 bits are an int so I can call ntohl()
 			long bytesAsInt = ntohl(*((int *) p));
-			SETFLOAT(&args[numArgs], *((float *) (& bytesAsInt)));
+			atom_setfloat(&args[numArgs], *((float *) (& bytesAsInt)));
 		      }
 	            p += 4;
 	            break;
@@ -951,34 +951,34 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
               case 't':
               /* handle typetags in args as they are in bundles */
               /* Could see if the data fits in a 32-bit int and output it like that if so... */
-              SETSYM(&args[numArgs], ps_OSCTimeTag);
+              atom_setsym(&args[numArgs], ps_OSCTimeTag);
               numArgs++;
-              SETLONG(&args[numArgs], ntohl(*((int *) p)));
+              atom_setlong(&args[numArgs], ntohl(*((int *) p)));
               numArgs++;
               p += 4;
-              SETLONG(&args[numArgs], ntohl(*((int *) p)));
+              atom_setlong(&args[numArgs], ntohl(*((int *) p)));
               p += 4;
               break;
              
 	            case 'h': 
 	            /* 64-bit int: interpret as zero since Max doesn't have long ints */
 	            /* Could see if the data fits in a 32-bit int and output it like that if so... */
-	            SETLONG(&args[numArgs], 0);
+	            atom_setlong(&args[numArgs], 0);
 	            p += 8;
 	            break;
 
 	            case 'd':
 	            /* 64-bit float: interpret as zero since Max doesn't have doubles */
 	            /* Could see if the data fits in a 32-bit float and output it like that if so... */
-	            SETFLOAT(&args[numArgs], 0.0);
+	            atom_setfloat(&args[numArgs], 0.0);
 	            p += 8;
 	            break;
 
 	            case 's': case 'S':
 	            if (!IsNiceString(p, typeTags+n)) {
-	            	SETSYM(&args[numArgs], gensym("¥Bogus_String"));
+	            	atom_setsym(&args[numArgs], gensym("¥Bogus_String"));
 	            } else {
-	            	SETSYM(&args[numArgs], gensym(p));
+	            	atom_setsym(&args[numArgs], gensym(p));
 	                p = DataAfterAlignedString(p, typeTags+n);
 	            }
 	            break;
@@ -992,16 +992,16 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
                     	error("OpenSoundControl: blob size %ld too big for packet", size);
                     	return;
 	            	}
-	            	SETSYM(&args[numArgs], ps_OSCBlob); numArgs++;
+	            	atom_setsym(&args[numArgs], ps_OSCBlob); numArgs++;
                 
                 if(numArgs + 1 + size > MAXARGS) {
                   post("OpenSoundControl: blob size too big for encoding");
                   return;
                 }
-	            	SETLONG(&args[numArgs], size); numArgs++;
+	            	atom_setlong(&args[numArgs], size); numArgs++;
 
                 for(j = 0; j < size; j++) {
-                  SETLONG(&args[numArgs], ((long) (*(p + 4 + j)))); numArgs++;
+                  atom_setlong(&args[numArgs], ((long) (*(p + 4 + j)))); numArgs++;
                 }
                 
                 numArgs--; // increments again at end of loop
@@ -1013,25 +1013,25 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 
 	            case 'T': 
 	            /* "True" value comes out as the int 1 */
-	           	SETLONG(&args[numArgs], 1);
+	           	atom_setlong(&args[numArgs], 1);
 	           	/* Don't touch p */
 	           	break;
 	           	
 	            case 'F': 
 	            /* "False" value comes out as the int 0 */
-	           	SETLONG(&args[numArgs], 0);
+	           	atom_setlong(&args[numArgs], 0);
 	           	/* Don't touch p */
 	           	break;
 	           	            
 	            case 'N': 
 	            /* Empty lists in max?  I wish!  How about the symbol "nil"? */
-	            SETSYM(&args[numArgs], gensym("nil"));
+	            atom_setsym(&args[numArgs], gensym("nil"));
 	            /* Don't touch p */
 	           	break;
 	           	
 	            case 'I': 
 	            /* Infinita in Max?  Ha!  How about the symbol "Infinitum"? */
-	            SETSYM(&args[numArgs], gensym("Infinitum"));
+	            atom_setsym(&args[numArgs], gensym("Infinitum"));
 	            /* Don't touch p */
 	           	break;
 
@@ -1058,22 +1058,22 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 
 			string = &chars[i*4];
 			if  (ints[i] >= -1000 && ints[i] <= 1000000) {
-				SETLONG(&args[numArgs], ntohl(ints[i]));
+				atom_setlong(&args[numArgs], ntohl(ints[i]));
 			    i++;
 			} else if (floats[i] >= -1000.f && floats[i] <= 1000000.f &&
 				   (floats[i]<=0.0f || floats[i] >= SMALLEST_POSITIVE_FLOAT)) {
 			  // Pretend the 32 bits are an int so I can call ntohl()
 			  long bytesAsInt = ntohl(ints[i]);
-			  SETFLOAT(&args[numArgs], *((float *) (&bytesAsInt)));
+			  atom_setfloat(&args[numArgs], *((float *) (&bytesAsInt)));
 			    i++;
 			} else if (IsNiceString(string, chars+n)) {
 			    nextString = DataAfterAlignedString(string, chars+n);
 			    argSymbol = gensym(string);
-			    SETSYM(&args[numArgs], argSymbol);
+			    atom_setsym(&args[numArgs], argSymbol);
 			    i += (nextString-string) / 4;
 			} else {
 				// Assume int if nothing looks good.
-			    SETLONG(&args[numArgs], ntohl(ints[i]));
+			    atom_setlong(&args[numArgs], ntohl(ints[i]));
 			    i++;
 			}
 			numArgs++;
