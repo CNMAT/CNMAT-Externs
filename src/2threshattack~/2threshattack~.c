@@ -137,7 +137,7 @@ t_int *tta_perform(t_int *w) {
     int size = w[4]; // vector size
     t_tta *x = (t_tta *) w[5];
     int in = x->in_attack;
-    Atom outputlist[2];
+    t_atom outputlist[2];
     
     lowthresh = x->low;
     highthresh = x->high;

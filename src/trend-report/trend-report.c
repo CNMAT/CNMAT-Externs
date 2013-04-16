@@ -80,7 +80,7 @@ void *TrendReport_class;
 
 void TrendReport_int(TrendReport *x, int i);
 void TrendReport_float(TrendReport *x, double f);
-void *TrendReport_new(Symbol *s, float arg);
+void *TrendReport_new(t_symbol *s, float arg);
 
 void Reset(TrendReport *x);
 int compare (float x, float y, float tolerance);
@@ -107,7 +107,7 @@ void Reset(TrendReport *x) {
 	x->lastDeltaWithinTolerance = 0;
 }
 
-void *TrendReport_new(Symbol *s, float arg)
+void *TrendReport_new(t_symbol *s, float arg)
 {
 	TrendReport *x;
 	
@@ -134,7 +134,7 @@ int compare (float x, float y, float tolerance) {
 }
 
 void OutputTrend(TrendReport *x) {
-	Atom outputList[4];
+	t_atom outputList[4];
 	atom_setfloat(outputList+0, x->initialValue);
 	atom_setlong(outputList+1, x->direction);
 	atom_setlong(outputList+2, x->numInTrend);

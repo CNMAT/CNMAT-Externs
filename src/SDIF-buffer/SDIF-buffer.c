@@ -109,24 +109,24 @@ typedef struct _SDIFbuffer_private {
 /* globals */
 t_class *SDIFbuffer_class;
 
-Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol;
+t_symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol;
 SDIFBuffer *AllTheBuffers;	/* A linked list of all the buffers */
 
 
 /* prototypes for my functions */
 void *my_getbytes(int numBytes);
 void my_freebytes(void *bytes, int size);
-void *SDIFbuffer_new(Symbol *name, Symbol *filename);
+void *SDIFbuffer_new(t_symbol *name, Symbol *filename);
 void SDIFbuffer_free(SDIFBuffer *x);
 void SDIFbuffer_clear(SDIFBuffer *x);
 void SDIFbuffer_doclear(SDIFBuffer *x);
 FILE *OpenSDIFFile(char *filename);
 void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long arg);
-void SDIFbuffer_readstreamnumber(SDIFBuffer *x, Symbol *fileName, long streamID);
-void SDIFbuffer_streamlist(SDIFBuffer *, Symbol *, int argc, Atom *argv);
-void one_streamlist(Symbol *fileName);
-void SDIFbuffer_framelist(SDIFBuffer *, Symbol *, int argc, Atom *argv);
-void one_framelist(Symbol *fileName);
+void SDIFbuffer_readstreamnumber(SDIFBuffer *x, t_symbol *fileName, long streamID);
+void SDIFbuffer_streamlist(SDIFBuffer *, t_symbol *, int argc, t_atom *argv);
+void one_streamlist(t_symbol *fileName);
+void SDIFbuffer_framelist(SDIFBuffer *, t_symbol *, int argc, t_atom *argv);
+void one_framelist(t_symbol *fileName);
 static void do_streamlist(FILE *f, char *name, int showframes);
 void SDIFbuffer_print(SDIFBuffer *x);
 void SDIFbuffer_NAVcrap(SDIFBuffer *x);
@@ -148,7 +148,7 @@ void SDIFbuffer_debug(SDIFBuffer *x, long debugMode);
 void SDIFbuffer_version (SDIFBuffer *x);
 
 
-void SDIFbuffer_writefile(SDIFBuffer *x, Symbol *fileName);
+void SDIFbuffer_writefile(SDIFBuffer *x, t_symbol *fileName);
 
 
 void *my_getbytes(int numBytes) {
@@ -238,7 +238,7 @@ int main(void) {
 	return 0;
 }
 
-void *SDIFbuffer_new(Symbol *name, Symbol *filename) {
+void *SDIFbuffer_new(t_symbol *name, Symbol *filename) {
 	SDIFBuffer *x;
 	SDIFBufferPrivate *privateStuff;
 
@@ -358,7 +358,7 @@ void SDIFbuffer_timeShift(SDIFBuffer *x) {
 
 
 
-void SDIFbuffer_readstreamnumber(SDIFBuffer *x, Symbol *fileNameSymbol, long streamID) {	
+void SDIFbuffer_readstreamnumber(SDIFBuffer *x, t_symbol *fileNameSymbol, long streamID) {	
 	
 
 	// post("SDIFbuffer_readstreamnumber: file %s, stream %ld", fileName->s_name, streamID);
@@ -433,7 +433,7 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
 
 
 
-void SDIFbuffer_streamlist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *argv) {	
+void SDIFbuffer_streamlist(SDIFBuffer *dummy1, t_symbol *dummy2, int argc, t_atom *argv) {	
 	int i;
 	
 	
@@ -450,7 +450,7 @@ void SDIFbuffer_streamlist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *a
 }
 
 
-void one_streamlist(Symbol *fileName) {	
+void one_streamlist(t_symbol *fileName) {	
 	FILE *f;
 	SDIFresult r;
 
@@ -470,7 +470,7 @@ void one_streamlist(Symbol *fileName) {
 
 
 
-void SDIFbuffer_framelist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *argv) {	
+void SDIFbuffer_framelist(SDIFBuffer *dummy1, t_symbol *dummy2, int argc, t_atom *argv) {	
 	int i;
 	
 	
@@ -488,7 +488,7 @@ void SDIFbuffer_framelist(SDIFBuffer *dummy1, Symbol *dummy2, int argc, Atom *ar
 
 
 
-void one_framelist(Symbol *fileName) {	
+void one_framelist(t_symbol *fileName) {	
 	FILE *f;
 	SDIFresult r;
 
@@ -819,7 +819,7 @@ void PrintAllTheBuffers(void) {
 
 /******************* Writing files *******************/
 
-void SDIFbuffer_writefile(SDIFBuffer *x, Symbol *fileName) {
+void SDIFbuffer_writefile(SDIFBuffer *x, t_symbol *fileName) {
 	SDIFresult r;
 	FILE *fp;
 	SDIFBufferPrivate *privateStuff;
@@ -881,9 +881,9 @@ void RTInitFrameHeader(SDIFmem_Frame frame);
 
 void SDIFbuffer_realtimeframe(
 	SDIFBuffer *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int i;
 	SDIF_FrameHeader *frame_header;
@@ -1068,9 +1068,9 @@ void remove_glisses(
 
 void SDIFbuffer_realtimeframe2(
 	SDIFBuffer *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int i;
 	int int_index;
@@ -1242,9 +1242,9 @@ void RTInitFrameHeader(SDIFmem_Frame frame)
 
 void SDIFbuffer_realtimeHeader(
 	SDIFBuffer *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	
 	int i;

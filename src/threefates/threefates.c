@@ -118,7 +118,7 @@ typedef struct t_threefates_
 	int max_inargs, max_outargs;
 	
 	void *t_out;
-	Atom *output_list;
+	t_atom *output_list;
 	int t_outsize;
 
 	// Frame0 num args.
@@ -142,7 +142,7 @@ typedef struct t_threefates_
 	int max_slot_index;
 } t_threefates;
 
-Symbol *ps_list;
+t_symbol *ps_list;
 
 t_class *threefates_class;
 
@@ -155,9 +155,9 @@ void threefates_free(t_threefates *x);
 
 void List(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 void SlotsToOutput(t_threefates *thisobject);
 void RemoveDeadSlots(t_threefates *thisobject);
@@ -178,9 +178,9 @@ void BirthSlotList(t_threefates *thisobject, int index, int nparams, float *para
 
 int InputToFutureFrame(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 	
 void SetFutureValue(
 	t_threefates *x,
@@ -293,7 +293,7 @@ void *threefates_new(long maxpartials, long nPartialParams) {
 	x->max_inargs =  (x->num_partial_parameters + 1) * x->max_osc;
 	x->max_outargs = x->num_partial_parameters * x->max_osc;
 
-	x->output_list = (Atom *)   sysmem_newptr(x->max_outargs * sizeof(Atom));
+	x->output_list = (t_atom *)   sysmem_newptr(x->max_outargs * sizeof(t_atom));
 	x->frame0 =      (float *)  sysmem_newptr(x->max_inargs * sizeof(float));
 	x->frame1 =      (float *)  sysmem_newptr(x->max_inargs * sizeof(float));
 	x->t_slotlist =  (t_slot *) sysmem_newptr(x->max_osc * sizeof(t_slot));
@@ -318,7 +318,7 @@ void threefates_free(t_threefates *x) {
 	sysmem_freeptr(x->t_slotlist);
 
 #ifdef GETBYTES_GIVES_ENOUGH_MEMORY
-  	freebytes(x->output_list, (short) x->max_outargs * sizeof(Atom));
+  	freebytes(x->output_list, (short) x->max_outargs * sizeof(t_atom));
 	freebytes(x->frame0,      (short) x->max_inargs * sizeof(float));
 	freebytes(x->frame1,      (short) x->max_inargs * sizeof(float));
 	freebytes(x->t_slotlist,  (short) x->max_osc * sizeof(t_slot));
@@ -332,9 +332,9 @@ void threefates_free(t_threefates *x) {
 
 void List(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 
 	if (argc > x->max_inargs) {
@@ -594,9 +594,9 @@ void SlotsToOutput(t_threefates *thisobject) {
 
 int InputToFutureFrame(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int i;
 	float value;	
@@ -835,7 +835,7 @@ void FutureFrameToSlots(t_threefates *x) {
 
 void threefates_tellmeeverything(t_threefates *x) {
    int i, j;
-   Atom a;
+   t_atom a;
    
    version(x);
 

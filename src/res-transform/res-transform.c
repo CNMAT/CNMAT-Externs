@@ -99,13 +99,13 @@ t_class *resonclass;
 
 typedef	struct	fobj
 {
-	Object			object;		/* An embedded MAX object.					*/
+	t_object			object;		/* An embedded MAX object.					*/
 	void *m_proxy;
 	long m_inletNumber;
 	void			*dataoutlet;	/* frequency, gain bandwidth tuplets -first outlet		*/
 	int maxresonances;
-	Atom 			*model;
-//	Atom			model[3*MAXRESON];
+	t_atom 			*model;
+//	t_atom			model[3*MAXRESON];
 /* current model 	*/
 	struct			reson { double f,g,b; }	*resonances;	
 	int			nreson; /* number of resonances */
@@ -170,29 +170,29 @@ typedef	struct	fobj
 static double miditopitchratio(double f);
 static double modeltune(double f,double p);
 static void faxis(double f[],long n);
-void * fnew(Symbol *s, int argc, Atom *argv);
+void * fnew(t_symbol *s, int argc, t_atom *argv);
 static double senv(fobj *x, double f);
 static void computeeverything(fobj *x);
 static void dumpresonances(fobj *x);
 //static void *setsrate(fobj *it, double ef);
-static void *setcenter(fobj *it, double f);
-static void *setslope(fobj *it, double f);
-static void *setnfilters(fobj *it, long n);
-static void *setfreqscale(fobj *it, double f);
-static void *setfreqbase(fobj *it, double f);
-static void *setfreqadd(fobj *it, double f);
-static void *setatten(fobj *it, double f);
-static void *setgain(fobj *it, double f);
-static void *setrmask(fobj *it, double f);
-static void *setmidipitch(fobj *it, double f);
-static void *setbwscale(fobj *it, double f);
-static void *specenv(fobj *x, struct symbol *s, int argc, Atom *argv);
+static void setcenter(fobj *it, double f);
+static void setslope(fobj *it, double f);
+static void setnfilters(fobj *it, long n);
+static void setfreqscale(fobj *it, double f);
+static void setfreqbase(fobj *it, double f);
+static void setfreqadd(fobj *it, double f);
+static void setatten(fobj *it, double f);
+static void setgain(fobj *it, double f);
+static void setrmask(fobj *it, double f);
+static void setmidipitch(fobj *it, double f);
+static void setbwscale(fobj *it, double f);
+static void specenv(fobj *x, struct symbol *s, int argc, t_atom *argv);
 static void setfreqrange(fobj *x, double min, double max);
 static void setamprange(fobj *x, double min, double max);
-static void flist(fobj *x, struct symbol *s, int argc, Atom *argv);
+static void flist(fobj *x, struct symbol *s, int argc, t_atom *argv);
 static void fulllist(fobj *x, struct symbol *s, int argc, struct atom *argv);
 void more_resonances(fobj *x, struct symbol *s, int argc, struct atom *argv);
-static void resondump(fobj *x, struct symbol *s, int argc, Atom *argv);
+static void resondump(fobj *x, struct symbol *s, int argc, t_atom *argv);
 static void enddump(fobj *x, struct symbol *s, int argc, struct atom *argv);
 static void tellmeeverything(fobj *x);
 void numresonances(fobj *x);
@@ -405,14 +405,14 @@ static void clear(fobj *it)
 		dumpifnecessary(it);
 }
 
-static void *setcenter(fobj *it, double f)
+static void setcenter(fobj *it, double f)
 {
 	it->center = f;
 		dumpifnecessary(it);
 }
 
-static void *setslope(fobj *it, double f);
-static void *setslope(fobj *it, double f)
+static void setslope(fobj *it, double f);
+static void setslope(fobj *it, double f)
 {		
 	it->slope = f;
 		dumpifnecessary(it);
@@ -420,99 +420,99 @@ static void *setslope(fobj *it, double f)
 
 
 
-static void *setfreqscale(fobj *it, double f);
-static void *setfreqscale(fobj *it, double f)
+static void setfreqscale(fobj *it, double f);
+static void setfreqscale(fobj *it, double f)
 {
 	it->freqscale = f;
 		dumpifnecessary(it);
 }
 
-static void *setoddfreqscale(fobj *it, double f);
-static void *setoddfreqscale(fobj *it, double f)
+static void setoddfreqscale(fobj *it, double f);
+static void setoddfreqscale(fobj *it, double f)
 {
 	it->oddfscale = f;
 		dumpifnecessary(it);
 }
 
-static void *setevenfreqscale(fobj *it, double f);
-static void *setevenfreqscale(fobj *it, double f)
+static void setevenfreqscale(fobj *it, double f);
+static void setevenfreqscale(fobj *it, double f)
 {
 	it->evenfscale = f;
 		dumpifnecessary(it);
 }
 
-static void *setk1(fobj *it, double f);
-static void *setk1(fobj *it, double f)
+static void setk1(fobj *it, double f);
+static void setk1(fobj *it, double f)
 {
 	it->k1 = f;
 		dumpifnecessary(it);
 }
-static void *setk2(fobj *it, double f);
-static void *setk2(fobj *it, double f)
+static void setk2(fobj *it, double f);
+static void setk2(fobj *it, double f)
 {
 	it->k2 = f;
 		dumpifnecessary(it);
 }
-static void *setfpivot(fobj *it, double f);
-static void *setfpivot(fobj *it, double f)
+static void setfpivot(fobj *it, double f);
+static void setfpivot(fobj *it, double f)
 {
 	it->fpivot = f;
 		dumpifnecessary(it);
 }
-static void *setfmax(fobj *it, double f);
-static void *setfmax(fobj *it, double f)
+static void setfmax(fobj *it, double f);
+static void setfmax(fobj *it, double f)
 {
 	it->fmax = f;
 		dumpifnecessary(it);
 }
-static void *setfmin(fobj *it, double f);
-static void *setfmin(fobj *it, double f)
+static void setfmin(fobj *it, double f);
+static void setfmin(fobj *it, double f)
 {
 	it->fmin = f;
 		dumpifnecessary(it);
 }
-static void *settime(fobj *it, double f);
-static void *settime(fobj *it, double f)
+static void settime(fobj *it, double f);
+static void settime(fobj *it, double f)
 {
 	it->time = f;
 		dumpifnecessary(it);
 }
 
 
-static void *setfreqbase(fobj *it, double f);
-static void *setfreqbase(fobj *it, double f)
+static void setfreqbase(fobj *it, double f);
+static void setfreqbase(fobj *it, double f)
 {
 	it->freqbase = f;
 //	post("freqbase %lf", f);
 		dumpifnecessary(it);
 }
 
-static void *setfreqadd(fobj *it, double f)
+static void setfreqadd(fobj *it, double f)
 {
 	it->freqadd = f;
 		dumpifnecessary(it);
 }
 
-static void *setatten(fobj *it, double f);
-static void *setatten(fobj *it, double f)
+static void setatten(fobj *it, double f);
+static void setatten(fobj *it, double f)
 {
 	it->gainscale = exp(-f*0.1151292546497);
 		dumpifnecessary(it);
 }
-static void *setgain(fobj *it, double f);
-static void *setgain(fobj *it, double f)
+static void setgain(fobj *it, double f);
+static void setgain(fobj *it, double f)
 {
 	it->gainscale = f;
 		dumpifnecessary(it);
 }
-static void *setoddgain(fobj *it, double f);
-static void *setoddgain(fobj *it, double f)
+static void setoddgain(fobj *it, double f);
+static void setoddgain(fobj *it, double f)
 {
 	it->oddgain = f;
 		dumpifnecessary(it);
 }
-static void *setevengain(fobj *it, double f);
-static void *setevengain(fobj *it, double f)
+static void setevengain(fobj *it, double f);
+static void setevengain(fobj *it, double f)
 {
 	it->evengain = f;
 		dumpifnecessary(it);
@@ -520,15 +520,15 @@ static void *setevengain(fobj *it, double f)
 
 
 
-static void *setmidipitch(fobj *it, double f);
-static void *setmidipitch(fobj *it, double f)
+static void setmidipitch(fobj *it, double f);
+static void setmidipitch(fobj *it, double f)
 {
 	it->freqscale = modeltune(f,it->freqbase);
 //	post("%d %lf %lf", n,it->freqbase,it->freqscale);
 		dumpifnecessary(it);
 }
-static void *setpitch(fobj *it, double f);
-static void *setpitch(fobj *it, double f)
+static void setpitch(fobj *it, double f);
+static void setpitch(fobj *it, double f)
 {
 	if(it->freqbase >0.0)
 		it->freqscale = f/it->freqbase;
@@ -536,54 +536,54 @@ static void *setpitch(fobj *it, double f)
 		dumpifnecessary(it);
 }
 
-static void *setbwscale(fobj *it, double f);
+static void setbwscale(fobj *it, double f);
 
-static void *setbwscale(fobj *it, double f)
+static void setbwscale(fobj *it, double f)
 {
 	it->bwscale = f;
 		dumpifnecessary(it);
 }
-static void *setfspread(fobj *it, double f);
-static void *setfspread(fobj *it, double f)
+static void setfspread(fobj *it, double f);
+static void setfspread(fobj *it, double f)
 {
 	it->fspread = f;
 		dumpifnecessary(it);
 }
 
-static void *setfstretch(fobj *it, double f);
+static void setfstretch(fobj *it, double f);
 
-static void *setfstretch(fobj *it, double f)
+static void setfstretch(fobj *it, double f)
 {
 	it->fstretch = f;
 		dumpifnecessary(it);
 }
-static void *setfaround(fobj *it, double f)
+static void setfaround(fobj *it, double f)
 {
 	it->faround = f;
 		dumpifnecessary(it);
 }
-static void *setbwstretch(fobj *it, double f);
-static void *setbwstretch(fobj *it, double f)
+static void setbwstretch(fobj *it, double f);
+static void setbwstretch(fobj *it, double f)
 {
 	it->bwstretch = f;
 		dumpifnecessary(it);
 }
-static void *setbwspread(fobj *it, double f);
+static void setbwspread(fobj *it, double f);
 
-static void *setbwspread(fobj *it, double f)
+static void setbwspread(fobj *it, double f)
 {
 	it->bwspread = f;
 		dumpifnecessary(it);
 }
-static void *setattenuationspread(fobj *it, double f);
-static void *setattenuationspread(fobj *it, double f)
+static void setattenuationspread(fobj *it, double f);
+static void setattenuationspread(fobj *it, double f)
 {
 	it->attenuationspread = f;
 		dumpifnecessary(it);
 }
 
-static void *setpartialmin(fobj *it, int i);
-static void *setpartialmin(fobj *it, int i)
+static void setpartialmin(fobj *it, int i);
+static void setpartialmin(fobj *it, int i)
 {
 	if(i<0)
 		post("partial number must be positive");
@@ -591,8 +591,8 @@ static void *setpartialmin(fobj *it, int i)
 		it->partialmin = i;
 	dumpifnecessary(it);
 }
-static void *setpartialmax(fobj *it, int i);
-static void *setpartialmax(fobj *it, int i)
+static void setpartialmax(fobj *it, int i);
+static void setpartialmax(fobj *it, int i)
 {
 	if(i<0)
 		post("partial number must be positive");
@@ -601,8 +601,8 @@ static void *setpartialmax(fobj *it, int i)
 	dumpifnecessary(it);
 }
 
-static void *setclustersize(fobj *it, int i);
-static void *setclustersize(fobj *it, int i)
+static void setclustersize(fobj *it, int i);
+static void setclustersize(fobj *it, int i)
 {
 	if(i<=0)
 		post("cluster size must be larger than 0");
@@ -661,7 +661,7 @@ static void squelch(fobj *x, double f)
 	dumpresonances(x);
 	x->squelch = -1.0;
 }
-void resondump(fobj *x, struct symbol *s, int argc, Atom *argv)
+void resondump(fobj *x, struct symbol *s, int argc, t_atom *argv)
 {
 	dumpresonances(x);
 }
@@ -815,15 +815,15 @@ static void setamprange(fobj *x, double min, double max) {
 }
 
 
-void *myobject_free(fobj *x);
-void *myobject_free(fobj *x)
+void myobject_free(fobj *x);
+void myobject_free(fobj *x)
 {
   sysmem_freeptr(x->model);
   sysmem_freeptr(x->resonances);
   freeobject(x->m_proxy);
 }
 
-void * fnew(Symbol *s, int argc, Atom *argv) {
+void * fnew(t_symbol *s, int argc, t_atom *argv) {
 	fobj *x;
 	int i;
 
@@ -836,7 +836,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	clearit(x);
 	
 	x->maxresonances = MAXRESON; // get this from the command line eventually
-	x->model = (Atom *) sysmem_newptr(3 * x->maxresonances * sizeof(Atom));
+	x->model = (t_atom *) sysmem_newptr(3 * x->maxresonances * sizeof(t_atom));
 	x->resonances = (struct reson *) sysmem_newptr(sizeof(struct reson) * x->maxresonances);
 	
 	if(!x->model || ! x->resonances)

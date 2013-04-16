@@ -69,7 +69,7 @@
 /* structure definition of your object */
 typedef struct _OSCSchedule
 {
-    Object o_ob; // required header
+    t_object o_ob; // required header
     
     // inlet
     t_object* in_p[1]; // either a normal inlet or a crazy proxy thing
@@ -110,10 +110,10 @@ typedef struct _OSCSchedule
 /* global that holds the class definition */
 t_class *OSCSchedule_class;
 
-Symbol *ps_FullPacket;
+t_symbol *ps_FullPacket;
 
 // basic prototypes
-void* OSCSchedule_new(Symbol* s, short argc, Atom* argv);
+void* OSCSchedule_new(t_symbol* s, short argc, t_atom* argv);
 void OSCSchedule_free(OSCSchedule *x);
 void OSCSchedule_assist (OSCSchedule *x, void *box, long msg, long arg, char *dstString);
 
@@ -122,7 +122,7 @@ void OSCSchedule_tick(OSCSchedule *x);
 
 // methods
 void OSCSchedule_reset(OSCSchedule* x); // clear queue
-void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv);
+void OSCSchedule_FullPacket(OSCSchedule *x, t_symbol *s, int argc, t_atom* argv);
 
 // setup
 int main(void)
@@ -150,7 +150,7 @@ int main(void)
     
 }
 
-void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
+void* OSCSchedule_new(t_symbol* s, short argc, t_atom *argv)
 {
     
     OSCSchedule *x;
@@ -334,7 +334,7 @@ void OSCSchedule_reset(OSCSchedule *x) {
     
 }
 
-void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
+void OSCSchedule_FullPacket(OSCSchedule *x, t_symbol *s, int argc, t_atom* argv) {
     
     struct ntptime now;
     struct ntptime nowp1;
@@ -496,7 +496,7 @@ void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
 
 void OSCSchedule_tick(OSCSchedule *x) {
     
-    Atom fp[2];
+    t_atom fp[2];
     struct ntptime now;
     struct ntptime nowp1;
     

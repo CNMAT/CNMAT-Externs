@@ -89,7 +89,7 @@ VERSION 1.17.2: object_error()
 
 typedef struct OSCroute
 {
-	Object o_ob;		        // required header
+	t_object o_ob;		        // required header
 	int o_num;		        // Number of address prefixes we store
 	int o_complainmode;             // Do we print a message if no match?
         char *o_prefixes[MAX_NUM];      // Prefixes this object matches, with multiple levels as successive 
@@ -101,7 +101,7 @@ typedef struct OSCroute
 	void *o_otheroutlet;		// "none of the above" outlet
 } OSCroute;
 
-Symbol *ps_list, *ps_complain, *ps_emptySymbol, *ps_slash;
+t_symbol *ps_list, *ps_complain, *ps_emptySymbol, *ps_slash;
 
 /* global necessary for 68K function macros to work */
 //fptr *FNS;
@@ -115,15 +115,15 @@ void OSCroute_free(OSCroute *x);
 int RememberNextPrefix (OSCroute *x, char *prefixWithoutLeadingSlash);
 int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num);
 Boolean MyPatternMatch (const char *pattern, const char *test);
-void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv);
-static void OutputOSCArguments(OSCroute *x, int i, short argc, Atom *argv);
-void OSCroute_anything(OSCroute *x, Symbol *s, short argc, Atom *argv);
-void OSCroute_list(OSCroute *x, Symbol *s, short argc, Atom *argv);
-void *OSCroute_new(Symbol *s, short argc, Atom *argv);
+void OSCroute_doanything(OSCroute *x, t_symbol *s, short argc, t_atom *argv);
+static void OutputOSCArguments(OSCroute *x, int i, short argc, t_atom *argv);
+void OSCroute_anything(OSCroute *x, t_symbol *s, short argc, t_atom *argv);
+void OSCroute_list(OSCroute *x, t_symbol *s, short argc, t_atom *argv);
+void *OSCroute_new(t_symbol *s, short argc, t_atom *argv);
 void OSCroute_version (OSCroute *x);
 void OSCroute_assist (OSCroute *x, void *box, long msg, long arg, char *dstString);
-void OSCroute_allmessages(OSCroute *x, Symbol *s, short argc, Atom *argv);
-void OSCroute_set(OSCroute *x, long outlet, Symbol *s);
+void OSCroute_allmessages(OSCroute *x, t_symbol *s, short argc, t_atom *argv);
+void OSCroute_set(OSCroute *x, long outlet, t_symbol *s);
 static char *NextSlashOrNull(char *p);
 static int StrCopyUntilSlash(char *target, const char *source);
 static int MyStrCopy(char *target, const char *source);
@@ -213,7 +213,7 @@ int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num) {
 	return 1;
 }
 
-void *OSCroute_new(Symbol *s, short argc, Atom *argv)
+void *OSCroute_new(t_symbol *s, short argc, t_atom *argv)
 {
 	OSCroute *x;
 	int i, j, n;
@@ -342,7 +342,7 @@ void OSCroute_assist (OSCroute *x, void *box, long msg, long arg, char *dstStrin
 }
 
 
-void OSCroute_set(OSCroute *x, long outlet, Symbol *s) {	
+void OSCroute_set(OSCroute *x, long outlet, t_symbol *s) {	
   int i;
 
   // outlet argument is 1-based.
@@ -369,7 +369,7 @@ void OSCroute_set(OSCroute *x, long outlet, Symbol *s) {
 }
 
 
-void OSCroute_list(OSCroute *x, Symbol *s, short argc, Atom *argv) {
+void OSCroute_list(OSCroute *x, t_symbol *s, short argc, t_atom *argv) {
 	if (argc > 0 && argv[0].a_type == A_SYM) {
 		/* Ignore the fact that this is a "list" */
 		OSCroute_doanything(x, argv[0].a_w.w_sym, argc-1, argv+1);
@@ -390,7 +390,7 @@ void OSCroute_list(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 	}
 }	
 	
-void OSCroute_anything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
+void OSCroute_anything(OSCroute *x, t_symbol *s, short argc, t_atom *argv) {
 	OSCroute_doanything(x, s, argc, argv);
 }
 	
@@ -409,7 +409,7 @@ Boolean MyPatternMatch (const char *pattern, const char *test) {
 
 #define MAX_PREFIX_LEVELS 20  // e.g., "/a/b/c/d/e/f/ ... /t"
 #define MAX_PREFIX_PART_LENGTH 100
-void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
+void OSCroute_doanything(OSCroute *x, t_symbol *s, short argc, t_atom *argv) {
 	char *pattern, *nextSlash, *str;
 	int i,j,k;
 	int matchedAnything;
@@ -472,7 +472,7 @@ void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 			} else {
 				// ...against the beginning of the pattern, so output the rest of the pattern plus arguments
 				char dstString[1000];
-				Symbol *restOfPattern;
+				t_symbol *restOfPattern;
 				k = 0;
 				for (/* j already first unmatched pattern part */; j<numPatternParts; ++j) {
 					k += MyStrCopy(dstString+k, "/");
@@ -494,7 +494,7 @@ void OSCroute_doanything(OSCroute *x, Symbol *s, short argc, Atom *argv) {
 }
 
 
-static void OutputOSCArguments(OSCroute *x, int i, short argc, Atom *argv) {
+static void OutputOSCArguments(OSCroute *x, int i, short argc, t_atom *argv) {
 	// We've matched  the entire OSC address pattern, so output the OSC arguments
 	// as a Max list.
 	 
@@ -563,12 +563,12 @@ static int MyStrLen(const char *s) {
 }
 
 	
-void OSCroute_allmessages(OSCroute *x, Symbol *s, short argc, Atom *argv) {
+void OSCroute_allmessages(OSCroute *x, t_symbol *s, short argc, t_atom *argv) {
 	int i;
-	Symbol *prefixSymbol = 0;
+	t_symbol *prefixSymbol = 0;
 	char prefixBuf[1000];
 	char *endOfPrefix;
-	Atom a[1];
+	t_atom a[1];
 
 	if (argc >= 1 && argv[0].a_type == A_SYM) {
 		prefixSymbol = argv[0].a_w.w_sym;

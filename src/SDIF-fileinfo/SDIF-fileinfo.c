@@ -80,19 +80,19 @@ To-Do:  use opendialog to present a dialog box to the user
 #include "open-sdif-file.h"
 
 
-Symbol *ps_file, *ps_stream, *ps_no_file, *ps_1NVT;
+t_symbol *ps_file, *ps_stream, *ps_no_file, *ps_1NVT;
 
 #define MAX_STREAMS 100  // Most SDIF streams any file should have
 
 typedef struct sdif_fileinfo {
 	struct object t_ob;
 
-	Symbol			*x_filenameSymbol;
+	t_symbol			*x_filenameSymbol;
 	
 	int			    x_ns; // number of streams seen
 	sdif_int32 		x_streamID[MAX_STREAMS];
 	char 			x_frameType[MAX_STREAMS][4];
-	Symbol			*x_frameTypeSymbol[MAX_STREAMS];
+	t_symbol			*x_frameTypeSymbol[MAX_STREAMS];
     sdif_float64 	x_starttime[MAX_STREAMS];
 	sdif_float64 	x_endtime[MAX_STREAMS];
 	sdif_int32		x_numframes[MAX_STREAMS];
@@ -105,11 +105,11 @@ typedef struct sdif_fileinfo {
 
 
 
-void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av);
+void *sdif_fileinfo_new(t_symbol *s, int ac, t_atom *av);
 void sdif_fileinfo_bang(t_sdif_fileinfo *x);
 void sdif_fileinfo_clear(t_sdif_fileinfo *x);
 
-void sdif_fileinfo_scan(t_sdif_fileinfo *x, Symbol *s);
+void sdif_fileinfo_scan(t_sdif_fileinfo *x, t_symbol *s);
 int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp);
 void do_scan(t_sdif_fileinfo *x, FILE *f, char *name);
 
@@ -149,7 +149,7 @@ int main(void){
 	class_register(CLASS_BOX, sdif_fileinfo_class);
 }
 
-void *sdif_fileinfo_new(Symbol *s, int ac, Atom *av) {
+void *sdif_fileinfo_new(t_symbol *s, int ac, t_atom *av) {
 	t_sdif_fileinfo *x;
 	x = object_alloc(sdif_fileinfo_class);	
 	if(!x){
@@ -184,7 +184,7 @@ void sdif_fileinfo_clear(t_sdif_fileinfo *x) {
 /*   SDIF file reading shit   */
 /*==========================================================================*/
 
-void sdif_fileinfo_scan(t_sdif_fileinfo *x, Symbol *s)  {	
+void sdif_fileinfo_scan(t_sdif_fileinfo *x, t_symbol *s)  {	
 	SDIFresult r;
 	FILE *f;
 	char *filename = s->s_name;
@@ -332,7 +332,7 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 void SDIFfileinfo_output(t_sdif_fileinfo *x) {
 	int i;
 	
-	Atom arguments[5];  // ID, type, start, end, #frames
+	t_atom arguments[5];  // ID, type, start, end, #frames
 	
 
 	// post("File %s has %d streams:", x->x_filenameSymbol->s_name, x->x_ns);
