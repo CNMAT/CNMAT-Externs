@@ -59,7 +59,7 @@ void listAccumDebug(struct listAccum *);
 void listAccumList(struct listAccum *, struct symbol *, int, struct atom *);
 void listAccumInt(struct listAccum *, int i);
 void listAccumFloat(struct listAccum *, double d);
-void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv);
+void listAccum_anything (struct listAccum *x, t_symbol *s, short argc, t_atom *argv);
 
 
 //fptr *FNS;
@@ -72,7 +72,7 @@ struct listAccum {
 	
 	long	l_numAtoms;
 	long	l_atomsInBuf;
-	Atom	*l_atoms;
+	t_atom	*l_atoms;
 	
 	int	debug;
 };
@@ -95,7 +95,7 @@ struct listAccum *listAccumNew(long n) {
 	x->l_outlet2 = intout(x);
 	x->l_outlet = outlet_new(x,0L);
 	x->l_numAtoms = n;
-	x->l_atoms	= (Atom *) sysmem_newptr((long)(sizeof(Atom)*x->l_numAtoms));
+	x->l_atoms	= (t_atom *) sysmem_newptr((long)(sizeof(t_atom)*x->l_numAtoms));
 	x->l_atomsInBuf = 0;
 	
 	x->debug = false;
@@ -105,7 +105,7 @@ struct listAccum *listAccumNew(long n) {
 
 void listAccumFree(struct listAccum *x)
 {
-  //freebytes(x->l_atoms,(short)(sizeof(Atom)*x->l_numAtoms));
+  //freebytes(x->l_atoms,(short)(sizeof(t_atom)*x->l_numAtoms));
   sysmem_freeptr(x->l_atoms);
 }
 
@@ -175,7 +175,7 @@ void listAccumFloat(struct listAccum *, double d);
 
 /* -----------------------  listAccum_anything ----------------------- */
 
-void listAccum_anything (struct listAccum *x, Symbol *s, short argc, Atom *argv) {
+void listAccum_anything (struct listAccum *x, t_symbol *s, short argc, t_atom *argv) {
 	int i;
 
 	/* First, deal with symbol that's the message name */
