@@ -44,7 +44,9 @@
 #define AUTHORS "Andy Schmeder"
 #define COPYRIGHT_YEARS "2008,12,13"
 
+#ifndef WIN_VERSION
 #include <CoreServices/CoreServices.h>
+#endif
 
 // max object header
 #include "ext.h"
@@ -60,6 +62,12 @@
 
 // version
 #include "version.h"
+
+#ifdef WIN_VERSION
+#include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif
 
 
 // default options

@@ -75,7 +75,7 @@ VERSION 1.9.16: Use unsigned bytes in blobs
 // To get ntohl() on Windows
 // #include <asm/byteorder.h>
 // #include </usr/include/asm/byteorder.h>
-#include </usr/include/w32api/winsock2.h>
+#include <winsock2.h>
 #endif
 
 void *OSC_class;
@@ -777,10 +777,10 @@ void OSC_NewTimeTag(OSC *x, long seconds, long fraction) {
  Stuff having to do with parsing incoming OSC packets into Max data
  *******************************************************************/
 
-int ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel);
+int ParseOSCPacket(OSC *x, char *buf, long n, int topLevel);
 static void Smessage(OSC *x, char *address, void *v, long n);
 char *DataAfterAlignedString(char *string, char *boundary); 
-Boolean IsNiceString(char *string, char *boundary);
+int IsNiceString(char *string, char *boundary);
 #ifdef DONT_HAVE_STRING_LIBRARY
 int strncmp(char *s1, char *s2, int n);
 #endif
@@ -798,7 +798,7 @@ void OSC_ParseEvilGimme(OSC *x, t_symbol *s, short not_really_argc, t_atom *not_
 	ParseOSCPacket(x, (char *) not_really_argv, not_really_argc, true);
 }
 
-int ParseOSCPacket(OSC *x, char *buf, long n, Boolean topLevel) {
+int ParseOSCPacket(OSC *x, char *buf, long n, int topLevel) {
     long size, messageLen, i;
     char *messageName;
     char *args;
@@ -915,7 +915,7 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
     t_symbol *addressSymbol, *argSymbol;
 	t_atom args[MAXARGS];
 	int numArgs = 0;
-	Boolean tooManyArgs = false;
+	int tooManyArgs = false;
 	
 	addressSymbol = gensym(address);
 
@@ -1134,7 +1134,7 @@ char *DataAfterAlignedString(char *string, char *boundary)
     return string+i;
 }
 
-Boolean IsNiceString(char *string, char *boundary)  {
+int IsNiceString(char *string, char *boundary)  {
     /* Arguments same as DataAfterAlignedString().  Is the given "string"
        really a string?  I.e., is it a sequence of isprint() characters
        terminated with 1-4 null characters to align on a 4-byte boundary? */
