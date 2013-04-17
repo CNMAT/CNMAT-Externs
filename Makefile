@@ -11,13 +11,14 @@ BUILDDIR = build/Release
 C74SUPPORT = ../max6-sdk/c74support
 MAX_INCLUDES = $(C74SUPPORT)/max-includes
 MSP_INCLUDES = $(C74SUPPORT)/msp-includes
+JIT_INCLUDES = $(C74SUPPORT)/jit-includes
 
 win: CC = i686-w64-mingw32-gcc
 win: LD = $(CC)
 win: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3
 LDFLAGS = -mno-cygwin -shared #-static-libgcc
-win: INCLUDES = -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I../gsl
-win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio
+win: INCLUDES = -I/usr/i686-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I../gsl -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC
+win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm
 
 JAVA_EXT = class
 
@@ -41,14 +42,21 @@ all: MACOBJECTS $(JAVAOBJECTS)
 MACOBJECTS: $(CURRENT_VERSION_FILE)
 	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
 
-SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay
+SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay cnmatrix~
 SIMPLEOBJECTS = $(foreach f, $(SIMPLEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
 MULTIPLEFILEOBJECTNAMES = harmonics~ randdist
 MULTIPLEFILEOBJECTS = $(foreach f, $(MULTIPLEFILEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
-win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS)
+GSLOBJECTNAMES = bdist bessel
+GSLOBJECTS = $(foreach f, $(GSLOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
+OSCOBJECTNAMES = OSC-route OSC-schedule OSC-timetag OpenSoundControl
+OSCOBJECTS = $(foreach f, $(OSCOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
+
+win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS)
+
+# Single file dependencies--just compile and stick the .o files in the build dir
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/commonsyms.o $(MAX_INCLUDES)/common/commonsyms.c
 
@@ -61,17 +69,55 @@ $(BUILDDIR)/libranddist.o: $(BUILDDIR)
 $(BUILDDIR)/noise-table.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/noise-table.o src/harmonics~/noise-table.c
 
+$(BUILDDIR)/OSC-pattern-match.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/OSC-pattern-match.o ../CNMAT-OSC/OSC-Kit/OSC-pattern-match.c
+
+$(BUILDDIR)/OSC-client.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/OSC-client.o ../CNMAT-OSC/libOSC/OSC-client.c
+
+$(BUILDDIR)/OSC-timetag-libOSC.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/OSC-timetag-libOSC.o ../CNMAT-OSC/libOSC/OSC-timetag.c
+
+$(BUILDDIR)/OSC-timetag-ops.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/OSC-timetag-ops.o src/OSC-timetag/OSC-timetag-ops.c
+
+$(BUILDDIR)/pqops.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/pqops.o src/OSC-schedule/pqops.c
+
+$(BUILDDIR)/strptime.o: $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/strptime.o ../libo/contrib/strptime.c
+
+# simple objects that have no dependencies
+$(SIMPLEOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS)
+
+# objects that need to link against the gsl
+$(GSLOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../gsl/.libs -lgsl
+
+# objects that rely on one or more files scattered around the repo
 $(BUILDDIR)/harmonics~.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
 	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(LIBS)
 
+# links against the gsl and libranddist.o
 $(BUILDDIR)/randdist.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
 	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(LIBS) -L../gsl/.libs -lgsl
 
-$(SIMPLEOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS)
+$(BUILDDIR)/OSC-route.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(LIBS)
+
+$(BUILDDIR)/OSC-timetag.$(EXT) $(BUILDDIR)/OSC-schedule.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-ops.o $(BUILDDIR)/pqops.o $(BUILDDIR)/strptime.o $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c -I../libo/contrib
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-ops.o $(BUILDDIR)/pqops.o $(BUILDDIR)/strptime.o $(LIBS) -lws2_32
+
+$(BUILDDIR)/OpenSoundControl.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-libOSC.o $(BUILDDIR)/OSC-client.o $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-client.o $(BUILDDIR)/OSC-timetag-libOSC.o $(LIBS) -lws2_32
 
 $(CURRENT_VERSION_FILE):
 	echo "#define CNMAT_EXT_VERSION \""`git describe --tags --long`"\"" > $(CURRENT_VERSION_FILE)

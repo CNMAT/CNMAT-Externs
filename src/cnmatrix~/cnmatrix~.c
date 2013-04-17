@@ -42,6 +42,7 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include "z_dsp.h"
 #include <math.h>
 #include "jit.common.h"
+#include "jit.symbols.h"
 
 #define FRAME   2
 #define FAST	1
@@ -82,6 +83,8 @@ void matrix_free(t_matrix *x);
 
 void matrix_slide(t_matrix *x, double slide);
 
+t_symbol *ps_jit_sym_class_jit_matrix, *ps_jit_sym_lock, *ps_jit_sym_getdata, *ps_jit_sym_getinfo, *ps_jit_sym_char, *ps_jit_sym_long, *ps_jit_sym_float32, *ps_jit_sym_float64, *ps_jit_sym_err_calculate;
+
 int main(void){
 	
 	ps_fast    = gensym("fast");
@@ -100,6 +103,16 @@ int main(void){
 	class_dspinit(matrix_class);
 
 	version_post_copyright();
+
+	ps_jit_sym_class_jit_matrix = gensym("jit_sym_class_jit_matrix");
+	ps_jit_sym_lock = gensym("jit_sym_lock");
+	ps_jit_sym_getdata = gensym("jit_sym_getdata");
+	ps_jit_sym_getinfo = gensym("jit_sym_getinfo");
+	ps_jit_sym_char = gensym("jit_sym_char");
+	ps_jit_sym_long = gensym("jit_sym_long");
+	ps_jit_sym_float32 = gensym("jit_sym_float32");
+	ps_jit_sym_float64 = gensym("jit_sym_float64");
+	ps_jit_sym_err_calculate = gensym("jit_sym_err_calculate");
 
 	class_register(CLASS_BOX, matrix_class);
 	return 0;
@@ -331,15 +344,15 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 	if (argc&&argv) {
 		//find matrix
 		matrix = jit_object_findregistered(jit_atom_getsym(argv));
-		if (matrix && jit_object_method(matrix, _jit_sym_class_jit_matrix)) {
+		if (matrix && jit_object_method(matrix, ps_jit_sym_class_jit_matrix)){
 			//calculate
-			in_savelock = (long) jit_object_method(matrix, _jit_sym_lock, 1);
-			jit_object_method(matrix, _jit_sym_getinfo, &in_minfo);
-			jit_object_method(matrix, _jit_sym_getdata, &in_bp);
+			in_savelock = (long) jit_object_method(matrix, ps_jit_sym_lock, 1);
+			jit_object_method(matrix, ps_jit_sym_getinfo, &in_minfo);
+			jit_object_method(matrix, ps_jit_sym_getdata, &in_bp);
 			
 			if (!in_bp) { 
-				jit_error_sym(x, _jit_sym_err_calculate);
-				jit_object_method(matrix, _jit_sym_lock, in_savelock);
+				jit_error_sym(x, ps_jit_sym_err_calculate);
+				jit_object_method(matrix, ps_jit_sym_lock, in_savelock);
 				return;
 			}
 			
@@ -356,7 +369,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 			
 			//post("n = %d, rowstride = %d, colstride = %d", n, rowstride, colstride);
 			
-			if (in_minfo.type==_jit_sym_char) {
+			if (in_minfo.type==ps_jit_sym_char) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -366,7 +379,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==_jit_sym_long) {
+			} else if (in_minfo.type==ps_jit_sym_long) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -376,7 +389,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==_jit_sym_float32) {
+			} else if (in_minfo.type==ps_jit_sym_float32) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -387,7 +400,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==_jit_sym_float64) {
+			} else if (in_minfo.type==ps_jit_sym_float64) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -398,7 +411,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
 			}
-			jit_object_method(matrix,_jit_sym_lock,in_savelock);
+			jit_object_method(matrix,ps_jit_sym_lock,in_savelock);
 		} else {
 
 		}
