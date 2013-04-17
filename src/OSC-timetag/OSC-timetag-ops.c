@@ -9,7 +9,11 @@
 #include <string.h>
 
 // need htonl
+#ifdef WIN_VERSION
+#include <Winsock.h>
+#else
 #include <arpa/inet.h>
+#endif
 
 // crossplatform gettimeofday
 #include "timeval.h"
@@ -90,6 +94,53 @@ int OSCTimeTag_cmp(struct ntptime* a, struct ntptime* b) {
 
 // conversion functions
 
+static void osc_timetag_setenv(const char *name, const char *value)
+{
+#if !(defined _WIN32) || defined HAVE_SETENV
+  	setenv(name, value, 1);
+#else
+  	int len = strlen(name) + 1 + strlen(value) + 1;
+  	char str[len];
+  	sprintf(str, "%s=%s", name, value);
+  	putenv(str);
+#endif
+}
+
+static void osc_timetag_unsetenv(const char *name)
+{
+#if !(defined _WIN32) || defined HAVE_SETENV
+	unsetenv(name);
+#else
+    	int len = strlen(name) + 2;
+  	char str[len];
+  	sprintf(str, "%s=", name);
+  	putenv(str);
+#endif
+}
+
+
+time_t osc_timetag_timegm (struct tm *tm)
+{
+	time_t ret;
+	char *tz;
+
+	tz = getenv("TZ");
+#ifdef WIN_VERSION
+	osc_timetag_setenv("TZ", "UTC");
+#else
+	osc_timetag_setenv("TZ", "");
+#endif
+	tzset();
+	ret = mktime(tm);
+	if(tz){
+		osc_timetag_setenv("TZ", tz);
+	}else{
+		osc_timetag_unsetenv("TZ");
+	}
+	tzset();
+	return ret;
+}
+
 void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n) {
   
     struct tm t;
@@ -105,7 +156,7 @@ void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n) {
     // parse the time
     strptime(s1, "%Y-%m-%dT%H:%M:%S", &t);
     
-    OSCTimeTag_ut_to_ntp(timegm(&t), n);
+    OSCTimeTag_ut_to_ntp(osc_timetag_timegm(&t), n);
     n->frac_sec = (unsigned long int)(fmod(sec, 1.0) * 4294967295.0);
 
     n->sign = 1;
