@@ -114,7 +114,7 @@ void *OSCroute_class;
 void OSCroute_free(OSCroute *x);
 int RememberNextPrefix (OSCroute *x, char *prefixWithoutLeadingSlash);
 int RememberPrefix (OSCroute *x, char *prefixWithoutLeadingSlash, int num);
-Boolean MyPatternMatch (const char *pattern, const char *test);
+int MyPatternMatch (const char *pattern, const char *test);
 void OSCroute_doanything(OSCroute *x, t_symbol *s, short argc, t_atom *argv);
 static void OutputOSCArguments(OSCroute *x, int i, short argc, t_atom *argv);
 void OSCroute_anything(OSCroute *x, t_symbol *s, short argc, t_atom *argv);
@@ -395,7 +395,7 @@ void OSCroute_anything(OSCroute *x, t_symbol *s, short argc, t_atom *argv) {
 }
 	
 
-Boolean MyPatternMatch (const char *pattern, const char *test) {
+int MyPatternMatch (const char *pattern, const char *test) {
 	if (test[0] == '*' && test[1] == '\0') {
 		/* This allows the special case of "OSC-route /*" to be an outlet
 		   that matches anything; i.e., it always outputs the input with the first
