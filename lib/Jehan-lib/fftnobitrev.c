@@ -28,11 +28,11 @@ static int ncount;
 static struct {
 		short ncache;
         float *twiddle;
-        Boolean ffttype;
+        int ffttype;
 } c[CMAX];
 
 /* maketwiddle */
-static void maketwiddle(int n, Boolean notinverse, float* PtrMemory) {
+static void maketwiddle(int n, int notinverse, float* PtrMemory) {
 	int i;
         
 	/* cache twiddle factors */
@@ -90,7 +90,7 @@ static void maketwiddle(int n, Boolean notinverse, float* PtrMemory) {
  * calculation is in place 
  */
   
-void fftComplexnbr(int n, float *a, Boolean notinverse, float* PtrMemory) {
+void fftComplexnbr(int n, float *a, int notinverse, float* PtrMemory) {
 	long i, j, mmax, m, N;
 	float t, tr,tc;
     long istep;
@@ -244,7 +244,7 @@ void fftComplexnbr(int n, float *a, Boolean notinverse, float* PtrMemory) {
  * a complexfft (above) of half the size
  */ 
  
-void realfftnbr(int n, float *a, Boolean notinverse, float* PtrMemory) {
+void realfftnbr(int n, float *a, int notinverse, float* PtrMemory) {
 	int i, i1, i2, i3, i4, n2p3;
 	float c1=0.5f, c2, h1r, h1i, h2r, h2i;
 
