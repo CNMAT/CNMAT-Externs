@@ -54,14 +54,19 @@ GSLOBJECTS = $(foreach f, $(GSLOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 OSCOBJECTNAMES = OSC-route OSC-schedule OSC-timetag OpenSoundControl
 OSCOBJECTS = $(foreach f, $(OSCOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
-win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS)
+JEHANOBJECTNAMES = analyzer~ brightness~ loudness~ pitch~ 
+JEHANOBJECTS = $(foreach f, $(JEHANOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
+JEHANDEPSNAMES = fft fftnobitrev
+JEHANDEPS = $(foreach f, $(JEHANDEPSNAMES), $(BUILDDIR)/$(f).o)
+
+win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS) $(JEHANOBJECTS)
 
 # Single file dependencies--just compile and stick the .o files in the build dir
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/commonsyms.o $(MAX_INCLUDES)/common/commonsyms.c
 
-$(BUILDDIR)/fft.o: $(BUILDDIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/fft.o lib/Jehan-lib/fft.c
+$(JEHANDEPS): $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ lib/Jehan-lib$(subst $(BUILDDIR),,$(subst .o,,$@)).c
 
 $(BUILDDIR)/libranddist.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/libranddist.o src/randdist/libranddist.c
@@ -104,19 +109,23 @@ $(BUILDDIR)/harmonics~.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/
 
 # links against the gsl and libranddist.o
 $(BUILDDIR)/randdist.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(CURRENT_VERSION_FILE)
-	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
 	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(LIBS) -L../gsl/.libs -lgsl
 
+$(JEHANOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(JEHANDEPS) $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(JEHANDEPS) $(LIBS)
+
 $(BUILDDIR)/OSC-route.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(CURRENT_VERSION_FILE)
-	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
 	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(LIBS)
 
 $(BUILDDIR)/OSC-timetag.$(EXT) $(BUILDDIR)/OSC-schedule.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-ops.o $(BUILDDIR)/pqops.o $(BUILDDIR)/strptime.o $(CURRENT_VERSION_FILE)
-	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c -I../libo/contrib
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c -I../libo/contrib
 	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-ops.o $(BUILDDIR)/pqops.o $(BUILDDIR)/strptime.o $(LIBS) -lws2_32
 
 $(BUILDDIR)/OpenSoundControl.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-libOSC.o $(BUILDDIR)/OSC-client.o $(CURRENT_VERSION_FILE)
-	$(CC) $(CFLAGS) $(INCLUDES) -I../gsl -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
 	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-client.o $(BUILDDIR)/OSC-timetag-libOSC.o $(LIBS) -lws2_32
 
 $(CURRENT_VERSION_FILE):
