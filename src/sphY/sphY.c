@@ -170,7 +170,7 @@ void sphY_free(sphY *x)
         free(x->list_buf);
     }
     if (x->list_i_buf != NULL) {
-        free(x->list_buf);
+        free(x->list_i_buf);
     }
 }
 
