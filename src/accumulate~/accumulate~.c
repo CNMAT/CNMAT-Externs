@@ -75,6 +75,8 @@ int main(void);
 
 void *acc_new(t_symbol*, short, t_atom*);
 void acc_dsp(t_acc *x, t_signal **sp, short int *count);
+void acc_dsp64(t_acc *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void acc_perform64(t_acc *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 t_int *acc_perform(t_int *w);
 void acc_free(t_acc *x);
 
@@ -83,6 +85,7 @@ int main(void){
     class_dspinit(c);
 
     class_addmethod(c, (method)acc_dsp, "dsp", A_CANT, 0);
+    class_addmethod(c, (method)acc_dsp64, "dsp64", A_CANT, 0);
 
     CLASS_ATTR_FLOAT(c, "min", 0, t_acc, min);
     CLASS_ATTR_FLOAT(c, "max", 0, t_acc, max);
@@ -126,6 +129,11 @@ void *acc_new(t_symbol *s, short argc, t_atom *argv) {
     return NULL;
 }
 
+void acc_dsp64(t_acc *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	object_method(dsp64, gensym("dsp_add64"), x, acc_perform64, 0, NULL);
+}
+
 void acc_dsp(t_acc *x, t_signal **sp, short int *count) {
 	// in, in, out, size, x
 	dsp_add(acc_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);  
@@ -133,6 +141,101 @@ void acc_dsp(t_acc *x, t_signal **sp, short int *count) {
 
 void acc_free(t_acc *x) {
     dsp_free((t_pxobject *)x);
+}
+
+void acc_perform64(t_acc *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+	double *signal = ins[0];
+	double *control = ins[1];
+	double *out = outs[0];
+	int size = sampleframes;
+
+    double next_signal;
+    double next_control;
+
+    /*
+     
+     When the control signal is zero, accumulate~ acts as a pass-through; 
+     i.e. the current sample is still "accumulated", or, the control signal causes the
+     accumulator to be reset for the *next* sample output.  
+     
+     This behavior ensures that accumulate~ has zero sample delay on its output.
+     
+     */
+
+    // here the loop is copied three times for each case to avoid unnecessary conditions in the inner loop
+    
+    if (x->mode == ps_clip) {
+        
+        while (size--) {
+        
+            next_signal = *signal++;
+            next_control = *control++;
+
+            // reset by control signal
+            if (next_control == 0.) {
+                x->current = x->start;
+            }
+            
+            x->current = fmaxf(fminf(x->current + next_signal, x->max), x->min);
+            
+            *out++ = x->current;
+            
+            x->current = x->current * x->scale; // apply leaky integrator with one-sample delay
+        }
+        
+	} else if (x->mode == ps_wrap) { // saturation at maximum
+            
+        while (size--) {
+
+            next_signal = *signal++;
+            next_control = *control++;
+            
+            // reset by control signal
+            if (next_control == 0.) {
+                x->current = x->start;
+            }
+            
+            x->current += next_signal;
+            
+            // wrap top and bottom boundary
+            if(x->current > x->max) {
+                x->current = x->min + fmodf(x->current, (x->max - x->min));
+            }
+            else if(x->current < x->min) {
+                x->current = x->max - fmodf(x->min - x->current, (x->max - x->min));
+            }
+            
+            *out++ = x->current;
+            
+            x->current = x->current * x->scale; // apply leaky integrator
+            
+        }
+        
+    } else if (x->mode == ps_reset) {
+        
+        while (size--) {
+            
+            next_signal = *signal++;
+            next_control = *control++;
+            
+            // reset by control signal
+            if (next_control == 0.) {
+                x->current = x->start;
+            }
+            
+            x->current += next_signal;
+            
+            if(x->current > x->max || x->current < x->min) {
+                x->current = x->start;
+            }
+            
+            *out++ = x->current;
+
+            x->current = x->current * x->scale; // apply leaky integrator
+        }
+        
+    }
 }
 
 t_int *acc_perform(t_int *w) {
