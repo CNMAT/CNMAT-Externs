@@ -109,11 +109,25 @@ typedef oscbank t_sinusoids;
 
 t_int *sinusoids2_perform(t_int *w);
 t_int *decayingsinusoids_perform_time_input_signal(t_int *w);
+void sinusoids2_perform64(t_sinusoids *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void decayingsinusoids_perform_time_input_signal64(t_sinusoids *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void sinusoids_dsp64(t_sinusoids *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
  void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv);
  void sinusoids_clear(t_sinusoids *x);
  void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
  void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
+
+void sinusoids_dsp64(t_sinusoids *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	if (count[0]) {
+		// Signal inlet is connected; that's virtual time
+		object_method(dsp64, gensym("dsp_add64"), x, decayingsinusoids_perform_time_input_signal64, 0, NULL);
+	} else {
+		// Old perform method, with only message control of time
+		object_method(dsp64, gensym("dsp_add64"), x, sinusoids2_perform64, 0, NULL);
+	}
+}
 
 void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *count)
 {
@@ -126,6 +140,55 @@ void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *count)
 		// Old perform method, with only message control of time
 		dsp_add(sinusoids2_perform, 3, x, sp[1]->s_vec,  sp[1]->s_n);
 	}
+}
+
+void sinusoids2_perform64(t_sinusoids *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+	//t_float *out = (t_float *)(w[2]);
+	double *out = outs[0];
+	t_sinusoids *op = x;
+	long n = sampleframes;
+	int nosc = op->nosc;
+	int i,j;
+	oscdesc *o = op->base;
+	const char *st = (const char *)Sinetab;
+	float rate ;
+	//	if(op->b_obj.z_disabled)
+	//		goto out;
+	
+	rate = 1.0f/n;
+	for(j=0;j<n;++j)
+		out[j] = 0.0f;
+
+
+	for(i=0;i<nosc;++i)
+		{
+			register float a = op->pulse*exp(-o->rate*op->t)*o->gain;
+			register float ascale = exp(-o->rate*op->sampleinterval*op->rate);
+			register long pi = o->phase_inc;
+			register unsigned long pc = o->phase_current;
+			//		register float astep = (nexta - o->amplitude)*rate;
+
+			//		if(op->t<1.0)
+			//			post("%d", o->phase_current);
+			for(j=0;j<n;++j)
+				{
+
+					out[j] +=  a  * 
+						*((float *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+								  & ((STABSZ-1)*sizeof(*Sinetab)))));
+					pc +=  pi;
+					a *=ascale;
+
+				}
+			o->phase_current = pc;
+			++o;
+		}
+	op->t += op->rate*n*op->sampleinterval;
+	if(op->t<op->backstop)
+		op->t = op->backstop;
+	if(op->t>op->stop)
+		op->t = op->stop;
 }
 
 
@@ -178,6 +241,56 @@ t_int *sinusoids2_perform(t_int *w)
 out:	return (w+4);
 }
 
+void decayingsinusoids_perform_time_input_signal64(t_sinusoids *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+	t_sinusoids *op = x;
+	double *time = ins[0];
+	double *out = outs[0];
+	long n = sampleframes;
+	int nosc = op->nosc;
+	int i,j;
+	oscdesc *o = op->base;
+	const char *st = (const char *)Sinetab;
+	float rate ;
+	//	if(op->b_obj.z_disabled)
+	//		goto out;
+	
+	rate = 1.0f/n;
+	for(j=0;j<n;++j)
+		out[j] = 0.0f;
+
+
+	for(i=0;i<nosc;++i)
+		{
+			// register float a = op->pulse*exp(-o->rate*op->t)*o->gain;
+			// register float ascale = exp(-o->rate*op->sampleinterval*op->rate);
+			register long pi = o->phase_inc;
+			register unsigned long pc = o->phase_current;
+			//		register float astep = (nexta - o->amplitude)*rate;
+			register float t, a;
+
+			//		if(op->t<1.0)
+			//			post("%d", o->phase_current);
+			for(j=0;j<n;++j)
+				{
+					// Super-inefficient version calls exp in the inner loop!
+					a = op->pulse *exp(-o->rate*time[j])*o->gain;
+					out[j] +=  a  * 
+						*((float *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+								  & ((STABSZ-1)*sizeof(*Sinetab)))));
+					pc +=  pi;
+					//			a *=ascale;
+
+				}
+			o->phase_current = pc;
+			++o;
+		}
+	op->t += op->rate*n*op->sampleinterval;
+	if(op->t<op->backstop)
+		op->t = op->backstop;
+	if(op->t>op->stop)
+		op->t = op->stop;
+}
 
 t_int *decayingsinusoids_perform_time_input_signal(t_int *w) {
 	t_sinusoids *op = (t_sinusoids *)(w[1]);
@@ -399,6 +512,7 @@ int main(void){
 	Makeoscsinetable();
 	class_addmethod(sinusoids_class, (method)version, "version", 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+	class_addmethod(sinusoids_class, (method)sinusoids_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_float, "float", A_FLOAT, 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_goto, "goto", A_FLOAT, 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_rate, "rate", A_FLOAT, 0);
