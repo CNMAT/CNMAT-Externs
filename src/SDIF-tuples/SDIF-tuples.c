@@ -178,7 +178,9 @@ void *SDIFtuples_new(t_symbol *s, short argc, t_atom *argv);
 void SDIFtuples_free(SDIFtuples *x);
 void SDIFtuples_outputinterval(SDIFtuples *x, t_symbol *dummy, short argc, t_atom *argv);
 void SDIFtuples_dsp(SDIFtuples *x, t_signal **sp, short *count);
+void SDIFtuples_dsp64(SDIFtuples *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 t_int *SDIFbuffer_perform(t_int *w);
+void SDIFtuples_perform64(SDIFtuples *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFtuples *x);
@@ -233,6 +235,7 @@ int main(void) {
 	/* bind my methods to symbols */
 	class_addmethod(SDIFtuples_class, (method)version, "version", 0);
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_dsp, "dsp", A_CANT, 0);
+	class_addmethod(SDIFtuples_class, (method)SDIFtuples_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_outputinterval, "outputinterval", A_GIMME, 0);
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_set, "set", A_SYM, 0);	
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_errorreporting, "errorreporting", A_LONG, 0);
@@ -962,6 +965,20 @@ void SDIFtuples_dsp(SDIFtuples *x, t_signal **sp, short *count) {
 	}
 }
 
+void SDIFtuples_dsp64(SDIFtuples *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	x->t_sr = samplerate;
+	x->t_samps_until_output = x->t_output_interval_samps = 
+		(int) (x->t_sr * x->t_output_interval * 0.001f);
+
+	if (count[0]) {
+		// Signal inlet is connected
+		object_method(dsp64, gensym("dsp_add64"), x, SDIFtuples_perform64, 0, NULL);   
+	} else {
+		// Don't add anything
+	}
+}
+
 t_int *SDIFbuffer_perform(t_int *w) {
 	SDIFtuples *x = (SDIFtuples *)(w[1]);  // object
 	int size = w[2]; // vector size
@@ -978,6 +995,19 @@ t_int *SDIFbuffer_perform(t_int *w) {
 	return w+4;
 }
 
+void SDIFtuples_perform64(SDIFtuples *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+	int size = sampleframes; // vector size
+	double *vtime_in = ins[0];
+
+	if (x->t_samps_until_output >= size) {
+		x->t_samps_until_output -= size;
+	} else {
+		x->t_time = (sdif_float64) vtime_in[x->t_samps_until_output];
+		SDIFtuples_tuples(x, 0, 0, 0);
+		x->t_samps_until_output = x->t_output_interval_samps;
+	}
+}
 
 void SDIFtuples_tellmeeverything(SDIFtuples *x) {
 	int i;
