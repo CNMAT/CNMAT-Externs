@@ -104,7 +104,8 @@ typedef  struct oscdesc
 typedef struct 
 {
 	t_pxobject b_obj;
-	oscdesc base[MAXOSCILLATORS];
+	//oscdesc base[MAXOSCILLATORS];
+	oscdesc *base;
 	int nosc; 
 	int next_nosc;
 	float  pk;
@@ -416,6 +417,7 @@ void *sinusoids_new(t_symbol *s, short argc, t_atom *argv) {
     
     dsp_setup((t_pxobject *)x,0);
     outlet_new((t_object *)x, "signal");
+    x->base = (oscdesc *)calloc(MAXOSCILLATORS, sizeof(oscdesc));
     
 	x->samplerate =  sys_getsr();
 	if(x->samplerate<=0.0f)
@@ -466,10 +468,16 @@ void Makeoscsinetable()
 		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(float)PI);
 }
 
-
+void sinusoids_free(t_sinusoids *x)
+{
+  	dsp_free(&(x->b_obj));
+	if(x->base){
+		free(x->base);
+	}
+}
 
 int main(void){
-	sinusoids_class = class_new("sinusoids~", (method)sinusoids_new, (method)dsp_free, 
+	sinusoids_class = class_new("sinusoids~", (method)sinusoids_new, (method)sinusoids_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 
 	version_post_copyright();
