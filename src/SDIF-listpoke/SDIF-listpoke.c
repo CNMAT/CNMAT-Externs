@@ -174,21 +174,21 @@ int main(void) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
-    return;
+    return 0;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-    return;
+    return 0;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 
 	/* list object in the new object list */
