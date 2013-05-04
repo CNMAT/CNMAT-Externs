@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				529D6EEF173338FD005FD64C /* PBXTargetDependency */,
 				5219622516E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
@@ -180,6 +181,8 @@
 		5219624B16E6C98000EA7DDF /* OSC-pattern-match.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219623E16E6C96D00EA7DDF /* OSC-pattern-match.c */; };
 		5219625516E6D02000EA7DDF /* OSC-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219624F16E6D01700EA7DDF /* OSC-client.c */; };
 		5219625616E6D09700EA7DDF /* OSC-timetag.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219625116E6D01700EA7DDF /* OSC-timetag.c */; };
+		529D6EF017334BE1005FD64C /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
+		529D6EF117334BE1005FD64C /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		52ADE2371733042E00074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		52ADE2381733042E00074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		52ADE2391733042E00074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
@@ -202,10 +205,8 @@
 		52ADE24A1733042E00074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		52ADE24C1733046200074C0C /* JitterAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE24B1733046200074C0C /* JitterAPI.framework */; };
 		52ADE24D173308C300074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		52B1558216A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		52B1558316A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		52B1558416A8E7FA000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
-		52B1558516A8E7FA000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		52B1558616A8E7FA000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		52B1558716A8E7FA000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		52B1558816A8E827000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
@@ -557,6 +558,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 5219620D16E6C61400EA7DDF;
 			remoteInfo = "res-transform";
+		};
+		529D6EEE173338FD005FD64C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4479415F1890800C91B67;
+			remoteInfo = "analyzer~";
 		};
 		52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -4239,8 +4247,8 @@
 			files = (
 				52E447E815F1893B00C91B67 /* analyzer~.c in Sources */,
 				52E44C7F15F4835400C91B67 /* commonsyms.c in Sources */,
-				52B1558216A8E7FA000FC2E4 /* fft.c in Sources */,
-				52B1558516A8E7FA000FC2E4 /* fftnobitrev.c in Sources */,
+				529D6EF017334BE1005FD64C /* fft.c in Sources */,
+				529D6EF117334BE1005FD64C /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4773,6 +4781,11 @@
 			isa = PBXTargetDependency;
 			target = 5219620D16E6C61400EA7DDF /* res-transform */;
 			targetProxy = 5219622E16E6C70700EA7DDF /* PBXContainerItemProxy */;
+		};
+		529D6EEF173338FD005FD64C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4479415F1890800C91B67 /* analyzer~ */;
+			targetProxy = 529D6EEE173338FD005FD64C /* PBXContainerItemProxy */;
 		};
 		52E447EF15F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5345,7 +5358,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5365,7 +5378,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
