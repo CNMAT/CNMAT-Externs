@@ -127,43 +127,12 @@
 #define POWERTHRES 1e-9f	// Total power minimum threshold
 #define FIDDLEDB_REF 100.0f	// Fiddle dB Reference
 
-double rect_w(int i, int ac)
-{
-	return 1.0;
-}
-double hanning_w(int i, int ac)
-{
-	return ((1.0 - cos((i * TWOPI) / (ac - 1.0))) * 0.5);
-}
-double hamming_w(int i, int ac)
-{
-	return (0.54 - 0.46 * cos((TWOPI * i) / (ac - 1.0)));
-}
-double blackman62_w(int i, int ac)
-{ 
-	return (0.44859 - 0.49364 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.05677 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))));
-}
-double blackman70_w(int i, int ac)
-{
-	return (0.42323 - 0.49755 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.07922 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))));
-}
-double blackman74_w(int i, int ac)
-{
-	return (0.402217 - 0.49703 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.09892 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))) - 0.00188 * cos(THREEPI * ((i - 1.0)/(ac - 1.0))));
-}
-double blackman92_w(int i, int ac)
-{
-	return (0.35875 - 0.48829 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.14128 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))) - 0.01168 * cos(THREEPI * ((i - 1.0)/(ac - 1.0))));
-}
-
 #define MINF(A,B) ((A < B) ? A : B)
 #define ftom pitch_ftom
 #define mtof pitch_mtof
 #define flog log
 #define fexp exp
 #define fsqrt sqrt
-
-typedef int32_t t_analyzer_int; // analyzer~ makes the assumption that int is the same size as float which is not cool
 
 static double pitch_partialonset[] = {
 	0, 48,76.0782000346154967102, 96, 111.45254855459339269887, 124.07820003461549671089,
@@ -172,11 +141,11 @@ static double pitch_partialonset[] = {
 	182.75303625876499715892, 187.53074858920888940907, 192
 };
 
-static t_analyzer_int pitch_intpartialonset[] = {
+static long pitch_intpartialonset[] = {
 	0, 48, 76, 96, 111, 124, 135, 144, 152, 159, 166, 172, 178, 183, 188, 192
 };
 
-#define NPARTIALONSET ((t_analyzer_int)(sizeof(pitch_partialonset)/sizeof(t_float)))
+#define NPARTIALONSET ((long)(sizeof(pitch_partialonset)/sizeof(t_float)))
 
 t_class *analyzer_class;
 
@@ -185,6 +154,40 @@ enum {Log=0, Linear};
 enum {List=0, noList};
 
 #define DEFWIN	Blackman70		// Default window
+
+static double rect_w(int i, int ac)
+{
+	return 1.0;
+}
+static double hanning_w(int i, int ac)
+{
+	return ((1.0 - cos((i * TWOPI) / (ac - 1.0))) * 0.5);
+}
+static double hamming_w(int i, int ac)
+{
+	return (0.54 - 0.46 * cos((TWOPI * i) / (ac - 1.0)));
+}
+static double blackman62_w(int i, int ac)
+{ 
+	return (0.44859 - 0.49364 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.05677 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))));
+}
+static double blackman70_w(int i, int ac)
+{
+	return (0.42323 - 0.49755 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.07922 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))));
+}
+static double blackman74_w(int i, int ac)
+{
+	return (0.402217 - 0.49703 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.09892 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))) - 0.00188 * cos(THREEPI * ((i - 1.0)/(ac - 1.0))));
+}
+static double blackman92_w(int i, int ac)
+{
+	return (0.35875 - 0.48829 * cos(TWOPI * ((i - 1.0)/(ac - 1.0))) + 0.14128 * cos(FOURPI * ((i - 1.0)/(ac - 1.0))) - 0.01168 * cos(THREEPI * ((i - 1.0)/(ac - 1.0))));
+}
+
+double (*window_functions[windowcount])(int, int) = {rect_w, hanning_w, hamming_w, blackman62_w, blackman70_w, blackman74_w, blackman92_w};
+
+char *window_names[windowcount] = {"rectangular", "hanning", "hamming", "blackman62", "blackman70", "blackman74", "blackman92"};
+t_symbol *window_names_s[windowcount];
 
 // Some structures from Fiddle~
 typedef struct peakout {    // a peak for output
@@ -204,8 +207,8 @@ typedef struct histopeak {	// Histogram for peaks
 	double h_pitch;		// estimated pitch
 	double h_value;		// value of peak
 	double h_loud;		    // combined strength of found partials
-	t_analyzer_int h_index;		    // index of bin holding peak
-	t_analyzer_int h_used;			// true if an x_hist entry points here
+	long h_index;		    // index of bin holding peak
+	long h_used;			// true if an x_hist entry points here
 } t_histopeak;
 
 typedef struct pitchhist {		// struct for keeping history by pitch
@@ -213,7 +216,7 @@ typedef struct pitchhist {		// struct for keeping history by pitch
 	double h_amps[HISTORY];	// past amplitudes
 	double h_pitches[HISTORY]; // past pitches
 	double h_noted;		    // last pitch output
-	t_analyzer_int h_age;			    // number of frames pitch has been there
+	long h_age;			    // number of frames pitch has been there
 	t_histopeak *h_wherefrom;	// new histogram peak to incorporate
 } t_pitchhist;
 
@@ -223,42 +226,42 @@ typedef struct _analyzer {
 	t_pxobject x_obj;
 
 	double x_Fs;			// Sample rate
-	t_analyzer_int x_overlap;		// Number of overlaping samples
-	t_analyzer_int x_hop;			// Number of non-overlaping samples
+	long x_overlap;		// Number of overlaping samples
+	long x_hop;			// Number of non-overlaping samples
 	int window;			// Type of window	
-	t_symbol *winName;		// Window name	
+	t_symbol *windname_dummy; // for the attribute---not actually used
 	double *windows[7]; // store the pointers to the precomputed windows.  these can be looked up with the values defined in the enum
-	t_analyzer_int x_delay;			// Vector size delay before to start feeding the buffer
-	t_analyzer_int x_counter;		// Counter that goes with the vector size delay
-	t_analyzer_int x_scale;			// Type of output scale (log=0, linear=1)	
-	t_analyzer_int x_output;			// Type of output
-	t_analyzer_int x_bright;			// Type of brightness
-	t_analyzer_int x_loud;			// Type of loudness
+	long x_delay;			// Vector size delay before to start feeding the buffer
+	long x_counter;		// Counter that goes with the vector size delay
+	long x_scale;			// Type of output scale (log=0, linear=1)	
+	long x_output;			// Type of output
+	long x_bright;			// Type of brightness
+	long x_loud;			// Type of loudness
 	double x_loudness;		// Current loudness
 	double x_brightness;	// Current brightness
 	double x_noisiness;	// Current noisiness
 
 	// Variables from Fiddle~
-	t_analyzer_int x_npitch;			// Number of pitches to output
-	t_analyzer_int x_npeakanal;		// Number of peaks to analyse
-	t_analyzer_int x_npeakout;		// Number of peaks to output
-	t_analyzer_int x_histphase;		// Phase into amplitude history vector
+	long x_npitch;			// Number of pitches to output
+	long x_npeakanal;		// Number of peaks to analyse
+	long x_npeakout;		// Number of peaks to output
+	long x_histphase;		// Phase into amplitude history vector
 	t_pitchhist x_hist[MAXNPITCH]; // History of current pitches
 	double x_dbs[HISTORY];	// DB history, indexed by "histphase"
 	double x_peaked;		// peak since last attack
-	t_analyzer_int x_dbage;		    // number of bins DB has met threshold
-	t_analyzer_int x_attackvalue;
+	long x_dbage;		    // number of bins DB has met threshold
+	long x_attackvalue;
 	t_peak x_peaklist[MAXNPEAK+1]; // This was originally a local buffer in pitch_getit
 	t_histopeak x_histvec[MAXHIST];// This one too
 		
 	// Parameters from fiddle~
 	double x_amplo;
 	double x_amphi;
-	t_analyzer_int x_attacktime;
-	t_analyzer_int x_attackbins;
+	long x_attacktime;
+	long x_attackbins;
 	double x_attackthresh;
-	t_analyzer_int x_vibtime;
-	t_analyzer_int x_vibbins;
+	long x_vibtime;
+	long x_vibbins;
 	double x_vibdepth;
 	double x_npartial;
 
@@ -273,13 +276,13 @@ typedef struct _analyzer {
 	t_peakout *peakBuf;		// Spectral peaks for output
 	double *histBuf;		// Histogram Buffer
 
-	t_analyzer_int BufSize;			// FFT buffer size
-	t_analyzer_int FFTSize;			// Size of FFT
+	long BufSize;			// FFT buffer size
+	long FFTSize;			// Size of FFT
 	uint32_t x_FFTSizeOver2;	// Size of FFT/2 (uint32_t in G4 FFT)
-	t_analyzer_int BufWritePos;		// Where to write in buffer
+	long BufWritePos;		// Where to write in buffer
 
 	double *BufBark;		// Bark buffer
-	t_analyzer_int *BufSizeBark;		// Number of bins per band
+	long *BufSizeBark;		// Number of bins per band
 
 	void **x_out;			// Outlet for all Bands
 	t_atom *myList;			// Copy of outputs as Atoms
@@ -294,7 +297,7 @@ typedef struct _analyzer {
 		
 	int x_debug;				// Debug mode?
 	double *lastInputVector;	// Remembered from last analyzer_perform() for debug into
-	t_analyzer_int lastInputVectorSize;	// ditto
+	long lastInputVectorSize;	// ditto
 
 	fftw_plan fft_plan;
 
@@ -304,7 +307,7 @@ t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_blackman62, *ps_blackman
 	*ps_list, *ps_nolist;
 
 void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
-t_analyzer_int *analyzer_perform(t_analyzer_int *w);
+long *analyzer_perform(long *w);
 void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect);
 void analyzer_log(t_analyzer *x);
@@ -334,18 +337,32 @@ void analyzer_free(t_analyzer *x);
 void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv);
 t_float pitch_mtof(t_float f);
 t_float pitch_ftom(t_float f);
-t_analyzer_int pitch_ilog2(t_analyzer_int n);
+long pitch_ilog2(long n);
 void pitch_getit(t_analyzer *x); // modified fiddle pitch tracker function
 void analyzer_debug(t_analyzer *x, long n);
 
+// accessor setters
+t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_hopsize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_fftsize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_windowtype_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_initialdelay_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_numpitches_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_numpeakstofind_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_numpeakstooutput_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+t_max_err analyzer_barkformat_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
+// accessor getters
+t_max_err analyzer_windowtype_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv);
+t_max_err analyzer_barkformat_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv);
+
 /*
-void _analyzer_perform(t_analyzer *x, t_float *in, t_analyzer_int n)
+void _analyzer_perform(t_analyzer *x, t_float *in, long n)
 {
-	t_analyzer_int *myintin = (t_analyzer_int *)in; 				// Copy integers rather than floats -> faster
-	t_analyzer_int *myintBufFFT = (t_analyzer_int *)(x->BufFFT);	// We assume sizeof(float) == sizeof(int) though
-	t_analyzer_int i, index = 0, cpt = n, maxindex;
-	t_analyzer_int overlapindex = x->BufSize - x->x_overlap;
-	t_analyzer_int *TmpBuf = x->Buf1;
+	long *myintin = (long *)in; 				// Copy integers rather than floats -> faster
+	long *myintBufFFT = (long *)(x->BufFFT);	// We assume sizeof(float) == sizeof(int) though
+	long i, index = 0, cpt = n, maxindex;
+	long overlapindex = x->BufSize - x->x_overlap;
+	long *TmpBuf = x->Buf1;
 			
 	if (x->x_obj.z_disabled)
 		//goto skip;
@@ -547,12 +564,12 @@ void analyzer_loud(t_analyzer *x, t_symbol *s, short argc, t_atom *argv) {
 
 void analyzer_float(t_analyzer *x, double f) {
 
-	int n = (t_analyzer_int)(f * x->x_Fs/1000.0f); 
+	int n = (long)(f * x->x_Fs/1000.0f); 
 	analyzer_int(x, n);
 }
 
 void analyzer_int(t_analyzer *x, long n) {
-	t_analyzer_int vs = sys_getblksize();
+	long vs = sys_getblksize();
 
 	x->x_hop = n; 
 	if (x->x_hop < vs) {
@@ -659,7 +676,7 @@ void analyzer_reattack(t_analyzer *x, t_floatarg attacktime, t_floatarg attackth
 	if (attackthresh <= 0) attackthresh = 1000;
 	x->x_attacktime = attacktime;
 	x->x_attackthresh = attackthresh;
-	x->x_attackbins = (t_analyzer_int) (x->x_Fs * 0.001f * attacktime) / (x->BufSize - x->x_overlap);
+	x->x_attackbins = (long) (x->x_Fs * 0.001f * attacktime) / (x->BufSize - x->x_overlap);
 	if (x->x_attackbins >= HISTORY) x->x_attackbins = HISTORY - 1;
 }
 
@@ -668,7 +685,7 @@ void analyzer_vibrato(t_analyzer *x, t_floatarg vibtime, t_floatarg vibdepth) {
 	if (vibdepth <= 0) vibdepth = 1000;
 	x->x_vibtime = vibtime;
 	x->x_vibdepth = vibdepth;
-	x->x_vibbins = (t_analyzer_int) (x->x_Fs * 0.001f * vibtime) / (x->BufSize - x->x_overlap);
+	x->x_vibbins = (long) (x->x_Fs * 0.001f * vibtime) / (x->BufSize - x->x_overlap);
 	if (x->x_vibbins >= HISTORY) x->x_vibbins = HISTORY - 1;
 	if (x->x_vibbins < 1) x->x_vibbins = 1;
 }
@@ -684,7 +701,7 @@ void readBufSize(t_analyzer *x, t_atom *argv) {
 	if (argv[0].a_type == A_LONG) {
 		x->BufSize = argv[0].a_w.w_long; // Samples
 	} else if (argv[0].a_type == A_FLOAT) {
-		x->BufSize = (t_analyzer_int)(argv[0].a_w.w_float * ms2samp); // Time in ms
+		x->BufSize = (long)(argv[0].a_w.w_float * ms2samp); // Time in ms
 	} else {
 		x->BufSize = DEFBUFSIZE;
 	}
@@ -696,7 +713,7 @@ void readx_overlap(t_analyzer *x, t_atom *argv) {
 	if (argv[1].a_type == A_LONG) {
 		x->x_hop = argv[1].a_w.w_long; // Samples
 	} else if (argv[1].a_type == A_FLOAT) {
-		x->x_hop = (t_analyzer_int)(argv[1].a_w.w_float * ms2samp); // Time in ms
+		x->x_hop = (long)(argv[1].a_w.w_float * ms2samp); // Time in ms
 	} else {
 		x->x_hop = x->BufSize/2;
 	}
@@ -709,33 +726,21 @@ void readFFTSize(t_analyzer *x, t_atom *argv) {
 	if (argv[2].a_type == A_LONG) {
 		x->FFTSize = argv[2].a_w.w_long; // Samples
 	} else if (argv[2].a_type == A_FLOAT) {
-		x->FFTSize = (t_analyzer_int)(argv[2].a_w.w_float * ms2samp); // Time in ms
+		x->FFTSize = (long)(argv[2].a_w.w_float * ms2samp); // Time in ms
 	} else {
 		x->FFTSize = x->BufSize;
 	}
 }
 
 void readwindow(t_analyzer *x, t_atom *argv) {
-	x->winName = atom_getsym(argv + 3);
-	if (argv[3].a_w.w_sym == ps_rectangular) {
-		x->window = Recta;
-	} else if (argv[3].a_w.w_sym == ps_hanning) {
-		x->window = Hann;
-	} else if (argv[3].a_w.w_sym == ps_hamming) {
-		x->window = Hamm;
-	} else if (argv[3].a_w.w_sym == ps_blackman62) {
-		x->window = Blackman62;
-	} else if (argv[3].a_w.w_sym == ps_blackman70) {
-		x->window = Blackman70;
-	} else if (argv[3].a_w.w_sym == ps_blackman74) {
-		x->window = Blackman74;
-	} else if (argv[3].a_w.w_sym == ps_blackman92) {
-		x->window = Blackman92;
-	} else {
-		x->window = DEFWIN;
-		x->winName = ps_blackman70;
+	t_symbol *window = atom_getsym(argv + 3);
+	x->window = DEFWIN;
+	for(int i = 0; i < windowcount; i++){
+		if(window == window_names_s[i]){
+			x->window = i;
+			break;
+		}
 	}
-	printf("%s: %s\n", __func__, x->winName->s_name);
 }
 
 void readx_delay(t_analyzer *x, t_atom *argv) {
@@ -805,7 +810,7 @@ void readx_output(t_analyzer *x, t_atom *argv) {
 void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 {
 	debug("Entering analyzer_tick");
-	t_analyzer_int i, index=0, cpt;
+	long i, index=0, cpt;
 	t_float bark = 0.0f, loud = 0.0f, bright = 0.0f, sumSpectrum = 0.0f, SFM = 0.0f;
 	t_float FsOverFFTSize = x->x_Fs/x->FFTSize; // Keep it here since x_Fs may change
 	t_float FsOverBarkSize = x->x_Fs/(2.0f*NUMBAND); // Fix that problem in a next version
@@ -1030,8 +1035,8 @@ t_float pitch_ftom(t_float f) {
 	return (17.3123405046f * log(.12231220585f * f));
 }
 
-t_analyzer_int pitch_ilog2(t_analyzer_int n) {
-	t_analyzer_int ret = -1;
+long pitch_ilog2(long n) {
+	long ret = -1;
     
 	while (n) {
 		n >>= 1;
@@ -1043,21 +1048,21 @@ t_analyzer_int pitch_ilog2(t_analyzer_int n) {
 // This is the actual Fiddle~ code
 void pitch_getit(t_analyzer *x)
 {
-	t_analyzer_int i, j, k;
+	long i, j, k;
 	t_peak *pk1; // peaks found
 	t_peakout *pk2; // peaks to output
 	t_histopeak *hp1;
 	double power_spec = 0.0f, total_power = 0.0f, total_loudness = 0.0f, total_db = 0.0f;
 	double *fp1, *fp2;
 	double *spec = x->BufFFT_out, *powSpec = x->BufPower, threshold, mult;
-	t_analyzer_int n = x->FFTSize/2;
-	t_analyzer_int npitch, newphase, oldphase, npeak = 0;
-	t_analyzer_int logn = pitch_ilog2(n);
+	long n = x->FFTSize/2;
+	long npitch, newphase, oldphase, npeak = 0;
+	long logn = pitch_ilog2(n);
 	double maxbin = BINPEROCT * (logn-2);
 	double hzperbin = x->x_Fs/x->FFTSize;
 	double coeff = x->FFTSize/(double)x->BufSize;
 	double *histogram = x->histBuf + BINGUARD;
-	t_analyzer_int npeaktot = (x->x_npeakout > x->x_npeakanal ? x->x_npeakout : x->x_npeakanal);
+	long npeaktot = (x->x_npeakout > x->x_npeakanal ? x->x_npeakout : x->x_npeakanal);
 	t_pitchhist *phist;
        
 	debug("entering pitch_getit");
@@ -1123,7 +1128,7 @@ void pitch_getit(t_analyzer *x)
 		
 		// BAD HACK TO BE CHANGED IN NEXT VERSION !!!!
 		if (coeff > 1) {
-			switch ((t_analyzer_int)coeff) {
+			switch ((long)coeff) {
 			case 2:
 				mult = 0.005;
 				break;
@@ -1194,9 +1199,9 @@ void pitch_getit(t_analyzer *x)
 			double bin = pit - *fp2;
 			if (bin<maxbin) {
 				double para, pphase, score = BINAMPCOEFF * weightamp / ((j+x->x_npartial) * weightbandwidth);
-				t_analyzer_int firstbin = bin + 0.5f - 0.5f * putbandwidth;
-				t_analyzer_int lastbin = bin + 0.5f + 0.5f * putbandwidth;
-				t_analyzer_int ibw = lastbin - firstbin;
+				long firstbin = bin + 0.5f - 0.5f * putbandwidth;
+				long lastbin = bin + 0.5f + 0.5f * putbandwidth;
+				long ibw = lastbin - firstbin;
 				if (firstbin < -BINGUARD) break;
 				para = 1.0f / (putbandwidth * putbandwidth);
 				for (k=0, fp1=histogram+firstbin, pphase=firstbin-bin; k<=ibw; k++, fp1++, pphase+=1.0f)
@@ -1213,7 +1218,7 @@ void pitch_getit(t_analyzer *x)
 	// the pitch_partialonset array, we suppress it.
 
 	for (npitch=0; npitch<x->x_npitch; npitch++) {
-		t_analyzer_int index;
+		long index;
 		double best;
 		if (npitch) {
 			for (best=0, index=-1, j=1; j<maxbin-1; j++) {
@@ -1263,13 +1268,13 @@ void pitch_getit(t_analyzer *x)
 
 	for (i=0; i<npitch; i++) {
 		double cumpow=0, cumstrength=0, freqnum=0, freqden=0;
-		t_analyzer_int npartials=0,  nbelow8=0;
+		long npartials=0,  nbelow8=0;
 		// guessed-at frequency in bins
 		double putfreq = fexp((1.0f / BPEROOVERLOG2) * (x->x_histvec[i].h_index + 96.0f));
 	
 		for (j=0; j<npeak; j++) {
 			double fpnum = x->x_peaklist[j].p_freq/putfreq;
-			t_analyzer_int pnum = fpnum + 0.5f;
+			long pnum = fpnum + 0.5f;
 			double fipnum = pnum;
 			double deviation;
 	    
@@ -1358,7 +1363,7 @@ void pitch_getit(t_analyzer *x)
 
 	if (x->x_peaked) {
 		if (total_db > x->x_amphi) {
-			t_analyzer_int binlook = newphase - x->x_attackbins;
+			long binlook = newphase - x->x_attackbins;
 			if (binlook < 0) binlook += HISTORY;
 			if (total_db > x->x_dbs[binlook] + x->x_attackthresh) {
 				x->x_attackvalue = 1;
@@ -1366,7 +1371,7 @@ void pitch_getit(t_analyzer *x)
 			}
 		}
 	} else {
-		t_analyzer_int binlook = newphase - x->x_attackbins;
+		long binlook = newphase - x->x_attackbins;
 		if (binlook < 0) binlook += HISTORY;
 		if ((x->x_dbs[binlook] > x->x_amphi) && (x->x_dbs[binlook] > total_db))
 			x->x_peaked = 1;
@@ -1387,7 +1392,7 @@ void pitch_getit(t_analyzer *x)
 		} else {
 			if (phist->h_wherefrom && phist->h_age >= x->x_vibbins) {
 				double centroid = 0;
-				t_analyzer_int not = 0;
+				long not = 0;
 				for (j=0, k=newphase; j<x->x_vibbins; j++) {
 					centroid += phist->h_pitches[k];
 					k--;
@@ -1474,15 +1479,11 @@ int main(void)
 	post("Pitch tracker based on Miller Puckette's fiddle~");
 	post("copyright (c) 1997-1999 Music Department UCSD");
 	post(" ");
-	post("using FFTW, bitches");
 
-	ps_rectangular = gensym("rectangular");
-	ps_hanning = gensym("hanning");
-	ps_hamming = gensym("hamming");
-	ps_blackman62 = gensym("blackman62");
-	ps_blackman70 = gensym("blackman70");
-	ps_blackman74 = gensym("blackman74");
-	ps_blackman92 = gensym("blackman92");
+	for(int i = 0; i < windowcount; i++){
+		window_names_s[i] = gensym(window_names[i]);
+	}
+
 	ps_list = gensym("list");
 	ps_nolist = gensym("nolist");
 
@@ -1505,6 +1506,50 @@ int main(void)
 	
 	class_addmethod(analyzer_class, (method)analyzer_float, "float", A_FLOAT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_int, "int", A_LONG, 0);
+
+	CLASS_ATTR_LONG(analyzer_class, "buffersize", 0, t_analyzer, BufSize);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "buffersize", NULL, analyzer_buffersize_set);
+	CLASS_ATTR_LABEL(analyzer_class, "buffersize", 0, "Buffer Size");
+
+	CLASS_ATTR_LONG(analyzer_class, "hopsize", 0, t_analyzer, x_hop);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "hopsize", NULL, analyzer_hopsize_set);
+	CLASS_ATTR_LABEL(analyzer_class, "hopsize", 0, "Hop Size");
+
+	CLASS_ATTR_LONG(analyzer_class, "fftsize", 0, t_analyzer, FFTSize);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "fftsize", NULL, analyzer_fftsize_set);
+	CLASS_ATTR_LABEL(analyzer_class, "fftsize", 0, "FFT Size");
+
+	CLASS_ATTR_SYM(analyzer_class, "windowtype", 0, t_analyzer, windname_dummy);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "windowtype", analyzer_windowtype_get, analyzer_windowtype_set);
+	CLASS_ATTR_LABEL(analyzer_class, "windowtype", 0, "Window Type");
+	char buf[1024];
+	char *bufptr = buf;
+	for(int i = 0; i < windowcount; i++){
+		bufptr += sprintf(bufptr, "%s ", window_names[i]);
+	}
+	CLASS_ATTR_ENUM(analyzer_class, "windowtype", 0, buf);
+
+	CLASS_ATTR_LONG(analyzer_class, "initialdelay", 0, t_analyzer, x_delay);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "initialdelay", NULL, analyzer_initialdelay_set);
+	CLASS_ATTR_LABEL(analyzer_class, "initialdelay", 0, "Initial Delay");
+
+	CLASS_ATTR_LONG(analyzer_class, "numpitches", 0, t_analyzer, x_npitch);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "numpitches", NULL, analyzer_numpitches_set);
+	CLASS_ATTR_LABEL(analyzer_class, "numpitches", 0, "Number of Pitches to Output");
+
+	CLASS_ATTR_LONG(analyzer_class, "numpeakstofind", 0, t_analyzer, x_npeakanal);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "numpeakstofind", NULL, analyzer_numpeakstofind_set);
+	CLASS_ATTR_LABEL(analyzer_class, "numpeakstofind", 0, "Number of Peaks to Analyze");
+
+	CLASS_ATTR_LONG(analyzer_class, "numpeakstooutput", 0, t_analyzer, x_npeakout);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "numpeakstooutput", NULL, analyzer_numpeakstooutput_set);
+	CLASS_ATTR_LABEL(analyzer_class, "numpeakstooutput", 0, "Number of Peaks to Output");
+
+	CLASS_ATTR_LONG(analyzer_class, "barkformat", 0, t_analyzer, x_output);
+	CLASS_ATTR_ACCESSORS(analyzer_class, "barkformat", analyzer_barkformat_get, analyzer_barkformat_set);
+	CLASS_ATTR_LABEL(analyzer_class, "barkformat", 0, "Bark Format");
+	CLASS_ATTR_ENUM(analyzer_class, "barkformat", 0, "list nolist");
+
 	class_dspinit(analyzer_class);
 	
 	class_register(CLASS_BOX, analyzer_class);
@@ -1512,8 +1557,8 @@ int main(void)
 }
 
 void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
-	t_analyzer_int i, j, band=0, oldband=0, sizeband=0;
-	t_analyzer_int vs = sys_getblksize(); // get vector size
+	long i, j, band=0, oldband=0, sizeband=0;
+	long vs = sys_getblksize(); // get vector size
 	double freq = 0.0f, oldfreq = 0.0f;
 	t_analyzer *x = (t_analyzer *)object_alloc(analyzer_class);
 	if(!x){
@@ -1559,131 +1604,39 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 		x->x_dbs[i] = 0.0f;
 	}
 
-	x->BufSize = DEFBUFSIZE;
-	x->x_overlap = x->BufSize/2;
-	x->x_hop = x->BufSize/2;
-	x->FFTSize = DEFBUFSIZE;
-	x->window = DEFWIN;
-	x->winName = ps_blackman70;
-	x->x_delay = DEFDELAY;
-	x->x_npitch = DEFNPITCH;
-	x->x_npeakanal = DEFNPEAKANAL;
-	x->x_npeakout = DEFNPEAKOUT;
-	x->x_output = List;
+	t_dictionary *attrs = dictionary_new();
 
-	switch (argc) { // Read arguments
-	case 0: 
-		x->BufSize = DEFBUFSIZE;
-		x->x_overlap = x->BufSize/2;
-		x->x_hop = x->BufSize/2;
-		x->FFTSize = DEFBUFSIZE;
-		x->window = DEFWIN;
-		x->x_delay = DEFDELAY;
-		x->x_npitch = DEFNPITCH;
-		x->x_npeakanal = DEFNPEAKANAL;
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 1:
-		readBufSize(x,argv);
-		x->x_overlap = x->BufSize/2;
-		x->x_hop = x->BufSize/2;
-		x->FFTSize = x->BufSize;
-		x->window = DEFWIN;
-		x->x_delay = DEFDELAY;
-		x->x_npitch = DEFNPITCH;
-		x->x_npeakanal = DEFNPEAKANAL;
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 2:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);		
-		x->FFTSize = x->BufSize;
-		x->window = DEFWIN;
-		x->x_delay = DEFDELAY;
-		x->x_npitch = DEFNPITCH;
-		x->x_npeakanal = DEFNPEAKANAL;
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 3:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);		
-		readFFTSize(x,argv);
-		x->window = DEFWIN;
-		x->x_delay = DEFDELAY;
-		x->x_npitch = DEFNPITCH;
-		x->x_npeakanal = DEFNPEAKANAL;
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 4:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);		
-		readFFTSize(x,argv);
-		readwindow(x,argv);
-		x->x_delay = DEFDELAY;
-		x->x_npitch = DEFNPITCH;
-		x->x_npeakanal = DEFNPEAKANAL;
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 5:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);		
-		readFFTSize(x,argv);
-		readwindow(x,argv);
-		readx_delay(x,argv);
-		x->x_npitch = DEFNPITCH;
-		x->x_npeakanal = DEFNPEAKANAL;
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 6:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);			
-		readFFTSize(x,argv);
-		readwindow(x,argv);
-		readx_delay(x,argv);
-		readx_npitch(x,argv);
-		x->x_npeakanal = DEFNPEAKANAL;
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 7:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);			
-		readFFTSize(x,argv);
-		readwindow(x,argv);
-		readx_delay(x,argv);
-		readx_npitch(x,argv);
-		readx_npeakanal(x,argv);
-		x->x_npeakout = DEFNPEAKOUT;
-		x->x_output = List;
-		break;
-	case 8:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);			
-		readFFTSize(x,argv);
-		readwindow(x,argv);
-		readx_delay(x,argv);
-		readx_npitch(x,argv);
-		readx_npeakanal(x,argv);
-		readx_npeakout(x,argv);
-		x->x_output = List;
-		break;
-	default:
-		readBufSize(x,argv);
-		readx_overlap(x,argv);			
-		readFFTSize(x,argv);
-		readwindow(x,argv);
-		readx_delay(x,argv);
-		readx_npitch(x,argv);
-		readx_npeakanal(x,argv);
-		readx_npeakout(x,argv);
-		readx_output(x,argv);
-	}		
+	t_symbol *attrnames[] = {gensym("buffersize"), gensym("hopsize"), gensym("fftsize"), gensym("windowtype"), gensym("initialdelay"), gensym("numpitches"), gensym("numpeakstofind"), gensym("numpeakstooutput"), gensym("barkformat")};
+
+	// get the attributes in order to see if buffersize and hopsize are both specified.
+	// if buffersize is and hopsize isn't, set hopsize to buffersize / 2
+	int ac = attr_args_offset(argc, argv);
+	attr_args_dictionary(attrs, argc, argv);
+
+	// overwrite everything with defaults
+	dictionary_appendlong(attrs, attrnames[0], DEFBUFSIZE);
+	dictionary_appendlong(attrs, attrnames[1], DEFBUFSIZE / 2);
+	dictionary_appendlong(attrs, attrnames[2], DEFBUFSIZE);
+	dictionary_appendsym(attrs, attrnames[3], window_names_s[DEFWIN]);
+	dictionary_appendlong(attrs, attrnames[4], DEFDELAY);
+	dictionary_appendlong(attrs, attrnames[5], DEFNPITCH);
+	dictionary_appendlong(attrs, attrnames[6], DEFNPEAKANAL);
+	dictionary_appendlong(attrs, attrnames[7], DEFNPEAKOUT);
+	dictionary_appendsym(attrs, attrnames[8], ps_list);
+
+	// non-attribute legacy param list
+	for(int i = 0; i < ac; i++){
+		dictionary_appendatom(attrs, attrnames[i], argv + i);
+	}
+
+	// replace defaults and legacy params passed as a list with the attributes
+	attr_args_dictionary(attrs, argc, argv);
+	dictionary_dump(attrs, 0, 0);
+
+	attr_dictionary_process(x, attrs);
+	attr_dictionary_process(x, attrs);
+	object_free(attrs);
+
 
 	if (x->x_npeakout > x->x_npeakanal) {
 		object_error((t_object *)x, "Analyzer~: '# of peaks to output' (%d) must not be larger than '# of peaks to analyze' (%d).  Setting the former to the latter.\n", x->x_npeakout, x->x_npeakanal);
@@ -1745,7 +1698,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
 	object_post((t_object *)x, "	Hop size = %d",x->x_hop);
 	object_post((t_object *)x, "	FFT size = %d",x->FFTSize);
-	object_post((t_object *)x, "	Window type = %s",x->winName->s_name);
+	object_post((t_object *)x, "	Window type = %s",window_names[x->window]);
 	object_post((t_object *)x, "	Initial delay = %d",x->x_delay);
 	object_post((t_object *)x, "	Number of pitches = %d",x->x_npitch);
 	object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
@@ -1773,12 +1726,12 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	  return 0;
 	  } else {
 	  x->BufBark = (t_float*) sysmem_newptr(2*NUMBAND * sizeof(t_float));
-	  x->BufSizeBark = (t_analyzer_int*) sysmem_newptr(NUMBAND * sizeof(t_analyzer_int));
+	  x->BufSizeBark = (long*) sysmem_newptr(NUMBAND * sizeof(long));
 	  }
 	*/
 	
 	x->BufBark = (double*) sysmem_newptr(2*NUMBAND * sizeof(double));
-	x->BufSizeBark = (t_analyzer_int*) sysmem_newptr(NUMBAND * sizeof(t_analyzer_int));
+	x->BufSizeBark = (long*) sysmem_newptr(NUMBAND * sizeof(long));
 
 	// Create the Bark outlet(s)
 	if (x->x_output == noList) {
@@ -1798,13 +1751,13 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_outloud = floatout((t_analyzer *)x); // one outlet for loudness
 	x->x_noteout = listout((t_analyzer *)x); // one outlet for MIDI & frequency cooked pitch
 
-	double (*f[windowcount])(int, int) = {rect_w, hanning_w, hamming_w, blackman62_w, blackman70_w, blackman74_w, blackman92_w};
+
 	for(int i = 0; i < windowcount; i++){
 		x->windows[i] = (double *)calloc(x->BufSize, sizeof(double));
 	}
 	for(int j = 0; j < x->BufSize; j++){
 		for(int i = 0; i < windowcount; i++){
-			x->windows[i][j] = f[i](j, x->BufSize);
+			x->windows[i][j] = window_functions[i](j, x->BufSize);
 		}
 	}
 
@@ -1862,4 +1815,172 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	printf("\n");
 	*/
 	return (x);
+}
+
+
+// accessor setters
+t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	if(!argc){
+		return MAX_ERR_NONE;
+	}
+	double ms2samp = x->x_Fs * 0.001;
+	switch(atom_gettype(argv)){
+	case A_LONG:
+		x->BufSize = atom_getlong(argv); // samples
+		break;
+	case A_FLOAT:
+		x->BufSize = (long)(atom_getfloat(argv) * ms2samp);
+		break;
+	default:
+		x->BufSize = DEFBUFSIZE;
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err analyzer_hopsize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	if(!argc){
+		return MAX_ERR_NONE;
+	}
+	double ms2samp = x->x_Fs * 0.001;
+	switch(atom_gettype(argv)){
+	case A_LONG:
+		x->x_hop = atom_getlong(argv); // samples
+		break;
+	case A_FLOAT:
+		x->x_hop = (long)(atom_getfloat(argv) * ms2samp);
+		break;
+	default:
+		x->x_hop = x->BufSize / 2;
+	}
+	x->x_overlap = x->BufSize - x->x_hop;
+	return MAX_ERR_NONE;
+}
+
+t_max_err analyzer_fftsize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	if(!argc){
+		return MAX_ERR_NONE;
+	}
+	double ms2samp = x->x_Fs * 0.001;
+	switch(atom_gettype(argv)){
+	case A_LONG:
+		x->FFTSize = atom_getlong(argv); // samples
+		break;
+	case A_FLOAT:
+		x->FFTSize = (long)(atom_getfloat(argv) * ms2samp);
+		break;
+	default:
+		x->FFTSize = x->BufSize;
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err analyzer_windowtype_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	if(!argc){
+		return MAX_ERR_NONE;
+	}
+	t_symbol *s = atom_getsym(argv);
+	for(int i = 0; i < windowcount; i++){
+		if(s == window_names_s[i]){
+			x->window = i;
+			break;
+		}
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err analyzer_handle_attr_type2(t_analyzer *x,
+				     long argc,
+				     t_atom *argv, 
+				     long *field,
+				     char *paramname,
+				     int maxval,
+				     int defval)
+{
+	if(!argc){
+		return MAX_ERR_NONE;
+	}
+	long val = 0;
+	switch(atom_gettype(argv)){
+	case A_LONG:
+		val = atom_getlong(argv);
+		break;
+	case A_FLOAT:
+		val = (long)atom_getfloat(argv);
+		break;
+	default:
+		object_error((t_object *)x, "'%s' must be either an int or a float (which will be truncated to an int).\n", paramname);
+	}
+	if(val >= 0 && val < maxval){
+		*field = val;
+	}else{
+		object_error((t_object *)x, "'%s' (%d) must be between [0, %d).  Setting to %d\n", paramname, val, maxval, defval);
+	}
+	return MAX_ERR_NONE;
+}
+
+t_max_err analyzer_initialdelay_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	return analyzer_handle_attr_type2(x, argc, argv, &(x->x_delay), "initial delay", MAXDELAY, DEFDELAY);
+}
+
+t_max_err analyzer_numpitches_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	return analyzer_handle_attr_type2(x, argc, argv, &(x->x_npitch), "# of pitches", MAXNPITCH, DEFNPITCH);
+}
+
+t_max_err analyzer_numpeakstofind_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	return analyzer_handle_attr_type2(x, argc, argv, &(x->x_npeakanal), "# of pitches to analyze", MAXNPEAK, DEFNPEAKANAL);
+}
+
+t_max_err analyzer_numpeakstooutput_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	return analyzer_handle_attr_type2(x, argc, argv, &(x->x_npeakout), "# of pitches to output", MAXNPEAK, DEFNPEAKOUT);
+}
+
+t_max_err analyzer_barkformat_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
+{
+	if(!argc){
+		return MAX_ERR_NONE;
+	}
+	if(atom_gettype(argv) == A_SYM){
+		t_symbol *sym = atom_getsym(argv);
+		if(sym == ps_list){
+			x->x_output = List;
+		}else if(sym == ps_nolist){
+			x->x_output = noList;
+		}else{
+			object_error((t_object *)x, "bark format must be a symbol, either 'list' or 'nolist'");
+		}
+	}else{
+		object_error((t_object *)x, "bark format must be a symbol, either 'list' or 'nolist'");
+	}
+	return MAX_ERR_NONE;
+}
+
+// accessor getters
+t_max_err analyzer_windowtype_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv)
+{
+	char alloc;
+	atom_alloc(argc, argv, &alloc);
+	atom_setsym(*argv, window_names_s[x->window]);
+	return MAX_ERR_NONE;
+}
+
+t_max_err analyzer_barkformat_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv)
+{
+	char alloc;
+	atom_alloc(argc, argv, &alloc);
+	if(x->x_output == List){
+		atom_setsym(*argv, ps_list);
+	}else if(x->x_output == noList){
+		atom_setsym(*argv, ps_nolist);
+	}else{
+		object_error((t_object *)x, "bark format is set to an unknown state!");
+	}
+	return MAX_ERR_NONE;
 }
