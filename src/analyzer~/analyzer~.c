@@ -72,6 +72,16 @@
 #include "fftw3.h"
 #include "fft.h"
 
+#define OSC 1
+#ifdef OSC
+#include "osc_bundle_u.h"
+#include "osc_message_u.h"
+#include "osc_atom_u.h"
+#include "osc_mem.h"
+//#define __OSC_PROFILE__
+#include "osc_profile.h"
+#endif
+
 #if !defined(WINDOWS) && !defined(WIN_VERSION)
 #include <Accelerate/Accelerate.h> // to get veclib
 #endif
@@ -294,6 +304,7 @@ typedef struct _analyzer {
 	void *x_noteout;		// Outlet for cooked pitch
 	void *x_peakout;		// Outlet for sinusoidal decomposition
 	void *x_pitchout;		// Outlet for raw pitch & amplitude
+	void *x_oscout;			// Outlet for OSC
 		
 	int x_debug;				// Debug mode?
 	double *lastInputVector;	// Remembered from last analyzer_perform() for debug into
@@ -305,6 +316,8 @@ typedef struct _analyzer {
 
 t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_blackman62, *ps_blackman70, *ps_blackman74, *ps_blackman92, 
 	*ps_list, *ps_nolist;
+
+t_symbol *ps_FullPacket;
 
 void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 long *analyzer_perform(long *w);
@@ -614,6 +627,9 @@ void analyzer_assist(t_analyzer *x, void *b, long m, long a, char *s)
 		case 7:
 			sprintf(s,"(list) sinusoidal components (freq, amp)");
 			break;
+		case 8:
+			sprintf(s,"OSC");
+			break;
 		}
 	}
 }
@@ -828,30 +844,10 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 		}
 	}else{
 		for(int i = 0; i < argc; i++){
-			x->BufFFT_in[i] = atom_getfloat(argv + i) * x->windows[x->window][i];//x->WindFFT[i];
+			x->BufFFT_in[i] = atom_getfloat(argv + i) * x->windows[x->window][i];
 		}
 	}
 	fftw_execute(x->fft_plan);
-	//memset(x->BufFFT_out + x->x_FFTSizeOver2, '\0', sizeof(double) * x->x_FFTSizeOver2);
-	/*
-	for(int i = 0; i < x->x_FFTSizeOver2; i++){
-		x->BufFFT_out[i + x->x_FFTSizeOver2] = x->BufFFT_out[(x->x_FFTSizeOver2 - 1) - i];
-	}
-	*/
-
-	/*
-	// Zero padding
-	for (i=x->BufSize; i<x->FFTSize; i++)
-		BufFFT[i] = 0.0f;
-
-	// Window the samples
-	if (x->window != Recta)
-		for (i=0; i<x->BufSize; ++i)
-			BufFFT[i] *= x->WindFFT[i];
-			
-	// FFT
-	fftRealfast(x->FFTSize, BufFFT, x->memFFT);
-	*/		
 
 	double *BufFFT = x->BufFFT_out;
 	// Squared Absolute
@@ -860,6 +856,8 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 	
 	// Go into fiddle~ code
 	pitch_getit(x);
+
+	double barkList[NUMBAND];
 					
 	// Output Band energy (find brightness #1)
 	for (i=0; i<NUMBAND; i++) {
@@ -901,6 +899,11 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 				atom_setfloat(x->myList+i, 10*log10(bark/DB_REF));
  			}
  		}
+		if(x->x_scale){
+			barkList[i] = bark;
+		}else{
+			barkList[i] = 10 * log10(bark / DB_REF);
+		}
  	}
 
 	// loudness
@@ -1022,7 +1025,200 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 	if (x->x_output == List) {
  		outlet_list(x->x_outlet, 0L, NUMBAND, x->myList);
  	}
- 
+
+#ifdef OSC
+	{
+		// do OSC output
+
+		// bark -> if(x->x_scale){bark}else{10 * log10(bark / DB_REF)}
+		// loudness -> x->x_loudness
+		// brightness -> x->x_brightness
+		// noisiness -> x->x_noisiness
+		// peaks ->
+		//	t_peakout *po;
+		//	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
+		//		t_atom at[3];
+		//		atom_setlong(at, i+1);
+		//		atom_setfloat(at+1, po->po_freq);
+		//		atom_setfloat(at+2, po->po_amp);
+		//		outlet_list(x->x_peakout, 0, 3, at);
+		//	}
+		// fundamental frequencies/amplitudes
+		/*
+	if (x->x_npitch > 1) {
+		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
+			t_atom at[3];
+			atom_setlong(at, i+1);
+			atom_setfloat(at+1, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+2, ph->h_amps[x->x_histphase]);
+			outlet_list(x->x_pitchout, 0, 3, at);
+   		}
+   	} else {
+		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
+			t_atom at[2];
+			atom_setfloat(at, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+1, ph->h_amps[x->x_histphase]);
+			outlet_list(x->x_pitchout, 0, 2, at);
+   		}
+	}   	
+		 */
+
+		// cooked MIDI/Freq pitch
+		/*
+	if (x->x_npitch > 1) {
+		for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
+ 			if (ph->h_pitch) {
+				t_atom at[3];
+				atom_setlong(at, i+1);
+				atom_setfloat(at+1, ph->h_pitch);
+				atom_setfloat(at+2, mtof(ph->h_pitch));
+				outlet_list(x->x_noteout, 0, 3, at);
+			}
+	} else {
+		ph = x->x_hist;
+ 		if (ph->h_pitch) {
+			t_atom at[2];
+			atom_setfloat(at, ph->h_pitch);
+			atom_setfloat(at+1, mtof(ph->h_pitch));
+			outlet_list(x->x_noteout, 0, 2, at);
+		}
+	}
+		 */
+
+		// attack -> x->x_attackvalue
+
+		OSC_PROFILE_TIMER_START(foo);
+		t_osc_bndl_u *bndl = osc_bundle_u_alloc();
+
+		// bark
+		t_osc_msg_u *bark = osc_message_u_alloc();
+		osc_message_u_setAddress(bark, "/bark");
+		for(int i = 0; i < NUMBAND; i++){
+			osc_message_u_appendDouble(bark, barkList[i]);
+		}
+		osc_bundle_u_addMsg(bndl, bark);
+
+		// loudness
+		t_osc_msg_u *loudness = osc_message_u_alloc();
+		osc_message_u_setAddress(loudness, "/loudness");
+		osc_message_u_appendDouble(loudness, x->x_loudness);
+		osc_bundle_u_addMsg(bndl, loudness);
+
+		// brightness
+		t_osc_msg_u *brightness = osc_message_u_alloc();
+		osc_message_u_setAddress(brightness, "/brightness");
+		osc_message_u_appendDouble(brightness, x->x_brightness);
+		osc_bundle_u_addMsg(bndl, brightness);
+
+		// noisiness
+		t_osc_msg_u *noisiness = osc_message_u_alloc();
+		osc_message_u_setAddress(noisiness, "/noisiness");
+		osc_message_u_appendDouble(noisiness, 1.0 - x->x_noisiness);
+		osc_bundle_u_addMsg(bndl, noisiness);
+
+		// peaks
+		t_osc_msg_u *peaks = osc_message_u_alloc();
+		osc_message_u_setAddress(peaks, "/peaks");
+		t_peakout *po;
+		int i;
+		for(i = 0, po = x->peakBuf; i < x->x_npeakout; i++, po++){
+			osc_message_u_appendDouble(peaks, po->po_freq);
+			osc_message_u_appendDouble(peaks, po->po_amp);
+		}
+		osc_bundle_u_addMsg(bndl, peaks);
+
+		// fundamental freqs/amps
+		if(x->x_npitch > 1){
+			for(i = 0, ph = x->x_hist; i < x->x_npitch; i++, ph++){
+				if(ph->h_pitch){
+					t_osc_msg_u *hz = osc_message_u_alloc();
+					t_osc_msg_u *amp = osc_message_u_alloc();
+					char buf[16];
+					sprintf(buf, "/pitch/raw/hz/%d", i);
+					osc_message_u_setAddress(hz, buf);
+					osc_message_u_appendDouble(hz, ph->h_pitches[x->x_histphase]);
+					osc_bundle_u_addMsg(bndl, hz);
+
+					sprintf(buf, "/pitch/raw/amp/%d", i);
+					osc_message_u_setAddress(amp, buf);
+					osc_message_u_appendDouble(amp, ph->h_amps[x->x_histphase]);
+					osc_bundle_u_addMsg(bndl, amp);
+				}
+			}
+		}else{
+			ph = x->x_hist;
+			if(ph->h_pitch){
+				t_osc_msg_u *hz = osc_message_u_alloc();
+				t_osc_msg_u *amp = osc_message_u_alloc();
+				osc_message_u_setAddress(hz, "/pitch/raw/midi");
+				osc_message_u_appendDouble(hz, ph->h_pitches[x->x_histphase]);
+				osc_bundle_u_addMsg(bndl, hz);
+
+				osc_message_u_setAddress(amp, "/pitch/raw/amp");
+				osc_message_u_appendDouble(amp, ph->h_amps[x->x_histphase]);
+				osc_bundle_u_addMsg(bndl, amp);
+			}
+		}
+
+		// cooked pitch
+		if(x->x_npitch > 1){
+			for(i = 0, ph = x->x_hist; i < x->x_npitch; i++, ph++){
+				if(ph->h_pitch){
+					t_osc_msg_u *hz = osc_message_u_alloc();
+					t_osc_msg_u *midi = osc_message_u_alloc();
+					char buf[16];
+					sprintf(buf, "/pitch/cooked/midi/%d", i);
+					osc_message_u_setAddress(hz, buf);
+					osc_message_u_appendDouble(hz, ph->h_pitch);
+					osc_bundle_u_addMsg(bndl, hz);
+
+					sprintf(buf, "/pitch/cooked/hz/%d", i);
+					osc_message_u_setAddress(midi, buf);
+					osc_message_u_appendDouble(midi, mtof(ph->h_pitch));
+					osc_bundle_u_addMsg(bndl, midi);
+				}
+			}
+		}else{
+			ph = x->x_hist;
+			if(ph->h_pitch){
+				t_osc_msg_u *hz = osc_message_u_alloc();
+				t_osc_msg_u *midi = osc_message_u_alloc();
+				osc_message_u_setAddress(hz, "/pitch/cooked/hz");
+				osc_message_u_appendDouble(hz, ph->h_pitch);
+				osc_bundle_u_addMsg(bndl, hz);
+
+				osc_message_u_setAddress(midi, "/pitch/cooked/midi");
+				osc_message_u_appendDouble(midi, mtof(ph->h_pitch));
+				osc_bundle_u_addMsg(bndl, midi);
+			}
+		}
+
+		// attack
+		if(x->x_attackvalue){
+			t_osc_msg_u *attack = osc_message_u_alloc();
+			osc_message_u_setAddress(attack, "/attack");
+			osc_message_u_appendTrue(attack);
+			osc_bundle_u_addMsg(bndl, attack);
+		}
+
+
+		long len = 0;
+		char *buf = NULL;
+		osc_bundle_u_serialize(bndl, &len, &buf);
+
+		OSC_PROFILE_TIMER_STOP(foo);
+		OSC_PROFILE_TIMER_PRINTF(foo);
+		if(buf){
+			t_atom out[2];
+			atom_setlong(out, len);
+			atom_setlong(out + 1, (long)buf);
+			outlet_anything(x->x_oscout, ps_FullPacket, 2, out);
+			osc_mem_free(buf);
+		}
+		osc_bundle_u_free(bndl);
+
+	}
+#endif // OSC 
  	debug("leaving analyzer_tick");
 }	
 
@@ -1473,7 +1669,6 @@ void  analyzer_free(t_analyzer *x)
 
 int main(void)
 {
-
 	post("Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
 	post("copyright (c) 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
 	post("Pitch tracker based on Miller Puckette's fiddle~");
@@ -1486,6 +1681,8 @@ int main(void)
 
 	ps_list = gensym("list");
 	ps_nolist = gensym("nolist");
+
+	ps_FullPacket = gensym("FullPacket");
 
 	analyzer_class = class_new("analyzer~", (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
 		
@@ -1613,6 +1810,10 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	int ac = attr_args_offset(argc, argv);
 	attr_args_dictionary(attrs, argc, argv);
 
+	int have_buffersize = dictionary_hasentry(attrs, gensym("buffersize")) || ac > 0;
+	int have_hopsize = dictionary_hasentry(attrs, gensym("hopsize")) || ac > 1;
+	int have_fftsize = dictionary_hasentry(attrs, gensym("fftsize")) || ac > 2;
+
 	// overwrite everything with defaults
 	dictionary_appendlong(attrs, attrnames[0], DEFBUFSIZE);
 	dictionary_appendlong(attrs, attrnames[1], DEFBUFSIZE / 2);
@@ -1631,17 +1832,23 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 
 	// replace defaults and legacy params passed as a list with the attributes
 	attr_args_dictionary(attrs, argc, argv);
-	dictionary_dump(attrs, 0, 0);
 
-	attr_dictionary_process(x, attrs);
+	if(have_buffersize && !have_hopsize){
+		x->x_hop = x->BufSize / 2;
+	}
+	if(have_buffersize && !have_fftsize){
+		x->FFTSize = x->BufSize;
+	}
 	attr_dictionary_process(x, attrs);
 	object_free(attrs);
-
 
 	if (x->x_npeakout > x->x_npeakanal) {
 		object_error((t_object *)x, "Analyzer~: '# of peaks to output' (%d) must not be larger than '# of peaks to analyze' (%d).  Setting the former to the latter.\n", x->x_npeakout, x->x_npeakanal);
 		x->x_npeakout = x->x_npeakanal;
 	}
+
+	// Make an outlet for OSC out
+	x->x_oscout = outlet_new((t_object *)x, "FullPacket");
 	
 	// Make an outlet for peaks out
 	if (x->x_npeakout)
@@ -1693,7 +1900,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_hop = x->BufSize - x->x_overlap;
 	x->x_FFTSizeOver2 = x->FFTSize/2;		
 	*/
-	printf("%s:%d\n", __func__, __LINE__);
 	object_post((t_object *)x, "--- Analyzer~ ---");	
 	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
 	object_post((t_object *)x, "	Hop size = %d",x->x_hop);
@@ -1703,7 +1909,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	object_post((t_object *)x, "	Number of pitches = %d",x->x_npitch);
 	object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
 	object_post((t_object *)x, "	Number of peaks to output = %d",x->x_npeakout);
-	printf("%s:%d\n", __func__, __LINE__);
 	//x->memFFT = (t_float*) sysmem_newptr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
 
 	// Allocate memory
