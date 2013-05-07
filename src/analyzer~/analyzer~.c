@@ -58,11 +58,12 @@
 */
 #define NAME "analyzer~"
 #define DESCRIPTION "FFT-Based Perceptual Analysis"
-#define AUTHORS "Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski"
+#define AUTHORS "Tristan Jehan, Adrian Freed, Matt Wright, Michael Zbyszynski, and John MacCallum"
 #define COPYRIGHT_YEARS "1988,89,90-99,2000,01-05,11-13"
 
 #include "ext.h"
 #include "ext_obex.h"
+#include "ext_critical.h"
 #include "version.h"
 
 #include "z_dsp.h"
@@ -70,7 +71,7 @@
 #include <math.h>
 #include <stdint.h>
 #include "fftw3.h"
-#include "fft.h"
+//#include "fft.h"
 
 #define OSC 1
 #ifdef OSC
@@ -78,6 +79,7 @@
 #include "osc_message_u.h"
 #include "osc_atom_u.h"
 #include "osc_mem.h"
+#include "osc_timetag.h"
 //#define __OSC_PROFILE__
 #include "osc_profile.h"
 #endif
@@ -93,8 +95,8 @@
 #define debug /* Do nothing */
 #endif
 
-#define VERSION "1.4.5"
-#define RES_ID	7079
+#define MAXBUFSIZE 65536
+
 #define NUMBAND 25 // at 44100 Hz only (should be fixed in future version)
 #define t_floatarg double
 #define DEFAULT_FS 44100
@@ -160,7 +162,6 @@ static long pitch_intpartialonset[] = {
 t_class *analyzer_class;
 
 enum {Recta=0, Hann, Hamm, Blackman62, Blackman70, Blackman74, Blackman92, windowcount};
-enum {Log=0, Linear};
 enum {List=0, noList};
 
 #define DEFWIN	Blackman70		// Default window
@@ -235,7 +236,10 @@ typedef struct _analyzer {
 
 	t_pxobject x_obj;
 
+	t_critical lock;
+
 	double x_Fs;			// Sample rate
+	long vs; 			// vector size
 	long x_overlap;		// Number of overlaping samples
 	long x_hop;			// Number of non-overlaping samples
 	int window;			// Type of window	
@@ -243,7 +247,7 @@ typedef struct _analyzer {
 	double *windows[7]; // store the pointers to the precomputed windows.  these can be looked up with the values defined in the enum
 	long x_delay;			// Vector size delay before to start feeding the buffer
 	long x_counter;		// Counter that goes with the vector size delay
-	long x_scale;			// Type of output scale (log=0, linear=1)	
+	t_symbol *x_scale;			// Type of output scale
 	long x_output;			// Type of output
 	long x_bright;			// Type of brightness
 	long x_loud;			// Type of loudness
@@ -312,12 +316,12 @@ typedef struct _analyzer {
 
 	fftw_plan fft_plan;
 
+	t_osc_timetag timetag; // the time reported by gettimeofday---used to create timestamps for outgoing OSC packets
+	uint64_t svctr; // the signal vector number---used to create timestamps for outgoing OSC packets
+
 } t_analyzer;
 
-t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_blackman62, *ps_blackman70, *ps_blackman74, *ps_blackman92, 
-	*ps_list, *ps_nolist;
-
-t_symbol *ps_FullPacket;
+t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_blackman62, *ps_blackman70, *ps_blackman74, *ps_blackman92, *ps_list, *ps_nolist, *ps_FullPacket, *ps_linear, *ps_log;
 
 void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 long *analyzer_perform(long *w);
@@ -336,15 +340,6 @@ void analyzer_amprange(t_analyzer *x, t_floatarg amplo, t_floatarg amphi);
 void analyzer_reattack(t_analyzer *x, t_floatarg attacktime, t_floatarg attackthresh);
 void analyzer_vibrato(t_analyzer *x, t_floatarg vibtime, t_floatarg vibdepth);
 void analyzer_npartial(t_analyzer *x, t_floatarg npartial);
-void readBufSize(t_analyzer *x, t_atom *argv);
-void readx_overlap(t_analyzer *x, t_atom *argv);
-void readFFTSize(t_analyzer *x, t_atom *argv);
-void readwindow(t_analyzer *x, t_atom *argv);
-void readx_delay(t_analyzer *x, t_atom *argv);
-void readx_output(t_analyzer *x, t_atom *argv);
-void readx_npitch(t_analyzer *x, t_atom *argv);
-void readx_npeakanal(t_analyzer *x, t_atom *argv);
-void readx_npeakout(t_analyzer *x, t_atom *argv);
 void *analyzer_new(t_symbol *s, short argc, t_atom *argv);
 void analyzer_free(t_analyzer *x);
 void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv);
@@ -353,6 +348,7 @@ t_float pitch_ftom(t_float f);
 long pitch_ilog2(long n);
 void pitch_getit(t_analyzer *x); // modified fiddle pitch tracker function
 void analyzer_debug(t_analyzer *x, long n);
+void analyzer_compute_windows(t_analyzer *x);
 
 // accessor setters
 t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv);
@@ -368,92 +364,26 @@ t_max_err analyzer_barkformat_set(t_analyzer *x, t_object *attr, long argc, t_at
 t_max_err analyzer_windowtype_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err analyzer_barkformat_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv);
 
-/*
-void _analyzer_perform(t_analyzer *x, t_float *in, long n)
-{
-	long *myintin = (long *)in; 				// Copy integers rather than floats -> faster
-	long *myintBufFFT = (long *)(x->BufFFT);	// We assume sizeof(float) == sizeof(int) though
-	long i, index = 0, cpt = n, maxindex;
-	long overlapindex = x->BufSize - x->x_overlap;
-	long *TmpBuf = x->Buf1;
-			
-	if (x->x_obj.z_disabled)
-		//goto skip;
-		return;
-
-	
-#ifdef DEBUG
-	x->lastInputVector = in;
-	x->lastInputVectorSize = n;
-#endif
-	
-	if (x->x_counter < 1) {
-	
-		// Copy input samples into FFT buffer	
-		while ((x->BufWritePos < x->BufSize) && (cpt > 0)) {
-			x->Buf1[x->BufWritePos] = myintin[index];
-			x->BufWritePos++;
-			index++;
-			cpt--;
-		}
-		
-		debug("perf[%ld]", x->BufWritePos);
-	
-		// When Buffer is full...
-		if (x->BufWritePos >= x->BufSize) {
-			
-			// Save overlapping samples into Buffer 2
-			for (i=0; i<x->x_overlap; i++) 
-				x->Buf2[i] = x->Buf1[overlapindex+i];
-
-			maxindex = n - index + x->x_overlap;
-
-			// Copy the rest of incoming samples into Buffer 2
-			for (i=x->x_overlap; i<maxindex; i++) {
-				x->Buf2[i] = myintin[index];
-				index++;
-			}
-		
-			x->BufWritePos = maxindex;
-										
-			// Make a copy of Buffer 1 into Buffer FFT for computation outside the perform function
-			for (i=0; i<x->BufSize; i++) 
-				myintBufFFT[i] = x->Buf1[i];
-
-			// Go for the FFT outside the perform function with a delay of 0 ms!
-			clock_delay(x->x_clock,0);
-			debug("set clock");
-		
-			// Swap buffers
-			x->Buf1 = x->Buf2;
-			x->Buf2 = TmpBuf;
-		}
-	} else {
-		x->x_counter--;
-	}
-	
-	
-#ifdef DEBUG
-	//Count down the debug value each time so we don't flood the Max window with text
- 	if (x->x_debug > 0) --(x->x_debug);
-#endif 
-}
-*/
-
 void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {
 	if(x->x_obj.z_disabled){
 		return;
 	}
+
+	if(x->svctr == 0){
+		x->timetag = osc_timetag_now();
+	}
+
+	long n = x->BufSize; // make a copy of this---it could change
 	if(x->x_counter < 1){
 		int index = 0;
-		int overlapindex = x->BufSize - x->x_overlap;
-		while((x->BufWritePos < x->BufSize) && (index < sampleframes)){
+		int overlapindex = n - x->x_overlap;
+		while((x->BufWritePos < n) && (index < sampleframes)){
 			atom_setfloat(x->Buf1 + x->BufWritePos, ins[0][index]);
 			x->BufWritePos++;
 			index++;
 		}
-		if(x->BufWritePos >= x->BufSize){
+		if(x->BufWritePos >= n){
 			for(int i = 0; i < x->x_overlap; i++){
 				x->Buf2[i] = x->Buf1[overlapindex + i];
 			}
@@ -463,7 +393,8 @@ void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numin
 				index++;
 			}
 			x->BufWritePos = maxindex;
-			schedule_delay(x, (method)analyzer_tick, 0, NULL, x->BufSize, x->Buf1);
+			atom_setlong(x->Buf1 + n, x->svctr);
+			schedule_delay(x, (method)analyzer_tick, 0, NULL, n + 1, x->Buf1);
 			t_atom *tmp = x->Buf1;
 			x->Buf1 = x->Buf2;
 			x->Buf2 = tmp;
@@ -471,127 +402,59 @@ void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numin
 	}else{
 		x->x_counter--;
 	}
+	x->svctr++;
 }
 
 void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-	int vs = sys_getblksize();
+	int vs = x->vs = sys_getblksize();
 	x->x_Fs = samplerate; // store sampling rate
 
 	// Initializing the delay counter
 	x->x_counter = x->x_delay;
+	x->timetag = 0;
+	x->svctr = 0;
 
-	//if(vs > x->BufSize) error("Analyzer~: Vector size (%d) must not be bigger than buffer size (%d)\n", vs, x->BufSize);
 	// Overlap case
 	if (x->x_overlap > x->BufSize - vs) {
-		object_error((t_object *)x, "Analyzer~: overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
-		object_error((t_object *)x, "***Analyzer~ will be left out of the dsp chain!\n");
+		object_error((t_object *)x, "Overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
+		object_error((t_object *)x, "Will be left out of the dsp chain!\n");
 		return;
 	} else if (x->x_overlap < 1)
 		x->x_overlap = 0; 
 
 	if(vs > x->BufSize){
-		object_error((t_object *)x, "Analyzer~: sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
-		object_error((t_object *)x, "***Analyzer~ will be left out of the dsp chain!\n");
+		object_error((t_object *)x, "Sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
+		object_error((t_object *)x, "Will be left out of the dsp chain!\n");
 		return;
 	}
 
 	x->x_hop = x->BufSize - x->x_overlap;
 	x->x_FFTSizeOver2 = x->FFTSize/2;		
 
-	//if(count[0]){
-
-	object_method(dsp64, gensym("dsp_add64"), x, analyzer_perform64, 0, NULL); 
-	//}
-}
-
-/*
-void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect) {
-	int vs = sys_getblksize();
-	x->x_Fs = sp[0]->s_sr; // store sampling rate
-
-	// Initializing the delay counter
-	x->x_counter = x->x_delay;
-
-	//if(vs > x->BufSize) error("Analyzer~: Vector size (%d) must not be bigger than buffer size (%d)\n", vs, x->BufSize);
-	// Overlap case
-	if (x->x_overlap > x->BufSize - vs) {
-		object_error((t_object *)x, "Analyzer~: overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
-		object_error((t_object *)x, "***Analyzer~ will be left out of the dsp chain!\n");
-		return;
-	} else if (x->x_overlap < 1)
-		x->x_overlap = 0; 
-
-	if(vs > x->BufSize){
-		object_error((t_object *)x, "Analyzer~: sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
-		object_error((t_object *)x, "***Analyzer~ will be left out of the dsp chain!\n");
-		return;
+	if(count[0]){
+		object_method(dsp64, gensym("dsp_add64"), x, analyzer_perform64, 0, NULL); 
 	}
-
-	x->x_hop = x->BufSize - x->x_overlap;
-	x->x_FFTSizeOver2 = x->FFTSize/2;		
-
-	if (connect[0]) dsp_add(analyzer_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
 }
-*/
 
 void analyzer_log(t_analyzer *x) {
-	x->x_scale = Log;
+	x->x_scale = ps_log;
 }
 
 void analyzer_linear(t_analyzer *x) {
-	x->x_scale = Linear;
-}
-
-void analyzer_bright(t_analyzer *x, t_symbol *s, short argc, t_atom *argv) {
-	if (argv[0].a_type == A_LONG) {
-		if (argv[0].a_w.w_long == 0) {
-			x->x_bright = 0;
-		} else {
-			x->x_bright = 1;
-		}
-	} else if (argv[0].a_type == A_FLOAT) {
-		if (argv[0].a_w.w_float == 0.0f) {
-			x->x_bright = 0;
-		} else {
-			x->x_bright = 1;
-		}
-	}
-}
-
-void analyzer_loud(t_analyzer *x, t_symbol *s, short argc, t_atom *argv) {
-	if (argv[0].a_type == A_LONG) {
-		if (argv[0].a_w.w_long == 0) {
-			x->x_loud = 0;
-		} else {
-			x->x_loud = 1;
-		}
-	} else if (argv[0].a_type == A_FLOAT) {
-		if (argv[0].a_w.w_float == 0.0f) {
-			x->x_loud = 0;
-		} else {
-			x->x_loud = 1;
-		}
-	}
+	x->x_scale = ps_linear;
 }
 
 void analyzer_float(t_analyzer *x, double f) {
-
-	int n = (long)(f * x->x_Fs/1000.0f); 
-	analyzer_int(x, n);
+	t_atom a;
+	atom_setfloat(&a, f);
+	analyzer_hopsize_set(x, NULL, 1, &a);
 }
 
 void analyzer_int(t_analyzer *x, long n) {
-	long vs = sys_getblksize();
-
-	x->x_hop = n; 
-	if (x->x_hop < vs) {
-		object_error((t_object *)x, "Analyzer~: hop size (%d) is less than ths signal vector size (%d)\n", x->x_hop, vs);
-		x->x_hop = vs;
-	} else if (x->x_hop > x->BufSize) {
-		x->x_hop = x->BufSize;
-	}
-	x->x_overlap = x->BufSize - x->x_hop;	
+	t_atom a;
+	atom_setlong(&a, n);
+	analyzer_hopsize_set(x, NULL, 1, &a);
 }
 
 //Assist strings
@@ -648,11 +511,7 @@ void analyzer_print(t_analyzer *x) {
 	object_post((t_object *)x, "npartial %.2f",  x->x_npartial);
 	object_post((t_object *)x, "loud %d",  x->x_loud);
 	object_post((t_object *)x, "bright %d",  x->x_bright);
-	if (x->x_scale == Log) {
-		object_post((t_object *)x, "log");
-	} else {
-		object_post((t_object *)x, "linear");
-	}
+	object_post((t_object *)x, "%s", x->x_scale->s_name);
 }
 
 #define TELLi(var) post("  " #var ": %ld", x->var);
@@ -711,148 +570,50 @@ void analyzer_npartial(t_analyzer *x, t_floatarg npartial) {
 	x->x_npartial = npartial;
 }
 
-void readBufSize(t_analyzer *x, t_atom *argv) {
-	t_float ms2samp = x->x_Fs * 0.001f;
-    
-	if (argv[0].a_type == A_LONG) {
-		x->BufSize = argv[0].a_w.w_long; // Samples
-	} else if (argv[0].a_type == A_FLOAT) {
-		x->BufSize = (long)(argv[0].a_w.w_float * ms2samp); // Time in ms
-	} else {
-		x->BufSize = DEFBUFSIZE;
-	}
-}
-
-void readx_overlap(t_analyzer *x, t_atom *argv) {
-	t_float ms2samp = x->x_Fs * 0.001f;
-
-	if (argv[1].a_type == A_LONG) {
-		x->x_hop = argv[1].a_w.w_long; // Samples
-	} else if (argv[1].a_type == A_FLOAT) {
-		x->x_hop = (long)(argv[1].a_w.w_float * ms2samp); // Time in ms
-	} else {
-		x->x_hop = x->BufSize/2;
-	}
-	x->x_overlap = x->BufSize - x->x_hop;
-}
-
-void readFFTSize(t_analyzer *x, t_atom *argv) {
-	t_float ms2samp = x->x_Fs * 0.001f;
-    
-	if (argv[2].a_type == A_LONG) {
-		x->FFTSize = argv[2].a_w.w_long; // Samples
-	} else if (argv[2].a_type == A_FLOAT) {
-		x->FFTSize = (long)(argv[2].a_w.w_float * ms2samp); // Time in ms
-	} else {
-		x->FFTSize = x->BufSize;
-	}
-}
-
-void readwindow(t_analyzer *x, t_atom *argv) {
-	t_symbol *window = atom_getsym(argv + 3);
-	x->window = DEFWIN;
-	for(int i = 0; i < windowcount; i++){
-		if(window == window_names_s[i]){
-			x->window = i;
-			break;
-		}
-	}
-}
-
-void readx_delay(t_analyzer *x, t_atom *argv) {
-	int val = 0;
-	int argnum = 4;
-	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
-	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
-	else error("Analyzer~: 'delay' argument must be either an int or a float (which will be truncated to an int).\n");
-
-	if(val >= 0 && val < MAXDELAY) x->x_delay = val;
-	else{
-		object_error((t_object *)x, "Analyzer~: 'delay' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXDELAY, DEFDELAY);
-		x->x_delay = DEFDELAY;
-	}
-}
-
-void readx_npitch(t_analyzer *x, t_atom *argv) {
-	int val = 0;
-	int argnum = 5;
-	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
-	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
-	else error("Analyzer~: '# of pitches' argument must be either an int or a float (which will be truncated to an int).\n");
-
-	if(val >= 0 && val < MAXNPITCH) x->x_npitch = val;
-	else{
-		object_error((t_object *)x, "Analyzer~: '# of pitches' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPITCH, DEFNPITCH);
-		x->x_npitch = DEFNPITCH;
-	}
-}
-
-void readx_npeakanal(t_analyzer *x, t_atom *argv) {
-	int val = 0;
-	int argnum = 6;
-	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
-	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
-	else error("Analyzer~: '# of peaks to find' argument must be either an int or a float (which will be truncated to an int).\n");
-
-	if(val >= 0 && val < MAXNPEAK) x->x_npeakanal = val;
-	else{
-		object_error((t_object *)x, "Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKANAL);
-		x->x_npeakanal = DEFNPEAKANAL;
-	}
-}
-
-void readx_npeakout(t_analyzer *x, t_atom *argv) {
-	int val = 0;
-	int argnum = 7;
-	if(argv[argnum].a_type == A_LONG) val = argv[argnum].a_w.w_long;
-	else if(argv[argnum].a_type == A_FLOAT) val = (int)(argv[argnum].a_w.w_float);
-	else error("Analyzer~: '# of peaks to output' argument must be either an int or a float (which will be truncated to an int).\n");
-
-	if(val >= 0 && val < MAXNPEAK) x->x_npeakout = val;
-	else{
-		object_error((t_object *)x, "Analyzer~: '# of peaks to find' argument (%d) must between [0, %d).  Setting to %d\n", val, MAXNPEAK, DEFNPEAKOUT);
-		x->x_npeakout = DEFNPEAKOUT;
-	}
-}
-
-void readx_output(t_analyzer *x, t_atom *argv) {
-	if (argv[8].a_w.w_sym == ps_nolist) {
-		x->x_output = noList;
-	} else  {
-		x->x_output = List;
-	}
-}
-
 void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 {
+	// argv has an extra atom at the end that has the signal vector 
+	//count that we'll use to generate a timetag
+	argc--; 
+
 	debug("Entering analyzer_tick");
 	long i, index=0, cpt;
-	t_float bark = 0.0f, loud = 0.0f, bright = 0.0f, sumSpectrum = 0.0f, SFM = 0.0f;
-	t_float FsOverFFTSize = x->x_Fs/x->FFTSize; // Keep it here since x_Fs may change
-	t_float FsOverBarkSize = x->x_Fs/(2.0f*NUMBAND); // Fix that problem in a next version
-	double prod = 1.0f, sum = 0.0f;
-	double invNumBand = 0.04f;
+	double bark = 0.0, loud = 0.0, bright = 0.0, sumSpectrum = 0.0, SFM = 0.0;
+	critical_enter(x->lock);
+	fftw_plan fft_plan = x->fft_plan;
+	double fs = x->x_Fs;
+	double FFTSize = x->FFTSize;
+	int window_index = x->window;
+	double window[argc];
+	memcpy(window, x->windows[window_index], argc * sizeof(double));
+	critical_exit(x->lock);
+	double FsOverFFTSize = fs / FFTSize; // Keep it here since x_Fs may change
+	double FsOverBarkSize = fs / (2.0 * NUMBAND); // Fix that problem in a next version
+	double prod = 1.0, sum = 0.0;
+	double invNumBand = 0.04;
 	t_pitchhist *ph;
 
 	// this function is only ever called by the scheduler (via schedule_delay() in the perform
 	// routine), so we don't need to enter a critical section to mess with the data stored
 	// in our struct
-	memset(x->BufFFT_in, '\0', x->FFTSize * sizeof(double)); // takes care of zero padding
-	if(x->window == Recta){
+	memset(x->BufFFT_in, '\0', FFTSize * sizeof(double)); // takes care of zero padding
+	if(window_index == Recta){
 		for(int i = 0; i < argc; i++){
 			x->BufFFT_in[i] = atom_getfloat(argv + i);
 		}
 	}else{
 		for(int i = 0; i < argc; i++){
-			x->BufFFT_in[i] = atom_getfloat(argv + i) * x->windows[x->window][i];
+			//x->BufFFT_in[i] = atom_getfloat(argv + i) * x->windows[window][i];
+			x->BufFFT_in[i] = atom_getfloat(argv + i) * window[i];
 		}
 	}
-	fftw_execute(x->fft_plan);
+	fftw_execute(fft_plan);
 
 	double *BufFFT = x->BufFFT_out;
 	// Squared Absolute
-	for (i=0; i<x->FFTSize; i+=2) 
+	for (i=0; i<x->FFTSize; i+=2) {
 		x->BufPower[i/2] = (BufFFT[i] * BufFFT[i]) + (BufFFT[i+1] * BufFFT[i+1]);
+	}
 	
 	// Go into fiddle~ code
 	pitch_getit(x);
@@ -887,19 +648,19 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 		
 		// output
 		if (x->x_output == noList) {
-			if (x->x_scale) {
+			if (x->x_scale == ps_linear) {
 				outlet_float(x->x_out[NUMBAND-1-i], bark);
 			} else {
 				outlet_float(x->x_out[NUMBAND-1-i], 10*log10(bark/DB_REF));
  			}
  		} else {
-			if (x->x_scale) {
+			if (x->x_scale == ps_linear) {
 				atom_setfloat(x->myList+i, bark);
 			} else {
 				atom_setfloat(x->myList+i, 10*log10(bark/DB_REF));
  			}
  		}
-		if(x->x_scale){
+		if(x->x_scale == ps_linear){
 			barkList[i] = bark;
 		}else{
 			barkList[i] = 10 * log10(bark / DB_REF);
@@ -916,7 +677,7 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 		x->x_loudness = loud / NUMBAND;
 	}
 	
-	if (x->x_scale == Log) {
+	if (x->x_scale == ps_log) {
 		if (x->x_loudness > 0) {
 			x->x_loudness = 10*log10(x->x_loudness/DB_REF);
 		} else {
@@ -1028,65 +789,6 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 
 #ifdef OSC
 	{
-		// do OSC output
-
-		// bark -> if(x->x_scale){bark}else{10 * log10(bark / DB_REF)}
-		// loudness -> x->x_loudness
-		// brightness -> x->x_brightness
-		// noisiness -> x->x_noisiness
-		// peaks ->
-		//	t_peakout *po;
-		//	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
-		//		t_atom at[3];
-		//		atom_setlong(at, i+1);
-		//		atom_setfloat(at+1, po->po_freq);
-		//		atom_setfloat(at+2, po->po_amp);
-		//		outlet_list(x->x_peakout, 0, 3, at);
-		//	}
-		// fundamental frequencies/amplitudes
-		/*
-	if (x->x_npitch > 1) {
-		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
-			t_atom at[3];
-			atom_setlong(at, i+1);
-			atom_setfloat(at+1, ph->h_pitches[x->x_histphase]);
-			atom_setfloat(at+2, ph->h_amps[x->x_histphase]);
-			outlet_list(x->x_pitchout, 0, 3, at);
-   		}
-   	} else {
-		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
-			t_atom at[2];
-			atom_setfloat(at, ph->h_pitches[x->x_histphase]);
-			atom_setfloat(at+1, ph->h_amps[x->x_histphase]);
-			outlet_list(x->x_pitchout, 0, 2, at);
-   		}
-	}   	
-		 */
-
-		// cooked MIDI/Freq pitch
-		/*
-	if (x->x_npitch > 1) {
-		for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
- 			if (ph->h_pitch) {
-				t_atom at[3];
-				atom_setlong(at, i+1);
-				atom_setfloat(at+1, ph->h_pitch);
-				atom_setfloat(at+2, mtof(ph->h_pitch));
-				outlet_list(x->x_noteout, 0, 3, at);
-			}
-	} else {
-		ph = x->x_hist;
- 		if (ph->h_pitch) {
-			t_atom at[2];
-			atom_setfloat(at, ph->h_pitch);
-			atom_setfloat(at+1, mtof(ph->h_pitch));
-			outlet_list(x->x_noteout, 0, 2, at);
-		}
-	}
-		 */
-
-		// attack -> x->x_attackvalue
-
 		OSC_PROFILE_TIMER_START(foo);
 		t_osc_bndl_u *bndl = osc_bundle_u_alloc();
 
@@ -1201,6 +903,16 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 			osc_bundle_u_addMsg(bndl, attack);
 		}
 
+		// timetag
+		double svct = (double)atom_getlong(argv + argc); // this is correct---we decremented argc at the top
+		t_osc_timetag time = osc_timetag_add(x->timetag, osc_timetag_floatToTimetag(svct * (x->vs / fs)));
+		t_osc_msg_u *timetag = osc_message_u_alloc();
+		osc_message_u_setAddress(timetag, "/time");
+		// osc_message_u.c doesn't have an appendTimetag function yet...
+		t_osc_atom_u *tta = osc_atom_u_alloc();
+		osc_atom_u_setTimetag(tta, time);
+		osc_message_u_appendAtom(timetag, tta);
+		osc_bundle_u_addMsg(bndl, timetag);
 
 		long len = 0;
 		char *buf = NULL;
@@ -1654,8 +1366,8 @@ void  analyzer_free(t_analyzer *x)
 
 	if (x->Buf1 != NULL) sysmem_freeptr((char *) x->Buf1);
 	if (x->Buf2 != NULL) sysmem_freeptr((char *) x->Buf2);
-	if (x->BufFFT_in != NULL) sysmem_freeptr((char *) x->BufFFT_in);
-	if (x->BufFFT_out != NULL) sysmem_freeptr((char *) x->BufFFT_out);
+	if (x->BufFFT_in != NULL) fftw_free((char *) x->BufFFT_in);
+	if (x->BufFFT_out != NULL) fftw_free((char *) x->BufFFT_out);
 	if (x->BufPower != NULL) sysmem_freeptr((char *) x->BufPower);
 	if (x->WindFFT != NULL) sysmem_freeptr((char *) x->WindFFT);
 	if (x->peakBuf != NULL) sysmem_freeptr((char *) x->peakBuf);
@@ -1664,24 +1376,40 @@ void  analyzer_free(t_analyzer *x)
 	if (x->BufSizeBark != NULL) sysmem_freeptr((char *) x->BufSizeBark);
 	if (x->x_out != NULL) sysmem_freeptr((char *) x->x_out);
 	if (x->myList != NULL) sysmem_freeptr((char *) x->myList);
-       
+
+	if(x->windows){
+		for(int i = 0; i < windowcount; i++){
+			if(x->windows[i]){
+				sysmem_freeptr(x->windows[i]);
+			}
+		}
+		sysmem_freeptr(x->windows);
+	}
+
+	fftw_destroy_plan(x->fft_plan);
+
+	critical_free(x->lock); 
 }
 
 int main(void)
 {
+	/*
 	post("Analyzer~ object version " VERSION " by Tristan Jehan, Adrian Freed, Matt Wright, and Michael Zbyszynski");
 	post("copyright (c) 2001 Massachusetts Institute of Technology, 2007-8 UC Regents");
 	post("Pitch tracker based on Miller Puckette's fiddle~");
 	post("copyright (c) 1997-1999 Music Department UCSD");
 	post(" ");
+	*/
 
+	version(NULL);
 	for(int i = 0; i < windowcount; i++){
 		window_names_s[i] = gensym(window_names[i]);
 	}
 
 	ps_list = gensym("list");
 	ps_nolist = gensym("nolist");
-
+	ps_linear = gensym("linear");
+	ps_log = gensym("log");
 	ps_FullPacket = gensym("FullPacket");
 
 	analyzer_class = class_new("analyzer~", (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
@@ -1689,10 +1417,6 @@ int main(void)
 	//class_addmethod(analyzer_class, (method)analyzer_dsp, "dsp", A_CANT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_assist, "assist", A_CANT, 0);
-	class_addmethod(analyzer_class, (method)analyzer_log, "log", A_GIMME, 0);
-	class_addmethod(analyzer_class, (method)analyzer_linear, "linear", A_GIMME, 0);
-	class_addmethod(analyzer_class, (method)analyzer_loud, "loud", A_GIMME, 0);
-	class_addmethod(analyzer_class, (method)analyzer_bright, "bright", A_GIMME, 0);
 	class_addmethod(analyzer_class, (method)analyzer_print, "print", 0);
 	class_addmethod(analyzer_class, (method)analyzer_tellmeeverything, "tellmeeverything", 0);
 	class_addmethod(analyzer_class, (method)analyzer_amprange, "amp-range", A_FLOAT, A_FLOAT, 0);
@@ -1703,6 +1427,12 @@ int main(void)
 	
 	class_addmethod(analyzer_class, (method)analyzer_float, "float", A_FLOAT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_int, "int", A_LONG, 0);
+
+	// These now have aliases, but the messages remain for backwards compatibility
+	class_addmethod(analyzer_class, (method)analyzer_log, "log", 0);
+	class_addmethod(analyzer_class, (method)analyzer_linear, "linear", 0);
+
+	// attributes
 
 	CLASS_ATTR_LONG(analyzer_class, "buffersize", 0, t_analyzer, BufSize);
 	CLASS_ATTR_ACCESSORS(analyzer_class, "buffersize", NULL, analyzer_buffersize_set);
@@ -1747,6 +1477,16 @@ int main(void)
 	CLASS_ATTR_LABEL(analyzer_class, "barkformat", 0, "Bark Format");
 	CLASS_ATTR_ENUM(analyzer_class, "barkformat", 0, "list nolist");
 
+	CLASS_ATTR_SYM(analyzer_class, "scale", 0, t_analyzer, x_scale);
+	CLASS_ATTR_LABEL(analyzer_class, "scale", 0, "Scale");
+	CLASS_ATTR_ENUM(analyzer_class, "scale", 0, "log linear");
+
+	CLASS_ATTR_LONG(analyzer_class, "loud", 0, t_analyzer, x_loud);
+	CLASS_ATTR_LABEL(analyzer_class, "loud", 0, "Loudness Type");
+
+	CLASS_ATTR_LONG(analyzer_class, "bright", 0, t_analyzer, x_bright);
+	CLASS_ATTR_LABEL(analyzer_class, "bright", 0, "Brightness Type");
+
 	class_dspinit(analyzer_class);
 	
 	class_register(CLASS_BOX, analyzer_class);
@@ -1762,10 +1502,12 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 		return NULL;
 	}
 
+	critical_new(&x->lock);
+
 	dsp_setup((t_pxobject *)x,1); // one inlet	
 	x->x_Fs = sys_getsr();
 	x->BufWritePos = 0;
-	x->x_scale = Log;
+	x->x_scale = ps_log;
 	x->x_loud = 0;
 	x->x_bright = 0;
 	x->x_loudness = 0.0f;
@@ -1800,6 +1542,12 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	for (i=0; i<HISTORY; i++){
 		x->x_dbs[i] = 0.0f;
 	}
+
+	for(int i = 0; i < windowcount; i++){
+		x->windows[i] = (double *)sysmem_newptr(MAXBUFSIZE * sizeof(double));
+		memset(x->windows[i], '\0', MAXBUFSIZE * sizeof(double));
+	}
+	// the actual windows will be computed when the buffersize setter is called
 
 	t_dictionary *attrs = dictionary_new();
 
@@ -1864,9 +1612,9 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	if (x->BufSize < vs) { 
 		object_error((t_object *)x, "Analyzer~: Buffer size (%d) is smaller than the vector size, %d.  Setting buffer size to the signal vector size.\n", x->BufSize, vs);
 		x->BufSize = vs;
-	} else if (x->BufSize > 65536) {
-		object_error((t_object *)x, "Analyzer~: Maximum FFT size is 65536 samples. Setting buffer size to 65536.\n");
-		x->BufSize = 65536;
+	} else if (x->BufSize > MAXBUFSIZE) {
+		object_error((t_object *)x, "Analyzer~: Maximum FFT size is %d samples. Setting buffer size to %d.\n", MAXBUFSIZE, MAXBUFSIZE);
+		x->BufSize = MAXBUFSIZE;
 	}
 	
 	if (x->FFTSize < x->BufSize) {
@@ -1882,24 +1630,12 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	else if ((x->FFTSize > 2048) && (x->FFTSize < 4096)) x->FFTSize = 4096;
 	else if ((x->FFTSize > 8192) && (x->FFTSize < 16384)) x->FFTSize = 16384;
 	else if ((x->FFTSize > 16384) && (x->FFTSize < 32768)) x->FFTSize = 32768;
-	else if ((x->FFTSize > 32768) && (x->FFTSize < 65536)) x->FFTSize = 65536;
-	else if (x->FFTSize > 65536) {
-		object_error((t_object *)x, "Analyzer~: Maximum FFT size is 65536 samples.  Setting FFT size to 65536.\n");
-		x->FFTSize = 65536;
+	else if ((x->FFTSize > 32768) && (x->FFTSize < MAXBUFSIZE)) x->FFTSize = MAXBUFSIZE;
+	else if (x->FFTSize > MAXBUFSIZE) {
+		object_error((t_object *)x, "Analyzer~: Maximum FFT size is %d samples.  Setting FFT size to %d.\n", MAXBUFSIZE, MAXBUFSIZE);
+		x->FFTSize = MAXBUFSIZE;
 	}
 
-	/*
-	// Overlap case
-	if (x->x_overlap > x->BufSize - vs) {
-	//post("Analyzer~: You can't overlap so much...");
-	object_error((t_object *)x, "Analyzer~: overlap (%d) must be smaller than the buffer size (%d) minus signal vector size (%d). Setting overlap to buffersize - sigvs.\n", x->x_overlap, x->BufSize, vs);
-	x->x_overlap = x->BufSize-vs;
-	} else if (x->x_overlap < 1)
-	x->x_overlap = 0; 
-
-	x->x_hop = x->BufSize - x->x_overlap;
-	x->x_FFTSizeOver2 = x->FFTSize/2;		
-	*/
 	object_post((t_object *)x, "--- Analyzer~ ---");	
 	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
 	object_post((t_object *)x, "	Hop size = %d",x->x_hop);
@@ -1909,12 +1645,11 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	object_post((t_object *)x, "	Number of pitches = %d",x->x_npitch);
 	object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
 	object_post((t_object *)x, "	Number of peaks to output = %d",x->x_npeakout);
-	//x->memFFT = (t_float*) sysmem_newptr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
 
 	// Allocate memory
-	x->Buf1 = (t_atom*) sysmem_newptr(x->BufSize * sizeof(t_atom)); // Careful these are pointers to integers but the content is floats
+	/*
+	x->Buf1 = (t_atom*) sysmem_newptr(x->BufSize * sizeof(t_atom)); 
 	x->Buf2 = (t_atom*) sysmem_newptr(x->BufSize * sizeof(t_atom));
-	//x->BufFFT = (t_float*) sysmem_newptr(x->FFTSize * sizeof(t_float));
 	x->BufFFT_in = (double *)fftw_malloc(sizeof(double) * x->FFTSize);
 	x->BufFFT_out = (double *)fftw_malloc(sizeof(double) * x->FFTSize * 2);
 	memset(x->BufFFT_in, '\0', x->FFTSize * sizeof(double));
@@ -1922,19 +1657,23 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->fft_plan = fftw_plan_dft_r2c_1d(x->FFTSize, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
 	x->BufPower = (double*) sysmem_newptr((x->FFTSize/2) * sizeof(double));
 	x->WindFFT = (double*) sysmem_newptr(x->BufSize * sizeof(double));
-	x->peakBuf = (t_peakout*) sysmem_newptr(x->x_npeakout * sizeof(t_peakout)); // from Fiddle~
-	x->histBuf = (double*) sysmem_newptr((x->FFTSize + BINGUARD) * sizeof(double)); // for Fiddle~
-
-	/*
-	  if (x->x_Fs != DEFAULT_FS) {
-	  object_error((t_object *)x, "Analyzer~: WARNING !!! Object set for 44.1 KHz only");
-	  return 0;
-	  } else {
-	  x->BufBark = (t_float*) sysmem_newptr(2*NUMBAND * sizeof(t_float));
-	  x->BufSizeBark = (long*) sysmem_newptr(NUMBAND * sizeof(long));
-	  }
 	*/
-	
+
+	// + 1 to stick the signal vector count to generate the timetag 
+	x->Buf1 = (t_atom*) sysmem_newptr((MAXBUFSIZE + 1) * sizeof(t_atom)); 
+	x->Buf2 = (t_atom*) sysmem_newptr((MAXBUFSIZE + 1) * sizeof(t_atom));
+
+	x->BufFFT_in = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE);
+	x->BufFFT_out = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE * 2);
+	memset(x->BufFFT_in, '\0', MAXBUFSIZE * sizeof(double));
+	memset(x->BufFFT_out, '\0', MAXBUFSIZE * 2 * sizeof(double));
+	x->fft_plan = fftw_plan_dft_r2c_1d(x->FFTSize, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
+	x->BufPower = (double*) sysmem_newptr((MAXBUFSIZE / 2) * sizeof(double));
+	x->WindFFT = (double*) sysmem_newptr(MAXBUFSIZE * sizeof(double));
+
+	x->peakBuf = (t_peakout*) sysmem_newptr(x->x_npeakout * sizeof(t_peakout)); // from Fiddle~
+	//x->histBuf = (double*) sysmem_newptr((x->FFTSize + BINGUARD) * sizeof(double)); // for Fiddle~
+	x->histBuf = (double*) sysmem_newptr((MAXBUFSIZE + BINGUARD) * sizeof(double)); // for Fiddle~
 	x->BufBark = (double*) sysmem_newptr(2*NUMBAND * sizeof(double));
 	x->BufSizeBark = (long*) sysmem_newptr(NUMBAND * sizeof(long));
 
@@ -1956,15 +1695,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_outloud = floatout((t_analyzer *)x); // one outlet for loudness
 	x->x_noteout = listout((t_analyzer *)x); // one outlet for MIDI & frequency cooked pitch
 
-
-	for(int i = 0; i < windowcount; i++){
-		x->windows[i] = (double *)calloc(x->BufSize, sizeof(double));
-	}
-	for(int j = 0; j < x->BufSize; j++){
-		for(int i = 0; i < windowcount; i++){
-			x->windows[i][j] = window_functions[i](j, x->BufSize);
-		}
-	}
 
 	// More initializations from Fiddle~
 	for (i=0; i<x->x_npeakout; i++)
@@ -1994,32 +1724,18 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 
 	x->x_debug = 0;
 
-	/*
-	float shithole1[1024], shithole2[512];
-	char memc[CMAX * 512 * sizeof(float)];
-	float *mem = (float *)memc;
+	return x;
+}
 
-	fftwf_plan plan = fftwf_plan_dft_r2c_1d(512, shithole1, shithole1, FFTW_MEASURE);
-	for(int i = 0; i < 512; i++){
-		//float r = (float)rand() / (float)RAND_MAX;
-		float val = sin(2 * M_PI * 440 * i / 44100.0);
-		shithole1[i] = val;
-		shithole2[i] = val;
+void analyzer_compute_windows(t_analyzer *x)
+{
+	critical_enter(x->lock);
+	for(int j = 0; j < x->BufSize; j++){
+		for(int i = 0; i < windowcount; i++){
+			x->windows[i][j] = window_functions[i](j, x->BufSize);
+		}
 	}
-	fftwf_execute(plan);
-	fftRealfast(512, shithole2, mem);
-
-	for(int i = 0; i < 512; i++){
-		printf("%f ", shithole1[i]);
-	}
-	printf("\n");
-	printf("\n");
-	for(int i = 0; i < 512; i++){
-		printf("%f ", shithole2[i]);
-	}
-	printf("\n");
-	*/
-	return (x);
+	critical_exit(x->lock);
 }
 
 
@@ -2029,17 +1745,31 @@ t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_at
 	if(!argc){
 		return MAX_ERR_NONE;
 	}
+	long vs = sys_getblksize();
 	double ms2samp = x->x_Fs * 0.001;
+	long n;
 	switch(atom_gettype(argv)){
 	case A_LONG:
-		x->BufSize = atom_getlong(argv); // samples
+		n = atom_getlong(argv); // samples
 		break;
 	case A_FLOAT:
-		x->BufSize = (long)(atom_getfloat(argv) * ms2samp);
+		n = (long)(atom_getfloat(argv) * ms2samp);
 		break;
 	default:
-		x->BufSize = DEFBUFSIZE;
+		n = DEFBUFSIZE;
 	}
+	if(n < vs){
+		object_error((t_object *)x, "Buffer size (%d) is smaller than the vector size (%d).  Setting the buffer size to the signal vector size", n, vs);
+		n = vs;
+	}
+	if(n > MAXBUFSIZE){
+		object_error((t_object *)x, "Maximum buffer size is %d samples.  Setting buffer size to %d.", MAXBUFSIZE, MAXBUFSIZE);
+		n = MAXBUFSIZE;
+	}
+	critical_enter(x->lock);
+	x->BufSize = n;
+	analyzer_compute_windows(x);
+	critical_exit(x->lock);
 	return MAX_ERR_NONE;
 }
 
@@ -2048,18 +1778,31 @@ t_max_err analyzer_hopsize_set(t_analyzer *x, t_object *attr, long argc, t_atom 
 	if(!argc){
 		return MAX_ERR_NONE;
 	}
+	long vs = sys_getblksize();
 	double ms2samp = x->x_Fs * 0.001;
+	long n;
 	switch(atom_gettype(argv)){
 	case A_LONG:
-		x->x_hop = atom_getlong(argv); // samples
+		n = atom_getlong(argv); // samples
 		break;
 	case A_FLOAT:
-		x->x_hop = (long)(atom_getfloat(argv) * ms2samp);
+		n = (long)(atom_getfloat(argv) * ms2samp);
 		break;
 	default:
-		x->x_hop = x->BufSize / 2;
+		n = x->BufSize / 2;
 	}
+	if(n < vs){
+		object_error((t_object *)x, "Hop size (%d) is less than ths signal vector size (%d)\n", n, vs);
+		n = vs;
+	}
+	if(n > MAXBUFSIZE){
+		object_error((t_object *)x, "Maximum hop size is %d samples.  Setting hop size to %d.", MAXBUFSIZE, MAXBUFSIZE);
+		n = MAXBUFSIZE;
+	}
+	critical_enter(x->lock);
+	x->x_hop = n;
 	x->x_overlap = x->BufSize - x->x_hop;
+	critical_exit(x->lock);
 	return MAX_ERR_NONE;
 }
 
@@ -2068,17 +1811,41 @@ t_max_err analyzer_fftsize_set(t_analyzer *x, t_object *attr, long argc, t_atom 
 	if(!argc){
 		return MAX_ERR_NONE;
 	}
+	long vs = sys_getblksize();
 	double ms2samp = x->x_Fs * 0.001;
+	long n;
 	switch(atom_gettype(argv)){
 	case A_LONG:
-		x->FFTSize = atom_getlong(argv); // samples
+		n = atom_getlong(argv); // samples
 		break;
 	case A_FLOAT:
-		x->FFTSize = (long)(atom_getfloat(argv) * ms2samp);
+		n = (long)(atom_getfloat(argv) * ms2samp);
 		break;
 	default:
-		x->FFTSize = x->BufSize;
+		n = x->BufSize;
 	}
+	if(n < vs){
+		object_error((t_object *)x, "FFT size (%d) is less than ths signal vector size (%d)\n", n, vs);
+		n = vs;
+	}
+	if(n > MAXBUFSIZE){
+		object_error((t_object *)x, "Maximum FFT size is %d samples.  Setting FFT size to %d.", MAXBUFSIZE, MAXBUFSIZE);
+		n = MAXBUFSIZE;
+	}
+	if(x->BufFFT_in && x->BufFFT_out){
+		// might be calling this from the new instance routine in which case these buffers may not
+		// be allocated yet.  the new instance routine will set up the FFT plan
+		fftw_plan p = fftw_plan_dft_r2c_1d(n, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
+		critical_enter(x->lock);
+		x->FFTSize = n;
+		x->fft_plan = p;
+		critical_exit(x->lock);
+	}else{
+		critical_enter(x->lock);
+		x->FFTSize = n;
+		critical_exit(x->lock);
+	}
+
 	return MAX_ERR_NONE;
 }
 
@@ -2139,12 +1906,17 @@ t_max_err analyzer_numpitches_set(t_analyzer *x, t_object *attr, long argc, t_at
 
 t_max_err analyzer_numpeakstofind_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
 {
-	return analyzer_handle_attr_type2(x, argc, argv, &(x->x_npeakanal), "# of pitches to analyze", MAXNPEAK, DEFNPEAKANAL);
+	t_max_err e = analyzer_handle_attr_type2(x, argc, argv, &(x->x_npeakanal), "# of pitches to analyze", MAXNPEAK, DEFNPEAKANAL);
+	return e;
 }
 
 t_max_err analyzer_numpeakstooutput_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
 {
-	return analyzer_handle_attr_type2(x, argc, argv, &(x->x_npeakout), "# of pitches to output", MAXNPEAK, DEFNPEAKOUT);
+	t_max_err e = analyzer_handle_attr_type2(x, argc, argv, &(x->x_npeakout), "# of pitches to output", MAXNPEAK, DEFNPEAKOUT);
+	if(x->x_npeakout > x->x_npeakanal){
+		object_error((t_object *)x, "# of peaks to output (%d) must not be larger than the # of peaks to analyze (%d).  Setting the former to the latter.", x->x_npeakout, x->x_npeakanal);
+		x->x_npeakout = x->x_npeakanal;
+	}
 }
 
 t_max_err analyzer_barkformat_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
