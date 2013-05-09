@@ -595,7 +595,11 @@ void rbfi_move(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv)
 	char label[128];
 	while(p){
 		if(x->enable_multiple_crosshairs){
-			sprintf(label, "/%d%s", n, p->label->s_name);
+			if(*(p->label->s_name) == '/'){
+				sprintf(label, "/%d%s", n, p->label->s_name);
+			}else{
+				sprintf(label, "/%d/%s", n, p->label->s_name);
+			}
 			atom_setsym(out, gensym(label));
 		}else{
 			atom_setsym(out, p->label);
@@ -712,7 +716,11 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 			while(p){
 				if(x->enable_multiple_crosshairs){
 					char buf[128];
-					sprintf(buf, "/%d%s", 0, p->label->s_name);
+					if(*(p->label->s_name) == '/'){
+						sprintf(buf, "/%d%s", 0, p->label->s_name);
+					}else{
+						sprintf(buf, "/%d/%s", 0, p->label->s_name);
+					}
 					atom_setsym(out, gensym(buf));
 				}else{
 					atom_setsym(out, p->label);
@@ -799,7 +807,11 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 			while(p){
 				if(x->enable_multiple_crosshairs){
 					char buf[128];
-					sprintf(buf, "/%d%s", 0, p->label->s_name);
+					if(*(p->label->s_name) == '/'){
+						sprintf(buf, "/%d%s", 0, p->label->s_name);
+					}else{
+						sprintf(buf, "/%d/%s", 0, p->label->s_name);
+					}
 					atom_setsym(out, gensym(buf));
 				}else{
 					atom_setsym(out, p->label);

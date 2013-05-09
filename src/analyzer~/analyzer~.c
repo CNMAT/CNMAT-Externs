@@ -103,8 +103,8 @@
 #define DB_REF 96
 #define SFM_MAX 60
 //#define TWOPI 6.28318530717952646f
-#define FOURPI 12.56637061435917292f
-#define THREEPI 9.424777960769379f
+#define FOURPI 12.56637061435917292
+#define THREEPI 9.424777960769379
 #define DEFBUFSIZE 1024		// Default signal buffer size
 #define MAXPADDING 16		// Maximum FFT zero padding (in # of FFT sizes)
 #define MAXDELAY 512		// Maximum initial delay (in # of signal vectors)
@@ -125,26 +125,24 @@
 #define MAXNPEAK 100		// Maximum number of peaks
 #define MINBIN 3			// Minimum FFT bin
 #define BINPEROCT 48		// bins per octave
-#define MINBW 0.03f			// consider BW >= 0.03 FFT bins
-#define GLISS 0.7f			// Pitch glissando
-#define BINAMPCOEFF 30.0f	// Don't know how to describe this
+#define MINBW 0.03			// consider BW >= 0.03 FFT bins
+#define GLISS 0.7			// Pitch glissando
+#define BINAMPCOEFF 30.0	// Don't know how to describe this
 #define DBFUDGE 30.8f		// Don't know how to describe this
-#define BPEROOVERLOG2 69.24936196f // BINSPEROCT/log(2)
-#define FACTORTOBINS 275.00292191f // 4/(pow(2.0,1/48.0)-1)
+#define BPEROOVERLOG2 69.24936196 // BINSPEROCT/log(2)
+#define FACTORTOBINS 275.00292191 // 4/(pow(2.0,1/48.0)-1)
 #define BINGUARD 10			// extra bins to throw in front
-#define PARTIALDEVIANCE 0.023f // acceptable partial detuning in %
-#define LOGTODB 4.34294481903f // 10/log(10)
-#define KNOCKTHRESH 4e5f 	// don't know how to describe this
+#define PARTIALDEVIANCE 0.023 // acceptable partial detuning in %
+#define LOGTODB 4.34294481903 // 10/log(10)
+#define KNOCKTHRESH 4e5 	// don't know how to describe this
 #define MAXHIST 3		    // find N hottest peaks in histogram
-#define POWERTHRES 1e-9f	// Total power minimum threshold
-#define FIDDLEDB_REF 100.0f	// Fiddle dB Reference
+#define POWERTHRES 1e-9	// Total power minimum threshold
+#define FIDDLEDB_REF 100.0	// Fiddle dB Reference
 
 #define MINF(A,B) ((A < B) ? A : B)
 #define ftom pitch_ftom
 #define mtof pitch_mtof
-#define flog log
-#define fexp exp
-#define fsqrt sqrt
+
 
 static double pitch_partialonset[] = {
 	0, 48,76.0782000346154967102, 96, 111.45254855459339269887, 124.07820003461549671089,
@@ -324,7 +322,7 @@ typedef struct _analyzer {
 t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_blackman62, *ps_blackman70, *ps_blackman74, *ps_blackman92, *ps_list, *ps_nolist, *ps_FullPacket, *ps_linear, *ps_log;
 
 void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
-long *analyzer_perform(long *w);
+t_int *analyzer_perform(t_int *w);
 void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void analyzer_dsp(t_analyzer *x, t_signal **sp, short *connect);
 void analyzer_log(t_analyzer *x);
@@ -343,8 +341,8 @@ void analyzer_npartial(t_analyzer *x, t_floatarg npartial);
 void *analyzer_new(t_symbol *s, short argc, t_atom *argv);
 void analyzer_free(t_analyzer *x);
 void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv);
-t_float pitch_mtof(t_float f);
-t_float pitch_ftom(t_float f);
+double pitch_mtof(double f);
+double pitch_ftom(double f);
 long pitch_ilog2(long n);
 void pitch_getit(t_analyzer *x); // modified fiddle pitch tracker function
 void analyzer_debug(t_analyzer *x, long n);
@@ -405,6 +403,23 @@ void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numin
 	x->svctr++;
 }
 
+t_int *analyzer_perform(t_int *w)
+{
+	t_analyzer *x = (t_analyzer *)w[3];
+	if(x->x_obj.z_disabled){
+		return w + 4;
+	}
+	long n = w[2];
+	t_float *vec = (t_float *)w[1];
+	double cpy[n];
+	for(int i = 0; i < n; i++){
+		cpy[i] = (double)(vec[i]);
+	}
+	double *cpyptr = (double *)cpy;
+	analyzer_perform64(x, NULL, &cpyptr, 1, NULL, 0, n, 0, NULL);
+	return w + 4;
+}
+
 void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
 	int vs = x->vs = sys_getblksize();
@@ -434,6 +449,40 @@ void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double sampler
 
 	if(count[0]){
 		object_method(dsp64, gensym("dsp_add64"), x, analyzer_perform64, 0, NULL); 
+	}
+}
+
+void analyzer_dsp(t_analyzer *x, t_signal **sp, short *count)
+{
+	int vs = x->vs = sys_getblksize();
+	x->x_Fs = sp[0]->s_sr; // store sampling rate
+
+	// Initializing the delay counter
+	x->x_counter = x->x_delay;
+
+	// Initialize the vars used to generate timetags
+	x->timetag = 0;
+	x->svctr = 0;
+
+	// Overlap case
+	if (x->x_overlap > x->BufSize - vs) {
+		object_error((t_object *)x, "Overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
+		object_error((t_object *)x, "Will be left out of the dsp chain!\n");
+		return;
+	} else if (x->x_overlap < 1)
+		x->x_overlap = 0; 
+
+	if(vs > x->BufSize){
+		object_error((t_object *)x, "Sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
+		object_error((t_object *)x, "Will be left out of the dsp chain!\n");
+		return;
+	}
+
+	x->x_hop = x->BufSize - x->x_overlap;
+	x->x_FFTSizeOver2 = x->FFTSize/2;		
+
+	if(count[0]){
+		dsp_add(analyzer_perform, 3, sp[0]->s_vec, sp[0]->s_n, x);
 	}
 }
 
@@ -496,13 +545,6 @@ void analyzer_assist(t_analyzer *x, void *b, long m, long a, char *s)
 		}
 	}
 }
-
-/*
-  void analyzer_assist(t_analyzer *x, void *b, long m, long a, char *s) {
-  assist_string(RES_ID,m,a,1,2,s);
-  }
-*/
-
 
 void analyzer_print(t_analyzer *x) {
 	object_post((t_object *)x, "amp-range %.2f %.2f",  x->x_amplo, x->x_amphi);
@@ -709,7 +751,7 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 	
 		// Absolute
 		for (i=1; i<x->x_FFTSizeOver2; i++) 
-			x->BufPower[i] = sqrtf(x->BufPower[i]);
+			x->BufPower[i] = sqrt(x->BufPower[i]);
 
 		// Brightness
 		for (i=1; i<x->x_FFTSizeOver2; i++) {
@@ -935,12 +977,12 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 }	
 
 // Convert from MIDI to Hz and Hz to MIDI
-t_float pitch_mtof(t_float f) {
-	return (8.17579891564f * exp(.0577622650f * f));
+double pitch_mtof(double f) {
+	return (8.17579891564 * exp(.0577622650 * f));
 }
 
-t_float pitch_ftom(t_float f) {
-	return (17.3123405046f * log(.12231220585f * f));
+double pitch_ftom(double f) {
+	return (17.3123405046 * log(.12231220585 * f));
 }
 
 long pitch_ilog2(long n) {
@@ -950,7 +992,7 @@ long pitch_ilog2(long n) {
 		n >>= 1;
 		ret++;
 	}
-	return (ret);
+	return ret;
 }
 
 // This is the actual Fiddle~ code
@@ -960,7 +1002,7 @@ void pitch_getit(t_analyzer *x)
 	t_peak *pk1; // peaks found
 	t_peakout *pk2; // peaks to output
 	t_histopeak *hp1;
-	double power_spec = 0.0f, total_power = 0.0f, total_loudness = 0.0f, total_db = 0.0f;
+	double power_spec = 0.0, total_power = 0.0, total_loudness = 0.0, total_db = 0.0;
 	double *fp1, *fp2;
 	double *spec = x->BufFFT_out, *powSpec = x->BufPower, threshold, mult;
 	long n = x->FFTSize/2;
@@ -985,14 +1027,14 @@ void pitch_getit(t_analyzer *x)
 	for (i=0; i<n; i++)
 		power_spec += powSpec[i];
 			    
-	total_power = 4.0f * power_spec; // Compensate for fiddle~ power estimation (difference of 6 dB)
+	total_power = 4.0 * power_spec; // Compensate for fiddle~ power estimation (difference of 6 dB)
 
 	if (total_power > POWERTHRES) {
-		total_db = (FIDDLEDB_REF-DBFUDGE) + LOGTODB*flog(total_power/n); // dB power estimation of fiddle~
-		total_loudness = fsqrt(fsqrt(power_spec)); // Use the actual real estimation rather than fiddle~'s
-		if (total_db < 0) total_db = 0.0f;
+		total_db = (FIDDLEDB_REF-DBFUDGE) + LOGTODB*log(total_power/n); // dB power estimation of fiddle~
+		total_loudness = sqrt(sqrt(power_spec)); // Use the actual real estimation rather than fiddle~'s
+		if (total_db < 0) total_db = 0.0;
 	} else {
-		total_db = total_loudness = 0.0f;
+		total_db = total_loudness = 0.0;
 	}
     
 	// Store new db in history vector
@@ -1020,17 +1062,17 @@ void pitch_getit(t_analyzer *x)
 
 		// Use an informal phase vocoder to estimate the frequency
 		pfreq = ((fp1[-4] - fp1[4]) * (2.0f * fp1[0] - fp1[4] - fp1[-4]) +
-			 (fp1[-3] - fp1[5]) * (2.0f * fp1[1] - fp1[5] - fp1[-3])) / (2.0f * height);
+			 (fp1[-3] - fp1[5]) * (2.0f * fp1[1] - fp1[5] - fp1[-3])) / (2.0 * height);
 		    
 		// Do this for the two adjacent bins too
 		f1 = ((fp1[-6] - fp1[2]) * (2.0f * fp1[-2] - fp1[2] - fp1[-6]) +
-		      (fp1[-5] - fp1[3]) * (2.0f * fp1[-1] - fp1[3] - fp1[-5])) / (2.0f * h1) - 1;
+		      (fp1[-5] - fp1[3]) * (2.0f * fp1[-1] - fp1[3] - fp1[-5])) / (2.0 * h1) - 1;
 		f2 = ((fp1[-2] - fp1[6]) * (2.0f * fp1[2] - fp1[6] - fp1[-2]) +
-		      (fp1[-1] - fp1[7]) * (2.0f * fp1[3] - fp1[7] - fp1[-1])) / (2.0f * h2) + 1;
+		      (fp1[-1] - fp1[7]) * (2.0f * fp1[3] - fp1[7] - fp1[-1])) / (2.0 * h2) + 1;
 
 		// get sample mean and variance of the three
-		m = 0.333333f * (pfreq + f1 + f2);
-		var = 0.5f * ((pfreq-m)*(pfreq-m) + (f1-m)*(f1-m) + (f2-m)*(f2-m));
+		m = 0.333333 * (pfreq + f1 + f2);
+		var = 0.5 * ((pfreq-m)*(pfreq-m) + (f1-m)*(f1-m) + (f2-m)*(f2-m));
 
 		totalfreq = i + m;
 		
@@ -1059,13 +1101,13 @@ void pitch_getit(t_analyzer *x)
 
 		if ((var * total_power) > threshold || (var < 1e-30)) continue;
 
-		stdev = fsqrt(var);
+		stdev = sqrt(var);
 		if (totalfreq < 4) totalfreq = 4;
 		
 		// Store the peak info in the list of peaks
 		pk1->p_width = stdev;
 		pk1->p_pow = height;
-		pk1->p_loudness = fsqrt(fsqrt(height));
+		pk1->p_loudness = sqrt(sqrt(height));
 		pk1->p_fp = fp1;
 		pk1->p_freq = totalfreq;
 	
@@ -1080,7 +1122,7 @@ void pitch_getit(t_analyzer *x)
 		if (i>=x->x_npeakout) break;
     	
 		pk2->po_freq = hzperbin * pk1->p_freq;
-		pk2->po_amp = (2.f/(double)n) * loudness * loudness * coeff;
+		pk2->po_amp = (2./(double)n) * loudness * loudness * coeff;
 	}
         
 	// in case npeak < x->x_npeakout
@@ -1093,27 +1135,27 @@ void pitch_getit(t_analyzer *x)
 	if (npeak > x->x_npeakanal) npeak = x->x_npeakanal; // max # peaks to analyze
         
 	// Initialize histogram buffer to 0
-	for (i=0, fp1=histogram; i<maxbin; i++) *fp1++ = 0.0f;
+	for (i=0, fp1=histogram; i<maxbin; i++) *fp1++ = 0.0;
 
 	for (i=0, pk1=x->x_peaklist; i<npeak; i++, pk1++) {
     
-		double pit = BPEROOVERLOG2 * flog(pk1->p_freq) - 96.0f;
+		double pit = BPEROOVERLOG2 * log(pk1->p_freq) - 96.0;
 		double binbandwidth = FACTORTOBINS * pk1->p_width/pk1->p_freq;
 		double putbandwidth = (binbandwidth < 2 ? 2 : binbandwidth);
-		double weightbandwidth = (binbandwidth < 1.0f ? 1.0f : binbandwidth);
-		double weightamp = 4.0f * pk1->p_loudness / total_loudness;
+		double weightbandwidth = (binbandwidth < 1.0 ? 1.0 : binbandwidth);
+		double weightamp = 4.0 * pk1->p_loudness / total_loudness;
 
 		for (j=0, fp2=pitch_partialonset; j<NPARTIALONSET; j++, fp2++) {
 			double bin = pit - *fp2;
 			if (bin<maxbin) {
 				double para, pphase, score = BINAMPCOEFF * weightamp / ((j+x->x_npartial) * weightbandwidth);
-				long firstbin = bin + 0.5f - 0.5f * putbandwidth;
-				long lastbin = bin + 0.5f + 0.5f * putbandwidth;
+				long firstbin = bin + 0.5 - 0.5 * putbandwidth;
+				long lastbin = bin + 0.5 + 0.5 * putbandwidth;
 				long ibw = lastbin - firstbin;
 				if (firstbin < -BINGUARD) break;
-				para = 1.0f / (putbandwidth * putbandwidth);
-				for (k=0, fp1=histogram+firstbin, pphase=firstbin-bin; k<=ibw; k++, fp1++, pphase+=1.0f)
-					*fp1 += score * (1.0f - para * pphase * pphase);
+				para = 1.0 / (putbandwidth * putbandwidth);
+				for (k=0, fp1=histogram+firstbin, pphase=firstbin-bin; k<=ibw; k++, fp1++, pphase+=1.0)
+					*fp1 += score * (1.0 - para * pphase * pphase);
 			}
 		} // end for
 	} // end for
@@ -1178,17 +1220,17 @@ void pitch_getit(t_analyzer *x)
 		double cumpow=0, cumstrength=0, freqnum=0, freqden=0;
 		long npartials=0,  nbelow8=0;
 		// guessed-at frequency in bins
-		double putfreq = fexp((1.0f / BPEROOVERLOG2) * (x->x_histvec[i].h_index + 96.0f));
+		double putfreq = exp((1.0 / BPEROOVERLOG2) * (x->x_histvec[i].h_index + 96.0));
 	
 		for (j=0; j<npeak; j++) {
 			double fpnum = x->x_peaklist[j].p_freq/putfreq;
-			long pnum = fpnum + 0.5f;
+			long pnum = fpnum + 0.5;
 			double fipnum = pnum;
 			double deviation;
 	    
 			if ((pnum>16) || (pnum<1)) continue;
 	    
-			deviation = 1.0f - fpnum/fipnum;
+			deviation = 1.0 - fpnum/fipnum;
 	   		if ((deviation > -PARTIALDEVIANCE) && (deviation < PARTIALDEVIANCE)) {
 				// we figure this is a partial since it's within 1/4 of
 				// a halftone of a multiple of the putative frequency.
@@ -1196,15 +1238,15 @@ void pitch_getit(t_analyzer *x)
 				npartials++;
 				if (pnum<8) nbelow8++;
 				cumpow += x->x_peaklist[j].p_pow;
-				cumstrength += fsqrt(fsqrt(x->x_peaklist[j].p_pow));
+				cumstrength += sqrt(sqrt(x->x_peaklist[j].p_pow));
 				stdev = (x->x_peaklist[j].p_width > MINBW ? x->x_peaklist[j].p_width : MINBW);
-				weight = 1.0f / ((stdev*fipnum) * (stdev*fipnum));
+				weight = 1.0 / ((stdev*fipnum) * (stdev*fipnum));
 				freqden += weight;
 				freqnum += weight * x->x_peaklist[j].p_freq/fipnum;		
 			} // end if
 		} // end for
 	
-		if (((nbelow8<4) || (npartials<DEFNPARTIAL)) && (cumpow < (0.01f * total_power))) {
+		if (((nbelow8<4) || (npartials<DEFNPARTIAL)) && (cumpow < (0.01 * total_power))) {
 			x->x_histvec[i].h_value = 0;
 		} else {
 	  	  	double pitchpow = (cumstrength * cumstrength * cumstrength * cumstrength);
@@ -1216,7 +1258,7 @@ void pitch_getit(t_analyzer *x)
 			} else {
 				// we passed all tests... save the values we got
 				x->x_histvec[i].h_pitch = ftom(hzperbin * freqnum/freqden);
-				x->x_histvec[i].h_loud = (FIDDLEDB_REF-DBFUDGE) + LOGTODB*flog(pitchpow*coeff/n);
+				x->x_histvec[i].h_loud = (FIDDLEDB_REF-DBFUDGE) + LOGTODB*log(pitchpow*coeff/n);
 			}	
 		} // end else
 	} // end for
@@ -1232,7 +1274,7 @@ void pitch_getit(t_analyzer *x)
 		double thispitch = phist->h_pitches[oldphase];
 		phist->h_pitch = 0;	    // no output, thanks...
 		phist->h_wherefrom = 0;
-		if (thispitch == 0.0f) continue;
+		if (thispitch == 0.0) continue;
 		for (j=0, hp1=x->x_histvec; j<npitch; j++, hp1++)
 			if ((hp1->h_value > 0) && (hp1->h_pitch > thispitch - GLISS) && (hp1->h_pitch < thispitch + GLISS)) {
 				phist->h_wherefrom = hp1;
@@ -1414,7 +1456,7 @@ int main(void)
 
 	analyzer_class = class_new("analyzer~", (method)analyzer_new, (method)analyzer_free, (short)sizeof(t_analyzer), 0L, A_GIMME, 0);
 		
-	//class_addmethod(analyzer_class, (method)analyzer_dsp, "dsp", A_CANT, 0);
+	class_addmethod(analyzer_class, (method)analyzer_dsp, "dsp", A_CANT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_assist, "assist", A_CANT, 0);
 	class_addmethod(analyzer_class, (method)analyzer_print, "print", 0);
@@ -1496,7 +1538,7 @@ int main(void)
 void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	long i, j, band=0, oldband=0, sizeband=0;
 	long vs = sys_getblksize(); // get vector size
-	double freq = 0.0f, oldfreq = 0.0f;
+	double freq = 0.0, oldfreq = 0.0;
 	t_analyzer *x = (t_analyzer *)object_alloc(analyzer_class);
 	if(!x){
 		return NULL;
@@ -1510,9 +1552,9 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_scale = ps_log;
 	x->x_loud = 0;
 	x->x_bright = 0;
-	x->x_loudness = 0.0f;
-	x->x_brightness = 0.0f;
-	x->x_noisiness = 0.0f;
+	x->x_loudness = 0.0;
+	x->x_brightness = 0.0;
+	x->x_noisiness = 0.0;
 
 	// From fiddle~
 	x->x_histphase = 0;
@@ -1531,16 +1573,16 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 
 	// More initializations from Fiddle~
 	for (i=0; i<MAXNPITCH; i++) {
-		x->x_hist[i].h_pitch = x->x_hist[i].h_noted = 0.0f;
+		x->x_hist[i].h_pitch = x->x_hist[i].h_noted = 0.0;
 		x->x_hist[i].h_age = 0;
 		x->x_hist[i].h_wherefrom = NULL;
 		
 		for (j=0; j<HISTORY; j++)
-			x->x_hist[i].h_amps[j] = x->x_hist[i].h_pitches[j] = 0.0f;
+			x->x_hist[i].h_amps[j] = x->x_hist[i].h_pitches[j] = 0.0;
 	}
         
 	for (i=0; i<HISTORY; i++){
-		x->x_dbs[i] = 0.0f;
+		x->x_dbs[i] = 0.0;
 	}
 
 	for(int i = 0; i < windowcount; i++){
@@ -1698,10 +1740,10 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 
 	// More initializations from Fiddle~
 	for (i=0; i<x->x_npeakout; i++)
-		x->peakBuf[i].po_freq = x->peakBuf[i].po_amp = 0.0f;
+		x->peakBuf[i].po_freq = x->peakBuf[i].po_amp = 0.0;
 	
 	j = 1;	
-	x->BufBark[0] = 0.0f;
+	x->BufBark[0] = 0.0;
 
 	// Compute and store Analyzer scale	
 	for (i=0; i<x->FFTSize/2; i++) {
