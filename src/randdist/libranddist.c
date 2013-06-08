@@ -266,7 +266,6 @@ int makeseed(void){
 	}
     	random_nextseed = random_nextseed * 435898247 + 938284287;
 	printf("r = %u\n", rand());
-	return rand();
     	return (random_nextseed & 0x7fffffff);
 }
 
