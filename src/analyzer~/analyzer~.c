@@ -1677,7 +1677,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 		object_error((t_object *)x, "Analyzer~: Maximum FFT size is %d samples.  Setting FFT size to %d.\n", MAXBUFSIZE, MAXBUFSIZE);
 		x->FFTSize = MAXBUFSIZE;
 	}
-
+	/*
 	object_post((t_object *)x, "--- Analyzer~ ---");	
 	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
 	object_post((t_object *)x, "	Hop size = %d",x->x_hop);
@@ -1687,7 +1687,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	object_post((t_object *)x, "	Number of pitches = %d",x->x_npitch);
 	object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
 	object_post((t_object *)x, "	Number of peaks to output = %d",x->x_npeakout);
-
+	*/
 	// Allocate memory
 	/*
 	x->Buf1 = (t_atom*) sysmem_newptr(x->BufSize * sizeof(t_atom)); 
