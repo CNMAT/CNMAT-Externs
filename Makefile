@@ -42,7 +42,7 @@ all: MACOBJECTS $(JAVAOBJECTS)
 MACOBJECTS: $(CURRENT_VERSION_FILE) 
 	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
 
-SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave firbank~ gridpanel interleave lcm list-accum list-interpolate migrator oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay cnmatrix~ waveguide~
+SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate migrator oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay cnmatrix~ waveguide~
 SIMPLEOBJECTS = $(foreach f, $(SIMPLEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
 MULTIPLEFILEOBJECTNAMES = harmonics~ randdist
@@ -67,7 +67,7 @@ SDIFOBJECTS = $(foreach f, $(SDIFOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 SDIFDEPSNAMES = sdif-buf sdif-mem sdif-sinusoids sdif-types sdif-util sdif sdif-interp-implem sdif-interp
 SDIFDEPS = $(foreach f, $(SDIFDEPSNAMES), $(BUILDDIR)/$(f).o)
 
-win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(JEHANOBJECTS)
+win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(JEHANOBJECTS) $(FFTWOBJECTS) 
 
 # Single file dependencies--just compile and stick the .o files in the build dir
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
