@@ -957,6 +957,8 @@
 		5219625416E6D01700EA7DDF /* test_OSC_timeTag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_OSC_timeTag.c; sourceTree = "<group>"; };
 		524981C016A65BCD0086F4BD /* harmonics~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "harmonics~.maxhelp"; sourceTree = "<group>"; };
 		524981C216A65BEE0086F4BD /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxhelp; sourceTree = "<group>"; };
+		529DD9C417A2466C00E1F789 /* basicresonators~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "basicresonators~.c"; sourceTree = "<group>"; };
+		529DD9C517A2466C00E1F789 /* basicresonators~.help.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "basicresonators~.help.pat"; sourceTree = "<group>"; };
 		52ADE2361733042E00074C0C /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../Downloads/MaxSDK-6.1.0/c74support/msp-includes/x64/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		52ADE24B1733046200074C0C /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "../../../../Downloads/MaxSDK-6.1.0/c74support/jit-includes/x64/JitterAPI.framework"; sourceTree = "<group>"; };
 		52B1557D16A8E7FA000FC2E4 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fft.c; path = "lib/Jehan-lib/fft.c"; sourceTree = SOURCE_ROOT; };
@@ -1989,6 +1991,16 @@
 			path = "../CNMAT-OSC/libOSC";
 			sourceTree = "<group>";
 		};
+		529DD9C317A2466C00E1F789 /* basicresonators~ */ = {
+			isa = PBXGroup;
+			children = (
+				529DD9C417A2466C00E1F789 /* basicresonators~.c */,
+				529DD9C517A2466C00E1F789 /* basicresonators~.help.pat */,
+			);
+			name = "basicresonators~";
+			path = "src/basicresonators~";
+			sourceTree = "<group>";
+		};
 		52DE949415F142570097B3E8 /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -2602,6 +2614,7 @@
 				52F10AC715F071DE008FC371 /* 2threshattack~ */,
 				52E4476215F1888200C91B67 /* accumulate~ */,
 				52E4477515F188D100C91B67 /* analyzer~ */,
+				529DD9C317A2466C00E1F789 /* basicresonators~ */,
 				52E4477C15F188D100C91B67 /* bdist */,
 				52E4478015F188D100C91B67 /* bench */,
 				52E4478515F188D100C91B67 /* bench~ */,
