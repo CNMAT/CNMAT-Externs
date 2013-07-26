@@ -205,7 +205,7 @@ t_int *diresonators2_perform(t_int *w)
 		fout[j] = out[j]; 
 	}
 
-    ifdef SQUASH_DENORMALS
+#ifdef SQUASH_DENORMALS
 #if defined( __i386__ ) || defined( __x86_64__ )
 	_mm_setcsr(oldMXCSR);
 #endif
@@ -236,7 +236,7 @@ void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 	resonators_clear(x);
 	
 	{
-		if (x->b_connected = connect[1])
+		if ((x->b_connected = connect[1]))
 		{
 				dsp_add(diresonators_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,  sp[0]->s_n);
 			}
@@ -326,10 +326,9 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 				f *= 2.0*3.14159265358979323*srbar;
 				ts = g;
 					ts *= sin(f);
-				tb1[i] = r*cos(f)*2.0;
-					ta1[i] = ts *  (1.0-r);   //this is one of the relavent L norms
-				tb2[i] =  -r*r;
-				 dp[i].a1prime = ts/tb2[i];  
+				dp[i].a1 = ts *  (1.0-r);   //this is one of the relavent L norms
+				dp[i].b2 =  -r*r;
+                dp[i].a1prime = ts/dp[i].b2;
 					//this is the other norm that establishes the impulse response of the right amplitude (scaled 
 					// so that it can be summed into the state variable outside the perform routine 
 			}
@@ -340,9 +339,6 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 
 	for(i=0;i<nres;++i)
 	{
-			dp[i].b1 = tb1[i];
-			 dp[i].a1 = ta1[i];
-			 dp[i].b2 =  tb2[i];
 			if(i>=x->nres) 	/* If there are now more resonances than there were: */ 
 
 			{
@@ -421,7 +417,7 @@ void resonators_free(t_resonators *x) {
   sysmem_freeptr(x->dbase);
 }
 
-void main(void) {
+int main(void) {
 	resonators_class = class_new("basicresonators~", (method) resonators_new,
                                  (method) resonators_free, (short)sizeof(t_resonators),
                                  0L, A_GIMME, 0);
