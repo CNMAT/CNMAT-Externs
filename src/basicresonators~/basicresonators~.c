@@ -14,6 +14,7 @@ VERSION 1.0: first release
 	
 */
 #include "ext.h"
+#include "ext_obex.h"
 
 #include "z_dsp.h"
 #include <math.h>
@@ -282,15 +283,15 @@ void resonators_bang(t_resonators *x)
 
 //	output filter state and coefficients to the second outlet
 // should we output the sample rate or normalize the coefficients?
-		SETFLOAT(&filterstate[0], x->samplerate);
+		atom_setfloat(&filterstate[0], x->samplerate);
 
 	for(i=0;i<x->nres;++i)
 	{
-		SETFLOAT(&filterstate[1+i*5+0], x->dbase[i].out1);
-		SETFLOAT(&filterstate[1+i*5+1], x->dbase[i].out2);
-		SETFLOAT(&filterstate[1+i*5+2], x->dbase[i].a1);
-		SETFLOAT(&filterstate[1+i*5+3], x->dbase[i].b1); // some people think this should be negative
-		SETFLOAT(&filterstate[1+i*5+4],x->dbase[i].b2);// and this
+		atom_setfloat(&filterstate[1+i*5+0], x->dbase[i].out1);
+		atom_setfloat(&filterstate[1+i*5+1], x->dbase[i].out2);
+		atom_setfloat(&filterstate[1+i*5+2], x->dbase[i].a1);
+		atom_setfloat(&filterstate[1+i*5+3], x->dbase[i].b1); // some people think this should be negative
+		atom_setfloat(&filterstate[1+i*5+4],x->dbase[i].b2);// and this
 	}
 	   outlet_list(x->outlet1, 0L, 1+i*5, filterstate);
 

@@ -183,6 +183,15 @@
 		5219625616E6D09700EA7DDF /* OSC-timetag.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219625116E6D01700EA7DDF /* OSC-timetag.c */; };
 		529D6EF017334BE1005FD64C /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		529D6EF117334BE1005FD64C /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
+		529DD9CA17A2472A00E1F789 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		529DD9CB17A2472A00E1F789 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
+		529DD9CC17A2472A00E1F789 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
+		529DD9CE17A2472A00E1F789 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		529DD9CF17A2472A00E1F789 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		529DD9D017A2472A00E1F789 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		529DD9D117A2472A00E1F789 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		529DD9D217A2472A00E1F789 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
+		529DD9D817A247B400E1F789 /* basicresonators~.c in Sources */ = {isa = PBXBuildFile; fileRef = 529DD9C417A2466C00E1F789 /* basicresonators~.c */; };
 		52ADE2371733042E00074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		52ADE2381733042E00074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		52ADE2391733042E00074C0C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
@@ -958,7 +967,8 @@
 		524981C016A65BCD0086F4BD /* harmonics~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "harmonics~.maxhelp"; sourceTree = "<group>"; };
 		524981C216A65BEE0086F4BD /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxhelp; sourceTree = "<group>"; };
 		529DD9C417A2466C00E1F789 /* basicresonators~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "basicresonators~.c"; sourceTree = "<group>"; };
-		529DD9C517A2466C00E1F789 /* basicresonators~.help.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "basicresonators~.help.pat"; sourceTree = "<group>"; };
+		529DD9C617A2471D00E1F789 /* basicresonators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "basicresonators~.maxhelp"; sourceTree = "<group>"; };
+		529DD9D717A2472A00E1F789 /* basicresonators~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "basicresonators~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52ADE2361733042E00074C0C /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../Downloads/MaxSDK-6.1.0/c74support/msp-includes/x64/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		52ADE24B1733046200074C0C /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "../../../../Downloads/MaxSDK-6.1.0/c74support/jit-includes/x64/JitterAPI.framework"; sourceTree = "<group>"; };
 		52B1557D16A8E7FA000FC2E4 /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fft.c; path = "lib/Jehan-lib/fft.c"; sourceTree = SOURCE_ROOT; };
@@ -1272,6 +1282,18 @@
 				5219621616E6C61400EA7DDF /* Accelerate.framework in Frameworks */,
 				5219621716E6C61400EA7DDF /* Carbon.framework in Frameworks */,
 				5219621816E6C61400EA7DDF /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		529DD9CD17A2472A00E1F789 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				529DD9CE17A2472A00E1F789 /* CoreFoundation.framework in Frameworks */,
+				529DD9CF17A2472A00E1F789 /* Accelerate.framework in Frameworks */,
+				529DD9D017A2472A00E1F789 /* Carbon.framework in Frameworks */,
+				529DD9D117A2472A00E1F789 /* CoreServices.framework in Frameworks */,
+				529DD9D217A2472A00E1F789 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1995,7 +2017,7 @@
 			isa = PBXGroup;
 			children = (
 				529DD9C417A2466C00E1F789 /* basicresonators~.c */,
-				529DD9C517A2466C00E1F789 /* basicresonators~.help.pat */,
+				529DD9C617A2471D00E1F789 /* basicresonators~.maxhelp */,
 			);
 			name = "basicresonators~";
 			path = "src/basicresonators~";
@@ -2731,6 +2753,7 @@
 				521961FB16E6C60500EA7DDF /* whichthread.mxo */,
 				5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */,
 				5219621D16E6C61400EA7DDF /* res-transform.mxo */,
+				529DD9D717A2472A00E1F789 /* basicresonators~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2891,6 +2914,23 @@
 			name = "res-transform";
 			productName = "2threshattack~";
 			productReference = 5219621D16E6C61400EA7DDF /* res-transform.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		529DD9C717A2472A00E1F789 /* basicresonators~ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 529DD9D417A2472A00E1F789 /* Build configuration list for PBXNativeTarget "basicresonators~" */;
+			buildPhases = (
+				529DD9C817A2472A00E1F789 /* Sources */,
+				529DD9CD17A2472A00E1F789 /* Frameworks */,
+				529DD9D317A2472A00E1F789 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "basicresonators~";
+			productName = "2threshattack~";
+			productReference = 529DD9D717A2472A00E1F789 /* basicresonators~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		52E4476715F1889300C91B67 /* accumulate~ */ = {
@@ -3734,6 +3774,7 @@
 				52F10ACE15F071FA008FC371 /* 2threshattack~ */,
 				52E4476715F1889300C91B67 /* accumulate~ */,
 				52E4479415F1890800C91B67 /* analyzer~ */,
+				529DD9C717A2472A00E1F789 /* basicresonators~ */,
 				52E447A215F1890E00C91B67 /* bdist */,
 				52E447B015F1891100C91B67 /* bench */,
 				52E447BE15F1891500C91B67 /* bench~ */,
@@ -3834,6 +3875,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		5219621916E6C61400EA7DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		529DD9D317A2472A00E1F789 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4242,6 +4290,17 @@
 			files = (
 				5219620F16E6C61400EA7DDF /* commonsyms.c in Sources */,
 				5219622116E6C6C200EA7DDF /* res-transform.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		529DD9C817A2472A00E1F789 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				529DD9CA17A2472A00E1F789 /* commonsyms.c in Sources */,
+				529DD9CB17A2472A00E1F789 /* fft.c in Sources */,
+				529DD9CC17A2472A00E1F789 /* fftnobitrev.c in Sources */,
+				529DD9D817A247B400E1F789 /* basicresonators~.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5313,6 +5372,58 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "res-transform";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		529DD9D517A2472A00E1F789 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../libo\"",
+				);
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DNO_TRANSLATION_SUPPORT",
+				);
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "basicresonators~";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		529DD9D617A2472A00E1F789 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../libo\"",
+				);
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DNO_TRANSLATION_SUPPORT",
+				);
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "basicresonators~";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7484,6 +7595,15 @@
 			buildConfigurations = (
 				5219621B16E6C61400EA7DDF /* Debug */,
 				5219621C16E6C61400EA7DDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		529DD9D417A2472A00E1F789 /* Build configuration list for PBXNativeTarget "basicresonators~" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				529DD9D517A2472A00E1F789 /* Debug */,
+				529DD9D617A2472A00E1F789 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
