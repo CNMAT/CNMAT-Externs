@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 1,
-			"revision" : 2,
+			"revision" : 3,
 			"architecture" : "x86"
 		}
 ,
@@ -32,12 +32,11 @@
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"id" : "obj-1",
-					"linecount" : 2,
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 53.0, 107.0, 45.0, 27.0 ],
+					"patching_rect" : [ 113.0, 45.0, 85.0, 17.0 ],
 					"text" : "loadbang"
 				}
 
@@ -93,7 +92,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 131.0, 213.0, 142.0, 17.0 ],
+					"patching_rect" : [ 137.0, 209.0, 142.0, 17.0 ],
 					"text" : "basicresonators~ 880. 0.5 1."
 				}
 
@@ -123,8 +122,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 506.0, 130.0, 254.0, 57.0 ],
-					"text" : "The resonators~ object can be excited with an input signal or by an impulse of arbitrary size. An incoming float is interpreted as the amplitude of an impulse. The impulse is taken to come at the first sample of the next signal vector computed."
+					"patching_rect" : [ 404.0, 70.0, 254.0, 57.0 ],
+					"text" : "The basicresonators~ object can be excited with an input signal or by an impulse of arbitrary size. An incoming float is interpreted as the amplitude of an impulse. The impulse is taken to come at the first sample of the next signal vector computed."
 				}
 
 			}
@@ -137,23 +136,8 @@
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 166.0, 372.0, 90.0, 17.0 ],
+					"patching_rect" : [ 230.0, 367.0, 90.0, 17.0 ],
 					"text" : "r resonators-help"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.4, 0.4, 0.8, 1.0 ],
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"id" : "obj-9",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 163.0, 488.0, 92.0, 15.0 ],
-					"text" : "resonance-display"
 				}
 
 			}
@@ -171,7 +155,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 2,
+							"revision" : 3,
 							"architecture" : "x86"
 						}
 ,
@@ -204,7 +188,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 422.0, 476.0, 140.0, 0.0 ],
+									"patching_rect" : [ 422.0, 476.0, 140.0, 51.0 ],
 									"text" : "note: this abstraction uses 'zl group' which is only good for 256 items, i.e. 85 components",
 									"textcolor" : [ 1.0, 0.890196, 0.090196, 1.0 ]
 								}
@@ -231,7 +215,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 287.0, 464.0, 65.0, 0.0 ],
+									"patching_rect" : [ 287.0, 464.0, 65.0, 15.0 ],
 									"text" : "what-is-this"
 								}
 
@@ -250,7 +234,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 2,
+											"revision" : 3,
 											"architecture" : "x86"
 										}
 ,
@@ -282,7 +266,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 2,
 													"outlettype" : [ "float", "" ],
-													"patching_rect" : [ 105.0, 318.0, 38.0, 0.0 ],
+													"patching_rect" : [ 105.0, 318.0, 38.0, 17.0 ],
 													"text" : "t 0.5 l"
 												}
 
@@ -307,7 +291,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"outlettype" : [ "", "" ],
-													"patching_rect" : [ 105.0, 178.0, 65.0, 0.0 ],
+													"patching_rect" : [ 105.0, 178.0, 65.0, 17.0 ],
 													"text" : "route symbol"
 												}
 
@@ -321,7 +305,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 105.0, 239.0, 25.0, 0.0 ],
+													"patching_rect" : [ 105.0, 239.0, 25.0, 17.0 ],
 													"text" : "iter"
 												}
 
@@ -335,7 +319,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"outlettype" : [ "", "" ],
-													"patching_rect" : [ 105.0, 283.0, 97.0, 0.0 ],
+													"patching_rect" : [ 105.0, 283.0, 97.0, 17.0 ],
 													"text" : "zl group 256"
 												}
 
@@ -349,7 +333,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 105.0, 108.0, 70.0, 0.0 ],
+													"patching_rect" : [ 105.0, 108.0, 70.0, 17.0 ],
 													"text" : "prepend refer"
 												}
 
@@ -363,7 +347,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 50.0, 109.0, 31.0, 0.0 ],
+													"patching_rect" : [ 50.0, 109.0, 31.0, 15.0 ],
 													"text" : "dump"
 												}
 
@@ -377,7 +361,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 2,
 													"outlettype" : [ "bang", "" ],
-													"patching_rect" : [ 50.0, 73.0, 28.0, 0.0 ],
+													"patching_rect" : [ 50.0, 73.0, 28.0, 17.0 ],
 													"text" : "t b s"
 												}
 
@@ -572,7 +556,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 4,
 													"outlettype" : [ "", "", "", "" ],
-													"patching_rect" : [ 105.0, 138.0, 169.0, 0.0 ],
+													"patching_rect" : [ 105.0, 138.0, 169.0, 17.0 ],
 													"saved_object_attributes" : 													{
 														"embed" : 1
 													}
@@ -714,7 +698,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 287.0, 488.0, 85.0, 0.0 ],
+									"patching_rect" : [ 287.0, 488.0, 85.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"default_fontface" : 0,
 										"default_fontname" : "Arial",
@@ -740,7 +724,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 287.0, 513.0, 90.0, 0.0 ],
+									"patching_rect" : [ 287.0, 513.0, 90.0, 17.0 ],
 									"text" : "s resonators-help"
 								}
 
@@ -754,7 +738,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 52.0, 554.0, 113.0, 0.0 ],
+									"patching_rect" : [ 52.0, 554.0, 113.0, 17.0 ],
 									"text" : "makes it easier to read"
 								}
 
@@ -949,7 +933,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 182.0, 488.0, 94.0, 0.0 ],
+									"patching_rect" : [ 182.0, 488.0, 94.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -968,7 +952,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 51.0, 495.0, 100.0, 0.0 ],
+									"patching_rect" : [ 51.0, 495.0, 102.0, 47.0 ],
 									"text" : "Store them in separate collections with one frequency component per index"
 								}
 
@@ -982,7 +966,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 34.0, 441.0, 100.0, 0.0 ],
+									"patching_rect" : [ 34.0, 441.0, 100.0, 47.0 ],
 									"text" : "3...",
 									"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
 								}
@@ -997,7 +981,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 33.0, 285.0, 100.0, 0.0 ],
+									"patching_rect" : [ 33.0, 285.0, 100.0, 47.0 ],
 									"text" : "2...",
 									"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
 								}
@@ -1061,7 +1045,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 422.0, 172.0, 140.0, 0.0 ],
+									"patching_rect" : [ 422.0, 172.0, 140.0, 29.0 ],
 									"text" : "note: max allows only 256 items per index in a coll",
 									"textcolor" : [ 1.0, 0.890196, 0.090196, 1.0 ]
 								}
@@ -1085,7 +1069,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 236.0, 321.0, 59.0, 0.0 ],
+									"patching_rect" : [ 236.0, 321.0, 59.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -1112,7 +1096,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 302.0, 321.0, 61.0, 0.0 ],
+									"patching_rect" : [ 302.0, 321.0, 61.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -1131,7 +1115,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 50.0, 341.0, 100.0, 0.0 ],
+									"patching_rect" : [ 50.0, 341.0, 102.0, 47.0 ],
 									"text" : "Store them in separate collections and switch between them using refer"
 								}
 
@@ -1145,7 +1129,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 175.0, 288.0, 31.0, 0.0 ],
+									"patching_rect" : [ 175.0, 288.0, 31.0, 15.0 ],
 									"text" : "dump"
 								}
 
@@ -1158,7 +1142,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 156.0, 352.0, 90.0, 0.0 ],
+									"patching_rect" : [ 156.0, 352.0, 90.0, 17.0 ],
 									"text" : "s resonators-help"
 								}
 
@@ -1172,7 +1156,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "float", "bang", "" ],
-									"patching_rect" : [ 156.0, 261.0, 48.0, 0.0 ],
+									"patching_rect" : [ 156.0, 261.0, 48.0, 17.0 ],
 									"text" : "t 0.5 b s"
 								}
 
@@ -1186,7 +1170,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 198.0, 231.0, 60.0, 0.0 ],
+									"patching_rect" : [ 198.0, 231.0, 60.0, 15.0 ],
 									"text" : "refer bass"
 								}
 
@@ -1200,7 +1184,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 98.0, 231.0, 83.0, 0.0 ],
+									"patching_rect" : [ 98.0, 231.0, 83.0, 15.0 ],
 									"text" : "refer bell"
 								}
 
@@ -1223,7 +1207,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 175.0, 321.0, 53.0, 0.0 ],
+									"patching_rect" : [ 175.0, 321.0, 53.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -1241,7 +1225,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "" ],
-									"patching_rect" : [ 193.0, 93.0, 40.0, 0.0 ],
+									"patching_rect" : [ 193.0, 93.0, 40.0, 17.0 ],
 									"text" : "t 0.5 s"
 								}
 
@@ -1257,7 +1241,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "int", "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 103.0, 65.0, 100.0, 0.0 ]
+									"patching_rect" : [ 103.0, 65.0, 100.0, 17.0 ]
 								}
 
 							}
@@ -1283,7 +1267,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 223.0, 120.0, 68.0, 0.0 ],
+									"patching_rect" : [ 223.0, 120.0, 68.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -1300,7 +1284,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 193.0, 147.0, 90.0, 0.0 ],
+									"patching_rect" : [ 193.0, 147.0, 90.0, 17.0 ],
 									"text" : "s resonators-help"
 								}
 
@@ -1315,7 +1299,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 53.0, 139.0, 100.0, 0.0 ],
+									"patching_rect" : [ 53.0, 139.0, 100.0, 37.0 ],
 									"text" : "Store them in a single collection and look them up by name"
 								}
 
@@ -1341,7 +1325,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 28.0, 87.0, 100.0, 0.0 ],
+									"patching_rect" : [ 28.0, 87.0, 100.0, 47.0 ],
 									"text" : "1...",
 									"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
 								}
@@ -1521,7 +1505,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 2,
+							"revision" : 3,
 							"architecture" : "x86"
 						}
 ,
@@ -1565,7 +1549,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "float", "dump", "clear" ],
-									"patching_rect" : [ 56.0, 126.0, 84.0, 0.0 ],
+									"patching_rect" : [ 56.0, 126.0, 84.0, 17.0 ],
 									"text" : "t 0.4 dump clear"
 								}
 
@@ -1588,7 +1572,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 93.0, 150.0, 40.0, 0.0 ],
+									"patching_rect" : [ 93.0, 150.0, 40.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -1607,7 +1591,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 10.0, 50.0, 323.0, 0.0 ],
+									"patching_rect" : [ 10.0, 50.0, 323.0, 15.0 ],
 									"text" : "241.5 0.08 0.4 383.4 0.4 0.73 1115. 0.3 5.8 925.18 0.14 0.93, 0.3"
 								}
 
@@ -1620,7 +1604,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 10.0, 206.0, 90.0, 0.0 ],
+									"patching_rect" : [ 10.0, 206.0, 90.0, 17.0 ],
 									"text" : "s resonators-help"
 								}
 
@@ -1634,7 +1618,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 10.0, 32.0, 341.0, 0.0 ],
+									"patching_rect" : [ 10.0, 32.0, 341.0, 17.0 ],
 									"text" : "Message boxes are unwieldy for models with more than a few resonances."
 								}
 
@@ -1649,7 +1633,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 144.0, 129.0, 155.0, 0.0 ],
+									"patching_rect" : [ 144.0, 129.0, 157.0, 37.0 ],
 									"text" : "Collections can be used to store lists of floats and provide a textual way to view and edit resonance models."
 								}
 
@@ -1791,210 +1775,6 @@
 			}
 , 			{
 				"box" : 				{
-					"handoff" : "",
-					"id" : "obj-16",
-					"maxclass" : "ubutton",
-					"numinlets" : 1,
-					"numoutlets" : 4,
-					"outlettype" : [ "bang", "bang", "", "int" ],
-					"patching_rect" : [ 328.0, 444.0, 268.0, 26.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-17",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 381.0, 455.0, 196.0, 17.0 ],
-					"text" : "http://www.cnmat.berkeley.edu/MAX/",
-					"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"hidden" : 1,
-					"id" : "obj-18",
-					"linecount" : 2,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 328.0, 490.0, 294.0, 0.0 ],
-					"text" : ";\rmax launch_browser http://www.cnmat.berkeley.edu/MAX/"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-19",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 327.0, 472.0, 303.0, 17.0 ],
-					"text" : "Adrian Freed ©1999, 2000-04, UC Regents. All Rights Reserved"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
-					"embed" : 1,
-					"id" : "obj-20",
-					"maxclass" : "fpic",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 330.0, 389.0, 109.0, 48.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-21",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 328.0, 443.0, 263.0, 27.0 ],
-					"text" : "resonators~, and all other CNMAT Max objects, can be found at:"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-22",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 442.0, 413.0, 179.0, 27.0 ],
-					"text" : "resonators~.help version 1.2.1 by Freed, Wright, & Zbyszynski"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.4, 0.4, 0.8, 1.0 ],
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"id" : "obj-23",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 220.0, 470.0, 100.0, 15.0 ],
-					"text" : "decaying-sinusoids~"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.4, 0.4, 0.8, 1.0 ],
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"id" : "obj-24",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 163.0, 470.0, 55.0, 15.0 ],
-					"text" : "sinusoids~"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.4, 0.4, 0.8, 1.0 ],
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"id" : "obj-25",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 97.0, 470.0, 62.0, 15.0 ],
-					"text" : "SDIF-buffer"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-26",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 21.0, 456.0, 48.0, 17.0 ],
-					"text" : "see also:",
-					"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"hidden" : 1,
-					"id" : "obj-27",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 21.0, 498.0, 64.0, 0.0 ],
-					"text" : "prepend help"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.4, 0.4, 0.8, 1.0 ],
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"id" : "obj-28",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 21.0, 470.0, 75.0, 15.0 ],
-					"text" : "res-transform"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"hidden" : 1,
-					"id" : "obj-29",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 21.0, 519.0, 45.0, 0.0 ],
-					"text" : "pcontrol"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"frgb" : 0.0,
@@ -2003,7 +1783,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 55.0, 75.0, 267.0, 27.0 ],
+					"patching_rect" : [ 417.0, 40.0, 267.0, 27.0 ],
 					"text" : "A bank of 2-pole resonating filters with common input (the inlet) and outputs summed together (outlet)"
 				}
 
@@ -2017,7 +1797,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 55.0, 59.0, 192.0, 17.0 ],
+					"patching_rect" : [ 414.0, 24.0, 192.0, 17.0 ],
 					"text" : "Resonant filter bank"
 				}
 
@@ -2031,23 +1811,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 55.0, 31.0, 185.0, 27.0 ],
+					"patching_rect" : [ 410.0, 0.0, 185.0, 27.0 ],
 					"text" : "basicresonators~",
 					"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.87451, 0.933333, 1.0, 1.0 ],
-					"border" : 5,
-					"bordercolor" : [ 0.4, 0.4, 0.8, 1.0 ],
-					"id" : "obj-33",
-					"maxclass" : "panel",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 27.0, 22.0, 348.0, 86.0 ],
-					"rounded" : 70
 				}
 
 			}
@@ -2064,7 +1830,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 2,
+							"revision" : 3,
 							"architecture" : "x86"
 						}
 ,
@@ -2096,7 +1862,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 101.0, 272.0, 65.0, 0.0 ],
+									"patching_rect" : [ 101.0, 272.0, 65.0, 15.0 ],
 									"text" : "startwindow"
 								}
 
@@ -2109,7 +1875,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 101.0, 293.0, 29.0, 0.0 ],
+									"patching_rect" : [ 101.0, 293.0, 29.0, 17.0 ],
 									"text" : "dac~"
 								}
 
@@ -2127,7 +1893,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 77.0, 241.0, 51.0, 15.0 ],
+									"patching_rect" : [ 77.0, 241.0, 51.0, 17.0 ],
 									"sig" : 0.0
 								}
 
@@ -2145,7 +1911,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 23.0, 241.0, 51.0, 15.0 ],
+									"patching_rect" : [ 23.0, 241.0, 51.0, 17.0 ],
 									"sig" : 0.0
 								}
 
@@ -2159,7 +1925,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 4,
 									"outlettype" : [ "signal", "signal", "float", "float" ],
-									"patching_rect" : [ 23.0, 218.0, 53.0, 0.0 ],
+									"patching_rect" : [ 23.0, 218.0, 53.0, 17.0 ],
 									"text" : "minmax~"
 								}
 
@@ -2173,7 +1939,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 23.0, 177.0, 42.0, 0.0 ],
+									"patching_rect" : [ 23.0, 177.0, 42.0, 17.0 ],
 									"text" : "*~ 100"
 								}
 
@@ -2185,10 +1951,10 @@
 									"id" : "obj-7",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "signal", "list" ],
-									"patching_rect" : [ 23.0, 197.0, 115.0, 0.0 ],
-									"text" : "resonators~ 480. 0.5 1."
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 23.0, 197.0, 124.0, 17.0 ],
+									"text" : "basicresonators~ 480. 0.5 1."
 								}
 
 							}
@@ -2202,7 +1968,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 23.0, 156.0, 34.0, 0.0 ],
+									"patching_rect" : [ 23.0, 156.0, 34.0, 27.0 ],
 									"text" : "noise~"
 								}
 
@@ -2220,7 +1986,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 209.0, 242.0, 51.0, 15.0 ],
+									"patching_rect" : [ 209.0, 242.0, 51.0, 17.0 ],
 									"sig" : 0.0
 								}
 
@@ -2238,7 +2004,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 155.0, 242.0, 51.0, 15.0 ],
+									"patching_rect" : [ 155.0, 242.0, 51.0, 17.0 ],
 									"sig" : 0.0
 								}
 
@@ -2252,7 +2018,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 4,
 									"outlettype" : [ "signal", "signal", "float", "float" ],
-									"patching_rect" : [ 155.0, 219.0, 53.0, 0.0 ],
+									"patching_rect" : [ 155.0, 219.0, 53.0, 17.0 ],
 									"text" : "minmax~"
 								}
 
@@ -2266,7 +2032,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 155.0, 178.0, 42.0, 0.0 ],
+									"patching_rect" : [ 155.0, 178.0, 42.0, 17.0 ],
 									"text" : "*~ 100"
 								}
 
@@ -2278,10 +2044,10 @@
 									"id" : "obj-13",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "signal", "list" ],
-									"patching_rect" : [ 155.0, 198.0, 115.0, 0.0 ],
-									"text" : "resonators~ 480. 0.5 1."
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 155.0, 198.0, 124.0, 17.0 ],
+									"text" : "basicresonators~ 480. 0.5 1."
 								}
 
 							}
@@ -2294,7 +2060,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 155.0, 157.0, 62.0, 0.0 ],
+									"patching_rect" : [ 155.0, 157.0, 62.0, 17.0 ],
 									"text" : "cycle~ 480."
 								}
 
@@ -2309,7 +2075,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 13.0, 69.0, 275.0, 0.0 ],
+									"patching_rect" : [ 13.0, 69.0, 275.0, 57.0 ],
 									"text" : "Unless your model has lots of very wide resonances, you'll probably have to boost input signals a lot to hear them. The issue is that only the spectral energy that lines up with the filters will appear in the output. But beware: energy focused at the same frequency as a resonance will come through loud and clear."
 								}
 
@@ -2324,7 +2090,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 12.0, 37.0, 269.0, 0.0 ],
+									"patching_rect" : [ 12.0, 37.0, 269.0, 27.0 ],
 									"text" : "Why does this example multiply the noise~ amplitude by 100 before passing the signal through the resonant filter?"
 								}
 
@@ -2721,65 +2487,10 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-18", 0 ],
-					"disabled" : 0,
-					"hidden" : 1,
-					"source" : [ "obj-16", 1 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-3", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-2", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-27", 0 ],
-					"disabled" : 0,
-					"hidden" : 1,
-					"source" : [ "obj-23", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-27", 0 ],
-					"disabled" : 0,
-					"hidden" : 1,
-					"source" : [ "obj-24", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-27", 0 ],
-					"disabled" : 0,
-					"hidden" : 1,
-					"source" : [ "obj-25", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-29", 0 ],
-					"disabled" : 0,
-					"hidden" : 1,
-					"source" : [ "obj-27", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-27", 0 ],
-					"disabled" : 0,
-					"hidden" : 1,
-					"midpoints" : [ 30.5, 494.0, 30.5, 494.0 ],
-					"source" : [ "obj-28", 0 ]
 				}
 
 			}
@@ -2928,26 +2639,13 @@
 					"destination" : [ "obj-47", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 175.5, 397.0, 154.5, 397.0 ],
+					"midpoints" : [ 239.5, 397.0, 154.5, 397.0 ],
 					"source" : [ "obj-8", 0 ]
 				}
 
 			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-27", 0 ],
-					"disabled" : 0,
-					"hidden" : 1,
-					"source" : [ "obj-9", 0 ]
-				}
-
-			}
  ],
-		"dependency_cache" : [ 			{
-				"name" : "resonators~.mxo",
-				"type" : "iLaX"
-			}
- ]
+		"dependency_cache" : [  ]
 	}
 
 }
