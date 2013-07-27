@@ -1,6 +1,6 @@
 
 /*
-  ©1988,1989,2007-2013 Adrian Freed
+  ï¿½1988,1989,2007-2013 Adrian Freed
 
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   NAME: basicresonators~
@@ -371,6 +371,8 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 					ts *= sin(f);
 					dp[i].a1 = ts *  (1.0-r);   //this is one of the relavent L norms
 					dp[i].b2 =  -r*r;
+                    dp[i].b1 = r*cos(f)*2.0;
+
 					dp[i].a1prime = ts/dp[i].b2;
 					//this is the other norm that establishes the impulse response of the right amplitude (scaled 
 					// so that it can be summed into the state variable outside the perform routine 
