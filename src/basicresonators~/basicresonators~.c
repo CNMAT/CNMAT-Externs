@@ -2,14 +2,17 @@
 /*
   �1988,1989,2007-2013 Adrian Freed
 
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  NAME: basicresonators~
-  DESCRIPTION: Parallel bank of resonant filters
-  AUTHOR: Adrian Freed
-  COPYRIGHT_YEARS: 1988-2013
-  VERSION 2.0: second release 
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	
+    basicresonators~
+    Parallel bank of resonant filters
+
+    Coefficients are linearly interpolated.
+ 
+    Double precision is required because the filter topology
+    (one with the minimum possible number of * +)
+    ends up with coefficients near 1 for high Q filters
+ 
+ 
+    Adrian Freed
 */
 #include "ext.h"
 #include "ext_obex.h"
@@ -58,10 +61,7 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv);
 void resonators_clear(t_resonators *x);
 void resonators_assist(t_resonators *x, void *b, long m, long a, char *s);
 void *resonators_new(t_symbol *s, short argc, t_atom *argv);
-void resonators_tellmeeverything(t_resonators *x);
 void resonators_free(t_resonators *x);
-
-
 
 //#define MAXMAXVECTOR 4096
 // double precision interpolating (smooth) with input
@@ -219,6 +219,7 @@ t_int *diresonators_perform(t_int *w)
 	t_resonators *op = (t_resonators *)(w[1]);
 	int n = (int)(w[4]);
 	double in[n];
+    
 	for(int j = 0; j < n; j++){
 		in[j] = fin[j];
 	}
@@ -241,11 +242,11 @@ t_int *diresonators2_perform(t_int *w)
 	int n = (int)(w[4]);
 	double out[n];
 	double *outp = out;
+    
 	diresonators2_perform64(op, NULL, NULL, 0, &outp, 1, n, 0, NULL);
 
-	for(int j=0;j<n;++j){
-		fout[j] = out[j]; 
-	}
+	for(int j=0;j<n;++j)
+ 		fout[j] = out[j]; 
 
 	return (w+4);
 }
@@ -257,37 +258,28 @@ void resonators_clear(t_resonators *x)
 	dresdesc *df = x->dbase;
 	int i;
 	for(i=0;i<x->nres;++i)
-		{
+	{
 			df[i].out1 = df[i].out2 = 0.0;
-
-		}
-
+	}
 }
 
 void resonators_dsp64(t_resonators *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
 	resonators_clear(x);
-	if((x->b_connected = count[1])){
+	if((x->b_connected = count[1]))
 		object_method(dsp64, gensym("dsp_add64"), x, diresonators_perform64, 0, NULL);
-	}else{
+	else
 		object_method(dsp64, gensym("dsp_add64"), x, diresonators2_perform64, 0, NULL);
-	}
-
 }
 
 void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 {
 	resonators_clear(x);
 	
-	{
 		if ((x->b_connected = connect[1]))
-			{
-				dsp_add(diresonators_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,  sp[0]->s_n);
-			}
-		else {
+			dsp_add(diresonators_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec,  sp[0]->s_n);
+		else
 			dsp_add(diresonators2_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
-		}
-	}
 }
 
 // This assumes we are single threaded, i.e. that we can never be interrupted by perform routine
@@ -296,9 +288,9 @@ void resonators_float(t_resonators *x, double ff)
 	int i;
 	dresdesc *dp = x->dbase;
 	for(i=0;i<x->nres;++i)
-		{
+	{
 			dp[i].out2 += dp[i].a1prime*ff;		
-		}
+	}
 }
 
 
@@ -314,7 +306,7 @@ void resonators_bang(t_resonators *x)
 	t_atom filterstate[MAXRESONANCES*5+1];
 
 	//	output filter state and coefficients to the second outlet
-	// should we output the sample rate or normalize the coefficients?
+	// should we output the sample rate too or normalize the coefficients?
 	atom_setfloat(&filterstate[0], x->samplerate);
 
 	for(i=0;i<x->nres;++i)
@@ -329,28 +321,28 @@ void resonators_bang(t_resonators *x)
 
 }
 
+// This assumes we are single threaded, i.e. that we can never be interrupted by perform routine
 void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 {
 	int i;
-	// does this overlap stuff work? why dont we buffer a1prime and fastr? 
-	
-
 	int nres;
 	double srbar = x->sampleinterval;
 	dresdesc *dp = x->dbase;
 	
-
-
 	if (argc%3!=0) {
 		object_error((t_object *)x, "multiple of 3 floats required (frequency amplitude decayRate)");
 		return;
 	}
 			
-	for(i=0; (i*3)<argc; ++i) {
-		if (i >= MAXRESONANCES) {
+	for(i=0; (i*3)<argc; ++i)
+    {
+		if (i >= MAXRESONANCES)
+        {
 			object_error((t_object *)x, "list has more than %ld resonances; dropping extras", MAXRESONANCES);
 			break;
-		} else {
+		}
+        else
+        {
 			// Here are the filter design equations		
 			double f = atom_getfloatarg(i*3,argc,argv);
 			double g = 	atom_getfloatarg(i*3+1,argc,argv);
@@ -358,13 +350,13 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 			double r;
 			r =  exp(-rate*srbar);
 			if((f<=0.0) || (f>=(0.995*x->samplerate*0.5)) || (r<=0.0) || (r>1.0))
-				{
+			{
 					//				post("Warning parameters out of range");
 					dp[i].b1 = dp[i].b1 = 0.0;
 					dp[i].a1prime = 0.0;
-				}
+            }
 			else
-				{
+            {
 					double ts;
 					f *= 2.0*3.14159265358979323*srbar;
 					ts = g;
@@ -372,21 +364,20 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 					dp[i].a1 = ts *  (1.0-r);   //this is one of the relavent L norms
 					dp[i].b2 =  -r*r;
                     dp[i].b1 = r*cos(f)*2.0;
+                        //this is the other norm that establishes the impulse response of the right amplitude (scaled
+                        // so that it can be summed into the state variable outside the perform routine (for efficiency)
+                        // This was chosen to correspond with IRCAM Resan representation
 
-					dp[i].a1prime = ts/dp[i].b2;
-					//this is the other norm that establishes the impulse response of the right amplitude (scaled 
-					// so that it can be summed into the state variable outside the perform routine 
-				}
+					dp[i].a1prime = ts/dp[i].b2;					            }
 		}
 	}
 	/* Now we know how many "good" resonances (freq > 0) were in the list */
 	nres = i;
 
 	for(i=0;i<nres;++i)
-		{
+	{
 			if(i>=x->nres) 	/* If there are now more resonances than there were: */ 
-
-				{
+            {
 					// Set old a1 to zero so that the input to the new resonators will ramp up over the first signal vector.
 			
 					dp[i].o_a1 = 0.0;
@@ -395,10 +386,9 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 					// Clear out state variables for these totally new resonances
 
 					dp[i].out1 = dp[i].out2 = 0.0f;
-				}
-		}
-	x->nres = nres;
-	
+			}
+	}
+	x->nres = nres;	
 	//		post("nres %d x->nres %d", nres, x->nres);
 }
 
@@ -420,21 +410,19 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 		x->samplerate = 44100.0;
 	x->sampleinterval = 1.0/x->samplerate;
 
-
 	x->dbase = (dresdesc *) sysmem_newptr(MAXRESONANCES*sizeof(dresdesc));
     
 	if(x->dbase==0)
-		{			
+	{			
 			object_error((t_object *)x, "not enough memory. ");
 			return 0;
-		}
+	}
 
 	x->nres = MAXRESONANCES;
 	resonators_clear(x); // clears state
 	x->nres = 0;
 	resonators_list(x,s,argc,argv);
 	{
-
 		dresdesc *df = x->dbase;
 		int i;
 		for(i=0;i<x->nres;++i)
@@ -446,7 +434,6 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 
 			}
 	}
-    	
 
 	x->b_obj.z_misc = Z_NO_INPLACE;
 	dsp_setup((t_pxobject *)x,1);
@@ -481,6 +468,7 @@ int main(void) {
 	class_addmethod(resonators_class, (method)resonators_assist, "assist", A_CANT, 0);
 	class_dspinit(resonators_class);
 	class_register(CLASS_BOX, resonators_class);
+    
 	return 0;
 }
 
