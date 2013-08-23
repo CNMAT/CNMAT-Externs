@@ -174,7 +174,7 @@ typedef struct _grans {
     
     double          prev_in1;
     
-    Boolean         always_on;
+    int         always_on;
     
     short           *count;
     
@@ -451,20 +451,20 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     double **inlets = ins;
     double **outlets = outs;
 
-    register double prev_trig = x->prev_in1;
-    register double trigger;
-    register double location = x->location;
-    register double rate = x->rate;
-    register double dur = x->dur;
-    register double w_shapex = x->w_shapex;
-    register double w_shapey = x->w_shapey;
-    register double window_index = x->window_index;
-    register int    outlet = x->outlet;
-    register int    buf_index = x->buf_index;
-    register double gr_amp = x->amp;
+    double prev_trig = x->prev_in1;
+    double trigger;
+    double location = x->location;
+    double rate = x->rate;
+    double dur = x->dur;
+    double w_shapex = x->w_shapex;
+    double w_shapey = x->w_shapey;
+    double window_index = x->window_index;
+    int    outlet = x->outlet;
+    int    buf_index = x->buf_index;
+    double gr_amp = x->amp;
     
     
-    const Boolean alwayson = x->always_on;
+    const int alwayson = x->always_on;
         
     const long maxoverlap = CLAMP(x->maxoverlap, 0, DEFAULTMAXOSCILLATORS);
     if(maxoverlap != x->maxoverlap) x->maxoverlap = maxoverlap;
@@ -475,19 +475,19 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     const int    shapetabscale = x->shapetabscale;
     const int    wtabscale = x->wtabscale;
     
-    register long       tex_pc, xshapetab, yshapetab;
-    register double     pc, wpc, chirpdir;
-    register double     pi, wpi, amp, tex, chirprate, pSamp, lowerSamp, upper_samp, linSamp;
-    register int        w_index, outletnum;
+    long       tex_pc, xshapetab, yshapetab;
+    double     pc, wpc, chirpdir;
+    double     pi, wpi, amp, tex, chirprate, pSamp, lowerSamp, upper_samp, linSamp;
+    int        w_index, outletnum;
 
     t_float **internal_window = granu_internal_window;
 
-    register t_float     *w_tab;
+    t_float     *w_tab;
     
     const long numbufs = x->numbufs;
     const long numenvbufs = x->numenvbufs;
     
-    register long frames[numbufs], nchans[numbufs], num_wframes, num_wchans, w_bufoffset;
+    long frames[numbufs], nchans[numbufs], num_wframes, num_wchans, w_bufoffset;
     
     t_sample_grain *o = x->base;
     
