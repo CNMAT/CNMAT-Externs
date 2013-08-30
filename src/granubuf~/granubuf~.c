@@ -21,54 +21,29 @@
 */
 
 /*--
- granubuf~ v.0
-
- inlets
-    0: trigger
-    1: sample location
-    2: dur
-    3: rate
-    4: x shape
-    5: y shape
-    6: env type
-    7: outlet number: -1 for cycle
-    8: buffer index
-    9: amp
+ granubuf~ v.0.2
  
- window types:
+ notes: 
+ - in new version, window buffers should ALWAYS be declared, if none are declared use cos or hanning at index 0
+ - special is the fof routinue which REQUIRES the tex shaping function... so fof cannot be added after instantiation if there are no shaping function inlets, so fof tex can not be adjusted at sample rate if there is no inlet, but not a show stopper
+ 
+ 
+ internal window types:
     0: cos
     1: fof
     2: dampedsine
     3: sinc
  
  to do: 
-    - linear interp (probably cubic also, and make attribute)
-    - correct phase reading for buffer's sampling rate?
-
-    - move buffer ref into grains to allow for corpus based file selection with polybuffer, or add "setbuffer <index> <name>"
-        or, accept list of buffers in order, counting down from -1, -2, etc.
+    - change location/dur to be start/end -- this effects the resulting rate, but due to situations with reverse play rates and negative chirps, we really need the end point -- this is different with granusoids~ and granufm~ which are oscilator based (actaully I might add options for wave tables there also...)
+   - fix chirp
  
-    - fix chirp
-
-    - check custom envelope situation, it seems like it is longer than the default tables, and cuts out as if it had run out of voices earlier, is that becuase of the attack / rev-attack shape?  i.e. not smooth overlap?
- 
- 
- *****
- - new version, window buffers should ALWAYS be declared, if none are declared use cos or hanning at index 0
- - because of this change, perform routine needs to always look up window index
- 
---- TODO
- : change all phases to be in terms of user buffer rather than scaling every time from STABSZ
- : same thing for window and buffer phases, i.e. pkw for a given buffer should be ( frames[index] * x->sampleinterval ) used in the calculation of the phase increment based on rate
- : add interpolation for all lookups
- : add attributes to set individual parameters (that may or may not have inlets)
- : figure out how to deal with fact that we are now assigning buffers explictly, so some window "buffers" may actually be built in, and so need not be checked like external buffers
- : I like having some built in windows, which avoids needing to have extra buffers if not needed
-
- : special is the fof routinue which REQUIRES the tex shaping function... so fof cannot be added after instantiation if there are no shaping function inlets, or rather, fof tex can not be adjusted at sample rate if there is no inlet, so not a show stopper
- 
+ eventually:
+    - cubic, bspline, resampled interpolation for nicer slow rate (but linear is sounding not too bad)
+    - adjust for user's buffer sampling rate?
  
 --*/
+
 
 #define NAME "granubuf~"
 #define DESCRIPTION "Generalized samplerate buffer granulator"
@@ -93,8 +68,8 @@ typedef enum _granubuf_in
     LOCATION,
     RATE,
     DURATION,
-    SHAPEX,
-    SHAPEY,
+    SHAPEX, // probably not using this (TEX for fof now)
+    SHAPEY, // removed this
     WIN_INDEX,
     OUTLET,
     BUF_INDEX,
