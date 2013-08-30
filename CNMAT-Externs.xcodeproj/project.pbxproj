@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				52B654EE17D023D5004FD84E /* PBXTargetDependency */,
 				529D6EEF173338FD005FD64C /* PBXTargetDependency */,
 				5219622516E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
@@ -221,14 +222,12 @@
 		52B1558816A8E827000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		52B1558916A8E832000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		52B654CF17D021E5004FD84E /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
-		52B654D017D021E5004FD84E /* 2threshattack~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AC815F071DE008FC371 /* 2threshattack~.c */; };
 		52B654D217D021E5004FD84E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52B654D317D021E5004FD84E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
 		52B654D417D021E5004FD84E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
 		52B654D517D021E5004FD84E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52B654D617D021E5004FD84E /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		52B654E517D0220D004FD84E /* granubuf-w-lines.maxpat in Resources */ = {isa = PBXBuildFile; fileRef = 52B654DE17D0220D004FD84E /* granubuf-w-lines.maxpat */; };
-		52B654E617D0220D004FD84E /* granubuf~ copy.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B654DF17D0220D004FD84E /* granubuf~ copy.c */; };
 		52B654E717D0220D004FD84E /* granubuf~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B654E017D0220D004FD84E /* granubuf~.c */; };
 		52B654E817D0220D004FD84E /* granubuf~.maxhelp in Resources */ = {isa = PBXBuildFile; fileRef = 52B654E117D0220D004FD84E /* granubuf~.maxhelp */; };
 		52E4476C15F1889300C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
@@ -586,12 +585,12 @@
 			remoteGlobalIDString = 52E4479415F1890800C91B67;
 			remoteInfo = "analyzer~";
 		};
-		52B654EA17D0220D004FD84E /* PBXContainerItemProxy */ = {
+		52B654ED17D023D5004FD84E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 52B654E217D0220D004FD84E /* granubuf~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2FBBEAE508F335360078DB84;
-			remoteInfo = "max-external";
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52B654CD17D021E5004FD84E;
+			remoteInfo = "granubuf~";
 		};
 		52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -994,13 +993,12 @@
 		52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fftnobitrev.c; path = "lib/Jehan-lib/fftnobitrev.c"; sourceTree = SOURCE_ROOT; };
 		52B1558016A8E7FA000FC2E4 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftnobitrev.h; path = "lib/Jehan-lib/fftnobitrev.h"; sourceTree = SOURCE_ROOT; };
 		52B1558116A8E7FA000FC2E4 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vDSP.h; path = "lib/Jehan-lib/vDSP.h"; sourceTree = SOURCE_ROOT; };
-		52B654DB17D021E5004FD84E /* 2threshattack~ copy.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "2threshattack~ copy.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52B654DB17D021E5004FD84E /* granubuf~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "granubuf~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B654DD17D0220D004FD84E /* granu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = granu.h; sourceTree = "<group>"; };
 		52B654DE17D0220D004FD84E /* granubuf-w-lines.maxpat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "granubuf-w-lines.maxpat"; sourceTree = "<group>"; };
 		52B654DF17D0220D004FD84E /* granubuf~ copy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "granubuf~ copy.c"; sourceTree = "<group>"; };
 		52B654E017D0220D004FD84E /* granubuf~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "granubuf~.c"; sourceTree = "<group>"; };
 		52B654E117D0220D004FD84E /* granubuf~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "granubuf~.maxhelp"; sourceTree = "<group>"; };
-		52B654E217D0220D004FD84E /* granubuf~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "granubuf~.xcodeproj"; sourceTree = "<group>"; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
 		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2068,18 +2066,9 @@
 				52B654DF17D0220D004FD84E /* granubuf~ copy.c */,
 				52B654E017D0220D004FD84E /* granubuf~.c */,
 				52B654E117D0220D004FD84E /* granubuf~.maxhelp */,
-				52B654E217D0220D004FD84E /* granubuf~.xcodeproj */,
 			);
 			name = "granubuf~";
 			path = "src/granubuf~";
-			sourceTree = "<group>";
-		};
-		52B654E317D0220D004FD84E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				52B654EB17D0220D004FD84E /* granubuf~.mxo */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		52DE949415F142570097B3E8 /* lib */ = {
@@ -2814,7 +2803,7 @@
 				5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */,
 				5219621D16E6C61400EA7DDF /* res-transform.mxo */,
 				529DD9D717A2472A00E1F789 /* basicresonators~.mxo */,
-				52B654DB17D021E5004FD84E /* 2threshattack~ copy.mxo */,
+				52B654DB17D021E5004FD84E /* granubuf~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3008,7 +2997,7 @@
 			);
 			name = "granubuf~";
 			productName = "2threshattack~";
-			productReference = 52B654DB17D021E5004FD84E /* 2threshattack~ copy.mxo */;
+			productReference = 52B654DB17D021E5004FD84E /* granubuf~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		52E4476715F1889300C91B67 /* accumulate~ */ = {
@@ -3846,12 +3835,6 @@
 			mainGroup = 52F10A9715F07157008FC371;
 			productRefGroup = 52F10AA315F07157008FC371 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 52B654E317D0220D004FD84E /* Products */;
-					ProjectRef = 52B654E217D0220D004FD84E /* granubuf~.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				52F10ADC15F072B2008FC371 /* CNMAT-Externs */,
@@ -3915,17 +3898,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		52B654EB17D0220D004FD84E /* granubuf~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			name = "granubuf~.mxo";
-			path = "granubuf~.bundle";
-			remoteRef = 52B654EA17D0220D004FD84E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		521961AF16E6C0ED00EA7DDF /* Resources */ = {
@@ -4414,8 +4386,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				52B654CF17D021E5004FD84E /* commonsyms.c in Sources */,
-				52B654D017D021E5004FD84E /* 2threshattack~.c in Sources */,
-				52B654E617D0220D004FD84E /* granubuf~ copy.c in Sources */,
 				52B654E717D0220D004FD84E /* granubuf~.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4974,6 +4944,11 @@
 			isa = PBXTargetDependency;
 			target = 52E4479415F1890800C91B67 /* analyzer~ */;
 			targetProxy = 529D6EEE173338FD005FD64C /* PBXContainerItemProxy */;
+		};
+		52B654EE17D023D5004FD84E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52B654CD17D021E5004FD84E /* granubuf~ */;
+			targetProxy = 52B654ED17D023D5004FD84E /* PBXContainerItemProxy */;
 		};
 		52E447EF15F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5563,14 +5538,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "2threshattack~ copy-Info.plist";
+				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = "2threshattack~ copy";
+				PRODUCT_NAME = "granubuf~";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5584,14 +5559,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "2threshattack~ copy-Info.plist";
+				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = "2threshattack~ copy";
+				PRODUCT_NAME = "granubuf~";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
