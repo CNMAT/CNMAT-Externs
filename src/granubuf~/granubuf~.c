@@ -500,7 +500,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
 //    const double tabSamp = x->tabSamp;
     const double halftab = x->halftab;
     const int    shapetabscale = x->shapetabscale;
-    const int    wtabscale = x->wtabscale;
+//    const int    wtabscale = x->wtabscale;
     
     long       tex_pc, xshapetab, yshapetab;
     double     pc, wpc, chirpdir, w_tabSamp;
@@ -583,7 +583,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                     x->envbuf_nchans[i] = w_nchans[i];
                     x->envbuffer_modified[i] = false;
                 }
-             //   post("%s %d %d", __func__, i, x->envbuf_frames[i]);
+//                post("%s %d %d", __func__, i, x->envbuf_frames[i]);
             } else {
                 w_valid[i] = 0;
             }
@@ -650,7 +650,6 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
 
     x->prev_in1 = prev_trig;
 
-
     for( i = 0; i < DEFAULTMAXOSCILLATORS; i++, o++)
     {
         
@@ -692,9 +691,10 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         }
         else
         {
-            if(!w_valid[w_bufoffset]) goto release;
 
             w_bufoffset = x->tab_w_index[w_index] - GRANUBUF_NUMINTERNAL_WINDOWS;
+            if(!w_valid[w_bufoffset]) goto release;
+            
             num_wframes = w_frames[w_bufoffset];
             num_wchans = w_nchans[w_bufoffset];
             w_tab = w_buftab[w_bufoffset];
@@ -704,7 +704,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         if(!valid[buf_index]) goto release;
         
         w_tabSamp     = 1.0 / num_wframes;
-        
+ 
         if( x->tab_w_index[w_index] == FOF) //fof is a special case which requres two window tables
         {
             tex = o->tex;
@@ -767,65 +767,6 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
             }
 
         }
-        /*
-        else if( w_index == 10 )
-        {
-            chirprate = o->chirp_rate;
-            chirpdir  = o->chirp_direction;
-            while(j < sampleframes && wpc < STABSZ && (pc + location) <= frames[buf_index] && ((frames[buf_index] - location) + pc) >= 0)
-            {
-                
-                //amp = pow( cos_wind[ (uint32_t)(pow( wpc * tabSamp, att ) * STABSZ) ], slop);
-                amp = gr_amp * granu_exptab[ yshapetab ][
-                                          (uint32_t)(cos_wind[(uint32_t)(granu_exptab[ xshapetab ][ (uint32_t)wpc ] * wtabscale)] * wtabscale)
-                                          ];
-
-                if(pi > 0)
-                    pSamp = pc + location;
-                else
-                    pSamp = (frames[buf_index] - location) + pc;
-                
-                upper_samp = ceil(pSamp);
-                linSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)floor(pSamp)  ], tab[buf_index][ nchans[buf_index] * (uint32_t)upper_samp  ], upper_samp - (pSamp));
-                outlets[outletnum][j] += amp * linSamp;
-                
-                pc = pc + pi + (wpc * tabSamp * chirprate * chirpdir);
-                wpc += wpi;
-
-                j++;
-            }
-            
-        } 
-        else if( w_index == 11 )
-        {
-            chirprate = o->chirp_rate;
-            chirpdir  = o->chirp_direction;
-            while(j < sampleframes && wpc < STABSZ && (pc + location) <= frames[buf_index] && ((frames[buf_index] - location) + pc) >= 0)
-            {
-                //amp = pow( cos_wind[ (uint32_t)(pow( wpc * tabSamp, att ) * STABSZ) ], slop);
-                amp = gr_amp * granu_exptab[ yshapetab ][
-                                          (uint32_t)(cos_wind[(uint32_t)(granu_exptab[ xshapetab ][ (uint32_t)wpc ] * wtabscale)] * wtabscale)
-                                          ];
-                
-                if(pi > 0)
-                    pSamp = pc + location;
-                else
-                    pSamp = (frames[buf_index] - location) + pc;
-                
-                upper_samp = ceil(pSamp);
-                linSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)floor(pSamp)  ], tab[buf_index][ nchans[buf_index] * (uint32_t)upper_samp  ], upper_samp - (pSamp));
-                outlets[outletnum][j] += amp * linSamp;
-                
-                pc = pc + pi + (chirpdir * pow(chirprate, wpc * tabSamp));
-                wpc += wpi;
-                
-                j++;
-            }
-            
-        } else {
-            goto release;
-        } 
-         */
         
         o->offset = 0;
 
@@ -846,7 +787,7 @@ release:
         }
 
     }
-    
+
 //unlock
     for(i=0; i<numbufs; i++)
         buffer_unlocksamples(buffer[i]);
@@ -896,7 +837,7 @@ void grans_free(t_grans *x)
 //buffer name is unavailable on delete, so there is no way to tell which buffer to notify that it's not there...
 //not good! -- but we check for it in the perform routine so I guess it's ok
 
-//currently fails silently on unbind and free (but I think this is not a problem)
+//currently fails silently on unbind and free (but this seems not to be a problem (yet))
 t_max_err granubuf_notify(t_grans *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
 //    post("%s %s %s", __func__, s->s_name, msg->s_name);
@@ -904,20 +845,19 @@ t_max_err granubuf_notify(t_grans *x, t_symbol *s, t_symbol *msg, void *sender, 
     // ask attribute object for name
     
     t_buffer_info buffer_info;
-    buffer_getinfo((t_buffer_obj *)data, &buffer_info); //<< magic
+    buffer_getinfo((t_buffer_obj *)data, &buffer_info); //<< e.j. magic -- (data is the buffer object? who would have guessed?)
     
     if(!buffer_info.b_name)
         return -1;
         
     t_symbol *buffername = buffer_info.b_name;
     
-    if (buffername && ((msg == ps_buffer_modified) || msg == gensym("globalsymbol_binding")))
+//    post("%s %s %s", __func__, buffername->s_name, msg->s_name);
+    
+    if (buffername && ((msg == ps_buffer_modified) || msg == gensym("globalsymbol_binding") || msg == gensym("globalsymbol_unbinding")))
     {
         //buffername = (t_symbol *)object_method((t_object *)data, gensym("getname"));
     
-        
-    
-//        post("%s %s %s", __func__, buffername->s_name, msg->s_name);
 
         int i;
         for(i = 0; i < x->numbufs; i++)
