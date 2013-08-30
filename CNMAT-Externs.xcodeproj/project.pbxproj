@@ -996,7 +996,6 @@
 		52B654DB17D021E5004FD84E /* granubuf~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "granubuf~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B654DD17D0220D004FD84E /* granu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = granu.h; sourceTree = "<group>"; };
 		52B654DE17D0220D004FD84E /* granubuf-w-lines.maxpat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "granubuf-w-lines.maxpat"; sourceTree = "<group>"; };
-		52B654DF17D0220D004FD84E /* granubuf~ copy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "granubuf~ copy.c"; sourceTree = "<group>"; };
 		52B654E017D0220D004FD84E /* granubuf~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "granubuf~.c"; sourceTree = "<group>"; };
 		52B654E117D0220D004FD84E /* granubuf~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "granubuf~.maxhelp"; sourceTree = "<group>"; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
@@ -2063,7 +2062,6 @@
 			children = (
 				52B654DD17D0220D004FD84E /* granu.h */,
 				52B654DE17D0220D004FD84E /* granubuf-w-lines.maxpat */,
-				52B654DF17D0220D004FD84E /* granubuf~ copy.c */,
 				52B654E017D0220D004FD84E /* granubuf~.c */,
 				52B654E117D0220D004FD84E /* granubuf~.maxhelp */,
 			);
