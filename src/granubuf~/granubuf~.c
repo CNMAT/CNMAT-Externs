@@ -84,7 +84,7 @@
 
 #include "granu.h"
 
-#define GRANUBUF_NUMINLET_TYPES 11
+#define GRANUBUF_NUMINLET_TYPES 13
 
 typedef enum _granubuf_in
 {
@@ -100,19 +100,22 @@ typedef enum _granubuf_in
     BUF_INDEX,
     AMP,
     TEX, //only used with fof window
-    CHIRP //only used with chirp window (chirp window used to specify log or linear)
+    CHIRP, //only used with chirp window (chirp window used to specify log or linear)
+    CHIRPTYPE // 0 linear, 1 exponential
 } e_granubuf_in;
 
 
 typedef struct _sample_grain
 {
-    long        startpoint;
+    long        startpoint; // in samples
+    long        endpoint; // in samples
     
     double      phase_current;
     double      phase_inc;
     
     double      chirp_rate;
     double      chirp_direction;
+    long        chirp_type;
     
     int         window_index;
     
@@ -146,6 +149,8 @@ typedef struct _grans {
     long            outlet;
     long            buf_index;
     double          amp;
+    long            chirp_type; // 0 linear, 1 exponential
+    double          chirp_rate;
     
     t_symbol        *current_window;
     t_symbol        *current_buffer;
@@ -254,6 +259,12 @@ void grans_assist(t_grans *x, void *b, long m, long a, char *s)
             case AMP:
                 sprintf(s, "(signal/float) amplitude (default 1.0) ");
                 break;
+            case CHIRP:
+                sprintf(s, "(signal/float) chirp rate ");
+                break;
+            case CHIRPTYPE:
+                sprintf(s, "(signal/float) chirp type (0 linear (default), 1 exponential ");
+                break;
             default:
                 sprintf(s, "I am inlet %ld", a);
                 break;
@@ -311,7 +322,12 @@ void granubuf_float(t_grans *x, double f)
         case AMP:
             x->amp = f;
             break;
-
+        case CHIRP:
+            x->chirp_rate = f;
+            break;
+        case CHIRPTYPE:
+            x->chirp_type = f;
+            break;
         default:
             break;
     }
@@ -364,6 +380,12 @@ void granubuf_int(t_grans *x, int f)
         case AMP:
             x->amp = (double)f;
             break;
+        case CHIRP:
+            x->chirp_rate = (double)f;
+            break;
+        case CHIRPTYPE:
+            x->chirp_type = (double)f;
+            break;
         default:
             break;
     }
@@ -392,7 +414,7 @@ static void grans_clear(t_grans *x)
 }
 
 
-void grans_setNewGrain(t_grans *x, int offset, double chirprate, double location, double rate, double duration, double attack, double slope, int window_index, int outlet, int bufferindex, double amp)
+void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype, double location, double rate, double duration, double attack, double slope, int window_index, int outlet, int bufferindex, double amp)
 {
     int i, maxoverlap = x->maxoverlap;
     t_sample_grain *o = x->base;
@@ -409,6 +431,7 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, double location
 
             o->chirp_direction = (chirprate > 0) ? 1 : -1;
             o->chirp_rate = fabs(chirprate) * pkw;
+            o->chirp_type = chirptype;
             
             double dur_hz = 1000.0 / duration;
 
@@ -489,6 +512,8 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     int    outlet = x->outlet;
     int    buf_index = x->buf_index;
     double gr_amp = x->amp;
+    double chirprate = x->chirp_rate;
+    int    chirptype = x->chirp_type;
     
     
     const int alwayson = x->always_on;
@@ -497,14 +522,14 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     if(maxoverlap != x->maxoverlap) x->maxoverlap = maxoverlap;
     
     
-    const double tabSamp = x->tabSamp;
+//    const double tabSamp = x->tabSamp;
     const double halftab = x->halftab;
     const int    shapetabscale = x->shapetabscale;
     const int    wtabscale = x->wtabscale;
     
     long       tex_pc, xshapetab, yshapetab;
-    double     pc, wpc, chirpdir;
-    double     pi, wpi, amp, tex, chirprate, pSamp, lowerSamp, upper_samp, linSamp;
+    double     pc, wpc, chirpdir, w_tabSamp;
+    double     pi, wpi, amp, tex, pSamp, lowerSamp, upper_samp, linSamp;
     int        w_index, outletnum;
 
     t_float **internal_window = granu_internal_window;
@@ -623,8 +648,10 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                     outlet = inlets[i][j];
                 else if(x->inlet_type[i] == AMP)
                     gr_amp = inlets[i][j];
-                
-                
+                else if(x->inlet_type[i] == CHIRP)
+                    chirprate = inlets[i][j];
+                else if(x->inlet_type[i] == CHIRPTYPE)
+                    chirptype = inlets[i][j];
             }
             
             
@@ -634,7 +661,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         if ( trigger != 0.0 && location >= 0.0 && location < frames[buf_index] && dur > 0.0 && buf_index < numbufs && buf_index >= 0 && window_index < x->numwindows && window_index >= 0 && x->nosc < maxoverlap)
         {
            // post("j[%d] trig[%f] loc[%f] rate[%f] dur[%f] att[%f] slop[%f] type[%d] outlet[%d] buf_index[%d] gr_amp[%f]", j, trigger, location, rate, dur,  w_shapex, w_shapey, (int)window_index, outlet, buf_index, gr_amp);
-            grans_setNewGrain( x, j, trigger, location, rate, dur,  w_shapex, w_shapey, window_index, outlet, buf_index, gr_amp );
+            grans_setNewGrain( x, j, chirprate, chirptype, location, rate, dur,  w_shapex, w_shapey, window_index, outlet, buf_index, gr_amp );
         }
 
 
@@ -671,12 +698,16 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         
         location    = o->startpoint;
         
-        buf_index     = o->buf_index;
+        buf_index   = o->buf_index;
         gr_amp      = o->amp;
         
         j           = o->offset;
 
-        w_index      = o->window_index; //index of all windows (including internal windows)
+        w_index     = o->window_index; //index of all windows (including internal windows)
+        
+        chirprate   = o->chirp_rate;
+        chirpdir    = o->chirp_direction;
+        chirptype   = o->chirp_type;
         
         if(x->tab_w_index[w_index] < GRANUBUF_NUMINTERNAL_WINDOWS) //do safety test on grain creation
         {
@@ -686,16 +717,18 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         }
         else
         {
+            if(!w_valid[w_bufoffset]) goto release;
+
             w_bufoffset = x->tab_w_index[w_index] - GRANUBUF_NUMINTERNAL_WINDOWS;
             num_wframes = w_frames[w_bufoffset];
             num_wchans = w_nchans[w_bufoffset];
             w_tab = w_buftab[w_bufoffset];
             
-            if(!w_valid[w_bufoffset]) goto release;
         }
         
         if(!valid[buf_index]) goto release;
         
+        w_tabSamp     = 1.0 / num_wframes;
         
         if( x->tab_w_index[w_index] == FOF) //fof is a special case which requres two window tables
         {
@@ -748,7 +781,11 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                 linSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)ceil(pSamp)  ], pSamp - lowerSamp);
                 outlets[outletnum][j] += amp * linSamp;
 
-                pc += pi;
+                if(chirptype == 1)
+                    pc += pi + (pow(chirprate, wpc * w_tabSamp) * chirpdir);
+                else
+                    pc += pi + (wpc * w_tabSamp * chirprate * chirpdir);
+                
                 wpc += wpi;
                 
                 j++;
@@ -1277,6 +1314,16 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
                     x->inlet_name[x->numinlets] = ps_granu_amp;
                     x->inlet_type[x->numinlets++] = AMP;
                 }
+                else if(inlet_name == ps_granu_chirprate)
+                {
+                    x->inlet_name[x->numinlets] = ps_granu_chirprate;
+                    x->inlet_type[x->numinlets++] = CHIRP;
+                }
+                else if(inlet_name == ps_granu_chirptype)
+                {
+                    x->inlet_name[x->numinlets] = ps_granu_chirptype;
+                    x->inlet_type[x->numinlets++] = CHIRPTYPE;
+                }
                 else
                 {                        
                     object_error((t_object *)x, "unknown parameter name: %s", inlet_name->s_name);
@@ -1373,6 +1420,7 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
                         
         grans_clear(x);
         
+        
         x->always_on = 0;
         x->location = 0;
         x->rate = 1;
@@ -1382,6 +1430,8 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
         x->outlet = -1;
         x->buf_index = 0;
         x->amp = 1.0;
+        x->chirp_type = 0;
+        x->chirp_rate = 0;
         
         x->numbufs = 0;
         x->numenvbufs = 0;
@@ -1485,6 +1535,9 @@ int main(void)
     CLASS_ATTR_LONG(c, "buffer_index", 0, t_grans, buf_index);
     CLASS_ATTR_LONG(c, "outlet", 0, t_grans, outlet);
     CLASS_ATTR_LONG(c, "amp", 0, t_grans, amp);
+
+    CLASS_ATTR_DOUBLE(c, "chirprate", 0, t_grans, chirp_rate);
+    CLASS_ATTR_LONG(c, "chirptype", 0, t_grans, chirp_type);
     
     CLASS_ATTR_LONG(c, "maxoverlap", 0, t_grans, maxoverlap);
     CLASS_ATTR_LABEL(c, "maxoverlap", 0, "max grain overlap");
@@ -1518,7 +1571,9 @@ int main(void)
         ps_granu_buf_idx = gensym("buffer_index");
         ps_granu_amp = gensym("amp");
         ps_granu_tex = gensym("tex");
-        
+        ps_granu_chirprate = gensym("chirprate");
+        ps_granu_chirptype = gensym("chirptype");
+
     }
 
     class_dspinit(c);

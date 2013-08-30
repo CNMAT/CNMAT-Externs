@@ -59,7 +59,7 @@ static t_symbol *ps_granu_dampedsine;
 static t_symbol *ps_granu_sinc;
 static t_symbol *ps_buffer_modified;
 
-static t_symbol *ps_granu_trigger, *ps_granu_location, *ps_granu_rate, *ps_granu_dur, *ps_granu_shapex, *ps_granu_shapey, *ps_granu_win_idx, *ps_granu_outlet, *ps_granu_buf_idx, *ps_granu_amp, *ps_granu_tex;
+static t_symbol *ps_granu_trigger, *ps_granu_location, *ps_granu_rate, *ps_granu_dur, *ps_granu_shapex, *ps_granu_shapey, *ps_granu_win_idx, *ps_granu_outlet, *ps_granu_buf_idx, *ps_granu_amp, *ps_granu_tex, *ps_granu_chirprate, *ps_granu_chirptype;
 
 //********************** utils
 
