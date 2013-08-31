@@ -38,6 +38,8 @@
     - change location/dur to be start/end -- this effects the resulting rate, but due to situations with reverse play rates and negative chirps, we really need the end point -- this is different with granusoids~ and granufm~ which are oscilator based (actaully I might add options for wave tables there also...)
    - fix chirp
  
+    - add samplerate check in dsp function, if this gets changed after buffer info is loaded it screws up the pitch, or calculate increment in the perform routine with the samplerate information
+ 
  eventually:
     - cubic, bspline, resampled interpolation for nicer slow rate (but linear is sounding not too bad)
     - adjust for user's buffer sampling rate?
@@ -65,11 +67,10 @@ typedef enum _granubuf_in
 {
     UNUSED = -1,
     TRIGGER,
-    LOCATION,
+    STARTLOCATION,
+    ENDLOCATION,
     RATE,
     DURATION,
-    SHAPEX, // probably not using this (TEX for fof now)
-    SHAPEY, // removed this
     WIN_INDEX,
     OUTLET,
     BUF_INDEX,
@@ -96,9 +97,6 @@ typedef struct _sample_grain
     
     double      window_phase_curent;
     double      window_phase_inc;
-    
-    double      window_shapex;
-    double      window_shapey;
        
     double      tex;
     int         offset;
@@ -114,12 +112,16 @@ typedef struct _sample_grain
 typedef struct _grans {
 	t_pxobject		ob;
     
+    int             loop_mode;
+    int             interpolation;
+    
     //float input memory
-    double          location;
-    double          rate;
+    double          start; // location in ratio 0-1
+    double          end; // end in ratio 0-1
+    double          rate; 
     double          dur;
-    double          w_shapex;
-    double          w_shapey;
+    
+    double          tex;
     long            window_index; //change to window_index
     long            outlet;
     long            buf_index;
@@ -181,10 +183,11 @@ typedef struct _grans {
     
     double          prev_in1;
     
-    int         always_on;
+    int             always_on;
     
     short           *count;
     
+
     
 } t_grans;
 
@@ -204,7 +207,7 @@ void grans_assist(t_grans *x, void *b, long m, long a, char *s)
             case TRIGGER:
                 sprintf(s, "(signal/float) trigger != 0 ");
                 break;
-            case LOCATION:
+            case STARTLOCATION:
                 sprintf(s, "(signal/float) sample start time ms ");
                 break;
             case RATE:
@@ -212,15 +215,6 @@ void grans_assist(t_grans *x, void *b, long m, long a, char *s)
                 break;
             case DURATION:
                 sprintf(s, "(signal/float) grain dur ms ");
-                break;
-            case TEX:
-                sprintf(s, "(signal/float) 0-1 attack ratio for FOF window only ");
-                break;
-            case SHAPEX:
-                sprintf(s, "(signal/float) x shape ");
-                break;
-            case SHAPEY:
-                sprintf(s, "(signal/float) y shape ");
                 break;
             case WIN_INDEX:
                 sprintf(s, "(signal/int) window buffer index ");
@@ -240,6 +234,9 @@ void grans_assist(t_grans *x, void *b, long m, long a, char *s)
             case CHIRPTYPE:
                 sprintf(s, "(signal/float) chirp type (0 linear (default), 1 exponential ");
                 break;
+            case TEX:
+                sprintf(s, "(signal/float) 0-1 attack ratio for FOF window only ");
+                break;
             default:
                 sprintf(s, "I am inlet %ld", a);
                 break;
@@ -255,8 +252,8 @@ void granubuf_float(t_grans *x, double f)
 {
     int inlet = proxy_getinlet((t_object *)x);
     switch (x->inlet_type[inlet]) {
-        case LOCATION:
-            x->location = f;
+        case STARTLOCATION:
+            x->start = f;
             break;
         case RATE:
             x->rate = f;
@@ -265,13 +262,7 @@ void granubuf_float(t_grans *x, double f)
             x->dur = f;
             break;
         case TEX:
-            x->w_shapex = f;
-            break;
-        case SHAPEX:
-            x->w_shapex = f;
-            break;
-        case SHAPEY:
-            x->w_shapey = f;
+            x->tex = f;
             break;
         case WIN_INDEX:
             if(f >= 0 && f < x->numwindows)                
@@ -313,8 +304,8 @@ void granubuf_int(t_grans *x, int f)
 {
     int inlet = proxy_getinlet((t_object *)x);
     switch (x->inlet_type[inlet]) {
-        case LOCATION:
-            x->location = (double)f;
+        case STARTLOCATION:
+            x->start = (double)f;
             break;
         case RATE:
             x->rate = (double)f;
@@ -323,13 +314,7 @@ void granubuf_int(t_grans *x, int f)
             x->dur = (double)f;
             break;
         case TEX:
-            x->w_shapex = (double)f;
-            break;
-        case SHAPEX:
-            x->w_shapex = (double)f;
-            break;
-        case SHAPEY:
-            x->w_shapey = (double)f;
+            x->tex = (double)f;
             break;
         case WIN_INDEX:
             if(f >= 0 && f < x->numwindows)
@@ -380,8 +365,6 @@ static void grans_clear(t_grans *x)
 		p->phase_inc = 0.0;
 		p->phase_current = 0.0;
         p->window_phase_curent = 0.0;
-        p->window_shapex = 1.0;
-        p->window_shapey = 1.0;
         p->window_index  = 0;
         p->tex = 0.0;
 	}
@@ -389,7 +372,7 @@ static void grans_clear(t_grans *x)
 }
 
 
-void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype, double location, double rate, double duration, double attack, double slope, int window_index, int outlet, int bufferindex, double amp)
+void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype, double location, double rate, double duration, double tex, int window_index, int outlet, int bufferindex, double amp)
 {
     int i, maxoverlap = x->maxoverlap;
     t_sample_grain *o = x->base;
@@ -426,10 +409,8 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype,
             o->offset = offset;
             
             o->window_phase_curent = 0.0; //offset for cos
-            o->window_shapex = CLAMP(attack, 0.0000000001, 1.);
-            o->window_shapey = CLAMP(slope, 0.0000000001, 1.);
             
-            o->tex = 1.0 / o->window_shapex;
+            o->tex = (tex == 0) ? 0 : 1.0 / CLAMP(tex, 0., 1.);;
 
             o->outlet = (outlet == -1) ? x->outletiter++ % x->numoutlets : outlet % x->numoutlets;
             
@@ -478,11 +459,10 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
 
     double prev_trig = x->prev_in1;
     double trigger;
-    double location = x->location;
+    double location = x->start;
     double rate = x->rate;
     double dur = x->dur;
-    double w_shapex = x->w_shapex;
-    double w_shapey = x->w_shapey;
+    double tex = x->tex;
     double window_index = x->window_index;
     int    outlet = x->outlet;
     int    buf_index = x->buf_index;
@@ -490,6 +470,8 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     double chirprate = x->chirp_rate;
     int    chirptype = x->chirp_type;
     
+    int    interpolation = x->interpolation;
+    int    loop = x->loop_mode;
     
     const int alwayson = x->always_on;
         
@@ -502,9 +484,9 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     const int    shapetabscale = x->shapetabscale;
 //    const int    wtabscale = x->wtabscale;
     
-    long       tex_pc, xshapetab, yshapetab;
+    long       tex_pc;
     double     pc, wpc, chirpdir, w_tabSamp;
-    double     pi, wpi, amp, tex, pSamp, lowerSamp, upper_samp, linSamp;
+    double     pi, wpi, amp, pSamp, lowerSamp, upper_samp, linSamp;
     int        w_index, outletnum;
 
     t_float **internal_window = granu_internal_window;
@@ -603,18 +585,14 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
             {
                 if(x->inlet_type[i] == TRIGGER)
                     trigger = inlets[i][j]; //trigger also used for chirp rate
-                else if(x->inlet_type[i] == LOCATION)
+                else if(x->inlet_type[i] == STARTLOCATION)
                     location = inlets[i][j];
                 else if(x->inlet_type[i] == DURATION)
                     dur = inlets[i][j];
                 else if(x->inlet_type[i] == RATE)
                     rate = inlets[i][j];
                 else if(x->inlet_type[i] == TEX)
-                    w_shapex = inlets[i][j];
-                else if(x->inlet_type[i] == SHAPEX)
-                    w_shapex = inlets[i][j];
-                else if(x->inlet_type[i] == SHAPEY)
-                    w_shapey = inlets[i][j];
+                    tex = inlets[i][j];
                 else if(x->inlet_type[i] == WIN_INDEX)
                     window_index = inlets[i][j];
                 else if(x->inlet_type[i] == BUF_INDEX)
@@ -636,7 +614,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         if ( trigger != 0.0 && location >= 0.0 && location < frames[buf_index] && dur > 0.0 && buf_index < numbufs && buf_index >= 0 && window_index < x->numwindows && window_index >= 0 && x->nosc < maxoverlap)
         {
            // post("j[%d] trig[%f] loc[%f] rate[%f] dur[%f] att[%f] slop[%f] type[%d] outlet[%d] buf_index[%d] gr_amp[%f]", j, trigger, location, rate, dur,  w_shapex, w_shapey, (int)window_index, outlet, buf_index, gr_amp);
-            grans_setNewGrain( x, j, chirprate, chirptype, location, rate, dur,  w_shapex, w_shapey, window_index, outlet, buf_index, gr_amp );
+            grans_setNewGrain( x, j, chirprate, chirptype, location, rate, dur,  tex, window_index, outlet, buf_index, gr_amp );
         }
 
 
@@ -661,13 +639,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         
         wpc     = o->window_phase_curent;
         wpi     = o->window_phase_inc;
-                
-        w_shapex    = o->window_shapex;
-        w_shapey    = o->window_shapey;
 
-        xshapetab = (uint32_t)(w_shapex * shapetabscale); //static, so could be in the grain struct
-        yshapetab = (uint32_t)(w_shapey * shapetabscale); //static, so could be in the grain struct
-        
         outletnum   = o->outlet;
         
         location    = o->startpoint;
@@ -711,7 +683,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
             while(j < sampleframes && wpc < num_wframes && (pc + location) <= frames[buf_index] && ((frames[buf_index] - location) + pc) >= 0)
             {
 
-                tex_pc = (uint32_t)wrapPhase(wpc * tex, STABSZ);
+                tex_pc = (uint32_t)wrapPhase(wpc * tex, STABSZ); //<< phase wrap not really necessary if bounds are checked for tex
                 if( tex_pc <= halftab )
                 {
                     //skipping interpolation for internal window, since we know it is 2^16
@@ -752,10 +724,17 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                 else
                     pSamp = (frames[buf_index] - location) + pc;
 
-                lowerSamp = floor(pSamp);
-                linSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)ceil(pSamp)  ], pSamp - lowerSamp);
-                outlets[outletnum][j] += amp * linSamp;
-
+                if (interpolation == 1) //<< probably not good to check this on every sample!
+                {
+                    lowerSamp = floor(pSamp);
+                    linSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)ceil(pSamp)  ], pSamp - lowerSamp);
+                    outlets[outletnum][j] += amp * linSamp;
+                }
+                else
+                {
+                    outlets[outletnum][j] += amp * tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
+                }
+                
                 if(chirptype == 1)
                     pc += pi + (pow(chirprate, wpc * w_tabSamp) * chirpdir);
                 else
@@ -1169,10 +1148,15 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
                     x->inlet_name[x->numinlets] = ps_granu_trigger;
                     x->inlet_type[x->numinlets++] = TRIGGER;
                 }
-                else if(inlet_name == ps_granu_location)
+                else if(inlet_name == gensym("location"))
                 {
-                    x->inlet_name[x->numinlets] = ps_granu_location;
-                    x->inlet_type[x->numinlets++] = LOCATION;
+                    x->inlet_name[x->numinlets] = ps_granu_start;
+                    x->inlet_type[x->numinlets++] = STARTLOCATION;
+                }
+                else if(inlet_name == ps_granu_start)
+                {
+                    x->inlet_name[x->numinlets] = ps_granu_start;
+                    x->inlet_type[x->numinlets++] = STARTLOCATION;
                 }
                 else if(inlet_name == ps_granu_dur)
                 {
@@ -1188,26 +1172,6 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
                 {
                     x->inlet_name[x->numinlets] = ps_granu_tex;
                     x->inlet_type[x->numinlets++] = TEX;
-                }
-                else if(inlet_name == ps_granu_shapex)
-                {
-                    /*
-                    if(!granu_shapingTableExists)
-                        granu_makeShapeTables();
-                      */
-                    
-                    x->inlet_name[x->numinlets] = ps_granu_shapex;
-                    x->inlet_type[x->numinlets++] = SHAPEX;
-                }
-                else if(inlet_name == ps_granu_shapey)
-                {
-                    /*
-                    if(!granu_shapingTableExists)
-                        granu_makeShapeTables();
-                    */
-                    
-                    x->inlet_name[x->numinlets] = ps_granu_shapey;
-                    x->inlet_type[x->numinlets++] = SHAPEY;
                 }
                 else if(inlet_name == ps_granu_win_idx)
                 {
@@ -1335,13 +1299,14 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
                         
         grans_clear(x);
         
+        x->loop_mode = 0;
+        x->interpolation = 1;
         
         x->always_on = 0;
-        x->location = 0;
+        x->start = 0;
         x->rate = 1;
         x->dur = 100;
-        x->w_shapex = 0.5;
-        x->w_shapey = 0.5;
+        x->tex = 0.5;
         x->outlet = -1;
         x->buf_index = 0;
         x->amp = 1.0;
@@ -1433,19 +1398,16 @@ int main(void)
 
     CLASS_ATTR_LONG(c, "numoutlets", ATTR_SET_OPAQUE_USER, t_grans, numoutlets);
     
-    CLASS_ATTR_DOUBLE(c, "location", 0, t_grans, location);
+    CLASS_ATTR_DOUBLE(c, "start", 0, t_grans, start);
+    CLASS_ATTR_ALIAS(c, "start", "location");
+    
+    CLASS_ATTR_DOUBLE(c, "end", 0, t_grans, end);
     CLASS_ATTR_DOUBLE(c, "rate", 0, t_grans, rate);
     CLASS_ATTR_DOUBLE(c, "duration", 0, t_grans, dur);
     
-    CLASS_ATTR_DOUBLE(c, "tex", 0, t_grans, w_shapex);
+    CLASS_ATTR_DOUBLE(c, "tex", 0, t_grans, tex);
     CLASS_ATTR_LABEL(c, "tex", 0, "tex (for fof window only)");
-    /*
-    CLASS_ATTR_DOUBLE(c, "shapex", 0, t_grans, w_shapex);
-    CLASS_ATTR_LABEL(c, "shapex", 0, "shapex(fof tex)");
-    CLASS_ATTR_ALIAS(c, "shapex", "tex");
-    
-    CLASS_ATTR_DOUBLE(c, "shapey", 0, t_grans, w_shapey);
-    */
+
     CLASS_ATTR_LONG(c, "window_index", 0, t_grans, window_index);
     CLASS_ATTR_LONG(c, "buffer_index", 0, t_grans, buf_index);
     CLASS_ATTR_LONG(c, "outlet", 0, t_grans, outlet);
@@ -1465,22 +1427,27 @@ int main(void)
     CLASS_ATTR_ACCESSORS(c, "setwindow", granubuf_currentwindow_get, granubuf_currentwindow_set);
     CLASS_ATTR_LABEL(c, "setwindow", 0, "current window");
     
+    CLASS_ATTR_LONG(c, "loop", 0, t_grans, loop_mode);
+    CLASS_ATTR_LONG(c, "interpolation", 0, t_grans, interpolation);
+    
+    
     if (!granu_tableExists)
     {
         granu_makeTables();
-        
+
+        //internal symbols
         ps_granu_cos = gensym("cos");
         ps_granu_fof = gensym("fof");
         ps_granu_dampedsine = gensym("dampedsine");
         ps_granu_sinc = gensym("sinc");
         ps_buffer_modified = gensym("buffer_modified");
         
+        //inlet types
         ps_granu_trigger = gensym("trigger");
-        ps_granu_location = gensym("location");
+        ps_granu_start = gensym("start");
+        ps_granu_end = gensym("end");
         ps_granu_rate = gensym("rate");
         ps_granu_dur = gensym("duration");
-        ps_granu_shapex = gensym("shapex");
-        ps_granu_shapey = gensym("shapey");
         ps_granu_win_idx = gensym("window_index");
         ps_granu_outlet = gensym("outlet");
         ps_granu_buf_idx = gensym("buffer_index");
@@ -1496,6 +1463,8 @@ int main(void)
 	granubuf_class = c;
 
 	version_post_copyright();
+    
+    error("n.b. granubuf~ is currently in alpha development -- please be sure to see the help patch for updated information, configuration will be stabilized soon");
     
 	return 0;
 }
