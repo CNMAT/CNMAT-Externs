@@ -101,9 +101,9 @@ typedef enum _granubuf_end_mode
 {
     NOPLAY,
     RESIZE,
-    LOOP,
-    REFLECT,
     CLIP
+    //    LOOP, //might want to add these?
+    //    REFLECT,
 } e_granu_end_mode;
 
 typedef struct _sample_grain
@@ -441,7 +441,7 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype,
 
             switch (overwrite) {
                 case DURATION:
-                    if(rate == 0) return;
+                    if(rate == 0 || start >= end) return;
 
                     _end = end * num_frameIdx;   //calc end, rate(phase_inc)
                     _rate = rate;
@@ -450,7 +450,7 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype,
                    // post("duration overwrite end %f rate %f dur %f",_end, _rate, _dur);
                     break;
                 case RATE:
-
+                    if(start >= end) return;
                     _end = end * num_frameIdx;   //calc end, duration
                     _dur = duration;
                     _rate = (end - start) / (_dur * dur2ratioScalar);
@@ -831,8 +831,8 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         {
             // something seems wrong with the pSamp when looping, probably some kind of loop interpolation issue?
             while(j < sampleframes && wpc < num_wframes)
-            {
-                if(end_mode == LOOP)
+            {//maybe don't need the loop option for now
+  /*              if(end_mode == LOOP)
                 {
                     //pSamp = (pi > 0) ? wrapPhase(pc+start, frames[buf_index]) : wrapPhase(pc+frames[buf_index], frames[buf_index]);
                     
@@ -852,7 +852,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                     }
                     
                 }
-                else if((pc + start) >= frames[buf_index] || (pc + end) < 0)
+                else*/ if((pc + start) >= frames[buf_index] || (pc + end) < 0)
                     break;
                 else
                 {
@@ -1734,7 +1734,6 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
                         
         grans_clear(x);
         
-        x->end_mode = NOPLAY;
         x->interpolation = 1;
         
         x->always_on = 0;
