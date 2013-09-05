@@ -40,6 +40,22 @@
  
     - add samplerate check in dsp function, if this gets changed after buffer info is loaded it screws up the pitch, or calculate increment in the perform routine with the samplerate information
  
+    - add information outlet to get grain information
+
+ ***
+    - errors for values for duration, rate, or end if specified as inlets
+        -- will have to store inlets as static, and then change @passive parameter if changed via message
+
+++++++ STATUS 9/1  BROKEN as is... TO DO ASAP:
+ currently setup for automatic @passive setting with inlets and without
+ need to now implement a check in the grain creation for which element is passive and calculate accordingly
+ also, need to add start_ms and end_ms and make start&end 0-1
+ ... actually, maybe just use 0-1 -- if the user is specifying specific points in the buffer, they will know the buffersize and can normalize to float (might need to check accuracy?
+ 
+++++
+
+ ***
+ 
  eventually:
     - cubic, bspline, resampled interpolation for nicer slow rate (but linear is sounding not too bad)
     - adjust for user's buffer sampling rate?
@@ -81,10 +97,19 @@ typedef enum _granubuf_in
 } e_granubuf_in;
 
 
+typedef enum _granubuf_end_mode
+{
+    NOPLAY,
+    RESIZE,
+    LOOP,
+    REFLECT,
+    CLIP
+} e_granu_end_mode;
+
 typedef struct _sample_grain
 {
-    long        startpoint; // in samples
-    long        endpoint; // in samples
+    double      startpoint; // in samples (floats for interpolation)
+    double      endpoint; // in samples
     
     double      phase_current;
     double      phase_inc;
@@ -112,8 +137,8 @@ typedef struct _sample_grain
 typedef struct _grans {
 	t_pxobject		ob;
     
-    int             loop_mode;
-    int             interpolation;
+    e_granu_end_mode    end_mode;
+    int                 interpolation;
     
     //float input memory
     double          start; // location in ratio 0-1
@@ -136,9 +161,12 @@ typedef struct _grans {
     e_granubuf_in   inlet_type[GRANUBUF_NUMINLET_TYPES];
     long            numinlets;
     
-//    e_granubuf_in   *inlet_type; //variable inlet order
+    int             parameter_error;
+    e_granubuf_in   prev_params[2];
+    e_granubuf_in   overwrite_param; //this should be checked in the grain creation since buffers sizes can vary
+    int             num_time_param_inlets;
     
-    //sample buffer array, 
+    //sample buffer array,
     t_buffer_ref    *buf[GRANU_MAX_BUFFERS];
 	t_symbol        *buf_name[GRANU_MAX_BUFFERS];
 	t_bool          buffer_modified[GRANU_MAX_BUFFERS];
@@ -208,7 +236,10 @@ void grans_assist(t_grans *x, void *b, long m, long a, char *s)
                 sprintf(s, "(signal/float) trigger != 0 ");
                 break;
             case STARTLOCATION:
-                sprintf(s, "(signal/float) sample start time ms ");
+                sprintf(s, "(signal/float) relative sample start time 0-1 ");
+                break;
+            case ENDLOCATION:
+                sprintf(s, "(signal/float) relative sample end time 0-1 ");
                 break;
             case RATE:
                 sprintf(s, "(signal/float) playback rate ");
@@ -254,6 +285,9 @@ void granubuf_float(t_grans *x, double f)
     switch (x->inlet_type[inlet]) {
         case STARTLOCATION:
             x->start = f;
+            break;
+        case ENDLOCATION:
+            x->end = f;
             break;
         case RATE:
             x->rate = f;
@@ -306,6 +340,9 @@ void granubuf_int(t_grans *x, int f)
     switch (x->inlet_type[inlet]) {
         case STARTLOCATION:
             x->start = (double)f;
+            break;
+        case ENDLOCATION:
+            x->end = (double)f;
             break;
         case RATE:
             x->rate = (double)f;
@@ -371,33 +408,107 @@ static void grans_clear(t_grans *x)
     x->nosc = 0;
 }
 
-
-void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype, double location, double rate, double duration, double tex, int window_index, int outlet, int bufferindex, double amp)
+//pre-test that start and end are between 0-1, and bufferindex value
+void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype, double start, double end, double rate, double duration, double tex, int window_index, int outlet, int bufferindex, double amp)
 {
+   // post("%s j[%d] start[%f] end[%f] rate[%f] dur[%f] type[%d] buf_index[%d] ", __func__, offset, start, end, rate, duration, (int)window_index, bufferindex);
+
     int i, maxoverlap = x->maxoverlap;
     t_sample_grain *o = x->base;
     double pkw = x->pkw;
+
+    double frames, num_frameIdx, dur2ratioScalar, dur_hz, _dur, _rate, _end; // using _vars for "low_level" versions of inputs, i.e. calculated here, not passed in
+
+    e_granubuf_in overwrite = x->overwrite_param;
+    e_granu_end_mode end_mode = x->end_mode;
     
     for ( i = 0; i < maxoverlap; ++i )
     {
         if( o->phase_inc == 0.0 )
         {
+            frames = (double)x->buf_frames[bufferindex];
+//            post("%s frames %d", __func__, x->buf_frames[bufferindex]);
+            if(frames == 0)  return;
+            
+            num_frameIdx = frames - 1; //probably check buf_frames > 0
+            dur2ratioScalar = 1 / (frames * x->sampleinterval * 1000.0);
 
+            o->buf_index = bufferindex;
+            o->startpoint = start * num_frameIdx;
+
+            // ms to samples( ms * x->samplerate * 0.001 )
+            // ratio to samples( ratio * numframes ) //numframes is length in samples
+
+            switch (overwrite) {
+                case DURATION:
+                    if(rate == 0) return;
+
+                    _end = end * num_frameIdx;   //calc end, rate(phase_inc)
+                    _rate = rate;
+                    _dur = ((end - start) * frames * x->sampleinterval * 1000.0) / fabs(rate);
+                    //duration = rate * (end - start)
+                   // post("duration overwrite end %f rate %f dur %f",_end, _rate, _dur);
+                    break;
+                case RATE:
+
+                    _end = end * num_frameIdx;   //calc end, duration
+                    _dur = duration;
+                    _rate = (end - start) / (_dur * dur2ratioScalar);
+                    //rate(phase_inc) = (end - start) / (duration / bufferduration_ms)
+                    //post("rate overwrite end %f rate %f dur %f", _end, _rate, _dur);
+                    break;
+                case ENDLOCATION:
+                    _rate = rate; //calc rate(phase_inc), duration
+                    _dur = duration;
+                    _end = (start + (_dur * dur2ratioScalar)) * num_frameIdx;
+                    //end = (start + (duration / bufferduration_ms)) * rate
+                    //post("end overwrite end %f rate %f dur %f", _end, _rate, _dur);
+
+                    break;
+                default:
+                    post("NO PASSIVE PARAMETER SET");
+                    return;
+                    break;
+            }
+            
+            if(_end >= frames)
+            {
+                switch (end_mode) {
+                    case NOPLAY: // 0
+                        return; //exit leaving phase_inc at 0.0
+                        break;
+                    case RESIZE: // 1
+                        _end = num_frameIdx;
+                        _dur = ((1.0 - start) * frames * x->sampleinterval * 1000.0) / fabs(rate);
+                        dur_hz = 1000.0 / _dur;
+                        break;
+                    case CLIP: // 4
+                    default:
+                        dur_hz = 1000.0 / duration;
+                        break; //let window duration be longer than file and just cut off
+                        //loop and reflect modes deal with clipping in perform routine
+                }
+            } else {
+                dur_hz = 1000.0 / _dur;
+            }
+            
+            //do end check, and adjust accordingly for @end_mode
+            
             o->window_index = window_index;
-            o->startpoint = location * x->samplerate * 0.001;
-            o->phase_inc = rate;
-
+            o->phase_inc = _rate;
+            o->endpoint = _end;
+            
             o->chirp_direction = (chirprate > 0) ? 1 : -1;
             o->chirp_rate = fabs(chirprate) * pkw;
             o->chirp_type = chirptype;
             
-            double dur_hz = 1000.0 / duration;
+            
 
 //            post("%s %d", __func__, x->tab_w_index[window_index]);
             if(x->tab_w_index[window_index] < GRANUBUF_NUMINTERNAL_WINDOWS) //do safety test on grain creation
             {
                 o->window_phase_inc = dur_hz * pkw;
-//                post("%s %f", __func__, o->window_phase_inc);
+//                post("%s %f %f", __func__, o->window_phase_inc, o->endpoint );
             }
             else
             {
@@ -414,7 +525,6 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype,
 
             o->outlet = (outlet == -1) ? x->outletiter++ % x->numoutlets : outlet % x->numoutlets;
             
-            o->buf_index = bufferindex;
             o->amp = amp;
             
             x->nosc++;
@@ -459,7 +569,8 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
 
     double prev_trig = x->prev_in1;
     double trigger;
-    double location = x->start;
+    double start = x->start;
+    double end = x->end;
     double rate = x->rate;
     double dur = x->dur;
     double tex = x->tex;
@@ -471,7 +582,8 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     int    chirptype = x->chirp_type;
     
     int    interpolation = x->interpolation;
-    int    loop = x->loop_mode;
+    
+    e_granu_end_mode    end_mode = x->end_mode;
     
     const int alwayson = x->always_on;
         
@@ -486,7 +598,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     
     long       tex_pc;
     double     pc, wpc, chirpdir, w_tabSamp;
-    double     pi, wpi, amp, pSamp, lowerSamp, upper_samp, linSamp;
+    double     pi, wpi, amp, pSamp, lowerSamp, upperSamp, outSamp;
     int        w_index, outletnum;
 
     t_float **internal_window = granu_internal_window;
@@ -526,8 +638,9 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                     x->buf_nchans[i] = nchans[i];
                     x->buffer_modified[i] = false;
                 }
+              //  post("%s frames %d", __func__, x->buf_frames[i]);
             } else {
-              //  post("debug: no frames || no channels, probably do something here");
+                post("debug: no frames || no channels, probably do something here");
                 valid[i] = 0;
                 
             }
@@ -586,7 +699,9 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                 if(x->inlet_type[i] == TRIGGER)
                     trigger = inlets[i][j]; //trigger also used for chirp rate
                 else if(x->inlet_type[i] == STARTLOCATION)
-                    location = inlets[i][j];
+                    start = inlets[i][j];
+                else if(x->inlet_type[i] == ENDLOCATION)
+                    end = inlets[i][j];
                 else if(x->inlet_type[i] == DURATION)
                     dur = inlets[i][j];
                 else if(x->inlet_type[i] == RATE)
@@ -611,10 +726,10 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         }
         
         //add valid tests here
-        if ( trigger != 0.0 && location >= 0.0 && location < frames[buf_index] && dur > 0.0 && buf_index < numbufs && buf_index >= 0 && window_index < x->numwindows && window_index >= 0 && x->nosc < maxoverlap)
+        if ( trigger != 0.0 && start >= 0.0 && start < 1 && end > 0.0 && dur > 0.0 && buf_index < numbufs && buf_index >= 0 && window_index < x->numwindows && window_index >= 0 && x->nosc < maxoverlap)
         {
-           // post("j[%d] trig[%f] loc[%f] rate[%f] dur[%f] att[%f] slop[%f] type[%d] outlet[%d] buf_index[%d] gr_amp[%f]", j, trigger, location, rate, dur,  w_shapex, w_shapey, (int)window_index, outlet, buf_index, gr_amp);
-            grans_setNewGrain( x, j, chirprate, chirptype, location, rate, dur,  tex, window_index, outlet, buf_index, gr_amp );
+//            post("j[%d] start[%f] end[%f] rate[%f] dur[%f] type[%d] buf_index[%d] ", j, start, end, rate, dur, (int)window_index, buf_index);
+            grans_setNewGrain( x, j, chirprate, chirptype, start, end, rate, dur, tex, window_index, outlet, buf_index, gr_amp );
         }
 
 
@@ -642,7 +757,8 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
 
         outletnum   = o->outlet;
         
-        location    = o->startpoint;
+        start       = o->startpoint;
+        end         = o->endpoint;
         
         buf_index   = o->buf_index;
         gr_amp      = o->amp;
@@ -680,7 +796,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         if( x->tab_w_index[w_index] == FOF) //fof is a special case which requres two window tables
         {
             tex = o->tex;
-            while(j < sampleframes && wpc < num_wframes && (pc + location) <= frames[buf_index] && ((frames[buf_index] - location) + pc) >= 0)
+            while(j < sampleframes && wpc < num_wframes && (pc + start) <= frames[buf_index] && ((frames[buf_index] - start) + pc) >= 0)
             {
 
                 tex_pc = (uint32_t)wrapPhase(wpc * tex, STABSZ); //<< phase wrap not really necessary if bounds are checked for tex
@@ -696,13 +812,13 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                 }
                 
                 if(pi > 0)
-                    pSamp = pc + location;
+                    pSamp = pc + start;
                 else
-                    pSamp = (frames[buf_index] - location) + pc;
+                    pSamp = (frames[buf_index] - start) + pc;
                 
-                upper_samp = ceil(pSamp);
-                linSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)floor(pSamp)  ], tab[buf_index][ nchans[buf_index] * (uint32_t)upper_samp  ], upper_samp - (pSamp));
-                outlets[outletnum][j] += amp * linSamp;
+                upperSamp = ceil(pSamp);
+                outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)floor(pSamp)  ], tab[buf_index][ nchans[buf_index] * (uint32_t)upperSamp  ], upperSamp - (pSamp));
+                outlets[outletnum][j] += amp * outSamp;
                 
                 pc += pi;
                 wpc += wpi;
@@ -713,28 +829,57 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         }
         else
         {
-            while(j < sampleframes && wpc < num_wframes && (pc + location) <= frames[buf_index] && ((frames[buf_index] - location) + pc) >= 0)
+            // something seems wrong with the pSamp when looping, probably some kind of loop interpolation issue?
+            while(j < sampleframes && wpc < num_wframes)
             {
+                if(end_mode == LOOP)
+                {
+                    //pSamp = (pi > 0) ? wrapPhase(pc+start, frames[buf_index]) : wrapPhase(pc+frames[buf_index], frames[buf_index]);
+                    
+                    if (interpolation == 1)
+                    { // there must be a way not to do all these phaseWraps!
+                        pSamp = start + pc;
+                        //this should be (,end-start) for eventual end mode for midsample selections
+                        lowerSamp = wrapPhase(floor(pSamp), frames[buf_index]-start);
+                        upperSamp = wrapPhase(ceil(pSamp), frames[buf_index]-start);
+                        
+                        outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)upperSamp  ], pSamp - floor(pSamp));
+                    }
+                    else
+                    {
+                        pSamp = start + wrapPhase(pc, frames[buf_index]-start); //this should be (,end-start) for eventual end mode for midsample selections
+                        outSamp = tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
+                    }
+                    
+                }
+                else if((pc + start) >= frames[buf_index] || (pc + end) < 0)
+                    break;
+                else
+                {
+                    if(pi > 0)
+                        pSamp = pc + start;
+                    else
+                        pSamp = pc + end;
+                    
+                    if (interpolation == 1) //<< probably not good to check this on every sample!, also should do loop interpolation
+                    {
+                        lowerSamp = floor(pSamp);
+                        outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)ceil(pSamp)  ], pSamp - lowerSamp);
+                    }
+                    else
+                    {
+                        outSamp = tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
+                    }
+                }
+                
+//                if(end_mode == REFLECT)
+//                    pi = ((pc + start) >= frames[buf_index] || (pc + end) < 0) ? (pi * -1) : pi;
                 
                 lowerSamp = floor(wpc);
                 amp = gr_amp * linear_interp(w_tab[ num_wchans * (uint32_t)lowerSamp  ], w_tab[ num_wchans * (uint32_t)ceil(wpc)  ], wpc - lowerSamp);
                 
-                if(pi > 0)
-                    pSamp = pc + location;
-                else
-                    pSamp = (frames[buf_index] - location) + pc;
+                outlets[outletnum][j] += amp * outSamp;
 
-                if (interpolation == 1) //<< probably not good to check this on every sample!
-                {
-                    lowerSamp = floor(pSamp);
-                    linSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)ceil(pSamp)  ], pSamp - lowerSamp);
-                    outlets[outletnum][j] += amp * linSamp;
-                }
-                else
-                {
-                    outlets[outletnum][j] += amp * tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
-                }
-                
                 if(chirptype == 1)
                     pc += pi + (pow(chirprate, wpc * w_tabSamp) * chirpdir);
                 else
@@ -750,7 +895,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         o->offset = 0;
 
         
-        if(wpc < num_wframes && (pc + location) <= frames[buf_index] && ((frames[buf_index] - location) + pc) >= 0)
+        if(wpc < num_wframes && (pc + start) <= frames[buf_index] && ((frames[buf_index] - start) + pc) >= 0)
         {
             o->window_phase_curent = wpc;
             o->phase_current = pc;
@@ -819,7 +964,7 @@ void grans_free(t_grans *x)
 //currently fails silently on unbind and free (but this seems not to be a problem (yet))
 t_max_err granubuf_notify(t_grans *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
-//    post("%s %s %s", __func__, s->s_name, msg->s_name);
+  //  post("%s %s %s", __func__, s->s_name, msg->s_name);
 
     // ask attribute object for name
     
@@ -831,12 +976,12 @@ t_max_err granubuf_notify(t_grans *x, t_symbol *s, t_symbol *msg, void *sender, 
         
     t_symbol *buffername = buffer_info.b_name;
     
-//    post("%s %s %s", __func__, buffername->s_name, msg->s_name);
     
     if (buffername && ((msg == ps_buffer_modified) || msg == gensym("globalsymbol_binding") || msg == gensym("globalsymbol_unbinding")))
     {
         //buffername = (t_symbol *)object_method((t_object *)data, gensym("getname"));
-    
+
+      //  post("%s %s %s", __func__, buffername->s_name, msg->s_name);
 
         int i;
         for(i = 0; i < x->numbufs; i++)
@@ -918,7 +1063,7 @@ t_max_err granubuf_envbuf_set(t_grans *x, t_object *attr, long argc, t_atom *arg
                            else
                                buffer_ref_set(x->envbuf[x->numenvbufs], x->envbuf_name[i]);
                            
-                           x->envbuffer_modified[x->numenvbufs] = 1;
+                           x->envbuffer_modified[x->numenvbufs] = true;
                            x->tab_w_index[i] = x->numenvbufs + GRANUBUF_NUMINTERNAL_WINDOWS;
                            
                            x->numenvbufs++;
@@ -1044,6 +1189,8 @@ t_max_err granubuf_buf_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
                     else
                         buffer_ref_set(x->buf[i], x->buf_name[i]);
                     
+                    x->buffer_modified[i] = true;
+
                 } else {
                     object_error((t_object *)x, "must have buffer name");
                 }
@@ -1078,6 +1225,7 @@ t_max_err granubuf_buf_get(t_grans *x, t_object *attr, long *argc, t_atom **argv
     
     return 0;
 }
+
 
 t_max_err granubuf_currentbuf_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
 {
@@ -1125,6 +1273,259 @@ t_max_err granubuf_currentbuf_get(t_grans *x, t_object *attr, long *argc, t_atom
     return 0;
 }
 
+void granubuf_postAdjustParam(t_grans *x, e_granubuf_in b)
+{
+    switch (b) {
+        case RATE:
+            object_post((t_object *)x, "passive parameter set to: rate");
+            break;
+        case DURATION:
+            object_post((t_object *)x, "passive parameter set to: duration");
+            break;
+        case ENDLOCATION:
+            object_post((t_object *)x, "passive parameter set to: end");
+            break;
+        case UNUSED:
+            post("unused");
+            break;
+        default:
+            break;
+    }
+}
+
+int granubuf_getPassive(t_grans *x, int a, int b)
+{
+    if((a == DURATION && b == ENDLOCATION) || (b == DURATION && a == ENDLOCATION))
+    {
+//        post("RATE");
+        return RATE;
+    }
+    else if((a == DURATION && b == RATE) || (b == DURATION && a == RATE) || b == UNUSED)
+    {
+//        post("ENDLOCATION");
+        return ENDLOCATION;
+    }
+    else if((a == ENDLOCATION && b == RATE) || (b == ENDLOCATION && a == RATE))
+    {
+//        post("DURATION");
+        return DURATION;
+    }
+    
+    return UNUSED;
+}
+
+void granubuf_setAdjustParam(t_grans *x, e_granubuf_in thisIn, int attrInit)
+{
+    
+    if(x->num_time_param_inlets == 0)
+    {
+        e_granubuf_in a = x->prev_params[0];
+        if(a == thisIn && !attrInit) return;
+        
+//        e_granubuf_in b = x->prev_params[1];
+
+        //push to stack
+        x->prev_params[0] = thisIn;
+        x->prev_params[1] = a;
+/*
+        post("0");
+        granubuf_postAdjustParam(x, thisIn);
+        post("1");
+        granubuf_postAdjustParam(x, a);
+        post("---------------");
+*/
+        e_granubuf_in passive = granubuf_getPassive(x, thisIn, a);
+        
+        if(x->overwrite_param != passive)
+        {
+            x->overwrite_param = passive;
+            granubuf_postAdjustParam(x, passive);
+        }
+        
+        
+    }
+    else if(x->num_time_param_inlets == 1)
+    {
+        e_granubuf_in a = x->prev_params[1];
+        if(a == thisIn) return;
+        
+        x->prev_params[1] = thisIn;
+        e_granubuf_in inlet = x->prev_params[0];
+/*
+        post("0b");
+        granubuf_postAdjustParam(x, thisIn);
+        post("1b");
+        granubuf_postAdjustParam(x, inlet);
+        post("---------------");
+*/
+        e_granubuf_in passive = granubuf_getPassive(x, inlet, thisIn);
+        
+        if(x->overwrite_param != passive)
+        {
+            x->overwrite_param = passive;
+            granubuf_postAdjustParam(x, passive);
+        }
+    
+    }
+    
+}
+
+t_max_err granubuf_duration_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
+{
+    if(x->num_time_param_inlets == 1 && x->prev_params[0] == DURATION)
+    {
+        object_error((t_object *)x, "duration is set as inlet  ");
+        return -1;
+    }
+    else if(x->num_time_param_inlets == 2 && (x->prev_params[1] == DURATION || x->prev_params[0] == DURATION))
+    {
+        object_error((t_object *)x, "duration is set as inlet  ");
+        return -1;
+    }
+    else if(x->num_time_param_inlets == 2 && x->prev_params[1] != DURATION && x->prev_params[0] != DURATION)
+    {
+        object_error((t_object *)x, "duration is configured as a passive parameter ");
+        return -1;
+    }
+    
+    
+    if(argc == 1 && argv)
+    {
+        double duration = -1;
+        
+        if(atom_gettype(argv) == A_FLOAT)
+            duration = atom_getfloat(argv);
+        else if(atom_gettype(argv) == A_LONG)
+            duration = (double)atom_getfloat(argv);
+        else if (atom_gettype(argv) == A_SYM || duration < 0)
+        {
+            object_error((t_object *)x, "unknown duration value ");
+            return -1;
+        }
+        
+        x->dur = duration;
+        granubuf_setAdjustParam(x, DURATION, 0);
+        
+        
+        return 0;
+    }
+    
+    return -1;
+}
+
+t_max_err granubuf_duration_get(t_grans *x, t_object *attr, long *argc, t_atom **argv)
+{
+    
+    char alloc;
+    atom_alloc(argc, argv, &alloc);
+    atom_setfloat(*argv, x->dur);
+
+    return 0;
+}
+
+t_max_err granubuf_rate_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
+{
+    if(x->num_time_param_inlets == 1 && x->prev_params[0] == RATE)
+    {
+        object_error((t_object *)x, "rate is set as inlet  ");
+        return -1;
+    }
+    else if(x->num_time_param_inlets == 2 && (x->prev_params[1] == RATE || x->prev_params[0] == RATE))
+    {
+        object_error((t_object *)x, "rate is set as inlet  ");
+        return -1;
+    }
+    else if(x->num_time_param_inlets == 2 && x->prev_params[1] != RATE && x->prev_params[0] != RATE)
+    {
+        object_error((t_object *)x, "rate is configured as a passive parameter ");
+        return -1;
+    }
+    
+    
+    if(argc == 1 && argv)
+    {
+        double rate = 0;
+        
+        if(atom_gettype(argv) == A_FLOAT)
+            rate = atom_getfloat(argv);
+        else if(atom_gettype(argv) == A_LONG)
+            rate = (double)atom_getfloat(argv);
+        else if (atom_gettype(argv) == A_SYM )
+        {
+            object_error((t_object *)x, "unknown rate value ");
+            return -1;
+        }
+        
+        x->rate = rate;
+        granubuf_setAdjustParam(x, RATE, 0);
+
+        return 0;
+    }
+    
+    return -1;
+}
+
+t_max_err granubuf_rate_get(t_grans *x, t_object *attr, long *argc, t_atom **argv)
+{
+    
+    char alloc;
+    atom_alloc(argc, argv, &alloc);
+    atom_setfloat(*argv, x->rate);
+    
+    return 0;
+}
+
+t_max_err granubuf_end_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
+{
+    if(x->num_time_param_inlets == 1 && x->prev_params[0] == ENDLOCATION)
+    {
+        object_error((t_object *)x, "end is set as inlet  ");
+        return -1;
+    }
+    else if(x->num_time_param_inlets == 2 && (x->prev_params[1] == ENDLOCATION || x->prev_params[0] == ENDLOCATION))
+    {
+        object_error((t_object *)x, "end is set as inlet  ");
+        return -1;
+    }
+    else if(x->num_time_param_inlets == 2 && x->prev_params[1] != ENDLOCATION && x->prev_params[0] != ENDLOCATION)
+    {
+        object_error((t_object *)x, "end is configured as a passive parameter ");
+        return -1;
+    }
+    
+    if(argc == 1 && argv)
+    {
+        double end = 0;
+        
+        if(atom_gettype(argv) == A_FLOAT)
+            end = atom_getfloat(argv);
+        else if(atom_gettype(argv) == A_LONG)
+            end = (double)atom_getfloat(argv);
+        else if (atom_gettype(argv) == A_SYM )
+        {
+            object_error((t_object *)x, "unknown end value ");
+            return -1;
+        }
+        
+        x->end = end;
+        granubuf_setAdjustParam(x, ENDLOCATION, 0);
+
+        return 0;
+    }
+    
+    return -1;
+}
+
+t_max_err granubuf_end_get(t_grans *x, t_object *attr, long *argc, t_atom **argv)
+{
+    
+    char alloc;
+    atom_alloc(argc, argv, &alloc);
+    atom_setfloat(*argv, x->end);
+    
+    return 0;
+}
+
 
 t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
 {
@@ -1135,6 +1536,7 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
         int i;
         x->numinlets = 0;
         t_symbol *inlet_name;
+        int param_interaction_count = 0;
         
         for(i = 0; i < argc; i++)
         {
@@ -1158,15 +1560,46 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
                     x->inlet_name[x->numinlets] = ps_granu_start;
                     x->inlet_type[x->numinlets++] = STARTLOCATION;
                 }
+                else if(inlet_name == ps_granu_end)
+                {
+                    x->inlet_name[x->numinlets] = ps_granu_end;
+                    x->inlet_type[x->numinlets++] = ENDLOCATION;
+                    if(param_interaction_count++ == 3)
+                    {
+                        object_error((t_object *)x, "duration, rate & end are potentially conflicting parameters! ");
+                        object_error((t_object *)x, "please select only two of these options (see help patch for more information) ");
+                        x->parameter_error = 1;
+                        return -1;
+                    }
+                    
+                    granubuf_setAdjustParam(x, ENDLOCATION, 1);
+                }
                 else if(inlet_name == ps_granu_dur)
                 {
                     x->inlet_name[x->numinlets] = ps_granu_dur;
                     x->inlet_type[x->numinlets++] = DURATION;
+                    if(param_interaction_count++ == 3)
+                    {
+                        object_error((t_object *)x, "duration, rate & end are potentially conflicting parameters! ");
+                        object_error((t_object *)x, "please select only two of these options (see help patch for more information) ");
+                        x->parameter_error = 1;
+                        return -1;
+                    }
+                    granubuf_setAdjustParam(x, DURATION, 1);
                 }
                 else if(inlet_name == ps_granu_rate)
                 {
                     x->inlet_name[x->numinlets] = ps_granu_rate;
                     x->inlet_type[x->numinlets++] = RATE;
+                    if(param_interaction_count++ == 3)
+                    {
+                        object_error((t_object *)x, "duration, rate & end are potentially conflicting parameters! ");
+                        object_error((t_object *)x, "please select only two of these options (see help patch for more information) ");
+                        x->parameter_error = 1;
+                        return -1;
+                    }
+                    granubuf_setAdjustParam(x, RATE, 1);
+
                 }
                 else if(inlet_name == ps_granu_tex)
                 {
@@ -1212,10 +1645,12 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
             }
             
         }
+        x->num_time_param_inlets = param_interaction_count;
+        // post("num param inlets %d", x->num_time_param_inlets);
+
     }
 
- //   post("%s %d inlets", __func__, x->numinlets);
-    
+
     return 0;
 }
 t_max_err granubuf_inlet_get(t_grans *x, t_object *attr, long *argc, t_atom **argv)
@@ -1299,11 +1734,12 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
                         
         grans_clear(x);
         
-        x->loop_mode = 0;
+        x->end_mode = NOPLAY;
         x->interpolation = 1;
         
         x->always_on = 0;
         x->start = 0;
+        x->end = 1;
         x->rate = 1;
         x->dur = 100;
         x->tex = 0.5;
@@ -1344,6 +1780,15 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
             x->inlet_type[i] = UNUSED;
         }
         
+        x->num_time_param_inlets = 0;
+        x->prev_params[0] = UNUSED;
+        x->prev_params[1] = UNUSED;
+        x->overwrite_param = ENDLOCATION;
+        
+        x->end_mode = RESIZE;
+        
+        x->parameter_error = 0;
+        
         t_dictionary *d = NULL;
         d = dictionary_new();
         
@@ -1352,6 +1797,8 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
             attr_dictionary_process(x, d); //calls appropriate class_attr_accessors
             object_free(d);
         }
+        
+        if (x->parameter_error) return NULL;
         
         dsp_setup((t_pxobject *)x, x->numinlets);
         x->count = (short *)malloc(x->numinlets * sizeof(short));
@@ -1367,6 +1814,7 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
     } else {
         object_post((t_object *)x, "this is potentially bad!");
     }
+    
     
 	return (x);
 }
@@ -1402,8 +1850,13 @@ int main(void)
     CLASS_ATTR_ALIAS(c, "start", "location");
     
     CLASS_ATTR_DOUBLE(c, "end", 0, t_grans, end);
+    CLASS_ATTR_ACCESSORS(c, "end", granubuf_end_get, granubuf_end_set);
+    
     CLASS_ATTR_DOUBLE(c, "rate", 0, t_grans, rate);
+    CLASS_ATTR_ACCESSORS(c, "rate", granubuf_rate_get, granubuf_rate_set);
+    
     CLASS_ATTR_DOUBLE(c, "duration", 0, t_grans, dur);
+    CLASS_ATTR_ACCESSORS(c, "duration", granubuf_duration_get, granubuf_duration_set);
     
     CLASS_ATTR_DOUBLE(c, "tex", 0, t_grans, tex);
     CLASS_ATTR_LABEL(c, "tex", 0, "tex (for fof window only)");
@@ -1427,7 +1880,7 @@ int main(void)
     CLASS_ATTR_ACCESSORS(c, "setwindow", granubuf_currentwindow_get, granubuf_currentwindow_set);
     CLASS_ATTR_LABEL(c, "setwindow", 0, "current window");
     
-    CLASS_ATTR_LONG(c, "loop", 0, t_grans, loop_mode);
+    CLASS_ATTR_LONG(c, "end_mode", 0, t_grans, end_mode);
     CLASS_ATTR_LONG(c, "interpolation", 0, t_grans, interpolation);
     
     
@@ -1464,7 +1917,7 @@ int main(void)
 
 	version_post_copyright();
     
-    error("n.b. granubuf~ is currently in alpha development -- please be sure to see the help patch for updated information, configuration will be stabilized soon");
+    error("n.b. granubuf~ is currently in alpha development -- configuration will be stabilized soon, please be sure to see the help patch for updated information,");
     
 	return 0;
 }

@@ -59,7 +59,7 @@ static t_symbol *ps_granu_dampedsine;
 static t_symbol *ps_granu_sinc;
 static t_symbol *ps_buffer_modified;
 
-static t_symbol *ps_granu_trigger, *ps_granu_start, *ps_granu_end, *ps_granu_rate, *ps_granu_dur, *ps_granu_win_idx, *ps_granu_outlet, *ps_granu_buf_idx, *ps_granu_amp, *ps_granu_tex, *ps_granu_chirprate, *ps_granu_chirptype;
+static t_symbol *ps_granu_trigger, *ps_granu_start, *ps_granu_end,  *ps_granu_rate, *ps_granu_dur, *ps_granu_win_idx, *ps_granu_outlet, *ps_granu_buf_idx, *ps_granu_amp, *ps_granu_tex, *ps_granu_chirprate, *ps_granu_chirptype;
 
 //********************** utils
 
@@ -75,6 +75,7 @@ double linear_interp( double v0, double v1, double t)
 {
     return v0+((v1-v0)*t);
 }
+
 
 double granu_shapeFunction( double *w_tab, double w_frames, uint32_t wpc, uint32_t xshapetab, uint32_t yshapetab, long tabscale )
 {
