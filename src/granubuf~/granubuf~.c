@@ -508,7 +508,7 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype,
             if(x->tab_w_index[window_index] < GRANUBUF_NUMINTERNAL_WINDOWS) //do safety test on grain creation
             {
                 o->window_phase_inc = dur_hz * pkw;
-//                post("%s %f %f", __func__, o->window_phase_inc, o->endpoint );
+//                post("%s %f %f %f", __func__, o->window_phase_inc, o->endpoint, frames );
             }
             else
             {
@@ -598,7 +598,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     
     long       tex_pc;
     double     pc, wpc, chirpdir, w_tabSamp;
-    double     pi, wpi, amp, pSamp, lowerSamp, upperSamp, outSamp;
+    double     pi, wpi, amp, pSamp, lowerSamp, upperSamp, upperVal, outSamp;
     int        w_index, outletnum;
 
     t_float **internal_window = granu_internal_window;
@@ -796,7 +796,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         if( x->tab_w_index[w_index] == FOF) //fof is a special case which requres two window tables
         {
             tex = o->tex;
-            while(j < sampleframes && wpc < num_wframes && (pc + start) <= frames[buf_index] && ((frames[buf_index] - start) + pc) >= 0)
+            while(j < sampleframes && wpc < num_wframes && (pc + start) < frames[buf_index] && (end + pc) >= 0)
             {
 
                 tex_pc = (uint32_t)wrapPhase(wpc * tex, STABSZ); //<< phase wrap not really necessary if bounds are checked for tex
@@ -814,10 +814,21 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
                 if(pi > 0)
                     pSamp = pc + start;
                 else
-                    pSamp = (frames[buf_index] - start) + pc;
+                    pSamp = pc + end;
                 
-                upperSamp = ceil(pSamp);
-                outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)floor(pSamp)  ], tab[buf_index][ nchans[buf_index] * (uint32_t)upperSamp  ], upperSamp - (pSamp));
+                if (interpolation == 1) //<< probably not good to check this on every sample!, also should do loop interpolation
+                {
+                    lowerSamp = floor(pSamp);
+                    upperSamp = ceil(wpc);
+                    upperVal = (upperSamp < num_wframes) ? tab[buf_index][ nchans[buf_index] * (uint32_t)upperSamp ] : 0.0;
+
+                    outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], upperVal, pSamp - lowerSamp);
+                }
+                else
+                {
+                    outSamp = tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
+                }
+                
                 outlets[outletnum][j] += amp * outSamp;
                 
                 pc += pi;
@@ -829,54 +840,38 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         }
         else
         {
-            // something seems wrong with the pSamp when looping, probably some kind of loop interpolation issue?
-            while(j < sampleframes && wpc < num_wframes)
-            {//maybe don't need the loop option for now
-  /*              if(end_mode == LOOP)
+            while(j < sampleframes && wpc < num_wframes && (pc + start) < frames[buf_index] && (end + pc) >= 0.0)
+            {
+                
+                
+                if(pi > 0)
+                    pSamp = pc + start;
+                else
+                    pSamp = pc + end;
+                
+                
+                if (interpolation == 1) 
                 {
-                    //pSamp = (pi > 0) ? wrapPhase(pc+start, frames[buf_index]) : wrapPhase(pc+frames[buf_index], frames[buf_index]);
                     
-                    if (interpolation == 1)
-                    { // there must be a way not to do all these phaseWraps!
-                        pSamp = start + pc;
-                        //this should be (,end-start) for eventual end mode for midsample selections
-                        lowerSamp = wrapPhase(floor(pSamp), frames[buf_index]-start);
-                        upperSamp = wrapPhase(ceil(pSamp), frames[buf_index]-start);
-                        
-                        outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)upperSamp  ], pSamp - floor(pSamp));
-                    }
-                    else
-                    {
-                        pSamp = start + wrapPhase(pc, frames[buf_index]-start); //this should be (,end-start) for eventual end mode for midsample selections
-                        outSamp = tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
-                    }
+                    lowerSamp = floor(wpc);
+                    upperSamp = ceil(wpc);
                     
+                    upperVal = (upperSamp < num_wframes) ? w_tab[ num_wchans * (uint32_t)upperSamp ] : 0.0;
+
+                    amp = gr_amp * linear_interp(w_tab[ num_wchans * (uint32_t)lowerSamp  ], upperVal, wpc - lowerSamp);
+                    
+                    lowerSamp = floor(pSamp);
+                    upperSamp = ceil(pSamp);
+                    upperVal = (upperSamp < frames[buf_index]) ? tab[buf_index][ nchans[buf_index] * (uint32_t)upperSamp ] : 0.0;
+
+                    outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], upperVal, pSamp - lowerSamp);
                 }
-                else*/ if((pc + start) >= frames[buf_index] || (pc + end) < 0)
-                    break;
                 else
                 {
-                    if(pi > 0)
-                        pSamp = pc + start;
-                    else
-                        pSamp = pc + end;
-                    
-                    if (interpolation == 1) //<< probably not good to check this on every sample!, also should do loop interpolation
-                    {
-                        lowerSamp = floor(pSamp);
-                        outSamp = linear_interp(tab[buf_index][ nchans[buf_index] * (uint32_t)lowerSamp  ], tab[buf_index][ nchans[buf_index] * (uint32_t)ceil(pSamp)  ], pSamp - lowerSamp);
-                    }
-                    else
-                    {
-                        outSamp = tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
-                    }
+                    amp = gr_amp * w_tab[ num_wchans * (uint32_t)wpc  ];
+                    outSamp = tab[buf_index][ nchans[buf_index] * (uint32_t)pSamp  ];;
                 }
-                
-//                if(end_mode == REFLECT)
-//                    pi = ((pc + start) >= frames[buf_index] || (pc + end) < 0) ? (pi * -1) : pi;
-                
-                lowerSamp = floor(wpc);
-                amp = gr_amp * linear_interp(w_tab[ num_wchans * (uint32_t)lowerSamp  ], w_tab[ num_wchans * (uint32_t)ceil(wpc)  ], wpc - lowerSamp);
+
                 
                 outlets[outletnum][j] += amp * outSamp;
 
@@ -1564,7 +1559,7 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
                 {
                     x->inlet_name[x->numinlets] = ps_granu_end;
                     x->inlet_type[x->numinlets++] = ENDLOCATION;
-                    if(param_interaction_count++ == 3)
+                    if(++param_interaction_count == 3)
                     {
                         object_error((t_object *)x, "duration, rate & end are potentially conflicting parameters! ");
                         object_error((t_object *)x, "please select only two of these options (see help patch for more information) ");
@@ -1578,7 +1573,7 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
                 {
                     x->inlet_name[x->numinlets] = ps_granu_dur;
                     x->inlet_type[x->numinlets++] = DURATION;
-                    if(param_interaction_count++ == 3)
+                    if(++param_interaction_count == 3)
                     {
                         object_error((t_object *)x, "duration, rate & end are potentially conflicting parameters! ");
                         object_error((t_object *)x, "please select only two of these options (see help patch for more information) ");
@@ -1591,7 +1586,7 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
                 {
                     x->inlet_name[x->numinlets] = ps_granu_rate;
                     x->inlet_type[x->numinlets++] = RATE;
-                    if(param_interaction_count++ == 3)
+                    if(++param_interaction_count == 3)
                     {
                         object_error((t_object *)x, "duration, rate & end are potentially conflicting parameters! ");
                         object_error((t_object *)x, "please select only two of these options (see help patch for more information) ");
@@ -1646,7 +1641,7 @@ t_max_err granubuf_inlet_set(t_grans *x, t_object *attr, long argc, t_atom *argv
             
         }
         x->num_time_param_inlets = param_interaction_count;
-        // post("num param inlets %d", x->num_time_param_inlets);
+       // post("num param inlets %d", x->num_time_param_inlets);
 
     }
 
