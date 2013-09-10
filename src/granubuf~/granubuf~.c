@@ -137,8 +137,8 @@ typedef struct _sample_grain
 typedef struct _grans {
 	t_pxobject		ob;
     
-    e_granu_end_mode    end_mode;
-    int                 interpolation;
+    int             end_mode;
+    int             interpolation;
     
     //float input memory
     double          start; // location in ratio 0-1
@@ -1858,7 +1858,7 @@ int main(void)
     CLASS_ATTR_LONG(c, "window_index", 0, t_grans, window_index);
     CLASS_ATTR_LONG(c, "buffer_index", 0, t_grans, buf_index);
     CLASS_ATTR_LONG(c, "outlet", 0, t_grans, outlet);
-    CLASS_ATTR_LONG(c, "amp", 0, t_grans, amp);
+    CLASS_ATTR_DOUBLE(c, "amp", 0, t_grans, amp);
 
     CLASS_ATTR_DOUBLE(c, "chirprate", 0, t_grans, chirp_rate);
     CLASS_ATTR_LONG(c, "chirptype", 0, t_grans, chirp_type);
@@ -1874,8 +1874,8 @@ int main(void)
     CLASS_ATTR_ACCESSORS(c, "setwindow", granubuf_currentwindow_get, granubuf_currentwindow_set);
     CLASS_ATTR_LABEL(c, "setwindow", 0, "current window");
     
-    CLASS_ATTR_LONG(c, "end_mode", 0, t_grans, end_mode);
-    CLASS_ATTR_LONG(c, "interpolation", 0, t_grans, interpolation);
+    CLASS_ATTR_INT32(c, "end_mode", 0, t_grans, end_mode);
+    CLASS_ATTR_INT32(c, "interpolation", 0, t_grans, interpolation);
     
     
     if (!granu_tableExists)
