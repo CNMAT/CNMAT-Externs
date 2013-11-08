@@ -427,7 +427,7 @@ void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double sampler
 
 	// Initializing the delay counter
 	x->x_counter = x->x_delay;
-	x->timetag = 0;
+	x->timetag = OSC_TIMETAG_NULL;
 	x->svctr = 0;
 
 	// Overlap case
@@ -461,7 +461,7 @@ void analyzer_dsp(t_analyzer *x, t_signal **sp, short *count)
 	x->x_counter = x->x_delay;
 
 	// Initialize the vars used to generate timetags
-	x->timetag = 0;
+	x->timetag = OSC_TIMETAG_NULL;
 	x->svctr = 0;
 
 	// Overlap case
