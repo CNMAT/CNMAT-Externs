@@ -58,6 +58,14 @@ t_max_err buffer_proxy_notify(t_buffer_proxy *x, t_symbol *s, t_symbol *msg, voi
 	return buffer_ref_notify(x->ref, s, msg, sender, data);
 }
 
+void buffer_proxy_set_ref(t_buffer_proxy *x, t_symbol *s)
+{
+    x->name = s;
+    buffer_ref_set(x->ref, x->name);
+    x->buffer_modified = true;
+}
+
+
 void *buffer_proxy_new(t_symbol *s)
 {
     
@@ -100,49 +108,137 @@ typedef struct _polywave
     long                set_argc;
     t_atom              *set_argv;
     
+    t_critical          lock;
+    
 } t_polywave;
+
+void debug_printAtoms(long argc, t_atom *argv)
+{
+    int i;
+    t_atom *ap = argv;
+    for (i=0; i<argc; i++) {
+        switch (atom_gettype(ap+i)) {
+            case A_SYM:
+                post("%s", atom_getsym(ap+i)->s_name);
+                break;
+            case A_FLOAT:
+                post("%f", atom_getfloat(ap+i));
+                break;
+            case A_LONG:
+                post("%ld", atom_getlong(ap+i));
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 
 t_max_err polywave_buf_set(t_polywave *x, t_object *attr, long argc, t_atom *argv)
 {
 
+    int i;
+/*
     if(sys_getdspstate())
     {
-        object_post((t_object *)x, "dsp must be off to set buffer array");
-        return -1;
+        
+        if(argc <= x->numbufs)
+        {
+            for (i = 0; i < argc; i++) {
+                if(atom_gettype(argv+i) == A_SYM && atom_getsym(argv+i) != x->buf_name[i])
+                    object_error((t_object *)x, "with DSP on samples maybe be replaced but must use the same buffer names");
+
+            }
+            x->numbufs = argc;
+            return 0;
+        }
+        
+        if(argc > x->numbufs)
+        {
+            object_post((t_object *)x, "cannot add new buffers with DSP on (samples maybe be replaced if they use the same buffer names)");
+            return -1;
+        }
     }
 
-    int i;
+   
+    if(sys_getdspstate() && x->process_flag == 0)
+    {
+
+        t_class *c = class_findbyname( CLASS_NOBOX, object_classname(attr));
+        if(c)
+        {
+            if (x->set_attr)
+                object_free(x->set_attr);
+                
+            x->set_attr = object_alloc(c);
+
+            if(argc < POLYWAVE_MAX_BUFFERS)
+                for (i=0; i<argc; i++) {
+                    x->set_argv[i] = argv[i];
+                }
+            
+            x->set_argc = argc;
+            x->process_flag = 1;
+        }
+        
+        return 0;
+    }
+ */
 
     if(argc && argv)
     {
-        if(x->numbufs)
-        {
-            for (i = 0; i < x->numbufs; i++) {
-                object_free(x->buf_proxy[i]->ref);
-                object_free(x->buf_proxy[i]);
-            }
-        }
-        
         if(argc < POLYWAVE_MAX_BUFFERS && atom_gettype(argv) == A_SYM)
         {
-            x->numbufs = argc;
-
-            for(i = 0; i < x->numbufs; i++)
+            critical_enter(x->lock);
+            if(argc >= x->numbufs)
             {
-/*
-                 if(atom_gettype(argv+i) == A_SYM)
-                     post("%x buf %s", x, atom_getsym(argv+i)->s_name);
-*/
-                
-                x->buf_name[i] = atom_getsym(argv+i);
-                if(x->buf_name[i])
+                i = 0;
+                while(i < x->numbufs)
                 {
-                    x->buf_proxy[i] = buffer_proxy_new(x->buf_name[i]);
-
-                } else {
-                    object_error((t_object *)x, "must have buffer name");
+                    t_symbol *s = atom_getsym(argv+i);
+                    if(s) {
+                        if(s != x->buf_name[i])
+                        {
+                            buffer_proxy_set_ref(x->buf_proxy[i], s);
+                            x->buf_name[i] = s;
+                        }
+                    } else {
+                        object_error((t_object *)x, "must have buffer name");
+                    }
+                    i++;
                 }
+
+                while (i < argc)
+                {
+                    x->buf_name[i] = atom_getsym(argv+i);
+                    if(x->buf_name[i])
+                        x->buf_proxy[i] = buffer_proxy_new(x->buf_name[i]);
+                    else
+                        object_error((t_object *)x, "must have buffer name");
+                    
+                    i++;
+                }
+                
+                x->numbufs = argc;
+                
             }
+            else if(argc < x->numbufs)
+            {
+                i = 0;
+                while(i < argc)
+                {
+                    t_symbol *s = atom_getsym(argv+i);
+                    if(s && s != x->buf_name[i] ) {
+                        buffer_proxy_set_ref(x->buf_proxy[i], s);
+                        x->buf_name[i] = s;
+                    } else {
+                        object_error((t_object *)x, "must have buffer name");
+                    }
+                    i++;
+                }
+            
+            }
+            critical_exit(x->lock);
         }
     }
     
@@ -192,7 +288,9 @@ double cubicInterpolate (double a, double b, double c, double d, double x) {
 
 void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {
+
     
+
     int i;
     t_double		*out = outs[0];
     t_double		*in1 = ins[0];
@@ -205,7 +303,20 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
             *out++ = 0.;
         return;
     }
-    
+    /*
+    if(x->process_flag == 1)
+    {
+        polywave_buf_set(x, x->set_attr, x->set_argc, x->set_argv);
+        
+        while (n--)
+            *out++ = 0.;
+        x->process_flag = 0;
+        return;
+        
+        //        post("%s", __func__);
+        //debug_printAtoms(x->set_argc, x->set_argv);
+    }
+    */
     int             idx_connected = x->w_connected[1];
     
     long            numbufs = x->numbufs;
@@ -393,7 +504,17 @@ void polywave_free(t_polywave *x)
         }
     }
     
-   free(x->buf_proxy);
+    sysmem_freeptr(x->buf_proxy);
+    x->buf_proxy = NULL;
+    
+    sysmem_freeptr(x->set_argv);
+    x->set_argv = NULL;
+    
+    if (x->set_attr)
+        object_free(x->set_attr);
+    
+    critical_free(x->lock);
+
 }
 
 void *polywave_new(t_symbol *s, long argc, t_atom *argv)
@@ -404,13 +525,18 @@ void *polywave_new(t_symbol *s, long argc, t_atom *argv)
     	dsp_setup((t_pxobject *)x, 2);
         outlet_new((t_object *)x, "signal");
         
-        x->buf_proxy = (t_buffer_proxy **)malloc(POLYWAVE_MAX_BUFFERS * sizeof(t_buffer_proxy *));
+        x->buf_proxy = (t_buffer_proxy **)sysmem_newptr(POLYWAVE_MAX_BUFFERS * sizeof(t_buffer_proxy *));
+        x->set_argv = (t_atom *)sysmem_newptr(POLYWAVE_MAX_BUFFERS * sizeof(t_atom));
+        
+        critical_new(&x->lock);
+        
         int n = POLYWAVE_MAX_BUFFERS;
         while (--n) {
             x->buf_proxy[n] = NULL;
         }
         
         x->interp_type = NONE;
+        x->numbufs = 0;
         
         t_dictionary *d = NULL;
         d = dictionary_new();
@@ -420,7 +546,7 @@ void *polywave_new(t_symbol *s, long argc, t_atom *argv)
             attr_dictionary_process(x, d); //calls appropriate class_attr_accessors
             object_free(d);
         }
-        
+
         x->process_flag = 0;
     }
     return x;
