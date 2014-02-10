@@ -8,7 +8,7 @@
 			"architecture" : "x64"
 		}
 ,
-		"rect" : [ 188.0, 44.0, 951.0, 704.0 ],
+		"rect" : [ 414.0, 44.0, 951.0, 704.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 11.0,
@@ -46,7 +46,7 @@
 							"architecture" : "x64"
 						}
 ,
-						"rect" : [ 188.0, 70.0, 951.0, 678.0 ],
+						"rect" : [ 414.0, 70.0, 951.0, 678.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 11.0,
@@ -233,7 +233,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
 									"patching_rect" : [ 205.0, 131.0, 75.0, 19.0 ],
-									"text" : "phasor~ 0.2"
+									"text" : "phasor~ 0.05"
 								}
 
 							}
@@ -242,13 +242,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 11.0,
 									"id" : "obj-34",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 205.0, 243.0, 100.0, 31.0 ],
-									"text" : "polywave~ @buffer foo bar"
+									"patching_rect" : [ 205.0, 243.0, 100.0, 43.0 ],
+									"text" : "polywave~ @buffer foo bar @interpolation 1"
 								}
 
 							}
@@ -280,8 +280,31 @@
 								}
 
 							}
+, 							{
+								"box" : 								{
+									"attr" : "interpolation",
+									"fontname" : "Arial",
+									"fontsize" : 11.0,
+									"id" : "obj-1",
+									"maxclass" : "attrui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 346.0, 214.0, 172.0, 19.0 ]
+								}
+
+							}
  ],
 						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-34", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-1", 0 ]
+								}
+
+							}
+, 							{
 								"patchline" : 								{
 									"destination" : [ "obj-31", 0 ],
 									"disabled" : 0,
@@ -704,7 +727,7 @@
 											"architecture" : "x64"
 										}
 ,
-										"rect" : [ 0.0, 0.0, 640.0, 480.0 ],
+										"rect" : [ 25.0, 69.0, 640.0, 480.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 11.0,
@@ -760,8 +783,8 @@
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"outlettype" : [ "", "" ],
-													"patching_rect" : [ 50.0, 128.0, 50.0, 19.0 ],
-													"text" : "zl group"
+													"patching_rect" : [ 50.0, 128.0, 77.0, 19.0 ],
+													"text" : "zl 2048 group"
 												}
 
 											}
@@ -872,7 +895,7 @@
 											"architecture" : "x64"
 										}
 ,
-										"rect" : [ 0.0, 0.0, 640.0, 480.0 ],
+										"rect" : [ 25.0, 69.0, 640.0, 480.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 11.0,
@@ -1031,12 +1054,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 11.0,
 									"id" : "obj-41",
+									"linecount" : 2,
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 536.666626, 433.5, 151.0, 19.0 ],
-									"text" : "buffer~ lengths @samps 128"
+									"patching_rect" : [ 831.666626, 195.5, 102.333374, 31.0 ],
+									"text" : "buffer~ lengths @samps 2048"
 								}
 
 							}
@@ -1073,12 +1097,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 11.0,
 									"id" : "obj-20",
-									"linecount" : 4,
+									"linecount" : 2,
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 536.666626, 283.0, 149.0, 54.0 ],
+									"patching_rect" : [ 504.0, 284.0, 364.0, 29.0 ],
 									"text" : "buffer example.1 example.2 example.3 example.4 example.5 example.6 example.7 example.8"
 								}
 
@@ -1197,12 +1221,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 11.0,
 									"id" : "obj-1",
+									"linecount" : 2,
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 175.0, 319.0, 132.5, 19.0 ],
-									"text" : "polywave~"
+									"patching_rect" : [ 175.0, 319.0, 132.5, 31.0 ],
+									"text" : "polywave~ @interpolation 2"
 								}
 
 							}
