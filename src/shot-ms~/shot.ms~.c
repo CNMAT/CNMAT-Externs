@@ -56,7 +56,7 @@ void shotms_perform64(t_shotms *x, t_object *dsp64, double **ins, long numins, d
     {
         setms = *in1++;
         
-        if (!active && setms) {
+        if (!active && setms > 0) {
             
             inc = shotms_setMs(x, setms);
             
