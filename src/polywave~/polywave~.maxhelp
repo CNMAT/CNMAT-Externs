@@ -8,7 +8,7 @@
 			"architecture" : "x64"
 		}
 ,
-		"rect" : [ 414.0, 44.0, 951.0, 704.0 ],
+		"rect" : [ 127.0, 44.0, 951.0, 704.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 11.0,
@@ -46,7 +46,7 @@
 							"architecture" : "x64"
 						}
 ,
-						"rect" : [ 414.0, 70.0, 951.0, 678.0 ],
+						"rect" : [ 0.0, 26.0, 951.0, 678.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 11.0,
@@ -450,7 +450,7 @@
 							"architecture" : "x64"
 						}
 ,
-						"rect" : [ 0.0, 26.0, 951.0, 678.0 ],
+						"rect" : [ 127.0, 70.0, 951.0, 678.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 11.0,
@@ -471,6 +471,20 @@
 						"tags" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 11.0,
+									"id" : "obj-26",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 753.0, 122.0, 50.0, 17.0 ],
+									"text" : "clear"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 11.0,
@@ -619,7 +633,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 468.0, 70.0, 56.0, 19.0 ],
+									"patching_rect" : [ 468.0, 52.0, 56.0, 19.0 ],
 									"text" : "loadbang"
 								}
 
@@ -1073,7 +1087,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 468.0, 98.5, 155.0, 17.0 ],
+									"patching_rect" : [ 468.0, 80.5, 155.0, 17.0 ],
 									"text" : "readfolder ./examples/sounds"
 								}
 
@@ -1097,13 +1111,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 11.0,
 									"id" : "obj-20",
-									"linecount" : 2,
+									"linecount" : 4,
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 504.0, 284.0, 364.0, 29.0 ],
-									"text" : "buffer example.1 example.2 example.3 example.4 example.5 example.6 example.7 example.8"
+									"patching_rect" : [ 504.0, 284.0, 364.0, 54.0 ],
+									"text" : "buffer example.1 example.2 example.3 example.4 example.5 example.6 example.7 example.8 example.9 example.10 example.11 example.12 example.13 example.14 example.15 example.16 example.17 example.18 example.19"
 								}
 
 							}
@@ -1405,6 +1419,15 @@
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-25", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-6", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-26", 0 ]
 								}
 
 							}
