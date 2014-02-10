@@ -76,27 +76,45 @@ void *buffer_proxy_new(t_symbol *s)
  
 //------------ polywave~
 
-#define POLYWAVE_MAX_BUFFERS 128
+#define POLYWAVE_MAX_BUFFERS 2048
+
+typedef enum _polywave_interp
+{
+    NONE,
+    LINEAR,
+    CUBIC
+} t_polywave_interp;
 
 typedef struct _polywave
 {
-	t_pxobject		ob;
-    double          sr;
-    t_buffer_proxy  **buf_proxy;
-    long            numbufs;
-    t_symbol        *buf_name[POLYWAVE_MAX_BUFFERS]; //<< for attr inspector
-	short           w_connected[2];
+	t_pxobject          ob;
+    double              sr;
+    t_buffer_proxy      **buf_proxy;
+    long                numbufs;
+    t_symbol            *buf_name[POLYWAVE_MAX_BUFFERS]; //<< for attr inspector
+	short               w_connected[2];
+    t_polywave_interp   interp_type;
+
+    int                 process_flag;
+    t_object            *set_attr;
+    long                set_argc;
+    t_atom              *set_argv;
     
 } t_polywave;
 
 t_max_err polywave_buf_set(t_polywave *x, t_object *attr, long argc, t_atom *argv)
 {
 
+    if(sys_getdspstate())
+    {
+        object_post((t_object *)x, "dsp must be off to set buffer array");
+        return -1;
+    }
+
     int i;
 
     if(argc && argv)
     {
-        // probably should wait and do this between vectors?
         if(x->numbufs)
         {
             for (i = 0; i < x->numbufs; i++) {
@@ -163,9 +181,18 @@ void polywave_print(t_polywave *x)
     }
 }
 
+double linear_interp( double v0, double v1, double t)
+{
+    return v0+((v1-v0)*t);
+}
+
+double cubicInterpolate (double a, double b, double c, double d, double x) {
+	return b + 0.5 * x*(c - a + x*(2.0*a - 5.0*b + 4.0*c - d + x*(3.0*(b - c) + d - a)));
+}
 
 void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {
+    
     int i;
     t_double		*out = outs[0];
     t_double		*in1 = ins[0];
@@ -187,6 +214,7 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
     t_buffer_obj    *buffer[numbufs];
     t_float         *tab[numbufs];
     int             valid[numbufs], modified[numbufs];
+    
     
     for (i=0; i<numbufs; i++) {
         buffer[i] = buffer_ref_getobject(x->buf_proxy[i]->ref);
@@ -228,28 +256,97 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
         }
         
     }
+    
+    t_polywave_interp interp = x->interp_type;
    
-    t_double p;
-    long bindx = 0;
-    while(n--)
-    {
-        p = *in1++;
-        p = CLAMP(p, 0, 1);
-        
-        if(idx_connected)
-        {
-            bindx = (long)*in2++;
-            bindx = CLAMP(bindx, 0, numbufs-1);
-        }
-        
-        if(valid[bindx])
-            *out++ = tab[bindx][nchans[bindx] * (long)(frames[bindx] * p)];
-        else
-            *out++ = 0.0;
-        
+    double p, pSamp, upperVal, lowerSamp, upperSamp, frac, a, b, c, d;
+    long  bindx = 0;
+    
+    switch (interp) {
+        case CUBIC:
+            while(n--)
+            {
+                p = *in1++;
+                p = CLAMP(p, 0, 1);
+                
+                if(idx_connected)
+                {
+                    bindx = (long)*in2++;
+                    bindx = CLAMP(bindx, 0, numbufs-1);
+                }
+                
+                
+                if(valid[bindx])
+                {
+                    pSamp = frames[bindx] * p;
+                    lowerSamp = floor(pSamp);
+                    frac = pSamp - lowerSamp;
+                    
+                    a = (long)lowerSamp - 1 < 0 ? 0 : tab[bindx][ nchans[bindx] * ((long)lowerSamp - 1)];
+                    b = tab[bindx][ nchans[bindx] * (long)lowerSamp];
+                    c = (long)lowerSamp + 1 > frames[bindx] ? 0 : tab[bindx][ nchans[bindx] * ((long)lowerSamp + 1)];
+                    d = (long)lowerSamp + 2 > frames[bindx] ? 0 : tab[bindx][ nchans[bindx] * ((long)lowerSamp + 2)];
+
+
+                    *out++ = cubicInterpolate(a,b,c,d,frac);
+
+                }
+                else
+                    *out++ = 0.0;
+            }
+    
+            break;
+        case LINEAR:
+            while(n--)
+            {
+                p = *in1++;
+                p = CLAMP(p, 0, 1);
+                
+                if(idx_connected)
+                {
+                    bindx = (long)*in2++;
+                    bindx = CLAMP(bindx, 0, numbufs-1);
+                }
+                
+                if(valid[bindx])
+                {
+                    pSamp = frames[bindx] * p;
+                    lowerSamp = floor(pSamp);
+                    upperSamp = ceil(pSamp);
+                    upperVal = (upperSamp < frames[bindx]) ? tab[bindx][ nchans[bindx] * (long)upperSamp ] : 0.0;
+                    
+                    *out++ = linear_interp(tab[bindx][ nchans[bindx] * (long)lowerSamp  ], upperVal, pSamp - lowerSamp);
+                }
+                else
+                    *out++ = 0.0;
+                
+            }
+            break;
+        default:
+        case NONE:
+            while(n--)
+            {
+                p = *in1++;
+                p = CLAMP(p, 0, 1);
+                
+                if(idx_connected)
+                {
+                    bindx = (long)*in2++;
+                    bindx = CLAMP(bindx, 0, numbufs-1);
+                }
+                
+                if(valid[bindx])
+                {
+                    *out++ = tab[bindx][nchans[bindx] * (long)(frames[bindx] * p)];
+                }
+                else
+                    *out++ = 0.0;
+                
+            }
+            break;
     }
     
-	
+    
     for(i=0; i<numbufs; i++)
         buffer_unlocksamples(buffer[i]);
 	
@@ -276,7 +373,7 @@ void polywave_assist(t_polywave *x, void *b, long m, long a, char *s)
 		}
 	}
 	else {	// outlet
-		snprintf_zero(s, 256, "(signal) sample outbut", a+1);
+		snprintf_zero(s, 256, "(signal) sample output", a+1);
 	}
 }
 
@@ -313,6 +410,8 @@ void *polywave_new(t_symbol *s, long argc, t_atom *argv)
             x->buf_proxy[n] = NULL;
         }
         
+        x->interp_type = NONE;
+        
         t_dictionary *d = NULL;
         d = dictionary_new();
         
@@ -322,6 +421,7 @@ void *polywave_new(t_symbol *s, long argc, t_atom *argv)
             object_free(d);
         }
         
+        x->process_flag = 0;
     }
     return x;
 }
@@ -332,12 +432,14 @@ int main(void)
 	
 	class_addmethod(c, (method)polywave_dsp64,		"dsp64",	A_CANT, 0);
     class_addmethod(c, (method)polywave_assist,     "assist",	A_CANT, 0);
-//    class_addmethod(c, (method)polywave_print,      "print",    0);
     
     CLASS_ATTR_SYM_VARSIZE(c, "buffer", 0, t_polywave, buf_name, numbufs, POLYWAVE_MAX_BUFFERS);
     CLASS_ATTR_ACCESSORS(c, "buffer", polywave_buf_get, polywave_buf_set);
     CLASS_ATTR_LABEL(c, "buffer", 0, "buffer list");
 
+    CLASS_ATTR_INT32(c, "interpolation", 0, t_polywave, interp_type);
+    CLASS_ATTR_ENUMINDEX3(c, "interpolation", 0, "none", "linear", "cubic");
+    
     t_class *bufpxy = class_new("bufferproxy", NULL, NULL, sizeof(t_buffer_proxy), 0L, 0);
     class_addmethod(bufpxy, (method)buffer_proxy_notify, "notify",	A_CANT, 0);
     class_register(CLASS_NOBOX, bufpxy);
