@@ -334,14 +334,15 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
     }
 
     int             idx_connected = x->w_connected[1];
-    
     long            numbufs = x->numbufs;
+    long            frames[numbufs], nchans[numbufs];
+
+    t_buffer_obj    *buffer[numbufs];
+    t_float         *tab[numbufs];
+    int             valid[numbufs], modified[numbufs];
     
-    t_buffer_obj    *w_buf;
-    t_float         *w_tab;
-    long            w_frames, w_chans, w_valid;
     
-    /*
+
     for (i=0; i<numbufs; i++) {
         buffer[i] = buffer_ref_getobject(x->buf_proxy[i]->ref);
         
@@ -350,44 +351,37 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
         else
         {
             tab[i] = buffer_locksamples(buffer[i]);
-            modified[i] = x->buf_proxy[i]->buffer_modified;
             
             if(!tab[i])
                 valid[i] = 0;
             else
             {
-                //if(modified[i])
-                //{
+                modified[i] = x->buf_proxy[i]->buffer_modified;
+
+                if(modified[i])
+                {
                     frames[i] = buffer_getframecount(buffer[i]);
                     nchans[i] = buffer_getchannelcount(buffer[i]);
-                //}
-                else
-                //{
-                //    frames[i] = x->buf_proxy[i]->nframes;
-                //    nchans[i] = x->buf_proxy[i]->nchans;
-                //}
-     
-                if(nchans[i] > 0 && frames[i] > 0)
-                {
-                    valid[i] = 1;
-                    if(modified[i])
-                    {
-                        x->buf_proxy[i]->nframes = frames[i];
-                        x->buf_proxy[i]->nchans = nchans[i];
-                        x->buf_proxy[i]->buffer_modified = false;
-                    }
-                    //  post("%s frames %d", __func__, x->buf_frames[i]);
+                    x->buf_proxy[i]->nframes = frames[i];
+                    x->buf_proxy[i]->nchans = nchans[i];
+                    x->buf_proxy[i]->buffer_modified = false;
                 }
+                else
+                {
+                    frames[i] = x->buf_proxy[i]->nframes;
+                    nchans[i] = x->buf_proxy[i]->nchans;
+                }
+     
+                valid[i] = (nchans[i] > 0 && frames[i] > 0);
+
             }
-            
         }
-        
     }
-    */
+
     t_polywave_interp interp = x->interp_type;
    
     double p, pSamp, upperVal, lowerSamp, upperSamp, frac, a, b, c, d;
-    long  bindx = 0, prevBindx = -1;
+    long  bindx = 0;
     
     switch (interp) {
         case CUBIC:
@@ -400,46 +394,27 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
                 {
                     bindx = (long)*in2++;
                     bindx = CLAMP(bindx, 0, numbufs-1);
-                    
-                    if (bindx != prevBindx) {
-                        if(prevBindx > -1 && w_tab)
-                            buffer_unlocksamples(w_buf);
-                        
-                        w_buf = buffer_ref_getobject(x->buf_proxy[bindx]->ref);
-                        w_tab = buffer_locksamples(w_buf);
-                        
-                        if (w_tab)
-                        {
-                            w_frames = buffer_getframecount(w_buf);
-                            w_chans = buffer_getchannelcount(w_buf);
-                            w_valid = 1;
-                        } else {
-                            w_valid = 0;
-                        }
-                    }
                 }
                 
-                if(w_valid)
+                
+                if(valid[bindx])
                 {
-                    pSamp = w_frames * p;
+                    pSamp = frames[bindx] * p;
                     lowerSamp = floor(pSamp);
                     frac = pSamp - lowerSamp;
                     
-                    a = (long)lowerSamp - 1 < 0 ? 0 : w_tab[ w_chans * ((long)lowerSamp - 1)];
-                    b = w_tab[ w_chans * (long)lowerSamp];
-                    c = (long)lowerSamp + 1 > w_frames ? 0 : w_tab[ w_chans * ((long)lowerSamp + 1)];
-                    d = (long)lowerSamp + 2 > w_frames ? 0 : w_tab[ w_chans * ((long)lowerSamp + 2)];
-
-
+                    a = (long)lowerSamp - 1 < 0 ? 0 : tab[bindx][ nchans[bindx] * ((long)lowerSamp - 1)];
+                    b = tab[bindx][ nchans[bindx] * (long)lowerSamp];
+                    c = (long)lowerSamp + 1 > frames[bindx] ? 0 : tab[bindx][ nchans[bindx] * ((long)lowerSamp + 1)];
+                    d = (long)lowerSamp + 2 > frames[bindx] ? 0 : tab[bindx][ nchans[bindx] * ((long)lowerSamp + 2)];
+                    
+                    
                     *out++ = cubicInterpolate(a,b,c,d,frac);
-
+                    
                 }
                 else
                     *out++ = 0.0;
-                
-                prevBindx = bindx;
             }
-            buffer_unlocksamples(w_buf);
             break;
         case LINEAR:
             while(n--)
@@ -451,40 +426,21 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
                 {
                     bindx = (long)*in2++;
                     bindx = CLAMP(bindx, 0, numbufs-1);
-                    
-                    if (bindx != prevBindx) {
-                        if(prevBindx > -1 && w_tab)
-                            buffer_unlocksamples(w_buf);
-                        
-                        w_buf = buffer_ref_getobject(x->buf_proxy[bindx]->ref);
-                        w_tab = buffer_locksamples(w_buf);
-                        
-                        if (w_tab)
-                        {
-                            w_frames = buffer_getframecount(w_buf);
-                            w_chans = buffer_getchannelcount(w_buf);
-                            w_valid = 1;
-                        } else {
-                            w_valid = 0;
-                        }
-                    }
                 }
                 
-                if(w_valid)
+                if(valid[bindx])
                 {
-                    pSamp = w_frames * p;
+                    pSamp = frames[bindx] * p;
                     lowerSamp = floor(pSamp);
                     upperSamp = ceil(pSamp);
-                    upperVal = (upperSamp < w_frames) ? w_tab[ w_chans * (long)upperSamp ] : 0.0;
+                    upperVal = (upperSamp < frames[bindx]) ? tab[bindx][ nchans[bindx] * (long)upperSamp ] : 0.0;
                     
-                    *out++ = linear_interp(w_tab[ w_chans * (long)lowerSamp  ], upperVal, pSamp - lowerSamp);
+                    *out++ = linear_interp(tab[bindx][ nchans[bindx] * (long)lowerSamp  ], upperVal, pSamp - lowerSamp);
                 }
                 else
                     *out++ = 0.0;
                 
-                prevBindx = bindx;
             }
-            buffer_unlocksamples(w_buf);
             break;
         default:
         case NONE:
@@ -497,36 +453,23 @@ void polywave_perform64(t_polywave *x, t_object *dsp64, double **ins, long numin
                 {
                     bindx = (long)*in2++;
                     bindx = CLAMP(bindx, 0, numbufs-1);
-                    
-                    if (bindx != prevBindx) {
-                        if(prevBindx > -1 && w_tab)
-                            buffer_unlocksamples(w_buf);
-                        
-                        w_buf = buffer_ref_getobject(x->buf_proxy[bindx]->ref);
-                        w_tab = buffer_locksamples(w_buf);
-                        
-                        if (w_tab)
-                        {
-                            w_frames = buffer_getframecount(w_buf);
-                            w_chans = buffer_getchannelcount(w_buf);
-                            w_valid = 1;
-                        } else {
-                            w_valid = 0;
-                        }
-                    }
                 }
                 
-                if(w_valid)//alid[bindx])
+                if(valid[bindx])
                 {
-                    *out++ = w_tab[w_chans * (long)(w_frames * p)];
+                    *out++ = tab[bindx][nchans[bindx] * (long)(frames[bindx] * p)];
                 }
                 else
                     *out++ = 0.0;
                 
-                prevBindx = bindx;
             }
-            buffer_unlocksamples(w_buf);
             break;
+    }
+    
+    for(i=0; i<numbufs; i++)
+    {
+        if(valid[i])
+            buffer_unlocksamples(buffer[i]);
     }
 
     return;
