@@ -65,25 +65,22 @@ void shotms_perform64(t_shotms *x, t_object *dsp64, double **ins, long numins, d
             //set delegation after this sample output
         }
         
-        if (active) {
-            
+        *out1++ = pc * inc;
+        *out2++ = active;
+        *out3++ = setms * delegate;
+        
+        if(active)
+        {
             if (pc >= samps) {
                 active = 0;
-                pc = 0;
+                pc = samps;
                 delegate = 0;
             } else {
                 pc++;
             }
             
-        }
-        
-        *out1++ = pc * inc;
-        *out2++ = active;
-        *out3++ = setms * delegate;
-        
-        if(active && setms)
-        {
-            delegate = 1;
+            if(setms)
+                delegate = 1;
         }
     }
     
@@ -124,7 +121,7 @@ t_int *shotms_perform(t_int *w)
     {
         setms = *in1++;
         
-        if (!active && setms) {
+        if (!active && setms > 0) {
             
             inc = shotms_setMs(x, setms);
             
@@ -133,28 +130,25 @@ t_int *shotms_perform(t_int *w)
             //set delegation after this sample output
         }
         
-        if (active) {
-            
-            if (pc >= samps) {
-                active = 0;
-                pc = 0;
-                delegate = 0;
-            } else {
-                pc++;
-            }
-
-        }
-        
         *out1++ = pc * inc;
         *out2++ = active;
         *out3++ = setms * delegate;
         
-        if(active && setms)
+        if(active)
         {
-            delegate = 1;
+            if (pc >= samps) {
+                active = 0;
+                pc = samps;
+                delegate = 0;
+            } else {
+                pc++;
+            }
+            
+            if(setms)
+                delegate = 1;
         }
     }
-    
+
     x->phase = pc;
     x->active = active;
     return (w+7);

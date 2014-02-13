@@ -257,6 +257,8 @@ t_max_err polywave_interp_set(t_polywave *x, t_object *attr, long argc, t_atom *
         x->backup = x->interp_type; // << HORRIBLE KLUDGE
         //post("%d %d", x->interp_type, x->backup);
         critical_exit(x->lock);
+    } else {
+        object_error((t_object *)x, "unknown interpolation ");
     }
     
     return 0;
@@ -267,7 +269,7 @@ t_max_err polywave_interp_get(t_polywave *x, t_object *attr, long *argc, t_atom 
     
     char alloc;
     
-    atom_alloc_array(1, argc, argv, &alloc);
+    atom_alloc(argc, argv, &alloc);
     atom_setlong(*argv, x->interp_type);
     
     return 0;
@@ -790,6 +792,7 @@ void *polywave_new(t_symbol *s, long argc, t_atom *argv)
         
         x->dims = ONE_D;
         x->interp_type = LINEAR;
+        x->backup = x->interp_type;
         x->numbufs = 0;
         
         t_dictionary *d = NULL;
