@@ -31,7 +31,7 @@ University of California, Berkeley.
 #define NAME "SDIF-ranges"
 #define DESCRIPTION "Find ranges of data in an SDIF-buffer"
 #define AUTHORS "Matt Wright "
-#define COPYRIGHT_YEARS "2004,05,06,2012"
+#define COPYRIGHT_YEARS "2004-06,12,13"
 
 
 /*
@@ -104,19 +104,19 @@ typedef struct _SDIFranges {
 
 /* global that holds the class definition */
 static void *SDIFranges_class;
-static Symbol *ps_SDIF_buffer_lookup, *ps_column_mins, *ps_column_maxes, *ps_maxcolumns, *ps_column_range;
+static t_symbol *ps_SDIF_buffer_lookup, *ps_column_mins, *ps_column_maxes, *ps_maxcolumns, *ps_column_range;
 
 /* prototypes for my functions */
-void *SDIFranges_new(Symbol *s, short argc, Atom *argv);
+void *SDIFranges_new(t_symbol *s, short argc, t_atom *argv);
 void SDIFranges_free(SDIFranges *x);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFranges *x);
-static void SDIFranges_set(SDIFranges *x, Symbol *bufName);
-void SDIFranges_GetMaxNumColumns(SDIFranges *x, Symbol *matrixTypeSym);
+static void SDIFranges_set(SDIFranges *x, t_symbol *bufName);
+void SDIFranges_GetMaxNumColumns(SDIFranges *x, t_symbol *matrixTypeSym);
 static int doGetMaxNumColumns(SDIFranges *x, char *matrixType, sdif_int32 *answer);
-void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym);
-void SDIFranges_GetColumnRange(SDIFranges *x, long column, Symbol *matrixTypeSym);
+void SDIFranges_GetColumnRanges(SDIFranges *x, t_symbol *matrixTypeSym);
+void SDIFranges_GetColumnRange(SDIFranges *x, long column, t_symbol *matrixTypeSym);
 
 
 int main(void)
@@ -172,7 +172,7 @@ int main(void)
 	return 0;	
 }
 
-void *SDIFranges_new(Symbol *dummy, short argc, Atom *argv) {
+void *SDIFranges_new(t_symbol *dummy, short argc, t_atom *argv) {
 	SDIFranges *x;
 	int i;
 	
@@ -233,7 +233,7 @@ static void LookupMyBuffer(SDIFranges *x) {
     x->t_buf = NULL;
 }
 
-static void SDIFranges_set(SDIFranges *x, Symbol *bufName) {
+static void SDIFranges_set(SDIFranges *x, t_symbol *bufName) {
 	x->t_buffer = 0;
 	x->t_bufferSym = bufName;
 
@@ -244,7 +244,7 @@ static void SDIFranges_set(SDIFranges *x, Symbol *bufName) {
 
 }
 
-static int resolveBufferAndMatrixType(SDIFranges *x, Symbol *matrixTypeSym, char *matrixType) {
+static int resolveBufferAndMatrixType(SDIFranges *x, t_symbol *matrixTypeSym, char *matrixType) {
     int i;
 
 	if (x->t_bufferSym == 0) {
@@ -304,14 +304,14 @@ static int doGetMaxNumColumns(SDIFranges *x, char *matrixType, sdif_int32 *answe
 }
 
 
-void SDIFranges_GetMaxNumColumns(SDIFranges *x, Symbol *matrixTypeSym) {
+void SDIFranges_GetMaxNumColumns(SDIFranges *x, t_symbol *matrixTypeSym) {
     char matrixType[4];
 	sdif_int32 answer;
     
     if (resolveBufferAndMatrixType(x, matrixTypeSym, matrixType)) {
 		if (doGetMaxNumColumns(x, matrixType, &answer)) {
-			Atom outputArgs[1];	
-			SETLONG(outputArgs, answer);
+			t_atom outputArgs[1];	
+			atom_setlong(outputArgs, answer);
 			outlet_anything(x->t_out, ps_maxcolumns, 1, outputArgs);
 		}
 	}
@@ -323,14 +323,14 @@ void SDIFranges_GetMaxNumColumns(SDIFranges *x, Symbol *matrixTypeSym) {
 #define freebytes16 freebytes
 #endif
 
-void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym) {
+void SDIFranges_GetColumnRanges(SDIFranges *x, t_symbol *matrixTypeSym) {
     char matrixType[4];
 	sdif_int32 numCols;
 	int i;
     
     if (resolveBufferAndMatrixType(x, matrixTypeSym, matrixType)) {
 		if (doGetMaxNumColumns(x, matrixType, &numCols)) {
-			Atom *outputArgs = (Atom *) getbytes(numCols * sizeof(Atom));
+			t_atom *outputArgs = (Atom *) getbytes(numCols * sizeof(t_atom));
 			sdif_float64 *mins = (sdif_float64 *) getbytes16(numCols * sizeof(sdif_float64));
 			sdif_float64 *maxes = (sdif_float64 *) getbytes16(numCols * sizeof(sdif_float64));
 			
@@ -341,23 +341,23 @@ void SDIFranges_GetColumnRanges(SDIFranges *x, Symbol *matrixTypeSym) {
 			SDIFbuf_GetColumnRanges(x->t_buf, matrixType, numCols, mins, maxes);
 			
 			for (i = 0; i<numCols; ++i) {
-				SETFLOAT(outputArgs+i, (float) mins[i]);
+				atom_setfloat(outputArgs+i, (float) mins[i]);
 			}
 			outlet_anything(x->t_out, ps_column_mins, numCols, outputArgs);
 			
 			for (i = 0; i<numCols; ++i) {
-				SETFLOAT(outputArgs+i, (float) maxes[i]);
+				atom_setfloat(outputArgs+i, (float) maxes[i]);
 			}
 			outlet_anything(x->t_out, ps_column_maxes, numCols, outputArgs);
 			
-			freebytes(outputArgs, numCols * sizeof(Atom));
+			freebytes(outputArgs, numCols * sizeof(t_atom));
 			freebytes16((char *)mins, numCols * sizeof(sdif_float64));
 			freebytes16((char *)maxes, numCols * sizeof(sdif_float64));
 		}
 	}
 }
 
-void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixTypeSym) {
+void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, t_symbol *matrixTypeSym) {
     char matrixType[4];
 	sdif_int32 numCols;
 	int i;
@@ -385,7 +385,7 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
 			 x->t_bufferSym->s_name, numCols, columnArg);
 		return;
 	} else {
-		Atom outputArgs[3];
+		t_atom outputArgs[3];
 		sdif_float64 min, max;
 
 		if (r = SDIFbuf_GetColumnRange(x->t_buf, matrixType, column, &min, &max)) {
@@ -395,9 +395,9 @@ void SDIFranges_GetColumnRange(SDIFranges *x, long columnArg, Symbol *matrixType
 		}
 		
 		object_post((t_object *)x, "**  min %f, max %f", (float) min, (float) max);
-		SETLONG(outputArgs, columnArg);
-		SETFLOAT(outputArgs+1, (float) min);
-		SETFLOAT(outputArgs+2, (float) max);
+		atom_setlong(outputArgs, columnArg);
+		atom_setfloat(outputArgs+1, (float) min);
+		atom_setfloat(outputArgs+2, (float) max);
 		
 		outlet_anything(x->t_out, ps_column_range, 3, outputArgs);
 	

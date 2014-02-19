@@ -52,7 +52,7 @@
 #define NAME "pitch~"
 #define DESCRIPTION "Pitch tracker (based on fiddle~ from Miller Puckette)"
 #define AUTHORS "Tristan Jehan, Adrian Freed, and Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05,2012"
+#define COPYRIGHT_YEARS "1988-99,2000-05,12,13"
 
 
 
@@ -64,6 +64,7 @@
 #include "fft.h"
 #include <string.h>
 #include <math.h>
+#include <inttypes.h>
 
 // Add altivec function prototypes
 #ifdef __ALTIVEC__
@@ -231,7 +232,7 @@ typedef struct _pitch {
 
     t_int BufSize;			// FFT buffer size
 	t_int FFTSize;			// Size of FFT
-	UInt32 x_FFTSizeOver2;	// Size of FFT/2 (UInt32 in G4 FFT)
+	uint32_t x_FFTSizeOver2;	// Size of FFT/2 (uint32_t in G4 FFT)
     t_int BufWritePos;		// Where to write in buffer
     void *x_envout;			// Outlets
     void *x_attackout;
@@ -243,7 +244,7 @@ typedef struct _pitch {
 #ifdef __ALTIVEC__ // Additional stuff for managing the G4-optimized FFT by Apple
 #pragma altivec_model on
 	t_float x_scaleFactor;
-	UInt32 x_log2n;
+	uint32_t x_log2n;
     COMPLEX_SPLIT x_A;
 	FFTSetup x_setup;
 #pragma altivec_model off
@@ -832,18 +833,18 @@ void *pitch_new(t_symbol *s, short argc, t_atom *argv) {
 
 	} else { // Normal tick function
 		x->x_clock = clock_new(x,(method)pitch_tick);
-		x->memFFT = (t_float*) NewPtr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
+		x->memFFT = (t_float*) sysmem_newptr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
 	}
 	object_post((t_object *)x, "");
 
 	// Allocate memory
-	x->Buf1 = (t_int*) NewPtr(x->BufSize * sizeof(t_float)); // Careful these are pointers to integers but the content is floats
-	x->Buf2 = (t_int*) NewPtr(x->BufSize * sizeof(t_float));
-	x->BufFFT = (t_float*) NewPtr(x->FFTSize * sizeof(t_float));
-	x->BufPower = (t_float*) NewPtr((x->FFTSize/2) * sizeof(t_float));
-	x->WindFFT = (t_float*) NewPtr(x->BufSize * sizeof(t_float));
-	x->peakBuf = (t_peakout*) NewPtr(x->x_npeakout * sizeof(t_peakout)); // from Fiddle~
-	x->histBuf = (t_float*) NewPtr((x->FFTSize + BINGUARD) * sizeof(t_float)); // for Fiddle~
+	x->Buf1 = (t_int*) sysmem_newptr(x->BufSize * sizeof(t_float)); // Careful these are pointers to integers but the content is floats
+	x->Buf2 = (t_int*) sysmem_newptr(x->BufSize * sizeof(t_float));
+	x->BufFFT = (t_float*) sysmem_newptr(x->FFTSize * sizeof(t_float));
+	x->BufPower = (t_float*) sysmem_newptr((x->FFTSize/2) * sizeof(t_float));
+	x->WindFFT = (t_float*) sysmem_newptr(x->BufSize * sizeof(t_float));
+	x->peakBuf = (t_peakout*) sysmem_newptr(x->x_npeakout * sizeof(t_peakout)); // from Fiddle~
+	x->histBuf = (t_float*) sysmem_newptr((x->FFTSize + BINGUARD) * sizeof(t_float)); // for Fiddle~
 		
 	// Compute and store Windows
 	if (x->x_window != Recta) {
@@ -893,16 +894,16 @@ dsp_free((t_pxobject *)x);
 	if (x->x_setup) destroy_fftsetup(x->x_setup);
 #pragma altivec_model off
 #else
-	if (x->memFFT != NULL) DisposePtr((char *) x->memFFT);
+	if (x->memFFT != NULL) sysmem_freeptr((char *) x->memFFT);
 #endif		
 	
-	if (x->Buf1 != NULL) DisposePtr((char *) x->Buf1);
-	if (x->Buf2 != NULL) DisposePtr((char *) x->Buf2);
-	if (x->BufFFT != NULL) DisposePtr((char *) x->BufFFT);
-	if (x->BufPower != NULL) DisposePtr((char *) x->BufPower);
-	if (x->WindFFT != NULL) DisposePtr((char *) x->WindFFT);
-	if (x->peakBuf != NULL) DisposePtr((char *) x->peakBuf);
-	if (x->histBuf != NULL) DisposePtr((char *) x->histBuf);
+	if (x->Buf1 != NULL) sysmem_freeptr((char *) x->Buf1);
+	if (x->Buf2 != NULL) sysmem_freeptr((char *) x->Buf2);
+	if (x->BufFFT != NULL) sysmem_freeptr((char *) x->BufFFT);
+	if (x->BufPower != NULL) sysmem_freeptr((char *) x->BufPower);
+	if (x->WindFFT != NULL) sysmem_freeptr((char *) x->WindFFT);
+	if (x->peakBuf != NULL) sysmem_freeptr((char *) x->peakBuf);
+	if (x->histBuf != NULL) sysmem_freeptr((char *) x->histBuf);
 	if (x->x_clock != NULL) freeobject((t_object *)x->x_clock);
 	
 }
@@ -938,9 +939,9 @@ void pitch_tick(t_pitch *x) {
     	t_peakout *po;
     	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
 			t_atom at[3];
-	    	SETLONG(at, i+1);
-	    	SETFLOAT(at+1, po->po_freq);
-	    	SETFLOAT(at+2, po->po_amp);
+	    	atom_setlong(at, i+1);
+	    	atom_setfloat(at+1, po->po_freq);
+	    	atom_setfloat(at+2, po->po_amp);
 	    	outlet_list(x->x_peakout, 0, 3, at);
 		}
     }
@@ -952,16 +953,16 @@ void pitch_tick(t_pitch *x) {
     if (x->x_npitch > 1) {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[3];
-			SETLONG(at, i+1);
-			SETFLOAT(at+1, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+2, ph->h_amps[x->x_histphase]);
+			atom_setlong(at, i+1);
+			atom_setfloat(at+1, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+2, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 3, at);
    		}
    	} else {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+1, ph->h_amps[x->x_histphase]);
+			atom_setfloat(at, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+1, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 2, at);
    		}
 	}   	
@@ -971,17 +972,17 @@ void pitch_tick(t_pitch *x) {
 	    for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
  			if (ph->h_pitch) {
 				t_atom at[3];
-				SETLONG(at, i+1);
-				SETFLOAT(at+1, ph->h_pitch);
-				SETFLOAT(at+2, mtof(ph->h_pitch));
+				atom_setlong(at, i+1);
+				atom_setfloat(at+1, ph->h_pitch);
+				atom_setfloat(at+2, mtof(ph->h_pitch));
 				outlet_list(x->x_noteout, 0, 3, at);
 			}
 	} else {
 		ph = x->x_hist;
  		if (ph->h_pitch) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitch);
-			SETFLOAT(at+1, mtof(ph->h_pitch));
+			atom_setfloat(at, ph->h_pitch);
+			atom_setfloat(at+1, mtof(ph->h_pitch));
 			outlet_list(x->x_noteout, 0, 2, at);
 		}
 	}
@@ -1036,9 +1037,9 @@ void pitch_tick_G4(t_pitch *x) {
     	t_peakout *po;
     	for (i=0, po=x->peakBuf; i<x->x_npeakout; i++, po++) {
 			t_atom at[3];
-	    	SETLONG(at, i+1);
-	    	SETFLOAT(at+1, po->po_freq);
-	    	SETFLOAT(at+2, po->po_amp);
+	    	atom_setlong(at, i+1);
+	    	atom_setfloat(at+1, po->po_freq);
+	    	atom_setfloat(at+2, po->po_amp);
 	    	outlet_list(x->x_peakout, 0, 3, at);
 		}
     }
@@ -1050,16 +1051,16 @@ void pitch_tick_G4(t_pitch *x) {
     if (x->x_npitch > 1) {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[3];
-			SETLONG(at, i+1);
-			SETFLOAT(at+1, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+2, ph->h_amps[x->x_histphase]);
+			atom_setlong(at, i+1);
+			atom_setfloat(at+1, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+2, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 3, at);
    		}
    	} else {
 		for (i=0,  ph=x->x_hist; i<x->x_npitch; i++, ph++) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitches[x->x_histphase]);
-			SETFLOAT(at+1, ph->h_amps[x->x_histphase]);
+			atom_setfloat(at, ph->h_pitches[x->x_histphase]);
+			atom_setfloat(at+1, ph->h_amps[x->x_histphase]);
 			outlet_list(x->x_pitchout, 0, 2, at);
    		}
 	}   	
@@ -1069,17 +1070,17 @@ void pitch_tick_G4(t_pitch *x) {
 	    for (i=0, ph=x->x_hist; i<x->x_npitch; i++, ph++)
  			if (ph->h_pitch) {
 				t_atom at[3];
-				SETLONG(at, i+1);
-				SETFLOAT(at+1, ph->h_pitch);
-				SETFLOAT(at+2, mtof(ph->h_pitch));
+				atom_setlong(at, i+1);
+				atom_setfloat(at+1, ph->h_pitch);
+				atom_setfloat(at+2, mtof(ph->h_pitch));
 				outlet_list(x->x_noteout, 0, 3, at);
 			}
 	} else {
 		ph = x->x_hist;
  		if (ph->h_pitch) {
 			t_atom at[2];
-			SETFLOAT(at, ph->h_pitch);
-			SETFLOAT(at+1, mtof(ph->h_pitch));
+			atom_setfloat(at, ph->h_pitch);
+			atom_setfloat(at+1, mtof(ph->h_pitch));
 			outlet_list(x->x_noteout, 0, 2, at);
 		}
 	}

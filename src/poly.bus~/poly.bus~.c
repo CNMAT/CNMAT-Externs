@@ -34,7 +34,7 @@ VERSION 0.1: Fixed a memory leak and made it so that you can safely have 2 of th
 #define NAME "poly.bus~"
 #define DESCRIPTION "Multichannel, dynamically assignable receive for poly~"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 #include "version.h"
@@ -43,10 +43,6 @@ VERSION 0.1: Fixed a memory leak and made it so that you can safely have 2 of th
 #include "ext_obex_util.h"
 #include "z_dsp.h"
 
-
-#ifdef WIN32
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
-#endif
 
 typedef struct _pbus{
 	t_pxobject ob;

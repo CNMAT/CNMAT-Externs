@@ -35,7 +35,7 @@
 #define NAME "bdist"
 #define DESCRIPTION "The beta distribution"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 #include "version.h"
 #include "ext.h"
@@ -55,6 +55,20 @@
 
 #define PDF 0
 #define CDF 1
+
+#ifndef DBL_MIN
+#define DBL_MIN 0.000000001
+#endif
+#ifndef FLT_MIN
+#define FLT_MIN 0.000000001
+#endif
+
+#ifndef DBL_MAX
+#define DBL_MAX 10000000000.
+#endif
+#ifndef FLT_MAX
+#define FLT_MAX 10000000000.
+#endif
 
 typedef struct _bdist{
 	t_jbox ob;

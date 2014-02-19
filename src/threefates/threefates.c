@@ -47,7 +47,7 @@ VERSION 0.2.6: Force Package Info Generation
 #define NAME "threefates"
 #define DESCRIPTION "Deal with track birth/death for sinusoids~"
 #define AUTHORS "Tim Madden and Matt Wright"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,2012"
+#define COPYRIGHT_YEARS "2000-05,12,13"
 
 
 
@@ -99,7 +99,7 @@ typedef struct t_slot_
 	// all the SDIF freq data. If this index is in the SDIF data, we are alive
 	// so we set to 0. If all SDIF data is processed, and we are still at 1, we died,
 	// so set amp to zero, release this slot.
-	Boolean is_dead;
+	int is_dead;
 } t_slot;
 
 
@@ -118,7 +118,7 @@ typedef struct t_threefates_
 	int max_inargs, max_outargs;
 	
 	void *t_out;
-	Atom *output_list;
+	t_atom *output_list;
 	int t_outsize;
 
 	// Frame0 num args.
@@ -142,7 +142,7 @@ typedef struct t_threefates_
 	int max_slot_index;
 } t_threefates;
 
-Symbol *ps_list;
+t_symbol *ps_list;
 
 t_class *threefates_class;
 
@@ -155,9 +155,9 @@ void threefates_free(t_threefates *x);
 
 void List(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 void SlotsToOutput(t_threefates *thisobject);
 void RemoveDeadSlots(t_threefates *thisobject);
@@ -178,9 +178,9 @@ void BirthSlotList(t_threefates *thisobject, int index, int nparams, float *para
 
 int InputToFutureFrame(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 	
 void SetFutureValue(
 	t_threefates *x,
@@ -293,7 +293,7 @@ void *threefates_new(long maxpartials, long nPartialParams) {
 	x->max_inargs =  (x->num_partial_parameters + 1) * x->max_osc;
 	x->max_outargs = x->num_partial_parameters * x->max_osc;
 
-	x->output_list = (Atom *)   sysmem_newptr(x->max_outargs * sizeof(Atom));
+	x->output_list = (t_atom *)   sysmem_newptr(x->max_outargs * sizeof(t_atom));
 	x->frame0 =      (float *)  sysmem_newptr(x->max_inargs * sizeof(float));
 	x->frame1 =      (float *)  sysmem_newptr(x->max_inargs * sizeof(float));
 	x->t_slotlist =  (t_slot *) sysmem_newptr(x->max_osc * sizeof(t_slot));
@@ -318,7 +318,7 @@ void threefates_free(t_threefates *x) {
 	sysmem_freeptr(x->t_slotlist);
 
 #ifdef GETBYTES_GIVES_ENOUGH_MEMORY
-  	freebytes(x->output_list, (short) x->max_outargs * sizeof(Atom));
+  	freebytes(x->output_list, (short) x->max_outargs * sizeof(t_atom));
 	freebytes(x->frame0,      (short) x->max_inargs * sizeof(float));
 	freebytes(x->frame1,      (short) x->max_inargs * sizeof(float));
 	freebytes(x->t_slotlist,  (short) x->max_osc * sizeof(t_slot));
@@ -332,9 +332,9 @@ void threefates_free(t_threefates *x) {
 
 void List(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 
 	if (argc > x->max_inargs) {
@@ -580,7 +580,7 @@ void SlotsToOutput(t_threefates *thisobject) {
 	for (i = 0; i < thisobject->max_slot_index; i++) {
 	    // Output everything except index
 	    for (j = 0; j<nparams; ++j) {
-			SETFLOAT(thisobject->output_list + outindex, thisobject->t_slotlist[i].params[j]);
+			atom_setfloat(thisobject->output_list + outindex, thisobject->t_slotlist[i].params[j]);
 			++outindex;
 		}
 	}
@@ -594,9 +594,9 @@ void SlotsToOutput(t_threefates *thisobject) {
 
 int InputToFutureFrame(
 	t_threefates *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int i;
 	float value;	
@@ -835,7 +835,7 @@ void FutureFrameToSlots(t_threefates *x) {
 
 void threefates_tellmeeverything(t_threefates *x) {
    int i, j;
-   Atom a;
+   t_atom a;
    
    version(x);
 
@@ -845,7 +845,7 @@ void threefates_tellmeeverything(t_threefates *x) {
    for (i = 0; i < GetPresentAC(x); i+= x->num_partial_parameters+1) {
    	  object_post((t_object *)x, "    ");
    	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
-   	  	SETFLOAT(&a, GetPresentValue(x, i+j));
+   	  	atom_setfloat(&a, GetPresentValue(x, i+j));
    	  	postatom(&a);
    	  }
    }
@@ -853,7 +853,7 @@ void threefates_tellmeeverything(t_threefates *x) {
    for (i = 0; i < GetFutureAC(x); i+= x->num_partial_parameters+1) {
    	  object_post((t_object *)x, "    ");
    	  for (j = 0; j < x->num_partial_parameters+1; ++j) {
-   	  	SETFLOAT(&a, GetFutureValue(x, i+j));
+   	  	atom_setfloat(&a, GetFutureValue(x, i+j));
    	  	postatom(&a);
    	  }
    }
@@ -861,7 +861,7 @@ void threefates_tellmeeverything(t_threefates *x) {
    for (i = 0; i<x->max_slot_index; i ++) {
    		object_post((t_object *)x, "  index %ld %s ", x->t_slotlist[i].index, x->t_slotlist[i].is_dead ? "DEAD" : "ALIVE");
    		for (j = 0; j<x->num_partial_parameters; ++j) {
-   			SETFLOAT(&a, x->t_slotlist[i].params[j]);
+   			atom_setfloat(&a, x->t_slotlist[i].params[j]);
    			postatom(&a);
    	  }
    }

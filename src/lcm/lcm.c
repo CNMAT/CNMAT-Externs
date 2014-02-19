@@ -39,10 +39,10 @@ VERSION 0.2: First release; fixed bug with typed-in arguments
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
 
 */
-#define NAME "lcm (least common multiple)"
+#define NAME "lcm"
 #define DESCRIPTION "Least common multiple"
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "1998,99,2000,01,02,03,04,05,06,07,2012"
+#define COPYRIGHT_YEARS "1998,99,2000-07,12,13"
 
 
    
@@ -63,7 +63,7 @@ typedef struct lcm
 	void *l_out;
 } LCM;
 
-fptr *FNS;
+//fptr *FNS;
 t_class *lcm_class;
 
 void lcm_bang(LCM *x);
@@ -79,8 +79,8 @@ void lcm_in8(LCM *x, long n);
 void lcm_in9(LCM *x, long n);
 void lcm_tellmeeverything(LCM *x);
 
-void lcm_list(LCM *x, Symbol *s, short ac, Atom *av);
-void *lcm_new(Symbol *s, short ac, Atom *av);
+void lcm_list(LCM *x, t_symbol *s, short ac, t_atom *av);
+void *lcm_new(t_symbol *s, short ac, t_atom *av);
 long gcd (long a, long b);
 long lcm (long a, long b);
 
@@ -180,7 +180,7 @@ void lcm_tellmeeverything(LCM *x) {
 }
 
 
-void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
+void lcm_list(LCM *x, t_symbol *s, short ac, t_atom *av)
 {
 	register short i;
 	if (ac > 10) {
@@ -204,7 +204,7 @@ void lcm_list(LCM *x, Symbol *s, short ac, Atom *av)
 }
 
 
-void *lcm_new(Symbol *s, short ac, Atom *av)
+void *lcm_new(t_symbol *s, short ac, t_atom *av)
 {
 	LCM *x;
 	x = (LCM *)object_alloc(lcm_class);

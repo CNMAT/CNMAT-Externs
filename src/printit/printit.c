@@ -47,7 +47,7 @@ VERSION 0.4.1: Added min and max OSC Packet sizes as a heuristic protection agai
 #define NAME "printit"
 #define DESCRIPTION "Really print everything about what comes in the inlet"
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "2000-06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
  
  
@@ -64,12 +64,12 @@ VERSION 0.4.1: Added min and max OSC Packet sizes as a heuristic protection agai
 typedef struct printit
 {
 	Object o_ob;				// required header
-	Symbol *my_name;
+	t_symbol *my_name;
   int min_OSCPacket_size, max_OSCPacket_size;
 } printit;
 
 /* global necessary for 68K function macros to work */
-fptr *FNS;
+//fptr *FNS;
 
 /* globalthat holds the class definition */
 t_class *printit_class;
@@ -79,14 +79,14 @@ t_class *printit_class;
 void printit_bang(printit *x);
 void printit_float(printit *x, double d);
 void printit_int(printit *x, long n);
-void printit_list(printit *x, Symbol *s, short argc, Atom *argv);
-void printit_anything(printit *x, Symbol *s, short argc, Atom *argv);
-void *printit_new(Symbol *s);
+void printit_list(printit *x, t_symbol *s, short argc, t_atom *argv);
+void printit_anything(printit *x, t_symbol *s, short argc, t_atom *argv);
+void *printit_new(t_symbol *s);
 void printit_assist (printit *x, void *box, long msg, long arg, char *dstString);
 
-Symbol *ps_emptysymbol;
-Symbol *ps_printit;
-Symbol *ps_FullPacket;
+t_symbol *ps_emptysymbol;
+t_symbol *ps_printit;
+t_symbol *ps_FullPacket;
 
 
 /* initialization routine */
@@ -120,7 +120,7 @@ int main(void)
 
 /* instance creation routine */
 
-void *printit_new(Symbol *s)
+void *printit_new(t_symbol *s)
 {
 	printit *x;	
 	
@@ -175,7 +175,7 @@ void printit_int(printit *x, long n)
 	object_post((t_object *)x, "%s: received an int: %ld", x->my_name->s_name, n);
 }
 
-static void print_args(printit *x, short argc, Atom *argv) {
+static void print_args(printit *x, short argc, t_atom *argv) {
   int i;
 
   for (i = 0; i < argc; ++i) {
@@ -216,7 +216,7 @@ static void print_args(printit *x, short argc, Atom *argv) {
   }
 }
 
-void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
+void printit_anything(printit *x, t_symbol *s, short argc, t_atom *argv) {
 	post("%s: received MESSAGE \"%s\" (%p, s_thing %p) with %d argument(s):", 
 	     x->my_name->s_name, s->s_name, s, s->s_thing, argc);
 
@@ -238,7 +238,7 @@ void printit_anything(printit *x, Symbol *s, short argc, Atom *argv) {
 	}
 }
 
-void printit_list(printit *x, Symbol *s, short argc, Atom *argv) {
+void printit_list(printit *x, t_symbol *s, short argc, t_atom *argv) {
 	object_post((t_object *)x, "%s: received LIST with %d argument(s):", x->my_name->s_name, argc);
 	print_args(x, argc, argv);
 }

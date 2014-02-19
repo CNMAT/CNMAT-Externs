@@ -42,7 +42,7 @@ VERSION 1.2incomplete: beginning of rewrite to have any number of outputs and to
 #define NAME "deinterleave"
 #define DESCRIPTION "Divide a large input list into multiple output lists by de-interleaving.  E.g., for 2 outputs, it will put odd-numbered elements out the left list and even-numbered elements out the right list."
 #define AUTHORS "Tim Madden and Matt Wright"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
 
 /**************************************************************************************
@@ -88,15 +88,15 @@ typedef struct t_deinterleave
 	// Outputs
 	void *t_out[MAX_OUTLETS];	
 	// data to output.	
-	Atom *t_list_out[MAX_OUTLETS];
+	t_atom *t_list_out[MAX_OUTLETS];
 	// Length of each output list.
 	short t_outsize;
 	// Number of outputs.
 	int num_outputs;
 } t_deinterleave;
 
-// Symbol (list) for output.
-Symbol *ps_list;
+// t_symbol (list) for output.
+t_symbol *ps_list;
 
 t_class *deinterleave_class;
 
@@ -106,17 +106,17 @@ t_class *deinterleave_class;
 
 // Make new object.
 void *deinterleave_new(
-	Symbol *s, 
+	t_symbol *s, 
 	int ac,
-	Atom *av);
+	t_atom *av);
 
 
 // Respond to a list.
 void List(
 	t_deinterleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 	
 // Respond to a bang.
 void Bang(t_deinterleave *x);
@@ -157,9 +157,9 @@ int main(void){
  *************************************************************************************/
 
 void *deinterleave_new(
-	Symbol *s, 
+	t_symbol *s, 
 	int ac,
-	Atom *av)
+	t_atom *av)
 {
 
 	t_deinterleave *x;
@@ -203,7 +203,7 @@ void *deinterleave_new(
 	// Make outputs (in right to left order) and allocate space to hold output lists
 		for (int i = x->num_outputs-1; i >= 0; --i) {
 		x->t_out[i] = listout(x);
-		x->t_list_out[i] = (Atom *) getbytes(DEFAULT_MAX_OUTARGS * sizeof(Atom));
+		x->t_list_out[i] = (t_atom *) getbytes(DEFAULT_MAX_OUTARGS * sizeof(t_atom));
 	}
 		
 	// Set output size 0	
@@ -216,7 +216,7 @@ void *deinterleave_new(
 void deinterleave_free(t_deinterleave *x) {
 	int i;
 	for (i = 0; i<x->num_outputs; ++i) {
-		freebytes(x->t_list_out[i], DEFAULT_MAX_OUTARGS * sizeof(Atom));
+		freebytes(x->t_list_out[i], DEFAULT_MAX_OUTARGS * sizeof(t_atom));
 	}
 }
 
@@ -227,9 +227,9 @@ void deinterleave_free(t_deinterleave *x) {
 
 void List(
 	t_deinterleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int counter;
 	int i;

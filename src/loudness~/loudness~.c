@@ -51,7 +51,7 @@
 #define NAME "loudness~"
 #define DESCRIPTION "Spectral or Time-domain Energy"
 #define AUTHORS "Tristan Jehan, Adrian Freed, and Michael Zbyszynski"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000-8,2012"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000-8,12,13"
 
 
 
@@ -65,7 +65,11 @@
 #include "fftnobitrev.h"
 #include <string.h>
 #include <math.h>
+#include <inttypes.h>
+
+#if !defined(WINDOWS) && !defined(WIN_VERSION)
 #include <Accelerate/Accelerate.h> // to get veclib
+#endif
 
 // Add altivec function prototypes
 #ifdef __ALTIVEC__
@@ -120,17 +124,17 @@ typedef struct _loudness {
 
     t_int BufSize;			// FFT buffer size
 	t_int FFTSize;			// Size of FFT
-	UInt32 x_FFTSizeOver2;	// Size of FFT/2 (UInt32 in G4 FFT)
+	uint32_t x_FFTSizeOver2;	// Size of FFT/2 (UInt32 in G4 FFT)
     t_int BufWritePos;		// Where to write in buffer
 	void *x_outcent;		// Outlet for the loudness
 	void *x_clock;			// Use a clock for outputs... (better than Qelem)
 	
-	UInt32 x_log2n;
-    COMPLEX_SPLIT x_A;
-	FFTSetup x_setup;
 
 #ifdef __ALTIVEC__ // Additional stuff for managing the G4-optimized FFT by Apple
 #pragma altivec_model on
+	uint32_t x_log2n;
+    COMPLEX_SPLIT x_A;
+	FFTSetup x_setup;
 	
 #pragma altivec_model off
 #endif
@@ -528,15 +532,15 @@ void *loudness_new(t_symbol *s, short argc, t_atom *argv) {
 
 	} else { // Normal tick function
 		x->x_clock = clock_new(x,(method)loudness_tick);
-		x->memFFT = (t_float*) NewPtr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
+		x->memFFT = (t_float*) sysmem_newptr(CMAX * x->FFTSize * sizeof(t_float)); // memory allocated for normal fft twiddle
 	}
 	object_post((t_object *)x, "");
 
 	// Allocate memory
-	x->Buf1 = (t_int*) NewPtr(x->BufSize * sizeof(t_float)); // Careful these are pointers to integers but the content is floats
-	x->Buf2 = (t_int*) NewPtr(x->BufSize * sizeof(t_float));
-	x->BufFFT = (t_float*) NewPtr(x->FFTSize * sizeof(t_float));
-	x->WindFFT = (t_float*) NewPtr(x->BufSize * sizeof(t_float));
+	x->Buf1 = (t_int*) sysmem_newptr(x->BufSize * sizeof(t_float)); // Careful these are pointers to integers but the content is floats
+	x->Buf2 = (t_int*) sysmem_newptr(x->BufSize * sizeof(t_float));
+	x->BufFFT = (t_float*) sysmem_newptr(x->FFTSize * sizeof(t_float));
+	x->WindFFT = (t_float*) sysmem_newptr(x->BufSize * sizeof(t_float));
 		
 	// Compute and store Windows
 	if (x->x_window != Recta) {
@@ -582,12 +586,12 @@ dsp_free((t_pxobject *)x);
 	if (x->x_setup) destroy_fftsetup(x->x_setup);
 #pragma altivec_model off
 #else
-	if (x->memFFT != NULL) DisposePtr((char *) x->memFFT);
+	if (x->memFFT != NULL) sysmem_freeptr((char *) x->memFFT);
 #endif		
-	if (x->Buf1 != NULL) DisposePtr((char *) x->Buf1);
-	if (x->Buf2 != NULL) DisposePtr((char *) x->Buf2);
-	if (x->BufFFT != NULL) DisposePtr((char *) x->BufFFT);
-	if (x->WindFFT != NULL) DisposePtr((char *) x->WindFFT);
+	if (x->Buf1 != NULL) sysmem_freeptr((char *) x->Buf1);
+	if (x->Buf2 != NULL) sysmem_freeptr((char *) x->Buf2);
+	if (x->BufFFT != NULL) sysmem_freeptr((char *) x->BufFFT);
+	if (x->WindFFT != NULL) sysmem_freeptr((char *) x->WindFFT);
 	if (x->x_clock != NULL) freeobject((t_object *)x->x_clock);
 	
 }
@@ -641,6 +645,7 @@ void loudness_tick(t_loudness *x) {
     outlet_float(x->x_outcent, x->x_loudness);
 }	
 
+#ifdef __ALTIVEC__
 void loudness_tick_G4(t_loudness *x) {
 
 	t_float FsOverFFTSize = x->x_Fs/x->FFTSize;
@@ -698,6 +703,7 @@ void loudness_tick_G4(t_loudness *x) {
 	
     outlet_float(x->x_outcent, x->x_loudness);
 }	
+#endif
 
 // Computes the ceiling of log2(n) 
 // i.e. log2max(7) = 3, log2max(8) = 3, log2max(9) = 4

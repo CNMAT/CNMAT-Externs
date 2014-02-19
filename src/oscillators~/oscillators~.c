@@ -46,7 +46,7 @@ VERSION 1.4: Removed spurious printing of incorrect version information
 #define NAME "oscillators~"
 #define DESCRIPTION "Oscillator bank that can read waveform from a buffer~"
 #define AUTHORS "Adrian Freed"
-#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,2012"
+#define COPYRIGHT_YEARS "1999,2000-07,12,13"
 
 
 
@@ -71,19 +71,15 @@ t_class *oscillators_class;
 
 float Sinetab[STABSZ];
 
-#if !defined(__llvm__) && !defined(__clang__)
-typedef  unsigned long ulong;
-#endif
-
 typedef  struct oscdesc
 {
 	float next_amplitude;
 	float amplitude;		/* amplitude */
-	ulong phase_current;
+	unsigned long phase_current;
 	long next_phase_inc;
 	long phase_inc;			/* frequency */
-//	ulong next_phaseadd;
-//	ulong phaseadd;			/* phase */
+//	unsigned long next_phaseadd;
+//	unsigned long phaseadd;			/* phase */
 } oscdesc;
 
 
@@ -137,10 +133,10 @@ t_int *sinusoids2_perform(t_int *w)
 	{
 		register float a = o->amplitude;
 		register long pi = o->phase_inc;
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 		register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
 		register float astep = (o->next_amplitude - o->amplitude)*rate;
-//		register ulong pa  = o->phaseadd;
+//		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 		
 		for(j=0;j<n;++j)

@@ -37,7 +37,7 @@ VERSION 0.2.1: Force Package Info Generation
 #define NAME "2threshattack~"
 #define DESCRIPTION "Two-threshold attack detector, aka a Schmitt Trigger (http://en.wikipedia.org/wiki/Schmitt_trigger)"
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "2004-06,2012"
+#define COPYRIGHT_YEARS "2004-06,12,13"
 
 
 
@@ -66,7 +66,9 @@ typedef struct _tta
 
 int main(void);
 void *tta_new(double low, double high);
+void tta_dsp64(t_tta *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void tta_dsp(t_tta *x, t_signal **sp, short *count);
+void tta_perform64(t_tta *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vectorsize, long flags, void *userparam);
 t_int *tta_perform(t_int *w);
 
 void tta_set_low(t_tta *x, double low);
@@ -79,6 +81,7 @@ int main(void){
           (short)sizeof(t_tta), 0L, A_DEFFLOAT, A_DEFFLOAT, 0);
     class_addmethod(tta_class, (method)version, "version", 0);
     class_addmethod(tta_class, (method)tta_dsp, "dsp", A_CANT, 0);
+    class_addmethod(tta_class, (method)tta_dsp64, "dsp64", A_CANT, 0);
     class_addmethod(tta_class, (method)tta_set_low, "low", A_FLOAT, 0);
     class_addmethod(tta_class, (method)tta_set_high, "high", A_FLOAT, 0);
     class_addmethod(tta_class, (method)tta_tellmeeverything, "tellmeeverything", 0);
@@ -121,6 +124,10 @@ void *tta_new(double l, double h) {
     return x;
 }
 
+void tta_dsp64(t_tta *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	object_method(dsp64, gensym("dsp_add64"), x, tta_perform64, 0, NULL);
+}
 
 void tta_dsp(t_tta *x, t_signal **sp, short *count) {
 	dsp_add(tta_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);  
@@ -128,6 +135,46 @@ void tta_dsp(t_tta *x, t_signal **sp, short *count) {
 }
 
 #define ABS(x) (((x)>=0) ? (x) : -(x))
+
+void tta_perform64(t_tta *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vectorsize, long flags, void *userparam)
+{
+	double val, l, lowthresh, highthresh, attack;
+	double *signal = ins[0];
+	double *level = ins[1];
+	double *out = outs[0];
+	int size = vectorsize;
+	int in = x->in_attack;
+	t_atom outputlist[2];
+    
+	lowthresh = x->low;
+	highthresh = x->high;
+	
+	// calculation loop
+	while (size--) {
+		val = *signal++;
+		l = *level++;
+
+		attack = 0;  // Probably not an attack this sample
+		
+		if (in) {
+			if (val < (l * lowthresh)) {
+				/* Back below low threshold, so reset trigger */
+				in = 0;
+			}
+		} else {
+			if (val >= (l * highthresh)) {
+				in = 1;
+				attack = 1;
+				atom_setfloat(outputlist, val);
+				atom_setfloat(outputlist+1, l);
+				outlet_list (x->event_outlet, 0L, 2, outputlist);
+			}
+		}
+		*out++ = attack;
+	}	
+
+	x->in_attack = in;
+}
 
 t_int *tta_perform(t_int *w) {
 	t_float val, l, lowthresh, highthresh, attack;
@@ -137,7 +184,7 @@ t_int *tta_perform(t_int *w) {
     int size = w[4]; // vector size
     t_tta *x = (t_tta *) w[5];
     int in = x->in_attack;
-    Atom outputlist[2];
+    t_atom outputlist[2];
     
     lowthresh = x->low;
     highthresh = x->high;
@@ -158,8 +205,8 @@ t_int *tta_perform(t_int *w) {
 			if (val >= (l * highthresh)) {
 				in = 1;
 				attack = 1;
-				SETFLOAT(outputlist, val);
-				SETFLOAT(outputlist+1, l);
+				atom_setfloat(outputlist, val);
+				atom_setfloat(outputlist+1, l);
 				outlet_list (x->event_outlet, 0L, 2, outputlist);
 			}
 		}
