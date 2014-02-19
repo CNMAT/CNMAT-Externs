@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 7,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 1.0, 44.0, 792.0, 478.0 ],
+		"rect" : [ 9.0, 56.0, 792.0, 478.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -109,11 +110,12 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 6,
-							"minor" : 0,
-							"revision" : 7
+							"minor" : 1,
+							"revision" : 7,
+							"architecture" : "x86"
 						}
 ,
-						"rect" : [ 369.0, 376.0, 265.0, 224.0 ],
+						"rect" : [ 35.0, 193.0, 265.0, 224.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -197,7 +199,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 50.0, 111.0, 154.0, 17.0 ],
+									"patching_rect" : [ 50.0, 111.0, 86.5, 17.0 ],
 									"text" : "pack i f"
 								}
 
@@ -270,6 +272,15 @@
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-5", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-5", 1 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-6", 1 ]
 								}
 
 							}
@@ -404,11 +415,12 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 6,
-							"minor" : 0,
-							"revision" : 7
+							"minor" : 1,
+							"revision" : 7,
+							"architecture" : "x86"
 						}
 ,
-						"rect" : [ 340.0, 44.0, 546.0, 406.0 ],
+						"rect" : [ 69.0, 72.0, 523.0, 390.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -508,7 +520,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 52.0, 316.0, 241.0, 17.0 ],
+									"patching_rect" : [ 52.0, 316.0, 134.5, 17.0 ],
 									"text" : "pack i f"
 								}
 
@@ -522,7 +534,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "" ],
-									"patching_rect" : [ 52.0, 291.0, 241.0, 17.0 ],
+									"patching_rect" : [ 52.0, 291.0, 250.0, 17.0 ],
 									"saved_object_attributes" : 									{
 										"filename" : "wavemaker.js",
 										"parameter_enable" : 0
@@ -800,6 +812,15 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-7", 1 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-19", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
 									"disabled" : 0,
 									"hidden" : 1,
@@ -849,6 +870,15 @@
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-6", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-6", 1 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-7", 1 ]
 								}
 
 							}
@@ -1050,11 +1080,12 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 6,
-							"minor" : 0,
-							"revision" : 7
+							"minor" : 1,
+							"revision" : 7,
+							"architecture" : "x86"
 						}
 ,
-						"rect" : [ 84.0, 44.0, 670.0, 282.0 ],
+						"rect" : [ 21.0, 91.0, 670.0, 282.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1205,14 +1236,16 @@
 							}
 , 							{
 								"box" : 								{
-									"filename" : "resonance-display.js",
+									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"freqmax" : 5000.0,
 									"id" : "obj-10",
-									"maxclass" : "jsui",
+									"maxclass" : "resdisplay",
 									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "", "" ],
-									"parameter_enable" : 0,
-									"patching_rect" : [ 33.0, 110.0, 533.0, 104.0 ]
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 33.0, 110.0, 534.0, 103.0 ]
 								}
 
 							}
@@ -1928,28 +1961,25 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "resonance-display.js",
-				"bootpath" : "/Users/john/MMJ6/CNMAT-Everything-OSX-MachO",
-				"patcherrelativepath" : "../../../../MMJ6/CNMAT-Everything-OSX-MachO",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "wavemaker.js",
-				"bootpath" : "/Users/john/Development/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Synthesis/wavemaker",
-				"patcherrelativepath" : "../../../cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Synthesis/wavemaker",
+				"bootpath" : "/Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat/repositories/CNMAT-MMJ-Depot/patchers/synthesis/wavemaker",
+				"patcherrelativepath" : "../../../CNMAT-MMJ-Depot/patchers/synthesis/wavemaker",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
+				"bootpath" : "/Users/jml/Documents/materials/programming/max_files/5_berkeley/projects/cnmat/repositories/CNMAT-MMJ-Depot/patchers/depot_support",
+				"patcherrelativepath" : "../../../CNMAT-MMJ-Depot/patchers/depot_support",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "oscillators~.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "resdisplay.mxo",
 				"type" : "iLaX"
 			}
  ]
