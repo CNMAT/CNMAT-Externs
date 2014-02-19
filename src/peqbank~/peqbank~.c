@@ -64,7 +64,7 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 #define NAME "peqbank~"
 #define DESCRIPTION "Bank of biquad filters in series with analog-like control parameters based on shelving or parametric EQ (or low-level control in the biquad coefficient domain)"
 #define AUTHORS "Tristan Jehan, Matt Wright, Andy Schmeder"
-#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,09,2012"
+#define COPYRIGHT_YEARS "1999,2000-07,9,12,13"
 
 
 
@@ -176,7 +176,7 @@ typedef struct _peqbank {
     t_float** s_vec_out;   // output vectors
     int s_n;
 	
-	Atom *myList;		// Copy of coefficients as Atoms
+	t_atom *myList;		// Copy of coefficients as Atoms
 	void *b_outlet;		// List of biquad coefficients
 	
 	int already_peqbank_compute;		// Flag for whether we're currently computing new coefficients
@@ -1176,7 +1176,7 @@ void peqbank_allocmem(t_peqbank *x){
 	x->b_xm2    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_xm2) );     
     x->s_vec_in = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
     x->s_vec_out = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
-	x->myList   = (Atom*)  sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
+	x->myList   = (t_atom*)  sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
 
 	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
 	    x->freecoeff == NIL || x->b_ym1 == NIL || x->b_ym2 == NIL || x->b_xm1 == NIL || 
@@ -1298,7 +1298,7 @@ void swap_in_new_coeffs(t_peqbank *x) {
 	}
 
 	// Output the new coefficients out the outlet
-	for (i=0; i<(x->b_nbpeq+1)*NBPARAM; i++) SETFLOAT(x->myList+i, x->coeff[i]);		
+	for (i=0; i<(x->b_nbpeq+1)*NBPARAM; i++) atom_setfloat(x->myList+i, x->coeff[i]);		
 	outlet_list(x->b_outlet, 0L, (x->b_nbpeq+1)*NBPARAM, x->myList);
 }
 

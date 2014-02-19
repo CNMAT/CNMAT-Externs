@@ -60,7 +60,7 @@
 #define NAME "rbfi"
 #define DESCRIPTION "A 2-D graphical display/editor like pictctrl but supporting multiple points."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 #include "version.h"
@@ -76,7 +76,6 @@
 #include <sys/time.h>
 
 #ifdef WIN32
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #else
 #include <mach/mach_time.h>
 #endif
@@ -137,7 +136,9 @@ typedef struct _rbfi{
 	long rbf;
 	float line_width;
 	long modifiers;
-	t_pt xhairs;
+	long enable_multiple_crosshairs;
+	t_pt *xhairs;
+	long nxhairs;
 	long mouse_active_beyond_rect;
 	int font_size;
 	struct timeval lastclick;
@@ -158,7 +159,7 @@ void rbfi_list(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
 void rbfi_deletePoint(t_rbfi *x, t_symbol *name);
 void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv);
 void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int nweights, double *weights);
-void rbfi_move(t_rbfi *x, double xx, double yy);
+void rbfi_move(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv);
 void rbfi_pushPointName(t_rbfi *x, t_symbol *name);
 void rbfi_push(t_rbfi *x, t_point *p);
 void rbfi_pop(t_rbfi *x, t_symbol *top);
@@ -416,12 +417,14 @@ void rbfi_paint(t_rbfi *x, t_object *patcherview){
 
 	// draw mouse cursor
 	{
-		jgraphics_set_source_jrgba(g, &(x->xhaircolor));
-		jgraphics_move_to(g, x->xhairs.x - 4, x->xhairs.y - 4);
-		jgraphics_line_to(g, x->xhairs.x + 4, x->xhairs.y + 4);
-		jgraphics_move_to(g, x->xhairs.x + 4, x->xhairs.y - 4);
-		jgraphics_line_to(g, x->xhairs.x - 4, x->xhairs.y + 4);
-		jgraphics_stroke(g);
+		for(int i = 0; i < x->nxhairs; i++){
+			jgraphics_set_source_jrgba(g, &(x->xhaircolor));
+			jgraphics_move_to(g, x->xhairs[i].x - 4, x->xhairs[i].y - 4);
+			jgraphics_line_to(g, x->xhairs[i].x + 4, x->xhairs[i].y + 4);
+			jgraphics_move_to(g, x->xhairs[i].x + 4, x->xhairs[i].y - 4);
+			jgraphics_line_to(g, x->xhairs[i].x - 4, x->xhairs[i].y + 4);
+			jgraphics_stroke(g);
+		}
 	}
 }
 
@@ -538,26 +541,75 @@ void rbfi_computeWeights(t_rbfi *x, t_pt coords, t_rect r, t_point *points, int 
 	}
 }
 
-void rbfi_move(t_rbfi *x, double xx, double yy){
+void rbfi_move(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv)
+{
 	t_rect r;
 	rbfi_getRect(x, &r);
 
+	long n = 0;
+	long xatom, yatom;
+
+	if(argc == 3){
+		if(atom_gettype(argv) != A_LONG){
+			object_error((t_object *)x, "if \"move\" has three arguments, the first must be an integer (the point number to move)");
+			return;
+		}
+		if(atom_gettype(argv + 1) != A_FLOAT || atom_gettype(argv + 2) != A_FLOAT){
+			object_error((t_object *)x, "position coordinates must be floats");
+			return;
+		}
+		n = atom_getlong(argv);
+		xatom = 1, yatom = 2;
+	}else{
+		if(atom_gettype(argv) != A_FLOAT || atom_gettype(argv + 1) != A_FLOAT){
+			object_error((t_object *)x, "position coordinates must be floats");
+			return;
+		}
+		xatom = 0, yatom = 1;
+	}
+
+	if(x->enable_multiple_crosshairs == 0 && n != 0){
+		object_error((t_object *)x, "you must set enable_multiple_crosshairs to 1 in order to use multiple crosshairs");
+		return;
+	}
+
+	if(n > x->nxhairs){
+		// could realloc
+		object_error((t_object *)x, "%d exceeds the maximum number of points", n);
+		return;
+	}
+
+	if(n < 0){
+		object_error((t_object *)x, "crosshair index must be positive");
+		return;
+	}
+
 	double weights[x->spaces->npoints];
-	double xx_screen = rbfi_scale(xx, x->xmin, x->xmax, 0, r.width);
-	double yy_screen = rbfi_scale(yy, x->ymin, x->ymax, r.height, 0);
+	double xx_screen = rbfi_scale(atom_getfloat(argv + xatom), x->xmin, x->xmax, 0, r.width);
+	double yy_screen = rbfi_scale(atom_getfloat(argv + yatom), x->ymin, x->ymax, r.height, 0);
 	rbfi_computeWeights(x, (t_pt){xx_screen,yy_screen}, r, x->spaces->points, x->spaces->npoints, weights);
 	t_atom out[2];
 	int i = 0;
 	critical_enter(x->lock);
 	t_point *p = x->spaces->points;
+	char label[128];
 	while(p){
-		atom_setsym(out, p->label);
+		if(x->enable_multiple_crosshairs){
+			if(*(p->label->s_name) == '/'){
+				sprintf(label, "/%d%s", n, p->label->s_name);
+			}else{
+				sprintf(label, "/%d/%s", n, p->label->s_name);
+			}
+			atom_setsym(out, gensym(label));
+		}else{
+			atom_setsym(out, p->label);
+		}
 		atom_setfloat(out + 1, weights[i]);
 		outlet_list(x->listOutlet, NULL, 2, out);
 		i++;
 		p = p->next;
 	}
-	x->xhairs = (t_pt){xx_screen,yy_screen};
+	x->xhairs[n] = (t_pt){xx_screen,yy_screen};
 	critical_exit(x->lock);
 	outlet_anything(x->listOutlet, ps_done, 0, NULL);
 	jbox_redraw(&(x->ob));
@@ -662,14 +714,24 @@ void rbfi_mousedown(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 			rbfi_computeWeights(x, pt, r, x->spaces->points, x->spaces->npoints, weights);
 			t_point *p = x->spaces->points;
 			while(p){
-				atom_setsym(out, p->label);
+				if(x->enable_multiple_crosshairs){
+					char buf[128];
+					if(*(p->label->s_name) == '/'){
+						sprintf(buf, "/%d%s", 0, p->label->s_name);
+					}else{
+						sprintf(buf, "/%d/%s", 0, p->label->s_name);
+					}
+					atom_setsym(out, gensym(buf));
+				}else{
+					atom_setsym(out, p->label);
+				}
 				atom_setfloat(out + 1, weights[i]);
 				outlet_list(x->listOutlet, NULL, 2, out);
 				i++;
 				p = p->next;
 			}
 			critical_exit(x->lock);
-			x->xhairs = pt;
+			x->xhairs[0] = pt;
 			outlet_anything(x->listOutlet, ps_done, 0, NULL);
 		}
 		break;
@@ -743,13 +805,23 @@ void rbfi_mousedrag(t_rbfi *x, t_object *patcherview, t_pt pt, long modifiers){
 			int i = 0;
 			t_point *p = x->spaces->points;
 			while(p){
-				atom_setsym(out, p->label);
+				if(x->enable_multiple_crosshairs){
+					char buf[128];
+					if(*(p->label->s_name) == '/'){
+						sprintf(buf, "/%d%s", 0, p->label->s_name);
+					}else{
+						sprintf(buf, "/%d/%s", 0, p->label->s_name);
+					}
+					atom_setsym(out, gensym(buf));
+				}else{
+					atom_setsym(out, p->label);
+				}
 				atom_setfloat(out + 1, weights[i]);
 				outlet_list(x->listOutlet, NULL, 2, out);
 				i++;
 				p = p->next;
 			}
-			x->xhairs = pt;
+			x->xhairs[0] = pt;
 			critical_exit(x->lock);
 			outlet_anything(x->listOutlet, ps_done, 0, NULL);
 		}
@@ -1238,7 +1310,7 @@ void rbfi_outputDistance(t_rbfi *x){
 	critical_enter(x->lock);
 	while(p){
 		atom_setsym(outptr++, p->label);
-		atom_setfloat(outptr++, sqrt(pow(rbfi_scale(x->xhairs.x, 0, r.width, x->xmin, x->xmax) - p->pt.x, 2.) + pow(rbfi_scale(x->xhairs.y, r.height, 0, x->ymin, x->ymax) - p->pt.y, 2.)));
+		atom_setfloat(outptr++, sqrt(pow(rbfi_scale(x->xhairs[0].x, 0, r.width, x->xmin, x->xmax) - p->pt.x, 2.) + pow(rbfi_scale(x->xhairs[0].y, r.height, 0, x->ymin, x->ymax) - p->pt.y, 2.)));
 		p = p->next;
 	}
 	critical_exit(x->lock);
@@ -1664,7 +1736,12 @@ void *rbfi_new(t_symbol *msg, int argc, t_atom *argv){
 		x->spaces->next = NULL;
 
 		x->monotonic_point_counter = 0;
-		x->xhairs = (t_pt){-10., -10.};
+		//x->xhairs = (t_pt){-10., -10.};
+		x->xhairs = (t_pt *)calloc(128, sizeof(t_pt));
+		for(int i = 0; i < 128; i++){
+			x->xhairs[i] = (t_pt){-10., -10.};
+		}
+		x->nxhairs = 128;
 		gettimeofday(&(x->lastclick), NULL);
 
 		x->pv = NULL;
@@ -1704,7 +1781,7 @@ int main(void){
 	class_addmethod(c, (method)rbfi_clear, "clear", 0);
 	class_addmethod(c, (method)rbfi_inner_radius, "inner_radius", A_FLOAT, 0);
 	class_addmethod(c, (method)rbfi_outer_radius, "outer_radius", A_FLOAT, 0);
-	class_addmethod(c, (method)rbfi_move, "move", A_FLOAT, A_FLOAT, 0);
+	class_addmethod(c, (method)rbfi_move, "move", A_GIMME, 0);
 	class_addmethod(c, (method)rbfi_dump, "dump", 0);
 	class_addmethod(c, (method)rbfi_addPoint, "add_point", A_GIMME, 0);
 	class_addmethod(c, (method)rbfi_deletePoint, "delete_point", A_SYM, 0);
@@ -1761,6 +1838,9 @@ int main(void){
 
 	CLASS_ATTR_LONG(c, "mouse_active_beyond_rect", 0, t_rbfi, mouse_active_beyond_rect);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "mouse_active_beyond_rect", 0, "1");
+
+	CLASS_ATTR_LONG(c, "enable_multiple_crosshairs", 0, t_rbfi, enable_multiple_crosshairs);
+	CLASS_ATTR_DEFAULTNAME_SAVE(c, "enable_multiple_crosshairs", 0, "0");
 
 	CLASS_ATTR_LONG(c, "font_size", 0, t_rbfi, font_size);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "font_size", 0, "11");

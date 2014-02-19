@@ -43,7 +43,7 @@ VERSION 1.3.1: Force Package Info Generation
 #define NAME "harmonics~ "
 #define DESCRIPTION "MSP harmonic oscillator Bank"
 #define AUTHORS "Adrian Freed"
-#define COPYRIGHT_YEARS "1996,97,98,99,2000,2001,2002,2003,2004,2005,2006,2012"
+#define COPYRIGHT_YEARS "1996-99,2000-06,12,13"
 
 
 
@@ -91,17 +91,13 @@ t_class *sinusoids_class;
 
 float Sinetab[STABSZ];
 
-#if !defined(__llvm__) && !defined(__clang__)
-typedef  unsigned long ulong;
-#endif
-
 typedef  struct oscdesc
 {
 	float next_amplitude;
 	float amplitude;		/* amplitude */
-	ulong phase_current;
-//	ulong next_phaseadd;
-//	ulong phaseadd;			/* phase */
+	unsigned long phase_current;
+//	unsigned long next_phaseadd;
+//	unsigned long phaseadd;			/* phase */
 } oscdesc;
 
 
@@ -194,12 +190,12 @@ static t_int *sinusoids2_perform(t_int *w)
 	{
 		register float a = o->amplitude;
 		register long pi = pi_fundamental * (i+1);   // This partial's freq is proportional to harmonic number
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 		register long pstep = ((x->next_phase_inc * (i+1)) - pi) *rate ;		// Also prop. to harmonic #
 		register float astep = (o->next_amplitude - o->amplitude)*rate;
 	
 	
-	//		register ulong pa  = o->phaseadd;
+	//		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 
 		
@@ -224,7 +220,7 @@ static t_int *sinusoids2_perform(t_int *w)
 	{
 		register float a = o->amplitude;
 		register long pi = pi_fundamental * (i+1);   // This partial's freq is proportional to harmonic number
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 		register long pstep = ((x->next_phase_inc * (i+1)) - pi) *rate ;		// Also prop. to harmonic #
 //		register float astep = (o->next_amplitude - o->amplitude)*rate;
 		register float carrier_amp, carrier_amp_inc;
@@ -245,7 +241,7 @@ static t_int *sinusoids2_perform(t_int *w)
 		carrier_amp_inc = (nb * o->next_amplitude - carrier_amp) *rate;
 	mod_amp =  nna   * o->amplitude;
 		mod_amp_inc = ( nnb * o->next_amplitude -mod_amp) * rate;
-//		register ulong pa  = o->phaseadd;
+//		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 
 		// Make sure we're not going to run out of noise:
@@ -360,8 +356,8 @@ long strcmp(const char *s1, const char *s2)
 }
 #endif
 
-Boolean isthesymbol(char *name, t_atom *t);
-Boolean isthesymbol(char *name, t_atom *t)
+int isthesymbol(char *name, t_atom *t);
+int isthesymbol(char *name, t_atom *t)
 {
 		if(t->a_type==A_SYM && (strcmp(t->a_w.w_sym->s_name,
 						name)==0))

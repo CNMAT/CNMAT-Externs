@@ -42,7 +42,7 @@ VERSION 1.2.1: Fixed a bug where in the computation of the denominator in rho_pr
 #define NAME "roughness"
 #define DESCRIPTION "Roughness estimate based on Richard Parncutt's algorithm."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2006,2012"
+#define COPYRIGHT_YEARS "2006,12,13"
 
 
 #include "version.h"
@@ -101,15 +101,15 @@ void rho_free(t_rho *x);
 void rho_tellmeeverything(t_rho *x);
 
 static void LookupMyBuffer(t_rho *x);
-static void rho_setSDIFbuffer(t_rho *x, Symbol *bufName);
+static void rho_setSDIFbuffer(t_rho *x, t_symbol *bufName);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 static void rho_GetMaxNumRows(t_rho *x);
-static void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row);
+static void SetAtomFromMatrix(t_atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row);
 
 void rho_SDIFtime(t_rho *x, double t);
 
-static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
+static t_symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup;
 
 //--------------------------------------------------------------------------
 
@@ -562,7 +562,7 @@ static void LookupMyBuffer(t_rho *x) {
     x->m_buf = NULL;
 }
 
-static void rho_setSDIFbuffer(t_rho *x, Symbol *bufName) {
+static void rho_setSDIFbuffer(t_rho *x, t_symbol *bufName) {
 	x->m_SDIFbuffer = 0;
 	x->m_bufferSym = bufName;
 
@@ -615,10 +615,10 @@ static void rho_GetMaxNumRows(t_rho *x){
 	}
 }
 
-static void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row) {
+static void SetAtomFromMatrix(t_atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row) {
 	if (m->header.matrixDataType == SDIF_INT32) {
-		SETLONG(a, SDIFutil_GetMatrixCell_int32(m, column, row));
+		atom_setlong(a, SDIFutil_GetMatrixCell_int32(m, column, row));
 	} else {
-		SETFLOAT(a, SDIFutil_GetMatrixCell(m, column, row));
+		atom_setfloat(a, SDIFutil_GetMatrixCell(m, column, row));
 	}
 }

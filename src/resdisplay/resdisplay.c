@@ -37,7 +37,7 @@
 #define NAME "resdisplay"
 #define DESCRIPTION "Display/edit resonance models"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2010,2012"
+#define COPYRIGHT_YEARS "2010,12,13"
 
 
 #include "version.h"

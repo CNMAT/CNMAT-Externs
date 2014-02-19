@@ -42,7 +42,7 @@ VERSION 0.1: First public release
 #define NAME "thread.join"
 #define DESCRIPTION "Pass data from a secondary thread back to the main thread"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 // max object header
@@ -70,26 +70,26 @@ typedef struct _thread_join
 void *thread_join_class;
 
 // basic prototypes
-void* thread_join_new(Symbol* s, short argc, Atom* argv);
+void* thread_join_new(t_symbol* s, short argc, t_atom* argv);
 void thread_join_free(thread_join *x);
 void thread_join_assist (thread_join *x, void *box, long msg, long arg, char *dstString);
 
 // methods
-void thread_join_anything(thread_join *x, Symbol* s, int argc, Atom* argv);
-void thread_join_outlet_anything(thread_join *x, Symbol* s, int argc, Atom* argv);
+void thread_join_anything(thread_join *x, t_symbol* s, int argc, t_atom* argv);
+void thread_join_outlet_anything(thread_join *x, t_symbol* s, int argc, t_atom* argv);
 
 void thread_join_bang(thread_join *x);
-void thread_join_outlet_bang(thread_join *x, Symbol* s, int argc, Atom* argv);
+void thread_join_outlet_bang(thread_join *x, t_symbol* s, int argc, t_atom* argv);
 
 void thread_join_float(thread_join *x, double f);
-void thread_join_outlet_float(thread_join *x, Symbol* s, int argc, Atom* argv);
+void thread_join_outlet_float(thread_join *x, t_symbol* s, int argc, t_atom* argv);
 
 void thread_join_int(thread_join *x, int i);
-void thread_join_outlet_int(thread_join *x, Symbol* s, int argc, Atom* argv);
+void thread_join_outlet_int(thread_join *x, t_symbol* s, int argc, t_atom* argv);
 
-Symbol* ps_bang;
-Symbol* ps_float;
-Symbol* ps_int;
+t_symbol* ps_bang;
+t_symbol* ps_float;
+t_symbol* ps_int;
 
 // setup
 int main(void)
@@ -115,7 +115,7 @@ int main(void)
     return 0;
 }
 
-void *thread_join_new(Symbol* s, short argc, Atom *argv)
+void *thread_join_new(t_symbol* s, short argc, t_atom *argv)
 {
     thread_join *x;
     
@@ -149,11 +149,11 @@ void thread_join_assist (thread_join *x, void *box, long msg, long arg, char *ds
     }
 }
 
-void thread_join_anything(thread_join *x, Symbol* s, int argc, Atom* argv) {
+void thread_join_anything(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
     schedule_defer(x, thread_join_outlet_anything, 0, s, argc, argv);
 }
 
-void thread_join_outlet_anything(thread_join *x, Symbol* s, int argc, Atom* argv) {
+void thread_join_outlet_anything(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
     outlet_anything(x->out_p[0], s, argc, argv);
 }
 
@@ -161,27 +161,27 @@ void thread_join_bang(thread_join* x) {
     schedule_defer(x, thread_join_outlet_bang, 0, ps_bang, 0, NULL);
 }
 
-void thread_join_outlet_bang(thread_join *x, Symbol* s, int argc, Atom* argv) {
+void thread_join_outlet_bang(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
     outlet_bang(x->out_p[0]);
 }
 
 void thread_join_float(thread_join* x, double f) {
-    Atom a;
+    t_atom a;
     atom_setfloat(&a, f);
     schedule_defer(x, thread_join_outlet_float, 0, ps_float, 1, &a);
 }
 
-void thread_join_outlet_float(thread_join *x, Symbol* s, int argc, Atom* argv) {
+void thread_join_outlet_float(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
     outlet_float(x->out_p[0], atom_getfloat(argv));
 }
 
 void thread_join_int(thread_join* x, int i) {
-    Atom a;
+    t_atom a;
     atom_setlong(&a, i);
     schedule_defer(x, thread_join_outlet_int, 0, ps_int, 1, &a);
 }
 
-void thread_join_outlet_int(thread_join *x, Symbol* s, int argc, Atom* argv) {
+void thread_join_outlet_int(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
     outlet_int(x->out_p[0], atom_getlong(argv));
 }
 

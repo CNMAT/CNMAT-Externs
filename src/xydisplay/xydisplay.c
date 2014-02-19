@@ -44,7 +44,7 @@
 #define NAME "xydisplay"
 #define DESCRIPTION "A 2-D graphical display/editor like pictctrl but supporting multiple points."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2010,2012"
+#define COPYRIGHT_YEARS "2010,12,13"
 
 
 #include "version.h"
@@ -61,7 +61,6 @@
 #endif
 
 #ifdef WIN32
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
 #else
 #include <mach/mach_time.h>
 #endif

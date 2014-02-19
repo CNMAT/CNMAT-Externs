@@ -45,7 +45,7 @@ VERSION 1.8: Force Package Info Generation
 #define NAME "list-interpolate"
 #define DESCRIPTION "Linearly interpolate two lists of numbers element-wise"
 #define AUTHORS "Adrian Freed and Matt Wright"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,2012"
+#define COPYRIGHT_YEARS "2000-05,12,13"
 
 
 /* 
@@ -77,18 +77,18 @@ typedef	struct	fobj
 	float *rate;
 	float *newinputs;
 	float *oldinputs;
-	Atom  *out;
+	t_atom  *out;
 	int capacity;	/* Size of these arrays */
 	
 	int n;
 	int countdown;
 	int steps;
-	Boolean zeroPadMode;
+	int zeroPadMode;
 }fobj;
 
 
 /* prototypes */
-void * fnew(Symbol *s, int argc, Atom *argv);
+void * fnew(t_symbol *s, int argc, t_atom *argv);
 
 
 static void storelist(fobj *x, struct symbol *s, int argc, struct atom *argv);
@@ -219,7 +219,7 @@ static void setzeropad(fobj *it, long l)
 
 static void tellmeeverything(fobj *x) {
 	int i;
-	Atom a;
+	t_atom a;
 	
 	
 	
@@ -232,24 +232,24 @@ static void tellmeeverything(fobj *x) {
 		
 	object_post((t_object *)x, "  oldinputs:");
 	for (i = 0; i<x->n; ++i) {
-		SETFLOAT(&a, x->oldinputs[i]);
+		atom_setfloat(&a, x->oldinputs[i]);
 		postatom(&a);
 	}
 	object_post((t_object *)x, "  newinputs:");
 	for (i = 0; i<x->n; ++i) {
-		SETFLOAT(&a, x->newinputs[i]);
+		atom_setfloat(&a, x->newinputs[i]);
 		postatom(&a);
 	}
 	object_post((t_object *)x, "  rate:");
 	for (i = 0; i<x->n; ++i) {
-		SETFLOAT(&a, x->rate[i]);
+		atom_setfloat(&a, x->rate[i]);
 		postatom(&a);
 	}
 			
 	
 }
 
-void * fnew(Symbol *s, int argc, Atom *argv) {
+void * fnew(t_symbol *s, int argc, t_atom *argv) {
 	fobj *x;
 	int i;
 
@@ -284,7 +284,7 @@ void * fnew(Symbol *s, int argc, Atom *argv) {
 	x->rate = 		(float *) getbytes(x->capacity * sizeof(float));
 	x->newinputs = 	(float *) getbytes(x->capacity * sizeof(float));
 	x->oldinputs = 	(float *) getbytes(x->capacity * sizeof(float));
-	x->out = 		(Atom *) getbytes(x->capacity * sizeof(Atom));
+	x->out = 		(t_atom *) getbytes(x->capacity * sizeof(t_atom));
 	
 	if (x->out == 0) {
 		object_error((t_object *)x, "not enough memory for capacity %ld!", x->capacity);
@@ -309,7 +309,7 @@ void ffree(fobj *x) {
 	freebytes((char *) x->rate, sizeof(float));
 	freebytes((char *) x->newinputs, sizeof(float));
 	freebytes((char *) x->oldinputs, sizeof(float));
-	freebytes((char *) x->out, x->capacity * sizeof(Atom));
+	freebytes((char *) x->out, x->capacity * sizeof(t_atom));
 }	
 
 int main(void)		/* called once at launch to define this class */
@@ -325,7 +325,7 @@ int main(void)		/* called once at launch to define this class */
 	class_addmethod(li_class,  (method) floatdump  , "float", A_FLOAT, 0);
 	
 	//post(NAME " object version by " AUTHORS ".");
-	//post("Copyright © " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
+	//post("Copyright ï¿½ " COPYRIGHT_YEARS " Regents of the University of California. All Rights Reserved.");
 	version_post_copyright();
     class_register(CLASS_BOX, li_class);
     return 0;

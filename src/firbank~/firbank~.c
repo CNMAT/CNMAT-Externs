@@ -36,7 +36,7 @@
 #define NAME "firbank~"
 #define DESCRIPTION "Implements optimized real FFT convolution of one ore more inputs and a bank of FIR filters using the overlap-save method."
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 // stdlib
 #include <math.h>
@@ -54,6 +54,8 @@
 
 // fftw 3
 #include "fftw3.h"
+
+
 
 t_class *firbank_class;
 

@@ -22,10 +22,12 @@
 #define EPOCHFILETIME (116444736000000000LL)
 #endif
 
+#ifndef _TIMEZONE_DEFINED
 struct timezone {
     int tz_minuteswest; /* minutes W of Greenwich */
     int tz_dsttime;     /* type of dst correction */
 };
+#endif
 
 __inline int gettimeofday(struct timeval *tv, struct timezone *tz)
 {
