@@ -41,7 +41,7 @@ VERSION 1.1: Force Package Info Generation
 #define NAME "interleave"
 #define DESCRIPTION "Interleave multiple input lists to one output list.  E.g., if inputs are "A B C" and "1 2 3", the output will be "A 1 B 2 C 3"."
 #define AUTHORS "Tim Madden"
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
 
 
@@ -83,7 +83,7 @@ typedef struct t_interleave
 {
 	struct object t_obj;
 	void *t_out;	
-	Atom t_list_out[MAX_OUTARGS];
+	t_atom t_list_out[MAX_OUTARGS];
 	void *t_proxy[3];
 	long t_which_inlet;
 	int t_outsize;
@@ -91,7 +91,7 @@ typedef struct t_interleave
 	int sublist_sizes[4];		// -1 before we get a list, else length of that list
 } t_Interleave;
 
-Symbol *ps_list;
+t_symbol *ps_list;
 
 t_class *interleave_class;
 
@@ -101,9 +101,9 @@ t_class *interleave_class;
 
 // Make new object.
 void *interleave_new(
-	Symbol *mess,	
+	t_symbol *mess,	
 	int ac,
-	Atom *av);
+	t_atom *av);
 
 void interleave_free(t_Interleave *x);
 	
@@ -114,88 +114,88 @@ void Bang(t_Interleave *x);
 // Respond to list.
 void List(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 	
 // Respond to list1, in left inlet.
 void List1(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 
 // Respond to list2 in left inlet.
 void List2(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // list3 inleft inlet.
 void List3(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // REspond to list4 in left inlet.
 void List4(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // Snap frequencies to the grid.
 void Output(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // Altorithm for interleaving data from first inlet, or list1 command.
 void List1guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // Algoritm for interleaving data from second inlet or list2.
 void List2guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // Algoritm for interleaving data from third inlet or list3.
 void List3guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // Algoritm for interleaving data from fourth inlet or list4.
 void List4guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 
 // Algoruthm to output the data.
 void Outputguts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 	
 // REspond to list command.	
 void List(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv);
+	t_atom *argv);
 	
 
 /**************************************************************************************
@@ -235,9 +235,9 @@ int main(void){
  *************************************************************************************/
 
 void *interleave_new(
-	Symbol *mess,
+	t_symbol *mess,
 	int ac,
-	Atom *av)
+	t_atom *av)
 {
 	int i;
 
@@ -328,9 +328,9 @@ void interleave_free(t_Interleave *x)
 
 void List(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	
 	// Which input?
@@ -372,9 +372,9 @@ void Bang(t_Interleave *x)
 
 void List1(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {	
 	List1guts(x, mess, argc, argv);
 }
@@ -385,9 +385,9 @@ void List1(
 
 void Output(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {	
 	Outputguts(x, mess, argc, argv);
 }
@@ -399,9 +399,9 @@ void Output(
 
 void List2(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	List2guts(x, mess, argc, argv);
 }
@@ -412,9 +412,9 @@ void List2(
 
 void List3(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	List3guts(x, mess, argc, argv);
 }
@@ -425,9 +425,9 @@ void List3(
 
 void List4(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {	
 	List4guts(x, mess, argc, argv);
 }
@@ -439,11 +439,11 @@ void List4(
 
 void List1guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
-	Symbol message;
+	t_symbol message;
 	int counter;
 	int i;
 	message.s_name = "list";
@@ -487,9 +487,9 @@ void List1guts(
 
 void Outputguts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int i;
 	
@@ -519,9 +519,9 @@ void Outputguts(
 
 void List2guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int counter;
 	int i;
@@ -565,9 +565,9 @@ void List2guts(
 
 void List3guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int counter;
 	int i;
@@ -610,9 +610,9 @@ void List3guts(
 
 void List4guts(
 	t_Interleave *x, 
-	Symbol *mess,
+	t_symbol *mess,
 	int argc, 
-	Atom *argv)
+	t_atom *argv)
 {
 	int counter;
 	int i;

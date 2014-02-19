@@ -42,9 +42,11 @@
 #define NAME "OSC-schedule"
 #define DESCRIPTION "Schedules packets using OSC time stamps"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
+#ifndef WIN_VERSION
 #include <CoreServices/CoreServices.h>
+#endif
 
 // max object header
 #include "ext.h"
@@ -61,6 +63,12 @@
 // version
 #include "version.h"
 
+#ifdef WIN_VERSION
+#include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif
+
 
 // default options
 #define DEFAULT_PACKET_SIZE 1000
@@ -69,7 +77,7 @@
 /* structure definition of your object */
 typedef struct _OSCSchedule
 {
-    Object o_ob; // required header
+    t_object o_ob; // required header
     
     // inlet
     t_object* in_p[1]; // either a normal inlet or a crazy proxy thing
@@ -110,10 +118,10 @@ typedef struct _OSCSchedule
 /* global that holds the class definition */
 t_class *OSCSchedule_class;
 
-Symbol *ps_FullPacket;
+t_symbol *ps_FullPacket;
 
 // basic prototypes
-void* OSCSchedule_new(Symbol* s, short argc, Atom* argv);
+void* OSCSchedule_new(t_symbol* s, short argc, t_atom* argv);
 void OSCSchedule_free(OSCSchedule *x);
 void OSCSchedule_assist (OSCSchedule *x, void *box, long msg, long arg, char *dstString);
 
@@ -122,7 +130,7 @@ void OSCSchedule_tick(OSCSchedule *x);
 
 // methods
 void OSCSchedule_reset(OSCSchedule* x); // clear queue
-void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv);
+void OSCSchedule_FullPacket(OSCSchedule *x, t_symbol *s, int argc, t_atom* argv);
 
 // setup
 int main(void)
@@ -150,7 +158,7 @@ int main(void)
     
 }
 
-void* OSCSchedule_new(Symbol* s, short argc, Atom *argv)
+void* OSCSchedule_new(t_symbol* s, short argc, t_atom *argv)
 {
     
     OSCSchedule *x;
@@ -334,7 +342,7 @@ void OSCSchedule_reset(OSCSchedule *x) {
     
 }
 
-void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
+void OSCSchedule_FullPacket(OSCSchedule *x, t_symbol *s, int argc, t_atom* argv) {
     
     struct ntptime now;
     struct ntptime nowp1;
@@ -496,7 +504,7 @@ void OSCSchedule_FullPacket(OSCSchedule *x, Symbol *s, int argc, Atom* argv) {
 
 void OSCSchedule_tick(OSCSchedule *x) {
     
-    Atom fp[2];
+    t_atom fp[2];
     struct ntptime now;
     struct ntptime nowp1;
     
@@ -532,8 +540,8 @@ void OSCSchedule_tick(OSCSchedule *x) {
             n = heap_extract_max(&(x->q));
             
             // dequeue and pass on the next scheduled packet
-            SETLONG(&(fp[0]), n.length);
-            SETLONG(&(fp[1]), (unsigned long int)((x->packet_data + (x->packet_size * n.id))));
+            atom_setlong(&(fp[0]), n.length);
+            atom_setlong(&(fp[1]), (unsigned long int)((x->packet_data + (x->packet_size * n.id))));
             
             x->packet_free[n.id] = 1;
             x->id = n.id; // this isn't necessary but should keep the cache footprint smaller

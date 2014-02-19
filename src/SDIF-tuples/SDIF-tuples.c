@@ -31,7 +31,7 @@
 #define NAME "SDIF-tuples"
 #define DESCRIPTION "Extract \"tuples\" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list."
 #define AUTHORS "Matt Wright and Ben \"Jacobs\""
-#define COPYRIGHT_YEARS "1999,2000,01,02,03,04,05,06,07,2012"
+#define COPYRIGHT_YEARS "1999,2000-07,12,13"
 
 
 /*
@@ -166,7 +166,7 @@ typedef struct _SDIFtuples {
 } SDIFtuples;
 
 
-static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
+static t_symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
 	*ps_time, *ps_reltime, *ps_direction, *ps_columns, *ps_interp, *ps_max_rows;
 
 
@@ -174,25 +174,27 @@ static Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_conca
 static void *SDIFtuples_class;
 
 /* prototypes for my functions */
-void *SDIFtuples_new(Symbol *s, short argc, Atom *argv);
+void *SDIFtuples_new(t_symbol *s, short argc, t_atom *argv);
 void SDIFtuples_free(SDIFtuples *x);
-void SDIFtuples_outputinterval(SDIFtuples *x, Symbol *dummy, short argc, t_atom *argv);
+void SDIFtuples_outputinterval(SDIFtuples *x, t_symbol *dummy, short argc, t_atom *argv);
 void SDIFtuples_dsp(SDIFtuples *x, t_signal **sp, short *count);
+void SDIFtuples_dsp64(SDIFtuples *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 t_int *SDIFbuffer_perform(t_int *w);
+void SDIFtuples_perform64(SDIFtuples *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFtuples *x);
-static void SDIFtuples_set(SDIFtuples *x, Symbol *bufName);
+static void SDIFtuples_set(SDIFtuples *x, t_symbol *bufName);
 static void SDIFtuples_errorreporting(SDIFtuples *x, long yesno);
 static void SDIFtuples_concatenate(SDIFtuples *x, long yesno);
 static void SDIFtuples_time(SDIFtuples *x, double t);
 static void SDIFtuples_reltime(SDIFtuples *x, double t);
 static void SDIFtuples_direction(SDIFtuples *x, long d);
-static void SDIFtuples_columns(SDIFtuples *x, Symbol *s, short argc, Atom *argv);
-static void SDIFtuples_matrix(SDIFtuples *x, Symbol *matrixType);
+static void SDIFtuples_columns(SDIFtuples *x, t_symbol *s, short argc, t_atom *argv);
+static void SDIFtuples_matrix(SDIFtuples *x, t_symbol *matrixType);
 static void SDIFtuples_max_rows(SDIFtuples *x, long n);
 static void SDIFtuples_interptype(SDIFtuples *x, long interptype);
-static void SDIFtuples_tuples(SDIFtuples *x, Symbol *s, short argc, Atom *argv);
+static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *s, short argc, t_atom *argv);
 static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
                                 sdif_float64 time,
                                 InterpMode mode,
@@ -233,6 +235,7 @@ int main(void) {
 	/* bind my methods to symbols */
 	class_addmethod(SDIFtuples_class, (method)version, "version", 0);
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_dsp, "dsp", A_CANT, 0);
+	class_addmethod(SDIFtuples_class, (method)SDIFtuples_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_outputinterval, "outputinterval", A_GIMME, 0);
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_set, "set", A_SYM, 0);	
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_errorreporting, "errorreporting", A_LONG, 0);
@@ -294,7 +297,7 @@ int main(void) {
 	return 1;
 }
 
-void *SDIFtuples_new(Symbol *dummy, short argc, Atom *argv) {
+void *SDIFtuples_new(t_symbol *dummy, short argc, t_atom *argv) {
 	SDIFtuples *x;
 	int i;
 	
@@ -398,7 +401,7 @@ static void LookupMyBuffer(SDIFtuples *x) {
 		x->t_buf = NULL;
 }
 
-static void SDIFtuples_set(SDIFtuples *x, Symbol *bufName) {
+static void SDIFtuples_set(SDIFtuples *x, t_symbol *bufName) {
 	x->t_buffer = 0;
 	x->t_bufferSym = bufName;
 
@@ -433,7 +436,7 @@ static void SDIFtuples_direction(SDIFtuples *x, long d) {
 	x->t_direction = d;
 }
 
-static void SDIFtuples_columns(SDIFtuples *x, Symbol *dummy, short argc, Atom *argv) {
+static void SDIFtuples_columns(SDIFtuples *x, t_symbol *dummy, short argc, t_atom *argv) {
 	int i;
 
 	/* First make sure all arguments are OK */
@@ -456,7 +459,7 @@ static void SDIFtuples_columns(SDIFtuples *x, Symbol *dummy, short argc, Atom *a
 
 }
 
-static void SDIFtuples_matrix(SDIFtuples *x, Symbol *matrixType) {
+static void SDIFtuples_matrix(SDIFtuples *x, t_symbol *matrixType) {
 	if (matrixType == ps_emptysymbol) {
 		x->t_mainMatrix = TRUE;
 	} else {		
@@ -479,16 +482,16 @@ static void SDIFtuples_interptype(SDIFtuples *x, long interptype) {
 }
 
 
-static void SetAtomFromMatrix(Atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row) {
+static void SetAtomFromMatrix(t_atom *a, SDIFmem_Matrix m, sdif_int32 column, sdif_int32 row) {
 	if (m->header.matrixDataType == SDIF_INT32) {
-		SETLONG(a, SDIFutil_GetMatrixCell_int32(m, column, row));
+		atom_setlong(a, SDIFutil_GetMatrixCell_int32(m, column, row));
 	} else {
-		SETFLOAT(a, SDIFutil_GetMatrixCell(m, column, row));
+		atom_setfloat(a, SDIFutil_GetMatrixCell(m, column, row));
 	}
 }
 
 
-static void SDIFtuples_tuples(SDIFtuples *x, Symbol *dummy, short argc, Atom *argv) {
+static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom *argv) {
 	Boolean concatenate;
 	sdif_float64 time;
 	Boolean reltime;
@@ -498,7 +501,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, Symbol *dummy, short argc, Atom *ar
 	int columns[MAX_NUM_COLUMNS];
 	int max_rows;
 	int i, j;
-	Atom outputArgs[BIGGEST_OUTPUT_LIST];
+	t_atom outputArgs[BIGGEST_OUTPUT_LIST];
 	short numArgs;
 	SDIFmem_Matrix m;
 	//	char desiredType[4];  XXX need to parse "matrix" arguments to tuples too!
@@ -933,7 +936,7 @@ static void SetupInterpolator(SDIFtuples *x,
 
 /* Signal-rate control ********************/
 
-void SDIFtuples_outputinterval(SDIFtuples *x, Symbol *dummy, short argc, t_atom *argv) {
+void SDIFtuples_outputinterval(SDIFtuples *x, t_symbol *dummy, short argc, t_atom *argv) {
 	if (argc != 1) {
 		error("SDIF-tuples: outputinterval should have exactly one argument (you passed %ld)",
 		      argc);
@@ -962,6 +965,20 @@ void SDIFtuples_dsp(SDIFtuples *x, t_signal **sp, short *count) {
 	}
 }
 
+void SDIFtuples_dsp64(SDIFtuples *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	x->t_sr = samplerate;
+	x->t_samps_until_output = x->t_output_interval_samps = 
+		(int) (x->t_sr * x->t_output_interval * 0.001f);
+
+	if (count[0]) {
+		// Signal inlet is connected
+		object_method(dsp64, gensym("dsp_add64"), x, SDIFtuples_perform64, 0, NULL);   
+	} else {
+		// Don't add anything
+	}
+}
+
 t_int *SDIFbuffer_perform(t_int *w) {
 	SDIFtuples *x = (SDIFtuples *)(w[1]);  // object
 	int size = w[2]; // vector size
@@ -978,6 +995,19 @@ t_int *SDIFbuffer_perform(t_int *w) {
 	return w+4;
 }
 
+void SDIFtuples_perform64(SDIFtuples *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+	int size = sampleframes; // vector size
+	double *vtime_in = ins[0];
+
+	if (x->t_samps_until_output >= size) {
+		x->t_samps_until_output -= size;
+	} else {
+		x->t_time = (sdif_float64) vtime_in[x->t_samps_until_output];
+		SDIFtuples_tuples(x, 0, 0, 0);
+		x->t_samps_until_output = x->t_output_interval_samps;
+	}
+}
 
 void SDIFtuples_tellmeeverything(SDIFtuples *x) {
 	int i;

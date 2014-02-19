@@ -33,7 +33,7 @@ VERSION 0.0.1: New help file
 #define NAME "poly.send~"
 #define DESCRIPTION "Multichannel, dynamically assignable output for poly~"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2009,2012"
+#define COPYRIGHT_YEARS "2009,12,13"
 
 
 #include "version.h"
@@ -41,11 +41,6 @@ VERSION 0.0.1: New help file
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "z_dsp.h"
-
-
-#ifdef WIN32
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
-#endif
 
 typedef struct _psend{
 	t_pxobject ob;

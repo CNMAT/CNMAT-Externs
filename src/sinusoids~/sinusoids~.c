@@ -51,7 +51,7 @@ VERSION 1.9: Changed click problem on Intel by removing small random numbers fro
 #define NAME "sinusoids~"
 #define DESCRIPTION "Additive synthesis with a bank of (optionally bandwidth-enhanced) sinusoidal oscillators"
 #define AUTHORS "Adrian Freed"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000,01,02,03,04,05,06,07,08,2012"
+#define COPYRIGHT_YEARS "1988-99,2000-08,12,13"
 
 
 #include "ext.h"
@@ -69,7 +69,7 @@ VERSION 1.9: Changed click problem on Intel by removing small random numbers fro
 #define sinf sin
 #endif
 
-#include "noise-table.h"
+#include "noise-table.c"//#include "noise-table.h"
 
 #undef PI	
 #define PI 3.14159265358979323f
@@ -84,21 +84,17 @@ t_class *sinusoids_class;
 
 float Sinetab[STABSZ];
 
-static Symbol *ps_bwe;
-
-#if !defined(__llvm__) && !defined(__clang__)
-typedef  unsigned long ulong;
-#endif
+static t_symbol *ps_bwe;
 
 typedef  struct oscdesc
 {
 	float next_amplitude;
 	float amplitude;		/* amplitude */
-	ulong phase_current;
+	unsigned long phase_current;
 	long next_phase_inc;
 	long phase_inc;			/* frequency */
-//	ulong next_phaseadd;
-//	ulong phaseadd;			/* phase */
+//	unsigned long next_phaseadd;
+//	unsigned long phaseadd;			/* phase */
 	float noisiness;
 	float next_noisiness;
 } oscdesc;
@@ -108,17 +104,18 @@ typedef  struct oscdesc
 typedef struct 
 {
 	t_pxobject b_obj;
-	oscdesc base[MAXOSCILLATORS];
+	//oscdesc base[MAXOSCILLATORS];
+	oscdesc *base;
 	int nosc; 
 	int next_nosc;
 	float  pk;
 	float samplerate;
 	float sampleinterval;
-	int is_bwe;		// Boolean for whether this object is bandwidth-enhanced
+	int is_bwe;		// int for whether this object is bandwidth-enhanced
 	float *noisep;  // Points into the global noise table
 	
 	int debugPrintsRemaining;
-	Boolean verbose;
+	int verbose;
 } oscbank;
 typedef oscbank t_sinusoids;
 
@@ -149,10 +146,10 @@ t_int *sinusoids_perform(t_int *w) {
 	for(i=0; i<nosc; ++i) {
 		register float a = o->amplitude;
 		register long pi = o->phase_inc;
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 		register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
 		register float astep = (o->next_amplitude - o->amplitude)*rate;
-//		register ulong pa  = o->phaseadd;
+//		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 		
 		for(j=0; j<n; ++j) {
@@ -196,9 +193,9 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 	for(i=0;i<nosc;++i)
 	{
 		register long pi = o->phase_inc;
-		register ulong pc = o->phase_current;
+		register unsigned long pc = o->phase_current;
 		register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
-//		register ulong pa  = o->phaseadd;
+//		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 		
 		register float carrier_amp, carrier_amp_inc;
@@ -420,6 +417,7 @@ void *sinusoids_new(t_symbol *s, short argc, t_atom *argv) {
     
     dsp_setup((t_pxobject *)x,0);
     outlet_new((t_object *)x, "signal");
+    x->base = (oscdesc *)calloc(MAXOSCILLATORS, sizeof(oscdesc));
     
 	x->samplerate =  sys_getsr();
 	if(x->samplerate<=0.0f)
@@ -470,10 +468,16 @@ void Makeoscsinetable()
 		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(float)PI);
 }
 
-
+void sinusoids_free(t_sinusoids *x)
+{
+  	dsp_free(&(x->b_obj));
+	if(x->base){
+		free(x->base);
+	}
+}
 
 int main(void){
-	sinusoids_class = class_new("sinusoids~", (method)sinusoids_new, (method)dsp_free, 
+	sinusoids_class = class_new("sinusoids~", (method)sinusoids_new, (method)sinusoids_free, 
 		  (short)sizeof(t_sinusoids), 0L, A_GIMME, 0);
 
 	version_post_copyright();

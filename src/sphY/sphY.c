@@ -13,7 +13,7 @@
 #define NAME "sphY"
 #define DESCRIPTION "Evaluates the real-valued spherical harmonics up to order N at a point (theta, phi)"
 #define AUTHORS "Franz Zotter, Andy Schmeder"
-#define COPYRIGHT_YEARS "2006-2008,2012"
+#define COPYRIGHT_YEARS "2006-08,12,13"
 
 #include <stdlib.h>
 #include <math.h>
@@ -30,8 +30,8 @@
 #include "version.h"
 
 
-Symbol* ps_index;
-Symbol* ps_r;
+t_symbol* ps_index;
+t_symbol* ps_r;
 
 typedef struct _sphY
 {
@@ -55,11 +55,11 @@ typedef struct _sphY
 
 static t_class *sphY_class;
 
-void* sphY_new(Symbol* s, short argc, Atom* argv);
+void* sphY_new(t_symbol* s, short argc, t_atom* argv);
 void sphY_free(sphY* x);
 void sphY_assist(sphY* x, void *box, long msg, long arg, char *dstString);
-void sphY_list(sphY* x, Symbol* mess, short argc, Atom* argv);
-void sphY_index(sphY* x, Symbol* mess, short argc, Atom* argv);
+void sphY_list(sphY* x, t_symbol* mess, short argc, t_atom* argv);
+void sphY_index(sphY* x, t_symbol* mess, short argc, t_atom* argv);
 
 // setup
 int main(void)
@@ -106,7 +106,7 @@ void sphY_assist(sphY *x, void *box, long msg, long arg, char *dstString) {
     
 }
 
-void *sphY_new(Symbol* s, short argc, Atom *argv)
+void *sphY_new(t_symbol* s, short argc, t_atom *argv)
 {
     
     sphY *x;
@@ -151,8 +151,8 @@ void *sphY_new(Symbol* s, short argc, Atom *argv)
     }
     
     x->len = (x->order+1)*(x->order+1);
-    x->list_buf = (Atom*)calloc(x->len, sizeof(Atom));
-    x->list_i_buf = (Atom*)calloc(2*x->len, sizeof(Atom));
+    x->list_buf = (t_atom*)calloc(x->len, sizeof(t_atom));
+    x->list_i_buf = (t_atom*)calloc(2*x->len, sizeof(t_atom));
     
     x->out_p[0] = outlet_new(x, "list");
     
@@ -170,11 +170,11 @@ void sphY_free(sphY *x)
         free(x->list_buf);
     }
     if (x->list_i_buf != NULL) {
-        free(x->list_buf);
+        free(x->list_i_buf);
     }
 }
 
-void sphY_list(sphY* x, Symbol* mess, short argc, Atom* argv)
+void sphY_list(sphY* x, t_symbol* mess, short argc, t_atom* argv)
 {
     
     int n,m,mn;
@@ -187,7 +187,7 @@ void sphY_list(sphY* x, Symbol* mess, short argc, Atom* argv)
         for(n=0, mn=0; n <= x->order; n++) {
             for (m = -n; m <= n; m++, mn++) {
                 value=sHEvaluate(x->shp, n, m, phi, theta);
-                SETFLOAT(&x->list_buf[mn], (float)value);
+                atom_setfloat(&x->list_buf[mn], (float)value);
             }
         }
         outlet_anything(x->out_p[0], ps_r, x->len, x->list_buf);
@@ -197,15 +197,15 @@ void sphY_list(sphY* x, Symbol* mess, short argc, Atom* argv)
     }
 }
 
-void sphY_index(sphY* x, Symbol* mess, short argc, Atom* argv)
+void sphY_index(sphY* x, t_symbol* mess, short argc, t_atom* argv)
 {
     
     int n, m, mn;
     
     for(n=0, mn=0; n <= x->order; n++) {
         for (m = -n; m <= n; m++, mn++) {
-            SETLONG(&x->list_i_buf[2*mn], n);
-            SETLONG(&x->list_i_buf[2*mn+1], m);
+            atom_setlong(&x->list_i_buf[2*mn], n);
+            atom_setlong(&x->list_i_buf[2*mn+1], m);
         }
     }
     

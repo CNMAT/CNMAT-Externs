@@ -36,7 +36,7 @@ VERSION 1.0.2: Added protection for re-entrancy in overdrive mode
 #define NAME "slipOSC"
 #define DESCRIPTION "Encode and decode SLIP data to/from the Max serial object and the OSC Fullpacket message format"
 #define AUTHORS "Adrian Freed, Andy Schmeder"
-#define COPYRIGHT_YEARS "2007,2008,2012"
+#define COPYRIGHT_YEARS "2007-08,12,13"
 
 
 #include "ext.h"
@@ -56,7 +56,7 @@ VERSION 1.0.2: Added protection for re-entrancy in overdrive mode
 
 t_class *sOSC_class;
 
-Symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket, *ps_OSCBlob;
+t_symbol *ps_gimme, *ps_OSCTimeTag, *ps_FullPacket, *ps_OSCBlob;
 
 #define MAXSLIPBUF 2048
 
@@ -74,7 +74,7 @@ typedef struct slipOSC {
   char slipobuf[MAXSLIPBUF]; // buffer used to output a completed packet
   int icount;
   short istate; // initialize to 0
-  Atom  *out;
+  t_atom  *out;
   int errorreporting;	  // Does this object report errors in the Max window?
 
   // lock
@@ -94,8 +94,8 @@ void sOSC_readtypestrings(sOSC *x, int yesno);
 void sOSC_writetypestrings(sOSC *x, int yesno);
 void sOSC_printcontents(sOSC *x);
 
-void sOSC_accumulateMessage(sOSC *x, char *messageName, short argc, Atom *argv);
-int sOSC_stringSubstitution(char *target, char *format, short *argcp, Atom **argvp);
+void sOSC_accumulateMessage(sOSC *x, char *messageName, short argc, t_atom *argv);
+int sOSC_stringSubstitution(char *target, char *format, short *argcp, t_atom **argvp);
 void sOSC_sendBuffer(sOSC *x);
 void sOSC_sendData(sOSC *x, short size, char *data);
 
@@ -369,7 +369,7 @@ void *sOSC_new(long arg) {
   
   x->icount = 0;
   x->istate = 0;
-  x->out = 		(Atom *) getbytes(MAXSLIPBUF * sizeof(Atom));
+  x->out = 		(t_atom *) getbytes(MAXSLIPBUF * sizeof(t_atom));
   
   if (x->out == 0) {
     object_post((t_object *)x, "slipOSC: not enough memory for capacity %ld!",MAXSLIPBUF);
@@ -439,7 +439,7 @@ void sOSC_bang (sOSC *x) {
 
 void sOSC_sendData(sOSC *x, short size, char *data) {
   
-  Atom arguments[2];
+  t_atom arguments[2];
   char fullpacket[MAXSLIPBUF];
   
   if (x->O_debug) {
@@ -451,8 +451,8 @@ void sOSC_sendData(sOSC *x, short size, char *data) {
   // safe to release lock now...
   critical_exit(x->lock);
   
-  SETLONG(&arguments[0], (long) size);
-  SETLONG(&arguments[1], (long) fullpacket);
+  atom_setlong(&arguments[0], (long) size);
+  atom_setlong(&arguments[1], (long) fullpacket);
   outlet_anything(x->O_outlet1, ps_FullPacket, 2, arguments);
   
 }
@@ -521,7 +521,7 @@ void sOSC_printcontents (sOSC *x) {
 /* In the old days, we used to have to compute the size of our messages
    by hand to see if there was room in the buffer. */
 
-int sOSC_messageSize(char *messageName, short argc, Atom *argv) {
+int sOSC_messageSize(char *messageName, short argc, t_atom *argv) {
   int result;
   int i;
   
@@ -559,9 +559,9 @@ int sOSC_messageSize(char *messageName, short argc, Atom *argv) {
  Stuff having to do with parsing incoming OSC packets into Max data
  *******************************************************************/
 
-void ParseOSCPacket(sOSC *x, char *buf, long n, Boolean topLevel);
+void ParseOSCPacket(sOSC *x, char *buf, long n, int topLevel);
 char *DataAfterAlignedString(char *string, char *boundary); 
-Boolean IsNiceString(char *string, char *boundary);
+int IsNiceString(char *string, char *boundary);
 #ifdef DONT_HAVE_STRING_LIBRARY
 int strncmp(char *s1, char *s2, int n);
 #endif
@@ -616,7 +616,7 @@ char *DataAfterAlignedString(char *string, char *boundary)
   return string+i;
 }
 
-Boolean IsNiceString(char *string, char *boundary)  {
+int IsNiceString(char *string, char *boundary)  {
   /* Arguments same as DataAfterAlignedString().  Is the given "string"
      really a string?  I.e., is it a sequence of isprint() characters
      terminated with 1-4 null characters to align on a 4-byte boundary? */

@@ -41,9 +41,9 @@ c.f. change point theory
 
 */
 #define NAME "trend-report"
-#define DESCRIPTION "Given an input stream of numbers, report statistics on "trends", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the "laughter" detector for Edmund Campion's "ME"."
+#define DESCRIPTION "Given an input stream of numbers, report statistics on \"trends\", i.e., series of increasing or decreasing values.  This was originally used on the output of fiddle~ as part of the \"laughter\" detector for Edmund Campion's \"ME\"."
 #define AUTHORS "Matt Wright"
-#define COPYRIGHT_YEARS "2002-06,2012"
+#define COPYRIGHT_YEARS "2002-06,12,13"
 
  
  
@@ -80,7 +80,7 @@ void *TrendReport_class;
 
 void TrendReport_int(TrendReport *x, int i);
 void TrendReport_float(TrendReport *x, double f);
-void *TrendReport_new(Symbol *s, float arg);
+void *TrendReport_new(t_symbol *s, float arg);
 
 void Reset(TrendReport *x);
 int compare (float x, float y, float tolerance);
@@ -107,7 +107,7 @@ void Reset(TrendReport *x) {
 	x->lastDeltaWithinTolerance = 0;
 }
 
-void *TrendReport_new(Symbol *s, float arg)
+void *TrendReport_new(t_symbol *s, float arg)
 {
 	TrendReport *x;
 	
@@ -134,11 +134,11 @@ int compare (float x, float y, float tolerance) {
 }
 
 void OutputTrend(TrendReport *x) {
-	Atom outputList[4];
-	SETFLOAT(outputList+0, x->initialValue);
-	SETLONG(outputList+1, x->direction);
-	SETLONG(outputList+2, x->numInTrend);
-	SETFLOAT(outputList+3, x->prev);
+	t_atom outputList[4];
+	atom_setfloat(outputList+0, x->initialValue);
+	atom_setlong(outputList+1, x->direction);
+	atom_setlong(outputList+2, x->numInTrend);
+	atom_setfloat(outputList+3, x->prev);
 	outlet_list(x->outlet, 0L, 4, outputList);
 }
 

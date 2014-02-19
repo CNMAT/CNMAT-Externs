@@ -31,7 +31,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 #define NAME "SDIF-listpoke"
 #define DESCRIPTION "Write data from a Max list into an SDIF-buffer"
 #define AUTHORS "Matt Wright "
-#define COPYRIGHT_YEARS "2000,01,02,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "2000-06,12,13"
 
 
 /*
@@ -109,7 +109,7 @@ typedef struct _SDIFlistpoke {
 
 
 
-Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
+t_symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
 	*ps_time, *ps_reltime, *ps_direction, *ps_numcolumns, *ps_interp, *ps_max_rows;
 
 
@@ -117,15 +117,15 @@ Symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
 t_class *SDIFlistpoke_class;
 
 /* prototypes for my functions */
-void *SDIFlistpoke_new(Symbol *s, short argc, Atom *argv);
+void *SDIFlistpoke_new(t_symbol *s, short argc, t_atom *argv);
 static void LookupMyBuffer(SDIFlistpoke *x);
-static void SDIFlistpoke_set(SDIFlistpoke *x, Symbol *bufName);
+static void SDIFlistpoke_set(SDIFlistpoke *x, t_symbol *bufName);
 static void SDIFlistpoke_errorreporting(SDIFlistpoke *x, long yesno);
 static void SDIFlistpoke_time(SDIFlistpoke *x, double t);
 static void SDIFlistpoke_numcolumns(SDIFlistpoke *x, long n);
-static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, Symbol *matrixType);
-static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
-static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv);
+static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, t_symbol *matrixType);
+static void SDIFlistpoke_listpoke(SDIFlistpoke *x, t_symbol *s, short argc, t_atom *argv);
+static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, t_symbol *s, short argc, t_atom *argv);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 static void SDIFlistpoke_tellmeeverything(SDIFlistpoke *x);
@@ -174,21 +174,21 @@ int main(void) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
-    return;
+    return 0;
 	}
 	
 	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-    return;
+    return 0;
 	}
 		
 	if (r = SDIFbuf_Init()) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
-		return;
+		return 0;
 	}
 
 	/* list object in the new object list */
@@ -211,7 +211,7 @@ int main(void) {
 	
 }
 
-void *SDIFlistpoke_new(Symbol *dummy, short argc, Atom *argv) {
+void *SDIFlistpoke_new(t_symbol *dummy, short argc, t_atom *argv) {
 	SDIFlistpoke *x;
 	
 	// post("SDIFlistpoke_new: %s, %ld args", s->s_name, (long) argc);
@@ -273,7 +273,7 @@ static void LookupMyBuffer(SDIFlistpoke *x) {
     x->t_buf = NULL;
 }
 
-static void SDIFlistpoke_set(SDIFlistpoke *x, Symbol *bufName) {
+static void SDIFlistpoke_set(SDIFlistpoke *x, t_symbol *bufName) {
 
 	x->t_buffer = 0;
 	x->t_bufferSym = bufName;
@@ -303,7 +303,7 @@ static void SDIFlistpoke_numcolumns(SDIFlistpoke *x, long n) {
 }
 
 
-static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, Symbol *matrixType) {
+static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, t_symbol *matrixType) {
 	if (matrixType == ps_emptysymbol) {
 		x->t_mainMatrix = 1;
 	} else {		
@@ -318,7 +318,7 @@ static void SDIFlistpoke_matrixtype(SDIFlistpoke *x, Symbol *matrixType) {
 }
 
 
-static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom *argv) {
+static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, t_symbol *s, short argc, t_atom *argv) {
 	sdif_float64 time, oldtime;
 	int numrows, numcols, oldnumcols, oldmainmatrix;
 	char oldmatrixtype[4];
@@ -404,7 +404,7 @@ static void SDIFlistpoke_newmatrix(SDIFlistpoke *x, Symbol *s, short argc, Atom 
 }	
 
 
-static void SDIFlistpoke_listpoke(SDIFlistpoke *x, Symbol *dummy, short argc, Atom *argv) {
+static void SDIFlistpoke_listpoke(SDIFlistpoke *x, t_symbol *dummy, short argc, t_atom *argv) {
 	int i;
 	SDIFmem_Frame f;
 	SDIFmem_Matrix m;

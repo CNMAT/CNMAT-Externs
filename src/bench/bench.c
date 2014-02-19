@@ -33,7 +33,7 @@ VERSION 1.1: Now outputs its measurement in milliseconds
 #define NAME "bench"
 #define DESCRIPTION "Benchmarking utility"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 #include "version.h"
@@ -43,9 +43,11 @@ VERSION 1.1: Now outputs its measurement in milliseconds
 #include "math.h"
 //#include "sys/time.h"
 //#include "cycle.h"
+#ifndef WIN_VERSION
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #include <unistd.h>
+#endif
 
 #define BENCH_IN 0
 #define BENCH_OUT 1
@@ -134,8 +136,8 @@ void bench_anything(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
 		l2 = (uint32_t)(t & 0xffffffffLL);
-		SETLONG(&out[0], l1);
-		SETLONG(&out[1], l2);
+		atom_setlong(&out[0], l1);
+		atom_setlong(&out[1], l2);
 		outlet_list(x->out1, NULL, 2, out);
 		outlet_anything(x->out0, msg, argc, argv);
 	}else{
@@ -163,8 +165,8 @@ void bench_list(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
 		l2 = (uint32_t)(t & 0xffffffffLL);
-		SETLONG(&out[0], l1);
-		SETLONG(&out[1], l2);
+		atom_setlong(&out[0], l1);
+		atom_setlong(&out[1], l2);
 		outlet_list(x->out1, NULL, 2, out);
 		outlet_list(x->out0, msg, argc, argv);
 	}else{

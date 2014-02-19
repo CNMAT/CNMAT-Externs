@@ -32,7 +32,7 @@
 #define NAME "gridpanel"
 #define DESCRIPTION "A 2-D grid that tracks mouse location."
 #define AUTHORS "Jeff Lubow"
-#define COPYRIGHT_YEARS "2011,2012"
+#define COPYRIGHT_YEARS "2011-13"
 
 
 #include "ext.h"

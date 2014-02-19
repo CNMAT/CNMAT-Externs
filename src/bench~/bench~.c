@@ -32,7 +32,7 @@ VERSION 1.0: First version
 #define NAME "bench~"
 #define DESCRIPTION "Benchmarking utility"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 #include "version.h"

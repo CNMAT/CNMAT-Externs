@@ -31,7 +31,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 #define NAME "SDIF-info"
 #define DESCRIPTION "report overall info about an SDIF-buffer"
 #define AUTHORS "Matt Wright and Ben \"Jacobs\""
-#define COPYRIGHT_YEARS "2002,03,04,05,06,2012"
+#define COPYRIGHT_YEARS "2002-06,12,13"
 
 
 /*
@@ -92,18 +92,18 @@ typedef struct _SDIFinfo {
 } SDIFinfo;
 
 /* prototypes for my functions */
-void *SDIFinfo_new(Symbol *s, short argc, Atom *argv);
+void *SDIFinfo_new(t_symbol *s, short argc, t_atom *argv);
 static void *my_getbytes(int numBytes);
 static void my_freebytes(void *bytes, int size);
 static void LookupMyBuffer(SDIFinfo *x);
-static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName);
+static void SDIFinfo_set(SDIFinfo *x, t_symbol *bufName);
 static void SDIFinfo_bang(SDIFinfo *x);
 void SDIFinfo_tellmeeverything(SDIFinfo *x);
 
 /* global that holds the class definition */
 t_class *SDIFinfo_class;
 
-Symbol *ps_name, *ps_filename, *ps_streamID, *ps_frameType, *ps_minTime, *ps_maxTime, 
+t_symbol *ps_name, *ps_filename, *ps_streamID, *ps_frameType, *ps_minTime, *ps_maxTime, 
 	   *ps_numFrames, *ps_SDIF_buffer_lookup, *ps_noFileName;
 
 int main(void)
@@ -161,7 +161,7 @@ int main(void)
 	return 0;
 }
 
-void *SDIFinfo_new(Symbol *dummy, short argc, Atom *argv) {
+void *SDIFinfo_new(t_symbol *dummy, short argc, t_atom *argv) {
 	SDIFinfo *x;
 	int i;
 	
@@ -231,7 +231,7 @@ static void LookupMyBuffer(SDIFinfo *x) {
     x->t_buf = NULL;
 }
 
-static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName) {
+static void SDIFinfo_set(SDIFinfo *x, t_symbol *bufName) {
 	x->t_buffer = 0;
 	x->t_bufferSym = bufName;
 
@@ -243,11 +243,11 @@ static void SDIFinfo_set(SDIFinfo *x, Symbol *bufName) {
 
 
 static void SDIFinfo_bang(SDIFinfo *x) {
-	Atom outputArgs[1];	
+	t_atom outputArgs[1];	
 	sdif_float64 tMin, tMax;
 	SDIFmem_Frame f;
 	char frameTypeString[5];
-	Symbol *frameTypeSym;
+	t_symbol *frameTypeSym;
 	
 	if (x->t_bufferSym == 0) {
 		object_post((t_object *)x, "¥ SDIF-info: no SDIF buffer name specified");
@@ -263,22 +263,22 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 
 
 	/* /name */
-	SETSYM(outputArgs, x->t_buffer->s_myname);
+	atom_setsym(outputArgs, x->t_buffer->s_myname);
 	outlet_anything(x->t_out, ps_name, 1, outputArgs);
 
 	/* /filename */
 	{
 		if (x->t_buffer->fileName == 0) {
-			SETSYM(outputArgs, ps_noFileName);
+			atom_setsym(outputArgs, ps_noFileName);
 		} else {
-			Symbol *filenameSym = gensym(x->t_buffer->fileName);
-			SETSYM(outputArgs, filenameSym);
+			t_symbol *filenameSym = gensym(x->t_buffer->fileName);
+			atom_setsym(outputArgs, filenameSym);
 		}
 		outlet_anything(x->t_out, ps_filename, 1, outputArgs);
 	}
 	
 	/* /streamID */
-	SETLONG(outputArgs, x->t_buffer->streamID);
+	atom_setlong(outputArgs, x->t_buffer->streamID);
 	outlet_anything(x->t_out, ps_streamID, 1, outputArgs);
 	
 	/* /frameType */
@@ -289,17 +289,17 @@ static void SDIFinfo_bang(SDIFinfo *x) {
   	frameTypeString[4] = '\0';
   	frameTypeSym = gensym(frameTypeString);
 	
-  	SETSYM(outputArgs, frameTypeSym);
+  	atom_setsym(outputArgs, frameTypeSym);
   	outlet_anything(x->t_out, ps_frameType, 1, outputArgs);
     }
 	
 	/* /minTime and /maxTime */
 	SDIFbuf_GetMinTime(x->t_buf, &tMin);
-	SETFLOAT(outputArgs, (float) tMin);
+	atom_setfloat(outputArgs, (float) tMin);
 	outlet_anything(x->t_out, ps_minTime, 1, outputArgs);
 	
 	SDIFbuf_GetMaxTime(x->t_buf, &tMax);
-	SETFLOAT(outputArgs, (float) tMax);
+	atom_setfloat(outputArgs, (float) tMax);
 	outlet_anything(x->t_out, ps_maxTime, 1, outputArgs);
 	
 	/* /numFrames */
@@ -314,7 +314,7 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 			++numFrames;
 		}
 	
-		SETLONG(outputArgs, numFrames);
+		atom_setlong(outputArgs, numFrames);
 		outlet_anything(x->t_out, ps_numFrames, 1, outputArgs);
 	}
 }

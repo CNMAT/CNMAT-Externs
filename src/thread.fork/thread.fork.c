@@ -42,7 +42,7 @@ VERSION 0.1: First public release
 #define NAME "thread.fork"
 #define DESCRIPTION "Pass data from main thread to a secondary thread"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 // max object header
@@ -82,9 +82,9 @@ typedef struct _thread_fork
     float f;
     int i;
     
-    Symbol* s;
+    t_symbol* s;
     int argc;
-    Atom* argv;
+    t_atom* argv;
     
 } thread_fork;
 
@@ -92,12 +92,12 @@ typedef struct _thread_fork
 void *thread_fork_class;
 
 // basic prototypes
-void* thread_fork_new(Symbol* s, short argc, Atom* argv);
+void* thread_fork_new(t_symbol* s, short argc, t_atom* argv);
 void thread_fork_free(thread_fork *x);
 void thread_fork_assist (thread_fork *x, void *box, long msg, long arg, char *dstString);
 
 // methods
-void thread_fork_anything(thread_fork *x, Symbol* s, int argc, Atom* argv);
+void thread_fork_anything(thread_fork *x, t_symbol* s, int argc, t_atom* argv);
 void thread_fork_bang(thread_fork *x);
 void thread_fork_float(thread_fork *x, double f);
 void thread_fork_int(thread_fork *x, int i);
@@ -124,7 +124,7 @@ int main(void)
     return 0;
 }
 
-void *thread_fork_new(Symbol* s, short argc, Atom *argv)
+void *thread_fork_new(t_symbol* s, short argc, t_atom *argv)
 {
     thread_fork *x;
     
@@ -164,7 +164,7 @@ void thread_fork_assist (thread_fork *x, void *box, long msg, long arg, char *ds
     }
 }
 
-void thread_fork_anything(thread_fork *x, Symbol* s, int argc, Atom* argv) {
+void thread_fork_anything(thread_fork *x, t_symbol* s, int argc, t_atom* argv) {
 
     x->type = TYPE_ANYTHING;
 
@@ -212,13 +212,13 @@ void thread_fork_float(thread_fork *x, double f) {
 
 void thread_fork_outlet_anything(thread_fork *x) {
     
-    Symbol s;
-    Atom argv[x->argc];
+    t_symbol s;
+    t_atom argv[x->argc];
     int argc;
 
     argc = x->argc;
-    memcpy(&s, x->s, sizeof(Symbol));
-    memcpy(argv, x->argv, sizeof(Atom)*x->argc);
+    memcpy(&s, x->s, sizeof(t_symbol));
+    memcpy(argv, x->argv, sizeof(t_atom)*x->argc);
     
     pthread_mutex_unlock(&(x->lock));
 

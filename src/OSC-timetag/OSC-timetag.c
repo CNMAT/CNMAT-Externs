@@ -44,7 +44,7 @@ VERSION 0.2: Added support for in-place operations on FullPackets
 #define NAME "OSC-timetag"
 #define DESCRIPTION "Generates, transforms and operates on high-resolution timestamps"
 #define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,2012"
+#define COPYRIGHT_YEARS "2008,12,13"
 
 
 // max object header
@@ -77,7 +77,7 @@ VERSION 0.2: Added support for in-place operations on FullPackets
 /* structure definition of your object */
 typedef struct _OSCTimeTag
 {
-  Object o_ob;    // required header
+  t_object o_ob;    // required header
     
   t_object* in_p[1];  // either a normal inlet or a crazy proxy thing
   long in_i_unsafe;   // which inlet message arrived on, but isn't threadsafe
@@ -97,13 +97,13 @@ typedef struct _OSCTimeTag
 /* global that holds the class definition */
 t_class *OSCTimeTag_class;
 
-Symbol *ps_FullPacket;
-Symbol *ps_OSCTimeTag;
-Symbol *ps_iso8601;
-Symbol *ps_tai;
+t_symbol *ps_FullPacket;
+t_symbol *ps_OSCTimeTag;
+t_symbol *ps_iso8601;
+t_symbol *ps_tai;
 
 // basic prototypes
-void* OSCTimeTag_new(Symbol* s, short argc, Atom* argv);
+void* OSCTimeTag_new(t_symbol* s, short argc, t_atom* argv);
 void OSCTimeTag_free(OSCTimeTag *x);
 void OSCTimeTag_assist (OSCTimeTag *x, void *box, long msg, long arg, char *dstString);
 
@@ -115,10 +115,10 @@ void OSCTimeTag_now(OSCTimeTag *x);
 void OSCTimeTag_int(OSCTimeTag *x, long i);
 void OSCTimeTag_float(OSCTimeTag *x, double d);
 void OSCTimeTag_immediate(OSCTimeTag *x);
-void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
-void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
-void OSCTimeTag_iso8601(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
-//void OSCTimeTag_tai(OSCTimeTag *x, Symbol* s, int argc, Atom* argv);
+void OSCTimeTag_FullPacket(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv);
+void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv);
+void OSCTimeTag_iso8601(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv);
+//void OSCTimeTag_tai(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv);
 
 // setup
 int main(void)
@@ -168,7 +168,7 @@ int main(void)
 
 /* instance creation routine */
 
-void *OSCTimeTag_new(Symbol* s, short argc, Atom *argv)
+void *OSCTimeTag_new(t_symbol* s, short argc, t_atom *argv)
 {
   
   OSCTimeTag *x;	
@@ -367,8 +367,8 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
     
   struct ntptime r; // answer
   char s[32]; // string if we need it
-  Atom tt[2]; // max list output for timetag
-  Atom iso[1]; // iso list output
+  t_atom tt[2]; // max list output for timetag
+  t_atom iso[1]; // iso list output
 
   double a, c;
     
@@ -561,8 +561,8 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
   switch(x->to) {
 
   case TO_T:
-    SETLONG(&tt[0], r.sec);
-    SETLONG(&tt[1], r.frac_sec);
+    atom_setlong(&tt[0], r.sec);
+    atom_setlong(&tt[1], r.frac_sec);
     outlet_anything(x->out_p[0], ps_OSCTimeTag, 2, tt);
     break;
             
@@ -673,7 +673,7 @@ void OSCTimeTag_float(OSCTimeTag *x, double d)
     
 }
 
-void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
+void OSCTimeTag_FullPacket(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
   
   long i;
   unsigned long sec;
@@ -735,7 +735,7 @@ void OSCTimeTag_FullPacket(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
 }
     
 
-void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
+void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
 
     long i;
     unsigned long sec;
@@ -774,7 +774,7 @@ void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
     
 }
 
-void OSCTimeTag_iso8601(OSCTimeTag *x, Symbol* s, int argc, Atom* argv) {
+void OSCTimeTag_iso8601(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
 
     long i;
     i = proxy_getinlet((t_object *)x);
