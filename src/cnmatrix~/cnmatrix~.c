@@ -327,21 +327,23 @@ void matrix_frame(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
 	x->version = FRAME;
 }
 
-void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
+void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
+{
 	void *matrix;
-	long err,dimcount,dim[JIT_MATRIX_MAX_DIMCOUNT];
+	long err,dimcount,dim[JIT_MATRIX_MAX_DIMCOUNT]; // YUK
 	long i, j, n;
 	long rowstride, colstride;
 	long in_savelock;
 	t_jit_matrix_info in_minfo;
 	char *in_bp;
 	char *ip;
-	t_atom a_coord[1024];
+	t_atom a_coord[1024];  // YUK
 	t_float *coeffptr,*oldcoeffptr;
 
 	coeffptr = x->coeffLists;
 	
-	if (argc&&argv) {
+	if (argc&&argv) // YUK
+    {
 		//find matrix
 		matrix = jit_object_findregistered(jit_atom_getsym(argv));
 		if (matrix && jit_object_method(matrix, ps_jit_sym_class_jit_matrix)){
@@ -412,11 +414,37 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv){
 				}
 			}
 			jit_object_method(matrix,ps_jit_sym_lock,in_savelock);
-		} else {
-
+		}
+        else {
+            post("!(matrix && jit_object_method(matrix, ps_jit_sym_class_jit_matrix)");
 		}
 	}
+    else
+        post("!   (argc&&argv) ");
 }
+
+// People forget that you can return structures in C.
+// This code is roughlyis the same length as the
+// buggy version that follows.
+typedef struct
+{
+    float f;
+    bool valid;
+} validatedfloat;
+
+validatedfloat mymorebettergetfloat(t_atom *a){
+    validatedfloat r; r.valid = true;
+	if(a->a_type == A_FLOAT){
+        r.f = a->a_w.w_float
+	}else if(a->a_type == A_LONG){
+		r.f = (a->a_w.w_long);
+	}else{
+		error("cnmatrix~: I don't understand %s", a->a_w.w_sym->s_name);
+		r.valid = false;
+	}
+    return r;
+}
+//YUK: these need a boolean valid flag and pass by reference (See above example)
 
 float mygetfloat(t_atom *a){
 	if(a->a_type == A_FLOAT){
@@ -445,7 +473,7 @@ void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
 	t_float *coeffptr;
 	int in, out;
 	float val;
-
+    //YUK:  these values need to be sanitized before they are used
 	if(argc == 2){
 		matrix_setgains(x, x->m_obj.z_in, mygetlong(argv), mygetfloat(argv + 1));
 	}else if(argc == 3){
@@ -476,8 +504,10 @@ void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
 	*/
 }
 
+// YUK, no defensiveness here at all.
 void matrix_setgains(t_matrix *x, long in, long out, float gain){
-	//post("%d %d %d %f", in, out, (in * x->numOutlets) + out, gain);
+	post("%d %d %d %f", in, out, (in * x->numOutlets) + out, gain);
+    if(
 	x->coeffLists[(in * x->numOutlets) + out] = gain;
 }
 
