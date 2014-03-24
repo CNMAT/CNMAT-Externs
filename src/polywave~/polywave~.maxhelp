@@ -8,7 +8,7 @@
 			"architecture" : "x64"
 		}
 ,
-		"rect" : [ 100.0, 100.0, 951.0, 704.0 ],
+		"rect" : [ 342.0, 44.0, 951.0, 704.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 11.0,
@@ -46,7 +46,7 @@
 							"architecture" : "x64"
 						}
 ,
-						"rect" : [ 328.0, 114.0, 712.0, 637.0 ],
+						"rect" : [ 0.0, 26.0, 951.0, 678.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 11.0,
@@ -66,7 +66,6 @@
 						"digest" : "",
 						"tags" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
@@ -819,7 +818,7 @@
 							"architecture" : "x64"
 						}
 ,
-						"rect" : [ 100.0, 126.0, 951.0, 678.0 ],
+						"rect" : [ 342.0, 70.0, 951.0, 678.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 11.0,
