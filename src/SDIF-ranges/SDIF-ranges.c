@@ -317,11 +317,11 @@ void SDIFranges_GetMaxNumColumns(SDIFranges *x, t_symbol *matrixTypeSym) {
 	}
 }
 
-#ifdef WIN_VERSION
+//#ifdef WIN_VERSION
 // Workaround kludge
 #define getbytes16 getbytes
 #define freebytes16 freebytes
-#endif
+//#endif
 
 void SDIFranges_GetColumnRanges(SDIFranges *x, t_symbol *matrixTypeSym) {
     char matrixType[4];
