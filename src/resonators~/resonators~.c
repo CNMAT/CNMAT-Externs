@@ -945,6 +945,351 @@ void resonators_clear(t_resonators *x)
 
 }
 
+void diresonators_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    const t_double *in = ins[0];
+	t_double *fout = outs[0];
+	t_resonators *op = x;
+	double out[MAXMAXVECTOR];
+	long n = sampleframes;
+	int nfilters = op->nres;
+	register	double yn,yo;
+	int i, j;
+	int ping = op->ping;
+	double rate = 1.0/n;
+	
+	if(op->b_obj.z_disabled || n>MAXMAXVECTOR)
+		goto out;
+    
+	if(ping>=0 && ping<nfilters)
+	{
+		op->dbase[ping].out2 += op->pingsize*op->dbase[ping].a1prime;
+		op->ping = -1;
+	}
+    
+	{
+        
+#ifdef SQUASH_DENORMALS
+#if defined( __i386__ ) || defined( __x86_64__ )
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR
+#endif
+#endif
+		dresdesc *f = op->dbase;
+		for(j=0;j<n;++j)
+			out[j] = 0.0;
+        
+        
+		for(i=0;i< nfilters ;++i)
+		{
+			register double b1=f[i].o_b1, b2=f[i].o_b2, a1=f[i].o_a1;
+			double a1inc = (f[i].a1-f[i].o_a1) *  rate;
+			double b1inc = (f[i].b1-f[i].o_b1) *  rate;
+			double b2inc = (f[i].b2-f[i].o_b2) *  rate;
+#ifdef OGAIN
+			register double			og=f[i].o_og;
+            
+			double oginc = (f[i].og-f[i].o_og) *  rate;
+#endif
+			yo= f[i].out1;
+			yn =f[i].out2;
+#ifdef UNROLL
+#ifdef OGAIN
+            if(f[i].og==0.0)
+                continue;
+            
+#endif
+            for(j=0;j<n;j+=4) //unroll 4 times
+			{
+                yn = b1*yo + b2*yn + a1*in[j] + 1e-15;
+                a1 += a1inc;
+                b1 += b1inc;
+                b2 += b2inc;
+                
+#ifdef OGAIN
+                out[j] += og* yn;
+                og += oginc;
+#else
+                out[j] += yn;
+#endif
+                yo = b1*yn + b2*yo ;
+				yo = b1*yn + b2*yo + a1*in[j+1];
+                a1 += a1inc;
+                b1 += b1inc;
+                b2 += b2inc;
+                
+#ifdef OGAIN
+                out[j+1] += og* yo;
+                og += oginc;
+#else
+                out[j+1] += yo;
+#endif
+                yo = b1*yn + b2*yo ;
+                
+				yn = b1*yo + b2*yn + a1*in[j+2];
+                a1 += a1inc;
+                b1 += b1inc;
+                b2 += b2inc;
+#ifdef OGAIN
+                out[j+2] += og* yn;
+                og += oginc;
+#else
+                out[j+2] += yn;
+#endif
+				yo = b1*yn + b2*yo + a1*in[j+3];
+                a1 += a1inc;
+                b1 += b1inc;
+                b2 += b2inc;
+#ifdef OGAIN
+                out[j+3] += og* yo;
+                og += oginc;
+#else
+                out[j+3] += yo;
+#endif
+                
+			}
+#else
+			for(j=0;j<n;++j)
+			{
+				double x = yo;
+				yo = b1*yo + b2*yn + a1*in[j];
+#ifdef OGAIN
+                out[j] += og* yo;
+                og += oginc;
+#else
+                out[j] += yo;
+#endif
+				yn = x;
+                a1 += a1inc;
+                b1 += b1inc;
+                b2 += b2inc;
+			}
+            
+#endif
+            
+			f[i].o_a1 = f[i].a1;
+			f[i].o_b1 = f[i].b1;
+			f[i].o_b2 = f[i].b2;
+			f[i].out1= yo;
+			f[i].out2 = yn;
+#ifdef OGAIN
+            f[i].o_og = f[i].og;
+#endif		
+		}
+#ifdef SQUASH_DENORMALS
+#if defined( __i386__ ) || defined( __x86_64__ )	
+		_mm_setcsr(oldMXCSR); 
+#endif
+#endif
+	}
+	for(j=0;j<n;++j)
+	{
+		fout[j] = out[j]; // when will max have double signals?
+	}
+    
+#ifdef UNDERFLOWCHECK
+    /* underflow check */
+	if(op->nres>0)
+	{
+		dresdesc *f;
+		(op->underflowcheck)++;
+		op->underflowcheck %= op->nres;
+		f =  &op->dbase[op->underflowcheck];
+		if((f->out2<RESEPS) && (f->out2>MINUSRESEPS) && (f->out1<RESEPS) && (f->out1>MINUSRESEPS))
+		{
+			f->out1 = f->out2 = 0.0;
+		}
+	}
+#endif
+    
+out:
+	return;
+}
+
+void diresonators2_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    t_double *fout = outs[0];
+	t_resonators *op = x;
+	long n = sampleframes;
+	double out[MAXMAXVECTOR];
+	
+	double rate = 1.0/n;
+	int nfilters = op->nres;
+    double yn,yo;
+	int i, j;
+	int ping = op->ping;
+	if(op->b_obj.z_disabled||n>MAXMAXVECTOR)
+		goto out;
+    
+	if(ping>=0 && ping<nfilters)
+	{
+		op->dbase[ping].out2 += op->pingsize*op->dbase[ping].a1prime;
+		op->ping = -1;
+	}
+    
+	{
+#ifdef SQUASH_DENORMALS
+#if defined( __i386__ ) || defined( __x86_64__ )
+		int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting
+		int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits
+		_mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR
+#endif
+#endif
+		dresdesc *f = op->dbase;
+		for(j=0;j<n;++j)
+			out[j] = 0.0f;
+        
+        
+        for(i=0;i< nfilters ;++i)
+		{
+			register double b1=f[i].o_b1,b2=f[i].o_b2;
+            double b1inc = (f[i].b1-f[i].o_b1) *  rate;
+			double b2inc = (f[i].b2-f[i].o_b2) *  rate;
+#ifdef OGAIN
+			register double			og=f[i].o_og;
+            
+			double oginc = (f[i].og-f[i].o_og) *  rate;
+#endif
+#ifdef OGAIN
+            if(f[i].og==0.0)
+                continue;
+#endif
+			yo= f[i].out1;
+			yn =f[i].out2;
+			for(j=0;j<n;j+=4) //unroll 4 times
+			{
+				yn = b1*yo + b2*yn ;
+                b1 += b1inc;
+                b2 += b2inc;
+                
+#ifdef OGAIN
+                out[j] += og* yn;
+                og += oginc;
+#else
+                out[j] += yn;
+#endif
+				yo = b1*yn + b2*yo ;
+                b1 += b1inc;
+                b2 += b2inc;
+#ifdef OGAIN
+                out[j+1] += og* yo;
+                og += oginc;
+#else
+                out[j+1] += yo;
+#endif
+				yn = b1*yo + b2*yn;
+				b1 += b1inc;
+                b2 += b2inc;
+#ifdef OGAIN
+                out[j+2] += og* yn;
+                og += oginc;
+#else
+                out[j+2] += yn;
+#endif
+				yo = b1*yn + b2*yo ;
+                b1 += b1inc;
+                b2 += b2inc;
+#ifdef OGAIN
+                out[j+3] += og* yo;
+                og += oginc;
+#else
+                out[j+3] += yo;
+#endif
+                
+			}
+			f[i].o_b1 = f[i].b1;
+			f[i].o_b2 = f[i].b2;
+			f[i].out1= yo;
+			f[i].out2 = yn;
+#ifdef OGAIN
+            f[i].o_og = f[i].og;
+#endif
+            
+		}
+#ifdef SQUASH_DENORMALS
+#if defined( __i386__ ) || defined( __x86_64__ )
+        _mm_setcsr(oldMXCSR);
+#endif
+#endif
+	}
+	
+	for(j=0;j<n;++j)
+	{
+		fout[j] = out[j]; // when will max have floating point signals?
+	}
+    
+#ifdef UNDERFLOWCHECK	
+	/* underflow check */
+	if(op->nres>0)
+	{
+		dresdesc *f;
+		(op->underflowcheck)++;
+		op->underflowcheck %= op->nres;
+		f =  &op->dbase[op->underflowcheck];
+		if((f->out2<RESEPS) && (f->out2>MINUSRESEPS) && (f->out1<RESEPS) && (f->out1>MINUSRESEPS))
+		{
+			f->out1 = f->out2 = 0.0;
+		}
+	}
+#endif
+    
+out:
+	return;
+    
+}
+
+void iresonators_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{}
+
+void iresonators2_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{}
+
+void resonators_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{}
+
+void resonators2_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{}
+
+void resonators_dsp64(t_resonators *x, t_object *dsp64, short *connect, double samplerate, long maxvectorsize, long flags)
+{
+    x->doubling = true; // only double mode for 64bit right now
+
+	resonators_clear(x);
+	
+	if(x->doubling)
+	{
+		if ((x->b_connected = connect[1]))
+		{
+            object_method(dsp64, gensym("dsp_add64"), x, diresonators_perform64, 0, NULL);
+        }
+		else {
+            object_method(dsp64, gensym("dsp_add64"), x, diresonators2_perform64, 0, NULL);
+		}
+	}
+    
+	/*
+    else
+	{
+        
+		if ((x->b_connected = connect[1]))
+		{
+			if(x->interpolating)
+                object_method(dsp64, gensym("dsp_add64"), x, iresonators_perform64, 0, NULL);
+			else
+                object_method(dsp64, gensym("dsp_add64"), x, resonators_perform64, 0, NULL);
+		}
+		else {
+			if(x->interpolating)
+                object_method(dsp64, gensym("dsp_add64"), x, iresonators2_perform64, 0, NULL);
+			else
+                object_method(dsp64, gensym("dsp_add64"), x, resonators2_perform64, 0, NULL);
+		}
+	}
+     */
+    
+}
+
 void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 {
 	short i;
@@ -1335,6 +1680,8 @@ int main(void){
 	
 	class_addmethod(resonators_class, (method)version, "version", 0);
 	class_addmethod(resonators_class, (method)resonators_dsp, "dsp", A_CANT, 0);
+    class_addmethod(resonators_class, (method)resonators_dsp64,	"dsp64", A_CANT, 0);
+    
 	class_addmethod(resonators_class, (method)resonators_list, "list", A_GIMME, 0);
 	class_addmethod(resonators_class, (method)outputgain_list, "outputgain", A_GIMME, 0);
 	class_addmethod(resonators_class, (method)resonators_clear, "clear", 0);
