@@ -13,7 +13,6 @@
 			buildPhases = (
 			);
 			dependencies = (
-				52B654EE17D023D5004FD84E /* PBXTargetDependency */,
 				529D6EEF173338FD005FD64C /* PBXTargetDependency */,
 				5219622516E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
@@ -600,13 +599,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E4479415F1890800C91B67;
 			remoteInfo = "analyzer~";
-		};
-		52B654ED17D023D5004FD84E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52B654CD17D021E5004FD84E;
-			remoteInfo = "granubuf~";
 		};
 		52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5083,11 +5075,6 @@
 			target = 52E4479415F1890800C91B67 /* analyzer~ */;
 			targetProxy = 529D6EEE173338FD005FD64C /* PBXContainerItemProxy */;
 		};
-		52B654EE17D023D5004FD84E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52B654CD17D021E5004FD84E /* granubuf~ */;
-			targetProxy = 52B654ED17D023D5004FD84E /* PBXContainerItemProxy */;
-		};
 		52E447EF15F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4476715F1889300C91B67 /* accumulate~ */;
@@ -7933,12 +7920,7 @@
 		52F10ADE15F072B2008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-<<<<<<< HEAD
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-=======
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
->>>>>>> 2ccfd597e6f225ee5ae7607d86519f2b2a41cc5a
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -7947,12 +7929,7 @@
 		52F10ADF15F072B2008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-<<<<<<< HEAD
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-=======
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
->>>>>>> 2ccfd597e6f225ee5ae7607d86519f2b2a41cc5a
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -52,7 +52,8 @@ t_class *matrix_class;
 
 typedef struct _matrix {
 	t_pxobject m_obj;
-	t_int numInlets;   // how many signals in 
+    void *obex;
+	t_int numInlets;   // how many signals in
 	t_int numOutlets;  // how many signals out
 	t_int version;
 	t_int **w;			
@@ -83,8 +84,6 @@ void matrix_free(t_matrix *x);
 
 void matrix_slide(t_matrix *x, double slide);
 
-t_symbol *ps_jit_sym_class_jit_matrix, *ps_jit_sym_lock, *ps_jit_sym_getdata, *ps_jit_sym_getinfo, *ps_jit_sym_char, *ps_jit_sym_long, *ps_jit_sym_float32, *ps_jit_sym_float64, *ps_jit_sym_err_calculate;
-
 int main(void){
 	
 	ps_fast    = gensym("fast");
@@ -92,8 +91,10 @@ int main(void){
 	ps_frame  = gensym("frame");
 
 	matrix_class = class_new("cnmatrix~", (method)matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
-		
-	class_addmethod(matrix_class, (method)matrix_dsp, "dsp", A_CANT, 0);
+    
+    void *p = max_jit_classex_setup(calcoffset(t_matrix,obex));
+	
+    class_addmethod(matrix_class, (method)matrix_dsp, "dsp", A_CANT, 0);
 	class_addmethod(matrix_class, (method)matrix_fast, "fast", A_GIMME, 0);
 	class_addmethod(matrix_class, (method)matrix_smooth, "smooth", A_GIMME, 0);
 	class_addmethod(matrix_class, (method)matrix_frame, "frame", A_GIMME, 0);
@@ -103,18 +104,10 @@ int main(void){
 	class_dspinit(matrix_class);
 
 	version_post_copyright();
-
-	ps_jit_sym_class_jit_matrix = gensym("jit_sym_class_jit_matrix");
-	ps_jit_sym_lock = gensym("jit_sym_lock");
-	ps_jit_sym_getdata = gensym("jit_sym_getdata");
-	ps_jit_sym_getinfo = gensym("jit_sym_getinfo");
-	ps_jit_sym_char = gensym("jit_sym_char");
-	ps_jit_sym_long = gensym("jit_sym_long");
-	ps_jit_sym_float32 = gensym("jit_sym_float32");
-	ps_jit_sym_float64 = gensym("jit_sym_float64");
-	ps_jit_sym_err_calculate = gensym("jit_sym_err_calculate");
-
-	class_register(CLASS_BOX, matrix_class);
+    
+    max_jit_classex_standard_wrap(p,NULL,0);
+	
+    class_register(CLASS_BOX, matrix_class);
 	return 0;
 }
 
@@ -329,49 +322,46 @@ void matrix_frame(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
 
 void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 {
-	void *matrix;
+	void *matrix = NULL;
 	long err,dimcount,dim[JIT_MATRIX_MAX_DIMCOUNT]; // YUK
 	long i, j, n;
 	long rowstride, colstride;
 	long in_savelock;
 	t_jit_matrix_info in_minfo;
-	char *in_bp;
-	char *ip;
+    memset(&in_minfo, '\0', sizeof(t_jit_matrix_info));
+	char *in_bp = NULL;
+	char *ip = NULL;
 	t_atom a_coord[1024];  // YUK
 	t_float *coeffptr,*oldcoeffptr;
 
 	coeffptr = x->coeffLists;
 	
+    //post("%s %s", _jit_sym_class_jit_matrix->s_name, ps_jit_sym_class_jit_matrix->s_name);
 	if (argc&&argv) // YUK
     {
 		//find matrix
 		matrix = jit_object_findregistered(jit_atom_getsym(argv));
-		if (matrix && jit_object_method(matrix, ps_jit_sym_class_jit_matrix)){
+		if (matrix && jit_object_method(matrix, _jit_sym_class_jit_matrix)){
 			//calculate
-			in_savelock = (long) jit_object_method(matrix, ps_jit_sym_lock, 1);
-			jit_object_method(matrix, ps_jit_sym_getinfo, &in_minfo);
-			jit_object_method(matrix, ps_jit_sym_getdata, &in_bp);
-			
+			in_savelock = (long) jit_object_method(matrix, _jit_sym_lock, 1);
+			jit_object_method(matrix, _jit_sym_getinfo, &in_minfo);
+			jit_object_method(matrix, _jit_sym_getdata, &in_bp);
 			if (!in_bp) { 
-				jit_error_sym(x, ps_jit_sym_err_calculate);
-				jit_object_method(matrix, ps_jit_sym_lock, in_savelock);
+				jit_error_sym(x, _jit_sym_err_calculate);
+				jit_object_method(matrix, _jit_sym_lock, in_savelock);
 				return;
 			}
-			
 			//get dimensions/planecount 
 			dimcount = in_minfo.dimcount;
 			for (i=0;i<dimcount;i++) {
 				dim[i] = in_minfo.dim[i];
 			}		
-			
 			//calculate
 			n = dim[0];
 			rowstride = in_minfo.dimstride[1];
 			colstride = in_minfo.dimstride[0];
-			
-			//post("n = %d, rowstride = %d, colstride = %d", n, rowstride, colstride);
-			
-			if (in_minfo.type==ps_jit_sym_char) {
+						
+			if (in_minfo.type==_jit_sym_char) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -381,7 +371,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==ps_jit_sym_long) {
+			} else if (in_minfo.type==_jit_sym_long) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -391,7 +381,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==ps_jit_sym_float32) {
+			} else if (in_minfo.type==_jit_sym_float32) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -402,7 +392,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==ps_jit_sym_float64) {
+			} else if (in_minfo.type==_jit_sym_float64) {
 				for (j=0;j<dim[0];j++) {
 					ip = in_bp + j * in_minfo.dimstride[0];	
 					for (i=0;i<dim[1];i++){
@@ -413,10 +403,10 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
 			}
-			jit_object_method(matrix,ps_jit_sym_lock,in_savelock);
+			jit_object_method(matrix,_jit_sym_lock,in_savelock);
 		}
         else {
-            post("!(matrix && jit_object_method(matrix, ps_jit_sym_class_jit_matrix)");
+            post("%p %p %s", matrix, jit_object_method(matrix, _jit_sym_class_jit_matrix), jit_atom_getsym(argv)->s_name);
 		}
 	}
     else
@@ -435,7 +425,7 @@ typedef struct
 validatedfloat mymorebettergetfloat(t_atom *a){
     validatedfloat r; r.valid = true;
 	if(a->a_type == A_FLOAT){
-        r.f = a->a_w.w_float
+		r.f = a->a_w.w_float;
 	}else if(a->a_type == A_LONG){
 		r.f = (a->a_w.w_long);
 	}else{
@@ -506,8 +496,8 @@ void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
 
 // YUK, no defensiveness here at all.
 void matrix_setgains(t_matrix *x, long in, long out, float gain){
-	post("%d %d %d %f", in, out, (in * x->numOutlets) + out, gain);
-    if(
+	//post("%d %d %d %f", in, out, (in * x->numOutlets) + out, gain);
+	//if(
 	x->coeffLists[(in * x->numOutlets) + out] = gain;
 }
 
@@ -541,9 +531,9 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
         x->version = SMOOTH; // smooth is default
     }
     
-	x->Inlets = t_getbytes(x->numInlets * sizeof(t_float*));
-	x->Outlets = t_getbytes(x->numOutlets * sizeof(t_float*));
-	x->w = t_getbytes((x->numInlets + x->numOutlets + 2) * sizeof(t_int*));
+	x->Inlets = malloc(x->numInlets * sizeof(t_float*));
+	x->Outlets = malloc(x->numOutlets * sizeof(t_float*));
+	x->w = malloc((x->numInlets + x->numOutlets + 2) * sizeof(t_int*));
 		
 	// Create inlets and outlets
 	dsp_setup((t_pxobject *)x, x->numInlets);
