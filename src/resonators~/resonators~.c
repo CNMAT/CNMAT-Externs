@@ -171,7 +171,7 @@ const 	t_float *in = (t_float *)(w[2]);
 	int nfilters = op->nres;
 	float o0, o1, o2, o3;
 	float i0,i1,i2,i3,i4,i5;
-		float yn,yo;
+    float yn,yo;
 	int i, j;
 	int ping = op->ping;
 	
@@ -1245,28 +1245,211 @@ void iresonators_perform64(t_resonators *x, t_object *dsp64, double **ins, long 
 void iresonators2_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {}
 
+// unsmoothed doubles version
 void resonators_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
-{}
+{
+    const 	t_double *in = ins[0];
+    t_double *out = outs[0];
+    t_resonators *op = x;
+    long n = sampleframes;
+    int nfilters = op->nres;
+    t_double o0, o1, o2, o3;
+    t_double i0,i1,i2,i3,i4,i5;
+    t_double yn,yo;
+    int i, j;
+    int ping = op->ping;
+    
+    if(op->b_obj.z_disabled)
+        goto out;
+    
+    if(ping>=0 && ping<nfilters )
+    {
+        op->dbase[ping].out2 += op->pingsize*op->dbase[ping].a1prime;
+        op->ping = -1;
+    }
+    
+#ifdef SQUASH_DENORMALS
+    static int sq;
+    if(!sq){
+        printf("squashing denormals\n");
+        sq++;
+    }
+#if defined( __i386__ ) || defined( __x86_64__ )
+    int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting
+    int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits
+    _mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR
+#endif
+#endif
+    for(j=0;j<n;j+=4)
+    {
+        dresdesc *f = op->dbase;
+        i0 = in[0]+ 1e-15;
+        i1 = in[1];
+        i2 = in[2];
+        i3 = in[3];
+        o0 = o1 = o2 = o3  = 0;
+        
+        for(i=0;i< nfilters ;++i)
+        {
+            yn = f->out1;
+            yo = f->out2;
+            
+            yo = f->b1*yn + f->b2*yo + f->a1*i0;
+            yn = f->b1*yo + f->b2*yn + f->a1*i1;
+#ifdef OGAIN
+#define GMUL f->og*
+#else
+#define GMUL
+#endif
+            o0 += GMUL yo;
+            o1 += GMUL yn;
+            
+            yo = f->b1*yn + f->b2*yo + f->a1*i2;
+            yn = f->b1*yo + f->b2*yn + f->a1*i3;
+            f->out2 = yo;
+            f->out1 = yn;
+            o2 += GMUL  yo;
+            o3 += GMUL yn;
+            ++f;
+        }
+        out[0] = o0;
+        out[1] = o1;
+        out[2] = o2;
+        out[3] = o3;
+        out += 4;
+        in += 4;
+    }
+#ifdef SQUASH_DENORMALS
+#if defined( __i386__ ) || defined( __x86_64__ )	
+    _mm_setcsr(oldMXCSR); 
+#endif
+#endif
+    
+#ifdef UNDERFLOWCHECK
+#define RESEPS 1.e-10f
+#define MINUSRESEPS -1.e-10f
+    /* underflow check */
+    if(op->nres>0)
+    {
+        dresdesc *f;
+        (op->underflowcheck)++;
+        op->underflowcheck %= op->nres;
+        f   = &op->dbase[op->underflowcheck];
+        if((f->out2<RESEPS) && (f->out2>MINUSRESEPS) && (f->out1<RESEPS) && (f->out1>MINUSRESEPS))
+        {
+            f->out1 = f->out2 = 0.0f;
+        }
+    }
+#endif
+out:
+    return;
+}
 
 void resonators2_perform64(t_resonators *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
-{}
+{
+    t_double *out = outs[0];
+    t_resonators *op = x;
+    long n = sampleframes;
+    int nfilters = op->nres;
+    t_double o0, o1, o2, o3;
+    t_double yn,yo;
+	int i, j;
+	int ping = op->ping;
+	if(op->b_obj.z_disabled)
+		goto out;
+    
+	if(ping>=0 && ping<nfilters)
+	{
+		op->dbase[ping].out2 += op->pingsize*op->dbase[ping].a1prime;
+		op->ping = -1;
+	}
+#ifdef SQUASH_DENORMALS
+#if defined( __i386__ ) || defined( __x86_64__ )
+    int oldMXCSR = _mm_getcsr(); // read the old MXCSR setting
+    int newMXCSR = oldMXCSR | 0x8040; // set DAZ and FZ bits
+    _mm_setcsr( newMXCSR );	 // write the new MXCSR setting to the MXCSR
+#endif
+#endif
+	for(j=0;j<n;j+=4)
+	{
+		dresdesc *f = op->dbase;
+		o0 = o1 = o2 = o3  = 0;
+        
+		for(i=0;i< nfilters ;++i)
+		{
+			yn = f->out1;
+			yo = f->out2;
+            
+			yo = f->b1*yn + f->b2*yo ;
+			yn = f->b1*yo + f->b2*yn ;
+			o0 += GMUL yo;
+			o1 += GMUL yn;
+            
+			yo = f->b1*yn + f->b2*yo ;
+			yn = f->b1*yo + f->b2*yn;
+			f->out2 = yo;
+			f->out1 = yn;
+			o2 += GMUL yo;
+			o3 += GMUL yn;
+			++f;
+		}
+		out[0] = o0;
+		out[1] = o1;
+		out[2] = o2;
+		out[3] = o3;
+		out += 4;
+	}
+#ifdef SQUASH_DENORMALS
+#if defined( __i386__ ) || defined( __x86_64__ )
+	_mm_setcsr(oldMXCSR);
+#endif
+#endif
+#ifdef UNDERFLOWCHECK
+	/* underflow check */
+	if(op->nres>0)
+	{
+		dresdesc *f;
+		(op->underflowcheck)++;
+		op->underflowcheck %= op->nres;
+		f =  &op->dbase[op->underflowcheck];
+		if((f->out2<RESEPS) && (f->out2>MINUSRESEPS) && (f->out1<RESEPS) && (f->out1>MINUSRESEPS))
+		{
+			f->out1 = f->out2 = 0.0f;
+		}
+	}
+#endif
+out:
+    
+	return;
+}
 
 void resonators_dsp64(t_resonators *x, t_object *dsp64, short *connect, double samplerate, long maxvectorsize, long flags)
 {
-    x->doubling = true; // only double mode for 64bit right now
+    x->doubling = true;
 
 	resonators_clear(x);
 	
-	if(x->doubling)
+    // only double mode now
+	if(x->interpolating)
 	{
 		if ((x->b_connected = connect[1]))
 		{
             object_method(dsp64, gensym("dsp_add64"), x, diresonators_perform64, 0, NULL);
         }
-		else {
+		else
+        {
             object_method(dsp64, gensym("dsp_add64"), x, diresonators2_perform64, 0, NULL);
 		}
-	}
+	} else {
+        if ((x->b_connected = connect[1]))
+		{
+            object_method(dsp64, gensym("dsp_add64"), x, resonators_perform64, 0, NULL);
+        }
+        else
+        {
+            object_method(dsp64, gensym("dsp_add64"), x, resonators2_perform64, 0, NULL);
+		}
+    }
     
 	/*
     else
