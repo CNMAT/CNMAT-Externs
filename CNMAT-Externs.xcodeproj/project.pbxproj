@@ -72,6 +72,15 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		110C3E3A194433A500A53893 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		110C3E3D194433A500A53893 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		110C3E3E194433A500A53893 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		110C3E3F194433A500A53893 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		110C3E40194433A500A53893 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		110C3E41194433A500A53893 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
+		110C3E4D194433EF00A53893 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 110C3E4A194433EF00A53893 /* Info.plist */; };
+		110C3E4E194433EF00A53893 /* localpeak~.c in Sources */ = {isa = PBXBuildFile; fileRef = 110C3E4B194433EF00A53893 /* localpeak~.c */; };
+		110C3E4F194433EF00A53893 /* localpeak~.maxhelp in Resources */ = {isa = PBXBuildFile; fileRef = 110C3E4C194433EF00A53893 /* localpeak~.maxhelp */; };
 		115E4E3818846E320071D644 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		115E4E3A18846E320071D644 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		115E4E3B18846E320071D644 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -911,6 +920,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		110C3E48194433A500A53893 /* localpeak~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "localpeak~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		110C3E4A194433EF00A53893 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		110C3E4B194433EF00A53893 /* localpeak~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "localpeak~.c"; sourceTree = "<group>"; };
+		110C3E4C194433EF00A53893 /* localpeak~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "localpeak~.maxhelp"; sourceTree = "<group>"; };
 		115E4E4318846E320071D644 /* shot-ms~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "shot-ms~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		115E4E4518846E990071D644 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		115E4E4618846E990071D644 /* shot.ms~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "shot.ms~.c"; sourceTree = "<group>"; };
@@ -1244,6 +1257,18 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		110C3E3C194433A500A53893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				110C3E3D194433A500A53893 /* CoreFoundation.framework in Frameworks */,
+				110C3E3E194433A500A53893 /* Accelerate.framework in Frameworks */,
+				110C3E3F194433A500A53893 /* Carbon.framework in Frameworks */,
+				110C3E40194433A500A53893 /* CoreServices.framework in Frameworks */,
+				110C3E41194433A500A53893 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		115E4E3918846E320071D644 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1922,6 +1947,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		110C3E49194433EF00A53893 /* localpeak~ */ = {
+			isa = PBXGroup;
+			children = (
+				110C3E4A194433EF00A53893 /* Info.plist */,
+				110C3E4B194433EF00A53893 /* localpeak~.c */,
+				110C3E4C194433EF00A53893 /* localpeak~.maxhelp */,
+			);
+			name = "localpeak~";
+			path = "src/localpeak~";
+			sourceTree = "<group>";
+		};
 		115E4E4418846E990071D644 /* shot-ms~ */ = {
 			isa = PBXGroup;
 			children = (
@@ -2758,6 +2794,7 @@
 				52E4484715F1E96D00C91B67 /* lcm */,
 				5219617E16E6C03100EA7DDF /* list-accum */,
 				52E4484B15F1E96D00C91B67 /* list-interpolate */,
+				110C3E49194433EF00A53893 /* localpeak~ */,
 				52E4484F15F1E96D00C91B67 /* loudness~ */,
 				5219618616E6C04A00EA7DDF /* migrator */,
 				5219619216E6C07200EA7DDF /* OpenSoundControl */,
@@ -2864,6 +2901,7 @@
 				52B654DB17D021E5004FD84E /* granubuf~.mxo */,
 				115E4E4318846E320071D644 /* shot-ms~.mxo */,
 				11C1B49D18A84AA900822EFF /* polywave~.mxo */,
+				110C3E48194433A500A53893 /* localpeak~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2907,6 +2945,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		110C3E38194433A500A53893 /* localpeak~ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 110C3E45194433A500A53893 /* Build configuration list for PBXNativeTarget "localpeak~" */;
+			buildPhases = (
+				110C3E39194433A500A53893 /* Sources */,
+				110C3E3C194433A500A53893 /* Frameworks */,
+				110C3E42194433A500A53893 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "localpeak~";
+			productName = "2threshattack~";
+			productReference = 110C3E48194433A500A53893 /* localpeak~.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
 		115E4E3518846E320071D644 /* shot-ms~ */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 115E4E4018846E320071D644 /* Build configuration list for PBXNativeTarget "shot-ms~" */;
@@ -3991,11 +4046,21 @@
 				521961EB16E6C60500EA7DDF /* whichthread */,
 				521961FC16E6C60D00EA7DDF /* OpenSoundControl */,
 				5219620D16E6C61400EA7DDF /* res-transform */,
+				110C3E38194433A500A53893 /* localpeak~ */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		110C3E42194433A500A53893 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				110C3E4F194433EF00A53893 /* localpeak~.maxhelp in Resources */,
+				110C3E4D194433EF00A53893 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		115E4E3F18846E320071D644 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4416,6 +4481,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		110C3E39194433A500A53893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				110C3E3A194433A500A53893 /* commonsyms.c in Sources */,
+				110C3E4E194433EF00A53893 /* localpeak~.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		115E4E3618846E320071D644 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5298,6 +5372,48 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		110C3E46194433A500A53893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_NAME = "localpeak~";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		110C3E47194433A500A53893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../fftw/.libs\"",
+				);
+				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_NAME = "localpeak~";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
 		115E4E4118846E320071D644 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -7980,6 +8096,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		110C3E45194433A500A53893 /* Build configuration list for PBXNativeTarget "localpeak~" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				110C3E46194433A500A53893 /* Debug */,
+				110C3E47194433A500A53893 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		115E4E4018846E320071D644 /* Build configuration list for PBXNativeTarget "shot-ms~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
