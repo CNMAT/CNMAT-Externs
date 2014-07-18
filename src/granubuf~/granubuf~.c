@@ -424,7 +424,7 @@ static void grans_clear(t_grans *x)
 {
 	t_sample_grain *p = x->base;
 	int i;
-	for( i=0; i<DEFAULTMAXOSCILLATORS; ++i, p++)
+	for( i=0; i<GRANU_DEFAULTMAXOSCILLATORS; ++i, p++)
 	{
         //		p->next_phase_inc = 0.0;
 		p->phase_inc = 0.0;
@@ -618,10 +618,15 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     int    interpolation = x->interpolation;
     
     const int alwayson = x->always_on;
-        
-    const long maxoverlap = CLAMP(x->maxoverlap, 0, DEFAULTMAXOSCILLATORS);
     
-    if(maxoverlap != x->maxoverlap) x->maxoverlap = maxoverlap;
+    if(x->maxoverlap != x->prev_maxoverlap)
+    {
+        x->maxoverlap = CLAMP(x->maxoverlap, 0, GRANU_DEFAULTMAXOSCILLATORS);
+        x->prev_maxoverlap = x->maxoverlap;
+    }
+    
+    long maxoverlap = (x->maxoverlap > x->nosc) ? x->maxoverlap : x->nosc;
+    
     
     const double halftab = x->halftab;
     
@@ -775,6 +780,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         {
 //            post("j[%d] start[%f] end[%f] rate[%f] dur[%f] type[%d] buf_index[%d] ", j, start, end, rate, dur, (int)window_index, buf_index);
             grans_setNewGrain( x, j, chirprate, chirptype, start, end, rate, dur, tex, window_index, outlet, buf_index, gr_amp );
+            
         }
 
 
@@ -789,7 +795,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
 
     x->prev_in1 = prev_trig;
 
-    for( i = 0; i < x->maxoverlap; i++, o++)
+    for( i = 0; i < GRANU_DEFAULTMAXOSCILLATORS; i++, o++)
     {
         
         pi      = o->phase_inc;
@@ -995,9 +1001,9 @@ void granu_info(t_grans *x)
     
     t_sample_grain *o = x->base;
     int i;
-    for( i = 0; i < x->maxoverlap; i++, o++)
+    for( i = 0; i < x->nosc && o; i++, o++)
     {
-    post("[%i] buf_id %i start %f end %f pc %f pi %f wind_idx %i wpc %f wi %f amp %f",
+    post("[%i] buf_idx %i start %f end %f phase %f phase_inc %f wind_idx %i wind_phase %f wind_inc %f amp %f",
          i,
          o->buf_index,
          o->startpoint, // in samples (floats for interpolation)
@@ -1764,8 +1770,8 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
     
 	if (x) {
         
-        x->base = (t_sample_grain *)calloc(DEFAULTMAXOSCILLATORS, sizeof(t_sample_grain));
-        x->maxoverlap = DEFAULTMAXOSCILLATORS;
+        x->base = (t_sample_grain *)calloc(GRANU_DEFAULTMAXOSCILLATORS, sizeof(t_sample_grain));
+        x->maxoverlap = GRANU_DEFAULTMAXOSCILLATORS;
         
         x->numoutlets = 1;
         
