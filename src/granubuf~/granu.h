@@ -11,8 +11,8 @@
 
 #define GRANU_SINCRIPPLES 5  //could probably make this an attribute, or maybe compute sinc in realtime... 5 seems good for now
 
-#define DEFAULTMAXOSCILLATORS 256
-#define GRANU_MAX_BUFFERS 128
+#define GRANU_DEFAULTMAXOSCILLATORS (1l<<13)
+#define GRANU_MAX_BUFFERS 256
 
 #define TPOW 16
 #define STABSZ (1l<<TPOW) //table size
