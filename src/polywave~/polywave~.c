@@ -457,7 +457,7 @@ void polywave_perform64_two(t_polywave *x, t_object *dsp64, double **ins, long n
                     *out++ = cubicInterpolate(a1,pSamp1,pSamp2,d,interp_p);
                 }
                 else
-                    *out++ = 0.5;
+                    *out++ = 0.0;
             }
             break;
         case LINEAR:

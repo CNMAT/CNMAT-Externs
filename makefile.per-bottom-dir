@@ -1,0 +1,7 @@
+# This is included in the makefile for every directory of Max externals
+
+# Name of this category of objects is the name of this directory
+CATEGORY := $(shell basename `pwd`)
+
+EXTERNALS :=$(shell ls)
+

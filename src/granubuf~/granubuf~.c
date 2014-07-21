@@ -34,25 +34,10 @@
     2: dampedsine
     3: sinc
  
- to do: 
-    - change location/dur to be start/end -- this effects the resulting rate, but due to situations with reverse play rates and negative chirps, we really need the end point -- this is different with granusoids~ and granufm~ which are oscilator based (actaully I might add options for wave tables there also...)
-   - fix chirp
- 
+ to do:
     - add samplerate check in dsp function, if this gets changed after buffer info is loaded it screws up the pitch, or calculate increment in the perform routine with the samplerate information
- 
+    - improve chirp
     - add information outlet to get grain information
-
- ***
-    - errors for values for duration, rate, or end if specified as inlets
-        -- will have to store inlets as static, and then change @passive parameter if changed via message
-
-++++++ STATUS 9/1  BROKEN as is... TO DO ASAP:
- currently setup for automatic @passive setting with inlets and without
- need to now implement a check in the grain creation for which element is passive and calculate accordingly
- also, need to add start_ms and end_ms and make start&end 0-1
- ... actually, maybe just use 0-1 -- if the user is specifying specific points in the buffer, they will know the buffersize and can normalize to float (might need to check accuracy?
- 
-++++
 
  ***
  
@@ -78,6 +63,55 @@
 #include "granu.h"
 
 #define GRANUBUF_NUMINLET_TYPES 13
+
+// -------- buffer proxy object class, to handle buffer notifications
+
+
+t_class *graunu_buffer_proxy_class = NULL;
+
+typedef struct _buffer_proxy
+{
+    t_object        ob;
+    t_buffer_ref    *ref;
+    t_symbol        *name;
+    t_bool          buffer_modified;
+    double          sr;
+    long            nframes;
+    long            nchans;
+} t_buffer_proxy;
+
+
+t_max_err buffer_proxy_notify(t_buffer_proxy *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
+{
+	if (msg == ps_buffer_modified)
+        x->buffer_modified = true;
+	return buffer_ref_notify(x->ref, s, msg, sender, data);
+}
+
+void buffer_proxy_set_ref(t_buffer_proxy *x, t_symbol *s)
+{
+    x->name = s;
+    buffer_ref_set(x->ref, x->name);
+    x->buffer_modified = true;
+}
+
+
+void *buffer_proxy_new(t_symbol *s)
+{
+    
+    t_buffer_proxy *x = NULL;
+    
+    if((x = (t_buffer_proxy *)object_alloc(graunu_buffer_proxy_class)))
+    {
+        x->name = s;
+        x->ref = buffer_ref_new((t_object *)x, x->name);
+        x->buffer_modified = true;
+    }
+    
+    return x;
+}
+
+// -------- graubuf~
 
 typedef enum _granubuf_in
 {
@@ -167,21 +201,15 @@ typedef struct _grans {
     int             num_time_param_inlets;
     
     //sample buffer array,
-    t_buffer_ref    *buf[GRANU_MAX_BUFFERS];
+    t_buffer_proxy  **buf_proxy;
 	t_symbol        *buf_name[GRANU_MAX_BUFFERS];
-	t_bool          buffer_modified[GRANU_MAX_BUFFERS];
-    long            buf_frames[GRANU_MAX_BUFFERS];
-    long            buf_nchans[GRANU_MAX_BUFFERS];
     long            numbufs;
 
     //sample buffer array for external buffers
-    t_buffer_ref    *envbuf[GRANU_MAX_BUFFERS];
-	t_symbol        *envbuf_name[GRANU_MAX_BUFFERS];
-	t_bool          envbuffer_modified[GRANU_MAX_BUFFERS];
-    long            envbuf_frames[GRANU_MAX_BUFFERS];
-    long            envbuf_nchans[GRANU_MAX_BUFFERS];
+    t_buffer_proxy  **envbuf_proxy;
     long            numenvbufs; //number of external buffers
-    
+
+    t_symbol        *window_name[GRANU_MAX_BUFFERS];
     int             numwindows;
 //includes count of internal and external buffers (internal are global vars)
     int             tab_w_index[GRANU_MAX_BUFFERS]; //offset by internal windows, +(GRANUBUF_NUMINTERNAL_WINDOWS-1)
@@ -196,8 +224,9 @@ typedef struct _grans {
     double          maxhz;
     t_sample_grain  *base;
     
-    int             nosc;
-    int             next_nosc;
+    long            nosc;
+    long            next_nosc;
+
     double          pk;
     double          pkw;
     
@@ -215,7 +244,7 @@ typedef struct _grans {
     
     short           *count;
     
-
+    t_critical      lock;
     
 } t_grans;
 
@@ -396,7 +425,7 @@ static void grans_clear(t_grans *x)
 {
 	t_sample_grain *p = x->base;
 	int i;
-	for( i=0; i<DEFAULTMAXOSCILLATORS; ++i, p++)
+	for( i=0; i<GRANU_DEFAULTMAXOSCILLATORS; ++i, p++)
 	{
         //		p->next_phase_inc = 0.0;
 		p->phase_inc = 0.0;
@@ -426,8 +455,8 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype,
     {
         if( o->phase_inc == 0.0 )
         {
-            frames = (double)x->buf_frames[bufferindex];
-//            post("%s frames %d", __func__, x->buf_frames[bufferindex]);
+            frames = (double)x->buf_proxy[bufferindex]->nframes;
+//            post("%s frames %i", __func__, x->buf_proxy[bufferindex]->nframes);
             if(frames == 0)  return;
             
             num_frameIdx = frames - 1; //probably check buf_frames > 0
@@ -512,8 +541,14 @@ void grans_setNewGrain(t_grans *x, int offset, double chirprate, long chirptype,
             }
             else
             {
-                o->window_phase_inc = dur_hz * ((double)x->envbuf_frames[x->tab_w_index[window_index] - GRANUBUF_NUMINTERNAL_WINDOWS]) * x->sampleinterval;
-//                post("%s %f %d", __func__, o->window_phase_inc, x->envbuf_frames[x->tab_w_index[window_index] - GRANUBUF_NUMINTERNAL_WINDOWS]);
+                o->window_phase_inc = dur_hz *
+                ((double)x->envbuf_proxy[x->tab_w_index[window_index] - GRANUBUF_NUMINTERNAL_WINDOWS]->nframes) * x->sampleinterval;
+            /*    post("%s %f %i %i %f", __func__,
+                     o->window_phase_inc,
+                     x->tab_w_index[window_index] - GRANUBUF_NUMINTERNAL_WINDOWS,
+                     x->envbuf_proxy[x->tab_w_index[window_index] - GRANUBUF_NUMINTERNAL_WINDOWS]->nframes ,
+             ((double)x->envbuf_proxy[x->tab_w_index[window_index] - GRANUBUF_NUMINTERNAL_WINDOWS]->nframes) * x->sampleinterval);
+            */
             }
             
             
@@ -583,18 +618,18 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     
     int    interpolation = x->interpolation;
     
-    e_granu_end_mode    end_mode = x->end_mode;
-    
     const int alwayson = x->always_on;
-        
-    const long maxoverlap = CLAMP(x->maxoverlap, 0, DEFAULTMAXOSCILLATORS);
-    if(maxoverlap != x->maxoverlap) x->maxoverlap = maxoverlap;
+    
+    if(x->maxoverlap != x->prev_maxoverlap)
+    {
+        x->maxoverlap = CLAMP(x->maxoverlap, 0, GRANU_DEFAULTMAXOSCILLATORS);
+        x->prev_maxoverlap = x->maxoverlap;
+    }
+    
+    long maxoverlap = (x->maxoverlap > x->nosc) ? x->maxoverlap : x->nosc;
     
     
-//    const double tabSamp = x->tabSamp;
     const double halftab = x->halftab;
-    const int    shapetabscale = x->shapetabscale;
-//    const int    wtabscale = x->wtabscale;
     
     long       tex_pc;
     double     pc, wpc, chirpdir, w_tabSamp;
@@ -617,74 +652,90 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
     
     t_buffer_obj    *buffer[numbufs];
     t_float         *tab[numbufs];
-    int             valid[numbufs];
+    int             valid[numbufs], modified[numbufs];
     
-    for (i=0; i<numbufs; i++) {
+    for (i=0; i<numbufs; i++)
+    {
     
-        buffer[i] = buffer_ref_getobject(x->buf[i]);
-        tab[i] = buffer_locksamples(buffer[i]);
-    
-        if (buffer[i] && tab[i])
-        {
-            frames[i] = buffer_getframecount(buffer[i]);
-            nchans[i] = buffer_getchannelcount(buffer[i]);
+        buffer[i] = buffer_ref_getobject(x->buf_proxy[i]->ref);
         
-            if(nchans[i] > 0 && frames[i] > 0)
-            {
-                valid[i] = 1;
-                if(x->buffer_modified[i])
-                {
-                    x->buf_frames[i] = frames[i];
-                    x->buf_nchans[i] = nchans[i];
-                    x->buffer_modified[i] = false;
-                }
-              //  post("%s frames %d", __func__, x->buf_frames[i]);
-            } else {
-                post("debug: no frames || no channels, probably do something here");
+        if(!buffer[i])
+            valid[i] = 0;
+        else
+        {
+            tab[i] = buffer_locksamples(buffer[i]);
+
+            if(!tab[i])
                 valid[i] = 0;
+            else
+            {
+                modified[i] = x->buf_proxy[i]->buffer_modified;
+
                 
+                if(modified[i])
+                {
+                    frames[i] = buffer_getframecount(buffer[i]);
+                    nchans[i] = buffer_getchannelcount(buffer[i]);
+                    x->buf_proxy[i]->nframes = frames[i];
+                    x->buf_proxy[i]->nchans = nchans[i];
+                    x->buf_proxy[i]->buffer_modified = false;
+                }
+                else
+                {
+                    frames[i] = x->buf_proxy[i]->nframes;
+                    nchans[i] = x->buf_proxy[i]->nchans;
+                }
+                
+                valid[i] = (nchans[i] > 0 && frames[i] > 0);
+
             }
             
-        } else {
-          //  post("debug: no buffer || no tab, do something here");
-             valid[i] = 0;
-//            goto unlock;
         }
     }
     
-    long            w_frames[numenvbufs], w_nchans[numenvbufs];
-    t_float         *w_buftab[numenvbufs];
     t_buffer_obj    *w_buffer[numenvbufs];
-    int             w_valid[numbufs];
+    t_float         *w_buftab[numenvbufs];
+    int             w_valid[numenvbufs], w_modified[numenvbufs];
+    long w_frames[numbufs], w_nchans[numbufs];
     
     for (i=0; i<numenvbufs; i++) {
         
-        w_buffer[i] = buffer_ref_getobject(x->envbuf[i]);
-        w_buftab[i] = buffer_locksamples(w_buffer[i]);
+        w_buffer[i] = buffer_ref_getobject(x->envbuf_proxy[i]->ref);
         
-        if (w_buffer[i] && w_buftab[i])
-        {
-            w_frames[i] = buffer_getframecount(w_buffer[i]);
-            w_nchans[i] = buffer_getchannelcount(w_buffer[i]);
-            
-            
-            if(w_nchans[i] > 0 && w_frames[i] > 0)
-            {
-                w_valid[i] = 1;
-                
-                if(x->envbuffer_modified[i])
-                {
-                    x->envbuf_frames[i] = w_frames[i];
-                    x->envbuf_nchans[i] = w_nchans[i];
-                    x->envbuffer_modified[i] = false;
-                }
-//                post("%s %d %d", __func__, i, x->envbuf_frames[i]);
-            } else {
-                w_valid[i] = 0;
-            }
-        } else {
+        
+        if(!w_buffer[i])
             w_valid[i] = 0;
+        else
+        {
+            w_buftab[i] = buffer_locksamples(w_buffer[i]);
+            
+            if(!w_buftab[i])
+                w_valid[i] = 0;
+            else
+            {
+                w_modified[i] = x->envbuf_proxy[i]->buffer_modified;
+                
+                
+                if(w_modified[i])
+                {
+                    w_frames[i] = buffer_getframecount(w_buffer[i]);
+                    w_nchans[i] = buffer_getchannelcount(w_buffer[i]);
+                    x->envbuf_proxy[i]->nframes = w_frames[i];
+                    x->envbuf_proxy[i]->nchans = w_nchans[i];
+                    x->envbuf_proxy[i]->buffer_modified = false;
+                }
+                else
+                {
+                    w_frames[i] = x->envbuf_proxy[i]->nframes;
+                    w_nchans[i] = x->envbuf_proxy[i]->nchans;
+                }
+                
+                w_valid[i] = (w_nchans[i] > 0 && w_frames[i] > 0);
+                
+            }
+            
         }
+
     }
     
     
@@ -730,7 +781,9 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         {
 //            post("j[%d] start[%f] end[%f] rate[%f] dur[%f] type[%d] buf_index[%d] ", j, start, end, rate, dur, (int)window_index, buf_index);
             grans_setNewGrain( x, j, chirprate, chirptype, start, end, rate, dur, tex, window_index, outlet, buf_index, gr_amp );
+            
         }
+
 
 
         prev_trig = trigger;
@@ -743,7 +796,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
 
     x->prev_in1 = prev_trig;
 
-    for( i = 0; i < DEFAULTMAXOSCILLATORS; i++, o++)
+    for( i = 0; i < GRANU_DEFAULTMAXOSCILLATORS; i++, o++)
     {
         
         pi      = o->phase_inc;
@@ -890,7 +943,7 @@ void grans_perform64(t_grans *x, t_object *dsp64, double **ins, long numins, dou
         o->offset = 0;
 
         
-        if(wpc < num_wframes && (pc + start) <= frames[buf_index] && ((frames[buf_index] - start) + pc) >= 0)
+        if(wpc < num_wframes && (pc + start) <= frames[buf_index] && pc >= 0 && ((frames[buf_index] - start) + pc) >= 0)
         {
             o->window_phase_curent = wpc;
             o->phase_current = pc;
@@ -903,16 +956,22 @@ release:
             
             if(x->nosc == 0 && !alwayson)
                 break;
+
         }
 
     }
 
 //unlock
     for(i=0; i<numbufs; i++)
-        buffer_unlocksamples(buffer[i]);
-    
+    {
+        if(tab[i])
+            buffer_unlocksamples(buffer[i]);
+    }
     for(i=0; i<numenvbufs; i++)
-        if(w_buffer[i]) buffer_unlocksamples(w_buffer[i]);
+    {
+        if(w_tab[i])
+            buffer_unlocksamples(w_buffer[i]);
+    }
     
     return;
 }
@@ -936,153 +995,99 @@ void grans_dsp64(t_grans *x, t_object *dsp64, short *count, double samplerate, l
 }
 
 
+void granu_info(t_grans *x)
+{
+
+    object_post((t_object *)x, "nosc %i", x->nosc);
+    
+    t_sample_grain *o = x->base;
+    int i;
+    for( i = 0; i < x->nosc && o; i++, o++)
+    {
+    post("[%i] buf_idx %i start %f end %f phase %f phase_inc %f wind_idx %i wind_phase %f wind_inc %f amp %f",
+         i,
+         o->buf_index,
+         o->startpoint, // in samples (floats for interpolation)
+        o->endpoint, // in samples
+        o->phase_current,
+        o->phase_inc,
+        o->window_index,
+        o->window_phase_curent,
+        o->window_phase_inc,
+         o->amp); ////        o->tex, o->offset, o->outlet,
+
+    }
+    
+    
+}
+
 //*************************************************************************************************
 
-
-
-void grans_free(t_grans *x)
+t_max_err granubuf_window_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
 {
-    dsp_free((t_pxobject *)x);
     
-    free(x->base);
-    x->base = NULL;
+    int i;
+    t_symbol *s;
     
-    free(x->count);
-    x->count = NULL;
-
-}
-
-
-//buffer name is unavailable on delete, so there is no way to tell which buffer to notify that it's not there...
-//not good! -- but we check for it in the perform routine so I guess it's ok
-
-//currently fails silently on unbind and free (but this seems not to be a problem (yet))
-t_max_err granubuf_notify(t_grans *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
-{
-  //  post("%s %s %s", __func__, s->s_name, msg->s_name);
-
-    // ask attribute object for name
-    
-    t_buffer_info buffer_info;
-    buffer_getinfo((t_buffer_obj *)data, &buffer_info); //<< e.j. magic -- (data is the buffer object? who would have guessed?)
-    
-    if(!buffer_info.b_name)
-        return -1;
-        
-    t_symbol *buffername = buffer_info.b_name;
-    
-    
-    if (buffername && ((msg == ps_buffer_modified) || msg == gensym("globalsymbol_binding") || msg == gensym("globalsymbol_unbinding")))
-    {
-        //buffername = (t_symbol *)object_method((t_object *)data, gensym("getname"));
-
-      //  post("%s %s %s", __func__, buffername->s_name, msg->s_name);
-
-        int i;
-        for(i = 0; i < x->numbufs; i++)
-        {
-            if(x->buf_name[i] && x->buf_name[i] == buffername)
-            {
-                if (msg == ps_buffer_modified)
-                    x->buffer_modified[i] = true;
-                
-                return buffer_ref_notify(x->buf[i], s, msg, sender, data);
-            }
-        }
-        
-        for(i = 0; i < x->numenvbufs; i++)
-        {
-            if(x->envbuf_name[i] && x->envbuf_name[i] == buffername)
-            {
-                if (msg == ps_buffer_modified)
-                    x->envbuffer_modified[i] = true;
-                
-                return buffer_ref_notify(x->envbuf[i], s, msg, sender, data);
-            }
-        }
-        
-    } else {
-        //object_error((t_object *)x, "notify failed: not sure which buffer to notify");
-        return 1;
-    }
-
-    
-    return 0;
-}
-
-
-t_max_err granubuf_envbuf_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
-{
-/*
-    if(sys_getdspstate())
-    {
-        object_error((t_object *)x, "currently not loading buffer arrays with dsp on");
-        return -1;
-    }
-  */  
     if(argc && argv)
     {
-
-        if(atom_gettype(argv) == A_SYM)
+        if(argc < GRANU_MAX_BUFFERS)
         {
-            t_symbol *envname = atom_getsym(argv);
-            if(envname)
+            critical_enter(x->lock);
+            i = 0;
+            x->numenvbufs = 0;
+            while(i < argc)
             {
-                x->numwindows = argc;
-                x->numenvbufs = 0;
-                int i;
-               for(i = 0; i < x->numwindows; i++)
-               {
-                   if(atom_gettype(argv+i) == A_SYM)
-                   {
-//                       post("envbuf %s", atom_getsym(argv+i)->s_name);
-                   
-//window index is the lookup indes for either x->envbuf, or x->granu_interal_window
-//if the window index VALUE is >= number of internal windows, subtract number of internal windows (num-1) for external buffers
-                       
-                       x->envbuf_name[i] = atom_getsym(argv+i);
-
-                       if (x->envbuf_name[i] == ps_granu_cos)
-                           x->tab_w_index[i] = COS;
-                       else if (x->envbuf_name[i] == ps_granu_fof)
-                           x->tab_w_index[i] = FOF;
-                       else if (x->envbuf_name[i] == ps_granu_dampedsine)
-                           x->tab_w_index[i] = DAMPEDSINE;
-                       else if (x->envbuf_name[i] == ps_granu_sinc)
-                           x->tab_w_index[i] = SINC;
-                       else
-                       {
-                           
-                           if(!x->envbuf[x->numenvbufs])
-                               x->envbuf[x->numenvbufs] = buffer_ref_new((t_object*)x, x->envbuf_name[i]);
-                           else
-                               buffer_ref_set(x->envbuf[x->numenvbufs], x->envbuf_name[i]);
-                           
-                           x->envbuffer_modified[x->numenvbufs] = true;
-                           x->tab_w_index[i] = x->numenvbufs + GRANUBUF_NUMINTERNAL_WINDOWS;
-                           
-                           x->numenvbufs++;
-
-                       }
-
-                   } else {
-                       object_error((t_object *)x, "buffer name must be a symbol");
-                   }
-               }
-
+                if(atom_gettype(argv+i) != A_SYM)
+                {
+                    object_error((t_object *)x, "non symbol buffer name");
+                    return -1;
+                }
+                
+                s = atom_getsym(argv+i);
+                
+                if(s) {
+                    
+                        x->window_name[i] = s;
+                        
+                        if (s == ps_granu_cos)
+                            x->tab_w_index[i] = COS;
+                        else if (s == ps_granu_fof)
+                            x->tab_w_index[i] = FOF;
+                        else if (s == ps_granu_dampedsine)
+                            x->tab_w_index[i] = DAMPEDSINE;
+                        else if (s == ps_granu_sinc)
+                            x->tab_w_index[i] = SINC;
+                        else
+                        {
+                            if(!x->envbuf_proxy[x->numenvbufs])
+                                x->envbuf_proxy[x->numenvbufs] = buffer_proxy_new(x->window_name[i]);
+                            else
+                                buffer_proxy_set_ref(x->envbuf_proxy[x->numenvbufs], x->window_name[i]);
+                            
+                            x->tab_w_index[i] = x->numenvbufs + GRANUBUF_NUMINTERNAL_WINDOWS;
+                            x->numenvbufs++;
+                            
+                        }
+                    
+                } else {
+                    post("%i %s", __LINE__, s->s_name);
+                    object_error((t_object *)x, "must have buffer name");
+                }
+                i++;
             }
-            else
-            {
-                object_error((t_object *)x, "must have buffer name");
-            }
+            x->numwindows = argc;
+
+            
+            critical_exit(x->lock);
         }
     }
-//    post("numwindows %d numenvbufs %d", x->numwindows, x->numenvbufs);
+ //   post("numwindows %d numenvbufs %d", x->numwindows, x->numenvbufs);
     
     return 0;
 }
 
-t_max_err granubuf_envbuf_get(t_grans *x, t_object *attr, long *argc, t_atom **argv)
+t_max_err granubuf_window_get(t_grans *x, t_object *attr, long *argc, t_atom **argv)
 {
     char alloc;
     int i;
@@ -1093,7 +1098,7 @@ t_max_err granubuf_envbuf_get(t_grans *x, t_object *attr, long *argc, t_atom **a
     {
         for(i = 0; i < x->numwindows; i++)
         {
-            atom_setsym(*argv+i, x->envbuf_name[i]);
+            atom_setsym(*argv+i, x->window_name[i]);
         }
         
     }
@@ -1109,7 +1114,7 @@ t_max_err granubuf_currentwindow_set(t_grans *x, t_object *attr, long argc, t_at
 
         for(i = 0; i < x->numwindows; i++)
         {
-            if(x->envbuf_name[i] == name)//names include internal buffers
+            if(x->window_name[i] == name)//names include internal buffers
             {
                 x->window_index = i;
                 sucess = 1;
@@ -1142,7 +1147,7 @@ t_max_err granubuf_currentwindow_get(t_grans *x, t_object *attr, long *argc, t_a
     
     if (x->numwindows)
     {
-        atom_setsym(*argv, x->envbuf_name[x->window_index]);
+        atom_setsym(*argv, x->window_name[x->window_index]);
     }
     else
     {
@@ -1161,39 +1166,86 @@ t_max_err granubuf_buf_set(t_grans *x, t_object *attr, long argc, t_atom *argv)
         return -1;
     }
     */
+   
+    
+    int i;
+    t_symbol *s;
     
     if(argc && argv)
     {
-        x->numbufs = argc;
-        if(atom_gettype(argv) == A_SYM)
+        if(argc < GRANU_MAX_BUFFERS)
         {
-            
-            int i;
-            for(i = 0; i < x->numbufs; i++)
+            critical_enter(x->lock);
+            if(argc >= x->numbufs)
             {
-                /*
-                if(atom_gettype(argv+i) == A_SYM)
-                    post("buf %s", atom_getsym(argv+i)->s_name);
-                */
-                
-                x->buf_name[i] = atom_getsym(argv+i);
-                if(x->buf_name[i])
+                i = 0;
+                while(i < x->numbufs)
                 {
-                    if(!x->buf[i])
-                        x->buf[i] = buffer_ref_new((t_object*)x, x->buf_name[i]);
-                    else
-                        buffer_ref_set(x->buf[i], x->buf_name[i]);
+                    if(atom_gettype(argv+i) != A_SYM)
+                    {
+                        object_error((t_object *)x, "non symbol buffer name");
+                        return -1;
+                    }
                     
-                    x->buffer_modified[i] = true;
-
-                } else {
-                    object_error((t_object *)x, "must have buffer name");
+                    s = atom_getsym(argv+i);
+                    if(s) {
+                        if(s != x->buf_name[i])
+                        {
+                            buffer_proxy_set_ref(x->buf_proxy[i], s);
+                            x->buf_name[i] = s;
+                        }
+                    } else {
+                        object_error((t_object *)x, "must have buffer name");
+                    }
+                    i++;
                 }
+                
+                while (i < argc)
+                {
+                    if(atom_gettype(argv+i) != A_SYM)
+                    {
+                        object_error((t_object *)x, "non symbol buffer name");
+                        return -1;
+                    }
+                    
+                    x->buf_name[i] = atom_getsym(argv+i);
+                    if(x->buf_name[i])
+                        x->buf_proxy[i] = buffer_proxy_new(x->buf_name[i]);
+                    else
+                        object_error((t_object *)x, "must have buffer name");
+                    
+                    i++;
+                }
+                
             }
+            else if(argc < x->numbufs)
+            {
+                i = 0;
+                while(i < argc)
+                {
+                    
+                    if(atom_gettype(argv+i) != A_SYM)
+                    {
+                        object_error((t_object *)x, "non symbol buffer name");
+                        return -1;
+                    }
+                    
+                    s = atom_getsym(argv+i);
+                    if(s && s != x->buf_name[i] ) {
+                        buffer_proxy_set_ref(x->buf_proxy[i], s);
+                        x->buf_name[i] = s;
+                    } else {
+                        //object_error((t_object *)x, "must have buffer name");
+                    }
+                    i++;
+                }
+                
+            }
+            x->numbufs = argc;
+            critical_exit(x->lock);
         }
     }
-//    post("numbufs %d", x->numbufs);
-
+    
     return 0;
 }
 
@@ -1230,7 +1282,7 @@ t_max_err granubuf_currentbuf_set(t_grans *x, t_object *attr, long argc, t_atom 
         t_symbol *name = atom_getsym(argv);
         for(i = 0; i < x->numbufs; i++)
         {        
-            if(x->buf_name[i] == name && x->buf[i])
+            if(x->buf_name[i] == name && x->buf_proxy[i])
             {
                 x->buf_index = i;
                 sucess = 1;
@@ -1669,6 +1721,48 @@ t_max_err granubuf_inlet_get(t_grans *x, t_object *attr, long *argc, t_atom **ar
     
 }
 
+void grans_free(t_grans *x)
+{
+    dsp_free((t_pxobject *)x);
+    
+    free(x->base);
+    x->base = NULL;
+    
+    free(x->count);
+    x->count = NULL;
+    
+    int i;
+    for( i = 0; i < x->numbufs; i++)
+    {
+        if(x->buf_proxy[i])
+        {
+            if(x->buf_proxy[i]->ref)
+                object_free(x->buf_proxy[i]->ref);
+            
+            object_free(x->buf_proxy[i]);
+        }
+    }
+    sysmem_freeptr(x->buf_proxy);
+    x->buf_proxy = NULL;
+
+    for( i = 0; i < x->numenvbufs; i++)
+    {
+        if(x->envbuf_proxy[i])
+        {
+            if(x->envbuf_proxy[i]->ref)
+                object_free(x->envbuf_proxy[i]->ref);
+            
+            object_free(x->envbuf_proxy[i]);
+        }
+    }
+    sysmem_freeptr(x->envbuf_proxy);
+    x->envbuf_proxy = NULL;
+
+    critical_free(x->lock);
+
+}
+
+
 void *grans_new(t_symbol *s, long argc, t_atom *argv)
 {
     int n;
@@ -1676,8 +1770,8 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
     
 	if (x) {
         
-        x->base = (t_sample_grain *)calloc(DEFAULTMAXOSCILLATORS, sizeof(t_sample_grain));
-        x->maxoverlap = DEFAULTMAXOSCILLATORS;
+        x->base = (t_sample_grain *)calloc(GRANU_DEFAULTMAXOSCILLATORS, sizeof(t_sample_grain));
+        x->maxoverlap = GRANU_DEFAULTMAXOSCILLATORS;
         
         x->numoutlets = 1;
         
@@ -1745,34 +1839,35 @@ void *grans_new(t_symbol *s, long argc, t_atom *argv)
         
         x->numbufs = 0;
         x->numenvbufs = 0;
-        
-        x->numwindows = 1;
-        x->envbuf_name[0] = ps_granu_cos;
-        x->tab_w_index[0] = COS;
-        x->window_index = 0;
 
         x->numinlets = 1;
         x->inlet_type[0] = TRIGGER;
         x->inlet_name[0] = ps_granu_trigger;
         
+        x->buf_proxy = (t_buffer_proxy **)sysmem_newptr(GRANU_MAX_BUFFERS * sizeof(t_buffer_proxy *));
+        x->envbuf_proxy = (t_buffer_proxy **)sysmem_newptr(GRANU_MAX_BUFFERS * sizeof(t_buffer_proxy *));
+
+        critical_new(&x->lock);
+
         int i;
         for(i=0; i<GRANU_MAX_BUFFERS; i++ )
         {
-            x->buffer_modified[i] = false;
-            x->buf_frames[i] = 0;
-            x->buf_nchans[i] = 0;
-            x->buf[i] = NULL;
+            x->buf_proxy[i] = NULL;
+            x->buf_name[i] = NULL;
             
-            x->envbuffer_modified[i] = false;
-            x->envbuf_frames[i] = 0;
-            x->envbuf_nchans[i] = 0;
-            x->envbuf[i] = NULL;
+            x->envbuf_proxy[i] = NULL;
+            x->window_name[i] = NULL;
         }
         
         for(i=1; i<GRANUBUF_NUMINLET_TYPES; i++)
         {
             x->inlet_type[i] = UNUSED;
         }
+        
+        x->numwindows = 1;
+        x->window_name[0] = ps_granu_cos;
+        x->tab_w_index[0] = COS;
+        x->window_index = 0;
         
         x->num_time_param_inlets = 0;
         x->prev_params[0] = UNUSED;
@@ -1820,12 +1915,13 @@ int main(void)
     class_addmethod(c, (method)grans_clear,		"clear",     0);
 	class_addmethod(c, (method)grans_dsp64,		"dsp64",	A_CANT, 0);
     class_addmethod(c, (method)grans_assist,	"assist",	A_CANT, 0);
-    class_addmethod(c, (method)granubuf_notify,	"notify",	A_CANT, 0);
+//    class_addmethod(c, (method)granubuf_notify,	"notify",	A_CANT, 0);
     class_addmethod(c, (method)granubuf_float,  "float",    A_FLOAT, 0);
     class_addmethod(c, (method)granubuf_int,    "int",      A_LONG, 0);
+    class_addmethod(c, (method)granu_info,      "info",     0);
     
-    CLASS_ATTR_SYM_VARSIZE(c, "window", 0, t_grans, envbuf_name, numwindows, GRANU_MAX_BUFFERS );
-    CLASS_ATTR_ACCESSORS(c, "window", granubuf_envbuf_get, granubuf_envbuf_set);
+    CLASS_ATTR_SYM_VARSIZE(c, "window", 0, t_grans, window_name, numwindows, GRANU_MAX_BUFFERS );
+    CLASS_ATTR_ACCESSORS(c, "window", granubuf_window_get, granubuf_window_set);
     CLASS_ATTR_LABEL(c, "window", 0, "window list");
     
     CLASS_ATTR_SYM_VARSIZE(c, "buffer", 0, t_grans, buf_name, numbufs, GRANU_MAX_BUFFERS);
@@ -1905,11 +2001,18 @@ int main(void)
 
     }
 
+    t_class *bufpxy = class_new("granu_bufferproxy", NULL, NULL, sizeof(t_buffer_proxy), 0L, 0);
+    class_addmethod(bufpxy, (method)buffer_proxy_notify, "notify",	A_CANT, 0);
+    class_register(CLASS_NOBOX, bufpxy);
+    graunu_buffer_proxy_class = bufpxy;
+    
     class_dspinit(c);
 	class_register(CLASS_BOX, c);
 	granubuf_class = c;
 
 	version_post_copyright();
+    
+    //post("test");
     
     error("n.b. granubuf~ is currently in alpha development -- configuration will be stabilized soon, please be sure to see the help patch for updated information,");
     

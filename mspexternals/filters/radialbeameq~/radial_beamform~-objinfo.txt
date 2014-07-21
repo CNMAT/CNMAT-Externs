@@ -1,0 +1,7 @@
+NAME: "radialbeameq~"
+DESCRIPTION: "IIR filter cascade for radial equalization of a dirac beam"
+AUTHORS: "Franz Zotter, Andy Schmeder"
+COPYRIGHT_YEARS: "2009"
+SVN_REVISION: "$LastChangedRevision: 550 $"
+VERSION 0.1: "Ported code from PD"
+VERSION: "0.1"

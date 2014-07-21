@@ -1,0 +1,6 @@
+/** 	@file
+	@defgroup 	Error	Error reporting
+	@defgroup 	OSC	OpenSoundControl (OSC)
+	@defgroup	SDIF 	Sound Description Interchange Format (SDIF)
+
+*/

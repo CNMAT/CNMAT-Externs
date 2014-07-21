@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+
+<pattrstorage name = "shepard">
+	<slot number = "1">
+		<pattr name = "metro" value = "50" />
+		<pattr name = "metrotoggle" value = "1" />
+		<pattr name = "stepsize" value = "1.011" />
+	</slot>
+	<slot number = "2">
+		<pattr name = "metro" value = "50" />
+		<pattr name = "metrotoggle" value = "1" />
+		<pattr name = "stepsize" value = "0.991" />
+	</slot>
+	<slot number = "3">
+		<pattr name = "metro" value = "150" />
+		<pattr name = "metrotoggle" value = "1" />
+		<pattr name = "stepsize" value = "1.059463" />
+	</slot>
+	<slot number = "4">
+		<pattr name = "metro" value = "150" />
+		<pattr name = "metrotoggle" value = "1" />
+		<pattr name = "stepsize" value = "0.943874" />
+	</slot>
+</pattrstorage>
+
