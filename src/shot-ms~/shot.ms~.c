@@ -36,6 +36,7 @@ t_double shotms_setMs(t_shotms *x, t_sample f)
 void shotms_perform64(t_shotms *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {
 	t_double *in1 = ins[0];
+	t_double *in2 = ins[1];
 	t_double *out1 = outs[0];
     t_double *out2 = outs[1];
     t_double *out3 = outs[2];
@@ -56,7 +57,7 @@ void shotms_perform64(t_shotms *x, t_object *dsp64, double **ins, long numins, d
     {
         setms = *in1++;
         
-        if (!active && setms > 0) {
+        if ((!active || *in2++) && setms > 0) {
             
             inc = shotms_setMs(x, setms);
             
@@ -170,11 +171,33 @@ void shotms_dsp(t_shotms *x, t_signal **sp)
 void shotms_assist(t_shotms *x, void *b, long m, long a, char *s)
 {
 	if (m == ASSIST_INLET) { //inlet
-		sprintf(s, "I am inlet %ld", a);
+        switch (a) {
+            case 0:
+                sprintf(s, "(signal) duration of ramp in ms");
+                break;
+            case 1:
+                sprintf(s, "(signal) 1 = retrigger, 0 = no retrigger (default) ");
+                break;
+            default:
+                sprintf(s, "inlet %ld", a);
+                break;
+        }
 	}
 	else {	// outlet
-		sprintf(s, "I am outlet %ld", a);
-	}
+        switch (a) {
+            case 0:
+                sprintf(s, "(signal) 0-1 ramp");
+                break;
+            case 1:
+                sprintf(s, "(signal) busy state (1 on frist sample of ramp)");
+                break;
+            case 2:
+                sprintf(s, "(signal) delegation outlet (value of inlet 1 when busy) ");
+                break;
+            default:
+                sprintf(s, "outlet %ld", a);
+                break;
+        }	}
 }
 
 void *shotms_new(t_symbol* s, short argc, t_atom* argv)
@@ -192,7 +215,7 @@ void *shotms_new(t_symbol* s, short argc, t_atom* argv)
 //        post("ms %f samps %f inc %f", x->ms, x->samps, x->inc);
         x->phase = 0;
         
-        dsp_setup((t_pxobject *)x, 1);
+        dsp_setup((t_pxobject *)x, 2);
         
         outlet_new(x, "signal");
         outlet_new(x, "signal");
