@@ -15,32 +15,21 @@
 			dependencies = (
 				11A5FE4F197914BF004098FD /* PBXTargetDependency */,
 				529D6EEF173338FD005FD64C /* PBXTargetDependency */,
-				5219622516E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622B16E6C70700EA7DDF /* PBXTargetDependency */,
-				5219622D16E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622F16E6C70700EA7DDF /* PBXTargetDependency */,
 				521961B616E6C25B00EA7DDF /* PBXTargetDependency */,
 				52E44B9C15F28BD300C91B67 /* PBXTargetDependency */,
-				52E44B9E15F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BA015F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA415F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA815F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BAC15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BAE15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB015F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB415F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB615F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BB815F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BBA15F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BBC15F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BBE15F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BC015F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BC215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BC415F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BC615F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BC815F28BD300C91B67 /* PBXTargetDependency */,
@@ -66,6 +55,17 @@
 				52E447F915F1897C00C91B67 /* PBXTargetDependency */,
 				52F10B0115F13DA8008FC371 /* PBXTargetDependency */,
 				52F10AE115F072C6008FC371 /* PBXTargetDependency */,
+				52E44BB815F28BD300C91B67 /* PBXTargetDependency */,
+				52E44BBA15F28BD300C91B67 /* PBXTargetDependency */,
+				52E44BBC15F28BD300C91B67 /* PBXTargetDependency */,
+				52E44BBE15F28BD300C91B67 /* PBXTargetDependency */,
+				52E44BC015F28BD300C91B67 /* PBXTargetDependency */,
+				52E44BC215F28BD300C91B67 /* PBXTargetDependency */,
+				52E44BAC15F28BD300C91B67 /* PBXTargetDependency */,
+				5219622D16E6C70700EA7DDF /* PBXTargetDependency */,
+				5219622516E6C70700EA7DDF /* PBXTargetDependency */,
+				52E44B9E15F28BD300C91B67 /* PBXTargetDependency */,
+				52E44BA015F28BD300C91B67 /* PBXTargetDependency */,
 			);
 			name = "CNMAT-Externs";
 			productName = "CNMAT-Externs";
@@ -79,16 +79,16 @@
 		110C3E3F194433A500A53893 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
 		110C3E40194433A500A53893 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		110C3E41194433A500A53893 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		110C3E4D194433EF00A53893 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 110C3E4A194433EF00A53893 /* Info.plist */; };
 		110C3E4E194433EF00A53893 /* localpeak~.c in Sources */ = {isa = PBXBuildFile; fileRef = 110C3E4B194433EF00A53893 /* localpeak~.c */; };
 		110C3E4F194433EF00A53893 /* localpeak~.maxhelp in Resources */ = {isa = PBXBuildFile; fileRef = 110C3E4C194433EF00A53893 /* localpeak~.maxhelp */; };
+		110EB6D119D1272000A37867 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
+		110EB6D219D1272300A37867 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		115E4E3818846E320071D644 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		115E4E3A18846E320071D644 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		115E4E3B18846E320071D644 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
 		115E4E3C18846E320071D644 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
 		115E4E3D18846E320071D644 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		115E4E3E18846E320071D644 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		115E4E4718846E990071D644 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 115E4E4518846E990071D644 /* Info.plist */; };
 		115E4E4818846E990071D644 /* shot.ms~.c in Sources */ = {isa = PBXBuildFile; fileRef = 115E4E4618846E990071D644 /* shot.ms~.c */; };
 		11C1B49018A84AA900822EFF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		11C1B49318A84AA900822EFF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
@@ -96,7 +96,6 @@
 		11C1B49518A84AA900822EFF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
 		11C1B49618A84AA900822EFF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		11C1B49718A84AA900822EFF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		11C1B4A118A84B1C00822EFF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11C1B49F18A84B1C00822EFF /* Info.plist */; };
 		11C1B4A218A84B1C00822EFF /* polywave~.c in Sources */ = {isa = PBXBuildFile; fileRef = 11C1B4A018A84B1C00822EFF /* polywave~.c */; };
 		5218BB33164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
 		5218BB34164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
@@ -207,8 +206,6 @@
 		5219624B16E6C98000EA7DDF /* OSC-pattern-match.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219623E16E6C96D00EA7DDF /* OSC-pattern-match.c */; };
 		5219625516E6D02000EA7DDF /* OSC-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219624F16E6D01700EA7DDF /* OSC-client.c */; };
 		5219625616E6D09700EA7DDF /* OSC-timetag.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219625116E6D01700EA7DDF /* OSC-timetag.c */; };
-		529D6EF017334BE1005FD64C /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
-		529D6EF117334BE1005FD64C /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		529DD9CA17A2472A00E1F789 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		529DD9CB17A2472A00E1F789 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		529DD9CC17A2472A00E1F789 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
@@ -3979,7 +3976,7 @@
 		52F10A9915F07157008FC371 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = CNMAT;
 			};
 			buildConfigurationList = 52F10A9C15F07157008FC371 /* Build configuration list for PBXProject "CNMAT-Externs" */;
@@ -4065,7 +4062,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				110C3E4F194433EF00A53893 /* localpeak~.maxhelp in Resources */,
-				110C3E4D194433EF00A53893 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4073,7 +4069,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				115E4E4718846E990071D644 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4081,7 +4076,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11C1B4A118A84B1C00822EFF /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4615,10 +4609,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				110EB6D119D1272000A37867 /* fft.c in Sources */,
 				52E447E815F1893B00C91B67 /* analyzer~.c in Sources */,
 				52E44C7F15F4835400C91B67 /* commonsyms.c in Sources */,
-				529D6EF017334BE1005FD64C /* fft.c in Sources */,
-				529D6EF117334BE1005FD64C /* fftnobitrev.c in Sources */,
+				110EB6D219D1272300A37867 /* fftnobitrev.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5950,26 +5944,26 @@
 		52E4479F15F1890800C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../libo\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
+				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5977,26 +5971,26 @@
 		52E447A015F1890800C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../libo\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
+				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6373,7 +6367,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -6397,7 +6391,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7008,7 +7002,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7029,7 +7023,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7881,10 +7875,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					x86_64,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -7946,10 +7937,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					x86_64,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

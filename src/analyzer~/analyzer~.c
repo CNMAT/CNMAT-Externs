@@ -1425,7 +1425,7 @@ void  analyzer_free(t_analyzer *x)
 				sysmem_freeptr(x->windows[i]);
 			}
 		}
-		sysmem_freeptr(x->windows);
+		//sysmem_freeptr(x->windows);
 	}
 
 	fftw_destroy_plan(x->fft_plan);
