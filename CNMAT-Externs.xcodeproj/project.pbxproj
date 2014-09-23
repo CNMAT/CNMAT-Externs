@@ -5968,7 +5968,7 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -5995,7 +5995,7 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};

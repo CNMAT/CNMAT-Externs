@@ -183,7 +183,8 @@ void shotms_assist(t_shotms *x, void *b, long m, long a, char *s)
                 break;
         }
 	}
-	else {	// outlet
+	else
+    {	// outlet
         switch (a) {
             case 0:
                 sprintf(s, "(signal) 0-1 ramp");
@@ -197,7 +198,9 @@ void shotms_assist(t_shotms *x, void *b, long m, long a, char *s)
             default:
                 sprintf(s, "outlet %ld", a);
                 break;
-        }	}
+        }
+    }
+
 }
 
 void *shotms_new(t_symbol* s, short argc, t_atom* argv)

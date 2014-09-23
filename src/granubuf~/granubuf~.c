@@ -226,6 +226,7 @@ typedef struct _grans {
     
     long            nosc;
     long            next_nosc;
+
     double          pk;
     double          pkw;
     
@@ -955,7 +956,6 @@ release:
             
             if(x->nosc == 0 && !alwayson)
                 break;
-            
         }
 
     }
@@ -1719,7 +1719,6 @@ t_max_err granubuf_inlet_get(t_grans *x, t_object *attr, long *argc, t_atom **ar
     return 0;
     
 }
-
 
 void grans_free(t_grans *x)
 {
