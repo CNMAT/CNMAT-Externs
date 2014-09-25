@@ -3,8 +3,9 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
 		"rect" : [ 64.0, 44.0, 769.0, 643.0 ],
@@ -67,8 +68,9 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 6,
-							"minor" : 0,
-							"revision" : 7
+							"minor" : 1,
+							"revision" : 9,
+							"architecture" : "x86"
 						}
 ,
 						"rect" : [ 324.0, 44.0, 749.0, 659.0 ],
@@ -246,14 +248,15 @@
 							}
 , 							{
 								"box" : 								{
-									"filename" : "resonance-display.js",
+									"color" : [ 1.0, 1.0, 1.0, 1.0 ],
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"id" : "obj-12",
-									"maxclass" : "jsui",
+									"maxclass" : "resdisplay",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"parameter_enable" : 0,
-									"patching_rect" : [ 96.0, 251.0, 533.0, 104.0 ]
+									"patching_rect" : [ 96.0, 251.0, 534.0, 99.0 ]
 								}
 
 							}
@@ -321,7 +324,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
-									"outlettype" : [ "" ],
+									"outlettype" : [ "signal" ],
 									"patching_rect" : [ 44.0, 385.0, 55.0, 17.0 ],
 									"text" : "sinusoids~"
 								}
@@ -364,7 +367,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 200.0, 356.0, 100.0, 17.0 ],
+									"patching_rect" : [ 326.5, 350.0, 73.0, 17.0 ],
 									"text" : "Frequency (Hz)"
 								}
 
@@ -955,8 +958,9 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 6,
-							"minor" : 0,
-							"revision" : 7
+							"minor" : 1,
+							"revision" : 9,
+							"architecture" : "x86"
 						}
 ,
 						"rect" : [ 236.0, 184.0, 450.0, 526.0 ],
@@ -1417,7 +1421,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
+					"outlettype" : [ "signal" ],
 					"patching_rect" : [ 312.0, 370.0, 130.0, 17.0 ],
 					"text" : "sinusoids~ bwe 340. 1. 0.1"
 				}
@@ -1490,7 +1494,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
+					"outlettype" : [ "signal" ],
 					"patching_rect" : [ 44.0, 257.0, 91.0, 17.0 ],
 					"text" : "sinusoids~ 340. 1."
 				}
@@ -1842,11 +1846,12 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
+				"name" : "sinusoids~.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "resdisplay.mxo",
+				"type" : "iLaX"
 			}
  ]
 	}
