@@ -246,7 +246,7 @@
 							"architecture" : "x86"
 						}
 ,
-						"rect" : [ 34.0, 34.0, 452.0, 382.0 ],
+						"rect" : [ 34.0, 44.0, 452.0, 382.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -274,7 +274,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 120.0, 290.0, 76.0, 22.0 ],
+									"patching_rect" : [ 120.0, 290.0, 76.0, 20.0 ],
 									"text" : "snapshot~ 5"
 								}
 
@@ -289,7 +289,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 352.5, 290.0, 61.5, 22.0 ],
+									"patching_rect" : [ 352.5, 290.0, 61.5, 20.0 ],
 									"triscale" : 0.9
 								}
 
@@ -359,7 +359,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 159.0, 335.5, 63.0, 22.0 ],
+									"patching_rect" : [ 159.0, 335.5, 63.0, 20.0 ],
 									"triscale" : 0.9
 								}
 
@@ -373,7 +373,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 292.5, 182.0, 24.0, 22.0 ],
+									"patching_rect" : [ 292.5, 182.0, 24.0, 20.0 ],
 									"text" : "t b"
 								}
 
@@ -387,7 +387,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 292.5, 250.0, 79.0, 22.0 ],
+									"patching_rect" : [ 292.5, 250.0, 79.0, 20.0 ],
 									"text" : "sampstoms~"
 								}
 
@@ -401,7 +401,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 292.5, 210.0, 31.0, 22.0 ],
+									"patching_rect" : [ 292.5, 210.0, 31.0, 18.0 ],
 									"text" : "500"
 								}
 
@@ -415,7 +415,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 24.0, 182.0, 80.0, 22.0 ],
+									"patching_rect" : [ 24.0, 182.0, 80.0, 20.0 ],
 									"text" : "delay~ 50 50"
 								}
 
@@ -441,7 +441,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 24.0, 147.0, 133.0, 22.0 ],
+									"patching_rect" : [ 24.0, 147.0, 133.0, 20.0 ],
 									"text" : "receive~ 2ta-help-input"
 								}
 
@@ -455,8 +455,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 120.0, 260.0, 97.0, 22.0 ],
-									"text" : "average~ 20 ms"
+									"patching_rect" : [ 120.0, 260.0, 84.0, 20.0 ],
+									"text" : "average~ 500"
 								}
 
 							}
