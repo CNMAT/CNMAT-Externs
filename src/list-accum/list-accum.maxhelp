@@ -4,11 +4,11 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 1,
-			"revision" : 0,
+			"revision" : 9,
 			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 342.0, 179.0, 400.0, 300.0 ],
+		"rect" : [ 36.0, 68.0, 400.0, 300.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -29,27 +29,13 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"args" : [ 4065 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 65.0, 193.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"id" : "obj-2",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 199.0, 150.0, 38.0, 17.0 ],
+					"patching_rect" : [ 203.0, 215.0, 38.0, 17.0 ],
 					"text" : "printit"
 				}
 
@@ -62,7 +48,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 164.0, 150.0, 31.0, 17.0 ],
+					"patching_rect" : [ 168.0, 215.0, 31.0, 17.0 ],
 					"text" : "print"
 				}
 
@@ -75,7 +61,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 112.0, 150.0, 38.0, 17.0 ],
+					"patching_rect" : [ 124.0, 215.0, 38.0, 17.0 ],
 					"text" : "printit"
 				}
 
@@ -88,7 +74,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 77.0, 150.0, 31.0, 17.0 ],
+					"patching_rect" : [ 81.0, 215.0, 31.0, 17.0 ],
 					"text" : "print"
 				}
 
@@ -100,7 +86,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 230.0, 72.0, 15.0, 15.0 ]
+					"patching_rect" : [ 214.0, 96.0, 15.0, 15.0 ]
 				}
 
 			}
@@ -113,7 +99,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 229.0, 116.0, 22.0, 15.0 ],
+					"patching_rect" : [ 213.0, 140.0, 22.0, 15.0 ],
 					"text" : "foo"
 				}
 
@@ -127,7 +113,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 3,
 					"outlettype" : [ "bang", "bang", "int" ],
-					"patching_rect" : [ 229.0, 93.0, 44.0, 17.0 ],
+					"patching_rect" : [ 213.0, 117.0, 44.0, 17.0 ],
 					"text" : "Uzi 300"
 				}
 
@@ -139,7 +125,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 49.0, 113.0, 15.0, 15.0 ]
+					"patching_rect" : [ 33.0, 137.0, 15.0, 15.0 ]
 				}
 
 			}
@@ -152,7 +138,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "int" ],
-					"patching_rect" : [ 97.0, 121.0, 84.0, 17.0 ],
+					"patching_rect" : [ 81.0, 176.0, 106.0, 17.0 ],
 					"text" : "list-accum 1000"
 				}
 
@@ -166,7 +152,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 42.0, 75.0, 32.0, 15.0 ],
+					"patching_rect" : [ 26.0, 99.0, 32.0, 15.0 ],
 					"text" : "1 2 3"
 				}
 
@@ -180,7 +166,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 89.0, 72.0, 41.0, 15.0 ],
+					"patching_rect" : [ 73.0, 96.0, 41.0, 15.0 ],
 					"text" : "4 5 6 7"
 				}
 
@@ -194,7 +180,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 143.0, 81.0, 35.0, 15.0 ],
+					"patching_rect" : [ 127.0, 105.0, 35.0, 15.0 ],
 					"text" : "10 20"
 				}
 
@@ -208,7 +194,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 146.0, 53.0, 29.0, 15.0 ],
+					"patching_rect" : [ 130.0, 77.0, 29.0, 15.0 ],
 					"text" : "a b c"
 				}
 
@@ -222,7 +208,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 201.0, 44.0, 40.0, 15.0 ],
+					"patching_rect" : [ 185.0, 68.0, 40.0, 15.0 ],
 					"text" : "foo bar"
 				}
 
@@ -236,7 +222,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 32.0, 25.0, 271.0, 15.0 ],
+					"patching_rect" : [ 16.0, 49.0, 271.0, 15.0 ],
 					"text" : "musical applications of computers and related technologies"
 				}
 
@@ -251,7 +237,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 256.0, 171.0, 96.0, 37.0 ],
+					"patching_rect" : [ 264.0, 205.0, 96.0, 37.0 ],
 					"text" : "the right outlet outputs the length of the list"
 				}
 
@@ -385,13 +371,6 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/MMJ6/CNMAT-Everything-OSX-MachO/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../../../MMJ6/CNMAT-Everything-OSX-MachO/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "list-accum.mxo",
 				"type" : "iLaX"
 			}

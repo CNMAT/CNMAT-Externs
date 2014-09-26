@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 73.0, 68.0, 693.0, 728.0 ],
+		"rect" : [ 15.0, 53.0, 572.0, 612.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,20 +29,6 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"args" : [ 4071 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 426.0, 469.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"frgb" : 0.0,
@@ -49,7 +36,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 69.0, 590.0, 294.0, 17.0 ],
+					"patching_rect" : [ 149.0, 565.0, 294.0, 17.0 ],
 					"text" : "3) Standard part of Max."
 				}
 
@@ -63,7 +50,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 69.0, 570.0, 294.0, 17.0 ],
+					"patching_rect" : [ 149.0, 545.0, 294.0, 17.0 ],
 					"text" : "2) Larger list length limit"
 				}
 
@@ -77,7 +64,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 69.0, 547.0, 294.0, 17.0 ],
+					"patching_rect" : [ 149.0, 522.0, 294.0, 17.0 ],
 					"text" : "1) No restriction to only 2, 3, or 4 input lists."
 				}
 
@@ -91,22 +78,24 @@
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "", "", "", "" ],
-					"patching_rect" : [ 98.0, 522.0, 111.0, 17.0 ],
+					"patching_rect" : [ 178.0, 497.0, 111.0, 17.0 ],
 					"text" : "mxj list.Demultiplex 3"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"bubble" : 1,
+					"bubblepoint" : 0.39,
+					"bubbleside" : 2,
 					"fontname" : "Arial",
-					"fontsize" : 20.0,
+					"fontsize" : 18.0,
 					"frgb" : 0.0,
 					"id" : "obj-6",
-					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 45.0, 459.0, 298.0, 51.0 ],
+					"patching_rect" : [ 51.0, 450.0, 462.0, 46.0 ],
 					"text" : "Don't use the deinterleave external! This is much better:"
 				}
 
@@ -121,7 +110,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 52.0, 422.0, 45.0, 17.0 ],
+					"patching_rect" : [ 52.0, 412.0, 45.0, 17.0 ],
 					"text" : "pcontrol"
 				}
 
@@ -151,7 +140,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 52.0, 401.0, 64.0, 17.0 ],
+					"patching_rect" : [ 52.0, 391.0, 64.0, 17.0 ],
 					"text" : "prepend help"
 				}
 
@@ -496,7 +485,6 @@
 					"destination" : [ "obj-9", 0 ],
 					"disabled" : 0,
 					"hidden" : 1,
-					"midpoints" : [ 61.5, 397.0, 61.5, 397.0 ],
 					"source" : [ "obj-10", 0 ]
 				}
 
@@ -632,13 +620,6 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "deinterleave.mxo",
 				"type" : "iLaX"
 			}

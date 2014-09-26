@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 88.0, 67.0, 1091.0, 767.0 ],
+		"rect" : [ 13.0, 55.0, 988.0, 739.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,20 +29,6 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"args" : [ 4013 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 570.0, 732.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.0,
 					"frgb" : 0.0,
@@ -49,7 +36,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 658.0, 399.0, 104.0, 20.0 ],
+					"patching_rect" : [ 668.0, 379.0, 104.0, 20.0 ],
 					"text" : "Misc. messages"
 				}
 
@@ -64,7 +51,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 391.0, 150.0, 179.0, 37.0 ],
+					"patching_rect" : [ 401.0, 130.0, 179.0, 37.0 ],
 					"text" : "The conversion from a flat list to a matrix is one-row-at-a-time, the inverse of how SDIF-tuples works."
 				}
 
@@ -78,7 +65,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 196.0, 688.0, 73.0, 16.0 ],
+					"patching_rect" : [ 206.0, 668.0, 73.0, 16.0 ],
 					"text" : "matrix ABCD"
 				}
 
@@ -92,7 +79,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 123.0, 709.0, 44.0, 16.0 ],
+					"patching_rect" : [ 133.0, 689.0, 44.0, 16.0 ],
 					"text" : "matrix"
 				}
 
@@ -106,7 +93,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 118.0, 688.0, 73.0, 16.0 ],
+					"patching_rect" : [ 128.0, 668.0, 73.0, 16.0 ],
 					"text" : "matrix 1RES"
 				}
 
@@ -120,7 +107,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 118.0, 666.0, 78.0, 16.0 ],
+					"patching_rect" : [ 128.0, 646.0, 78.0, 16.0 ],
 					"text" : "tuples time 0."
 				}
 
@@ -135,7 +122,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 882.0, 321.0, 92.0, 37.0 ],
+					"patching_rect" : [ 892.0, 301.0, 92.0, 37.0 ],
 					"text" : "640. 0.5 4. \r843.5 0.4 2. \r2041. 0.3 8."
 				}
 
@@ -150,7 +137,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 660.0, 321.0, 219.0, 27.0 ],
+					"patching_rect" : [ 670.0, 301.0, 219.0, 27.0 ],
 					"text" : "Add a \"1RES\" matrix to the frame at time 0 with 3 rows and 3 columns:"
 				}
 
@@ -164,7 +151,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 651.0, 301.0, 289.0, 15.0 ],
+					"patching_rect" : [ 661.0, 281.0, 289.0, 15.0 ],
 					"text" : "newmatrix 0. 1RES 3 3 640. 0.5 4. 843.5 0.4 2. 2041. 0.3 8."
 				}
 
@@ -179,7 +166,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 878.0, 230.0, 31.0, 47.0 ],
+					"patching_rect" : [ 888.0, 210.0, 31.0, 47.0 ],
 					"text" : "1. 2.\r3. 4. \r5. 6.\r7. 8.\r"
 				}
 
@@ -194,7 +181,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 657.0, 246.0, 219.0, 27.0 ],
+					"patching_rect" : [ 667.0, 226.0, 219.0, 27.0 ],
 					"text" : "Add an \"ABCD\" matrix to the frame at time 0.72 with 4 rows and 2 columns:"
 				}
 
@@ -208,7 +195,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 653.0, 191.0, 288.0, 17.0 ],
+					"patching_rect" : [ 663.0, 171.0, 288.0, 17.0 ],
 					"text" : "everything else) Matrix of data (like the \"listpoke\" message)."
 				}
 
@@ -222,7 +209,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 653.0, 176.0, 260.0, 17.0 ],
+					"patching_rect" : [ 663.0, 156.0, 260.0, 17.0 ],
 					"text" : "4) Number of columns (like the \"numcolumns\" message)"
 				}
 
@@ -236,7 +223,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 653.0, 160.0, 219.0, 17.0 ],
+					"patching_rect" : [ 663.0, 140.0, 219.0, 17.0 ],
 					"text" : "3) Number of rows"
 				}
 
@@ -250,7 +237,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 653.0, 145.0, 219.0, 17.0 ],
+					"patching_rect" : [ 663.0, 125.0, 219.0, 17.0 ],
 					"text" : "2) matrixtype (like the \"matrixtype\" message)"
 				}
 
@@ -264,7 +251,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 653.0, 130.0, 188.0, 17.0 ],
+					"patching_rect" : [ 663.0, 110.0, 188.0, 17.0 ],
 					"text" : "1) frametime (like the \"time\" message)"
 				}
 
@@ -278,7 +265,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 642.0, 114.0, 179.0, 17.0 ],
+					"patching_rect" : [ 652.0, 94.0, 179.0, 17.0 ],
 					"text" : "Arguments:"
 				}
 
@@ -292,7 +279,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 646.0, 229.0, 225.0, 15.0 ],
+					"patching_rect" : [ 656.0, 209.0, 225.0, 15.0 ],
 					"text" : "newmatrix 0.72 ABCD 4 2 1. 2. 3. 4. 5. 6. 7. 8."
 				}
 
@@ -307,7 +294,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 124.0, 321.0, 215.0, 37.0 ],
+					"patching_rect" : [ 134.0, 301.0, 215.0, 37.0 ],
 					"text" : "Set matrix type for your new matrix. Calling with no argument means to reuse the frame type as the matrix type."
 				}
 
@@ -321,7 +308,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 633.0, 93.0, 265.0, 20.0 ],
+					"patching_rect" : [ 643.0, 73.0, 265.0, 20.0 ],
 					"text" : "All-in-one listpoking with \"newmatrix\""
 				}
 
@@ -335,7 +322,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 27.0, 453.0, 115.0, 17.0 ],
+					"patching_rect" : [ 37.0, 433.0, 115.0, 17.0 ],
 					"text" : "Print state of object"
 				}
 
@@ -349,7 +336,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 142.0, 450.0, 87.0, 15.0 ],
+					"patching_rect" : [ 152.0, 430.0, 87.0, 15.0 ],
 					"text" : "tellmeeverything"
 				}
 
@@ -363,7 +350,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 33.0, 341.0, 61.0, 15.0 ],
+					"patching_rect" : [ 43.0, 321.0, 61.0, 15.0 ],
 					"text" : "matrixtype"
 				}
 
@@ -377,7 +364,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 33.0, 322.0, 87.0, 15.0 ],
+					"patching_rect" : [ 43.0, 302.0, 87.0, 15.0 ],
 					"text" : "matrixtype 1RES"
 				}
 
@@ -391,7 +378,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 382.0, 95.0, 201.0, 20.0 ],
+					"patching_rect" : [ 392.0, 75.0, 201.0, 20.0 ],
 					"text" : "Poking a list into an SDIF buffer"
 				}
 
@@ -406,7 +393,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 116.0, 247.0, 223.0, 47.0 ],
+					"patching_rect" : [ 126.0, 227.0, 223.0, 47.0 ],
 					"text" : "Set number of columns for your new matrix. The number of arguments to \"listpoke\" divided by this number is therefore the number of rows for your new matrix."
 				}
 
@@ -423,7 +410,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "int", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 33.0, 228.0, 35.0, 17.0 ],
+					"patching_rect" : [ 43.0, 208.0, 35.0, 17.0 ],
 					"triscale" : 0.9
 				}
 
@@ -437,7 +424,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 33.0, 247.0, 79.0, 15.0 ],
+					"patching_rect" : [ 43.0, 227.0, 79.0, 15.0 ],
 					"text" : "numcolumns $1"
 				}
 
@@ -452,7 +439,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 80.0, 204.0, 263.0, 27.0 ],
+					"patching_rect" : [ 90.0, 184.0, 263.0, 27.0 ],
 					"text" : "3) Otherwise \"listpoke\" will overwrite the old matrix (and warn you that it does so)."
 				}
 
@@ -466,7 +453,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 31.0, 95.0, 265.0, 20.0 ],
+					"patching_rect" : [ 41.0, 75.0, 265.0, 20.0 ],
 					"text" : "Messages that affect what listpoke will do"
 				}
 
@@ -481,7 +468,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 80.0, 165.0, 263.0, 37.0 ],
+					"patching_rect" : [ 90.0, 145.0, 263.0, 37.0 ],
 					"text" : "2) If your SDIF buffer does have a frame at this time, but that frame doesn't contain your desired matrix type, \"listpoke\" will add the new matrix to the old frame."
 				}
 
@@ -496,7 +483,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 80.0, 138.0, 263.0, 27.0 ],
+					"patching_rect" : [ 90.0, 118.0, 263.0, 27.0 ],
 					"text" : "1) If your SDIF buffer doesn't have a frame at this time, then \"listpoke\" will create a new frame."
 				}
 
@@ -510,7 +497,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 70.0, 123.0, 265.0, 17.0 ],
+					"patching_rect" : [ 80.0, 103.0, 265.0, 17.0 ],
 					"text" : "Set time for data you'll add with the \"listpoke\" message."
 				}
 
@@ -527,7 +514,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "float", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 33.0, 121.0, 35.0, 17.0 ],
+					"patching_rect" : [ 43.0, 101.0, 35.0, 17.0 ],
 					"triscale" : 0.9
 				}
 
@@ -541,7 +528,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 33.0, 139.0, 45.0, 15.0 ],
+					"patching_rect" : [ 43.0, 119.0, 45.0, 15.0 ],
 					"text" : "time $1"
 				}
 
@@ -555,7 +542,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 625.0, 502.0, 115.0, 17.0 ],
+					"patching_rect" : [ 635.0, 482.0, 115.0, 17.0 ],
 					"text" : "Currently does nothing."
 				}
 
@@ -569,7 +556,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 625.0, 473.0, 90.0, 17.0 ],
+					"patching_rect" : [ 635.0, 453.0, 90.0, 17.0 ],
 					"text" : "Print version info"
 				}
 
@@ -582,7 +569,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 723.0, 500.0, 15.0, 15.0 ]
+					"patching_rect" : [ 733.0, 480.0, 15.0, 15.0 ]
 				}
 
 			}
@@ -595,7 +582,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 739.0, 499.0, 92.0, 15.0 ],
+					"patching_rect" : [ 749.0, 479.0, 92.0, 15.0 ],
 					"text" : "errorreporting $1"
 				}
 
@@ -609,7 +596,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 9.0, 533.0, 186.0, 15.0 ],
+					"patching_rect" : [ 19.0, 513.0, 186.0, 15.0 ],
 					"text" : "read-stream-number moanin.add.sdif 0"
 				}
 
@@ -623,7 +610,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 408.0, 242.0, 125.0, 16.0 ],
+					"patching_rect" : [ 418.0, 222.0, 125.0, 16.0 ],
 					"text" : "11. 12. 13. 14. 15. 16."
 				}
 
@@ -637,7 +624,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 25.0, 666.0, 90.0, 16.0 ],
+					"patching_rect" : [ 35.0, 646.0, 90.0, 16.0 ],
 					"text" : "tuples time 0.72"
 				}
 
@@ -651,7 +638,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 407.0, 221.0, 84.0, 16.0 ],
+					"patching_rect" : [ 417.0, 201.0, 84.0, 16.0 ],
 					"text" : "listpoke 8 9 10"
 				}
 
@@ -665,7 +652,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 7.0, 734.0, 26.0, 16.0 ],
+					"patching_rect" : [ 17.0, 714.0, 26.0, 16.0 ],
 					"text" : "•••"
 				}
 
@@ -678,7 +665,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 34.0, 734.0, 62.0, 17.0 ],
+					"patching_rect" : [ 44.0, 714.0, 62.0, 17.0 ],
 					"text" : "print tuples"
 				}
 
@@ -692,7 +679,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 102.0, 592.0, 34.0, 16.0 ],
+					"patching_rect" : [ 112.0, 572.0, 34.0, 16.0 ],
 					"text" : "print"
 				}
 
@@ -706,7 +693,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 34.0, 685.0, 38.0, 16.0 ],
+					"patching_rect" : [ 44.0, 665.0, 38.0, 16.0 ],
 					"text" : "tuples"
 				}
 
@@ -720,7 +707,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "list", "" ],
-					"patching_rect" : [ 25.0, 711.0, 91.0, 17.0 ],
+					"patching_rect" : [ 35.0, 691.0, 91.0, 17.0 ],
 					"text" : "SDIF-tuples mybuf"
 				}
 
@@ -734,7 +721,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 393.0, 203.0, 138.0, 16.0 ],
+					"patching_rect" : [ 403.0, 183.0, 138.0, 16.0 ],
 					"text" : "listpoke 1. 2. 3. 4. 5. 6. 7."
 				}
 
@@ -748,7 +735,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 738.0, 472.0, 42.0, 15.0 ],
+					"patching_rect" : [ 748.0, 452.0, 42.0, 15.0 ],
 					"text" : "version"
 				}
 
@@ -762,7 +749,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 738.0, 445.0, 53.0, 15.0 ],
+					"patching_rect" : [ 748.0, 425.0, 53.0, 15.0 ],
 					"text" : "set mybuf"
 				}
 
@@ -776,7 +763,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 738.0, 427.0, 63.0, 15.0 ],
+					"patching_rect" : [ 748.0, 407.0, 63.0, 15.0 ],
 					"text" : "set otherbuf"
 				}
 
@@ -790,7 +777,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 615.0, 155.0, 15.0 ],
+					"patching_rect" : [ 18.0, 595.0, 155.0, 15.0 ],
 					"text" : "read-stream-number lick5.sdif 1"
 				}
 
@@ -802,8 +789,9 @@
 					"id" : "obj-55",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 634.0, 102.0, 17.0 ],
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 18.0, 614.0, 102.0, 17.0 ],
 					"text" : "SDIF-buffer otherbuf"
 				}
 
@@ -816,7 +804,7 @@
 					"maxclass" : "fpic",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 535.0, 629.0, 109.0, 48.0 ]
+					"patching_rect" : [ 545.0, 609.0, 109.0, 48.0 ]
 				}
 
 			}
@@ -830,7 +818,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 536.0, 682.0, 263.0, 27.0 ],
+					"patching_rect" : [ 546.0, 662.0, 263.0, 27.0 ],
 					"text" : "SDIF-listpoke, and all other CNMAT Max objects, can be found at: http://www.cnmat.berkeley.edu/MAX"
 				}
 
@@ -844,7 +832,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 536.0, 710.0, 256.0, 17.0 ],
+					"patching_rect" : [ 546.0, 690.0, 256.0, 17.0 ],
 					"text" : "SDIF web page: http://www.cnmat.berkeley.edu/SDIF"
 				}
 
@@ -859,7 +847,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 650.0, 649.0, 148.0, 27.0 ],
+					"patching_rect" : [ 660.0, 629.0, 148.0, 27.0 ],
 					"text" : "SDIF-listpoke.help version 0.1, Matt Wright 1/29/7"
 				}
 
@@ -873,7 +861,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 2.0, 29.0, 100.0, 22.0 ],
+					"patching_rect" : [ 12.0, 9.0, 100.0, 22.0 ],
 					"text" : "SDIF-listpoke"
 				}
 
@@ -887,7 +875,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 104.0, 33.0, 206.0, 17.0 ],
+					"patching_rect" : [ 114.0, 13.0, 206.0, 17.0 ],
 					"text" : "Get data into an SDIF-buffer via Max lists"
 				}
 
@@ -901,7 +889,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 1.0, 52.0, 207.0, 17.0 ],
+					"patching_rect" : [ 11.0, 32.0, 207.0, 17.0 ],
 					"text" : "Argument: name of SDIF-buffer (optional)"
 				}
 
@@ -915,7 +903,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 553.0, 215.0, 15.0 ],
+					"patching_rect" : [ 18.0, 533.0, 215.0, 15.0 ],
 					"text" : "read-stream-number ivory.speedy.loud.sdif 1"
 				}
 
@@ -929,7 +917,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 9.0, 571.0, 178.0, 15.0 ],
+					"patching_rect" : [ 19.0, 551.0, 178.0, 15.0 ],
 					"text" : "read-stream-number cbass.res.sdif 1"
 				}
 
@@ -941,8 +929,9 @@
 					"id" : "obj-65",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 592.0, 92.0, 17.0 ],
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 18.0, 572.0, 92.0, 17.0 ],
 					"text" : "SDIF-buffer mybuf"
 				}
 
@@ -955,7 +944,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 335.0, 474.0, 145.0, 22.0 ],
+					"patching_rect" : [ 345.0, 454.0, 145.0, 22.0 ],
 					"text" : "SDIF-listpoke mybuf"
 				}
 
@@ -970,7 +959,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 625.0, 431.0, 111.0, 27.0 ],
+					"patching_rect" : [ 635.0, 411.0, 111.0, 27.0 ],
 					"text" : "Change the SDIF-buffer this object writes to"
 				}
 
@@ -985,7 +974,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 391.0, 119.0, 179.0, 27.0 ],
+					"patching_rect" : [ 401.0, 99.0, 179.0, 27.0 ],
 					"text" : "Sending a raw list of numbers is equivalent to the \"listpoke\" message."
 				}
 
@@ -1263,11 +1252,12 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
+				"name" : "SDIF-listpoke.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "SDIF-buffer.mxo",
+				"type" : "iLaX"
 			}
 , 			{
 				"name" : "SDIF-tuples.mxo",
