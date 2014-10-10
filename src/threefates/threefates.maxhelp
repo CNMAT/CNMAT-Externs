@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 24.0, 84.0, 906.0, 627.0 ],
+		"rect" : [ 6.0, 54.0, 754.0, 589.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,20 +29,6 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"args" : [ 4005 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 563.0, 581.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"id" : "obj-2",
@@ -49,7 +36,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 90.0, 569.0, 75.0, 17.0 ],
+					"patching_rect" : [ 90.0, 559.0, 75.0, 17.0 ],
 					"text" : "sinusoids~ bwe"
 				}
 
@@ -91,7 +78,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 203.0, 499.0, 85.0, 15.0 ],
+					"patching_rect" : [ 203.0, 489.0, 85.0, 15.0 ],
 					"text" : "tellmeeverything"
 				}
 
@@ -200,7 +187,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 152.0, 519.0, 173.0, 47.0 ],
+					"patching_rect" : [ 152.0, 509.0, 173.0, 47.0 ],
 					"text" : "Optional second argument says how many parameters each partial has besides its index. This is useful for sinusoids~ bwe mode."
 				}
 
@@ -214,7 +201,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 125.0, 499.0, 72.0, 15.0 ],
+					"patching_rect" : [ 125.0, 489.0, 72.0, 15.0 ],
 					"text" : "1 100 0.2 0.4"
 				}
 
@@ -226,7 +213,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 50.0, 482.0, 15.0, 15.0 ]
+					"patching_rect" : [ 50.0, 472.0, 15.0, 15.0 ]
 				}
 
 			}
@@ -239,7 +226,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 50.0, 500.0, 72.0, 15.0 ],
+					"patching_rect" : [ 50.0, 490.0, 72.0, 15.0 ],
 					"text" : "1 100 0.1 0.5"
 				}
 
@@ -252,7 +239,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 561.0, 30.0, 17.0 ],
+					"patching_rect" : [ 50.0, 551.0, 30.0, 17.0 ],
 					"text" : "print"
 				}
 
@@ -266,7 +253,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "list" ],
-					"patching_rect" : [ 50.0, 520.0, 74.0, 17.0 ],
+					"patching_rect" : [ 50.0, 510.0, 74.0, 17.0 ],
 					"text" : "threefates 4 3"
 				}
 
@@ -466,7 +453,6 @@
 			}
 , 			{
 				"box" : 				{
-					"bordercolor" : [ 0.5, 0.5, 0.5, 1.0 ],
 					"id" : "obj-33",
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
@@ -539,7 +525,7 @@
 					"maxclass" : "fpic",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 571.0, 482.0, 109.0, 48.0 ]
+					"patching_rect" : [ 441.0, 472.0, 109.0, 48.0 ]
 				}
 
 			}
@@ -553,7 +539,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 686.0, 488.0, 125.0, 37.0 ],
+					"patching_rect" : [ 556.0, 478.0, 125.0, 37.0 ],
 					"text" : "threefates help version 0.2 Tim Madden 3/12/01, Matt Wright 12/30/04"
 				}
 
@@ -568,7 +554,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 572.0, 535.0, 294.0, 27.0 ],
+					"patching_rect" : [ 442.0, 525.0, 268.0, 27.0 ],
 					"text" : "threefates, and all other CNMAT Max objects, can be found at: http://www.cnmat.berkeley.edu/MAX"
 				}
 
@@ -1049,13 +1035,6 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "threefates.mxo",
 				"type" : "iLaX"
 			}

@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 134.0, 192.0, 567.0, 481.0 ],
+		"rect" : [ 28.0, 59.0, 567.0, 481.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -27,20 +28,6 @@
 		"digest" : "",
 		"tags" : "",
 		"boxes" : [ 			{
-				"box" : 				{
-					"args" : [ 4014 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 326.0, 445.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
@@ -307,7 +294,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 48.0, 79.0, 198.0, 57.0 ],
+					"patching_rect" : [ 48.0, 79.0, 201.0, 57.0 ],
 					"text" : "The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name."
 				}
 
@@ -563,7 +550,8 @@
 					"id" : "obj-38",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
 					"patching_rect" : [ 305.0, 130.0, 78.0, 17.0 ],
 					"text" : "SDIF-buffer buf"
 				}
@@ -748,11 +736,8 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
+				"name" : "SDIF-buffer.mxo",
+				"type" : "iLaX"
 			}
 , 			{
 				"name" : "SDIF-info.mxo",

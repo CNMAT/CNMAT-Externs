@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 73.0, 68.0, 693.0, 728.0 ],
+		"rect" : [ 31.0, 57.0, 596.0, 614.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,20 +29,6 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"args" : [ 4071 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 426.0, 469.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"frgb" : 0.0,
@@ -49,7 +36,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 69.0, 590.0, 294.0, 17.0 ],
+					"patching_rect" : [ 69.0, 580.0, 294.0, 17.0 ],
 					"text" : "3) Standard part of Max."
 				}
 
@@ -63,7 +50,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 69.0, 570.0, 294.0, 17.0 ],
+					"patching_rect" : [ 69.0, 560.0, 294.0, 17.0 ],
 					"text" : "2) Larger list length limit"
 				}
 
@@ -77,7 +64,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 69.0, 547.0, 294.0, 17.0 ],
+					"patching_rect" : [ 69.0, 537.0, 294.0, 17.0 ],
 					"text" : "1) No restriction to only 2, 3, or 4 input lists."
 				}
 
@@ -91,7 +78,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "", "", "", "" ],
-					"patching_rect" : [ 98.0, 522.0, 111.0, 17.0 ],
+					"patching_rect" : [ 98.0, 512.0, 111.0, 17.0 ],
 					"text" : "mxj list.Demultiplex 3"
 				}
 
@@ -106,7 +93,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 45.0, 459.0, 298.0, 51.0 ],
+					"patching_rect" : [ 45.0, 449.0, 298.0, 51.0 ],
 					"text" : "Don't use the deinterleave external! This is much better:"
 				}
 
@@ -121,7 +108,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 52.0, 422.0, 45.0, 17.0 ],
+					"patching_rect" : [ 52.0, 412.0, 45.0, 17.0 ],
 					"text" : "pcontrol"
 				}
 
@@ -135,7 +122,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 52.0, 359.0, 48.0, 17.0 ],
+					"patching_rect" : [ 52.0, 349.0, 48.0, 17.0 ],
 					"text" : "see also:",
 					"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
 				}
@@ -151,7 +138,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 52.0, 401.0, 64.0, 17.0 ],
+					"patching_rect" : [ 52.0, 391.0, 64.0, 17.0 ],
 					"text" : "prepend help"
 				}
 
@@ -166,7 +153,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 52.0, 373.0, 56.0, 15.0 ],
+					"patching_rect" : [ 52.0, 363.0, 56.0, 15.0 ],
 					"text" : "interleave"
 				}
 
@@ -180,7 +167,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 277.0, 375.0, 300.0, 17.0 ],
+					"patching_rect" : [ 277.0, 365.0, 300.0, 17.0 ],
 					"text" : "Adrian Freed ©1999, 2000-06, UC Regents. All Rights Reserved"
 				}
 
@@ -195,7 +182,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 73.0, 170.0, 130.0, 15.0 ],
+					"patching_rect" : [ 73.0, 160.0, 130.0, 15.0 ],
 					"text" : "1.2 50 a 4.5 30 b 2.1 81 c"
 				}
 
@@ -252,7 +239,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "bang", "bang", "", "int" ],
-					"patching_rect" : [ 278.0, 347.0, 268.0, 26.0 ]
+					"patching_rect" : [ 278.0, 337.0, 268.0, 26.0 ]
 				}
 
 			}
@@ -265,7 +252,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 330.0, 360.0, 196.0, 17.0 ],
+					"patching_rect" : [ 330.0, 350.0, 196.0, 17.0 ],
 					"text" : "http://www.cnmat.berkeley.edu/MAX/",
 					"textcolor" : [ 0.4, 0.4, 0.8, 1.0 ]
 				}
@@ -282,7 +269,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 277.0, 395.0, 294.0, 25.0 ],
+					"patching_rect" : [ 277.0, 385.0, 294.0, 25.0 ],
 					"text" : ";\rmax launch_browser http://www.cnmat.berkeley.edu/MAX/"
 				}
 
@@ -297,7 +284,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 277.0, 348.0, 263.0, 27.0 ],
+					"patching_rect" : [ 277.0, 338.0, 263.0, 27.0 ],
 					"text" : "deinterleave, and all other CNMAT Max objects, can be found at:"
 				}
 
@@ -312,7 +299,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 116.0, 195.0, 39.0, 15.0 ],
+					"patching_rect" : [ 116.0, 185.0, 39.0, 15.0 ],
 					"text" : "version"
 				}
 
@@ -326,7 +313,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 224.0, 260.0, 54.0, 17.0 ],
+					"patching_rect" : [ 224.0, 250.0, 54.0, 17.0 ],
 					"text" : "loadmess -"
 				}
 
@@ -340,7 +327,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 193.0, 297.0, 60.0, 17.0 ],
+					"patching_rect" : [ 193.0, 287.0, 60.0, 17.0 ],
 					"text" : "prepend set"
 				}
 
@@ -355,7 +342,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 193.0, 323.0, 64.0, 15.0 ],
+					"patching_rect" : [ 193.0, 313.0, 64.0, 15.0 ],
 					"text" : "-"
 				}
 
@@ -369,7 +356,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 123.0, 298.0, 60.0, 17.0 ],
+					"patching_rect" : [ 123.0, 288.0, 60.0, 17.0 ],
 					"text" : "prepend set"
 				}
 
@@ -384,7 +371,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 123.0, 324.0, 64.0, 15.0 ],
+					"patching_rect" : [ 123.0, 314.0, 64.0, 15.0 ],
 					"text" : "-"
 				}
 
@@ -397,7 +384,7 @@
 					"maxclass" : "fpic",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 278.0, 298.0, 109.0, 48.0 ]
+					"patching_rect" : [ 278.0, 288.0, 109.0, 48.0 ]
 				}
 
 			}
@@ -411,7 +398,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 399.0, 302.0, 125.0, 37.0 ],
+					"patching_rect" : [ 399.0, 292.0, 125.0, 37.0 ],
 					"text" : "deinterleave.help version 1. Tim Madden & Michael Zbyszynski"
 				}
 
@@ -425,7 +412,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 53.0, 299.0, 60.0, 17.0 ],
+					"patching_rect" : [ 53.0, 289.0, 60.0, 17.0 ],
 					"text" : "prepend set"
 				}
 
@@ -440,7 +427,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 53.0, 144.0, 105.0, 15.0 ],
+					"patching_rect" : [ 53.0, 134.0, 105.0, 15.0 ],
 					"text" : "10 20 30 1 2 3 x y z"
 				}
 
@@ -455,7 +442,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 53.0, 325.0, 64.0, 15.0 ],
+					"patching_rect" : [ 53.0, 315.0, 64.0, 15.0 ],
 					"text" : "-"
 				}
 
@@ -470,7 +457,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "list", "list", "list" ],
-					"patching_rect" : [ 53.0, 234.0, 150.0, 17.0 ],
+					"patching_rect" : [ 53.0, 224.0, 150.0, 17.0 ],
 					"text" : "deinterleave 3"
 				}
 
@@ -485,7 +472,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 208.0, 229.0, 161.0, 27.0 ],
+					"patching_rect" : [ 208.0, 219.0, 161.0, 27.0 ],
 					"text" : "Can de-interleave into two to four lists, determined by argument."
 				}
 
@@ -496,7 +483,7 @@
 					"destination" : [ "obj-9", 0 ],
 					"disabled" : 0,
 					"hidden" : 1,
-					"midpoints" : [ 61.5, 397.0, 61.5, 397.0 ],
+					"midpoints" : [ 61.5, 387.0, 61.5, 387.0 ],
 					"source" : [ "obj-10", 0 ]
 				}
 
@@ -533,7 +520,7 @@
 					"destination" : [ "obj-22", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 233.5, 287.0, 202.5, 287.0 ],
+					"midpoints" : [ 233.5, 277.0, 202.5, 277.0 ],
 					"source" : [ "obj-21", 0 ]
 				}
 
@@ -543,7 +530,7 @@
 					"destination" : [ "obj-24", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 233.5, 287.0, 132.5, 287.0 ],
+					"midpoints" : [ 233.5, 277.0, 132.5, 277.0 ],
 					"source" : [ "obj-21", 0 ]
 				}
 
@@ -553,7 +540,7 @@
 					"destination" : [ "obj-28", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 233.5, 287.0, 62.5, 287.0 ],
+					"midpoints" : [ 233.5, 277.0, 62.5, 277.0 ],
 					"source" : [ "obj-21", 0 ]
 				}
 
@@ -632,13 +619,6 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "deinterleave.mxo",
 				"type" : "iLaX"
 			}

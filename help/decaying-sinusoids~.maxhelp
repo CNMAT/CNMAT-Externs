@@ -3,8 +3,9 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
 		"rect" : [ 64.0, 44.0, 903.0, 701.0 ],
@@ -27,20 +28,6 @@
 		"digest" : "",
 		"tags" : "",
 		"boxes" : [ 			{
-				"box" : 				{
-					"args" : [ 4072 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 716.0, 641.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
 				"box" : 				{
 					"bgcolor" : [ 0.4, 0.4, 0.8, 1.0 ],
 					"fontname" : "Arial",
@@ -305,11 +292,11 @@
 					"fontsize" : 9.0,
 					"frgb" : 0.0,
 					"id" : "obj-20",
-					"linecount" : 5,
+					"linecount" : 4,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 639.0, 342.0, 202.0, 57.0 ],
+					"patching_rect" : [ 639.0, 342.0, 204.0, 47.0 ],
 					"text" : "Rather than control virtual time with the \"goto\", \"rate\", \"min_vtime\", and \"max_vtime\" messages, you can now send in a signal input for the virtual time. This is much more powerful and expensive."
 				}
 
@@ -853,8 +840,9 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 6,
-							"minor" : 0,
-							"revision" : 7
+							"minor" : 1,
+							"revision" : 9,
+							"architecture" : "x86"
 						}
 ,
 						"rect" : [ 36.0, 59.0, 191.0, 174.0 ],
@@ -1054,11 +1042,11 @@
 					"fontsize" : 9.0,
 					"frgb" : 0.0,
 					"id" : "obj-64",
-					"linecount" : 6,
+					"linecount" : 5,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 60.0, 139.0, 165.0, 67.0 ],
+					"patching_rect" : [ 60.0, 139.0, 167.0, 57.0 ],
 					"text" : "jump to a time in seconds. Time 0 is the beginning of the decay. Negative times are possible but dangerous because amplitudes *grow* exponentially as you go back from time 0..."
 				}
 
@@ -1408,13 +1396,6 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "decaying-sinusoids~.mxo",
 				"type" : "iLaX"
 			}

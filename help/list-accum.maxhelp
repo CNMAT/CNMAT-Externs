@@ -4,11 +4,11 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 1,
-			"revision" : 0,
+			"revision" : 9,
 			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 342.0, 179.0, 400.0, 300.0 ],
+		"rect" : [ 73.0, 84.0, 400.0, 300.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -29,27 +29,13 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"args" : [ 4065 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 65.0, 193.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"id" : "obj-2",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 199.0, 150.0, 38.0, 17.0 ],
+					"patching_rect" : [ 211.0, 191.0, 38.0, 17.0 ],
 					"text" : "printit"
 				}
 
@@ -62,7 +48,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 164.0, 150.0, 31.0, 17.0 ],
+					"patching_rect" : [ 176.0, 191.0, 31.0, 17.0 ],
 					"text" : "print"
 				}
 
@@ -75,7 +61,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 112.0, 150.0, 38.0, 17.0 ],
+					"patching_rect" : [ 128.0, 191.0, 38.0, 17.0 ],
 					"text" : "printit"
 				}
 
@@ -88,7 +74,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 77.0, 150.0, 31.0, 17.0 ],
+					"patching_rect" : [ 97.0, 191.0, 31.0, 17.0 ],
 					"text" : "print"
 				}
 
@@ -152,7 +138,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "int" ],
-					"patching_rect" : [ 97.0, 121.0, 84.0, 17.0 ],
+					"patching_rect" : [ 97.0, 152.0, 98.0, 17.0 ],
 					"text" : "list-accum 1000"
 				}
 
@@ -194,7 +180,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 143.0, 81.0, 35.0, 15.0 ],
+					"patching_rect" : [ 176.0, 104.0, 35.0, 15.0 ],
 					"text" : "10 20"
 				}
 
@@ -385,13 +371,6 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/MMJ6/CNMAT-Everything-OSX-MachO/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../../../MMJ6/CNMAT-Everything-OSX-MachO/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "list-accum.mxo",
 				"type" : "iLaX"
 			}

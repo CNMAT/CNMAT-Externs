@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 6,
 			"minor" : 1,
-			"revision" : 0,
+			"revision" : 9,
 			"architecture" : "x86"
 		}
 ,
@@ -67,7 +67,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 67.0, 145.0, 45.0, 0.0 ],
+					"patching_rect" : [ 67.0, 145.0, 45.0, 27.0 ],
 					"text" : "loadbang"
 				}
 
@@ -148,14 +148,15 @@
 			}
 , 			{
 				"box" : 				{
-					"filename" : "resonance-display.js",
+					"color" : [ 1.0, 1.0, 1.0, 1.0 ],
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
 					"id" : "obj-9",
-					"maxclass" : "jsui",
+					"maxclass" : "resdisplay",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 162.0, 402.0, 381.0, 117.0 ]
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 162.0, 402.0, 371.0, 110.0 ]
 				}
 
 			}
@@ -202,7 +203,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -281,7 +282,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 0,
+											"revision" : 9,
 											"architecture" : "x86"
 										}
 ,
@@ -1520,7 +1521,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -1569,7 +1570,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 0,
+											"revision" : 9,
 											"architecture" : "x86"
 										}
 ,
@@ -1775,7 +1776,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 0,
+											"revision" : 9,
 											"architecture" : "x86"
 										}
 ,
@@ -1990,7 +1991,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 0,
+											"revision" : 9,
 											"architecture" : "x86"
 										}
 ,
@@ -2494,7 +2495,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -3012,7 +3013,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -3231,7 +3232,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 476.0, 643.0, 64.0, 0.0 ],
+					"patching_rect" : [ 476.0, 643.0, 64.0, 17.0 ],
 					"text" : "prepend help"
 				}
 
@@ -3261,7 +3262,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 476.0, 658.0, 45.0, 0.0 ],
+					"patching_rect" : [ 476.0, 658.0, 45.0, 17.0 ],
 					"text" : "pcontrol"
 				}
 
@@ -3360,7 +3361,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 567.0, 544.0, 294.0, 0.0 ],
+					"patching_rect" : [ 567.0, 544.0, 294.0, 25.0 ],
 					"text" : ";\rmax launch_browser http://www.cnmat.berkeley.edu/MAX/"
 				}
 
@@ -3464,7 +3465,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -3828,7 +3829,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -4908,7 +4909,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -5258,7 +5259,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 0,
+											"revision" : 9,
 											"architecture" : "x86"
 										}
 ,
@@ -6175,7 +6176,7 @@
 													"maxclass" : "inlet",
 													"numinlets" : 0,
 													"numoutlets" : 1,
-													"outlettype" : [ "list" ],
+													"outlettype" : [ "" ],
 													"patching_rect" : [ 364.0, 41.0, 15.0, 15.0 ]
 												}
 
@@ -7032,7 +7033,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 0,
+											"revision" : 9,
 											"architecture" : "x86"
 										}
 ,
@@ -9697,7 +9698,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -10146,7 +10147,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -10317,7 +10318,7 @@
 										"appversion" : 										{
 											"major" : 6,
 											"minor" : 1,
-											"revision" : 0,
+											"revision" : 9,
 											"architecture" : "x86"
 										}
 ,
@@ -10964,7 +10965,7 @@
 						"appversion" : 						{
 							"major" : 6,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 9,
 							"architecture" : "x86"
 						}
 ,
@@ -11997,7 +11998,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 384.0, 379.0, 147.0, 0.0 ],
+					"patching_rect" : [ 384.0, 379.0, 147.0, 17.0 ],
 					"text" : "loadmess displayrange 0 5000"
 				}
 
@@ -12315,15 +12316,8 @@
 		"dependency_cache" : [ 			{
 				"name" : "var.maxpat",
 				"bootpath" : "/Applications/Max 6.1/examples/max-tricks/send-receive-tricks/lib",
-				"patcherrelativepath" : "../../../../../../../../Applications/Max 6.1/examples/max-tricks/send-receive-tricks/lib",
+				"patcherrelativepath" : "../../../../../../../Applications/Max 6.1/examples/max-tricks/send-receive-tricks/lib",
 				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "resonance-display.js",
-				"bootpath" : "/Users/john/MMJ6/CNMAT-Everything-OSX-MachO",
-				"patcherrelativepath" : "../../../../../../MMJ6/CNMAT-Everything-OSX-MachO",
-				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
@@ -12332,6 +12326,10 @@
 			}
 , 			{
 				"name" : "sinusoids~.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "resdisplay.mxo",
 				"type" : "iLaX"
 			}
  ]

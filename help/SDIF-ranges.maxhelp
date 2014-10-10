@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 130.0, 192.0, 1043.0, 539.0 ],
+		"rect" : [ 19.0, 56.0, 1018.0, 451.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -28,20 +29,6 @@
 		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"args" : [ 4011 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 863.0, 408.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
 					"id" : "obj-2",
@@ -49,7 +36,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 865.0, 295.0, 54.0, 15.0 ],
+					"patching_rect" : [ 865.0, 215.0, 54.0, 15.0 ],
 					"text" : "set incand"
 				}
 
@@ -62,7 +49,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 406.0, 366.0, 75.0, 17.0 ],
+					"patching_rect" : [ 406.0, 286.0, 75.0, 17.0 ],
 					"text" : "print statistics"
 				}
 
@@ -77,7 +64,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 518.0, 235.0, 164.0, 47.0 ],
+					"patching_rect" : [ 518.0, 155.0, 164.0, 47.0 ],
 					"text" : "No argument means look for the \"main\" matrix, i.e., the one whose type is the same as the SDIF-buffer's stream's frame type."
 				}
 
@@ -91,7 +78,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 534.0, 288.0, 75.0, 15.0 ],
+					"patching_rect" : [ 534.0, 208.0, 75.0, 15.0 ],
 					"text" : "column-ranges"
 				}
 
@@ -105,7 +92,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 498.0, 201.0, 101.0, 15.0 ],
+					"patching_rect" : [ 498.0, 121.0, 101.0, 15.0 ],
 					"text" : "column-ranges 1RES"
 				}
 
@@ -120,7 +107,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 479.0, 139.0, 217.0, 37.0 ],
+					"patching_rect" : [ 479.0, 59.0, 217.0, 37.0 ],
 					"text" : "For all rows in all matrices in the SDIF-buffer of the given type, what are the maximum and minimum data values per column?"
 				}
 
@@ -134,7 +121,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 484.0, 183.0, 102.0, 15.0 ],
+					"patching_rect" : [ 484.0, 103.0, 102.0, 15.0 ],
 					"text" : "column-ranges 1TRC"
 				}
 
@@ -150,7 +137,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "", "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 588.0, 440.0, 100.0, 50.0 ],
+					"patching_rect" : [ 588.0, 360.0, 100.0, 50.0 ],
 					"text" : "0.257 0.257"
 				}
 
@@ -166,7 +153,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "", "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 482.0, 441.0, 100.0, 50.0 ],
+					"patching_rect" : [ 482.0, 361.0, 100.0, 50.0 ],
 					"text" : "0. -1."
 				}
 
@@ -183,7 +170,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "int", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 390.0, 427.0, 35.0, 17.0 ],
+					"patching_rect" : [ 390.0, 347.0, 35.0, 17.0 ],
 					"triscale" : 0.9
 				}
 
@@ -212,7 +199,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 265.0, 221.0, 164.0, 47.0 ],
+					"patching_rect" : [ 265.0, 141.0, 164.0, 47.0 ],
 					"text" : "No argument means look for the \"main\" matrix, i.e., the one whose type is the same as the SDIF-buffer's stream's frame type."
 				}
 
@@ -226,7 +213,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 281.0, 274.0, 69.0, 15.0 ],
+					"patching_rect" : [ 281.0, 194.0, 69.0, 15.0 ],
 					"text" : "max-columns"
 				}
 
@@ -240,7 +227,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 245.0, 187.0, 95.0, 15.0 ],
+					"patching_rect" : [ 245.0, 107.0, 95.0, 15.0 ],
 					"text" : "max-columns 1RES"
 				}
 
@@ -255,7 +242,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 226.0, 139.0, 217.0, 27.0 ],
+					"patching_rect" : [ 226.0, 59.0, 217.0, 27.0 ],
 					"text" : "Of all matrices in the SDIF-buffer of the given type, what's the largest number of columns?"
 				}
 
@@ -269,7 +256,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 826.0, 242.0, 39.0, 20.0 ],
+					"patching_rect" : [ 826.0, 162.0, 39.0, 20.0 ],
 					"text" : "Misc."
 				}
 
@@ -283,7 +270,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 865.0, 315.0, 43.0, 15.0 ],
+					"patching_rect" : [ 865.0, 235.0, 43.0, 15.0 ],
 					"text" : "version"
 				}
 
@@ -297,7 +284,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 865.0, 279.0, 53.0, 15.0 ],
+					"patching_rect" : [ 865.0, 199.0, 53.0, 15.0 ],
 					"text" : "set mybuf"
 				}
 
@@ -311,7 +298,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 865.0, 261.0, 63.0, 15.0 ],
+					"patching_rect" : [ 865.0, 181.0, 63.0, 15.0 ],
 					"text" : "set otherbuf"
 				}
 
@@ -337,7 +324,8 @@
 					"id" : "obj-22",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
 					"patching_rect" : [ 8.0, 377.0, 102.0, 17.0 ],
 					"text" : "SDIF-buffer otherbuf"
 				}
@@ -351,7 +339,7 @@
 					"maxclass" : "fpic",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 742.0, 419.0, 109.0, 48.0 ]
+					"patching_rect" : [ 742.0, 339.0, 109.0, 48.0 ]
 				}
 
 			}
@@ -365,7 +353,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 743.0, 472.0, 263.0, 27.0 ],
+					"patching_rect" : [ 743.0, 392.0, 263.0, 27.0 ],
 					"text" : "SDIF-tuples, and all other CNMAT Max objects, can be found at: http://www.cnmat.berkeley.edu/MAX"
 				}
 
@@ -379,7 +367,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 743.0, 500.0, 256.0, 17.0 ],
+					"patching_rect" : [ 743.0, 420.0, 256.0, 17.0 ],
 					"text" : "SDIF web page: http://www.cnmat.berkeley.edu/SDIF"
 				}
 
@@ -394,7 +382,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 857.0, 439.0, 151.0, 27.0 ],
+					"patching_rect" : [ 857.0, 359.0, 151.0, 27.0 ],
 					"text" : "SDIF-ranges.help version 0.1, Matt Wright 12/23/04"
 				}
 
@@ -451,7 +439,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 79.0, 201.0, 57.0 ],
+					"patching_rect" : [ 8.0, 79.0, 203.0, 57.0 ],
 					"text" : "The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name."
 				}
 
@@ -465,7 +453,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "", "", "", "" ],
-					"patching_rect" : [ 390.0, 402.0, 288.0, 17.0 ],
+					"patching_rect" : [ 390.0, 322.0, 288.0, 17.0 ],
 					"text" : "OSC-route /max-num-columns /column-mins /column-maxes"
 				}
 
@@ -479,7 +467,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 231.0, 169.0, 95.0, 15.0 ],
+					"patching_rect" : [ 231.0, 89.0, 95.0, 15.0 ],
 					"text" : "max-columns 1TRC"
 				}
 
@@ -519,7 +507,8 @@
 					"id" : "obj-35",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
 					"patching_rect" : [ 8.0, 335.0, 92.0, 17.0 ],
 					"text" : "SDIF-buffer mybuf"
 				}
@@ -533,8 +522,8 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 390.0, 341.0, 95.0, 17.0 ],
+					"outlettype" : [ "list" ],
+					"patching_rect" : [ 390.0, 261.0, 95.0, 17.0 ],
 					"text" : "SDIF-ranges mybuf"
 				}
 
@@ -549,7 +538,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 752.0, 265.0, 111.0, 27.0 ],
+					"patching_rect" : [ 752.0, 185.0, 111.0, 27.0 ],
 					"text" : "Change the SDIF-buffer this object reads from"
 				}
 
@@ -728,11 +717,12 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../../svn/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
+				"name" : "SDIF-ranges.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "SDIF-buffer.mxo",
+				"type" : "iLaX"
 			}
 , 			{
 				"name" : "OSC-route.mxo",

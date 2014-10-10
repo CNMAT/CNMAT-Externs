@@ -3,11 +3,12 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 6,
-			"minor" : 0,
-			"revision" : 7
+			"minor" : 1,
+			"revision" : 9,
+			"architecture" : "x86"
 		}
 ,
-		"rect" : [ 688.0, 44.0, 689.0, 795.0 ],
+		"rect" : [ 22.0, 44.0, 689.0, 795.0 ],
 		"bglocked" : 1,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -27,20 +28,6 @@
 		"digest" : "",
 		"tags" : "",
 		"boxes" : [ 			{
-				"box" : 				{
-					"args" : [ 4075 ],
-					"id" : "obj-1",
-					"lockeddragscroll" : 1,
-					"maxclass" : "bpatcher",
-					"name" : "html_reference.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ -68.0, -58.0 ],
-					"patching_rect" : [ 390.0, 751.0, 131.0, 20.0 ]
-				}
-
-			}
-, 			{
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 9.0,
@@ -255,8 +242,9 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 6,
-							"minor" : 0,
-							"revision" : 7
+							"minor" : 1,
+							"revision" : 9,
+							"architecture" : "x86"
 						}
 ,
 						"rect" : [ 640.0, 365.0, 457.0, 340.0 ],
@@ -280,6 +268,34 @@
 						"tags" : "",
 						"boxes" : [ 							{
 								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-18",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "float" ],
+									"patching_rect" : [ 101.5, 270.0, 76.0, 20.0 ],
+									"text" : "snapshot~ 5"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-17",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "signal" ],
+									"patching_rect" : [ 101.5, 240.0, 84.0, 20.0 ],
+									"text" : "average~ 500"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 1.0 ],
 									"fontname" : "Arial",
 									"fontsize" : 9.0,
@@ -290,23 +306,8 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 267.0, 205.0, 44.0, 17.0 ],
+									"patching_rect" : [ 266.0, 285.0, 44.0, 17.0 ],
 									"triscale" : 0.9
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"id" : "obj-2",
-									"linecount" : 2,
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 123.0, 171.0, 45.0, 27.0 ],
-									"text" : "loadbang"
 								}
 
 							}
@@ -320,22 +321,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 37.0, 91.0, 390.0, 27.0 ],
+									"patching_rect" : [ 44.0, 91.0, 390.0, 27.0 ],
 									"text" : "Each time an attack is detected, find the RMS of the energy from 50 samples before the attack to 500 samples after (plus or minus Max event scheduler slop)."
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"id" : "obj-4",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 122.0, 192.0, 65.0, 15.0 ],
-									"text" : "continuous 0"
 								}
 
 							}
@@ -348,7 +335,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.0, 75.0, 390.0, 17.0 ],
+									"patching_rect" : [ 44.0, 75.0, 390.0, 17.0 ],
 									"text" : "This solution gives up the beauty of staying in the signal domain:"
 								}
 
@@ -363,7 +350,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 23.0, 46.0, 390.0, 27.0 ],
+									"patching_rect" : [ 44.0, 46.0, 390.0, 27.0 ],
 									"text" : "So you need to look at the energy around when the attack occurred (generally including *after* it occurred) to put a single number on the strength of the attack."
 								}
 
@@ -375,7 +362,7 @@
 									"maxclass" : "outlet",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 128.0, 253.0, 15.0, 15.0 ]
+									"patching_rect" : [ 102.0, 305.0, 15.0, 15.0 ]
 								}
 
 							}
@@ -391,7 +378,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 144.0, 252.0, 35.0, 17.0 ],
+									"patching_rect" : [ 153.5, 305.0, 55.0, 17.0 ],
 									"triscale" : 0.9
 								}
 
@@ -405,7 +392,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 212.0, 144.0, 20.0, 17.0 ],
+									"patching_rect" : [ 220.0, 174.0, 20.0, 17.0 ],
 									"text" : "t b"
 								}
 
@@ -419,7 +406,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 212.0, 185.0, 65.0, 17.0 ],
+									"patching_rect" : [ 220.0, 260.0, 65.0, 17.0 ],
 									"text" : "sampstoms~"
 								}
 
@@ -433,7 +420,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 212.0, 165.0, 26.0, 15.0 ],
+									"patching_rect" : [ 220.0, 195.0, 26.0, 15.0 ],
 									"text" : "500"
 								}
 
@@ -447,7 +434,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 44.0, 171.0, 70.0, 17.0 ],
+									"patching_rect" : [ 52.0, 201.0, 70.0, 17.0 ],
 									"text" : "delay~ 50 50"
 								}
 
@@ -460,7 +447,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "list" ],
-									"patching_rect" : [ 212.0, 124.0, 15.0, 15.0 ]
+									"patching_rect" : [ 220.0, 140.0, 20.0, 20.0 ]
 								}
 
 							}
@@ -473,22 +460,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 44.0, 148.0, 115.0, 17.0 ],
+									"patching_rect" : [ 52.0, 178.0, 115.0, 17.0 ],
 									"text" : "receive~ 2ta-help-input"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"id" : "obj-15",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "float", "list" ],
-									"patching_rect" : [ 136.0, 222.0, 54.0, 17.0 ],
-									"text" : "mattrms~"
 								}
 
 							}
@@ -502,7 +475,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 25.0, 16.0, 414.0, 27.0 ],
+									"patching_rect" : [ 32.0, 16.0, 414.0, 27.0 ],
 									"text" : "If you want to know how loud the attack was, you have to change your strategy a little, because the high threshold will generally be crossed while the signal is still on its way up."
 								}
 
@@ -528,7 +501,7 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-15", 0 ],
+									"destination" : [ "obj-17", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-11", 0 ]
@@ -537,7 +510,7 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-15", 0 ],
+									"destination" : [ "obj-17", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-12", 0 ]
@@ -564,10 +537,19 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-18", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-17", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
-									"source" : [ "obj-15", 0 ]
+									"source" : [ "obj-18", 0 ]
 								}
 
 							}
@@ -576,25 +558,7 @@
 									"destination" : [ "obj-8", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
-									"source" : [ "obj-15", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-4", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-2", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-15", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-4", 0 ]
+									"source" : [ "obj-18", 0 ]
 								}
 
 							}
@@ -979,7 +943,6 @@
 			}
 , 			{
 				"box" : 				{
-					"bordercolor" : [ 0.5, 0.5, 0.5, 1.0 ],
 					"id" : "obj-41",
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
@@ -1499,22 +1462,11 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "html_reference.maxpat",
-				"bootpath" : "/Users/john/Development/cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"patcherrelativepath" : "../../../cnmat/trunk/max/patches/MMJ-DEPOT/CNMAT_MMJ-Depot/modules/Depot_Support",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "2threshattack~.mxo",
 				"type" : "iLaX"
 			}
 , 			{
 				"name" : "resonators~.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "mattrms~.mxo",
 				"type" : "iLaX"
 			}
  ]
