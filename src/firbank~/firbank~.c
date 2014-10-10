@@ -163,24 +163,7 @@ void firbank_dsp(t_firbank *x, t_signal **sp, short int *count);
 t_int *firbank_perform(t_int *w);
 void firbank_free(t_firbank *x);
 
-// main
-int main(void){
-    
-    version_post_copyright();
-    
-    firbank_class = class_new("firbank~", (method)firbank_new, (method)firbank_free,
-          (short)sizeof(t_firbank), 0L, A_GIMME, 0);
-    
-    class_addmethod(firbank_class, (method)firbank_dsp, "dsp", A_CANT, 0);
-    
-    class_dspinit(firbank_class);
-    
-    ps_buffer_tilde = gensym("buffer~");
-    
-    
-	class_register(CLASS_BOX, firbank_class);
-	return 0;
-}
+
 
 // msp arcana to extract t_buffer* from a t_symbol*
 t_buffer* _sym_to_buffer(t_symbol* s) {
@@ -192,353 +175,6 @@ t_buffer* _sym_to_buffer(t_symbol* s) {
         return 0;
     }
 
-}
-
-// new
-void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
-
-    // scope vars
-    t_firbank *x;	
-    t_symbol* default_buffer;
-    int default_filters;
-    int default_iomap;
-    int default_channel_1;
-    int default_channel_2;
-    
-    int i, j, c;
-    
-    // instantiate 
-    x = object_alloc(firbank_class);
-    if(!x){
-	    return NULL;
-    }
-    
-    // setup defaults
-    /*
-    x->autosplit = 0;
-    x->overlap = 0.5;
-    x->overlap_power = 1.0;
-    x->rc = 0.9;
-    x->template = NULL;
-    x->bands = NULL;
-    x->iomap = NULL;
-    */
-    
-    x->framesize = 512;
-    x->n = 1;
-    x->m = 16;
-    x->k = 16;
-    x->v = 0;
-    
-    x->filters = NULL;
-    x->filter_states = NULL;
-    x->input_copy = NULL;
-    x->input = NULL;
-    x->output = NULL;
-    x->w = NULL;
-    
-    // initialization parsing state
-    default_buffer = NULL;
-    
-    default_iomap = 1;
-    default_filters = 1;
-    
-    default_channel_1 = 0;
-    default_channel_2 = 1;
-    
-    // read arguments
-    for(i = 0; i < argc; i++) {
-        
-        if(argv[i].a_type == A_SYM) {
-            
-            // look for @n
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@n") == 0) {
-                i++;
-                if(i < argc && argv[i].a_type == A_LONG) {
-                    x->n = argv[i].a_w.w_long;
-                } else {
-                    object_post((t_object *)x, "firbank~: expected int for @n");
-                }
-            }
-            
-            // look for @k
-            else if(strcmp(argv[i].a_w.w_sym->s_name, "@k") == 0) {
-                i++;
-                if(i < argc && argv[i].a_type == A_LONG) {
-                    x->k = argv[i].a_w.w_long;
-                } else {
-                    object_post((t_object *)x, "firbank~: expected int for @k");
-                }
-            }
-            
-            // look for @m
-            else if(strcmp(argv[i].a_w.w_sym->s_name, "@m") == 0) {
-                i++;
-                if(i < argc && argv[i].a_type == A_LONG) {
-                    x->m = argv[i].a_w.w_long;
-                } else {
-                    object_post((t_object *)x, "firbank~: expected int for @m");
-                }
-            }
-            
-            // look for @framesize
-            else if(strcmp(argv[i].a_w.w_sym->s_name, "@framesize") == 0) {
-                i++;
-                if(i < argc && argv[i].a_type == A_LONG) {
-                    x->framesize = argv[i].a_w.w_long;
-                } else {
-                    object_post((t_object *)x, "firbank~: expected int for @framesize");
-                }
-            }
-            
-            // look for @buffer
-            else if(strcmp(argv[i].a_w.w_sym->s_name, "@buffer") == 0) {
-                i++;
-                if(i < argc && argv[i].a_type == A_SYM) {
-                    default_buffer = argv[i].a_w.w_sym; // _sym_to_buffer(argv[i].a_w.w_sym);
-                    //x->autosplit = 0;
-                } else {
-                    object_post((t_object *)x, "firbank~: expected symbol for @buffer");
-                }
-            }
-            
-            // look for @channel
-            else if(strcmp(argv[i].a_w.w_sym->s_name, "@channel") == 0) {
-                default_channel_1 = -1;
-                default_channel_2 = -1;
-                
-                i++;
-                
-                if(i < argc && argv[i].a_type == A_LONG) {
-                    default_channel_1 = argv[i].a_w.w_long;
-                        
-                    if(i + 1 < argc && argv[i+1].a_type == A_LONG) {
-                        i++;
-                        default_channel_2 = argv[i].a_w.w_long;
-                    } else {
-                        default_channel_2 = -1;
-                    }
-                } else {
-                    object_post((t_object *)x, "firbank~: expected int for @channel");
-                }
-            }
-            
-            // look for @filter
-            /*
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@filter") == 0) {
-                // @todo
-            }
-            */
-            
-            // look for @mode
-            /*
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@mode") == 0) {
-                i++;
-                if(strcmp(argv[i].a_w.w_sym->s_name, "complex") == 0) {
-                    default_mode = FIRBANK_MODE_COMPLEX;
-                } else if(strcmp(argv[i].a_w.w_sym->s_name, "polar") == 0) {
-                    default_mode = FIRBANK_MODE_POLAR;
-                } else if(strcmp(argv[i].a_w.w_sym->s_name, "timedomain") == 0) {
-                    default_mode = FIRBANK_MODE_POLAR;
-                } else {
-                    object_post((t_object *)x, "firbank~: expected symbol, 'complex', 'polar', or 'timedomain' for @mode");
-                }
-            }
-            */
-            
-            /*
-            // look for @offset
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@offset") == 0) {
-                // todo
-            }
-            
-            // look for @iomap
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@iomap") == 0) {
-                
-            }
-            
-            // look for @autosplit
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@autosplit") == 0) {
-                
-            }
-            
-            // look for @overlap
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@overlap") == 0) {
-                
-            }
-            
-            // look for @rc
-            if(strcmp(argv[i].a_w.w_sym->s_name, "@rc") == 0) {
-                
-            }
-            */
-            
-        }
-        
-    }
-    
-    if(x->m) {
-        // post("firbank~: allocating %d filter states, tail %d samples", x->m, x->framesize / 2);
-        x->filter_states = (t_fir_state*)malloc(sizeof(t_fir_state)*x->m);
-        for(i = 0; i < x->m; i++) {
-            x->filter_states[i].tail = (float*)fftwf_malloc(sizeof(float) * x->framesize / 2);
-            memset(x->filter_states[i].tail, 0, sizeof(float) * x->framesize / 2);
-        }
-    }
-    
-    /*
-    if(x->autosplit) {
-        // configure...
-        object_post((t_object *)x, "firbank~: autosplit mode not supported yet");
-    }
-    */
-    
-    // setup filters if not from initialization
-    if(default_filters && default_buffer != NULL) {
-        // post("firbank~: setting up %d filters with framesize %d, channels (%d, %d)", x->k, x->framesize, default_channel_1, default_channel_2);
-        
-        x->filters = (t_fir*)malloc(sizeof(t_fir)*x->k);
-        
-        for(i = 0; i < x->k; i++) {
-            x->filters[i].buffer = default_buffer;
-            x->filters[i].channel_1 = default_channel_1;
-            x->filters[i].channel_2 = default_channel_2;
-            x->filters[i].offset = i * x->framesize;
-        }
-    } else {
-        object_post((t_object *)x, "firbank~: no buffer specified");
-    }
-    
-    // setup iomap if not from initialization
-    if(default_iomap) {
-        // post("firbank~: initializing input-output map...");
-        for(i = 0; i < x->n; i++) {
-            for(j = 0; j < x->k; j++) {
-                c = (j*(x->m/x->k))+i;
-                if(c < x->m) {
-                    x->filter_states[c].o = c;      // output channel
-                    x->filter_states[c].k = j;      // filter
-                    x->filter_states[c].i = i;      // input channel
-                    // post("firbank~: input: %d, filter %d, output %d", x->filter_states[c].i, x->filter_states[c].k, x->filter_states[c].o);
-                }
-            }
-        }
-    }
-    
-    // setup fftw
-    x->x_forward_t = (float*)fftwf_malloc(sizeof(float) * (x->framesize + 2)); // two extra so fftw can work its in-place magic
-    x->x_forward_c = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * (x->framesize / 2 + 1));  // n/2+1 complex numbers (dc is first, nyquist last)
-    
-    x->x_inverse_t = (float*)fftwf_malloc(sizeof(float) * (x->framesize + 2));
-    x->x_inverse_c = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * (x->framesize / 2 + 1));  // n/2+1 complex numbers (dc is first, nyquist last)
-
-    x->input_copy = (float*)fftwf_malloc(sizeof(float) * (x->framesize / 2) * x->n);
-    
-    memset(x->x_forward_t, 0, sizeof(float) * (x->framesize));
-    memset(x->x_inverse_t, 0, sizeof(float) * (x->framesize));
-
-    // post("firbank~: preparing fftw plan...");
-    
-    x->x_forward = fftwf_plan_dft_r2c_1d(x->framesize,
-                                         x->x_forward_t, x->x_forward_c,
-                                         FFTW_MEASURE
-                                         );
-
-    x->x_inverse = fftwf_plan_dft_c2r_1d(x->framesize,
-                                         x->x_inverse_c, x->x_inverse_t,
-                                         FFTW_MEASURE
-                                         );
-    
-    // post("firbank~: done.");
-
-    x->w = (t_int**)malloc(sizeof(t_int*) * (x->n + x->m + 2));
-    x->input = (float**)malloc(sizeof(float*) * x->n);
-    x->output = (float**)malloc(sizeof(float*) * x->m);
-    
-    // don't share inlet and outlet buffers
-    // this doesn't work!
-    // x->x_obj.z_misc = Z_NO_INPLACE;
-    
-    // allocate inlets
-    dsp_setup((t_pxobject *)x, x->n);
-    
-    // allocate outlets
-    for(i = 0; i < x->m; i++) {
-        outlet_new((t_object *)x, "signal");	// type of outlet: "signal"
-    }
-    
-    return (x);
-    
-}
-
-// free
-void firbank_free(t_firbank *x) {
-	
-    int i;
-    
-	dsp_free(&(x->x_obj));
-    
-    if(x->input != NULL) {
-        free(x->input);
-    }
-	
-    if(x->output != NULL) {
-        free(x->output);
-    }
-    
-    if(x->framesize) {
-        fftwf_free(x->x_forward_t);
-        fftwf_free(x->x_forward_c);
-        
-        fftwf_free(x->x_inverse_t);
-        fftwf_free(x->x_inverse_c);
-        
-        fftwf_destroy_plan(x->x_forward);
-        fftwf_destroy_plan(x->x_inverse);
-        
-        fftwf_free(x->input_copy);
-    }
-    
-    if(x->filter_states != NULL) {
-        for(i = 0; i < x->m; i++) {
-            fftwf_free(x->filter_states[i].tail);
-        }
-        free(x->filter_states);
-    }
-    
-    if(x->filters != NULL) {
-        free(x->filters);
-    }
-    
-    if(x->w != NULL) {
-        free(x->w);
-    }
-    
-    // post("firbank~: object destroyed.");
-    
-}
-
-// dsp setup
-void firbank_dsp(t_firbank *x, t_signal **sp, short *connect) {
-
-    int i;
-
-    x->v = sp[0]->s_n;
-
-    if(x->v != x->framesize / 2) {
-        object_post((t_object *)x, "firbank~: vector size (%d) is not equal to framesize / 2 (%d)", x->v, x->framesize / 2);
-    }
-
-    // setup args
-    x->w[0] = (t_int*)x;
-    x->w[1] = (t_int*)(sp[0]->s_n);
-    
-    for(i = 0; i < (x->n + x->m); i++) {
-        x->w[i+2] = (t_int*)(sp[i]->s_vec);
-    }
-    
-	dsp_addv(firbank_perform, 2 + x->n + x->m, (void**)(x->w)); // not sure if this is right for number of inlets, outlets
-    
 }
 
 t_int* firbank_perform(t_int *w) {
@@ -676,3 +312,515 @@ t_int* firbank_perform(t_int *w) {
     
 }
 
+void firbank_perform64(t_firbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+    {
+
+    t_int** wp;
+    int i, p, s, k;
+    float c, d;
+    
+    t_buffer* b;
+    
+    long v = sampleframes;
+    if(v != x->v) {
+        object_post((t_object *)x, "firbank~: unexpected block size, v != x->v, %d", v);
+        return;
+    }
+    
+    for(i = 0; i < numins; i++) {
+        x->input[i] = (float *)ins[i];
+    }
+    
+    for(i = 0; i < numouts; i++) {
+        x->output[i] = (float *)outs[i];
+    }
+    
+    if(x->v == x->framesize / 2) {
+        
+        // copy input
+        for(i = 0; i < x->n; i++) {
+            memcpy(x->input_copy + (i * x->v), x->input[i], x->v * sizeof(float));
+        }
+        
+        // do overlap-save
+        
+        // for each input...
+        for(i = 0; i < x->n; i++) {
+            
+            // copy input into first half of x_forward_t
+            for(s = 0; s < x->v; s++) {
+                x->x_forward_t[s] = x->input_copy[i * x->v + s];
+                x->x_forward_t[s + x->v] = 0.f;
+            }
+            
+            // transform -> x_forward_c
+            fftwf_execute(x->x_forward);
+            
+            // for each filter state using this input...
+            for(p = 0; p < x->m; p++) {
+                
+                if(x->filter_states[p].i == i) {
+                    
+                    // find the corresponding filter index
+                    k = x->filter_states[p].k;
+                    
+                    b = _sym_to_buffer(x->filters[k].buffer);
+                    
+                    // verify that its buffer valid and meets the channel and length requirements...
+                    if(b && (b->b_valid) &&
+                       (x->filters[k].channel_1 >= 0 && x->filters[k].channel_1 < b->b_nchans) &&
+                       ((x->filters[k].channel_2 >= 0 && x->filters[k].channel_2 < b->b_nchans) || (x->filters[k].channel_2 < 0)) &&
+                       (x->filters[k].offset + x->framesize < b->b_frames)) {
+                        
+                        // real convolution only (magnitude)
+                        if(x->filters[k].channel_2 < 0) {
+                            
+                            for(s = 0; s < x->framesize / 2 + 1; s++) { // note symmetry; second half of filter is ignored
+                                c = b->b_samples[(x->filters[k].offset + s) * b->b_nchans + x->filters[k].channel_1];
+                                
+                                // (a + b I) * c = ac + bc I
+                                x->x_inverse_c[s][0] = x->x_forward_c[s][0] * c; // ac
+                                x->x_inverse_c[s][1] = x->x_forward_c[s][1] * c; // bc
+                            }
+                            
+                        }
+                        
+                        // complex convolution
+                        else {
+                            
+                            for(s = 0; s < (x->framesize / 2 + 1); s++) { // note symmetry
+                                c = b->b_samples[(x->filters[k].offset + s) * b->b_nchans + x->filters[k].channel_1];
+                                d = b->b_samples[(x->filters[k].offset + s) * b->b_nchans + x->filters[k].channel_2];
+                                
+                                // (a + b I) * (c + d I) = (ac - bd) + (ad + bc) I
+                                x->x_inverse_c[s][0] = x->x_forward_c[s][0] * c - x->x_forward_c[s][1] * d;  // ac - bd
+                                x->x_inverse_c[s][1] = x->x_forward_c[s][0] * d +  x->x_forward_c[s][1] * c; // ad + bc
+                            }
+                            
+                        }
+                        
+                        // invert result
+                        fftwf_execute(x->x_inverse);
+                        
+                        // normalize
+                        for(s = 0; s < x->framesize; s++) {
+                            x->x_inverse_t[s] /= x->framesize;
+                        }
+                        
+                        // copy first half of result into output + tail of filter state
+                        for(s = 0; s < x->v; s++) {
+                            x->output[x->filter_states[p].o][s] = x->x_inverse_t[s] + x->filter_states[p].tail[s];
+                        }
+                        
+                        // copy second half of result into tail
+                        for(s = 0; s < x->v; s++) {
+                            x->filter_states[p].tail[s] = x->x_inverse_t[s + x->v];
+                        }
+                        
+                    } else {
+                        object_post((t_object *)x, "firbank~: buffer for filter %d does not meet specifications", k);
+                    }
+                    
+                } // filter state corresponds to this input
+                
+            } // for each filter state
+            
+        } // for each input
+        
+    } else {
+        
+        // outputs all zeros
+        for(i = 0; i < x->m; i++) {
+            for(s = 0; s < x->v; s++) {
+                x->output[i][s] = 0.f;
+            }
+        }
+        
+    }
+}
+
+
+void firbank_dsp64(t_firbank *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    x->v = sys_getblksize();
+    
+    if(x->v != x->framesize / 2) {
+        object_post((t_object *)x, "firbank~: vector size (%d) is not equal to framesize / 2 (%d)", x->v, x->framesize / 2);
+    }
+    
+    
+    if(count[0]){
+		object_method(dsp64, gensym("dsp_add64"), x, firbank_perform64, 0, NULL);
+	}
+    
+}
+
+
+// dsp setup
+void firbank_dsp(t_firbank *x, t_signal **sp, short *connect) {
+    
+    int i;
+    
+    x->v = sp[0]->s_n;
+    
+    if(x->v != x->framesize / 2) {
+        object_post((t_object *)x, "firbank~: vector size (%d) is not equal to framesize / 2 (%d)", x->v, x->framesize / 2);
+    }
+    
+    // setup args
+    x->w[0] = (t_int*)x;
+    x->w[1] = (t_int*)(sp[0]->s_n);
+    
+    for(i = 0; i < (x->n + x->m); i++) {
+        x->w[i+2] = (t_int*)(sp[i]->s_vec);
+    }
+    
+	dsp_addv(firbank_perform, 2 + x->n + x->m, (void**)(x->w)); // not sure if this is right for number of inlets, outlets
+    
+}
+
+
+// free
+void firbank_free(t_firbank *x) {
+	
+    int i;
+    
+	dsp_free(&(x->x_obj));
+    
+    if(x->input != NULL) {
+        free(x->input);
+    }
+	
+    if(x->output != NULL) {
+        free(x->output);
+    }
+    
+    if(x->framesize) {
+        fftwf_free(x->x_forward_t);
+        fftwf_free(x->x_forward_c);
+        
+        fftwf_free(x->x_inverse_t);
+        fftwf_free(x->x_inverse_c);
+        
+        fftwf_destroy_plan(x->x_forward);
+        fftwf_destroy_plan(x->x_inverse);
+        
+        fftwf_free(x->input_copy);
+    }
+    
+    if(x->filter_states != NULL) {
+        for(i = 0; i < x->m; i++) {
+            fftwf_free(x->filter_states[i].tail);
+        }
+        free(x->filter_states);
+    }
+    
+    if(x->filters != NULL) {
+        free(x->filters);
+    }
+    
+    if(x->w != NULL) {
+        free(x->w);
+    }
+    
+    // post("firbank~: object destroyed.");
+    
+}
+
+
+// new
+void *firbank_new(t_symbol *s, short argc, t_atom *argv) {
+    
+    // scope vars
+    t_firbank *x;
+    t_symbol* default_buffer;
+    int default_filters;
+    int default_iomap;
+    int default_channel_1;
+    int default_channel_2;
+    
+    int i, j, c;
+    
+    // instantiate
+    x = object_alloc(firbank_class);
+    if(!x){
+	    return NULL;
+    }
+    
+    // setup defaults
+    /*
+     x->autosplit = 0;
+     x->overlap = 0.5;
+     x->overlap_power = 1.0;
+     x->rc = 0.9;
+     x->template = NULL;
+     x->bands = NULL;
+     x->iomap = NULL;
+     */
+    
+    x->framesize = 512;
+    x->n = 1;
+    x->m = 16;
+    x->k = 16;
+    x->v = 0;
+    
+    x->filters = NULL;
+    x->filter_states = NULL;
+    x->input_copy = NULL;
+    x->input = NULL;
+    x->output = NULL;
+    x->w = NULL;
+    
+    // initialization parsing state
+    default_buffer = NULL;
+    
+    default_iomap = 1;
+    default_filters = 1;
+    
+    default_channel_1 = 0;
+    default_channel_2 = 1;
+    
+    // read arguments
+    for(i = 0; i < argc; i++) {
+        
+        if(argv[i].a_type == A_SYM) {
+            
+            // look for @n
+            if(strcmp(argv[i].a_w.w_sym->s_name, "@n") == 0) {
+                i++;
+                if(i < argc && argv[i].a_type == A_LONG) {
+                    x->n = argv[i].a_w.w_long;
+                } else {
+                    object_post((t_object *)x, "firbank~: expected int for @n");
+                }
+            }
+            
+            // look for @k
+            else if(strcmp(argv[i].a_w.w_sym->s_name, "@k") == 0) {
+                i++;
+                if(i < argc && argv[i].a_type == A_LONG) {
+                    x->k = argv[i].a_w.w_long;
+                } else {
+                    object_post((t_object *)x, "firbank~: expected int for @k");
+                }
+            }
+            
+            // look for @m
+            else if(strcmp(argv[i].a_w.w_sym->s_name, "@m") == 0) {
+                i++;
+                if(i < argc && argv[i].a_type == A_LONG) {
+                    x->m = argv[i].a_w.w_long;
+                } else {
+                    object_post((t_object *)x, "firbank~: expected int for @m");
+                }
+            }
+            
+            // look for @framesize
+            else if(strcmp(argv[i].a_w.w_sym->s_name, "@framesize") == 0) {
+                i++;
+                if(i < argc && argv[i].a_type == A_LONG) {
+                    x->framesize = argv[i].a_w.w_long;
+                } else {
+                    object_post((t_object *)x, "firbank~: expected int for @framesize");
+                }
+            }
+            
+            // look for @buffer
+            else if(strcmp(argv[i].a_w.w_sym->s_name, "@buffer") == 0) {
+                i++;
+                if(i < argc && argv[i].a_type == A_SYM) {
+                    default_buffer = argv[i].a_w.w_sym; // _sym_to_buffer(argv[i].a_w.w_sym);
+                    //x->autosplit = 0;
+                } else {
+                    object_post((t_object *)x, "firbank~: expected symbol for @buffer");
+                }
+            }
+            
+            // look for @channel
+            else if(strcmp(argv[i].a_w.w_sym->s_name, "@channel") == 0) {
+                default_channel_1 = -1;
+                default_channel_2 = -1;
+                
+                i++;
+                
+                if(i < argc && argv[i].a_type == A_LONG) {
+                    default_channel_1 = argv[i].a_w.w_long;
+                    
+                    if(i + 1 < argc && argv[i+1].a_type == A_LONG) {
+                        i++;
+                        default_channel_2 = argv[i].a_w.w_long;
+                    } else {
+                        default_channel_2 = -1;
+                    }
+                } else {
+                    object_post((t_object *)x, "firbank~: expected int for @channel");
+                }
+            }
+            
+            // look for @filter
+            /*
+             if(strcmp(argv[i].a_w.w_sym->s_name, "@filter") == 0) {
+             // @todo
+             }
+             */
+            
+            // look for @mode
+            /*
+             if(strcmp(argv[i].a_w.w_sym->s_name, "@mode") == 0) {
+             i++;
+             if(strcmp(argv[i].a_w.w_sym->s_name, "complex") == 0) {
+             default_mode = FIRBANK_MODE_COMPLEX;
+             } else if(strcmp(argv[i].a_w.w_sym->s_name, "polar") == 0) {
+             default_mode = FIRBANK_MODE_POLAR;
+             } else if(strcmp(argv[i].a_w.w_sym->s_name, "timedomain") == 0) {
+             default_mode = FIRBANK_MODE_POLAR;
+             } else {
+             object_post((t_object *)x, "firbank~: expected symbol, 'complex', 'polar', or 'timedomain' for @mode");
+             }
+             }
+             */
+            
+            /*
+             // look for @offset
+             if(strcmp(argv[i].a_w.w_sym->s_name, "@offset") == 0) {
+             // todo
+             }
+             
+             // look for @iomap
+             if(strcmp(argv[i].a_w.w_sym->s_name, "@iomap") == 0) {
+             
+             }
+             
+             // look for @autosplit
+             if(strcmp(argv[i].a_w.w_sym->s_name, "@autosplit") == 0) {
+             
+             }
+             
+             // look for @overlap
+             if(strcmp(argv[i].a_w.w_sym->s_name, "@overlap") == 0) {
+             
+             }
+             
+             // look for @rc
+             if(strcmp(argv[i].a_w.w_sym->s_name, "@rc") == 0) {
+             
+             }
+             */
+            
+        }
+        
+    }
+    
+    if(x->m) {
+        // post("firbank~: allocating %d filter states, tail %d samples", x->m, x->framesize / 2);
+        x->filter_states = (t_fir_state*)malloc(sizeof(t_fir_state)*x->m);
+        for(i = 0; i < x->m; i++) {
+            x->filter_states[i].tail = (float*)fftwf_malloc(sizeof(float) * x->framesize / 2);
+            memset(x->filter_states[i].tail, 0, sizeof(float) * x->framesize / 2);
+        }
+    }
+    
+    /*
+     if(x->autosplit) {
+     // configure...
+     object_post((t_object *)x, "firbank~: autosplit mode not supported yet");
+     }
+     */
+    
+    // setup filters if not from initialization
+    if(default_filters && default_buffer != NULL) {
+        // post("firbank~: setting up %d filters with framesize %d, channels (%d, %d)", x->k, x->framesize, default_channel_1, default_channel_2);
+        
+        x->filters = (t_fir*)malloc(sizeof(t_fir)*x->k);
+        
+        for(i = 0; i < x->k; i++) {
+            x->filters[i].buffer = default_buffer;
+            x->filters[i].channel_1 = default_channel_1;
+            x->filters[i].channel_2 = default_channel_2;
+            x->filters[i].offset = i * x->framesize;
+        }
+    } else {
+        object_post((t_object *)x, "firbank~: no buffer specified");
+    }
+    
+    // setup iomap if not from initialization
+    if(default_iomap) {
+        // post("firbank~: initializing input-output map...");
+        for(i = 0; i < x->n; i++) {
+            for(j = 0; j < x->k; j++) {
+                c = (j*(x->m/x->k))+i;
+                if(c < x->m) {
+                    x->filter_states[c].o = c;      // output channel
+                    x->filter_states[c].k = j;      // filter
+                    x->filter_states[c].i = i;      // input channel
+                    // post("firbank~: input: %d, filter %d, output %d", x->filter_states[c].i, x->filter_states[c].k, x->filter_states[c].o);
+                }
+            }
+        }
+    }
+    
+    // setup fftw
+    x->x_forward_t = (float*)fftwf_malloc(sizeof(float) * (x->framesize + 2)); // two extra so fftw can work its in-place magic
+    x->x_forward_c = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * (x->framesize / 2 + 1));  // n/2+1 complex numbers (dc is first, nyquist last)
+    
+    x->x_inverse_t = (float*)fftwf_malloc(sizeof(float) * (x->framesize + 2));
+    x->x_inverse_c = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * (x->framesize / 2 + 1));  // n/2+1 complex numbers (dc is first, nyquist last)
+    
+    x->input_copy = (float*)fftwf_malloc(sizeof(float) * (x->framesize / 2) * x->n);
+    
+    memset(x->x_forward_t, 0, sizeof(float) * (x->framesize));
+    memset(x->x_inverse_t, 0, sizeof(float) * (x->framesize));
+    
+    // post("firbank~: preparing fftw plan...");
+    
+    x->x_forward = fftwf_plan_dft_r2c_1d(x->framesize,
+                                         x->x_forward_t, x->x_forward_c,
+                                         FFTW_MEASURE
+                                         );
+    
+    x->x_inverse = fftwf_plan_dft_c2r_1d(x->framesize,
+                                         x->x_inverse_c, x->x_inverse_t,
+                                         FFTW_MEASURE
+                                         );
+    
+    // post("firbank~: done.");
+    
+    x->w = (t_int**)malloc(sizeof(t_int*) * (x->n + x->m + 2));
+    x->input = (float**)malloc(sizeof(float*) * x->n);
+    x->output = (float**)malloc(sizeof(float*) * x->m);
+    
+    // don't share inlet and outlet buffers
+    // this doesn't work!
+    // x->x_obj.z_misc = Z_NO_INPLACE;
+    
+    // allocate inlets
+    dsp_setup((t_pxobject *)x, x->n);
+    
+    // allocate outlets
+    for(i = 0; i < x->m; i++) {
+        outlet_new((t_object *)x, "signal");	// type of outlet: "signal"
+    }
+    
+    return (x);
+    
+}
+
+// main
+int main(void){
+    
+    version_post_copyright();
+    
+    firbank_class = class_new("firbank~", (method)firbank_new, (method)firbank_free,
+                              (short)sizeof(t_firbank), 0L, A_GIMME, 0);
+    
+    class_addmethod(firbank_class, (method)firbank_dsp, "dsp", A_CANT, 0);
+    class_addmethod(firbank_class, (method)firbank_dsp64, "dsp64", A_CANT, 0);
+    
+    class_dspinit(firbank_class);
+    
+    ps_buffer_tilde = gensym("buffer~");
+    
+    
+	class_register(CLASS_BOX, firbank_class);
+	return 0;
+}
