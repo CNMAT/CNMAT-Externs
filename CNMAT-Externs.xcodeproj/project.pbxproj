@@ -90,6 +90,20 @@
 		115E4E3D18846E320071D644 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		115E4E3E18846E320071D644 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		115E4E4818846E990071D644 /* shot.ms~.c in Sources */ = {isa = PBXBuildFile; fileRef = 115E4E4618846E990071D644 /* shot.ms~.c */; };
+		118DF69319D2165C00AD8C6C /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		118DF69619D2165C00AD8C6C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		118DF69719D2165C00AD8C6C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		118DF69819D2165C00AD8C6C /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		118DF69919D2165C00AD8C6C /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		118DF69A19D2165C00AD8C6C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
+		118DF6A919D216CE00AD8C6C /* firbank~.16band-512pt.wav in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A219D216CE00AD8C6C /* firbank~.16band-512pt.wav */; };
+		118DF6AA19D216CE00AD8C6C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A319D216CE00AD8C6C /* Info.plist */; };
+		118DF6AB19D216CE00AD8C6C /* partconv~-objinfo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A419D216CE00AD8C6C /* partconv~-objinfo.txt */; };
+		118DF6AC19D216CE00AD8C6C /* partconv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 118DF6A519D216CE00AD8C6C /* partconv~.cpp */; };
+		118DF6AD19D216CE00AD8C6C /* partconv~.help.maxpat in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A619D216CE00AD8C6C /* partconv~.help.maxpat */; };
+		118DF6AE19D216CE00AD8C6C /* partconv~.help.pat in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A719D216CE00AD8C6C /* partconv~.help.pat */; };
+		11B18EF619D7D88600896D7E /* buffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11B18EF219D7D88600896D7E /* buffers.cpp */; };
+		11B18EF719D7D88600896D7E /* partconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11B18EF419D7D88600896D7E /* partconv.cpp */; };
 		11C1B49018A84AA900822EFF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		11C1B49318A84AA900822EFF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		11C1B49418A84AA900822EFF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -932,6 +946,17 @@
 		115E4E4318846E320071D644 /* shot-ms~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "shot-ms~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		115E4E4518846E990071D644 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		115E4E4618846E990071D644 /* shot.ms~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "shot.ms~.c"; sourceTree = "<group>"; };
+		118DF69F19D2165C00AD8C6C /* partconv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "partconv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		118DF6A219D216CE00AD8C6C /* firbank~.16band-512pt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "firbank~.16band-512pt.wav"; sourceTree = "<group>"; };
+		118DF6A319D216CE00AD8C6C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		118DF6A419D216CE00AD8C6C /* partconv~-objinfo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "partconv~-objinfo.txt"; sourceTree = "<group>"; };
+		118DF6A519D216CE00AD8C6C /* partconv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "partconv~.cpp"; sourceTree = "<group>"; };
+		118DF6A619D216CE00AD8C6C /* partconv~.help.maxpat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "partconv~.help.maxpat"; sourceTree = "<group>"; };
+		118DF6A719D216CE00AD8C6C /* partconv~.help.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partconv~.help.pat"; sourceTree = "<group>"; };
+		11B18EF219D7D88600896D7E /* buffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = buffers.cpp; sourceTree = "<group>"; };
+		11B18EF319D7D88600896D7E /* buffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffers.h; sourceTree = "<group>"; };
+		11B18EF419D7D88600896D7E /* partconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = partconv.cpp; sourceTree = "<group>"; };
+		11B18EF519D7D88600896D7E /* partconv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = partconv.h; sourceTree = "<group>"; };
 		11C1B49D18A84AA900822EFF /* polywave~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "polywave~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		11C1B49F18A84B1C00822EFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11C1B4A018A84B1C00822EFF /* polywave~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "polywave~.c"; sourceTree = "<group>"; };
@@ -1283,6 +1308,18 @@
 				115E4E3C18846E320071D644 /* Carbon.framework in Frameworks */,
 				115E4E3D18846E320071D644 /* CoreServices.framework in Frameworks */,
 				115E4E3E18846E320071D644 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		118DF69519D2165C00AD8C6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				118DF69619D2165C00AD8C6C /* CoreFoundation.framework in Frameworks */,
+				118DF69719D2165C00AD8C6C /* Accelerate.framework in Frameworks */,
+				118DF69819D2165C00AD8C6C /* Carbon.framework in Frameworks */,
+				118DF69919D2165C00AD8C6C /* CoreServices.framework in Frameworks */,
+				118DF69A19D2165C00AD8C6C /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1971,6 +2008,24 @@
 			);
 			name = "shot-ms~";
 			path = "src/shot-ms~";
+			sourceTree = "<group>";
+		};
+		118DF6A019D216CE00AD8C6C /* partconv~ */ = {
+			isa = PBXGroup;
+			children = (
+				118DF6A219D216CE00AD8C6C /* firbank~.16band-512pt.wav */,
+				118DF6A319D216CE00AD8C6C /* Info.plist */,
+				118DF6A419D216CE00AD8C6C /* partconv~-objinfo.txt */,
+				118DF6A519D216CE00AD8C6C /* partconv~.cpp */,
+				11B18EF219D7D88600896D7E /* buffers.cpp */,
+				11B18EF319D7D88600896D7E /* buffers.h */,
+				11B18EF419D7D88600896D7E /* partconv.cpp */,
+				11B18EF519D7D88600896D7E /* partconv.h */,
+				118DF6A619D216CE00AD8C6C /* partconv~.help.maxpat */,
+				118DF6A719D216CE00AD8C6C /* partconv~.help.pat */,
+			);
+			name = "partconv~";
+			path = "src/partconv~";
 			sourceTree = "<group>";
 		};
 		11C1B49E18A84B1C00822EFF /* polywave~ */ = {
@@ -2807,6 +2862,7 @@
 				52E4492A15F2879300C91B67 /* OSC-schedule */,
 				52E4493215F2879300C91B67 /* OSC-timetag */,
 				52E4493915F2879300C91B67 /* oscillators~ */,
+				118DF6A019D216CE00AD8C6C /* partconv~ */,
 				52E4493D15F2879300C91B67 /* peqbank~ */,
 				52E4494515F2879300C91B67 /* pitch~ */,
 				52E4494915F2879400C91B67 /* poly.bus~ */,
@@ -2907,6 +2963,7 @@
 				115E4E4318846E320071D644 /* shot-ms~.mxo */,
 				11C1B49D18A84AA900822EFF /* polywave~.mxo */,
 				110C3E48194433A500A53893 /* localpeak~.mxo */,
+				118DF69F19D2165C00AD8C6C /* partconv~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2982,6 +3039,23 @@
 			name = "shot-ms~";
 			productName = "2threshattack~";
 			productReference = 115E4E4318846E320071D644 /* shot-ms~.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		118DF68F19D2165C00AD8C6C /* partconv~ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 118DF69C19D2165C00AD8C6C /* Build configuration list for PBXNativeTarget "partconv~" */;
+			buildPhases = (
+				118DF69019D2165C00AD8C6C /* Sources */,
+				118DF69519D2165C00AD8C6C /* Frameworks */,
+				118DF69B19D2165C00AD8C6C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "partconv~";
+			productName = "2threshattack~";
+			productReference = 118DF69F19D2165C00AD8C6C /* partconv~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		11C1B48E18A84AA900822EFF /* polywave~ */ = {
@@ -4017,6 +4091,7 @@
 				52E449BD15F287ED00C91B67 /* OSC-schedule */,
 				52E449CC15F287F500C91B67 /* OSC-timetag */,
 				52E449DB15F287FB00C91B67 /* oscillators~ */,
+				118DF68F19D2165C00AD8C6C /* partconv~ */,
 				52E449EA15F2880400C91B67 /* peqbank~ */,
 				52E449F915F2880900C91B67 /* pitch~ */,
 				52E44A0815F2880E00C91B67 /* poly.bus~ */,
@@ -4069,6 +4144,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		118DF69B19D2165C00AD8C6C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				118DF6AD19D216CE00AD8C6C /* partconv~.help.maxpat in Resources */,
+				118DF6AE19D216CE00AD8C6C /* partconv~.help.pat in Resources */,
+				118DF6A919D216CE00AD8C6C /* firbank~.16band-512pt.wav in Resources */,
+				118DF6AB19D216CE00AD8C6C /* partconv~-objinfo.txt in Resources */,
+				118DF6AA19D216CE00AD8C6C /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4498,6 +4585,17 @@
 			files = (
 				115E4E3818846E320071D644 /* commonsyms.c in Sources */,
 				115E4E4818846E990071D644 /* shot.ms~.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		118DF69019D2165C00AD8C6C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11B18EF619D7D88600896D7E /* buffers.cpp in Sources */,
+				118DF69319D2165C00AD8C6C /* commonsyms.c in Sources */,
+				11B18EF719D7D88600896D7E /* partconv.cpp in Sources */,
+				118DF6AC19D216CE00AD8C6C /* partconv~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5457,6 +5555,60 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "shot-ms~";
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		118DF69D19D2165C00AD8C6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DNO_TRANSLATION_SUPPORT",
+				);
+				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRODUCT_NAME = "partconv~";
+				SDKROOT = macosx10.9;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		118DF69E19D2165C00AD8C6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(inherited)";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DNO_TRANSLATION_SUPPORT",
+				);
+				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRODUCT_NAME = "partconv~";
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8111,6 +8263,15 @@
 			buildConfigurations = (
 				115E4E4118846E320071D644 /* Debug */,
 				115E4E4218846E320071D644 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		118DF69C19D2165C00AD8C6C /* Build configuration list for PBXNativeTarget "partconv~" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				118DF69D19D2165C00AD8C6C /* Debug */,
+				118DF69E19D2165C00AD8C6C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
