@@ -102,6 +102,11 @@
 		118DF6AC19D216CE00AD8C6C /* partconv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 118DF6A519D216CE00AD8C6C /* partconv~.cpp */; };
 		118DF6AD19D216CE00AD8C6C /* partconv~.help.maxpat in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A619D216CE00AD8C6C /* partconv~.help.maxpat */; };
 		118DF6AE19D216CE00AD8C6C /* partconv~.help.pat in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A719D216CE00AD8C6C /* partconv~.help.pat */; };
+		119F597519E8E1DC00D7B4A7 /* partconv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 118DF6A519D216CE00AD8C6C /* partconv~.cpp */; };
+		119F597619E8E1E000D7B4A7 /* buffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11B18EF219D7D88600896D7E /* buffers.cpp */; };
+		119F597719E8E1E500D7B4A7 /* partconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11B18EF419D7D88600896D7E /* partconv.cpp */; };
+		119F597A19E8E66E00D7B4A7 /* max2pd.c in Sources */ = {isa = PBXBuildFile; fileRef = 119F597819E8E66E00D7B4A7 /* max2pd.c */; };
+		119F597B19E8E66E00D7B4A7 /* max2pd.h in Headers */ = {isa = PBXBuildFile; fileRef = 119F597919E8E66E00D7B4A7 /* max2pd.h */; };
 		11B18EF619D7D88600896D7E /* buffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11B18EF219D7D88600896D7E /* buffers.cpp */; };
 		11B18EF719D7D88600896D7E /* partconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11B18EF419D7D88600896D7E /* partconv.cpp */; };
 		11C1B49018A84AA900822EFF /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
@@ -953,6 +958,9 @@
 		118DF6A519D216CE00AD8C6C /* partconv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "partconv~.cpp"; sourceTree = "<group>"; };
 		118DF6A619D216CE00AD8C6C /* partconv~.help.maxpat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "partconv~.help.maxpat"; sourceTree = "<group>"; };
 		118DF6A719D216CE00AD8C6C /* partconv~.help.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partconv~.help.pat"; sourceTree = "<group>"; };
+		119F596819E8DDCB00D7B4A7 /* partconv~.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; name = "partconv~.dylib"; path = "partconv~.pd_darwin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		119F597819E8E66E00D7B4A7 /* max2pd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = max2pd.c; path = include/max2pd.c; sourceTree = "<group>"; };
+		119F597919E8E66E00D7B4A7 /* max2pd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = max2pd.h; path = include/max2pd.h; sourceTree = "<group>"; };
 		11B18EF219D7D88600896D7E /* buffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = buffers.cpp; sourceTree = "<group>"; };
 		11B18EF319D7D88600896D7E /* buffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffers.h; sourceTree = "<group>"; };
 		11B18EF419D7D88600896D7E /* partconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = partconv.cpp; sourceTree = "<group>"; };
@@ -1320,6 +1328,13 @@
 				118DF69819D2165C00AD8C6C /* Carbon.framework in Frameworks */,
 				118DF69919D2165C00AD8C6C /* CoreServices.framework in Frameworks */,
 				118DF69A19D2165C00AD8C6C /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		119F596519E8DDCB00D7B4A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2226,6 +2241,8 @@
 		52DE949415F142570097B3E8 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				119F597819E8E66E00D7B4A7 /* max2pd.c */,
+				119F597919E8E66E00D7B4A7 /* max2pd.h */,
 				5219624C16E6D01700EA7DDF /* libOSC */,
 				5219623016E6C96D00EA7DDF /* OSC-Kit */,
 				5218BB76164DD87F00A02F42 /* sdif-interp-implem.c */,
@@ -2964,6 +2981,7 @@
 				11C1B49D18A84AA900822EFF /* polywave~.mxo */,
 				110C3E48194433A500A53893 /* localpeak~.mxo */,
 				118DF69F19D2165C00AD8C6C /* partconv~.mxo */,
+				119F596819E8DDCB00D7B4A7 /* partconv~.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3005,6 +3023,17 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		119F596619E8DDCB00D7B4A7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				119F597B19E8E66E00D7B4A7 /* max2pd.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		110C3E38194433A500A53893 /* localpeak~ */ = {
@@ -3057,6 +3086,23 @@
 			productName = "2threshattack~";
 			productReference = 118DF69F19D2165C00AD8C6C /* partconv~.mxo */;
 			productType = "com.apple.product-type.bundle";
+		};
+		119F596719E8DDCB00D7B4A7 /* partconv~.pd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 119F597419E8DDCC00D7B4A7 /* Build configuration list for PBXNativeTarget "partconv~.pd" */;
+			buildPhases = (
+				119F596419E8DDCB00D7B4A7 /* Sources */,
+				119F596519E8DDCB00D7B4A7 /* Frameworks */,
+				119F596619E8DDCB00D7B4A7 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "partconv~.pd";
+			productName = "partconv~.pd";
+			productReference = 119F596819E8DDCB00D7B4A7 /* partconv~.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
 		};
 		11C1B48E18A84AA900822EFF /* polywave~ */ = {
 			isa = PBXNativeTarget;
@@ -4092,6 +4138,7 @@
 				52E449CC15F287F500C91B67 /* OSC-timetag */,
 				52E449DB15F287FB00C91B67 /* oscillators~ */,
 				118DF68F19D2165C00AD8C6C /* partconv~ */,
+				119F596719E8DDCB00D7B4A7 /* partconv~.pd */,
 				52E449EA15F2880400C91B67 /* peqbank~ */,
 				52E449F915F2880900C91B67 /* pitch~ */,
 				52E44A0815F2880E00C91B67 /* poly.bus~ */,
@@ -4596,6 +4643,17 @@
 				118DF69319D2165C00AD8C6C /* commonsyms.c in Sources */,
 				11B18EF719D7D88600896D7E /* partconv.cpp in Sources */,
 				118DF6AC19D216CE00AD8C6C /* partconv~.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		119F596419E8DDCB00D7B4A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				119F597619E8E1E000D7B4A7 /* buffers.cpp in Sources */,
+				119F597A19E8E66E00D7B4A7 /* max2pd.c in Sources */,
+				119F597719E8E1E500D7B4A7 /* partconv.cpp in Sources */,
+				119F597519E8E1DC00D7B4A7 /* partconv~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5610,6 +5668,100 @@
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		119F597219E8DDCC00D7B4A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../fftw/api\"",
+					"\"$(SRCROOT)/../pd-src/src\"",
+					"\"$(SRCROOT)/include\"",
+				);
+				INFOPLIST_FILE = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../fftw/.libs\"";
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_CFLAGS = (
+					"-DCNMAT_PD_VERSION",
+					"-DNO_TRANSLATION_SUPPORT",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
+				PRODUCT_NAME = "partconv~";
+				WRAPPER_EXTENSION = "";
+			};
+			name = Debug;
+		};
+		119F597319E8DDCC00D7B4A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_NS_ASSERTIONS = NO;
+				EXECUTABLE_EXTENSION = pd_darwin;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../fftw/api\"",
+					"\"$(SRCROOT)/../pd-src/src\"",
+					"\"$(SRCROOT)/include\"",
+				);
+				INFOPLIST_FILE = "";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../fftw/.libs\"";
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_CFLAGS = (
+					"-DCNMAT_PD_VERSION",
+					"-DNO_TRANSLATION_SUPPORT",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
+				PRODUCT_NAME = "partconv~";
+				WRAPPER_EXTENSION = "";
 			};
 			name = Release;
 		};
@@ -8272,6 +8424,15 @@
 			buildConfigurations = (
 				118DF69D19D2165C00AD8C6C /* Debug */,
 				118DF69E19D2165C00AD8C6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		119F597419E8DDCC00D7B4A7 /* Build configuration list for PBXNativeTarget "partconv~.pd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				119F597219E8DDCC00D7B4A7 /* Debug */,
+				119F597319E8DDCC00D7B4A7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
