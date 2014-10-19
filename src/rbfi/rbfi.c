@@ -1505,14 +1505,11 @@ void rbfi_clear(t_rbfi *x){
 	x->monotonic_point_counter = 0; // not really monotonic i guess...
 	hashtab_clear(x->ht);
 	critical_exit(x->lock);
-	object_notify(x, _sym_modified, NULL);
-	jbox_invalidate_layer((t_object *)x, NULL, l_color);
-	jbox_redraw(&(x->ob));
 }
 
 void rbfi_free(t_rbfi *x){
+    rbfi_clear(x);
 	jbox_free(&(x->ob));
-	rbfi_clear(x);
 	if(x->spaces){
 		sysmem_freeptr(x->spaces);
 	}
@@ -1599,6 +1596,11 @@ t_max_err rbfi_setvalueof(t_rbfi *x, long ac, t_atom *av){
 	critical_enter(x->lock);
 	x->spaces = rbfi_fromArray(x->ht, ac, av);
 	critical_exit(x->lock);
+    
+    object_notify(x, _sym_modified, NULL);
+	jbox_invalidate_layer((t_object *)x, NULL, l_color);
+	jbox_redraw(&(x->ob));
+
 	return MAX_ERR_NONE;
 }
 

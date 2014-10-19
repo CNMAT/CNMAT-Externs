@@ -27,6 +27,15 @@
 
 #include <pthread.h>
 
+
+#ifdef PCONV_DOUBLE
+    #ifndef t_pc_samp
+        #define t_pc_samp double
+    #else
+        #define t_pc_samp float
+    #endif
+#endif
+
 #include "buffers.h"
 
 

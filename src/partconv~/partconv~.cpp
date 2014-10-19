@@ -25,10 +25,13 @@
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  NAME: partconv~
  DESCRIPTION: Non-uniform partitioned FFT convolution, multiple in/out and parallel multithreaded
- AUTHORS: Andy Schmeder, Eric Battenberg
- COPYRIGHT_YEARS: 2011
+ AUTHORS: Andy Schmeder, Eric Battenberg, Rama Gottfried
+ COPYRIGHT_YEARS: 2011-14
  VERSION 0.1: Initial port of partconv code
+ VERSION 0.2: Ported to max 64 bit, and to pd (currently only 32bit)
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+ notes: need to seriously think about how we're doing buffer managment here, Pd has only 1D arrays for tables, and Max has interleaved buffers when multichannel, but a limit on how many channels you can use -- Max has polybuffer to facilitate a large number of buffers, and we could script something like that in Pd (or make a new external). PartConv expects concatenated buffers, so eventually I think the best thing to do will be to combine approaches around the polybuffer style. However, the question at some point is where to make the change, and how deep? We might want to tweak how Eric's PartConv routine handles buffers (see partconv.c).
  
  */
 
@@ -77,16 +80,16 @@ typedef struct _partconv
     t_buffer_ref *l_buffer_reference;
 #endif
     // number of signals in
-    int n;
+    long n;
     
     // number of signals out
-    int m;
+    long m;
     
     // number of filters
-    int k;
+    long k;
     
     // length of filters in bank (must all be same length)
-    int v;
+    long v;
 
     // v internal
     int v0;
@@ -95,7 +98,7 @@ typedef struct _partconv
     int plan;
 
     // max num of threads per level
-    int max_threads_per_level;
+    long max_threads_per_level;
     
     // max num of threads at level 0
     int max_threads_per_level0;
@@ -499,6 +502,8 @@ void partconv_dsp64(t_partconv *x, t_object *dsp64, short *count, double sampler
             bdata = b->b_samples;
             bstride = b->b_nchans;
             
+            post("v = %d frames %d channels %d", x->v, b->b_frames, b->b_nchans);
+            
             // auto-guess the number of samples
             if(x->v == 0) {
                 if((b->b_frames % x->k) != 0) {
@@ -506,6 +511,7 @@ void partconv_dsp64(t_partconv *x, t_object *dsp64, short *count, double sampler
                     bdata = NULL;
                 } else {
                     x->v0 = b->b_frames / x->k;
+                    post("b_frames % k == 0 && x->v0 = %d", x->v0);
                 }
             } else {
                 x->v0 = x->v;
@@ -891,6 +897,11 @@ void partconv_process_args(t_partconv *x, short argc, t_atom *argv)
                     {
                         if(atom_gettype(argv+i)==A_FLOAT)
                             x->k = (int)atom_getfloat(argv+i);
+                    }
+                    else if (!strcmp(s, "@v"))
+                    {
+                        if(atom_gettype(argv+i)==A_FLOAT)
+                            x->v = (int)atom_getfloat(argv+i);
                     }
                     else
                     {
@@ -1334,7 +1345,7 @@ int main(void) {
     class_dspinit(c);
     
     CLASS_ATTR_SYM(c, "buffer", 0, t_partconv, buffer);
-    CLASS_ATTR_LABEL(c, "n", 0, "Impulse response buffer");
+    CLASS_ATTR_LABEL(c, "buffer", 0, "Impulse response buffer");
     //CLASS_ATTR_SAVE(c, "buffer", 0);
     
     CLASS_ATTR_SYM(c, "wisdom", 0, t_partconv, wisdom);
@@ -1376,7 +1387,7 @@ int main(void) {
     CLASS_ATTR_FILTER_MIN(c, "v", 0);
     CLASS_ATTR_DEFAULT(c, "v", 0, 0);
     CLASS_ATTR_LABEL(c, "v", 0, "Impulse response length, 0 = automatic");
-    
+    /*
     CLASS_ATTR_LONG_VARSIZE(c, "scheme_32", 0, t_partconv, scheme_32, nparts_32, 256);
     CLASS_ATTR_ACCESSORS(c, "scheme_32", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_32", 0, "Partioning scheme for 32 sample block");
@@ -1416,7 +1427,7 @@ int main(void) {
     CLASS_ATTR_ACCESSORS(c, "scheme_4096", NULL, partconv_scheme_set);
     CLASS_ATTR_LABEL(c, "scheme_4096", 0, "Partioning scheme for 4096 sample block");
     //CLASS_ATTR_SAVE(c, "scheme_4096", 0);
-    
+    */
 //    class_addmethod(c, (method)partconv_dsp, "dsp", A_CANT, 0);
     class_addmethod(c, (method)partconv_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(c, (method)partconv_assist, "assist", A_CANT, 0);
