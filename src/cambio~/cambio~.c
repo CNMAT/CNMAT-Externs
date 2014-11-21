@@ -41,20 +41,20 @@ VERSION 0.2: Renamed to "cambio~"
 
 */
 
-
-
+#define NAME "cambio~"
+#define DESCRIPTION "Signal to event domain version of change: Output a float whenever the input signal's value changes."
+#define AUTHORS "Matt Wright"
+#define COPYRIGHT_YEARS "2007-14"
 #include "ext.h"
 #include "version.h"
-#include "version.c"
+//#include "version.c"
 
 #include "z_dsp.h"
 #include <math.h>
 
 void *cambio_class;
 
-
-typedef struct _cambio
-{
+typedef struct _cambio {
 	/* Max stuff */
     t_pxobject x_obj;	//  header
     
@@ -63,53 +63,42 @@ typedef struct _cambio
 	float speedlimit;
 } t_cambio;
 
-
-
-void main(void);
+int main(void);
 void *cambio_new(void);
 static void Output(t_cambio *x);
 void cambio_int(t_cambio *x, int i);
-void cambio_continuous(t_cambio *x, long yesno);
-void cambio_free(t_cambio *x);
-void cambio_dsp(t_cambio *x, t_signal **sp, short *count);
+//void cambio_dsp(t_cambio *x, t_signal **sp, short *count);
+void cambio_dsp(t_cambio *x, t_object *dsp, short *count, double samplerate, long maxvectorsize, long flags);
 t_int *cambio_perform(t_int *w);
 
-
-void main(void) {
-	version(0);	
-    setup((t_messlist **)&cambio_class, (method)cambio_new, (method)dsp_free, (short)sizeof(t_cambio),
-          0L, 0);
-//    addint((method)cambio_int);
-    addmess((method)version, "version", 0);
-    addmess((method)cambio_dsp, "dsp", A_CANT, 0);
-//    addmess((method)cambio_continuous, "continuous", A_LONG, 0);
-    dsp_initclass();
-}
-
-void *cambio_new(void) {
-	t_cambio *x;
-
-	x = (t_cambio *)newobject(cambio_class);
-	
-	if (x==0) return 0;
-
-	x->prev = -987654321.;  // So first sample will always be a change
-	
-  	dsp_setup((t_pxobject *)x,1);  
-    x->outlet = floatout(x);
-    return x;   
-}
-	
 
 void cambio_int(t_cambio *x, int i) {
 }
 
 
-void cambio_dsp(t_cambio *x, t_signal **sp, short *count) {
-	dsp_add(cambio_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);  // in, size
+void cambio_perform64(t_cambio *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vectorsize, long flags, void *userparam)
+{
+	int events_this_vector = 0;
+	
+	int i;
+	float p = x->prev;
+	
+	for (i = 0; i < vectorsize; ++i) {
+		if (ins[0][i] != p) {
+			if (events_this_vector++ < 3) {
+				outlet_float(x->outlet, ins[0][i]);
+			}
+		}
+		p = ins[0][i];
+	}
+    
+	x->prev = p;
 }
 
-int bogus = 0;
+void cambio_dsp64(t_cambio *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	object_method(dsp64, gensym("dsp_add64"), x, cambio_perform64, 0, NULL);
+}
 
 t_int *cambio_perform(t_int *w) {
     t_cambio *x = (t_cambio *)(w[1]);  // object
@@ -128,7 +117,47 @@ t_int *cambio_perform(t_int *w) {
 		}
 		p = in[i];
 	}
-
+    
 	x->prev = p;
     return (w+4);
 }
+
+
+void cambio_dsp(t_cambio *x, t_object *dsp, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    object_method(dsp, gensym("dsp_add"), x, cambio_perform, 0, NULL);
+}
+
+/*
+void cambio_dsp(t_cambio *x, t_signal **sp, short *count) {
+	dsp_add(cambio_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);  // in, size
+}
+ */
+
+void *cambio_new(void) {
+	t_cambio *x;
+    
+    x = (t_cambio *)object_alloc(cambio_class);
+	
+	if (x==0) return 0;
+    
+	x->prev = -987654321.;  // So first sample will always be a change
+	
+  	dsp_setup((t_pxobject *)x,1);
+    x->outlet = floatout(x);
+    return x;
+}
+
+int main(void) {
+	//version(0);
+    version_post_copyright();
+    cambio_class = class_new("cambio~", (method)cambio_new, (method)dsp_free, (short)sizeof(t_cambio), 0L, 0);
+
+    class_addmethod(cambio_class, (method)version, "version", 0);
+    class_addmethod(cambio_class, (method)cambio_dsp, "dsp", A_CANT, 0);
+    class_addmethod(cambio_class, (method)cambio_dsp64, "dsp64", A_CANT, 0);
+    //    addmess((method)cambio_continuous, "continuous", A_LONG, 0);
+    class_dspinit(cambio_class);
+    class_register(CLASS_BOX, cambio_class);
+}
+
