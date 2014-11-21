@@ -13,13 +13,28 @@
 
 #ifndef _PORTAUDIO_
 //for max/msp external
-#define printf post 
-#include "ext.h"
+    #ifdef CNMAT_PD_VERSION
+        #include "m_pd.h"
+    #else
+        #include "ext.h"
+    #endif
+
+    #define printf post
+
 #else
-#include <stdio.h>
+    #include <stdio.h>
 #endif
 
 #include <pthread.h>
+
+
+#ifdef PCONV_DOUBLE
+    #ifndef t_pc_samp
+        #define t_pc_samp double
+    #else
+        #define t_pc_samp float
+    #endif
+#endif
 
 #include "buffers.h"
 

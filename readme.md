@@ -43,4 +43,4 @@ I don't see this in the repository, and the Makefile expects it in the `../OSC-k
 
 
 
-*-- Rama Gottfried*, 9/22/14
+*-- Rama Gottfried / Jeff Lubow*, 11/19/14
