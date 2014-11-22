@@ -1,22 +1,26 @@
 CNMAT-Externs
 =============
 
-This is a place holder for a more informative readme. In the short term, I just wanted to make a note for how to compile `fftw` to work with the current externals.
+The CNMAT externals xcode project has various dependencies that need to be configured and built on your own platform for you to compile current/new externals on your own.
 
 ## Dependencies
-### 1. fftw
+
+### 1. FFTW
+
 Since we are still supporting i386 processors, we need to configure `fftw` to build a universal version. To configure for i386 and x86_64: 
 
 1. `./configure CC="gcc -arch i386 -arch x86_64" CXX="g++ -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
-2. Then `sudo make` to compile the `libfftw3.a` in the `../fftw/.libs` directory.  Note that we don't invoke `make install` as we need the xcode project to refer to this specific location.	
 
+2. Then `sudo make` to compile the `libfftw3.a` in the `../fftw/.libs` directory.  Note that we don't invoke `make install` as we need the xcode project to refer to this specific location.	
 This is the (default) double precision version. However, there are some files that refer to the floating point version. To add the floating point version you need to repeat the above steps, but with the single precision flag `--enable-single`:
 
 3. `./configure CC="gcc -arch i386 -arch x86_64" CXX="g++ -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E" --enable-single`
 
 4. Then `sudo make` to compile the `libfftw3f.a` in the `../fftw/.libs` directory.
 
-### 2. gsl
+### 2. GSL
+
+Same situation with GSL as fftw:  configure for both i386 and x86_64:
 
 `./configure CC="gcc -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
 
@@ -43,4 +47,8 @@ I don't see this in the repository, and the Makefile expects it in the `../OSC-k
 
 
 
+<<<<<<< Updated upstream
 *-- Rama Gottfried / Jeff Lubow*, 11/19/14
+=======
+*-- Rama Gottfried + Jeff Lubow*, 10/10/14
+>>>>>>> Stashed changes

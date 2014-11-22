@@ -70,7 +70,6 @@
 #define AUTHORS "John MacCallum "
 #define COPYRIGHT_YEARS "2009,12,13"
 
-
 /*
 todo:
 extend to 0 and 1 function
