@@ -47,8 +47,4 @@ I don't see this in the repository, and the Makefile expects it in the `../OSC-k
 
 
 
-<<<<<<< Updated upstream
 *-- Rama Gottfried / Jeff Lubow*, 11/19/14
-=======
-*-- Rama Gottfried + Jeff Lubow*, 10/10/14
->>>>>>> Stashed changes
