@@ -3,6 +3,8 @@ CNMAT-Externs
 
 The CNMAT externals xcode project has various dependencies that need to be configured and built on your own platform for you to compile current/new externals on your own.
 
+We have removed the built externals release as we we have learned that GNU licensing for FFTW and GSL is incompatible with UCB licensing
+
 ## Dependencies
 
 ### 1. FFTW
