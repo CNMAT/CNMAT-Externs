@@ -62,8 +62,8 @@ VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily remove
 #define PDEBUG(s,args...)
 #endif
 
-#define MIG_MAX_NUM_OSC 2048
-#define MIG_MAX_INPUT 2048
+#define MIG_MAX_NUM_OSC 8192
+#define MIG_MAX_INPUT 8192
 #define MIG_STATE_FADE_OUT 0
 #define MIG_STATE_CHANGE_FREQ 1
 #define MIG_STATE_FADE_IN 2
