@@ -956,18 +956,19 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 		osc_message_u_appendAtom(timetag, tta);
 		osc_bundle_u_addMsg(bndl, timetag);
 
-		long len = 0;
-		char *buf = NULL;
-		osc_bundle_u_serialize(bndl, &len, &buf);
+		//long len = 0;
+		//char *buf = NULL;
+		//osc_bundle_u_serialize(bndl, &len, &buf);
+		t_osc_bndl_s *bs = osc_bundle_u_serialize(bndl);
 
 		OSC_PROFILE_TIMER_STOP(foo);
 		OSC_PROFILE_TIMER_PRINTF(foo);
-		if(buf){
+		if(bs){
 			t_atom out[2];
-			atom_setlong(out, len);
-			atom_setlong(out + 1, (long)buf);
+			atom_setlong(out, osc_bundle_s_getLen(bs));
+			atom_setlong(out + 1, (long)osc_bundle_s_getPtr(bs));
 			outlet_anything(x->x_oscout, ps_FullPacket, 2, out);
-			osc_mem_free(buf);
+			osc_bundle_s_deepFree(bs);
 		}
 		osc_bundle_u_free(bndl);
 

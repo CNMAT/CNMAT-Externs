@@ -577,7 +577,6 @@
 		A4E832F719E8650200C55B20 /* cambio~.c in Sources */ = {isa = PBXBuildFile; fileRef = A4E832F419E8650200C55B20 /* cambio~.c */; };
 		A4E832F819E8650200C55B20 /* cambio~.help.pat in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F519E8650200C55B20 /* cambio~.help.pat */; };
 		A4E832F919E8650200C55B20 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F619E8650200C55B20 /* Info.plist */; };
-		A4E832FA19E867A000C55B20 /* 2threshattack~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52F10AC815F071DE008FC371 /* 2threshattack~.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -969,7 +968,7 @@
 		118DF6A519D216CE00AD8C6C /* partconv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "partconv~.cpp"; sourceTree = "<group>"; };
 		118DF6A619D216CE00AD8C6C /* partconv~.help.maxpat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "partconv~.help.maxpat"; sourceTree = "<group>"; };
 		118DF6A719D216CE00AD8C6C /* partconv~.help.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partconv~.help.pat"; sourceTree = "<group>"; };
-		119F596819E8DDCB00D7B4A7 /* partconv~.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; name = "partconv~.dylib"; path = "partconv~.pd_darwin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		119F596819E8DDCB00D7B4A7 /* partconv~.pd_darwin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "partconv~.pd_darwin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		119F597819E8E66E00D7B4A7 /* max2pd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = max2pd.c; path = include/max2pd.c; sourceTree = "<group>"; };
 		119F597919E8E66E00D7B4A7 /* max2pd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = max2pd.h; path = include/max2pd.h; sourceTree = "<group>"; };
 		11B18EF219D7D88600896D7E /* buffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = buffers.cpp; sourceTree = "<group>"; };
@@ -979,6 +978,7 @@
 		11C1B49D18A84AA900822EFF /* polywave~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "polywave~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		11C1B49F18A84B1C00822EFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11C1B4A018A84B1C00822EFF /* polywave~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "polywave~.c"; sourceTree = "<group>"; };
+		5212B03D1B3CAF8300D4D5EC /* cambio~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cambio~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5218BB2A164DD36A00A02F42 /* sdif-buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-buf.c"; path = "../CNMAT-SDIF/lib/sdif-buf.c"; sourceTree = "<group>"; };
 		5218BB2B164DD36A00A02F42 /* sdif-mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-mem.c"; path = "../CNMAT-SDIF/lib/sdif-mem.c"; sourceTree = "<group>"; };
 		5218BB2C164DD36A00A02F42 /* sdif-sinusoids.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-sinusoids.c"; path = "../CNMAT-SDIF/lib/sdif-sinusoids.c"; sourceTree = "<group>"; };
@@ -1304,7 +1304,6 @@
 		52FF189D163B5C4B00F94922 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework; sourceTree = "<group>"; };
 		52FF18CE163B5C5B00F94922 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
 		A4DB19B31A1EFC470074BE10 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../gsl/libgsl.a; sourceTree = "<group>"; };
-		A4E832F219E8642800C55B20 /* cambio~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cambio~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4E832F419E8650200C55B20 /* cambio~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cambio~.c"; sourceTree = "<group>"; };
 		A4E832F519E8650200C55B20 /* cambio~.help.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cambio~.help.pat"; sourceTree = "<group>"; };
 		A4E832F619E8650200C55B20 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -3011,7 +3010,8 @@
 				11C1B49D18A84AA900822EFF /* polywave~.mxo */,
 				110C3E48194433A500A53893 /* localpeak~.mxo */,
 				118DF69F19D2165C00AD8C6C /* partconv~.mxo */,
-				119F596819E8DDCB00D7B4A7 /* partconv~.dylib */,
+				119F596819E8DDCB00D7B4A7 /* partconv~.pd_darwin */,
+				5212B03D1B3CAF8300D4D5EC /* cambio~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3143,7 +3143,7 @@
 			);
 			name = "partconv~.pd";
 			productName = "partconv~.pd";
-			productReference = 119F596819E8DDCB00D7B4A7 /* partconv~.dylib */;
+			productReference = 119F596819E8DDCB00D7B4A7 /* partconv~.pd_darwin */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		11C1B48E18A84AA900822EFF /* polywave~ */ = {
@@ -4146,7 +4146,7 @@
 			);
 			name = "cambio~";
 			productName = "2threshattack~";
-			productReference = A4E832F219E8642800C55B20 /* cambio~.mxo */;
+			productReference = 5212B03D1B3CAF8300D4D5EC /* cambio~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -6343,7 +6343,7 @@
 					"-DNO_TRANSLATION_SUPPORT",
 				);
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = mxo;
@@ -6370,7 +6370,7 @@
 					"-DNO_TRANSLATION_SUPPORT",
 				);
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = mxo;
@@ -6749,7 +6749,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -6773,7 +6773,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7384,7 +7384,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7405,7 +7405,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
