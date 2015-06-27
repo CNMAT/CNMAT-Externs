@@ -73,8 +73,8 @@ float Sinetab[STABSZ];
 
 typedef  struct oscdesc
 {
-	float next_amplitude;
-	float amplitude;		/* amplitude */
+	double next_amplitude;
+	double amplitude;		/* amplitude */
 	unsigned long phase_current;
 	long next_phase_inc;
 	long phase_inc;			/* frequency */
@@ -90,9 +90,9 @@ typedef struct
 	oscdesc base[MAXOSCILLATORS];
 	int nosc; 
 	int cleared;
-	float  pk;
-	float samplerate;
-	float sampleinterval;
+	double  pk;
+	double samplerate;
+	double sampleinterval;
     t_symbol *l_sym;
     t_buffer *l_buf;
 	int noglissbirthmode;
@@ -100,25 +100,26 @@ typedef struct
 } oscbank;
 typedef oscbank t_oscillators;
 
-t_int *sinusoids2_perform(t_int *w);
-void sinusoids_dsp(t_oscillators *x, t_signal **sp, short *connect);
+//t_int *sinusoids2_perform(t_int *w);
+//void sinusoids_dsp(t_oscillators *x, t_signal **sp, short *connect);
  void sinusoids_list(t_oscillators *x, t_symbol *s, short argc, t_atom *argv);
  void sinusoids_clear(t_oscillators *x);
  void sinusoids_assist(t_oscillators *x, void *b, long m, long a, char *s);
  void *oscillators_new(t_symbol *s, short argc, t_atom *argv);
 void oscillators_noglissbirthmode(t_oscillators *x, long i);
 
+/*
 t_int *sinusoids2_perform(t_int *w)
 {
 	t_oscillators *op = (t_oscillators *)(w[1]);
-	t_float *out = (t_float *)(w[2]);
+	t_double *out = (t_double *)(w[2]);
 	int n = (int)(w[3]);
 	int nosc = op->nosc;
 	int i,j;
 	oscdesc *o = op->base;
     t_buffer *b = op->l_buf;
 	const char *st;
-	float rate ;
+	double rate ;
 	 
 	if(op->b_obj.z_disabled) 
 		goto out;
@@ -131,11 +132,11 @@ t_int *sinusoids2_perform(t_int *w)
 
 	for(i=0;i<nosc;++i)
 	{
-		register float a = o->amplitude;
+		register double a = o->amplitude;
 		register long pi = o->phase_inc;
 		register unsigned long pc = o->phase_current;
 		register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
-		register float astep = (o->next_amplitude - o->amplitude)*rate;
+		register double astep = (o->next_amplitude - o->amplitude)*rate;
 //		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
 		
@@ -143,7 +144,7 @@ t_int *sinusoids2_perform(t_int *w)
 		{
 
 			out[j] +=  a  * 
-		*((float *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+		*((double *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
 					& ((STABSZ-1)*sizeof(*Sinetab)))));
 			pc +=  pi;
 			pi += pstep;
@@ -167,6 +168,70 @@ out:
 		op->cleared = 0;
 	}
 	return (w+4);
+}
+ */
+
+void  sinusoids_perform64(t_oscillators *op, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    //t_oscillators *op = (t_oscillators *)(w[1]);
+    //t_double *out = (t_double *)(w[2]);
+    double *out = outs[0];
+    //int n = (int)(w[3]);
+    int n = sampleframes;
+    int nosc = op->nosc;
+    int i,j;
+    oscdesc *o = op->base;
+    t_buffer *b = op->l_buf;
+    const char *st;
+    double rate ;
+    
+    if(op->b_obj.z_disabled)
+        goto out;
+    if((b==0) || !b->b_valid || (b->b_frames!=(1l<<16)))
+        goto zero;
+    rate = 1.0/n;
+    st  = (const char *)b->b_samples;
+    for(j=0;j<n;++j)
+        out[j] = 0.0f;
+    
+    for(i=0;i<nosc;++i)
+    {
+        register double a = o->amplitude;
+        register long pi = o->phase_inc;
+        register unsigned long pc = o->phase_current;
+        register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
+        register double astep = (o->next_amplitude - o->amplitude)*rate;
+        //		register unsigned long pa  = o->phaseadd;
+        //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
+        
+        for(j=0;j<n;++j)
+        {
+            
+            out[j] +=  a  *
+            *((float *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+                               & ((STABSZ-1)*sizeof(*Sinetab)))));
+            pc +=  pi;
+            pi += pstep;
+            a += astep;
+            //			out[j] +=  a  * Sinetab[pc%STABSZ];
+            //			pa +=  phaseadd_inc;
+        }
+        o->amplitude = o->next_amplitude;
+        o->phase_inc = o->next_phase_inc;
+        o->phase_current = pc;
+        ++o;
+    }
+    goto out;
+zero:
+    for(i=0;i<n;++i)
+        out[i] = 0.0f;
+out:
+    if(op->cleared)
+    {
+        op->nosc = 0;
+        op->cleared = 0;
+    }
+    //return (w+4);
 }
 
 static void clear(t_oscillators *x)
@@ -214,23 +279,33 @@ void oscillators_set(t_oscillators *x, t_symbol *s)
 		x->l_buf = 0;
 	}
 }
+
+void sinusoids_dsp64(t_oscillators *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    //Now that DSP is starting, assume that the buffer~ we're reading from has been loaded
+    oscillators_set(x,x->l_sym);
+    
+    object_method(dsp64, gensym("dsp_add64"), x, sinusoids_perform64, 0, NULL);
+}
+
+/*
 void sinusoids_dsp(t_oscillators *x, t_signal **sp, short *connect)
 {
 	int i;
 
-	/* Now that DSP is starting, assume that the buffer~ we're reading from has been
-	   loaded */
+	//Now that DSP is starting, assume that the buffer~ we're reading from has been loaded
     oscillators_set(x,x->l_sym);
 
 	dsp_add(sinusoids2_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
 }
+*/
 
 void sinusoids_list(t_oscillators *x, t_symbol *s, short argc, t_atom *argv)
 {
 	int i;
 	if(argc%2!=0)
 	{
-		object_post((t_object *)x, "multiple of 2 floats (Frequency, amplitude) required");
+		object_post((t_object *)x, "multiple of 2 doubles (Frequency, amplitude) required");
 	}
 	else
 	{
@@ -249,8 +324,8 @@ void sinusoids_list(t_oscillators *x, t_symbol *s, short argc, t_atom *argv)
 		x->nosc = nosc;
 		for(i=0;i<nosc;++i)
 		{
-			float f = atom_getfloatarg(i*2,argc,argv);
-			float a = 	atom_getfloatarg(i*2+1,argc,argv);
+			double f = atom_getfloatarg(i*2,argc,argv);
+			double a = 	atom_getfloatarg(i*2+1,argc,argv);
 			if((f<=0.0f) || (f>=(x->samplerate*0.5f)))
 			{
 				fp[i].next_phase_inc = 0;
@@ -337,7 +412,8 @@ int main(void){
 	post("Maximum Oscillators: %d", MAXOSCILLATORS);
 	post("Never expires.");
     
-	class_addmethod(oscillators_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+	//class_addmethod(oscillators_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+    class_addmethod(oscillators_class, (method)sinusoids_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(oscillators_class, (method)sinusoids_list, "list", A_GIMME, 0);
 	class_addmethod(oscillators_class, (method)sinusoids_clear, "clear", 0);
 	class_addmethod(oscillators_class, (method)sinusoids_assist, "assist", A_CANT, 0);
