@@ -1,5 +1,7 @@
 ifeq ($(MAKECMDGOALS),win)
 EXT = mxe
+else ifeq ($(MAKECMDGOALS), win64)
+EXT = mxe64
 else
 EXT = mxo
 endif
@@ -19,6 +21,13 @@ win: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U_
 win: LDFLAGS = -mno-cygwin -shared #-static-libgcc
 win: INCLUDES = -I/usr/i686-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I../gsl -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm
+
+win64: CC = i686-w64-mingw64-gcc
+win64: LD = $(CC)
+win64: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3
+win64: LDFLAGS = -mno-cygwin -shared #-static-libgcc
+win64: INCLUDES = -I/usr/i686-w64-mingw64/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I../gsl -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
+win64: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm
 
 JAVA_EXT = class
 
@@ -67,7 +76,9 @@ SDIFOBJECTS = $(foreach f, $(SDIFOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 SDIFDEPSNAMES = sdif-buf sdif-mem sdif-sinusoids sdif-types sdif-util sdif sdif-interp-implem sdif-interp
 SDIFDEPS = $(foreach f, $(SDIFDEPSNAMES), $(BUILDDIR)/$(f).o)
 
-win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(JEHANOBJECTS) $(FFTWOBJECTS) 
+win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(JEHANOBJECTS) $(FFTWOBJECTS)
+
+win64: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(JEHANOBJECTS) $(FFTWOBJECTS) 
 
 # Single file dependencies--just compile and stick the .o files in the build dir
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
@@ -112,51 +123,51 @@ $(BUILDDIR)/open-sdif-file.o: $(BUILDDIR)
 # simple objects that have no dependencies
 $(SIMPLEOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS)
 
 # objects that need to link against the gsl
 $(GSLOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../gsl/.libs -lgsl
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../gsl/.libs -lgsl
 
 # objects that need to link against fftw
 $(FFTWOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../fftw -lfftw3f_i386
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../fftw -lfftw3f_i386
 
 # objects that rely on one or more files scattered around the repo
 $(BUILDDIR)/harmonics~.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(LIBS)
 
 # links against the gsl and libranddist.o
 $(BUILDDIR)/randdist.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(LIBS) -L../gsl/.libs -lgsl
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(LIBS) -L../gsl/.libs -lgsl
 
 $(JEHANOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE) #$(JEHANDEPS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../libo -lo -L../libomax -lomax -L../fftw -lfftw3_i386
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../libo -lo -L../libomax -lomax -L../fftw -lfftw3_i386
 
 $(SDIFOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(SDIFDEPS) $(BUILDDIR)/open-sdif-file.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(SDIFDEPS) $(BUILDDIR)/open-sdif-file.o $(LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(SDIFDEPS) $(BUILDDIR)/open-sdif-file.o $(LIBS)
 
 $(BUILDDIR)/OSC-route.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(LIBS)
 
 $(BUILDDIR)/OSC-timetag.$(EXT) $(BUILDDIR)/OSC-schedule.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-ops.o $(BUILDDIR)/pqops.o $(BUILDDIR)/strptime.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c -I../libo/contrib
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-ops.o $(BUILDDIR)/pqops.o $(BUILDDIR)/strptime.o $(LIBS) -lws2_32
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-ops.o $(BUILDDIR)/pqops.o $(BUILDDIR)/strptime.o $(LIBS) -lws2_32
 
 $(BUILDDIR)/OpenSoundControl.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-timetag-libOSC.o $(BUILDDIR)/OSC-client.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-client.o $(BUILDDIR)/OSC-timetag-libOSC.o $(LIBS) -lws2_32
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-client.o $(BUILDDIR)/OSC-timetag-libOSC.o $(LIBS) -lws2_32
 
 $(BUILDDIR)/printit.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/myPrintOSCpacket.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $(subst $(EXT),,$@)mxe $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/myPrintOSCpacket.o $(LIBS) -lws2_32
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/myPrintOSCpacket.o $(LIBS) -lws2_32
 
 .PHONY: $(CURRENT_VERSION_FILE)
 $(CURRENT_VERSION_FILE):
