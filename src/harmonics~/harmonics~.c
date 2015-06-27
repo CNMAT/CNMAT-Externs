@@ -49,14 +49,14 @@ VERSION 1.3.1: Force Package Info Generation
 
 	/* harmonic oscillator bank */
 	/* sums a bunch of sinusoidal oscillators which are frequency locked to integer harmonics: great for glottal simulations, periodic pulse trains, etc */
-	/* a list of floats sets the amplitudes (and the length of the list sets the numberof  harmonic partials) */
-	/* a single float sets the frequency of the first partial */
+	/* a list of doubles sets the amplitudes (and the length of the list sets the numberof  harmonic partials) */
+	/* a single double sets the frequency of the first partial */
 	/* TODO:  a method to set the amplitude roll off in db/Octave */
 	/* TODO: more efficient implementation that locks the phase by using a single phasor */
 	
 	
 /*
-	Left inlet float = ffreq;  list = freq + amp&*
+	Left inlet double = ffreq;  list = freq + amp&*
 	Right inlet list is just amplitudes
 
 */	
@@ -85,16 +85,16 @@ VERSION 1.3.1: Force Package Info Generation
 
 #define TPOW 14
 #define STABSZ (1l<<TPOW)
-#define LOGBASE2OFTABLEELEMENT 2
+#define LOGBASE2OFTABLEELEMENT 3
 
 t_class *sinusoids_class;
 
-float Sinetab[STABSZ];
+double Sinetab[STABSZ];
 
 typedef  struct oscdesc
 {
-	float next_amplitude;
-	float amplitude;		/* amplitude */
+	double next_amplitude;
+	double amplitude;		/* amplitude */
 	unsigned long phase_current;
 //	unsigned long next_phaseadd;
 //	unsigned long phaseadd;			/* phase */
@@ -114,13 +114,13 @@ typedef struct
 	int nosc; 
 	int nyqmaxosc;
 	int cleared;
-	float  pk;
-	float noisiness;
-	float next_noisiness;
-	float samplerate;
-	float sampleinterval;
+	double  pk;
+	double noisiness;
+	double next_noisiness;
+	double samplerate;
+	double sampleinterval;
 	int is_bwe;		// Boolean for whether this object is bandwidth-enhanced
-	float *noisep;  // Points into the global noise table
+	double *noisep;  // Points into the global noise table
 	
 	// For logging
 	int numTimesPerformCalled;
@@ -130,16 +130,16 @@ typedef oscbank t_sinusoids;
 
 static void ResetInterruptStats(t_sinusoids *x);
 static void ReportInterruptStats(t_sinusoids *x);
-static t_int *sinusoids2_perform(t_int *w);
+//static t_int *sinusoids2_perform(t_int *w);
 static void clear(t_sinusoids *x);
-static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
+//static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
 static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv);
 static void sinusoids_clear(t_sinusoids *x);
 static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
 static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
 static void frequency_float(t_sinusoids *x, double ff);
 void harmonics_free(t_sinusoids *x);
-static void SineFunction(int n, float *stab, int stride, float from, float to);
+static void SineFunction(int n, double *stab, int stride, double from, double to);
 static void Makeoscsinetable();
 void tellmeeverything(t_sinusoids *x);
 
@@ -155,24 +155,24 @@ static void ReportInterruptStats(t_sinusoids *x) {
 	ResetInterruptStats(x);
 }
 
-
+/*
 static t_int *sinusoids2_perform(t_int *w)
 {
 	t_sinusoids *x = (t_sinusoids *)(w[1]);
-		t_float *out = (t_float *)(w[2]);
+		t_double *out = (t_double *)(w[2]);
 	int n = (int)(w[3]);
 	int nosc = x->nosc;
 	int i,j;
 	oscdesc *o = x->base;
 	const char *st = (const char *)Sinetab;
-	float rate ;
+	double rate ;
 	long pi_fundamental, pi_nextfundamental;
-	static float *local_noisep; 
-	float na=sqrtf(1.0f - x->noisiness), nb=sqrtf(1.0f - x->next_noisiness);
-		float nna=sqrtf(2.0f * x->noisiness), nnb=sqrtf(2.0f * x->next_noisiness);
+	static double *local_noisep; 
+	double na=sqrtf(1.0f - x->noisiness), nb=sqrtf(1.0f - x->next_noisiness);
+		double nna=sqrtf(2.0f * x->noisiness), nnb=sqrtf(2.0f * x->next_noisiness);
 
 
-	/* Store local copy of F0 outside the loop in case the user changes it in the middle of DSP. */
+	// Store local copy of F0 outside the loop in case the user changes it in the middle of DSP.
 	pi_fundamental = x->phase_inc;
 	pi_nextfundamental = x->next_phase_inc;
 
@@ -188,11 +188,11 @@ static t_int *sinusoids2_perform(t_int *w)
 	if(nna==0.0f && nnb==0.0f)
 	for(i=0;i<nosc && i<x->nosc&&i<x->nyqmaxosc;++i)   // In case user changes nosc, we synthesize the smaller number of oscillators.
 	{
-		register float a = o->amplitude;
+		register double a = o->amplitude;
 		register long pi = pi_fundamental * (i+1);   // This partial's freq is proportional to harmonic number
 		register unsigned long pc = o->phase_current;
 		register long pstep = ((x->next_phase_inc * (i+1)) - pi) *rate ;		// Also prop. to harmonic #
-		register float astep = (o->next_amplitude - o->amplitude)*rate;
+		register double astep = (o->next_amplitude - o->amplitude)*rate;
 	
 	
 	//		register unsigned long pa  = o->phaseadd;
@@ -203,7 +203,7 @@ static t_int *sinusoids2_perform(t_int *w)
 		{
 
 		out[j] +=  a  * 
-					   *((float *)(st + ((pc >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+					   *((double *)(st + ((pc >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
 					     & ((STABSZ-1)*sizeof(*Sinetab)))));
 			pc +=  pi;
 			pi += pstep;
@@ -218,14 +218,14 @@ static t_int *sinusoids2_perform(t_int *w)
 		else
 	for(i=0;i<nosc && i<x->nosc&&i<x->nyqmaxosc;++i)   // In case user changes nosc, we synthesize the smaller number of oscillators.
 	{
-		register float a = o->amplitude;
+		register double a = o->amplitude;
 		register long pi = pi_fundamental * (i+1);   // This partial's freq is proportional to harmonic number
 		register unsigned long pc = o->phase_current;
 		register long pstep = ((x->next_phase_inc * (i+1)) - pi) *rate ;		// Also prop. to harmonic #
-//		register float astep = (o->next_amplitude - o->amplitude)*rate;
-		register float carrier_amp, carrier_amp_inc;
-		register float mod_amp, mod_amp_inc;
-		float carrier_amp_final, mod_amp_final;
+//		register double astep = (o->next_amplitude - o->amplitude)*rate;
+		register double carrier_amp, carrier_amp_inc;
+		register double mod_amp, mod_amp_inc;
+		double carrier_amp_final, mod_amp_final;
 
 	
 			// Make sure we're not going to run out of noise:
@@ -254,9 +254,9 @@ static t_int *sinusoids2_perform(t_int *w)
 		for(j=0;j<n;++j)
 		{
 
-		float a = carrier_amp + mod_amp * (*local_noisep++);
+		double a = carrier_amp + mod_amp * (*local_noisep++);
 		out[j] +=  a  * 
-					   *((float *)(st + ((pc >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+					   *((double *)(st + ((pc >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
 					     & ((STABSZ-1)*sizeof(*Sinetab)))));
 			pc +=  pi;
 			pi += pstep;
@@ -282,13 +282,151 @@ out:
 		x->cleared = 0;
 	}
 	
-/*	++(x->numTimesPerformCalled);
-	if (pi_nextfundamental != x->x->next_phase_inc) {
-		++(x->numTimesParamsChangedDuringPerform);
-	} */
+    //++(x->numTimesPerformCalled);
+	//if (pi_nextfundamental != x->x->next_phase_inc) {
+	//	++(x->numTimesParamsChangedDuringPerform);
+	//}
 	
 	return (w+4);
 }
+*/
+
+void  sinusoids_perform64(t_sinusoids *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    //t_sinusoids *x = (t_sinusoids *)(w[1]);
+    //t_double *out = (t_double *)(w[2]);
+    double *out = outs[0];
+    //int n = (int)(w[3]);
+    long n = sampleframes;
+    int nosc = x->nosc;
+    int i,j;
+    oscdesc *o = x->base;
+    const char *st = (const char *)Sinetab;
+    double rate ;
+    long pi_fundamental, pi_nextfundamental;
+    static double *local_noisep;
+    double na=sqrtf(1.0f - x->noisiness), nb=sqrtf(1.0f - x->next_noisiness);
+    double nna=sqrtf(2.0f * x->noisiness), nnb=sqrtf(2.0f * x->next_noisiness);
+    
+    
+    /* Store local copy of F0 outside the loop in case the user changes it in the middle of DSP. */
+    pi_fundamental = x->phase_inc;
+    pi_nextfundamental = x->next_phase_inc;
+    
+    //	if(op->b_obj.z_disabled)
+    //		goto out;
+    rate = 1.0f/n;
+    
+    for(j=0;j<n;++j)
+        out[j] = 0.0f;
+    
+    local_noisep = x->noisep;
+    
+    if(nna==0.0f && nnb==0.0f)
+        for(i=0;i<nosc && i<x->nosc&&i<x->nyqmaxosc;++i)   // In case user changes nosc, we synthesize the smaller number of oscillators.
+        {
+            register double a = o->amplitude;
+            register long pi = pi_fundamental * (i+1);   // This partial's freq is proportional to harmonic number
+            register unsigned long pc = o->phase_current;
+            register long pstep = ((x->next_phase_inc * (i+1)) - pi) *rate ;		// Also prop. to harmonic #
+            register double astep = (o->next_amplitude - o->amplitude)*rate;
+            
+            
+            //		register unsigned long pa  = o->phaseadd;
+            //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
+            
+            
+            for(j=0;j<n;++j)
+            {
+                
+                out[j] +=  a  *
+                *((double *)(st + ((pc >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+                                  & ((STABSZ-1)*sizeof(*Sinetab)))));
+                pc +=  pi;
+                pi += pstep;
+                a += astep;
+                //			out[j] +=  a  * Sinetab[pc%STABSZ];
+                //			pa +=  phaseadd_inc;
+            }
+            o->amplitude = o->next_amplitude;
+            o->phase_current = pc;
+            ++o;
+        }
+    else
+        for(i=0;i<nosc && i<x->nosc&&i<x->nyqmaxosc;++i)   // In case user changes nosc, we synthesize the smaller number of oscillators.
+        {
+            register double a = o->amplitude;
+            register long pi = pi_fundamental * (i+1);   // This partial's freq is proportional to harmonic number
+            register unsigned long pc = o->phase_current;
+            register long pstep = ((x->next_phase_inc * (i+1)) - pi) *rate ;		// Also prop. to harmonic #
+            //		register double astep = (o->next_amplitude - o->amplitude)*rate;
+            register double carrier_amp, carrier_amp_inc;
+            register double mod_amp, mod_amp_inc;
+            double carrier_amp_final, mod_amp_final;
+            
+            
+            // Make sure we're not going to run out of noise:
+            if ((local_noisep + n) >= &(NoiseTable[NTABSZ])) {
+                local_noisep = &(NoiseTable[0]);
+                // Could start at a random location within the noise table...
+            }
+            // These formulae are from Loris / Kelly Fitz:
+            //      carrier amp: sqrt( 1. - noisiness ) * amp
+            //      modulation index: sqrt( 2. * noisiness ) * amp
+            
+            carrier_amp = na * o->amplitude;
+            carrier_amp_inc = (nb * o->next_amplitude - carrier_amp) *rate;
+            mod_amp =  nna   * o->amplitude;
+            mod_amp_inc = ( nnb * o->next_amplitude -mod_amp) * rate;
+            //		register unsigned long pa  = o->phaseadd;
+            //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
+            
+            // Make sure we're not going to run out of noise:
+            if ((local_noisep + n) >= &(NoiseTable[NTABSZ])) {
+                local_noisep = &(NoiseTable[0]);
+                // Could start at a random location within the noise table...
+            }
+            
+            
+            for(j=0;j<n;++j)
+            {
+                
+                double a = carrier_amp + mod_amp * (*local_noisep++);
+                out[j] +=  a  * 
+                *((double *)(st + ((pc >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+                                  & ((STABSZ-1)*sizeof(*Sinetab)))));
+                pc +=  pi;
+                pi += pstep;
+                carrier_amp += carrier_amp_inc;
+                mod_amp += mod_amp_inc;
+                
+                //a += astep;
+                //			out[j] +=  a  * Sinetab[pc%STABSZ];
+                //			pa +=  phaseadd_inc;
+            }
+            o->amplitude = o->next_amplitude;
+            o->phase_current = pc;
+            ++o;
+        }
+    x->noisiness = x->next_noisiness;
+    x->noisep = local_noisep;
+    x->phase_inc = x->next_phase_inc;	
+    
+out:
+    if(x->cleared)
+    {
+        x->nosc = 0;
+        x->cleared = 0;
+    }
+    
+    /*	++(x->numTimesPerformCalled);
+     if (pi_nextfundamental != x->x->next_phase_inc) {
+     ++(x->numTimesParamsChangedDuringPerform);
+     } */
+    
+    //return (w+4);
+}
+
 
 static void clear(t_sinusoids *x) {
 	
@@ -323,11 +461,17 @@ static void sinusoids_clear(t_sinusoids *x)
 	x->cleared = TRUE;
 }
 
+void sinusoids_dsp64(t_sinusoids *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    object_method(dsp64, gensym("dsp_add64"), x, sinusoids_perform64, 0, NULL);
+}
 
+/*
 static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
 {
 	dsp_add(sinusoids2_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
 }
+ */
 
 #ifdef __MWERKS__
 #define DONT_HAVE_STRING_LIBRARY
@@ -399,7 +543,7 @@ static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv
 		x->nosc = nosc;
 
 		for(i=0;i<nosc;++i)	{
-			float a = atom_getfloatarg(i,argc,argv);
+			double a = atom_getfloatarg(i,argc,argv);
 			fp[i].next_amplitude = a;
 		}
 	}
@@ -414,7 +558,7 @@ static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 
 static void frequency_float(t_sinusoids *x, double ff)
 {
-	float f = ff;
+	double f = ff;
 	
 	if(f>-0.0f && ff<x->samplerate/2.0f)
 	{
@@ -430,7 +574,7 @@ static void wave_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv)
 	{
 		if(argv[0].a_type == A_SYM)
 		{
-			float sq2=sqrt(2.0)/2.0f;
+			double sq2=sqrt(2.0)/2.0f;
 			oscdesc *fp = x->base;
 			int j;
 	    	if(isthesymbol("sawtooth", argv))
@@ -527,7 +671,7 @@ static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv)
 	{
 		if(argv[0].a_type == A_SYM)
 		{
-			float sq2=sqrt(2.0)/2.0f;
+			double sq2=sqrt(2.0)/2.0f;
 			oscdesc *fp = x->base;
 			int j;
 	    	if(isthesymbol("sawtooth", argv))
@@ -617,7 +761,7 @@ void harmonics_free(t_sinusoids *x) {
 	dsp_free(&(x->b_obj));
 }
 
-static void SineFunction(int n, float *stab, int stride, float from, float to)
+static void SineFunction(int n, double *stab, int stride, double from, double to)
 {
 	int j;
 	double f = (to-from)/n;
@@ -632,20 +776,20 @@ static void SineFunction(int n, float *stab, int stride, float from, float to)
 
 static void Makeoscsinetable()
 {
-		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(float)PI);
+		SineFunction(STABSZ, Sinetab, 1, 0.0f, 2.0f*(double)PI);
 }
 
 static void first_amplitude(t_sinusoids *x, double ff);
 static void first_amplitude(t_sinusoids *x, double ff)
 {
-	float f = ff;
+	double f = ff;
 	
 	if (x->nosc>0) x->base[0].next_amplitude = f;
 }
 static void noisiness(t_sinusoids *x, double ff);
 static void noisiness(t_sinusoids *x, double ff)
 {
-	float f = ff;
+	double f = ff;
 	
 	if (f>=0.0f && f<=1.0f) x->next_noisiness = f;
 	else
@@ -654,7 +798,7 @@ static void noisiness(t_sinusoids *x, double ff)
 
 void tellmeeverything(t_sinusoids *x) {
 	int i;
-	float f0 = x->next_phase_inc / x->pk;
+	double f0 = x->next_phase_inc / x->pk;
 
 	object_post((t_object *)x, NAME " object with %ld oscillators:", x->nosc);
 	
@@ -696,7 +840,8 @@ int main(void){
 			{
 #endif
 
-				class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+				//class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+                class_addmethod(sinusoids_class, (method)sinusoids_dsp64, "dsp64", A_CANT, 0);
 			}
 		class_addmethod(sinusoids_class, (method)sinusoids_list, "list", A_GIMME, 0);		// amplitudes
 		class_addmethod(sinusoids_class, (method)wave_list, "wave", A_GIMME, 0);		// amplitudes
