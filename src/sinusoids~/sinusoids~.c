@@ -94,7 +94,7 @@ typedef  struct oscdesc
 	long next_phase_inc;
 	long phase_inc;			/* frequency */
 //	unsigned long next_phaseadd;
-//	unsigned long phaseadd;			/* phase */
+//	unsigned long phaseadd;	/* phase */
 	float noisiness;
 	float next_noisiness;
 } oscdesc;
@@ -113,15 +113,17 @@ typedef struct
 	float sampleinterval;
 	int is_bwe;		// int for whether this object is bandwidth-enhanced
 	float *noisep;  // Points into the global noise table
-	
 	int debugPrintsRemaining;
 	int verbose;
 } oscbank;
 typedef oscbank t_sinusoids;
 
 t_int *sinusoids_perform(t_int *w);
+void  sinusoids_perform64(t_sinusoids *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 t_int *sinusoids_bwe_perform(t_int *w);
+void  sinusoids_bwe_perform64(t_sinusoids *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
+void sinusoids_dsp64(t_sinusoids *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv);
 void sinusoids_clear(t_sinusoids *x);
 void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s);
@@ -173,6 +175,51 @@ t_int *sinusoids_perform(t_int *w) {
 	return (w+4);
 }
 
+void  sinusoids_perform64(t_sinusoids *op, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    //t_sinusoids *op = (t_sinusoids *)(w[1]); /* taken care of through the variable name */
+    //t_float *out = (t_float *)(outs[0]);
+    double *out = outs[0];
+    //int n = (int)(w[3]);
+    long n = sampleframes;
+    int nosc = op->nosc;
+    int i,j;
+    oscdesc *o = op->base;
+    const char *st = (const char *)Sinetab;
+    //float rate = 1.0f/n;
+    double rate = 1.0/n;
+    
+    for(j=0;j<n;++j)
+        out[j] = 0.0;
+    
+    for(i=0; i<nosc; ++i) {
+        register double a = o->amplitude;
+        register long pi = o->phase_inc;
+        register unsigned long pc = o->phase_current;
+        register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
+        register double astep = (o->next_amplitude - o->amplitude)*rate;
+        //		register unsigned long pa  = o->phaseadd;
+        //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
+        
+        for(j=0; j<n; ++j) {
+            out[j] +=  a  *
+            *((float *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+                              & ((STABSZ-1)*sizeof(*Sinetab)))));
+            pc +=  pi;
+            pi += pstep;
+            a += astep;
+            //			out[j] +=  a  * Sinetab[pc%STABSZ];
+            //			pa +=  phaseadd_inc;
+        }
+        o->amplitude = o->next_amplitude;
+        o->phase_inc = o->next_phase_inc;
+        o->phase_current = pc;
+        ++o;
+    }
+    
+    op->nosc = op->next_nosc;
+}
+
 
 t_int *sinusoids_bwe_perform(t_int *w) {
 	t_sinusoids *op = (t_sinusoids *)(w[1]);
@@ -183,7 +230,7 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 	oscdesc *o = op->base;
 	const char *st = (const char *)Sinetab;
 	float rate = 1.0f/n;
-	float *local_noisep; 
+	float *local_noisep;
 	
 	for(j=0;j<n;++j)
 		out[j] = 0.0f;
@@ -197,11 +244,10 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 		register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
 //		register unsigned long pa  = o->phaseadd;
 //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
-		
+
 		register float carrier_amp, carrier_amp_inc;
 		register float mod_amp, mod_amp_inc;
 		float carrier_amp_final, mod_amp_final;
-		
 		
 		// Make sure we're not going to run out of noise:
 		while ((local_noisep + n) >= (NoiseTable+NTS())) {
@@ -213,7 +259,6 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 		// These formulae are from Loris / Kelly Fitz:
         //      carrier amp: sqrt( 1. - noisiness ) * amp
         //      modulation index: sqrt( 2. * noisiness ) * amp
-		
 		carrier_amp = sqrtf(1.0f - o->noisiness) * o->amplitude ;
 		carrier_amp_final = sqrtf(1.0f - o->next_noisiness) * o->next_amplitude;
 		carrier_amp_inc = (carrier_amp_final - carrier_amp)*rate;
@@ -227,9 +272,8 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 		
 		
 		for (j=0; j<n; ++j) {
-		
 			float a = (carrier_amp + (mod_amp * (*local_noisep++)));
-			
+    
 			/* if (op->debugPrintsRemaining) {
 				--(op->debugPrintsRemaining);
 				object_post((t_object *)x, "a %f", a);
@@ -256,9 +300,95 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 
 	op->noisep = local_noisep;
 	op->nosc = op->next_nosc;
-
 	
 	return (w+4);
+}
+
+void sinusoids_bwe_perform64(t_sinusoids *op, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    //t_sinusoids *op = (t_sinusoids *)(w[1]);
+    //t_float *out = (t_float *)(w[2]);
+    double *out = outs[0];
+    //int n = (int)(w[3]);
+    long n = sampleframes;
+    int nosc = op->nosc;
+    int i,j;
+    oscdesc *o = op->base;
+    const char *st = (const char *)Sinetab;
+    float rate = 1.0f/n;
+    float *local_noisep;
+    //double rate = 1.0/n;
+    //double *local_noisep;
+    
+    for(j=0;j<n;++j)
+        out[j] = 0.0f;
+    
+    local_noisep = op->noisep;
+    
+    for(i=0;i<nosc;++i)
+    {
+        register long pi = o->phase_inc;
+        register unsigned long pc = o->phase_current;
+        register long pstep = (o->next_phase_inc - o->phase_inc)*rate;
+        //		register unsigned long pa  = o->phaseadd;
+        //		register  long phaseadd_inc = (o->next_phaseadd - o->phaseadd)*rate;
+        
+        register float carrier_amp, carrier_amp_inc;
+        register float mod_amp, mod_amp_inc;
+        float carrier_amp_final, mod_amp_final;
+        
+        // Make sure we're not going to run out of noise:
+        while ((local_noisep + n) >= (NoiseTable+NTS())) {
+            local_noisep = &NoiseTable[0] ;
+            // Could start at a random location within the noise table...
+        }
+        
+        
+        // These formulae are from Loris / Kelly Fitz:
+        //      carrier amp: sqrt( 1. - noisiness ) * amp
+        //      modulation index: sqrt( 2. * noisiness ) * amp
+        
+        carrier_amp = sqrtf(1.0f - o->noisiness) * o->amplitude ;
+        carrier_amp_final = sqrtf(1.0f - o->next_noisiness) * o->next_amplitude;
+        carrier_amp_inc = (carrier_amp_final - carrier_amp)*rate;
+        
+        mod_amp =       sqrtf(2.0f * o->noisiness) * o->amplitude ;
+        mod_amp_final = sqrtf(2.0f * o->next_noisiness) * o->next_amplitude ;
+        mod_amp_inc = (mod_amp_final - mod_amp) *rate;
+        
+        // post("carrier %f to %f, mod %f to %f", carrier_amp, carrier_amp_final, mod_amp, mod_amp_final);
+        
+        
+        
+        for (j=0; j<n; ++j) {
+            float a = (carrier_amp + (mod_amp * (*local_noisep++)));
+            
+            /* if (op->debugPrintsRemaining) {
+             --(op->debugPrintsRemaining);
+             object_post((t_object *)x, "a %f", a);
+             } */
+            
+            out[j] +=  a *
+            *((float *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
+                              & ((STABSZ-1)*sizeof(*Sinetab)))));
+            
+            carrier_amp += carrier_amp_inc;
+            mod_amp += mod_amp_inc;
+            pc +=  pi;
+            pi += pstep;
+            //			out[j] +=  a  * Sinetab[pc%STABSZ];
+            //			pa +=  phaseadd_inc;
+        }
+        
+        o->amplitude = o->next_amplitude;
+        o->phase_inc = o->next_phase_inc;
+        o->noisiness = o->next_noisiness;
+        o->phase_current = pc;
+        ++o;
+    }
+    
+    op->noisep = local_noisep;
+    op->nosc = op->next_nosc;
 }
 
 
@@ -304,6 +434,21 @@ void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect)
 	} else {
 		dsp_add(sinusoids_perform, 3, x,sp[0]->s_vec,  sp[0]->s_n);
 	}
+}
+
+void sinusoids_dsp64(t_sinusoids *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    if (maxvectorsize > NTS()) {
+        error("sinusoids~: %ld-size Noise table is too small for sigvs %ld",
+              NTS(), maxvectorsize);
+        return;
+    }
+    
+    if (x->is_bwe) {
+        object_method(dsp64, gensym("dsp_add64"), x, sinusoids_bwe_perform64, 0, NULL);
+    } else {
+        object_method(dsp64, gensym("dsp_add64"), x, sinusoids_perform64, 0, NULL);
+    }
 }
 
 void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv) {
@@ -490,6 +635,7 @@ int main(void){
 
 	class_addmethod(sinusoids_class, (method)version, "version", 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_dsp, "dsp", A_CANT, 0);
+    class_addmethod(sinusoids_class, (method)sinusoids_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_list, "list", A_GIMME, 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_clear, "clear", 0);
 	class_addmethod(sinusoids_class, (method)sinusoids_assist, "assist", A_CANT, 0);

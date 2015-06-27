@@ -1,9 +1,8 @@
 #include "noise-table.h"
 
 // From Matlab (make_filtered_noise.m)
-
 float NoiseTable[] = {
--0.00012756f,  
+  -0.00012756f,
   -0.00024853f,  
   -0.00042516f,  
   -0.00066833f,  
