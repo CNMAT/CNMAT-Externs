@@ -221,7 +221,7 @@ void  sinusoids_perform64(t_sinusoids *op, t_object *dsp64, double **ins, long n
     op->nosc = op->next_nosc;
 }
 
-
+/*
 t_int *sinusoids_bwe_perform(t_int *w) {
 	t_sinusoids *op = (t_sinusoids *)(w[1]);
 	t_double *out = (t_double *)(w[2]);
@@ -275,10 +275,10 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 		for (j=0; j<n; ++j) {
 			double a = (carrier_amp + (mod_amp * (*local_noisep++)));
     
-			/* if (op->debugPrintsRemaining) {
-				--(op->debugPrintsRemaining);
-				object_post((t_object *)x, "a %f", a);
-			} */
+			// if (op->debugPrintsRemaining) {
+			//	--(op->debugPrintsRemaining);
+			//	object_post((t_object *)x, "a %f", a);
+			//}
 	
 			out[j] +=  a *
 				*((double *)(st + (((pc) >> (32-TPOW-LOGBASE2OFTABLEELEMENT))
@@ -304,6 +304,7 @@ t_int *sinusoids_bwe_perform(t_int *w) {
 	
 	return (w+4);
 }
+ */
 
 void sinusoids_bwe_perform64(t_sinusoids *op, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {

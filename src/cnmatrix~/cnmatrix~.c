@@ -56,28 +56,30 @@ typedef struct _matrix {
 	t_int numInlets;   // how many signals in
 	t_int numOutlets;  // how many signals out
 	t_int version;
-	t_int **w;			
-	t_float **Inlets;			
-	t_float **Outlets;	 
-	t_float *coeffLists;   //  panning factors		
-	float *lasty;
-	float slide;
+	//t_int **w;
+	//t_float **Inlets;
+	//t_float **Outlets;
+	//t_float *coeffLists;   //  panning factors
+    double *coeffLists;
+	double *lasty;
+	double slide;
     int mode;
 } t_matrix;
 
 t_symbol *ps_fast, *ps_smooth, *ps_frame;
 
-t_int *matrix_perform_fast(t_int *w);
-t_int *matrix_perform_smooth(t_int *w);
-t_int *matrix_perform_frame(t_int *w);
-void matrix_dsp(t_matrix *x, t_signal **sp, short *connect);
+//t_int *matrix_perform_fast(t_int *w);
+//t_int *matrix_perform_smooth(t_int *w);
+//t_int *matrix_perform_frame(t_int *w);
+//void matrix_dsp(t_matrix *x, t_signal **sp, short *connect);
+void matrix_dsp64(t_matrix *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void matrix_fast(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
 void matrix_smooth(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
 void matrix_frame(t_matrix *x, t_symbol *s, short argc, t_atom *argv);
 void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv);
-float mygetfloat(t_atom *a);
-float mygetlong(t_atom *a);
-void matrix_setgains(t_matrix *x, long in, long out, float gain);
+double mygetfloat(t_atom *a);
+double mygetlong(t_atom *a);
+void matrix_setgains(t_matrix *x, long in, long out, double gain);
 void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv);
 void *matrix_new(t_symbol *s, short argc, t_atom *argv);
 void matrix_free(t_matrix *x);
@@ -94,7 +96,7 @@ int main(void){
     
     void *p = max_jit_classex_setup(calcoffset(t_matrix,obex));
 	
-    class_addmethod(matrix_class, (method)matrix_dsp, "dsp", A_CANT, 0);
+    class_addmethod(matrix_class, (method)matrix_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(matrix_class, (method)matrix_fast, "fast", A_GIMME, 0);
 	class_addmethod(matrix_class, (method)matrix_smooth, "smooth", A_GIMME, 0);
 	class_addmethod(matrix_class, (method)matrix_frame, "frame", A_GIMME, 0);
@@ -111,6 +113,141 @@ int main(void){
 	return 0;
 }
 
+void matrix_perform64_fast(t_matrix *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    // fast == no gain factor cross fading -> possible clicks if panning direction
+    // changed
+    //t_int k, i, j;
+    //t_int **w = (t_int **)wAsT_int;
+    //t_matrix *x = (t_matrix *)(w[1]);
+    //t_int n = (t_int)(w[2]);
+    long n = sampleframes;
+    // use integers to copy blocs faster: was suggested by David Z.
+    //t_float **in = x->Inlets;
+    //t_float **out = x->Outlets;
+    //t_float *outptr;
+    //t_float *inptr;
+    double *outptr, *inptr;
+    //t_int numInlets = x->numInlets;
+    //t_int numOutlets = x->numOutlets;
+    double *coeffptr = x->coeffLists;
+    double coeff;
+    
+    for(int i = 0; i < numouts; i++){
+        //memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
+        memset(outs[i], 0, n * sizeof(double));
+    }
+    
+    for(int j = 0; j < (numouts * numins); j++) {
+        //outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
+        //inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
+        outptr = outs[(j % numouts)];
+        inptr = ins[(j / numouts) % numins];
+        
+        coeff = *coeffptr++;
+        
+        for(int k = 0; k < n; k += 4) {
+            
+            *outptr++ += coeff * *inptr++;
+            *outptr++ += coeff * *inptr++;
+            *outptr++ += coeff * *inptr++;
+            *outptr++ += coeff * *inptr++;
+            
+        }
+    }
+}
+
+void matrix_perform64_smooth(t_matrix *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    //int i, j, k;
+    //t_matrix *x = (t_matrix *)w[1];
+    //int n = (int)w[2];
+    long n = sampleframes;
+    //float *in, *out;
+    //t_int numInlets = x->numInlets;
+    //t_int numOutlets = x->numOutlets;
+    double coeff;
+    double *coeffptr = x->coeffLists;
+    double *inptr, *outptr;
+    double *lasty = x->lasty;
+    double tmp;
+    
+    for(int i = 0; i < numouts; i++){
+        //memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
+        memset(outs[i], 0, n * sizeof(double));
+    }
+    
+    for(int j = 0; j < (numins * numouts); j++) {
+        //outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
+        //inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
+        outptr = outs[j % numouts];
+        inptr = ins[(j / numouts) % numins];
+        
+        coeff = *coeffptr++;
+        
+        for(int k = 0; k < n; k += 4) {
+            
+            tmp = (*lasty + ((coeff - *lasty) / x->slide));
+            
+            *outptr++ += tmp * *inptr++;
+            *outptr++ += tmp * *inptr++;
+            *outptr++ += tmp * *inptr++;
+            *outptr++ += tmp * *inptr++;
+            
+            if(fabsf(coeff - *lasty) < 10e-18){
+                *lasty = coeff;
+            } else{
+                *lasty = tmp;
+            }
+            
+        }
+        lasty++;
+    }
+}
+
+void matrix_perform64_frame(t_matrix *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    //int i, j, k;
+    //t_matrix *x = (t_matrix *)w[1];
+    //int n = (int)w[2];
+    long n = sampleframes;
+    //float *in, *out;
+    //t_int numInlets = x->numInlets;
+    //t_int numOutlets = x->numOutlets;
+    double coeff;
+    double coeffstep;
+    double *coeffptr = x->coeffLists;
+    double *inptr, *outptr;
+    double *lasty = x->lasty;
+    
+    for(int i = 0; i < numouts; i++){
+        //memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
+        memset(outs[i], 0, n * sizeof(double));
+    }
+    
+    //x->coeffLists[(in * x->numOutlets) + out] = gain;
+    
+    for(int j = 0; j < numouts * numins; j++){
+        //outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
+        //inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
+        outptr = outs[j % numouts];
+        inptr = ins[(j / numouts) % numins];
+        coeff = *coeffptr++;
+        coeffstep = (coeff - *lasty) / n;
+        if(coeffstep != 0.) {
+            for(int k = 1; k <= n; k += 1) {
+                *outptr++ += (*lasty + k * coeffstep) * *inptr++;
+            }
+        } else {
+            for(int k = 1; k <= n; k += 1) {
+                *outptr++ += coeff * *inptr++;
+            }
+        }
+        *lasty = coeff;
+        lasty++;
+    }
+}
+/*
 t_int *matrix_perform_fast(t_int *wAsT_int) {
 	// fast == no gain factor cross fading -> possible clicks if panning direction
 	// changed
@@ -192,7 +329,7 @@ t_int *matrix_perform_smooth(t_int *w) {
 		}
 		lasty++;
 	}		
-    
+    */
 	/*
      object_post((t_object *)x, "***************");
      for(i = 0; i < numInlets + numOutlets; i++){
@@ -240,9 +377,11 @@ t_int *matrix_perform_smooth(t_int *w) {
      }
      }
      */
+/*
 	return w + numInlets + numOutlets + 3;
 }
-
+ */
+/*
 // this mode does linear interpolation over one signal frame
 t_int *matrix_perform_frame(t_int *w) {
 	int i, j, k;
@@ -285,7 +424,32 @@ t_int *matrix_perform_frame(t_int *w) {
 
 	return w + numInlets + numOutlets + 3;
 }
+ */
 
+void matrix_dsp64(t_matrix *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    //t_int vs = maxvectorsize;
+    //t_int i, num = x->numInlets + x->numOutlets; // number of Inlets and Outlets
+    //t_int **w = x->w;
+    
+    //w[0] = (t_int *)x;
+    //w[1] = (t_int *)sp[0]->s_n;
+    
+    //for (i=0; i<num; ++i)
+      //  w[i+2] = (t_int *)sp[i]->s_vec;
+    
+    //num += 2; // x and n
+    
+    if (x->version == FAST) {
+        object_method(dsp64, gensym("dsp_add64"), x, matrix_perform64_fast, 0, NULL);
+    } else if (x->version == SMOOTH) {
+        object_method(dsp64, gensym("dsp_add64"), x, matrix_perform64_smooth, 0, NULL);
+    } else if (x->version == FRAME) {
+        object_method(dsp64, gensym("dsp_add64"), x, matrix_perform64_frame, 0, NULL);
+    }
+}
+
+/*
 void matrix_dsp(t_matrix *x, t_signal **sp, short *connect) {
 	t_int vs = sys_getblksize();
 	t_int i, num = x->numInlets + x->numOutlets; // number of Inlets and Outlets 
@@ -307,6 +471,7 @@ void matrix_dsp(t_matrix *x, t_signal **sp, short *connect) {
         dsp_addv(matrix_perform_frame, num, (void **)w);
     }
 }
+ */
 
 void matrix_fast(t_matrix *x, t_symbol *s, short argc, t_atom *argv) {
 	x->version = FAST;
@@ -332,7 +497,7 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 	char *in_bp = NULL;
 	char *ip = NULL;
 	t_atom a_coord[1024];  // YUK
-	t_float *coeffptr,*oldcoeffptr;
+	double *coeffptr,*oldcoeffptr;
 
 	coeffptr = x->coeffLists;
 	
@@ -436,7 +601,7 @@ validatedfloat mymorebettergetfloat(t_atom *a){
 }
 //YUK: these need a boolean valid flag and pass by reference (See above example)
 
-float mygetfloat(t_atom *a){
+double mygetfloat(t_atom *a){
 	if(a->a_type == A_FLOAT){
 		return a->a_w.w_float;
 	}else if(a->a_type == A_LONG){
@@ -447,7 +612,7 @@ float mygetfloat(t_atom *a){
 	}
 }
 
-float mygetlong(t_atom *a){
+double mygetlong(t_atom *a){
 	if(a->a_type == A_FLOAT){
 		return (long)(a->a_w.w_float);
 	}else if(a->a_type == A_LONG){
@@ -459,10 +624,10 @@ float mygetlong(t_atom *a){
 }
 
 void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
-	int i;
-	t_float *coeffptr;
-	int in, out;
-	float val;
+	//int i;
+	//t_float *coeffptr;
+	//int in, out;
+	//float val;
     //YUK:  these values need to be sanitized before they are used
 	if(argc == 2){
 		matrix_setgains(x, x->m_obj.z_in, mygetlong(argv), mygetfloat(argv + 1));
@@ -495,23 +660,23 @@ void matrix_list(t_matrix *x, t_symbol *s, long argc, t_atom *argv) {
 }
 
 // YUK, no defensiveness here at all.
-void matrix_setgains(t_matrix *x, long in, long out, float gain){
+void matrix_setgains(t_matrix *x, long in, long out, double gain){
 	//post("%d %d %d %f", in, out, (in * x->numOutlets) + out, gain);
 	//if(
 	x->coeffLists[(in * x->numOutlets) + out] = gain;
 }
 
 void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
-	t_int i, k;
-	t_int vs = sys_getblksize(); // Size of signal vector selected in MSP
+	//t_int i, k;
+	//t_int vs = sys_getblksize(); // Size of signal vector selected in MSP
 	t_matrix *x = (t_matrix *)object_alloc(matrix_class);
 	if(!x){
 		post("bailing");
 		return NULL;
 	}
     
-	t_float Fs = sys_getsr();
-	t_float *fptr,*gptr, *nptr;		
+	//t_float Fs = sys_getsr();
+	//t_float *fptr,*gptr, *nptr;
 	// Look at 1st argument
 	if (argv[0].a_type == A_LONG) x->numInlets = argv[0].a_w.w_long;
 	else if (argv[0].a_type == A_FLOAT) x->numInlets = (int)argv[0].a_w.w_float;
@@ -531,18 +696,18 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
         x->version = SMOOTH; // smooth is default
     }
     
-	x->Inlets = malloc(x->numInlets * sizeof(t_float*));
-	x->Outlets = malloc(x->numOutlets * sizeof(t_float*));
-	x->w = malloc((x->numInlets + x->numOutlets + 2) * sizeof(t_int*));
+	//x->Inlets = malloc(x->numInlets * sizeof(t_float*));
+	//x->Outlets = malloc(x->numOutlets * sizeof(t_float*));
+	//x->w = malloc((x->numInlets + x->numOutlets + 2) * sizeof(t_int*));
 		
 	// Create inlets and outlets
 	dsp_setup((t_pxobject *)x, x->numInlets);
 	x->m_obj.z_misc = Z_NO_INPLACE; // Necessary when outlets should have different vectors than inlets !!
-	for (i=0; i<x->numOutlets; ++i)
+	for (int i=0; i<x->numOutlets; ++i)
 		outlet_new((t_object *)x, "signal");
-	x->coeffLists = (t_float *) calloc(x->numInlets * x->numOutlets, sizeof(t_float));
+	x->coeffLists = (double *) calloc(x->numInlets * x->numOutlets, sizeof(double));
 
-	x->lasty = (float *)calloc(x->numInlets * x->numOutlets, sizeof(float));
+	x->lasty = (double *)calloc(x->numInlets * x->numOutlets, sizeof(double));
 
 	x->slide = 1000;
 	return x;
@@ -551,7 +716,7 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
 void  matrix_free(t_matrix *x) {
 
     dsp_free((t_pxobject *)x);
-    
+    /*
 	if (x->Inlets){
 		free(x->Inlets);
 	}
@@ -561,6 +726,7 @@ void  matrix_free(t_matrix *x) {
 	if (x->w){
 		free(x->w);
 	}
+     */
 	if(x->coeffLists){
 		free(x->coeffLists);
 	}
