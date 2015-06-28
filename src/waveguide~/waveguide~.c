@@ -76,26 +76,26 @@ VERSION 0.1: Initial version
 typedef struct {
     
 	int size;           // buffer size (power of two)
-	float *buffer[2];   // left and right delay
+	double *buffer[2];   // left and right delay
 	int ptr;            // pointer to buffer position
 
-    float delay_ms;     // delay in milliseconds
+    double delay_ms;     // delay in milliseconds
 	int delay;          // current delay (samples)
     
-	float fc;           // filter coefficient for low-pass at junction
-	float lp[2];        // temp variables for low-pass at junction
+	double fc;           // filter coefficient for low-pass at junction
+	double lp[2];        // temp variables for low-pass at junction
     
-	float a1a;          // positive-going non-linearity
-	float a1b;          // negative-going non-linearity
-	float zm1[2];       // temp variables for non-linearity filter
+	double a1a;          // positive-going non-linearity
+	double a1b;          // negative-going non-linearity
+	double zm1[2];       // temp variables for non-linearity filter
     
-    float out[2];       // outputs at each end
+    double out[2];       // outputs at each end
     
 } waveguide;
 
 t_class *waveguide_class;
 
-waveguide* waveguide_new(int size, float fc, float nl_pos, float nl_neg)
+waveguide* waveguide_new(int size, double fc, double nl_pos, double nl_neg)
 {
 	waveguide *w = malloc(sizeof(waveguide));
 	if(!w){
@@ -103,8 +103,8 @@ waveguide* waveguide_new(int size, float fc, float nl_pos, float nl_neg)
 	}
     
 	w->size = size;
-	w->buffer[0] = calloc(size, sizeof(float));
-	w->buffer[1] = calloc(size, sizeof(float));
+	w->buffer[0] = calloc(size, sizeof(double));
+	w->buffer[1] = calloc(size, sizeof(double));
 	w->ptr = 0;
     
 	w->delay = size;
@@ -134,8 +134,8 @@ void waveguide_free(waveguide* w) {
 
 void waveguide_reset(waveguide* w) {
     // set buffer to zero
-	memset(w->buffer[0], 0, w->size * sizeof(float));
-	memset(w->buffer[1], 0, w->size * sizeof(float));
+	memset(w->buffer[0], 0, w->size * sizeof(double));
+	memset(w->buffer[1], 0, w->size * sizeof(double));
 
     // reset lowpass filter
 	w->lp[0] = 0.0f;
@@ -150,7 +150,7 @@ void waveguide_reset(waveguide* w) {
     w->out[1] = 0.0f;
 }
 
-void waveguide_set_delay(waveguide* w, float delay_ms, float fs)
+void waveguide_set_delay(waveguide* w, double delay_ms, double fs)
 {
     int delay;
     
@@ -167,28 +167,28 @@ void waveguide_set_delay(waveguide* w, float delay_ms, float fs)
 	}
 }
 
-void waveguide_set_fc(waveguide* w, float fc)
+void waveguide_set_fc(waveguide* w, double fc)
 {
 	w->fc = fc;
 }
 
-void waveguide_set_nl_pos(waveguide* w, float nl_pos)
+void waveguide_set_nl_pos(waveguide* w, double nl_pos)
 {
 	w->a1a = (1.0f - nl_pos) / (1.0f + nl_pos);
     w->a1a = nl_pos;
 }
 
-void waveguide_set_nl_neg(waveguide* w, float nl_neg)
+void waveguide_set_nl_neg(waveguide* w, double nl_neg)
 {
 	w->a1b = (1.0f - nl_neg) / (1.0f + nl_neg);
     w->a1b = nl_neg;
 }
 
-void waveguide_process(waveguide *w, float in0, float in1)
+void waveguide_process(waveguide *w, double in0, double in1)
 {
-	float tmp;
-	float a1;
-	float b;
+	double tmp;
+	double a1;
+	double b;
     
 	w->out[0] = w->buffer[0][(w->ptr + w->delay) % w->size];
 	w->out[0] = w->lp[0] * (w->fc - 1.0f) + w->fc * w->out[0];
@@ -245,8 +245,8 @@ typedef struct {
     
     waveguide** w;      // waveguide edges
     
-    float* d;           // mesh deflection state at each node
-    float* dm1;           // previous mesh deflection state at each node
+    double* d;           // mesh deflection state at each node
+    double* dm1;           // previous mesh deflection state at each node
     
     int inputs;         // how many inputs
     int* in;            // input locations (nodes)
@@ -267,8 +267,8 @@ waveguide_mesh* waveguide_mesh_new(int n, int e, int s, int inputs, int outputs)
     m->edge = (int_pair*)calloc(e, sizeof(int[2]));
     memset(m->edge, 0, sizeof(int[2]) * e);
     
-    m->d = calloc(n, sizeof(float));
-    m->dm1 = calloc(n, sizeof(float));
+    m->d = calloc(n, sizeof(double));
+    m->dm1 = calloc(n, sizeof(double));
     m->w = calloc(e, sizeof(waveguide*));
     
     for(i = 0; i < e; i++) {
@@ -290,8 +290,8 @@ void waveguide_mesh_reset(waveguide_mesh* m) {
     
     int i;
     
-    memset(m->d, 0, m->n * sizeof(float));
-    memset(m->dm1, 0, m->n * sizeof(float));
+    memset(m->d, 0, m->n * sizeof(double));
+    memset(m->dm1, 0, m->n * sizeof(double));
     
     for(i = 0; i < m->e; i++) {
         waveguide_reset(m->w[i]);
@@ -324,7 +324,7 @@ void waveguide_mesh_free(waveguide_mesh* m) {
 }
 
 // propagate new delay caused by sample rate change
-void waveguide_mesh_update_fs(waveguide_mesh* m, float fs) {
+void waveguide_mesh_update_fs(waveguide_mesh* m, double fs) {
     int i;
     
     for(i = 0; i < m->e; i++) {
@@ -345,13 +345,13 @@ void waveguide_mesh_connect_output(waveguide_mesh* m, int o, int n) {
     m->out[o] = n;
 }
 
-void waveguide_mesh_process(waveguide_mesh* m, int s, float** s_in, float** s_out) {
+void waveguide_mesh_process(waveguide_mesh* m, int s, double** s_in, double** s_out) {
     
     int i;
     int j;
     int k;
     
-    float p;  // energy entering the junction
+    double p;  // energy entering the junction
     int q;    // number of edges entering the junction
     int m0;   // indicator that edge maps to this junction, edge side 0
     int m1;   // indicator that edge maps to this junction, edge side 1
@@ -429,9 +429,9 @@ typedef struct
 	t_pxobject x_obj;
 
     // dsp state 
-    t_int** w;
-    float** s_in;
-    float** s_out;
+    //t_int** w;
+    //float** s_in;
+    //float** s_out;
     int s_n;
     
     int do_reset;
@@ -452,6 +452,28 @@ void waveguide_tilde_assist(waveguide_tilde_state *x, void *b, long m, long a, c
 void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv);
 void waveguide_tilde_free(waveguide_tilde_state *x);
 
+void waveguide_tilde_perform64(waveguide_tilde_state *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    int s = sampleframes;
+    /*
+    for(i = 0; i < x->mesh->inputs; i++) {
+        x->s_in[i] = (float*)(wp[3 + i]);
+    }
+    
+    for(i = 0; i < x->mesh->outputs; i++) {
+        x->s_out[i] = (float*)(wp[3 + i + x->mesh->inputs]);
+    }
+    */
+    if(x->do_reset) {
+        object_post((t_object *)x, "waveguide~: reset");
+        waveguide_mesh_reset(x->mesh);
+        x->do_reset = 0;
+    }
+    
+    //waveguide_mesh_process(x->mesh, s, x->s_in, x->s_out);
+    waveguide_mesh_process(x->mesh, s, ins, outs);
+}
+/*
 t_int *waveguide_tilde_perform(t_int *w) {
 
     // retreive inlet, outlet vectors...
@@ -484,7 +506,18 @@ t_int *waveguide_tilde_perform(t_int *w) {
     return w + 2 + x->mesh->inputs + x->mesh->outputs + 1;
     
 }
-
+*/
+void waveguide_tilde_dsp64(waveguide_tilde_state *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    // reset mesh
+    waveguide_mesh_reset(x->mesh);
+    
+    // update sampling rate
+    waveguide_mesh_update_fs(x->mesh, samplerate);
+    
+    object_method(dsp64, gensym("dsp_add64"), x, waveguide_tilde_perform64, 0, NULL);
+}
+/*
 void waveguide_tilde_dsp(waveguide_tilde_state *x, t_signal **sp, short *connect) {
     
     int i;
@@ -506,7 +539,7 @@ void waveguide_tilde_dsp(waveguide_tilde_state *x, t_signal **sp, short *connect
 	dsp_addv(waveguide_tilde_perform, 2 + x->mesh->inputs + x->mesh->outputs, (void**)(x->w)); // not sure if this is right for number of inlets, outlets
     
 }
-
+*/
 void waveguide_tilde_reset(waveguide_tilde_state *x) {
 
     x->do_reset = 1;
@@ -522,7 +555,7 @@ void waveguide_tilde_list(waveguide_tilde_state *x, t_symbol *s, short argc, t_a
     
     int arg0_star;
     
-    float v;
+    double v;
     
     // iterates over the list and interprets any commands encountered
     // user can update multiple things in a single list command
@@ -888,7 +921,7 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
     int init_s = 1024;
     int init_inputs = 1;
     int init_outputs = 1;
-    float init_delay = 1.0;
+    double init_delay = 1.0;
     
     int i;
     
@@ -972,9 +1005,9 @@ void* waveguide_tilde_new(t_symbol *s, short argc, t_atom *argv) {
         waveguide_set_delay(x->mesh->w[i], init_delay, sys_getsr());
     }
     
-    x->w = (t_int**)malloc(sizeof(t_int*) * (x->mesh->inputs + x->mesh->outputs + 2));
-    x->s_in = (float**)malloc(sizeof(float*) * x->mesh->inputs);
-    x->s_out = (float**)malloc(sizeof(float*) * x->mesh->outputs);
+    //x->w = (t_int**)malloc(sizeof(t_int*) * (x->mesh->inputs + x->mesh->outputs + 2));
+    //x->s_in = (float**)malloc(sizeof(float*) * x->mesh->inputs);
+    //x->s_out = (float**)malloc(sizeof(float*) * x->mesh->outputs);
     
     x->do_reset = 0;
 
@@ -993,9 +1026,9 @@ void waveguide_tilde_free(waveguide_tilde_state* x) {
     
     dsp_free(&(x->x_obj));
     
-    free(x->w);
-    free(x->s_in);
-    free(x->s_out);
+    //free(x->w);
+    //free(x->s_in);
+    //free(x->s_out);
     
     free(x->mesh);
 
@@ -1009,7 +1042,7 @@ int main(void){
 		  (method)waveguide_tilde_free, (short)sizeof(waveguide_tilde_state),
 		  0L, A_GIMME, 0);
 
-	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_dsp, "dsp", A_CANT, 0);
+	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_list, "connect", A_GIMME, 0);
 	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_list, "set", A_GIMME, 0);
 	class_addmethod(waveguide_tilde_class, (method)waveguide_tilde_reset, "reset", 0);
