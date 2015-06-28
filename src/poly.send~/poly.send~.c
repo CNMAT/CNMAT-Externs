@@ -46,15 +46,16 @@ typedef struct _psend{
 	t_pxobject ob;
 	t_symbol *name, *mangled_name;
 	long channel;
-	double *sv;
-	long blksize;
-	long samplerate;
+	//double *sv;
+	//long blksize;
+	//long samplerate;
 } t_psend;
 
 static t_class *psend_class;
 
-void psend_dsp(t_psend *x, t_signal **sp, short *count);
-t_int *psend_perform(t_int *w);
+//void psend_dsp(t_psend *x, t_signal **sp, short *count);
+//t_int *psend_perform(t_int *w);
+void psend_perform64(t_psend *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 void psend_mangle(t_psend *x);
 void psend_free(t_psend *x);
 void psend_assist(t_psend *x, void *b, long m, long a, char *s);
@@ -64,6 +65,22 @@ t_max_err psend_setchannel(t_psend *x, t_object *attr, long argc, t_atom *argv);
 t_max_err psend_getchannel(t_psend *x, t_object *attr, long *argc, t_atom **argv);
 void *psend_new(t_symbol *sym, int argc, t_atom *argv);
 
+void psend_dsp64(t_psend *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    object_method(dsp64, gensym("dsp_add64"), x, psend_perform64, 0, NULL);
+}
+
+void psend_perform64(t_psend *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    if(!(x->mangled_name->s_thing)){
+        return;
+    }
+    double *ptr = (double *)(x->mangled_name->s_thing);
+    for(int i = 0; i < sampleframes; i++){
+        ptr[i] += ins[0][i];
+    }
+}
+/*
 void psend_dsp(t_psend *x, t_signal **sp, short *count){
 	x->sv = sp[0]->s_vec;
 	x->blksize = sp[0]->s_n;
@@ -83,7 +100,7 @@ t_int *psend_perform(t_int *w){
 	}
 	return w + 2;
 }
-
+*/
 void psend_mangle(t_psend *x){
 	if(x->name){
 		char buf[256];
@@ -167,7 +184,7 @@ int main(void){
 	t_class *c = class_new("poly.send~", (method)psend_new, (method)psend_free, sizeof(t_psend), 0L, A_GIMME, 0);
 	class_dspinit(c);
 
-	class_addmethod(c, (method)psend_dsp, "dsp", A_CANT, 0);
+	class_addmethod(c, (method)psend_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(c, (method)psend_assist, "assist", A_CANT, 0);
 
 	CLASS_ATTR_SYM(c, "name", 0, t_psend, name);

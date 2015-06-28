@@ -63,10 +63,14 @@ t_class *bench_class;
 
 void bench_assist(t_bench *x, void *b, long m, long a, char *s);
 void *bench_new(t_symbol *msg, short argc, t_atom *argv);
-t_int *bench_perform_in(t_int *w);
-t_int *bench_perform_in_connected(t_int *w);
-t_int *bench_perform_out(t_int *w);
-void bench_dsp(t_bench *x, t_signal **sp, short *count);
+//t_int *bench_perform_in(t_int *w);
+//t_int *bench_perform_in_connected(t_int *w);
+//t_int *bench_perform_out(t_int *w);
+//void bench_dsp(t_bench *x, t_signal **sp, short *count);
+void bench_dsp64(t_bench *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void bench_perform64_in(t_bench *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void bench_perform64_in_connected(t_bench *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void bench_perform64_out(t_bench *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 void bench_free(t_bench *x);
 
 int main(void){
@@ -75,7 +79,7 @@ int main(void){
 	version_post_copyright();
 
 	class_addmethod(bench_class, (method) version, "version", 0);
-	class_addmethod(bench_class, (method)bench_dsp, "dsp", A_CANT, 0);
+	class_addmethod(bench_class, (method)bench_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(bench_class, (method)bench_assist, "assist", A_CANT, 0);
 	
 	class_dspinit(bench_class);
@@ -147,6 +151,19 @@ void bench_free(t_bench *x){
 	dsp_free((t_pxobject *)x);
 }
 
+void bench_dsp64(t_bench *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    if(x->t_objmode == BENCH_IN){
+        if(!count[0]){
+            object_method(dsp64, gensym("dsp_add64"), x, bench_perform64_in, 0, NULL);
+        }else{
+            object_method(dsp64, gensym("dsp_add64"), x, bench_perform64_in_connected, 0, NULL);
+        }
+    }else{
+        object_method(dsp64, gensym("dsp_add64"), x, bench_perform64_out, 0, NULL);
+    }
+}
+/*
 void bench_dsp(t_bench *x, t_signal **sp, short *count){
 	if(x->t_objmode == BENCH_IN){ 
 		if(!count[0]) dsp_add(bench_perform_in, 4, x, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
@@ -154,7 +171,13 @@ void bench_dsp(t_bench *x, t_signal **sp, short *count){
 	}
 	else dsp_add(bench_perform_out, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 }
-
+*/
+void bench_perform64_in(t_bench *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    ticks t = getticks();
+    outs[1][0] = (double)t;
+}
+/*
 t_int *bench_perform_in(t_int *w){
 	t_bench *x = (t_bench *)w[1];
 	t_float *out1 = (t_float *)w[2];
@@ -170,7 +193,14 @@ t_int *bench_perform_in(t_int *w){
 
 	return (w + 5);
 }
-
+*/
+void bench_perform64_in_connected(t_bench *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    ticks t = getticks();
+    outs[1][0] = (double)t;
+    memcpy(outs[0], ins[0], sizeof(double) * sampleframes);
+}
+/*
 t_int *bench_perform_in_connected(t_int *w){
 	t_bench *x = (t_bench *)w[1];
 	t_float *in = (t_float *)w[2];
@@ -189,7 +219,16 @@ t_int *bench_perform_in_connected(t_int *w){
 
 	return (w + 6);
 }
-
+*/
+void bench_perform64_out(t_bench *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    ticks t2 = getticks();
+    double diff = elapsed(t2, (ticks)ins[1][0]);
+    for(int i = 0; i < sampleframes; i++){
+        outs[0][i] = diff;
+    }
+}
+/*
 t_int *bench_perform_out(t_int *w){
 	t_bench *x = (t_bench *)w[1];
 	t_float *in1 = (t_float *)w[2];
@@ -213,3 +252,4 @@ t_int *bench_perform_out(t_int *w){
 	return (w + 6);
 	
 }
+ */

@@ -48,9 +48,9 @@ typedef struct _pbus{
 	t_pxobject ob;
 	t_symbol *name, **mangled_names;
 	long num_channels;
-	double **sv;
+	//double **sv;
 	long blksize;
-	long samplerate;
+	//long samplerate;
 	long my_id;
 } t_pbus;
 
@@ -63,6 +63,7 @@ void pbus_free(t_pbus *x);
 void pbus_assist(t_pbus *x, void *b, long m, long a, char *s);
 void *pbus_new(t_symbol *sym, int argc, t_atom *argv);
 
+/*
 void pbus_dsp(t_pbus *x, t_signal **sp, short *count){
 	int i;
 	for(i = 0; i < x->num_channels; i++){
@@ -90,7 +91,51 @@ void pbus_dsp(t_pbus *x, t_signal **sp, short *count){
 	x->samplerate = sp[0]->s_sr;
 	dsp_add(pbus_perform, 1, x);
 }
+*/
+void pbus_perform64(t_pbus *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 
+void pbus_dsp64(t_pbus *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    for(int i = 0; i < x->num_channels; i++){
+        //x->sv[i] = sp[i + 1]->s_vec;
+        if(x->blksize != maxvectorsize){
+            // block size has changed
+            // if there are multiple instances of this object, this will happen more than once, but
+            // it's cool because (from the gcc manual):
+            // If the new size you specify is the same as the old size, realloc is guaranteed to change
+            // nothing and return the same address that you gave.
+            
+            void *ptr = realloc(x->mangled_names[i]->s_thing, maxvectorsize * sizeof(double));
+            if(ptr){
+                x->mangled_names[i]->s_thing = ptr;
+            }else{
+                object_error((t_object *)x, "out of memory!");
+                x->mangled_names[i]->s_thing = NULL;
+            }
+        }
+        memset(x->mangled_names[i]->s_thing, '\0', sizeof(double) * maxvectorsize);
+    }
+    x->blksize = maxvectorsize;
+    long id = (long)(x->name->s_thing);
+    x->my_id = ++id;
+    x->name->s_thing = (void *)id;
+    //x->samplerate = sp[0]->s_sr;
+    //dsp_add(pbus_perform, 1, x);
+    object_method(dsp64, gensym("dsp_add64"), x, pbus_perform64, 0, NULL);
+}
+
+void pbus_perform64(t_pbus *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    for(int i = 0; i < x->num_channels; i++){
+        if(x->mangled_names[i]->s_thing){
+            memcpy(outs[i], x->mangled_names[i]->s_thing, sizeof(double) * sampleframes);
+        }
+        if(x->my_id == (long)(x->name->s_thing)){
+            memset(x->mangled_names[i]->s_thing, '\0', sizeof(double) * sampleframes);
+        }
+    }
+}
+/*
 t_int *pbus_perform(t_int *w){
 	t_pbus *x = (t_pbus *)w[1];
 	int i;
@@ -104,7 +149,7 @@ t_int *pbus_perform(t_int *w){
 	}
 	return w + 2;
 }
-
+*/
 void pbus_mangle(t_pbus *x){
 	if(!(x->name) || x->num_channels < 0){
 		return;
@@ -167,7 +212,7 @@ void *pbus_new(t_symbol *sym, int argc, t_atom *argv){
 			return NULL;
 		}
 		x->mangled_names = (t_symbol **)calloc(x->num_channels, sizeof(t_symbol *));
-		x->sv = (double **)calloc(x->num_channels, sizeof(double *));
+		//x->sv = (double **)calloc(x->num_channels, sizeof(double *));
 		int i;
 		pbus_mangle(x);
 		for(i = 0; i < x->num_channels; i++){
@@ -185,7 +230,7 @@ int main(void){
 	t_class *c = class_new("poly.bus~", (method)pbus_new, (method)pbus_free, sizeof(t_pbus), 0L, A_GIMME, 0);
 	class_dspinit(c);
 
-	class_addmethod(c, (method)pbus_dsp, "dsp", A_CANT, 0);
+	class_addmethod(c, (method)pbus_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(c, (method)pbus_assist, "assist", A_CANT, 0);
 
 	class_register(CLASS_BOX, c);
