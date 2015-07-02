@@ -928,7 +928,8 @@ if(f[i].og==0.0f)
 				 og += oginc;
 #else
 				 out[j] += yn;
-#endif				yo = b1*yn + b2*yo ;	
+#endif				
+            yo = b1*yn + b2*yo ;
 			b1 += b1inc;
 			b2 += b2inc;
 #ifdef OGAIN
@@ -1060,7 +1061,8 @@ void iresonators2_perform64(t_resonators *op, t_object *dsp64, double **ins, lon
                 og += oginc;
 #else
                 out[j] += yn;
-#endif				yo = b1*yn + b2*yo ;
+#endif				
+                yo = b1*yn + b2*yo ;
                 b1 += b1inc;
                 b2 += b2inc;
 #ifdef OGAIN
@@ -1199,20 +1201,20 @@ if(f[i].og==0.0)
 				 out[j] += yn;
 #endif	
 			yo = b1*yn + b2*yo ;	
-				yo = b1*yn + b2*yo + a1*in[j+1];	
+            yo = b1*yn + b2*yo + a1*in[j+1];
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
 			
 #ifdef OGAIN
-				 out[j+1] += og* yo;
-				 og += oginc;
+                out[j+1] += og* yo;
+                og += oginc;
 #else
-				 out[j+1] += yo;
+                out[j+1] += yo;
 #endif		
-		yo = b1*yn + b2*yo ;	
+            yo = b1*yn + b2*yo ;
 
-				yn = b1*yo + b2*yn + a1*in[j+2];	
+            yn = b1*yo + b2*yn + a1*in[j+2];
 			a1 += a1inc;
 			b1 += b1inc;
 			b2 += b2inc;
