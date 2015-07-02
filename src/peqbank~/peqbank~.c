@@ -148,18 +148,18 @@ typedef struct _peqbank {
 
 	t_pxobject b_obj;
 
-	float *param;		// Ptr on stored parameters
-	float *oldparam;	// Ptr on stored old parameters
+	double *param;		// Ptr on stored parameters
+	double *oldparam;	// Ptr on stored old parameters
 	
-	float *coeff;		// See large comment above for explanation of these four pointers
-	float *oldcoeff;
-	float *newcoeff;
-	float *freecoeff;
+	double *coeff;		// See large comment above for explanation of these four pointers
+	double *oldcoeff;
+	double *newcoeff;
+	double *freecoeff;
 
 #ifdef DEBUG	
-	float testcoeff3;  // Matt sanity check
+	double testcoeff3;  // Matt sanity check
 #endif	
-	float b_Fs;			// Sample rate
+	double b_Fs;			// Sample rate
 
     int b_channels;     // Number of channels to process in parallel
 	int b_max;			// Number max of peq filters (used to allocate memory)
@@ -167,14 +167,14 @@ typedef struct _peqbank {
 	int b_start;		// 0=shelf, 5=no shelf
 	int b_version;		// SMOOTH (0) or FAST (1) 
 
-	float *b_ym1;		// Ptr on y minus 1 per biquad, per channel
-	float *b_ym2;		// Ptr on y minus 2 per biquad, per channel
-	float *b_xm1;		// Ptr on x minus 1 per biquad, per channel
-	float *b_xm2;		// Pyr on x minus 2 per biquad, per channel
+	double *b_ym1;		// Ptr on y minus 1 per biquad, per channel
+	double *b_ym2;		// Ptr on y minus 2 per biquad, per channel
+	double *b_xm1;		// Ptr on x minus 1 per biquad, per channel
+	double *b_xm2;		// Pyr on x minus 2 per biquad, per channel
     
-    t_float** s_vec_in;    // input vectors in multi-channel mode
-    t_float** s_vec_out;   // output vectors
-    int s_n;
+    //t_float** s_vec_in;    // input vectors in multi-channel mode
+    //t_float** s_vec_out;   // output vectors
+    //int s_n;
 	
 	t_atom *myList;		// Copy of coefficients as Atoms
 	void *b_outlet;		// List of biquad coefficients
@@ -186,14 +186,21 @@ typedef struct _peqbank {
 
 t_symbol *ps_maxelem, *ps_shelf, *ps_peq, *ps_fast, *ps_smooth, *ps_channels, *ps_highpass, *ps_lowpass;
 
-t_int *peqbank_perform_smooth(t_int *w);
-t_int *peqbank_perform_fast(t_int *w);
-t_int *peqbank_perform_smooth_multi(t_int *w);
-t_int *peqbank_perform_fast_multi(t_int *w);
-t_int *do_peqbank_perform_fast(t_int *w, float *mycoeffs);
-void do_peqbank_perform_fast_multi(t_peqbank *w, float *mycoeffs);
+//t_int *peqbank_perform_smooth(t_int *w);
+//t_int *peqbank_perform_fast(t_int *w);
+//t_int *peqbank_perform_smooth_multi(t_int *w);
+//t_int *peqbank_perform_fast_multi(t_int *w);
+//t_int *do_peqbank_perform_fast(t_int *w, float *mycoeffs);
+//void do_peqbank_perform_fast_multi(t_peqbank *w, float *mycoeffs);
+void peqbank_perform64_fast_multi(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void do_peqbank_perform64_fast_multi(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, double *mycoeff);
+void peqbank_perform64_smooth_multi(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void peqbank_perform64_fast(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
+void do_peqbank_perform64_fast(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, double *mycoeff);
+
 void peqbank_clear(t_peqbank *x);
-void peqbank_dsp(t_peqbank *x, t_signal **sp, short *connect);
+//void peqbank_dsp(t_peqbank *x, t_signal **sp, short *connect);
+void peqbank_dsp64(t_peqbank *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void peqbank_reset(t_peqbank *x);
 int maxelem(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest);
 int shelf(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest);
@@ -206,7 +213,7 @@ void peqbank_smooth(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_list(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
 void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv);
-int peqbank_cheby_coeffs(t_peqbank *x, float freq, int type, int order, float ripple);
+int peqbank_cheby_coeffs(t_peqbank *x, double freq, int type, int order, double ripple);
 void peqbank_init(t_peqbank *x);
 void peqbank_assist(t_peqbank *x, void *b, long m, long a, char *s);
 void *peqbank_new(t_symbol *s, short argc, t_atom *argv);
@@ -217,8 +224,8 @@ void peqbank_compute(t_peqbank *x);
 void swap_in_new_coeffs(t_peqbank *x);
 void compute_parameq(t_peqbank *x, int index); 
 void compute_shelf(t_peqbank *x); 
-float pow10(float x);
-float pow2(float x);
+double pow10(double x);
+double pow2(double x);
 void peqbank_tellmeeverything(t_peqbank *x);
 
 int test_normal_state(t_peqbank *x);
@@ -253,7 +260,8 @@ int main(void){
 #else
 		post ("Never expires.");
 #endif
-		class_addmethod(peqbank_class, (method)peqbank_dsp, "dsp", A_CANT, 0);
+		//class_addmethod(peqbank_class, (method)peqbank_dsp, "dsp", A_CANT, 0);
+        class_addmethod(peqbank_class, (method)peqbank_dsp64, "dsp64", A_CANT, 0);
 	}
 	class_addmethod(peqbank_class, (method)peqbank_reset, "reset", A_GIMME, 0);
 	class_addmethod(peqbank_class, (method)peqbank_list, "list", A_GIMME, 0);
@@ -326,6 +334,11 @@ void peqbank_tellmeeverything(t_peqbank *x) {
 
 int posted = 0;
 
+void peqbank_perform64_smooth_multi(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    peqbank_perform64_fast_multi(x, dsp64, ins, numins, outs, numouts, sampleframes, flags, userparam);
+}
+/*
 t_int *peqbank_perform_smooth_multi(t_int *w) {
 
    
@@ -333,7 +346,127 @@ t_int *peqbank_perform_smooth_multi(t_int *w) {
     return peqbank_perform_fast_multi(w);
     
 }
+*/
+void peqbank_perform64_smooth(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    double *in  = ins[0];
+    double *out = outs[0];
+    //t_peqbank *x = (t_peqbank *)(w[3]);
+    //int n        = (int)(w[4]);
+    int n = sampleframes;
+    double *mycoeff;
     
+    // In overdrive, it's possible that this perform routine could be interrupted (e.g.,
+    // by a MIDI event) by new coefficients being calculated.  So we snapshot a local
+    // copy of x->coeff
+    // Nowhere else is x->oldcoeff set, so we don't have to worry about that.
+    
+    mycoeff = x->coeff;
+    
+#ifdef DEBUG
+    if (x->oldcoeff[3] != x->testcoeff3) {
+        if (posted == 1) {
+            object_post((t_object *)x, "testcoeff3 is %f, but x->oldcoeff[3] is %f!", x->testcoeff3, x->oldcoeff[3]);
+        }
+        ++ posted;
+        posted = posted %100;
+    }
+#endif
+    
+    if (mycoeff == x->oldcoeff) {
+        // Coefficients haven't changed, so no need to interpolate
+        
+#ifdef DEBUG
+        if (!test_normal_state(x)) post("peqbank_perform: mycoeff==x->oldcoeff");
+#endif
+        
+        //return do_peqbank_perform_fast(w, mycoeff);
+        do_peqbank_perform64_fast(x, dsp64, ins, numins, outs, numouts, sampleframes, flags, mycoeff);
+    } else {
+        
+        // Biquad with linear interpolation: smooth-biquad~
+        int i, j, k=0;
+        double rate = 1.0f/n;
+        double i0, i1, i2, i3;
+        double a0, a1, a2, b1, b2;
+        double a0inc, a1inc, a2inc, b1inc, b2inc;
+        double y0, y1;
+        
+        
+#ifdef DEBUG
+        if (!test_newcoeffs_state(x)) post("peqbank_perform: mycoeff!=x->oldcoeff");
+#endif
+        
+        
+        // First copy input vector to output vector (below we'll filter the output in-place
+        if (out != in) {
+            for (i=0; i<n; ++i) out[i] = in[i];
+        }
+        
+        // Cascade of Biquads
+        for (j=x->b_start; j<(x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
+            
+            i2 = x->b_xm2[k];
+            i3 = x->b_xm1[k];
+            y0 = x->b_ym2[k];
+            y1 = x->b_ym1[k];
+            
+            // Interpolated values
+            a0 = x->oldcoeff[j  ];
+            a1 = x->oldcoeff[j+1];
+            a2 = x->oldcoeff[j+2];
+            b1 = x->oldcoeff[j+3];
+            b2 = x->oldcoeff[j+4];
+            
+            // Incrementation values
+            a0inc = (mycoeff[j  ] - a0) * rate;
+            a1inc = (mycoeff[j+1] - a1) * rate;
+            a2inc = (mycoeff[j+2] - a2) * rate;
+            b1inc = (mycoeff[j+3] - b1) * rate;
+            b2inc = (mycoeff[j+4] - b2) * rate;
+            
+            for (i=0; i<n; i+=4) {
+                
+                out[i  ] = y0 = (a0 * (i0 = out[i  ])) + (a1 * i3) + (a2 * i2) - (b1 * y1) - (b2 * y0);
+                a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
+                
+                out[i+1] = y1 = (a0 * (i1 = out[i+1])) + (a1 * i0) + (a2 * i3) - (b1 * y0) - (b2 * y1);
+                a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
+                
+                out[i+2] = y0 = (a0 * (i2 = out[i+2])) + (a1 * i1) + (a2 * i0) - (b1 * y1) - (b2 * y0);
+                a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
+                
+                out[i+3] = y1 = (a0 * (i3 = out[i+3])) + (a1 * i2) + (a2 * i1) - (b1 * y0) - (b2 * y1);
+                a1 += a1inc; a2 += a2inc; a0 += a0inc; b1 += b1inc; b2 += b2inc;
+                
+            } // Interpolation loop
+            
+            x->b_xm2[k] = FLUSH_TO_ZERO(i2);
+            x->b_xm1[k] = FLUSH_TO_ZERO(i3);
+            x->b_ym2[k] = FLUSH_TO_ZERO(y0);
+            x->b_ym1[k] = FLUSH_TO_ZERO(y1);
+            k ++;
+            
+        } // cascade loop
+        
+        
+        // Now that we've made it to the end of the signal vector, the "old" coefficients are
+        // the ones we just used.  The previous "old" coeffients, which we've now finished
+        // interpolating away from, are not needed any more.
+        
+        if (x->freecoeff != 0) {
+            object_post((t_object *)x, "peqbank~: disaster (smooth)!  freecoeff should be zero now!");
+        }
+        
+#ifdef DEBUG	
+        x->testcoeff3 = x->oldcoeff[3];
+#endif
+        
+        x->freecoeff = x->oldcoeff;
+        x->oldcoeff = mycoeff;		
+    }
+}
+/*
 t_int *peqbank_perform_smooth(t_int *w) {
     
 	t_float *in  = (t_float *)(w[1]);
@@ -369,7 +502,7 @@ t_int *peqbank_perform_smooth(t_int *w) {
 		return do_peqbank_perform_fast(w, mycoeff);
 	} else {
 
-		/* Biquad with linear interpolation: smooth-biquad~ */ 		
+		// Biquad with linear interpolation: smooth-biquad~
 		int i, j, k=0;
 		float rate = 1.0f/n;
 		float i0, i1, i2, i3;
@@ -388,7 +521,7 @@ t_int *peqbank_perform_smooth(t_int *w) {
 			for (i=0; i<n; ++i) out[i] = in[i];
 		}
 
-		/* Cascade of Biquads */
+		// Cascade of Biquads
 		for (j=x->b_start; j<(x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
 			
 			i2 = x->b_xm2[k]; 
@@ -396,14 +529,14 @@ t_int *peqbank_perform_smooth(t_int *w) {
 			y0 = x->b_ym2[k]; 
 			y1 = x->b_ym1[k];	
 			
-			/* Interpolated values */
+			// Interpolated values
 			a0 = x->oldcoeff[j  ];
 			a1 = x->oldcoeff[j+1];
 			a2 = x->oldcoeff[j+2];
 			b1 = x->oldcoeff[j+3];	
 			b2 = x->oldcoeff[j+4];
 					
-			/* Incrementation values */
+			// Incrementation values
 			a0inc = (mycoeff[j  ] - a0) * rate;
 			a1inc = (mycoeff[j+1] - a1) * rate;
 			a2inc = (mycoeff[j+2] - a2) * rate;
@@ -452,14 +585,29 @@ t_int *peqbank_perform_smooth(t_int *w) {
 	}
 	return (w+5);
 }
-
+*/
+void peqbank_perform64_fast(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    do_peqbank_perform64_fast(x, dsp64, ins, numins, outs, numouts, sampleframes, flags, x->coeff);
+    
+    // We still have to shuffle the coeff pointers around.
+    
+    if (x->coeff != x->oldcoeff) {
+        if (x->freecoeff != 0) {
+            object_post((t_object *)x, "peqbank~: disaster (fast)!  freecoeff should be zero now!");
+        }
+        x->freecoeff = x->oldcoeff;
+        x->oldcoeff = x->coeff;		
+    }
+}
+/*
 t_int *peqbank_perform_fast(t_int *w) {
 	t_peqbank *x = (t_peqbank *)(w[3]);
 	t_int *result;
 
 	result = do_peqbank_perform_fast(w, x->coeff);
 	
-	/* We still have to shuffle the coeff pointers around. */
+	// We still have to shuffle the coeff pointers around.
 	
 	if (x->coeff != x->oldcoeff) {
 		if (x->freecoeff != 0) {
@@ -471,14 +619,67 @@ t_int *peqbank_perform_fast(t_int *w) {
 	
 	return result;	
 }
-
+*/
+void do_peqbank_perform64_fast(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, double *mycoeff)
+{
+    //t_float *in  = (t_float *)(w[1]);
+    //t_float *out = (t_float *)(w[2]);
+    //t_peqbank *x = (t_peqbank *)(w[3]);
+    //int n        = (int)(w[4]);
+    double *in = ins[0];
+    double *out = outs[0];
+    int n = sampleframes;
+    
+    // Biquad with linear interpolation: smooth-biquad~
+    int i, j, k=0;
+    double a0, a1, a2, b1, b2;
+    double xn, yn, xm2, xm1, ym2, ym1;
+    
+    // First copy input vector to output vector (below we'll filter the output in-place
+    if (out != in) {
+        for (i=0; i<n; ++i) out[i] = in[i];
+    }
+    
+    // Cascade of Biquads
+    for (j=x->b_start; j<(x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
+        
+        xm2 = x->b_xm2[k];
+        xm1 = x->b_xm1[k];
+        ym2 = x->b_ym2[k];
+        ym1 = x->b_ym1[k];
+        
+        a0 = mycoeff[j  ];
+        a1 = mycoeff[j+1];
+        a2 = mycoeff[j+2];
+        b1 = mycoeff[j+3];
+        b2 = mycoeff[j+4];
+        
+        for (i=0; i<n; i++) {
+            xn = out[i];
+            out[i] = yn = (a0 * xn) + (a1 * xm1) + (a2 * xm2) - (b1 * ym1) - (b2 * ym2);
+            
+            xm2 = xm1;
+            xm1 = xn;
+            ym2 = ym1;
+            ym1 = yn;
+        }
+        
+        x->b_xm2[k] = FLUSH_TO_ZERO(xm2);
+        x->b_xm1[k] = FLUSH_TO_ZERO(xm1);
+        x->b_ym2[k] = FLUSH_TO_ZERO(ym2);
+        x->b_ym1[k] = FLUSH_TO_ZERO(ym1);		
+        k ++;
+        
+    } // cascade loop
+}
+/*
 t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 	t_float *in  = (t_float *)(w[1]);
 	t_float *out = (t_float *)(w[2]);
 	t_peqbank *x = (t_peqbank *)(w[3]);
 	int n        = (int)(w[4]);	
 
-	/* Biquad with linear interpolation: smooth-biquad~ */ 		
+	// Biquad with linear interpolation: smooth-biquad~
 	int i, j, k=0;
 	float a0, a1, a2, b1, b2;
 	float xn, yn, xm2, xm1, ym2, ym1; 
@@ -488,7 +689,7 @@ t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 		for (i=0; i<n; ++i) out[i] = in[i];
 	}
 
-	/* Cascade of Biquads */
+	// Cascade of Biquads
 	for (j=x->b_start; j<(x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
 		
 		xm2 = x->b_xm2[k]; 
@@ -522,14 +723,29 @@ t_int *do_peqbank_perform_fast(t_int *w, float *mycoeff) {
 
 	return (w+5);
 }
-
+*/
+void peqbank_perform64_fast_multi(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    do_peqbank_perform64_fast_multi(x, dsp64, ins, numins, outs, numouts, sampleframes, flags, x->coeff);
+    
+    /* We still have to shuffle the coeff pointers around. */
+    
+    if (x->coeff != x->oldcoeff) {
+        if (x->freecoeff != 0) {
+            object_post((t_object *)x, "peqbank~: disaster (fast)!  freecoeff should be zero now!");
+        }
+        x->freecoeff = x->oldcoeff;
+        x->oldcoeff = x->coeff;		
+    }
+}
+/*
 t_int *peqbank_perform_fast_multi(t_int *w) {
 
 	t_peqbank *x = (t_peqbank *)(w[1]);
     
 	do_peqbank_perform_fast_multi(x, x->coeff);
 	
-	/* We still have to shuffle the coeff pointers around. */
+	// We still have to shuffle the coeff pointers around.
 	
 	if (x->coeff != x->oldcoeff) {
 		if (x->freecoeff != 0) {
@@ -541,7 +757,81 @@ t_int *peqbank_perform_fast_multi(t_int *w) {
 	
 	return w + 2;	
 }
-
+*/
+void do_peqbank_perform64_fast_multi(t_peqbank *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, double *mycoeff)
+{
+    int n = sampleframes;
+    
+    int i, j, k=0, c;
+    double a0, a1, a2, b1, b2;
+    
+    double xn[x->b_channels], yn[x->b_channels], xm2[x->b_channels], xm1[x->b_channels], ym2[x->b_channels], ym1[x->b_channels];
+    
+    // First copy input vector to output vector, we'll filter the output in-place
+    for (c = 0; c < x->b_channels; c++) {
+        if(outs[c] != ins[c]) {
+            for (i=0; i<n; i++) {
+                outs[c][i] = ins[c][i];
+            }
+        }
+    }
+    
+    /* Cascade of Biquads */
+    for (j=x->b_start; j < (x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
+        
+        for(c = 0; c < x->b_channels; c++) {
+            xm2[c] = x->b_xm2[k*x->b_channels + c];
+            xm1[c] = x->b_xm1[k*x->b_channels + c];
+            ym2[c] = x->b_ym2[k*x->b_channels + c];
+            ym1[c] = x->b_ym1[k*x->b_channels + c];
+        }
+        
+        a0 = mycoeff[j  ];
+        a1 = mycoeff[j+1];
+        a2 = mycoeff[j+2];
+        b1 = mycoeff[j+3];
+        b2 = mycoeff[j+4];
+        
+        for (i=0; i < n; i++) {
+            
+#pragma ivdep
+            for(c = 0; c < x->b_channels; c++) {
+                xn[c] = outs[c][i];
+            }
+            
+#pragma ivdep
+#pragma loop_count min(2) max(1000) avg(20)
+            for(c = 0; c < x->b_channels; c++) {
+                yn[c] = (a0 * xn[c]) + (a1 * xm1[c]) + (a2 * xm2[c]) - (b1 * ym1[c]) - (b2 * ym2[c]);
+            }
+            
+#pragma ivdep
+            for(c = 0; c < x->b_channels; c++) {
+                outs[c][i] = yn[c];
+            }
+            
+#pragma ivdep
+#pragma loop_count min(2) max(1000) avg(20)
+            for(c = 0; c < x->b_channels; c++) {
+                xm2[c] = xm1[c];
+                xm1[c] = xn[c];
+                ym2[c] = ym1[c];
+                ym1[c] = yn[c];
+            }
+        }
+        
+        for(c = 0; c < x->b_channels; c++) {
+            x->b_xm2[k*x->b_channels + c] = FLUSH_TO_ZERO(xm2[c]);
+            x->b_xm1[k*x->b_channels + c] = FLUSH_TO_ZERO(xm1[c]);
+            x->b_ym2[k*x->b_channels + c] = FLUSH_TO_ZERO(ym2[c]);
+            x->b_ym1[k*x->b_channels + c] = FLUSH_TO_ZERO(ym1[c]);		
+        }
+        
+        k ++;
+        
+    } // cascade loop
+}
+/*
 void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
 
 	int n = x->s_n;
@@ -560,7 +850,7 @@ void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
         }
     }
     
-	/* Cascade of Biquads */
+	// Cascade of Biquads
 	for (j=x->b_start; j < (x->b_nbpeq+1)*NBCOEFF; j+=NBCOEFF) {
 
 		for(c = 0; c < x->b_channels; c++) {
@@ -615,20 +905,51 @@ void do_peqbank_perform_fast_multi(t_peqbank *x, float *mycoeff) {
 		
 	} // cascade loop
 }
-
+*/
 
 void peqbank_clear(t_peqbank *x) {
 
 	int i;
 	
 	for(i=0; i < (x->b_max * x->b_channels); ++i) {
-		x->b_ym1[i] = 0.0f;
-		x->b_ym2[i] = 0.0f;
-		x->b_xm1[i] = 0.0f;
-		x->b_xm2[i] = 0.0f;
+		x->b_ym1[i] = 0.0;
+		x->b_ym2[i] = 0.0;
+		x->b_xm1[i] = 0.0;
+		x->b_xm2[i] = 0.0;
 	}
 }
 
+void peqbank_dsp64(t_peqbank *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    //int i;
+    
+    x->b_Fs = samplerate;
+    
+    peqbank_clear(x);
+    
+    if(x->b_channels == 1) {
+        if (x->b_version == FAST) {
+            object_method(dsp64, gensym("dsp_add64"), x, peqbank_perform64_fast, 0, NULL);
+        } else {
+            object_method(dsp64, gensym("dsp_add64"), x, peqbank_perform64_smooth, 0, NULL);
+        }
+    } else {
+        /*
+        for(i = 0; i < x->b_channels; i++) {
+            x->s_vec_in[i] = sp[i]->s_vec;
+            x->s_vec_out[i] = sp[i + x->b_channels]->s_vec;
+        }
+        x->s_n = sp[0]->s_n;
+         */
+        if (x->b_version == FAST) {
+            object_method(dsp64, gensym("dsp_add64"), x, peqbank_perform64_fast_multi, 0, NULL);
+        } else {
+            object_method(dsp64, gensym("dsp_add64"), x, peqbank_perform64_smooth_multi, 0, NULL);
+        }
+        
+    }
+}
+/*
 void peqbank_dsp(t_peqbank *x, t_signal **sp, short *connect) {
 
     int i;
@@ -658,6 +979,7 @@ void peqbank_dsp(t_peqbank *x, t_signal **sp, short *connect) {
     }
         
 }
+ */
 
 void peqbank_reset(t_peqbank *x) {
 	x->b_nbpeq = 0;
@@ -670,34 +992,34 @@ void peqbank_reset(t_peqbank *x) {
 	}
 	
 	if(x->param){
-		memset(x->param, 0, x->b_max * NBPARAM * sizeof(float));
+		memset(x->param, 0, x->b_max * NBPARAM * sizeof(double));
 	}
 	if(x->oldparam){
-		memset(x->oldparam, 0, x->b_max * NBPARAM * sizeof(float));
+		memset(x->oldparam, 0, x->b_max * NBPARAM * sizeof(double));
 	}
 	if(x->coeff){
-		memset(x->coeff, 0, x->b_max * NBCOEFF * sizeof(float));
+		memset(x->coeff, 0, x->b_max * NBCOEFF * sizeof(double));
 	}
 	if(x->oldcoeff){
-		memset(x->oldcoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+		memset(x->oldcoeff, 0, x->b_max * NBCOEFF * sizeof(double));
 	}
 	if(x->newcoeff){
-		memset(x->newcoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+		memset(x->newcoeff, 0, x->b_max * NBCOEFF * sizeof(double));
 	}
 	if(x->freecoeff){
-		memset(x->freecoeff, 0, x->b_max * NBCOEFF * sizeof(float));
+		memset(x->freecoeff, 0, x->b_max * NBCOEFF * sizeof(double));
 	}
 	if(x->b_ym1){
-		memset(x->b_ym1, 0, x->b_max * x->b_channels * sizeof(float));
+		memset(x->b_ym1, 0, x->b_max * x->b_channels * sizeof(double));
 	}
 	if(x->b_ym2){
-		memset(x->b_ym2, 0, x->b_max * x->b_channels * sizeof(float));
+		memset(x->b_ym2, 0, x->b_max * x->b_channels * sizeof(double));
 	}
 	if(x->b_xm1){
-		memset(x->b_xm1, 0, x->b_max * x->b_channels * sizeof(float));
+		memset(x->b_xm1, 0, x->b_max * x->b_channels * sizeof(double));
 	}
 	if(x->b_xm2){
-		memset(x->b_xm2, 0, x->b_max * x->b_channels * sizeof(float));
+		memset(x->b_xm2, 0, x->b_max * x->b_channels * sizeof(double));
 	}
 	if(x->myList){
 		memset(x->myList, 0, x->b_max * NBCOEFF * sizeof(t_atom));
@@ -752,7 +1074,7 @@ int shelf(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest) {
 int peq(t_peqbank *x, t_symbol *s, short argc, t_atom *argv, int rest) {
 
 	int index=NBPARAM;
-	float G0, G, GB;
+	double G0, G, GB;
 		
 	x->b_nbpeq = 0;
 					
@@ -884,9 +1206,9 @@ void peqbank_biquads(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 		
 void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	
-	float freq;
+	double freq;
 	int order;
-	float ripple;
+	double ripple;
 	
 	int i;
 	
@@ -944,14 +1266,14 @@ void peqbank_cheby(t_peqbank *x, t_symbol *s, short argc, t_atom *argv) {
 	}
 }	
 
-int peqbank_cheby_coeffs(t_peqbank *x, float freq, int type, int order, float ripple) {
+int peqbank_cheby_coeffs(t_peqbank *x, double freq, int type, int order, double ripple) {
 
 	int error=0;
 
-	float FC, PR;
-	float A0, A1, A2, B1, B2;
-	float RP, IP, ES, VX, KX, T, W, M, D, K, X0, X1, X2, Y1, Y2;
-	float GAIN;
+	double FC, PR;
+	double A0, A1, A2, B1, B2;
+	double RP, IP, ES, VX, KX, T, W, M, D, K, X0, X1, X2, Y1, Y2;
+	double GAIN;
 	unsigned int LH, NP, P;
 
 	FC = freq;
@@ -1005,18 +1327,18 @@ int peqbank_cheby_coeffs(t_peqbank *x, float freq, int type, int order, float ri
 			// warp from a circle to an ellipse
 			if (PR != 0)
 			{
-				ES = sqrt(((100.0f/(100.0f-PR))*(100.0f/(100.0f-PR)))-1.0f);
-				VX = (1.0f/NP) * log((1.0f/ES) + sqrt((1.0f/(ES*ES))+1.0f));
-				KX = (1.0f/NP) * log((1.0f/ES) + sqrt((1.0f/(ES*ES))-1.0f));
-				KX = (exp(KX) + exp(-KX))/2.0f;
-				RP = RP * ((exp(VX) - exp(-VX))/2.0f)/KX; 
-				IP = IP * ((exp(VX) + exp(-VX))/2.0f)/KX;
+				ES = sqrt(((100.0/(100.0-PR))*(100.0/(100.0-PR)))-1.0);
+				VX = (1.0/NP) * log((1.0/ES) + sqrt((1.0/(ES*ES))+1.0));
+				KX = (1.0/NP) * log((1.0/ES) + sqrt((1.0/(ES*ES))-1.0));
+				KX = (exp(KX) + exp(-KX))/2.0;
+				RP = RP * ((exp(VX) - exp(-VX))/2.0)/KX;
+				IP = IP * ((exp(VX) + exp(-VX))/2.0)/KX;
 			}
 			// fprintf(stderr, "cheby: after warping RP = %f IP = %f\n", RP, IP);
 			// fprintf(stderr, "cheby: ES = %f VX = %f KX = %f\n", ES, VX, KX);
 			
 			// s-domain to z-domain conversion
-			T  = 2 * tan(0.5f); 
+			T  = 2 * tan(0.5);
 			W  = 2*PI*FC;
 			M  = (RP*RP) + (IP*IP);
 			D  = 4 - 4*RP*T + M*(T*T); 
@@ -1028,17 +1350,17 @@ int peqbank_cheby_coeffs(t_peqbank *x, float freq, int type, int order, float ri
 			
 			// lopass to lopass or lopass to hipass transform
 			if (LH == 1)
-				K = -cos(W/2.0f + 0.5f) / cos(W/2.0f - 0.5f);
+				K = -cos(W/2.0 + 0.5) / cos(W/2.0 - 0.5);
 			if (LH == 0)
-				K =  sin(0.5f - W/2.0f) / sin(0.5f + W/2.0f);
+				K =  sin(0.5 - W/2.0) / sin(0.5 + W/2.0);
 			
-			D  = 1.0f + Y1*K - Y2*(K*K); 
+			D  = 1.0 + Y1*K - Y2*(K*K);
 			A0 = (X0 - X1*K + X2*(K*K))/D;
 			A1 = (-2*X0*K + X1 + X1*(K*K) - 2*X2*K)/D;
 			A2 = (X0*(K*K) - X1*K + X2)/D;
 			B1 = (2*K + Y1 + Y1*(K*K) - 2*Y2*K)/D;
 			B2 = (-(K*K) - Y1*K + Y2)/D;
-			GAIN = (1.0f - (B1 + B2)) / (A0 + A1 + A2);
+			GAIN = (1.0 - (B1 + B2)) / (A0 + A1 + A2);
 			if (LH == 1)
 			{
 				A1 = -A1;
@@ -1069,16 +1391,16 @@ void peqbank_init(t_peqbank *x) {
 	int i;
 
 	for (i=0; i<x->b_max * NBPARAM; ++i) {
-		x->param[i]    = 0.0f;
-		x->oldparam[i] = 0.0f;
-		x->coeff[i]    = 0.0f;
+		x->param[i]    = 0.0;
+		x->oldparam[i] = 0.0;
+		x->coeff[i]    = 0.0;
 	}
 	
 	for (i=0; i < (x->b_max * x->b_channels); ++i) {
-		x->b_ym1[i] = 0.0f;
-		x->b_ym2[i] = 0.0f;
-		x->b_xm1[i] = 0.0f;
-		x->b_xm2[i] = 0.0f;
+		x->b_ym1[i] = 0.0;
+		x->b_ym2[i] = 0.0;
+		x->b_xm1[i] = 0.0;
+		x->b_xm2[i] = 0.0;
 	}
 	
 #ifdef DEBUG
@@ -1164,18 +1486,18 @@ void *peqbank_new(t_symbol *s, short argc, t_atom *argv) {
 
 void peqbank_allocmem(t_peqbank *x){
 	/* alocate and initialize memory */
-	x->param    = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->param) );
-	x->oldparam = (float*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->oldparam) );
-	x->coeff    = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->coeff) );
+	x->param    = (double*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->param) );
+	x->oldparam = (double*) sysmem_newptr( x->b_max * NBPARAM * sizeof(*x->oldparam) );
+	x->coeff    = (double*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->coeff) );
 	x->oldcoeff = x->coeff;
-	x->newcoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->newcoeff) );
-	x->freecoeff = (float*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->freecoeff) );
-	x->b_ym1    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_ym1) );
-	x->b_ym2    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_ym2) );     
-	x->b_xm1    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_xm1) );
-	x->b_xm2    = (float*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_xm2) );     
-    x->s_vec_in = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
-    x->s_vec_out = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
+	x->newcoeff = (double*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->newcoeff) );
+	x->freecoeff = (double*) sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->freecoeff) );
+	x->b_ym1    = (double*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_ym1) );
+	x->b_ym2    = (double*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_ym2) );     
+	x->b_xm1    = (double*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_xm1) );
+	x->b_xm2    = (double*) sysmem_newptr( x->b_max * x->b_channels * sizeof(*x->b_xm2) );     
+    //x->s_vec_in = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
+    //x->s_vec_out = (t_float**) sysmem_newptr( x->b_channels * sizeof(t_float*));
 	x->myList   = (t_atom*)  sysmem_newptr( x->b_max * NBCOEFF * sizeof(*x->myList) );     
 
 	if (x->param == NIL || x->oldparam == NIL || x->coeff == NIL || x->newcoeff == NIL ||
@@ -1198,8 +1520,8 @@ void peqbank_freemem(t_peqbank *x){
 	sysmem_freeptr((char *) x->b_ym2);
 	sysmem_freeptr((char *) x->b_xm1);
 	sysmem_freeptr((char *) x->b_xm2);
-    sysmem_freeptr((char *) x->s_vec_in);
-    sysmem_freeptr((char *) x->s_vec_out);
+    //sysmem_freeptr((char *) x->s_vec_in);
+    //sysmem_freeptr((char *) x->s_vec_out);
 	sysmem_freeptr((char *) x->myList);
 }
 
@@ -1245,7 +1567,7 @@ void peqbank_compute(t_peqbank *x) {
 
 
 void swap_in_new_coeffs(t_peqbank *x) {
-	float *prevcoeffs, *prevnew, *prevfree;
+	double *prevcoeffs, *prevnew, *prevfree;
 	int i;
 
 	// To make the new coefficients take effect we swap around the pointers to the
@@ -1307,80 +1629,80 @@ void swap_in_new_coeffs(t_peqbank *x) {
 void compute_parameq(t_peqbank *x, int index) {
 	
 	/* Biquad coefficient estimation */
-	float G0 = pow10(x->param[index+2] * 0.05f);
-	float G  = pow10(x->param[index+3] * 0.05f);
-	float GB = pow10(x->param[index+4] * 0.05f);
+	double G0 = pow10(x->param[index+2] * 0.05);
+	double G  = pow10(x->param[index+3] * 0.05);
+	double GB = pow10(x->param[index+4] * 0.05);
 	
-	float w0  = TWOPI * x->param[index] / x->b_Fs;
-	float G02 = G0 * G0;
-	float GB2 = GB * GB;
-	float G2  = G * G;	
-	float w02 = w0 * w0;
+	double w0  = TWOPI * x->param[index] / x->b_Fs;
+	double G02 = G0 * G0;
+	double GB2 = GB * GB;
+	double G2  = G * G;	
+	double w02 = w0 * w0;
 	
-	float val1 = 1.0f / fabs(G2 - GB2);
-	float val2 = fabs(G2 - G02);
-	float val3 = fabs(GB2 - G02);
-	float val4 = (w02 - PI2) * (w02 - PI2);
+	double val1 = 1.0 / fabs(G2 - GB2);
+	double val2 = fabs(G2 - G02);
+	double val3 = fabs(GB2 - G02);
+	double val4 = (w02 - PI2) * (w02 - PI2);
 	
-	float mul1 = LOG_22 * x->param[index+1];
-	float Dw   = 2.0f * w0 * sinhf(mul1);
-	float mul2 = val3 * PI2 * Dw * Dw;
-	float num  = G02 * val4 + G2 * mul2 * val1;
-	float den  = val4 + mul2 * val1;
+	double mul1 = LOG_22 * x->param[index+1];
+	double Dw   = 2.0 * w0 * sinh(mul1);
+	double mul2 = val3 * PI2 * Dw * Dw;
+	double num  = G02 * val4 + G2 * mul2 * val1;
+	double den  = val4 + mul2 * val1;
 	
-	float G1  = sqrtf(num / den);
-	float G12 = G1 * G1;
+	double G1  = sqrt(num / den);
+	double G12 = G1 * G1;
 	
-	float mul3 = G0 * G1;
-	float val5 = fabs(G2 - mul3);
-	float val6 = fabs(G2 - G12);
-	float val7 = fabs(GB2 - mul3);
-	float val8 = fabs(GB2 - G12);	
-	float val9 = sqrtf((val3 * val6) / (val8 * val2));
+	double mul3 = G0 * G1;
+	double val5 = fabs(G2 - mul3);
+	double val6 = fabs(G2 - G12);
+	double val7 = fabs(GB2 - mul3);
+	double val8 = fabs(GB2 - G12);	
+	double val9 = sqrt((val3 * val6) / (val8 * val2));
 	
-	float tan0 = tanf(w0 * 0.5f);
-	float w1   = w0 * pow2(x->param[index+1] * -0.5f);
-	float tan1 = tanf(w1 * 0.5f);
-	float tan2 = val9 * tan0 * tan0 / tan1;
+	double tan0 = tan(w0 * 0.5);
+	double w1   = w0 * pow2(x->param[index+1] * -0.5);
+	double tan1 = tan(w1 * 0.5);
+	double tan2 = val9 * tan0 * tan0 / tan1;
 		
-	float W2 = sqrtf(val6 / val2) * tan0 * tan0;
-	float DW = tan2 - tan1;
+	double W2 = sqrt(val6 / val2) * tan0 * tan0;
+	double DW = tan2 - tan1;
 	
-	float C = val8 * DW * DW - 2.0f * W2 * (val7 - sqrtf(val3 * val8));
-	float D = 2.0f * W2 * (val5 - sqrtf(val2 * val6));
-	float A = sqrtf((C + D) * val1);
-	float B = sqrtf((G2 * C + GB2 * D) * val1);
+	double C = val8 * DW * DW - 2.0 * W2 * (val7 - sqrt(val3 * val8));
+	double D = 2.0 * W2 * (val5 - sqrt(val2 * val6));
+	double A = sqrt((C + D) * val1);
+	double B = sqrt((G2 * C + GB2 * D) * val1);
 	
-	float val10 = 1.0f / (1.0f + W2 + A);
+	double val10 = 1.0 / (1.0 + W2 + A);
     
    	/* New values */
  	x->newcoeff[index  ] = (G1 + G0 * W2 + B)     * val10; 
-	x->newcoeff[index+1] = -2.0f * (G1 - G0 * W2) * val10;
+	x->newcoeff[index+1] = -2.0 * (G1 - G0 * W2) * val10;
 	x->newcoeff[index+2] = (G1 - B + G0 * W2)     * val10;
-	x->newcoeff[index+3] = -2.0f * (1.0f - W2)    * val10;
-	x->newcoeff[index+4] = (1.0f + W2 - A)        * val10;
+	x->newcoeff[index+3] = -2.0 * (1.0 - W2)    * val10;
+	x->newcoeff[index+4] = (1.0 + W2 - A)        * val10;
 }
 
 void compute_shelf(t_peqbank *x) {
 	
 	/* Biquad coefficient estimation */	
-	float G1 = pow10((x->param[0] - x->param[1]) * 0.05f);
-	float G2 = pow10((x->param[1] - x->param[2]) * 0.05f);
-	float Gh = pow10(x->param[2] * 0.05f);
+	double G1 = pow10((x->param[0] - x->param[1]) * 0.05);
+	double G2 = pow10((x->param[1] - x->param[2]) * 0.05);
+	double Gh = pow10(x->param[2] * 0.05);
 	
 	/* Low shelf */
-	float X  = tanf(x->param[3] * PI / x->b_Fs) / sqrtf(G1);
-	float L1 = (X - 1.0f) / (X + 1.0f);
-	float L2 = (G1 * X - 1.0f) / (G1 * X + 1.0f);
-	float L3 = (G1 * X + 1.0f) / (X + 1.0f);
+	double X  = tan(x->param[3] * PI / x->b_Fs) / sqrt(G1);
+	double L1 = (X - 1.0) / (X + 1.0);
+	double L2 = (G1 * X - 1.0) / (G1 * X + 1.0);
+	double L3 = (G1 * X + 1.0) / (X + 1.0);
 	
 	/* High shelf */
-	float Y  = tanf(x->param[4] * PI / x->b_Fs) / sqrtf(G2);
-	float H1 = (Y - 1.0f) / (Y + 1.0f);
-	float H2 = (G2 * Y - 1.0f) / (G2 * Y + 1.0f);
-	float H3 = (G2 * Y + 1.0f) / (Y + 1.0f);
+	double Y  = tan(x->param[4] * PI / x->b_Fs) / sqrt(G2);
+	double H1 = (Y - 1.0) / (Y + 1.0);
+	double H2 = (G2 * Y - 1.0) / (G2 * Y + 1.0);
+	double H3 = (G2 * Y + 1.0) / (Y + 1.0);
 	
-	float C0 = L3 * H3 * Gh;
+	double C0 = L3 * H3 * Gh;
   
     /* New values */
  	x->newcoeff[0] = C0; 
@@ -1390,12 +1712,12 @@ void compute_shelf(t_peqbank *x) {
 	x->newcoeff[4] = L1 * H1;
 }
 
-float pow10(float x) {
-	return expf(LOG_10 * x);
+double pow10(double x) {
+	return exp(LOG_10 * x);
 }
 
-float pow2(float x) {
-	return expf(LOG_2 * x);
+double pow2(double x) {
+	return exp(LOG_2 * x);
 }
 
 

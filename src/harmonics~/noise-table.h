@@ -1,4 +1,4 @@
-extern float NoiseTable[];
+extern double NoiseTable[];
 
 // #define NTABSZ 96000
 
