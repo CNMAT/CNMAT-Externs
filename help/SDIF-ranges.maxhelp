@@ -183,7 +183,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 617.0, 20.0, 125.0, 20.0 ],
+					"patching_rect" : [ 617.0, 35.0, 125.0, 20.0 ],
 					"style" : "default",
 					"text" : "Query column ranges"
 				}
@@ -195,7 +195,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 373.0, 20.0, 91.0, 20.0 ],
+					"patching_rect" : [ 347.0, 35.0, 91.0, 20.0 ],
 					"style" : "default",
 					"text" : "Query columns"
 				}
@@ -246,7 +246,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 617.0, 145.0, 125.0, 22.0 ],
+					"patching_rect" : [ 617.0, 160.0, 125.0, 22.0 ],
 					"style" : "default",
 					"text" : "column-ranges 1RES"
 				}
@@ -259,7 +259,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 617.0, 53.0, 197.0, 60.0 ],
+					"patching_rect" : [ 617.0, 68.0, 197.0, 60.0 ],
 					"style" : "default",
 					"text" : "For all rows in all matrices in the SDIF-buffer of the given type, what are the maximum and minimum data values per column?"
 				}
@@ -272,7 +272,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 617.0, 117.0, 125.0, 22.0 ],
+					"patching_rect" : [ 617.0, 132.0, 125.0, 22.0 ],
 					"style" : "default",
 					"text" : "column-ranges 1TRC"
 				}
@@ -355,7 +355,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 373.0, 145.0, 117.0, 22.0 ],
+					"patching_rect" : [ 347.0, 160.0, 117.0, 22.0 ],
 					"style" : "default",
 					"text" : "max-columns 1RES"
 				}
@@ -368,7 +368,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 373.0, 53.0, 168.0, 60.0 ],
+					"patching_rect" : [ 347.0, 68.0, 168.0, 60.0 ],
 					"style" : "default",
 					"text" : "Of all matrices in the SDIF-buffer of the given type, what's the largest number of columns?"
 				}
@@ -524,7 +524,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 373.0, 117.0, 117.0, 22.0 ],
+					"patching_rect" : [ 347.0, 132.0, 117.0, 22.0 ],
 					"style" : "default",
 					"text" : "max-columns 1TRC"
 				}
