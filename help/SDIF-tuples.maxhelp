@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 7,
 			"minor" : 0,
-			"revision" : 3,
+			"revision" : 4,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -49,7 +49,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -89,7 +89,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 551.0, 299.0, 128.0, 22.0 ],
+									"patching_rect" : [ 576.0, 275.0, 128.0, 22.0 ],
 									"style" : "",
 									"text" : "receive~ tuples_audio"
 								}
@@ -156,7 +156,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 297.0, 401.0, 89.0, 20.0 ],
+									"patching_rect" : [ 297.0, 431.0, 89.0, 20.0 ],
 									"style" : "",
 									"text" : "enable printing"
 								}
@@ -170,7 +170,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 267.5, 399.0, 24.0, 24.0 ],
+									"patching_rect" : [ 267.5, 429.0, 24.0, 24.0 ],
 									"style" : ""
 								}
 
@@ -182,7 +182,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 267.5, 450.5, 34.0, 22.0 ],
+									"patching_rect" : [ 267.5, 480.5, 34.0, 22.0 ],
 									"style" : "default",
 									"text" : "gate"
 								}
@@ -194,7 +194,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 213.0, 483.0, 43.0, 20.0 ],
+									"patching_rect" : [ 213.0, 513.0, 43.0, 20.0 ],
 									"style" : "",
 									"text" : "length"
 								}
@@ -208,7 +208,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 158.0, 483.0, 50.0, 22.0 ],
+									"patching_rect" : [ 158.0, 513.0, 50.0, 22.0 ],
 									"style" : ""
 								}
 
@@ -220,7 +220,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 551.0, 270.0, 67.0, 22.0 ],
+									"patching_rect" : [ 491.0, 275.0, 67.0, 22.0 ],
 									"style" : "",
 									"text" : "r to_tuples"
 								}
@@ -262,7 +262,7 @@
 										"appversion" : 										{
 											"major" : 7,
 											"minor" : 0,
-											"revision" : 3,
+											"revision" : 4,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -492,7 +492,7 @@
 										"appversion" : 										{
 											"major" : 7,
 											"minor" : 0,
-											"revision" : 3,
+											"revision" : 4,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -815,7 +815,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 158.0, 410.0, 33.0, 22.0 ],
+									"patching_rect" : [ 158.0, 415.0, 33.0, 22.0 ],
 									"style" : "default",
 									"text" : "t l l"
 								}
@@ -828,7 +828,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 158.0, 450.5, 41.0, 22.0 ],
+									"patching_rect" : [ 158.0, 480.5, 41.0, 22.0 ],
 									"style" : "default",
 									"text" : "zl len"
 								}
@@ -840,7 +840,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 267.5, 483.0, 76.0, 22.0 ],
+									"patching_rect" : [ 267.5, 513.0, 76.0, 22.0 ],
 									"style" : "default",
 									"text" : "print tuples"
 								}
@@ -943,7 +943,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 725.0, 122.0, 233.0, 74.0 ],
+									"patching_rect" : [ 725.0, 122.0, 234.0, 74.0 ],
 									"style" : "default",
 									"text" : "The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name."
 								}
@@ -1277,7 +1277,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1391,6 +1391,9 @@
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 0,
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
 									"id" : "obj-29",
 									"interval" : 250.0,
 									"maxclass" : "number~",
@@ -1398,7 +1401,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 191.0, 349.0, 48.0, 19.0 ],
+									"patching_rect" : [ 191.0, 349.0, 48.0, 22.0 ],
 									"sig" : 0.0,
 									"style" : "default"
 								}
@@ -1437,7 +1440,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 539.0, 192.0, 296.0, 60.0 ],
+									"patching_rect" : [ 539.0, 192.0, 297.0, 60.0 ],
 									"style" : "default",
 									"text" : "The \"output interval\" (default 10ms) determines how often SDIF-tuples will sample its time input signal and output (but it never outputs more than once per signal vector)."
 								}
@@ -1577,7 +1580,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1812,7 +1815,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -2031,7 +2034,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}

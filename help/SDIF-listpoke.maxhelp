@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 7,
 			"minor" : 0,
-			"revision" : 3,
+			"revision" : 4,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -102,7 +102,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -183,7 +183,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 928.0, 598.0, 123.0, 20.0 ],
+					"patching_rect" : [ 640.0, 556.0, 123.0, 20.0 ],
 					"style" : "default",
 					"text" : "Specify matrix format"
 				}
@@ -195,7 +195,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 842.0, 505.0, 133.0, 20.0 ],
+					"patching_rect" : [ 842.0, 496.0, 133.0, 20.0 ],
 					"style" : "default",
 					"text" : "Jump to a specific time"
 				}
@@ -213,7 +213,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -397,7 +397,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 659.0, 499.164185, 53.0, 22.0 ],
+					"patching_rect" : [ 665.0, 471.164185, 53.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -447,7 +447,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -543,7 +543,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 988.0, 569.0, 86.0, 22.0 ],
+					"patching_rect" : [ 726.0, 578.0, 86.0, 22.0 ],
 					"style" : "default",
 					"text" : "matrix ABCD"
 				}
@@ -556,7 +556,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 836.0, 569.0, 51.0, 22.0 ],
+					"patching_rect" : [ 574.0, 578.0, 51.0, 22.0 ],
 					"style" : "default",
 					"text" : "matrix"
 				}
@@ -569,7 +569,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 894.0, 569.0, 86.0, 22.0 ],
+					"patching_rect" : [ 632.0, 578.0, 86.0, 22.0 ],
 					"style" : "default",
 					"text" : "matrix 1RES"
 				}
@@ -582,7 +582,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 916.0, 531.0, 92.0, 22.0 ],
+					"patching_rect" : [ 916.0, 522.0, 92.0, 22.0 ],
 					"style" : "default",
 					"text" : "tuples time 0."
 				}
@@ -737,7 +737,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 801.0, 176.5, 289.0, 60.0 ],
+					"patching_rect" : [ 801.0, 176.5, 291.0, 60.0 ],
 					"style" : "default",
 					"text" : "Set number of columns for your new matrix. The number of arguments to \"listpoke\" divided by this number is therefore the number of rows for your new matrix."
 				}
@@ -856,7 +856,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 796.0, 531.0, 106.0, 22.0 ],
+					"patching_rect" : [ 796.0, 522.0, 106.0, 22.0 ],
 					"style" : "default",
 					"text" : "tuples time 0.72"
 				}
@@ -881,7 +881,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 796.0, 642.0, 69.0, 22.0 ],
+					"patching_rect" : [ 875.999939, 664.0, 69.0, 22.0 ],
 					"style" : "default",
 					"text" : "print tuples"
 				}
@@ -907,7 +907,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 1017.0, 531.0, 45.0, 22.0 ],
+					"patching_rect" : [ 1017.0, 522.0, 45.0, 22.0 ],
 					"style" : "default",
 					"text" : "tuples"
 				}
@@ -920,7 +920,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "list", "" ],
-					"patching_rect" : [ 796.0, 610.0, 110.0, 22.0 ],
+					"patching_rect" : [ 875.999939, 632.0, 110.0, 22.0 ],
 					"style" : "default",
 					"text" : "SDIF-tuples mybuf"
 				}

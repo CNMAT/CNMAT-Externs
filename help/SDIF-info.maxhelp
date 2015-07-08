@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 7,
 			"minor" : 0,
-			"revision" : 3,
+			"revision" : 4,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -48,7 +48,7 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -203,13 +203,11 @@
 					"fontface" : 0,
 					"fontsize" : 10.0,
 					"id" : "obj-46",
-					"linecount" : 6,
 					"maxclass" : "o.display",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 273.0, 272.927704, 220.0, 88.0 ],
-					"text" : "/name : \"buf\",\n/filename : \"---no-filename---\",\n/streamID : 1,\n/minTime : 0.,\n/maxTime : 0.,\n/numFrames : 0",
+					"patching_rect" : [ 217.0, 303.927704, 220.0, 32.0 ],
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
 				}
 
