@@ -54,7 +54,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 34.0, 105.0, 816.0, 415.0 ],
+						"rect" : [ 0.0, 26.0, 816.0, 415.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -253,7 +253,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 474.0, 303.0, 52.0, 22.0 ],
+									"patching_rect" : [ 28.0, 246.0, 52.0, 22.0 ],
 									"style" : "default",
 									"text" : "version"
 								}
@@ -395,7 +395,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 169.0, 336.0, 40.0, 22.0 ],
+									"patching_rect" : [ 169.0, 315.5, 40.0, 22.0 ],
 									"style" : "default",
 									"text" : "printit"
 								}
@@ -408,7 +408,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 528.0, 303.0, 86.0, 47.0 ],
+									"patching_rect" : [ 32.0, 290.5, 86.0, 47.0 ],
 									"style" : "default",
 									"text" : "Ask for the version of this printit object"
 								}
@@ -797,7 +797,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 225.0, 138.0, 39.0, 22.0 ],
+									"patching_rect" : [ 225.0, 133.0, 39.0, 22.0 ],
 									"style" : "default",
 									"text" : "1 2 3"
 								}
@@ -810,7 +810,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 311.0, 138.0, 37.0, 22.0 ],
+									"patching_rect" : [ 311.0, 133.0, 37.0, 22.0 ],
 									"style" : "default",
 									"text" : "a b c"
 								}
@@ -823,7 +823,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 193.0, 138.0, 28.0, 22.0 ],
+									"patching_rect" : [ 193.0, 133.0, 28.0, 22.0 ],
 									"style" : "default",
 									"text" : "1.2"
 								}
@@ -836,7 +836,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 172.0, 138.0, 18.0, 22.0 ],
+									"patching_rect" : [ 172.0, 133.0, 18.0, 22.0 ],
 									"style" : "default",
 									"text" : "1"
 								}
@@ -849,7 +849,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 268.0, 138.0, 38.0, 22.0 ],
+									"patching_rect" : [ 268.0, 133.0, 38.0, 22.0 ],
 									"style" : "default",
 									"text" : "apple"
 								}
@@ -862,7 +862,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 172.0, 183.0, 24.0, 22.0 ],
+									"patching_rect" : [ 172.0, 198.0, 24.0, 22.0 ],
 									"style" : "default",
 									"text" : "t s"
 								}
@@ -875,7 +875,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 214.0, 179.0, 191.0, 60.0 ],
+									"patching_rect" : [ 209.0, 191.0, 191.0, 60.0 ],
 									"style" : "default",
 									"text" : "Turns anything into a \"symbol\", AKA \"message\", possibly a message consisting of the empty symbol with some arguments"
 								}
@@ -1219,7 +1219,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 278.0, 125.0, 48.0, 22.0 ],
+									"patching_rect" : [ 278.0, 132.0, 48.0, 22.0 ],
 									"style" : "default",
 									"text" : "1 a b c"
 								}
@@ -1232,7 +1232,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 490.666656, 125.0, 28.0, 22.0 ],
+									"patching_rect" : [ 490.666656, 132.0, 28.0, 22.0 ],
 									"style" : "default",
 									"text" : "1.1"
 								}
@@ -1245,7 +1245,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 450.944458, 125.0, 18.0, 22.0 ],
+									"patching_rect" : [ 450.944458, 132.0, 18.0, 22.0 ],
 									"style" : "default",
 									"text" : "1"
 								}
@@ -1258,7 +1258,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 372.722198, 125.0, 39.0, 22.0 ],
+									"patching_rect" : [ 372.722198, 132.0, 39.0, 22.0 ],
 									"style" : "default",
 									"text" : "1 2 3"
 								}
@@ -1270,7 +1270,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 435.0, 280.0, 87.0, 22.0 ],
+									"patching_rect" : [ 435.0, 250.0, 87.0, 22.0 ],
 									"style" : "default",
 									"text" : "printit trigger-s"
 								}
@@ -1282,7 +1282,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 241.0, 280.0, 84.0, 22.0 ],
+									"patching_rect" : [ 241.0, 250.0, 84.0, 22.0 ],
 									"style" : "default",
 									"text" : "printit trigger-l"
 								}
@@ -1296,7 +1296,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 524.0, 307.0, 47.0, 22.0 ],
+									"patching_rect" : [ 524.0, 277.0, 47.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -1310,7 +1310,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 328.0, 307.0, 47.0, 22.0 ],
+									"patching_rect" : [ 328.0, 277.0, 47.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -1323,7 +1323,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 524.0, 280.0, 39.0, 22.0 ],
+									"patching_rect" : [ 524.0, 250.0, 39.0, 22.0 ],
 									"style" : "default",
 									"text" : "zl len"
 								}
@@ -1336,7 +1336,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 328.0, 280.0, 39.0, 22.0 ],
+									"patching_rect" : [ 328.0, 250.0, 39.0, 22.0 ],
 									"style" : "default",
 									"text" : "zl len"
 								}
@@ -1491,7 +1491,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 816.0, 415.0 ],
+						"rect" : [ 34.0, 105.0, 816.0, 415.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,

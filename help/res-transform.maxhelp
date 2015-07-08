@@ -1405,7 +1405,7 @@
 													"numoutlets" : 2,
 													"outlettype" : [ "", "bang" ],
 													"parameter_enable" : 0,
-													"patching_rect" : [ 639.0, 191.0, 55.0, 22.0 ],
+													"patching_rect" : [ 639.0, 191.0, 56.0, 22.0 ],
 													"style" : "default",
 													"triscale" : 0.9
 												}
@@ -1511,7 +1511,7 @@
 													"numoutlets" : 2,
 													"outlettype" : [ "", "bang" ],
 													"parameter_enable" : 0,
-													"patching_rect" : [ 360.0, 191.0, 55.0, 22.0 ],
+													"patching_rect" : [ 360.0, 191.0, 56.0, 22.0 ],
 													"style" : "default",
 													"triscale" : 0.9
 												}
@@ -1617,7 +1617,7 @@
 													"numoutlets" : 2,
 													"outlettype" : [ "", "bang" ],
 													"parameter_enable" : 0,
-													"patching_rect" : [ 90.0, 191.0, 55.0, 22.0 ],
+													"patching_rect" : [ 90.0, 191.0, 56.0, 22.0 ],
 													"style" : "default",
 													"triscale" : 0.9
 												}
@@ -3256,7 +3256,7 @@
 													"numoutlets" : 2,
 													"outlettype" : [ "", "bang" ],
 													"parameter_enable" : 0,
-													"patching_rect" : [ 273.0, 142.0, 52.0, 22.0 ],
+													"patching_rect" : [ 273.0, 142.0, 53.0, 22.0 ],
 													"style" : "default",
 													"triscale" : 0.9
 												}
@@ -3271,7 +3271,7 @@
 													"numoutlets" : 2,
 													"outlettype" : [ "", "bang" ],
 													"parameter_enable" : 0,
-													"patching_rect" : [ 39.0, 142.0, 52.0, 22.0 ],
+													"patching_rect" : [ 39.0, 142.0, 53.0, 22.0 ],
 													"style" : "default",
 													"triscale" : 0.9
 												}
@@ -3597,7 +3597,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 374.0, 241.5, 110.0, 22.0 ],
+									"patching_rect" : [ 374.0, 255.5, 110.0, 22.0 ],
 									"style" : "default",
 									"text" : "s help-transform"
 								}
@@ -3830,7 +3830,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 533.0, 505.0, 97.0, 22.0 ],
+									"patching_rect" : [ 533.0, 519.0, 97.0, 22.0 ],
 									"style" : "default",
 									"text" : "s help-transform"
 								}
@@ -4416,7 +4416,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 938.0, 705.0 ],
+						"rect" : [ 49.0, 111.0, 938.0, 705.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -7136,7 +7136,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 315.0, 298.902771, 131.0, 22.0 ],
+									"patching_rect" : [ 315.0, 269.902771, 131.0, 22.0 ],
 									"style" : "default",
 									"text" : "attenuation-spread 30."
 								}
@@ -7162,7 +7162,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 260.0, 272.427094, 121.0, 22.0 ],
+									"patching_rect" : [ 260.0, 243.427094, 121.0, 22.0 ],
 									"style" : "default",
 									"text" : "frequency-spread $1"
 								}
@@ -7175,7 +7175,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "bang", "int", "float", "bang" ],
-									"patching_rect" : [ 150.0, 193.0, 184.0, 22.0 ],
+									"patching_rect" : [ 150.0, 189.0, 184.0, 22.0 ],
 									"style" : "default",
 									"text" : "t b i f b"
 								}
@@ -7188,7 +7188,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 205.0, 219.475708, 88.0, 22.0 ],
+									"patching_rect" : [ 205.0, 215.475708, 88.0, 22.0 ],
 									"style" : "default",
 									"text" : "cluster-size $1"
 								}
@@ -7265,7 +7265,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 123.5, 31.5, 520.0, 33.0 ],
+									"patching_rect" : [ 123.5, 31.5, 521.0, 33.0 ],
 									"style" : "default",
 									"text" : "Clusters are a set number of resonances (cluster-size) grown from each resonance in an model. Clusters are created after the basic transformations are applied."
 								}

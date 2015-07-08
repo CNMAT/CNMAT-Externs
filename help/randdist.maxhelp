@@ -54,7 +54,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 52.0, 118.0, 920.0, 526.0 ],
+						"rect" : [ 0.0, 26.0, 920.0, 526.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -285,7 +285,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 366.0, 264.0, 74.0, 22.0 ],
+									"patching_rect" : [ 143.0, 318.0, 74.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -376,7 +376,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 366.0, 236.0, 63.0, 22.0 ],
+									"patching_rect" : [ 143.0, 290.0, 63.0, 22.0 ],
 									"style" : "default",
 									"text" : "unpack 1."
 								}
@@ -554,7 +554,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 920.0, 526.0 ],
+						"rect" : [ 52.0, 118.0, 920.0, 526.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -590,8 +590,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 332.0, 272.0, 267.0, 20.0 ],
 									"style" : "default",
-									"text" : "* http://web.media.mit.edu/~tristan/maxmsp.html",
-									"textjustification" : 1
+									"text" : "* http://web.media.mit.edu/~tristan/maxmsp.html"
 								}
 
 							}
@@ -988,8 +987,7 @@
 									}
 ,
 									"style" : "default",
-									"text" : "p save_this_as_gaussdist.pat",
-									"textjustification" : 1
+									"text" : "p save_this_as_gaussdist.pat"
 								}
 
 							}
@@ -1002,8 +1000,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 329.0, 175.0, 270.0, 47.0 ],
 									"style" : "default",
-									"text" : "If you're looking for a Universal Binary version of Tristan Jehan's Gaussdist*, save this subpatch as an abstraction.",
-									"textjustification" : 1
+									"text" : "If you're looking for a Universal Binary version of Tristan Jehan's Gaussdist*, save this subpatch as an abstraction."
 								}
 
 							}
@@ -1101,7 +1098,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 671.0, 440.0, 182.0, 33.0 ],
+									"patching_rect" : [ 671.0, 440.0, 183.0, 33.0 ],
 									"style" : "default",
 									"text" : "dirichlet <(list of K floats) alpha> (returns a list of K elements)"
 								}

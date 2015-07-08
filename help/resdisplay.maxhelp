@@ -581,7 +581,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 607.0, 204.0, 73.0, 22.0 ],
+									"patching_rect" : [ 609.0, 203.0, 73.0, 22.0 ],
 									"style" : "",
 									"text" : "r rdisp_help"
 								}
@@ -594,7 +594,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 166.5, 203.25, 23.5, 23.5 ],
+									"patching_rect" : [ 277.5, 188.0, 23.5, 23.5 ],
 									"style" : "default"
 								}
 
@@ -823,7 +823,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
-									"outlettype" : [ "clear" ],
+									"outlettype" : [ "" ],
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
@@ -1025,7 +1025,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
-									"outlettype" : [ "float" ],
+									"outlettype" : [ "" ],
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
@@ -1083,7 +1083,7 @@
 													"maxclass" : "inlet",
 													"numinlets" : 0,
 													"numoutlets" : 1,
-													"outlettype" : [ "" ],
+													"outlettype" : [ "bang" ],
 													"patching_rect" : [ 139.0, 17.0, 30.0, 30.0 ],
 													"style" : "default"
 												}
@@ -1407,7 +1407,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 579.0, 281.25, 75.0, 100.0 ],
+									"patching_rect" : [ 579.0, 299.25, 75.0, 100.0 ],
 									"style" : "default",
 									"text" : "Click and drag the mouse in the window to move the selection cursors"
 								}
@@ -1527,7 +1527,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 82.0, 246.5, 495.0, 169.5 ],
+									"patching_rect" : [ 82.0, 264.5, 495.0, 169.5 ],
 									"selectioncolor" : [ 0.94902, 0.901961, 0.141176, 1.0 ]
 								}
 

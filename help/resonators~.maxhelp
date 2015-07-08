@@ -54,7 +54,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 34.0, 105.0, 772.0, 570.0 ],
+						"rect" : [ 0.0, 26.0, 772.0, 570.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -116,7 +116,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 250.0, 382.5, 102.0, 22.0 ],
+									"patching_rect" : [ 332.0, 366.208801, 102.0, 22.0 ],
 									"style" : "default",
 									"text" : "r resonators-help"
 								}
@@ -666,7 +666,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 522.0, 398.917572, 99.0, 22.0 ],
+									"patching_rect" : [ 635.0, 406.917572, 99.0, 22.0 ],
 									"style" : "default",
 									"text" : "tellmeeverything"
 								}
@@ -679,7 +679,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 250.0, 329.5, 202.0, 22.0 ],
+									"patching_rect" : [ 265.0, 325.5, 202.0, 22.0 ],
 									"style" : "default",
 									"text" : "640. 0.5 4. 843.5 0.4 2. 2041. 0.3 8."
 								}
@@ -744,7 +744,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 522.0, 337.5, 38.0, 22.0 ],
+									"patching_rect" : [ 488.0, 351.208801, 38.0, 22.0 ],
 									"style" : "default",
 									"text" : "clear"
 								}
@@ -809,7 +809,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 522.0, 368.208801, 53.0, 22.0 ],
+									"patching_rect" : [ 549.5, 389.208801, 53.0, 22.0 ],
 									"style" : "default",
 									"text" : "squelch"
 								}
@@ -822,7 +822,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 250.0, 297.5, 135.0, 22.0 ],
+									"patching_rect" : [ 230.5, 295.5, 135.0, 22.0 ],
 									"style" : "default",
 									"text" : "540. 0.5 4. 543.5 0.4 2."
 								}
@@ -871,7 +871,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 589.0, 368.208801, 66.0, 20.0 ],
+									"patching_rect" : [ 552.0, 367.208801, 66.0, 20.0 ],
 									"style" : "default",
 									"text" : "fast decay"
 								}
@@ -883,7 +883,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 250.0, 275.5, 187.0, 20.0 ],
+									"patching_rect" : [ 265.0, 271.5, 187.0, 20.0 ],
 									"style" : "default",
 									"text" : "frequency, gain, decayrate triples"
 								}
@@ -895,7 +895,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 589.0, 337.5, 158.0, 20.0 ],
+									"patching_rect" : [ 488.0, 329.208801, 158.0, 20.0 ],
 									"style" : "default",
 									"text" : "set filter state variables to 0"
 								}
@@ -1119,7 +1119,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 772.0, 570.0 ],
+						"rect" : [ 34.0, 105.0, 772.0, 570.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1894,7 +1894,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 214.0, 257.0, 27.0, 20.0 ],
+									"patching_rect" : [ 214.0, 273.0, 27.0, 20.0 ],
 									"style" : "default",
 									"text" : "2..."
 								}
@@ -1916,7 +1916,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 429.0, 293.0, 61.0, 22.0 ],
+									"patching_rect" : [ 429.0, 309.0, 61.0, 22.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -1942,7 +1942,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 504.0, 293.0, 67.0, 22.0 ],
+									"patching_rect" : [ 504.0, 309.0, 67.0, 22.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -1959,7 +1959,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 214.0, 279.0, 122.0, 60.0 ],
+									"patching_rect" : [ 214.0, 295.0, 122.0, 60.0 ],
 									"style" : "default",
 									"text" : "Store them in separate collections and switch between them using refer"
 								}
@@ -1972,7 +1972,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 356.0, 260.0, 41.0, 22.0 ],
+									"patching_rect" : [ 356.0, 276.0, 41.0, 22.0 ],
 									"style" : "default",
 									"text" : "dump"
 								}
@@ -1984,7 +1984,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 337.0, 324.0, 103.0, 22.0 ],
+									"patching_rect" : [ 337.0, 340.0, 103.0, 22.0 ],
 									"style" : "default",
 									"text" : "s resonators-help"
 								}
@@ -1997,7 +1997,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "float", "bang", "" ],
-									"patching_rect" : [ 337.0, 233.0, 57.0, 22.0 ],
+									"patching_rect" : [ 337.0, 249.0, 57.0, 22.0 ],
 									"style" : "default",
 									"text" : "t 0.5 b s"
 								}
@@ -2045,7 +2045,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 356.0, 293.0, 50.5, 22.0 ],
+									"patching_rect" : [ 356.0, 309.0, 50.5, 22.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -2370,7 +2370,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 286.0, 314.5, 50.5, 22.0 ],
+									"patching_rect" : [ 286.0, 282.0, 50.5, 22.0 ],
 									"saved_object_attributes" : 									{
 										"embed" : 1
 									}
@@ -2568,8 +2568,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 279.0, 189.0, 200.0, 114.0 ],
 									"style" : "default",
-									"text" : "If you expect to change the parameters of the resonators in real-time you probably want to use the \"smooth\" option as shown below. It slows things down slightly but the linearly interpolated filter coefficients will yield less artifacts as you change parameters.",
-									"textjustification" : 1
+									"text" : "If you expect to change the parameters of the resonators in real-time you probably want to use the \"smooth\" option as shown below. It slows things down slightly but the linearly interpolated filter coefficients will yield less artifacts as you change parameters."
 								}
 
 							}
