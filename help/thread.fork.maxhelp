@@ -1,293 +1,396 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
-		"rect" : [ 25.0, 69.0, 961.0, 569.0 ],
+		"appversion" : 		{
+			"major" : 7,
+			"minor" : 0,
+			"revision" : 4,
+			"architecture" : "x64",
+			"modernui" : 1
+		}
+,
+		"rect" : [ 46.0, 88.0, 719.0, 615.0 ],
 		"bglocked" : 0,
-		"defrect" : [ 25.0, 69.0, 961.0, 569.0 ],
-		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
 		"default_fontface" : 0,
 		"default_fontname" : "Arial",
-		"gridonopen" : 0,
+		"gridonopen" : 1,
 		"gridsize" : [ 10.0, 10.0 ],
-		"gridsnaponopen" : 0,
+		"gridsnaponopen" : 1,
+		"objectsnaponopen" : 1,
+		"statusbarvisible" : 2,
 		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
 		"boxanimatetime" : 200,
-		"imprint" : 0,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"maxclass" : "comment",
-					"text" : "written by Andy Schmeder 2009\n<andy@cnmat.berkeley.edu>",
-					"linecount" : 2,
-					"presentation_rect" : [ 632.0, 447.0, 0.0, 0.0 ],
-					"fontsize" : 12.0,
+					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
+					"embed" : 1,
+					"id" : "obj-18",
+					"maxclass" : "fpic",
 					"numinlets" : 1,
-					"patching_rect" : [ 650.0, 480.0, 220.0, 34.0 ],
-					"numoutlets" : 0,
-					"id" : "obj-15",
-					"fontname" : "Arial"
+					"numoutlets" : 1,
+					"outlettype" : [ "jit_matrix" ],
+					"patching_rect" : [ 316.0, 28.0, 109.0, 48.0 ]
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"fontface" : 1,
+					"fontsize" : 24.0,
+					"id" : "obj-22",
 					"maxclass" : "comment",
-					"text" : "<--- the source of these events is the main thread",
-					"linecount" : 2,
-					"presentation_rect" : [ 279.0, 129.0, 0.0, 0.0 ],
-					"fontsize" : 12.0,
 					"numinlets" : 1,
-					"patching_rect" : [ 250.0, 130.0, 214.0, 34.0 ],
 					"numoutlets" : 0,
-					"id" : "obj-14",
-					"fontname" : "Arial"
+					"patching_rect" : [ 31.0, 43.0, 289.0, 33.0 ],
+					"presentation_rect" : [ 488.0, 12.0, 0.0, 0.0 ],
+					"style" : "",
+					"text" : "thread.fork / thread.join\n"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "comment",
-					"text" : "<--- at this point execution is back in the \"main\" thread",
-					"linecount" : 2,
-					"presentation_rect" : [ 364.0, 467.0, 0.0, 0.0 ],
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 330.0, 470.0, 214.0, 34.0 ],
-					"numoutlets" : 0,
-					"id" : "obj-13",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"maxclass" : "comment",
-					"text" : "thread.join\n\nany event received by thread.join is passed back into the main thread",
+					"id" : "obj-21",
 					"linecount" : 4,
-					"presentation_rect" : [ 523.0, 345.0, 0.0, 0.0 ],
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 490.0, 350.0, 214.0, 62.0 ],
-					"numoutlets" : 0,
-					"id" : "obj-12",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"maxclass" : "comment",
-					"text" : "<--- all event domain processing that happens in here executes in the \"other\" thread",
-					"linecount" : 3,
-					"presentation_rect" : [ 318.0, 279.0, 0.0, 0.0 ],
-					"fontsize" : 12.0,
 					"numinlets" : 1,
-					"patching_rect" : [ 230.0, 290.0, 214.0, 48.0 ],
 					"numoutlets" : 0,
-					"id" : "obj-11",
-					"fontname" : "Arial"
+					"patching_rect" : [ 459.0, 202.0, 156.0, 60.0 ],
+					"presentation_rect" : [ 553.0, 93.0, 0.0, 0.0 ],
+					"style" : "default",
+					"text" : "WARNING: this object will crash MaxMSP if used improperly or with objects that are not \"overdrive safe\""
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"maxclass" : "comment",
-					"text" : "thread.fork\n\ncreates a thread; events received on its inlet are moved to the other thread for output",
-					"linecount" : 5,
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 490.0, 210.0, 214.0, 75.0 ],
-					"numoutlets" : 0,
-					"id" : "obj-10",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"maxclass" : "comment",
-					"text" : "thread.fork / thread.join\n\nthread-level parallelism for event domain computation\n\nWARNING: this object will crash MaxMSP if used improperly or with objects that are not \"overdrive safe\"",
-					"linecount" : 9,
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 490.0, 40.0, 156.0, 131.0 ],
-					"numoutlets" : 0,
-					"id" : "obj-9",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "print in-main-thread",
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 190.0, 470.0, 115.0, 20.0 ],
-					"numoutlets" : 0,
-					"id" : "obj-8",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"maxclass" : "newobj",
-					"text" : "thread.join",
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 150.0, 400.0, 67.0, 20.0 ],
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"id" : "obj-7",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"maxclass" : "flonum",
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 110.0, 40.0, 79.0, 20.0 ],
-					"numoutlets" : 2,
-					"outlettype" : [ "float", "bang" ],
-					"id" : "obj-6",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"maxclass" : "number",
-					"fontsize" : 12.0,
-					"numinlets" : 1,
-					"patching_rect" : [ 60.0, 100.0, 50.0, 20.0 ],
-					"numoutlets" : 2,
-					"outlettype" : [ "int", "bang" ],
-					"id" : "obj-5",
-					"fontname" : "Arial"
-				}
-
-			}
-, 			{
-				"box" : 				{
+					"id" : "obj-19",
 					"maxclass" : "message",
-					"text" : "aoeu 1212013 a b c 1 2 3 4 5 6 7 5 54 4 3",
-					"fontsize" : 12.0,
 					"numinlets" : 2,
-					"patching_rect" : [ 210.0, 100.0, 233.0, 18.0 ],
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"id" : "obj-4",
-					"fontname" : "Arial"
+					"patching_rect" : [ 459.0, 410.0, 67.0, 22.0 ],
+					"style" : "default",
+					"text" : "thread.join"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"hidden" : 1,
+					"id" : "obj-17",
 					"maxclass" : "newobj",
-					"text" : "print in-other-thread",
-					"fontsize" : 12.0,
 					"numinlets" : 1,
-					"patching_rect" : [ 190.0, 250.0, 116.0, 20.0 ],
-					"numoutlets" : 0,
-					"id" : "obj-3",
-					"fontname" : "Arial"
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 459.0, 531.0, 53.0, 22.0 ],
+					"style" : "default",
+					"text" : "pcontrol"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"hidden" : 1,
+					"id" : "obj-16",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 459.0, 498.0, 81.0, 22.0 ],
+					"style" : "default",
+					"text" : "prepend help"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-14",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 196.0, 226.5, 214.0, 33.0 ],
+					"style" : "default",
+					"text" : "<--- the source of these events is the main thread"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-13",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 245.0, 537.0, 169.0, 33.0 ],
+					"style" : "default",
+					"text" : "<--- at this point execution is back in the \"main\" thread"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-12",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 459.0, 439.0, 214.0, 33.0 ],
+					"style" : "default",
+					"text" : "any event received by thread.join is passed back into the main thread"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-11",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 151.0, 383.0, 214.0, 47.0 ],
+					"style" : "default",
+					"text" : "<--- all event domain processing that happens in here executes in the \"other\" thread"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-10",
+					"linecount" : 5,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 459.0, 301.0, 214.0, 74.0 ],
+					"style" : "default",
+					"text" : "thread.fork\n\ncreates a thread; events received on its inlet are moved to the other thread for output"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-9",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 31.0, 78.0, 295.0, 20.0 ],
+					"style" : "default",
+					"text" : "thread-level parallelism for event domain computation"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-8",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 121.0, 537.0, 115.0, 22.0 ],
+					"style" : "default",
+					"text" : "print in-main-thread"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-7",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 121.0, 502.0, 67.0, 22.0 ],
+					"style" : "default",
+					"text" : "thread.join"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"format" : 6,
+					"id" : "obj-6",
+					"maxclass" : "flonum",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 81.0, 142.0, 79.0, 22.0 ],
+					"style" : "default"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-5",
+					"maxclass" : "number",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 31.0, 202.0, 50.0, 22.0 ],
+					"style" : "default"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 181.0, 202.0, 233.0, 22.0 ],
+					"style" : "default",
+					"text" : "aoeu 1212013 a b c 1 2 3 4 5 6 7 5 54 4 3"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-3",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 161.0, 352.0, 116.0, 22.0 ],
+					"style" : "default",
+					"text" : "print in-other-thread"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-2",
 					"maxclass" : "button",
 					"numinlets" : 1,
-					"patching_rect" : [ 150.0, 80.0, 34.0, 34.0 ],
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"id" : "obj-2"
+					"patching_rect" : [ 121.0, 182.0, 34.0, 34.0 ],
+					"style" : "default"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"id" : "obj-1",
 					"maxclass" : "newobj",
-					"text" : "thread.fork",
-					"fontsize" : 12.0,
 					"numinlets" : 1,
-					"patching_rect" : [ 150.0, 190.0, 68.0, 20.0 ],
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"id" : "obj-1",
-					"fontname" : "Arial"
+					"patching_rect" : [ 121.0, 292.0, 68.0, 22.0 ],
+					"style" : "default",
+					"text" : "thread.fork"
 				}
 
 			}
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"source" : [ "obj-7", 0 ],
-					"destination" : [ "obj-8", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-1", 0 ],
-					"destination" : [ "obj-7", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"source" : [ "obj-1", 0 ],
 					"destination" : [ "obj-3", 0 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ]
+					"source" : [ "obj-1", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-4", 0 ],
-					"destination" : [ "obj-1", 0 ],
+					"destination" : [ "obj-7", 0 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ]
+					"source" : [ "obj-1", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-2", 0 ],
-					"destination" : [ "obj-1", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
+					"destination" : [ "obj-17", 0 ],
+					"disabled" : 0,
+					"hidden" : 1,
+					"source" : [ "obj-16", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-5", 0 ],
-					"destination" : [ "obj-1", 0 ],
-					"hidden" : 0,
-					"midpoints" : [  ]
+					"destination" : [ "obj-16", 0 ],
+					"disabled" : 0,
+					"hidden" : 1,
+					"source" : [ "obj-19", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"source" : [ "obj-6", 0 ],
 					"destination" : [ "obj-1", 0 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ]
+					"source" : [ "obj-2", 0 ]
 				}
 
 			}
- ]
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-1", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-4", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-1", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-1", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-6", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-8", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-7", 0 ]
+				}
+
+			}
+ ],
+		"dependency_cache" : [ 			{
+				"name" : "thread.fork.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "thread.join.mxo",
+				"type" : "iLaX"
+			}
+ ],
+		"embedsnapshot" : 0
 	}
 
 }
