@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 45.0, 86.0, 936.0, 709.0 ],
+		"rect" : [ 45.0, 86.0, 936.0, 720.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,12 +38,25 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
+					"embed" : 1,
+					"id" : "obj-3",
+					"maxclass" : "fpic",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "jit_matrix" ],
+					"patching_rect" : [ 185.0, 25.0, 109.0, 48.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-2",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 414.0, 314.670349, 102.0, 22.0 ],
+					"patching_rect" : [ 414.0, 324.670349, 102.0, 22.0 ],
 					"style" : "",
 					"text" : "r waveguide-help"
 				}
@@ -56,7 +69,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 33.0, 246.934067, 261.0, 33.0 ],
+					"patching_rect" : [ 33.0, 256.934082, 261.0, 33.0 ],
 					"style" : "default",
 					"text" : "energy can be injected into the mesh and read out of the mesh at any number of nodes"
 				}
@@ -145,7 +158,7 @@
 						"lines" : [  ]
 					}
 ,
-					"patching_rect" : [ 675.0, 586.0, 46.0, 22.0 ],
+					"patching_rect" : [ 675.0, 596.0, 46.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -299,7 +312,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 674.0, 557.0, 144.0, 22.0 ],
+					"patching_rect" : [ 674.0, 567.0, 144.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -321,7 +334,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 346.0, 76.670334, 61.0, 22.0 ],
+					"patching_rect" : [ 346.0, 86.670334, 61.0, 22.0 ],
 					"style" : "default",
 					"text" : "loadbang"
 				}
@@ -337,7 +350,7 @@
 					"orientation" : 2,
 					"outlettype" : [ "signal", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 346.0, 529.0, 22.0, 86.0 ],
+					"patching_rect" : [ 346.0, 539.0, 22.0, 86.0 ],
 					"style" : "default"
 				}
 
@@ -349,7 +362,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 130.0, 374.0, 122.0, 22.0 ],
+					"patching_rect" : [ 130.0, 384.0, 122.0, 22.0 ],
 					"style" : "default",
 					"text" : "onepole~ 3000. Hz"
 				}
@@ -363,7 +376,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "float" ],
-					"patching_rect" : [ 383.0, 529.0, 16.0, 86.0 ],
+					"patching_rect" : [ 383.0, 539.0, 16.0, 86.0 ],
 					"style" : "default",
 					"tepidcolor" : [ 0.6, 0.729412, 0.0, 1.0 ],
 					"warmcolor" : [ 0.85098, 0.85098, 0.0, 1.0 ]
@@ -376,7 +389,7 @@
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 346.0, 641.0, 42.0, 42.0 ],
+					"patching_rect" : [ 346.0, 651.0, 42.0, 42.0 ],
 					"style" : "default"
 				}
 
@@ -387,7 +400,7 @@
 					"maxclass" : "scope~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 404.0, 529.0, 236.0, 86.0 ],
+					"patching_rect" : [ 404.0, 539.0, 236.0, 86.0 ],
 					"style" : "default"
 				}
 
@@ -399,7 +412,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 130.0, 309.0, 24.0, 24.0 ],
+					"patching_rect" : [ 130.0, 319.0, 24.0, 24.0 ],
 					"style" : "default"
 				}
 
@@ -411,7 +424,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 130.0, 342.0, 47.0, 22.0 ],
+					"patching_rect" : [ 130.0, 352.0, 47.0, 22.0 ],
 					"style" : "default",
 					"text" : "click~"
 				}
@@ -423,7 +436,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 596.0, 485.0, 315.0, 20.0 ],
+					"patching_rect" : [ 596.0, 495.0, 315.0, 20.0 ],
 					"style" : "default",
 					"text" : "@size: size of delay-line buffer in samples (default: 1024)"
 				}
@@ -436,7 +449,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 33.0, 186.8022, 247.0, 47.0 ],
+					"patching_rect" : [ 33.0, 196.8022, 247.0, 47.0 ],
 					"style" : "default",
 					"text" : "the basic mesh parameters (number of edges and nodes) must be specified at creation-time."
 				}
@@ -448,7 +461,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 596.0, 465.0, 259.0, 20.0 ],
+					"patching_rect" : [ 596.0, 475.0, 259.0, 20.0 ],
 					"style" : "default",
 					"text" : "@outputs: number of signal outputs (unlimited)"
 				}
@@ -460,7 +473,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 615.5, 314.670349, 261.0, 20.0 ],
+					"patching_rect" : [ 615.5, 324.670349, 261.0, 20.0 ],
 					"style" : "default",
 					"text" : "reset state to zero, in case it blows up"
 				}
@@ -473,7 +486,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 563.0, 314.670349, 42.0, 22.0 ],
+					"patching_rect" : [ 563.0, 324.670349, 42.0, 22.0 ],
 					"style" : "default",
 					"text" : "reset"
 				}
@@ -485,7 +498,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 596.0, 445.0, 245.0, 20.0 ],
+					"patching_rect" : [ 596.0, 455.0, 245.0, 20.0 ],
 					"style" : "default",
 					"text" : "@inputs: number of signal inputs (unlimited)"
 				}
@@ -497,7 +510,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 596.0, 425.0, 272.0, 20.0 ],
+					"patching_rect" : [ 596.0, 435.0, 272.0, 20.0 ],
 					"style" : "default",
 					"text" : "@edges: number of edges (waveguides) in mesh"
 				}
@@ -509,7 +522,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 488.5, 267.0, 383.0, 20.0 ],
+					"patching_rect" : [ 488.5, 277.0, 383.0, 20.0 ],
 					"style" : "default",
 					"text" : "set delay time of edge 0 in msec, range: (0.0 - delay-max)"
 				}
@@ -522,7 +535,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 346.0, 267.0, 82.0, 22.0 ],
+					"patching_rect" : [ 346.0, 277.0, 82.0, 22.0 ],
 					"style" : "default",
 					"text" : "set delay 0 5."
 				}
@@ -534,7 +547,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 488.5, 236.934067, 344.0, 20.0 ],
+					"patching_rect" : [ 488.5, 246.934067, 344.0, 20.0 ],
 					"style" : "default",
 					"text" : "set stiffness of edge 0. range: [0.0 - 1.0)"
 				}
@@ -547,7 +560,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 346.0, 236.934067, 69.0, 22.0 ],
+					"patching_rect" : [ 346.0, 246.934067, 69.0, 22.0 ],
 					"style" : "default",
 					"text" : "set nl 0 0.5"
 				}
@@ -559,7 +572,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 488.5, 206.868134, 345.0, 20.0 ],
+					"patching_rect" : [ 488.5, 216.868134, 345.0, 20.0 ],
 					"style" : "default",
 					"text" : "set damping coefficient on edge 0. range: (0.0 - 1.0)"
 				}
@@ -572,7 +585,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 346.0, 206.868134, 76.0, 22.0 ],
+					"patching_rect" : [ 346.0, 216.868134, 76.0, 22.0 ],
 					"style" : "default",
 					"text" : "set fc 0 0.99"
 				}
@@ -584,7 +597,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 488.5, 176.8022, 345.0, 20.0 ],
+					"patching_rect" : [ 488.5, 186.8022, 345.0, 20.0 ],
 					"style" : "default",
 					"text" : "connect edge 0 between nodes 0 and 1"
 				}
@@ -597,7 +610,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 346.0, 176.8022, 113.0, 22.0 ],
+					"patching_rect" : [ 346.0, 186.8022, 113.0, 22.0 ],
 					"style" : "default",
 					"text" : "connect edge 0 0 1"
 				}
@@ -609,7 +622,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 488.5, 146.736267, 341.0, 20.0 ],
+					"patching_rect" : [ 488.5, 156.736267, 341.0, 20.0 ],
 					"style" : "default",
 					"text" : "connect output to node 1"
 				}
@@ -622,7 +635,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 346.0, 146.736267, 109.0, 22.0 ],
+					"patching_rect" : [ 346.0, 156.736267, 109.0, 22.0 ],
 					"style" : "default",
 					"text" : "connect output 0 1"
 				}
@@ -635,7 +648,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 346.0, 116.670334, 102.0, 22.0 ],
+					"patching_rect" : [ 346.0, 126.670334, 102.0, 22.0 ],
 					"style" : "default",
 					"text" : "connect input 0 0"
 				}
@@ -648,7 +661,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 346.0, 459.0, 201.0, 22.0 ],
+					"patching_rect" : [ 346.0, 469.0, 201.0, 22.0 ],
 					"style" : "default",
 					"text" : "waveguide~ @nodes 2 @edges 1"
 				}
@@ -660,7 +673,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 33.0, 65.0, 255.0, 20.0 ],
+					"patching_rect" : [ 33.0, 75.0, 255.0, 20.0 ],
 					"style" : "default",
 					"text" : "waveguide mesh physical model with stiffness"
 				}
@@ -674,7 +687,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 33.0, 30.0, 147.0, 33.0 ],
+					"patching_rect" : [ 33.0, 40.0, 147.0, 33.0 ],
 					"style" : "",
 					"text" : "waveguide~"
 				}
@@ -687,7 +700,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 33.0, 116.670334, 255.0, 60.0 ],
+					"patching_rect" : [ 33.0, 126.670334, 255.0, 60.0 ],
 					"style" : "default",
 					"text" : "the user must define the mesh structure using the \"connect edge\" message, configure input and output locations, and filter coefficients for each edge."
 				}
@@ -699,7 +712,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 488.5, 116.670334, 345.0, 20.0 ],
+					"patching_rect" : [ 488.5, 126.670334, 345.0, 20.0 ],
 					"style" : "default",
 					"text" : "connects first signal input (number 0) to node 0"
 				}
@@ -711,7 +724,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 573.0, 372.0, 71.0, 20.0 ],
+					"patching_rect" : [ 573.0, 382.0, 71.0, 20.0 ],
 					"style" : "default",
 					"text" : "attributes:"
 				}
@@ -723,7 +736,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 596.0, 405.0, 253.0, 20.0 ],
+					"patching_rect" : [ 596.0, 415.0, 253.0, 20.0 ],
 					"style" : "default",
 					"text" : "@nodes: number of nodes (verticies) in mesh"
 				}
