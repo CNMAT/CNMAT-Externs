@@ -391,10 +391,8 @@ void *sOSC_new(long arg) {
 
 void sOSC_assist(sOSC *x, void *b, long m, long a, char *dst) {
   if (m == ASSIST_INLET) {
-    if (a == 0) {
+    if (a == 0 || a == 1) {
         sprintf(dst, "Max msgs; OSC packets");
-    } else if (a == 1) {
-        sprintf(dst, "Testing");
     }
     //} else {
     //  object_error((t_object *)x, "sOSC_assist: unrecognized inlet number %ld", a);
