@@ -392,17 +392,20 @@ void *sOSC_new(long arg) {
 void sOSC_assist(sOSC *x, void *b, long m, long a, char *dst) {
   if (m == ASSIST_INLET) {
     if (a == 0) {
-      strcpy(dst, "Max msgs; OSC packets");
-    } else {
-      object_error((t_object *)x, "sOSC_assist: unrecognized inlet number %ld", a);
+        sprintf(dst, "Max msgs; OSC packets");
+    } else if (a == 1) {
+        sprintf(dst, "Testing");
     }
+    //} else {
+    //  object_error((t_object *)x, "sOSC_assist: unrecognized inlet number %ld", a);
+    //}
   } else if (m == ASSIST_OUTLET) {
     if (a == 0) {
-      strcpy(dst, "OSC packets; bang after msgs in OSC packet");
+      sprintf(dst, "OSC packets; bang after msgs in OSC packet");
     } else if (a == 1) {
-      strcpy(dst, "OSC msgs decoded from OSC packet");
+      sprintf(dst, "OSC msgs decoded from OSC packet");
     } else if (a == 2) {
-      strcpy(dst, "Time tag (list of two ints) from OSC packet");
+      sprintf(dst, "Time tag (list of two ints) from OSC packet");
     } else {
       object_error((t_object *)x, "sOSC_assist: unrecognized outlet number %ld", a);
     }
