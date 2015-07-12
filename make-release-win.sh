@@ -9,4 +9,7 @@ do
 	[ -e $f ] && cp -r $f CNMAT-Externals
 done
 
+# force-copy an old version of resonators~
+cp -f kludge/resonators~.mxe CNMAT-Externals/externals
+
 zip -r $archive_name CNMAT-Externals && rm -r CNMAT-Externals
