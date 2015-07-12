@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 69.0, 79.0, 933.0, 656.0 ],
+		"rect" : [ 50.0, 90.0, 933.0, 656.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,12 +38,25 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
+					"embed" : 1,
+					"id" : "obj-1",
+					"maxclass" : "fpic",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "jit_matrix" ],
+					"patching_rect" : [ 281.5, 17.0, 109.0, 48.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-2",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 813.0, 595.0, 86.0, 22.0 ],
+					"patching_rect" : [ 812.0, 604.0, 86.0, 22.0 ],
 					"style" : "default",
 					"text" : "timemachine~"
 				}
@@ -56,7 +69,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 555.0, 330.0, 182.0, 22.0 ],
+					"patching_rect" : [ 554.0, 339.0, 182.0, 22.0 ],
 					"style" : "default",
 					"text" : "0, 2 2000 -1 2000 10 5000"
 				}
@@ -74,7 +87,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "float" ],
-					"patching_rect" : [ 572.0, 410.0, 50.0, 19.0 ],
+					"patching_rect" : [ 571.0, 419.0, 50.0, 19.0 ],
 					"sig" : 0.0,
 					"style" : "default"
 				}
@@ -87,7 +100,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 502.0, 436.0, 33.0, 22.0 ],
+					"patching_rect" : [ 501.0, 490.0, 33.0, 22.0 ],
 					"style" : "default",
 					"text" : "stop"
 				}
@@ -100,7 +113,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 427.0, 436.0, 74.0, 22.0 ],
+					"patching_rect" : [ 426.0, 490.0, 74.0, 22.0 ],
 					"style" : "default",
 					"text" : "startwindow"
 				}
@@ -113,10 +126,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 427.0, 418.0, 108.0, 20.0 ],
+					"patching_rect" : [ 426.0, 472.0, 108.0, 20.0 ],
 					"style" : "default",
-					"text" : "• start audio",
-					"textjustification" : 1
+					"text" : "• start audio"
 				}
 
 			}
@@ -126,7 +138,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 225.0, 485.5, 63.0, 22.0 ],
+					"patching_rect" : [ 224.0, 539.5, 63.0, 22.0 ],
 					"style" : "default",
 					"text" : "dac~"
 				}
@@ -139,7 +151,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 225.0, 436.0, 180.0, 22.0 ],
+					"patching_rect" : [ 224.0, 490.0, 180.0, 22.0 ],
 					"style" : "default",
 					"text" : "decaying-sinusoids~ 440. 0.5 2."
 				}
@@ -152,7 +164,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 555.0, 436.0, 202.0, 22.0 ],
+					"patching_rect" : [ 554.0, 445.0, 202.0, 22.0 ],
 					"style" : "default",
 					"text" : "decaying-sinusoids~ 440. 0.5 2."
 				}
@@ -161,11 +173,11 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-12",
-					"linecount" : 2,
+					"linecount" : 3,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 612.0, 480.0, 215.0, 33.0 ],
+					"patching_rect" : [ 611.0, 494.5, 145.0, 47.0 ],
 					"style" : "default",
 					"text" : "but of course you can make up the time signal however you like."
 				}
@@ -181,7 +193,7 @@
 					"orientation" : 2,
 					"outlettype" : [ "signal", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 556.0, 464.0, 22.0, 122.0 ],
+					"patching_rect" : [ 555.0, 473.0, 22.0, 122.0 ],
 					"style" : "default"
 				}
 
@@ -193,7 +205,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 797.0, 330.0, 74.0, 22.0 ],
+					"patching_rect" : [ 796.0, 339.0, 74.0, 22.0 ],
 					"style" : "default",
 					"text" : "0, 15 15000"
 				}
@@ -205,7 +217,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 612.0, 468.0, 180.0, 20.0 ],
+					"patching_rect" : [ 611.0, 477.0, 180.0, 20.0 ],
 					"style" : "default",
 					"text" : "This is designed for use with"
 				}
@@ -218,7 +230,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 769.0, 464.0, 94.0, 22.0 ],
+					"patching_rect" : [ 775.0, 473.0, 94.0, 22.0 ],
 					"style" : "default",
 					"text" : "timemachine~"
 				}
@@ -232,7 +244,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 770.0, 492.0, 83.0, 22.0 ],
+					"patching_rect" : [ 775.0, 502.0, 83.0, 22.0 ],
 					"style" : "default",
 					"text" : "prepend help"
 				}
@@ -246,7 +258,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 770.0, 512.0, 56.0, 22.0 ],
+					"patching_rect" : [ 775.0, 522.0, 56.0, 22.0 ],
 					"style" : "default",
 					"text" : "pcontrol"
 				}
@@ -258,7 +270,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 556.0, 595.0, 39.0, 22.0 ],
+					"patching_rect" : [ 555.0, 604.0, 39.0, 22.0 ],
 					"style" : "default",
 					"text" : "dac~"
 				}
@@ -271,7 +283,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 630.0, 370.0, 269.0, 60.0 ],
+					"patching_rect" : [ 629.0, 379.0, 269.0, 60.0 ],
 					"style" : "default",
 					"text" : "Rather than control virtual time with the \"goto\", \"rate\", \"min_vtime\", and \"max_vtime\" messages, you can now send in a signal input for the virtual time. This is much more powerful and expensive."
 				}
@@ -283,7 +295,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 555.0, 310.0, 123.0, 20.0 ],
+					"patching_rect" : [ 554.0, 319.0, 123.0, 20.0 ],
 					"style" : "default",
 					"text" : "Signal control of time"
 				}
@@ -296,7 +308,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 743.5, 330.0, 47.0, 22.0 ],
+					"patching_rect" : [ 742.5, 339.0, 47.0, 22.0 ],
 					"style" : "default",
 					"text" : "1 1000"
 				}
@@ -309,7 +321,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "bang" ],
-					"patching_rect" : [ 555.0, 378.0, 39.0, 22.0 ],
+					"patching_rect" : [ 554.0, 387.0, 39.0, 22.0 ],
 					"style" : "default",
 					"text" : "line~"
 				}
@@ -323,7 +335,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 259.0, 317.0, 193.0, 47.0 ],
+					"patching_rect" : [ 258.0, 326.0, 193.0, 47.0 ],
 					"style" : "default",
 					"text" : "Silence all sinusoids by resetting current rate, current \"virtual time\", and current limits on \"virtual time.\""
 				}
@@ -336,7 +348,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 260.0, 365.0, 42.0, 22.0 ],
+					"patching_rect" : [ 259.0, 374.0, 42.0, 22.0 ],
 					"style" : "default",
 					"text" : "clear"
 				}
@@ -349,7 +361,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 111.0, 365.0, 103.0, 22.0 ],
+					"patching_rect" : [ 110.0, 374.0, 103.0, 22.0 ],
 					"style" : "default",
 					"text" : "max_vtime 1.1"
 				}
@@ -362,7 +374,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 404.0, 193.0, 60.0 ],
+					"patching_rect" : [ 29.0, 458.0, 195.0, 60.0 ],
 					"style" : "default",
 					"text" : "For symmetry you can also set the maximum \"virtual time\", i.e., the point at which the amplitudes stop decaying and become constant."
 				}
@@ -375,7 +387,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 111.0, 332.0, 102.0, 22.0 ],
+					"patching_rect" : [ 110.0, 341.0, 102.0, 22.0 ],
 					"style" : "default",
 					"text" : "min_vtime -0.5"
 				}
@@ -388,7 +400,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 736.0, 595.0, 74.0, 22.0 ],
+					"patching_rect" : [ 735.0, 604.0, 74.0, 22.0 ],
 					"style" : "default",
 					"text" : "resonators~"
 				}
@@ -400,7 +412,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 665.0, 573.0, 61.0, 20.0 ],
+					"patching_rect" : [ 664.0, 582.0, 61.0, 20.0 ],
 					"style" : "default",
 					"text" : "see also:"
 				}
@@ -414,7 +426,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 775.0, 543.0, 83.0, 22.0 ],
+					"patching_rect" : [ 774.0, 552.0, 83.0, 22.0 ],
 					"style" : "default",
 					"text" : "prepend help"
 				}
@@ -427,7 +439,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 665.0, 595.0, 68.0, 22.0 ],
+					"patching_rect" : [ 664.0, 604.0, 68.0, 22.0 ],
 					"style" : "default",
 					"text" : "sinusoids~"
 				}
@@ -441,7 +453,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 776.0, 563.0, 56.0, 22.0 ],
+					"patching_rect" : [ 775.0, 572.0, 56.0, 22.0 ],
 					"style" : "default",
 					"text" : "pcontrol"
 				}
@@ -453,10 +465,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 270.0, 160.0, 167.0, 20.0 ],
+					"patching_rect" : [ 269.0, 169.0, 167.0, 20.0 ],
 					"style" : "default",
-					"text" : "change all decay-rates",
-					"textjustification" : 1
+					"text" : "change all decay-rates"
 				}
 
 			}
@@ -469,7 +480,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 171.5, 239.5, 37.0, 22.0 ],
+					"patching_rect" : [ 170.5, 248.5, 37.0, 22.0 ],
 					"style" : "default",
 					"triscale" : 0.9
 				}
@@ -477,12 +488,11 @@
 			}
 , 			{
 				"box" : 				{
-					"fontface" : 1,
 					"id" : "obj-39",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 31.5, 58.0, 251.0, 20.0 ],
+					"patching_rect" : [ 30.5, 67.0, 251.0, 20.0 ],
 					"style" : "default",
 					"text" : "Bank of exponentially-decaying sinusoids"
 				}
@@ -496,8 +506,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 31.5, 30.0, 249.0, 33.0 ],
-					"style" : "default",
+					"patching_rect" : [ 30.5, 32.0, 249.0, 33.0 ],
+					"style" : "",
 					"text" : "decaying-sinusoids~"
 				}
 
@@ -509,7 +519,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 480.0, 151.0, 380.0, 22.0 ],
+					"patching_rect" : [ 479.0, 160.0, 380.0, 22.0 ],
 					"style" : "default",
 					"text" : "100. 0.5 2. 200. 0.3 3. 300 0.2 5. 400. 0.1 8. 500 0.07 10."
 				}
@@ -522,7 +532,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 270.0, 180.0, 43.0, 22.0 ],
+					"patching_rect" : [ 269.0, 189.0, 43.0, 22.0 ],
 					"style" : "default",
 					"text" : "rate 1"
 				}
@@ -535,7 +545,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 386.0, 180.0, 51.0, 22.0 ],
+					"patching_rect" : [ 385.0, 189.0, 51.0, 22.0 ],
 					"style" : "default",
 					"text" : "rate -1"
 				}
@@ -548,7 +558,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 120.5, 267.5, 47.0, 22.0 ],
+					"patching_rect" : [ 119.5, 276.5, 47.0, 22.0 ],
 					"style" : "default",
 					"text" : "goto 1."
 				}
@@ -561,7 +571,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 366.5, 235.0, 28.0, 22.0 ],
+					"patching_rect" : [ 365.5, 244.0, 28.0, 22.0 ],
 					"style" : "default",
 					"text" : "0.1"
 				}
@@ -574,7 +584,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 171.5, 267.5, 51.0, 22.0 ],
+					"patching_rect" : [ 170.5, 276.5, 51.0, 22.0 ],
 					"style" : "default",
 					"text" : "goto $1"
 				}
@@ -597,7 +607,7 @@
 					"orientation" : 0,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 171.5, 218.5, 83.0, 11.0 ],
+					"patching_rect" : [ 170.5, 227.5, 83.0, 11.0 ],
 					"setstyle" : 1,
 					"slidercolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 					"style" : "default"
@@ -611,7 +621,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 317.5, 180.0, 64.0, 22.0 ],
+					"patching_rect" : [ 316.5, 189.0, 64.0, 22.0 ],
 					"style" : "default",
 					"text" : "rate 0.25"
 				}
@@ -624,7 +634,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 480.0, 180.0, 152.0, 22.0 ],
+					"patching_rect" : [ 479.0, 189.0, 152.0, 22.0 ],
 					"style" : "default",
 					"text" : "441. 0.5 2. 440. 0.5 3."
 				}
@@ -637,7 +647,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 69.5, 267.5, 47.0, 22.0 ],
+					"patching_rect" : [ 68.5, 276.5, 47.0, 22.0 ],
 					"style" : "default",
 					"text" : "goto 0."
 				}
@@ -650,7 +660,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 402.5, 235.0, 28.0, 22.0 ],
+					"patching_rect" : [ 401.5, 244.0, 28.0, 22.0 ],
 					"style" : "default",
 					"text" : "0.3"
 				}
@@ -663,7 +673,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 225.0, 404.0, 31.0, 22.0 ],
+					"patching_rect" : [ 224.0, 458.0, 31.0, 22.0 ],
 					"style" : "default",
 					"text" : "thru"
 				}
@@ -676,7 +686,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 31.5, 90.0, 276.0, 33.0 ],
+					"patching_rect" : [ 30.5, 99.0, 276.0, 33.0 ],
 					"style" : "default",
 					"text" : "This object has a virtual time index used to compute the exponentially decaying sinusoid."
 				}
@@ -689,7 +699,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 341.5, 214.0, 125.0, 20.0 ],
+					"patching_rect" : [ 340.5, 223.0, 125.0, 20.0 ],
 					"style" : "default",
 					"text" : "Set gain & set time 0."
 				}
@@ -702,7 +712,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 480.0, 105.0, 342.0, 47.0 ],
+					"patching_rect" : [ 479.0, 114.0, 342.0, 47.0 ],
 					"style" : "default",
 					"text" : "Sets of sinusoids are specified as arguments or as a list. They come in groups of three floats: freq (Hz), gain, and decay rate. (This format is also used by res-transform and resonators~.)"
 				}
@@ -714,7 +724,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 634.0, 181.0, 54.0, 20.0 ],
+					"patching_rect" : [ 633.0, 190.0, 54.0, 20.0 ],
 					"style" : "default",
 					"text" : "beating"
 				}
@@ -727,7 +737,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 570.0, 469.0, 47.0 ],
+					"patching_rect" : [ 29.0, 579.0, 469.0, 47.0 ],
 					"style" : "default",
 					"text" : "Decaying-sinusoids~ can be substituted for resonators~ for impulsive excitations. An advantage of this object is its ability (via the included \"time machine)\" to play the impulse response forward and backwards (even before the beginning of time!)."
 				}
@@ -741,7 +751,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 300.0, 150.0, 47.0 ],
+					"patching_rect" : [ 29.0, 309.0, 150.0, 47.0 ],
 					"style" : "default",
 					"text" : "...so that's why you might want to set the minimum \"virtual time:\""
 				}
@@ -754,7 +764,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 31.5, 136.0, 223.0, 74.0 ],
+					"patching_rect" : [ 30.5, 145.0, 223.0, 74.0 ],
 					"style" : "default",
 					"text" : "jump to a time in seconds. Time 0 is the beginning of the decay. Negative times are possible but dangerous because amplitudes *grow* exponentially as you go back from time 0..."
 				}

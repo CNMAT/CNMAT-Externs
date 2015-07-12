@@ -38,15 +38,27 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
+					"embed" : 1,
+					"id" : "obj-78",
+					"maxclass" : "fpic",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "jit_matrix" ],
+					"patching_rect" : [ 115.0, 29.5, 109.0, 48.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"fontface" : 1,
 					"fontsize" : 24.0,
 					"id" : "obj-15",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 45.0, 30.0, 68.0, 33.0 ],
-					"presentation_rect" : [ 49.0, 42.0, 0.0, 0.0 ],
-					"style" : "default",
+					"patching_rect" : [ 43.0, 44.5, 70.0, 33.0 ],
+					"style" : "",
 					"text" : "bdist"
 				}
 
@@ -58,7 +70,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 42.0, 159.0, 24.0, 24.0 ],
+					"patching_rect" : [ 40.0, 174.0, 24.0, 24.0 ],
 					"style" : ""
 				}
 
@@ -73,7 +85,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 345.0, 122.5, 100.0, 22.0 ],
+					"patching_rect" : [ 343.0, 137.5, 100.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -85,7 +97,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 130.0, 122.5, 157.0, 22.0 ],
+					"patching_rect" : [ 128.0, 137.5, 157.0, 22.0 ],
 					"style" : "default",
 					"text" : "distlist 2. 2. 100. 100. 2. 10."
 				}
@@ -98,7 +110,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 66.0, 408.0, 221.0, 22.0 ],
+					"patching_rect" : [ 64.0, 423.0, 221.0, 22.0 ],
 					"style" : "default",
 					"text" : "0.241664"
 				}
@@ -111,7 +123,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 66.0, 122.5, 54.0, 22.0 ],
+					"patching_rect" : [ 64.0, 137.5, 54.0, 22.0 ],
 					"style" : "default",
 					"text" : "distlist 4"
 				}
@@ -125,7 +137,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "float", "float" ],
-					"patching_rect" : [ 490.0, 101.0, 76.0, 22.0 ],
+					"patching_rect" : [ 488.0, 116.0, 76.0, 22.0 ],
 					"style" : "default",
 					"text" : "unpack 2. 2."
 				}
@@ -139,7 +151,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 490.0, 70.0, 60.0, 22.0 ],
+					"patching_rect" : [ 488.0, 85.0, 60.0, 22.0 ],
 					"style" : "default",
 					"text" : "loadbang"
 				}
@@ -152,7 +164,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 555.0, 368.207764, 269.0, 33.0 ],
+					"patching_rect" : [ 553.0, 383.207764, 269.0, 33.0 ],
 					"style" : "default",
 					"text" : "bdist uses the GNU Scientific Library.  Source code available on request."
 				}
@@ -165,7 +177,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 555.0, 277.292236, 272.0, 87.0 ],
+					"patching_rect" : [ 553.0, 292.292236, 272.0, 87.0 ],
 					"style" : "default",
 					"text" : "a and b must be greater than 0.  When a value <= 0 is input for either one of these, they will be set to the smallest floating-point value greater than 0.  Still, certain combinations of parameters (large a and extremely small b) can cause an underflow to occur."
 				}
@@ -178,7 +190,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 555.0, 224.856888, 257.0, 47.0 ],
+					"patching_rect" : [ 553.0, 239.856888, 257.0, 47.0 ],
 					"style" : "default",
 					"text" : "By default, the x and y axes cover the interval [0,1], but this can be changed with the attributes xmin, ymin, xmax, ymax"
 				}
@@ -191,7 +203,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 555.0, 133.941391, 252.0, 87.0 ],
+					"patching_rect" : [ 553.0, 148.941391, 252.0, 87.0 ],
 					"style" : "default",
 					"text" : "A float in the left-most inlet sets the x-value and causes the corresponding y-value to be output.\n\nThe middle and right outlet set the values for a and b respectively"
 				}
@@ -203,7 +215,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 500.5, 159.0, 19.0, 20.0 ],
+					"patching_rect" : [ 498.5, 174.0, 19.0, 20.0 ],
 					"style" : "default",
 					"text" : "b"
 				}
@@ -219,7 +231,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 450.5, 159.0, 50.0, 22.0 ],
+					"patching_rect" : [ 448.5, 174.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -230,7 +242,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 308.5, 159.0, 19.0, 20.0 ],
+					"patching_rect" : [ 306.5, 174.0, 19.0, 20.0 ],
 					"style" : "default",
 					"text" : "a"
 				}
@@ -246,7 +258,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 258.5, 159.0, 50.0, 22.0 ],
+					"patching_rect" : [ 256.5, 174.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -257,7 +269,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 130.0, 159.0, 19.0, 20.0 ],
+					"patching_rect" : [ 128.0, 174.0, 19.0, 20.0 ],
 					"style" : "default",
 					"text" : "x"
 				}
@@ -274,7 +286,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 81.0, 159.0, 50.0, 22.0 ],
+					"patching_rect" : [ 79.0, 174.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -286,7 +298,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 555.0, 69.0, 243.0, 60.0 ],
+					"patching_rect" : [ 553.0, 84.0, 243.0, 60.0 ],
 					"style" : "default",
 					"text" : "a = 1, b = 1: straight line [0,1]\na = 2, b = 1: exponential curve [0,1]\na = 1, b = 2: logarithmic curve [0, 1]\na = 2, b = 2: sigmoid (s-shaped) curve [0, 1]"
 				}
@@ -299,7 +311,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 45.0, 64.5, 328.0, 33.0 ],
+					"patching_rect" : [ 43.0, 79.5, 328.0, 33.0 ],
 					"style" : "default",
 					"text" : "transfer function in the shape of the Beta distribution's CDF\n (http://en.wikipedia.org/wiki/Beta_distribution)"
 				}
@@ -321,7 +333,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 66.0, 201.0, 404.0, 191.0 ],
+					"patching_rect" : [ 64.0, 216.0, 404.0, 191.0 ],
 					"showmean" : 1,
 					"showmode" : 1,
 					"showvariance" : 1
@@ -335,7 +347,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 345.0, 159.0, 95.0, 22.0 ],
+					"patching_rect" : [ 343.0, 174.0, 95.0, 22.0 ],
 					"style" : "default",
 					"text" : "displaymode $1"
 				}
@@ -350,7 +362,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 516.0, 441.0, 50.0, 22.0 ],
+					"patching_rect" : [ 514.0, 456.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -364,7 +376,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 460.0, 441.0, 50.0, 22.0 ],
+					"patching_rect" : [ 458.0, 456.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -378,7 +390,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 404.0, 441.0, 50.0, 22.0 ],
+					"patching_rect" : [ 402.0, 456.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -392,7 +404,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 348.0, 441.0, 50.0, 22.0 ],
+					"patching_rect" : [ 346.0, 456.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -406,7 +418,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 292.0, 441.0, 50.0, 22.0 ],
+					"patching_rect" : [ 290.0, 456.0, 50.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -418,7 +430,7 @@
 					"numinlets" : 6,
 					"numoutlets" : 6,
 					"outlettype" : [ "", "", "", "", "", "" ],
-					"patching_rect" : [ 292.0, 409.0, 299.0, 22.0 ],
+					"patching_rect" : [ 290.0, 424.0, 299.0, 22.0 ],
 					"style" : "default",
 					"text" : "route mean variance skewness kurtosis mode"
 				}

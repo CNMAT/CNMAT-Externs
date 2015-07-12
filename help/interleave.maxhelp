@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 598.0, 634.0 ],
+		"rect" : [ 100.0, 100.0, 415.0, 591.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -42,7 +42,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 451.0, 159.0, 20.0 ],
+					"patching_rect" : [ 89.0, 473.0, 159.0, 20.0 ],
 					"style" : "default",
 					"text" : "3) Standard part of Max."
 				}
@@ -54,7 +54,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 431.0, 164.0, 20.0 ],
+					"patching_rect" : [ 89.0, 453.0, 164.0, 20.0 ],
 					"style" : "default",
 					"text" : "2) Larger list length limit"
 				}
@@ -66,7 +66,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 50.0, 408.0, 288.0, 20.0 ],
+					"patching_rect" : [ 89.0, 430.0, 288.0, 20.0 ],
 					"style" : "default",
 					"text" : "1) No restriction to only 2, 3, or 4 input lists."
 				}
@@ -79,7 +79,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 95.0, 381.0, 130.0, 22.0 ],
+					"patching_rect" : [ 134.0, 403.0, 130.0, 22.0 ],
 					"style" : "default",
 					"text" : "mxj list.Multiplex 3"
 				}
@@ -88,11 +88,10 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-6",
-					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 37.0, 319.0, 290.0, 33.0 ],
+					"patching_rect" : [ 52.5, 376.0, 293.0, 20.0 ],
 					"style" : "default",
 					"text" : "Don't use the interleave external! This is much better:"
 				}
@@ -105,7 +104,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 236.0, 172.0, 70.0, 22.0 ],
+					"patching_rect" : [ 237.0, 192.0, 70.0, 22.0 ],
 					"style" : "default",
 					"text" : "33 22 hut"
 				}
@@ -118,7 +117,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 207.0, 137.0, 92.0, 22.0 ],
+					"patching_rect" : [ 208.0, 157.0, 92.0, 22.0 ],
 					"style" : "default",
 					"text" : "100 cats moo"
 				}
@@ -131,7 +130,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 156.0, 106.0, 182.0, 22.0 ],
+					"patching_rect" : [ 157.0, 126.0, 182.0, 22.0 ],
 					"style" : "default",
 					"text" : "1.1264 2.28392 3.317874"
 				}
@@ -144,7 +143,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 27.0, 172.0, 55.0, 22.0 ],
+					"patching_rect" : [ 28.0, 192.0, 55.0, 22.0 ],
 					"style" : "default",
 					"text" : "version"
 				}
@@ -157,7 +156,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 73.0, 280.0, 284.0, 22.0 ],
+					"patching_rect" : [ 74.0, 300.0, 284.0, 22.0 ],
 					"style" : "default"
 				}
 
@@ -169,7 +168,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 104.5, 137.0, 78.0, 22.0 ],
+					"patching_rect" : [ 105.5, 157.0, 78.0, 22.0 ],
 					"style" : "default",
 					"text" : "1.2 boo 3.3"
 				}
@@ -182,7 +181,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 136.0, 172.0, 87.0, 22.0 ],
+					"patching_rect" : [ 137.0, 192.0, 87.0, 22.0 ],
 					"style" : "default",
 					"text" : "999 888 777"
 				}
@@ -195,7 +194,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 73.0, 106.0, 63.0, 22.0 ],
+					"patching_rect" : [ 74.0, 126.0, 63.0, 22.0 ],
 					"style" : "default",
 					"text" : "40 50 60"
 				}
@@ -208,7 +207,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 1,
 					"outlettype" : [ "list" ],
-					"patching_rect" : [ 73.0, 212.0, 82.0, 22.0 ],
+					"patching_rect" : [ 74.0, 232.0, 82.0, 22.0 ],
 					"style" : "default",
 					"text" : "interleave 3"
 				}
@@ -221,7 +220,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 198.0, 212.0, 204.0, 33.0 ],
+					"patching_rect" : [ 199.0, 232.0, 204.0, 33.0 ],
 					"style" : "default",
 					"text" : "Can interleave two to four lists, determined by argument."
 				}
@@ -235,7 +234,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 170.0, 542.0, 56.0, 22.0 ],
+					"patching_rect" : [ 171.0, 562.0, 56.0, 22.0 ],
 					"style" : "default",
 					"text" : "pcontrol"
 				}
@@ -247,7 +246,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 72.0, 511.0, 61.0, 20.0 ],
+					"patching_rect" : [ 73.0, 531.0, 61.0, 20.0 ],
 					"style" : "default",
 					"text" : "see also:"
 				}
@@ -261,7 +260,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 170.0, 516.0, 83.0, 22.0 ],
+					"patching_rect" : [ 171.0, 536.0, 83.0, 22.0 ],
 					"style" : "default",
 					"text" : "prepend help"
 				}
@@ -274,7 +273,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 72.0, 525.0, 85.0, 22.0 ],
+					"patching_rect" : [ 73.0, 553.0, 85.0, 22.0 ],
 					"style" : "default",
 					"text" : "deinterleave"
 				}
@@ -287,7 +286,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 42.0, 66.0, 183.0, 33.0 ],
+					"patching_rect" : [ 43.0, 86.0, 183.0, 33.0 ],
 					"style" : "default",
 					"text" : "Interleave elements of multiple lists into one output list."
 				}
@@ -301,7 +300,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 42.0, 31.0, 123.0, 33.0 ],
+					"patching_rect" : [ 43.0, 51.0, 123.0, 33.0 ],
 					"style" : "",
 					"text" : "interleave"
 				}
@@ -316,7 +315,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "jit_matrix" ],
-					"patching_rect" : [ 283.0, 35.0, 109.0, 48.0 ]
+					"patching_rect" : [ 168.0, 36.0, 109.0, 48.0 ]
 				}
 
 			}
@@ -389,7 +388,7 @@
 					"destination" : [ "obj-17", 2 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 245.5, 203.0, 145.5, 203.0 ],
+					"midpoints" : [ 246.5, 223.0, 146.5, 223.0 ],
 					"source" : [ "obj-7", 0 ]
 				}
 
@@ -399,7 +398,7 @@
 					"destination" : [ "obj-17", 1 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 216.5, 164.0, 114.0, 164.0 ],
+					"midpoints" : [ 217.5, 184.0, 115.0, 184.0 ],
 					"source" : [ "obj-8", 0 ]
 				}
 
@@ -409,7 +408,7 @@
 					"destination" : [ "obj-17", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 165.5, 132.0, 82.5, 132.0 ],
+					"midpoints" : [ 166.5, 152.0, 83.5, 152.0 ],
 					"source" : [ "obj-9", 0 ]
 				}
 

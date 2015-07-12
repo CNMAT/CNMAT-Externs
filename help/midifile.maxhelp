@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 215.0, 103.0, 879.0, 486.0 ],
+		"rect" : [ 67.0, 91.0, 815.0, 486.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,6 +38,20 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"fontface" : 1,
+					"fontsize" : 24.0,
+					"id" : "obj-15",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 39.0, 26.0, 95.0, 33.0 ],
+					"style" : "",
+					"text" : "midifile"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"data" : [ 593, "", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
 					"embed" : 1,
 					"id" : "obj-49",
@@ -45,37 +59,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "jit_matrix" ],
-					"patching_rect" : [ 40.0, 380.0, 109.0, 48.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"id" : "obj-52",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 204.0, 404.0, 136.0, 27.0 ],
-					"style" : "",
-					"text" : "midifile  help version 1.0 \nJohn MacCallum 8/4/2009"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"id" : "obj-53",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 41.0, 433.0, 294.0, 27.0 ],
-					"style" : "",
-					"text" : "midifile, and all other CNMAT Max objects, can be found at: http://www.cnmat.berkeley.edu/downloads"
+					"patching_rect" : [ 135.0, 26.0, 109.0, 48.0 ]
 				}
 
 			}
@@ -86,15 +70,13 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 310.0, 90.0, 20.0, 20.0 ],
-					"style" : ""
+					"patching_rect" : [ 293.0, 126.0, 20.0, 20.0 ],
+					"style" : "default"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-24",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
@@ -390,7 +372,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 310.0, 120.0, 107.0, 22.0 ],
+					"patching_rect" : [ 293.0, 156.0, 107.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -399,7 +381,7 @@
 						"tags" : ""
 					}
 ,
-					"style" : "",
+					"style" : "default",
 					"text" : "p chromatic_scale"
 				}
 
@@ -411,15 +393,13 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 240.0, 90.0, 20.0, 20.0 ],
-					"style" : ""
+					"patching_rect" : [ 224.0, 126.0, 20.0, 20.0 ],
+					"style" : "default"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-20",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
@@ -861,7 +841,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 240.0, 120.0, 61.0, 22.0 ],
+					"patching_rect" : [ 224.0, 156.0, 61.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -870,75 +850,65 @@
 						"tags" : ""
 					}
 ,
-					"style" : "",
+					"style" : "default",
 					"text" : "p xenakis"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-19",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 170.0, 90.0, 37.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 160.0, 156.0, 37.0, 22.0 ],
+					"style" : "default",
 					"text" : "clear"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-18",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 120.0, 90.0, 41.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 110.0, 156.0, 41.0, 22.0 ],
+					"style" : "default",
 					"text" : "dump"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-17",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 80.0, 90.0, 33.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 70.0, 156.0, 33.0, 22.0 ],
+					"style" : "default",
 					"text" : "stop"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-16",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 40.0, 90.0, 33.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 30.0, 156.0, 33.0, 22.0 ],
+					"style" : "default",
 					"text" : "play"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-14",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -1228,7 +1198,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 430.0, 410.0, 109.0, 22.0 ],
+					"patching_rect" : [ 500.0, 410.0, 109.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1237,15 +1207,13 @@
 						"tags" : ""
 					}
 ,
-					"style" : "",
+					"style" : "default",
 					"text" : "p meta_messages"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-13",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -1440,7 +1408,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 430.0, 350.0, 49.0, 22.0 ],
+					"patching_rect" : [ 500.0, 350.0, 49.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1449,15 +1417,13 @@
 						"tags" : ""
 					}
 ,
-					"style" : "",
+					"style" : "default",
 					"text" : "p fileIO"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-12",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -1874,7 +1840,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 430.0, 320.0, 71.0, 22.0 ],
+					"patching_rect" : [ 500.0, 320.0, 71.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1883,15 +1849,13 @@
 						"tags" : ""
 					}
 ,
-					"style" : "",
+					"style" : "default",
 					"text" : "p recording"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-11",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -2312,7 +2276,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 430.0, 380.0, 40.0, 22.0 ],
+					"patching_rect" : [ 500.0, 380.0, 40.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -2321,15 +2285,13 @@
 						"tags" : ""
 					}
 ,
-					"style" : "",
+					"style" : "default",
 					"text" : "p info"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-10",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -3140,7 +3102,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 430.0, 290.0, 68.0, 22.0 ],
+					"patching_rect" : [ 500.0, 290.0, 68.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -3149,94 +3111,82 @@
 						"tags" : ""
 					}
 ,
-					"style" : "",
+					"style" : "default",
 					"text" : "p playback"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-9",
 					"linecount" : 6,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 430.0, 170.0, 391.0, 87.0 ],
-					"style" : "",
+					"patching_rect" : [ 438.0, 191.0, 358.0, 87.0 ],
+					"style" : "default",
 					"text" : "outlets:\nleft: midi data formated for the noteout object\nmid left: dumpout.  Send the midifile the ``dump'' message and all data stored in the object will come out here\nmid right: info about the midifile as a set of OSC-style messages\nright: bang when done dumping or playing a sequence"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-8",
 					"linecount" : 5,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 430.0, 70.0, 449.0, 74.0 ],
-					"style" : "",
+					"patching_rect" : [ 438.0, 106.0, 346.0, 74.0 ],
+					"style" : "default",
 					"text" : "attributes: \n@def_channel: default channel number for incoming midi data\n@ignoreTempoChanges\n@ignoreNoteOffVelocity\n@verbose: turn this one for extra messages in the max window"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-7",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 430.0, 50.0, 150.0, 20.0 ],
-					"style" : "",
+					"patching_rect" : [ 438.0, 86.0, 144.0, 20.0 ],
+					"style" : "default",
 					"text" : "args: <number of tracks>"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-2",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 130.0, 150.0, 73.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 70.0, 109.0, 73.0, 22.0 ],
+					"style" : "default",
 					"text" : "r to_midifile"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-5",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 86.0, 256.0, 112.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 87.0, 316.0, 112.0, 22.0 ],
+					"style" : "default",
 					"text" : "print midifile_dump"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-4",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 106.0, 228.0, 84.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 104.0, 288.0, 84.0, 22.0 ],
+					"style" : "default",
 					"text" : "s midifile_info"
 				}
 
@@ -3248,65 +3198,57 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 126.0, 204.0, 20.0, 20.0 ],
-					"style" : ""
+					"patching_rect" : [ 121.0, 264.0, 20.0, 20.0 ],
+					"style" : "default"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-79",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 106.0, 316.0, 132.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 137.0, 400.0, 119.0, 22.0 ],
+					"style" : "default",
 					"text" : "print meta_message"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-81",
 					"maxclass" : "newobj",
 					"numinlets" : 3,
 					"numoutlets" : 0,
-					"patching_rect" : [ 70.0, 340.0, 55.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 70.0, 400.0, 55.0, 22.0 ],
+					"style" : "default",
 					"text" : "noteout"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-82",
 					"maxclass" : "newobj",
 					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 70.0, 292.0, 72.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 70.0, 352.0, 86.0, 22.0 ],
+					"style" : "default",
 					"text" : "route note"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
 					"id" : "obj-1",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "", "", "", "" ],
-					"patching_rect" : [ 70.0, 176.0, 70.0, 22.0 ],
-					"style" : "",
+					"patching_rect" : [ 70.0, 236.0, 70.0, 22.0 ],
+					"style" : "default",
 					"text" : "mxj midifile"
 				}
 

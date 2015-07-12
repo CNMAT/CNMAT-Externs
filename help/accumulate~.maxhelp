@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 217.0, 93.0, 978.0, 689.0 ],
+		"rect" : [ 57.0, 92.0, 978.0, 689.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -760,7 +760,6 @@
 					}
 ,
 					"patching_rect" : [ 720.0, 30.0, 104.0, 22.0 ],
-					"presentation_rect" : [ 791.0, 27.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1045,7 +1044,6 @@
 					}
 ,
 					"patching_rect" : [ 596.0, 30.0, 108.0, 22.0 ],
-					"presentation_rect" : [ 596.0, 30.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1075,7 +1073,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 144.0, 154.0, 640.0, 480.0 ],
+						"rect" : [ 0.0, 26.0, 978.0, 663.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1103,7 +1101,6 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-48",
@@ -1390,7 +1387,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 617.0, 315.0, 173.0, 33.0 ],
+									"patching_rect" : [ 617.0, 315.0, 175.0, 33.0 ],
 									"style" : "default",
 									"text" : "solution: reset the accumulator on each pulse"
 								}
@@ -1569,7 +1566,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 94.0, 104.0, 1017.0, 711.0 ],
+						"rect" : [ 57.0, 118.0, 978.0, 663.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1597,8 +1594,20 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
+									"embed" : 1,
+									"id" : "obj-1",
+									"maxclass" : "fpic",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "jit_matrix" ],
+									"patching_rect" : [ 189.0, 16.0, 109.0, 48.0 ]
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"id" : "obj-51",
 									"maxclass" : "button",
@@ -1989,11 +1998,11 @@
 , 							{
 								"box" : 								{
 									"id" : "obj-35",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 91.0, 381.0, 33.0 ],
+									"patching_rect" : [ 30.0, 91.0, 259.0, 47.0 ],
 									"style" : "default",
 									"text" : "accumulate~ is similar to the MaxMSP builtin object +=~, but uses a signal to reset the accumulator instead of a message."
 								}
@@ -2102,13 +2111,14 @@
 , 							{
 								"box" : 								{
 									"fontface" : 1,
+									"fontname" : "Arial",
 									"fontsize" : 24.0,
 									"id" : "obj-44",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 30.0, 183.0, 33.0 ],
-									"style" : "default",
+									"patching_rect" : [ 30.0, 31.0, 157.0, 33.0 ],
+									"style" : "",
 									"text" : "accumulate~"
 								}
 
@@ -2261,7 +2271,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 30.0, 30.0, 89.0, 22.0 ],
+					"patching_rect" : [ 30.0, 30.0, 49.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -2271,7 +2281,7 @@
 					}
 ,
 					"style" : "",
-					"text" : "p accumulate~"
+					"text" : "p basic"
 				}
 
 			}
@@ -2291,7 +2301,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 878.0, 207.0, 528.0, 482.0 ],
+						"rect" : [ 0.0, 26.0, 978.0, 663.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2319,7 +2329,6 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-48",
@@ -2841,7 +2850,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 296.5, 135.0, 77.0, 22.0 ],
+									"patching_rect" : [ 186.5, 90.0, 77.0, 22.0 ],
 									"style" : "default",
 									"text" : "loadmess 1"
 								}
@@ -2854,7 +2863,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "bang", "bang" ],
-									"patching_rect" : [ 186.5, 240.0, 44.0, 22.0 ],
+									"patching_rect" : [ 186.5, 296.0, 44.0, 22.0 ],
 									"style" : "default",
 									"text" : "t b b"
 								}
@@ -2868,7 +2877,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 296.5, 165.0, 24.0, 24.0 ],
+									"patching_rect" : [ 186.5, 120.0, 24.0, 24.0 ],
 									"style" : "default"
 								}
 
@@ -2880,7 +2889,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 296.5, 195.0, 82.0, 22.0 ],
+									"patching_rect" : [ 186.5, 150.0, 82.0, 22.0 ],
 									"style" : "default",
 									"text" : "metro 1000"
 								}
@@ -3004,7 +3013,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 186.5, 303.5, 78.0, 22.0 ],
+									"patching_rect" : [ 186.5, 359.5, 78.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -3017,7 +3026,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "" ],
-									"patching_rect" : [ 186.5, 270.0, 44.0, 22.0 ],
+									"patching_rect" : [ 186.5, 326.0, 44.0, 22.0 ],
 									"style" : "default",
 									"text" : "timer"
 								}
@@ -3030,7 +3039,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 330.0, 203.0, 60.0 ],
+									"patching_rect" : [ 150.0, 386.0, 203.0, 60.0 ],
 									"style" : "default",
 									"text" : "one way to measure time.\nproblems:\n* does not work for signals\n* accuracy is limited to 1 millisecond"
 								}

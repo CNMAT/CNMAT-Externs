@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 79.0, 903.0, 635.0 ],
+		"rect" : [ 48.0, 91.0, 903.0, 650.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,11 +38,24 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
+					"embed" : 1,
+					"id" : "obj-18",
+					"maxclass" : "fpic",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "jit_matrix" ],
+					"patching_rect" : [ 136.0, 29.0, 109.0, 48.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-24",
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 541.0, 45.0, 45.0 ],
+					"patching_rect" : [ 29.0, 570.0, 45.0, 45.0 ],
 					"style" : ""
 				}
 
@@ -53,7 +66,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 567.5, 259.0, 267.0, 20.0 ],
+					"patching_rect" : [ 566.5, 288.0, 267.0, 20.0 ],
 					"style" : "default",
 					"text" : "3. adjust multisliders to do eq on each channel..."
 				}
@@ -66,7 +79,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 130.0, 510.0, 33.0 ],
+					"patching_rect" : [ 29.0, 159.0, 510.0, 33.0 ],
 					"style" : "default",
 					"text" : "fft overlap-save requires that the patch vector size = framesize/2. otherwise its output will be zero."
 				}
@@ -79,7 +92,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 94.0, 510.0, 33.0 ],
+					"patching_rect" : [ 29.0, 123.0, 510.0, 33.0 ],
 					"style" : "default",
 					"text" : "firbank~ is optimized for real-valued input and one-to-many structure, and is at least twice as fast as the equivalent implemented in pure maxmsp."
 				}
@@ -91,7 +104,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 50.0, 323.0, 20.0 ],
+					"patching_rect" : [ 29.0, 79.0, 323.0, 20.0 ],
 					"style" : "default",
 					"text" : "firbank~ uses the FFTW library under GNU Public License."
 				}
@@ -526,7 +539,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 102.5, 366.5, 253.0, 22.0 ],
+					"patching_rect" : [ 101.5, 395.5, 253.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -556,7 +569,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 336.5, 259.0, 229.0, 90.0 ],
+					"patching_rect" : [ 335.5, 288.0, 229.0, 90.0 ],
 					"setminmax" : [ 0.0, 1.0 ],
 					"size" : 16,
 					"style" : "default"
@@ -570,7 +583,7 @@
 					"numinlets" : 16,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "list" ],
-					"patching_rect" : [ 340.0, 488.0, 271.0, 22.0 ],
+					"patching_rect" : [ 339.0, 517.0, 271.0, 22.0 ],
 					"style" : "default",
 					"text" : "matrix~ 16 1 1."
 				}
@@ -583,7 +596,7 @@
 					"numinlets" : 16,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "list" ],
-					"patching_rect" : [ 30.0, 488.0, 271.0, 22.0 ],
+					"patching_rect" : [ 29.0, 517.0, 271.0, 22.0 ],
 					"style" : "default",
 					"text" : "matrix~ 16 1 1."
 				}
@@ -605,7 +618,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 102.5, 259.0, 229.0, 90.0 ],
+					"patching_rect" : [ 101.5, 288.0, 229.0, 90.0 ],
 					"setminmax" : [ 0.0, 1.0 ],
 					"size" : 16,
 					"style" : "default"
@@ -711,7 +724,7 @@
 						"lines" : [  ]
 					}
 ,
-					"patching_rect" : [ 654.0, 199.0, 212.0, 22.0 ],
+					"patching_rect" : [ 653.0, 228.0, 212.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -732,7 +745,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 654.0, 87.0, 60.0, 22.0 ],
+					"patching_rect" : [ 653.0, 116.0, 60.0, 22.0 ],
 					"style" : "default",
 					"text" : "loadbang"
 				}
@@ -745,7 +758,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 70.0, 229.0, 18.0, 22.0 ],
+					"patching_rect" : [ 69.0, 258.0, 18.0, 22.0 ],
 					"style" : "default",
 					"text" : "1"
 				}
@@ -757,7 +770,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 90.0, 229.0, 65.0, 20.0 ],
+					"patching_rect" : [ 89.0, 258.0, 65.0, 20.0 ],
 					"style" : "default",
 					"text" : "2. play it..."
 				}
@@ -770,7 +783,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 654.0, 115.0, 212.0, 22.0 ],
+					"patching_rect" : [ 653.0, 144.0, 212.0, 22.0 ],
 					"style" : "default",
 					"text" : "read firbank~.16band-512pt.wav"
 				}
@@ -783,7 +796,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "float", "bang" ],
-					"patching_rect" : [ 654.0, 141.0, 212.0, 22.0 ],
+					"patching_rect" : [ 653.0, 170.0, 212.0, 22.0 ],
 					"style" : "default",
 					"text" : "buffer~ firbank~.16band-512pt 1000 2"
 				}
@@ -796,7 +809,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 30.0, 199.0, 37.0, 22.0 ],
+					"patching_rect" : [ 29.0, 228.0, 37.0, 22.0 ],
 					"style" : "default",
 					"text" : "open"
 				}
@@ -809,7 +822,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 3,
 					"outlettype" : [ "signal", "signal", "bang" ],
-					"patching_rect" : [ 30.0, 259.0, 68.0, 22.0 ],
+					"patching_rect" : [ 29.0, 288.0, 68.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"basictuning" : 440,
 						"followglobaltempo" : 0,
@@ -835,8 +848,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 15.0, 105.0, 33.0 ],
-					"style" : "default",
+					"patching_rect" : [ 29.0, 44.0, 106.0, 33.0 ],
+					"style" : "",
 					"text" : "firbank~"
 				}
 
@@ -848,7 +861,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 32,
 					"outlettype" : [ "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal", "signal" ],
-					"patching_rect" : [ 30.0, 406.0, 581.0, 22.0 ],
+					"patching_rect" : [ 29.0, 435.0, 581.0, 22.0 ],
 					"style" : "default",
 					"text" : "firbank~ @n 2 @m 32 @k 16 @buffer firbank~.16band-512pt @framesize 512 @channel 0 1"
 				}
@@ -860,7 +873,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 70.0, 199.0, 125.0, 20.0 ],
+					"patching_rect" : [ 69.0, 228.0, 125.0, 20.0 ],
 					"style" : "default",
 					"text" : "1. open a sound file..."
 				}
@@ -872,7 +885,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 582.0, 200.0, 81.0, 20.0 ],
+					"patching_rect" : [ 581.0, 229.0, 81.0, 20.0 ],
 					"style" : "default",
 					"text" : "please read:"
 				}
@@ -884,7 +897,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 598.0, 429.0, 20.0 ],
+					"patching_rect" : [ 95.0, 595.0, 429.0, 20.0 ],
 					"style" : "default",
 					"text" : "this demo is a 16-band stereo equalizer with a perfect reconstruction filterbank."
 				}
@@ -896,7 +909,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 72.0, 510.0, 20.0 ],
+					"patching_rect" : [ 29.0, 101.0, 510.0, 20.0 ],
 					"style" : "default",
 					"text" : "firbank~ implements the FFT overlap-save method for applying an FIR filter to the input signal."
 				}
@@ -909,7 +922,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 619.0, 406.0, 247.0, 100.0 ],
+					"patching_rect" : [ 618.0, 435.0, 250.0, 100.0 ],
 					"style" : "default",
 					"text" : "attributes: \n@n: number of inputs \n@m: number of outputs \n@k: number of filters \n@buffer: name of buffer for filterbank\n@channel: real, imaginary channel numbers \n@framesize: length of fft"
 				}

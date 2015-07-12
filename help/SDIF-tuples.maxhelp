@@ -943,7 +943,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 725.0, 122.0, 234.0, 74.0 ],
+									"patching_rect" : [ 725.0, 122.0, 237.0, 74.0 ],
 									"style" : "default",
 									"text" : "The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name."
 								}
@@ -1282,7 +1282,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 107.0, 84.0, 744.0, 406.0 ],
+						"rect" : [ 0.0, 26.0, 1061.0, 639.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1310,7 +1310,6 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-3",
