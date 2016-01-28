@@ -41,7 +41,8 @@ Cycling's SDK can be found [here](https://github.com/Cycling74/max6-sdk)
 
 ### 2. OSC-kit
 
-I don't see this in the repository, and the Makefile expects it in the `../OSC-kit` directory for building legacy OSC objects.  Does anyone have a copy they could post in the root CNMAT repository folder?
+The Makefile expects it in the `../OSC-kit` directory for building legacy OSC objects.
+The OSC kit is in a different CNMAT repo: https://github.com/CNMAT/CNMAT-OSC
 
 ### 3. SDIF
 
