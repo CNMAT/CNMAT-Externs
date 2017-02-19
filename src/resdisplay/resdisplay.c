@@ -24,7 +24,7 @@
   NAME: resdisplay
   DESCRIPTION: Display/edit resonance models
   AUTHORS: John MacCallum
-  COPYRIGHT_YEARS: 2010
+  COPYRIGHT_YEARS: 2010, 12, 13, 17
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
   VERSION 0.1: bug fix in the log display mode and much faster drawing
@@ -32,13 +32,13 @@
   VERSION 0.2.1: Bang now outputs model and model comes out when loaded
   VERSION 0.2.2: added displayrange message for compatibility with resonance-display.js
   VERSION 0.2.3: more reasonable default size
+  VERSION 0.2.4: bounds of selection are output in selection, user must select a partial for output
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 #define NAME "resdisplay"
 #define DESCRIPTION "Display/edit resonance models"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2010,12,13"
-
+#define COPYRIGHT_YEARS "2010,12,13,17"
 
 #include "version.h"
 #include "ext.h"
