@@ -295,6 +295,7 @@ double rd_scale(double f, double min_in, double max_in, double min_out, double m
 }
 
 void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
+    
 	t_rect rect;
     	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
 
@@ -310,6 +311,7 @@ void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
 }
 
 void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
+    
 	t_rect rect;
     	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
 
@@ -360,8 +362,17 @@ void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
 		}
 	}
 	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
-	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
-	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+    
+    t_atom sel[2];
+    atom_setfloat(sel, x->selection.min);
+    atom_setfloat(sel + 1, x->selection.max);
+    
+    if(buf){
+        outlet_anything(x->outlet, gensym("selected"), selpos, buf);
+        outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+        outlet_anything(x->outlet, gensym("bounds"), 2, sel);
+    }
+
 }
 
 void rd_output_all(t_rd *x){
@@ -376,9 +387,12 @@ void rd_output_all(t_rd *x){
 
 void rd_output_sel(t_rd *x){
 	t_rect rect;
-        jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
-	int i;
+    jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
+	
 	t_atom buf[x->buffer_size];
+    
+    int i;
+    
 	int selpos = 0, nselpos = x->buffer_size - 1;
 	if(x->sinusoids){
 		t_sin *s = (t_sin *)x->buffer;
@@ -406,9 +420,18 @@ void rd_output_sel(t_rd *x){
 			}
 		}
 	}
+    
 	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
-	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
-	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+    
+    //only output if user selects a partial
+    if(x->num_partials_selected){
+        t_atom sel[2];
+        atom_setfloat(sel, x->selection.min);
+        atom_setfloat(sel + 1, x->selection.max);
+        outlet_anything(x->outlet, gensym("selected"), selpos, buf);
+        outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+        outlet_anything(x->outlet, gensym("bounds"), 2, sel);
+    }
 }
 
 #define BASE 27.5
