@@ -32,7 +32,7 @@
   VERSION 0.2.1: Bang now outputs model and model comes out when loaded
   VERSION 0.2.2: added displayrange message for compatibility with resonance-display.js
   VERSION 0.2.3: more reasonable default size
-  VERSION 0.2.4: bounds of selection are output in selection, user must select a partial for output
+  VERSION 0.2.4: bounds of selection are output, user must select a partial for data
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 #define NAME "resdisplay"
@@ -367,12 +367,13 @@ void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
     atom_setfloat(sel, x->selection.min);
     atom_setfloat(sel + 1, x->selection.max);
     
-    if(buf){
+    //only output if user selects a partial
+    if(x->num_partials_selected){
         outlet_anything(x->outlet, gensym("selected"), selpos, buf);
         outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+        
     }
     outlet_anything(x->outlet, gensym("bounds"), 2, sel);
-
 }
 
 void rd_output_all(t_rd *x){
@@ -422,16 +423,18 @@ void rd_output_sel(t_rd *x){
 	}
     
 	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
-    
+
+    t_atom sel[2];
+    atom_setfloat(sel, x->selection.min);
+    atom_setfloat(sel + 1, x->selection.max);
+
     //only output if user selects a partial
     if(x->num_partials_selected){
-        t_atom sel[2];
-        atom_setfloat(sel, x->selection.min);
-        atom_setfloat(sel + 1, x->selection.max);
         outlet_anything(x->outlet, gensym("selected"), selpos, buf);
         outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
-        outlet_anything(x->outlet, gensym("bounds"), 2, sel);
+        
     }
+    outlet_anything(x->outlet, gensym("bounds"), 2, sel);
 }
 
 #define BASE 27.5
