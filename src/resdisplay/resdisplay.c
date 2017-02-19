@@ -370,8 +370,8 @@ void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
     if(buf){
         outlet_anything(x->outlet, gensym("selected"), selpos, buf);
         outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
-        outlet_anything(x->outlet, gensym("bounds"), 2, sel);
     }
+    outlet_anything(x->outlet, gensym("bounds"), 2, sel);
 
 }
 
