@@ -101,7 +101,7 @@ typedef struct _xy{
 	long monotonic_point_counter;
 	long locked;
 	t_pt interp;
-	int draw_stupid_little_point;
+	int draw_point;
 	int highlight_line;
 	char *slots;
 	int nslots;
@@ -158,7 +158,7 @@ t_max_err xy_notify(t_xy *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
 t_max_err xy_points_get(t_xy *x, t_object *attr, long *argc, t_atom **argv);
 t_max_err xy_points_set(t_xy *x, t_object *attr, long argc, t_atom *argv);
 
-t_symbol *l_points, *l_stupid_little_point, *l_background;
+t_symbol *l_points, *l_small_point, *l_background;
 
 
 
@@ -245,15 +245,15 @@ void xy_paint(t_xy *x, t_object *patcherview){
 		jbox_end_layer((t_object *)x, patcherview, l_points);
 	}
 	jbox_paint_layer((t_object *)x, patcherview, l_points, 0, 0);
-	if(x->draw_stupid_little_point){
-		g = jbox_start_layer((t_object *)x, patcherview, l_stupid_little_point, 4, 4);
+	if(x->draw_point){
+		g = jbox_start_layer((t_object *)x, patcherview, l_small_point, 4, 4);
 		if(g){
 			jgraphics_set_source_jrgba(g, &(x->selectedcolor));
 			jgraphics_ellipse(g, 0, 0, 4, 4);
 			jgraphics_fill(g);
-			jbox_end_layer((t_object *)x, patcherview, l_stupid_little_point);
+			jbox_end_layer((t_object *)x, patcherview, l_small_point);
 		}
-		jbox_paint_layer((t_object *)x, patcherview, l_stupid_little_point, x->interp.x - 2, x->interp.y - 2);
+		jbox_paint_layer((t_object *)x, patcherview, l_small_point, x->interp.x - 2, x->interp.y - 2);
 	}
 }
 
@@ -301,8 +301,8 @@ void xy_float(t_xy *x, double f){
 			atom_setfloat(out, xy_scale(x->interp.x, 0, r.width, x->xmin, x->xmax));
 			atom_setfloat(out + 1, xy_scale(x->interp.y, r.width, 0, x->ymin, x->ymax));
 			outlet_list(x->interpOutlet, NULL, 2, out);
-			if(x->draw_stupid_little_point){
-				jbox_invalidate_layer((t_object *)x, x->patcherview, l_stupid_little_point);
+			if(x->draw_point){
+				jbox_invalidate_layer((t_object *)x, x->patcherview, l_small_point);
 				jbox_redraw(&(x->ob));
 			}
 			break;
@@ -1080,8 +1080,8 @@ int main(void){
 	CLASS_ATTR_LONG(c, "drawlabels", 0, t_xy, drawlabels);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawlabels", 0, "0");
 
-	CLASS_ATTR_LONG(c, "drawstupidlittlepoint", 0, t_xy, draw_stupid_little_point);
-	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawstupidlittlepoint", 0, "1");
+	CLASS_ATTR_LONG(c, "drawpoint", 0, t_xy, draw_point);
+	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "drawpoint", 0, "1");
 
 	CLASS_ATTR_LONG(c, "connect_points", 0, t_xy, connect_points);
 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "connect_points", 0, "0");
@@ -1095,7 +1095,7 @@ int main(void){
 
 	l_points = gensym("l_points");
 	l_background = gensym("l_background");
-	l_stupid_little_point = gensym("l_stupid_little_point");
+	l_small_point = gensym("l_small_point");
 
 	common_symbols_init();
 
