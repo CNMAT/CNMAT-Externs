@@ -1,7 +1,7 @@
 /*
 Written by John MacCallum and Ville Pulkki, The Center for New Music and Audio Technologies,
 University of California, Berkeley.  Copyright (c) 2006, The Regents of
-the University of California (Regents). 
+the University of California (Regents).
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
 licensing agreement, is hereby granted, provided that the above copyright
@@ -68,6 +68,10 @@ typedef struct _matrix {
 
 t_symbol *ps_fast, *ps_smooth, *ps_frame;
 
+/* workaround for jitlib.lib failure on windows */
+
+t_symbol *ps_jit_sym_class_jit_matrix, *ps_jit_sym_lock, *ps_jit_sym_getinfo, *ps_jit_sym_getdata, *ps_jit_sym_err_calculate, *ps_jit_sym_char, *ps_jit_sym_long , *ps_jit_sym_float32, *ps_jit_sym_float64;
+
 //t_int *matrix_perform_fast(t_int *w);
 //t_int *matrix_perform_smooth(t_int *w);
 //t_int *matrix_perform_frame(t_int *w);
@@ -87,15 +91,25 @@ void matrix_free(t_matrix *x);
 void matrix_slide(t_matrix *x, double slide);
 
 int main(void){
-	
+
 	ps_fast    = gensym("fast");
 	ps_smooth  = gensym("smooth");
 	ps_frame  = gensym("frame");
 
+	ps_jit_sym_class_jit_matrix = gensym("class_jit_matrix");
+	ps_jit_sym_lock = gensym("lock");
+	ps_jit_sym_getinfo = gensym("getinfo");
+	ps_jit_sym_getdata = gensym("getdata");
+	ps_jit_sym_err_calculate = gensym("err_calculate");
+	ps_jit_sym_char = gensym("char");
+	ps_jit_sym_long  = gensym("long");
+	ps_jit_sym_float32 = gensym("float32");
+	ps_jit_sym_float64 = gensym("float32");
+
 	matrix_class = class_new("cnmatrix~", (method)matrix_new, (method)matrix_free, (short)sizeof(t_matrix), 0L, A_GIMME, 0);
-    
+
     void *p = max_jit_classex_setup(calcoffset(t_matrix,obex));
-	
+
     class_addmethod(matrix_class, (method)matrix_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(matrix_class, (method)matrix_fast, "fast", A_GIMME, 0);
 	class_addmethod(matrix_class, (method)matrix_smooth, "smooth", A_GIMME, 0);
@@ -106,9 +120,9 @@ int main(void){
 	class_dspinit(matrix_class);
 
 	version_post_copyright();
-    
+
     max_jit_classex_standard_wrap(p,NULL,0);
-	
+
     class_register(CLASS_BOX, matrix_class);
 	return 0;
 }
@@ -132,27 +146,27 @@ void matrix_perform64_fast(t_matrix *x, t_object *dsp64, double **ins, long numi
     //t_int numOutlets = x->numOutlets;
     double *coeffptr = x->coeffLists;
     double coeff;
-    
+
     for(int i = 0; i < numouts; i++){
         //memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
         memset(outs[i], 0, n * sizeof(double));
     }
-    
+
     for(int j = 0; j < (numouts * numins); j++) {
         //outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
         //inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
         outptr = outs[(j % numouts)];
         inptr = ins[(j / numouts) % numins];
-        
-        coeff = *coeffptr++;
-        
+				coeff = *coeffptr++;
+
+
         for(int k = 0; k < n; k += 4) {
-            
+
             *outptr++ += coeff * *inptr++;
             *outptr++ += coeff * *inptr++;
             *outptr++ += coeff * *inptr++;
             *outptr++ += coeff * *inptr++;
-            
+
         }
     }
 }
@@ -171,35 +185,35 @@ void matrix_perform64_smooth(t_matrix *x, t_object *dsp64, double **ins, long nu
     double *inptr, *outptr;
     double *lasty = x->lasty;
     double tmp;
-    
+
     for(int i = 0; i < numouts; i++){
         //memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
         memset(outs[i], 0, n * sizeof(double));
     }
-    
+
     for(int j = 0; j < (numins * numouts); j++) {
         //outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
         //inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
         outptr = outs[j % numouts];
         inptr = ins[(j / numouts) % numins];
-        
+
         coeff = *coeffptr++;
-        
+
         for(int k = 0; k < n; k += 4) {
-            
+
             tmp = (*lasty + ((coeff - *lasty) / x->slide));
-            
+
             *outptr++ += tmp * *inptr++;
             *outptr++ += tmp * *inptr++;
             *outptr++ += tmp * *inptr++;
             *outptr++ += tmp * *inptr++;
-            
+
             if(fabsf(coeff - *lasty) < 10e-18){
                 *lasty = coeff;
             } else{
                 *lasty = tmp;
             }
-            
+
         }
         lasty++;
     }
@@ -219,14 +233,14 @@ void matrix_perform64_frame(t_matrix *x, t_object *dsp64, double **ins, long num
     double *coeffptr = x->coeffLists;
     double *inptr, *outptr;
     double *lasty = x->lasty;
-    
+
     for(int i = 0; i < numouts; i++){
         //memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
         memset(outs[i], 0, n * sizeof(double));
     }
-    
+
     //x->coeffLists[(in * x->numOutlets) + out] = gain;
-    
+
     for(int j = 0; j < numouts * numins; j++){
         //outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
         //inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
@@ -254,7 +268,7 @@ t_int *matrix_perform_fast(t_int *wAsT_int) {
 	t_int k, i, j;
 	t_int **w = (t_int **)wAsT_int;
 	t_matrix *x = (t_matrix *)(w[1]);
-	t_int n = (t_int)(w[2]);	
+	t_int n = (t_int)(w[2]);
 	// use integers to copy blocs faster: was suggested by David Z.
 	t_float **in = x->Inlets;
 	t_float **out = x->Outlets;
@@ -263,28 +277,28 @@ t_int *matrix_perform_fast(t_int *wAsT_int) {
 	t_int numInlets = x->numInlets;
 	t_int numOutlets = x->numOutlets;
 	t_float *coeffptr = x->coeffLists;
-	t_float coeff; 
-	
+	t_float coeff;
+
 	for(i = 0; i < numOutlets; i++){
 		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
-	
+
 	for(j = 0; j < (numOutlets * numInlets); j++) {
 		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
 		inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
-		
+
 		coeff = *coeffptr++;
-		
+
 		for(k = 0; k < n; k += 4) {
-			
+
 			*outptr++ += coeff * *inptr++;
 			*outptr++ += coeff * *inptr++;
 			*outptr++ += coeff * *inptr++;
 			*outptr++ += coeff * *inptr++;
-			
+
 		}
 	}
-	
+
 	return (wAsT_int+numInlets+numOutlets+3);
 }
 
@@ -300,7 +314,7 @@ t_int *matrix_perform_smooth(t_int *w) {
 	float *inptr, *outptr;
 	float *lasty = x->lasty;
 	float tmp;
-    
+
 	for(i = 0; i < numOutlets; i++){
 		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
@@ -308,27 +322,27 @@ t_int *matrix_perform_smooth(t_int *w) {
 	for(j = 0; j < (numOutlets * numInlets); j++) {
 		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
 		inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
-		
+
 		coeff = *coeffptr++;
 
 		for(k = 0; k < n; k += 4) {
-			
+
 			tmp = (*lasty + ((coeff - *lasty) / x->slide));
-			
+
 			*outptr++ += tmp * *inptr++;
 			*outptr++ += tmp * *inptr++;
 			*outptr++ += tmp * *inptr++;
 			*outptr++ += tmp * *inptr++;
-			
+
 			if(fabsf(coeff - *lasty) < 10e-18){
 				*lasty = coeff;
 			} else{
 				*lasty = tmp;
 			}
-			
+
 		}
 		lasty++;
-	}		
+	}
     */
 	/*
      object_post((t_object *)x, "***************");
@@ -355,7 +369,7 @@ t_int *matrix_perform_smooth(t_int *w) {
      }
      lasty++;
      }
-     
+
      for(i = 1; i < numInlets; i++){
      inptr = (float *)(w[i + 3]);
      for(j = 0; j < numOutlets; j++){
@@ -396,14 +410,14 @@ t_int *matrix_perform_frame(t_int *w) {
 	float *inptr, *outptr;
 	float *lasty = x->lasty;
 	float tmp;
-    
-    
+
+
 	for(i = 0; i < numOutlets; i++){
 		memset((float *)(w[numInlets + i + 3]), 0, n * sizeof(float));
 	}
-    
+
     //x->coeffLists[(in * x->numOutlets) + out] = gain;
-    
+
 	for(j = 0; j < numOutlets * numInlets; j++){
 		outptr = (float *)(w[(j % numOutlets) + numInlets + 3]);
 		inptr = (float *)(w[((j/numOutlets) % numInlets) + 3]);
@@ -431,15 +445,15 @@ void matrix_dsp64(t_matrix *x, t_object *dsp64, short *count, double samplerate,
     //t_int vs = maxvectorsize;
     //t_int i, num = x->numInlets + x->numOutlets; // number of Inlets and Outlets
     //t_int **w = x->w;
-    
+
     //w[0] = (t_int *)x;
     //w[1] = (t_int *)sp[0]->s_n;
-    
+
     //for (i=0; i<num; ++i)
       //  w[i+2] = (t_int *)sp[i]->s_vec;
-    
+
     //num += 2; // x and n
-    
+
     if (x->version == FAST) {
         object_method(dsp64, gensym("dsp_add64"), x, matrix_perform64_fast, 0, NULL);
     } else if (x->version == SMOOTH) {
@@ -452,7 +466,7 @@ void matrix_dsp64(t_matrix *x, t_object *dsp64, short *count, double samplerate,
 /*
 void matrix_dsp(t_matrix *x, t_signal **sp, short *connect) {
 	t_int vs = sys_getblksize();
-	t_int i, num = x->numInlets + x->numOutlets; // number of Inlets and Outlets 
+	t_int i, num = x->numInlets + x->numOutlets; // number of Inlets and Outlets
 	t_int **w = x->w;
 
 	w[0] = (t_int *)x;
@@ -460,7 +474,7 @@ void matrix_dsp(t_matrix *x, t_signal **sp, short *connect) {
 
 	for (i=0; i<num; ++i)
 		w[i+2] = (t_int *)sp[i]->s_vec;
-			
+
 	num += 2; // x and n
 
 	if (x->version == FAST) {
@@ -500,35 +514,34 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 	double *coeffptr,*oldcoeffptr;
 
 	coeffptr = x->coeffLists;
-	
     //post("%s %s", _jit_sym_class_jit_matrix->s_name, ps_jit_sym_class_jit_matrix->s_name);
 	if (argc&&argv) // YUK
     {
 		//find matrix
 		matrix = jit_object_findregistered(jit_atom_getsym(argv));
-		if (matrix && jit_object_method(matrix, _jit_sym_class_jit_matrix)){
+		if (matrix && jit_object_method(matrix, ps_jit_sym_class_jit_matrix)){
 			//calculate
-			in_savelock = (long) jit_object_method(matrix, _jit_sym_lock, 1);
-			jit_object_method(matrix, _jit_sym_getinfo, &in_minfo);
-			jit_object_method(matrix, _jit_sym_getdata, &in_bp);
-			if (!in_bp) { 
-				jit_error_sym(x, _jit_sym_err_calculate);
-				jit_object_method(matrix, _jit_sym_lock, in_savelock);
+			in_savelock = (long) jit_object_method(matrix, ps_jit_sym_lock, 1);
+			jit_object_method(matrix, ps_jit_sym_getinfo, &in_minfo);
+			jit_object_method(matrix, ps_jit_sym_getdata, &in_bp);
+			if (!in_bp) {
+				jit_error_sym(x, ps_jit_sym_err_calculate);
+				jit_object_method(matrix, ps_jit_sym_lock, in_savelock);
 				return;
 			}
-			//get dimensions/planecount 
+			//get dimensions/planecount
 			dimcount = in_minfo.dimcount;
 			for (i=0;i<dimcount;i++) {
 				dim[i] = in_minfo.dim[i];
-			}		
+			}
 			//calculate
 			n = dim[0];
 			rowstride = in_minfo.dimstride[1];
 			colstride = in_minfo.dimstride[0];
-						
-			if (in_minfo.type==_jit_sym_char) {
+
+			if (in_minfo.type==ps_jit_sym_char) {
 				for (j=0;j<dim[0];j++) {
-					ip = in_bp + j * in_minfo.dimstride[0];	
+					ip = in_bp + j * in_minfo.dimstride[0];
 					for (i=0;i<dim[1];i++){
 						jit_atom_setfloat(&(a_coord[i]), *((uchar *)ip));
 						ip += rowstride;
@@ -536,9 +549,9 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==_jit_sym_long) {
+			} else if (in_minfo.type==ps_jit_sym_long) {
 				for (j=0;j<dim[0];j++) {
-					ip = in_bp + j * in_minfo.dimstride[0];	
+					ip = in_bp + j * in_minfo.dimstride[0];
 					for (i=0;i<dim[1];i++){
 						jit_atom_setfloat(&(a_coord[i]), *((long *)ip));
 						ip += rowstride;
@@ -546,9 +559,9 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==_jit_sym_float32) {
+			} else if (in_minfo.type==ps_jit_sym_float32) {
 				for (j=0;j<dim[0];j++) {
-					ip = in_bp + j * in_minfo.dimstride[0];	
+					ip = in_bp + j * in_minfo.dimstride[0];
 					for (i=0;i<dim[1];i++){
 						jit_atom_setfloat(&(a_coord[i]), *((float *)ip));
 						//post("j = %d, i = %d, f = %f", j, i, *((float *)ip));
@@ -557,9 +570,9 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					}
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
-			} else if (in_minfo.type==_jit_sym_float64) {
+			} else if (in_minfo.type==ps_jit_sym_float64) {
 				for (j=0;j<dim[0];j++) {
-					ip = in_bp + j * in_minfo.dimstride[0];	
+					ip = in_bp + j * in_minfo.dimstride[0];
 					for (i=0;i<dim[1];i++){
 						jit_atom_setfloat(&(a_coord[i]), *((double *)ip));
 						ip += rowstride;
@@ -568,10 +581,10 @@ void jit_matrix(t_matrix *x, t_symbol *sym, long argc, t_atom *argv)
 					//matrix_list(x, NULL, dim[1], a_coord);
 				}
 			}
-			jit_object_method(matrix,_jit_sym_lock,in_savelock);
+			jit_object_method(matrix,ps_jit_sym_lock,in_savelock);
 		}
         else {
-            post("%p %p %s", matrix, jit_object_method(matrix, _jit_sym_class_jit_matrix), jit_atom_getsym(argv)->s_name);
+            post("%p %p %s", matrix, jit_object_method(matrix, ps_jit_sym_class_jit_matrix), jit_atom_getsym(argv)->s_name);
 		}
 	}
     else
@@ -674,7 +687,7 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
 		post("bailing");
 		return NULL;
 	}
-    
+
 	//t_float Fs = sys_getsr();
 	//t_float *fptr,*gptr, *nptr;
 	// Look at 1st argument
@@ -686,7 +699,7 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
 	if (argv[1].a_type == A_LONG) x->numOutlets = argv[1].a_w.w_long;
 	else if (argv[1].a_type == A_FLOAT) x->numOutlets = (int)argv[1].a_w.w_float;
 	else x->numOutlets = 2; // Just a default value
-		
+
 	// Look at 3rd argument
 	if (argv[2].a_w.w_sym == ps_fast) {
 		x->version = FAST;
@@ -695,11 +708,11 @@ void *matrix_new(t_symbol *s, short argc, t_atom *argv) {
     } else {
         x->version = SMOOTH; // smooth is default
     }
-    
+
 	//x->Inlets = malloc(x->numInlets * sizeof(t_float*));
 	//x->Outlets = malloc(x->numOutlets * sizeof(t_float*));
 	//x->w = malloc((x->numInlets + x->numOutlets + 2) * sizeof(t_int*));
-		
+
 	// Create inlets and outlets
 	dsp_setup((t_pxobject *)x, x->numInlets);
 	x->m_obj.z_misc = Z_NO_INPLACE; // Necessary when outlets should have different vectors than inlets !!
@@ -730,11 +743,11 @@ void  matrix_free(t_matrix *x) {
 	if(x->coeffLists){
 		free(x->coeffLists);
 	}
-    
+
     if(x->lasty) {
         free(x->lasty);
     }
-	
+
 }
 
 void matrix_slide(t_matrix *x, double slide){

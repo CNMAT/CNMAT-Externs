@@ -1,7 +1,7 @@
 /*
   Written by John MacCallum, The Center for New Music and Audio Technologies,
   University of California, Berkeley.  Copyright (c) 2009, The Regents of
-  the University of California (Regents). 
+  the University of California (Regents).
   Permission to use, copy, modify, distribute, and distribute modified versions
   of this software and its documentation without fee and without a signed
   licensing agreement, is hereby granted, provided that the above copyright
@@ -41,7 +41,7 @@
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
-#include "jpatcher_api.h" 
+#include "jpatcher_api.h"
 #include "jgraphics.h"
 #include "ext_critical.h"
 
@@ -130,15 +130,15 @@ double bdist_beta(t_bdist *x, double xx, double a, double b){
 
 void bdist_paint(t_bdist *x, t_object *patcherview){
 	t_rect rect;
-    
+
 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);
 	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
-        
+
 	jgraphics_set_source_jrgba(g, &(x->bordercolor));
 	jgraphics_set_line_width(g, 1);
 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
 	jgraphics_stroke(g);
-    
+
 	jgraphics_set_source_jrgba(g, &(x->bgcolor));
 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
 	jgraphics_fill(g);
@@ -472,7 +472,7 @@ void bdist_assist(t_bdist *x, void *b, long io, long index, char *s){
 	}
 }
 
-double bdist_scale(double f, double min_in, double max_in, double min_out, double max_out){	
+double bdist_scale(double f, double min_in, double max_in, double min_out, double max_out){
 	double m = (max_out - min_out) / (max_in - min_in);
 	double b = (min_out - (m * min_in));
 	return m * f + b;
@@ -518,20 +518,20 @@ Object and instance creation functions.
 
 void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 	t_bdist *x;
-    
- 	t_dictionary *d = NULL; 
- 	long boxflags; 
-    
-	// box setup 
-	if(!(d = object_dictionaryarg(argc, argv))){ 
-		return NULL; 
-	} 
-    
-	boxflags = 0 
-		| JBOX_DRAWFIRSTIN 
+
+ 	t_dictionary *d = NULL;
+ 	long boxflags;
+
+	// box setup
+	if(!(d = object_dictionaryarg(argc, argv))){
+		return NULL;
+	}
+
+	boxflags = 0
+		| JBOX_DRAWFIRSTIN
 		//| JBOX_NODRAWBOX
 		| JBOX_DRAWINLAST
-		//| JBOX_TRANSPARENT  
+		//| JBOX_TRANSPARENT
 		//      | JBOX_NOGROW
 		//| JBOX_GROWY
 		| JBOX_GROWBOTH
@@ -544,21 +544,21 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 		;
 
 	if((x = (t_bdist *)object_alloc(bdist_class))){
-		jbox_new((t_jbox *)x, boxflags, argc, argv); 
- 		x->ob.b_firstin = (void *)x; 
+		jbox_new((t_jbox *)x, boxflags, argc, argv);
+ 		x->ob.b_firstin = (void *)x;
 
 		x->info_outlet = outlet_new(x, NULL);
 		x->outlet = outlet_new(x, NULL);
 		x->proxies[1] = proxy_new((t_object *)x, 2, &(x->inlet));
 		x->proxies[0] = proxy_new((t_object *)x, 1, &(x->inlet));
 
-		// set up the random number generator	
+		// set up the random number generator
 		gsl_rng_env_setup();
 
 		// waterman14 was the fastest according to my tests
 		x->rng = gsl_rng_alloc((const gsl_rng_type *)gsl_rng_waterman14);
-	
-		// seed it by reading from /dev/random on mac os x and 
+
+		// seed it by reading from /dev/random on mac os x and
 		// something similar on windows
 		unsigned int r;
 		FILE *f;
@@ -569,9 +569,9 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 		fread(&r, sizeof(r), 1, f);
 		gsl_rng_set(x->rng, r);
 
-		// this is really fucking important.  if there's an error and the gsl's 
+		// this is really fucking important.  if there's an error and the gsl's
 		// default handler gets called, it aborts the program!
-		gsl_set_error_handler(bdist_errorHandler);  
+		gsl_set_error_handler(bdist_errorHandler);
 
 		critical_new(&(x->lock));
 
@@ -580,12 +580,12 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 		memset(x->hist, '\0', x->histbufsize * sizeof(double));
 		x->histpos = 0;
 		x->histlen = 0;
-        
+
 		attr_dictionary_process(x, d);
 		bdist_computeMoments(x);
 		object_attach_byptr_register(x, x, CLASS_BOX);
- 		jbox_ready((t_jbox *)x); 
-        
+ 		jbox_ready((t_jbox *)x);
+
 		return x;
 	}
 	return NULL;
@@ -594,10 +594,10 @@ void *bdist_new(t_symbol *msg, int argc, t_atom *argv){
 int main(void){
 	t_class *c = class_new("bdist", (method)bdist_new, (method)bdist_free, sizeof(t_bdist), 0L, A_GIMME, 0);
 
-	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
- 	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
-    
-	class_addmethod(c, (method)bdist_paint, "paint", A_CANT, 0); 
+	c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
+ 	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR);
+
+	class_addmethod(c, (method)bdist_paint, "paint", A_CANT, 0);
 	class_addmethod(c, (method)bdist_bang, "bang", 0);
 	class_addmethod(c, (method)bdist_int, "int", A_LONG, 0);
 	class_addmethod(c, (method)bdist_float, "float", A_FLOAT, 0);
@@ -607,22 +607,22 @@ int main(void){
 	class_addmethod(c, (method)bdist_mousedrag, "mousedrag", A_CANT, 0);
 	class_addmethod(c, (method)bdist_distlist, "distlist", A_GIMME, 0);
 	class_addmethod(c, (method)bdist_notify, "notify", A_CANT, 0);
-    
-	CLASS_STICKY_ATTR(c, "category", 0, "Color"); 
-    
- 	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_bdist, bgcolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, "1. 1. 1. 1."); 
- 	CLASS_ATTR_STYLE_LABEL(c, "bgcolor", 0, "rgba", "Background Color"); 
 
- 	CLASS_ATTR_RGBA(c, "linecolor", 0, t_bdist, linecolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "linecolor", 0, "0. 0. 0. 1."); 
- 	CLASS_ATTR_STYLE_LABEL(c, "linecolor", 0, "rgba", "Line Color"); 
+	CLASS_STICKY_ATTR(c, "category", 0, "Color");
 
- 	CLASS_ATTR_RGBA(c, "bordercolor", 0, t_bdist, bordercolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bordercolor", 0, "0. 0. 0. 1."); 
- 	CLASS_ATTR_STYLE_LABEL(c, "bordercolor", 0, "rgba", "Border Color"); 
-    
-	CLASS_STICKY_ATTR_CLEAR(c, "category"); 
+ 	CLASS_ATTR_RGBA(c, "bgcolor", 0, t_bdist, bgcolor);
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bgcolor", 0, "1. 1. 1. 1.");
+ 	CLASS_ATTR_STYLE_LABEL(c, "bgcolor", 0, "rgba", "Background Color");
+
+ 	CLASS_ATTR_RGBA(c, "linecolor", 0, t_bdist, linecolor);
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "linecolor", 0, "0. 0. 0. 1.");
+ 	CLASS_ATTR_STYLE_LABEL(c, "linecolor", 0, "rgba", "Line Color");
+
+ 	CLASS_ATTR_RGBA(c, "bordercolor", 0, t_bdist, bordercolor);
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bordercolor", 0, "0. 0. 0. 1.");
+ 	CLASS_ATTR_STYLE_LABEL(c, "bordercolor", 0, "rgba", "Border Color");
+
+	CLASS_STICKY_ATTR_CLEAR(c, "category");
 
 	CLASS_ATTR_DOUBLE(c, "a", 0, t_bdist, a);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "a", 0, "2.0");
@@ -651,8 +651,8 @@ int main(void){
 	CLASS_ATTR_LONG(c, "drawhist", 0, t_bdist, drawhist);
 	CLASS_ATTR_DEFAULTNAME_SAVE(c, "drawhist", 0, "0");
 	CLASS_ATTR_STYLE_LABEL(c, "drawhist", 0, "onoff", "Draw History");
-	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 300. 100."); 
-    
+	CLASS_ATTR_DEFAULT(c, "patching_rect", 0, "0. 0. 300. 100.");
+
 	class_register(CLASS_BOX, c);
 	bdist_class = c;
 
