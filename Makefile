@@ -78,10 +78,15 @@ SDIFOBJECTS = $(foreach f, $(SDIFOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 SDIFDEPSNAMES = sdif-buf sdif-mem sdif-sinusoids sdif-types sdif-util sdif sdif-interp-implem sdif-interp
 SDIFDEPS = $(foreach f, $(SDIFDEPSNAMES), $(BUILDDIR)/$(f).o)
 
+SPHYOBJECTNAMES = sphY
+SPHYOBJECTS = $(foreach f, $(SPHYOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
+SPHYDEPSNAMES = legendre_a sh_normalization sh
+SPHYDEPS = $(foreach f, $(SPHYDEPSNAMES), $(BUILDDIR)/$(f).o)
+
 #win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) #$(SDIFOBJECTS)
 win: $(SIMPLEOBJECTS)
 #win64: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) #$(SDIFOBJECTS)
-win64: $(SIMPLEOBJECTS)
+win64: $(SPHYOBJECTS)
 
 # Single file dependencies--just compile and stick the .o files in the build dir
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
@@ -120,6 +125,9 @@ $(BUILDDIR)/myPrintOSCpacket.o: $(BUILDDIR)
 $(SDIFDEPS): $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ ../CNMAT-SDIF/lib$(subst $(BUILDDIR),,$(subst .o,,$@)).c
 
+$(SPHYDEPS): $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@) $(SRCDIR)/sphY/$(subst $(BUILDDIR),,$(subst .o,,$@)).c
+
 $(BUILDDIR)/open-sdif-file.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/open-sdif-file.o utility-library/search-path/open-sdif-file.c
 
@@ -155,6 +163,10 @@ $(JEHANOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE) #$
 $(SDIFOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(SDIFDEPS) $(BUILDDIR)/open-sdif-file.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
 	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(SDIFDEPS) $(BUILDDIR)/open-sdif-file.o $(LIBS)
+
+$(SPHYOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(SPHYDEPS) $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(SPHYDEPS) $(LIBS)
 
 $(BUILDDIR)/OSC-route.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
