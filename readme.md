@@ -166,9 +166,54 @@ git clone https://github.com/Cycling74/max-sdk
 
 ### 5. libo and libomax
 
-build libo and libomax first, then finally:
+#### libo
+To build for Windows 64bit, enter the `libo` directory and do:
+```
+make win64
+```
+This will compile the library with the win64 tool chain, and create a `libo.a` file in the `/libo/libs/x86_64` folder.
+
+Then to build the Windows 32bit version of the library do:
+```
+make clean
+make win
+```
+This will  compile the library with the win64 tool chain, and create a `libo.a` file in the `/libo/libs/i686` folder.
+
+Note we need to `make clean` before building the new version, otherwise the library will be created with the already complied `.o` files.
+
+#### libomax
+
+Then do the same for the `libomax` library: enter the `libomax` directory and do:
+```
+make win64
+```
+This will  compile the library with the win64 tool chain, and create a `libomax.a` file in the `/libomax/libs/x86_64` folder.
+
+Then to build the Windows 32bit version of the library do:
+```
+make clean
+make win
+```
+This will  compile the library with the win64 tool chain, and create a `libomax.a` file in the `/libomax/libs/i686` folder.
 
 ### 6. build CNMAT-Externs
+
+Finally we are ready to build the CNMAT-Externals for Windows 64 and 32 bit!
+
+To build for Windows 64bit, enter the `CNMAT-Externs` directory and do:
+```
+make clean
+make win64
+```
+
+To build for Windows 32bit, enter the `CNMAT-Externs` directory and do:
+```
+make clean
+make win
+```
+
+The built objects will be in the `/build/Release` folder.
 
 
 
