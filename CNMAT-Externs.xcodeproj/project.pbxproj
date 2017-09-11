@@ -5419,7 +5419,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5446,7 +5446,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6005,7 +6005,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6032,7 +6032,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7925,14 +7925,14 @@
 				DSTROOT = "$(PROJECT_DIR)/build";
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/Frameworks,
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "../max6-sdk/c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../max-sdk/source/c74support/max-includes/macho-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -7945,9 +7945,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
 					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
@@ -7966,10 +7966,10 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7988,14 +7988,14 @@
 				DSTROOT = "$(PROJECT_DIR)/build";
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/Frameworks,
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREFIX_HEADER = "../max6-sdk/c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../max-sdk/source/c74support/max-includes/macho-prefix.pch";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
@@ -8003,9 +8003,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
 					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
@@ -8024,9 +8024,9 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = mxo;
 			};
