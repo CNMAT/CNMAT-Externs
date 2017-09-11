@@ -69,6 +69,7 @@ select and install the following:
 * `wget` : Utility to retrieve files from the WWW via HTTP and FTP
 * `flex` : A fast lexical analyzer generator
 * `bison` : GNU yacc-compatible parser generator
+* `zip` : Info-ZIP compression utility (for making the CNMAT-Externals release)
 
 (to select for installation, click the `Skip` icon which should then change to the version number)
 
@@ -215,6 +216,7 @@ make win
 
 The built objects will be in the `/build/Release` folder.
 
-
+There are two scripts for creating the release for Windows 32 and 64 bit:
+`make-release-win.sh` and `make-release-win64.sh`.
 
 *-- Rama Gottfried / Jeff Lubow*, 11/19/14, updated Sept 2017
