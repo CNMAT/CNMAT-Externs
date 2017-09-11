@@ -50,6 +50,21 @@ Build `libo` first, and then `libomax`, using the `make`.
 
 More details can be found [here](https://github.com/CNMAT/libo/blob/master/doc/libo-documentation/odot-build-setup.txt).
 
+### 5. build CNMAT-Externs
+
+Finally we are ready to build the CNMAT-Externals!
+
+To build for Mac, enter the `CNMAT-Externs` directory and do:
+```
+make
+```
+
+The built objects will be in the `/build/Release` folder.
+
+To create the CNMAT-Externals release package, run the release script:
+`./make-release-mac.sh`.
+
+
 
 # WINDOWS
 
@@ -219,6 +234,6 @@ make win
 The built objects will be in the `/build/Release` folder.
 
 There are two scripts for creating the release for Windows 32 and 64 bit:
-`make-release-win.sh` and `make-release-win64.sh`.
+`./make-release-win.sh` and `./make-release-win64.sh`.
 
 *-- Rama Gottfried / Jeff Lubow*, 11/19/14, updated Sept 2017
