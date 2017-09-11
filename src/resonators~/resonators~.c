@@ -32,8 +32,8 @@ University of California, Berkeley.
 
 
 /*
-	©1988,1989,2005,2006,2007 Adrian Freed
-	©1999, 2005 UC Regents, All Rights Reserved. 
+	ï¿½1988,1989,2005,2006,2007 Adrian Freed
+	ï¿½1999, 2005 UC Regents, All Rights Reserved. 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: resonators~
 DESCRIPTION: Parallel bank of resonant filters
@@ -2208,8 +2208,6 @@ void resonators_tellmeeverything(t_resonators *x)
 //	int i;
 	
 	version(x);
-	object_post((t_object *)x, "Copyright (C) 1986, 1987 Adrian Freed");
-
 
 	if (x->interpolating) {
 		object_post((t_object *)x, "  Smooth mode: parameter changes interpolated over time");
@@ -2217,10 +2215,9 @@ void resonators_tellmeeverything(t_resonators *x)
 		object_post((t_object *)x, "  Fast mode: no interpolation, more efficient");
 	}
 
-	post("%s\n%s\n Max resonances: %d, currently computing  %d",
-	x->interpolating?"  Smooth mode: parameter changes interpolated over time":"  Fast mode: no interpolation, more efficient",
-	//x->doubling?"  Double precision mode":"",
-	 MAXRESONANCES, x->nres);
+    object_post((t_object *)x, "  Max resonances: %d", MAXRESONANCES );
+    object_post((t_object *)x, "  Currently computing %d resonances", x->nres );
+
 }
 
 
