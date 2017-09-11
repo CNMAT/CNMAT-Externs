@@ -10,7 +10,6 @@ do
 done
 
 # force-copy an old version of resonators~
-# cp -f kludge/resonators~.mxe CNMAT-Externals/externals
-# this is no longer needed AFAICT, rama (sept 2017)
+cp -f kludge/resonators~.mxe CNMAT-Externals/externals
 
 zip -r $archive_name CNMAT-Externals && rm -r CNMAT-Externals
