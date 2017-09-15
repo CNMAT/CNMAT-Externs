@@ -1,5 +1,4 @@
-versionStr=`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`
-archive_name=CNMAT_Externals-$(versionStr)-Max-Win32-.zip
+archive_name=CNMAT_Externals-Max-Win32-`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`.zip
 dirs=(help media misc)
 
 mkdir CNMAT-Externals && mkdir CNMAT-Externals/externals
