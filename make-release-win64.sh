@@ -9,4 +9,8 @@ do
 	[ -e $f ] && cp -r $f CNMAT-Externals
 done
 
+python make-package-info.py
+
+cp package-info.json CNMAT-Externals
+
 zip -r $archive_name CNMAT-Externals && rm -r CNMAT-Externals

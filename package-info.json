@@ -1,0 +1,108 @@
+{
+    "website": "http://cnmat.berkeley.edu", 
+    "versions": null, 
+    "displayname": "", 
+    "description": "A collection of Max tools created by researchers at CNMAT in Berkeley, CA.", 
+    "installdate": 3536015897, 
+    "author": "CNMAT", 
+    "max_version_max": "none", 
+    "filelist": {
+        "media": [
+            "Cbass.res.sdif", 
+            "lick5.sdif", 
+            "moanin.add.sdif"
+        ], 
+        "misc": [
+            "firbank~.16band-512pt.wav", 
+            "rbfihelp.json"
+        ], 
+        "externals": [], 
+        "help": [
+            "2threshattack~.maxhelp", 
+            "accumulate~.maxhelp", 
+            "analyzer~.maxhelp", 
+            "basicresonators~.maxhelp", 
+            "bdist.maxhelp", 
+            "bench.maxhelp", 
+            "bench~.maxhelp", 
+            "bessel.maxhelp", 
+            "bpf.maxhelp", 
+            "brightness~.maxhelp", 
+            "cnmatrix~.maxhelp", 
+            "decaying-sinusoids~.maxhelp", 
+            "deinterleave.maxhelp", 
+            "firbank~.maxhelp", 
+            "gridpanel.maxhelp", 
+            "harmonics~.maxhelp", 
+            "interleave.maxhelp", 
+            "lcm.maxhelp", 
+            "list-accum.maxhelp", 
+            "list-interpolate.maxhelp", 
+            "loudness~.maxhelp", 
+            "midifile.maxhelp", 
+            "migrator.maxhelp", 
+            "OpenSoundControl.maxhelp", 
+            "OSC-route.maxhelp", 
+            "OSC-schedule.maxhelp", 
+            "OSC-timetag.maxhelp", 
+            "oscillators~.maxhelp", 
+            "peqbank~.maxhelp", 
+            "pitch~.maxhelp", 
+            "poly.bus~.maxhelp", 
+            "poly.send~.maxhelp", 
+            "printit.maxhelp", 
+            "randdist.maxhelp", 
+            "rbfi.maxhelp", 
+            "res-transform.maxhelp", 
+            "resdisplay.maxhelp", 
+            "resonators~.maxhelp", 
+            "roughness.maxhelp", 
+            "SDIF-buffer.maxhelp", 
+            "SDIF-fileinfo.maxhelp", 
+            "SDIF-info.maxhelp", 
+            "SDIF-listpoke.maxhelp", 
+            "SDIF-ranges.maxhelp", 
+            "SDIF-tuples.maxhelp", 
+            "sin-transform.maxhelp", 
+            "sinusoids~.maxhelp", 
+            "slipOSC.maxhelp", 
+            "sphY.maxhelp", 
+            "thread.fork.maxhelp", 
+            "thread.join.maxhelp", 
+            "threefates.maxhelp", 
+            "trampoline.maxhelp", 
+            "trend-report.maxhelp", 
+            "vsnapshot~.maxhelp", 
+            "waveguide~.maxhelp", 
+            "whichthread.maxhelp", 
+            "xydisplay.maxhelp"
+        ]
+    }, 
+    "c74install": 1, 
+    "homepatcher": null, 
+    "extends": "", 
+    "extensible": 0, 
+    "version": "1.0.1-17-g0625301-master", 
+    "authors": [], 
+    "readme": "", 
+    "max_version_min": "none", 
+    "tags": [], 
+    "os": {
+        "windows": {
+            "platform": [
+                "ia32", 
+                "x64"
+            ], 
+            "min_version": "7"
+        }, 
+        "macintosh": {
+            "platform": [
+                "ia32", 
+                "x64"
+            ], 
+            "min_version": "10.7.x"
+        }
+    }, 
+    "categories": [], 
+    "name": "CNMAT Externals"
+}

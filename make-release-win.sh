@@ -1,4 +1,5 @@
-archive_name=CNMAT_Externals-Max-Win32-`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`.zip
+versionStr=`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`
+archive_name=CNMAT_Externals-$(versionStr)-Max-Win32-.zip
 dirs=(help media misc)
 
 mkdir CNMAT-Externals && mkdir CNMAT-Externals/externals
@@ -12,5 +13,7 @@ done
 # force-copy an old version of resonators~
 # cp -f kludge/resonators~.mxe CNMAT-Externals/externals
 # this is no longer needed AFAICT, rama (sept 2017)
+python make-package-info.py
 
+cp package-info.json CNMAT-Externals
 zip -r $archive_name CNMAT-Externals && rm -r CNMAT-Externals
