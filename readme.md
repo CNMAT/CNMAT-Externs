@@ -225,13 +225,14 @@ make clean
 make win64
 ```
 
-To build for Windows 32bit, enter the `CNMAT-Externs` directory and do:
+To build for Windows 32bit, while in the `CNMAT-Externs` directory do:
 ```
-make clean
 make win
 ```
 
 The built objects will be in the `/build/Release` folder.
+
+Note that we don't need/want to `make clean` this time, since the Windows makefile routine cleans out the `.o` files but leaves the other platform Max object files (i.e. when building `.mxe64` the script leaves the `.mxe` objects in place). For the final step of making the release, it's simpler to have both platforms pre-built.
 
 There are two scripts for creating the release for Windows 32 and 64 bit:
 `./make-release-win.sh` and `./make-release-win64.sh`.
