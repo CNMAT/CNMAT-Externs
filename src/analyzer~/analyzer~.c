@@ -111,7 +111,7 @@
 #define DEFDELAY 0			// Default initial delay (in # of signal vectors) 
 #define DEFNPITCH 1			// Default number of pitches to output
 #define DEFNPEAKANAL 20		// Default number of peaks to analyse 
-#define DEFNPEAKOUT 0		// Default number of peaks to output
+#define DEFNPEAKOUT 1		// Default number of peaks to output
 #define DEFNPARTIAL 7		// Default number of partials for threshold
 #define DEFAMPLO 40			// Default Low attack threshold
 #define DEFAMPHI 50			// Default High attack threshold
@@ -1571,7 +1571,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_vibdepth = DEFVIBDEPTH;
 	x->x_npartial = DEFNPARTIAL;
 	x->x_attackvalue = 0;
-
+    
 	// More initializations from Fiddle~
 	for (i=0; i<MAXNPITCH; i++) {
 		x->x_hist[i].h_pitch = x->x_hist[i].h_noted = 0.0;
@@ -1642,12 +1642,10 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_oscout = outlet_new((t_object *)x, "FullPacket");
 	
 	// Make an outlet for peaks out
-	if (x->x_npeakout)
-		x->x_peakout = listout((t_object *)x); // one list out
+    x->x_peakout = listout((t_object *)x); // one list out
 
  	// One outlet for fundamental & amplitude raw values
-	if (x->x_npitch)
-		x->x_pitchout = listout((t_object *)x);
+    x->x_pitchout = listout((t_object *)x);
 
 	// Make bang outlet for onset detection
 	x->x_attackout = bangout((t_object *)x);
@@ -1960,6 +1958,7 @@ t_max_err analyzer_numpeakstooutput_set(t_analyzer *x, t_object *attr, long argc
 		object_error((t_object *)x, "# of peaks to output (%d) must not be larger than the # of peaks to analyze (%d).  Setting the former to the latter.", x->x_npeakout, x->x_npeakanal);
 		x->x_npeakout = x->x_npeakanal;
 	}
+    return e;
 }
 
 t_max_err analyzer_barkformat_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
