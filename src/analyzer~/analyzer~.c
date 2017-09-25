@@ -567,6 +567,7 @@ void analyzer_tellmeeverything(t_analyzer *x) {
 	object_post((t_object *)x, "Analyzer~ state:");
 	
 	TELLi(BufSize);
+    TELLi(FFTSize);
 	TELLi(BufWritePos);
 	TELLp(Buf1);
 	TELLp(Buf2);
@@ -877,7 +878,7 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 				if(ph->h_pitch){
 					t_osc_msg_u *hz = osc_message_u_alloc();
 					t_osc_msg_u *amp = osc_message_u_alloc();
-					char buf[16];
+					char buf[64];
 					sprintf(buf, "/pitch/raw/hz/%d", i);
 					osc_message_u_setAddress(hz, buf);
 					osc_message_u_appendDouble(hz, ph->h_pitches[x->x_histphase]);
@@ -910,7 +911,7 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 				if(ph->h_pitch){
 					t_osc_msg_u *hz = osc_message_u_alloc();
 					t_osc_msg_u *midi = osc_message_u_alloc();
-					char buf[16];
+					char buf[64];
 					sprintf(buf, "/pitch/cooked/midi/%d", i);
 					osc_message_u_setAddress(hz, buf);
 					osc_message_u_appendDouble(hz, ph->h_pitch);
@@ -927,11 +928,11 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 			if(ph->h_pitch){
 				t_osc_msg_u *hz = osc_message_u_alloc();
 				t_osc_msg_u *midi = osc_message_u_alloc();
-				osc_message_u_setAddress(hz, "/pitch/cooked/hz");
+				osc_message_u_setAddress(hz, "/pitch/cooked/midi");
 				osc_message_u_appendDouble(hz, ph->h_pitch);
 				osc_bundle_u_addMsg(bndl, hz);
 
-				osc_message_u_setAddress(midi, "/pitch/cooked/midi");
+				osc_message_u_setAddress(midi, "/pitch/cooked/hz");
 				osc_message_u_appendDouble(midi, mtof(ph->h_pitch));
 				osc_bundle_u_addMsg(bndl, midi);
 			}
