@@ -88,7 +88,7 @@
 #include <Accelerate/Accelerate.h> // to get veclib
 #endif
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define debug if (x->x_debug) post
 #else
@@ -197,6 +197,9 @@ double (*window_functions[windowcount])(int, int) = {rect_w, hanning_w, hamming_
 
 char *window_names[windowcount] = {"rectangular", "hanning", "hamming", "blackman62", "blackman70", "blackman74", "blackman92"};
 t_symbol *window_names_s[windowcount];
+
+char *fft_size_strings[12] = {"32", "64", "128", "256", "512", "1024", "2048", "4096", "8192", "16384", "32768", "65536" };
+t_symbol *fft_size_names[12];
 
 // Some structures from Fiddle~
 typedef struct peakout {    // a peak for output
@@ -316,7 +319,7 @@ typedef struct _analyzer {
 
 	t_osc_timetag timetag; // the time reported by gettimeofday---used to create timestamps for outgoing OSC packets
 	uint64_t svctr; // the signal vector number---used to create timestamps for outgoing OSC packets
-
+    
 } t_analyzer;
 
 t_symbol *ps_rectangular, *ps_hanning, *ps_hamming, *ps_blackman62, *ps_blackman70, *ps_blackman74, *ps_blackman92, *ps_list, *ps_nolist, *ps_FullPacket, *ps_linear, *ps_log;
@@ -372,6 +375,7 @@ void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numin
 		x->timetag = osc_timetag_now();
 	}
 
+    critical_enter(x->lock);
 	long n = x->BufSize; // make a copy of this---it could change
 	if(x->x_counter < 1){
 		int index = 0;
@@ -401,6 +405,7 @@ void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numin
 		x->x_counter--;
 	}
 	x->svctr++;
+    critical_exit(x->lock);
 }
 
 t_int *analyzer_perform(t_int *w)
@@ -1400,7 +1405,7 @@ long log2max(long n) {
 	return power;
 }
 
-void  analyzer_free(t_analyzer *x)
+void analyzer_free(t_analyzer *x)
 {
 
 	dsp_free((t_pxobject *)x);
@@ -1408,8 +1413,8 @@ void  analyzer_free(t_analyzer *x)
 
 	//if (x->memFFT != NULL) sysmem_freeptr((char *) x->memFFT);
 
-	if (x->Buf1 != NULL) sysmem_freeptr((char *) x->Buf1);
-	if (x->Buf2 != NULL) sysmem_freeptr((char *) x->Buf2);
+	if (x->Buf1 != NULL) free(x->Buf1);
+	if (x->Buf2 != NULL) free(x->Buf2);
 	if (x->BufFFT_in != NULL) fftw_free((char *) x->BufFFT_in);
 	if (x->BufFFT_out != NULL) fftw_free((char *) x->BufFFT_out);
 	if (x->BufPower != NULL) sysmem_freeptr((char *) x->BufPower);
@@ -1424,7 +1429,7 @@ void  analyzer_free(t_analyzer *x)
 	if(x->windows){
 		for(int i = 0; i < windowcount; i++){
 			if(x->windows[i]){
-				sysmem_freeptr(x->windows[i]);
+				free(x->windows[i]);
 			}
 		}
 		//sysmem_freeptr(x->windows);
@@ -1450,6 +1455,11 @@ int main(void)
 		window_names_s[i] = gensym(window_names[i]);
 	}
 
+    for( int i = 0; i < 12; i++)
+    {
+        fft_size_names[i] = gensym(fft_size_strings[i]);
+    }
+    
 	ps_list = gensym("list");
 	ps_nolist = gensym("nolist");
 	ps_linear = gensym("linear");
@@ -1490,6 +1500,7 @@ int main(void)
 	CLASS_ATTR_ACCESSORS(analyzer_class, "fftsize", NULL, analyzer_fftsize_set);
 	CLASS_ATTR_LABEL(analyzer_class, "fftsize", 0, "FFT Size");
 
+    
 	CLASS_ATTR_SYM(analyzer_class, "windowtype", 0, t_analyzer, windname_dummy);
 	CLASS_ATTR_ACCESSORS(analyzer_class, "windowtype", analyzer_windowtype_get, analyzer_windowtype_set);
 	CLASS_ATTR_LABEL(analyzer_class, "windowtype", 0, "Window Type");
@@ -1538,10 +1549,8 @@ int main(void)
 }
 
 void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
-	long i, j, band=0, oldband=0, sizeband=0;
-	long vs = sys_getblksize(); // get vector size
-	double freq = 0.0, oldfreq = 0.0;
-	t_analyzer *x = (t_analyzer *)object_alloc(analyzer_class);
+
+    t_analyzer *x = (t_analyzer *)object_alloc(analyzer_class);
 	if(!x){
 		return NULL;
 	}
@@ -1573,84 +1582,114 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->x_npartial = DEFNPARTIAL;
 	x->x_attackvalue = 0;
     
+    x->x_output = -1;
+    
 	// More initializations from Fiddle~
-	for (i=0; i<MAXNPITCH; i++) {
+	for (int i=0; i<MAXNPITCH; i++) {
 		x->x_hist[i].h_pitch = x->x_hist[i].h_noted = 0.0;
 		x->x_hist[i].h_age = 0;
 		x->x_hist[i].h_wherefrom = NULL;
 		
-		for (j=0; j<HISTORY; j++)
+		for (int j=0; j<HISTORY; j++)
 			x->x_hist[i].h_amps[j] = x->x_hist[i].h_pitches[j] = 0.0;
 	}
         
-	for (i=0; i<HISTORY; i++){
+	for (int i=0; i<HISTORY; i++){
 		x->x_dbs[i] = 0.0;
 	}
 
-	for(int i = 0; i < windowcount; i++){
-		x->windows[i] = (double *)sysmem_newptr(MAXBUFSIZE * sizeof(double));
-		memset(x->windows[i], '\0', MAXBUFSIZE * sizeof(double));
-	}
-	// the actual windows will be computed when the buffersize setter is called
-
+	
 	t_dictionary *attrs = dictionary_new();
 
 	t_symbol *attrnames[] = {gensym("buffersize"), gensym("hopsize"), gensym("fftsize"), gensym("windowtype"), gensym("initialdelay"), gensym("numpitches"), gensym("numpeakstofind"), gensym("numpeakstooutput"), gensym("barkformat")};
 
-	// get the attributes in order to see if buffersize and hopsize are both specified.
-	// if buffersize is and hopsize isn't, set hopsize to buffersize / 2
+
+    // get number of arguments (non-attributes)
 	int ac = attr_args_offset(argc, argv);
+    
+    // set user defined attrs into dictionary
 	attr_args_dictionary(attrs, argc, argv);
+    
+    if( dictionary_hasentry(attrs, attrnames[0]) && ac > 0 )
+    {
+        object_error((t_object*)x, "buffersize was set twice, please use either attribute or argument, but not both.");
+        return NULL;
+    }
+    else if( dictionary_hasentry(attrs, attrnames[1]) && ac > 1 )
+    {
+        object_error((t_object*)x, "hopsize was set twice, please use either attribute or argument, but not both.");
+        return NULL;
+    }
+    else if( dictionary_hasentry(attrs, attrnames[2]) && ac > 2 )
+    {
+        object_error((t_object*)x, "fftsize was set twice, please use either attribute or argument, but not both.");
+        return NULL;
+    }
 
-	int have_buffersize = dictionary_hasentry(attrs, gensym("buffersize")) || ac > 0;
-	int have_hopsize = dictionary_hasentry(attrs, gensym("hopsize")) || ac > 1;
-	int have_fftsize = dictionary_hasentry(attrs, gensym("fftsize")) || ac > 2;
+    // put legacy arguments into attr dict (overriding existing attributes, maybe should add more warnings above)
+    for( int i = 0; i < ac; i++ )
+        dictionary_appendatom(attrs, attrnames[i], argv + i);
+    
 
-	// overwrite everything with defaults
-	dictionary_appendlong(attrs, attrnames[0], DEFBUFSIZE);
-	dictionary_appendlong(attrs, attrnames[1], DEFBUFSIZE / 2);
-	dictionary_appendlong(attrs, attrnames[2], DEFBUFSIZE);
-	dictionary_appendsym(attrs, attrnames[3], window_names_s[DEFWIN]);
-	dictionary_appendlong(attrs, attrnames[4], DEFDELAY);
-	dictionary_appendlong(attrs, attrnames[5], DEFNPITCH);
-	dictionary_appendlong(attrs, attrnames[6], DEFNPEAKANAL);
-	dictionary_appendlong(attrs, attrnames[7], DEFNPEAKOUT);
-	dictionary_appendsym(attrs, attrnames[8], ps_list);
+    
+    // get the attributes in order to see if buffersize and hopsize are both specified.
+    // if buffersize is and hopsize isn't, set hopsize to buffersize / 2
+    
+    t_atom_long val;
+    
+    if( !dictionary_hasentry(attrs, attrnames[0]) )
+        dictionary_appendlong(attrs, attrnames[0], DEFBUFSIZE);
+    
+    dictionary_getlong(attrs, attrnames[0], &val);
+    x->BufSize = val;
+    
+    if( !dictionary_hasentry(attrs, attrnames[1]) )
+        dictionary_appendlong(attrs, attrnames[1], x->BufSize / 2);
+    
+    dictionary_getlong(attrs, attrnames[1], &val);
+    x->x_hop = val;
 
-	// non-attribute legacy param list
-	for(int i = 0; i < ac; i++){
-		dictionary_appendatom(attrs, attrnames[i], argv + i);
-	}
+    
+    if( !dictionary_hasentry(attrs, attrnames[2]) )
+        dictionary_appendlong(attrs, attrnames[2], x->BufSize );
+    
+    dictionary_getlong(attrs, attrnames[2], &val);
+    x->FFTSize = val;
 
-	// replace defaults and legacy params passed as a list with the attributes
-	attr_args_dictionary(attrs, argc, argv);
 
-	if(have_buffersize && !have_hopsize){
-		x->x_hop = x->BufSize / 2;
-	}
-	if(have_buffersize && !have_fftsize){
-		x->FFTSize = x->BufSize;
-	}
-	attr_dictionary_process(x, attrs);
-	object_free(attrs);
+    if( !dictionary_hasentry(attrs, attrnames[3]) )
+        dictionary_appendsym(attrs, attrnames[3], window_names_s[DEFWIN]);
+    
+    if( !dictionary_hasentry(attrs, attrnames[4]) )
+        dictionary_appendlong(attrs, attrnames[4], DEFDELAY);
+	
+    if( !dictionary_hasentry(attrs, attrnames[5]) )
+        dictionary_appendlong(attrs, attrnames[5], DEFNPITCH);
+	
+    if( !dictionary_hasentry(attrs, attrnames[6]) )
+        dictionary_appendlong(attrs, attrnames[6], DEFNPEAKANAL);
+	
+    dictionary_getlong(attrs, attrnames[6], &val);
+    x->x_npeakanal = val;
+    
+    if( !dictionary_hasentry(attrs, attrnames[7]) )
+        dictionary_appendlong(attrs, attrnames[7], DEFNPEAKOUT);
+    
+    dictionary_getlong(attrs, attrnames[7], &val);
+    x->x_npeakout = val;
+	
+    if( !dictionary_hasentry(attrs, attrnames[8]) )
+        dictionary_appendsym(attrs, attrnames[8], ps_list);
+
+    
 
 	if (x->x_npeakout > x->x_npeakanal) {
 		object_error((t_object *)x, "Analyzer~: '# of peaks to output' (%d) must not be larger than '# of peaks to analyze' (%d).  Setting the former to the latter.\n", x->x_npeakout, x->x_npeakanal);
 		x->x_npeakout = x->x_npeakanal;
 	}
 
-	// Make an outlet for OSC out
-	x->x_oscout = outlet_new((t_object *)x, "FullPacket");
-	
-	// Make an outlet for peaks out
-    x->x_peakout = listout((t_object *)x); // one list out
-
- 	// One outlet for fundamental & amplitude raw values
-    x->x_pitchout = listout((t_object *)x);
-
-	// Make bang outlet for onset detection
-	x->x_attackout = bangout((t_object *)x);
-	
+		
+    /*
 	if (x->BufSize < vs) { 
 		object_error((t_object *)x, "Analyzer~: Buffer size (%d) is smaller than the vector size, %d.  Setting buffer size to the signal vector size.\n", x->BufSize, vs);
 		x->BufSize = vs;
@@ -1660,7 +1699,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	}
 	
 	if (x->FFTSize < x->BufSize) {
-		object_error((t_object *)x, "Analyzer~: FFT size (%d) must be less than the buffer size, %d. Setting FFT size to buffer size.\n", x->FFTSize, x->BufSize);
+		object_error((t_object *)x, "Analyzer~: FFT size (%d) cannot be less than the buffer size, %d. Setting FFT size to buffer size.\n", x->FFTSize, x->BufSize);
 		x->FFTSize = x->BufSize;
 	}
 
@@ -1677,6 +1716,9 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 		object_error((t_object *)x, "Analyzer~: Maximum FFT size is %d samples.  Setting FFT size to %d.\n", MAXBUFSIZE, MAXBUFSIZE);
 		x->FFTSize = MAXBUFSIZE;
 	}
+    */
+    
+
 	/*
 	object_post((t_object *)x, "--- Analyzer~ ---");	
 	object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
@@ -1701,15 +1743,23 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->WindFFT = (double*) sysmem_newptr(x->BufSize * sizeof(double));
 	*/
 
-	// + 1 to stick the signal vector count to generate the timetag 
-	x->Buf1 = (t_atom*) sysmem_newptr((MAXBUFSIZE + 1) * sizeof(t_atom)); 
-	x->Buf2 = (t_atom*) sysmem_newptr((MAXBUFSIZE + 1) * sizeof(t_atom));
+    for(int i = 0; i < windowcount; i++){
+        x->windows[i] = (double *)malloc(MAXBUFSIZE * sizeof(double));
+        memset(x->windows[i], '\0', MAXBUFSIZE * sizeof(double));
+    }
+    // the actual windows will be computed when the buffersize setter is called
+
+    // + 1 to stick the signal vector count to generate the timetag
+	x->Buf1 = (t_atom*)calloc( MAXBUFSIZE + 1, sizeof(t_atom));
+    x->Buf2 = (t_atom*)calloc( MAXBUFSIZE + 1, sizeof(t_atom));
+
+	//x->Buf2 = (t_atom*)sysmem_newptr((MAXBUFSIZE + 1) * sizeof(t_atom));
 
 	x->BufFFT_in = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE);
 	x->BufFFT_out = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE * 2);
 	memset(x->BufFFT_in, '\0', MAXBUFSIZE * sizeof(double));
 	memset(x->BufFFT_out, '\0', MAXBUFSIZE * 2 * sizeof(double));
-	x->fft_plan = fftw_plan_dft_r2c_1d(x->FFTSize, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
+	// x->fft_plan = fftw_plan_dft_r2c_1d(x->FFTSize, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
 	x->BufPower = (double*) sysmem_newptr((MAXBUFSIZE / 2) * sizeof(double));
 	x->WindFFT = (double*) sysmem_newptr(MAXBUFSIZE * sizeof(double));
 
@@ -1719,11 +1769,27 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 	x->BufBark = (double*) sysmem_newptr(2*NUMBAND * sizeof(double));
 	x->BufSizeBark = (long*) sysmem_newptr(NUMBAND * sizeof(long));
 
+    attr_dictionary_process(x, attrs);
+    object_free(attrs);
+    
+    // Make an outlet for OSC out
+    x->x_oscout = outlet_new((t_object *)x, "FullPacket");
+    
+    // Make an outlet for peaks out
+    x->x_peakout = listout((t_object *)x); // one list out
+    
+    // One outlet for fundamental & amplitude raw values
+    x->x_pitchout = listout((t_object *)x);
+    
+    // Make bang outlet for onset detection
+    x->x_attackout = bangout((t_object *)x);
+
+    
 	// Create the Bark outlet(s)
 	if (x->x_output == noList) {
 		// Allocate memory for all outlets
 		x->x_out = (void**) sysmem_newptr(NUMBAND * sizeof(double*));
-		for (i=0; i<NUMBAND; i++) {
+		for (int i=0; i<NUMBAND; i++) {
 			x->x_out[i] = floatout((t_analyzer *)x); // Create float outlets
 		}
 	} else {
@@ -1739,31 +1805,9 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 
 
 	// More initializations from Fiddle~
-	for (i=0; i<x->x_npeakout; i++)
+	for (int i=0; i<x->x_npeakout; i++)
 		x->peakBuf[i].po_freq = x->peakBuf[i].po_amp = 0.0;
 	
-	j = 1;	
-	x->BufBark[0] = 0.0;
-
-	// Compute and store Analyzer scale	
-	for (i=0; i<x->FFTSize/2; i++) {
-		freq = (i*x->x_Fs)/x->FFTSize;
-		band = floor(13*atan(0.76*freq/1000) + 3.5*atan((freq/7500)*(freq/7500)));
-		if (oldband != band) {
-			x->BufBark[j] = oldfreq;
-			x->BufBark[j+1] = freq;
-			x->BufSizeBark[j/2] = sizeband;
-			j+=2;
-			sizeband = 0;
-		}
-		oldband = band;
-		oldfreq = freq;
-		sizeband++;
-	}
-
-	x->BufBark[2*NUMBAND-1] = freq;
-	x->BufSizeBark[NUMBAND-1] = sizeband;
-
 	x->x_debug = 0;
 
 	return x;
@@ -1784,6 +1828,7 @@ void analyzer_compute_windows(t_analyzer *x)
 // accessor setters
 t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
 {
+    
 	if(!argc){
 		return MAX_ERR_NONE;
 	}
@@ -1800,16 +1845,26 @@ t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_at
 	default:
 		n = DEFBUFSIZE;
 	}
+    
 	if(n < vs){
-		object_error((t_object *)x, "Buffer size (%d) is smaller than the vector size (%d).  Setting the buffer size to the signal vector size", n, vs);
+        object_error((t_object *)x, "Buffer size (%d) is smaller than the vector size (%d).  Setting the buffer size to the signal vector size", n, vs);
 		n = vs;
 	}
-	if(n > MAXBUFSIZE){
-		object_error((t_object *)x, "Maximum buffer size is %d samples.  Setting buffer size to %d.", MAXBUFSIZE, MAXBUFSIZE);
-		n = MAXBUFSIZE;
-	}
+
+    if(n > x->FFTSize){
+        object_error((t_object *)x, "Buffer size (%d) cannot be greater than the FFT size. Setting buffer size to %d.", n, x->FFTSize);
+        
+        n = x->FFTSize;
+    }
+    
+    if(n > MAXBUFSIZE){
+        object_error((t_object *)x, "Maximum buffer size is %d samples.  Setting buffer size to %d.", MAXBUFSIZE, MAXBUFSIZE);
+        n = MAXBUFSIZE;
+    }
+    
 	critical_enter(x->lock);
 	x->BufSize = n;
+    x->x_overlap = x->BufSize - x->x_hop;
 	analyzer_compute_windows(x);
 	critical_exit(x->lock);
 	return MAX_ERR_NONE;
@@ -1822,17 +1877,21 @@ t_max_err analyzer_hopsize_set(t_analyzer *x, t_object *attr, long argc, t_atom 
 	}
 	long vs = sys_getblksize();
 	double ms2samp = x->x_Fs * 0.001;
-	long n;
-	switch(atom_gettype(argv)){
-	case A_LONG:
-		n = atom_getlong(argv); // samples
-		break;
-	case A_FLOAT:
-		n = (long)(atom_getfloat(argv) * ms2samp);
-		break;
-	default:
-		n = x->BufSize / 2;
+    long half_buf = x->BufSize / 2;
+
+    long n;
+	switch(atom_gettype(argv))
+    {
+        case A_LONG:
+            n = atom_getlong(argv); // samples
+            break;
+        case A_FLOAT:
+            n = (long)(atom_getfloat(argv) * ms2samp); // << make sure this is noted in the help patch
+            break;
+        default:
+            n = half_buf;
 	}
+    
 	if(n < vs){
 		object_error((t_object *)x, "Hop size (%d) is less than ths signal vector size (%d)\n", n, vs);
 		n = vs;
@@ -1841,11 +1900,42 @@ t_max_err analyzer_hopsize_set(t_analyzer *x, t_object *attr, long argc, t_atom 
 		object_error((t_object *)x, "Maximum hop size is %d samples.  Setting hop size to %d.", MAXBUFSIZE, MAXBUFSIZE);
 		n = MAXBUFSIZE;
 	}
+    
+
 	critical_enter(x->lock);
 	x->x_hop = n;
 	x->x_overlap = x->BufSize - x->x_hop;
 	critical_exit(x->lock);
 	return MAX_ERR_NONE;
+}
+
+void analyzer_setBarkBins( t_analyzer *x )
+{
+    long band=0, oldband=0, sizeband=0;
+    double freq = 0.0, oldfreq = 0.0;
+    
+    int j = 1;
+    x->BufBark[0] = 0.0;
+
+    // Compute and store Analyzer scale
+    for (int i=0; i<x->FFTSize/2; i++)
+    {
+        freq = (i*x->x_Fs)/x->FFTSize;
+        band = floor(13*atan(0.76*freq/1000) + 3.5*atan((freq/7500)*(freq/7500)));
+        if (oldband != band) {
+            x->BufBark[j] = oldfreq;
+            x->BufBark[j+1] = freq;
+            x->BufSizeBark[j/2] = sizeband;
+            j+=2;
+            sizeband = 0;
+        }
+        oldband = band;
+        oldfreq = freq;
+        sizeband++;
+    }
+    
+    x->BufBark[2*NUMBAND-1] = freq;
+    x->BufSizeBark[NUMBAND-1] = sizeband;
 }
 
 t_max_err analyzer_fftsize_set(t_analyzer *x, t_object *attr, long argc, t_atom *argv)
@@ -1861,7 +1951,7 @@ t_max_err analyzer_fftsize_set(t_analyzer *x, t_object *attr, long argc, t_atom 
 		n = atom_getlong(argv); // samples
 		break;
 	case A_FLOAT:
-		n = (long)(atom_getfloat(argv) * ms2samp);
+		n = (long)(atom_getfloat(argv) * ms2samp); //<< make sure this is in the help file
 		break;
 	default:
 		n = x->BufSize;
@@ -1874,18 +1964,49 @@ t_max_err analyzer_fftsize_set(t_analyzer *x, t_object *attr, long argc, t_atom 
 		object_error((t_object *)x, "Maximum FFT size is %d samples.  Setting FFT size to %d.", MAXBUFSIZE, MAXBUFSIZE);
 		n = MAXBUFSIZE;
 	}
-	if(x->BufFFT_in && x->BufFFT_out){
-		// might be calling this from the new instance routine in which case these buffers may not
-		// be allocated yet.  the new instance routine will set up the FFT plan
-		fftw_plan p = fftw_plan_dft_r2c_1d(n, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
-		critical_enter(x->lock);
-		x->FFTSize = n;
-		x->fft_plan = p;
-		critical_exit(x->lock);
-	}else{
-		critical_enter(x->lock);
-		x->FFTSize = n;
-		critical_exit(x->lock);
+    
+    if (n < x->BufSize) {
+        object_error((t_object *)x, "FFT size (%d) cannot be less than the buffer size, %d. Setting FFT size to buffer size.\n", n, x->BufSize);
+        n = x->BufSize;
+    }
+    
+    if ((n > vs) && (n < 128))  n = 128;
+    else if ((n > 128) && (n < 256)) n = 256;
+    else if ((n > 256) && (n < 512)) n = 512;
+    else if ((n > 512) && (n < 1024)) n = 1024;
+    else if ((n > 1024) && (n < 2048)) n = 2048;
+    else if ((n > 2048) && (n < 4096)) n = 4096;
+    else if ((n > 4096) && (n < 8192)) n = 8192;
+    else if ((n > 8192) && (n < 16384)) n = 16384;
+    else if ((n > 16384) && (n < 32768)) n = 32768;
+    else if ((n > 32768) && (n < MAXBUFSIZE)) n = MAXBUFSIZE;
+    else if (n > MAXBUFSIZE) {
+        object_error((t_object *)x, "Maximum FFT size is %d samples.  Setting FFT size to %d.\n", MAXBUFSIZE, MAXBUFSIZE);
+        n = MAXBUFSIZE;
+    }
+    
+	if(x->BufFFT_in && x->BufFFT_out)
+    {
+
+        fftw_plan p = x->fft_plan;
+        if( n != x->FFTSize || !p )
+        {
+            critical_enter(x->lock);
+
+            p = fftw_plan_dft_r2c_1d(n, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
+            x->FFTSize = n;
+            x->fft_plan = p;
+            
+            analyzer_setBarkBins(x);
+            
+            critical_exit(x->lock);
+        }
+		
+	} else {
+        
+        object_error((t_object*)x, "initialization error");
+        
+        return MAX_ERR_GENERIC;
 	}
 
 	return MAX_ERR_NONE;
@@ -1967,6 +2088,13 @@ t_max_err analyzer_barkformat_set(t_analyzer *x, t_object *attr, long argc, t_at
 	if(!argc){
 		return MAX_ERR_NONE;
 	}
+    
+    if( x->x_output != -1 )
+    {
+        object_error((t_object *)x, "bark format cannont be changed dynamically");
+        return MAX_ERR_GENERIC;
+    }
+    
 	if(atom_gettype(argv) == A_SYM){
 		t_symbol *sym = atom_getsym(argv);
 		if(sym == ps_list){
