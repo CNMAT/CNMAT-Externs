@@ -239,11 +239,12 @@ typedef struct _analyzer {
 
 	t_critical lock;
 
-	double x_Fs;			// Sample rate
+	double x_Fs;		// Sample rate
 	long vs; 			// vector size
 	long x_overlap;		// Number of overlaping samples
 	long x_hop;			// Number of non-overlaping samples
-	int window;			// Type of window	
+	int window;			// Type of window
+    int fftsize_idx;    // index in fft size enum
 	t_symbol *windname_dummy; // for the attribute---not actually used
 	double *windows[7]; // store the pointers to the precomputed windows.  these can be looked up with the values defined in the enum
 	long x_delay;			// Vector size delay before to start feeding the buffer
@@ -286,7 +287,7 @@ typedef struct _analyzer {
 	double *BufFFT_in;		// FFT buffer
 	double *BufFFT_out;		// FFT buffer
 	double *BufPower;		// Power spectrum buffer
-	double *WindFFT;		// Window of FFTSize
+//	double *WindFFT;		// Window of FFTSize
 	//double *memFFT;		// fft.c memory space
 	t_peakout *peakBuf;		// Spectral peaks for output
 	double *histBuf;		// Histogram Buffer
@@ -375,7 +376,6 @@ void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numin
 		x->timetag = osc_timetag_now();
 	}
 
-    critical_enter(x->lock);
 	long n = x->BufSize; // make a copy of this---it could change
 	if(x->x_counter < 1){
 		int index = 0;
@@ -405,7 +405,6 @@ void analyzer_perform64(t_analyzer *x, t_object *dsp64, double **ins, long numin
 		x->x_counter--;
 	}
 	x->svctr++;
-    critical_exit(x->lock);
 }
 
 t_int *analyzer_perform(t_int *w)
@@ -1412,17 +1411,16 @@ void analyzer_free(t_analyzer *x)
 	//This is an easier way, since object_free checks before freeing.  -mzed
 
 	//if (x->memFFT != NULL) sysmem_freeptr((char *) x->memFFT);
-
-	if (x->Buf1 != NULL) free(x->Buf1);
-	if (x->Buf2 != NULL) free(x->Buf2);
-	if (x->BufFFT_in != NULL) fftw_free((char *) x->BufFFT_in);
+// switch back to sysmem and test
+	if (x->Buf1 != NULL) sysmem_freeptr((char *)x->Buf1);
+	if (x->Buf2 != NULL) sysmem_freeptr((char *)x->Buf2);
+	if (x->BufFFT_in != NULL) fftw_free((char *)x->BufFFT_in);
 	if (x->BufFFT_out != NULL) fftw_free((char *) x->BufFFT_out);
-	if (x->BufPower != NULL) sysmem_freeptr((char *) x->BufPower);
-	if (x->WindFFT != NULL) sysmem_freeptr((char *) x->WindFFT);
-	if (x->peakBuf != NULL) sysmem_freeptr((char *) x->peakBuf);
-	if (x->histBuf != NULL) sysmem_freeptr((char *) x->histBuf);
-	if (x->BufBark != NULL) sysmem_freeptr((char *) x->BufBark);
-	if (x->BufSizeBark != NULL) sysmem_freeptr((char *) x->BufSizeBark);
+	if (x->BufPower != NULL) sysmem_freeptr((char *)x->BufPower);
+	if (x->peakBuf != NULL) sysmem_freeptr((char *)x->peakBuf);
+	if (x->histBuf != NULL) sysmem_freeptr((char *)x->histBuf);
+	if (x->BufBark != NULL) sysmem_freeptr((char *)x->BufBark);
+	if (x->BufSizeBark != NULL) sysmem_freeptr((char *)x->BufSizeBark);
 	if (x->x_out != NULL) sysmem_freeptr((char *) x->x_out);
 	if (x->myList != NULL) sysmem_freeptr((char *) x->myList);
 
@@ -1584,6 +1582,8 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     
     x->x_output = -1;
     
+    x->fftsize_idx = 5;
+    
 	// More initializations from Fiddle~
 	for (int i=0; i<MAXNPITCH; i++) {
 		x->x_hist[i].h_pitch = x->x_hist[i].h_noted = 0.0;
@@ -1649,7 +1649,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     dictionary_getlong(attrs, attrnames[1], &val);
     x->x_hop = val;
 
-    
     if( !dictionary_hasentry(attrs, attrnames[2]) )
         dictionary_appendlong(attrs, attrnames[2], x->BufSize );
     
@@ -1681,7 +1680,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     if( !dictionary_hasentry(attrs, attrnames[8]) )
         dictionary_appendsym(attrs, attrnames[8], ps_list);
 
-    
 
 	if (x->x_npeakout > x->x_npeakanal) {
 		object_error((t_object *)x, "Analyzer~: '# of peaks to output' (%d) must not be larger than '# of peaks to analyze' (%d).  Setting the former to the latter.\n", x->x_npeakout, x->x_npeakanal);
@@ -1750,18 +1748,15 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     // the actual windows will be computed when the buffersize setter is called
 
     // + 1 to stick the signal vector count to generate the timetag
-	x->Buf1 = (t_atom*)calloc( MAXBUFSIZE + 1, sizeof(t_atom));
-    x->Buf2 = (t_atom*)calloc( MAXBUFSIZE + 1, sizeof(t_atom));
-
-	//x->Buf2 = (t_atom*)sysmem_newptr((MAXBUFSIZE + 1) * sizeof(t_atom));
+	x->Buf1 = (t_atom*)sysmem_newptr( (MAXBUFSIZE + 1) * sizeof(t_atom));
+    x->Buf2 = (t_atom*)sysmem_newptr( (MAXBUFSIZE + 1) * sizeof(t_atom));
 
 	x->BufFFT_in = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE);
 	x->BufFFT_out = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE * 2);
 	memset(x->BufFFT_in, '\0', MAXBUFSIZE * sizeof(double));
 	memset(x->BufFFT_out, '\0', MAXBUFSIZE * 2 * sizeof(double));
-	// x->fft_plan = fftw_plan_dft_r2c_1d(x->FFTSize, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
-	x->BufPower = (double*) sysmem_newptr((MAXBUFSIZE / 2) * sizeof(double));
-	x->WindFFT = (double*) sysmem_newptr(MAXBUFSIZE * sizeof(double));
+
+    x->BufPower = (double*) sysmem_newptr((MAXBUFSIZE / 2) * sizeof(double));
 
 	x->peakBuf = (t_peakout*) sysmem_newptr(x->x_npeakout * sizeof(t_peakout)); // from Fiddle~
 	//x->histBuf = (double*) sysmem_newptr((x->FFTSize + BINGUARD) * sizeof(double)); // for Fiddle~
@@ -1793,7 +1788,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
 			x->x_out[i] = floatout((t_analyzer *)x); // Create float outlets
 		}
 	} else {
-		x->myList   = (t_atom*) sysmem_newptr(NUMBAND * sizeof(*x->myList));     
+		x->myList   = (t_atom*) sysmem_newptr(NUMBAND * sizeof(*x->myList));
 		x->x_outlet = listout((t_analyzer *)x);	// Create a list outlet
 	}
 
@@ -1853,7 +1848,6 @@ t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_at
 
     if(n > x->FFTSize){
         object_error((t_object *)x, "Buffer size (%d) cannot be greater than the FFT size. Setting buffer size to %d.", n, x->FFTSize);
-        
         n = x->FFTSize;
     }
     
@@ -1864,9 +1858,17 @@ t_max_err analyzer_buffersize_set(t_analyzer *x, t_object *attr, long argc, t_at
     
 	critical_enter(x->lock);
 	x->BufSize = n;
+    
+    if( x->x_hop > n )
+    {
+        object_error((t_object *)x, "Hop size (%d) cannot be larger than buffer size.  Setting hop size to %d.", x->x_hop, n);
+        x->x_hop = n;
+    }
+    
     x->x_overlap = x->BufSize - x->x_hop;
 	analyzer_compute_windows(x);
 	critical_exit(x->lock);
+    
 	return MAX_ERR_NONE;
 }
 
@@ -1896,12 +1898,18 @@ t_max_err analyzer_hopsize_set(t_analyzer *x, t_object *attr, long argc, t_atom 
 		object_error((t_object *)x, "Hop size (%d) is less than ths signal vector size (%d)\n", n, vs);
 		n = vs;
 	}
-	if(n > MAXBUFSIZE){
-		object_error((t_object *)x, "Maximum hop size is %d samples.  Setting hop size to %d.", MAXBUFSIZE, MAXBUFSIZE);
-		n = MAXBUFSIZE;
-	}
+	
+    if( n > x->BufSize )
+    {
+        object_error((t_object *)x, "Hop size (%d) cannot be larger than buffer size.  Setting hop size to %d.", n, x->BufSize);
+        n = x->BufSize;
+    }
     
-
+    if(n > MAXBUFSIZE){
+        object_error((t_object *)x, "Maximum hop size is %d samples.  Setting hop size to %d.", MAXBUFSIZE, MAXBUFSIZE);
+        n = MAXBUFSIZE;
+    }
+    
 	critical_enter(x->lock);
 	x->x_hop = n;
 	x->x_overlap = x->BufSize - x->x_hop;
@@ -2117,6 +2125,14 @@ t_max_err analyzer_windowtype_get(t_analyzer *x, t_object *attr, long *argc, t_a
 	atom_alloc(argc, argv, &alloc);
 	atom_setsym(*argv, window_names_s[x->window]);
 	return MAX_ERR_NONE;
+}
+
+t_max_err analyzer_fftsize_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv)
+{
+    char alloc;
+    atom_alloc(argc, argv, &alloc);
+    atom_setsym(*argv, fft_size_names[x->fftsize_idx]);
+    return MAX_ERR_NONE;
 }
 
 t_max_err analyzer_barkformat_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv)
