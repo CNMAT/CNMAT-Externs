@@ -435,12 +435,12 @@ void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double sampler
 	x->svctr = 0;
 
 	// Overlap case
-    // (should never happen now - rama, 2017)
 	if (x->x_overlap > x->BufSize - vs) {
 		object_error((t_object *)x, "Overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
 		object_error((t_object *)x, "Will be left out of the dsp chain!\n");
 		return;
-	} else if (x->x_overlap < 1)
+	}
+    else if (x->x_overlap < 1) // should never happen
 		x->x_overlap = 0; 
 
 	if(vs > x->BufSize){
@@ -449,6 +449,12 @@ void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double sampler
 		return;
 	}
 
+    if(x->FFTSize < vs){
+        object_error((t_object *)x, "FFT size (%d) cannot be less than ths signal vector size (%d).\n", x->FFTSize, vs);
+        object_error((t_object *)x, "Will be left out of the dsp chain!\n");
+        return;
+    }
+    
     //no longer necessary to do this:
 	//x->x_hop = x->BufSize - x->x_overlap;
     
@@ -1545,6 +1551,9 @@ void analyzer_setBarkBins( t_analyzer *x )
     x->BufBark[0] = 0.0;
 
     // Compute and store Analyzer scale
+    
+    // what happens if the fft size / 2 is < 25 bark bands?
+    // for now setting minimum fftsize to be 128
     for (int i=0; i<x->FFTSize/2; i++)
     {
         freq = (i*x->x_Fs)/x->FFTSize;
@@ -1553,7 +1562,7 @@ void analyzer_setBarkBins( t_analyzer *x )
             x->BufBark[j] = oldfreq;
             x->BufBark[j+1] = freq;
             x->BufSizeBark[j/2] = sizeband;
-            // post("%d band %d %d", band, j/2, sizeband);
+            post("%d band BufSizeBark[%d] =  %d size", band, j/2, sizeband);
             j+=2;
             sizeband = 0;
         }
@@ -1575,7 +1584,7 @@ void analyzer_fftsize_do_set(t_analyzer *x, long n)
         n = vs;
     }
     
-    if ((n > vs) && (n < 128))  n = 128;
+    if (n < 128)  n = 128;
     else if ((n > 128) && (n < 256)) n = 256;
     else if ((n > 256) && (n < 512)) n = 512;
     else if ((n > 512) && (n < 1024)) n = 1024;
@@ -1931,11 +1940,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     if( have_bufsize )
     {
         dictionary_getlong(attrs, attrnames[0], &val);
-        
-        if(val < vs){
-            object_error((t_object *)x, "Buffer size (%d) cannot be less than ths signal vector size (%d). Setting to vector size\n", val, vs);
-            val = vs;
-        }
         x->BufSize = val;
     }
     
@@ -1943,9 +1947,11 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     {
         dictionary_getlong(attrs, attrnames[2], &val);
         
-        if(val < vs){
-            object_error((t_object *)x, "FFT size (%d) cannot be less than ths signal vector size (%d). Setting to vector size\n", val, vs);
-            val = vs;
+        if( val < 128 )
+        {
+            object_error((t_object *)x, "FFT size (%d) cannot be less than 128!", val );
+            return NULL;
+
         }
         
         x->FFTSize = val;
