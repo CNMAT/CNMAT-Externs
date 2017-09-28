@@ -58,8 +58,8 @@
 */
 #define NAME "analyzer~"
 #define DESCRIPTION "FFT-Based Perceptual Analysis"
-#define AUTHORS "Tristan Jehan, Adrian Freed, Matt Wright, Michael Zbyszynski, and John MacCallum"
-#define COPYRIGHT_YEARS "1988,89,90-99,2000,01-05,11-13"
+#define AUTHORS "Tristan Jehan, Adrian Freed, Matt Wright, Michael Zbyszynski, John MacCallum, and Rama Gottfried"
+#define COPYRIGHT_YEARS "1988,89,90-99,2000,01-05,11-17"
 
 #include "ext.h"
 #include "ext_obex.h"
@@ -886,9 +886,12 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 		osc_bundle_u_addMsg(bndl, peaks);
 
 		// fundamental freqs/amps
-		if(x->x_npitch > 1){
-			for(i = 0, ph = x->x_hist; i < x->x_npitch; i++, ph++){
-				if(ph->h_pitch){
+		if(x->x_npitch > 1)
+        {
+			for(i = 0, ph = x->x_hist; i < x->x_npitch; i++, ph++)
+            {
+				//if(ph->h_pitch)
+                {
 					t_osc_msg_u *hz = osc_message_u_alloc();
 					t_osc_msg_u *amp = osc_message_u_alloc();
 					char buf[64];
@@ -905,7 +908,8 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 			}
 		}else{
 			ph = x->x_hist;
-			if(ph->h_pitch){
+			//if(ph->h_pitch)
+            {
 				t_osc_msg_u *hz = osc_message_u_alloc();
 				t_osc_msg_u *amp = osc_message_u_alloc();
 				osc_message_u_setAddress(hz, "/pitch/raw/midi");
@@ -938,7 +942,8 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 			}
 		}else{
 			ph = x->x_hist;
-			if(ph->h_pitch){
+			if(ph->h_pitch)
+            {
 				t_osc_msg_u *hz = osc_message_u_alloc();
 				t_osc_msg_u *midi = osc_message_u_alloc();
 				osc_message_u_setAddress(hz, "/pitch/cooked/midi");
@@ -1562,7 +1567,6 @@ void analyzer_setBarkBins( t_analyzer *x )
             x->BufBark[j] = oldfreq;
             x->BufBark[j+1] = freq;
             x->BufSizeBark[j/2] = sizeband;
-            post("%d band BufSizeBark[%d] =  %d size", band, j/2, sizeband);
             j+=2;
             sizeband = 0;
         }
@@ -1577,13 +1581,6 @@ void analyzer_setBarkBins( t_analyzer *x )
 
 void analyzer_fftsize_do_set(t_analyzer *x, long n)
 {
-    
-    long vs = sys_getblksize();
-    if(n < vs){
-        object_error((t_object *)x, "FFT size (%d) is less than ths signal vector size (%d)\n", n, vs);
-        n = vs;
-    }
-    
     if (n < 128)  n = 128;
     else if ((n > 128) && (n < 256)) n = 256;
     else if ((n > 256) && (n < 512)) n = 512;
@@ -1599,6 +1596,12 @@ void analyzer_fftsize_do_set(t_analyzer *x, long n)
         n = MAXBUFSIZE;
     }
     
+    long vs = sys_getblksize();
+    if(n < vs){
+        object_error((t_object *)x, "FFT size (%d) is less than ths signal vector size (%d)\n", n, vs);
+        n = vs;
+    }
+    
     fftw_plan p = x->fft_plan;
     if( n != x->FFTSize || !p )
     {
@@ -1609,7 +1612,6 @@ void analyzer_fftsize_do_set(t_analyzer *x, long n)
         x->fft_plan = p;
         
         analyzer_setBarkBins(x);
-        post("fftsize %ld\n", x->FFTSize);
         
         if (x->BufSize > n)
         {
@@ -2036,36 +2038,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     
     
     /*
-     if (x->BufSize < vs) {
-     object_error((t_object *)x, "Analyzer~: Buffer size (%d) is smaller than the vector size, %d.  Setting buffer size to the signal vector size.\n", x->BufSize, vs);
-     x->BufSize = vs;
-     } else if (x->BufSize > MAXBUFSIZE) {
-     object_error((t_object *)x, "Analyzer~: Maximum FFT size is %d samples. Setting buffer size to %d.\n", MAXBUFSIZE, MAXBUFSIZE);
-     x->BufSize = MAXBUFSIZE;
-     }
-     
-     if (x->FFTSize < x->BufSize) {
-     object_error((t_object *)x, "Analyzer~: FFT size (%d) cannot be less than the buffer size, %d. Setting FFT size to buffer size.\n", x->FFTSize, x->BufSize);
-     x->FFTSize = x->BufSize;
-     }
-     
-     if ((x->FFTSize > vs) && (x->FFTSize < 128))  x->FFTSize = 128;
-     else if ((x->FFTSize > 128) && (x->FFTSize < 256)) x->FFTSize = 256;
-     else if ((x->FFTSize > 256) && (x->FFTSize < 512)) x->FFTSize = 512;
-     else if ((x->FFTSize > 512) && (x->FFTSize < 1024)) x->FFTSize = 1024;
-     else if ((x->FFTSize > 1024) && (x->FFTSize < 2048)) x->FFTSize = 2048;
-     else if ((x->FFTSize > 2048) && (x->FFTSize < 4096)) x->FFTSize = 4096;
-     else if ((x->FFTSize > 8192) && (x->FFTSize < 16384)) x->FFTSize = 16384;
-     else if ((x->FFTSize > 16384) && (x->FFTSize < 32768)) x->FFTSize = 32768;
-     else if ((x->FFTSize > 32768) && (x->FFTSize < MAXBUFSIZE)) x->FFTSize = MAXBUFSIZE;
-     else if (x->FFTSize > MAXBUFSIZE) {
-     object_error((t_object *)x, "Analyzer~: Maximum FFT size is %d samples.  Setting FFT size to %d.\n", MAXBUFSIZE, MAXBUFSIZE);
-     x->FFTSize = MAXBUFSIZE;
-     }
-     */
-    
-    
-    /*
      object_post((t_object *)x, "--- Analyzer~ ---");
      object_post((t_object *)x, "	Buffer size = %d",x->BufSize);
      object_post((t_object *)x, "	Hop size = %d",x->x_hop);
@@ -2076,22 +2048,6 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
      object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
      object_post((t_object *)x, "	Number of peaks to output = %d",x->x_npeakout);
      */
-    // Allocate memory
-    /*
-     x->Buf1 = (t_atom*) sysmem_newptr(x->BufSize * sizeof(t_atom));
-     x->Buf2 = (t_atom*) sysmem_newptr(x->BufSize * sizeof(t_atom));
-     x->BufFFT_in = (double *)fftw_malloc(sizeof(double) * x->FFTSize);
-     x->BufFFT_out = (double *)fftw_malloc(sizeof(double) * x->FFTSize * 2);
-     memset(x->BufFFT_in, '\0', x->FFTSize * sizeof(double));
-     memset(x->BufFFT_out, '\0', x->FFTSize * sizeof(double));
-     x->fft_plan = fftw_plan_dft_r2c_1d(x->FFTSize, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
-     x->BufPower = (double*) sysmem_newptr((x->FFTSize/2) * sizeof(double));
-     x->WindFFT = (double*) sysmem_newptr(x->BufSize * sizeof(double));
-     */
-    
-
-
-    
     
     // first set fftsize, buffersize and hopsize in that order.
     analyzer_fftsize_do_set(x, x->FFTSize);
