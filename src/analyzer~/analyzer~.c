@@ -1558,15 +1558,21 @@ void analyzer_setBarkBins( t_analyzer *x )
     // Compute and store Analyzer scale
     
     // what happens if the fft size / 2 is < 25 bark bands?
-    // for now setting minimum fftsize to be 128
+    // also, what happens when the number of bark bands required is less than the NUMBAND macro?
+    // for now setting minimum fftsize to be 512, which works around this limitation.
+    // this could be improved, but we'd need to reduce the number of bark bins dynamically which would screw up the legacy multiple output style, so I'm just going to clip the min fft size for now -- rama, 2017
     for (int i=0; i<x->FFTSize/2; i++)
     {
         freq = (i*x->x_Fs)/x->FFTSize;
         band = floor(13*atan(0.76*freq/1000) + 3.5*atan((freq/7500)*(freq/7500)));
+        // post("[%d] freq %f band %d", i, freq, band);
+        
         if (oldband != band) {
             x->BufBark[j] = oldfreq;
             x->BufBark[j+1] = freq;
             x->BufSizeBark[j/2] = sizeband;
+            
+            // post("x->BufSizeBark[%d] = %ld", j/2, sizeband);
             j+=2;
             sizeband = 0;
         }
@@ -1577,13 +1583,12 @@ void analyzer_setBarkBins( t_analyzer *x )
     
     x->BufBark[2*NUMBAND-1] = freq;
     x->BufSizeBark[NUMBAND-1] = sizeband;
+    // post("x->BufSizeBark[%d] = %ld", NUMBAND-1, sizeband);
 }
 
 void analyzer_fftsize_do_set(t_analyzer *x, long n)
 {
-    if (n < 128)  n = 128;
-    else if ((n > 128) && (n < 256)) n = 256;
-    else if ((n > 256) && (n < 512)) n = 512;
+    if (n < 512) n = 512;
     else if ((n > 512) && (n < 1024)) n = 1024;
     else if ((n > 1024) && (n < 2048)) n = 2048;
     else if ((n > 2048) && (n < 4096)) n = 4096;
@@ -1949,9 +1954,9 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     {
         dictionary_getlong(attrs, attrnames[2], &val);
         
-        if( val < 128 )
+        if( val < 512 )
         {
-            object_error((t_object *)x, "FFT size (%d) cannot be less than 128!", val );
+            object_error((t_object *)x, "FFT size (%d) must be >= 512.", val );
             return NULL;
 
         }
