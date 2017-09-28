@@ -464,6 +464,8 @@ void analyzer_dsp64(t_analyzer *x, t_object *dsp64, short *count, double sampler
 
 void analyzer_dsp(t_analyzer *x, t_signal **sp, short *count)
 {
+    object_post((t_object *)x, "initializing 32bit DSP routine");
+    
 	int vs = x->vs = sys_getblksize();
 	x->x_Fs = sp[0]->s_sr; // store sampling rate
 
@@ -474,22 +476,31 @@ void analyzer_dsp(t_analyzer *x, t_signal **sp, short *count)
 	x->timetag = OSC_TIMETAG_NULL;
 	x->svctr = 0;
 
-	// Overlap case
-	if (x->x_overlap > x->BufSize - vs) {
-		object_error((t_object *)x, "Overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
-		object_error((t_object *)x, "Will be left out of the dsp chain!\n");
-		return;
-	} else if (x->x_overlap < 1)
-		x->x_overlap = 0; 
-
-	if(vs > x->BufSize){
-		object_error((t_object *)x, "Sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
-		object_error((t_object *)x, "Will be left out of the dsp chain!\n");
-		return;
-	}
-
-	x->x_hop = x->BufSize - x->x_overlap;
-	x->x_FFTSizeOver2 = x->FFTSize/2;		
+    // Overlap case
+    if (x->x_overlap > x->BufSize - vs) {
+        object_error((t_object *)x, "Overlap (%d) can't be larger than bufsize (%d) - sigvs (%d).\n", x->x_overlap, x->BufSize, vs);
+        object_error((t_object *)x, "Will be left out of the dsp chain!\n");
+        return;
+    }
+    else if (x->x_overlap < 1) // should never happen
+        x->x_overlap = 0;
+    
+    if(vs > x->BufSize){
+        object_error((t_object *)x, "Sigvs (%d) can't be larger than the buffer size (%d)\n", vs, x->BufSize);
+        object_error((t_object *)x, "Will be left out of the dsp chain!\n");
+        return;
+    }
+    
+    if(x->FFTSize < vs){
+        object_error((t_object *)x, "FFT size (%d) cannot be less than ths signal vector size (%d).\n", x->FFTSize, vs);
+        object_error((t_object *)x, "Will be left out of the dsp chain!\n");
+        return;
+    }
+    
+    //no longer necessary to do this:
+    //x->x_hop = x->BufSize - x->x_overlap;
+    
+    x->x_FFTSizeOver2 = x->FFTSize/2;
 
 	if(count[0]){
 		dsp_add(analyzer_perform, 3, sp[0]->s_vec, sp[0]->s_n, x);
