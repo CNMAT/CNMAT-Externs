@@ -198,9 +198,6 @@ double (*window_functions[windowcount])(int, int) = {rect_w, hanning_w, hamming_
 char *window_names[windowcount] = {"rectangular", "hanning", "hamming", "blackman62", "blackman70", "blackman74", "blackman92"};
 t_symbol *window_names_s[windowcount];
 
-char *fft_size_strings[12] = {"32", "64", "128", "256", "512", "1024", "2048", "4096", "8192", "16384", "32768", "65536" };
-t_symbol *fft_size_names[12];
-
 // Some structures from Fiddle~
 typedef struct peakout {    // a peak for output
 	double po_freq;		// frequency in Hz
@@ -1762,14 +1759,6 @@ t_max_err analyzer_windowtype_get(t_analyzer *x, t_object *attr, long *argc, t_a
 	return MAX_ERR_NONE;
 }
 
-t_max_err analyzer_fftsize_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv)
-{
-    char alloc;
-    atom_alloc(argc, argv, &alloc);
-    atom_setsym(*argv, fft_size_names[x->fftsize_idx]);
-    return MAX_ERR_NONE;
-}
-
 t_max_err analyzer_barkformat_get(t_analyzer *x, t_object *attr, long *argc, t_atom **argv)
 {
 	char alloc;
@@ -2119,11 +2108,6 @@ int main(void)
     version(NULL);
     for(int i = 0; i < windowcount; i++){
         window_names_s[i] = gensym(window_names[i]);
-    }
-    
-    for( int i = 0; i < 12; i++)
-    {
-        fft_size_names[i] = gensym(fft_size_strings[i]);
     }
     
     ps_list = gensym("list");
