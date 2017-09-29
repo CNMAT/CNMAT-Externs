@@ -44,7 +44,7 @@
 #define NAME "xydisplay"
 #define DESCRIPTION "A 2-D graphical display/editor like pictctrl but supporting multiple points."
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2010,12,13"
+#define COPYRIGHT_YEARS "2010,12,13,17"
 
 
 #include "version.h"
@@ -202,6 +202,7 @@ void xy_paint(t_xy *x, t_object *patcherview){
 			}else{
 				color = x->pointcolor;
 			}
+            
 			jgraphics_set_source_jrgba(g, &(color));
 			t_pt pt = p->pt;
 			pt.x = xy_scale(pt.x, x->xmin, x->xmax, 0, rect.width);
@@ -1122,12 +1123,16 @@ void xy_postPoint(t_point *p){
 }
 
 t_max_err xy_notify(t_xy *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
-	if(msg == gensym("attr_modified")){
+	if(msg == gensym("attr_modified"))
+    {
+        /*
 		t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
 		if(attrname == gensym("xmin") || attrname == gensym("xmax") || attrname == gensym("ymin") || attrname == gensym("ymax") || attrname == gensym("connect_points") || attrname == gensym("drawlabels")){
-			jbox_invalidate_layer((t_object *)x, x->patcherview, l_points);
-			jbox_redraw(&(x->ob));
-		}
+        }
+         */
+        jbox_invalidate_layer((t_object *)x, x->patcherview, l_points);
+        jbox_redraw(&(x->ob));
+
 	}
 	return 0;
 }
