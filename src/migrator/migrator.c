@@ -46,7 +46,7 @@ VERSION 2.0: Major overhaul.  Lots of bugfixes.  SDIF support temporarily remove
 #define NAME "migrator"
 #define DESCRIPTION "Spectral harmony a la David Wessel"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2006-07,13"
+#define COPYRIGHT_YEARS "2006-17"
 
 #include "version.h"
 #include "ext.h"
@@ -207,7 +207,7 @@ void *mig_new(t_symbol *sym, long argc, t_atom *argv){
 	t_mig *x;
 	int i = 0;
 
-	if(x = (t_mig *)object_alloc(mig_class)){
+	if((x = (t_mig *)object_alloc(mig_class))){
 		x->arrayIn = (t_atom *)calloc(MIG_MAX_INPUT, sizeof(t_atom));
 		x->arrayOut = (t_atom *)calloc(MIG_MAX_NUM_OSC, sizeof(t_atom));
 		x->pmf = (float *)calloc(MIG_MAX_INPUT, sizeof(t_atom));
@@ -312,42 +312,50 @@ void mig_list(t_mig *x, t_symbol *msg, long argc, t_atom *argv){
 
 }
 
-void mig_bang(t_mig *x){
-	error("migrator: bang does nothing right now");
+void mig_tick(t_mig *x)
+{
+    int n;
+    if(x->algo == MIG_ALGO_MCMC){
+        
+    }
+    
+    switch(x->state){
+        case MIG_STATE_FADE_OUT:
+            x->nOsc = x->nOsc_new;
+            if(x->numOscToUpdate < 0){
+                PDEBUG("forcefeed");
+                n = x->actualNumOscToUpdate;
+                x->actualNumOscToUpdate = x->nOsc;
+                x->numOscToUpdate = n;
+                PDEBUG("actual = %d, num = %d", x->actualNumOscToUpdate, x->numOscToUpdate);
+            }else{
+                PDEBUG("regular");
+                x->actualNumOscToUpdate = x->numOscToUpdate;
+                PDEBUG("actual = %d, num = %d", x->actualNumOscToUpdate, x->numOscToUpdate);
+            }
+            mig_fadeOut(x);
+            break;
+        case MIG_STATE_CHANGE_FREQ:
+            mig_changeFreq(x);
+            break;
+        case MIG_STATE_FADE_IN:
+            mig_fadeIn(x);
+            mig_counter(x);
+            break;
+    }
+    mig_outputList(x, (short)x->nOsc * 2, x->arrayOut);
+    x->state = (x->state + 1) % 3;
+}
+
+void mig_bang(t_mig *x)
+{
+    mig_tick(x);
 }
 
 void mig_clock_cb(t_mig *x){
-	int n;
-	if(x->algo == MIG_ALGO_MCMC){
 
-	}
-
-	switch(x->state){
-	case MIG_STATE_FADE_OUT:
-		x->nOsc = x->nOsc_new;
-		if(x->numOscToUpdate < 0){
-			PDEBUG("forcefeed");
-			n = x->actualNumOscToUpdate;
-			x->actualNumOscToUpdate = x->nOsc;
-			x->numOscToUpdate = n;
-			PDEBUG("actual = %d, num = %d", x->actualNumOscToUpdate, x->numOscToUpdate);
-		}else{
-			PDEBUG("regular");
-			x->actualNumOscToUpdate = x->numOscToUpdate;
-			PDEBUG("actual = %d, num = %d", x->actualNumOscToUpdate, x->numOscToUpdate);
-		}
-		mig_fadeOut(x);
-		break;
-	case MIG_STATE_CHANGE_FREQ:
-		mig_changeFreq(x);
-		break;
-	case MIG_STATE_FADE_IN:
-		mig_fadeIn(x);
-		mig_counter(x);
-		break;
-	}
-	mig_outputList(x, (short)x->nOsc * 2, x->arrayOut);
-	x->state = (x->state + 1) % 3;
+    mig_tick(x);
+    
 	if(x->on){
 		clock_fdelay(x->clock, x->tinterval);
 	}
