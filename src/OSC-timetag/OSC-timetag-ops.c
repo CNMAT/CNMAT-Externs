@@ -145,14 +145,15 @@ void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n) {
   
     struct tm t;
     float sec;
-    char s1[20];
+    char s1[32];
     
     // read out the fractions part
     sscanf(s, "%*d-%*d-%*dT%*d:%*d:%fZ", &sec);
     
     // null-terminate the string
-    strncat(s1, s, 19);
-
+    //strncat(s1, s, 19);
+    snprintf(s1, 19, "%s", s);
+    
     // parse the time
     strptime(s1, "%Y-%m-%dT%H:%M:%S", &t);
     
