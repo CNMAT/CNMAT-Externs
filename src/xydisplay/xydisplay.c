@@ -170,15 +170,16 @@ void xy_paint(t_xy *x, t_object *patcherview){
 
 	t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_background, rect.width, rect.height);
 	if(g){
-		jgraphics_set_source_jrgba(g, &(x->bordercolor));
-		jgraphics_set_line_width(g, 1);
-		jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
-		jgraphics_stroke(g);
-    
 		jgraphics_set_source_jrgba(g, &(x->bgcolor));
 		jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
 		jgraphics_fill(g);
-		jbox_end_layer((t_object *)x, patcherview, l_background);
+        
+        jgraphics_set_source_jrgba(g, &(x->bordercolor));
+        jgraphics_set_line_width(g, 2);
+        jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
+        jgraphics_stroke(g);
+        jbox_end_layer((t_object *)x, patcherview, l_background);
+
 	}
 	jbox_paint_layer((t_object *)x, patcherview, l_background, 0, 0);
 	// draw points
@@ -960,7 +961,7 @@ void *xy_new(t_symbol *msg, int argc, t_atom *argv){
     
 	boxflags = 0 
 		| JBOX_DRAWFIRSTIN 
-		//| JBOX_NODRAWBOX
+		| JBOX_NODRAWBOX
 		| JBOX_DRAWINLAST
 		//| JBOX_TRANSPARENT  
 		//      | JBOX_NOGROW
@@ -1009,7 +1010,7 @@ int main(void){
 	t_class *c = class_new("xydisplay", (method)xy_new, (method)xy_free, sizeof(t_xy), 0L, A_GIMME, 0);
 
 	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
- 	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
+ 	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_FONTATTR );
     
 	class_addmethod(c, (method)xy_paint, "paint", A_CANT, 0); 
 	class_addmethod(c, (method)xy_bang, "bang", 0);
@@ -1052,7 +1053,7 @@ int main(void){
  	CLASS_ATTR_STYLE_LABEL(c, "pointcolor", 0, "rgba", "Point Color"); 
 
  	CLASS_ATTR_RGBA(c, "bordercolor", 0, t_xy, bordercolor); 
- 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bordercolor", 0, "0. 0. 0. 1."); 
+ 	CLASS_ATTR_DEFAULTNAME_SAVE_PAINT(c, "bordercolor", 0, "0. 0. 0. 0.5");
  	CLASS_ATTR_STYLE_LABEL(c, "bordercolor", 0, "rgba", "Border Color"); 
 
  	CLASS_ATTR_RGBA(c, "selectedcolor", 0, t_xy, selectedcolor); 
@@ -1130,6 +1131,8 @@ t_max_err xy_notify(t_xy *x, t_symbol *s, t_symbol *msg, void *sender, void *dat
 		if(attrname == gensym("xmin") || attrname == gensym("xmax") || attrname == gensym("ymin") || attrname == gensym("ymax") || attrname == gensym("connect_points") || attrname == gensym("drawlabels")){
         }
          */
+        jbox_invalidate_layer((t_object *)x, x->patcherview, l_background);
+        jbox_invalidate_layer((t_object *)x, x->patcherview, l_small_point);
         jbox_invalidate_layer((t_object *)x, x->patcherview, l_points);
         jbox_redraw(&(x->ob));
 
