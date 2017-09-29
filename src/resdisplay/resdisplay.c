@@ -109,7 +109,7 @@ void rd_paint(t_rd *x, t_object *patcherview){
     
 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);
 	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
-        
+    
 	jgraphics_set_source_jrgba(g, &(x->bordercolor));
 	jgraphics_set_line_width(g, 1);
 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
@@ -198,7 +198,11 @@ void rd_paint(t_rd *x, t_object *patcherview){
 
 	// info
 	{
-		char buf[128];
+        t_object *b = (t_object *)x;
+        jgraphics_select_font_face(g, jbox_get_fontname(b)->s_name, jbox_get_font_slant(b), jbox_get_font_weight(b));
+        jgraphics_set_font_size(g, jbox_get_fontsize((t_object *)x));
+
+        char buf[128];
 		double w, h;
 		jgraphics_set_source_jrgba(g, &x->datacolor);
 		sprintf(buf, "%0.2f", x->selection.min);
@@ -600,10 +604,10 @@ int main(void){
 
 t_max_err rd_notify(t_rd *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
 	t_rect rect;
-        jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
-        t_symbol *attrname;
-        if (msg == gensym("attr_modified")){
-                attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
+    jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
+    t_symbol *attrname;
+    if (msg == gensym("attr_modified")){
+        attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
 		if(attrname == gensym("mode")){
 			/*
 			if(x->mode){
