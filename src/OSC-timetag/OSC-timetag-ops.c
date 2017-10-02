@@ -152,12 +152,13 @@ void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n) {
     
     // null-terminate the string
     //strncat(s1, s, 19);
-    snprintf(s1, 19, "%s", s);
+    snprintf(s1, 20, "%s", s);
     
     // parse the time
     strptime(s1, "%Y-%m-%dT%H:%M:%S", &t);
     
-    OSCTimeTag_ut_to_ntp(osc_timetag_timegm(&t), n);
+    time_t time = timegm(&t);
+    OSCTimeTag_ut_to_ntp(time, n);
     n->frac_sec = (unsigned long int)(fmod(sec, 1.0) * 4294967295.0);
 
     n->sign = 1;
@@ -174,7 +175,7 @@ void OSCTimeTag_ntp_to_iso8601(struct ntptime* n, char* s) {
     i = (time_t)OSCTimeTag_ntp_to_ut(n);
     d = OSCTimeTag_ntp_to_float(n);
     t = gmtime(&i);
-    
+
     strftime(s1, 24, "%Y-%m-%dT%H:%M:%S", t);
     sprintf(s2, "%05fZ", fmod(d, 1.0));
     sprintf(s, "%s.%s", s1, s2+2);
@@ -246,7 +247,6 @@ void OSCTimeTag_now_to_ntp(struct ntptime* n) {
         (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
     
     n->frac_sec = (unsigned long)(tv.tv_usec * 4295); // 2^32-1 / 1.0e6
-
     n->sign = 1;
 }
 
