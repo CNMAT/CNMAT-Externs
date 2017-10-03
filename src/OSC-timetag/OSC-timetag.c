@@ -315,6 +315,7 @@ void OSCTimeTag_free(OSCTimeTag* x) {
   // this does not work, why?
   // release the proxy
   //freeobject(x->in_p[0]);
+    object_free(x->in_p[0]);
   
 }
 
