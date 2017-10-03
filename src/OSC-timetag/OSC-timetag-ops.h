@@ -8,8 +8,8 @@
 
 struct ntptime 
 {
-  unsigned long int sec;
-  unsigned long int frac_sec;
+  uint32_t sec;
+  uint32_t frac_sec;
   int sign;
   int type;
 };

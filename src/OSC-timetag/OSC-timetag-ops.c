@@ -44,15 +44,15 @@ void OSCTimeTag_add(struct ntptime* a, struct ntptime* b, struct ntptime* r) {
       r->sign = 1;
       
       if(a->frac_sec >= b->frac_sec) {
-	r->frac_sec = a->frac_sec - b->frac_sec;
+        r->frac_sec = a->frac_sec - b->frac_sec;
       } else {
-	if(r->sec == 0) {
-	  r->frac_sec = b->frac_sec - a->frac_sec;
-	  r->sign = -1;
-	} else {
-	  r->sec--;
-	  r->frac_sec = a->frac_sec - b->frac_sec;
-	}
+        if(r->sec == 0) {
+          r->frac_sec = b->frac_sec - a->frac_sec;
+          r->sign = -1;
+        } else {
+          r->sec--;
+          r->frac_sec = a->frac_sec - b->frac_sec;
+        }
       }
       
       
@@ -61,9 +61,9 @@ void OSCTimeTag_add(struct ntptime* a, struct ntptime* b, struct ntptime* r) {
       r->sec = b->sec - a->sec;
       
       if(a->frac_sec >= b->frac_sec) {
-	r->frac_sec = a->frac_sec - b->frac_sec;
+        r->frac_sec = a->frac_sec - b->frac_sec;
       } else {
-	r->frac_sec = b->frac_sec - a->frac_sec;
+        r->frac_sec = b->frac_sec - a->frac_sec;
       }
       
       r->sign = -1;
@@ -196,8 +196,8 @@ void OSCTimeTag_float_to_ntp(double d, struct ntptime* n) {
     frac_sec = fmod(d, 1.0);
     sec = d - frac_sec;
     
-    n->sec = (unsigned long int)(sec);
-    n->frac_sec= (unsigned long int)(frac_sec * 4294967295.0);
+    n->sec = (uint32_t)(sec);
+    n->frac_sec= (uint32_t)(frac_sec * 4294967295.0);
     n->type = TIME_STAMP;
 }
 
@@ -205,7 +205,7 @@ double OSCTimeTag_ntp_to_float(struct ntptime* n) {
   if(n->sign == 1) {
     return ((double)(n->sec)) + ((double)((unsigned long int)(n->frac_sec))) / 4294967295.0;
   } else {
-    return -1. * (((double)(n->sec)) + (((double)((unsigned long int)(n->frac_sec))) / 4294967295.0));
+    return -1. * (((double)(n->sec)) + (((double)((uint64_t)(n->frac_sec))) / 4294967295.0));
   }
 }
 
@@ -216,10 +216,10 @@ void OSCTimeTag_ut_to_ntp(long int ut, struct ntptime* n) {
     
     gettimeofday(&tv, &tz); // this is just to get the timezone...
     
-    n->sec = (unsigned long)2208988800UL + 
-            (unsigned long)ut - 
-            (unsigned long)(60 * tz.tz_minuteswest) +
-            (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
+    n->sec = (uint64_t)2208988800UL +
+            (uint32_t)ut -
+            (uint64_t)(60 * tz.tz_minuteswest) +
+            (uint32_t)(tz.tz_dsttime == 1 ? 3600 : 0);
 
     n->frac_sec = 0;
 }
@@ -231,7 +231,7 @@ long int OSCTimeTag_ntp_to_ut(struct ntptime* n) {
     
     gettimeofday(&tv, &tz); // this is just to get the timezone...
     
-    return n->sec - (unsigned long)2208988800UL + (unsigned long)(60 * tz.tz_minuteswest) - (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
+    return n->sec - (time_t)2208988800UL + (time_t)(60 * tz.tz_minuteswest) - (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
 }
 
 void OSCTimeTag_now_to_ntp(struct ntptime* n) {
@@ -241,12 +241,12 @@ void OSCTimeTag_now_to_ntp(struct ntptime* n) {
 
     gettimeofday(&tv, &tz);
     
-    n->sec = (unsigned long)2208988800UL + 
-        (unsigned long) tv.tv_sec - 
-        (unsigned long)(60 * tz.tz_minuteswest) +
-        (unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
+    n->sec = (uint32_t)2208988800UL +
+    (uint32_t) tv.tv_sec;// -
+        //(unsigned long)(60 * tz.tz_minuteswest) +
+        //(unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
     
-    n->frac_sec = (unsigned long)(tv.tv_usec * 4295); // 2^32-1 / 1.0e6
+    n->frac_sec = (uint32_t)(tv.tv_usec * 4295); // 2^32-1 / 1.0e6
     n->sign = 1;
 }
 

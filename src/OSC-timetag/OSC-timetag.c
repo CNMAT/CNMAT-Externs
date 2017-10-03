@@ -407,34 +407,34 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       r.frac_sec = 1;
     } else {
       if(x->op == OP_SUB || x->op == OP_DST) {
-	// flip sign
-	x->b.sign *= -1;
-
-	// do add
-	OSCTimeTag_add(&(x->a), &(x->b), &r);
-	
-	// flip sign back
-	x->b.sign *= -1;
+        // flip sign
+        x->b.sign *= -1;
+          
+        // do add
+        OSCTimeTag_add(&(x->a), &(x->b), &r);
+        
+        // flip sign back
+        x->b.sign *= -1;
       } else {
-	OSCTimeTag_add(&(x->a), &(x->b), &r);
+        OSCTimeTag_add(&(x->a), &(x->b), &r);
       }
 
       // force result unsigned in this mode...
       if(x->op == OP_DST) {
-	r.sign = 1;
+        r.sign = 1;
       }
       
       if(x->to == TO_F) {
-	outlet_float(x->out_p[0], OSCTimeTag_ntp_to_float(&r));
-	return r;
+        outlet_float(x->out_p[0], OSCTimeTag_ntp_to_float(&r));
+        return r;
       } else {
-	if(r.sign == -1) {
-	  // result undefined
-	  r.sign = 1;
-	  r.sec = 0;
-	  r.frac_sec = 1;
-	  r.type = TIME_IMMEDIATE;
-	}
+        if(r.sign == -1) {
+          // result undefined
+          r.sign = 1;
+          r.sec = 0;
+          r.frac_sec = 1;
+          r.type = TIME_IMMEDIATE;
+        }
       }
     }
     break;
