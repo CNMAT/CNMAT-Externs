@@ -1,14 +1,14 @@
 #ifndef _OSC_TIMETAG_OPS_H
 #define _OSC_TIMETAG_OPS_H
 
-#define TIME_NULL       0 
+#define TIME_NULL       0
 #define TIME_NOW        1
 #define TIME_IMMEDIATE  2
 #define TIME_STAMP      3
 
 #include <stdint.h>
 
-struct ntptime 
+struct ntptime
 {
   uint32_t sec;
   uint32_t frac_sec;
@@ -21,7 +21,7 @@ int osc_timetag_isleap(unsigned short int year);
 // conversions
 void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* timetag);
 //void OSCTimeTag_ntp_to_iso8601(struct ntptime* n, char* s);
-void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf);
+void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf, long n);
 
 void OSCTimeTag_float_to_ntp(double d, struct ntptime* n);
 double OSCTimeTag_ntp_to_float(struct ntptime* n);

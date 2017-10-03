@@ -24,25 +24,25 @@
 // add or subtract
 
 void OSCTimeTag_add(struct ntptime* a, struct ntptime* b, struct ntptime* r) {
-  
+
   if((a->sign == 1 && b->sign == 1) || (a->sign == -1 && b->sign == -1)) {
-    
+
     r->sec = a->sec + b->sec;
     r->frac_sec = a->frac_sec + b->frac_sec;
-    
+
     if(r->frac_sec < a->frac_sec) { // rollover occurred
       r->sec += 1;
     }
-    
+
     r->sign = a->sign;
-    
+
   } else if((a->sign == 1 && b->sign == -1)) {
-    
+
     if(a->sec > b->sec || (a->sec == b->sec && a->frac_sec >= b->frac_sec)) {
-      
+
       r->sec = a->sec - b->sec;
       r->sign = 1;
-      
+
       if(a->frac_sec >= b->frac_sec) {
         r->frac_sec = a->frac_sec - b->frac_sec;
       } else {
@@ -54,42 +54,42 @@ void OSCTimeTag_add(struct ntptime* a, struct ntptime* b, struct ntptime* r) {
           r->frac_sec = a->frac_sec - b->frac_sec;
         }
       }
-      
-      
+
+
     } else {
-      
+
       r->sec = b->sec - a->sec;
-      
+
       if(a->frac_sec >= b->frac_sec) {
         r->frac_sec = a->frac_sec - b->frac_sec;
       } else {
         r->frac_sec = b->frac_sec - a->frac_sec;
       }
-      
+
       r->sign = -1;
-      
+
     }
-    
+
   } else { // a.sign == -1 and b.sign == 1...
     OSCTimeTag_add(b, a, r);
   }
-  
+
   r->type = TIME_STAMP;
-  
+
 }
 
 int OSCTimeTag_cmp(struct ntptime* a, struct ntptime* b) {
-  
+
   if(a->sec < b->sec || (a->sec == b->sec && a->frac_sec < b->frac_sec)) {
     return -1;
   }
-  
+
   if(a->sec > b->sec || (a->sec == b->sec && a->frac_sec > b->frac_sec)) {
     return 1;
   }
-  
+
   return 0;
-  
+
 }
 
 // conversion functions
@@ -143,21 +143,21 @@ time_t osc_timetag_timegm (struct tm *tm)
 
 
 void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n) {
-  
+
     struct tm t;
     float sec;
     char s1[32];
-    
+
     // read out the fractions part
     sscanf(s, "%*d-%*d-%*dT%*d:%*d:%fZ", &sec);
-    
+
     // null-terminate the string
     //strncat(s1, s, 19);
     snprintf(s1, 20, "%s", s);
-    
+
     // parse the time
     strptime(s1, "%Y-%m-%dT%H:%M:%S", &t);
-    
+
     time_t time = timegm(&t);
     OSCTimeTag_ut_to_ntp(time, n);
     n->frac_sec = (unsigned long int)(fmod(sec, 1.0) * 4294967295.0);
@@ -166,13 +166,13 @@ void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* n) {
 }
 
 void OSCTimeTag_ntp_to_iso8601(struct ntptime* n, char* s) {
-  
+
     time_t i;
     struct tm* t;
     char s1[24];
     char s2[10];
     double d;
-    
+
     i = (time_t)OSCTimeTag_ntp_to_ut(n);
     d = OSCTimeTag_ntp_to_float(n);
     t = gmtime(&i);
@@ -202,7 +202,7 @@ int osc_timetag_isleap(unsigned short int year)
 {
     short int yrtest;
     yrtest=year;
-    
+
     //year modulo 400 = 0? if so, it's a leap year
     while(yrtest>0){
         yrtest-=400;
@@ -211,7 +211,7 @@ int osc_timetag_isleap(unsigned short int year)
         return 1; //it's a leap year
     }
     yrtest=year;
-    
+
     //year modulo 4 = 0 and year modulo 100 <>0? if so, it's a leap year
     while(yrtest>0){
         yrtest-=4;
@@ -247,7 +247,7 @@ unsigned short int osc_timetag_getmonth(unsigned short int *day, unsigned short 
     const unsigned short int OCT = 10;
     const unsigned short int NOV = 11;
     const unsigned short int DEC = 12;
-    
+
     unsigned short int JAN_LAST = 31;
     unsigned short int FEB_LAST = 59;
     unsigned short int MAR_LAST = 90;
@@ -260,7 +260,7 @@ unsigned short int osc_timetag_getmonth(unsigned short int *day, unsigned short 
     unsigned short int OCT_LAST = 304;
     unsigned short int NOV_LAST = 334;
     unsigned short int DEC_LAST = 365;
-    
+
     //correct monthly end dates for leap years (leap=1=leap year, 0 otherwise)
     if(leap > 0){
         if(leap <= 1){
@@ -275,7 +275,7 @@ unsigned short int osc_timetag_getmonth(unsigned short int *day, unsigned short 
             OCT_LAST += leap;
             NOV_LAST += leap;
             DEC_LAST += leap;
-            
+
         }else if(leap > 1){ //error condition
             return 0;
         }
@@ -325,23 +325,23 @@ unsigned short int osc_timetag_getmonth(unsigned short int *day, unsigned short 
 
 #define DWORD uint64_t
 // osc_timetag_toISO8601
-void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf)
+void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf, long n)
 {
-        char s1[20];
-    long n = 19 + snprintf(NULL, 0, "%05fZ", fmod(OSCTimeTag_ntp_to_float(timetag), 1.0));
+
     if(!buf){
         return;
     }
-    
+    char s1[20];
+
     uint32_t secs = osc_timetag_ntp_getSeconds(timetag);
     unsigned short int year, month, day, hour, minute, leap = 0;
-    
+
     const DWORD SEC_PER_YEAR = 31536000;
     const DWORD SEC_PER_DAY = 86400;
     const unsigned short int SEC_PER_HR = 3600;
     const unsigned short int SEC_PER_MIN = 60;
-    
-    
+
+
     //secs=-2208988800;//SNTPGetUTCSeconds();
     //secs = abs(secs);
     for(year = 0; secs >= SEC_PER_YEAR; year++){ //determine # years elapse since epoch
@@ -362,8 +362,8 @@ void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf)
      }
      */
     leap = osc_timetag_isleap(year); //Is this a leap year?
-    
-    
+
+
     for(day = 1; secs >= SEC_PER_DAY; day++){ //determine # days elapsed in current year
         secs -= SEC_PER_DAY;
     }
@@ -373,12 +373,12 @@ void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf)
     for(minute = 0; secs >= SEC_PER_MIN; minute++){  //determine minutes elapsed in current hour
         secs -= SEC_PER_MIN;
     }
-    
+
     //The value of secs at the end of the minutes loop is the seconds elapsed in the
     //current minute.
     //Given the year & day of year, determine month & day of month
     month = osc_timetag_getmonth(&day, leap);
-    
+
     //convert it all to the iso-8601 string
     {
         char yearstr[5], monthstr[3], daystr[3], hourstr[3], minutestr[3], secstr[3];
@@ -396,7 +396,7 @@ void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf)
         snprintf(hourstr, sizeof(hourstr), "%02u", hour);
         snprintf(minutestr, sizeof(minutestr), "%02u", minute);
         snprintf(secstr, sizeof(secstr), "%02u", secs);
-        
+
         //All items except for year can be 1 or two digits, need to adjust accordingly
         /*
          if(month < 10){
@@ -420,7 +420,7 @@ void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf)
          secstr[0] = '0';
          }
          */
-        
+
         //put it all together
         long i = 0;
         s1[i++] = yearstr[0];
@@ -444,31 +444,32 @@ void OSCTimeTag_ntp_to_iso8601(struct ntptime* timetag, char *buf)
         s1[i++] = secstr[1];
         s1[i++] = '\0';
     }
-    
+
     double d = OSCTimeTag_ntp_to_float(timetag);
     double dm1 = fmod(d, 1.0);
     //int l = osc_strfmt_float64(NULL, 0, dm1);
-    int l = snprintf(NULL, 0, "%05fZ", dm1);
-    char s2[l + 1];
-    snprintf(s2, l, "%05fZ", dm1);
+    //int l = snprintf(NULL, 0, "%05fZ", dm1);
+    char s2[24];
+    snprintf(s2, 24, "%05fZ", dm1);
     //osc_strfmt_float64(s2, l + 1, dm1);
-    snprintf(buf, n, "%s.%sZ", s1, s2+2);
-    
+    //long n = 19 + snprintf(NULL, 0, "%05fZ", fmod(d, 1.0));
+    snprintf(buf, n, "%s.%s", s1, s2+2);
+
     /*
      time_t i;
      struct tm *t;
      char s1[24];
      //char s2[10];
      double d;
-     
+
      t_osc_timetag_ntptime ntptime = *((t_osc_timetag_ntptime *)&timetag);
-     
+
      i = (time_t)osc_timetag_ntp_to_ut(ntptime);
      d = osc_timetag_ntp_to_float(ntptime);
      t = gmtime(&i);
      //printf("fucked: 0x%llx %f\n", i, d);
     	//t = localtime(&i);
-     
+
      strftime(s1, 24, "%Y-%m-%dT%H:%M:%S", t);
      double dm1 = fmod(d, 1.0);
      int l = osc_strfmt_float64(NULL, 0, dm1);
@@ -489,7 +490,7 @@ void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* timetag)
     double fsec;
     //char s1[];
     //memset(s1, '\0', sizeof(s1));
-    
+
     // read out the fractions part
     sscanf(s, "%*d-%*d-%*dT%*d:%*d:%lfZ", &fsec);
     /*
@@ -501,16 +502,16 @@ void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* timetag)
      */
     // null-terminate the string
     //strncat(s1, s, OSC_TIMETAG_MAX_STRING_LENGTH - 1);
-    
+
     // parse the time
     strptime(s, "%Y-%m-%dT%H:%M:%S", &t);
    // printf("year: %d, month: %d, mday: %d, yday: %d, hour: %d, min: %d, sec: %d\n", t.tm_year, t.tm_mon, t.tm_mday, t.tm_yday, t.tm_hour, t.tm_min, t.tm_sec);
-    
+
     const DWORD SEC_PER_YEAR = 31536000;
     const DWORD SEC_PER_DAY = 86400;
     const unsigned short int SEC_PER_HR = 3600;
     const unsigned short int SEC_PER_MIN = 60;
-    
+
     uint32_t sec = 0;
     for(int i = 0; i < t.tm_year; i++){
         sec += SEC_PER_YEAR;
@@ -522,21 +523,21 @@ void OSCTimeTag_iso8601_to_ntp(char* s, struct ntptime* timetag)
     int leap = osc_timetag_isleap(t.tm_year + 1900);
 
     int days_in_months[] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
-  
+
     int offset = leap && (t.tm_mon > 1) ? 1 : 0;
     sec += ((days_in_months[t.tm_mon] + offset + t.tm_mday ) * SEC_PER_DAY);
     sec += (t.tm_hour * SEC_PER_HR);
     sec += (t.tm_min * SEC_PER_MIN);
     sec += t.tm_sec;
     timetag->sec = sec;
-    
+
     //timetag->sec = (t.tm_year * 3.15569e7) + (t.tm_yday * 86400) + (t.tm_hour * 3600) + (t.tm_min * 60) + t.tm_sec;
     //osc_timetag_ut_to_ntp(mktime(&t), timetag);
     //t_osc_timetag_ntptime n;
     //osc_timetag_ut_to_ntp(mktime(&t), &n);
-    
+
     /**************************************************
-     * The connversion from double precision float to 32-bit int obviously 
+     * The connversion from double precision float to 32-bit int obviously
      * results in a loss of precision that I don't think can be overcome...
      **************************************************/
     timetag->frac_sec = (uint32_t)(fmod(fsec, 1.0) * 4294967295.0);
@@ -560,10 +561,10 @@ void OSCTimeTag_float_to_ntp(double d, struct ntptime* n) {
       d *= -1;
       n->sign = -1;
     }
-    
+
     frac_sec = fmod(d, 1.0);
     sec = d - frac_sec;
-    
+
     n->sec = (uint32_t)(sec);
     n->frac_sec= (uint32_t)(frac_sec * 4294967295.0);
     n->type = TIME_STAMP;
@@ -581,9 +582,9 @@ void OSCTimeTag_ut_to_ntp(time_t ut, struct ntptime* n) {
 
     struct timeval tv;
     struct timezone tz;
-    
+
     gettimeofday(&tv, &tz); // this is just to get the timezone...
-    
+
     n->sec = (uint64_t)2208988800UL +
             (uint32_t)ut -
             (uint64_t)(60 * tz.tz_minuteswest) +
@@ -596,9 +597,9 @@ time_t OSCTimeTag_ntp_to_ut(struct ntptime* n) {
 
     struct timeval tv;
     struct timezone tz;
-    
+
     gettimeofday(&tv, &tz); // this is just to get the timezone...
-    
+
     return n->sec - (time_t)2208988800UL + (time_t)(60 * tz.tz_minuteswest) - (time_t)(tz.tz_dsttime == 1 ? 3600 : 0);
 }
 
@@ -608,13 +609,12 @@ void OSCTimeTag_now_to_ntp(struct ntptime* n) {
     struct timezone tz;
 
     gettimeofday(&tv, &tz);
-    
+
     n->sec = (uint32_t)2208988800UL +
     (uint32_t) tv.tv_sec;// -
         //(unsigned long)(60 * tz.tz_minuteswest) +
         //(unsigned long)(tz.tz_dsttime == 1 ? 3600 : 0);
-    
+
     n->frac_sec = (uint32_t)(tv.tv_usec * 4295); // 2^32-1 / 1.0e6
     n->sign = 1;
 }
-
