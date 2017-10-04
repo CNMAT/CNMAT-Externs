@@ -338,13 +338,13 @@ void List(
 {
 
 	if (argc > x->max_inargs) {
-	  object_error((t_object *)x, "threefates: %ld-element input list too big, so I'm dropping it as if you'd never sent it.", argc);
-	  object_error((t_object *)x, "   Maximum input list size is %ld = %ld partials * (1 index + %ld parameters per partial)", x->max_inargs, x->max_osc, x->num_partial_parameters);
+	  object_error((t_object *)x, "threefates: %d-element input list too big, so I'm dropping it as if you'd never sent it.", argc);
+	  object_error((t_object *)x, "   Maximum input list size is %d = %d partials * (1 index + %d parameters per partial)", x->max_inargs, x->max_osc, x->num_partial_parameters);
 		return;
 	}
 	
 	if (argc %  (1+ x->num_partial_parameters) != 0) {
-		object_error((t_object *)x, "threefates: input list length not a multiple of %ld - dropping", 1+x->num_partial_parameters);
+		object_error((t_object *)x, "threefates: input list length not a multiple of %d - dropping", 1+x->num_partial_parameters);
 		return;
 	}
 

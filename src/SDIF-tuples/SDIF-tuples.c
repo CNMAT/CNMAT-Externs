@@ -163,6 +163,9 @@ typedef struct _SDIFtuples {
  	Boolean t_mainMatrix;	  /* If true, output the main matrix in the frame */
  	char t_matrixType[4];   /* Type of matrix to output */
  	int t_max_rows;			/* Max # of rows to output */
+    
+    void *clock;
+    
 } SDIFtuples;
 
 
@@ -221,6 +224,8 @@ void SDIFtuples_tellmeeverything(SDIFtuples *x);
 void PrintOneFrame(SDIFtuples *x, SDIFmem_Frame f);
 void PrintFrameHeader(SDIFtuples *x, SDIF_FrameHeader *fh);
 void PrintMatrixHeader(SDIFtuples *x, SDIF_MatrixHeader *mh);
+
+void SDIFtuples_tuples_timer_thread(SDIFtuples *x);
 
 
 int main(void) {
@@ -309,6 +314,8 @@ void *SDIFtuples_new(t_symbol *dummy, short argc, t_atom *argv) {
 	}
 	dsp_setup((t_pxobject *)x,1); // One signal input
 	
+    x->clock = clock_new((t_object *)x, (method)SDIFtuples_tuples_timer_thread );
+    
 	x->t_errorreporting = FALSE;
 	x->t_complainedAboutEmptyBufferAlready = FALSE;
 	x->t_buffer = 0;
@@ -349,9 +356,12 @@ void *SDIFtuples_new(t_symbol *dummy, short argc, t_atom *argv) {
 
 void SDIFtuples_free(SDIFtuples *x)
 {
+    dsp_free(&(x->t_ob));
+
+    object_free(x->clock);
+    
 	if(x->t_it)
 		SDIFinterp_Free(x->t_it);
-	dsp_free(&(x->t_ob));
 }
 
 static void *my_getbytes(int numBytes) {
@@ -979,6 +989,11 @@ void SDIFtuples_dsp64(SDIFtuples *x, t_object *dsp64, short *count, double sampl
 	}
 }
 
+void SDIFtuples_tuples_timer_thread(SDIFtuples *x)
+{
+    SDIFtuples_tuples(x, 0, 0, 0);
+}
+
 t_int *SDIFbuffer_perform(t_int *w) {
 	SDIFtuples *x = (SDIFtuples *)(w[1]);  // object
 	int size = w[2]; // vector size
@@ -988,8 +1003,9 @@ t_int *SDIFbuffer_perform(t_int *w) {
 		x->t_samps_until_output -= size;
 	} else {
 		x->t_time = (sdif_float64) vtime_in[x->t_samps_until_output];
-		SDIFtuples_tuples(x, 0, 0, 0);
-		x->t_samps_until_output = x->t_output_interval_samps;
+        //SDIFtuples_tuples(x, 0, 0, 0);
+        clock_delay(x->clock, 0);
+        x->t_samps_until_output = x->t_output_interval_samps;
 	}
 
 	return w+4;
@@ -1004,7 +1020,8 @@ void SDIFtuples_perform64(SDIFtuples *x, t_object *dsp64, double **ins, long num
 		x->t_samps_until_output -= size;
 	} else {
 		x->t_time = (sdif_float64) vtime_in[x->t_samps_until_output];
-		SDIFtuples_tuples(x, 0, 0, 0);
+		//SDIFtuples_tuples(x, 0, 0, 0);
+        clock_delay(x->clock, 0);
 		x->t_samps_until_output = x->t_output_interval_samps;
 	}
 }
