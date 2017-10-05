@@ -1,8 +1,8 @@
-archive_name=CNMAT_Externals-Max-Win32-`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`.zip
+archive_name=CNMAT_Externals-Max-Win32_64-`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`.zip
 dirs=(doc help media misc)
 
 mkdir CNMAT-Externals && mkdir CNMAT-Externals/externals
-cp build/Release/*.mxe CNMAT-Externals/externals
+cp build/Release/*.mxe* CNMAT-Externals/externals
 
 for f in ${dirs[*]}
 do

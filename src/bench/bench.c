@@ -239,7 +239,7 @@ void bench_bang(t_bench *x){
 
     uint64_t en = (uint64_t)diff.QuadPart;
     //post("%f, %f", (double)en, (double)en * 0.000001);
-    outlet_float(x->out0, (double)en );
+    outlet_float(x->out0, (double)en * 0.01);
 #else
 		uint64_t t2 = mach_absolute_time();
 		uint64_t diff = t2 - x->time;
