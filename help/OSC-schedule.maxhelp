@@ -3,13 +3,13 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 7,
-			"minor" : 0,
+			"minor" : 3,
 			"revision" : 4,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 238.0, 139.0, 723.0, 502.0 ],
+		"rect" : [ 100.0, 100.0, 723.0, 502.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -50,8 +50,8 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 22.0, 196.0, 203.919922, 19.171875 ],
-					"presentation_rect" : [ 30.0, 30.0, 203.919922, 19.171875 ],
+					"patching_rect" : [ 22.0, 196.0, 203.919876, 19.499023 ],
+					"presentation_rect" : [ 30.0, 30.0, 203.919876, 19.499023 ],
 					"prototypename" : "M4L.display",
 					"style" : "",
 					"text" : "https://github.com/CNMAT/CNMAT-odot",
@@ -75,7 +75,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 22.0, 223.0, 222.0, 49.0 ],
 					"style" : "default",
-					"text" : ";\rmax launch_browser https://github.com/CNMAT/CNMAT-odot"
+					"text" : ";\r\nmax launch_browser https://github.com/CNMAT/CNMAT-odot"
 				}
 
 			}
@@ -86,7 +86,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 22.0, 159.0, 272.0, 33.0 ],
+					"patching_rect" : [ 22.0, 159.0, 272.0, 34.0 ],
 					"style" : "",
 					"text" : "Note: for the current version of CNMAT OSC objects please see the Odot library, available at: "
 				}
@@ -170,7 +170,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 0,
+							"minor" : 3,
 							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -282,7 +282,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 0,
+							"minor" : 3,
 							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -404,7 +404,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 0,
+							"minor" : 3,
 							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -528,7 +528,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 0,
+							"minor" : 3,
 							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -653,13 +653,13 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 7,
-							"minor" : 0,
+							"minor" : 3,
 							"revision" : 4,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 288.0, 79.0, 1043.0, 717.0 ],
+						"rect" : [ 288.0, 85.0, 685.0, 717.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -688,12 +688,25 @@
 						"subpatcher_template" : "",
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-30",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"patching_rect" : [ 257.0, 184.0, 37.0, 22.0 ],
+									"style" : "",
+									"text" : "del 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"id" : "obj-1",
 									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 698.0, 109.0, 225.0, 47.0 ],
+									"patching_rect" : [ 698.0, 109.0, 227.0, 48.0 ],
 									"style" : "default",
 									"text" : "3. this message is scheduled 10 msec in the future; it will emerge from the leftmost outlet 10 msec after receipt."
 								}
@@ -861,7 +874,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 353.0, 113.0, 24.0, 24.0 ],
+									"patching_rect" : [ 353.0, 88.0, 24.0, 24.0 ],
 									"style" : "default"
 								}
 
@@ -873,7 +886,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "bang", "bang" ],
-									"patching_rect" : [ 353.0, 164.0, 37.0, 22.0 ],
+									"patching_rect" : [ 353.0, 122.0, 37.0, 22.0 ],
 									"style" : "default",
 									"text" : "t b b"
 								}
@@ -1025,7 +1038,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 404.0, 110.0, 235.0, 60.0 ],
+									"patching_rect" : [ 394.0, 82.0, 235.0, 62.0 ],
 									"style" : "default",
 									"text" : "2. this message is stamped with the current time--it will be late by the time OSC-schedule gets it, and therefore goes out the middle outlet (deadline missed)"
 								}
@@ -1035,8 +1048,6 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-11", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
 
@@ -1044,8 +1055,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-12", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-10", 1 ]
 								}
 
@@ -1053,8 +1062,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-24", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-11", 0 ]
 								}
 
@@ -1062,8 +1069,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-13", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-12", 0 ]
 								}
 
@@ -1071,8 +1076,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-19", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -1080,35 +1083,27 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-15", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-14", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-16", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-15", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
 									"destination" : [ "obj-17", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-15", 1 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-30", 0 ],
+									"source" : [ "obj-15", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-24", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-16", 0 ]
 								}
 
@@ -1116,8 +1111,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-17", 0 ]
 								}
 
@@ -1125,8 +1118,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-24", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-18", 0 ]
 								}
 
@@ -1134,8 +1125,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-24", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-19", 0 ]
 								}
 
@@ -1143,8 +1132,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-19", 1 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-2", 0 ]
 								}
 
@@ -1152,8 +1139,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-24", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-23", 0 ]
 								}
 
@@ -1161,8 +1146,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-25", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-24", 0 ]
 								}
 
@@ -1170,8 +1153,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-20", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-25", 2 ]
 								}
 
@@ -1179,8 +1160,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-21", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-25", 1 ]
 								}
 
@@ -1188,8 +1167,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-22", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 0,
 									"source" : [ "obj-25", 0 ]
 								}
 
@@ -1197,8 +1175,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-8", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
+									"order" : 1,
 									"source" : [ "obj-25", 0 ]
 								}
 
@@ -1206,17 +1183,20 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-2", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-3", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-16", 0 ],
+									"source" : [ "obj-30", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-23", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -1224,8 +1204,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -1233,8 +1211,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-6", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-8", 1 ]
 								}
 
@@ -1242,8 +1218,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-8", 2 ]
 								}
 
@@ -1251,8 +1225,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
 									"source" : [ "obj-9", 0 ]
 								}
 
@@ -1281,7 +1253,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 22.0, 95.0, 457.0, 47.0 ],
+					"patching_rect" : [ 22.0, 95.0, 457.0, 48.0 ],
 					"style" : "default",
 					"text" : "Rescheduled messages appear on the leftmost outlet. Messages which have missed the scheduling deadline on the middle, and messages with the immediate tag on the rightmost."
 				}
@@ -1295,7 +1267,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 22.0, 24.0, 175.0, 33.0 ],
+					"patching_rect" : [ 22.0, 24.0, 175.0, 34.0 ],
 					"style" : "",
 					"text" : "OSC-schedule"
 				}
@@ -1317,7 +1289,6 @@
 		"lines" : [ 			{
 				"patchline" : 				{
 					"destination" : [ "obj-16", 0 ],
-					"disabled" : 0,
 					"hidden" : 1,
 					"source" : [ "obj-15", 0 ]
 				}
@@ -1326,7 +1297,6 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-26", 0 ],
-					"disabled" : 0,
 					"hidden" : 1,
 					"source" : [ "obj-21", 0 ]
 				}
@@ -1335,7 +1305,6 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-21", 0 ],
-					"disabled" : 0,
 					"hidden" : 1,
 					"source" : [ "obj-44", 1 ]
 				}
@@ -1343,19 +1312,19 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "OSC-schedule.mxo",
-				"type" : "iLaX"
+				"name" : "OSC-schedule.mxe64",
+				"type" : "mx64"
 			}
 , 			{
-				"name" : "OpenSoundControl.mxo",
-				"type" : "iLaX"
+				"name" : "OpenSoundControl.mxe64",
+				"type" : "mx64"
 			}
 , 			{
-				"name" : "OSC-timetag.mxo",
-				"type" : "iLaX"
+				"name" : "OSC-timetag.mxe64",
+				"type" : "mx64"
 			}
  ],
-		"embedsnapshot" : 0
+		"autosave" : 0
 	}
 
 }
