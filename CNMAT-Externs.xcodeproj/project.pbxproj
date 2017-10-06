@@ -543,7 +543,6 @@
 		52FF18FC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FD163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
-		A4DB19B41A1EFC470074BE10 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4DB19B31A1EFC470074BE10 /* libgsl.a */; };
 		A4E832E619E8642800C55B20 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		A4E832E919E8642800C55B20 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		A4E832EA19E8642800C55B20 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -1937,7 +1936,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4DB19B41A1EFC470074BE10 /* libgsl.a in Frameworks */,
 				52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */,
 				52FF1872163B5C3800F94922 /* Accelerate.framework in Frameworks */,
 				52FF18A4163B5C4B00F94922 /* Carbon.framework in Frameworks */,
