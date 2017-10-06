@@ -1,7 +1,7 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
 University of California, Berkeley.  Copyright (c) 2008, The Regents of
-the University of California (Regents). 
+the University of California (Regents).
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
 licensing agreement, is hereby granted, provided that the above copyright
@@ -56,7 +56,7 @@ VERSION 1.0: First version
 typedef struct _bench{
        	t_pxobject t_ob;
 	int t_objmode;
-	int t_mode; 
+	int t_mode;
 } t_bench;
 
 t_class *bench_class;
@@ -75,16 +75,16 @@ void bench_free(t_bench *x);
 
 int main(void){
 	bench_class = class_new("bench~", (method)bench_new, (method)bench_free, (short)sizeof(t_bench), 0L, A_GIMME, 0);
-	
+
 	version_post_copyright();
 
 	class_addmethod(bench_class, (method) version, "version", 0);
 	class_addmethod(bench_class, (method)bench_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(bench_class, (method)bench_assist, "assist", A_CANT, 0);
-	
+
 	class_dspinit(bench_class);
-	
-	
+
+
 	class_register(CLASS_BOX, bench_class);
 	return 0;
 }
@@ -117,7 +117,7 @@ void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 			outlet_new((t_object *)x, "signal");
 			outlet_new((t_object *)x, "signal");
 			x->t_objmode = BENCH_IN;
-			
+
 			if(argc == 1) x->t_mode = BENCH_MODE_ONES;
 			else{
 				if(!strcmp(argv[1].a_w.w_sym->s_name, "zeros")){
@@ -142,7 +142,7 @@ void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 			return NULL;
 		}
 	}
-	//x->t_ob.z_misc |= Z_NO_INPLACE;	
+	//x->t_ob.z_misc |= Z_NO_INPLACE;
 
 	return x;
 }
@@ -165,7 +165,7 @@ void bench_dsp64(t_bench *x, t_object *dsp64, short *count, double samplerate, l
 }
 /*
 void bench_dsp(t_bench *x, t_signal **sp, short *count){
-	if(x->t_objmode == BENCH_IN){ 
+	if(x->t_objmode == BENCH_IN){
 		if(!count[0]) dsp_add(bench_perform_in, 4, x, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 		else dsp_add(bench_perform_in_connected, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 	}
@@ -250,6 +250,6 @@ t_int *bench_perform_out(t_int *w){
 		out[i] = (float)diff;
 
 	return (w + 6);
-	
+
 }
  */
