@@ -28,6 +28,11 @@
 
     <!--ARGUMENTS-->
     <objarglist>
+	<objarg name="type" optional="0" type="symbol">
+	    <description>
+		The object's communication type.  This must be either the word "in" or "out", indicating which use case you would like the object to adhere to.
+	    </description>
+	</objarg>
     </objarglist>
 
     <!--MESSAGES-->
