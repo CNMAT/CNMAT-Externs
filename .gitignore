@@ -21,3 +21,4 @@ build-gcc
 !default.perspectivev3
 !xcshareddata
 package-info.json
+./include/current_version.h
