@@ -78,7 +78,7 @@
 
 */
 
-#include "version.h" 
+//#include "version.h"
 #include "ext.h" 
 #include "ext_obex.h" 
 #include "ext_obex_util.h" 
@@ -88,7 +88,7 @@
 #include "jpatcher_api.h" 
 #include "jgraphics.h" 
 #include "z_dsp.h"
-#include "version.c" 
+//#include "version.c"
 //#include "gsl/gsl_sf.h"
 //#include "gsl/gsl_errno.h"
 #undef msg
@@ -420,7 +420,7 @@ void te_scaleToFit(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_scaleToFitX(t_te *x, int numfunctions, int *functions);
 void te_scaleToFitY(t_te *x, int numfunctions, int *functions);
 void te_addToFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv);
-void te_addToAllFunctions(t_te *x, double x, double y);
+void te_addToAllFunctions(t_te *x, double xx, double yy);
 void te_getFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_setFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv);
 void te_invertSelected(t_te *x);
@@ -438,7 +438,7 @@ void te_cut(t_te *x);
 void te_copy(t_te *x);
 void te_paste(t_te *x);
 void te_pasteAtTime(t_te *x, double time);
-void te_pasteAtCoords(t_te *x, double x, double y);
+void te_pasteAtCoords(t_te *x, double xx, double yy);
 void te_findNearestGridPoint(t_te *x, t_pt pt_sc, t_pt *pt_out_sc);
 void te_showgrid(t_te *x, long b);
 void te_mouseup(t_te *x, t_object *patcherview, t_pt pt, long modifiers); 
@@ -1990,7 +1990,8 @@ void te_fullPacket(t_te *x, long len, long ptr){
 	int i;
 	for(i = 0; i < (int)(sizeof(params) / sizeof(char*)); i++){
 		t_osc_msg_ar_s *m = NULL;
-		osc_bundle_s_lookupAddress(len, (char *)ptr, params[i], &m, 1);
+		//osc_bundle_s_lookupAddress(len, (char *)ptr, params[i], &m, 1);
+        m = osc_bundle_s_lookupAddress(len, (char *)ptr, params[i], 1);
 
 		int j = 0;
 		for(j = 0; j < osc_message_array_s_getLen(m); j++){
@@ -2016,7 +2017,8 @@ void te_fullPacket(t_te *x, long len, long ptr){
 
 	t_osc_msg_ar_s *m = NULL;
 	//osc_bundle_lookupAddress_s(len, (char *)ptr, "/function/??/", &m, 0);	
-	osc_bundle_s_lookupAddress(len, (char *)ptr, "/function/", &m, 0);	
+	//osc_bundle_s_lookupAddress(len, (char *)ptr, "/function/", &m, 0);
+    m = osc_bundle_s_lookupAddress(len, (char *)ptr, "/function/", 0);
 	if(m){
 		int fplen = 10;
 		char fn[99];
@@ -3662,8 +3664,8 @@ void te_removePoint(t_te *x, t_point *point, int functionNum){
 }
 
 void te_dump(t_te *x){
-	double rdtsc = RDTSC_CYCLES_PER_SECOND;
-	TIMER_START(bar, rdtsc);
+	//double rdtsc = RDTSC_CYCLES_PER_SECOND;
+	//TIMER_START(bar, rdtsc);
 	t_osc_bndl_u *b = osc_bundle_u_alloc();
 	int i;
 	for(i = 0; i < x->numFunctions; i++){
@@ -3748,47 +3750,54 @@ void te_dump(t_te *x){
 			osc_message_u_appendFloat(error_beta, p->error_beta);
 			osc_bundle_u_addMsg(pmb, error_beta);
 
-			long mb_s_len = 0;
-			char *mb_s = NULL;
-			osc_bundle_u_serialize(pmb, &mb_s_len, &mb_s);
-			osc_message_u_appendBndl(pm, mb_s_len, mb_s);
+			//long mb_s_len = 0;
+			//char *mb_s = NULL;
+			//osc_bundle_u_serialize(pmb, &mb_s_len, &mb_s);
+			//osc_message_u_appendBndl(pm, mb_s_len, mb_s);
+            osc_message_u_appendBndl_u(pm, pmb);
 			osc_bundle_u_addMsg(fb, pm);
 
-			if(mb_s){
-				osc_mem_free(mb_s);
-			}
+			//if(mb_s){
+			//	osc_mem_free(mb_s);
+			//}
 			p = p->next;
 			p_num++;
 		}
-		long fb_s_len = 0;
-		char *fb_s = NULL;
-		osc_bundle_u_serialize(fb, &fb_s_len, &fb_s);
-		osc_message_u_appendBndl(m, fb_s_len, fb_s);
+		//long fb_s_len = 0;
+		//char *fb_s = NULL;
+		//osc_bundle_u_serialize(fb, &fb_s_len, &fb_s);
+        t_osc_bndl_s *fb_s = osc_bundle_u_serialize(fb);
+		osc_message_u_appendBndl(m, osc_bundle_s_getLen(fb_s), osc_bundle_s_getPtr(fb_s));
 		if(fb_s){
-			osc_mem_free(fb_s);
+			//osc_mem_free(fb_s);
+            osc_bundle_s_deepFree(fb_s);
 		}
 		osc_bundle_u_addMsg(b, m);
 	}
-	long len = 0;
-	char *bndl_s = NULL;
-	osc_bundle_u_serialize(b, &len, &bndl_s);
+	//long len = 0;
+	//char *bndl_s = NULL;
+	//osc_bundle_u_serialize(b, &len, &bndl_s);
+    t_osc_bndl_s *sb = osc_bundle_u_serialize(b);
+    long len = osc_bundle_s_getLen(sb);
+    char *bndl_s = osc_bundle_s_getPtr(sb);
 
 	t_atom out[2];
 	atom_setlong(out, len);
 	atom_setlong(out + 1, (long)bndl_s);
 	outlet_anything(x->out_osc, ps_FullPacket, 2, out);
 
-	osc_mem_free(bndl_s);
+	//osc_mem_free(bndl_s);
+    osc_bundle_s_deepFree(sb);
 	osc_bundle_u_free(b);
 
-	TIMER_STOP(bar, rdtsc);
-	TIMER_PRINTF(bar);
+	//TIMER_STOP(bar, rdtsc);
+	//TIMER_PRINTF(bar);
 	return;
 	//////////////////////////////////////////////////
 	// OLD
 	//////////////////////////////////////////////////
 	{
-	TIMER_START(foo, rdtsc);
+	//TIMER_START(foo, rdtsc);
 	t_atom out[2];
 
 	char function_address[] = "/dump/function/";
@@ -4038,8 +4047,8 @@ void te_dump(t_te *x){
 		free(buf);
 	}
 
-	TIMER_STOP(foo, rdtsc);
-	TIMER_PRINTF(foo);
+	//TIMER_STOP(foo, rdtsc);
+	//TIMER_PRINTF(foo);
 	}
 }
 
@@ -4197,16 +4206,20 @@ void te_outputBeatOSC(t_te *x, long function, long point, long beat, float time,
 	osc_message_u_appendFloat(phase_msg, phase);
 	osc_bundle_u_addMsg(nested_bndl, phase_msg);
 
-	char *nested_bndl_s = NULL;
-	long nested_bndl_len_s = 0;
-	osc_bundle_u_serialize(nested_bndl, &nested_bndl_len_s, &nested_bndl_s);
-	osc_message_u_appendBndl(msg, nested_bndl_len_s, nested_bndl_s);
+	//char *nested_bndl_s = NULL;
+	//long nested_bndl_len_s = 0;
+	//osc_bundle_u_serialize(nested_bndl, &nested_bndl_len_s, &nested_bndl_s);
+	//osc_message_u_appendBndl(msg, nested_bndl_len_s, nested_bndl_s);
+    osc_message_u_appendBndl_u(msg, nested_bndl);
 	osc_bundle_u_addMsg(bndl, msg);
 
-	char *bndl_s = NULL;
-	long bndl_len_s = 0;
+	//char *bndl_s = NULL;
+	//long bndl_len_s = 0;
 
-	osc_bundle_u_serialize(bndl, &bndl_len_s, &bndl_s);
+	//osc_bundle_u_serialize(bndl, &bndl_len_s, &bndl_s);
+    t_osc_bndl_s *sb = osc_bundle_u_serialize(bndl);
+    char *bndl_s = osc_bundle_s_getPtr(sb);
+    long bndl_len_s = osc_bundle_s_getLen(sb);
 
 	t_atom foo[2];
 	atom_setlong(foo, bndl_len_s);
@@ -4214,8 +4227,9 @@ void te_outputBeatOSC(t_te *x, long function, long point, long beat, float time,
 	outlet_anything(x->out_osc, ps_FullPacket, 2, foo);
 
 	osc_bundle_u_free(bndl);
-	osc_mem_free(nested_bndl_s);
-	osc_mem_free(bndl_s);
+	//osc_mem_free(nested_bndl_s);
+	//osc_mem_free(bndl_s);
+    osc_bundle_s_deepFree(sb);
 
 	return;
 
@@ -4341,26 +4355,31 @@ void te_outputSubdivOSC(t_te *x, long function, long point, long beat, long subd
 	osc_message_u_setAddress(phase_msg, "/phase");
 	osc_message_u_appendFloat(phase_msg, phase);
 	osc_bundle_u_addMsg(nested_bndl, phase_msg);
-
-	char *nested_bndl_s = NULL;
-	long nested_bndl_len_s = 0;
-	osc_bundle_u_serialize(nested_bndl, &nested_bndl_len_s, &nested_bndl_s);
-	osc_message_u_appendBndl(msg, nested_bndl_len_s, nested_bndl_s);
-	osc_bundle_u_addMsg(bndl, msg);
-
-	char *bndl_s = NULL;
-	long bndl_len_s = 0;
-
-	osc_bundle_u_serialize(bndl, &bndl_len_s, &bndl_s);
-
-	t_atom foo[2];
-	atom_setlong(foo, bndl_len_s);
-	atom_setlong(foo + 1, (long)bndl_s);
-	outlet_anything(x->out_osc, ps_FullPacket, 2, foo);
-
-	osc_bundle_u_free(bndl);
-	osc_mem_free(nested_bndl_s);
-	osc_mem_free(bndl_s);
+    
+    //char *nested_bndl_s = NULL;
+    //long nested_bndl_len_s = 0;
+    //osc_bundle_u_serialize(nested_bndl, &nested_bndl_len_s, &nested_bndl_s);
+    //osc_message_u_appendBndl(msg, nested_bndl_len_s, nested_bndl_s);
+    osc_message_u_appendBndl_u(msg, nested_bndl);
+    osc_bundle_u_addMsg(bndl, msg);
+    
+    //char *bndl_s = NULL;
+    //long bndl_len_s = 0;
+    
+    //osc_bundle_u_serialize(bndl, &bndl_len_s, &bndl_s);
+    t_osc_bndl_s *sb = osc_bundle_u_serialize(bndl);
+    char *bndl_s = osc_bundle_s_getPtr(sb);
+    long bndl_len_s = osc_bundle_s_getLen(sb);
+    
+    t_atom foo[2];
+    atom_setlong(foo, bndl_len_s);
+    atom_setlong(foo + 1, (long)bndl_s);
+    outlet_anything(x->out_osc, ps_FullPacket, 2, foo);
+    
+    osc_bundle_u_free(bndl);
+    //osc_mem_free(nested_bndl_s);
+    //osc_mem_free(bndl_s);
+    osc_bundle_s_deepFree(sb);
 
 	return;
 	struct {
@@ -5569,7 +5588,7 @@ int main(void){
 	class_addmethod(c, (method)te_dsp, "dsp", A_CANT, 0);
 	class_addmethod(c, (method)te_dspstate, "dspstate", A_CANT, 0);
  	class_addmethod(c, (method)te_paint, "paint", A_CANT, 0); 
- 	class_addmethod(c, (method)version, "version", 0); 
+ 	//class_addmethod(c, (method)version, "version", 0);
  	class_addmethod(c, (method)te_assist, "assist", A_CANT, 0); 
  	class_addmethod(c, (method)te_notify, "notify", A_CANT, 0); 
  	class_addmethod(c, (method)te_mousedown, "mousedown", A_CANT, 0); 
@@ -5794,7 +5813,7 @@ int main(void){
 		l_function_layers[i] = gensym(buf);
 	}
 
- 	version(0); 
+ 	//version(0);
 	
  	return 0; 
 } 
