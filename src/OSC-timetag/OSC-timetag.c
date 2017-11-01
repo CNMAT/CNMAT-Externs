@@ -1,6 +1,6 @@
 
 /*
- 
+
 Copyright (c) 2008
 The Regents of the University of California (Regents).
 All Rights Reserved.
@@ -29,7 +29,7 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
  OSC-timetag.c
- 
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: OSC-timetag
 DESCRIPTION: Generates, transforms and operates on high-resolution timestamps
@@ -43,8 +43,8 @@ VERSION 0.2: Added support for in-place operations on FullPackets
 */
 #define NAME "OSC-timetag"
 #define DESCRIPTION "Generates, transforms and operates on high-resolution timestamps"
-#define AUTHORS "Andy Schmeder"
-#define COPYRIGHT_YEARS "2008,12,13"
+#define AUTHORS "Andy Schmeder and John MacCallum"
+#define COPYRIGHT_YEARS "2008,12,13-17"
 
 
 // max object header
@@ -69,7 +69,7 @@ VERSION 0.2: Added support for in-place operations on FullPackets
 
 #define TO_T 1
 #define TO_F 2
-#define TO_I 3 
+#define TO_I 3
 #define TO_S 4
 #define TO_A 5
 #define TO_P 6
@@ -78,20 +78,20 @@ VERSION 0.2: Added support for in-place operations on FullPackets
 typedef struct _OSCTimeTag
 {
   t_object o_ob;    // required header
-    
+
   t_object* in_p[1];  // either a normal inlet or a crazy proxy thing
   long in_i_unsafe;   // which inlet message arrived on, but isn't threadsafe
-  
+
   t_object* out_p[1]; // outlet
-  
+
   int op;
   int to;
 
   struct ntptime a;
   struct ntptime b; // second argument to the operator, if relevant, or the previous value in OP_DER
-  
+
   float f; // scaling factor if in multiply mode
-  
+
 } OSCTimeTag;
 
 /* global that holds the class definition */
@@ -126,83 +126,83 @@ int main(void)
 
   // post version
   version_post_copyright();
-    
+
   OSCTimeTag_class = class_new("OSC-timetag", (method)OSCTimeTag_new, (method)OSCTimeTag_free, (short)sizeof(OSCTimeTag), 0L, A_GIMME, 0);
-    
+
   // unix timestamp
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_int, "int", A_LONG, 0);
-    
+
   // float time
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_float, "float", A_FLOAT, 0);
-    
+
   // now (both inlets via proxy)
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_now, "now", 0);
-    
+
   // bang is equivalent to now
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_now, "bang", 0);
 
   // special immediate handler (both inlets via proxy)
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_immediate, "immediate", 0);
-    
+
   // OSCTimeTag in (both inlets via proxy)
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_OSCTimeTag, "OSCTimeTag", A_GIMME, 0);
-    
+
   // OSCTimeTag in (both inlets via proxy)
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_FullPacket, "FullPacket", A_GIMME, 0);
-    
+
   // supports iso8601 string (both inlets via proxy)
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_iso8601, "iso8601", A_GIMME, 0);
-    
+
   // tooltip helper
   class_addmethod(OSCTimeTag_class, (method)OSCTimeTag_assist, "assist", A_CANT, 0);
-    
+
   ps_FullPacket = gensym("FullPacket");
   ps_OSCTimeTag = gensym("OSCTimeTag");
   ps_iso8601 = gensym("iso8601");
   ps_tai = gensym("tai");
-    
+
     class_register(CLASS_BOX, OSCTimeTag_class);
     return 0;
-  
+
 }
 
 /* instance creation routine */
 
 void *OSCTimeTag_new(t_symbol* s, short argc, t_atom *argv)
 {
-  
-  OSCTimeTag *x;	
+
+  OSCTimeTag *x;
   int i;
-    
+
   x = object_alloc(OSCTimeTag_class);
   if(!x){
 	  return NULL;
   }
-    
+
   x->op = OP_TAG;
   x->to = TO_T;
-  
+
   x->f = 1.0;
 
   x->a.sec = 0;
   x->a.frac_sec = 1;
   x->a.sign = 1;
   x->a.type = TIME_IMMEDIATE;
-  
+
   x->b.sec = 0;
   x->b.frac_sec = 1;
   x->b.sign = 1;
   x->b.type = TIME_NULL;
-    
+
   for(i = 0; i < argc; i++) {
 
     if(argv[i].a_type == A_SYM) {
       // look for @op
       if(strcmp(argv[i].a_w.w_sym->s_name, "@op") == 0) {
-                
+
 	if(i + 1 < argc) {
 	  i++;
-          
+
 	  if(argv[i].a_type == A_SYM) {
 	    if(strcmp(argv[i].a_w.w_sym->s_name, "tag") == 0) {
 	      x->op = OP_TAG;
@@ -222,60 +222,60 @@ void *OSCTimeTag_new(t_symbol* s, short argc, t_atom *argv)
 	  } else {
 	    object_post((t_object *)x, "OSC-timetag got unexpected type for @op");
 	  }
-          
+
 	} else {
 	  object_post((t_object *)x, "OSC-timetag expects an operator after @op");
 	}
-        
+
       }
 
       // look for @to
       if(strcmp(argv[i].a_w.w_sym->s_name, "@to") == 0) {
-	
-	if(i + 1 < argc) {
-	  i++;
-          
-	  if(argv[i].a_type == A_SYM) {
-	    if(strcmp(argv[i].a_w.w_sym->s_name, "t") == 0) {
-	      x->to = TO_T;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "OSCTimeTag") == 0) {
-	      x->to = TO_T;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "i") == 0) {
-	      x->to = TO_I;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "int") == 0) {
-	      x->to = TO_I;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "unix") == 0) {
-	      x->to = TO_I;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "f") == 0) {
-	      x->to = TO_F;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "float") == 0) {
-	      x->to = TO_F;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "s") == 0) {
-	      x->to = TO_S;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "str") == 0) {
-	      x->to = TO_S;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "iso8601") == 0) {
-	      x->to = TO_S;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "FullPacket") == 0) {
-	      x->to = TO_P;
-	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "#bundle") == 0) {
-	      x->to = TO_P;
-	    } else {
-	      object_post((t_object *)x, "OSC-timetag got unknown value for @to: %s", argv[i].a_w.w_sym->s_name);
-	    }
-	  } else {
-	    object_post((t_object *)x, "OSC-timetag got unexpected type for @to");
-	  }
-          
-	} else {
-	  object_post((t_object *)x, "OSC-timetag expects a type after @to");
-	}
-        
+
+      	if(i + 1 < argc) {
+      	  i++;
+
+      	  if(argv[i].a_type == A_SYM) {
+      	    if(strcmp(argv[i].a_w.w_sym->s_name, "t") == 0) {
+      	      x->to = TO_T;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "OSCTimeTag") == 0) {
+      	      x->to = TO_T;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "i") == 0) {
+      	      x->to = TO_I;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "int") == 0) {
+      	      x->to = TO_I;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "unix") == 0) {
+      	      x->to = TO_I;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "f") == 0) {
+      	      x->to = TO_F;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "float") == 0) {
+      	      x->to = TO_F;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "s") == 0) {
+      	      x->to = TO_S;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "str") == 0) {
+      	      x->to = TO_S;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "iso8601") == 0) {
+      	      x->to = TO_S;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "FullPacket") == 0) {
+      	      x->to = TO_P;
+      	    } else if(strcmp(argv[i].a_w.w_sym->s_name, "#bundle") == 0) {
+      	      x->to = TO_P;
+      	    } else {
+      	      object_post((t_object *)x, "OSC-timetag got unknown value for @to: %s", argv[i].a_w.w_sym->s_name);
+      	    }
+      	  } else {
+      	    object_post((t_object *)x, "OSC-timetag got unexpected type for @to");
+      	  }
+
+      	} else {
+          object_post((t_object *)x, "OSC-timetag expects a type after @to");
+      	}
+
       }
     }
-    
+
   }
-    
+
   if(x->op == OP_CMP) {
     x->to = TO_I;
   }
@@ -297,7 +297,7 @@ void *OSCTimeTag_new(t_symbol* s, short argc, t_atom *argv)
     x->out_p[0] = outlet_new(x, "FullPacket");
     break;
   }
-    
+
   switch(x->op) {
   case OP_TAG: // only one inlet for these two cases
   case OP_DER:
@@ -306,16 +306,17 @@ void *OSCTimeTag_new(t_symbol* s, short argc, t_atom *argv)
     x->in_p[0] = proxy_new(x, 1, &x->in_i_unsafe);
     break;
   }
-    
+
   return (x);
 }
 
 void OSCTimeTag_free(OSCTimeTag* x) {
-  
+
   // this does not work, why?
   // release the proxy
   //freeobject(x->in_p[0]);
-  
+    object_free(x->in_p[0]);
+
 }
 
 // tooltip assist
@@ -364,18 +365,18 @@ void OSCTimeTag_assist (OSCTimeTag *x, void *box, long msg, long arg, char *dstS
 // this is where the op executes
 struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 {
-    
+
   struct ntptime r; // answer
   char s[32]; // string if we need it
   t_atom tt[2]; // max list output for timetag
   t_atom iso[1]; // iso list output
 
   double a, c;
-    
+
   r.sign = 1;
-  
+
   switch(x->op) {
-    
+
   case OP_TAG:
     if(x->a.type == TIME_IMMEDIATE) {
       r.sec = 0;
@@ -392,7 +393,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       r.type = TIME_STAMP;
     }
     break;
-    
+
   case OP_ADD:
   case OP_SUB:
   case OP_DST:
@@ -407,38 +408,38 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       r.frac_sec = 1;
     } else {
       if(x->op == OP_SUB || x->op == OP_DST) {
-	// flip sign
-	x->b.sign *= -1;
+        // flip sign
+        x->b.sign *= -1;
 
-	// do add
-	OSCTimeTag_add(&(x->a), &(x->b), &r);
-	
-	// flip sign back
-	x->b.sign *= -1;
+        // do add
+        OSCTimeTag_add(&(x->a), &(x->b), &r);
+
+        // flip sign back
+        x->b.sign *= -1;
       } else {
-	OSCTimeTag_add(&(x->a), &(x->b), &r);
+        OSCTimeTag_add(&(x->a), &(x->b), &r);
       }
 
       // force result unsigned in this mode...
       if(x->op == OP_DST) {
-	r.sign = 1;
+        r.sign = 1;
       }
-      
+
       if(x->to == TO_F) {
-	outlet_float(x->out_p[0], OSCTimeTag_ntp_to_float(&r));
-	return r;
+        outlet_float(x->out_p[0], OSCTimeTag_ntp_to_float(&r));
+        return r;
       } else {
-	if(r.sign == -1) {
-	  // result undefined
-	  r.sign = 1;
-	  r.sec = 0;
-	  r.frac_sec = 1;
-	  r.type = TIME_IMMEDIATE;
-	}
+        if(r.sign == -1) {
+          // result undefined
+          r.sign = 1;
+          r.sec = 0;
+          r.frac_sec = 1;
+          r.type = TIME_IMMEDIATE;
+        }
       }
     }
     break;
-    
+
   case OP_MUL:
     if(x->a.type == TIME_NOW) {
       OSCTimeTag_now_to_ntp(&(x->a));
@@ -458,7 +459,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       }
     }
     break;
-    
+
   case OP_CMP:
     if(x->a.type == TIME_NOW) {
       OSCTimeTag_now_to_ntp(&(x->a));
@@ -488,7 +489,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
     }
     return r;
     break;
-    
+
   case OP_DER:
     if(x->a.type == TIME_NOW) {
       OSCTimeTag_now_to_ntp(&(x->a));
@@ -504,9 +505,9 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 
       // stop
       return r;
-      
+
     }
-    
+
     if(x->b.type != TIME_NULL && x->a.type != TIME_NULL) {
 
       // reset
@@ -520,14 +521,14 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 
 	// stop
 	return r;
-	
+
       } else {
-	
+
 	OSCTimeTag_add(&(x->a), &(x->b), &r);
-      
+
 	if(x->to == TO_F) {
 	  outlet_float(x->out_p[0], OSCTimeTag_ntp_to_float(&r));
-	  
+
 	  // propagate current to next
 	  x->b.type = x->a.type;
 	  x->b.sign = -1. * x->a.sign;
@@ -536,13 +537,13 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 
 	  // stop
 	  return r;
-	  
+
 	} else if(r.sign == -1) { // undefined result for this output mode
 	  r.sec = 0;
 	  r.frac_sec = 1; // undefined
 	  r.type = TIME_IMMEDIATE;
 	}
-	
+
 	// propagate current to next
 	x->b.type = x->a.type;
 	x->b.sign = -1. * x->a.sign;
@@ -551,13 +552,13 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
 
 	// return normally (using @to)
       }
-      
+
     }
-    
+
     break;
-    
+
   }
-  
+
   switch(x->to) {
 
   case TO_T:
@@ -565,7 +566,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
     atom_setlong(&tt[1], r.frac_sec);
     outlet_anything(x->out_p[0], ps_OSCTimeTag, 2, tt);
     break;
-            
+
   case TO_F:
     if(r.sec == 0 && r.frac_sec == 1) { // undefined result; use NAN
       outlet_float(x->out_p[0], NAN);
@@ -574,7 +575,7 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       outlet_float(x->out_p[0], OSCTimeTag_ntp_to_float(&r));
     }
     break;
-            
+
   case TO_I:
     if(r.sec == 0 && r.frac_sec == 1) { // undefined result; just use -1
       outlet_int(x->out_p[0], -1);
@@ -582,14 +583,14 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
       outlet_int(x->out_p[0], (long int)OSCTimeTag_ntp_to_ut(&r));
     }
     break;
-            
+
   case TO_S:
     if(r.sec == 0 && r.frac_sec == 1) {
       iso[0].a_type = A_SYM;
       iso[0].a_w.w_sym = gensym("Z");
       outlet_anything(x->out_p[0], ps_iso8601, 1, iso); // undefined result
     } else {
-      OSCTimeTag_ntp_to_iso8601(&r, s);
+      OSCTimeTag_ntp_to_iso8601(&r, s, 32);
       iso[0].a_type = A_SYM;
       iso[0].a_w.w_sym = gensym(s);
       outlet_anything(x->out_p[0], ps_iso8601, 1, iso);
@@ -598,17 +599,17 @@ struct ntptime OSCTimeTag_run(OSCTimeTag *x)
   }
 
   return r;
-    
+
 }
 
 // methods--this copy & convert data, etc
 
 void OSCTimeTag_now(OSCTimeTag *x)
 {
-    
+
     long i;
     i = proxy_getinlet((t_object *)x);
-    
+
     if(i == 0) {
         x->a.type = TIME_NOW;
         OSCTimeTag_run(x);
@@ -622,7 +623,7 @@ void OSCTimeTag_immediate(OSCTimeTag *x)
 {
     long i;
     i = proxy_getinlet((t_object *)x);
-    
+
     if(i == 0) {
         x->a.type = TIME_IMMEDIATE;
         OSCTimeTag_run(x);
@@ -630,7 +631,7 @@ void OSCTimeTag_immediate(OSCTimeTag *x)
     else if(i == 1) {
         x->b.type = TIME_IMMEDIATE;
     }
-    
+
 }
 
 void OSCTimeTag_int(OSCTimeTag *x, long int ut)
@@ -638,7 +639,7 @@ void OSCTimeTag_int(OSCTimeTag *x, long int ut)
 
     long i;
     i = proxy_getinlet((t_object *)x);
-    
+
     if(i == 0) {
         x->a.type = TIME_STAMP;
         OSCTimeTag_ut_to_ntp(ut, &(x->a));
@@ -652,11 +653,11 @@ void OSCTimeTag_int(OSCTimeTag *x, long int ut)
 
 void OSCTimeTag_float(OSCTimeTag *x, double d)
 {
-    
+
     long i;
-    
+
     i = proxy_getinlet((t_object *)x);
-    
+
     if(i == 0) {
         x->a.type = TIME_STAMP;
         OSCTimeTag_float_to_ntp(d, &(x->a));
@@ -670,31 +671,31 @@ void OSCTimeTag_float(OSCTimeTag *x, double d)
             OSCTimeTag_float_to_ntp(d, &(x->b));
         }
     }
-    
+
 }
 
 void OSCTimeTag_FullPacket(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
-  
+
   long i;
   unsigned long sec;
   unsigned long frac_sec;
 
   struct ntptime r;
-  
+
   char* data;
 
   sec = 0;
   frac_sec = 0;
-  
+
   i = proxy_getinlet((t_object *)x);
   if(argc == 2 && argv[0].a_type == A_LONG && argv[0].a_w.w_long >= 16 && argv[1].a_type == A_LONG && argv[1].a_w.w_long != 0) {
-    
+
     data = (char*)argv[1].a_w.w_long;
     if(strcmp(data, "#bundle") == 0) {
-      
+
       sec =      ntohl(*((unsigned long *)(data+8)));
       frac_sec = ntohl(*((unsigned long *)(data+12)));
-      
+
       if(i == 0) {
 	if(sec == 0 && frac_sec == 1) {
 	  if(x->op == OP_TAG) {
@@ -707,14 +708,14 @@ void OSCTimeTag_FullPacket(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
 	  x->a.sec = sec;
 	  x->a.frac_sec = frac_sec;
 	}
-	
+
 	r = OSCTimeTag_run(x);
-	
+
 	if(x->to == TO_P) {
 	  // write result into packet...
 	  (*((unsigned long *)(data+8))) = htonl(r.sec);
 	  (*((unsigned long *)(data+12))) = htonl(r.frac_sec);
-	  
+
 	  // output transformed FullPacket
 	  outlet_anything(x->out_p[0], ps_FullPacket, 2, argv);
 	}
@@ -731,23 +732,23 @@ void OSCTimeTag_FullPacket(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
       }
     }
   }
-  
+
 }
-    
+
 
 void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
 
     long i;
     unsigned long sec;
     unsigned long frac_sec;
-    
+
     i = proxy_getinlet((t_object *)x);
 
     if(argc == 2 && argv[0].a_type == A_LONG && argv[1].a_type == A_LONG) {
-      
+
         sec = (unsigned long)argv[0].a_w.w_long;
         frac_sec = (unsigned long)argv[1].a_w.w_long;
-    
+
         if(i == 0) {
 	  x->a.sec = sec;
 	  x->a.frac_sec = frac_sec;
@@ -771,7 +772,7 @@ void OSCTimeTag_OSCTimeTag(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
     } else {
         object_post((t_object *)x, "OSC-timetag: got invalid OSCTimeTag");
     }
-    
+
 }
 
 void OSCTimeTag_iso8601(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
@@ -780,7 +781,7 @@ void OSCTimeTag_iso8601(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
     i = proxy_getinlet((t_object *)x);
 
     if(argc == 1 && argv[0].a_type == A_SYM) {
-    
+
         if(i == 0) {
             x->a.type = TIME_STAMP;
             OSCTimeTag_iso8601_to_ntp(argv[0].a_w.w_sym->s_name, &(x->a));
@@ -790,8 +791,7 @@ void OSCTimeTag_iso8601(OSCTimeTag *x, t_symbol* s, int argc, t_atom* argv) {
             x->b.type = TIME_STAMP;
             OSCTimeTag_iso8601_to_ntp(argv[0].a_w.w_sym->s_name, &(x->b));
         }
-                                    
-    }
-    
-}
 
+    }
+
+}

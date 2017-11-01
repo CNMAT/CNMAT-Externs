@@ -2,458 +2,446 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 6,
-			"minor" : 1,
-			"revision" : 9,
-			"architecture" : "x86"
+			"major" : 7,
+			"minor" : 0,
+			"revision" : 3,
+			"architecture" : "x64",
+			"modernui" : 1
 		}
 ,
-		"rect" : [ 14.0, 53.0, 646.0, 503.0 ],
+		"rect" : [ 34.0, 79.0, 928.0, 562.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
 		"default_fontface" : 0,
 		"default_fontname" : "Arial",
-		"gridonopen" : 0,
+		"gridonopen" : 1,
 		"gridsize" : [ 10.0, 10.0 ],
-		"gridsnaponopen" : 0,
+		"gridsnaponopen" : 1,
+		"objectsnaponopen" : 1,
 		"statusbarvisible" : 2,
 		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
 		"boxanimatetime" : 200,
-		"imprint" : 0,
 		"enablehscroll" : 1,
 		"enablevscroll" : 1,
 		"devicewidth" : 0.0,
 		"description" : "",
 		"digest" : "",
 		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
+					"id" : "obj-50",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 215.0, 503.0, 59.0, 20.0 ],
+					"style" : "",
+					"text" : "see also:"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-44",
+					"items" : [ "SDIF-fileinfo", ",", "SDIF-info", ",", "SDIF-listpoke", ",", "SDIF-ranges", ",", "SDIF-tuples" ],
+					"maxclass" : "umenu",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "int", "", "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 284.5, 502.0, 100.0, 22.0 ],
+					"prefix_mode" : 2,
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"hidden" : 1,
+					"id" : "obj-15",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 215.0, 534.0, 138.0, 22.0 ],
+					"style" : "",
+					"text" : "sprintf load %s.maxhelp"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"hidden" : 1,
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 215.0, 559.0, 53.0, 22.0 ],
+					"style" : "",
+					"text" : "pcontrol"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-2",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 250.0, 241.0, 41.0, 15.0 ],
+					"patching_rect" : [ 580.5, 355.899994, 46.0, 22.0 ],
+					"style" : "default",
 					"text" : "printall"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-3",
-					"linecount" : 3,
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 293.0, 241.0, 125.0, 37.0 ],
+					"patching_rect" : [ 631.5, 355.899994, 218.0, 33.0 ],
+					"style" : "default",
 					"text" : "List the names of all of the SDIF-buffer objects currently in existence"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-4",
-					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 293.0, 197.0, 114.0, 27.0 ],
+					"patching_rect" : [ 631.5, 439.0, 246.5, 20.0 ],
+					"style" : "default",
 					"text" : "Empty the SDIF-buffer, reclaiming memory"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-5",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 260.0, 197.0, 31.0, 15.0 ],
+					"patching_rect" : [ 580.5, 439.0, 37.0, 22.0 ],
+					"style" : "default",
 					"text" : "clear"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-6",
 					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 460.0, 268.0, 152.0, 27.0 ],
+					"patching_rect" : [ 555.5, 153.799988, 169.0, 33.0 ],
+					"style" : "default",
 					"text" : "List the frames in the given SDIF file in the Max window."
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-7",
 					"linecount" : 3,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 460.0, 129.0, 152.0, 37.0 ],
+					"patching_rect" : [ 325.0, 140.0, 174.5, 47.0 ],
+					"style" : "default",
 					"text" : "List the streams in the given SDIF file in the Max window. (Not as good as SDIF-menu!)"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-8",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 299.0, 210.0, 15.0 ],
+					"patching_rect" : [ 27.0, 298.0, 247.0, 22.0 ],
+					"style" : "default",
 					"text" : "read-stream-number bogusfilename.sdif 999"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-9",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 280.0, 202.0, 15.0 ],
+					"patching_rect" : [ 27.0, 271.199982, 231.0, 22.0 ],
+					"style" : "default",
 					"text" : "read-stream-number multistream.sdif 999"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-10",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 261.0, 202.0, 15.0 ],
+					"patching_rect" : [ 27.0, 244.399994, 231.0, 22.0 ],
+					"style" : "default",
 					"text" : "read-stream-number multistream.sdif 103"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-11",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 242.0, 202.0, 15.0 ],
+					"patching_rect" : [ 27.0, 217.599991, 231.0, 22.0 ],
+					"style" : "default",
 					"text" : "read-stream-number multistream.sdif 101"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-12",
-					"linecount" : 4,
+					"linecount" : 3,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 306.0, 48.0, 233.0, 47.0 ],
-					"text" : "This object is described by the paper \"Supporting the Sound Description Interchange Format in the Max/MSP Environment\", which you can find here: http://www.cnmat.berkeley.edu/ICMC99"
+					"patching_rect" : [ 18.0, 69.0, 264.0, 47.0 ],
+					"style" : "default",
+					"text" : "This object is described by the paper \"Supporting the Sound Description Interchange Format in the Max/MSP Environment\""
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-13",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 438.0, 60.0, 17.0 ],
+					"patching_rect" : [ 12.0, 521.0, 69.0, 22.0 ],
+					"style" : "default",
 					"text" : "print tuples"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-14",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 394.0, 35.0, 15.0 ],
+					"patching_rect" : [ 12.0, 466.0, 44.0, 22.0 ],
+					"style" : "default",
 					"text" : "tuples"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"data" : [ 593, "png", "IBkSG0fBZn....PCIgDQRA...zF....LHX....vFnS+e....DLmPIQEBHf.B7g.YHB..BfPRDEDU3wY6bEsiCCBCKLc+++xbOwItcqkVHN1oGVZZRSCWZbLgNfUp0Z01HU3K1cfMLqTJC+N8dqOJZ2kjQs0Cy7Sk2qDqaeuV6esBIWssWky6bs9Oy6qO8gH.RtmAn5O2k2Yb0SWSalKVuE2KffyYwrIBm0++DmmJZpDLx.NpFFBG8epo4IVovKR7deHaImPEMTPsfLpYfdDfKZQ31Tv8FIBwoolyvSDsKyLhCOxxcftdVDIngIZnCNLRBXk3QchHOsZQQUFHTQSsZaqzeXlvQeJ+Qdyi7ZEYBY3hlm2brpqwdXc5NMy3GDVEQOrOEQSgZay1GTHASBmlY3CFn3mQBHMQyqa1HqqofKyLxNMEd.4U.qg4kY3wHwrKfqJftn4gaajHfHfybxTzEMD3ouzORHZYq1F6GYQBQKRb2.thaMAYDsUcaG0d0csy.YDMEghtLyDSzxVsMVPJQyLeEtUbJp5xLavlUMaY5n1bndBO5e+xogbsthpsHfJ2KGdpY73hfjiQbGc6tB7lix9jflOH2DQ1XL1hVBwVzRH1hVBwVzRH1hVBws+KoX0mPXzuH.5spcV4um2ScZ0Z8mWdidNQehZP0+QFaNi6gCOVJkTtmAabiLgqEWP7O1P+6uC5G0ITBWi6mxgtnGCEMTCAzPV2bosQfXrpBzVZldtQu6oxF+i3b+CFmP7MQ+TMlEbQ3RG.....IUjSD4pPfIH" ],
-					"embed" : 1,
-					"id" : "obj-15",
-					"maxclass" : "fpic",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 330.0, 397.0, 109.0, 48.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-16",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 331.0, 450.0, 265.0, 27.0 ],
-					"text" : "SDIF-buffer, and all other CNMAT Max objects, can be found at: http://www.cnmat.berkeley.edu/MAX"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-17",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 306.0, 28.0, 183.0, 17.0 ],
-					"text" : "http://www.cnmat.berkeley.edu/SDIF"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-18",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 8.0, 223.0, 215.0, 15.0 ],
+					"patching_rect" : [ 27.0, 190.799988, 247.0, 22.0 ],
+					"style" : "default",
 					"text" : "read-stream-number ivory.speedy.loud.sdif 1"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-19",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 461.0, 296.0, 153.0, 15.0 ],
+					"patching_rect" : [ 555.5, 190.799988, 202.0, 22.0 ],
+					"style" : "default",
 					"text" : "framelist ivory.speedy.loud.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-20",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 460.0, 170.0, 158.0, 15.0 ],
+					"patching_rect" : [ 325.0, 190.799988, 179.0, 22.0 ],
+					"style" : "default",
 					"text" : "streamlist ivory.speedy.loud.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-21",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 461.0, 313.0, 115.0, 15.0 ],
+					"patching_rect" : [ 555.5, 217.599991, 151.0, 22.0 ],
+					"style" : "default",
 					"text" : "framelist cbass.res.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-22",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 461.0, 368.0, 95.0, 15.0 ],
+					"patching_rect" : [ 555.5, 298.0, 123.0, 22.0 ],
+					"style" : "default",
 					"text" : "framelist lick5.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-23",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 461.0, 331.0, 128.0, 15.0 ],
+					"patching_rect" : [ 555.5, 244.399994, 168.0, 22.0 ],
+					"style" : "default",
 					"text" : "framelist multistream.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-24",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 460.0, 225.0, 100.0, 15.0 ],
+					"patching_rect" : [ 325.0, 271.199982, 111.0, 22.0 ],
+					"style" : "default",
 					"text" : "streamlist lick5.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-25",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 460.0, 206.0, 133.0, 15.0 ],
+					"patching_rect" : [ 325.0, 244.399994, 149.0, 22.0 ],
+					"style" : "default",
 					"text" : "streamlist multistream.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-26",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 460.0, 243.0, 113.0, 15.0 ],
+					"patching_rect" : [ 325.0, 298.0, 125.0, 22.0 ],
+					"style" : "default",
 					"text" : "streamlist lick5.f0.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-27",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 461.0, 350.0, 108.0, 15.0 ],
+					"patching_rect" : [ 555.5, 271.199982, 141.0, 22.0 ],
+					"style" : "default",
 					"text" : "framelist lick5.f0.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-28",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 261.0, 152.0, 30.0, 15.0 ],
+					"patching_rect" : [ 580.5, 398.0, 34.0, 22.0 ],
+					"style" : "default",
 					"text" : "print"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-29",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 460.0, 188.0, 121.0, 15.0 ],
+					"patching_rect" : [ 325.0, 217.599991, 139.0, 22.0 ],
+					"style" : "default",
 					"text" : "streamlist cbass.res.sdif"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-30",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "list", "" ],
-					"patching_rect" : [ 8.0, 415.0, 95.0, 17.0 ],
+					"patching_rect" : [ 12.0, 493.0, 117.0, 22.0 ],
+					"style" : "default",
 					"text" : "SDIF-tuples helpbuf"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-31",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 226.0, 367.0, 95.0, 17.0 ],
+					"patching_rect" : [ 413.0, 503.0, 124.0, 22.0 ],
+					"style" : "default",
 					"text" : "SDIF-buffer helpbuf"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
 					"id" : "obj-32",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -461,99 +449,98 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 6,
-							"minor" : 1,
-							"revision" : 9,
-							"architecture" : "x86"
+							"major" : 7,
+							"minor" : 0,
+							"revision" : 3,
+							"architecture" : "x64",
+							"modernui" : 1
 						}
 ,
-						"rect" : [ 40.0, 55.0, 411.0, 264.0 ],
+						"rect" : [ 40.0, 79.0, 407.0, 240.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
 						"default_fontface" : 0,
 						"default_fontname" : "Arial",
-						"gridonopen" : 0,
+						"gridonopen" : 1,
 						"gridsize" : [ 10.0, 10.0 ],
-						"gridsnaponopen" : 0,
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
 						"statusbarvisible" : 2,
 						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
 						"boxanimatetime" : 200,
-						"imprint" : 0,
 						"enablehscroll" : 1,
 						"enablevscroll" : 1,
 						"devicewidth" : 0.0,
 						"description" : "",
 						"digest" : "",
 						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
 						"boxes" : [ 							{
 								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"frgb" : 0.0,
 									"id" : "obj-1",
 									"linecount" : 5,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 7.0, 143.0, 294.0, 57.0 ],
+									"patching_rect" : [ 6.0, 149.0, 352.0, 74.0 ],
+									"style" : "default",
 									"text" : "Navigation Services is built into MacOS 8.5 (and presumably all later MacOSes too). If you're running 7.5.5, 7.6.1, or 8 . 1, you can add Navigation Services to your system by putting the shared library \"Navigation\" in your extensions folder. That library is included with CNMAT's SDIF-buffer distribution."
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"frgb" : 0.0,
 									"id" : "obj-2",
 									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 6.0, 100.0, 294.0, 37.0 ],
+									"patching_rect" : [ 6.0, 94.0, 293.0, 47.0 ],
+									"style" : "default",
 									"text" : "SDIF-buffer uses Apple's new \"Navigation Services\" to provide you with the fanciest, most up-to-date look and feel \"Open a file\" dialog boxes known to MacOS."
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"frgb" : 0.0,
 									"id" : "obj-3",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 6.0, 41.0, 294.0, 17.0 ],
+									"patching_rect" : [ 6.0, 17.0, 238.0, 20.0 ],
+									"style" : "default",
 									"text" : "Here's what to do if you see something like"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"frgb" : 0.0,
 									"id" : "obj-4",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.0, 57.0, 334.0, 17.0 ],
+									"patching_rect" : [ 24.0, 39.0, 370.0, 20.0 ],
+									"style" : "default",
 									"text" : "• error: can't fragload SDIF-buffer (missing NavigationLib), err -2804"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 9.0,
-									"frgb" : 0.0,
 									"id" : "obj-5",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 6.0, 73.0, 294.0, 17.0 ],
+									"patching_rect" : [ 6.0, 66.0, 112.0, 20.0 ],
+									"style" : "default",
 									"text" : "in the Max window."
 								}
 
@@ -562,138 +549,107 @@
 						"lines" : [  ]
 					}
 ,
-					"patching_rect" : [ 141.0, 453.0, 161.0, 17.0 ],
+					"patching_rect" : [ 718.5, 521.0, 189.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"default_fontsize" : 12.0,
 						"description" : "",
 						"digest" : "",
-						"fontface" : 0,
-						"fontname" : "Arial",
-						"fontsize" : 12.0,
 						"globalpatchername" : "",
+						"style" : "",
 						"tags" : ""
 					}
 ,
-					"text" : "p error: can't fraglod SDIF-buffer"
+					"style" : "default",
+					"text" : "p error: can't fragload SDIF-buffer"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
-					"id" : "obj-33",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 445.0, 417.0, 148.0, 27.0 ],
-					"text" : "SDIF-buffer.help version 0.2, Matt Wright 10/14/99"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 14.0,
-					"frgb" : 0.0,
+					"fontface" : 1,
+					"fontsize" : 24.0,
 					"id" : "obj-34",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 25.0, 100.0, 22.0 ],
+					"patching_rect" : [ 18.0, 12.0, 141.0, 33.0 ],
+					"style" : "",
 					"text" : "SDIF-buffer"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-35",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 115.0, 28.0, 151.0, 17.0 ],
+					"patching_rect" : [ 18.0, 47.0, 165.0, 20.0 ],
+					"style" : "default",
 					"text" : "Store an SDIF stream in Max"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-36",
 					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 56.0, 207.0, 27.0 ],
+					"patching_rect" : [ 365.5, 26.0, 252.0, 33.0 ],
+					"style" : "default",
 					"text" : "Arguments: name of buffer (required), filename (optional - doesn't do anything yet)"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-37",
-					"linecount" : 5,
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 93.0, 201.0, 57.0 ],
+					"patching_rect" : [ 365.5, 61.0, 542.0, 33.0 ],
+					"style" : "default",
 					"text" : "The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name."
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-38",
 					"linecount" : 4,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 8.0, 341.0, 123.0, 47.0 ],
+					"patching_rect" : [ 8.0, 396.0, 153.0, 60.0 ],
+					"style" : "default",
 					"text" : "Use other objects, such as SDIF-tuples, to get data out of an SDIF-buffer in a form usable by Max"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-39",
 					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 30.0, 194.0, 152.0, 27.0 ],
+					"patching_rect" : [ 50.5, 153.799988, 200.0, 33.0 ],
+					"style" : "default",
 					"text" : "Read the given stream from the given SDIF file into this buffer."
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 9.0,
-					"frgb" : 0.0,
 					"id" : "obj-40",
-					"linecount" : 3,
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 293.0, 152.0, 124.0, 37.0 ],
+					"patching_rect" : [ 631.5, 398.0, 238.5, 33.0 ],
+					"style" : "default",
 					"text" : "Print some info about the currently-loaded stream in the Max window."
 				}
 
@@ -723,6 +679,15 @@
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-14", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-1", 0 ],
+					"disabled" : 0,
+					"hidden" : 1,
+					"source" : [ "obj-15", 0 ]
 				}
 
 			}
@@ -854,6 +819,15 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-15", 0 ],
+					"disabled" : 0,
+					"hidden" : 1,
+					"source" : [ "obj-44", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-31", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
@@ -888,7 +862,8 @@
 				"name" : "SDIF-tuples.mxo",
 				"type" : "iLaX"
 			}
- ]
+ ],
+		"embedsnapshot" : 0
 	}
 
 }

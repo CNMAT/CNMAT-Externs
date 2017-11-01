@@ -1,7 +1,7 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
 University of California, Berkeley.  Copyright (c) 2008, The Regents of
-the University of California (Regents). 
+the University of California (Regents).
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
 licensing agreement, is hereby granted, provided that the above copyright
@@ -47,6 +47,8 @@ VERSION 1.1: Now outputs its measurement in milliseconds
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #include <unistd.h>
+#else
+#include <stdint.h>
 #endif
 
 #define BENCH_IN 0
@@ -75,7 +77,7 @@ void bench_bang(t_bench *x);
 
 int main(void){
 	t_class *c = class_new("bench", (method)bench_new, (method)bench_free, (short)sizeof(t_bench), 0L, A_SYM, 0);
-	
+
 	version_post_copyright();
 
 	class_addmethod(c, (method) version, "version", 0);
@@ -88,8 +90,8 @@ int main(void){
 
 	bench_class = c;
 	class_register(CLASS_BOX, c);
-	
-	
+
+
 	class_register(CLASS_BOX, bench_class);
 	return 0;
 }
@@ -131,7 +133,13 @@ void bench_free(t_bench *x){
 void bench_anything(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 	t_atom out[2];
 	if(x->t_objmode == BENCH_IN){
-		uint64_t t = mach_absolute_time();
+#ifdef _WIN32
+    LARGE_INTEGER wint;
+    QueryPerformanceCounter(&wint);
+    uint64_t t = (uint64_t)wint.QuadPart;
+#else
+    uint64_t t = mach_absolute_time();
+#endif
 		uint32_t l1, l2;
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
@@ -157,10 +165,17 @@ void bench_anything(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 	}
 }
 
+
 void bench_list(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 	t_atom out[2];
 	if(x->t_objmode == BENCH_IN){
-		uint64_t t = mach_absolute_time();
+#ifdef _WIN32
+    LARGE_INTEGER wint;
+    QueryPerformanceCounter(&wint);
+    uint64_t t = (uint64_t)wint.QuadPart;
+#else
+    uint64_t t = mach_absolute_time();
+#endif
 		uint32_t l1, l2;
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
@@ -188,15 +203,34 @@ void bench_list(t_bench *x, t_symbol *msg, short argc, t_atom *argv){
 
 void bench_bang(t_bench *x){
 	if(x->t_objmode == BENCH_OUT){
+#ifdef _WIN32
+    LARGE_INTEGER t2, diff, freq;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&t2);
+    diff.QuadPart = t2.QuadPart - (int64_t)x->time;
+    diff.QuadPart *= 1000000;
+    diff.QuadPart /= freq.QuadPart;
+
+    uint64_t en = (uint64_t)diff.QuadPart;
+    //post("%f, %f", (double)en, (double)en * 0.000001);
+    outlet_float(x->out0, (double)en * 0.01);
+#else
 		uint64_t t2 = mach_absolute_time();
 		uint64_t diff = t2 - x->time;
 		UnsignedWide elapsedNano = AbsoluteToNanoseconds(*(AbsoluteTime *)&diff);
 		uint64_t en = UnsignedWideToUInt64(elapsedNano);
 		//post("%f, %f", (double)en, (double)en * 0.000001);
 		outlet_float(x->out0, (double)en * 0.000001);
+#endif
 	}else{
 		t_atom out[2];
-		uint64_t t = mach_absolute_time();
+#ifdef _WIN32
+    LARGE_INTEGER wint;
+    QueryPerformanceCounter(&wint);
+    uint64_t t = (uint64_t)wint.QuadPart;
+#else
+    uint64_t t = mach_absolute_time();
+#endif
 		uint32_t l1, l2;
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
@@ -211,7 +245,13 @@ void bench_bang(t_bench *x){
 void bench_float(t_bench *x, double f){
 	t_atom out[2];
 	if(x->t_objmode == BENCH_IN){
-		uint64_t t = mach_absolute_time();
+#ifdef _WIN32
+    LARGE_INTEGER wint;
+    QueryPerformanceCounter(&wint);
+    uint64_t t = (uint64_t)wint.QuadPart;
+#else
+    uint64_t t = mach_absolute_time();
+#endif
 		uint32_t l1, l2;
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);
@@ -226,7 +266,13 @@ void bench_float(t_bench *x, double f){
 void bench_int(t_bench *x, long i){
 	t_atom out[2];
 	if(x->t_objmode == BENCH_IN){
-		uint64_t t = mach_absolute_time();
+#ifdef _WIN32
+    LARGE_INTEGER wint;
+    QueryPerformanceCounter(&wint);
+    uint64_t t = (uint64_t)wint.QuadPart;
+#else
+    uint64_t t = mach_absolute_time();
+#endif
 		uint32_t l1, l2;
 
 		l1 = (uint32_t)((t & 0xffffffff00000000LL) >> 32);

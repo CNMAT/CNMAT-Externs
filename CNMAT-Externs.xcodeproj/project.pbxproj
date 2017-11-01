@@ -15,7 +15,6 @@
 			dependencies = (
 				52E957391B40786100D1D7E2 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
-				11A5FE4F197914BF004098FD /* PBXTargetDependency */,
 				529D6EEF173338FD005FD64C /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
@@ -74,23 +73,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		110C3E3A194433A500A53893 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
-		110C3E3D194433A500A53893 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		110C3E3E194433A500A53893 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
-		110C3E3F194433A500A53893 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
-		110C3E40194433A500A53893 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
-		110C3E41194433A500A53893 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		110C3E4E194433EF00A53893 /* localpeak~.c in Sources */ = {isa = PBXBuildFile; fileRef = 110C3E4B194433EF00A53893 /* localpeak~.c */; };
-		110C3E4F194433EF00A53893 /* localpeak~.maxhelp in Resources */ = {isa = PBXBuildFile; fileRef = 110C3E4C194433EF00A53893 /* localpeak~.maxhelp */; };
 		110EB6D119D1272000A37867 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		110EB6D219D1272300A37867 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
-		115E4E3818846E320071D644 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
-		115E4E3A18846E320071D644 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		115E4E3B18846E320071D644 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
-		115E4E3C18846E320071D644 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
-		115E4E3D18846E320071D644 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
-		115E4E3E18846E320071D644 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		115E4E4818846E990071D644 /* shot.ms~.c in Sources */ = {isa = PBXBuildFile; fileRef = 115E4E4618846E990071D644 /* shot.ms~.c */; };
 		118DF69319D2165C00AD8C6C /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		118DF69619D2165C00AD8C6C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		118DF69719D2165C00AD8C6C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -263,15 +247,6 @@
 		52B1558716A8E7FA000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
 		52B1558816A8E827000FC2E4 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		52B1558916A8E832000FC2E4 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
-		52B654CF17D021E5004FD84E /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
-		52B654D217D021E5004FD84E /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
-		52B654D317D021E5004FD84E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
-		52B654D417D021E5004FD84E /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
-		52B654D517D021E5004FD84E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
-		52B654D617D021E5004FD84E /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		52B654E517D0220D004FD84E /* granubuf-w-lines.maxpat in Resources */ = {isa = PBXBuildFile; fileRef = 52B654DE17D0220D004FD84E /* granubuf-w-lines.maxpat */; };
-		52B654E717D0220D004FD84E /* granubuf~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B654E017D0220D004FD84E /* granubuf~.c */; };
-		52B654E817D0220D004FD84E /* granubuf~.maxhelp in Resources */ = {isa = PBXBuildFile; fileRef = 52B654E117D0220D004FD84E /* granubuf~.maxhelp */; };
 		52E4476C15F1889300C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		52E4477415F188A000C91B67 /* accumulate~.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E4476315F1888200C91B67 /* accumulate~.c */; };
 		52E4479A15F1890800C91B67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
@@ -568,7 +543,6 @@
 		52FF18FC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FD163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
-		A4DB19B41A1EFC470074BE10 /* libgsl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4DB19B31A1EFC470074BE10 /* libgsl.a */; };
 		A4E832E619E8642800C55B20 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		A4E832E919E8642800C55B20 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		A4E832EA19E8642800C55B20 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -581,13 +555,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		11A5FE4E197914BF004098FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52B654CD17D021E5004FD84E;
-			remoteInfo = "granubuf~";
-		};
 		521961B516E6C25B00EA7DDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
@@ -962,13 +929,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		110C3E48194433A500A53893 /* localpeak~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "localpeak~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		110C3E4A194433EF00A53893 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		110C3E4B194433EF00A53893 /* localpeak~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "localpeak~.c"; sourceTree = "<group>"; };
-		110C3E4C194433EF00A53893 /* localpeak~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "localpeak~.maxhelp"; sourceTree = "<group>"; };
-		115E4E4318846E320071D644 /* shot-ms~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "shot-ms~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		115E4E4518846E990071D644 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		115E4E4618846E990071D644 /* shot.ms~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "shot.ms~.c"; sourceTree = "<group>"; };
 		118DF69F19D2165C00AD8C6C /* partconv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "partconv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		118DF6A219D216CE00AD8C6C /* firbank~.16band-512pt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "firbank~.16band-512pt.wav"; sourceTree = "<group>"; };
 		118DF6A319D216CE00AD8C6C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1077,11 +1037,6 @@
 		52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fftnobitrev.c; path = "lib/Jehan-lib/fftnobitrev.c"; sourceTree = SOURCE_ROOT; };
 		52B1558016A8E7FA000FC2E4 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftnobitrev.h; path = "lib/Jehan-lib/fftnobitrev.h"; sourceTree = SOURCE_ROOT; };
 		52B1558116A8E7FA000FC2E4 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vDSP.h; path = "lib/Jehan-lib/vDSP.h"; sourceTree = SOURCE_ROOT; };
-		52B654DB17D021E5004FD84E /* granubuf~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "granubuf~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		52B654DD17D0220D004FD84E /* granu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = granu.h; sourceTree = "<group>"; };
-		52B654DE17D0220D004FD84E /* granubuf-w-lines.maxpat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "granubuf-w-lines.maxpat"; sourceTree = "<group>"; };
-		52B654E017D0220D004FD84E /* granubuf~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "granubuf~.c"; sourceTree = "<group>"; };
-		52B654E117D0220D004FD84E /* granubuf~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "granubuf~.maxhelp"; sourceTree = "<group>"; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
 		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1318,30 +1273,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		110C3E3C194433A500A53893 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				110C3E3D194433A500A53893 /* CoreFoundation.framework in Frameworks */,
-				110C3E3E194433A500A53893 /* Accelerate.framework in Frameworks */,
-				110C3E3F194433A500A53893 /* Carbon.framework in Frameworks */,
-				110C3E40194433A500A53893 /* CoreServices.framework in Frameworks */,
-				110C3E41194433A500A53893 /* MaxAudioAPI.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		115E4E3918846E320071D644 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				115E4E3A18846E320071D644 /* CoreFoundation.framework in Frameworks */,
-				115E4E3B18846E320071D644 /* Accelerate.framework in Frameworks */,
-				115E4E3C18846E320071D644 /* Carbon.framework in Frameworks */,
-				115E4E3D18846E320071D644 /* CoreServices.framework in Frameworks */,
-				115E4E3E18846E320071D644 /* MaxAudioAPI.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		118DF69519D2165C00AD8C6C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1459,18 +1390,6 @@
 				529DD9D017A2472A00E1F789 /* Carbon.framework in Frameworks */,
 				529DD9D117A2472A00E1F789 /* CoreServices.framework in Frameworks */,
 				529DD9D217A2472A00E1F789 /* MaxAudioAPI.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52B654D117D021E5004FD84E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				52B654D217D021E5004FD84E /* CoreFoundation.framework in Frameworks */,
-				52B654D317D021E5004FD84E /* Accelerate.framework in Frameworks */,
-				52B654D417D021E5004FD84E /* Carbon.framework in Frameworks */,
-				52B654D517D021E5004FD84E /* CoreServices.framework in Frameworks */,
-				52B654D617D021E5004FD84E /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2017,7 +1936,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4DB19B41A1EFC470074BE10 /* libgsl.a in Frameworks */,
 				52F10AF715F13D86008FC371 /* CoreFoundation.framework in Frameworks */,
 				52FF1872163B5C3800F94922 /* Accelerate.framework in Frameworks */,
 				52FF18A4163B5C4B00F94922 /* Carbon.framework in Frameworks */,
@@ -2040,27 +1958,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		110C3E49194433EF00A53893 /* localpeak~ */ = {
-			isa = PBXGroup;
-			children = (
-				110C3E4A194433EF00A53893 /* Info.plist */,
-				110C3E4B194433EF00A53893 /* localpeak~.c */,
-				110C3E4C194433EF00A53893 /* localpeak~.maxhelp */,
-			);
-			name = "localpeak~";
-			path = "src/localpeak~";
-			sourceTree = "<group>";
-		};
-		115E4E4418846E990071D644 /* shot-ms~ */ = {
-			isa = PBXGroup;
-			children = (
-				115E4E4518846E990071D644 /* Info.plist */,
-				115E4E4618846E990071D644 /* shot.ms~.c */,
-			);
-			name = "shot-ms~";
-			path = "src/shot-ms~";
-			sourceTree = "<group>";
-		};
 		118DF6A019D216CE00AD8C6C /* partconv~ */ = {
 			isa = PBXGroup;
 			children = (
@@ -2260,18 +2157,6 @@
 			);
 			name = "basicresonators~";
 			path = "src/basicresonators~";
-			sourceTree = "<group>";
-		};
-		52B654DC17D0220D004FD84E /* granubuf~ */ = {
-			isa = PBXGroup;
-			children = (
-				52B654DD17D0220D004FD84E /* granu.h */,
-				52B654DE17D0220D004FD84E /* granubuf-w-lines.maxpat */,
-				52B654E017D0220D004FD84E /* granubuf~.c */,
-				52B654E117D0220D004FD84E /* granubuf~.maxhelp */,
-			);
-			name = "granubuf~";
-			path = "src/granubuf~";
 			sourceTree = "<group>";
 		};
 		52DE949415F142570097B3E8 /* lib */ = {
@@ -2901,14 +2786,12 @@
 				52E4482D15F1E96A00C91B67 /* decaying-sinusoids~ */,
 				52E4483015F1E96A00C91B67 /* deinterleave */,
 				52E4483315F1E96A00C91B67 /* firbank~ */,
-				52B654DC17D0220D004FD84E /* granubuf~ */,
 				52E4483915F1E96B00C91B67 /* gridpanel */,
 				52E4483D15F1E96C00C91B67 /* harmonics~ */,
 				52E4484315F1E96C00C91B67 /* interleave */,
 				52E4484715F1E96D00C91B67 /* lcm */,
 				5219617E16E6C03100EA7DDF /* list-accum */,
 				52E4484B15F1E96D00C91B67 /* list-interpolate */,
-				110C3E49194433EF00A53893 /* localpeak~ */,
 				52E4484F15F1E96D00C91B67 /* loudness~ */,
 				5219618616E6C04A00EA7DDF /* migrator */,
 				5219619216E6C07200EA7DDF /* OpenSoundControl */,
@@ -2935,7 +2818,6 @@
 				52E4498015F2879600C91B67 /* SDIF-listpoke */,
 				52E4498515F2879600C91B67 /* SDIF-ranges */,
 				52E4498815F2879600C91B67 /* SDIF-tuples */,
-				115E4E4418846E990071D644 /* shot-ms~ */,
 				52E4498C15F2879600C91B67 /* sinusoids~ */,
 				52E4499415F2879600C91B67 /* slipOSC */,
 				52E4499715F2879600C91B67 /* sphY */,
@@ -3013,10 +2895,7 @@
 				5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */,
 				5219621D16E6C61400EA7DDF /* res-transform.mxo */,
 				529DD9D717A2472A00E1F789 /* basicresonators~.mxo */,
-				52B654DB17D021E5004FD84E /* granubuf~.mxo */,
-				115E4E4318846E320071D644 /* shot-ms~.mxo */,
 				11C1B49D18A84AA900822EFF /* polywave~.mxo */,
-				110C3E48194433A500A53893 /* localpeak~.mxo */,
 				118DF69F19D2165C00AD8C6C /* partconv~.mxo */,
 				119F596819E8DDCB00D7B4A7 /* partconv~.pd_darwin */,
 				5212B03D1B3CAF8300D4D5EC /* cambio~.mxo */,
@@ -3086,40 +2965,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		110C3E38194433A500A53893 /* localpeak~ */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 110C3E45194433A500A53893 /* Build configuration list for PBXNativeTarget "localpeak~" */;
-			buildPhases = (
-				110C3E39194433A500A53893 /* Sources */,
-				110C3E3C194433A500A53893 /* Frameworks */,
-				110C3E42194433A500A53893 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "localpeak~";
-			productName = "2threshattack~";
-			productReference = 110C3E48194433A500A53893 /* localpeak~.mxo */;
-			productType = "com.apple.product-type.bundle";
-		};
-		115E4E3518846E320071D644 /* shot-ms~ */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 115E4E4018846E320071D644 /* Build configuration list for PBXNativeTarget "shot-ms~" */;
-			buildPhases = (
-				115E4E3618846E320071D644 /* Sources */,
-				115E4E3918846E320071D644 /* Frameworks */,
-				115E4E3F18846E320071D644 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "shot-ms~";
-			productName = "2threshattack~";
-			productReference = 115E4E4318846E320071D644 /* shot-ms~.mxo */;
-			productType = "com.apple.product-type.bundle";
-		};
 		118DF68F19D2165C00AD8C6C /* partconv~ */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 118DF69C19D2165C00AD8C6C /* Build configuration list for PBXNativeTarget "partconv~" */;
@@ -3305,23 +3150,6 @@
 			name = "basicresonators~";
 			productName = "2threshattack~";
 			productReference = 529DD9D717A2472A00E1F789 /* basicresonators~.mxo */;
-			productType = "com.apple.product-type.bundle";
-		};
-		52B654CD17D021E5004FD84E /* granubuf~ */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 52B654D817D021E5004FD84E /* Build configuration list for PBXNativeTarget "granubuf~" */;
-			buildPhases = (
-				52B654CE17D021E5004FD84E /* Sources */,
-				52B654D117D021E5004FD84E /* Frameworks */,
-				52B654D717D021E5004FD84E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "granubuf~";
-			productName = "2threshattack~";
-			productReference = 52B654DB17D021E5004FD84E /* granubuf~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		52E4476715F1889300C91B67 /* accumulate~ */ = {
@@ -4193,7 +4021,6 @@
 				52E4486215F1E99B00C91B67 /* decaying-sinusoids~ */,
 				52E4487115F1E9AD00C91B67 /* deinterleave */,
 				52E4488015F1E9B200C91B67 /* firbank~ */,
-				52B654CD17D021E5004FD84E /* granubuf~ */,
 				52E4488F15F1E9B700C91B67 /* gridpanel */,
 				52E4489E15F1E9BC00C91B67 /* harmonics~ */,
 				52E448AD15F1E9C100C91B67 /* interleave */,
@@ -4223,7 +4050,6 @@
 				52E44AAD15F2884F00C91B67 /* SDIF-listpoke */,
 				52E44ABC15F2885600C91B67 /* SDIF-ranges */,
 				52E44ACB15F2885D00C91B67 /* SDIF-tuples */,
-				115E4E3518846E320071D644 /* shot-ms~ */,
 				52E44ADA15F2886200C91B67 /* sinusoids~ */,
 				52E44AE915F2886800C91B67 /* slipOSC */,
 				52E44AF815F2886E00C91B67 /* sphY */,
@@ -4240,28 +4066,12 @@
 				521961EB16E6C60500EA7DDF /* whichthread */,
 				521961FC16E6C60D00EA7DDF /* OpenSoundControl */,
 				5219620D16E6C61400EA7DDF /* res-transform */,
-				110C3E38194433A500A53893 /* localpeak~ */,
 				A4E832E419E8642800C55B20 /* cambio~ */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		110C3E42194433A500A53893 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				110C3E4F194433EF00A53893 /* localpeak~.maxhelp in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		115E4E3F18846E320071D644 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		118DF69B19D2165C00AD8C6C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4334,15 +4144,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52B654D717D021E5004FD84E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				52B654E517D0220D004FD84E /* granubuf-w-lines.maxpat in Resources */,
-				52B654E817D0220D004FD84E /* granubuf~.maxhelp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4694,24 +4495,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		110C3E39194433A500A53893 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				110C3E3A194433A500A53893 /* commonsyms.c in Sources */,
-				110C3E4E194433EF00A53893 /* localpeak~.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		115E4E3618846E320071D644 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				115E4E3818846E320071D644 /* commonsyms.c in Sources */,
-				115E4E4818846E990071D644 /* shot.ms~.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		118DF69019D2165C00AD8C6C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4817,15 +4600,6 @@
 				529DD9CB17A2472A00E1F789 /* fft.c in Sources */,
 				529DD9CC17A2472A00E1F789 /* fftnobitrev.c in Sources */,
 				529DD9D817A247B400E1F789 /* basicresonators~.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52B654CE17D021E5004FD84E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				52B654CF17D021E5004FD84E /* commonsyms.c in Sources */,
-				52B654E717D0220D004FD84E /* granubuf~.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5353,11 +5127,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		11A5FE4F197914BF004098FD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52B654CD17D021E5004FD84E /* granubuf~ */;
-			targetProxy = 11A5FE4E197914BF004098FD /* PBXContainerItemProxy */;
-		};
 		521961B616E6C25B00EA7DDF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 521961A316E6C0ED00EA7DDF /* list-accum */;
@@ -5626,88 +5395,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		110C3E46194433A500A53893 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(inherited)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(inherited)";
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../fftw/.libs\"",
-				);
-				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = "localpeak~";
-				WRAPPER_EXTENSION = mxo;
-			};
-			name = Debug;
-		};
-		110C3E47194433A500A53893 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(inherited)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(inherited)";
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../fftw/.libs\"",
-				);
-				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = "localpeak~";
-				WRAPPER_EXTENSION = mxo;
-			};
-			name = Release;
-		};
-		115E4E4118846E320071D644 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(inherited)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(inherited)";
-				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "";
-				PRODUCT_NAME = "shot-ms~";
-				WRAPPER_EXTENSION = mxo;
-			};
-			name = Debug;
-		};
-		115E4E4218846E320071D644 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(inherited)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(inherited)";
-				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "";
-				PRODUCT_NAME = "shot-ms~";
-				WRAPPER_EXTENSION = mxo;
-			};
-			name = Release;
-		};
 		118DF69D19D2165C00AD8C6C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5730,7 +5417,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5757,7 +5444,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6252,48 +5939,6 @@
 			};
 			name = Release;
 		};
-		52B654D917D021E5004FD84E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(inherited)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(inherited)";
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../fftw/.libs\"",
-				);
-				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = "granubuf~";
-				WRAPPER_EXTENSION = mxo;
-			};
-			name = Debug;
-		};
-		52B654DA17D021E5004FD84E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(inherited)";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(inherited)";
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../fftw/.libs\"",
-				);
-				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = "granubuf~";
-				WRAPPER_EXTENSION = mxo;
-			};
-			name = Release;
-		};
 		52E4477115F1889300C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6358,7 +6003,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6385,7 +6030,7 @@
 				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.9;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8278,14 +7923,14 @@
 				DSTROOT = "$(PROJECT_DIR)/build";
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/Frameworks,
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "../max6-sdk/c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../max-sdk/source/c74support/max-includes/macho-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -8298,9 +7943,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
 					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
@@ -8319,10 +7964,10 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -8341,14 +7986,14 @@
 				DSTROOT = "$(PROJECT_DIR)/build";
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/Frameworks,
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREFIX_HEADER = "../max6-sdk/c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "../max-sdk/source/c74support/max-includes/macho-prefix.pch";
 				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
@@ -8356,9 +8001,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../max6-sdk/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
 					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
@@ -8377,9 +8022,9 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -8538,24 +8183,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		110C3E45194433A500A53893 /* Build configuration list for PBXNativeTarget "localpeak~" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				110C3E46194433A500A53893 /* Debug */,
-				110C3E47194433A500A53893 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		115E4E4018846E320071D644 /* Build configuration list for PBXNativeTarget "shot-ms~" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				115E4E4118846E320071D644 /* Debug */,
-				115E4E4218846E320071D644 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		118DF69C19D2165C00AD8C6C /* Build configuration list for PBXNativeTarget "partconv~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -8651,15 +8278,6 @@
 			buildConfigurations = (
 				529DD9D517A2472A00E1F789 /* Debug */,
 				529DD9D617A2472A00E1F789 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		52B654D817D021E5004FD84E /* Build configuration list for PBXNativeTarget "granubuf~" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				52B654D917D021E5004FD84E /* Debug */,
-				52B654DA17D021E5004FD84E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

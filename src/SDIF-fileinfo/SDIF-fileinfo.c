@@ -127,7 +127,7 @@ int main(void){
 
 	version_post_copyright();
 
-	if (r = SDIF_Init()) {
+	if ((r = SDIF_Init())) {
 		ouchstring(NAME ": Couldn't initialize SDIF library! %s",
 		           SDIF_GetErrorString(r));
 	return 0;
@@ -268,7 +268,7 @@ void do_scan(t_sdif_fileinfo *x, FILE *f, char *name) {
 		++(x->x_numframes[i]);
 
 		if (needToSkip) {
-			if (r = SDIF_SkipFrame(&fh, f)) {
+			if ((r = SDIF_SkipFrame(&fh, f))) {
 				object_post((t_object *)x, NAME ": error skipping frame in SDIF file %s:", name);
 				object_post((t_object *)x, "   %s", SDIF_GetErrorString(r));
 				return;
@@ -296,7 +296,7 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 	char *buf;
 	
 	for (i = 0; i < fhp->matrixCount; ++i) {
-        if (r = SDIF_ReadMatrixHeader(&mh, f)) {
+        if ((r = SDIF_ReadMatrixHeader(&mh, f))) {
         	object_error((t_object *)x, NAME ": error reading matrix header: %s", SDIF_GetErrorString(r));
    			return 0;     	
 		}
@@ -308,24 +308,27 @@ int Read1NVTFrame(t_sdif_fileinfo *x, FILE *f, char *name, SDIF_FrameHeader *fhp
 				object_error((t_object *)x, NAME ": out of memory; can't read name/value table");
 				return 0;
 			}
-			if (r = SDIF_ReadMatrixData((void *) buf, f, &mh)) {
+			if ((r = SDIF_ReadMatrixData((void *) buf, f, &mh))) {
 			    object_error((t_object *)x, NAME ": error reading 1NVT matrix data: %s", SDIF_GetErrorString(r));
 			    return 0;
 			}
 			//post("Name/value table:");
 			//post("%s", buf);
 			SDIFfileinfo_output1NVT(x, buf, fhp);
-			freebytes(buf, sz);						
+			freebytes(buf, sz);
 		} else {
 			if (SDIF_Char4Eq("1NVT", mh.matrixType)) {
 				object_post((t_object *)x, NAME ": 1NVT matrix has unexpected matrix data type 0x%x; skipping",  mh.matrixDataType);
+                return 0;
 			}				
-			if (r = SDIF_SkipMatrix(&mh, f)) {
+			if ((r = SDIF_SkipMatrix(&mh, f))) {
 			    object_error((t_object *)x, NAME ": error skipping 1NVT matrix: %s", SDIF_GetErrorString(r));
 			    return 0;
 			 }
 	    }
-	  }
+    }
+    return 1;
+
 }
 
 

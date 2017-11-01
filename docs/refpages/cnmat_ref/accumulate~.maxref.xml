@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="accumulate~" module="CNMAT-Externs">
+	<!--METADATA-->
+	<metadatalist>
+	    <metadata name="author">CNMAT</metadata>
+	    <metadata name="tag">CNMAT-Externals</metadata>
+	</metadatalist>
+
+	<digest>
+	    Adds the current incoming sample to the previous output.
+	</digest>
+
+	<description>
+	    accumulate~ is similar to the MSP builtin object <o>+=~</o>, but uses a signal to reset the accumulator instead of a message.
+	</description>
+
+	<!--DISCUSSION-->
+
+	<!--INLETS-->
+	<inletlist>
+	    <inlet id="0" type="signal">
+		<digest>
+		</digest>
+		<description>
+			Input signal to add to the count.
+		</description>
+	    </inlet>
+	    <inlet id="1" type="signal">
+		<digest>
+		</digest>
+		<description>
+		    on(1) / off(0)
+		</description>
+	    </inlet>
+	</inletlist>
+
+	<!--OUTLETS-->
+	<outletlist>
+	    <outlet id="0" type="signal">
+		<digest>
+		</digest>
+		<description>
+		    Accumulated value.
+		</description>
+	    </outlet>
+	</outletlist>
+
+	<!--ARGUMENTS-->
+	<!--MESSAGES-->
+	<!--ATTRIBUTES-->
+	<attributelist>
+	    <attribute name="min" get="1" set="1" type="float" size="1">
+		<digest>
+		    Minimum bound for accumulation.
+		</digest>
+		<description>
+		    Minimum bound for accumulation.
+		</description>
+	    </attribute>
+
+		<attribute name="max" get="1" set="1" type="float" size="1">
+		    <digest>
+			Maximum bound for accumulation.
+		    </digest>
+			<description>
+			    Maximum bound for accumulation.
+			</description>
+		</attribute>
+
+		<attribute name="start" get="1" set="1" type="float" size="1">
+		    <digest>
+			Initial value to start counting from.
+		    </digest>
+		    <description>
+			When this value is defined, accumulate~'s internal count will increment from this value.
+		    </description>
+		</attribute>
+
+		<attribute name="scale" get="1" set="1" type="float" size="1">
+		    <digest>
+			multiplies the last output by a scaling factor, causing the accumulation to "leak" when <m>scale</m> is between 0. and 1.
+		    </digest>
+		    <description>
+			multiplies the last output by a scaling factor, causing the accumulation to "leak" when <m>scale</m> is between 0. and 1.
+		    </description>
+		</attribute>
+
+		<attribute name="mode" get="1" set="1" type="symbol" size="1">
+		    <digest>
+			Defines the behavior at bounds of accumulation:<br />
+			<m>clip</m> : stop at the maximum or minimum (default) <br />
+			<m>wrap</m> = jump to the other boundary (e.g max->min)<br />
+			<m>reset</m> = reset to the start value<br />
+		    </digest>
+		    <description>
+		    </description>
+		</attribute>
+
+	</attributelist>
+
+	<!--EXAMPLE-->
+	<!--SEEALSO-->
+	<seealsolist>
+	    <seealso name="+=~" />
+	</seealsolist>
+
+
+</c74object>

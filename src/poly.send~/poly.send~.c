@@ -1,7 +1,7 @@
 /*
 Written by John MacCallum, The Center for New Music and Audio Technologies,
 University of California, Berkeley.  Copyright (c) 2009, The Regents of
-the University of California (Regents). 
+the University of California (Regents).
 Permission to use, copy, modify, distribute, and distribute modified versions
 of this software and its documentation without fee and without a signed
 licensing agreement, is hereby granted, provided that the above copyright
@@ -27,7 +27,7 @@ AUTHORS: John MacCallum
 COPYRIGHT_YEARS: 2009
 SVN_REVISION: $LastChangedRevision: 587 $
 VERSION 0.0: First try
-VERSION 0.0.1: New help file 
+VERSION 0.0.1: New help file
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 #define NAME "poly.send~"
@@ -173,9 +173,19 @@ void *psend_new(t_symbol *sym, int argc, t_atom *argv){
 		dsp_setup((t_pxobject *)x, 1);
         	x->ob.z_misc = Z_NO_INPLACE;
 		x->name = NULL;
+		x->mangled_name = NULL;
+		x->channel = 0;
 		attr_args_process(x, argc, argv);
-		psend_mangle(x);
-		return x;
+		if( x->name && x->channel )
+		{
+			psend_mangle(x);
+			return x;
+		}
+		else
+		{
+			object_error((t_object*)x, "missing required attributes @name and/or @channel");
+		}
+
 	}
 	return NULL;
 }
@@ -198,7 +208,7 @@ int main(void){
 
 	common_symbols_init();
 	version_post_copyright();
-	
+
 	class_register(CLASS_BOX, psend_class);
 	return 0;
 }

@@ -24,7 +24,7 @@
   NAME: resdisplay
   DESCRIPTION: Display/edit resonance models
   AUTHORS: John MacCallum
-  COPYRIGHT_YEARS: 2010
+  COPYRIGHT_YEARS: 2010, 12, 13, 17
   SVN_REVISION: $LastChangedRevision: 587 $
   VERSION 0.0: First try
   VERSION 0.1: bug fix in the log display mode and much faster drawing
@@ -32,13 +32,13 @@
   VERSION 0.2.1: Bang now outputs model and model comes out when loaded
   VERSION 0.2.2: added displayrange message for compatibility with resonance-display.js
   VERSION 0.2.3: more reasonable default size
+  VERSION 0.2.4: bounds of selection are output, user must select a partial for data
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 #define NAME "resdisplay"
 #define DESCRIPTION "Display/edit resonance models"
 #define AUTHORS "John MacCallum"
-#define COPYRIGHT_YEARS "2010,12,13"
-
+#define COPYRIGHT_YEARS "2010,12,13,17"
 
 #include "version.h"
 #include "ext.h"
@@ -109,7 +109,7 @@ void rd_paint(t_rd *x, t_object *patcherview){
     
 	t_jgraphics *g = (t_jgraphics *)patcherview_get_jgraphics(patcherview);
 	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
-        
+    
 	jgraphics_set_source_jrgba(g, &(x->bordercolor));
 	jgraphics_set_line_width(g, 1);
 	jgraphics_rectangle(g, 0., 0., rect.width, rect.height);
@@ -198,7 +198,11 @@ void rd_paint(t_rd *x, t_object *patcherview){
 
 	// info
 	{
-		char buf[128];
+        t_object *b = (t_object *)x;
+        jgraphics_select_font_face(g, jbox_get_fontname(b)->s_name, jbox_get_font_slant(b), jbox_get_font_weight(b));
+        jgraphics_set_font_size(g, jbox_get_fontsize((t_object *)x));
+
+        char buf[128];
 		double w, h;
 		jgraphics_set_source_jrgba(g, &x->datacolor);
 		sprintf(buf, "%0.2f", x->selection.min);
@@ -295,6 +299,7 @@ double rd_scale(double f, double min_in, double max_in, double min_out, double m
 }
 
 void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
+    
 	t_rect rect;
     	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
 
@@ -310,6 +315,7 @@ void rd_mousedown(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
 }
 
 void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
+    
 	t_rect rect;
     	jbox_get_rect_for_view((t_object *)x, patcherview, &rect);
 
@@ -360,8 +366,18 @@ void rd_select_decayrates(t_rd *x, t_symbol *key, double f){
 		}
 	}
 	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
-	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
-	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+    
+    t_atom sel[2];
+    atom_setfloat(sel, x->selection.min);
+    atom_setfloat(sel + 1, x->selection.max);
+    
+    //only output if user selects a partial
+    if(x->num_partials_selected){
+        outlet_anything(x->outlet, gensym("selected"), selpos, buf);
+        outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+        
+    }
+    outlet_anything(x->outlet, gensym("bounds"), 2, sel);
 }
 
 void rd_output_all(t_rd *x){
@@ -376,9 +392,12 @@ void rd_output_all(t_rd *x){
 
 void rd_output_sel(t_rd *x){
 	t_rect rect;
-        jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
-	int i;
+    jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
+	
 	t_atom buf[x->buffer_size];
+    
+    int i;
+    
 	int selpos = 0, nselpos = x->buffer_size - 1;
 	if(x->sinusoids){
 		t_sin *s = (t_sin *)x->buffer;
@@ -406,9 +425,20 @@ void rd_output_sel(t_rd *x){
 			}
 		}
 	}
+    
 	x->num_partials_selected = selpos / (x->sinusoids ? 2 : 3);
-	outlet_anything(x->outlet, gensym("selected"), selpos, buf);
-	outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+
+    t_atom sel[2];
+    atom_setfloat(sel, x->selection.min);
+    atom_setfloat(sel + 1, x->selection.max);
+
+    //only output if user selects a partial
+    if(x->num_partials_selected){
+        outlet_anything(x->outlet, gensym("selected"), selpos, buf);
+        outlet_anything(x->outlet, gensym("unselected"), x->buffer_size - nselpos - 1, buf + nselpos + 1);
+        
+    }
+    outlet_anything(x->outlet, gensym("bounds"), 2, sel);
 }
 
 #define BASE 27.5
@@ -574,10 +604,10 @@ int main(void){
 
 t_max_err rd_notify(t_rd *x, t_symbol *s, t_symbol *msg, void *sender, void *data){
 	t_rect rect;
-        jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
-        t_symbol *attrname;
-        if (msg == gensym("attr_modified")){
-                attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
+    jbox_get_patching_rect(&((x->ob.b_ob)), &rect);
+    t_symbol *attrname;
+    if (msg == gensym("attr_modified")){
+        attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
 		if(attrname == gensym("mode")){
 			/*
 			if(x->mode){

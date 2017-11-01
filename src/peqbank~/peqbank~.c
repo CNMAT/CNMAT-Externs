@@ -122,7 +122,10 @@ TO-DO:  Include b_nbpeq and b_start in the atomic pointer-swapping scheme
 #define expf exp
 #endif
 
-#define FLUSH_TO_ZERO(fv) (((*(unsigned int*)&(fv))&0x7f800000)==0)?0.0f:(fv)
+// switched to simple denormal check for doubles to avoid cruchy sound
+#define FLUSH_TO_ZERO(fv) (fabs(fv)<1e-20f)?0.0:(fv)
+
+//#define FLUSH_TO_ZERO(fv) (((*(unsigned int*)&(fv))&0x7f800000)==0)?0.0f:(fv)
 
 
 #undef PI  /* so we can use the one below instead of the one from math.h */

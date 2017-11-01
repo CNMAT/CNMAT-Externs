@@ -10,24 +10,26 @@ SRCDIR = src
 JAVAOBJECTNAMES = midifile
 BUILDDIR = build/Release
 
-C74SUPPORT = ../max6-sdk/c74support
+C74SUPPORT = ../max-sdk/source/c74support
 MAX_INCLUDES = $(C74SUPPORT)/max-includes
 MSP_INCLUDES = $(C74SUPPORT)/msp-includes
 JIT_INCLUDES = $(C74SUPPORT)/jit-includes
 
 win: CC = i686-w64-mingw32-gcc
 win: LD = $(CC)
-win: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3
-win: LDFLAGS = -mno-cygwin -shared #-static-libgcc
-win: INCLUDES = -I/usr/i686-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I../gsl -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
-win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm
+win: CFLAGS += -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3 -m32
+win: LDFLAGS = -shared -static-libgcc
+win: INCLUDES = -I/usr/i686-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
+win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm -L/usr/i686-w64-mingw32/sys-root/mingw/lib
+win: ODOT_LIBS = -L../libo/libs/i686 -l:libo.a -L../libomax/libs/i686 -l:libomax.a
 
-win64: CC = i686-w64-mingw64-gcc
+win64: CC = x86_64-w64-mingw32-gcc
 win64: LD = $(CC)
-win64: CFLAGS += -mno-cygwin -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3
-win64: LDFLAGS = -mno-cygwin -shared #-static-libgcc
-win64: INCLUDES = -I/usr/i686-w64-mingw64/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I../gsl -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
-win64: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm
+win64: CFLAGS += -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3
+win64: LDFLAGS = -shared -static-libgcc # -Wl,--verbose
+win64: INCLUDES = -I/usr/x86_64-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib  -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
+win64: LIBS = -L$(JIT_INCLUDES) -lx64/jitlib -L$(MAX_INCLUDES) -lx64/MaxAPI -L$(MSP_INCLUDES) -lx64/MaxAudio -lm -L/usr/x86_64-w64-mingw32/sys-root/mingw/lib
+win64: ODOT_LIBS = -L../libo/libs/x86_64 -l:libo.a -L../libomax/libs/x86_64 -l:libomax.a
 
 JAVA_EXT = class
 
@@ -48,10 +50,10 @@ CURRENT_VERSION_FILE = include/current_version.h
 all: MACOBJECTS $(JAVAOBJECTS)
 
 .PHONY: MACOBJECTS
-MACOBJECTS: $(CURRENT_VERSION_FILE) 
+MACOBJECTS: $(CURRENT_VERSION_FILE)
 	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
 
-SIMPLEOBJECTNAMES = 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate migrator oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay cnmatrix~ waveguide~ granubuf~
+SIMPLEOBJECTNAMES = cambio~ bench bench~ thread.join thread.fork cnmatrix~ 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate migrator oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay waveguide~  #granubuf~
 SIMPLEOBJECTS = $(foreach f, $(SIMPLEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
 MULTIPLEFILEOBJECTNAMES = harmonics~ randdist
@@ -60,13 +62,13 @@ MULTIPLEFILEOBJECTS = $(foreach f, $(MULTIPLEFILEOBJECTNAMES), $(BUILDDIR)/$(f).
 GSLOBJECTNAMES = bdist bessel
 GSLOBJECTS = $(foreach f, $(GSLOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
-FFTWOBJECTNAMES = firbank~ 
+FFTWOBJECTNAMES = firbank~
 FFTWOBJECTS = $(foreach f, $(FFTWOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
 OSCOBJECTNAMES = OSC-route OSC-schedule OSC-timetag OpenSoundControl printit
 OSCOBJECTS = $(foreach f, $(OSCOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
-JEHANOBJECTNAMES = analyzer~ #brightness~ loudness~ pitch~ 
+JEHANOBJECTNAMES = analyzer~ #brightness~ loudness~ pitch~
 JEHANOBJECTS = $(foreach f, $(JEHANOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 JEHANDEPSNAMES = fft fftnobitrev
 JEHANDEPS = $(foreach f, $(JEHANDEPSNAMES), $(BUILDDIR)/$(f).o)
@@ -76,9 +78,16 @@ SDIFOBJECTS = $(foreach f, $(SDIFOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 SDIFDEPSNAMES = sdif-buf sdif-mem sdif-sinusoids sdif-types sdif-util sdif sdif-interp-implem sdif-interp
 SDIFDEPS = $(foreach f, $(SDIFDEPSNAMES), $(BUILDDIR)/$(f).o)
 
-win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(JEHANOBJECTS) $(FFTWOBJECTS)
+SPHYOBJECTNAMES = sphY
+SPHYOBJECTS = $(foreach f, $(SPHYOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
+SPHYDEPSNAMES = legendre_a sh_normalization sh
+SPHYDEPS = $(foreach f, $(SPHYDEPSNAMES), $(BUILDDIR)/$(f).o)
 
-win64: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(JEHANOBJECTS) $(FFTWOBJECTS) 
+clean-obj:
+	rm -f $(BUILDDIR)/*.o
+
+win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(SPHYOBJECTS) clean-obj
+win64: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(SPHYOBJECTS) clean-obj
 
 # Single file dependencies--just compile and stick the .o files in the build dir
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
@@ -117,6 +126,9 @@ $(BUILDDIR)/myPrintOSCpacket.o: $(BUILDDIR)
 $(SDIFDEPS): $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ ../CNMAT-SDIF/lib$(subst $(BUILDDIR),,$(subst .o,,$@)).c
 
+$(SPHYDEPS): $(BUILDDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@) $(SRCDIR)/sphY/$(subst $(BUILDDIR),,$(subst .o,,$@)).c
+
 $(BUILDDIR)/open-sdif-file.o: $(BUILDDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(BUILDDIR)/open-sdif-file.o utility-library/search-path/open-sdif-file.c
 
@@ -128,12 +140,12 @@ $(SIMPLEOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 # objects that need to link against the gsl
 $(GSLOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../gsl/.libs -lgsl
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -l:libgsl.a
 
 # objects that need to link against fftw
 $(FFTWOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../fftw -lfftw3f_i386
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -l:libfftw3f.a
 
 # objects that rely on one or more files scattered around the repo
 $(BUILDDIR)/harmonics~.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/noise-table.o $(CURRENT_VERSION_FILE)
@@ -143,15 +155,19 @@ $(BUILDDIR)/harmonics~.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/
 # links against the gsl and libranddist.o
 $(BUILDDIR)/randdist.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(LIBS) -L../gsl/.libs -lgsl
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(BUILDDIR)/libranddist.o $(LIBS) -l:libgsl.a
 
 $(JEHANOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(CURRENT_VERSION_FILE) #$(JEHANDEPS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
-	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -L../libo -lo -L../libomax -lomax -L../fftw -lfftw3_i386
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(LIBS) -l:libfftw3.a $(ODOT_LIBS)
 
 $(SDIFOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(SDIFDEPS) $(BUILDDIR)/open-sdif-file.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
 	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(SDIFDEPS) $(BUILDDIR)/open-sdif-file.o $(LIBS)
+
+$(SPHYOBJECTS): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(SPHYDEPS) $(CURRENT_VERSION_FILE)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
+	$(LD) $(LDFLAGS) -o $@ $(subst $(EXT),,$@)o $(BUILDDIR)/commonsyms.o $(SPHYDEPS) $(LIBS)
 
 $(BUILDDIR)/OSC-route.$(EXT): $(BUILDDIR) $(BUILDDIR)/commonsyms.o $(BUILDDIR)/OSC-pattern-match.o $(CURRENT_VERSION_FILE)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $(subst $(EXT),,$@)o $(SRCDIR)$(subst $(BUILDDIR),,$(subst .$(EXT),,$@))$(subst $(BUILDDIR),,$(subst .$(EXT),,$@)).c
