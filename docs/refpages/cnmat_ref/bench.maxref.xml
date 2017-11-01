@@ -15,7 +15,7 @@
     <metadatalist>
 	<metadata name="author">CNMAT</metadata>
 	<metadata name="tag">CNMAT-Externals</metadata>
-	<metadata name="tag">CNMAT</metadata>
+	<metadata name="tag">benchmarking</metadata>
     </metadatalist>
 
     <!--INLETS-->
