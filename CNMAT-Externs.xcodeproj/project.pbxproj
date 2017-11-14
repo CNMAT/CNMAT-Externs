@@ -1252,7 +1252,7 @@
 		52E44B5115F2888700C91B67 /* vsnapshot~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsnapshot~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6015F2888E00C91B67 /* waveguide~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "waveguide~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6F15F2889400C91B67 /* xydisplay.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xydisplay.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		52E44C7C15F4835400C91B67 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../max6-sdk/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
+		52E44C7C15F4835400C91B67 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../max-sdk/source/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 		52F10AA515F07157008FC371 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		52F10AC815F071DE008FC371 /* 2threshattack~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "2threshattack~.c"; sourceTree = "<group>"; };
 		52F10AC915F071DE008FC371 /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "2threshattack~.maxhelp"; sourceTree = "<group>"; };
@@ -5414,7 +5414,7 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = "";
@@ -5441,7 +5441,7 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = "";
@@ -6000,8 +6000,8 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
@@ -6027,8 +6027,8 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max6-sdk/c74support/max-includes/c74_linker_flags.txt";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				WRAPPER_EXTENSION = mxo;
@@ -6407,7 +6407,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -6431,7 +6431,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/libfftw3.a\" \"$(SRCROOT)/../fftw/libfftw3f.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7042,7 +7042,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -7063,7 +7063,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -8107,7 +8107,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -8128,7 +8128,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = mxo;
 			};
