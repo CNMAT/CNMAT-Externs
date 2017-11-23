@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
 
-<c74object name="bench" module="CNMAT-Externals">
+<c74object name="bench~" module="CNMAT-Externals">
 
     <digest>
-	Simple benchmarking utility.		
+	Simple benchmarking utility for signals.
     </digest>
 
     <description>
-	bench allows you to benchmark the speed of various processes running through it, utilizing your CPU's cycle counter as the reference time.  You use bench by instantiating two copies of it - one for the <i>input</i> to be measured, and one for the <i>output</i>.  These must be two separate bench objects, similar to Max's <m>tapin~</m> and <m>tapout~</m> objects.  When something arrives in the left inlet of an <i>input</i> bench object, the <i>input</i> object outputs a reference time out the right outlet, which should be connected to the right inlet of the <i>output</i> object.  The <i>output</i> object simply stores that time.  The <i>input</i> object then outputs the message, which presumably will occupy some time to process.  Once this process has been completed, a bang can be issued to the <i>output</i> object's left inlet, which will consequentially check the current time vs the input time, and output the difference.  The output of the <i>output</i> bench object is a measurement in milliseconds: a record of how long it took to perform a task between the input and the output.
+	bench~ outputs a signal, representing how long it takes to compute a given MSP network that falls between its input and its output, utilizing your CPU's cycle counter for reference.  You employ bench~ by instantiating two copies of it - one for the <i>input</i> to be measured, and one for the <i>output</i>.  There <i>must</i> be two separate bench~ objects, similar to Max's <m>tapin~</m> and <m>tapout~</m> objects.  When signal arrives in the left inlet of an <i>input</i> bench~ object, the <i>input</i> object outputs a reference <m>signal</m> out the right outlet, which should be connected to the right inlet of the <i>output</i> object.  The <i>output</i> object simply stores that <m>signal</m>.  The <i>input</i> object then outputs the <m>signal</m> out the left outlet, which presumably will have said network attached, and which occupy some time to process.  Once this process has been computed, the resultant signal is assessed at the <i>output</i> object's left inlet, which will consequentially check the current time vs the input time, and output the difference (as a signal).  The output of the <i>output</i> bench~ object is a measurement in milliseconds: a record of how long it took to perform a task between the input and the output.
     </description>
 
     <!--METADATA-->
@@ -31,6 +31,12 @@
 	<objarg name="type" optional="0" type="symbol">
 	    <description>
 		The object's communication type.  This must be either the word "in" or "out", indicating which use case you would like the object to adhere to.
+	    </description>
+	</objarg>
+	<objarg name="function" optional="1" type="symbol">
+	    <description>
+		A word indicating whether or not the object will pass the MSP signal through </b>
+		Possible options:  'true', '<nothing>'
 	    </description>
 	</objarg>
     </objarglist>
