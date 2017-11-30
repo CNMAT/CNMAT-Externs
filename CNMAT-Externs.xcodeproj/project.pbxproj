@@ -100,7 +100,6 @@
 		11C1B49518A84AA900822EFF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
 		11C1B49618A84AA900822EFF /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		11C1B49718A84AA900822EFF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
-		11C1B4A218A84B1C00822EFF /* polywave~.c in Sources */ = {isa = PBXBuildFile; fileRef = 11C1B4A018A84B1C00822EFF /* polywave~.c */; };
 		5218BB33164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
 		5218BB34164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
 		5218BB35164DD36A00A02F42 /* sdif-buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5218BB2A164DD36A00A02F42 /* sdif-buf.c */; };
@@ -543,6 +542,7 @@
 		52FF18FC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FD163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		A4542BB51FC681A400330E3F /* basicresonators~.maxhelp in Resources */ = {isa = PBXBuildFile; fileRef = A4542BB41FC681A400330E3F /* basicresonators~.maxhelp */; };
 		A4E832E619E8642800C55B20 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		A4E832E919E8642800C55B20 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		A4E832EA19E8642800C55B20 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -550,7 +550,6 @@
 		A4E832EC19E8642800C55B20 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		A4E832ED19E8642800C55B20 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		A4E832F719E8650200C55B20 /* cambio~.c in Sources */ = {isa = PBXBuildFile; fileRef = A4E832F419E8650200C55B20 /* cambio~.c */; };
-		A4E832F819E8650200C55B20 /* cambio~.help.pat in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F519E8650200C55B20 /* cambio~.help.pat */; };
 		A4E832F919E8650200C55B20 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F619E8650200C55B20 /* Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -944,8 +943,6 @@
 		11B18EF419D7D88600896D7E /* partconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = partconv.cpp; sourceTree = "<group>"; };
 		11B18EF519D7D88600896D7E /* partconv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = partconv.h; sourceTree = "<group>"; };
 		11C1B49D18A84AA900822EFF /* polywave~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "polywave~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		11C1B49F18A84B1C00822EFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		11C1B4A018A84B1C00822EFF /* polywave~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "polywave~.c"; sourceTree = "<group>"; };
 		5212B03D1B3CAF8300D4D5EC /* cambio~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cambio~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5218BB2A164DD36A00A02F42 /* sdif-buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-buf.c"; path = "../CNMAT-SDIF/lib/sdif-buf.c"; sourceTree = "<group>"; };
 		5218BB2B164DD36A00A02F42 /* sdif-mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-mem.c"; path = "../CNMAT-SDIF/lib/sdif-mem.c"; sourceTree = "<group>"; };
@@ -958,22 +955,16 @@
 		5218BB77164DD87F00A02F42 /* sdif-interp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "sdif-interp.c"; path = "../CNMAT-SDIF/lib/sdif-interp.c"; sourceTree = "<group>"; };
 		5219617F16E6C03100EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219618016E6C03100EA7DDF /* list-accum.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "list-accum.c"; sourceTree = "<group>"; };
-		5219618116E6C03100EA7DDF /* list-accum.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "list-accum.maxhelp"; sourceTree = "<group>"; };
 		5219618316E6C03E00EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219618416E6C03E00EA7DDF /* OSC-route.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-route.c"; sourceTree = "<group>"; };
-		5219618516E6C03E00EA7DDF /* OSC-route.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OSC-route.maxhelp"; sourceTree = "<group>"; };
 		5219618716E6C04A00EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219618816E6C04A00EA7DDF /* migrator.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = migrator.c; sourceTree = "<group>"; };
-		5219618916E6C04A00EA7DDF /* migrator.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = migrator.maxhelp; sourceTree = "<group>"; };
 		5219618B16E6C05800EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219618C16E6C05800EA7DDF /* trampoline.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = trampoline.c; sourceTree = "<group>"; };
-		5219618D16E6C05800EA7DDF /* trampoline.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = trampoline.maxhelp; sourceTree = "<group>"; };
 		5219618F16E6C06700EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219619016E6C06700EA7DDF /* whichthread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = whichthread.c; sourceTree = "<group>"; };
-		5219619116E6C06700EA7DDF /* whichthread.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = whichthread.maxhelp; sourceTree = "<group>"; };
 		5219619316E6C07200EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219619416E6C07200EA7DDF /* OpenSoundControl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = OpenSoundControl.c; sourceTree = "<group>"; };
-		5219619516E6C07200EA7DDF /* OpenSoundControl.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpenSoundControl.maxhelp; sourceTree = "<group>"; };
 		5219619716E6C07200EA7DDF /* OSC-receiving-example.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OSC-receiving-example.pat"; sourceTree = "<group>"; };
 		5219619816E6C07200EA7DDF /* OSC-sending-example.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OSC-sending-example.pat"; sourceTree = "<group>"; };
 		5219619A16E6C07200EA7DDF /* client-reply-tester.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "client-reply-tester.pat"; sourceTree = "<group>"; };
@@ -982,8 +973,6 @@
 		5219619E16E6C07C00EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219619F16E6C07C00EA7DDF /* o.res-transform.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "o.res-transform.c"; sourceTree = "<group>"; };
 		521961A016E6C07C00EA7DDF /* res-transform.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "res-transform.c"; sourceTree = "<group>"; };
-		521961A116E6C07C00EA7DDF /* res-transform.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "res-transform.maxhelp"; sourceTree = "<group>"; };
-		521961A216E6C07C00EA7DDF /* sin-transform.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sin-transform.maxhelp"; sourceTree = "<group>"; };
 		521961B316E6C0ED00EA7DDF /* list-accum.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "list-accum.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		521961C816E6C5EC00EA7DDF /* OSC-route.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OSC-route.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		521961D916E6C5F900EA7DDF /* migrator.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = migrator.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1025,10 +1014,7 @@
 		5219625216E6D01700EA7DDF /* OSC-timetag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-timetag.h"; sourceTree = "<group>"; };
 		5219625316E6D01700EA7DDF /* test_OSC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_OSC.c; sourceTree = "<group>"; };
 		5219625416E6D01700EA7DDF /* test_OSC_timeTag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_OSC_timeTag.c; sourceTree = "<group>"; };
-		524981C016A65BCD0086F4BD /* harmonics~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "harmonics~.maxhelp"; sourceTree = "<group>"; };
-		524981C216A65BEE0086F4BD /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.fork.maxhelp; sourceTree = "<group>"; };
 		529DD9C417A2466C00E1F789 /* basicresonators~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "basicresonators~.c"; sourceTree = "<group>"; };
-		529DD9C617A2471D00E1F789 /* basicresonators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "basicresonators~.maxhelp"; sourceTree = "<group>"; };
 		529DD9D717A2472A00E1F789 /* basicresonators~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "basicresonators~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52ADE2361733042E00074C0C /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../Downloads/MaxSDK-6.1.0/c74support/msp-includes/x64/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		52ADE24B1733046200074C0C /* JitterAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JitterAPI.framework; path = "../../../../Downloads/MaxSDK-6.1.0/c74support/jit-includes/x64/JitterAPI.framework"; sourceTree = "<group>"; };
@@ -1038,31 +1024,24 @@
 		52B1558016A8E7FA000FC2E4 /* fftnobitrev.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftnobitrev.h; path = "lib/Jehan-lib/fftnobitrev.h"; sourceTree = SOURCE_ROOT; };
 		52B1558116A8E7FA000FC2E4 /* vDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vDSP.h; path = "lib/Jehan-lib/vDSP.h"; sourceTree = SOURCE_ROOT; };
 		52E4476315F1888200C91B67 /* accumulate~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "accumulate~.c"; sourceTree = "<group>"; };
-		52E4476415F1888200C91B67 /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "accumulate~.maxhelp"; sourceTree = "<group>"; };
 		52E4476515F1888200C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4477315F1889300C91B67 /* accumulate~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "accumulate~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E4477615F188D100C91B67 /* analyzer~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "analyzer~.c"; sourceTree = "<group>"; };
-		52E4477715F188D100C91B67 /* analyzer~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "analyzer~.maxhelp"; sourceTree = "<group>"; };
 		52E4477815F188D100C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4477A15F188D100C91B67 /* analyzer~-histograms.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "analyzer~-histograms.pat"; sourceTree = "<group>"; };
 		52E4477B15F188D100C91B67 /* analyzer~-test.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "analyzer~-test.pat"; sourceTree = "<group>"; };
 		52E4477D15F188D100C91B67 /* bdist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bdist.c; sourceTree = "<group>"; };
-		52E4477E15F188D100C91B67 /* bdist.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bdist.maxhelp; sourceTree = "<group>"; };
 		52E4477F15F188D100C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4478215F188D100C91B67 /* bench.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bench.c; sourceTree = "<group>"; };
-		52E4478315F188D100C91B67 /* bench.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bench.maxhelp; sourceTree = "<group>"; };
 		52E4478415F188D100C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4478615F188D100C91B67 /* bench~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "bench~.c"; sourceTree = "<group>"; };
-		52E4478715F188D100C91B67 /* bench~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bench~.maxhelp"; sourceTree = "<group>"; };
 		52E4478815F188D100C91B67 /* cycle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cycle.h; sourceTree = "<group>"; };
 		52E4478915F188D100C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4478B15F188D100C91B67 /* bpf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bpf.c; sourceTree = "<group>"; };
-		52E4478C15F188D100C91B67 /* bpf.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bpf.maxhelp; sourceTree = "<group>"; };
 		52E4478D15F188D100C91B67 /* bpf_w_undo.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bpf_w_undo.c; sourceTree = "<group>"; };
 		52E4478E15F188D100C91B67 /* dev_bpf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dev_bpf.c; sourceTree = "<group>"; };
 		52E4478F15F188D100C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4479115F188D100C91B67 /* brightness~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "brightness~.c"; sourceTree = "<group>"; };
-		52E4479215F188D100C91B67 /* brightness~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "brightness~.maxhelp"; sourceTree = "<group>"; };
 		52E4479315F188D100C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E447A115F1890800C91B67 /* analyzer~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "analyzer~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E447AF15F1890E00C91B67 /* bdist.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bdist.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1071,19 +1050,15 @@
 		52E447D915F1891800C91B67 /* bpf.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bpf.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E447E715F1891E00C91B67 /* brightness~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "brightness~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E4482A15F1E96900C91B67 /* cnmatrix~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "cnmatrix~.c"; sourceTree = "<group>"; };
-		52E4482B15F1E96900C91B67 /* cnmatrix~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "cnmatrix~.maxhelp"; sourceTree = "<group>"; };
 		52E4482C15F1E96A00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4482E15F1E96A00C91B67 /* decaying-sinusoids~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "decaying-sinusoids~.c"; sourceTree = "<group>"; };
 		52E4482F15F1E96A00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4483115F1E96A00C91B67 /* deinterleave.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = deinterleave.c; sourceTree = "<group>"; };
 		52E4483215F1E96A00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		52E4483415F1E96B00C91B67 /* fftw3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fftw3.h; sourceTree = "<group>"; };
 		52E4483515F1E96B00C91B67 /* firbank~.16band-512pt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "firbank~.16band-512pt.wav"; sourceTree = "<group>"; };
 		52E4483615F1E96B00C91B67 /* firbank~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "firbank~.c"; sourceTree = "<group>"; };
-		52E4483715F1E96B00C91B67 /* firbank~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "firbank~.maxhelp"; sourceTree = "<group>"; };
 		52E4483815F1E96B00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4483A15F1E96B00C91B67 /* gridpanel.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gridpanel.c; sourceTree = "<group>"; };
-		52E4483B15F1E96C00C91B67 /* gridpanel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = gridpanel.maxhelp; sourceTree = "<group>"; };
 		52E4483C15F1E96C00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4483E15F1E96C00C91B67 /* harmonics~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "harmonics~.c"; sourceTree = "<group>"; };
 		52E4484015F1E96C00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1091,16 +1066,12 @@
 		52E4484215F1E96C00C91B67 /* noise-table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "noise-table.h"; sourceTree = "<group>"; };
 		52E4484415F1E96C00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4484515F1E96C00C91B67 /* interleave.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = interleave.c; sourceTree = "<group>"; };
-		52E4484615F1E96D00C91B67 /* interleave.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = interleave.maxhelp; sourceTree = "<group>"; };
 		52E4484815F1E96D00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4484915F1E96D00C91B67 /* lcm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lcm.c; sourceTree = "<group>"; };
-		52E4484A15F1E96D00C91B67 /* lcm.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = lcm.maxhelp; sourceTree = "<group>"; };
 		52E4484C15F1E96D00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4484D15F1E96D00C91B67 /* list-interpolate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "list-interpolate.c"; sourceTree = "<group>"; };
-		52E4484E15F1E96D00C91B67 /* list-interpolate.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "list-interpolate.maxhelp"; sourceTree = "<group>"; };
 		52E4485015F1E96D00C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4485115F1E96D00C91B67 /* loudness~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "loudness~.c"; sourceTree = "<group>"; };
-		52E4485215F1E96D00C91B67 /* loudness~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "loudness~.maxhelp"; sourceTree = "<group>"; };
 		52E4486115F1E99000C91B67 /* cnmatrix~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cnmatrix~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E4487015F1E99B00C91B67 /* decaying-sinusoids~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "decaying-sinusoids~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E4487F15F1E9AD00C91B67 /* deinterleave.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = deinterleave.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1114,7 +1085,6 @@
 		52E4492B15F2879300C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4492C15F2879300C91B67 /* OSC-schedule-old.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-schedule-old.c"; sourceTree = "<group>"; };
 		52E4492D15F2879300C91B67 /* OSC-schedule.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-schedule.c"; sourceTree = "<group>"; };
-		52E4492E15F2879300C91B67 /* OSC-schedule.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OSC-schedule.maxhelp"; sourceTree = "<group>"; };
 		52E4492F15F2879300C91B67 /* pqops.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pqops.c; sourceTree = "<group>"; };
 		52E4493015F2879300C91B67 /* pqops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pqops.h; sourceTree = "<group>"; };
 		52E4493115F2879300C91B67 /* timeval.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timeval.h; sourceTree = "<group>"; };
@@ -1122,50 +1092,39 @@
 		52E4493415F2879300C91B67 /* OSC-timetag-ops.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-timetag-ops.c"; sourceTree = "<group>"; };
 		52E4493515F2879300C91B67 /* OSC-timetag-ops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OSC-timetag-ops.h"; sourceTree = "<group>"; };
 		52E4493615F2879300C91B67 /* OSC-timetag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "OSC-timetag.c"; sourceTree = "<group>"; };
-		52E4493715F2879300C91B67 /* OSC-timetag.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OSC-timetag.maxhelp"; sourceTree = "<group>"; };
 		52E4493815F2879300C91B67 /* timeval.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timeval.h; sourceTree = "<group>"; };
 		52E4493A15F2879300C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4493B15F2879300C91B67 /* oscillators~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "oscillators~.c"; sourceTree = "<group>"; };
-		52E4493C15F2879300C91B67 /* oscillators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "oscillators~.maxhelp"; sourceTree = "<group>"; };
 		52E4494015F2879300C91B67 /* 90-31-band.mxb */ = {isa = PBXFileReference; lastKnownFileType = file; path = "90-31-band.mxb"; sourceTree = "<group>"; };
 		52E4494115F2879300C91B67 /* one-band */ = {isa = PBXFileReference; lastKnownFileType = file; path = "one-band"; sourceTree = "<group>"; };
 		52E4494215F2879300C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4494315F2879300C91B67 /* peqbank~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "peqbank~.c"; sourceTree = "<group>"; };
-		52E4494415F2879300C91B67 /* peqbank~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "peqbank~.maxhelp"; sourceTree = "<group>"; };
 		52E4494615F2879400C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4494715F2879400C91B67 /* pitch~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "pitch~.c"; sourceTree = "<group>"; };
-		52E4494815F2879400C91B67 /* pitch~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "pitch~.maxhelp"; sourceTree = "<group>"; };
 		52E4494A15F2879400C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4494B15F2879400C91B67 /* poly.bus~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "poly.bus~.c"; sourceTree = "<group>"; };
-		52E4494C15F2879400C91B67 /* poly.bus~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "poly.bus~.maxhelp"; sourceTree = "<group>"; };
 		52E4494D15F2879400C91B67 /* poly.bus~.poly.maxpat */ = {isa = PBXFileReference; lastKnownFileType = text; path = "poly.bus~.poly.maxpat"; sourceTree = "<group>"; };
 		52E4494F15F2879400C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4495015F2879400C91B67 /* poly.send~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "poly.send~.c"; sourceTree = "<group>"; };
-		52E4495115F2879400C91B67 /* poly.send~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "poly.send~.maxhelp"; sourceTree = "<group>"; };
+		52E4495115F2879400C91B67 /* poly.send~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = file; name = "poly.send~.maxhelp"; path = "../../poly.send~/poly.send~.maxhelp"; sourceTree = "<group>"; };
 		52E4495315F2879400C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4495415F2879400C91B67 /* myPrintOSCpacket.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = myPrintOSCpacket.c; sourceTree = "<group>"; };
 		52E4495515F2879400C91B67 /* printit.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = printit.c; sourceTree = "<group>"; };
-		52E4495615F2879400C91B67 /* printit.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = printit.maxhelp; sourceTree = "<group>"; };
 		52E4495815F2879500C91B67 /* dirichlet_v_gelman.maxpat */ = {isa = PBXFileReference; lastKnownFileType = text; path = dirichlet_v_gelman.maxpat; sourceTree = "<group>"; };
 		52E4495915F2879500C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4495A15F2879500C91B67 /* libranddist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = libranddist.c; sourceTree = "<group>"; };
 		52E4495B15F2879500C91B67 /* libranddist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libranddist.h; sourceTree = "<group>"; };
 		52E4495C15F2879500C91B67 /* randdist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = randdist.c; sourceTree = "<group>"; };
-		52E4495D15F2879500C91B67 /* randdist.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = randdist.maxhelp; sourceTree = "<group>"; };
 		52E4495F15F2879500C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4496015F2879500C91B67 /* o.rbfi.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = o.rbfi.c; sourceTree = "<group>"; };
 		52E4496115F2879500C91B67 /* rbfi.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rbfi.c; sourceTree = "<group>"; };
-		52E4496215F2879500C91B67 /* rbfi.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = rbfi.maxhelp; sourceTree = "<group>"; };
 		52E4496315F2879500C91B67 /* rbfihelp.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = rbfihelp.json; sourceTree = "<group>"; };
 		52E4496515F2879500C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4496615F2879500C91B67 /* resdisplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = resdisplay.c; sourceTree = "<group>"; };
-		52E4496715F2879500C91B67 /* resdisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = resdisplay.maxhelp; sourceTree = "<group>"; };
 		52E4496915F2879500C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4496A15F2879500C91B67 /* resonators~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "resonators~.c"; sourceTree = "<group>"; };
-		52E4496B15F2879500C91B67 /* resonators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "resonators~.maxhelp"; sourceTree = "<group>"; };
 		52E4496D15F2879500C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4496E15F2879500C91B67 /* roughness.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = roughness.c; sourceTree = "<group>"; };
-		52E4496F15F2879500C91B67 /* roughness.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = roughness.maxhelp; sourceTree = "<group>"; };
 		52E4497115F2879500C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4497215F2879500C91B67 /* SDIF-buffer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "SDIF-buffer.c"; sourceTree = "<group>"; };
 		52E4497315F2879500C91B67 /* SDIF-buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDIF-buffer.h"; sourceTree = "<group>"; };
@@ -1175,7 +1134,6 @@
 		52E4497815F2879500C91B67 /* test-change-StreamID.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "test-change-StreamID.pat"; sourceTree = "<group>"; };
 		52E4497A15F2879500C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4497B15F2879500C91B67 /* SDIF-fileinfo.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "SDIF-fileinfo.c"; sourceTree = "<group>"; };
-		52E4497C15F2879500C91B67 /* SDIF-fileinfo.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "SDIF-fileinfo.maxhelp"; sourceTree = "<group>"; };
 		52E4497E15F2879600C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4497F15F2879600C91B67 /* SDIF-info.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "SDIF-info.c"; sourceTree = "<group>"; };
 		52E4498115F2879600C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1185,7 +1143,6 @@
 		52E4498715F2879600C91B67 /* SDIF-ranges.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "SDIF-ranges.c"; sourceTree = "<group>"; };
 		52E4498915F2879600C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4498A15F2879600C91B67 /* SDIF-tuples.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "SDIF-tuples.c"; sourceTree = "<group>"; };
-		52E4498B15F2879600C91B67 /* SDIF-tuples.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "SDIF-tuples.maxhelp"; sourceTree = "<group>"; };
 		52E4498D15F2879600C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E4498E15F2879600C91B67 /* make_filtered_noise.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = make_filtered_noise.m; sourceTree = "<group>"; };
 		52E4498F15F2879600C91B67 /* noise-table.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "noise-table.c"; sourceTree = "<group>"; };
@@ -1207,22 +1164,16 @@
 		52E449A315F2879700C91B67 /* thread.fork.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = thread.fork.c; sourceTree = "<group>"; };
 		52E449A615F2879700C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449A715F2879700C91B67 /* thread.join.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = thread.join.c; sourceTree = "<group>"; };
-		52E449A815F2879700C91B67 /* thread.join.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = thread.join.maxhelp; sourceTree = "<group>"; };
 		52E449AA15F2879700C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449AB15F2879700C91B67 /* threefates.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = threefates.c; sourceTree = "<group>"; };
-		52E449AC15F2879700C91B67 /* threefates.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = threefates.maxhelp; sourceTree = "<group>"; };
 		52E449AE15F2879700C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449AF15F2879700C91B67 /* trend-report.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "trend-report.c"; sourceTree = "<group>"; };
-		52E449B015F2879700C91B67 /* trend-report.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "trend-report.maxhelp"; sourceTree = "<group>"; };
 		52E449B215F287C400C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449B315F287C400C91B67 /* vsnapshot~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "vsnapshot~.c"; sourceTree = "<group>"; };
-		52E449B415F287C400C91B67 /* vsnapshot~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "vsnapshot~.maxhelp"; sourceTree = "<group>"; };
 		52E449B615F287C400C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449B715F287C400C91B67 /* waveguide~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "waveguide~.c"; sourceTree = "<group>"; };
-		52E449B815F287C400C91B67 /* waveguide~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "waveguide~.maxhelp"; sourceTree = "<group>"; };
 		52E449BA15F287C400C91B67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E449BB15F287C400C91B67 /* xydisplay.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xydisplay.c; sourceTree = "<group>"; };
-		52E449BC15F287C400C91B67 /* xydisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = xydisplay.maxhelp; sourceTree = "<group>"; };
 		52E449CB15F287ED00C91B67 /* OSC-schedule.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OSC-schedule.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E449DA15F287F500C91B67 /* OSC-timetag.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OSC-timetag.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E449E915F287FB00C91B67 /* oscillators~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "oscillators~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1255,20 +1206,73 @@
 		52E44C7C15F4835400C91B67 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../max-sdk/source/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 		52F10AA515F07157008FC371 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		52F10AC815F071DE008FC371 /* 2threshattack~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "2threshattack~.c"; sourceTree = "<group>"; };
-		52F10AC915F071DE008FC371 /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = "2threshattack~.maxhelp"; sourceTree = "<group>"; };
 		52F10ACA15F071DE008FC371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52F10ACF15F071FA008FC371 /* 2threshattack~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "2threshattack~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52F10AEE15F13D41008FC371 /* bessel-readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "bessel-readme.txt"; sourceTree = "<group>"; };
 		52F10AEF15F13D41008FC371 /* bessel.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bessel.c; sourceTree = "<group>"; };
-		52F10AF015F13D41008FC371 /* bessel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; path = bessel.maxhelp; sourceTree = "<group>"; };
 		52F10AF115F13D41008FC371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52F10AFE15F13D86008FC371 /* bessel.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bessel.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		52FF186B163B5C3800F94922 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = ../../../../../System/Library/Frameworks/Accelerate.framework; sourceTree = "<group>"; };
 		52FF189D163B5C4B00F94922 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework; sourceTree = "<group>"; };
 		52FF18CE163B5C5B00F94922 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
+		A4542BB41FC681A400330E3F /* basicresonators~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "basicresonators~.maxhelp"; path = "help/basicresonators~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BC61FC6837300330E3F /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "2threshattack~.maxhelp"; path = "help/2threshattack~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BC71FC6838000330E3F /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "accumulate~.maxhelp"; path = "help/accumulate~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BC81FC6838E00330E3F /* analyzer~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "analyzer~.maxhelp"; path = "help/analyzer~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BC91FC6839900330E3F /* basicresonators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "basicresonators~.maxhelp"; path = "help/basicresonators~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BCA1FC683A400330E3F /* bdist.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = bdist.maxhelp; path = help/bdist.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4542BCB1FC683AC00330E3F /* bench.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = bench.maxhelp; path = help/bench.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4542BCC1FC683B600330E3F /* bench~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "bench~.maxhelp"; path = "help/bench~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BCD1FC683C300330E3F /* bessel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = bessel.maxhelp; path = help/bessel.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4542BCE1FC683CA00330E3F /* bpf.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = bpf.maxhelp; path = help/bpf.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4542BCF1FC683DC00330E3F /* brightness~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "brightness~.maxhelp"; path = "help/brightness~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BD01FC683E900330E3F /* cambio~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "cambio~.maxhelp"; path = "help/cambio~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BD11FC683F400330E3F /* cnmatrix~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "cnmatrix~.maxhelp"; path = "help/cnmatrix~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BD21FC6A83600330E3F /* decaying-sinusoids~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "decaying-sinusoids~.maxhelp"; path = "help/decaying-sinusoids~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BD31FC6A84700330E3F /* deinterleave.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = deinterleave.maxhelp; path = help/deinterleave.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4542BD41FC6A86F00330E3F /* firbank~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "firbank~.maxhelp"; path = "help/firbank~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BD61FC6A8A100330E3F /* harmonics~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "harmonics~.maxhelp"; path = "help/harmonics~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BD71FC6A8B100330E3F /* interleave.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = interleave.maxhelp; path = help/interleave.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4542BD81FC6A8C600330E3F /* lcm.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = lcm.maxhelp; path = help/lcm.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4542BD91FC6A8D800330E3F /* list-accum.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "list-accum.maxhelp"; path = "help/list-accum.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BDA1FC6A8E400330E3F /* list-interpolate.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "list-interpolate.maxhelp"; path = "help/list-interpolate.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BDB1FC6A8F000330E3F /* loudness~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "loudness~.maxhelp"; path = "help/loudness~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4542BDC1FC6A8FC00330E3F /* migrator.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = migrator.maxhelp; path = help/migrator.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8291FCFDEAE00A59C42 /* gridpanel.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = gridpanel.maxhelp; path = help/gridpanel.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD82A1FCFDEFC00A59C42 /* OSC-route.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "OSC-route.maxhelp"; path = "help/OSC-route.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD82B1FCFDF0600A59C42 /* OSC-schedule.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "OSC-schedule.maxhelp"; path = "help/OSC-schedule.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD82C1FCFDF1200A59C42 /* OSC-timetag.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "OSC-timetag.maxhelp"; path = "help/OSC-timetag.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD82D1FCFDF1A00A59C42 /* oscillators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "oscillators~.maxhelp"; path = "help/oscillators~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD82E1FCFDF3400A59C42 /* peqbank~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "peqbank~.maxhelp"; path = "help/peqbank~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD82F1FCFDF3C00A59C42 /* pitch~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "pitch~.maxhelp"; path = "help/pitch~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8301FCFDF4700A59C42 /* poly.bus~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "poly.bus~.maxhelp"; path = "help/poly.bus~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8311FCFDF5D00A59C42 /* printit.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = printit.maxhelp; path = help/printit.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8321FCFDF6500A59C42 /* randdist.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = randdist.maxhelp; path = help/randdist.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8331FCFDF7100A59C42 /* rbfi.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = rbfi.maxhelp; path = help/rbfi.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8341FCFDF7B00A59C42 /* resdisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = resdisplay.maxhelp; path = help/resdisplay.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8351FCFDF8400A59C42 /* resonators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "resonators~.maxhelp"; path = "help/resonators~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8361FCFDF9F00A59C42 /* res-transform.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "res-transform.maxhelp"; path = "help/res-transform.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8371FCFDFB300A59C42 /* sin-transform.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "sin-transform.maxhelp"; path = "help/sin-transform.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8381FCFDFBE00A59C42 /* roughness.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = roughness.maxhelp; path = help/roughness.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8391FCFDFD500A59C42 /* SDIF-fileinfo.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "SDIF-fileinfo.maxhelp"; path = "help/SDIF-fileinfo.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD83A1FCFDFDD00A59C42 /* SDIF-info.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "SDIF-info.maxhelp"; path = "help/SDIF-info.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD83B1FCFDFE800A59C42 /* SDIF-listpoke.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "SDIF-listpoke.maxhelp"; path = "help/SDIF-listpoke.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD83C1FCFDFF000A59C42 /* SDIF-ranges.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "SDIF-ranges.maxhelp"; path = "help/SDIF-ranges.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD83D1FCFDFF800A59C42 /* SDIF-tuples.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "SDIF-tuples.maxhelp"; path = "help/SDIF-tuples.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD83E1FCFE00600A59C42 /* sinusoids~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "sinusoids~.maxhelp"; path = "help/sinusoids~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD83F1FCFE00E00A59C42 /* slipOSC.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = slipOSC.maxhelp; path = help/slipOSC.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8401FCFE01900A59C42 /* sphY.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = sphY.maxhelp; path = help/sphY.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8411FCFE03B00A59C42 /* thread.fork.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = thread.fork.maxhelp; path = help/thread.fork.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8421FCFE04200A59C42 /* thread.join.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = thread.join.maxhelp; path = help/thread.join.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8431FCFE04B00A59C42 /* threefates.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = threefates.maxhelp; path = help/threefates.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8441FCFE05300A59C42 /* trampoline.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = trampoline.maxhelp; path = help/trampoline.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8451FCFE05D00A59C42 /* trend-report.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "trend-report.maxhelp"; path = "help/trend-report.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8461FCFE06500A59C42 /* vsnapshot~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "vsnapshot~.maxhelp"; path = "help/vsnapshot~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8471FCFE06C00A59C42 /* waveguide~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "waveguide~.maxhelp"; path = "help/waveguide~.maxhelp"; sourceTree = SOURCE_ROOT; };
+		A4ADD8481FCFE07400A59C42 /* whichthread.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = whichthread.maxhelp; path = help/whichthread.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8491FCFE07C00A59C42 /* xydisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = xydisplay.maxhelp; path = help/xydisplay.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4DB19B31A1EFC470074BE10 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../gsl/libgsl.a; sourceTree = "<group>"; };
 		A4E832F419E8650200C55B20 /* cambio~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cambio~.c"; sourceTree = "<group>"; };
-		A4E832F519E8650200C55B20 /* cambio~.help.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cambio~.help.pat"; sourceTree = "<group>"; };
 		A4E832F619E8650200C55B20 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1976,16 +1980,6 @@
 			path = "src/partconv~";
 			sourceTree = "<group>";
 		};
-		11C1B49E18A84B1C00822EFF /* polywave~ */ = {
-			isa = PBXGroup;
-			children = (
-				11C1B49F18A84B1C00822EFF /* Info.plist */,
-				11C1B4A018A84B1C00822EFF /* polywave~.c */,
-			);
-			name = "polywave~";
-			path = "src/polywave~";
-			sourceTree = "<group>";
-		};
 		5218BAD4164DC6E300A02F42 /* Jehan-lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -2004,7 +1998,7 @@
 			children = (
 				5219617F16E6C03100EA7DDF /* Info.plist */,
 				5219618016E6C03100EA7DDF /* list-accum.c */,
-				5219618116E6C03100EA7DDF /* list-accum.maxhelp */,
+				A4542BD91FC6A8D800330E3F /* list-accum.maxhelp */,
 			);
 			name = "list-accum";
 			path = "src/list-accum";
@@ -2015,7 +2009,7 @@
 			children = (
 				5219618316E6C03E00EA7DDF /* Info.plist */,
 				5219618416E6C03E00EA7DDF /* OSC-route.c */,
-				5219618516E6C03E00EA7DDF /* OSC-route.maxhelp */,
+				A4ADD82A1FCFDEFC00A59C42 /* OSC-route.maxhelp */,
 			);
 			name = "OSC-route";
 			path = "src/OSC-route";
@@ -2026,7 +2020,7 @@
 			children = (
 				5219618716E6C04A00EA7DDF /* Info.plist */,
 				5219618816E6C04A00EA7DDF /* migrator.c */,
-				5219618916E6C04A00EA7DDF /* migrator.maxhelp */,
+				A4542BDC1FC6A8FC00330E3F /* migrator.maxhelp */,
 			);
 			name = migrator;
 			path = src/migrator;
@@ -2037,7 +2031,7 @@
 			children = (
 				5219618B16E6C05800EA7DDF /* Info.plist */,
 				5219618C16E6C05800EA7DDF /* trampoline.c */,
-				5219618D16E6C05800EA7DDF /* trampoline.maxhelp */,
+				A4ADD8441FCFE05300A59C42 /* trampoline.maxhelp */,
 			);
 			name = trampoline;
 			path = src/trampoline;
@@ -2048,7 +2042,7 @@
 			children = (
 				5219618F16E6C06700EA7DDF /* Info.plist */,
 				5219619016E6C06700EA7DDF /* whichthread.c */,
-				5219619116E6C06700EA7DDF /* whichthread.maxhelp */,
+				A4ADD8481FCFE07400A59C42 /* whichthread.maxhelp */,
 			);
 			name = whichthread;
 			path = src/whichthread;
@@ -2059,7 +2053,6 @@
 			children = (
 				5219619316E6C07200EA7DDF /* Info.plist */,
 				5219619416E6C07200EA7DDF /* OpenSoundControl.c */,
-				5219619516E6C07200EA7DDF /* OpenSoundControl.maxhelp */,
 				5219619616E6C07200EA7DDF /* release */,
 				5219619916E6C07200EA7DDF /* test-patches */,
 			);
@@ -2092,8 +2085,8 @@
 				5219619E16E6C07C00EA7DDF /* Info.plist */,
 				5219619F16E6C07C00EA7DDF /* o.res-transform.c */,
 				521961A016E6C07C00EA7DDF /* res-transform.c */,
-				521961A116E6C07C00EA7DDF /* res-transform.maxhelp */,
-				521961A216E6C07C00EA7DDF /* sin-transform.maxhelp */,
+				A4ADD8361FCFDF9F00A59C42 /* res-transform.maxhelp */,
+				A4ADD8371FCFDFB300A59C42 /* sin-transform.maxhelp */,
 			);
 			name = "res-transform";
 			path = "src/res-transform";
@@ -2153,7 +2146,8 @@
 			isa = PBXGroup;
 			children = (
 				529DD9C417A2466C00E1F789 /* basicresonators~.c */,
-				529DD9C617A2471D00E1F789 /* basicresonators~.maxhelp */,
+				A4542BC91FC6839900330E3F /* basicresonators~.maxhelp */,
+				A4542BB41FC681A400330E3F /* basicresonators~.maxhelp */,
 			);
 			name = "basicresonators~";
 			path = "src/basicresonators~";
@@ -2184,7 +2178,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4476315F1888200C91B67 /* accumulate~.c */,
-				52E4476415F1888200C91B67 /* accumulate~.maxhelp */,
+				A4542BC71FC6838000330E3F /* accumulate~.maxhelp */,
 				52E4476515F1888200C91B67 /* Info.plist */,
 			);
 			name = "accumulate~";
@@ -2195,7 +2189,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4477615F188D100C91B67 /* analyzer~.c */,
-				52E4477715F188D100C91B67 /* analyzer~.maxhelp */,
+				A4542BC81FC6838E00330E3F /* analyzer~.maxhelp */,
 				52E4477815F188D100C91B67 /* Info.plist */,
 				52E4477915F188D100C91B67 /* test-patches */,
 			);
@@ -2216,7 +2210,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4477D15F188D100C91B67 /* bdist.c */,
-				52E4477E15F188D100C91B67 /* bdist.maxhelp */,
+				A4542BCA1FC683A400330E3F /* bdist.maxhelp */,
 				52E4477F15F188D100C91B67 /* Info.plist */,
 			);
 			name = bdist;
@@ -2227,7 +2221,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4478215F188D100C91B67 /* bench.c */,
-				52E4478315F188D100C91B67 /* bench.maxhelp */,
+				A4542BCB1FC683AC00330E3F /* bench.maxhelp */,
 				52E4478415F188D100C91B67 /* Info.plist */,
 			);
 			name = bench;
@@ -2238,7 +2232,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4478615F188D100C91B67 /* bench~.c */,
-				52E4478715F188D100C91B67 /* bench~.maxhelp */,
+				A4542BCC1FC683B600330E3F /* bench~.maxhelp */,
 				52E4478815F188D100C91B67 /* cycle.h */,
 				52E4478915F188D100C91B67 /* Info.plist */,
 			);
@@ -2250,8 +2244,8 @@
 			isa = PBXGroup;
 			children = (
 				52E4478B15F188D100C91B67 /* bpf.c */,
-				52E4478C15F188D100C91B67 /* bpf.maxhelp */,
 				52E4478D15F188D100C91B67 /* bpf_w_undo.c */,
+				A4542BCE1FC683CA00330E3F /* bpf.maxhelp */,
 				52E4478E15F188D100C91B67 /* dev_bpf.c */,
 				52E4478F15F188D100C91B67 /* Info.plist */,
 			);
@@ -2263,7 +2257,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4479115F188D100C91B67 /* brightness~.c */,
-				52E4479215F188D100C91B67 /* brightness~.maxhelp */,
+				A4542BCF1FC683DC00330E3F /* brightness~.maxhelp */,
 				52E4479315F188D100C91B67 /* Info.plist */,
 			);
 			name = "brightness~";
@@ -2274,7 +2268,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4482A15F1E96900C91B67 /* cnmatrix~.c */,
-				52E4482B15F1E96900C91B67 /* cnmatrix~.maxhelp */,
+				A4542BD11FC683F400330E3F /* cnmatrix~.maxhelp */,
 				52E4482C15F1E96A00C91B67 /* Info.plist */,
 			);
 			name = "cnmatrix~";
@@ -2285,6 +2279,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4482E15F1E96A00C91B67 /* decaying-sinusoids~.c */,
+				A4542BD21FC6A83600330E3F /* decaying-sinusoids~.maxhelp */,
 				52E4482F15F1E96A00C91B67 /* Info.plist */,
 			);
 			name = "decaying-sinusoids~";
@@ -2295,6 +2290,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4483115F1E96A00C91B67 /* deinterleave.c */,
+				A4542BD31FC6A84700330E3F /* deinterleave.maxhelp */,
 				52E4483215F1E96A00C91B67 /* Info.plist */,
 			);
 			name = deinterleave;
@@ -2304,10 +2300,9 @@
 		52E4483315F1E96A00C91B67 /* firbank~ */ = {
 			isa = PBXGroup;
 			children = (
-				52E4483415F1E96B00C91B67 /* fftw3.h */,
 				52E4483515F1E96B00C91B67 /* firbank~.16band-512pt.wav */,
 				52E4483615F1E96B00C91B67 /* firbank~.c */,
-				52E4483715F1E96B00C91B67 /* firbank~.maxhelp */,
+				A4542BD41FC6A86F00330E3F /* firbank~.maxhelp */,
 				52E4483815F1E96B00C91B67 /* Info.plist */,
 			);
 			name = "firbank~";
@@ -2318,7 +2313,7 @@
 			isa = PBXGroup;
 			children = (
 				52E4483A15F1E96B00C91B67 /* gridpanel.c */,
-				52E4483B15F1E96C00C91B67 /* gridpanel.maxhelp */,
+				A4ADD8291FCFDEAE00A59C42 /* gridpanel.maxhelp */,
 				52E4483C15F1E96C00C91B67 /* Info.plist */,
 			);
 			name = gridpanel;
@@ -2328,8 +2323,8 @@
 		52E4483D15F1E96C00C91B67 /* harmonics~ */ = {
 			isa = PBXGroup;
 			children = (
-				524981C016A65BCD0086F4BD /* harmonics~.maxhelp */,
 				52E4483E15F1E96C00C91B67 /* harmonics~.c */,
+				A4542BD61FC6A8A100330E3F /* harmonics~.maxhelp */,
 				52E4484015F1E96C00C91B67 /* Info.plist */,
 				52E4484115F1E96C00C91B67 /* noise-table.c */,
 				52E4484215F1E96C00C91B67 /* noise-table.h */,
@@ -2343,7 +2338,7 @@
 			children = (
 				52E4484415F1E96C00C91B67 /* Info.plist */,
 				52E4484515F1E96C00C91B67 /* interleave.c */,
-				52E4484615F1E96D00C91B67 /* interleave.maxhelp */,
+				A4542BD71FC6A8B100330E3F /* interleave.maxhelp */,
 			);
 			name = interleave;
 			path = src/interleave;
@@ -2354,7 +2349,7 @@
 			children = (
 				52E4484815F1E96D00C91B67 /* Info.plist */,
 				52E4484915F1E96D00C91B67 /* lcm.c */,
-				52E4484A15F1E96D00C91B67 /* lcm.maxhelp */,
+				A4542BD81FC6A8C600330E3F /* lcm.maxhelp */,
 			);
 			name = lcm;
 			path = src/lcm;
@@ -2365,7 +2360,7 @@
 			children = (
 				52E4484C15F1E96D00C91B67 /* Info.plist */,
 				52E4484D15F1E96D00C91B67 /* list-interpolate.c */,
-				52E4484E15F1E96D00C91B67 /* list-interpolate.maxhelp */,
+				A4542BDA1FC6A8E400330E3F /* list-interpolate.maxhelp */,
 			);
 			name = "list-interpolate";
 			path = "src/list-interpolate";
@@ -2376,7 +2371,7 @@
 			children = (
 				52E4485015F1E96D00C91B67 /* Info.plist */,
 				52E4485115F1E96D00C91B67 /* loudness~.c */,
-				52E4485215F1E96D00C91B67 /* loudness~.maxhelp */,
+				A4542BDB1FC6A8F000330E3F /* loudness~.maxhelp */,
 			);
 			name = "loudness~";
 			path = "src/loudness~";
@@ -2388,7 +2383,7 @@
 				52E4492B15F2879300C91B67 /* Info.plist */,
 				52E4492C15F2879300C91B67 /* OSC-schedule-old.c */,
 				52E4492D15F2879300C91B67 /* OSC-schedule.c */,
-				52E4492E15F2879300C91B67 /* OSC-schedule.maxhelp */,
+				A4ADD82B1FCFDF0600A59C42 /* OSC-schedule.maxhelp */,
 				52E4492F15F2879300C91B67 /* pqops.c */,
 				52E4493015F2879300C91B67 /* pqops.h */,
 				52E4493115F2879300C91B67 /* timeval.h */,
@@ -2404,7 +2399,7 @@
 				52E4493415F2879300C91B67 /* OSC-timetag-ops.c */,
 				52E4493515F2879300C91B67 /* OSC-timetag-ops.h */,
 				52E4493615F2879300C91B67 /* OSC-timetag.c */,
-				52E4493715F2879300C91B67 /* OSC-timetag.maxhelp */,
+				A4ADD82C1FCFDF1200A59C42 /* OSC-timetag.maxhelp */,
 				52E4493815F2879300C91B67 /* timeval.h */,
 			);
 			name = "OSC-timetag";
@@ -2416,7 +2411,7 @@
 			children = (
 				52E4493A15F2879300C91B67 /* Info.plist */,
 				52E4493B15F2879300C91B67 /* oscillators~.c */,
-				52E4493C15F2879300C91B67 /* oscillators~.maxhelp */,
+				A4ADD82D1FCFDF1A00A59C42 /* oscillators~.maxhelp */,
 			);
 			name = "oscillators~";
 			path = "src/oscillators~";
@@ -2428,7 +2423,7 @@
 				52E4493E15F2879300C91B67 /* bug-report */,
 				52E4494215F2879300C91B67 /* Info.plist */,
 				52E4494315F2879300C91B67 /* peqbank~.c */,
-				52E4494415F2879300C91B67 /* peqbank~.maxhelp */,
+				A4ADD82E1FCFDF3400A59C42 /* peqbank~.maxhelp */,
 			);
 			name = "peqbank~";
 			path = "src/peqbank~";
@@ -2437,6 +2432,7 @@
 		52E4493E15F2879300C91B67 /* bug-report */ = {
 			isa = PBXGroup;
 			children = (
+				52E4495115F2879400C91B67 /* poly.send~.maxhelp */,
 				52E4493F15F2879300C91B67 /* bigEQ */,
 			);
 			path = "bug-report";
@@ -2456,7 +2452,7 @@
 			children = (
 				52E4494615F2879400C91B67 /* Info.plist */,
 				52E4494715F2879400C91B67 /* pitch~.c */,
-				52E4494815F2879400C91B67 /* pitch~.maxhelp */,
+				A4ADD82F1FCFDF3C00A59C42 /* pitch~.maxhelp */,
 			);
 			name = "pitch~";
 			path = "src/pitch~";
@@ -2467,7 +2463,7 @@
 			children = (
 				52E4494A15F2879400C91B67 /* Info.plist */,
 				52E4494B15F2879400C91B67 /* poly.bus~.c */,
-				52E4494C15F2879400C91B67 /* poly.bus~.maxhelp */,
+				A4ADD8301FCFDF4700A59C42 /* poly.bus~.maxhelp */,
 				52E4494D15F2879400C91B67 /* poly.bus~.poly.maxpat */,
 			);
 			name = "poly.bus~";
@@ -2479,7 +2475,6 @@
 			children = (
 				52E4494F15F2879400C91B67 /* Info.plist */,
 				52E4495015F2879400C91B67 /* poly.send~.c */,
-				52E4495115F2879400C91B67 /* poly.send~.maxhelp */,
 			);
 			name = "poly.send~";
 			path = "src/poly.send~";
@@ -2491,7 +2486,7 @@
 				52E4495315F2879400C91B67 /* Info.plist */,
 				52E4495415F2879400C91B67 /* myPrintOSCpacket.c */,
 				52E4495515F2879400C91B67 /* printit.c */,
-				52E4495615F2879400C91B67 /* printit.maxhelp */,
+				A4ADD8311FCFDF5D00A59C42 /* printit.maxhelp */,
 			);
 			name = printit;
 			path = src/printit;
@@ -2505,7 +2500,7 @@
 				52E4495A15F2879500C91B67 /* libranddist.c */,
 				52E4495B15F2879500C91B67 /* libranddist.h */,
 				52E4495C15F2879500C91B67 /* randdist.c */,
-				52E4495D15F2879500C91B67 /* randdist.maxhelp */,
+				A4ADD8321FCFDF6500A59C42 /* randdist.maxhelp */,
 			);
 			name = randdist;
 			path = src/randdist;
@@ -2517,7 +2512,7 @@
 				52E4495F15F2879500C91B67 /* Info.plist */,
 				52E4496015F2879500C91B67 /* o.rbfi.c */,
 				52E4496115F2879500C91B67 /* rbfi.c */,
-				52E4496215F2879500C91B67 /* rbfi.maxhelp */,
+				A4ADD8331FCFDF7100A59C42 /* rbfi.maxhelp */,
 				52E4496315F2879500C91B67 /* rbfihelp.json */,
 			);
 			name = rbfi;
@@ -2529,7 +2524,7 @@
 			children = (
 				52E4496515F2879500C91B67 /* Info.plist */,
 				52E4496615F2879500C91B67 /* resdisplay.c */,
-				52E4496715F2879500C91B67 /* resdisplay.maxhelp */,
+				A4ADD8341FCFDF7B00A59C42 /* resdisplay.maxhelp */,
 			);
 			name = resdisplay;
 			path = src/resdisplay;
@@ -2540,7 +2535,7 @@
 			children = (
 				52E4496915F2879500C91B67 /* Info.plist */,
 				52E4496A15F2879500C91B67 /* resonators~.c */,
-				52E4496B15F2879500C91B67 /* resonators~.maxhelp */,
+				A4ADD8351FCFDF8400A59C42 /* resonators~.maxhelp */,
 			);
 			name = "resonators~";
 			path = "src/resonators~";
@@ -2551,7 +2546,7 @@
 			children = (
 				52E4496D15F2879500C91B67 /* Info.plist */,
 				52E4496E15F2879500C91B67 /* roughness.c */,
-				52E4496F15F2879500C91B67 /* roughness.maxhelp */,
+				A4ADD8381FCFDFBE00A59C42 /* roughness.maxhelp */,
 			);
 			name = roughness;
 			path = src/roughness;
@@ -2585,7 +2580,7 @@
 			children = (
 				52E4497A15F2879500C91B67 /* Info.plist */,
 				52E4497B15F2879500C91B67 /* SDIF-fileinfo.c */,
-				52E4497C15F2879500C91B67 /* SDIF-fileinfo.maxhelp */,
+				A4ADD8391FCFDFD500A59C42 /* SDIF-fileinfo.maxhelp */,
 			);
 			name = "SDIF-fileinfo";
 			path = "src/SDIF-fileinfo";
@@ -2596,6 +2591,7 @@
 			children = (
 				52E4497E15F2879600C91B67 /* Info.plist */,
 				52E4497F15F2879600C91B67 /* SDIF-info.c */,
+				A4ADD83A1FCFDFDD00A59C42 /* SDIF-info.maxhelp */,
 			);
 			name = "SDIF-info";
 			path = "src/SDIF-info";
@@ -2606,6 +2602,7 @@
 			children = (
 				52E4498115F2879600C91B67 /* Info.plist */,
 				52E4498215F2879600C91B67 /* SDIF-listpoke.c */,
+				A4ADD83B1FCFDFE800A59C42 /* SDIF-listpoke.maxhelp */,
 				52E4498315F2879600C91B67 /* test-patches */,
 			);
 			name = "SDIF-listpoke";
@@ -2625,6 +2622,7 @@
 			children = (
 				52E4498615F2879600C91B67 /* Info.plist */,
 				52E4498715F2879600C91B67 /* SDIF-ranges.c */,
+				A4ADD83C1FCFDFF000A59C42 /* SDIF-ranges.maxhelp */,
 			);
 			name = "SDIF-ranges";
 			path = "src/SDIF-ranges";
@@ -2635,7 +2633,7 @@
 			children = (
 				52E4498915F2879600C91B67 /* Info.plist */,
 				52E4498A15F2879600C91B67 /* SDIF-tuples.c */,
-				52E4498B15F2879600C91B67 /* SDIF-tuples.maxhelp */,
+				A4ADD83D1FCFDFF800A59C42 /* SDIF-tuples.maxhelp */,
 			);
 			name = "SDIF-tuples";
 			path = "src/SDIF-tuples";
@@ -2649,6 +2647,7 @@
 				52E4498F15F2879600C91B67 /* noise-table.c */,
 				52E4499015F2879600C91B67 /* noise-table.h */,
 				52E4499115F2879600C91B67 /* sinusoids~.c */,
+				A4ADD83E1FCFE00600A59C42 /* sinusoids~.maxhelp */,
 				52E4499215F2879600C91B67 /* test-patches */,
 			);
 			name = "sinusoids~";
@@ -2668,6 +2667,7 @@
 			children = (
 				52E4499515F2879600C91B67 /* Info.plist */,
 				52E4499615F2879600C91B67 /* slipOSC.c */,
+				A4ADD83F1FCFE00E00A59C42 /* slipOSC.maxhelp */,
 			);
 			name = slipOSC;
 			path = src/slipOSC;
@@ -2685,6 +2685,7 @@
 				52E4499E15F2879600C91B67 /* sh_normalization.c */,
 				52E4499F15F2879600C91B67 /* sh_normalization.h */,
 				52E449A015F2879600C91B67 /* sphY.c */,
+				A4ADD8401FCFE01900A59C42 /* sphY.maxhelp */,
 			);
 			name = sphY;
 			path = src/sphY;
@@ -2693,9 +2694,9 @@
 		52E449A115F2879600C91B67 /* thread.fork */ = {
 			isa = PBXGroup;
 			children = (
-				524981C216A65BEE0086F4BD /* thread.fork.maxhelp */,
 				52E449A215F2879700C91B67 /* Info.plist */,
 				52E449A315F2879700C91B67 /* thread.fork.c */,
+				A4ADD8411FCFE03B00A59C42 /* thread.fork.maxhelp */,
 			);
 			name = thread.fork;
 			path = src/thread.fork;
@@ -2706,7 +2707,7 @@
 			children = (
 				52E449A615F2879700C91B67 /* Info.plist */,
 				52E449A715F2879700C91B67 /* thread.join.c */,
-				52E449A815F2879700C91B67 /* thread.join.maxhelp */,
+				A4ADD8421FCFE04200A59C42 /* thread.join.maxhelp */,
 			);
 			name = thread.join;
 			path = src/thread.join;
@@ -2717,7 +2718,7 @@
 			children = (
 				52E449AA15F2879700C91B67 /* Info.plist */,
 				52E449AB15F2879700C91B67 /* threefates.c */,
-				52E449AC15F2879700C91B67 /* threefates.maxhelp */,
+				A4ADD8431FCFE04B00A59C42 /* threefates.maxhelp */,
 			);
 			name = threefates;
 			path = src/threefates;
@@ -2728,7 +2729,7 @@
 			children = (
 				52E449AE15F2879700C91B67 /* Info.plist */,
 				52E449AF15F2879700C91B67 /* trend-report.c */,
-				52E449B015F2879700C91B67 /* trend-report.maxhelp */,
+				A4ADD8451FCFE05D00A59C42 /* trend-report.maxhelp */,
 			);
 			name = "trend-report";
 			path = "src/trend-report";
@@ -2739,7 +2740,7 @@
 			children = (
 				52E449B215F287C400C91B67 /* Info.plist */,
 				52E449B315F287C400C91B67 /* vsnapshot~.c */,
-				52E449B415F287C400C91B67 /* vsnapshot~.maxhelp */,
+				A4ADD8461FCFE06500A59C42 /* vsnapshot~.maxhelp */,
 			);
 			name = "vsnapshot~";
 			path = "src/vsnapshot~";
@@ -2750,7 +2751,7 @@
 			children = (
 				52E449B615F287C400C91B67 /* Info.plist */,
 				52E449B715F287C400C91B67 /* waveguide~.c */,
-				52E449B815F287C400C91B67 /* waveguide~.maxhelp */,
+				A4ADD8471FCFE06C00A59C42 /* waveguide~.maxhelp */,
 			);
 			name = "waveguide~";
 			path = "src/waveguide~";
@@ -2761,7 +2762,7 @@
 			children = (
 				52E449BA15F287C400C91B67 /* Info.plist */,
 				52E449BB15F287C400C91B67 /* xydisplay.c */,
-				52E449BC15F287C400C91B67 /* xydisplay.maxhelp */,
+				A4ADD8491FCFE07C00A59C42 /* xydisplay.maxhelp */,
 			);
 			name = xydisplay;
 			path = src/xydisplay;
@@ -2804,7 +2805,6 @@
 				52E4494515F2879300C91B67 /* pitch~ */,
 				52E4494915F2879400C91B67 /* poly.bus~ */,
 				52E4494E15F2879400C91B67 /* poly.send~ */,
-				11C1B49E18A84B1C00822EFF /* polywave~ */,
 				52E4495215F2879400C91B67 /* printit */,
 				52E4495715F2879400C91B67 /* randdist */,
 				52E4495E15F2879500C91B67 /* rbfi */,
@@ -2921,7 +2921,7 @@
 			isa = PBXGroup;
 			children = (
 				52F10AC815F071DE008FC371 /* 2threshattack~.c */,
-				52F10AC915F071DE008FC371 /* 2threshattack~.maxhelp */,
+				A4542BC61FC6837300330E3F /* 2threshattack~.maxhelp */,
 				52F10ACA15F071DE008FC371 /* Info.plist */,
 			);
 			name = "2threshattack~";
@@ -2933,7 +2933,7 @@
 			children = (
 				52F10AEE15F13D41008FC371 /* bessel-readme.txt */,
 				52F10AEF15F13D41008FC371 /* bessel.c */,
-				52F10AF015F13D41008FC371 /* bessel.maxhelp */,
+				A4542BCD1FC683C300330E3F /* bessel.maxhelp */,
 				52F10AF115F13D41008FC371 /* Info.plist */,
 			);
 			name = bessel;
@@ -2944,7 +2944,7 @@
 			isa = PBXGroup;
 			children = (
 				A4E832F419E8650200C55B20 /* cambio~.c */,
-				A4E832F519E8650200C55B20 /* cambio~.help.pat */,
+				A4542BD01FC683E900330E3F /* cambio~.maxhelp */,
 				A4E832F619E8650200C55B20 /* Info.plist */,
 			);
 			name = "cambio~";
@@ -4473,6 +4473,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4542BB51FC681A400330E3F /* basicresonators~.maxhelp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4488,7 +4489,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A4E832F919E8650200C55B20 /* Info.plist in Resources */,
-				A4E832F819E8650200C55B20 /* cambio~.help.pat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4522,7 +4522,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				11C1B49018A84AA900822EFF /* commonsyms.c in Sources */,
-				11C1B4A218A84B1C00822EFF /* polywave~.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
