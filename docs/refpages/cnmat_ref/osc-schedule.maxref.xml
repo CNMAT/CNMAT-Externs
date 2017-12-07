@@ -8,7 +8,7 @@
     </digest>
 
     <description>
-	Stores incoming OSC packet/bundle and attempts to output them at the time indicated by the timestamp.
+	Stores incoming OSC packets (bundles) and attempts to output them at the time indicated by the timestamp.
     </description>
 
     <!--METADATA-->
