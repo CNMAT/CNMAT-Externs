@@ -90,7 +90,7 @@
 	</method>
 	<method name="OSCTimeTag">
 	    <description>
-		Specify an NTP timestamp for evaluation.  NTP is a 64-bit fixed point encoding used for network time synchronization and by OSC bundles.  This timestamp is represented as two 32-bit integers, the seconds elapsed since 1/1/1900, and the fractions of a second.
+		Specify an NTP timestamp for evaluation.  NTP is a 64-bit fixed point encoding used for network time synchronization and by OSC bundles.  This timestamp is represented as two 32-bit integers, the seconds elapsed since 1/1/1900, and the fractions of a second.  See "More details" below for further info on use cases.
 	    </description>
 	    <arglist>
 		<arg name="seconds" optional="0" type="int"/>
@@ -201,14 +201,17 @@
     <misc name = "Discussion">
 	<entry name ="More details">
 	    <description>
-		Note: This object has been deprecated albeit specific use cases.  For the current version of CNMAT OSC objects please see the ODOT library, available <a href="https://github.com/CNMAT/CNMAT-odot">here</a>.
-		
-		Note on string substitution:  If the address portion of your message includes one of the "conversion specifiers" %c, %d, %f, or %s, then the first argument to your message will be formatted and inserted into the address string, replacing the conversion specifier.  The meanings of the conversion specifiers are the same as in sprintf (except that you can just say %d instead of %ld). %c interprets an int arg as an ASCII character, %d formats an int arg, %f formats a float arg, and %s inserts a symbol arg. There can be multiple conversion specifiers as long as there are enough arguments for each of them.
+		<ul>
+		    <li>General note: This object has been deprecated albeit specific use cases.  For the current version of CNMAT OSC objects please see the ODOT library, available <a href="https://github.com/CNMAT/CNMAT-odot">here</a>.</li>
+		    <li>Note on string substitution:  If the address portion of your message includes one of the "conversion specifiers" %c, %d, %f, or %s, then the first argument to your message will be formatted and inserted into the address string, replacing the conversion specifier.  The meanings of the conversion specifiers are the same as in sprintf (except that you can just say %d instead of %ld). %c interprets an int arg as an ASCII character, %d formats an int arg, %f formats a float arg, and %s inserts a symbol arg. There can be multiple conversion specifiers as long as there are enough arguments for each of them.</li>
+		    <li>Note on timetag arguments:  OpenSoundControl supports encoding and decoding of time tags in the argument section of a message using the extended type tag, "t".  These are represented in Max as a list "OSCTimeTag x y."</li>
+		    <li>Note on blob arguments:  The blob type "b" enables one to encode a sequence of arbitrary bytes including non-printable characters not possible to include in a normal string.  The blob type is represented in MaxMSP as a list starting with "OSCBlob" followed by the length (integer) followed by an integer for each byte. See also the serial object for a similar representation of byte streams in MaxMSP.</li>
+		</ul>
 	    </description>
 	</entry>
 	<entry name ="Keywords">
 	    <description>
-		schedule, CNMAT, timestamp, time
+		OSC, OpenSoundControl, CNMAT, bundle, packet, networking
 	    </description>
 	</entry>
     </misc>
