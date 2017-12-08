@@ -119,6 +119,13 @@
 		List the streams in the given SDIF file in the Max window. (Not as good as SDIF-menu!)
 	    </description>
 	</method>
+	<method name="timeshift">
+	    <arglist>
+	    </arglist>
+	    <description>
+		offset the timings of SDIF matrix data to time "0.", based on the first valid frame found.
+	    </description>
+	</method>
 	<method name="version">
 	    <arglist>
 	    </arglist>
@@ -131,7 +138,7 @@
 		<arg name="path to file" type="symbol" optional="0" id="0" />
 	    </arglist>
 	    <description>
-		Write the contents of an SDIF-buffer instance to disk.  The path argument enables you to specify a location on disk, appended by the filename itself.
+		Write the contents of an SDIF-buffer instance to disk.  The path argument enables you to specify a disk location, appended by the filename itself.
 	    </description>
 	</method>
 
@@ -143,44 +150,24 @@
 
     <!--SEEALSO-->
     <seealsolist>
-	<seealso name="randdist" />
+	<seealso name="SDIF-fileinfo" />
+	<seealso name="SDIF-info" />
+	<seealso name="SDIF-listpoke" />
+	<seealso name="SDIF-ranges" />
+	<seealso name="SDIF-tuples" />
     </seealsolist>
 
     <misc name = "Input">
 	<entry name ="Inlet 1 [anything]">
 	    <description>
-		The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
-	    </description>
-	</entry>
-	<entry name ="Inlet 2 [float]">
-	    <description>
-		Set the 'a' parameter for the current distribution, recalculate, and display the result.
-	    </description>
-	</entry>
-	<entry name ="Inlet 3 [float]">
-	    <description>
-		Set the 'b' parameter for the current distribution, recalculate, and display the result.
 	    </description>
 	</entry>
     </misc>
 
     <misc name = "Output">
-	<entry name ="Outlet 1 [list or float]">
+	<entry name ="Outlet 1 [bang]">
 	    <description>
-		This output is variable, and can be one of the following:<br/><br/>
-		- Y output from corresponding X input<br/>
-		- A list of chosen values from the distribution designated in the left inlet<br/>
-		- A float that represents a chosen value from either a [bang] in the left inlet, or a when the object receives the message [distlist 1]<br/>
-	    </description>
-	</entry>
-	<entry name ="Outlet 2 [variable]">
-	    <description>
-		Outputs a number of descriptors outlining the characteristics of the distribution, sent upon any change in the parameterizations.  These include:<br/><br/>
-		- mean [value]<br/>
-		- variance [value]<br/>
-		- skewness [value]<br/>
-		- kurtosis [value]<br/>
-		- mode [value]<br/>
+		Outputs a bang when an SDIF file is successfully read.
 	    </description>
 	</entry>
     </misc>
@@ -192,7 +179,7 @@
 	</entry>
 	<entry name ="Keywords">
 	    <description>
-		bdist, CNMAT, transfer function
+		SDIF, CNMAT, buffer, matrix, format 
 	    </description>
 	</entry>
     </misc>
