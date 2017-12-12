@@ -8,7 +8,7 @@
     </digest>
 
     <description>
-	An SDIF stream is a matrix of data that can be queried, manipulated, and written.  The Sound Description Interchange Format (“SDIF”) offers a framework for representing high-level sound descriptions such as sum-of-sinusoids, noise bands, time-domain samples, and formants.  Many of these sound descriptions are mutable models, affording operations such as filtering, morphing, pitch shifting, and time stretching.  SDIF data consists of time-tagged frames, each containing one or more two-dimensional matrices of data such as floating-point numbers and a frame type ID indicating what kind of sound description the frame represents. For example, an SDIF frame representing additive synthesis data has a single matrix where rows represent individual sinusoids and columns represent parameters such as frequency, amplitude, and phase. A stream is a sequence of frames of the same frame type that represents a single “sonic object” evolving through time. An SDIF file may contain one stream, or multiple streams with interleaved frames. Each frame has a Stream ID, a meaningless 32-bit number that uniquely identifies the stream to which it belongs.
+	The SDIF-tuples object is a link between data in the matrix format of SDIF and the world of Max.  Lists that are output from this object can be used to synthesize audio in a variety of ways, depending on the files loaded into buffers.  These buffers are referenced by name, as outlined below.
     </description>
 
     <!--METADATA-->
@@ -216,6 +216,7 @@
     <misc name = "Discussion">
 	<entry name ="More details">
 	    <description>
+		An SDIF stream is a matrix of data that can be queried, manipulated, and written.  The Sound Description Interchange Format (“SDIF”) offers a framework for representing high-level sound descriptions such as sum-of-sinusoids, noise bands, time-domain samples, and formants.  Many of these sound descriptions are mutable models, affording operations such as filtering, morphing, pitch shifting, and time stretching.  SDIF data consists of time-tagged frames, each containing one or more two-dimensional matrices of data such as floating-point numbers and a frame type ID indicating what kind of sound description the frame represents. For example, an SDIF frame representing additive synthesis data has a single matrix where rows represent individual sinusoids and columns represent parameters such as frequency, amplitude, and phase. A stream is a sequence of frames of the same frame type that represents a single “sonic object” evolving through time. An SDIF file may contain one stream, or multiple streams with interleaved frames. Each frame has a Stream ID, a meaningless 32-bit number that uniquely identifies the stream to which it belongs.
 	    </description>
 	</entry>
 	<entry name ="Keywords">
