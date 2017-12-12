@@ -177,6 +177,11 @@
 		</ol>
 	    </description>
 	</method>
+	<method name="version">
+	    <description>
+		Print version info to the Max window.
+	    </description>
+	</method>
     </methodlist>
 
     <!--DISCUSSION-->
