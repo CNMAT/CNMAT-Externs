@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 925.0, 550.0 ],
+		"rect" : [ 159.0, 130.0, 925.0, 578.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -54,7 +54,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 925.0, 524.0 ],
+						"rect" : [ 0.0, 26.0, 925.0, 552.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -87,7 +87,6 @@
 					}
 ,
 					"patching_rect" : [ 95.0, 17.0, 27.0, 22.0 ],
-					"presentation_rect" : [ 91.0, 13.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -117,7 +116,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 59.0, 104.0, 640.0, 480.0 ],
+						"rect" : [ 159.0, 156.0, 925.0, 552.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -145,7 +144,6 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-54",
@@ -308,11 +306,13 @@
 									"fontface" : 0,
 									"fontsize" : 10.0,
 									"id" : "obj-46",
+									"linecount" : 7,
 									"maxclass" : "o.display",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 208.0, 299.927704, 220.0, 32.0 ],
+									"patching_rect" : [ 180.0, 274.927704, 220.0, 100.0 ],
+									"text" : "/name : \"testbuf\",\n/filename : \"Cbass.res.sdif\",\n/streamID : 1,\n/frameType : \"1RES\",\n/minTime : 0.,\n/maxTime : 0.,\n/numFrames : 1",
 									"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ]
 								}
 
@@ -336,7 +336,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 535.285706, 440.0, 93.0, 20.0 ],
+									"patching_rect" : [ 535.285706, 449.0, 93.0, 20.0 ],
 									"style" : "default",
 									"text" : "Min frame time "
 								}
@@ -372,7 +372,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 491.0, 59.0, 20.0 ],
+									"patching_rect" : [ 15.0, 500.0, 59.0, 20.0 ],
 									"style" : "default",
 									"text" : "see also:"
 								}
@@ -387,7 +387,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "int", "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 84.500061, 490.0, 100.0, 22.0 ],
+									"patching_rect" : [ 84.500061, 499.0, 100.0, 22.0 ],
 									"prefix_mode" : 2,
 									"style" : "default"
 								}
@@ -401,7 +401,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 15.0, 522.0, 138.0, 22.0 ],
+									"patching_rect" : [ 15.0, 531.0, 138.0, 22.0 ],
 									"style" : "default",
 									"text" : "sprintf load %s.maxhelp"
 								}
@@ -427,7 +427,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 767.428589, 440.0, 99.0, 20.0 ],
+									"patching_rect" : [ 767.428589, 449.0, 99.0, 20.0 ],
 									"style" : "default",
 									"text" : "Total # of frames"
 								}
@@ -439,7 +439,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 651.357117, 440.0, 93.0, 20.0 ],
+									"patching_rect" : [ 651.357117, 449.0, 93.0, 20.0 ],
 									"style" : "default",
 									"text" : "Max frame time"
 								}
@@ -451,7 +451,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 378.214294, 440.0, 74.0, 20.0 ],
+									"patching_rect" : [ 378.214294, 449.0, 74.0, 20.0 ],
 									"style" : "default",
 									"text" : "Frame Type"
 								}
@@ -463,7 +463,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 293.142853, 440.0, 63.0, 20.0 ],
+									"patching_rect" : [ 293.142853, 449.0, 63.0, 20.0 ],
 									"style" : "default",
 									"text" : "stream ID"
 								}
@@ -476,7 +476,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 104.071426, 440.0, 113.0, 33.0 ],
+									"patching_rect" : [ 104.071426, 449.0, 113.0, 33.0 ],
 									"style" : "default",
 									"text" : "Name of most recently loaded file"
 								}
@@ -489,7 +489,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 440.0, 75.0, 33.0 ],
+									"patching_rect" : [ 15.0, 449.0, 75.0, 33.0 ],
 									"style" : "default",
 									"text" : "Name of SDIF-buffer"
 								}
@@ -526,7 +526,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 368.0, 147.0, 49.0, 22.0 ],
+									"patching_rect" : [ 319.0, 147.0, 49.0, 22.0 ],
 									"style" : "default",
 									"text" : "version"
 								}
@@ -539,7 +539,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 180.0, 147.0, 88.0, 22.0 ],
+									"patching_rect" : [ 166.5, 147.0, 88.0, 22.0 ],
 									"style" : "default",
 									"text" : "set otherbuffer"
 								}
@@ -658,7 +658,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 767.428589, 412.0, 44.0, 22.0 ],
+									"patching_rect" : [ 767.428589, 421.0, 44.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -673,7 +673,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 651.357117, 412.0, 51.0, 22.0 ],
+									"patching_rect" : [ 651.357117, 421.0, 51.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -688,7 +688,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 535.285706, 412.0, 51.0, 22.0 ],
+									"patching_rect" : [ 535.285706, 421.0, 51.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -701,7 +701,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 390.214294, 412.0, 48.0, 22.0 ],
+									"patching_rect" : [ 390.214294, 421.0, 48.0, 22.0 ],
 									"style" : "default"
 								}
 
@@ -714,7 +714,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 303.142853, 412.0, 43.0, 22.0 ],
+									"patching_rect" : [ 303.142853, 421.0, 43.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -727,9 +727,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 100.071426, 412.0, 106.0, 22.0 ],
-									"style" : "default",
-									"text" : "---no-filename---"
+									"patching_rect" : [ 100.071426, 421.0, 106.0, 22.0 ],
+									"style" : "default"
 								}
 
 							}
@@ -740,9 +739,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 15.0, 412.0, 75.0, 22.0 ],
-									"style" : "default",
-									"text" : "buf"
+									"patching_rect" : [ 15.0, 421.0, 75.0, 22.0 ],
+									"style" : "default"
 								}
 
 							}
@@ -753,7 +751,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 8,
 									"outlettype" : [ "", "", "", "", "", "", "", "FullPacket" ],
-									"patching_rect" : [ 71.0, 380.0, 831.5, 22.0 ],
+									"patching_rect" : [ 71.0, 389.0, 831.5, 22.0 ],
 									"style" : "default",
 									"text" : "o.route /name /filename /streamID /frameType /minTime /maxTime /numFrames"
 								}
@@ -829,7 +827,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 201.0, 181.927704, 96.0, 22.0 ],
+									"patching_rect" : [ 483.0, 148.0, 96.0, 22.0 ],
 									"style" : "",
 									"text" : "tellmeeverything"
 								}
