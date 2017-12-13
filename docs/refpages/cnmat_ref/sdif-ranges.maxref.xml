@@ -38,11 +38,12 @@
     <methodlist>
 	<method name="column-range">
 	    <arglist>
-		<arg name="matrix type" type="symbol" optional="0" id="0"/>
+		<arg name="columne number" type="int" optional="0" id="0"/>
+		<arg name="matrix type" type="symbol" optional="0" id="1"/>
 	    </arglist>
 	    <description>
-		Query column ranges.<br/><br/>
-		Output the maximum and minimum data values per column, for all rows in all matrices in the buffer (of the specified type).  Note that this query will fail if sdif-ranges cannot find a valid frame of said type.<br/><br/>
+		Query a single column with a given matrix type.<br/><br/>
+		Outputs the maximum and minimum data values for the column of the specified type.  Note that this query will fail if sdif-ranges cannot find a valid frame.<br/><br/>
 		The osc-style messages that are output:
 		<ul>
 		    <li>/max-num-columns: output the maximum number of columns found.</li>
@@ -53,12 +54,11 @@
 	</method>
 	<method name="column-ranges">
 	    <arglist>
-		<arg name="columne number" type="int" optional="0" id="0"/>
-		<arg name="matrix type" type="symbol" optional="0" id="1"/>
+		<arg name="matrix type" type="symbol" optional="0" id="0"/>
 	    </arglist>
 	    <description>
-		Query a single column with a given matrix type.<br/><br/>
-		Outputs the maximum and minimum data values for the column of the specified type.  Note that this query will fail if sdif-ranges cannot find a valid frame.<br/><br/>
+		Query column ranges.<br/><br/>
+		Output the maximum and minimum data values per column, for all rows in all matrices in the buffer (of the specified type).  Note that this query will fail if sdif-ranges cannot find a valid frame of said type.<br/><br/>
 		The osc-style messages that are output:
 		<ul>
 		    <li>/max-num-columns: output the maximum number of columns found.</li>
