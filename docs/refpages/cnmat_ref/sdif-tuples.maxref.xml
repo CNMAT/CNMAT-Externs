@@ -157,7 +157,7 @@
 	</method>
 	<method name="time">
 	    <arglist>
-		<arg name="ms or relative time" type="float" optional="0" id="0" />
+		<arg name="seconds or relative time" type="float" optional="0" id="0" />
 	    </arglist>
 	    <description>
 		This message changes the behavior of the [tuples] message*  <br/>
