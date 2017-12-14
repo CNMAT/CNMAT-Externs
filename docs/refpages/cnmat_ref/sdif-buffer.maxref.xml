@@ -52,7 +52,7 @@
 		    <li>1RES: Resonances / Exponentially Decaying Sinusoids</li>
 		    <li>1TDS: Time Domain Samples</li>
 		</ul>
-		The list above describes intiial standard frame types compiled in 1999, and can be found <a href="http://cnmat.org/SDIF/FrameTypes.html">here</a>.
+		The list above describes initial standard frame types compiled in 1999, and can be found <a href="http://cnmat.org/SDIF/FrameTypes.html">here</a>.
 		For information on more frame types, please see the main <a href="http://sdif.sourceforge.net/standard/types-main.html">SDIF types page</a>.
 	    </description>
 	</method>
