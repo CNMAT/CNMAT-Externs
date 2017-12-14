@@ -306,13 +306,11 @@
 									"fontface" : 0,
 									"fontsize" : 10.0,
 									"id" : "obj-46",
-									"linecount" : 7,
 									"maxclass" : "o.display",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 180.0, 274.927704, 220.0, 100.0 ],
-									"text" : "/name : \"testbuf\",\n/filename : \"Cbass.res.sdif\",\n/streamID : 1,\n/frameType : \"1RES\",\n/minTime : 0.,\n/maxTime : 0.,\n/numFrames : 1",
+									"patching_rect" : [ 180.0, 274.927704, 220.0, 32.0 ],
 									"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ]
 								}
 
@@ -333,12 +331,13 @@
 , 							{
 								"box" : 								{
 									"id" : "obj-45",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 535.285706, 449.0, 93.0, 20.0 ],
+									"patching_rect" : [ 535.285706, 449.0, 98.0, 33.0 ],
 									"style" : "default",
-									"text" : "Min frame time "
+									"text" : "Min frame time \n(seconds)"
 								}
 
 							}
@@ -436,12 +435,13 @@
 , 							{
 								"box" : 								{
 									"id" : "obj-3",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 651.357117, 449.0, 93.0, 20.0 ],
+									"patching_rect" : [ 651.357117, 449.0, 98.0, 33.0 ],
 									"style" : "default",
-									"text" : "Max frame time"
+									"text" : "Max frame time\n(seconds)"
 								}
 
 							}
