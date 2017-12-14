@@ -87,7 +87,6 @@
 					}
 ,
 					"patching_rect" : [ 753.0, 127.0, 27.0, 22.0 ],
-					"presentation_rect" : [ 753.0, 127.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -240,7 +239,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 91.0, 210.0, 195.0, 64.0 ],
 									"style" : "default",
-									"text" : "the tuplets time <float> message recalls the matrix value at the specified time in the SDIF file."
+									"text" : "the tuplets time <float> message recalls the matrix value at the specified time (in seconds) in the SDIF file."
 								}
 
 							}
@@ -1041,8 +1040,7 @@
 									"id" : "obj-74",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
+									"numoutlets" : 0,
 									"patching_rect" : [ 723.0, 342.0, 120.0, 22.0 ],
 									"style" : "default",
 									"text" : "SDIF-buffer otherbuf"
@@ -1172,8 +1170,7 @@
 									"id" : "obj-95",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
+									"numoutlets" : 0,
 									"patching_rect" : [ 723.0, 263.0, 108.0, 22.0 ],
 									"style" : "default",
 									"text" : "SDIF-buffer mybuf"
@@ -1860,7 +1857,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 608.0, 52.5, 200.0, 27.0 ],
+									"patching_rect" : [ 608.0, 52.5, 200.0, 20.0 ],
 									"style" : "default",
 									"text" : "Signal control of time"
 								}
@@ -3017,10 +3014,6 @@
 			}
 , 			{
 				"name" : "o.route.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "SDIF-buffer.mxo",
 				"type" : "iLaX"
 			}
  ],
