@@ -101,6 +101,18 @@
 	</method>
     </methodlist>
 
+<!--ATTRIBUTES-->
+	<attributelist>
+		<attribute name="min" get="1" set="1" type="float" size="1">
+			<digest>
+				minimum bound for accumulation
+			</digest>
+			<description>
+				minimum bound for accumulation
+			</description>
+		</attribute>
+	</attributelist>
+
     <!--DISCUSSION-->
     <discussion>
     </discussion>
