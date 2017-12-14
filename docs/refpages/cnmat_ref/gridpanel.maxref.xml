@@ -24,14 +24,6 @@
 
     <!--OUTLETS-->
     <outletlist>
-	<outlet id="0" type="list">
-	    <digest>
-		A list containing two elements:  The x and y cell location for the currently selected cell.
-	    </digest>
-	    <description>
-		A list containing two elements:  The x and y cell location for the currently selected cell.
-	    </description>
-	</outlet>
     </outletlist>
 
     <!--ARGUMENTS-->
