@@ -5,11 +5,11 @@
 			"major" : 7,
 			"minor" : 3,
 			"revision" : 4,
-			"architecture" : "x64",
+			"architecture" : "x86",
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 1089.0, 718.0 ],
+		"rect" : [ 100.0, 100.0, 1080.0, 718.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,11 +40,73 @@
 		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 7,
+							"minor" : 3,
+							"revision" : 4,
+							"architecture" : "x86",
+							"modernui" : 1
+						}
+,
+						"rect" : [ 0.0, 26.0, 1080.0, 692.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 12.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 8.0, 8.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"showontab" : 1,
+						"boxes" : [  ],
+						"lines" : [  ]
+					}
+,
+					"patching_rect" : [ 865.0, 191.566635, 31.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"globalpatchername" : "",
+						"style" : "",
+						"tags" : ""
+					}
+,
+					"style" : "default",
+					"text" : "p ?"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-5",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 628.0, 280.166626, 279.0, 20.0 ],
+					"patching_rect" : [ 593.0, 434.166626, 279.0, 20.0 ],
 					"style" : "",
 					"text" : "<< currently not included in tab due to broken links"
 				}
@@ -62,11 +124,11 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 1089.0, 692.0 ],
+						"rect" : [ 100.0, 126.0, 1080.0, 692.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -108,7 +170,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 24.0, 155.0, 203.919922, 19.171875 ],
+									"patching_rect" : [ 24.0, 158.0, 203.919922, 19.171875 ],
 									"presentation_rect" : [ 30.0, 30.0, 203.919922, 19.171875 ],
 									"prototypename" : "M4L.display",
 									"style" : "",
@@ -131,7 +193,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 24.0, 182.0, 222.0, 49.0 ],
+									"patching_rect" : [ 24.0, 185.0, 222.0, 49.0 ],
 									"style" : "default",
 									"text" : ";\rmax launch_browser https://github.com/CNMAT/CNMAT-odot"
 								}
@@ -144,7 +206,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.0, 118.0, 272.0, 33.0 ],
+									"patching_rect" : [ 24.0, 121.0, 272.0, 33.0 ],
 									"style" : "",
 									"text" : "Note: for the current version of CNMAT OSC objects please see the Odot library, available at: "
 								}
@@ -156,7 +218,7 @@
 									"maxclass" : "live.line",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 666.5, 56.933319, 5.0, 163.0 ]
+									"patching_rect" : [ 666.5, 50.933319, 5.0, 163.0 ]
 								}
 
 							}
@@ -168,7 +230,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 418.0, 365.866669, 32.0, 22.0 ],
+									"patching_rect" : [ 418.0, 359.866669, 32.0, 22.0 ],
 									"style" : "",
 									"text" : "thru"
 								}
@@ -182,7 +244,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 418.0, 234.999969, 32.0, 22.0 ],
+									"patching_rect" : [ 418.0, 228.999969, 32.0, 22.0 ],
 									"style" : "",
 									"text" : "thru"
 								}
@@ -196,7 +258,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 780.0, 379.933319, 24.0, 24.0 ],
+									"patching_rect" : [ 780.0, 373.933319, 24.0, 24.0 ],
 									"style" : ""
 								}
 
@@ -207,7 +269,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 818.5, 379.933319, 233.0, 20.0 ],
+									"patching_rect" : [ 818.5, 373.933319, 233.0, 20.0 ],
 									"style" : "",
 									"text" : "Are errors are printed in the Max window?"
 								}
@@ -220,7 +282,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 780.0, 411.933319, 101.0, 22.0 ],
+									"patching_rect" : [ 780.0, 405.933319, 101.0, 22.0 ],
 									"style" : "",
 									"text" : "errorreporting $1"
 								}
@@ -232,7 +294,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 484.5, 247.999969, 184.0, 20.0 ],
+									"patching_rect" : [ 484.5, 241.999969, 184.0, 20.0 ],
 									"style" : "",
 									"text" : "Miscellaneous features and info:"
 								}
@@ -244,7 +306,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 633.5, 664.800049, 64.0, 22.0 ],
+									"patching_rect" : [ 633.5, 635.800049, 64.0, 22.0 ],
 									"style" : "",
 									"text" : "print bang"
 								}
@@ -253,11 +315,11 @@
 , 							{
 								"box" : 								{
 									"id" : "obj-11",
-									"linecount" : 2,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 776.5, 531.800049, 289.0, 33.0 ],
+									"patching_rect" : [ 780.0, 513.800049, 180.0, 47.0 ],
 									"style" : "",
 									"text" : "OpenSoundControl will also parse incoming OSC packets and convert them to Max data."
 								}
@@ -270,7 +332,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 633.5, 544.800049, 114.0, 22.0 ],
+									"patching_rect" : [ 633.5, 538.800049, 114.0, 22.0 ],
 									"style" : "",
 									"text" : "OpenSoundControl"
 								}
@@ -283,7 +345,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 633.5, 510.799988, 135.0, 22.0 ],
+									"patching_rect" : [ 633.5, 504.799988, 135.0, 22.0 ],
 									"style" : "",
 									"text" : "udpreceive 5432 cnmat"
 								}
@@ -295,7 +357,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 681.0, 621.800049, 93.0, 22.0 ],
+									"patching_rect" : [ 681.0, 604.800049, 93.0, 22.0 ],
 									"style" : "",
 									"text" : "print messages"
 								}
@@ -307,7 +369,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 728.5, 580.93335, 82.0, 22.0 ],
+									"patching_rect" : [ 728.5, 574.93335, 82.0, 22.0 ],
 									"style" : "",
 									"text" : "print time-tag"
 								}
@@ -320,7 +382,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 438.0, 539.43335, 124.0, 35.0 ],
+									"patching_rect" : [ 438.0, 533.43335, 124.0, 35.0 ],
 									"style" : "",
 									"text" : "print not-too-exciting @popup 1"
 								}
@@ -332,7 +394,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 633.5, 479.800018, 242.0, 20.0 ],
+									"patching_rect" : [ 633.5, 473.800018, 242.0, 20.0 ],
 									"style" : "",
 									"text" : "Parsing OSC packets to produce Max data:"
 								}
@@ -347,7 +409,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "jit_matrix" ],
-									"patching_rect" : [ 260.0, 14.56665, 109.0, 48.0 ]
+									"patching_rect" : [ 260.0, 17.56665, 109.0, 48.0 ]
 								}
 
 							}
@@ -358,7 +420,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 499.0, 341.866669, 80.0, 22.0 ],
+									"patching_rect" : [ 499.0, 335.866669, 80.0, 22.0 ],
 									"style" : "",
 									"text" : "printcontents"
 								}
@@ -371,7 +433,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.0, 68.866669, 336.0, 33.0 ],
+									"patching_rect" : [ 24.0, 71.866669, 336.0, 33.0 ],
 									"style" : "",
 									"text" : "Translate between Max data and buffers in CNMAT's \"OpenSoundControl\" (\"OSC\") network protocol."
 								}
@@ -385,7 +447,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.0, 22.06665, 232.0, 33.0 ],
+									"patching_rect" : [ 24.0, 25.06665, 232.0, 33.0 ],
 									"style" : "",
 									"text" : "OpenSoundControl"
 								}
@@ -398,7 +460,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 136.5, 466.300018, 272.0, 47.0 ],
+									"patching_rect" : [ 136.5, 460.300018, 272.0, 47.0 ],
 									"style" : "",
 									"text" : "Argument: buffer size in bytes. Default is 1024. (Determines maximum OSC packet that can be created.)"
 								}
@@ -411,7 +473,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 681.0, 121.933319, 289.0, 33.0 ],
+									"patching_rect" : [ 681.0, 115.933319, 289.0, 33.0 ],
 									"style" : "",
 									"text" : "OSC messages are converted to the correct format and added to the internal buffer."
 								}
@@ -424,7 +486,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 474.0, 56.933319, 116.0, 22.0 ],
+									"patching_rect" : [ 474.0, 50.933319, 116.0, 22.0 ],
 									"style" : "",
 									"text" : "/voices/0/tm/start 0."
 								}
@@ -437,7 +499,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 474.0, 85.743729, 154.0, 22.0 ],
+									"patching_rect" : [ 474.0, 79.743729, 154.0, 22.0 ],
 									"style" : "",
 									"text" : "/voices/*/tm/time_scale 0.7"
 								}
@@ -450,7 +512,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 474.0, 114.554153, 116.0, 22.0 ],
+									"patching_rect" : [ 474.0, 108.554153, 116.0, 22.0 ],
 									"style" : "",
 									"text" : "/voices/1/tm/start 0."
 								}
@@ -463,7 +525,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 476.5, 204.138245, 168.0, 22.0 ],
+									"patching_rect" : [ 476.5, 198.138245, 168.0, 22.0 ],
 									"style" : "",
 									"text" : "/documentation/all-messages"
 								}
@@ -476,7 +538,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 476.5, 174.502441, 170.0, 22.0 ],
+									"patching_rect" : [ 476.5, 168.502441, 170.0, 22.0 ],
 									"style" : "",
 									"text" : "/bar/mixedmessage 1 2. three"
 								}
@@ -489,7 +551,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 476.5, 144.866638, 183.0, 22.0 ],
+									"patching_rect" : [ 476.5, 138.866638, 183.0, 22.0 ],
 									"style" : "",
 									"text" : "/foo/stringmessage a few strings"
 								}
@@ -501,7 +563,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 418.0, 593.93335, 140.0, 22.0 ],
+									"patching_rect" : [ 418.0, 587.93335, 140.0, 22.0 ],
 									"style" : "",
 									"text" : "udpsend 127.0.0.1 7005"
 								}
@@ -514,7 +576,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 418.0, 466.300018, 143.0, 22.0 ],
+									"patching_rect" : [ 418.0, 460.300018, 143.0, 22.0 ],
 									"style" : "",
 									"text" : "OpenSoundControl 2000"
 								}
@@ -527,7 +589,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 165.5, 539.43335, 235.0, 60.0 ],
+									"patching_rect" : [ 165.5, 533.43335, 235.0, 60.0 ],
 									"style" : "",
 									"text" : "Outlet: a \"FullPacket\" message containing a sort of pointer to a buffer holding the binary representation of the OSC packet you built. (See otudp.help for details.)"
 								}
@@ -540,7 +602,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 162.0, 348.933319, 120.0, 33.0 ],
+									"patching_rect" : [ 162.0, 342.933319, 120.0, 33.0 ],
 									"style" : "",
 									"text" : "\"[\" (or \"openbundle\") opens a new bundle."
 								}
@@ -553,7 +615,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 296.0, 348.933319, 30.0, 22.0 ],
+									"patching_rect" : [ 296.0, 342.933319, 30.0, 22.0 ],
 									"style" : "",
 									"text" : "["
 								}
@@ -565,7 +627,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 559.0, 378.933319, 204.0, 20.0 ],
+									"patching_rect" : [ 559.0, 372.933319, 204.0, 20.0 ],
 									"style" : "",
 									"text" : "Reset (clear) buffer without sending."
 								}
@@ -577,7 +639,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 548.5, 273.999969, 291.0, 20.0 ],
+									"patching_rect" : [ 548.5, 267.999969, 291.0, 20.0 ],
 									"style" : "",
 									"text" : "Print version number (and other info) to Max window."
 								}
@@ -589,7 +651,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 548.5, 302.999969, 287.0, 20.0 ],
+									"patching_rect" : [ 548.5, 296.999969, 287.0, 20.0 ],
 									"style" : "",
 									"text" : "Toggle \"debug\" mode (verbosity in the Max window)"
 								}
@@ -602,7 +664,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 496.0, 302.999969, 45.0, 22.0 ],
+									"patching_rect" : [ 496.0, 296.999969, 45.0, 22.0 ],
 									"style" : "",
 									"text" : "debug"
 								}
@@ -615,7 +677,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 496.0, 273.999969, 49.0, 22.0 ],
+									"patching_rect" : [ 496.0, 267.999969, 49.0, 22.0 ],
 									"style" : "",
 									"text" : "version"
 								}
@@ -628,7 +690,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 502.0, 378.933319, 37.0, 22.0 ],
+									"patching_rect" : [ 502.0, 372.933319, 37.0, 22.0 ],
 									"style" : "",
 									"text" : "reset"
 								}
@@ -641,7 +703,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 273.5, 162.002441, 141.0, 47.0 ],
+									"patching_rect" : [ 273.5, 168.502441, 141.0, 47.0 ],
 									"style" : "",
 									"text" : "Bang closes all open bundles, sends out the buffer and resets."
 								}
@@ -654,7 +716,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 418.0, 162.002441, 24.0, 24.0 ],
+									"patching_rect" : [ 418.0, 156.002441, 24.0, 24.0 ],
 									"style" : ""
 								}
 
@@ -666,7 +728,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 295.0, 378.933319, 30.0, 22.0 ],
+									"patching_rect" : [ 295.0, 372.933319, 30.0, 22.0 ],
 									"style" : "",
 									"text" : "]"
 								}
@@ -679,7 +741,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 167.0, 281.999969, 211.0, 60.0 ],
+									"patching_rect" : [ 167.0, 275.999969, 211.0, 60.0 ],
 									"style" : "",
 									"text" : "OSC's \"bundle\" mechanism allows a packet to contain multiple messages. Bundles can have sub-bundles, sub-sub-bundles, etc."
 								}
@@ -691,7 +753,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 559.0, 406.933319, 167.0, 20.0 ],
+									"patching_rect" : [ 559.0, 400.933319, 167.0, 20.0 ],
 									"style" : "",
 									"text" : "Send buffer without resetting."
 								}
@@ -704,7 +766,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 502.0, 411.933319, 38.0, 22.0 ],
+									"patching_rect" : [ 502.0, 405.933319, 38.0, 22.0 ],
 									"style" : "",
 									"text" : "send"
 								}
@@ -717,7 +779,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 154.0, 378.933319, 148.0, 47.0 ],
+									"patching_rect" : [ 154.0, 372.933319, 148.0, 47.0 ],
 									"style" : "",
 									"text" : "\"]\" (or \"closebundle\") closes the current (most recently opened) bundle."
 								}
@@ -729,7 +791,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 582.5, 341.866669, 284.0, 20.0 ],
+									"patching_rect" : [ 582.5, 335.866669, 284.0, 20.0 ],
 									"style" : "",
 									"text" : "Print current buffer byte by byte to the Max window."
 								}
@@ -741,7 +803,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 496.0, 33.366669, 214.0, 20.0 ],
+									"patching_rect" : [ 496.0, 27.366669, 214.0, 20.0 ],
 									"style" : "",
 									"text" : "Creating OSC packets from Max data:"
 								}
@@ -940,7 +1002,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 420.5, 27.56665, 49.0, 22.0 ],
+					"patching_rect" : [ 24.0, 192.566635, 49.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -966,11 +1028,11 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 1089.0, 692.0 ],
+						"rect" : [ 0.0, 26.0, 1080.0, 692.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1005,7 +1067,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 653.0, 264.0, 24.0, 24.0 ],
+									"patching_rect" : [ 728.0, 362.0, 24.0, 24.0 ],
 									"style" : ""
 								}
 
@@ -1017,7 +1079,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 442.0, 290.0, 206.0, 22.0 ],
+									"patching_rect" : [ 517.0, 388.0, 206.0, 22.0 ],
 									"style" : "default",
 									"text" : "/sendblob OSCBlob 8 1 2 3 4 5 6 7 8"
 								}
@@ -1030,7 +1092,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 582.0, 236.0, 113.0, 22.0 ],
+									"patching_rect" : [ 657.0, 334.0, 113.0, 22.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl"
 								}
@@ -1043,7 +1105,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 582.0, 131.0, 239.0, 22.0 ],
+									"patching_rect" : [ 657.0, 229.0, 239.0, 22.0 ],
 									"style" : "default",
 									"text" : "/sendblob OSCBlob 8 1 2 3 4 5 6 7 8, bang"
 								}
@@ -1056,7 +1118,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 582.0, 188.0, 113.0, 22.0 ],
+									"patching_rect" : [ 657.0, 286.0, 113.0, 22.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl"
 								}
@@ -1069,7 +1131,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 93.0, 207.0, 422.0, 47.0 ],
+									"patching_rect" : [ 168.0, 305.0, 422.0, 47.0 ],
 									"style" : "default",
 									"text" : "The blob type is represented in MaxMSP as a list starting with \"OSCBlob\" followed by the length (integer) followed by an integer for each byte. See also the serial object for a similar representation of byte streams in MaxMSP."
 								}
@@ -1081,7 +1143,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 178.0, 131.0, 213.0, 20.0 ],
+									"patching_rect" : [ 253.0, 229.0, 213.0, 20.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl blobs"
 								}
@@ -1094,7 +1156,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 93.0, 166.0, 428.0, 33.0 ],
+									"patching_rect" : [ 168.0, 264.0, 428.0, 33.0 ],
 									"style" : "default",
 									"text" : "The blob type \"b\" enables one to encode a sequence of arbitrary bytes including non-printable characters not possible to include in a normal string."
 								}
@@ -1134,7 +1196,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 472.0, 221.766632, 104.0, 22.0 ],
+					"patching_rect" : [ 602.285706, 192.566635, 104.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1150,6 +1212,200 @@
 			}
 , 			{
 				"box" : 				{
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 7,
+							"minor" : 3,
+							"revision" : 4,
+							"architecture" : "x86",
+							"modernui" : 1
+						}
+,
+						"rect" : [ 0.0, 26.0, 1080.0, 692.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 12.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 8.0, 8.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "default",
+						"subpatcher_template" : "",
+						"showontab" : 1,
+						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-9",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"patching_rect" : [ 713.0, 370.0, 24.0, 24.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-2",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 554.0, 378.0, 155.0, 22.0 ],
+									"style" : "default",
+									"text" : "/clock/set OSCTimeTag 0 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-3",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "OSCTimeTag" ],
+									"patching_rect" : [ 641.0, 324.0, 117.0, 22.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-4",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 641.0, 218.0, 215.0, 22.0 ],
+									"style" : "default",
+									"text" : "/clock/set OSCTimeTag 0 1, bang"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-5",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "OSCTimeTag" ],
+									"patching_rect" : [ 641.0, 286.0, 117.0, 22.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-6",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 200.0, 326.0, 331.0, 33.0 ],
+									"style" : "default",
+									"text" : "These are represented in Max as a list \"OSCTimeTag x y.\" See also the other subpatch [p time-tags] for details."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-7",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 207.0, 218.0, 364.0, 20.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl time tags--as arguments"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-8",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 200.0, 285.0, 370.0, 33.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl supports encoding and decoding of time tags in the argument section of a message using the extended type tag, \"t\""
+								}
+
+							}
+ ],
+						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-2", 1 ],
+									"order" : 1,
+									"source" : [ "obj-3", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-9", 0 ],
+									"order" : 0,
+									"source" : [ "obj-3", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-5", 0 ],
+									"source" : [ "obj-4", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-3", 0 ],
+									"source" : [ "obj-5", 0 ]
+								}
+
+							}
+ ]
+					}
+,
+					"patching_rect" : [ 469.571442, 192.566635, 125.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"globalpatchername" : "",
+						"style" : "default",
+						"tags" : ""
+					}
+,
+					"style" : "default",
+					"text" : "p time-tag-arguments"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-3",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -1160,7 +1416,7 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
@@ -1325,7 +1581,7 @@
 						"lines" : [  ]
 					}
 ,
-					"patching_rect" : [ 472.0, 280.166626, 137.0, 22.0 ],
+					"patching_rect" : [ 437.0, 434.166626, 137.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1351,11 +1607,11 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 1089.0, 692.0 ],
+						"rect" : [ 0.0, 26.0, 1080.0, 692.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1390,7 +1646,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 906.0, 571.0, 122.0, 22.0 ],
+									"patching_rect" : [ 918.0, 602.0, 104.0, 22.0 ],
 									"style" : "default",
 									"text" : "writetypestrings 1"
 								}
@@ -1402,7 +1658,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 655.0, 571.0, 289.0, 20.0 ],
+									"patching_rect" : [ 667.0, 602.0, 289.0, 20.0 ],
 									"style" : "default",
 									"text" : "And you can set it back to normal:"
 								}
@@ -1415,7 +1671,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 906.0, 530.0, 122.0, 22.0 ],
+									"patching_rect" : [ 918.0, 561.0, 104.0, 22.0 ],
 									"style" : "default",
 									"text" : "writetypestrings 0"
 								}
@@ -1428,7 +1684,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 655.0, 486.0, 265.0, 60.0 ],
+									"patching_rect" : [ 667.0, 517.0, 265.0, 60.0 ],
 									"style" : "default",
 									"text" : "If you prefer to send OSC messages without type-tag strings (for example, to talk to old OSC software that doesn't yet implement them), you can set OpenSoundControl not to write them:"
 								}
@@ -1441,7 +1697,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 905.0, 458.0, 116.0, 22.0 ],
+									"patching_rect" : [ 917.0, 489.0, 103.0, 22.0 ],
 									"style" : "default",
 									"text" : "readtypestrings 1"
 								}
@@ -1454,7 +1710,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 655.0, 447.0, 213.0, 33.0 ],
+									"patching_rect" : [ 667.0, 478.0, 213.0, 33.0 ],
 									"style" : "default",
 									"text" : "When you come to your senses, send this message to go back to normal:"
 								}
@@ -1467,7 +1723,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 905.0, 414.0, 116.0, 22.0 ],
+									"patching_rect" : [ 917.0, 445.0, 103.0, 22.0 ],
 									"style" : "default",
 									"text" : "readtypestrings 0"
 								}
@@ -1480,7 +1736,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 655.0, 376.0, 258.0, 60.0 ],
+									"patching_rect" : [ 667.0, 407.0, 258.0, 60.0 ],
 									"style" : "default",
 									"text" : "If you want to use the old guessing rules even if the incoming message has type-tag strings, you can set the OpenSoundControl object always to ignore incoming type-tag strings:"
 								}
@@ -1493,7 +1749,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 655.0, 322.0, 240.0, 47.0 ],
+									"patching_rect" : [ 667.0, 353.0, 240.0, 47.0 ],
 									"style" : "default",
 									"text" : "Incoming OSC messages without type-tag strings are converted to Max messages using the same old guessing rules."
 								}
@@ -1505,7 +1761,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 667.0, 295.0, 203.0, 20.0 ],
+									"patching_rect" : [ 679.0, 326.0, 203.0, 20.0 ],
 									"style" : "default",
 									"text" : "Getting the old behavior"
 								}
@@ -1518,7 +1774,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 648.0, 146.0, 293.0, 127.0 ],
+									"patching_rect" : [ 660.0, 177.0, 293.0, 127.0 ],
 									"style" : "default",
 									"text" : "The only trouble you may have is if you're using an old (pre-1.7) OpenSoundControl object to receive messages sent from a new one (or from SuperCollider, or from any other program that uses the new OSC protocol). The old object won't know that there's anything special about the type-tag strings and will consider them to be an extra argument. So if you send the message \"/foo/bar 1 2\", an old object will output the message \"/foo/bar, ii 1 2\"."
 								}
@@ -1531,7 +1787,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 648.0, 84.0, 255.0, 60.0 ],
+									"patching_rect" : [ 660.0, 115.0, 255.0, 60.0 ],
 									"style" : "default",
 									"text" : "With this new feature, any Max message that you convert to an OSC packet and then re-convert into a Max message is guaranteed to come out the same as what you put in."
 								}
@@ -1544,7 +1800,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 365.0, 255.0, 277.0, 100.0 ],
+									"patching_rect" : [ 377.0, 286.0, 277.0, 100.0 ],
 									"style" : "default",
 									"text" : "The Max OpenSoundControl object now implements these type-tag strings. OpenSoundControl automatically adds the correct type-tag string to all outgoing messages. If an incoming OSC message contains this type-tag string, the OpenSoundControl object uses the type-tags (instead of the old guessing rules)"
 								}
@@ -1557,7 +1813,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 365.0, 150.0, 256.0, 100.0 ],
+									"patching_rect" : [ 377.0, 181.0, 256.0, 100.0 ],
 									"style" : "default",
 									"text" : "Now, each OSC message has a \"hidden\" first argument that is a type-tag string beginning with a comma and followed by one letter corresponding to each argument to the message. For example, if a message has two int arguments, a symbol argument, and a float argument, the type-tag string will be \", iisf\"."
 								}
@@ -1570,7 +1826,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 365.0, 88.0, 268.0, 60.0 ],
+									"patching_rect" : [ 377.0, 119.0, 268.0, 60.0 ],
 									"style" : "default",
 									"text" : "James McCartney improved the OSC protocol by adding what we should have had all along: explicit type-tags in messages saying how to interpret the types of the arguments."
 								}
@@ -1582,7 +1838,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 667.0, 55.0, 205.0, 20.0 ],
+									"patching_rect" : [ 679.0, 86.0, 205.0, 20.0 ],
 									"style" : "default",
 									"text" : "What this means for you"
 								}
@@ -1594,7 +1850,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 392.0, 55.0, 188.0, 20.0 ],
+									"patching_rect" : [ 404.0, 86.0, 188.0, 20.0 ],
 									"style" : "default",
 									"text" : "The Right Way to do it"
 								}
@@ -1606,7 +1862,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 102.0, 50.0, 149.0, 20.0 ],
+									"patching_rect" : [ 114.0, 81.0, 149.0, 20.0 ],
 									"style" : "default",
 									"text" : "The bad old days"
 								}
@@ -1619,7 +1875,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 61.0, 188.0, 275.0, 74.0 ],
+									"patching_rect" : [ 73.0, 219.0, 275.0, 74.0 ],
 									"style" : "default",
 									"text" : "For example, the string \"A\" would be represented in OSC by the hexidecimal number 1090519040, which is the ASCII \"A\" followed by three null bytes. 1090519040 also happens to be the binary representation of the floating point number 8.0."
 								}
@@ -1632,7 +1888,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 60.0, 270.0, 282.0, 127.0 ],
+									"patching_rect" : [ 72.0, 301.0, 282.0, 127.0 ],
 									"style" : "default",
 									"text" : "Therefore, when receiving OSC messages in Max, the OpenSoundControl object had to look at the bits that represented the arguments to a message and basically guess what you meant by using heuristics like \"if the bits represent an integer between -1000 and 1000000, interpret them as an integer.\" Obviously, the object sometimes guessed wrong, for example, the string \"A\" as an argument would instead come out as the float 8.0."
 								}
@@ -1645,7 +1901,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 61.0, 83.0, 290.0, 100.0 ],
+									"patching_rect" : [ 73.0, 114.0, 290.0, 100.0 ],
 									"style" : "default",
 									"text" : "In the original OpenSoundControl protocol, the strings, integers, and floating point numbers that were arguments to messages were represented in binary form with no way of distinguising different types. (It was assumed that the sender and receiver of OSC messages would agree on what argument types were appropriate for which messages.)"
 								}
@@ -1657,7 +1913,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 76.5, 12.0, 771.0, 20.0 ],
+									"patching_rect" : [ 88.5, 43.0, 771.0, 20.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl versions 1.7 and above support type tags for arguments to OSC messages."
 								}
@@ -1667,7 +1923,7 @@
 						"lines" : [  ]
 					}
 ,
-					"patching_rect" : [ 472.0, 96.866638, 70.0, 22.0 ],
+					"patching_rect" : [ 191.428574, 192.566635, 70.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1706,7 +1962,7 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
@@ -2069,7 +2325,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 472.0, 194.866638, 70.0, 22.0 ],
+					"patching_rect" : [ 269.142853, 192.566635, 70.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -2095,11 +2351,11 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 1089.0, 692.0 ],
+						"rect" : [ 0.0, 26.0, 1080.0, 692.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2133,7 +2389,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 629.0, 144.0, 123.0, 20.0 ],
+									"patching_rect" : [ 652.0, 254.0, 123.0, 20.0 ],
 									"style" : "default",
 									"text" : "Use at your own risk."
 								}
@@ -2146,7 +2402,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 188.0, 229.0, 401.0, 87.0 ],
+									"patching_rect" : [ 211.0, 339.0, 401.0, 87.0 ],
 									"style" : "default",
 									"text" : "If you want to create a packet with a single message (i.e., not a bundle), you can send the message \"resetallthewaymode\" to toggle the mode where resetting the buffer (with \"reset\" or \"bang\") doesn't automatically open a bundle. In this mode you must send a bang after every message - if you try to add a second message to a packet, OpenSoundControl will print an error message and throw away the entire packet."
 								}
@@ -2159,7 +2415,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 628.0, 184.0, 28.0, 28.0 ],
+									"patching_rect" : [ 651.0, 294.0, 28.0, 28.0 ],
 									"style" : "default"
 								}
 
@@ -2171,7 +2427,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 691.0, 222.0, 137.0, 22.0 ],
+									"patching_rect" : [ 714.0, 332.0, 137.0, 22.0 ],
 									"style" : "default",
 									"text" : "/a/single/message 1 2 3"
 								}
@@ -2184,7 +2440,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 691.0, 190.0, 117.0, 22.0 ],
+									"patching_rect" : [ 714.0, 300.0, 117.0, 22.0 ],
 									"style" : "default",
 									"text" : "resetallthewaymode"
 								}
@@ -2197,7 +2453,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 628.0, 263.0, 114.0, 22.0 ],
+									"patching_rect" : [ 651.0, 373.0, 114.0, 22.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl"
 								}
@@ -2209,7 +2465,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 188.0, 101.0, 375.0, 20.0 ],
+									"patching_rect" : [ 211.0, 211.0, 375.0, 20.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl's \"reset all the way\" mode"
 								}
@@ -2221,7 +2477,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 215.0, 134.0, 360.0, 20.0 ],
+									"patching_rect" : [ 238.0, 244.0, 360.0, 20.0 ],
 									"style" : "default",
 									"text" : "*** For serious OpenSoundControl hackers only! ***"
 								}
@@ -2234,7 +2490,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 188.0, 160.0, 380.0, 60.0 ],
+									"patching_rect" : [ 211.0, 270.0, 380.0, 60.0 ],
 									"style" : "default",
 									"text" : "By default, OpenSoundControl assumes that you want your packets to contain multiple-message bundles. That's why you can send as many messages to OpenSoundControl as will fit in the buffer and they'll all go into a big bundle until you send a bang to send them out."
 								}
@@ -2265,7 +2521,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 472.0, 250.966644, 143.0, 22.0 ],
+					"patching_rect" : [ 714.0, 192.566635, 143.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -2291,11 +2547,11 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 1089.0, 692.0 ],
+						"rect" : [ 0.0, 26.0, 1080.0, 692.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2329,7 +2585,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 435.0, 452.300049, 354.0, 20.0 ],
+									"patching_rect" : [ 539.0, 451.300049, 354.0, 20.0 ],
 									"style" : "default",
 									"text" : "udpreceive in CNMAT, or FullPacket mode, outputs OSC bundles"
 								}
@@ -2342,7 +2598,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 84.0, 517.0, 24.0, 24.0 ],
+									"patching_rect" : [ 188.0, 516.0, 24.0, 24.0 ],
 									"style" : ""
 								}
 
@@ -2354,9 +2610,9 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 35.0, 548.800049, 187.0, 22.0 ],
+									"patching_rect" : [ 139.0, 547.800049, 187.0, 22.0 ],
 									"style" : "",
-									"text" : "FullPacket 60 140650284961296"
+									"text" : "FullPacket 60 -1304048112"
 								}
 
 							}
@@ -2368,7 +2624,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 84.0, 437.300049, 147.0, 35.0 ],
+									"patching_rect" : [ 188.0, 436.300049, 147.0, 35.0 ],
 									"style" : "default",
 									"text" : "/a/single/message 1 2 3, bang"
 								}
@@ -2381,7 +2637,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 84.0, 482.300049, 114.0, 22.0 ],
+									"patching_rect" : [ 188.0, 481.300049, 114.0, 22.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl"
 								}
@@ -2393,7 +2649,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 292.0, 635.300049, 64.0, 22.0 ],
+									"patching_rect" : [ 396.0, 634.300049, 64.0, 22.0 ],
 									"style" : "default",
 									"text" : "print bang"
 								}
@@ -2406,7 +2662,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 435.0, 506.300049, 289.0, 33.0 ],
+									"patching_rect" : [ 539.0, 505.300049, 289.0, 33.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl will parse incoming OSC packets and convert them to Max data."
 								}
@@ -2419,7 +2675,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 292.0, 519.300049, 114.0, 22.0 ],
+									"patching_rect" : [ 396.0, 518.300049, 114.0, 22.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl"
 								}
@@ -2432,7 +2688,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 292.0, 450.300049, 135.0, 22.0 ],
+									"patching_rect" : [ 396.0, 449.300049, 135.0, 22.0 ],
 									"style" : "default",
 									"text" : "udpreceive 5432 cnmat"
 								}
@@ -2445,7 +2701,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 339.5, 596.300049, 93.0, 35.0 ],
+									"patching_rect" : [ 443.5, 595.300049, 93.0, 35.0 ],
 									"style" : "default",
 									"text" : "print messages @popup 1"
 								}
@@ -2457,7 +2713,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 387.0, 559.300049, 82.0, 22.0 ],
+									"patching_rect" : [ 491.0, 558.300049, 82.0, 22.0 ],
 									"style" : "default",
 									"text" : "print time-tag"
 								}
@@ -2469,7 +2725,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 71.0, 410.300018, 242.0, 20.0 ],
+									"patching_rect" : [ 175.0, 409.300018, 242.0, 20.0 ],
 									"style" : "default",
 									"text" : "Parsing OSC packets to produce Max data:"
 								}
@@ -2481,7 +2737,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 198.0, 52.0, 555.0, 20.0 ],
+									"patching_rect" : [ 302.0, 51.0, 555.0, 20.0 ],
 									"style" : "default",
 									"text" : "Using the OpenSoundControl object to parse received OSC packets"
 								}
@@ -2494,7 +2750,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 356.0, 498.0, 47.0 ],
+									"patching_rect" : [ 389.0, 355.0, 498.0, 47.0 ],
 									"style" : "default",
 									"text" : "This behavior is symmetric with the way you use OpenSoundControl to build packets piece by piece for sending. In fact, you could connect these three outlets to the input of another OpenSoundControl object to recreate (in flattened form) each packet you receive."
 								}
@@ -2507,7 +2763,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 117.0, 439.0, 47.0 ],
+									"patching_rect" : [ 389.0, 116.0, 439.0, 47.0 ],
 									"style" : "default",
 									"text" : "1) If the message is a bundle, it has a time tag, so the message OSCTimeTag comes out the right outlet with two int arguments containing the time tag. (This is the same format as what you use to specify a time tag in a message to be sent.)"
 								}
@@ -2519,7 +2775,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 89.0, 410.0, 20.0 ],
+									"patching_rect" : [ 389.0, 88.0, 410.0, 20.0 ],
 									"style" : "default",
 									"text" : "Here's what happens when OpenSoundControl receives a message:"
 								}
@@ -2532,7 +2788,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 173.0, 488.0, 127.0 ],
+									"patching_rect" : [ 389.0, 172.0, 488.0, 127.0 ],
 									"style" : "default",
 									"text" : "2) Then the contents of the message come out of the middle outlet one at a time, in the order they appear in the packet. Each comes out as a Max list whose first element (the \"message\") is the OSC address and whose remaining elements (the \"arguments\") are the OSC arguments. If the incoming message has type tag strings, OpenSoundControl uses them to ensure that each argument has the correct type. Otherwise, OpenSoundControl uses heuristics to guess the types of the arguments, which may sometimes lead to surprising results. (They're the same heuristics as the \"dumpOSC\" program.) If the packet has sub-bundles, their structure is ignored and the all the messages in the packet messages come out in a single sequence as if they were flattened into one large bundle."
 								}
@@ -2545,7 +2801,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 308.0, 381.0, 33.0 ],
+									"patching_rect" : [ 389.0, 307.0, 381.0, 33.0 ],
 									"style" : "default",
 									"text" : "3) After all the messages in the packet have been output as Max lists, a bang comes out the left outlet signalling the end of the packet."
 								}
@@ -2614,7 +2870,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 455.5, 64.366638, 103.0, 22.0 ],
+					"patching_rect" : [ 80.714287, 192.566635, 103.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -2640,11 +2896,11 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x64",
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 1089.0, 692.0 ],
+						"rect" : [ 0.0, 26.0, 1080.0, 692.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2679,7 +2935,7 @@
 									"maxclass" : "live.line",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 359.0, 188.5, 39.0, 9.0 ]
+									"patching_rect" : [ 364.0, 223.5, 39.0, 9.0 ]
 								}
 
 							}
@@ -2692,7 +2948,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 711.0, 429.0, 40.0, 22.0 ],
+									"patching_rect" : [ 716.0, 464.0, 40.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -2705,7 +2961,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 711.0, 460.25, 139.0, 22.0 ],
+									"patching_rect" : [ 716.0, 495.25, 139.0, 22.0 ],
 									"style" : "default",
 									"text" : "/voices/%d/tm/goto 4 $1"
 								}
@@ -2718,7 +2974,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 711.0, 489.75, 111.0, 22.0 ],
+									"patching_rect" : [ 716.0, 524.75, 111.0, 22.0 ],
 									"style" : "default",
 									"text" : "/float%f 3.1415 6.5"
 								}
@@ -2731,7 +2987,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 461.0, 460.25, 206.0, 22.0 ],
+									"patching_rect" : [ 466.0, 495.25, 206.0, 22.0 ],
 									"style" : "default",
 									"text" : "%s%s%s%s%s /a /b /c /d /e /f /g /h /i"
 								}
@@ -2744,7 +3000,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 461.0, 433.0, 231.0, 22.0 ],
+									"patching_rect" : [ 466.0, 468.0, 231.0, 22.0 ],
 									"style" : "default",
 									"text" : "/voices/%d/%s/%s 8 inharm stretch 0.998"
 								}
@@ -2757,7 +3013,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "OSCTimeTag" ],
-									"patching_rect" : [ 409.0, 556.0, 114.0, 22.0 ],
+									"patching_rect" : [ 414.0, 591.0, 114.0, 22.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl"
 								}
@@ -2770,7 +3026,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 330.0, 517.75, 44.0, 22.0 ],
+									"patching_rect" : [ 335.0, 552.75, 44.0, 22.0 ],
 									"style" : "default",
 									"text" : "debug"
 								}
@@ -2783,7 +3039,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 330.0, 489.75, 60.0, 22.0 ],
+									"patching_rect" : [ 335.0, 524.75, 60.0, 22.0 ],
 									"style" : "default",
 									"text" : "loadbang"
 								}
@@ -2796,7 +3052,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 844.0, 218.0, 115.0, 22.0 ],
+									"patching_rect" : [ 849.0, 253.0, 115.0, 22.0 ],
 									"style" : "default",
 									"text" : "/voices/6/tm/goto 0."
 								}
@@ -2809,7 +3065,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 844.0, 178.5, 135.0, 22.0 ],
+									"patching_rect" : [ 849.0, 213.5, 135.0, 22.0 ],
 									"style" : "default",
 									"text" : "/voices/%d/tm/goto 6 0."
 								}
@@ -2822,7 +3078,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 409.0, 182.0, 121.0, 22.0 ],
+									"patching_rect" : [ 414.0, 217.0, 121.0, 22.0 ],
 									"style" : "default",
 									"text" : "/voices/#1/tm/goto 0."
 								}
@@ -2835,7 +3091,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 87.0, 45.0, 266.0, 74.0 ],
+									"patching_rect" : [ 92.0, 80.0, 266.0, 74.0 ],
 									"style" : "default",
 									"text" : "OpenSoundControl addresses are represented in Max by long symbols. Unfortunately, Max's tools for manipulating symbols are quite weak, so the OpenSoundControl object has built-in string substitution features."
 								}
@@ -2848,7 +3104,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 87.0, 114.0, 277.0, 87.0 ],
+									"patching_rect" : [ 92.0, 149.0, 277.0, 87.0 ],
 									"style" : "default",
 									"text" : "Imagine that you'd like to define a patch whose argument determines something about the address of the OSC messages it generates. You'd then instantiate multiple copies of this patch sending to different addresses. You'd be inclined to have your patch full of message boxes like this:"
 								}
@@ -2861,7 +3117,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 89.0, 213.0, 257.0, 60.0 ],
+									"patching_rect" : [ 94.0, 248.0, 257.0, 60.0 ],
 									"style" : "default",
 									"text" : "But Max's #1 argument substitution doesn't work in this case because the #1 is inside a larger symbol. So we added string substitution to the OpenSoundControl object."
 								}
@@ -2873,7 +3129,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 128.0, 14.0, 124.0, 20.0 ],
+									"patching_rect" : [ 133.0, 49.0, 124.0, 20.0 ],
 									"style" : "default",
 									"text" : "Why it's there:"
 								}
@@ -2885,7 +3141,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 628.0, 92.5, 118.0, 20.0 ],
+									"patching_rect" : [ 633.0, 127.5, 118.0, 20.0 ],
 									"style" : "default",
 									"text" : "How it works:"
 								}
@@ -2898,7 +3154,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 576.0, 126.5, 307.0, 74.0 ],
+									"patching_rect" : [ 581.0, 161.5, 307.0, 74.0 ],
 									"style" : "default",
 									"text" : "If the address portion of your message includes one of the \"conversion specifiers\" %c, %d, %f, or %s, then the first argument to your message will be formatted and inserted into the address string, replacing the conversion specifier. For example, this message:"
 								}
@@ -2910,7 +3166,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 576.0, 218.0, 245.0, 20.0 ],
+									"patching_rect" : [ 581.0, 253.0, 245.0, 20.0 ],
 									"style" : "default",
 									"text" : "will be converted by OSC into this message:"
 								}
@@ -2923,7 +3179,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 576.0, 265.0, 281.0, 33.0 ],
+									"patching_rect" : [ 581.0, 300.0, 281.0, 33.0 ],
 									"style" : "default",
 									"text" : "Note that the argument 6 did not appear as an argument in the converted message."
 								}
@@ -2936,7 +3192,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 576.0, 300.0, 293.0, 100.0 ],
+									"patching_rect" : [ 581.0, 335.0, 293.0, 100.0 ],
 									"style" : "default",
 									"text" : "The meanings of the conversion specifiers are the same as in sprintf (except that you can just say %d instead of %ld). %c interprets an int arg as an ASCII character, %d formats an int arg, %f formats a float arg, and %s inserts a symbol arg. There can be multiple conversion specifiers as long as there are enough arguments for each of them."
 								}
@@ -2948,7 +3204,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 162.0, 298.0, 85.0, 20.0 ],
+									"patching_rect" : [ 167.0, 333.0, 85.0, 20.0 ],
 									"style" : "default",
 									"text" : "Try it out:"
 								}
@@ -2961,7 +3217,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 89.0, 326.0, 274.0, 74.0 ],
+									"patching_rect" : [ 94.0, 361.0, 274.0, 74.0 ],
 									"style" : "default",
 									"text" : "This OpenSoundControl object is in debug mode, so it will print the converted version of whatever message you give it to the Max window. Click on the message boxes in this patcher and see what happens."
 								}
@@ -2978,7 +3234,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-6", 0 ],
-									"midpoints" : [ 853.5, 213.75, 418.5, 213.75 ],
+									"midpoints" : [ 858.5, 248.75, 423.5, 248.75 ],
 									"source" : [ "obj-10", 0 ]
 								}
 
@@ -3035,7 +3291,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-6", 0 ],
-									"midpoints" : [ 853.5, 248.0, 418.5, 248.0 ],
+									"midpoints" : [ 858.5, 283.0, 423.5, 283.0 ],
 									"source" : [ "obj-9", 0 ]
 								}
 
@@ -3043,7 +3299,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 472.0, 163.366638, 115.0, 22.0 ],
+					"patching_rect" : [ 346.857147, 192.566635, 115.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",

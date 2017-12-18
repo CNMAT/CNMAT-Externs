@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="opensoundcontrol" module="CNMAT-Externals">
+
+    <digest>
+	Translate between Max data and buffers in CNMAT's "OpenSoundControl" ("OSC") network protocol.
+    </digest>
+
+    <description>
+	Open Sound Control ("OSC") is a protocol for communication among computers, sound synthesizers, and other multimedia devices that is optimized for modern networking technology and has been used in many application areas.
+	OSC Features:
+	<ul>
+	    <li>Open-ended, dynamic, URL-style symbolic naming scheme</li>
+	    <li>Numeric and symbolic arguments to messages</li>
+	    <li>Pattern matching language to specify multiple targets of a single message</li>
+	    <li>High resolution time tags</li>
+	    <li>"Bundles" of messages whose effects must occur simultaneously</li>
+	    <li>Query system to dynamically find out the capabilities of an OSC server and acquire documentation</li>
+	</ul>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="buffer size" optional="1" type="int">
+	    <description>
+		The internal buffer size in bytes
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <description>
+		Bang closes all open bundles, sends out the buffer and resets.
+	    </description>
+	</method>
+
+	<method name="closebundle / ]">
+	    <description>
+		"]" (or "closebundle") closes the current (most recently opened) bundle.
+	    </description>
+	</method>
+	<method name="debug">
+	    <description>
+		Toggle "debug" mode (verbosity in the Max window)
+	    </description>
+	</method>
+	<method name="errorreporting">
+	    <description>
+		Turn on (or off) error reporting, which reports errors to the Max window.
+	    </description>
+	    <arglist>
+		<arg name="on/off" optional="0" type="int"/>
+	    </arglist>
+	</method>
+	<method name="FullPacket">
+	    <description>
+		Send an OSC bundle to the opensoundcontrol object.  It is not expected that the user will generate this.
+	    </description>
+	    <arglist>
+		<arg name="length of packet (in bytes)" optional="0" type="int"/>
+		<arg name="pointer value (address in memory)" optional="0" type="int"/>
+	    </arglist>
+	</method>
+	<method name="openbundle / [">
+	    <description>
+		"[" (or "openbundle") opens a new bundle.
+	    </description>
+	</method>
+	<method name="OSCTimeTag">
+	    <description>
+		Specify an NTP timestamp for evaluation.  NTP is a 64-bit fixed point encoding used for network time synchronization and by OSC bundles.  This timestamp is represented as two 32-bit integers, the seconds elapsed since 1/1/1900, and the fractions of a second.  See "More details" below for further info on use cases.
+	    </description>
+	    <arglist>
+		<arg name="seconds" optional="0" type="int"/>
+		<arg name="fractions of a second" optional="0" type="int"/>
+	    </arglist>
+	</method>
+	<method name="PartialPacket">
+	    <description>
+		Send a portion of an OSC bundle to the opensoundcontrol object.  It is not expected that the user will generate this.  The partial packet can be used in conjuction with the "openbundle" and "closebundle" messages.
+	    </description>
+	    <arglist>
+		<arg name="length of packet (in bytes)" optional="0" type="int"/>
+		<arg name="pointer value (address in memory)" optional="0" type="int"/>
+	    </arglist>
+	</method>
+	<method name="printcontents">
+	    <description>
+		Print current buffer byte by byte to the Max window.
+	    </description>
+	</method>
+	<method name="readtypestrings">
+	    <description>
+		Allows the object to use the type strings designated in an incoming bundle (default is "1").  If "0" (legacy behavior), opensoundcontrol attempts to guess what the type strings are based on a series of rules.  "0" is not recommended.
+	    </description>
+	    <arglist>
+		<arg name="0/1" optional="0" type="int"/>
+	    </arglist>
+	</method>
+	<method name="reset">
+	    <description>
+		Reset (clear) buffer without sending data.
+	    </description>
+	</method>
+	<method name="resetallthewaymode">
+	    <digest>
+		Require a bang for every (atomized) message.
+	    </digest>
+	    <description>
+		By default, OpenSoundControl assumes that you want your packets to contain multiple-message bundles. That's why you can send as many messages to OpenSoundControl as will fit in the buffer and they'll all go into a big bundle until you send a bang to send them out.  If you want to create a packet with a single message (i.e., not a bundle), you can send the message "resetallthewaymode" to toggle the mode where resetting the buffer (with "reset" or "bang") doesn't automatically open a bundle. In this mode you must send a bang after every message - if you try to add a second message to a packet, OpenSoundControl will print an error message and throw away the entire packet.
+	    </description>
+	</method>
+	<method name="send">
+	    <description>
+		Send buffer without resetting the internal contents.
+	    </description>
+	</method>
+	<method name="writetypestrings">
+	    <description>
+		Allows the object to send bundles without typestrings (if set to 0).  This would normally only be desirable if sending to legacy OSC software that does not have typestrings implemented.  Default is 1.
+	    </description>
+	    <arglist>
+		<arg name="0/1" optional="0" type="int"/>
+	    </arglist>
+	</method>
+	<method name="version">
+	    <description>
+		Print version number (and other info) to Max window.
+	    </description>
+	</method>
+
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	Here's what happens when OpenSoundControl receives a message:
+
+	<ol display="list-item">
+	    <li>If the message is a bundle, it has a time tag, so the message OSCTimeTag comes out the right outlet with two int arguments containing the time tag. (This is the same format as what you use to specify a time tag in a message to be sent.)</li>
+	    <li>Then the contents of the message come out of the middle outlet one at a time, in the order they appear in the packet. Each comes out as a Max list whose first element (the "message") is the OSC address and whose remaining elements (the "arguments") are the OSC arguments. If the incoming message has type tag strings, OpenSoundControl uses them to ensure that each argument has the correct type. Otherwise, OpenSoundControl uses heuristics to guess the types of the arguments, which may sometimes lead to surprising results. (They're the same heuristics as the "dumpOSC" program.) If the packet has sub-bundles, their structure is ignored and the all the messages in the packet messages come out in a single sequence as if they were flattened into one large bundle.</li>
+	    <li>After all the messages in the packet have been output as Max lists, a bang comes out the left outlet signalling the end of the packet.</li>
+	</ol>
+	
+	This behavior is symmetric with the way you use OpenSoundControl to build packets piece by piece for sending. In fact, you could connect these three outlets to the input of another OpenSoundControl object to recreate (in flattened form) each packet you receive.
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="osc-timetag" />
+	<seealso name="osc-schedule" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the opensoundcontrol object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [FullPacket/bang]">
+	    <description>
+		Outputs a "FullPacket" message containing a sort of pointer to a buffer holding the binary representation of the OSC packet you built.  Will also forward a "bang" message if received in the inlet.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [anything]">
+	    <description>
+		Outputs OSC messages decoded from an OSC packet
+	    </description>
+	</entry>
+	<entry name ="Outlet 3 [list]">
+	    <description>
+		Outputs a timetag (list of two integers) from an incoming OSC packet if that packet contains a timetag.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		<ul>
+		    <li>General note: This object has been deprecated albeit specific use cases.  For the current version of CNMAT OSC objects please see the ODOT library, available <a href="https://github.com/CNMAT/CNMAT-odot">here</a>.</li>
+		    <li>Note on string substitution:  If the address portion of your message includes one of the "conversion specifiers" %c, %d, %f, or %s, then the first argument to your message will be formatted and inserted into the address string, replacing the conversion specifier.  The meanings of the conversion specifiers are the same as in sprintf (except that you can just say %d instead of %ld). %c interprets an int arg as an ASCII character, %d formats an int arg, %f formats a float arg, and %s inserts a symbol arg. There can be multiple conversion specifiers as long as there are enough arguments for each of them.</li>
+		    <li>Note on timetag arguments:  OpenSoundControl supports encoding and decoding of time tags in the argument section of a message using the extended type tag, "t".  These are represented in Max as a list "OSCTimeTag x y."</li>
+		    <li>Note on blob arguments:  The blob type "b" enables one to encode a sequence of arbitrary bytes including non-printable characters not possible to include in a normal string.  The blob type is represented in MaxMSP as a list starting with "OSCBlob" followed by the length (integer) followed by an integer for each byte. See also the serial object for a similar representation of byte streams in MaxMSP.</li>
+		</ul>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		OSC, OpenSoundControl, CNMAT, bundle, packet, networking
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

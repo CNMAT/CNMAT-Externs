@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="SDIF-ranges" module="CNMAT-Externals">
+
+    <digest>
+	Report ranges of values in an SDIF-buffer
+    </digest>
+
+    <description>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="buffer name" optional="0" type="float">
+	    <description>
+		The name of the SDIF-buffer.  Required because it has to be referenced by other objects in the SDIF suite.  The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="column-range">
+	    <arglist>
+		<arg name="columne number" type="int" optional="0" id="0"/>
+		<arg name="matrix type" type="symbol" optional="0" id="1"/>
+	    </arglist>
+	    <description>
+		Query a single column with a given matrix type.<br/><br/>
+		Outputs the maximum and minimum data values for the column of the specified type.  Note that this query will fail if sdif-ranges cannot find a valid frame.<br/><br/>
+		The osc-style messages that are output:
+		<ul>
+		    <li>/max-num-columns: output the maximum number of columns found.</li>
+		    <li>/columns-mins: output the smallest data set found in the entirety of the matrix referenced.</li>
+		    <li>/columns-maxes: output the smallest data set found in the entirety of the maxtrix referenced.</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="column-ranges">
+	    <arglist>
+		<arg name="matrix type" type="symbol" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Query column ranges.<br/><br/>
+		Output the maximum and minimum data values per column, for all rows in all matrices in the buffer (of the specified type).  Note that this query will fail if sdif-ranges cannot find a valid frame of said type.<br/><br/>
+		The osc-style messages that are output:
+		<ul>
+		    <li>/max-num-columns: output the maximum number of columns found.</li>
+		    <li>/columns-mins: output the smallest data set found in the entirety of the matrix referenced.</li>
+		    <li>/columns-maxes: output the smallest data set found in the entirety of the maxtrix referenced.</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="max-columns">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Output the maximum number of columns present in the loaded SDIF buffer, out of all matrices in the buffer.  This data is output as an osc-style message.
+	    </description>
+	</method>
+	<method name="set">
+	    <arglist>
+		<arg name="buffer name" type="symbol" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Change the SDIF-buffer this object reads from.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="SDIF-buffer" />
+	<seealso name="SDIF-fileinfo" />
+	<seealso name="SDIF-info" />
+	<seealso name="SDIF-listpoke" />
+	<seealso name="SDIF-tuples" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the sdif-ranges object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		sdif-ranges outputs osc-style messages if a buffer reference is valid.
+		<br/><br/>
+		potential messages include:
+		<ul>
+		    <li>/max-num-columns: output the maximum number of columns found.</li>
+		    <li>/columns-mins: output the smallest data set found in the entirety of the matrix referenced.</li>
+		    <li>/columns-maxes: output the smallest data set found in the entirety of the maxtrix referenced.</li>
+		</ul>
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		An SDIF stream is a matrix of data that can be queried, manipulated, and written.  The Sound Description Interchange Format (“SDIF”) offers a framework for representing high-level sound descriptions such as sum-of-sinusoids, noise bands, time-domain samples, and formants.  Many of these sound descriptions are mutable models, affording operations such as filtering, morphing, pitch shifting, and time stretching.  SDIF data consists of time-tagged frames, each containing one or more two-dimensional matrices of data such as floating-point numbers and a frame type ID indicating what kind of sound description the frame represents. For example, an SDIF frame representing additive synthesis data has a single matrix where rows represent individual sinusoids and columns represent parameters such as frequency, amplitude, and phase. A stream is a sequence of frames of the same frame type that represents a single “sonic object” evolving through time. An SDIF file may contain one stream, or multiple streams with interleaved frames. Each frame has a Stream ID, a meaningless 32-bit number that uniquely identifies the stream to which it belongs.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		SDIF, CNMAT, statistics, ranges
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

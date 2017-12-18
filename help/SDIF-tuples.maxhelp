@@ -4,12 +4,12 @@
 		"appversion" : 		{
 			"major" : 7,
 			"minor" : 3,
-			"revision" : 5,
-			"architecture" : "x64",
+			"revision" : 4,
+			"architecture" : "x86",
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 278.0, 79.0, 1061.0, 665.0 ],
+		"rect" : [ 100.0, 100.0, 1061.0, 665.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,6 +40,68 @@
 		"showontab" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 7,
+							"minor" : 3,
+							"revision" : 4,
+							"architecture" : "x86",
+							"modernui" : 1
+						}
+,
+						"rect" : [ 0.0, 26.0, 1061.0, 639.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 12.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 15.0, 15.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"showontab" : 1,
+						"boxes" : [  ],
+						"lines" : [  ]
+					}
+,
+					"patching_rect" : [ 753.0, 127.0, 27.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"globalpatchername" : "",
+						"style" : "",
+						"tags" : ""
+					}
+,
+					"style" : "",
+					"text" : "p ?"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-27",
 					"maxclass" : "newobj",
 					"numinlets" : 0,
@@ -49,12 +111,12 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 3,
-							"revision" : 5,
-							"architecture" : "x64",
+							"revision" : 4,
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 278.0, 105.0, 1061.0, 639.0 ],
+						"rect" : [ 100.0, 126.0, 1061.0, 639.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -92,7 +154,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 39.0, 304.0, 199.0, 51.0 ],
-									"presentation_rect" : [ 34.0, 326.0, 0.0, 0.0 ],
 									"style" : "default",
 									"text" : "the tuplets reltime <float> is the same as \"time\" but relative to the range of 0-1"
 								}
@@ -108,7 +169,6 @@
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
 									"patching_rect" : [ 240.0, 315.0, 85.0, 22.0 ],
-									"presentation_rect" : [ 243.0, 317.0, 0.0, 0.0 ],
 									"style" : ""
 								}
 
@@ -121,7 +181,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 240.0, 342.0, 99.0, 22.0 ],
-									"presentation_rect" : [ 243.0, 352.0, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "tuples reltime $1"
 								}
@@ -135,7 +194,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 469.0, 559.0, 33.0, 22.0 ],
-									"presentation_rect" : [ 478.0, 554.0, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "stop"
 								}
@@ -165,7 +223,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 531.0, 304.0, 156.0, 66.0 ],
-									"presentation_rect" : [ 539.0, 346.0, 0.0, 0.0 ],
 									"style" : "default",
 									"text" : "for use with threefates, set SDIF-tuples to output the first 3 columns"
 								}
@@ -181,9 +238,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 91.0, 210.0, 195.0, 64.0 ],
-									"presentation_rect" : [ 35.25, 267.5, 0.0, 0.0 ],
 									"style" : "default",
-									"text" : "the tuplets time <float> message recalls the matrix value at the specified time in the SDIF file."
+									"text" : "the tuplets time <float> message recalls the matrix value at the specified time (in seconds) in the SDIF file."
 								}
 
 							}
@@ -394,8 +450,8 @@
 										"appversion" : 										{
 											"major" : 7,
 											"minor" : 3,
-											"revision" : 5,
-											"architecture" : "x64",
+											"revision" : 4,
+											"architecture" : "x86",
 											"modernui" : 1
 										}
 ,
@@ -602,7 +658,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 520.0, 195.0, 154.0, 37.0 ],
+									"patching_rect" : [ 520.0, 195.0, 156.0, 37.0 ],
 									"style" : "default",
 									"text" : "Change the SDIF-buffer this object reads from"
 								}
@@ -620,8 +676,8 @@
 										"appversion" : 										{
 											"major" : 7,
 											"minor" : 3,
-											"revision" : 5,
-											"architecture" : "x64",
+											"revision" : 4,
+											"architecture" : "x86",
 											"modernui" : 1
 										}
 ,
@@ -984,8 +1040,7 @@
 									"id" : "obj-74",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
+									"numoutlets" : 0,
 									"patching_rect" : [ 723.0, 342.0, 120.0, 22.0 ],
 									"style" : "default",
 									"text" : "SDIF-buffer otherbuf"
@@ -1065,7 +1120,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 705.0, 88.0, 237.0, 93.0 ],
+									"patching_rect" : [ 705.0, 88.0, 239.0, 93.0 ],
 									"style" : "default",
 									"text" : "The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name."
 								}
@@ -1115,8 +1170,7 @@
 									"id" : "obj-95",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
+									"numoutlets" : 0,
 									"patching_rect" : [ 723.0, 263.0, 108.0, 22.0 ],
 									"style" : "default",
 									"text" : "SDIF-buffer mybuf"
@@ -1418,8 +1472,8 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 3,
-							"revision" : 5,
-							"architecture" : "x64",
+							"revision" : 4,
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
@@ -1525,7 +1579,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 36.0, 45.5, 253.0, 52.0 ],
-									"presentation_rect" : [ 77.0, 80.5, 0.0, 0.0 ],
 									"style" : "default",
 									"text" : "time and reltime messages tell SDIF-tuplets how to interpret the incoming signal."
 								}
@@ -1538,7 +1591,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 67.0, 110.0, 120.0, 20.0 ],
-									"presentation_rect" : [ 158.5, 81.5, 0.0, 0.0 ],
 									"style" : "default",
 									"text" : "absolute time in sec."
 								}
@@ -1551,7 +1603,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 91.0, 142.0, 96.0, 20.0 ],
-									"presentation_rect" : [ 408.0, 81.0, 0.0, 0.0 ],
 									"style" : "default",
 									"text" : "relative time 0-1"
 								}
@@ -1565,7 +1616,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 194.0, 110.0, 47.0, 22.0 ],
-									"presentation_rect" : [ 329.0, 202.0, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "time 0."
 								}
@@ -1579,7 +1629,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 194.0, 142.0, 60.0, 22.0 ],
-									"presentation_rect" : [ 358.0, 153.0, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "reltime 0."
 								}
@@ -1804,13 +1853,11 @@
 							}
 , 							{
 								"box" : 								{
-									"fontname" : "Arial Bold Italic",
-									"fontsize" : 18.0,
 									"id" : "obj-43",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 608.0, 52.5, 200.0, 27.0 ],
+									"patching_rect" : [ 608.0, 52.5, 200.0, 20.0 ],
 									"style" : "default",
 									"text" : "Signal control of time"
 								}
@@ -2015,8 +2062,8 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 3,
-							"revision" : 5,
-							"architecture" : "x64",
+							"revision" : 4,
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
@@ -2246,8 +2293,8 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 3,
-							"revision" : 5,
-							"architecture" : "x64",
+							"revision" : 4,
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
@@ -2476,8 +2523,8 @@
 						"appversion" : 						{
 							"major" : 7,
 							"minor" : 3,
-							"revision" : 5,
-							"architecture" : "x64",
+							"revision" : 4,
+							"architecture" : "x86",
 							"modernui" : 1
 						}
 ,
@@ -2967,10 +3014,6 @@
 			}
 , 			{
 				"name" : "o.route.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "SDIF-buffer.mxo",
 				"type" : "iLaX"
 			}
  ],

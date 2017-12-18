@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="SDIF-tuples" module="CNMAT-Externals">
+
+    <digest>
+	Pull data out of an SDIF-buffer into Max lists
+    </digest>
+
+    <description>
+	The SDIF-tuples object is a link between data in the matrix format of SDIF and the world of Max.  Lists that are output from this object can be used to synthesize audio in a variety of ways, depending on the files loaded into buffers.  These buffers are referenced by name, as outlined below.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="buffer name" optional="0" type="float">
+	    <description>
+		The name of the SDIF-buffer.  Required because it has to be referenced by other objects in the SDIF suite.  The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="columns">
+	    This message changes the behavior of the [tuples] message*  <br/>
+	    <arglist>
+		<arg name="column 1" type="int" optional="0" id="0" />
+		<arg name="column 2" type="int" optional="1" id="1" />
+		<arg name="column 3" type="int" optional="1" id="2" />
+	    </arglist>
+	    <description>
+		Specify the columns accessed for data.  At least one column designation is required, although more can be set, e.g. [columns 1 2 3].
+	    </description>
+	</method>
+	<method name="concatenate">
+	    This message changes the behavior of the [tuples] message*  <br/>
+	    <arglist>
+		<arg name="id" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Specify whether or not to concatenate lists when outputting.  A "0" will output each row as a separate list.  A "1" will concatenate all rows into a single list, which is the default behavior.
+	    </description>
+	</method>
+	<method name="direction">
+	    <arglist>
+		<arg name="direction" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Return the closest frame to the requested time, searching forwards or backwards.  Forwards is [1], and backwards [-1]
+	    </description>
+	</method>
+	<method name="errorreporting">
+	    <arglist>
+		<arg name="on/off" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Enable error reporting to the Max console.
+	    </description>
+	</method>
+	<method name="interp">
+	    This message changes the behavior of the [tuples] message*  <br/>
+	    <arglist>
+		<arg name="type" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Interpolates all parameters to make up a [virtual frame] for any given input time by combining nearby frames.  <br/><br/>
+		Options include:<br/><br/>
+		<ol>
+		    <li>None: output a nearby frame (based on [direction]) from the SDIF file for any input time.</li>
+		    <li>Linear</li>
+		    <li>Lagrange: 2nd-order polynomial</li>
+		    <li>Lagrange: 3rd-order polynomial</li>
+		</ol>
+	    </description>
+	</method>
+	<method name="matrix">
+	    <arglist>
+		<arg name="type" type="symbol, optional" optional="1" id="0" />
+	    </arglist>
+	    <description>
+		[matrix" tells the object to use the "main" matrix from the frame (default)<br/><br/>
+		[matrix (type)] Specify a matrix type with a 4 character identifier.  If you specify a matrix type that is not contained within the currently loaded buffer, SDIF-tuples will issue an error.
+	    </description>
+	</method>
+	<method name="max_rows">
+	    <arglist>
+		<arg name="maximum" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Output only the first n rows of each matrix (by the order in which they're stored in the SDIF file). 
+	    </description>
+	</method>
+	<method name="outputinterval">
+	    <arglist>
+		<arg name="ms" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The "output interval" (default 10ms) determines how often SDIF-tuples will sample its time input signal and output (but it never outputs more than once per signal vector).
+	    </description>
+	</method>
+	<method name="print">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Print contents of SDIF-buffer to Max console.
+	    </description>
+	</method>
+	<method name="reltime">
+	    <arglist>
+		<arg name="phase" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		"Relative" time, scaled according to the duration of the SDIF-buffer so that 1. means the last frame.
+	    </description>
+	</method>
+	<method name="reltime">
+	    <arglist>
+		<arg name="phase" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		"Relative" time, scaled according to the duration of the SDIF-buffer so that 1. means the last frame.
+	    </description>
+	</method>
+	<method name="set">
+	    <arglist>
+		<arg name="buffer name" type="symbol" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the SDIF-buffer that SDIF-tuples object reads from.
+	    </description>
+	</method>
+	<method name="signal">
+	    <description>
+		Signal control of time.  Rather than sending lots of [tuples] messages, you can use a signal input to control time.  To interpret the signal input as relative time, just send in a "reltime" message (with a float argument).  The interpretation of the signal input is absolute or relative depending on whether you most recently sent [time] or [reltime].
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Output all information about the object's state to the Max window.
+	    </description>
+	</method>
+	<method name="time">
+	    <arglist>
+		<arg name="seconds or relative time" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This message changes the behavior of the [tuples] message*  <br/>
+		Set matrix frame to output based on time tag (default: 0).  If the object is in relative time mode, the time value needs to be between 0 and 1.  If in absolute time mode, the frame is specified.
+	    </description>
+	</method>
+	<method name="tuples">
+	    <arglist>
+		<arg name="variable" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The most important message for this object is [tuples], which outputs the desired parts of the specified frame.  You can use this message in one of two ways:<br/>
+		*Note that other messages work in conjunction with the [tuples] message.
+		<ol>
+		    <li>set the object up in a way that suits the user, then issue the [tuples] message</li>
+		    <li>(*) issue the [tuples] message with multiple arguments in a single list</li>
+		</ol>
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version info to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="SDIF-buffer" />
+	<seealso name="SDIF-fileinfo" />
+	<seealso name="SDIF-info" />
+	<seealso name="SDIF-listpoke" />
+	<seealso name="SDIF-ranges" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the sdif-tuples object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		Outputs lists in the format specified by the input.  Lists represent the data stored in an SDIF matrix.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		An SDIF stream is a matrix of data that can be queried, manipulated, and written.  The Sound Description Interchange Format (“SDIF”) offers a framework for representing high-level sound descriptions such as sum-of-sinusoids, noise bands, time-domain samples, and formants.  Many of these sound descriptions are mutable models, affording operations such as filtering, morphing, pitch shifting, and time stretching.  SDIF data consists of time-tagged frames, each containing one or more two-dimensional matrices of data such as floating-point numbers and a frame type ID indicating what kind of sound description the frame represents. For example, an SDIF frame representing additive synthesis data has a single matrix where rows represent individual sinusoids and columns represent parameters such as frequency, amplitude, and phase. A stream is a sequence of frames of the same frame type that represents a single “sonic object” evolving through time. An SDIF file may contain one stream, or multiple streams with interleaved frames. Each frame has a Stream ID, a meaningless 32-bit number that uniquely identifies the stream to which it belongs.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		SDIF, CNMAT, buffer, matrix, format 
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

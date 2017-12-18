@@ -302,11 +302,8 @@
 		</method>
 
 		<method name="tellmeeverything">
-			<digest>
-				Print information about the object state.
-			</digest>
 			<description>
-				Print information about the object state.
+				Output all information about the object's state to the Max window.
 			</description>
 		</method>
 		<method name="version">

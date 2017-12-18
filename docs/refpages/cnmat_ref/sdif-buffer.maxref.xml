@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="SDIF-buffer" module="CNMAT-Externals">
+
+    <digest>
+	Store an SDIF stream in Max.
+    </digest>
+
+    <description>
+	An SDIF stream is a matrix of data that can be queried, manipulated, and written.  The Sound Description Interchange Format (“SDIF”) offers a framework for representing high-level sound descriptions such as sum-of-sinusoids, noise bands, time-domain samples, and formants.  Many of these sound descriptions are mutable models, affording operations such as filtering, morphing, pitch shifting, and time stretching.  SDIF data consists of time-tagged frames, each containing one or more two-dimensional matrices of data such as floating-point numbers and a frame type ID indicating what kind of sound description the frame represents. For example, an SDIF frame representing additive synthesis data has a single matrix where rows represent individual sinusoids and columns represent parameters such as frequency, amplitude, and phase. A stream is a sequence of frames of the same frame type that represents a single “sonic object” evolving through time. An SDIF file may contain one stream, or multiple streams with interleaved frames. Each frame has a Stream ID, a meaningless 32-bit number that uniquely identifies the stream to which it belongs.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="buffer name" optional="0" type="float">
+	    <description>
+		The name of the SDIF-buffer.  Required because it has to be referenced by other objects in the SDIF suite.  The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="change-frametype">
+	    <arglist>
+		<arg name="type" type="symbol" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Change the frametype.  Some options are:
+		<ul>
+		    <li>1FQ0: Fundamental Frequency Estimates</li>
+		    <li>1STF: Discrete Short-Term Fourier Transform</li>
+		    <li>1PIC: Picked Spectral Peaks</li>
+		    <li>1TRC: Sinusoidal Tracks</li>
+		    <li>1HRM: Pseudo-harmonic Sinusoidal Tracks</li>
+		    <li>1RES: Resonances / Exponentially Decaying Sinusoids</li>
+		    <li>1TDS: Time Domain Samples</li>
+		</ul>
+		The list above describes initial standard frame types compiled in 1999, and can be found <a href="http://cnmat.org/SDIF/FrameTypes.html">here</a>.
+		For information on more frame types, please see the main <a href="http://sdif.sourceforge.net/standard/types-main.html">SDIF types page</a>.
+	    </description>
+	</method>
+	<method name="change-streamID">
+	    <arglist>
+		<arg name="id" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Change the stream ID that is queried for data.
+	    </description>
+	</method>
+	<method name="clear">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Empty the SDIF-buffer, reclaiming memory
+	    </description>
+	</method>
+	<method name="debug">
+	    <arglist>
+		<arg name="on/off" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Enable debugging.
+	    </description>
+	</method>
+
+	<method name="framelist">
+	    <arglist>
+		<arg name="filename" type="symbol" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Post the frames in the given SDIF file, specified by filename, to the Max window.  The file must be in Max's search path.
+	    </description>
+	</method>
+	<method name="printall">
+	    <arglist>
+	    </arglist>
+	    <description>
+		List the names of all of the SDIF-buffer objects currently in existence.
+	    </description>
+	</method>
+	<method name="print">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Print some info about the currently-loaded stream in the Max window.
+	    </description>
+	</method>
+	<method name="read-stream-number">
+	    <arglist>
+		<arg name="filename" type="symbol" optional="0" id="0" />
+		<arg name="stream" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Read a user-specified stream from a user-specified SDIF file into this buffer.  The file must be in Max's search path.
+	    </description>
+	</method>
+	<method name="streamlist">
+	    <arglist>
+		<arg name="filename" type="symbol" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		List the streams in the given SDIF file in the Max window. (Not as good as SDIF-menu!)
+	    </description>
+	</method>
+	<method name="timeshift">
+	    <arglist>
+	    </arglist>
+	    <description>
+		offset the timings of SDIF matrix data to time "0.", based on the first valid frame found.
+	    </description>
+	</method>
+	<method name="version">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Print version info in the Max window.
+	    </description>
+	</method>
+	<method name="write">
+	    <arglist>
+		<arg name="path to file" type="symbol" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Write the contents of an SDIF-buffer instance to disk.  The path argument enables you to specify a disk location, appended by the filename itself.
+	    </description>
+	</method>
+
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="SDIF-fileinfo" />
+	<seealso name="SDIF-info" />
+	<seealso name="SDIF-listpoke" />
+	<seealso name="SDIF-ranges" />
+	<seealso name="SDIF-tuples" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [bang]">
+	    <description>
+		Outputs a bang when an SDIF file is successfully read.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		SDIF, CNMAT, buffer, matrix, format 
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
