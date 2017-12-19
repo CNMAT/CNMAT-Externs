@@ -95,10 +95,7 @@
     <misc name = "Output">
 	<entry name ="Outlet 1 [list or float]">
 	    <description>
-		This output is variable, and can be one of the following:<br/><br/>
-		- Y output from corresponding X input<br/>
-		- A list of chosen values from the distribution designated in the left inlet<br/>
-		- A float that represents a chosen value from either a <m>bang</m> in the left inlet, or a when the object receives the message [distlist 1]<br/>
+		Y output from corresponding X input, using a zeroth, first, or nth order Bessel function.
 	    </description>
 	</entry>
     </misc>
