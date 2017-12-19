@@ -4,7 +4,7 @@
 <c74object name="bdist" module="CNMAT-Externals">
 
     <digest>
-	The <a href="https://en.wikipedia.org/wiki/Beta_distribution">beta distribution</a>.
+	The <a href="https://en.wikipedia.org/wiki/Beta_distribution">beta distribution</a>
     </digest>
 
     <description>
@@ -92,6 +92,7 @@
     <!--SEEALSO-->
     <seealsolist>
 	<seealso name="randdist" />
+	<seealso name="bessel" />
     </seealsolist>
 
     <misc name = "Input">
