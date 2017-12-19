@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 206.0, 117.0, 799.0, 546.0 ],
+		"rect" : [ 100.0, 100.0, 799.0, 546.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -87,7 +87,6 @@
 					}
 ,
 					"patching_rect" : [ 96.0, 19.0, 27.0, 22.0 ],
-					"presentation_rect" : [ 90.0, 16.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -117,7 +116,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 206.0, 143.0, 799.0, 520.0 ],
+						"rect" : [ 100.0, 126.0, 799.0, 520.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -296,9 +295,9 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 141.0, 347.0, 80.0, 22.0 ],
+									"patching_rect" : [ 141.0, 347.0, 54.0, 22.0 ],
 									"style" : "default",
-									"text" : "jmn -10 10"
+									"text" : "jmn -2 2"
 								}
 
 							}
@@ -509,7 +508,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 393.0, 243.0, 47.0, 22.0 ],
+									"patching_rect" : [ 393.0, 243.0, 45.0, 22.0 ],
 									"style" : "default",
 									"text" : "bessel"
 								}
