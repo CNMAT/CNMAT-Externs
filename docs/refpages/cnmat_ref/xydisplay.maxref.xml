@@ -252,8 +252,8 @@
 
     <!--SEEALSO-->
     <seealsolist>
+	<seealso name="bpf"/>
 	<seealso name="rbfi"/>
-	<seealso name="timewarp~"/>
 	<seealso name="function"/>
     </seealsolist>
 
