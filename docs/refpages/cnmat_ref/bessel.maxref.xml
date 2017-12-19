@@ -8,7 +8,7 @@
     </digest>
 
     <description>
-	Calculate Bessel functions, based on parameterization of said functions.  An X input will cause a corresponding Y output out the outlet.
+	Calculate Bessel functions, based on parameterization of said functions.  An X input will cause a corresponding Y output out the outlet.  Read more about bessel functions <a href="http://mathworld.wolfram.com/BesselFunction.html">here</a>.
     </description>
 
     <!--METADATA-->
@@ -32,21 +32,12 @@
 
     <!--MESSAGES-->
     <methodlist>
-	<method name="jn">
-	    <arglist>
-		<arg name="scalar value" type="float" optional="0" id="0" />
-		<arg name="gain" type="float" optional="0" id="1" />
-	    </arglist>
-	    <description>
-		description of jn
-	    </description>
-	</method>
 	<method name="j0">
 	    <arglist>
 		<arg name="gain" type="float" optional="0" id="0" />
 	    </arglist>
 	    <description>
-		description of j0
+		0th integer order.  Modify the gain of `a` when `a` is equivalent to zero.  j0 refers to zeros of the bessel function of the first kind.  This function is particularly relevant to spherical calculations.  See more <a href="http://functions.wolfram.com/Bessel-TypeFunctions/BesselJZero/02/">here</a>.
 	    </description>
 	</method>
 	<method name="j1">
@@ -54,7 +45,26 @@
 		<arg name="gain" type="float" optional="0" id="0" />
 	    </arglist>
 	    <description>
-		description of j1
+		1th integer order (needs description here)
+	    </description>
+	</method>
+
+	<method name="jmn">
+	    <arglist>
+		<arg name="scalar value" type="float" optional="0" id="0" />
+		<arg name="gain" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Bessel functions of the second kind, defined as solutions to the bessel differential equation.  These equations have two linearly independent variables, hence the 'm' and 'n'.  See more <a href="http://mathworld.wolfram.com/BesselFunctionoftheSecondKind.html">here</a>.
+	    </description>
+	</method>
+	<method name="jn">
+	    <arglist>
+		<arg name="scalar value" type="float" optional="0" id="0" />
+		<arg name="gain" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Bessel functions of the first kind, defined as solutions to the bessel differential equation.  These equations are non-singular at the origin, and are particuarly relevant to cylindrical harmonics.  See more <a href="http://mathworld.wolfram.com/BesselFunctionoftheFirstKind.html">here</a>.
 	    </description>
 	</method>
 	<method name="float" type="float">
