@@ -4,11 +4,13 @@
 <c74object name="bessel" module="CNMAT-Externals">
 
     <digest>
-	<a href="https://en.wikipedia.org/wiki/Bessel_function">Bessel Functions</a>.
+	<a href="https://en.wikipedia.org/wiki/Bessel_function">Bessel Functions</a>
     </digest>
 
     <description>
-	Calculate Bessel functions, based on parameterization of said functions.  An X input will cause a corresponding Y output out the outlet.
+	Calculate Bessel functions.  An x input will cause a corresponding y output out the outlet.  
+	
+	Bessel functions are found in clusters of functions called "kinds".  Each kind is a family of functions, and has a specific name.  In mathematical notation, the first kind is usually denoted with the letter "j", aka "j0", the second kind is denoted as "j1", etc.  Read more about bessel functions of the first kind <a href="http://mathworld.wolfram.com/BesselFunctionoftheFirstKind.html">here</a>.  
     </description>
 
     <!--METADATA-->
@@ -32,34 +34,58 @@
 
     <!--MESSAGES-->
     <methodlist>
-	<method name="jn">
-	    <arglist>
-		<arg name="scalar value" type="float" optional="0" id="0" />
-		<arg name="gain" type="float" optional="0" id="1" />
-	    </arglist>
+	<method name="int">
 	    <description>
-		description of jn
+		Define the nth order of the first kind of bessel function for evaluation.  This message is used in conjunction with a [float] input.
 	    </description>
 	</method>
 	<method name="j0">
 	    <arglist>
-		<arg name="gain" type="float" optional="0" id="0" />
+		<arg name="x" type="float" optional="0" id="0" />
 	    </arglist>
 	    <description>
-		description of j0
+		0th integer order, aka zero order of the first kind of bessel function.  An x argument yields the evaluated output (y) for the x value.
 	    </description>
 	</method>
 	<method name="j1">
 	    <arglist>
-		<arg name="gain" type="float" optional="0" id="0" />
+		<arg name="x" type="float" optional="0" id="0" />
 	    </arglist>
 	    <description>
-		description of j1
+		1th integer order, aka the first order of the first kind of bessel function.  An x argument yields the evaluated output (y) for the x value.
 	    </description>
 	</method>
-	<method name="float" type="float">
+	<method name="jn">
+	    <arglist>
+		<arg name="integer order" type="int" optional="0" id="0" />
+		<arg name="x" type="float" optional="0" id="1" />
+	    </arglist>
 	    <description>
-		A float input will output the corresponding Y value(s) along the X axis of the transfer function.  This output can be a list, depending on the type of Bessel function defined.<br/>
+		Calculate a bessel functions of the first kind, with the order being user-defined.  An x argument yields the evaluated output (y) for the x value.
+	    </description>
+	</method>
+	<method name="jmn">
+	    <arglist>
+		<arg name="integer order range begin" type="int" optional="0" id="1" />
+		<arg name="integer order range end" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The range input by the first two arguments to the [jmn] message define solutions to the bessel differential equation.  For example, the message [jmn -1 1] will define integer orders -1, 0, and 1 for evaluation.  It is expected that a [float] message will be issued some time after this range has been defined.  
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		A float input will output the corresponding Y value(s) along the X axis of the transfer function.  This output is variable, and can be a list depending on the type of Bessel function defined via the [jmn] message or an input list.<br/>
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		This list of integers defines which bessel functions are calculated for a given (Y) evaluation in the output list for an x input.  The order in the output matches this definition.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Post version information to the Max window.
 	    </description>
 	</method>
     </methodlist>
@@ -85,10 +111,7 @@
     <misc name = "Output">
 	<entry name ="Outlet 1 [list or float]">
 	    <description>
-		This output is variable, and can be one of the following:<br/><br/>
-		- Y output from corresponding X input<br/>
-		- A list of chosen values from the distribution designated in the left inlet<br/>
-		- A float that represents a chosen value from either a <m>bang</m> in the left inlet, or a when the object receives the message [distlist 1]<br/>
+		y output from corresponding x input, using a zeroth, first, or nth order Bessel function.
 	    </description>
 	</entry>
     </misc>

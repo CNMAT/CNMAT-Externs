@@ -28,11 +28,6 @@
 
     <!--ARGUMENTS-->
     <objarglist>
-	<objarg name="buffer name" optional="0" type="float">
-	    <description>
-		The name of the SDIF-buffer.  Required because it has to be referenced by other objects in the SDIF suite.  The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name.
-	    </description>
-	</objarg>
     </objarglist>
 
     <!--MESSAGES-->
@@ -257,7 +252,9 @@
 
     <!--SEEALSO-->
     <seealsolist>
+	<seealso name="bpf"/>
 	<seealso name="rbfi"/>
+	<seealso name="function"/>
     </seealsolist>
 
     <misc name = "Input">
@@ -284,9 +281,9 @@
 		Output the interpolated xy value for a given input phase along the trajectory of the breakpoint function.
 	    </description>
 	</entry>
-	<entry name ="Outlet 4 [list]">
+	<entry name ="Outlet 4 [variable]">
 	    <description>
-		Output data when object receives a [dump] message.  Format is [index x y], and a [done] message at the end.
+		Output data when object receives a [dump] message.  The format is a list containing [index x y], and a [done] message at the end.
 	    </description>
 	</entry>
     </misc>

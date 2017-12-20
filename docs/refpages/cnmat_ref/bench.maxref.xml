@@ -66,6 +66,8 @@
 
     <!--SEEALSO-->
     <seealsolist>
+	<seealso name="bench~"/>
+	<seealso name="trampoline"/>
     </seealsolist>
 
     <misc name = "Input">
