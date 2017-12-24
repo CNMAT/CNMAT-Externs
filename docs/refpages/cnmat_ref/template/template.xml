@@ -4,11 +4,11 @@
 <c74object name="some name" module="CNMAT-Externals">
 
     <digest>
-		digest text
+		Short description here; summarize
     </digest>
 
     <description>
-		description text
+		Longer decription here, include some background and details as to what the object does and why it exists.
     </description>
 
     <!--METADATA-->
@@ -18,57 +18,73 @@
 	<metadata name="tag">CNMAT</metadata>
     </metadatalist>
 
+    <!--DISCUSSION-->
+    <discussion>
+		Relevant discussion about the object, it's history, what is has in common with other objects, etc.
+    </discussion>
+
     <!--INLETS-->
+    <!--do not use-->
     <inletlist>
     </inletlist>
 
     <!--OUTLETS-->
+    <!--do not use-->
     <outletlist>
     </outletlist>
 
     <!--ARGUMENTS-->
     <objarglist>
-	<objarg name="test" optional="0" type="float">
+	<objarg name="myfloat" optional="0" type="float">
 	    <description>
-			This argument does some other stuff, that can be elaborated here.
+			float argument description
 	    </description>
 	</objarg>
-	<objarg name="test1" optional="1" type="symbol">
+	<objarg name="mysymbol" optional="1" type="symbol">
 	    <description>
-		This argument does some other stuff, that can be elaborated here.
+			symbol argument description
 	    </description>
 	</objarg>
     </objarglist>
 
     <!--MESSAGES-->
     <methodlist>
-		<method name="mess1">
-		    <arglist>
-				<arg name="some arg name" type="int" optional="0" id="0" />
-		    </arglist>
-		    <description>
-		    	desc of the mess1
-		    </description>
-		</method>
-		<method name="bang">
-		    <description>
+	<method name="my_message_with_args">
+	    <arglist>
+		<arg name="arg1name" type="int" optional="0" id="0" />
+		<arg name="arg2name" type="symbol" optional="1" id="1" />
+	    </arglist>
+	    <description>
+			desc of the messages, including bits describing which items are option, if applicable.
+	    </description>
+	</method>
+	<method name="bang">
+	    <description>
 			bang does x
-		    </description>
-		</method>
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+			float does x
+	    </description>
+	</method>
     </methodlist>
 
-<!--ATTRIBUTES-->
-	<attributelist>
-		<attribute name="min" get="1" set="1" type="float" size="1">
-			<description>
-				minimum bound for accumulation
-			</description>
-		</attribute>
-	</attributelist>
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="min" get="1" set="1" type="float" size="1">
+	    <description>
+			minimum bound for accumulation
+	    </description>
+	</attribute>
+	<attribute name="bgcolor" get="1" set="1" type="float" size="4">
+	    <attributelist>
+	    <description>
+	    	Love the bg color.  Format is RGBA.
+	    </description>
+	</attribute>
+    </attributelist>
 
-    <!--DISCUSSION-->
-    <discussion>
-    </discussion>
 
     <!--SEEALSO-->
     <seealsolist>
@@ -78,12 +94,12 @@
     <misc name = "Input">
 	<entry name ="Inlet 1 [anything]">
 	    <description>
-		The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
+			The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
 	    </description>
 	</entry>
 	<entry name ="Inlet 2 [float]">
 	    <description>
-		Set the 'a' parameter for the current distribution, recalculate, and display the result.
+			Set the 'a' parameter for the current distribution, recalculate, and display the result.
 	    </description>
 	</entry>
     </misc>
@@ -96,7 +112,7 @@
 	</entry>
 	<entry name ="Outlet 2 [variable]">
 	    <description>
-			Outlet description
+			If the object receives a [dump] message, lists of size N will come out here.
 	    </description>
 	</entry>
     </misc>
@@ -104,7 +120,7 @@
     <misc name = "Discussion">
 	<entry name ="More details">
 	    <description>
-	    	Some extra text about the subject
+	    	Some extra text about the subject; stories and folklore
 	    </description>
 	</entry>
 	<entry name ="Keywords">
