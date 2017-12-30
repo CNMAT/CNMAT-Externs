@@ -15,6 +15,9 @@ MAX_INCLUDES = $(C74SUPPORT)/max-includes
 MSP_INCLUDES = $(C74SUPPORT)/msp-includes
 JIT_INCLUDES = $(C74SUPPORT)/jit-includes
 
+# this might need to be updated:
+MAX_JAVA_JAR = /Applications/Max.app/Contents/Resources/C74/packages/max-mxj/java-classes/lib/max.jar
+
 win: CC = i686-w64-mingw32-gcc
 win: LD = $(CC)
 win: CFLAGS += -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3 -m32
@@ -40,10 +43,11 @@ STAGING_DIR = CNMAT_Externals
 #CFILES = $(foreach f, $(OBJECTNAMES), $(SRCDIR)/$(f)/$(f).c)
 
 JAVAOBJECTS = $(foreach f, $(JAVAOBJECTNAMES), $(BUILDDIR)/$(f).class)
-JAVAFILES = $(foreach f, $(JAVAOBJECTNAMES), $(BUILDDIR)/$(f).java)
+JAVASRC = $(foreach f, $(JAVAOBJECTNAMES), $(SRCDIR)/$(f)/$(f).java)
 
 $(BUILDDIR)/%.class: #$(SRCDIR)/%/%.java
-	@echo java
+	@echo ".... building java object >>>>>>" $(@F)
+	javac -classpath $(MAX_JAVA_JAR) $(SRCDIR)/$(subst .class,,$(@F))/$(subst .class,.java,$(@F)) -d $(BUILDDIR)
 
 CURRENT_VERSION_FILE = include/current_version.h
 
