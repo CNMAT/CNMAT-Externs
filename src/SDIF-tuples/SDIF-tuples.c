@@ -57,6 +57,7 @@
   VERSION 0.6.1: Force Package Info Generation
   VERSION 1.0: Controllable by a virtual time signal input. tellmeeverything. Better help patch.
   VERSION 1.1: Works for Max 5.
+  VERSION 1.3: added next/prev messages (rama 2017).
 
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
