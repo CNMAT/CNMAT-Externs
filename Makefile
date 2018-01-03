@@ -25,6 +25,8 @@ win: LDFLAGS = -shared -static-libgcc
 win: INCLUDES = -I/usr/i686-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm -L/usr/i686-w64-mingw32/sys-root/mingw/lib
 win: ODOT_LIBS = -L../libo/libs/i686 -l:libo.a -L../libomax/libs/i686 -l:libomax.a
+win: MAX_JAVA_JAR = "C:\Program Files (x86)\Cycling '74\Max 7\resources\packages\max-mxj\java-classes\lib\max.jar"
+# note: javac on windows requires windows style paths
 
 win64: CC = x86_64-w64-mingw32-gcc
 win64: LD = $(CC)
@@ -33,6 +35,8 @@ win64: LDFLAGS = -shared -static-libgcc # -Wl,--verbose
 win64: INCLUDES = -I/usr/x86_64-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib  -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win64: LIBS = -L$(JIT_INCLUDES) -lx64/jitlib -L$(MAX_INCLUDES) -lx64/MaxAPI -L$(MSP_INCLUDES) -lx64/MaxAudio -lm -L/usr/x86_64-w64-mingw32/sys-root/mingw/lib
 win64: ODOT_LIBS = -L../libo/libs/x86_64 -l:libo.a -L../libomax/libs/x86_64 -l:libomax.a
+win64: MAX_JAVA_JAR = "C:\Program Files\Cycling '74\Max 7\resources\packages\max-mxj\java-classes\lib\max.jar"
+# note: javac on windows requires windows style paths
 
 JAVA_EXT = class
 
@@ -90,8 +94,8 @@ SPHYDEPS = $(foreach f, $(SPHYDEPSNAMES), $(BUILDDIR)/$(f).o)
 clean-obj:
 	rm -f $(BUILDDIR)/*.o
 
-win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(SPHYOBJECTS) clean-obj
-win64: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(SPHYOBJECTS) clean-obj
+win: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(SPHYOBJECTS) $(JAVAOBJECTS) clean-obj
+win64: $(SIMPLEOBJECTS) $(MULTIPLEFILEOBJECTS) $(GSLOBJECTS) $(FFTWOBJECTS) $(JEHANOBJECTS) $(OSCOBJECTS) $(SDIFOBJECTS) $(SPHYOBJECTS) $(JAVAOBJECTS) clean-obj
 
 # Single file dependencies--just compile and stick the .o files in the build dir
 $(BUILDDIR)/commonsyms.o: $(BUILDDIR)
