@@ -1,7 +1,7 @@
 {
 	"author" : "CNMAT",
 	"authors" : [  ],
-	"categories" : [  ],
+	"categories" : ["Utilities", "Audio and Music", "Educational" ],
 	"description" : "A collection of Max tools created by researchers at CNMAT in Berkeley, CA.",
 	"displayname" : "",
 	"extends" : "",
