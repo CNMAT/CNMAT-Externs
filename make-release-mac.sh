@@ -15,5 +15,6 @@ python make-package-info.py
 
 cp package-info.json CNMAT-Externals
 cp license.txt CNMAT-Externals
+cp icon.png CNMAT-Externals
 
 zip -r $archive_name CNMAT-Externals && rm -r CNMAT-Externals
