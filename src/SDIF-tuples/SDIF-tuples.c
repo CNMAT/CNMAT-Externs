@@ -57,6 +57,8 @@
   VERSION 0.6.1: Force Package Info Generation
   VERSION 1.0: Controllable by a virtual time signal input. tellmeeverything. Better help patch.
   VERSION 1.1: Works for Max 5.
+  VERSION 1.3: added next/prev messages (rama 2017).
+
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   Todo:
@@ -166,11 +168,14 @@ typedef struct _SDIFtuples {
     
     void *clock;
     
+    SDIFmem_Frame t_current_frame;
+    int t_boundsflag; // -1 if less than beginning or not set, 0 if in middle, 1 if off end
+    
 } SDIFtuples;
 
 
 static t_symbol *ps_SDIFbuffer, *ps_SDIF_buffer_lookup, *ps_emptysymbol, *ps_concatenate,
-	*ps_time, *ps_reltime, *ps_direction, *ps_columns, *ps_interp, *ps_max_rows;
+	*ps_time, *ps_reltime, *ps_direction, *ps_columns, *ps_interp, *ps_max_rows, *ps_next, *ps_prev;
 
 
 /* global that holds the class definition */
@@ -204,6 +209,8 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
                                 int direction,
                                 int *columns,
                                 int num_columns);
+static SDIFmem_Matrix GetNextMatrix(SDIFtuples *x, int step, int *columns, int num_columns, int *hitbounds );
+
 static SDIFmem_Matrix GetMatrixWithoutInterpolation(SDIFtuples *x,
                                                     const char *desiredType,
                                                     sdif_float64 time,
@@ -257,29 +264,29 @@ int main(void) {
 	class_addmethod(SDIFtuples_class, (method)SDIFtuples_matrix, "matrix", A_DEFSYM, 0);
 
 	//  initialize SDIF libraries
-	if (r = SDIF_Init()) {
+	if ((r = SDIF_Init())) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
 		return 0;
 	}
 	
-	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
-		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
+	if ((r = SDIFmem_Init(my_getbytes, my_freebytes))) {
+		post("* %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
 		return 0;
 	}
 		
-	if (r = SDIFbuf_Init()) {
-		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
+	if ((r = SDIFbuf_Init())) {
+		post("* %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
 		return 0;
 	}
 	
-	if (r = SDIFinterp_Init()) {
-		post("¥ %s: Couldn't initialize SDIF interpolation utilities! %s", 
+	if ((r = SDIFinterp_Init())) {
+		post("* %s: Couldn't initialize SDIF interpolation utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
 		return 0;
@@ -295,7 +302,10 @@ int main(void) {
 	ps_columns = gensym("columns");
 	ps_interp = gensym("interp");
 	ps_max_rows = gensym("max_rows");
-	
+    ps_next = gensym("next");
+    ps_prev = gensym("prev");
+    
+    
 	class_dspinit(SDIFtuples_class);
 
 	class_register(CLASS_BOX, SDIFtuples_class);
@@ -325,7 +335,7 @@ void *SDIFtuples_new(t_symbol *dummy, short argc, t_atom *argv) {
 	if (argc >= 1) {
 		// First argument is name of SDIF-buffer
 		if (argv[0].a_type != A_SYM) {
-			object_post((t_object *)x, "¥ SDIF-tuples: argument must be name of an SDIF-buffer");
+			object_post((t_object *)x, "* SDIF-tuples: argument must be name of an SDIF-buffer");
 		} else {
 			// post("* You want SDIF-buffer %s", argv[0].a_w.w_sym->s_name);
 			x->t_bufferSym = argv[0].a_w.w_sym;
@@ -351,6 +361,9 @@ void *SDIFtuples_new(t_symbol *dummy, short argc, t_atom *argv) {
 
 	x->t_output_interval = 10.0f; // Default 10ms
 
+    x->t_current_frame = NULL;
+    x->t_boundsflag = -1;
+    
 	return (x);
 }
 
@@ -362,6 +375,7 @@ void SDIFtuples_free(SDIFtuples *x)
     
 	if(x->t_it)
 		SDIFinterp_Free(x->t_it);
+    
 }
 
 static void *my_getbytes(int numBytes) {
@@ -417,9 +431,11 @@ static void SDIFtuples_set(SDIFtuples *x, t_symbol *bufName) {
 
 	LookupMyBuffer(x);
 	if (x->t_buffer == 0) {
-		object_post((t_object *)x, "¥ SDIF-tuples: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
+		object_post((t_object *)x, "* SDIF-tuples: warning: there is no SDIF-buffer \"%s\"", bufName->s_name);
 	}
 	x->t_complainedAboutEmptyBufferAlready = FALSE;
+    
+    x->t_current_frame = NULL;
 
 }
 
@@ -452,11 +468,11 @@ static void SDIFtuples_columns(SDIFtuples *x, t_symbol *dummy, short argc, t_ato
 	/* First make sure all arguments are OK */
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_LONG) {
-			object_post((t_object *)x, "¥ SDIF-tuples: all arguments to columns must be ints!");
+			object_post((t_object *)x, "* SDIF-tuples: all arguments to columns must be ints!");
 			return;
 		}
 		if (argv[i].a_w.w_long <= 0) {
-			object_post((t_object *)x, "¥ SDIF-tuples: column number %d is no good.", argv[i].a_w.w_long);
+			object_post((t_object *)x, "* SDIF-tuples: column number %d is no good.", argv[i].a_w.w_long);
 			return;
 		}
 	}
@@ -475,7 +491,7 @@ static void SDIFtuples_matrix(SDIFtuples *x, t_symbol *matrixType) {
 	} else {		
 		/* Here's where I could implement user matrix names that aren't just the 4 bytes. */
 		if (strlen(matrixType->s_name) != 4) {
-			object_post((t_object *)x, "¥ SDIF-tuples: matrix %s is not 4 letters!", matrixType->s_name);
+			object_post((t_object *)x, "* SDIF-tuples: matrix %s is not 4 letters!", matrixType->s_name);
 			return;
 		}
 		x->t_mainMatrix = FALSE;
@@ -514,6 +530,9 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 	t_atom outputArgs[BIGGEST_OUTPUT_LIST];
 	short numArgs;
 	SDIFmem_Matrix m;
+    
+    int step = 0;
+    
 	//	char desiredType[4];  XXX need to parse "matrix" arguments to tuples too!
 	
 	
@@ -524,16 +543,17 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 	direction = x->t_direction;
 	interp = x->t_interp;
 	num_columns = x->t_num_columns;
+    
 	for (i = 0; i < num_columns; ++i) {
  		columns[i] = x->t_columns[i];
  	}
  	max_rows = x->t_max_rows;
- 	
+    
 	/* Now parse my arguments to replace these values */
 
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_SYM) {
-			object_error((t_object *)x, "¥ SDIF-tuples: bad arguments");
+			object_error((t_object *)x, "* SDIF-tuples: bad arguments");
 			return;
 		}
 		
@@ -542,12 +562,12 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 				concatenate = argv[i+1].a_w.w_long;
 				++i;
 			} else {
-				object_error((t_object *)x, "¥ SDIF-tuples: bad argument after concatenate");
+				object_error((t_object *)x, "* SDIF-tuples: bad argument after concatenate");
 				return;
 			}
 		} else if (argv[i].a_w.w_sym == ps_interp) {
 			if (i+1 >= argc) {
-				object_error((t_object *)x, "¥ SDIF-tuples needs an argument after \"interp\" to specify interpolation type. ");
+				object_error((t_object *)x, "* SDIF-tuples needs an argument after \"interp\" to specify interpolation type. ");
 				return;
 			} 
 
@@ -556,17 +576,17 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 				if(arg >= 0 && arg < INTERP_MODE_END)
 					interp = arg;
 				else {
-					object_error((t_object *)x, "¥ SDIF-tuples: unknown interp mode specified (%d)", arg);
+					object_error((t_object *)x, "* SDIF-tuples: unknown interp mode specified (%d)", arg);
 					return;
 				}
 				++i;
 			} else {
-				object_error((t_object *)x, "¥ SDIF-tuples: bad argument after interp");
+				object_error((t_object *)x, "* SDIF-tuples: bad argument after interp");
 				return;
 			}
 		} else if (argv[i].a_w.w_sym == ps_time) {
 			if (i+1 >= argc) {
-				object_error((t_object *)x, "¥ SDIF-tuples: need an argument after time");
+				object_error((t_object *)x, "* SDIF-tuples: need an argument after time");
 				return;
 			} else if (argv[i+1].a_type == A_FLOAT) {
 				time = (sdif_float64) argv[i+1].a_w.w_float;
@@ -577,7 +597,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 				reltime = FALSE;
 				++i;
 			} else {
-				object_error((t_object *)x, "¥ SDIF-tuples: bad argument after time");
+				object_error((t_object *)x, "* SDIF-tuples: bad argument after time");
 				return;
 			}
 		} else if (argv[i].a_w.w_sym == ps_reltime) {
@@ -586,7 +606,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 				reltime = TRUE;
 				++i;
 			} else {
-				object_error((t_object *)x, "¥ SDIF-tuples: bad argument after reltime");
+				object_error((t_object *)x, "* SDIF-tuples: bad argument after reltime");
 				return;
 			}
 		} else if (argv[i].a_w.w_sym == ps_direction) {
@@ -594,7 +614,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 				direction = argv[i+1].a_w.w_long;
 				++i;
 			} else {
-				object_error((t_object *)x, "¥ SDIF-tuples: bad argument after direction");
+				object_error((t_object *)x, "* SDIF-tuples: bad argument after direction");
 				return;
 			}
 		} else if (argv[i].a_w.w_sym == ps_max_rows) {
@@ -602,7 +622,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 				max_rows = argv[i+1].a_w.w_long;
 				++i;
 			} else {
-				object_error((t_object *)x, "¥ SDIF-tuples: bad argument after max_rows");
+				object_error((t_object *)x, "* SDIF-tuples: bad argument after max_rows");
 				return;
 			}
 		} else if (argv[i].a_w.w_sym == ps_columns) {
@@ -613,11 +633,15 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 			--i; // What we finally found wasn't a column number
 			num_columns = j;
 			if (num_columns == 0) {
-				object_error((t_object *)x, "¥ SDIF-tuples: need at least one column!");
+				object_error((t_object *)x, "* SDIF-tuples: need at least one column!");
 				return;
-			}	
+			}
+        } else if( argv[i].a_w.w_sym == ps_next ) {
+            step = 1;
+        } else if( argv[i].a_w.w_sym == ps_prev ) {
+            step = -1;
 		} else {
-			object_error((t_object *)x, "¥ SDIF-tuples: unrecognized argument %s", argv[i].a_w.w_sym->s_name);
+			object_error((t_object *)x, "* SDIF-tuples: unrecognized argument %s", argv[i].a_w.w_sym->s_name);
 			return;
 		}
 	}
@@ -625,7 +649,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 	LookupMyBuffer(x);
 	
 	if (x->t_buffer == 0) {
-		object_error((t_object *)x, "¥ SDIF-tuples: no buffer!");
+		object_error((t_object *)x, "* SDIF-tuples: no buffer!");
 		return;
 	}
 	
@@ -634,19 +658,46 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 	  
 		SDIFbuf_GetMaxTime(x->t_buf, &tMax);
 		time *= tMax;
+        x->t_time = time;
 	}
+    
+    if( !step )
+    {
+        if( !(m = GetMatrix(x, time, interp, direction, columns, num_columns)) )
+        {
+            //  get the matrix (perform interpolation if requested), if null return
+            return;
+        }
+    }
+    else
+    {
+        int hitbounds = 0;
+        t_atom at;
+        
+        if( !(m = GetNextMatrix(x, step, columns, num_columns, &hitbounds )) )
+        {
+            
+            if( hitbounds != 0 )
+            {
+                atom_setlong(&at, hitbounds);
+                outlet_anything(x->t_infoout, gensym("framebound"), 1, &at);
+            }
+            
+            return;//  if null return
+        }
+        
+        atom_setfloat(&at, x->t_time);
+        outlet_anything(x->t_infoout, ps_time, 1, &at);
+    }
 
-
-	//  get the matrix (perform interpolation if requested)
-	if(!(m = GetMatrix(x, time, interp, direction, columns, num_columns)))
-		return;
-	
+    
+    
 	numArgs = 0;
 	for (i = 0; (i < m->header.rowCount) && (i < max_rows); i++) {
 		if (num_columns == 0) {
 			/* Output all the columns */
 			if (numArgs + m->header.columnCount >= BIGGEST_OUTPUT_LIST) {
-				object_post((t_object *)x, "¥ SDIF-tuples: output list too big.");
+				object_post((t_object *)x, "* SDIF-tuples: output list too big.");
 				break;
 			}
 			for (j = 0; j < m->header.columnCount; ++j) {
@@ -655,7 +706,7 @@ static void SDIFtuples_tuples(SDIFtuples *x, t_symbol *dummy, short argc, t_atom
 		} else {
 			/* Output the desired columns */
 			if (numArgs + num_columns >= BIGGEST_OUTPUT_LIST) {
-				object_post((t_object *)x, "¥ SDIF-tuples: output list too big.");
+				object_post((t_object *)x, "* SDIF-tuples: output list too big.");
 				break;
 			}
 			for (j = 0; j<num_columns; ++j) {
@@ -693,7 +744,7 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 	LookupMyBuffer(x);
 	
 	if (x->t_buffer == 0) {
-		object_post((t_object *)x, "¥ SDIF-tuples: no buffer!");
+		object_post((t_object *)x, "* SDIF-tuples: no buffer!");
 		return NULL;
 	}
 	
@@ -705,7 +756,7 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 		// post("* main matrix mode - first frame is %p", f);
 		if (f == NULL) {
 			if (x->t_errorreporting) {
-				object_post((t_object *)x, "¥ SDIF-tuples: buffer %s is empty!", x->t_bufferSym->s_name);
+				object_post((t_object *)x, "* SDIF-tuples: buffer %s is empty!", x->t_bufferSym->s_name);
 			}
 			return NULL;
 		}
@@ -716,6 +767,7 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 		SDIF_Copy4Bytes(desiredType, x->t_matrixType);
 	}	
 	
+    
 	// post("* Looking for matrix type %c%c%c%c", desiredType[0], desiredType[1], desiredType[2], desiredType[3]);
 
 	if (mode == INTERP_MODE_NONE)
@@ -743,7 +795,7 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 	if (num_columns != 0) {
 		for (j = 0; j < num_columns; ++j) {
 			if (columns[j] > matrixOut->header.columnCount || columns[j] <= 0) {
-				post("¥ SDIF-tuples: can't output column %d of a %d-column matrix!",
+				post("* SDIF-tuples: can't output column %d of a %d-column matrix!",
 				     columns[j], matrixOut->header.columnCount);
 				return NULL;
 			}
@@ -753,6 +805,158 @@ static SDIFmem_Matrix GetMatrix(SDIFtuples *x,
 	//  return result
 	//  NOTE: caller is responsible for calling SDIFmem_FreeMatrix()  
 	return matrixOut;
+}
+
+
+static SDIFmem_Matrix GetNextMatrix(SDIFtuples *x, int step, int *columns, int num_columns, int *hitbounds )
+{
+    SDIFmem_Frame f = x->t_current_frame;
+    SDIFmem_Matrix m = NULL, matrixOut = NULL;
+    SDIFresult r;
+    
+    int boundsflag = x->t_boundsflag;
+    
+    char desiredType[4];
+    
+    LookupMyBuffer(x);
+    
+    if (x->t_buffer == 0) {
+        object_post((t_object *)x, "* SDIF-tuples: no buffer!");
+        return NULL;
+    }
+    
+    //  what matrixType do we want?
+    if (x->t_mainMatrix) {
+        SDIFmem_Frame ff;
+        // The "main" matrix is the one whose type is the same as the frame type
+        ff = SDIFbuf_GetFirstFrame(x->t_buf);
+        // post("* main matrix mode - first frame is %p", f);
+        if (ff == NULL) {
+            if (x->t_errorreporting) {
+                object_post((t_object *)x, "* SDIF-tuples: buffer %s is empty!", x->t_bufferSym->s_name);
+            }
+            return NULL;
+        }
+        SDIF_Copy4Bytes(desiredType, ff->header.frameType);
+    } else {
+        //post("** explicit matrix mode: want %c%c%c%c",
+        //     x->t_matrixType[0], x->t_matrixType[1], x->t_matrixType[2], x->t_matrixType[3]);
+        SDIF_Copy4Bytes(desiredType, x->t_matrixType);
+    }
+    
+    
+    
+    if( !f )
+    {
+        if( boundsflag == -1 && step == 1) // time not set yet, or off beginning bounds
+        {
+            f = SDIFbuf_GetFirstFrame(x->t_buf);
+        }
+        else if( boundsflag == 1 && step == -1 )
+        {
+            f = SDIFbuf_GetLastFrame(x->t_buf);
+        }
+        
+        if( f )
+        {
+            if((m = SDIFbuf_GetMatrixInFrame(f, desiredType)) )
+            {
+                if( (((m->header.matrixDataType >> 8) != SDIF_FLOAT) && (m->header.matrixDataType != SDIF_INT32)) ||                    !(m->header.rowCount * m->header.columnCount) )
+                {
+//                    post("found a matrix but it's empty or the wrong type");
+                    m = NULL;
+                }
+            }
+        }
+        else
+        {
+            if (!x->t_complainedAboutEmptyBufferAlready)
+            {
+                object_post((t_object *)x, "* SDIF-tuples: SDIF-buffer %s is empty", x->t_bufferSym->s_name);
+                x->t_complainedAboutEmptyBufferAlready = TRUE;
+            }
+            
+            *hitbounds = step;
+            x->t_boundsflag = step;
+            x->t_current_frame = NULL;
+            return NULL;
+        }
+        
+    }
+    
+    // post("at bounds %i step %i m %p", boundsflag, step, m );
+    
+    if( !m )
+    {
+        if( step == 1 && f != SDIFbuf_GetLastFrame(x->t_buf))
+        {
+            //  loop forwards through frame list
+            f = SDIFbuf_GetNextFrame(f);
+            while( f )
+            {
+                if((m = SDIFbuf_GetMatrixInFrame(f, desiredType)) )
+                {
+                    if( (((m->header.matrixDataType >> 8) == SDIF_FLOAT) || (m->header.matrixDataType == SDIF_INT32)) &&                    (m->header.rowCount * m->header.columnCount) )
+                    {
+                        // break when we find a matrix that matches our desired type that's not empty or the wrong type
+                        break;
+                    }
+                }
+                f = SDIFbuf_GetNextFrame(f);
+            }
+        }
+        else if( step == -1 && f != SDIFbuf_GetFirstFrame(x->t_buf))
+        {
+            //  loop backwards through frame list
+            for(f = SDIFbuf_GetPrevFrame(f); f; f = SDIFbuf_GetPrevFrame(f))
+            {
+                if((m = SDIFbuf_GetMatrixInFrame(f, desiredType)))
+                {
+                    if( (((m->header.matrixDataType >> 8) == SDIF_FLOAT) || (m->header.matrixDataType == SDIF_INT32)) &&                    ((m->header.rowCount * m->header.columnCount) > 0) )
+                    {
+                        // break when we find a matrix that matches our desired type that's not empty or the wrong type
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    //  couldn't find the matrix
+    if (!f || m == 0)
+    {
+        *hitbounds = step;
+        x->t_boundsflag = step;
+        x->t_current_frame = NULL;
+        return NULL;
+    }
+
+    // this should never happen because we test for it above...
+    if( !(m->header.rowCount * m->header.columnCount ) )
+    {
+        error("empty matrix");
+        x->t_current_frame = f;
+        x->t_time = f->header.time;
+        return NULL;
+    }
+    
+    
+    r = SDIFutil_CloneMatrix(m, &matrixOut);
+    
+    if (r == ESDIF_OUT_OF_MEMORY) {
+        object_error((t_object *)x, "* SDIF-tuples: out of memory to clone matrix");
+        return NULL;
+    } else if (r!=ESDIF_SUCCESS) {
+        object_error((t_object *)x, "* SDIF-tuples: couldn't clone matrix: %s", SDIF_GetErrorString(r));
+        return NULL;
+    }
+    
+    //  return result
+    x->t_time = f->header.time;
+    x->t_current_frame = f;
+    x->t_boundsflag = 0;
+    
+    return matrixOut; //  NOTE: caller is responsible for calling SDIFmem_FreeMatrix()
 }
 
 
@@ -769,12 +973,12 @@ static SDIFmem_Matrix GetMatrixWithoutInterpolation(SDIFtuples *x,
 	if(!(f = (*(x->t_buffer->FrameLookup))(x->t_buffer, time, direction))) {
 		if ((*(x->t_buffer->FrameLookup))(x->t_buffer, (sdif_float64) VERY_SMALL, 1) == 0) {
 			if (!x->t_complainedAboutEmptyBufferAlready) {
-				object_post((t_object *)x, "¥ SDIF-tuples: SDIF-buffer %s is empty", x->t_bufferSym->s_name);
+				object_post((t_object *)x, "* SDIF-tuples: SDIF-buffer %s is empty", x->t_bufferSym->s_name);
 				x->t_complainedAboutEmptyBufferAlready = TRUE;
 			}
 		} else {
 			if (x->t_errorreporting) {
-				post("¥ SDIF-tuples: SDIF-buffer %s has no frame at time %f", 
+				post("* SDIF-tuples: SDIF-buffer %s has no frame at time %f", 
 				     x->t_bufferSym->s_name, (float) time);
 			}
 		}
@@ -790,7 +994,7 @@ static SDIFmem_Matrix GetMatrixWithoutInterpolation(SDIFtuples *x,
 	
 	//  couldn't find the matrix
 	if (m == 0) {
-		post("¥ SDIF-tuples: no matrix of type %c%c%c%c in frame at time %f of SDIF-buffer %s",
+		post("* SDIF-tuples: no matrix of type %c%c%c%c in frame at time %f of SDIF-buffer %s",
 		     desiredType[0], desiredType[1], desiredType[2], desiredType[3],
 		     (float) f->header.time, x->t_bufferSym->s_name);
 		return NULL;
@@ -798,7 +1002,7 @@ static SDIFmem_Matrix GetMatrixWithoutInterpolation(SDIFtuples *x,
 
 	//  we don't support matrix data types other than float and int32  	
 	if (((m->header.matrixDataType >> 8) != SDIF_FLOAT) && (m->header.matrixDataType != SDIF_INT32))  {
-		post("¥ SDIF-tuples: Unsupported matrix data type (0x%x) in %c%c%c%c matrix ",
+		post("* SDIF-tuples: Unsupported matrix data type (0x%x) in %c%c%c%c matrix ",
 		     m->header.matrixDataType, 
 		     desiredType[0], desiredType[1], desiredType[2], desiredType[3]);
 		post("  in frame at time %f of SDIF-buffer %s (currently only float and int32 are supported)",
@@ -813,15 +1017,17 @@ static SDIFmem_Matrix GetMatrixWithoutInterpolation(SDIFtuples *x,
 		r = SDIFutil_CloneMatrix(m, &matrixOut);
 	
 		if (r == ESDIF_OUT_OF_MEMORY) {
-			object_error((t_object *)x, "¥ SDIF-tuples: out of memory to clone matrix");
+			object_error((t_object *)x, "* SDIF-tuples: out of memory to clone matrix");
 			return NULL;
 		} else if (r!=ESDIF_SUCCESS) {
-			object_error((t_object *)x, "¥ SDIF-tuples: couldn't clone matrix: %s", SDIF_GetErrorString(r));
+			object_error((t_object *)x, "* SDIF-tuples: couldn't clone matrix: %s", SDIF_GetErrorString(r));
 			return NULL;
 		}
   	
 		//  return result
 		//  NOTE: caller is responsible for calling SDIFmem_FreeMatrix()
+        
+        x->t_current_frame = f;
 		return matrixOut;
 	}else{
 		return NULL;
@@ -852,7 +1058,7 @@ static SDIFmem_Matrix GetMatrixWithInterpolation(SDIFtuples *x,
 	//  we don't support matrix data types other than float	
 	if ((m->header.matrixDataType >> 8) != SDIF_FLOAT)
 		{
-			post("¥ SDIF-tuples: Unsupported matrix data type (Ox%x) in %c%c%c%c matrix ",
+			post("* SDIF-tuples: Unsupported matrix data type (Ox%x) in %c%c%c%c matrix ",
 			     m->header.matrixDataType, 
 			     desiredType[0], desiredType[1], desiredType[2], desiredType[3]);
 			post("  in frame at time %f of SDIF-buffer %s (currently only float data is supported with interpolation)",
@@ -902,6 +1108,8 @@ static SDIFmem_Matrix GetMatrixWithInterpolation(SDIFtuples *x,
 			return NULL;
 		}
   
+    x->t_current_frame = f;
+
 	//  return result
 	//  NOTE: caller is responsible for calling SDIFmem_FreeMatrix()
 	return matrixOut;
@@ -1097,7 +1305,7 @@ void SDIFtuples_print(SDIFtuples *x) {
 	} else {
 		LookupMyBuffer(x);
 		if (x->t_buffer == 0) {
-			object_post((t_object *)x, "¥ SDIFtuples: \"%s\" is not an SDIF buffer.", x->t_bufferSym->s_name);
+			object_post((t_object *)x, "* SDIFtuples: \"%s\" is not an SDIF buffer.", x->t_bufferSym->s_name);
 		} else {
 			sdif_float64 tMin, tMax;
 		  
@@ -1108,7 +1316,7 @@ void SDIFtuples_print(SDIFtuples *x) {
 			object_post((t_object *)x, "SDIFtuples: SDIF-buffer \"%s\"", x->t_buffer->s_myname->s_name);
 			atom_setsym(&a, x->t_buffer->s_myname);
 			outlet_anything(x->t_infoout, gensym("SDIF-buffer"), 1, &a);
-			if(f = SDIFbuf_GetFirstFrame(x->t_buf)) {
+			if((f = SDIFbuf_GetFirstFrame(x->t_buf))) {
 	  			post("   Stream ID %ld, Frame Type %c%c%c%c", x->t_buffer->streamID,
 				     f->header.frameType[0], f->header.frameType[1], f->header.frameType[2], f->header.frameType[3]);
 				atom_setlong(&a, x->t_buffer->streamID);

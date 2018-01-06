@@ -75,6 +75,15 @@
 /* Begin PBXBuildFile section */
 		110EB6D119D1272000A37867 /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557D16A8E7FA000FC2E4 /* fft.c */; };
 		110EB6D219D1272300A37867 /* fftnobitrev.c in Sources */ = {isa = PBXBuildFile; fileRef = 52B1557F16A8E7FA000FC2E4 /* fftnobitrev.c */; };
+		116F87611F9A5B5A0062EE91 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
+		116F87641F9A5B5A0062EE91 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
+		116F87651F9A5B5A0062EE91 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
+		116F87661F9A5B5A0062EE91 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF189D163B5C4B00F94922 /* Carbon.framework */; };
+		116F87671F9A5B5A0062EE91 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
+		116F87681F9A5B5A0062EE91 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
+		116F876A1F9A5B5A0062EE91 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F619E8650200C55B20 /* Info.plist */; };
+		116F876B1F9A5B5A0062EE91 /* cambio~.help.pat in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F519E8650200C55B20 /* cambio~.help.pat */; };
+		116F87711F9A5BE50062EE91 /* patcherbangs.c in Sources */ = {isa = PBXBuildFile; fileRef = 116F87701F9A5BE50062EE91 /* patcherbangs.c */; };
 		118DF69319D2165C00AD8C6C /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		118DF69619D2165C00AD8C6C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		118DF69719D2165C00AD8C6C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -928,6 +937,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		116F876F1F9A5B5A0062EE91 /* patcherbangs.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = patcherbangs.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		116F87701F9A5BE50062EE91 /* patcherbangs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = patcherbangs.c; path = src/patcherbangs/patcherbangs.c; sourceTree = "<group>"; };
 		118DF69F19D2165C00AD8C6C /* partconv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "partconv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		118DF6A219D216CE00AD8C6C /* firbank~.16band-512pt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "firbank~.16band-512pt.wav"; sourceTree = "<group>"; };
 		118DF6A319D216CE00AD8C6C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1277,6 +1288,18 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		116F87631F9A5B5A0062EE91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				116F87641F9A5B5A0062EE91 /* CoreFoundation.framework in Frameworks */,
+				116F87651F9A5B5A0062EE91 /* Accelerate.framework in Frameworks */,
+				116F87661F9A5B5A0062EE91 /* Carbon.framework in Frameworks */,
+				116F87671F9A5B5A0062EE91 /* CoreServices.framework in Frameworks */,
+				116F87681F9A5B5A0062EE91 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		118DF69519D2165C00AD8C6C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2801,6 +2824,7 @@
 				52E4493215F2879300C91B67 /* OSC-timetag */,
 				52E4493915F2879300C91B67 /* oscillators~ */,
 				118DF6A019D216CE00AD8C6C /* partconv~ */,
+				116F87701F9A5BE50062EE91 /* patcherbangs.c */,
 				52E4493D15F2879300C91B67 /* peqbank~ */,
 				52E4494515F2879300C91B67 /* pitch~ */,
 				52E4494915F2879400C91B67 /* poly.bus~ */,
@@ -2899,6 +2923,7 @@
 				118DF69F19D2165C00AD8C6C /* partconv~.mxo */,
 				119F596819E8DDCB00D7B4A7 /* partconv~.pd_darwin */,
 				5212B03D1B3CAF8300D4D5EC /* cambio~.mxo */,
+				116F876F1F9A5B5A0062EE91 /* patcherbangs.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2965,6 +2990,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		116F875F1F9A5B5A0062EE91 /* patcherbangs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 116F876C1F9A5B5A0062EE91 /* Build configuration list for PBXNativeTarget "patcherbangs" */;
+			buildPhases = (
+				116F87601F9A5B5A0062EE91 /* Sources */,
+				116F87631F9A5B5A0062EE91 /* Frameworks */,
+				116F87691F9A5B5A0062EE91 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = patcherbangs;
+			productName = "2threshattack~";
+			productReference = 116F876F1F9A5B5A0062EE91 /* patcherbangs.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
 		118DF68F19D2165C00AD8C6C /* partconv~ */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 118DF69C19D2165C00AD8C6C /* Build configuration list for PBXNativeTarget "partconv~" */;
@@ -4067,11 +4109,21 @@
 				521961FC16E6C60D00EA7DDF /* OpenSoundControl */,
 				5219620D16E6C61400EA7DDF /* res-transform */,
 				A4E832E419E8642800C55B20 /* cambio~ */,
+				116F875F1F9A5B5A0062EE91 /* patcherbangs */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		116F87691F9A5B5A0062EE91 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				116F876A1F9A5B5A0062EE91 /* Info.plist in Resources */,
+				116F876B1F9A5B5A0062EE91 /* cambio~.help.pat in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		118DF69B19D2165C00AD8C6C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4495,6 +4547,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		116F87601F9A5B5A0062EE91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				116F87611F9A5B5A0062EE91 /* commonsyms.c in Sources */,
+				116F87711F9A5BE50062EE91 /* patcherbangs.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		118DF69019D2165C00AD8C6C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5394,6 +5455,46 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		116F876D1F9A5B5A0062EE91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(INHERITED)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Debug;
+		};
+		116F876E1F9A5B5A0062EE91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(INHERITED)";
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
 		118DF69D19D2165C00AD8C6C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -8182,6 +8283,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		116F876C1F9A5B5A0062EE91 /* Build configuration list for PBXNativeTarget "patcherbangs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				116F876D1F9A5B5A0062EE91 /* Debug */,
+				116F876E1F9A5B5A0062EE91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		118DF69C19D2165C00AD8C6C /* Build configuration list for PBXNativeTarget "partconv~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

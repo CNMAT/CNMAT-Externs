@@ -1966,7 +1966,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 73.0, 79.0, 385.0, 509.0 ],
+						"rect" : [ 0.0, 26.0, 1089.0, 692.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1993,8 +1993,110 @@
 						"tags" : "",
 						"style" : "",
 						"subpatcher_template" : "",
-						"showontab" : 0,
+						"showontab" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-13",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"patching_rect" : [ 649.0, 613.0, 24.0, 24.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-14",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 490.0, 621.0, 155.0, 22.0 ],
+									"style" : "default",
+									"text" : "/clock/set OSCTimeTag 0 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-15",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "OSCTimeTag" ],
+									"patching_rect" : [ 577.0, 567.0, 117.0, 22.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-16",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 577.0, 491.0, 215.0, 22.0 ],
+									"style" : "default",
+									"text" : "/clock/set OSCTimeTag 0 1, bang"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-17",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "OSCTimeTag" ],
+									"patching_rect" : [ 577.0, 529.0, 117.0, 22.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-18",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 167.0, 552.0, 331.0, 33.0 ],
+									"style" : "default",
+									"text" : "These are represented in Max as a list \"OSCTimeTag x y.\" See also the other subpatch [p time-tags] for details."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-19",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 585.0, 463.0, 246.0, 20.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl time tags--as arguments"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-20",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 167.0, 511.0, 370.0, 33.0 ],
+									"style" : "default",
+									"text" : "OpenSoundControl supports encoding and decoding of time tags in the argument section of a message using the extended type tag, \"t\""
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"id" : "obj-1",
 									"maxclass" : "message",
@@ -2141,7 +2243,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 84.0, 366.0, 389.0, 74.0 ],
+									"patching_rect" : [ 84.0, 366.0, 393.0, 74.0 ],
 									"style" : "default",
 									"text" : "Here's how it works: until you send an OSCTimeTag message, the OSC object uses a time tag of 1 (meaning \"do it immediately\") for all bundles. When you send an OSCTimeTag message, the given time tag is written into the current buffer and remembered for future buffers. That time tag is used until a new OSCTimeTag message supercedes it."
 								}
@@ -2152,6 +2254,36 @@
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
 									"source" : [ "obj-1", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-13", 0 ],
+									"order" : 0,
+									"source" : [ "obj-15", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-14", 1 ],
+									"order" : 1,
+									"source" : [ "obj-15", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-17", 0 ],
+									"source" : [ "obj-16", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-15", 0 ],
+									"source" : [ "obj-17", 0 ]
 								}
 
 							}

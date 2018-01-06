@@ -1,0 +1,58 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "B270348540865A8561A051F110FCD76E369910C3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "B8AA74D9D4A1197CF4F66E229F82E21C086C6C34" : 9223372036854775807,
+    "43DDD4A1012A81E5C2F5DA96FCA0DABF5263B8FC" : 9223372036854775807,
+    "B270348540865A8561A051F110FCD76E369910C3" : 9223372036854775807,
+    "B14A0AC5E22B96959F00E8C27DE0DEB1D0136078" : 9223372036854775807,
+    "C5119101C474C038632B05030584249C7D400413" : 9223372036854775807,
+    "20DC6287C6D318433B681296E0BF364C4882CD47" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "33BA781E-519E-4282-817D-DF08E568B02A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "B8AA74D9D4A1197CF4F66E229F82E21C086C6C34" : "CNMAT-SDIF\/",
+    "43DDD4A1012A81E5C2F5DA96FCA0DABF5263B8FC" : "max6-sdk\/",
+    "B270348540865A8561A051F110FCD76E369910C3" : "CNMAT-Externs\/",
+    "B14A0AC5E22B96959F00E8C27DE0DEB1D0136078" : "gsl\/",
+    "C5119101C474C038632B05030584249C7D400413" : "CNMAT-OSC\/",
+    "20DC6287C6D318433B681296E0BF364C4882CD47" : "max-sdk\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "CNMAT-Externs",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "CNMAT-Externs.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Cycling74\/max-sdk.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "20DC6287C6D318433B681296E0BF364C4882CD47"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Cycling74\/max6-sdk.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "43DDD4A1012A81E5C2F5DA96FCA0DABF5263B8FC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CNMAT\/gsl.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B14A0AC5E22B96959F00E8C27DE0DEB1D0136078"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CNMAT\/CNMAT-Externs.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B270348540865A8561A051F110FCD76E369910C3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CNMAT\/CNMAT-SDIF.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B8AA74D9D4A1197CF4F66E229F82E21C086C6C34"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CNMAT\/CNMAT-OSC.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C5119101C474C038632B05030584249C7D400413"
+    }
+  ]
+}

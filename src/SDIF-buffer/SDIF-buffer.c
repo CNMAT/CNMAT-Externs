@@ -71,7 +71,7 @@ VERSION 1.1: For Max 5
 
 #include "ext.h"
 #include "ext_obex.h"
-
+#include "ext_critical.h"
 
 
 #include <limits.h>
@@ -103,6 +103,8 @@ typedef struct _SDIFbuffer_private {
   SDIFBuffer *next;	/* For linked list of all buffers, for name lookup */
   int debug;			/* 0 or non-zero for debug mode. */
   void *t_out;
+  t_critical lock;
+
 } SDIFBufferPrivate;
 
 
@@ -190,19 +192,19 @@ int main(void) {
 	class_addmethod(SDIFbuffer_class, (method)SDIFbuffer_debug, "debug", A_LONG, 0);
 
   //  initialize SDIF libraries
-	if (r = SDIF_Init()) {
+	if ((r = SDIF_Init())) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
 	}
 	
-	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
+	if ((r = SDIFmem_Init(my_getbytes, my_freebytes))) {
 		ouchstring("%s: Couldn't initialize SDIF memory utilities! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
 	}
 
-	if (r = SDIFbuf_Init()) {
+	if ((r = SDIFbuf_Init())) {
 		ouchstring("%s: Couldn't initialize SDIF buffer utilities! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
@@ -254,16 +256,22 @@ void *SDIFbuffer_new(t_symbol *name, Symbol *filename) {
 		return NULL;
 	}
 	x->s_myname = name;
+    
+    // >>>> I don't think this stuff is used in this object (anymore?), could be removed maybe (rama, jan 1 2018)
 	x->FrameLookup = ListSearch;
 	x->FrameInsert = ListInsert;
 	x->FrameDelete = ListDelete;    //  NOTE: this has never actually been implemented (0.8.0)
 	x->BufferAccessor = GetBuffer;
+    // <<<<<
+    
 	x->internal = getbytes((short) sizeof(SDIFBufferPrivate));
 	privateStuff = (SDIFBufferPrivate *) x->internal;
 	privateStuff->buf = SDIFbuf_Create();
 	privateStuff->debug = 0;	
 	privateStuff->t_out = bangout(x);
-
+    
+    critical_new(&privateStuff->lock);
+    
 	SDIFbuffer_doclear(x);
 	AddNewBuffer(x);
 	
@@ -278,22 +286,24 @@ void *SDIFbuffer_new(t_symbol *name, Symbol *filename) {
 void SDIFbuffer_free(SDIFBuffer *x) {
 	SDIFBufferPrivate *privateStuff;
   
-	privateStuff = (SDIFBufferPrivate *) x->internal;	
+	privateStuff = (SDIFBufferPrivate *)x->internal;
 
-  SDIFbuf_Free(privateStuff->buf);
+    SDIFbuf_Free(privateStuff->buf);
+    critical_free(privateStuff->lock);
+    
+    
+    // maybe lock the buffer delete? not sure if it matters or not (rama, jan 1 2018)
 	DeleteBuffer(x);
-	
 }
 
 void SDIFbuffer_doclear(SDIFBuffer *x) {
 	SDIFBufferPrivate *privateStuff;
-  
-	privateStuff = (SDIFBufferPrivate *) x->internal;	
-
-  SDIFbuf_Clear(privateStuff->buf);
-
+	privateStuff = (SDIFBufferPrivate *)x->internal;
+    critical_enter(privateStuff->lock);
+    SDIFbuf_Clear(privateStuff->buf);
 	x->fileName = 0;
 	x->streamID = 1;
+    critical_exit(privateStuff->lock);
 }	
 
 void SDIFbuffer_clear(SDIFBuffer *x) {
@@ -313,37 +323,46 @@ void SDIFbuffer_debug(SDIFBuffer *x, long debugMode) {
 void SDIFbuffer_changeStreamID(SDIFBuffer *x, long newStreamID) {
 	SDIFBufferPrivate *privateStuff;
 	SDIFmem_Frame f;
-		
 	privateStuff = (SDIFBufferPrivate *) x->internal;
+    
+    critical_enter(privateStuff->lock);
 	for (f = SDIFbuf_GetFirstFrame(privateStuff->buf); f != 0; f = f->next) {
 		f->header.streamID = newStreamID;	
 	}
-	
 	x->streamID = newStreamID;
+    critical_exit(privateStuff->lock);
+
 }
 
 
 void SDIFbuffer_changeFrameType(SDIFBuffer *x, t_symbol *newFrameType) {
 	SDIFBufferPrivate *privateStuff;
 	SDIFmem_Frame f;
+
 	char *type = newFrameType->s_name;
-	
 	if (type[0] == '\0' || type[1] == '\0' || type[2] == '\0' || type[3] == '\0' || type[4] != '\0') {
 		object_post((t_object *)x, "¥ SDIF-buffer: change-frametype: illegal type \"%s\" is not 4 characters.", type);
 		return;
 	}
 	
 	privateStuff = (SDIFBufferPrivate *) x->internal;
+    
+    critical_enter(privateStuff->lock);
 	for (f = SDIFbuf_GetFirstFrame(privateStuff->buf); f != 0; f = f->next) {
 		SDIF_Copy4Bytes(f->header.frameType, type);	
 	}
+    critical_exit(privateStuff->lock);
+
 }
 
 
 void SDIFbuffer_timeShift(SDIFBuffer *x) {
 	SDIFBufferPrivate *privateStuff = (SDIFBufferPrivate *) x->internal;
-	
+    
+    critical_enter(privateStuff->lock);
 	SDIFbuf_TimeShiftToZero(privateStuff->buf);
+    critical_exit(privateStuff->lock);
+
 }
 
 
@@ -389,11 +408,13 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
     object_post((t_object *)x, " SDIF-buffer debug: trying to read stream %d from file \"%s\"", streamID, filename);
   }
 
+  critical_enter(privateStuff->lock);
   //  open requested file
   //  (handle sordid details of mac file/path spec)
   f = OpenSDIFFile(filename);
   if (f == NULL) {
     //  OpenSDIFFile already printed an error message
+      critical_exit(privateStuff->lock);
     return;
   }
   
@@ -429,6 +450,8 @@ void ReadStream(SDIFBuffer *x, char *filename, SDIFwhichStreamMode mode, long ar
     SDIFBufferPrivate *p = x->internal;
     outlet_bang(p->t_out);
   }
+    
+  critical_exit(privateStuff->lock);
 }
 
 
@@ -472,9 +495,6 @@ void one_streamlist(t_symbol *fileName) {
 
 void SDIFbuffer_framelist(SDIFBuffer *dummy1, t_symbol *dummy2, int argc, t_atom *argv) {	
 	int i;
-	
-	
-
 	for (i = 0; i < argc; ++i) {
 		if (argv[i].a_type != A_SYM) {
 			post("SDIFbuffer_framelist: ignoring numeric argument");
@@ -482,8 +502,6 @@ void SDIFbuffer_framelist(SDIFBuffer *dummy1, t_symbol *dummy2, int argc, t_atom
 			one_framelist(argv[i].a_w.w_sym);
 		}
 	}
-
-		
 }
 
 
@@ -500,7 +518,7 @@ void one_framelist(t_symbol *fileName) {
 	} 
 
 	do_streamlist(f, fileName->s_name, 1);
-	if (r = SDIF_CloseRead(f)) {
+	if ((r = SDIF_CloseRead(f))) {
 		post("SDIF-buffer: error closing SDIF file %s:", fileName->s_name);
 		post("%s", SDIF_GetErrorString(r));
 	}
@@ -558,7 +576,7 @@ static void do_streamlist(FILE *f, char *name, int showframes) {
 				 fh.size, (float) fh.time, fh.streamID, fh.matrixCount);
 		}
 
-		if (r = SDIF_SkipFrame(&fh, f)) {
+		if ((r = SDIF_SkipFrame(&fh, f))) {
 			post("SDIF-buffer: error skipping frame in SDIF file %s:", name);
 			post("%s", SDIF_GetErrorString(r));
 			return;
@@ -624,7 +642,7 @@ void SDIFbuffer_print(SDIFBuffer *x) {
 	sdif_float64 tMin, tMax;
 		
 	object_post((t_object *)x, "SDIFBuffer %s: file \"%s\"", x->s_myname->s_name, x->fileName);
-	if(head = SDIFbuf_GetFirstFrame(privateStuff->buf))
+	if((head = SDIFbuf_GetFirstFrame(privateStuff->buf)))
 	{
   	post("   Stream ID %ld, Frame Type %c%c%c%c", x->streamID,
   		head->header.frameType[0], head->header.frameType[1], head->header.frameType[2], head->header.frameType[3]);

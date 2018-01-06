@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="cnmatrix~" module="CNMAT-Externals">
+
+    <digest>
+      Signal Routing with Jitter Matrices
+    </digest>
+
+    <description>
+      <o>cnmatrix~</o> takes lists (like matrix~) or jitter matrices as input to set the gains. The rows of the matrix represent the outputs, and the columns are the inputs (same as matrixctl).
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="number of inputs" optional="0" type="int">
+	    <description>
+			The first argument sets the number of inlets to create.
+	    </description>
+	</objarg>
+	<objarg name="number of outputs" optional="0" type="int">
+	    <description>
+        The second argument sets the number of outlets to create.
+	    </description>
+	</objarg>
+  <objarg name="interpoation mode" optional="1" type="symbol">
+      <description>
+        An optional third argument sets the interpoation mode.
+        Options are: <br/>
+        <m>smooth</m> : (default) uses the same formula as slide~. Use this option for an audio mixer.<br/>
+        <m>frame</m> : linear interpolation over one signal vector. Use for equal power panning.<br/>
+        <m>fast</m> : no interpolation at all. Audible clicks may result. Use for static routing only.<br/>
+      </description>
+  </objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+      <method name="signal">
+  		    <description>
+          signal to route.
+  		    </description>
+  		</method>
+		<method name="jit_matrix">
+		    <description>
+          jitter matrix to set the gains. The rows of the matrix represent the outputs, and the columns are the inputs.
+		    </description>
+		</method>
+    <method name="list">
+        <description>
+          Like <o>matrix~</o>, <o>cnmatrix~</o> allows you to set connections between inlets and outlets using a list of three values: <m>inlet_number</m> <m>outlet_number</m> <m>multiplier</m> <br/><br/>
+          For example the list: <m>0 1 0.5</m> would make a connection between the first inlet and the second outlet, with a multiplier of 0.5.
+        </description>
+    </method>
+    <method name="slide">
+        <description>
+          the <m>slide</m> followed by a <m>float</m> value, sets the time in milliseconds it takes to interpolate between matrix connections in smooth mode.
+        </description>
+    </method>
+    <method name="smooth">
+        <description>
+          enables <m>smooth</m> mode.
+        </description>
+    </method>
+    <method name="frame">
+        <description>
+          enables <m>frame</m> mode.
+        </description>
+    </method>
+    <method name="fast">
+        <description>
+          enables <m>fast</m> mode.
+        </description>
+    </method>
+    </methodlist>
+
+<!--ATTRIBUTES-->
+	<attributelist>
+	</attributelist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="matrix~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlets [signal/list/jit_matrix]">
+	    <description>
+        see message descriptions above.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlets">
+	    <description>
+			routed signals.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		audio routing, jitter audio, CNMAT
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

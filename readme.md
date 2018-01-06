@@ -64,6 +64,9 @@ The built objects will be in the `/build/Release` folder.
 To create the CNMAT-Externals release package, run the release script:
 `./make-release-mac.sh`.
 
+### 6. footnote: Java Dev Kit
+
+If you get an error message about Java not being installed, you may need to install the Java Dev Kit. You should be able to type `which javac` and get a report about its location. This is the application we use to compile .java file into a .class file that can be used by Max.
 
 
 # WINDOWS
@@ -215,7 +218,20 @@ make win
 ```
 This will  compile the library with the win64 tool chain, and create a `libomax.a` file in the `/libomax/libs/i686` folder.
 
-### 6. build CNMAT-Externs
+### 7. Install the Java Dev Kit
+
+Install the suggested version of the JDK for your version of Windows, at this time of writing the Orcale website told me the suggested version was 8 update 151.
+
+Once this is installed, we need to tell Cygwin where to find it. To do this we need to add a folder to our PATH variable in the file `.bashrc` in your Cygwin user home folder. For example, for me this is at: `/cygwin64/home/rama`.
+
+Add this line, but make sure to use the correct folder location for your JDK install:
+```
+PATH=$PATH:/cygdrive/c/Program\ Files/Java/jdk1.8.0_151/bin/
+```
+
+After adding this line, quite Cygwin and restart, then type `which javac` and it should print the folder that we just added.
+
+### 7. build CNMAT-Externs
 
 Finally we are ready to build the CNMAT-Externals for Windows 64 and 32 bit!
 
@@ -236,5 +252,7 @@ Note that we don't need/want to `make clean` this time, since the Windows makefi
 
 There are two scripts for creating the release for Windows 32 and 64 bit:
 `./make-release-win.sh` and `./make-release-win64.sh`.
+
+Update: there is also now a `./make-release-win32-64.sh` which bundles both bit flavors together.
 
 *-- Rama Gottfried / Jeff Lubow*, 11/19/14, updated Sept 2017
