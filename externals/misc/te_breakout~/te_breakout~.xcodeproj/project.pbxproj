@@ -8,18 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		121EBEC70FDB194C00D5AF54 /* te_breakout~.c in Sources */ = {isa = PBXBuildFile; fileRef = 121EBEC60FDB194C00D5AF54 /* te_breakout~.c */; };
-		121EBEC90FDB196900D5AF54 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 121EBEC80FDB196900D5AF54 /* commonsyms.c */; };
-		52EE98021458981A0034CDDF /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52EE98011458981A0034CDDF /* MaxAPI.framework */; };
-		52EE9804145898270034CDDF /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52EE9803145898270034CDDF /* MaxAudioAPI.framework */; };
+		A43EB6DF1FEF5D6500A6C6ED /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43EB6DE1FEF5D6500A6C6ED /* MaxAPI.framework */; };
+		A43EB6E11FEF5D6E00A6C6ED /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43EB6E01FEF5D6E00A6C6ED /* MaxAudioAPI.framework */; };
+		A43EB6E31FEF5D7A00A6C6ED /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = A43EB6E21FEF5D7A00A6C6ED /* commonsyms.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		120615410BAD19EE00C1162A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		121EBEC60FDB194C00D5AF54 /* te_breakout~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "te_breakout~.c"; sourceTree = "<group>"; };
-		121EBEC80FDB196900D5AF54 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"; sourceTree = SOURCE_ROOT; };
 		121EBED40FDB197D00D5AF54 /* te_breakout~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "te_breakout~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		52EE98011458981A0034CDDF /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
-		52EE9803145898270034CDDF /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
+		A43EB6DE1FEF5D6500A6C6ED /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../../max-sdk/source/c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
+		A43EB6E01FEF5D6E00A6C6ED /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../max-sdk/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
+		A43EB6E21FEF5D7A00A6C6ED /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../../max-sdk/source/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,8 +27,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52EE98021458981A0034CDDF /* MaxAPI.framework in Frameworks */,
-				52EE9804145898270034CDDF /* MaxAudioAPI.framework in Frameworks */,
+				A43EB6DF1FEF5D6500A6C6ED /* MaxAPI.framework in Frameworks */,
+				A43EB6E11FEF5D6E00A6C6ED /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,8 +49,8 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				52EE9803145898270034CDDF /* MaxAudioAPI.framework */,
-				52EE98011458981A0034CDDF /* MaxAPI.framework */,
+				A43EB6E01FEF5D6E00A6C6ED /* MaxAudioAPI.framework */,
+				A43EB6DE1FEF5D6500A6C6ED /* MaxAPI.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -67,7 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				121EBEC60FDB194C00D5AF54 /* te_breakout~.c */,
-				121EBEC80FDB196900D5AF54 /* commonsyms.c */,
+				A43EB6E21FEF5D7A00A6C6ED /* commonsyms.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -118,6 +118,9 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0920;
+			};
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "te_breakout~" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -159,8 +162,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A43EB6E31FEF5D7A00A6C6ED /* commonsyms.c in Sources */,
 				121EBEC70FDB194C00D5AF54 /* te_breakout~.c in Sources */,
-				121EBEC90FDB196900D5AF54 /* commonsyms.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,29 +173,19 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/msp-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/msp-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../c74support/msp-includes\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "../../../c74support/max-includes/macho-prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_PREFIX_HEADER = "/Users/jml/Documents/programming/git_repositories/CNMAT-builds/max-sdk/source/c74support/max-includes/macho-prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -202,25 +195,20 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/max-includes\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../MaxSDK-5/c74support/msp-includes\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/msp-includes\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../SDK/MaxSDK-5/c74support/max-includes\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../../../c74support/max-includes\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../c74support/msp-includes\"";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-lmx";
 				OTHER_REZFLAGS = "";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.te_breakout~";
 				PRODUCT_NAME = "te_breakout~";
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\" \"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -234,6 +222,39 @@
 		0FF66710096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\\\"",
+					"\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\\\"",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "/Users/jml/Documents/programming/git_repositories/CNMAT-builds/max-sdk/source/c74support/max-includes/macho-prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\" \"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"";
 			};
 			name = Deployment;
 		};

@@ -75,6 +75,7 @@
 	    <arglist>
 	    </arglist>
 	    <description>
+		The size of this list is dependent on which distribution is set up for the object.  For example, a gaussian distribution would require a list of one element, and that element would pertain to the 'sigma' parameter.  See the various distributions listed in this reference for full details.
 	    </description>
 	</method>
 	<method name="loadbang">
