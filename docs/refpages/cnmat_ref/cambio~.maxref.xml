@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="cambio~" module="CNMAT-Externals">
+
+    <digest>
+	Signal-to-event version of change, for mostly-constant signals
+    </digest>
+
+    <description>
+	The [cambio~] object outputs a signal's value if it changes.  If the input signal to cambio~ wavers too much, it will not be able to detect distinct changes (i.e., don't use noise~ as your input).
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="signal">
+	    <description>
+		Send a signal to be analyzed for changes.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="2threshattack~" />
+	<seealso name="change~" />
+	<seealso name="change" />
+	<seealso name="edge~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [signal]">
+	    <description>
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [float]">
+	    <description>
+		Outputs a float when an input signal's value changes.  The rate of this output can be quite high, depending on your DSP and scheduler settings.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		detection, change, signal, control
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
