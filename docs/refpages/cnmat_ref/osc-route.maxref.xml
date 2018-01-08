@@ -90,14 +90,14 @@
     </misc>
 
     <misc name = "Output">
-	<entry name ="Outlet 1 to N [anything]">
+	<entry name ="Outlet 1 [anything]">
 	    <description>
 		This output is variable, and corresponds to the data retained after osc-route matches an address.
 	    </description>
 	</entry>
-	<entry name ="Outlet N+1 [anything]">
+	<entry name ="Outlet 1+N [anything]">
 	    <description>
-		The unmatched output comes out of this outlet, which is always the rightmost.  This behavior is identical to the <m>route</m> object.
+		The unmatched output comes out of this outlet, which is always the rightmost.  This behavior is identical to the <m>route</m> object.  1+N specifies that the object will have a variable number of outlets.
 	    </description>
 	</entry>
     </misc>
