@@ -67,7 +67,7 @@
 		<arg name="time in seconds" type="float" optional="0" id="0"/>
 	    </arglist>
 	    <description>
-		Go to a virtual time.  The total time window can be assessed by the following calculation:  
+		Go to a virtual time.
 	    </description>
 	</method>
 	<method name="list">
@@ -142,7 +142,7 @@
     <misc name = "Output">
 	<entry name ="Outlet 1 [signal]">
 	    <description>
-		Decaying sinusoids out
+		Audio of sinusoids out
 	    </description>
 	</entry>
     </misc>
@@ -150,7 +150,7 @@
     <misc name = "Discussion">
 	<entry name ="More details">
 	    <description>
-		This object is designed for use with an object titled [timemachine~], although the user is welcome to generate the time index signal as they like.  Decaying-sinusoids~ can be substituted for resonators~ for impulsive excitations. An advantage of this object is its ability (via [time machine]) to play the impulse response forward and backwards.
+		This object is designed for use with an object titled [timemachine~], which will be included in a future release.  Although this object assists in specifying the time index, the user is welcome to generate this signal as they like.  [decaying-sinusoids~] can be substituted for resonators~ for impulsive excitations. An advantage of this object is its ability (via [time machine]) to play the impulse response forward and backwards.
 	    </description>
 	</entry>
 	<entry name ="Keywords">
