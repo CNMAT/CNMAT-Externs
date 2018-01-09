@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="resonators~" module="CNMAT-Externals">
+
+    <digest>
+	Resonant filter bank
+    </digest>
+
+    <description>
+	A bank of 2-pole resonating filters with common input (the inlet) and outputs summed together (outlet)
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	The resonators~ object can be excited with an input signal or by an impulse of arbitrary size. An incoming float is interpreted as the amplitude of an impulse. The impulse is taken to come at the first sample of the next signal vector computed.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="smooth" optional="1" type="symbol">
+	    <description>
+		If the first argument to resonators~ is "smooth", the object will smoothly interpolate between various parameter sets.  If you expect to change the parameters of the resonators in real-time you'll probably want to use this option.  The linearly interpolated filter coefficients will yield less artifacts as you update parameters.
+	    </description>
+	</objarg>
+	<objarg name="list" optional="1" type="symbol">
+	    <description>
+		An optional list of frequency, gain, decayrate triples specifies the resonant model that the object adheres to.  This list can be input dynamically via the inlet.  For example, the list [540. 0.5 4. 543.5 0.4 2.] is comprised of two resonances:<br/>
+		<ol>
+		    <li>540. 0.5 4.</li>
+		    <li>543.5 0.4 2.</li>
+		</ol>
+		<br/>
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <description>
+		Pass the sample rate, filter state and coefficients out the right outlet.
+	    </description>
+	</method>
+	<method name="clear">
+	    <description>
+		Clear the contents, set filter state variables to 0.
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		Excite the currently stored resonant model with an impulse.  The float designates the amplitude.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		An int basically functions the same as a float value - it is cast internally and evaluated.  Note that you lose quite a bit of resolution this way.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+		<arg name="list of triples" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		An list of frequency, gain, decayrate triples specifies the resonant model that the object adheres to.  This list can be dynamically updated, which instantly updates the model (this should not cause a glitch in the output audio stream).  For example, the list [540. 0.5 4. 543.5 0.4 2.] is comprised of two resonances:<br/>
+		<ol>
+		    <li>540. 0.5 4.</li>
+		    <li>543.5 0.4 2.</li>
+		</ol>
+		<br/>
+	    </description>
+	</method>
+	<method name="outputgain">
+	    <arglist>
+		<arg name="list of gains" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Input a list of gains corresponding to the resonances stored in memory.  Note that if the list length differs from the number of resonances, the object will post a warning, and could lead to unexpected results.
+	    </description>
+	</method>
+	<method name="signal">
+	    <description>
+		An excitation signal will produce output of any model stored.  The gain of such a signal may need to be boosted quite a bit to yield audible output (gain increases on the order of 1-200X are normal - see detail below).
+	    </description>
+	</method>
+	<method name="squelch">
+	    <description>
+		Squelch the resonant model.  This is similar to dampening a resonant object.  The squelch time will depend on the model's contents.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print information about the status of the object to the Max window.	
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="res-transform" />
+	<seealso name="SDIF-buffer" />
+	<seealso name="sinusoids~" />
+	<seealso name="decaying-sinusoids~" />
+	<seealso name="resdisplay" />
+	<seealso name="reson~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a messages to the resonators~ object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		Filter bank output.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [list]">
+	    <description>
+		Outputs sample rate, filter state and coefficients when a bang is received in the inlet.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		Regarding input excitation signals:  Unless your model has lots of very wide resonances, you'll probably have to boost input signals a lot to hear them. The issue is that only the spectral energy that lines up with the filters will appear in the output. Beware: energy focused at the same frequency as a resonance will come through loud and clear.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		resonance, filter bank, model, excitation
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
