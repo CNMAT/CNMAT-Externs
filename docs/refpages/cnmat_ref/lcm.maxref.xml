@@ -90,7 +90,7 @@
 	</entry>
 	<entry name ="Inlet 2+N [int]">
 	    <description>
-		An int will be stored as one in a list of numbers to be evaluated for a LCM.
+		An int will be stored as one in a group of numbers to be evaluated for a LCM, with N being the number of inlets created based on the object's arguments.
 	    </description>
 	</entry>
     </misc>
