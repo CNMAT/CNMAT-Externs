@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="harmonics~" module="CNMAT-Externals">
+
+    <digest>
+	Bank of harmonic, sinusoidal oscillators
+    </digest>
+
+    <description>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	harmonics~ is similar to oscillators~ and sinusoids~ in that it outputs multiple summed waves (additive synthesis).  The difference is that it operates on a single fundamental frequency and builds harmonics from that.  The user can change waveforms ala built-in waveshapes, and specify amplitudes for each of the harmonics which can lead to a large variance in output timbre.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="fundamental" optional="1" type="float">
+	    <description>
+		The fundamental frequency.
+	    </description>
+	</objarg>
+	<objarg name="list of amplitudes" optional="1" type="list">
+	    <description>
+		A list of floats that describe the amplitudes for the harmonics.  These harmonics are based on the fundamental.  Although this list is optional, it must be preceded by a fundamental argument to the object if it is to function correctly.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="clear">
+	    <description>
+		Clear fundamental and harmonics after fading to zero amplitude.
+	    </description>
+	</method>
+	<method name="first-amplitude">
+	    <arglist>
+		<arg name="amplitude" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the amplitude of the fundamental frequency.  Usage of this message assumes that the object contains a fundamental frequency.
+	    </description>
+	</method>
+	<method name="float">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Set the fundamental frequency.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+	    </arglist>
+	    <description>
+		A list input to the object must specify a fundamental, followed by a series of amplitudes for the partials. <br/><br/>
+		Example:<br/>
+		[420. 0.1 0.2 0.3 0.4]<br/><br/>
+		<ol>
+		    <li>Fundamental frequency: 420.0</li>
+		    <li>First harmonic's amplitude: 0.1</li>
+		    <li>Second harmonic's amplitude: 0.2</li>
+		    <li>Third harmonic's amplitude: 0.3</li>
+		    <li>Fourth harmonic's amplitude: 0.4</li>
+		</ol>
+		Note that if a list is sent into the right inlet, it is assumed that it will be a list of amplitudes (the first element being an amplitude for the fundamental).
+	    </description>
+	</method>
+	<method name="noisiness">
+	    <arglist>
+		<arg name="amount" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the amount of noisiness for all partials.  This value should be between 0. and 1.  Use bwe mode in [sinusoids~] for per-partial control of noisiness.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Post diagnostic information about the current fundamental and associated partials to the Max window.
+	    </description>
+	</method>
+	<method name="version">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Post version information to the Max window.
+	    </description>
+	</method>
+	<method name="wave">
+	    <arglist>
+		<arg name="shape" type="symbol" optional="0" id="0" />
+		<arg name="maximum number of sinusoids" type="int" optional="1" id="0" />
+	    </arglist>
+	    <description>
+		Change the waveform that the object draws from when synthesizing its harmonics.  Options are:<br/>
+		<ul>
+		    <li>pulse-train</li>
+		    <li>sine</li>
+		    <li>sawtooth</li>
+		    <li>square</li>
+		    <li>triangle</li>
+		</ul>
+		The second argument can be used to set the maximum allowable number of harmonics.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="oscillators~" />
+	<seealso name="sinusoids~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the harmonics~ object.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [list]">
+	    <description>
+		Set the amplitudes for all oscillators, starting with the fundamental.  List length should match the number of partials + the fundamental.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		Harmonics out.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		harmonics, additive synthesis, waveform, noisiness, sinusoid
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
