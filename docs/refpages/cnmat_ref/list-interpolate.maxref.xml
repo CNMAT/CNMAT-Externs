@@ -39,10 +39,12 @@
     <objarglist>
 	<objarg name="number of steps" optional="1" type="int">
 	    <description>
+		The number of steps required to perform an interpolation from the first list to the last.
 	    </description>
 	</objarg>
 	<objarg name="maximum length of list" optional="1" type="int">
 	    <description>
+		This number determines the maximum list length in the same way that the <o>zl</o> object's "zlmaxsize" attribute works.
 	    </description>
 	</objarg>
     </objarglist>
