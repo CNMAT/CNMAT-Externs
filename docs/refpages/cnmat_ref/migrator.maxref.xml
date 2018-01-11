@@ -45,7 +45,7 @@
 		The number of frequency/amplitude pairs that are output.
 	    </description>
 	</objarg>
-	<objarg name="base amplitude of oscillators" optional="1" type="symbol">
+	<objarg name="base amplitude" optional="1" type="symbol">
 	    <description>
 		The default amplitude for oscillators during the migration of frequencies.  
 	    </description>
