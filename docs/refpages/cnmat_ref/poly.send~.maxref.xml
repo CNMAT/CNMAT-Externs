@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="poly.send~" module="CNMAT-Externals">
+
+    <digest>
+	Send audio to a named <o>poly.bus~</o> channel destination.
+    </digest>
+
+    <description>
+	poly.send~ and <o>poly.bus~</o> fix performance and delay issues that come up with having many outputs or sends come out of <o>poly~</o>.  They enable the user to freely assign a <o>poly~</o> output with a named destination.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	This object is meant to be used with the <o>poly.bus~</o> object.  It allows the user to circumvent the issue in poly~ by which a signal is delayed by one signal vector when using <o>send~</o> and <o>receive~</o>.  It also allows for direct addressing of signals within the context of a <o>poly~</o> instance to MSP networks out of said poly~ instance.  Note that this object will <em>not</em> function if used outside of a <o>poly~</o> instance.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="signal">
+	    <description>
+		Send a signal over a virtual bus connection.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="name" get="1" set="1" type="symbol" size="1">
+	    <digest>
+	    </digest>
+	    <description>
+		The name of the <o>poly.bus~</o> object to send an audio signal to.
+	    </description>
+	</attribute>
+	<attribute name="channel" get="1" set="1" type="int" size="1">
+	    <digest>
+	    </digest>
+	    <description>
+		The channel of the <o>poly.bus~</o> object to send an audio signal to.  Note that a channel may not exist if the corresponding bus object has not been set up properly.
+	    </description>
+	</attribute>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="poly.bus~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [signal]">
+	    <description>
+		Send a signal over a virtual bus connection.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		virtual bus, performance critical, addressing
+	    </description>
+	</entry>
+    </misc>
+</c74object>
